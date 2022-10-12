@@ -37,7 +37,6 @@ public class AttributesBuilder {
 	}
 
 	public boolean isEmpty() {
-
 		return (attributeList == null || attributeList.isEmpty()) && (complexAttributeList == null || complexAttributeList.isEmpty());
 	}
 

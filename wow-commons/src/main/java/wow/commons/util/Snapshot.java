@@ -82,7 +82,7 @@ public class Snapshot {
 
 		spMultiplier = 1 + stats.getAdditionalSpellDamageTakenPct().getCoefficient();
 
-		hitChance = Math.min(SpellConstants.BASE_HIT + totalHit, 99) / 100.0;
+		hitChance = Math.min(SpellConstants.BASE_HIT.getValue() + totalHit, 99) / 100.0;
 		critChance = Math.min(totalCrit, 100) / 100.0;
 		haste = totalHaste / 100.0;
 

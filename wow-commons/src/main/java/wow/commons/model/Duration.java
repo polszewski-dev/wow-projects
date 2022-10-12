@@ -32,6 +32,12 @@ public final class Duration implements Comparable<Duration> {
 	}
 
 	public static Duration millis(long millis) {
+		if (millis == 0) {
+			return ZERO;
+		}
+		if (millis == INF_MILLIS) {
+			return INFINITE;
+		}
 		return new Duration(millis);
 	}
 
@@ -55,7 +61,7 @@ public final class Duration implements Comparable<Duration> {
 		if (this.isInfinite() || duration.isInfinite()) {
 			return INFINITE;
 		}
-		return new Duration(this.millis + duration.millis);
+		return millis(this.millis + duration.millis);
 	}
 
 	public Duration subtract(Duration duration) {
@@ -65,7 +71,7 @@ public final class Duration implements Comparable<Duration> {
 		if (this.isInfinite()) {
 			return INFINITE;
 		}
-		return new Duration(this.millis - duration.millis);
+		return millis(this.millis - duration.millis);
 	}
 
 	public Duration multiplyBy(double factor) {
@@ -78,7 +84,7 @@ public final class Duration implements Comparable<Duration> {
 		if (this.isInfinite()) {
 			return INFINITE;
 		}
-		return new Duration((int)(millis * factor));
+		return millis((int)(millis * factor));
 	}
 
 	public Duration divideBy(double factor) {
@@ -88,7 +94,7 @@ public final class Duration implements Comparable<Duration> {
 		if (factor == 0 || this.isInfinite()) {
 			return INFINITE;
 		}
-		return new Duration((int)(millis / factor));
+		return millis((int)(millis / factor));
 	}
 
 	public double divideBy(Duration duration) {
