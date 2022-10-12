@@ -121,7 +121,9 @@ public enum AttributeId {
 	private final Class type;
 	private final String shortName;
 
-	private static List<AttributeId> complexAttributeIds;
+	private static final List<AttributeId> complexAttributeIds = Stream.of(values())
+			.filter(AttributeId::isComplexAttribute)
+			.collect(Collectors.toUnmodifiableList());;
 
 	AttributeId(Class type, String shortName) {
 		List<Class> allowedTypes = List.of(Double.class, Percent.class, Boolean.class, Duration.class, ComplexAttribute.class);
@@ -184,11 +186,6 @@ public enum AttributeId {
 	}
 	
 	public static List<AttributeId> getComplexAttributeIds() {
-		if (complexAttributeIds == null) {
-			complexAttributeIds = Stream.of(values())
-										.filter(AttributeId::isComplexAttribute)
-										.collect(Collectors.toUnmodifiableList());
-		}
 		return complexAttributeIds;
 	}
 

@@ -15,7 +15,7 @@ public class Attributes implements AttributeSource {
 	public static final Attributes EMPTY = new Attributes(List.of(), Map.of());
 
 	private final List<PrimitiveAttribute> attributeList;
-	private Map<AttributeId, List<ComplexAttribute>> complexAttributeList;
+	private final Map<AttributeId, List<ComplexAttribute>> complexAttributeList;
 
 	private Map<AttributeId, Double> doubleCache;
 	private Map<AttributeId, Percent> percentCache;
@@ -26,9 +26,7 @@ public class Attributes implements AttributeSource {
 	}
 
 	public Attributes(List<PrimitiveAttribute> attributeList) {
-		this.attributeList = new ArrayList<>();
-		this.attributeList.addAll(attributeList);
-		this.complexAttributeList = Map.of();
+		this(attributeList, Map.of());
 	}
 
 	public static Attributes of(AttributeId attributeId, double value) {
