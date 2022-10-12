@@ -51,34 +51,34 @@ class Api {
 
 	static createNewProfile(profileName, phase, copiedProfileId) {
 		if (copiedProfileId) {
-			return Api.sendRequest(`/api/v1/profile/copy/${copiedProfileId}/name/${profileName}/phase/${phase}`)
+			return Api.sendRequest(`/api/v1/profile/copy/${encodeURIComponent(copiedProfileId)}/name/${encodeURIComponent(profileName)}/phase/${phase}`)
 		} else {
-			return Api.sendRequest(`/api/v1/profile/create/name/${profileName}/phase/${phase}`)
+			return Api.sendRequest(`/api/v1/profile/create/name/${encodeURIComponent(profileName)}/phase/${phase}`)
 		}
 	}
 
 	static getProfile(profileId) {
-		return Api.sendRequest(`/api/v1/profile/${profileId}`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}`)
 	}
 
 	static getProfileWithItemOptions(profileId, addOptions) {
-		return Api.sendRequest(`/api/v1/profile/${profileId}/add/options/${addOptions}`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/add/options/${addOptions}`)
 	}
 	
 	static changeItem(profileId, slot, itemId) {
-		return Api.sendRequest(`/api/v1/profile/${profileId}/change/item/${slot}/${itemId}`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/change/item/${encodeURIComponent(slot)}/${encodeURIComponent(itemId)}`)
 	}
 	
 	static changeEnchant(profileId, slot, enchantId) {
-		return Api.sendRequest(`/api/v1/profile/${profileId}/change/enchant/${slot}/${enchantId}`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/change/enchant/${encodeURIComponent(slot)}/${encodeURIComponent(enchantId)}`)
 	}
 	
 	static changeGem(profileId, slot, socketNo, gemId) {
-		return Api.sendRequest(`/api/v1/profile/${profileId}/change/gem/${slot}/${socketNo}/${gemId}`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/change/gem/${encodeURIComponent(slot)}/${socketNo}/${encodeURIComponent(gemId)}`)
 	}
 	
 	static getUpgrades(profileId, slot) {
-		return Api.sendRequest(`/api/v1/upgrade/${profileId}/slot/${slot}`)
+		return Api.sendRequest(`/api/v1/upgrade/${encodeURIComponent(profileId)}/slot/${encodeURIComponent(slot)}`)
 	}
 
 	static getAvailableBuffs() {
@@ -86,23 +86,23 @@ class Api {
 	}
 
 	static enableBuff(profileId, buffId, enabled) {
-		return Api.sendRequest(`/api/v1/profile/${profileId}/enable/buff/${buffId}/${enabled}`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/enable/buff/${encodeURIComponent(buffId)}/${enabled}`)
 	}
 
 	static getSpellStats(profileId) {
-		return Api.sendRequest(`/api/v1/stats/spell/${profileId}`)
+		return Api.sendRequest(`/api/v1/stats/spell/${encodeURIComponent(profileId)}`)
 	}
 
 	static getPlayerStats(profileId) {
-		return Api.sendRequest(`/api/v1/stats/player/${profileId}`)
+		return Api.sendRequest(`/api/v1/stats/player/${encodeURIComponent(profileId)}`)
 	}
 
 	static getSpecialAbilityStats(profileId) {
-		return Api.sendRequest(`/api/v1/stats/special/${profileId}`)
+		return Api.sendRequest(`/api/v1/stats/special/${encodeURIComponent(profileId)}`)
 	}
 
 	static resetProfile(profileId) {
-		return Api.sendRequest(`/api/v1/profile/${profileId}/reset/equipment`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/reset/equipment`)
 	}
 
 	static async sendRequest(url) {
@@ -1096,7 +1096,7 @@ $(() => {
 			phase = equipmentEditor._profile.phase
 			copiedProfileId = equipmentEditor._profile.profileId
 		} else {
-			name = new Date().toLocaleString('en-GB') // TODO
+			name = new Date().toLocaleString('pl-PL') // TODO
 			phase = 5
 			copiedProfileId = null
 		}
