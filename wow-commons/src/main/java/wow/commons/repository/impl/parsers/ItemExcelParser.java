@@ -3,9 +3,9 @@ package wow.commons.repository.impl.parsers;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import polszewski.excel.reader.ExcelReader;
 import polszewski.excel.reader.PoiExcelReader;
-import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.ItemSet;
@@ -16,7 +16,6 @@ import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -77,65 +76,71 @@ public class ItemExcelParser {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			if (getString(COL_ITEM_SET_NAME, excelReader, header) == null) {
-				continue;
+			if (getOptionalString(COL_ITEM_SET_NAME, excelReader, header).isPresent()) {
+				ItemSet itemSet = getItemSet(excelReader, header);
+				itemDataRepository.addItemSet(itemSet);
 			}
-
-			String name = getString(COL_ITEM_SET_NAME, excelReader, header);
-			Tier tier = Tier.parse(getString(COL_ITEM_SET_TIER, excelReader, header));
-			String classesStr = getString(COL_ITEM_SET_CLASS, excelReader, header);
-			List<CharacterClass> classes = List.of();
-
-			if (classesStr != null) {
-				classes = Stream.of(classesStr.split(",")).map(x -> CharacterClass.parse(x.trim())).collect(Collectors.toList());
-			}
-
-			ItemSet itemSet = new ItemSet(name, tier, classes);
-			itemDataRepository.addItemSet(itemSet);
 		}
+	}
+
+	private static ItemSet getItemSet(ExcelReader excelReader, Map<String, Integer> header) {
+		var name = getString(COL_ITEM_SET_NAME, excelReader, header);
+		var tier = getOptionalString(COL_ITEM_SET_TIER, excelReader, header).map(Tier::parse).orElse(null);
+		var classes = getList(COL_ITEM_SET_CLASS, x -> CharacterClass.parse(x.trim()), excelReader, header);
+
+		return new ItemSet(name, tier, classes);
 	}
 
 	private static void readEnchants(ExcelReader excelReader, ItemDataRepositoryImpl itemDataRepository) {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			if (getString(COL_ITEM_SET_NAME, excelReader, header) == null) {
-				continue;
+			if (getOptionalString(COL_ITEM_SET_NAME, excelReader, header).isPresent()) {
+				Enchant enchant = getEnchant(excelReader, header);
+				itemDataRepository.addEnchant(enchant);
 			}
-
-			int id = getInteger(COL_ENCHANT_ID, excelReader, header);
-			String name = getString(COL_ENCHANT_NAME, excelReader, header);
-			List<ItemType> itemTypes = Stream.of(getString(COL_ENCHANT_ITEM_TYPES, excelReader, header).split(",")).map(x -> ItemType.parse(x.trim())).collect(Collectors.toList());
-			AttributesBuilder itemStats = new AttributesBuilder();
-
-			int sp = getInteger(COL_ENCHANT_SP, excelReader, header);
-			int spShadow = getInteger(COL_ENCHANT_SP_SHADOW, excelReader, header);
-			int spellCritRating = getInteger(COL_ENCHANT_SPELL_CRIT_RATING, excelReader, header);
-			int spellHitRating = getInteger(COL_ENCHANT_SPELL_HIT_RATING, excelReader, header);
-			int allStats = getInteger(COL_ENCHANT_ALL_STATS, excelReader, header);
-			int sta = getInteger(COL_ENCHANT_STA, excelReader, header);
-			int int_ = getInteger(COL_ENCHANT_INT, excelReader, header);
-			int spi = getInteger(COL_ENCHANT_SPI, excelReader, header);
-			Percent threatReductionPct = getPercent(COL_ENCHANT_THREAT_REDUCTION_PCT, excelReader, header);
-			Percent speedIncreasePct = getPercent(COL_ENCHANT_SPEED_INCREASE_PCT, excelReader, header);
-			int shadowResist = getInteger(COL_ENCHANT_SHADOW_RESIST, excelReader, header);
-
-			itemStats
-					.addAttribute(AttributeId.SpellDamage, sp)
-					.addAttribute(AttributeId.SpellDamage, spShadow, AttributeCondition.of(SpellSchool.Shadow))
-					.addAttribute(AttributeId.SpellCritRating, spellCritRating)
-					.addAttribute(AttributeId.SpellHitRating, spellHitRating)
-					.addAttribute(AttributeId.BaseStatsIncrease, allStats)
-					.addAttribute(AttributeId.Stamina, sta)
-					.addAttribute(AttributeId.Intellect, int_)
-					.addAttribute(AttributeId.Spirit, spi)
-					.addAttribute(AttributeId.threatReductionPct, threatReductionPct)
-					.addAttribute(AttributeId.SpeedIncreasePct, speedIncreasePct)
-					.addAttribute(AttributeId.Resistance, shadowResist, AttributeCondition.of(SpellSchool.Shadow))
-					;
-
-			Enchant enchant = new Enchant(id, name, itemTypes, itemStats.toAttributes());
-			itemDataRepository.addEnchant(enchant);
 		}
+	}
+
+	private static Enchant getEnchant(ExcelReader excelReader, Map<String, Integer> header) {
+		var id = getInteger(COL_ENCHANT_ID, excelReader, header);
+		var name = getString(COL_ENCHANT_NAME, excelReader, header);
+		var itemTypes = Stream.of(getString(COL_ENCHANT_ITEM_TYPES, excelReader, header).split(","))
+				.map(x -> ItemType.parse(x.trim()))
+				.collect(Collectors.toList());
+		var itemStats = getEnchantStats(excelReader, header);
+
+		return new Enchant(id, name, itemTypes, itemStats);
+	}
+
+	private static Attributes getEnchantStats(ExcelReader excelReader, Map<String, Integer> header) {
+		var sp = getOptionalInteger(COL_ENCHANT_SP, excelReader, header).orElse(0);
+		var spShadow = getOptionalInteger(COL_ENCHANT_SP_SHADOW, excelReader, header).orElse(0);
+		var spellCritRating = getOptionalInteger(COL_ENCHANT_SPELL_CRIT_RATING, excelReader, header).orElse(0);
+		var spellHitRating = getOptionalInteger(COL_ENCHANT_SPELL_HIT_RATING, excelReader, header).orElse(0);
+		var allStats = getOptionalInteger(COL_ENCHANT_ALL_STATS, excelReader, header).orElse(0);
+		var sta = getOptionalInteger(COL_ENCHANT_STA, excelReader, header).orElse(0);
+		var int_ = getOptionalInteger(COL_ENCHANT_INT, excelReader, header).orElse(0);
+		var spi = getOptionalInteger(COL_ENCHANT_SPI, excelReader, header).orElse(0);
+		var threatReductionPct = getOptionalPercent(COL_ENCHANT_THREAT_REDUCTION_PCT, excelReader, header).orElse(null);
+		var speedIncreasePct = getOptionalPercent(COL_ENCHANT_SPEED_INCREASE_PCT, excelReader, header).orElse(null);
+		var shadowResist = getOptionalInteger(COL_ENCHANT_SHADOW_RESIST, excelReader, header).orElse(0);
+
+		AttributesBuilder itemStats = new AttributesBuilder();
+
+		itemStats
+				.addAttribute(AttributeId.SpellDamage, sp)
+				.addAttribute(AttributeId.SpellDamage, spShadow, AttributeCondition.of(SpellSchool.Shadow))
+				.addAttribute(AttributeId.SpellCritRating, spellCritRating)
+				.addAttribute(AttributeId.SpellHitRating, spellHitRating)
+				.addAttribute(AttributeId.BaseStatsIncrease, allStats)
+				.addAttribute(AttributeId.Stamina, sta)
+				.addAttribute(AttributeId.Intellect, int_)
+				.addAttribute(AttributeId.Spirit, spi)
+				.addAttribute(AttributeId.threatReductionPct, threatReductionPct)
+				.addAttribute(AttributeId.SpeedIncreasePct, speedIncreasePct)
+				.addAttribute(AttributeId.Resistance, shadowResist, AttributeCondition.of(SpellSchool.Shadow))
+		;
+		return itemStats.toAttributes();
 	}
 }

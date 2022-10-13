@@ -4,12 +4,9 @@ import polszewski.excel.reader.ExcelReader;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,110 +46,95 @@ public final class ExcelUtil {
 		return result;
 	}
 
+	public static Optional<String> getOptionalString(String col, ExcelReader excelReader, Map<String, Integer> header) {
+		return Optional.ofNullable(excelReader.getCellStringValue(header.get(col)));
+	}
+
 	public static String getString(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		return excelReader.getCellStringValue(header.get(col));
+		return getOptionalString(col, excelReader, header)
+				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+	}
+
+	public static OptionalInt getOptionalInteger(String col, ExcelReader excelReader, Map<String, Integer> header) {
+		return getOptionalString(col, excelReader, header)
+				.map(s -> OptionalInt.of(Integer.parseInt(s)))
+				.orElse(OptionalInt.empty());
 	}
 
 	public static int getInteger(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return 0;
-		}
-		return Integer.parseInt(str);
+		return getOptionalInteger(col, excelReader, header)
+				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
 	}
 
-	public static Integer getNullableInteger(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return null;
-		}
-		return Integer.parseInt(str);
+	public static OptionalDouble getOptionalDouble(String col, ExcelReader excelReader, Map<String, Integer> header) {
+		return getOptionalString(col, excelReader, header)
+				.map(s -> OptionalDouble.of(Double.parseDouble(s)))
+				.orElse(OptionalDouble.empty());
 	}
 
 	public static double getDouble(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return 0;
-		}
-		return Double.parseDouble(str);
+		return getOptionalDouble(col, excelReader, header)
+				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
 	}
 
-	public static Double getNullableDouble(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return null;
-		}
-		return Double.parseDouble(str);
+	public static Optional<Percent> getOptionalPercent(String col, ExcelReader excelReader, Map<String, Integer> header) {
+		return getOptionalString(col, excelReader, header)
+				.map(seconds -> Percent.of(Double.parseDouble(seconds)));
 	}
 
 	public static Percent getPercent(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return Percent.ZERO;
-		}
-		return Percent.of(Double.parseDouble(str));
-	}
-
-	public static Percent getNullablePercent(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return null;
-		}
-		return Percent.of(Double.parseDouble(str));
+		return getOptionalPercent(col, excelReader, header)
+				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
 	}
 
 	public static boolean getBoolean(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return false;
-		}
-		if ("1".equals(str)) {
-			return true;
-		}
-		if ("0".equals(str)) {
-			return false;
-		}
-		return Boolean.parseBoolean(str);
+		return getOptionalString(col, excelReader, header)
+				.map(str -> {
+					if ("1".equals(str)) {
+						return true;
+					}
+					if ("0".equals(str)) {
+						return false;
+					}
+					return Boolean.parseBoolean(str);
+				})
+				.orElse(false);
+	}
+
+	public static Optional<Duration> getOptionalDuration(String col, ExcelReader excelReader, Map<String, Integer> header) {
+		return getOptionalString(col, excelReader, header)
+				.map(seconds -> Duration.seconds(Double.parseDouble(seconds)));
 	}
 
 	public static Duration getDuration(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		Double seconds = getNullableDouble(col, excelReader, header);
-		if (seconds == null) {
-			return null;
-		}
-		return Duration.seconds(seconds);
+		return getOptionalDuration(col, excelReader, header)
+				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+	}
+
+	public static <T> Optional<T> getOptionalEnum(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
+		return getOptionalString(col, excelReader, header)
+				.map(str -> producer.apply(str.toUpperCase()));
 	}
 
 	public static <T> T getEnum(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return null;
-		}
-		return producer.apply(str.toUpperCase());
-	}
-
-	public static <T> Set<T> getSet(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return null;
-		}
-		return Stream.of(str.split(",")).map(x -> producer.apply(x.trim())).collect(Collectors.toSet());
-	}
-
-	public static List<String> getStringList(String col, String separator, ExcelReader excelReader, Map<String, Integer> header) {
-		String string = excelReader.getCellStringValue(header.get(col));
-		if (string == null || string.isEmpty()) {
-			return null;
-		}
-		return List.of(string.split(Pattern.quote(separator)));
+		return getOptionalEnum(col, producer, excelReader, header)
+				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
 	}
 
 	public static <T> List<T> getList(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
-		String str = getString(col, excelReader, header);
-		if (str == null || str.isEmpty()) {
-			return null;
-		}
-		return Stream.of(str.split(",")).map(x -> producer.apply(x.trim())).collect(Collectors.toList());
+		return getValues(col, producer, excelReader, header, Collectors.toList());
+	}
+
+	public static <T> Set<T> getSet(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
+		return getValues(col, producer, excelReader, header, Collectors.toSet());
+	}
+
+	private static <T, C extends Collection<T>> C getValues(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header, Collector<T, ?, C> collector) {
+		return getOptionalString(col, excelReader, header)
+				.stream()
+				.flatMap(str -> Stream.of(str.split(",")))
+				.map(x -> producer.apply(x.trim()))
+				.collect(collector);
 	}
 
 	private ExcelUtil() {}

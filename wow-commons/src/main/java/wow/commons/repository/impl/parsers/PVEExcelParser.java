@@ -96,28 +96,27 @@ public class PVEExcelParser {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			if (getString(COL_INSTANCE_NO, excelReader, header) == null) {
-				continue;
+			if (getOptionalString(COL_INSTANCE_NO, excelReader, header).isPresent()) {
+				Instance instance = getInstance(excelReader, header);
+				pveRepository.addInstanceByName(instance);
 			}
+		}
+	}
 
-			int no = getInteger(COL_INSTANCE_NO, excelReader, header);
-			String name = getString(COL_INSTANCE_NAME, excelReader, header);
-			int partySize = getInteger(COL_INSTANCE_PARTY_SIZE, excelReader, header);
-			GameVersion version = GameVersion.parse(getString(COL_INSTANCE_VERSION, excelReader, header));
-			int phase = getInteger(COL_INSTANCE_PHASE, excelReader, header);
-			String shortName = getString(COL_INSTANCE_SHORT_NAME, excelReader, header);
+	private static Instance getInstance(ExcelReader excelReader, Map<String, Integer> header) {
+		var no = getInteger(COL_INSTANCE_NO, excelReader, header);
+		var name = getString(COL_INSTANCE_NAME, excelReader, header);
+		var partySize = getInteger(COL_INSTANCE_PARTY_SIZE, excelReader, header);
+		var version = GameVersion.parse(getString(COL_INSTANCE_VERSION, excelReader, header));
+		var phase = getInteger(COL_INSTANCE_PHASE, excelReader, header);
+		var shortName = getOptionalString(COL_INSTANCE_SHORT_NAME, excelReader, header).orElse(null);
 
-			Instance instance;
-
-			if (partySize > 5) {
-				instance = new Raid(no, name, partySize, version, phase, shortName);
-			} else if (partySize == 5) {
-				instance = new Dungeon(no, name, version, phase, shortName);
-			} else {
-				throw new IllegalArgumentException("Party size: " + partySize);
-			}
-
-			pveRepository.addInstanceByName(instance);
+		if (partySize > 5) {
+			return new Raid(no, name, partySize, version, phase, shortName);
+		} else if (partySize == 5) {
+			return new Dungeon(no, name, version, phase, shortName);
+		} else {
+			throw new IllegalArgumentException("Party size: " + partySize);
 		}
 	}
 
@@ -125,78 +124,86 @@ public class PVEExcelParser {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			if (getString(COL_BOSS_NO, excelReader, header) == null) {
-				continue;
+			if (getOptionalString(COL_BOSS_NO, excelReader, header).isPresent()) {
+				Boss boss = getBoss(excelReader, pveRepository, header);
+				pveRepository.addBossByName(boss);
 			}
-
-			int no = getInteger(COL_BOSS_NO, excelReader, header);
-			String name = getString(COL_BOSS_NAME, excelReader, header);
-			String instance = getString(COL_BOSS_INSTANCE, excelReader, header);
-
-			Boss boss = new Boss(no, name, pveRepository.getInstance(instance));
-			pveRepository.addBossByName(boss);
 		}
+	}
+
+	private static Boss getBoss(ExcelReader excelReader, PVERepositoryImpl pveRepository, Map<String, Integer> header) {
+		var no = getInteger(COL_BOSS_NO, excelReader, header);
+		var name = getString(COL_BOSS_NAME, excelReader, header);
+		var instance = getString(COL_BOSS_INSTANCE, excelReader, header);
+
+		return new Boss(no, name, pveRepository.getInstance(instance));
 	}
 
 	private static void readFactions(ExcelReader excelReader, PVERepositoryImpl pveRepository) {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			if (getString(COL_FACTION_NO, excelReader, header) == null) {
-				continue;
+			if (getString(COL_FACTION_NO, excelReader, header) != null) {
+				Faction faction = getFaction(excelReader, header);
+				pveRepository.addFactionByName(faction);
 			}
-
-			int no = getInteger(COL_FACTION_NO, excelReader, header);
-			String name = getString(COL_FACTION_NAME, excelReader, header);
-			GameVersion version = GameVersion.parse(getString(COL_FACTION_VERSION, excelReader, header));
-			int phase = getInteger(COL_FACTION_PHASE, excelReader, header);
-
-			Faction faction = new Faction(no, name, version, phase);
-			pveRepository.addFactionByName(faction);
 		}
+	}
+
+	private static Faction getFaction(ExcelReader excelReader, Map<String, Integer> header) {
+		var no = getInteger(COL_FACTION_NO, excelReader, header);
+		var name = getString(COL_FACTION_NAME, excelReader, header);
+		var version = GameVersion.parse(getString(COL_FACTION_VERSION, excelReader, header));
+		var phase = getInteger(COL_FACTION_PHASE, excelReader, header);
+
+		return new Faction(no, name, version, phase);
 	}
 
 	private static void readBaseStats(ExcelReader excelReader, PVERepositoryImpl pveRepository) {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			if (getString(COL_BS_LEVEL, excelReader, header) == null) {
-				continue;
+			if (getOptionalString(COL_BS_LEVEL, excelReader, header).isPresent()) {
+				BaseStatInfo baseStatInfo = getBaseStatInfo(excelReader, header);
+				pveRepository.addBaseStatInfo(baseStatInfo);
 			}
-
-			int level = getInteger(COL_BS_LEVEL, excelReader, header);
-			CharacterClass characterClass = CharacterClass.parse(getString(COL_BS_CLASS, excelReader, header));
-			Race race = Race.parse(getString(COL_BS_RACE, excelReader, header));
-			int baseStr = getInteger(COL_BS_BASE_STR, excelReader, header);
-			int baseAgi = getInteger(COL_BS_BASE_AGI, excelReader, header);
-			int baseSta = getInteger(COL_BS_BASE_STA, excelReader, header);
-			int baseInt = getInteger(COL_BS_BASE_INT, excelReader, header);
-			int baseSpi = getInteger(COL_BS_BASE_SPI, excelReader, header);
-			int baseHP = getInteger(COL_BS_BASE_HP, excelReader, header);
-			int baseMana = getInteger(COL_BS_BASE_MANA, excelReader, header);
-			double baseSpellCrit = getDouble(COL_BS_BASE_SPELL_CRIT, excelReader, header);
-			double intPerCrit = getDouble(COL_BS_INT_PER_CRIT, excelReader, header);
-
-			BaseStatInfo baseStatInfo = new BaseStatInfo(level, characterClass, race, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit);
-			pveRepository.addBaseStatInfo(baseStatInfo);
 		}
+	}
+
+	private static BaseStatInfo getBaseStatInfo(ExcelReader excelReader, Map<String, Integer> header) {
+		var level = getInteger(COL_BS_LEVEL, excelReader, header);
+		var characterClass = CharacterClass.parse(getString(COL_BS_CLASS, excelReader, header));
+		var race = Race.parse(getString(COL_BS_RACE, excelReader, header));
+		var baseStr = getInteger(COL_BS_BASE_STR, excelReader, header);
+		var baseAgi = getInteger(COL_BS_BASE_AGI, excelReader, header);
+		var baseSta = getInteger(COL_BS_BASE_STA, excelReader, header);
+		var baseInt = getInteger(COL_BS_BASE_INT, excelReader, header);
+		var baseSpi = getInteger(COL_BS_BASE_SPI, excelReader, header);
+		var baseHP = getInteger(COL_BS_BASE_HP, excelReader, header);
+		var baseMana = getInteger(COL_BS_BASE_MANA, excelReader, header);
+		var baseSpellCrit = getDouble(COL_BS_BASE_SPELL_CRIT, excelReader, header);
+		var intPerCrit = getDouble(COL_BS_INT_PER_CRIT, excelReader, header);
+
+		return new BaseStatInfo(level, characterClass, race, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit);
 	}
 
 	private static void readCombatRatings(ExcelReader excelReader, PVERepositoryImpl pveRepository) {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			if (getString(COL_CR_LEVEL, excelReader, header) == null) {
-				continue;
+			if (getOptionalString(COL_CR_LEVEL, excelReader, header).isPresent()) {
+				CombatRatingInfo combatRatingInfo = getCombatRatingInfo(excelReader, header);
+				pveRepository.addCombatRatingInfo(combatRatingInfo);
 			}
-
-			int level = getInteger(COL_CR_LEVEL, excelReader, header);
-			double spellCrit = getDouble(COL_CR_SPELL_CRIT, excelReader, header);
-			double spellHit = getDouble(COL_CR_SPELL_HIT, excelReader, header);
-			double spellHaste = getDouble(COL_CR_SPELL_HASTE, excelReader, header);
-
-			CombatRatingInfo combatRatingInfo = new CombatRatingInfo(level, spellCrit, spellHit, spellHaste);
-			pveRepository.addCombatRatingInfo(combatRatingInfo);
 		}
+	}
+
+	private static CombatRatingInfo getCombatRatingInfo(ExcelReader excelReader, Map<String, Integer> header) {
+		var level = getInteger(COL_CR_LEVEL, excelReader, header);
+		var spellCrit = getDouble(COL_CR_SPELL_CRIT, excelReader, header);
+		var spellHit = getDouble(COL_CR_SPELL_HIT, excelReader, header);
+		var spellHaste = getDouble(COL_CR_SPELL_HASTE, excelReader, header);
+
+		return new CombatRatingInfo(level, spellCrit, spellHit, spellHaste);
 	}
 }

@@ -91,37 +91,43 @@ class StatParserRepository {
 		Map<String, Integer> header = getHeader(excelReader);
 
 		while (excelReader.nextRow()) {
-			String pattern = getString(COL_PATTERN, excelReader, header);
-
-			if (pattern == null) {
-				continue;
-			}
-
-			ParsedStatSetter stat1 = parseStatSetter(getString(COL_STAT1, excelReader, header));
-			ParsedStatSetter stat2 = parseStatSetter(getString(COL_STAT2, excelReader, header));
-			String alias = getString(COL_ALIAS, excelReader, header);
-
-			if (stat1 == null && stat2 == null) {
-				stat1 = ParsedStatSetter.group(0, MiscStatSetter.INSTANCE);
-			}
-
-			StatSetterParams params = getParams(excelReader, parsers, header);
-			List<ParsedStatSetter> setters = Stream.of(stat1, stat2).filter(Objects::nonNull).collect(Collectors.toList());
-			StatParser parser = new StatParser(pattern.trim(), setters, params);
-
-			parsers.add(parser);
-
-			if (alias != null) {
-				aliases.computeIfAbsent(alias, x -> new ArrayList<>()).add(parser);
-			}
+			readParsers(excelReader, parsers, header);
 		}
 	}
 
-	private ParsedStatSetter parseStatSetter(String line) {
-		if (line == null) {
-			return null;
+	private void readParsers(ExcelReader excelReader, List<StatParser> parsers, Map<String, Integer> header) {
+		var pattern = getOptionalString(COL_PATTERN, excelReader, header);
+
+		if (pattern.isPresent()) {
+			List<ParsedStatSetter> setters = getParsedStatSetters(excelReader, header);
+
+			StatSetterParams params = getParams(excelReader, parsers, header);
+			StatParser parser = new StatParser(pattern.get().trim(), setters, params);
+
+			parsers.add(parser);
+
+			getOptionalString(COL_ALIAS, excelReader, header)
+					.ifPresent(alias -> aliases.computeIfAbsent(alias, x -> new ArrayList<>()).add(parser));
+		}
+	}
+
+	private List<ParsedStatSetter> getParsedStatSetters(ExcelReader excelReader, Map<String, Integer> header) {
+		var setters = Stream.of(
+						getOptionalString(COL_STAT1, excelReader, header),
+						getOptionalString(COL_STAT2, excelReader, header)
+				)
+				.map(line -> line.map(this::parseStatSetter))
+				.flatMap(Optional::stream)
+				.collect(Collectors.toList());
+
+		if (!setters.isEmpty()) {
+			return setters;
 		}
 
+		return List.of(ParsedStatSetter.group(0, MiscStatSetter.INSTANCE));
+	}
+
+	private ParsedStatSetter parseStatSetter(String line) {
 		line = line.trim();
 
 		int groupNo = -1;
@@ -150,16 +156,13 @@ class StatParserRepository {
 		StatSetterParams params = new StatSetterParams();
 
 		if (parsers == itemStatParsers) {
-			params.setSpecialType(getString(COL_SPECIAL_TYPE, excelReader, header));
-			String statStr = getString(COL_SPECIAL_STAT, excelReader, header);
-			if (statStr != null) {
-				params.setAttributeParser(new SimpleAttributeParser(statStr));
-			}
-			params.setSpecialAmount(getString(COL_SPECIAL_AMOUNT, excelReader, header));
-			params.setSpecialDuration(getString(COL_SPECIAL_DURATION, excelReader, header));
-			params.setSpecialCd(getString(COL_SPECIAL_CD, excelReader, header));
-			params.setSpecialProcChance(getString(COL_SPECIAL_PROC_CHANCE, excelReader, header));
-			params.setSpecialProcCd(getString(COL_SPECIAL_PROC_CD, excelReader, header));
+			params.setSpecialType(getOptionalString(COL_SPECIAL_TYPE, excelReader, header).orElse(null));
+			params.setAttributeParser(getOptionalString(COL_SPECIAL_STAT, excelReader, header).map(SimpleAttributeParser::new).orElse(null));
+			params.setSpecialAmount(getOptionalString(COL_SPECIAL_AMOUNT, excelReader, header).orElse(null));
+			params.setSpecialDuration(getOptionalString(COL_SPECIAL_DURATION, excelReader, header).orElse(null));
+			params.setSpecialCd(getOptionalString(COL_SPECIAL_CD, excelReader, header).orElse(null));
+			params.setSpecialProcChance(getOptionalString(COL_SPECIAL_PROC_CHANCE, excelReader, header).orElse(null));
+			params.setSpecialProcCd(getOptionalString(COL_SPECIAL_PROC_CD, excelReader, header).orElse(null));
 			params.setSpecialSpell(getList(COL_SPECIAL_SPELL, SpellId::parse, excelReader, header));
 		}
 
