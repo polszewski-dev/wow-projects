@@ -28,6 +28,13 @@ public enum CostType {
 
 	;
 
+	public static CostType parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		return valueOf(value.toUpperCase());
+	}
+
 	public interface Visitor<T> {
 		T onMana();
 

@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,36 +37,30 @@ public class StatParserExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader(SHEET_ITEM, () -> readParsers(itemStatParsers), COL_PATTERN),
-				new SheetReader(SHEET_ITEM2, () -> readParsers(itemStatParsers), COL_PATTERN),
-				new SheetReader(SHEET_ITEM3, () -> readParsers(itemStatParsers), COL_PATTERN),
-				new SheetReader(SHEET_GEM, () -> readParsers(gemStatParsers), COL_PATTERN),
-				new SheetReader(SHEET_SOCKET, () -> readParsers(socketBonusStatParsers), COL_PATTERN)
+				new SheetReader("item", () -> readParsers(itemStatParsers), COL_PATTERN),
+				new SheetReader("item2", () -> readParsers(itemStatParsers), COL_PATTERN),
+				new SheetReader("item3", () -> readParsers(itemStatParsers), COL_PATTERN),
+				new SheetReader("gem", () -> readParsers(gemStatParsers), COL_PATTERN),
+				new SheetReader("socket", () -> readParsers(socketBonusStatParsers), COL_PATTERN)
 		);
 	}
 
-	private static final String SHEET_ITEM = "item";
-	private static final String SHEET_ITEM2 = "item2";
-	private static final String SHEET_ITEM3 = "item3";
-	private static final String SHEET_GEM = "gem";
-	private static final String SHEET_SOCKET = "socket";
+	private final ExcelColumn COL_PATTERN = column("pattern");
+	private final ExcelColumn COL_STAT1 = column("stat1");
+	private final ExcelColumn COL_STAT2 = column("stat2");
+	private final ExcelColumn COL_ALIAS = column("alias");
 
-	private static final String COL_PATTERN = "pattern";
-	private static final String COL_STAT1 = "stat1";
-	private static final String COL_STAT2 = "stat2";
-	private static final String COL_ALIAS = "alias";
-
-	private static final String COL_SPECIAL_TYPE = "special:type";
-	private static final String COL_SPECIAL_STAT = "special:stat";
-	private static final String COL_SPECIAL_AMOUNT = "special:amount";
-	private static final String COL_SPECIAL_DURATION = "special:duration";
-	private static final String COL_SPECIAL_CD = "special:cd";
-	private static final String COL_SPECIAL_PROC_CHANCE = "special:proc chance";
-	private static final String COL_SPECIAL_PROC_CD = "special:proc cd";
-	private static final String COL_SPECIAL_SPELL = "special:spell";
+	private final ExcelColumn COL_SPECIAL_TYPE = column("special:type");
+	private final ExcelColumn COL_SPECIAL_STAT = column("special:stat");
+	private final ExcelColumn COL_SPECIAL_AMOUNT = column("special:amount");
+	private final ExcelColumn COL_SPECIAL_DURATION = column("special:duration");
+	private final ExcelColumn COL_SPECIAL_CD = column("special:cd");
+	private final ExcelColumn COL_SPECIAL_PROC_CHANCE = column("special:proc chance");
+	private final ExcelColumn COL_SPECIAL_PROC_CD = column("special:proc cd");
+	private final ExcelColumn COL_SPECIAL_SPELL = column("special:spell");
 
 	private void readParsers(List<StatParser> parsers) {
-		var pattern = getString(COL_PATTERN);
+		var pattern = COL_PATTERN.getString();
 
 		List<ParsedStatSetter> setters = getParsedStatSetters();
 
@@ -75,17 +69,20 @@ public class StatParserExcelParser extends ExcelParser {
 
 		parsers.add(parser);
 
-		getOptionalString(COL_ALIAS)
-				.ifPresent(alias -> aliases.computeIfAbsent(alias, x -> new ArrayList<>()).add(parser));
+		String alias = COL_ALIAS.getString(null);
+
+		if (alias != null) {
+			aliases.computeIfAbsent(alias, x -> new ArrayList<>()).add(parser);
+		}
 	}
 
 	private List<ParsedStatSetter> getParsedStatSetters() {
 		var setters = Stream.of(
-						getOptionalString(COL_STAT1),
-						getOptionalString(COL_STAT2)
+						COL_STAT1.getString(null),
+						COL_STAT2.getString(null)
 				)
-				.map(line -> line.map(this::parseStatSetter))
-				.flatMap(Optional::stream)
+				.filter(Objects::nonNull)
+				.map(this::parseStatSetter)
 				.collect(Collectors.toList());
 
 		if (!setters.isEmpty()) {
@@ -124,14 +121,14 @@ public class StatParserExcelParser extends ExcelParser {
 		StatSetterParams params = new StatSetterParams();
 
 		if (parsers == itemStatParsers) {
-			params.setSpecialType(getOptionalString(COL_SPECIAL_TYPE).orElse(null));
-			params.setAttributeParser(getOptionalString(COL_SPECIAL_STAT).map(SimpleAttributeParser::new).orElse(null));
-			params.setSpecialAmount(getOptionalString(COL_SPECIAL_AMOUNT).orElse(null));
-			params.setSpecialDuration(getOptionalString(COL_SPECIAL_DURATION).orElse(null));
-			params.setSpecialCd(getOptionalString(COL_SPECIAL_CD).orElse(null));
-			params.setSpecialProcChance(getOptionalString(COL_SPECIAL_PROC_CHANCE).orElse(null));
-			params.setSpecialProcCd(getOptionalString(COL_SPECIAL_PROC_CD).orElse(null));
-			params.setSpecialSpell(getList(COL_SPECIAL_SPELL, SpellId::parse));
+			params.setSpecialType(COL_SPECIAL_TYPE.getString(null));
+			params.setAttributeParser(COL_SPECIAL_STAT.getEnum(SimpleAttributeParser::new, null));
+			params.setSpecialAmount(COL_SPECIAL_AMOUNT.getString(null));
+			params.setSpecialDuration(COL_SPECIAL_DURATION.getString(null));
+			params.setSpecialCd(COL_SPECIAL_CD.getString(null));
+			params.setSpecialProcChance(COL_SPECIAL_PROC_CHANCE.getString(null));
+			params.setSpecialProcCd(COL_SPECIAL_PROC_CD.getString(null));
+			params.setSpecialSpell(COL_SPECIAL_SPELL.getList(SpellId::parse));
 		}
 
 		return params;

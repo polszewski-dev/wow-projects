@@ -30,6 +30,13 @@ public enum Scope {
 		}
 	};
 
+	public static Scope parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		return valueOf(value.toUpperCase());
+	}
+
 	public interface Visitor {
 		boolean visitPersonal();
 		boolean visitParty();

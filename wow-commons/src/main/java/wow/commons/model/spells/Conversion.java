@@ -31,6 +31,13 @@ public class Conversion {
 		;
 
 		public abstract int getValue(int actualDamage, List<Cost> paidCosts);
+
+		public static From parse(String value) {
+			if (value == null || value.isEmpty()) {
+				return null;
+			}
+			return valueOf(value.toUpperCase());
+		}
 	}
 
 	public enum To {
@@ -49,6 +56,13 @@ public class Conversion {
 		},
 
 		;
+
+		public static To parse(String value) {
+			if (value == null || value.isEmpty()) {
+				return null;
+			}
+			return valueOf(value.toUpperCase());
+		}
 
 		public interface Visitor {
 			void visitHealing();

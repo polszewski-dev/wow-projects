@@ -8,7 +8,9 @@ import wow.commons.model.Percent;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -23,9 +25,9 @@ public abstract class ExcelParser {
 		public final String sheetName;
 		private final Runnable rowConsumer;
 
-		private final String columnIndicatingOptionalRow;
+		private final ExcelColumn columnIndicatingOptionalRow;
 
-		public SheetReader(String sheetName, Runnable rowConsumer, String columnIndicatingOptionalRow) {
+		public SheetReader(String sheetName, Runnable rowConsumer, ExcelColumn columnIndicatingOptionalRow) {
 			this.sheetName = sheetName;
 			this.rowConsumer = rowConsumer;
 			this.columnIndicatingOptionalRow = columnIndicatingOptionalRow;
@@ -37,7 +39,7 @@ public abstract class ExcelParser {
 
 		public void readSheet() {
 			while (excelReader.nextRow()) {
-				if (columnIndicatingOptionalRow == null || getOptionalString(columnIndicatingOptionalRow).isPresent()) {
+				if (columnIndicatingOptionalRow == null || columnIndicatingOptionalRow.getString(null) != null) {
 					rowConsumer.run();
 				}
 			}
@@ -78,63 +80,83 @@ public abstract class ExcelParser {
 		return this.getClass().getResourceAsStream(path);
 	}
 
-	protected Optional<String> getOptionalString(String col) {
-		return ExcelUtil.getOptionalString(col, excelReader, header);
+	protected class ExcelColumn {
+		private final String name;
+
+		public ExcelColumn(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getString(String defaultValue) {
+			return ExcelUtil.getOptionalString(name, excelReader, header).orElse(defaultValue);
+		}
+
+		public String getString() {
+			return ExcelUtil.getString(name, excelReader, header);
+		}
+
+		public int getInteger(int defaultValue) {
+			return ExcelUtil.getOptionalInteger(name, excelReader, header).orElse(defaultValue);
+		}
+
+		public int getInteger() {
+			return ExcelUtil.getInteger(name, excelReader, header);
+		}
+
+		public double getDouble(double defaultValue) {
+			return ExcelUtil.getOptionalDouble(name, excelReader, header).orElse(defaultValue);
+		}
+
+		public double getDouble() {
+			return ExcelUtil.getDouble(name, excelReader, header);
+		}
+
+		public Percent getPercent(Percent defaultValue) {
+			return ExcelUtil.getOptionalPercent(name, excelReader, header).orElse(defaultValue);
+		}
+
+		public Percent getPercent() {
+			return ExcelUtil.getPercent(name, excelReader, header);
+		}
+
+		public boolean getBoolean() {
+			return ExcelUtil.getBoolean(name, excelReader, header);
+		}
+
+		public Duration getDuration(Duration defaultValue) {
+			return ExcelUtil.getOptionalDuration(name, excelReader, header).orElse(defaultValue);
+		}
+
+		public Duration getDuration() {
+			return ExcelUtil.getDuration(name, excelReader, header);
+		}
+
+		public <T> T getEnum(Function<String, T> producer, T defaultValue) {
+			return ExcelUtil.getOptionalEnum(name, producer, excelReader, header).orElse(defaultValue);
+		}
+
+		public <T> T getEnum(Function<String, T> producer) {
+			return ExcelUtil.getEnum(name, producer, excelReader, header);
+		}
+
+		public <T> List<T> getList(Function<String, T> producer) {
+			return ExcelUtil.getList(name, producer, excelReader, header);
+		}
+
+		public <T> Set<T> getSet(Function<String, T> producer) {
+			return ExcelUtil.getSet(name, producer, excelReader, header);
+		}
+
+		public ExcelColumn multi(int index) {
+			return new ExcelColumn(name + index);
+		}
 	}
 
-	protected String getString(String col) {
-		return ExcelUtil.getString(col, excelReader, header);
-	}
-
-	protected OptionalInt getOptionalInteger(String col) {
-		return ExcelUtil.getOptionalInteger(col, excelReader, header);
-	}
-
-	protected int getInteger(String col) {
-		return ExcelUtil.getInteger(col, excelReader, header);
-	}
-
-	protected OptionalDouble getOptionalDouble(String col) {
-		return ExcelUtil.getOptionalDouble(col, excelReader, header);
-	}
-
-	protected double getDouble(String col) {
-		return ExcelUtil.getDouble(col, excelReader, header);
-	}
-
-	protected Optional<Percent> getOptionalPercent(String col) {
-		return ExcelUtil.getOptionalPercent(col, excelReader, header);
-	}
-
-	protected Percent getPercent(String col) {
-		return ExcelUtil.getPercent(col, excelReader, header);
-	}
-
-	protected boolean getBoolean(String col) {
-		return ExcelUtil.getBoolean(col, excelReader, header);
-	}
-
-	protected Optional<Duration> getOptionalDuration(String col) {
-		return ExcelUtil.getOptionalDuration(col, excelReader, header);
-	}
-
-	protected Duration getDuration(String col) {
-		return ExcelUtil.getDuration(col, excelReader, header);
-	}
-
-	protected <T> Optional<T> getOptionalEnum(String col, Function<String, T> producer) {
-		return ExcelUtil.getOptionalEnum(col, producer, excelReader, header);
-	}
-
-	protected <T> T getEnum(String col, Function<String, T> producer) {
-		return ExcelUtil.getEnum(col, producer, excelReader, header);
-	}
-
-	protected <T> List<T> getList(String col, Function<String, T> producer) {
-		return ExcelUtil.getList(col, producer, excelReader, header);
-	}
-
-	protected <T> Set<T> getSet(String col, Function<String, T> producer) {
-		return ExcelUtil.getSet(col, producer, excelReader, header);
+	protected ExcelColumn column(String name) {
+		return new ExcelColumn(name);
 	}
 }

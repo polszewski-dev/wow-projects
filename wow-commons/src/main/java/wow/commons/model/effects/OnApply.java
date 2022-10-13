@@ -6,5 +6,12 @@ package wow.commons.model.effects;
  */
 public enum OnApply {
 	STACK,
-	REPLACE
+	REPLACE;
+
+	public static OnApply parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		return valueOf(value.toUpperCase());
+	}
 }

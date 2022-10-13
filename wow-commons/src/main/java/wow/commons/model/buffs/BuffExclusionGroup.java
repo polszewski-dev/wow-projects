@@ -15,5 +15,12 @@ public enum BuffExclusionGroup {
 
 	ARMOR,
 	DEMONIC_SACRIFICE,
-	COE,
+	COE;
+
+	public static BuffExclusionGroup parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		return valueOf(value.toUpperCase());
+	}
 }

@@ -30,53 +30,47 @@ public class PVEExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader(SHEET_INSTANCES, this::readInstances, COL_INSTANCE_NO),
-				new SheetReader(SHEET_BOSSES, this::readBosses, COL_BOSS_NO),
-				new SheetReader(SHEET_FACTIONS, this::readFactions, COL_FACTION_NO),
-				new SheetReader(SHEET_BASE_STATS, this::readBaseStats, COL_BS_LEVEL),
-				new SheetReader(SHEET_COMBAT_RATINGS, this::readCombatRatings, COL_CR_LEVEL)
+				new SheetReader("instances", this::readInstances, COL_INSTANCE_NO),
+				new SheetReader("bosses", this::readBosses, COL_BOSS_NO),
+				new SheetReader("factions", this::readFactions, COL_FACTION_NO),
+				new SheetReader("base_stats", this::readBaseStats, COL_BS_LEVEL),
+				new SheetReader("combat_ratings", this::readCombatRatings, COL_CR_LEVEL)
 		);
 	}
 
-	private static final String SHEET_INSTANCES = "instances";
-	private static final String SHEET_BOSSES = "bosses";
-	private static final String SHEET_FACTIONS = "factions";
-	private static final String SHEET_BASE_STATS = "base_stats";
-	private static final String SHEET_COMBAT_RATINGS = "combat_ratings";
+	private final ExcelColumn COL_INSTANCE_NO = column("no.");
+	private final ExcelColumn COL_INSTANCE_NAME = column("name");
+	private final ExcelColumn COL_INSTANCE_PARTY_SIZE = column("party_size");
+	private final ExcelColumn COL_INSTANCE_VERSION = column("version");
+	private final ExcelColumn COL_INSTANCE_PHASE = column("phase");
+	private final ExcelColumn COL_INSTANCE_SHORT_NAME = column("short_name");
 
-	private static final String COL_INSTANCE_NO = "no.";
-	private static final String COL_INSTANCE_NAME = "name";
-	private static final String COL_INSTANCE_PARTY_SIZE = "party_size";
-	private static final String COL_INSTANCE_VERSION = "version";
-	private static final String COL_INSTANCE_PHASE = "phase";
-	private static final String COL_INSTANCE_SHORT_NAME = "short_name";
+	private final ExcelColumn COL_BOSS_NO = column("no.");
+	private final ExcelColumn COL_BOSS_NAME = column("name");
+	private final ExcelColumn COL_BOSS_INSTANCE = column("instance");
 
-	private static final String COL_BOSS_NO = "no.";
-	private static final String COL_BOSS_NAME = "name";
-	private static final String COL_BOSS_INSTANCE = "instance";
+	private final ExcelColumn COL_FACTION_NO = column("no.");
+	private final ExcelColumn COL_FACTION_NAME = column("name");
+	private final ExcelColumn COL_FACTION_VERSION = column("version");
+	private final ExcelColumn COL_FACTION_PHASE = column("phase");
 
-	private static final String COL_FACTION_NO = "no.";
-	private static final String COL_FACTION_NAME = "name";
-	private static final String COL_FACTION_VERSION = "version";
-	private static final String COL_FACTION_PHASE = "phase";
+	private final ExcelColumn COL_BS_LEVEL = column("level");
+	private final ExcelColumn COL_BS_CLASS = column("class");
+	private final ExcelColumn COL_BS_RACE = column("race");
+	private final ExcelColumn COL_BS_BASE_STR = column("base_str");
+	private final ExcelColumn COL_BS_BASE_AGI = column("base_agi");
+	private final ExcelColumn COL_BS_BASE_STA = column("base_sta");
+	private final ExcelColumn COL_BS_BASE_INT = column("base_int");
+	private final ExcelColumn COL_BS_BASE_SPI = column("base_spi");
+	private final ExcelColumn COL_BS_BASE_HP = column("base_hp");
+	private final ExcelColumn COL_BS_BASE_MANA = column("base_mana");
+	private final ExcelColumn COL_BS_BASE_SPELL_CRIT = column("base_spell_crit");
+	private final ExcelColumn COL_BS_INT_PER_CRIT = column("int_per_crit");
 
-	private static final String COL_BS_LEVEL = "level";
-	private static final String COL_BS_CLASS = "class";
-	private static final String COL_BS_RACE = "race";
-	private static final String COL_BS_BASE_STR = "base_str";
-	private static final String COL_BS_BASE_AGI = "base_agi";
-	private static final String COL_BS_BASE_STA = "base_sta";
-	private static final String COL_BS_BASE_INT = "base_int";
-	private static final String COL_BS_BASE_SPI = "base_spi";
-	private static final String COL_BS_BASE_HP = "base_hp";
-	private static final String COL_BS_BASE_MANA = "base_mana";
-	private static final String COL_BS_BASE_SPELL_CRIT = "base_spell_crit";
-	private static final String COL_BS_INT_PER_CRIT = "int_per_crit";
-
-	private static final String COL_CR_LEVEL = "level";
-	private static final String COL_CR_SPELL_CRIT = "spell_crit";
-	private static final String COL_CR_SPELL_HIT = "spell_hit";
-	private static final String COL_CR_SPELL_HASTE = "spell_haste";
+	private final ExcelColumn COL_CR_LEVEL = column("level");
+	private final ExcelColumn COL_CR_SPELL_CRIT = column("spell_crit");
+	private final ExcelColumn COL_CR_SPELL_HIT = column("spell_hit");
+	private final ExcelColumn COL_CR_SPELL_HASTE = column("spell_haste");
 
 	private void readInstances() {
 		Instance instance = getInstance();
@@ -84,12 +78,12 @@ public class PVEExcelParser extends ExcelParser {
 	}
 
 	private Instance getInstance() {
-		var no = getInteger(COL_INSTANCE_NO);
-		var name = getString(COL_INSTANCE_NAME);
-		var partySize = getInteger(COL_INSTANCE_PARTY_SIZE);
-		var version = GameVersion.parse(getString(COL_INSTANCE_VERSION));
-		var phase = getInteger(COL_INSTANCE_PHASE);
-		var shortName = getOptionalString(COL_INSTANCE_SHORT_NAME).orElse(null);
+		var no = COL_INSTANCE_NO.getInteger();
+		var name = COL_INSTANCE_NAME.getString();
+		var partySize = COL_INSTANCE_PARTY_SIZE.getInteger();
+		var version = GameVersion.parse(COL_INSTANCE_VERSION.getString());
+		var phase = COL_INSTANCE_PHASE.getInteger();
+		var shortName = COL_INSTANCE_SHORT_NAME.getString(null);
 
 		if (partySize > 5) {
 			return new Raid(no, name, partySize, version, phase, shortName);
@@ -106,9 +100,9 @@ public class PVEExcelParser extends ExcelParser {
 	}
 
 	private Boss getBoss() {
-		var no = getInteger(COL_BOSS_NO);
-		var name = getString(COL_BOSS_NAME);
-		var instance = getString(COL_BOSS_INSTANCE);
+		var no = COL_BOSS_NO.getInteger();
+		var name = COL_BOSS_NAME.getString();
+		var instance = COL_BOSS_INSTANCE.getString();
 
 		return new Boss(no, name, pveRepository.getInstance(instance));
 	}
@@ -119,10 +113,10 @@ public class PVEExcelParser extends ExcelParser {
 	}
 
 	private Faction getFaction() {
-		var no = getInteger(COL_FACTION_NO);
-		var name = getString(COL_FACTION_NAME);
-		var version = GameVersion.parse(getString(COL_FACTION_VERSION));
-		var phase = getInteger(COL_FACTION_PHASE);
+		var no = COL_FACTION_NO.getInteger();
+		var name = COL_FACTION_NAME.getString();
+		var version = GameVersion.parse(COL_FACTION_VERSION.getString());
+		var phase = COL_FACTION_PHASE.getInteger();
 
 		return new Faction(no, name, version, phase);
 	}
@@ -133,18 +127,18 @@ public class PVEExcelParser extends ExcelParser {
 	}
 
 	private BaseStatInfo getBaseStatInfo() {
-		var level = getInteger(COL_BS_LEVEL);
-		var characterClass = CharacterClass.parse(getString(COL_BS_CLASS));
-		var race = Race.parse(getString(COL_BS_RACE));
-		var baseStr = getInteger(COL_BS_BASE_STR);
-		var baseAgi = getInteger(COL_BS_BASE_AGI);
-		var baseSta = getInteger(COL_BS_BASE_STA);
-		var baseInt = getInteger(COL_BS_BASE_INT);
-		var baseSpi = getInteger(COL_BS_BASE_SPI);
-		var baseHP = getInteger(COL_BS_BASE_HP);
-		var baseMana = getInteger(COL_BS_BASE_MANA);
-		var baseSpellCrit = getDouble(COL_BS_BASE_SPELL_CRIT);
-		var intPerCrit = getDouble(COL_BS_INT_PER_CRIT);
+		var level = COL_BS_LEVEL.getInteger();
+		var characterClass = CharacterClass.parse(COL_BS_CLASS.getString());
+		var race = Race.parse(COL_BS_RACE.getString());
+		var baseStr = COL_BS_BASE_STR.getInteger();
+		var baseAgi = COL_BS_BASE_AGI.getInteger();
+		var baseSta = COL_BS_BASE_STA.getInteger();
+		var baseInt = COL_BS_BASE_INT.getInteger();
+		var baseSpi = COL_BS_BASE_SPI.getInteger();
+		var baseHP = COL_BS_BASE_HP.getInteger();
+		var baseMana = COL_BS_BASE_MANA.getInteger();
+		var baseSpellCrit = COL_BS_BASE_SPELL_CRIT.getDouble();
+		var intPerCrit = COL_BS_INT_PER_CRIT.getDouble();
 
 		return new BaseStatInfo(level, characterClass, race, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit);
 	}
@@ -155,10 +149,10 @@ public class PVEExcelParser extends ExcelParser {
 	}
 
 	private CombatRatingInfo getCombatRatingInfo() {
-		var level = getInteger(COL_CR_LEVEL);
-		var spellCrit = getDouble(COL_CR_SPELL_CRIT);
-		var spellHit = getDouble(COL_CR_SPELL_HIT);
-		var spellHaste = getDouble(COL_CR_SPELL_HASTE);
+		var level = COL_CR_LEVEL.getInteger();
+		var spellCrit = COL_CR_SPELL_CRIT.getDouble();
+		var spellHit = COL_CR_SPELL_HIT.getDouble();
+		var spellHaste = COL_CR_SPELL_HASTE.getDouble();
 
 		return new CombatRatingInfo(level, spellCrit, spellHit, spellHaste);
 	}

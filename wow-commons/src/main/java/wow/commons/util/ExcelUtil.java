@@ -112,8 +112,7 @@ public final class ExcelUtil {
 	}
 
 	public static <T> Optional<T> getOptionalEnum(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
-		return getOptionalString(col, excelReader, header)
-				.map(str -> producer.apply(str.toUpperCase()));
+		return getOptionalString(col, excelReader, header).map(producer);
 	}
 
 	public static <T> T getEnum(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {

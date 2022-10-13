@@ -11,7 +11,14 @@ import wow.commons.model.attributes.ComplexAttribute;
  */
 public class StatConversion extends ComplexAttribute {
 	public enum Stat {
-		PET_STA, PET_INT, SP
+		PET_STA, PET_INT, SP;
+
+		public static Stat parse(String value) {
+			if (value == null || value.isEmpty()) {
+				return null;
+			}
+			return valueOf(value.toUpperCase());
+		}
 	}
 
 	private final Stat fromStat;

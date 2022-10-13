@@ -8,5 +8,12 @@ public enum ProcEvent {
 	SPELL_HIT,
 	SPELL_CRIT,
 	SPELL_RESIST,
-	SPELL_DAMAGE,
+	SPELL_DAMAGE;
+
+	public static ProcEvent parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		return valueOf(value.toUpperCase());
+	}
 }

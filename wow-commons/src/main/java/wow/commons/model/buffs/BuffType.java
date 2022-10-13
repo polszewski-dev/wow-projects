@@ -24,6 +24,13 @@ public enum BuffType {
 		this.defaultExclusionGroup = defaultExclusionGroup;
 	}
 
+	public static BuffType parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+		return valueOf(value.toUpperCase());
+	}
+
 	public BuffExclusionGroup getDefaultExclusionGroup() {
 		return defaultExclusionGroup;
 	}
