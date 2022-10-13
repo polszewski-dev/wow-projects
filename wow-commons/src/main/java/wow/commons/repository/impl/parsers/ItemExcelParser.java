@@ -1,8 +1,5 @@
 package wow.commons.repository.impl.parsers;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import polszewski.excel.reader.ExcelReader;
-import polszewski.excel.reader.PoiExcelReader;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
@@ -14,20 +11,35 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
+import wow.commons.util.ExcelParser;
 
-import java.io.IOException;
-import java.util.Map;
+import java.io.InputStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static wow.commons.util.ExcelUtil.*;
 
 /**
  * User: POlszewski
  * Date: 2021-03-14
  */
-public class ItemExcelParser {
-	private static final String XLS_FILE_PATH = "/xls/item_data.xls";
+public class ItemExcelParser extends ExcelParser {
+	private final ItemDataRepositoryImpl itemDataRepository;
+
+	public ItemExcelParser(ItemDataRepositoryImpl itemDataRepository) {
+		this.itemDataRepository = itemDataRepository;
+	}
+
+	@Override
+	protected InputStream getExcelInputStream() {
+		return fromResourcePath("/xls/item_data.xls");
+	}
+
+	@Override
+	protected Stream<SheetReader> getSheetReaders() {
+		return Stream.of(
+				new SheetReader(SHEET_ITEM_SETS, this::readItemSets, COL_ITEM_SET_NAME),
+				new SheetReader(SHEET_ENCHANTS, this::readEnchants, COL_ITEM_SET_NAME)
+		);
+	}
 
 	private static final String SHEET_ITEM_SETS = "item_sets";
 	private static final String SHEET_ENCHANTS = "enchants";
@@ -51,80 +63,47 @@ public class ItemExcelParser {
 	private static final String COL_ENCHANT_SPEED_INCREASE_PCT = "speed increase%";
 	private static final String COL_ENCHANT_SHADOW_RESIST = "shadow resist";
 
-	public static void readFromXls(ItemDataRepositoryImpl itemDataRepository) throws IOException, InvalidFormatException {
-		try (ExcelReader excelReader = new PoiExcelReader(ItemExcelParser.class.getResourceAsStream(XLS_FILE_PATH))) {
-			while (excelReader.nextSheet()) {
-				if (!excelReader.nextRow()) {
-					continue;
-				}
-
-				switch (excelReader.getCurrentSheetName()) {
-					case SHEET_ITEM_SETS:
-						readItemSets(excelReader, itemDataRepository);
-						break;
-					case SHEET_ENCHANTS:
-						readEnchants(excelReader, itemDataRepository);
-						break;
-					default:
-						throw new IllegalArgumentException("Unknown sheet: " + excelReader.getCurrentSheetName());
-				}
-			}
-		}
+	private void readItemSets() {
+		ItemSet itemSet = getItemSet();
+		itemDataRepository.addItemSet(itemSet);
 	}
 
-	private static void readItemSets(ExcelReader excelReader, ItemDataRepositoryImpl itemDataRepository) {
-		Map<String, Integer> header = getHeader(excelReader);
-
-		while (excelReader.nextRow()) {
-			if (getOptionalString(COL_ITEM_SET_NAME, excelReader, header).isPresent()) {
-				ItemSet itemSet = getItemSet(excelReader, header);
-				itemDataRepository.addItemSet(itemSet);
-			}
-		}
-	}
-
-	private static ItemSet getItemSet(ExcelReader excelReader, Map<String, Integer> header) {
-		var name = getString(COL_ITEM_SET_NAME, excelReader, header);
-		var tier = getOptionalString(COL_ITEM_SET_TIER, excelReader, header).map(Tier::parse).orElse(null);
-		var classes = getList(COL_ITEM_SET_CLASS, x -> CharacterClass.parse(x.trim()), excelReader, header);
+	private ItemSet getItemSet() {
+		var name = getString(COL_ITEM_SET_NAME);
+		var tier = getOptionalString(COL_ITEM_SET_TIER).map(Tier::parse).orElse(null);
+		var classes = getList(COL_ITEM_SET_CLASS, x -> CharacterClass.parse(x.trim()));
 
 		return new ItemSet(name, tier, classes);
 	}
 
-	private static void readEnchants(ExcelReader excelReader, ItemDataRepositoryImpl itemDataRepository) {
-		Map<String, Integer> header = getHeader(excelReader);
-
-		while (excelReader.nextRow()) {
-			if (getOptionalString(COL_ITEM_SET_NAME, excelReader, header).isPresent()) {
-				Enchant enchant = getEnchant(excelReader, header);
-				itemDataRepository.addEnchant(enchant);
-			}
-		}
+	private void readEnchants() {
+		Enchant enchant = getEnchant();
+		itemDataRepository.addEnchant(enchant);
 	}
 
-	private static Enchant getEnchant(ExcelReader excelReader, Map<String, Integer> header) {
-		var id = getInteger(COL_ENCHANT_ID, excelReader, header);
-		var name = getString(COL_ENCHANT_NAME, excelReader, header);
-		var itemTypes = Stream.of(getString(COL_ENCHANT_ITEM_TYPES, excelReader, header).split(","))
+	private Enchant getEnchant() {
+		var id = getInteger(COL_ENCHANT_ID);
+		var name = getString(COL_ENCHANT_NAME);
+		var itemTypes = Stream.of(getString(COL_ENCHANT_ITEM_TYPES).split(","))
 				.map(x -> ItemType.parse(x.trim()))
 				.collect(Collectors.toList());
-		var itemStats = getEnchantStats(excelReader, header);
+		var itemStats = getEnchantStats();
 
 		return new Enchant(id, name, itemTypes, itemStats);
 	}
 
-	private static Attributes getEnchantStats(ExcelReader excelReader, Map<String, Integer> header) {
-		var sp = getOptionalInteger(COL_ENCHANT_SP, excelReader, header).orElse(0);
-		var spShadow = getOptionalInteger(COL_ENCHANT_SP_SHADOW, excelReader, header).orElse(0);
-		var spellCritRating = getOptionalInteger(COL_ENCHANT_SPELL_CRIT_RATING, excelReader, header).orElse(0);
-		var spellHitRating = getOptionalInteger(COL_ENCHANT_SPELL_HIT_RATING, excelReader, header).orElse(0);
-		var allStats = getOptionalInteger(COL_ENCHANT_ALL_STATS, excelReader, header).orElse(0);
-		var sta = getOptionalInteger(COL_ENCHANT_STA, excelReader, header).orElse(0);
-		var int_ = getOptionalInteger(COL_ENCHANT_INT, excelReader, header).orElse(0);
-		var spi = getOptionalInteger(COL_ENCHANT_SPI, excelReader, header).orElse(0);
-		var threatReductionPct = getOptionalPercent(COL_ENCHANT_THREAT_REDUCTION_PCT, excelReader, header).orElse(null);
-		var speedIncreasePct = getOptionalPercent(COL_ENCHANT_SPEED_INCREASE_PCT, excelReader, header).orElse(null);
-		var shadowResist = getOptionalInteger(COL_ENCHANT_SHADOW_RESIST, excelReader, header).orElse(0);
+	private Attributes getEnchantStats() {
+		var sp = getOptionalInteger(COL_ENCHANT_SP).orElse(0);
+		var spShadow = getOptionalInteger(COL_ENCHANT_SP_SHADOW).orElse(0);
+		var spellCritRating = getOptionalInteger(COL_ENCHANT_SPELL_CRIT_RATING).orElse(0);
+		var spellHitRating = getOptionalInteger(COL_ENCHANT_SPELL_HIT_RATING).orElse(0);
+		var allStats = getOptionalInteger(COL_ENCHANT_ALL_STATS).orElse(0);
+		var sta = getOptionalInteger(COL_ENCHANT_STA).orElse(0);
+		var int_ = getOptionalInteger(COL_ENCHANT_INT).orElse(0);
+		var spi = getOptionalInteger(COL_ENCHANT_SPI).orElse(0);
+		var threatReductionPct = getOptionalPercent(COL_ENCHANT_THREAT_REDUCTION_PCT).orElse(null);
+		var speedIncreasePct = getOptionalPercent(COL_ENCHANT_SPEED_INCREASE_PCT).orElse(null);
+		var shadowResist = getOptionalInteger(COL_ENCHANT_SHADOW_RESIST).orElse(0);
 
 		AttributesBuilder itemStats = new AttributesBuilder();
 

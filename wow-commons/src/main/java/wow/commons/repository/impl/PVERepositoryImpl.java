@@ -73,7 +73,8 @@ public class PVERepositoryImpl implements PVERepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		PVEExcelParser.readFromXls(this);
+		var pveExcelParser = new PVEExcelParser(this);
+		pveExcelParser.readFromXls();
 
 		for (Instance instance : instanceByName.values()) {
 			instance.setBosses(new ArrayList<>());

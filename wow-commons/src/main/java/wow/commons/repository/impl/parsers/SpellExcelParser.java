@@ -1,8 +1,5 @@
 package wow.commons.repository.impl.parsers;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import polszewski.excel.reader.ExcelReader;
-import polszewski.excel.reader.PoiExcelReader;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
@@ -24,59 +21,54 @@ import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.PetType;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
+import wow.commons.util.ExcelParser;
 
-import java.io.IOException;
-import java.util.*;
-
-import static wow.commons.util.ExcelUtil.*;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2021-09-25
  */
-public class SpellExcelParser {
-	public static void readFromXls(SpellDataRepositoryImpl spellDataRepository) throws IOException, InvalidFormatException {
-		try (ExcelReader excelReader = new PoiExcelReader(SpellExcelParser.class.getResourceAsStream("/xls/spell_data.xls"))) {
-			while (excelReader.nextSheet()) {
-				if (!excelReader.nextRow()) {
-					continue;
-				}
+public class SpellExcelParser extends ExcelParser {
+	private final SpellDataRepositoryImpl spellDataRepository;
 
-				switch (excelReader.getCurrentSheetName()) {
-					case SHEET_SPELLS:
-						readSpells(excelReader, spellDataRepository);
-						break;
-					case SHEET_RANKS:
-						readRanks(excelReader, spellDataRepository);
-						break;
-					case SHEET_TALENTS:
-						readTalents(excelReader, spellDataRepository);
-						break;
-					case SHEET_EFFECTS:
-						readEffects(excelReader, spellDataRepository);
-						break;
-					case SHEET_BUFFS:
-						readBuffs(excelReader, spellDataRepository);
-						break;
-					default:
-						throw new IllegalArgumentException("Unknown sheet: " + excelReader.getCurrentSheetName());
-				}
-			}
-		}
+	public SpellExcelParser(SpellDataRepositoryImpl spellDataRepository) {
+		this.spellDataRepository = spellDataRepository;
 	}
 
-	private static class BenefitAttributeColumns {
-		private static abstract class Column {
+	@Override
+	protected InputStream getExcelInputStream() {
+		return fromResourcePath("/xls/spell_data.xls");
+	}
+
+	@Override
+	protected Stream<SheetReader> getSheetReaders() {
+		return Stream.of(
+			new SheetReader(SHEET_SPELLS, this::readSpells, COL_SPELL_SPELL),
+			new SheetReader(SHEET_RANKS, this::readRanks, COL_RANK_SPELL),
+			new SheetReader(SHEET_TALENTS, this::readTalents, COL_TALENT_TALENT),
+			new SheetReader(SHEET_EFFECTS, this::readEffects, COL_EFFECT_EFFECT),
+			new SheetReader(SHEET_BUFFS, this::readBuffs, COL_BUFF_NAME)
+		);
+	}
+
+	private class BenefitAttributeColumns {
+		private abstract class Column {
 			final AttributeId id;
 
 			Column(AttributeId id) {
 				this.id = id;
 			}
 
-			abstract Attribute readAttribute(ExcelReader excelReader, Map<String, Integer> header);
+			abstract Attribute readAttribute();
 		}
 
-		private static class SimpleColumn extends Column {
+		private class SimpleColumn extends Column {
 			final String name;
 
 			SimpleColumn(String name, AttributeId id) {
@@ -85,28 +77,28 @@ public class SpellExcelParser {
 			}
 
 			@Override
-			Attribute readAttribute(ExcelReader excelReader, Map<String, Integer> header) {
+			Attribute readAttribute() {
 				if (id.isDoubleAttribute()) {
-					var value = getOptionalDouble(name, excelReader, header).orElse(0);
+					var value = getOptionalDouble(name).orElse(0);
 					return Attribute.ofNullable(id, value);
 				}
 				if (id.isPercentAttribute()) {
-					var value = getOptionalPercent(name, excelReader, header).orElse(null);
+					var value = getOptionalPercent(name).orElse(null);
 					return Attribute.ofNullable(id, value);
 				}
 				if (id.isBooleanAttribute()) {
-					var value = getBoolean(name, excelReader, header);
+					var value = getBoolean(name);
 					return Attribute.ofNullable(id, value);
 				}
 				if (id.isDurationAttribute()) {
-					var value = getOptionalDuration(name, excelReader, header).orElse(null);
+					var value = getOptionalDuration(name).orElse(null);
 					return Attribute.ofNullable(id, value);
 				}
 				throw new IllegalArgumentException("Unhandled type: " + id.getType());
 			}
 		}
 
-		private static class StatConversionColumn extends Column {
+		private class StatConversionColumn extends Column {
 			final String colConversionFrom;
 			final String colConversionTo;
 			final String colConversionRationPct;
@@ -119,12 +111,12 @@ public class SpellExcelParser {
 			}
 
 			@Override
-			Attribute readAttribute(ExcelReader excelReader, Map<String, Integer> header) {
-				var conversionFrom = getOptionalEnum(colConversionFrom, StatConversion.Stat::valueOf, excelReader, header).orElse(null);
-				var conversionTo = getOptionalEnum(colConversionTo, StatConversion.Stat::valueOf, excelReader, header).orElse(null);
+			Attribute readAttribute() {
+				var conversionFrom = getOptionalEnum(colConversionFrom, StatConversion.Stat::valueOf).orElse(null);
+				var conversionTo = getOptionalEnum(colConversionTo, StatConversion.Stat::valueOf).orElse(null);
 
 				if (conversionFrom != null && conversionTo != null) {
-					var conversionRatioPct = getPercent(colConversionRationPct, excelReader, header);
+					var conversionRatioPct = getPercent(colConversionRationPct);
 					return new StatConversion(conversionFrom, conversionTo, conversionRatioPct, null);
 				} else if (conversionFrom != null || conversionTo != null) {
 					throw new IllegalArgumentException("Missing conversion from or to");
@@ -134,7 +126,7 @@ public class SpellExcelParser {
 			}
 		}
 
-		private static class ProcTriggerColumn extends Column {
+		private class ProcTriggerColumn extends Column {
 			final String colType;
 			final String colChancePct;
 			final String colEffect;
@@ -151,23 +143,23 @@ public class SpellExcelParser {
 			}
 
 			@Override
-			public Attribute readAttribute(ExcelReader excelReader, Map<String, Integer> header) {
-				var effectId = getOptionalString(colEffect, excelReader, header).map(EffectId::parse).orElse(null);
+			public Attribute readAttribute() {
+				var effectId = getOptionalString(colEffect).map(EffectId::parse).orElse(null);
 
 				if (effectId == null) {
 					return null;
 				}
 
-				var type = getEnum(colType, ProcEvent::valueOf, excelReader, header);
-				var chancePct = getOptionalPercent(colChancePct, excelReader, header).orElse(Percent._100);
-				var duration = getOptionalDuration(colDuration, excelReader, header).orElse(Duration.INFINITE);
-				var stacks = getOptionalInteger(colStacks, excelReader, header).orElse(1);
+				var type = getEnum(colType, ProcEvent::valueOf);
+				var chancePct = getOptionalPercent(colChancePct).orElse(Percent._100);
+				var duration = getOptionalDuration(colDuration).orElse(Duration.INFINITE);
+				var stacks = getOptionalInteger(colStacks).orElse(1);
 
 				return SpecialAbility.talentProc(type, chancePct, effectId, duration, stacks);
 			}
 		}
 
-		private static class EffectIncreasePerEffectOnTargetColumn extends Column {
+		private class EffectIncreasePerEffectOnTargetColumn extends Column {
 			final String colEffectTree;
 			final String colIncreasePerEffectPct;
 			final String colMaxIncreasePct;
@@ -180,15 +172,15 @@ public class SpellExcelParser {
 			}
 
 			@Override
-			public Attribute readAttribute(ExcelReader excelReader, Map<String, Integer> header) {
-				var effectTree = getOptionalEnum(colEffectTree, TalentTree::parse, excelReader, header).orElse(null);
+			public Attribute readAttribute() {
+				var effectTree = getOptionalEnum(colEffectTree, TalentTree::parse).orElse(null);
 
 				if (effectTree == null) {
 					return null;
 				}
 
-				var increasePerEffectPct = getPercent(colIncreasePerEffectPct, excelReader, header);
-				var maxIncreasePct = getPercent(colMaxIncreasePct, excelReader, header);
+				var increasePerEffectPct = getPercent(colIncreasePerEffectPct);
+				var maxIncreasePct = getPercent(colMaxIncreasePct);
 
 				return new EffectIncreasePerEffectOnTarget(effectTree, increasePerEffectPct, maxIncreasePct, null);
 			}
@@ -230,10 +222,10 @@ public class SpellExcelParser {
 			return this;
 		}
 
-		Attributes readAttributes(ExcelReader excelReader, Map<String, Integer> header, TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes) {
+		Attributes readAttributes(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes) {
 			AttributesBuilder result = new AttributesBuilder();
 			for (Column column : columns) {
-				Attribute attribute = column.readAttribute(excelReader, header);
+				Attribute attribute = column.readAttribute();
 				if (attribute != null) {
 					spells = !spells.isEmpty() ? spells : Collections.singleton(null);
 					petTypes = !petTypes.isEmpty() ? petTypes : Collections.singleton(null);
@@ -327,7 +319,7 @@ public class SpellExcelParser {
 	private static final String COL_BUFF_DESCRIPTION = "description";
 	private static final String COL_BUFF_SOURCE_SPELL = "source spell";
 
-	private static final BenefitAttributeColumns TALENT_COLUMNS = new BenefitAttributeColumns()
+	private final BenefitAttributeColumns TALENT_COLUMNS = new BenefitAttributeColumns()
 			.add(AttributeId.castTimeReduction, "cast time reduction")
 			.add(AttributeId.cooldownReduction, "cooldown reduction")
 			.add(AttributeId.costReductionPct, "cost reduction%")
@@ -381,7 +373,7 @@ public class SpellExcelParser {
 
 			;
 
-	private static final BenefitAttributeColumns EFFECT_COLUMNS = new BenefitAttributeColumns()
+	private final BenefitAttributeColumns EFFECT_COLUMNS = new BenefitAttributeColumns()
 			.add(AttributeId.effectIncreasePct, "effect increase%")
 			.add(AttributeId.damageTakenIncreasePct, "damage taken increase%")
 			.add(AttributeId.SpellDamage, "sp bonus")
@@ -389,47 +381,41 @@ public class SpellExcelParser {
 			;
 
 
-	private static void readSpells(ExcelReader excelReader, SpellDataRepositoryImpl spellDataRepository) {
-		Map<String, Integer> header = getHeader(excelReader);
+	private void readSpells() {
+		SpellInfo spellInfo = getSpellInfo();
 
-		while (excelReader.nextRow()) {
-			if (getOptionalString(COL_SPELL_SPELL, excelReader, header).isPresent()) {
-				SpellInfo spellInfo = getSpellInfo(excelReader, header);
-
-				if (spellDataRepository.getSpellInfo(spellInfo.getSpellId()) != null) {
-					throw new IllegalArgumentException("Duplicate: " + spellInfo.getSpellId());
-				}
-
-				spellDataRepository.addSpellInfo(spellInfo);
-			}
+		if (spellDataRepository.getSpellInfo(spellInfo.getSpellId()) != null) {
+			throw new IllegalArgumentException("Duplicate: " + spellInfo.getSpellId());
 		}
+
+		spellDataRepository.addSpellInfo(spellInfo);
 	}
 
-	private static SpellInfo getSpellInfo(ExcelReader excelReader, Map<String, Integer> header) {
-		var spellId = SpellId.parse(getString(COL_SPELL_SPELL, excelReader, header));
-		var talentTree = getEnum(COL_SPELL_TREE, TalentTree::parse, excelReader, header);
-		var spellSchool = getOptionalEnum(COL_SPELL_SCHOOL, SpellSchool::parse, excelReader, header).orElse(null);
-		var coeffDirect = getOptionalPercent(COL_SPELL_COEFF_DIRECT, excelReader, header).orElse(Percent.ZERO);
-		var coeffDot = getOptionalPercent(COL_SPELL_COEFF_DOT, excelReader, header).orElse(Percent.ZERO);
-		var cooldown = getOptionalDuration(COL_SPELL_COOLDOWN, excelReader, header).orElse(null);
-		var ignoresGCD = getBoolean(COL_SPELL_IGNORES_GCD, excelReader, header);
-		var requiredTalent = getOptionalString(COL_SPELL_REQUITED_TALENT, excelReader, header).map(TalentId::parse).orElse(null);
-		var bolt = getBoolean(COL_SPELL_BOLT, excelReader, header);
-		var requiredEffect = getOptionalString(COL_SPELL_REQUITED_EFFECT, excelReader, header).map(EffectId::parse).orElse(null);
-		var effectRemovedOnHit = getOptionalString(COL_SPELL_EFFECT_REMOVED_ON_HIT, excelReader, header).map(EffectId::parse).orElse(null);
-		var bonusDamageIfUnderEffect = getOptionalString(COL_SPELL_BONUS_DAMAGE_IF_UNDER_EFFECT, excelReader, header).map(EffectId::parse).orElse(null);
-		var dotScheme = getList(COL_SPELL_DOT_SCHEME, Integer::parseInt, excelReader, header);
-		var conversion = getConversion(excelReader, header);
+	private SpellInfo getSpellInfo() {
+		var spellId = SpellId.parse(getString(COL_SPELL_SPELL));
+		var talentTree = getEnum(COL_SPELL_TREE, TalentTree::parse);
+		var spellSchool = getOptionalEnum(COL_SPELL_SCHOOL, SpellSchool::parse).orElse(null);
+		var coeffDirect = getOptionalPercent(COL_SPELL_COEFF_DIRECT).orElse(Percent.ZERO);
+		var coeffDot = getOptionalPercent(COL_SPELL_COEFF_DOT).orElse(Percent.ZERO);
+		var cooldown = getOptionalDuration(COL_SPELL_COOLDOWN).orElse(null);
+		var ignoresGCD = getBoolean(COL_SPELL_IGNORES_GCD);
+		var requiredTalent = getOptionalString(COL_SPELL_REQUITED_TALENT).map(TalentId::parse).orElse(null);
+		var bolt = getBoolean(COL_SPELL_BOLT);
+		var requiredEffect = getOptionalString(COL_SPELL_REQUITED_EFFECT).map(EffectId::parse).orElse(null);
+		var effectRemovedOnHit = getOptionalString(COL_SPELL_EFFECT_REMOVED_ON_HIT).map(EffectId::parse).orElse(null);
+		var bonusDamageIfUnderEffect = getOptionalString(COL_SPELL_BONUS_DAMAGE_IF_UNDER_EFFECT).map(EffectId::parse).orElse(null);
+		var dotScheme = getList(COL_SPELL_DOT_SCHEME, Integer::parseInt);
+		var conversion = getConversion();
 
 		return new SpellInfo(spellId, talentTree, spellSchool, coeffDirect, coeffDot, cooldown, ignoresGCD, requiredTalent, bolt, conversion, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect, dotScheme);
 	}
 
-	private static Conversion getConversion(ExcelReader excelReader, Map<String, Integer> header) {
-		var conversionFrom = getOptionalEnum(COL_SPELL_CONVERSION_FROM, Conversion.From::valueOf, excelReader, header).orElse(null);
-		var conversionTo = getOptionalEnum(COL_SPELL_CONVERSION_TO, Conversion.To::valueOf, excelReader, header).orElse(null);
+	private Conversion getConversion() {
+		var conversionFrom = getOptionalEnum(COL_SPELL_CONVERSION_FROM, Conversion.From::valueOf).orElse(null);
+		var conversionTo = getOptionalEnum(COL_SPELL_CONVERSION_TO, Conversion.To::valueOf).orElse(null);
 
 		if (conversionFrom != null && conversionTo != null) {
-			var conversionPct = getPercent(COL_SPELL_CONVERSION_PCT, excelReader, header);
+			var conversionPct = getPercent(COL_SPELL_CONVERSION_PCT);
 			return new Conversion(conversionFrom, conversionTo, conversionPct);
 		} else if (conversionFrom != null || conversionTo != null) {
 			throw new IllegalArgumentException("Conversion misses either from or to part");
@@ -438,44 +424,38 @@ public class SpellExcelParser {
 		return null;
 	}
 
-	private static void readRanks(ExcelReader excelReader, SpellDataRepositoryImpl spellDataRepository) {
-		Map<String, Integer> header = getHeader(excelReader);
+	private void readRanks() {
+		SpellRankInfo spellRankInfo = getSpellRankInfo();
+		SpellInfo spellInfo = spellDataRepository.getSpellInfo(spellRankInfo.getSpellId());
 
-		while (excelReader.nextRow()) {
-			if (getOptionalString(COL_RANK_SPELL, excelReader, header).isPresent()) {
-				SpellRankInfo spellRankInfo = getSpellRankInfo(excelReader, header);
-				SpellInfo spellInfo = spellDataRepository.getSpellInfo(spellRankInfo.getSpellId());
-
-				if (spellInfo == null) {
-					throw new IllegalArgumentException("No spell: " + spellRankInfo.getSpellId());
-				}
-
-				if (spellInfo.getRanks().containsKey(spellRankInfo.getRank())) {
-					throw new IllegalArgumentException("Duplicate rank: " + spellRankInfo.getSpellId() + " " + spellRankInfo.getRank());
-				}
-
-				spellInfo.getRanks().put(spellRankInfo.getRank(), spellRankInfo);
-			}
+		if (spellInfo == null) {
+			throw new IllegalArgumentException("No spell: " + spellRankInfo.getSpellId());
 		}
+
+		if (spellInfo.getRanks().containsKey(spellRankInfo.getRank())) {
+			throw new IllegalArgumentException("Duplicate rank: " + spellRankInfo.getSpellId() + " " + spellRankInfo.getRank());
+		}
+
+		spellInfo.getRanks().put(spellRankInfo.getRank(), spellRankInfo);
 	}
 
-	private static SpellRankInfo getSpellRankInfo(ExcelReader excelReader, Map<String, Integer> header) {
-		var spellId = SpellId.parse(getString(COL_RANK_SPELL, excelReader, header));
-		var rank = getOptionalInteger(COL_RANK_RANK, excelReader, header).orElse(0);
-		var level = getInteger(COL_RANK_LEVEL, excelReader, header);
-		var manaCost = getInteger(COL_RANK_MANA_COST, excelReader, header);
-		var castTime = getDuration(COL_RANK_CAST_TIME, excelReader, header);
-		var channeled = getBoolean(COL_RANK_CHANNELED, excelReader, header);
-		var minDmg = getOptionalInteger(COL_RANK_MIN_DMG, excelReader, header).orElse(0);
-		var maxDmg = getOptionalInteger(COL_RANK_MAX_DMG, excelReader, header).orElse(0);
-		var dotDmg = getOptionalInteger(COL_RANK_DOT_DMG, excelReader, header).orElse(0);
-		var numTicks = getOptionalInteger(COL_RANK_NUM_TICKS, excelReader, header).orElse(0);
-		var tickInterval = getOptionalDuration(COL_RANK_TICK_INTERVAL, excelReader, header).orElse(null);
-		var minDmg2 = getOptionalInteger(COL_RANK_MIN_DMG2, excelReader, header).orElse(0);
-		var maxDmg2 = getOptionalInteger(COL_RANK_MAX_DMG2, excelReader, header).orElse(0);
-		var appliedEffect = getOptionalString(COL_RANK_APPLIED_EFFECT, excelReader, header).map(EffectId::parse).orElse(null);
-		var appliedEffectDuration = getOptionalDuration(COL_RANK_APPLIED_EFFECT_DURATION, excelReader, header).orElse(null);
-		var additionalCost = getAdditionalCost(excelReader, header);
+	private SpellRankInfo getSpellRankInfo() {
+		var spellId = SpellId.parse(getString(COL_RANK_SPELL));
+		var rank = getOptionalInteger(COL_RANK_RANK).orElse(0);
+		var level = getInteger(COL_RANK_LEVEL);
+		var manaCost = getInteger(COL_RANK_MANA_COST);
+		var castTime = getDuration(COL_RANK_CAST_TIME);
+		var channeled = getBoolean(COL_RANK_CHANNELED);
+		var minDmg = getOptionalInteger(COL_RANK_MIN_DMG).orElse(0);
+		var maxDmg = getOptionalInteger(COL_RANK_MAX_DMG).orElse(0);
+		var dotDmg = getOptionalInteger(COL_RANK_DOT_DMG).orElse(0);
+		var numTicks = getOptionalInteger(COL_RANK_NUM_TICKS).orElse(0);
+		var tickInterval = getOptionalDuration(COL_RANK_TICK_INTERVAL).orElse(null);
+		var minDmg2 = getOptionalInteger(COL_RANK_MIN_DMG2).orElse(0);
+		var maxDmg2 = getOptionalInteger(COL_RANK_MAX_DMG2).orElse(0);
+		var appliedEffect = getOptionalString(COL_RANK_APPLIED_EFFECT).map(EffectId::parse).orElse(null);
+		var appliedEffectDuration = getOptionalDuration(COL_RANK_APPLIED_EFFECT_DURATION).orElse(null);
+		var additionalCost = getAdditionalCost();
 
 		if (appliedEffect != null && appliedEffectDuration == null) {
 			appliedEffectDuration = Duration.INFINITE;
@@ -484,126 +464,106 @@ public class SpellExcelParser {
 		return new SpellRankInfo(spellId, rank, level, manaCost, castTime, channeled, minDmg, maxDmg, minDmg2, maxDmg2, dotDmg, numTicks, tickInterval, additionalCost, appliedEffect, appliedEffectDuration);
 	}
 
-	private static AdditionalCost getAdditionalCost(ExcelReader excelReader, Map<String, Integer> header) {
-		var additionalCostType = getOptionalEnum(COL_RANK_ADDITIONAL_COST_TYPE, CostType::valueOf, excelReader, header).orElse(null);
+	private AdditionalCost getAdditionalCost() {
+		var additionalCostType = getOptionalEnum(COL_RANK_ADDITIONAL_COST_TYPE, CostType::valueOf).orElse(null);
 
 		if (additionalCostType == null) {
 			return null;
 		}
 
-		var additionalCostAmount = getInteger(COL_RANK_ADDITIONAL_COST_AMOUNT, excelReader, header);
-		var additionalCostScaled = getBoolean(COL_RANK_ADDITIONAL_COST_SCALED, excelReader, header);
+		var additionalCostAmount = getInteger(COL_RANK_ADDITIONAL_COST_AMOUNT);
+		var additionalCostScaled = getBoolean(COL_RANK_ADDITIONAL_COST_SCALED);
 
 		return new AdditionalCost(additionalCostType, additionalCostAmount, additionalCostScaled);
 	}
 
-	private static void readTalents(ExcelReader excelReader, SpellDataRepositoryImpl spellDataRepository) {
-		Map<String, Integer> header = getHeader(excelReader);
-
-		while (excelReader.nextRow()) {
-			if (getOptionalString(COL_TALENT_TALENT, excelReader, header).isPresent()) {
-				TalentInfo talentInfo = getTalentInfo(excelReader, header);
-				Attributes talentBenefit = getTalentBenefit(excelReader, header);
-
-				spellDataRepository.addTalent(talentInfo, talentBenefit);
-			}
-		}
+	private void readTalents() {
+		TalentInfo talentInfo = getTalentInfo();
+		Attributes talentBenefit = getTalentBenefit();
+		spellDataRepository.addTalent(talentInfo, talentBenefit);
 	}
 
-	private static TalentInfo getTalentInfo(ExcelReader excelReader, Map<String, Integer> header) {
-		var talentName = TalentId.parse(getString(COL_TALENT_TALENT, excelReader, header));
-		var rank = getInteger(COL_TALENT_RANK, excelReader, header);
-		var maxRank = getInteger(COL_TALENT_MAX_RANK, excelReader, header);
-		var description = getOptionalString(COL_TALENT_DESCRIPTION, excelReader, header).orElse(null);
+	private TalentInfo getTalentInfo() {
+		var talentName = TalentId.parse(getString(COL_TALENT_TALENT));
+		var rank = getInteger(COL_TALENT_RANK);
+		var maxRank = getInteger(COL_TALENT_MAX_RANK);
+		var description = getOptionalString(COL_TALENT_DESCRIPTION).orElse(null);
 
 		return new TalentInfo(talentName, rank, maxRank, description, Attributes.EMPTY);
 	}
 
-	private static Attributes getTalentBenefit(ExcelReader excelReader, Map<String, Integer> header) {
-		var talentTree = getOptionalEnum(COL_TALENT_TREE, TalentTree::parse, excelReader, header).orElse(null);
-		var spellSchool = getOptionalEnum(COL_TALENT_SCHOOL, SpellSchool::parse, excelReader, header).orElse(null);
-		var spells = getSet(COL_TALENT_SPELL, SpellId::parse, excelReader, header);
-		var petTypes = getSet(COL_TALENT_PET, PetType::parse, excelReader, header);
+	private Attributes getTalentBenefit() {
+		var talentTree = getOptionalEnum(COL_TALENT_TREE, TalentTree::parse).orElse(null);
+		var spellSchool = getOptionalEnum(COL_TALENT_SCHOOL, SpellSchool::parse).orElse(null);
+		var spells = getSet(COL_TALENT_SPELL, SpellId::parse);
+		var petTypes = getSet(COL_TALENT_PET, PetType::parse);
 
-		return TALENT_COLUMNS.readAttributes(excelReader, header, talentTree, spellSchool, spells, petTypes);
+		return TALENT_COLUMNS.readAttributes(talentTree, spellSchool, spells, petTypes);
 	}
 
-	private static void readEffects(ExcelReader excelReader, SpellDataRepositoryImpl spellDataRepository) {
-		Map<String, Integer> header = getHeader(excelReader);
-
-		while (excelReader.nextRow()) {
-			if (getOptionalString(COL_EFFECT_EFFECT, excelReader, header).isPresent()) {
-				EffectInfo effectInfo = getEffectInfo(excelReader, header);
-				spellDataRepository.addEffectInfo(effectInfo);
-			}
-		}
+	private void readEffects() {
+		EffectInfo effectInfo = getEffectInfo();
+		spellDataRepository.addEffectInfo(effectInfo);
 	}
 
-	private static EffectInfo getEffectInfo(ExcelReader excelReader, Map<String, Integer> header) {
-		var effectId = EffectId.parse(getString(COL_EFFECT_EFFECT, excelReader, header));
-
-		var friendly = getBoolean(COL_EFFECT_FRIENDLY, excelReader, header);
-		var scope = getOptionalEnum(COL_EFFECT_SCOPE, Scope::valueOf, excelReader, header).orElse(Scope.PERSONAL);
-		var maxStacks = getOptionalInteger(COL_EFFECT_MAX_STACKS, excelReader, header).orElse(1);
-		var onApply = getOptionalEnum(COL_EFFECT_ON_APPLY, OnApply::valueOf, excelReader, header).orElse(null);
-		var stackScaling = getBoolean(COL_EFFECT_STACK_SCALING, excelReader, header);
-		var attributes = getEffectAttributes(excelReader, header);
-		var removeCondition = getRemoveCondition(excelReader, header);
+	private EffectInfo getEffectInfo() {
+		var effectId = EffectId.parse(getString(COL_EFFECT_EFFECT));
+		var friendly = getBoolean(COL_EFFECT_FRIENDLY);
+		var scope = getOptionalEnum(COL_EFFECT_SCOPE, Scope::valueOf).orElse(Scope.PERSONAL);
+		var maxStacks = getOptionalInteger(COL_EFFECT_MAX_STACKS).orElse(1);
+		var onApply = getOptionalEnum(COL_EFFECT_ON_APPLY, OnApply::valueOf).orElse(null);
+		var stackScaling = getBoolean(COL_EFFECT_STACK_SCALING);
+		var attributes = getEffectAttributes();
+		var removeCondition = getRemoveCondition();
 
 		return new EffectInfo(effectId, friendly, scope, maxStacks, removeCondition, onApply, attributes, stackScaling);
 	}
 
-	private static Attributes getEffectAttributes(ExcelReader excelReader, Map<String, Integer> header) {
-		var talentTree = getOptionalEnum(COL_EFFECT_TREE, TalentTree::parse, excelReader, header).orElse(null);
-		var spellSchool = getOptionalEnum(COL_EFFECT_SCHOOL, SpellSchool::parse, excelReader, header).orElse(null);
-		var spells = getSet(COL_EFFECT_SPELL, SpellId::parse, excelReader, header);
-		var petTypes = getSet(COL_EFFECT_PET, PetType::parse, excelReader, header);
+	private Attributes getEffectAttributes() {
+		var talentTree = getOptionalEnum(COL_EFFECT_TREE, TalentTree::parse).orElse(null);
+		var spellSchool = getOptionalEnum(COL_EFFECT_SCHOOL, SpellSchool::parse).orElse(null);
+		var spells = getSet(COL_EFFECT_SPELL, SpellId::parse);
+		var petTypes = getSet(COL_EFFECT_PET, PetType::parse);
 
-		return EFFECT_COLUMNS.readAttributes(excelReader, header, talentTree, spellSchool, spells, petTypes);
+		return EFFECT_COLUMNS.readAttributes(talentTree, spellSchool, spells, petTypes);
 	}
 
-	private static RemoveCondition getRemoveCondition(ExcelReader excelReader, Map<String, Integer> header) {
-		var removeConditionEvent = getOptionalEnum(COL_EFFECT_REMOVE_AFTER, RemoveEvent::valueOf, excelReader, header).orElse(null);
-		var removeConditionSpellSchool = getOptionalEnum(COL_EFFECT_REMOVE_AFTER_SCHOOL, SpellSchool::parse, excelReader, header).orElse(null);
+	private RemoveCondition getRemoveCondition() {
+		var removeConditionEvent = getOptionalEnum(COL_EFFECT_REMOVE_AFTER, RemoveEvent::valueOf).orElse(null);
+		var removeConditionSpellSchool = getOptionalEnum(COL_EFFECT_REMOVE_AFTER_SCHOOL, SpellSchool::parse).orElse(null);
 
 		return RemoveCondition.create(removeConditionEvent, removeConditionSpellSchool);
 	}
 
-	private static void readBuffs(ExcelReader excelReader, SpellDataRepositoryImpl spellDataRepository) {
-		Map<String, Integer> header = getHeader(excelReader);
-
-		while (excelReader.nextRow()) {
-			if (getOptionalString(COL_BUFF_NAME, excelReader, header).isPresent()) {
-				Buff buff = getBuff(excelReader, header);
-				spellDataRepository.addBuff(buff);
-			}
-		}
+	private void readBuffs() {
+		Buff buff = getBuff();
+		spellDataRepository.addBuff(buff);
 	}
 
-	private static Buff getBuff(ExcelReader excelReader, Map<String, Integer> header) {
-		var buffId = getInteger(COL_BUFF_ID, excelReader, header);
-		var name = getString(COL_BUFF_NAME, excelReader, header);
-		var level = getOptionalInteger(COL_BUFF_LEVEL, excelReader, header).orElse(0);
-		var type = getEnum(COL_BUFF_TYPE, BuffType::valueOf, excelReader, header);
-		var exclusionGroup = getOptionalEnum(COL_BUFF_EXCLUSION_GROUP, BuffExclusionGroup::valueOf, excelReader, header).orElse(null);
-		var duration = getOptionalDuration(COL_BUFF_DURATION, excelReader, header).orElse(null);
-		var cooldown = getOptionalDuration(COL_BUFF_COOLDOWN, excelReader, header).orElse(null);
-		var description = getOptionalString(COL_BUFF_DESCRIPTION, excelReader, header).orElse(null);
-		var sourceSpell = getOptionalEnum(COL_BUFF_SOURCE_SPELL, SpellId::parse, excelReader, header).orElse(null);
-		var buffAttributes = getBuffAttributes(excelReader, header);
+	private Buff getBuff() {
+		var buffId = getInteger(COL_BUFF_ID);
+		var name = getString(COL_BUFF_NAME);
+		var level = getOptionalInteger(COL_BUFF_LEVEL).orElse(0);
+		var type = getEnum(COL_BUFF_TYPE, BuffType::valueOf);
+		var exclusionGroup = getOptionalEnum(COL_BUFF_EXCLUSION_GROUP, BuffExclusionGroup::valueOf).orElse(null);
+		var duration = getOptionalDuration(COL_BUFF_DURATION).orElse(null);
+		var cooldown = getOptionalDuration(COL_BUFF_COOLDOWN).orElse(null);
+		var description = getOptionalString(COL_BUFF_DESCRIPTION).orElse(null);
+		var sourceSpell = getOptionalEnum(COL_BUFF_SOURCE_SPELL, SpellId::parse).orElse(null);
+		var buffAttributes = getBuffAttributes();
 
 		return new Buff(buffId, name, level, type, exclusionGroup, buffAttributes, sourceSpell, duration, cooldown, description);
 	}
 
-	private static Attributes getBuffAttributes(ExcelReader excelReader, Map<String, Integer> header) {
+	private Attributes getBuffAttributes() {
 		AttributesBuilder builder = new AttributesBuilder();
 		int maxAttributes = 5;
 
 		for (int statNo = 1; statNo <= maxAttributes; ++statNo) {
-			var attributeStr = getOptionalString(COL_BUFF_STAT + statNo, excelReader, header);
+			var attributeStr = getOptionalString(COL_BUFF_STAT + statNo);
 			if (attributeStr.isPresent()) {
 				SimpleAttributeParser attributeParser = new SimpleAttributeParser(attributeStr.get());
-				int amount = getInteger(COL_BUFF_AMOUNT + statNo, excelReader, header);
+				int amount = getInteger(COL_BUFF_AMOUNT + statNo);
 				for (Attribute attribute : attributeParser.getAttributes(amount)) {
 					builder.addAttribute(attribute);
 				}

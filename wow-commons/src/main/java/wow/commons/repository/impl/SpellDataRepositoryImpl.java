@@ -95,7 +95,8 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		SpellExcelParser.readFromXls(this);
+		var spellExcelParser = new SpellExcelParser(this);
+		spellExcelParser.readFromXls();
 		validateAll();
 	}
 

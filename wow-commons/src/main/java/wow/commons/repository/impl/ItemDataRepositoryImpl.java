@@ -229,7 +229,8 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		ItemExcelParser.readFromXls(this);
+		var itemExcelParser = new ItemExcelParser(this);
+		itemExcelParser.readFromXls();
 		readFromLua("lua/item_tooltips_dungeons.lua");
 		readFromLua("lua/item_tooltips_factions.lua");
 		readFromLua("lua/item_tooltips_crafted.lua");
