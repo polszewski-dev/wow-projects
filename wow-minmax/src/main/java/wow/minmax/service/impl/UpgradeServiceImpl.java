@@ -24,10 +24,8 @@ import wow.minmax.service.ItemService;
 import wow.minmax.service.SpellService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * User: POlszewski
@@ -47,12 +45,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 		Spell spell = spellService.getSpell(spellId);
 		double referenceDps = calculationService.getSpellStatistics(playerProfile, spell).dps;
 
-		List<EquippableItem> referenceEquipment = new ArrayList<>();
 		for (ItemSlot slot : slotGroup.getSlots()) {
-			referenceEquipment.add(playerProfileCopy.getEquipment().get(slot));
 			playerProfileCopy.getEquipment().set(null, slot);
 		}
-		referenceEquipment.removeIf(Objects::isNull);
 
 		Attributes withoutSlotGroup = AttributeEvaluator.of(spell.getSpellInfo())
 				.addAttributes(playerProfileCopy)

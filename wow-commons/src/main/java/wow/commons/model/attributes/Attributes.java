@@ -3,7 +3,10 @@ package wow.commons.model.attributes;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,7 +15,7 @@ import java.util.stream.Stream;
  * Date: 2021-03-04
  */
 public class Attributes implements AttributeSource {
-	public static final Attributes EMPTY = new Attributes(List.of(), Map.of());
+	public static final Attributes EMPTY = of(List.of(), Map.of());
 
 	private final List<PrimitiveAttribute> attributeList;
 	private final Map<AttributeId, List<ComplexAttribute>> complexAttributeList;
@@ -20,25 +23,29 @@ public class Attributes implements AttributeSource {
 	private Map<AttributeId, Double> doubleCache;
 	private Map<AttributeId, Percent> percentCache;
 
-	public Attributes(List<PrimitiveAttribute> attributeList, Map<AttributeId, List<ComplexAttribute>> complexAttributeList) {
+	private Attributes(List<PrimitiveAttribute> attributeList, Map<AttributeId, List<ComplexAttribute>> complexAttributeList) {
 		this.attributeList = attributeList;
 		this.complexAttributeList = complexAttributeList;
 	}
 
-	public Attributes(List<PrimitiveAttribute> attributeList) {
-		this(attributeList, Map.of());
+	public static Attributes of(List<PrimitiveAttribute> attributeList, Map<AttributeId, List<ComplexAttribute>> complexAttributeList) {
+		return new Attributes(attributeList, complexAttributeList);
+	}
+
+	public static Attributes of(List<PrimitiveAttribute> attributeList) {
+		return of(attributeList, Map.of());
 	}
 
 	public static Attributes of(AttributeId attributeId, double value) {
-		return new Attributes(List.of(Attribute.of(attributeId, value)), Map.of());
+		return of(List.of(Attribute.of(attributeId, value)), Map.of());
 	}
 
 	public static Attributes of(AttributeId attributeId, Percent value) {
-		return new Attributes(List.of(Attribute.of(attributeId, value)), Map.of());
+		return of(List.of(Attribute.of(attributeId, value)), Map.of());
 	}
 
 	public static Attributes of(ComplexAttribute complexAttribute) {
-		return new Attributes(List.of(), Map.of(complexAttribute.getId(), List.of(complexAttribute)));
+		return of(List.of(), Map.of(complexAttribute.getId(), List.of(complexAttribute)));
 	}
 
 	@Override
@@ -91,7 +98,7 @@ public class Attributes implements AttributeSource {
 	}
 
 	public Attributes scale(double factor) {
-		return new Attributes(
+		return of(
 				attributeList
 				.stream()
 				.map(attribute -> attribute.scale(factor))

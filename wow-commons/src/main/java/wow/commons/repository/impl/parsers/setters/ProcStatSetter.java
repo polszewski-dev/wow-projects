@@ -42,7 +42,7 @@ public class ProcStatSetter implements StatSetter {
 			chance = Percent._100;
 		}
 
-		Attributes attributes = new Attributes(params.getAttributeParser().getAttributes(amount));
+		Attributes attributes = Attributes.of(params.getAttributeParser().getAttributes(amount));
 
 		return SpecialAbility.proc(event, chance, attributes, duration, cooldown, line);
 	}

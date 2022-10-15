@@ -27,7 +27,7 @@ public class AttributesBuilder {
 	}
 
 	public Attributes toAttributes() {
-		Attributes result = isEmpty() ? Attributes.EMPTY : new Attributes(
+		Attributes result = isEmpty() ? Attributes.EMPTY : Attributes.of(
 				attributeList != null ? attributeList : List.of(),
 				complexAttributeList != null ? complexAttributeList : Map.of()
 		);

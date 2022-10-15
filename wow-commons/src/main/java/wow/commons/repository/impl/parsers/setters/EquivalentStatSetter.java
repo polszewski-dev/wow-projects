@@ -20,7 +20,7 @@ public class EquivalentStatSetter implements StatSetter {
 		StatSetterParams params = parser.getParams();
 
 		Integer amount = parser.evalParam(params.getSpecialAmount());
-		Attributes attributes = new Attributes(params.getAttributeParser().getAttributes(amount));
+		Attributes attributes = Attributes.of(params.getAttributeParser().getAttributes(amount));
 
 		SpecialAbility equivalent = SpecialAbility.equivalent(attributes, line);
 		itemStats.addAttribute(equivalent);

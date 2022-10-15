@@ -52,23 +52,23 @@ public abstract class ExcelParser {
 	public final void readFromXls() throws IOException, InvalidFormatException {
 		try (ExcelReader excelReader = new PoiExcelReader(getExcelInputStream())) {
 			this.excelReader = excelReader;
-
 			while (excelReader.nextSheet()) {
-				if (!excelReader.nextRow()) {
-					continue;
+				if (excelReader.nextRow()) {
+					this.header = getHeader(excelReader);
+					getSheetReader(excelReader).readSheet();
 				}
-
-				String currentSheetName = excelReader.getCurrentSheetName();
-
-				SheetReader sheetReader = getSheetReaders()
-						.filter(reader -> reader.sheetName.equals(currentSheetName))
-						.findFirst()
-						.orElseThrow(() -> new IllegalArgumentException("Unknown sheet: " + currentSheetName));
-
-				this.header = getHeader(excelReader);
-				sheetReader.readSheet();
 			}
+		} finally {
+			this.excelReader = null;
+			this.header = null;
 		}
+	}
+
+	private SheetReader getSheetReader(ExcelReader excelReader) {
+		return getSheetReaders()
+				.filter(reader -> reader.sheetName.equals(excelReader.getCurrentSheetName()))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("Unknown sheet: " + excelReader.getCurrentSheetName()));
 	}
 
 	protected abstract InputStream getExcelInputStream();

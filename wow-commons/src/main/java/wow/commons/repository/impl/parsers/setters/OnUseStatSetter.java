@@ -41,7 +41,7 @@ public class OnUseStatSetter implements StatSetter {
 		Duration duration = Duration.seconds(parser.evalParam(params.getSpecialDuration()));
 		Duration cooldown = Duration.seconds(parseCooldown(parser.evalParamString(params.getSpecialCd())));
 
-		Attributes attributes = new Attributes(params.getAttributeParser().getAttributes(amount));
+		Attributes attributes = Attributes.of(params.getAttributeParser().getAttributes(amount));
 
 		return SpecialAbility.onUse(attributes, duration, cooldown, line);
 	}

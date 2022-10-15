@@ -47,7 +47,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final Map<Integer, Gem> gemById = new TreeMap<>();
 	private final Map<String, Gem> gemByName = new TreeMap<>();
 
-	private Map<String, Map<ItemType, List<Item>>> casterItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, Map<ItemType, List<Item>>> casterItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
 
 	public ItemDataRepositoryImpl(PVERepository pveRepository) {
 		this.pveRepository = pveRepository;
