@@ -447,6 +447,7 @@ class ItemEditor {
 		this.gem1Select.generateUI($(`#${this._slot}-gem1-select-container`))
 		this.gem2Select.generateUI($(`#${this._slot}-gem2-select-container`))
 		this.gem3Select.generateUI($(`#${this._slot}-gem3-select-container`))
+		this.findUpgradesBtn.prop('disabled', true)
 	}
 
 	populateEnchantAndGems(item) {
@@ -547,6 +548,8 @@ class EquipmentEditor {
     	.then(data => {
     		this.itemsBySlot = data
     		slots.forEach(slot => this.selectItem(slot))
+			this.findAllUpgradesBtn.prop('disabled', false)
+			this.resetBtn.prop('disabled', false)
     	})
     	.catch(err => showError(err))
     }
@@ -578,11 +581,19 @@ class EquipmentEditor {
 		})
 	}
 
+	get findAllUpgradesBtn() {
+		return $('#find-all-upgrades-btn')
+	}
+	get resetBtn() {
+		return $('#reset-btn')
+	}
+
 	selectItem(slot) {
 		const editor = this.getItemEditor(slot)
 		const item = this.getEquippedItem(slot)
 
 		editor.selectedItem = item
+		editor.findUpgradesBtn.prop('disabled', false)
 
 		if (editor.slot == 'MainHand') {
 			const offHandEditor = this.getItemEditor('OffHand')
@@ -600,7 +611,7 @@ class EquipmentEditor {
 		parent.append(`
 			<div class="border">
 				<button type="button" class="btn btn-sm btn-link" id="find-all-upgrades-btn">Find All Upgrades</button>
-				<button type="button" class="btn btn-sm btn-link" id="find-reset-btn">Reset</button>
+				<button type="button" class="btn btn-sm btn-link" id="reset-btn">Reset</button>
 			</div>
 		`)
 		slots.forEach(slot => {
@@ -608,6 +619,9 @@ class EquipmentEditor {
 			const editor = this.getItemEditor(slot)
 			editor.generateUI(parent)
 		})
+
+		this.findAllUpgradesBtn.prop('disabled', true)
+		this.resetBtn.prop('disabled', true)
 		this.setupEvents()
 	}
 
@@ -682,14 +696,14 @@ class EquipmentEditor {
     		}
     	})
 
-    	$('#find-all-upgrades-btn').click(e => {
+    	this.findAllUpgradesBtn.click(e => {
     		e.preventDefault()
     		slots.forEach(slot => {
     			this.getItemEditor(slot).findUpgradesBtn.click()
     		})
     	})
 
-    	$('#find-reset-btn').click(e => {
+    	this.resetBtn.click(e => {
     		e.preventDefault()
 
 			slots.forEach(slot => {
@@ -1071,13 +1085,11 @@ $(() => {
 	const populateProfileSelect = (profiles, selectedProfileId) => {
 		const select = $('#profile-select').html('')
 
-		if (profiles.length > 0) {
-			profiles
-				.sort(profile => profile.profileName)
-				.forEach(profile =>
-					select.append(`<option value="${profile.profileId}">${profile.profileName} - P${profile.phase}</option>`)
-				)
-		}
+		profiles
+			.sort((profile1, profile2) => profile1.profileName < profile2.profileName ? -1 : profile1.profileName > profile2.profileName ? 1 : 0)
+			.forEach(profile =>
+				select.append(`<option value="${profile.profileId}">P${profile.phase} ${profile.profileName}</option>`)
+			)
 
 		if (selectedProfileId) {
 			select.val(selectedProfileId).change()
@@ -1096,7 +1108,7 @@ $(() => {
 			phase = equipmentEditor._profile.phase
 			copiedProfileId = equipmentEditor._profile.profileId
 		} else {
-			name = new Date().toLocaleString('pl-PL') // TODO
+			name = 'Dummy Profile Name' // TODO
 			phase = 5
 			copiedProfileId = null
 		}
@@ -1121,7 +1133,9 @@ $(() => {
 		let selectedProfileId = null
 
 		if (profiles.length > 0) {
-			selectedProfileId = profiles.sort(profile => profile.lastModified).reverse()[0].profileId
+			selectedProfileId = profiles
+				.sort((profile1, profile2) => profile1.lastModified < profile2.lastModified ? 1 : profile1.lastModified > profile2.lastModified ? -1 : 0)[0]
+				.profileId
 		}
 
 		populateProfileSelect(profiles, selectedProfileId)

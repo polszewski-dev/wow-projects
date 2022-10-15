@@ -53,6 +53,8 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment()));
 		playerProfile.setBuffs(buffPOConverter.convertBackList(value.getBuffs()));
 
+		playerProfile.setLastModified(value.getLastModified());
+
 		return playerProfile;
 	}
 }
