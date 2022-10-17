@@ -14,9 +14,9 @@ import wow.minmax.model.dto.UpgradesDTO;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -38,13 +38,10 @@ public class UpgradeController {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).readOnlyCopy();
 		List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpellId());
 
-		List<UpgradeDTO> result = new ArrayList<>();
-
-		for (Comparison comparison : upgrades) {
-			result.add(upgradeConverter.convert(comparison));
-		}
-
-		return result;
+		return upgrades.stream()
+				.map(upgradeConverter::convert)
+				.limit(20)
+				.collect(Collectors.toList());
 	}
 
 	@GetMapping(path = "{profileId}")

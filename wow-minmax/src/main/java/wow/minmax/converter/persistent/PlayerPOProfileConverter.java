@@ -2,7 +2,6 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.repository.SpellDataRepository;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
@@ -17,7 +16,6 @@ import wow.minmax.repository.BuildRepository;
 public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerProfilePO> {
 	private final EquipmentPOConverter equipmentPOConverter;
 	private final BuffPOConverter buffPOConverter;
-	private final SpellDataRepository spellDataRepository;
 	private final BuildRepository buildRepository;
 
 	@Override
