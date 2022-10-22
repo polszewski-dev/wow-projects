@@ -13,4 +13,7 @@ import wow.commons.util.SpellStatistics;
 public class PlayerSpellStats {
 	private PlayerProfile playerProfile;
 	private SpellStatistics spellStatistics;
+	private double hitSpEqv;
+	private double critSpEqv;
+	private double hasteSpEqv;
 }

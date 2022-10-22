@@ -1,6 +1,6 @@
 package wow.commons.model.sources;
 
-import wow.commons.model.item.ItemLink;
+import wow.commons.model.item.Item;
 
 import java.util.Objects;
 
@@ -8,20 +8,20 @@ import java.util.Objects;
  * User: POlszewski
  * Date: 2021-03-13
  */
-class TradedFromToken extends NotSourcedFromInstance {
-	private final ItemLink tokenLink;
+public class TradedFromToken extends NotSourcedFromInstance {
+	private final Item item;
 
-	TradedFromToken(ItemLink tokenLink) {
+	public TradedFromToken(Item item) {
 		super(null);
-		if (tokenLink == null) {
+		if (item == null) {
 			throw new NullPointerException();
 		}
-		this.tokenLink = tokenLink;
+		this.item = item;
 	}
 
 	@Override
-	public ItemLink getTradedFromToken() {
-		return tokenLink;
+	public Item getSourceToken() {
+		return item;
 	}
 
 	@Override
@@ -34,16 +34,16 @@ class TradedFromToken extends NotSourcedFromInstance {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		TradedFromToken that = (TradedFromToken) o;
-		return tokenLink.equals(that.tokenLink);
+		return item.equals(that.item);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(tokenLink);
+		return Objects.hash(item);
 	}
 
 	@Override
 	public String toString() {
-		return "Token: " + tokenLink.getName();
+		return "Token: " + item.getName();
 	}
 }

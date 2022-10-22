@@ -1,6 +1,6 @@
 package wow.commons.model.sources;
 
-import wow.commons.model.item.ItemLink;
+import wow.commons.model.item.Item;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Instance;
@@ -18,7 +18,7 @@ public abstract class Source {
 
 	public abstract Instance getInstance();
 
-	public ItemLink getTradedFromToken() {
+	public Item getSourceToken() {
 		return null;
 	}
 

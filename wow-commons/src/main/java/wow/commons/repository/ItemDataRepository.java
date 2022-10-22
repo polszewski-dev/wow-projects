@@ -6,19 +6,16 @@ import wow.commons.model.pve.Raid;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: POlszewski
  * Date: 2021-03-02
  */
 public interface ItemDataRepository {
-	Item getItem(int itemId);
-	Item getItem(String itemName);
-	Item getItem(ItemLink itemLink);
+	Optional<Item> getItem(int itemId);
+	Optional<Item> getItem(String itemName);
+	Optional<Item> getItem(ItemLink itemLink);
 
 	Collection<Item> getAllItems();
 
@@ -30,17 +27,17 @@ public interface ItemDataRepository {
 
 	Set<Raid> getRaidSources(Item item);
 
-	List<Item> getTierItems(ItemSet tierSet);
+	List<Item> getSetItems(ItemSet itemSet);
 	List<Item> getItemsTradedFor(ItemLink itemLink);
 	List<Item> getSourceItemsFor(ItemLink itemLink);
 	List<Item> getEquippableItemsFromRaidDrop(Item item, CharacterClass clazz);
 
 	Collection<ItemSet> getAllItemSets();
-	ItemSet getItemSet(String name);
-	Enchant getEnchant(int enchantId);
-	Enchant getEnchant(String name);
-	Gem getGem(int gemId);
-	Gem getGem(String name);
+	Optional<ItemSet> getItemSet(String name);
+	Optional<Enchant> getEnchant(int enchantId);
+	Optional<Enchant> getEnchant(String name);
+	Optional<Gem> getGem(int gemId);
+	Optional<Gem> getGem(String name);
 	List<Gem> getAllGems();
 
 	List<Enchant> getEnchants(ItemType itemType);

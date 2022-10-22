@@ -1,6 +1,8 @@
 package wow.commons.model.sources;
 
+import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemLink;
+import wow.commons.model.item.ItemTooltip;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
@@ -17,7 +19,8 @@ public final class SourceParser {
 	public static Source parse(String line, PVERepository pveRepository) {
 		ItemLink tokenLink = ItemLink.tryParse(line);
 		if (tokenLink != null) {
-			return new TradedFromToken(tokenLink);
+			Item dummy = new Item(new ItemTooltip(tokenLink, 0, null, null, null));
+			return new TradedFromToken(dummy);
 		}
 
 		String[] parts = line.split(":");

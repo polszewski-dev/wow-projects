@@ -35,11 +35,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Item getItem(int itemId) {
-		Item item = itemDataRepository.getItem(itemId);
-		if (item != null) {
-			return item;
-		}
-		throw new IllegalArgumentException("Couldn't find item with id: " + itemId);
+		return itemDataRepository.getItem(itemId).orElseThrow();
 	}
 
 	@Override

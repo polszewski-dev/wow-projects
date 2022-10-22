@@ -23,6 +23,6 @@ public class GemPOConverter extends Converter<Gem, GemPO> {
 
 	@Override
 	protected Gem doConvertBack(GemPO value) {
-		return itemDataRepository.getGem(value.getId());
+		return itemDataRepository.getGem(value.getId()).orElseThrow();
 	}
 }

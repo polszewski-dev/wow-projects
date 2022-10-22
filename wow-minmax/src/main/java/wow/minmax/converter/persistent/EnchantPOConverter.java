@@ -23,6 +23,6 @@ public class EnchantPOConverter extends Converter<Enchant, EnchantPO> {
 
 	@Override
 	protected Enchant doConvertBack(EnchantPO value) {
-		return itemDataRepository.getEnchant(value.getId());
+		return itemDataRepository.getEnchant(value.getId()).orElseThrow();
 	}
 }

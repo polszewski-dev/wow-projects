@@ -12,10 +12,12 @@ import wow.commons.model.unit.CharacterClass;
 import wow.minmax.converter.dto.ItemConverter;
 import wow.minmax.model.dto.ItemDTO;
 import wow.minmax.service.ItemService;
+import wow.minmax.service.UpgradeService;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -27,6 +29,8 @@ import java.util.Map;
 public class ItemController {
 	private final ItemService itemService;
 	private final ItemConverter itemConverter;
+
+	private final UpgradeService upgradeService;
 
 	@GetMapping
 	public List<ItemDTO> getItems() {
@@ -51,17 +55,30 @@ public class ItemController {
 		CharacterClass characterClass = CharacterClass.Warlock;
 		SpellSchool spellSchool = SpellSchool.Shadow;
 		var itemsBySlot = itemService.getItemsBySlot(phase, characterClass, spellSchool);
-		var result = itemConverter.convertGroups(itemsBySlot);
 
-		for (List<ItemDTO> list : result.values()) {
-			sortItems(list);
-		}
-
-		return result;
+		return itemsBySlot.entrySet().stream()
+					.collect(Collectors.toMap(
+							Map.Entry::getKey,
+							e -> getItemsDTOsOrderedByScore(e.getValue(), spellSchool)
+					)
+		);
 	}
 
-	private void sortItems(List<ItemDTO> list) {
-		list.sort(Comparator.comparingDouble((ItemDTO itemDTO) -> -itemDTO.getScore())
-							.thenComparing(ItemDTO::getName));
+	private List<ItemDTO> getItemsDTOsOrderedByScore(List<Item> items, SpellSchool spellSchool) {
+		return items.stream()
+				.map(item -> getItemDTO(item, spellSchool))
+				.sorted(orderByScore())
+				.collect(Collectors.toList());
+	}
+
+	private ItemDTO getItemDTO(Item item, SpellSchool spellSchool) {
+		ItemDTO itemDTO = itemConverter.convert(item);
+		itemDTO.setScore(upgradeService.getItemScore(item, spellSchool));
+		return itemDTO;
+	}
+
+	private static Comparator<ItemDTO> orderByScore() {
+		return Comparator.comparingDouble((ItemDTO itemDTO) -> -itemDTO.getScore())
+				.thenComparing(ItemDTO::getName);
 	}
 }

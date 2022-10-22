@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.attributes.AttributeCollection;
+import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.buffs.Buff;
@@ -72,7 +73,12 @@ public class StatsController {
 
 		for (Spell spell : spells) {
 			SpellStatistics spellStatistics = calculationService.getSpellStatistics(playerProfile, spell);
-			result.add(playerSpellStatsConverter.convert(new PlayerSpellStats(playerProfile, spellStatistics)));
+			double hitSpEqv = calculationService.getSpEquivalent(AttributeId.SpellHitRating, 10, playerProfile, spell);
+			double critSpEqv = calculationService.getSpEquivalent(AttributeId.SpellCritRating, 10, playerProfile, spell);
+			double hasteSpEqv = calculationService.getSpEquivalent(AttributeId.SpellHasteRating, 10, playerProfile, spell);
+			PlayerSpellStats playerSpellStats = new PlayerSpellStats(playerProfile, spellStatistics, hitSpEqv, critSpEqv, hasteSpEqv);
+
+			result.add(playerSpellStatsConverter.convert(playerSpellStats));
 		}
 
 		return result;

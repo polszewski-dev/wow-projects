@@ -210,24 +210,19 @@ abstract class ItemCombinator<T extends ItemCombinator<T>> {
 			gemNames = new String[]{};
 		}
 		for (String itemName : itemNames) {
-			Item item = itemDataRepository.getItem(itemName);
-			if (item == null) {
-				throw new IllegalArgumentException("No item: " + itemName);
-			}
+			Item item = itemDataRepository.getItem(itemName).orElseThrow();
+
 			for (String enchantName : enchantNames) {
 				EquippableItem equippableItem = new EquippableItem(item);
 
 				if (enchantName != null) {
-					Enchant enchant = itemDataRepository.getEnchant(enchantName);
-					if (enchant == null) {
-						throw new IllegalArgumentException("No enchant: " + enchantName);
-					}
+					Enchant enchant = itemDataRepository.getEnchant(enchantName).orElseThrow();
 					equippableItem.enchant(enchant);
 				}
 
 				if (gemNames.length != 0) {
 					Gem[] gems = Stream.of(gemNames)
-							.map(itemDataRepository::getGem)
+							.map(name -> itemDataRepository.getGem(name).orElseThrow())
 							.toArray(Gem[]::new);
 
 					if (Stream.of(gems).anyMatch(Objects::isNull) || gems.length != equippableItem.getSocketCount()) {

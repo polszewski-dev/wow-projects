@@ -173,13 +173,10 @@ public class ItemLuaParser {
 
 			parsedValues = parseMultiValue("(.*) \\(\\d/(\\d)\\)", line);
 			if (parsedValues != null) {
-				item.setItemSet(itemDataRepository.getItemSet((String) parsedValues[0]));
-				if (item.getItemSet() == null) {
-					throw new IllegalArgumentException("Unknown set: " + parsedValues[0]);
-				}
+				ItemSet itemSet = itemDataRepository.getItemSet((String) parsedValues[0]).orElseThrow();
+				item.setItemSet(itemSet);
 				int numPieces = (int) parsedValues[1];
-				if (lines.get(i + 1)
-						.startsWith("Requires")) {
+				if (lines.get(i + 1).startsWith("Requires")) {
 					++i;
 				}
 				i += numPieces;

@@ -65,7 +65,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId) {
 		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId);
-		Item item = itemDataRepository.getItem(itemId);
+		Item item = itemDataRepository.getItem(itemId).orElseThrow();
 		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile.readOnlyCopy(), item, slot, playerProfile.getDamagingSpellId());
 
 		playerProfile.getEquipment().set(bestItemVariant, slot);

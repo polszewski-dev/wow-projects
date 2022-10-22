@@ -23,6 +23,6 @@ public class ItemPOConverter extends Converter<Item, ItemPO> {
 
 	@Override
 	protected Item doConvertBack(ItemPO value) {
-		return itemDataRepository.getItem(value.getId());
+		return itemDataRepository.getItem(value.getId()).orElseThrow();
 	}
 }

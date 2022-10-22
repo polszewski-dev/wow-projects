@@ -82,7 +82,7 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	@Override
 	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		EquippableItem equippableItem = new EquippableItem(itemDataRepository.getItem(itemId));
+		EquippableItem equippableItem = new EquippableItem(itemDataRepository.getItem(itemId).orElseThrow());
 
 		playerProfile.getEquipment().set(equippableItem, slot);
 		saveProfile(playerProfile);
@@ -92,7 +92,7 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	@Override
 	public PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Enchant enchant = itemDataRepository.getEnchant(enchantId);
+		Enchant enchant = itemDataRepository.getEnchant(enchantId).orElseThrow();
 
 		playerProfile.getEquipment().get(slot).enchant(enchant);
 		saveProfile(playerProfile);
@@ -102,7 +102,7 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	@Override
 	public PlayerProfile changeGem(UUID profileId, ItemSlot slot, int socketNo, int gemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Gem gem = itemDataRepository.getGem(gemId);
+		Gem gem = itemDataRepository.getGem(gemId).orElseThrow();
 
 		playerProfile.getEquipment().get(slot).insertGem(socketNo, gem);
 		saveProfile(playerProfile);

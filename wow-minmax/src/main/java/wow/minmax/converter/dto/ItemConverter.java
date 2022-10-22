@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Item;
 import wow.commons.model.sources.Source;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.repository.ItemDataRepository;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.ItemDTO;
-import wow.minmax.service.UpgradeService;
 
 import java.util.stream.Collectors;
 
@@ -19,9 +16,6 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class ItemConverter extends Converter<Item, ItemDTO> {
-	private final UpgradeService upgradeService;
-	private final ItemDataRepository itemDataRepository;
-
 	@Override
 	protected ItemDTO doConvert(Item item) {
 		return new ItemDTO(
@@ -29,7 +23,7 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 				item.getName(),
 				item.getRarity(),
 				item.getItemType(),
-				upgradeService.getItemScore(item, SpellSchool.Shadow),
+				0,
 				getSources(item),
 				item.getAttributes().statString(),
 				item.getSocketCount(),
@@ -65,7 +59,7 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 			return source.getFaction().getName();
 		}
 		if (source.isTradedFromToken()) {
-			return getSources(itemDataRepository.getItem(source.getTradedFromToken()));
+			return getSources(source.getSourceToken());
 		}
 		return source.toString();
 	}
