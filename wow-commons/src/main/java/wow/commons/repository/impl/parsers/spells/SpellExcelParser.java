@@ -1,4 +1,4 @@
-package wow.commons.repository.impl.parsers;
+package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -20,6 +20,7 @@ import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.PetType;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
+import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.ExcelParser;
 
@@ -556,11 +557,9 @@ public class SpellExcelParser extends ExcelParser {
 		for (int statNo = 1; statNo <= maxAttributes; ++statNo) {
 			var attributeStr = COL_BUFF_STAT.multi(statNo).getString(null);
 			if (attributeStr != null) {
-				SimpleAttributeParser attributeParser = new SimpleAttributeParser(attributeStr);
+				PrimitiveAttributeSupplier attributeParser = PrimitiveAttributeSupplier.fromString(attributeStr);
 				int amount = COL_BUFF_AMOUNT.multi(statNo).getInteger();
-				for (Attribute attribute : attributeParser.getAttributes(amount)) {
-					builder.addAttribute(attribute);
-				}
+				builder.addAttributeList(attributeParser.getAttributeList(amount));
 			}
 		}
 

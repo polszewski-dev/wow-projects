@@ -1,4 +1,4 @@
-package wow.commons.repository.impl.parsers;
+package wow.commons.repository.impl.parsers.pve;
 
 import wow.commons.model.pve.*;
 import wow.commons.model.unit.BaseStatInfo;

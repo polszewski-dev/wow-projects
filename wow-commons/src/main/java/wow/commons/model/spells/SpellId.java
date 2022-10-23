@@ -1,5 +1,7 @@
 package wow.commons.model.spells;
 
+import java.util.stream.Stream;
+
 /**
  * User: POlszewski
  * Date: 2020-10-01
@@ -84,12 +86,10 @@ public enum SpellId {
 		if (name == null) {
 			return null;
 		}
-		for (SpellId value : values()) {
-			if (value.getName().equalsIgnoreCase(name)) {
-				return value;
-			}
-		}
-		throw new IllegalArgumentException("Unknown spell: " + name);
+		return Stream.of(values())
+				.filter(x -> x.getName().equalsIgnoreCase(name))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException(name));
 	}
 
 	public String getName() {

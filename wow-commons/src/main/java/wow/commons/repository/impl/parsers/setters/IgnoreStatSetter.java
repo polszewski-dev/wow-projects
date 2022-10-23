@@ -1,6 +1,6 @@
 package wow.commons.repository.impl.parsers.setters;
 
-import wow.commons.repository.impl.parsers.StatParser;
+import wow.commons.repository.impl.parsers.stats.StatMatcher;
 import wow.commons.util.AttributesBuilder;
 
 /**
@@ -13,7 +13,12 @@ public class IgnoreStatSetter implements StatSetter {
 	private IgnoreStatSetter() {}
 
 	@Override
-	public void set(AttributesBuilder itemStats, StatParser parser, int groupNo) {
+	public void set(AttributesBuilder itemStats, StatMatcher matcher) {
 		// do nothing
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return true;
 	}
 }

@@ -1,6 +1,6 @@
 package wow.commons.repository.impl.parsers.setters;
 
-import wow.commons.repository.impl.parsers.StatParser;
+import wow.commons.repository.impl.parsers.stats.StatMatcher;
 import wow.commons.util.AttributesBuilder;
 
 /**
@@ -8,5 +8,9 @@ import wow.commons.util.AttributesBuilder;
  * Date: 2021-03-25
  */
 public interface StatSetter {
-	void set(AttributesBuilder itemStats, StatParser parser, int groupNo);
+	void set(AttributesBuilder itemStats, StatMatcher matcher);
+
+	default boolean isEmpty() {
+		return false;
+	}
 }

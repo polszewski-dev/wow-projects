@@ -6,7 +6,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.ComplexAttribute;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.modifiers.ProcEvent;
-import wow.commons.repository.impl.parsers.StatParser;
+import wow.commons.repository.impl.parsers.stats.StatMatcher;
 import wow.commons.util.AttributesBuilder;
 
 /**
@@ -14,35 +14,36 @@ import wow.commons.util.AttributesBuilder;
  * Date: 2021-03-25
  */
 public class ProcStatSetter implements StatSetter {
-	public static final ProcStatSetter INSTANCE = new ProcStatSetter();
+	private final int groupNo;
 
-	private ProcStatSetter() {}
+	public ProcStatSetter(int groupNo) {
+		this.groupNo = groupNo;
+	}
 
 	@Override
-	public void set(AttributesBuilder itemStats, StatParser parser, int groupNo) {
-		ComplexAttribute proc = getProc(parser, groupNo);
+	public void set(AttributesBuilder itemStats, StatMatcher matcher) {
+		ComplexAttribute proc = getProc(matcher);
 		itemStats.addAttribute(proc);
 	}
 
-	private ComplexAttribute getProc(StatParser parser, int groupNo) {
-		String line = parser.getString(groupNo);
-		StatSetterParams params = parser.getParams();
+	private ComplexAttribute getProc(StatMatcher matcher) {
+		String line = matcher.getString(groupNo);
 
-		if (params.getSpecialType() == null) {
+		if (matcher.getParamType() == null) {
 			return SpecialAbility.misc(line);
 		}
 
-		ProcEvent event = ProcEvent.valueOf(params.getSpecialType().toUpperCase());
-		Percent chance = parser.evalParamPercent(params.getSpecialProcChance());
-		Integer amount = parser.evalParam(params.getSpecialAmount());
-		Duration duration = Duration.seconds(parser.evalParam(params.getSpecialDuration()));
-		Duration cooldown = Duration.seconds(parser.evalParam(params.getSpecialProcCd()));
+		ProcEvent event = ProcEvent.parse(matcher.getParamType());
+		Percent chance = matcher.getParamProcChance();
+		Integer amount = matcher.getParamAmount();
+		Duration duration = matcher.getParamDuration();
+		Duration cooldown = matcher.getParamProcCooldown();
 
 		if (chance == null) {
 			chance = Percent._100;
 		}
 
-		Attributes attributes = Attributes.of(params.getAttributeParser().getAttributes(amount));
+		Attributes attributes = matcher.getParamStats(amount);
 
 		return SpecialAbility.proc(event, chance, attributes, duration, cooldown, line);
 	}

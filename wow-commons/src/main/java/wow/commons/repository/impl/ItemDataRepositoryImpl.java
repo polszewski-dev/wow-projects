@@ -11,8 +11,8 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.PVERepository;
-import wow.commons.repository.impl.parsers.ItemDatabaseLuaParser;
-import wow.commons.repository.impl.parsers.ItemExcelParser;
+import wow.commons.repository.impl.parsers.items.ItemDatabaseLuaParser;
+import wow.commons.repository.impl.parsers.items.ItemExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

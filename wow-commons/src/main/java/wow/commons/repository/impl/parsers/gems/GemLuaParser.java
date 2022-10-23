@@ -1,4 +1,4 @@
-package wow.commons.repository.impl.parsers;
+package wow.commons.repository.impl.parsers.gems;
 
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.Binding;

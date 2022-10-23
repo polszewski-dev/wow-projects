@@ -12,7 +12,7 @@ import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.repository.SpellDataRepository;
-import wow.commons.repository.impl.parsers.SpellExcelParser;
+import wow.commons.repository.impl.parsers.spells.SpellExcelParser;
 import wow.commons.util.AttributesBuilder;
 
 import javax.annotation.PostConstruct;

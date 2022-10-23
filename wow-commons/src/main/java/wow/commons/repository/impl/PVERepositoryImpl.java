@@ -11,7 +11,7 @@ import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.PVERepository;
-import wow.commons.repository.impl.parsers.PVEExcelParser;
+import wow.commons.repository.impl.parsers.pve.PVEExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

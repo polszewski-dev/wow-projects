@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollection {
 	private final UUID profileId;
-	private String profileName;
+	private final String profileName;
 
 	private final CharacterClass characterClass;
 	private final Race race;

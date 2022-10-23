@@ -1,10 +1,11 @@
-package wow.commons.repository.impl.parsers;
+package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
 import wow.commons.model.item.*;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.impl.parsers.gems.SocketBonusParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ItemLuaParser {
 		List<SocketType> socketTypes = null;
 		Attributes socketBonus = null;
 
-		ItemStatParser.resetAll();
+		ItemStatParser statParser = new ItemStatParser();
 
 		for (int i = 0; i < lines.size(); i++) {
 			String line = lines.get(i).trim().replace("\n", "");
@@ -116,7 +117,7 @@ public class ItemLuaParser {
 				}
 			}
 
-			if (ItemStatParser.tryParse(line)) {
+			if (statParser.tryParse(line)) {
 				continue;
 			}
 
@@ -167,7 +168,10 @@ public class ItemLuaParser {
 			String socketBonusPrefix = "Socket Bonus: ";
 
 			if (line.startsWith(socketBonusPrefix)) {
-				socketBonus = SocketBonusParser.parseSocketBonus(line.substring(socketBonusPrefix.length()));
+				socketBonus = SocketBonusParser.tryParseSocketBonus(line.substring(socketBonusPrefix.length()));
+				if (socketBonus == null) {
+					throw new IllegalArgumentException("Invalid socket bonus: " + line);
+				}
 				continue;
 			}
 
@@ -197,8 +201,8 @@ public class ItemLuaParser {
 			throw new IllegalArgumentException(line);
 		}
 
-		ItemStatParser.setItemStats(item);
-		ItemStatParser.checkForNotUsedMatches();
+		statParser.setItemStats(item);
+		statParser.checkForNotUsedMatches();
 
 		if (socketTypes != null) {
 			if (socketBonus == null) {

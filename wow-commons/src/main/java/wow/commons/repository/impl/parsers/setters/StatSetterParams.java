@@ -1,85 +1,73 @@
 package wow.commons.repository.impl.parsers.setters;
 
-import wow.commons.model.spells.SpellId;
-import wow.commons.repository.impl.parsers.SimpleAttributeParser;
-
-import java.util.List;
+import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
 
 /**
  * User: POlszewski
  * Date: 2021-09-18
  */
 public class StatSetterParams {
-	private String specialType;
-	private SimpleAttributeParser attributeParser;
-	private String specialAmount;
-	private String specialDuration;
-	private String specialCd;
-	private String specialProcChance;
-	private String specialProcCd;
-	private List<SpellId> specialSpell;
+	private String type;
+	private PrimitiveAttributeSupplier statsSupplier;
+	private String amount;
+	private String duration;
+	private String cooldown;
+	private String procChance;
+	private String procCooldown;
 
-	public String getSpecialType() {
-		return specialType;
+	public String getType() {
+		return type;
 	}
 
-	public void setSpecialType(String specialType) {
-		this.specialType = specialType;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public SimpleAttributeParser getAttributeParser() {
-		return attributeParser;
+	public PrimitiveAttributeSupplier getStatsSupplier() {
+		return statsSupplier;
 	}
 
-	public void setAttributeParser(SimpleAttributeParser attributeParser) {
-		this.attributeParser = attributeParser;
+	public void setStatsSupplier(PrimitiveAttributeSupplier statsSupplier) {
+		this.statsSupplier = statsSupplier;
 	}
 
-	public String getSpecialAmount() {
-		return specialAmount;
+	public String getAmount() {
+		return amount;
 	}
 
-	public void setSpecialAmount(String specialAmount) {
-		this.specialAmount = specialAmount;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 
-	public String getSpecialDuration() {
-		return specialDuration;
+	public String getDuration() {
+		return duration;
 	}
 
-	public void setSpecialDuration(String specialDuration) {
-		this.specialDuration = specialDuration;
+	public void setDuration(String duration) {
+		this.duration = duration;
 	}
 
-	public String getSpecialCd() {
-		return specialCd;
+	public String getCooldown() {
+		return cooldown;
 	}
 
-	public void setSpecialCd(String specialCd) {
-		this.specialCd = specialCd;
+	public void setCooldown(String cooldown) {
+		this.cooldown = cooldown;
 	}
 
-	public String getSpecialProcChance() {
-		return specialProcChance;
+	public String getProcChance() {
+		return procChance;
 	}
 
-	public void setSpecialProcChance(String specialProcChance) {
-		this.specialProcChance = specialProcChance;
+	public void setProcChance(String procChance) {
+		this.procChance = procChance;
 	}
 
-	public String getSpecialProcCd() {
-		return specialProcCd;
+	public String getProcCooldown() {
+		return procCooldown;
 	}
 
-	public void setSpecialProcCd(String specialProcCd) {
-		this.specialProcCd = specialProcCd;
-	}
-
-	public List<SpellId> getSpecialSpell() {
-		return specialSpell;
-	}
-
-	public void setSpecialSpell(List<SpellId> specialSpell) {
-		this.specialSpell = specialSpell;
+	public void setProcCooldown(String procCooldown) {
+		this.procCooldown = procCooldown;
 	}
 }

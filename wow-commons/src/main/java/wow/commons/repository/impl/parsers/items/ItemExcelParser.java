@@ -1,4 +1,4 @@
-package wow.commons.repository.impl.parsers;
+package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;

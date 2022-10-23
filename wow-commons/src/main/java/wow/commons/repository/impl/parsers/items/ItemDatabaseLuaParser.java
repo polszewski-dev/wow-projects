@@ -1,4 +1,4 @@
-package wow.commons.repository.impl.parsers;
+package wow.commons.repository.impl.parsers.items;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
@@ -11,6 +11,7 @@ import wow.commons.model.sources.SourceParser;
 import wow.commons.model.sources.TradedFromToken;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.parsers.gems.GemLuaParser;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -134,9 +135,9 @@ public class ItemDatabaseLuaParser {
 				continue;// Ignore obsolete stuff
 			}
 			for (ItemSetBonus itemSetBonus : itemSet.getItemSetBonuses()) {
-				ItemStatParser.resetAll();
-				if (ItemStatParser.tryParse(itemSetBonus.getDescription())) {
-					itemSetBonus.setBonusStats(ItemStatParser.getParsedStats());
+				ItemStatParser statParser = new ItemStatParser();
+				if (statParser.tryParse(itemSetBonus.getDescription())) {
+					itemSetBonus.setBonusStats(statParser.getParsedStats());
 				} else {
 					throw new IllegalArgumentException("Missing bonus: " + itemSetBonus.getDescription());
 				}

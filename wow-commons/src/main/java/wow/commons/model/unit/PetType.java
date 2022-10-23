@@ -15,7 +15,12 @@ public enum PetType {
 	Felguard,
 	;
 
-	public static PetType parse(String line) {
-		return Stream.of(values()).filter(x -> x.name().equalsIgnoreCase(line)).findAny().orElseThrow(() -> new IllegalArgumentException(line));
+	public static PetType parse(String name) {
+		if (name == null) {
+			return null;
+		}
+		return Stream.of(values())
+				.filter(x -> x.name().equalsIgnoreCase(name))
+				.findAny().orElseThrow(() -> new IllegalArgumentException(name));
 	}
 }

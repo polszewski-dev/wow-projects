@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.setters;
 
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.repository.impl.parsers.StatParser;
+import wow.commons.repository.impl.parsers.stats.StatMatcher;
 import wow.commons.util.AttributesBuilder;
 
 /**
@@ -10,19 +10,24 @@ import wow.commons.util.AttributesBuilder;
  * Date: 2022-01-18
  */
 public class EquivalentStatSetter implements StatSetter {
-	public static final EquivalentStatSetter INSTANCE = new EquivalentStatSetter();
+	private final int groupNo;
 
-	private EquivalentStatSetter() {}
+	public EquivalentStatSetter(int groupNo) {
+		this.groupNo = groupNo;
+	}
 
 	@Override
-	public void set(AttributesBuilder itemStats, StatParser parser, int groupNo) {
-		String line = parser.getString(groupNo);
-		StatSetterParams params = parser.getParams();
-
-		Integer amount = parser.evalParam(params.getSpecialAmount());
-		Attributes attributes = Attributes.of(params.getAttributeParser().getAttributes(amount));
-
-		SpecialAbility equivalent = SpecialAbility.equivalent(attributes, line);
+	public void set(AttributesBuilder itemStats, StatMatcher matcher) {
+		SpecialAbility equivalent = getSpecialAbility(matcher);
 		itemStats.addAttribute(equivalent);
+	}
+
+	private SpecialAbility getSpecialAbility(StatMatcher matcher) {
+		String line = matcher.getString(groupNo);
+
+		Integer amount = matcher.getParamAmount();
+		Attributes attributes = matcher.getParamStats(amount);
+
+		return SpecialAbility.equivalent(attributes, line);
 	}
 }
