@@ -47,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
 	public List<Item> getItems(int phase) {
 		return itemDataRepository.getAllItems()
 								 .stream()
-								 .filter(item -> itemDataRepository.getPhase(item) <= phase)
+								 .filter(item -> item.getPhase() <= phase)
 								 .collect(Collectors.toList());
 	}
 
@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
 	public List<Item> getItems(int phase, ItemSlot slot) {
 		return itemDataRepository.getAllItems()
 								 .stream()
-								 .filter(item -> itemDataRepository.getPhase(item) <= phase && item.canBeEquippedIn(slot))
+								 .filter(item -> item.getPhase() <= phase && item.canBeEquippedIn(slot))
 								 .collect(Collectors.toList());
 	}
 

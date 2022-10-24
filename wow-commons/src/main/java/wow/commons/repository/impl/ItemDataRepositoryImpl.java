@@ -2,11 +2,8 @@ package wow.commons.repository.impl;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
-import wow.commons.model.pve.Raid;
-import wow.commons.model.sources.Source;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.ItemDataRepository;
@@ -40,8 +37,6 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final Map<String, Gem> gemByName = new TreeMap<>();
 
 	private final Map<String, Map<ItemType, List<Item>>> casterItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
-
-	private static final List<String> HARDCODED_CASTER_ITEM_NAMES = List.of("Shroud of the Highborne");
 
 	public ItemDataRepositoryImpl(PVERepository pveRepository) {
 		this.pveRepository = pveRepository;
@@ -78,7 +73,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	@Override
 	public List<Item> getCasterItems(int phase, CharacterClass characterClass, SpellSchool spellSchool) {
 		return getAllItems().stream()
-							.filter(item -> isCasterItem(item, phase, characterClass, spellSchool))
+							.filter(item -> item.getPhase() <= phase && item.isCasterItem(characterClass, spellSchool))
 							.collect(Collectors.toList());
 	}
 
@@ -88,58 +83,6 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 				x -> getCasterItems(phase, characterClass, spellSchool)
 						.stream()
 						.collect(Collectors.groupingBy(Item::getItemType)));
-	}
-
-	@Override
-	public int getPhase(Item item) {
-		return item.getSources()
-				   .stream()
-				   .map(source -> source.isTradedFromToken() ? getPhase(source.getSourceToken()) : source.getPhase())
-				   .min(Integer::compareTo)
-				   .orElse(-1);
-	}
-
-	private boolean isCasterItem(Item item, int phase, CharacterClass characterClass, SpellSchool spellSchool) {
-		if (getPhase(item) > phase) {
-			return false;
-		}
-		ItemCategory category = item.getItemType().getCategory();
-		if (!(category == ItemCategory.Armor || category == ItemCategory.Accessory || category == ItemCategory.Weapon)) {
-			return false;
-		}
-		if (!item.canBeEquippedBy(characterClass)) {
-			return false;
-		}
-		if (item.hasCasterStats(spellSchool)) {
-			return true;
-		}
-		if (item.getClassRestriction().contains(characterClass)) {
-			return true;
-		}
-		if (item.getItemType() == ItemType.Trinket) {
-			return item.getSpecialAbilities()
-					   .stream()
-					   .anyMatch(x -> x.getLine().contains("spell"));
-		}
-		return HARDCODED_CASTER_ITEM_NAMES.contains(item.getName());
-	}
-
-	@Override
-	public Set<Raid> getRaidSources(Item item) {
-		Set<Raid> result = new LinkedHashSet<>();
-
-		for (Source source : item.getSources()) {
-			if (source.isRaidDrop()) {
-				result.add((Raid)source.getInstance());
-			} else if (source.isTradedFromToken()) {
-				Item token = source.getSourceToken();
-				if (token.isSourcedFromRaid()) {
-					result.addAll(getRaidSources(token));
-				}
-			}
-		}
-
-		return result;
 	}
 
 	@Override

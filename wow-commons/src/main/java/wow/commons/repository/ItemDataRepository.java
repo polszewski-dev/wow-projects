@@ -2,11 +2,13 @@ package wow.commons.repository;
 
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
-import wow.commons.model.pve.Raid;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -22,10 +24,6 @@ public interface ItemDataRepository {
 	List<Item> getCasterItems(int phase, CharacterClass characterClass, SpellSchool spellSchool);
 
 	Map<ItemType, List<Item>> getCasterItemsByType(int phase, CharacterClass characterClass, SpellSchool spellSchool);
-
-	int getPhase(Item item);
-
-	Set<Raid> getRaidSources(Item item);
 
 	List<Item> getSetItems(ItemSet itemSet);
 	List<Item> getItemsTradedFor(ItemLink itemLink);

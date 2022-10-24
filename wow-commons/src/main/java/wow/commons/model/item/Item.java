@@ -4,14 +4,19 @@ import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
 import wow.commons.model.professions.Profession;
+import wow.commons.model.pve.Raid;
 import wow.commons.model.sources.Source;
+import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.ArmorProfficiency;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.WeaponProfficiency;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -201,6 +206,55 @@ public class Item implements AttributeSource, Sourced {
 	public void setStats(Attributes stats) {
 		this.stats = stats;
 	}
+
+	public int getPhase() {
+		return getSourcesAfterTradingTokens()
+				.map(Source::getPhase)
+				.min(Integer::compareTo)
+				.orElse(-1);
+	}
+
+	public Set<Raid> getRaidSources() {
+		return getSourcesAfterTradingTokens()
+				.filter(Source::isRaidDrop)
+				.map(source -> (Raid)source.getInstance())
+				.collect(Collectors.toCollection(LinkedHashSet::new));
+	}
+
+	public Set<Item> getSourceTokens() {
+		return getSources().stream()
+				.map(Source::getSourceToken)
+				.collect(Collectors.toSet());
+	}
+
+	private Stream<Source> getSourcesAfterTradingTokens() {
+		return getSources().stream()
+				.flatMap(source -> source.isTradedFromToken() ? source.getSourceToken().getSources().stream() : Stream.of(source));
+	}
+
+	public boolean isCasterItem(CharacterClass characterClass, SpellSchool spellSchool) {
+		ItemCategory category = getItemType().getCategory();
+		if (!(category == ItemCategory.Armor || category == ItemCategory.Accessory || category == ItemCategory.Weapon)) {
+			return false;
+		}
+		if (!canBeEquippedBy(characterClass)) {
+			return false;
+		}
+		if (hasCasterStats(spellSchool)) {
+			return true;
+		}
+		if (getClassRestriction().contains(characterClass)) {
+			return true;
+		}
+		if (getItemType() == ItemType.Trinket) {
+			return getSpecialAbilities()
+					.stream()
+					.anyMatch(x -> x.getLine().contains("spell"));
+		}
+		return HARDCODED_CASTER_ITEM_NAMES.contains(getName());
+	}
+
+	private static final List<String> HARDCODED_CASTER_ITEM_NAMES = List.of("Shroud of the Highborne");
 
 	@Override
 	public boolean equals(Object o) {
