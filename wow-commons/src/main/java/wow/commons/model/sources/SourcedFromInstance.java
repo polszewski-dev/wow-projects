@@ -11,20 +11,12 @@ abstract class SourcedFromInstance extends Source {
 	protected final Instance instance;
 
 	SourcedFromInstance(Instance instance, Phase phase) {
-		super(phase);
-		if (instance == null) {
-			throw new NullPointerException();
-		}
+		super(phase != null ? phase : instance.getPhase());
 		this.instance = instance;
 	}
 
 	@Override
 	public final Instance getInstance() {
 		return instance;
-	}
-
-	@Override
-	protected Phase getDefaultPhase() {
-		return instance.getPhase();
 	}
 }

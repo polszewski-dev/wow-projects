@@ -1,7 +1,6 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.item.Item;
-import wow.commons.model.pve.Phase;
 
 import java.util.Objects;
 
@@ -13,21 +12,13 @@ public class TradedFromToken extends NotSourcedFromInstance {
 	private final Item item;
 
 	public TradedFromToken(Item item) {
-		super(null);
-		if (item == null) {
-			throw new NullPointerException();
-		}
+		super(item.getPhase());
 		this.item = item;
 	}
 
 	@Override
 	public Item getSourceToken() {
 		return item;
-	}
-
-	@Override
-	protected Phase getDefaultPhase() {
-		return Phase.TBC_P0;
 	}
 
 	@Override

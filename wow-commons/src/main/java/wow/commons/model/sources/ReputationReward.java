@@ -13,13 +13,8 @@ class ReputationReward extends NotSourcedFromInstance {
 	private final Faction faction;
 
 	ReputationReward(Faction faction, Phase phase) {
-		super(phase);
+		super(phase != null ? phase : faction.getPhase());
 		this.faction = faction;
-	}
-
-	@Override
-	protected Phase getDefaultPhase() {
-		return faction.getPhase();
 	}
 
 	@Override

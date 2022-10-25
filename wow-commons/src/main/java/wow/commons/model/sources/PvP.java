@@ -12,11 +12,6 @@ class PvP extends NotSourcedFromInstance {
 	}
 
 	@Override
-	protected Phase getDefaultPhase() {
-		return Phase.TBC_P0;
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		return o instanceof PvP;
 	}

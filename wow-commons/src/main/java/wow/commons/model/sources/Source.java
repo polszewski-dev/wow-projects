@@ -14,6 +14,9 @@ public abstract class Source {
 	private final Phase phase;
 
 	protected Source(Phase phase) {
+		if (phase == null) {
+			throw new NullPointerException();
+		}
 		this.phase = phase;
 	}
 
@@ -36,14 +39,7 @@ public abstract class Source {
 	}
 
 	public final Phase getPhase() {
-		if (phase != null) {
-			return phase;
-		}
-		return getDefaultPhase();
-	}
-
-	protected Phase getDefaultPhase() {
-		throw new IllegalArgumentException("Can't infer the phase for: " + getClass().getSimpleName());
+		return phase;
 	}
 
 	public boolean isBossDrop() {

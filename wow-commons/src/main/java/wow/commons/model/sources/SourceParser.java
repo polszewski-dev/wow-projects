@@ -10,6 +10,7 @@ import wow.commons.model.pve.Instance;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.PVERepository;
 
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -20,7 +21,7 @@ public final class SourceParser {
 	public static Source parse(String line, PVERepository pveRepository) {
 		ItemLink tokenLink = ItemLink.tryParse(line);
 		if (tokenLink != null) {
-			Item dummy = new Item(new ItemTooltip(tokenLink, 0, null, null, null));
+			Item dummy = new Item(new ItemTooltip(tokenLink, 0, Set.of(new PvP(Phase.TBC_P0)), null, null));
 			return new TradedFromToken(dummy);
 		}
 
@@ -58,7 +59,7 @@ public final class SourceParser {
 
 		Profession profession = Profession.tryParse(line);
 		if (profession != null) {
-			return new Crafted(profession, phase);
+			return new Crafted(profession, phase != null ? phase : Phase.TBC_P0);
 		}
 
 		if (line.equalsIgnoreCase("Quest")) {
@@ -70,11 +71,11 @@ public final class SourceParser {
 		}
 
 		if (line.equalsIgnoreCase("Vendor")) {
-			return new PurchasedFromVendor(phase);
+			return new PurchasedFromVendor(phase != null ? phase : Phase.TBC_P0);
 		}
 
 		if (line.equalsIgnoreCase("BadgeVendor")) {
-			return new BadgeVendor(phase);
+			return new BadgeVendor(phase != null ? phase : Phase.TBC_P0);
 		}
 
 		if (line.equalsIgnoreCase("WorldDrop")) {
@@ -82,7 +83,7 @@ public final class SourceParser {
 		}
 
 		if (line.equalsIgnoreCase("PvP")) {
-			return new PvP(phase);
+			return new PvP(phase != null ? phase : Phase.TBC_P0);
 		}
 
 		throw new IllegalArgumentException("Invalid source: " + line);
