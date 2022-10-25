@@ -8,6 +8,7 @@ import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
@@ -136,7 +137,7 @@ abstract class ItemVariantEnumerator {
 
 	protected abstract Map<ItemType, List<Item>> getItemsByType(PlayerProfile playerProfile, Spell spell);
 
-	private List<EquippableItem> getItemVariants(Item item, int phase, SpellSchool spellSchool) {
+	private List<EquippableItem> getItemVariants(Item item, Phase phase, SpellSchool spellSchool) {
 		if (item.isEnchantable() && item.hasSockets()) {
 			List<wow.commons.model.item.Enchant> enchants = itemService.getCasterEnchants(item.getItemType(), phase, spellSchool);
 			List<Gem[]> gemCombos = itemService.getCasterGemCombos(item, phase);

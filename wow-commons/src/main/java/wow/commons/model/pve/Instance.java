@@ -12,11 +12,11 @@ public abstract class Instance implements Comparable<Instance> {
 	private final String name;
 	private final int partySize;
 	private final GameVersion version;
-	private final int phase;
+	private final Phase phase;
 	private final String shortName;
 	private List<Boss> bosses;
 
-	Instance(int no, String name, int partySize, GameVersion version, int phase, String shortName) {
+	Instance(int no, String name, int partySize, GameVersion version, Phase phase, String shortName) {
 		this.no = no;
 		this.name = name;
 		this.partySize = partySize;
@@ -41,7 +41,7 @@ public abstract class Instance implements Comparable<Instance> {
 		return version;
 	}
 
-	public int getPhase() {
+	public Phase getPhase() {
 		return phase;
 	}
 

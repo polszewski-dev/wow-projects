@@ -10,6 +10,7 @@ import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
+import wow.commons.model.pve.Phase;
 import wow.minmax.converter.dto.*;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.dto.*;
@@ -19,7 +20,6 @@ import wow.minmax.service.PlayerProfileService;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -54,7 +54,7 @@ public class PlayerProfileController {
 	@GetMapping(path = "create/name/{profileName}/phase/{phase}")
 	public PlayerProfileDTO createPlayerProfile(
 			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") int phase
+			@PathVariable("phase") Phase phase
 	) {
 		PlayerProfile createdProfile = playerProfileService.createPlayerProfile(profileName, phase);
 		return playerProfileConverter.convert(createdProfile);
@@ -64,7 +64,7 @@ public class PlayerProfileController {
 	public PlayerProfileDTO createPlayerProfile(
 			@PathVariable("copiedProfileId") UUID copiedProfileId,
 			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") int phase
+			@PathVariable("phase") Phase phase
 	) {
 		PlayerProfile createdProfile = playerProfileService.copyPlayerProfile(copiedProfileId, profileName, phase);
 		return playerProfileConverter.convert(createdProfile);
@@ -158,7 +158,7 @@ public class PlayerProfileController {
 		return equipmentConverter.convertItem(playerProfile.getEquipment(), equippableItem);
 	}
 
-	private void addItemOptions(EquippableItemDTO dto, int phase) {
+	private void addItemOptions(EquippableItemDTO dto, Phase phase) {
 		Item item = itemService.getItem(dto.getItem().getId());
 		dto.setItemOptions(new ItemOptionsDTO(
 				getEnchants(item, phase),
@@ -168,13 +168,13 @@ public class PlayerProfileController {
 		));
 	}
 
-	private List<EnchantDTO> getEnchants(Item item, int phase) {
+	private List<EnchantDTO> getEnchants(Item item, Phase phase) {
 		List<Enchant> enchants = itemService.getAvailableEnchants(item, phase);
 		enchants.sort(Comparator.comparing(Enchant::getName));
 		return enchantConverter.convertList(enchants);
 	}
 
-	private List<GemDTO> getAvailableGems(Item item, int socketNo, int phase) {
+	private List<GemDTO> getAvailableGems(Item item, int socketNo, Phase phase) {
 		List<Gem> gems = itemService.getAvailableGems(item, socketNo, phase, false);
 		gems.sort(Comparator.comparing(this::sourceBasedOrder)
 							.thenComparing(Comparator.comparing(Gem::getRarity).reversed())

@@ -6,6 +6,7 @@ import wow.commons.model.attributes.*;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.equipment.Equipment;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.unit.CharacterClass;
@@ -34,7 +35,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	private final int level;
 	private final CreatureType enemyType;
 
-	private final int phase;
+	private final Phase phase;
 
 	private Build build;
 
@@ -44,11 +45,11 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	private final boolean readOnly;
 	private LocalDateTime lastModified;
 
-	public PlayerProfile(UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, CreatureType enemyType, int phase, Build build) {
+	public PlayerProfile(UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, CreatureType enemyType, Phase phase, Build build) {
 		this(profileId, profileName, characterClass, race, level, enemyType, phase, build, false);
 	}
 
-	private PlayerProfile(UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, CreatureType enemyType, int phase, Build build, boolean readOnly) {
+	private PlayerProfile(UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, CreatureType enemyType, Phase phase, Build build, boolean readOnly) {
 		this.profileId = profileId;
 		this.profileName = profileName;
 		this.characterClass = characterClass;
@@ -70,15 +71,15 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return copy(profileId, profileName, phase, readOnly);
 	}
 
-	public PlayerProfile copy(UUID profileId, String profileName, int phase) {
+	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
 		return copy(profileId, profileName, phase, false);
 	}
 
-	public PlayerProfile readOnlyCopy(UUID profileId, String profileName, int phase) {
+	public PlayerProfile readOnlyCopy(UUID profileId, String profileName, Phase phase) {
 		return copy(profileId, profileName, phase, true);
 	}
 
-	private PlayerProfile copy(UUID profileId, String profileName, int phase, boolean readOnly) {
+	private PlayerProfile copy(UUID profileId, String profileName, Phase phase, boolean readOnly) {
 		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterClass, race, level, enemyType, phase, build, readOnly);
 
 		copy.equipment = Copyable.copyNullable(this.equipment, readOnly);
@@ -130,7 +131,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return enemyType;
 	}
 
-	public int getPhase() {
+	public Phase getPhase() {
 		return phase;
 	}
 

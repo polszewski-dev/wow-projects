@@ -1,17 +1,19 @@
 package wow.commons.model.sources;
 
+import wow.commons.model.pve.Phase;
+
 /**
  * User: POlszewski
  * Date: 2021-03-22
  */
 class WorldDrop extends NotSourcedFromInstance {
-	WorldDrop(int phase) {
+	WorldDrop(Phase phase) {
 		super(phase);
 	}
 
 	@Override
-	protected int getDefaultPhase() {
-		return -1;
+	protected Phase getDefaultPhase() {
+		return Phase.TBC_P0;
 	}
 
 	@Override

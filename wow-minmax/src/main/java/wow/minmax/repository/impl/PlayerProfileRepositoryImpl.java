@@ -7,6 +7,7 @@ import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.CreatureType;
 import wow.commons.model.unit.Race;
@@ -41,14 +42,14 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	}
 
 	@Override
-	public PlayerProfile createPlayerProfile(String profileName, int phase) {
+	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
 		PlayerProfile playerProfile = createTemporaryPlayerProfile(profileName, phase);
 		saveProfile(playerProfile);
 		return playerProfile;
 	}
 
 	@Override
-	public PlayerProfile createTemporaryPlayerProfile(String profileName, int phase) {
+	public PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase) {
 		PlayerProfile playerProfile = new PlayerProfile(
 				UUID.randomUUID(),
 				profileName,
@@ -66,7 +67,7 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	}
 
 	@Override
-	public PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, int phase) {
+	public PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase) {
 		PlayerProfile copiedProfile = getPlayerProfile(copiedProfileId);
 		PlayerProfile copy = copiedProfile.copy(UUID.randomUUID(), profileName, phase);
 

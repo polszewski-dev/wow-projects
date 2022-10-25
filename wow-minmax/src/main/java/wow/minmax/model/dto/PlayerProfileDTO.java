@@ -2,6 +2,7 @@ package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.CreatureType;
 import wow.commons.model.unit.Race;
@@ -25,7 +26,7 @@ public class PlayerProfileDTO {
 	private final int level;
 	private final CreatureType enemyType;
 
-	private final int phase;
+	private final Phase phase;
 
 	private EquipmentDTO equipment;
 	private List<BuffDTO> buffs;

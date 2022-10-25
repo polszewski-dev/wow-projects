@@ -1,6 +1,7 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.item.Item;
+import wow.commons.model.pve.Phase;
 
 import java.util.Objects;
 
@@ -25,8 +26,8 @@ public class TradedFromToken extends NotSourcedFromInstance {
 	}
 
 	@Override
-	protected int getDefaultPhase() {
-		return -1;
+	protected Phase getDefaultPhase() {
+		return Phase.TBC_P0;
 	}
 
 	@Override

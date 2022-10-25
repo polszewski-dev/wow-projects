@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 import wow.minmax.converter.dto.ItemConverter;
@@ -39,19 +40,19 @@ public class ItemController {
 	}
 
 	@GetMapping(path = "phase/{phase}")
-	public List<ItemDTO> getItems(@PathVariable("phase") int phase) {
+	public List<ItemDTO> getItems(@PathVariable("phase") Phase phase) {
 		List<Item> result = itemService.getItems(phase);
 		return itemConverter.convertList(result);
 	}
 
 	@GetMapping(path = "phase/{phase}/slot/{slot}")
-	public List<ItemDTO> getItems(@PathVariable("phase") int phase, @PathVariable("slot") ItemSlot slot) {
+	public List<ItemDTO> getItems(@PathVariable("phase") Phase phase, @PathVariable("slot") ItemSlot slot) {
 		List<Item> result = itemService.getItems(phase, slot);
 		return itemConverter.convertList(result);
 	}
 
 	@GetMapping(path = "phase/{phase}/byslot")
-	public Map<ItemSlot, List<ItemDTO>> getItemsBySlot(@PathVariable("phase") int phase) {
+	public Map<ItemSlot, List<ItemDTO>> getItemsBySlot(@PathVariable("phase") Phase phase) {
 		CharacterClass characterClass = CharacterClass.Warlock;
 		SpellSchool spellSchool = SpellSchool.Shadow;
 		var itemsBySlot = itemService.getItemsBySlot(phase, characterClass, spellSchool);

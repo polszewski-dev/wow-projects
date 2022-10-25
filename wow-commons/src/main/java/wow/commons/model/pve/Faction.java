@@ -10,9 +10,9 @@ public class Faction implements Comparable<Faction> {
 	private final int no;
 	private final String name;
 	private final GameVersion version;
-	private final int phase;
+	private final Phase phase;
 
-	public Faction(int no, String name, GameVersion version, int phase) {
+	public Faction(int no, String name, GameVersion version, Phase phase) {
 		this.no = no;
 		this.name = name;
 		this.version = version;
@@ -31,7 +31,7 @@ public class Faction implements Comparable<Faction> {
 		return version;
 	}
 
-	public int getPhase() {
+	public Phase getPhase() {
 		return phase;
 	}
 

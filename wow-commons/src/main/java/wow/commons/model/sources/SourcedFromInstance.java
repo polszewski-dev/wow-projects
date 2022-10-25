@@ -1,6 +1,7 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.pve.Instance;
+import wow.commons.model.pve.Phase;
 
 /**
  * User: POlszewski
@@ -9,7 +10,7 @@ import wow.commons.model.pve.Instance;
 abstract class SourcedFromInstance extends Source {
 	protected final Instance instance;
 
-	SourcedFromInstance(Instance instance, Integer phase) {
+	SourcedFromInstance(Instance instance, Phase phase) {
 		super(phase);
 		if (instance == null) {
 			throw new NullPointerException();
@@ -23,7 +24,7 @@ abstract class SourcedFromInstance extends Source {
 	}
 
 	@Override
-	protected int getDefaultPhase() {
+	protected Phase getDefaultPhase() {
 		return instance.getPhase();
 	}
 }

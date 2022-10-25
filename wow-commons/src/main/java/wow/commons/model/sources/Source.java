@@ -4,15 +4,16 @@ import wow.commons.model.item.Item;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Instance;
+import wow.commons.model.pve.Phase;
 
 /**
  * User: POlszewski
  * Date: 2021-01-21
  */
 public abstract class Source {
-	private final Integer phase;
+	private final Phase phase;
 
-	protected Source(Integer phase) {
+	protected Source(Phase phase) {
 		this.phase = phase;
 	}
 
@@ -34,14 +35,14 @@ public abstract class Source {
 		return null;
 	}
 
-	public final int getPhase() {
+	public final Phase getPhase() {
 		if (phase != null) {
 			return phase;
 		}
 		return getDefaultPhase();
 	}
 
-	protected int getDefaultPhase() {
+	protected Phase getDefaultPhase() {
 		throw new IllegalArgumentException("Can't infer the phase for: " + getClass().getSimpleName());
 	}
 

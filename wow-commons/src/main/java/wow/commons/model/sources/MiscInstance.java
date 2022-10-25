@@ -1,6 +1,7 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.pve.Instance;
+import wow.commons.model.pve.Phase;
 
 import java.util.Objects;
 
@@ -9,7 +10,7 @@ import java.util.Objects;
  * Date: 2021-03-13
  */
 class MiscInstance extends SourcedFromInstance {
-	MiscInstance(Instance instance, Integer phase) {
+	MiscInstance(Instance instance, Phase phase) {
 		super(instance, phase);
 	}
 

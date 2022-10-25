@@ -9,6 +9,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Item;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.util.AttributeEvaluator;
@@ -43,17 +44,17 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public PlayerProfile createPlayerProfile(String profileName, int phase) {
+	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
 		return playerProfileRepository.createPlayerProfile(profileName, phase);
 	}
 
 	@Override
-	public PlayerProfile createTemporaryPlayerProfile(String profileName, int phase) {
+	public PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase) {
 		return playerProfileRepository.createTemporaryPlayerProfile(profileName, phase);
 	}
 
 	@Override
-	public PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, int phase) {
+	public PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase) {
 		return playerProfileRepository.copyPlayerProfile(copiedProfileId, profileName, phase);
 	}
 

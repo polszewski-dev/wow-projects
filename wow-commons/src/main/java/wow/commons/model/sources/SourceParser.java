@@ -7,6 +7,7 @@ import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Instance;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.PVERepository;
 
 import java.util.function.Function;
@@ -28,10 +29,9 @@ public final class SourceParser {
 		line = parts[0];
 		parts[0] = null;
 
-		Integer phase = getArgument(parts, part -> {
-			String regex = "^p(\\d+)$";
-			if (part.matches(regex)) {
-				return Integer.parseInt(part.replaceAll(regex, "$1"));
+		Phase phase = getArgument(parts, part -> {
+			if (part.matches("^(p\\d+)$")) {
+				return Phase.valueOf("TBC_" + part.toUpperCase());
 			}
 			return null;
 		});
@@ -78,7 +78,7 @@ public final class SourceParser {
 		}
 
 		if (line.equalsIgnoreCase("WorldDrop")) {
-			return new WorldDrop(phase != null ? phase : -1);
+			return new WorldDrop(phase != null ? phase : Phase.TBC_P0);
 		}
 
 		if (line.equalsIgnoreCase("PvP")) {

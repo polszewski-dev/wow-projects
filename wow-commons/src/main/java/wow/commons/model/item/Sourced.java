@@ -1,5 +1,6 @@
 package wow.commons.model.item;
 
+import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
 
 import java.util.Arrays;
@@ -45,7 +46,11 @@ public interface Sourced {
 		return getSources().stream().anyMatch(predicate);
 	}
 
-	default int getPhase() {
-		return getSources().stream().map(Source::getPhase).min(Integer::compareTo).orElse(-1);
+	default Phase getPhase() {
+		return getSources().stream().map(Source::getPhase).min(Phase::compareTo).orElse(Phase.TBC_P0);
+	}
+
+	default boolean isAvailableDuring(Phase phase) {
+		return getPhase().isEarlierOrTheSame(phase);
 	}
 }

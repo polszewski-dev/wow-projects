@@ -8,6 +8,7 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.ItemDataRepository;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
-	private static final int EPIC_GEM_PHASE = 3;
+	private static final Phase EPIC_GEM_PHASE = Phase.TBC_P3;
 
 	private final ItemDataRepository itemDataRepository;
 
@@ -44,23 +45,23 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItems(int phase) {
+	public List<Item> getItems(Phase phase) {
 		return itemDataRepository.getAllItems()
 								 .stream()
-								 .filter(item -> item.getPhase() <= phase)
+								 .filter(item -> item.isAvailableDuring(phase))
 								 .collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Item> getItems(int phase, ItemSlot slot) {
+	public List<Item> getItems(Phase phase, ItemSlot slot) {
 		return itemDataRepository.getAllItems()
 								 .stream()
-								 .filter(item -> item.getPhase() <= phase && item.canBeEquippedIn(slot))
+								 .filter(item -> item.isAvailableDuring(phase) && item.canBeEquippedIn(slot))
 								 .collect(Collectors.toList());
 	}
 
 	@Override
-	public Map<ItemSlot, List<Item>> getItemsBySlot(int phase, CharacterClass characterClass, SpellSchool spellSchool) {
+	public Map<ItemSlot, List<Item>> getItemsBySlot(Phase phase, CharacterClass characterClass, SpellSchool spellSchool) {
 		var byItemType = itemDataRepository.getCasterItems(phase, characterClass, spellSchool)
 										   .stream()
 										   .collect(Collectors.groupingBy(Item::getItemType));
@@ -77,12 +78,12 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getAvailableEnchants(Item item, int phase) {
+	public List<Enchant> getAvailableEnchants(Item item, Phase phase) {
 		return itemDataRepository.getEnchants(item.getItemType());
 	}
 
 	@Override
-	public List<Enchant> getCasterEnchants(ItemType itemType, int phase, SpellSchool spellSchool) {
+	public List<Enchant> getCasterEnchants(ItemType itemType, Phase phase, SpellSchool spellSchool) {
 		return casterEnchants.computeIfAbsent(itemType + "#" + phase,
 				x -> itemDataRepository.getEnchants(itemType)
 									   .stream()
@@ -109,11 +110,11 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getAvailableGems(Item item, int socketNo, int phase, boolean onlyCrafted) {
+	public List<Gem> getAvailableGems(Item item, int socketNo, Phase phase, boolean onlyCrafted) {
 		return getAvailableGems(item.getSocketSpecification(), socketNo, phase, onlyCrafted);
 	}
 
-	private List<Gem> getAvailableGems(ItemSocketSpecification specification, int socketNo, int phase, boolean onlyCrafted) {
+	private List<Gem> getAvailableGems(ItemSocketSpecification specification, int socketNo, Phase phase, boolean onlyCrafted) {
 		if (socketNo > specification.getSocketCount()) {
 			return Collections.emptyList();//sortable list is needed
 		}
@@ -125,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem[]> getCasterGemCombos(Item item, int phase) {
+	public List<Gem[]> getCasterGemCombos(Item item, Phase phase) {
 		ItemSocketsUniqueConfiguration uniqueConfiguration = item.getSocketSpecification().getUniqueConfiguration();
 		List<Gem[]> casterGemCombos = getCasterGemCombos(uniqueConfiguration, phase);
 		return casterGemCombos.stream()
@@ -133,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
 							  .collect(Collectors.toList());
 	}
 
-	private List<Gem[]> getCasterGemCombos(ItemSocketsUniqueConfiguration uniqueConfiguration, int phase) {
+	private List<Gem[]> getCasterGemCombos(ItemSocketsUniqueConfiguration uniqueConfiguration, Phase phase) {
 		return casterGemCombosCache.computeIfAbsent(uniqueConfiguration.getKey() + "#" + phase, x -> {
 			ItemSocketSpecification specification = uniqueConfiguration.getSpecification();
 
@@ -222,23 +223,33 @@ public class ItemServiceImpl implements ItemService {
 		return gemEquivalenceGroups.values().stream().map(group -> group.get(0)).collect(Collectors.toList());
 	}
 
-	private List<Gem> getGems(int phase, boolean onlyCrafted) {
+	private List<Gem> getGems(Phase phase, boolean onlyCrafted) {
 		return getCachedGems(coloredGemsByPhase, false, phase, onlyCrafted);
 	}
 
-	private List<Gem> getMetaGems(int phase, boolean onlyCrafted) {
+	private List<Gem> getMetaGems(Phase phase, boolean onlyCrafted) {
 		return getCachedGems(metaGemsByPhase, true, phase, onlyCrafted);
 	}
 
-	private List<Gem> getCachedGems(Map<String, List<Gem>> map, boolean meta, int phase, boolean onlyCrafted) {
+	private List<Gem> getCachedGems(Map<String, List<Gem>> map, boolean meta, Phase phase, boolean onlyCrafted) {
 		return map.computeIfAbsent(phase + "#" + onlyCrafted,
 				key -> itemDataRepository.getAllGems()
 										 .stream()
-										 .filter(gem -> gem.getPhase() <= phase)
-										 .filter(gem -> gem.getRarity().isAtLeastAsGoodAs(onlyCrafted && phase >= EPIC_GEM_PHASE && !meta ? ItemRarity.Epic : ItemRarity.Rare))
+										 .filter(gem -> gem.isAvailableDuring(phase))
+										 .filter(gem -> gem.getRarity().isAtLeastAsGoodAs(getMinimumRarity(meta, phase, onlyCrafted)))
 										 .filter(gem -> meta == (gem.getColor() == GemColor.Meta))
 										 .filter(gem -> !onlyCrafted || (gem.isCrafted() && gem.getBinding() != Binding.BindsOnPickUp))
 										 .filter(Gem::hasCasterStats)
 										 .collect(Collectors.toList()));
+	}
+
+	private static ItemRarity getMinimumRarity(boolean meta, Phase phase, boolean onlyCrafted) {
+		if (meta) {
+			return ItemRarity.Rare;
+		}
+		if (phase.isEarlier(EPIC_GEM_PHASE)) {
+			return ItemRarity.Rare;
+		}
+		return onlyCrafted ? ItemRarity.Epic : ItemRarity.Rare;
 	}
 }

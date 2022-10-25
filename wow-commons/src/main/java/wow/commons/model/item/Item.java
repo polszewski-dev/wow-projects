@@ -4,6 +4,7 @@ import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
 import wow.commons.model.professions.Profession;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Raid;
 import wow.commons.model.sources.Source;
 import wow.commons.model.spells.SpellSchool;
@@ -207,11 +208,11 @@ public class Item implements AttributeSource, Sourced {
 		this.stats = stats;
 	}
 
-	public int getPhase() {
+	public Phase getPhase() {
 		return getSourcesAfterTradingTokens()
 				.map(Source::getPhase)
-				.min(Integer::compareTo)
-				.orElse(-1);
+				.min(Phase::compareTo)
+				.orElse(Phase.TBC_P0);
 	}
 
 	public Set<Raid> getRaidSources() {

@@ -4,6 +4,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.ItemDataRepository;
@@ -71,14 +72,14 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
-	public List<Item> getCasterItems(int phase, CharacterClass characterClass, SpellSchool spellSchool) {
+	public List<Item> getCasterItems(Phase phase, CharacterClass characterClass, SpellSchool spellSchool) {
 		return getAllItems().stream()
-							.filter(item -> item.getPhase() <= phase && item.isCasterItem(characterClass, spellSchool))
+							.filter(item -> item.isAvailableDuring(phase) && item.isCasterItem(characterClass, spellSchool))
 							.collect(Collectors.toList());
 	}
 
 	@Override
-	public Map<ItemType, List<Item>> getCasterItemsByType(int phase, CharacterClass characterClass, SpellSchool spellSchool) {
+	public Map<ItemType, List<Item>> getCasterItemsByType(Phase phase, CharacterClass characterClass, SpellSchool spellSchool) {
 		return casterItemsByTypeCache.computeIfAbsent(phase + "#" + characterClass + "#" + spellSchool,
 				x -> getCasterItems(phase, characterClass, spellSchool)
 						.stream()

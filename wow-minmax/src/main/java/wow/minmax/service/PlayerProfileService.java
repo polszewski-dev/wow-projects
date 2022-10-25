@@ -2,6 +2,7 @@ package wow.minmax.service;
 
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.pve.Phase;
 import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.PlayerProfile;
 
@@ -15,11 +16,11 @@ import java.util.UUID;
 public interface PlayerProfileService {
 	List<PlayerProfile> getPlayerProfileList();
 
-	PlayerProfile createPlayerProfile(String profileName, int phase);
+	PlayerProfile createPlayerProfile(String profileName, Phase phase);
 
-	PlayerProfile createTemporaryPlayerProfile(String profileName, int phase);
+	PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase);
 
-	PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, int phase);
+	PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase);
 
 	PlayerProfile getPlayerProfile(UUID profileId);
 

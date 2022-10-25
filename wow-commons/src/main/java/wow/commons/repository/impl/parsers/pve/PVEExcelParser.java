@@ -82,7 +82,7 @@ public class PVEExcelParser extends ExcelParser {
 		var name = COL_INSTANCE_NAME.getString();
 		var partySize = COL_INSTANCE_PARTY_SIZE.getInteger();
 		var version = GameVersion.parse(COL_INSTANCE_VERSION.getString());
-		var phase = COL_INSTANCE_PHASE.getInteger();
+		var phase = COL_INSTANCE_PHASE.getEnum(Phase::parse);
 		var shortName = COL_INSTANCE_SHORT_NAME.getString(null);
 
 		if (partySize > 5) {
@@ -116,7 +116,7 @@ public class PVEExcelParser extends ExcelParser {
 		var no = COL_FACTION_NO.getInteger();
 		var name = COL_FACTION_NAME.getString();
 		var version = GameVersion.parse(COL_FACTION_VERSION.getString());
-		var phase = COL_FACTION_PHASE.getInteger();
+		var phase = COL_FACTION_PHASE.getEnum(Phase::parse);
 
 		return new Faction(no, name, version, phase);
 	}

@@ -1,6 +1,7 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.pve.Boss;
+import wow.commons.model.pve.Phase;
 
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
 class BossDrop extends SourcedFromInstance {
 	private final Boss boss;
 
-	BossDrop(Boss boss, Integer phase) {
+	BossDrop(Boss boss, Phase phase) {
 		super(boss.getInstance(), phase);
 		this.boss = boss;
 	}

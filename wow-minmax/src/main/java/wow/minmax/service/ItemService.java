@@ -5,6 +5,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 
@@ -20,17 +21,17 @@ public interface ItemService {
 
 	List<Item> getItems();
 
-	List<Item> getItems(int phase);
+	List<Item> getItems(Phase phase);
 
-	List<Item> getItems(int phase, ItemSlot slot);
+	List<Item> getItems(Phase phase, ItemSlot slot);
 
-	Map<ItemSlot, List<Item>> getItemsBySlot(int phase, CharacterClass characterClass, SpellSchool spellSchool);
+	Map<ItemSlot, List<Item>> getItemsBySlot(Phase phase, CharacterClass characterClass, SpellSchool spellSchool);
 
-	List<Enchant> getAvailableEnchants(Item item, int phase);
+	List<Enchant> getAvailableEnchants(Item item, Phase phase);
 
-	List<Enchant> getCasterEnchants(ItemType itemType, int phase, SpellSchool spellSchool);
+	List<Enchant> getCasterEnchants(ItemType itemType, Phase phase, SpellSchool spellSchool);
 
-	List<Gem> getAvailableGems(Item item, int socketNo, int phase, boolean onlyCrafted);
+	List<Gem> getAvailableGems(Item item, int socketNo, Phase phase, boolean onlyCrafted);
 
-	List<Gem[]> getCasterGemCombos(Item item, int phase);
+	List<Gem[]> getCasterGemCombos(Item item, Phase phase);
 }

@@ -1088,7 +1088,7 @@ $(() => {
 		profiles
 			.sort((profile1, profile2) => profile1.profileName < profile2.profileName ? -1 : profile1.profileName > profile2.profileName ? 1 : 0)
 			.forEach(profile =>
-				select.append(`<option value="${profile.profileId}">P${profile.phase} ${profile.profileName}</option>`)
+				select.append(`<option value="${profile.profileId}">${profile.phase} ${profile.profileName}</option>`)
 			)
 
 		if (selectedProfileId) {
@@ -1109,7 +1109,7 @@ $(() => {
 			copiedProfileId = equipmentEditor._profile.profileId
 		} else {
 			name = 'Dummy Profile Name' // TODO
-			phase = 5
+			phase = 'TBC_P5'
 			copiedProfileId = null
 		}
 

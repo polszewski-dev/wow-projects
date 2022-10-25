@@ -2,6 +2,7 @@ package wow.commons.repository;
 
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
 
@@ -21,9 +22,9 @@ public interface ItemDataRepository {
 
 	Collection<Item> getAllItems();
 
-	List<Item> getCasterItems(int phase, CharacterClass characterClass, SpellSchool spellSchool);
+	List<Item> getCasterItems(Phase phase, CharacterClass characterClass, SpellSchool spellSchool);
 
-	Map<ItemType, List<Item>> getCasterItemsByType(int phase, CharacterClass characterClass, SpellSchool spellSchool);
+	Map<ItemType, List<Item>> getCasterItemsByType(Phase phase, CharacterClass characterClass, SpellSchool spellSchool);
 
 	List<Item> getSetItems(ItemSet itemSet);
 	List<Item> getItemsTradedFor(ItemLink itemLink);
