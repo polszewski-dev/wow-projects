@@ -2,10 +2,13 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.model.unit.CharacterInfo;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.BuildRepository;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -40,9 +43,7 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 		PlayerProfile playerProfile = new PlayerProfile(
 				value.getProfileId(),
 				value.getProfileName(),
-				value.getCharacterClass(),
-				value.getRace(),
-				value.getLevel(),
+				new CharacterInfo(value.getCharacterClass(), value.getRace(), value.getLevel(), List.of()),
 				value.getEnemyType(),
 				value.getPhase(),
 				buildRepository.getBuild(value.getBuildId())

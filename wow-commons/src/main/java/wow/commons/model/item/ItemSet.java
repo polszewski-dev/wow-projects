@@ -1,6 +1,7 @@
 package wow.commons.model.item;
 
-import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.pve.Phase;
+import wow.commons.model.unit.CharacterInfo;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,14 +13,15 @@ import java.util.Objects;
 public class ItemSet {
 	private final String name;
 	private final Tier tier;
-	private final List<CharacterClass> classRestriction;
+	private final ItemRestriction restriction = new ItemRestriction();
+	private final List<ItemSetBonus> itemSetBonuses;
+	private final List<Item> pieces;
 
-	private List<ItemSetBonus> itemSetBonuses;
-
-	public ItemSet(String name, Tier tier, List<CharacterClass> classRestriction) {
+	public ItemSet(String name, Tier tier, List<ItemSetBonus> itemSetBonuses, List<Item> pieces) {
 		this.name = name;
 		this.tier = tier;
-		this.classRestriction = classRestriction;
+		this.itemSetBonuses = itemSetBonuses;
+		this.pieces = pieces;
 	}
 
 	public String getName() {
@@ -30,20 +32,20 @@ public class ItemSet {
 		return tier;
 	}
 
-	public List<CharacterClass> getClassRestriction() {
-		return classRestriction;
+	public ItemRestriction getRestriction() {
+		return restriction;
 	}
 
 	public List<ItemSetBonus> getItemSetBonuses() {
 		return itemSetBonuses;
 	}
 
-	public void setItemSetBonuses(List<ItemSetBonus> itemSetBonuses) {
-		this.itemSetBonuses = itemSetBonuses;
+	public List<Item> getPieces() {
+		return pieces;
 	}
 
-	public boolean canBeEquippedBy(CharacterClass characterClass) {
-		return classRestriction.isEmpty() || classRestriction.contains(characterClass);
+	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
+		return restriction.isMetBy(characterInfo, phase);
 	}
 
 	@Override

@@ -15,6 +15,7 @@ public enum ItemSocketsUniqueConfiguration {
 	R("R"),
 	Y("Y"),
 	B("B"),
+	M("M"),
 
 	RR("RR"),
 	RY("RY"),

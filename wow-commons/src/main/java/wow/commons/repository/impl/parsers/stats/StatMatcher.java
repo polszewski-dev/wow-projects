@@ -5,8 +5,8 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.repository.impl.parsers.setters.StatSetter;
 import wow.commons.util.AttributesBuilder;
+import wow.commons.util.ParserUtil;
 
-import java.util.function.IntConsumer;
 import java.util.regex.Matcher;
 
 /**
@@ -68,55 +68,32 @@ public class StatMatcher {
 	}
 
 	public Integer getParamAmount() {
-		return evalParam(pattern.getParams().getAmount());
+		String value = evalParams(pattern.getParams().getAmount());
+		return value != null ? Integer.valueOf(value) : null;
 	}
 
 	public Duration getParamDuration() {
-		return Duration.seconds(evalParam(pattern.getParams().getDuration()));
+		String value = evalParams(pattern.getParams().getDuration());
+		return Duration.parse(value);
 	}
 
 	public Duration getParamCooldown() {
-		String value = evalParamString(pattern.getParams().getCooldown());
-		return Duration.seconds(CooldownParser.parseCooldown(value));
+		String value = evalParams(pattern.getParams().getCooldown());
+		return CooldownParser.parseCooldown(value);
 	}
 
 	public Percent getParamProcChance() {
-		return evalParamPercent(pattern.getParams().getProcChance());
+		String value = evalParams(pattern.getParams().getProcChance());
+		return value != null ? Percent.of(Double.parseDouble(value)) : null;
 	}
 
 	public Duration getParamProcCooldown() {
-		return Duration.seconds(evalParam(pattern.getParams().getProcCooldown()));
+		String value = evalParams(pattern.getParams().getProcCooldown());
+		return Duration.parse(value);
 	}
 
-	private Integer evalParam(String paramValue) {
-		if (paramValue == null) {
-			return null;
-		}
-		if (paramValue.startsWith("$")) {
-			int groupNo = Integer.parseInt(paramValue.substring(1));
-			return getInt(groupNo);
-		}
-		return Integer.valueOf(paramValue);
-	}
-
-	private Percent evalParamPercent(String paramValue) {
-		Integer value = evalParam(paramValue);
-		return value != null ? Percent.of(value) : null;
-	}
-
-	private String evalParamString(String paramValue) {
-		if (paramValue == null) {
-			return null;
-		}
-		if (paramValue.startsWith("$")) {
-			int groupNo = Integer.parseInt(paramValue.substring(1));
-			return getString(groupNo);
-		}
-		return paramValue;
-	}
-
-	public String getMatchedLine() {
-		return matchedLine;
+	private String evalParams(String pattern) {
+		return ParserUtil.substituteParams(pattern, this::getString);
 	}
 
 	public boolean tryParse(String line) {
@@ -136,33 +113,13 @@ public class StatMatcher {
 		return true;
 	}
 
-	private void setItemStats(AttributesBuilder itemStats) {
-		for (StatSetter setter : pattern.getSetters()) {
-			setter.set(itemStats, this);
-		}
-	}
-
 	public Attributes tryParseAttributes(String line) {
 		if (tryParse(line)) {
 			AttributesBuilder result = new AttributesBuilder();
-			setItemStats(result);
+			collectStats(result);
 			return result.toAttributes();
 		}
 		return null;
-	}
-
-	public boolean hasUnusedMatch() {
-		return hasMatch() && !matchUsed && pattern.canHaveUsefulMatch();
-	}
-
-	public void setMatched(IntConsumer consumer) {
-		if (hasMatch()) {
-			if (matchUsed) {
-				throw new IllegalStateException("Already used: " + matchedLine);
-			}
-			consumer.accept(getInt());
-			this.matchUsed = true;
-		}
 	}
 
 	public void setStat(AttributesBuilder stats) {
@@ -170,17 +127,15 @@ public class StatMatcher {
 			if (matchUsed) {
 				throw new IllegalStateException("Already used: " + matchedLine);
 			}
-			setItemStats(stats);
+			collectStats(stats);
 			this.matchUsed = true;
 		}
 	}
 
-	public int groupCount() {
-		return parsedValues != null ? parsedValues.length : 0;
-	}
-
-	public String getAlias() {
-		return pattern.getAlias();
+	private void collectStats(AttributesBuilder builder) {
+		for (StatSetter setter : pattern.getSetters()) {
+			setter.set(builder, this);
+		}
 	}
 
 	@Override

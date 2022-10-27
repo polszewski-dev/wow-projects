@@ -4,7 +4,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,14 +22,13 @@ public interface ItemDataRepository {
 
 	Collection<Item> getAllItems();
 
-	List<Item> getCasterItems(Phase phase, CharacterClass characterClass, SpellSchool spellSchool);
+	List<Item> getCasterItems(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
 
-	Map<ItemType, List<Item>> getCasterItemsByType(Phase phase, CharacterClass characterClass, SpellSchool spellSchool);
+	Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
 
-	List<Item> getSetItems(ItemSet itemSet);
 	List<Item> getItemsTradedFor(ItemLink itemLink);
 	List<Item> getSourceItemsFor(ItemLink itemLink);
-	List<Item> getEquippableItemsFromRaidDrop(Item item, CharacterClass clazz);
+	List<Item> getEquippableItemsFromRaidDrop(Item item, CharacterInfo characterInfo, Phase phase);
 
 	Collection<ItemSet> getAllItemSets();
 	Optional<ItemSet> getItemSet(String name);

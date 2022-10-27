@@ -6,10 +6,9 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
-import wow.commons.repository.PVERepository;
-import wow.commons.repository.impl.parsers.items.ItemDatabaseLuaParser;
+import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
 import wow.commons.repository.impl.parsers.items.ItemExcelParser;
 
 import javax.annotation.PostConstruct;
@@ -23,11 +22,8 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class ItemDataRepositoryImpl implements ItemDataRepository {
-	private final PVERepository pveRepository;
-
 	private final Map<Integer, Item> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
-	private final Map<ItemSet, List<Item>> itemsByItemSet = new HashMap<>();
 	private final Map<Item, List<Item>> tokenToItems = new HashMap<>();
 	private final Map<Item, List<Item>> itemToTokens = new HashMap<>();
 
@@ -38,10 +34,6 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final Map<String, Gem> gemByName = new TreeMap<>();
 
 	private final Map<String, Map<ItemType, List<Item>>> casterItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
-
-	public ItemDataRepositoryImpl(PVERepository pveRepository) {
-		this.pveRepository = pveRepository;
-	}
 
 	@Override
 	public Optional<Item> getItem(int itemId) {
@@ -72,23 +64,18 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
-	public List<Item> getCasterItems(Phase phase, CharacterClass characterClass, SpellSchool spellSchool) {
+	public List<Item> getCasterItems(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
 		return getAllItems().stream()
-							.filter(item -> item.isAvailableDuring(phase) && item.isCasterItem(characterClass, spellSchool))
+							.filter(item -> item.canBeEquippedBy(characterInfo, phase) && item.isCasterItem(spellSchool))
 							.collect(Collectors.toList());
 	}
 
 	@Override
-	public Map<ItemType, List<Item>> getCasterItemsByType(Phase phase, CharacterClass characterClass, SpellSchool spellSchool) {
-		return casterItemsByTypeCache.computeIfAbsent(phase + "#" + characterClass + "#" + spellSchool,
-				x -> getCasterItems(phase, characterClass, spellSchool)
+	public Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
+		return casterItemsByTypeCache.computeIfAbsent(phase + "#" + characterInfo.getCharacterClass() + "#" + spellSchool,
+				x -> getCasterItems(characterInfo, phase, spellSchool)
 						.stream()
 						.collect(Collectors.groupingBy(Item::getItemType)));
-	}
-
-	@Override
-	public List<Item> getSetItems(ItemSet itemSet) {
-		return itemsByItemSet.get(itemSet);
 	}
 
 	@Override
@@ -102,13 +89,13 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
-	public List<Item> getEquippableItemsFromRaidDrop(Item item, CharacterClass clazz) {
+	public List<Item> getEquippableItemsFromRaidDrop(Item item, CharacterInfo characterInfo, Phase phase) {
 		List<Item> items = getItemsTradedFor(item.getItemLink());
 		if (items.isEmpty()) {
 			return List.of(item);
 		}
 		items = items.stream()
-				.filter(item2 -> clazz == null || item2.canBeEquippedBy(clazz))
+				.filter(item2 -> characterInfo.getCharacterClass() == null || item2.canBeEquippedBy(characterInfo, phase))//TODO podejrzane
 				.collect(Collectors.toList());
 		return items;
 	}
@@ -161,8 +148,8 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 		var itemExcelParser = new ItemExcelParser(this);
 		itemExcelParser.readFromXls();
 
-		var itemDabaseLuaParser = new ItemDatabaseLuaParser(this, pveRepository);
-		itemDabaseLuaParser.readFromLua();
+		ItemBaseExcelParser itemBaseExcelParser = new ItemBaseExcelParser(this);
+		itemBaseExcelParser.readFromXls();
 	}
 
 	public void addItem(Item item) {
@@ -173,11 +160,6 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	public void addToken(Item item, Item sourceToken) {
 		tokenToItems.computeIfAbsent(sourceToken, x -> new ArrayList<>()).add(item);
 		itemToTokens.computeIfAbsent(item, x -> new ArrayList<>()).add(sourceToken);
-	}
-
-
-	public void addSetItem(Item item, ItemSet itemSet) {
-		itemsByItemSet.computeIfAbsent(itemSet, x -> new ArrayList<>()).add(item);
 	}
 
 	public void addGem(Gem gem) {

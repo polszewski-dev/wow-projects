@@ -1,16 +1,20 @@
 package wow.commons.model;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * User: POlszewski
  * Date: 2019-08-14
  */
 public final class Duration implements Comparable<Duration> {
-	private final long millis;
-
+	private static final Pattern PATTERN = Pattern.compile("^((\\d+)h)?((\\d+)m)?((\\d+)s)?((\\d+)ms)?$");
 	private static final int INF_MILLIS = Integer.MAX_VALUE;
 
 	public static final Duration ZERO = new Duration(0);
 	public static final Duration INFINITE = new Duration(INF_MILLIS);
+
+	private final long millis;
 
 	private Duration(long millis) {
 		if (millis < 0) {
@@ -39,6 +43,47 @@ public final class Duration implements Comparable<Duration> {
 			return INFINITE;
 		}
 		return new Duration(millis);
+	}
+
+	public static Duration parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+
+		if (value.matches("\\d+")) {
+			return Duration.seconds(Double.parseDouble(value));
+		}
+
+		Matcher matcher = PATTERN.matcher(value);
+
+		if (!matcher.find()) {
+			throw new IllegalArgumentException(value);
+		}
+
+		String hourStr = matcher.group(2);
+		String minStr = matcher.group(4);
+		String secStr = matcher.group(6);
+		String millisStr = matcher.group(8);
+
+		long millis = 0;
+
+		if (hourStr != null) {
+			millis += Long.parseLong(hourStr) * 60 * 60 * 1000;
+		}
+
+		if (minStr != null) {
+			millis += Long.parseLong(minStr) * 60 * 1000;
+		}
+
+		if (secStr != null) {
+			millis += Long.parseLong(secStr) * 1000;
+		}
+
+		if (millisStr != null) {
+			millis += Long.parseLong(millisStr);
+		}
+
+		return millis(millis);
 	}
 
 	public long getMillis() {

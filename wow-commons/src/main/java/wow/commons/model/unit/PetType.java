@@ -7,7 +7,6 @@ import java.util.stream.Stream;
  * Date: 2020-09-30
  */
 public enum PetType {
-	None,
 	Imp,
 	Voidwalker,
 	Succubus,

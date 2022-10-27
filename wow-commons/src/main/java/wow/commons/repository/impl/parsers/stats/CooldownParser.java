@@ -1,39 +1,36 @@
 package wow.commons.repository.impl.parsers.stats;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import wow.commons.model.Duration;
+
+import static wow.commons.util.ParserUtil.parseMultipleInts;
 
 /**
  * User: POlszewski
  * Date: 2022-10-23
  */
 public class CooldownParser {
-	public static Integer parseCooldown(String value) {
-		int[] parsedValues;
-
-		parsedValues = tryParseCooldown("^(\\d+) Mins$", value);
-		if (parsedValues != null) {
-			return 60 * parsedValues[0];
+	public static Duration parseCooldown(String value) {
+		if (value == null) {
+			return null;
 		}
 
-		parsedValues = tryParseCooldown("^(\\d+) Min (\\d+) Secs", value);
+		int[] parsedValues;
+
+		parsedValues = parseMultipleInts("(\\d+) Mins?", value);
 		if (parsedValues != null) {
-			return 60 * parsedValues[0] + parsedValues[1];
+			return Duration.seconds(60 * parsedValues[0]);
+		}
+
+		parsedValues = parseMultipleInts("(\\d+) Min,? (\\d+) Secs?", value);
+		if (parsedValues != null) {
+			return Duration.seconds(60 * parsedValues[0] + parsedValues[1]);
+		}
+
+		parsedValues = parseMultipleInts("(\\d+) Hour", value);
+		if (parsedValues != null) {
+			return Duration.seconds(60 * 60 * parsedValues[0]);
 		}
 
 		throw new IllegalArgumentException(value);
-	}
-
-	private static int[] tryParseCooldown(String regex, String value) {
-		Pattern pattern = Pattern.compile("^" + regex + "$");
-		Matcher matcher = pattern.matcher(value);
-		if (matcher.find()) {
-			int[] result = new int[matcher.groupCount()];
-			for (int i = 1; i <= matcher.groupCount(); ++i) {
-				result[i - 1] = Integer.parseInt(matcher.group(i));
-			}
-			return result;
-		}
-		return null;
 	}
 }

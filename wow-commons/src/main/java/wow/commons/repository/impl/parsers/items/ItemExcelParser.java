@@ -5,10 +5,7 @@ import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
-import wow.commons.model.item.ItemSet;
-import wow.commons.model.item.Tier;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.ExcelParser;
@@ -35,14 +32,9 @@ public class ItemExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader("item_sets", this::readItemSets, COL_ITEM_SET_NAME),
-				new SheetReader("enchants", this::readEnchants, COL_ITEM_SET_NAME)
+				new SheetReader("enchants", this::readEnchants, COL_ENCHANT_NAME)
 		);
 	}
-
-	private final ExcelColumn COL_ITEM_SET_NAME = column("name");
-	private final ExcelColumn COL_ITEM_SET_TIER = column("tier");
-	private final ExcelColumn COL_ITEM_SET_CLASS = column("class");
 
 	private final ExcelColumn COL_ENCHANT_ID = column("id");
 	private final ExcelColumn COL_ENCHANT_NAME = column("name");
@@ -58,19 +50,6 @@ public class ItemExcelParser extends ExcelParser {
 	private final ExcelColumn COL_ENCHANT_THREAT_REDUCTION_PCT = column("threat reduction%");
 	private final ExcelColumn COL_ENCHANT_SPEED_INCREASE_PCT = column("speed increase%");
 	private final ExcelColumn COL_ENCHANT_SHADOW_RESIST = column("shadow resist");
-
-	private void readItemSets() {
-		ItemSet itemSet = getItemSet();
-		itemDataRepository.addItemSet(itemSet);
-	}
-
-	private ItemSet getItemSet() {
-		var name = COL_ITEM_SET_NAME.getString();
-		var tier = COL_ITEM_SET_TIER.getEnum(Tier::parse, null);
-		var classes = COL_ITEM_SET_CLASS.getList(x -> CharacterClass.parse(x.trim()));
-
-		return new ItemSet(name, tier, classes);
-	}
 
 	private void readEnchants() {
 		Enchant enchant = getEnchant();

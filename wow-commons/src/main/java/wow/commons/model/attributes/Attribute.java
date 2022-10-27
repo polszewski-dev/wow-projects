@@ -113,38 +113,30 @@ public abstract class Attribute {
 		return condition;
 	}
 
+	public boolean hasCondition() {
+		return condition != null && !condition.isEmpty();
+	}
+
 	public abstract Attribute attachCondition(AttributeCondition condition);
 
-	public boolean matches(AttributeCondition filter) {
-		if (filter == null) {
-			return true;
-		}
-		return matches(filter.getTalentTree(), filter.getSpellSchool(), filter.getSpellId(), filter.getPetType(), filter.getCreatureType());
+	public boolean isTheSameOrNull(TalentTree talentTree) {
+		return !hasCondition() || condition.isTheSameOrNull(talentTree);
 	}
 
-	public boolean matches(TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
-		if (condition == null) {
-			return true;
-		}
-
-		return matches(this.getCondition().getTalentTree(), talentTree, TalentTree.None) &&
-				matches(this.getCondition().getSpellSchool(), spellSchool, SpellSchool.None) &&
-				matches(this.getCondition().getSpellId(), spellId, SpellId.None) &&
-				matches(this.getCondition().getPetType(), petType, PetType.None) &&
-				matches(this.getCondition().getCreatureType(), creatureType, CreatureType.None);
+	public boolean isTheSameOrNull(SpellSchool spellSchool) {
+		return !hasCondition() || condition.isTheSameOrNull(spellSchool);
 	}
 
-	private static <T> boolean matches(T condition, T filter, T none) {
-		if (filter == null) {
-			return true;
-		}
-		if (filter == none) {
-			return condition == null;
-		}
-		if (condition == null) {
-			return true;
-		}
-		return condition == filter;
+	public boolean isTheSameOrNull(SpellId spellId) {
+		return !hasCondition() || condition.isTheSameOrNull(spellId);
+	}
+
+	public boolean isTheSameOrNull(PetType petType) {
+		return !hasCondition() || condition.isTheSameOrNull(petType);
+	}
+
+	public boolean isTheSameOrNull(CreatureType creatureType) {
+		return !hasCondition() || condition.isTheSameOrNull(creatureType);
 	}
 
 	public PrimitiveAttribute scale(double factor) {

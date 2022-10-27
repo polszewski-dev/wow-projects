@@ -7,10 +7,10 @@ import java.util.stream.Stream;
  * Date: 2021-03-19
  */
 public enum CreatureType {
-	None,
 	Humanoid,
 	Undead,
 	Demon,
+	Beast,
 	Dragon,
 	;
 

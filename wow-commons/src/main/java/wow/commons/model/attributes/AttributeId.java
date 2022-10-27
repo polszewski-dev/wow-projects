@@ -61,6 +61,7 @@ public enum AttributeId {
 	DefenseRating,
 	Block,
 	BlockPct(Percent.class),
+	BlockRating,
 	ShieldBlock,
 	ShieldBlockRating,
 	Parry,

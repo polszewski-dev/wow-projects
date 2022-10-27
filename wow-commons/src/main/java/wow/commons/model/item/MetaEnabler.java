@@ -5,16 +5,17 @@ package wow.commons.model.item;
  * Date: 2021-03-24
  */
 public enum MetaEnabler {
-	AtLeast1Red("Requires at least 1 Red gem", 1, 0, 0),
-	AtLeast2Reds("Requires at least 2 Red gems", 2, 0, 0),
-	AtLeast3Reds("Requires at least 3 Red gems", 3, 0, 0),
+	AtLeast1Red("Requires at least 1 Red Gem", 1, 0, 0),
+	AtLeast2Reds("Requires at least 2 Red Gems", 2, 0, 0),
+	AtLeast3Reds("Requires at least 3 Red Gems", 3, 0, 0),
 
-	AtLeast1Yellow("Requires at least 1 Yellow gem", 0, 1, 0),
-	AtLeast2Yellows("Requires at least 2 Yellow gems", 0, 2, 0),
+	AtLeast1Yellow("Requires at least 1 Yellow Gem", 0, 1, 0),
+	AtLeast2Yellows("Requires at least 2 Yellow Gems", 0, 2, 0),
+	AtLeast3Yellows("Requires at least 3 Yellow Gems", 0, 3, 0),
 
-	AtLeast2Blues("Requires at least 2 Blue gems", 0, 0, 2),
-	AtLeast3Blues("Requires at least 3 Blue gems", 0, 0, 3),
-	AtLeast5Blues("Requires at least 5 Blue gems", 0, 0, 5),
+	AtLeast2Blues("Requires at least 2 Blue Gems", 0, 0, 2),
+	AtLeast3Blues("Requires at least 3 Blue Gems", 0, 0, 3),
+	AtLeast5Blues("Requires at least 5 Blue Gems", 0, 0, 5),
 
 	MoreRedThanYellow("Requires more Red gems than Yellow gems", true, false, false),
 	MoreRedThanBlue("Requires more Red gems than Blue gems", false, true, false),

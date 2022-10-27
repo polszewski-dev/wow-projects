@@ -7,8 +7,6 @@ import java.util.stream.Stream;
  * Date: 2020-10-01
  */
 public enum SpellId {
-	None("None"),
-
 	Trinket("Trinket"),
 	Potion("Potion"),
 

@@ -10,7 +10,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.util.AttributeEvaluator;
 import wow.minmax.service.ItemService;
@@ -61,8 +61,8 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Map<ItemSlot, List<Item>> getItemsBySlot(Phase phase, CharacterClass characterClass, SpellSchool spellSchool) {
-		var byItemType = itemDataRepository.getCasterItems(phase, characterClass, spellSchool)
+	public Map<ItemSlot, List<Item>> getItemsBySlot(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
+		var byItemType = itemDataRepository.getCasterItems(characterInfo, phase, spellSchool)
 										   .stream()
 										   .collect(Collectors.groupingBy(Item::getItemType));
 

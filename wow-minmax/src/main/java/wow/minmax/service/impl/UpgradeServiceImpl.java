@@ -89,7 +89,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 			@Override
 			protected Map<ItemType, List<Item>> getItemsByType(PlayerProfile playerProfile, Spell spell) {
 				return itemDataRepository.getCasterItemsByType(
-						playerProfile.getPhase(), playerProfile.getCharacterClass(), spell.getSpellSchool());
+						playerProfile.getCharacterInfo(), playerProfile.getPhase(), spell.getSpellSchool());
 			}
 		}.run(slotGroup, playerProfile, spell)
 		.getResult();

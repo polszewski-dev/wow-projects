@@ -7,7 +7,6 @@ import java.util.stream.Stream;
  * Date: 2019-11-02
  */
 public enum SpellSchool {
-	None,
 	Frost,
 	Fire,
 	Arcane,

@@ -10,6 +10,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
 import wow.commons.model.unit.CreatureType;
 import wow.commons.model.unit.Race;
 import wow.commons.util.AttributesBuilder;
@@ -30,31 +31,26 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	private final UUID profileId;
 	private final String profileName;
 
-	private final CharacterClass characterClass;
-	private final Race race;
-	private final int level;
-	private final CreatureType enemyType;
+	private final CharacterInfo characterInfo;
 
+	private final CreatureType enemyType;
 	private final Phase phase;
 
 	private Build build;
-
 	private Equipment equipment;
 	private List<Buff> buffs;
 
 	private final boolean readOnly;
 	private LocalDateTime lastModified;
 
-	public PlayerProfile(UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, CreatureType enemyType, Phase phase, Build build) {
-		this(profileId, profileName, characterClass, race, level, enemyType, phase, build, false);
+	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType, Phase phase, Build build) {
+		this(profileId, profileName, characterInfo, enemyType, phase, build, false);
 	}
 
-	private PlayerProfile(UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, CreatureType enemyType, Phase phase, Build build, boolean readOnly) {
+	private PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType, Phase phase, Build build, boolean readOnly) {
 		this.profileId = profileId;
 		this.profileName = profileName;
-		this.characterClass = characterClass;
-		this.race = race;
-		this.level = level;
+		this.characterInfo = characterInfo;
 		this.enemyType = enemyType;
 		this.phase = phase;
 		this.build = build;
@@ -80,7 +76,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	private PlayerProfile copy(UUID profileId, String profileName, Phase phase, boolean readOnly) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterClass, race, level, enemyType, phase, build, readOnly);
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo, enemyType, phase, build, readOnly);
 
 		copy.equipment = Copyable.copyNullable(this.equipment, readOnly);
 		copy.buffs = new ArrayList<>(this.buffs);
@@ -115,16 +111,20 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return profileName;
 	}
 
+	public CharacterInfo getCharacterInfo() {
+		return characterInfo;
+	}
+
 	public CharacterClass getCharacterClass() {
-		return characterClass;
+		return characterInfo.getCharacterClass();
 	}
 
 	public Race getRace() {
-		return race;
+		return characterInfo.getRace();
 	}
 
 	public int getLevel() {
-		return level;
+		return characterInfo.getLevel();
 	}
 
 	public CreatureType getEnemyType() {
@@ -223,7 +223,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 			return Percent.ZERO;
 		}
 
-		Attributes selfBuffModifiers = new AttributesBuilder(AttributeCondition.of(sourceSpell))
+		Attributes selfBuffModifiers = new AttributesBuilder(AttributeFilter.of(sourceSpell))
 				.addAttributes(build.getTalentInfos())
 				.toAttributes();
 

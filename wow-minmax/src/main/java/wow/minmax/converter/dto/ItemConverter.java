@@ -30,7 +30,9 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 				item.getSocketType(1),
 				item.getSocketType(2),
 				item.getSocketType(3),
-				item.getSocketSpecification().getSocketBonus().statString()
+				item.getSocketSpecification().getSocketBonus().statString(),
+				item.getIcon(),
+				item.getTooltip()
 		);
 	}
 

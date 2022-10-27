@@ -15,13 +15,11 @@ public class StatPattern {
 	private final Pattern pattern;
 	private final List<StatSetter> setters;
 	private final StatSetterParams params;
-	private final String alias;
 
-	public StatPattern(String pattern, List<StatSetter> setters, StatSetterParams params, String alias) {
+	public StatPattern(String pattern, List<StatSetter> setters, StatSetterParams params) {
 		this.pattern = Pattern.compile("^" + pattern + "$");
 		this.setters = setters;
 		this.params = params;
-		this.alias = alias;
 	}
 
 	public Pattern getPattern() {
@@ -34,10 +32,6 @@ public class StatPattern {
 
 	public StatSetterParams getParams() {
 		return params;
-	}
-
-	public String getAlias() {
-		return alias;
 	}
 
 	public Matcher getMatcher(String line) {

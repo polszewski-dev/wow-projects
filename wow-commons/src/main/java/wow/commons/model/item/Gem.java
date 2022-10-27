@@ -4,6 +4,7 @@ import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
 
 import java.util.List;
@@ -15,15 +16,18 @@ import java.util.Set;
  * Date: 2021-03-06
  */
 public class Gem implements AttributeSource, Sourced {
-	private final ItemTooltip tooltip;
+	private final ItemLink itemLink;
 	private final GemColor color;
 	private final Binding binding;
 	private final boolean unique;
 	private final Attributes stats;
 	private final List<MetaEnabler> metaEnablers;
+	private Phase phase;
+	private String icon;
+	private String tooltip;
 
-	public Gem(ItemTooltip tooltip, GemColor color, Binding binding, boolean unique, Attributes stats, List<MetaEnabler> metaEnablers) {
-		this.tooltip = tooltip;
+	public Gem(ItemLink itemLink, GemColor color, Binding binding, boolean unique, Attributes stats, List<MetaEnabler> metaEnablers) {
+		this.itemLink = itemLink;
 		this.color = color;
 		this.binding = binding;
 		this.unique = unique;
@@ -51,7 +55,7 @@ public class Gem implements AttributeSource, Sourced {
 	}
 
 	private ItemLink getItemLink() {
-		return tooltip.getItemLink();
+		return itemLink;
 	}
 
 	public GemColor getColor() {
@@ -73,7 +77,7 @@ public class Gem implements AttributeSource, Sourced {
 
 	@Override
 	public Set<Source> getSources() {
-		return tooltip.getSources();
+		return Set.of();//TODO
 	}
 
 	public boolean isMetaConditionTrue(int numRed, int numYellow, int numBlue) {
@@ -82,6 +86,31 @@ public class Gem implements AttributeSource, Sourced {
 		}
 
 		return metaEnablers.stream().allMatch(metaEnabler -> metaEnabler.isMetaConditionTrue(numRed, numYellow, numBlue));
+	}
+
+	@Override
+	public Phase getPhase() {
+		return phase;
+	}
+
+	public void setPhase(Phase phase) {
+		this.phase = phase;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 
 	@Override

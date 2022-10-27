@@ -46,9 +46,7 @@ public interface Sourced {
 		return getSources().stream().anyMatch(predicate);
 	}
 
-	default Phase getPhase() {
-		return getSources().stream().map(Source::getPhase).min(Phase::compareTo).orElse(Phase.TBC_P0);
-	}
+	Phase getPhase();
 
 	default boolean isAvailableDuring(Phase phase) {
 		return getPhase().isEarlierOrTheSame(phase);

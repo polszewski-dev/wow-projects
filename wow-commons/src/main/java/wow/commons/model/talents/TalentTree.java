@@ -7,8 +7,6 @@ import java.util.stream.Stream;
  * Date: 2020-09-19
  */
 public enum TalentTree {
-	None,
-
 	Racial,
 
 	Affliction,

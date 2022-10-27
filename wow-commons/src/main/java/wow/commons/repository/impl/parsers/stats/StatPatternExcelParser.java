@@ -35,9 +35,15 @@ public class StatPatternExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader("item", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("item2", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("item3", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("base", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("onuse", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("proc", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("set", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("ignored", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("misc_bonus", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("misc_onuse", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("misc_proc", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
+				new SheetReader("misc_set", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
 				new SheetReader("gem", () -> readStatPatterns(gemStatPatterns), COL_PATTERN),
 				new SheetReader("socket", () -> readStatPatterns(socketBonusStatPatterns), COL_PATTERN)
 		);
@@ -46,7 +52,6 @@ public class StatPatternExcelParser extends ExcelParser {
 	private final ExcelColumn COL_PATTERN = column("pattern");
 	private final ExcelColumn COL_STAT1 = column("stat1");
 	private final ExcelColumn COL_STAT2 = column("stat2");
-	private final ExcelColumn COL_ALIAS = column("alias");
 
 	private final ExcelColumn COL_SPECIAL_TYPE = column("special:type");
 	private final ExcelColumn COL_SPECIAL_STAT = column("special:stat");
@@ -60,7 +65,7 @@ public class StatPatternExcelParser extends ExcelParser {
 		var pattern = COL_PATTERN.getString();
 		var setters = getParsedStatSetters();
 		var params = getParams(patterns);
-		var statPattern = new StatPattern(pattern.trim(), setters, params, COL_ALIAS.getString(null));
+		var statPattern = new StatPattern(pattern.trim(), setters, params);
 		patterns.add(statPattern);
 	}
 

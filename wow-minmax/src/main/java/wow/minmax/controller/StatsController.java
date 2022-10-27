@@ -13,10 +13,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.CombatRatingInfo;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PetType;
 import wow.commons.repository.PVERepository;
 import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
@@ -137,7 +134,7 @@ public class StatsController {
 
 		return new PlayerStatsDTO(
 				"Items",
-				(int) attributes.getTotalSpellDamage(SpellSchool.None),
+				(int) attributes.getTotalSpellDamage(),
 				(int) attributes.getTotalSpellDamage(SpellSchool.Shadow),
 				(int) attributes.getTotalSpellDamage(SpellSchool.Fire),
 				(int) attributes.getSpellHitRating(),
@@ -163,7 +160,7 @@ public class StatsController {
 
 		return new PlayerStatsDTO(
 				type,
-				(int) attributes.getTotalSpellDamage(SpellSchool.None),
+				(int) attributes.getTotalSpellDamage(),
 				(int) attributes.getTotalSpellDamage(SpellSchool.Shadow),
 				(int) attributes.getTotalSpellDamage(SpellSchool.Fire),
 				(int) attributes.getSpellHitRating(),
@@ -179,7 +176,7 @@ public class StatsController {
 	}
 
 	private Attributes getUnsolvedAttributes(AttributeCollection collection) {
-		return AttributeEvaluator.of(TalentTree.None, null, SpellId.None, PetType.None, CreatureType.None)
+		return AttributeEvaluator.of(/*None*/null, null, /*None*/null, /*None*/null, /*None*/null)//TODO
 				.addAttributes(collection)
 				.solveAllLeaveAbilities()
 				.getAttributes();

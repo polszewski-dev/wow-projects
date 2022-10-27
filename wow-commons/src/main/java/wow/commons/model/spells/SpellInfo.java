@@ -2,6 +2,7 @@ package wow.commons.model.spells;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.AttributeFilter;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentTree;
@@ -134,5 +135,9 @@ public class SpellInfo {
 
 	public Percent getConversionPct(Conversion.From from, Conversion.To to) {
 		return conversion != null && conversion.is(from, to) ? conversion.getPercent() : Percent.ZERO;
+	}
+
+	public AttributeFilter getAttributeFiter() {
+		return AttributeFilter.ofNotNullOnly(talentTree, spellSchool, spellId, null, null);
 	}
 }

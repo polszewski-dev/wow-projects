@@ -16,14 +16,14 @@ import java.util.*;
 public class AttributesBuilder {
 	private List<PrimitiveAttribute> attributeList;
 	private Map<AttributeId, List<ComplexAttribute>> complexAttributeList;
-	private final AttributeCondition condition;
+	private final AttributeFilter filter;
 
 	public AttributesBuilder() {
 		this(null);
 	}
 
-	public AttributesBuilder(AttributeCondition condition) {
-		this.condition = condition;
+	public AttributesBuilder(AttributeFilter filter) {
+		this.filter = filter;
 	}
 
 	public Attributes toAttributes() {
@@ -41,7 +41,7 @@ public class AttributesBuilder {
 	}
 
 	public AttributesBuilder addAttribute(Attribute attribute) {
-		if (attribute == null || condition != null && !attribute.matches(condition)) {
+		if (attribute == null || filter != null && !filter.matchesCondition(attribute.getCondition())) {
 			return this;
 		}
 		if (attribute instanceof PrimitiveAttribute) {
@@ -69,7 +69,7 @@ public class AttributesBuilder {
 
 	public AttributesBuilder addAttributeList(Collection<PrimitiveAttribute> attributes) {
 		if (attributes != null) {
-			if (condition != null) {
+			if (filter != null) {
 				for (Attribute attribute : attributes) {
 					addAttribute(attribute);
 				}
@@ -169,22 +169,22 @@ public class AttributesBuilder {
 		return new AttributesBuilder().addAttributes(attributeSources).toAttributes();
 	}
 
-	public static Attributes filter(Attributes attributes, AttributeCondition condition) {
+	public static Attributes filter(Attributes attributes, AttributeFilter filter) {
 		if (attributes.isEmpty()) {
 			return Attributes.EMPTY;
 		}
 
-		return new AttributesBuilder(condition)
+		return new AttributesBuilder(filter)
 				.addAttributes(attributes)
 				.toAttributes();
 	}
 
 	public static Attributes filter(AttributeSource attributeSource, SpellSchool spellSchool) {
-		return filter(attributeSource.getAttributes(), AttributeCondition.of(spellSchool));
+		return filter(attributeSource.getAttributes(), AttributeFilter.of(spellSchool));
 	}
 
 	public static Attributes filter(AttributeSource attributeSource, SpellId spellId) {
-		return filter(attributeSource.getAttributes(), AttributeCondition.of(spellId));
+		return filter(attributeSource.getAttributes(), AttributeFilter.of(spellId));
 	}
 
 	public static AttributesDiff diff(Attributes attributes1, Attributes attributes2) {

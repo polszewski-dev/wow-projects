@@ -7,8 +7,9 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
-import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
 import wow.commons.util.AttributesBuilder;
 
 import java.util.Objects;
@@ -97,12 +98,8 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		return item.isUnique();
 	}
 
-	public int getRequiredLevel() {
-		return item.getRequiredLevel();
-	}
-
-	public boolean canBeEquippedBy(CharacterClass characterClass) {
-		return item.canBeEquippedBy(characterClass);
+	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
+		return item.canBeEquippedBy(characterInfo, phase);
 	}
 
 	public boolean isEnchantable() {

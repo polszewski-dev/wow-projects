@@ -43,7 +43,7 @@ public interface AttributeSource {
 	private double getDouble(AttributeId attributeId, SpellSchool spellSchool) {
 		double result = 0;
 		for (Attribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId && attribute.matches(null, spellSchool, null, null, null)) {
+			if (attribute.getId() == attributeId && attribute.isTheSameOrNull(spellSchool)) {
 				result += attribute.getDouble();
 			}
 		}
@@ -63,7 +63,7 @@ public interface AttributeSource {
 	private Percent getPercent(AttributeId attributeId, SpellSchool spellSchool) {
 		Percent result = Percent.ZERO;
 		for (Attribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId && attribute.matches(null, spellSchool, null, null, null)) {
+			if (attribute.getId() == attributeId && attribute.isTheSameOrNull(spellSchool)) {
 				result = result.add(attribute.getPercent());
 			}
 		}
@@ -262,7 +262,7 @@ public interface AttributeSource {
 	}
 
 	default boolean hasCasterStats() {
-		return hasCasterStats(SpellSchool.None);
+		return hasCasterStats(null);
 	}
 
 	default boolean hasCasterStats(SpellSchool spellSchool) {

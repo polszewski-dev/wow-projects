@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Date: 2022-01-05
  */
 public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator> {
-	private AttributeCondition filter;
+	private AttributeFilter filter;
 
 	private Map<AttributeId, Double> doubleAttributes = new EnumMap<>(AttributeId.class);
 	private Map<AttributeId, Percent> percentAttributes = new EnumMap<>(AttributeId.class);
@@ -36,24 +36,24 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 
 	private Map<AttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(AttributeId.class);
 
-	private AttributeEvaluator(AttributeCondition filter) {
+	private AttributeEvaluator(AttributeFilter filter) {
 		this.filter = filter;
 	}
 
-	public static AttributeEvaluator of() {
-		return new AttributeEvaluator(null);
-	}
-
-	public static AttributeEvaluator of(AttributeCondition filter) {
+	public static AttributeEvaluator of(AttributeFilter filter) {
 		return new AttributeEvaluator(filter);
 	}
 
+	public static AttributeEvaluator of() {
+		return of((AttributeFilter)null);
+	}
+
 	public static AttributeEvaluator of(TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
-		return new AttributeEvaluator(AttributeCondition.of(talentTree, spellSchool, spellId, petType, creatureType));
+		return of(AttributeFilter.ofNotNullOnly(talentTree, spellSchool, spellId, petType, creatureType));
 	}
 
 	public static AttributeEvaluator of(SpellInfo spellInfo) {
-		return of(spellInfo.getTalentTree(), spellInfo.getSpellSchool(), spellInfo.getSpellId(), null, null);
+		return of(spellInfo.getAttributeFiter());
 	}
 
 	@Override
@@ -87,35 +87,35 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		if (filter != null && !attribute.matches(filter)) {
+		if (filter != null && !filter.matchesCondition(attribute.getCondition())) {
 			return this;
 		}
 
 		AttributeId id = attribute.getId();
 
 		if (id.isDoubleAttribute()) {
-			if (attribute.getCondition() == null || attribute.getCondition().isEmpty()) {
+			if (!attribute.hasCondition()) {
 				doubleAttributes.put(id, attribute.getDouble() + doubleAttributes.getOrDefault(id, 0.0));
 			} else {
 				var map = conditionalDoubleAttributes.computeIfAbsent(id, x -> new HashMap<>());
 				map.put(attribute.getCondition(), attribute.getDouble() + map.getOrDefault(attribute.getCondition(), 0.0));
 			}
 		} else if (id.isPercentAttribute()) {
-			if (attribute.getCondition() == null || attribute.getCondition().isEmpty()) {
+			if (!attribute.hasCondition()) {
 				percentAttributes.put(id, attribute.getPercent().add(percentAttributes.getOrDefault(id, Percent.ZERO)));
 			} else {
 				var map = conditionalPercentAttributes.computeIfAbsent(id, x -> new HashMap<>());
 				map.put(attribute.getCondition(), attribute.getPercent().add(map.getOrDefault(attribute.getCondition(), Percent.ZERO)));
 			}
 		} else if (id.isBooleanAttribute()) {
-			if (attribute.getCondition() == null || attribute.getCondition().isEmpty()) {
+			if (!attribute.hasCondition()) {
 				booleanAttributes.put(id, attribute.getBoolean() || booleanAttributes.getOrDefault(id, false));
 			} else {
 				var map = conditionalBooleanAttributes.computeIfAbsent(id, x -> new HashMap<>());
 				map.put(attribute.getCondition(), attribute.getBoolean() || map.getOrDefault(attribute.getCondition(), false));
 			}
 		} else if (id.isDurationAttribute()) {
-			if (attribute.getCondition() == null || attribute.getCondition().isEmpty()) {
+			if (!attribute.hasCondition()) {
 				durationAttributes.put(id, attribute.getDuration().add(durationAttributes.getOrDefault(id, Duration.ZERO)));
 			} else {
 				var map = conditionalDurationAttributes.computeIfAbsent(id, x -> new HashMap<>());
@@ -134,7 +134,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		if (filter != null && !attribute.matches(filter)) {
+		if (filter != null && !filter.matchesCondition(attribute.getCondition())) {
 			return this;
 		}
 

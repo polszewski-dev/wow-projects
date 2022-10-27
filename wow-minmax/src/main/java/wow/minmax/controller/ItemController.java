@@ -10,6 +10,8 @@ import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
+import wow.commons.model.unit.Race;
 import wow.minmax.converter.dto.ItemConverter;
 import wow.minmax.model.dto.ItemDTO;
 import wow.minmax.service.ItemService;
@@ -53,9 +55,10 @@ public class ItemController {
 
 	@GetMapping(path = "phase/{phase}/byslot")
 	public Map<ItemSlot, List<ItemDTO>> getItemsBySlot(@PathVariable("phase") Phase phase) {
-		CharacterClass characterClass = CharacterClass.Warlock;
+		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.Warlock, Race.Orc, 70, List.of());//TODO parametr
 		SpellSchool spellSchool = SpellSchool.Shadow;
-		var itemsBySlot = itemService.getItemsBySlot(phase, characterClass, spellSchool);
+
+		var itemsBySlot = itemService.getItemsBySlot(characterInfo, phase, spellSchool);
 
 		return itemsBySlot.entrySet().stream()
 					.collect(Collectors.toMap(

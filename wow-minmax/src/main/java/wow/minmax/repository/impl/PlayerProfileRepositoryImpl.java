@@ -9,6 +9,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
 import wow.commons.model.unit.CreatureType;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.ItemDataRepository;
@@ -50,12 +51,16 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 
 	@Override
 	public PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase) {
-		PlayerProfile playerProfile = new PlayerProfile(
-				UUID.randomUUID(),
-				profileName,
+		CharacterInfo characterInfo = new CharacterInfo(
 				CharacterClass.Warlock,
 				Race.Orc,
 				70,
+				List.of()
+		);
+		PlayerProfile playerProfile = new PlayerProfile(
+				UUID.randomUUID(),
+				profileName,
+				characterInfo,
 				CreatureType.Undead,
 				phase,
 				buildRepository.getBuild(BuildIds.DESTRO_SHADOW_BUILD)

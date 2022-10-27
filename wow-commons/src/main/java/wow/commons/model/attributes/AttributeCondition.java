@@ -23,7 +23,6 @@ public class AttributeCondition {
 	private final CreatureType creatureType;
 
 	public static final AttributeCondition EMPTY = new AttributeCondition(null, null, null, null, null);
-	public static final AttributeCondition IGNORE_CONDITIONAL = new AttributeCondition(TalentTree.None, SpellSchool.None, SpellId.None, PetType.None, CreatureType.None);
 
 	private AttributeCondition(TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
 		this.talentTree = talentTree;
@@ -95,6 +94,35 @@ public class AttributeCondition {
 		return talentTree == null && spellSchool == null && spellId == null && petType == null && creatureType == null;
 	}
 
+	public boolean isMetBy(TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
+		return
+				isTheSameOrNull(talentTree) &&
+				isTheSameOrNull(spellSchool) &&
+				isTheSameOrNull(spellId) &&
+				isTheSameOrNull(petType) &&
+				isTheSameOrNull(creatureType);
+	}
+
+	public boolean isTheSameOrNull(TalentTree talentTree) {
+		return this.talentTree == talentTree || this.talentTree == null;
+	}
+
+	public boolean isTheSameOrNull(SpellSchool spellSchool) {
+		return this.spellSchool == spellSchool || this.spellSchool == null;
+	}
+
+	public boolean isTheSameOrNull(SpellId spellId) {
+		return this.spellId == spellId || this.spellId == null;
+	}
+
+	public boolean isTheSameOrNull(PetType petType) {
+		return this.petType == petType || this.petType == null;
+	}
+
+	public boolean isTheSameOrNull(CreatureType creatureType) {
+		return this.creatureType == creatureType || this.creatureType == null;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -118,7 +146,8 @@ public class AttributeCondition {
 				talentTree != null ? "tree: " + talentTree : "",
 				spellSchool != null ? "school: " + spellSchool : "",
 				spellId != null ? "spell: " + spellId : "",
-				petType != null ? "pet: " + petType : ""
+				petType != null ? "pet: " + petType : "",
+				creatureType != null ? "creature: " + creatureType : ""
 		).filter(x -> !x.isEmpty()).collect(Collectors.joining(", "));
 	}
 }

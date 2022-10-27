@@ -2,7 +2,6 @@ package wow.commons.model.sources;
 
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemLink;
-import wow.commons.model.item.ItemTooltip;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
@@ -21,7 +20,7 @@ public final class SourceParser {
 	public static Source parse(String line, PVERepository pveRepository) {
 		ItemLink tokenLink = ItemLink.tryParse(line);
 		if (tokenLink != null) {
-			Item dummy = new Item(new ItemTooltip(tokenLink, 0, Set.of(new PvP(Phase.TBC_P0)), null, null));
+			Item dummy = new Item(tokenLink, Set.of(new PvP(Phase.TBC_P0)));
 			return new TradedFromToken(dummy);
 		}
 

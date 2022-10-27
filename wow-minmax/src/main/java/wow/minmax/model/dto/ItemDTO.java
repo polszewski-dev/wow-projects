@@ -25,4 +25,6 @@ public class ItemDTO {
 	private SocketType socket2Color;
 	private SocketType socket3Color;
 	private String socketBonus;
+	private String icon;
+	private String tooltip;
 }

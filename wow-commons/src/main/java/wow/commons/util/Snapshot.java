@@ -3,7 +3,7 @@ package wow.commons.util;
 import wow.commons.constants.SpellConstants;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.AttributeFilter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.spells.SpellRankInfo;
@@ -51,7 +51,7 @@ public class Snapshot {
 		this.spellInfo = spellInfo;
 		this.spellRankInfo = spellRankInfo;
 
-		AttributeCondition filter = AttributeCondition.of(spellInfo, null, null);
+		AttributeFilter filter = spellInfo.getAttributeFiter();
 
 		stats = AttributesBuilder.filter(stats, filter);
 

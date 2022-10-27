@@ -7,7 +7,7 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public interface ItemService {
 
 	List<Item> getItems(Phase phase, ItemSlot slot);
 
-	Map<ItemSlot, List<Item>> getItemsBySlot(Phase phase, CharacterClass characterClass, SpellSchool spellSchool);
+	Map<ItemSlot, List<Item>> getItemsBySlot(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
 
 	List<Enchant> getAvailableEnchants(Item item, Phase phase);
 
