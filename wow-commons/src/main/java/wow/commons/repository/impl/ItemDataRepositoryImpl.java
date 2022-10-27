@@ -63,7 +63,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	@Override
 	public Optional<Item> getItem(ItemLink itemLink) {
-		return getItem(itemLink.getId());
+		return getItem(itemLink.getItemId());
 	}
 
 	@Override

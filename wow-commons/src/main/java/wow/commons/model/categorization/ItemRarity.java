@@ -5,11 +5,11 @@ package wow.commons.model.categorization;
  * Date: 2021-03-03
  */
 public enum ItemRarity {
-	Common("cffffffff"),
-	Uncommon("cff1eff00"),
-	Rare("cff0070dd"),
-	Epic("cffa335ee"),
-	Legendary("cffff8000"),
+	Common("ffffffff"),
+	Uncommon("ff1eff00"),
+	Rare("ff0070dd"),
+	Epic("ffa335ee"),
+	Legendary("ffff8000"),
 	;
 
 	private final String color;
@@ -22,13 +22,13 @@ public enum ItemRarity {
 		return color;
 	}
 
-	public static ItemRarity parseFromItemLink(String link) {
+	public static ItemRarity parseFromColor(String color) {
 		for (ItemRarity itemRarity : values()) {
-			if (link.contains("|" + itemRarity.color + "|")) {
+			if (itemRarity.color.equalsIgnoreCase(color)) {
 				return itemRarity;
 			}
 		}
-		throw new IllegalArgumentException("Can't parse rarity from: " + link);
+		throw new IllegalArgumentException("Can't parse rarity from: " + color);
 	}
 
 	public boolean isAtLeastAsGoodAs(ItemRarity itemRarity) {

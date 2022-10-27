@@ -32,7 +32,7 @@ public class Gem implements AttributeSource, Sourced {
 	}
 
 	public int getId() {
-		return getItemLink().getId();
+		return getItemLink().getItemId();
 	}
 
 	public String getName() {
