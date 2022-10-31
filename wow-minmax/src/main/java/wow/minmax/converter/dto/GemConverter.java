@@ -15,6 +15,6 @@ import wow.minmax.model.dto.GemDTO;
 public class GemConverter extends Converter<Gem, GemDTO> {
 	@Override
 	protected GemDTO doConvert(Gem gem) {
-		return new GemDTO(gem.getId(), gem.getName(), gem.getColor(), gem.getRarity(), gem.getAttributes().statString(), gem.getShorterName());
+		return new GemDTO(gem.getId(), gem.getName(), gem.getColor(), gem.getRarity(), gem.getAttributes().statString(), gem.getShorterName(), gem.getIcon(), gem.getTooltip());
 	}
 }

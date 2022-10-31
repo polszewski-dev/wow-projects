@@ -18,4 +18,6 @@ public class GemDTO {
 	private ItemRarity rarity;
 	private String attributes;
 	private String shortName;
+	private String icon;
+	private String tooltip;
 }
