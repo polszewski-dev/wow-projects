@@ -106,8 +106,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var tooltip = COL_ITEM_TOOLTIP.getString();
 		var stats = getStats();
 
-		var itemLink = new ItemLink(id, name, rarity, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-		var item = new Item(itemLink, Set.of());
+		var item = new Item(id, name, rarity, stats, Set.of());
 
 		item.setItemLevel(itemLevel);
 		item.getRestriction().setRequiredLevel(requiredLevel);
@@ -123,9 +122,9 @@ public class ItemBaseExcelParser extends ExcelParser {
 		item.getRestriction().setRequiredProfessionLevel(requiredProfessionLevel);
 		item.getRestriction().setRequiredProfessionSpec(requiredProfessionSpec);
 		item.setSocketSpecification(getSocketSpecification(socketTypes, socketBonus));
+		item.setSellPrice(sellPrice);
 		item.setIcon(icon);
 		item.setTooltip(tooltip);
-		item.setStats(stats);
 
 		validateItem(item);
 
@@ -283,16 +282,16 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var sellPrice = Money.parse(COL_GEM_SELL_PRICE.getString(null));
 		var icon = COL_GEM_ICON.getString();
 		var tooltip = COL_GEM_TOOLTIP.getString();
-
 		var stats = GemStatsParser.tryParseStats(COL_GEM_STATS.getString());
 
-		var itemLink = new ItemLink(id, name, rarity, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-		var gem = new Gem(itemLink, color, binding, unique, stats, metaEnablers);
-
-		gem.setPhase(phase);
+		var gem = new Gem(id, name, rarity, Set.of(), color, stats, metaEnablers);
+		gem.getRestriction().setPhase(phase);
+		gem.setItemLevel(itemLevel);
+		gem.setBinding(binding);
+		gem.setUnique(unique);
+		gem.setSellPrice(sellPrice);
 		gem.setIcon(icon);
 		gem.setTooltip(tooltip);
-
 		return gem;
 	}
 }

@@ -1,6 +1,5 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
 import wow.commons.model.pve.Phase;
@@ -13,7 +12,6 @@ import wow.commons.model.unit.WeaponProfficiency;
 
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,42 +20,15 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-03-02
  */
-public class Item implements AttributeSource, Sourced {
-	private final ItemLink itemLink;
-	private final Set<Source> sources;
-	private Binding binding;
-	private boolean unique;
+public class Item extends AbstractItem {
 	private ItemType itemType;
 	private ItemSubType itemSubType;
-	private int itemLevel;
-	private final ItemRestriction restriction = new ItemRestriction();
 	private ItemSet itemSet;
-	private String icon;
-	private String tooltip;
-
-	private Attributes stats;
 	private WeaponStats weaponStats;
 	private ItemSocketSpecification socketSpecification;
 
-	public Item(ItemLink itemLink, Set<Source> sources) {
-		this.itemLink = itemLink;
-		this.sources = sources;
-	}
-
-	public int getId() {
-		return getItemLink().getItemId();
-	}
-
-	public String getName() {
-		return itemLink.getName();
-	}
-
-	public ItemRarity getRarity() {
-		return getItemLink().getRarity();
-	}
-
-	public ItemLink getItemLink() {
-		return itemLink;
+	public Item(int itemId, String name, ItemRarity rarity, Attributes stats, Set<Source> sources) {
+		super(itemId, name, rarity, stats, sources);
 	}
 
 	public boolean isEnchantable() {
@@ -80,27 +51,6 @@ public class Item implements AttributeSource, Sourced {
 		return socketSpecification.getSocketBonus();
 	}
 
-	@Override
-	public Set<Source> getSources() {
-		return sources;
-	}
-
-	public Binding getBinding() {
-		return binding;
-	}
-
-	public void setBinding(Binding binding) {
-		this.binding = binding;
-	}
-
-	public boolean isUnique() {
-		return unique;
-	}
-
-	public void setUnique(boolean unique) {
-		this.unique = unique;
-	}
-
 	public ItemType getItemType() {
 		return itemType;
 	}
@@ -117,10 +67,6 @@ public class Item implements AttributeSource, Sourced {
 		this.itemSubType = itemSubType;
 	}
 
-	public boolean canBeEquippedIn(ItemSlot itemSlot) {
-		return itemType.getItemSlots().contains(itemSlot);
-	}
-
 	public ItemSet getItemSet() {
 		return itemSet;
 	}
@@ -129,42 +75,8 @@ public class Item implements AttributeSource, Sourced {
 		this.itemSet = itemSet;
 	}
 
-	public int getItemLevel() {
-		return itemLevel;
-	}
-
-	public void setItemLevel(int itemLevel) {
-		this.itemLevel = itemLevel;
-	}
-
-	public ItemRestriction getRestriction() {
-		return restriction;
-	}
-
-	@Override
-	public Phase getPhase() {
-		return restriction.getPhase();
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public String getTooltip() {
-		return tooltip;
-	}
-
-	public void setTooltip(String tooltip) {
-		this.tooltip = tooltip;
-	}
-
-	@Override
-	public Attributes getAttributes() {
-		return stats;
+	public boolean canBeEquippedIn(ItemSlot itemSlot) {
+		return itemType.getItemSlots().contains(itemSlot);
 	}
 
 	public WeaponStats getWeaponStats() {
@@ -181,10 +93,6 @@ public class Item implements AttributeSource, Sourced {
 
 	public void setSocketSpecification(ItemSocketSpecification socketSpecification) {
 		this.socketSpecification = socketSpecification;
-	}
-
-	public void setStats(Attributes stats) {
-		this.stats = stats;
 	}
 
 	public Set<Raid> getRaidSources() {
@@ -216,7 +124,7 @@ public class Item implements AttributeSource, Sourced {
 		if (itemType.getCategory() == ItemCategory.Weapon && !WeaponProfficiency.matches(characterInfo.getCharacterClass(), itemType, (WeaponSubType)itemSubType)) {
 			return false;
 		}
-		if (!restriction.isMetBy(characterInfo, phase)) {
+		if (!getRestriction().isMetBy(characterInfo, phase)) {
 			return false;
 		}
 		if (itemSet != null && !itemSet.canBeEquippedBy(characterInfo, phase)) {
@@ -241,22 +149,4 @@ public class Item implements AttributeSource, Sourced {
 	}
 
 	private static final List<String> HARDCODED_CASTER_ITEM_NAMES = List.of("Shroud of the Highborne");
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Item item = (Item) o;
-		return Objects.equals(getItemLink(), item.getItemLink());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getItemLink());
-	}
-
-	@Override
-	public String toString() {
-		return getName();
-	}
 }

@@ -1,5 +1,6 @@
 package wow.commons.model.sources;
 
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemLink;
 import wow.commons.model.professions.Profession;
@@ -20,7 +21,7 @@ public final class SourceParser {
 	public static Source parse(String line, PVERepository pveRepository) {
 		ItemLink tokenLink = ItemLink.tryParse(line);
 		if (tokenLink != null) {
-			Item dummy = new Item(tokenLink, Set.of(new PvP(Phase.TBC_P0)));
+			Item dummy = new Item(tokenLink.getItemId(), tokenLink.getName(), tokenLink.getRarity(), Attributes.EMPTY, Set.of());
 			return new TradedFromToken(dummy);
 		}
 
