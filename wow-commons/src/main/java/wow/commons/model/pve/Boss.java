@@ -1,37 +1,33 @@
 package wow.commons.model.pve;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2021-02-01
  */
-public class Boss implements Comparable<Boss> {
-	private final int no;
+public class Boss {
+	private final int id;
 	private final String name;
-	private final Instance instance;
+	private final List<Zone> zones;
 
-	public Boss(int no, String name, Instance instance) {
-		this.no = no;
+	public Boss(int id, String name, List<Zone> zones) {
+		this.id = id;
 		this.name = name;
-		this.instance = instance;
+		this.zones = zones;
 	}
 
-	public int getNo() {
-		return no;
+	public int getId() {
+		return id;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public Instance getInstance() {
-		return instance;
-	}
-
-	@Override
-	public int compareTo(Boss o) {
-		return this.no - o.no;
+	public List<Zone> getZones() {
+		return zones;
 	}
 
 	@Override
@@ -39,7 +35,7 @@ public class Boss implements Comparable<Boss> {
 		if (this == o) return true;
 		if (!(o instanceof Boss)) return false;
 		Boss boss = (Boss) o;
-		return name.equals(boss.name);
+		return id == boss.id;
 	}
 
 	@Override

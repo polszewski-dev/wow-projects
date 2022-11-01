@@ -9,6 +9,7 @@ import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.GemTooltipParser;
 import wow.scraper.parsers.ItemTooltipParser;
+import wow.scraper.parsers.SourceParser;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,6 +69,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("item_type");
 		setHeader("item_subtype");
 		setHeader("phase");
+		setHeader("source");
 		setHeader("socket_types");
 		setHeader("socket_bonus");
 		setHeader("class_restriction");
@@ -104,6 +106,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue((parser.getItemType()));
 		setValue(parser.getItemSubType() != null ? parser.getItemSubType().toString() : null);
 		setValue(parser.getPhase());
+		setValue(parseSource(parser.getRequiredFactionName(), itemDetailsAndTooltip));
 		setValue(parser.getSocketTypes());
 		setValue(parser.getSocketBonus());
 		setValue(parser.getClassRestriction());
@@ -187,6 +190,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("rarity");
 		setHeader("item_level");
 		setHeader("phase");
+		setHeader("source");
 		setHeader("color");
 		setHeader("binding");
 		setHeader("unique");
@@ -204,6 +208,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(getItemRarity(itemDetailsAndTooltip));
 		setValue(parser.getItemLevel());
 		setValue(parser.getPhase());
+		setValue(parseSource(null, itemDetailsAndTooltip));
 		setValue(parser.getColor());
 		setValue(parser.getBinding());
 		setValue(parser.isUnique() ? 1 : 0);
@@ -221,5 +226,17 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	private static ItemRarity getItemRarity(JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
 		Integer quality = itemDetailsAndTooltip.getDetails().getQuality();
 		return WowheadItemQuality.fromCode(quality).getItemRarity();
+	}
+
+	protected static String parseSource(String requiredFactionName, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
+		if (requiredFactionName != null) {
+			return "Faction:" + requiredFactionName;
+		}
+		SourceParser sourceParser = new SourceParser(itemDetailsAndTooltip);
+		List<String> sources = sourceParser.getSource();
+		if (sources.size() > 1) {
+			throw new IllegalArgumentException("Too many sources: " + sources);
+		}
+		return sources.get(0);
 	}
 }

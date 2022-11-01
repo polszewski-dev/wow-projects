@@ -1,7 +1,6 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.professions.Profession;
-import wow.commons.model.pve.Phase;
 
 /**
  * User: POlszewski
@@ -10,8 +9,7 @@ import wow.commons.model.pve.Phase;
 class Crafted extends NotSourcedFromInstance {
 	private final Profession profession;
 
-	Crafted(Profession profession, Phase phase) {
-		super(phase);
+	Crafted(Profession profession) {
 		this.profession = profession;
 	}
 

@@ -1,13 +1,12 @@
 package wow.scraper.parsers;
 
-import wow.commons.model.professions.Profession;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.JsonSourceMore;
+import wow.scraper.model.WowheadProfession;
 import wow.scraper.model.WowheadSource;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -49,72 +48,68 @@ public class SourceParser {
 			return List.of("PvP");
 		}
 
-		if (isFactionReward()) {
-			return List.of("Faction");
-		}
-
 		switch (sources.get(0)) {
 			case crafted:
-				return parseSingleSourceCrafted();
+				return List.of(parseSingleSourceCrafted());
 			case pvp_arena:
-				return parseSingleSourcePvP();
+				return List.of(parseSingleSourcePvP());
 			case badges:
-				return parseSingleBadges();
+				return List.of(parseSingleBadges());
 			case quest:
-				return parseSingleQuest();
+				return List.of(parseSingleQuest());
 			case drop:
-				return parseSingleSourceDrop();
+				return List.of(parseSingleSourceDrop());
 			default:
 				throw new IllegalArgumentException("Unhandled source: " + sources.get(0));
 		}
 	}
 
-	private List<String> parseSingleSourceDrop() {
+	private String parseSingleSourceDrop() {
 		if (hasNoSourceMores()) {
-			return List.of("World Drop");
+			return "WorldDrop";
 		}
 
-		return List.of("Drop " + sourceMores);
+		JsonSourceMore sourceMore = assertSingleSourcMore();
+
+		if (sourceMore.getN() != null) {
+
+			return String.format("BossDrop:%s:%s", sourceMore.getN(), sourceMore.getZ() != null ? sourceMore.getZ() : 0);
+		}
+
+		return "ZoneDrop:" + sourceMore.getZ();
 	}
 
-	private List<String> parseSingleSourceCrafted() {
+	private String parseSingleSourceCrafted() {
 		if (hasNoSourceMores()) {
 			throw new IllegalArgumentException("No source more: " + getName());
 		}
-		JsonSourceMore sourceMore = sourceMores.get(0);
-		switch (sourceMore.getS()) {
-			case 197: return List.of(Profession.Tailoring.name());
-			case 165: return List.of(Profession.Leatherworking.name());
-			case 164: return List.of(Profession.Blacksmithing.name());
-			case 171: return List.of(Profession.Alchemy.name());
-			case 202: return List.of(Profession.Engineering.name());
-			case 755: return List.of(Profession.Jewelcrafting.name());
-			default:
-				throw new IllegalArgumentException(sourceMores.toString());
-		}
+
+		JsonSourceMore sourceMore = assertSingleSourcMore();
+
+		return "Crafted:" + WowheadProfession.fromCode(sourceMore.getS()).getProfession();
 	}
 
-	private List<String> parseSingleSourcePvP() {
-		return List.of("PvP");
+	private String parseSingleSourcePvP() {
+		return "PvP";
 	}
 
-	private List<String> parseSingleBadges() {
-		return List.of("Badges");
+	private String parseSingleBadges() {
+		return "Badges";
 	}
 
-	private List<String> parseSingleQuest() {
+	private String parseSingleQuest() {
 		if (hasNoSourceMores()) {
-			return List.of("Quest 2+");
+			return "Quest:>1";
 		}
 
-		JsonSourceMore sourceMore = sourceMores.get(0);
+		JsonSourceMore sourceMore = assertSingleSourcMore();
 
 		// 2 or more quests
 		if (sourceMore.getN() == null) {
-			return List.of("Quest: 2+");
+			return "Quest:>1";
 		}
 
-		return List.of("Quest: " + sourceMore.getN());
+		return "Quest:" + sourceMore.getN();
 	}
 
 	private String getName() {
@@ -125,9 +120,19 @@ public class SourceParser {
 		return sourceMores == null || sourceMores.isEmpty();
 	}
 
-	private boolean isFactionReward() {
-		String tooltip = itemDetailsAndTooltip.getHtmlTooltip();
-		return Stream.of(" - Neutral", " - Friendly", " - Honored", " - Revered", " - Exalted").anyMatch(tooltip::contains);
+	private JsonSourceMore assertSingleSourcMore() {
+		if (sourceMores.size() != 1) {
+			throw new IllegalArgumentException("Multiple source mores: " + sourceMores);
+		}
+		JsonSourceMore sourceMore = sourceMores.get(0);
+		fixData(sourceMore);
+		return sourceMore;
+	}
+
+	private void fixData(JsonSourceMore sourceMore) {
+		if ("Onyxia".equals(sourceMore.getN()) && sourceMore.getZ() == null) {
+			sourceMore.setZ(2159);
+		}
 	}
 
 	private static boolean isPvPItemName(String name) {

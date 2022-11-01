@@ -1,32 +1,21 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.item.Item;
-import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.Instance;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Zone;
 
 /**
  * User: POlszewski
  * Date: 2021-01-21
  */
 public abstract class Source {
-	private final Phase phase;
-
-	protected Source(Phase phase) {
-		if (phase == null) {
-			throw new NullPointerException();
-		}
-		this.phase = phase;
-	}
-
-	public abstract Instance getInstance();
+	public abstract Zone getInstance();
 
 	public Item getSourceToken() {
 		return null;
 	}
 
-	public Boss getBoss() {
+	public String getBoss() {
 		return null;
 	}
 
@@ -36,10 +25,6 @@ public abstract class Source {
 
 	public String getQuestName() {
 		return null;
-	}
-
-	public final Phase getPhase() {
-		return phase;
 	}
 
 	public boolean isBossDrop() {

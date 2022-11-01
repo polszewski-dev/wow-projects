@@ -4,8 +4,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.Instance;
-import wow.commons.model.pve.Raid;
+import wow.commons.model.pve.Zone;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.CombatRatingInfo;
@@ -24,35 +23,45 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class PVERepositoryImpl implements PVERepository {
-	private final Map<String, Instance> instanceByName = new TreeMap<>();
+	private final Map<Integer, Zone> zoneById = new HashMap<>();
+	private final Map<String, Zone> zoneByName = new TreeMap<>();
 	private final Map<String, Boss> bossByName = new TreeMap<>();
 	private final Map<String, Faction> factionByName = new TreeMap<>();
 	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
 	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
 
 	@Override
-	public Instance getInstance(String name) {
-		return instanceByName.get(name);
+	public Optional<Zone> getZone(int zoneId) {
+		return Optional.ofNullable(zoneById.get(zoneId));
 	}
 
 	@Override
-	public Boss getBoss(String name) {
-		return bossByName.get(name);
+	public Optional<Zone> getZone(String name) {
+		return Optional.ofNullable(zoneByName.get(name));
 	}
 
 	@Override
-	public Faction getFaction(String name) {
-		return factionByName.get(name);
+	public Optional<Boss> getBoss(String name) {
+		return Optional.ofNullable(bossByName.get(name));
 	}
 
 	@Override
-	public Collection<Instance> getAllInstances() {
-		return instanceByName.values();
+	public Optional<Faction> getFaction(String name) {
+		return Optional.ofNullable(factionByName.get(name));
 	}
 
 	@Override
-	public Collection<Raid> getAllRaids() {
-		return getAllInstances().stream().filter(Instance::isRaid).map(Raid.class::cast).collect(Collectors.toList());
+	public List<Zone> getAllInstances() {
+		return zoneByName.values().stream()
+				.filter(Zone::isInstance)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Zone> getAllRaids() {
+		return getAllInstances().stream()
+				.filter(Zone::isRaid)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -76,17 +85,22 @@ public class PVERepositoryImpl implements PVERepository {
 		var pveExcelParser = new PVEExcelParser(this);
 		pveExcelParser.readFromXls();
 
-		for (Instance instance : instanceByName.values()) {
+		for (Zone instance : getAllInstances()) {
 			instance.setBosses(new ArrayList<>());
 		}
 
 		for (Boss boss : bossByName.values()) {
-			boss.getInstance().getBosses().add(boss);
+			for (Zone zone : boss.getZones()) {
+				if (zone.isInstance()) {
+					zone.getBosses().add(boss);
+				}
+			}
 		}
 	}
 
-	public void addInstanceByName(Instance instance) {
-		instanceByName.put(instance.getName(), instance);
+	public void addZone(Zone zone) {
+		zoneById.put(zone.getId(), zone);
+		zoneByName.put(zone.getName(), zone);
 	}
 
 	public void addBossByName(Boss boss) {

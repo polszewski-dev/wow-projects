@@ -8,6 +8,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
 import wow.commons.repository.impl.parsers.items.ItemExcelParser;
 
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class ItemDataRepositoryImpl implements ItemDataRepository {
+	private final PVERepository pveRepository;
+
 	private final Map<Integer, Item> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
 	private final Map<Item, List<Item>> tokenToItems = new HashMap<>();
@@ -34,6 +37,10 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final Map<String, Gem> gemByName = new TreeMap<>();
 
 	private final Map<String, Map<ItemType, List<Item>>> casterItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
+
+	public ItemDataRepositoryImpl(PVERepository pveRepository) {
+		this.pveRepository = pveRepository;
+	}
 
 	@Override
 	public Optional<Item> getItem(int itemId) {
@@ -148,7 +155,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 		var itemExcelParser = new ItemExcelParser(this);
 		itemExcelParser.readFromXls();
 
-		ItemBaseExcelParser itemBaseExcelParser = new ItemBaseExcelParser(this);
+		ItemBaseExcelParser itemBaseExcelParser = new ItemBaseExcelParser(this, pveRepository);
 		itemBaseExcelParser.readFromXls();
 	}
 

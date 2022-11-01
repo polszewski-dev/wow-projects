@@ -121,17 +121,25 @@ public final class ExcelUtil {
 	}
 
 	public static <T> List<T> getList(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
-		return getValues(col, producer, excelReader, header, Collectors.toList());
+		return getList(col, producer, ",", excelReader, header);
+	}
+
+	public static <T> List<T> getList(String col, Function<String, T> producer, String separator, ExcelReader excelReader, Map<String, Integer> header) {
+		return getValues(col, producer, separator, excelReader, header, Collectors.toList());
 	}
 
 	public static <T> Set<T> getSet(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
-		return getValues(col, producer, excelReader, header, Collectors.toSet());
+		return getSet(col, producer, ",", excelReader, header);
 	}
 
-	private static <T, C extends Collection<T>> C getValues(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header, Collector<T, ?, C> collector) {
+	public static <T> Set<T> getSet(String col, Function<String, T> producer, String separator, ExcelReader excelReader, Map<String, Integer> header) {
+		return getValues(col, producer, separator, excelReader, header, Collectors.toSet());
+	}
+
+	private static <T, C extends Collection<T>> C getValues(String col, Function<String, T> producer, String separator, ExcelReader excelReader, Map<String, Integer> header, Collector<T, ?, C> collector) {
 		return getOptionalString(col, excelReader, header)
 				.stream()
-				.flatMap(str -> Stream.of(str.split(",")))
+				.flatMap(str -> Stream.of(str.split(separator)))
 				.map(x -> producer.apply(x.trim()))
 				.collect(collector);
 	}

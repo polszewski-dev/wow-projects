@@ -3,7 +3,9 @@ package wow.scraper.repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import wow.commons.model.pve.GameVersion;
+import wow.scraper.model.JsonBossDetails;
 import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.JsonZoneDetails;
 import wow.scraper.model.WowheadItemInfo;
 
 import java.io.BufferedReader;
@@ -24,22 +26,41 @@ public class WowheadFetcher {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private static final Pattern ITEM_LIST_PATTERN = Pattern.compile("var listviewitems = (\\[.*?]);");
+	private static final Pattern ZONE_LIST_PATTERN = Pattern.compile("id: 'zones'.*?data: (\\[.*?])");
+	private static final Pattern BOSS_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*?]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
 
 	public static List<JsonItemDetails> fetchItemDetails(GameVersion gameVersion, String urlPart) throws IOException {
+		String json = fetchAndParse(gameVersion, urlPart, ITEM_LIST_PATTERN);
+
+		return MAPPER.readValue(json, new TypeReference<>() {});
+	}
+
+	public static List<JsonZoneDetails> fetchZoneDetails(GameVersion gameVersion, String urlPart) throws IOException {
+		String json = fetchAndParse(gameVersion, urlPart, ZONE_LIST_PATTERN);
+
+		return MAPPER.readValue(json, new TypeReference<>() {});
+	}
+
+	public static List<JsonBossDetails> fetchBossDetails(GameVersion gameVersion, String urlPart) throws IOException {
+		String json = fetchAndParse(gameVersion, urlPart, BOSS_LIST_PATTERN);
+
+		return MAPPER.readValue(json, new TypeReference<>() {});
+	}
+
+	private static String fetchAndParse(GameVersion gameVersion, String urlPart, Pattern itemListPattern) throws IOException {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 		String html = fetchPage(urlStr);
 
-		Matcher matcher = ITEM_LIST_PATTERN.matcher(html);
+		Matcher matcher = itemListPattern.matcher(html);
 
 		if (!matcher.find()) {
-			throw new IllegalArgumentException("Can't parse item data from: " + urlStr);
+			throw new IllegalArgumentException("Can't parse data from: " + urlStr);
 		}
 
 		String itemJson = matcher.group(1);
 
 		itemJson = fixJsonErrors(itemJson);
-
-		return MAPPER.readValue(itemJson, new TypeReference<>() {});
+		return itemJson;
 	}
 
 

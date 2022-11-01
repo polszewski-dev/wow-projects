@@ -1,16 +1,10 @@
 package wow.commons.model.sources;
 
-import wow.commons.model.pve.Phase;
-
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
 class PurchasedFromVendor extends NotSourcedFromInstance {
-	PurchasedFromVendor(Phase phase) {
-		super(phase);
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		return o instanceof PurchasedFromVendor;

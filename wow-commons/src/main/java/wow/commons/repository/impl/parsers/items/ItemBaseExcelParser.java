@@ -8,8 +8,10 @@ import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.sources.SourceParser;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
+import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
 import wow.commons.repository.impl.parsers.gems.SocketBonusParser;
@@ -27,14 +29,25 @@ import java.util.stream.Stream;
  */
 public class ItemBaseExcelParser extends ExcelParser {
 	private final ItemDataRepositoryImpl itemDataRepository;
+	private final PVERepository pveRepository;
 
-	public ItemBaseExcelParser(ItemDataRepositoryImpl itemDataRepository) {
+	public ItemBaseExcelParser(ItemDataRepositoryImpl itemDataRepository, PVERepository pveRepository) {
 		this.itemDataRepository = itemDataRepository;
+		this.pveRepository = pveRepository;
 	}
 
 	@Override
 	protected InputStream getExcelInputStream() {
 		return fromResourcePath("/xls/item_base.xls");
+	}
+
+	@Override
+	protected Stream<SheetReader> getSheetReaders() {
+		return Stream.of(
+				new SheetReader("item", this::readItems, COL_ITEM_NAME),
+				new SheetReader("set", this::readItemSets, COL_ITEM_SET_NAME),
+				new SheetReader("gem", this::readGems, COL_GEM_NAME)
+		);
 	}
 
 	private final ExcelColumn COL_ITEM_ID = column("id");
@@ -47,6 +60,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 	private final ExcelColumn COL_ITEM_ITEM_TYPE = column("item_type");
 	private final ExcelColumn COL_ITEM_ITEM_SUBTYPE = column("item_subtype");
 	private final ExcelColumn COL_ITEM_PHASE = column("phase");
+	private final ExcelColumn COL_ITEM_SOURCE = column("source");
 	private final ExcelColumn COL_ITEM_SOCKET_TYPES = column("socket_types");
 	private final ExcelColumn COL_ITEM_SOCKET_BONUS = column("socket_bonus");
 	private final ExcelColumn COL_ITEM_CLASS_RESTRICTION = column("class_restriction");
@@ -65,15 +79,6 @@ public class ItemBaseExcelParser extends ExcelParser {
 
 	private static final int MAX_ITEM_STATS = 10;
 
-	@Override
-	protected Stream<SheetReader> getSheetReaders() {
-		return Stream.of(
-				new SheetReader("item", this::readItems, COL_ITEM_NAME),
-				new SheetReader("set", this::readItemSets, COL_ITEM_SET_NAME),
-				new SheetReader("gem", this::readGems, COL_GEM_NAME)
-		);
-	}
-
 	private void readItems() {
 		Item item = getItem();
 		itemDataRepository.addItem(item);
@@ -90,6 +95,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var itemType = COL_ITEM_ITEM_TYPE.getEnum(ItemType::valueOf);
 		var itemSubType = COL_ITEM_ITEM_SUBTYPE.getEnum(ItemSubType::tryParse, null);
 		var phase = COL_ITEM_PHASE.getEnum(Phase::valueOf, Phase.TBC_P1);
+		var source = COL_ITEM_SOURCE.getString();
 		var socketTypes = COL_ITEM_SOCKET_TYPES.getList(SocketType::valueOf);
 		var socketBonus = COL_ITEM_SOCKET_BONUS.getString(null);
 		var classRestriction = COL_ITEM_CLASS_RESTRICTION.getList(CharacterClass::valueOf);
@@ -106,7 +112,8 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var tooltip = COL_ITEM_TOOLTIP.getString();
 		var stats = getStats();
 
-		var item = new Item(id, name, rarity, stats, Set.of());
+		var itemSource = SourceParser.parse(source, pveRepository);
+		var item = new Item(id, name, rarity, stats, Set.of(itemSource));
 
 		item.setItemLevel(itemLevel);
 		item.getRestriction().setRequiredLevel(requiredLevel);
@@ -255,6 +262,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 	private final ExcelColumn COL_GEM_RARITY = column("rarity");
 	private final ExcelColumn COL_GEM_ITEM_LEVEL = column("item_level");
 	private final ExcelColumn COL_GEM_PHASE = column("phase");
+	private final ExcelColumn COL_GEM_SOURCE = column("source");
 	private final ExcelColumn COL_GEM_COLOR = column("color");
 	private final ExcelColumn COL_GEM_BINDING = column("binding");
 	private final ExcelColumn COL_GEM_UNIQUE = column("unique");
@@ -275,6 +283,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var rarity = COL_GEM_RARITY.getEnum(ItemRarity::valueOf);
 		var itemLevel = COL_GEM_ITEM_LEVEL.getInteger();
 		var phase = COL_GEM_PHASE.getEnum(Phase::valueOf, Phase.TBC_P0);
+		var source = COL_GEM_SOURCE.getString();
 		var color = COL_GEM_COLOR.getEnum(GemColor::valueOf);
 		var binding = COL_GEM_BINDING.getEnum(Binding::valueOf, Binding.BindsOnEquip);
 		var unique = COL_GEM_UNIQUE.getBoolean();
@@ -284,7 +293,9 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var tooltip = COL_GEM_TOOLTIP.getString();
 		var stats = GemStatsParser.tryParseStats(COL_GEM_STATS.getString());
 
-		var gem = new Gem(id, name, rarity, Set.of(), color, stats, metaEnablers);
+		var gemSource = SourceParser.parse(source, pveRepository);
+		var gem = new Gem(id, name, rarity, Set.of(gemSource), color, stats, metaEnablers);
+
 		gem.getRestriction().setPhase(phase);
 		gem.setItemLevel(itemLevel);
 		gem.setBinding(binding);
@@ -292,6 +303,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		gem.setSellPrice(sellPrice);
 		gem.setIcon(icon);
 		gem.setTooltip(tooltip);
+
 		return gem;
 	}
 }

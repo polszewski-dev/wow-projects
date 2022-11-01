@@ -3,7 +3,7 @@ package wow.commons.model.item;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.pve.Raid;
+import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.Source;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.ArmorProfficiency;
@@ -95,10 +95,10 @@ public class Item extends AbstractItem {
 		this.socketSpecification = socketSpecification;
 	}
 
-	public Set<Raid> getRaidSources() {
+	public Set<Zone> getRaidSources() {
 		return getSourcesAfterTradingTokens()
 				.filter(Source::isRaidDrop)
-				.map(source -> (Raid)source.getInstance())
+				.map(source -> source.getInstance())
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 

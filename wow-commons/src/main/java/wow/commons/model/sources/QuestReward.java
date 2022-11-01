@@ -1,7 +1,5 @@
 package wow.commons.model.sources;
 
-import wow.commons.model.pve.Phase;
-
 import java.util.Objects;
 
 /**
@@ -12,8 +10,7 @@ class QuestReward extends NotSourcedFromInstance {
 	private final boolean dungeon;
 	private final String name;
 
-	QuestReward(boolean dungeon, Phase phase, String name) {
-		super(phase);
+	QuestReward(boolean dungeon, String name) {
 		this.dungeon = dungeon;
 		this.name = name;
 	}

@@ -9,6 +9,7 @@ import wow.commons.repository.impl.PVERepositoryImpl;
 import wow.commons.util.ExcelParser;
 
 import java.io.InputStream;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -30,24 +31,28 @@ public class PVEExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader("instances", this::readInstances, COL_INSTANCE_NO),
-				new SheetReader("bosses", this::readBosses, COL_BOSS_NO),
+				new SheetReader("zones", this::readZones, COL_ZONE_ID),
+				new SheetReader("bosses", this::readBosses, COL_BOSS_ID),
 				new SheetReader("factions", this::readFactions, COL_FACTION_NO),
 				new SheetReader("base_stats", this::readBaseStats, COL_BS_LEVEL),
 				new SheetReader("combat_ratings", this::readCombatRatings, COL_CR_LEVEL)
 		);
 	}
 
-	private final ExcelColumn COL_INSTANCE_NO = column("no.");
-	private final ExcelColumn COL_INSTANCE_NAME = column("name");
-	private final ExcelColumn COL_INSTANCE_PARTY_SIZE = column("party_size");
-	private final ExcelColumn COL_INSTANCE_VERSION = column("version");
-	private final ExcelColumn COL_INSTANCE_PHASE = column("phase");
-	private final ExcelColumn COL_INSTANCE_SHORT_NAME = column("short_name");
+	private final ExcelColumn COL_ZONE_ID = column("id");
+	private final ExcelColumn COL_ZONE_NAME = column("name");
+	private final ExcelColumn COL_ZONE_SHORT_NAME = column("short_name");
+	private final ExcelColumn COL_ZONE_TYPE = column("type");
+	private final ExcelColumn COL_ZONE_VERSION = column("version");
+	private final ExcelColumn COL_ZONE_PARTY_SIZE = column("max_players");
+	private final ExcelColumn COL_ZONE_REQ_LVL = column("req_lvl");
+	private final ExcelColumn COL_ZONE_MIN_LVL = column("min_lvl");
+	private final ExcelColumn COL_ZONE_MAX_LVL = column("max_lvl");
 
-	private final ExcelColumn COL_BOSS_NO = column("no.");
+
+	private final ExcelColumn COL_BOSS_ID = column("id");
 	private final ExcelColumn COL_BOSS_NAME = column("name");
-	private final ExcelColumn COL_BOSS_INSTANCE = column("instance");
+	private final ExcelColumn COL_BOSS_ZONE = column("zone");
 
 	private final ExcelColumn COL_FACTION_NO = column("no.");
 	private final ExcelColumn COL_FACTION_NAME = column("name");
@@ -72,26 +77,23 @@ public class PVEExcelParser extends ExcelParser {
 	private final ExcelColumn COL_CR_SPELL_HIT = column("spell_hit");
 	private final ExcelColumn COL_CR_SPELL_HASTE = column("spell_haste");
 
-	private void readInstances() {
-		Instance instance = getInstance();
-		pveRepository.addInstanceByName(instance);
+	private void readZones() {
+		Zone zone = getZone();
+		pveRepository.addZone(zone);
 	}
 
-	private Instance getInstance() {
-		var no = COL_INSTANCE_NO.getInteger();
-		var name = COL_INSTANCE_NAME.getString();
-		var partySize = COL_INSTANCE_PARTY_SIZE.getInteger();
-		var version = GameVersion.parse(COL_INSTANCE_VERSION.getString());
-		var phase = COL_INSTANCE_PHASE.getEnum(Phase::parse);
-		var shortName = COL_INSTANCE_SHORT_NAME.getString(null);
+	private Zone getZone() {
+		var id = COL_ZONE_ID.getInteger();
+		var name = COL_ZONE_NAME.getString();
+		var shortName = COL_ZONE_SHORT_NAME.getString(null);
+		var type = COL_ZONE_TYPE.getEnum(ZoneType::valueOf);
+		var version = COL_ZONE_VERSION.getEnum(GameVersion::parse);
+		var partySize = COL_ZONE_PARTY_SIZE.getInteger();
+		var reqLvl = COL_ZONE_REQ_LVL.getInteger();
+		var minLvl = COL_ZONE_MIN_LVL.getInteger();
+		var maxLvl = COL_ZONE_MAX_LVL.getInteger();
 
-		if (partySize > 5) {
-			return new Raid(no, name, partySize, version, phase, shortName);
-		} else if (partySize == 5) {
-			return new Dungeon(no, name, version, phase, shortName);
-		} else {
-			throw new IllegalArgumentException("Party size: " + partySize);
-		}
+		return new Zone(id, name, shortName, version, type, partySize);
 	}
 
 	private void readBosses() {
@@ -100,11 +102,15 @@ public class PVEExcelParser extends ExcelParser {
 	}
 
 	private Boss getBoss() {
-		var no = COL_BOSS_NO.getInteger();
+		var id = COL_BOSS_ID.getInteger();
 		var name = COL_BOSS_NAME.getString();
-		var instance = COL_BOSS_INSTANCE.getString();
+		var zoneIds = COL_BOSS_ZONE.getList(Integer::valueOf, ":");
 
-		return new Boss(no, name, pveRepository.getInstance(instance));
+		var zones = zoneIds.stream()
+				.map(zoneId -> pveRepository.getZone(zoneId).orElseThrow())
+				.collect(Collectors.toList());
+
+		return new Boss(id, name, zones);
 	}
 
 	private void readFactions() {

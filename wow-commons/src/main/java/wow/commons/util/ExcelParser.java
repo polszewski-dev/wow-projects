@@ -147,8 +147,16 @@ public abstract class ExcelParser {
 			return ExcelUtil.getList(name, producer, excelReader, header);
 		}
 
+		public <T> List<T> getList(Function<String, T> producer, String separator) {
+			return ExcelUtil.getList(name, producer, separator, excelReader, header);
+		}
+
 		public <T> Set<T> getSet(Function<String, T> producer) {
 			return ExcelUtil.getSet(name, producer, excelReader, header);
+		}
+
+		public <T> Set<T> getSet(Function<String, T> producer, String separator) {
+			return ExcelUtil.getSet(name, producer, separator, excelReader, header);
 		}
 
 		public ExcelColumn multi(int index) {

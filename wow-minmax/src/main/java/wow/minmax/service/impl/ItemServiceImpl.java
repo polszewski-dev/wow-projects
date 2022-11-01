@@ -63,8 +63,9 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public Map<ItemSlot, List<Item>> getItemsBySlot(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
 		var byItemType = itemDataRepository.getCasterItems(characterInfo, phase, spellSchool)
-										   .stream()
-										   .collect(Collectors.groupingBy(Item::getItemType));
+				.stream()
+				.filter(item -> isSuitableFor(item, characterInfo))
+				.collect(Collectors.groupingBy(Item::getItemType));
 
 		var result = new HashMap<ItemSlot, List<Item>>();
 
@@ -75,6 +76,13 @@ public class ItemServiceImpl implements ItemService {
 		}
 
 		return result;
+	}
+
+	private boolean isSuitableFor(Item item, CharacterInfo characterInfo) {
+		if (item.getRestriction().getRequiredLevel() > characterInfo.getLevel() - 10) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

@@ -62,6 +62,13 @@ public class ParserUtil {
 		return sb.toString();
 	}
 
+	public static String removePrefix(String prefix, String line) {
+		if (line.startsWith(prefix)) {
+			return line.substring(prefix.length());
+		}
+		return null;
+	}
+
 	public static <T> List<T> getValues(String line, Function<String, T> elementMapper) {
 		return Stream.of(line.split(", "))
 				.map(elementMapper)

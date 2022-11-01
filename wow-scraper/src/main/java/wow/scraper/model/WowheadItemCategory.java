@@ -32,9 +32,11 @@ public enum WowheadItemCategory {
 
 	gems,
 
+	tokens,
+
 	;
 
 	public static List<WowheadItemCategory> equipment() {
-		return Stream.of(values()).filter(x -> x != gems).collect(Collectors.toList());
+		return Stream.of(values()).filter(x -> x != gems && x != tokens).collect(Collectors.toList());
 	}
 }

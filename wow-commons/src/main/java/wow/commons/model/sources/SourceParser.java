@@ -1,17 +1,10 @@
 package wow.commons.model.sources;
 
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.item.Item;
-import wow.commons.model.item.ItemLink;
 import wow.commons.model.professions.Profession;
-import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.Instance;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Zone;
 import wow.commons.repository.PVERepository;
-
-import java.util.Set;
-import java.util.function.Function;
+import wow.commons.util.ParserUtil;
 
 /**
  * User: POlszewski
@@ -19,91 +12,63 @@ import java.util.function.Function;
  */
 public final class SourceParser {
 	public static Source parse(String line, PVERepository pveRepository) {
-		ItemLink tokenLink = ItemLink.tryParse(line);
-		if (tokenLink != null) {
-			Item dummy = new Item(tokenLink.getItemId(), tokenLink.getName(), tokenLink.getRarity(), Attributes.EMPTY, Set.of());
-			return new TradedFromToken(dummy);
-		}
-
-		String[] parts = line.split(":");
-
-		line = parts[0];
-		parts[0] = null;
-
-		Phase phase = getArgument(parts, part -> {
-			if (part.matches("^(p\\d+)$")) {
-				return Phase.valueOf("TBC_" + part.toUpperCase());
-			}
+		if (line == null) {
 			return null;
-		});
-
-		Boss boss = pveRepository.getBoss(line);
-		if (boss != null) {
-			return new BossDrop(boss, phase);
 		}
 
-		Instance instance = matchesInstanceName(line, "Trash", pveRepository);
-		if (instance != null) {
-			return new TrashDrop(instance, phase);
+		Object[] bossDropParams = ParserUtil.parseMultipleValues("BossDrop:(.*):(.*)", line);
+		if (bossDropParams != null) {
+			String bossName = (String) bossDropParams[0];
+			int zoneId = (int) bossDropParams[1];
+			Zone zone = pveRepository.getZone(zoneId).orElseThrow();
+			return new BossDrop(zone, bossName);
 		}
 
-		Instance instance2 = matchesInstanceName(line, "Misc", pveRepository);
-		if (instance2 != null) {
-			return new MiscInstance(instance2, phase);
+		Object[] zoneDropParams = ParserUtil.parseMultipleValues("ZoneDrop:(.*)", line);
+		if (zoneDropParams != null) {
+			int zoneId = (int) zoneDropParams[0];
+			Zone zone = pveRepository.getZone(zoneId).orElseThrow();
+			return new TrashDrop(zone);
 		}
 
-		Faction faction = pveRepository.getFaction(line);
-		if (faction != null) {
-			return new ReputationReward(faction, phase);
+		String factionName = ParserUtil.removePrefix("Faction:", line);
+		if (factionName != null) {
+			Faction faction = pveRepository.getFaction(factionName).orElseThrow();
+			assertNotNull(faction, factionName);
+			return new ReputationReward(faction);
 		}
 
-		Profession profession = Profession.tryParse(line);
-		if (profession != null) {
-			return new Crafted(profession, phase != null ? phase : Phase.TBC_P0);
+		String professionName = ParserUtil.removePrefix("Crafted:", line);
+		if (professionName != null) {
+			Profession profession = Profession.valueOf(professionName);
+			assertNotNull(profession, professionName);
+			return new Crafted(profession);
 		}
 
-		if (line.equalsIgnoreCase("Quest")) {
-			return new QuestReward(false, phase, getArgument(parts, Function.identity()));
+		String questName = ParserUtil.removePrefix("Quest:", line);
+		if (questName != null) {
+			return new QuestReward(false, questName);
 		}
 
-		if (line.equalsIgnoreCase("DungeonQuest")) {
-			return new QuestReward(true, phase, getArgument(parts, Function.identity()));
+		if (line.equals("Badges")) {
+			return new BadgeVendor();
 		}
 
-		if (line.equalsIgnoreCase("Vendor")) {
-			return new PurchasedFromVendor(phase != null ? phase : Phase.TBC_P0);
+		if (line.equals("WorldDrop")) {
+			return new WorldDrop();
 		}
 
-		if (line.equalsIgnoreCase("BadgeVendor")) {
-			return new BadgeVendor(phase != null ? phase : Phase.TBC_P0);
+		if (line.equals("PvP")) {
+			return new PvP();
 		}
-
-		if (line.equalsIgnoreCase("WorldDrop")) {
-			return new WorldDrop(phase != null ? phase : Phase.TBC_P0);
-		}
-
-		if (line.equalsIgnoreCase("PvP")) {
-			return new PvP(phase != null ? phase : Phase.TBC_P0);
-		}
-
+		//TODO token
 		throw new IllegalArgumentException("Invalid source: " + line);
 	}
 
-	private static <T> T getArgument(String[] parts, Function<String, T> extractor) {
-		for (int i = 1; i < parts.length; ++i) {
-			if (parts[i] != null) {
-				T value = extractor.apply(parts[i]);
-				if (value != null) {
-					parts[i] = null;
-					return value;
-				}
-			}
+	private static void assertNotNull(Object value, String error) {
+		if (value == null) {
+			throw new IllegalArgumentException(error);
 		}
-		return null;
-	}
-
-	private static Instance matchesInstanceName(String line, String sufix, PVERepository pveRepository) {
-		return pveRepository.getAllInstances().stream().filter(x -> (x.getName() + sufix).equals(line)).findAny().orElse(null);
 	}
 
 	private SourceParser() {}

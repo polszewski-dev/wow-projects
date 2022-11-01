@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 public enum Tier {
 	T1("T1"),
 	T2("T2"),
-	T25("T2.5"),
+	T2_5("T2.5"),
 	T3("T3"),
 
 	T4("T4"),

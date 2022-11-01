@@ -70,6 +70,10 @@ public class ItemLink {
 		this.upgradeValue = upgradeValue;
 	}
 
+	public ItemLink(int itemId, String name, ItemRarity rarity, Integer enchantId, Integer gem1Id, Integer gem2Id, Integer gem3Id) {
+		this(itemId, name, rarity, enchantId, gem1Id, gem2Id, gem3Id, null, null, null, null, null, null, null, null, null, null, null);
+	}
+
 	public static ItemLink parse(String itemLink) {
 		return parseHelper(itemLink, false);
 	}

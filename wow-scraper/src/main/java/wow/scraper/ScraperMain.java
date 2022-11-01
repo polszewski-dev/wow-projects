@@ -51,6 +51,8 @@ public class ScraperMain {
 		fetch("items/weapons/wands", WowheadItemCategory.wands);
 
 		fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", WowheadItemCategory.gems);
+
+		fetch("items/miscellaneous/armor-tokens", WowheadItemCategory.tokens);
 	}
 
 	private static void fetch(String url, WowheadItemCategory category) throws IOException {

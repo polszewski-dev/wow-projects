@@ -1,7 +1,6 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.Phase;
 
 import java.util.Objects;
 
@@ -12,8 +11,7 @@ import java.util.Objects;
 class ReputationReward extends NotSourcedFromInstance {
 	private final Faction faction;
 
-	ReputationReward(Faction faction, Phase phase) {
-		super(phase != null ? phase : faction.getPhase());
+	ReputationReward(Faction faction) {
 		this.faction = faction;
 	}
 

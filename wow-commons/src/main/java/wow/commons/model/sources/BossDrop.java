@@ -1,7 +1,6 @@
 package wow.commons.model.sources;
 
-import wow.commons.model.pve.Boss;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Zone;
 
 import java.util.Objects;
 
@@ -10,24 +9,24 @@ import java.util.Objects;
  * Date: 2021-03-13
  */
 class BossDrop extends SourcedFromInstance {
-	private final Boss boss;
+	private final String boss;
 
-	BossDrop(Boss boss, Phase phase) {
-		super(boss.getInstance(), phase);
+	BossDrop(Zone instance, String boss) {
+		super(instance);
 		this.boss = boss;
 	}
 
 	@Override
-	public Boss getBoss() {
+	public String getBoss() {
 		return boss;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (!(o instanceof BossDrop)) return false;
 		BossDrop bossDrop = (BossDrop) o;
-		return boss == bossDrop.boss;
+		return Objects.equals(boss, bossDrop.boss);
 	}
 
 	@Override

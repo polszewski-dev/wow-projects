@@ -110,7 +110,7 @@ public abstract class AbstractItem implements AttributeSource {
 	}
 
 	public ItemLink getItemLink() {
-		return new ItemLink(id, name, rarity, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		return new ItemLink(id, name, rarity, null, null, null, null);
 	}
 
 	public Phase getPhase() {

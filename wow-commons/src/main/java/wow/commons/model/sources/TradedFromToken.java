@@ -12,7 +12,6 @@ public class TradedFromToken extends NotSourcedFromInstance {
 	private final Item item;
 
 	public TradedFromToken(Item item) {
-		super(item.getPhase());
 		this.item = item;
 	}
 
