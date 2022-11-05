@@ -1,7 +1,6 @@
 package wow.commons.model.attributes.primitive;
 
 import wow.commons.model.Duration;
-import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
 
@@ -28,7 +27,7 @@ public final class DurationAttribute extends ScalarAttribute {
 	}
 
 	@Override
-	public Attribute attachCondition(AttributeCondition condition) {
+	public DurationAttribute attachCondition(AttributeCondition condition) {
 		return new DurationAttribute(id, value, condition);
 	}
 
@@ -46,7 +45,7 @@ public final class DurationAttribute extends ScalarAttribute {
 	}
 
 	@Override
-	protected String getValueString(String idFmt) {
-		return String.format("%s" + idFmt, value, id);
+	public String toString() {
+		return String.format("%s %s%s", value, id, getConditionString());
 	}
 }

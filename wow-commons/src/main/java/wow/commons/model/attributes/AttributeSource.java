@@ -42,7 +42,7 @@ public interface AttributeSource {
 
 	private double getDouble(AttributeId attributeId, SpellSchool spellSchool) {
 		double result = 0;
-		for (Attribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
 			if (attribute.getId() == attributeId && attribute.isTheSameOrNull(spellSchool)) {
 				result += attribute.getDouble();
 			}
@@ -52,18 +52,8 @@ public interface AttributeSource {
 
 	default Percent getPercent(AttributeId attributeId) {
 		Percent result = Percent.ZERO;
-		for (Attribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
 			if (attribute.getId() == attributeId) {
-				result = result.add(attribute.getPercent());
-			}
-		}
-		return result;
-	}
-
-	private Percent getPercent(AttributeId attributeId, SpellSchool spellSchool) {
-		Percent result = Percent.ZERO;
-		for (Attribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId && attribute.isTheSameOrNull(spellSchool)) {
 				result = result.add(attribute.getPercent());
 			}
 		}
@@ -72,7 +62,7 @@ public interface AttributeSource {
 
 	default boolean getBoolean(AttributeId attributeId) {
 		boolean result = false;
-		for (Attribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
 			if (attribute.getId() == attributeId) {
 				result = result || attribute.getBoolean();
 			}

@@ -4,12 +4,13 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.ComplexAttribute;
+import wow.commons.model.attributes.ConditionalAttribute;
 
 /**
  * User: POlszewski
  * Date: 2021-01-17
  */
-public class StatConversion extends ComplexAttribute {
+public class StatConversion extends ComplexAttribute implements ConditionalAttribute {
 	public enum Stat {
 		PET_STA, PET_INT, SP;
 
@@ -24,12 +25,14 @@ public class StatConversion extends ComplexAttribute {
 	private final Stat fromStat;
 	private final Stat toStat;
 	private final Percent ratioPct;
+	private final AttributeCondition condition;
 
 	public StatConversion(Stat fromStat, Stat toStat, Percent ratioPct, AttributeCondition condition) {
-		super(AttributeId.statConversion, condition);
+		super(AttributeId.statConversion);
 		this.fromStat = fromStat;
 		this.toStat = toStat;
 		this.ratioPct = ratioPct;
+		this.condition = condition;
 	}
 
 	public Stat getFromStat() {
@@ -45,12 +48,17 @@ public class StatConversion extends ComplexAttribute {
 	}
 
 	@Override
+	public AttributeCondition getCondition() {
+		return condition;
+	}
+
+	@Override
 	public StatConversion attachCondition(AttributeCondition condition) {
 		return new StatConversion(fromStat, toStat, ratioPct, condition);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("(from: %s, to: %s, ratio: %s)", fromStat, toStat, ratioPct);
+		return String.format("(from: %s, to: %s, ratio: %s)%s", fromStat, toStat, ratioPct, getConditionString());
 	}
 }

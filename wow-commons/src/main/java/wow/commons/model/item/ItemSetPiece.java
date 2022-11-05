@@ -14,7 +14,7 @@ public class ItemSetPiece extends ComplexAttribute {
 	private final Item item;
 
 	public ItemSetPiece(Item item) {
-		super(AttributeId.SetPieces, null);
+		super(AttributeId.SetPieces);
 		this.item = item;
 	}
 
@@ -27,8 +27,8 @@ public class ItemSetPiece extends ComplexAttribute {
 	}
 
 	@Override
-	public ComplexAttribute attachCondition(AttributeCondition condition) {
-		throw new IllegalArgumentException("ItemSetPiece can't be conditional");
+	public AttributeCondition getCondition() {
+		return null;
 	}
 
 	@Override

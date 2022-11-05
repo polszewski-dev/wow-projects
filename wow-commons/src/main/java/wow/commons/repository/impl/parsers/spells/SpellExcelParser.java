@@ -2,10 +2,7 @@ package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.*;
 import wow.commons.model.attributes.complex.EffectIncreasePerEffectOnTarget;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
@@ -66,7 +63,7 @@ public class SpellExcelParser extends ExcelParser {
 				this.id = id;
 			}
 
-			abstract Attribute readAttribute();
+			abstract ConditionalAttribute readAttribute();
 		}
 
 		private class SimpleColumn extends Column {
@@ -78,7 +75,7 @@ public class SpellExcelParser extends ExcelParser {
 			}
 
 			@Override
-			Attribute readAttribute() {
+			ConditionalAttribute readAttribute() {
 				if (id.isDoubleAttribute()) {
 					var value = name.getDouble(0);
 					return Attribute.ofNullable(id, value);
@@ -112,7 +109,7 @@ public class SpellExcelParser extends ExcelParser {
 			}
 
 			@Override
-			Attribute readAttribute() {
+			ConditionalAttribute readAttribute() {
 				var conversionFrom = colConversionFrom.getEnum(StatConversion.Stat::parse, null);
 				var conversionTo = colConversionTo.getEnum(StatConversion.Stat::parse, null);
 
@@ -144,7 +141,7 @@ public class SpellExcelParser extends ExcelParser {
 			}
 
 			@Override
-			public Attribute readAttribute() {
+			public ConditionalAttribute readAttribute() {
 				var effectId = colEffect.getEnum(EffectId::parse, null);
 
 				if (effectId == null) {
@@ -173,7 +170,7 @@ public class SpellExcelParser extends ExcelParser {
 			}
 
 			@Override
-			public Attribute readAttribute() {
+			public ConditionalAttribute readAttribute() {
 				var effectTree = colEffectTree.getEnum(TalentTree::parse, null);
 
 				if (effectTree == null) {
@@ -226,7 +223,7 @@ public class SpellExcelParser extends ExcelParser {
 		Attributes readAttributes(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes) {
 			AttributesBuilder result = new AttributesBuilder();
 			for (Column column : columns) {
-				Attribute attribute = column.readAttribute();
+				ConditionalAttribute attribute = column.readAttribute();
 				if (attribute != null) {
 					spells = !spells.isEmpty() ? spells : Collections.singleton(null);
 					petTypes = !petTypes.isEmpty() ? petTypes : Collections.singleton(null);

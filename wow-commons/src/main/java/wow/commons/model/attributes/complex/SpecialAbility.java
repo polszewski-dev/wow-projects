@@ -12,18 +12,20 @@ import java.util.Objects;
  * User: POlszewski
  * Date: 2021-10-15
  */
-public final class SpecialAbility extends ComplexAttribute implements StatEquivalentProvider {
+public final class SpecialAbility extends ComplexAttribute implements ConditionalAttribute, StatEquivalentProvider {
 	private final AttributeModifier attributeModifier;
 	private final String line;
+	private final AttributeCondition condition;
 
 	private SpecialAbility(AttributeModifier attributeModifier, String line) {
 		this(attributeModifier, line, null);
 	}
 
 	private SpecialAbility(AttributeModifier attributeModifier, String line, AttributeCondition condition) {
-		super(AttributeId.SpecialAbilities, condition);
+		super(AttributeId.SpecialAbilities);
 		this.attributeModifier = attributeModifier;
 		this.line = line;
+		this.condition = condition;
 	}
 
 	public static SpecialAbility onUse(Attributes attributes, Duration duration, Duration cooldown, String line) {
@@ -47,11 +49,6 @@ public final class SpecialAbility extends ComplexAttribute implements StatEquiva
 	}
 
 	@Override
-	public ComplexAttribute attachCondition(AttributeCondition condition) {
-		return new SpecialAbility(attributeModifier, line, condition);
-	}
-
-	@Override
 	public Attributes getStatEquivalent(StatProvider statProvider) {
 		return attributeModifier.getAveragedAttributes(statProvider);
 	}
@@ -69,6 +66,16 @@ public final class SpecialAbility extends ComplexAttribute implements StatEquiva
 	}
 
 	@Override
+	public AttributeCondition getCondition() {
+		return condition;
+	}
+
+	@Override
+	public SpecialAbility attachCondition(AttributeCondition condition) {
+		return new SpecialAbility(attributeModifier, line, condition);
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof SpecialAbility)) return false;
@@ -83,6 +90,6 @@ public final class SpecialAbility extends ComplexAttribute implements StatEquiva
 
 	@Override
 	public String toString() {
-		return line;
+		return String.format("%s%s", line, getConditionString());
 	}
 }

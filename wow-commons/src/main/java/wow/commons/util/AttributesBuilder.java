@@ -41,7 +41,10 @@ public class AttributesBuilder {
 	}
 
 	public AttributesBuilder addAttribute(Attribute attribute) {
-		if (attribute == null || filter != null && !filter.matchesCondition(attribute.getCondition())) {
+		if (attribute == null) {
+			return this;
+		}
+		if (!attribute.isMatchedBy(filter)) {
 			return this;
 		}
 		if (attribute instanceof PrimitiveAttribute) {

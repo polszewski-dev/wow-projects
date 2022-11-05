@@ -1,6 +1,5 @@
 package wow.commons.model.attributes.primitive;
 
-import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
 
@@ -27,14 +26,14 @@ public final class DoubleAttribute extends ScalarAttribute {
 	}
 
 	@Override
-	public Attribute attachCondition(AttributeCondition condition) {
+	public DoubleAttribute attachCondition(AttributeCondition condition) {
 		return new DoubleAttribute(id, value, condition);
 	}
 
 	@Override
 	public DoubleAttribute scale(double factor) {
 		double value = factor * this.value;
-		return new DoubleAttribute(id, value, condition);
+		return new DoubleAttribute(id, value, getCondition());
 	}
 
 	@Override
@@ -51,12 +50,12 @@ public final class DoubleAttribute extends ScalarAttribute {
 	}
 
 	@Override
-	protected String getValueString(String idFmt) {
+	public String toString() {
 		double value = this.value;
 		if (value % 1 == 0) {
-			return String.format("%s" + idFmt, (int)value, id);
+			return String.format("%s %s%s", (int)value, id, getConditionString());
 		} else {
-			return String.format("%.2f" + idFmt, value, id);
+			return String.format("%.2f %s%s", value, id, getConditionString());
 		}
 	}
 }

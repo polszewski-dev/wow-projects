@@ -94,15 +94,6 @@ public class AttributeCondition {
 		return talentTree == null && spellSchool == null && spellId == null && petType == null && creatureType == null;
 	}
 
-	public boolean isMetBy(TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
-		return
-				isTheSameOrNull(talentTree) &&
-				isTheSameOrNull(spellSchool) &&
-				isTheSameOrNull(spellId) &&
-				isTheSameOrNull(petType) &&
-				isTheSameOrNull(creatureType);
-	}
-
 	public boolean isTheSameOrNull(TalentTree talentTree) {
 		return this.talentTree == talentTree || this.talentTree == null;
 	}

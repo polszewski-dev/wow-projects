@@ -35,7 +35,7 @@ public final class PercentAttribute extends ScalarAttribute {
 	@Override
 	public PercentAttribute scale(double factor) {
 		Percent value = this.value.scale(factor);
-		return new PercentAttribute(id, value, condition);
+		return new PercentAttribute(id, value, getCondition());
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public final class PercentAttribute extends ScalarAttribute {
 	}
 
 	@Override
-	protected String getValueString(String idFmt) {
-		return String.format("%s" + idFmt, value, id);
+	public String toString() {
+		return String.format("%s %s%s", value, id, getConditionString());
 	}
 }

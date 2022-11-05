@@ -87,7 +87,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		if (filter != null && !filter.matchesCondition(attribute.getCondition())) {
+		if (!attribute.isMatchedBy(filter)) {
 			return this;
 		}
 
@@ -134,7 +134,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		if (filter != null && !filter.matchesCondition(attribute.getCondition())) {
+		if (!attribute.isMatchedBy(filter)) {
 			return this;
 		}
 

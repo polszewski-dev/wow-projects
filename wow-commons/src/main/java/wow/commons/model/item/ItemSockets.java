@@ -27,7 +27,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	public ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets, boolean readOnly) {
-		super(AttributeId.Sockets, null);
+		super(AttributeId.Sockets);
 		this.specification = specification;
 		this.sockets = sockets;
 		this.readOnly = readOnly;
@@ -67,6 +67,11 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 
 	public Attributes getSocketBonus() {
 		return specification.getSocketBonus();
+	}
+
+	@Override
+	public AttributeCondition getCondition() {
+		return null;
 	}
 
 	public boolean allMatch(int numRed, int numYellow, int numBlue) {
@@ -113,11 +118,6 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 
 	public Stream<ItemSocket> stream() {
 		return sockets.stream();
-	}
-
-	@Override
-	public ComplexAttribute attachCondition(AttributeCondition condition) {
-		throw new IllegalArgumentException("Conditional socket, really?");
 	}
 
 	@Override

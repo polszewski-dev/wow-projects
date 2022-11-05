@@ -61,6 +61,10 @@ public class AttributeFilter {
 		return true;
 	}
 
+	public boolean isEmpty() {
+		return talentTree == null && spellSchool == null && spellId == null && petType == null && creatureType == null;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

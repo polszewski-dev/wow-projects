@@ -5,18 +5,10 @@ package wow.commons.model.attributes;
  * Date: 2022-01-02
  */
 public abstract class ComplexAttribute extends Attribute {
-	protected ComplexAttribute(AttributeId id, AttributeCondition condition) {
-		super(id, condition);
+	protected ComplexAttribute(AttributeId id) {
+		super(id);
 		if (!id.isComplexAttribute()) {
 			throw new IllegalArgumentException();
 		}
-	}
-
-	@Override
-	public abstract ComplexAttribute attachCondition(AttributeCondition condition);
-
-	@Override
-	protected String getValueString(String idFmt) {
-		return String.format("%s -> %s", id, this);
 	}
 }

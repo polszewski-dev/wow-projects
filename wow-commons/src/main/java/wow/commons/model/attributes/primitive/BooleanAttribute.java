@@ -1,6 +1,5 @@
 package wow.commons.model.attributes.primitive;
 
-import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
 
@@ -27,7 +26,7 @@ public final class BooleanAttribute extends PrimitiveAttribute {
 	}
 
 	@Override
-	public Attribute attachCondition(AttributeCondition condition) {
+	public BooleanAttribute attachCondition(AttributeCondition condition) {
 		return new BooleanAttribute(id, value, condition);
 	}
 
@@ -45,7 +44,7 @@ public final class BooleanAttribute extends PrimitiveAttribute {
 	}
 
 	@Override
-	protected String getValueString(String idFmt) {
-		return  String.format("%s" + idFmt, value, id);
+	public String toString() {
+		return String.format("%s = %s%s", id, value, getConditionString());
 	}
 }

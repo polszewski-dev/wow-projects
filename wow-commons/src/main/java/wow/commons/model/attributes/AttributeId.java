@@ -34,7 +34,7 @@ public enum AttributeId {
 	SpellPower("sp"),
 	SpellDamage("sd"),
 
-	AdditionalSpellDamageTakenPct(Percent.class),
+	AdditionalSpellDamageTakenPct(Percent.class, "additinal spell dmg taken"),
 
 	SpellCritRating("crit"),
 	SpellCritPct(Percent.class, "crit"),

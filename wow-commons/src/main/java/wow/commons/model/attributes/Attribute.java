@@ -3,11 +3,6 @@ package wow.commons.model.attributes;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.primitive.*;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.talents.TalentTree;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PetType;
 
 /**
  * User: POlszewski
@@ -15,14 +10,12 @@ import wow.commons.model.unit.PetType;
  */
 public abstract class Attribute {
 	protected final AttributeId id;
-	protected final AttributeCondition condition;
 
-	protected Attribute(AttributeId id, AttributeCondition condition) {
+	protected Attribute(AttributeId id) {
 		if (id == null) {
 			throw new NullPointerException();
 		}
 		this.id = id;
-		this.condition = condition;
 	}
 
 	public static DoubleAttribute of(AttributeId id, double value) {
@@ -109,49 +102,20 @@ public abstract class Attribute {
 		throw new IllegalArgumentException(id + " isn't a duration attribute");
 	}
 
-	public AttributeCondition getCondition() {
-		return condition;
-	}
-
-	public boolean hasCondition() {
-		return condition != null && !condition.isEmpty();
-	}
-
-	public abstract Attribute attachCondition(AttributeCondition condition);
-
-	public boolean isTheSameOrNull(TalentTree talentTree) {
-		return !hasCondition() || condition.isTheSameOrNull(talentTree);
-	}
-
-	public boolean isTheSameOrNull(SpellSchool spellSchool) {
-		return !hasCondition() || condition.isTheSameOrNull(spellSchool);
-	}
-
-	public boolean isTheSameOrNull(SpellId spellId) {
-		return !hasCondition() || condition.isTheSameOrNull(spellId);
-	}
-
-	public boolean isTheSameOrNull(PetType petType) {
-		return !hasCondition() || condition.isTheSameOrNull(petType);
-	}
-
-	public boolean isTheSameOrNull(CreatureType creatureType) {
-		return !hasCondition() || condition.isTheSameOrNull(creatureType);
-	}
-
 	public PrimitiveAttribute scale(double factor) {
 		throw new IllegalArgumentException("Can't scale " + id);
 	}
 
-	@Override
-	public String toString() {
-		String condStr = condition != null ? condition.toString() : "";
-		String idFmt = " %s";
-		if (id.toString().startsWith("%")) {
-			idFmt = "%s";
-		}
-		return getValueString(idFmt) + (condStr.isEmpty() ? "" : " | " + condStr);
+	public abstract AttributeCondition getCondition();
+
+	public boolean isMatchedBy(AttributeFilter filter) {
+		return filter == null || filter.matchesCondition(getCondition());
 	}
 
-	protected abstract String getValueString(String idFmt);
+	@Override
+	public abstract String toString();
+
+	protected String getConditionString() {
+		return getCondition() != null && !getCondition().isEmpty() ? " | " + getCondition() : "";
+	}
 }
