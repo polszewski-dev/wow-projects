@@ -55,7 +55,7 @@ public class ItemController {
 
 	@GetMapping(path = "phase/{phase}/byslot")
 	public Map<ItemSlot, List<ItemDTO>> getItemsBySlot(@PathVariable("phase") Phase phase) {
-		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.Warlock, Race.Orc, 70, List.of());//TODO parametr
+		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.Warlock, Race.Orc, phase.getGameVersion().getMaxLevel(), List.of());//TODO parametr
 		SpellSchool spellSchool = SpellSchool.Shadow;
 
 		var itemsBySlot = itemService.getItemsBySlot(characterInfo, phase, spellSchool);

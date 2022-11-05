@@ -190,6 +190,27 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		this.lastModified = LocalDateTime.now();
 	}
 
+	public void enableBuff(Buff buff, boolean enable) {
+		if (!enable) {
+			buffs.removeIf(existingBuff -> existingBuff.getId() == buff.getId());
+			return;
+		}
+
+		if (hasBuff(buff)) {
+			return;
+		}
+
+		if (buff.getExclusionGroup() != null) {
+			buffs.removeIf(existingBuff -> existingBuff.getExclusionGroup() == buff.getExclusionGroup());
+		}
+
+		buffs.add(buff);
+	}
+
+	private boolean hasBuff(Buff buff) {
+		return buffs.stream().anyMatch(existingBuff -> existingBuff.getId() == buff.getId());
+	}
+
 	@Override
 	public <T extends AttributeCollector> T collectAttributes(T collector) {
 		collector.addAttributes(getBuffsModifiedByTalents());

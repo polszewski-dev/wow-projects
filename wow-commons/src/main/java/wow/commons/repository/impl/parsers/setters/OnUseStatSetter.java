@@ -35,10 +35,9 @@ public class OnUseStatSetter implements StatSetter {
 			throw new IllegalArgumentException("OnUse has incorrect special type");
 		}
 
-		Integer amount = matcher.getParamAmount();
 		Duration duration = matcher.getParamDuration();
 		Duration cooldown = matcher.getParamCooldown();
-		Attributes attributes = matcher.getParamStats(amount);
+		Attributes attributes = matcher.getParamStats();
 
 		return SpecialAbility.onUse(attributes, duration, cooldown, line);
 	}

@@ -126,7 +126,7 @@ public class SpellInfo {
 		if (hasRanks()) {
 			return ranks.values().stream()
 					.filter(x -> x.getLevel() <= level)
-					.max(Comparator.comparing(SpellRankInfo::getRank))
+					.max(Comparator.comparingInt(SpellRankInfo::getRank))
 					.orElse(null);
 		} else {
 			throw new IllegalArgumentException("No ranks");

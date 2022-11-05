@@ -24,9 +24,7 @@ public class EquivalentStatSetter implements StatSetter {
 
 	private SpecialAbility getSpecialAbility(StatMatcher matcher) {
 		String line = matcher.getString(groupNo);
-
-		Integer amount = matcher.getParamAmount();
-		Attributes attributes = matcher.getParamStats(amount);
+		Attributes attributes = matcher.getParamStats();
 
 		return SpecialAbility.equivalent(attributes, line);
 	}

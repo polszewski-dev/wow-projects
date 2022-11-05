@@ -1,9 +1,7 @@
 package wow.minmax.service;
 
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.pve.Phase;
-import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.List;
@@ -18,8 +16,6 @@ public interface PlayerProfileService {
 
 	PlayerProfile createPlayerProfile(String profileName, Phase phase);
 
-	PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase);
-
 	PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase);
 
 	PlayerProfile getPlayerProfile(UUID profileId);
@@ -33,6 +29,4 @@ public interface PlayerProfileService {
 	PlayerProfile resetEquipment(UUID profileId);
 
 	PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled);
-
-	StatProvider getPlayerStatsProvider(PlayerProfile playerProfile, AttributeEvaluator attributeEvaluator);
 }

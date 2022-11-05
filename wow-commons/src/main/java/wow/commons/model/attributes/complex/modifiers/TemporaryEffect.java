@@ -58,7 +58,7 @@ public class TemporaryEffect implements AttributeModifier {
 		if (extraCritCoeff == 0) {
 			return Attributes.EMPTY;
 		}
-		return Attributes.of(AttributeId.extraCritCoeff, extraCritCoeff);
+		return Attributes.of(AttributeId.ExtraCritCoeff, extraCritCoeff);
 	}
 
 	@Override

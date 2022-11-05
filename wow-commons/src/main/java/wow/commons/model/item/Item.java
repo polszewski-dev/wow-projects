@@ -21,14 +21,26 @@ import java.util.stream.Stream;
  * Date: 2021-03-02
  */
 public class Item extends AbstractItem {
-	private ItemType itemType;
-	private ItemSubType itemSubType;
+	private final ItemType itemType;
+	private final ItemSubType itemSubType;
 	private ItemSet itemSet;
-	private WeaponStats weaponStats;
-	private ItemSocketSpecification socketSpecification;
+	private final ItemSocketSpecification socketSpecification;
+	private final WeaponStats weaponStats;
 
-	public Item(int itemId, String name, ItemRarity rarity, Attributes stats, Set<Source> sources) {
+	public Item(int itemId,
+				String name,
+				ItemRarity rarity,
+				ItemType itemType,
+				ItemSubType itemSubType,
+				Set<Source> sources,
+				ItemSocketSpecification socketSpecification,
+				Attributes stats,
+				WeaponStats weaponStats) {
 		super(itemId, name, rarity, stats, sources);
+		this.itemType = itemType;
+		this.itemSubType = itemSubType;
+		this.socketSpecification = socketSpecification;
+		this.weaponStats = weaponStats;
 	}
 
 	public boolean isEnchantable() {
@@ -55,16 +67,8 @@ public class Item extends AbstractItem {
 		return itemType;
 	}
 
-	public void setItemType(ItemType itemType) {
-		this.itemType = itemType;
-	}
-
 	public ItemSubType getItemSubType() {
 		return itemSubType;
-	}
-
-	public void setItemSubType(ItemSubType itemSubType) {
-		this.itemSubType = itemSubType;
 	}
 
 	public ItemSet getItemSet() {
@@ -83,22 +87,14 @@ public class Item extends AbstractItem {
 		return weaponStats;
 	}
 
-	public void setWeaponStats(WeaponStats weaponStats) {
-		this.weaponStats = weaponStats;
-	}
-
 	public ItemSocketSpecification getSocketSpecification() {
 		return socketSpecification;
-	}
-
-	public void setSocketSpecification(ItemSocketSpecification socketSpecification) {
-		this.socketSpecification = socketSpecification;
 	}
 
 	public Set<Zone> getRaidSources() {
 		return getSourcesAfterTradingTokens()
 				.filter(Source::isRaidDrop)
-				.map(source -> source.getInstance())
+				.map(Source::getInstance)
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 

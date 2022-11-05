@@ -89,7 +89,7 @@ public class ItemExcelParser extends ExcelParser {
 				.addAttribute(AttributeId.Stamina, sta)
 				.addAttribute(AttributeId.Intellect, int_)
 				.addAttribute(AttributeId.Spirit, spi)
-				.addAttribute(AttributeId.threatReductionPct, threatReductionPct)
+				.addAttribute(AttributeId.ThreatReductionPct, threatReductionPct)
 				.addAttribute(AttributeId.SpeedIncreasePct, speedIncreasePct)
 				.addAttribute(AttributeId.Resistance, shadowResist, AttributeCondition.of(SpellSchool.Shadow))
 		;

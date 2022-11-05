@@ -35,15 +35,13 @@ public class ProcStatSetter implements StatSetter {
 
 		ProcEvent event = ProcEvent.parse(matcher.getParamType());
 		Percent chance = matcher.getParamProcChance();
-		Integer amount = matcher.getParamAmount();
 		Duration duration = matcher.getParamDuration();
 		Duration cooldown = matcher.getParamProcCooldown();
+		Attributes attributes = matcher.getParamStats();
 
 		if (chance == null) {
 			chance = Percent._100;
 		}
-
-		Attributes attributes = matcher.getParamStats(amount);
 
 		return SpecialAbility.proc(event, chance, attributes, duration, cooldown, line);
 	}

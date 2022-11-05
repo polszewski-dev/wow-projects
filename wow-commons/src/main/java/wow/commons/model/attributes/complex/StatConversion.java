@@ -28,7 +28,7 @@ public class StatConversion extends ComplexAttribute implements ConditionalAttri
 	private final AttributeCondition condition;
 
 	public StatConversion(Stat fromStat, Stat toStat, Percent ratioPct, AttributeCondition condition) {
-		super(AttributeId.statConversion);
+		super(AttributeId.StatConversion);
 		this.fromStat = fromStat;
 		this.toStat = toStat;
 		this.ratioPct = ratioPct;

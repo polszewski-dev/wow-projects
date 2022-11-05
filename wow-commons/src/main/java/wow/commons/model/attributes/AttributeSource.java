@@ -124,15 +124,15 @@ public interface AttributeSource {
 	}
 
 	default Percent getStaIncreasePct() {
-		return getPercent(AttributeId.staIncreasePct);
+		return getPercent(AttributeId.StaIncreasePct);
 	}
 
 	default Percent getIntIncreasePct() {
-		return getPercent(AttributeId.intIncreasePct);
+		return getPercent(AttributeId.IntIncreasePct);
 	}
 
 	default Percent getSpiIncreasePct() {
-		return getPercent(AttributeId.spiIncreasePct);
+		return getPercent(AttributeId.SpiIncreasePct);
 	}
 
 	default double getSpellPower() {
@@ -168,7 +168,7 @@ public interface AttributeSource {
 	}
 
 	default Percent getCritDamageIncreasePct() {
-		return getPercent(AttributeId.critDamageIncreasePct);
+		return getPercent(AttributeId.CritDamageIncreasePct);
 	}
 
 	default double getSpellHitRating() {
@@ -212,11 +212,11 @@ public interface AttributeSource {
 	}
 
 	default Percent getDirectDamageIncreasePct() {
-		return getPercent(AttributeId.directDamageIncreasePct);
+		return getPercent(AttributeId.DirectDamageIncreasePct);
 	}
 
 	default Percent getDoTDamageIncreasePct() {
-		return getPercent(AttributeId.dotDamageIncreasePct);
+		return getPercent(AttributeId.DotDamageIncreasePct);
 	}
 
 	default Percent getAdditionalSpellDamageTakenPct() {
@@ -224,23 +224,23 @@ public interface AttributeSource {
 	}
 
 	default Percent getEffectIncreasePct() {
-		return getPercent(AttributeId.effectIncreasePct);
+		return getPercent(AttributeId.EffectIncreasePct);
 	}
 
 	default Percent getDamageTakenIncreasePct() {
-		return getPercent(AttributeId.damageTakenIncreasePct);
+		return getPercent(AttributeId.DamageTakenIncreasePct);
 	}
 
 	default Percent getSpellCoeffPct() {
-		return getPercent(AttributeId.spellCoeffBonusPct);
+		return getPercent(AttributeId.SpellCoeffBonusPct);
 	}
 
 	default Duration getCastTimeReduction() {
-		return getDuration(AttributeId.castTimeReduction);
+		return getDuration(AttributeId.CastTimeReduction);
 	}
 
 	default Percent getCostReductionPct() {
-		return getPercent(AttributeId.costReductionPct);
+		return getPercent(AttributeId.CostReductionPct);
 	}
 
 	default List<SpecialAbility> getSpecialAbilities() {
@@ -248,7 +248,7 @@ public interface AttributeSource {
 	}
 
 	default double getExtraCritCoeff() {
-		return getDouble(AttributeId.extraCritCoeff);
+		return getDouble(AttributeId.ExtraCritCoeff);
 	}
 
 	default boolean hasCasterStats() {
@@ -260,7 +260,7 @@ public interface AttributeSource {
 	}
 
 	default Percent getThreatReductionPct() {
-		return getPercent(AttributeId.threatReductionPct);
+		return getPercent(AttributeId.ThreatReductionPct);
 	}
 
 	default Percent getSpeedIncreasePct() {

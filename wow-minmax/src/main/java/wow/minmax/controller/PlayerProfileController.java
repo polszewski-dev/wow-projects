@@ -176,7 +176,7 @@ public class PlayerProfileController {
 
 	private List<GemDTO> getAvailableGems(Item item, int socketNo, Phase phase) {
 		List<Gem> gems = itemService.getAvailableGems(item, socketNo, phase, false);
-		gems.sort(Comparator.comparing(this::sourceBasedOrder)
+		gems.sort(Comparator.comparingInt(this::sourceBasedOrder)
 							.thenComparing(Comparator.comparing(Gem::getRarity).reversed())
 							.thenComparing(Gem::getColor)
 							.thenComparing(Gem::getName));

@@ -15,7 +15,7 @@ public class Gem extends AbstractItem {
 	private final GemColor color;
 	private final List<MetaEnabler> metaEnablers;
 
-	public Gem(int itemId, String name, ItemRarity rarity, Set<Source> sources, GemColor color, Attributes stats, List<MetaEnabler> metaEnablers) {
+	public Gem(int itemId, String name, ItemRarity rarity, Set<Source> sources, GemColor color, List<MetaEnabler> metaEnablers, Attributes stats) {
 		super(itemId, name, rarity, stats, sources);
 		this.color = color;
 		this.metaEnablers = metaEnablers;

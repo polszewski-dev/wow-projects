@@ -82,40 +82,40 @@ public enum AttributeId {
 
 	// talents
 
-	castTimeReduction(Duration.class, "reduced cast time"),//
-	cooldownReduction(Duration.class),
-	costReductionPct(Percent.class, "reduced cost"),//
-	threatReductionPct(Percent.class, "reduced threat"),
-	pushbackReductionPct(Percent.class, "reduced pushback"),
-	rangeIncreasePct(Percent.class, "increased range"),
-	durationIncreasePct(Percent.class, "increased duration"),//
-	castInstantly(Boolean.class),
+	CastTimeReduction(Duration.class, "reduced cast time"),//
+	CooldownReduction(Duration.class),
+	CostReductionPct(Percent.class, "reduced cost"),//
+	ThreatReductionPct(Percent.class, "reduced threat"),
+	PushbackReductionPct(Percent.class, "reduced pushback"),
+	RangeIncreasePct(Percent.class, "increased range"),
+	DurationIncreasePct(Percent.class, "increased duration"),//
+	CastInstantly(Boolean.class),
 
-	spellCoeffBonusPct(Percent.class, "increased spell coefficient"),//
-	effectIncreasePct(Percent.class, "increased effect"),//
-	directDamageIncreasePct(Percent.class, "increased direct damage"),//
-	dotDamageIncreasePct(Percent.class, "increased dot damage"),//
-	critDamageIncreasePct(Percent.class, "increased crit damage"),//Ruin!!
-	extraCritCoeff("gimmick to handle ISB"),
+	SpellCoeffBonusPct(Percent.class, "increased spell coefficient"),//
+	EffectIncreasePct(Percent.class, "increased effect"),//
+	DirectDamageIncreasePct(Percent.class, "increased direct damage"),//
+	DotDamageIncreasePct(Percent.class, "increased dot damage"),//
+	CritDamageIncreasePct(Percent.class, "increased crit damage"),//Ruin!!
+	ExtraCritCoeff("gimmick to handle ISB"),
 
-	staIncreasePct(Percent.class, "increased sta"),
-	intIncreasePct(Percent.class, "increased int"),
-	spiIncreasePct(Percent.class, "increased spi"),
-	maxHealthIncreasePct(Percent.class, "increased max health"),
-	maxManaIncreasePct(Percent.class, "increased max mana"),
-	meleeCritIncreasePct(Percent.class),
-	damageTakenIncreasePct(Percent.class),//
+	StaIncreasePct(Percent.class, "increased sta"),
+	IntIncreasePct(Percent.class, "increased int"),
+	SpiIncreasePct(Percent.class, "increased spi"),
+	MaxHealthIncreasePct(Percent.class, "increased max health"),
+	MaxManaIncreasePct(Percent.class, "increased max mana"),
+	MeleeCritIncreasePct(Percent.class),
+	DamageTakenIncreasePct(Percent.class),//
 
-	petStaIncreasePct(Percent.class, "increased pet sta"),
-	petIntIncreasePct(Percent.class, "increased pet int"),
-	petSpellCritIncreasePct(Percent.class),
-	petMeleeCritIncreasePct(Percent.class),
-	petMeleeDamageIncreasePct(Percent.class),
+	PetStaIncreasePct(Percent.class, "increased pet sta"),
+	PetIntIncreasePct(Percent.class, "increased pet int"),
+	PetSpellCritIncreasePct(Percent.class),
+	PetMeleeCritIncreasePct(Percent.class),
+	PetMeleeDamageIncreasePct(Percent.class),
 
-	statConversion(ComplexAttribute.class),//
-	effectIncreasePerEffectOnTarget(ComplexAttribute.class),
+	StatConversion(ComplexAttribute.class),//
+	EffectIncreasePerEffectOnTarget(ComplexAttribute.class),
 
-	manaTransferredToPetPct(Percent.class),
+	ManaTransferredToPetPct(Percent.class),
 
 	;
 
@@ -174,7 +174,7 @@ public enum AttributeId {
 		return type == Duration.class;
 	}
 
-	public boolean isScalarAtribute() {
+	public boolean isScalarAttribute() {
 		return isDoubleAttribute() || isPercentAttribute() || isDurationAttribute();
 	}
 

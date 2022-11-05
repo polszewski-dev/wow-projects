@@ -18,7 +18,6 @@ public class StatMatcher {
 
 	private String matchedLine;
 	private String[] parsedValues;
-	private boolean matchUsed;
 
 	public StatMatcher(StatPattern pattern) {
 		this.pattern = pattern;
@@ -52,7 +51,6 @@ public class StatMatcher {
 		if (!hasMatch()) {
 			throw new IllegalArgumentException();
 		}
-		this.matchUsed = true;
 		if (i == 0) {
 			return matchedLine;
 		}
@@ -63,13 +61,10 @@ public class StatMatcher {
 		return pattern.getParams().getType();
 	}
 
-	public Attributes getParamStats(Integer amount) {
-		return pattern.getParams().getStatsSupplier().getAttributes(amount);
-	}
-
-	public Integer getParamAmount() {
+	public Attributes getParamStats() {
 		String value = evalParams(pattern.getParams().getAmount());
-		return value != null ? Integer.valueOf(value) : null;
+		int amount = Integer.parseInt(value);
+		return pattern.getParams().getStatsSupplier().getAttributes(amount);
 	}
 
 	public Duration getParamDuration() {
@@ -113,28 +108,11 @@ public class StatMatcher {
 		return true;
 	}
 
-	public Attributes tryParseAttributes(String line) {
-		if (tryParse(line)) {
-			AttributesBuilder result = new AttributesBuilder();
-			collectStats(result);
-			return result.toAttributes();
-		}
-		return null;
-	}
-
 	public void setStat(AttributesBuilder stats) {
-		if (pattern.canHaveUsefulMatch() && hasMatch()) {
-			if (matchUsed) {
-				throw new IllegalStateException("Already used: " + matchedLine);
+		if (hasMatch()) {
+			for (StatSetter setter : pattern.getSetters()) {
+				setter.set(stats, this);
 			}
-			collectStats(stats);
-			this.matchUsed = true;
-		}
-	}
-
-	private void collectStats(AttributesBuilder builder) {
-		for (StatSetter setter : pattern.getSetters()) {
-			setter.set(builder, this);
 		}
 	}
 

@@ -113,14 +113,12 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var stats = getStats();
 
 		var itemSource = SourceParser.parse(source, pveRepository);
-		var item = new Item(id, name, rarity, stats, Set.of(itemSource));
+		var item = new Item(id, name, rarity, itemType, itemSubType, Set.of(itemSource), getSocketSpecification(socketTypes, socketBonus), stats, null);
 
 		item.setItemLevel(itemLevel);
 		item.getRestriction().setRequiredLevel(requiredLevel);
 		item.setBinding(binding);
 		item.setUnique(unique);
-		item.setItemType(itemType);
-		item.setItemSubType(itemSubType);
 		item.getRestriction().setPhase(phase);
 		item.getRestriction().setClassRestriction(classRestriction);
 		item.getRestriction().setRaceRestriction(raceRestriction);
@@ -128,7 +126,6 @@ public class ItemBaseExcelParser extends ExcelParser {
 		item.getRestriction().setRequiredProfession(requiredProfession);
 		item.getRestriction().setRequiredProfessionLevel(requiredProfessionLevel);
 		item.getRestriction().setRequiredProfessionSpec(requiredProfessionSpec);
-		item.setSocketSpecification(getSocketSpecification(socketTypes, socketBonus));
 		item.setSellPrice(sellPrice);
 		item.setIcon(icon);
 		item.setTooltip(tooltip);
@@ -147,10 +144,8 @@ public class ItemBaseExcelParser extends ExcelParser {
 
 		for (int i = 1; i <= MAX_ITEM_STATS; ++i) {
 			String line = COL_ITEM_STAT.multi(i).getString(null);
-			if (line != null) {
-				if (!parser.tryParse(line)) {
-					throw new IllegalArgumentException("Can't parse: " + line);
-				}
+			if (line != null && !parser.tryParse(line)) {
+				throw new IllegalArgumentException("Can't parse: " + line);
 			}
 		}
 
@@ -294,7 +289,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var stats = GemStatsParser.tryParseStats(COL_GEM_STATS.getString());
 
 		var gemSource = SourceParser.parse(source, pveRepository);
-		var gem = new Gem(id, name, rarity, Set.of(gemSource), color, stats, metaEnablers);
+		var gem = new Gem(id, name, rarity, Set.of(gemSource), color, metaEnablers, stats);
 
 		gem.getRestriction().setPhase(phase);
 		gem.setItemLevel(itemLevel);

@@ -2,9 +2,6 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.commons.model.Duration;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.equipment.Equipment;
@@ -19,14 +16,10 @@ import wow.commons.model.unit.CreatureType;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
-import wow.commons.util.AttributeEvaluator;
-import wow.commons.util.Snapshot;
 import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.Spell;
 import wow.minmax.repository.BuildRepository;
 import wow.minmax.repository.PlayerProfileRepository;
-import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
@@ -48,7 +41,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final BuildRepository buildRepository;
 
 	private final UpgradeService upgradeService;
-	private final CalculationService calculationService;
 
 	@Override
 	public List<PlayerProfile> getPlayerProfileList() {
@@ -57,17 +49,10 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
-		PlayerProfile playerProfile = createTemporaryPlayerProfile(profileName, phase);
-		playerProfileRepository.saveProfile(playerProfile);
-		return playerProfile;
-	}
-
-	@Override
-	public PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase) {
 		CharacterInfo characterInfo = new CharacterInfo(
 				CharacterClass.Warlock,
 				Race.Orc,
-				70,
+				phase.getGameVersion().getMaxLevel(),
 				List.of()
 		);
 
@@ -82,6 +67,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SelfBuff, PartyBuff, RaidBuff, Consumes));
 		playerProfile.setEquipment(new Equipment());
+		playerProfileRepository.saveProfile(playerProfile);
 		return playerProfile;
 	}
 
@@ -134,6 +120,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile resetEquipment(UUID profileId) {
 		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
+
 		playerProfile.setEquipment(new Equipment());
 		playerProfileRepository.saveProfile(playerProfile);
 		return playerProfile;
@@ -144,51 +131,8 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
 		Buff buff = spellDataRepository.getBuff(buffId).orElseThrow();
 
-		List<Buff> existingBuffs = playerProfile.getBuffs();
-
-		if (buff.getExclusionGroup() != null) {
-			existingBuffs.removeIf(existingBuff -> existingBuff.getExclusionGroup() == buff.getExclusionGroup());
-		}
-		existingBuffs.removeIf(existingBuff -> existingBuff.getId() == buffId);
-
-		if (enabled) {
-			existingBuffs.add(buff);
-		}
-
-		playerProfile.setBuffs(existingBuffs);
+		playerProfile.enableBuff(buff, enabled);
 		playerProfileRepository.saveProfile(playerProfile);
-
 		return playerProfile;
-	}
-
-	@Override
-	public StatProvider getPlayerStatsProvider(PlayerProfile playerProfile, AttributeEvaluator attributeEvaluator) {
-		return new StatProvider() {
-			private Snapshot snapshot;
-
-			@Override
-			public double hitChance() {
-				return getSnapshot().hitChance;
-			}
-
-			@Override
-			public double critChance() {
-				return getSnapshot().critChance;
-			}
-
-			@Override
-			public Duration castTime() {
-				return getSnapshot().effectiveCastTime;
-			}
-
-			private Snapshot getSnapshot() {
-				if (snapshot == null) {
-					Spell spell = playerProfile.getDamagingSpell();
-					Attributes attributes = attributeEvaluator.getAttributes();
-					this.snapshot = calculationService.getSnapshot(playerProfile, spell, attributes);
-				}
-				return snapshot;
-			}
-		};
 	}
 }
