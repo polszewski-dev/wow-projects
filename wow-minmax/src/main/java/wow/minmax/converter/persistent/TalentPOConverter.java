@@ -23,6 +23,6 @@ public class TalentPOConverter extends Converter<TalentInfo, TalentPO> {
 
 	@Override
 	protected TalentInfo doConvertBack(TalentPO value) {
-		return spellDataRepository.getTalentInfo(value.getTalentId(), value.getRank());
+		return spellDataRepository.getTalentInfo(value.getTalentId(), value.getRank()).orElseThrow();
 	}
 }

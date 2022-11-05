@@ -87,8 +87,8 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public Snapshot getSnapshot(PlayerProfile playerProfile, Spell spell, Attributes totalStats) {
-		BaseStatInfo baseStats = pveRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel());
-		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel());
+		BaseStatInfo baseStats = pveRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel()).orElseThrow();
+		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
 
 		return new Snapshot(spell.getSpellInfo(), spell.getSpellRankInfo(playerProfile.getLevel()), baseStats, cr, totalStats);
 	}

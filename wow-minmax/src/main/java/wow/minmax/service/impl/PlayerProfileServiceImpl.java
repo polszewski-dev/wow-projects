@@ -7,15 +7,24 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.CharacterInfo;
+import wow.commons.model.unit.CreatureType;
+import wow.commons.model.unit.Race;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
+import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.Spell;
+import wow.minmax.repository.BuildRepository;
 import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
@@ -23,6 +32,8 @@ import wow.minmax.service.UpgradeService;
 
 import java.util.List;
 import java.util.UUID;
+
+import static wow.minmax.model.Build.BuffSet.*;
 
 /**
  * User: POlszewski
@@ -34,6 +45,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final PlayerProfileRepository playerProfileRepository;
 	private final ItemDataRepository itemDataRepository;
 	private final SpellDataRepository spellDataRepository;
+	private final BuildRepository buildRepository;
 
 	private final UpgradeService upgradeService;
 	private final CalculationService calculationService;
@@ -45,27 +57,51 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
-		return playerProfileRepository.createPlayerProfile(profileName, phase);
+		PlayerProfile playerProfile = createTemporaryPlayerProfile(profileName, phase);
+		playerProfileRepository.saveProfile(playerProfile);
+		return playerProfile;
 	}
 
 	@Override
 	public PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase) {
-		return playerProfileRepository.createTemporaryPlayerProfile(profileName, phase);
+		CharacterInfo characterInfo = new CharacterInfo(
+				CharacterClass.Warlock,
+				Race.Orc,
+				70,
+				List.of()
+		);
+
+		PlayerProfile playerProfile = new PlayerProfile(
+				UUID.randomUUID(),
+				profileName,
+				characterInfo,
+				CreatureType.Undead,
+				phase,
+				buildRepository.getBuild(BuildIds.DESTRO_SHADOW_BUILD).orElseThrow()
+		);
+
+		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SelfBuff, PartyBuff, RaidBuff, Consumes));
+		playerProfile.setEquipment(new Equipment());
+		return playerProfile;
 	}
 
 	@Override
 	public PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase) {
-		return playerProfileRepository.copyPlayerProfile(copiedProfileId, profileName, phase);
+		PlayerProfile copiedProfile = playerProfileRepository.getPlayerProfile(copiedProfileId).orElseThrow();
+		PlayerProfile copy = copiedProfile.copy(UUID.randomUUID(), profileName, phase);
+
+		playerProfileRepository.saveProfile(copy);
+		return copy;
 	}
 
 	@Override
 	public PlayerProfile getPlayerProfile(UUID profileId) {
-		return playerProfileRepository.getPlayerProfile(profileId);
+		return playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
 	}
 
 	@Override
 	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId) {
-		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId);
+		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
 		Item item = itemDataRepository.getItem(itemId).orElseThrow();
 		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile.readOnlyCopy(), item, slot, playerProfile.getDamagingSpellId());
 
@@ -77,23 +113,36 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId) {
-		return playerProfileRepository.changeEnchant(profileId, slot, enchantId);
+		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
+		Enchant enchant = itemDataRepository.getEnchant(enchantId).orElseThrow();
+
+		playerProfile.getEquipment().get(slot).enchant(enchant);
+		playerProfileRepository.saveProfile(playerProfile);
+		return playerProfile;
 	}
 
 	@Override
 	public PlayerProfile changeGem(UUID profileId, ItemSlot slot, int socketNo, int gemId) {
-		return playerProfileRepository.changeGem(profileId, slot, socketNo, gemId);
+		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
+		Gem gem = itemDataRepository.getGem(gemId).orElseThrow();
+
+		playerProfile.getEquipment().get(slot).insertGem(socketNo, gem);
+		playerProfileRepository.saveProfile(playerProfile);
+		return playerProfile;
 	}
 
 	@Override
 	public PlayerProfile resetEquipment(UUID profileId) {
-		return playerProfileRepository.resetEquipment(profileId);
+		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
+		playerProfile.setEquipment(new Equipment());
+		playerProfileRepository.saveProfile(playerProfile);
+		return playerProfile;
 	}
 
 	@Override
 	public PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled) {
-		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId);
-		Buff buff = spellDataRepository.getBuff(buffId);
+		PlayerProfile playerProfile = playerProfileRepository.getPlayerProfile(profileId).orElseThrow();
+		Buff buff = spellDataRepository.getBuff(buffId).orElseThrow();
 
 		List<Buff> existingBuffs = playerProfile.getBuffs();
 

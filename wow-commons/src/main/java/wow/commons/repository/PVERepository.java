@@ -24,6 +24,6 @@ public interface PVERepository {
 	List<Zone> getAllInstances();
 	List<Zone> getAllRaids();
 
-	BaseStatInfo getBaseStats(CharacterClass characterClass, Race race, int level);
-	CombatRatingInfo getCombatRatings(int level);
+	Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level);
+	Optional<CombatRatingInfo> getCombatRatings(int level);
 }

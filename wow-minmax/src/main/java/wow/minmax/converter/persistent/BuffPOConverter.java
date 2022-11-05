@@ -23,6 +23,6 @@ public class BuffPOConverter extends Converter<Buff, BuffPO> {
 
 	@Override
 	protected Buff doConvertBack(BuffPO value) {
-		return spellDataRepository.getHighestRankBuff(value.getName(), 70);
+		return spellDataRepository.getHighestRankBuff(value.getName(), 70).orElseThrow();
 	}
 }

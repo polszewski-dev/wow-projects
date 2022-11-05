@@ -65,19 +65,17 @@ public class PVERepositoryImpl implements PVERepository {
 	}
 
 	@Override
-	public BaseStatInfo getBaseStats(CharacterClass characterClass, Race race, int level) {
+	public Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level) {
 		return baseStatInfos.stream()
 				.filter(x -> x.getCharacterClass() == characterClass && x.getRace() == race && x.getLevel() == level)
-				.findAny()
-				.orElseThrow(IllegalArgumentException::new);
+				.findAny();
 	}
 
 	@Override
-	public CombatRatingInfo getCombatRatings(int level) {
+	public Optional<CombatRatingInfo> getCombatRatings(int level) {
 		return combatRatingInfos.stream()
 				.filter(x -> x.getLevel() == level)
-				.findAny()
-				.orElseThrow(IllegalArgumentException::new);
+				.findAny();
 	}
 
 	@PostConstruct

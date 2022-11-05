@@ -11,6 +11,7 @@ import wow.minmax.model.Spell;
 import wow.minmax.repository.BuildRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +24,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 	private final SpellDataRepository spellDataRepository;
 
 	@Override
-	public Build getBuild(String buildId) {
+	public Optional<Build> getBuild(String buildId) {
 		if (!buildId.equals(BuildIds.DESTRO_SHADOW_BUILD)) {
 			throw new IllegalArgumentException(buildId);
 		}
@@ -34,7 +35,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 									 .values()
 									 .stream()
 									 .collect(Collectors.toUnmodifiableList()));
-		build.setDamagingSpell(new Spell(spellDataRepository.getSpellInfo(SpellId.ShadowBolt)));
+		build.setDamagingSpell(new Spell(spellDataRepository.getSpellInfo(SpellId.ShadowBolt).orElseThrow()));
 
 		build.setSelfBuffs(spellDataRepository.getBuffs(List.of(
 				"Fel Armor",
@@ -59,6 +60,6 @@ public class BuildRepositoryImpl implements BuildRepository {
 				"Totem of Wrath"
 		)));
 
-		return build;
+		return Optional.of(build);
 	}
 }

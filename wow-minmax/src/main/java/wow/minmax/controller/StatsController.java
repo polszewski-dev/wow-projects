@@ -130,7 +130,7 @@ public class StatsController {
 
 		Attributes attributes = getUnsolvedAttributes(equipment);
 
-		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel());
+		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
 
 		return new PlayerStatsDTO(
 				"Items",

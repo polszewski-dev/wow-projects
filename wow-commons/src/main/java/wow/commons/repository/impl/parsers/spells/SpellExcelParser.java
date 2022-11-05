@@ -376,7 +376,7 @@ public class SpellExcelParser extends ExcelParser {
 	private void readSpells() {
 		SpellInfo spellInfo = getSpellInfo();
 
-		if (spellDataRepository.getSpellInfo(spellInfo.getSpellId()) != null) {
+		if (spellDataRepository.getSpellInfo(spellInfo.getSpellId()).isPresent()) {
 			throw new IllegalArgumentException("Duplicate: " + spellInfo.getSpellId());
 		}
 
@@ -418,11 +418,7 @@ public class SpellExcelParser extends ExcelParser {
 
 	private void readRanks() {
 		SpellRankInfo spellRankInfo = getSpellRankInfo();
-		SpellInfo spellInfo = spellDataRepository.getSpellInfo(spellRankInfo.getSpellId());
-
-		if (spellInfo == null) {
-			throw new IllegalArgumentException("No spell: " + spellRankInfo.getSpellId());
-		}
+		SpellInfo spellInfo = spellDataRepository.getSpellInfo(spellRankInfo.getSpellId()).orElseThrow();
 
 		if (spellInfo.getRanks().containsKey(spellRankInfo.getRank())) {
 			throw new IllegalArgumentException("Duplicate rank: " + spellRankInfo.getSpellId() + " " + spellRankInfo.getRank());

@@ -21,7 +21,7 @@ public class SpellServiceImpl implements SpellService {
 
 	@Override
 	public Spell getSpell(SpellId spellId) {
-		return new Spell(spellDataRepository.getSpellInfo(spellId));
+		return new Spell(spellDataRepository.getSpellInfo(spellId).orElseThrow());
 	}
 
 	@Override

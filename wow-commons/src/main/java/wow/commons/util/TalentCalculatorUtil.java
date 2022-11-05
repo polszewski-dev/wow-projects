@@ -24,7 +24,7 @@ public final class TalentCalculatorUtil {
 
 			if (talentRank > 0) {
 				TalentId talentId = TalentId.fromTalentCalculatorPosition(talentCalculatorPosition);
-				TalentInfo talentInfo = spellDataRepository.getTalentInfo(talentId, talentRank);
+				TalentInfo talentInfo = spellDataRepository.getTalentInfo(talentId, talentRank).orElseThrow();
 				result.put(talentId, talentInfo);
 			}
 		}

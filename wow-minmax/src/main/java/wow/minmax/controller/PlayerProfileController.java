@@ -51,25 +51,6 @@ public class PlayerProfileController {
 		return result;
 	}
 
-	@GetMapping(path = "create/name/{profileName}/phase/{phase}")
-	public PlayerProfileDTO createPlayerProfile(
-			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") Phase phase
-	) {
-		PlayerProfile createdProfile = playerProfileService.createPlayerProfile(profileName, phase);
-		return playerProfileConverter.convert(createdProfile);
-	}
-
-	@GetMapping(path = "copy/{copiedProfileId}/name/{profileName}/phase/{phase}")
-	public PlayerProfileDTO createPlayerProfile(
-			@PathVariable("copiedProfileId") UUID copiedProfileId,
-			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") Phase phase
-	) {
-		PlayerProfile createdProfile = playerProfileService.copyPlayerProfile(copiedProfileId, profileName, phase);
-		return playerProfileConverter.convert(createdProfile);
-	}
-
 	@GetMapping(path = "{profileId}")
 	public PlayerProfileDTO getPlayerProfile(
 			@PathVariable("profileId") UUID profileId
@@ -92,6 +73,25 @@ public class PlayerProfileController {
 		}
 
 		return playerProfileDTO;
+	}
+
+	@GetMapping(path = "create/name/{profileName}/phase/{phase}")
+	public PlayerProfileDTO createPlayerProfile(
+			@PathVariable("profileName") String profileName,
+			@PathVariable("phase") Phase phase
+	) {
+		PlayerProfile createdProfile = playerProfileService.createPlayerProfile(profileName, phase);
+		return playerProfileConverter.convert(createdProfile);
+	}
+
+	@GetMapping(path = "copy/{copiedProfileId}/name/{profileName}/phase/{phase}")
+	public PlayerProfileDTO createPlayerProfile(
+			@PathVariable("copiedProfileId") UUID copiedProfileId,
+			@PathVariable("profileName") String profileName,
+			@PathVariable("phase") Phase phase
+	) {
+		PlayerProfile createdProfile = playerProfileService.copyPlayerProfile(copiedProfileId, profileName, phase);
+		return playerProfileConverter.convert(createdProfile);
 	}
 
 	@GetMapping(path = "{profileId}/change/item/{slot}/{itemId}")

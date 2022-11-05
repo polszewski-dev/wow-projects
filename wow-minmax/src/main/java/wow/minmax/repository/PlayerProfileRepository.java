@@ -1,10 +1,9 @@
 package wow.minmax.repository;
 
-import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.pve.Phase;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -14,21 +13,7 @@ import java.util.UUID;
 public interface PlayerProfileRepository {
 	List<PlayerProfile> getPlayerProfileList();
 
-	PlayerProfile createPlayerProfile(String profileName, Phase phase);
-
-	PlayerProfile createTemporaryPlayerProfile(String profileName, Phase phase);
-
-	PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase);
-
-	PlayerProfile getPlayerProfile(UUID profileId);
-
-	PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId);
-
-	PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId);
-
-	PlayerProfile changeGem(UUID profileId, ItemSlot slot, int socketNo, int gemId);
+	Optional<PlayerProfile> getPlayerProfile(UUID profileId);
 
 	void saveProfile(PlayerProfile playerProfile);
-
-	PlayerProfile resetEquipment(UUID profileId);
 }

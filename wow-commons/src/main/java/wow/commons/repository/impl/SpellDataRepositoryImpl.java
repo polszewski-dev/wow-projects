@@ -32,44 +32,39 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
 
 	@Override
-	public SpellInfo getSpellInfo(SpellId spellId) {
-		return spellInfoBySpellId.get(spellId);
+	public Optional<SpellInfo> getSpellInfo(SpellId spellId) {
+		return Optional.ofNullable(spellInfoBySpellId.get(spellId));
 	}
 
 	@Override
-	public TalentInfo getTalentInfo(TalentId talentId, Integer rank) {
+	public Optional<TalentInfo> getTalentInfo(TalentId talentId, Integer rank) {
 		Map<Integer, TalentInfo> talentInfoByRank = talentInfoByTalentIdByRank.get(talentId);
 		if (talentInfoByRank == null) {
-			return null;
+			return Optional.empty();
 		}
 		if (rank != null) {
-			return talentInfoByRank.get(rank);
+			return Optional.ofNullable(talentInfoByRank.get(rank));
 		}
-		Integer maxRank = talentInfoByRank.keySet().stream().max(Integer::compareTo).orElse(null);
-		return maxRank != null ? talentInfoByRank.get(maxRank) : null;
+		return talentInfoByRank.keySet().stream()
+				.max(Integer::compareTo)
+				.map(talentInfoByRank::get);
 	}
 
 	@Override
-	public EffectInfo getEffectInfo(EffectId effectId) {
-		return effectInfoByEffectId.get(effectId);
+	public Optional<EffectInfo> getEffectInfo(EffectId effectId) {
+		return Optional.ofNullable(effectInfoByEffectId.get(effectId));
 	}
 
 	@Override
-	public Buff getBuff(int buffId) {
-		return buffsById.get(buffId);
+	public Optional<Buff> getBuff(int buffId) {
+		return Optional.ofNullable(buffsById.get(buffId));
 	}
 
 	@Override
-	public Buff getHighestRankBuff(String name, int level) {
-		Buff result = null;
-		for (Buff buff : buffsById.values()) {
-			if (buff.getName().equals(name) && buff.getLevel() <= level) {
-				if (result == null || buff.getLevel() > result.getLevel()) {
-					result = buff;
-				}
-			}
-		}
-		return result;
+	public Optional<Buff> getHighestRankBuff(String name, int level) {
+		return buffsById.values().stream()
+				.filter(buff -> buff.getName().equals(name) && buff.getLevel() <= level)
+				.max(Comparator.comparing(Buff::getLevel));
 	}
 
 	@Override
