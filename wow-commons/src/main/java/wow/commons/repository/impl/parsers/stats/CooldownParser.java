@@ -18,17 +18,17 @@ public class CooldownParser {
 
 		parsedValues = parseMultipleInts("(\\d+) Mins?", value);
 		if (parsedValues != null) {
-			return Duration.seconds(60 * parsedValues[0]);
+			return Duration.seconds(60.0 * parsedValues[0]);
 		}
 
 		parsedValues = parseMultipleInts("(\\d+) Min,? (\\d+) Secs?", value);
 		if (parsedValues != null) {
-			return Duration.seconds(60 * parsedValues[0] + parsedValues[1]);
+			return Duration.seconds(60.0 * parsedValues[0] + parsedValues[1]);
 		}
 
 		parsedValues = parseMultipleInts("(\\d+) Hour", value);
 		if (parsedValues != null) {
-			return Duration.seconds(60 * 60 * parsedValues[0]);
+			return Duration.seconds(60.0 * 60.0 * parsedValues[0]);
 		}
 
 		throw new IllegalArgumentException(value);

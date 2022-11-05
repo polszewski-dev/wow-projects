@@ -66,10 +66,12 @@ public class WowheadFetcher {
 
 	private static String fetchPage(String urlStr) throws IOException {
 		URL url = new URL(urlStr);
-		return new BufferedReader(
-				new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))
-				.lines()
-				.collect(Collectors.joining("\n"));
+		try (BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+			return bufferedReader
+					.lines()
+					.collect(Collectors.joining("\n"));
+		}
 	}
 
 	private static String fixJsonErrors(String itemJson) {

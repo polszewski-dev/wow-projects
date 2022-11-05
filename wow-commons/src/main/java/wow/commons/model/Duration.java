@@ -24,7 +24,7 @@ public final class Duration implements Comparable<Duration> {
 	}
 
 	public static Duration seconds(double seconds) {
-		return millis((int)(seconds * 1000));
+		return millis((long)(seconds * 1000));
 	}
 
 	public static Duration seconds(Double seconds) {

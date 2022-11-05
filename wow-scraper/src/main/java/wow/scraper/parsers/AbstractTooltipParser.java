@@ -25,7 +25,7 @@ public abstract class AbstractTooltipParser {
 	protected String name;
 
 	public static final boolean ERROR_ON_UNMATCHED_LINE = true;
-	public static Set<String> UNMATCHED_LINES = new TreeSet<>();
+	public static final Set<String> UNMATCHED_LINES = new TreeSet<>();
 
 	protected AbstractTooltipParser(Integer itemId, String htmlTooltip) {
 		this.itemId = itemId;
