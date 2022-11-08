@@ -60,28 +60,4 @@ public class ItemSocketSpecification {
 												  .collect(Collectors.toUnmodifiableList());
 		return new ItemSockets(this, itemSockets);
 	}
-
-	public Gem[] changeOrder(ItemSocketSpecification newSpecification, Gem[] gems) {
-		if (gems.length != getSocketCount()) {
-			throw new IllegalArgumentException();
-		}
-
-		Gem[] result = new Gem[getSocketCount()];
-
-		for (int i = 1; i <= getSocketCount(); ++i) {
-			allocate(result, gems[i - 1], getSocketType(i), newSpecification);
-		}
-
-		return result;
-	}
-
-	private void allocate(Gem[] gems, Gem gem, SocketType socketType, ItemSocketSpecification newSpecification) {
-		for (int i = 1; i <= newSpecification.getSocketCount(); ++i) {
-			if (newSpecification.getSocketType(i) == socketType && gems[i - 1] == null) {
-				gems[i - 1] = gem;
-				return;
-			}
-		}
-		throw new IllegalArgumentException("Couldn't allocate socket for " + gem);
-	}
 }

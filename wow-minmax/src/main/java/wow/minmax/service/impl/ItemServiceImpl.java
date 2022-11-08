@@ -2,7 +2,6 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
@@ -12,7 +11,6 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
-import wow.commons.util.AttributeEvaluator;
 import wow.minmax.service.ItemService;
 
 import java.util.*;
@@ -29,7 +27,8 @@ public class ItemServiceImpl implements ItemService {
 
 	private final ItemDataRepository itemDataRepository;
 
-	private final Map<String, List<Gem[]>> casterGemCombosCache = Collections.synchronizedMap(new HashMap<>());
+	private final GemComboEvaluator gemComboEvaluator = new GemComboEvaluator(this);
+
 	private final Map<String, List<Enchant>> casterEnchants = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> coloredGemsByPhase = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> metaGemsByPhase = Collections.synchronizedMap(new HashMap<>());
@@ -122,7 +121,7 @@ public class ItemServiceImpl implements ItemService {
 		return getAvailableGems(item.getSocketSpecification(), socketNo, phase, onlyCrafted);
 	}
 
-	private List<Gem> getAvailableGems(ItemSocketSpecification specification, int socketNo, Phase phase, boolean onlyCrafted) {
+	List<Gem> getAvailableGems(ItemSocketSpecification specification, int socketNo, Phase phase, boolean onlyCrafted) {
 		if (socketNo > specification.getSocketCount()) {
 			return Collections.emptyList();//sortable list is needed
 		}
@@ -135,100 +134,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Gem[]> getCasterGemCombos(Item item, Phase phase) {
-		ItemSocketsUniqueConfiguration uniqueConfiguration = item.getSocketSpecification().getUniqueConfiguration();
-		List<Gem[]> casterGemCombos = getCasterGemCombos(uniqueConfiguration, phase);
-		return casterGemCombos.stream()
-							  .map(gems -> uniqueConfiguration.getSpecification().changeOrder(item.getSocketSpecification(), gems))
-							  .collect(Collectors.toList());
-	}
-
-	private List<Gem[]> getCasterGemCombos(ItemSocketsUniqueConfiguration uniqueConfiguration, Phase phase) {
-		return casterGemCombosCache.computeIfAbsent(uniqueConfiguration.getKey() + "#" + phase, x -> {
-			ItemSocketSpecification specification = uniqueConfiguration.getSpecification();
-
-			List<Gem[]> result = new ArrayList<>();
-
-			if (specification.getSocketCount() == 1) {
-				List<Gem> gems1 = getAvailableGems(specification, 1, phase, true);
-				for (Gem gem1 : gems1) {
-					result.add(new Gem[]{gem1});
-				}
-				return result;
-			} else if (specification.getSocketCount() == 2) {
-				List<Gem> gems1 = getAvailableGems(specification, 1, phase, true);
-				List<Gem> gems2 = getAvailableGems(specification, 2, phase, true);
-				for (Gem gem1 : gems1) {
-					for (Gem gem2 : gems2) {
-						result.add(new Gem[]{gem1, gem2});
-					}
-				}
-				return removeEquivalents2(result, specification);
-			} else if (specification.getSocketCount() == 3) {
-				List<Gem> gems1 = getAvailableGems(specification, 1, phase, true);
-				List<Gem> gems2 = getAvailableGems(specification, 2, phase, true);
-				List<Gem> gems3 = getAvailableGems(specification, 3, phase, true);
-				for (Gem gem1 : gems1) {
-					for (Gem gem2 : gems2) {
-						for (Gem gem3 : gems3) {
-							result.add(new Gem[]{gem1, gem2, gem3});
-						}
-					}
-				}
-				return removeEquivalents3(result, specification);
-			} else {
-				throw new IllegalArgumentException("Socket count should be at most 3 but is " + specification.getSocketCount());
-			}
-		});
-	}
-
-	private List<Gem[]> removeEquivalents2(List<Gem[]> gemCombos, ItemSocketSpecification socketSpecification) {
-		Map<String, List<Gem[]>> gemEquivalenceGroups = new HashMap<>();
-		ItemSockets sockets = socketSpecification.createSockets();
-
-		for (Gem[] gemCombo : gemCombos) {
-			Gem gem1 = gemCombo[0];
-			Gem gem2 = gemCombo[1];
-
-			Attributes attributes = AttributeEvaluator.of()
-													  .addAttributes(gem1)
-													  .addAttributes(gem2)
-													  .nothingToSolve()
-													  .getAttributes();
-
-			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) && sockets.getSocket(2).gemMatchesSocketColor(gem2);
-
-			String key = match + "#" + attributes.statString();
-
-			gemEquivalenceGroups.computeIfAbsent(key, x -> new ArrayList<>()).add(gemCombo);
-		}
-
-		return gemEquivalenceGroups.values().stream().map(group -> group.get(0)).collect(Collectors.toList());
-	}
-
-	private List<Gem[]> removeEquivalents3(List<Gem[]> gemCombos, ItemSocketSpecification socketSpecification) {
-		Map<String, List<Gem[]>> gemEquivalenceGroups = new HashMap<>();
-		ItemSockets sockets = socketSpecification.createSockets();
-
-		for (Gem[] gemCombo : gemCombos) {
-			Gem gem1 = gemCombo[0];
-			Gem gem2 = gemCombo[1];
-			Gem gem3 = gemCombo[2];
-
-			Attributes attributes = AttributeEvaluator.of()
-													  .addAttributes(gem1)
-													  .addAttributes(gem2)
-													  .addAttributes(gem3)
-													  .nothingToSolve()
-													  .getAttributes();
-
-			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) && sockets.getSocket(2).gemMatchesSocketColor(gem2) && sockets.getSocket(3).gemMatchesSocketColor(gem3);
-
-			String key = match + "#" + attributes.statString();
-
-			gemEquivalenceGroups.computeIfAbsent(key, x -> new ArrayList<>()).add(gemCombo);
-		}
-
-		return gemEquivalenceGroups.values().stream().map(group -> group.get(0)).collect(Collectors.toList());
+		return gemComboEvaluator.getCasterGemCombos(item, phase);
 	}
 
 	private List<Gem> getGems(Phase phase, boolean onlyCrafted) {

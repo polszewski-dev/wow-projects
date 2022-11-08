@@ -69,22 +69,39 @@ public enum ItemSocketsUniqueConfiguration {
 		return key;
 	}
 
-	public ItemSocketSpecification getSpecification() {
+	public ItemSocketSpecification getSocketSpecification() {
 		if (specification == null) {
 			this.specification = new ItemSocketSpecification(
-					key.chars().mapToObj(letter -> SocketType.parse((char)letter)).collect(Collectors.toList()),
+					key.chars()
+							.mapToObj(letter -> parseSocketType((char)letter))
+							.collect(Collectors.toList()),
 					Attributes.EMPTY
 			);
 		}
 		return specification;
 	}
 
+	private static SocketType parseSocketType(char firstLetter) {
+		switch (firstLetter) {
+			case 'R':
+				return SocketType.Red;
+			case 'Y':
+				return SocketType.Yellow;
+			case 'B':
+				return SocketType.Blue;
+			case 'M':
+				return SocketType.Meta;
+			default:
+				throw new IllegalArgumentException("Can't parse: " + firstLetter);
+		}
+	}
+
 	public int getSocketCount() {
-		return getSpecification().getSocketCount();
+		return getSocketSpecification().getSocketCount();
 	}
 
 	public SocketType getSocketType(int socketNo) {
-		return getSpecification().getSocketType(socketNo);
+		return getSocketSpecification().getSocketType(socketNo);
 	}
 
 	@Override
