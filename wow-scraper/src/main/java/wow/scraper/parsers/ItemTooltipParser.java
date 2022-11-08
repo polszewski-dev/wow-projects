@@ -72,177 +72,42 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	}
 
 	@Override
-	protected void parseLine(String currentLine) {
-		if (currentLine.startsWith("Phase ")) {
-			this.phase = parsePhase(currentLine);
-			return;
-		}
-
-		if (currentLine.startsWith("Item Level ")) {
-			this.itemLevel = parseItemLevel(currentLine);
-			return;
-		}
-
-		if (currentLine.startsWith("Requires Level ")) {
-			this.requiredLevel = parseRequiredLevel(currentLine);
-			return;
-		}
-
-		if (currentLine.equals("Binds when picked up")) {
-			this.binding = Binding.BindsOnPickUp;
-			return;
-		}
-
-		if (currentLine.equals("Binds when equipped")) {
-			this.binding = Binding.BindsOnEquip;
-			return;
-		}
-
-		if (currentLine.equals("Binds when used")) {
-			this.binding = Binding.BindsOnEquip;
-			return;
-		}
-
-		if (currentLine.equals("Unique") || currentLine.equals("Unique-Equipped")) {
-			this.unique = true;
-			return;
-		}
-
-		if (itemType == null && (this.itemType = ItemType.tryParse(currentLine)) != null) {
-			return;
-		}
-
-		if (itemSubType == null && (this.itemSubType = ItemSubType.tryParse(currentLine)) != null) {
-			return;
-		}
-
-		if (currentLine.equals("Red Socket")) {
-			socketTypes.add(SocketType.Red);
-			return;
-		}
-
-		if (currentLine.equals("Yellow Socket")) {
-			socketTypes.add(SocketType.Yellow);
-			return;
-		}
-
-		if (currentLine.equals("Blue Socket")) {
-			socketTypes.add(SocketType.Blue);
-			return;
-		}
-
-		if (currentLine.equals("Meta Socket")) {
-			socketTypes.add(SocketType.Meta);
-			return;
-		}
-
-		String socketBonusPrefix = "Socket Bonus: ";
-
-		if (currentLine.startsWith(socketBonusPrefix)) {
-			parseSocketBonus(currentLine, socketBonusPrefix);
-			return;
-		}
-
-		if (currentLine.matches("Durability \\d+ / \\d+")) {
-			return;
-		}
-
-		if (currentLine.startsWith("Classes: ")) {
-			String sub = currentLine.substring("Classes: ".length());
-			this.classRestriction = ParserUtil.getValues(sub, CharacterClass::parse);
-			return;
-		}
-
-		if (currentLine.startsWith("Races: ")) {
-			String sub = currentLine.substring("Races: ".length());
-			this.raceRestriction = ParserUtil.getValues(sub, Race::parse);
-			return;
-		}
-
-		if (currentLine.equals("Requires any Alliance race")) {
-			this.sideRestriction = Side.Alliance;
-			return;
-		}
-
-		if (currentLine.equals("Requires any Horde race")) {
-			this.sideRestriction = Side.Horde;
-			return;
-		}
-
-		Object[] itemSetParams = ParserUtil.parseMultipleValues("(.*) \\(\\d/(\\d)\\)", currentLine);
-		if (itemSetParams != null) {
-			parseItemSet(itemSetParams);
-			return;
-		}
-
-		Object[] itemSetBonusParams = ParserUtil.parseMultipleValues("\\((\\d+)\\) Set ?: (.*)", currentLine);
-		if (itemSetBonusParams != null) {
-			parseItemSetBonus(itemSetBonusParams);
-			return;
-		}
-
-		if (currentLine.equals("<Random enchantment>")) {
-			this.randomEnchantment = true;
-			return;
-		}
-
-		Object[] factionParams = ParserUtil.parseMultipleValues("Requires (.*?) - (Neutral|Friendly|Honored|Revered|Exalted)", currentLine);
-		if (factionParams != null) {
-			parseReputation(factionParams);
-			return;
-		}
-
-		Object[] requiredProfessionParams = ParserUtil.parseMultipleValues("Requires (Alchemy|Engineering|Jewelcrafting|Tailoring) \\((\\d+)\\)", currentLine);
-		if (requiredProfessionParams != null) {
-			parseRequiredProfession(requiredProfessionParams);
-			return;
-		}
-
-		Object[] requiredProfessionSpecParams = ParserUtil.parseMultipleValues("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", currentLine);
-		if (requiredProfessionSpecParams != null) {
-			parseRequiredProfessionSpec(requiredProfessionSpecParams);
-			return;
-		}
-
-		if (currentLine.startsWith("Dropped by: ")) {
-			this.droppedBy = parseDroppedBy(currentLine);
-			return;
-		}
-
-		if (currentLine.startsWith("Drop Chance: ")) {
-			this.dropChance = parseDropChance(currentLine);
-			return;
-		}
-
-		if (currentLine.startsWith("Sell Price: ")) {
-			this.sellPrice = parseSellPrice(currentLine);
-			return;
-		}
-
-		Object[] weaponDamageParams = ParserUtil.parseMultipleValues("(\\d+) - (\\d+) (\\S+)? ?Damage", currentLine);
-		if (weaponDamageParams != null) {
-			parseWeaponDamage(weaponDamageParams);
-			return;
-		}
-
-		Object[] weaponDpsParams = ParserUtil.parseMultipleValues("\\((\\d+\\.\\d+) damage per second\\)", currentLine);
-		if (weaponDpsParams != null) {
-			parseWeaponDps(weaponDpsParams);
-			return;
-		}
-
-		Object[] weaponSpeedParams = ParserUtil.parseMultipleValues("Speed (\\d+.\\d+)", currentLine);
-		if (weaponSpeedParams != null) {
-			parseWeaponSpeedParams(weaponSpeedParams);
-			return;
-		}
-
-		if (statParser.tryParse(currentLine)) {
-			statLines.add(currentLine);
-			return;
-		}
-
-		unmatchedLine(currentLine);
+	protected Rule[] getRules() {
+		return new Rule[] {
+				Rule.prefix("Phase ", x -> this.phase = parsePhase(x)),
+				Rule.prefix("Item Level ", x -> this.itemLevel = parseItemLevel(x)),
+				Rule.prefix("Requires Level ", x ->	this.requiredLevel = parseRequiredLevel(x)),
+				Rule.exact("Binds when picked up", () -> this.binding = Binding.BindsOnPickUp),
+				Rule.exact("Binds when equipped", () -> this.binding = Binding.BindsOnEquip),
+				Rule.exact("Binds when used", () -> this.binding = Binding.BindsOnEquip),
+				Rule.exact("Unique", () -> this.unique = true),
+				Rule.exact("Unique-Equipped", () -> this.unique = true),
+				Rule.tryParse(ItemType::tryParse, x -> this.itemType = x),
+				Rule.tryParse(ItemSubType::tryParse, x -> this.itemSubType = x),
+				Rule.exact("Red Socket", () -> socketTypes.add(SocketType.Red)),
+				Rule.exact("Yellow Socket", () -> socketTypes.add(SocketType.Yellow)),
+				Rule.exact("Blue Socket", () -> socketTypes.add(SocketType.Blue)),
+				Rule.exact("Meta Socket", () -> socketTypes.add(SocketType.Meta)),
+				Rule.prefix("Socket Bonus: ", this::parseSocketBonus),
+				Rule.regex("Durability \\d+ / \\d+", x -> {}),
+				Rule.prefix("Classes: ", x -> this.classRestriction = ParserUtil.getValues(x, CharacterClass::parse)),
+				Rule.prefix("Races: ", x -> this.raceRestriction = ParserUtil.getValues(x, Race::parse)),
+				Rule.exact("Requires any Alliance race", () -> this.sideRestriction = Side.Alliance),
+				Rule.exact("Requires any Horde race", () -> this.sideRestriction = Side.Horde),
+				Rule.regex("(.*) \\(\\d/(\\d)\\)", this::parseItemSet),
+				Rule.regex("\\((\\d+)\\) Set ?: (.*)", this::parseItemSetBonus),
+				Rule.exact("<Random enchantment>", () -> this.randomEnchantment = true),
+				Rule.regex("Requires (.*?) - (Neutral|Friendly|Honored|Revered|Exalted)", this::parseReputation),
+				Rule.regex("Requires (Alchemy|Engineering|Jewelcrafting|Tailoring) \\((\\d+)\\)", this::parseRequiredProfession),
+				Rule.regex("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", this::parseRequiredProfessionSpec),
+				Rule.prefix("Dropped by: ", x -> this.droppedBy = x),
+				Rule.prefix("Drop Chance: ", x -> this.dropChance = parseDropChance(x)),
+				Rule.prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x)),
+				Rule.regex("(\\d+) - (\\d+) (\\S+)? ?Damage", this::parseWeaponDamage),
+				Rule.regex("\\((\\d+\\.\\d+) damage per second\\)", this::parseWeaponDps),
+				Rule.regex("Speed (\\d+.\\d+)", this::parseWeaponSpeedParams),
+				Rule.test(statParser::tryParse, x -> statLines.add(x)),
+		};
 	}
 
 	@Override
@@ -280,18 +145,16 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		throw new IllegalArgumentException("Can't determine item type for: " + name);
 	}
 
-	private int parseRequiredLevel(String line) {
-		String sub = line.substring("Requires Level ".length());
-		return Integer.parseInt(sub);
+	private int parseRequiredLevel(String value) {
+		return Integer.parseInt(value);
 	}
 
-	private void parseSocketBonus(String currentLine, String socketBonusPrefix) {
-		String sub = currentLine.substring(socketBonusPrefix.length());
-		if (SocketBonusParser.tryParseSocketBonus(sub) != null) {
-			this.socketBonus = sub;
+	private void parseSocketBonus(String value) {
+		if (SocketBonusParser.tryParseSocketBonus(value) != null) {
+			this.socketBonus = value;
 			return;
 		}
-		throw new IllegalArgumentException("Invalid socket bonus: " + currentLine);
+		throw new IllegalArgumentException("Invalid socket bonus: " + value);
 	}
 
 	private void parseItemSet(Object[] parsedValues) {
@@ -347,13 +210,8 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		this.requiredProfessionSpec = ProfessionSpecialization.valueOf(((String)params[0]).replaceAll("\\s", ""));
 	}
 
-	private String parseDroppedBy(String line) {
-		return line.substring("Dropped by: ".length());
-	}
-
-	private Percent parseDropChance(String line) {
-		String sub = line.substring("Drop Chance: ".length());
-		return Percent.of(Double.parseDouble(sub.replace("%", "")));
+	private Percent parseDropChance(String value) {
+		return Percent.of(Double.parseDouble(value.replace("%", "")));
 	}
 
 	private void parseWeaponDamage(Object[] weaponDamageParams) {
@@ -388,5 +246,4 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		}
 		weaponStats.setWeaponSpeed(Double.parseDouble((String)weaponSpeedParams[0]));
 	}
-
 }

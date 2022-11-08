@@ -3,6 +3,7 @@ package wow.scraper;
 import wow.commons.model.pve.GameVersion;
 import wow.scraper.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.WowheadItemCategory;
+import wow.scraper.parsers.AbstractTooltipParser;
 import wow.scraper.parsers.GemTooltipParser;
 import wow.scraper.parsers.ItemTooltipParser;
 import wow.scraper.repository.ItemDetailRepository;
@@ -32,7 +33,7 @@ public class ItemBaseGeneratorMain {
 		itemBaseExcelBuilder.finish(itemFilePath);
 		System.out.printf("Saved to %s%n", itemFilePath);
 
-		ItemTooltipParser.UNMATCHED_LINES.forEach(System.out::println);
+		AbstractTooltipParser.UNMATCHED_LINES.forEach(System.out::println);
 	}
 
 	private static void addEquipment(ItemBaseExcelBuilder itemBaseExcelBuilder) throws IOException {

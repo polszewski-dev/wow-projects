@@ -5,6 +5,7 @@ import wow.commons.model.Money;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
+import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
 
@@ -24,6 +25,8 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	private boolean unique;
 	private List<MetaEnabler> metaEnablers;
 	private List<String> statLines;
+	private Profession requiredProfession;
+	private Integer requiredProfessionLevel;
 	private Money sellPrice;
 
 	public GemTooltipParser(Integer itemId, String htmlTooltip) {
@@ -31,59 +34,21 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	}
 
 	@Override
-	protected void parseLine(String currentLine) {
-		if (currentLine.startsWith("Phase ")) {
-			this.phase = parsePhase(currentLine);
-			return;
-		}
-
-		if (currentLine.startsWith("Item Level ")) {
-			this.itemLevel = parseItemLevel(currentLine);
-			return;
-		}
-
-		if (color == null && (color = tryParseColor(currentLine)) != null) {
-			return;
-		}
-
-		if (currentLine.equals("Binds when picked up")) {
-			this.binding = Binding.BindsOnPickUp;
-			return;
-		}
-
-		if (currentLine.equals("Binds when equipped")) {
-			this.binding = Binding.BindsOnEquip;
-			return;
-		}
-
-		if (currentLine.equals("Unique") || currentLine.equals("Unique-Equipped")) {
-			this.unique = true;
-			return;
-		}
-
-		MetaEnabler metaEnabler = MetaEnabler.tryParse(currentLine);
-		if (metaEnabler != null) {
-			metaEnablers.add(metaEnabler);
-			return;
-		}
-
-		if (currentLine.startsWith("Requires Jewelcrafting")) {
-			//TODO
-			return;
-		}
-
-		if (currentLine.startsWith("Sell Price: ")) {
-			this.sellPrice = parseSellPrice(currentLine);
-			return;
-		}
-
-		if (GemStatsParser.tryParseStats(currentLine) != null) {
-			statLines.add(currentLine);
-			return;
-		}
-
-		unmatchedLine(currentLine);
-	}
+	protected Rule[] getRules() {
+		return new Rule[] {
+				Rule.prefix("Phase ", x -> this.phase = parsePhase(x)),
+				Rule.prefix("Item Level ", x -> this.itemLevel = parseItemLevel(x)),
+				Rule.tryParse(GemTooltipParser::tryParseColor, x -> this.color = x),
+				Rule.exact("Binds when picked up", () -> this.binding = Binding.BindsOnPickUp),
+				Rule.exact("Binds when equipped", () -> this.binding = Binding.BindsOnEquip),
+				Rule.exact("Unique", () -> this.unique = true),
+				Rule.exact("Unique-Equipped", () -> this.unique = true),
+				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
+				Rule.regex("Requires (Alchemy|Engineering|Jewelcrafting|Tailoring) \\((\\d+)\\)", this::parseRequiredProfession),
+				Rule.prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x)),
+				Rule.testNotNull(GemStatsParser::tryParseStats, x -> statLines.add(x)),
+		};
+	};
 
 	@Override
 	protected void beforeParse() {
@@ -100,6 +65,11 @@ public class GemTooltipParser extends AbstractTooltipParser {
 		if (statLines.isEmpty()) {
 			throw new IllegalArgumentException("Couldn't parse any stat for: " + name);
 		}
+	}
+
+	private void parseRequiredProfession(Object[] params) {
+		this.requiredProfession = Profession.tryParse((String)params[0]);
+		this.requiredProfessionLevel = (Integer)params[1];
 	}
 
 	private static GemColor tryParseColor(String line) {

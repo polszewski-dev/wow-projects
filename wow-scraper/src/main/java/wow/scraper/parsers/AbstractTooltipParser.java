@@ -3,10 +3,14 @@ package wow.scraper.parsers;
 import lombok.Getter;
 import wow.commons.model.Money;
 import wow.commons.model.pve.Phase;
+import wow.commons.util.ParserUtil;
 
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,23 +51,91 @@ public abstract class AbstractTooltipParser {
 		afterParse();
 	}
 
-	protected abstract void parseLine(String currentLine);
+	private void parseLine(String currentLine) {
+		for (Rule rule : getRules()) {
+			if (rule.matchAndTakeAction(currentLine)) {
+				return;
+			}
+		}
+		unmatchedLine(currentLine);
+	}
+
+	protected abstract Rule[] getRules();
+
+	protected interface Rule {
+		boolean matchAndTakeAction(String line);
+
+		static Rule exact(String exactValue, Runnable action) {
+			return line -> {
+				if (line.equals(exactValue)) {
+					action.run();
+					return true;
+				}
+				return false;
+			};
+		}
+
+		static Rule prefix(String prefix, Consumer<String> action) {
+			return line -> {
+				String withoutPrefix = ParserUtil.removePrefix(prefix, line);
+				if (withoutPrefix != null) {
+					action.accept(withoutPrefix);
+					return true;
+				}
+				return false;
+			};
+		}
+
+		static <T> Rule tryParse(Function<String, T> lineParser, Consumer<T> parsedValueConsumer) {
+			return line -> {
+				T parsedValue = lineParser.apply(line);
+				if (parsedValue != null) {
+					parsedValueConsumer.accept(parsedValue);
+					return true;
+				}
+				return false;
+			};
+		}
+
+		static Rule test(Predicate<String> predicate, Consumer<String> consumer) {
+			return line -> {
+				if (predicate.test(line)) {
+					consumer.accept(line);
+					return true;
+				}
+				return false;
+			};
+		}
+
+		static <T> Rule testNotNull(Function<String, T> lineParser, Consumer<String> consumer) {
+			return test(line -> lineParser.apply(line) != null, consumer);
+		}
+
+		static Rule regex(String regex, Consumer<Object[]> matchedValueConsumer) {
+			return line -> {
+				Object[] matchedValues = ParserUtil.parseMultipleValues(regex, line);
+				if (matchedValues != null) {
+					matchedValueConsumer.accept(matchedValues);
+					return true;
+				}
+				return false;
+			};
+		}
+	}
+
 	protected abstract void beforeParse();
 	protected abstract void afterParse();
 
-	protected Phase parsePhase(String line) {
-		String sub = line.substring("Phase ".length());
-		return Phase.parse("TBC_P" + sub);
+	protected Phase parsePhase(String value) {
+		return Phase.parse("TBC_P" + value);
 	}
 
-	protected int parseItemLevel(String line) {
-		String sub = line.substring("Item Level ".length());
-		return Integer.parseInt(sub);
+	protected int parseItemLevel(String value) {
+		return Integer.parseInt(value);
 	}
 
-	protected Money parseSellPrice(String line) {
-		String sub = line.substring("Sell Price: ".length());
-		return Money.parse(sub.replace(" ", ""));
+	protected Money parseSellPrice(String value) {
+		return Money.parse(value.replace(" ", ""));
 	}
 
 	protected void unmatchedLine(String line) {

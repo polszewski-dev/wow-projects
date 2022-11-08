@@ -30,15 +30,22 @@ public class ParserUtil {
 		return null;
 	}
 
-	public static int[] parseMultipleInts(String regex, String value) {
+	public static int[] parseMultipleInts(String regex, String line) {
 		Pattern pattern = Pattern.compile("^" + regex + "$");
-		Matcher matcher = pattern.matcher(value);
+		Matcher matcher = pattern.matcher(line);
 		if (matcher.find()) {
 			int[] result = new int[matcher.groupCount()];
 			for (int i = 1; i <= matcher.groupCount(); ++i) {
 				result[i - 1] = Integer.parseInt(matcher.group(i));
 			}
 			return result;
+		}
+		return null;
+	}
+
+	public static String removePrefix(String prefix, String line) {
+		if (line.startsWith(prefix)) {
+			return line.substring(prefix.length());
 		}
 		return null;
 	}
@@ -60,13 +67,6 @@ public class ParserUtil {
 		matcher.appendTail(sb);
 
 		return sb.toString();
-	}
-
-	public static String removePrefix(String prefix, String line) {
-		if (line.startsWith(prefix)) {
-			return line.substring(prefix.length());
-		}
-		return null;
 	}
 
 	public static <T> List<T> getValues(String line, Function<String, T> elementMapper) {
