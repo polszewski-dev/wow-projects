@@ -58,11 +58,11 @@ public class Zone {
 	}
 
 	public boolean isRaid() {
-		return zoneType == ZoneType.Raid;
+		return zoneType == ZoneType.RAID;
 	}
 
 	public boolean isDungeon() {
-		return zoneType == ZoneType.Dungeon;
+		return zoneType == ZoneType.DUNGEON;
 	}
 
 	public boolean isInstance() {

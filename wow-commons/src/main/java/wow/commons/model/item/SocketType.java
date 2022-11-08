@@ -5,18 +5,17 @@ package wow.commons.model.item;
  * Date: 2021-03-06
  */
 public enum SocketType {
-	Meta,
-	Red,
-	Yellow,
-	Blue
-	;
+	META,
+	RED,
+	YELLOW,
+	BLUE;
 
 	public boolean accepts(GemColor gemColor) {
-		if (this == Meta) {
-			return gemColor == GemColor.Meta;
+		if (this == META) {
+			return gemColor == GemColor.META;
 		}
 		else {
-			return gemColor != GemColor.Meta;
+			return gemColor != GemColor.META;
 		}
 	}
 }

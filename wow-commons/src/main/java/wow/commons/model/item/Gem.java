@@ -22,7 +22,7 @@ public class Gem extends AbstractItem {
 	}
 
 	public String getShorterName() {
-		if (color == GemColor.Meta) {
+		if (color == GemColor.META) {
 			return getName();
 		}
 		return getAttributes().toString();

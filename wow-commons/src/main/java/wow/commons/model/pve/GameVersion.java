@@ -1,14 +1,15 @@
 package wow.commons.model.pve;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
 public enum GameVersion {
-	Vanilla(60, 300),
+	VANILLA(60, 300),
 	TBC(70, 375),
-	WotLK(80, 450),
-	;
+	WOTLK(80, 450);
 
 	private final int maxLevel;
 	private final int maxProfession;
@@ -18,8 +19,8 @@ public enum GameVersion {
 		this.maxProfession = maxProfession;
 	}
 
-	public static GameVersion parse(String line) {
-		return valueOf(line);
+	public static GameVersion parse(String value) {
+		return EnumUtil.parse(value, values());
 	}
 
 	public int getMaxLevel() {

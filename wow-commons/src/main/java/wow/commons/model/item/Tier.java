@@ -1,6 +1,6 @@
 package wow.commons.model.item;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
@@ -14,8 +14,7 @@ public enum Tier {
 
 	T4("T4"),
 	T5("T5"),
-	T6("T6"),
-	;
+	T6("T6");
 
 	private final String name;
 
@@ -23,11 +22,8 @@ public enum Tier {
 		this.name = name;
 	}
 
-	public static Tier parse(String line) {
-		if (line == null || line.isEmpty()) {
-			return null;
-		}
-		return Stream.of(values()).filter(x -> x.name.equals(line)).findAny().orElseThrow(IllegalArgumentException::new);
+	public static Tier parse(String value) {
+		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
 	@Override

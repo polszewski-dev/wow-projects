@@ -1,28 +1,20 @@
 package wow.commons.model.spells;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2019-11-02
  */
 public enum SpellSchool {
-	Frost,
-	Fire,
-	Arcane,
-	Shadow,
-	Holy,
-	Nature,
+	FROST,
+	FIRE,
+	ARCANE,
+	SHADOW,
+	HOLY,
+	NATURE;
 
-	;
-
-	public static SpellSchool parse(String name) {
-		if (name == null) {
-			return null;
-		}
-		return Stream.of(values())
-				.filter(x -> x.name().equalsIgnoreCase(name))
-				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException(name));
+	public static SpellSchool parse(String value) {
+		return EnumUtil.parse(value, values());
 	}
 }

@@ -1,5 +1,7 @@
 package wow.commons.model.unit;
 
+import wow.commons.util.EnumUtil;
+
 import java.util.List;
 
 import static wow.commons.model.unit.ArmorProfficiency.*;
@@ -10,83 +12,82 @@ import static wow.commons.model.unit.WeaponProfficiency.*;
  * Date: 2019-11-02
  */
 public enum CharacterClass {
-	Mage(List.of(Cloth), List.of(
-			MainHandDagger, OneHandDagger,
-			MainHandSword, OneHandSword,
-			Staff,
-			HeldInOffHand,
-			Wand
+	MAGE(List.of(CLOTH), List.of(
+			MAIN_HAND_DAGGER, ONE_HAND_DAGGER,
+			MAIN_HAND_SWORD, ONE_HAND_SWORD,
+			STAFF,
+			HELD_IN_OFF_HAND,
+			WAND
 	)),
-	Warlock(List.of(Cloth), List.of(
-			MainHandDagger, OneHandDagger,
-			MainHandSword, OneHandSword,
-			Staff,
-			HeldInOffHand,
-			Wand
+	WARLOCK(List.of(CLOTH), List.of(
+			MAIN_HAND_DAGGER, ONE_HAND_DAGGER,
+			MAIN_HAND_SWORD, ONE_HAND_SWORD,
+			STAFF,
+			HELD_IN_OFF_HAND,
+			WAND
 	)),
-	Priest(List.of(Cloth), List.of(
-			MainHandDagger, OneHandDagger,
-			MainHandMace, OneHandMace,
-			Staff,
-			HeldInOffHand,
-			Wand
+	PRIEST(List.of(CLOTH), List.of(
+			MAIN_HAND_DAGGER, ONE_HAND_DAGGER,
+			MAIN_HAND_MACE, ONE_HAND_MACE,
+			STAFF,
+			HELD_IN_OFF_HAND,
+			WAND
 	)),
-	Druid(List.of(Cloth, Leather), List.of(
-			MainHandDagger, OneHandDagger,
-			MainHandMace, OneHandMace, TwoHandMace,
-			Staff,
-			FistWeapon,
-			HeldInOffHand,
-			Idol
+	DRUID(List.of(CLOTH, LEATHER), List.of(
+			MAIN_HAND_DAGGER, ONE_HAND_DAGGER,
+			MAIN_HAND_MACE, ONE_HAND_MACE, TWO_HAND_MACE,
+			STAFF,
+			FIST_WEAPON,
+			HELD_IN_OFF_HAND,
+			IDOL
 	)),
-	Rogue(List.of(Cloth, Leather), List.of(
-			Dagger,
-			MainHandSword, OffHandSword, OneHandSword,
-			MainHandAxe, OffHandAxe, OneHandAxe,
-			MainHandMace, OffHandMace, OneHandMace,
-			FistWeapon,
-			Gun, Bow, Crossbow
+	ROGUE(List.of(CLOTH, LEATHER), List.of(
+			DAGGER,
+			MAIN_HAND_SWORD, OFF_HAND_SWORD, ONE_HAND_SWORD,
+			MAIN_HAND_AXE, OFF_HAND_AXE, ONE_HAND_AXE,
+			MAIN_HAND_MACE, OFF_HAND_MACE, ONE_HAND_MACE,
+			FIST_WEAPON,
+			GUN, BOW, CROSSBOW
 	)),
-	Hunter(List.of(Cloth, Leather, Mail), List.of(
-			Dagger,
-			Sword,
-			Axe,
-			Polearm,
-			Mace,
-			Staff,
-			FistWeapon,
-			Gun, Bow, Crossbow
+	HUNTER(List.of(CLOTH, LEATHER, MAIL), List.of(
+			DAGGER,
+			SWORD,
+			AXE,
+			POLEARM,
+			MACE,
+			STAFF,
+			FIST_WEAPON,
+			GUN, BOW, CROSSBOW
 	)),
-	Shaman(List.of(Cloth, Leather, Mail), List.of(
-			Dagger,
-			Mace,
-			Staff,
-			FistWeapon,
-			HeldInOffHand, Shield,
-			Totem
+	SHAMAN(List.of(CLOTH, LEATHER, MAIL), List.of(
+			DAGGER,
+			MACE,
+			STAFF,
+			FIST_WEAPON,
+			HELD_IN_OFF_HAND, SHIELD,
+			TOTEM
 	)),
-	Paladin(List.of(Cloth, Leather, Mail, Plate), List.of(
-			MainHandDagger, OneHandDagger,
-			MainHandSword, OneHandSword, TwoHandSword,
-			MainHandAxe, OneHandAxe, TwoHandAxe,
-			Polearm,
-			MainHandMace, OneHandMace, TwoHandMace,
-			Staff,
-			HeldInOffHand, Shield,
-			Libram
+	PALADIN(List.of(CLOTH, LEATHER, MAIL, PLATE), List.of(
+			MAIN_HAND_DAGGER, ONE_HAND_DAGGER,
+			MAIN_HAND_SWORD, ONE_HAND_SWORD, TWO_HAND_SWORD,
+			MAIN_HAND_AXE, ONE_HAND_AXE, TWO_HAND_AXE,
+			POLEARM,
+			MAIN_HAND_MACE, ONE_HAND_MACE, TWO_HAND_MACE,
+			STAFF,
+			HELD_IN_OFF_HAND, SHIELD,
+			LIBRAM
 	)),
-	Warrior(List.of(Cloth, Leather, Mail, Plate), List.of(
-			Dagger,
-			Sword,
-			Axe,
-			Polearm,
-			Mace,
-			Staff,
-			FistWeapon,
-			Shield,
-			Gun, Bow, Crossbow
-	)),
-	;
+	WARRIOR(List.of(CLOTH, LEATHER, MAIL, PLATE), List.of(
+			DAGGER,
+			SWORD,
+			AXE,
+			POLEARM,
+			MACE,
+			STAFF,
+			FIST_WEAPON,
+			SHIELD,
+			GUN, BOW, CROSSBOW
+	));
 
 	private final List<ArmorProfficiency> armorProfficiencies;
 	private final List<WeaponProfficiency> weaponProfficiencies;
@@ -97,7 +98,7 @@ public enum CharacterClass {
 	}
 
 	public static CharacterClass parse(String value) {
-		return CharacterClass.valueOf(value);
+		return EnumUtil.parse(value, values());
 	}
 
 	public List<ArmorProfficiency> getArmorProfficiencies() {

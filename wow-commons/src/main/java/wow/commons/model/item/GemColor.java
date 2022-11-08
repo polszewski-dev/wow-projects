@@ -1,5 +1,7 @@
 package wow.commons.model.item;
 
+import wow.commons.util.EnumUtil;
+
 import java.util.List;
 
 /**
@@ -7,15 +9,14 @@ import java.util.List;
  * Date: 2021-03-06
  */
 public enum GemColor {
-	Red(SocketType.Red),
-	Orange(SocketType.Red, SocketType.Yellow),
-	Yellow(SocketType.Yellow),
-	Green(SocketType.Yellow, SocketType.Blue),
-	Blue(SocketType.Blue),
-	Purple(SocketType.Red, SocketType.Blue),
-	Prismatic(SocketType.Red, SocketType.Yellow, SocketType.Blue),
-	Meta(SocketType.Meta)
-	;
+	RED(SocketType.RED),
+	ORANGE(SocketType.RED, SocketType.YELLOW),
+	YELLOW(SocketType.YELLOW),
+	GREEN(SocketType.YELLOW, SocketType.BLUE),
+	BLUE(SocketType.BLUE),
+	PURPLE(SocketType.RED, SocketType.BLUE),
+	PRISMATIC(SocketType.RED, SocketType.YELLOW, SocketType.BLUE),
+	META(SocketType.META);
 
 	private final List<SocketType> matchingSocketTypes;
 
@@ -24,10 +25,7 @@ public enum GemColor {
 	}
 
 	public static GemColor parse(String value) {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
-		return valueOf(value);
+		return EnumUtil.parse(value, values());
 	}
 
 	public boolean matchesSocket(SocketType socket) {

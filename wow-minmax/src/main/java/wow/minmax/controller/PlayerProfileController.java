@@ -67,7 +67,7 @@ public class PlayerProfileController {
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);
 
 		if (addOptions) {
-			for (EquippableItemDTO item : playerProfileDTO.getEquipment().toList()) {
+			for (EquippableItemDTO item : playerProfileDTO.getEquipment().getItemsBySlot().values()) {
 				addItemOptions(item, playerProfileDTO.getPhase());
 			}
 		}
@@ -146,7 +146,7 @@ public class PlayerProfileController {
 		PlayerProfile playerProfile = playerProfileService.resetEquipment(profileId);
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);
 
-		for (EquippableItemDTO item : playerProfileDTO.getEquipment().toList()) {
+		for (EquippableItemDTO item : playerProfileDTO.getEquipment().getItemsBySlot().values()) {
 			addItemOptions(item, playerProfileDTO.getPhase());
 		}
 

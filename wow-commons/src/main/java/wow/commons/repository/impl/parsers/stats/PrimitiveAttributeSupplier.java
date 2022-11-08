@@ -30,7 +30,7 @@ public class PrimitiveAttributeSupplier {
 	private PrimitiveAttributeSupplier(String line) {
 		String[] parts = line.split(",");
 
-		this.attributeId = AttributeId.valueOf(parts[0]);
+		this.attributeId = AttributeId.parse(parts[0]);
 
 		for (int i = 1; i < parts.length; ++i) {
 			addCondition(parts[i].trim());

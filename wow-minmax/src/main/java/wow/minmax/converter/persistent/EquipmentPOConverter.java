@@ -25,17 +25,17 @@ public class EquipmentPOConverter extends Converter<Equipment, EquipmentPO> {
 				equippableItemPOConverter.convert(equipment.getBack()),
 				equippableItemPOConverter.convert(equipment.getChest()),
 				equippableItemPOConverter.convert(equipment.getWrist()),
-				equippableItemPOConverter.convert(equipment.getHand()),
+				equippableItemPOConverter.convert(equipment.getHands()),
 				equippableItemPOConverter.convert(equipment.getWaist()),
 				equippableItemPOConverter.convert(equipment.getLegs()),
 				equippableItemPOConverter.convert(equipment.getFeet()),
-				equippableItemPOConverter.convert(equipment.getRing1()),
-				equippableItemPOConverter.convert(equipment.getRing2()),
+				equippableItemPOConverter.convert(equipment.getFinger1()),
+				equippableItemPOConverter.convert(equipment.getFinger2()),
 				equippableItemPOConverter.convert(equipment.getTrinket1()),
 				equippableItemPOConverter.convert(equipment.getTrinket2()),
-				equippableItemPOConverter.convert(equipment.getMain()),
-				equippableItemPOConverter.convert(equipment.getOff()),
-				equippableItemPOConverter.convert(equipment.getWand())
+				equippableItemPOConverter.convert(equipment.getMainHand()),
+				equippableItemPOConverter.convert(equipment.getOffHand()),
+				equippableItemPOConverter.convert(equipment.getRanged())
 		);
 	}
 
@@ -53,10 +53,10 @@ public class EquipmentPOConverter extends Converter<Equipment, EquipmentPO> {
 		equipment.set(equippableItemPOConverter.convertBack(value.getWaist()));
 		equipment.set(equippableItemPOConverter.convertBack(value.getLegs()));
 		equipment.set(equippableItemPOConverter.convertBack(value.getFeet()));
-		equipment.set(equippableItemPOConverter.convertBack(value.getFinger1()), ItemSlot.Finger1);
-		equipment.set(equippableItemPOConverter.convertBack(value.getFinger2()), ItemSlot.Finger2);
-		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket1()), ItemSlot.Trinket1);
-		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket2()), ItemSlot.Trinket2);
+		equipment.set(equippableItemPOConverter.convertBack(value.getFinger1()), ItemSlot.FINGER_1);
+		equipment.set(equippableItemPOConverter.convertBack(value.getFinger2()), ItemSlot.FINGER_2);
+		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket1()), ItemSlot.TRINKET_1);
+		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket2()), ItemSlot.TRINKET_2);
 		equipment.set(equippableItemPOConverter.convertBack(value.getMainHand()));
 		equipment.set(equippableItemPOConverter.convertBack(value.getOffHand()));
 		equipment.set(equippableItemPOConverter.convertBack(value.getRanged()));

@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 public class ScraperMain {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
 	private static final int MIN_ITEM_LEVEL = 60;
-	private static final WowheadItemQuality MIN_QUALITY = WowheadItemQuality.Uncommon;
+	private static final WowheadItemQuality MIN_QUALITY = WowheadItemQuality.UNCOMMON;
 
 	private static final Set<Integer> IGNORED_ITEM_IDS = Set.of(
 			22736,
@@ -32,27 +32,27 @@ public class ScraperMain {
 	);
 
 	public static void main(String[] args) throws IOException {
-		fetch("items/armor/cloth/slot:5", WowheadItemCategory.chest);
-		fetch("items/armor/cloth/slot:8", WowheadItemCategory.feet);
-		fetch("items/armor/cloth/slot:10", WowheadItemCategory.hands);
-		fetch("items/armor/cloth/slot:1", WowheadItemCategory.head);
-		fetch("items/armor/cloth/slot:7", WowheadItemCategory.legs);
-		fetch("items/armor/cloth/slot:3", WowheadItemCategory.shoulder);
-		fetch("items/armor/cloth/slot:6", WowheadItemCategory.waist);
-		fetch("items/armor/cloth/slot:9", WowheadItemCategory.wrist);
-		fetch("items/armor/amulets/slot:9", WowheadItemCategory.amulets);
-		fetch("items/armor/rings", WowheadItemCategory.rings);
-		fetch("items/armor/trinkets", WowheadItemCategory.trinkets);
-		fetch("items/armor/cloaks", WowheadItemCategory.cloaks);
-		fetch("items/armor/off-hand-frills", WowheadItemCategory.off_hands);
-		fetch("items/weapons/daggers", WowheadItemCategory.daggers);
-		fetch("items/weapons/one-handed-swords", WowheadItemCategory.one_handed_swords);
-		fetch("items/weapons/staves", WowheadItemCategory.staves);
-		fetch("items/weapons/wands", WowheadItemCategory.wands);
+		fetch("items/armor/cloth/slot:5", WowheadItemCategory.CHEST);
+		fetch("items/armor/cloth/slot:8", WowheadItemCategory.FEET);
+		fetch("items/armor/cloth/slot:10", WowheadItemCategory.HANDS);
+		fetch("items/armor/cloth/slot:1", WowheadItemCategory.HEAD);
+		fetch("items/armor/cloth/slot:7", WowheadItemCategory.LEGS);
+		fetch("items/armor/cloth/slot:3", WowheadItemCategory.SHOULDER);
+		fetch("items/armor/cloth/slot:6", WowheadItemCategory.WAIST);
+		fetch("items/armor/cloth/slot:9", WowheadItemCategory.WRIST);
+		fetch("items/armor/amulets/slot:9", WowheadItemCategory.AMULETS);
+		fetch("items/armor/rings", WowheadItemCategory.RINGS);
+		fetch("items/armor/trinkets", WowheadItemCategory.TRINKETS);
+		fetch("items/armor/cloaks", WowheadItemCategory.CLOAKS);
+		fetch("items/armor/off-hand-frills", WowheadItemCategory.OFF_HANDS);
+		fetch("items/weapons/daggers", WowheadItemCategory.DAGGERS);
+		fetch("items/weapons/one-handed-swords", WowheadItemCategory.ONE_HANDED_SWORDS);
+		fetch("items/weapons/staves", WowheadItemCategory.STAVES);
+		fetch("items/weapons/wands", WowheadItemCategory.WANDS);
 
-		fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", WowheadItemCategory.gems);
+		fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", WowheadItemCategory.GEMS);
 
-		fetch("items/miscellaneous/armor-tokens", WowheadItemCategory.tokens);
+		fetch("items/miscellaneous/armor-tokens", WowheadItemCategory.TOKENS);
 	}
 
 	private static void fetch(String url, WowheadItemCategory category) throws IOException {
@@ -85,12 +85,12 @@ public class ScraperMain {
 		}
 
 		int craftedPosition = IntStream.iterate(0, i -> i < sources.size(), i -> i + 1)
-				.filter(i -> sources.get(i) == WowheadSource.crafted.getCode())
+				.filter(i -> sources.get(i) == WowheadSource.CRAFTED.getCode())
 				.findFirst().orElse(-1);
 
 		if (craftedPosition >= 0) {
 			sources.clear();
-			sources.add(WowheadSource.crafted.getCode());
+			sources.add(WowheadSource.CRAFTED.getCode());
 			JsonSourceMore sourceMore = itemDetails.getSourceMores().get(craftedPosition);
 			itemDetails.getSourceMores().clear();
 			itemDetails.getSourceMores().add(sourceMore);

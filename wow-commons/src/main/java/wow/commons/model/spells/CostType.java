@@ -1,5 +1,7 @@
 package wow.commons.model.spells;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2021-09-25
@@ -24,15 +26,10 @@ public enum CostType {
 		public <T> T visit(Visitor<T> visitor) {
 			return visitor.onPetMana();
 		}
-	},
-
-	;
+	};
 
 	public static CostType parse(String value) {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
-		return valueOf(value.toUpperCase());
+		return EnumUtil.parse(value, values());
 	}
 
 	public interface Visitor<T> {

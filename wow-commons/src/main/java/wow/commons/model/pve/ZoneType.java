@@ -5,9 +5,9 @@ package wow.commons.model.pve;
  * Date: 2022-11-01
  */
 public enum ZoneType {
-	Normal,
-	Dungeon,
-	Raid,
-	Battleground,
-	Arena
+	NORMAL,
+	DUNGEON,
+	RAID,
+	BATTLEGROUND,
+	ARENA
 }

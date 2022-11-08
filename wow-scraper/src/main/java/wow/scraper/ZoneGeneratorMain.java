@@ -62,7 +62,7 @@ public class ZoneGeneratorMain {
 	private static void fixData(List<JsonZoneDetails> zones) {
 		zones.forEach(zone -> {
 			if (zone.getName().equals("Onyxia's Lair")) {
-				zone.setInstance(WowheadZoneType.Raid.getCode());
+				zone.setInstance(WowheadZoneType.RAID.getCode());
 			}
 		});
 	}

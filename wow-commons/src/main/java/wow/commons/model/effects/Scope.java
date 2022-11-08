@@ -1,5 +1,7 @@
 package wow.commons.model.effects;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2021-01-17
@@ -31,10 +33,7 @@ public enum Scope {
 	};
 
 	public static Scope parse(String value) {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
-		return valueOf(value.toUpperCase());
+		return EnumUtil.parse(value, values());
 	}
 
 	public interface Visitor {

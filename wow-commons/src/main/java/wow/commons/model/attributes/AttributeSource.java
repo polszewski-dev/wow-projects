@@ -104,47 +104,47 @@ public interface AttributeSource {
 	}
 
 	default double getStamina() {
-		return getDouble(AttributeId.Stamina);
+		return getDouble(AttributeId.STAMINA);
 	}
 
 	default double getIntellect() {
-		return getDouble(AttributeId.Intellect);
+		return getDouble(AttributeId.INTELLECT);
 	}
 
 	default double getSpirit() {
-		return getDouble(AttributeId.Spirit);
+		return getDouble(AttributeId.SPIRIT);
 	}
 
 	default double getBaseStatsIncrease() {
-		return getDouble(AttributeId.BaseStatsIncrease);
+		return getDouble(AttributeId.BASE_STATS_INCREASE);
 	}
 
 	default Percent getBaseStatsIncreasePct() {
-		return getPercent(AttributeId.BaseStatsIncreasePct);
+		return getPercent(AttributeId.BASE_STATS_INCREASE_PCT);
 	}
 
 	default Percent getStaIncreasePct() {
-		return getPercent(AttributeId.StaIncreasePct);
+		return getPercent(AttributeId.STA_INCREASE_PCT);
 	}
 
 	default Percent getIntIncreasePct() {
-		return getPercent(AttributeId.IntIncreasePct);
+		return getPercent(AttributeId.INT_INCREASE_PCT);
 	}
 
 	default Percent getSpiIncreasePct() {
-		return getPercent(AttributeId.SpiIncreasePct);
+		return getPercent(AttributeId.SPI_INCREASE_PCT);
 	}
 
 	default double getSpellPower() {
-		return getDouble(AttributeId.SpellPower);
+		return getDouble(AttributeId.SPELL_POWER);
 	}
 
 	default double getSpellDamage() {
-		return getDouble(AttributeId.SpellDamage);
+		return getDouble(AttributeId.SPELL_DAMAGE);
 	}
 
 	default double getSpellDamage(SpellSchool spellSchool) {
-		return getDouble(AttributeId.SpellDamage, spellSchool);
+		return getDouble(AttributeId.SPELL_DAMAGE, spellSchool);
 	}
 
 	default double getTotalSpellDamage() {
@@ -156,99 +156,99 @@ public interface AttributeSource {
 	}
 
 	default double getSpellCritRating() {
-		return getDouble(AttributeId.SpellCritRating);
+		return getDouble(AttributeId.SPELL_CRIT_RATING);
 	}
 
 	default Percent getSpellCritPct() {
-		return getPercent(AttributeId.SpellCritPct);
+		return getPercent(AttributeId.SPELL_CRIT_PCT);
 	}
 
 	default Percent getIncreasedCriticalDamagePct() {
-		return getPercent(AttributeId.IncreasedCriticalDamagePct);
+		return getPercent(AttributeId.INCREASED_CRITICAL_DAMAGE_PCT);
 	}
 
 	default Percent getCritDamageIncreasePct() {
-		return getPercent(AttributeId.CritDamageIncreasePct);
+		return getPercent(AttributeId.CRIT_DAMAGE_INCREASE_PCT);
 	}
 
 	default double getSpellHitRating() {
-		return getDouble(AttributeId.SpellHitRating);
+		return getDouble(AttributeId.SPELL_HIT_RATING);
 	}
 
 	default Percent getSpellHitPct() {
-		return getPercent(AttributeId.SpellHitPct);
+		return getPercent(AttributeId.SPELL_HIT_PCT);
 	}
 
 	default double getSpellHasteRating() {
-		return getDouble(AttributeId.SpellHasteRating);
+		return getDouble(AttributeId.SPELL_HASTE_RATING);
 	}
 
 	default Percent getSpellHastePct() {
-		return getPercent(AttributeId.SpellHastePct);
+		return getPercent(AttributeId.SPELL_HASTE_PCT);
 	}
 
 	default double getSpellPenetration() {
-		return getDouble(AttributeId.SpellPenetration);
+		return getDouble(AttributeId.SPELL_PENETRATION);
 	}
 
 	default double getHealingPower() {
-		return getDouble(AttributeId.HealingPower);
+		return getDouble(AttributeId.HEALING_POWER);
 	}
 
 	default double getMp5() {
-		return getDouble(AttributeId.Mp5);
+		return getDouble(AttributeId.MP5);
 	}
 
 	default double getResistance() {
-		return getDouble(AttributeId.Resistance);
+		return getDouble(AttributeId.RESISTANCE);
 	}
 
 	default double getResistance(SpellSchool spellSchool) {
-		return getDouble(AttributeId.Resistance, spellSchool);
+		return getDouble(AttributeId.RESISTANCE, spellSchool);
 	}
 
 	default Percent getDamageTakenPct() {
-		return getPercent(AttributeId.DamageTakenPct);
+		return getPercent(AttributeId.DAMAGE_TAKEN_PCT);
 	}
 
 	default Percent getDirectDamageIncreasePct() {
-		return getPercent(AttributeId.DirectDamageIncreasePct);
+		return getPercent(AttributeId.DIRECT_DAMAGE_INCREASE_PCT);
 	}
 
 	default Percent getDoTDamageIncreasePct() {
-		return getPercent(AttributeId.DotDamageIncreasePct);
+		return getPercent(AttributeId.DOT_DAMAGE_INCREASE_PCT);
 	}
 
 	default Percent getAdditionalSpellDamageTakenPct() {
-		return getPercent(AttributeId.AdditionalSpellDamageTakenPct);
+		return getPercent(AttributeId.ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT);
 	}
 
 	default Percent getEffectIncreasePct() {
-		return getPercent(AttributeId.EffectIncreasePct);
+		return getPercent(AttributeId.EFFECT_INCREASE_PCT);
 	}
 
 	default Percent getDamageTakenIncreasePct() {
-		return getPercent(AttributeId.DamageTakenIncreasePct);
+		return getPercent(AttributeId.DAMAGE_TAKEN_INCREASE_PCT);
 	}
 
 	default Percent getSpellCoeffPct() {
-		return getPercent(AttributeId.SpellCoeffBonusPct);
+		return getPercent(AttributeId.SPELL_COEFF_BONUS_PCT);
 	}
 
 	default Duration getCastTimeReduction() {
-		return getDuration(AttributeId.CastTimeReduction);
+		return getDuration(AttributeId.CAST_TIME_REDUCTION);
 	}
 
 	default Percent getCostReductionPct() {
-		return getPercent(AttributeId.CostReductionPct);
+		return getPercent(AttributeId.COST_REDUCTION_PCT);
 	}
 
 	default List<SpecialAbility> getSpecialAbilities() {
-		return getList(AttributeId.SpecialAbilities);
+		return getList(AttributeId.SPECIAL_ABILITIES);
 	}
 
 	default double getExtraCritCoeff() {
-		return getDouble(AttributeId.ExtraCritCoeff);
+		return getDouble(AttributeId.EXTRA_CRIT_COEFF);
 	}
 
 	default boolean hasCasterStats() {
@@ -260,10 +260,10 @@ public interface AttributeSource {
 	}
 
 	default Percent getThreatReductionPct() {
-		return getPercent(AttributeId.ThreatReductionPct);
+		return getPercent(AttributeId.THREAT_REDUCTION_PCT);
 	}
 
 	default Percent getSpeedIncreasePct() {
-		return getPercent(AttributeId.SpeedIncreasePct);
+		return getPercent(AttributeId.SPEED_INCREASE_PCT);
 	}
 }

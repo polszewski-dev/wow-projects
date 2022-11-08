@@ -1,20 +1,19 @@
 package wow.commons.model.unit;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-19
  */
 public enum CreatureType {
-	Humanoid,
-	Undead,
-	Demon,
-	Beast,
-	Dragon,
-	;
+	HUMANOID,
+	UNDEAD,
+	DEMON,
+	BEAST,
+	DRAGON;
 
-	public static CreatureType parse(String line) {
-		return Stream.of(values()).filter(x -> x.name().equalsIgnoreCase(line)).findAny().orElseThrow(() -> new IllegalArgumentException(line));
+	public static CreatureType parse(String value) {
+		return EnumUtil.parse(value, values());
 	}
 }

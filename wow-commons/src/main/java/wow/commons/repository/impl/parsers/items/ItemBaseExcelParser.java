@@ -180,16 +180,16 @@ public class ItemBaseExcelParser extends ExcelParser {
 		if (itemType == null) {
 			return;// checked after all items are read
 		}
-		if (itemType.getCategory() == ItemCategory.Armor && itemSubType == null) {
+		if (itemType.getCategory() == ItemCategory.ARMOR && itemSubType == null) {
 			throw new IllegalArgumentException(item.getName());
 		}
-		if (itemType.getCategory() == ItemCategory.Weapon && itemSubType == null) {
+		if (itemType.getCategory() == ItemCategory.WEAPON && itemSubType == null) {
 			throw new IllegalArgumentException(item.getName());
 		}
-		if (itemType.getCategory() == ItemCategory.Projectile && itemSubType == null) {
+		if (itemType.getCategory() == ItemCategory.PROJECTILE && itemSubType == null) {
 			throw new IllegalArgumentException(item.getName());
 		}
-		if ((itemType.getCategory() != ItemCategory.Armor && itemType.getCategory() != ItemCategory.Weapon && itemType.getCategory() != ItemCategory.Projectile) && itemSubType != null) {
+		if ((itemType.getCategory() != ItemCategory.ARMOR && itemType.getCategory() != ItemCategory.WEAPON && itemType.getCategory() != ItemCategory.PROJECTILE) && itemSubType != null) {
 			throw new IllegalArgumentException(item.getName());
 		}
 	}
@@ -280,7 +280,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var phase = COL_GEM_PHASE.getEnum(Phase::valueOf, Phase.TBC_P0);
 		var source = COL_GEM_SOURCE.getString();
 		var color = COL_GEM_COLOR.getEnum(GemColor::valueOf);
-		var binding = COL_GEM_BINDING.getEnum(Binding::valueOf, Binding.BindsOnEquip);
+		var binding = COL_GEM_BINDING.getEnum(Binding::valueOf, Binding.BINDS_ON_EQUIP);
 		var unique = COL_GEM_UNIQUE.getBoolean();
 		var metaEnablers = COL_GEM_META_ENABLERS.getList(MetaEnabler::valueOf);
 		var sellPrice = Money.parse(COL_GEM_SELL_PRICE.getString(null));

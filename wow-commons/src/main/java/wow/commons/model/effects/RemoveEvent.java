@@ -1,5 +1,7 @@
 package wow.commons.model.effects;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2021-01-21
@@ -11,9 +13,6 @@ public enum RemoveEvent {
 	DIRECT_DAMAGE_TAKEN;
 
 	public static RemoveEvent parse(String value) {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
-		return valueOf(value.toUpperCase());
+		return EnumUtil.parse(value, values());
 	}
 }

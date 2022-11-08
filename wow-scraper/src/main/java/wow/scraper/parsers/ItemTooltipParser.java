@@ -77,23 +77,23 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 				Rule.prefix("Phase ", x -> this.phase = parsePhase(x)),
 				Rule.prefix("Item Level ", x -> this.itemLevel = parseItemLevel(x)),
 				Rule.prefix("Requires Level ", x ->	this.requiredLevel = parseRequiredLevel(x)),
-				Rule.exact("Binds when picked up", () -> this.binding = Binding.BindsOnPickUp),
-				Rule.exact("Binds when equipped", () -> this.binding = Binding.BindsOnEquip),
-				Rule.exact("Binds when used", () -> this.binding = Binding.BindsOnEquip),
+				Rule.exact("Binds when picked up", () -> this.binding = Binding.BINDS_ON_PICK_UP),
+				Rule.exact("Binds when equipped", () -> this.binding = Binding.BINDS_ON_EQUIP),
+				Rule.exact("Binds when used", () -> this.binding = Binding.BINDS_ON_EQUIP),
 				Rule.exact("Unique", () -> this.unique = true),
 				Rule.exact("Unique-Equipped", () -> this.unique = true),
 				Rule.tryParse(ItemType::tryParse, x -> this.itemType = x),
 				Rule.tryParse(ItemSubType::tryParse, x -> this.itemSubType = x),
-				Rule.exact("Red Socket", () -> socketTypes.add(SocketType.Red)),
-				Rule.exact("Yellow Socket", () -> socketTypes.add(SocketType.Yellow)),
-				Rule.exact("Blue Socket", () -> socketTypes.add(SocketType.Blue)),
-				Rule.exact("Meta Socket", () -> socketTypes.add(SocketType.Meta)),
+				Rule.exact("Red Socket", () -> socketTypes.add(SocketType.RED)),
+				Rule.exact("Yellow Socket", () -> socketTypes.add(SocketType.YELLOW)),
+				Rule.exact("Blue Socket", () -> socketTypes.add(SocketType.BLUE)),
+				Rule.exact("Meta Socket", () -> socketTypes.add(SocketType.META)),
 				Rule.prefix("Socket Bonus: ", this::parseSocketBonus),
 				Rule.regex("Durability \\d+ / \\d+", x -> {}),
 				Rule.prefix("Classes: ", x -> this.classRestriction = ParserUtil.getValues(x, CharacterClass::parse)),
 				Rule.prefix("Races: ", x -> this.raceRestriction = ParserUtil.getValues(x, Race::parse)),
-				Rule.exact("Requires any Alliance race", () -> this.sideRestriction = Side.Alliance),
-				Rule.exact("Requires any Horde race", () -> this.sideRestriction = Side.Horde),
+				Rule.exact("Requires any Alliance race", () -> this.sideRestriction = Side.ALLIANCE),
+				Rule.exact("Requires any Horde race", () -> this.sideRestriction = Side.HORDE),
 				Rule.regex("(.*) \\(\\d/(\\d)\\)", this::parseItemSet),
 				Rule.regex("\\((\\d+)\\) Set ?: (.*)", this::parseItemSetBonus),
 				Rule.exact("<Random enchantment>", () -> this.randomEnchantment = true),
@@ -119,26 +119,26 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 	@Override
 	protected void afterParse() {
-		if (itemType == ItemType.Back && itemSubType == null) {
-			this.itemSubType = ArmorSubType.Cloth;
+		if (itemType == ItemType.BACK && itemSubType == null) {
+			this.itemSubType = ArmorSubType.CLOTH;
 		}
 
 		if (itemType != null) {
 			return;
 		}
 
-		if (itemSubType == WeaponSubType.HeldInOffHand) {
-			this.itemType = ItemType.OffHand;
+		if (itemSubType == WeaponSubType.HELD_IN_OFF_HAND) {
+			this.itemType = ItemType.OFF_HAND;
 			return;
 		}
 
-		if (itemSubType == WeaponSubType.Wand) {
-			this.itemType = ItemType.Ranged;
+		if (itemSubType == WeaponSubType.WAND) {
+			this.itemType = ItemType.RANGED;
 			return;
 		}
 
-		if (itemSubType == WeaponSubType.Gun || itemSubType == WeaponSubType.Bow || itemSubType == WeaponSubType.Crossbow || itemSubType == WeaponSubType.Thrown) {
-			this.itemType = ItemType.Ranged;
+		if (itemSubType == WeaponSubType.GUN || itemSubType == WeaponSubType.BOW || itemSubType == WeaponSubType.CROSSBOW || itemSubType == WeaponSubType.THROWN) {
+			this.itemType = ItemType.RANGED;
 			return;
 		}
 
@@ -163,7 +163,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 		Object[] setRestriction = ParserUtil.parseMultipleValues("Requires (Tailoring) \\((\\d+)\\)", lines.get(currentLineIdx + 1));
 		if (setRestriction != null) {
-			this.itemSetRequiredProfession = Profession.tryParse((String)setRestriction[0]);
+			this.itemSetRequiredProfession = Profession.parse((String)setRestriction[0]);
 			this.itemSetRequiredProfessionLevel = (Integer)setRestriction[1];
 			++currentLineIdx;
 		}
@@ -202,12 +202,12 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	}
 
 	private void parseRequiredProfession(Object[] params) {
-		this.requiredProfession = Profession.tryParse((String)params[0]);
+		this.requiredProfession = Profession.parse((String)params[0]);
 		this.requiredProfessionLevel = (Integer)params[1];
 	}
 
 	private void parseRequiredProfessionSpec(Object[] params) {
-		this.requiredProfessionSpec = ProfessionSpecialization.valueOf(((String)params[0]).replaceAll("\\s", ""));
+		this.requiredProfessionSpec = ProfessionSpecialization.parse((String)params[0]);
 	}
 
 	private Percent parseDropChance(String value) {

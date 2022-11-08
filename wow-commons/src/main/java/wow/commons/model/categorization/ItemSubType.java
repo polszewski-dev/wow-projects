@@ -5,15 +5,29 @@ package wow.commons.model.categorization;
  * Date: 2021-03-05
  */
 public interface ItemSubType {
-	static ItemSubType tryParse(String line) {
-		ItemSubType result = ArmorSubType.tryParse(line);
+	static ItemSubType parse(String value) {
+		if (value == null) {
+			return null;
+		}
+		ItemSubType result = tryParse(value);
 		if (result != null) {
 			return result;
 		}
-		result = WeaponSubType.tryParse(line);
+		throw new IllegalArgumentException(value);
+	}
+
+	static ItemSubType tryParse(String value) {
+		if (value == null) {
+			return null;
+		}
+		ItemSubType result = ArmorSubType.tryParse(value);
 		if (result != null) {
 			return result;
 		}
-		return ProjectileSubType.tryParse(line);
+		result = WeaponSubType.tryParse(value);
+		if (result != null) {
+			return result;
+		}
+		return ProjectileSubType.tryParse(value);
 	}
 }

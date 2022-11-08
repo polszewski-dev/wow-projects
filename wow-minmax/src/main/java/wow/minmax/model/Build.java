@@ -25,10 +25,10 @@ public class Build {
 	private List<Buff> raidBuffs;
 
 	public enum BuffSet {
-		SelfBuff,
-		PartyBuff,
-		Consumes,
-		RaidBuff,
+		SELF_BUFF,
+		PARTY_BUFF,
+		CONSUMES,
+		RAID_BUFF,
 	}
 
 	public Build(String buildId) {
@@ -37,16 +37,16 @@ public class Build {
 
 	public List<Buff> getBuffs(BuffSet... buffSets) {
 		List<Buff> result = new ArrayList<>();
-		if (Arrays.asList(buffSets).contains(BuffSet.SelfBuff)) {
+		if (Arrays.asList(buffSets).contains(BuffSet.SELF_BUFF)) {
 			result.addAll(selfBuffs);
 		}
-		if (Arrays.asList(buffSets).contains(BuffSet.PartyBuff)) {
+		if (Arrays.asList(buffSets).contains(BuffSet.PARTY_BUFF)) {
 			result.addAll(partyBuffs);
 		}
-		if (Arrays.asList(buffSets).contains(BuffSet.Consumes)) {
+		if (Arrays.asList(buffSets).contains(BuffSet.CONSUMES)) {
 			result.addAll(consumeBuffs);
 		}
-		if (Arrays.asList(buffSets).contains(BuffSet.RaidBuff)) {
+		if (Arrays.asList(buffSets).contains(BuffSet.RAID_BUFF)) {
 			result.addAll(raidBuffs);
 		}
 		return result;

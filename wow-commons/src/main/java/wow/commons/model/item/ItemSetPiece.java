@@ -14,7 +14,7 @@ public class ItemSetPiece extends ComplexAttribute {
 	private final Item item;
 
 	public ItemSetPiece(Item item) {
-		super(AttributeId.SetPieces);
+		super(AttributeId.SET_PIECES);
 		this.item = item;
 	}
 

@@ -1,5 +1,7 @@
 package wow.commons.model.attributes.complex.modifiers;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2022-01-13
@@ -11,9 +13,6 @@ public enum ProcEvent {
 	SPELL_DAMAGE;
 
 	public static ProcEvent parse(String value) {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
-		return valueOf(value.toUpperCase());
+		return EnumUtil.parse(value, values());
 	}
 }

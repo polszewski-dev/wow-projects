@@ -7,12 +7,11 @@ import java.util.stream.Stream;
  * Date: 2022-10-27
  */
 public enum WowheadSource {
-	crafted(1),
-	drop(2),
-	pvp_arena(3),
-	quest(4),
-	badges(5)
-	;
+	CRAFTED(1),
+	DROP(2),
+	PVP_ARENA(3),
+	QUEST(4),
+	BADGES(5);
 
 	private final int code;
 

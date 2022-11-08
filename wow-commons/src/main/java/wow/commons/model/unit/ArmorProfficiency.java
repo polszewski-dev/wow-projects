@@ -7,11 +7,10 @@ import wow.commons.model.categorization.ArmorSubType;
  * Date: 2021-03-14
  */
 public enum ArmorProfficiency {
-	Cloth(ArmorSubType.Cloth),
-	Leather(ArmorSubType.Leather),
-	Mail(ArmorSubType.Mail),
-	Plate(ArmorSubType.Plate),
-	;
+	CLOTH(ArmorSubType.CLOTH),
+	LEATHER(ArmorSubType.LEATHER),
+	MAIL(ArmorSubType.MAIL),
+	PLATE(ArmorSubType.PLATE);
 
 	private final ArmorSubType armorSubType;
 

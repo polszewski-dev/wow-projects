@@ -43,7 +43,7 @@ public class Comparison {
 				continue;
 			}
 			if (referenceItem != null && possibleItem == null || referenceItem == null && possibleItem != null) {
-				if (slot == ItemSlot.OffHand) {
+				if (slot == ItemSlot.OFF_HAND) {
 					continue;
 				}
 				System.err.println("Empty slot: " + slot);

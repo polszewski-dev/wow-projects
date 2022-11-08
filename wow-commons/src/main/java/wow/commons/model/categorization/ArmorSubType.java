@@ -1,24 +1,24 @@
 package wow.commons.model.categorization;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-02
  */
 public enum ArmorSubType implements ItemSubType {
-	Cloth("Cloth"),
-	Leather("Leather"),
-	Mail("Mail"),
-	Plate("Plate");
+	CLOTH("Cloth"),
+	LEATHER("Leather"),
+	MAIL("Mail"),
+	PLATE("Plate");
 
-	private final String tooltipText;
+	private final String key;
 
-	ArmorSubType(String tooltipText) {
-		this.tooltipText = tooltipText;
+	ArmorSubType(String key) {
+		this.key = key;
 	}
 
-	public static ArmorSubType tryParse(String line) {
-		return Stream.of(values()).filter(x -> x.tooltipText.equals(line)).findAny().orElse(null);
+	public static ArmorSubType tryParse(String value) {
+		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 }

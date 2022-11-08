@@ -134,7 +134,7 @@ public class PVEExcelParser extends ExcelParser {
 
 	private BaseStatInfo getBaseStatInfo() {
 		var level = COL_BS_LEVEL.getInteger();
-		var characterClass = CharacterClass.parse(COL_BS_CLASS.getString());
+		var characterClass = COL_BS_CLASS.getEnum(CharacterClass::parse);
 		var race = Race.parse(COL_BS_RACE.getString());
 		var baseStr = COL_BS_BASE_STR.getInteger();
 		var baseAgi = COL_BS_BASE_AGI.getInteger();

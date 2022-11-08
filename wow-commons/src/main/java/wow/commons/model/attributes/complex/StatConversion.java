@@ -5,6 +5,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.ComplexAttribute;
 import wow.commons.model.attributes.ConditionalAttribute;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
@@ -12,13 +13,12 @@ import wow.commons.model.attributes.ConditionalAttribute;
  */
 public class StatConversion extends ComplexAttribute implements ConditionalAttribute {
 	public enum Stat {
-		PET_STA, PET_INT, SP;
+		PET_STA,
+		PET_INT,
+		SP;
 
 		public static Stat parse(String value) {
-			if (value == null || value.isEmpty()) {
-				return null;
-			}
-			return valueOf(value.toUpperCase());
+			return EnumUtil.parse(value, values());
 		}
 	}
 
@@ -28,7 +28,7 @@ public class StatConversion extends ComplexAttribute implements ConditionalAttri
 	private final AttributeCondition condition;
 
 	public StatConversion(Stat fromStat, Stat toStat, Percent ratioPct, AttributeCondition condition) {
-		super(AttributeId.StatConversion);
+		super(AttributeId.STAT_CONVERSION);
 		this.fromStat = fromStat;
 		this.toStat = toStat;
 		this.ratioPct = ratioPct;

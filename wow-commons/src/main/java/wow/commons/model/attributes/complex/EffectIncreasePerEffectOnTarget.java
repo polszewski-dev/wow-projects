@@ -18,7 +18,7 @@ public class EffectIncreasePerEffectOnTarget extends ComplexAttribute implements
 	private final AttributeCondition condition;
 
 	public EffectIncreasePerEffectOnTarget(TalentTree effectTree, Percent increasePerEffectPct, Percent maxIncreasePct, AttributeCondition condition) {
-		super(AttributeId.EffectIncreasePerEffectOnTarget);
+		super(AttributeId.EFFECT_INCREASE_PER_EFFECT_ON_TARGET);
 		this.effectTree = effectTree;
 		this.increasePerEffectPct = increasePerEffectPct;
 		this.maxIncreasePct = maxIncreasePct;

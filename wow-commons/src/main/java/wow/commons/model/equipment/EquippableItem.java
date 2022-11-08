@@ -163,6 +163,11 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		return sockets.getGem(socketNo);
 	}
 
+	public boolean isCompleteMatch(int socketNo, int numRed, int numYellow, int numBlue) {
+		ItemSocket socket = sockets.getSocket(socketNo);
+		return socket != null && socket.isCompleteMatch(numRed, numYellow, numBlue);
+	}
+
 	public boolean allGemsMatch(int numRed, int numYellow, int numBlue) {
 		return sockets.allMatch(numRed, numYellow, numBlue);
 	}

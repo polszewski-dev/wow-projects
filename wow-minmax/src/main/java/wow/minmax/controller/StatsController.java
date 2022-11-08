@@ -57,22 +57,22 @@ public class StatsController {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).readOnlyCopy();
 
 		Spell[] spells = {
-				spellService.getSpell(SpellId.ShadowBolt),
-				spellService.getSpell(SpellId.CurseOfDoom),
-				spellService.getSpell(SpellId.CurseOfAgony),
-				spellService.getSpell(SpellId.Corruption),
-				spellService.getSpell(SpellId.Immolate),
-				spellService.getSpell(SpellId.Shadowburn),
-				spellService.getSpell(SpellId.SeedOfCorruptionDirect)
+				spellService.getSpell(SpellId.SHADOW_BOLT),
+				spellService.getSpell(SpellId.CURSE_OF_DOOM),
+				spellService.getSpell(SpellId.CURSE_OF_AGONY),
+				spellService.getSpell(SpellId.CORRUPTION),
+				spellService.getSpell(SpellId.IMMOLATE),
+				spellService.getSpell(SpellId.SHADOWBURN),
+				spellService.getSpell(SpellId.SEED_OF_CORRUPTION_DIRECT)
 		};
 
 		List<SpellStatsDTO> result = new ArrayList<>();
 
 		for (Spell spell : spells) {
 			SpellStatistics spellStatistics = calculationService.getSpellStatistics(playerProfile, spell);
-			double hitSpEqv = calculationService.getSpEquivalent(AttributeId.SpellHitRating, 10, playerProfile, spell);
-			double critSpEqv = calculationService.getSpEquivalent(AttributeId.SpellCritRating, 10, playerProfile, spell);
-			double hasteSpEqv = calculationService.getSpEquivalent(AttributeId.SpellHasteRating, 10, playerProfile, spell);
+			double hitSpEqv = calculationService.getSpEquivalent(AttributeId.SPELL_HIT_RATING, 10, playerProfile, spell);
+			double critSpEqv = calculationService.getSpEquivalent(AttributeId.SPELL_CRIT_RATING, 10, playerProfile, spell);
+			double hasteSpEqv = calculationService.getSpEquivalent(AttributeId.SPELL_HASTE_RATING, 10, playerProfile, spell);
 			PlayerSpellStats playerSpellStats = new PlayerSpellStats(playerProfile, spellStatistics, hitSpEqv, critSpEqv, hasteSpEqv);
 
 			result.add(playerSpellStatsConverter.convert(playerSpellStats));
@@ -90,9 +90,9 @@ public class StatsController {
 		return List.of(
 				getEquipmentStats(playerProfile),
 				getBuffedPlayerStats("No buffs", playerProfile, List.of()),
-				getBuffedPlayerStats("Self-buffs", playerProfile, playerProfile.getBuild().getBuffs(SelfBuff)),
-				getBuffedPlayerStats("Party buffs", playerProfile, playerProfile.getBuild().getBuffs(SelfBuff, PartyBuff)),
-				getBuffedPlayerStats("Party buffs & consumes", playerProfile, playerProfile.getBuild().getBuffs(SelfBuff, PartyBuff, Consumes))
+				getBuffedPlayerStats("Self-buffs", playerProfile, playerProfile.getBuild().getBuffs(SELF_BUFF)),
+				getBuffedPlayerStats("Party buffs", playerProfile, playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF)),
+				getBuffedPlayerStats("Party buffs & consumes", playerProfile, playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, CONSUMES))
 		);
 	}
 
@@ -135,8 +135,8 @@ public class StatsController {
 		return new PlayerStatsDTO(
 				"Items",
 				(int) attributes.getTotalSpellDamage(),
-				(int) attributes.getTotalSpellDamage(SpellSchool.Shadow),
-				(int) attributes.getTotalSpellDamage(SpellSchool.Fire),
+				(int) attributes.getTotalSpellDamage(SpellSchool.SHADOW),
+				(int) attributes.getTotalSpellDamage(SpellSchool.FIRE),
 				(int) attributes.getSpellHitRating(),
 				attributes.getSpellHitRating() / cr.getSpellHit(),
 				(int) attributes.getSpellCritRating(),
@@ -161,8 +161,8 @@ public class StatsController {
 		return new PlayerStatsDTO(
 				type,
 				(int) attributes.getTotalSpellDamage(),
-				(int) attributes.getTotalSpellDamage(SpellSchool.Shadow),
-				(int) attributes.getTotalSpellDamage(SpellSchool.Fire),
+				(int) attributes.getTotalSpellDamage(SpellSchool.SHADOW),
+				(int) attributes.getTotalSpellDamage(SpellSchool.FIRE),
 				(int) attributes.getSpellHitRating(),
 				snapshot.totalHit,
 				(int) attributes.getSpellCritRating(),

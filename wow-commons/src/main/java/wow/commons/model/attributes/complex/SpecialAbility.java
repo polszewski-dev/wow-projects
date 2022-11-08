@@ -22,7 +22,7 @@ public final class SpecialAbility extends ComplexAttribute implements Conditiona
 	}
 
 	private SpecialAbility(AttributeModifier attributeModifier, String line, AttributeCondition condition) {
-		super(AttributeId.SpecialAbilities);
+		super(AttributeId.SPECIAL_ABILITIES);
 		this.attributeModifier = attributeModifier;
 		this.line = line;
 		this.condition = condition;

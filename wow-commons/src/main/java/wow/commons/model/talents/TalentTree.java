@@ -1,31 +1,23 @@
 package wow.commons.model.talents;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-09-19
  */
 public enum TalentTree {
-	Racial,
+	RACIAL,
 
-	Affliction,
-	Demonology,
-	Destruction,
+	AFFLICTION,
+	DEMONOLOGY,
+	DESTRUCTION,
 
-	MageArcane,
-	MageFire,
-	MageFrost,
+	MAGE_ARCANE,
+	MAGE_FIRE,
+	MAGE_FROST;
 
-	;
-
-	public static TalentTree parse(String name) {
-		if (name == null) {
-			return null;
-		}
-		return Stream.of(values())
-				.filter(x -> x.name().equalsIgnoreCase(name))
-				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException(name));
+	public static TalentTree parse(String value) {
+		return EnumUtil.parse(value, values());
 	}
 }

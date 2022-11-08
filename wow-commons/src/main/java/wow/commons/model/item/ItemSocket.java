@@ -40,7 +40,7 @@ public class ItemSocket implements Copyable<ItemSocket> {
 	}
 
 	public boolean isMetaSocket() {
-		return socketType == SocketType.Meta;
+		return socketType == SocketType.META;
 	}
 
 	public Gem getGem() {
@@ -67,10 +67,10 @@ public class ItemSocket implements Copyable<ItemSocket> {
 		if (!insertedGemMatchesSocketColor()) {
 			return false;
 		}
-		if (isMetaSocket() && !gem.isMetaConditionTrue(numRed, numYellow, numBlue)) {
-			return false;
+		if (!isMetaSocket()) {
+			return true;
 		}
-		return true;
+		return gem.isMetaConditionTrue(numRed, numYellow, numBlue);
 	}
 
 	@Override

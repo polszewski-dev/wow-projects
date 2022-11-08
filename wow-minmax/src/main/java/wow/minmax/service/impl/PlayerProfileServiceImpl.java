@@ -50,8 +50,8 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
 		CharacterInfo characterInfo = new CharacterInfo(
-				CharacterClass.Warlock,
-				Race.Orc,
+				CharacterClass.WARLOCK,
+				Race.ORC,
 				phase.getGameVersion().getMaxLevel(),
 				List.of()
 		);
@@ -60,12 +60,12 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				UUID.randomUUID(),
 				profileName,
 				characterInfo,
-				CreatureType.Undead,
+				CreatureType.UNDEAD,
 				phase,
 				buildRepository.getBuild(BuildIds.DESTRO_SHADOW_BUILD).orElseThrow()
 		);
 
-		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SelfBuff, PartyBuff, RaidBuff, Consumes));
+		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES));
 		playerProfile.setEquipment(new Equipment());
 		playerProfileRepository.saveProfile(playerProfile);
 		return playerProfile;

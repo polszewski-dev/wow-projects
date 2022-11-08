@@ -9,11 +9,11 @@ import java.util.stream.Stream;
  * Date: 2022-10-30
  */
 public enum WowheadItemQuality {
-	Common(1, ItemRarity.Common),
-	Uncommon(2, ItemRarity.Uncommon),
-	Rare(3, ItemRarity.Rare),
-	Epic(4, ItemRarity.Epic),
-	Legendary(5, ItemRarity.Legendary);
+	COMMON(1, ItemRarity.COMMON),
+	UNCOMMON(2, ItemRarity.UNCOMMON),
+	RARE(3, ItemRarity.RARE),
+	EPIC(4, ItemRarity.EPIC),
+	LEGENDARY(5, ItemRarity.LEGENDARY);
 
 	private final int code;
 	private final ItemRarity itemRarity;

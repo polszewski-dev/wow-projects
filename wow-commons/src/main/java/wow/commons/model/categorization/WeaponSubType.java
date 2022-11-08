@@ -1,47 +1,45 @@
 package wow.commons.model.categorization;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-02
  */
 public enum WeaponSubType implements ItemSubType {
-	Dagger("Dagger"),
-	Sword("Sword"),
-	Axe("Axe"),
-	Polearm("Polearm"),
-	Mace("Mace"),
-	Staff("Staff"),
-	FistWeapon("Fist Weapon"),
+	DAGGER("Dagger"),
+	SWORD("Sword"),
+	AXE("Axe"),
+	POLEARM("Polearm"),
+	MACE("Mace"),
+	STAFF("Staff"),
+	FIST_WEAPON("Fist Weapon"),
 
-	HeldInOffHand("Held In Off-hand"),
-	Shield("Shield"),
+	HELD_IN_OFF_HAND("Held In Off-hand"),
+	SHIELD("Shield"),
 
-	Wand("Wand"),
-	Gun("Gun"),
-	Bow("Bow"),
-	Crossbow("Crossbow"),
-	Thrown("Thrown"),
+	WAND("Wand"),
+	GUN("Gun"),
+	BOW("Bow"),
+	CROSSBOW("Crossbow"),
+	THROWN("Thrown"),
 
-	Totem("Totem"),
-	Libram("Libram"),
-	Idol("Idol"),
+	TOTEM("Totem"),
+	LIBRAM("Libram"),
+	IDOL("Idol");
 
-	;
+	private final String key;
 
-	private final String tooltipText;
-
-	WeaponSubType(String tooltipText) {
-		this.tooltipText = tooltipText;
+	WeaponSubType(String key) {
+		this.key = key;
 	}
 
-	public static WeaponSubType tryParse(String line) {
-		return Stream.of(values()).filter(x -> x.tooltipText.equalsIgnoreCase(line)).findAny().orElse(null);
+	public static WeaponSubType tryParse(String value) {
+		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 
 	@Override
 	public String toString() {
-		return tooltipText;
+		return key;
 	}
 }

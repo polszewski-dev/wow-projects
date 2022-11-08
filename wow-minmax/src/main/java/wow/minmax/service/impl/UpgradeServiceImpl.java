@@ -141,14 +141,14 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 		if (item.hasSockets()) {
 			for (int i = 1; i <= item.getSocketCount(); ++i) {
-				if (item.getSocketType(i) == SocketType.Meta) {
-					builder.addAttribute(AttributeId.SpellDamage, 50);
+				if (item.getSocketType(i) == SocketType.META) {
+					builder.addAttribute(AttributeId.SPELL_DAMAGE, 50);
 				} else {
-					builder.addAttribute(AttributeId.SpellDamage, 9);
+					builder.addAttribute(AttributeId.SPELL_DAMAGE, 9);
 				}
 			}
 
-			if (item.getSocketSpecification().getSocketTypes().stream().noneMatch(x -> x == SocketType.Blue)) {
+			if (item.getSocketSpecification().getSocketTypes().stream().noneMatch(x -> x == SocketType.BLUE)) {
 				builder.addAttributes(item.getSocketSpecification().getSocketBonus());
 			}
 		}

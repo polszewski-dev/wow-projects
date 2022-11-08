@@ -35,7 +35,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 									 .values()
 									 .stream()
 									 .collect(Collectors.toUnmodifiableList()));
-		build.setDamagingSpell(new Spell(spellDataRepository.getSpellInfo(SpellId.ShadowBolt).orElseThrow()));
+		build.setDamagingSpell(new Spell(spellDataRepository.getSpellInfo(SpellId.SHADOW_BOLT).orElseThrow()));
 
 		build.setSelfBuffs(spellDataRepository.getBuffs(List.of(
 				"Fel Armor",

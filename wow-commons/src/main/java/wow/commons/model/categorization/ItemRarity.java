@@ -1,16 +1,17 @@
 package wow.commons.model.categorization;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2021-03-03
  */
 public enum ItemRarity {
-	Common("ffffffff"),
-	Uncommon("ff1eff00"),
-	Rare("ff0070dd"),
-	Epic("ffa335ee"),
-	Legendary("ffff8000"),
-	;
+	COMMON("ffffffff"),
+	UNCOMMON("ff1eff00"),
+	RARE("ff0070dd"),
+	EPIC("ffa335ee"),
+	LEGENDARY("ffff8000");
 
 	private final String color;
 
@@ -20,6 +21,10 @@ public enum ItemRarity {
 
 	public String getColor() {
 		return color;
+	}
+
+	public static ItemRarity parse(String value) {
+		return EnumUtil.parse(value, values());
 	}
 
 	public static ItemRarity parseFromColor(String color) {

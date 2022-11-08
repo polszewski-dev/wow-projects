@@ -39,8 +39,8 @@ public class GemTooltipParser extends AbstractTooltipParser {
 				Rule.prefix("Phase ", x -> this.phase = parsePhase(x)),
 				Rule.prefix("Item Level ", x -> this.itemLevel = parseItemLevel(x)),
 				Rule.tryParse(GemTooltipParser::tryParseColor, x -> this.color = x),
-				Rule.exact("Binds when picked up", () -> this.binding = Binding.BindsOnPickUp),
-				Rule.exact("Binds when equipped", () -> this.binding = Binding.BindsOnEquip),
+				Rule.exact("Binds when picked up", () -> this.binding = Binding.BINDS_ON_PICK_UP),
+				Rule.exact("Binds when equipped", () -> this.binding = Binding.BINDS_ON_EQUIP),
 				Rule.exact("Unique", () -> this.unique = true),
 				Rule.exact("Unique-Equipped", () -> this.unique = true),
 				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
@@ -68,34 +68,34 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	}
 
 	private void parseRequiredProfession(Object[] params) {
-		this.requiredProfession = Profession.tryParse((String)params[0]);
+		this.requiredProfession = Profession.parse((String)params[0]);
 		this.requiredProfessionLevel = (Integer)params[1];
 	}
 
 	private static GemColor tryParseColor(String line) {
 		if (line.equals("\"Matches a Red Socket.\"") || line.equals("\"Matches a Red Socket.  Socketing this gem causes the item to become Soulbound.\"")) {
-			return GemColor.Red;
+			return GemColor.RED;
 		}
 		if (line.equals("\"Matches a Yellow Socket.\"") || line.equals("\"Matches a Yellow Socket.  Socketing this gem causes the item to become Soulbound.\"")) {
-			return GemColor.Yellow;
+			return GemColor.YELLOW;
 		}
 		if (line.equals("\"Matches a Blue Socket.\"") || line.startsWith("\"Matches a Blue Socket.  Socketing this gem causes the item to become Soulbound.\"")) {
-			return GemColor.Blue;
+			return GemColor.BLUE;
 		}
 		if (line.equals("\"Matches a Red or Yellow Socket.\"") || line.equals("\"Matches a Yellow or Red Socket.\"")) {
-			return GemColor.Orange;
+			return GemColor.ORANGE;
 		}
 		if (line.equals("\"Matches a Red or Blue Socket.\"")) {
-			return GemColor.Purple;
+			return GemColor.PURPLE;
 		}
 		if (line.equals("\"Matches a Yellow or Blue Socket.\"") || line.equals("\"Matches a Blue or Yellow Socket.\"")) {
-			return GemColor.Green;
+			return GemColor.GREEN;
 		}
 		if (line.equals("\"Matches a Red, Yellow or Blue Socket.\"")) {
-			return GemColor.Prismatic;
+			return GemColor.PRISMATIC;
 		}
 		if (line.equals("\"Only fits in a meta gem slot.\"")) {
-			return GemColor.Meta;
+			return GemColor.META;
 		}
 		return null;
 	}

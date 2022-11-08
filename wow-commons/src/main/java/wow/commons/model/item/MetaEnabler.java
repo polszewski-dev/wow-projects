@@ -1,26 +1,27 @@
 package wow.commons.model.item;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2021-03-24
  */
 public enum MetaEnabler {
-	AtLeast1Red("Requires at least 1 Red Gem", 1, 0, 0),
-	AtLeast2Reds("Requires at least 2 Red Gems", 2, 0, 0),
-	AtLeast3Reds("Requires at least 3 Red Gems", 3, 0, 0),
+	AT_LEAST_1_RED("Requires at least 1 Red Gem", 1, 0, 0),
+	AT_LEAST_2_REDS("Requires at least 2 Red Gems", 2, 0, 0),
+	AT_LEAST_3_REDS("Requires at least 3 Red Gems", 3, 0, 0),
 
-	AtLeast1Yellow("Requires at least 1 Yellow Gem", 0, 1, 0),
-	AtLeast2Yellows("Requires at least 2 Yellow Gems", 0, 2, 0),
-	AtLeast3Yellows("Requires at least 3 Yellow Gems", 0, 3, 0),
+	AT_LEAST_1_YELLOW("Requires at least 1 Yellow Gem", 0, 1, 0),
+	AT_LEAST_2_YELLOWS("Requires at least 2 Yellow Gems", 0, 2, 0),
+	AT_LEAST_3_YELLOWS("Requires at least 3 Yellow Gems", 0, 3, 0),
 
-	AtLeast2Blues("Requires at least 2 Blue Gems", 0, 0, 2),
-	AtLeast3Blues("Requires at least 3 Blue Gems", 0, 0, 3),
-	AtLeast5Blues("Requires at least 5 Blue Gems", 0, 0, 5),
+	AT_LEAST_2_BLUES("Requires at least 2 Blue Gems", 0, 0, 2),
+	AT_LEAST_3_BLUES("Requires at least 3 Blue Gems", 0, 0, 3),
+	AT_LEAST_5_BLUES("Requires at least 5 Blue Gems", 0, 0, 5),
 
-	MoreRedThanYellow("Requires more Red gems than Yellow gems", true, false, false),
-	MoreRedThanBlue("Requires more Red gems than Blue gems", false, true, false),
-	MoreBlueThanYellow("Requires more Blue gems than Yellow gems", false, false, true),
-	;
+	MORE_RED_THAN_YELLOW("Requires more Red gems than Yellow gems", true, false, false),
+	MORE_RED_THAN_BLUE("Requires more Red gems than Blue gems", false, true, false),
+	MORE_BLUE_THAN_YELLOW("Requires more Blue gems than Yellow gems", false, false, true);
 
 	private final String string;
 	private final int reqRed;
@@ -49,15 +50,7 @@ public enum MetaEnabler {
 	}
 
 	public static MetaEnabler tryParse(String value) {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
-		for (MetaEnabler metaEnabler : values()) {
-			if (metaEnabler.string.equals(value)) {
-				return metaEnabler;
-			}
-		}
-		return null;
+		return EnumUtil.tryParse(value, values(), x -> x.string);
 	}
 
 	public boolean isMetaConditionTrue(int numRed, int numYellow, int numBlue) {

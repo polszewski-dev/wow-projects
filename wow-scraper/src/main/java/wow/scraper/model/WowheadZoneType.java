@@ -9,12 +9,11 @@ import java.util.stream.Stream;
  * Date: 2022-11-01
  */
 public enum WowheadZoneType {
-	Normal(0, ZoneType.Normal),
-	Dungeon(2, ZoneType.Dungeon),
-	Raid(3, ZoneType.Raid),
-	Battleground(4, ZoneType.Battleground),
-	Arena(6, ZoneType.Arena),
-	;
+	NORMAL(0, ZoneType.NORMAL),
+	DUNGEON(2, ZoneType.DUNGEON),
+	RAID(3, ZoneType.RAID),
+	BATTLEGROUND(4, ZoneType.BATTLEGROUND),
+	ARENA(6, ZoneType.ARENA);
 
 	private final int code;
 	private final ZoneType type;

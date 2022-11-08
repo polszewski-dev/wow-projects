@@ -1,27 +1,28 @@
 package wow.commons.model.pve;
 
+import wow.commons.util.EnumUtil;
+
 import static wow.commons.model.pve.GameVersion.TBC;
-import static wow.commons.model.pve.GameVersion.Vanilla;
+import static wow.commons.model.pve.GameVersion.VANILLA;
 
 /**
  * User: POlszewski
  * Date: 2022-10-24
  */
 public enum Phase {
-	Vanilla_P1(Vanilla),//mc
-	Vanilla_P2(Vanilla),//dm
-	Vanilla_P3(Vanilla),//bwl
-	Vanilla_P4(Vanilla),//zg
-	Vanilla_P5(Vanilla),//aq
-	Vanilla_P6(Vanilla),//naxx
+	VANILLA_P1(VANILLA),//mc
+	VANILLA_P2(VANILLA),//dm
+	VANILLA_P3(VANILLA),//bwl
+	VANILLA_P4(VANILLA),//zg
+	VANILLA_P5(VANILLA),//aq
+	VANILLA_P6(VANILLA),//naxx
 
 	TBC_P0(TBC),//pre-patch
 	TBC_P1(TBC),//kara,gruul,mag
 	TBC_P2(TBC),//ssc,tk
 	TBC_P3(TBC),//mh,bt
 	TBC_P4(TBC),//za
-	TBC_P5(TBC),//swp
-	;
+	TBC_P5(TBC);//swp
 
 	private final GameVersion gameVersion;
 
@@ -30,10 +31,7 @@ public enum Phase {
 	}
 
 	public static Phase parse(String value) {
-		if (value == null) {
-			return null;
-		}
-		return valueOf(value);
+		return EnumUtil.parse(value, values());
 	}
 
 	public GameVersion getGameVersion() {

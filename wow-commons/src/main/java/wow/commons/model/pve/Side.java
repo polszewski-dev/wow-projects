@@ -5,6 +5,6 @@ package wow.commons.model.pve;
  * Date: 2022-10-31
  */
 public enum Side {
-	Horde,
-	Alliance
+	HORDE,
+	ALLIANCE
 }

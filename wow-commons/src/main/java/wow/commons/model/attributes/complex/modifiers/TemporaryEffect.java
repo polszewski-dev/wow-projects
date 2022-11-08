@@ -58,7 +58,7 @@ public class TemporaryEffect implements AttributeModifier {
 		if (extraCritCoeff == 0) {
 			return Attributes.EMPTY;
 		}
-		return Attributes.of(AttributeId.ExtraCritCoeff, extraCritCoeff);
+		return Attributes.of(AttributeId.EXTRA_CRIT_COEFF, extraCritCoeff);
 	}
 
 	@Override
@@ -69,19 +69,19 @@ public class TemporaryEffect implements AttributeModifier {
 	private double getExtraCritCoeff(double critChance) {
 		int rank;
 		switch (effectId) {
-			case ShadowVulnerability_4:
+			case SHADOW_VULNERABILITY_4:
 				rank = 1;
 				break;
-			case ShadowVulnerability_8:
+			case SHADOW_VULNERABILITY_8:
 				rank = 2;
 				break;
-			case ShadowVulnerability_12:
+			case SHADOW_VULNERABILITY_12:
 				rank = 3;
 				break;
-			case ShadowVulnerability_16:
+			case SHADOW_VULNERABILITY_16:
 				rank = 4;
 				break;
-			case ShadowVulnerability_20:
+			case SHADOW_VULNERABILITY_20:
 				rank = 5;
 				break;
 			default:

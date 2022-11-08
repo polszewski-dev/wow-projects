@@ -1,32 +1,39 @@
 package wow.commons.model.professions;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-07-14
  */
 public enum Profession {
-	Enchanting,
-	Jewelcrafting,
-	Inscription,
-	Alchemy,
-	Tailoring,
-	Leatherworking,
-	Blacksmithing,
-	Engineering,
-	Herbalism,
-	Mining,
-	Skinning,
-	Cooking,
-	Fishing,
-	FirstAid
-	;
+	ENCHANTING("Enchanting"),
+	JEWELCRAFTING("Jewelcrafting"),
+	INSCRIPTION("Inscription"),
+	ALCHEMY("Alchemy"),
+	TAILORING("Tailoring"),
+	LEATHERWORKING("Leatherworking"),
+	BLACKSMITHING("Blacksmithing"),
+	ENGINEERING("Engineering"),
+	HERBALISM("Herbalism"),
+	MINING("Mining"),
+	SKINNING("Skinning"),
+	COOKING("Cooking"),
+	FISHING("Fishing"),
+	FIRST_AID("FirstAid");
 
-	public static Profession tryParse(String value) {
-		if (value == null) {
-			return null;
-		}
-		return Stream.of(values()).filter(x -> x.name().equalsIgnoreCase(value)).findFirst().orElse(null);
+	private final String key;
+
+	Profession(String key) {
+		this.key = key;
+	}
+
+	public static Profession parse(String value) {
+		return EnumUtil.parse(value, values(), x -> x.key);
+	}
+
+	@Override
+	public String toString() {
+		return key;
 	}
 }

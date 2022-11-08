@@ -1,43 +1,43 @@
 "use strict";
 
 const slots = [
-	'Head',
-	'Neck',
-	'Shoulder',
-	'Back',
-	'Chest',
-	'Wrist',
-	'Hands',
-	'Waist',
-	'Legs',
-	'Feet',
-	'Finger1',
-	'Finger2',
-	'Trinket1',
-	'Trinket2',
-	'MainHand',
-	'OffHand',
-	'Ranged'
+	'HEAD',
+	'NECK',
+	'SHOULDER',
+	'BACK',
+	'CHEST',
+	'WRIST',
+	'HANDS',
+	'WAIST',
+	'LEGS',
+	'FEET',
+	'FINGER_1',
+	'FINGER_2',
+	'TRINKET_1',
+	'TRINKET_2',
+	'MAIN_HAND',
+	'OFF_HAND',
+	'RANGED'
 ]
 
 const slotToSlotGroup = {
-	Head: 'Head',
-	Neck: 'Neck',
-	Shoulder: 'Shoulder',
-	Back: 'Back',
-	Chest: 'Chest',
-	Wrist: 'Wrist',
-	Hands: 'Hands',
-	Waist: 'Waist',
-	Legs: 'Legs',
-	Feet: 'Feet',
-	Finger1: 'Fingers',
-	Finger2: 'Fingers',
-	Trinket1: 'Trinkets',
-	Trinket2: 'Trinkets',
-	MainHand: 'Weapons',
-	OffHand: 'Weapons',
-	Ranged: 'Ranged'
+	HEAD: 'HEAD',
+	NECK: 'NECK',
+	SHOULDER: 'SHOULDER',
+	BACK: 'BACK',
+	CHEST: 'CHEST',
+	WRIST: 'WRIST',
+	HANDS: 'HANDS',
+	WAIST: 'WAIST',
+	LEGS: 'LEGS',
+	FEET: 'FEET',
+	FINGER_1: 'FINGERS',
+	FINGER_2: 'FINGERS',
+	TRINKET_1: 'TRINKETS',
+	TRINKET_2: 'TRINKETS',
+	MAIN_HAND: 'WEAPONS',
+	OFF_HAND: 'WEAPONS',
+	RANGED: 'RANGED'
 }
 
 class Api {
@@ -555,13 +555,11 @@ class EquipmentEditor {
     }
 
     getEquippedItem(slot) {
-    	const field = slot[0].toLowerCase() + slot.substr(1)
-    	return this._profile.equipment[field]
+    	return this._profile.equipment.itemsBySlot[slot]
     }
 
     setEquippedItem(item, slot) {
-		const field = slot[0].toLowerCase() + slot.substr(1)
-		this._profile.equipment[field] = item
+		this._profile.equipment.itemsBySlot[slot] = item
 	}
 
 	getItemEditor(slot) {
@@ -595,10 +593,10 @@ class EquipmentEditor {
 		editor.selectedItem = item
 		editor.findUpgradesBtn.prop('disabled', false)
 
-		if (editor.slot == 'MainHand') {
-			const offHandEditor = this.getItemEditor('OffHand')
+		if (editor.slot == 'MAIN_HAND') {
+			const offHandEditor = this.getItemEditor('OFF_HAND')
 
-			if (!item || item.item.itemType != 'TwoHand') {
+			if (!item || item.item.itemType != 'TWO_HAND') {
 				offHandEditor.itemSelect.enabled = true
 			} else {
 				offHandEditor.itemSelect.enabled = false
@@ -673,7 +671,7 @@ class EquipmentEditor {
 				handleGemSelection(slot, 3, gemId)
 			})
 
-    		if (!(editor.slot == 'Finger2' || editor.slot == 'Trinket2' || editor.slot == 'OffHand')) {
+    		if (!(editor.slot == 'FINGER_2' || editor.slot == 'TRINKET_2' || editor.slot == 'OFF_HAND')) {
     			editor.findUpgradesBtn.click(e => {
     				e.preventDefault()
     				$('#error-container').hide()

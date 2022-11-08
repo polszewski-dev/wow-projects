@@ -111,13 +111,13 @@ public class Item extends AbstractItem {
 
 	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
 		ItemCategory category = itemType.getCategory();
-		if (!(category == ItemCategory.Armor || category == ItemCategory.Accessory || category == ItemCategory.Weapon)) {
+		if (!(category == ItemCategory.ARMOR || category == ItemCategory.ACCESSORY || category == ItemCategory.WEAPON)) {
 			return false;
 		}
-		if (itemType.getCategory() == ItemCategory.Armor && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)itemSubType)) {
+		if (itemType.getCategory() == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)itemSubType)) {
 			return false;
 		}
-		if (itemType.getCategory() == ItemCategory.Weapon && !WeaponProfficiency.matches(characterInfo.getCharacterClass(), itemType, (WeaponSubType)itemSubType)) {
+		if (itemType.getCategory() == ItemCategory.WEAPON && !WeaponProfficiency.matches(characterInfo.getCharacterClass(), itemType, (WeaponSubType)itemSubType)) {
 			return false;
 		}
 		if (!getRestriction().isMetBy(characterInfo, phase)) {
@@ -136,7 +136,7 @@ public class Item extends AbstractItem {
 		if (HARDCODED_CASTER_ITEM_NAMES.contains(getName())) {
 			return true;
 		}
-		if (itemType == ItemType.Trinket) {
+		if (itemType == ItemType.TRINKET) {
 			return getSpecialAbilities()
 					.stream()
 					.anyMatch(x -> x.getLine().contains("spell"));

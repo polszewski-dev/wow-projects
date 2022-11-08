@@ -209,7 +209,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 
 	private void solveSetBonuses() {
 		var itemSetPieces = complexAttributes
-				.getOrDefault(AttributeId.SetPieces, List.of())
+				.getOrDefault(AttributeId.SET_PIECES, List.of())
 				.stream()
 				.distinct()
 				.collect(Collectors.groupingBy(x -> ((ItemSetPiece) x).getItemSet()));
@@ -225,26 +225,26 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			}
 		}
 
-		complexAttributes.remove(AttributeId.SetPieces);
+		complexAttributes.remove(AttributeId.SET_PIECES);
 	}
 
 	private void solveSockets() {
-		List<ItemSockets> sockets = (List)complexAttributes.getOrDefault(AttributeId.Sockets, List.of());
+		List<ItemSockets> sockets = (List)complexAttributes.getOrDefault(AttributeId.SOCKETS, List.of());
 
 		int numRed = 0;
 		int numYellow = 0;
 		int numBlue = 0;
 
 		for (ItemSockets itemSockets : sockets) {
-			numRed += itemSockets.getGemCount(SocketType.Red);
-			numYellow += itemSockets.getGemCount(SocketType.Yellow);
-			numBlue += itemSockets.getGemCount(SocketType.Blue);
+			numRed += itemSockets.getGemCount(SocketType.RED);
+			numYellow += itemSockets.getGemCount(SocketType.YELLOW);
+			numBlue += itemSockets.getGemCount(SocketType.BLUE);
 		}
 
 		for (ItemSockets itemSockets : sockets) {
 			for (int i = 1; i <= itemSockets.getSocketCount(); ++i) {
 				Gem gem = itemSockets.getGem(i);
-				if (gem != null && (gem.getColor() != GemColor.Meta || gem.isMetaConditionTrue(numRed, numYellow, numBlue))) {
+				if (gem != null && (gem.getColor() != GemColor.META || gem.isMetaConditionTrue(numRed, numYellow, numBlue))) {
 					addAttributes(gem);
 				}
 			}
@@ -253,11 +253,11 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			}
 		}
 
-		complexAttributes.remove(AttributeId.Sockets);
+		complexAttributes.remove(AttributeId.SOCKETS);
 	}
 
 	private void solveAbilities(StatProvider statProvider) {
-		List<SpecialAbility> specialAbilities = (List)complexAttributes.get(AttributeId.SpecialAbilities);
+		List<SpecialAbility> specialAbilities = (List)complexAttributes.get(AttributeId.SPECIAL_ABILITIES);
 
 		if (specialAbilities == null) {
 			return;
@@ -270,7 +270,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			addAttributes(statEquivalent);
 		}
 
-		complexAttributes.remove(AttributeId.SpecialAbilities);
+		complexAttributes.remove(AttributeId.SPECIAL_ABILITIES);
 	}
 
 	public AttributesAccessor nothingToSolve() {

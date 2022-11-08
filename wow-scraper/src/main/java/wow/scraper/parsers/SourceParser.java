@@ -49,15 +49,15 @@ public class SourceParser {
 		}
 
 		switch (sources.get(0)) {
-			case crafted:
+			case CRAFTED:
 				return List.of(parseSingleSourceCrafted());
-			case pvp_arena:
+			case PVP_ARENA:
 				return List.of(parseSingleSourcePvP());
-			case badges:
+			case BADGES:
 				return List.of(parseSingleBadges());
-			case quest:
+			case QUEST:
 				return List.of(parseSingleQuest());
-			case drop:
+			case DROP:
 				return List.of(parseSingleSourceDrop());
 			default:
 				throw new IllegalArgumentException("Unhandled source: " + sources.get(0));

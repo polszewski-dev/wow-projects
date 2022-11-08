@@ -1,5 +1,7 @@
 package wow.commons.model.categorization;
 
+import wow.commons.util.EnumUtil;
+
 import java.util.List;
 
 /**
@@ -7,29 +9,28 @@ import java.util.List;
  * Date: 2022-01-01
  */
 public enum ItemSlotGroup {
-	Head(ItemSlot.Head),
-	Neck(ItemSlot.Neck),
-	Shoulder(ItemSlot.Shoulder),
-	Back(ItemSlot.Back),
-	Chest(ItemSlot.Chest),
-	Shirt(ItemSlot.Shirt),
-	Tabard(ItemSlot.Tabard),
-	Wrist(ItemSlot.Wrist),
-	Hands(ItemSlot.Hands),
-	Waist(ItemSlot.Waist),
-	Legs(ItemSlot.Legs),
-	Feet(ItemSlot.Feet),
-	Finger1(ItemSlot.Finger1),
-	Finger2(ItemSlot.Finger2),
-	Trinket1(ItemSlot.Trinket1),
-	Trinket2(ItemSlot.Trinket2),
-	MainHand(ItemSlot.MainHand),
-	OffHand(ItemSlot.OffHand),
-	Ranged(ItemSlot.Ranged),
-	Fingers(ItemSlot.Finger1, ItemSlot.Finger2),
-	Trinkets(ItemSlot.Trinket1, ItemSlot.Trinket2),
-	Weapons(ItemSlot.MainHand, ItemSlot.OffHand),
-	;
+	HEAD(ItemSlot.HEAD),
+	NECK(ItemSlot.NECK),
+	SHOULDER(ItemSlot.SHOULDER),
+	BACK(ItemSlot.BACK),
+	CHEST(ItemSlot.CHEST),
+	SHIRT(ItemSlot.SHIRT),
+	TABARD(ItemSlot.TABARD),
+	WRIST(ItemSlot.WRIST),
+	HANDS(ItemSlot.HANDS),
+	WAIST(ItemSlot.WAIST),
+	LEGS(ItemSlot.LEGS),
+	FEET(ItemSlot.FEET),
+	FINGER_1(ItemSlot.FINGER_1),
+	FINGER_2(ItemSlot.FINGER_2),
+	TRINKET_1(ItemSlot.TRINKET_1),
+	TRINKET_2(ItemSlot.TRINKET_2),
+	MAIN_HAND(ItemSlot.MAIN_HAND),
+	OFF_HAND(ItemSlot.OFF_HAND),
+	RANGED(ItemSlot.RANGED),
+	FINGERS(ItemSlot.FINGER_1, ItemSlot.FINGER_2),
+	TRINKETS(ItemSlot.TRINKET_1, ItemSlot.TRINKET_2),
+	WEAPONS(ItemSlot.MAIN_HAND, ItemSlot.OFF_HAND);
 
 	private final List<ItemSlot> slots;
 
@@ -39,6 +40,10 @@ public enum ItemSlotGroup {
 
 	ItemSlotGroup(ItemSlot slot1, ItemSlot slot2) {
 		this.slots = List.of(slot1, slot2);
+	}
+
+	public static ItemSlotGroup parse(String value) {
+		return EnumUtil.parse(value, values());
 	}
 
 	public List<ItemSlot> getSlots() {

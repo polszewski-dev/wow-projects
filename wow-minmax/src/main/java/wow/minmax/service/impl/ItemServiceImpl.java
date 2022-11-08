@@ -100,15 +100,15 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean isCasterEnchant(Enchant enchant, ItemType itemType, SpellSchool spellSchool) {
-		if (itemType == ItemType.Chest) {
+		if (itemType == ItemType.CHEST) {
 			if (enchant.getBaseStatsIncrease() > 0) {
 				return true;
 			}
-		} else if (itemType == ItemType.Back) {
+		} else if (itemType == ItemType.BACK) {
 			if (enchant.getThreatReductionPct().getValue() > 0) {
 				return true;
 			}
-		} else if (itemType == ItemType.Feet) {
+		} else if (itemType == ItemType.FEET) {
 			if (enchant.getSpeedIncreasePct().getValue() > 0) {
 				return true;
 			}
@@ -126,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
 			return Collections.emptyList();//sortable list is needed
 		}
 		SocketType socketType = specification.getSocketType(socketNo);
-		if (socketType == SocketType.Meta) {
+		if (socketType == SocketType.META) {
 			return getMetaGems(phase, onlyCrafted);
 		}
 		return getGems(phase, onlyCrafted);
@@ -151,19 +151,19 @@ public class ItemServiceImpl implements ItemService {
 										 .stream()
 										 .filter(gem -> gem.isAvailableDuring(phase))
 										 .filter(gem -> gem.getRarity().isAtLeastAsGoodAs(getMinimumRarity(meta, phase, onlyCrafted)))
-										 .filter(gem -> meta == (gem.getColor() == GemColor.Meta))
-										 .filter(gem -> !onlyCrafted || (gem.isCrafted() && gem.getBinding() != Binding.BindsOnPickUp))
+										 .filter(gem -> meta == (gem.getColor() == GemColor.META))
+										 .filter(gem -> !onlyCrafted || (gem.isCrafted() && gem.getBinding() != Binding.BINDS_ON_PICK_UP))
 										 .filter(Gem::hasCasterStats)
 										 .collect(Collectors.toList()));
 	}
 
 	private static ItemRarity getMinimumRarity(boolean meta, Phase phase, boolean onlyCrafted) {
 		if (meta) {
-			return ItemRarity.Rare;
+			return ItemRarity.RARE;
 		}
 		if (phase.isEarlier(EPIC_GEM_PHASE)) {
-			return ItemRarity.Rare;
+			return ItemRarity.RARE;
 		}
-		return onlyCrafted ? ItemRarity.Epic : ItemRarity.Rare;
+		return onlyCrafted ? ItemRarity.EPIC : ItemRarity.RARE;
 	}
 }

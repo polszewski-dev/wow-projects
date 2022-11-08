@@ -40,7 +40,7 @@ public final class SourceParser {
 
 		String professionName = ParserUtil.removePrefix("Crafted:", line);
 		if (professionName != null) {
-			Profession profession = Profession.valueOf(professionName);
+			Profession profession = Profession.parse(professionName);
 			assertNotNull(profession, professionName);
 			return new Crafted(profession);
 		}

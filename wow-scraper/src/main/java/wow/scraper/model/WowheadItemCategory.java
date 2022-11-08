@@ -9,34 +9,32 @@ import java.util.stream.Stream;
  * Date: 2022-10-29
  */
 public enum WowheadItemCategory {
-	head,
-	shoulder,
-	chest,
-	wrist,
-	hands,
-	waist,
-	legs,
-	feet,
+	HEAD,
+	SHOULDER,
+	CHEST,
+	WRIST,
+	HANDS,
+	WAIST,
+	LEGS,
+	FEET,
 
-	amulets,
-	rings,
-	trinkets,
-	cloaks,
+	AMULETS,
+	RINGS,
+	TRINKETS,
+	CLOAKS,
 
-	off_hands,
+	OFF_HANDS,
 
-	daggers,
-	one_handed_swords,
-	staves,
-	wands,
+	DAGGERS,
+	ONE_HANDED_SWORDS,
+	STAVES,
+	WANDS,
 
-	gems,
+	GEMS,
 
-	tokens,
-
-	;
+	TOKENS;
 
 	public static List<WowheadItemCategory> equipment() {
-		return Stream.of(values()).filter(x -> x != gems && x != tokens).collect(Collectors.toList());
+		return Stream.of(values()).filter(x -> x != GEMS && x != TOKENS).collect(Collectors.toList());
 	}
 }

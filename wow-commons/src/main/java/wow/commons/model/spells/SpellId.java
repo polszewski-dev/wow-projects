@@ -1,78 +1,76 @@
 package wow.commons.model.spells;
 
-import java.util.stream.Stream;
+import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-10-01
  */
 public enum SpellId {
-	Trinket("Trinket"),
-	Potion("Potion"),
+	TRINKET("Trinket"),
+	POTION("Potion"),
 
 	// racial
 
-	BloodFury("Blood Fury"),
+	BLOOD_FURY("Blood Fury"),
 
 	// warlock
 
-	AmplifyCurse("Amplify Curse"),
-	Corruption("Corruption"),
-	CurseOfAgony("Curse of Agony"),
-	CurseOfDoom("Curse of Doom"),
-	CurseOfTheElements("Curse of the Elements"),
-	CurseOfExhaustion("Curse of Exhaustion"),
-	CurseOfShadows("Curse of Shadows"),
-	CurseOfWeakness("Curse of Weakness"),
-	DarkPact("Dark Pact"),
-	DeathCoil("Death Coil"),
-	DrainLife("Drain Life"),
-	DrainMana("Drain Mana"),
-	DrainSoul("Drain Soul"),
-	HowlOfTerror("Howl of Terror"),
-	LifeTap("Life Tap"),
-	SeedOfCorruption("Seed of Corruption"),
-	SeedOfCorruptionDirect("Seed of Corruption (direct)"),
-	SiphonLife("Siphon Life"),
-	UnstableAffliction("Unstable Affliction"),
+	AMPLIFY_CURSE("Amplify Curse"),
+	CORRUPTION("Corruption"),
+	CURSE_OF_AGONY("Curse of Agony"),
+	CURSE_OF_THE_ELEMENTS("Curse of the Elements"),
+	CURSE_OF_DOOM("Curse of Doom"),
+	CURSE_OF_EXHAUSTION("Curse of Exhaustion"),
+	CURSE_OF_SHADOWS("Curse of Shadows"),
+	CURSE_OF_WEAKNESS("Curse of Weakness"),
+	DARK_PACT("Dark Pact"),
+	DEATH_COIL("Death Coil"),
+	DRAIN_LIFE("Drain Life"),
+	DRAIN_MANA("Drain Mana"),
+	DRAIN_SOUL("Drain Soul"),
+	HOWL_OF_TERROR("Howl of Terror"),
+	LIFE_TAP("Life Tap"),
+	SEED_OF_CORRUPTION("Seed of Corruption"),
+	SEED_OF_CORRUPTION_DIRECT("Seed of Corruption (direct)"),
+	SIPHON_LIFE("Siphon Life"),
+	UNSTABLE_AFFLICTION("Unstable Affliction"),
 
-	CreateHealthstone("Create Healthstone"),
-	DemonArmor("Demon Armor"),
-	DemonicSacrifice("Demonic Sacrifice"),
-	EnslaveDemon("Enslave Demon"),
-	FelArmor("Fel Armor"),
-	HealthFunnel("Health Funnel"),
-	ShadowWard("Shadow Ward"),
-	SummonImp("Summon Imp"),
-	SummonVoidwalker("Summon Voidwalker"),
-	SummonSuccubus("Summon Succubus"),
-	SummonFelhunter("Summon Felhunter"),
-	SummonFelguard("Summon Felguard"),
+	CREATE_HEALTHSTONE("Create Healthstone"),
+	DEMON_ARMOR("Demon Armor"),
+	DEMONIC_SACRIFICE("Demonic Sacrifice"),
+	ENSLAVE_DEMON("Enslave Demon"),
+	FEL_ARMOR("Fel Armor"),
+	HEALTH_FUNNEL("Health Funnel"),
+	SHADOW_WARD("Shadow Ward"),
+	SUMMON_IMP("Summon Imp"),
+	SUMMON_VOIDWALKER("Summon Voidwalker"),
+	SUMMON_SUCCUBUS("Summon Succubus"),
+	SUMMON_FELHUNTER("Summon Felhunter"),
+	SUMMON_FELGUARD("Summon Felguard"),
 
-	Conflagrate("Conflagrate"),
-	Hellfire("Hellfire"),
-	Immolate("Immolate"),
-	Incinerate("Incinerate"),
-	RainOfFire("Rain of Fire"),
-	SearingPain("Searing Pain"),
-	ShadowBolt("Shadow Bolt"),
-	Shadowburn("Shadowburn"),
-	Shadowfury("Shadowfury"),
-	SoulFire("Soul Fire"),
+	CONFLAGRATE("Conflagrate"),
+	HELLFIRE("Hellfire"),
+	IMMOLATE("Immolate"),
+	INCINERATE("Incinerate"),
+	RAIN_OF_FIRE("Rain of Fire"),
+	SEARING_PAIN("Searing Pain"),
+	SHADOW_BOLT("Shadow Bolt"),
+	SHADOWBURN("Shadowburn"),
+	SHADOWFURY("Shadowfury"),
+	SOUL_FIRE("Soul Fire"),
 
-	Firebolt("Firebolt"),
-	BloodPact("Blood Pact"),
-	FireShield("Fire Shield"),
-	PhaseShift("Phase Shift"),
-	Torment("Torment"),
-	ConsumeShadows("Consume Shadows"),
-	Sacrifice("Sacrifice"),
-	SoothingKiss("Soothing Kiss"),
-	LashOfPain("Lash of Pain"),
-	LesserInvisibility("Lesser Invisibility"),
-	Seduction("Seduction"),
-
-	;
+	FIREBOLT("Firebolt"),
+	BLOOD_PACT("Blood Pact"),
+	FIRE_SHIELD("Fire Shield"),
+	PHASE_SHIFT("Phase Shift"),
+	TORMENT("Torment"),
+	CONSUME_SHADOWS("Consume Shadows"),
+	SACRIFICE("Sacrifice"),
+	SOOTHING_KISS("Soothing Kiss"),
+	LASH_OF_PAIN("Lash of Pain"),
+	LESSER_INVISIBILITY("Lesser Invisibility"),
+	SEDUCTION("Seduction");
 
 	private final String name;
 
@@ -80,14 +78,8 @@ public enum SpellId {
 		this.name = name;
 	}
 
-	public static SpellId parse(String name) {
-		if (name == null) {
-			return null;
-		}
-		return Stream.of(values())
-				.filter(x -> x.getName().equalsIgnoreCase(name))
-				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException(name));
+	public static SpellId parse(String value) {
+		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
 	public String getName() {

@@ -1,72 +1,64 @@
 package wow.commons.model.categorization;
 
+import wow.commons.util.EnumUtil;
+
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2021-03-02
  */
 public enum ItemType {
-	Head("Head", ItemCategory.Armor, ItemSlot.Head),
-	Neck("Neck", ItemCategory.Accessory, ItemSlot.Neck),
-	Shoulder("Shoulder", ItemCategory.Armor, ItemSlot.Shoulder),
-	Back("Back", ItemCategory.Armor, ItemSlot.Back),
-	Chest("Chest", ItemCategory.Armor, ItemSlot.Chest),
-	Shirt("Shirt", ItemCategory.Armor, ItemSlot.Shirt),
-	Tabard("Tabard", ItemCategory.Armor, ItemSlot.Tabard),
-	Wrist("Wrist", ItemCategory.Armor, ItemSlot.Wrist),
-	Hands("Hands", ItemCategory.Armor, ItemSlot.Hands),
-	Waist("Waist", ItemCategory.Armor, ItemSlot.Waist),
-	Legs("Legs", ItemCategory.Armor, ItemSlot.Legs),
-	Feet("Feet", ItemCategory.Armor, ItemSlot.Feet),
-	Finger("Finger", ItemCategory.Accessory, ItemSlot.Finger1, ItemSlot.Finger2),
-	Trinket("Trinket", ItemCategory.Accessory, ItemSlot.Trinket1, ItemSlot.Trinket2),
+	HEAD("Head", ItemCategory.ARMOR, ItemSlot.HEAD),
+	NECK("Neck", ItemCategory.ACCESSORY, ItemSlot.NECK),
+	SHOULDER("Shoulder", ItemCategory.ARMOR, ItemSlot.SHOULDER),
+	BACK("Back", ItemCategory.ARMOR, ItemSlot.BACK),
+	CHEST("Chest", ItemCategory.ARMOR, ItemSlot.CHEST),
+	SHIRT("Shirt", ItemCategory.ARMOR, ItemSlot.SHIRT),
+	TABARD("Tabard", ItemCategory.ARMOR, ItemSlot.TABARD),
+	WRIST("Wrist", ItemCategory.ARMOR, ItemSlot.WRIST),
+	HANDS("Hands", ItemCategory.ARMOR, ItemSlot.HANDS),
+	WAIST("Waist", ItemCategory.ARMOR, ItemSlot.WAIST),
+	LEGS("Legs", ItemCategory.ARMOR, ItemSlot.LEGS),
+	FEET("Feet", ItemCategory.ARMOR, ItemSlot.FEET),
+	FINGER("Finger", ItemCategory.ACCESSORY, ItemSlot.FINGER_1, ItemSlot.FINGER_2),
+	TRINKET("Trinket", ItemCategory.ACCESSORY, ItemSlot.TRINKET_1, ItemSlot.TRINKET_2),
 
-	TwoHand("Two-Hand", ItemCategory.Weapon, ItemSlot.MainHand),
-	OneHand("One-Hand", ItemCategory.Weapon, ItemSlot.MainHand, ItemSlot.OffHand),
-	MainHand("Main Hand", ItemCategory.Weapon, ItemSlot.MainHand),
-	OffHand("Off Hand", ItemCategory.Weapon, ItemSlot.OffHand),
+	TWO_HAND("Two-Hand", ItemCategory.WEAPON, ItemSlot.MAIN_HAND),
+	ONE_HAND("One-Hand", ItemCategory.WEAPON, ItemSlot.MAIN_HAND, ItemSlot.OFF_HAND),
+	MAIN_HAND("Main Hand", ItemCategory.WEAPON, ItemSlot.MAIN_HAND),
+	OFF_HAND("Off Hand", ItemCategory.WEAPON, ItemSlot.OFF_HAND),
 
-	Relic("Relic", ItemCategory.Weapon, ItemSlot.Ranged),
-	Ranged("Ranged", ItemCategory.Weapon, ItemSlot.Ranged),
-	Thrown("Thrown", ItemCategory.Weapon, ItemSlot.Ranged),
+	RELIC("Relic", ItemCategory.WEAPON, ItemSlot.RANGED),
+	RANGED("Ranged", ItemCategory.WEAPON, ItemSlot.RANGED),
+	THROWN("Thrown", ItemCategory.WEAPON, ItemSlot.RANGED),
 
-	Quest("This Item Begins a Quest", ItemCategory.Quest),
-	Bag("Bag", ItemCategory.Container),
-	Projectile("Projectile", ItemCategory.Projectile),
+	QUEST("This Item Begins a Quest", ItemCategory.QUEST),
+	BAG("Bag", ItemCategory.CONTAINER),
+	PROJECTILE("Projectile", ItemCategory.PROJECTILE),
 
-	Token("<<<Token>>>", ItemCategory.Token),
-	Enchant("<<<Enchant>>>", ItemCategory.Enchant),
+	TOKEN("<<<Token>>>", ItemCategory.TOKEN),
+	ENCHANT("<<<Enchant>>>", ItemCategory.ENCHANT),
 
-	CraftingMaterial("<<<Crafting Material>>>", ItemCategory.CraftingMaterial),
-	Pattern("<<<Pattern>>>", ItemCategory.Pattern),
+	CRAFTING_MATERIAL("<<<Crafting Material>>>", ItemCategory.CRAFTING_MATERIAL),
+	PATTERN("<<<Pattern>>>", ItemCategory.PATTERN);
 
-	;
-
-	private final String tooltipText;
+	private final String key;
 	private final ItemCategory category;
 	private final List<ItemSlot> itemSlots;
 
-	ItemType(String tooltipText, ItemCategory category, ItemSlot... slots) {
-		this.tooltipText = tooltipText;
+	ItemType(String key, ItemCategory category, ItemSlot... slots) {
+		this.key = key;
 		this.category = category;
 		this.itemSlots = List.of(slots);
 	}
 
-	public static ItemType tryParse(String line) {
-		return Stream.of(values()).filter(x -> x.tooltipText.equals(line)).findAny().orElse(null);
+	public static ItemType tryParse(String value) {
+		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 
-	public static ItemType parse(String line) {
-		if (line == null || line.isEmpty()) {
-			return null;
-		}
-		ItemType result = tryParse(line);
-		if (result == null) {
-			throw new IllegalArgumentException(line);
-		}
-		return result;
+	public static ItemType parse(String value) {
+		return EnumUtil.parse(value, values(), x -> x.key);
 	}
 
 	public ItemCategory getCategory() {
@@ -90,23 +82,23 @@ public enum ItemType {
 
 	public boolean isEnchantable(ItemSubType subType) {
 		switch (this) {
-			case Head:
-			case Shoulder:
-			case Back:
-			case Chest:
-			case Wrist:
-			case Hands:
-			case Legs:
-			case Feet:
-			case Finger:
-			case TwoHand:
-			case OneHand:
-			case MainHand:
+			case HEAD:
+			case SHOULDER:
+			case BACK:
+			case CHEST:
+			case WRIST:
+			case HANDS:
+			case LEGS:
+			case FEET:
+			case FINGER:
+			case TWO_HAND:
+			case ONE_HAND:
+			case MAIN_HAND:
 				return true;
-			case OffHand:
-				return subType == WeaponSubType.Shield;
-			case Ranged:
-				return subType == WeaponSubType.Bow || subType == WeaponSubType.Crossbow || subType == WeaponSubType.Gun;
+			case OFF_HAND:
+				return subType == WeaponSubType.SHIELD;
+			case RANGED:
+				return subType == WeaponSubType.BOW || subType == WeaponSubType.CROSSBOW || subType == WeaponSubType.GUN;
 			default:
 				return false;
 		}
@@ -114,6 +106,6 @@ public enum ItemType {
 
 	@Override
 	public String toString() {
-		return tooltipText;
+		return key;
 	}
 }

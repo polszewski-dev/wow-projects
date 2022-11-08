@@ -39,7 +39,7 @@ public class CalculationServiceImpl implements CalculationService {
 		double increase = 1;
 
 		while (true) {
-			double spEqvDps = getSpellStatistics(playerProfile, spell, Attribute.of(AttributeId.SpellDamage, totalSp + increase)).dps;
+			double spEqvDps = getSpellStatistics(playerProfile, spell, Attribute.of(AttributeId.SPELL_DAMAGE, totalSp + increase)).dps;
 
 			if (Math.abs(spEqvDps - targetDps) <= 0.001) {
 				return totalSp + increase;

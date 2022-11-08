@@ -1,5 +1,7 @@
 package wow.commons.model.buffs;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2021-12-26
@@ -18,9 +20,6 @@ public enum BuffExclusionGroup {
 	COE;
 
 	public static BuffExclusionGroup parse(String value) {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
-		return valueOf(value.toUpperCase());
+		return EnumUtil.parse(value, values());
 	}
 }

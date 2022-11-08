@@ -1,6 +1,7 @@
 package wow.commons.model.item;
 
 import wow.commons.model.attributes.Attributes;
+import wow.commons.util.EnumUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,8 +38,7 @@ public enum ItemSocketsUniqueConfiguration {
 	YYY("YYY"),
 	YYB("YYB"),
 	YBB("YBB"),
-	BBB("BBB"),
-	;
+	BBB("BBB");
 
 	private final String key;
 	private ItemSocketSpecification specification;
@@ -47,13 +47,8 @@ public enum ItemSocketsUniqueConfiguration {
 		this.key = key;
 	}
 
-	public static ItemSocketsUniqueConfiguration parse(String key) {
-		for (ItemSocketsUniqueConfiguration value : values()) {
-			if (value.key.equals(key)) {
-				return value;
-			}
-		}
-		throw new IllegalArgumentException(key);
+	public static ItemSocketsUniqueConfiguration parse(String value) {
+		return EnumUtil.parse(value, values(), x -> x.key);
 	}
 
 	public static ItemSocketsUniqueConfiguration of(List<SocketType> socketTypes) {
@@ -84,13 +79,13 @@ public enum ItemSocketsUniqueConfiguration {
 	private static SocketType parseSocketType(char firstLetter) {
 		switch (firstLetter) {
 			case 'R':
-				return SocketType.Red;
+				return SocketType.RED;
 			case 'Y':
-				return SocketType.Yellow;
+				return SocketType.YELLOW;
 			case 'B':
-				return SocketType.Blue;
+				return SocketType.BLUE;
 			case 'M':
-				return SocketType.Meta;
+				return SocketType.META;
 			default:
 				throw new IllegalArgumentException("Can't parse: " + firstLetter);
 		}

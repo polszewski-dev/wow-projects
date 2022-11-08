@@ -52,20 +52,20 @@ public class UpgradeController {
 
 		try {
 			return new UpgradesDTO(
-					findUpgrades(profileId, ItemSlotGroup.Head),
-					findUpgrades(profileId, ItemSlotGroup.Neck),
-					findUpgrades(profileId, ItemSlotGroup.Shoulder),
-					findUpgrades(profileId, ItemSlotGroup.Back),
-					findUpgrades(profileId, ItemSlotGroup.Chest),
-					findUpgrades(profileId, ItemSlotGroup.Wrist),
-					findUpgrades(profileId, ItemSlotGroup.Hands),
-					findUpgrades(profileId, ItemSlotGroup.Waist),
-					findUpgrades(profileId, ItemSlotGroup.Legs),
-					findUpgrades(profileId, ItemSlotGroup.Feet),
-					findUpgrades(profileId, ItemSlotGroup.Fingers),
-					findUpgrades(profileId, ItemSlotGroup.Trinkets),
-					findUpgrades(profileId, ItemSlotGroup.Weapons),
-					findUpgrades(profileId, ItemSlotGroup.Ranged)
+					findUpgrades(profileId, ItemSlotGroup.HEAD),
+					findUpgrades(profileId, ItemSlotGroup.NECK),
+					findUpgrades(profileId, ItemSlotGroup.SHOULDER),
+					findUpgrades(profileId, ItemSlotGroup.BACK),
+					findUpgrades(profileId, ItemSlotGroup.CHEST),
+					findUpgrades(profileId, ItemSlotGroup.WRIST),
+					findUpgrades(profileId, ItemSlotGroup.HANDS),
+					findUpgrades(profileId, ItemSlotGroup.WAIST),
+					findUpgrades(profileId, ItemSlotGroup.LEGS),
+					findUpgrades(profileId, ItemSlotGroup.FEET),
+					findUpgrades(profileId, ItemSlotGroup.FINGERS),
+					findUpgrades(profileId, ItemSlotGroup.TRINKETS),
+					findUpgrades(profileId, ItemSlotGroup.WEAPONS),
+					findUpgrades(profileId, ItemSlotGroup.RANGED)
 			);
 		} finally {
 			System.out.println("It took " + (System.currentTimeMillis() - start) + " millis.");

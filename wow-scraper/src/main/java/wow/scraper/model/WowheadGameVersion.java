@@ -9,10 +9,9 @@ import java.util.stream.Stream;
  * Date: 2022-11-01
  */
 public enum WowheadGameVersion {
-	Vanilla(0, GameVersion.Vanilla),
+	VANILLA(0, GameVersion.VANILLA),
 	TBC(1, GameVersion.TBC),
-	WotLK(2, GameVersion.WotLK),
-	;
+	WOTLK(2, GameVersion.WOTLK);
 
 	private final int code;
 	private final GameVersion gameVersion;

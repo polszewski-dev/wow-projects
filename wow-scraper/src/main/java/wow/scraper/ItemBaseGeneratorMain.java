@@ -53,7 +53,7 @@ public class ItemBaseGeneratorMain {
 	}
 
 	private static void addGems(ItemBaseExcelBuilder itemBaseExcelBuilder) throws IOException {
-		WowheadItemCategory category = WowheadItemCategory.gems;
+		WowheadItemCategory category = WowheadItemCategory.GEMS;
 		List<Integer> itemIds = ItemDetailRepository.getItemIds(GAME_VERSION, category);
 
 		for (Integer itemId : itemIds) {

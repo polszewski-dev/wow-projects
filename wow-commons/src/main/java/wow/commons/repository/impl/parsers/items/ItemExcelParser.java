@@ -81,17 +81,17 @@ public class ItemExcelParser extends ExcelParser {
 		AttributesBuilder itemStats = new AttributesBuilder();
 
 		itemStats
-				.addAttribute(AttributeId.SpellDamage, sp)
-				.addAttribute(AttributeId.SpellDamage, spShadow, AttributeCondition.of(SpellSchool.Shadow))
-				.addAttribute(AttributeId.SpellCritRating, spellCritRating)
-				.addAttribute(AttributeId.SpellHitRating, spellHitRating)
-				.addAttribute(AttributeId.BaseStatsIncrease, allStats)
-				.addAttribute(AttributeId.Stamina, sta)
-				.addAttribute(AttributeId.Intellect, int_)
-				.addAttribute(AttributeId.Spirit, spi)
-				.addAttribute(AttributeId.ThreatReductionPct, threatReductionPct)
-				.addAttribute(AttributeId.SpeedIncreasePct, speedIncreasePct)
-				.addAttribute(AttributeId.Resistance, shadowResist, AttributeCondition.of(SpellSchool.Shadow))
+				.addAttribute(AttributeId.SPELL_DAMAGE, sp)
+				.addAttribute(AttributeId.SPELL_DAMAGE, spShadow, AttributeCondition.of(SpellSchool.SHADOW))
+				.addAttribute(AttributeId.SPELL_CRIT_RATING, spellCritRating)
+				.addAttribute(AttributeId.SPELL_HIT_RATING, spellHitRating)
+				.addAttribute(AttributeId.BASE_STATS_INCREASE, allStats)
+				.addAttribute(AttributeId.STAMINA, sta)
+				.addAttribute(AttributeId.INTELLECT, int_)
+				.addAttribute(AttributeId.SPIRIT, spi)
+				.addAttribute(AttributeId.THREAT_REDUCTION_PCT, threatReductionPct)
+				.addAttribute(AttributeId.SPEED_INCREASE_PCT, speedIncreasePct)
+				.addAttribute(AttributeId.RESISTANCE, shadowResist, AttributeCondition.of(SpellSchool.SHADOW))
 		;
 		return itemStats.toAttributes();
 	}

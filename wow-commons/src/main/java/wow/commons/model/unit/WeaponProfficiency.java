@@ -8,48 +8,47 @@ import wow.commons.model.categorization.WeaponSubType;
  * Date: 2021-03-14
  */
 public enum WeaponProfficiency {
-	Dagger(WeaponSubType.Dagger),
-	MainHandDagger(ItemType.MainHand, WeaponSubType.Dagger),
-	OneHandDagger(ItemType.OneHand, WeaponSubType.Dagger),
+	DAGGER(WeaponSubType.DAGGER),
+	MAIN_HAND_DAGGER(ItemType.MAIN_HAND, WeaponSubType.DAGGER),
+	ONE_HAND_DAGGER(ItemType.ONE_HAND, WeaponSubType.DAGGER),
 
-	Sword(WeaponSubType.Sword),
-	MainHandSword(ItemType.MainHand, WeaponSubType.Sword),
-	OffHandSword(ItemType.OffHand, WeaponSubType.Sword),
-	OneHandSword(ItemType.OneHand, WeaponSubType.Sword),
-	TwoHandSword(ItemType.TwoHand, WeaponSubType.Sword),
+	SWORD(WeaponSubType.SWORD),
+	MAIN_HAND_SWORD(ItemType.MAIN_HAND, WeaponSubType.SWORD),
+	OFF_HAND_SWORD(ItemType.OFF_HAND, WeaponSubType.SWORD),
+	ONE_HAND_SWORD(ItemType.ONE_HAND, WeaponSubType.SWORD),
+	TWO_HAND_SWORD(ItemType.TWO_HAND, WeaponSubType.SWORD),
 
-	Axe(WeaponSubType.Axe),
-	MainHandAxe(ItemType.MainHand, WeaponSubType.Axe),
-	OffHandAxe(ItemType.OffHand, WeaponSubType.Axe),
-	OneHandAxe(ItemType.OneHand, WeaponSubType.Axe),
-	TwoHandAxe(ItemType.TwoHand, WeaponSubType.Axe),
+	AXE(WeaponSubType.AXE),
+	MAIN_HAND_AXE(ItemType.MAIN_HAND, WeaponSubType.AXE),
+	OFF_HAND_AXE(ItemType.OFF_HAND, WeaponSubType.AXE),
+	ONE_HAND_AXE(ItemType.ONE_HAND, WeaponSubType.AXE),
+	TWO_HAND_AXE(ItemType.TWO_HAND, WeaponSubType.AXE),
 
-	Polearm(WeaponSubType.Polearm),
+	POLEARM(WeaponSubType.POLEARM),
 
-	Mace(WeaponSubType.Mace),
-	MainHandMace(ItemType.MainHand, WeaponSubType.Mace),
-	OffHandMace(ItemType.OffHand, WeaponSubType.Mace),
-	OneHandMace(ItemType.OneHand, WeaponSubType.Mace),
-	TwoHandMace(ItemType.TwoHand, WeaponSubType.Mace),
+	MACE(WeaponSubType.MACE),
+	MAIN_HAND_MACE(ItemType.MAIN_HAND, WeaponSubType.MACE),
+	OFF_HAND_MACE(ItemType.OFF_HAND, WeaponSubType.MACE),
+	ONE_HAND_MACE(ItemType.ONE_HAND, WeaponSubType.MACE),
+	TWO_HAND_MACE(ItemType.TWO_HAND, WeaponSubType.MACE),
 
-	Staff(WeaponSubType.Staff),
+	STAFF(WeaponSubType.STAFF),
 
-	FistWeapon(WeaponSubType.FistWeapon),
+	FIST_WEAPON(WeaponSubType.FIST_WEAPON),
 
-	HeldInOffHand(WeaponSubType.HeldInOffHand),
-	Shield(WeaponSubType.Shield),
+	HELD_IN_OFF_HAND(WeaponSubType.HELD_IN_OFF_HAND),
+	SHIELD(WeaponSubType.SHIELD),
 
-	Wand(WeaponSubType.Wand),
+	WAND(WeaponSubType.WAND),
 
-	Gun(WeaponSubType.Gun),
-	Bow(WeaponSubType.Bow),
-	Crossbow(WeaponSubType.Crossbow),
-	Thrown(WeaponSubType.Thrown),
+	GUN(WeaponSubType.GUN),
+	BOW(WeaponSubType.BOW),
+	CROSSBOW(WeaponSubType.CROSSBOW),
+	THROWN(WeaponSubType.THROWN),
 
-	Idol(WeaponSubType.Idol),
-	Totem(WeaponSubType.Totem),
-	Libram(WeaponSubType.Libram),
-	;
+	IDOL(WeaponSubType.IDOL),
+	TOTEM(WeaponSubType.TOTEM),
+	LIBRAM(WeaponSubType.LIBRAM);
 
 	private final ItemType weaponType;
 	private final WeaponSubType weaponSubType;

@@ -89,11 +89,11 @@ public class WowheadFetcher {
 
 	private static String getRootUrlStr(GameVersion gameVersion) {
 		switch (gameVersion) {
-			case Vanilla:
+			case VANILLA:
 				return "https://www.wowhead.com/classic/";
 			case TBC:
 				return "https://www.wowhead.com/tbc/";
-			case WotLK:
+			case WOTLK:
 				return "https://www.wowhead.com/wotlk/";
 			default:
 				throw new IllegalArgumentException("Unhandled game version: " + gameVersion);
@@ -104,13 +104,13 @@ public class WowheadFetcher {
 		String urlStr;
 
 		switch (gameVersion) {
-			case Vanilla:
+			case VANILLA:
 				urlStr = "https://nether.wowhead.com/tooltip/item/%s?dataEnv=4&locale=0";
 				break;
 			case TBC:
 				urlStr = "https://nether.wowhead.com/tooltip/item/%s?dataEnv=5&locale=0";
 				break;
-			case WotLK:
+			case WOTLK:
 				urlStr = "https://nether.wowhead.com/tooltip/item/%s?dataEnv=6&locale=0";
 				break;
 			default:

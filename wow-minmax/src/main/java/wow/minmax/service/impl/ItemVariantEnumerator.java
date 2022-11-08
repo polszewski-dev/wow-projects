@@ -34,22 +34,22 @@ abstract class ItemVariantEnumerator {
 	}
 
 	public ItemVariantEnumerator run(ItemSlotGroup slotGroup, PlayerProfile playerProfile, Spell spell) {
-		if (slotGroup == ItemSlotGroup.Weapons) {
-			for (EquippableItem twoHand : getItemVariants(TwoHand, playerProfile, spell)) {
+		if (slotGroup == ItemSlotGroup.WEAPONS) {
+			for (EquippableItem twoHand : getItemVariants(TWO_HAND, playerProfile, spell)) {
 				handleItemOption(twoHand);
 			}
 
-			List<EquippableItem> mainHands = getItemVariants(Set.of(MainHand, OneHand), playerProfile, spell);
-			List<EquippableItem> offHands = getItemVariants(OffHand, playerProfile, spell);
+			List<EquippableItem> mainHands = getItemVariants(Set.of(MAIN_HAND, ONE_HAND), playerProfile, spell);
+			List<EquippableItem> offHands = getItemVariants(OFF_HAND, playerProfile, spell);
 
 			for (EquippableItem mainhand : mainHands) {
 				for (EquippableItem offhand : offHands) {
 					handleItemOption(mainhand, offhand);
 				}
 			}
-		} else if (slotGroup == ItemSlotGroup.Fingers) {
-			List<EquippableItem> rings1 = getItemVariants(Finger, playerProfile, spell);
-			List<EquippableItem> rings2 = getItemVariants(Finger, playerProfile, spell);
+		} else if (slotGroup == ItemSlotGroup.FINGERS) {
+			List<EquippableItem> rings1 = getItemVariants(FINGER, playerProfile, spell);
+			List<EquippableItem> rings2 = getItemVariants(FINGER, playerProfile, spell);
 
 			for (int i = 0; i < rings1.size(); i++) {
 				EquippableItem ring1 = rings1.get(i);
@@ -60,8 +60,8 @@ abstract class ItemVariantEnumerator {
 					}
 				}
 			}
-		} else if (slotGroup == ItemSlotGroup.Trinkets) {
-			List<EquippableItem> trinkets = getItemVariants(Trinket, playerProfile, spell);
+		} else if (slotGroup == ItemSlotGroup.TRINKETS) {
+			List<EquippableItem> trinkets = getItemVariants(TRINKET, playerProfile, spell);
 
 			for (int i = 0; i < trinkets.size(); i++) {
 				EquippableItem trinket1 = trinkets.get(i);
