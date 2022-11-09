@@ -236,18 +236,22 @@ public class SpellExcelParser extends ExcelParser {
 			for (Column column : columns) {
 				ConditionalAttribute attribute = column.readAttribute();
 				if (attribute != null) {
-					spells = !spells.isEmpty() ? spells : Collections.singleton(null);
-					petTypes = !petTypes.isEmpty() ? petTypes : Collections.singleton(null);
-
-					for (SpellId spellId : spells) {
-						for (PetType petType : petTypes) {
-							AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, null);
-							result.addAttribute(attribute.attachCondition(condition));
-						}
-					}
+					addPossibleAtributes(talentTree, spellSchool, spells, petTypes, result, attribute);
 				}
 			}
 			return result.toAttributes();
+		}
+
+		private void addPossibleAtributes(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes, AttributesBuilder result, ConditionalAttribute attribute) {
+			Set<SpellId> possibleSpells = !spells.isEmpty() ? spells : Collections.singleton(null);
+			Set<PetType> possiblePetTypes = !petTypes.isEmpty() ? petTypes : Collections.singleton(null);
+
+			for (SpellId spellId : possibleSpells) {
+				for (PetType petType : possiblePetTypes) {
+					AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, null);
+					result.addAttribute(attribute.attachCondition(condition));
+				}
+			}
 		}
 	}
 

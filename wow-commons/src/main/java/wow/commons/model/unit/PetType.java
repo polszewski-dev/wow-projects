@@ -23,6 +23,10 @@ public enum PetType {
 		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
+	public static PetType tryParse(String value) {
+		return EnumUtil.tryParse(value, values(), x -> x.name);
+	}
+
 	@Override
 	public String toString() {
 		return name;

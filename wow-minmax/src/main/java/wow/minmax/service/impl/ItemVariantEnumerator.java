@@ -35,56 +35,72 @@ abstract class ItemVariantEnumerator {
 
 	public ItemVariantEnumerator run(ItemSlotGroup slotGroup, PlayerProfile playerProfile, Spell spell) {
 		if (slotGroup == ItemSlotGroup.WEAPONS) {
-			for (EquippableItem twoHand : getItemVariants(TWO_HAND, playerProfile, spell)) {
-				handleItemOption(twoHand);
-			}
-
-			List<EquippableItem> mainHands = getItemVariants(Set.of(MAIN_HAND, ONE_HAND), playerProfile, spell);
-			List<EquippableItem> offHands = getItemVariants(OFF_HAND, playerProfile, spell);
-
-			for (EquippableItem mainhand : mainHands) {
-				for (EquippableItem offhand : offHands) {
-					handleItemOption(mainhand, offhand);
-				}
-			}
+			enumerateWeapons(playerProfile, spell);
 		} else if (slotGroup == ItemSlotGroup.FINGERS) {
-			List<EquippableItem> rings1 = getItemVariants(FINGER, playerProfile, spell);
-			List<EquippableItem> rings2 = getItemVariants(FINGER, playerProfile, spell);
-
-			for (int i = 0; i < rings1.size(); i++) {
-				EquippableItem ring1 = rings1.get(i);
-				for (int j = i; j < rings2.size(); j++) {
-					EquippableItem ring2 = rings2.get(j);
-					if (i != j || !ring1.isUnique()) {
-						handleItemOption(ring1, ring2);
-					}
-				}
-			}
+			enumerateFingers(playerProfile, spell);
 		} else if (slotGroup == ItemSlotGroup.TRINKETS) {
-			List<EquippableItem> trinkets = getItemVariants(TRINKET, playerProfile, spell);
-
-			for (int i = 0; i < trinkets.size(); i++) {
-				EquippableItem trinket1 = trinkets.get(i);
-				for (int j = i; j < trinkets.size(); j++) {
-					EquippableItem trinket2 = trinkets.get(j);
-					if (i != j || !trinket1.isUnique()) {
-						handleItemOption(trinket1, trinket2);
-					}
-				}
-			}
+			enumerateTrinkets(playerProfile, spell);
 		} else {
-			if (slotGroup.getSlots().size() != 1) {
-				throw new IllegalArgumentException(slotGroup + " should have only 1 slot");
-			}
-
-			ItemSlot slot = slotGroup.getSlots().get(0);
-			Set<ItemType> itemTypes = slot.getItemTypes();
-
-			for (EquippableItem item : getItemVariants(itemTypes, playerProfile, spell)) {
-				handleItemOption(item);
-			}
+			enumerateEverythingElse(slotGroup, playerProfile, spell);
 		}
 		return this;
+	}
+
+	private void enumerateWeapons(PlayerProfile playerProfile, Spell spell) {
+		for (EquippableItem twoHand : getItemVariants(TWO_HAND, playerProfile, spell)) {
+			handleItemOption(twoHand);
+		}
+
+		List<EquippableItem> mainHands = getItemVariants(Set.of(MAIN_HAND, ONE_HAND), playerProfile, spell);
+		List<EquippableItem> offHands = getItemVariants(OFF_HAND, playerProfile, spell);
+
+		for (EquippableItem mainhand : mainHands) {
+			for (EquippableItem offhand : offHands) {
+				handleItemOption(mainhand, offhand);
+			}
+		}
+	}
+
+	private void enumerateFingers(PlayerProfile playerProfile, Spell spell) {
+		List<EquippableItem> rings1 = getItemVariants(FINGER, playerProfile, spell);
+		List<EquippableItem> rings2 = getItemVariants(FINGER, playerProfile, spell);
+
+		for (int i = 0; i < rings1.size(); i++) {
+			EquippableItem ring1 = rings1.get(i);
+			for (int j = i; j < rings2.size(); j++) {
+				EquippableItem ring2 = rings2.get(j);
+				if (i != j || !ring1.isUnique()) {
+					handleItemOption(ring1, ring2);
+				}
+			}
+		}
+	}
+
+	private void enumerateTrinkets(PlayerProfile playerProfile, Spell spell) {
+		List<EquippableItem> trinkets = getItemVariants(TRINKET, playerProfile, spell);
+
+		for (int i = 0; i < trinkets.size(); i++) {
+			EquippableItem trinket1 = trinkets.get(i);
+			for (int j = i; j < trinkets.size(); j++) {
+				EquippableItem trinket2 = trinkets.get(j);
+				if (i != j || !trinket1.isUnique()) {
+					handleItemOption(trinket1, trinket2);
+				}
+			}
+		}
+	}
+
+	private void enumerateEverythingElse(ItemSlotGroup slotGroup, PlayerProfile playerProfile, Spell spell) {
+		if (slotGroup.getSlots().size() != 1) {
+			throw new IllegalArgumentException(slotGroup + " should have only 1 slot");
+		}
+
+		ItemSlot slot = slotGroup.getSlots().get(0);
+		Set<ItemType> itemTypes = slot.getItemTypes();
+
+		for (EquippableItem item : getItemVariants(itemTypes, playerProfile, spell)) {
+			handleItemOption(item);
+		}
 	}
 
 	public List<Comparison> getResult() {
@@ -139,7 +155,7 @@ abstract class ItemVariantEnumerator {
 
 	private List<EquippableItem> getItemVariants(Item item, Phase phase, SpellSchool spellSchool) {
 		if (item.isEnchantable() && item.hasSockets()) {
-			List<wow.commons.model.item.Enchant> enchants = itemService.getCasterEnchants(item.getItemType(), phase, spellSchool);
+			List<Enchant> enchants = itemService.getCasterEnchants(item.getItemType(), phase, spellSchool);
 			List<Gem[]> gemCombos = itemService.getCasterGemCombos(item, phase);
 			List<EquippableItem> result = new ArrayList<>(enchants.size() * gemCombos.size());
 

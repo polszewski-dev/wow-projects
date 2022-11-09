@@ -72,35 +72,47 @@ class GemComboEvaluator {
 		List<Gem[]> result = new ArrayList<>();
 
 		if (specification.getSocketCount() == 1) {
-			List<Gem> gems1 = itemService.getAvailableGems(specification, 1, phase, true);
-			for (Gem gem1 : gems1) {
-				result.add(new Gem[]{gem1});
-			}
-			return result;
+			return getSingleGemCombos(phase, specification, result);
 		} else if (specification.getSocketCount() == 2) {
-			List<Gem> gems1 = itemService.getAvailableGems(specification, 1, phase, true);
-			List<Gem> gems2 = itemService.getAvailableGems(specification, 2, phase, true);
-			for (Gem gem1 : gems1) {
-				for (Gem gem2 : gems2) {
-					result.add(new Gem[]{gem1, gem2});
-				}
-			}
-			return removeEquivalents2(result, specification);
+			return getDoubleGemCombos(phase, specification, result);
 		} else if (specification.getSocketCount() == 3) {
-			List<Gem> gems1 = itemService.getAvailableGems(specification, 1, phase, true);
-			List<Gem> gems2 = itemService.getAvailableGems(specification, 2, phase, true);
-			List<Gem> gems3 = itemService.getAvailableGems(specification, 3, phase, true);
-			for (Gem gem1 : gems1) {
-				for (Gem gem2 : gems2) {
-					for (Gem gem3 : gems3) {
-						result.add(new Gem[]{gem1, gem2, gem3});
-					}
-				}
-			}
-			return removeEquivalents3(result, specification);
+			return getTripleGemCombos(phase, specification, result);
 		} else {
 			throw new IllegalArgumentException("Socket count should be at most 3 but is " + specification.getSocketCount());
 		}
+	}
+
+	private List<Gem[]> getSingleGemCombos(Phase phase, ItemSocketSpecification specification, List<Gem[]> result) {
+		List<Gem> gems1 = itemService.getAvailableGems(specification, 1, phase, true);
+		for (Gem gem1 : gems1) {
+			result.add(new Gem[]{gem1});
+		}
+		return result;
+	}
+
+	private List<Gem[]> getDoubleGemCombos(Phase phase, ItemSocketSpecification specification, List<Gem[]> result) {
+		List<Gem> gems1 = itemService.getAvailableGems(specification, 1, phase, true);
+		List<Gem> gems2 = itemService.getAvailableGems(specification, 2, phase, true);
+		for (Gem gem1 : gems1) {
+			for (Gem gem2 : gems2) {
+				result.add(new Gem[]{gem1, gem2});
+			}
+		}
+		return removeEquivalents2(result, specification);
+	}
+
+	private List<Gem[]> getTripleGemCombos(Phase phase, ItemSocketSpecification specification, List<Gem[]> result) {
+		List<Gem> gems1 = itemService.getAvailableGems(specification, 1, phase, true);
+		List<Gem> gems2 = itemService.getAvailableGems(specification, 2, phase, true);
+		List<Gem> gems3 = itemService.getAvailableGems(specification, 3, phase, true);
+		for (Gem gem1 : gems1) {
+			for (Gem gem2 : gems2) {
+				for (Gem gem3 : gems3) {
+					result.add(new Gem[]{gem1, gem2, gem3});
+				}
+			}
+		}
+		return removeEquivalents3(result, specification);
 	}
 
 	private List<Gem[]> removeEquivalents2(List<Gem[]> gemCombos, ItemSocketSpecification socketSpecification) {
@@ -117,7 +129,8 @@ class GemComboEvaluator {
 					.nothingToSolve()
 					.getAttributes();
 
-			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) && sockets.getSocket(2).gemMatchesSocketColor(gem2);
+			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) &&
+					sockets.getSocket(2).gemMatchesSocketColor(gem2);
 
 			String key = match + "#" + attributes.statString();
 
@@ -145,7 +158,9 @@ class GemComboEvaluator {
 					.nothingToSolve()
 					.getAttributes();
 
-			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) && sockets.getSocket(2).gemMatchesSocketColor(gem2) && sockets.getSocket(3).gemMatchesSocketColor(gem3);
+			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) &&
+					sockets.getSocket(2).gemMatchesSocketColor(gem2) &&
+					sockets.getSocket(3).gemMatchesSocketColor(gem3);
 
 			String key = match + "#" + attributes.statString();
 

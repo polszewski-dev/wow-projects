@@ -27,6 +27,10 @@ public enum TalentTree {
 		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
+	public static TalentTree tryParse(String value) {
+		return EnumUtil.tryParse(value, values(), x -> x.name);
+	}
+
 	@Override
 	public String toString() {
 		return name;

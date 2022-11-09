@@ -70,18 +70,9 @@ public class Snapshot {
 	}
 
 	private void calcSpellStats(SpellInfo spellInfo, BaseStatInfo baseStats, CombatRatingInfo cr) {
-		double ratingHit = stats.getSpellHitRating() / cr.getSpellHit();
-		double pctHit = stats.getSpellHitPct().getValue();
-		totalHit = ratingHit + pctHit;
-
-		double intCrit = baseStats.getBaseSpellCrit() + (intellect - baseStats.getBaseIntellect()) / baseStats.getIntellectPerCritPct();
-		double ratingCrit = stats.getSpellCritRating() / cr.getSpellCrit();
-		double pctCrit = stats.getSpellCritPct().getValue();
-		totalCrit = intCrit + ratingCrit + pctCrit;
-
-		double ratingHaste = stats.getSpellHasteRating() / cr.getSpellHaste();
-		double pctHaste = stats.getSpellHastePct().getValue();
-		totalHaste = pctHaste + ratingHaste;
+		totalHit = getTotalHit(cr);
+		totalCrit = getTotalCrit(baseStats, cr);
+		totalHaste = getTotalHaste(cr);
 
 		sp = stats.getTotalSpellDamage();
 
@@ -91,19 +82,51 @@ public class Snapshot {
 		critChance = Math.min(totalCrit, 100) / 100.0;
 		haste = totalHaste / 100.0;
 
-		double increasedCriticalDamage = stats.getIncreasedCriticalDamagePct().getCoefficient();
-		double talentIncrease = stats.getCritDamageIncreasePct().getCoefficient();
-		double extraCritCoeff = stats.getExtraCritCoeff();
-		critCoeff = 1 + (0.5 + 1.5 * increasedCriticalDamage) * (1 + talentIncrease) + extraCritCoeff;
+		critCoeff = getCritCoeffValue();
 
 		directDamageDoneMultiplier = 1 + stats.getDamageTakenPct().getCoefficient() + stats.getEffectIncreasePct().getCoefficient() + stats.getDirectDamageIncreasePct().getCoefficient();
 		dotDamageDoneMultiplier = 1 + stats.getDamageTakenPct().getCoefficient() + stats.getEffectIncreasePct().getCoefficient() + stats.getDoTDamageIncreasePct().getCoefficient();
 
+		spellCoeffDirect = getSpellCoeffDirect(spellInfo);
+		spellCoeffDoT = getSpellCoeffDoT(spellInfo);
+	}
+
+	private double getTotalHit(CombatRatingInfo cr) {
+		double ratingHit = stats.getSpellHitRating() / cr.getSpellHit();
+		double pctHit = stats.getSpellHitPct().getValue();
+		return ratingHit + pctHit;
+	}
+
+	private double getTotalCrit(BaseStatInfo baseStats, CombatRatingInfo cr) {
+		double intCrit = baseStats.getBaseSpellCrit() + (intellect - baseStats.getBaseIntellect()) / baseStats.getIntellectPerCritPct();
+		double ratingCrit = stats.getSpellCritRating() / cr.getSpellCrit();
+		double pctCrit = stats.getSpellCritPct().getValue();
+		return intCrit + ratingCrit + pctCrit;
+	}
+
+	private double getTotalHaste(CombatRatingInfo cr) {
+		double ratingHaste = stats.getSpellHasteRating() / cr.getSpellHaste();
+		double pctHaste = stats.getSpellHastePct().getValue();
+		return pctHaste + ratingHaste;
+	}
+
+	private double getCritCoeffValue() {
+		double increasedCriticalDamage = stats.getIncreasedCriticalDamagePct().getCoefficient();
+		double talentIncrease = stats.getCritDamageIncreasePct().getCoefficient();
+		double extraCritCoeff = stats.getExtraCritCoeff();
+		return 1 + (0.5 + 1.5 * increasedCriticalDamage) * (1 + talentIncrease) + extraCritCoeff;
+	}
+
+	private double getSpellCoeffDirect(SpellInfo spellInfo) {
 		double baseSpellCoeffDirect = spellInfo.getCoeffDirect().getCoefficient();
+		double talentSpellCoeff = stats.getSpellCoeffPct().getCoefficient();
+		return baseSpellCoeffDirect + talentSpellCoeff;
+	}
+
+	private double getSpellCoeffDoT(SpellInfo spellInfo) {
 		double baseSpellCoeffDoT = spellInfo.getCoeffDot().getCoefficient();
 		double talentSpellCoeff = stats.getSpellCoeffPct().getCoefficient();
-		spellCoeffDirect = baseSpellCoeffDirect + talentSpellCoeff;
-		spellCoeffDoT = baseSpellCoeffDoT + talentSpellCoeff;
+		return baseSpellCoeffDoT + talentSpellCoeff;
 	}
 
 	private void calcCastTime(SpellRankInfo spellRankInfo) {

@@ -23,6 +23,10 @@ public enum CreatureType {
 		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
+	public static CreatureType tryParse(String value) {
+		return EnumUtil.tryParse(value, values(), x -> x.name);
+	}
+
 	@Override
 	public String toString() {
 		return name;

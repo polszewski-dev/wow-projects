@@ -82,6 +82,10 @@ public enum SpellId {
 		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
+	public static SpellId tryParse(String value) {
+		return EnumUtil.tryParse(value, values(), x -> x.name);
+	}
+
 	public String getName() {
 		return name;
 	}

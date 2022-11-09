@@ -57,10 +57,7 @@ public class PrimitiveAttributeSupplier {
 				for (SpellId spellId : spellIds) {
 					for (PetType petType : petTypes) {
 						for (CreatureType creatureType : creatureTypes) {
-							PrimitiveAttribute attribute = getAttribute(value, talentTree, spellSchool, spellId, petType, creatureType);
-							if (attribute != null) {
-								result.add(attribute);
-							}
+							addAttribute(value, result, talentTree, spellSchool, spellId, petType, creatureType);
 						}
 					}
 				}
@@ -72,6 +69,13 @@ public class PrimitiveAttributeSupplier {
 
 	public Attributes getAttributes(double value) {
 		return Attributes.of(getAttributeList(value));
+	}
+
+	private void addAttribute(double value, List<PrimitiveAttribute> result, TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
+		PrimitiveAttribute attribute = getAttribute(value, talentTree, spellSchool, spellId, petType, creatureType);
+		if (attribute != null) {
+			result.add(attribute);
+		}
 	}
 
 	private PrimitiveAttribute getAttribute(double value, TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
@@ -87,23 +91,37 @@ public class PrimitiveAttributeSupplier {
 	}
 
 	private void addCondition(String value) {
-		try {
-			talentTrees.add(TalentTree.parse(value));
-		} catch (IllegalArgumentException e1) {
-			try {
-				spellSchools.add(SpellSchool.parse(value));
-			} catch (IllegalArgumentException e2) {
-				try {
-					spellIds.add(SpellId.parse(value));
-				} catch (IllegalArgumentException e3) {
-					try {
-						petTypes.add(PetType.parse(value));
-					} catch (IllegalArgumentException e4) {
-						creatureTypes.add(CreatureType.parse(value));
-					}
-				}
-			}
+		TalentTree talentTree = TalentTree.tryParse(value);
+		if (talentTree != null) {
+			talentTrees.add(talentTree);
+			return;
 		}
+
+		SpellSchool spellSchool = SpellSchool.tryParse(value);
+		if (spellSchool != null) {
+			spellSchools.add(spellSchool);
+			return;
+		}
+
+		SpellId spellId = SpellId.tryParse(value);
+		if (spellId != null) {
+			spellIds.add(spellId);
+			return;
+		}
+
+		PetType petType = PetType.tryParse(value);
+		if (petType != null) {
+			petTypes.add(petType);
+			return;
+		}
+
+		CreatureType creatureType = CreatureType.tryParse(value);
+		if (creatureType != null) {
+			creatureTypes.add(creatureType);
+			return;
+		}
+
+		throw new IllegalArgumentException(value);
 	}
 
 	private static <T> void ensureAtLeastOneElement(List<T> list) {

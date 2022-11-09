@@ -169,6 +169,13 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 	public Attributes getAttributes() {
 		AttributesBuilder result = new AttributesBuilder();
 
+		processUnconditionalAttributes(result);
+		processConditionalAttributes(result);
+		processComplexAttributes(result);
+		return result.toAttributes();
+	}
+
+	private void processUnconditionalAttributes(AttributesBuilder result) {
 		for (var entry : doubleAttributes.entrySet()) {
 			var id = entry.getKey();
 			var value = entry.getValue();
@@ -189,7 +196,9 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			var value = entry.getValue();
 			result.addAttribute(id, value);
 		}
+	}
 
+	private void processConditionalAttributes(AttributesBuilder result) {
 		for (var entry : conditionalDoubleAttributes.entrySet()) {
 			var id = entry.getKey();
 			for (var entry2 : entry.getValue().entrySet()) {
@@ -222,12 +231,12 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 				result.addAttribute(id, value, condition2);
 			}
 		}
+	}
 
+	private void processComplexAttributes(AttributesBuilder result) {
 		for (var entry : complexAttributes.entrySet()) {
 			result.addComplexAttributeList(entry.getValue());
 		}
-
-		return result.toAttributes();
 	}
 
 	private void solveSetBonuses() {
