@@ -3,7 +3,9 @@ package wow.commons.util;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.*;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.primitive.*;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 
@@ -15,7 +17,7 @@ import java.util.*;
  */
 public class AttributesBuilder {
 	private List<PrimitiveAttribute> attributeList;
-	private Map<AttributeId, List<ComplexAttribute>> complexAttributeList;
+	private Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList;
 	private final AttributeFilter filter;
 
 	public AttributesBuilder() {
@@ -55,10 +57,10 @@ public class AttributesBuilder {
 		if (!attribute.isMatchedBy(filter)) {
 			return this;
 		}
-		if (attribute instanceof PrimitiveAttribute) {
+		if (attribute.getId().isPrimitiveAttribute()) {
 			getOrCreateAttributeList().add((PrimitiveAttribute)attribute);
 		} else {
-			getOrCreateComplexAttributeList().computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
+			getOrCreateComplexAttributeList().computeIfAbsent((ComplexAttributeId) attribute.getId(), x -> new ArrayList<>())
 								.add((ComplexAttribute)attribute);
 		}
 		return this;
@@ -71,9 +73,9 @@ public class AttributesBuilder {
 		return attributeList;
 	}
 
-	private Map<AttributeId, List<ComplexAttribute>> getOrCreateComplexAttributeList() {
+	private Map<ComplexAttributeId, List<ComplexAttribute>> getOrCreateComplexAttributeList() {
 		if (complexAttributeList == null) {
-			complexAttributeList = new EnumMap<>(AttributeId.class);
+			complexAttributeList = new EnumMap<>(ComplexAttributeId.class);
 		}
 		return complexAttributeList;
 	}
@@ -100,40 +102,40 @@ public class AttributesBuilder {
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, double value) {
+	public AttributesBuilder addAttribute(DoubleAttributeId attributeId, double value) {
 		return addAttribute(attributeId, value, null);
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, double value, AttributeCondition condition) {
+	public AttributesBuilder addAttribute(DoubleAttributeId attributeId, double value, AttributeCondition condition) {
 		addAttribute(Attribute.ofNullable(attributeId, value, condition));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, Percent value) {
+	public AttributesBuilder addAttribute(PercentAttributeId attributeId, Percent value) {
 		return addAttribute(attributeId, value, null);
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, Percent value, AttributeCondition condition) {
+	public AttributesBuilder addAttribute(PercentAttributeId attributeId, Percent value, AttributeCondition condition) {
 		addAttribute(Attribute.ofNullable(attributeId, value, condition));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, boolean value) {
+	public AttributesBuilder addAttribute(BooleanAttributeId attributeId, boolean value) {
 		addAttribute(Attribute.ofNullable(attributeId, value));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, boolean value, AttributeCondition condition) {
+	public AttributesBuilder addAttribute(BooleanAttributeId attributeId, boolean value, AttributeCondition condition) {
 		addAttribute(Attribute.ofNullable(attributeId, value, condition));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, Duration value) {
+	public AttributesBuilder addAttribute(DurationAttributeId attributeId, Duration value) {
 		addAttribute(Attribute.ofNullable(attributeId, value));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(AttributeId attributeId, Duration value, AttributeCondition condition) {
+	public AttributesBuilder addAttribute(DurationAttributeId attributeId, Duration value, AttributeCondition condition) {
 		addAttribute(Attribute.ofNullable(attributeId, value, condition));
 		return this;
 	}
@@ -152,26 +154,6 @@ public class AttributesBuilder {
 	public AttributesBuilder addAttributes(Collection<? extends AttributeSource> attributeSources) {
 		for (AttributeSource attributeSource : attributeSources) {
 			addAttributes(attributeSource);
-		}
-		return this;
-	}
-
-	public AttributesBuilder removeAttribute(AttributeId attributeId) {
-		if (attributeId.isComplexAttribute()) {
-			if (complexAttributeList != null) {
-				complexAttributeList.remove(attributeId);
-			}
-		} else {
-			if (attributeList != null) {
-				attributeList.removeIf(attribute -> attribute.getId() == attributeId);
-			}
-		}
-		return this;
-	}
-
-	public AttributesBuilder removeAttributes(Collection<AttributeId> attributeIdList) {
-		for (AttributeId attributeId : attributeIdList) {
-			removeAttribute(attributeId);
 		}
 		return this;
 	}
@@ -199,47 +181,47 @@ public class AttributesBuilder {
 	}
 
 	public static AttributesDiff diff(Attributes attributes1, Attributes attributes2) {
-		Map<AttributeId, Map<AttributeCondition, Double>> doubleAttributes = new EnumMap<>(AttributeId.class);
-		Map<AttributeId, Map<AttributeCondition, Percent>> percentAttributes = new EnumMap<>(AttributeId.class);
-		Map<AttributeId, Map<AttributeCondition, Boolean>> booleanAttributes = new EnumMap<>(AttributeId.class);
-		Map<AttributeId, Map<AttributeCondition, Duration>> durationAttributes = new EnumMap<>(AttributeId.class);
+		var doubleAttributes = new EnumMap<DoubleAttributeId, Map<AttributeCondition, Double>>(DoubleAttributeId.class);
+		var percentAttributes = new EnumMap<PercentAttributeId, Map<AttributeCondition, Percent>>(PercentAttributeId.class);
+		var booleanAttributes = new EnumMap<BooleanAttributeId, Map<AttributeCondition, Boolean>>(BooleanAttributeId.class);
+		var durationAttributes = new EnumMap<DurationAttributeId, Map<AttributeCondition, Duration>>(DurationAttributeId.class);
 
-		for (PrimitiveAttribute attribute : attributes1.getPrimitiveAttributeList()) {
+		for (var attribute : attributes1.getPrimitiveAttributeList()) {
 			AttributeId id = attribute.getId();
 			if (id.isDoubleAttribute()) {
-				var byCond = doubleAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = doubleAttributes.computeIfAbsent((DoubleAttributeId) id, x -> new LinkedHashMap<>());
 				byCond.put(attribute.getCondition(), byCond.getOrDefault(attribute.getCondition(), 0.0) + attribute.getDouble());
 			} else if (id.isPercentAttribute()) {
-				var byCond = percentAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = percentAttributes.computeIfAbsent((PercentAttributeId) id, x -> new LinkedHashMap<>());
 				byCond.put(attribute.getCondition(), byCond.getOrDefault(attribute.getCondition(), Percent.ZERO).add(attribute.getPercent()));
 			} else if (id.isBooleanAttribute()) {
-				var byCond = booleanAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = booleanAttributes.computeIfAbsent((BooleanAttributeId) id, x -> new LinkedHashMap<>());
 				byCond.put(attribute.getCondition(), byCond.getOrDefault(attribute.getCondition(), false) || attribute.getBoolean());
 			} else if (id.isDurationAttribute()) {
-				var byCond = durationAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = durationAttributes.computeIfAbsent((DurationAttributeId) id, x -> new LinkedHashMap<>());
 				byCond.put(attribute.getCondition(), byCond.getOrDefault(attribute.getCondition(), Duration.ZERO).add(attribute.getDuration()));
 			} else {
 				throw new IllegalArgumentException(attribute.toString());
 			}
 		}
 
-		for (PrimitiveAttribute attribute : attributes2.getPrimitiveAttributeList()) {
+		for (var attribute : attributes2.getPrimitiveAttributeList()) {
 			AttributeId id = attribute.getId();
 			if (id.isDoubleAttribute()) {
-				var byCond = doubleAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = doubleAttributes.computeIfAbsent((DoubleAttributeId) id, x -> new LinkedHashMap<>());
 				byCond.put(attribute.getCondition(), byCond.getOrDefault(attribute.getCondition(), 0.0) - attribute.getDouble());
 			} else if (id.isPercentAttribute()) {
-				var byCond = percentAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = percentAttributes.computeIfAbsent((PercentAttributeId) id, x -> new LinkedHashMap<>());
 				byCond.put(attribute.getCondition(), byCond.getOrDefault(attribute.getCondition(), Percent.ZERO).subtract(attribute.getPercent()));
 			} else if (id.isBooleanAttribute()) {
-				var byCond = booleanAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = booleanAttributes.computeIfAbsent((BooleanAttributeId) id, x -> new LinkedHashMap<>());
 				Boolean value2 = byCond.getOrDefault(attribute.getCondition(), false);
 				boolean value1 = attribute.getBoolean();
 				if (value1 != value2) {
 					throw new IllegalArgumentException("Boolean attribute: " + id + " has different values");
 				}
 			} else if (id.isDurationAttribute()) {
-				var byCond = durationAttributes.computeIfAbsent(id, x -> new LinkedHashMap<>());
+				var byCond = durationAttributes.computeIfAbsent((DurationAttributeId) id, x -> new LinkedHashMap<>());
 				byCond.put(attribute.getCondition(), byCond.getOrDefault(attribute.getCondition(), Duration.ZERO).subtract(attribute.getDuration()));
 			} else {
 				throw new IllegalArgumentException(attribute.toString());
@@ -247,13 +229,12 @@ public class AttributesBuilder {
 		}
 
 		AttributesDiff result = new AttributesDiff();
-		AttributesBuilder builder = new AttributesBuilder();
 
 		List<PrimitiveAttribute> attributes = new ArrayList<>();
 
 		for (var entry : doubleAttributes.entrySet()) {
 			for (var entry2 : entry.getValue().entrySet()) {
-				PrimitiveAttribute attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
+				var attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
 				if (attribute != null) {
 					attributes.add(attribute);
 				}
@@ -262,7 +243,7 @@ public class AttributesBuilder {
 
 		for (var entry : percentAttributes.entrySet()) {
 			for (var entry2 : entry.getValue().entrySet()) {
-				PrimitiveAttribute attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
+				var attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
 				if (attribute != null) {
 					attributes.add(attribute);
 				}
@@ -271,7 +252,7 @@ public class AttributesBuilder {
 
 		for (var entry : booleanAttributes.entrySet()) {
 			for (var entry2 : entry.getValue().entrySet()) {
-				PrimitiveAttribute attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
+				var attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
 				if (attribute != null) {
 					attributes.add(attribute);
 				}
@@ -280,17 +261,18 @@ public class AttributesBuilder {
 
 		for (var entry : durationAttributes.entrySet()) {
 			for (var entry2 : entry.getValue().entrySet()) {
-				PrimitiveAttribute attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
+				var attribute = Attribute.ofNullable(entry.getKey(), entry2.getValue(), entry2.getKey());
 				if (attribute != null) {
 					attributes.add(attribute);
 				}
 			}
 		}
 
-		attributes.sort(Comparator.comparing(Attribute::getId));
-		builder.addAttributeList(attributes);
+		attributes.sort(Comparator.comparingInt(x -> x.getId().getSortOrder()));
 
-		result.attributes = builder.toAttributes();
+		result.attributes = new AttributesBuilder()
+				.addAttributeList(attributes)
+				.toAttributes();
 
 		for (var entry : attributes1.getComplexAttributeList().entrySet()) {
 			result.getAddedAbilities().computeIfAbsent(entry.getKey(), x -> new ArrayList<>()).addAll(entry.getValue());

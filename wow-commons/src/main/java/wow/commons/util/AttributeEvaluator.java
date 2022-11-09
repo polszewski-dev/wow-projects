@@ -3,8 +3,10 @@ package wow.commons.util;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.*;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.*;
 import wow.commons.model.item.*;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellInfo;
@@ -22,19 +24,19 @@ import java.util.stream.Collectors;
  * Date: 2022-01-05
  */
 public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator> {
-	private AttributeFilter filter;
+	private final AttributeFilter filter;
 
-	private Map<AttributeId, Double> doubleAttributes = new EnumMap<>(AttributeId.class);
-	private Map<AttributeId, Percent> percentAttributes = new EnumMap<>(AttributeId.class);
-	private Map<AttributeId, Boolean> booleanAttributes = new EnumMap<>(AttributeId.class);
-	private Map<AttributeId, Duration> durationAttributes = new EnumMap<>(AttributeId.class);
+	private final Map<DoubleAttributeId, Double> doubleAttributes = new EnumMap<>(DoubleAttributeId.class);
+	private final Map<PercentAttributeId, Percent> percentAttributes = new EnumMap<>(PercentAttributeId.class);
+	private final Map<BooleanAttributeId, Boolean> booleanAttributes = new EnumMap<>(BooleanAttributeId.class);
+	private final Map<DurationAttributeId, Duration> durationAttributes = new EnumMap<>(DurationAttributeId.class);
 
-	private Map<AttributeId, Map<AttributeCondition, Double>> conditionalDoubleAttributes = new EnumMap<>(AttributeId.class);
-	private Map<AttributeId, Map<AttributeCondition, Percent>> conditionalPercentAttributes = new EnumMap<>(AttributeId.class);
-	private Map<AttributeId, Map<AttributeCondition, Boolean>> conditionalBooleanAttributes = new EnumMap<>(AttributeId.class);
-	private Map<AttributeId, Map<AttributeCondition, Duration>> conditionalDurationAttributes = new EnumMap<>(AttributeId.class);
+	private final Map<DoubleAttributeId, Map<AttributeCondition, Double>> conditionalDoubleAttributes = new EnumMap<>(DoubleAttributeId.class);
+	private final Map<PercentAttributeId, Map<AttributeCondition, Percent>> conditionalPercentAttributes = new EnumMap<>(PercentAttributeId.class);
+	private final Map<BooleanAttributeId, Map<AttributeCondition, Boolean>> conditionalBooleanAttributes = new EnumMap<>(BooleanAttributeId.class);
+	private final Map<DurationAttributeId, Map<AttributeCondition, Duration>> conditionalDurationAttributes = new EnumMap<>(DurationAttributeId.class);
 
-	private Map<AttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(AttributeId.class);
+	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(ComplexAttributeId.class);
 
 	private AttributeEvaluator(AttributeFilter filter) {
 		this.filter = filter;
@@ -64,7 +66,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 
 		Attributes attributes = attributeSource.getAttributes();
 
-		for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributeList()) {
+		for (var attribute : attributes.getPrimitiveAttributeList()) {
 			addAttribute(attribute);
 		}
 
@@ -94,38 +96,58 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		AttributeId id = attribute.getId();
 
 		if (id.isDoubleAttribute()) {
-			if (!attribute.hasCondition()) {
-				doubleAttributes.put(id, attribute.getDouble() + doubleAttributes.getOrDefault(id, 0.0));
-			} else {
-				var map = conditionalDoubleAttributes.computeIfAbsent(id, x -> new HashMap<>());
-				map.put(attribute.getCondition(), attribute.getDouble() + map.getOrDefault(attribute.getCondition(), 0.0));
-			}
-		} else if (id.isPercentAttribute()) {
-			if (!attribute.hasCondition()) {
-				percentAttributes.put(id, attribute.getPercent().add(percentAttributes.getOrDefault(id, Percent.ZERO)));
-			} else {
-				var map = conditionalPercentAttributes.computeIfAbsent(id, x -> new HashMap<>());
-				map.put(attribute.getCondition(), attribute.getPercent().add(map.getOrDefault(attribute.getCondition(), Percent.ZERO)));
-			}
-		} else if (id.isBooleanAttribute()) {
-			if (!attribute.hasCondition()) {
-				booleanAttributes.put(id, attribute.getBoolean() || booleanAttributes.getOrDefault(id, false));
-			} else {
-				var map = conditionalBooleanAttributes.computeIfAbsent(id, x -> new HashMap<>());
-				map.put(attribute.getCondition(), attribute.getBoolean() || map.getOrDefault(attribute.getCondition(), false));
-			}
+			addDoubleAttribute((DoubleAttribute) attribute);
 		} else if (id.isDurationAttribute()) {
-			if (!attribute.hasCondition()) {
-				durationAttributes.put(id, attribute.getDuration().add(durationAttributes.getOrDefault(id, Duration.ZERO)));
-			} else {
-				var map = conditionalDurationAttributes.computeIfAbsent(id, x -> new HashMap<>());
-				map.put(attribute.getCondition(), attribute.getDuration().add(map.getOrDefault(attribute.getCondition(), Duration.ZERO)));
-			}
+			addDurationAttribute((DurationAttribute) attribute);
+		} else if (id.isPercentAttribute()) {
+			addPercentAttribute((PercentAttribute) attribute);
+		} else if (id.isBooleanAttribute()) {
+			addBooleanAttribute((BooleanAttribute) attribute);
 		} else {
 			throw new IllegalArgumentException("Wrong type");
 		}
 
 		return this;
+	}
+
+	private void addDoubleAttribute(DoubleAttribute attribute) {
+		DoubleAttributeId id = attribute.getId();
+		if (!attribute.hasCondition()) {
+			doubleAttributes.put(id, attribute.getDouble() + doubleAttributes.getOrDefault(id, 0.0));
+		} else {
+			var map = conditionalDoubleAttributes.computeIfAbsent(id, x -> new HashMap<>());
+			map.put(attribute.getCondition(), attribute.getDouble() + map.getOrDefault(attribute.getCondition(), 0.0));
+		}
+	}
+
+	private void addPercentAttribute(PercentAttribute attribute) {
+		PercentAttributeId id = attribute.getId();
+		if (!attribute.hasCondition()) {
+			percentAttributes.put(id, attribute.getPercent().add(percentAttributes.getOrDefault(id, Percent.ZERO)));
+		} else {
+			var map = conditionalPercentAttributes.computeIfAbsent(id, x -> new HashMap<>());
+			map.put(attribute.getCondition(), attribute.getPercent().add(map.getOrDefault(attribute.getCondition(), Percent.ZERO)));
+		}
+	}
+
+	private void addDurationAttribute(DurationAttribute attribute) {
+		DurationAttributeId id = attribute.getId();
+		if (!attribute.hasCondition()) {
+			durationAttributes.put(id, attribute.getDuration().add(durationAttributes.getOrDefault(id, Duration.ZERO)));
+		} else {
+			var map = conditionalDurationAttributes.computeIfAbsent(id, x -> new HashMap<>());
+			map.put(attribute.getCondition(), attribute.getDuration().add(map.getOrDefault(attribute.getCondition(), Duration.ZERO)));
+		}
+	}
+
+	private void addBooleanAttribute(BooleanAttribute attribute) {
+		BooleanAttributeId id = attribute.getId();
+		if (!attribute.hasCondition()) {
+			booleanAttributes.put(id, attribute.getBoolean() || booleanAttributes.getOrDefault(id, false));
+		} else {
+			var map = conditionalBooleanAttributes.computeIfAbsent(id, x -> new HashMap<>());
+			map.put(attribute.getCondition(), attribute.getBoolean() || map.getOrDefault(attribute.getCondition(), false));
+		}
 	}
 
 	@Override
@@ -138,7 +160,8 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		complexAttributes.computeIfAbsent(attribute.getId(), x -> new ArrayList<>()).add(attribute);
+		complexAttributes.computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
+				.add(attribute);
 
 		return this;
 	}
@@ -147,60 +170,60 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		AttributesBuilder result = new AttributesBuilder();
 
 		for (var entry : doubleAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
-			Double value = entry.getValue();
+			var id = entry.getKey();
+			var value = entry.getValue();
 			result.addAttribute(id, value);
 		}
 		for (var entry : percentAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
-			Percent value = entry.getValue();
+			var id = entry.getKey();
+			var value = entry.getValue();
 			result.addAttribute(id, value);
 		}
 		for (var entry : booleanAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
-			Boolean value = entry.getValue();
+			var id = entry.getKey();
+			var value = entry.getValue();
 			result.addAttribute(id, value);
 		}
 		for (var entry : durationAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
-			Duration value = entry.getValue();
+			var id = entry.getKey();
+			var value = entry.getValue();
 			result.addAttribute(id, value);
 		}
 
 		for (var entry : conditionalDoubleAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
+			var id = entry.getKey();
 			for (var entry2 : entry.getValue().entrySet()) {
-				AttributeCondition condition2 = entry2.getKey();
-				Double value = entry2.getValue();
+				var condition2 = entry2.getKey();
+				var value = entry2.getValue();
 				result.addAttribute(id, value, condition2);
 			}
 		}
 		for (var entry : conditionalPercentAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
+			var id = entry.getKey();
 			for (var entry2 : entry.getValue().entrySet()) {
-				AttributeCondition condition2 = entry2.getKey();
-				Percent value = entry2.getValue();
+				var condition2 = entry2.getKey();
+				var value = entry2.getValue();
 				result.addAttribute(id, value, condition2);
 			}
 		}
 		for (var entry : conditionalBooleanAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
+			var id = entry.getKey();
 			for (var entry2 : entry.getValue().entrySet()) {
-				AttributeCondition condition2 = entry2.getKey();
-				Boolean value = entry2.getValue();
+				var condition2 = entry2.getKey();
+				var value = entry2.getValue();
 				result.addAttribute(id, value, condition2);
 			}
 		}
 		for (var entry : conditionalDurationAttributes.entrySet()) {
-			AttributeId id = entry.getKey();
+			var id = entry.getKey();
 			for (var entry2 : entry.getValue().entrySet()) {
-				AttributeCondition condition2 = entry2.getKey();
-				Duration value = entry2.getValue();
+				var condition2 = entry2.getKey();
+				var value = entry2.getValue();
 				result.addAttribute(id, value, condition2);
 			}
 		}
 
-		for (Map.Entry<AttributeId, List<ComplexAttribute>> entry : complexAttributes.entrySet()) {
+		for (var entry : complexAttributes.entrySet()) {
 			result.addComplexAttributeList(entry.getValue());
 		}
 
@@ -209,7 +232,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 
 	private void solveSetBonuses() {
 		var itemSetPieces = complexAttributes
-				.getOrDefault(AttributeId.SET_PIECES, List.of())
+				.getOrDefault(ComplexAttributeId.SET_PIECES, List.of())
 				.stream()
 				.distinct()
 				.collect(Collectors.groupingBy(x -> ((ItemSetPiece) x).getItemSet()));
@@ -225,11 +248,11 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			}
 		}
 
-		complexAttributes.remove(AttributeId.SET_PIECES);
+		complexAttributes.remove(ComplexAttributeId.SET_PIECES);
 	}
 
 	private void solveSockets() {
-		List<ItemSockets> sockets = (List)complexAttributes.getOrDefault(AttributeId.SOCKETS, List.of());
+		List<ItemSockets> sockets = (List)complexAttributes.getOrDefault(ComplexAttributeId.SOCKETS, List.of());
 
 		int numRed = 0;
 		int numYellow = 0;
@@ -253,11 +276,11 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			}
 		}
 
-		complexAttributes.remove(AttributeId.SOCKETS);
+		complexAttributes.remove(ComplexAttributeId.SOCKETS);
 	}
 
 	private void solveAbilities(StatProvider statProvider) {
-		List<SpecialAbility> specialAbilities = (List)complexAttributes.get(AttributeId.SPECIAL_ABILITIES);
+		List<SpecialAbility> specialAbilities = (List)complexAttributes.get(ComplexAttributeId.SPECIAL_ABILITIES);
 
 		if (specialAbilities == null) {
 			return;
@@ -270,7 +293,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			addAttributes(statEquivalent);
 		}
 
-		complexAttributes.remove(AttributeId.SPECIAL_ABILITIES);
+		complexAttributes.remove(ComplexAttributeId.SPECIAL_ABILITIES);
 	}
 
 	public AttributesAccessor nothingToSolve() {

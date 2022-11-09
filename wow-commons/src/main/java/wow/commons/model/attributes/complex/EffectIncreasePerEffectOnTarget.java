@@ -2,8 +2,6 @@ package wow.commons.model.attributes.complex;
 
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
-import wow.commons.model.attributes.ComplexAttribute;
 import wow.commons.model.attributes.ConditionalAttribute;
 import wow.commons.model.talents.TalentTree;
 
@@ -18,7 +16,7 @@ public class EffectIncreasePerEffectOnTarget extends ComplexAttribute implements
 	private final AttributeCondition condition;
 
 	public EffectIncreasePerEffectOnTarget(TalentTree effectTree, Percent increasePerEffectPct, Percent maxIncreasePct, AttributeCondition condition) {
-		super(AttributeId.EFFECT_INCREASE_PER_EFFECT_ON_TARGET);
+		super(ComplexAttributeId.EFFECT_INCREASE_PER_EFFECT_ON_TARGET);
 		this.effectTree = effectTree;
 		this.increasePerEffectPct = increasePerEffectPct;
 		this.maxIncreasePct = maxIncreasePct;

@@ -18,7 +18,7 @@ class ItemLinkTest {
 
 		assertThat(itemLink.getItemId()).isEqualTo(34333);
 		assertThat(itemLink.getName()).isEqualTo("Coif of Alleria");
-		assertThat(itemLink.getRarity()).isEqualTo(ItemRarity.Epic);
+		assertThat(itemLink.getRarity()).isEqualTo(ItemRarity.EPIC);
 	}
 
 	@ParameterizedTest

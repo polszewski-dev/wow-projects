@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.attributes.AttributeCollection;
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.buffs.Buff;
@@ -34,6 +33,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static wow.commons.model.attributes.primitive.DoubleAttributeId.*;
 import static wow.minmax.model.Build.BuffSet.*;
 
 /**
@@ -70,9 +70,9 @@ public class StatsController {
 
 		for (Spell spell : spells) {
 			SpellStatistics spellStatistics = calculationService.getSpellStatistics(playerProfile, spell);
-			double hitSpEqv = calculationService.getSpEquivalent(AttributeId.SPELL_HIT_RATING, 10, playerProfile, spell);
-			double critSpEqv = calculationService.getSpEquivalent(AttributeId.SPELL_CRIT_RATING, 10, playerProfile, spell);
-			double hasteSpEqv = calculationService.getSpEquivalent(AttributeId.SPELL_HASTE_RATING, 10, playerProfile, spell);
+			double hitSpEqv = calculationService.getSpEquivalent(SPELL_HIT_RATING, 10, playerProfile, spell);
+			double critSpEqv = calculationService.getSpEquivalent(SPELL_CRIT_RATING, 10, playerProfile, spell);
+			double hasteSpEqv = calculationService.getSpEquivalent(SPELL_HASTE_RATING, 10, playerProfile, spell);
 			PlayerSpellStats playerSpellStats = new PlayerSpellStats(playerProfile, spellStatistics, hitSpEqv, critSpEqv, hasteSpEqv);
 
 			result.add(playerSpellStatsConverter.convert(playerSpellStats));

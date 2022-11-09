@@ -4,7 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.*;
+import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.StatEquivalentProvider;
+import wow.commons.model.attributes.StatProvider;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
@@ -26,6 +30,8 @@ import wow.minmax.service.UpgradeService;
 
 import java.util.List;
 import java.util.Map;
+
+import static wow.commons.model.attributes.primitive.DoubleAttributeId.SPELL_DAMAGE;
 
 /**
  * User: POlszewski
@@ -142,9 +148,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 		if (item.hasSockets()) {
 			for (int i = 1; i <= item.getSocketCount(); ++i) {
 				if (item.getSocketType(i) == SocketType.META) {
-					builder.addAttribute(AttributeId.SPELL_DAMAGE, 50);
+					builder.addAttribute(SPELL_DAMAGE, 50);
 				} else {
-					builder.addAttribute(AttributeId.SPELL_DAMAGE, 9);
+					builder.addAttribute(SPELL_DAMAGE, 9);
 				}
 			}
 
@@ -153,7 +159,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 			}
 		}
 
-		for (ComplexAttribute attribute : item.getAttributes().getList(AttributeId.getComplexAttributeIds())) {
+		for (ComplexAttribute attribute : item.getAttributes().getList(ComplexAttributeId.values())) {
 			if (attribute instanceof StatEquivalentProvider) {
 				StatEquivalentProvider statEquivalentProvider = (StatEquivalentProvider) attribute;
 				Attributes statEquivalent = statEquivalentProvider.getStatEquivalent(getStatProviderForItemScore());

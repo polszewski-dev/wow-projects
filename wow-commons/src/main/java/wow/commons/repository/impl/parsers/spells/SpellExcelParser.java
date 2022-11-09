@@ -7,6 +7,10 @@ import wow.commons.model.attributes.complex.EffectIncreasePerEffectOnTarget;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.complex.modifiers.ProcEvent;
+import wow.commons.model.attributes.primitive.BooleanAttributeId;
+import wow.commons.model.attributes.primitive.DoubleAttributeId;
+import wow.commons.model.attributes.primitive.DurationAttributeId;
+import wow.commons.model.attributes.primitive.PercentAttributeId;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
@@ -27,6 +31,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static wow.commons.model.attributes.complex.ComplexAttributeId.*;
+import static wow.commons.model.attributes.primitive.BooleanAttributeId.CAST_INSTANTLY;
+import static wow.commons.model.attributes.primitive.DoubleAttributeId.SPELL_DAMAGE;
+import static wow.commons.model.attributes.primitive.DurationAttributeId.CAST_TIME_REDUCTION;
+import static wow.commons.model.attributes.primitive.DurationAttributeId.COOLDOWN_REDUCTION;
+import static wow.commons.model.attributes.primitive.PercentAttributeId.*;
 
 /**
  * User: POlszewski
@@ -78,21 +89,21 @@ public class SpellExcelParser extends ExcelParser {
 			ConditionalAttribute readAttribute() {
 				if (id.isDoubleAttribute()) {
 					var value = name.getDouble(0);
-					return Attribute.ofNullable(id, value);
+					return Attribute.ofNullable((DoubleAttributeId) id, value);
 				}
 				if (id.isPercentAttribute()) {
 					var value = name.getPercent(null);
-					return Attribute.ofNullable(id, value);
+					return Attribute.ofNullable((PercentAttributeId) id, value);
 				}
 				if (id.isBooleanAttribute()) {
 					var value = name.getBoolean();
-					return Attribute.ofNullable(id, value);
+					return Attribute.ofNullable((BooleanAttributeId) id, value);
 				}
 				if (id.isDurationAttribute()) {
 					var value = name.getDuration(null);
-					return Attribute.ofNullable(id, value);
+					return Attribute.ofNullable((DurationAttributeId) id, value);
 				}
-				throw new IllegalArgumentException("Unhandled type: " + id.getType());
+				throw new IllegalArgumentException("Unhandled type for: " + id);
 			}
 		}
 
@@ -196,7 +207,7 @@ public class SpellExcelParser extends ExcelParser {
 				String colConversionTo,
 				String colConversionRationPct
 		) {
-			columns.add(new StatConversionColumn(colConversionFrom, colConversionTo, colConversionRationPct, AttributeId.STAT_CONVERSION));
+			columns.add(new StatConversionColumn(colConversionFrom, colConversionTo, colConversionRationPct, STAT_CONVERSION));
 			return this;
 		}
 
@@ -207,7 +218,7 @@ public class SpellExcelParser extends ExcelParser {
 				String colDuration,
 				String colStacks
 		) {
-			columns.add(new ProcTriggerColumn(colType, colChancePct, colEffect, colDuration, colStacks, AttributeId.SPECIAL_ABILITIES));
+			columns.add(new ProcTriggerColumn(colType, colChancePct, colEffect, colDuration, colStacks, SPECIAL_ABILITIES));
 			return this;
 		}
 
@@ -216,7 +227,7 @@ public class SpellExcelParser extends ExcelParser {
 				String colIncreasePerEffectPct,
 				String colMaxIncreasePct
 		) {
-			columns.add(new EffectIncreasePerEffectOnTargetColumn(colEffectTree, colIncreasePerEffectPct, colMaxIncreasePct, AttributeId.EFFECT_INCREASE_PER_EFFECT_ON_TARGET));
+			columns.add(new EffectIncreasePerEffectOnTargetColumn(colEffectTree, colIncreasePerEffectPct, colMaxIncreasePct, EFFECT_INCREASE_PER_EFFECT_ON_TARGET));
 			return this;
 		}
 
@@ -312,34 +323,34 @@ public class SpellExcelParser extends ExcelParser {
 	private final ExcelColumn colBuffSourceSpell = column("source spell");
 
 	private final BenefitAttributeColumns talentColumns = new BenefitAttributeColumns()
-			.add(AttributeId.CAST_TIME_REDUCTION, "cast time reduction")
-			.add(AttributeId.COOLDOWN_REDUCTION, "cooldown reduction")
-			.add(AttributeId.COST_REDUCTION_PCT, "cost reduction%")
-			.add(AttributeId.THREAT_REDUCTION_PCT, "threat reduction%")
-			.add(AttributeId.PUSHBACK_REDUCTION_PCT, "pushback reduction%")
-			.add(AttributeId.RANGE_INCREASE_PCT, "range increase%")
-			.add(AttributeId.DURATION_INCREASE_PCT, "duration increase%")
+			.add(CAST_TIME_REDUCTION, "cast time reduction")
+			.add(COOLDOWN_REDUCTION, "cooldown reduction")
+			.add(COST_REDUCTION_PCT, "cost reduction%")
+			.add(THREAT_REDUCTION_PCT, "threat reduction%")
+			.add(PUSHBACK_REDUCTION_PCT, "pushback reduction%")
+			.add(RANGE_INCREASE_PCT, "range increase%")
+			.add(DURATION_INCREASE_PCT, "duration increase%")
 
-			.add(AttributeId.SPELL_COEFF_BONUS_PCT, "spell coeff bonus%")
-			.add(AttributeId.EFFECT_INCREASE_PCT, "effect increase%")
-			.add(AttributeId.DIRECT_DAMAGE_INCREASE_PCT, "direct damage increase%")
-			.add(AttributeId.DOT_DAMAGE_INCREASE_PCT, "dot damage increase%")
-			.add(AttributeId.CRIT_DAMAGE_INCREASE_PCT, "spell crit damage increase%")
+			.add(SPELL_COEFF_BONUS_PCT, "spell coeff bonus%")
+			.add(EFFECT_INCREASE_PCT, "effect increase%")
+			.add(DIRECT_DAMAGE_INCREASE_PCT, "direct damage increase%")
+			.add(DOT_DAMAGE_INCREASE_PCT, "dot damage increase%")
+			.add(CRIT_DAMAGE_INCREASE_PCT, "spell crit damage increase%")
 
-			.add(AttributeId.STA_INCREASE_PCT, "sta increase%")
-			.add(AttributeId.INT_INCREASE_PCT, "int increase%")
-			.add(AttributeId.SPI_INCREASE_PCT, "spi increase%")
-			.add(AttributeId.MAX_HEALTH_INCREASE_PCT, "max health increase%")
-			.add(AttributeId.MAX_MANA_INCREASE_PCT, "max mana increase%")
-			.add(AttributeId.SPELL_HIT_PCT, "spell hit increase%")
-			.add(AttributeId.SPELL_CRIT_PCT, "spell crit increase%")
-			.add(AttributeId.MELEE_CRIT_INCREASE_PCT, "melee crit increase%")
+			.add(STA_INCREASE_PCT, "sta increase%")
+			.add(INT_INCREASE_PCT, "int increase%")
+			.add(SPI_INCREASE_PCT, "spi increase%")
+			.add(MAX_HEALTH_INCREASE_PCT, "max health increase%")
+			.add(MAX_MANA_INCREASE_PCT, "max mana increase%")
+			.add(SPELL_HIT_PCT, "spell hit increase%")
+			.add(SPELL_CRIT_PCT, "spell crit increase%")
+			.add(MELEE_CRIT_INCREASE_PCT, "melee crit increase%")
 
-			.add(AttributeId.PET_STA_INCREASE_PCT, "pet sta increase%")
-			.add(AttributeId.PET_INT_INCREASE_PCT, "pet int increase%")
-			.add(AttributeId.PET_SPELL_CRIT_INCREASE_PCT, "pet spell crit increase%")
-			.add(AttributeId.PET_MELEE_CRIT_INCREASE_PCT, "pet melee crit increase%")
-			.add(AttributeId.PET_MELEE_DAMAGE_INCREASE_PCT, "pet melee damage increase%")
+			.add(PET_STA_INCREASE_PCT, "pet sta increase%")
+			.add(PET_INT_INCREASE_PCT, "pet int increase%")
+			.add(PET_SPELL_CRIT_INCREASE_PCT, "pet spell crit increase%")
+			.add(PET_MELEE_CRIT_INCREASE_PCT, "pet melee crit increase%")
+			.add(PET_MELEE_DAMAGE_INCREASE_PCT, "pet melee damage increase%")
 
 			.addStatConversion(
 					"stat conversion from",
@@ -361,15 +372,15 @@ public class SpellExcelParser extends ExcelParser {
 					"effect increase per effect on target: max%"
 			)
 
-			.add(AttributeId.MANA_TRANSFERRED_TO_PET_PCT, "mana transferred to pet%")
+			.add(MANA_TRANSFERRED_TO_PET_PCT, "mana transferred to pet%")
 
 			;
 
 	private final BenefitAttributeColumns effectColumns = new BenefitAttributeColumns()
-			.add(AttributeId.EFFECT_INCREASE_PCT, "effect increase%")
-			.add(AttributeId.DAMAGE_TAKEN_INCREASE_PCT, "damage taken increase%")
-			.add(AttributeId.SPELL_DAMAGE, "sp bonus")
-			.add(AttributeId.CAST_INSTANTLY, "cast instanly")
+			.add(EFFECT_INCREASE_PCT, "effect increase%")
+			.add(DAMAGE_TAKEN_INCREASE_PCT, "damage taken increase%")
+			.add(SPELL_DAMAGE, "sp bonus")
+			.add(CAST_INSTANTLY, "cast instantly")
 			;
 
 

@@ -3,9 +3,9 @@ package wow.commons.repository.impl.parsers.items;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.modifiers.ProcTemporaryModifier;
 import wow.commons.model.attributes.complex.modifiers.TemporaryModifier;
@@ -34,7 +34,7 @@ class ItemStatParserTest {
 		assertThat(stats.getPrimitiveAttributeList()).isEmpty();
 		assertThat(stats.getComplexAttributeList()).hasSize(1);
 
-		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(AttributeId.SpecialAbilities);
+		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
 		assertThat(specialAbilities).isNotNull();
 		assertThat(specialAbilities).hasSize(1);
@@ -61,7 +61,7 @@ class ItemStatParserTest {
 		assertThat(stats.getPrimitiveAttributeList()).isEmpty();
 		assertThat(stats.getComplexAttributeList()).hasSize(1);
 
-		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(AttributeId.SpecialAbilities);
+		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
 		assertThat(specialAbilities).isNotNull();
 		assertThat(specialAbilities).hasSize(1);

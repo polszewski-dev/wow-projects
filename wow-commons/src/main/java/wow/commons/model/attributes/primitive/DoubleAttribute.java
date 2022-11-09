@@ -1,7 +1,6 @@
 package wow.commons.model.attributes.primitive;
 
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
 
 import java.util.Objects;
 
@@ -10,19 +9,29 @@ import java.util.Objects;
  * Date: 2022-01-02
  */
 public final class DoubleAttribute extends ScalarAttribute {
+	private final DoubleAttributeId id;
 	private final double value;
+	private final AttributeCondition condition;
 
-	public DoubleAttribute(AttributeId id, double value, AttributeCondition condition) {
-		super(id, condition);
+	public DoubleAttribute(DoubleAttributeId id, double value, AttributeCondition condition) {
+		this.id = id;
 		this.value = value;
-		if (!id.isDoubleAttribute()) {
-			throw new IllegalArgumentException();
-		}
+		this.condition = condition;
+	}
+
+	@Override
+	public DoubleAttributeId getId() {
+		return id;
 	}
 
 	@Override
 	public double getDouble() {
 		return value;
+	}
+
+	@Override
+	public AttributeCondition getCondition() {
+		return condition;
 	}
 
 	@Override
@@ -41,12 +50,12 @@ public final class DoubleAttribute extends ScalarAttribute {
 		if (this == o) return true;
 		if (!(o instanceof DoubleAttribute)) return false;
 		DoubleAttribute that = (DoubleAttribute) o;
-		return id == that.id && Double.compare(that.value, value) == 0;
+		return Double.compare(that.value, value) == 0 && id == that.id && Objects.equals(condition, that.condition);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, value);
+		return Objects.hash(id, value, condition);
 	}
 
 	@Override

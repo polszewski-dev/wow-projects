@@ -1,7 +1,6 @@
 package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -12,6 +11,10 @@ import wow.commons.util.ExcelParser;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
+
+import static wow.commons.model.attributes.primitive.DoubleAttributeId.*;
+import static wow.commons.model.attributes.primitive.PercentAttributeId.SPEED_INCREASE_PCT;
+import static wow.commons.model.attributes.primitive.PercentAttributeId.THREAT_REDUCTION_PCT;
 
 /**
  * User: POlszewski
@@ -81,17 +84,17 @@ public class ItemExcelParser extends ExcelParser {
 		AttributesBuilder itemStats = new AttributesBuilder();
 
 		itemStats
-				.addAttribute(AttributeId.SPELL_DAMAGE, sp)
-				.addAttribute(AttributeId.SPELL_DAMAGE, spShadow, AttributeCondition.of(SpellSchool.SHADOW))
-				.addAttribute(AttributeId.SPELL_CRIT_RATING, spellCritRating)
-				.addAttribute(AttributeId.SPELL_HIT_RATING, spellHitRating)
-				.addAttribute(AttributeId.BASE_STATS_INCREASE, allStats)
-				.addAttribute(AttributeId.STAMINA, stamina)
-				.addAttribute(AttributeId.INTELLECT, intellect)
-				.addAttribute(AttributeId.SPIRIT, spirit)
-				.addAttribute(AttributeId.THREAT_REDUCTION_PCT, threatReductionPct)
-				.addAttribute(AttributeId.SPEED_INCREASE_PCT, speedIncreasePct)
-				.addAttribute(AttributeId.RESISTANCE, shadowResist, AttributeCondition.of(SpellSchool.SHADOW))
+				.addAttribute(SPELL_DAMAGE, sp)
+				.addAttribute(SPELL_DAMAGE, spShadow, AttributeCondition.of(SpellSchool.SHADOW))
+				.addAttribute(SPELL_CRIT_RATING, spellCritRating)
+				.addAttribute(SPELL_HIT_RATING, spellHitRating)
+				.addAttribute(BASE_STATS_INCREASE, allStats)
+				.addAttribute(STAMINA, stamina)
+				.addAttribute(INTELLECT, intellect)
+				.addAttribute(SPIRIT, spirit)
+				.addAttribute(THREAT_REDUCTION_PCT, threatReductionPct)
+				.addAttribute(SPEED_INCREASE_PCT, speedIncreasePct)
+				.addAttribute(RESISTANCE, shadowResist, AttributeCondition.of(SpellSchool.SHADOW))
 		;
 		return itemStats.toAttributes();
 	}

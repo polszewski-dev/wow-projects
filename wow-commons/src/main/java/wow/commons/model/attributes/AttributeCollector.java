@@ -1,5 +1,7 @@
 package wow.commons.model.attributes;
 
+import wow.commons.model.attributes.complex.ComplexAttribute;
+
 import java.util.List;
 
 /**

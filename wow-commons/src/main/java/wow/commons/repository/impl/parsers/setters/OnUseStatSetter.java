@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.setters;
 
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.repository.impl.parsers.stats.StatMatcher;
 import wow.commons.util.AttributesBuilder;

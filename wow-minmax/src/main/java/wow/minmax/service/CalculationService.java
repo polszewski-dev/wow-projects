@@ -1,8 +1,8 @@
 package wow.minmax.service;
 
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
+import wow.commons.model.attributes.primitive.DoubleAttributeId;
 import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
 import wow.commons.util.SpellStatistics;
@@ -14,7 +14,7 @@ import wow.minmax.model.Spell;
  * Date: 2021-12-15
  */
 public interface CalculationService {
-	double getSpEquivalent(AttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell);
+	double getSpEquivalent(DoubleAttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell);
 
 	SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell);
 

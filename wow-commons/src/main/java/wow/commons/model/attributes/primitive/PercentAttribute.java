@@ -3,7 +3,6 @@ package wow.commons.model.attributes.primitive;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
 
 import java.util.Objects;
 
@@ -12,19 +11,32 @@ import java.util.Objects;
  * Date: 2022-01-02
  */
 public final class PercentAttribute extends ScalarAttribute {
+	private final PercentAttributeId id;
 	private final Percent value;
+	private final AttributeCondition condition;
 
-	public PercentAttribute(AttributeId id, Percent value, AttributeCondition condition) {
-		super(id, condition);
+	public PercentAttribute(PercentAttributeId id, Percent value, AttributeCondition condition) {
+		this.id = id;
 		this.value = value;
-		if (!id.isPercentAttribute()) {
+		this.condition = condition;
+		if (id == null || value == null) {
 			throw new IllegalArgumentException();
 		}
 	}
 
 	@Override
+	public PercentAttributeId getId() {
+		return id;
+	}
+
+	@Override
 	public Percent getPercent() {
 		return value;
+	}
+
+	@Override
+	public AttributeCondition getCondition() {
+		return condition;
 	}
 
 	@Override
@@ -41,14 +53,14 @@ public final class PercentAttribute extends ScalarAttribute {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (!(o instanceof PercentAttribute)) return false;
 		PercentAttribute that = (PercentAttribute) o;
-		return value.equals(that.value);
+		return id == that.id && value.equals(that.value) && Objects.equals(condition, that.condition);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value);
+		return Objects.hash(id, value, condition);
 	}
 
 	@Override

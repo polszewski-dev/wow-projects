@@ -5,6 +5,8 @@ import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.primitive.DoubleAttributeId;
+import wow.commons.model.attributes.primitive.PercentAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
@@ -76,9 +78,9 @@ public class PrimitiveAttributeSupplier {
 		AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, creatureType);
 
 		if (attributeId.isDoubleAttribute()) {
-			return Attribute.ofNullable(attributeId, value, condition);
+			return Attribute.ofNullable((DoubleAttributeId) attributeId, value, condition);
 		} else if (attributeId.isPercentAttribute()) {
-			return Attribute.ofNullable(attributeId, Percent.ofNullable(value), condition);
+			return Attribute.ofNullable((PercentAttributeId) attributeId, Percent.ofNullable(value), condition);
 		} else {
 			throw new IllegalArgumentException("Wrong attribute type: " + attributeId);
 		}

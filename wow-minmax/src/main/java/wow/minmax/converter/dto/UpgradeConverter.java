@@ -2,7 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.attributes.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.util.AttributesDiff;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.Comparison;

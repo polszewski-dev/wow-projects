@@ -2,9 +2,9 @@ package wow.commons.model.item;
 
 import wow.commons.model.Copyable;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttributeId;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	public ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets, boolean readOnly) {
-		super(AttributeId.SOCKETS);
+		super(ComplexAttributeId.SOCKETS);
 		this.specification = specification;
 		this.sockets = sockets;
 		this.readOnly = readOnly;
