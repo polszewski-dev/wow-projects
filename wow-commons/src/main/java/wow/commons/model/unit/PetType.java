@@ -7,14 +7,24 @@ import wow.commons.util.EnumUtil;
  * Date: 2020-09-30
  */
 public enum PetType {
-	IMP,
-	VOIDWALKER,
-	SUCCUBUS,
-	FELHUNTER,
-	FELGUARD,
-	;
+	IMP("Imp"),
+	VOIDWALKER("Voidwalker"),
+	SUCCUBUS("Succubus"),
+	FELHUNTER("Felhunter"),
+	FELGUARD("Felguard");
+
+	private final String name;
+
+	PetType(String name) {
+		this.name = name;
+	}
 
 	public static PetType parse(String value) {
-		return EnumUtil.parse(value, values());
+		return EnumUtil.parse(value, values(), x -> x.name);
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }
