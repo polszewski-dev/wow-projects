@@ -27,25 +27,6 @@ public final class ExcelUtil {
 		return result;
 	}
 
-	public static Map<String, Integer> get2RowHeader(ExcelReader excelReader) {
-		Map<String, Integer> result = new LinkedHashMap<>();
-
-		for (int i = 1; i <= 2; ++i) {
-			while (excelReader.nextCell()) {
-				String value = excelReader.getCurrentCellStringValue();
-				if (value != null) {
-					result.put(value.trim(), excelReader.getCurrentColIdx());
-				}
-			}
-			if (i == 1) {
-				if (!excelReader.nextRow()) {
-					break;
-				}
-			}
-		}
-		return result;
-	}
-
 	public static Optional<String> getOptionalString(String col, ExcelReader excelReader, Map<String, Integer> header) {
 		return Optional.ofNullable(excelReader.getCellStringValue(header.get(col)));
 	}

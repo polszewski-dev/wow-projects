@@ -14,12 +14,16 @@ import java.util.stream.Collectors;
  * Date: 2021-10-13
  */
 public class AttributesDiff {
-	Attributes attributes;
-	final Map<ComplexAttributeId, List<ComplexAttribute>> addedAbilities = new EnumMap<>(ComplexAttributeId.class);
-	final Map<ComplexAttributeId, List<ComplexAttribute>> removedAbilities = new EnumMap<>(ComplexAttributeId.class);
+	private Attributes attributes;
+	private final Map<ComplexAttributeId, List<ComplexAttribute>> addedAbilities = new EnumMap<>(ComplexAttributeId.class);
+	private final Map<ComplexAttributeId, List<ComplexAttribute>> removedAbilities = new EnumMap<>(ComplexAttributeId.class);
 
 	public Attributes getAttributes() {
 		return attributes;
+	}
+
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
 	}
 
 	public Map<ComplexAttributeId, List<ComplexAttribute>> getAddedAbilities() {

@@ -5,8 +5,8 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.util.AttributeEvaluator;
-import wow.commons.util.AttributesBuilder;
 import wow.commons.util.AttributesDiff;
+import wow.commons.util.AttributesDiffFinder;
 
 import java.util.List;
 
@@ -42,11 +42,12 @@ public class Comparison {
 				.addAttributes(possibleEquipment)
 				.solveAllLeaveAbilities()
 				.getAttributes();
+
 		Attributes referenceAttributes = AttributeEvaluator.of()
 				.addAttributes(referenceEquipment)
 				.solveAllLeaveAbilities()
 				.getAttributes();
 
-		return AttributesBuilder.diff(possibleAttributes, referenceAttributes);
+		return new AttributesDiffFinder(possibleAttributes, referenceAttributes).getDiff();
 	}
 }
