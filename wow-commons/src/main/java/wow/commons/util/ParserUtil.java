@@ -2,6 +2,7 @@ package wow.commons.util;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-10-30
  */
-public class ParserUtil {
+public final class ParserUtil {
 	public static Object[] parseMultipleValues(String regex, String line) {
 		Pattern pattern = Pattern.compile("^" + regex + "$");
 		Matcher matcher = pattern.matcher(line);
@@ -50,7 +51,7 @@ public class ParserUtil {
 		return null;
 	}
 
-	public static String substituteParams(String expression, Function<Integer, String> paramProvider) {
+	public static String substituteParams(String expression, IntFunction<String> paramProvider) {
 		if (expression == null || expression.isBlank()) {
 			return expression;
 		}
@@ -74,4 +75,6 @@ public class ParserUtil {
 				.map(elementMapper)
 				.collect(Collectors.toList());
 	}
+
+	private ParserUtil() {}
 }

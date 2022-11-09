@@ -8,7 +8,7 @@ import static wow.commons.util.ParserUtil.parseMultipleInts;
  * User: POlszewski
  * Date: 2022-10-23
  */
-public class CooldownParser {
+public final class CooldownParser {
 	public static Duration parseCooldown(String value) {
 		if (value == null) {
 			return null;
@@ -33,4 +33,6 @@ public class CooldownParser {
 
 		throw new IllegalArgumentException(value);
 	}
+
+	private CooldownParser() {}
 }

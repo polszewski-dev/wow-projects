@@ -7,6 +7,7 @@ import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
+import wow.commons.model.attributes.primitive.DoubleAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CombatRatingInfo;
@@ -34,12 +35,14 @@ public class CalculationServiceImpl implements CalculationService {
 	public double getSpEquivalent(AttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell) {
 		playerProfile = playerProfile.copy();
 
-		double targetDps = getSpellStatistics(playerProfile, spell, Attribute.of(attributeId, amount)).dps;
+		DoubleAttribute base = Attribute.of(attributeId, amount);
+		double targetDps = getSpellStatistics(playerProfile, spell, base).getDps();
 		double totalSp = 0;
 		double increase = 1;
 
 		while (true) {
-			double spEqvDps = getSpellStatistics(playerProfile, spell, Attribute.of(AttributeId.SPELL_DAMAGE, totalSp + increase)).dps;
+			DoubleAttribute spEquivalent = Attribute.of(AttributeId.SPELL_DAMAGE, totalSp + increase);
+			double spEqvDps = getSpellStatistics(playerProfile, spell, spEquivalent).getDps();
 
 			if (Math.abs(spEqvDps - targetDps) <= 0.001) {
 				return totalSp + increase;
@@ -77,9 +80,9 @@ public class CalculationServiceImpl implements CalculationService {
 		Snapshot snapshot = getSnapshot(playerProfile, spell, totalStats);
 
 		return SpellCalculations.getDamage(
-				snapshot.spellRankInfo.getMinDmg(),
-				snapshot.spellRankInfo.getMaxDmg(),
-				snapshot.spellRankInfo.getDotDmg(),
+				snapshot.getSpellRankInfo().getMinDmg(),
+				snapshot.getSpellRankInfo().getMaxDmg(),
+				snapshot.getSpellRankInfo().getDotDmg(),
 				snapshot,
 				AVERAGE_CRIT
 		);
@@ -100,17 +103,17 @@ public class CalculationServiceImpl implements CalculationService {
 
 			@Override
 			public double hitChance() {
-				return getSnapshot().hitChance;
+				return getSnapshot().getHitChance();
 			}
 
 			@Override
 			public double critChance() {
-				return getSnapshot().critChance;
+				return getSnapshot().getCritChance();
 			}
 
 			@Override
 			public Duration castTime() {
-				return getSnapshot().effectiveCastTime;
+				return getSnapshot().getEffectiveCastTime();
 			}
 
 			private Snapshot getSnapshot() {

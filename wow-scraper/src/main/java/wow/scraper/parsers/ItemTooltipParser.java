@@ -189,8 +189,8 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		}
 		int numPieces = (int)itemSetBonusParams[0];
 		String description = (String)itemSetBonusParams[1];
-		StatParser statParser = StatPatternRepository.getInstance().getItemStatParser();
-		if (!statParser.tryParse(description)) {
+		StatParser setBonusParser = StatPatternRepository.getInstance().getItemStatParser();
+		if (!setBonusParser.tryParse(description)) {
 			unmatchedLine(description);
 		}
 		itemSetBonuses.add(new ItemSetBonus(numPieces, description));

@@ -123,10 +123,7 @@ public class Item extends AbstractItem {
 		if (!getRestriction().isMetBy(characterInfo, phase)) {
 			return false;
 		}
-		if (itemSet != null && !itemSet.canBeEquippedBy(characterInfo, phase)) {
-			return false;
-		}
-		return true;
+		return itemSet == null || itemSet.canBeEquippedBy(characterInfo, phase);
 	}
 
 	public boolean isCasterItem(SpellSchool spellSchool) {

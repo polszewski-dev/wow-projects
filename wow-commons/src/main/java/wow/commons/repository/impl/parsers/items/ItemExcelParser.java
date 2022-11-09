@@ -32,24 +32,24 @@ public class ItemExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader("enchants", this::readEnchants, COL_ENCHANT_NAME)
+				new SheetReader("enchants", this::readEnchants, colEnchantName)
 		);
 	}
 
-	private final ExcelColumn COL_ENCHANT_ID = column("id");
-	private final ExcelColumn COL_ENCHANT_NAME = column("name");
-	private final ExcelColumn COL_ENCHANT_ITEM_TYPES = column("item_types");
-	private final ExcelColumn COL_ENCHANT_SP = column("sp");
-	private final ExcelColumn COL_ENCHANT_SP_SHADOW = column("sp_shadow");
-	private final ExcelColumn COL_ENCHANT_SPELL_CRIT_RATING = column("spell_crit_rating");
-	private final ExcelColumn COL_ENCHANT_SPELL_HIT_RATING = column("spell_hit_rating");
-	private final ExcelColumn COL_ENCHANT_ALL_STATS = column("all_stats");
-	private final ExcelColumn COL_ENCHANT_STA = column("sta");
-	private final ExcelColumn COL_ENCHANT_INT = column("int");
-	private final ExcelColumn COL_ENCHANT_SPI = column("spi");
-	private final ExcelColumn COL_ENCHANT_THREAT_REDUCTION_PCT = column("threat reduction%");
-	private final ExcelColumn COL_ENCHANT_SPEED_INCREASE_PCT = column("speed increase%");
-	private final ExcelColumn COL_ENCHANT_SHADOW_RESIST = column("shadow resist");
+	private final ExcelColumn colEnchantId = column("id");
+	private final ExcelColumn colEnchantName = column("name");
+	private final ExcelColumn colEnchantItemTypes = column("item_types");
+	private final ExcelColumn colEnchantSp = column("sp");
+	private final ExcelColumn colEnchantSpShadow = column("sp_shadow");
+	private final ExcelColumn colEnchantSpellCritRating = column("spell_crit_rating");
+	private final ExcelColumn colEnchantSpellHitRating = column("spell_hit_rating");
+	private final ExcelColumn colEnchantAllStats = column("all_stats");
+	private final ExcelColumn colEnchantSta = column("sta");
+	private final ExcelColumn colEnchantInt = column("int");
+	private final ExcelColumn colEnchantSpi = column("spi");
+	private final ExcelColumn colEnchantThreatReductionPct = column("threat reduction%");
+	private final ExcelColumn colEnchantSpeedIncreasePct = column("speed increase%");
+	private final ExcelColumn colEnchantShadowResist = column("shadow resist");
 
 	private void readEnchants() {
 		Enchant enchant = getEnchant();
@@ -57,26 +57,26 @@ public class ItemExcelParser extends ExcelParser {
 	}
 
 	private Enchant getEnchant() {
-		var id = COL_ENCHANT_ID.getInteger();
-		var name = COL_ENCHANT_NAME.getString();
-		var itemTypes = COL_ENCHANT_ITEM_TYPES.getList(x -> ItemType.parse(x.trim()));
+		var id = colEnchantId.getInteger();
+		var name = colEnchantName.getString();
+		var itemTypes = colEnchantItemTypes.getList(x -> ItemType.parse(x.trim()));
 		var itemStats = getEnchantStats();
 
 		return new Enchant(id, name, itemTypes, itemStats);
 	}
 
 	private Attributes getEnchantStats() {
-		var sp = COL_ENCHANT_SP.getInteger(0);
-		var spShadow = COL_ENCHANT_SP_SHADOW.getInteger(0);
-		var spellCritRating = COL_ENCHANT_SPELL_CRIT_RATING.getInteger(0);
-		var spellHitRating = COL_ENCHANT_SPELL_HIT_RATING.getInteger(0);
-		var allStats = COL_ENCHANT_ALL_STATS.getInteger(0);
-		var sta = COL_ENCHANT_STA.getInteger(0);
-		var int_ = COL_ENCHANT_INT.getInteger(0);
-		var spi = COL_ENCHANT_SPI.getInteger(0);
-		var threatReductionPct = COL_ENCHANT_THREAT_REDUCTION_PCT.getPercent(null);
-		var speedIncreasePct = COL_ENCHANT_SPEED_INCREASE_PCT.getPercent(null);
-		var shadowResist = COL_ENCHANT_SHADOW_RESIST.getInteger(0);
+		var sp = colEnchantSp.getInteger(0);
+		var spShadow = colEnchantSpShadow.getInteger(0);
+		var spellCritRating = colEnchantSpellCritRating.getInteger(0);
+		var spellHitRating = colEnchantSpellHitRating.getInteger(0);
+		var allStats = colEnchantAllStats.getInteger(0);
+		var stamina = colEnchantSta.getInteger(0);
+		var intellect = colEnchantInt.getInteger(0);
+		var spirit = colEnchantSpi.getInteger(0);
+		var threatReductionPct = colEnchantThreatReductionPct.getPercent(null);
+		var speedIncreasePct = colEnchantSpeedIncreasePct.getPercent(null);
+		var shadowResist = colEnchantShadowResist.getInteger(0);
 
 		AttributesBuilder itemStats = new AttributesBuilder();
 
@@ -86,9 +86,9 @@ public class ItemExcelParser extends ExcelParser {
 				.addAttribute(AttributeId.SPELL_CRIT_RATING, spellCritRating)
 				.addAttribute(AttributeId.SPELL_HIT_RATING, spellHitRating)
 				.addAttribute(AttributeId.BASE_STATS_INCREASE, allStats)
-				.addAttribute(AttributeId.STAMINA, sta)
-				.addAttribute(AttributeId.INTELLECT, int_)
-				.addAttribute(AttributeId.SPIRIT, spi)
+				.addAttribute(AttributeId.STAMINA, stamina)
+				.addAttribute(AttributeId.INTELLECT, intellect)
+				.addAttribute(AttributeId.SPIRIT, spirit)
 				.addAttribute(AttributeId.THREAT_REDUCTION_PCT, threatReductionPct)
 				.addAttribute(AttributeId.SPEED_INCREASE_PCT, speedIncreasePct)
 				.addAttribute(AttributeId.RESISTANCE, shadowResist, AttributeCondition.of(SpellSchool.SHADOW))

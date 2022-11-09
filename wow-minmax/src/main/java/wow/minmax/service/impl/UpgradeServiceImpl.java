@@ -43,7 +43,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 	public List<Comparison> findUpgrades(PlayerProfile playerProfile, ItemSlotGroup slotGroup, SpellId spellId) {
 		PlayerProfile playerProfileCopy = playerProfile.copy();
 		Spell spell = spellService.getSpell(spellId);
-		double referenceDps = calculationService.getSpellStatistics(playerProfile, spell).dps;
+		double referenceDps = calculationService.getSpellStatistics(playerProfile, spell).getDps();
 
 		for (ItemSlot slot : slotGroup.getSlots()) {
 			playerProfileCopy.getEquipment().set(null, slot);
@@ -70,7 +70,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 						.solveAll(attributeEvaluator -> calculationService.getPlayerStatsProvider(playerProfile, spell, attributeEvaluator))
 						.getAttributes();
 
-				double dps = calculationService.getSpellStatistics(playerProfileCopy, spell, totalStats).dps;
+				double dps = calculationService.getSpellStatistics(playerProfileCopy, spell, totalStats).getDps();
 				double changePct = 100 * (dps / referenceDps - 1);
 
 				if (changePct > 0) {
@@ -99,7 +99,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 	public EquippableItem getBestItemVariant(PlayerProfile playerProfile, Item item, ItemSlot slot, SpellId spellId) {
 		PlayerProfile playerProfileCopy = playerProfile.copy();
 		Spell spell = spellService.getSpell(spellId);
-		double referenceDps = calculationService.getSpellStatistics(playerProfile, spell).dps;
+		double referenceDps = calculationService.getSpellStatistics(playerProfile, spell).getDps();
 
 		return new ItemVariantEnumerator(itemService) {
 			@Override
@@ -107,7 +107,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 				EquippableItem itemVariant = itemOption[0];
 				playerProfileCopy.getEquipment().set(itemVariant, slot);
 
-				double dps = calculationService.getSpellStatistics(playerProfileCopy, spell).dps;
+				double dps = calculationService.getSpellStatistics(playerProfileCopy, spell).getDps();
 				double changePct = 100 * (dps / referenceDps - 1);
 
 				return new Comparison(playerProfileCopy.getEquipment().copy(), playerProfile.getEquipment(), Percent.of(changePct));
@@ -155,26 +155,31 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 		for (ComplexAttribute attribute : item.getAttributes().getList(AttributeId.getComplexAttributeIds())) {
 			if (attribute instanceof StatEquivalentProvider) {
-				builder.addAttributes(((StatEquivalentProvider)attribute).getStatEquivalent(
-						new StatProvider() {
-							@Override
-							public double hitChance() {
-								return 0.99;
-							}
-
-							@Override
-							public double critChance() {
-								return 0.30;
-							}
-
-							@Override
-							public Duration castTime() {
-								return Duration.seconds(2.5);
-							}
-						}));
+				StatEquivalentProvider statEquivalentProvider = (StatEquivalentProvider) attribute;
+				Attributes statEquivalent = statEquivalentProvider.getStatEquivalent(getStatProviderForItemScore());
+				builder.addAttributes(statEquivalent);
 			}
 		}
 
 		return builder.toAttributes();
+	}
+
+	private static StatProvider getStatProviderForItemScore() {
+		return new StatProvider() {
+			@Override
+			public double hitChance() {
+				return 0.99;
+			}
+
+			@Override
+			public double critChance() {
+				return 0.30;
+			}
+
+			@Override
+			public Duration castTime() {
+				return Duration.seconds(2.5);
+			}
+		};
 	}
 }

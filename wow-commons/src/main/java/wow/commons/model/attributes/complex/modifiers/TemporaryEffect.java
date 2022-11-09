@@ -87,7 +87,8 @@ public class TemporaryEffect implements AttributeModifier {
 			default:
 				throw new IllegalArgumentException("Unhandled: " + effectId);
 		}
-		double c = critChance, n = 1 - c;
+		double c = critChance;
+		double n = 1 - c;
 		return rank * 0.04 * (2 * c + n) * (1 + n + n * n + n * n * n);
 	}
 

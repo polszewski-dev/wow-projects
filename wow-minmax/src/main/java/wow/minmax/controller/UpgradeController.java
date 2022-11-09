@@ -1,6 +1,7 @@
 package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/v1/upgrade")
 @AllArgsConstructor
+@Slf4j
 public class UpgradeController {
 	private final UpgradeService upgradeService;
 	private final PlayerProfileService playerProfileService;
@@ -68,7 +70,7 @@ public class UpgradeController {
 					findUpgrades(profileId, ItemSlotGroup.RANGED)
 			);
 		} finally {
-			System.out.println("It took " + (System.currentTimeMillis() - start) + " millis.");
+			log.info("It took {} millis.", System.currentTimeMillis() - start);
 		}
 	}
 }

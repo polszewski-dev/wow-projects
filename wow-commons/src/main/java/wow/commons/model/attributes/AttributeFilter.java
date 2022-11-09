@@ -55,10 +55,7 @@ public class AttributeFilter {
 		if (petType != null && !condition.isTheSameOrNull(petType)) {
 			return false;
 		}
-		if (creatureType != null && !condition.isTheSameOrNull(creatureType)) {
-			return false;
-		}
-		return true;
+		return creatureType == null || condition.isTheSameOrNull(creatureType);
 	}
 
 	public boolean isEmpty() {

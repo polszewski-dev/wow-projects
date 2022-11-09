@@ -164,14 +164,14 @@ public class StatsController {
 				(int) attributes.getTotalSpellDamage(SpellSchool.SHADOW),
 				(int) attributes.getTotalSpellDamage(SpellSchool.FIRE),
 				(int) attributes.getSpellHitRating(),
-				snapshot.totalHit,
+				snapshot.getTotalHit(),
 				(int) attributes.getSpellCritRating(),
-				snapshot.totalCrit,
+				snapshot.getTotalCrit(),
 				(int) attributes.getSpellHasteRating(),
-				snapshot.totalHaste,
-				(int) snapshot.stamina,
-				(int) snapshot.intellect,
-				(int) snapshot.spirit
+				snapshot.getTotalHaste(),
+				(int) snapshot.getStamina(),
+				(int) snapshot.getIntellect(),
+				(int) snapshot.getSpirit()
 		);
 	}
 

@@ -9,7 +9,7 @@ import wow.commons.util.AttributesBuilder;
  * User: POlszewski
  * Date: 2021-03-24
  */
-public class GemStatsParser {
+public final class GemStatsParser {
 	public static Attributes tryParseStats(String line) {
 		AttributesBuilder builder = new AttributesBuilder();
 
@@ -40,4 +40,6 @@ public class GemStatsParser {
 		StatParser parser = StatPatternRepository.getInstance().getGemStatParser();
 		return parser.tryParseSingleStat(line);
 	}
+
+	private GemStatsParser() {}
 }

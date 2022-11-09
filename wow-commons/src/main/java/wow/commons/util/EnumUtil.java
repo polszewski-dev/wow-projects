@@ -8,7 +8,7 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-08
  */
-public class EnumUtil {
+public final class EnumUtil {
 	public static <T extends Enum<T>> T parse(String stringToParse, T[] enumValues, Function<T, String> keyAccessor) {
 		if (stringToParse == null) {
 			return null;
@@ -37,4 +37,6 @@ public class EnumUtil {
 				.filter(value -> keyAccessor.apply(value).equalsIgnoreCase(stringToParse))
 				.findAny();
 	}
+
+	private EnumUtil() {}
 }

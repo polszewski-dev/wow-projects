@@ -35,34 +35,34 @@ public class StatPatternExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader("base", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("onuse", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("proc", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("set", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("ignored", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("misc_bonus", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("misc_onuse", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("misc_proc", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("misc_set", () -> readStatPatterns(itemStatPatterns), COL_PATTERN),
-				new SheetReader("gem", () -> readStatPatterns(gemStatPatterns), COL_PATTERN),
-				new SheetReader("socket", () -> readStatPatterns(socketBonusStatPatterns), COL_PATTERN)
+				new SheetReader("base", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("onuse", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("proc", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("set", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("ignored", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("misc_bonus", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("misc_onuse", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("misc_proc", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("misc_set", () -> readStatPatterns(itemStatPatterns), colPattern),
+				new SheetReader("gem", () -> readStatPatterns(gemStatPatterns), colPattern),
+				new SheetReader("socket", () -> readStatPatterns(socketBonusStatPatterns), colPattern)
 		);
 	}
 
-	private final ExcelColumn COL_PATTERN = column("pattern");
-	private final ExcelColumn COL_STAT1 = column("stat1");
-	private final ExcelColumn COL_STAT2 = column("stat2");
+	private final ExcelColumn colPattern = column("pattern");
+	private final ExcelColumn colStat1 = column("stat1");
+	private final ExcelColumn colStat2 = column("stat2");
 
-	private final ExcelColumn COL_SPECIAL_TYPE = column("special:type");
-	private final ExcelColumn COL_SPECIAL_STAT = column("special:stat");
-	private final ExcelColumn COL_SPECIAL_AMOUNT = column("special:amount");
-	private final ExcelColumn COL_SPECIAL_DURATION = column("special:duration");
-	private final ExcelColumn COL_SPECIAL_CD = column("special:cd");
-	private final ExcelColumn COL_SPECIAL_PROC_CHANCE = column("special:proc chance");
-	private final ExcelColumn COL_SPECIAL_PROC_CD = column("special:proc cd");
+	private final ExcelColumn colSpecialType = column("special:type");
+	private final ExcelColumn colSpecialStat = column("special:stat");
+	private final ExcelColumn colSpecialAmount = column("special:amount");
+	private final ExcelColumn colSpecialDuration = column("special:duration");
+	private final ExcelColumn colSpecialCd = column("special:cd");
+	private final ExcelColumn colSpecialProcChance = column("special:proc chance");
+	private final ExcelColumn colSpecialProcCd = column("special:proc cd");
 
 	private void readStatPatterns(List<StatPattern> patterns) {
-		var pattern = COL_PATTERN.getString();
+		var pattern = colPattern.getString();
 		var setters = getParsedStatSetters();
 		var params = getParams(patterns);
 		var statPattern = new StatPattern(pattern.trim(), setters, params);
@@ -71,8 +71,8 @@ public class StatPatternExcelParser extends ExcelParser {
 
 	private List<StatSetter> getParsedStatSetters() {
 		var setters = Stream.of(
-						COL_STAT1.getString(null),
-						COL_STAT2.getString(null)
+						colStat1.getString(null),
+						colStat2.getString(null)
 				)
 				.filter(Objects::nonNull)
 				.map(this::parseStatSetter)
@@ -114,13 +114,13 @@ public class StatPatternExcelParser extends ExcelParser {
 		StatSetterParams params = new StatSetterParams();
 
 		if (patterns == itemStatPatterns) {
-			params.setType(COL_SPECIAL_TYPE.getString(null));
-			params.setStatsSupplier(COL_SPECIAL_STAT.getEnum(PrimitiveAttributeSupplier::fromString, null));
-			params.setAmount(COL_SPECIAL_AMOUNT.getString(null));
-			params.setDuration(COL_SPECIAL_DURATION.getString(null));
-			params.setCooldown(COL_SPECIAL_CD.getString(null));
-			params.setProcChance(COL_SPECIAL_PROC_CHANCE.getString(null));
-			params.setProcCooldown(COL_SPECIAL_PROC_CD.getString(null));
+			params.setType(colSpecialType.getString(null));
+			params.setStatsSupplier(colSpecialStat.getEnum(PrimitiveAttributeSupplier::fromString, null));
+			params.setAmount(colSpecialAmount.getString(null));
+			params.setDuration(colSpecialDuration.getString(null));
+			params.setCooldown(colSpecialCd.getString(null));
+			params.setProcChance(colSpecialProcChance.getString(null));
+			params.setProcCooldown(colSpecialProcCd.getString(null));
 		}
 
 		return params;

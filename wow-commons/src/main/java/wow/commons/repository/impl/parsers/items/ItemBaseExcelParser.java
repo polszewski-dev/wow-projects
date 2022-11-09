@@ -44,38 +44,38 @@ public class ItemBaseExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader("item", this::readItems, COL_ITEM_NAME),
-				new SheetReader("set", this::readItemSets, COL_ITEM_SET_NAME),
-				new SheetReader("gem", this::readGems, COL_GEM_NAME)
+				new SheetReader("item", this::readItems, colItemName),
+				new SheetReader("set", this::readItemSets, colItemSetName),
+				new SheetReader("gem", this::readGems, colGemName)
 		);
 	}
 
-	private final ExcelColumn COL_ITEM_ID = column("id");
-	private final ExcelColumn COL_ITEM_NAME = column("name");
-	private final ExcelColumn COL_ITEM_RARITY = column("rarity");
-	private final ExcelColumn COL_ITEM_ITEM_LEVEL = column("item_level");
-	private final ExcelColumn COL_ITEM_REQ_LEVEL = column("req_level");
-	private final ExcelColumn COL_ITEM_BINDING = column("binding");
-	private final ExcelColumn COL_ITEM_UNIQUE = column("unique");
-	private final ExcelColumn COL_ITEM_ITEM_TYPE = column("item_type");
-	private final ExcelColumn COL_ITEM_ITEM_SUBTYPE = column("item_subtype");
-	private final ExcelColumn COL_ITEM_PHASE = column("phase");
-	private final ExcelColumn COL_ITEM_SOURCE = column("source");
-	private final ExcelColumn COL_ITEM_SOCKET_TYPES = column("socket_types");
-	private final ExcelColumn COL_ITEM_SOCKET_BONUS = column("socket_bonus");
-	private final ExcelColumn COL_ITEM_CLASS_RESTRICTION = column("class_restriction");
-	private final ExcelColumn COL_ITEM_RACE_RESTRICTION = column("race_restriction");
-	private final ExcelColumn COL_ITEM_SIDE_RESTRICTION = column("side_restriction");
-	private final ExcelColumn COL_ITEM_ITEM_SET = column("item_set");
-	private final ExcelColumn COL_ITEM_REQ_PROFESSION = column("req_profession");
-	private final ExcelColumn COL_ITEM_REQ_PROFESSION_LEVEL = column("req_profession_level");
-	private final ExcelColumn COL_ITEM_REQ_PROFESSION_SPEC = column("req_profession_spec");
-	private final ExcelColumn COL_ITEM_DROPPED_BY = column("dropped_by");
-	private final ExcelColumn COL_ITEM_DROP_CHANCE = column("drop_chance");
-	private final ExcelColumn COL_ITEM_SELL_PRICE = column("sell_price");
-	private final ExcelColumn COL_ITEM_STAT = column("stat");
-	private final ExcelColumn COL_ITEM_ICON = column("icon");
-	private final ExcelColumn COL_ITEM_TOOLTIP = column("tooltip");
+	private final ExcelColumn colItemId = column("id");
+	private final ExcelColumn colItemName = column("name");
+	private final ExcelColumn colItemRarity = column("rarity");
+	private final ExcelColumn colItemItemLevel = column("item_level");
+	private final ExcelColumn colItemReqLevel = column("req_level");
+	private final ExcelColumn colItemBinding = column("binding");
+	private final ExcelColumn colItemUnique = column("unique");
+	private final ExcelColumn colItemItemType = column("item_type");
+	private final ExcelColumn colItemItemSubtype = column("item_subtype");
+	private final ExcelColumn colItemPhase = column("phase");
+	private final ExcelColumn colItemSource = column("source");
+	private final ExcelColumn colItemSocketTypes = column("socket_types");
+	private final ExcelColumn colItemSocketBonus = column("socket_bonus");
+	private final ExcelColumn colItemClassRestriction = column("class_restriction");
+	private final ExcelColumn colItemRaceRestriction = column("race_restriction");
+	private final ExcelColumn colItemSideRestriction = column("side_restriction");
+	private final ExcelColumn colItemItemSet = column("item_set");
+	private final ExcelColumn colItemReqProfession = column("req_profession");
+	private final ExcelColumn colItemReqProfessionLevel = column("req_profession_level");
+	private final ExcelColumn colItemReqProfessionSpec = column("req_profession_spec");
+//	private final ExcelColumn colItemDroppedBy = column("dropped_by");
+//	private final ExcelColumn colItemDropChance = column("drop_chance");
+	private final ExcelColumn colItemSellPrice = column("sell_price");
+	private final ExcelColumn colItemStat = column("stat");
+	private final ExcelColumn colItemIcon = column("icon");
+	private final ExcelColumn colItemTooltip = column("tooltip");
 
 	private static final int MAX_ITEM_STATS = 10;
 
@@ -85,31 +85,31 @@ public class ItemBaseExcelParser extends ExcelParser {
 	}
 
 	private Item getItem() {
-		var id = COL_ITEM_ID.getInteger();
-		var name = COL_ITEM_NAME.getString();
-		var rarity = COL_ITEM_RARITY.getEnum(ItemRarity::valueOf);
-		var itemLevel = COL_ITEM_ITEM_LEVEL.getInteger(0);
-		var requiredLevel = COL_ITEM_REQ_LEVEL.getInteger(0);
-		var binding = COL_ITEM_BINDING.getEnum(Binding::valueOf, null);
-		var unique = COL_ITEM_UNIQUE.getBoolean();
-		var itemType = COL_ITEM_ITEM_TYPE.getEnum(ItemType::valueOf);
-		var itemSubType = COL_ITEM_ITEM_SUBTYPE.getEnum(ItemSubType::tryParse, null);
-		var phase = COL_ITEM_PHASE.getEnum(Phase::valueOf, Phase.TBC_P1);
-		var source = COL_ITEM_SOURCE.getString();
-		var socketTypes = COL_ITEM_SOCKET_TYPES.getList(SocketType::valueOf);
-		var socketBonus = COL_ITEM_SOCKET_BONUS.getString(null);
-		var classRestriction = COL_ITEM_CLASS_RESTRICTION.getList(CharacterClass::valueOf);
-		var raceRestriction = COL_ITEM_RACE_RESTRICTION.getList(Race::valueOf);
-		var sideRestriction = COL_ITEM_SIDE_RESTRICTION.getEnum(Side::valueOf, null);
-		var itemSetName = COL_ITEM_ITEM_SET.getString(null);
-		var requiredProfession = COL_ITEM_REQ_PROFESSION.getEnum(Profession::valueOf, null);
-		var requiredProfessionLevel = COL_ITEM_REQ_PROFESSION_LEVEL.getInteger(0);
-		var requiredProfessionSpec = COL_ITEM_REQ_PROFESSION_SPEC.getEnum(ProfessionSpecialization::valueOf, null);
-		var droppedBy = COL_ITEM_DROPPED_BY.getString(null);
-		var dropChance = COL_ITEM_DROP_CHANCE.getPercent(null);
-		var sellPrice = Money.parse(COL_ITEM_SELL_PRICE.getString(null));
-		var icon = COL_ITEM_ICON.getString();
-		var tooltip = COL_ITEM_TOOLTIP.getString();
+		var id = colItemId.getInteger();
+		var name = colItemName.getString();
+		var rarity = colItemRarity.getEnum(ItemRarity::valueOf);
+		var itemLevel = colItemItemLevel.getInteger(0);
+		var requiredLevel = colItemReqLevel.getInteger(0);
+		var binding = colItemBinding.getEnum(Binding::valueOf, null);
+		var unique = colItemUnique.getBoolean();
+		var itemType = colItemItemType.getEnum(ItemType::valueOf);
+		var itemSubType = colItemItemSubtype.getEnum(ItemSubType::tryParse, null);
+		var phase = colItemPhase.getEnum(Phase::valueOf, Phase.TBC_P1);
+		var source = colItemSource.getString();
+		var socketTypes = colItemSocketTypes.getList(SocketType::valueOf);
+		var socketBonus = colItemSocketBonus.getString(null);
+		var classRestriction = colItemClassRestriction.getList(CharacterClass::valueOf);
+		var raceRestriction = colItemRaceRestriction.getList(Race::valueOf);
+		var sideRestriction = colItemSideRestriction.getEnum(Side::valueOf, null);
+		var itemSetName = colItemItemSet.getString(null);
+		var requiredProfession = colItemReqProfession.getEnum(Profession::valueOf, null);
+		var requiredProfessionLevel = colItemReqProfessionLevel.getInteger(0);
+		var requiredProfessionSpec = colItemReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
+//		var droppedBy = colItemDroppedBy.getString(null);
+//		var dropChance = colItemDropChance.getPercent(null);
+		var sellPrice = Money.parse(colItemSellPrice.getString(null));
+		var icon = colItemIcon.getString();
+		var tooltip = colItemTooltip.getString();
 		var stats = getStats();
 
 		var itemSource = SourceParser.parse(source, pveRepository);
@@ -143,7 +143,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		StatParser parser = StatPatternRepository.getInstance().getItemStatParser();
 
 		for (int i = 1; i <= MAX_ITEM_STATS; ++i) {
-			String line = COL_ITEM_STAT.multi(i).getString(null);
+			String line = colItemStat.multi(i).getString(null);
 			if (line != null && !parser.tryParse(line)) {
 				throw new IllegalArgumentException("Can't parse: " + line);
 			}
@@ -196,9 +196,9 @@ public class ItemBaseExcelParser extends ExcelParser {
 
 	private final Map<String, List<Item>> setPiecesByName = new HashMap<>();
 
-	private final ExcelColumn COL_ITEM_SET_NAME = column("name");
-	private final ExcelColumn COL_ITEM_SET_REQ_PROF = column("req_prof");
-	private final ExcelColumn COL_ITEM_SET_REQ_PROF_LVL = column("req_prof_lvl");
+	private final ExcelColumn colItemSetName = column("name");
+	private final ExcelColumn colItemSetReqProf = column("req_prof");
+	private final ExcelColumn colItemSetReqProfLvl = column("req_prof_lvl");
 
 	private static final int MAX_ITEM_SET_BONUSES = 6;
 
@@ -208,10 +208,10 @@ public class ItemBaseExcelParser extends ExcelParser {
 	}
 
 	private ItemSet getItemSet() {
-		var name = COL_ITEM_SET_NAME.getString();
+		var name = colItemSetName.getString();
 		var itemSetBonuses = getItemSetBonuses();
-		var requiredProfession = COL_ITEM_SET_REQ_PROF.getEnum(Profession::valueOf, null);//TODO
-		var requiredProfessionLevel = COL_ITEM_SET_REQ_PROF_LVL.getInteger(0);
+		var requiredProfession = colItemSetReqProf.getEnum(Profession::valueOf, null);//TODO
+		var requiredProfessionLevel = colItemSetReqProfLvl.getInteger(0);
 
 		var itemSet = new ItemSet(name, null, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
 
@@ -252,20 +252,20 @@ public class ItemBaseExcelParser extends ExcelParser {
 		throw new IllegalArgumentException("Missing bonus: " + itemSetBonus.getDescription());
 	}
 
-	private final ExcelColumn COL_GEM_ID = column("id");
-	private final ExcelColumn COL_GEM_NAME = column("name");
-	private final ExcelColumn COL_GEM_RARITY = column("rarity");
-	private final ExcelColumn COL_GEM_ITEM_LEVEL = column("item_level");
-	private final ExcelColumn COL_GEM_PHASE = column("phase");
-	private final ExcelColumn COL_GEM_SOURCE = column("source");
-	private final ExcelColumn COL_GEM_COLOR = column("color");
-	private final ExcelColumn COL_GEM_BINDING = column("binding");
-	private final ExcelColumn COL_GEM_UNIQUE = column("unique");
-	private final ExcelColumn COL_GEM_STATS = column("stats");
-	private final ExcelColumn COL_GEM_META_ENABLERS = column("meta_enablers");
-	private final ExcelColumn COL_GEM_SELL_PRICE = column("sell_price");
-	private final ExcelColumn COL_GEM_ICON = column("icon");
-	private final ExcelColumn COL_GEM_TOOLTIP = column("tooltip");
+	private final ExcelColumn colGemId = column("id");
+	private final ExcelColumn colGemName = column("name");
+	private final ExcelColumn colGemRarity = column("rarity");
+	private final ExcelColumn colGemItemLevel = column("item_level");
+	private final ExcelColumn colGemPhase = column("phase");
+	private final ExcelColumn colGemSource = column("source");
+	private final ExcelColumn colGemColor = column("color");
+	private final ExcelColumn colGemBinding = column("binding");
+	private final ExcelColumn colGemUnique = column("unique");
+	private final ExcelColumn colGemStats = column("stats");
+	private final ExcelColumn colGemMetaEnablers = column("meta_enablers");
+	private final ExcelColumn colGemSellPrice = column("sell_price");
+	private final ExcelColumn colGemIcon = column("icon");
+	private final ExcelColumn colGemTooltip = column("tooltip");
 
 	private void readGems() {
 		Gem gem = getGem();
@@ -273,20 +273,20 @@ public class ItemBaseExcelParser extends ExcelParser {
 	}
 
 	private Gem getGem() {
-		var id = COL_GEM_ID.getInteger();
-		var name = COL_GEM_NAME.getString();
-		var rarity = COL_GEM_RARITY.getEnum(ItemRarity::valueOf);
-		var itemLevel = COL_GEM_ITEM_LEVEL.getInteger();
-		var phase = COL_GEM_PHASE.getEnum(Phase::valueOf, Phase.TBC_P0);
-		var source = COL_GEM_SOURCE.getString();
-		var color = COL_GEM_COLOR.getEnum(GemColor::valueOf);
-		var binding = COL_GEM_BINDING.getEnum(Binding::valueOf, Binding.BINDS_ON_EQUIP);
-		var unique = COL_GEM_UNIQUE.getBoolean();
-		var metaEnablers = COL_GEM_META_ENABLERS.getList(MetaEnabler::valueOf);
-		var sellPrice = Money.parse(COL_GEM_SELL_PRICE.getString(null));
-		var icon = COL_GEM_ICON.getString();
-		var tooltip = COL_GEM_TOOLTIP.getString();
-		var stats = GemStatsParser.tryParseStats(COL_GEM_STATS.getString());
+		var id = colGemId.getInteger();
+		var name = colGemName.getString();
+		var rarity = colGemRarity.getEnum(ItemRarity::valueOf);
+		var itemLevel = colGemItemLevel.getInteger();
+		var phase = colGemPhase.getEnum(Phase::valueOf, Phase.TBC_P0);
+		var source = colGemSource.getString();
+		var color = colGemColor.getEnum(GemColor::valueOf);
+		var binding = colGemBinding.getEnum(Binding::valueOf, Binding.BINDS_ON_EQUIP);
+		var unique = colGemUnique.getBoolean();
+		var metaEnablers = colGemMetaEnablers.getList(MetaEnabler::valueOf);
+		var sellPrice = Money.parse(colGemSellPrice.getString(null));
+		var icon = colGemIcon.getString();
+		var tooltip = colGemTooltip.getString();
+		var stats = GemStatsParser.tryParseStats(colGemStats.getString());
 
 		var gemSource = SourceParser.parse(source, pveRepository);
 		var gem = new Gem(id, name, rarity, Set.of(gemSource), color, metaEnablers, stats);

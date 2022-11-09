@@ -27,13 +27,21 @@ public class AttributesBuilder {
 	}
 
 	public Attributes toAttributes() {
-		Attributes result = isEmpty() ? Attributes.EMPTY : Attributes.of(
-				attributeList != null ? attributeList : List.of(),
-				complexAttributeList != null ? complexAttributeList : Map.of()
-		);
+		Attributes result = getAttributes();
 		this.attributeList = null;
 		this.complexAttributeList = null;
 		return result;
+	}
+
+	private Attributes getAttributes() {
+		if (isEmpty()) {
+			return Attributes.EMPTY;
+		}
+
+		return Attributes.of(
+				attributeList != null ? attributeList : List.of(),
+				complexAttributeList != null ? complexAttributeList : Map.of()
+		);
 	}
 
 	public boolean isEmpty() {

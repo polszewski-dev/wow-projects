@@ -265,7 +265,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 
 		specialAbilities.sort(Comparator.comparingInt(SpecialAbility::getPriority));
 
-		for (ComplexAttribute attribute : specialAbilities) {
+		for (SpecialAbility attribute : specialAbilities) {
 			Attributes statEquivalent = ((StatEquivalentProvider)attribute).getStatEquivalent(statProvider);
 			addAttributes(statEquivalent);
 		}

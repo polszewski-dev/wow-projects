@@ -12,17 +12,17 @@ public final class SpellCalculations {
 	public static final Boolean AVERAGE_CRIT = null;
 
 	public static SpellStatistics getDamage(int baseDmgMin, int baseDmgMax, int baseDmgDoT, Snapshot snapshot, Boolean hasCrit) {
-		double hitChance = snapshot.hitChance;
-		double critChance = snapshot.critChance;
-		double critCoeff = snapshot.critCoeff;
-		double sp = snapshot.sp;
-		double spMultiplier = snapshot.spMultiplier;
-		double coeffDirect = snapshot.spellCoeffDirect;
-		double coeffDoT = snapshot.spellCoeffDoT;
-		double directDamageDoneMultiplier = snapshot.directDamageDoneMultiplier;
-		double dotDamageDoneMultiplier = snapshot.dotDamageDoneMultiplier;
+		double hitChance = snapshot.getHitChance();
+		double critChance = snapshot.getCritChance();
+		double critCoeff = snapshot.getCritCoeff();
+		double sp = snapshot.getSp();
+		double spMultiplier = snapshot.getSpMultiplier();
+		double coeffDirect = snapshot.getSpellCoeffDirect();
+		double coeffDoT = snapshot.getSpellCoeffDoT();
+		double directDamageDoneMultiplier = snapshot.getDirectDamageDoneMultiplier();
+		double dotDamageDoneMultiplier = snapshot.getDotDamageDoneMultiplier();
 
-		Duration castTime = snapshot.effectiveCastTime;
+		Duration castTime = snapshot.getEffectiveCastTime();
 
 		if (hasCrit != null) {
 			critChance = hasCrit ? 1 : 0;
@@ -53,20 +53,20 @@ public final class SpellCalculations {
 
 		SpellStatistics result = new SpellStatistics();
 
-		result.snapshot = snapshot;
-		result.totalDamage = directDamage + dotDamage;
-		result.castTime = castTime;
-		result.dps = result.totalDamage / result.castTime.getSeconds();
-		result.manaCost = snapshot.manaCost;
-		result.dpm = result.totalDamage / result.manaCost;
+		result.setSnapshot(snapshot);
+		result.setTotalDamage(directDamage + dotDamage);
+		result.setCastTime(castTime);
+		result.setDps(result.getTotalDamage() / result.getCastTime().getSeconds());
+		result.setManaCost(snapshot.getManaCost());
+		result.setDpm(result.getTotalDamage() / result.getManaCost());
 
 		return result;
 	}
 
 	public static int getScaledValue(int base, Snapshot snapshot) {
-		double sp = snapshot.sp;
-		double dmgCoeff = snapshot.spellCoeffDirect;
-		double dmgMultiplier = snapshot.directDamageDoneMultiplier;
+		double sp = snapshot.getSp();
+		double dmgCoeff = snapshot.getSpellCoeffDirect();
+		double dmgMultiplier = snapshot.getDirectDamageDoneMultiplier();
 
 		return (int) ((base + sp * dmgCoeff) * dmgMultiplier);
 	}

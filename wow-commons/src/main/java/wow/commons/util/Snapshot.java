@@ -1,9 +1,9 @@
 package wow.commons.util;
 
+import lombok.Data;
 import wow.commons.constants.SpellConstants;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.AttributeFilter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.spells.SpellRankInfo;
@@ -14,49 +14,52 @@ import wow.commons.model.unit.CombatRatingInfo;
  * User: POlszewski
  * Date: 2021-08-20
  */
+@Data
 public class Snapshot {
-	public final SpellInfo spellInfo;
-	public final SpellRankInfo spellRankInfo;
-	public final Attributes stats;
+	private SpellInfo spellInfo;
+	private SpellRankInfo spellRankInfo;
+	private Attributes stats;
 
-	public final double stamina;
-	public final double intellect;
-	public final double spirit;
+	private double stamina;
+	private double intellect;
+	private double spirit;
 
-	public final double totalCrit;
-	public final double totalHit;
-	public final double totalHaste;
+	private double totalCrit;
+	private double totalHit;
+	private double totalHaste;
 
-	public final double sp;
-	public final double spMultiplier;
+	private double sp;
+	private double spMultiplier;
 
-	public final double hitChance;
-	public final double critChance;
-	public final double critCoeff;
-	public final double haste;
+	private double hitChance;
+	private double critChance;
+	private double critCoeff;
+	private double haste;
 
-	public final double directDamageDoneMultiplier;
-	public final double dotDamageDoneMultiplier;
+	private double directDamageDoneMultiplier;
+	private double dotDamageDoneMultiplier;
 
-	public final Duration castTime;// actual cast time
-	public final Duration gcd;
-	public final Duration effectiveCastTime;// max(castTime, gcd)
+	private Duration castTime;// actual cast time
+	private Duration gcd;
+	private Duration effectiveCastTime;// max(castTime, gcd)
 
-	public final double spellCoeffDirect;
-	public final double spellCoeffDoT;
+	private double spellCoeffDirect;
+	private double spellCoeffDoT;
 
-	public final double manaCost;
+	private double manaCost;
 
 	public Snapshot(SpellInfo spellInfo, SpellRankInfo spellRankInfo, BaseStatInfo baseStats, CombatRatingInfo cr, Attributes stats) {
 		this.spellInfo = spellInfo;
 		this.spellRankInfo = spellRankInfo;
+		this.stats = AttributesBuilder.filter(stats, spellInfo.getAttributeFiter());
 
-		AttributeFilter filter = spellInfo.getAttributeFiter();
+		calcBaseStats(baseStats);
+		calcSpellStats(spellInfo, baseStats, cr);
+		calcCastTime(spellRankInfo);
+		calcCost(spellRankInfo);
+	}
 
-		stats = AttributesBuilder.filter(stats, filter);
-
-		this.stats = stats;
-
+	private void calcBaseStats(BaseStatInfo baseStats) {
 		double baseStaMultiplier = 1 + stats.getBaseStatsIncreasePct().getCoefficient() + stats.getStaIncreasePct().getCoefficient();
 		double baseIntMultiplier = 1 + stats.getBaseStatsIncreasePct().getCoefficient() + stats.getIntIncreasePct().getCoefficient();
 		double baseSpiMultiplier = 1 + stats.getBaseStatsIncreasePct().getCoefficient() + stats.getSpiIncreasePct().getCoefficient();
@@ -64,7 +67,9 @@ public class Snapshot {
 		stamina = (baseStats.getBaseStamina() + stats.getStamina() + stats.getBaseStatsIncrease()) * baseStaMultiplier;
 		intellect = (baseStats.getBaseIntellect() + stats.getIntellect() + stats.getBaseStatsIncrease()) * baseIntMultiplier;
 		spirit = (baseStats.getBaseSpirit() + stats.getSpirit() + stats.getBaseStatsIncrease()) * baseSpiMultiplier;
+	}
 
+	private void calcSpellStats(SpellInfo spellInfo, BaseStatInfo baseStats, CombatRatingInfo cr) {
 		double ratingHit = stats.getSpellHitRating() / cr.getSpellHit();
 		double pctHit = stats.getSpellHitPct().getValue();
 		totalHit = ratingHit + pctHit;
@@ -99,7 +104,9 @@ public class Snapshot {
 		double talentSpellCoeff = stats.getSpellCoeffPct().getCoefficient();
 		spellCoeffDirect = baseSpellCoeffDirect + talentSpellCoeff;
 		spellCoeffDoT = baseSpellCoeffDoT + talentSpellCoeff;
+	}
 
+	private void calcCastTime(SpellRankInfo spellRankInfo) {
 		Duration castTimeReduction = stats.getCastTimeReduction();
 		Duration baseCastTime = spellRankInfo.getCastTime();
 		Duration reducedCastTime = baseCastTime.subtract(castTimeReduction);
@@ -107,7 +114,9 @@ public class Snapshot {
 		castTime = reducedCastTime.divideBy(1 + haste);
 		gcd = SpellConstants.GCD.divideBy(1 + haste).max(SpellConstants.MIN_GCD);
 		effectiveCastTime = castTime.max(gcd);
+	}
 
+	private void calcCost(SpellRankInfo spellRankInfo) {
 		double baseManaCost = spellRankInfo.getManaCost();
 		Percent costReductionPct = stats.getCostReductionPct();
 		manaCost = baseManaCost * costReductionPct.negate().toMultiplier();

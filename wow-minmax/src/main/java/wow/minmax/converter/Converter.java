@@ -47,15 +47,6 @@ public abstract class Converter<F, T> {
 				  .collect(Collectors.toMap(Map.Entry::getKey, e -> convert(e.getValue())));
 	}
 
-	public final <K> Map<K, List<T>> convertGroups(Map<K, List<F>> map) {
-		if (map == null) {
-			return null;
-		}
-		return map.entrySet()
-				  .stream()
-				  .collect(Collectors.toMap(Map.Entry::getKey, e -> convertList(e.getValue())));
-	}
-
 	public final List<F> convertBackList(List<T> list) {
 		if (list == null) {
 			return null;
@@ -72,14 +63,5 @@ public abstract class Converter<F, T> {
 		return map.entrySet()
 				  .stream()
 				  .collect(Collectors.toMap(Map.Entry::getKey, e -> convertBack(e.getValue())));
-	}
-
-	public final <K> Map<K, List<F>> convertBackGroups(Map<K, List<T>> map) {
-		if (map == null) {
-			return null;
-		}
-		return map.entrySet()
-				  .stream()
-				  .collect(Collectors.toMap(Map.Entry::getKey, e -> convertBackList(e.getValue())));
 	}
 }

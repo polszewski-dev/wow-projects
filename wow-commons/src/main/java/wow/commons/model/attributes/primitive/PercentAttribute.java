@@ -34,8 +34,8 @@ public final class PercentAttribute extends ScalarAttribute {
 
 	@Override
 	public PercentAttribute scale(double factor) {
-		Percent value = this.value.scale(factor);
-		return new PercentAttribute(id, value, getCondition());
+		Percent scaledValue = value.scale(factor);
+		return new PercentAttribute(id, scaledValue, getCondition());
 	}
 
 	@Override

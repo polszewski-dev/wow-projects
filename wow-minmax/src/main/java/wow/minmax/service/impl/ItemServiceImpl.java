@@ -66,11 +66,13 @@ public class ItemServiceImpl implements ItemService {
 				.filter(item -> isSuitableFor(item, characterInfo))
 				.collect(Collectors.groupingBy(Item::getItemType));
 
-		var result = new HashMap<ItemSlot, List<Item>>();
+		var result = new EnumMap<ItemSlot, List<Item>>(ItemSlot.class);
 
-		for (ItemType itemType : byItemType.keySet()) {
+		for (var entry : byItemType.entrySet()) {
+			var itemType = entry.getKey();
 			for (ItemSlot itemSlot : itemType.getItemSlots()) {
-				result.computeIfAbsent(itemSlot, x -> new ArrayList<>()).addAll(byItemType.get(itemType));
+				var items = byItemType.get(itemType);
+				result.computeIfAbsent(itemSlot, x -> new ArrayList<>()).addAll(items);
 			}
 		}
 
@@ -78,10 +80,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean isSuitableFor(Item item, CharacterInfo characterInfo) {
-		if (item.getRestriction().getRequiredLevel() > characterInfo.getLevel() - 10) {
-			return true;
-		}
-		return false;
+		return item.getRestriction().getRequiredLevel() > characterInfo.getLevel() - 10;
 	}
 
 	@Override
@@ -100,20 +99,19 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean isCasterEnchant(Enchant enchant, ItemType itemType, SpellSchool spellSchool) {
-		if (itemType == ItemType.CHEST) {
-			if (enchant.getBaseStatsIncrease() > 0) {
-				return true;
-			}
-		} else if (itemType == ItemType.BACK) {
-			if (enchant.getThreatReductionPct().getValue() > 0) {
-				return true;
-			}
-		} else if (itemType == ItemType.FEET) {
-			if (enchant.getSpeedIncreasePct().getValue() > 0) {
-				return true;
-			}
+		if (enchant.hasCasterStats(spellSchool)) {
+			return true;
 		}
-		return enchant.hasCasterStats(spellSchool);
+		if (itemType == ItemType.CHEST) {
+			return enchant.getBaseStatsIncrease() > 0;
+		}
+		if (itemType == ItemType.BACK) {
+			return enchant.getThreatReductionPct().getValue() > 0;
+		}
+		if (itemType == ItemType.FEET) {
+			return enchant.getSpeedIncreasePct().getValue() > 0;
+		}
+		return false;
 	}
 
 	@Override

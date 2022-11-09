@@ -102,7 +102,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 			return List.of(item);
 		}
 		items = items.stream()
-				.filter(item2 -> characterInfo.getCharacterClass() == null || item2.canBeEquippedBy(characterInfo, phase))//TODO podejrzane
+				.filter(item2 -> item2.canBeEquippedBy(characterInfo, phase))
 				.collect(Collectors.toList());
 		return items;
 	}

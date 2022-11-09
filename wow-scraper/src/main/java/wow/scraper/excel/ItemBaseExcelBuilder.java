@@ -84,7 +84,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("sell_price");
 
 		for (int i = 1; i <= MAX_STATS; ++i) {
-			setHeader("stat" + i);;
+			setHeader("stat" + i);
 		}
 
 		setHeader("icon");

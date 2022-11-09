@@ -63,16 +63,13 @@ public enum MetaEnabler {
 		if (numBlue < reqBlue) {
 			return false;
 		}
-		if (moreRedThanYellow && !(numRed > numYellow)) {
+		if (moreRedThanYellow && numRed <= numYellow) {
 			return false;
 		}
-		if (moreRedThanBlue && !(numRed > numBlue)) {
+		if (moreRedThanBlue && numRed <= numBlue) {
 			return false;
 		}
-		if (moreBlueThanYellow && !(numBlue > numYellow)) {
-			return false;
-		}
-		return true;
+		return !moreBlueThanYellow || numBlue > numYellow;
 	}
 
 	@Override

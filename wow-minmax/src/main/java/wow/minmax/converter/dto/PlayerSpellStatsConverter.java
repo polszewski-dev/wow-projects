@@ -20,28 +20,28 @@ public class PlayerSpellStatsConverter extends Converter<PlayerSpellStats, Spell
 	@Override
 	protected SpellStatsDTO doConvert(PlayerSpellStats playerSpellStats) {
 		SpellStatistics spellStatistics = playerSpellStats.getSpellStatistics();
-		Snapshot snapshot = spellStatistics.snapshot;
+		Snapshot snapshot = spellStatistics.getSnapshot();
 
-		SpellInfo spellInfo = snapshot.spellInfo;
-		SpellRankInfo spellRankInfo = snapshot.spellRankInfo;
+		SpellInfo spellInfo = snapshot.getSpellInfo();
+		SpellRankInfo spellRankInfo = snapshot.getSpellRankInfo();
 
 		boolean dir = spellRankInfo.getMinDmg() != 0 && spellRankInfo.getMaxDmg() != 0;
-		boolean dot = spellRankInfo.getDotDmg() != 0;;
+		boolean dot = spellRankInfo.getDotDmg() != 0;
 
 		return new SpellStatsDTO(
 				spellInfo.getSpellId().getName(),
-				(int) spellStatistics.dps,
-				(int) spellStatistics.totalDamage,
-				spellStatistics.castTime.getSeconds(),
-				(int) spellStatistics.manaCost,
-				(int) spellStatistics.dpm,
-				(int) snapshot.sp,
-				snapshot.totalHit,
-				dir ? snapshot.totalCrit : 0,
-				snapshot.totalHaste,
-				dir ? snapshot.spellCoeffDirect : 0,
-				dot ? snapshot.spellCoeffDoT : 0,
-				dir ? snapshot.critCoeff : 0,
+				(int) spellStatistics.getDps(),
+				(int) spellStatistics.getTotalDamage(),
+				spellStatistics.getCastTime().getSeconds(),
+				(int) spellStatistics.getManaCost(),
+				(int) spellStatistics.getDpm(),
+				(int) snapshot.getSp(),
+				snapshot.getTotalHit(),
+				dir ? snapshot.getTotalCrit() : 0,
+				snapshot.getTotalHaste(),
+				dir ? snapshot.getSpellCoeffDirect() : 0,
+				dot ? snapshot.getSpellCoeffDoT() : 0,
+				dir ? snapshot.getCritCoeff() : 0,
 				blankNearZeros(playerSpellStats.getHitSpEqv()),
 				blankNearZeros(playerSpellStats.getCritSpEqv()),
 				blankNearZeros(playerSpellStats.getHasteSpEqv())

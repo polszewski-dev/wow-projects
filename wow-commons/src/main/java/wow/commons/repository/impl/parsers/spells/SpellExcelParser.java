@@ -47,11 +47,11 @@ public class SpellExcelParser extends ExcelParser {
 	@Override
 	protected Stream<SheetReader> getSheetReaders() {
 		return Stream.of(
-				new SheetReader("spells", this::readSpells, COL_SPELL_SPELL),
-				new SheetReader("ranks", this::readRanks, COL_RANK_SPELL),
-				new SheetReader("talents", this::readTalents, COL_TALENT_TALENT),
-				new SheetReader("effects", this::readEffects, COL_EFFECT_EFFECT),
-				new SheetReader("buffs", this::readBuffs, COL_BUFF_NAME)
+				new SheetReader("spells", this::readSpells, colSpellSpell),
+				new SheetReader("ranks", this::readRanks, colRankSpell),
+				new SheetReader("talents", this::readTalents, colTalentTalent),
+				new SheetReader("effects", this::readEffects, colEffectEffect),
+				new SheetReader("buffs", this::readBuffs, colBuffName)
 		);
 	}
 
@@ -240,78 +240,78 @@ public class SpellExcelParser extends ExcelParser {
 		}
 	}
 
-	private final ExcelColumn COL_SPELL_SPELL = column("spell");
-	private final ExcelColumn COL_SPELL_TREE = column("tree");
-	private final ExcelColumn COL_SPELL_SCHOOL = column("school");
-	private final ExcelColumn COL_SPELL_COEFF_DIRECT = column("coeff direct");
-	private final ExcelColumn COL_SPELL_COEFF_DOT = column("coeff dot");
-	private final ExcelColumn COL_SPELL_COOLDOWN = column("cooldown");
-	private final ExcelColumn COL_SPELL_IGNORES_GCD = column("ignores gcd");
-	private final ExcelColumn COL_SPELL_REQUITED_TALENT = column("required talent");
-	private final ExcelColumn COL_SPELL_BOLT = column("bolt");
-	private final ExcelColumn COL_SPELL_CONVERSION_FROM = column("conversion: from");
-	private final ExcelColumn COL_SPELL_CONVERSION_TO = column("conversion: to");
-	private final ExcelColumn COL_SPELL_CONVERSION_PCT = column("conversion: %");
-	private final ExcelColumn COL_SPELL_REQUITED_EFFECT = column("required effect");
-	private final ExcelColumn COL_SPELL_EFFECT_REMOVED_ON_HIT = column("effect removed on hit");
-	private final ExcelColumn COL_SPELL_BONUS_DAMAGE_IF_UNDER_EFFECT = column("bonus dmg if under effect");
-	private final ExcelColumn COL_SPELL_DOT_SCHEME = column("dot scheme");
+	private final ExcelColumn colSpellSpell = column("spell");
+	private final ExcelColumn colSpellTree = column("tree");
+	private final ExcelColumn colSpellSchool = column("school");
+	private final ExcelColumn colSpellCoeffDirect = column("coeff direct");
+	private final ExcelColumn colSpellCoeffDot = column("coeff dot");
+	private final ExcelColumn colSpellCooldown = column("cooldown");
+	private final ExcelColumn colSpellIgnoresGcd = column("ignores gcd");
+	private final ExcelColumn colSpellRequitedTalent = column("required talent");
+	private final ExcelColumn colSpellBolt = column("bolt");
+	private final ExcelColumn colSpellConversionFrom = column("conversion: from");
+	private final ExcelColumn colSpellConversionTo = column("conversion: to");
+	private final ExcelColumn colSpellConversionPct = column("conversion: %");
+	private final ExcelColumn colSpellRequitedEffect = column("required effect");
+	private final ExcelColumn colSpellEffectRemovedOnHit = column("effect removed on hit");
+	private final ExcelColumn colSpellBonusDamageIfUnderEffect = column("bonus dmg if under effect");
+	private final ExcelColumn colSpellDotScheme = column("dot scheme");
 
-	private final ExcelColumn COL_RANK_SPELL = column("spell");
-	private final ExcelColumn COL_RANK_RANK = column("rank");
-	private final ExcelColumn COL_RANK_LEVEL = column("level");
-	private final ExcelColumn COL_RANK_MANA_COST = column("mana cost");
-	private final ExcelColumn COL_RANK_CAST_TIME = column("cast time");
-	private final ExcelColumn COL_RANK_CHANNELED = column("channeled");
-	private final ExcelColumn COL_RANK_MIN_DMG = column("min dmg");
-	private final ExcelColumn COL_RANK_MAX_DMG = column("max dmg");
-	private final ExcelColumn COL_RANK_DOT_DMG = column("dot dmg");
-	private final ExcelColumn COL_RANK_NUM_TICKS = column("num ticks");
-	private final ExcelColumn COL_RANK_TICK_INTERVAL = column("tick interval");
-	private final ExcelColumn COL_RANK_MIN_DMG2 = column("min dmg2");
-	private final ExcelColumn COL_RANK_MAX_DMG2 = column("max dmg2");
-	private final ExcelColumn COL_RANK_ADDITIONAL_COST_TYPE = column("additional cost: type");
-	private final ExcelColumn COL_RANK_ADDITIONAL_COST_AMOUNT = column("additional cost: amount");
-	private final ExcelColumn COL_RANK_ADDITIONAL_COST_SCALED = column("additional cost: scaled");
-	private final ExcelColumn COL_RANK_APPLIED_EFFECT = column("applied effect");
-	private final ExcelColumn COL_RANK_APPLIED_EFFECT_DURATION = column("applied effect duration");
+	private final ExcelColumn colRankSpell = column("spell");
+	private final ExcelColumn colRankRank = column("rank");
+	private final ExcelColumn colRankLevel = column("level");
+	private final ExcelColumn colRankManaCost = column("mana cost");
+	private final ExcelColumn colRankCastTime = column("cast time");
+	private final ExcelColumn colRankChanneled = column("channeled");
+	private final ExcelColumn colRankMinDmg = column("min dmg");
+	private final ExcelColumn colRankMaxDmg = column("max dmg");
+	private final ExcelColumn colRankDotDmg = column("dot dmg");
+	private final ExcelColumn colRankNumTicks = column("num ticks");
+	private final ExcelColumn colRankTickInterval = column("tick interval");
+	private final ExcelColumn colRankMinDmg2 = column("min dmg2");
+	private final ExcelColumn colRankMaxDmg2 = column("max dmg2");
+	private final ExcelColumn colRankAdditionalCostType = column("additional cost: type");
+	private final ExcelColumn colRankAdditionalCostAmount = column("additional cost: amount");
+	private final ExcelColumn colRankAdditionalCostScaled = column("additional cost: scaled");
+	private final ExcelColumn colRankAppliedEffect = column("applied effect");
+	private final ExcelColumn colRankAppliedEffectDuration = column("applied effect duration");
 
-	private final ExcelColumn COL_TALENT_TALENT = column("talent");
-	private final ExcelColumn COL_TALENT_RANK = column("rank");
-	private final ExcelColumn COL_TALENT_MAX_RANK = column("max rank");
-	private final ExcelColumn COL_TALENT_DESCRIPTION = column("description");
+	private final ExcelColumn colTalentTalent = column("talent");
+	private final ExcelColumn colTalentRank = column("rank");
+	private final ExcelColumn colTalentMaxRank = column("max rank");
+	private final ExcelColumn colTalentDescription = column("description");
 
-	private final ExcelColumn COL_TALENT_TREE = column("tree");
-	private final ExcelColumn COL_TALENT_SCHOOL = column("school");
-	private final ExcelColumn COL_TALENT_SPELL = column("spell");
-	private final ExcelColumn COL_TALENT_PET = column("pet");
+	private final ExcelColumn colTalentTree = column("tree");
+	private final ExcelColumn colTalentSchool = column("school");
+	private final ExcelColumn colTalentSpell = column("spell");
+	private final ExcelColumn colTalentPet = column("pet");
 
-	private final ExcelColumn COL_EFFECT_EFFECT = column("effect");
-	private final ExcelColumn COL_EFFECT_FRIENDLY = column("friendly");
-	private final ExcelColumn COL_EFFECT_SCOPE = column("scope");
-	private final ExcelColumn COL_EFFECT_MAX_STACKS = column("max stacks");
-	private final ExcelColumn COL_EFFECT_REMOVE_AFTER = column("remove after");
-	private final ExcelColumn COL_EFFECT_REMOVE_AFTER_SCHOOL = column("remove after: school");
-	private final ExcelColumn COL_EFFECT_ON_APPLY = column("on apply");
-	private final ExcelColumn COL_EFFECT_TREE = column("tree");
-	private final ExcelColumn COL_EFFECT_SCHOOL = column("school");
-	private final ExcelColumn COL_EFFECT_SPELL = column("spell");
-	private final ExcelColumn COL_EFFECT_PET = column("pet");
-	private final ExcelColumn COL_EFFECT_STACK_SCALING = column("stack scaling");
+	private final ExcelColumn colEffectEffect = column("effect");
+	private final ExcelColumn colEffectFriendly = column("friendly");
+	private final ExcelColumn colEffectScope = column("scope");
+	private final ExcelColumn colEffectMaxStacks = column("max stacks");
+	private final ExcelColumn colEffectRemoveAfter = column("remove after");
+	private final ExcelColumn colEffectRemoveAfterSchool = column("remove after: school");
+	private final ExcelColumn colEffectOnApply = column("on apply");
+	private final ExcelColumn colEffectTree = column("tree");
+	private final ExcelColumn colEffectSchool = column("school");
+	private final ExcelColumn colEffectSpell = column("spell");
+	private final ExcelColumn colEffectPet = column("pet");
+	private final ExcelColumn colEffectStackScaling = column("stack scaling");
 
-	private final ExcelColumn COL_BUFF_ID = column("id");
-	private final ExcelColumn COL_BUFF_NAME = column("name");
-	private final ExcelColumn COL_BUFF_LEVEL = column("level");
-	private final ExcelColumn COL_BUFF_TYPE = column("type");
-	private final ExcelColumn COL_BUFF_EXCLUSION_GROUP = column("exclusion group");
-	private final ExcelColumn COL_BUFF_STAT = column("stat");
-	private final ExcelColumn COL_BUFF_AMOUNT = column("amount");
-	private final ExcelColumn COL_BUFF_DURATION = column("duration");
-	private final ExcelColumn COL_BUFF_COOLDOWN = column("cooldown");
-	private final ExcelColumn COL_BUFF_DESCRIPTION = column("description");
-	private final ExcelColumn COL_BUFF_SOURCE_SPELL = column("source spell");
+	private final ExcelColumn colBuffId = column("id");
+	private final ExcelColumn colBuffName = column("name");
+	private final ExcelColumn colBuffLevel = column("level");
+	private final ExcelColumn colBuffType = column("type");
+	private final ExcelColumn colBuffExclusionGroup = column("exclusion group");
+	private final ExcelColumn colBuffStat = column("stat");
+	private final ExcelColumn colBuffAmount = column("amount");
+	private final ExcelColumn colBuffDuration = column("duration");
+	private final ExcelColumn colBuffCooldown = column("cooldown");
+	private final ExcelColumn colBuffDescription = column("description");
+	private final ExcelColumn colBuffSourceSpell = column("source spell");
 
-	private final BenefitAttributeColumns TALENT_COLUMNS = new BenefitAttributeColumns()
+	private final BenefitAttributeColumns talentColumns = new BenefitAttributeColumns()
 			.add(AttributeId.CAST_TIME_REDUCTION, "cast time reduction")
 			.add(AttributeId.COOLDOWN_REDUCTION, "cooldown reduction")
 			.add(AttributeId.COST_REDUCTION_PCT, "cost reduction%")
@@ -365,7 +365,7 @@ public class SpellExcelParser extends ExcelParser {
 
 			;
 
-	private final BenefitAttributeColumns EFFECT_COLUMNS = new BenefitAttributeColumns()
+	private final BenefitAttributeColumns effectColumns = new BenefitAttributeColumns()
 			.add(AttributeId.EFFECT_INCREASE_PCT, "effect increase%")
 			.add(AttributeId.DAMAGE_TAKEN_INCREASE_PCT, "damage taken increase%")
 			.add(AttributeId.SPELL_DAMAGE, "sp bonus")
@@ -384,30 +384,30 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private SpellInfo getSpellInfo() {
-		var spellId = SpellId.parse(COL_SPELL_SPELL.getString());
-		var talentTree = COL_SPELL_TREE.getEnum(TalentTree::parse);
-		var spellSchool = COL_SPELL_SCHOOL.getEnum(SpellSchool::parse, null);
-		var coeffDirect = COL_SPELL_COEFF_DIRECT.getPercent(Percent.ZERO);
-		var coeffDot = COL_SPELL_COEFF_DOT.getPercent(Percent.ZERO);
-		var cooldown = COL_SPELL_COOLDOWN.getDuration(null);
-		var ignoresGCD = COL_SPELL_IGNORES_GCD.getBoolean();
-		var requiredTalent = COL_SPELL_REQUITED_TALENT.getEnum(TalentId::parse, null);
-		var bolt = COL_SPELL_BOLT.getBoolean();
-		var requiredEffect = COL_SPELL_REQUITED_EFFECT.getEnum(EffectId::parse, null);
-		var effectRemovedOnHit = COL_SPELL_EFFECT_REMOVED_ON_HIT.getEnum(EffectId::parse, null);
-		var bonusDamageIfUnderEffect = COL_SPELL_BONUS_DAMAGE_IF_UNDER_EFFECT.getEnum(EffectId::parse, null);
-		var dotScheme = COL_SPELL_DOT_SCHEME.getList(Integer::parseInt);
+		var spellId = SpellId.parse(colSpellSpell.getString());
+		var talentTree = colSpellTree.getEnum(TalentTree::parse);
+		var spellSchool = colSpellSchool.getEnum(SpellSchool::parse, null);
+		var coeffDirect = colSpellCoeffDirect.getPercent(Percent.ZERO);
+		var coeffDot = colSpellCoeffDot.getPercent(Percent.ZERO);
+		var cooldown = colSpellCooldown.getDuration(null);
+		var ignoresGCD = colSpellIgnoresGcd.getBoolean();
+		var requiredTalent = colSpellRequitedTalent.getEnum(TalentId::parse, null);
+		var bolt = colSpellBolt.getBoolean();
+		var requiredEffect = colSpellRequitedEffect.getEnum(EffectId::parse, null);
+		var effectRemovedOnHit = colSpellEffectRemovedOnHit.getEnum(EffectId::parse, null);
+		var bonusDamageIfUnderEffect = colSpellBonusDamageIfUnderEffect.getEnum(EffectId::parse, null);
+		var dotScheme = colSpellDotScheme.getList(Integer::parseInt);
 		var conversion = getConversion();
 
 		return new SpellInfo(spellId, talentTree, spellSchool, coeffDirect, coeffDot, cooldown, ignoresGCD, requiredTalent, bolt, conversion, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect, dotScheme);
 	}
 
 	private Conversion getConversion() {
-		var conversionFrom = COL_SPELL_CONVERSION_FROM.getEnum(Conversion.From::parse, null);
-		var conversionTo = COL_SPELL_CONVERSION_TO.getEnum(Conversion.To::parse, null);
+		var conversionFrom = colSpellConversionFrom.getEnum(Conversion.From::parse, null);
+		var conversionTo = colSpellConversionTo.getEnum(Conversion.To::parse, null);
 
 		if (conversionFrom != null && conversionTo != null) {
-			var conversionPct = COL_SPELL_CONVERSION_PCT.getPercent();
+			var conversionPct = colSpellConversionPct.getPercent();
 			return new Conversion(conversionFrom, conversionTo, conversionPct);
 		} else if (conversionFrom != null || conversionTo != null) {
 			throw new IllegalArgumentException("Conversion misses either from or to part");
@@ -428,21 +428,21 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private SpellRankInfo getSpellRankInfo() {
-		var spellId = SpellId.parse(COL_RANK_SPELL.getString());
-		var rank = COL_RANK_RANK.getInteger(0);
-		var level = COL_RANK_LEVEL.getInteger();
-		var manaCost = COL_RANK_MANA_COST.getInteger();
-		var castTime = COL_RANK_CAST_TIME.getDuration();
-		var channeled = COL_RANK_CHANNELED.getBoolean();
-		var minDmg = COL_RANK_MIN_DMG.getInteger(0);
-		var maxDmg = COL_RANK_MAX_DMG.getInteger(0);
-		var dotDmg = COL_RANK_DOT_DMG.getInteger(0);
-		var numTicks = COL_RANK_NUM_TICKS.getInteger(0);
-		var tickInterval = COL_RANK_TICK_INTERVAL.getDuration(null);
-		var minDmg2 = COL_RANK_MIN_DMG2.getInteger(0);
-		var maxDmg2 = COL_RANK_MAX_DMG2.getInteger(0);
-		var appliedEffect = COL_RANK_APPLIED_EFFECT.getEnum(EffectId::parse, null);
-		var appliedEffectDuration = COL_RANK_APPLIED_EFFECT_DURATION.getDuration(null);
+		var spellId = SpellId.parse(colRankSpell.getString());
+		var rank = colRankRank.getInteger(0);
+		var level = colRankLevel.getInteger();
+		var manaCost = colRankManaCost.getInteger();
+		var castTime = colRankCastTime.getDuration();
+		var channeled = colRankChanneled.getBoolean();
+		var minDmg = colRankMinDmg.getInteger(0);
+		var maxDmg = colRankMaxDmg.getInteger(0);
+		var dotDmg = colRankDotDmg.getInteger(0);
+		var numTicks = colRankNumTicks.getInteger(0);
+		var tickInterval = colRankTickInterval.getDuration(null);
+		var minDmg2 = colRankMinDmg2.getInteger(0);
+		var maxDmg2 = colRankMaxDmg2.getInteger(0);
+		var appliedEffect = colRankAppliedEffect.getEnum(EffectId::parse, null);
+		var appliedEffectDuration = colRankAppliedEffectDuration.getDuration(null);
 		var additionalCost = getAdditionalCost();
 
 		if (appliedEffect != null && appliedEffectDuration == null) {
@@ -453,14 +453,14 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private AdditionalCost getAdditionalCost() {
-		var additionalCostType = COL_RANK_ADDITIONAL_COST_TYPE.getEnum(CostType::parse, null);
+		var additionalCostType = colRankAdditionalCostType.getEnum(CostType::parse, null);
 
 		if (additionalCostType == null) {
 			return null;
 		}
 
-		var additionalCostAmount = COL_RANK_ADDITIONAL_COST_AMOUNT.getInteger();
-		var additionalCostScaled = COL_RANK_ADDITIONAL_COST_SCALED.getBoolean();
+		var additionalCostAmount = colRankAdditionalCostAmount.getInteger();
+		var additionalCostScaled = colRankAdditionalCostScaled.getBoolean();
 
 		return new AdditionalCost(additionalCostType, additionalCostAmount, additionalCostScaled);
 	}
@@ -472,21 +472,21 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private TalentInfo getTalentInfo() {
-		var talentName = TalentId.parse(COL_TALENT_TALENT.getString());
-		var rank = COL_TALENT_RANK.getInteger();
-		var maxRank = COL_TALENT_MAX_RANK.getInteger();
-		var description = COL_TALENT_DESCRIPTION.getString(null);
+		var talentName = TalentId.parse(colTalentTalent.getString());
+		var rank = colTalentRank.getInteger();
+		var maxRank = colTalentMaxRank.getInteger();
+		var description = colTalentDescription.getString(null);
 
 		return new TalentInfo(talentName, rank, maxRank, description, Attributes.EMPTY);
 	}
 
 	private Attributes getTalentBenefit() {
-		var talentTree = COL_TALENT_TREE.getEnum(TalentTree::parse, null);
-		var spellSchool = COL_TALENT_SCHOOL.getEnum(SpellSchool::parse, null);
-		var spells = COL_TALENT_SPELL.getSet(SpellId::parse);
-		var petTypes = COL_TALENT_PET.getSet(PetType::parse);
+		var talentTree = colTalentTree.getEnum(TalentTree::parse, null);
+		var spellSchool = colTalentSchool.getEnum(SpellSchool::parse, null);
+		var spells = colTalentSpell.getSet(SpellId::parse);
+		var petTypes = colTalentPet.getSet(PetType::parse);
 
-		return TALENT_COLUMNS.readAttributes(talentTree, spellSchool, spells, petTypes);
+		return talentColumns.readAttributes(talentTree, spellSchool, spells, petTypes);
 	}
 
 	private void readEffects() {
@@ -495,12 +495,12 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private EffectInfo getEffectInfo() {
-		var effectId = EffectId.parse(COL_EFFECT_EFFECT.getString());
-		var friendly = COL_EFFECT_FRIENDLY.getBoolean();
-		var scope = COL_EFFECT_SCOPE.getEnum(Scope::parse, Scope.PERSONAL);
-		var maxStacks = COL_EFFECT_MAX_STACKS.getInteger(1);
-		var onApply = COL_EFFECT_ON_APPLY.getEnum(OnApply::parse, null);
-		var stackScaling = COL_EFFECT_STACK_SCALING.getBoolean();
+		var effectId = EffectId.parse(colEffectEffect.getString());
+		var friendly = colEffectFriendly.getBoolean();
+		var scope = colEffectScope.getEnum(Scope::parse, Scope.PERSONAL);
+		var maxStacks = colEffectMaxStacks.getInteger(1);
+		var onApply = colEffectOnApply.getEnum(OnApply::parse, null);
+		var stackScaling = colEffectStackScaling.getBoolean();
 		var attributes = getEffectAttributes();
 		var removeCondition = getRemoveCondition();
 
@@ -508,17 +508,17 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private Attributes getEffectAttributes() {
-		var talentTree = COL_EFFECT_TREE.getEnum(TalentTree::parse, null);
-		var spellSchool = COL_EFFECT_SCHOOL.getEnum(SpellSchool::parse, null);
-		var spells = COL_EFFECT_SPELL.getSet(SpellId::parse);
-		var petTypes = COL_EFFECT_PET.getSet(PetType::parse);
+		var talentTree = colEffectTree.getEnum(TalentTree::parse, null);
+		var spellSchool = colEffectSchool.getEnum(SpellSchool::parse, null);
+		var spells = colEffectSpell.getSet(SpellId::parse);
+		var petTypes = colEffectPet.getSet(PetType::parse);
 
-		return EFFECT_COLUMNS.readAttributes(talentTree, spellSchool, spells, petTypes);
+		return effectColumns.readAttributes(talentTree, spellSchool, spells, petTypes);
 	}
 
 	private RemoveCondition getRemoveCondition() {
-		var removeConditionEvent = COL_EFFECT_REMOVE_AFTER.getEnum(RemoveEvent::parse, null);
-		var removeConditionSpellSchool = COL_EFFECT_REMOVE_AFTER_SCHOOL.getEnum(SpellSchool::parse, null);
+		var removeConditionEvent = colEffectRemoveAfter.getEnum(RemoveEvent::parse, null);
+		var removeConditionSpellSchool = colEffectRemoveAfterSchool.getEnum(SpellSchool::parse, null);
 
 		return RemoveCondition.create(removeConditionEvent, removeConditionSpellSchool);
 	}
@@ -529,15 +529,15 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private Buff getBuff() {
-		var buffId = COL_BUFF_ID.getInteger();
-		var name = COL_BUFF_NAME.getString();
-		var level = COL_BUFF_LEVEL.getInteger(0);
-		var type = COL_BUFF_TYPE.getEnum(BuffType::parse);
-		var exclusionGroup = COL_BUFF_EXCLUSION_GROUP.getEnum(BuffExclusionGroup::parse, null);
-		var duration = COL_BUFF_DURATION.getDuration(null);
-		var cooldown = COL_BUFF_COOLDOWN.getDuration(null);
-		var description = COL_BUFF_DESCRIPTION.getString(null);
-		var sourceSpell = COL_BUFF_SOURCE_SPELL.getEnum(SpellId::parse, null);
+		var buffId = colBuffId.getInteger();
+		var name = colBuffName.getString();
+		var level = colBuffLevel.getInteger(0);
+		var type = colBuffType.getEnum(BuffType::parse);
+		var exclusionGroup = colBuffExclusionGroup.getEnum(BuffExclusionGroup::parse, null);
+		var duration = colBuffDuration.getDuration(null);
+		var cooldown = colBuffCooldown.getDuration(null);
+		var description = colBuffDescription.getString(null);
+		var sourceSpell = colBuffSourceSpell.getEnum(SpellId::parse, null);
 		var buffAttributes = getBuffAttributes();
 
 		return new Buff(buffId, name, level, type, exclusionGroup, buffAttributes, sourceSpell, duration, cooldown, description);
@@ -548,10 +548,10 @@ public class SpellExcelParser extends ExcelParser {
 		int maxAttributes = 5;
 
 		for (int statNo = 1; statNo <= maxAttributes; ++statNo) {
-			var attributeStr = COL_BUFF_STAT.multi(statNo).getString(null);
+			var attributeStr = colBuffStat.multi(statNo).getString(null);
 			if (attributeStr != null) {
 				PrimitiveAttributeSupplier attributeParser = PrimitiveAttributeSupplier.fromString(attributeStr);
-				int amount = COL_BUFF_AMOUNT.multi(statNo).getInteger();
+				int amount = colBuffAmount.multi(statNo).getInteger();
 				builder.addAttributeList(attributeParser.getAttributeList(amount));
 			}
 		}

@@ -194,15 +194,14 @@ public final class Duration implements Comparable<Duration> {
 			return "INFINITE";
 		}
 
-		long hours, minutes, seconds, milliseconds;
 		long x = millis;
-		milliseconds = x % 1000;
+		long milliseconds = x % 1000;
 		x /= 1000;
-		seconds = x % 60;
+		long seconds = x % 60;
 		x /= 60;
-		minutes = x % 60;
+		long minutes = x % 60;
 		x /= 60;
-		hours = x;
+		long hours = x;
 
 		return (hours != 0 ? hours + "h" : "") +
 				(minutes != 0 ? minutes + "m" : "") +

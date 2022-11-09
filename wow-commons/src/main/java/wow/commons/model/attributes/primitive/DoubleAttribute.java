@@ -32,8 +32,8 @@ public final class DoubleAttribute extends ScalarAttribute {
 
 	@Override
 	public DoubleAttribute scale(double factor) {
-		double value = factor * this.value;
-		return new DoubleAttribute(id, value, getCondition());
+		double scaledValue = factor * value;
+		return new DoubleAttribute(id, scaledValue, getCondition());
 	}
 
 	@Override
@@ -51,7 +51,6 @@ public final class DoubleAttribute extends ScalarAttribute {
 
 	@Override
 	public String toString() {
-		double value = this.value;
 		if (value % 1 == 0) {
 			return String.format("%s %s%s", (int)value, id, getConditionString());
 		} else {

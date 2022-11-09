@@ -48,7 +48,7 @@ public class GemTooltipParser extends AbstractTooltipParser {
 				Rule.prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x)),
 				Rule.testNotNull(GemStatsParser::tryParseStats, x -> statLines.add(x)),
 		};
-	};
+	}
 
 	@Override
 	protected void beforeParse() {
