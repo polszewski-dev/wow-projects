@@ -39,14 +39,6 @@ public class AttributesDiffFinder {
 
 	private void addPrimitiveAttributeDiff(AttributesDiff result) {
 		List<PrimitiveAttribute> attributes = getPrimitiveAttributeDiff();
-
-		attributes.removeIf(Objects::isNull);
-
-		attributes.sort(//TODO powinno byc w attribtes
-				Comparator.<PrimitiveAttribute>comparingInt(x -> x.getId().getSortOrder())
-						.thenComparing(x -> x.getCondition() != null ? x.getCondition().toString() : "")
-		);
-
 		result.setAttributes(Attributes.of(attributes));
 	}
 
@@ -64,6 +56,8 @@ public class AttributesDiffFinder {
 		for (PrimitiveCollector collector : collectors.values()) {
 			attributes.add(collector.getResult());
 		}
+
+		attributes.removeIf(Objects::isNull);
 
 		return attributes;
 	}

@@ -7,6 +7,8 @@ import wow.commons.model.attributes.AttributeCondition;
 
 import java.util.Objects;
 
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.DisplayHint;
+
 /**
  * User: POlszewski
  * Date: 2022-01-04
@@ -84,12 +86,21 @@ public class PrimitiveAttribute extends Attribute {
 	}
 
 	@Override
-	public String toString() {//TODO format hints
-		String idStr = (id.name().endsWith("_PCT") ? "% " : " ") + id;
+	public String toString() {
+		return String.format("%s %s%s", getValueString(), id, getConditionString());
+	}
+
+	private String getValueString() {
+		if (id.getDisplayHint() == DisplayHint.PERCENT) {
+			return getPercent().toString();
+		} else if (id.getDisplayHint() == DisplayHint.DURATION) {
+			return getDuration().toString();
+		}
+
 		if (value % 1 == 0) {
-			return String.format("%s%s%s", (int)value, idStr, getConditionString());
+			return Integer.toString((int)value);
 		} else {
-			return String.format("%.2f%s%s", value, idStr, getConditionString());
+			return String.format("%.2f", value);
 		}
 	}
 }

@@ -6,10 +6,7 @@ import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +35,10 @@ public abstract class Attributes implements AttributeSource {
 
 	public static Attributes of(List<PrimitiveAttribute> attributeList) {
 		return of(attributeList, Map.of());
+	}
+
+	public static Attributes of(PrimitiveAttribute... attributeList) {
+		return of(List.of(attributeList), Map.of());
 	}
 
 	public static Attributes of(PrimitiveAttributeId attributeId, double value) {
@@ -85,7 +86,10 @@ public abstract class Attributes implements AttributeSource {
 	@Override
 	public String toString() {
 		return Stream.concat(
-				attributeList.stream(),
+				attributeList.stream().sorted(
+						Comparator.<PrimitiveAttribute>comparingInt(x -> x.getId().getSortOrder())
+								.thenComparing(x -> x.getCondition() != null ? x.getCondition().toString() : "")
+				),
 				complexAttributeList.values().stream().flatMap(Collection::stream)
 		)
 		 .map(Object::toString)
