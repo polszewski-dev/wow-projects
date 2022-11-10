@@ -12,9 +12,7 @@ import wow.commons.util.ExcelParser;
 import java.io.InputStream;
 import java.util.stream.Stream;
 
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.*;
-import static wow.commons.model.attributes.primitive.PercentAttributeId.SPEED_INCREASE_PCT;
-import static wow.commons.model.attributes.primitive.PercentAttributeId.THREAT_REDUCTION_PCT;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski

@@ -3,9 +3,8 @@ package wow.commons.model.attributes;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.primitive.DoubleAttributeId;
-import wow.commons.model.attributes.primitive.PercentAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -21,15 +20,15 @@ import java.util.stream.Stream;
 public abstract class Attributes implements AttributeSource {
 	public static final Attributes EMPTY = of(List.of(), Map.of());
 
-	protected final List<? extends PrimitiveAttribute> attributeList;
+	protected final List<PrimitiveAttribute> attributeList;
 	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList;
 
-	private Attributes(List<? extends PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
+	private Attributes(List<PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
 		this.attributeList = attributeList;
 		this.complexAttributeList = complexAttributeList;
 	}
 
-	public static Attributes of(List<? extends PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
+	public static Attributes of(List<PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
 		if (attributeList.size() < 10) {
 			return new NonCachedAttributes(attributeList, complexAttributeList);
 		} else {
@@ -37,15 +36,15 @@ public abstract class Attributes implements AttributeSource {
 		}
 	}
 
-	public static Attributes of(List<? extends PrimitiveAttribute> attributeList) {
+	public static Attributes of(List<PrimitiveAttribute> attributeList) {
 		return of(attributeList, Map.of());
 	}
 
-	public static Attributes of(DoubleAttributeId attributeId, double value) {
+	public static Attributes of(PrimitiveAttributeId attributeId, double value) {
 		return of(List.of(Attribute.of(attributeId, value)), Map.of());
 	}
 
-	public static Attributes of(PercentAttributeId attributeId, Percent value) {
+	public static Attributes of(PrimitiveAttributeId attributeId, Percent value) {
 		return of(List.of(Attribute.of(attributeId, value)), Map.of());
 	}
 
@@ -55,7 +54,7 @@ public abstract class Attributes implements AttributeSource {
 
 	@Override
 	public List<PrimitiveAttribute> getPrimitiveAttributeList() {
-		return (List<PrimitiveAttribute>)attributeList;
+		return attributeList;
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public abstract class Attributes implements AttributeSource {
 
 	@Override
 	public boolean isEmpty() {
-		return attributeList.isEmpty();//TODO bug?
+		return attributeList.isEmpty() && complexAttributeList.isEmpty();
 	}
 
 	@Override
@@ -94,29 +93,22 @@ public abstract class Attributes implements AttributeSource {
 	}
 
 	private static class NonCachedAttributes extends Attributes {
-		private NonCachedAttributes(List<? extends PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
+		private NonCachedAttributes(List<PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
 			super(attributeList, complexAttributeList);
 		}
 	}
 
 	private static class CachedAttributes extends Attributes {
-		private Map<DoubleAttributeId, Double> doubleCache;
-		private Map<PercentAttributeId, Percent> percentCache;
+		private Map<PrimitiveAttributeId, Double> doubleCache;
 
-		private CachedAttributes(List<? extends PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
+		private CachedAttributes(List<PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
 			super(attributeList, complexAttributeList);
 		}
 
 		@Override
-		public double getDouble(DoubleAttributeId attributeId) {
+		public double getDouble(PrimitiveAttributeId attributeId) {
 			ensureCache();
 			return doubleCache.getOrDefault(attributeId, 0.0);
-		}
-
-		@Override
-		public Percent getPercent(PercentAttributeId attributeId) {
-			ensureCache();
-			return percentCache.getOrDefault(attributeId, Percent.ZERO);
 		}
 
 		private void ensureCache() {
@@ -124,17 +116,11 @@ public abstract class Attributes implements AttributeSource {
 				return;
 			}
 
-			doubleCache = new EnumMap<>(DoubleAttributeId.class);
-			percentCache = new EnumMap<>(PercentAttributeId.class);
+			doubleCache = new EnumMap<>(PrimitiveAttributeId.class);
 
-			for (Attribute attribute : attributeList) {
-				if (attribute.getId().isDoubleAttribute()) {
-					DoubleAttributeId id = (DoubleAttributeId) attribute.getId();
-					doubleCache.put(id, attribute.getDouble() + doubleCache.getOrDefault(id, 0.0));
-				} else if (attribute.getId().isPercentAttribute()) {
-					PercentAttributeId id = (PercentAttributeId) attribute.getId();
-					percentCache.put(id, attribute.getPercent().add(percentCache.getOrDefault(id, Percent.ZERO)));
-				}
+			for (PrimitiveAttribute attribute : attributeList) {
+				PrimitiveAttributeId id = attribute.getId();
+				doubleCache.put(id, attribute.getDouble() + doubleCache.getOrDefault(id, 0.0));
 			}
 		}
 	}

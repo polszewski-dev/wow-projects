@@ -4,11 +4,12 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.primitive.DoubleAttributeId;
 import wow.commons.model.effects.EffectId;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.EXTRA_CRIT_COEFF;
 
 /**
  * User: POlszewski
@@ -58,7 +59,7 @@ public class TemporaryEffect implements AttributeModifier {
 		if (extraCritCoeff == 0) {
 			return Attributes.EMPTY;
 		}
-		return Attributes.of(DoubleAttributeId.EXTRA_CRIT_COEFF, extraCritCoeff);
+		return Attributes.of(EXTRA_CRIT_COEFF, extraCritCoeff);
 	}
 
 	@Override

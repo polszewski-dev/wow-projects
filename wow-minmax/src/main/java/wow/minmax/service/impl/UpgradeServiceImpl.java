@@ -31,7 +31,7 @@ import wow.minmax.service.UpgradeService;
 import java.util.List;
 import java.util.Map;
 
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.SPELL_DAMAGE;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_DAMAGE;
 
 /**
  * User: POlszewski

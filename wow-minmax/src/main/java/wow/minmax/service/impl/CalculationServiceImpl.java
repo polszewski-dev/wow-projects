@@ -6,9 +6,8 @@ import wow.commons.model.Duration;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.primitive.DoubleAttribute;
-import wow.commons.model.attributes.primitive.DoubleAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.repository.PVERepository;
@@ -20,7 +19,7 @@ import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.Spell;
 import wow.minmax.service.CalculationService;
 
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.SPELL_DAMAGE;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_DAMAGE;
 import static wow.commons.util.SpellCalculations.AVERAGE_CRIT;
 
 /**
@@ -33,16 +32,16 @@ public class CalculationServiceImpl implements CalculationService {
 	private final PVERepository pveRepository;
 
 	@Override
-	public double getSpEquivalent(DoubleAttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell) {
+	public double getSpEquivalent(PrimitiveAttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell) {
 		playerProfile = playerProfile.copy();
 
-		DoubleAttribute base = Attribute.of(attributeId, amount);
+		PrimitiveAttribute base = Attribute.of(attributeId, amount);
 		double targetDps = getSpellStatistics(playerProfile, spell, base).getDps();
 		double totalSp = 0;
 		double increase = 1;
 
 		while (true) {
-			DoubleAttribute spEquivalent = Attribute.of(SPELL_DAMAGE, totalSp + increase);
+			PrimitiveAttribute spEquivalent = Attribute.of(SPELL_DAMAGE, totalSp + increase);
 			double spEqvDps = getSpellStatistics(playerProfile, spell, spEquivalent).getDps();
 
 			if (Math.abs(spEqvDps - targetDps) <= 0.001) {

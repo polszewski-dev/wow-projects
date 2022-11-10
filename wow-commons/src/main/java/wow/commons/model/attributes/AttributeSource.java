@@ -5,7 +5,8 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.primitive.*;
+import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.SpellSchool;
 
 import java.util.ArrayList;
@@ -13,9 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.attributes.complex.ComplexAttributeId.SPECIAL_ABILITIES;
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.*;
-import static wow.commons.model.attributes.primitive.DurationAttributeId.CAST_TIME_REDUCTION;
-import static wow.commons.model.attributes.primitive.PercentAttributeId.*;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski
@@ -36,9 +35,9 @@ public interface AttributeSource {
 		return getAttributes().isEmpty();
 	}
 
-	default double getDouble(DoubleAttributeId attributeId) {
+	default double getDouble(PrimitiveAttributeId attributeId) {
 		double result = 0;
-		for (Attribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
 			if (attribute.getId() == attributeId) {
 				result += attribute.getDouble();
 			}
@@ -46,7 +45,7 @@ public interface AttributeSource {
 		return result;
 	}
 
-	private double getDouble(DoubleAttributeId attributeId, SpellSchool spellSchool) {
+	private double getDouble(PrimitiveAttributeId attributeId, SpellSchool spellSchool) {
 		double result = 0;
 		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
 			if (attribute.getId() == attributeId && attribute.isTheSameOrNull(spellSchool)) {
@@ -56,7 +55,7 @@ public interface AttributeSource {
 		return result;
 	}
 
-	default Percent getPercent(PercentAttributeId attributeId) {
+	default Percent getPercent(PrimitiveAttributeId attributeId) {
 		Percent result = Percent.ZERO;
 		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
 			if (attribute.getId() == attributeId) {
@@ -66,19 +65,9 @@ public interface AttributeSource {
 		return result;
 	}
 
-	default boolean getBoolean(BooleanAttributeId attributeId) {
-		boolean result = false;
-		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId) {
-				result = result || attribute.getBoolean();
-			}
-		}
-		return result;
-	}
-
-	default Duration getDuration(DurationAttributeId attributeId) {
+	default Duration getDuration(PrimitiveAttributeId attributeId) {
 		Duration result = Duration.ZERO;
-		for (Attribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
 			if (attribute.getId() == attributeId) {
 				result = result.add(attribute.getDuration());
 			}

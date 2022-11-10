@@ -1,13 +1,12 @@
 package wow.commons.util;
 
-import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.primitive.*;
+import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
 import java.util.*;
 
@@ -19,8 +18,7 @@ public class AttributesDiffFinder {
 	private final Attributes attributes1;
 	private final Attributes attributes2;
 
-	private final Map<String, DoubleCollector> doubleAttributes = new HashMap<>();
-	private final Map<String, PercentCollector> percentAttributes = new HashMap<>();
+	private final Map<String, PrimitiveCollector> collectors = new HashMap<>();
 
 	public AttributesDiffFinder(Attributes attributes1, Attributes attributes2) {
 		this.attributes1 = attributes1;
@@ -28,70 +26,23 @@ public class AttributesDiffFinder {
 	}
 
 	public AttributesDiff getDiff() {
-		for (var attribute : attributes1.getPrimitiveAttributeList()) {
-			addPrimitiveAttribute(attribute);
-		}
-
-		for (var attribute : attributes2.getPrimitiveAttributeList()) {
-			subtractPrimitiveAttribute(attribute);
-		}
-
 		AttributesDiff result = new AttributesDiff();
-
 		addPrimitiveAttributeDiff(result);
-		addComplexAttributeDiff(result, attributes1, attributes2);
-
+		addComplexAttributeDiff(result);
 		return result;
 	}
 
-	private void addPrimitiveAttribute(PrimitiveAttribute attribute) {
-		AttributeId id = attribute.getId();
-
-		if (id.isDoubleAttribute()) {
-			getDoubleCollector(attribute).add((DoubleAttribute) attribute);
-		} else if (id.isPercentAttribute()) {
-			getPercentCollector(attribute).add((PercentAttribute) attribute);
-		} else {
-			throw new IllegalArgumentException(attribute.toString());
-		}
-	}
-
-	private void subtractPrimitiveAttribute(PrimitiveAttribute attribute) {
-		AttributeId id = attribute.getId();
-
-		if (id.isDoubleAttribute()) {
-			getDoubleCollector(attribute).subtract((DoubleAttribute) attribute);
-		} else if (id.isPercentAttribute()) {
-			getPercentCollector(attribute).subtract((PercentAttribute) attribute);
-		} else {
-			throw new IllegalArgumentException(attribute.toString());
-		}
-	}
-
-	private DoubleCollector getDoubleCollector(PrimitiveAttribute attribute) {
+	private PrimitiveCollector getDoubleCollector(PrimitiveAttribute attribute) {
 		String key = getKey(attribute);
-		return doubleAttributes.computeIfAbsent(key, x -> new DoubleCollector((DoubleAttribute) attribute));
-	}
-
-	private PercentCollector getPercentCollector(PrimitiveAttribute attribute) {
-		String key = getKey(attribute);
-		return percentAttributes.computeIfAbsent(key, x -> new PercentCollector((PercentAttribute) attribute));
+		return collectors.computeIfAbsent(key, x -> new PrimitiveCollector(attribute));
 	}
 
 	private void addPrimitiveAttributeDiff(AttributesDiff result) {
-		List<PrimitiveAttribute> attributes = new ArrayList<>();
-
-		for (DoubleCollector collector : doubleAttributes.values()) {
-			attributes.add(collector.getResult());
-		}
-
-		for (PercentCollector collector : percentAttributes.values()) {
-			attributes.add(collector.getResult());
-		}
+		List<PrimitiveAttribute> attributes = getPrimitiveAttributeDiff();
 
 		attributes.removeIf(Objects::isNull);
 
-		attributes.sort(
+		attributes.sort(//TODO powinno byc w attribtes
 				Comparator.<PrimitiveAttribute>comparingInt(x -> x.getId().getSortOrder())
 						.thenComparing(x -> x.getCondition() != null ? x.getCondition().toString() : "")
 		);
@@ -99,7 +50,25 @@ public class AttributesDiffFinder {
 		result.setAttributes(Attributes.of(attributes));
 	}
 
-	private static void addComplexAttributeDiff(AttributesDiff result, Attributes attributes1, Attributes attributes2) {
+	private List<PrimitiveAttribute> getPrimitiveAttributeDiff() {
+		for (var attribute : attributes1.getPrimitiveAttributeList()) {
+			getDoubleCollector(attribute).add(attribute);
+		}
+
+		for (var attribute : attributes2.getPrimitiveAttributeList()) {
+			getDoubleCollector(attribute).subtract(attribute);
+		}
+
+		List<PrimitiveAttribute> attributes = new ArrayList<>();
+
+		for (PrimitiveCollector collector : collectors.values()) {
+			attributes.add(collector.getResult());
+		}
+
+		return attributes;
+	}
+
+	private void addComplexAttributeDiff(AttributesDiff result) {
 		for (var entry : attributes1.getComplexAttributeList().entrySet()) {
 			ensureList(entry.getKey(), result.getAddedAbilities()).addAll(entry.getValue());
 		}
@@ -125,48 +94,25 @@ public class AttributesDiffFinder {
 		return attribute.getId() + " " + attribute.getCondition();
 	}
 
-	private static class DoubleCollector {
-		private final DoubleAttributeId id;
+	private static class PrimitiveCollector {
+		private final PrimitiveAttributeId id;
 		private final AttributeCondition condition;
 		private double value;
 
-		DoubleCollector(DoubleAttribute prototype) {
+		PrimitiveCollector(PrimitiveAttribute prototype) {
 			this.id = prototype.getId();
 			this.condition = prototype.getCondition();
 		}
 
-		void add(DoubleAttribute attribute) {
+		void add(PrimitiveAttribute attribute) {
 			this.value += attribute.getDouble();
 		}
 
-		void subtract(DoubleAttribute attribute) {
+		void subtract(PrimitiveAttribute attribute) {
 			this.value -= attribute.getDouble();
 		}
 
-		DoubleAttribute getResult() {
-			return Attribute.ofNullable(id, value, condition);
-		}
-	}
-
-	private static class PercentCollector {
-		private final PercentAttributeId id;
-		private final AttributeCondition condition;
-		private Percent value = Percent.ZERO;
-
-		PercentCollector(PercentAttribute prototype) {
-			this.id = prototype.getId();
-			this.condition = prototype.getCondition();
-		}
-
-		void add(PercentAttribute attribute) {
-			this.value = value.add(attribute.getPercent());
-		}
-
-		void subtract(PercentAttribute attribute) {
-			this.value = value.subtract(attribute.getPercent());
-		}
-
-		PercentAttribute getResult() {
+		PrimitiveAttribute getResult() {
 			return Attribute.ofNullable(id, value, condition);
 		}
 	}

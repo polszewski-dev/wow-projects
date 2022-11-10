@@ -35,13 +35,13 @@ public enum ComplexAttributeId implements AttributeId {
 	}
 
 	@Override
-	public boolean isComplexAttribute() {
-		return true;
+	public boolean isPrimitiveAttribute() {
+		return false;
 	}
 
 	@Override
 	public int getSortOrder() {
-		return 4000 + ordinal();
+		return 1000 + ordinal();
 	}
 
 	@Override

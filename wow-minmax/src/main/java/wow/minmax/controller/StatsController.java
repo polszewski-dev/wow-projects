@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.*;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.minmax.model.Build.BuffSet.*;
 
 /**

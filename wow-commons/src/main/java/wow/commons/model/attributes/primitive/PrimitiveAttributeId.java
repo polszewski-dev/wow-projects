@@ -7,7 +7,57 @@ import wow.commons.util.EnumUtil;
  * User: POlszewski
  * Date: 2022-11-09
  */
-public enum PercentAttributeId implements AttributeId {
+public enum PrimitiveAttributeId implements AttributeId {
+	STRENGTH("Strength", "str"),
+	AGILITY("Agility", "agi"),
+	STAMINA("Stamina", "sta"),
+	INTELLECT("Intellect", "int"),
+	SPIRIT("Spirit", "spi"),
+	BASE_STATS_INCREASE("BaseStatsIncrease", "base stats"),
+
+	ATTACK_POWER("AttackPower"),
+	RANGED_ATTACK_POWER("RangedAttackPower"),
+	CRIT_RATING("CritRating"),
+	HIT_RATING("HitRating"),
+	HASTE_RATING("HasteRating"),
+	EXPERTISE_RATING("ExpertiseRating"),
+	ARMOR_PENETRATION("ArmorPenetration"),
+
+	SPELL_POWER("SpellPower", "sp"),
+	SPELL_DAMAGE("SpellDamage", "sd"),
+	SPELL_CRIT_RATING("SpellCritRating", "crit"),
+	SPELL_HIT_RATING("SpellHitRating", "hit"),
+	SPELL_HASTE_RATING("SpellHasteRating", "haste"),
+	SPELL_PENETRATION("SpellPenetration", "penetration"),
+
+	ADDITIONAL_DAMAGE("AdditionalDamage", "additional damage"),
+
+	HEALING_POWER("HealingPower", "healing"),
+
+	MP5("Mp5", "mp5"),
+	HP5("Hp5", "hp5"),
+
+	ARMOR("Armor", "armor"),
+	DODGE("Dodge"),
+	DODGE_RATING("DodgeRating"),
+	DEFENSE("Defense"),
+	DEFENSE_RATING("DefenseRating"),
+	BLOCK("Block"),
+
+	BLOCK_RATING("BlockRating"),
+	SHIELD_BLOCK("ShieldBlock"),
+	SHIELD_BLOCK_RATING("ShieldBlockRating"),
+	PARRY("Parry"),
+	PARRY_RATING("ParryRating"),
+	RESILIENCE_RATING("ResilienceRating", "resi"),
+
+	RESISTANCE("Resistance", "resist"),
+	RESIST_ALL("ResistAll", "resist all"),
+
+	EXTRA_CRIT_COEFF("ExtraCritCoeff", "gimmick to handle ISB"),
+
+	// percent attributes
+
 	BASE_STATS_INCREASE_PCT("BaseStatsIncreasePct", "base stats"),
 	CRIT_PCT("CritPct"),
 	HIT_PCT("HitPct"),
@@ -44,36 +94,45 @@ public enum PercentAttributeId implements AttributeId {
 	PET_MELEE_CRIT_INCREASE_PCT("PetMeleeCritIncreasePct"),
 	PET_MELEE_DAMAGE_INCREASE_PCT("PetMeleeDamageIncreasePct"),
 
-	MANA_TRANSFERRED_TO_PET_PCT("ManaTransferredToPetPct");
+	MANA_TRANSFERRED_TO_PET_PCT("ManaTransferredToPetPct"),
+
+	// duration attributes
+
+	CAST_TIME_REDUCTION("CastTimeReduction", "reduced cast time"),
+	COOLDOWN_REDUCTION("CooldownReduction"),
+
+	// boolean attributes
+
+	NUM_NEXT_SPELLS_CAST_INSTANTLY("#NextSpellsCastInstantly");
 
 	private final String key;
 	private final String shortName;
 
-	PercentAttributeId(String key, String shortName) {
+	PrimitiveAttributeId(String key, String shortName) {
 		this.key = key;
 		this.shortName = shortName;
 	}
 
-	PercentAttributeId(String key) {
+	PrimitiveAttributeId(String key) {
 		this(key, null);
 	}
 
-	public static PercentAttributeId parse(String value) {
+	public static PrimitiveAttributeId parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.key);
 	}
 
-	public static PercentAttributeId tryParse(String value) {
+	public static PrimitiveAttributeId tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 
 	@Override
-	public boolean isPercentAttribute() {
+	public boolean isPrimitiveAttribute() {
 		return true;
 	}
 
 	@Override
 	public int getSortOrder() {
-		return 1000 + ordinal();
+		return ordinal();
 	}
 
 	@Override

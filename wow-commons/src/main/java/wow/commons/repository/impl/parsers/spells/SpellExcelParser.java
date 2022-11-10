@@ -3,14 +3,13 @@ package wow.commons.repository.impl.parsers.spells;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.*;
+import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.EffectIncreasePerEffectOnTarget;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.complex.modifiers.ProcEvent;
-import wow.commons.model.attributes.primitive.BooleanAttributeId;
-import wow.commons.model.attributes.primitive.DoubleAttributeId;
-import wow.commons.model.attributes.primitive.DurationAttributeId;
-import wow.commons.model.attributes.primitive.PercentAttributeId;
+import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
@@ -30,14 +29,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static wow.commons.model.attributes.complex.ComplexAttributeId.*;
-import static wow.commons.model.attributes.primitive.BooleanAttributeId.CAST_INSTANTLY;
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.SPELL_DAMAGE;
-import static wow.commons.model.attributes.primitive.DurationAttributeId.CAST_TIME_REDUCTION;
-import static wow.commons.model.attributes.primitive.DurationAttributeId.COOLDOWN_REDUCTION;
-import static wow.commons.model.attributes.primitive.PercentAttributeId.*;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski
@@ -80,30 +76,15 @@ public class SpellExcelParser extends ExcelParser {
 		private class SimpleColumn extends Column {
 			final ExcelColumn name;
 
-			SimpleColumn(String name, AttributeId id) {
+			SimpleColumn(String name, PrimitiveAttributeId id) {
 				super(id);
 				this.name = column(name);
 			}
 
 			@Override
 			ConditionalAttribute readAttribute() {
-				if (id.isDoubleAttribute()) {
-					var value = name.getDouble(0);
-					return Attribute.ofNullable((DoubleAttributeId) id, value);
-				}
-				if (id.isPercentAttribute()) {
-					var value = name.getPercent(null);
-					return Attribute.ofNullable((PercentAttributeId) id, value);
-				}
-				if (id.isBooleanAttribute()) {
-					var value = name.getBoolean();
-					return Attribute.ofNullable((BooleanAttributeId) id, value);
-				}
-				if (id.isDurationAttribute()) {
-					var value = name.getDuration(null);
-					return Attribute.ofNullable((DurationAttributeId) id, value);
-				}
-				throw new IllegalArgumentException("Unhandled type for: " + id);
+				var value = name.getDouble(0);
+				return Attribute.ofNullable((PrimitiveAttributeId) id, value);
 			}
 		}
 
@@ -197,7 +178,7 @@ public class SpellExcelParser extends ExcelParser {
 
 		private final List<Column> columns = new ArrayList<>();
 
-		BenefitAttributeColumns add(AttributeId id, String name) {
+		BenefitAttributeColumns add(PrimitiveAttributeId id, String name) {
 			columns.add(new SimpleColumn(name, id));
 			return this;
 		}
@@ -235,21 +216,33 @@ public class SpellExcelParser extends ExcelParser {
 			AttributesBuilder result = new AttributesBuilder();
 			for (Column column : columns) {
 				ConditionalAttribute attribute = column.readAttribute();
-				if (attribute != null) {
-					addPossibleAtributes(talentTree, spellSchool, spells, petTypes, result, attribute);
-				}
+				addAttributeWithConditions(talentTree, spellSchool, spells, petTypes, result, attribute);
 			}
 			return result.toAttributes();
 		}
 
-		private void addPossibleAtributes(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes, AttributesBuilder result, ConditionalAttribute attribute) {
+		private void addAttributeWithConditions(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes, AttributesBuilder result, ConditionalAttribute attribute) {
+			if (attribute == null) {
+				return;
+			}
+
+			forEachPossibleCondition(talentTree, spellSchool, spells, petTypes, condition -> {
+				if (attribute instanceof PrimitiveAttribute) {
+					result.addAttribute((PrimitiveAttribute) attribute.attachCondition(condition));
+				} else {
+					result.addAttribute((ComplexAttribute) attribute.attachCondition(condition));
+				}
+			});
+		}
+
+		private void forEachPossibleCondition(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes, Consumer<AttributeCondition> conditionConsumer) {
 			Set<SpellId> possibleSpells = !spells.isEmpty() ? spells : Collections.singleton(null);
 			Set<PetType> possiblePetTypes = !petTypes.isEmpty() ? petTypes : Collections.singleton(null);
 
 			for (SpellId spellId : possibleSpells) {
 				for (PetType petType : possiblePetTypes) {
 					AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, null);
-					result.addAttribute(attribute.attachCondition(condition));
+					conditionConsumer.accept(condition);
 				}
 			}
 		}
@@ -384,7 +377,7 @@ public class SpellExcelParser extends ExcelParser {
 			.add(EFFECT_INCREASE_PCT, "effect increase%")
 			.add(DAMAGE_TAKEN_INCREASE_PCT, "damage taken increase%")
 			.add(SPELL_DAMAGE, "sp bonus")
-			.add(CAST_INSTANTLY, "cast instantly")
+			.add(NUM_NEXT_SPELLS_CAST_INSTANTLY, "#next spells cast instantly")
 			;
 
 

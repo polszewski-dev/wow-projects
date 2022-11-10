@@ -1,13 +1,10 @@
 package wow.commons.repository.impl.parsers.stats;
 
-import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.primitive.DoubleAttributeId;
-import wow.commons.model.attributes.primitive.PercentAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentTree;
@@ -22,7 +19,7 @@ import java.util.List;
  * Date: 2021-10-20
  */
 public class PrimitiveAttributeSupplier {
-	private final AttributeId attributeId;
+	private final PrimitiveAttributeId attributeId;
 	private final List<TalentTree> talentTrees = new ArrayList<>();
 	private final List<SpellSchool> spellSchools = new ArrayList<>();
 	private final List<SpellId> spellIds = new ArrayList<>();
@@ -32,7 +29,7 @@ public class PrimitiveAttributeSupplier {
 	private PrimitiveAttributeSupplier(String line) {
 		String[] parts = line.split(",");
 
-		this.attributeId = AttributeId.parse(parts[0]);
+		this.attributeId = PrimitiveAttributeId.parse(parts[0]);
 
 		for (int i = 1; i < parts.length; ++i) {
 			addCondition(parts[i].trim());
@@ -81,13 +78,7 @@ public class PrimitiveAttributeSupplier {
 	private PrimitiveAttribute getAttribute(double value, TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
 		AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, creatureType);
 
-		if (attributeId.isDoubleAttribute()) {
-			return Attribute.ofNullable((DoubleAttributeId) attributeId, value, condition);
-		} else if (attributeId.isPercentAttribute()) {
-			return Attribute.ofNullable((PercentAttributeId) attributeId, Percent.ofNullable(value), condition);
-		} else {
-			throw new IllegalArgumentException("Wrong attribute type: " + attributeId);
-		}
+		return Attribute.ofNullable(attributeId, value, condition);
 	}
 
 	private void addCondition(String value) {

@@ -5,7 +5,8 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.*;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.primitive.*;
+import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 
@@ -50,19 +51,27 @@ public class AttributesBuilder {
 		return (attributeList == null || attributeList.isEmpty()) && (complexAttributeList == null || complexAttributeList.isEmpty());
 	}
 
-	public AttributesBuilder addAttribute(Attribute attribute) {
+	public AttributesBuilder addAttribute(PrimitiveAttribute attribute) {
 		if (attribute == null) {
 			return this;
 		}
 		if (!attribute.isMatchedBy(filter)) {
 			return this;
 		}
-		if (attribute.getId().isPrimitiveAttribute()) {
-			getOrCreateAttributeList().add((PrimitiveAttribute)attribute);
-		} else {
-			getOrCreateComplexAttributeList().computeIfAbsent((ComplexAttributeId) attribute.getId(), x -> new ArrayList<>())
-								.add((ComplexAttribute)attribute);
+		getOrCreateAttributeList().add(attribute);
+		return this;
+	}
+
+	public AttributesBuilder addAttribute(ComplexAttribute attribute) {
+		if (attribute == null) {
+			return this;
 		}
+		if (!attribute.isMatchedBy(filter)) {
+			return this;
+		}
+		getOrCreateComplexAttributeList()
+				.computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
+				.add(attribute);
 		return this;
 	}
 
@@ -83,7 +92,7 @@ public class AttributesBuilder {
 	public AttributesBuilder addAttributeList(Collection<PrimitiveAttribute> attributes) {
 		if (attributes != null) {
 			if (filter != null) {
-				for (Attribute attribute : attributes) {
+				for (PrimitiveAttribute attribute : attributes) {
 					addAttribute(attribute);
 				}
 			} else {
@@ -95,47 +104,37 @@ public class AttributesBuilder {
 
 	public AttributesBuilder addComplexAttributeList(Collection<ComplexAttribute> attributes) {
 		if (attributes != null) {
-			for (Attribute attribute : attributes) {
+			for (ComplexAttribute attribute : attributes) {
 				addAttribute(attribute);
 			}
 		}
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(DoubleAttributeId attributeId, double value) {
+	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, double value) {
 		return addAttribute(attributeId, value, null);
 	}
 
-	public AttributesBuilder addAttribute(DoubleAttributeId attributeId, double value, AttributeCondition condition) {
+	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, double value, AttributeCondition condition) {
 		addAttribute(Attribute.ofNullable(attributeId, value, condition));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(PercentAttributeId attributeId, Percent value) {
+	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, Percent value) {
 		return addAttribute(attributeId, value, null);
 	}
 
-	public AttributesBuilder addAttribute(PercentAttributeId attributeId, Percent value, AttributeCondition condition) {
+	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, Percent value, AttributeCondition condition) {
 		addAttribute(Attribute.ofNullable(attributeId, value, condition));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(BooleanAttributeId attributeId, boolean value) {
+	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, Duration value) {
 		addAttribute(Attribute.ofNullable(attributeId, value));
 		return this;
 	}
 
-	public AttributesBuilder addAttribute(BooleanAttributeId attributeId, boolean value, AttributeCondition condition) {
-		addAttribute(Attribute.ofNullable(attributeId, value, condition));
-		return this;
-	}
-
-	public AttributesBuilder addAttribute(DurationAttributeId attributeId, Duration value) {
-		addAttribute(Attribute.ofNullable(attributeId, value));
-		return this;
-	}
-
-	public AttributesBuilder addAttribute(DurationAttributeId attributeId, Duration value, AttributeCondition condition) {
+	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, Duration value, AttributeCondition condition) {
 		addAttribute(Attribute.ofNullable(attributeId, value, condition));
 		return this;
 	}

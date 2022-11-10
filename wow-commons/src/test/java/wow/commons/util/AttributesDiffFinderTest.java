@@ -17,10 +17,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.SPELL_CRIT_RATING;
-import static wow.commons.model.attributes.primitive.DoubleAttributeId.SPELL_DAMAGE;
-import static wow.commons.model.attributes.primitive.PercentAttributeId.SPELL_CRIT_PCT;
-import static wow.commons.model.attributes.primitive.PercentAttributeId.SPELL_HIT_PCT;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski

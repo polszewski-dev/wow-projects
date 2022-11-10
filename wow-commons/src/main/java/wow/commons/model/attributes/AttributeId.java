@@ -1,10 +1,7 @@
 package wow.commons.model.attributes;
 
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.primitive.BooleanAttributeId;
-import wow.commons.model.attributes.primitive.DoubleAttributeId;
-import wow.commons.model.attributes.primitive.DurationAttributeId;
-import wow.commons.model.attributes.primitive.PercentAttributeId;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
 /**
  * User: POlszewski
@@ -16,16 +13,7 @@ public interface AttributeId {
 			return null;
 		}
 		AttributeId id;
-		if ((id = DoubleAttributeId.tryParse(value)) != null) {
-			return id;
-		}
-		if ((id = PercentAttributeId.tryParse(value)) != null) {
-			return id;
-		}
-		if ((id = DurationAttributeId.tryParse(value)) != null) {
-			return id;
-		}
-		if ((id = BooleanAttributeId.tryParse(value)) != null) {
+		if ((id = PrimitiveAttributeId.tryParse(value)) != null) {
 			return id;
 		}
 		if ((id = ComplexAttributeId.tryParse(value)) != null) {
@@ -34,32 +22,10 @@ public interface AttributeId {
 		throw new IllegalArgumentException(value);
 	}
 
-	default boolean isDoubleAttribute() {
-		return false;
-	}
-
-	default boolean isPercentAttribute() {
-		return false;
-	}
-
-	default boolean isBooleanAttribute() {
-		return false;
-	}
-
-	default boolean isDurationAttribute() {
-		return false;
-	}
+	boolean isPrimitiveAttribute();
 
 	default boolean isComplexAttribute() {
-		return false;
-	}
-
-	default boolean isScalarAttribute() {
-		return isDoubleAttribute() || isPercentAttribute() || isDurationAttribute();
-	}
-
-	default boolean isPrimitiveAttribute() {
-		return !isComplexAttribute();
+		return !isPrimitiveAttribute();
 	}
 
 	int getSortOrder();
