@@ -4,7 +4,6 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.ConditionalAttribute;
 
 import java.util.Objects;
 
@@ -12,18 +11,16 @@ import java.util.Objects;
  * User: POlszewski
  * Date: 2022-01-04
  */
-public class PrimitiveAttribute extends Attribute implements ConditionalAttribute {
+public class PrimitiveAttribute extends Attribute {
 	private final PrimitiveAttributeId id;
 	private final double value;
-	private final AttributeCondition condition;
-
 	private Percent percentValue;
 	private Duration durationValue;
 
 	private PrimitiveAttribute(PrimitiveAttributeId id, double value, AttributeCondition condition, Percent percentValue, Duration durationValue) {
+		super(condition);
 		this.id = id;
 		this.value = value;
-		this.condition = condition;
 		this.percentValue = percentValue;
 		this.durationValue = durationValue;
 	}
@@ -61,11 +58,6 @@ public class PrimitiveAttribute extends Attribute implements ConditionalAttribut
 			this.durationValue = Duration.seconds(value);
 		}
 		return durationValue;
-	}
-
-	@Override
-	public AttributeCondition getCondition() {
-		return condition;
 	}
 
 	@Override

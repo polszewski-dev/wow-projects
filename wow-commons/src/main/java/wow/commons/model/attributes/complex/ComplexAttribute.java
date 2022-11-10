@@ -1,6 +1,7 @@
 package wow.commons.model.attributes.complex;
 
 import wow.commons.model.attributes.Attribute;
+import wow.commons.model.attributes.AttributeCondition;
 
 /**
  * User: POlszewski
@@ -9,7 +10,8 @@ import wow.commons.model.attributes.Attribute;
 public abstract class ComplexAttribute extends Attribute {
 	private final ComplexAttributeId id;
 
-	protected ComplexAttribute(ComplexAttributeId id) {
+	protected ComplexAttribute(ComplexAttributeId id, AttributeCondition condition) {
+		super(condition);
 		this.id = id;
 	}
 

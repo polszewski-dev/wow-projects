@@ -1,6 +1,7 @@
 package wow.commons.model.item;
 
 import wow.commons.model.Copyable;
+import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
@@ -27,7 +28,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	public ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets, boolean readOnly) {
-		super(ComplexAttributeId.SOCKETS);
+		super(ComplexAttributeId.SOCKETS, null);
 		this.specification = specification;
 		this.sockets = sockets;
 		this.readOnly = readOnly;
@@ -67,11 +68,6 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 
 	public Attributes getSocketBonus() {
 		return specification.getSocketBonus();
-	}
-
-	@Override
-	public AttributeCondition getCondition() {
-		return null;
 	}
 
 	public boolean allMatch(int numRed, int numYellow, int numBlue) {
@@ -118,6 +114,11 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 
 	public Stream<ItemSocket> stream() {
 		return sockets.stream();
+	}
+
+	@Override
+	public Attribute attachCondition(AttributeCondition condition) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

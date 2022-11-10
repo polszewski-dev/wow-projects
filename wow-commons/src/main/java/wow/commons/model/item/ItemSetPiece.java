@@ -1,5 +1,6 @@
 package wow.commons.model.item;
 
+import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
@@ -14,7 +15,7 @@ public class ItemSetPiece extends ComplexAttribute {
 	private final Item item;
 
 	public ItemSetPiece(Item item) {
-		super(ComplexAttributeId.SET_PIECES);
+		super(ComplexAttributeId.SET_PIECES, null);
 		this.item = item;
 	}
 
@@ -27,8 +28,8 @@ public class ItemSetPiece extends ComplexAttribute {
 	}
 
 	@Override
-	public AttributeCondition getCondition() {
-		return null;
+	public Attribute attachCondition(AttributeCondition condition) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

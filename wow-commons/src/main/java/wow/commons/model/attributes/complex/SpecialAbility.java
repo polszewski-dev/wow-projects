@@ -2,7 +2,10 @@ package wow.commons.model.attributes.complex;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.*;
+import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.StatEquivalentProvider;
+import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.modifiers.*;
 import wow.commons.model.effects.EffectId;
 
@@ -12,20 +15,18 @@ import java.util.Objects;
  * User: POlszewski
  * Date: 2021-10-15
  */
-public final class SpecialAbility extends ComplexAttribute implements ConditionalAttribute, StatEquivalentProvider {
+public final class SpecialAbility extends ComplexAttribute implements StatEquivalentProvider {
 	private final AttributeModifier attributeModifier;
 	private final String line;
-	private final AttributeCondition condition;
 
 	private SpecialAbility(AttributeModifier attributeModifier, String line) {
 		this(attributeModifier, line, null);
 	}
 
 	private SpecialAbility(AttributeModifier attributeModifier, String line, AttributeCondition condition) {
-		super(ComplexAttributeId.SPECIAL_ABILITIES);
+		super(ComplexAttributeId.SPECIAL_ABILITIES, condition);
 		this.attributeModifier = attributeModifier;
 		this.line = line;
-		this.condition = condition;
 	}
 
 	public static SpecialAbility onUse(Attributes attributes, Duration duration, Duration cooldown, String line) {
@@ -63,11 +64,6 @@ public final class SpecialAbility extends ComplexAttribute implements Conditiona
 
 	public int getPriority() {
 		return attributeModifier.getPriority();
-	}
-
-	@Override
-	public AttributeCondition getCondition() {
-		return condition;
 	}
 
 	@Override
