@@ -1,7 +1,6 @@
 package wow.commons.model.item;
 
 import wow.commons.model.Copyable;
-import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
@@ -117,7 +116,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	@Override
-	public Attribute attachCondition(AttributeCondition condition) {
+	public ItemSockets attachCondition(AttributeCondition condition) {
 		throw new UnsupportedOperationException();
 	}
 

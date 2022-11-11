@@ -1,6 +1,5 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
@@ -28,7 +27,7 @@ public class ItemSetPiece extends ComplexAttribute {
 	}
 
 	@Override
-	public Attribute attachCondition(AttributeCondition condition) {
+	public ItemSetPiece attachCondition(AttributeCondition condition) {
 		throw new UnsupportedOperationException();
 	}
 

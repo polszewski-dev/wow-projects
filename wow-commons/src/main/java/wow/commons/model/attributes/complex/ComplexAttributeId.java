@@ -35,16 +35,6 @@ public enum ComplexAttributeId implements AttributeId {
 	}
 
 	@Override
-	public boolean isPrimitiveAttribute() {
-		return false;
-	}
-
-	@Override
-	public int getSortOrder() {
-		return 1000 + ordinal();
-	}
-
-	@Override
 	public String toString() {
 		return shortName != null ? shortName : key;
 	}

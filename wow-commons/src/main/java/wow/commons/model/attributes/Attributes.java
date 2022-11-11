@@ -87,7 +87,7 @@ public abstract class Attributes implements AttributeSource {
 	public String toString() {
 		return Stream.concat(
 				attributeList.stream().sorted(
-						Comparator.<PrimitiveAttribute>comparingInt(x -> x.getId().getSortOrder())
+						Comparator.comparing(PrimitiveAttribute::getId)
 								.thenComparing(x -> x.getCondition() != null ? x.getCondition().toString() : "")
 				),
 				complexAttributeList.values().stream().flatMap(Collection::stream)

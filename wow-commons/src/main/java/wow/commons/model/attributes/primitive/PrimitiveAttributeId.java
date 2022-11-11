@@ -143,16 +143,6 @@ public enum PrimitiveAttributeId implements AttributeId {
 	}
 
 	@Override
-	public boolean isPrimitiveAttribute() {
-		return true;
-	}
-
-	@Override
-	public int getSortOrder() {
-		return ordinal();
-	}
-
-	@Override
 	public String toString() {
 		return shortName != null ? shortName : key;
 	}

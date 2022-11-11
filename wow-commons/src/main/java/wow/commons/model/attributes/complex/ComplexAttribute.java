@@ -19,4 +19,7 @@ public abstract class ComplexAttribute extends Attribute {
 	public ComplexAttributeId getId() {
 		return id;
 	}
+
+	@Override
+	public abstract ComplexAttribute attachCondition(AttributeCondition condition);
 }

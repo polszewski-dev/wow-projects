@@ -86,6 +86,6 @@ public final class SpecialAbility extends ComplexAttribute implements StatEquiva
 
 	@Override
 	public String toString() {
-		return String.format("%s%s", line, getConditionString());
+		return String.format("%s%s", line != null ? line : attributeModifier.toString(), getConditionString());
 	}
 }

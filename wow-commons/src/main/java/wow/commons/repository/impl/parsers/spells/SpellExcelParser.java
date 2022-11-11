@@ -4,7 +4,6 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.AttributeId;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.EffectIncreasePerEffectOnTarget;
@@ -32,10 +31,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static wow.commons.model.attributes.complex.ComplexAttributeId.*;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
@@ -65,46 +62,65 @@ public class SpellExcelParser extends ExcelParser {
 		);
 	}
 
+	private interface Column {
+		void addAttribute(AttributesBuilder builder, List<AttributeCondition> conditions);
+	}
+
 	private class BenefitAttributeColumns {
-		private abstract class Column {
-			final AttributeId id;
-
-			Column(AttributeId id) {
-				this.id = id;
-			}
-
-			abstract Attribute readAttribute();
-		}
-
-		private class SimpleColumn extends Column {
+		private class SimpleColumn implements Column {
+			final PrimitiveAttributeId id;
 			final ExcelColumn name;
 
 			SimpleColumn(String name, PrimitiveAttributeId id) {
-				super(id);
+				this.id = id;
 				this.name = column(name);
 			}
 
-			@Override
-			PrimitiveAttribute readAttribute() {
+			private PrimitiveAttribute readAttribute() {
 				var value = name.getDouble(0);
-				return Attribute.ofNullable((PrimitiveAttributeId) id, value);
+				return Attribute.ofNullable(id, value);
+			}
+
+			@Override
+			public void addAttribute(AttributesBuilder builder, List<AttributeCondition> conditions) {
+				PrimitiveAttribute attribute = readAttribute();
+				if (attribute == null) {
+					return;
+				}
+				for (AttributeCondition condition : conditions) {
+					builder.addAttribute(attribute.attachCondition(condition));
+				}
 			}
 		}
 
-		private class StatConversionColumn extends Column {
+		private abstract class ComplexColumn implements Column {
+			protected abstract ComplexAttribute readAttribute();
+
+			@Override
+			public void addAttribute(AttributesBuilder builder, List<AttributeCondition> conditions) {
+				ComplexAttribute attribute = readAttribute();
+				if (attribute == null) {
+					return;
+				}
+				for (AttributeCondition condition : conditions) {
+					builder.addAttribute(attribute.attachCondition(condition));
+				}
+			}
+		}
+
+		private class StatConversionColumn extends ComplexColumn {
 			final ExcelColumn colConversionFrom;
 			final ExcelColumn colConversionTo;
 			final ExcelColumn colConversionRationPct;
 
-			StatConversionColumn(String colConversionFrom, String colConversionTo, String colConversionRationPct, AttributeId id) {
-				super(id);
+			StatConversionColumn(String colConversionFrom, String colConversionTo, String colConversionRationPct) {
 				this.colConversionFrom = column(colConversionFrom);
 				this.colConversionTo = column(colConversionTo);
 				this.colConversionRationPct = column(colConversionRationPct);
 			}
 
 			@Override
-			StatConversion readAttribute() {
+			protected StatConversion readAttribute() {
 				var conversionFrom = colConversionFrom.getEnum(StatConversion.Stat::parse, null);
 				var conversionTo = colConversionTo.getEnum(StatConversion.Stat::parse, null);
 
@@ -119,15 +135,14 @@ public class SpellExcelParser extends ExcelParser {
 			}
 		}
 
-		private class ProcTriggerColumn extends Column {
+		private class ProcTriggerColumn extends ComplexColumn {
 			final ExcelColumn colType;
 			final ExcelColumn colChancePct;
 			final ExcelColumn colEffect;
 			final ExcelColumn colDuration;
 			final ExcelColumn colStacks;
 
-			ProcTriggerColumn(String colType, String colChancePct, String colEffect, String colDuration, String colStacks, AttributeId id) {
-				super(id);
+			ProcTriggerColumn(String colType, String colChancePct, String colEffect, String colDuration, String colStacks) {
 				this.colType = column(colType);
 				this.colChancePct = column(colChancePct);
 				this.colEffect = column(colEffect);
@@ -136,7 +151,7 @@ public class SpellExcelParser extends ExcelParser {
 			}
 
 			@Override
-			public SpecialAbility readAttribute() {
+			protected SpecialAbility readAttribute() {
 				var effectId = colEffect.getEnum(EffectId::parse, null);
 
 				if (effectId == null) {
@@ -152,20 +167,19 @@ public class SpellExcelParser extends ExcelParser {
 			}
 		}
 
-		private class EffectIncreasePerEffectOnTargetColumn extends Column {
+		private class EffectIncreasePerEffectOnTargetColumn extends ComplexColumn {
 			final ExcelColumn colEffectTree;
 			final ExcelColumn colIncreasePerEffectPct;
 			final ExcelColumn colMaxIncreasePct;
 
-			EffectIncreasePerEffectOnTargetColumn(String colEffectTree, String colIncreasePerEffectPct, String colMaxIncreasePct, AttributeId id) {
-				super(id);
+			EffectIncreasePerEffectOnTargetColumn(String colEffectTree, String colIncreasePerEffectPct, String colMaxIncreasePct) {
 				this.colEffectTree = column(colEffectTree);
 				this.colIncreasePerEffectPct = column(colIncreasePerEffectPct);
 				this.colMaxIncreasePct = column(colMaxIncreasePct);
 			}
 
 			@Override
-			public EffectIncreasePerEffectOnTarget readAttribute() {
+			protected EffectIncreasePerEffectOnTarget readAttribute() {
 				var effectTree = colEffectTree.getEnum(TalentTree::parse, null);
 
 				if (effectTree == null) {
@@ -191,7 +205,7 @@ public class SpellExcelParser extends ExcelParser {
 				String colConversionTo,
 				String colConversionRationPct
 		) {
-			columns.add(new StatConversionColumn(colConversionFrom, colConversionTo, colConversionRationPct, STAT_CONVERSION));
+			columns.add(new StatConversionColumn(colConversionFrom, colConversionTo, colConversionRationPct));
 			return this;
 		}
 
@@ -202,7 +216,7 @@ public class SpellExcelParser extends ExcelParser {
 				String colDuration,
 				String colStacks
 		) {
-			columns.add(new ProcTriggerColumn(colType, colChancePct, colEffect, colDuration, colStacks, SPECIAL_ABILITIES));
+			columns.add(new ProcTriggerColumn(colType, colChancePct, colEffect, colDuration, colStacks));
 			return this;
 		}
 
@@ -211,43 +225,35 @@ public class SpellExcelParser extends ExcelParser {
 				String colIncreasePerEffectPct,
 				String colMaxIncreasePct
 		) {
-			columns.add(new EffectIncreasePerEffectOnTargetColumn(colEffectTree, colIncreasePerEffectPct, colMaxIncreasePct, EFFECT_INCREASE_PER_EFFECT_ON_TARGET));
+			columns.add(new EffectIncreasePerEffectOnTargetColumn(colEffectTree, colIncreasePerEffectPct, colMaxIncreasePct));
 			return this;
 		}
 
 		Attributes readAttributes(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes) {
 			AttributesBuilder result = new AttributesBuilder();
+
 			for (Column column : columns) {
-				Attribute attribute = column.readAttribute();
-				addAttributeWithConditions(attribute, talentTree, spellSchool, spells, petTypes, result);
+				var conditions = getPossibleConditions(talentTree, spellSchool, spells, petTypes);
+				column.addAttribute(result, conditions);
 			}
+
 			return result.toAttributes();
 		}
 
-		private void addAttributeWithConditions(Attribute attribute, TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes, AttributesBuilder result) {
-			if (attribute == null) {
-				return;
-			}
-
-			forEachPossibleCondition(talentTree, spellSchool, spells, petTypes, condition -> {
-				if (attribute instanceof PrimitiveAttribute) {
-					result.addAttribute((PrimitiveAttribute) attribute.attachCondition(condition));
-				} else {
-					result.addAttribute((ComplexAttribute) attribute.attachCondition(condition));
-				}
-			});
-		}
-
-		private void forEachPossibleCondition(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes, Consumer<AttributeCondition> conditionConsumer) {
+		private List<AttributeCondition> getPossibleConditions(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes) {
 			Set<SpellId> possibleSpells = !spells.isEmpty() ? spells : Collections.singleton(null);
 			Set<PetType> possiblePetTypes = !petTypes.isEmpty() ? petTypes : Collections.singleton(null);
+
+			List<AttributeCondition> result = new ArrayList<>();
 
 			for (SpellId spellId : possibleSpells) {
 				for (PetType petType : possiblePetTypes) {
 					AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, null);
-					conditionConsumer.accept(condition);
+					result.add(condition);
 				}
 			}
+
+			return result;
 		}
 	}
 
