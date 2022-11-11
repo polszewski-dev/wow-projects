@@ -70,8 +70,6 @@ public class ItemBaseExcelParser extends ExcelParser {
 	private final ExcelColumn colItemReqProfession = column("req_profession");
 	private final ExcelColumn colItemReqProfessionLevel = column("req_profession_level");
 	private final ExcelColumn colItemReqProfessionSpec = column("req_profession_spec");
-//	private final ExcelColumn colItemDroppedBy = column("dropped_by");
-//	private final ExcelColumn colItemDropChance = column("drop_chance");
 	private final ExcelColumn colItemSellPrice = column("sell_price");
 	private final ExcelColumn colItemStat = column("stat");
 	private final ExcelColumn colItemIcon = column("icon");
@@ -105,8 +103,6 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var requiredProfession = colItemReqProfession.getEnum(Profession::valueOf, null);
 		var requiredProfessionLevel = colItemReqProfessionLevel.getInteger(0);
 		var requiredProfessionSpec = colItemReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
-//		var droppedBy = colItemDroppedBy.getString(null);
-//		var dropChance = colItemDropChance.getPercent(null);
 		var sellPrice = Money.parse(colItemSellPrice.getString(null));
 		var icon = colItemIcon.getString();
 		var tooltip = colItemTooltip.getString();

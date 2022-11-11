@@ -18,12 +18,11 @@ public final class TalentCalculatorUtil {
 		String talentStringStart = "?tal=";
 		String talentString = link.substring(link.indexOf(talentStringStart) + talentStringStart.length());
 
-		for (int i = 1; i <= talentString.length(); ++i) {
-			int talentCalculatorPosition = i;
-			int talentRank = talentString.charAt(i - 1) - '0';
+		for (int position = 1; position <= talentString.length(); ++position) {
+			int talentRank = talentString.charAt(position - 1) - '0';
 
 			if (talentRank > 0) {
-				TalentId talentId = TalentId.fromTalentCalculatorPosition(talentCalculatorPosition);
+				TalentId talentId = TalentId.fromTalentCalculatorPosition(position);
 				TalentInfo talentInfo = spellDataRepository.getTalentInfo(talentId, talentRank).orElseThrow();
 				result.put(talentId, talentInfo);
 			}

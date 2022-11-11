@@ -196,7 +196,7 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	}
 
 	@Override
-	public <T extends AttributeCollector> T collectAttributes(T collector) {
+	public <T extends AttributeCollector<T>> T collectAttributes(T collector) {
 		collector.addAttributes(item);
 		collector.addAttributes(enchant);
 		if (sockets.getSocketCount() > 0) {

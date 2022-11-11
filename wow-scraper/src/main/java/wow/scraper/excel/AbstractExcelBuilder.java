@@ -55,7 +55,7 @@ public abstract class AbstractExcelBuilder {
 		}
 	}
 
-	protected void setValue(Enum value) {
+	protected <T extends Enum<T>> void setValue(Enum<T> value) {
 		if (value != null) {
 			writer.setCell(value.name(), DATA_STYLE);
 		} else {
@@ -64,11 +64,7 @@ public abstract class AbstractExcelBuilder {
 	}
 
 	protected void setValue(String value) {
-		if (value != null) {
-			writer.setCell(value, DATA_STYLE);
-		} else {
-			writer.setCell(null, DATA_STYLE);
-		}
+		writer.setCell(value, DATA_STYLE);
 	}
 
 	protected void setValue(Percent value) {
@@ -87,7 +83,7 @@ public abstract class AbstractExcelBuilder {
 		}
 	}
 
-	protected <T extends Enum> void setValue(List<T> list) {
+	protected <T extends Enum<T>> void setValue(List<T> list) {
 		if (list != null && !list.isEmpty()) {
 			setValue(list.stream().map(Enum::name).collect(Collectors.joining(",")));
 		} else {

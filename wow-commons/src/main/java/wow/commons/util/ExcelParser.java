@@ -33,10 +33,6 @@ public abstract class ExcelParser {
 			this.columnIndicatingOptionalRow = columnIndicatingOptionalRow;
 		}
 
-		public SheetReader(String sheetName, Runnable rowConsumer) {
-			this(sheetName, rowConsumer, null);
-		}
-
 		public void readSheet() {
 			while (excelReader.nextRow()) {
 				if (columnIndicatingOptionalRow == null || columnIndicatingOptionalRow.getString(null) != null) {

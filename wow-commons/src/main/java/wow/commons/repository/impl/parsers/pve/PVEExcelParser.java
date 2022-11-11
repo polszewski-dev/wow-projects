@@ -45,9 +45,6 @@ public class PVEExcelParser extends ExcelParser {
 	private final ExcelColumn colZoneType = column("type");
 	private final ExcelColumn colZoneVersion = column("version");
 	private final ExcelColumn colZonePartySize = column("max_players");
-//	private final ExcelColumn colZoneReqLvl = column("req_lvl");
-//	private final ExcelColumn colZoneMinLvl = column("min_lvl");
-//	private final ExcelColumn colZoneMaxLvl = column("max_lvl");
 
 	private final ExcelColumn colBossId = column("id");
 	private final ExcelColumn colBossName = column("name");
@@ -88,9 +85,6 @@ public class PVEExcelParser extends ExcelParser {
 		var type = colZoneType.getEnum(ZoneType::valueOf);
 		var version = colZoneVersion.getEnum(GameVersion::parse);
 		var partySize = colZonePartySize.getInteger();
-//		var reqLvl = colZoneReqLvl.getInteger();
-//		var minLvl = colZoneMinLvl.getInteger();
-//		var maxLvl = colZoneMaxLvl.getInteger();
 
 		return new Zone(id, name, shortName, version, type, partySize);
 	}

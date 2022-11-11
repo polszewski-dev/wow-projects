@@ -10,15 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Date: 2022-09-26
  */
 class PercentTest {
-
-/*	@Test
-	void fromMultiplier() {
-		assertEquals(0, Percent.fromMultiplier(0).getValue());
-		assertEquals(0, Percent.fromMultiplier(1).getValue());
-		assertEquals(25, Percent.fromMultiplier(1.25).getValue());
-		assertEquals(25, Percent.fromMultiplier(1.25).getValue());
-	}*/
-
 	@ParameterizedTest
 	@CsvSource({
 			"0%, 0",

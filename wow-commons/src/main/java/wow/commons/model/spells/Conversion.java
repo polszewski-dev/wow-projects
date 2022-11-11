@@ -38,30 +38,12 @@ public class Conversion {
 	}
 
 	public enum To {
-		HEALING {
-			@Override
-			public void visit(Visitor visitor) {
-				visitor.visitHealing();
-			}
-		},
-
-		MANA {
-			@Override
-			public void visit(Visitor visitor) {
-				visitor.visitMana();
-			}
-		};
+		HEALING,
+		MANA;
 
 		public static To parse(String value) {
 			return EnumUtil.parse(value, values());
 		}
-
-		public interface Visitor {
-			void visitHealing();
-			void visitMana();
-		}
-
-		public abstract void visit(Visitor visitor);
 	}
 
 	private final From from;

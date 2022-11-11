@@ -14,7 +14,7 @@ public final class Money implements Comparable<Money> {
 	public static final Money ZERO = new Money(0);
 	public static final Money MAX_MONEY = new Money(Integer.MAX_VALUE);
 
-	private static final Pattern PATTERN = Pattern.compile("^([+-])?(\\d{1,}g)?(\\d{1,2}s)?(\\d{1,2}c)?$");
+	private static final Pattern PATTERN = Pattern.compile("^([+-])?(\\d+g)?(\\d{1,2}s)?(\\d{1,2}c)?$");
 
 	public static Money parse(String value) {
 		if (value == null || value.isEmpty()) {

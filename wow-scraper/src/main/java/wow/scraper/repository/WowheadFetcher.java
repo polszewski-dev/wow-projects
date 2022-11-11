@@ -119,4 +119,6 @@ public class WowheadFetcher {
 
 		return String.format(urlStr, itemId);
 	}
+
+	private WowheadFetcher() {}
 }

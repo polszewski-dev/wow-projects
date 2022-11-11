@@ -1,14 +1,13 @@
 package wow.scraper.model;
 
-/**
- * User: POlszewski
- * Date: 2022-11-01
- */
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+/**
+ * User: POlszewski
+ * Date: 2022-11-01
+ */
 @Data
 @JsonIgnoreProperties({
 	"popularity",

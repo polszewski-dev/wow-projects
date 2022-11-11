@@ -30,6 +30,6 @@ class ItemLinkTest {
 	void testToString(String itemLinkString) {
 		ItemLink itemLink = ItemLink.parse(itemLinkString);
 
-		assertThat(itemLink.toString()).isEqualTo(itemLinkString);
+		assertThat(itemLink).hasToString(itemLinkString);
 	}
 }

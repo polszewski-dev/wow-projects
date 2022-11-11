@@ -212,7 +212,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	@Override
-	public <T extends AttributeCollector> T collectAttributes(T collector) {
+	public <T extends AttributeCollector<T>> T collectAttributes(T collector) {
 		collector.addAttributes(getBuffsModifiedByTalents());
 		collector.addAttributes(build.getTalentInfos());
 		equipment.collectAttributes(collector);

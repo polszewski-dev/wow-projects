@@ -43,10 +43,12 @@ public class ItemRestriction {
 			return false;
 		}
 		if (requiredProfession != null) {
-			// TODO
+			if (characterInfo.getProfessionLevel(requiredProfession) < requiredProfessionLevel) {
+				return false;
+			}
 		}
 		if (requiredProfessionSpec != null) {
-			//TODO
+			return characterInfo.hasProfessionSpecialization(requiredProfessionSpec);
 		}
 		return true;
 	}

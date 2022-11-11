@@ -302,7 +302,7 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 	// item stats, gems, socket bonuses, procs, on-use, socket bonuses
 
 	@Override
-	public <T extends AttributeCollector> T collectAttributes(T collector) {
+	public <T extends AttributeCollector<T>> T collectAttributes(T collector) {
 		forEach(item -> item.collectAttributes(collector));
 		return collector;
 	}

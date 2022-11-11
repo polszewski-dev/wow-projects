@@ -57,4 +57,6 @@ public class ItemDetailRepository {
 	private static Path getPath(GameVersion gameVersion, WowheadItemCategory category, int itemId) {
 		return Paths.get("scraper", "items", gameVersion.toString().toLowerCase(), category.name().toLowerCase(), Integer.toString(itemId));
 	}
+
+	private ItemDetailRepository() {}
 }
