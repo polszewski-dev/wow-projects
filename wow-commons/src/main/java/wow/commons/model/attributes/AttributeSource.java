@@ -98,6 +98,10 @@ public interface AttributeSource {
 		return getAttributes().toString();
 	}
 
+	default double getArmor() {
+		return getDouble(ARMOR);
+	}
+
 	default double getStamina() {
 		return getDouble(STAMINA);
 	}

@@ -41,6 +41,7 @@ public class ItemExcelParser extends ExcelParser {
 	private final ExcelColumn colEnchantName = column("name");
 	private final ExcelColumn colEnchantItemTypes = column("item_types");
 	private final ExcelColumn colEnchantSp = column("sp");
+	private final ExcelColumn colEnchantSd = column("sd");
 	private final ExcelColumn colEnchantSpShadow = column("sp_shadow");
 	private final ExcelColumn colEnchantSpellCritRating = column("spell_crit_rating");
 	private final ExcelColumn colEnchantSpellHitRating = column("spell_hit_rating");
@@ -68,6 +69,7 @@ public class ItemExcelParser extends ExcelParser {
 
 	private Attributes getEnchantStats() {
 		var sp = colEnchantSp.getInteger(0);
+		var sd = colEnchantSd.getInteger(0);
 		var spShadow = colEnchantSpShadow.getInteger(0);
 		var spellCritRating = colEnchantSpellCritRating.getInteger(0);
 		var spellHitRating = colEnchantSpellHitRating.getInteger(0);
@@ -82,7 +84,8 @@ public class ItemExcelParser extends ExcelParser {
 		AttributesBuilder itemStats = new AttributesBuilder();
 
 		itemStats
-				.addAttribute(SPELL_DAMAGE, sp)
+				.addAttribute(SPELL_POWER, sp)
+				.addAttribute(SPELL_DAMAGE, sd)
 				.addAttribute(SPELL_DAMAGE, spShadow, AttributeCondition.of(SpellSchool.SHADOW))
 				.addAttribute(SPELL_CRIT_RATING, spellCritRating)
 				.addAttribute(SPELL_HIT_RATING, spellHitRating)

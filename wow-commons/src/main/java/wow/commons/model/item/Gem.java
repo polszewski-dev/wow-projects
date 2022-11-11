@@ -32,6 +32,10 @@ public class Gem extends AbstractItem {
 		return color;
 	}
 
+	public List<MetaEnabler> getMetaEnablers() {
+		return metaEnablers;
+	}
+
 	public boolean isMetaConditionTrue(int numRed, int numYellow, int numBlue) {
 		if (metaEnablers == null) {
 			return true;
