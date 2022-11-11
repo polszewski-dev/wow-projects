@@ -120,7 +120,7 @@ class PVERepositoryTest {
 		assertThat(baseStatInfo.getBaseSpirit()).isEqualTo(114);
 		assertThat(baseStatInfo.getBaseHP()).isEqualTo(1964);
 		assertThat(baseStatInfo.getBaseMana()).isEqualTo(2698);
-		assertThat(baseStatInfo.getBaseSpellCrit()).isEqualTo(3.29, PRECISION);
+		assertThat(baseStatInfo.getBaseSpellCritPct().getValue()).isEqualTo(3.29, PRECISION);
 		assertThat(baseStatInfo.getIntellectPerCritPct()).isEqualTo(80, PRECISION);
 	}
 

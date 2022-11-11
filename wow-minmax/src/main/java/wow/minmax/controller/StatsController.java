@@ -15,6 +15,7 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.repository.PVERepository;
 import wow.commons.util.AttributeEvaluator;
+import wow.commons.util.AttributesBuilder;
 import wow.commons.util.Snapshot;
 import wow.commons.util.SpellStatistics;
 import wow.minmax.converter.dto.PlayerSpellStatsConverter;
@@ -111,18 +112,25 @@ public class StatsController {
 		return attributes.getSpecialAbilities()
 				.stream()
 				.filter(x -> x.getLine() != null)
-				.map(x -> new SpecialAbilityStatsDTO(x.getLine(), x.getAttributeModifier().toString(), getStatEquivalent(x, playerProfile)))
+				.map(x -> new SpecialAbilityStatsDTO(x.getLine(), x.getAttributeModifier().toString(), getStatEquivalent(x, playerProfile, attributes)))
 				.collect(Collectors.toList())
 				;
 	}
 
-	private String getStatEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile) {
-		AttributeEvaluator attributeEvaluator = AttributeEvaluator.of(playerProfile.getDamagingSpell().getSpellInfo())
-				.addAttributes(playerProfile);
+	private String getStatEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile, Attributes attributes) {
+		List<SpecialAbility> withoutGivenSpecialAbility = new ArrayList<>(attributes.getSpecialAbilities());
 
-		return specialAbility.getStatEquivalent(
-				calculationService.getPlayerStatsProvider(playerProfile, playerProfile.getDamagingSpell(), attributeEvaluator))
-				.statString();
+		withoutGivenSpecialAbility.remove(specialAbility);
+
+		Attributes attributesWithoutGivenSpecialAbility = new AttributesBuilder()
+				.addAttributeList(attributes.getPrimitiveAttributeList())
+				.addComplexAttributeList(withoutGivenSpecialAbility)
+				.toAttributes();
+
+
+		Snapshot snapshot = calculationService.getSnapshot(playerProfile, playerProfile.getDamagingSpell(), attributesWithoutGivenSpecialAbility);
+
+		return specialAbility.getStatEquivalent(snapshot).statString();
 	}
 
 	private PlayerStatsDTO getEquipmentStats(PlayerProfile playerProfile) {

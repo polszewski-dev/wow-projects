@@ -1,9 +1,7 @@
 package wow.minmax.service;
 
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
-import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
 import wow.commons.util.SpellStatistics;
 import wow.minmax.model.PlayerProfile;
@@ -21,6 +19,4 @@ public interface CalculationService {
 	SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell, Attributes totalStats);
 
 	Snapshot getSnapshot(PlayerProfile playerProfile, Spell spell, Attributes totalStats);
-
-	StatProvider getPlayerStatsProvider(PlayerProfile playerProfile, Spell spell, AttributeEvaluator attributeEvaluator);
 }

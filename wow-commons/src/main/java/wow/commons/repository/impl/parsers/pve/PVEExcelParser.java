@@ -136,7 +136,7 @@ public class PVEExcelParser extends ExcelParser {
 		var baseSpi = colBsBaseSpi.getInteger();
 		var baseHP = colBsBaseHp.getInteger();
 		var baseMana = colBsBaseMana.getInteger();
-		var baseSpellCrit = colBsBaseSpellCrit.getDouble();
+		var baseSpellCrit = colBsBaseSpellCrit.getPercent();
 		var intPerCrit = colBsIntPerCrit.getDouble();
 
 		return new BaseStatInfo(level, characterClass, race, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit);

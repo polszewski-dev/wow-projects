@@ -73,7 +73,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 				}
 
 				Attributes totalStats = evaluator
-						.solveAll(attributeEvaluator -> calculationService.getPlayerStatsProvider(playerProfile, spell, attributeEvaluator))
+						.solveAllLeaveAbilities()
 						.getAttributes();
 
 				double dps = calculationService.getSpellStatistics(playerProfileCopy, spell, totalStats).getDps();
@@ -171,21 +171,6 @@ public class UpgradeServiceImpl implements UpgradeService {
 	}
 
 	private static StatProvider getStatProviderForItemScore() {
-		return new StatProvider() {
-			@Override
-			public double hitChance() {
-				return 0.99;
-			}
-
-			@Override
-			public double critChance() {
-				return 0.30;
-			}
-
-			@Override
-			public Duration castTime() {
-				return Duration.seconds(2.5);
-			}
-		};
+		return StatProvider.fixedValues(0.99, 0.30, Duration.seconds(2.5));
 	}
 }

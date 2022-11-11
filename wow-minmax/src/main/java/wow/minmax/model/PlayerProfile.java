@@ -2,17 +2,16 @@ package wow.minmax.model;
 
 import wow.commons.model.Copyable;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.*;
+import wow.commons.model.attributes.AttributeCollection;
+import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentInfo;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.CharacterInfo;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.Race;
+import wow.commons.model.unit.*;
 import wow.commons.util.AttributesBuilder;
 
 import java.time.LocalDateTime;
@@ -34,6 +33,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	private final CharacterInfo characterInfo;
 
 	private final CreatureType enemyType;
+
 	private final Phase phase;
 
 	private Build build;
@@ -125,6 +125,10 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public int getLevel() {
 		return characterInfo.getLevel();
+	}
+
+	public PetType getActivePet() {
+		return build.getActivePet();
 	}
 
 	public CreatureType getEnemyType() {
@@ -244,11 +248,10 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 			return Percent.ZERO;
 		}
 
-		Attributes selfBuffModifiers = new AttributesBuilder(AttributeFilter.of(sourceSpell))
+		return new AttributesBuilder()
 				.addAttributes(build.getTalentInfos())
-				.toAttributes();
-
-		return selfBuffModifiers.getEffectIncreasePct();
+				.toAttributes()
+				.getEffectIncreasePct(sourceSpell);
 	}
 
 	@Override

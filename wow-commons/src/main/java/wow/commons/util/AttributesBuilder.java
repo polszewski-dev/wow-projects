@@ -102,7 +102,7 @@ public class AttributesBuilder {
 		return this;
 	}
 
-	public AttributesBuilder addComplexAttributeList(Collection<ComplexAttribute> attributes) {
+	public AttributesBuilder addComplexAttributeList(Collection<? extends ComplexAttribute> attributes) {
 		if (attributes != null) {
 			for (ComplexAttribute attribute : attributes) {
 				addAttribute(attribute);

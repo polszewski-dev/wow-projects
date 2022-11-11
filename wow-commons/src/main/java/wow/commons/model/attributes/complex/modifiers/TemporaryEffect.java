@@ -54,7 +54,7 @@ public class TemporaryEffect implements AttributeModifier {
 
 	@Override
 	public Attributes getAveragedAttributes(StatProvider statProvider) {
-		double critChance = statProvider.critChance();
+		double critChance = statProvider.getCritChance();
 		double extraCritCoeff = getExtraCritCoeff(critChance);
 		if (extraCritCoeff == 0) {
 			return Attributes.EMPTY;

@@ -7,6 +7,7 @@ import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 
 import java.util.ArrayList;
@@ -35,44 +36,58 @@ public interface AttributeSource {
 		return getAttributes().isEmpty();
 	}
 
+	default double getDouble(PrimitiveAttributeId attributeId, AttributeCondition condition) {
+		double result = 0;
+		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
+			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
+				result += attribute.getDouble();
+			}
+		}
+		return result;
+	}
+
 	default double getDouble(PrimitiveAttributeId attributeId) {
-		double result = 0;
-		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId) {
-				result += attribute.getDouble();
-			}
-		}
-		return result;
+		return getDouble(attributeId, AttributeCondition.EMPTY);
 	}
 
-	private double getDouble(PrimitiveAttributeId attributeId, SpellSchool spellSchool) {
-		double result = 0;
-		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId && attribute.isTheSameOrNull(spellSchool)) {
-				result += attribute.getDouble();
-			}
-		}
-		return result;
+	default double getDouble(PrimitiveAttributeId attributeId, SpellSchool spellSchool) {
+		return getDouble(attributeId, AttributeCondition.of(spellSchool));
 	}
 
-	default Percent getPercent(PrimitiveAttributeId attributeId) {
+	default Percent getPercent(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		Percent result = Percent.ZERO;
 		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId) {
+			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
 				result = result.add(attribute.getPercent());
 			}
 		}
 		return result;
 	}
 
-	default Duration getDuration(PrimitiveAttributeId attributeId) {
+	default Percent getPercent(PrimitiveAttributeId attributeId) {
+		return getPercent(attributeId, AttributeCondition.EMPTY);
+	}
+
+	default Percent getPercent(PrimitiveAttributeId attributeId, SpellSchool spellSchool) {
+		return getPercent(attributeId, AttributeCondition.of(spellSchool));
+	}
+
+	default Duration getDuration(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		Duration result = Duration.ZERO;
 		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
-			if (attribute.getId() == attributeId) {
+			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
 				result = result.add(attribute.getDuration());
 			}
 		}
 		return result;
+	}
+
+	default Duration getDuration(PrimitiveAttributeId attributeId) {
+		return getDuration(attributeId, AttributeCondition.EMPTY);
+	}
+
+	default Duration getDuration(PrimitiveAttributeId attributeId, SpellSchool spellSchool) {
+		return getDuration(attributeId, AttributeCondition.of(spellSchool));
 	}
 
 	default <T extends ComplexAttribute> List<T> getList(ComplexAttributeId attributeId) {
@@ -151,7 +166,7 @@ public interface AttributeSource {
 	}
 
 	default double getTotalSpellDamage(SpellSchool spellSchool) {
-		return getSpellPower() + getSpellDamage(spellSchool);
+		return getSpellPower() + getSpellDamage(spellSchool);//TODO incorrect
 	}
 
 	default double getSpellCritRating() {
@@ -210,6 +225,11 @@ public interface AttributeSource {
 		return getPercent(DAMAGE_TAKEN_PCT);
 	}
 
+	default Percent getDamageTakenPct(SpellSchool spellSchool) {
+		return getPercent(DAMAGE_TAKEN_PCT, AttributeCondition.of(spellSchool));
+	}
+
+
 	default Percent getDirectDamageIncreasePct() {
 		return getPercent(DIRECT_DAMAGE_INCREASE_PCT);
 	}
@@ -222,8 +242,8 @@ public interface AttributeSource {
 		return getPercent(ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT);
 	}
 
-	default Percent getEffectIncreasePct() {
-		return getPercent(EFFECT_INCREASE_PCT);
+	default Percent getEffectIncreasePct(SpellId spellId) {
+		return getPercent(EFFECT_INCREASE_PCT, AttributeCondition.of(spellId));
 	}
 
 	default Percent getDamageTakenIncreasePct() {

@@ -40,9 +40,9 @@ public class ProcTemporaryModifier implements AttributeModifier {
 
 	@Override
 	public Attributes getAveragedAttributes(StatProvider statProvider) {
-		Duration castTime = statProvider.castTime();
-		double hitChance = statProvider.hitChance();
-		double critChance = statProvider.critChance();
+		Duration castTime = statProvider.getEffectiveCastTime();
+		double hitChance = statProvider.getHitChance();
+		double critChance = statProvider.getCritChance();
 		Duration internalCooldown = castTime.divideBy(getProcChance(hitChance, critChance));
 		Duration actualCooldown = getActualCooldown(internalCooldown);
 		double factor = duration.divideBy(actualCooldown);

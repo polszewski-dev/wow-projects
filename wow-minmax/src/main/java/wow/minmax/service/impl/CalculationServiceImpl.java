@@ -2,10 +2,8 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.commons.model.Duration;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.unit.BaseStatInfo;
@@ -69,8 +67,9 @@ public class CalculationServiceImpl implements CalculationService {
 			attributeEvaluator.addAttribute(attribute);
 		}
 
-		Attributes totalStats = attributeEvaluator.solveAll(attributeEvaluator2 -> getPlayerStatsProvider(playerProfile, spell, attributeEvaluator2))
-											 .getAttributes();
+		Attributes totalStats = attributeEvaluator
+				.solveAllLeaveAbilities()
+				.getAttributes();
 
 		return getSpellStatistics(playerProfile, spell, totalStats);
 	}
@@ -93,36 +92,14 @@ public class CalculationServiceImpl implements CalculationService {
 		BaseStatInfo baseStats = pveRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel()).orElseThrow();
 		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
 
-		return new Snapshot(spell.getSpellInfo(), spell.getSpellRankInfo(playerProfile.getLevel()), baseStats, cr, totalStats);
-	}
-
-	@Override
-	public StatProvider getPlayerStatsProvider(PlayerProfile playerProfile, Spell spell, AttributeEvaluator attributeEvaluator) {
-		return new StatProvider() {
-			private Snapshot snapshot;
-
-			@Override
-			public double hitChance() {
-				return getSnapshot().getHitChance();
-			}
-
-			@Override
-			public double critChance() {
-				return getSnapshot().getCritChance();
-			}
-
-			@Override
-			public Duration castTime() {
-				return getSnapshot().getEffectiveCastTime();
-			}
-
-			private Snapshot getSnapshot() {
-				if (snapshot == null) {
-					Attributes attributes = attributeEvaluator.getAttributes();
-					this.snapshot = CalculationServiceImpl.this.getSnapshot(playerProfile, spell, attributes);
-				}
-				return snapshot;
-			}
-		};
+		return new Snapshot(
+				spell.getSpellInfo(),
+				spell.getSpellRankInfo(playerProfile.getLevel()),
+				baseStats,
+				cr,
+				totalStats,
+				playerProfile.getActivePet(),
+				playerProfile.getEnemyType()
+		);
 	}
 }

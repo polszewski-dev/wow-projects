@@ -3,6 +3,7 @@ package wow.minmax.model;
 import lombok.Data;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.unit.PetType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class Build {
 	private String talentLink;
 	private List<TalentInfo> talentInfos;
 	private Spell damagingSpell;
+	private PetType activePet;
 
 	private List<Buff> selfBuffs;
 	private List<Buff> partyBuffs;

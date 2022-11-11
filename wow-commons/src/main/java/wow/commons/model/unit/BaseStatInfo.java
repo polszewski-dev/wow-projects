@@ -1,5 +1,7 @@
 package wow.commons.model.unit;
 
+import wow.commons.model.Percent;
+
 /**
  * User: POlszewski
  * Date: 2021-03-19
@@ -15,10 +17,10 @@ public class BaseStatInfo {
 	private final int baseSpirit;
 	private final int baseHP;
 	private final int baseMana;
-	private final double baseSpellCrit;
+	private final Percent baseSpellCritPct;
 	private final double intellectPerCritPct;
 
-	public BaseStatInfo(int level, CharacterClass characterClass, Race race, int baseStrength, int baseAgility, int baseStamina, int baseIntellect, int baseSpirit, int baseHP, int baseMana, double baseSpellCrit, double intellectPerCritPct) {
+	public BaseStatInfo(int level, CharacterClass characterClass, Race race, int baseStrength, int baseAgility, int baseStamina, int baseIntellect, int baseSpirit, int baseHP, int baseMana, Percent baseSpellCritPct, double intellectPerCritPct) {
 		this.level = level;
 		this.characterClass = characterClass;
 		this.race = race;
@@ -29,7 +31,7 @@ public class BaseStatInfo {
 		this.baseSpirit = baseSpirit;
 		this.baseHP = baseHP;
 		this.baseMana = baseMana;
-		this.baseSpellCrit = baseSpellCrit;
+		this.baseSpellCritPct = baseSpellCritPct;
 		this.intellectPerCritPct = intellectPerCritPct;
 	}
 
@@ -73,8 +75,8 @@ public class BaseStatInfo {
 		return baseMana;
 	}
 
-	public double getBaseSpellCrit() {
-		return baseSpellCrit;
+	public Percent getBaseSpellCritPct() {
+		return baseSpellCritPct;
 	}
 
 	public double getIntellectPerCritPct() {
