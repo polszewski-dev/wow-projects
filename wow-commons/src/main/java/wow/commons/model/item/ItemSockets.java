@@ -27,7 +27,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	public ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets, boolean readOnly) {
-		super(ComplexAttributeId.SOCKETS, null);
+		super(ComplexAttributeId.SOCKETS, AttributeCondition.EMPTY);
 		this.specification = specification;
 		this.sockets = sockets;
 		this.readOnly = readOnly;

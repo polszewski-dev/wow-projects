@@ -32,11 +32,6 @@ public class AttributesDiffFinder {
 		return result;
 	}
 
-	private PrimitiveCollector getDoubleCollector(PrimitiveAttribute attribute) {
-		String key = getKey(attribute);
-		return collectors.computeIfAbsent(key, x -> new PrimitiveCollector(attribute));
-	}
-
 	private void addPrimitiveAttributeDiff(AttributesDiff result) {
 		List<PrimitiveAttribute> attributes = getPrimitiveAttributeDiff();
 		result.setAttributes(Attributes.of(attributes));
@@ -80,12 +75,13 @@ public class AttributesDiffFinder {
 		}
 	}
 
-	private static List<ComplexAttribute> ensureList(ComplexAttributeId key, Map<ComplexAttributeId, List<ComplexAttribute>> list) {
-		return list.computeIfAbsent(key, x -> new ArrayList<>());
+	private PrimitiveCollector getDoubleCollector(PrimitiveAttribute attribute) {
+		String key = attribute.getId() + " " + attribute.getCondition();
+		return collectors.computeIfAbsent(key, x -> new PrimitiveCollector(attribute));
 	}
 
-	private static String getKey(PrimitiveAttribute attribute) {
-		return attribute.getId() + " " + attribute.getCondition();
+	private static List<ComplexAttribute> ensureList(ComplexAttributeId key, Map<ComplexAttributeId, List<ComplexAttribute>> list) {
+		return list.computeIfAbsent(key, x -> new ArrayList<>());
 	}
 
 	private static class PrimitiveCollector {

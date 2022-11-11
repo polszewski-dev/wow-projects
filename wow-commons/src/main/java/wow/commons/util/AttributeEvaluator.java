@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
 public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator> {
 	private final AttributeFilter filter;
 
-	private final Map<PrimitiveAttributeId, Double> primitiveAttributes = new EnumMap<>(PrimitiveAttributeId.class);
-	private final Map<PrimitiveAttributeId, Map<AttributeCondition, Double>> conditionalPrimitiveAttributes = new EnumMap<>(PrimitiveAttributeId.class);
+	private final Map<AttributeCondition, Map<PrimitiveAttributeId, Double>> primitiveAttributes = new HashMap<>();
 
 	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(ComplexAttributeId.class);
 
@@ -85,19 +84,13 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		addPrimitiveAttribute(attribute);
+		AttributeCondition condition = attribute.getCondition();
+		PrimitiveAttributeId id = attribute.getId();
+
+		var map = primitiveAttributes.computeIfAbsent(condition, x -> new EnumMap<>(PrimitiveAttributeId.class));
+		map.put(id, attribute.getDouble() + map.getOrDefault(id, 0.0));
 
 		return this;
-	}
-
-	private void addPrimitiveAttribute(PrimitiveAttribute attribute) {
-		PrimitiveAttributeId id = attribute.getId();
-		if (!attribute.hasCondition()) {
-			primitiveAttributes.put(id, attribute.getDouble() + primitiveAttributes.getOrDefault(id, 0.0));
-		} else {
-			var map = conditionalPrimitiveAttributes.computeIfAbsent(id, x -> new HashMap<>());
-			map.put(attribute.getCondition(), attribute.getDouble() + map.getOrDefault(attribute.getCondition(), 0.0));
-		}
 	}
 
 	@Override
@@ -119,27 +112,18 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 	public Attributes getAttributes() {
 		AttributesBuilder result = new AttributesBuilder();
 
-		processUnconditionalAttributes(result);
 		processConditionalAttributes(result);
 		processComplexAttributes(result);
 		return result.toAttributes();
 	}
 
-	private void processUnconditionalAttributes(AttributesBuilder result) {
-		for (var entry : primitiveAttributes.entrySet()) {
-			var id = entry.getKey();
-			var value = entry.getValue();
-			result.addAttribute(id, value);
-		}
-	}
-
 	private void processConditionalAttributes(AttributesBuilder result) {
-		for (var entry : conditionalPrimitiveAttributes.entrySet()) {
-			var id = entry.getKey();
+		for (var entry : primitiveAttributes.entrySet()) {
+			var condition = entry.getKey();
 			for (var entry2 : entry.getValue().entrySet()) {
-				var condition2 = entry2.getKey();
+				var id = entry2.getKey();
 				var value = entry2.getValue();
-				result.addAttribute(id, value, condition2);
+				result.addAttribute(id, value, condition);
 			}
 		}
 	}

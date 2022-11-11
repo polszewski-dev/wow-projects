@@ -20,11 +20,7 @@ import java.util.List;
  */
 public class PrimitiveAttributeSupplier {
 	private final PrimitiveAttributeId attributeId;
-	private final List<TalentTree> talentTrees = new ArrayList<>();
-	private final List<SpellSchool> spellSchools = new ArrayList<>();
-	private final List<SpellId> spellIds = new ArrayList<>();
-	private final List<PetType> petTypes = new ArrayList<>();
-	private final List<CreatureType> creatureTypes = new ArrayList<>();
+	private final List<AttributeCondition> conditions = new ArrayList<>();
 
 	private PrimitiveAttributeSupplier(String line) {
 		String[] parts = line.split(",");
@@ -32,14 +28,41 @@ public class PrimitiveAttributeSupplier {
 		this.attributeId = PrimitiveAttributeId.parse(parts[0]);
 
 		for (int i = 1; i < parts.length; ++i) {
-			addCondition(parts[i].trim());
+			conditions.add(parseCondition(parts[i].trim()));
 		}
 
-		ensureAtLeastOneElement(talentTrees);
-		ensureAtLeastOneElement(spellSchools);
-		ensureAtLeastOneElement(spellIds);
-		ensureAtLeastOneElement(petTypes);
-		ensureAtLeastOneElement(creatureTypes);
+		if (conditions.isEmpty()) {
+			conditions.add(AttributeCondition.EMPTY);
+		}
+	}
+
+	private AttributeCondition parseCondition(String value) {
+		TalentTree talentTree = TalentTree.tryParse(value);
+		if (talentTree != null) {
+			return AttributeCondition.of(talentTree);
+		}
+
+		SpellSchool spellSchool = SpellSchool.tryParse(value);
+		if (spellSchool != null) {
+			return AttributeCondition.of(spellSchool);
+		}
+
+		SpellId spellId = SpellId.tryParse(value);
+		if (spellId != null) {
+			return AttributeCondition.of(spellId);
+		}
+
+		PetType petType = PetType.tryParse(value);
+		if (petType != null) {
+			return AttributeCondition.of(petType);
+		}
+
+		CreatureType creatureType = CreatureType.tryParse(value);
+		if (creatureType != null) {
+			return AttributeCondition.of(creatureType);
+		}
+
+		throw new IllegalArgumentException(value);
 	}
 
 	public static PrimitiveAttributeSupplier fromString(String line) {
@@ -47,18 +70,14 @@ public class PrimitiveAttributeSupplier {
 	}
 
 	public List<PrimitiveAttribute> getAttributeList(double value) {
+		if (value == 0) {
+			return List.of();
+		}
+
 		List<PrimitiveAttribute> result = new ArrayList<>();
 
-		for (TalentTree talentTree : talentTrees) {
-			for (SpellSchool spellSchool : spellSchools) {
-				for (SpellId spellId : spellIds) {
-					for (PetType petType : petTypes) {
-						for (CreatureType creatureType : creatureTypes) {
-							addAttribute(value, result, talentTree, spellSchool, spellId, petType, creatureType);
-						}
-					}
-				}
-			}
+		for (AttributeCondition condition : conditions) {
+			result.add(Attribute.of(attributeId, value, condition));
 		}
 
 		return result;
@@ -66,58 +85,5 @@ public class PrimitiveAttributeSupplier {
 
 	public Attributes getAttributes(double value) {
 		return Attributes.of(getAttributeList(value));
-	}
-
-	private void addAttribute(double value, List<PrimitiveAttribute> result, TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
-		PrimitiveAttribute attribute = getAttribute(value, talentTree, spellSchool, spellId, petType, creatureType);
-		if (attribute != null) {
-			result.add(attribute);
-		}
-	}
-
-	private PrimitiveAttribute getAttribute(double value, TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
-		AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, creatureType);
-
-		return Attribute.ofNullable(attributeId, value, condition);
-	}
-
-	private void addCondition(String value) {
-		TalentTree talentTree = TalentTree.tryParse(value);
-		if (talentTree != null) {
-			talentTrees.add(talentTree);
-			return;
-		}
-
-		SpellSchool spellSchool = SpellSchool.tryParse(value);
-		if (spellSchool != null) {
-			spellSchools.add(spellSchool);
-			return;
-		}
-
-		SpellId spellId = SpellId.tryParse(value);
-		if (spellId != null) {
-			spellIds.add(spellId);
-			return;
-		}
-
-		PetType petType = PetType.tryParse(value);
-		if (petType != null) {
-			petTypes.add(petType);
-			return;
-		}
-
-		CreatureType creatureType = CreatureType.tryParse(value);
-		if (creatureType != null) {
-			creatureTypes.add(creatureType);
-			return;
-		}
-
-		throw new IllegalArgumentException(value);
-	}
-
-	private static <T> void ensureAtLeastOneElement(List<T> list) {
-		if (list.isEmpty()) {
-			list.add(null);
-		}
 	}
 }

@@ -20,7 +20,7 @@ public final class SpecialAbility extends ComplexAttribute implements StatEquiva
 	private final String line;
 
 	private SpecialAbility(AttributeModifier attributeModifier, String line) {
-		this(attributeModifier, line, null);
+		this(attributeModifier, line, AttributeCondition.EMPTY);
 	}
 
 	private SpecialAbility(AttributeModifier attributeModifier, String line, AttributeCondition condition) {

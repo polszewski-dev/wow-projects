@@ -112,7 +112,8 @@ public class AttributesBuilder {
 	}
 
 	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, double value) {
-		return addAttribute(attributeId, value, null);
+		addAttribute(Attribute.ofNullable(attributeId, value));
+		return this;
 	}
 
 	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, double value, AttributeCondition condition) {
@@ -121,7 +122,8 @@ public class AttributesBuilder {
 	}
 
 	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, Percent value) {
-		return addAttribute(attributeId, value, null);
+		addAttribute(Attribute.ofNullable(attributeId, value));
+		return this;
 	}
 
 	public AttributesBuilder addAttribute(PrimitiveAttributeId attributeId, Percent value, AttributeCondition condition) {

@@ -8,13 +8,13 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.spells.SpellSchool;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.spells.SpellSchool.*;
 
 /**
  * User: POlszewski
@@ -56,18 +56,18 @@ class AttributesDiffFinderTest {
 				),
 				arguments(
 						Attributes.of(
-								Attribute.of(SPELL_DAMAGE, 10, AttributeCondition.of(SpellSchool.FIRE)),
+								Attribute.of(SPELL_DAMAGE, 10, AttributeCondition.of(FIRE)),
 								Attribute.of(SPELL_DAMAGE, 20),
 								Attribute.of(SPELL_DAMAGE, 30)
 						),
 						Attributes.of(
 								Attribute.of(SPELL_DAMAGE, 4),
 								Attribute.of(SPELL_DAMAGE, 6),
-								Attribute.of(SPELL_DAMAGE, 8, AttributeCondition.of(SpellSchool.FIRE))
+								Attribute.of(SPELL_DAMAGE, 8, AttributeCondition.of(FIRE))
 						),
 						Attributes.of(
 								Attribute.of(SPELL_DAMAGE, 40),
-								Attribute.of(SPELL_DAMAGE, 2, AttributeCondition.of(SpellSchool.FIRE))
+								Attribute.of(SPELL_DAMAGE, 2, AttributeCondition.of(FIRE))
 						)
 				),
 				arguments(
@@ -88,18 +88,18 @@ class AttributesDiffFinderTest {
 				arguments(
 						Attributes.of(
 								Attribute.of(SPELL_DAMAGE, 10),
-								Attribute.of(SPELL_CRIT_RATING, 15, AttributeCondition.of(SpellSchool.FIRE)),
-								Attribute.of(SPELL_DAMAGE, 20, AttributeCondition.of(SpellSchool.ARCANE))
+								Attribute.of(SPELL_CRIT_RATING, 15, AttributeCondition.of(FIRE)),
+								Attribute.of(SPELL_DAMAGE, 20, AttributeCondition.of(ARCANE))
 						),
 						Attributes.of(
 								Attribute.of(SPELL_DAMAGE, 5),
-								Attribute.of(SPELL_CRIT_RATING, 6, AttributeCondition.of(SpellSchool.FROST))
+								Attribute.of(SPELL_CRIT_RATING, 6, AttributeCondition.of(FROST))
 						),
 						Attributes.of(
 								Attribute.of(SPELL_DAMAGE, 5),
-								Attribute.of(SPELL_DAMAGE, 20, AttributeCondition.of(SpellSchool.ARCANE)),
-								Attribute.of(SPELL_CRIT_RATING, 15, AttributeCondition.of(SpellSchool.FIRE)),
-								Attribute.of(SPELL_CRIT_RATING, -6, AttributeCondition.of(SpellSchool.FROST))
+								Attribute.of(SPELL_DAMAGE, 20, AttributeCondition.of(ARCANE)),
+								Attribute.of(SPELL_CRIT_RATING, 15, AttributeCondition.of(FIRE)),
+								Attribute.of(SPELL_CRIT_RATING, -6, AttributeCondition.of(FROST))
 						)
 				),
 
@@ -125,18 +125,18 @@ class AttributesDiffFinderTest {
 				),
 				arguments(
 						Attributes.of(
-								Attribute.of(SPELL_HIT_PCT, Percent.of(10), AttributeCondition.of(SpellSchool.FIRE)),
+								Attribute.of(SPELL_HIT_PCT, Percent.of(10), AttributeCondition.of(FIRE)),
 								Attribute.of(SPELL_HIT_PCT, Percent.of(20)),
 								Attribute.of(SPELL_HIT_PCT, Percent.of(30))
 						),
 						Attributes.of(
 								Attribute.of(SPELL_HIT_PCT, Percent.of(4)),
 								Attribute.of(SPELL_HIT_PCT, Percent.of(6)),
-								Attribute.of(SPELL_HIT_PCT, Percent.of(8), AttributeCondition.of(SpellSchool.FIRE))
+								Attribute.of(SPELL_HIT_PCT, Percent.of(8), AttributeCondition.of(FIRE))
 						),
 						Attributes.of(
 								Attribute.of(SPELL_HIT_PCT, Percent.of(40)),
-								Attribute.of(SPELL_HIT_PCT, Percent.of(2), AttributeCondition.of(SpellSchool.FIRE))
+								Attribute.of(SPELL_HIT_PCT, Percent.of(2), AttributeCondition.of(FIRE))
 						)
 				),
 				arguments(
@@ -157,18 +157,18 @@ class AttributesDiffFinderTest {
 				arguments(
 						Attributes.of(
 								Attribute.of(SPELL_HIT_PCT, Percent.of(10)),
-								Attribute.of(SPELL_CRIT_PCT, Percent.of(15), AttributeCondition.of(SpellSchool.FIRE)),
-								Attribute.of(SPELL_HIT_PCT, Percent.of(20), AttributeCondition.of(SpellSchool.ARCANE))
+								Attribute.of(SPELL_CRIT_PCT, Percent.of(15), AttributeCondition.of(FIRE)),
+								Attribute.of(SPELL_HIT_PCT, Percent.of(20), AttributeCondition.of(ARCANE))
 						),
 						Attributes.of(
 								Attribute.of(SPELL_HIT_PCT, Percent.of(5)),
-								Attribute.of(SPELL_CRIT_PCT, Percent.of(6), AttributeCondition.of(SpellSchool.FROST))
+								Attribute.of(SPELL_CRIT_PCT, Percent.of(6), AttributeCondition.of(FROST))
 						),
 						Attributes.of(
-								Attribute.of(SPELL_CRIT_PCT, Percent.of(15), AttributeCondition.of(SpellSchool.FIRE)),
-								Attribute.of(SPELL_CRIT_PCT, Percent.of(-6), AttributeCondition.of(SpellSchool.FROST)),
+								Attribute.of(SPELL_CRIT_PCT, Percent.of(15), AttributeCondition.of(FIRE)),
+								Attribute.of(SPELL_CRIT_PCT, Percent.of(-6), AttributeCondition.of(FROST)),
 								Attribute.of(SPELL_HIT_PCT, Percent.of(5)),
-								Attribute.of(SPELL_HIT_PCT, Percent.of(20), AttributeCondition.of(SpellSchool.ARCANE))
+								Attribute.of(SPELL_HIT_PCT, Percent.of(20), AttributeCondition.of(ARCANE))
 						)
 				)
 		);

@@ -28,9 +28,9 @@ import wow.commons.util.ExcelParser;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
@@ -126,7 +126,7 @@ public class SpellExcelParser extends ExcelParser {
 
 				if (conversionFrom != null && conversionTo != null) {
 					var conversionRatioPct = colConversionRationPct.getPercent();
-					return new StatConversion(conversionFrom, conversionTo, conversionRatioPct, null);
+					return new StatConversion(conversionFrom, conversionTo, conversionRatioPct, AttributeCondition.EMPTY);
 				} else if (conversionFrom != null || conversionTo != null) {
 					throw new IllegalArgumentException("Missing conversion from or to");
 				}
@@ -189,7 +189,7 @@ public class SpellExcelParser extends ExcelParser {
 				var increasePerEffectPct = colIncreasePerEffectPct.getPercent();
 				var maxIncreasePct = colMaxIncreasePct.getPercent();
 
-				return new EffectIncreasePerEffectOnTarget(effectTree, increasePerEffectPct, maxIncreasePct, null);
+				return new EffectIncreasePerEffectOnTarget(effectTree, increasePerEffectPct, maxIncreasePct, AttributeCondition.EMPTY);
 			}
 		}
 
@@ -241,19 +241,39 @@ public class SpellExcelParser extends ExcelParser {
 		}
 
 		private List<AttributeCondition> getPossibleConditions(TalentTree talentTree, SpellSchool spellSchool, Set<SpellId> spells, Set<PetType> petTypes) {
-			Set<SpellId> possibleSpells = !spells.isEmpty() ? spells : Collections.singleton(null);
-			Set<PetType> possiblePetTypes = !petTypes.isEmpty() ? petTypes : Collections.singleton(null);
-
-			List<AttributeCondition> result = new ArrayList<>();
-
-			for (SpellId spellId : possibleSpells) {
-				for (PetType petType : possiblePetTypes) {
-					AttributeCondition condition = AttributeCondition.of(talentTree, spellSchool, spellId, petType, null);
-					result.add(condition);
+			if (talentTree != null) {
+				if (spellSchool == null && spells.isEmpty() && petTypes.isEmpty()) {
+					return List.of(AttributeCondition.of(talentTree));
+				} else {
+					throw new IllegalArgumentException();
 				}
 			}
 
-			return result;
+			if (spellSchool != null) {
+				if (spells.isEmpty() && petTypes.isEmpty()) {
+					return List.of(AttributeCondition.of(spellSchool));
+				} else {
+					throw new IllegalArgumentException();
+				}
+			}
+
+			if (!spells.isEmpty()) {
+				if (petTypes.isEmpty()) {
+					return spells.stream()
+							.map(AttributeCondition::of)
+							.collect(Collectors.toList());
+				} else {
+					throw new IllegalArgumentException();
+				}
+			}
+
+			if (!petTypes.isEmpty()) {
+				return petTypes.stream()
+						.map(AttributeCondition::of)
+						.collect(Collectors.toList());
+			}
+
+			return List.of(AttributeCondition.EMPTY);
 		}
 	}
 

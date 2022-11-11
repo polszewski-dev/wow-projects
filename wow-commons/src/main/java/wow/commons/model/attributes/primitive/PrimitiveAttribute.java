@@ -69,7 +69,7 @@ public class PrimitiveAttribute extends Attribute {
 
 	public PrimitiveAttribute scale(double factor) {
 		double scaledValue = factor * value;
-		return new PrimitiveAttribute(id, scaledValue, getCondition());
+		return new PrimitiveAttribute(id, scaledValue, condition);
 	}
 
 	@Override

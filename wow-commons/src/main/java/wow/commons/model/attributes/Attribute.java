@@ -19,10 +19,13 @@ public abstract class Attribute {
 
 	protected Attribute(AttributeCondition condition) {
 		this.condition = condition;
+		if (condition == null) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public static PrimitiveAttribute of(PrimitiveAttributeId id, double value) {
-		return of(id, value, null);
+		return of(id, value, AttributeCondition.EMPTY);
 	}
 
 	public static PrimitiveAttribute of(PrimitiveAttributeId id, double value, AttributeCondition condition) {
@@ -30,7 +33,7 @@ public abstract class Attribute {
 	}
 
 	public static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value) {
-		return of(id, value, null);
+		return of(id, value, AttributeCondition.EMPTY);
 	}
 
 	public static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
@@ -38,7 +41,7 @@ public abstract class Attribute {
 	}
 
 	public static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value) {
-		return of(id, value, null);
+		return of(id, value, AttributeCondition.EMPTY);
 	}
 
 	public static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
@@ -46,7 +49,7 @@ public abstract class Attribute {
 	}
 
 	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value) {
-		return ofNullable(id, value, null);
+		return ofNullable(id, value, AttributeCondition.EMPTY);
 	}
 
 	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value, AttributeCondition condition) {
@@ -54,7 +57,7 @@ public abstract class Attribute {
 	}
 
 	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value) {
-		return ofNullable(id, value, null);
+		return ofNullable(id, value, AttributeCondition.EMPTY);
 	}
 
 	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
@@ -62,7 +65,7 @@ public abstract class Attribute {
 	}
 
 	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value) {
-		return ofNullable(id, value, null);
+		return ofNullable(id, value, AttributeCondition.EMPTY);
 	}
 
 	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
@@ -78,7 +81,7 @@ public abstract class Attribute {
 	public abstract Attribute attachCondition(AttributeCondition condition);
 
 	public boolean hasCondition() {
-		return condition != null && !condition.isEmpty();
+		return !condition.isEmpty();
 	}
 
 	public boolean isTheSameOrNull(TalentTree talentTree) {
@@ -102,13 +105,13 @@ public abstract class Attribute {
 	}
 
 	public boolean isMatchedBy(AttributeFilter filter) {
-		return filter == null || filter.matchesCondition(getCondition());
+		return filter == null || filter.matchesCondition(condition);
 	}
 
 	@Override
 	public abstract String toString();
 
 	protected String getConditionString() {
-		return getCondition() != null && !getCondition().isEmpty() ? " | " + getCondition() : "";
+		return condition.isEmpty() ? "" : " | " + condition;
 	}
 }
