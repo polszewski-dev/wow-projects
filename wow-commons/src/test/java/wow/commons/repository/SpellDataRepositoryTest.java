@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.commons.TestConfig;
+import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
@@ -36,7 +36,7 @@ import static wow.commons.model.talents.TalentTree.DESTRUCTION;
  * Date: 2022-11-11
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = WowCommonsTestConfig.class)
 class SpellDataRepositoryTest {
 	@Autowired
 	SpellDataRepository underTest;

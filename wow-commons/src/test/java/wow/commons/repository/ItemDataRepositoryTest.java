@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.commons.TestConfig;
+import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.Money;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
@@ -32,7 +32,7 @@ import static wow.commons.model.pve.Phase.TBC_P5;
  * Date: 2022-11-11
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = WowCommonsTestConfig.class)
 class ItemDataRepositoryTest {
 	@Autowired
 	ItemDataRepository underTest;

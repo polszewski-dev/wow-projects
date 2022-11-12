@@ -1,13 +1,15 @@
-package wow.commons;
+package wow.minmax;
 
 import org.springframework.context.annotation.ComponentScan;
 
 /**
  * User: POlszewski
- * Date: 2022-11-10
+ * Date: 2022-11-12
  */
 @ComponentScan(basePackages = {
-		"wow.commons.repository"
+		"wow.commons.repository",
+		"wow.minmax"
 })
-public class TestConfig {
+
+public class WowMinMaxTestConfig {
 }

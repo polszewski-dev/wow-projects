@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.commons.TestConfig;
+import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Phase;
@@ -30,7 +30,7 @@ import static wow.commons.model.unit.Race.ORC;
  * Date: 2022-11-10
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = WowCommonsTestConfig.class)
 class PVERepositoryTest {
 	@Autowired
 	PVERepository underTest;
