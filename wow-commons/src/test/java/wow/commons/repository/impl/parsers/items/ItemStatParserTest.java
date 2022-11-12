@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parsers.items;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,7 +24,8 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  * Date: 2022-10-30
  */
 class ItemStatParserTest {
-	@ParameterizedTest
+	@DisplayName("Test parsing proc strings")
+	@ParameterizedTest(name = "[{index}] LINE = {0}, STAT = {1}")
 	@MethodSource("getProcTestArguments")
 	void testParseProc(String line, String expectedStatString) {
 		StatParser parser =  StatPatternRepository.getInstance().getItemStatParser();
@@ -36,8 +38,7 @@ class ItemStatParserTest {
 
 		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
-		assertThat(specialAbilities).isNotNull();
-		assertThat(specialAbilities).hasSize(1);
+		assertThat(specialAbilities).isNotNull().hasSize(1);
 		assertThat(specialAbilities.get(0)).isOfAnyClassIn(SpecialAbility.class);
 
 		SpecialAbility specialAbility = (SpecialAbility)specialAbilities.get(0);
@@ -47,10 +48,11 @@ class ItemStatParserTest {
 
 		ProcTemporaryModifier proc = (ProcTemporaryModifier) specialAbility.getAttributeModifier();
 
-		assertThat(proc.toString()).isEqualTo(expectedStatString);
+		assertThat(proc).hasToString(expectedStatString);
 	}
 
-	@ParameterizedTest
+	@DisplayName("Test parsing on-use strings")
+	@ParameterizedTest(name = "[{index}] LINE = {0}, STAT = {1}")
 	@MethodSource("getOnUseTestArguments")
 	void testParseOnUse(String line, String expectedStatString) {
 		StatParser parser =  StatPatternRepository.getInstance().getItemStatParser();
@@ -63,8 +65,7 @@ class ItemStatParserTest {
 
 		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
-		assertThat(specialAbilities).isNotNull();
-		assertThat(specialAbilities).hasSize(1);
+		assertThat(specialAbilities).isNotNull().hasSize(1);
 		assertThat(specialAbilities.get(0)).isOfAnyClassIn(SpecialAbility.class);
 
 		SpecialAbility specialAbility = (SpecialAbility)specialAbilities.get(0);
@@ -72,9 +73,9 @@ class ItemStatParserTest {
 		assertThat(specialAbility.getLine()).isEqualTo(line);
 		assertThat(specialAbility.getAttributeModifier()).isOfAnyClassIn(TemporaryModifier.class);
 
-		TemporaryModifier proc = (TemporaryModifier) specialAbility.getAttributeModifier();
+		TemporaryModifier onUse = (TemporaryModifier) specialAbility.getAttributeModifier();
 
-		assertThat(proc.toString()).isEqualTo(expectedStatString);
+		assertThat(onUse).hasToString(expectedStatString);
 	}
 
 	static Stream<Arguments> getProcTestArguments() {

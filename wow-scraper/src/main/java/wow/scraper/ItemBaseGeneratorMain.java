@@ -1,5 +1,6 @@
 package wow.scraper;
 
+import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersion;
 import wow.scraper.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.WowheadItemCategory;
@@ -15,6 +16,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-10-29
  */
+@Slf4j
 public class ItemBaseGeneratorMain {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
 
@@ -31,9 +33,9 @@ public class ItemBaseGeneratorMain {
 		String itemFilePath = "scraper/item_base.xls";
 
 		itemBaseExcelBuilder.finish(itemFilePath);
-		System.out.printf("Saved to %s%n", itemFilePath);
+		log.info("Saved to {}", itemFilePath);
 
-		AbstractTooltipParser.UNMATCHED_LINES.forEach(System.out::println);
+		AbstractTooltipParser.reportUnmatchedLines(log);
 	}
 
 	private static void addEquipment(ItemBaseExcelBuilder itemBaseExcelBuilder) throws IOException {
@@ -47,7 +49,7 @@ public class ItemBaseGeneratorMain {
 				parser.parse();
 				itemBaseExcelBuilder.add(parser, itemDetailsAndTooltip);
 
-				System.out.printf("Added %s %s%n", parser.getItemId(), parser.getName());
+				log.info("Added {} {}", parser.getItemId(), parser.getName());
 			}
 		}
 	}
@@ -63,7 +65,7 @@ public class ItemBaseGeneratorMain {
 			parser.parse();
 			itemBaseExcelBuilder.add(parser, itemDetailsAndTooltip);
 
-			System.out.printf("Added %s %s%n", parser.getItemId(), parser.getName());
+			log.info("Added {} {}", parser.getItemId(), parser.getName());
 		}
 	}
 }

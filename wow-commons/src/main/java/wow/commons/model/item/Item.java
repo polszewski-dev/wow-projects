@@ -12,6 +12,7 @@ import wow.commons.model.unit.WeaponProfficiency;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -142,4 +143,18 @@ public class Item extends AbstractItem {
 	}
 
 	private static final List<String> HARDCODED_CASTER_ITEM_NAMES = List.of("Shroud of the Highborne");
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Item)) return false;
+		Item item = (Item) o;
+		return getId() == item.getId();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
+	}
 }

@@ -23,7 +23,7 @@ public class StatPatternRepository {
 			try {
 				instance.init();
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				throw new IllegalStateException("Initialization failed", e);
 			}
 		}
 		return instance;

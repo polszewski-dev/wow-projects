@@ -46,8 +46,8 @@ public abstract class ExcelParser {
 	protected Map<String, Integer> header;
 
 	public final void readFromXls() throws IOException, InvalidFormatException {
-		try (ExcelReader excelReader = new PoiExcelReader(getExcelInputStream())) {
-			this.excelReader = excelReader;
+		try (ExcelReader newExcelReader = new PoiExcelReader(getExcelInputStream())) {
+			this.excelReader = newExcelReader;
 			while (excelReader.nextSheet()) {
 				if (excelReader.nextRow()) {
 					this.header = getHeader(excelReader);

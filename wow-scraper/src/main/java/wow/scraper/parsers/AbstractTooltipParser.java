@@ -1,6 +1,7 @@
 package wow.scraper.parsers;
 
 import lombok.Getter;
+import org.slf4j.Logger;
 import wow.commons.model.Money;
 import wow.commons.model.pve.Phase;
 import wow.commons.util.ParserUtil;
@@ -28,8 +29,8 @@ public abstract class AbstractTooltipParser {
 	protected final Integer itemId;
 	protected String name;
 
-	public static final boolean ERROR_ON_UNMATCHED_LINE = true;
-	public static final Set<String> UNMATCHED_LINES = new TreeSet<>();
+	private static final boolean ERROR_ON_UNMATCHED_LINE = true;
+	private static final Set<String> UNMATCHED_LINES = new TreeSet<>();
 
 	protected AbstractTooltipParser(Integer itemId, String htmlTooltip) {
 		this.itemId = itemId;
@@ -138,24 +139,6 @@ public abstract class AbstractTooltipParser {
 		return Money.parse(value.replace(" ", ""));
 	}
 
-	protected void unmatchedLine(String line) {
-		if (ERROR_ON_UNMATCHED_LINE) {
-			throw new IllegalArgumentException(line);
-		}
-
-		line = line
-				.replace("(", "\\(")
-				.replace(")", "\\)")
-				.replace("+", "\\+")
-				.replaceAll("(\\d+.\\d+)", "\\(\\\\d+\\.\\\\d+\\)")
-				.replaceAll("(\\d+)", "\\(\\\\d+\\)")
-				.replace("[", "\\[")
-				.replace("]", "\\]")
-		;
-
-		UNMATCHED_LINES.add(line);
-	}
-
 	protected static List<String> cleanTooltip(String tooltip) {
 		tooltip = tooltip
 				.replaceAll("<!--.*?-->", "")
@@ -195,5 +178,27 @@ public abstract class AbstractTooltipParser {
 				.map(String::trim)
 				.filter(x -> !x.isBlank())
 				.collect(Collectors.toList());
+	}
+
+	protected void unmatchedLine(String line) {
+		if (ERROR_ON_UNMATCHED_LINE) {
+			throw new IllegalArgumentException(line);
+		}
+
+		line = line
+				.replace("(", "\\(")
+				.replace(")", "\\)")
+				.replace("+", "\\+")
+				.replaceAll("(\\d+.\\d+)", "\\(\\\\d+\\.\\\\d+\\)")
+				.replaceAll("(\\d+)", "\\(\\\\d+\\)")
+				.replace("[", "\\[")
+				.replace("]", "\\]")
+		;
+
+		UNMATCHED_LINES.add(line);
+	}
+
+	public static void reportUnmatchedLines(Logger log) {
+		UNMATCHED_LINES.forEach(log::info);
 	}
 }

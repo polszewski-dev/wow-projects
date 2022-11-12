@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 public class WowheadFetcher {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
-	private static final Pattern ITEM_LIST_PATTERN = Pattern.compile("var listviewitems = (\\[.*?]);");
-	private static final Pattern ZONE_LIST_PATTERN = Pattern.compile("id: 'zones'.*?data: (\\[.*?])");
-	private static final Pattern BOSS_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*?]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
+	private static final Pattern ITEM_LIST_PATTERN = Pattern.compile("var listviewitems = (\\[.*]);");
+	private static final Pattern ZONE_LIST_PATTERN = Pattern.compile("id: 'zones'.*?data: (\\[.*])");
+	private static final Pattern BOSS_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
 
 	public static List<JsonItemDetails> fetchItemDetails(GameVersion gameVersion, String urlPart) throws IOException {
 		String json = fetchAndParse(gameVersion, urlPart, ITEM_LIST_PATTERN);

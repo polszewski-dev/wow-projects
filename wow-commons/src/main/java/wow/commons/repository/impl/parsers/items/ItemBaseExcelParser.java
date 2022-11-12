@@ -206,12 +206,13 @@ public class ItemBaseExcelParser extends ExcelParser {
 	private ItemSet getItemSet() {
 		var name = colItemSetName.getString();
 		var itemSetBonuses = getItemSetBonuses();
-		var requiredProfession = colItemSetReqProf.getEnum(Profession::valueOf, null);//TODO
+		var classRestriction = List.<CharacterClass>of();// TODO brak ograniczenia klas dla Tier
+		var requiredProfession = colItemSetReqProf.getEnum(Profession::valueOf, null);
 		var requiredProfessionLevel = colItemSetReqProfLvl.getInteger(0);
 
 		var itemSet = new ItemSet(name, null, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
 
-		// TODO brak ograniczenia klas dla Tier
+		itemSet.getRestriction().setClassRestriction(classRestriction);
 		itemSet.getRestriction().setRequiredProfession(requiredProfession);
 		itemSet.getRestriction().setRequiredLevel(requiredProfessionLevel);
 

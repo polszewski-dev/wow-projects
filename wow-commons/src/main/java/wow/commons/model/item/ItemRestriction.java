@@ -42,10 +42,8 @@ public class ItemRestriction {
 		if (sideRestriction != null && sideRestriction != characterInfo.getSide()) {
 			return false;
 		}
-		if (requiredProfession != null) {
-			if (characterInfo.getProfessionLevel(requiredProfession) < requiredProfessionLevel) {
-				return false;
-			}
+		if (requiredProfession != null && characterInfo.getProfessionLevel(requiredProfession) < requiredProfessionLevel) {
+			return false;
 		}
 		if (requiredProfessionSpec != null) {
 			return characterInfo.hasProfessionSpecialization(requiredProfessionSpec);

@@ -5,6 +5,7 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.sources.Source;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -42,5 +43,18 @@ public class Gem extends AbstractItem {
 		}
 
 		return metaEnablers.stream().allMatch(metaEnabler -> metaEnabler.isMetaConditionTrue(numRed, numYellow, numBlue));
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Gem)) return false;
+		Gem gem = (Gem) o;
+		return getId() == gem.getId();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
 	}
 }

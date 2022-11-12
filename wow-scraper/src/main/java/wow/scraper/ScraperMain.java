@@ -1,5 +1,6 @@
 package wow.scraper;
 
+import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.*;
 import wow.scraper.repository.ItemDetailRepository;
@@ -14,6 +15,7 @@ import java.util.stream.IntStream;
  * User: POlszewski
  * Date: 2022-10-26
  */
+@Slf4j
 public class ScraperMain {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
 	private static final int MIN_ITEM_LEVEL = 60;
@@ -56,13 +58,12 @@ public class ScraperMain {
 	}
 
 	private static void fetch(String url, WowheadItemCategory category) throws IOException {
-		System.out.printf("Fetching %s...%n", url);
+		log.info("Fetching {} ...", url);
 
 		List<JsonItemDetails> itemDetailsList = WowheadFetcher.fetchItemDetails(GAME_VERSION, url);
 
 		for (JsonItemDetails itemDetails : itemDetailsList) {
 			if (isToBeSaved(itemDetails)) {
-//				System.out.printf("%s: %s %s %s%n", itemDetails.getId(), itemDetails.getSource(), itemDetails.getName(), itemDetails.getSourceMores());
 				fixSource(itemDetails);
 				saveItemDetails(itemDetails, category);
 			}
@@ -103,7 +104,7 @@ public class ScraperMain {
 
 	private static void saveItemDetails(JsonItemDetails itemDetails, WowheadItemCategory category) {
 		if (ItemDetailRepository.hasItemDetail(GAME_VERSION, category, itemDetails.getId())) {
-			System.out.printf("Tooltip for item id: %s [%s] already exists%n", itemDetails.getId(), itemDetails.getName());
+			log.info("Tooltip for item id: {} [{}] already exists", itemDetails.getId(), itemDetails.getName());
 			return;
 		}
 
@@ -111,9 +112,9 @@ public class ScraperMain {
 			WowheadItemInfo itemInfo = WowheadFetcher.fetchTooltip(GAME_VERSION, itemDetails.getId());
 			JsonItemDetailsAndTooltip detailsAndTooltip = new JsonItemDetailsAndTooltip(itemDetails, itemInfo.getTooltip(), itemInfo.getIcon());
 			ItemDetailRepository.saveItemDetail(GAME_VERSION, category, itemDetails.getId(), detailsAndTooltip);
-			System.out.printf("Fetched tooltip for item id: %s [%s]%n", itemDetails.getId(), itemDetails.getName());
+			log.info("Fetched tooltip for item id: {} [{}]", itemDetails.getId(), itemDetails.getName());
 		} catch (IOException e) {
-			System.err.printf("Error while fetching tooltip for item id: %s [%s]: %s%n", itemDetails.getId(), itemDetails.getName(), e.getMessage());
+			log.error("Error while fetching tooltip for item id: {} [{}]: {}", itemDetails.getId(), itemDetails.getName(), e.getMessage());
 		}
 	}
 }

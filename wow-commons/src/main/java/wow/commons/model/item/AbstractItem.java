@@ -9,7 +9,6 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -157,18 +156,9 @@ public abstract class AbstractItem implements AttributeSource {
 		return getPhase().isEarlierOrTheSame(phase);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof AbstractItem)) return false;
-		AbstractItem that = (AbstractItem) o;
-		return id == that.id;
-	}
+	public abstract boolean equals(Object o);
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+	public abstract int hashCode();
 
 	public String toString() {
 		return String.format("%s [%s]", name, getAttributes());

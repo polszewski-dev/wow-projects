@@ -33,7 +33,7 @@ public final class ExcelUtil {
 
 	public static String getString(String col, ExcelReader excelReader, Map<String, Integer> header) {
 		return getOptionalString(col, excelReader, header)
-				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+				.orElseThrow(() -> new IllegalArgumentException(columnIsEmpty(col)));
 	}
 
 	public static OptionalInt getOptionalInteger(String col, ExcelReader excelReader, Map<String, Integer> header) {
@@ -44,7 +44,7 @@ public final class ExcelUtil {
 
 	public static int getInteger(String col, ExcelReader excelReader, Map<String, Integer> header) {
 		return getOptionalInteger(col, excelReader, header)
-				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+				.orElseThrow(() -> new IllegalArgumentException(columnIsEmpty(col)));
 	}
 
 	public static OptionalDouble getOptionalDouble(String col, ExcelReader excelReader, Map<String, Integer> header) {
@@ -55,7 +55,7 @@ public final class ExcelUtil {
 
 	public static double getDouble(String col, ExcelReader excelReader, Map<String, Integer> header) {
 		return getOptionalDouble(col, excelReader, header)
-				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+				.orElseThrow(() -> new IllegalArgumentException(columnIsEmpty(col)));
 	}
 
 	public static Optional<Percent> getOptionalPercent(String col, ExcelReader excelReader, Map<String, Integer> header) {
@@ -65,7 +65,7 @@ public final class ExcelUtil {
 
 	public static Percent getPercent(String col, ExcelReader excelReader, Map<String, Integer> header) {
 		return getOptionalPercent(col, excelReader, header)
-				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+				.orElseThrow(() -> new IllegalArgumentException(columnIsEmpty(col)));
 	}
 
 	public static boolean getBoolean(String col, ExcelReader excelReader, Map<String, Integer> header) {
@@ -89,7 +89,7 @@ public final class ExcelUtil {
 
 	public static Duration getDuration(String col, ExcelReader excelReader, Map<String, Integer> header) {
 		return getOptionalDuration(col, excelReader, header)
-				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+				.orElseThrow(() -> new IllegalArgumentException(columnIsEmpty(col)));
 	}
 
 	public static <T> Optional<T> getOptionalEnum(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
@@ -98,7 +98,7 @@ public final class ExcelUtil {
 
 	public static <T> T getEnum(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
 		return getOptionalEnum(col, producer, excelReader, header)
-				.orElseThrow(() -> new IllegalArgumentException("Column '" + col + "' is empty"));
+				.orElseThrow(() -> new IllegalArgumentException(columnIsEmpty(col)));
 	}
 
 	public static <T> List<T> getList(String col, Function<String, T> producer, ExcelReader excelReader, Map<String, Integer> header) {
@@ -123,6 +123,10 @@ public final class ExcelUtil {
 				.flatMap(str -> Stream.of(str.split(separator)))
 				.map(x -> producer.apply(x.trim()))
 				.collect(collector);
+	}
+
+	private static String columnIsEmpty(String col) {
+		return "Column '" + col + "' is empty";
 	}
 
 	private ExcelUtil() {}

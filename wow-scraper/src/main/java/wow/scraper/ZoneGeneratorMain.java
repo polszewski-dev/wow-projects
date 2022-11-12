@@ -1,5 +1,6 @@
 package wow.scraper;
 
+import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.JsonZoneDetails;
 import wow.scraper.model.WowheadGameVersion;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-11-01
  */
+@Slf4j
 public class ZoneGeneratorMain {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
 
@@ -30,8 +32,8 @@ public class ZoneGeneratorMain {
 						.thenComparing((JsonZoneDetails x) -> Math.max(x.getReqlevel(), x.getMinlevel()))
 						.thenComparing(JsonZoneDetails::getName));
 
-		System.out.printf(
-				"%s;%s;%s;%s;%s;%s;%s;%s;%s%n",
+		log.info(
+				"{};{};{};{};{};{};{};{};{}",
 				"id",
 				"name",
 				"short_name",
@@ -44,8 +46,8 @@ public class ZoneGeneratorMain {
 		);
 
 		for (JsonZoneDetails zone : zones) {
-			System.out.printf(
-				"%s;%s;%s;%s;%s;%s;%s;%s;%s%n",
+			log.info(
+				"{};{};{};{};{};{};{};{};{}",
 				zone.getId(),
 				zone.getName(),
 				"",

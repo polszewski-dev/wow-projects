@@ -1,5 +1,6 @@
 package wow.scraper;
 
+import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.JsonBossDetails;
 import wow.scraper.repository.WowheadFetcher;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-11-01
  */
+@Slf4j
 public class BossGeneratorMain {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
 
@@ -25,16 +27,16 @@ public class BossGeneratorMain {
 
 		bosses.sort(Comparator.comparing(JsonBossDetails::getName));
 
-		System.out.printf(
-				"%s;%s;%s%n",
+		log.info(
+				"{};{};{}",
 				"id",
 				"name",
 				"zone"
 		);
 
 		for (JsonBossDetails boss : bosses) {
-			System.out.printf(
-					"%s;%s;%s%n",
+			log.info(
+					"{};{};{}",
 					boss.getId(),
 					boss.getName(),
 					boss.getLocation().stream().map(Object::toString).collect(Collectors.joining(":"))
