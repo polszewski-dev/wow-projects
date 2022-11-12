@@ -184,7 +184,7 @@ public class StatsController {
 	}
 
 	private Attributes getUnsolvedAttributes(AttributeCollection collection) {
-		return AttributeEvaluator.of(/*None*/null, null, /*None*/null, /*None*/null, /*None*/null)//TODO
+		return AttributeEvaluator.of()
 				.addAttributes(collection)
 				.solveAllLeaveAbilities()
 				.getAttributes();

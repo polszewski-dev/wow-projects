@@ -3,50 +3,46 @@ package wow.commons.util;
 import wow.commons.model.attributes.*;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.item.*;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellInfo;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.talents.TalentTree;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PetType;
 
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-01-05
  */
 public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator> {
-	private final AttributeFilter filter;
-
 	private final Map<AttributeCondition, Map<PrimitiveAttributeId, Double>> primitiveAttributes = new HashMap<>();
-
 	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(ComplexAttributeId.class);
 
-	private AttributeEvaluator(AttributeFilter filter) {
+	private final Predicate<Attribute> filter;
+
+	private AttributeEvaluator(Predicate<Attribute> filter) {
 		this.filter = filter;
 	}
 
-	public static AttributeEvaluator of(AttributeFilter filter) {
+	public static AttributeEvaluator of(Predicate<Attribute> filter) {
 		return new AttributeEvaluator(filter);
 	}
 
 	public static AttributeEvaluator of() {
-		return of((AttributeFilter)null);
-	}
-
-	public static AttributeEvaluator of(TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
-		return of(AttributeFilter.ofNotNullOnly(talentTree, spellSchool, spellId, petType, creatureType));
+		return of(x -> true);
 	}
 
 	public static AttributeEvaluator of(SpellInfo spellInfo) {
-		return of(spellInfo.getAttributeFiter());
+		Set<AttributeCondition> conditions = Stream.of(
+				AttributeCondition.of(spellInfo.getTalentTree()),
+				AttributeCondition.of(spellInfo.getSpellSchool()),
+				AttributeCondition.of(spellInfo.getSpellId()),
+				AttributeCondition.EMPTY
+		).collect(Collectors.toSet());
+		return of(x -> conditions.contains(x.getCondition()));
 	}
 
 	@Override
@@ -80,7 +76,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		if (!attribute.isMatchedBy(filter)) {
+		if (!filter.test(attribute)) {
 			return this;
 		}
 
@@ -99,7 +95,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		if (!attribute.isMatchedBy(filter)) {
+		if (!filter.test(attribute)) {
 			return this;
 		}
 
@@ -183,23 +179,6 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		complexAttributes.remove(ComplexAttributeId.SOCKETS);
 	}
 
-	private void solveAbilities(StatProvider statProvider) {
-		List<SpecialAbility> specialAbilities = (List)complexAttributes.get(ComplexAttributeId.SPECIAL_ABILITIES);
-
-		if (specialAbilities == null) {
-			return;
-		}
-
-		specialAbilities.sort(Comparator.comparingInt(SpecialAbility::getPriority));
-
-		for (SpecialAbility attribute : specialAbilities) {
-			Attributes statEquivalent = ((StatEquivalentProvider)attribute).getStatEquivalent(statProvider);
-			addAttributes(statEquivalent);
-		}
-
-		complexAttributes.remove(ComplexAttributeId.SPECIAL_ABILITIES);
-	}
-
 	public AttributesAccessor nothingToSolve() {
 		return new AttributesAccessor();
 	}
@@ -207,13 +186,6 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 	public AttributesAccessor solveAllLeaveAbilities() {
 		solveSetBonuses();
 		solveSockets();
-		return new AttributesAccessor();
-	}
-
-	public AttributesAccessor solveAll(Function<AttributeEvaluator, StatProvider> statProviderFactory) {
-		solveSetBonuses();
-		solveSockets();
-		solveAbilities(statProviderFactory.apply(this));
 		return new AttributesAccessor();
 	}
 

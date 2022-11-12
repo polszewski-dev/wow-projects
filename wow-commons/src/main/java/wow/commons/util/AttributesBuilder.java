@@ -2,13 +2,14 @@ package wow.commons.util;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.*;
+import wow.commons.model.attributes.Attribute;
+import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.AttributeSource;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellSchool;
 
 import java.util.*;
 
@@ -19,15 +20,6 @@ import java.util.*;
 public class AttributesBuilder {
 	private List<PrimitiveAttribute> attributeList;
 	private Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList;
-	private final AttributeFilter filter;
-
-	public AttributesBuilder() {
-		this(null);
-	}
-
-	public AttributesBuilder(AttributeFilter filter) {
-		this.filter = filter;
-	}
 
 	public Attributes toAttributes() {
 		Attributes result = getAttributes();
@@ -52,26 +44,18 @@ public class AttributesBuilder {
 	}
 
 	public AttributesBuilder addAttribute(PrimitiveAttribute attribute) {
-		if (attribute == null) {
-			return this;
+		if (attribute != null) {
+			getOrCreateAttributeList().add(attribute);
 		}
-		if (!attribute.isMatchedBy(filter)) {
-			return this;
-		}
-		getOrCreateAttributeList().add(attribute);
 		return this;
 	}
 
 	public AttributesBuilder addAttribute(ComplexAttribute attribute) {
-		if (attribute == null) {
-			return this;
+		if (attribute != null) {
+			getOrCreateComplexAttributeList()
+					.computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
+					.add(attribute);
 		}
-		if (!attribute.isMatchedBy(filter)) {
-			return this;
-		}
-		getOrCreateComplexAttributeList()
-				.computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
-				.add(attribute);
 		return this;
 	}
 
@@ -91,13 +75,7 @@ public class AttributesBuilder {
 
 	public AttributesBuilder addAttributeList(Collection<PrimitiveAttribute> attributes) {
 		if (attributes != null) {
-			if (filter != null) {
-				for (PrimitiveAttribute attribute : attributes) {
-					addAttribute(attribute);
-				}
-			} else {
-				getOrCreateAttributeList().addAll(attributes);
-			}
+			getOrCreateAttributeList().addAll(attributes);
 		}
 		return this;
 	}
@@ -161,23 +139,5 @@ public class AttributesBuilder {
 
 	public static Attributes list(Collection<? extends AttributeSource> attributeSources) {
 		return new AttributesBuilder().addAttributes(attributeSources).toAttributes();
-	}
-
-	public static Attributes filter(Attributes attributes, AttributeFilter filter) {
-		if (attributes.isEmpty()) {
-			return Attributes.EMPTY;
-		}
-
-		return new AttributesBuilder(filter)
-				.addAttributes(attributes)
-				.toAttributes();
-	}
-
-	public static Attributes filter(AttributeSource attributeSource, SpellSchool spellSchool) {
-		return filter(attributeSource.getAttributes(), AttributeFilter.of(spellSchool));
-	}
-
-	public static Attributes filter(AttributeSource attributeSource, SpellId spellId) {
-		return filter(attributeSource.getAttributes(), AttributeFilter.of(spellId));
 	}
 }

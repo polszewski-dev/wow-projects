@@ -6,7 +6,10 @@ import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,7 +17,7 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-03-04
  */
-public abstract class Attributes implements AttributeSource {
+public class Attributes implements AttributeSource {
 	public static final Attributes EMPTY = of(List.of(), Map.of());
 
 	protected final List<PrimitiveAttribute> attributeList;
@@ -26,11 +29,7 @@ public abstract class Attributes implements AttributeSource {
 	}
 
 	public static Attributes of(List<PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
-		if (attributeList.size() < 10) {
-			return new NonCachedAttributes(attributeList, complexAttributeList);
-		} else {
-			return new CachedAttributes(attributeList, complexAttributeList);
-		}
+		return new Attributes(attributeList, complexAttributeList);
 	}
 
 	public static Attributes of(List<PrimitiveAttribute> attributeList) {
@@ -94,38 +93,5 @@ public abstract class Attributes implements AttributeSource {
 		)
 		 .map(Object::toString)
 		 .collect(Collectors.joining(", "));
-	}
-
-	private static class NonCachedAttributes extends Attributes {
-		private NonCachedAttributes(List<PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
-			super(attributeList, complexAttributeList);
-		}
-	}
-
-	private static class CachedAttributes extends Attributes {
-		private Map<PrimitiveAttributeId, Double> doubleCache;
-
-		private CachedAttributes(List<PrimitiveAttribute> attributeList, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList) {
-			super(attributeList, complexAttributeList);
-		}
-
-		@Override
-		public double getDouble(PrimitiveAttributeId attributeId) {
-			ensureCache();
-			return doubleCache.getOrDefault(attributeId, 0.0);
-		}
-
-		private void ensureCache() {
-			if (doubleCache != null) {
-				return;
-			}
-
-			doubleCache = new EnumMap<>(PrimitiveAttributeId.class);
-
-			for (PrimitiveAttribute attribute : attributeList) {
-				PrimitiveAttributeId id = attribute.getId();
-				doubleCache.put(id, attribute.getDouble() + doubleCache.getOrDefault(id, 0.0));
-			}
-		}
 	}
 }

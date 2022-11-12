@@ -25,10 +25,28 @@ public class BuildRepositoryImpl implements BuildRepository {
 
 	@Override
 	public Optional<Build> getBuild(String buildId) {
-		if (!buildId.equals(BuildIds.DESTRO_SHADOW_BUILD)) {
-			throw new IllegalArgumentException(buildId);
+		if (buildId.equals(BuildIds.NONE)) {
+			return createEmptyBuild();
 		}
+		if (buildId.equals(BuildIds.DESTRO_SHADOW_BUILD)) {
+			return createDestroShadowBuild(buildId);
+		}
+		throw new IllegalArgumentException(buildId);
+	}
 
+	private Optional<Build> createEmptyBuild() {
+		Build build = new Build(BuildIds.NONE);
+		build.setTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000000000000000000000000000000000000000000000000");
+		build.setTalentInfos(List.of());
+		build.setDamagingSpell(null);
+		build.setSelfBuffs(List.of());
+		build.setPartyBuffs(List.of());
+		build.setConsumeBuffs(List.of());
+		build.setRaidBuffs(List.of());
+		return Optional.of(build);
+	}
+
+	private Optional<Build> createDestroShadowBuild(String buildId) {
 		Build build = new Build(buildId);
 		build.setTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
 		build.setTalentInfos(TalentCalculatorUtil.parseFromLink(build.getTalentLink(), spellDataRepository)
