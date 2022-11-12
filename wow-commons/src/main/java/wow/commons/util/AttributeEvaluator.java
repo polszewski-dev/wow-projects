@@ -105,31 +105,6 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		return this;
 	}
 
-	public Attributes getAttributes() {
-		AttributesBuilder result = new AttributesBuilder();
-
-		processConditionalAttributes(result);
-		processComplexAttributes(result);
-		return result.toAttributes();
-	}
-
-	private void processConditionalAttributes(AttributesBuilder result) {
-		for (var entry : primitiveAttributes.entrySet()) {
-			var condition = entry.getKey();
-			for (var entry2 : entry.getValue().entrySet()) {
-				var id = entry2.getKey();
-				var value = entry2.getValue();
-				result.addAttribute(id, value, condition);
-			}
-		}
-	}
-
-	private void processComplexAttributes(AttributesBuilder result) {
-		for (var entry : complexAttributes.entrySet()) {
-			result.addComplexAttributeList(entry.getValue());
-		}
-	}
-
 	private void solveSetBonuses() {
 		var itemSetPieces = complexAttributes
 				.getOrDefault(ComplexAttributeId.SET_PIECES, List.of())
@@ -193,7 +168,27 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		private AttributesAccessor() {}
 
 		public Attributes getAttributes() {
-			return AttributeEvaluator.this.getAttributes();
+			AttributesBuilder result = new AttributesBuilder();
+			processConditionalAttributes(result);
+			processComplexAttributes(result);
+			return result.toAttributes();
+		}
+
+		private void processConditionalAttributes(AttributesBuilder result) {
+			for (var entry : primitiveAttributes.entrySet()) {
+				var condition = entry.getKey();
+				for (var entry2 : entry.getValue().entrySet()) {
+					var id = entry2.getKey();
+					var value = entry2.getValue();
+					result.addAttribute(id, value, condition);
+				}
+			}
+		}
+
+		private void processComplexAttributes(AttributesBuilder result) {
+			for (var entry : complexAttributes.entrySet()) {
+				result.addComplexAttributeList(entry.getValue());
+			}
 		}
 	}
 }

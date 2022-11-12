@@ -11,14 +11,13 @@ import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.repository.PVERepository;
 import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
-import wow.commons.util.SpellCalculations;
 import wow.commons.util.SpellStatistics;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.Spell;
 import wow.minmax.service.CalculationService;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_DAMAGE;
-import static wow.commons.util.SpellCalculations.AVERAGE_CRIT;
+import static wow.commons.util.Snapshot.CritMode;
 
 /**
  * User: POlszewski
@@ -76,15 +75,8 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell, Attributes totalStats) {
-		Snapshot snapshot = getSnapshot(playerProfile, spell, totalStats);
-
-		return SpellCalculations.getDamage(
-				snapshot.getSpellRankInfo().getMinDmg(),
-				snapshot.getSpellRankInfo().getMaxDmg(),
-				snapshot.getSpellRankInfo().getDotDmg(),
-				snapshot,
-				AVERAGE_CRIT
-		);
+		return getSnapshot(playerProfile, spell, totalStats)
+				.getSpellStatistics(CritMode.AVERAGE, false);
 	}
 
 	@Override

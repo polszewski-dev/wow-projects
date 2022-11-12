@@ -9,6 +9,8 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.modifiers.ProcEvent;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.spells.SpellRankInfo;
 import wow.commons.model.unit.BaseStatInfo;
@@ -27,6 +29,7 @@ import static wow.commons.model.talents.TalentTree.DESTRUCTION;
 import static wow.commons.model.unit.CharacterClass.WARLOCK;
 import static wow.commons.model.unit.CreatureType.UNDEAD;
 import static wow.commons.model.unit.Race.ORC;
+import static wow.commons.util.Snapshot.CritMode;
 
 /**
  * User: POlszewski
@@ -36,7 +39,7 @@ class SnapshotTest {
 	@BeforeEach
 	void setup() {
 		spellInfo = new SpellInfo(SHADOW_BOLT, DESTRUCTION, SHADOW, Percent.of(150), Percent.ZERO, null, false, null, false, null, null, null, null, null);
-		spellRankInfo = new SpellRankInfo(SHADOW_BOLT, 0, 0, 1000, Duration.seconds(2), false, 0, 0, 0, 0, 0, 0, null, null, null, null);
+		spellRankInfo = new SpellRankInfo(SHADOW_BOLT, 0, 0, 200, Duration.seconds(2), false, 400, 600, 0, 0, 0, 0, null, null, null, null);
 		baseStatInfo = new BaseStatInfo(0, WARLOCK, ORC, 0, 0, 100, 200, 300, 1000, 2000, Percent.of(10), 100);
 		combatRatingInfo = new CombatRatingInfo(0, 10, 20, 40);
 	}
@@ -72,7 +75,15 @@ class SnapshotTest {
 		assertThat(snapshot.getGcd().getSeconds()).isEqualTo(1.5, PRECISION);
 		assertThat(snapshot.getEffectiveCastTime().getSeconds()).isEqualTo(2, PRECISION);
 
-		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(1000);
+		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(200);
+
+		SpellStatistics statistics = snapshot.getSpellStatistics(CritMode.AVERAGE, false);
+
+		assertThat(statistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(435);
+		assertThat(statistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(217);
+		assertThat(statistics.getCastTime().getSeconds()).isEqualTo(2, PRECISION);
+		assertThat(statistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(200);
+		assertThat(statistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(2.17);
 	}
 
 	@Test
@@ -205,11 +216,35 @@ class SnapshotTest {
 	}
 
 	@Test
+	@DisplayName("Sp multiplier")
+	void spMultiplier() {
+		Snapshot snapshot = getSnapshot(Attributes.of(ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT, 25));
+
+		assertThat(snapshot.getSpMultiplier()).isEqualTo(1.25);
+	}
+
+	@Test
 	@DisplayName("Increased crit damage%")
 	void critCoeff() {
 		Snapshot snapshot = getSnapshot(Attributes.of(INCREASED_CRITICAL_DAMAGE_PCT, 10));
 
 		assertThat(snapshot.getCritCoeff()).isEqualTo(1.65);
+	}
+
+	@Test
+	@DisplayName("Crit damage increase%")
+	void critDamageIncreasePct() {
+		Snapshot snapshot = getSnapshot(Attributes.of(CRIT_DAMAGE_INCREASE_PCT, 10));
+
+		assertThat(snapshot.getCritCoeff()).isEqualTo(1.55);
+	}
+
+	@Test
+	@DisplayName("Extra crit coeff%")
+	void extraCritCoeffPct() {
+		Snapshot snapshot = getSnapshot(Attributes.of(EXTRA_CRIT_COEFF, 0.10));
+
+		assertThat(snapshot.getCritCoeff()).isEqualTo(1.60);
 	}
 
 	@Test
@@ -219,6 +254,40 @@ class SnapshotTest {
 
 		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.7);
 		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0.2);
+	}
+
+	@Test
+	@DisplayName("Damage taken%")
+	void damageTakenPct() {
+		Snapshot snapshot = getSnapshot(Attributes.of(DAMAGE_TAKEN_PCT, 50));
+
+		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.5);
+		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.5);
+	}
+
+	@Test
+	@DisplayName("Effect increase%")
+	void effectIncreasePct() {
+		Snapshot snapshot = getSnapshot(Attributes.of(EFFECT_INCREASE_PCT, 50));
+
+		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.5);
+		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.5);
+	}
+
+	@Test
+	@DisplayName("Direct damage multiplier%")
+	void directDamageMultiplierPct() {
+		Snapshot snapshot = getSnapshot(Attributes.of(DIRECT_DAMAGE_INCREASE_PCT, 50));
+
+		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.5);
+	}
+
+	@Test
+	@DisplayName("DoT damage multiplier%")
+	void dotDamageMultiplierPct() {
+		Snapshot snapshot = getSnapshot(Attributes.of(DOT_DAMAGE_INCREASE_PCT, 50));
+
+		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.5);
 	}
 
 	@Test
@@ -234,20 +303,25 @@ class SnapshotTest {
 	void manaCost() {
 		Snapshot snapshot = getSnapshot(Attributes.of(COST_REDUCTION_PCT, 25));
 
-		assertThat(snapshot.getManaCost()).isEqualTo(750);
+		assertThat(snapshot.getManaCost()).isEqualTo(150);
 	}
 
+	@Test
+	@DisplayName("Solving special ability with internal cooldown")
+	void specialAbility() {
+		SpecialAbility proc = SpecialAbility.proc(
+				ProcEvent.SPELL_CRIT,
+				Percent._100,
+				Attributes.of(SPELL_DAMAGE, 100),
+				Duration.seconds(15),
+				Duration.seconds(60),
+				"test"
+		);
 
-	/*
+		Snapshot snapshot = getSnapshot(Attributes.of(proc));
 
-ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT:
-			case DAMAGE_TAKEN_PCT:
-			case EFFECT_INCREASE_PCT:
-			case DIRECT_DAMAGE_INCREASE_PCT:
-			case DOT_DAMAGE_INCREASE_PCT:
-			case EXTRA_CRIT_COEFF:
-
-	 */
+		assertThat(snapshot.getSp()).isEqualTo(25);
+	}
 
 	private Snapshot getSnapshot(Attributes stats) {
 		return new Snapshot(spellInfo, spellRankInfo, baseStatInfo, combatRatingInfo, stats, activePet, enemyType);

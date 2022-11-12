@@ -40,40 +40,37 @@ public class ProcTemporaryModifier implements AttributeModifier {
 
 	@Override
 	public Attributes getAveragedAttributes(StatProvider statProvider) {
-		Duration castTime = statProvider.getEffectiveCastTime();
 		double hitChance = statProvider.getHitChance();
 		double critChance = statProvider.getCritChance();
-		Duration internalCooldown = castTime.divideBy(getProcChance(hitChance, critChance));
-		Duration actualCooldown = getActualCooldown(internalCooldown);
-		double factor = duration.divideBy(actualCooldown);
+		Duration castTime = statProvider.getEffectiveCastTime();
+
+		double procChance = getProcChance(hitChance, critChance);
+
+		Duration theoreticalCooldown = castTime.divideBy(procChance * chance.getCoefficient());
+		Duration actualCooldown = cooldown != null ? cooldown.max(theoreticalCooldown) : theoreticalCooldown;
+
+		double factor = Math.min(duration.divideBy(actualCooldown), 1);
+
 		return attributes.scale(factor);
+	}
+
+	private double getProcChance(double hitChance, double critChance) {
+		if (event == ProcEvent.SPELL_HIT) {
+			return hitChance;
+		} else if (event == ProcEvent.SPELL_CRIT) {
+			return critChance;
+		} else if (event == ProcEvent.SPELL_RESIST) {
+			return 1 - hitChance;
+		} else if (event == ProcEvent.SPELL_DAMAGE) {
+			return 1;
+		} else {
+			throw new IllegalArgumentException("Unhandled proc event: " + event);
+		}
 	}
 
 	@Override
 	public int getPriority() {
 		return 4;
-	}
-
-	private double getProcChance(double hitChance, double critChance) {
-		double procChance;
-		if (event == ProcEvent.SPELL_RESIST) {
-			procChance = 1 - hitChance;
-		} else if (event == ProcEvent.SPELL_CRIT) {
-			procChance = critChance;
-		} else {
-			procChance = 1;
-		}
-		return procChance * chance.getCoefficient();
-	}
-
-	private Duration getActualCooldown(Duration internalCooldown) {
-		if (internalCooldown.isZero()) {
-			return this.cooldown;
-		} else if (cooldown == null) {
-			return internalCooldown;
-		} else {
-			return cooldown.max(internalCooldown);
-		}
 	}
 
 	@Override

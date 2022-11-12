@@ -342,4 +342,70 @@ public class Snapshot implements StatProvider {
 			}
 		}
 	}
+
+	public enum CritMode {
+		ALWAYS,
+		NEVER,
+		AVERAGE
+	}
+
+	public SpellStatistics getSpellStatistics(CritMode critMode, boolean useBothDamageRanges) {
+		int baseDmgMin = spellRankInfo.getMinDmg();
+		int baseDmgMax = spellRankInfo.getMaxDmg();
+		int baseDmgDoT = spellRankInfo.getDotDmg();
+
+		if (useBothDamageRanges) {
+			baseDmgMin += spellRankInfo.getMinDmg();
+			baseDmgMax += spellRankInfo.getMaxDmg2();
+		}
+
+		double actualCritChance = getActualCritChance(critMode);
+
+		// direct damage
+
+		double directDamage = 0;
+
+		if (baseDmgMin + baseDmgMax != 0) {
+			directDamage += (baseDmgMin + baseDmgMax) / 2.0;
+			directDamage += spellCoeffDirect * sp * spMultiplier;
+			directDamage *= directDamageDoneMultiplier;
+			directDamage *= hitChance;
+			directDamage *= (1 - actualCritChance) * 1 + actualCritChance * critCoeff;
+		}
+
+		// dot damage
+
+		double dotDamage = 0;
+
+		if (baseDmgDoT != 0) {
+			dotDamage = baseDmgDoT;
+			dotDamage += spellCoeffDoT * sp * spMultiplier;
+			dotDamage *= dotDamageDoneMultiplier;
+			dotDamage *= hitChance;
+		}
+
+		SpellStatistics result = new SpellStatistics();
+
+		result.setSnapshot(this);
+		result.setTotalDamage(directDamage + dotDamage);
+		result.setCastTime(effectiveCastTime);
+		result.setDps(result.getTotalDamage() / result.getCastTime().getSeconds());
+		result.setManaCost(manaCost);
+		result.setDpm(result.getTotalDamage() / result.getManaCost());
+
+		return result;
+	}
+
+	private double getActualCritChance(CritMode critMode) {
+		switch (critMode) {
+			case ALWAYS:
+				return 1;
+			case NEVER:
+				return 0;
+			case AVERAGE:
+				return critChance;
+			default:
+				throw new IllegalArgumentException("Unhandled value: " + critMode);
+		}
+	}
 }
