@@ -55,22 +55,17 @@ public class ItemSocket implements Copyable<ItemSocket> {
 		this.gem = gem;
 	}
 
-	public boolean insertedGemMatchesSocketColor() {
-		return gemMatchesSocketColor(gem);
+	public boolean matchesSocketColor(Gem gem) {
+		return gem == null || gem.getColor().matchesSocket(socketType);
 	}
 
-	public boolean gemMatchesSocketColor(Gem gem) {
-		return gem != null && gem.getColor().matchesSocket(socketType);
+	public boolean hasGemMatchingSocketColor() {
+		return gem != null && matchesSocketColor(gem);
 	}
 
-	public boolean isCompleteMatch(int numRed, int numYellow, int numBlue) {
-		if (!insertedGemMatchesSocketColor()) {
-			return false;
-		}
-		if (!isMetaSocket()) {
-			return true;
-		}
-		return gem.isMetaConditionTrue(numRed, numYellow, numBlue);
+	public boolean hasMatchingGem(int numRed, int numYellow, int numBlue) {
+		return hasGemMatchingSocketColor() &&
+				(!isMetaSocket() || gem.isMetaConditionTrue(numRed, numYellow, numBlue));
 	}
 
 	@Override

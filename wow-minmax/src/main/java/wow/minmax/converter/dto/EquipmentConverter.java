@@ -33,10 +33,10 @@ public class EquipmentConverter extends Converter<Equipment, EquipmentDTO> {
 	public EquippableItemDTO convertItem(Equipment equipment, EquippableItem item) {
 		EquippableItemDTO dto = equippableItemConverter.convert(item);
 		if (dto != null) {
-			dto.setSocket1Matching(equipment.isCompleteMatch(item, 1));
-			dto.setSocket2Matching(equipment.isCompleteMatch(item, 2));
-			dto.setSocket3Matching(equipment.isCompleteMatch(item, 3));
-			dto.setSocketBonusEnabled(equipment.allGemsMatch(item));
+			dto.setSocket1Matching(equipment.hasMatchingGem(item, 1));
+			dto.setSocket2Matching(equipment.hasMatchingGem(item, 2));
+			dto.setSocket3Matching(equipment.hasMatchingGem(item, 3));
+			dto.setSocketBonusEnabled(equipment.allSocketsHaveMatchingGems(item));
 		}
 		return dto;
 	}

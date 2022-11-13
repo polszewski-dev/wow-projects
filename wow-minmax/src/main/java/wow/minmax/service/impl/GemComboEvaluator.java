@@ -129,8 +129,8 @@ class GemComboEvaluator {
 					.nothingToSolve()
 					.getAttributes();
 
-			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) &&
-					sockets.getSocket(2).gemMatchesSocketColor(gem2);
+			boolean match = sockets.getSocket(1).matchesSocketColor(gem1) &&
+					sockets.getSocket(2).matchesSocketColor(gem2);
 
 			String key = match + "#" + attributes.statString();
 
@@ -158,9 +158,9 @@ class GemComboEvaluator {
 					.nothingToSolve()
 					.getAttributes();
 
-			boolean match = sockets.getSocket(1).gemMatchesSocketColor(gem1) &&
-					sockets.getSocket(2).gemMatchesSocketColor(gem2) &&
-					sockets.getSocket(3).gemMatchesSocketColor(gem3);
+			boolean match = sockets.getSocket(1).matchesSocketColor(gem1) &&
+					sockets.getSocket(2).matchesSocketColor(gem2) &&
+					sockets.getSocket(3).matchesSocketColor(gem3);
 
 			String key = match + "#" + attributes.statString();
 

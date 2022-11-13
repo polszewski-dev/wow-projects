@@ -146,7 +146,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 					addAttributes(gem);
 				}
 			}
-			if (itemSockets.allMatch(numRed, numYellow, numBlue)) {
+			if (itemSockets.allSocketsHaveMatchingGems(numRed, numYellow, numBlue)) {
 				addAttributes(itemSockets.getSocketBonus());
 			}
 		}

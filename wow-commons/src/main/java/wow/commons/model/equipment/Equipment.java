@@ -5,7 +5,6 @@ import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.ItemSocket;
 import wow.commons.model.item.SocketType;
 
 import java.util.*;
@@ -361,20 +360,12 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 		return result;
 	}
 
-	public boolean isMetaEnabled() {
-		return !hasMetaSocket() || allGemsMatch(head);
+	public boolean hasMatchingGem(EquippableItem item, int socketNo) {
+		return item.hasMatchingGem(socketNo, numRed(), numYellow(), numBlue());
 	}
 
-	private boolean hasMetaSocket() {
-		return head.getSockets().stream().anyMatch(ItemSocket::isMetaSocket);
-	}
-
-	public boolean isCompleteMatch(EquippableItem item, int socketNo) {
-		return item.isCompleteMatch(socketNo, numRed(), numYellow(), numBlue());
-	}
-
-	public boolean allGemsMatch(EquippableItem item) {
-		return item.allGemsMatch(numRed(), numYellow(), numBlue());
+	public boolean allSocketsHaveMatchingGems(EquippableItem item) {
+		return item.allSocketsHaveMatchingGems(numRed(), numYellow(), numBlue());
 	}
 
 	public List<EquippableItem> getItemDifference(Equipment equipment) {

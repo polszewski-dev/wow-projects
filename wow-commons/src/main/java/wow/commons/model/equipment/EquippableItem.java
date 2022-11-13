@@ -163,18 +163,18 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		return sockets.getGem(socketNo);
 	}
 
-	public boolean isCompleteMatch(int socketNo, int numRed, int numYellow, int numBlue) {
+	public boolean hasMatchingGem(int socketNo, int numRed, int numYellow, int numBlue) {
 		ItemSocket socket = sockets.getSocket(socketNo);
-		return socket != null && socket.isCompleteMatch(numRed, numYellow, numBlue);
+		return socket != null && socket.hasMatchingGem(numRed, numYellow, numBlue);
 	}
 
-	public boolean allGemsMatch(int numRed, int numYellow, int numBlue) {
-		return sockets.allMatch(numRed, numYellow, numBlue);
+	public boolean allSocketsHaveMatchingGems(int numRed, int numYellow, int numBlue) {
+		return sockets.allSocketsHaveMatchingGems(numRed, numYellow, numBlue);
 	}
 
-	public boolean insertedGemMatchesSocketColor(int socketNo) {
+	public boolean hasGemMatchingSocketColor(int socketNo) {
 		ItemSocket socket = sockets.getSocket(socketNo);
-		return socket != null && socket.insertedGemMatchesSocketColor();
+		return socket != null && socket.hasGemMatchingSocketColor();
 	}
 
 	public Attributes getAttributes(int numRed, int numYellow, int numBlue) {
@@ -185,11 +185,11 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		}
 		for (int socketNo = 1; socketNo <= sockets.getSocketCount(); ++socketNo) {
 			ItemSocket socket = sockets.getSocket(socketNo);
-			if (!socket.isMetaSocket() || socket.isCompleteMatch(numRed, numYellow, numBlue)) {
+			if (socket.hasMatchingGem(numRed, numYellow, numBlue)) {
 				result.addAttributes(socket.getGem());
 			}
 		}
-		if (allGemsMatch(numRed, numYellow, numBlue)) {
+		if (allSocketsHaveMatchingGems(numRed, numYellow, numBlue)) {
 			result.addAttributes(getSocketBonus());
 		}
 		return result.toAttributes();

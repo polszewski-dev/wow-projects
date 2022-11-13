@@ -69,10 +69,9 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 		return specification.getSocketBonus();
 	}
 
-	public boolean allMatch(int numRed, int numYellow, int numBlue) {
-		for (int i = 0; i < sockets.size(); i++) {
-			ItemSocket socket = sockets.get(i);
-			if (!socket.isCompleteMatch(numRed, numYellow, numBlue)) {
+	public boolean allSocketsHaveMatchingGems(int numRed, int numYellow, int numBlue) {
+		for (ItemSocket socket : sockets) {
+			if (!socket.hasMatchingGem(numRed, numYellow, numBlue)) {
 				return false;
 			}
 		}
