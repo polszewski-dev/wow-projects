@@ -34,4 +34,6 @@ public interface ItemService {
 	List<Gem> getAvailableGems(Item item, int socketNo, Phase phase, boolean onlyCrafted);
 
 	List<Gem[]> getCasterGemCombos(Item item, Phase phase);
+
+	Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
 }

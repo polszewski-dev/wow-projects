@@ -47,4 +47,13 @@ public enum ItemSlotGroup {
 	public static ItemSlotGroup parse(String value) {
 		return EnumUtil.parse(value, values());
 	}
+
+	public static ItemSlotGroup getGroup(ItemSlot slot) {
+		for (ItemSlotGroup group : values()) {
+			if (group.slots.contains(slot)) {
+				return group;
+			}
+		}
+		return null;
+	}
 }

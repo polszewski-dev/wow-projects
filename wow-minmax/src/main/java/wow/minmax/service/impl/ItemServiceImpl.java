@@ -135,6 +135,11 @@ public class ItemServiceImpl implements ItemService {
 		return gemComboEvaluator.getCasterGemCombos(item, phase);
 	}
 
+	@Override
+	public Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
+		return itemDataRepository.getCasterItemsByType(characterInfo, phase, spellSchool);
+	}
+
 	private List<Gem> getGems(Phase phase, boolean onlyCrafted) {
 		return getCachedGems(coloredGemsByPhase, false, phase, onlyCrafted);
 	}
