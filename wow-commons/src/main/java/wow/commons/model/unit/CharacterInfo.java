@@ -1,5 +1,6 @@
 package wow.commons.model.unit;
 
+import lombok.Getter;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Side;
@@ -10,6 +11,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-10-31
  */
+@Getter
 public class CharacterInfo {
 	private final CharacterClass characterClass;
 	private final Race race;
@@ -29,28 +31,12 @@ public class CharacterInfo {
 		}
 	}
 
-	public CharacterClass getCharacterClass() {
-		return characterClass;
-	}
-
-	public Race getRace() {
-		return race;
-	}
-
 	public Side getSide() {
 		return race.getSide();
 	}
 
-	public int getLevel() {
-		return level;
-	}
-
-	public List<CharacterProfession> getProfessions() {
-		return professions;
-	}
-
 	public boolean hasProfession(Profession profession) {
-		return professions.stream().anyMatch(x -> x.getProfession() == profession);
+		return professions.stream().anyMatch(x -> x.getProfession() == profession);//todo sprawdzic level!!!
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {

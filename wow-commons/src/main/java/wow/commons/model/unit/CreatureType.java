@@ -1,11 +1,13 @@
 package wow.commons.model.unit;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-19
  */
+@AllArgsConstructor
 public enum CreatureType {
 	HUMANOID("Humanoid"),
 	UNDEAD("Undead"),
@@ -14,10 +16,6 @@ public enum CreatureType {
 	DRAGON("Dragon");
 
 	private final String name;
-
-	CreatureType(String name) {
-		this.name = name;
-	}
 
 	public static CreatureType parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);

@@ -1,11 +1,15 @@
 package wow.commons.model.pve;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
+@AllArgsConstructor
+@Getter
 public enum GameVersion {
 	VANILLA(60, 300),
 	TBC(70, 375),
@@ -14,20 +18,7 @@ public enum GameVersion {
 	private final int maxLevel;
 	private final int maxProfession;
 
-	GameVersion(int maxLevel, int maxProfession) {
-		this.maxLevel = maxLevel;
-		this.maxProfession = maxProfession;
-	}
-
 	public static GameVersion parse(String value) {
 		return EnumUtil.parse(value, values());
-	}
-
-	public int getMaxLevel() {
-		return maxLevel;
-	}
-
-	public int getMaxProfession() {
-		return maxProfession;
 	}
 }

@@ -9,7 +9,6 @@ import wow.commons.model.attributes.complex.ComplexAttributeId;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -95,8 +94,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 			return;
 		}
 		assertCanBeModified();
-		sockets.get(socketNo - 1)
-			   .insertGem(gem);
+		sockets.get(socketNo - 1).insertGem(gem);
 	}
 
 	public int getGemCount(SocketType socketType) {
@@ -108,10 +106,6 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 			}
 		}
 		return result;
-	}
-
-	public Stream<ItemSocket> stream() {
-		return sockets.stream();
 	}
 
 	@Override

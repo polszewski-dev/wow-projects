@@ -1,5 +1,6 @@
 package wow.commons.model.item;
 
+import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.util.EnumUtil;
 
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-01-03
  */
+@Getter
 public enum ItemSocketsUniqueConfiguration {
 	NONE(""),
 
@@ -58,10 +60,6 @@ public enum ItemSocketsUniqueConfiguration {
 				.map(socketType -> socketType.toString().substring(0, 1))
 				.collect(Collectors.joining());
 		return parse(key);
-	}
-
-	public String getKey() {
-		return key;
 	}
 
 	public ItemSocketSpecification getSocketSpecification() {

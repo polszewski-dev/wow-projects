@@ -1,11 +1,13 @@
 package wow.commons.model.unit;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-09-30
  */
+@AllArgsConstructor
 public enum PetType {
 	IMP("Imp"),
 	VOIDWALKER("Voidwalker"),
@@ -14,10 +16,6 @@ public enum PetType {
 	FELGUARD("Felguard");
 
 	private final String name;
-
-	PetType(String name) {
-		this.name = name;
-	}
 
 	public static PetType parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);

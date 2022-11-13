@@ -1,5 +1,7 @@
 package wow.commons.model.unit;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.model.pve.Side;
 import wow.commons.util.EnumUtil;
 
@@ -10,6 +12,8 @@ import static wow.commons.model.pve.Side.HORDE;
  * User: POlszewski
  * Date: 2021-03-19
  */
+@AllArgsConstructor
+@Getter
 public enum Race {
 	UNDEAD(HORDE),
 	ORC(HORDE),
@@ -25,15 +29,7 @@ public enum Race {
 
 	private final Side side;
 
-	Race(Side side) {
-		this.side = side;
-	}
-
 	public static Race parse(String value) {
 		return EnumUtil.parse(value, values());
-	}
-
-	public Side getSide() {
-		return side;
 	}
 }

@@ -1,5 +1,6 @@
 package wow.commons.model.attributes.primitive;
 
+import lombok.AllArgsConstructor;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.util.EnumUtil;
 
@@ -7,6 +8,7 @@ import wow.commons.util.EnumUtil;
  * User: POlszewski
  * Date: 2022-11-09
  */
+@AllArgsConstructor
 public enum PrimitiveAttributeId implements AttributeId {
 	STRENGTH("Strength", "str"),
 	AGILITY("Agility", "agi"),
@@ -111,12 +113,6 @@ public enum PrimitiveAttributeId implements AttributeId {
 	private final String key;
 	private final String shortName;
 	private final DisplayHint displayHint;
-
-	PrimitiveAttributeId(String key, String shortName, DisplayHint displayHint) {
-		this.key = key;
-		this.shortName = shortName;
-		this.displayHint = displayHint;
-	}
 
 	PrimitiveAttributeId(String key) {
 		this(key, null, null);

@@ -1,11 +1,15 @@
 package wow.commons.model.effects;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-10-01
  */
+@AllArgsConstructor
+@Getter
 public enum EffectId {
 	// special effect
 
@@ -61,21 +65,8 @@ public enum EffectId {
 		this(name, null);
 	}
 
-	EffectId(String name, Group group) {
-		this.name = name;
-		this.group = group;
-	}
-
 	public static EffectId parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Group getGroup() {
-		return group;
 	}
 
 	@Override

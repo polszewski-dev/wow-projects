@@ -1,11 +1,13 @@
 package wow.commons.model.professions;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-07-14
  */
+@AllArgsConstructor
 public enum Profession {
 	ENCHANTING("Enchanting"),
 	JEWELCRAFTING("Jewelcrafting"),
@@ -23,10 +25,6 @@ public enum Profession {
 	FIRST_AID("FirstAid");
 
 	private final String key;
-
-	Profession(String key) {
-		this.key = key;
-	}
 
 	public static Profession parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.key);

@@ -1,5 +1,6 @@
 package wow.commons.model.categorization;
 
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-01-01
  */
+@Getter
 public enum ItemSlotGroup {
 	HEAD(ItemSlot.HEAD),
 	NECK(ItemSlot.NECK),
@@ -44,9 +46,5 @@ public enum ItemSlotGroup {
 
 	public static ItemSlotGroup parse(String value) {
 		return EnumUtil.parse(value, values());
-	}
-
-	public List<ItemSlot> getSlots() {
-		return slots;
 	}
 }

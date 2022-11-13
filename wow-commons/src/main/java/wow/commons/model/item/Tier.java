@@ -1,11 +1,13 @@
 package wow.commons.model.item;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2019-12-30
  */
+@AllArgsConstructor
 public enum Tier {
 	T1("T1"),
 	T2("T2"),
@@ -17,10 +19,6 @@ public enum Tier {
 	T6("T6");
 
 	private final String name;
-
-	Tier(String name) {
-		this.name = name;
-	}
 
 	public static Tier parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);

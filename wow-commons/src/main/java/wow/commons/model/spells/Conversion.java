@@ -1,5 +1,7 @@
 package wow.commons.model.spells;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.model.Percent;
 import wow.commons.util.EnumUtil;
 
@@ -9,6 +11,8 @@ import java.util.List;
  * User: POlszewski
  * Date: 2020-10-17
  */
+@AllArgsConstructor
+@Getter
 public class Conversion {
 	public enum From {
 		DAMAGE{
@@ -49,24 +53,6 @@ public class Conversion {
 	private final From from;
 	private final To to;
 	private final Percent percent;
-
-	public Conversion(From from, To to, Percent percent) {
-		this.from = from;
-		this.to = to;
-		this.percent = percent;
-	}
-
-	public From getFrom() {
-		return from;
-	}
-
-	public To getTo() {
-		return to;
-	}
-
-	public Percent getPercent() {
-		return percent;
-	}
 
 	public boolean is(From from, To to) {
 		return this.from == from && this.to == to;

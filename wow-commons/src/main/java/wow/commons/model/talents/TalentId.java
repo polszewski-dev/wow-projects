@@ -1,11 +1,15 @@
 package wow.commons.model.talents;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-10-01
  */
+@AllArgsConstructor
+@Getter
 public enum TalentId {
 	// affliction
 
@@ -83,11 +87,6 @@ public enum TalentId {
 	private final String name;
 	private final int talentCalculatorPosition;
 
-	TalentId(String name, int talentCalculatorPosition) {
-		this.name = name;
-		this.talentCalculatorPosition = talentCalculatorPosition;
-	}
-
 	public static TalentId parse(String name) {
 		return EnumUtil.parse(name, values(), x -> x.name);
 	}
@@ -99,10 +98,6 @@ public enum TalentId {
 			}
 		}
 		throw new IllegalArgumentException("Unknown talent#: " + pos);
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	@Override

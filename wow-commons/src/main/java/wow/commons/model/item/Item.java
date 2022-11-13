@@ -1,5 +1,6 @@
 package wow.commons.model.item;
 
+import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
 import wow.commons.model.pve.Phase;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-03-02
  */
+@Getter
 public class Item extends AbstractItem {
 	private final ItemType itemType;
 	private final ItemSubType itemSubType;
@@ -64,32 +66,12 @@ public class Item extends AbstractItem {
 		return socketSpecification.getSocketBonus();
 	}
 
-	public ItemType getItemType() {
-		return itemType;
-	}
-
-	public ItemSubType getItemSubType() {
-		return itemSubType;
-	}
-
-	public ItemSet getItemSet() {
-		return itemSet;
-	}
-
 	public void setItemSet(ItemSet itemSet) {
 		this.itemSet = itemSet;
 	}
 
 	public boolean canBeEquippedIn(ItemSlot itemSlot) {
 		return itemType.getItemSlots().contains(itemSlot);
-	}
-
-	public WeaponStats getWeaponStats() {
-		return weaponStats;
-	}
-
-	public ItemSocketSpecification getSocketSpecification() {
-		return socketSpecification;
 	}
 
 	public Set<Zone> getRaidSources() {
@@ -143,7 +125,6 @@ public class Item extends AbstractItem {
 	}
 
 	private static final List<String> HARDCODED_CASTER_ITEM_NAMES = List.of("Shroud of the Highborne");
-
 
 	@Override
 	public boolean equals(Object o) {

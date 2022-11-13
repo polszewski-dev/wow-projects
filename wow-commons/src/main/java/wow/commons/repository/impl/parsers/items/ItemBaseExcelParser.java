@@ -240,13 +240,12 @@ public class ItemBaseExcelParser extends ExcelParser {
 	}
 
 	private static ItemSetBonus getItemSetBonus(int numPieces, String description) {
-		ItemSetBonus itemSetBonus = new ItemSetBonus(numPieces, description);
 		StatParser statParser = StatPatternRepository.getInstance().getItemStatParser();
 		if (statParser.tryParse(description)) {
-			itemSetBonus.setBonusStats(statParser.getParsedStats());
-			return itemSetBonus;
+			Attributes bonusStats = statParser.getParsedStats();
+			return new ItemSetBonus(numPieces, description, bonusStats);
 		}
-		throw new IllegalArgumentException("Missing bonus: " + itemSetBonus.getDescription());
+		throw new IllegalArgumentException("Missing bonus: " + description);
 	}
 
 	private final ExcelColumn colGemId = column("id");

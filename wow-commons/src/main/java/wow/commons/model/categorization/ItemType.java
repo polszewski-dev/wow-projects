@@ -1,5 +1,6 @@
 package wow.commons.model.categorization;
 
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-02
  */
+@Getter
 public enum ItemType {
 	HEAD("Head", ItemCategory.ARMOR, ItemSlot.HEAD),
 	NECK("Neck", ItemCategory.ACCESSORY, ItemSlot.NECK),
@@ -59,14 +61,6 @@ public enum ItemType {
 
 	public static ItemType parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.key);
-	}
-
-	public ItemCategory getCategory() {
-		return category;
-	}
-
-	public List<ItemSlot> getItemSlots() {
-		return itemSlots;
 	}
 
 	public ItemSlot getUniqueItemSlot() {

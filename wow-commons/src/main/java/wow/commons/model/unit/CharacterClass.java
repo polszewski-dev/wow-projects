@@ -1,5 +1,7 @@
 package wow.commons.model.unit;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 import java.util.List;
@@ -11,6 +13,8 @@ import static wow.commons.model.unit.WeaponProfficiency.*;
  * User: POlszewski
  * Date: 2019-11-02
  */
+@AllArgsConstructor
+@Getter
 public enum CharacterClass {
 	MAGE(List.of(CLOTH), List.of(
 			MAIN_HAND_DAGGER, ONE_HAND_DAGGER,
@@ -92,20 +96,7 @@ public enum CharacterClass {
 	private final List<ArmorProfficiency> armorProfficiencies;
 	private final List<WeaponProfficiency> weaponProfficiencies;
 
-	CharacterClass(List<ArmorProfficiency> armorProfficiencies, List<WeaponProfficiency> weaponProfficiencies) {
-		this.armorProfficiencies = armorProfficiencies;
-		this.weaponProfficiencies = weaponProfficiencies;
-	}
-
 	public static CharacterClass parse(String value) {
 		return EnumUtil.parse(value, values());
-	}
-
-	public List<ArmorProfficiency> getArmorProfficiencies() {
-		return armorProfficiencies;
-	}
-
-	public List<WeaponProfficiency> getWeaponProfficiencies() {
-		return weaponProfficiencies;
 	}
 }

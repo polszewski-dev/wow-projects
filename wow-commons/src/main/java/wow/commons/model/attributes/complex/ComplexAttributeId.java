@@ -1,5 +1,6 @@
 package wow.commons.model.attributes.complex;
 
+import lombok.AllArgsConstructor;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.util.EnumUtil;
 
@@ -7,6 +8,7 @@ import wow.commons.util.EnumUtil;
  * User: POlszewski
  * Date: 2022-11-09
  */
+@AllArgsConstructor
 public enum ComplexAttributeId implements AttributeId {
 	SPECIAL_ABILITIES("SpecialAbilities"),
 	SOCKETS("Sockets"),
@@ -16,11 +18,6 @@ public enum ComplexAttributeId implements AttributeId {
 
 	private final String key;
 	private final String shortName;
-
-	ComplexAttributeId(String key, String shortName) {
-		this.key = key;
-		this.shortName = shortName;
-	}
 
 	ComplexAttributeId(String key) {
 		this(key, null);

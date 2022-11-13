@@ -1,5 +1,7 @@
 package wow.commons.model.pve;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 import static wow.commons.model.pve.GameVersion.TBC;
@@ -9,6 +11,8 @@ import static wow.commons.model.pve.GameVersion.VANILLA;
  * User: POlszewski
  * Date: 2022-10-24
  */
+@AllArgsConstructor
+@Getter
 public enum Phase {
 	VANILLA_P1(VANILLA),//mc
 	VANILLA_P2(VANILLA),//dm
@@ -26,16 +30,8 @@ public enum Phase {
 
 	private final GameVersion gameVersion;
 
-	Phase(GameVersion gameVersion) {
-		this.gameVersion = gameVersion;
-	}
-
 	public static Phase parse(String value) {
 		return EnumUtil.parse(value, values());
-	}
-
-	public GameVersion getGameVersion() {
-		return gameVersion;
 	}
 
 	public boolean isEarlier(Phase phase) {

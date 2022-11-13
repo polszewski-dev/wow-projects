@@ -1,11 +1,13 @@
 package wow.commons.model.categorization;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-02
  */
+@AllArgsConstructor
 public enum WeaponSubType implements ItemSubType {
 	DAGGER("Dagger"),
 	SWORD("Sword"),
@@ -29,10 +31,6 @@ public enum WeaponSubType implements ItemSubType {
 	IDOL("Idol");
 
 	private final String key;
-
-	WeaponSubType(String key) {
-		this.key = key;
-	}
 
 	public static WeaponSubType tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);

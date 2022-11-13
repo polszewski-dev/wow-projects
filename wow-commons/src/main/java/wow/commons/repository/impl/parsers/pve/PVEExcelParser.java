@@ -86,7 +86,7 @@ public class PVEExcelParser extends ExcelParser {
 		var version = colZoneVersion.getEnum(GameVersion::parse);
 		var partySize = colZonePartySize.getInteger();
 
-		return new Zone(id, name, shortName, version, type, partySize);
+		return new Zone(id, name, shortName, version, type, partySize, null);
 	}
 
 	private void readBosses() {

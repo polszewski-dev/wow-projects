@@ -3,6 +3,7 @@ package wow.scraper.parsers;
 import lombok.Getter;
 import wow.commons.model.Money;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.item.SocketType;
@@ -193,7 +194,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		if (!setBonusParser.tryParse(description)) {
 			unmatchedLine(description);
 		}
-		itemSetBonuses.add(new ItemSetBonus(numPieces, description));
+		itemSetBonuses.add(new ItemSetBonus(numPieces, description, Attributes.EMPTY));
 	}
 
 	private void parseReputation(Object[] factionParams) {

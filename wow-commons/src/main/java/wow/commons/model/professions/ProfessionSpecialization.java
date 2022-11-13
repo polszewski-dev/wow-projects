@@ -1,11 +1,15 @@
 package wow.commons.model.professions;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2022-10-31
  */
+@AllArgsConstructor
+@Getter
 public enum ProfessionSpecialization {
 	GNOMISH_ENGINEER("Gnomish Engineer", Profession.ENGINEERING),
 	GOBLIN_ENGINEER("Goblin Engineer", Profession.ENGINEERING),
@@ -17,21 +21,12 @@ public enum ProfessionSpecialization {
 	private final String key;
 	private final Profession profession;
 
-	ProfessionSpecialization(String key, Profession profession) {
-		this.key = key;
-		this.profession = profession;
-	}
-
 	public static ProfessionSpecialization parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.key);
 	}
 
 	public static ProfessionSpecialization tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
-	}
-
-	public Profession getProfession() {
-		return profession;
 	}
 
 	@Override

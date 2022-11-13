@@ -1,5 +1,6 @@
 package wow.commons.model.unit;
 
+import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.WeaponSubType;
 
@@ -7,6 +8,7 @@ import wow.commons.model.categorization.WeaponSubType;
  * User: POlszewski
  * Date: 2021-03-14
  */
+@AllArgsConstructor
 public enum WeaponProfficiency {
 	DAGGER(WeaponSubType.DAGGER),
 	MAIN_HAND_DAGGER(ItemType.MAIN_HAND, WeaponSubType.DAGGER),
@@ -55,14 +57,6 @@ public enum WeaponProfficiency {
 
 	WeaponProfficiency(WeaponSubType weaponSubType) {
 		this(null, weaponSubType);
-	}
-
-	WeaponProfficiency(ItemType weaponType, WeaponSubType weaponSubType) {
-		if (weaponSubType == null) {
-			throw new NullPointerException();
-		}
-		this.weaponType = weaponType;
-		this.weaponSubType = weaponSubType;
 	}
 
 	public boolean matches(ItemType weaponType, WeaponSubType weaponSubType) {

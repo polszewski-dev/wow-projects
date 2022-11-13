@@ -1,11 +1,13 @@
 package wow.commons.model.spells;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2019-11-02
  */
+@AllArgsConstructor
 public enum SpellSchool {
 	FROST("Frost"),
 	FIRE("Fire"),
@@ -15,10 +17,6 @@ public enum SpellSchool {
 	NATURE("Nature");
 
 	private final String name;
-
-	SpellSchool(String name) {
-		this.name = name;
-	}
 
 	public static SpellSchool parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);

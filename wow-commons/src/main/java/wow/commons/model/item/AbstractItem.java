@@ -1,5 +1,6 @@
 package wow.commons.model.item;
 
+import lombok.Getter;
 import wow.commons.model.Money;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
@@ -16,6 +17,7 @@ import java.util.function.Predicate;
  * User: POlszewski
  * Date: 2022-10-31
  */
+@Getter
 public abstract class AbstractItem implements AttributeSource {
 	private final int id;
 	private final String name;
@@ -39,64 +41,24 @@ public abstract class AbstractItem implements AttributeSource {
 		this.sources = sources;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public ItemRarity getRarity() {
-		return rarity;
-	}
-
-	public Binding getBinding() {
-		return binding;
-	}
-
 	public void setBinding(Binding binding) {
 		this.binding = binding;
-	}
-
-	public boolean isUnique() {
-		return unique;
 	}
 
 	public void setUnique(boolean unique) {
 		this.unique = unique;
 	}
 
-	public int getItemLevel() {
-		return itemLevel;
-	}
-
 	public void setItemLevel(int itemLevel) {
 		this.itemLevel = itemLevel;
-	}
-
-	public ItemRestriction getRestriction() {
-		return restriction;
-	}
-
-	public Money getSellPrice() {
-		return sellPrice;
 	}
 
 	public void setSellPrice(Money sellPrice) {
 		this.sellPrice = sellPrice;
 	}
 
-	public String getIcon() {
-		return icon;
-	}
-
 	public void setIcon(String icon) {
 		this.icon = icon;
-	}
-
-	public String getTooltip() {
-		return tooltip;
 	}
 
 	public void setTooltip(String tooltip) {
@@ -114,10 +76,6 @@ public abstract class AbstractItem implements AttributeSource {
 
 	public Phase getPhase() {
 		return restriction.getPhase();
-	}
-
-	public Set<Source> getSources() {
-		return sources;
 	}
 
 	public boolean isSourcedFromRaid() {

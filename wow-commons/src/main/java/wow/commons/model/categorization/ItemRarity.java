@@ -1,11 +1,15 @@
 package wow.commons.model.categorization;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-03
  */
+@AllArgsConstructor
+@Getter
 public enum ItemRarity {
 	COMMON("ffffffff"),
 	UNCOMMON("ff1eff00"),
@@ -14,14 +18,6 @@ public enum ItemRarity {
 	LEGENDARY("ffff8000");
 
 	private final String color;
-
-	ItemRarity(String color) {
-		this.color = color;
-	}
-
-	public String getColor() {
-		return color;
-	}
 
 	public static ItemRarity parse(String value) {
 		return EnumUtil.parse(value, values());

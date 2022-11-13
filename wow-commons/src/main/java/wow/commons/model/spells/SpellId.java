@@ -1,11 +1,15 @@
 package wow.commons.model.spells;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-10-01
  */
+@AllArgsConstructor
+@Getter
 public enum SpellId {
 	TRINKET("Trinket"),
 	POTION("Potion"),
@@ -74,20 +78,12 @@ public enum SpellId {
 
 	private final String name;
 
-	SpellId(String name) {
-		this.name = name;
-	}
-
 	public static SpellId parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
 	public static SpellId tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.name);
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	@Override

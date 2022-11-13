@@ -1,11 +1,13 @@
 package wow.commons.model.item;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2021-03-24
  */
+@AllArgsConstructor
 public enum MetaEnabler {
 	AT_LEAST_1_RED("Requires at least 1 Red Gem", 1, 0, 0),
 	AT_LEAST_2_REDS("Requires at least 2 Red Gems", 2, 0, 0),
@@ -30,16 +32,6 @@ public enum MetaEnabler {
 	private final boolean moreRedThanYellow;
 	private final boolean moreRedThanBlue;
 	private final boolean moreBlueThanYellow;
-
-	MetaEnabler(String string, int reqRed, int reqYellow, int reqBlue, boolean moreRedThanYellow, boolean moreRedThanBlue, boolean moreBlueThanYellow) {
-		this.string = string;
-		this.reqRed = reqRed;
-		this.reqYellow = reqYellow;
-		this.reqBlue = reqBlue;
-		this.moreRedThanYellow = moreRedThanYellow;
-		this.moreRedThanBlue = moreRedThanBlue;
-		this.moreBlueThanYellow = moreBlueThanYellow;
-	}
 
 	MetaEnabler(String string, int reqRed, int reqYellow, int reqBlue) {
 		this(string, reqRed, reqYellow, reqBlue, false, false, false);

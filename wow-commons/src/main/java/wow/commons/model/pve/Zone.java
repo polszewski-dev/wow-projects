@@ -1,12 +1,18 @@
 package wow.commons.model.pve;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 import java.util.List;
-import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2022-11-01
  */
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(of = "id")
 public class Zone {
 	private final int id;
 	private final String name;
@@ -16,41 +22,8 @@ public class Zone {
 	private final int partySize;
 	private List<Boss> bosses;
 
-	public Zone(int id, String name, String shortName, GameVersion version, ZoneType zoneType, int partySize) {
-		this.id = id;
-		this.name = name;
-		this.shortName = shortName;
-		this.version = version;
-		this.zoneType = zoneType;
-		this.partySize = partySize;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
 	public String getShortName() {
 		return shortName != null ? shortName : name;
-	}
-
-	public GameVersion getVersion() {
-		return version;
-	}
-
-	public ZoneType getZoneType() {
-		return zoneType;
-	}
-
-	public int getPartySize() {
-		return partySize;
-	}
-
-	public List<Boss> getBosses() {
-		return bosses;
 	}
 
 	public void setBosses(List<Boss> bosses) {
@@ -67,19 +40,6 @@ public class Zone {
 
 	public boolean isInstance() {
 		return isRaid() || isDungeon();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Zone)) return false;
-		Zone zone = (Zone) o;
-		return id == zone.id;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
 	}
 
 	@Override

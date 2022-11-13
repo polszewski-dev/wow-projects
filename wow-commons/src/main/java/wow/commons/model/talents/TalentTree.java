@@ -1,11 +1,13 @@
 package wow.commons.model.talents;
 
+import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-09-19
  */
+@AllArgsConstructor
 public enum TalentTree {
 	RACIAL("Racial"),
 
@@ -18,10 +20,6 @@ public enum TalentTree {
 	MAGE_FROST("MageFrost");
 
 	private final String name;
-
-	TalentTree(String name) {
-		this.name = name;
-	}
 
 	public static TalentTree parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);

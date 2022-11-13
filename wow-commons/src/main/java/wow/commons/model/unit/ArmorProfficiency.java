@@ -1,11 +1,13 @@
 package wow.commons.model.unit;
 
+import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ArmorSubType;
 
 /**
  * User: POlszewski
  * Date: 2021-03-14
  */
+@AllArgsConstructor
 public enum ArmorProfficiency {
 	CLOTH(ArmorSubType.CLOTH),
 	LEATHER(ArmorSubType.LEATHER),
@@ -13,13 +15,6 @@ public enum ArmorProfficiency {
 	PLATE(ArmorSubType.PLATE);
 
 	private final ArmorSubType armorSubType;
-
-	ArmorProfficiency(ArmorSubType armorSubType) {
-		if (armorSubType == null) {
-			throw new NullPointerException();
-		}
-		this.armorSubType = armorSubType;
-	}
 
 	public boolean matches(ArmorSubType armorSubType) {
 		return this.armorSubType == armorSubType;
