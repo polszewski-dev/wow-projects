@@ -13,6 +13,9 @@ import wow.minmax.repository.BuildRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static wow.commons.model.spells.SpellId.*;
 
 /**
  * User: POlszewski
@@ -31,7 +34,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 		if (buildId.equals(BuildIds.DESTRO_SHADOW_BUILD)) {
 			return createDestroShadowBuild(buildId);
 		}
-		throw new IllegalArgumentException(buildId);
+		return Optional.empty();
 	}
 
 	private Optional<Build> createEmptyBuild() {
@@ -43,6 +46,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 		build.setPartyBuffs(List.of());
 		build.setConsumeBuffs(List.of());
 		build.setRaidBuffs(List.of());
+		build.setRelevantSpells(List.of());
 		return Optional.of(build);
 	}
 
@@ -77,6 +81,22 @@ public class BuildRepositoryImpl implements BuildRepository {
 				"Wrath of Air Totem",
 				"Totem of Wrath"
 		)));
+
+		SpellId[] spellsIds = {
+				SHADOW_BOLT,
+				CURSE_OF_DOOM,
+				CURSE_OF_AGONY,
+				CORRUPTION,
+				IMMOLATE,
+				SHADOWBURN,
+				SEED_OF_CORRUPTION_DIRECT
+		};
+
+		build.setRelevantSpells(
+				Stream.of(spellsIds)
+						.map(spellId -> new Spell(spellDataRepository.getSpellInfo(spellId).orElseThrow()))
+						.collect(Collectors.toList())
+		);
 
 		return Optional.of(build);
 	}

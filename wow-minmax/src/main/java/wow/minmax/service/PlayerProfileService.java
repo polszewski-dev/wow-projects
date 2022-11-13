@@ -2,6 +2,7 @@ package wow.minmax.service;
 
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.pve.Phase;
+import wow.minmax.model.Build;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface PlayerProfileService {
 	PlayerProfile resetEquipment(UUID profileId);
 
 	PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled);
+
+	Build getBuild(String buildId);
 }

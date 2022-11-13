@@ -4,19 +4,25 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.repository.PVERepository;
 import wow.commons.util.AttributeEvaluator;
+import wow.commons.util.AttributesBuilder;
 import wow.commons.util.Snapshot;
 import wow.commons.util.SpellStatistics;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.model.Spell;
 import wow.minmax.service.CalculationService;
 
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_DAMAGE;
+import java.util.ArrayList;
+import java.util.List;
+
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.util.Snapshot.CritMode;
 
 /**
@@ -27,6 +33,23 @@ import static wow.commons.util.Snapshot.CritMode;
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
 	private final PVERepository pveRepository;
+
+	@Override
+	public Attributes getStatEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile, Attributes totalStats) {
+		List<SpecialAbility> withoutGivenSpecialAbility = new ArrayList<>(totalStats.getSpecialAbilities());
+
+		withoutGivenSpecialAbility.remove(specialAbility);
+
+		Attributes attributesWithoutGivenSpecialAbility = new AttributesBuilder()
+				.addAttributeList(totalStats.getPrimitiveAttributeList())
+				.addComplexAttributeList(withoutGivenSpecialAbility)
+				.toAttributes();
+
+
+		Snapshot snapshot = getSnapshot(playerProfile, playerProfile.getDamagingSpell(), attributesWithoutGivenSpecialAbility);
+
+		return specialAbility.getStatEquivalent(snapshot);
+	}
 
 	@Override
 	public double getSpEquivalent(PrimitiveAttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell) {
@@ -93,5 +116,14 @@ public class CalculationServiceImpl implements CalculationService {
 				playerProfile.getActivePet(),
 				playerProfile.getEnemyType()
 		);
+	}
+
+	@Override
+	public PlayerSpellStats getPlayerSpellStats(PlayerProfile playerProfile, Spell spell) {
+		SpellStatistics spellStatistics = getSpellStatistics(playerProfile, spell);
+		double hitSpEqv = getSpEquivalent(SPELL_HIT_RATING, 10, playerProfile, spell);
+		double critSpEqv = getSpEquivalent(SPELL_CRIT_RATING, 10, playerProfile, spell);
+		double hasteSpEqv = getSpEquivalent(SPELL_HASTE_RATING, 10, playerProfile, spell);
+		return new PlayerSpellStats(playerProfile, spellStatistics, hitSpEqv, critSpEqv, hasteSpEqv);
 	}
 }

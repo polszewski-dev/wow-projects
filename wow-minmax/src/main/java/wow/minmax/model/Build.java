@@ -26,6 +26,8 @@ public class Build {
 	private List<Buff> consumeBuffs;
 	private List<Buff> raidBuffs;
 
+	private List<Spell> relevantSpells;
+
 	public enum BuffSet {
 		SELF_BUFF,
 		PARTY_BUFF,

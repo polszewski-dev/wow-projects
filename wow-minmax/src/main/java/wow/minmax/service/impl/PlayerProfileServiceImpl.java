@@ -16,6 +16,7 @@ import wow.commons.model.unit.CreatureType;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
+import wow.minmax.model.Build;
 import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.BuildRepository;
@@ -62,7 +63,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				characterInfo,
 				CreatureType.UNDEAD,
 				phase,
-				buildRepository.getBuild(BuildIds.DESTRO_SHADOW_BUILD).orElseThrow()
+				getBuild(BuildIds.DESTRO_SHADOW_BUILD)
 		);
 
 		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES));
@@ -134,5 +135,10 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		playerProfile.enableBuff(buff, enabled);
 		playerProfileRepository.saveProfile(playerProfile);
 		return playerProfile;
+	}
+
+	@Override
+	public Build getBuild(String buildId) {
+		return buildRepository.getBuild(buildId).orElseThrow();
 	}
 }
