@@ -37,7 +37,7 @@ public class UpgradeController {
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).readOnlyCopy();
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
 		List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpellId());
 
 		return upgrades.stream()

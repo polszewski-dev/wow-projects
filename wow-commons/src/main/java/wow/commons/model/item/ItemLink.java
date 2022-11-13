@@ -1,5 +1,6 @@
 package wow.commons.model.item;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import wow.commons.model.categorization.ItemRarity;
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
  * User: POlszewski
  * Date: 2021-01-22
  */
+@AllArgsConstructor
 @Getter
 @EqualsAndHashCode
 public class ItemLink {
@@ -48,27 +50,6 @@ public class ItemLink {
 	private final Integer bonusId1;
 	private final Integer bonusId2;
 	private final Integer upgradeValue;
-
-	public ItemLink(int itemId, String name, ItemRarity rarity, Integer enchantId, Integer gem1Id, Integer gem2Id, Integer gem3Id, Integer gem4Id, Integer suffixId, Integer uniqueId, Integer linkLevel, Integer specializationID, Integer upgradeId, Integer instanceDifficultyId, Integer numBonusIds, Integer bonusId1, Integer bonusId2, Integer upgradeValue) {
-		this.itemId = itemId;
-		this.name = name;
-		this.rarity = rarity;
-		this.enchantId = enchantId;
-		this.gem1Id = gem1Id;
-		this.gem2Id = gem2Id;
-		this.gem3Id = gem3Id;
-		this.gem4Id = gem4Id;
-		this.suffixId = suffixId;
-		this.uniqueId = uniqueId;
-		this.linkLevel = linkLevel;
-		this.specializationID = specializationID;
-		this.upgradeId = upgradeId;
-		this.instanceDifficultyId = instanceDifficultyId;
-		this.numBonusIds = numBonusIds;
-		this.bonusId1 = bonusId1;
-		this.bonusId2 = bonusId2;
-		this.upgradeValue = upgradeValue;
-	}
 
 	public ItemLink(int itemId, String name, ItemRarity rarity, Integer enchantId, Integer gem1Id, Integer gem2Id, Integer gem3Id) {
 		this(itemId, name, rarity, enchantId, gem1Id, gem2Id, gem3Id, null, null, null, null, null, null, null, null, null, null, null);

@@ -17,39 +17,23 @@ import java.util.stream.Collectors;
 public class ItemSockets extends ComplexAttribute implements Copyable<ItemSockets> {
 	private final ItemSocketSpecification specification;
 	private final List<ItemSocket> sockets;
-	private final boolean readOnly;
 
-	public static final ItemSockets EMPTY = new ItemSockets(ItemSocketSpecification.EMPTY, List.of(), true);
+	public static final ItemSockets EMPTY = new ItemSockets(ItemSocketSpecification.EMPTY, List.of());
 
 	public ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets) {
-		this(specification, sockets, false);
-	}
-
-	public ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets, boolean readOnly) {
 		super(ComplexAttributeId.SOCKETS, AttributeCondition.EMPTY);
 		this.specification = specification;
 		this.sockets = sockets;
-		this.readOnly = readOnly;
 	}
 
 	@Override
-	public ItemSockets copy(boolean readOnly) {
-		if (this.readOnly && readOnly) {
-			return this;
-		}
-
+	public ItemSockets copy() {
 		return new ItemSockets(
 				specification,
 				sockets.stream()
-					   .map(socket -> socket.copy(readOnly))
-					   .collect(Collectors.toList()),
-				readOnly
+					   .map(ItemSocket::copy)
+					   .collect(Collectors.toList())
 		);
-	}
-
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
 	}
 
 	public int getSocketCount() {
@@ -93,7 +77,6 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 		if (socketNo > getSocketCount() && gem == null) {
 			return;
 		}
-		assertCanBeModified();
 		sockets.get(socketNo - 1).insertGem(gem);
 	}
 

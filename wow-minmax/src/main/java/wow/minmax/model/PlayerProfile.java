@@ -16,7 +16,6 @@ import wow.commons.util.AttributesBuilder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,70 +28,38 @@ import java.util.stream.Collectors;
 public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollection {
 	private final UUID profileId;
 	private final String profileName;
-
 	private final CharacterInfo characterInfo;
-
 	private final CreatureType enemyType;
-
 	private final Phase phase;
-
 	private Build build;
 	private Equipment equipment;
 	private List<Buff> buffs;
 
-	private final boolean readOnly;
 	private LocalDateTime lastModified;
 
 	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType, Phase phase, Build build) {
-		this(profileId, profileName, characterInfo, enemyType, phase, build, false);
-	}
-
-	private PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType, Phase phase, Build build, boolean readOnly) {
 		this.profileId = profileId;
 		this.profileName = profileName;
 		this.characterInfo = characterInfo;
 		this.enemyType = enemyType;
 		this.phase = phase;
 		this.build = build;
-		this.readOnly = readOnly;
 		this.lastModified = LocalDateTime.now();
 	}
 
 	@Override
-	public PlayerProfile copy(boolean readOnly) {
-		if (this.readOnly && readOnly) {
-			return this;
-		}
-
-		return copy(profileId, profileName, phase, readOnly);
+	public PlayerProfile copy() {
+		return copy(profileId, profileName, phase);
 	}
 
 	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
-		return copy(profileId, profileName, phase, false);
-	}
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo, enemyType, phase, build);
 
-	public PlayerProfile readOnlyCopy(UUID profileId, String profileName, Phase phase) {
-		return copy(profileId, profileName, phase, true);
-	}
-
-	private PlayerProfile copy(UUID profileId, String profileName, Phase phase, boolean readOnly) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo, enemyType, phase, build, readOnly);
-
-		copy.equipment = Copyable.copyNullable(this.equipment, readOnly);
+		copy.equipment = Copyable.copyNullable(this.equipment);
 		copy.buffs = new ArrayList<>(this.buffs);
-
-		if (readOnly) {
-			copy.buffs = Collections.unmodifiableList(copy.buffs);
-		}
-
 		copy.lastModified = this.lastModified;
 
 		return copy;
-	}
-
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
 	}
 
 	public LocalDateTime getLastModified() {
@@ -156,7 +123,6 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public void setEquipment(Equipment equipment) {
-		assertCanBeModified();
 		this.equipment = equipment;
 		this.lastModified = LocalDateTime.now();
 	}
@@ -166,7 +132,6 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public void setBuffs(List<Buff> buffs) {
-		assertCanBeModified();
 		validateExclusionGroups(buffs);
 		this.buffs = buffs;
 		this.lastModified = LocalDateTime.now();
@@ -189,7 +154,6 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public void setBuild(Build build) {
-		assertCanBeModified();
 		this.build = build;
 		this.lastModified = LocalDateTime.now();
 	}

@@ -1,37 +1,20 @@
 package wow.commons.model.attributes.condition;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PetType;
 
 /**
  * User: POlszewski
  * Date: 2022-11-11
  */
+@AllArgsConstructor
 @EqualsAndHashCode
 public class CreatureTypeCondition implements AttributeCondition {
+	@NonNull
 	private final CreatureType creatureType;
-
-	public CreatureTypeCondition(CreatureType creatureType) {
-		this.creatureType = creatureType;
-		if (creatureType == null) {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	@Override
-	public CreatureType getCreatureType() {
-		return creatureType;
-	}
-
-	@Override
-	public boolean isMetBy(TalentTree talentTree, SpellSchool spellSchool, SpellId spellId, PetType petType, CreatureType creatureType) {
-		return this.creatureType == creatureType;
-	}
 
 	@Override
 	public String toString() {

@@ -55,7 +55,7 @@ public class StatsController {
 	public List<SpellStatsDTO> getSpellStats(
 			@PathVariable("profileId") UUID profileId
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).readOnlyCopy();
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
 
 		Spell[] spells = {
 				spellService.getSpell(SpellId.SHADOW_BOLT),
@@ -86,7 +86,7 @@ public class StatsController {
 	public List<PlayerStatsDTO> getPlayerStats(
 			@PathVariable("profileId") UUID profileId
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).readOnlyCopy();
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
 
 		return List.of(
 				getEquipmentStats(playerProfile),
@@ -101,8 +101,7 @@ public class StatsController {
 	public List<SpecialAbilityStatsDTO> getSpecialAbilityStats(
 			@PathVariable("profileId") UUID profileId
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId)
-														  .readOnlyCopy();
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
 
 		Attributes attributes = AttributeEvaluator.of()
 				.addAttributes(playerProfile)

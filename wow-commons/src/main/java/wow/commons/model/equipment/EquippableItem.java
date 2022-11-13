@@ -24,34 +24,20 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	private final ItemSockets sockets;
 	private Enchant enchant;
 
-	private final boolean readOnly;
-
 	public EquippableItem(Item item) {
-		this(item, item.getSocketSpecification().createSockets(), false);
+		this(item, item.getSocketSpecification().createSockets());
 	}
 
-	private EquippableItem(Item item, ItemSockets sockets, boolean readOnly) {
+	private EquippableItem(Item item, ItemSockets sockets) {
 		this.item = item;
 		this.sockets = sockets;
-		this.readOnly = readOnly;
 	}
 
 	@Override
-	public EquippableItem copy(boolean readOnly) {
-		if (this.readOnly && readOnly) {
-			return this;
-		}
-
-		EquippableItem copy = new EquippableItem(item, sockets.copy(readOnly), readOnly);
-
+	public EquippableItem copy() {
+		EquippableItem copy = new EquippableItem(item, sockets.copy());
 		copy.enchant = enchant;
-
 		return copy;
-	}
-
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
 	}
 
 	public ItemLink getItemLink() {
@@ -127,7 +113,6 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	}
 
 	public EquippableItem enchant(Enchant enchant) {
-		assertCanBeModified();
 		if (enchant == null) {
 			this.enchant = null;
 			return this;
@@ -143,7 +128,6 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	}
 
 	public EquippableItem gem(Gem... gems) {
-		assertCanBeModified();
 		if (gems.length != getSocketCount()) {
 			throw new IllegalArgumentException("Wrong #sockets");
 		}
@@ -155,7 +139,6 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	}
 
 	public void insertGem(int socketNo, Gem gem) {
-		assertCanBeModified();
 		sockets.insertGem(socketNo, gem);
 	}
 

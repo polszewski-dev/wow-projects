@@ -11,16 +11,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "name")
-public class Faction implements Comparable<Faction> {
+public class Faction {
 	private final int no;
 	private final String name;
 	private final GameVersion version;
 	private final Phase phase;
-
-	@Override
-	public int compareTo(Faction o) {
-		return this.no - o.no;
-	}
 
 	@Override
 	public String toString() {

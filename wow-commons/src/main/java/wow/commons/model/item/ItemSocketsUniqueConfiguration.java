@@ -89,14 +89,6 @@ public enum ItemSocketsUniqueConfiguration {
 		}
 	}
 
-	public int getSocketCount() {
-		return getSocketSpecification().getSocketCount();
-	}
-
-	public SocketType getSocketType(int socketNo) {
-		return getSocketSpecification().getSocketType(socketNo);
-	}
-
 	@Override
 	public String toString() {
 		return key;

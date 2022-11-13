@@ -20,30 +20,11 @@ import static wow.commons.model.categorization.ItemSlot.*;
 public class Equipment implements Copyable<Equipment>, AttributeCollection {
 	private final Map<ItemSlot, EquippableItem> itemsBySlot = new EnumMap<>(ItemSlot.class);
 
-	private final boolean readOnly;
-
-	public Equipment() {
-		this(false);
-	}
-
-	private Equipment(boolean readOnly) {
-		this.readOnly = readOnly;
-	}
-
 	@Override
-	public Equipment copy(boolean readOnly) {
-		if (this.readOnly && readOnly) {
-			return this;
-		}
-
-		Equipment copy = new Equipment(readOnly);
+	public Equipment copy() {
+		Equipment copy = new Equipment();
 		copy.itemsBySlot.putAll(itemsBySlot);
 		return copy;
-	}
-
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
 	}
 
 	public EquippableItem getHead() {
@@ -122,8 +103,6 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 		if (item != null && !item.canBeEquippedIn(slot)) {
 			throw new IllegalArgumentException(item + " can't be equipped into " + slot);
 		}
-
-		assertCanBeModified();
 
 		if (slot == MAIN_HAND) {
 			putOrRemove(MAIN_HAND, item);

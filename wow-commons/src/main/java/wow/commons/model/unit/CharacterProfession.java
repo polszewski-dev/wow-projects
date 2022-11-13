@@ -1,5 +1,6 @@
 package wow.commons.model.unit;
 
+import lombok.Getter;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 
@@ -7,6 +8,7 @@ import wow.commons.model.professions.ProfessionSpecialization;
  * User: POlszewski
  * Date: 2022-10-31
  */
+@Getter
 public class CharacterProfession {
 	private final Profession profession;
 	private final int level;
@@ -19,17 +21,5 @@ public class CharacterProfession {
 		if (specialization != null && specialization.getProfession() != profession) {
 			throw new IllegalArgumentException("Specialization doesn't match the profession");
 		}
-	}
-
-	public Profession getProfession() {
-		return profession;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public ProfessionSpecialization getSpecialization() {
-		return specialization;
 	}
 }

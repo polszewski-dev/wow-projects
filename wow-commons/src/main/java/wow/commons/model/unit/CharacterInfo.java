@@ -36,18 +36,14 @@ public class CharacterInfo {
 	}
 
 	public boolean hasProfession(Profession profession) {
-		return professions.stream().anyMatch(x -> x.getProfession() == profession);//todo sprawdzic level!!!
+		return professions.stream().anyMatch(x -> x.getProfession() == profession);
+	}
+
+	public boolean hasProfession(Profession profession, int level) {
+		return professions.stream().anyMatch(x -> x.getProfession() == profession && x.getLevel() >= level);
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
 		return professions.stream().anyMatch(x -> x.getSpecialization() == specialization);
-	}
-
-	public int getProfessionLevel(Profession profession) {
-		return professions.stream()
-				.filter(x -> x.getProfession() == profession)
-				.mapToInt(CharacterProfession::getLevel)
-				.findFirst()
-				.orElse(0);
 	}
 }

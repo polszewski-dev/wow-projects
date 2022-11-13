@@ -12,31 +12,15 @@ public class ItemSocket implements Copyable<ItemSocket> {
 	private final SocketType socketType;
 	private Gem gem;
 
-	private final boolean readOnly;
-
 	ItemSocket(SocketType socketType) {
-		this(socketType, false);
-	}
-
-	private ItemSocket(SocketType socketType, boolean readOnly) {
 		this.socketType = socketType;
-		this.readOnly = readOnly;
 	}
 
 	@Override
-	public ItemSocket copy(boolean readOnly) {
-		if (this.readOnly && readOnly) {
-			return this;
-		}
-
-		ItemSocket copy = new ItemSocket(socketType, readOnly);
+	public ItemSocket copy() {
+		ItemSocket copy = new ItemSocket(socketType);
 		copy.gem = gem;
 		return copy;
-	}
-
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
 	}
 
 	public boolean isMetaSocket() {
@@ -48,7 +32,6 @@ public class ItemSocket implements Copyable<ItemSocket> {
 	}
 
 	public void insertGem(Gem gem) {
-		assertCanBeModified();
 		if (gem != null && !socketType.accepts(gem.getColor())) {
 			throw new IllegalArgumentException(String.format("%s socket does not accept gems of color: %s", socketType, gem.getColor()));
 		}
