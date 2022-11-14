@@ -1,10 +1,7 @@
 package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
@@ -53,15 +50,8 @@ public class PlayerProfileController {
 
 	@GetMapping("{profileId}")
 	public PlayerProfileDTO getPlayerProfile(
-			@PathVariable("profileId") UUID profileId
-	) {
-		return getPlayerProfile(profileId, false);
-	}
-
-	@GetMapping("{profileId}/add/options/{addOptions}")
-	public PlayerProfileDTO getPlayerProfile(
 			@PathVariable("profileId") UUID profileId,
-			@PathVariable("addOptions") boolean addOptions
+			@RequestParam(value = "addOptions", required = false, defaultValue = "false") boolean addOptions
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);

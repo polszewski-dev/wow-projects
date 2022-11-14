@@ -62,7 +62,7 @@ class Api {
 	}
 
 	static getProfileWithItemOptions(profileId, addOptions) {
-		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/add/options/${addOptions}`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}?addOptions=${addOptions}`)
 	}
 	
 	static changeItem(profileId, slot, itemId) {
