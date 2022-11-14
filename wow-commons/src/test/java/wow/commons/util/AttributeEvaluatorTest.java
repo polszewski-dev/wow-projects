@@ -33,9 +33,7 @@ class AttributeEvaluatorTest {
 	@Test
 	@DisplayName("nothingToSolve returns empty attributes if none were added")
 	void empty() {
-		Attributes attributes = AttributeEvaluator.of()
-				.nothingToSolve()
-				.getAttributes();
+		Attributes attributes = AttributeEvaluator.of().nothingToSolve();
 
 		assertThat(attributes.isEmpty()).isTrue();
 	}
@@ -47,8 +45,7 @@ class AttributeEvaluatorTest {
 
 		Attributes attributes = AttributeEvaluator.of()
 				.addAttributes(equipment)
-				.nothingToSolve()
-				.getAttributes();
+				.nothingToSolve();
 
 		assertThat(attributes.getSpecialAbilities()).hasSize(2);
 		assertThat(attributes.getList(ComplexAttributeId.SOCKETS)).hasSize(12);
@@ -62,8 +59,7 @@ class AttributeEvaluatorTest {
 
 		Attributes attributes = AttributeEvaluator.of()
 				.addAttributes(equipment)
-				.solveAllLeaveAbilities()
-				.getAttributes();
+				.solveAllLeaveAbilities();
 
 		assertThat(attributes.getSpecialAbilities()).hasSize(4);
 		assertThat(attributes.getList(ComplexAttributeId.SOCKETS)).isEmpty();

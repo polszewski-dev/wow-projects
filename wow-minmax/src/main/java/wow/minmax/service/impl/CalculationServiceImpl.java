@@ -45,7 +45,6 @@ public class CalculationServiceImpl implements CalculationService {
 				.addComplexAttributeList(withoutGivenSpecialAbility)
 				.toAttributes();
 
-
 		Snapshot snapshot = getSnapshot(playerProfile, playerProfile.getDamagingSpell(), attributesWithoutGivenSpecialAbility);
 
 		return specialAbility.getStatEquivalent(snapshot);
@@ -82,16 +81,10 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell, PrimitiveAttribute attribute) {
-		AttributeEvaluator attributeEvaluator = AttributeEvaluator.of(spell.getSpellInfo())
-				.addAttributes(playerProfile);
-
-		if (attribute != null) {
-			attributeEvaluator.addAttribute(attribute);
-		}
-
-		Attributes totalStats = attributeEvaluator
-				.solveAllLeaveAbilities()
-				.getAttributes();
+		Attributes totalStats = AttributeEvaluator.of()
+				.addAttributes(playerProfile)
+				.addAttribute(attribute)
+				.solveAllLeaveAbilities();
 
 		return getSpellStatistics(playerProfile, spell, totalStats);
 	}

@@ -166,7 +166,7 @@ public interface AttributeSource {
 	}
 
 	default double getTotalSpellDamage(SpellSchool spellSchool) {
-		return getSpellPower() + getSpellDamage(spellSchool);//TODO incorrect
+		return getSpellPower() + getSpellDamage() + getSpellDamage(spellSchool);
 	}
 
 	default double getSpellCritRating() {

@@ -8,7 +8,6 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static wow.commons.model.categorization.ItemSlot.*;
@@ -147,13 +146,8 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 	// item stats, gems, socket bonuses, procs, on-use, socket bonuses
 
 	@Override
-	public <T extends AttributeCollector<T>> T collectAttributes(T collector) {
-		forEach(item -> item.collectAttributes(collector));
-		return collector;
-	}
-
-	private void forEach(Consumer<EquippableItem> consumer) {
-		itemsBySlot.values().forEach(consumer);
+	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+		itemsBySlot.values().forEach(item -> item.collectAttributes(collector));
 	}
 
 	private int numRed() {
@@ -210,7 +204,7 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 				result.add(this.getTrinket1());
 				result.add(this.getTrinket2());
 			}
-		} else if (slot != FINGER_2 && slot != TRINKET_2) {
+		} else if (slot != FINGER_2 && slot != TRINKET_2 && slot != OFF_HAND) {
 			EquippableItem mine = this.get(slot);
 			EquippableItem theirs = equipment.get(slot);
 

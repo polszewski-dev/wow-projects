@@ -15,7 +15,6 @@ import wow.commons.model.unit.Race;
 import wow.minmax.converter.dto.ItemConverter;
 import wow.minmax.model.dto.ItemDTO;
 import wow.minmax.service.ItemService;
-import wow.minmax.service.UpgradeService;
 
 import java.util.Comparator;
 import java.util.List;
@@ -33,27 +32,25 @@ public class ItemController {
 	private final ItemService itemService;
 	private final ItemConverter itemConverter;
 
-	private final UpgradeService upgradeService;
-
 	@GetMapping
 	public List<ItemDTO> getItems() {
 		List<Item> result = itemService.getItems();
 		return itemConverter.convertList(result);
 	}
 
-	@GetMapping(path = "phase/{phase}")
+	@GetMapping("phase/{phase}")
 	public List<ItemDTO> getItems(@PathVariable("phase") Phase phase) {
 		List<Item> result = itemService.getItems(phase);
 		return itemConverter.convertList(result);
 	}
 
-	@GetMapping(path = "phase/{phase}/slot/{slot}")
+	@GetMapping("phase/{phase}/slot/{slot}")
 	public List<ItemDTO> getItems(@PathVariable("phase") Phase phase, @PathVariable("slot") ItemSlot slot) {
 		List<Item> result = itemService.getItems(phase, slot);
 		return itemConverter.convertList(result);
 	}
 
-	@GetMapping(path = "phase/{phase}/byslot")
+	@GetMapping("phase/{phase}/byslot")
 	public Map<ItemSlot, List<ItemDTO>> getItemsBySlot(@PathVariable("phase") Phase phase) {
 		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, phase.getGameVersion().getMaxLevel(), List.of());//TODO parametr
 		SpellSchool spellSchool = SpellSchool.SHADOW;
@@ -63,26 +60,21 @@ public class ItemController {
 		return itemsBySlot.entrySet().stream()
 					.collect(Collectors.toMap(
 							Map.Entry::getKey,
-							e -> getItemsDTOsOrderedByScore(e.getValue(), spellSchool)
+							e -> getItemsDTOsOrderedByScore(e.getValue())
 					)
 		);
 	}
 
-	private List<ItemDTO> getItemsDTOsOrderedByScore(List<Item> items, SpellSchool spellSchool) {
+	private List<ItemDTO> getItemsDTOsOrderedByScore(List<Item> items) {
 		return items.stream()
-				.map(item -> getItemDTO(item, spellSchool))
-				.sorted(orderByScore())
+				.map(this::getItemDTO)
+				.sorted(Comparator.comparing(ItemDTO::getScore).reversed().thenComparing(ItemDTO::getName))
 				.collect(Collectors.toList());
 	}
 
-	private ItemDTO getItemDTO(Item item, SpellSchool spellSchool) {
+	private ItemDTO getItemDTO(Item item) {
 		ItemDTO itemDTO = itemConverter.convert(item);
-		itemDTO.setScore(upgradeService.getItemScore(item, spellSchool));
+		itemDTO.setScore(item.getItemLevel());
 		return itemDTO;
-	}
-
-	private static Comparator<ItemDTO> orderByScore() {
-		return Comparator.comparingDouble((ItemDTO itemDTO) -> -itemDTO.getScore())
-				.thenComparing(ItemDTO::getName);
 	}
 }

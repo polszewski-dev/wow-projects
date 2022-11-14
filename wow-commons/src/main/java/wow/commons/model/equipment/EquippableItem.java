@@ -179,7 +179,7 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> T collectAttributes(T collector) {
+	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
 		collector.addAttributes(item);
 		collector.addAttributes(enchant);
 		if (sockets.getSocketCount() > 0) {
@@ -188,7 +188,6 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		if (item.getItemSet() != null) {
 			collector.addAttribute(new ItemSetPiece(item));
 		}
-		return collector;
 	}
 
 	public int getGemCount(SocketType socketType) {

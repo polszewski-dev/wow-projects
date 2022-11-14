@@ -78,8 +78,7 @@ public class StatsController {
 
 		Attributes attributes = AttributeEvaluator.of()
 				.addAttributes(playerProfile)
-				.solveAllLeaveAbilities()
-				.getAttributes();
+				.solveAllLeaveAbilities();
 
 		return attributes.getSpecialAbilities()
 				.stream()
@@ -113,8 +112,7 @@ public class StatsController {
 	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, Spell spell) {
 		Attributes attributes = AttributeEvaluator.of()
 				.addAttributes(playerProfile)
-				.solveAllLeaveAbilities()
-				.getAttributes();
+				.solveAllLeaveAbilities();
 
 		Snapshot snapshot = calculationService.getSnapshot(playerProfile, spell, attributes);
 

@@ -40,13 +40,11 @@ public class Comparison {
 	public AttributesDiff getStatDifference() {
 		Attributes possibleAttributes = AttributeEvaluator.of()
 				.addAttributes(possibleEquipment)
-				.solveAllLeaveAbilities()
-				.getAttributes();
+				.solveAllLeaveAbilities();
 
 		Attributes referenceAttributes = AttributeEvaluator.of()
 				.addAttributes(referenceEquipment)
-				.solveAllLeaveAbilities()
-				.getAttributes();
+				.solveAllLeaveAbilities();
 
 		return new AttributesDiffFinder(possibleAttributes, referenceAttributes).getDiff();
 	}

@@ -37,7 +37,7 @@ public class PlayerProfileController {
 	private final GemConverter gemConverter;
 	private final BuffConverter buffConverter;
 
-	@GetMapping(path = "list")
+	@GetMapping("list")
 	public List<PlayerProfileDTO> getPlayerProfileList() {
 		List<PlayerProfile> playerProfiles = playerProfileService.getPlayerProfileList();
 		List<PlayerProfileDTO> result = playerProfileConverter.convertList(playerProfiles);
@@ -51,14 +51,14 @@ public class PlayerProfileController {
 		return result;
 	}
 
-	@GetMapping(path = "{profileId}")
+	@GetMapping("{profileId}")
 	public PlayerProfileDTO getPlayerProfile(
 			@PathVariable("profileId") UUID profileId
 	) {
 		return getPlayerProfile(profileId, false);
 	}
 
-	@GetMapping(path = "{profileId}/add/options/{addOptions}")
+	@GetMapping("{profileId}/add/options/{addOptions}")
 	public PlayerProfileDTO getPlayerProfile(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("addOptions") boolean addOptions
@@ -75,7 +75,7 @@ public class PlayerProfileController {
 		return playerProfileDTO;
 	}
 
-	@GetMapping(path = "create/name/{profileName}/phase/{phase}")
+	@GetMapping("create/name/{profileName}/phase/{phase}")
 	public PlayerProfileDTO createPlayerProfile(
 			@PathVariable("profileName") String profileName,
 			@PathVariable("phase") Phase phase
@@ -84,7 +84,7 @@ public class PlayerProfileController {
 		return playerProfileConverter.convert(createdProfile);
 	}
 
-	@GetMapping(path = "copy/{copiedProfileId}/name/{profileName}/phase/{phase}")
+	@GetMapping("copy/{copiedProfileId}/name/{profileName}/phase/{phase}")
 	public PlayerProfileDTO createPlayerProfile(
 			@PathVariable("copiedProfileId") UUID copiedProfileId,
 			@PathVariable("profileName") String profileName,
@@ -94,7 +94,7 @@ public class PlayerProfileController {
 		return playerProfileConverter.convert(createdProfile);
 	}
 
-	@GetMapping(path = "{profileId}/change/item/{slot}/{itemId}")
+	@GetMapping("{profileId}/change/item/{slot}/{itemId}")
 	public EquippableItemDTO changeItem(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("slot") ItemSlot slot,
@@ -107,7 +107,7 @@ public class PlayerProfileController {
 		return dto;
 	}
 
-	@GetMapping(path = "{profileId}/change/enchant/{slot}/{enchantId}")
+	@GetMapping("{profileId}/change/enchant/{slot}/{enchantId}")
 	public EquippableItemDTO changeEnchant(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("slot") ItemSlot slot,
@@ -118,7 +118,7 @@ public class PlayerProfileController {
 		return convertEquippableItem(playerProfile, slot);
 	}
 
-	@GetMapping(path = "{profileId}/change/gem/{slot}/{socketNo}/{gemId}")
+	@GetMapping("{profileId}/change/gem/{slot}/{socketNo}/{gemId}")
 	public EquippableItemDTO changeGem(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("slot") ItemSlot slot,
@@ -129,7 +129,7 @@ public class PlayerProfileController {
 		return convertEquippableItem(playerProfile, slot);
 	}
 
-	@GetMapping(path = "{profileId}/enable/buff/{buffId}/{enabled}")
+	@GetMapping("{profileId}/enable/buff/{buffId}/{enabled}")
 	public List<BuffDTO> enableBuff(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("buffId") int buffId,
@@ -139,7 +139,7 @@ public class PlayerProfileController {
 		return buffConverter.convertList(playerProfile.getBuffs());
 	}
 
-	@GetMapping(path = "{profileId}/reset/equipment")
+	@GetMapping("{profileId}/reset/equipment")
 	public PlayerProfileDTO resetProfile(
 			@PathVariable("profileId") UUID profileId
 	) {

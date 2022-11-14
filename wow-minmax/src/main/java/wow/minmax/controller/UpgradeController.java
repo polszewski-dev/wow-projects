@@ -32,7 +32,7 @@ public class UpgradeController {
 	private final PlayerProfileService playerProfileService;
 	private final UpgradeConverter upgradeConverter;
 
-	@GetMapping(path = "{profileId}/slot/{slotGroup}")
+	@GetMapping("{profileId}/slot/{slotGroup}")
 	public List<UpgradeDTO> findUpgrades(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup
@@ -46,7 +46,7 @@ public class UpgradeController {
 				.collect(Collectors.toList());
 	}
 
-	@GetMapping(path = "{profileId}")
+	@GetMapping("{profileId}")
 	public UpgradesDTO findUpgrades(
 			@PathVariable("profileId") UUID profileId
 	) {

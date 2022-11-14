@@ -235,8 +235,7 @@ class CalculationServiceTest {
 	private Attributes getCurrentStats(PlayerProfile playerProfile) {
 		return AttributeEvaluator.of()
 				.addAttributes(playerProfile)
-				.solveAllLeaveAbilities()
-				.getAttributes();
+				.solveAllLeaveAbilities();
 	}
 
 	private Equipment getEquipment() {

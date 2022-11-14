@@ -4,6 +4,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Item;
 import wow.commons.util.AttributeEvaluator;
@@ -38,11 +39,9 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 			workingProfile.getEquipment().set(null, slot);
 		}
 
-		this.withoutSlotGroup = AttributeEvaluator.of(spell.getSpellInfo())
+		this.withoutSlotGroup = AttributeEvaluator.of()
 				.addAttributes(workingProfile)
-				.nothingToSolve()
-				.getAttributes()
-				;
+				.nothingToSolve();
 	}
 
 	@Override
@@ -55,12 +54,7 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 			return null;
 		}
 
-		for (int i = 0; i < itemOption.length; i++) {
-			EquippableItem item = itemOption[i];
-			ItemSlot slot = slotGroup.getSlots().get(i);
-			workingProfile.getEquipment().set(item, slot);
-		}
-
+		equipItems(workingProfile.getEquipment(), itemOption);
 		return newComparison(changePct);
 	}
 
@@ -70,18 +64,24 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 		evaluator.addAttributes(withoutSlotGroup);
 
 		for (EquippableItem item : itemOption) {
-			item.collectAttributes(evaluator);
+			evaluator.addAttributes(item);
 		}
 
-		return evaluator
-				.solveAllLeaveAbilities()
-				.getAttributes();
+		return evaluator.solveAllLeaveAbilities();
+	}
+
+	private void equipItems(Equipment equipment, EquippableItem[] itemOption) {
+		for (int i = 0; i < itemOption.length; i++) {
+			EquippableItem item = itemOption[i];
+			ItemSlot slot = slotGroup.getSlots().get(i);
+			equipment.set(item, slot);
+		}
 	}
 
 	@Override
 	protected Map<ItemType, List<Item>> getItemsByType() {
 		return itemService.getCasterItemsByType(
-				referenceProfile.getCharacterInfo(), referenceProfile.getPhase(), spell.getSpellSchool()
+				referenceProfile.getCharacterInfo(), phase, spellSchool
 		);
 	}
 }

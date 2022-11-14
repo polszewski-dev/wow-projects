@@ -6,12 +6,9 @@ import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.item.*;
-import wow.commons.model.spells.SpellInfo;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -21,28 +18,8 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 	private final Map<AttributeCondition, Map<PrimitiveAttributeId, Double>> primitiveAttributes = new HashMap<>();
 	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(ComplexAttributeId.class);
 
-	private final Predicate<Attribute> filter;
-
-	private AttributeEvaluator(Predicate<Attribute> filter) {
-		this.filter = filter;
-	}
-
-	public static AttributeEvaluator of(Predicate<Attribute> filter) {
-		return new AttributeEvaluator(filter);
-	}
-
 	public static AttributeEvaluator of() {
-		return of(x -> true);
-	}
-
-	public static AttributeEvaluator of(SpellInfo spellInfo) {
-		Set<AttributeCondition> conditions = Stream.of(
-				AttributeCondition.of(spellInfo.getTalentTree()),
-				AttributeCondition.of(spellInfo.getSpellSchool()),
-				AttributeCondition.of(spellInfo.getSpellId()),
-				AttributeCondition.EMPTY
-		).collect(Collectors.toSet());
-		return of(x -> conditions.contains(x.getCondition()));
+		return new AttributeEvaluator();
 	}
 
 	@Override
@@ -76,10 +53,6 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 			return this;
 		}
 
-		if (!filter.test(attribute)) {
-			return this;
-		}
-
 		AttributeCondition condition = attribute.getCondition();
 		PrimitiveAttributeId id = attribute.getId();
 
@@ -92,10 +65,6 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 	@Override
 	public AttributeEvaluator addAttribute(ComplexAttribute attribute) {
 		if (attribute == null) {
-			return this;
-		}
-
-		if (!filter.test(attribute)) {
 			return this;
 		}
 
@@ -154,41 +123,37 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		complexAttributes.remove(ComplexAttributeId.SOCKETS);
 	}
 
-	public AttributesAccessor nothingToSolve() {
-		return new AttributesAccessor();
+	public Attributes nothingToSolve() {
+		return getAttributes();
 	}
 
-	public AttributesAccessor solveAllLeaveAbilities() {
+	public Attributes solveAllLeaveAbilities() {
 		solveSetBonuses();
 		solveSockets();
-		return new AttributesAccessor();
+		return getAttributes();
 	}
 
-	public class AttributesAccessor {
-		private AttributesAccessor() {}
+	private Attributes getAttributes() {
+		AttributesBuilder result = new AttributesBuilder();
+		processConditionalAttributes(result);
+		processComplexAttributes(result);
+		return result.toAttributes();
+	}
 
-		public Attributes getAttributes() {
-			AttributesBuilder result = new AttributesBuilder();
-			processConditionalAttributes(result);
-			processComplexAttributes(result);
-			return result.toAttributes();
-		}
-
-		private void processConditionalAttributes(AttributesBuilder result) {
-			for (var entry : primitiveAttributes.entrySet()) {
-				var condition = entry.getKey();
-				for (var entry2 : entry.getValue().entrySet()) {
-					var id = entry2.getKey();
-					var value = entry2.getValue();
-					result.addAttribute(id, value, condition);
-				}
+	private void processConditionalAttributes(AttributesBuilder result) {
+		for (var entry : primitiveAttributes.entrySet()) {
+			var condition = entry.getKey();
+			for (var entry2 : entry.getValue().entrySet()) {
+				var id = entry2.getKey();
+				var value = entry2.getValue();
+				result.addAttribute(id, value, condition);
 			}
 		}
+	}
 
-		private void processComplexAttributes(AttributesBuilder result) {
-			for (var entry : complexAttributes.entrySet()) {
-				result.addComplexAttributeList(entry.getValue());
-			}
+	private void processComplexAttributes(AttributesBuilder result) {
+		for (var entry : complexAttributes.entrySet()) {
+			result.addComplexAttributeList(entry.getValue());
 		}
 	}
 }
