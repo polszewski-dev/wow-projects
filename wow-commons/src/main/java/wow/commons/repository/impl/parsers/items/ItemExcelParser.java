@@ -4,6 +4,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.professions.Profession;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
@@ -40,6 +41,8 @@ public class ItemExcelParser extends ExcelParser {
 	private final ExcelColumn colEnchantId = column("id");
 	private final ExcelColumn colEnchantName = column("name");
 	private final ExcelColumn colEnchantItemTypes = column("item_types");
+	private final ExcelColumn colEnchantReqProf = column("req_prof");
+	private final ExcelColumn colEnchantReqProfLvl = column("req_prof_lvl");
 	private final ExcelColumn colEnchantSp = column("sp");
 	private final ExcelColumn colEnchantSd = column("sd");
 	private final ExcelColumn colEnchantSpShadow = column("sp_shadow");
@@ -61,10 +64,17 @@ public class ItemExcelParser extends ExcelParser {
 	private Enchant getEnchant() {
 		var id = colEnchantId.getInteger();
 		var name = colEnchantName.getString();
+		var requiredProfession = colEnchantReqProf.getEnum(Profession::parse, null);
+		var requiredProfessionLevel = colEnchantReqProfLvl.getInteger(0);
 		var itemTypes = colEnchantItemTypes.getList(x -> ItemType.parse(x.trim()));
-		var itemStats = getEnchantStats();
 
-		return new Enchant(id, name, itemTypes, itemStats);
+		var itemStats = getEnchantStats();
+		var enchant = new Enchant(id, name, itemTypes, itemStats);
+
+		enchant.getRestriction().setRequiredProfession(requiredProfession);
+		enchant.getRestriction().setRequiredProfessionLevel(requiredProfessionLevel);
+
+		return enchant;
 	}
 
 	private Attributes getEnchantStats() {
