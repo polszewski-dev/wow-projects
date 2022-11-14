@@ -77,7 +77,11 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell) {
-		return getSpellStatistics(playerProfile, spell, (PrimitiveAttribute)null);
+		Attributes totalStats = AttributeEvaluator.of()
+				.addAttributes(playerProfile)
+				.solveAllLeaveAbilities();
+
+		return getSpellStatistics(playerProfile, spell, totalStats);
 	}
 
 	private SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell, PrimitiveAttribute attribute) {

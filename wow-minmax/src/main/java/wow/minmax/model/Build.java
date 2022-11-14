@@ -18,15 +18,15 @@ public class Build {
 	private final String buildId;
 	private String talentLink;
 	private List<TalentInfo> talentInfos;
+	private PVERole role;
 	private Spell damagingSpell;
+	private List<Spell> relevantSpells;
 	private PetType activePet;
 
 	private List<Buff> selfBuffs;
 	private List<Buff> partyBuffs;
 	private List<Buff> consumeBuffs;
 	private List<Buff> raidBuffs;
-
-	private List<Spell> relevantSpells;
 
 	public enum BuffSet {
 		SELF_BUFF,

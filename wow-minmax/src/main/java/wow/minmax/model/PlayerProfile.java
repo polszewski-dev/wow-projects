@@ -5,6 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.attributes.AttributeSource;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.equipment.Equipment;
@@ -179,6 +180,10 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return buffs.stream().anyMatch(existingBuff -> existingBuff.getId() == buff.getId());
 	}
 
+	public PVERole getRole() {
+		return build.getRole();
+	}
+
 	@Override
 	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
 		collector.addAttributes(getBuffsModifiedByTalents());
@@ -187,17 +192,13 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	private List<AttributeSource> getBuffsModifiedByTalents() {
+		Attributes talentAttributes = getTalentAttributes();
 		List<AttributeSource> result = new ArrayList<>(buffs.size());
 
 		for (Buff buff : buffs) {
 			if (buff.getType() == BuffType.SELF_BUFF) {
-				Percent effectIncreasePct = getEffectIncreasePct(buff.getSourceSpell());
-
-				if (!effectIncreasePct.isZero()) {
-					result.add(buff.modifyEffectByPct(effectIncreasePct));
-				} else {
-					result.add(buff);
-				}
+				Percent effectIncreasePct = talentAttributes.getEffectIncreasePct(buff.getSourceSpell());
+				result.add(buff.modifyEffectByPct(effectIncreasePct));
 			} else {
 				result.add(buff);
 			}
@@ -206,15 +207,10 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return result;
 	}
 
-	private Percent getEffectIncreasePct(SpellId sourceSpell) {
-		if (sourceSpell == null) {
-			return Percent.ZERO;
-		}
-
+	private Attributes getTalentAttributes() {
 		return new AttributesBuilder()
 				.addAttributes(build.getTalentInfos())
-				.toAttributes()
-				.getEffectIncreasePct(sourceSpell);
+				.toAttributes();
 	}
 
 	@Override
