@@ -58,15 +58,16 @@ public class StatsController {
 			@PathVariable("profileId") UUID profileId
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
+		Build build = playerProfile.getBuild();
 
 		return List.of(
 				getPlayerStatsDTO("Current buffs", playerProfile, playerProfile.getBuffs()),
 				getEquipmentStats("Items", playerProfile),
 				getPlayerStatsDTO("No buffs", playerProfile, List.of()),
-				getPlayerStatsDTO("Self-buffs", playerProfile, playerProfile.getBuild().getBuffs(SELF_BUFF)),
-				getPlayerStatsDTO("Party buffs", playerProfile, playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF)),
-				getPlayerStatsDTO("Party buffs & consumes", playerProfile, playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, CONSUMES)),
-				getPlayerStatsDTO("Raid buffs & consumes", playerProfile, playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES))
+				getPlayerStatsDTO("Self-buffs", playerProfile, build.getBuffs(SELF_BUFF)),
+				getPlayerStatsDTO("Party buffs", playerProfile, build.getBuffs(SELF_BUFF, PARTY_BUFF)),
+				getPlayerStatsDTO("Party buffs & consumes", playerProfile, build.getBuffs(SELF_BUFF, PARTY_BUFF, CONSUMES)),
+				getPlayerStatsDTO("Raid buffs & consumes", playerProfile, build.getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES))
 		);
 	}
 

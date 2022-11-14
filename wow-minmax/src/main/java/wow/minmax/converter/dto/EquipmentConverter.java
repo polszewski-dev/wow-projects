@@ -2,14 +2,12 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.EquipmentDTO;
 import wow.minmax.model.dto.EquippableItemDTO;
-
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -22,22 +20,31 @@ public class EquipmentConverter extends Converter<Equipment, EquipmentDTO> {
 
 	@Override
 	protected EquipmentDTO doConvert(Equipment equipment) {
-		var itemsBySlot = equipment.toMap().entrySet().stream()
-				.collect(Collectors.toMap(
-						Map.Entry::getKey,
-						e -> convertItem(equipment, e.getValue())
-				));
+		var itemsBySlot = equippableItemConverter.convertMap(equipment.toMap());
+
+		for (var entry : itemsBySlot.entrySet()) {
+			ItemSlot itemSlot = entry.getKey();
+			EquippableItemDTO itemDTO = entry.getValue();
+			setSocketMatchingInfo(equipment, equipment.get(itemSlot), itemDTO);
+		}
+
 		return new EquipmentDTO(itemsBySlot);
 	}
 
 	public EquippableItemDTO convertItem(Equipment equipment, EquippableItem item) {
 		EquippableItemDTO dto = equippableItemConverter.convert(item);
-		if (dto != null) {
-			dto.setSocket1Matching(equipment.hasMatchingGem(item, 1));
-			dto.setSocket2Matching(equipment.hasMatchingGem(item, 2));
-			dto.setSocket3Matching(equipment.hasMatchingGem(item, 3));
-			dto.setSocketBonusEnabled(equipment.allSocketsHaveMatchingGems(item));
-		}
+		setSocketMatchingInfo(equipment, item, dto);
 		return dto;
+	}
+
+	private static void setSocketMatchingInfo(Equipment equipment, EquippableItem item, EquippableItemDTO dto) {
+		if (dto == null) {
+			return;
+		}
+
+		dto.setSocket1Matching(equipment.hasMatchingGem(item, 1));
+		dto.setSocket2Matching(equipment.hasMatchingGem(item, 2));
+		dto.setSocket3Matching(equipment.hasMatchingGem(item, 3));
+		dto.setSocketBonusEnabled(equipment.allSocketsHaveMatchingGems(item));
 	}
 }

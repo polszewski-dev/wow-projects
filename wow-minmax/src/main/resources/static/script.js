@@ -41,10 +41,6 @@ const slotToSlotGroup = {
 }
 
 class Api {
-	static getItemsBySlot(phase) {
-		return Api.sendRequest(`/api/v1/item/phase/${phase}/byslot`)
-	}
-
 	static getProfiles() {
 		return Api.sendRequest(`/api/v1/profile/list`)
 	}
@@ -57,12 +53,8 @@ class Api {
 		}
 	}
 
-	static getProfile(profileId) {
-		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}`)
-	}
-
-	static getProfileWithItemOptions(profileId, addOptions) {
-		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}?addOptions=${addOptions}`)
+	static getProfile(profileId, addOptions) {
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}?addOptions=${addOptions || false}`)
 	}
 	
 	static changeItem(profileId, slot, itemId) {
@@ -544,14 +536,10 @@ class EquipmentEditor {
 
 	set profile(value) {
 		this._profile = value
-    	Api.getItemsBySlot(this._profile.phase)
-    	.then(data => {
-    		this.itemsBySlot = data
-    		slots.forEach(slot => this.selectItem(slot))
-			this.findAllUpgradesBtn.prop('disabled', false)
-			this.resetBtn.prop('disabled', false)
-    	})
-    	.catch(err => showError(err))
+		this.itemsBySlot = this._profile.availableItemsBySlot
+		slots.forEach(slot => this.selectItem(slot))
+		this.findAllUpgradesBtn.prop('disabled', false)
+		this.resetBtn.prop('disabled', false)
     }
 
     getEquippedItem(slot) {
@@ -1069,7 +1057,7 @@ $(() => {
 
 		console.log('changed', profileId)
 
-		Api.getProfileWithItemOptions(profileId, true)
+		Api.getProfile(profileId, true)
 		.then(profile => {
 			equipmentEditor.profile = profile
 			buffEditor.profile = profile

@@ -11,7 +11,9 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
+import wow.minmax.model.PVERole;
 import wow.minmax.service.ItemService;
+import wow.minmax.service.impl.enumerators.GemComboEvaluator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,17 +48,17 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Item> getItems(Phase phase) {
 		return itemDataRepository.getAllItems()
-								 .stream()
-								 .filter(item -> item.isAvailableDuring(phase))
-								 .collect(Collectors.toList());
+				.stream()
+				.filter(item -> item.isAvailableDuring(phase))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<Item> getItems(Phase phase, ItemSlot slot) {
 		return itemDataRepository.getAllItems()
-								 .stream()
-								 .filter(item -> item.isAvailableDuring(phase) && item.canBeEquippedIn(slot))
-								 .collect(Collectors.toList());
+				.stream()
+				.filter(item -> item.isAvailableDuring(phase) && item.canBeEquippedIn(slot))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -84,21 +86,21 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getAvailableEnchants(Item item, Phase phase) {
-		return itemDataRepository.getEnchants(item.getItemType());
+	public List<Enchant> getAvailableEnchants(ItemType itemType, Phase phase) {
+		return itemDataRepository.getEnchants(itemType);
 	}
 
 	@Override
-	public List<Enchant> getCasterEnchants(ItemType itemType, Phase phase, SpellSchool spellSchool) {
+	public List<Enchant> getEnchants(ItemType itemType, PVERole role, SpellSchool spellSchool, Phase phase) {
 		return casterEnchants.computeIfAbsent(itemType + "#" + phase,
-				x -> itemDataRepository.getEnchants(itemType)
-									   .stream()
-									   .filter(enchant -> isCasterEnchant(enchant, itemType, spellSchool))
-									   .collect(Collectors.toList())
+											  x -> getAvailableEnchants(itemType, phase)
+													  .stream()
+													  .filter(enchant -> isSuitableForRole(enchant, itemType, role, spellSchool))
+													  .collect(Collectors.toList())
 		);
 	}
 
-	private boolean isCasterEnchant(Enchant enchant, ItemType itemType, SpellSchool spellSchool) {
+	private boolean isSuitableForRole(Enchant enchant, ItemType itemType, PVERole role, SpellSchool spellSchool) {
 		if (enchant.hasCasterStats(spellSchool)) {
 			return true;
 		}
@@ -115,24 +117,24 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getAvailableGems(Item item, int socketNo, Phase phase, boolean onlyCrafted) {
-		return getAvailableGems(item.getSocketSpecification(), socketNo, phase, onlyCrafted);
-	}
-
-	List<Gem> getAvailableGems(ItemSocketSpecification specification, int socketNo, Phase phase, boolean onlyCrafted) {
+	public List<Gem> getAvailableGems(Item item, int socketNo, PVERole role, Phase phase, boolean onlyCrafted) {
+		ItemSocketSpecification specification = item.getSocketSpecification();
 		if (socketNo > specification.getSocketCount()) {
 			return Collections.emptyList();//sortable list is needed
 		}
-		SocketType socketType = specification.getSocketType(socketNo);
+		return getAvailableGems(role, phase, specification.getSocketType(socketNo), onlyCrafted);
+	}
+
+	public List<Gem> getAvailableGems(PVERole role, Phase phase, SocketType socketType, boolean onlyCrafted) {
 		if (socketType == SocketType.META) {
-			return getMetaGems(phase, onlyCrafted);
+			return getMetaGems(role, phase, onlyCrafted);
 		}
-		return getGems(phase, onlyCrafted);
+		return getGems(role, phase, onlyCrafted);
 	}
 
 	@Override
-	public List<Gem[]> getCasterGemCombos(Item item, Phase phase) {
-		return gemComboEvaluator.getCasterGemCombos(item, phase);
+	public List<Gem[]> getGemCombos(Item item, PVERole role, Phase phase) {
+		return gemComboEvaluator.getGemCombos(role, phase, item.getSocketSpecification());
 	}
 
 	@Override
@@ -140,16 +142,16 @@ public class ItemServiceImpl implements ItemService {
 		return itemDataRepository.getCasterItemsByType(characterInfo, phase, spellSchool);
 	}
 
-	private List<Gem> getGems(Phase phase, boolean onlyCrafted) {
-		return getCachedGems(coloredGemsByPhase, false, phase, onlyCrafted);
+	private List<Gem> getGems(PVERole role, Phase phase, boolean onlyCrafted) {
+		return getCachedGems(role, coloredGemsByPhase, false, phase, onlyCrafted);
 	}
 
-	private List<Gem> getMetaGems(Phase phase, boolean onlyCrafted) {
-		return getCachedGems(metaGemsByPhase, true, phase, onlyCrafted);
+	private List<Gem> getMetaGems(PVERole role, Phase phase, boolean onlyCrafted) {
+		return getCachedGems(role, metaGemsByPhase, true, phase, onlyCrafted);
 	}
 
-	private List<Gem> getCachedGems(Map<String, List<Gem>> map, boolean meta, Phase phase, boolean onlyCrafted) {
-		return map.computeIfAbsent(phase + "#" + onlyCrafted,
+	private List<Gem> getCachedGems(PVERole role, Map<String, List<Gem>> map, boolean meta, Phase phase, boolean onlyCrafted) {
+		return map.computeIfAbsent(role + "#" + phase + "#" + onlyCrafted,
 				key -> itemDataRepository.getAllGems()
 										 .stream()
 										 .filter(gem -> gem.isAvailableDuring(phase))

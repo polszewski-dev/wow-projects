@@ -26,11 +26,13 @@ public class PlayerProfileConverter extends Converter<PlayerProfile, PlayerProfi
 				playerProfile.getRace(),
 				playerProfile.getLevel(),
 				playerProfile.getEnemyType(),
+				playerProfile.getRole(),
 				playerProfile.getPhase(),
 				equipmentConverter.convert(playerProfile.getEquipment()),
 				buffConverter.convertList(playerProfile.getBuffs()),
 				talentConverter.convertList(playerProfile.getTalentInfos()),
-				playerProfile.getLastModified()
+				playerProfile.getLastModified(),
+				null
 		);
 	}
 }

@@ -16,7 +16,9 @@ import wow.minmax.service.PlayerProfileService;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -30,6 +32,7 @@ public class PlayerProfileController {
 	private final ItemService itemService;
 	private final PlayerProfileConverter playerProfileConverter;
 	private final EquipmentConverter equipmentConverter;
+	private final ItemConverter itemConverter;
 	private final EnchantConverter enchantConverter;
 	private final GemConverter gemConverter;
 	private final BuffConverter buffConverter;
@@ -57,9 +60,7 @@ public class PlayerProfileController {
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);
 
 		if (addOptions) {
-			for (EquippableItemDTO item : playerProfileDTO.getEquipment().getItemsBySlot().values()) {
-				addItemOptions(item, playerProfileDTO.getPhase());
-			}
+			addItemOptions(playerProfileDTO, playerProfile);
 		}
 
 		return playerProfileDTO;
@@ -71,7 +72,10 @@ public class PlayerProfileController {
 			@PathVariable("phase") Phase phase
 	) {
 		PlayerProfile createdProfile = playerProfileService.createPlayerProfile(profileName, phase);
-		return playerProfileConverter.convert(createdProfile);
+		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
+
+		addItemOptions(createdProfileDTO, createdProfile);
+		return createdProfileDTO;
 	}
 
 	@GetMapping("copy/{copiedProfileId}/name/{profileName}/phase/{phase}")
@@ -93,7 +97,7 @@ public class PlayerProfileController {
 		PlayerProfile playerProfile = playerProfileService.changeItem(profileId, slot, itemId);
 
 		EquippableItemDTO dto = convertEquippableItem(playerProfile, slot);
-		addItemOptions(dto, playerProfile.getPhase());
+		addItemOptions(dto, playerProfile);
 		return dto;
 	}
 
@@ -136,10 +140,7 @@ public class PlayerProfileController {
 		PlayerProfile playerProfile = playerProfileService.resetEquipment(profileId);
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);
 
-		for (EquippableItemDTO item : playerProfileDTO.getEquipment().getItemsBySlot().values()) {
-			addItemOptions(item, playerProfileDTO.getPhase());
-		}
-
+		addItemOptions(playerProfileDTO, playerProfile);
 		return playerProfileDTO;
 	}
 
@@ -148,29 +149,43 @@ public class PlayerProfileController {
 		return equipmentConverter.convertItem(playerProfile.getEquipment(), equippableItem);
 	}
 
-	private void addItemOptions(EquippableItemDTO dto, Phase phase) {
+	private void addItemOptions(PlayerProfileDTO playerProfileDTO, PlayerProfile playerProfile) {
+		for (EquippableItemDTO item : playerProfileDTO.getEquippedItems()) {
+			addItemOptions(item, playerProfile);
+		}
+
+		addAvailableItems(playerProfileDTO, playerProfile);
+	}
+
+	private void addItemOptions(EquippableItemDTO dto, PlayerProfile playerProfile) {
 		Item item = itemService.getItem(dto.getItem().getId());
 		dto.setItemOptions(new ItemOptionsDTO(
-				getEnchants(item, phase),
-				getAvailableGems(item, 1, phase),
-				getAvailableGems(item, 2, phase),
-				getAvailableGems(item, 3, phase)
+				getEnchants(item, playerProfile),
+				getAvailableGems(item, 1, playerProfile),
+				getAvailableGems(item, 2, playerProfile),
+				getAvailableGems(item, 3, playerProfile)
 		));
 	}
 
-	private List<EnchantDTO> getEnchants(Item item, Phase phase) {
-		List<Enchant> enchants = itemService.getAvailableEnchants(item, phase);
+	private List<EnchantDTO> getEnchants(Item item, PlayerProfile playerProfile) {
+		List<Enchant> enchants = itemService.getAvailableEnchants(item.getItemType(), playerProfile.getPhase());
 		enchants.sort(Comparator.comparing(Enchant::getName));
 		return enchantConverter.convertList(enchants);
 	}
 
-	private List<GemDTO> getAvailableGems(Item item, int socketNo, Phase phase) {
-		List<Gem> gems = itemService.getAvailableGems(item, socketNo, phase, false);
-		gems.sort(Comparator.comparingInt(this::sourceBasedOrder)
-							.thenComparing(Comparator.comparing(Gem::getRarity).reversed())
-							.thenComparing(Gem::getColor)
-							.thenComparing(Gem::getName));
+	private List<GemDTO> getAvailableGems(Item item, int socketNo, PlayerProfile playerProfile) {
+		List<Gem> gems = itemService.getAvailableGems(
+				item, socketNo, playerProfile.getRole(), playerProfile.getPhase(), false
+		);
+		gems.sort(getGemComparator());
 		return gemConverter.convertList(gems);
+	}
+
+	private Comparator<Gem> getGemComparator() {
+		return Comparator.comparingInt(this::sourceBasedOrder)
+				.thenComparing(Comparator.comparing(Gem::getRarity).reversed())
+				.thenComparing(Gem::getColor)
+				.thenComparing(Gem::getName);
 	}
 
 	private int sourceBasedOrder(Gem gem) {
@@ -181,5 +196,32 @@ public class PlayerProfileController {
 			return 2;
 		}
 		return 3;
+	}
+
+	private void addAvailableItems(PlayerProfileDTO playerProfileDTO, PlayerProfile playerProfile) {
+		var itemsBySlot = itemService.getItemsBySlot(
+				playerProfile.getCharacterInfo(),
+				playerProfile.getPhase(),
+				playerProfile.getDamagingSpell().getSpellSchool()
+		);
+
+		Map<ItemSlot, List<ItemDTO>> itemDTOsBySlot = itemsBySlot.entrySet().stream().collect(
+				Collectors.toMap(Map.Entry::getKey, e -> getItemsDTOsOrderedByScore(e.getValue()))
+		);
+
+		playerProfileDTO.setAvailableItemsBySlot(itemDTOsBySlot);
+	}
+
+	private List<ItemDTO> getItemsDTOsOrderedByScore(List<Item> items) {
+		return items.stream()
+				.map(this::getItemDTO)
+				.sorted(Comparator.comparing(ItemDTO::getScore).reversed().thenComparing(ItemDTO::getName))
+				.collect(Collectors.toList());
+	}
+
+	private ItemDTO getItemDTO(Item item) {
+		ItemDTO itemDTO = itemConverter.convert(item);
+		itemDTO.setScore(item.getItemLevel());
+		return itemDTO;
 	}
 }

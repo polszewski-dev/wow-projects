@@ -91,6 +91,15 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 		return result;
 	}
 
+	public boolean matchesSockets(Gem[] gemCombo) {
+		for (int i = 1; i <= getSocketCount(); ++i) {
+			if (!getSocket(i).matchesSocketColor(gemCombo[i - 1])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public ItemSockets attachCondition(AttributeCondition condition) {
 		throw new UnsupportedOperationException();
