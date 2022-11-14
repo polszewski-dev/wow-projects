@@ -85,7 +85,10 @@ public class PlayerProfileController {
 			@PathVariable("phase") Phase phase
 	) {
 		PlayerProfile createdProfile = playerProfileService.copyPlayerProfile(copiedProfileId, profileName, phase);
-		return playerProfileConverter.convert(createdProfile);
+		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
+
+		addItemOptions(createdProfileDTO, createdProfile);
+		return createdProfileDTO;
 	}
 
 	@GetMapping("{profileId}/change/item/{slot}/{itemId}")
@@ -168,15 +171,13 @@ public class PlayerProfileController {
 	}
 
 	private List<EnchantDTO> getEnchants(Item item, PlayerProfile playerProfile) {
-		List<Enchant> enchants = itemService.getAvailableEnchants(item.getItemType(), playerProfile.getPhase());
+		List<Enchant> enchants = itemService.getEnchants(playerProfile, item.getItemType());
 		enchants.sort(Comparator.comparing(Enchant::getName));
 		return enchantConverter.convertList(enchants);
 	}
 
 	private List<GemDTO> getAvailableGems(Item item, int socketNo, PlayerProfile playerProfile) {
-		List<Gem> gems = itemService.getAvailableGems(
-				item, socketNo, playerProfile.getRole(), playerProfile.getPhase(), false
-		);
+		List<Gem> gems = itemService.getGems(playerProfile, item, socketNo, false);
 		gems.sort(getGemComparator());
 		return gemConverter.convertList(gems);
 	}
@@ -199,13 +200,9 @@ public class PlayerProfileController {
 	}
 
 	private void addAvailableItems(PlayerProfileDTO playerProfileDTO, PlayerProfile playerProfile) {
-		var itemsBySlot = itemService.getItemsBySlot(
-				playerProfile.getCharacterInfo(),
-				playerProfile.getPhase(),
-				playerProfile.getDamagingSpell().getSpellSchool()
-		);
+		var itemsBySlot = itemService.getItemsBySlot(playerProfile);
 
-		Map<ItemSlot, List<ItemDTO>> itemDTOsBySlot = itemsBySlot.entrySet().stream().collect(
+		var itemDTOsBySlot = itemsBySlot.entrySet().stream().collect(
 				Collectors.toMap(Map.Entry::getKey, e -> getItemsDTOsOrderedByScore(e.getValue()))
 		);
 

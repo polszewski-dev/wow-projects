@@ -1,6 +1,7 @@
 package wow.minmax.model;
 
 import wow.commons.model.Copyable;
+import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
@@ -117,6 +118,10 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public SpellId getDamagingSpellId() {
 		return build.getDamagingSpell().getSpellId();
+	}
+
+	public Duration getDamagingSpellCastTime() {
+		return build.getDamagingSpell().getCastTime(getLevel());
 	}
 
 	public Equipment getEquipment() {

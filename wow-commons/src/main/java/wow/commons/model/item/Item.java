@@ -6,13 +6,11 @@ import wow.commons.model.categorization.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.Source;
-import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.ArmorProfficiency;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.model.unit.WeaponProfficiency;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -93,14 +91,7 @@ public class Item extends AbstractItem {
 	}
 
 	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
-		ItemCategory category = itemType.getCategory();
-		if (!(category == ItemCategory.ARMOR || category == ItemCategory.ACCESSORY || category == ItemCategory.WEAPON)) {
-			return false;
-		}
-		if (itemType.getCategory() == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)itemSubType)) {
-			return false;
-		}
-		if (itemType.getCategory() == ItemCategory.WEAPON && !WeaponProfficiency.matches(characterInfo.getCharacterClass(), itemType, (WeaponSubType)itemSubType)) {
+		if (!isCorrectCategory(characterInfo)) {
 			return false;
 		}
 		if (!getRestriction().isMetBy(characterInfo, phase)) {
@@ -109,22 +100,16 @@ public class Item extends AbstractItem {
 		return itemSet == null || itemSet.canBeEquippedBy(characterInfo, phase);
 	}
 
-	public boolean isCasterItem(SpellSchool spellSchool) {
-		if (hasCasterStats(spellSchool)) {
-			return true;
+	private boolean isCorrectCategory(CharacterInfo characterInfo) {
+		ItemCategory category = itemType.getCategory();
+		if (!(category == ItemCategory.ARMOR || category == ItemCategory.ACCESSORY || category == ItemCategory.WEAPON)) {
+			return false;
 		}
-		if (HARDCODED_CASTER_ITEM_NAMES.contains(getName())) {
-			return true;
+		if (itemType.getCategory() == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)itemSubType)) {
+			return false;
 		}
-		if (itemType == ItemType.TRINKET) {
-			return getSpecialAbilities()
-					.stream()
-					.anyMatch(x -> x.getLine().contains("spell"));
-		}
-		return false;
+		return itemType.getCategory() != ItemCategory.WEAPON || WeaponProfficiency.matches(characterInfo.getCharacterClass(), itemType, (WeaponSubType) itemSubType);
 	}
-
-	private static final List<String> HARDCODED_CASTER_ITEM_NAMES = List.of("Shroud of the Highborne");
 
 	@Override
 	public boolean equals(Object o) {

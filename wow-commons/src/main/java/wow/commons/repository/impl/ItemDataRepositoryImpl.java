@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.PVERepository;
@@ -35,8 +34,6 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final Map<String, Enchant> enchantByName = new TreeMap<>();
 	private final Map<Integer, Gem> gemById = new TreeMap<>();
 	private final Map<String, Gem> gemByName = new TreeMap<>();
-
-	private final Map<String, Map<ItemType, List<Item>>> casterItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
 
 	public ItemDataRepositoryImpl(PVERepository pveRepository) {
 		this.pveRepository = pveRepository;
@@ -68,21 +65,6 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	@Override
 	public Collection<Item> getAllItems() {
 		return Collections.unmodifiableCollection(itemById.values());
-	}
-
-	@Override
-	public List<Item> getCasterItems(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
-		return getAllItems().stream()
-							.filter(item -> item.canBeEquippedBy(characterInfo, phase) && item.isCasterItem(spellSchool))
-							.collect(Collectors.toList());
-	}
-
-	@Override
-	public Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
-		return casterItemsByTypeCache.computeIfAbsent(phase + "#" + characterInfo.getCharacterClass() + "#" + spellSchool,
-				x -> getCasterItems(characterInfo, phase, spellSchool)
-						.stream()
-						.collect(Collectors.groupingBy(Item::getItemType)));
 	}
 
 	@Override

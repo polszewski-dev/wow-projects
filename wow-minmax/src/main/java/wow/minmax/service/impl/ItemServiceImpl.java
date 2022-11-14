@@ -2,38 +2,43 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.AttributeSource;
+import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.StatProvider;
+import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.minmax.model.PVERole;
+import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.Spell;
 import wow.minmax.service.ItemService;
-import wow.minmax.service.impl.enumerators.GemComboEvaluator;
+import wow.minmax.service.impl.enumerators.GemComboFinder;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski
  * Date: 2021-12-13
  */
-@Service
+@Service("nonCachedItemService")
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 	private static final Phase EPIC_GEM_PHASE = Phase.TBC_P3;
 
 	private final ItemDataRepository itemDataRepository;
 
-	private final GemComboEvaluator gemComboEvaluator = new GemComboEvaluator(this);
-
-	private final Map<String, List<Enchant>> casterEnchants = Collections.synchronizedMap(new HashMap<>());
-	private final Map<String, List<Gem>> coloredGemsByPhase = Collections.synchronizedMap(new HashMap<>());
-	private final Map<String, List<Gem>> metaGemsByPhase = Collections.synchronizedMap(new HashMap<>());
+	private final GemComboFinder gemComboFinder = new GemComboFinder(this);
 
 	@Override
 	public Item getItem(int itemId) {
@@ -62,12 +67,16 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Map<ItemSlot, List<Item>> getItemsBySlot(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
-		var byItemType = itemDataRepository.getCasterItems(characterInfo, phase, spellSchool)
-				.stream()
-				.filter(item -> isSuitableFor(item, characterInfo))
+	public Map<ItemType, List<Item>> getItemsByType(PlayerProfile playerProfile) {
+		return itemDataRepository.getAllItems().stream()
+				.filter(item -> isSuitableFor(item, playerProfile))
+				.filter(item -> item.getItemLevel() > 100 && item.getRarity().isAtLeastAsGoodAs(ItemRarity.RARE))
 				.collect(Collectors.groupingBy(Item::getItemType));
+	}
 
+	@Override
+	public Map<ItemSlot, List<Item>> getItemsBySlot(PlayerProfile playerProfile) {
+		var byItemType = getItemsByType(playerProfile);
 		var result = new EnumMap<ItemSlot, List<Item>>(ItemSlot.class);
 
 		for (var entry : byItemType.entrySet()) {
@@ -81,27 +90,41 @@ public class ItemServiceImpl implements ItemService {
 		return result;
 	}
 
-	private boolean isSuitableFor(Item item, CharacterInfo characterInfo) {
-		return item.getRestriction().getRequiredLevel() > characterInfo.getLevel() - 10;
+	@Override
+	public List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType) {
+		return itemDataRepository.getEnchants(itemType).stream()
+				.filter(enchant -> isSuitableFor(enchant, itemType, playerProfile))
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Enchant> getAvailableEnchants(ItemType itemType, Phase phase) {
-		return itemDataRepository.getEnchants(itemType);
+	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted) {
+		return itemDataRepository.getAllGems().stream()
+				.filter(gem -> socketType.accepts(gem.getColor()))
+				.filter(gem -> !onlyCrafted || (gem.isCrafted() && gem.getBinding() != Binding.BINDS_ON_PICK_UP))
+				.filter(gem -> gem.getRarity().isAtLeastAsGoodAs(getMinimumGemRarity(gem, playerProfile.getPhase(), onlyCrafted)))
+				.filter(gem -> isSuitableFor(gem, playerProfile))
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Enchant> getEnchants(ItemType itemType, PVERole role, SpellSchool spellSchool, Phase phase) {
-		return casterEnchants.computeIfAbsent(itemType + "#" + phase,
-											  x -> getAvailableEnchants(itemType, phase)
-													  .stream()
-													  .filter(enchant -> isSuitableForRole(enchant, itemType, role, spellSchool))
-													  .collect(Collectors.toList())
-		);
+	public List<Gem[]> getGemCombos(PlayerProfile playerProfile, Item item) {
+		return gemComboFinder.getGemCombos(playerProfile, item.getSocketSpecification());
+
 	}
 
-	private boolean isSuitableForRole(Enchant enchant, ItemType itemType, PVERole role, SpellSchool spellSchool) {
-		if (enchant.hasCasterStats(spellSchool)) {
+	private boolean isSuitableFor(Item item, PlayerProfile playerProfile) {
+		if (!item.canBeEquippedBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
+			return false;
+		}
+		return hasStatsSuitableForRole(item, playerProfile);
+	}
+
+	private boolean isSuitableFor(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
+		if (!enchant.getRestriction().isMetBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
+			return false;
+		}
+		if (hasStatsSuitableForRole(enchant, playerProfile)) {
 			return true;
 		}
 		if (itemType == ItemType.CHEST) {
@@ -116,53 +139,70 @@ public class ItemServiceImpl implements ItemService {
 		return false;
 	}
 
-	@Override
-	public List<Gem> getAvailableGems(Item item, int socketNo, PVERole role, Phase phase, boolean onlyCrafted) {
-		ItemSocketSpecification specification = item.getSocketSpecification();
-		if (socketNo > specification.getSocketCount()) {
-			return Collections.emptyList();//sortable list is needed
+	private boolean isSuitableFor(Gem gem, PlayerProfile playerProfile) {
+		if (!gem.getRestriction().isMetBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
+			return false;
 		}
-		return getAvailableGems(role, phase, specification.getSocketType(socketNo), onlyCrafted);
+		return hasStatsSuitableForRole(gem, playerProfile);
 	}
 
-	public List<Gem> getAvailableGems(PVERole role, Phase phase, SocketType socketType, boolean onlyCrafted) {
-		if (socketType == SocketType.META) {
-			return getMetaGems(role, phase, onlyCrafted);
+	private boolean hasStatsSuitableForRole(AttributeSource attributeSource, PlayerProfile playerProfile) {
+		if (playerProfile.getRole() == PVERole.CASTER_DPS) {
+			return hasStatsSuitableForCasterDps(attributeSource, playerProfile);
 		}
-		return getGems(role, phase, onlyCrafted);
+		throw new IllegalArgumentException("Unsupported role: " + playerProfile.getRole());
 	}
 
-	@Override
-	public List<Gem[]> getGemCombos(Item item, PVERole role, Phase phase) {
-		return gemComboEvaluator.getGemCombos(role, phase, item.getSocketSpecification());
+	private boolean hasStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
+		if (hasPrimitiveStatsSuitableForCasterDps(attributeSource, playerProfile)) {
+			return true;
+		}
+
+		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, playerProfile.getDamagingSpellCastTime());
+
+		for (SpecialAbility specialAbility : attributeSource.getSpecialAbilities()) {
+			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);
+			if (hasPrimitiveStatsSuitableForCasterDps(statEquivalent, playerProfile)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	@Override
-	public Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool) {
-		return itemDataRepository.getCasterItemsByType(characterInfo, phase, spellSchool);
+	private static boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
+		return attributeSource.getPrimitiveAttributeList().stream()
+				.anyMatch(attribute -> isCasterStat(attribute, playerProfile));
 	}
 
-	private List<Gem> getGems(PVERole role, Phase phase, boolean onlyCrafted) {
-		return getCachedGems(role, coloredGemsByPhase, false, phase, onlyCrafted);
+	private static boolean isCasterStat(PrimitiveAttribute attribute, PlayerProfile playerProfile) {
+		return CASTER_STATS.contains(attribute.getId()) && hasCasterStatCondition(attribute, playerProfile);
 	}
 
-	private List<Gem> getMetaGems(PVERole role, Phase phase, boolean onlyCrafted) {
-		return getCachedGems(role, metaGemsByPhase, true, phase, onlyCrafted);
+	private static final Set<PrimitiveAttributeId> CASTER_STATS = Set.of(
+			SPELL_DAMAGE,
+			SPELL_POWER,
+			SPELL_HIT_PCT,
+			SPELL_HIT_RATING,
+			SPELL_CRIT_PCT,
+			SPELL_CRIT_RATING,
+			SPELL_HASTE_PCT,
+			SPELL_HASTE_RATING
+	);
+
+	private static boolean hasCasterStatCondition(PrimitiveAttribute attribute, PlayerProfile playerProfile) {
+		Spell damagingSpell = playerProfile.getDamagingSpell();
+		return Set.of(
+				AttributeCondition.EMPTY,
+				AttributeCondition.of(damagingSpell.getTalentTree()),
+				AttributeCondition.of(damagingSpell.getSpellSchool()),
+				AttributeCondition.of(damagingSpell.getSpellId()),
+				AttributeCondition.of(playerProfile.getEnemyType())
+			).contains(attribute.getCondition());
 	}
 
-	private List<Gem> getCachedGems(PVERole role, Map<String, List<Gem>> map, boolean meta, Phase phase, boolean onlyCrafted) {
-		return map.computeIfAbsent(role + "#" + phase + "#" + onlyCrafted,
-				key -> itemDataRepository.getAllGems()
-										 .stream()
-										 .filter(gem -> gem.isAvailableDuring(phase))
-										 .filter(gem -> gem.getRarity().isAtLeastAsGoodAs(getMinimumRarity(meta, phase, onlyCrafted)))
-										 .filter(gem -> meta == (gem.getColor() == GemColor.META))
-										 .filter(gem -> !onlyCrafted || (gem.isCrafted() && gem.getBinding() != Binding.BINDS_ON_PICK_UP))
-										 .filter(Gem::hasCasterStats)
-										 .collect(Collectors.toList()));
-	}
-
-	private static ItemRarity getMinimumRarity(boolean meta, Phase phase, boolean onlyCrafted) {
+	private static ItemRarity getMinimumGemRarity(Gem gem, Phase phase, boolean onlyCrafted) {
+		boolean meta = gem.getColor() == GemColor.META;
 		if (meta) {
 			return ItemRarity.RARE;
 		}

@@ -270,14 +270,6 @@ public interface AttributeSource {
 		return getDouble(EXTRA_CRIT_COEFF);
 	}
 
-	default boolean hasCasterStats() {
-		return hasCasterStats(null);
-	}
-
-	default boolean hasCasterStats(SpellSchool spellSchool) {
-		return (getTotalSpellDamage(spellSchool) != 0 || getSpellCritRating() != 0 || getSpellHitRating() != 0 || getSpellHasteRating() != 0) && getHealingPower() == 0;
-	}
-
 	default Percent getThreatReductionPct() {
 		return getPercent(THREAT_REDUCTION_PCT);
 	}

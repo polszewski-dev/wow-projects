@@ -8,10 +8,7 @@ import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
-import wow.commons.model.pve.Phase;
-import wow.commons.model.spells.SpellSchool;
 import wow.minmax.model.Comparison;
-import wow.minmax.model.PVERole;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.Spell;
 import wow.minmax.service.CalculationService;
@@ -35,9 +32,6 @@ public abstract class ItemVariantEnumerator {
 	protected final double referenceDps;
 	protected final PlayerProfile workingProfile;
 	protected final Spell spell;
-	protected final SpellSchool spellSchool;
-	protected final PVERole role;
-	protected final Phase phase;
 
 	private final Map<String, Comparison> bestOptions = new HashMap<>();
 
@@ -50,9 +44,6 @@ public abstract class ItemVariantEnumerator {
 		this.referenceDps = calculationService.getSpellStatistics(referenceProfile, spell).getDps();
 		this.workingProfile = referenceProfile.copy();
 		this.spell = spell;
-		this.spellSchool = spell.getSpellSchool();
-		this.role = referenceProfile.getRole();
-		this.phase = referenceProfile.getPhase();
 	}
 
 	public ItemVariantEnumerator run(ItemSlotGroup slotGroup) {
@@ -192,8 +183,8 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedAndGemmedItems(Item item) {
-		List<Enchant> enchants = itemService.getEnchants(item.getItemType(), role, spellSchool, phase);
-		List<Gem[]> gemCombos = itemService.getGemCombos(item, role, phase);
+		List<Enchant> enchants = itemService.getEnchants(referenceProfile, item.getItemType());
+		List<Gem[]> gemCombos = itemService.getGemCombos(referenceProfile, item);
 		List<EquippableItem> result = new ArrayList<>(enchants.size() * gemCombos.size());
 
 		for (Enchant enchant : enchants) {
@@ -205,7 +196,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getGemmedItems(Item item) {
-		List<Gem[]> gemCombos = itemService.getGemCombos(item, role, phase);
+		List<Gem[]> gemCombos = itemService.getGemCombos(referenceProfile, item);
 		List<EquippableItem> result = new ArrayList<>(gemCombos.size());
 
 		for (Gem[] gemCombo : gemCombos) {
@@ -215,7 +206,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedItems(Item item) {
-		List<Enchant> enchants = itemService.getEnchants(item.getItemType(), role, spellSchool, phase);
+		List<Enchant> enchants = itemService.getEnchants(referenceProfile, item.getItemType());
 		List<EquippableItem> result = new ArrayList<>(enchants.size());
 
 		for (Enchant enchant : enchants) {

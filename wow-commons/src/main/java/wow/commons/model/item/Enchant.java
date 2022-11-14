@@ -20,6 +20,7 @@ public class Enchant implements AttributeSource {
 	private final int id;
 	private final String name;
 	private final List<ItemType> itemTypes;
+	private final ItemRestriction restriction = new ItemRestriction();
 	private final Attributes stats;
 
 	@Override

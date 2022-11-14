@@ -80,8 +80,6 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 
 	@Override
 	protected Map<ItemType, List<Item>> getItemsByType() {
-		return itemService.getCasterItemsByType(
-				referenceProfile.getCharacterInfo(), phase, spellSchool
-		);
+		return itemService.getItemsByType(referenceProfile);
 	}
 }

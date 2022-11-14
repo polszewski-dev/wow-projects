@@ -3,12 +3,10 @@ package wow.commons.repository;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.CharacterInfo;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -21,10 +19,6 @@ public interface ItemDataRepository {
 	Optional<Item> getItem(ItemLink itemLink);
 
 	Collection<Item> getAllItems();
-
-	List<Item> getCasterItems(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
-
-	Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
 
 	List<Item> getItemsTradedFor(ItemLink itemLink);
 	List<Item> getSourceItemsFor(ItemLink itemLink);

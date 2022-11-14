@@ -1,5 +1,6 @@
 package wow.minmax.model;
 
+import wow.commons.model.Duration;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.spells.SpellRankInfo;
@@ -59,5 +60,9 @@ public class Spell {
 
 	public boolean hasDoTComponent(int level) {
 		return getDoTDamage(level) != 0;
+	}
+
+	public Duration getCastTime(int level) {
+		return getSpellInfo().getHighestRank(level).getCastTime();
 	}
 }

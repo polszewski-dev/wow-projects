@@ -2,14 +2,11 @@ package wow.minmax.service;
 
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
-import wow.commons.model.item.Item;
+import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.CharacterInfo;
-import wow.minmax.model.PVERole;
+import wow.minmax.model.PlayerProfile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,15 +23,23 @@ public interface ItemService {
 
 	List<Item> getItems(Phase phase, ItemSlot slot);
 
-	Map<ItemSlot, List<Item>> getItemsBySlot(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
+	Map<ItemType, List<Item>> getItemsByType(PlayerProfile playerProfile);
 
-	List<Enchant> getAvailableEnchants(ItemType itemType, Phase phase);
+	Map<ItemSlot, List<Item>> getItemsBySlot(PlayerProfile playerProfile);
 
-	List<Enchant> getEnchants(ItemType itemType, PVERole role, SpellSchool spellSchool, Phase phase);
+	List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType);
 
-	List<Gem> getAvailableGems(Item item, int socketNo, PVERole role, Phase phase, boolean onlyCrafted);
+	default List<Gem> getGems(PlayerProfile playerProfile, Item item, int socketNo, boolean onlyCrafted) {
+		ItemSocketSpecification specification = item.getSocketSpecification();
 
-	List<Gem[]> getGemCombos(Item item, PVERole role, Phase phase);
+		if (socketNo > specification.getSocketCount()) {
+			return Collections.emptyList();//sortable list is needed
+		}
 
-	Map<ItemType, List<Item>> getCasterItemsByType(CharacterInfo characterInfo, Phase phase, SpellSchool spellSchool);
+		return getGems(playerProfile, specification.getSocketType(socketNo), onlyCrafted);
+	}
+
+	List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted);
+
+	List<Gem[]> getGemCombos(PlayerProfile playerProfile, Item item);
 }
