@@ -10,14 +10,11 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.CharacterInfo;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.Race;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
+import wow.minmax.config.ProfileConfig;
 import wow.minmax.model.Build;
-import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.BuildRepository;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -36,12 +33,12 @@ import static wow.minmax.model.Build.BuffSet.*;
 @Service
 @AllArgsConstructor
 public class PlayerProfileServiceImpl implements PlayerProfileService {
+	private final UpgradeService upgradeService;
 	private final PlayerProfileRepository playerProfileRepository;
 	private final ItemDataRepository itemDataRepository;
 	private final SpellDataRepository spellDataRepository;
 	private final BuildRepository buildRepository;
-
-	private final UpgradeService upgradeService;
+	private final ProfileConfig profileConfig;
 
 	@Override
 	public List<PlayerProfile> getPlayerProfileList() {
@@ -51,19 +48,19 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
 		CharacterInfo characterInfo = new CharacterInfo(
-				CharacterClass.WARLOCK,
-				Race.ORC,
+				profileConfig.getDefaultClass(),
+				profileConfig.getDefaultRace(),
 				phase.getGameVersion().getMaxLevel(),
-				List.of()
+				profileConfig.getDefaultProfessions(phase)
 		);
 
 		PlayerProfile playerProfile = new PlayerProfile(
 				UUID.randomUUID(),
 				profileName,
 				characterInfo,
-				CreatureType.UNDEAD,
+				profileConfig.getDefaultEnemyType(),
 				phase,
-				getBuild(BuildIds.DESTRO_SHADOW_BUILD)
+				getBuild(profileConfig.getDefaultBuild())
 		);
 
 		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES));

@@ -12,5 +12,6 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class BuffPO implements Serializable {
+	private int id;
 	private String name;
 }

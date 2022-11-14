@@ -16,6 +16,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemDataRepository;
+import wow.minmax.config.ItemConfig;
 import wow.minmax.model.PVERole;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.Spell;
@@ -34,9 +35,8 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 @Service("nonCachedItemService")
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
-	private static final Phase EPIC_GEM_PHASE = Phase.TBC_P3;
-
 	private final ItemDataRepository itemDataRepository;
+	private final ItemConfig itemConfig;
 
 	private final GemComboFinder gemComboFinder = new GemComboFinder(this);
 
@@ -70,7 +70,8 @@ public class ItemServiceImpl implements ItemService {
 	public Map<ItemType, List<Item>> getItemsByType(PlayerProfile playerProfile) {
 		return itemDataRepository.getAllItems().stream()
 				.filter(item -> isSuitableFor(item, playerProfile))
-				.filter(item -> item.getItemLevel() > 100 && item.getRarity().isAtLeastAsGoodAs(ItemRarity.RARE))
+				.filter(item -> item.getItemLevel() >= itemConfig.getMinItemLevel())
+				.filter(item -> item.getRarity().isAtLeastAsGoodAs(itemConfig.getMinRarity()))
 				.collect(Collectors.groupingBy(Item::getItemType));
 	}
 
@@ -117,6 +118,9 @@ public class ItemServiceImpl implements ItemService {
 		if (!item.canBeEquippedBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
 			return false;
 		}
+		if (item.isPvPReward() && !itemConfig.isIncludePvpItems()) {
+			return false;
+		}
 		return hasStatsSuitableForRole(item, playerProfile);
 	}
 
@@ -154,6 +158,10 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean hasStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
+		if (attributeSource.getHealingPower() > attributeSource.getSpellPower() && !itemConfig.isIncludeHealingItems()) {
+			return false;
+		}
+
 		if (hasPrimitiveStatsSuitableForCasterDps(attributeSource, playerProfile)) {
 			return true;
 		}
@@ -200,6 +208,8 @@ public class ItemServiceImpl implements ItemService {
 				AttributeCondition.of(playerProfile.getEnemyType())
 			).contains(attribute.getCondition());
 	}
+
+	private static final Phase EPIC_GEM_PHASE = Phase.TBC_P3;
 
 	private static ItemRarity getMinimumGemRarity(Gem gem, Phase phase, boolean onlyCrafted) {
 		boolean meta = gem.getColor() == GemColor.META;

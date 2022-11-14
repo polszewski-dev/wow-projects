@@ -18,11 +18,11 @@ public class BuffPOConverter extends Converter<Buff, BuffPO> {
 
 	@Override
 	protected BuffPO doConvert(Buff buff) {
-		return new BuffPO(buff.getName());
+		return new BuffPO(buff.getId(), buff.getName());
 	}
 
 	@Override
 	protected Buff doConvertBack(BuffPO value) {
-		return spellDataRepository.getHighestRankBuff(value.getName(), 70).orElseThrow();
+		return spellDataRepository.getBuff(value.getId()).orElseThrow();
 	}
 }

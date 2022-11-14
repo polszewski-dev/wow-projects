@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.categorization.ItemSlotGroup;
+import wow.minmax.config.UpgradeConfig;
 import wow.minmax.converter.dto.UpgradeConverter;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
@@ -31,6 +32,7 @@ public class UpgradeController {
 	private final UpgradeService upgradeService;
 	private final PlayerProfileService playerProfileService;
 	private final UpgradeConverter upgradeConverter;
+	private final UpgradeConfig upgradeConfig;
 
 	@GetMapping("{profileId}/slot/{slotGroup}")
 	public List<UpgradeDTO> findUpgrades(
@@ -42,7 +44,7 @@ public class UpgradeController {
 
 		return upgrades.stream()
 				.map(upgradeConverter::convert)
-				.limit(20)
+				.limit(upgradeConfig.getMaxUpgrades())
 				.collect(Collectors.toList());
 	}
 

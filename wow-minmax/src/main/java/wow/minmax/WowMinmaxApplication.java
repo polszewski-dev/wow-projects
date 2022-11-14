@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import wow.commons.repository.ItemDataRepository;
+import wow.minmax.config.ItemConfig;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.impl.CachedItemService;
 import wow.minmax.service.impl.ItemServiceImpl;
@@ -20,7 +21,7 @@ public class WowMinmaxApplication {
 	}
 
 	@Bean
-	public ItemService itemService(ItemDataRepository itemDataRepository) {
-		return new CachedItemService(new ItemServiceImpl(itemDataRepository));
+	public ItemService itemService(ItemDataRepository itemDataRepository, ItemConfig itemConfig) {
+		return new CachedItemService(new ItemServiceImpl(itemDataRepository, itemConfig));
 	}
 }

@@ -29,6 +29,8 @@ public interface ItemService {
 
 	List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType);
 
+	List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted);
+
 	default List<Gem> getGems(PlayerProfile playerProfile, Item item, int socketNo, boolean onlyCrafted) {
 		ItemSocketSpecification specification = item.getSocketSpecification();
 
@@ -38,8 +40,6 @@ public interface ItemService {
 
 		return getGems(playerProfile, specification.getSocketType(socketNo), onlyCrafted);
 	}
-
-	List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted);
 
 	List<Gem[]> getGemCombos(PlayerProfile playerProfile, Item item);
 }
