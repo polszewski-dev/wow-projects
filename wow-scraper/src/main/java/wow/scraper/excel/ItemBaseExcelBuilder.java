@@ -76,9 +76,9 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("race_restriction");
 		setHeader("side_restriction");
 		setHeader("item_set", 30);
-		setHeader("req_profession");
-		setHeader("req_profession_level");
-		setHeader("req_profession_spec");
+		setHeader("req_prof");
+		setHeader("req_prof_lvl");
+		setHeader("req_prof_spec");
 		setHeader("dropped_by");
 		setHeader("drop_chance");
 		setHeader("sell_price");

@@ -28,7 +28,11 @@ public final class ExcelUtil {
 	}
 
 	public static Optional<String> getOptionalString(String col, ExcelReader excelReader, Map<String, Integer> header) {
-		return Optional.ofNullable(excelReader.getCellStringValue(header.get(col)));
+		Integer colNo = header.get(col);
+		if (colNo == null) {
+			throw new IllegalArgumentException("No column: " + col);
+		}
+		return Optional.ofNullable(excelReader.getCellStringValue(colNo));
 	}
 
 	public static String getString(String col, ExcelReader excelReader, Map<String, Integer> header) {

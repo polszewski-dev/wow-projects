@@ -67,9 +67,9 @@ public class ItemBaseExcelParser extends ExcelParser {
 	private final ExcelColumn colItemRaceRestriction = column("race_restriction");
 	private final ExcelColumn colItemSideRestriction = column("side_restriction");
 	private final ExcelColumn colItemItemSet = column("item_set");
-	private final ExcelColumn colItemReqProfession = column("req_profession");
-	private final ExcelColumn colItemReqProfessionLevel = column("req_profession_level");
-	private final ExcelColumn colItemReqProfessionSpec = column("req_profession_spec");
+	private final ExcelColumn colItemReqProfession = column("req_prof");
+	private final ExcelColumn colItemReqProfessionLevel = column("req_prof_lvl");
+	private final ExcelColumn colItemReqProfessionSpec = column("req_prof_spec");
 	private final ExcelColumn colItemSellPrice = column("sell_price");
 	private final ExcelColumn colItemStat = column("stat");
 	private final ExcelColumn colItemIcon = column("icon");
@@ -257,6 +257,8 @@ public class ItemBaseExcelParser extends ExcelParser {
 	private final ExcelColumn colGemColor = column("color");
 	private final ExcelColumn colGemBinding = column("binding");
 	private final ExcelColumn colGemUnique = column("unique");
+	private final ExcelColumn colGemReqProfession = column("req_prof");
+	private final ExcelColumn colGemReqProfessionLevel = column("req_prof_lvl");
 	private final ExcelColumn colGemStats = column("stats");
 	private final ExcelColumn colGemMetaEnablers = column("meta_enablers");
 	private final ExcelColumn colGemSellPrice = column("sell_price");
@@ -278,6 +280,8 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var color = colGemColor.getEnum(GemColor::valueOf);
 		var binding = colGemBinding.getEnum(Binding::valueOf, Binding.BINDS_ON_EQUIP);
 		var unique = colGemUnique.getBoolean();
+		var requiredProfession = colGemReqProfession.getEnum(Profession::valueOf, null);
+		var requiredProfessionLevel = colGemReqProfessionLevel.getInteger(0);
 		var metaEnablers = colGemMetaEnablers.getList(MetaEnabler::valueOf);
 		var sellPrice = Money.parse(colGemSellPrice.getString(null));
 		var icon = colGemIcon.getString();
@@ -288,6 +292,8 @@ public class ItemBaseExcelParser extends ExcelParser {
 		var gem = new Gem(id, name, rarity, Set.of(gemSource), color, metaEnablers, stats);
 
 		gem.getRestriction().setPhase(phase);
+		gem.getRestriction().setRequiredProfession(requiredProfession);
+		gem.getRestriction().setRequiredProfessionLevel(requiredProfessionLevel);
 		gem.setItemLevel(itemLevel);
 		gem.setBinding(binding);
 		gem.setUnique(unique);
