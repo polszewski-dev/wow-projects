@@ -7,8 +7,8 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.CreatureType;
+import wow.commons.model.unit.PVERole;
 import wow.commons.model.unit.Race;
-import wow.minmax.model.PVERole;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

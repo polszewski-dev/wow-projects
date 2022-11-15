@@ -31,10 +31,10 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.commons.model.unit.Build.BuffSet.*;
 import static wow.commons.model.unit.CharacterClass.WARLOCK;
 import static wow.commons.model.unit.CreatureType.UNDEAD;
 import static wow.commons.model.unit.Race.ORC;
-import static wow.minmax.model.Build.BuffSet.*;
 
 /**
  * User: POlszewski

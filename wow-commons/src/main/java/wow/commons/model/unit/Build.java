@@ -1,10 +1,9 @@
-package wow.minmax.model;
+package wow.commons.model.unit;
 
 import lombok.Data;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.TalentInfo;
-import wow.commons.model.unit.PetType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

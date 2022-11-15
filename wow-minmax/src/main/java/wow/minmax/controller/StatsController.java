@@ -10,10 +10,10 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
+import wow.commons.model.unit.Build;
 import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
 import wow.minmax.converter.dto.PlayerSpellStatsConverter;
-import wow.minmax.model.Build;
 import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static wow.minmax.model.Build.BuffSet.*;
+import static wow.commons.model.unit.Build.BuffSet.*;
 
 /**
  * User: POlszewski

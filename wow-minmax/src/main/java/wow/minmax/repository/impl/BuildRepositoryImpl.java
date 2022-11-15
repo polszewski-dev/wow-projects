@@ -6,11 +6,11 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.unit.Build;
+import wow.commons.model.unit.PVERole;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.util.TalentCalculatorUtil;
-import wow.minmax.model.Build;
 import wow.minmax.model.BuildIds;
-import wow.minmax.model.PVERole;
 import wow.minmax.repository.BuildRepository;
 
 import java.util.List;

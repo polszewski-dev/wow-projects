@@ -2,7 +2,7 @@ package wow.minmax.service;
 
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.pve.Phase;
-import wow.minmax.model.Build;
+import wow.commons.model.unit.Build;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.List;

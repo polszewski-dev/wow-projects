@@ -10,11 +10,11 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.unit.Build;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
 import wow.minmax.config.ProfileConfig;
-import wow.minmax.model.Build;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.BuildRepository;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -24,7 +24,7 @@ import wow.minmax.service.UpgradeService;
 import java.util.List;
 import java.util.UUID;
 
-import static wow.minmax.model.Build.BuffSet.*;
+import static wow.commons.model.unit.Build.BuffSet.*;
 
 /**
  * User: POlszewski

@@ -1,4 +1,4 @@
-package wow.minmax.model;
+package wow.commons.model.unit;
 
 /**
  * User: POlszewski
