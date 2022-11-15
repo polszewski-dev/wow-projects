@@ -5,8 +5,8 @@ import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
 
-import javax.imageio.stream.FileImageInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,7 +34,7 @@ public class ItemDetailRepository {
 		if (!Files.exists(path)) {
 			return Optional.empty();
 		}
-		var detailsAndTooltip = MAPPER.readValue(new FileImageInputStream(path.toFile()), JsonItemDetailsAndTooltip.class);
+		var detailsAndTooltip = MAPPER.readValue(new FileInputStream(path.toFile()), JsonItemDetailsAndTooltip.class);
 		return Optional.of(detailsAndTooltip);
 	}
 

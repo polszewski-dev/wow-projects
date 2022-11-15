@@ -3,6 +3,7 @@ package wow.scraper.parsers;
 import lombok.Getter;
 import org.slf4j.Logger;
 import wow.commons.model.Money;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.util.ParserUtil;
 
@@ -21,6 +22,8 @@ import java.util.stream.Stream;
  */
 @Getter
 public abstract class AbstractTooltipParser {
+	protected final GameVersion gameVersion;
+
 	protected final String htmlTooltip;
 
 	protected List<String> lines;
@@ -32,7 +35,8 @@ public abstract class AbstractTooltipParser {
 	private static final boolean ERROR_ON_UNMATCHED_LINE = true;
 	private static final Set<String> UNMATCHED_LINES = new TreeSet<>();
 
-	protected AbstractTooltipParser(Integer itemId, String htmlTooltip) {
+	protected AbstractTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
+		this.gameVersion = gameVersion;
 		this.itemId = itemId;
 		this.htmlTooltip = htmlTooltip;
 	}
@@ -128,7 +132,7 @@ public abstract class AbstractTooltipParser {
 	protected abstract void afterParse();
 
 	protected Phase parsePhase(String value) {
-		return Phase.parse("TBC_P" + value);
+		return Phase.parse(gameVersion + "_P" + value);
 	}
 
 	protected int parseItemLevel(String value) {

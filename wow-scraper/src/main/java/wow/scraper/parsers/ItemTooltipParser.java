@@ -10,6 +10,7 @@ import wow.commons.model.item.SocketType;
 import wow.commons.model.item.WeaponStats;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spells.SpellSchool;
@@ -68,8 +69,8 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	private Percent dropChance;
 	private Money sellPrice;
 
-	public ItemTooltipParser(Integer itemId, String htmlTooltip) {
-		super(itemId, htmlTooltip);
+	public ItemTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
+		super(itemId, htmlTooltip, gameVersion);
 	}
 
 	@Override
@@ -216,9 +217,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	}
 
 	private void parseWeaponDamage(Object[] weaponDamageParams) {
-		if (weaponStats == null) {
-			this.weaponStats = new WeaponStats();
-		}
+		ensureWeaponStats();
 		String damageType;
 		if (weaponDamageParams.length == 3) {
 			weaponStats.setWeaponDamageMin((int)weaponDamageParams[0]);
@@ -235,16 +234,18 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	}
 
 	private void parseWeaponDps(Object[] weaponDpsParams) {
-		if (weaponStats == null) {
-			this.weaponStats = new WeaponStats();
-		}
+		ensureWeaponStats();
 		weaponStats.setWeaponDps(Double.parseDouble((String)weaponDpsParams[0]));
 	}
 
 	private void parseWeaponSpeedParams(Object[] weaponSpeedParams) {
+		ensureWeaponStats();
+		weaponStats.setWeaponSpeed(Double.parseDouble((String)weaponSpeedParams[0]));
+	}
+
+	private void ensureWeaponStats() {
 		if (weaponStats == null) {
 			this.weaponStats = new WeaponStats();
 		}
-		weaponStats.setWeaponSpeed(Double.parseDouble((String)weaponSpeedParams[0]));
 	}
 }

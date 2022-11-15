@@ -44,7 +44,7 @@ public class ItemBaseGeneratorMain {
 
 			for (Integer itemId : itemIds) {
 				var itemDetailsAndTooltip = ItemDetailRepository.getDetail(GAME_VERSION, category, itemId).orElseThrow();
-				var parser = new ItemTooltipParser(itemId, itemDetailsAndTooltip.getHtmlTooltip());
+				var parser = new ItemTooltipParser(itemId, itemDetailsAndTooltip.getHtmlTooltip(), GAME_VERSION);
 
 				parser.parse();
 				itemBaseExcelBuilder.add(parser, itemDetailsAndTooltip);
@@ -60,7 +60,7 @@ public class ItemBaseGeneratorMain {
 
 		for (Integer itemId : itemIds) {
 			var itemDetailsAndTooltip = ItemDetailRepository.getDetail(GAME_VERSION, category, itemId).orElseThrow();
-			var parser = new GemTooltipParser(itemId, itemDetailsAndTooltip.getHtmlTooltip());
+			var parser = new GemTooltipParser(itemId, itemDetailsAndTooltip.getHtmlTooltip(), GAME_VERSION);
 
 			parser.parse();
 			itemBaseExcelBuilder.add(parser, itemDetailsAndTooltip);
