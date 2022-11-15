@@ -3,8 +3,6 @@ package wow.scraper;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.*;
-import wow.scraper.repository.ItemDetailRepository;
-import wow.scraper.repository.WowheadFetcher;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.stream.IntStream;
  * Date: 2022-10-26
  */
 @Slf4j
-public class ScraperMain {
+public class ScraperMain extends ScraperTool {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
 	private static final int MIN_ITEM_LEVEL = 60;
 	private static final WowheadItemQuality MIN_QUALITY = WowheadItemQuality.UNCOMMON;
@@ -33,7 +31,12 @@ public class ScraperMain {
 			30319
 	);
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
+		new ScraperMain().run();
+	}
+
+	@Override
+	protected void run() throws Exception {
 		fetch("items/armor/cloth/slot:5", WowheadItemCategory.CHEST);
 		fetch("items/armor/cloth/slot:8", WowheadItemCategory.FEET);
 		fetch("items/armor/cloth/slot:10", WowheadItemCategory.HANDS);
@@ -57,10 +60,10 @@ public class ScraperMain {
 		fetch("items/miscellaneous/armor-tokens", WowheadItemCategory.TOKENS);
 	}
 
-	private static void fetch(String url, WowheadItemCategory category) throws IOException {
+	private void fetch(String url, WowheadItemCategory category) throws IOException {
 		log.info("Fetching {} ...", url);
 
-		List<JsonItemDetails> itemDetailsList = WowheadFetcher.fetchItemDetails(GAME_VERSION, url);
+		List<JsonItemDetails> itemDetailsList = getWowheadFetcher().fetchItemDetails(GAME_VERSION, url);
 
 		for (JsonItemDetails itemDetails : itemDetailsList) {
 			if (isToBeSaved(itemDetails)) {
@@ -70,7 +73,7 @@ public class ScraperMain {
 		}
 	}
 
-	private static boolean isToBeSaved(JsonItemDetails itemDetails) {
+	private boolean isToBeSaved(JsonItemDetails itemDetails) {
 		return itemDetails.getSources() != null &&
 				(itemDetails.getLevel() == null || itemDetails.getLevel() >= MIN_ITEM_LEVEL) &&
 				itemDetails.getQuality() >= MIN_QUALITY.getCode() &&
@@ -78,7 +81,7 @@ public class ScraperMain {
 				;
 	}
 
-	private static void fixSource(JsonItemDetails itemDetails) {
+	private void fixSource(JsonItemDetails itemDetails) {
 		List<Integer> sources = itemDetails.getSources();
 
 		if (sources.size() == 1) {
@@ -102,25 +105,25 @@ public class ScraperMain {
 		}
 	}
 
-	private static void saveItemDetails(JsonItemDetails itemDetails, WowheadItemCategory category) {
-		if (ItemDetailRepository.hasItemDetail(GAME_VERSION, category, itemDetails.getId())) {
+	private void saveItemDetails(JsonItemDetails itemDetails, WowheadItemCategory category) {
+		if (getItemDetailRepository().hasItemDetail(GAME_VERSION, category, itemDetails.getId())) {
 			log.info("Tooltip for item id: {} [{}] already exists", itemDetails.getId(), itemDetails.getName());
 			return;
 		}
 
 		try {
-			WowheadItemInfo itemInfo = WowheadFetcher.fetchTooltip(GAME_VERSION, itemDetails.getId());
+			WowheadItemInfo itemInfo = getWowheadFetcher().fetchTooltip(GAME_VERSION, itemDetails.getId());
 			String tooltip = fixTooltip(itemInfo.getTooltip());
 			String icon = itemInfo.getIcon();
 			JsonItemDetailsAndTooltip detailsAndTooltip = new JsonItemDetailsAndTooltip(itemDetails, tooltip, icon);
-			ItemDetailRepository.saveItemDetail(GAME_VERSION, category, itemDetails.getId(), detailsAndTooltip);
+			getItemDetailRepository().saveItemDetail(GAME_VERSION, category, itemDetails.getId(), detailsAndTooltip);
 			log.info("Fetched tooltip for item id: {} [{}]", itemDetails.getId(), itemDetails.getName());
 		} catch (IOException e) {
 			log.error("Error while fetching tooltip for item id: {} [{}]: {}", itemDetails.getId(), itemDetails.getName(), e.getMessage());
 		}
 	}
 
-	private static String fixTooltip(String tooltip) {
+	private String fixTooltip(String tooltip) {
 		//replace with something that doesn't change line numbers unlike <br>
 		return tooltip.trim().replace("\n", "<span></span>");
 	}

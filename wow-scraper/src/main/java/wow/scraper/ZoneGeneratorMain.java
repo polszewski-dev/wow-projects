@@ -5,9 +5,7 @@ import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.JsonZoneDetails;
 import wow.scraper.model.WowheadGameVersion;
 import wow.scraper.model.WowheadZoneType;
-import wow.scraper.repository.WowheadFetcher;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +15,16 @@ import java.util.stream.Collectors;
  * Date: 2022-11-01
  */
 @Slf4j
-public class ZoneGeneratorMain {
+public class ZoneGeneratorMain extends ScraperTool {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
 
-	public static void main(String[] args) throws IOException {
-		List<JsonZoneDetails> zones = WowheadFetcher.fetchZoneDetails(GAME_VERSION, "zones").stream()
+	public static void main(String[] args) throws Exception {
+		new ZoneGeneratorMain().run();
+	}
+
+	@Override
+	protected void run() throws Exception {
+		List<JsonZoneDetails> zones = getWowheadFetcher().fetchZoneDetails(GAME_VERSION, "zones").stream()
 				.filter(x -> !isIgnored(x))
 				.collect(Collectors.toList());
 

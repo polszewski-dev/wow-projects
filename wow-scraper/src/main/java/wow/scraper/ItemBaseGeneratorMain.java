@@ -7,7 +7,6 @@ import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parsers.AbstractTooltipParser;
 import wow.scraper.parsers.GemTooltipParser;
 import wow.scraper.parsers.ItemTooltipParser;
-import wow.scraper.repository.ItemDetailRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,10 +16,15 @@ import java.util.List;
  * Date: 2022-10-29
  */
 @Slf4j
-public class ItemBaseGeneratorMain {
+public class ItemBaseGeneratorMain extends ScraperTool {
 	private static final GameVersion GAME_VERSION = GameVersion.TBC;
+	
+	public static void main(String[] args) throws Exception {
+		new ItemBaseGeneratorMain().run();
+	}
 
-	public static void main(String[] args) throws IOException {
+	@Override
+	protected void run() throws Exception {
 		ItemBaseExcelBuilder itemBaseExcelBuilder = new ItemBaseExcelBuilder();
 		itemBaseExcelBuilder.start();
 
@@ -33,17 +37,18 @@ public class ItemBaseGeneratorMain {
 		String itemFilePath = "scraper/item_base.xls";
 
 		itemBaseExcelBuilder.finish(itemFilePath);
+
 		log.info("Saved to {}", itemFilePath);
 
 		AbstractTooltipParser.reportUnmatchedLines(log);
 	}
 
-	private static void addEquipment(ItemBaseExcelBuilder itemBaseExcelBuilder) throws IOException {
+	private void addEquipment(ItemBaseExcelBuilder itemBaseExcelBuilder) throws IOException {
 		for (WowheadItemCategory category : WowheadItemCategory.equipment()) {
-			List<Integer> itemIds = ItemDetailRepository.getItemIds(GAME_VERSION, category);
+			List<Integer> itemIds = getItemDetailRepository().getItemIds(GAME_VERSION, category);
 
 			for (Integer itemId : itemIds) {
-				var itemDetailsAndTooltip = ItemDetailRepository.getDetail(GAME_VERSION, category, itemId).orElseThrow();
+				var itemDetailsAndTooltip = getItemDetailRepository().getDetail(GAME_VERSION, category, itemId).orElseThrow();
 				var parser = new ItemTooltipParser(itemId, itemDetailsAndTooltip.getHtmlTooltip(), GAME_VERSION);
 
 				parser.parse();
@@ -54,12 +59,12 @@ public class ItemBaseGeneratorMain {
 		}
 	}
 
-	private static void addGems(ItemBaseExcelBuilder itemBaseExcelBuilder) throws IOException {
+	private void addGems(ItemBaseExcelBuilder itemBaseExcelBuilder) throws IOException {
 		WowheadItemCategory category = WowheadItemCategory.GEMS;
-		List<Integer> itemIds = ItemDetailRepository.getItemIds(GAME_VERSION, category);
+		List<Integer> itemIds = getItemDetailRepository().getItemIds(GAME_VERSION, category);
 
 		for (Integer itemId : itemIds) {
-			var itemDetailsAndTooltip = ItemDetailRepository.getDetail(GAME_VERSION, category, itemId).orElseThrow();
+			var itemDetailsAndTooltip = getItemDetailRepository().getDetail(GAME_VERSION, category, itemId).orElseThrow();
 			var parser = new GemTooltipParser(itemId, itemDetailsAndTooltip.getHtmlTooltip(), GAME_VERSION);
 
 			parser.parse();
