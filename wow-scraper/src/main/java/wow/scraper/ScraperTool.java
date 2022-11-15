@@ -2,6 +2,8 @@ package wow.scraper;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import wow.commons.model.pve.GameVersion;
+import wow.scraper.config.ScraperConfig;
 import wow.scraper.repository.ItemDetailRepository;
 import wow.scraper.repository.WowheadFetcher;
 
@@ -24,5 +26,13 @@ public abstract class ScraperTool {
 
 	protected ItemDetailRepository getItemDetailRepository() {
 		return context.getBean(ItemDetailRepository.class);
+	}
+
+	protected ScraperConfig getScraperConfig() {
+		return context.getBean(ScraperConfig.class);
+	}
+
+	protected GameVersion getGameVersion() {
+		return getScraperConfig().getGameVersion();
 	}
 }

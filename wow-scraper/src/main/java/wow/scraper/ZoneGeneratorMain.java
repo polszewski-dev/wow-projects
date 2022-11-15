@@ -1,7 +1,6 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.JsonZoneDetails;
 import wow.scraper.model.WowheadGameVersion;
 import wow.scraper.model.WowheadZoneType;
@@ -16,16 +15,14 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class ZoneGeneratorMain extends ScraperTool {
-	private static final GameVersion GAME_VERSION = GameVersion.TBC;
-
 	public static void main(String[] args) throws Exception {
 		new ZoneGeneratorMain().run();
 	}
 
 	@Override
 	protected void run() throws Exception {
-		List<JsonZoneDetails> zones = getWowheadFetcher().fetchZoneDetails(GAME_VERSION, "zones").stream()
-				.filter(x -> !isIgnored(x))
+		List<JsonZoneDetails> zones = getWowheadFetcher().fetchZoneDetails(getGameVersion(), "zones").stream()
+				.filter(x -> !getScraperConfig().getIgnoredZoneIds().contains(x.getId()))
 				.collect(Collectors.toList());
 
 		fixData(zones);
@@ -53,7 +50,7 @@ public class ZoneGeneratorMain extends ScraperTool {
 				"{};{};{};{};{};{};{};{};{}",
 				zone.getId(),
 				zone.getName(),
-				"",
+				getShortName(zone),
 				WowheadZoneType.fromCode(zone.getInstance()).getType(),
 				WowheadGameVersion.fromCode(zone.getExpansion()),
 				zone.getNplayers(),
@@ -64,7 +61,14 @@ public class ZoneGeneratorMain extends ScraperTool {
 		}
 	}
 
-	private static void fixData(List<JsonZoneDetails> zones) {
+	private void fixData(List<JsonZoneDetails> zones) {
+		JsonZoneDetails unknown = new JsonZoneDetails();
+		unknown.setId(0);
+		unknown.setName("UNKNOWN");
+		unknown.setExpansion(WowheadGameVersion.VANILLA.getCode());
+		unknown.setInstance(WowheadZoneType.NORMAL.getCode());
+		zones.add(unknown);
+
 		zones.forEach(zone -> {
 			if (zone.getName().equals("Onyxia's Lair")) {
 				zone.setInstance(WowheadZoneType.RAID.getCode());
@@ -72,7 +76,8 @@ public class ZoneGeneratorMain extends ScraperTool {
 		});
 	}
 
-	private static boolean isIgnored(JsonZoneDetails x) {
-		return List.of(3477,3817,4076,3948,3711,1397).contains(x.getId());
+	private String getShortName(JsonZoneDetails zone) {
+		String shortName = getScraperConfig().getDungeonShortNames().get(zone.getName());
+		return shortName != null ? shortName : "";
 	}
 }

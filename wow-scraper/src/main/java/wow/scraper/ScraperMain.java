@@ -1,12 +1,10 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
@@ -15,22 +13,6 @@ import java.util.stream.IntStream;
  */
 @Slf4j
 public class ScraperMain extends ScraperTool {
-	private static final GameVersion GAME_VERSION = GameVersion.TBC;
-	private static final int MIN_ITEM_LEVEL = 60;
-	private static final WowheadItemQuality MIN_QUALITY = WowheadItemQuality.UNCOMMON;
-
-	private static final Set<Integer> IGNORED_ITEM_IDS = Set.of(
-			22736,
-			30311,
-			30312,
-			30313,
-			30314,
-			30316,
-			30317,
-			30318,
-			30319
-	);
-
 	public static void main(String[] args) throws Exception {
 		new ScraperMain().run();
 	}
@@ -63,7 +45,7 @@ public class ScraperMain extends ScraperTool {
 	private void fetch(String url, WowheadItemCategory category) throws IOException {
 		log.info("Fetching {} ...", url);
 
-		List<JsonItemDetails> itemDetailsList = getWowheadFetcher().fetchItemDetails(GAME_VERSION, url);
+		List<JsonItemDetails> itemDetailsList = getWowheadFetcher().fetchItemDetails(getGameVersion(), url);
 
 		for (JsonItemDetails itemDetails : itemDetailsList) {
 			if (isToBeSaved(itemDetails)) {
@@ -75,9 +57,9 @@ public class ScraperMain extends ScraperTool {
 
 	private boolean isToBeSaved(JsonItemDetails itemDetails) {
 		return itemDetails.getSources() != null &&
-				(itemDetails.getLevel() == null || itemDetails.getLevel() >= MIN_ITEM_LEVEL) &&
-				itemDetails.getQuality() >= MIN_QUALITY.getCode() &&
-				!IGNORED_ITEM_IDS.contains(itemDetails.getId())
+				(itemDetails.getLevel() == null || itemDetails.getLevel() >= getScraperConfig().getMinItemLevel()) &&
+				itemDetails.getQuality() >= getScraperConfig().getMinQuality().getCode() &&
+				!getScraperConfig().getIgnoredItemIds().contains(itemDetails.getId())
 				;
 	}
 
@@ -106,17 +88,17 @@ public class ScraperMain extends ScraperTool {
 	}
 
 	private void saveItemDetails(JsonItemDetails itemDetails, WowheadItemCategory category) {
-		if (getItemDetailRepository().hasItemDetail(GAME_VERSION, category, itemDetails.getId())) {
+		if (getItemDetailRepository().hasItemDetail(getGameVersion(), category, itemDetails.getId())) {
 			log.info("Tooltip for item id: {} [{}] already exists", itemDetails.getId(), itemDetails.getName());
 			return;
 		}
 
 		try {
-			WowheadItemInfo itemInfo = getWowheadFetcher().fetchTooltip(GAME_VERSION, itemDetails.getId());
+			WowheadItemInfo itemInfo = getWowheadFetcher().fetchTooltip(getGameVersion(), itemDetails.getId());
 			String tooltip = fixTooltip(itemInfo.getTooltip());
 			String icon = itemInfo.getIcon();
 			JsonItemDetailsAndTooltip detailsAndTooltip = new JsonItemDetailsAndTooltip(itemDetails, tooltip, icon);
-			getItemDetailRepository().saveItemDetail(GAME_VERSION, category, itemDetails.getId(), detailsAndTooltip);
+			getItemDetailRepository().saveItemDetail(getGameVersion(), category, itemDetails.getId(), detailsAndTooltip);
 			log.info("Fetched tooltip for item id: {} [{}]", itemDetails.getId(), itemDetails.getName());
 		} catch (IOException e) {
 			log.error("Error while fetching tooltip for item id: {} [{}]: {}", itemDetails.getId(), itemDetails.getName(), e.getMessage());

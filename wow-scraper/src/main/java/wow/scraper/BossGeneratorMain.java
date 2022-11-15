@@ -1,7 +1,6 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.JsonBossDetails;
 
 import java.util.Comparator;
@@ -14,16 +13,14 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class BossGeneratorMain extends ScraperTool {
-	private static final GameVersion GAME_VERSION = GameVersion.TBC;
-
 	public static void main(String[] args) throws Exception {
 		new BossGeneratorMain().run();
 	}
 
 	@Override
 	protected void run() throws Exception {
-		List<JsonBossDetails> bosses = getWowheadFetcher().fetchBossDetails(GAME_VERSION, "npcs/classification:3/react-a:-1/react-h:-1#100").stream()
-				.filter(x -> !isIgnored(x))
+		List<JsonBossDetails> bosses = getWowheadFetcher().fetchBossDetails(getGameVersion(), "npcs/classification:3/react-a:-1/react-h:-1#100").stream()
+				.filter(x -> !getScraperConfig().getIgnoredBossIds().contains(x.getId()))
 				.collect(Collectors.toList());
 
 		fixData(bosses);
@@ -55,9 +52,5 @@ public class BossGeneratorMain extends ScraperTool {
 				boss.getLocation().removeIf(x -> x < 0);
 			}
 		});
-	}
-
-	private boolean isIgnored(JsonBossDetails x) {
-		return List.of(15963).contains(x.getId());
 	}
 }
