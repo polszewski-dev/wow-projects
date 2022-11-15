@@ -21,18 +21,14 @@ import java.util.UUID;
 public class PlayerProfilePO implements Serializable {
 	private final UUID profileId;
 	private final String profileName;
-
 	private final CharacterClass characterClass;
 	private final Race race;
 	private final int level;
+	private final List<CharacterProfessionPO> professions;
 	private final CreatureType enemyType;
-
 	private final Phase phase;
-
 	private String buildId;
-
 	private EquipmentPO equipment;
 	private List<BuffPO> buffs;
-
 	private LocalDateTime lastModified;
 }
