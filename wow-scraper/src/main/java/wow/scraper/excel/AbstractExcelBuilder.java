@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Date: 2022-10-31
  */
 public abstract class AbstractExcelBuilder {
-	private static final Font FONT = Font.DEFAULT;
+	private static final Font FONT = Font.DEFAULT.name("Arial").size(9);
 	private static final Style DATA_STYLE = Style.DEFAULT.font(FONT);
 	private static final Style HEADER_STYLE = DATA_STYLE.font(FONT.bold());
 

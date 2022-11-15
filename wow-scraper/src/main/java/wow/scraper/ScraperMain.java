@@ -110,11 +110,18 @@ public class ScraperMain {
 
 		try {
 			WowheadItemInfo itemInfo = WowheadFetcher.fetchTooltip(GAME_VERSION, itemDetails.getId());
-			JsonItemDetailsAndTooltip detailsAndTooltip = new JsonItemDetailsAndTooltip(itemDetails, itemInfo.getTooltip(), itemInfo.getIcon());
+			String tooltip = fixTooltip(itemInfo.getTooltip());
+			String icon = itemInfo.getIcon();
+			JsonItemDetailsAndTooltip detailsAndTooltip = new JsonItemDetailsAndTooltip(itemDetails, tooltip, icon);
 			ItemDetailRepository.saveItemDetail(GAME_VERSION, category, itemDetails.getId(), detailsAndTooltip);
 			log.info("Fetched tooltip for item id: {} [{}]", itemDetails.getId(), itemDetails.getName());
 		} catch (IOException e) {
 			log.error("Error while fetching tooltip for item id: {} [{}]: {}", itemDetails.getId(), itemDetails.getName(), e.getMessage());
 		}
+	}
+
+	private static String fixTooltip(String tooltip) {
+		//replace with something that doesn't change line numbers unlike <br>
+		return tooltip.trim().replace("\n", "<span></span>");
 	}
 }

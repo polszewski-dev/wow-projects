@@ -60,7 +60,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	private void writeItemHeader() {
 		setHeader("id");
-		setHeader("name", 50);
+		setHeader("name", 30);
 		setHeader("rarity");
 		setHeader("item_level");
 		setHeader("req_level");
@@ -69,13 +69,13 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("item_type");
 		setHeader("item_subtype");
 		setHeader("phase");
-		setHeader("source");
+		setHeader("source", 30);
 		setHeader("socket_types");
 		setHeader("socket_bonus");
 		setHeader("class_restriction");
 		setHeader("race_restriction");
 		setHeader("side_restriction");
-		setHeader("item_set");
+		setHeader("item_set", 30);
 		setHeader("req_profession");
 		setHeader("req_profession_level");
 		setHeader("req_profession_spec");
@@ -84,7 +84,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("sell_price");
 
 		for (int i = 1; i <= MAX_STATS; ++i) {
-			setHeader("stat" + i);
+			setHeader("stat" + i, 20);
 		}
 
 		setHeader("icon");
@@ -121,7 +121,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getSellPrice());
 		setList(parser.getStatLines(), MAX_STATS);
 		setValue(itemDetailsAndTooltip.getIcon());
-		setValue(itemDetailsAndTooltip.getHtmlTooltip().trim());
+		setValue(itemDetailsAndTooltip.getHtmlTooltip());
 
 		writer.nextRow();
 	}
@@ -153,7 +153,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	private void writeItemSetHeader() {
-		setHeader("name", 50);
+		setHeader("name", 30);
 		setHeader("#pieces");
 
 		for (int i = 1; i <= MAX_PIECES; ++i) {
@@ -162,7 +162,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 		for (int i = 1; i <= MAX_BONUSES; ++i) {
 			setHeader("bonus" + i + "_p");
-			setHeader("bonus" + i + "_d");
+			setHeader("bonus" + i + "_d", 30);
 		}
 
 		setHeader("req_prof");
@@ -186,15 +186,17 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	private void writeGemHeader() {
 		setHeader("id");
-		setHeader("name", 50);
+		setHeader("name", 30);
 		setHeader("rarity");
 		setHeader("item_level");
 		setHeader("phase");
-		setHeader("source");
+		setHeader("source", 20);
 		setHeader("color");
 		setHeader("binding");
 		setHeader("unique");
-		setHeader("stats");
+		setHeader("req_prof");
+		setHeader("req_prof_lvl");
+		setHeader("stats", 20);
 		setHeader("meta_enablers");
 		setHeader("sell_price");
 		setHeader("icon");
@@ -212,11 +214,13 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getColor());
 		setValue(parser.getBinding());
 		setValue(parser.isUnique() ? 1 : 0);
+		setValue(parser.getRequiredProfession());
+		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getStatLines().get(0));
 		setValue(parser.getMetaEnablers());
 		setValue(parser.getSellPrice());
 		setValue(itemDetailsAndTooltip.getIcon());
-		setValue(itemDetailsAndTooltip.getHtmlTooltip().trim());
+		setValue(itemDetailsAndTooltip.getHtmlTooltip());
 		if (parser.getStatLines().size() != 1) {
 			throw new IllegalArgumentException("Only 1 stat line allowed");
 		}
