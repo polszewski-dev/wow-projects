@@ -8,9 +8,9 @@ import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
+import wow.commons.model.spells.Spell;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.Spell;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.ItemService;
 

@@ -11,6 +11,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.unit.*;

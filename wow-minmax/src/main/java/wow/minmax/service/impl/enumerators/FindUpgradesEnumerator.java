@@ -7,10 +7,10 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Item;
+import wow.commons.model.spells.Spell;
 import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.Spell;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.ItemService;
 

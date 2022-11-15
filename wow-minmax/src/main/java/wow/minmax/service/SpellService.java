@@ -1,8 +1,8 @@
 package wow.minmax.service;
 
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.minmax.model.Spell;
 
 import java.util.List;
 

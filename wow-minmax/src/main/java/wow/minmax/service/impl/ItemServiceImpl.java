@@ -15,11 +15,11 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.spells.Spell;
 import wow.commons.repository.ItemDataRepository;
 import wow.minmax.config.ItemConfig;
 import wow.minmax.model.PVERole;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.Spell;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.impl.enumerators.GemComboFinder;
 

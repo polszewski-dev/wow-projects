@@ -14,6 +14,7 @@ import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.util.AttributeEvaluator;
@@ -21,7 +22,6 @@ import wow.commons.util.Snapshot;
 import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.Spell;
 import wow.minmax.repository.BuildRepository;
 
 import java.util.Comparator;

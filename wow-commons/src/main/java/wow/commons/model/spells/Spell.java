@@ -1,10 +1,6 @@
-package wow.minmax.model;
+package wow.commons.model.spells;
 
 import wow.commons.model.Duration;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellInfo;
-import wow.commons.model.spells.SpellRankInfo;
-import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentTree;
 
 /**
