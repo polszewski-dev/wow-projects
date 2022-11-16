@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.unit.Build;
 import wow.commons.model.unit.PVERole;
@@ -46,11 +47,12 @@ public class BuildRepositoryImpl implements BuildRepository {
 	private Optional<Build> createEmptyBuild() {
 		Build build = new Build(BuildIds.NONE);
 		build.setTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000000000000000000000000000000000000000000000000");
-		build.setTalentInfos(List.of());
+		build.setTalentInfos(Map.of());
 		build.setRole(null);
 		build.setDamagingSpell(null);
 		build.setRelevantSpells(List.of());
 		build.setBuffSets(Map.of());
+		build.setBuffs(List.of());
 		return Optional.of(build);
 	}
 
@@ -101,15 +103,13 @@ public class BuildRepositoryImpl implements BuildRepository {
 		));
 
 		build.setBuffSets(buffSets);
+		build.setBuffs(List.of());
 
 		return Optional.of(build);
 	}
 
-	private List<TalentInfo> getTalentInfos(String talentLink) {
-		return TalentCalculatorUtil.parseFromLink(talentLink, spellDataRepository)
-				.values()
-				.stream()
-				.collect(Collectors.toUnmodifiableList());
+	private Map<TalentId, TalentInfo> getTalentInfos(String talentLink) {
+		return TalentCalculatorUtil.parseFromLink(talentLink, spellDataRepository);
 	}
 
 	private List<Spell> getSpells(int level, SpellId... spellsIds) {

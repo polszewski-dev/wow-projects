@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.Build;
@@ -28,6 +27,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static wow.commons.model.unit.Build.BuffSetId;
 import static wow.commons.model.unit.Build.BuffSetId.*;
 
 /**
@@ -62,16 +62,15 @@ public class StatsController {
 			@PathVariable("profileId") UUID profileId
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
-		Build build = playerProfile.getBuild();
 
 		return List.of(
-				getPlayerStatsDTO("Current buffs", playerProfile, playerProfile.getBuffs()),
+				getPlayerStatsDTO("Current buffs", playerProfile, CURRENT),
 				getEquipmentStats("Items", playerProfile),
-				getPlayerStatsDTO("No buffs", playerProfile, List.of()),
-				getPlayerStatsDTO("Self-buffs", playerProfile, build.getBuffs(SELF_BUFFS)),
-				getPlayerStatsDTO("Party buffs", playerProfile, build.getBuffs(SELF_BUFFS, PARTY_BUFFS)),
-				getPlayerStatsDTO("Party buffs & consumes", playerProfile, build.getBuffs(SELF_BUFFS, PARTY_BUFFS, CONSUMES)),
-				getPlayerStatsDTO("Raid buffs & consumes", playerProfile, build.getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES))
+				getPlayerStatsDTO("No buffs", playerProfile),
+				getPlayerStatsDTO("Self-buffs", playerProfile, SELF_BUFFS),
+				getPlayerStatsDTO("Party buffs", playerProfile, SELF_BUFFS, PARTY_BUFFS),
+				getPlayerStatsDTO("Party buffs & consumes", playerProfile, SELF_BUFFS, PARTY_BUFFS, CONSUMES),
+				getPlayerStatsDTO("Raid buffs & consumes", playerProfile, SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES)
 		);
 	}
 
@@ -89,8 +88,7 @@ public class StatsController {
 				.stream()
 				.filter(x -> x.getLine() != null)
 				.map(x -> getSpecialAbilityStatsDTO(playerProfile, attributes, x))
-				.collect(Collectors.toList())
-				;
+				.collect(Collectors.toList());
 	}
 
 	private PlayerStatsDTO getEquipmentStats(String type, PlayerProfile playerProfile) {
@@ -105,10 +103,10 @@ public class StatsController {
 		return getPlayerStatsDTO(type, copy, copy.getDamagingSpell());
 	}
 
-	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, List<Buff> buffs) {
+	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, BuffSetId... buffSetIds) {
 		PlayerProfile copy = playerProfile.copy();
 
-		copy.setBuffs(buffs);
+		copy.setBuffs(buffSetIds);
 
 		Spell spell = copy.getDamagingSpell();
 		return getPlayerStatsDTO(type, copy, spell);

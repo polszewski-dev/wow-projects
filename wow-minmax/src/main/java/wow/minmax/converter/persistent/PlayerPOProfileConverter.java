@@ -49,15 +49,13 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 				value.getProfileName(),
 				convertBackCharacterInfo(value),
 				value.getEnemyType(),
-				value.getPhase(),
-				buildRepository.getBuild(value.getBuildId(), value.getLevel()).orElseThrow()
+				value.getPhase()
 		);
 
+		playerProfile.setBuild(buildRepository.getBuild(value.getBuildId(), value.getLevel()).orElseThrow());
 		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment()));
 		playerProfile.setBuffs(buffPOConverter.convertBackList(value.getBuffs()));
-
 		playerProfile.setLastModified(value.getLastModified());
-
 		return playerProfile;
 	}
 

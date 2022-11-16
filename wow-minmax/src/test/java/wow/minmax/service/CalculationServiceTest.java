@@ -143,7 +143,7 @@ class CalculationServiceTest {
 		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
 
 		playerProfile.setEquipment(new Equipment());
-		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
 		Spell spell = playerProfile.getDamagingSpell();
 		Attributes stats = getCurrentStats(playerProfile);
@@ -184,7 +184,7 @@ class CalculationServiceTest {
 		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
 
 		playerProfile.setEquipment(getEquipment());
-		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
 		Spell spell = playerProfile.getDamagingSpell();
 		Attributes stats = getCurrentStats(playerProfile);
@@ -223,14 +223,15 @@ class CalculationServiceTest {
 	static final Offset<Double> PRECISION = Offset.offset(0.01);
 
 	private PlayerProfile getPlayerProfile(String buildId) {
-		return new PlayerProfile(
+		PlayerProfile playerProfile = new PlayerProfile(
 				UUID.randomUUID(),
 				"test",
 				new CharacterInfo(WARLOCK, ORC, 70, List.of()),
 				UNDEAD,
-				Phase.TBC_P5,
-				buildRepository.getBuild(buildId, 70).orElseThrow()
+				Phase.TBC_P5
 		);
+		playerProfile.setBuild(buildRepository.getBuild(buildId, 70).orElseThrow());
+		return playerProfile;
 	}
 	private Attributes getCurrentStats(PlayerProfile playerProfile) {
 		return AttributeEvaluator.of()

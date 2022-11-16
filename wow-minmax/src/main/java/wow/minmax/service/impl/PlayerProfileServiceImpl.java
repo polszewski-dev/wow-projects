@@ -59,11 +59,11 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				profileName,
 				characterInfo,
 				profileConfig.getDefaultEnemyType(),
-				phase,
-				getBuild(profileConfig.getDefaultBuild(), characterInfo.getLevel())
+				phase
 		);
 
-		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
+		playerProfile.setBuild(getBuild(profileConfig.getDefaultBuild(), characterInfo.getLevel()));
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 		playerProfile.setEquipment(new Equipment());
 		playerProfileRepository.saveProfile(playerProfile);
 		return playerProfile;

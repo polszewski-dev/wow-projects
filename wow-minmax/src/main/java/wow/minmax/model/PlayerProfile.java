@@ -2,26 +2,20 @@ package wow.minmax.model;
 
 import wow.commons.model.Copyable;
 import wow.commons.model.Duration;
-import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.attributes.AttributeSource;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffType;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.unit.*;
-import wow.commons.util.AttributesBuilder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -36,17 +30,15 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	private final Phase phase;
 	private Build build;
 	private Equipment equipment;
-	private List<Buff> buffs;
 
 	private LocalDateTime lastModified;
 
-	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType, Phase phase, Build build) {
+	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType, Phase phase) {
 		this.profileId = profileId;
 		this.profileName = profileName;
 		this.characterInfo = characterInfo;
 		this.enemyType = enemyType;
 		this.phase = phase;
-		this.build = build;
 		this.lastModified = LocalDateTime.now();
 	}
 
@@ -56,13 +48,17 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo, enemyType, phase, build);
-
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo, enemyType, phase);
+		copy.build = Copyable.copyNullable(this.build);
 		copy.equipment = Copyable.copyNullable(this.equipment);
-		copy.buffs = new ArrayList<>(this.buffs);
 		copy.lastModified = this.lastModified;
-
 		return copy;
+	}
+
+	@Override
+	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+		build.collectAttributes(collector);
+		equipment.collectAttributes(collector);
 	}
 
 	public LocalDateTime getLastModified() {
@@ -131,92 +127,34 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
-		this.lastModified = LocalDateTime.now();
 	}
 
 	public List<Buff> getBuffs() {
-		return buffs;
+		return build.getBuffs();
 	}
 
 	public void setBuffs(List<Buff> buffs) {
-		validateExclusionGroups(buffs);
-		this.buffs = buffs;
-		this.lastModified = LocalDateTime.now();
+		build.setBuffs(buffs);
 	}
 
-	private void validateExclusionGroups(List<Buff> buffs) {
-		var groups = buffs.stream()
-						  .filter(buff -> buff.getExclusionGroup() != null)
-						  .collect(Collectors.groupingBy(Buff::getExclusionGroup));
-
-		for (var group : groups.entrySet()) {
-			if (group.getValue().size() > 1) {
-				throw new IllegalArgumentException("Group:  " + group.getKey() + " has more than one buff");
-			}
-		}
+	public void setBuffs(Build.BuffSetId... buffSetIds) {
+		build.setBuffsFromSets(buffSetIds);
 	}
 
-	public List<TalentInfo> getTalentInfos() {
-		return build.getTalentInfos();
+	public Collection<TalentInfo> getTalentInfos() {
+		return build.getTalentInfos().values();
 	}
 
 	public void setBuild(Build build) {
 		this.build = build;
-		this.lastModified = LocalDateTime.now();
 	}
 
 	public void enableBuff(Buff buff, boolean enable) {
-		if (!enable) {
-			buffs.removeIf(existingBuff -> existingBuff.getId() == buff.getId());
-			return;
-		}
-
-		if (hasBuff(buff)) {
-			return;
-		}
-
-		if (buff.getExclusionGroup() != null) {
-			buffs.removeIf(existingBuff -> existingBuff.getExclusionGroup() == buff.getExclusionGroup());
-		}
-
-		buffs.add(buff);
-	}
-
-	private boolean hasBuff(Buff buff) {
-		return buffs.stream().anyMatch(existingBuff -> existingBuff.getId() == buff.getId());
+		build.enableBuff(buff, enable);
 	}
 
 	public PVERole getRole() {
 		return build.getRole();
-	}
-
-	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
-		collector.addAttributes(getBuffsModifiedByTalents());
-		collector.addAttributes(build.getTalentInfos());
-		equipment.collectAttributes(collector);
-	}
-
-	private List<AttributeSource> getBuffsModifiedByTalents() {
-		Attributes talentAttributes = getTalentAttributes();
-		List<AttributeSource> result = new ArrayList<>(buffs.size());
-
-		for (Buff buff : buffs) {
-			if (buff.getType() == BuffType.SELF_BUFF) {
-				Percent effectIncreasePct = talentAttributes.getEffectIncreasePct(buff.getSourceSpell());
-				result.add(buff.modifyEffectByPct(effectIncreasePct));
-			} else {
-				result.add(buff);
-			}
-		}
-
-		return result;
-	}
-
-	private Attributes getTalentAttributes() {
-		return new AttributesBuilder()
-				.addAttributes(build.getTalentInfos())
-				.toAttributes();
 	}
 
 	@Override

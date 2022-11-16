@@ -1,5 +1,6 @@
 package wow.minmax.converter;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public abstract class Converter<F, T> {
 		throw new IllegalArgumentException("Not implemented");
 	}
 
-	public final List<T> convertList(List<F> list) {
+	public final List<T> convertList(Collection<F> list) {
 		return list.stream()
 					.map(this::convert)
 					.collect(Collectors.toList());

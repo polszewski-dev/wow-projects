@@ -90,7 +90,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("icon");
 		setHeader("tooltip");
 
-		writer.nextRow().freeze(0, 1);
+		writer.nextRow().freeze(2, 1);
 	}
 
 	private void writeItemRow(ItemTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
@@ -168,7 +168,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("req_prof");
 		setHeader("req_prof_lvl");
 
-		writer.nextRow().freeze(0, 1);
+		writer.nextRow().freeze(1, 1);
 	}
 
 	private void writeItemSetRow(SetInfo setInfo) {
@@ -201,7 +201,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader("sell_price");
 		setHeader("icon");
 		setHeader("tooltip");
-		writer.nextRow();
+		writer.nextRow().freeze(2, 1);
 	}
 
 	private void writeGemRow(GemTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
