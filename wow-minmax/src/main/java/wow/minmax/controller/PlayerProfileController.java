@@ -1,6 +1,7 @@
 package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.equipment.EquippableItem;
@@ -14,10 +15,7 @@ import wow.minmax.model.dto.*;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +25,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/v1/profile")
 @AllArgsConstructor
+@Slf4j
 public class PlayerProfileController {
 	private final PlayerProfileService playerProfileService;
 	private final ItemService itemService;
@@ -73,8 +72,8 @@ public class PlayerProfileController {
 	) {
 		PlayerProfile createdProfile = playerProfileService.createPlayerProfile(profileName, phase);
 		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
-
 		addItemOptions(createdProfileDTO, createdProfile);
+		log.info("Created profile id: {}, name: {}", createdProfile.getProfileId(), createdProfile.getProfileName());
 		return createdProfileDTO;
 	}
 
@@ -86,8 +85,8 @@ public class PlayerProfileController {
 	) {
 		PlayerProfile createdProfile = playerProfileService.copyPlayerProfile(copiedProfileId, profileName, phase);
 		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
-
 		addItemOptions(createdProfileDTO, createdProfile);
+		log.info("Copied profile id: {}, name: {}, sourceId: {}", createdProfile.getProfileId(), createdProfile.getProfileName(), copiedProfileId);
 		return createdProfileDTO;
 	}
 
@@ -98,9 +97,9 @@ public class PlayerProfileController {
 			@PathVariable("itemId") int itemId
 	) {
 		PlayerProfile playerProfile = playerProfileService.changeItem(profileId, slot, itemId);
-
 		EquippableItemDTO dto = convertEquippableItem(playerProfile, slot);
 		addItemOptions(dto, playerProfile);
+		log.info("Changed item profile id: {}, slot: {}, itemId: {}", profileId, slot, itemId);
 		return dto;
 	}
 
@@ -111,7 +110,7 @@ public class PlayerProfileController {
 			@PathVariable("enchantId") int enchantId
 	) {
 		PlayerProfile playerProfile = playerProfileService.changeEnchant(profileId, slot, enchantId);
-
+		log.info("Changed enchant profile id: {}, slot: {}, itemId: {}", profileId, slot, enchantId);
 		return convertEquippableItem(playerProfile, slot);
 	}
 
@@ -122,7 +121,7 @@ public class PlayerProfileController {
 			@PathVariable("socketNo") int socketNo,
 			@PathVariable("gemId") int gemId) {
 		PlayerProfile playerProfile = playerProfileService.changeGem(profileId, slot, socketNo, gemId);
-
+		log.info("Changed gem profile id: {}, slot: {}, socketNo: {}, gemId: {}", profileId, slot, socketNo, gemId);
 		return convertEquippableItem(playerProfile, slot);
 	}
 
@@ -132,8 +131,8 @@ public class PlayerProfileController {
 			@PathVariable("buffId") int buffId,
 			@PathVariable("enabled") boolean enabled) {
 		PlayerProfile playerProfile = playerProfileService.enableBuff(profileId, buffId, enabled);
-
-		return buffConverter.convertList(playerProfile.getBuffs());
+		log.info("Changed buff profile id: {}, buffId: {}, enabled: {}", profileId, buffId, enabled);
+		return buffConverter.convertList(new ArrayList<>(playerProfile.getBuffs()));
 	}
 
 	@GetMapping("{profileId}/reset/equipment")
@@ -142,8 +141,8 @@ public class PlayerProfileController {
 	) {
 		PlayerProfile playerProfile = playerProfileService.resetEquipment(profileId);
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);
-
 		addItemOptions(playerProfileDTO, playerProfile);
+		log.info("Reset profile id: {}", profileId);
 		return playerProfileDTO;
 	}
 
@@ -156,7 +155,6 @@ public class PlayerProfileController {
 		for (EquippableItemDTO item : playerProfileDTO.getEquippedItems()) {
 			addItemOptions(item, playerProfile);
 		}
-
 		addAvailableItems(playerProfileDTO, playerProfile);
 	}
 
