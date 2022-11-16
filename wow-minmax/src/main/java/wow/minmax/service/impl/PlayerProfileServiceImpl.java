@@ -60,7 +60,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				characterInfo,
 				profileConfig.getDefaultEnemyType(),
 				phase,
-				getBuild(profileConfig.getDefaultBuild())
+				getBuild(profileConfig.getDefaultBuild(), characterInfo.getLevel())
 		);
 
 		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
@@ -135,7 +135,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public Build getBuild(String buildId) {
-		return buildRepository.getBuild(buildId).orElseThrow();
+	public Build getBuild(String buildId, int level) {
+		return buildRepository.getBuild(buildId, level).orElseThrow();
 	}
 }

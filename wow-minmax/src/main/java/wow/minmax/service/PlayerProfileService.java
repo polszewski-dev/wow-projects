@@ -31,5 +31,5 @@ public interface PlayerProfileService {
 
 	PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled);
 
-	Build getBuild(String buildId);
+	Build getBuild(String buildId, int level);
 }

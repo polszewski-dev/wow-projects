@@ -11,7 +11,7 @@ import java.util.List;
  * Date: 2021-12-28
  */
 public interface SpellService {
-	Spell getSpell(SpellId spellId);
+	Spell getSpell(SpellId spellId, int level);
 
 	List<Buff> getAvailableBuffs();
 }

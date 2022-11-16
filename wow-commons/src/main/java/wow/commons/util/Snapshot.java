@@ -9,6 +9,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.spells.SpellRankInfo;
 import wow.commons.model.unit.BaseStatInfo;
@@ -29,6 +30,7 @@ import java.util.stream.Stream;
  */
 @Getter
 public class Snapshot implements StatProvider {
+	private final Spell spell;
 	private final SpellInfo spellInfo;
 	private final SpellRankInfo spellRankInfo;
 	private final BaseStatInfo baseStats;
@@ -94,9 +96,10 @@ public class Snapshot implements StatProvider {
 
 	private final boolean calcFinished;
 
-	public Snapshot(SpellInfo spellInfo, SpellRankInfo spellRankInfo, BaseStatInfo baseStats, CombatRatingInfo cr, Attributes stats, PetType activePet, CreatureType enemyType) {
-		this.spellInfo = spellInfo;
-		this.spellRankInfo = spellRankInfo;
+	public Snapshot(Spell spell, BaseStatInfo baseStats, CombatRatingInfo cr, Attributes stats, PetType activePet, CreatureType enemyType) {
+		this.spell = spell;
+		this.spellInfo = spell.getSpellInfo();
+		this.spellRankInfo = spell.getSpellRankInfo();
 		this.baseStats = baseStats;
 		this.cr = cr;
 		this.stats = stats;

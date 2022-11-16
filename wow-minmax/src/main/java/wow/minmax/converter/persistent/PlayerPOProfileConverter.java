@@ -50,7 +50,7 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 				convertBackCharacterInfo(value),
 				value.getEnemyType(),
 				value.getPhase(),
-				buildRepository.getBuild(value.getBuildId()).orElseThrow()
+				buildRepository.getBuild(value.getBuildId(), value.getLevel()).orElseThrow()
 		);
 
 		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment()));

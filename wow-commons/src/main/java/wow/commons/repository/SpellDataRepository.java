@@ -4,6 +4,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.effects.EffectInfo;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.talents.TalentId;
@@ -19,6 +20,8 @@ import java.util.Optional;
  */
 public interface SpellDataRepository {
 	Optional<SpellInfo> getSpellInfo(SpellId spellId);
+	Optional<Spell> getSpell(SpellId spellId, Integer rank);
+	Optional<Spell> getSpellHighestRank(SpellId spellId, int level);
 	Optional<TalentInfo> getTalentInfo(TalentId talentId, Integer rank);
 	Optional<EffectInfo> getEffectInfo(EffectId effectId);
 	Optional<Buff> getBuff(int buffId);

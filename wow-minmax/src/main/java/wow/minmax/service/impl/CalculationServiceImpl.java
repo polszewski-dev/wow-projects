@@ -105,8 +105,7 @@ public class CalculationServiceImpl implements CalculationService {
 		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
 
 		return new Snapshot(
-				spell.getSpellInfo(),
-				spell.getSpellRankInfo(playerProfile.getLevel()),
+				spell,
 				baseStats,
 				cr,
 				totalStats,

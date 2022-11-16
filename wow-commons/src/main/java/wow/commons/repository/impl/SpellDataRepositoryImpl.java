@@ -7,6 +7,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.effects.EffectInfo;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.talents.TalentId;
@@ -34,6 +35,40 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	@Override
 	public Optional<SpellInfo> getSpellInfo(SpellId spellId) {
 		return Optional.ofNullable(spellInfoBySpellId.get(spellId));
+	}
+
+	@Override
+	public Optional<Spell> getSpell(SpellId spellId, Integer rank) {
+		Optional<SpellInfo> optionalSpellInfo = getSpellInfo(spellId);
+
+		if (optionalSpellInfo.isEmpty()) {
+			return Optional.empty();
+		}
+
+		SpellInfo spellInfo = optionalSpellInfo.orElseThrow();
+
+		if (spellInfo.hasRanks() && rank != null) {
+			return spellInfo.getRank(rank).map(spellRankInfo -> new Spell(spellInfo, spellRankInfo));
+		} else if (!spellInfo.hasRanks() && rank == null) {
+			return Optional.of(new Spell(spellInfo, null));
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	@Override
+	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level) {
+		Optional<SpellInfo> optionalSpellInfo = getSpellInfo(spellId);
+
+		if (optionalSpellInfo.isEmpty()) {
+			return Optional.empty();
+		}
+
+		SpellInfo spellInfo = optionalSpellInfo.orElseThrow();
+
+		return spellInfo
+				.getHighestRank(level)
+				.map(spellRankInfo -> new Spell(spellInfo, spellRankInfo));
 	}
 
 	@Override

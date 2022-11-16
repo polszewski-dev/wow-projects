@@ -20,8 +20,8 @@ public class SpellServiceImpl implements SpellService {
 	private final SpellDataRepository spellDataRepository;
 
 	@Override
-	public Spell getSpell(SpellId spellId) {
-		return new Spell(spellDataRepository.getSpellInfo(spellId).orElseThrow());
+	public Spell getSpell(SpellId spellId, int level) {
+		return spellDataRepository.getSpellHighestRank(spellId, level).orElseThrow();
 	}
 
 	@Override

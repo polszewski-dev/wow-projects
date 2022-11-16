@@ -11,6 +11,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.modifiers.ProcEvent;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.spells.SpellRankInfo;
 import wow.commons.model.unit.BaseStatInfo;
@@ -38,8 +39,9 @@ import static wow.commons.util.Snapshot.CritMode;
 class SnapshotTest {
 	@BeforeEach
 	void setup() {
-		spellInfo = new SpellInfo(SHADOW_BOLT, DESTRUCTION, SHADOW, Percent.of(150), Percent.ZERO, null, false, null, false, null, null, null, null, null);
-		spellRankInfo = new SpellRankInfo(SHADOW_BOLT, 0, 0, 200, Duration.seconds(2), false, 400, 600, 0, 0, 0, 0, null, null, null, null);
+		SpellInfo spellInfo = new SpellInfo(SHADOW_BOLT, DESTRUCTION, SHADOW, Percent.of(150), Percent.ZERO, null, false, null, false, null, null, null, null, null);
+		SpellRankInfo spellRankInfo = new SpellRankInfo(SHADOW_BOLT, 0, 0, 200, Duration.seconds(2), false, 400, 600, 0, 0, 0, 0, null, null, null, null);
+		spell = new Spell(spellInfo, spellRankInfo);
 		baseStatInfo = new BaseStatInfo(0, WARLOCK, ORC, 0, 0, 100, 200, 300, 1000, 2000, Percent.of(10), 100);
 		combatRatingInfo = new CombatRatingInfo(0, 10, 20, 40);
 	}
@@ -324,14 +326,13 @@ class SnapshotTest {
 	}
 
 	private Snapshot getSnapshot(Attributes stats) {
-		return new Snapshot(spellInfo, spellRankInfo, baseStatInfo, combatRatingInfo, stats, activePet, enemyType);
+		return new Snapshot(spell, baseStatInfo, combatRatingInfo, stats, activePet, enemyType);
 	}
 
 	static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	static final Offset<Double> PRECISION = Offset.offset(0.01);
 
-	SpellInfo spellInfo;
-	SpellRankInfo spellRankInfo;
+	Spell spell;
 	BaseStatInfo baseStatInfo;
 	CombatRatingInfo combatRatingInfo;
 

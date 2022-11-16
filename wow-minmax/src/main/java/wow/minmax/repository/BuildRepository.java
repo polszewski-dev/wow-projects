@@ -9,5 +9,5 @@ import java.util.Optional;
  * Date: 2022-01-15
  */
 public interface BuildRepository {
-	Optional<Build> getBuild(String buildId);
+	Optional<Build> getBuild(String buildId, int level);
 }

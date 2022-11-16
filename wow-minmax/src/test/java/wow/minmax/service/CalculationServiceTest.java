@@ -63,7 +63,7 @@ class CalculationServiceTest {
 		playerProfile.setEquipment(new Equipment());
 		playerProfile.setBuffs(List.of());
 
-		Spell spell = spellService.getSpell(SHADOW_BOLT);
+		Spell spell = spellService.getSpell(SHADOW_BOLT, playerProfile.getLevel());
 		Attributes stats = getCurrentStats(playerProfile);
 		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
 
@@ -104,7 +104,7 @@ class CalculationServiceTest {
 		playerProfile.setEquipment(new Equipment());
 		playerProfile.setBuffs(List.of());
 
-		Spell spell = spellService.getSpell(SHADOW_BOLT);
+		Spell spell = playerProfile.getDamagingSpell();
 		Attributes stats = getCurrentStats(playerProfile);
 		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
 
@@ -145,7 +145,7 @@ class CalculationServiceTest {
 		playerProfile.setEquipment(new Equipment());
 		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
 
-		Spell spell = spellService.getSpell(SHADOW_BOLT);
+		Spell spell = playerProfile.getDamagingSpell();
 		Attributes stats = getCurrentStats(playerProfile);
 		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
 
@@ -186,7 +186,7 @@ class CalculationServiceTest {
 		playerProfile.setEquipment(getEquipment());
 		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
 
-		Spell spell = spellService.getSpell(SHADOW_BOLT);
+		Spell spell = playerProfile.getDamagingSpell();
 		Attributes stats = getCurrentStats(playerProfile);
 		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
 
@@ -229,7 +229,7 @@ class CalculationServiceTest {
 				new CharacterInfo(WARLOCK, ORC, 70, List.of()),
 				UNDEAD,
 				Phase.TBC_P5,
-				buildRepository.getBuild(buildId).orElseThrow()
+				buildRepository.getBuild(buildId, 70).orElseThrow()
 		);
 	}
 	private Attributes getCurrentStats(PlayerProfile playerProfile) {

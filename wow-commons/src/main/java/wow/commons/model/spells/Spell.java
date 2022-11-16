@@ -1,5 +1,7 @@
 package wow.commons.model.spells;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.talents.TalentTree;
 
@@ -7,12 +9,11 @@ import wow.commons.model.talents.TalentTree;
  * User: POlszewski
  * Date: 2021-09-19
  */
+@AllArgsConstructor
+@Getter
 public class Spell {
 	private final SpellInfo spellInfo;
-
-	public Spell(SpellInfo spellInfo) {
-		this.spellInfo = spellInfo;
-	}
+	private final SpellRankInfo spellRankInfo;
 
 	public SpellId getSpellId() {
 		return spellInfo.getSpellId();
@@ -30,35 +31,27 @@ public class Spell {
 		return getSpellInfo().getSpellSchool();
 	}
 
-	public int getMinDmg(int level) {
-		return getSpellRankInfo(level).getMinDmg();
+	public int getMinDmg() {
+		return spellRankInfo.getMinDmg();
 	}
 
-	public int getMaxDmg(int level) {
-		return getSpellRankInfo(level).getMaxDmg();
+	public int getMaxDmg() {
+		return spellRankInfo.getMaxDmg();
 	}
 
-	public int getDoTDamage(int level) {
-		return getSpellRankInfo(level).getDotDmg();
+	public int getDoTDamage() {
+		return spellRankInfo.getDotDmg();
 	}
 
-	public SpellInfo getSpellInfo() {
-		return spellInfo;
+	public boolean hasDirectComponent() {
+		return getMinDmg() != 0 && getMaxDmg() != 0;
 	}
 
-	public SpellRankInfo getSpellRankInfo(int level) {
-		return getSpellInfo().getHighestRank(level);
+	public boolean hasDoTComponent() {
+		return getDoTDamage() != 0;
 	}
 
-	public boolean hasDirectComponent(int level) {
-		return getMinDmg(level) != 0 && getMaxDmg(level) != 0;
-	}
-
-	public boolean hasDoTComponent(int level) {
-		return getDoTDamage(level) != 0;
-	}
-
-	public Duration getCastTime(int level) {
-		return getSpellInfo().getHighestRank(level).getCastTime();
+	public Duration getCastTime() {
+		return spellRankInfo.getCastTime();
 	}
 }

@@ -96,7 +96,7 @@ public class StatsController {
 	private PlayerStatsDTO getEquipmentStats(String type, PlayerProfile playerProfile) {
 		PlayerProfile copy = playerProfile.copy();
 
-		Build emptyBuild = playerProfileService.getBuild(BuildIds.NONE);
+		Build emptyBuild = playerProfileService.getBuild(BuildIds.NONE, playerProfile.getLevel());
 		emptyBuild.setDamagingSpell(playerProfile.getDamagingSpell());
 
 		copy.setBuild(emptyBuild);

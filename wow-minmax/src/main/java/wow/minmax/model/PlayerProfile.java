@@ -122,7 +122,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public Duration getDamagingSpellCastTime() {
-		return build.getDamagingSpell().getCastTime(getLevel());
+		return build.getDamagingSpell().getCastTime();
 	}
 
 	public Equipment getEquipment() {

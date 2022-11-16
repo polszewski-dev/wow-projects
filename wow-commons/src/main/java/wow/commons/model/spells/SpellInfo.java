@@ -8,10 +8,7 @@ import wow.commons.model.effects.EffectId;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentTree;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * User: POlszewski
@@ -40,23 +37,21 @@ public class SpellInfo {
 		return !ranks.isEmpty();
 	}
 
-	public int getHighestRank() {
-		return ranks.keySet().stream().max(Integer::compareTo).orElseThrow(IllegalArgumentException::new);
+	public Optional<SpellRankInfo> getRank(int rank) {
+		return Optional.ofNullable(ranks.get(rank));
 	}
 
-	public SpellRankInfo getRank(int rank) {
-		return ranks.get(rank);
+	public Optional<Integer> getHighestRank() {
+		return ranks.keySet().stream().max(Integer::compareTo);
 	}
 
-	public SpellRankInfo getHighestRank(int level) {
-		if (hasRanks()) {
-			return ranks.values().stream()
-					.filter(x -> x.getLevel() <= level)
-					.max(Comparator.comparingInt(SpellRankInfo::getRank))
-					.orElse(null);
-		} else {
-			throw new IllegalArgumentException("No ranks");
+	public Optional<SpellRankInfo> getHighestRank(int level) {
+		if (!hasRanks()) {
+			return Optional.empty();
 		}
+		return ranks.values().stream()
+				.filter(x -> x.getLevel() <= level)
+				.max(Comparator.comparingInt(SpellRankInfo::getRank));
 	}
 
 	public Percent getConversionPct(Conversion.From from, Conversion.To to) {

@@ -8,7 +8,6 @@ import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.commons.repository.ItemDataRepository;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;
@@ -27,14 +26,13 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UpgradeServiceImpl implements UpgradeService {
-	private final ItemDataRepository itemDataRepository;
 	private final SpellService spellService;
 	private final ItemService itemService;
 	private final CalculationService calculationService;
 
 	@Override
 	public List<Comparison> findUpgrades(PlayerProfile playerProfile, ItemSlotGroup slotGroup, SpellId spellId) {
-		Spell spell = spellService.getSpell(spellId);
+		Spell spell = spellService.getSpell(spellId, playerProfile.getLevel());
 
 		FindUpgradesEnumerator enumerator = new FindUpgradesEnumerator(
 				playerProfile, slotGroup, spell, itemService, calculationService
@@ -45,7 +43,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 	@Override
 	public EquippableItem getBestItemVariant(PlayerProfile playerProfile, Item item, ItemSlot slot, SpellId spellId) {
-		Spell spell = spellService.getSpell(spellId);
+		Spell spell = spellService.getSpell(spellId, playerProfile.getLevel());
 
 		BestItemVariantEnumerator enumerator = new BestItemVariantEnumerator(
 				playerProfile, slot, item, spell, itemService, calculationService
