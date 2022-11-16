@@ -6,8 +6,8 @@ import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.TalentInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -23,35 +23,23 @@ public class Build {
 	private List<Spell> relevantSpells;
 	private PetType activePet;
 
-	private List<Buff> selfBuffs;
-	private List<Buff> partyBuffs;
-	private List<Buff> consumeBuffs;
-	private List<Buff> raidBuffs;
-
-	public enum BuffSet {
-		SELF_BUFF,
-		PARTY_BUFF,
+	public enum BuffSetId {
+		SELF_BUFFS,
+		PARTY_BUFFS,
+		RAID_BUFFS,
 		CONSUMES,
-		RAID_BUFF,
 	}
+
+	private Map<BuffSetId, List<Buff>> buffSets;
 
 	public Build(String buildId) {
 		this.buildId = buildId;
 	}
 
-	public List<Buff> getBuffs(BuffSet... buffSets) {
+	public List<Buff> getBuffs(BuffSetId... buffSetIds) {
 		List<Buff> result = new ArrayList<>();
-		if (Arrays.asList(buffSets).contains(BuffSet.SELF_BUFF)) {
-			result.addAll(selfBuffs);
-		}
-		if (Arrays.asList(buffSets).contains(BuffSet.PARTY_BUFF)) {
-			result.addAll(partyBuffs);
-		}
-		if (Arrays.asList(buffSets).contains(BuffSet.CONSUMES)) {
-			result.addAll(consumeBuffs);
-		}
-		if (Arrays.asList(buffSets).contains(BuffSet.RAID_BUFF)) {
-			result.addAll(raidBuffs);
+		for (BuffSetId buffSetId : buffSetIds) {
+			result.addAll(buffSets.getOrDefault(buffSetId, List.of()));
 		}
 		return result;
 	}

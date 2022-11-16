@@ -13,12 +13,15 @@ import wow.commons.util.TalentCalculatorUtil;
 import wow.minmax.model.BuildIds;
 import wow.minmax.repository.BuildRepository;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static wow.commons.model.spells.SpellId.*;
+import static wow.commons.model.unit.Build.BuffSetId.*;
 
 /**
  * User: POlszewski
@@ -47,10 +50,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 		build.setRole(null);
 		build.setDamagingSpell(null);
 		build.setRelevantSpells(List.of());
-		build.setSelfBuffs(List.of());
-		build.setPartyBuffs(List.of());
-		build.setConsumeBuffs(List.of());
-		build.setRaidBuffs(List.of());
+		build.setBuffSets(Map.of());
 		return Optional.of(build);
 	}
 
@@ -74,28 +74,32 @@ public class BuildRepositoryImpl implements BuildRepository {
 				)
 		);
 
-		build.setSelfBuffs(getBuffs(
+		Map<Build.BuffSetId, List<Buff>> buffSets = new EnumMap<>(Build.BuffSetId.class);
+
+		buffSets.put(SELF_BUFFS, getBuffs(
 				"Fel Armor",
 				"Touch of Shadow"
 		));
 
-		build.setPartyBuffs(getBuffs(
+		buffSets.put(PARTY_BUFFS, getBuffs(
 				"Arcane Brilliance",
 				"Gift of the Wild",
 				"Blessing of Kings"
 		));
 
-		build.setConsumeBuffs(getBuffs(
+		buffSets.put(CONSUMES, getBuffs(
 				"Well Fed (sp)",
 				"Brilliant Wizard Oil",
 				"Flask of Pure Death"
 		));
 
-		build.setRaidBuffs(getBuffs(
+		buffSets.put(RAID_BUFFS, getBuffs(
 				"Curse of the Elements",
 				"Wrath of Air Totem",
 				"Totem of Wrath"
 		));
+
+		build.setBuffSets(buffSets);
 
 		return Optional.of(build);
 	}

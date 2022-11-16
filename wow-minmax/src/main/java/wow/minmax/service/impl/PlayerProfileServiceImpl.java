@@ -24,7 +24,7 @@ import wow.minmax.service.UpgradeService;
 import java.util.List;
 import java.util.UUID;
 
-import static wow.commons.model.unit.Build.BuffSet.*;
+import static wow.commons.model.unit.Build.BuffSetId.*;
 
 /**
  * User: POlszewski
@@ -63,7 +63,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				getBuild(profileConfig.getDefaultBuild())
 		);
 
-		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES));
+		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
 		playerProfile.setEquipment(new Equipment());
 		playerProfileRepository.saveProfile(playerProfile);
 		return playerProfile;

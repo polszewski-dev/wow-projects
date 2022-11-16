@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static wow.commons.model.unit.Build.BuffSet.*;
+import static wow.commons.model.unit.Build.BuffSetId.*;
 
 /**
  * User: POlszewski
@@ -68,10 +68,10 @@ public class StatsController {
 				getPlayerStatsDTO("Current buffs", playerProfile, playerProfile.getBuffs()),
 				getEquipmentStats("Items", playerProfile),
 				getPlayerStatsDTO("No buffs", playerProfile, List.of()),
-				getPlayerStatsDTO("Self-buffs", playerProfile, build.getBuffs(SELF_BUFF)),
-				getPlayerStatsDTO("Party buffs", playerProfile, build.getBuffs(SELF_BUFF, PARTY_BUFF)),
-				getPlayerStatsDTO("Party buffs & consumes", playerProfile, build.getBuffs(SELF_BUFF, PARTY_BUFF, CONSUMES)),
-				getPlayerStatsDTO("Raid buffs & consumes", playerProfile, build.getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES))
+				getPlayerStatsDTO("Self-buffs", playerProfile, build.getBuffs(SELF_BUFFS)),
+				getPlayerStatsDTO("Party buffs", playerProfile, build.getBuffs(SELF_BUFFS, PARTY_BUFFS)),
+				getPlayerStatsDTO("Party buffs & consumes", playerProfile, build.getBuffs(SELF_BUFFS, PARTY_BUFFS, CONSUMES)),
+				getPlayerStatsDTO("Raid buffs & consumes", playerProfile, build.getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES))
 		);
 	}
 

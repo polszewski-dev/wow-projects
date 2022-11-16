@@ -31,7 +31,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
-import static wow.commons.model.unit.Build.BuffSet.*;
+import static wow.commons.model.unit.Build.BuffSetId.*;
 import static wow.commons.model.unit.CharacterClass.WARLOCK;
 import static wow.commons.model.unit.CreatureType.UNDEAD;
 import static wow.commons.model.unit.Race.ORC;
@@ -143,7 +143,7 @@ class CalculationServiceTest {
 		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
 
 		playerProfile.setEquipment(new Equipment());
-		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES));
+		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
 
 		Spell spell = spellService.getSpell(SHADOW_BOLT);
 		Attributes stats = getCurrentStats(playerProfile);
@@ -184,7 +184,7 @@ class CalculationServiceTest {
 		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
 
 		playerProfile.setEquipment(getEquipment());
-		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUMES));
+		playerProfile.setBuffs(playerProfile.getBuild().getBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES));
 
 		Spell spell = spellService.getSpell(SHADOW_BOLT);
 		Attributes stats = getCurrentStats(playerProfile);
