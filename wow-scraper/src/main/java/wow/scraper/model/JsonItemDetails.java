@@ -68,6 +68,7 @@ import java.util.List;
 		"splhitrtng",
 		"reqskill",
 		"reqskillrank",
+		"classes",
 })
 public class JsonItemDetails {
 	@JsonProperty(value = "id")

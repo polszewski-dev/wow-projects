@@ -38,8 +38,8 @@ public class ScraperMain extends ScraperTool {
 		fetch("items/weapons/wands", WowheadItemCategory.WANDS);
 
 		fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", WowheadItemCategory.GEMS);
-
 		fetch("items/miscellaneous/armor-tokens", WowheadItemCategory.TOKENS);
+		fetch("items/quest/quality:3:4:5?filter=6;1;0", WowheadItemCategory.ITEM_STARTING_QUEST);
 	}
 
 	private void fetch(String url, WowheadItemCategory category) throws IOException {
@@ -48,19 +48,24 @@ public class ScraperMain extends ScraperTool {
 		List<JsonItemDetails> itemDetailsList = getWowheadFetcher().fetchItemDetails(getGameVersion(), url);
 
 		for (JsonItemDetails itemDetails : itemDetailsList) {
-			if (isToBeSaved(itemDetails)) {
+			if (isToBeSaved(itemDetails, category)) {
 				fixSource(itemDetails);
 				saveItemDetails(itemDetails, category);
 			}
 		}
 	}
 
-	private boolean isToBeSaved(JsonItemDetails itemDetails) {
-		return itemDetails.getSources() != null &&
-				(itemDetails.getLevel() == null || itemDetails.getLevel() >= getScraperConfig().getMinItemLevel()) &&
-				itemDetails.getQuality() >= getScraperConfig().getMinQuality().getCode() &&
-				!getScraperConfig().getIgnoredItemIds().contains(itemDetails.getId())
-				;
+	private boolean isToBeSaved(JsonItemDetails itemDetails, WowheadItemCategory category) {
+		if (itemDetails.getSources() == null) {
+			return false;
+		}
+		if (category.isEquipment() && itemDetails.getLevel() != null && itemDetails.getLevel() < getScraperConfig().getMinItemLevel()) {
+			return false;
+		}
+		if (itemDetails.getQuality() < getScraperConfig().getMinQuality().getCode()) {
+			return false;
+		}
+		return !getScraperConfig().getIgnoredItemIds().contains(itemDetails.getId());
 	}
 
 	private void fixSource(JsonItemDetails itemDetails) {

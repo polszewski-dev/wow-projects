@@ -30,11 +30,27 @@ public enum WowheadItemCategory {
 	STAVES,
 	WANDS,
 
-	GEMS,
+	GEMS(false),
+	TOKENS(false),
+	ITEM_STARTING_QUEST(false);
 
-	TOKENS;
+	private final boolean equipment;
+
+	WowheadItemCategory(boolean equipment) {
+		this.equipment = equipment;
+	}
+
+	WowheadItemCategory() {
+		this(true);
+	}
+
+	public boolean isEquipment() {
+		return equipment;
+	}
 
 	public static List<WowheadItemCategory> equipment() {
-		return Stream.of(values()).filter(x -> x != GEMS && x != TOKENS).collect(Collectors.toList());
+		return Stream.of(values())
+				.filter(x -> x.equipment)
+				.collect(Collectors.toList());
 	}
 }
