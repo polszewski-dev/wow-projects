@@ -32,7 +32,7 @@ public enum WowheadItemCategory {
 
 	GEMS(false),
 	TOKENS(false),
-	ITEM_STARTING_QUEST(false);
+	QUEST(false);
 
 	private final boolean equipment;
 

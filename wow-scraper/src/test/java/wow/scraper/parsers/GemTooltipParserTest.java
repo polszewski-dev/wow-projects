@@ -90,18 +90,18 @@ class GemTooltipParserTest {
 
 	@BeforeAll
 	static void readTestData() throws IOException {
-		redGem = getReadValue("32196");
-		orangeGem = getReadValue("35760");
-		yellowGem = getReadValue("35761");
-		greenGem = getReadValue("35759");
-		blueGem = getReadValue("33135");
-		purpleGem = getReadValue("32215");
-		metaGem = getReadValue("34220");
+		redGem = getTooltip("32196");
+		orangeGem = getTooltip("35760");
+		yellowGem = getTooltip("35761");
+		greenGem = getTooltip("35759");
+		blueGem = getTooltip("33135");
+		purpleGem = getTooltip("32215");
+		metaGem = getTooltip("34220");
 	}
 
 	static final ObjectMapper MAPPER = new ObjectMapper();
 
-	static GemTooltipParser getReadValue(String path) throws IOException {
+	static GemTooltipParser getTooltip(String path) throws IOException {
 		JsonItemDetailsAndTooltip data = MAPPER.readValue(
 				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/gem/" + path),
 				JsonItemDetailsAndTooltip.class

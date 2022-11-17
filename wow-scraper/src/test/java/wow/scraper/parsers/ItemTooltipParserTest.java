@@ -157,16 +157,16 @@ class ItemTooltipParserTest {
 
 	@BeforeAll
 	static void readTestData() throws IOException {
-		hoodOfMalefic = getReadValue("31051");
-		sunfireRobe = getReadValue("34364");
-		scryersBlodgem = getReadValue("29132");
-		magistersStaff = getReadValue("34182");
-		wandOfDemonsoul = getReadValue("34347");
+		hoodOfMalefic = getTooltip("31051");
+		sunfireRobe = getTooltip("34364");
+		scryersBlodgem = getTooltip("29132");
+		magistersStaff = getTooltip("34182");
+		wandOfDemonsoul = getTooltip("34347");
 	}
 
 	static final ObjectMapper MAPPER = new ObjectMapper();
 
-	static ItemTooltipParser getReadValue(String path) throws IOException {
+	static ItemTooltipParser getTooltip(String path) throws IOException {
 		JsonItemDetailsAndTooltip data = MAPPER.readValue(
 				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/item/" + path),
 				JsonItemDetailsAndTooltip.class

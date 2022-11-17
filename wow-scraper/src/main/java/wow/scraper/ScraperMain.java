@@ -39,7 +39,7 @@ public class ScraperMain extends ScraperTool {
 
 		fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", WowheadItemCategory.GEMS);
 		fetch("items/miscellaneous/armor-tokens", WowheadItemCategory.TOKENS);
-		fetch("items/quest/quality:3:4:5?filter=6;1;0", WowheadItemCategory.ITEM_STARTING_QUEST);
+		fetch("items/quest/quality:3:4:5?filter=6;1;0", WowheadItemCategory.QUEST);
 	}
 
 	private void fetch(String url, WowheadItemCategory category) throws IOException {
