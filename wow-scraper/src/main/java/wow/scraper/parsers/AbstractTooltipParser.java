@@ -3,8 +3,15 @@ package wow.scraper.parsers;
 import lombok.Getter;
 import org.slf4j.Logger;
 import wow.commons.model.Money;
+import wow.commons.model.Percent;
+import wow.commons.model.categorization.Binding;
+import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Side;
+import wow.commons.model.unit.CharacterClass;
+import wow.commons.model.unit.Race;
 import wow.commons.util.ParserUtil;
 
 import java.util.List;
@@ -23,17 +30,70 @@ import java.util.stream.Stream;
 @Getter
 public abstract class AbstractTooltipParser {
 	protected final GameVersion gameVersion;
-
 	protected final String htmlTooltip;
-
 	protected List<String> lines;
 	protected int currentLineIdx;
 
 	protected final Integer itemId;
 	protected String name;
+	protected Phase phase;
+	protected Integer requiredLevel;
+	protected Integer itemLevel;
+	protected Binding binding;
+	protected boolean unique;
+	protected List<CharacterClass> classRestriction;
+	protected List<Race> raceRestriction;
+	protected Side sideRestriction;
+	protected String requiredFactionName;
+	protected String requiredFactionStanding;
+	protected Profession requiredProfession;
+	protected Integer requiredProfessionLevel;
+	protected ProfessionSpecialization requiredProfessionSpec;
+	protected String droppedBy;
+	protected Percent dropChance;
+	protected Money sellPrice;
 
 	private static final boolean ERROR_ON_UNMATCHED_LINE = true;
 	private static final Set<String> UNMATCHED_LINES = new TreeSet<>();
+
+	protected final Rule rulePhase = Rule.
+			prefix("Phase ", x -> this.phase = parsePhase(x));
+	protected final Rule ruleRequiresLevel = Rule.
+			prefix("Requires Level ", x -> this.requiredLevel = parseRequiredLevel(x));
+	protected final Rule ruleItemLevel = Rule.
+			prefix("Item Level ", x -> this.itemLevel = parseItemLevel(x));
+	protected final Rule ruleBindsWhenPickedUp = Rule.
+			exact("Binds when picked up", () -> this.binding = Binding.BINDS_ON_PICK_UP);
+	protected final Rule ruleBindsWhenEquipped = Rule.
+			exact("Binds when equipped", () -> this.binding = Binding.BINDS_ON_EQUIP);
+	protected final Rule ruleBindsWhenUsed = Rule.
+			exact("Binds when used", () -> this.binding = Binding.BINDS_ON_EQUIP);
+	protected final Rule ruleUnique = Rule.
+			exact("Unique", () -> this.unique = true);
+	protected final Rule ruleUniqueEquipped = Rule.
+			exact("Unique-Equipped", () -> this.unique = true);
+	protected final Rule ruleClassRestriction = Rule.
+			prefix("Classes: ", x -> this.classRestriction = ParserUtil.getValues(x, CharacterClass::parse));
+	protected final Rule ruleRaceRestriction = Rule.
+			prefix("Races: ", x -> this.raceRestriction = ParserUtil.getValues(x, Race::parse));
+	protected final Rule ruleAllianceRestriction = Rule.
+			exact("Requires any Alliance race", () -> this.sideRestriction = Side.ALLIANCE);
+	protected final Rule ruleHordeRestriction = Rule.
+			exact("Requires any Horde race", () -> this.sideRestriction = Side.HORDE);
+	protected final Rule ruleFactionRestriction = Rule.
+			regex("Requires (.*?) - (Neutral|Friendly|Honored|Revered|Exalted)", this::parseReputation);
+	protected final Rule ruleProfessionRestriction = Rule.
+			regex("Requires (Alchemy|Engineering|Jewelcrafting|Tailoring) \\((\\d+)\\)", this::parseRequiredProfession);
+	protected final Rule ruleProfessionSpecializationRestriction = Rule.
+			regex("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", this::parseRequiredProfessionSpec);
+	protected final Rule ruleDurability = Rule.
+			regex("Durability \\d+ / \\d+", x -> {});
+	protected final Rule ruleDroppedBy = Rule.
+			prefix("Dropped by: ", x -> this.droppedBy = x);
+	protected final Rule ruleDropChance = Rule.
+			prefix("Drop Chance: ", x -> this.dropChance = parseDropChance(x));
+	protected final Rule ruleSellPrice = Rule.
+			prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x));
 
 	protected AbstractTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
 		this.gameVersion = gameVersion;
@@ -137,6 +197,28 @@ public abstract class AbstractTooltipParser {
 
 	protected int parseItemLevel(String value) {
 		return Integer.parseInt(value);
+	}
+
+	protected int parseRequiredLevel(String value) {
+		return Integer.parseInt(value);
+	}
+
+	private void parseReputation(Object[] factionParams) {
+		this.requiredFactionName = (String)factionParams[0];
+		this.requiredFactionStanding = (String)factionParams[1];
+	}
+
+	private void parseRequiredProfession(Object[] params) {
+		this.requiredProfession = Profession.parse((String)params[0]);
+		this.requiredProfessionLevel = (Integer)params[1];
+	}
+
+	private void parseRequiredProfessionSpec(Object[] params) {
+		this.requiredProfessionSpec = ProfessionSpecialization.parse((String)params[0]);
+	}
+
+	private Percent parseDropChance(String value) {
+		return Percent.of(Double.parseDouble(value.replace("%", "")));
 	}
 
 	protected Money parseSellPrice(String value) {

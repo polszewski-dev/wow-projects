@@ -1,11 +1,9 @@
 package wow.scraper.parsers;
 
 import lombok.Getter;
-import wow.commons.model.Money;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
-import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
@@ -19,16 +17,9 @@ import java.util.List;
  */
 @Getter
 public class GemTooltipParser extends AbstractTooltipParser {
-	private Phase phase;
-	private Integer itemLevel;
 	private GemColor color;
-	private Binding binding;
-	private boolean unique;
 	private List<MetaEnabler> metaEnablers;
 	private List<String> statLines;
-	private Profession requiredProfession;
-	private Integer requiredProfessionLevel;
-	private Money sellPrice;
 
 	public GemTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
 		super(itemId, htmlTooltip, gameVersion);
@@ -37,16 +28,16 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	@Override
 	protected Rule[] getRules() {
 		return new Rule[] {
-				Rule.prefix("Phase ", x -> this.phase = parsePhase(x)),
-				Rule.prefix("Item Level ", x -> this.itemLevel = parseItemLevel(x)),
+				rulePhase,
+				ruleItemLevel,
 				Rule.tryParse(GemTooltipParser::tryParseColor, x -> this.color = x),
-				Rule.exact("Binds when picked up", () -> this.binding = Binding.BINDS_ON_PICK_UP),
-				Rule.exact("Binds when equipped", () -> this.binding = Binding.BINDS_ON_EQUIP),
-				Rule.exact("Unique", () -> this.unique = true),
-				Rule.exact("Unique-Equipped", () -> this.unique = true),
+				ruleBindsWhenPickedUp,
+				ruleBindsWhenEquipped,
+				ruleUnique,
+				ruleUniqueEquipped,
 				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
-				Rule.regex("Requires (Alchemy|Engineering|Jewelcrafting|Tailoring) \\((\\d+)\\)", this::parseRequiredProfession),
-				Rule.prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x)),
+				ruleProfessionRestriction,
+				ruleSellPrice,
 				Rule.testNotNull(GemStatsParser::tryParseStats, x -> statLines.add(x)),
 		};
 	}
@@ -74,11 +65,6 @@ public class GemTooltipParser extends AbstractTooltipParser {
 		if (statLines.isEmpty()) {
 			throw new IllegalArgumentException("Couldn't parse any stat for: " + name);
 		}
-	}
-
-	private void parseRequiredProfession(Object[] params) {
-		this.requiredProfession = Profession.parse((String)params[0]);
-		this.requiredProfessionLevel = (Integer)params[1];
 	}
 
 	private static GemColor tryParseColor(String line) {
