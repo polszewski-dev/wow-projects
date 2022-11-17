@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import wow.scraper.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
-import wow.scraper.parsers.AbstractTooltipParser;
-import wow.scraper.parsers.GemTooltipParser;
-import wow.scraper.parsers.ItemTooltipParser;
+import wow.scraper.parsers.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +30,12 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		builder.addGemHeader();
 		addGems(builder);
 
+		builder.addItemstartingQuestHeader();
+		addItemsStartingQuest(builder);
+
+		builder.addTokenHeader();
+		addTokens(builder);
+
 		String itemFilePath = "scraper/item_base.xls";
 
 		builder.finish(itemFilePath);
@@ -55,6 +59,22 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		export(
 				WowheadItemCategory.GEMS,
 				(itemId, tooltip) -> new GemTooltipParser(itemId, tooltip, getGameVersion()),
+				builder::add
+		);
+	}
+
+	private void addItemsStartingQuest(ItemBaseExcelBuilder builder) throws IOException {
+		export(
+				WowheadItemCategory.QUEST,
+				(itemId, tooltip) -> new ItemStartingQuestTooltipParser(itemId, tooltip, getGameVersion()),
+				builder::add
+		);
+	}
+
+	private void addTokens(ItemBaseExcelBuilder builder) throws IOException {
+		export(
+				WowheadItemCategory.TOKENS,
+				(itemId, tooltip) -> new TokenTooltipParser(itemId, tooltip, getGameVersion()),
 				builder::add
 		);
 	}

@@ -7,9 +7,7 @@ import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemQuality;
-import wow.scraper.parsers.GemTooltipParser;
-import wow.scraper.parsers.ItemTooltipParser;
-import wow.scraper.parsers.SourceParser;
+import wow.scraper.parsers.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,6 +38,16 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		writeGemHeader();
 	}
 
+	public void addItemstartingQuestHeader() {
+		writer.nextSheet("quest");
+		writeItemsStartingQuestHeader();
+	}
+
+	public void addTokenHeader() {
+		writer.nextSheet("token");
+		writeTokenHeader();
+	}
+
 	@Override
 	public void finish(String fileName) throws IOException {
 		writer.nextSheet("set");
@@ -60,6 +68,14 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	public void add(GemTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
 		writeGemRow(parser, itemDetailsAndTooltip);
+	}
+
+	public void add(ItemStartingQuestTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
+		//TODO
+	}
+
+	public void add(TokenTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
+		//TODO
 	}
 
 	private void writeItemHeader() {
@@ -236,7 +252,15 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		return WowheadItemQuality.fromCode(quality).getItemRarity();
 	}
 
-	protected static String parseSource(String requiredFactionName, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
+	private void writeItemsStartingQuestHeader() {
+		//TODO
+	}
+
+	private void writeTokenHeader() {
+		//TODO
+	}
+
+	private static String parseSource(String requiredFactionName, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
 		if (requiredFactionName != null) {
 			return "Faction:" + requiredFactionName;
 		}
