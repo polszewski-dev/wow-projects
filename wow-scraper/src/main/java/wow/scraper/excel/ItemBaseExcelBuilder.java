@@ -27,11 +27,15 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	@Override
 	public void start() {
-		writer.open("item");
+		writer.open();
+	}
+
+	public void addItemHeader() {
+		writer.nextSheet("item");
 		writeItemHeader();
 	}
 
-	public void timeForGems() {
+	public void addGemHeader() {
 		writer.nextSheet("gem");
 		writeGemHeader();
 	}

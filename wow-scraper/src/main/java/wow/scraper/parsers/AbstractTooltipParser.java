@@ -83,7 +83,7 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleFactionRestriction = Rule.
 			regex("Requires (.*?) - (Neutral|Friendly|Honored|Revered|Exalted)", this::parseReputation);
 	protected final Rule ruleProfessionRestriction = Rule.
-			regex("Requires (Alchemy|Engineering|Jewelcrafting|Tailoring) \\((\\d+)\\)", this::parseRequiredProfession);
+			regex("Requires (Alchemy|Enchanting|Jewelcrafting|Tailoring|Leatherworking|Blacksmithing|Engineering) \\((\\d+)\\)", this::parseRequiredProfession);
 	protected final Rule ruleProfessionSpecializationRestriction = Rule.
 			regex("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", this::parseRequiredProfessionSpec);
 	protected final Rule ruleDurability = Rule.
