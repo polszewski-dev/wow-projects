@@ -4,7 +4,6 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
-import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.AttributesDiff;
 import wow.commons.util.AttributesDiffFinder;
 
@@ -38,13 +37,8 @@ public class Comparison {
 	}
 
 	public AttributesDiff getStatDifference() {
-		Attributes possibleAttributes = AttributeEvaluator.of()
-				.addAttributes(possibleEquipment)
-				.solveAllLeaveAbilities();
-
-		Attributes referenceAttributes = AttributeEvaluator.of()
-				.addAttributes(referenceEquipment)
-				.solveAllLeaveAbilities();
+		Attributes possibleAttributes = possibleEquipment.getStats();
+		Attributes referenceAttributes = referenceEquipment.getStats();
 
 		return new AttributesDiffFinder(possibleAttributes, referenceAttributes).getDiff();
 	}

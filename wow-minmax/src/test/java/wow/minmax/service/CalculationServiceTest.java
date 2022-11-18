@@ -64,7 +64,7 @@ class CalculationServiceTest {
 		playerProfile.setBuffs(List.of());
 
 		Spell spell = spellService.getSpell(SHADOW_BOLT, playerProfile.getLevel());
-		Attributes stats = getCurrentStats(playerProfile);
+		Attributes stats = playerProfile.getStats();
 		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(78);
@@ -105,8 +105,7 @@ class CalculationServiceTest {
 		playerProfile.setBuffs(List.of());
 
 		Spell spell = playerProfile.getDamagingSpell();
-		Attributes stats = getCurrentStats(playerProfile);
-		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
+		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, playerProfile.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(89);
 		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(130);
@@ -146,8 +145,7 @@ class CalculationServiceTest {
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
 		Spell spell = playerProfile.getDamagingSpell();
-		Attributes stats = getCurrentStats(playerProfile);
-		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
+		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, playerProfile.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(115);
 		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(202);
@@ -187,18 +185,17 @@ class CalculationServiceTest {
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
 		Spell spell = playerProfile.getDamagingSpell();
-		Attributes stats = getCurrentStats(playerProfile);
-		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, stats);
+		Snapshot snapshot = underTest.getSnapshot(playerProfile, spell, playerProfile.getStats());
 
-		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(733);
-		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(643);
+		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
+		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(619);
 		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(161);
 
-		assertThat(snapshot.getTotalCrit()).isEqualTo(36.55, PRECISION);
-		assertThat(snapshot.getTotalHit()).isEqualTo(17.02, PRECISION);
+		assertThat(snapshot.getTotalCrit()).isEqualTo(35.75, PRECISION);
+		assertThat(snapshot.getTotalHit()).isEqualTo(15.99, PRECISION);
 		assertThat(snapshot.getTotalHaste()).isEqualTo(31.10, PRECISION);
 
-		assertThat(snapshot.getSp()).usingComparator(ROUNDED_DOWN).isEqualTo(1713);
+		assertThat(snapshot.getSp()).usingComparator(ROUNDED_DOWN).isEqualTo(1749);
 		assertThat(snapshot.getSpMultiplier()).isEqualTo(1, PRECISION);
 
 		assertThat(snapshot.getHitChance()).isEqualTo(0.99, PRECISION);
@@ -233,35 +230,34 @@ class CalculationServiceTest {
 		playerProfile.setBuild(buildRepository.getBuild(buildId, 70).orElseThrow());
 		return playerProfile;
 	}
-	private Attributes getCurrentStats(PlayerProfile playerProfile) {
-		return AttributeEvaluator.of()
-				.addAttributes(playerProfile)
-				.solveAllLeaveAbilities();
-	}
 
 	private Equipment getEquipment() {
 		Equipment equipment = new Equipment();
 
 		Gem metaGem = getGem("Chaotic Skyfire Diamond").orElseThrow();
-		Gem orangeGem = getGem("Reckless Pyrestone").orElseThrow();
-		Gem violetGem = getGem("Glowing Shadowsong Amethyst").orElseThrow();
+		Gem hitSpGem = getGem("Veiled Pyrestone").orElseThrow();
+		Gem critSpGem = getGem("Potent Pyrestone").orElseThrow();
+		Gem hasteSpGem = getGem("Reckless Pyrestone").orElseThrow();
+		Gem hasteGem = getGem("Quick Lionseye").orElseThrow();
+		Gem staSpGem = getGem("Glowing Shadowsong Amethyst").orElseThrow();
 
-		equipment.set(getItem("Dark Conjuror's Collar").enchant(getEnchant("Glyph of Power")).gem(metaGem, violetGem));
-		equipment.set(getItem("Pendant of Sunfire").gem(orangeGem));
-		equipment.set(getItem("Mantle of the Malefic").enchant(getEnchant("Greater Inscription of the Orb")).gem(violetGem, orangeGem));
-		equipment.set(getItem("Tattered Cape of Antonidas").enchant(getEnchant("Enchant Cloak - Subtlety")).gem(orangeGem));
-		equipment.set(getItem("Sunfire Robe").enchant(getEnchant("Enchant Chest - Exceptional Stats")).gem(orangeGem, orangeGem, orangeGem));
-		equipment.set(getItem("Bracers of the Malefic").enchant(getEnchant("Enchant Bracer – Spellpower")).gem(orangeGem));
-		equipment.set(getItem("Sunfire Handwraps").enchant(getEnchant("Enchant Gloves - Major Spellpower")).gem(orangeGem, orangeGem));
-		equipment.set(getItem("Belt of the Malefic").gem(orangeGem));
-		equipment.set(getItem("Leggings of Calamity").enchant(getEnchant("Runic Spellthread")).gem(orangeGem, orangeGem, orangeGem));
-		equipment.set(getItem("Boots of the Malefic").enchant(getEnchant("Enchant Boots - Boar's Speed")).gem(orangeGem));
+		equipment.set(getItem("Dark Conjuror's Collar").enchant(getEnchant("Glyph of Power")).gem(metaGem, staSpGem));
+		equipment.set(getItem("Amulet of Unfettered Magics"));
+		equipment.set(getItem("Mantle of the Malefic").enchant(getEnchant("Greater Inscription of the Orb")).gem(staSpGem, hasteSpGem));
+		equipment.set(getItem("Tattered Cape of Antonidas").enchant(getEnchant("Enchant Cloak - Subtlety")).gem(critSpGem));
+		equipment.set(getItem("Sunfire Robe").enchant(getEnchant("Enchant Chest - Exceptional Stats")).gem(hasteSpGem, hasteSpGem, hasteSpGem));
+		equipment.set(getItem("Bracers of the Malefic").enchant(getEnchant("Enchant Bracer – Spellpower")).gem(hasteSpGem));
+		equipment.set(getItem("Sunfire Handwraps").enchant(getEnchant("Enchant Gloves - Major Spellpower")).gem(hasteSpGem, hasteSpGem));
+		equipment.set(getItem("Belt of the Malefic").gem(hasteSpGem));
+		equipment.set(getItem("Leggings of Calamity").enchant(getEnchant("Runic Spellthread")).gem(hasteSpGem, hasteSpGem, hasteGem));
+		equipment.set(getItem("Boots of the Malefic").enchant(getEnchant("Enchant Boots - Boar's Speed")).gem(critSpGem));
 		equipment.set(getItem("Ring of Omnipotence").enchant(getEnchant("Enchant Ring – Spellpower")), ItemSlot.FINGER_1);
 		equipment.set(getItem("Loop of Forged Power").enchant(getEnchant("Enchant Ring – Spellpower")), ItemSlot.FINGER_2);
 		equipment.set(getItem("The Skull of Gul'dan"), ItemSlot.TRINKET_1);
 		equipment.set(getItem("Shifting Naaru Sliver"), ItemSlot.TRINKET_2);
-		equipment.set(getItem("Grand Magister's Staff of Torrents").enchant(getEnchant("Enchant Weapon – Soulfrost")).gem(orangeGem, orangeGem, orangeGem));
-		equipment.set(getItem("Wand of the Demonsoul").gem(orangeGem));
+		equipment.set(getItem("Sunflare").enchant(getEnchant("Enchant Weapon – Soulfrost")));
+		equipment.set(getItem("Chronicle of Dark Secrets"));
+		equipment.set(getItem("Wand of the Demonsoul").gem(hitSpGem));
 
 		return equipment;
 	}

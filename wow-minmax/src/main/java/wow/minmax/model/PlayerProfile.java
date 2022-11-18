@@ -4,6 +4,7 @@ import wow.commons.model.Copyable;
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.pve.Phase;
@@ -11,6 +12,7 @@ import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.unit.*;
+import wow.commons.util.AttributeEvaluator;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -155,6 +157,12 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public PVERole getRole() {
 		return build.getRole();
+	}
+
+	public Attributes getStats() {
+		return AttributeEvaluator.of()
+				.addAttributes(this)
+				.solveAllLeaveAbilities();
 	}
 
 	@Override

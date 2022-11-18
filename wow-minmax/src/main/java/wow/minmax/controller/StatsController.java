@@ -10,7 +10,6 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.unit.Build;
-import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
 import wow.minmax.converter.dto.PlayerSpellStatsConverter;
 import wow.minmax.model.BuildIds;
@@ -79,10 +78,7 @@ public class StatsController {
 			@PathVariable("profileId") UUID profileId
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
-
-		Attributes attributes = AttributeEvaluator.of()
-				.addAttributes(playerProfile)
-				.solveAllLeaveAbilities();
+		Attributes attributes = playerProfile.getStats();
 
 		return attributes.getSpecialAbilities()
 				.stream()
@@ -113,10 +109,7 @@ public class StatsController {
 	}
 
 	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, Spell spell) {
-		Attributes attributes = AttributeEvaluator.of()
-				.addAttributes(playerProfile)
-				.solveAllLeaveAbilities();
-
+		Attributes attributes = playerProfile.getStats();
 		Snapshot snapshot = calculationService.getSnapshot(playerProfile, spell, attributes);
 
 		return new PlayerStatsDTO(

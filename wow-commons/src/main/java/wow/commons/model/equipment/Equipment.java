@@ -3,9 +3,11 @@ package wow.commons.model.equipment;
 import wow.commons.model.Copyable;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
+import wow.commons.util.AttributeEvaluator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -176,6 +178,12 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 
 	public boolean allSocketsHaveMatchingGems(EquippableItem item) {
 		return item.allSocketsHaveMatchingGems(numRed(), numYellow(), numBlue());
+	}
+
+	public Attributes getStats() {
+		return AttributeEvaluator.of()
+				.addAttributes(this)
+				.solveAllLeaveAbilities();
 	}
 
 	public List<EquippableItem> getItemDifference(Equipment equipment) {
