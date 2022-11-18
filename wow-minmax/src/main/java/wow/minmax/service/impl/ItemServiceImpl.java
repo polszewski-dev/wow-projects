@@ -101,10 +101,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted) {
 		return itemDataRepository.getAllGems().stream()
-				.filter(gem -> socketType.accepts(gem.getColor()))
-				.filter(gem -> !onlyCrafted || (gem.isCrafted() && gem.getBinding() != Binding.BINDS_ON_PICK_UP))
-				.filter(gem -> gem.getRarity().isAtLeastAsGoodAs(getMinimumGemRarity(gem, playerProfile.getPhase(), onlyCrafted)))
-				.filter(gem -> isSuitableFor(gem, playerProfile))
+				.filter(gem -> socketType.accepts(gem.getColor()) && isSuitableFor(gem, onlyCrafted, playerProfile))
 				.collect(Collectors.toList());
 	}
 
@@ -143,8 +140,14 @@ public class ItemServiceImpl implements ItemService {
 		return false;
 	}
 
-	private boolean isSuitableFor(Gem gem, PlayerProfile playerProfile) {
+	private boolean isSuitableFor(Gem gem, boolean onlyCrafted, PlayerProfile playerProfile) {
 		if (!gem.getRestriction().isMetBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
+			return false;
+		}
+		if (onlyCrafted && (!gem.isCrafted() || gem.getBinding() == Binding.BINDS_ON_PICK_UP)) {
+			return false;
+		}
+		if (!gem.getRarity().isAtLeastAsGoodAs(getMinimumGemRarity(gem, playerProfile.getPhase(), onlyCrafted))) {
 			return false;
 		}
 		return hasStatsSuitableForRole(gem, playerProfile);

@@ -33,7 +33,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final Map<Integer, Enchant> enchantById = new TreeMap<>();
 	private final Map<String, Enchant> enchantByName = new TreeMap<>();
 	private final Map<Integer, Gem> gemById = new TreeMap<>();
-	private final Map<String, Gem> gemByName = new TreeMap<>();
+	private final Map<String, List<Gem>> gemByName = new TreeMap<>();
 
 	public ItemDataRepositoryImpl(PVERepository pveRepository) {
 		this.pveRepository = pveRepository;
@@ -45,16 +45,8 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
-	public Optional<Item> getItem(String itemName) {
-		List<Item> result = itemByName.get(itemName);
-
-		if (result == null || result.isEmpty()) {
-			return Optional.empty();
-		}
-		if (result.size() == 1) {
-			return Optional.of(result.get(0));
-		}
-		throw new IllegalArgumentException("Multiple results for: " + itemName);
+	public Optional<Item> getItem(String name) {
+		return getUniqueByName(name, itemByName);
 	}
 
 	@Override
@@ -116,12 +108,12 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	@Override
 	public Optional<Gem> getGem(String name) {
-		return Optional.ofNullable(gemByName.get(name));
+		return getUniqueByName(name, gemByName);
 	}
 
 	@Override
 	public List<Gem> getAllGems() {
-		return new ArrayList<>(gemByName.values());
+		return new ArrayList<>(gemById.values());
 	}
 
 	@Override
@@ -153,7 +145,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	public void addGem(Gem gem) {
 		gemById.put(gem.getId(), gem);
-		gemByName.put(gem.getName(), gem);
+		gemByName.computeIfAbsent(gem.getName(), x -> new ArrayList<>()).add(gem);
 	}
 
 	public void addItemSet(ItemSet itemSet) {
@@ -163,5 +155,17 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	public void addEnchant(Enchant enchant) {
 		enchantById.put(enchant.getId(), enchant);
 		enchantByName.put(enchant.getName(), enchant);
+	}
+
+	private <T> Optional<T> getUniqueByName(String name, Map<String, List<T>> byName) {
+		List<T> result = byName.get(name);
+
+		if (result == null || result.isEmpty()) {
+			return Optional.empty();
+		}
+		if (result.size() == 1) {
+			return Optional.of(result.get(0));
+		}
+		throw new IllegalArgumentException("Multiple results for: " + name);
 	}
 }

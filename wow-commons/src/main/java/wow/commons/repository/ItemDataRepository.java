@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 public interface ItemDataRepository {
 	Optional<Item> getItem(int itemId);
-	Optional<Item> getItem(String itemName);
+	Optional<Item> getItem(String name);
 	Optional<Item> getItem(ItemLink itemLink);
 
 	Collection<Item> getAllItems();
