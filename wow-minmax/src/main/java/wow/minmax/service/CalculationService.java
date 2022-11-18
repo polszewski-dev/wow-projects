@@ -14,9 +14,16 @@ import wow.minmax.model.PlayerSpellStats;
  * Date: 2021-12-15
  */
 public interface CalculationService {
-	Attributes getStatEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile, Attributes totalStats);
+	enum EquivalentMode {
+		ADDITIONAL,
+		REPLACEMENT,
+	}
 
-	double getSpEquivalent(PrimitiveAttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell);
+	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, PlayerProfile playerProfile);
+
+	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, PlayerProfile playerProfile, Spell spell, Attributes totalStats);
+
+	Attributes getAbilityEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile, Spell spell, Attributes totalStats);
 
 	SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell);
 

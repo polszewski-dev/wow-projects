@@ -11,16 +11,12 @@ import wow.commons.model.spells.Spell;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.repository.PVERepository;
-import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.Snapshot;
 import wow.commons.util.SpellStatistics;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.service.CalculationService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.util.Snapshot.CritMode;
@@ -34,68 +30,65 @@ import static wow.commons.util.Snapshot.CritMode;
 public class CalculationServiceImpl implements CalculationService {
 	private final PVERepository pveRepository;
 
+	private static final double PRECISION = 0.0001;
+
 	@Override
-	public Attributes getStatEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile, Attributes totalStats) {
-		List<SpecialAbility> withoutGivenSpecialAbility = new ArrayList<>(totalStats.getSpecialAbilities());
-
-		withoutGivenSpecialAbility.remove(specialAbility);
-
-		Attributes attributesWithoutGivenSpecialAbility = new AttributesBuilder()
-				.addAttributeList(totalStats.getPrimitiveAttributeList())
-				.addComplexAttributeList(withoutGivenSpecialAbility)
-				.toAttributes();
-
-		Snapshot snapshot = getSnapshot(playerProfile, playerProfile.getDamagingSpell(), attributesWithoutGivenSpecialAbility);
-
-		return specialAbility.getStatEquivalent(snapshot);
+	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, PlayerProfile playerProfile) {
+		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, playerProfile, null, null);
 	}
 
 	@Override
-	public double getSpEquivalent(PrimitiveAttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell) {
-		playerProfile = playerProfile.copy();
+	public Attributes getDpsStatEquivalent(
+			Attributes attributesToFindEquivalent,
+			PrimitiveAttributeId targetStat,
+			EquivalentMode mode,
+			PlayerProfile playerProfile,
+			Spell spell,
+			Attributes totalStats
+	) {
+		spell = initOptional(playerProfile, spell);
+		totalStats = initOptional(playerProfile, totalStats);
 
-		PrimitiveAttribute base = Attribute.of(attributeId, amount);
-		double targetDps = getSpellStatistics(playerProfile, spell, base).getDps();
-		double totalSp = 0;
+		Attributes baseStats = getBaseAttributes(attributesToFindEquivalent, totalStats, mode);
+		double targetDps = getTargetDps(attributesToFindEquivalent, totalStats, playerProfile, spell, mode);
+
+		double equivalentValue = 0;
 		double increase = 1;
 
 		while (true) {
-			PrimitiveAttribute spEquivalent = Attribute.of(SPELL_DAMAGE, totalSp + increase);
-			double spEqvDps = getSpellStatistics(playerProfile, spell, spEquivalent).getDps();
+			PrimitiveAttribute equivalentStat = Attribute.of(targetStat, equivalentValue + increase);
+			Attributes equivalentStats = AttributesBuilder.addAttribute(baseStats, equivalentStat);
+			double equivalentDps = getSpellStatistics(playerProfile, spell, equivalentStats).getDps();
 
-			if (Math.abs(spEqvDps - targetDps) <= 0.001) {
-				return totalSp + increase;
+			if (Math.abs(equivalentDps - targetDps) <= PRECISION) {
+				return Attributes.of(targetStat, equivalentValue);
 			}
 
-			if (spEqvDps > targetDps) {
-				increase /= 2;
+			if (equivalentDps < targetDps) {
+				equivalentValue += increase;
 			} else {
-				totalSp += increase;
+				increase /= 2;
 			}
 		}
 	}
 
 	@Override
+	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile, Spell spell, Attributes totalStats) {
+		spell = initOptional(playerProfile, spell);
+		totalStats = initOptional(playerProfile, totalStats);
+
+		Snapshot snapshot = getSnapshot(
+				playerProfile,
+				spell,
+				AttributesBuilder.removeAttributes(totalStats, Attributes.of(specialAbility))
+		);
+
+		return specialAbility.getStatEquivalent(snapshot);
+	}
+
+	@Override
 	public SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell) {
-		return getSpellStatistics(playerProfile, spell, playerProfile.getStats());
-	}
-
-	private SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell, PrimitiveAttribute attribute) {
-		Attributes totalStats = AttributeEvaluator.of()
-				.addAttributes(playerProfile)
-				.addAttribute(attribute)
-				.solveAllLeaveAbilities();
-
-		return getSpellStatistics(playerProfile, spell, totalStats);
-	}
-
-	private SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell, PrimitiveAttribute attribute) {
-		Attributes totalStats = AttributeEvaluator.of()
-				.addAttributes(playerProfile)
-				.addAttribute(attribute)
-				.solveAllLeaveAbilities();
-
-		return getSpellStatistics(playerProfile, spell, totalStats);
+		return getSpellStatistics(playerProfile, spell, null);
 	}
 
 	@Override
@@ -106,6 +99,9 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public Snapshot getSnapshot(PlayerProfile playerProfile, Spell spell, Attributes totalStats) {
+		spell = initOptional(playerProfile, spell);
+		totalStats = initOptional(playerProfile, totalStats);
+
 		BaseStatInfo baseStats = pveRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel()).orElseThrow();
 		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
 
@@ -126,5 +122,48 @@ public class CalculationServiceImpl implements CalculationService {
 		double critSpEqv = getSpEquivalent(SPELL_CRIT_RATING, 10, playerProfile, spell);
 		double hasteSpEqv = getSpEquivalent(SPELL_HASTE_RATING, 10, playerProfile, spell);
 		return new PlayerSpellStats(playerProfile, spellStatistics, hitSpEqv, critSpEqv, hasteSpEqv);
+	}
+
+	private double getSpEquivalent(PrimitiveAttributeId attributeId, int amount, PlayerProfile playerProfile, Spell spell) {
+		return getDpsStatEquivalent(
+				Attributes.of(attributeId, amount),
+				SPELL_POWER,
+				EquivalentMode.ADDITIONAL,
+				playerProfile, spell, playerProfile.getStats()
+		).getSpellPower();
+	}
+
+	private Spell initOptional(PlayerProfile playerProfile, Spell spell) {
+		if (spell != null) {
+			return spell;
+		}
+		return playerProfile.getDamagingSpell();
+	}
+
+	private Attributes initOptional(PlayerProfile playerProfile, Attributes totalStats) {
+		if (totalStats != null) {
+			return totalStats;
+		}
+		return playerProfile.getStats();
+	}
+
+	private Attributes getBaseAttributes(Attributes sourceAttributes, Attributes totalStats, EquivalentMode mode) {
+		if (mode == EquivalentMode.REPLACEMENT) {
+			return AttributesBuilder.removeAttributes(totalStats, sourceAttributes);
+		} else {
+			return totalStats;
+		}
+	}
+
+	private double getTargetDps(Attributes attributesToFindEquivalent, Attributes totalStats, PlayerProfile playerProfile, Spell spell, EquivalentMode mode) {
+		if (mode == EquivalentMode.REPLACEMENT) {
+			return getSpellStatistics(playerProfile, spell, totalStats).getDps();
+		} else {
+			return getSpellStatistics(
+					playerProfile,
+					spell,
+					AttributesBuilder.addAttributes(totalStats, attributesToFindEquivalent)
+			).getDps();
+		}
 	}
 }

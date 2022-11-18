@@ -17,7 +17,6 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
-import wow.commons.util.AttributeEvaluator;
 import wow.commons.util.Snapshot;
 import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.BuildIds;
@@ -30,11 +29,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.commons.model.unit.Build.BuffSetId.*;
 import static wow.commons.model.unit.CharacterClass.WARLOCK;
 import static wow.commons.model.unit.CreatureType.UNDEAD;
 import static wow.commons.model.unit.Race.ORC;
+import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 
 /**
  * User: POlszewski
@@ -215,6 +216,24 @@ class CalculationServiceTest {
 
 		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 	}
+
+	@Test
+	@DisplayName("Correct stat quivalent")
+	void correctStatEquivalent() {
+		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
+
+		Attributes hitEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HIT_RATING, 10), SPELL_POWER, ADDITIONAL, playerProfile);
+		Attributes critEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_CRIT_RATING, 10), SPELL_POWER, ADDITIONAL, playerProfile);
+		Attributes hasteEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HASTE_RATING, 10), SPELL_POWER, ADDITIONAL, playerProfile);
+
+		assertThat(hitEqv.getSpellPower()).isEqualTo(0.11, PRECISION);
+		assertThat(critEqv.getSpellPower()).isEqualTo(9.98, PRECISION);
+		assertThat(hasteEqv.getSpellPower()).isEqualTo(10.87, PRECISION);
+	}
+
 
 	static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

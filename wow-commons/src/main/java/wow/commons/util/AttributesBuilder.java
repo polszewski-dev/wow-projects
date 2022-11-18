@@ -140,4 +140,58 @@ public class AttributesBuilder {
 	public static Attributes list(Collection<? extends AttributeSource> attributeSources) {
 		return new AttributesBuilder().addAttributes(attributeSources).toAttributes();
 	}
+
+	public static Attributes addAttribute(Attributes attributes, PrimitiveAttribute attribute) {
+		return new AttributesBuilder()
+				.addAttributes(attributes)
+				.addAttribute(attribute)
+				.toAttributes();
+	}
+
+	public static Attributes addAttributes(Attributes attributes1, Attributes attributes2) {
+		return new AttributesBuilder()
+				.addAttributes(attributes1)
+				.addAttributes(attributes2)
+				.toAttributes();
+	}
+
+	public static Attributes removeAttributes(Attributes attributes, Attributes attributesToRemove) {
+		return Attributes.of(
+				removePrimitiveAttributes(attributes, attributesToRemove),
+				removeComplexAttributes(attributes, attributesToRemove)
+		);
+	}
+
+	private static List<PrimitiveAttribute> removePrimitiveAttributes(Attributes attributes, Attributes attributesToRemove) {
+		var result = new ArrayList<>(attributes.getPrimitiveAttributeList());
+
+		for (var attributeToRemove : attributesToRemove.getPrimitiveAttributeList()) {
+			var minusAttributeToRemove = Attribute.of(attributeToRemove.getId(), -attributeToRemove.getDouble());
+
+			result.add(minusAttributeToRemove);
+		}
+
+		return result;
+	}
+
+	private static Map<ComplexAttributeId, List<ComplexAttribute>> removeComplexAttributes(Attributes attributes, Attributes attributesToRemove) {
+		var result = new EnumMap<>(attributes.getComplexAttributeList());
+
+		for (var entry : result.entrySet()) {
+			entry.setValue(new ArrayList<>(entry.getValue()));
+		}
+
+		for (var entry : attributesToRemove.getComplexAttributeList().entrySet()) {
+			for (var complexAttributeToRemove : entry.getValue()) {
+				boolean removed = result.get(entry.getKey())
+						.remove(complexAttributeToRemove);
+
+				if (!removed) {
+					throw new IllegalArgumentException("Can't remove complex attribute that there is not on the list: " + complexAttributeToRemove);
+				}
+			}
+		}
+
+		return result;
+	}
 }

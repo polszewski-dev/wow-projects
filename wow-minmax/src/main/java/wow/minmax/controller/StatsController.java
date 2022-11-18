@@ -78,12 +78,10 @@ public class StatsController {
 			@PathVariable("profileId") UUID profileId
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
-		Attributes attributes = playerProfile.getStats();
 
-		return attributes.getSpecialAbilities()
-				.stream()
+		return playerProfile.getStats().getSpecialAbilities().stream()
 				.filter(x -> x.getLine() != null)
-				.map(x -> getSpecialAbilityStatsDTO(playerProfile, attributes, x))
+				.map(x -> getSpecialAbilityStatsDTO(playerProfile, x))
 				.collect(Collectors.toList());
 	}
 
@@ -110,7 +108,7 @@ public class StatsController {
 
 	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, Spell spell) {
 		Attributes attributes = playerProfile.getStats();
-		Snapshot snapshot = calculationService.getSnapshot(playerProfile, spell, attributes);
+		Snapshot snapshot = calculationService.getSnapshot(playerProfile, spell, null);
 
 		return new PlayerStatsDTO(
 				type,
@@ -129,8 +127,8 @@ public class StatsController {
 		);
 	}
 
-	private SpecialAbilityStatsDTO getSpecialAbilityStatsDTO(PlayerProfile playerProfile, Attributes attributes, SpecialAbility specialAbility) {
-		Attributes statEquivalent = calculationService.getStatEquivalent(specialAbility, playerProfile, attributes);
+	private SpecialAbilityStatsDTO getSpecialAbilityStatsDTO(PlayerProfile playerProfile, SpecialAbility specialAbility) {
+		Attributes statEquivalent = calculationService.getAbilityEquivalent(specialAbility, playerProfile, null, null);
 
 		return new SpecialAbilityStatsDTO(
 				specialAbility.getLine(),
