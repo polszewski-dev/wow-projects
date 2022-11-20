@@ -181,14 +181,16 @@ public class PlayerProfileController {
 	}
 
 	private List<EnchantDTO> getEnchants(Item item, PlayerProfile playerProfile) {
-		List<Enchant> enchants = itemService.getEnchants(playerProfile, item.getItemType());
-		enchants.sort(Comparator.comparing(Enchant::getName));
+		List<Enchant> enchants = itemService.getEnchants(playerProfile, item.getItemType()).stream()
+				.sorted(Comparator.comparing(Enchant::getName))
+				.collect(Collectors.toList());
 		return enchantConverter.convertList(enchants);
 	}
 
 	private List<GemDTO> getAvailableGems(Item item, int socketNo, PlayerProfile playerProfile) {
-		List<Gem> gems = itemService.getGems(playerProfile, item, socketNo, false);
-		gems.sort(getGemComparator());
+		List<Gem> gems = itemService.getGems(playerProfile, item, socketNo, false).stream()
+				.sorted(getGemComparator())
+				.collect(Collectors.toList());
 		return gemConverter.convertList(gems);
 	}
 

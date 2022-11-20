@@ -54,4 +54,9 @@ public class Spell {
 	public Duration getCastTime() {
 		return spellRankInfo.getCastTime();
 	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

@@ -1,40 +1,31 @@
 package wow.minmax.service;
 
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.equipment.Equipment;
-import wow.commons.model.equipment.EquippableItem;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
-import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.util.Snapshot;
+import wow.commons.util.SpellStatistics;
 import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.repository.BuildRepository;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.commons.model.unit.Build.BuffSetId.*;
-import static wow.commons.model.unit.CharacterClass.WARLOCK;
-import static wow.commons.model.unit.CreatureType.UNDEAD;
-import static wow.commons.model.unit.Race.ORC;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 
 /**
@@ -43,7 +34,8 @@ import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WowMinMaxTestConfig.class)
-class CalculationServiceTest {
+@TestPropertySource("classpath:application.properties")
+class CalculationServiceTest extends ServiceTest {
 	@Autowired
 	ItemDataRepository itemDataRepository;
 
@@ -234,62 +226,58 @@ class CalculationServiceTest {
 		assertThat(hasteEqv.getSpellPower()).isEqualTo(10.87, PRECISION);
 	}
 
+	@Test
+	@DisplayName("Correct stat quivalent")
+	void correctAbilityEquivalent() {
+		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		playerProfile.setEquipment(getEquipment());
 
-	static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
-	static final Offset<Double> PRECISION = Offset.offset(0.01);
+		String line = "Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)";
+		SpecialAbility specialAbility = playerProfile.getEquipment().getStats().getSpecialAbilities().stream()
+				.filter(x -> line.equals(x.getLine()))
+				.findFirst()
+				.orElseThrow();
+		Attributes equivalent = underTest.getAbilityEquivalent(specialAbility, playerProfile, null, null);
 
-	private PlayerProfile getPlayerProfile(String buildId) {
-		PlayerProfile playerProfile = new PlayerProfile(
-				UUID.randomUUID(),
-				"test",
-				new CharacterInfo(WARLOCK, ORC, 70, List.of()),
-				UNDEAD,
-				Phase.TBC_P5
-		);
-		playerProfile.setBuild(buildRepository.getBuild(buildId, 70).orElseThrow());
-		return playerProfile;
+		assertThat(equivalent.getSpellHasteRating()).isEqualTo(29.17, PRECISION);
 	}
 
-	private Equipment getEquipment() {
-		Equipment equipment = new Equipment();
+	@Test
+	@DisplayName("Correct spell stats")
+	void correctSpellStats() {
+		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
 
-		Gem metaGem = getGem("Chaotic Skyfire Diamond").orElseThrow();
-		Gem hitSpGem = getGem("Veiled Pyrestone").orElseThrow();
-		Gem critSpGem = getGem("Potent Pyrestone").orElseThrow();
-		Gem hasteSpGem = getGem("Reckless Pyrestone").orElseThrow();
-		Gem hasteGem = getGem("Quick Lionseye").orElseThrow();
-		Gem staSpGem = getGem("Glowing Shadowsong Amethyst").orElseThrow();
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-		equipment.set(getItem("Dark Conjuror's Collar").enchant(getEnchant("Glyph of Power")).gem(metaGem, staSpGem));
-		equipment.set(getItem("Amulet of Unfettered Magics"));
-		equipment.set(getItem("Mantle of the Malefic").enchant(getEnchant("Greater Inscription of the Orb")).gem(staSpGem, hasteSpGem));
-		equipment.set(getItem("Tattered Cape of Antonidas").enchant(getEnchant("Enchant Cloak - Subtlety")).gem(critSpGem));
-		equipment.set(getItem("Sunfire Robe").enchant(getEnchant("Enchant Chest - Exceptional Stats")).gem(hasteSpGem, hasteSpGem, hasteSpGem));
-		equipment.set(getItem("Bracers of the Malefic").enchant(getEnchant("Enchant Bracer – Spellpower")).gem(hasteSpGem));
-		equipment.set(getItem("Sunfire Handwraps").enchant(getEnchant("Enchant Gloves - Major Spellpower")).gem(hasteSpGem, hasteSpGem));
-		equipment.set(getItem("Belt of the Malefic").gem(hasteSpGem));
-		equipment.set(getItem("Leggings of Calamity").enchant(getEnchant("Runic Spellthread")).gem(hasteSpGem, hasteSpGem, hasteGem));
-		equipment.set(getItem("Boots of the Malefic").enchant(getEnchant("Enchant Boots - Boar's Speed")).gem(critSpGem));
-		equipment.set(getItem("Ring of Omnipotence").enchant(getEnchant("Enchant Ring – Spellpower")), ItemSlot.FINGER_1);
-		equipment.set(getItem("Loop of Forged Power").enchant(getEnchant("Enchant Ring – Spellpower")), ItemSlot.FINGER_2);
-		equipment.set(getItem("The Skull of Gul'dan"), ItemSlot.TRINKET_1);
-		equipment.set(getItem("Shifting Naaru Sliver"), ItemSlot.TRINKET_2);
-		equipment.set(getItem("Sunflare").enchant(getEnchant("Enchant Weapon – Soulfrost")));
-		equipment.set(getItem("Chronicle of Dark Secrets"));
-		equipment.set(getItem("Wand of the Demonsoul").gem(hitSpGem));
+		SpellStatistics spellStatistics = underTest.getSpellStatistics(playerProfile, null);
 
-		return equipment;
+		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5348);
+		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2806);
+		assertThat(spellStatistics.getCastTime().getSeconds()).isEqualTo(1.91, PRECISION);
+		assertThat(spellStatistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
+		assertThat(spellStatistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
 	}
 
-	private Optional<Gem> getGem(String name) {
-		return itemDataRepository.getGem(name);
-	}
+	@Test
+	@DisplayName("Correct player spell stats")
+	void correctPlayerSpellStats() {
+		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
 
-	private EquippableItem getItem(String name) {
-		return new EquippableItem(itemDataRepository.getItem(name).orElseThrow());
-	}
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-	private Enchant getEnchant(String name) {
-		return itemDataRepository.getEnchant(name).orElseThrow();
+		PlayerSpellStats playerSpellStats = underTest.getPlayerSpellStats(playerProfile, null);
+		SpellStatistics spellStatistics = playerSpellStats.getSpellStatistics();
+
+		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5348);
+		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2806);
+		assertThat(spellStatistics.getCastTime().getSeconds()).isEqualTo(1.91, PRECISION);
+		assertThat(spellStatistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
+		assertThat(spellStatistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
+
+		assertThat(playerSpellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
+		assertThat(playerSpellStats.getCritSpEqv()).isEqualTo(9.98, PRECISION);
+		assertThat(playerSpellStats.getHasteSpEqv()).isEqualTo(10.87, PRECISION);
 	}
 }

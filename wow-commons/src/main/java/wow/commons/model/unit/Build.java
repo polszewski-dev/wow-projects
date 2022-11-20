@@ -55,7 +55,7 @@ public class Build implements Copyable<Build>, AttributeCollection {
 		copy.damagingSpell = damagingSpell;
 		copy.relevantSpells = new ArrayList<>(relevantSpells);
 		copy.activePet = activePet;
-		copy.buffSets = new EnumMap<>(buffSets);
+		copy.buffSets = !buffSets.isEmpty() ? new EnumMap<>(buffSets) : new EnumMap<>(BuffSetId.class);
 		copy.buffs = new ArrayList<>(buffs);
 		return copy;
 	}
