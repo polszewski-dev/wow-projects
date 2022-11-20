@@ -156,11 +156,10 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getItemVariants(Set<ItemType> itemTypes) {
-		Map<ItemType, List<Item>> itemsByType = getItemsByType();
 		List<EquippableItem> result = new ArrayList<>();
 
 		for (ItemType itemType : itemTypes) {
-			for (Item item : itemsByType.getOrDefault(itemType, List.of())) {
+			for (Item item : getItemsToAnalyze(itemType)) {
 				result.addAll(getItemVariants(item));
 			}
 		}
@@ -168,7 +167,7 @@ public abstract class ItemVariantEnumerator {
 		return result;
 	}
 
-	protected abstract Map<ItemType, List<Item>> getItemsByType();
+	protected abstract List<Item> getItemsToAnalyze(ItemType itemType);
 
 	private List<EquippableItem> getItemVariants(Item item) {
 		if (item.isEnchantable() && item.hasSockets()) {

@@ -16,8 +16,7 @@ import wow.minmax.model.dto.UpgradesDTO;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +41,10 @@ public class UpgradeController {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
 		List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpellId());
 
+		return toUpgradeDTOs(upgrades);
+	}
+
+	private List<UpgradeDTO> toUpgradeDTOs(List<Comparison> upgrades) {
 		return upgrades.stream()
 				.map(upgradeConverter::convert)
 				.limit(upgradeConfig.getMaxUpgrades())
@@ -55,24 +58,36 @@ public class UpgradeController {
 		long start = System.currentTimeMillis();
 
 		try {
+			PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
+			var result = new EnumMap<ItemSlotGroup, List<Comparison>>(ItemSlotGroup.class);
+
+			for (ItemSlotGroup slotGroup : ItemSlotGroup.values()) {
+				if (!IGNORED_SLOT_GROUPS.contains(slotGroup)) {
+					List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpellId());
+					result.put(slotGroup, upgrades);
+				}
+			}
+
 			return new UpgradesDTO(
-					findUpgrades(profileId, ItemSlotGroup.HEAD),
-					findUpgrades(profileId, ItemSlotGroup.NECK),
-					findUpgrades(profileId, ItemSlotGroup.SHOULDER),
-					findUpgrades(profileId, ItemSlotGroup.BACK),
-					findUpgrades(profileId, ItemSlotGroup.CHEST),
-					findUpgrades(profileId, ItemSlotGroup.WRIST),
-					findUpgrades(profileId, ItemSlotGroup.HANDS),
-					findUpgrades(profileId, ItemSlotGroup.WAIST),
-					findUpgrades(profileId, ItemSlotGroup.LEGS),
-					findUpgrades(profileId, ItemSlotGroup.FEET),
-					findUpgrades(profileId, ItemSlotGroup.FINGERS),
-					findUpgrades(profileId, ItemSlotGroup.TRINKETS),
-					findUpgrades(profileId, ItemSlotGroup.WEAPONS),
-					findUpgrades(profileId, ItemSlotGroup.RANGED)
+				result.entrySet().stream()
+						.collect(Collectors.toMap(
+								Map.Entry::getKey,
+								e -> toUpgradeDTOs(e.getValue())
+						))
 			);
 		} finally {
 			log.info("It took {} millis.", System.currentTimeMillis() - start);
 		}
 	}
+
+	private static final Set<ItemSlotGroup> IGNORED_SLOT_GROUPS = Set.of(
+			ItemSlotGroup.TABARD,
+			ItemSlotGroup.SHIRT,
+			ItemSlotGroup.FINGER_1,
+			ItemSlotGroup.FINGER_2,
+			ItemSlotGroup.TRINKET_1,
+			ItemSlotGroup.TRINKET_2,
+			ItemSlotGroup.MAIN_HAND,
+			ItemSlotGroup.OFF_HAND
+	);
 }

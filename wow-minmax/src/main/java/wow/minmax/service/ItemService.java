@@ -3,12 +3,10 @@ package wow.minmax.service;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
-import wow.commons.model.pve.Phase;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -17,15 +15,9 @@ import java.util.Map;
 public interface ItemService {
 	Item getItem(int itemId);
 
-	List<Item> getItems();
+	List<Item> getItemsByType(PlayerProfile playerProfile, ItemType itemType);
 
-	List<Item> getItems(Phase phase);
-
-	List<Item> getItems(Phase phase, ItemSlot slot);
-
-	Map<ItemType, List<Item>> getItemsByType(PlayerProfile playerProfile);
-
-	Map<ItemSlot, List<Item>> getItemsBySlot(PlayerProfile playerProfile);
+	List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot);
 
 	List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType);
 

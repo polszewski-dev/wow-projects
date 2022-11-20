@@ -23,7 +23,9 @@ import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.impl.enumerators.GemComboFinder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
@@ -46,48 +48,20 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItems() {
-		return new ArrayList<>(itemDataRepository.getAllItems());
-	}
-
-	@Override
-	public List<Item> getItems(Phase phase) {
-		return itemDataRepository.getAllItems()
-				.stream()
-				.filter(item -> item.isAvailableDuring(phase))
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<Item> getItems(Phase phase, ItemSlot slot) {
-		return itemDataRepository.getAllItems()
-				.stream()
-				.filter(item -> item.isAvailableDuring(phase) && item.canBeEquippedIn(slot))
-				.collect(Collectors.toList());
-	}
-
-	@Override
-	public Map<ItemType, List<Item>> getItemsByType(PlayerProfile playerProfile) {
-		return itemDataRepository.getAllItems().stream()
+	public List<Item> getItemsByType(PlayerProfile playerProfile, ItemType itemType) {
+		return itemDataRepository.getItemsByType(itemType).stream()
 				.filter(item -> isSuitableFor(item, playerProfile))
 				.filter(item -> item.getItemLevel() >= itemConfig.getMinItemLevel())
 				.filter(item -> item.getRarity().isAtLeastAsGoodAs(itemConfig.getMinRarity()))
-				.collect(Collectors.groupingBy(Item::getItemType));
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Map<ItemSlot, List<Item>> getItemsBySlot(PlayerProfile playerProfile) {
-		var byItemType = getItemsByType(playerProfile);
-		var result = new EnumMap<ItemSlot, List<Item>>(ItemSlot.class);
-
-		for (var entry : byItemType.entrySet()) {
-			var itemType = entry.getKey();
-			for (ItemSlot itemSlot : itemType.getItemSlots()) {
-				var items = byItemType.get(itemType);
-				result.computeIfAbsent(itemSlot, x -> new ArrayList<>()).addAll(items);
-			}
+	public List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot) {
+		List<Item> result = new ArrayList<>();
+		for (ItemType itemType : itemSlot.getItemTypes()) {
+			result.addAll(getItemsByType(playerProfile, itemType));
 		}
-
 		return result;
 	}
 
@@ -108,7 +82,6 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Gem[]> getGemCombos(PlayerProfile playerProfile, Item item) {
 		return gemComboFinder.getGemCombos(playerProfile, item.getSocketSpecification());
-
 	}
 
 	private boolean isSuitableFor(Item item, PlayerProfile playerProfile) {

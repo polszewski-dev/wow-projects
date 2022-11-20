@@ -2,8 +2,10 @@ package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.categorization.ItemSlotGroup;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -12,18 +14,5 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class UpgradesDTO {
-	private List<UpgradeDTO> head;
-	private List<UpgradeDTO> neck;
-	private List<UpgradeDTO> shoulder;
-	private List<UpgradeDTO> back;
-	private List<UpgradeDTO> chest;
-	private List<UpgradeDTO> wrist;
-	private List<UpgradeDTO> hands;
-	private List<UpgradeDTO> waist;
-	private List<UpgradeDTO> legs;
-	private List<UpgradeDTO> feet;
-	private List<UpgradeDTO> finger1;
-	private List<UpgradeDTO> trinket1;
-	private List<UpgradeDTO> mainhand;
-	private List<UpgradeDTO> ranged;
+	private Map<ItemSlotGroup, List<UpgradeDTO>> upgradesBySlotGroup;
 }

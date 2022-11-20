@@ -20,6 +20,8 @@ public interface ItemDataRepository {
 
 	Collection<Item> getAllItems();
 
+	List<Item> getItemsByType(ItemType itemType);
+
 	List<Item> getItemsTradedFor(ItemLink itemLink);
 	List<Item> getSourceItemsFor(ItemLink itemLink);
 	List<Item> getEquippableItemsFromRaidDrop(Item item, CharacterInfo characterInfo, Phase phase);

@@ -26,6 +26,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	private final Map<Integer, Item> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
+	private final Map<ItemType, List<Item>> itemByType = new TreeMap<>();
 	private final Map<Item, List<Item>> tokenToItems = new HashMap<>();
 	private final Map<Item, List<Item>> itemToTokens = new HashMap<>();
 
@@ -57,6 +58,11 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	@Override
 	public Collection<Item> getAllItems() {
 		return Collections.unmodifiableCollection(itemById.values());
+	}
+
+	@Override
+	public List<Item> getItemsByType(ItemType itemType) {
+		return Collections.unmodifiableList(itemByType.getOrDefault(itemType, List.of()));
 	}
 
 	@Override
@@ -136,6 +142,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	public void addItem(Item item) {
 		itemById.put(item.getId(), item);
 		itemByName.computeIfAbsent(item.getName(), x -> new ArrayList<>()).add(item);
+		itemByType.computeIfAbsent(item.getItemType(), x -> new ArrayList<>()).add(item);
 	}
 
 	public void addToken(Item item, Item sourceToken) {

@@ -198,11 +198,12 @@ public class PlayerProfileController {
 	}
 
 	private void addAvailableItems(PlayerProfileDTO playerProfileDTO, PlayerProfile playerProfile) {
-		var itemsBySlot = itemService.getItemsBySlot(playerProfile);
+		var itemDTOsBySlot = new EnumMap<ItemSlot, List<ItemDTO>>(ItemSlot.class);
 
-		var itemDTOsBySlot = itemsBySlot.entrySet().stream().collect(
-				Collectors.toMap(Map.Entry::getKey, e -> getItemsDTOsOrderedByScore(e.getValue()))
-		);
+		for (ItemSlot slot : ItemSlot.values()) {
+			List<Item> itemsBySlot = itemService.getItemsBySlot(playerProfile, slot);
+			itemDTOsBySlot.put(slot, getItemsDTOsOrderedByScore(itemsBySlot));
+		}
 
 		playerProfileDTO.setAvailableItemsBySlot(itemDTOsBySlot);
 	}

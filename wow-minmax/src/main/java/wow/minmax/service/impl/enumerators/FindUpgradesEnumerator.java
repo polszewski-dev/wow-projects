@@ -15,7 +15,6 @@ import wow.minmax.service.CalculationService;
 import wow.minmax.service.ItemService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -79,7 +78,7 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 	}
 
 	@Override
-	protected Map<ItemType, List<Item>> getItemsByType() {
-		return itemService.getItemsByType(referenceProfile);
+	protected List<Item> getItemsToAnalyze(ItemType itemType) {
+		return itemService.getItemsByType(referenceProfile, itemType);
 	}
 }

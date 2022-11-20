@@ -11,7 +11,6 @@ import wow.minmax.service.CalculationService;
 import wow.minmax.service.ItemService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -46,10 +45,7 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 	}
 
 	@Override
-	protected Map<ItemType, List<Item>> getItemsByType() {
-		return Map.of(
-				item.getItemType(),
-				List.of(item)
-		);
+	protected List<Item> getItemsToAnalyze(ItemType itemType) {
+		return List.of(item);
 	}
 }
