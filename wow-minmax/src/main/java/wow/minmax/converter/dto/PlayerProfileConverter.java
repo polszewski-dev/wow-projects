@@ -31,8 +31,7 @@ public class PlayerProfileConverter extends Converter<PlayerProfile, PlayerProfi
 				equipmentConverter.convert(playerProfile.getEquipment()),
 				buffConverter.convertList(playerProfile.getBuffs()),
 				talentConverter.convertList(playerProfile.getTalentInfos()),
-				playerProfile.getLastModified(),
-				null
+				playerProfile.getLastModified()
 		);
 	}
 }

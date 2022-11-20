@@ -3,7 +3,6 @@ package wow.minmax.model.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.CreatureType;
@@ -13,8 +12,9 @@ import wow.commons.model.unit.Race;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -40,10 +40,11 @@ public class PlayerProfileDTO {
 
 	private LocalDateTime lastModified;
 
-	private Map<ItemSlot, List<ItemDTO>> availableItemsBySlot;
-
 	@JsonIgnore
 	public Collection<EquippableItemDTO> getEquippedItems() {
-		return equipment.getItemsBySlot().values();
+		return equipment.getEquipmentSlotsByType().values().stream()
+				.map(EquipmentSlotDTO::getEquippableItem)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 	}
 }

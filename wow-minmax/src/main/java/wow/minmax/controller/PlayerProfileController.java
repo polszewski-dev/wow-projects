@@ -15,7 +15,10 @@ import wow.minmax.model.dto.*;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -57,22 +60,19 @@ public class PlayerProfileController {
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);
-
-		if (addOptions) {
-			addItemOptions(playerProfileDTO, playerProfile);
-		}
-
+		addItemOptions(addOptions, playerProfileDTO, playerProfile);
 		return playerProfileDTO;
 	}
 
 	@GetMapping("create/name/{profileName}/phase/{phase}")
 	public PlayerProfileDTO createPlayerProfile(
 			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") Phase phase
+			@PathVariable("phase") Phase phase,
+			@RequestParam(value = "addOptions", required = false, defaultValue = "false") boolean addOptions
 	) {
 		PlayerProfile createdProfile = playerProfileService.createPlayerProfile(profileName, phase);
 		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
-		addItemOptions(createdProfileDTO, createdProfile);
+		addItemOptions(addOptions, createdProfileDTO, createdProfile);
 		log.info("Created profile id: {}, name: {}", createdProfile.getProfileId(), createdProfile.getProfileName());
 		return createdProfileDTO;
 	}
@@ -81,11 +81,12 @@ public class PlayerProfileController {
 	public PlayerProfileDTO createPlayerProfile(
 			@PathVariable("copiedProfileId") UUID copiedProfileId,
 			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") Phase phase
+			@PathVariable("phase") Phase phase,
+			@RequestParam(value = "addOptions", required = false, defaultValue = "false") boolean addOptions
 	) {
 		PlayerProfile createdProfile = playerProfileService.copyPlayerProfile(copiedProfileId, profileName, phase);
 		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
-		addItemOptions(createdProfileDTO, createdProfile);
+		addItemOptions(addOptions, createdProfileDTO, createdProfile);
 		log.info("Copied profile id: {}, name: {}, sourceId: {}", createdProfile.getProfileId(), createdProfile.getProfileName(), copiedProfileId);
 		return createdProfileDTO;
 	}
@@ -137,11 +138,12 @@ public class PlayerProfileController {
 
 	@GetMapping("{profileId}/reset/equipment")
 	public PlayerProfileDTO resetProfile(
-			@PathVariable("profileId") UUID profileId
+			@PathVariable("profileId") UUID profileId,
+			@RequestParam(value = "addOptions", required = false, defaultValue = "false") boolean addOptions
 	) {
 		PlayerProfile playerProfile = playerProfileService.resetEquipment(profileId);
 		PlayerProfileDTO playerProfileDTO = playerProfileConverter.convert(playerProfile);
-		addItemOptions(playerProfileDTO, playerProfile);
+		addItemOptions(addOptions, playerProfileDTO, playerProfile);
 		log.info("Reset profile id: {}", profileId);
 		return playerProfileDTO;
 	}
@@ -151,11 +153,21 @@ public class PlayerProfileController {
 		return equipmentConverter.convertItem(playerProfile.getEquipment(), equippableItem);
 	}
 
-	private void addItemOptions(PlayerProfileDTO playerProfileDTO, PlayerProfile playerProfile) {
-		for (EquippableItemDTO item : playerProfileDTO.getEquippedItems()) {
-			addItemOptions(item, playerProfile);
+	private void addItemOptions(boolean addOptions, PlayerProfileDTO playerProfileDTO, PlayerProfile playerProfile) {
+		if (!addOptions) {
+			return;
 		}
-		addAvailableItems(playerProfileDTO, playerProfile);
+
+		for (ItemSlot slot : ItemSlot.getDpsSlots()) {
+			EquipmentSlotDTO slotDTO = playerProfileDTO.getEquipment().getEquipmentSlotsByType().get(slot);
+
+			List<Item> itemsBySlot = itemService.getItemsBySlot(playerProfile, slot);
+			slotDTO.setAvailableItems(getItemsDTOsOrderedByScore(itemsBySlot));
+
+			if (slotDTO.getEquippableItem() != null) {
+				addItemOptions(slotDTO.getEquippableItem(), playerProfile);
+			}
+		}
 	}
 
 	private void addItemOptions(EquippableItemDTO dto, PlayerProfile playerProfile) {
@@ -195,17 +207,6 @@ public class PlayerProfileController {
 			return 2;
 		}
 		return 3;
-	}
-
-	private void addAvailableItems(PlayerProfileDTO playerProfileDTO, PlayerProfile playerProfile) {
-		var itemDTOsBySlot = new EnumMap<ItemSlot, List<ItemDTO>>(ItemSlot.class);
-
-		for (ItemSlot slot : ItemSlot.values()) {
-			List<Item> itemsBySlot = itemService.getItemsBySlot(playerProfile, slot);
-			itemDTOsBySlot.put(slot, getItemsDTOsOrderedByScore(itemsBySlot));
-		}
-
-		playerProfileDTO.setAvailableItemsBySlot(itemDTOsBySlot);
 	}
 
 	private List<ItemDTO> getItemsDTOsOrderedByScore(List<Item> items) {

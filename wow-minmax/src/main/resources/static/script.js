@@ -20,26 +20,6 @@ const slots = [
 	'RANGED'
 ]
 
-const slotToSlotGroup = {
-	HEAD: 'HEAD',
-	NECK: 'NECK',
-	SHOULDER: 'SHOULDER',
-	BACK: 'BACK',
-	CHEST: 'CHEST',
-	WRIST: 'WRIST',
-	HANDS: 'HANDS',
-	WAIST: 'WAIST',
-	LEGS: 'LEGS',
-	FEET: 'FEET',
-	FINGER_1: 'FINGERS',
-	FINGER_2: 'FINGERS',
-	TRINKET_1: 'TRINKETS',
-	TRINKET_2: 'TRINKETS',
-	MAIN_HAND: 'WEAPONS',
-	OFF_HAND: 'WEAPONS',
-	RANGED: 'RANGED'
-}
-
 class Api {
 	static getProfiles() {
 		return Api.sendRequest(`/api/v1/profile/list`)
@@ -47,9 +27,9 @@ class Api {
 
 	static createNewProfile(profileName, phase, copiedProfileId) {
 		if (copiedProfileId) {
-			return Api.sendRequest(`/api/v1/profile/copy/${encodeURIComponent(copiedProfileId)}/name/${encodeURIComponent(profileName)}/phase/${phase}`)
+			return Api.sendRequest(`/api/v1/profile/copy/${encodeURIComponent(copiedProfileId)}/name/${encodeURIComponent(profileName)}/phase/${phase}?addOptions=true`)
 		} else {
-			return Api.sendRequest(`/api/v1/profile/create/name/${encodeURIComponent(profileName)}/phase/${phase}`)
+			return Api.sendRequest(`/api/v1/profile/create/name/${encodeURIComponent(profileName)}/phase/${phase}?addOptions=true`)
 		}
 	}
 
@@ -94,7 +74,7 @@ class Api {
 	}
 
 	static resetProfile(profileId) {
-		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/reset/equipment`)
+		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/reset/equipment?addOptions=true`)
 	}
 
 	static async sendRequest(url) {
@@ -531,23 +511,22 @@ class ItemEditor {
 class EquipmentEditor {
 	constructor() {
 		this._itemEditorsBySlot = {}
-		this._itemsBySlot = null
 	}
 
 	set profile(value) {
 		this._profile = value
-		this.itemsBySlot = this._profile.availableItemsBySlot
+		this.loadItemOptions()
 		slots.forEach(slot => this.selectItem(slot))
 		this.findAllUpgradesBtn.prop('disabled', false)
 		this.resetBtn.prop('disabled', false)
     }
 
     getEquippedItem(slot) {
-    	return this._profile.equipment.itemsBySlot[slot]
+    	return this._profile.equipment.equipmentSlotsByType[slot].equippableItem
     }
 
     setEquippedItem(item, slot) {
-		this._profile.equipment.itemsBySlot[slot] = item
+		this._profile.equipment.equipmentSlotsByType[slot].equippableItem = item
 	}
 
 	getItemEditor(slot) {
@@ -555,11 +534,10 @@ class EquipmentEditor {
 	}
 
 	getItems(slot) {
-		return this._itemsBySlot[slot] || []
+		return this._profile.equipment.equipmentSlotsByType[slot].availableItems || []
 	}
 
-	set itemsBySlot(value) {
-		this._itemsBySlot = value
+	loadItemOptions() {
 		slots.forEach(slot => {
 			const items = this.getItems(slot)
 			const editor = this.getItemEditor(slot)
@@ -664,7 +642,7 @@ class EquipmentEditor {
     				e.preventDefault()
     				$('#error-container').hide()
     				editor.upgradeBox.show().html('<i>waiting...</i>')
-    				Api.getUpgrades(this._profile.profileId, slotToSlotGroup[slot])
+    				Api.getUpgrades(this._profile.profileId, this._profile.equipment.equipmentSlotsByType[slot].slotGroup)
     				.then(upgrades => {
     					let lines = []
     					upgrades.forEach(upgrade => {

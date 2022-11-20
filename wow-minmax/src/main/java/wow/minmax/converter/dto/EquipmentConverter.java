@@ -3,11 +3,15 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.EquipmentDTO;
+import wow.minmax.model.dto.EquipmentSlotDTO;
 import wow.minmax.model.dto.EquippableItemDTO;
+
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -20,15 +24,20 @@ public class EquipmentConverter extends Converter<Equipment, EquipmentDTO> {
 
 	@Override
 	protected EquipmentDTO doConvert(Equipment equipment) {
-		var itemsBySlot = equippableItemConverter.convertMap(equipment.toMap());
+		return new EquipmentDTO(
+				ItemSlot.getDpsSlots().stream()
+						.map(slot -> getEquipmentSlotDTO(slot, equipment))
+						.collect(Collectors.toMap(EquipmentSlotDTO::getSlot, x -> x))
+		);
+	}
 
-		for (var entry : itemsBySlot.entrySet()) {
-			ItemSlot itemSlot = entry.getKey();
-			EquippableItemDTO itemDTO = entry.getValue();
-			setSocketMatchingInfo(equipment, equipment.get(itemSlot), itemDTO);
-		}
-
-		return new EquipmentDTO(itemsBySlot);
+	private EquipmentSlotDTO getEquipmentSlotDTO(ItemSlot slot, Equipment equipment) {
+		return new EquipmentSlotDTO(
+				slot,
+				ItemSlotGroup.getGroup(slot),
+				convertItem(equipment, equipment.get(slot)),
+				null
+		);
 	}
 
 	public EquippableItemDTO convertItem(Equipment equipment, EquippableItem item) {

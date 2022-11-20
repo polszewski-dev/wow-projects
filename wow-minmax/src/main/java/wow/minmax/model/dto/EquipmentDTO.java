@@ -13,5 +13,5 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 public class EquipmentDTO {
-	private Map<ItemSlot, EquippableItemDTO> itemsBySlot;
+	private Map<ItemSlot, EquipmentSlotDTO> equipmentSlotsByType;
 }

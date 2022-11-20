@@ -2,6 +2,7 @@ package wow.commons.model.categorization;
 
 import wow.commons.util.EnumUtil;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,8 +17,8 @@ public enum ItemSlot {
 	SHOULDER,
 	BACK,
 	CHEST,
-	SHIRT,
-	TABARD,
+	SHIRT(false),
+	TABARD(false),
 	WRIST,
 	HANDS,
 	WAIST,
@@ -31,8 +32,28 @@ public enum ItemSlot {
 	OFF_HAND,
 	RANGED;
 
+	private final boolean dpsSlot;
+
+	ItemSlot() {
+		this(true);
+	}
+
+	ItemSlot(boolean dpsSlot) {
+		this.dpsSlot = dpsSlot;
+	}
+
 	public static ItemSlot parse(String value) {
 		return EnumUtil.parse(value, values());
+	}
+
+	public boolean isDpsSlot() {
+		return dpsSlot;
+	}
+
+	public static List<ItemSlot> getDpsSlots() {
+		return Stream.of(values())
+				.filter(ItemSlot::isDpsSlot)
+				.collect(Collectors.toList());
 	}
 
 	public Set<ItemType> getItemTypes() {
