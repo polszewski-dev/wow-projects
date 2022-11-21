@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -174,10 +175,14 @@ public class PlayerProfileController {
 		Item item = itemService.getItem(dto.getItem().getId());
 		dto.setItemOptions(new ItemOptionsDTO(
 				getEnchants(item, playerProfile),
-				getAvailableGems(item, 1, playerProfile),
-				getAvailableGems(item, 2, playerProfile),
-				getAvailableGems(item, 3, playerProfile)
+				getAvailableGems(playerProfile, item)
 		));
+	}
+
+	private List<List<GemDTO>> getAvailableGems(PlayerProfile playerProfile, Item item) {
+		return Stream.iterate(0, i -> i < item.getSocketCount(), i -> i + 1)
+				.map(i -> getAvailableGems(item, i, playerProfile))
+				.collect(Collectors.toList());
 	}
 
 	private List<EnchantDTO> getEnchants(Item item, PlayerProfile playerProfile) {

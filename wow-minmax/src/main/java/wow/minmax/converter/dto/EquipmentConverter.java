@@ -51,9 +51,10 @@ public class EquipmentConverter extends Converter<Equipment, EquipmentDTO> {
 			return;
 		}
 
-		dto.setSocket1Matching(equipment.hasMatchingGem(item, 1));
-		dto.setSocket2Matching(equipment.hasMatchingGem(item, 2));
-		dto.setSocket3Matching(equipment.hasMatchingGem(item, 3));
+		for (int i = 0; i < item.getSocketCount(); ++i) {
+			dto.getSockets().get(i).setMatching(equipment.hasMatchingGem(item, i));
+		}
+
 		dto.setSocketBonusEnabled(equipment.allSocketsHaveMatchingGems(item));
 	}
 }

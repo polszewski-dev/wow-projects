@@ -100,7 +100,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		assertThat(mainHand.getEnchant()).isNotNull();
 
-		for (int i = 1; i <= mainHand.getSocketCount(); ++i) {
+		for (int i = 0; i < mainHand.getSocketCount(); ++i) {
 			assertThat(mainHand.getGem(i)).isNotNull();
 		}
 
@@ -126,11 +126,11 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		assertThat(chest.getName()).isEqualTo("Sunfire Robe");
 		assertThat(chest.getSocketCount()).isEqualTo(3);
-		assertThat(chest.getGem(2).getId()).isNotEqualTo(35761);
+		assertThat(chest.getGem(1).getId()).isNotEqualTo(35761);
 
-		underTest.changeGem(profile.getProfileId(), ItemSlot.CHEST, 2, 35761);
+		underTest.changeGem(profile.getProfileId(), ItemSlot.CHEST, 1, 35761);
 
-		assertThat(chest.getGem(2).getId()).isEqualTo(35761);
+		assertThat(chest.getGem(1).getId()).isEqualTo(35761);
 
 		verify(playerProfileRepository).saveProfile(profile);
 	}

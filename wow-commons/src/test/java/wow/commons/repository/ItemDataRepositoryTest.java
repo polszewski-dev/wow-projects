@@ -101,9 +101,9 @@ class ItemDataRepositoryTest {
 		ItemSocketSpecification socketSpecification = item.getSocketSpecification();
 
 		assertThat(socketSpecification.getSocketCount()).isEqualTo(3);
+		assertThat(socketSpecification.getSocketType(0)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketType(1)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketType(2)).isEqualTo(SocketType.RED);
-		assertThat(socketSpecification.getSocketType(3)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketBonus().getPrimitiveAttributeList().get(0)).isEqualTo(Attribute.of(SPELL_POWER, 5));
 	}
 

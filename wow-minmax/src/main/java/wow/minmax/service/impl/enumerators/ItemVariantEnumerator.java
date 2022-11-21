@@ -75,13 +75,12 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private void enumerateFingers() {
-		List<EquippableItem> rings1 = getItemVariants(FINGER);
-		List<EquippableItem> rings2 = getItemVariants(FINGER);
+		List<EquippableItem> rings = getItemVariants(FINGER);
 
-		for (int i = 0; i < rings1.size(); i++) {
-			EquippableItem ring1 = rings1.get(i);
-			for (int j = i; j < rings2.size(); j++) {
-				EquippableItem ring2 = rings2.get(j);
+		for (int i = 0; i < rings.size(); i++) {
+			EquippableItem ring1 = rings.get(i);
+			for (int j = i; j < rings.size(); j++) {
+				EquippableItem ring2 = rings.get(j);
 				if (i != j || !ring1.isUnique()) {
 					handleItemOption(ring1, ring2);
 				}

@@ -32,10 +32,7 @@ public class ItemSocketSpecification {
 	}
 
 	public SocketType getSocketType(int socketNo) {
-		if (socketNo > getSocketCount()) {
-			return null;
-		}
-		return socketTypes.get(socketNo - 1);
+		return socketTypes.get(socketNo);
 	}
 
 	public List<SocketType> getSocketTypes() {

@@ -6,6 +6,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2021-03-06
  */
-public class ItemSockets extends ComplexAttribute implements Copyable<ItemSockets> {
+public class ItemSockets extends ComplexAttribute implements Copyable<ItemSockets>, Iterable<ItemSocket>  {
 	private final ItemSocketSpecification specification;
 	private final List<ItemSocket> sockets;
 
@@ -62,27 +63,29 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	public ItemSocket getSocket(int socketNo) {
-		if (socketNo > getSocketCount()) {
-			return null;
+		if (0 <= socketNo && socketNo < getSocketCount()) {
+			return sockets.get(socketNo);
 		}
-		return sockets.get(socketNo - 1);
+		throw new IllegalArgumentException("Socket no: " + socketNo);
+	}
+
+	public List<Gem> getGems() {
+		return sockets.stream()
+				.map(ItemSocket::getGem)
+				.collect(Collectors.toList());
 	}
 
 	public Gem getGem(int socketNo) {
-		ItemSocket socket = getSocket(socketNo);
-		return socket != null ? socket.getGem() : null;
+		return getSocket(socketNo).getGem();
 	}
 
 	public void insertGem(int socketNo, Gem gem) {
-		if (socketNo > getSocketCount() && gem == null) {
-			return;
-		}
-		sockets.get(socketNo - 1).insertGem(gem);
+		getSocket(socketNo).insertGem(gem);
 	}
 
 	public int getGemCount(SocketType socketType) {
 		int result = 0;
-		for (int socketNo = 1; socketNo <= getSocketCount(); ++socketNo) {
+		for (int socketNo = 0; socketNo < getSocketCount(); ++socketNo) {
 			Gem gem = getGem(socketNo);
 			if (gem != null && gem.getColor().matchesSocket(socketType)) {
 				++result;
@@ -92,8 +95,8 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	public boolean matchesSockets(Gem[] gemCombo) {
-		for (int i = 1; i <= getSocketCount(); ++i) {
-			if (!getSocket(i).matchesSocketColor(gemCombo[i - 1])) {
+		for (int i = 0; i < getSocketCount(); ++i) {
+			if (!getSocket(i).matchesSocketColor(gemCombo[i])) {
 				return false;
 			}
 		}
@@ -103,6 +106,11 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	@Override
 	public ItemSockets attachCondition(AttributeCondition condition) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Iterator<ItemSocket> iterator() {
+		return sockets.iterator();
 	}
 
 	@Override

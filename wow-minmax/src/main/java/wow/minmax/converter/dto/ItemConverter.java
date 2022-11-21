@@ -27,10 +27,8 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 				getSources(item),
 				item.getAttributes().statString(),
 				item.getSocketCount(),
-				item.getSocketType(1),
-				item.getSocketType(2),
-				item.getSocketType(3),
-				item.getSocketSpecification().getSocketBonus().statString(),
+				item.getSocketTypes(),
+				item.getSocketBonus().statString(),
 				item.getIcon(),
 				item.getTooltip()
 		);

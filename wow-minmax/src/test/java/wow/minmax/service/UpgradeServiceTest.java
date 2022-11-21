@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.equipment.EquippableItem;
+import wow.commons.model.item.ItemSocket;
 import wow.commons.model.spells.SpellId;
 import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.BuildIds;
@@ -99,8 +100,8 @@ class UpgradeServiceTest extends ServiceTest {
 
 		assertThat(item.getEnchant()).isNotNull();
 
-		for (int i = 1; i <= item.getSocketCount(); ++i) {
-			assertThat(item.getGem(i)).isNotNull();
+		for (ItemSocket socket : item.getSockets()) {
+			assertThat(socket.getGem()).isNotNull();
 		}
 	}
 

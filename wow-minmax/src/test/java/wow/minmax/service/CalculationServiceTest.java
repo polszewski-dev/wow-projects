@@ -11,14 +11,12 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.spells.Spell;
-import wow.commons.repository.ItemDataRepository;
 import wow.commons.util.Snapshot;
 import wow.commons.util.SpellStatistics;
 import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
-import wow.minmax.repository.BuildRepository;
 
 import java.util.List;
 
@@ -37,13 +35,7 @@ import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 @TestPropertySource("classpath:application.properties")
 class CalculationServiceTest extends ServiceTest {
 	@Autowired
-	ItemDataRepository itemDataRepository;
-
-	@Autowired
 	SpellService spellService;
-
-	@Autowired
-	BuildRepository buildRepository;
 
 	@Autowired
 	CalculationService underTest;

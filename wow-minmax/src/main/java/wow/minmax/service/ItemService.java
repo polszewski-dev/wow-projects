@@ -5,7 +5,6 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.minmax.model.PlayerProfile;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,11 +24,6 @@ public interface ItemService {
 
 	default List<Gem> getGems(PlayerProfile playerProfile, Item item, int socketNo, boolean onlyCrafted) {
 		ItemSocketSpecification specification = item.getSocketSpecification();
-
-		if (socketNo > specification.getSocketCount()) {
-			return Collections.emptyList();//sortable list is needed
-		}
-
 		return getGems(playerProfile, specification.getSocketType(socketNo), onlyCrafted);
 	}
 

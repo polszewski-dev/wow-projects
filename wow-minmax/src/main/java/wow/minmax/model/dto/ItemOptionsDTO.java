@@ -13,7 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemOptionsDTO {
 	private List<EnchantDTO> availableEnchants;
-	private List<GemDTO> availableGems1;
-	private List<GemDTO> availableGems2;
-	private List<GemDTO> availableGems3;
+	private List<List<GemDTO>> availableGems;
 }

@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import wow.commons.model.equipment.EquippableItem;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.persistent.EquippableItemPO;
+import wow.minmax.model.persistent.GemPO;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -23,9 +26,7 @@ public class EquippableItemPOConverter extends Converter<EquippableItem, Equippa
 				itemPOConverter.convert(item.getItem()),
 				enchantPOConverter.convert(item.getEnchant()),
 				item.getSocketCount(),
-				gemPOConverter.convert(item.getGem(1)),
-				gemPOConverter.convert(item.getGem(2)),
-				gemPOConverter.convert(item.getGem(3))
+				gemPOConverter.convertList(item.getGems())
 		);
 	}
 
@@ -35,9 +36,12 @@ public class EquippableItemPOConverter extends Converter<EquippableItem, Equippa
 
 		equippableItem.enchant(enchantPOConverter.convertBack(value.getEnchant()));
 
-		equippableItem.insertGem(1, gemPOConverter.convertBack(value.getGem1()));
-		equippableItem.insertGem(2, gemPOConverter.convertBack(value.getGem2()));
-		equippableItem.insertGem(3, gemPOConverter.convertBack(value.getGem3()));
+		List<GemPO> gems = value.getGems();
+
+		for (int i = 0; i < gems.size(); i++) {
+			GemPO gem = gems.get(i);
+			equippableItem.insertGem(i, gemPOConverter.convertBack(gem));
+		}
 
 		return equippableItem;
 	}

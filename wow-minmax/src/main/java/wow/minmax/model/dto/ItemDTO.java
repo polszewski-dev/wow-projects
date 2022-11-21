@@ -6,6 +6,8 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
 
+import java.util.List;
+
 /**
  * User: POlszewski
  * Date: 2021-12-13
@@ -21,9 +23,7 @@ public class ItemDTO {
 	private String source;
 	private String attributes;
 	private int socketCount;
-	private SocketType socket1Color;
-	private SocketType socket2Color;
-	private SocketType socket3Color;
+	private List<SocketType> socketColors;
 	private String socketBonus;
 	private String icon;
 	private String tooltip;

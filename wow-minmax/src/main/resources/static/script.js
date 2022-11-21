@@ -229,19 +229,25 @@ class ItemEditor {
 
 		this._itemSelect = new ItemSelect(`${this._slot}-item`)
 		this._enchantSelect = new EnchantSelect(`${this._slot}-enchant`)
-		this._gem1Select = new GemSelect(`${this._slot}-gem1`)
-		this._gem2Select = new GemSelect(`${this._slot}-gem2`)
-		this._gem3Select = new GemSelect(`${this._slot}-gem3`)
+		this._gemSelects = [
+			new GemSelect(`${this._slot}-gem0`),
+			new GemSelect(`${this._slot}-gem1`),
+			new GemSelect(`${this._slot}-gem2`)
+		]
 
 		this._enchantRowId = `${this._slot}-enchant-row`
 
-		this._gem1RowId = `${this._slot}-gem1-row`
-		this._gem2RowId = `${this._slot}-gem2-row`
-		this._gem3RowId = `${this._slot}-gem3-row`
+		this._gemRowIds = [
+			`${this._slot}-gem0-row`,
+			`${this._slot}-gem1-row`,
+			`${this._slot}-gem2-row`
+		]
 
-		this._socket1ColorId = `${this._slot}-socket1-color`
-		this._socket2ColorId = `${this._slot}-socket2-color`
-		this._socket3ColorId = `${this._slot}-socket3-color`
+		this._socketColorIds = [
+			`${this._slot}-socket0-color`,
+			`${this._slot}-socket1-color`,
+			`${this._slot}-socket2-color`
+		]
 
 		this._socketBonusRowId = `${this._slot}-socket-bonus-row`
 		this._socketBonusContainerId = `${this._slot}-socket-bonus-container`
@@ -261,17 +267,9 @@ class ItemEditor {
 	get enchantSelect() {
 		return this._enchantSelect
 	}
-	
-	get gem1Select() {
-		return this._gem1Select
-	}
-	
-	get gem2Select() {
-		return this._gem2Select
-	}
-	
-	get gem3Select() {
-		return this._gem3Select
+
+	get gemSelects() {
+		return this._gemSelects
 	}
 
 	get socketBonusContainer() {
@@ -362,10 +360,19 @@ class ItemEditor {
 								</div>
 							</div>
 
-							<div class="row g-3" id="${this._slot}-gem1-row">
+							<div class="row g-3" id="${this._slot}-gem0-row">
 								<div class="col-md-2 pe-0">
 									<span class="item-editor-header">Gem #1</span>
-									<span class="item-editor-header" style="float:right;" id="${this._socket1ColorId}"></span>
+									<span class="item-editor-header" style="float:right;" id="${this._socketColorIds[0]}"></span>
+								</div>
+								<div class="col-md-10" id="${this._slot}-gem0-select-container">
+								</div>
+							</div>
+
+							<div class="row g-3" id="${this._slot}-gem1-row">
+								<div class="col-md-2 pe-0">
+									<span class="item-editor-header">Gem #2</span>
+									<span class="item-editor-header" style="float:right;" id="${this._socketColorIds[1]}"></span>
 								</div>
 								<div class="col-md-10" id="${this._slot}-gem1-select-container">
 								</div>
@@ -373,19 +380,10 @@ class ItemEditor {
 
 							<div class="row g-3" id="${this._slot}-gem2-row">
 								<div class="col-md-2 pe-0">
-									<span class="item-editor-header">Gem #2</span>
-									<span class="item-editor-header" style="float:right;" id="${this._socket2ColorId}"></span>
+									<span class="item-editor-header">Gem #3</span>
+									<span class="item-editor-header" style="float:right;" id="${this._socketColorIds[2]}"></span>
 								</div>
 								<div class="col-md-10" id="${this._slot}-gem2-select-container">
-								</div>
-							</div>
-
-							<div class="row g-3" id="${this._slot}-gem3-row">
-								<div class="col-md-2 pe-0">
-									<span class="item-editor-header">Gem #3</span>
-									<span class="item-editor-header" style="float:right;" id="${this._socket3ColorId}"></span>
-								</div>
-								<div class="col-md-10" id="${this._slot}-gem3-select-container">
 								</div>
 							</div>
 
@@ -407,103 +405,69 @@ class ItemEditor {
 		parent.append(html)
 
 		$(`#${this._enchantRowId}`).hide()
-		$(`#${this._gem1RowId}`).hide()
-		$(`#${this._gem2RowId}`).hide()
-		$(`#${this._gem3RowId}`).hide()
+		this._gemRowIds.forEach(gemRowId => $(`#${gemRowId}`).hide())
 		$(`#${this._socketBonusRowId}`).hide()
 
 		this.upgradeBox.hide()
 
 		this.itemSelect.generateUI($(`#${this._slot}-item-select-container`))
 		this.enchantSelect.generateUI($(`#${this._slot}-enchant-select-container`))
-		this.gem1Select.generateUI($(`#${this._slot}-gem1-select-container`))
-		this.gem2Select.generateUI($(`#${this._slot}-gem2-select-container`))
-		this.gem3Select.generateUI($(`#${this._slot}-gem3-select-container`))
+		this.gemSelects.forEach((select, i) => select.generateUI($(`#${this._slot}-gem${i}-select-container`)))
 		this.findUpgradesBtn.prop('disabled', true)
 	}
 
 	populateEnchantAndGems(item) {
 		let availableEnchants = null
-		let availableGems1 = null
-		let availableGems2 = null
-		let availableGems3 = null
-
 		let enchant = null
-		let gem1 = null
-		let gem2 = null
-		let gem3 = null
+		let showEnchantSelect = false
 
-		let socket1Color = null
-		let socket2Color = null
-		let socket3Color = null
-
-		let socket1Matching = false
-		let socket2Matching = false
-		let socket3Matching = false
+		let availableGems = []
+		let gems = []
+		let showGemSelects = []
+		let socketColors = []
+		let socketMatchings = []
 
 		let socketBonus = null
 		let socketBonusEnabled = false
-
-		let showEnchantSelect = false
-		let showGem1Select = false
-		let showGem2Select = false
-		let showGem3Select = false
 		let showSocketBonus = false
 
 		if (item) {
 			availableEnchants = item.itemOptions.availableEnchants
-			availableGems1 = item.itemOptions.availableGems1
-			availableGems2 = item.itemOptions.availableGems2
-			availableGems3 = item.itemOptions.availableGems3
-
 			enchant = item.enchant
-			gem1 = item.gem1
-			gem2 = item.gem2
-			gem3 = item.gem3
+			showEnchantSelect = (availableEnchants || []).length != 0
 
-			socket1Color = item.item.socket1Color
-			socket2Color = item.item.socket2Color
-			socket3Color = item.item.socket3Color
-
-			socket1Matching = item.socket1Matching
-			socket2Matching = item.socket2Matching
-			socket3Matching = item.socket3Matching
+			availableGems = item.itemOptions.availableGems
+			gems = item.sockets.map(socket => socket.gem)
+			showGemSelects = availableGems.map(x => (x || []).length != 0)
+			socketColors = item.item.socketColors
+			socketMatchings = item.sockets.map(socket => socket.matching)
 
 			socketBonus = item.item.socketBonus
 			socketBonusEnabled = item.socketBonusEnabled
-
-			showEnchantSelect = (availableEnchants || []).length != 0
-			showGem1Select = (availableGems1 || []).length != 0
-			showGem2Select = (availableGems2 || []).length != 0
-			showGem3Select = (availableGems3 || []).length != 0
 			showSocketBonus = !!item.item.socketBonus
 		}
 
 		this.enchantSelect.items = availableEnchants
-		this.gem1Select.items = availableGems1
-		this.gem2Select.items = availableGems2
-		this.gem3Select.items = availableGems3
-
 		this.enchantSelect.selected = enchant
-		this.gem1Select.selected = gem1
-		this.gem2Select.selected = gem2
-		this.gem3Select.selected = gem3
 
-		this.setSocketColor(1, socket1Color)
-		this.setSocketColor(2, socket2Color)
-		this.setSocketColor(3, socket3Color)
+		this.gemSelects.forEach((select, i) => {
+			select.items = availableGems[i] || []
+			select.selected = gems[i] || false
+		})
 
-		this.setSocketMatching(1, socket1Matching)
-		this.setSocketMatching(2, socket2Matching)
-		this.setSocketMatching(3, socket3Matching)
+		this.setSocketColor(0, socketColors[0])
+		this.setSocketColor(1, socketColors[1])
+		this.setSocketColor(2, socketColors[2])
+
+		this.setSocketMatching(0, socketMatchings[0])
+		this.setSocketMatching(1, socketMatchings[1])
+		this.setSocketMatching(2, socketMatchings[2])
 
 		this.socketBonus = socketBonus
 		this.socketBonusEnabled = socketBonusEnabled
 
 		$(`#${this._enchantRowId}`).toggle(showEnchantSelect)
-		$(`#${this._gem1RowId}`).toggle(showGem1Select)
-		$(`#${this._gem2RowId}`).toggle(showGem2Select)
-		$(`#${this._gem3RowId}`).toggle(showGem3Select)
+		this._gemRowIds.forEach((gemRowId, i) => $(`#${gemRowId}`).toggle(showGemSelects[i] || false))
 		$(`#${this._socketBonusRowId}`).toggle(showSocketBonus)
 	}
 }
@@ -616,33 +580,30 @@ class EquipmentEditor {
 				return Api.changeGem(this._profile.profileId, slot, socketNo, gemId)
 				.then(item => {
 					this.setEquippedItem(item, slot)
-					editor.setSocketMatching(1, item.socket1Matching)
-					editor.setSocketMatching(2, item.socket2Matching)
-					editor.setSocketMatching(3, item.socket3Matching)
+					item.sockets.forEach((socket, i) => editor.setSocketMatching(i, socket.matching))
 					editor.socketBonusEnabled = item.socketBonusEnabled
 					this.triggerOnChange()
 				})
 				.catch(err => showError(err))
 			}
 
-			editor.gem1Select.change(gemId => {
-				handleGemSelection(slot, 1, gemId)
-			})
-
-			editor.gem2Select.change(gemId => {
-				handleGemSelection(slot, 2, gemId)
-			})
-
-			editor.gem3Select.change(gemId => {
-				handleGemSelection(slot, 3, gemId)
-			})
+			editor.gemSelects.forEach((select, i) =>
+					select.change(gemId => handleGemSelection(slot, i, gemId)))
 
     		if (!(editor.slot == 'FINGER_2' || editor.slot == 'TRINKET_2' || editor.slot == 'OFF_HAND')) {
     			editor.findUpgradesBtn.click(e => {
     				e.preventDefault()
     				$('#error-container').hide()
     				editor.upgradeBox.show().html('<i>waiting...</i>')
-    				Api.getUpgrades(this._profile.profileId, this._profile.equipment.equipmentSlotsByType[slot].slotGroup)
+    				let slotGroup = this._profile.equipment.equipmentSlotsByType[slot].slotGroup
+    				if (slotGroup == 'MAIN_HAND') {
+    					slotGroup = 'WEAPONS'
+    				} else if (slotGroup == 'FINGER_1') {
+    					slotGroup = 'FINGERS'
+    				} else if (slotGroup == 'TRINKET_1') {
+    					slotGroup = 'TRINKETS'
+    				}
+    				Api.getUpgrades(this._profile.profileId, slotGroup)
     				.then(upgrades => {
     					let lines = []
     					upgrades.forEach(upgrade => {
@@ -688,7 +649,7 @@ class EquipmentEditor {
 
 	itemDiffToHtml(itemDifference) {
 		return itemDifference.map(item => {
-			const gems = [item.gem1, item.gem2, item.gem3]
+			const gems = item.sockets.map(socket => socket.gem)
 				.filter(gem => !!gem)
 				.map(gem => `<span class="${gem.color.toLowerCase()}-gem item-header">[${gem.shortName}]</span>`).join('')
 			return `[${item.item.source}] <span class="rarity-${item.item.rarity.toLowerCase()} item-header">${item.item.name}</span>&nbsp;${gems}`

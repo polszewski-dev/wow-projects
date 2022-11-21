@@ -109,7 +109,7 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		}
 
 		for (ItemSockets itemSockets : sockets) {
-			for (int i = 1; i <= itemSockets.getSocketCount(); ++i) {
+			for (int i = 0; i < itemSockets.getSocketCount(); ++i) {
 				Gem gem = itemSockets.getGem(i);
 				if (gem != null && (gem.getColor() != GemColor.META || gem.isMetaConditionTrue(numRed, numYellow, numBlue))) {
 					addAttributes(gem);

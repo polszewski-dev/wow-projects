@@ -63,7 +63,7 @@ public class ItemLink {
 		return parseHelper(itemLink, true);
 	}
 
-	public ItemLink setEnchantAndGems(Integer enchantId, Integer gem1Id, Integer gem2Id, Integer gem3Id) {
+	public ItemLink setEnchantAndGems(Integer enchantId, Integer gem1Id, Integer gem2Id, Integer gem3Id, Integer gem4Id) {
 		return new ItemLink(
 				this.itemId,
 				this.name,
@@ -72,7 +72,7 @@ public class ItemLink {
 				gem1Id,
 				gem2Id,
 				gem3Id,
-				this.gem4Id,
+				gem4Id,
 				this.suffixId,
 				this.uniqueId,
 				this.linkLevel,

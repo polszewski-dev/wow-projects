@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -15,7 +16,5 @@ public class EquippableItemPO implements Serializable {
 	private ItemPO item;
 	private EnchantPO enchant;
 	private int socketCount;
-	private GemPO gem1;
-	private GemPO gem2;
-	private GemPO gem3;
+	private List<GemPO> gems;
 }

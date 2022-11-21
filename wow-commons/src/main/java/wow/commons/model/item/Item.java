@@ -11,6 +11,7 @@ import wow.commons.model.unit.CharacterInfo;
 import wow.commons.model.unit.WeaponProfficiency;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,6 +59,10 @@ public class Item extends AbstractItem {
 
 	public SocketType getSocketType(int i) {
 		return socketSpecification.getSocketType(i);
+	}
+
+	public List<SocketType> getSocketTypes() {
+		return socketSpecification.getSocketTypes();
 	}
 
 	public Attributes getSocketBonus() {

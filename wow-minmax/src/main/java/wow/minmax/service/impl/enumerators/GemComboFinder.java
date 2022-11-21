@@ -56,7 +56,7 @@ public class GemComboFinder {
 
 	private List<Gem[]> getSingleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(1), true);
+		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(0), true);
 		for (Gem gem1 : gems1) {
 			result.add(new Gem[]{gem1});
 		}
@@ -65,8 +65,8 @@ public class GemComboFinder {
 
 	private List<Gem[]> getDoubleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(1), true);
-		List<Gem> gems2 = itemService.getGems(playerProfile, specification.getSocketType(2), true);
+		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(0), true);
+		List<Gem> gems2 = itemService.getGems(playerProfile, specification.getSocketType(1), true);
 		for (Gem gem1 : gems1) {
 			for (Gem gem2 : gems2) {
 				result.add(new Gem[]{gem1, gem2});
@@ -77,9 +77,9 @@ public class GemComboFinder {
 
 	private List<Gem[]> getTripleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(1), true);
-		List<Gem> gems2 = itemService.getGems(playerProfile, specification.getSocketType(2), true);
-		List<Gem> gems3 = itemService.getGems(playerProfile, specification.getSocketType(3), true);
+		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(0), true);
+		List<Gem> gems2 = itemService.getGems(playerProfile, specification.getSocketType(1), true);
+		List<Gem> gems3 = itemService.getGems(playerProfile, specification.getSocketType(2), true);
 		for (Gem gem1 : gems1) {
 			for (Gem gem2 : gems2) {
 				for (Gem gem3 : gems3) {
@@ -125,17 +125,17 @@ public class GemComboFinder {
 
 		Gem[] result = new Gem[socketCount];
 
-		for (int i = 1; i <= socketCount; ++i) {
-			placeAccordingToSpecification(result, gemCombo[i - 1], uniqueSpecification.getSocketType(i), itemSpecification);
+		for (int i = 0; i < socketCount; ++i) {
+			placeAccordingToSpecification(result, gemCombo[i], uniqueSpecification.getSocketType(i), itemSpecification);
 		}
 
 		return result;
 	}
 
 	private void placeAccordingToSpecification(Gem[] gemCombo, Gem gem, SocketType socketType, ItemSocketSpecification specification) {
-		for (int i = 1; i <= specification.getSocketCount(); ++i) {
-			if (specification.getSocketType(i) == socketType && gemCombo[i - 1] == null) {
-				gemCombo[i - 1] = gem;
+		for (int i = 0; i < specification.getSocketCount(); ++i) {
+			if (specification.getSocketType(i) == socketType && gemCombo[i] == null) {
+				gemCombo[i] = gem;
 				return;
 			}
 		}

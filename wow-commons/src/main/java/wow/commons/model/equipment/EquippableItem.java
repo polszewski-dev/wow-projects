@@ -12,6 +12,7 @@ import wow.commons.model.sources.Source;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.util.AttributesBuilder;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -42,10 +43,11 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 
 	public ItemLink getItemLink() {
 		Integer enchantId = enchant != null ? enchant.getId() : null;
-		Integer gem1Id = getGem(1) != null ? getGem(1).getId() : null;
-		Integer gem2Id = getGem(2) != null ? getGem(2).getId() : null;
-		Integer gem3Id = getGem(3) != null ? getGem(3).getId() : null;
-		return item.getItemLink().setEnchantAndGems(enchantId, gem1Id, gem2Id, gem3Id);
+		Integer gem1Id = getSocketCount() >= 1 && getGem(0) != null ? getGem(0).getId() : null;
+		Integer gem2Id = getSocketCount() >= 2 && getGem(1) != null ? getGem(1).getId() : null;
+		Integer gem3Id = getSocketCount() >= 3 && getGem(2) != null ? getGem(2).getId() : null;
+		Integer gem4Id = getSocketCount() >= 4 && getGem(3) != null ? getGem(3).getId() : null;
+		return item.getItemLink().setEnchantAndGems(enchantId, gem1Id, gem2Id, gem3Id, gem4Id);
 	}
 
 	public Item getItem() {
@@ -133,7 +135,7 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		}
 		for (int i = 0; i < gems.length; i++) {
 			Gem gem = gems[i];
-			sockets.insertGem(i + 1, gem);
+			insertGem(i, gem);
 		}
 		return this;
 	}
@@ -146,9 +148,13 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		return sockets.getGem(socketNo);
 	}
 
+	public List<Gem> getGems() {
+		return sockets.getGems();
+	}
+
 	public boolean hasMatchingGem(int socketNo, int numRed, int numYellow, int numBlue) {
 		ItemSocket socket = sockets.getSocket(socketNo);
-		return socket != null && socket.hasMatchingGem(numRed, numYellow, numBlue);
+		return socket.hasMatchingGem(numRed, numYellow, numBlue);
 	}
 
 	public boolean allSocketsHaveMatchingGems(int numRed, int numYellow, int numBlue) {
@@ -157,7 +163,7 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 
 	public boolean hasGemMatchingSocketColor(int socketNo) {
 		ItemSocket socket = sockets.getSocket(socketNo);
-		return socket != null && socket.hasGemMatchingSocketColor();
+		return socket.hasGemMatchingSocketColor();
 	}
 
 	public Attributes getAttributes(int numRed, int numYellow, int numBlue) {
@@ -166,7 +172,7 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 		if (enchant != null) {
 			result.addAttributes(enchant);
 		}
-		for (int socketNo = 1; socketNo <= sockets.getSocketCount(); ++socketNo) {
+		for (int socketNo = 0; socketNo < sockets.getSocketCount(); ++socketNo) {
 			ItemSocket socket = sockets.getSocket(socketNo);
 			if (socket.hasMatchingGem(numRed, numYellow, numBlue)) {
 				result.addAttributes(socket.getGem());
