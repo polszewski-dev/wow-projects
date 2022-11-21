@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class SpellDataRepositoryImpl implements SpellDataRepository {
 	private final Map<SpellId, SpellInfo> spellInfoBySpellId = new LinkedHashMap<>();
 	private final Map<TalentId, Map<Integer, TalentInfo>> talentInfoByTalentIdByRank = new LinkedHashMap<>();
+	private final Map<Integer, Map<Integer, TalentInfo>> talentInfoByCalculatorPositionIdByRank = new LinkedHashMap<>();
 	private final Map<EffectId, EffectInfo> effectInfoByEffectId = new LinkedHashMap<>();
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
 
@@ -74,6 +75,16 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	@Override
 	public Optional<TalentInfo> getTalentInfo(TalentId talentId, Integer rank) {
 		Map<Integer, TalentInfo> talentInfoByRank = talentInfoByTalentIdByRank.get(talentId);
+		return getTalentInfo(rank, talentInfoByRank);
+	}
+
+	@Override
+	public Optional<TalentInfo> getTalentInfo(int talentCalculatorPosition, Integer rank) {
+		Map<Integer, TalentInfo> talentInfoByRank = talentInfoByCalculatorPositionIdByRank.get(talentCalculatorPosition);
+		return getTalentInfo(rank, talentInfoByRank);
+	}
+
+	private static Optional<TalentInfo> getTalentInfo(Integer rank, Map<Integer, TalentInfo> talentInfoByRank) {
 		if (talentInfoByRank == null) {
 			return Optional.empty();
 		}
@@ -148,6 +159,8 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 
 	public void addTalent(TalentInfo talentInfo, Attributes attributes) {
 		Map<Integer, TalentInfo> talentByRank = talentInfoByTalentIdByRank.computeIfAbsent(talentInfo.getTalentId(), x -> new LinkedHashMap<>());
+
+		talentInfoByCalculatorPositionIdByRank.computeIfAbsent(talentInfo.getTalentCalculatorPosition(), x -> talentByRank);
 
 		if (talentByRank.containsKey(talentInfo.getRank())) {
 			// simply add another benefit to already existing talent rank

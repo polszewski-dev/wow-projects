@@ -15,6 +15,7 @@ public class TalentInfo implements AttributeSource {
 	private final TalentId talentId;
 	private final int rank;
 	private final int maxRank;
+	private final int talentCalculatorPosition;
 	private final String description;
 	private Attributes attributes;
 

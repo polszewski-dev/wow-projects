@@ -23,6 +23,7 @@ public interface SpellDataRepository {
 	Optional<Spell> getSpell(SpellId spellId, Integer rank);
 	Optional<Spell> getSpellHighestRank(SpellId spellId, int level);
 	Optional<TalentInfo> getTalentInfo(TalentId talentId, Integer rank);
+	Optional<TalentInfo> getTalentInfo(int talentCalculatorPosition, Integer rank);
 	Optional<EffectInfo> getEffectInfo(EffectId effectId);
 	Optional<Buff> getBuff(int buffId);
 	Optional<Buff> getHighestRankBuff(String name, int level);

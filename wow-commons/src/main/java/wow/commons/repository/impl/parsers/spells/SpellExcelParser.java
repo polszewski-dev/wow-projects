@@ -316,6 +316,7 @@ public class SpellExcelParser extends ExcelParser {
 	private final ExcelColumn colTalentTalent = column("talent");
 	private final ExcelColumn colTalentRank = column("rank");
 	private final ExcelColumn colTalentMaxRank = column("max rank");
+	private final ExcelColumn colTalentCalculatorPosition = column("talent calculator position");
 	private final ExcelColumn colTalentDescription = column("description");
 
 	private final ExcelColumn colTalentTree = column("tree");
@@ -421,7 +422,7 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private SpellInfo getSpellInfo() {
-		var spellId = SpellId.parse(colSpellSpell.getString());
+		var spellId = colSpellSpell.getEnum(SpellId::parse);
 		var talentTree = colSpellTree.getEnum(TalentTree::parse);
 		var spellSchool = colSpellSchool.getEnum(SpellSchool::parse, null);
 		var coeffDirect = colSpellCoeffDirect.getPercent(Percent.ZERO);
@@ -465,7 +466,7 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private SpellRankInfo getSpellRankInfo() {
-		var spellId = SpellId.parse(colRankSpell.getString());
+		var spellId = colRankSpell.getEnum(SpellId::parse);
 		var rank = colRankRank.getInteger(0);
 		var level = colRankLevel.getInteger();
 		var manaCost = colRankManaCost.getInteger();
@@ -509,12 +510,13 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private TalentInfo getTalentInfo() {
-		var talentName = TalentId.parse(colTalentTalent.getString());
+		var talentName = colTalentTalent.getEnum(TalentId::parse);
 		var rank = colTalentRank.getInteger();
 		var maxRank = colTalentMaxRank.getInteger();
+		var talentCalculatorPosition = colTalentCalculatorPosition.getInteger();
 		var description = colTalentDescription.getString(null);
 
-		return new TalentInfo(talentName, rank, maxRank, description, Attributes.EMPTY);
+		return new TalentInfo(talentName, rank, maxRank, talentCalculatorPosition, description, Attributes.EMPTY);
 	}
 
 	private Attributes getTalentBenefit() {
@@ -532,7 +534,7 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private EffectInfo getEffectInfo() {
-		var effectId = EffectId.parse(colEffectEffect.getString());
+		var effectId = colEffectEffect.getEnum(EffectId::parse);
 		var friendly = colEffectFriendly.getBoolean();
 		var scope = colEffectScope.getEnum(Scope::parse, Scope.PERSONAL);
 		var maxStacks = colEffectMaxStacks.getInteger(1);
