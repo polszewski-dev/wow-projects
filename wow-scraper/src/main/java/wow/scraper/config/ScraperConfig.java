@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.WowheadItemQuality;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,4 +39,19 @@ public class ScraperConfig {
 
 	@Value("#{${dungeon.short.names}}")
 	private Map<String, String> dungeonShortNames;
+
+	@Value("#{${pvp.item.name.parts}}")
+	private List<String> pvpItemNameParts;
+
+	@Value("#{'${world.drop.overrides}'.split(',')}")
+	private List<Integer> worldDropOverrides;
+
+	@Value("#{${boss.drop.overrides}}")
+	private Map<Integer, List<Integer>> bossDropOverrides;
+
+	@Value("#{${token.to.traded.for}}")
+	private Map<Integer, List<Integer>> tokenToTradedFor;
+
+	@Value("#{${item.starting.quest.to.traded.for}}")
+	private Map<Integer, List<Integer>> itemStartingQuestToTradedFor;
 }

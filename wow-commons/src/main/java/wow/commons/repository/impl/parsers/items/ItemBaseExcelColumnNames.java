@@ -5,6 +5,17 @@ package wow.commons.repository.impl.parsers.items;
  * Date: 2022-11-22
  */
 public final class ItemBaseExcelColumnNames {
+	public static final String TRADE_ITEM_ID = "id";
+	public static final String TRADE_ITEM_NAME = "name";
+	public static final String TRADE_ITEM_TYPE = "type";
+	public static final String TRADE_ITEM_RARITY = "rarity";
+	public static final String TRADE_ITEM_ITEM_LEVEL = "item_level";
+	public static final String TRADE_ITEM_REQ_LEVEL = "req_level";
+	public static final String TRADE_ITEM_BINDING = "binding";
+	public static final String TRADE_ITEM_PHASE = "phase";
+	public static final String TRADE_ITEM_CLASS_RESTRICTION = "class_restriction";
+	public static final String TRADE_ITEM_SOURCE = "source";
+
 	public static final String ITEM_ID = "id";
 	public static final String ITEM_NAME = "name";
 	public static final String ITEM_RARITY = "rarity";

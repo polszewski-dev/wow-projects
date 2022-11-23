@@ -35,11 +35,11 @@ public class ItemStartingQuestTooltipParser extends AbstractTooltipParser {
 
 	@Override
 	protected void beforeParse() {
-		//TODO
+		// VOID
 	}
 
 	@Override
 	protected void afterParse() {
-		//TODO
+		// VOID
 	}
 }

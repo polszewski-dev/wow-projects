@@ -1,11 +1,9 @@
 package wow.scraper.parsers;
 
 import lombok.Getter;
-import wow.commons.model.categorization.Binding;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
 import wow.commons.util.parser.Rule;
 
@@ -53,14 +51,6 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	protected void afterParse() {
 		if (color == null) {
 			throw new IllegalArgumentException("Couldn't parse color for: " + name);
-		}
-
-		if (binding == null) {
-			this.binding = Binding.BINDS_ON_EQUIP;
-		}
-
-		if (phase == null) {
-			this.phase = Phase.TBC_P1;
 		}
 
 		if (statLines.isEmpty()) {

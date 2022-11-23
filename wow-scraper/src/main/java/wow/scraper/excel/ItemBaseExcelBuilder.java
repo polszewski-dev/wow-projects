@@ -3,6 +3,7 @@ package wow.scraper.excel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
@@ -77,15 +78,45 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	private void writeTradedItemHeader() {
-		//TODO
+		setHeader(TRADE_ITEM_ID);
+		setHeader(TRADE_ITEM_NAME, 30);
+		setHeader(TRADE_ITEM_TYPE);
+		setHeader(TRADE_ITEM_RARITY);
+		setHeader(TRADE_ITEM_ITEM_LEVEL);
+		setHeader(TRADE_ITEM_REQ_LEVEL);
+		setHeader(TRADE_ITEM_BINDING);
+		setHeader(TRADE_ITEM_PHASE);
+		setHeader(TRADE_ITEM_CLASS_RESTRICTION);
+		setHeader(TRADE_ITEM_SOURCE, 20);
+		writer.nextRow().freeze(2, 1);
 	}
 
 	private void writeTokenRow(TokenTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		//TODO
+		setValue(parser.getItemId());
+		setValue(parser.getName());
+		setValue(ItemType.TOKEN);
+		setValue(getItemRarity(itemDetailsAndTooltip));
+		setValue(parser.getItemLevel());
+		setValue(parser.getRequiredLevel());
+		setValue(parser.getBinding());
+		setValue(parser.getPhase());
+		setValue(parser.getClassRestriction());
+		setValue(parseSource(null, itemDetailsAndTooltip));
+		writer.nextRow();
 	}
 
 	private void writeItemStartingQuestRow(ItemStartingQuestTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		//TODO
+		setValue(parser.getItemId());
+		setValue(parser.getName());
+		setValue(ItemType.QUEST);
+		setValue(getItemRarity(itemDetailsAndTooltip));
+		setValue(parser.getItemLevel());
+		setValue(parser.getRequiredLevel());
+		setValue(parser.getBinding());
+		setValue(parser.getPhase());
+		setValue(parser.getClassRestriction());
+		setValue(parseSource(null, itemDetailsAndTooltip));
+		writer.nextRow();
 	}
 
 	private void writeItemHeader() {
@@ -262,11 +293,8 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		if (requiredFactionName != null) {
 			return "Faction:" + requiredFactionName;
 		}
-		SourceParser sourceParser = new SourceParser(itemDetailsAndTooltip);
+		WowheadSourceParser sourceParser = new WowheadSourceParser(itemDetailsAndTooltip);
 		List<String> sources = sourceParser.getSource();
-		if (sources.size() > 1) {
-			throw new IllegalArgumentException("Too many sources: " + sources);
-		}
-		return sources.get(0);
+		return String.join("#", sources);
 	}
 }

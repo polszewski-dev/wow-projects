@@ -113,6 +113,7 @@ public abstract class AbstractTooltipParser {
 			parseLine(currentLine);
 		}
 
+		fixCommonFields();
 		afterParse();
 	}
 
@@ -129,6 +130,15 @@ public abstract class AbstractTooltipParser {
 
 	protected abstract void beforeParse();
 	protected abstract void afterParse();
+
+	private void fixCommonFields() {
+		if (phase == null) {
+			phase = getGameVersion().getEarliestPhase();
+		}
+		if (binding == null) {
+			binding = Binding.NO_BINDING;
+		}
+	}
 
 	protected Phase parsePhase(String value) {
 		return Phase.parse(gameVersion + "_P" + value);

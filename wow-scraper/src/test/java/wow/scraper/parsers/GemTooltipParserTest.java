@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.categorization.Binding.BINDS_ON_EQUIP;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
+import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.item.GemColor.*;
 import static wow.commons.model.professions.Profession.JEWELCRAFTING;
 import static wow.commons.model.pve.GameVersion.TBC;
-import static wow.commons.model.pve.Phase.TBC_P1;
+import static wow.commons.model.pve.Phase.TBC_P0;
 import static wow.commons.model.pve.Phase.TBC_P3;
 
 /**
@@ -39,10 +39,10 @@ class GemTooltipParserTest {
 	void basicInfo() {
 		assertThat(redGem.getPhase()).isEqualTo(TBC_P3);
 		assertThat(redGem.getItemLevel()).isEqualTo(100);
-		assertThat(redGem.getBinding()).isEqualTo(BINDS_ON_EQUIP);
+		assertThat(redGem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(redGem.isUnique()).isFalse();
 
-		assertThat(blueGem.getPhase()).isEqualTo(TBC_P1);
+		assertThat(blueGem.getPhase()).isEqualTo(TBC_P0);
 		assertThat(blueGem.getItemLevel()).isEqualTo(130);
 		assertThat(blueGem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(blueGem.isUnique()).isTrue();

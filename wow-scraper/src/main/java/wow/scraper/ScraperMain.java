@@ -53,6 +53,21 @@ public class ScraperMain extends ScraperTool {
 				saveItemDetails(itemDetails, category);
 			}
 		}
+
+		if (category == WowheadItemCategory.TOKENS) {
+			for (Integer tokenId : getScraperConfig().getTokenToTradedFor().keySet()) {
+				fetchMissingToken(tokenId);
+			}
+		}
+	}
+
+	private void fetchMissingToken(Integer tokenId) {
+		JsonItemDetails itemDetails = new JsonItemDetails();
+		itemDetails.setId(tokenId);
+		itemDetails.setName("" + tokenId);
+		itemDetails.setSources(List.of());
+		itemDetails.setQuality(WowheadItemQuality.EPIC.getCode());
+		saveItemDetails(itemDetails, WowheadItemCategory.TOKENS);
 	}
 
 	private boolean isToBeSaved(JsonItemDetails itemDetails, WowheadItemCategory category) {

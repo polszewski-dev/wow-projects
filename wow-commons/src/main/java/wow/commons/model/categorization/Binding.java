@@ -7,6 +7,7 @@ import wow.commons.util.EnumUtil;
  * Date: 2021-03-03
  */
 public enum Binding {
+	NO_BINDING,
 	BINDS_ON_EQUIP,
 	BINDS_ON_PICK_UP;
 
