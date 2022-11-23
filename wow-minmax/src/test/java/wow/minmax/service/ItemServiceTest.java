@@ -137,7 +137,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void testGetGems() {
-		List<Gem> coloredGems = underTest.getGems(profile, getItem("Sunfire Robe").getItem(), 1, false);
+		List<Gem> coloredGems = underTest.getGems(profile, getItem("Sunfire Robe").getSocketType(1), false);
 
 		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).collect(Collectors.toList());
 
@@ -154,7 +154,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos() {
-		List<Gem[]> gemCombos = underTest.getGemCombos(profile, getItem("Bracers of the Malefic").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(profile, getItem("Bracers of the Malefic").getItem());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
 
@@ -171,7 +171,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos2() {
-		List<Gem[]> gemCombos = underTest.getGemCombos(profile, getItem("Dark Conjuror's Collar").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(profile, getItem("Dark Conjuror's Collar").getItem());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
 
@@ -188,7 +188,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos3() {
-		List<Gem[]> gemCombos = underTest.getGemCombos(profile, getItem("Sunfire Robe").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(profile, getItem("Sunfire Robe").getItem());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
 

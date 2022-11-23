@@ -9,18 +9,20 @@ import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
-import wow.commons.model.categorization.Binding;
-import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.*;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
+import wow.commons.model.item.Item;
+import wow.commons.model.item.SocketType;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.unit.PVERole;
 import wow.commons.repository.ItemDataRepository;
 import wow.minmax.config.ItemConfig;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.ItemService;
+import wow.minmax.service.impl.enumerators.FilterOutWorseEnchantChoices;
+import wow.minmax.service.impl.enumerators.FilterOutWorseGemChoices;
 import wow.minmax.service.impl.enumerators.GemComboFinder;
 
 import java.util.ArrayList;
@@ -73,14 +75,31 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted) {
+	public List<Enchant> getBestEnchants(PlayerProfile playerProfile, ItemType itemType) {
+		List<Enchant> enchants = getEnchants(playerProfile, itemType);
+		return new FilterOutWorseEnchantChoices(enchants).getResult();
+	}
+
+	@Override
+	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean nonUniqueOnly) {
 		return itemDataRepository.getAllGems().stream()
-				.filter(gem -> socketType.accepts(gem.getColor()) && isSuitableFor(gem, onlyCrafted, playerProfile))
+				.filter(gem -> socketType.accepts(gem.getColor()))
+				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests()))
+				.filter(gem -> isSuitableFor(gem, playerProfile))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Gem[]> getGemCombos(PlayerProfile playerProfile, Item item) {
+	public List<Gem> getBestGems(PlayerProfile playerProfile, SocketType socketType) {
+		List<Gem> gems = getGems(playerProfile, socketType, true);
+		if (socketType == SocketType.META) {
+			return gems;
+		}
+		return new FilterOutWorseGemChoices(gems).getResult();
+	}
+
+	@Override
+	public List<Gem[]> getBestGemCombos(PlayerProfile playerProfile, Item item) {
 		return gemComboFinder.getGemCombos(playerProfile, item.getSocketSpecification());
 	}
 
@@ -113,14 +132,8 @@ public class ItemServiceImpl implements ItemService {
 		return false;
 	}
 
-	private boolean isSuitableFor(Gem gem, boolean onlyCrafted, PlayerProfile playerProfile) {
+	private boolean isSuitableFor(Gem gem, PlayerProfile playerProfile) {
 		if (!gem.getRestriction().isMetBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
-			return false;
-		}
-		if (onlyCrafted && (!gem.isCrafted() || gem.getBinding() == Binding.BINDS_ON_PICK_UP)) {
-			return false;
-		}
-		if (!gem.getRarity().isAtLeastAsGoodAs(getMinimumGemRarity(gem, playerProfile.getPhase(), onlyCrafted))) {
 			return false;
 		}
 		return hasStatsSuitableForRole(gem, playerProfile);
@@ -183,18 +196,5 @@ public class ItemServiceImpl implements ItemService {
 				AttributeCondition.of(damagingSpell.getSpellId()),
 				AttributeCondition.of(playerProfile.getEnemyType())
 			).contains(attribute.getCondition());
-	}
-
-	private static final Phase EPIC_GEM_PHASE = Phase.TBC_P3;
-
-	private static ItemRarity getMinimumGemRarity(Gem gem, Phase phase, boolean onlyCrafted) {
-		boolean meta = gem.getColor() == GemColor.META;
-		if (meta) {
-			return ItemRarity.RARE;
-		}
-		if (phase.isEarlier(EPIC_GEM_PHASE)) {
-			return ItemRarity.RARE;
-		}
-		return onlyCrafted ? ItemRarity.EPIC : ItemRarity.RARE;
 	}
 }

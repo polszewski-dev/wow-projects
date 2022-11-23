@@ -176,7 +176,6 @@ class PlayerProfileControllerTest extends ControllerTest {
 
 		when(itemService.getEnchants(any(), eq(ItemType.CHEST))).thenReturn(List.of(enchant));
 
-		when(itemService.getGems(any(), any(), anyInt(), anyBoolean())).thenReturn(List.of(redGem, yellowGem, blueGem));
 		when(itemService.getGems(any(), any(), anyBoolean())).thenReturn(List.of(redGem, yellowGem, blueGem));
 	}
 }

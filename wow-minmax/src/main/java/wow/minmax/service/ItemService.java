@@ -2,7 +2,10 @@ package wow.minmax.service;
 
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.*;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
+import wow.commons.model.item.Item;
+import wow.commons.model.item.SocketType;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.List;
@@ -20,12 +23,11 @@ public interface ItemService {
 
 	List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType);
 
-	List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted);
+	List<Enchant> getBestEnchants(PlayerProfile playerProfile, ItemType itemType);
 
-	default List<Gem> getGems(PlayerProfile playerProfile, Item item, int socketNo, boolean onlyCrafted) {
-		ItemSocketSpecification specification = item.getSocketSpecification();
-		return getGems(playerProfile, specification.getSocketType(socketNo), onlyCrafted);
-	}
+	List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean nonUniqueOnly);
 
-	List<Gem[]> getGemCombos(PlayerProfile playerProfile, Item item);
+	List<Gem> getBestGems(PlayerProfile playerProfile, SocketType socketType);
+
+	List<Gem[]> getBestGemCombos(PlayerProfile playerProfile, Item item);
 }

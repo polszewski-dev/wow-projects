@@ -181,8 +181,8 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedAndGemmedItems(Item item) {
-		List<Enchant> enchants = itemService.getEnchants(referenceProfile, item.getItemType());
-		List<Gem[]> gemCombos = itemService.getGemCombos(referenceProfile, item);
+		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile, item.getItemType());
+		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile, item);
 		List<EquippableItem> result = new ArrayList<>(enchants.size() * gemCombos.size());
 
 		for (Enchant enchant : enchants) {
@@ -194,7 +194,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getGemmedItems(Item item) {
-		List<Gem[]> gemCombos = itemService.getGemCombos(referenceProfile, item);
+		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile, item);
 		List<EquippableItem> result = new ArrayList<>(gemCombos.size());
 
 		for (Gem[] gemCombo : gemCombos) {
@@ -204,7 +204,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedItems(Item item) {
-		List<Enchant> enchants = itemService.getEnchants(referenceProfile, item.getItemType());
+		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile, item.getItemType());
 		List<EquippableItem> result = new ArrayList<>(enchants.size());
 
 		for (Enchant enchant : enchants) {

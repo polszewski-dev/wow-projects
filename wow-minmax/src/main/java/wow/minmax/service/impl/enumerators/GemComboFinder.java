@@ -56,7 +56,7 @@ public class GemComboFinder {
 
 	private List<Gem[]> getSingleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(0), true);
+		List<Gem> gems1 = itemService.getBestGems(playerProfile, specification.getSocketType(0));
 		for (Gem gem1 : gems1) {
 			result.add(new Gem[]{gem1});
 		}
@@ -65,8 +65,8 @@ public class GemComboFinder {
 
 	private List<Gem[]> getDoubleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(0), true);
-		List<Gem> gems2 = itemService.getGems(playerProfile, specification.getSocketType(1), true);
+		List<Gem> gems1 = itemService.getBestGems(playerProfile, specification.getSocketType(0));
+		List<Gem> gems2 = itemService.getBestGems(playerProfile, specification.getSocketType(1));
 		for (Gem gem1 : gems1) {
 			for (Gem gem2 : gems2) {
 				result.add(new Gem[]{gem1, gem2});
@@ -77,9 +77,9 @@ public class GemComboFinder {
 
 	private List<Gem[]> getTripleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getGems(playerProfile, specification.getSocketType(0), true);
-		List<Gem> gems2 = itemService.getGems(playerProfile, specification.getSocketType(1), true);
-		List<Gem> gems3 = itemService.getGems(playerProfile, specification.getSocketType(2), true);
+		List<Gem> gems1 = itemService.getBestGems(playerProfile, specification.getSocketType(0));
+		List<Gem> gems2 = itemService.getBestGems(playerProfile, specification.getSocketType(1));
+		List<Gem> gems3 = itemService.getBestGems(playerProfile, specification.getSocketType(2));
 		for (Gem gem1 : gems1) {
 			for (Gem gem2 : gems2) {
 				for (Gem gem3 : gems3) {

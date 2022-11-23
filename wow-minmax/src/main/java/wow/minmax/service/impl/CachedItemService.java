@@ -28,7 +28,9 @@ public class CachedItemService implements ItemService {
 	private final Map<String, List<Item>> getItemsBySlotCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Item>> getItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Enchant>> getEnchantsCache = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<Enchant>> getBestEnchantsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> getGemsCache = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<Gem>> getBestGemsCache = Collections.synchronizedMap(new HashMap<>());
 
 	@Override
 	public Item getItem(int itemId) {
@@ -54,15 +56,28 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean onlyCrafted) {
-		boolean meta = socketType == SocketType.META;
-		String key = getProfileKey(playerProfile) + "#" + meta + "#" + onlyCrafted;
-		return getGemsCache.computeIfAbsent(key, x -> itemService.getGems(playerProfile, socketType, onlyCrafted));
+	public List<Enchant> getBestEnchants(PlayerProfile playerProfile, ItemType itemType) {
+		String key = getProfileKey(playerProfile) + "#" + itemType;
+		return getBestEnchantsCache.computeIfAbsent(key, x -> itemService.getBestEnchants(playerProfile, itemType));
 	}
 
 	@Override
-	public List<Gem[]> getGemCombos(PlayerProfile playerProfile, Item item) {
-		return itemService.getGemCombos(playerProfile, item);
+	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean nonUniqueOnly) {
+		boolean meta = socketType == SocketType.META;
+		String key = getProfileKey(playerProfile) + "#" + meta + "#" + nonUniqueOnly;
+		return getGemsCache.computeIfAbsent(key, x -> itemService.getGems(playerProfile, socketType, nonUniqueOnly));
+	}
+
+	@Override
+	public List<Gem> getBestGems(PlayerProfile playerProfile, SocketType socketType) {
+		boolean meta = socketType == SocketType.META;
+		String key = getProfileKey(playerProfile) + "#" + meta;
+		return getBestGemsCache.computeIfAbsent(key, x -> itemService.getBestGems(playerProfile, socketType));
+	}
+
+	@Override
+	public List<Gem[]> getBestGemCombos(PlayerProfile playerProfile, Item item) {
+		return itemService.getBestGemCombos(playerProfile, item);
 	}
 
 	private static String getProfileKey(PlayerProfile playerProfile) {

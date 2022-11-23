@@ -109,8 +109,20 @@ public abstract class AbstractItem implements AttributeSource {
 		return anySource(Source::isPvP);
 	}
 
+	public boolean isQuestReward() {
+		return anySource(Source::isQuestReward);
+	}
+
+	public boolean isAvailableOnlyByQuests() {
+		return allSources(Source::isQuestReward);
+	}
+
 	public boolean anySource(Predicate<Source> predicate) {
 		return getSources().stream().anyMatch(predicate);
+	}
+
+	public boolean allSources(Predicate<Source> predicate) {
+		return getSources().stream().allMatch(predicate);
 	}
 
 	public boolean isAvailableDuring(Phase phase) {

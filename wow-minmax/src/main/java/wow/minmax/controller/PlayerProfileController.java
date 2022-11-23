@@ -193,7 +193,7 @@ public class PlayerProfileController {
 	}
 
 	private List<GemDTO> getAvailableGems(Item item, int socketNo, PlayerProfile playerProfile) {
-		List<Gem> gems = itemService.getGems(playerProfile, item, socketNo, false).stream()
+		List<Gem> gems = itemService.getGems(playerProfile, item.getSocketType(socketNo), false).stream()
 				.sorted(getGemComparator())
 				.collect(Collectors.toList());
 		return gemConverter.convertList(gems);
