@@ -1,18 +1,20 @@
 package wow.commons.model.sources;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 /**
  * User: POlszewski
  * Date: 2021-04-03
  */
-class PvP extends NotSourcedFromInstance {
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(callSuper = false)
+public class PvP extends Source {
 	@Override
-	public boolean equals(Object o) {
-		return o instanceof PvP;
-	}
-
-	@Override
-	public int hashCode() {
-		return 0;
+	public boolean isPvP() {
+		return true;
 	}
 
 	@Override

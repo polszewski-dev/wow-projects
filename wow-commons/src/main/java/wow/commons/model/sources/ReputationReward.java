@@ -1,36 +1,23 @@
 package wow.commons.model.sources;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import wow.commons.model.pve.Faction;
-
-import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
-class ReputationReward extends NotSourcedFromInstance {
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(callSuper = false)
+public class ReputationReward extends Source {
 	private final Faction faction;
 
-	ReputationReward(Faction faction) {
-		this.faction = faction;
-	}
-
 	@Override
-	public Faction getFaction() {
-		return faction;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ReputationReward that = (ReputationReward) o;
-		return faction == that.faction;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(faction);
+	public boolean isReputationReward() {
+		return true;
 	}
 
 	@Override

@@ -1,47 +1,29 @@
 package wow.commons.model.sources;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
-class QuestReward extends NotSourcedFromInstance {
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(callSuper = false)
+public class QuestReward extends Source {
 	private final boolean dungeon;
-	private final String name;
-
-	QuestReward(boolean dungeon, String name) {
-		this.dungeon = dungeon;
-		this.name = name;
-	}
-
-	public boolean isDungeon() {
-		return dungeon;
-	}
+	private final String questName;
 
 	@Override
-	public String getQuestName() {
-		return name;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof QuestReward)) return false;
-		QuestReward that = (QuestReward) o;
-		return dungeon == that.dungeon &&
-				Objects.equals(name, that.name);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(dungeon, name);
+	public boolean isQuestReward() {
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		if (name != null) {
-			return "Quest: " + name;
+		if (questName != null) {
+			return "Quest: " + questName;
 		}
 		return "Quest";
 	}

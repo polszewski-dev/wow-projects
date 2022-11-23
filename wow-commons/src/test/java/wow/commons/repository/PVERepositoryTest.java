@@ -73,7 +73,7 @@ class PVERepositoryTest {
 	@Test
 	@DisplayName("Boss is read correctly")
 	void bossIsCorrect() {
-		Optional<Boss> optionalBoss = underTest.getBoss("Entropius");
+		Optional<Boss> optionalBoss = underTest.getBoss(25840);
 
 		assertThat(optionalBoss).isPresent();
 

@@ -8,13 +8,11 @@ import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.sources.SourceParser;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
 import wow.commons.util.ExcelSheetReader;
-
-import java.util.Set;
+import wow.commons.util.SourceParser;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -78,7 +76,7 @@ public class GemSheetReader extends ExcelSheetReader {
 		var tooltip = colTooltip.getString();
 		var stats = GemStatsParser.tryParseStats(colStats.getString());
 
-		var sources = Set.of(SourceParser.parse(source, pveRepository));
+		var sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
 		var gem = new Gem(id, name, rarity, sources, color, metaEnablers, stats);
 
 		gem.getRestriction().setPhase(phase);

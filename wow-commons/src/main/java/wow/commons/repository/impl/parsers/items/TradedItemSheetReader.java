@@ -5,13 +5,11 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.sources.SourceParser;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.util.ExcelSheetReader;
-
-import java.util.Set;
+import wow.commons.util.SourceParser;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -63,7 +61,7 @@ public class TradedItemSheetReader extends ExcelSheetReader {
 		var classRestriction = colItemClassRestriction.getList(CharacterClass::valueOf);
 		var source = colItemSource.getString();
 
-		var sources = Set.of(SourceParser.parse(source, pveRepository));
+		var sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
 		TradedItem tradedItem = new TradedItem(id, name, type, rarity, sources);
 
 		tradedItem.setItemLevel(itemLevel);

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class PVERepositoryImpl implements PVERepository {
 	private final Map<Integer, Zone> zoneById = new HashMap<>();
 	private final Map<String, Zone> zoneByName = new TreeMap<>();
-	private final Map<String, Boss> bossByName = new TreeMap<>();
+	private final Map<Integer, Boss> bossById = new TreeMap<>();
 	private final Map<String, Faction> factionByName = new TreeMap<>();
 	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
 	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
@@ -41,8 +41,8 @@ public class PVERepositoryImpl implements PVERepository {
 	}
 
 	@Override
-	public Optional<Boss> getBoss(String name) {
-		return Optional.ofNullable(bossByName.get(name));
+	public Optional<Boss> getBoss(int bossId) {
+		return Optional.ofNullable(bossById.get(bossId));
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class PVERepositoryImpl implements PVERepository {
 			instance.setBosses(new ArrayList<>());
 		}
 
-		for (Boss boss : bossByName.values()) {
+		for (Boss boss : bossById.values()) {
 			for (Zone zone : boss.getZones()) {
 				if (zone.isInstance()) {
 					zone.getBosses().add(boss);
@@ -101,8 +101,8 @@ public class PVERepositoryImpl implements PVERepository {
 		zoneByName.put(zone.getName(), zone);
 	}
 
-	public void addBossByName(Boss boss) {
-		bossByName.put(boss.getName(), boss);
+	public void addBoss(Boss boss) {
+		bossById.put(boss.getId(), boss);
 	}
 
 	public void addFactionByName(Faction faction) {

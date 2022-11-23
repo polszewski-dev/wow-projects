@@ -2,6 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.Item;
 import wow.commons.model.sources.Source;
 import wow.minmax.converter.Converter;
@@ -34,22 +35,18 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 		);
 	}
 
-	private String getSources(Item item) {
+	private String getSources(AbstractItem item) {
 		return item.getSources().stream().map(this::getSourceString).distinct().collect(Collectors.joining(", "));
 	}
 
 	private String getSourceString(Source source) {
-		if (source.getInstance() != null) {
-			return source.getInstance()
-						 .getShortName();
+		if (source.getZone() != null) {
+			return source.getZone().getShortName();
 		}
 		if (source.isBadgeVendor()) {
 			return "BoJ";
 		}
-		if (source.isPurchasedFromVendor()) {
-			return "Vendor";
-		}
-		if (source.isPvp()) {
+		if (source.isPvP()) {
 			return "PvP";
 		}
 		if (source.isCrafted()) {
@@ -58,8 +55,8 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 		if (source.isReputationReward()) {
 			return source.getFaction().getName();
 		}
-		if (source.isTradedFromToken()) {
-			return getSources(source.getSourceToken());
+		if (source.isTraded()) {
+			return getSources(source.getSourceItem());
 		}
 		return source.toString();
 	}

@@ -86,11 +86,11 @@ public abstract class AbstractItem implements AttributeSource {
 	}
 
 	public boolean isSourcedFromInstance(String instanceName) {
-		return anySource(source -> source.getInstance() != null && source.getInstance().getName().equalsIgnoreCase(instanceName));
+		return anySource(source -> source.getZone() != null && source.getZone().getName().equalsIgnoreCase(instanceName));
 	}
 
 	public boolean isSourcedFromAnyInstance(String... instanceNames) {
-		return anySource(source -> source.getInstance() != null && Arrays.asList(instanceNames).contains(source.getInstance().getName()));
+		return anySource(source -> source.getZone() != null && Arrays.asList(instanceNames).contains(source.getZone().getName()));
 	}
 
 	public boolean isPurchasedFromBadgeVendor() {
@@ -98,7 +98,7 @@ public abstract class AbstractItem implements AttributeSource {
 	}
 
 	public boolean isTradedFromToken() {
-		return anySource(Source::isTradedFromToken);
+		return anySource(Source::isTraded);
 	}
 
 	public boolean isCrafted() {
@@ -106,7 +106,7 @@ public abstract class AbstractItem implements AttributeSource {
 	}
 
 	public boolean isPvPReward() {
-		return anySource(Source::isPvp);
+		return anySource(Source::isPvP);
 	}
 
 	public boolean anySource(Predicate<Source> predicate) {

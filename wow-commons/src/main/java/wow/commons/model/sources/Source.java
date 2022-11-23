@@ -1,6 +1,8 @@
 package wow.commons.model.sources;
 
-import wow.commons.model.item.Item;
+import wow.commons.model.item.TradedItem;
+import wow.commons.model.professions.Profession;
+import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
 
@@ -9,13 +11,15 @@ import wow.commons.model.pve.Zone;
  * Date: 2021-01-21
  */
 public abstract class Source {
-	public abstract Zone getInstance();
-
-	public Item getSourceToken() {
+	public Zone getZone() {
 		return null;
 	}
 
-	public String getBoss() {
+	public TradedItem getSourceItem() {
+		return null;
+	}
+
+	public Boss getBoss() {
 		return null;
 	}
 
@@ -27,59 +31,53 @@ public abstract class Source {
 		return null;
 	}
 
-	public boolean isBossDrop() {
-		return this instanceof BossDrop;
+	public Profession getProfession() { return null; }
+
+	public boolean isTraded() {
+		return false;
 	}
 
-	public boolean isTradedFromToken() {
-		return this instanceof TradedFromToken;
+	public boolean isBossDrop() {
+		return false;
 	}
 
 	public boolean isTrashDrop() {
-		return this instanceof TrashDrop;
-	}
-
-	public boolean isMiscInstance() {
-		return this instanceof MiscInstance;
+		return (isRaidDrop() || isDungeonDrop()) && getBoss() == null;
 	}
 
 	public boolean isReputationReward() {
-		return this instanceof ReputationReward;
-	}
-
-	public boolean isPurchasedFromVendor() {
-		return this instanceof PurchasedFromVendor;
+		return false;
 	}
 
 	public boolean isCrafted() {
-		return this instanceof Crafted;
+		return false;
 	}
 
-	public boolean isNormalQuestReward() {
-		return this instanceof QuestReward && !((QuestReward)this).isDungeon();
-	}
-
-	public boolean isDungeonQuestReward() {
-		return this instanceof QuestReward && ((QuestReward)this).isDungeon();
+	public boolean isQuestReward() {
+		return false;
 	}
 
 	public boolean isRaidDrop() {
-		return getInstance() != null && getInstance().isRaid();
+		return getZone() != null && getZone().isRaid();
 	}
 
 	public boolean isDungeonDrop() {
-		return getInstance() != null && getInstance().isDungeon();
+		return getZone() != null && getZone().isDungeon();
 	}
 
+	public boolean isZoneDrop() { return false; }
+
 	public boolean isWorldDrop() {
-		return this instanceof WorldDrop;
+		return false;
 	}
 
 	public boolean isBadgeVendor() {
-		return this instanceof BadgeVendor;
+		return false;
 	}
 
-	public boolean isPvp() { return this instanceof PvP; }
+	public boolean isPvP() {
+		return false;
+	}
 
 	public abstract boolean equals(Object o);
 

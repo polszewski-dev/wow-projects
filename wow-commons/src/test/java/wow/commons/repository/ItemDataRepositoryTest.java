@@ -19,13 +19,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
 import static wow.commons.model.categorization.ArmorSubType.CLOTH;
-import static wow.commons.model.categorization.Binding.BINDS_ON_EQUIP;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
+import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.categorization.ItemRarity.EPIC;
 import static wow.commons.model.categorization.ItemType.CHEST;
+import static wow.commons.model.categorization.ItemType.TOKEN;
 import static wow.commons.model.professions.Profession.TAILORING;
 import static wow.commons.model.pve.Phase.TBC_P3;
 import static wow.commons.model.pve.Phase.TBC_P5;
+import static wow.commons.model.unit.CharacterClass.*;
 
 /**
  * User: POlszewski
@@ -145,7 +147,7 @@ class ItemDataRepositoryTest {
 		assertThat(gem.getId()).isEqualTo(35760);
 		assertThat(gem.getName()).isEqualTo("Reckless Pyrestone");
 		assertThat(gem.getRarity()).isEqualTo(EPIC);
-		assertThat(gem.getBinding()).isEqualTo(BINDS_ON_EQUIP);
+		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(gem.isUnique()).isFalse();
 		assertThat(gem.getItemLevel()).isEqualTo(100);
 		assertThat(gem.getRestriction().getRequiredLevel()).isNull();
@@ -208,5 +210,26 @@ class ItemDataRepositoryTest {
 		assertThat(enchant.getItemTypes()).hasSameElementsAs(List.of(ItemType.LEGS));
 		assertThat(enchant.getAttributes().getSpellPower()).isEqualTo(35);
 		assertThat(enchant.getAttributes().getStamina()).isEqualTo(20);
+	}
+
+	@Test
+	@DisplayName("Token is read correctly")
+	void tokenIsCorrect() {
+		Optional<TradedItem> optionalTradedItem = underTest.getTradedItem(31101);
+
+		assertThat(optionalTradedItem).isPresent();
+
+		TradedItem tradedItem = optionalTradedItem.orElseThrow();
+
+		assertThat(tradedItem.getId()).isEqualTo(31101);
+		assertThat(tradedItem.getName()).isEqualTo("Pauldrons of the Forgotten Conqueror");
+		assertThat(tradedItem.getItemType()).isEqualTo(TOKEN);
+		assertThat(tradedItem.getRarity()).isEqualTo(EPIC);
+		assertThat(tradedItem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
+		assertThat(tradedItem.isUnique()).isFalse();
+		assertThat(tradedItem.getItemLevel()).isEqualTo(70);
+		assertThat(tradedItem.getRestriction().getRequiredLevel()).isEqualTo(70);
+		assertThat(tradedItem.getRestriction().getPhase()).isEqualTo(TBC_P3);
+		assertThat(tradedItem.getRestriction().getClassRestriction()).hasSameElementsAs(List.of(PALADIN,PRIEST,WARLOCK));
 	}
 }

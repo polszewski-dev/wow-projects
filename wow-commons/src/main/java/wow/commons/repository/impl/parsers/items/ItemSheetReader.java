@@ -10,7 +10,6 @@ import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
-import wow.commons.model.sources.SourceParser;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.PVERepository;
@@ -19,11 +18,11 @@ import wow.commons.repository.impl.parsers.gems.SocketBonusParser;
 import wow.commons.repository.impl.parsers.stats.StatParser;
 import wow.commons.repository.impl.parsers.stats.StatPatternRepository;
 import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.SourceParser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -107,7 +106,7 @@ public class ItemSheetReader extends ExcelSheetReader {
 		var tooltip = colTooltip.getString();
 		var stats = getStats();
 
-		var sources = Set.of(SourceParser.parse(source, pveRepository));
+		var sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
 		var item = new Item(id, name, rarity, itemType, itemSubType, sources, getSocketSpecification(socketTypes, socketBonus), stats, null);
 
 		item.setItemLevel(itemLevel);

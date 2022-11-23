@@ -30,7 +30,7 @@ public class BossSheetReader extends ExcelSheetReader {
 	@Override
 	protected void readSingleRow() {
 		Boss boss = getBoss();
-		pveRepository.addBossByName(boss);
+		pveRepository.addBoss(boss);
 	}
 
 	private Boss getBoss() {

@@ -1,37 +1,25 @@
 package wow.commons.model.sources;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Zone;
-
-import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
-class BossDrop extends SourcedFromInstance {
-	private final String boss;
-
-	BossDrop(Zone instance, String boss) {
-		super(instance);
-		this.boss = boss;
-	}
-
-	@Override
-	public String getBoss() {
-		return boss;
-	}
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(callSuper = false)
+public class BossDrop extends Source {
+	private final Boss boss;
+	private final Zone zone;
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof BossDrop)) return false;
-		BossDrop bossDrop = (BossDrop) o;
-		return Objects.equals(boss, bossDrop.boss);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(boss);
+	public boolean isBossDrop() {
+		return true;
 	}
 
 	@Override

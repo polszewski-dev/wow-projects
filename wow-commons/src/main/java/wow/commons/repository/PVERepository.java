@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface PVERepository {
 	Optional<Zone> getZone(int zoneId);
 	Optional<Zone> getZone(String name);
-	Optional<Boss> getBoss(String name);
+	Optional<Boss> getBoss(int bossId);
 	Optional<Faction> getFaction(String name);
 
 	List<Zone> getAllInstances();

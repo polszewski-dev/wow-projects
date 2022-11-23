@@ -1,18 +1,20 @@
 package wow.commons.model.sources;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 /**
  * User: POlszewski
  * Date: 2021-03-22
  */
-class WorldDrop extends NotSourcedFromInstance {
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(callSuper = false)
+public class WorldDrop extends Source {
 	@Override
-	public boolean equals(Object o) {
-		return o instanceof WorldDrop;
-	}
-
-	@Override
-	public int hashCode() {
-		return 0;
+	public boolean isWorldDrop() {
+		return true;
 	}
 
 	@Override

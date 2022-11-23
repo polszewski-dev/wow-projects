@@ -78,19 +78,19 @@ public class Item extends AbstractItem {
 	public Set<Zone> getRaidSources() {
 		return getSourcesAfterTradingTokens()
 				.filter(Source::isRaidDrop)
-				.map(Source::getInstance)
+				.map(Source::getZone)
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public Set<Item> getSourceTokens() {
+	public Set<TradedItem> getSourceItems() {
 		return getSources().stream()
-				.map(Source::getSourceToken)
+				.map(Source::getSourceItem)
 				.collect(Collectors.toSet());
 	}
 
 	private Stream<Source> getSourcesAfterTradingTokens() {
 		return getSources().stream()
-				.flatMap(source -> source.isTradedFromToken() ? source.getSourceToken().getSources().stream() : Stream.of(source));
+				.flatMap(source -> source.isTraded() ? source.getSourceItem().getSources().stream() : Stream.of(source));
 	}
 
 	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
