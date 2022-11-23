@@ -24,17 +24,15 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		ItemBaseExcelBuilder builder = new ItemBaseExcelBuilder();
 		builder.start();
 
+		builder.addTradedItemHeader();
+		addTokens(builder);
+		addItemsStartingQuest(builder);
+
 		builder.addItemHeader();
 		addEquipment(builder);
 
 		builder.addGemHeader();
 		addGems(builder);
-
-		builder.addItemstartingQuestHeader();
-		addItemsStartingQuest(builder);
-
-		builder.addTokenHeader();
-		addTokens(builder);
 
 		String itemFilePath = "scraper/item_base.xls";
 
