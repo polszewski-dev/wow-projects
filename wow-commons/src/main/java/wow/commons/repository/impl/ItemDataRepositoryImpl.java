@@ -4,8 +4,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
-import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
@@ -27,14 +25,16 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final Map<Integer, Item> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
 	private final Map<ItemType, List<Item>> itemByType = new TreeMap<>();
-	private final Map<Item, List<Item>> tokenToItems = new HashMap<>();
-	private final Map<Item, List<Item>> itemToTokens = new HashMap<>();
 
 	private final Map<String, ItemSet> itemSetByName = new TreeMap<>();
+
 	private final Map<Integer, Enchant> enchantById = new TreeMap<>();
 	private final Map<String, Enchant> enchantByName = new TreeMap<>();
+
 	private final Map<Integer, Gem> gemById = new TreeMap<>();
 	private final Map<String, List<Gem>> gemByName = new TreeMap<>();
+
+	private final Map<Integer, TradedItem> tradedItemById = new TreeMap<>();
 
 	public ItemDataRepositoryImpl(PVERepository pveRepository) {
 		this.pveRepository = pveRepository;
@@ -66,28 +66,6 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
-	public List<Item> getItemsTradedFor(ItemLink itemLink) {
-		return tokenToItems.getOrDefault(getItem(itemLink).orElseThrow(), List.of());
-	}
-
-	@Override
-	public List<Item> getSourceItemsFor(ItemLink itemLink) {
-		return itemToTokens.getOrDefault(getItem(itemLink).orElseThrow(), List.of());
-	}
-
-	@Override
-	public List<Item> getEquippableItemsFromRaidDrop(Item item, CharacterInfo characterInfo, Phase phase) {
-		List<Item> items = getItemsTradedFor(item.getItemLink());
-		if (items.isEmpty()) {
-			return List.of(item);
-		}
-		items = items.stream()
-				.filter(item2 -> item2.canBeEquippedBy(characterInfo, phase))
-				.collect(Collectors.toList());
-		return items;
-	}
-
-	@Override
 	public Collection<ItemSet> getAllItemSets() {
 		return Collections.unmodifiableCollection(itemSetByName.values());
 	}
@@ -108,6 +86,14 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
+	public List<Enchant> getEnchants(ItemType itemType) {
+		return enchantById.values()
+				.stream()
+				.filter(enchant -> enchant.matches(itemType))
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public Optional<Gem> getGem(int gemId) {
 		return Optional.ofNullable(gemById.get(gemId));
 	}
@@ -123,11 +109,8 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
-	public List<Enchant> getEnchants(ItemType itemType) {
-		return enchantById.values()
-						  .stream()
-						  .filter(enchant -> enchant.matches(itemType))
-						  .collect(Collectors.toList());
+	public Optional<TradedItem> getTradedItem(int tradedItemId) {
+		return Optional.ofNullable(tradedItemById.get(tradedItemId));
 	}
 
 	@PostConstruct
@@ -145,9 +128,8 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 		itemByType.computeIfAbsent(item.getItemType(), x -> new ArrayList<>()).add(item);
 	}
 
-	public void addToken(Item item, Item sourceToken) {
-		tokenToItems.computeIfAbsent(sourceToken, x -> new ArrayList<>()).add(item);
-		itemToTokens.computeIfAbsent(item, x -> new ArrayList<>()).add(sourceToken);
+	public void addTradedItem(TradedItem tradedItem) {
+		tradedItemById.put(tradedItem.getId(), tradedItem);
 	}
 
 	public void addGem(Gem gem) {

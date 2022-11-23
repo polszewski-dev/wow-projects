@@ -35,12 +35,14 @@ public enum ItemType {
 	RANGED("Ranged", ItemCategory.WEAPON, ItemSlot.RANGED),
 	THROWN("Thrown", ItemCategory.WEAPON, ItemSlot.RANGED),
 
+	ENCHANT("<<<Enchant>>>", ItemCategory.ENCHANT),
+	GEM("<<<Gem>>>", ItemCategory.GEM),
+
 	QUEST("This Item Begins a Quest", ItemCategory.QUEST),
+	TOKEN("<<<Token>>>", ItemCategory.TOKEN),
+
 	BAG("Bag", ItemCategory.CONTAINER),
 	PROJECTILE("Projectile", ItemCategory.PROJECTILE),
-
-	TOKEN("<<<Token>>>", ItemCategory.TOKEN),
-	ENCHANT("<<<Enchant>>>", ItemCategory.ENCHANT),
 
 	CRAFTING_MATERIAL("<<<Crafting Material>>>", ItemCategory.CRAFTING_MATERIAL),
 	PATTERN("<<<Pattern>>>", ItemCategory.PATTERN);

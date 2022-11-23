@@ -6,6 +6,7 @@ import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
 
@@ -21,6 +22,7 @@ import java.util.function.Predicate;
 public abstract class AbstractItem implements AttributeSource {
 	private final int id;
 	private final String name;
+	private final ItemType itemType;
 	private final ItemRarity rarity;
 	private Binding binding;
 	private boolean unique;
@@ -33,9 +35,10 @@ public abstract class AbstractItem implements AttributeSource {
 	private final Attributes stats;
 	private final Set<Source> sources;
 
-	protected AbstractItem(int itemId, String name, ItemRarity rarity, Attributes stats, Set<Source> sources) {
+	protected AbstractItem(int itemId, String name, ItemType itemType, ItemRarity rarity, Attributes stats, Set<Source> sources) {
 		this.id = itemId;
 		this.name = name;
+		this.itemType = itemType;
 		this.rarity = rarity;
 		this.stats = stats;
 		this.sources = sources;

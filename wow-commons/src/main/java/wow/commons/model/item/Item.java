@@ -23,7 +23,6 @@ import java.util.stream.Stream;
  */
 @Getter
 public class Item extends AbstractItem {
-	private final ItemType itemType;
 	private final ItemSubType itemSubType;
 	private ItemSet itemSet;
 	private final ItemSocketSpecification socketSpecification;
@@ -38,15 +37,14 @@ public class Item extends AbstractItem {
 				ItemSocketSpecification socketSpecification,
 				Attributes stats,
 				WeaponStats weaponStats) {
-		super(itemId, name, rarity, stats, sources);
-		this.itemType = itemType;
+		super(itemId, name, itemType, rarity, stats, sources);
 		this.itemSubType = itemSubType;
 		this.socketSpecification = socketSpecification;
 		this.weaponStats = weaponStats;
 	}
 
 	public boolean isEnchantable() {
-		return itemType.isEnchantable(itemSubType);
+		return getItemType().isEnchantable(itemSubType);
 	}
 
 	public int getSocketCount() {
@@ -74,7 +72,7 @@ public class Item extends AbstractItem {
 	}
 
 	public boolean canBeEquippedIn(ItemSlot itemSlot) {
-		return itemType.getItemSlots().contains(itemSlot);
+		return getItemType().getItemSlots().contains(itemSlot);
 	}
 
 	public Set<Zone> getRaidSources() {
@@ -106,14 +104,14 @@ public class Item extends AbstractItem {
 	}
 
 	private boolean isCorrectCategory(CharacterInfo characterInfo) {
-		ItemCategory category = itemType.getCategory();
+		ItemCategory category = getItemType().getCategory();
 		if (!(category == ItemCategory.ARMOR || category == ItemCategory.ACCESSORY || category == ItemCategory.WEAPON)) {
 			return false;
 		}
-		if (itemType.getCategory() == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)itemSubType)) {
+		if (category == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)itemSubType)) {
 			return false;
 		}
-		return itemType.getCategory() != ItemCategory.WEAPON || WeaponProfficiency.matches(characterInfo.getCharacterClass(), itemType, (WeaponSubType) itemSubType);
+		return category != ItemCategory.WEAPON || WeaponProfficiency.matches(characterInfo.getCharacterClass(), getItemType(), (WeaponSubType) itemSubType);
 	}
 
 	@Override

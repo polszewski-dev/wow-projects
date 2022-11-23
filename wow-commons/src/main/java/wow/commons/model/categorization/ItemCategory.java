@@ -15,6 +15,7 @@ public enum ItemCategory {
 	PROJECTILE,
 	TOKEN,
 	ENCHANT,
+	GEM,
 	CRAFTING_MATERIAL,
 	PATTERN;
 

@@ -37,6 +37,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetReader> getSheetReaders() {
 		return Stream.of(
+				new TradedItemSheetReader(TRADE, pveRepository, itemDataRepository),
 				new ItemSheetReader(ITEM, pveRepository, itemDataRepository, setPiecesByName),
 				new GemSheetReader(GEM, pveRepository, itemDataRepository),
 				new ItemSetSheetReader(SET, itemDataRepository, setPiecesByName)

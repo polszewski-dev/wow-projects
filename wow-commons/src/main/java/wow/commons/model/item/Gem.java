@@ -3,6 +3,7 @@ package wow.commons.model.item;
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.sources.Source;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class Gem extends AbstractItem {
 	private final List<MetaEnabler> metaEnablers;
 
 	public Gem(int itemId, String name, ItemRarity rarity, Set<Source> sources, GemColor color, List<MetaEnabler> metaEnablers, Attributes stats) {
-		super(itemId, name, rarity, stats, sources);
+		super(itemId, name, ItemType.GEM, rarity, stats, sources);
 		this.color = color;
 		this.metaEnablers = metaEnablers;
 	}
