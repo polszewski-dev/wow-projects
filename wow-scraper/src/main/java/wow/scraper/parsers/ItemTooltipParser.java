@@ -15,7 +15,8 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.repository.impl.parsers.gems.SocketBonusParser;
 import wow.commons.repository.impl.parsers.stats.StatParser;
 import wow.commons.repository.impl.parsers.stats.StatPatternRepository;
-import wow.commons.util.ParserUtil;
+import wow.commons.util.parser.ParserUtil;
+import wow.commons.util.parser.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 				ruleDroppedBy,
 				ruleDropChance,
 				ruleSellPrice,
+				quote,
 				Rule.regex("(.*) \\(\\d/(\\d)\\)", this::parseItemSet),
 				Rule.regex("\\((\\d+)\\) Set ?: (.*)", this::parseItemSetBonus),
 				Rule.exact("<Random enchantment>", () -> this.randomEnchantment = true),
@@ -136,7 +138,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		int numPieces = (int) parsedValues[1];
 
 		Object[] setRestriction = ParserUtil.parseMultipleValues("Requires (Tailoring) \\((\\d+)\\)", lines.get(currentLineIdx + 1));
-		if (setRestriction != null) {
+		if (setRestriction.length > 0) {
 			this.itemSetRequiredProfession = Profession.parse((String)setRestriction[0]);
 			this.itemSetRequiredProfessionLevel = (Integer)setRestriction[1];
 			++currentLineIdx;

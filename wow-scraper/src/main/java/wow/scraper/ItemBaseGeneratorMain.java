@@ -15,12 +15,12 @@ import java.util.List;
  */
 @Slf4j
 public class ItemBaseGeneratorMain extends ScraperTool {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		new ItemBaseGeneratorMain().run();
 	}
 
 	@Override
-	protected void run() throws Exception {
+	protected void run() throws IOException {
 		ItemBaseExcelBuilder builder = new ItemBaseExcelBuilder();
 		builder.start();
 

@@ -7,6 +7,7 @@ import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
+import wow.commons.util.parser.Rule;
 
 import java.util.ArrayList;
 import java.util.List;

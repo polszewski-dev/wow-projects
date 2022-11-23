@@ -2,6 +2,7 @@ package wow.scraper.parsers;
 
 import lombok.Setter;
 import wow.commons.model.pve.GameVersion;
+import wow.commons.util.parser.Rule;
 
 /**
  * User: POlszewski
@@ -26,9 +27,9 @@ public class ItemStartingQuestTooltipParser extends AbstractTooltipParser {
 				ruleProfessionRestriction,
 				ruleDroppedBy,
 				ruleSellPrice,
+				quote,
 				Rule.exact("This Item Begins a Quest", () -> {}),
-				Rule.regex("<Right Click to Read>", params -> {}),
-				Rule.regex("\".*\"", params -> {}),
+				Rule.exact("<Right Click to Read>", () -> {}),
 		};
 	}
 

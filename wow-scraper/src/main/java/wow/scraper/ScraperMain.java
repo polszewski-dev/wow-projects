@@ -13,12 +13,12 @@ import java.util.stream.IntStream;
  */
 @Slf4j
 public class ScraperMain extends ScraperTool {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		new ScraperMain().run();
 	}
 
 	@Override
-	protected void run() throws Exception {
+	protected void run() throws IOException {
 		fetch("items/armor/cloth/slot:5", WowheadItemCategory.CHEST);
 		fetch("items/armor/cloth/slot:8", WowheadItemCategory.FEET);
 		fetch("items/armor/cloth/slot:10", WowheadItemCategory.HANDS);

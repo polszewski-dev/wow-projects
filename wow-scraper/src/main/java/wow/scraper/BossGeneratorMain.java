@@ -3,6 +3,7 @@ package wow.scraper;
 import lombok.extern.slf4j.Slf4j;
 import wow.scraper.model.JsonBossDetails;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +14,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class BossGeneratorMain extends ScraperTool {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		new BossGeneratorMain().run();
 	}
 
 	@Override
-	protected void run() throws Exception {
+	protected void run() throws IOException {
 		List<JsonBossDetails> bosses = getWowheadFetcher().fetchBossDetails(getGameVersion(), "npcs/classification:3/react-a:-1/react-h:-1#100").stream()
 				.filter(x -> !getScraperConfig().getIgnoredBossIds().contains(x.getId()))
 				.collect(Collectors.toList());

@@ -5,7 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.repository.impl.parsers.setters.StatSetter;
 import wow.commons.util.AttributesBuilder;
-import wow.commons.util.ParserUtil;
+import wow.commons.util.parser.ParserUtil;
 
 import java.util.regex.Matcher;
 

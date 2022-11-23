@@ -1,6 +1,7 @@
 package wow.scraper.parsers;
 
 import wow.commons.model.pve.GameVersion;
+import wow.commons.util.parser.Rule;
 
 /**
  * User: POlszewski
@@ -21,6 +22,7 @@ public class TokenTooltipParser extends AbstractTooltipParser {
 				ruleBindsWhenEquipped,
 				ruleClassRestriction,
 				ruleSellPrice,
+				quote,
 		};
 	}
 

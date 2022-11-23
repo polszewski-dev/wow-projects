@@ -12,14 +12,12 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
-import wow.commons.util.ParserUtil;
+import wow.commons.util.parser.ParserUtil;
+import wow.commons.util.parser.Rule;
 
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -87,13 +85,15 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleProfessionSpecializationRestriction = Rule.
 			regex("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", this::parseRequiredProfessionSpec);
 	protected final Rule ruleDurability = Rule.
-			regex("Durability \\d+ / \\d+", x -> {});
+			matches("Durability \\d+ / \\d+", x -> {});
 	protected final Rule ruleDroppedBy = Rule.
 			prefix("Dropped by: ", x -> this.droppedBy = x);
 	protected final Rule ruleDropChance = Rule.
 			prefix("Drop Chance: ", x -> this.dropChance = parseDropChance(x));
 	protected final Rule ruleSellPrice = Rule.
 			prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x));
+	protected final Rule quote = Rule
+			.matches("\".*\"", params -> {});
 
 	protected AbstractTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
 		this.gameVersion = gameVersion;
@@ -126,67 +126,6 @@ public abstract class AbstractTooltipParser {
 	}
 
 	protected abstract Rule[] getRules();
-
-	protected interface Rule {
-		boolean matchAndTakeAction(String line);
-
-		static Rule exact(String exactValue, Runnable action) {
-			return line -> {
-				if (line.equals(exactValue)) {
-					action.run();
-					return true;
-				}
-				return false;
-			};
-		}
-
-		static Rule prefix(String prefix, Consumer<String> action) {
-			return line -> {
-				String withoutPrefix = ParserUtil.removePrefix(prefix, line);
-				if (withoutPrefix != null) {
-					action.accept(withoutPrefix);
-					return true;
-				}
-				return false;
-			};
-		}
-
-		static <T> Rule tryParse(Function<String, T> lineParser, Consumer<T> parsedValueConsumer) {
-			return line -> {
-				T parsedValue = lineParser.apply(line);
-				if (parsedValue != null) {
-					parsedValueConsumer.accept(parsedValue);
-					return true;
-				}
-				return false;
-			};
-		}
-
-		static Rule test(Predicate<String> predicate, Consumer<String> consumer) {
-			return line -> {
-				if (predicate.test(line)) {
-					consumer.accept(line);
-					return true;
-				}
-				return false;
-			};
-		}
-
-		static <T> Rule testNotNull(Function<String, T> lineParser, Consumer<String> consumer) {
-			return test(line -> lineParser.apply(line) != null, consumer);
-		}
-
-		static Rule regex(String regex, Consumer<Object[]> matchedValueConsumer) {
-			return line -> {
-				Object[] matchedValues = ParserUtil.parseMultipleValues(regex, line);
-				if (matchedValues != null) {
-					matchedValueConsumer.accept(matchedValues);
-					return true;
-				}
-				return false;
-			};
-		}
-	}
 
 	protected abstract void beforeParse();
 	protected abstract void afterParse();

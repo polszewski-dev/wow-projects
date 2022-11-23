@@ -1,4 +1,4 @@
-package wow.commons.util;
+package wow.commons.util.parser;
 
 import java.util.List;
 import java.util.function.Function;
@@ -16,32 +16,40 @@ public final class ParserUtil {
 	public static Object[] parseMultipleValues(String regex, String line) {
 		Pattern pattern = Pattern.compile("^" + regex + "$");
 		Matcher matcher = pattern.matcher(line);
-		if (matcher.find()) {
-			Object[] result = new Object[matcher.groupCount()];
-			for (int i = 1; i <= matcher.groupCount(); ++i) {
-				String group = matcher.group(i);
-				if (group != null && group.matches("\\d+")) {
-					result[i - 1] = Integer.valueOf(group);
-				} else {
-					result[i - 1] = group;
-				}
-			}
-			return result;
+		if (!matcher.find()) {
+			return new Object[0];
 		}
-		return null;
+		assertHasGroups(matcher, regex);
+		Object[] result = new Object[matcher.groupCount()];
+		for (int i = 1; i <= matcher.groupCount(); ++i) {
+			String group = matcher.group(i);
+			if (group != null && group.matches("\\d+")) {
+				result[i - 1] = Integer.valueOf(group);
+			} else {
+				result[i - 1] = group;
+			}
+		}
+		return result;
 	}
 
 	public static int[] parseMultipleInts(String regex, String line) {
 		Pattern pattern = Pattern.compile("^" + regex + "$");
 		Matcher matcher = pattern.matcher(line);
-		if (matcher.find()) {
-			int[] result = new int[matcher.groupCount()];
-			for (int i = 1; i <= matcher.groupCount(); ++i) {
-				result[i - 1] = Integer.parseInt(matcher.group(i));
-			}
-			return result;
+		if (!matcher.find()) {
+			return new int[0];
 		}
-		return null;
+		assertHasGroups(matcher, regex);
+		int[] result = new int[matcher.groupCount()];
+		for (int i = 1; i <= matcher.groupCount(); ++i) {
+			result[i - 1] = Integer.parseInt(matcher.group(i));
+		}
+		return result;
+	}
+
+	private static void assertHasGroups(Matcher matcher, String regex) {
+		if (matcher.groupCount() == 0) {
+			throw new IllegalArgumentException(String.format("Pattern '%s' has no groups, use String.matches instead!", regex));
+		}
 	}
 
 	public static String removePrefix(String prefix, String line) {

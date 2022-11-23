@@ -4,7 +4,7 @@ import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
 import wow.commons.repository.PVERepository;
-import wow.commons.util.ParserUtil;
+import wow.commons.util.parser.ParserUtil;
 
 /**
  * User: POlszewski
@@ -17,7 +17,7 @@ public final class SourceParser {
 		}
 
 		Object[] bossDropParams = ParserUtil.parseMultipleValues("BossDrop:(.*):(.*)", line);
-		if (bossDropParams != null) {
+		if (bossDropParams.length > 0) {
 			String bossName = (String) bossDropParams[0];
 			int zoneId = (int) bossDropParams[1];
 			Zone zone = pveRepository.getZone(zoneId).orElseThrow();
@@ -25,7 +25,7 @@ public final class SourceParser {
 		}
 
 		Object[] zoneDropParams = ParserUtil.parseMultipleValues("ZoneDrop:(.*)", line);
-		if (zoneDropParams != null) {
+		if (zoneDropParams.length > 0) {
 			int zoneId = (int) zoneDropParams[0];
 			Zone zone = pveRepository.getZone(zoneId).orElseThrow();
 			return new TrashDrop(zone);

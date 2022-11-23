@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.stats;
 
 import wow.commons.model.Duration;
 
-import static wow.commons.util.ParserUtil.parseMultipleInts;
+import static wow.commons.util.parser.ParserUtil.parseMultipleInts;
 
 /**
  * User: POlszewski
@@ -17,17 +17,17 @@ public final class CooldownParser {
 		int[] parsedValues;
 
 		parsedValues = parseMultipleInts("(\\d+) Mins?", value);
-		if (parsedValues != null) {
+		if (parsedValues.length > 0) {
 			return Duration.seconds(60.0 * parsedValues[0]);
 		}
 
 		parsedValues = parseMultipleInts("(\\d+) Min,? (\\d+) Secs?", value);
-		if (parsedValues != null) {
+		if (parsedValues.length > 0) {
 			return Duration.seconds(60.0 * parsedValues[0] + parsedValues[1]);
 		}
 
 		parsedValues = parseMultipleInts("(\\d+) Hour", value);
-		if (parsedValues != null) {
+		if (parsedValues.length > 0) {
 			return Duration.seconds(60.0 * 60.0 * parsedValues[0]);
 		}
 
