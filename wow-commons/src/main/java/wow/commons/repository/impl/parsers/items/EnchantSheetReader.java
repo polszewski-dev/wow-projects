@@ -7,15 +7,15 @@ import wow.commons.model.config.Restriction;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.professions.Profession;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
 import wow.commons.util.AttributesBuilder;
-import wow.commons.util.ExcelSheetReader;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class EnchantSheetReader extends ExcelSheetReader {
+public class EnchantSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colItemTypes = column("item_types");

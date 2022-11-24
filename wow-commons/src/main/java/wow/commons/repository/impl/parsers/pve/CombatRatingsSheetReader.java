@@ -2,13 +2,13 @@ package wow.commons.repository.impl.parsers.pve;
 
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.repository.impl.PVERepositoryImpl;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class CombatRatingsSheetReader extends ExcelSheetReader {
+public class CombatRatingsSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colLevel = column("level");
 	private final ExcelColumn colSpellCrit = column("spell_crit");
 	private final ExcelColumn colSpellHit = column("spell_hit");

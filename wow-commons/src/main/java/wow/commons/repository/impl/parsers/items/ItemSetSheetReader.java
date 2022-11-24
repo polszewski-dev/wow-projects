@@ -7,9 +7,9 @@ import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.repository.impl.parsers.stats.StatParser;
 import wow.commons.repository.impl.parsers.stats.StatPatternRepository;
-import wow.commons.util.ExcelSheetReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class ItemSetSheetReader extends ExcelSheetReader {
+public class ItemSetSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colName = column(ITEM_SET_NAME);
 	private final ExcelColumn colReqProf = column(ITEM_SET_REQ_PROF);
 	private final ExcelColumn colReqProfLvl = column(ITEM_SET_REQ_PROF_LVL);

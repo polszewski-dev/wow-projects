@@ -17,6 +17,7 @@ import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.PetType;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.ExcelSheetReader;
 
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public abstract class BenefitSheetReader extends ExcelSheetReader {
+public abstract class BenefitSheetReader extends WowExcelSheetParser {
 	protected BenefitSheetReader(String sheetName) {
 		super(sheetName);
 	}

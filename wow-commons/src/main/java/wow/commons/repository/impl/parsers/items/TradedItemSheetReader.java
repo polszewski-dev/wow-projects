@@ -12,7 +12,7 @@ import wow.commons.model.sources.Source;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.util.SourceParser;
 
 import java.util.Set;
@@ -23,7 +23,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class TradedItemSheetReader extends ExcelSheetReader {
+public class TradedItemSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colItemId = column(TRADE_ITEM_ID);
 	private final ExcelColumn colItemName = column(TRADE_ITEM_NAME);
 	private final ExcelColumn colItemType = column(TRADE_ITEM_TYPE);

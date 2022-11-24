@@ -4,13 +4,13 @@ import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.impl.PVERepositoryImpl;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class BaseStatsSheetReader extends ExcelSheetReader {
+public class BaseStatsSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colLevel = column("level");
 	private final ExcelColumn colClass = column("class");
 	private final ExcelColumn colRace = column("race");

@@ -6,10 +6,9 @@ import polszewski.excel.reader.PoiExcelReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import static wow.commons.util.ExcelUtil.getHeader;
 
 /**
  * User: POlszewski
@@ -24,7 +23,7 @@ public abstract class ExcelParser {
 			this.excelReader = newExcelReader;
 			while (excelReader.nextSheet()) {
 				if (excelReader.nextRow()) {
-					this.header = getHeader(excelReader);
+					this.header = getHeader();
 					ExcelSheetReader sheetReader = getSheetReader(excelReader);
 					sheetReader.init(excelReader, header);
 					sheetReader.readSheet();
@@ -49,5 +48,17 @@ public abstract class ExcelParser {
 
 	protected InputStream fromResourcePath(String path) {
 		return this.getClass().getResourceAsStream(path);
+	}
+
+	private Map<String, Integer> getHeader() {
+		Map<String, Integer> result = new LinkedHashMap<>();
+
+		while (excelReader.nextCell()) {
+			String value = excelReader.getCurrentCellStringValue();
+			if (value != null) {
+				result.put(value.trim(), excelReader.getCurrentColIdx());
+			}
+		}
+		return result;
 	}
 }

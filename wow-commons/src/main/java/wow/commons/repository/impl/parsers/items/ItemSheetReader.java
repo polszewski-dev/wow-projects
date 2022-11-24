@@ -17,10 +17,10 @@ import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.repository.impl.parsers.gems.SocketBonusParser;
 import wow.commons.repository.impl.parsers.stats.StatParser;
 import wow.commons.repository.impl.parsers.stats.StatPatternRepository;
-import wow.commons.util.ExcelSheetReader;
 import wow.commons.util.SourceParser;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class ItemSheetReader extends ExcelSheetReader {
+public class ItemSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colId = column(ITEM_ID);
 	private final ExcelColumn colName = column(ITEM_NAME);
 	private final ExcelColumn colRarity = column(ITEM_RARITY);

@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.pve;
 
 import wow.commons.model.pve.Boss;
 import wow.commons.repository.impl.PVERepositoryImpl;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 import java.util.stream.Collectors;
 
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class BossSheetReader extends ExcelSheetReader {
+public class BossSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colZone = column("zone");

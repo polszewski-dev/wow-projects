@@ -4,13 +4,13 @@ import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.PVERepositoryImpl;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class FactionSheetReader extends ExcelSheetReader {
+public class FactionSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colNo = column("no.");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colVersion = column("version");

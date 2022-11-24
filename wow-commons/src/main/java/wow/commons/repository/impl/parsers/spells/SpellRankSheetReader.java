@@ -4,13 +4,13 @@ import wow.commons.model.Duration;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.spells.*;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class SpellRankSheetReader extends ExcelSheetReader {
+public class SpellRankSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colRank = column("rank");
 	private final ExcelColumn colLevel = column("level");

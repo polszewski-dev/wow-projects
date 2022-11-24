@@ -4,13 +4,13 @@ import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.pve.ZoneType;
 import wow.commons.repository.impl.PVERepositoryImpl;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class ZoneSheetReader extends ExcelSheetReader {
+public class ZoneSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colShortName = column("short_name");
