@@ -1,8 +1,8 @@
 package wow.commons.repository.impl.parsers.excel;
 
+import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.util.ExcelSheetParser;
 
 import java.util.Optional;
 

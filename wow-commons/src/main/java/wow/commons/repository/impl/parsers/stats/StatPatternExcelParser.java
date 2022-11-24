@@ -1,7 +1,7 @@
 package wow.commons.repository.impl.parsers.stats;
 
-import wow.commons.util.ExcelParser;
-import wow.commons.util.ExcelSheetParser;
+import polszewski.excel.reader.templates.ExcelParser;
+import polszewski.excel.reader.templates.ExcelSheetParser;
 
 import java.io.InputStream;
 import java.util.List;

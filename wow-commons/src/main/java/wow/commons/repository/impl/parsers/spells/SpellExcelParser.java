@@ -1,8 +1,8 @@
 package wow.commons.repository.impl.parsers.spells;
 
+import polszewski.excel.reader.templates.ExcelParser;
+import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
-import wow.commons.util.ExcelParser;
-import wow.commons.util.ExcelSheetParser;
 
 import java.io.InputStream;
 import java.util.stream.Stream;

@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parsers.spells;
 
+import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
@@ -19,7 +20,6 @@ import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.PetType;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.util.AttributesBuilder;
-import wow.commons.util.ExcelSheetParser;
 
 import java.util.ArrayList;
 import java.util.List;
