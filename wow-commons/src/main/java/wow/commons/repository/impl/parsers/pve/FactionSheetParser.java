@@ -10,7 +10,7 @@ import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class FactionSheetReader extends WowExcelSheetParser {
+public class FactionSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colNo = column("no.");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colVersion = column("version");
@@ -18,7 +18,7 @@ public class FactionSheetReader extends WowExcelSheetParser {
 
 	private final PVERepositoryImpl pveRepository;
 
-	public FactionSheetReader(String sheetName, PVERepositoryImpl pveRepository) {
+	public FactionSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

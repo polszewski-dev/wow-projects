@@ -21,7 +21,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class ItemSetSheetReader extends WowExcelSheetParser {
+public class ItemSetSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colName = column(ITEM_SET_NAME);
 	private final ExcelColumn colReqProf = column(ITEM_SET_REQ_PROF);
 	private final ExcelColumn colReqProfLvl = column(ITEM_SET_REQ_PROF_LVL);
@@ -31,7 +31,7 @@ public class ItemSetSheetReader extends WowExcelSheetParser {
 	private final ItemDataRepositoryImpl itemDataRepository;
 	private final Map<String, List<Item>> setPiecesByName;
 
-	public ItemSetSheetReader(String sheetName, ItemDataRepositoryImpl itemDataRepository, Map<String, List<Item>> setPiecesByName) {
+	public ItemSetSheetParser(String sheetName, ItemDataRepositoryImpl itemDataRepository, Map<String, List<Item>> setPiecesByName) {
 		super(sheetName);
 		this.itemDataRepository = itemDataRepository;
 		this.setPiecesByName = setPiecesByName;

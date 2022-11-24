@@ -4,7 +4,7 @@ import wow.commons.model.item.Item;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.util.ExcelParser;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.ExcelSheetParser;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -35,12 +35,12 @@ public class ItemBaseExcelParser extends ExcelParser {
 	}
 
 	@Override
-	protected Stream<ExcelSheetReader> getSheetReaders() {
+	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new TradedItemSheetReader(TRADE, pveRepository, itemDataRepository),
-				new ItemSheetReader(ITEM, pveRepository, itemDataRepository, setPiecesByName),
-				new GemSheetReader(GEM, pveRepository, itemDataRepository),
-				new ItemSetSheetReader(SET, itemDataRepository, setPiecesByName)
+				new TradedItemSheetParser(TRADE, pveRepository, itemDataRepository),
+				new ItemSheetParser(ITEM, pveRepository, itemDataRepository, setPiecesByName),
+				new GemSheetParser(GEM, pveRepository, itemDataRepository),
+				new ItemSetSheetParser(SET, itemDataRepository, setPiecesByName)
 		);
 	}
 }

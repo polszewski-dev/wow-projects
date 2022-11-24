@@ -10,7 +10,7 @@ import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class ZoneSheetReader extends WowExcelSheetParser {
+public class ZoneSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colShortName = column("short_name");
@@ -20,7 +20,7 @@ public class ZoneSheetReader extends WowExcelSheetParser {
 
 	private final PVERepositoryImpl pveRepository;
 
-	public ZoneSheetReader(String sheetName, PVERepositoryImpl pveRepository) {
+	public ZoneSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

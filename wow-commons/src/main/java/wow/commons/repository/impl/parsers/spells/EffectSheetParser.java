@@ -14,7 +14,7 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class EffectSheetReader extends BenefitSheetReader {
+public class EffectSheetParser extends BenefitSheetParser {
 	private final ExcelColumn colEffect = column("effect");
 	private final ExcelColumn colFriendly = column("friendly");
 	private final ExcelColumn colScope = column("scope");
@@ -30,7 +30,7 @@ public class EffectSheetReader extends BenefitSheetReader {
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	public EffectSheetReader(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public EffectSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
 		super(sheetName);
 		this.spellDataRepository = spellDataRepository;
 		addColumnGroups();

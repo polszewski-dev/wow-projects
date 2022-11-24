@@ -10,7 +10,7 @@ import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class SpellRankSheetReader extends WowExcelSheetParser {
+public class SpellRankSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colRank = column("rank");
 	private final ExcelColumn colLevel = column("level");
@@ -32,7 +32,7 @@ public class SpellRankSheetReader extends WowExcelSheetParser {
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	public SpellRankSheetReader(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public SpellRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
 		super(sheetName);
 		this.spellDataRepository = spellDataRepository;
 	}

@@ -15,7 +15,7 @@ import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class SpellSheetReader extends WowExcelSheetParser {
+public class SpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colTree = column("tree");
 	private final ExcelColumn colSchool = column("school");
@@ -23,19 +23,19 @@ public class SpellSheetReader extends WowExcelSheetParser {
 	private final ExcelColumn colCoeffDot = column("coeff dot");
 	private final ExcelColumn colCooldown = column("cooldown");
 	private final ExcelColumn colIgnoresGcd = column("ignores gcd");
-	private final ExcelColumn colRequitedTalent = column("required talent");
+	private final ExcelColumn colRequiredTalent = column("required talent");
 	private final ExcelColumn colBolt = column("bolt");
 	private final ExcelColumn colConversionFrom = column("conversion: from");
 	private final ExcelColumn colConversionTo = column("conversion: to");
 	private final ExcelColumn colConversionPct = column("conversion: %");
-	private final ExcelColumn colRequitedEffect = column("required effect");
+	private final ExcelColumn colRequiredEffect = column("required effect");
 	private final ExcelColumn colEffectRemovedOnHit = column("effect removed on hit");
 	private final ExcelColumn colBonusDamageIfUnderEffect = column("bonus dmg if under effect");
 	private final ExcelColumn colDotScheme = column("dot scheme");
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	public SpellSheetReader(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public SpellSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
 		super(sheetName);
 		this.spellDataRepository = spellDataRepository;
 	}
@@ -64,9 +64,9 @@ public class SpellSheetReader extends WowExcelSheetParser {
 		var coeffDot = colCoeffDot.getPercent(Percent.ZERO);
 		var cooldown = colCooldown.getDuration(null);
 		var ignoresGCD = colIgnoresGcd.getBoolean();
-		var requiredTalent = colRequitedTalent.getEnum(TalentId::parse, null);
+		var requiredTalent = colRequiredTalent.getEnum(TalentId::parse, null);
 		var bolt = colBolt.getBoolean();
-		var requiredEffect = colRequitedEffect.getEnum(EffectId::parse, null);
+		var requiredEffect = colRequiredEffect.getEnum(EffectId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(EffectId::parse, null);
 		var bonusDamageIfUnderEffect = colBonusDamageIfUnderEffect.getEnum(EffectId::parse, null);
 		var dotScheme = colDotScheme.getList(Integer::parseInt);

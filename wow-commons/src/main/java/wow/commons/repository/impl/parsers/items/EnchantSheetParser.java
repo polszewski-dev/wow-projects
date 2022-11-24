@@ -15,7 +15,7 @@ import wow.commons.util.AttributesBuilder;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class EnchantSheetReader extends WowExcelSheetParser {
+public class EnchantSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colItemTypes = column("item_types");
@@ -26,7 +26,7 @@ public class EnchantSheetReader extends WowExcelSheetParser {
 
 	private final ItemDataRepositoryImpl itemDataRepository;
 
-	public EnchantSheetReader(String sheetName, ItemDataRepositoryImpl itemDataRepository) {
+	public EnchantSheetParser(String sheetName, ItemDataRepositoryImpl itemDataRepository) {
 		super(sheetName);
 		this.itemDataRepository = itemDataRepository;
 	}

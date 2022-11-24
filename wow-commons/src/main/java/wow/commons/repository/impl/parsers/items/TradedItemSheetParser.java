@@ -23,7 +23,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class TradedItemSheetReader extends WowExcelSheetParser {
+public class TradedItemSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colItemId = column(TRADE_ITEM_ID);
 	private final ExcelColumn colItemName = column(TRADE_ITEM_NAME);
 	private final ExcelColumn colItemType = column(TRADE_ITEM_TYPE);
@@ -38,7 +38,7 @@ public class TradedItemSheetReader extends WowExcelSheetParser {
 	private final PVERepository pveRepository;
 	private final ItemDataRepositoryImpl itemDataRepository;
 
-	public TradedItemSheetReader(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
+	public TradedItemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 		this.itemDataRepository = itemDataRepository;

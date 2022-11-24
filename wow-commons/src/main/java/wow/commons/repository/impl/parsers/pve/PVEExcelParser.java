@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.pve;
 
 import wow.commons.repository.impl.PVERepositoryImpl;
 import wow.commons.util.ExcelParser;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.ExcelSheetParser;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -24,13 +24,13 @@ public class PVEExcelParser extends ExcelParser {
 	}
 
 	@Override
-	protected Stream<ExcelSheetReader> getSheetReaders() {
+	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new ZoneSheetReader("zones", pveRepository),
-				new BossSheetReader("bosses", pveRepository),
-				new FactionSheetReader("factions", pveRepository),
-				new BaseStatsSheetReader("base_stats", pveRepository),
-				new CombatRatingsSheetReader("combat_ratings", pveRepository)
+				new ZoneSheetParser("zones", pveRepository),
+				new BossSheetParser("bosses", pveRepository),
+				new FactionSheetParser("factions", pveRepository),
+				new BaseStatsSheetParser("base_stats", pveRepository),
+				new CombatRatingsSheetParser("combat_ratings", pveRepository)
 		);
 	}
 }

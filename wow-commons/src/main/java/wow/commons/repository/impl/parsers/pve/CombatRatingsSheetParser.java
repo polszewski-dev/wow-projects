@@ -8,7 +8,7 @@ import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class CombatRatingsSheetReader extends WowExcelSheetParser {
+public class CombatRatingsSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colLevel = column("level");
 	private final ExcelColumn colSpellCrit = column("spell_crit");
 	private final ExcelColumn colSpellHit = column("spell_hit");
@@ -16,7 +16,7 @@ public class CombatRatingsSheetReader extends WowExcelSheetParser {
 
 	private final PVERepositoryImpl pveRepository;
 
-	public CombatRatingsSheetReader(String sheetName, PVERepositoryImpl pveRepository) {
+	public CombatRatingsSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

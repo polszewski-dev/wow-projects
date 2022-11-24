@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
 import wow.commons.util.ExcelParser;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.ExcelSheetParser;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -24,13 +24,13 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	@Override
-	protected Stream<ExcelSheetReader> getSheetReaders() {
+	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new SpellSheetReader("spells", spellDataRepository),
-				new SpellRankSheetReader("ranks", spellDataRepository),
-				new TalentSheetReader("talents", spellDataRepository),
-				new EffectSheetReader("effects", spellDataRepository),
-				new BuffSheetReader("buffs", spellDataRepository)
+				new SpellSheetParser("spells", spellDataRepository),
+				new SpellRankSheetParser("ranks", spellDataRepository),
+				new TalentSheetParser("talents", spellDataRepository),
+				new EffectSheetParser("effects", spellDataRepository),
+				new BuffSheetParser("buffs", spellDataRepository)
 		);
 	}
 }

@@ -15,7 +15,7 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class TalentSheetReader extends BenefitSheetReader {
+public class TalentSheetParser extends BenefitSheetParser {
 	private final ExcelColumn colTalent = column("talent");
 	private final ExcelColumn colRank = column("rank");
 	private final ExcelColumn colMaxRank = column("max rank");
@@ -29,7 +29,7 @@ public class TalentSheetReader extends BenefitSheetReader {
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	public TalentSheetReader(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public TalentSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
 		super(sheetName);
 		this.spellDataRepository = spellDataRepository;
 

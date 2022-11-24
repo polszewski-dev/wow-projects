@@ -24,9 +24,9 @@ public abstract class ExcelParser {
 			while (excelReader.nextSheet()) {
 				if (excelReader.nextRow()) {
 					this.header = getHeader();
-					ExcelSheetReader sheetReader = getSheetReader(excelReader);
-					sheetReader.init(excelReader, header);
-					sheetReader.readSheet();
+					ExcelSheetParser sheetParser = getSheetParser(excelReader);
+					sheetParser.init(excelReader, header);
+					sheetParser.readSheet();
 				}
 			}
 		} finally {
@@ -35,16 +35,16 @@ public abstract class ExcelParser {
 		}
 	}
 
-	private ExcelSheetReader getSheetReader(ExcelReader excelReader) {
-		return getSheetReaders()
-				.filter(reader -> reader.sheetName.equals(excelReader.getCurrentSheetName()))
+	private ExcelSheetParser getSheetParser(ExcelReader excelReader) {
+		return getSheetParsers()
+				.filter(parser -> parser.sheetName.equals(excelReader.getCurrentSheetName()))
 				.findFirst()
 				.orElseThrow(() -> new IllegalArgumentException("Unknown sheet: " + excelReader.getCurrentSheetName()));
 	}
 
 	protected abstract InputStream getExcelInputStream();
 
-	protected abstract Stream<ExcelSheetReader> getSheetReaders();
+	protected abstract Stream<ExcelSheetParser> getSheetParsers();
 
 	protected InputStream fromResourcePath(String path) {
 		return this.getClass().getResourceAsStream(path);

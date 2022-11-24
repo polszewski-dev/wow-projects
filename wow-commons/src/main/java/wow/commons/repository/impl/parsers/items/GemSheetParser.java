@@ -25,7 +25,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class GemSheetReader extends WowExcelSheetParser {
+public class GemSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colId = column(GEM_ID);
 	private final ExcelColumn colName = column(GEM_NAME);
 	private final ExcelColumn colRarity = column(GEM_RARITY);
@@ -45,7 +45,7 @@ public class GemSheetReader extends WowExcelSheetParser {
 	private final PVERepository pveRepository;
 	private final ItemDataRepositoryImpl itemDataRepository;
 
-	public GemSheetReader(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
+	public GemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 		this.itemDataRepository = itemDataRepository;

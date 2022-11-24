@@ -12,13 +12,13 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public abstract class ExcelSheetReader {
+public abstract class ExcelSheetParser {
 	protected final String sheetName;
 
 	protected ExcelReader excelReader;
 	protected Map<String, Integer> header;
 
-	protected ExcelSheetReader(String sheetName) {
+	protected ExcelSheetParser(String sheetName) {
 		this.sheetName = sheetName;
 	}
 

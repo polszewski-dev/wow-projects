@@ -18,7 +18,7 @@ import wow.commons.util.AttributesBuilder;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class BuffSheetReader extends WowExcelSheetParser {
+public class BuffSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colLevel = column("level");
@@ -33,7 +33,7 @@ public class BuffSheetReader extends WowExcelSheetParser {
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	public BuffSheetReader(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public BuffSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
 		super(sheetName);
 		this.spellDataRepository = spellDataRepository;
 	}

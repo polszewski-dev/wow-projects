@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class BossSheetReader extends WowExcelSheetParser {
+public class BossSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colZone = column("zone");
 
 	private final PVERepositoryImpl pveRepository;
 
-	public BossSheetReader(String sheetName, PVERepositoryImpl pveRepository) {
+	public BossSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

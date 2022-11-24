@@ -19,7 +19,7 @@ import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.PetType;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.util.AttributesBuilder;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.ExcelSheetParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public abstract class BenefitSheetReader extends WowExcelSheetParser {
-	protected BenefitSheetReader(String sheetName) {
+public abstract class BenefitSheetParser extends WowExcelSheetParser {
+	protected BenefitSheetParser(String sheetName) {
 		super(sheetName);
 	}
 
@@ -41,7 +41,7 @@ public abstract class BenefitSheetReader extends WowExcelSheetParser {
 
 	private class SimpleColumn implements Column {
 		final PrimitiveAttributeId id;
-		final ExcelSheetReader.ExcelColumn name;
+		final ExcelSheetParser.ExcelColumn name;
 
 		SimpleColumn(String name, PrimitiveAttributeId id) {
 			this.id = id;
@@ -167,12 +167,12 @@ public abstract class BenefitSheetReader extends WowExcelSheetParser {
 
 	private final List<Column> columns = new ArrayList<>();
 
-	protected BenefitSheetReader add(PrimitiveAttributeId id, String name) {
+	protected BenefitSheetParser add(PrimitiveAttributeId id, String name) {
 		columns.add(new SimpleColumn(name, id));
 		return this;
 	}
 
-	protected BenefitSheetReader addStatConversion(
+	protected BenefitSheetParser addStatConversion(
 			String colConversionFrom,
 			String colConversionTo,
 			String colConversionRationPct
@@ -181,7 +181,7 @@ public abstract class BenefitSheetReader extends WowExcelSheetParser {
 		return this;
 	}
 
-	protected BenefitSheetReader addProcTrigger(
+	protected BenefitSheetParser addProcTrigger(
 			String colType,
 			String colChancePct,
 			String colEffect,
@@ -192,7 +192,7 @@ public abstract class BenefitSheetReader extends WowExcelSheetParser {
 		return this;
 	}
 
-	protected BenefitSheetReader addEffectIncreasePerEffectOnTarget(
+	protected BenefitSheetParser addEffectIncreasePerEffectOnTarget(
 			String colEffectTree,
 			String colIncreasePerEffectPct,
 			String colMaxIncreasePct

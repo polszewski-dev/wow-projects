@@ -1,7 +1,7 @@
 package wow.commons.repository.impl.parsers.stats;
 
 import wow.commons.util.ExcelParser;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.ExcelSheetParser;
 
 import java.io.InputStream;
 import java.util.List;
@@ -31,19 +31,19 @@ public class StatPatternExcelParser extends ExcelParser {
 	}
 
 	@Override
-	protected Stream<ExcelSheetReader> getSheetReaders() {
+	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new PatternSheetReader("base", itemStatPatterns, true),
-				new PatternSheetReader("onuse", itemStatPatterns, true),
-				new PatternSheetReader("proc", itemStatPatterns, true),
-				new PatternSheetReader("set", itemStatPatterns, true),
-				new PatternSheetReader("ignored", itemStatPatterns, true),
-				new PatternSheetReader("misc_bonus", itemStatPatterns, true),
-				new PatternSheetReader("misc_onuse", itemStatPatterns, true),
-				new PatternSheetReader("misc_proc", itemStatPatterns, true),
-				new PatternSheetReader("misc_set", itemStatPatterns, true),
-				new PatternSheetReader("gem", gemStatPatterns, false),
-				new PatternSheetReader("socket", socketBonusStatPatterns, false)
+				new PatternSheetParser("base", itemStatPatterns, true),
+				new PatternSheetParser("onuse", itemStatPatterns, true),
+				new PatternSheetParser("proc", itemStatPatterns, true),
+				new PatternSheetParser("set", itemStatPatterns, true),
+				new PatternSheetParser("ignored", itemStatPatterns, true),
+				new PatternSheetParser("misc_bonus", itemStatPatterns, true),
+				new PatternSheetParser("misc_onuse", itemStatPatterns, true),
+				new PatternSheetParser("misc_proc", itemStatPatterns, true),
+				new PatternSheetParser("misc_set", itemStatPatterns, true),
+				new PatternSheetParser("gem", gemStatPatterns, false),
+				new PatternSheetParser("socket", socketBonusStatPatterns, false)
 		);
 	}
 }

@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.excel;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.ExcelSheetParser;
 
 import java.util.Optional;
 
@@ -10,12 +10,12 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2022-11-24
  */
-public abstract class WowExcelSheetParser extends ExcelSheetReader {
+public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	protected WowExcelSheetParser(String sheetName) {
 		super(sheetName);
 	}
 
-	protected class ExcelColumn extends ExcelSheetReader.ExcelColumn {
+	protected class ExcelColumn extends ExcelSheetParser.ExcelColumn {
 		public ExcelColumn(String name, boolean optional) {
 			super(name, optional);
 		}

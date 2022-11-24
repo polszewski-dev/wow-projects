@@ -10,7 +10,7 @@ import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class BaseStatsSheetReader extends WowExcelSheetParser {
+public class BaseStatsSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colLevel = column("level");
 	private final ExcelColumn colClass = column("class");
 	private final ExcelColumn colRace = column("race");
@@ -26,7 +26,7 @@ public class BaseStatsSheetReader extends WowExcelSheetParser {
 
 	private final PVERepositoryImpl pveRepository;
 
-	public BaseStatsSheetReader(String sheetName, PVERepositoryImpl pveRepository) {
+	public BaseStatsSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

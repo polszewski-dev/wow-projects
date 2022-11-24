@@ -1,7 +1,7 @@
 package wow.commons.repository.impl.parsers.stats;
 
 import wow.commons.repository.impl.parsers.setters.*;
-import wow.commons.util.ExcelSheetReader;
+import wow.commons.util.ExcelSheetParser;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class PatternSheetReader extends ExcelSheetReader {
+public class PatternSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colPattern = column("pattern");
 	private final ExcelColumn colStat1 = column("stat1");
 	private final ExcelColumn colStat2 = column("stat2");
@@ -28,7 +28,7 @@ public class PatternSheetReader extends ExcelSheetReader {
 	private final List<StatPattern> patterns;
 	private final boolean itemStats;
 
-	public PatternSheetReader(String sheetName, List<StatPattern> patterns, boolean itemStats) {
+	public PatternSheetParser(String sheetName, List<StatPattern> patterns, boolean itemStats) {
 		super(sheetName);
 		this.patterns = patterns;
 		this.itemStats = itemStats;

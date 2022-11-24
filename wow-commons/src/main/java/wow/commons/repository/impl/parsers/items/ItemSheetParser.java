@@ -34,7 +34,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class ItemSheetReader extends WowExcelSheetParser {
+public class ItemSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colId = column(ITEM_ID);
 	private final ExcelColumn colName = column(ITEM_NAME);
 	private final ExcelColumn colRarity = column(ITEM_RARITY);
@@ -65,7 +65,7 @@ public class ItemSheetReader extends WowExcelSheetParser {
 	private final ItemDataRepositoryImpl itemDataRepository;
 	private final Map<String, List<Item>> setPiecesByName;
 	
-	public ItemSheetReader(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository, Map<String, List<Item>> setPiecesByName) {
+	public ItemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository, Map<String, List<Item>> setPiecesByName) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 		this.itemDataRepository = itemDataRepository;
