@@ -1,9 +1,13 @@
 package wow.commons.repository.impl.parsers.spells;
 
+import wow.commons.model.Duration;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.spells.SpellId;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
@@ -55,12 +59,27 @@ public class BuffSheetReader extends ExcelSheetReader {
 		var cooldown = colCooldown.getDuration(null);
 		var description = colDescription.getString(null);
 		var sourceSpell = colSourceSpell.getEnum(SpellId::parse, null);
-		var buffAttributes = getBuffAttributes();
+		var buffAttributes = getBuffAttributes(duration, cooldown, description);
 
-		return new Buff(buffId, name, level, type, exclusionGroup, buffAttributes, sourceSpell, duration, cooldown, description);
+		var desc = new Description(name, null, description);
+
+		Restriction restriction = Restriction.builder()
+				.requiredLevel(level)
+				.build();
+
+		return new Buff(buffId, desc, restriction, type, exclusionGroup, buffAttributes, sourceSpell, duration, cooldown);
 	}
 
-	private Attributes getBuffAttributes() {
+	private Attributes getBuffAttributes(Duration duration, Duration cooldown, String tooltip) {
+		Attributes attributes = readAttributes();
+		if (duration != null && cooldown != null) {
+			SpecialAbility onUseAbility = SpecialAbility.onUse(attributes, duration, cooldown, tooltip);
+			return Attributes.of(onUseAbility);
+		}
+		return attributes;
+	}
+
+	private Attributes readAttributes() {
 		AttributesBuilder builder = new AttributesBuilder();
 		int maxAttributes = 5;
 

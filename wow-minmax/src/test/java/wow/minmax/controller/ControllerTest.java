@@ -11,6 +11,8 @@ import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.*;
@@ -27,6 +29,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.categorization.Binding.BINDS_ON_EQUIP;
+import static wow.commons.model.categorization.Binding.NO_BINDING;
 
 /**
  * User: POlszewski
@@ -56,24 +60,37 @@ abstract class ControllerTest {
 
 	private void createItems() {
 		ItemSocketSpecification socketSpecification = new ItemSocketSpecification(List.of(SocketType.RED, SocketType.YELLOW, SocketType.BLUE), Attributes.EMPTY);
-		chest = new Item(101, "Test Chest Item", ItemRarity.EPIC, ItemType.CHEST, ArmorSubType.CLOTH, Set.of(), socketSpecification, Attributes.EMPTY, null);
+		Description chestDescription = new Description("Test Chest Item", null, null);
+		Restriction noRestriction = Restriction.builder().build();
+		BasicItemInfo basicItemInfo = new BasicItemInfo(ItemRarity.EPIC, BINDS_ON_EQUIP, false, 0, Set.of());
+		chest = new Item(101, chestDescription, noRestriction, Attributes.EMPTY, ItemType.CHEST, ArmorSubType.CLOTH, basicItemInfo, socketSpecification, null);
 
 		SpecialAbility specialAbility = SpecialAbility.onUse(Attributes.of(SPELL_DAMAGE, 100), Duration.seconds(15), Duration.seconds(60), "...");
-		trinket = new Item(102, "Test Trinket", ItemRarity.EPIC, ItemType.TRINKET, null, Set.of(), ItemSocketSpecification.EMPTY, Attributes.of(specialAbility), null);
+		Description trinketDescription = new Description("Test Test", null, null);
+		trinket = new Item(102, trinketDescription, noRestriction, Attributes.of(specialAbility), ItemType.TRINKET, null, basicItemInfo, ItemSocketSpecification.EMPTY, null);
 	}
 
 	private void createGems() {
-		redGem = new Gem(301, "Test Red Gem", ItemRarity.RARE, Set.of(), GemColor.RED, List.of(), Attributes.of(SPELL_DAMAGE, 20));
-		yellowGem = new Gem(302, "Test Yellow Gem", ItemRarity.RARE, Set.of(), GemColor.RED, List.of(), Attributes.of(SPELL_HIT_RATING, 15));
-		blueGem = new Gem(303, "Test Blue Gem", ItemRarity.RARE, Set.of(), GemColor.RED, List.of(), Attributes.of(STAMINA, 10));
+		Description redDescription = new Description("Test Red Gem", null, null);
+		Description yellowDescription = new Description("Test Red Gem", null, null);
+		Description blueDescription = new Description("Test Red Gem", null, null);
+		Restriction noRestriction = Restriction.builder().build();
+		BasicItemInfo basicItemInfo = new BasicItemInfo(ItemRarity.RARE, NO_BINDING, false, 0, Set.of());
+		redGem = new Gem(301, redDescription, noRestriction, Attributes.of(SPELL_DAMAGE, 20), basicItemInfo, GemColor.RED, List.of());
+		yellowGem = new Gem(302, yellowDescription, noRestriction, Attributes.of(SPELL_HIT_RATING, 15), basicItemInfo, GemColor.RED, List.of());
+		blueGem = new Gem(303, blueDescription, noRestriction, Attributes.of(STAMINA, 10), basicItemInfo, GemColor.RED, List.of());
 	}
 
 	private void createEnchants() {
-		enchant = new Enchant(201, "Test Chest Enchant", List.of(ItemType.CHEST), Attributes.of(BASE_STATS_INCREASE, 12));
+		Description description = new Description("Test Chest Enchant", null, null);
+		Restriction restriction = Restriction.builder().build();
+		enchant = new Enchant(201, description, restriction, Attributes.of(BASE_STATS_INCREASE, 12), List.of(ItemType.CHEST));
 	}
 
 	private void createBuffs() {
-		buff = new Buff(401, "Test Buff", 1, BuffType.SELF_BUFF, BuffExclusionGroup.SELF_BUFF, Attributes.of(SPELL_DAMAGE, 100), SpellId.FEL_ARMOR, Duration.INFINITE, Duration.ZERO, "...");
+		Description description = new Description("Test Buff", null, "...");
+		Restriction restriction = Restriction.builder().requiredLevel(1).build();
+		buff = new Buff(401, description, restriction, BuffType.SELF_BUFF, BuffExclusionGroup.SELF_BUFF, Attributes.of(SPELL_DAMAGE, 100), SpellId.FEL_ARMOR, Duration.INFINITE, Duration.ZERO);
 	}
 
 	private void createSpells() {

@@ -1,16 +1,15 @@
 package wow.commons.repository.impl.parsers.items;
 
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.professions.Profession;
-import wow.commons.model.spells.SpellSchool;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.ExcelSheetReader;
-
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski
@@ -22,18 +21,8 @@ public class EnchantSheetReader extends ExcelSheetReader {
 	private final ExcelColumn colItemTypes = column("item_types");
 	private final ExcelColumn colReqProf = column("req_prof");
 	private final ExcelColumn colReqProfLvl = column("req_prof_lvl");
-	private final ExcelColumn colSp = column("sp");
-	private final ExcelColumn colSd = column("sd");
-	private final ExcelColumn colSpShadow = column("sp_shadow");
-	private final ExcelColumn colSpellCritRating = column("spell_crit_rating");
-	private final ExcelColumn colSpellHitRating = column("spell_hit_rating");
-	private final ExcelColumn colAllStats = column("all_stats");
-	private final ExcelColumn colSta = column("sta");
-	private final ExcelColumn colInt = column("int");
-	private final ExcelColumn colSpi = column("spi");
-	private final ExcelColumn colThreatReductionPct = column("threat reduction%");
-	private final ExcelColumn colSpeedIncreasePct = column("speed increase%");
-	private final ExcelColumn colShadowResist = column("shadow resist");
+	private final ExcelColumn colStat = column("stat");
+	private final ExcelColumn colAmount = column("amount");
 
 	private final ItemDataRepositoryImpl itemDataRepository;
 
@@ -60,45 +49,29 @@ public class EnchantSheetReader extends ExcelSheetReader {
 		var requiredProfessionLevel = colReqProfLvl.getInteger(0);
 		var itemTypes = colItemTypes.getList(x -> ItemType.parse(x.trim()));
 
-		var itemStats = getEnchantStats();
-		var enchant = new Enchant(id, name, itemTypes, itemStats);
+		Description description = new Description(name, null, null);
+		Restriction restriction = Restriction.builder()
+				.requiredProfession(requiredProfession)
+				.requiredProfessionLevel(requiredProfessionLevel)
+				.build();
+		Attributes attributes = readAttributes();
 
-		enchant.getRestriction().setRequiredProfession(requiredProfession);
-		enchant.getRestriction().setRequiredProfessionLevel(requiredProfessionLevel);
-
-		return enchant;
+		return new Enchant(id, description, restriction, attributes, itemTypes);
 	}
 
-	private Attributes getEnchantStats() {
-		var sp = colSp.getInteger(0);
-		var sd = colSd.getInteger(0);
-		var spShadow = colSpShadow.getInteger(0);
-		var spellCritRating = colSpellCritRating.getInteger(0);
-		var spellHitRating = colSpellHitRating.getInteger(0);
-		var allStats = colAllStats.getInteger(0);
-		var stamina = colSta.getInteger(0);
-		var intellect = colInt.getInteger(0);
-		var spirit = colSpi.getInteger(0);
-		var threatReductionPct = colThreatReductionPct.getPercent(null);
-		var speedIncreasePct = colSpeedIncreasePct.getPercent(null);
-		var shadowResist = colShadowResist.getInteger(0);
+	private Attributes readAttributes() {
+		AttributesBuilder builder = new AttributesBuilder();
+		int maxAttributes = 2;
 
-		AttributesBuilder itemStats = new AttributesBuilder();
+		for (int statNo = 1; statNo <= maxAttributes; ++statNo) {
+			var attributeStr = colStat.multi(statNo).getString(null);
+			if (attributeStr != null) {
+				PrimitiveAttributeSupplier attributeParser = PrimitiveAttributeSupplier.fromString(attributeStr);
+				int amount = colAmount.multi(statNo).getInteger();
+				builder.addAttributeList(attributeParser.getAttributeList(amount));
+			}
+		}
 
-		itemStats
-				.addAttribute(SPELL_POWER, sp)
-				.addAttribute(SPELL_DAMAGE, sd)
-				.addAttribute(SPELL_DAMAGE, spShadow, AttributeCondition.of(SpellSchool.SHADOW))
-				.addAttribute(SPELL_CRIT_RATING, spellCritRating)
-				.addAttribute(SPELL_HIT_RATING, spellHitRating)
-				.addAttribute(BASE_STATS_INCREASE, allStats)
-				.addAttribute(STAMINA, stamina)
-				.addAttribute(INTELLECT, intellect)
-				.addAttribute(SPIRIT, spirit)
-				.addAttribute(THREAT_REDUCTION_PCT, threatReductionPct)
-				.addAttribute(SPEED_INCREASE_PCT, speedIncreasePct)
-				.addAttribute(RESISTANCE, shadowResist, AttributeCondition.of(SpellSchool.SHADOW))
-		;
-		return itemStats.toAttributes();
+		return builder.toAttributes();
 	}
 }

@@ -3,13 +3,19 @@ package wow.commons.repository.impl.parsers.items;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
+import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.sources.Source;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.util.ExcelSheetReader;
 import wow.commons.util.SourceParser;
+
+import java.util.Set;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -61,15 +67,15 @@ public class TradedItemSheetReader extends ExcelSheetReader {
 		var classRestriction = colItemClassRestriction.getList(CharacterClass::valueOf);
 		var source = colItemSource.getString();
 
-		var sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
-		TradedItem tradedItem = new TradedItem(id, name, type, rarity, sources);
+		Description description = new Description(name, null, null);
+		Restriction restriction = Restriction.builder()
+				.requiredLevel(requiredLevel)
+				.phase(phase)
+				.classRestriction(classRestriction)
+				.build();
+		Set<Source> sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
+		BasicItemInfo basicItemInfo = new BasicItemInfo(rarity, binding, false, itemLevel, sources);
 
-		tradedItem.setItemLevel(itemLevel);
-		tradedItem.setBinding(binding);
-		tradedItem.getRestriction().setRequiredLevel(requiredLevel);
-		tradedItem.getRestriction().setPhase(phase);
-		tradedItem.getRestriction().setClassRestriction(classRestriction);
-
-		return tradedItem;
+		return new TradedItem(id, description, restriction, type, basicItemInfo);
 	}
 }

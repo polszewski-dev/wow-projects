@@ -2,12 +2,9 @@ package wow.commons.model.item;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.sources.Source;
-
-import java.util.Objects;
-import java.util.Set;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
 
 /**
  * User: POlszewski
@@ -15,24 +12,11 @@ import java.util.Set;
  */
 @Getter
 public class TradedItem extends AbstractItem {
-	public TradedItem(int itemId, String name, ItemType itemType, ItemRarity rarity, Set<Source> sources) {
-		super(itemId, name, itemType, rarity, Attributes.EMPTY, sources);
+	public TradedItem(Integer id, Description description, Restriction restriction, ItemType itemType, BasicItemInfo basicItemInfo) {
+		super(id, description, restriction, Attributes.EMPTY, itemType, basicItemInfo);
 		if (itemType != ItemType.QUEST && itemType != ItemType.TOKEN) {
 			throw new IllegalArgumentException("Wrong item type: " + itemType);
 		}
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof TradedItem)) return false;
-		TradedItem tradedItem = (TradedItem) o;
-		return getId() == tradedItem.getId();
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId());
 	}
 
 	@Override

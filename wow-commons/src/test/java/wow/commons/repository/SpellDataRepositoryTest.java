@@ -106,7 +106,7 @@ class SpellDataRepositoryTest {
 
 		assertThat(buff.getId()).isEqualTo(27228);
 		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
-		assertThat(buff.getLevel()).isZero();
+		assertThat(buff.getRequiredLevel()).isZero();
 		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
 		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.COE);
 		assertThat(buff.getSourceSpell()).isEqualTo(CURSE_OF_THE_ELEMENTS);

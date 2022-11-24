@@ -2,13 +2,11 @@ package wow.commons.model.item;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.sources.Source;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * User: POlszewski
@@ -19,8 +17,8 @@ public class Gem extends AbstractItem {
 	private final GemColor color;
 	private final List<MetaEnabler> metaEnablers;
 
-	public Gem(int itemId, String name, ItemRarity rarity, Set<Source> sources, GemColor color, List<MetaEnabler> metaEnablers, Attributes stats) {
-		super(itemId, name, ItemType.GEM, rarity, stats, sources);
+	public Gem(Integer id, Description description, Restriction restriction, Attributes attributes, BasicItemInfo basicItemInfo, GemColor color, List<MetaEnabler> metaEnablers) {
+		super(id, description, restriction, attributes, ItemType.GEM, basicItemInfo);
 		this.color = color;
 		this.metaEnablers = metaEnablers;
 	}
@@ -38,18 +36,5 @@ public class Gem extends AbstractItem {
 		}
 
 		return metaEnablers.stream().allMatch(metaEnabler -> metaEnabler.isMetaConditionTrue(numRed, numYellow, numBlue));
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Gem)) return false;
-		Gem gem = (Gem) o;
-		return getId() == gem.getId();
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId());
 	}
 }

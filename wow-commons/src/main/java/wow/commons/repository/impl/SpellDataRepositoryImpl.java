@@ -109,8 +109,8 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	@Override
 	public Optional<Buff> getHighestRankBuff(String name, int level) {
 		return buffsById.values().stream()
-				.filter(buff -> buff.getName().equals(name) && buff.getLevel() <= level)
-				.max(Comparator.comparingInt(Buff::getLevel));
+				.filter(buff -> buff.getName().equals(name) && buff.getRequiredLevel() <= level)
+				.max(Comparator.comparingInt(Buff::getRequiredLevel));
 	}
 
 	@Override

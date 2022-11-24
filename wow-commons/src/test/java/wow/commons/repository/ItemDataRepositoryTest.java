@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.WowCommonsTestConfig;
-import wow.commons.model.Money;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.categorization.ItemType;
@@ -82,7 +81,6 @@ class ItemDataRepositoryTest {
 		assertThat(item.getRestriction().getPhase()).isEqualTo(TBC_P5);
 		assertThat(item.getRestriction().getRequiredProfession()).isEqualTo(TAILORING);
 		assertThat(item.getRestriction().getRequiredProfessionLevel()).isEqualTo(350);
-		assertThat(item.getSellPrice()).isEqualTo(Money.parse("6g8s49c"));
 		assertThat(item.getIcon()).isEqualTo("inv_chest_cloth_02");
 		assertThat(item.getTooltip()).isNotBlank();
 		assertThat(item.getItemType()).isEqualTo(CHEST);
@@ -150,9 +148,8 @@ class ItemDataRepositoryTest {
 		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(gem.isUnique()).isFalse();
 		assertThat(gem.getItemLevel()).isEqualTo(100);
-		assertThat(gem.getRestriction().getRequiredLevel()).isNull();
+		assertThat(gem.getRestriction().getRequiredLevel()).isZero();
 		assertThat(gem.getRestriction().getPhase()).isEqualTo(TBC_P3);
-		assertThat(gem.getSellPrice()).isEqualTo(Money.parse("6g"));
 		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
 		assertThat(gem.getTooltip()).isNotBlank();
 	}

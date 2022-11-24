@@ -1,8 +1,10 @@
 package wow.commons.repository.impl.parsers.items;
 
-import wow.commons.model.Money;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
+import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
@@ -10,6 +12,7 @@ import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.sources.Source;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.PVERepository;
@@ -23,6 +26,7 @@ import wow.commons.util.SourceParser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -51,7 +55,6 @@ public class ItemSheetReader extends ExcelSheetReader {
 	private final ExcelColumn colReqProfession = column(ITEM_REQ_PROFESSION);
 	private final ExcelColumn colReqProfessionLevel = column(ITEM_REQ_PROFESSION_LEVEL);
 	private final ExcelColumn colReqProfessionSpec = column(ITEM_REQ_PROFESSION_SPEC);
-	private final ExcelColumn colSellPrice = column(ITEM_SELL_PRICE);
 	private final ExcelColumn colStat = column(ITEM_STAT);
 	private final ExcelColumn colIcon = column(ITEM_ICON);
 	private final ExcelColumn colTooltip = column(ITEM_TOOLTIP);
@@ -101,28 +104,26 @@ public class ItemSheetReader extends ExcelSheetReader {
 		var requiredProfession = colReqProfession.getEnum(Profession::valueOf, null);
 		var requiredProfessionLevel = colReqProfessionLevel.getInteger(0);
 		var requiredProfessionSpec = colReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
-		var sellPrice = Money.parse(colSellPrice.getString(null));
 		var icon = colIcon.getString();
 		var tooltip = colTooltip.getString();
 		var stats = getStats();
 
-		var sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
-		var item = new Item(id, name, rarity, itemType, itemSubType, sources, getSocketSpecification(socketTypes, socketBonus), stats, null);
+		Description description = new Description(name, icon, tooltip);
+		Restriction restriction = Restriction.builder()
+				.phase(phase)
+				.requiredLevel(requiredLevel)
+				.classRestriction(classRestriction)
+				.raceRestriction(raceRestriction)
+				.sideRestriction(sideRestriction)
+				.requiredProfession(requiredProfession)
+				.requiredProfessionLevel(requiredProfessionLevel)
+				.requiredProfessionSpec(requiredProfessionSpec)
+				.build();
+		Set<Source> sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
+		BasicItemInfo basicItemInfo = new BasicItemInfo(rarity, binding, unique, itemLevel, sources);
+		ItemSocketSpecification socketSpecification = getSocketSpecification(socketTypes, socketBonus);
 
-		item.setItemLevel(itemLevel);
-		item.getRestriction().setRequiredLevel(requiredLevel);
-		item.setBinding(binding);
-		item.setUnique(unique);
-		item.getRestriction().setPhase(phase);
-		item.getRestriction().setClassRestriction(classRestriction);
-		item.getRestriction().setRaceRestriction(raceRestriction);
-		item.getRestriction().setSideRestriction(sideRestriction);
-		item.getRestriction().setRequiredProfession(requiredProfession);
-		item.getRestriction().setRequiredProfessionLevel(requiredProfessionLevel);
-		item.getRestriction().setRequiredProfessionSpec(requiredProfessionSpec);
-		item.setSellPrice(sellPrice);
-		item.setIcon(icon);
-		item.setTooltip(tooltip);
+		Item item = new Item(id, description, restriction, stats, itemType, itemSubType, basicItemInfo, socketSpecification, null);
 
 		validateItem(item);
 

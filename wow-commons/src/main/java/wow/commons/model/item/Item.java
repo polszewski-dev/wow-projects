@@ -3,19 +3,14 @@ package wow.commons.model.item;
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.*;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.pve.Zone;
-import wow.commons.model.sources.Source;
 import wow.commons.model.unit.ArmorProfficiency;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.model.unit.WeaponProfficiency;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -28,16 +23,18 @@ public class Item extends AbstractItem {
 	private final ItemSocketSpecification socketSpecification;
 	private final WeaponStats weaponStats;
 
-	public Item(int itemId,
-				String name,
-				ItemRarity rarity,
-				ItemType itemType,
-				ItemSubType itemSubType,
-				Set<Source> sources,
-				ItemSocketSpecification socketSpecification,
-				Attributes stats,
-				WeaponStats weaponStats) {
-		super(itemId, name, itemType, rarity, stats, sources);
+	public Item(
+			Integer id,
+			Description description,
+			Restriction restriction,
+			Attributes attributes,
+			ItemType itemType,
+			ItemSubType itemSubType,
+			BasicItemInfo basicItemInfo,
+			ItemSocketSpecification socketSpecification,
+			WeaponStats weaponStats
+	) {
+		super(id, description, restriction, attributes, itemType, basicItemInfo);
 		this.itemSubType = itemSubType;
 		this.socketSpecification = socketSpecification;
 		this.weaponStats = weaponStats;
@@ -75,24 +72,6 @@ public class Item extends AbstractItem {
 		return getItemType().getItemSlots().contains(itemSlot);
 	}
 
-	public Set<Zone> getRaidSources() {
-		return getSourcesAfterTradingTokens()
-				.filter(Source::isRaidDrop)
-				.map(Source::getZone)
-				.collect(Collectors.toCollection(LinkedHashSet::new));
-	}
-
-	public Set<TradedItem> getSourceItems() {
-		return getSources().stream()
-				.map(Source::getSourceItem)
-				.collect(Collectors.toSet());
-	}
-
-	private Stream<Source> getSourcesAfterTradingTokens() {
-		return getSources().stream()
-				.flatMap(source -> source.isTraded() ? source.getSourceItem().getSources().stream() : Stream.of(source));
-	}
-
 	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
 		if (!isCorrectCategory(characterInfo)) {
 			return false;
@@ -112,18 +91,5 @@ public class Item extends AbstractItem {
 			return false;
 		}
 		return category != ItemCategory.WEAPON || WeaponProfficiency.matches(characterInfo.getCharacterClass(), getItemType(), (WeaponSubType) itemSubType);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Item)) return false;
-		Item item = (Item) o;
-		return getId() == item.getId();
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId());
 	}
 }

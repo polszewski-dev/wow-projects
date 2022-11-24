@@ -1,18 +1,23 @@
 package wow.commons.repository.impl.parsers.items;
 
-import wow.commons.model.Money;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
+import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.sources.Source;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
 import wow.commons.util.ExcelSheetReader;
 import wow.commons.util.SourceParser;
+
+import java.util.Set;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -34,7 +39,6 @@ public class GemSheetReader extends ExcelSheetReader {
 	private final ExcelColumn colReqProfessionLevel = column(GEM_REQ_PROFESSION_LEVEL);
 	private final ExcelColumn colStats = column(GEM_STATS);
 	private final ExcelColumn colMetaEnablers = column(GEM_META_ENABLERS);
-	private final ExcelColumn colSellPrice = column(GEM_SELL_PRICE);
 	private final ExcelColumn colIcon = column(GEM_ICON);
 	private final ExcelColumn colTooltip = column(GEM_TOOLTIP);
 
@@ -71,24 +75,19 @@ public class GemSheetReader extends ExcelSheetReader {
 		var requiredProfession = colReqProfession.getEnum(Profession::valueOf, null);
 		var requiredProfessionLevel = colReqProfessionLevel.getInteger(0);
 		var metaEnablers = colMetaEnablers.getList(MetaEnabler::valueOf);
-		var sellPrice = Money.parse(colSellPrice.getString(null));
 		var icon = colIcon.getString();
 		var tooltip = colTooltip.getString();
 		var stats = GemStatsParser.tryParseStats(colStats.getString());
 
-		var sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
-		var gem = new Gem(id, name, rarity, sources, color, metaEnablers, stats);
+		Description description = new Description(name, icon, tooltip);
+		Restriction restriction = Restriction.builder()
+				.phase(phase)
+				.requiredProfession(requiredProfession)
+				.requiredProfessionLevel(requiredProfessionLevel)
+				.build();
+		Set<Source> sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
+		BasicItemInfo basicItemInfo = new BasicItemInfo(rarity, binding, unique, itemLevel, sources);
 
-		gem.getRestriction().setPhase(phase);
-		gem.getRestriction().setRequiredProfession(requiredProfession);
-		gem.getRestriction().setRequiredProfessionLevel(requiredProfessionLevel);
-		gem.setItemLevel(itemLevel);
-		gem.setBinding(binding);
-		gem.setUnique(unique);
-		gem.setSellPrice(sellPrice);
-		gem.setIcon(icon);
-		gem.setTooltip(tooltip);
-
-		return gem;
+		return new Gem(id, description, restriction, stats, basicItemInfo, color, metaEnablers);
 	}
 }

@@ -1,6 +1,7 @@
-package wow.commons.model.item;
+package wow.commons.model.config;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
@@ -15,9 +16,10 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-10-31
  */
-@Data
-public class ItemRestriction {
-	private Integer requiredLevel;
+@Getter
+@Builder
+public class Restriction {
+	private int requiredLevel;
 	private Phase phase;
 	private List<CharacterClass> classRestriction;
 	private List<Race> raceRestriction;
@@ -27,7 +29,7 @@ public class ItemRestriction {
 	private ProfessionSpecialization requiredProfessionSpec;
 
 	public boolean isMetBy(CharacterInfo characterInfo, Phase phase) {
-		if (requiredLevel != null && characterInfo.getLevel() < requiredLevel) {
+		if (characterInfo.getLevel() < requiredLevel) {
 			return false;
 		}
 		if (this.phase != null && phase.isEarlier(this.phase)) {

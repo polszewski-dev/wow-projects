@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
@@ -53,10 +54,12 @@ public class ItemSetSheetReader extends ExcelSheetReader {
 		var requiredProfession = colReqProf.getEnum(Profession::valueOf, null);
 		var requiredProfessionLevel = colReqProfLvl.getInteger(0);
 
-		var itemSet = new ItemSet(name, null, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
+		Restriction restriction = Restriction.builder()
+				.requiredProfession(requiredProfession)
+				.requiredProfessionLevel(requiredProfessionLevel)
+				.build();
 
-		itemSet.getRestriction().setRequiredProfession(requiredProfession);
-		itemSet.getRestriction().setRequiredLevel(requiredProfessionLevel);
+		ItemSet itemSet = new ItemSet(name, null, restriction, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
 
 		for (Item item : itemSet.getPieces()) {
 			item.setItemSet(itemSet);

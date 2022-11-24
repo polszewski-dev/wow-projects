@@ -1,84 +1,60 @@
 package wow.commons.model.item;
 
 import lombok.Getter;
-import wow.commons.model.Money;
-import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.config.ConfigurationElementWithAttributes;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
+import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.Source;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-10-31
  */
 @Getter
-public abstract class AbstractItem implements AttributeSource {
-	private final int id;
-	private final String name;
+public abstract class AbstractItem extends ConfigurationElementWithAttributes<Integer> {
 	private final ItemType itemType;
-	private final ItemRarity rarity;
-	private Binding binding;
-	private boolean unique;
-	private int itemLevel;
-	private final ItemRestriction restriction = new ItemRestriction();
-	private Money sellPrice;
-	private String icon;
-	private String tooltip;
+	private final BasicItemInfo basicItemInfo;
 
-	private final Attributes stats;
-	private final Set<Source> sources;
-
-	protected AbstractItem(int itemId, String name, ItemType itemType, ItemRarity rarity, Attributes stats, Set<Source> sources) {
-		this.id = itemId;
-		this.name = name;
+	protected AbstractItem(Integer id, Description description, Restriction restriction, Attributes attributes, ItemType itemType, BasicItemInfo basicItemInfo) {
+		super(id, description, restriction, attributes);
 		this.itemType = itemType;
-		this.rarity = rarity;
-		this.stats = stats;
-		this.sources = sources;
-	}
-
-	public void setBinding(Binding binding) {
-		this.binding = binding;
-	}
-
-	public void setUnique(boolean unique) {
-		this.unique = unique;
-	}
-
-	public void setItemLevel(int itemLevel) {
-		this.itemLevel = itemLevel;
-	}
-
-	public void setSellPrice(Money sellPrice) {
-		this.sellPrice = sellPrice;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public void setTooltip(String tooltip) {
-		this.tooltip = tooltip;
-	}
-
-	@Override
-	public Attributes getAttributes() {
-		return stats;
+		this.basicItemInfo = basicItemInfo;
 	}
 
 	public ItemLink getItemLink() {
-		return new ItemLink(id, name, rarity, null, null, null, null);
+		return new ItemLink(getId(), getName(), getRarity(), null, null, null, null);
 	}
 
-	public Phase getPhase() {
-		return restriction.getPhase();
+	public ItemRarity getRarity() {
+		return basicItemInfo.getRarity();
+	}
+
+	public Binding getBinding() {
+		return basicItemInfo.getBinding();
+	}
+
+	public boolean isUnique() {
+		return basicItemInfo.isUnique();
+	}
+
+	public int getItemLevel() {
+		return basicItemInfo.getItemLevel();
+	}
+
+	public Set<Source> getSources() {
+		return basicItemInfo.getSources();
 	}
 
 	public boolean isSourcedFromRaid() {
@@ -125,15 +101,21 @@ public abstract class AbstractItem implements AttributeSource {
 		return getSources().stream().allMatch(predicate);
 	}
 
-	public boolean isAvailableDuring(Phase phase) {
-		return getPhase().isEarlierOrTheSame(phase);
+	public Set<Zone> getRaidSources() {
+		return getSourcesAfterTradingTokens()
+				.filter(Source::isRaidDrop)
+				.map(Source::getZone)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public abstract boolean equals(Object o);
+	public Set<TradedItem> getSourceItems() {
+		return getSources().stream()
+				.map(Source::getSourceItem)
+				.collect(Collectors.toSet());
+	}
 
-	public abstract int hashCode();
-
-	public String toString() {
-		return String.format("%s [%s]", name, getAttributes());
+	private Stream<Source> getSourcesAfterTradingTokens() {
+		return getSources().stream()
+				.flatMap(source -> source.isTraded() ? source.getSourceItem().getSources().stream() : Stream.of(source));
 	}
 }
