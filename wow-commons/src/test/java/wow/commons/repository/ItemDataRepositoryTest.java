@@ -227,6 +227,6 @@ class ItemDataRepositoryTest {
 		assertThat(tradedItem.getItemLevel()).isEqualTo(70);
 		assertThat(tradedItem.getRestriction().getRequiredLevel()).isEqualTo(70);
 		assertThat(tradedItem.getRestriction().getPhase()).isEqualTo(TBC_P3);
-		assertThat(tradedItem.getRestriction().getClassRestriction()).hasSameElementsAs(List.of(PALADIN,PRIEST,WARLOCK));
+		assertThat(tradedItem.getRestriction().getRequiredClass()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
 	}
 }

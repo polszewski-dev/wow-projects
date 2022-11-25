@@ -19,11 +19,11 @@ import java.util.List;
 @Getter
 @Builder
 public class Restriction {
-	private int requiredLevel;
 	private Phase phase;
-	private List<CharacterClass> classRestriction;
-	private List<Race> raceRestriction;
-	private Side sideRestriction;
+	private int requiredLevel;
+	private List<CharacterClass> requiredClass;
+	private List<Race> requiredRace;
+	private Side requiredSide;
 	private Profession requiredProfession;
 	private int requiredProfessionLevel;
 	private ProfessionSpecialization requiredProfessionSpec;
@@ -35,13 +35,13 @@ public class Restriction {
 		if (this.phase != null && phase.isEarlier(this.phase)) {
 			return false;
 		}
-		if (classRestriction != null && !classRestriction.isEmpty() && !classRestriction.contains(characterInfo.getCharacterClass())) {
+		if (requiredClass != null && !requiredClass.isEmpty() && !requiredClass.contains(characterInfo.getCharacterClass())) {
 			return false;
 		}
-		if (raceRestriction != null && !raceRestriction.isEmpty() && !raceRestriction.contains(characterInfo.getRace())) {
+		if (requiredRace != null && !requiredRace.isEmpty() && !requiredRace.contains(characterInfo.getRace())) {
 			return false;
 		}
-		if (sideRestriction != null && sideRestriction != characterInfo.getSide()) {
+		if (requiredSide != null && requiredSide != characterInfo.getSide()) {
 			return false;
 		}
 		if (requiredProfession != null && !characterInfo.hasProfession(requiredProfession, requiredProfessionLevel)) {

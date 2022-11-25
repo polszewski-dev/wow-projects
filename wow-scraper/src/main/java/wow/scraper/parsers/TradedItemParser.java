@@ -1,17 +1,19 @@
 package wow.scraper.parsers;
 
-import lombok.Setter;
+import lombok.Getter;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.util.parser.Rule;
+import wow.scraper.model.JsonItemDetailsAndTooltip;
 
 /**
  * User: POlszewski
  * Date: 2022-11-16
  */
-@Setter
-public class ItemStartingQuestTooltipParser extends AbstractTooltipParser {
-	public ItemStartingQuestTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
-		super(itemId, htmlTooltip, gameVersion);
+@Getter
+public class TradedItemParser extends AbstractTooltipParser {
+	public TradedItemParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
+		super(itemDetailsAndTooltip, gameVersion);
 	}
 
 	@Override
@@ -24,18 +26,18 @@ public class ItemStartingQuestTooltipParser extends AbstractTooltipParser {
 				ruleBindsWhenEquipped,
 				ruleUnique,
 				ruleClassRestriction,
-				ruleProfessionRestriction,
-				ruleDroppedBy,
 				ruleSellPrice,
-				quote,
-				Rule.exact("This Item Begins a Quest", () -> {}),
+				ruleDroppedBy,
+				ruleDropChance,
+				ruleQuote,
+				Rule.exact("This Item Begins a Quest", () -> this.itemType = ItemType.QUEST),
 				Rule.exact("<Right Click to Read>", () -> {}),
 		};
 	}
 
 	@Override
 	protected void beforeParse() {
-		// VOID
+		this.itemType = ItemType.TOKEN;
 	}
 
 	@Override

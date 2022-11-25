@@ -1,11 +1,13 @@
 package wow.scraper.parsers;
 
 import lombok.Getter;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.repository.impl.parsers.gems.GemStatsParser;
 import wow.commons.util.parser.Rule;
+import wow.scraper.model.JsonItemDetailsAndTooltip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,8 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	private List<MetaEnabler> metaEnablers;
 	private List<String> statLines;
 
-	public GemTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
-		super(itemId, htmlTooltip, gameVersion);
+	public GemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
+		super(itemDetailsAndTooltip, gameVersion);
 	}
 
 	@Override
@@ -43,6 +45,7 @@ public class GemTooltipParser extends AbstractTooltipParser {
 
 	@Override
 	protected void beforeParse() {
+		this.itemType = ItemType.GEM;
 		this.metaEnablers = new ArrayList<>();
 		this.statLines = new ArrayList<>();
 	}

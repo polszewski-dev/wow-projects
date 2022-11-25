@@ -2,7 +2,10 @@ package wow.commons.model.item;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.categorization.*;
+import wow.commons.model.categorization.ArmorSubType;
+import wow.commons.model.categorization.ItemCategory;
+import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.WeaponSubType;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.pve.Phase;
@@ -18,7 +21,6 @@ import java.util.List;
  */
 @Getter
 public class Item extends AbstractItem {
-	private final ItemSubType itemSubType;
 	private ItemSet itemSet;
 	private final ItemSocketSpecification socketSpecification;
 	private final WeaponStats weaponStats;
@@ -28,20 +30,17 @@ public class Item extends AbstractItem {
 			Description description,
 			Restriction restriction,
 			Attributes attributes,
-			ItemType itemType,
-			ItemSubType itemSubType,
 			BasicItemInfo basicItemInfo,
 			ItemSocketSpecification socketSpecification,
 			WeaponStats weaponStats
 	) {
-		super(id, description, restriction, attributes, itemType, basicItemInfo);
-		this.itemSubType = itemSubType;
+		super(id, description, restriction, attributes, basicItemInfo);
 		this.socketSpecification = socketSpecification;
 		this.weaponStats = weaponStats;
 	}
 
 	public boolean isEnchantable() {
-		return getItemType().isEnchantable(itemSubType);
+		return getItemType().isEnchantable(getItemSubType());
 	}
 
 	public int getSocketCount() {
@@ -87,9 +86,9 @@ public class Item extends AbstractItem {
 		if (!(category == ItemCategory.ARMOR || category == ItemCategory.ACCESSORY || category == ItemCategory.WEAPON)) {
 			return false;
 		}
-		if (category == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)itemSubType)) {
+		if (category == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)getItemSubType())) {
 			return false;
 		}
-		return category != ItemCategory.WEAPON || WeaponProfficiency.matches(characterInfo.getCharacterClass(), getItemType(), (WeaponSubType) itemSubType);
+		return category != ItemCategory.WEAPON || WeaponProfficiency.matches(characterInfo.getCharacterClass(), getItemType(), (WeaponSubType) getItemSubType());
 	}
 }

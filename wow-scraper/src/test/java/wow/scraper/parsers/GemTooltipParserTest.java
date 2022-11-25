@@ -106,9 +106,7 @@ class GemTooltipParserTest {
 				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/gem/" + path),
 				JsonItemDetailsAndTooltip.class
 		);
-		Integer itemId = data.getDetails().getId();
-		String htmlTooltip = data.getHtmlTooltip();
-		GemTooltipParser parser = new GemTooltipParser(itemId, htmlTooltip, TBC);
+		GemTooltipParser parser = new GemTooltipParser(data, TBC);
 		parser.parse();
 		return parser;
 	}

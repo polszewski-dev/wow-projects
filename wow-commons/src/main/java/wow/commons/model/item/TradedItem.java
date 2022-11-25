@@ -12,10 +12,10 @@ import wow.commons.model.config.Restriction;
  */
 @Getter
 public class TradedItem extends AbstractItem {
-	public TradedItem(Integer id, Description description, Restriction restriction, ItemType itemType, BasicItemInfo basicItemInfo) {
-		super(id, description, restriction, Attributes.EMPTY, itemType, basicItemInfo);
-		if (itemType != ItemType.QUEST && itemType != ItemType.TOKEN) {
-			throw new IllegalArgumentException("Wrong item type: " + itemType);
+	public TradedItem(Integer id, Description description, Restriction restriction, BasicItemInfo basicItemInfo) {
+		super(id, description, restriction, Attributes.EMPTY, basicItemInfo);
+		if (getItemType() != ItemType.QUEST && getItemType() != ItemType.TOKEN) {
+			throw new IllegalArgumentException("Wrong item type: " + getItemType());
 		}
 	}
 

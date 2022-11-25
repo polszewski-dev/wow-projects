@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import wow.commons.model.Money;
 import wow.commons.model.Percent;
 import wow.commons.model.categorization.Binding;
+import wow.commons.model.categorization.ItemSubType;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.GameVersion;
@@ -14,6 +16,7 @@ import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
+import wow.scraper.model.JsonItemDetailsAndTooltip;
 
 import java.util.List;
 import java.util.Set;
@@ -27,26 +30,27 @@ import java.util.stream.Stream;
  */
 @Getter
 public abstract class AbstractTooltipParser {
+	protected final JsonItemDetailsAndTooltip itemDetailsAndTooltip;
 	protected final GameVersion gameVersion;
-	protected final String htmlTooltip;
 	protected List<String> lines;
 	protected int currentLineIdx;
 
-	protected final Integer itemId;
 	protected String name;
-	protected Phase phase;
-	protected Integer requiredLevel;
-	protected Integer itemLevel;
+	protected ItemType itemType;
+	protected ItemSubType itemSubType;
 	protected Binding binding;
 	protected boolean unique;
-	protected List<CharacterClass> classRestriction;
-	protected List<Race> raceRestriction;
-	protected Side sideRestriction;
-	protected String requiredFactionName;
-	protected String requiredFactionStanding;
+	protected Integer itemLevel;
+	protected Phase phase;
+	protected Integer requiredLevel;
+	protected List<CharacterClass> requiredClass;
+	protected List<Race> requiredRace;
+	protected Side requiredSide;
 	protected Profession requiredProfession;
 	protected Integer requiredProfessionLevel;
 	protected ProfessionSpecialization requiredProfessionSpec;
+	protected String requiredFactionName;
+	protected String requiredFactionStanding;
 	protected String droppedBy;
 	protected Percent dropChance;
 	protected Money sellPrice;
@@ -71,13 +75,13 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleUniqueEquipped = Rule.
 			exact("Unique-Equipped", () -> this.unique = true);
 	protected final Rule ruleClassRestriction = Rule.
-			prefix("Classes: ", x -> this.classRestriction = ParserUtil.getValues(x, CharacterClass::parse));
+			prefix("Classes: ", x -> this.requiredClass = ParserUtil.getValues(x, CharacterClass::parse));
 	protected final Rule ruleRaceRestriction = Rule.
-			prefix("Races: ", x -> this.raceRestriction = ParserUtil.getValues(x, Race::parse));
+			prefix("Races: ", x -> this.requiredRace = ParserUtil.getValues(x, Race::parse));
 	protected final Rule ruleAllianceRestriction = Rule.
-			exact("Requires any Alliance race", () -> this.sideRestriction = Side.ALLIANCE);
+			exact("Requires any Alliance race", () -> this.requiredSide = Side.ALLIANCE);
 	protected final Rule ruleHordeRestriction = Rule.
-			exact("Requires any Horde race", () -> this.sideRestriction = Side.HORDE);
+			exact("Requires any Horde race", () -> this.requiredSide = Side.HORDE);
 	protected final Rule ruleFactionRestriction = Rule.
 			regex("Requires (.*?) - (Neutral|Friendly|Honored|Revered|Exalted)", this::parseReputation);
 	protected final Rule ruleProfessionRestriction = Rule.
@@ -92,17 +96,28 @@ public abstract class AbstractTooltipParser {
 			prefix("Drop Chance: ", x -> this.dropChance = parseDropChance(x));
 	protected final Rule ruleSellPrice = Rule.
 			prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x));
-	protected final Rule quote = Rule
+	protected final Rule ruleQuote = Rule
 			.matches("\".*\"", params -> {});
 
-	protected AbstractTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
+	protected AbstractTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
+		this.itemDetailsAndTooltip = itemDetailsAndTooltip;
 		this.gameVersion = gameVersion;
-		this.itemId = itemId;
-		this.htmlTooltip = htmlTooltip;
+	}
+
+	public int getItemId() {
+		return itemDetailsAndTooltip.getDetails().getId();
+	}
+
+	public String getIcon() {
+		return itemDetailsAndTooltip.getIcon();
+	}
+
+	public String getTooltip() {
+		return itemDetailsAndTooltip.getHtmlTooltip();
 	}
 
 	public final void parse() {
-		this.lines = cleanTooltip(htmlTooltip);
+		this.lines = cleanTooltip(itemDetailsAndTooltip.getHtmlTooltip());
 
 		beforeParse();
 

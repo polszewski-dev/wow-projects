@@ -134,9 +134,9 @@ class ItemTooltipParserTest {
 	@Test
 	@DisplayName("Misc restriction is parsed correctly")
 	void miscRestriction() {
-		assertThat(sunfireRobe.getClassRestriction()).isNull();
-		assertThat(sunfireRobe.getRaceRestriction()).isNull();
-		assertThat(sunfireRobe.getSideRestriction()).isNull();
+		assertThat(sunfireRobe.getRequiredClass()).isNull();
+		assertThat(sunfireRobe.getRequiredRace()).isNull();
+		assertThat(sunfireRobe.getRequiredSide()).isNull();
 
 	}
 
@@ -171,9 +171,7 @@ class ItemTooltipParserTest {
 				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/item/" + path),
 				JsonItemDetailsAndTooltip.class
 		);
-		Integer itemId = data.getDetails().getId();
-		String htmlTooltip = data.getHtmlTooltip();
-		ItemTooltipParser parser = new ItemTooltipParser(itemId, htmlTooltip, TBC);
+		ItemTooltipParser parser = new ItemTooltipParser(data, TBC);
 		parser.parse();
 		return parser;
 	}

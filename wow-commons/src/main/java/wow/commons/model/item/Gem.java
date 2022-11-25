@@ -18,9 +18,12 @@ public class Gem extends AbstractItem {
 	private final List<MetaEnabler> metaEnablers;
 
 	public Gem(Integer id, Description description, Restriction restriction, Attributes attributes, BasicItemInfo basicItemInfo, GemColor color, List<MetaEnabler> metaEnablers) {
-		super(id, description, restriction, attributes, ItemType.GEM, basicItemInfo);
+		super(id, description, restriction, attributes, basicItemInfo);
 		this.color = color;
 		this.metaEnablers = metaEnablers;
+		if (getItemType() != ItemType.GEM) {
+			throw new IllegalArgumentException("Wrong item type: " + getItemType());
+		}
 	}
 
 	public String getShorterName() {

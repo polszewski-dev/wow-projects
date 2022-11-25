@@ -17,6 +17,7 @@ import wow.commons.repository.impl.parsers.stats.StatParser;
 import wow.commons.repository.impl.parsers.stats.StatPatternRepository;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
+import wow.scraper.model.JsonItemDetailsAndTooltip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,6 @@ import java.util.List;
 @Getter
 public class ItemTooltipParser extends AbstractTooltipParser {
 	private StatParser statParser;
-
-	private ItemType itemType;
-	private ItemSubType itemSubType;
 
 	private List<SocketType> socketTypes;
 	private String socketBonus;
@@ -46,8 +44,8 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 	private boolean randomEnchantment;
 
-	public ItemTooltipParser(Integer itemId, String htmlTooltip, GameVersion gameVersion) {
-		super(itemId, htmlTooltip, gameVersion);
+	public ItemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
+		super(itemDetailsAndTooltip, gameVersion);
 	}
 
 	@Override
@@ -79,7 +77,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 				ruleDroppedBy,
 				ruleDropChance,
 				ruleSellPrice,
-				quote,
+				ruleQuote,
 				Rule.regex("(.*) \\(\\d/(\\d)\\)", this::parseItemSet),
 				Rule.regex("\\((\\d+)\\) Set ?: (.*)", this::parseItemSetBonus),
 				Rule.exact("<Random enchantment>", () -> this.randomEnchantment = true),
@@ -99,6 +97,13 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 	@Override
 	protected void afterParse() {
+		if (itemLevel == null) {
+			itemLevel = 1;
+		}
+		fixItemType();
+	}
+
+	private void fixItemType() {
 		if (itemType == ItemType.BACK && itemSubType == null) {
 			this.itemSubType = ArmorSubType.CLOTH;
 		}

@@ -44,7 +44,7 @@ class SpellServiceTest extends ServiceTest {
 		assertThat(names).hasSameElementsAs(List.of(
 				"Arcane Brilliance",
 				"Gift of the Wild",
-				"Blessing of Kings",
+				"Greater Blessing of Kings",
 				"Fel Armor",
 				"Touch of Shadow",
 				"Burning Wish",

@@ -5,7 +5,6 @@ import wow.commons.model.config.Restriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
-import wow.commons.model.professions.Profession;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.repository.impl.parsers.stats.StatParser;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.ITEM_SET_NAME;
 
 /**
  * User: POlszewski
@@ -23,8 +22,6 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  */
 public class ItemSetSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colName = column(ITEM_SET_NAME);
-	private final ExcelColumn colReqProf = column(ITEM_SET_REQ_PROF);
-	private final ExcelColumn colReqProfLvl = column(ITEM_SET_REQ_PROF_LVL);
 
 	private static final int MAX_ITEM_SET_BONUSES = 6;
 
@@ -51,14 +48,8 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 	private ItemSet getItemSet() {
 		var name = colName.getString();
 		var itemSetBonuses = getItemSetBonuses();
-		var requiredProfession = colReqProf.getEnum(Profession::valueOf, null);
-		var requiredProfessionLevel = colReqProfLvl.getInteger(0);
 
-		Restriction restriction = Restriction.builder()
-				.requiredProfession(requiredProfession)
-				.requiredProfessionLevel(requiredProfessionLevel)
-				.build();
-
+		Restriction restriction = getRestriction();
 		ItemSet itemSet = new ItemSet(name, null, restriction, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
 
 		for (Item item : itemSet.getPieces()) {

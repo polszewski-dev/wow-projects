@@ -59,15 +59,17 @@ abstract class ControllerTest {
 	}
 
 	private void createItems() {
+		Restriction noRestriction = Restriction.builder().build();
+
 		ItemSocketSpecification socketSpecification = new ItemSocketSpecification(List.of(SocketType.RED, SocketType.YELLOW, SocketType.BLUE), Attributes.EMPTY);
 		Description chestDescription = new Description("Test Chest Item", null, null);
-		Restriction noRestriction = Restriction.builder().build();
-		BasicItemInfo basicItemInfo = new BasicItemInfo(ItemRarity.EPIC, BINDS_ON_EQUIP, false, 0, Set.of());
-		chest = new Item(101, chestDescription, noRestriction, Attributes.EMPTY, ItemType.CHEST, ArmorSubType.CLOTH, basicItemInfo, socketSpecification, null);
+		BasicItemInfo chestBasicItemInfo = new BasicItemInfo(ItemType.CHEST, ArmorSubType.CLOTH, ItemRarity.EPIC, BINDS_ON_EQUIP, false, 0, Set.of());
+		chest = new Item(101, chestDescription, noRestriction, Attributes.EMPTY, chestBasicItemInfo, socketSpecification, null);
 
 		SpecialAbility specialAbility = SpecialAbility.onUse(Attributes.of(SPELL_DAMAGE, 100), Duration.seconds(15), Duration.seconds(60), "...");
 		Description trinketDescription = new Description("Test Test", null, null);
-		trinket = new Item(102, trinketDescription, noRestriction, Attributes.of(specialAbility), ItemType.TRINKET, null, basicItemInfo, ItemSocketSpecification.EMPTY, null);
+		BasicItemInfo trinketBasicItemInfo = new BasicItemInfo(ItemType.TRINKET, null, ItemRarity.EPIC, BINDS_ON_EQUIP, false, 0, Set.of());
+		trinket = new Item(102, trinketDescription, noRestriction, Attributes.of(specialAbility), trinketBasicItemInfo, ItemSocketSpecification.EMPTY, null);
 	}
 
 	private void createGems() {
@@ -75,7 +77,7 @@ abstract class ControllerTest {
 		Description yellowDescription = new Description("Test Red Gem", null, null);
 		Description blueDescription = new Description("Test Red Gem", null, null);
 		Restriction noRestriction = Restriction.builder().build();
-		BasicItemInfo basicItemInfo = new BasicItemInfo(ItemRarity.RARE, NO_BINDING, false, 0, Set.of());
+		BasicItemInfo basicItemInfo = new BasicItemInfo(ItemType.GEM, null, ItemRarity.RARE, NO_BINDING, false, 0, Set.of());
 		redGem = new Gem(301, redDescription, noRestriction, Attributes.of(SPELL_DAMAGE, 20), basicItemInfo, GemColor.RED, List.of());
 		yellowGem = new Gem(302, yellowDescription, noRestriction, Attributes.of(SPELL_HIT_RATING, 15), basicItemInfo, GemColor.RED, List.of());
 		blueGem = new Gem(303, blueDescription, noRestriction, Attributes.of(STAMINA, 10), basicItemInfo, GemColor.RED, List.of());

@@ -3,10 +3,8 @@ package wow.scraper.excel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import wow.commons.model.categorization.ItemRarity;
-import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.*;
 
@@ -15,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelSheetNames.*;
 
@@ -55,136 +54,82 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		super.finish(fileName);
 	}
 
-	public void add(TokenTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		writeTokenRow(parser, itemDetailsAndTooltip);
+	public void add(TradedItemParser parser) {
+		writeTradedItemRow(parser);
 	}
 
-	public void add(ItemStartingQuestTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		writeItemStartingQuestRow(parser, itemDetailsAndTooltip);
-	}
-
-	public void add(ItemTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		// TODO skipping this for now
+	public void add(ItemTooltipParser parser) {
 		if (parser.isRandomEnchantment()) {
 			return;
 		}
 
-		writeItemRow(parser, itemDetailsAndTooltip);
+		writeItemRow(parser);
 		saveSetInfo(parser);
 	}
 
-	public void add(GemTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		writeGemRow(parser, itemDetailsAndTooltip);
+	public void add(GemTooltipParser parser) {
+		writeGemRow(parser);
 	}
 
 	private void writeTradedItemHeader() {
-		setHeader(TRADE_ITEM_ID);
-		setHeader(TRADE_ITEM_NAME, 30);
-		setHeader(TRADE_ITEM_TYPE);
-		setHeader(TRADE_ITEM_RARITY);
-		setHeader(TRADE_ITEM_ITEM_LEVEL);
-		setHeader(TRADE_ITEM_REQ_LEVEL);
-		setHeader(TRADE_ITEM_BINDING);
-		setHeader(TRADE_ITEM_PHASE);
-		setHeader(TRADE_ITEM_CLASS_RESTRICTION);
-		setHeader(TRADE_ITEM_SOURCE, 20);
+		writeCommonHeader();
+		setHeader(REQ_LEVEL);
+		setHeader(REQ_CLASS);
+		writeIconAndTooltipHeader();
 		writer.nextRow().freeze(2, 1);
 	}
 
-	private void writeTokenRow(TokenTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		setValue(parser.getItemId());
-		setValue(parser.getName());
-		setValue(ItemType.TOKEN);
-		setValue(getItemRarity(itemDetailsAndTooltip));
-		setValue(parser.getItemLevel());
+	private void writeTradedItemRow(TradedItemParser parser) {
+		writeCommonColumns(parser, null);
 		setValue(parser.getRequiredLevel());
-		setValue(parser.getBinding());
-		setValue(parser.getPhase());
-		setValue(parser.getClassRestriction());
-		setValue(parseSource(null, itemDetailsAndTooltip));
-		writer.nextRow();
-	}
-
-	private void writeItemStartingQuestRow(ItemStartingQuestTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		setValue(parser.getItemId());
-		setValue(parser.getName());
-		setValue(ItemType.QUEST);
-		setValue(getItemRarity(itemDetailsAndTooltip));
-		setValue(parser.getItemLevel());
-		setValue(parser.getRequiredLevel());
-		setValue(parser.getBinding());
-		setValue(parser.getPhase());
-		setValue(parser.getClassRestriction());
-		setValue(parseSource(null, itemDetailsAndTooltip));
+		setValue(parser.getRequiredClass());
+		writeIconAndTooltip(parser);
 		writer.nextRow();
 	}
 
 	private void writeItemHeader() {
-		setHeader(ITEM_ID);
-		setHeader(ITEM_NAME, 30);
-		setHeader(ITEM_RARITY);
-		setHeader(ITEM_ITEM_LEVEL);
-		setHeader(ITEM_REQ_LEVEL);
-		setHeader(ITEM_BINDING);
-		setHeader(ITEM_UNIQUE);
-		setHeader(ITEM_ITEM_TYPE);
-		setHeader(ITEM_ITEM_SUBTYPE);
-		setHeader(ITEM_PHASE);
-		setHeader(ITEM_SOURCE, 30);
+		writeCommonHeader();
+		setHeader(REQ_LEVEL);
+		setHeader(REQ_CLASS);
+		setHeader(REQ_RACE);
+		setHeader(REQ_SIDE);
+		setHeader(REQ_PROFESSION);
+		setHeader(REQ_PROFESSION_LEVEL);
+		setHeader(REQ_PROFESSION_SPEC);
 		setHeader(ITEM_SOCKET_TYPES);
 		setHeader(ITEM_SOCKET_BONUS);
-		setHeader(ITEM_CLASS_RESTRICTION);
-		setHeader(ITEM_RACE_RESTRICTION);
-		setHeader(ITEM_SIDE_RESTRICTION);
 		setHeader(ITEM_ITEM_SET, 30);
-		setHeader(ITEM_REQ_PROFESSION);
-		setHeader(ITEM_REQ_PROFESSION_LEVEL);
-		setHeader(ITEM_REQ_PROFESSION_SPEC);
-		setHeader(ITEM_SELL_PRICE);
 
 		for (int i = 1; i <= MAX_STATS; ++i) {
 			setHeader("stat" + i, 20);
 		}
 
-		setHeader("icon");
-		setHeader("tooltip");
-
+		writeIconAndTooltipHeader();
 		writer.nextRow().freeze(2, 1);
 	}
 
-	private void writeItemRow(ItemTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		ItemRarity rarity = getItemRarity(itemDetailsAndTooltip);
-
-		setValue(parser.getItemId());
-		setValue(parser.getName());
-		setValue(rarity);
-		setValue(parser.getItemLevel());
+	private void writeItemRow(ItemTooltipParser parser) {
+		writeCommonColumns(parser, parser.getRequiredFactionName());
 		setValue(parser.getRequiredLevel());
-		setValue(parser.getBinding());
-		setValue(parser.isUnique() ? 1 : 0);
-		setValue((parser.getItemType()));
-		setValue(parser.getItemSubType() != null ? parser.getItemSubType().toString() : null);
-		setValue(parser.getPhase());
-		setValue(parseSource(parser.getRequiredFactionName(), itemDetailsAndTooltip));
-		setValue(parser.getSocketTypes());
-		setValue(parser.getSocketBonus());
-		setValue(parser.getClassRestriction());
-		setValue(parser.getRaceRestriction());
-		setValue(parser.getSideRestriction());
-		setValue(parser.getItemSetName());
+		setValue(parser.getRequiredClass());
+		setValue(parser.getRequiredRace());
+		setValue(parser.getRequiredSide());
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getRequiredProfessionSpec());
-		setValue(parser.getSellPrice());
+		setValue(parser.getSocketTypes());
+		setValue(parser.getSocketBonus());
+		setValue(parser.getItemSetName());
 		setList(parser.getStatLines(), MAX_STATS);
-		setValue(itemDetailsAndTooltip.getIcon());
-		setValue(itemDetailsAndTooltip.getHtmlTooltip());
-
+		writeIconAndTooltip(parser);
 		writer.nextRow();
 	}
 
 	private void writeItemSetHeader() {
 		setHeader(ITEM_SET_NAME, 30);
+		setHeader(REQ_PROFESSION);
+		setHeader(REQ_PROFESSION_LEVEL);
+
 		setHeader("#pieces");
 
 		for (int i = 1; i <= MAX_PIECES; ++i) {
@@ -196,66 +141,81 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 			setHeader("bonus" + i + "_d", 30);
 		}
 
-		setHeader(ITEM_SET_REQ_PROF);
-		setHeader(ITEM_SET_REQ_PROF_LVL);
-
 		writer.nextRow().freeze(1, 1);
 	}
 
 	private void writeItemSetRow(SetInfo setInfo) {
 		setValue(setInfo.getItemSetName());
+		setValue(setInfo.getItemSetRequiredProfession());
+		setValue(setInfo.getItemSetRequiredProfessionLevel());
 		setValue(setInfo.getItemSetPieces().size());
 		setList(setInfo.getItemSetPieces(), MAX_PIECES);
 		setList(setInfo.getItemSetBonuses(), MAX_BONUSES, x -> {
 			setValue(x.getNumPieces());
 			setValue(x.getDescription());
 		}, 2);
-		setValue(setInfo.getItemSetRequiredProfession());
-		setValue(setInfo.getItemSetRequiredProfessionLevel());
 		writer.nextRow();
 	}
 
 	private void writeGemHeader() {
-		setHeader(GEM_ID);
-		setHeader(GEM_NAME, 30);
-		setHeader(GEM_RARITY);
-		setHeader(GEM_ITEM_LEVEL);
-		setHeader(GEM_PHASE);
-		setHeader(GEM_SOURCE, 20);
+		writeCommonHeader();
+		setHeader(REQ_PROFESSION);
+		setHeader(REQ_PROFESSION_LEVEL);
 		setHeader(GEM_COLOR);
-		setHeader(GEM_BINDING);
-		setHeader(GEM_UNIQUE);
-		setHeader(GEM_REQ_PROFESSION);
-		setHeader(GEM_REQ_PROFESSION_LEVEL);
 		setHeader(GEM_STATS, 20);
 		setHeader(GEM_META_ENABLERS);
-		setHeader(GEM_SELL_PRICE);
-		setHeader(GEM_ICON);
-		setHeader(GEM_TOOLTIP);
+		writeIconAndTooltipHeader();
 		writer.nextRow().freeze(2, 1);
 	}
 
-	private void writeGemRow(GemTooltipParser parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		setValue(parser.getItemId());
-		setValue(parser.getName());
-		setValue(getItemRarity(itemDetailsAndTooltip));
-		setValue(parser.getItemLevel());
-		setValue(parser.getPhase());
-		setValue(parseSource(null, itemDetailsAndTooltip));
-		setValue(parser.getColor());
-		setValue(parser.getBinding());
-		setValue(parser.isUnique() ? 1 : 0);
+	private void writeGemRow(GemTooltipParser parser) {
+		writeCommonColumns(parser, null);
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
+		setValue(parser.getColor());
 		setValue(parser.getStatLines().get(0));
 		setValue(parser.getMetaEnablers());
-		setValue(parser.getSellPrice());
-		setValue(itemDetailsAndTooltip.getIcon());
-		setValue(itemDetailsAndTooltip.getHtmlTooltip());
+		writeIconAndTooltip(parser);
 		if (parser.getStatLines().size() != 1) {
 			throw new IllegalArgumentException("Only 1 stat line allowed");
 		}
 		writer.nextRow();
+	}
+
+	private void writeCommonHeader() {
+		setHeader(ID);
+		setHeader(NAME, 30);
+		setHeader(ITEM_TYPE);
+		setHeader(ITEM_SUBTYPE);
+		setHeader(RARITY);
+		setHeader(BINDING);
+		setHeader(UNIQUE);
+		setHeader(ITEM_LEVEL);
+		setHeader(SOURCE, 20);
+		setHeader(PHASE);
+	}
+
+	private void writeCommonColumns(AbstractTooltipParser parser, String requiredFactionName) {
+		setValue(parser.getItemId());
+		setValue(parser.getName());
+		setValue(parser.getItemType());
+		setValue(parser.getItemSubType() != null ? parser.getItemSubType().toString() : null);
+		setValue(getItemRarity(parser));
+		setValue(parser.getBinding());
+		setValue(parser.isUnique() ? 1 : 0);
+		setValue(parser.getItemLevel());
+		setValue(parseSource(requiredFactionName, parser));
+		setValue(parser.getPhase());
+	}
+
+	private void writeIconAndTooltipHeader() {
+		setHeader(ICON);
+		setHeader(TOOLTIP);
+	}
+
+	private void writeIconAndTooltip(AbstractTooltipParser parser) {
+		setValue(parser.getIcon());
+		setValue(parser.getTooltip());
 	}
 
 	@Data
@@ -284,16 +244,16 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		));
 	}
 
-	private static ItemRarity getItemRarity(JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
-		Integer quality = itemDetailsAndTooltip.getDetails().getQuality();
+	private static ItemRarity getItemRarity(AbstractTooltipParser parser) {
+		Integer quality = parser.getItemDetailsAndTooltip().getDetails().getQuality();
 		return WowheadItemQuality.fromCode(quality).getItemRarity();
 	}
 
-	private static String parseSource(String requiredFactionName, JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
+	private static String parseSource(String requiredFactionName, AbstractTooltipParser parser) {
 		if (requiredFactionName != null) {
 			return "Faction:" + requiredFactionName;
 		}
-		WowheadSourceParser sourceParser = new WowheadSourceParser(itemDetailsAndTooltip);
+		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getItemDetailsAndTooltip());
 		List<String> sources = sourceParser.getSource();
 		return String.join("#", sources);
 	}

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemSubType;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.sources.Source;
 
 import java.util.Set;
@@ -16,6 +18,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 public class BasicItemInfo {
+	@NonNull
+	private final ItemType itemType;
+	private final ItemSubType itemSubType;
 	@NonNull
 	private final ItemRarity rarity;
 	@NonNull

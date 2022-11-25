@@ -4,6 +4,7 @@ import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.config.Description;
@@ -24,17 +25,23 @@ import java.util.stream.Stream;
  */
 @Getter
 public abstract class AbstractItem extends ConfigurationElementWithAttributes<Integer> {
-	private final ItemType itemType;
 	private final BasicItemInfo basicItemInfo;
 
-	protected AbstractItem(Integer id, Description description, Restriction restriction, Attributes attributes, ItemType itemType, BasicItemInfo basicItemInfo) {
+	protected AbstractItem(Integer id, Description description, Restriction restriction, Attributes attributes, BasicItemInfo basicItemInfo) {
 		super(id, description, restriction, attributes);
-		this.itemType = itemType;
 		this.basicItemInfo = basicItemInfo;
 	}
 
 	public ItemLink getItemLink() {
 		return new ItemLink(getId(), getName(), getRarity(), null, null, null, null);
+	}
+
+	public ItemType getItemType() {
+		return basicItemInfo.getItemType();
+	}
+
+	public ItemSubType getItemSubType() {
+		return basicItemInfo.getItemSubType();
 	}
 
 	public ItemRarity getRarity() {

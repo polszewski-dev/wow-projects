@@ -49,7 +49,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		for (WowheadItemCategory category : WowheadItemCategory.equipment()) {
 			export(
 					category,
-					(itemId, tooltip) -> new ItemTooltipParser(itemId, tooltip, getGameVersion()),
+					itemDetailsAndTooltip -> new ItemTooltipParser(itemDetailsAndTooltip, getGameVersion()),
 					builder::add
 			);
 		}
@@ -58,7 +58,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addGems(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.GEMS,
-				(itemId, tooltip) -> new GemTooltipParser(itemId, tooltip, getGameVersion()),
+				itemDetailsAndTooltip -> new GemTooltipParser(itemDetailsAndTooltip, getGameVersion()),
 				builder::add
 		);
 	}
@@ -66,7 +66,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addItemsStartingQuest(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.QUEST,
-				(itemId, tooltip) -> new ItemStartingQuestTooltipParser(itemId, tooltip, getGameVersion()),
+				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion()),
 				builder::add
 		);
 	}
@@ -74,17 +74,17 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addTokens(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.TOKENS,
-				(itemId, tooltip) -> new TokenTooltipParser(itemId, tooltip, getGameVersion()),
+				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion()),
 				builder::add
 		);
 	}
 
 	private interface ParserCreator<T extends AbstractTooltipParser> {
-		T create(int itemId, String tooltip);
+		T create(JsonItemDetailsAndTooltip itemDetailsAndTooltip);
 	}
 
 	private interface ParsedDataExporter<T extends AbstractTooltipParser> {
-		void export(T parser, JsonItemDetailsAndTooltip itemDetailsAndTooltip);
+		void export(T parser);
 	}
 
 	private <T extends AbstractTooltipParser> void export(WowheadItemCategory category, ParserCreator<T> parserCreator, ParsedDataExporter<T> parsedDataExporter) throws IOException {
@@ -92,10 +92,10 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 
 		for (Integer itemId : itemIds) {
 			var itemDetailsAndTooltip = getItemDetailRepository().getDetail(getGameVersion(), category, itemId).orElseThrow();
-			var parser = parserCreator.create(itemId, itemDetailsAndTooltip.getHtmlTooltip());
+			var parser = parserCreator.create(itemDetailsAndTooltip);
 
 			parser.parse();
-			parsedDataExporter.export(parser, itemDetailsAndTooltip);
+			parsedDataExporter.export(parser);
 
 			log.info("Added {} {}", parser.getItemId(), parser.getName());
 		}

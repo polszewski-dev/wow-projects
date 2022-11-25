@@ -87,7 +87,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 		buffSets.put(PARTY_BUFFS, getBuffs(
 				"Arcane Brilliance",
 				"Gift of the Wild",
-				"Blessing of Kings"
+				"Greater Blessing of Kings"
 		));
 
 		buffSets.put(CONSUMES, getBuffs(
