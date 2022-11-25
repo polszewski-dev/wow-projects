@@ -36,6 +36,7 @@ public class Build implements Copyable<Build>, AttributeCollection {
 		SELF_BUFFS,
 		PARTY_BUFFS,
 		RAID_BUFFS,
+		WORLD_BUFFS,
 		CONSUMES,
 	}
 

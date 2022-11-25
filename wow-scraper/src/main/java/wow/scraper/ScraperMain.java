@@ -1,6 +1,7 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
+import wow.commons.model.pve.GameVersion;
 import wow.scraper.model.*;
 
 import java.io.IOException;
@@ -36,8 +37,9 @@ public class ScraperMain extends ScraperTool {
 		fetch("items/weapons/one-handed-swords", WowheadItemCategory.ONE_HANDED_SWORDS);
 		fetch("items/weapons/staves", WowheadItemCategory.STAVES);
 		fetch("items/weapons/wands", WowheadItemCategory.WANDS);
-
-		fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", WowheadItemCategory.GEMS);
+		if (getGameVersion() != GameVersion.VANILLA) {
+			fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", WowheadItemCategory.GEMS);
+		}
 		fetch("items/miscellaneous/armor-tokens", WowheadItemCategory.TOKENS);
 		fetch("items/quest/quality:3:4:5?filter=6;1;0", WowheadItemCategory.QUEST);
 	}
@@ -49,8 +51,12 @@ public class ScraperMain extends ScraperTool {
 
 		for (JsonItemDetails itemDetails : itemDetailsList) {
 			if (isToBeSaved(itemDetails, category)) {
-				fixSource(itemDetails);
-				saveItemDetails(itemDetails, category);
+				try {
+					fixSource(itemDetails);
+					saveItemDetails(itemDetails, category);
+				} catch (Exception e) {
+					log.error("Error while fetching:  " + itemDetails.getName(), e);
+				}
 			}
 		}
 

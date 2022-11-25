@@ -1,5 +1,6 @@
 package wow.scraper.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,9 @@ import java.util.List;
  */
 
 @Data
+@JsonIgnoreProperties({
+		"completion_category",
+})
 public class WowheadItemInfo {
 	private String name;
 	private int quality;

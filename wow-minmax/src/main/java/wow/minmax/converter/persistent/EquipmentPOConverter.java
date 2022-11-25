@@ -57,8 +57,8 @@ public class EquipmentPOConverter extends Converter<Equipment, EquipmentPO> {
 		equipment.set(equippableItemPOConverter.convertBack(value.getFinger2()), ItemSlot.FINGER_2);
 		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket1()), ItemSlot.TRINKET_1);
 		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket2()), ItemSlot.TRINKET_2);
-		equipment.set(equippableItemPOConverter.convertBack(value.getMainHand()));
-		equipment.set(equippableItemPOConverter.convertBack(value.getOffHand()));
+		equipment.set(equippableItemPOConverter.convertBack(value.getMainHand()), ItemSlot.MAIN_HAND);
+		equipment.set(equippableItemPOConverter.convertBack(value.getOffHand()), ItemSlot.OFF_HAND);
 		equipment.set(equippableItemPOConverter.convertBack(value.getRanged()));
 
 		return equipment;

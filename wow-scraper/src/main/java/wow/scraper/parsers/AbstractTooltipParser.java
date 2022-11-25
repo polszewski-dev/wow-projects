@@ -59,7 +59,7 @@ public abstract class AbstractTooltipParser {
 	private static final Set<String> UNMATCHED_LINES = new TreeSet<>();
 
 	protected final Rule rulePhase = Rule.
-			prefix("Phase ", x -> this.phase = parsePhase(x));
+			regex("(SoM )?Phase (.*)", x -> this.phase = parsePhase(x[1].toString()));
 	protected final Rule ruleRequiresLevel = Rule.
 			prefix("Requires Level ", x -> this.requiredLevel = parseRequiredLevel(x));
 	protected final Rule ruleItemLevel = Rule.
@@ -156,7 +156,7 @@ public abstract class AbstractTooltipParser {
 	}
 
 	protected Phase parsePhase(String value) {
-		return Phase.parse(gameVersion + "_P" + value);
+		return Phase.parse(gameVersion + "_P" + value.replace('.', '_'));
 	}
 
 	protected int parseItemLevel(String value) {

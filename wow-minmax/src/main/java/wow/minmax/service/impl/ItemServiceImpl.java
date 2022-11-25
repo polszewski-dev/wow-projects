@@ -120,6 +120,9 @@ public class ItemServiceImpl implements ItemService {
 		if (hasStatsSuitableForRole(enchant, playerProfile)) {
 			return true;
 		}
+		if (itemType == ItemType.WRIST) {
+			return enchant.getIntellect() > 0;
+		}
 		if (itemType == ItemType.CHEST) {
 			return enchant.getBaseStatsIncrease() > 0;
 		}

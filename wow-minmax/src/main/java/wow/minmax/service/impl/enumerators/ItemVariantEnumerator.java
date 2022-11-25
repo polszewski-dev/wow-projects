@@ -207,6 +207,10 @@ public abstract class ItemVariantEnumerator {
 		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile, item.getItemType());
 		List<EquippableItem> result = new ArrayList<>(enchants.size());
 
+		if (enchants.isEmpty()) {
+			return List.of(new EquippableItem(item));
+		}
+
 		for (Enchant enchant : enchants) {
 			result.add(new EquippableItem(item).enchant(enchant));
 		}

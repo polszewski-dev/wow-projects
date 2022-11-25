@@ -63,7 +63,7 @@ public class StatMatcher {
 
 	public Attributes getParamStats() {
 		String value = evalParams(pattern.getParams().getAmount());
-		int amount = Integer.parseInt(value);
+		double amount = Double.parseDouble(value);
 		return pattern.getParams().getStatsSupplier().getAttributes(amount);
 	}
 

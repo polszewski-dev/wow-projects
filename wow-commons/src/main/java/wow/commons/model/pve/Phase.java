@@ -16,6 +16,7 @@ import static wow.commons.model.pve.GameVersion.VANILLA;
 public enum Phase {
 	VANILLA_P1(VANILLA),//mc
 	VANILLA_P2(VANILLA),//dm
+	VANILLA_P2_5(VANILLA),//
 	VANILLA_P3(VANILLA),//bwl
 	VANILLA_P4(VANILLA),//zg
 	VANILLA_P5(VANILLA),//aq
