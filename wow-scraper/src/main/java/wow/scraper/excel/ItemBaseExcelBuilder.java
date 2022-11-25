@@ -5,6 +5,7 @@ import lombok.Data;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
+import wow.commons.model.unit.CharacterClass;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.*;
 
@@ -127,6 +128,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	private void writeItemSetHeader() {
 		setHeader(ITEM_SET_NAME, 30);
+		setHeader(REQ_CLASS);
 		setHeader(REQ_PROFESSION);
 		setHeader(REQ_PROFESSION_LEVEL);
 
@@ -146,6 +148,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	private void writeItemSetRow(SetInfo setInfo) {
 		setValue(setInfo.getItemSetName());
+		setValue(setInfo.getItemSetRequiredClass());
 		setValue(setInfo.getItemSetRequiredProfession());
 		setValue(setInfo.getItemSetRequiredProfessionLevel());
 		setValue(setInfo.getItemSetPieces().size());
@@ -224,6 +227,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		private String itemSetName;
 		private List<String> itemSetPieces;
 		private List<ItemSetBonus> itemSetBonuses;
+		private List<CharacterClass> itemSetRequiredClass;
 		private Profession itemSetRequiredProfession;
 		private Integer itemSetRequiredProfessionLevel;
 	}
@@ -231,17 +235,32 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	private final Map<String, SetInfo> savedSets = new TreeMap<>();
 
 	private void saveSetInfo(ItemTooltipParser parser) {
-		if (parser.getItemSetName() == null || savedSets.containsKey(parser.getItemSetName())) {
+		if (parser.getItemSetName() == null) {
 			return;
 		}
 
-		savedSets.put(parser.getItemSetName(), new SetInfo(
+		SetInfo setInfo = savedSets.computeIfAbsent(parser.getItemSetName(), x -> new SetInfo(
 				parser.getItemSetName(),
 				parser.getItemSetPieces(),
 				parser.getItemSetBonuses(),
+				null,
 				parser.getItemSetRequiredProfession(),
 				parser.getItemSetRequiredProfessionLevel()
 		));
+
+		if (parser.getRequiredClass() != null && !parser.getRequiredClass().isEmpty()) {
+			if (setInfo.getItemSetRequiredClass() == null) {
+				setInfo.setItemSetRequiredClass(parser.getRequiredClass());
+			} else {
+				assertTheSameClassRequirements(parser, setInfo);
+			}
+		}
+	}
+
+	private static void assertTheSameClassRequirements(ItemTooltipParser parser, SetInfo setInfo) {
+		if (!setInfo.getItemSetRequiredClass().equals(parser.getRequiredClass())) {
+			throw new IllegalArgumentException("Set pieces have different class requirements: " + setInfo.itemSetName);
+		}
 	}
 
 	private static ItemRarity getItemRarity(AbstractTooltipParser parser) {
