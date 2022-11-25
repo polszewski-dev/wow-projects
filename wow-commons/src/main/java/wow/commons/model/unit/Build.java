@@ -10,8 +10,8 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentInfo;
 import wow.commons.util.AttributesBuilder;
 
 import java.util.*;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class Build implements Copyable<Build>, AttributeCollection {
 	private final String buildId;
 	private String talentLink;
-	private Map<TalentId, TalentInfo> talentInfos;
+	private Map<TalentId, Talent> talents;
 	private PVERole role;
 	private Spell damagingSpell;
 	private List<Spell> relevantSpells;
@@ -51,7 +51,7 @@ public class Build implements Copyable<Build>, AttributeCollection {
 	public Build copy() {
 		Build copy = new Build(buildId);
 		copy.talentLink = talentLink;
-		copy.talentInfos = talentInfos;
+		copy.talents = talents;
 		copy.role = role;
 		copy.damagingSpell = damagingSpell;
 		copy.relevantSpells = new ArrayList<>(relevantSpells);
@@ -64,7 +64,7 @@ public class Build implements Copyable<Build>, AttributeCollection {
 	@Override
 	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
 		Attributes talentAttributes = new AttributesBuilder()
-				.addAttributes(talentInfos.values())
+				.addAttributes(talents.values())
 				.toAttributes();
 		collector.addAttributes(talentAttributes);
 		collector.addAttributes(getBuffsModifiedByTalents(talentAttributes));

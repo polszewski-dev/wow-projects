@@ -75,7 +75,9 @@ public class AttributesBuilder {
 
 	public AttributesBuilder addAttributeList(Collection<PrimitiveAttribute> attributes) {
 		if (attributes != null) {
-			getOrCreateAttributeList().addAll(attributes);
+			for (PrimitiveAttribute attribute : attributes) {
+				addAttribute(attribute);
+			}
 		}
 		return this;
 	}

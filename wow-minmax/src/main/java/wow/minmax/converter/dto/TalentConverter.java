@@ -2,7 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.talents.Talent;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.TalentDTO;
 
@@ -12,9 +12,9 @@ import wow.minmax.model.dto.TalentDTO;
  */
 @Component
 @AllArgsConstructor
-public class TalentConverter extends Converter<TalentInfo, TalentDTO> {
+public class TalentConverter extends Converter<Talent, TalentDTO> {
 	@Override
-	protected TalentDTO doConvert(TalentInfo talentInfo) {
-		return new TalentDTO(talentInfo.getTalentId(), talentInfo.getRank(), talentInfo.getTalentId().getName());
+	protected TalentDTO doConvert(Talent talent) {
+		return new TalentDTO(talent.getTalentId(), talent.getRank(), talent.getTalentId().getName());
 	}
 }

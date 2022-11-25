@@ -1,12 +1,15 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.effects.*;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.talents.TalentTree;
-import wow.commons.model.unit.PetType;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
@@ -22,10 +25,7 @@ public class EffectSheetParser extends BenefitSheetParser {
 	private final ExcelColumn colRemoveAfter = column("remove after");
 	private final ExcelColumn colRemoveAfterSchool = column("remove after: school");
 	private final ExcelColumn colOnApply = column("on apply");
-	private final ExcelColumn colTree = column("tree");
-	private final ExcelColumn colSchool = column("school");
-	private final ExcelColumn colSpell = column("spell");
-	private final ExcelColumn colPet = column("pet");
+
 	private final ExcelColumn colStackScaling = column("stack scaling");
 
 	private final SpellDataRepositoryImpl spellDataRepository;
@@ -33,16 +33,6 @@ public class EffectSheetParser extends BenefitSheetParser {
 	public EffectSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
 		super(sheetName);
 		this.spellDataRepository = spellDataRepository;
-		addColumnGroups();
-	}
-
-	private void addColumnGroups() {
-		this
-				.add(EFFECT_INCREASE_PCT, "effect increase%")
-				.add(DAMAGE_TAKEN_INCREASE_PCT, "damage taken increase%")
-				.add(SPELL_DAMAGE, "sp bonus")
-				.add(NUM_NEXT_SPELLS_CAST_INSTANTLY, "#next spells cast instantly")
-		;
 	}
 
 	@Override
@@ -70,12 +60,18 @@ public class EffectSheetParser extends BenefitSheetParser {
 	}
 
 	private Attributes getEffectAttributes() {
-		var talentTree = colTree.getEnum(TalentTree::parse, null);
-		var spellSchool = colSchool.getEnum(SpellSchool::parse, null);
-		var spells = colSpell.getSet(SpellId::parse);
-		var petTypes = colPet.getSet(PetType::parse);
+		return attachConditions(Attributes.of(getPrimitiveAttributes()));
+	}
 
-		return readAttributes(talentTree, spellSchool, spells, petTypes);
+	private List<PrimitiveAttribute> getPrimitiveAttributes() {
+		return Stream.of(
+				getDouble(EFFECT_INCREASE_PCT, "effect increase%"),
+				getDouble(DAMAGE_TAKEN_INCREASE_PCT, "damage taken increase%"),
+				getDouble(SPELL_DAMAGE, "sp bonus"),
+				getDouble(NUM_NEXT_SPELLS_CAST_INSTANTLY, "#next spells cast instantly")
+		)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 	}
 
 	private RemoveCondition getRemoveCondition() {

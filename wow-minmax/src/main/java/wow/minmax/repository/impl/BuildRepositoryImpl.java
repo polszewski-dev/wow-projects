@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.unit.Build;
 import wow.commons.model.unit.PVERole;
 import wow.commons.repository.SpellDataRepository;
@@ -47,7 +47,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 	private Optional<Build> createEmptyBuild() {
 		Build build = new Build(BuildIds.NONE);
 		build.setTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000000000000000000000000000000000000000000000000");
-		build.setTalentInfos(Map.of());
+		build.setTalents(Map.of());
 		build.setRole(null);
 		build.setDamagingSpell(null);
 		build.setRelevantSpells(List.of());
@@ -60,7 +60,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 		Build build = new Build(buildId);
 
 		build.setTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
-		build.setTalentInfos(getTalentInfos(build.getTalentLink()));
+		build.setTalents(getTalents(build.getTalentLink()));
 		build.setRole(PVERole.CASTER_DPS);
 		build.setDamagingSpell(spellDataRepository.getSpellHighestRank(SpellId.SHADOW_BOLT, level).orElseThrow());
 
@@ -108,7 +108,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 		return Optional.of(build);
 	}
 
-	private Map<TalentId, TalentInfo> getTalentInfos(String talentLink) {
+	private Map<TalentId, Talent> getTalents(String talentLink) {
 		return TalentCalculatorUtil.parseFromLink(talentLink, spellDataRepository);
 	}
 

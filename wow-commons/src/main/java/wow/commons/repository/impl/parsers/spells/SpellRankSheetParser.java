@@ -49,8 +49,8 @@ public class SpellRankSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		Spell spellRankInfo = getSpell();
-		spellDataRepository.addSpell(spellRankInfo);
+		Spell spell = getSpell();
+		spellDataRepository.addSpell(spell);
 	}
 
 	private Spell getSpell() {

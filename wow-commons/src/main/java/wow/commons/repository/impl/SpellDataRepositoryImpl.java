@@ -9,8 +9,8 @@ import wow.commons.model.effects.EffectId;
 import wow.commons.model.effects.EffectInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentInfo;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.repository.impl.parsers.spells.SpellExcelParser;
 import wow.commons.util.AttributesBuilder;
@@ -27,17 +27,14 @@ import java.util.stream.Collectors;
 @Repository
 public class SpellDataRepositoryImpl implements SpellDataRepository {
 	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
-	private final Map<TalentId, Map<Integer, TalentInfo>> talentInfoByTalentIdByRank = new LinkedHashMap<>();
-	private final Map<Integer, Map<Integer, TalentInfo>> talentInfoByCalculatorPositionIdByRank = new LinkedHashMap<>();
+	private final Map<TalentId, List<Talent>> talentById = new LinkedHashMap<>();
+	private final Map<Integer, TalentId> talentIdByCalculatorPosition = new LinkedHashMap<>();
 	private final Map<EffectId, EffectInfo> effectInfoByEffectId = new LinkedHashMap<>();
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
 
 	@Override
 	public Optional<Spell> getSpell(SpellId spellId, Integer rank) {
-		List<Spell> spells = spellById.get(spellId);
-		if (spells == null) {
-			return Optional.empty();
-		}
+		List<Spell> spells = spellById.getOrDefault(spellId, List.of());
 		return spells.stream()
 				.filter(spell -> Objects.equals(spell.getRank(), rank))
 				.findFirst();
@@ -55,27 +52,20 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	}
 
 	@Override
-	public Optional<TalentInfo> getTalentInfo(TalentId talentId, Integer rank) {
-		Map<Integer, TalentInfo> talentInfoByRank = talentInfoByTalentIdByRank.get(talentId);
-		return getTalentInfo(rank, talentInfoByRank);
+	public Optional<Talent> getTalent(TalentId talentId, int rank) {
+		List<Talent> talents = talentById.getOrDefault(talentId, List.of());
+		return talents.stream()
+				.filter(talent -> talent.getRank() == rank)
+				.findFirst();
 	}
 
 	@Override
-	public Optional<TalentInfo> getTalentInfo(int talentCalculatorPosition, Integer rank) {
-		Map<Integer, TalentInfo> talentInfoByRank = talentInfoByCalculatorPositionIdByRank.get(talentCalculatorPosition);
-		return getTalentInfo(rank, talentInfoByRank);
-	}
-
-	private static Optional<TalentInfo> getTalentInfo(Integer rank, Map<Integer, TalentInfo> talentInfoByRank) {
-		if (talentInfoByRank == null) {
+	public Optional<Talent> getTalent(int talentCalculatorPosition, int rank) {
+		TalentId talentId = talentIdByCalculatorPosition.get(talentCalculatorPosition);
+		if (talentId == null) {
 			return Optional.empty();
 		}
-		if (rank != null) {
-			return Optional.ofNullable(talentInfoByRank.get(rank));
-		}
-		return talentInfoByRank.keySet().stream()
-				.max(Integer::compareTo)
-				.map(talentInfoByRank::get);
+		return getTalent(talentId, rank);
 	}
 
 	@Override
@@ -120,36 +110,21 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	public void init() throws IOException, InvalidFormatException {
 		var spellExcelParser = new SpellExcelParser(this);
 		spellExcelParser.readFromXls();
-		validateAll();
 	}
 
-	private void validateAll() {
-		for (Map<Integer, TalentInfo> talentsByRank : talentInfoByTalentIdByRank.values()) {
-			for (TalentInfo talentInfo : talentsByRank.values()) {
-				if (!(1 <= talentInfo.getRank() && talentInfo.getRank() <= talentInfo.getMaxRank())) {
-					throw new IllegalArgumentException("Wrong rank: " + talentInfo.getTalentId());
-				}
-			}
-		}
-	}
+	public void addTalent(Talent talent, Attributes attributes) {
+		talentIdByCalculatorPosition.put(talent.getTalentCalculatorPosition(), talent.getTalentId());
 
-	public void addTalent(TalentInfo talentInfo, Attributes attributes) {
-		Map<Integer, TalentInfo> talentByRank = talentInfoByTalentIdByRank.computeIfAbsent(talentInfo.getTalentId(), x -> new LinkedHashMap<>());
+		Optional<Talent> existingTalent = getTalent(talent.getTalentId(), talent.getRank());
 
-		talentInfoByCalculatorPositionIdByRank.computeIfAbsent(talentInfo.getTalentCalculatorPosition(), x -> talentByRank);
-
-		if (talentByRank.containsKey(talentInfo.getRank())) {
-			// simply add another benefit to already existing talent rank
-			talentInfo = talentByRank.get(talentInfo.getRank());
+		if (existingTalent.isPresent()) {
+			talent = existingTalent.orElseThrow();
+		} else {
+			talentById.computeIfAbsent(talent.getTalentId(), x -> new ArrayList<>()).add(talent);
 		}
 
-		talentInfo.setAttributes(
-				new AttributesBuilder()
-				.addAttributes(talentInfo.getAttributes())
-				.addAttributes(attributes)
-				.toAttributes());
-
-		talentInfoByTalentIdByRank.get(talentInfo.getTalentId()).put(talentInfo.getRank(), talentInfo);
+		Attributes combinedAttributes = AttributesBuilder.addAttributes(talent.getAttributes(), attributes);
+		talent.setAttributes(combinedAttributes);
 	}
 
 	public void addSpell(Spell spell) {

@@ -6,8 +6,8 @@ import wow.commons.model.effects.EffectId;
 import wow.commons.model.effects.EffectInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentInfo;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,8 +20,8 @@ import java.util.Optional;
 public interface SpellDataRepository {
 	Optional<Spell> getSpell(SpellId spellId, Integer rank);
 	Optional<Spell> getSpellHighestRank(SpellId spellId, int level);
-	Optional<TalentInfo> getTalentInfo(TalentId talentId, Integer rank);
-	Optional<TalentInfo> getTalentInfo(int talentCalculatorPosition, Integer rank);
+	Optional<Talent> getTalent(TalentId talentId, int rank);
+	Optional<Talent> getTalent(int talentCalculatorPosition, int rank);
 	Optional<EffectInfo> getEffectInfo(EffectId effectId);
 	Optional<Buff> getBuff(int buffId);
 	Optional<Buff> getHighestRankBuff(String name, int level);

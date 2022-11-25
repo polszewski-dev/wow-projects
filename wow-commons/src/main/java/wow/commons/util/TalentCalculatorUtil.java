@@ -1,7 +1,7 @@
 package wow.commons.util;
 
+import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentInfo;
 import wow.commons.repository.SpellDataRepository;
 
 import java.util.LinkedHashMap;
@@ -12,8 +12,8 @@ import java.util.Map;
  * Date: 2021-09-28
  */
 public final class TalentCalculatorUtil {
-	public static Map<TalentId, TalentInfo> parseFromLink(String link, SpellDataRepository spellDataRepository) {
-		Map<TalentId, TalentInfo> result = new LinkedHashMap<>();
+	public static Map<TalentId, Talent> parseFromLink(String link, SpellDataRepository spellDataRepository) {
+		Map<TalentId, Talent> result = new LinkedHashMap<>();
 
 		String talentStringStart = "?tal=";
 		String talentString = link.substring(link.indexOf(talentStringStart) + talentStringStart.length());
@@ -22,8 +22,8 @@ public final class TalentCalculatorUtil {
 			int talentRank = talentString.charAt(position - 1) - '0';
 
 			if (talentRank > 0) {
-				TalentInfo talentInfo = spellDataRepository.getTalentInfo(position, talentRank).orElseThrow();
-				result.put(talentInfo.getTalentId(), talentInfo);
+				Talent talent = spellDataRepository.getTalent(position, talentRank).orElseThrow();
+				result.put(talent.getTalentId(), talent);
 			}
 		}
 

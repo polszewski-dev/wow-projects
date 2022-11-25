@@ -10,7 +10,7 @@ import wow.commons.model.equipment.Equipment;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.talents.Talent;
 import wow.commons.model.unit.*;
 import wow.commons.util.AttributeEvaluator;
 
@@ -143,8 +143,8 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		build.setBuffsFromSets(buffSetIds);
 	}
 
-	public Collection<TalentInfo> getTalentInfos() {
-		return build.getTalentInfos().values();
+	public Collection<Talent> getTalents() {
+		return build.getTalents().values();
 	}
 
 	public void setBuild(Build build) {

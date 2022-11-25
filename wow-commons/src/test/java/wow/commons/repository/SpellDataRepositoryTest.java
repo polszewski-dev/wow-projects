@@ -18,7 +18,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.talents.Talent;
 
 import java.util.Optional;
 
@@ -67,21 +67,21 @@ class SpellDataRepositoryTest {
 	}
 
 	@Test
-	@DisplayName("TalentInfo is read correctly")
-	void talentInfoIsCorrect() {
-		Optional<TalentInfo> optionalTalentInfo = underTest.getTalentInfo(IMPROVED_SHADOW_BOLT, 5);
+	@DisplayName("Talent is read correctly")
+	void talentIsCorrect() {
+		Optional<Talent> optionalTalent = underTest.getTalent(IMPROVED_SHADOW_BOLT, 5);
 
-		assertThat(optionalTalentInfo).isPresent();
+		assertThat(optionalTalent).isPresent();
 
-		TalentInfo talentInfo = optionalTalentInfo.orElseThrow();
+		Talent talent = optionalTalent.orElseThrow();
 
-		assertThat(talentInfo.getTalentId()).isEqualTo(IMPROVED_SHADOW_BOLT);
-		assertThat(talentInfo.getRank()).isEqualTo(5);
-		assertThat(talentInfo.getMaxRank()).isEqualTo(5);
-		assertThat(talentInfo.getDescription()).isNotBlank();
-		assertThat(talentInfo.getAttributes().getSpecialAbilities()).hasSize(1);
+		assertThat(talent.getTalentId()).isEqualTo(IMPROVED_SHADOW_BOLT);
+		assertThat(talent.getRank()).isEqualTo(5);
+		assertThat(talent.getMaxRank()).isEqualTo(5);
+		assertThat(talent.getTooltip()).isNotBlank();
+		assertThat(talent.getAttributes().getSpecialAbilities()).hasSize(1);
 
-		SpecialAbility specialAbility = talentInfo.getAttributes().getSpecialAbilities().get(0);
+		SpecialAbility specialAbility = talent.getAttributes().getSpecialAbilities().get(0);
 
 		assertThat(specialAbility.getCondition()).isEqualTo(AttributeCondition.of(SHADOW_BOLT));
 		assertThat(specialAbility.getAttributeModifier()).isInstanceOf(TemporaryEffect.class);

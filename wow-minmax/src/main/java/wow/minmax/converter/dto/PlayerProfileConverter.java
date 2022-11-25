@@ -30,7 +30,7 @@ public class PlayerProfileConverter extends Converter<PlayerProfile, PlayerProfi
 				playerProfile.getPhase(),
 				equipmentConverter.convert(playerProfile.getEquipment()),
 				buffConverter.convertList(playerProfile.getBuffs()),
-				talentConverter.convertList(playerProfile.getTalentInfos()),
+				talentConverter.convertList(playerProfile.getTalents()),
 				playerProfile.getLastModified()
 		);
 	}
