@@ -11,9 +11,9 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.modifiers.ProcEvent;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellInfo;
-import wow.commons.model.spells.SpellRankInfo;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
+import wow.commons.model.spells.*;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.model.unit.CreatureType;
@@ -39,9 +39,15 @@ import static wow.commons.util.Snapshot.CritMode;
 class SnapshotTest {
 	@BeforeEach
 	void setup() {
-		SpellInfo spellInfo = new SpellInfo(SHADOW_BOLT, DESTRUCTION, SHADOW, Percent.of(150), Percent.ZERO, null, false, null, false, null, null, null, null, null);
-		SpellRankInfo spellRankInfo = new SpellRankInfo(SHADOW_BOLT, 0, 0, 200, Duration.seconds(2), false, 400, 600, 0, 0, 0, 0, null, null, null, null);
-		spell = new Spell(spellInfo, spellRankInfo);
+		SpellIdAndRank id = new SpellIdAndRank(SHADOW_BOLT, 1);
+		Description description = new Description(SHADOW_BOLT.getName(), null, null);
+		Restriction noRestriction = Restriction.builder().build();
+		CastInfo castInfo = new CastInfo(200, Duration.seconds(2), false, null, null);
+		DirectDamageInfo directDamageInfo = new DirectDamageInfo(400, 600, 0, 0);
+		DotDamageInfo dotDamageInfo = new DotDamageInfo(0, 0, null);
+		DamagingSpellInfo damagingSpellInfo = new DamagingSpellInfo(Percent.of(150), Percent.ZERO, false, null, null, null, null);
+		SpellInfo spellInfo = new SpellInfo(SHADOW_BOLT, description, noRestriction, DESTRUCTION, SHADOW, null, false, damagingSpellInfo, null);
+		spell = new Spell(id, noRestriction, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 		baseStatInfo = new BaseStatInfo(0, WARLOCK, ORC, 0, 0, 100, 200, 300, 1000, 2000, Percent.of(10), 100);
 		combatRatingInfo = new CombatRatingInfo(0, 10, 20, 40);
 	}

@@ -31,6 +31,7 @@ import java.util.UUID;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.categorization.Binding.BINDS_ON_EQUIP;
 import static wow.commons.model.categorization.Binding.NO_BINDING;
+import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -96,9 +97,14 @@ abstract class ControllerTest {
 	}
 
 	private void createSpells() {
-		SpellInfo spellInfo = new SpellInfo(SpellId.SHADOW_BOLT, TalentTree.DESTRUCTION, SpellSchool.SHADOW, Percent._100, Percent.ZERO, Duration.ZERO, false, null, true, null, null, null, null, null);
-		SpellRankInfo spellRankInfo = new SpellRankInfo(SpellId.SHADOW_BOLT, 10, 70, 100, Duration.seconds(3), false, 500, 600, 0, 0, 0, 0, null, null, null, null);
-		spell = new Spell(spellInfo, spellRankInfo);
+		SpellIdAndRank id = new SpellIdAndRank(SHADOW_BOLT, 10);
+		Description description = new Description(SHADOW_BOLT.getName(), null, null);
+		DamagingSpellInfo damagingSpellInfo = new DamagingSpellInfo(Percent._100, Percent.ZERO, true, null, null, null, null);
+		SpellInfo spellInfo = new SpellInfo(SpellId.SHADOW_BOLT, description, Restriction.builder().build(), TalentTree.DESTRUCTION, SpellSchool.SHADOW, Duration.ZERO, false, damagingSpellInfo, null);
+		CastInfo castInfo = new CastInfo(100, Duration.seconds(3), false, null, null);
+		DirectDamageInfo directDamageInfo = new DirectDamageInfo(500, 600, 0, 0);
+		DotDamageInfo dotDamageInfo = new DotDamageInfo(0, 0, null);
+		spell = new Spell(id, Restriction.builder().requiredLevel(70).build(), spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 	}
 
 	private void createBuild() {

@@ -6,7 +6,6 @@ import wow.commons.model.effects.EffectId;
 import wow.commons.model.effects.EffectInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentInfo;
 
@@ -19,7 +18,6 @@ import java.util.Optional;
  * Date: 2020-09-28
  */
 public interface SpellDataRepository {
-	Optional<SpellInfo> getSpellInfo(SpellId spellId);
 	Optional<Spell> getSpell(SpellId spellId, Integer rank);
 	Optional<Spell> getSpellHighestRank(SpellId spellId, int level);
 	Optional<TalentInfo> getTalentInfo(TalentId talentId, Integer rank);

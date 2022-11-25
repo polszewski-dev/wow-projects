@@ -1,62 +1,123 @@
 package wow.commons.model.spells;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import wow.commons.model.Duration;
+import wow.commons.model.Percent;
+import wow.commons.model.config.ConfigurationElement;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.talents.TalentTree;
 
 /**
  * User: POlszewski
  * Date: 2021-09-19
  */
-@AllArgsConstructor
 @Getter
-public class Spell {
+public class Spell extends ConfigurationElement<SpellIdAndRank> {
+	@NonNull
 	private final SpellInfo spellInfo;
-	private final SpellRankInfo spellRankInfo;
+	@NonNull
+	private final CastInfo castInfo;
+	private final DirectDamageInfo directDamageInfo;
+	private final DotDamageInfo dotDamageInfo;
 
-	public SpellId getSpellId() {
-		return spellInfo.getSpellId();
+	public Spell(SpellIdAndRank id, Restriction restriction, SpellInfo spellInfo, CastInfo castInfo, DirectDamageInfo directDamageInfo, DotDamageInfo dotDamageInfo) {
+		super(id, spellInfo.getDescription(), restriction);
+		this.spellInfo = spellInfo;
+		this.castInfo = castInfo;
+		this.directDamageInfo = directDamageInfo;
+		this.dotDamageInfo = dotDamageInfo;
 	}
 
-	public String getName() {
-		return spellInfo.getSpellId().getName();
+	public SpellId getSpellId() {
+		return getId().getSpellId();
+	}
+
+	public Integer getRank() {
+		return getId().getRank();
 	}
 
 	public TalentTree getTalentTree() {
-		return getSpellInfo().getTalentTree();
+		return spellInfo.getTalentTree();
 	}
 
 	public SpellSchool getSpellSchool() {
-		return getSpellInfo().getSpellSchool();
+		return spellInfo.getSpellSchool();
 	}
 
-	public int getMinDmg() {
-		return spellRankInfo.getMinDmg();
+	public Percent getCoeffDirect() {
+		return spellInfo.getDamagingSpellInfo().getCoeffDirect();
 	}
 
-	public int getMaxDmg() {
-		return spellRankInfo.getMaxDmg();
+	public Percent getCoeffDot() {
+		return spellInfo.getDamagingSpellInfo().getCoeffDot();
 	}
 
-	public int getDoTDamage() {
-		return spellRankInfo.getDotDmg();
-	}
-
-	public boolean hasDirectComponent() {
-		return getMinDmg() != 0 && getMaxDmg() != 0;
-	}
-
-	public boolean hasDoTComponent() {
-		return getDoTDamage() != 0;
+	public int getManaCost() {
+		return castInfo.getManaCost();
 	}
 
 	public Duration getCastTime() {
-		return spellRankInfo.getCastTime();
+		return castInfo.getCastTime();
+	}
+
+	public boolean isChanneled() {
+		return castInfo.isChanneled();
+	}
+
+	public AdditionalCost getAdditionalCost() {
+		return castInfo.getAdditionalCost();
+	}
+
+	public AppliedEffect getAppliedEffect() {
+		return castInfo.getAppliedEffect();
+	}
+
+	public boolean hasDirectComponent() {
+		return directDamageInfo != null;
+	}
+
+	public boolean hasDotComponent() {
+		return dotDamageInfo != null;
+	}
+
+	public int getMinDmg() {
+		return directDamageInfo.getMinDmg();
+	}
+
+	public int getMaxDmg() {
+		return directDamageInfo.getMaxDmg();
+	}
+
+	public int getMinDmg2() {
+		return directDamageInfo.getMinDmg2();
+	}
+
+	public int getMaxDmg2() {
+		return directDamageInfo.getMaxDmg2();
+	}
+
+	public int getDotDmg() {
+		return dotDamageInfo.getDotDmg();
+	}
+
+	public int getNumTicks() {
+		return dotDamageInfo.getNumTicks();
+	}
+
+	public Duration getTickInterval() {
+		if (isChanneled()) {
+			return getCastTime().divideBy(getNumTicks());
+		}
+		return getTickInterval();
+	}
+
+	public Duration getDotDuration() {
+		return getTickInterval().multiplyBy(getNumTicks());
 	}
 
 	@Override
 	public String toString() {
-		return getName();
+		return getId().toString();
 	}
 }

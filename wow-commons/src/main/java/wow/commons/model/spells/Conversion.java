@@ -2,6 +2,7 @@ package wow.commons.model.spells;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import wow.commons.model.Percent;
 import wow.commons.util.EnumUtil;
 
@@ -50,8 +51,11 @@ public class Conversion {
 		}
 	}
 
+	@NonNull
 	private final From from;
+	@NonNull
 	private final To to;
+	@NonNull
 	private final Percent percent;
 
 	public boolean is(From from, To to) {

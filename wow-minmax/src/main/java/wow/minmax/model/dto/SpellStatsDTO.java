@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SpellStatsDTO {
-	private String spellName;
+	private SpellDTO spell;
 	private int dps;
 	private int totalDamage;
 	private double castTime;

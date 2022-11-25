@@ -9,7 +9,6 @@ import wow.commons.model.effects.EffectId;
 import wow.commons.model.effects.EffectInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.repository.SpellDataRepository;
@@ -27,49 +26,32 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class SpellDataRepositoryImpl implements SpellDataRepository {
-	private final Map<SpellId, SpellInfo> spellInfoBySpellId = new LinkedHashMap<>();
+	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
 	private final Map<TalentId, Map<Integer, TalentInfo>> talentInfoByTalentIdByRank = new LinkedHashMap<>();
 	private final Map<Integer, Map<Integer, TalentInfo>> talentInfoByCalculatorPositionIdByRank = new LinkedHashMap<>();
 	private final Map<EffectId, EffectInfo> effectInfoByEffectId = new LinkedHashMap<>();
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
 
 	@Override
-	public Optional<SpellInfo> getSpellInfo(SpellId spellId) {
-		return Optional.ofNullable(spellInfoBySpellId.get(spellId));
-	}
-
-	@Override
 	public Optional<Spell> getSpell(SpellId spellId, Integer rank) {
-		Optional<SpellInfo> optionalSpellInfo = getSpellInfo(spellId);
-
-		if (optionalSpellInfo.isEmpty()) {
+		List<Spell> spells = spellById.get(spellId);
+		if (spells == null) {
 			return Optional.empty();
 		}
-
-		SpellInfo spellInfo = optionalSpellInfo.orElseThrow();
-
-		if (spellInfo.hasRanks() && rank != null) {
-			return spellInfo.getRank(rank).map(spellRankInfo -> new Spell(spellInfo, spellRankInfo));
-		} else if (!spellInfo.hasRanks() && rank == null) {
-			return Optional.of(new Spell(spellInfo, null));
-		} else {
-			return Optional.empty();
-		}
+		return spells.stream()
+				.filter(spell -> Objects.equals(spell.getRank(), rank))
+				.findFirst();
 	}
 
 	@Override
 	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level) {
-		Optional<SpellInfo> optionalSpellInfo = getSpellInfo(spellId);
-
-		if (optionalSpellInfo.isEmpty()) {
+		List<Spell> spells = spellById.get(spellId);
+		if (spells == null) {
 			return Optional.empty();
 		}
-
-		SpellInfo spellInfo = optionalSpellInfo.orElseThrow();
-
-		return spellInfo
-				.getHighestRank(level)
-				.map(spellRankInfo -> new Spell(spellInfo, spellRankInfo));
+		return spells.stream()
+				.filter(spell -> spell.getRequiredLevel() <= level)
+				.max(Comparator.nullsFirst(Comparator.comparing(Spell::getRank)));
 	}
 
 	@Override
@@ -142,12 +124,6 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	}
 
 	private void validateAll() {
-		for (SpellInfo spellInfo : spellInfoBySpellId.values()) {
-			if (spellInfo.getTalentTree() == null) {
-				throw new IllegalArgumentException("No talent tree: " + spellInfo.getSpellId());
-			}
-		}
-
 		for (Map<Integer, TalentInfo> talentsByRank : talentInfoByTalentIdByRank.values()) {
 			for (TalentInfo talentInfo : talentsByRank.values()) {
 				if (!(1 <= talentInfo.getRank() && talentInfo.getRank() <= talentInfo.getMaxRank())) {
@@ -176,8 +152,8 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 		talentInfoByTalentIdByRank.get(talentInfo.getTalentId()).put(talentInfo.getRank(), talentInfo);
 	}
 
-	public void addSpellInfo(SpellInfo spellInfo) {
-		spellInfoBySpellId.put(spellInfo.getSpellId(), spellInfo);
+	public void addSpell(Spell spell) {
+		spellById.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
 	}
 
 	public void addEffectInfo(EffectInfo effectInfo) {

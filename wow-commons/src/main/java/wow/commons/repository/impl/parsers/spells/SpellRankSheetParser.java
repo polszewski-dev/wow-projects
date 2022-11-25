@@ -1,10 +1,13 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Duration;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.spells.*;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
+
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -13,7 +16,6 @@ import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 public class SpellRankSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colRank = column("rank");
-	private final ExcelColumn colLevel = column("level");
 	private final ExcelColumn colManaCost = column("mana cost");
 	private final ExcelColumn colCastTime = column("cast time");
 	private final ExcelColumn colChanneled = column("channeled");
@@ -32,9 +34,12 @@ public class SpellRankSheetParser extends WowExcelSheetParser {
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	public SpellRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	private final Map<SpellId, SpellInfo> spellInfoById;
+
+	public SpellRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository, Map<SpellId, SpellInfo> spellInfoById) {
 		super(sheetName);
 		this.spellDataRepository = spellDataRepository;
+		this.spellInfoById = spellInfoById;
 	}
 
 	@Override
@@ -44,39 +49,69 @@ public class SpellRankSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		SpellRankInfo spellRankInfo = getSpellRankInfo();
-		SpellInfo spellInfo = spellDataRepository.getSpellInfo(spellRankInfo.getSpellId()).orElseThrow();
-
-		if (spellInfo.getRanks().containsKey(spellRankInfo.getRank())) {
-			throw new IllegalArgumentException("Duplicate rank: " + spellRankInfo.getSpellId() + " " + spellRankInfo.getRank());
-		}
-
-		spellInfo.getRanks().put(spellRankInfo.getRank(), spellRankInfo);
+		Spell spellRankInfo = getSpell();
+		spellDataRepository.addSpell(spellRankInfo);
 	}
 
-	private SpellRankInfo getSpellRankInfo() {
+	private Spell getSpell() {
 		var spellId = colSpell.getEnum(SpellId::parse);
 		var rank = colRank.getInteger(0);
-		var level = colLevel.getInteger();
+
+		SpellIdAndRank id = new SpellIdAndRank(spellId, rank);
+		SpellInfo spellInfo = spellInfoById.get(spellId);
+		Restriction restriction = getRestriction().merge(spellInfo.getRestriction());
+		CastInfo castInfo = getCastInfo();
+		DirectDamageInfo directDamageInfo = getDirectDamageInfo();
+		DotDamageInfo dotDamageInfo = getDotDamageInfo();
+
+		return new Spell(id, restriction, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+	}
+
+	private CastInfo getCastInfo() {
 		var manaCost = colManaCost.getInteger();
 		var castTime = colCastTime.getDuration();
 		var channeled = colChanneled.getBoolean();
+		AdditionalCost additionalCost = getAdditionalCost();
+		AppliedEffect appliedEffect = getAppliedEffect();
+		return new CastInfo(manaCost, castTime, channeled, additionalCost, appliedEffect);
+	}
+
+	private DirectDamageInfo getDirectDamageInfo() {
 		var minDmg = colMinDmg.getInteger(0);
 		var maxDmg = colMaxDmg.getInteger(0);
+		var minDmg2 = colMinDmg2.getInteger(0);
+		var maxDmg2 = colMaxDmg2.getInteger(0);
+		if (minDmg == 0 && maxDmg == 0) {
+			return null;
+		}
+		return new DirectDamageInfo(minDmg, maxDmg, minDmg2, maxDmg2);
+	}
+
+	private DotDamageInfo getDotDamageInfo() {
 		var dotDmg = colDotDmg.getInteger(0);
 		var numTicks = colNumTicks.getInteger(0);
 		var tickInterval = colTickInterval.getDuration(null);
-		var minDmg2 = colMinDmg2.getInteger(0);
-		var maxDmg2 = colMaxDmg2.getInteger(0);
-		var appliedEffect = colAppliedEffect.getEnum(EffectId::parse, null);
-		var appliedEffectDuration = colAppliedEffectDuration.getDuration(null);
-		var additionalCost = getAdditionalCost();
+		if (dotDmg == 0) {
+			return null;
+		}
+		return new DotDamageInfo(dotDmg, numTicks, tickInterval);
+	}
 
-		if (appliedEffect != null && appliedEffectDuration == null) {
-			appliedEffectDuration = Duration.INFINITE;
+	private AppliedEffect getAppliedEffect() {
+		var effectId = colAppliedEffect.getEnum(EffectId::parse, null);
+		var duration = colAppliedEffectDuration.getDuration(null);
+
+		if (effectId == null && duration == null) {
+			return null;
+		}
+		if (effectId == null) {
+			throw new IllegalArgumentException("No effect id");
+		}
+		if (duration == null) {
+			duration = Duration.INFINITE;
 		}
 
-		return new SpellRankInfo(spellId, rank, level, manaCost, castTime, channeled, minDmg, maxDmg, minDmg2, maxDmg2, dotDmg, numTicks, tickInterval, additionalCost, appliedEffect, appliedEffectDuration);
+		return new AppliedEffect(effectId, duration);
 	}
 
 	private AdditionalCost getAdditionalCost() {

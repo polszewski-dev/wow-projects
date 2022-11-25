@@ -10,6 +10,7 @@ import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.talents.TalentId;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
 import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
@@ -87,6 +88,13 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		return new Description(name, icon, tooltip);
 	}
 
+	protected Description getDescription(String name) {
+		var icon = colIcon.getString(null);
+		var tooltip = colTooltip.getString(null);
+
+		return new Description(name, icon, tooltip);
+	}
+
 	private final ExcelColumn colPhase = column(PHASE, true);
 	private final ExcelColumn colReqLevel = column(REQ_LEVEL, true);
 	private final ExcelColumn colReqClass = column(REQ_CLASS, true);
@@ -95,6 +103,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colReqProfession = column(REQ_PROFESSION, true);
 	private final ExcelColumn colReqProfessionLevel = column(REQ_PROFESSION_LEVEL, true);
 	private final ExcelColumn colReqProfessionSpec = column(REQ_PROFESSION_SPEC, true);
+	private final ExcelColumn colReqTalent = column(REQ_TALENT, true);
 
 	protected Restriction getRestriction() {
 		var phase = colPhase.getEnum(Phase::parse, null);
@@ -105,6 +114,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var requiredProfession = colReqProfession.getEnum(Profession::parse, null);
 		var requiredProfessionLevel = colReqProfessionLevel.getInteger(0);
 		var requiredProfessionSpec = colReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
+		var requiredTalent = colReqTalent.getEnum(TalentId::parse, null);
 
 		return Restriction.builder()
 				.phase(phase)
@@ -115,6 +125,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				.requiredProfession(requiredProfession)
 				.requiredProfessionLevel(requiredProfessionLevel)
 				.requiredProfessionSpec(requiredProfessionSpec)
+				.requiredTalent(requiredTalent)
 				.build();
 	}
 

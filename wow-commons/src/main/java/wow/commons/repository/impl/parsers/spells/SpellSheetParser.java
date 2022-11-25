@@ -1,15 +1,14 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Percent;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.Restriction;
 import wow.commons.model.effects.EffectId;
-import wow.commons.model.spells.Conversion;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellInfo;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.spells.*;
 import wow.commons.model.talents.TalentTree;
-import wow.commons.repository.impl.SpellDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
+
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -23,7 +22,6 @@ public class SpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colCoeffDot = column("coeff dot");
 	private final ExcelColumn colCooldown = column("cooldown");
 	private final ExcelColumn colIgnoresGcd = column("ignores gcd");
-	private final ExcelColumn colRequiredTalent = column("required talent");
 	private final ExcelColumn colBolt = column("bolt");
 	private final ExcelColumn colConversionFrom = column("conversion: from");
 	private final ExcelColumn colConversionTo = column("conversion: to");
@@ -33,11 +31,11 @@ public class SpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colBonusDamageIfUnderEffect = column("bonus dmg if under effect");
 	private final ExcelColumn colDotScheme = column("dot scheme");
 
-	private final SpellDataRepositoryImpl spellDataRepository;
+	private final Map<SpellId, SpellInfo> spellInfoById;
 
-	public SpellSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public SpellSheetParser(String sheetName, Map<SpellId, SpellInfo> spellInfoById) {
 		super(sheetName);
-		this.spellDataRepository = spellDataRepository;
+		this.spellInfoById = spellInfoById;
 	}
 
 	@Override
@@ -49,30 +47,38 @@ public class SpellSheetParser extends WowExcelSheetParser {
 	protected void readSingleRow() {
 		SpellInfo spellInfo = getSpellInfo();
 
-		if (spellDataRepository.getSpellInfo(spellInfo.getSpellId()).isPresent()) {
+		if (spellInfoById.containsKey(spellInfo.getSpellId())) {
 			throw new IllegalArgumentException("Duplicate: " + spellInfo.getSpellId());
 		}
 
-		spellDataRepository.addSpellInfo(spellInfo);
+		spellInfoById.put(spellInfo.getSpellId(), spellInfo);
 	}
 
 	private SpellInfo getSpellInfo() {
 		var spellId = colSpell.getEnum(SpellId::parse);
 		var talentTree = colTree.getEnum(TalentTree::parse);
 		var spellSchool = colSchool.getEnum(SpellSchool::parse, null);
-		var coeffDirect = colCoeffDirect.getPercent(Percent.ZERO);
-		var coeffDot = colCoeffDot.getPercent(Percent.ZERO);
 		var cooldown = colCooldown.getDuration(null);
 		var ignoresGCD = colIgnoresGcd.getBoolean();
-		var requiredTalent = colRequiredTalent.getEnum(TalentId::parse, null);
+
+		Description description = getDescription(spellId.getName());
+		Restriction restriction = getRestriction();
+		DamagingSpellInfo damagingSpellInfo = getDamagingSpellInfo();
+		Conversion conversion = getConversion();
+
+		return new SpellInfo(spellId, description, restriction, talentTree, spellSchool, cooldown, ignoresGCD, damagingSpellInfo, conversion);
+	}
+
+	private DamagingSpellInfo getDamagingSpellInfo() {
+		var coeffDirect = colCoeffDirect.getPercent(Percent.ZERO);
+		var coeffDot = colCoeffDot.getPercent(Percent.ZERO);
 		var bolt = colBolt.getBoolean();
 		var requiredEffect = colRequiredEffect.getEnum(EffectId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(EffectId::parse, null);
 		var bonusDamageIfUnderEffect = colBonusDamageIfUnderEffect.getEnum(EffectId::parse, null);
 		var dotScheme = colDotScheme.getList(Integer::parseInt);
-		var conversion = getConversion();
 
-		return new SpellInfo(spellId, talentTree, spellSchool, coeffDirect, coeffDot, cooldown, ignoresGCD, requiredTalent, bolt, conversion, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect, dotScheme);
+		return new DamagingSpellInfo(coeffDirect, coeffDot, bolt, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect, dotScheme);
 	}
 
 	private Conversion getConversion() {

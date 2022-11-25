@@ -20,6 +20,10 @@ const slots = [
 	'RANGED'
 ]
 
+const getIcon = element => {
+	return `https://wow.zamimg.com/images/wow/icons/small/${element.icon}.jpg`
+}
+
 class Api {
 	static getProfiles() {
 		return Api.sendRequest(`/api/v1/profile/list`)
@@ -187,7 +191,7 @@ class ItemSelect extends DropdownSelect {
 		this._keyGenerator = item => item.id
 		this._valueGenerator = item =>
 				`
-				<img src="${getItemIcon(item)}"/>
+				<img src="${getIcon(item)}"/>
 				<span class="rarity-${item.rarity.toLowerCase()} item-header">&nbsp;${item.name}</span>
 				<span class="item-descr">[${item.source}]</span>
 				<span class="item-descr">(${item.attributes})</span>
@@ -202,7 +206,7 @@ class EnchantSelect extends DropdownSelect {
 		this._keyGenerator = enchant => enchant.id
 		this._valueGenerator = enchant =>
 				`
-				<img src="${getEnchantIcon(enchant)}"/>&nbsp;
+				<img src="${getIcon(enchant)}"/>&nbsp;
 				<span class="rarity-common item-header">${enchant.name}</span>&nbsp;
 				<span class="item-descr">(${enchant.attributes})</span>
 				`
@@ -216,7 +220,7 @@ class GemSelect extends DropdownSelect {
 		this._keyGenerator = gem => gem.id
 		this._valueGenerator = gem =>
 				`
-				<img src="${getGemIcon(gem)}"/>&nbsp;
+				<img src="${getIcon(gem)}"/>&nbsp;
 				<span class="rarity-${gem.rarity.toLowerCase()} item-header">${gem.name}</span>&nbsp;
 				<span class="item-descr">(${gem.attributes})</span>
 				`
@@ -709,7 +713,7 @@ class BuffEditor {
 					<input class="form-check-input" type="checkbox" value="" id="buff-select-${buff.id}">
 					<label class="form-check-label" for="buff-select-${buff.id}">
 						<span class="buff-name">
-							<img src="${getBuffIcon(buff)}"/>&nbsp;${buff.name}
+							<img src="${getIcon(buff)}"/>&nbsp;${buff.name}
 						</span>
 						<span class="buff-stats">
 							(${buff.attributes})
@@ -808,7 +812,7 @@ class SpellSummary {
 			data.forEach(spellStats => {
 				const html = `
 				<tr>
-					<td><strong><img src="${getSpellIcon(spellStats.spellName)}"/>&nbsp;${spellStats.spellName}</strong></td>
+					<td><strong><img src="${getIcon(spellStats.spell)}"/>&nbsp;${spellStats.spell.name}</strong></td>
 					<td>${spellStats.dps}</td>
 					<td>${spellStats.totalDamage}</td>
 					<td>${fmt(spellStats.castTime)}</td>

@@ -32,7 +32,7 @@ class SpellServiceTest extends ServiceTest {
 		Spell spell = underTest.getSpell(SpellId.SHADOW_BOLT, 70);
 
 		assertThat(spell.getSpellId()).isEqualTo(SpellId.SHADOW_BOLT);
-		assertThat(spell.getSpellRankInfo().getRank()).isEqualTo(11);
+		assertThat(spell.getRank()).isEqualTo(11);
 	}
 
 	@Test

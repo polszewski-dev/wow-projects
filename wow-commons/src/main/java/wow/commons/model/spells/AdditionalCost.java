@@ -2,6 +2,7 @@ package wow.commons.model.spells;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 
 /**
  * User: POlszewski
@@ -10,6 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class AdditionalCost {
+	@NonNull
 	private final CostType type;
 	private final int amount;
 	private final boolean scaled;

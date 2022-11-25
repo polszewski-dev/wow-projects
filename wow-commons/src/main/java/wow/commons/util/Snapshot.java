@@ -10,8 +10,6 @@ import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellInfo;
-import wow.commons.model.spells.SpellRankInfo;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.model.unit.CreatureType;
@@ -31,8 +29,6 @@ import java.util.stream.Stream;
 @Getter
 public class Snapshot implements StatProvider {
 	private final Spell spell;
-	private final SpellInfo spellInfo;
-	private final SpellRankInfo spellRankInfo;
 	private final BaseStatInfo baseStats;
 	private final CombatRatingInfo cr;
 	private final Attributes stats;
@@ -98,15 +94,13 @@ public class Snapshot implements StatProvider {
 
 	public Snapshot(Spell spell, BaseStatInfo baseStats, CombatRatingInfo cr, Attributes stats, PetType activePet, CreatureType enemyType) {
 		this.spell = spell;
-		this.spellInfo = spell.getSpellInfo();
-		this.spellRankInfo = spell.getSpellRankInfo();
 		this.baseStats = baseStats;
 		this.cr = cr;
 		this.stats = stats;
 		this.conditions = Stream.of(
-				AttributeCondition.of(spellInfo.getTalentTree()),
-				AttributeCondition.of(spellInfo.getSpellSchool()),
-				AttributeCondition.of(spellInfo.getSpellId()),
+				AttributeCondition.of(spell.getTalentTree()),
+				AttributeCondition.of(spell.getSpellSchool()),
+				AttributeCondition.of(spell.getSpellId()),
 				AttributeCondition.of(activePet),
 				AttributeCondition.of(enemyType),
 				AttributeCondition.EMPTY
@@ -201,20 +195,20 @@ public class Snapshot implements StatProvider {
 	}
 
 	private double getSpellCoeffDirectValue() {
-		double baseSpellCoeffDirect = spellInfo.getCoeffDirect().getCoefficient();
+		double baseSpellCoeffDirect = spell.getCoeffDirect().getCoefficient();
 		double talentSpellCoeff = statsSpellCoeffPct / 100.0;
 		return baseSpellCoeffDirect + talentSpellCoeff;
 	}
 
 	private double getSpellCoeffDoTValue() {
-		double baseSpellCoeffDoT = spellInfo.getCoeffDot().getCoefficient();
+		double baseSpellCoeffDoT = spell.getCoeffDot().getCoefficient();
 		double talentSpellCoeff = statsSpellCoeffPct / 100.0;
 		return baseSpellCoeffDoT + talentSpellCoeff;
 	}
 
 	private void calcCastTime() {
 		Duration castTimeReduction = Duration.seconds(statsCastTimeReduction);
-		Duration baseCastTime = spellRankInfo.getCastTime();
+		Duration baseCastTime = spell.getCastTime();
 		Duration reducedCastTime = baseCastTime.subtract(castTimeReduction);
 
 		castTime =  reducedCastTime.divideBy(1 + haste);
@@ -233,7 +227,7 @@ public class Snapshot implements StatProvider {
 	}
 
 	private void calcCost() {
-		double baseManaCost = spellRankInfo.getManaCost();
+		double baseManaCost = spell.getManaCost();
 		Percent costReductionPct = Percent.of(statsCostReductionPct);
 		manaCost = baseManaCost * costReductionPct.negate().toMultiplier();
 	}
@@ -353,22 +347,21 @@ public class Snapshot implements StatProvider {
 	}
 
 	public SpellStatistics getSpellStatistics(CritMode critMode, boolean useBothDamageRanges) {
-		int baseDmgMin = spellRankInfo.getMinDmg();
-		int baseDmgMax = spellRankInfo.getMaxDmg();
-		int baseDmgDoT = spellRankInfo.getDotDmg();
-
-		if (useBothDamageRanges) {
-			baseDmgMin += spellRankInfo.getMinDmg();
-			baseDmgMax += spellRankInfo.getMaxDmg2();
-		}
-
-		double actualCritChance = getActualCritChance(critMode);
-
 		// direct damage
 
 		double directDamage = 0;
 
-		if (baseDmgMin + baseDmgMax != 0) {
+		if (spell.hasDirectComponent()) {
+			int baseDmgMin = spell.getMinDmg();
+			int baseDmgMax = spell.getMaxDmg();
+
+			if (useBothDamageRanges) {
+				baseDmgMin += spell.getMinDmg2();
+				baseDmgMax += spell.getMaxDmg2();
+			}
+
+			double actualCritChance = getActualCritChance(critMode);
+
 			directDamage += (baseDmgMin + baseDmgMax) / 2.0;
 			directDamage += spellCoeffDirect * sp * spMultiplier;
 			directDamage *= directDamageDoneMultiplier;
@@ -380,8 +373,8 @@ public class Snapshot implements StatProvider {
 
 		double dotDamage = 0;
 
-		if (baseDmgDoT != 0) {
-			dotDamage = baseDmgDoT;
+		if (spell.hasDotComponent()) {
+			dotDamage = spell.getDotDmg();
 			dotDamage += spellCoeffDoT * sp * spMultiplier;
 			dotDamage *= dotDamageDoneMultiplier;
 			dotDamage *= hitChance;

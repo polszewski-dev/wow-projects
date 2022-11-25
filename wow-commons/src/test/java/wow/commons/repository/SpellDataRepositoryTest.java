@@ -17,7 +17,7 @@ import wow.commons.model.attributes.complex.modifiers.TemporaryEffect;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
-import wow.commons.model.spells.SpellInfo;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.TalentInfo;
 
 import java.util.Optional;
@@ -44,26 +44,26 @@ class SpellDataRepositoryTest {
 	@Test
 	@DisplayName("SpellInfo is read correctly")
 	void spellInfoIsCorrect() {
-		Optional<SpellInfo> optionalSpellInfo = underTest.getSpellInfo(SHADOW_BOLT);
+		Optional<Spell> optionalSpell = underTest.getSpell(SHADOW_BOLT, 11);
 
-		assertThat(optionalSpellInfo).isPresent();
+		assertThat(optionalSpell).isPresent();
 
-		SpellInfo spellInfo = optionalSpellInfo.orElseThrow();
+		Spell spell = optionalSpell.orElseThrow();
 
-		assertThat(spellInfo.getSpellId()).isEqualTo(SHADOW_BOLT);
-		assertThat(spellInfo.getTalentTree()).isEqualTo(DESTRUCTION);
-		assertThat(spellInfo.getSpellSchool()).isEqualTo(SHADOW);
-		assertThat(spellInfo.getCoeffDirect().getValue()).isEqualTo(85.71, PRECISION);
-		assertThat(spellInfo.getCoeffDot()).isEqualTo(Percent.ZERO);
-		assertThat(spellInfo.getCooldown()).isNull();
-		assertThat(spellInfo.isIgnoresGCD()).isFalse();
-		assertThat(spellInfo.getRequiredTalent()).isNull();
-		assertThat(spellInfo.isBolt()).isTrue();
-		assertThat(spellInfo.getConversion()).isNull();
-		assertThat(spellInfo.getRequiredSpellEffect()).isNull();
-		assertThat(spellInfo.getSpellEffectRemovedOnHit()).isNull();
-		assertThat(spellInfo.getBonusDamageIfUnderSpellEffect()).isNull();
-		assertThat(spellInfo.getDotScheme()).isEmpty();
+		assertThat(spell.getSpellId()).isEqualTo(SHADOW_BOLT);
+		assertThat(spell.getTalentTree()).isEqualTo(DESTRUCTION);
+		assertThat(spell.getSpellSchool()).isEqualTo(SHADOW);
+		assertThat(spell.getCoeffDirect().getValue()).isEqualTo(85.71, PRECISION);
+		assertThat(spell.getCoeffDot()).isEqualTo(Percent.ZERO);
+		assertThat(spell.getSpellInfo().getCooldown()).isNull();
+		assertThat(spell.getSpellInfo().isIgnoresGCD()).isFalse();
+		assertThat(spell.getRestriction().getRequiredTalent()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().isBolt()).isTrue();
+		assertThat(spell.getSpellInfo().getConversion()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getRequiredSpellEffect()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getSpellEffectRemovedOnHit()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getBonusDamageIfUnderSpellEffect()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getDotScheme()).isEmpty();
 	}
 
 	@Test

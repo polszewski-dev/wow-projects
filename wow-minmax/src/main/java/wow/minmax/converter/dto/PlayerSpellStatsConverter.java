@@ -2,8 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.spells.SpellInfo;
-import wow.commons.model.spells.SpellRankInfo;
+import wow.commons.model.spells.Spell;
 import wow.commons.util.Snapshot;
 import wow.commons.util.SpellStatistics;
 import wow.minmax.converter.Converter;
@@ -17,19 +16,20 @@ import wow.minmax.model.dto.SpellStatsDTO;
 @Component
 @AllArgsConstructor
 public class PlayerSpellStatsConverter extends Converter<PlayerSpellStats, SpellStatsDTO> {
+	private final SpellConverter spellConverter;
+
 	@Override
 	protected SpellStatsDTO doConvert(PlayerSpellStats playerSpellStats) {
 		SpellStatistics spellStatistics = playerSpellStats.getSpellStatistics();
 		Snapshot snapshot = spellStatistics.getSnapshot();
 
-		SpellInfo spellInfo = snapshot.getSpellInfo();
-		SpellRankInfo spellRankInfo = snapshot.getSpellRankInfo();
+		Spell spell = snapshot.getSpell();
 
-		boolean dir = spellRankInfo.getMinDmg() != 0 && spellRankInfo.getMaxDmg() != 0;
-		boolean dot = spellRankInfo.getDotDmg() != 0;
+		boolean dir = spell.hasDirectComponent();
+		boolean dot = spell.hasDotComponent();
 
 		return new SpellStatsDTO(
-				spellInfo.getSpellId().getName(),
+				spellConverter.convert(spell),
 				(int) spellStatistics.getDps(),
 				(int) spellStatistics.getTotalDamage(),
 				spellStatistics.getCastTime().getSeconds(),
