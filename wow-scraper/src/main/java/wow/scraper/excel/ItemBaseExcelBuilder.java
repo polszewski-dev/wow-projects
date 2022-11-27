@@ -11,7 +11,11 @@ import wow.commons.model.professions.Profession;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.repository.impl.parsers.excel.ComplexAttributeMapper;
 import wow.scraper.model.WowheadItemQuality;
-import wow.scraper.parsers.*;
+import wow.scraper.parsers.WowheadSourceParser;
+import wow.scraper.parsers.tooltip.AbstractTooltipParser;
+import wow.scraper.parsers.tooltip.GemTooltipParser;
+import wow.scraper.parsers.tooltip.ItemTooltipParser;
+import wow.scraper.parsers.tooltip.TradedItemParser;
 
 import java.io.IOException;
 import java.util.Collection;

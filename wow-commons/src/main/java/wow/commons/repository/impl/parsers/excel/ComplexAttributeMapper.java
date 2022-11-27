@@ -12,8 +12,8 @@ import wow.commons.model.attributes.complex.special.*;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.talents.TalentTree;
-import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
 import wow.commons.util.AttributesBuilder;
+import wow.commons.util.PrimitiveAttributeSupplier;
 import wow.commons.util.parser.simple.ParseResult;
 import wow.commons.util.parser.simple.SimpleRecordMapper;
 

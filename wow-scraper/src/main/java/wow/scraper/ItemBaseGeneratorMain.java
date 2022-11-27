@@ -4,7 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import wow.scraper.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
-import wow.scraper.parsers.*;
+import wow.scraper.parsers.WowheadSourceParser;
+import wow.scraper.parsers.tooltip.AbstractTooltipParser;
+import wow.scraper.parsers.tooltip.GemTooltipParser;
+import wow.scraper.parsers.tooltip.ItemTooltipParser;
+import wow.scraper.parsers.tooltip.TradedItemParser;
 
 import java.io.IOException;
 import java.util.List;

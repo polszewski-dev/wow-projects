@@ -13,8 +13,8 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.unit.CharacterClass;
 import wow.commons.model.unit.Race;
-import wow.commons.repository.impl.parsers.stats.PrimitiveAttributeSupplier;
 import wow.commons.util.AttributesBuilder;
+import wow.commons.util.PrimitiveAttributeSupplier;
 
 import java.util.Optional;
 
