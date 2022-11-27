@@ -1,5 +1,7 @@
 package wow.commons.model;
 
+import wow.commons.util.FormatUtil;
+
 /**
  * User: POlszewski
  * Date: 2022-09-25
@@ -31,6 +33,18 @@ public final class Percent implements Comparable<Percent> {
 	public static Percent fromMultiplier(double multiplier) {
 		double value = (multiplier - 1) * 100;
 		return of(value);
+	}
+
+	public static Percent parse(String value) {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+
+		if (value.endsWith("%")) {
+			return parse(value.substring(0, value.length() - 1));
+		}
+
+		return of(Double.parseDouble(value));
 	}
 
 	public double getCoefficient() {
@@ -90,11 +104,7 @@ public final class Percent implements Comparable<Percent> {
 
 	@Override
 	public String toString() {
-		if (value % 1 == 0) {
-			return (int)value + "%";
-		} else {
-			return String.format("%.2f%%", value);
-		}
+		return FormatUtil.decimalPointOnlyIfNecessary(value, "%s%%");
 	}
 
 	@Override

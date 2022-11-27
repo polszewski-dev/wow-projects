@@ -68,7 +68,7 @@ public enum PrimitiveAttributeId implements AttributeId {
 	ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT("AdditionalSpellDamageTakenPct", "additinal spell dmg taken", DisplayHint.PERCENT),
 	SPELL_CRIT_PCT("SpellCritPct", "crit", DisplayHint.PERCENT),
 	SPELL_HIT_PCT("SpellHitPct", "hit", DisplayHint.PERCENT),
-	SPELL_HASTE_PCT("SpellHastePct", "haste"),
+	SPELL_HASTE_PCT("SpellHastePct", "haste", DisplayHint.PERCENT),
 	INCREASED_CRITICAL_DAMAGE_PCT("IncreasedCriticalDamagePct", "increased crit dmg", DisplayHint.PERCENT),
 	DAMAGE_TAKEN_PCT("DamageTakenPct", "increased spell dmg", DisplayHint.PERCENT),
 	BLOCK_PCT("BlockPct", DisplayHint.PERCENT),
@@ -134,12 +134,16 @@ public enum PrimitiveAttributeId implements AttributeId {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 
+	public String getShortName() {
+		return shortName != null ? shortName : key;
+	}
+
 	public DisplayHint getDisplayHint() {
 		return displayHint;
 	}
 
 	@Override
 	public String toString() {
-		return shortName != null ? shortName : key;
+		return key;
 	}
 }

@@ -4,6 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.util.FormatUtil;
 
 import java.util.Objects;
 
@@ -87,7 +88,7 @@ public class PrimitiveAttribute extends Attribute {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s%s", getValueString(), id, getConditionString());
+		return String.format("%s %s%s", getValueString(), id.getShortName(), getConditionString());
 	}
 
 	private String getValueString() {
@@ -97,10 +98,6 @@ public class PrimitiveAttribute extends Attribute {
 			return getDuration().toString();
 		}
 
-		if (value % 1 == 0) {
-			return Integer.toString((int)value);
-		} else {
-			return String.format("%.2f", value);
-		}
+		return FormatUtil.decimalPointOnlyIfNecessary(value);
 	}
 }
