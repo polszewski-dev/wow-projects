@@ -93,7 +93,7 @@ abstract class ControllerTest {
 	private void createBuffs() {
 		Description description = new Description("Test Buff", null, "...");
 		Restriction restriction = Restriction.builder().requiredLevel(1).build();
-		buff = new Buff(401, description, restriction, BuffType.SELF_BUFF, BuffExclusionGroup.SELF_BUFF, Attributes.of(SPELL_DAMAGE, 100), SpellId.FEL_ARMOR, Duration.INFINITE, Duration.ZERO);
+		buff = new Buff(401, description, restriction, BuffType.SELF_BUFF, BuffExclusionGroup.SELF_BUFF, Attributes.of(SPELL_DAMAGE, 100), SpellId.FEL_ARMOR);
 	}
 
 	private void createSpells() {

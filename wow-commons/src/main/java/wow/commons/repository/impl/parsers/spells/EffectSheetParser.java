@@ -1,17 +1,9 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.effects.*;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski
@@ -60,18 +52,7 @@ public class EffectSheetParser extends BenefitSheetParser {
 	}
 
 	private Attributes getEffectAttributes() {
-		return attachConditions(Attributes.of(getPrimitiveAttributes()));
-	}
-
-	private List<PrimitiveAttribute> getPrimitiveAttributes() {
-		return Stream.of(
-				getDouble(EFFECT_INCREASE_PCT, "effect increase%"),
-				getDouble(DAMAGE_TAKEN_INCREASE_PCT, "damage taken increase%"),
-				getDouble(SPELL_DAMAGE, "sp bonus"),
-				getDouble(NUM_NEXT_SPELLS_CAST_INSTANTLY, "#next spells cast instantly")
-		)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+		return attachConditions(readAttributes(1));
 	}
 
 	private RemoveCondition getRemoveCondition() {

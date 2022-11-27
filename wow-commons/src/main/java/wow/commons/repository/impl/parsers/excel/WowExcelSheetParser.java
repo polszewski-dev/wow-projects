@@ -52,7 +52,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 
 		private Optional<Percent> getOptionalPercent() {
 			return getOptionalString()
-					.map(seconds -> Percent.of(Double.parseDouble(seconds)));
+					.map(value -> Percent.of(Double.parseDouble(value)));
 		}
 
 		private Optional<Duration> getOptionalDuration() {
@@ -129,20 +129,35 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				.build();
 	}
 
-	private final ExcelColumn colStat = column("stat");
-	private final ExcelColumn colAmount = column("amount");
-
 	protected Attributes readAttributes(int maxAttributes) {
+		return readAttributes("", maxAttributes);
+	}
+
+	protected Attributes readAttributes(String prefix, int maxAttributes) {
 		AttributesBuilder builder = new AttributesBuilder();
 		for (int statNo = 1; statNo <= maxAttributes; ++statNo) {
-			var attributeStr = colStat.multi(statNo).getString(null);
-			if (attributeStr != null) {
-				PrimitiveAttributeSupplier attributeParser = PrimitiveAttributeSupplier.fromString(attributeStr);
-				int amount = colAmount.multi(statNo).getInteger();
-				builder.addAttributeList(attributeParser.getAttributeList(amount));
-			}
+			readAttribute(builder, prefix, statNo);
 		}
 
 		return builder.toAttributes();
+	}
+
+	private void readAttribute(AttributesBuilder builder, String prefix, int statNo) {
+		ExcelColumn colStat = column(colStat(prefix, statNo));
+		ExcelColumn colAmount = column(colAmount(prefix, statNo));
+
+		var attributeStr = colStat.getString(null);
+
+		if (attributeStr == null) {
+			return;
+		}
+
+		if (colAmount.getString(null) != null) {
+			var attributeSupplier = PrimitiveAttributeSupplier.fromString(attributeStr);
+			attributeSupplier.addAttributeList(builder, colAmount.getDouble());
+		} else {
+			var attribute = ComplexAttributeMapper.fromString(attributeStr);
+			builder.addAttribute(attribute);
+		}
 	}
 }

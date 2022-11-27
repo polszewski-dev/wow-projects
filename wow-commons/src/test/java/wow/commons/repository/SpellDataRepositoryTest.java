@@ -110,8 +110,6 @@ class SpellDataRepositoryTest {
 		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
 		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.COE);
 		assertThat(buff.getSourceSpell()).isEqualTo(CURSE_OF_THE_ELEMENTS);
-		assertThat(buff.getDuration()).isNull();
-		assertThat(buff.getCooldown()).isNull();
 
 		Attributes stats = buff.getAttributes();
 
