@@ -10,7 +10,7 @@ import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.modifiers.ProcEvent;
+import wow.commons.model.attributes.complex.special.ProcEvent;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.spells.*;

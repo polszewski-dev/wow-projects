@@ -132,7 +132,7 @@ public class StatsController {
 
 		return new SpecialAbilityStatsDTO(
 				specialAbility.getLine(),
-				specialAbility.getAttributeModifier().toString(),
+				specialAbility.toString(),
 				statEquivalent.statString()
 		);
 	}

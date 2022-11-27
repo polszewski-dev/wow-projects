@@ -1,9 +1,12 @@
-package wow.commons.model.attributes.complex.modifiers;
+package wow.commons.model.attributes.complex.special;
 
+import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.effects.EffectId;
 
 import java.util.stream.Collectors;
@@ -13,16 +16,18 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.EXTRA_
 
 /**
  * User: POlszewski
- * Date: 2021-11-06
+ * Date: 2022-11-26
  */
-public class TemporaryEffect implements AttributeModifier {
+@Getter
+public class TalentProcAbility extends SpecialAbility {
 	private final ProcEvent event;
 	private final Percent chance;
 	private final EffectId effectId;
 	private final Duration duration;
 	private final int stacks;
 
-	public TemporaryEffect(ProcEvent event, Percent chance, EffectId effectId, Duration duration, int stacks) {
+	public TalentProcAbility(ProcEvent event, Percent chance, EffectId effectId, Duration duration, int stacks, String line, AttributeCondition condition) {
+		super(line, 4, condition);
 		this.event = event;
 		this.chance = chance;
 		this.effectId = effectId;
@@ -31,28 +36,15 @@ public class TemporaryEffect implements AttributeModifier {
 	}
 
 	@Override
-	public ProcEvent getEvent() {
-		return event;
+	public TalentProcAbility attachCondition(AttributeCondition condition) {
+		return new TalentProcAbility(event, chance, effectId, duration, stacks, getLine(), condition);
 	}
 
 	@Override
-	public Percent getChance() {
-		return chance;
+	public Attributes getStatEquivalent(StatProvider statProvider) {
+		return getAveragedAttributes(statProvider);
 	}
 
-	public EffectId getEffectId() {
-		return effectId;
-	}
-
-	public Duration getDuration() {
-		return duration;
-	}
-
-	public int getStacks() {
-		return stacks;
-	}
-
-	@Override
 	public Attributes getAveragedAttributes(StatProvider statProvider) {
 		double critChance = statProvider.getCritChance();
 		double extraCritCoeff = getExtraCritCoeff(critChance);
@@ -60,11 +52,6 @@ public class TemporaryEffect implements AttributeModifier {
 			return Attributes.EMPTY;
 		}
 		return Attributes.of(EXTRA_CRIT_COEFF, extraCritCoeff);
-	}
-
-	@Override
-	public int getPriority() {
-		return 3;
 	}
 
 	private double getExtraCritCoeff(double critChance) {

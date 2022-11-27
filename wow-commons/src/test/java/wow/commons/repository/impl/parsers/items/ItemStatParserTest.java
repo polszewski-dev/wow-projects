@@ -7,9 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.modifiers.ProcTemporaryModifier;
-import wow.commons.model.attributes.complex.modifiers.TemporaryModifier;
+import wow.commons.model.attributes.complex.special.OnUseAbility;
+import wow.commons.model.attributes.complex.special.ProcAbility;
 import wow.commons.repository.impl.parsers.stats.StatParser;
 import wow.commons.repository.impl.parsers.stats.StatPatternRepository;
 
@@ -39,16 +38,12 @@ class ItemStatParserTest {
 		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
 		assertThat(specialAbilities).isNotNull().hasSize(1);
-		assertThat(specialAbilities.get(0)).isOfAnyClassIn(SpecialAbility.class);
+		assertThat(specialAbilities.get(0)).isInstanceOf(ProcAbility.class);
 
-		SpecialAbility specialAbility = (SpecialAbility)specialAbilities.get(0);
+		ProcAbility specialAbility = (ProcAbility)specialAbilities.get(0);
 
 		assertThat(specialAbility.getLine()).isEqualTo(line);
-		assertThat(specialAbility.getAttributeModifier()).isOfAnyClassIn(ProcTemporaryModifier.class);
-
-		ProcTemporaryModifier proc = (ProcTemporaryModifier) specialAbility.getAttributeModifier();
-
-		assertThat(proc).hasToString(expectedStatString);
+		assertThat(specialAbility).hasToString(expectedStatString);
 	}
 
 	@DisplayName("Test parsing on-use strings")
@@ -66,16 +61,12 @@ class ItemStatParserTest {
 		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
 		assertThat(specialAbilities).isNotNull().hasSize(1);
-		assertThat(specialAbilities.get(0)).isOfAnyClassIn(SpecialAbility.class);
+		assertThat(specialAbilities.get(0)).isInstanceOf(OnUseAbility.class);
 
-		SpecialAbility specialAbility = (SpecialAbility)specialAbilities.get(0);
+		OnUseAbility specialAbility = (OnUseAbility)specialAbilities.get(0);
 
 		assertThat(specialAbility.getLine()).isEqualTo(line);
-		assertThat(specialAbility.getAttributeModifier()).isOfAnyClassIn(TemporaryModifier.class);
-
-		TemporaryModifier onUse = (TemporaryModifier) specialAbility.getAttributeModifier();
-
-		assertThat(onUse).hasToString(expectedStatString);
+		assertThat(specialAbility).hasToString(expectedStatString);
 	}
 
 	static Stream<Arguments> getProcTestArguments() {

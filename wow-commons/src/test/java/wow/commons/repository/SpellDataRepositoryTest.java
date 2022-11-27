@@ -13,7 +13,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.modifiers.TemporaryEffect;
+import wow.commons.model.attributes.complex.special.TalentProcAbility;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
@@ -23,7 +23,7 @@ import wow.commons.model.talents.Talent;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attributes.complex.modifiers.ProcEvent.SPELL_CRIT;
+import static wow.commons.model.attributes.complex.special.ProcEvent.SPELL_CRIT;
 import static wow.commons.model.effects.EffectId.SHADOW_VULNERABILITY_20;
 import static wow.commons.model.spells.SpellId.CURSE_OF_THE_ELEMENTS;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
@@ -84,15 +84,15 @@ class SpellDataRepositoryTest {
 		SpecialAbility specialAbility = talent.getAttributes().getSpecialAbilities().get(0);
 
 		assertThat(specialAbility.getCondition()).isEqualTo(AttributeCondition.of(SHADOW_BOLT));
-		assertThat(specialAbility.getAttributeModifier()).isInstanceOf(TemporaryEffect.class);
+		assertThat(specialAbility).isInstanceOf(TalentProcAbility.class);
 
-		TemporaryEffect attributeModifier = (TemporaryEffect) specialAbility.getAttributeModifier();
+		TalentProcAbility ability = (TalentProcAbility) specialAbility;
 
-		assertThat(attributeModifier.getEvent()).isEqualTo(SPELL_CRIT);
-		assertThat(attributeModifier.getChance()).isEqualTo(Percent._100);
-		assertThat(attributeModifier.getEffectId()).isEqualTo(SHADOW_VULNERABILITY_20);
-		assertThat(attributeModifier.getDuration()).isEqualTo(Duration.seconds(12));
-		assertThat(attributeModifier.getStacks()).isEqualTo(4);
+		assertThat(ability.getEvent()).isEqualTo(SPELL_CRIT);
+		assertThat(ability.getChance()).isEqualTo(Percent._100);
+		assertThat(ability.getEffectId()).isEqualTo(SHADOW_VULNERABILITY_20);
+		assertThat(ability.getDuration()).isEqualTo(Duration.seconds(12));
+		assertThat(ability.getStacks()).isEqualTo(4);
 	}
 
 	@Test

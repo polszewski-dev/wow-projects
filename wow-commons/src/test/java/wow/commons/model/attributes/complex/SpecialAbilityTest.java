@@ -10,13 +10,13 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.complex.modifiers.ProcEvent;
+import wow.commons.model.attributes.complex.special.ProcEvent;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static wow.commons.model.attributes.complex.modifiers.ProcEvent.*;
+import static wow.commons.model.attributes.complex.special.ProcEvent.*;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
 
 /**

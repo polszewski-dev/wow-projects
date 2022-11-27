@@ -7,7 +7,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.EffectIncreasePerEffectOnTarget;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
-import wow.commons.model.attributes.complex.modifiers.ProcEvent;
+import wow.commons.model.attributes.complex.special.ProcEvent;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
@@ -149,7 +149,7 @@ public class TalentSheetParser extends BenefitSheetParser {
 		var duration = colDuration.getDuration(Duration.INFINITE);
 		var stacks = colStacks.getInteger(1);
 
-		return SpecialAbility.talentProc(type, chancePct, effectId, duration, stacks);
+		return SpecialAbility.talentProc(type, chancePct, effectId, duration, stacks, null);
 	}
 
 	private final ExcelColumn colEffectTree = column("effect increase per effect on target: tree");

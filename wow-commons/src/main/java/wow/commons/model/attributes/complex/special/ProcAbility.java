@@ -1,45 +1,44 @@
-package wow.commons.model.attributes.complex.modifiers;
+package wow.commons.model.attributes.complex.special;
 
+import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
+import wow.commons.model.attributes.complex.SpecialAbility;
 
 /**
  * User: POlszewski
- * Date: 2022-01-13
+ * Date: 2022-11-26
  */
-public class ProcTemporaryModifier implements AttributeModifier {
+@Getter
+public class ProcAbility extends SpecialAbility {
 	private final ProcEvent event;
 	private final Percent chance;
 	private final Attributes attributes;
 	private final Duration duration;
 	private final Duration cooldown;
 
-	public ProcTemporaryModifier(ProcEvent event, Percent chance, Attributes attributes, Duration duration, Duration cooldown) {
+	public ProcAbility(ProcEvent event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line, AttributeCondition condition) {
+		super(line, 3, condition);
 		this.event = event;
 		this.chance = chance;
 		this.attributes = attributes;
 		this.duration = duration;
 		this.cooldown = cooldown;
-
 		if (event == null || chance == null || attributes == null || duration == null) {
 			throw new NullPointerException();
 		}
 	}
 
 	@Override
-	public ProcEvent getEvent() {
-		return event;
+	public ProcAbility attachCondition(AttributeCondition condition) {
+		return new ProcAbility(event, chance, attributes, duration, cooldown, getLine(), condition);
 	}
 
 	@Override
-	public Percent getChance() {
-		return chance;
-	}
-
-	@Override
-	public Attributes getAveragedAttributes(StatProvider statProvider) {
+	public Attributes getStatEquivalent(StatProvider statProvider) {
 		double hitChance = statProvider.getHitChance();
 		double critChance = statProvider.getCritChance();
 		Duration castTime = statProvider.getEffectiveCastTime();
@@ -66,11 +65,6 @@ public class ProcTemporaryModifier implements AttributeModifier {
 		} else {
 			throw new IllegalArgumentException("Unhandled proc event: " + event);
 		}
-	}
-
-	@Override
-	public int getPriority() {
-		return 4;
 	}
 
 	@Override

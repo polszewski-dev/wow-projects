@@ -1,91 +1,48 @@
 package wow.commons.model.attributes.complex;
 
+import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatEquivalentProvider;
-import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.complex.modifiers.*;
+import wow.commons.model.attributes.complex.special.*;
 import wow.commons.model.effects.EffectId;
-
-import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2021-10-15
  */
-public final class SpecialAbility extends ComplexAttribute implements StatEquivalentProvider {
-	private final AttributeModifier attributeModifier;
+@Getter
+public abstract class SpecialAbility extends ComplexAttribute implements StatEquivalentProvider {
 	private final String line;
+	private final int priority;
 
-	private SpecialAbility(AttributeModifier attributeModifier, String line) {
-		this(attributeModifier, line, AttributeCondition.EMPTY);
-	}
-
-	private SpecialAbility(AttributeModifier attributeModifier, String line, AttributeCondition condition) {
+	protected SpecialAbility(String line, int priority, AttributeCondition condition) {
 		super(ComplexAttributeId.SPECIAL_ABILITIES, condition);
-		this.attributeModifier = attributeModifier;
 		this.line = line;
+		this.priority = priority;
 	}
 
-	public static SpecialAbility onUse(Attributes attributes, Duration duration, Duration cooldown, String line) {
-		return new SpecialAbility(new TemporaryModifier(attributes, duration, cooldown), line);
+	public static OnUseAbility onUse(Attributes attributes, Duration duration, Duration cooldown, String line) {
+		return new OnUseAbility(attributes, duration, cooldown, line, AttributeCondition.EMPTY);
 	}
 
-	public static SpecialAbility proc(ProcEvent event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line) {
-		return new SpecialAbility(new ProcTemporaryModifier(event, chance, attributes, duration, cooldown), line);
+	public static ProcAbility proc(ProcEvent event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line) {
+		return new ProcAbility(event, chance, attributes, duration, cooldown, line, AttributeCondition.EMPTY);
 	}
 
-	public static SpecialAbility talentProc(ProcEvent event, Percent chance, EffectId effectId, Duration duration, int stacks) {
-		return new SpecialAbility(new TemporaryEffect(event, chance, effectId, duration, stacks), null);
+	public static TalentProcAbility talentProc(ProcEvent event, Percent chance, EffectId effectId, Duration duration, int stacks, String line) {
+		return new TalentProcAbility(event, chance, effectId, duration, stacks, line, AttributeCondition.EMPTY);
 	}
 
-	public static SpecialAbility equivalent(Attributes attributes, String line) {
-		return new SpecialAbility(new AttributeEquivalent(attributes), line);
+	public static EquivalentAbility equivalent(Attributes attributes, String line) {
+		return new EquivalentAbility(attributes, line, AttributeCondition.EMPTY);
 	}
 
-	public static SpecialAbility misc(String line) {
-		return new SpecialAbility(new AttributeEquivalent(Attributes.EMPTY), line);
+	public static MiscAbility misc(String line) {
+		return new MiscAbility(line, AttributeCondition.EMPTY);
 	}
 
-	@Override
-	public Attributes getStatEquivalent(StatProvider statProvider) {
-		return attributeModifier.getAveragedAttributes(statProvider);
-	}
-
-	public AttributeModifier getAttributeModifier() {
-		return attributeModifier;
-	}
-
-	public String getLine() {
-		return line;
-	}
-
-	public int getPriority() {
-		return attributeModifier.getPriority();
-	}
-
-	@Override
-	public SpecialAbility attachCondition(AttributeCondition condition) {
-		return new SpecialAbility(attributeModifier, line, condition);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof SpecialAbility)) return false;
-		SpecialAbility that = (SpecialAbility) o;
-		return Objects.equals(line, that.line);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(line);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("%s%s", line != null ? line : attributeModifier.toString(), getConditionString());
-	}
+	public abstract String toString();
 }

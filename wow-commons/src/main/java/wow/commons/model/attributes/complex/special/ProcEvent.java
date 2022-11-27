@@ -1,4 +1,4 @@
-package wow.commons.model.attributes.complex.modifiers;
+package wow.commons.model.attributes.complex.special;
 
 import wow.commons.util.EnumUtil;
 
