@@ -17,7 +17,12 @@ public class SpellSchoolCondition implements AttributeCondition {
 	private final SpellSchool spellSchool;
 
 	@Override
-	public String toString() {
+	public String getConditionString() {
 		return "school: " + spellSchool;
+	}
+
+	@Override
+	public String toString() {
+		return spellSchool.toString();
 	}
 }

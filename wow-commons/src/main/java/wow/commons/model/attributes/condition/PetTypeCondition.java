@@ -17,7 +17,12 @@ public class PetTypeCondition implements AttributeCondition {
 	private final PetType petType;
 
 	@Override
-	public String toString() {
+	public String getConditionString() {
 		return "pet: " + petType;
+	}
+
+	@Override
+	public String toString() {
+		return petType.toString();
 	}
 }

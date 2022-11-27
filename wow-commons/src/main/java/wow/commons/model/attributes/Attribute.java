@@ -83,6 +83,6 @@ public abstract class Attribute {
 	public abstract String toString();
 
 	protected String getConditionString() {
-		return condition.isEmpty() ? "" : " | " + condition;
+		return condition.isEmpty() ? "" : " | " + condition.getConditionString();
 	}
 }

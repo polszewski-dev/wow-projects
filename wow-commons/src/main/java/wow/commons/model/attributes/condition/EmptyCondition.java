@@ -15,6 +15,11 @@ public class EmptyCondition implements AttributeCondition {
 	}
 
 	@Override
+	public String getConditionString() {
+		return "";
+	}
+
+	@Override
 	public String toString() {
 		return "";
 	}

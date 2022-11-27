@@ -37,4 +37,6 @@ public interface AttributeCondition {
 	default boolean isEmpty() {
 		return false;
 	}
+
+	String getConditionString();
 }

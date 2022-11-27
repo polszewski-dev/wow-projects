@@ -17,7 +17,12 @@ public class TalentTreeCondition implements AttributeCondition {
 	private final TalentTree talentTree;
 
 	@Override
-	public String toString() {
+	public String getConditionString() {
 		return "tree: " + talentTree;
+	}
+
+	@Override
+	public String toString() {
+		return talentTree.toString();
 	}
 }

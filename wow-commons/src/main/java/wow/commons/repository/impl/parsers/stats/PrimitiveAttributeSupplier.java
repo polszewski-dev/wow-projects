@@ -10,6 +10,7 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.model.unit.CreatureType;
 import wow.commons.model.unit.PetType;
+import wow.commons.util.AttributesBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,10 @@ public class PrimitiveAttributeSupplier {
 		}
 
 		return result;
+	}
+
+	public void addAttributeList(AttributesBuilder builder, double value) {
+		builder.addAttributeList(getAttributeList(value));
 	}
 
 	public Attributes getAttributes(double value) {

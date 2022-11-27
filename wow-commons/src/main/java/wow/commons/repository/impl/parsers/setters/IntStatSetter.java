@@ -20,6 +20,6 @@ public class IntStatSetter implements StatSetter {
 	@Override
 	public void set(AttributesBuilder itemStats, StatMatcher matcher) {
 		int value = matcher.getInt(groupNo);
-		itemStats.addAttributeList(attributeParser.getAttributeList(value));
+		attributeParser.addAttributeList(itemStats, value);
 	}
 }

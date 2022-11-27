@@ -17,7 +17,12 @@ public class CreatureTypeCondition implements AttributeCondition {
 	private final CreatureType creatureType;
 
 	@Override
-	public String toString() {
+	public String getConditionString() {
 		return "creature: " + creatureType;
+	}
+
+	@Override
+	public String toString() {
+		return creatureType.toString();
 	}
 }

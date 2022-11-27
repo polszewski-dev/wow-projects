@@ -17,7 +17,12 @@ public class SpellIdCondition implements AttributeCondition {
 	private final SpellId spellId;
 
 	@Override
-	public String toString() {
+	public String getConditionString() {
 		return "spell: " + spellId;
+	}
+
+	@Override
+	public String toString() {
+		return spellId.toString();
 	}
 }
