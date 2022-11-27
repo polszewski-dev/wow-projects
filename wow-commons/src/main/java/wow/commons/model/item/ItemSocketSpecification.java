@@ -4,7 +4,6 @@ import wow.commons.model.attributes.Attributes;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -45,16 +44,5 @@ public class ItemSocketSpecification {
 
 	public ItemSocketsUniqueConfiguration getUniqueConfiguration() {
 		return uniqueConfiguration;
-	}
-
-	public ItemSockets createSockets() {
-		if (!hasSockets()) {
-			return ItemSockets.EMPTY;
-		}
-
-		List<ItemSocket> itemSockets = socketTypes.stream()
-												  .map(ItemSocket::new)
-												  .collect(Collectors.toUnmodifiableList());
-		return new ItemSockets(this, itemSockets);
 	}
 }

@@ -1,4 +1,4 @@
-package wow.commons.util;
+package wow.commons.model.spells;
 
 import lombok.Data;
 import wow.commons.model.Duration;

@@ -5,6 +5,7 @@ import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.equipment.ItemSockets;
 import wow.commons.model.item.*;
 
 import java.util.*;

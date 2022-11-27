@@ -1,4 +1,4 @@
-package wow.commons.util;
+package wow.commons.model.spells;
 
 import lombok.Getter;
 import wow.commons.constants.SpellConstants;
@@ -9,7 +9,6 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
-import wow.commons.model.spells.Spell;
 import wow.commons.model.unit.BaseStatInfo;
 import wow.commons.model.unit.CombatRatingInfo;
 import wow.commons.model.unit.CreatureType;
@@ -347,6 +346,19 @@ public class Snapshot implements StatProvider {
 	}
 
 	public SpellStatistics getSpellStatistics(CritMode critMode, boolean useBothDamageRanges) {
+		SpellStatistics result = new SpellStatistics();
+
+		result.setSnapshot(this);
+		result.setTotalDamage(getTotalDamage(critMode, useBothDamageRanges));
+		result.setCastTime(effectiveCastTime);
+		result.setDps(result.getTotalDamage() / result.getCastTime().getSeconds());
+		result.setManaCost(manaCost);
+		result.setDpm(result.getTotalDamage() / result.getManaCost());
+
+		return result;
+	}
+
+	private double getTotalDamage(CritMode critMode, boolean useBothDamageRanges) {
 		// direct damage
 
 		double directDamage = 0;
@@ -380,16 +392,7 @@ public class Snapshot implements StatProvider {
 			dotDamage *= hitChance;
 		}
 
-		SpellStatistics result = new SpellStatistics();
-
-		result.setSnapshot(this);
-		result.setTotalDamage(directDamage + dotDamage);
-		result.setCastTime(effectiveCastTime);
-		result.setDps(result.getTotalDamage() / result.getCastTime().getSeconds());
-		result.setManaCost(manaCost);
-		result.setDpm(result.getTotalDamage() / result.getManaCost());
-
-		return result;
+		return directDamage + dotDamage;
 	}
 
 	private double getActualCritChance(CritMode critMode) {

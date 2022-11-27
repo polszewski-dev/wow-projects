@@ -12,7 +12,7 @@ public class ItemSocket implements Copyable<ItemSocket> {
 	private final SocketType socketType;
 	private Gem gem;
 
-	ItemSocket(SocketType socketType) {
+	public ItemSocket(SocketType socketType) {
 		this.socketType = socketType;
 	}
 

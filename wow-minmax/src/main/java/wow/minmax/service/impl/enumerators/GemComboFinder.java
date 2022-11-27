@@ -1,7 +1,11 @@
 package wow.minmax.service.impl.enumerators;
 
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.item.*;
+import wow.commons.model.equipment.ItemSockets;
+import wow.commons.model.item.Gem;
+import wow.commons.model.item.ItemSocketSpecification;
+import wow.commons.model.item.ItemSocketsUniqueConfiguration;
+import wow.commons.model.item.SocketType;
 import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.ItemService;
@@ -92,7 +96,7 @@ public class GemComboFinder {
 
 	private List<Gem[]> removeEquivalents(List<Gem[]> gemCombos, ItemSocketSpecification socketSpecification) {
 		Map<String, List<Gem[]>> gemEquivalenceGroups = new HashMap<>();
-		ItemSockets sockets = socketSpecification.createSockets();
+		ItemSockets sockets = ItemSockets.create(socketSpecification);
 
 		for (Gem[] gemCombo : gemCombos) {
 			String key = getKey(gemCombo, sockets);

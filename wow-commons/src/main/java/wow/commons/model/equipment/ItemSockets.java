@@ -1,10 +1,14 @@
-package wow.commons.model.item;
+package wow.commons.model.equipment;
 
 import wow.commons.model.Copyable;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.item.Gem;
+import wow.commons.model.item.ItemSocket;
+import wow.commons.model.item.ItemSocketSpecification;
+import wow.commons.model.item.SocketType;
 
 import java.util.Iterator;
 import java.util.List;
@@ -21,10 +25,21 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 
 	public static final ItemSockets EMPTY = new ItemSockets(ItemSocketSpecification.EMPTY, List.of());
 
-	public ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets) {
+	private ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets) {
 		super(ComplexAttributeId.SOCKETS, AttributeCondition.EMPTY);
 		this.specification = specification;
 		this.sockets = sockets;
+	}
+
+	public static ItemSockets create(ItemSocketSpecification specification) {
+		if (!specification.hasSockets()) {
+			return ItemSockets.EMPTY;
+		}
+
+		List<ItemSocket> itemSockets = specification.getSocketTypes().stream()
+				.map(ItemSocket::new)
+				.collect(Collectors.toUnmodifiableList());
+		return new ItemSockets(specification, itemSockets);
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	private Enchant enchant;
 
 	public EquippableItem(Item item) {
-		this(item, item.getSocketSpecification().createSockets());
+		this(item, ItemSockets.create(item.getSocketSpecification()));
 	}
 
 	private EquippableItem(Item item, ItemSockets sockets) {
