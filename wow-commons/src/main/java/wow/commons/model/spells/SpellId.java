@@ -33,6 +33,7 @@ public enum SpellId {
 	DRAIN_LIFE("Drain Life"),
 	DRAIN_MANA("Drain Mana"),
 	DRAIN_SOUL("Drain Soul"),
+	FEAR("Fear"),
 	HOWL_OF_TERROR("Howl of Terror"),
 	LIFE_TAP("Life Tap"),
 	SEED_OF_CORRUPTION("Seed of Corruption"),

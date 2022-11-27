@@ -137,7 +137,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
 			setHeader(itemSetBonusNumPieces(bonusIdx));
 			setHeader(itemSetBonusDescription(bonusIdx));
-			writeAttributeHeader(itemSetBonusStatPrefix(bonusIdx), 1);
+			writeAttributeHeader(itemSetBonusStatPrefix(bonusIdx), ITEM_SET_BONUS_MAX_STATS);
 		}
 
 		writer.nextRow().freeze(1, 1);

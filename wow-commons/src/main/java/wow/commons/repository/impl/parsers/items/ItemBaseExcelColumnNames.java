@@ -29,7 +29,7 @@ public final class ItemBaseExcelColumnNames {
 
 	public static final String ITEM_SET_NAME = "name";
 	public static final int ITEM_SET_MAX_BONUSES = 6;
-	public static final int ITEM_SET_BONUS_MAX_STATS = 1;
+	public static final int ITEM_SET_BONUS_MAX_STATS = 2;
 
 	public static String itemSetBonusNumPieces(int bonusIdx) {
 		return itemSetBonus(bonusIdx) + "_pieces";

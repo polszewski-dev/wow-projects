@@ -5,6 +5,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -36,6 +38,27 @@ public class StatPatternRepository {
 				this.socketBonusStatPatterns
 		);
 		statParserExcelParser.readFromXls();
+		validateAll();
+	}
+
+	private void validateAll() {
+		assertNoDuplicates(itemStatPatterns);
+		assertNoDuplicates(gemStatPatterns);
+		assertNoDuplicates(socketBonusStatPatterns);
+	}
+
+	private void assertNoDuplicates(List<StatPattern> patterns) {
+		List<String> duplicatePatterns = patterns.stream()
+				.map(x -> x.getPattern().pattern())
+				.collect(Collectors.groupingBy(x -> x, Collectors.counting()))
+				.entrySet().stream()
+				.filter(x -> x.getValue() > 1)
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+
+		if (!duplicatePatterns.isEmpty()) {
+			throw new IllegalArgumentException("Duplicate patterns detected: " + duplicatePatterns);
+		}
 	}
 
 	public StatParser getItemStatParser() {

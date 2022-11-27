@@ -58,6 +58,8 @@ public enum PrimitiveAttributeId implements AttributeId {
 
 	EXTRA_CRIT_COEFF("ExtraCritCoeff", "gimmick to handle ISB"),
 
+	DURATION_INCREASE("DurationIncrease", "increased duration", DisplayHint.DURATION),
+
 	NUM_NEXT_SPELLS_CAST_INSTANTLY("#NextSpellsCastInstantly"),
 
 	// percent attributes
@@ -103,7 +105,8 @@ public enum PrimitiveAttributeId implements AttributeId {
 	// duration attributes
 
 	CAST_TIME_REDUCTION("CastTimeReduction", "reduced cast time", DisplayHint.DURATION),
-	COOLDOWN_REDUCTION("CooldownReduction", DisplayHint.DURATION);
+	COOLDOWN_REDUCTION("CooldownReduction", DisplayHint.DURATION),
+	COOLDOWN_REDUCTION_PCT("CooldownReductionPct", DisplayHint.PERCENT);
 
 	enum DisplayHint {
 		PERCENT,
