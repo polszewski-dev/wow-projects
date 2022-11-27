@@ -8,7 +8,6 @@ import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
-import wow.commons.repository.impl.parsers.gems.GemStatsParser;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -18,7 +17,6 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  */
 public class GemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colColor = column(GEM_COLOR);
-	private final ExcelColumn colStats = column(GEM_STATS);
 	private final ExcelColumn colMetaEnablers = column(GEM_META_ENABLERS);
 
 	public GemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
@@ -35,7 +33,7 @@ public class GemSheetParser extends AbstractItemSheetParser {
 		var id = getId();
 		var color = colColor.getEnum(GemColor::valueOf);
 		var metaEnablers = colMetaEnablers.getList(MetaEnabler::valueOf);
-		var stats = GemStatsParser.tryParseStats(colStats.getString());
+		var stats = readAttributes(GEM_MAX_STATS);
 
 		Description description = getDescription();
 		Restriction restriction = getRestriction();

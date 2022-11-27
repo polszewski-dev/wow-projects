@@ -63,13 +63,16 @@ class GemTooltipParserTest {
 	@Test
 	@DisplayName("Stats are parsed correctly")
 	void stats() {
-		assertThat(redGem.getStatLines()).isEqualTo(List.of("+12 Spell Damage"));
-		assertThat(orangeGem.getStatLines()).isEqualTo(List.of("+5 Spell Haste Rating and +6 Spell Damage"));
-		assertThat(yellowGem.getStatLines()).isEqualTo(List.of("+10 Spell Haste Rating"));
-		assertThat(greenGem.getStatLines()).isEqualTo(List.of("+5 Spell Haste Rating and +7 Stamina"));
-		assertThat(blueGem.getStatLines()).isEqualTo(List.of("+18 Stamina"));
+		assertThat(redGem.getStats().getSpellDamage()).isEqualTo(12);
+		assertThat(orangeGem.getStats().getSpellHasteRating()).isEqualTo(5);
+		assertThat(orangeGem.getStats().getSpellDamage()).isEqualTo(6);
+		assertThat(yellowGem.getStats().getSpellHasteRating()).isEqualTo(10);
+		assertThat(greenGem.getStats().getSpellHasteRating()).isEqualTo(5);
+		assertThat(greenGem.getStats().getStamina()).isEqualTo(7);
+		assertThat(blueGem.getStats().getStamina()).isEqualTo(18);
 
-		assertThat(metaGem.getStatLines()).isEqualTo(List.of("+12 Spell Critical & 3% Increased Critical Damage"));
+		assertThat(metaGem.getStats().getSpellCritRating()).isEqualTo(12);
+		assertThat(metaGem.getStats().getIncreasedCriticalDamagePct().getValue()).isEqualTo(3);
 		assertThat(metaGem.getMetaEnablers()).isEqualTo(List.of(MetaEnabler.AT_LEAST_2_BLUES));
 	}
 

@@ -2,17 +2,23 @@ package wow.scraper.excel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.unit.CharacterClass;
+import wow.commons.repository.impl.parsers.excel.ComplexAttributeMapper;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.*;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
@@ -23,10 +29,6 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelSheetNames.
  * Date: 2022-10-30
  */
 public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
-	private static final int MAX_STATS = 10;
-	private static final int MAX_BONUSES = 6;
-	private static final int MAX_PIECES = 9;
-
 	@Override
 	public void start() {
 		writer.open();
@@ -98,13 +100,9 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader(REQ_PROFESSION_LEVEL);
 		setHeader(REQ_PROFESSION_SPEC);
 		setHeader(ITEM_SOCKET_TYPES);
-		setHeader(ITEM_SOCKET_BONUS);
+		writeAttributeHeader(SOCKET_BONUS_PREFIX, SOCKET_BONUS_MAX_STATS);
 		setHeader(ITEM_ITEM_SET, 30);
-
-		for (int i = 1; i <= MAX_STATS; ++i) {
-			setHeader("stat" + i, 20);
-		}
-
+		writeAttributeHeader("", ITEM_MAX_STATS);
 		writeIconAndTooltipHeader();
 		writer.nextRow().freeze(2, 1);
 	}
@@ -119,9 +117,9 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getRequiredProfessionSpec());
 		setValue(parser.getSocketTypes());
-		setValue(parser.getSocketBonus());
+		writeAttributes(parser.getSocketBonus(), SOCKET_BONUS_MAX_STATS);
 		setValue(parser.getItemSetName());
-		setList(parser.getStatLines(), MAX_STATS);
+		writeAttributes(parser.getStatParser().getParsedStats(), ITEM_MAX_STATS);
 		writeIconAndTooltip(parser);
 		writer.nextRow();
 	}
@@ -132,15 +130,10 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader(REQ_PROFESSION);
 		setHeader(REQ_PROFESSION_LEVEL);
 
-		setHeader("#pieces");
-
-		for (int i = 1; i <= MAX_PIECES; ++i) {
-			setHeader("item" + i);
-		}
-
-		for (int i = 1; i <= MAX_BONUSES; ++i) {
-			setHeader("bonus" + i + "_p");
-			setHeader("bonus" + i + "_d", 30);
+		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
+			setHeader(itemSetBonusNumPieces(bonusIdx));
+			setHeader(itemSetBonusDescription(bonusIdx));
+			writeAttributeHeader(itemSetBonusStatPrefix(bonusIdx), 1);
 		}
 
 		writer.nextRow().freeze(1, 1);
@@ -151,12 +144,11 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(setInfo.getItemSetRequiredClass());
 		setValue(setInfo.getItemSetRequiredProfession());
 		setValue(setInfo.getItemSetRequiredProfessionLevel());
-		setValue(setInfo.getItemSetPieces().size());
-		setList(setInfo.getItemSetPieces(), MAX_PIECES);
-		setList(setInfo.getItemSetBonuses(), MAX_BONUSES, x -> {
+		setList(setInfo.getItemSetBonuses(), ITEM_SET_MAX_BONUSES, x -> {
 			setValue(x.getNumPieces());
 			setValue(x.getDescription());
-		}, 2);
+			writeAttributes(x.getBonusStats(), ITEM_SET_BONUS_MAX_STATS);
+		}, 2 + 2 * ITEM_SET_BONUS_MAX_STATS);
 		writer.nextRow();
 	}
 
@@ -165,8 +157,8 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader(REQ_PROFESSION);
 		setHeader(REQ_PROFESSION_LEVEL);
 		setHeader(GEM_COLOR);
-		setHeader(GEM_STATS, 20);
-		setHeader(GEM_META_ENABLERS);
+		writeAttributeHeader("", GEM_MAX_STATS);
+		setHeader(GEM_META_ENABLERS, 20);
 		writeIconAndTooltipHeader();
 		writer.nextRow().freeze(2, 1);
 	}
@@ -176,12 +168,9 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getColor());
-		setValue(parser.getStatLines().get(0));
+		writeAttributes(parser.getStats(), GEM_MAX_STATS);
 		setValue(parser.getMetaEnablers());
 		writeIconAndTooltip(parser);
-		if (parser.getStatLines().size() != 1) {
-			throw new IllegalArgumentException("Only 1 stat line allowed");
-		}
 		writer.nextRow();
 	}
 
@@ -209,6 +198,40 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getItemLevel());
 		setValue(parseSource(requiredFactionName, parser));
 		setValue(parser.getPhase());
+	}
+
+	private void writeAttributeHeader(String prefix, int maxAttributes) {
+		for (int i = 1; i <= maxAttributes; ++i) {
+			setHeader(colStat(prefix, i), 20);
+			setHeader(colAmount(prefix, i), 5);
+		}
+	}
+
+	private void writeAttributes(Attributes attributes, int maxAttributes) {
+		if (attributes == null) {
+			fillRemainingEmptyCols(2 * maxAttributes);
+			return;
+		}
+
+		int colNo = 0;
+
+		for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributeList()) {
+			setValue(ComplexAttributeMapper.getIdAndCondition(attribute));
+			setValue(attribute.getDouble());
+			++colNo;
+		}
+
+		for (ComplexAttribute attribute : attributes.getComplexAttributeList().values().stream().flatMap(Collection::stream).collect(Collectors.toList())) {
+			setValue(ComplexAttributeMapper.toString(attribute));
+			setValue((String)null);
+			++colNo;
+		}
+
+		if (colNo > maxAttributes) {
+			throw new IllegalArgumentException("Can't write more attributes than " + maxAttributes);
+		}
+
+		fillRemainingEmptyCols(2 * (maxAttributes - colNo));
 	}
 
 	private void writeIconAndTooltipHeader() {
@@ -270,7 +293,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	private static String parseSource(String requiredFactionName, AbstractTooltipParser parser) {
 		if (requiredFactionName != null) {
-			return "Faction:" + requiredFactionName;
+			return WowheadSourceParser.sourceFaction(requiredFactionName);
 		}
 		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getItemDetailsAndTooltip());
 		List<String> sources = sourceParser.getSource();

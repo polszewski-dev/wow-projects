@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Money;
+import wow.commons.model.attributes.Attributes;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 
 import java.io.IOException;
@@ -62,23 +63,23 @@ class ItemTooltipParserTest {
 	@DisplayName("Socket info is parsed correctly")
 	void socketInfo() {
 		assertThat(hoodOfMalefic.getSocketTypes()).isEqualTo(List.of(META, YELLOW));
-		assertThat(hoodOfMalefic.getSocketBonus()).isEqualTo("+5 Spell Damage and Healing");
+		assertThat(hoodOfMalefic.getSocketBonus().getSpellPower()).isEqualTo(5);
 
 		assertThat(sunfireRobe.getSocketTypes()).isEqualTo(List.of(RED, RED, RED));
-		assertThat(sunfireRobe.getSocketBonus()).isEqualTo("+5 Spell Damage and Healing");
+		assertThat(sunfireRobe.getSocketBonus().getSpellPower()).isEqualTo(5);
 	}
 
 	@Test
 	@DisplayName("Stats are parsed correctly")
 	void stats() {
-		assertThat(sunfireRobe.getStatLines()).isEqualTo(List.of(
-				"266 Armor",
-				"+36 Stamina",
-				"+34 Intellect",
-				"Equip: Improves spell critical strike rating by 40.",
-				"Equip: Improves spell haste rating by 40.",
-				"Equip: Increases damage and healing done by magical spells and effects by up to 71."
-		));
+		Attributes parsedStats = sunfireRobe.getStatParser().getParsedStats();
+
+		assertThat(parsedStats.getArmor()).isEqualTo(266);
+		assertThat(parsedStats.getStamina()).isEqualTo(36);
+		assertThat(parsedStats.getIntellect()).isEqualTo(34);
+		assertThat(parsedStats.getSpellCritRating()).isEqualTo(40);
+		assertThat(parsedStats.getSpellHasteRating()).isEqualTo(40);
+		assertThat(parsedStats.getSpellPower()).isEqualTo(71);
 	}
 
 	@Test

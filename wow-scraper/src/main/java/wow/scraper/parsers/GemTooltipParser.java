@@ -1,6 +1,7 @@
 package wow.scraper.parsers;
 
 import lombok.Getter;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
@@ -20,7 +21,7 @@ import java.util.List;
 public class GemTooltipParser extends AbstractTooltipParser {
 	private GemColor color;
 	private List<MetaEnabler> metaEnablers;
-	private List<String> statLines;
+	private Attributes stats;
 
 	public GemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
 		super(itemDetailsAndTooltip, gameVersion);
@@ -39,7 +40,7 @@ public class GemTooltipParser extends AbstractTooltipParser {
 				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
 				ruleProfessionRestriction,
 				ruleSellPrice,
-				Rule.testNotNull(GemStatsParser::tryParseStats, x -> statLines.add(x)),
+				Rule.tryParse(GemStatsParser::tryParseStats, x -> stats = x),
 		};
 	}
 
@@ -47,7 +48,6 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	protected void beforeParse() {
 		this.itemType = ItemType.GEM;
 		this.metaEnablers = new ArrayList<>();
-		this.statLines = new ArrayList<>();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class GemTooltipParser extends AbstractTooltipParser {
 			throw new IllegalArgumentException("Couldn't parse color for: " + name);
 		}
 
-		if (statLines.isEmpty()) {
+		if (stats.isEmpty()) {
 			throw new IllegalArgumentException("Couldn't parse any stat for: " + name);
 		}
 	}

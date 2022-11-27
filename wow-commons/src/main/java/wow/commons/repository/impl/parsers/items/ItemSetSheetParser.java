@@ -7,14 +7,12 @@ import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
-import wow.commons.repository.impl.parsers.stats.StatParser;
-import wow.commons.repository.impl.parsers.stats.StatPatternRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.ITEM_SET_NAME;
+import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
 /**
  * User: POlszewski
@@ -22,8 +20,6 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  */
 public class ItemSetSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colName = column(ITEM_SET_NAME);
-
-	private static final int MAX_ITEM_SET_BONUSES = 6;
 
 	private final ItemDataRepositoryImpl itemDataRepository;
 	private final Map<String, List<Item>> setPiecesByName;
@@ -62,12 +58,9 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 	private List<ItemSetBonus> getItemSetBonuses() {
 		List<ItemSetBonus> itemSetBonuses = new ArrayList<>();
 
-		for (int i = 1; i <= MAX_ITEM_SET_BONUSES; i++) {
-			int numPieces = column("bonus" + i + "_p").getInteger(-1);
-			String description = column("bonus" + i + "_d").getString(null);
-
-			if (description != null) {
-				ItemSetBonus itemSetBonus = getItemSetBonus(numPieces, description);
+		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
+			ItemSetBonus itemSetBonus = getItemSetBonus(bonusIdx);
+			if (itemSetBonus != null) {
 				itemSetBonuses.add(itemSetBonus);
 			}
 		}
@@ -75,12 +68,16 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		return itemSetBonuses;
 	}
 
-	private static ItemSetBonus getItemSetBonus(int numPieces, String description) {
-		StatParser statParser = StatPatternRepository.getInstance().getItemStatParser();
-		if (statParser.tryParse(description)) {
-			Attributes bonusStats = statParser.getParsedStats();
-			return new ItemSetBonus(numPieces, description, bonusStats);
+	private ItemSetBonus getItemSetBonus(int bonusIdx) {
+		int numPieces = column(itemSetBonusNumPieces(bonusIdx)).getInteger(0);
+
+		if (numPieces == 0) {
+			return null;
 		}
-		throw new IllegalArgumentException("Missing bonus: " + description);
+
+		String description = column(itemSetBonusDescription(bonusIdx)).getString();
+		Attributes attributes = readAttributes(itemSetBonusStatPrefix(bonusIdx), ITEM_SET_BONUS_MAX_STATS);
+
+		return new ItemSetBonus(numPieces, description, attributes);
 	}
 }

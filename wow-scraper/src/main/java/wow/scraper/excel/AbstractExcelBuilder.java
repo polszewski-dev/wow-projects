@@ -104,10 +104,14 @@ public abstract class AbstractExcelBuilder {
 			if (values.size() >= i) {
 				valueSetter.accept(values.get(i - 1));
 			} else {
-				for (int c = 0; c < numEmptyCells; c++) {
-					writer.nextCell();
-				}
+				fillRemainingEmptyCols(numEmptyCells);
 			}
+		}
+	}
+
+	protected void fillRemainingEmptyCols(int numCols) {
+		for (int colNo = 0; colNo < numCols; ++colNo) {
+			writer.nextCell();
 		}
 	}
 }

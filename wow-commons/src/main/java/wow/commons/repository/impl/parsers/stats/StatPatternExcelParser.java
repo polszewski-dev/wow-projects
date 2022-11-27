@@ -33,17 +33,17 @@ public class StatPatternExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new PatternSheetParser("base", itemStatPatterns, true),
-				new PatternSheetParser("onuse", itemStatPatterns, true),
-				new PatternSheetParser("proc", itemStatPatterns, true),
-				new PatternSheetParser("set", itemStatPatterns, true),
-				new PatternSheetParser("ignored", itemStatPatterns, true),
-				new PatternSheetParser("misc_bonus", itemStatPatterns, true),
-				new PatternSheetParser("misc_onuse", itemStatPatterns, true),
-				new PatternSheetParser("misc_proc", itemStatPatterns, true),
-				new PatternSheetParser("misc_set", itemStatPatterns, true),
-				new PatternSheetParser("gem", gemStatPatterns, false),
-				new PatternSheetParser("socket", socketBonusStatPatterns, false)
+				new PatternSheetParser("base", itemStatPatterns),
+				new PatternSheetParser("onuse", itemStatPatterns),
+				new PatternSheetParser("proc", itemStatPatterns),
+				new PatternSheetParser("set", itemStatPatterns),
+				new PatternSheetParser("ignored", itemStatPatterns),
+				new PatternSheetParser("misc_bonus", itemStatPatterns),
+				new PatternSheetParser("misc_onuse", itemStatPatterns),
+				new PatternSheetParser("misc_proc", itemStatPatterns),
+				new PatternSheetParser("misc_set", itemStatPatterns),
+				new PatternSheetParser("gem", gemStatPatterns),
+				new PatternSheetParser("socket", socketBonusStatPatterns)
 		);
 	}
 }

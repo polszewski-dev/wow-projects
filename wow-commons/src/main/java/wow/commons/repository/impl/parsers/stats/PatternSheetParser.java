@@ -26,12 +26,10 @@ public class PatternSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colSpecialProcCd = column("special:proc cd");
 
 	private final List<StatPattern> patterns;
-	private final boolean itemStats;
 
-	public PatternSheetParser(String sheetName, List<StatPattern> patterns, boolean itemStats) {
+	public PatternSheetParser(String sheetName, List<StatPattern> patterns) {
 		super(sheetName);
 		this.patterns = patterns;
-		this.itemStats = itemStats;
 	}
 
 	@Override
@@ -82,6 +80,8 @@ public class PatternSheetParser extends ExcelSheetParser {
 				return new OnUseStatSetter(Math.max(groupNo, 0));
 			case "Equivalent":
 				return new EquivalentStatSetter(Math.max(groupNo, 0));
+			case "Misc":
+				return new MiscStatSetter(0);
 			case "Ignored":
 				return IgnoreStatSetter.INSTANCE;
 			default:
@@ -92,15 +92,13 @@ public class PatternSheetParser extends ExcelSheetParser {
 	private StatSetterParams getParams() {
 		StatSetterParams params = new StatSetterParams();
 
-		if (itemStats) {
-			params.setType(colSpecialType.getString(null));
-			params.setStatsSupplier(colSpecialStat.getEnum(PrimitiveAttributeSupplier::fromString, null));
-			params.setAmount(colSpecialAmount.getString(null));
-			params.setDuration(colSpecialDuration.getString(null));
-			params.setCooldown(colSpecialCd.getString(null));
-			params.setProcChance(colSpecialProcChance.getString(null));
-			params.setProcCooldown(colSpecialProcCd.getString(null));
-		}
+		params.setType(colSpecialType.getString(null));
+		params.setStatsSupplier(colSpecialStat.getEnum(PrimitiveAttributeSupplier::fromString, null));
+		params.setAmount(colSpecialAmount.getString(null));
+		params.setDuration(colSpecialDuration.getString(null));
+		params.setCooldown(colSpecialCd.getString(null));
+		params.setProcChance(colSpecialProcChance.getString(null));
+		params.setProcCooldown(colSpecialProcCd.getString(null));
 
 		return params;
 	}

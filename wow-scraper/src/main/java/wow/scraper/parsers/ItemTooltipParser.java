@@ -31,10 +31,9 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	private StatParser statParser;
 
 	private List<SocketType> socketTypes;
-	private String socketBonus;
+	private Attributes socketBonus;
 
 	private WeaponStats weaponStats;
-	private List<String> statLines;
 
 	private String itemSetName;
 	private List<String> itemSetPieces;
@@ -84,7 +83,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 				Rule.regex("(\\d+) - (\\d+) (\\S+)? ?Damage", this::parseWeaponDamage),
 				Rule.regex("\\((\\d+\\.\\d+) damage per second\\)", this::parseWeaponDps),
 				Rule.regex("Speed (\\d+.\\d+)", this::parseWeaponSpeedParams),
-				Rule.test(line -> statParser.tryParse(line), x -> statLines.add(x)),
+				Rule.tryParse(line -> statParser.tryParse(line), x -> {}),
 		};
 	}
 
@@ -92,7 +91,6 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	protected void beforeParse() {
 		this.statParser = StatPatternRepository.getInstance().getItemStatParser();
 		this.socketTypes = new ArrayList<>();
-		this.statLines = new ArrayList<>();
 	}
 
 	@Override
@@ -131,11 +129,10 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	}
 
 	private void parseSocketBonus(String value) {
-		if (SocketBonusParser.tryParseSocketBonus(value) != null) {
-			this.socketBonus = value;
-			return;
+		this.socketBonus = SocketBonusParser.tryParseSocketBonus(value);
+		if (socketBonus == null) {
+			throw new IllegalArgumentException("Invalid socket bonus: " + value);
 		}
-		throw new IllegalArgumentException("Invalid socket bonus: " + value);
 	}
 
 	private void parseItemSet(Object[] parsedValues) {
@@ -174,7 +171,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		if (!setBonusParser.tryParse(description)) {
 			unmatchedLine(description);
 		}
-		itemSetBonuses.add(new ItemSetBonus(numPieces, description, Attributes.EMPTY));
+		itemSetBonuses.add(new ItemSetBonus(numPieces, description, setBonusParser.getParsedStats()));
 	}
 
 	private void parseWeaponDamage(Object[] weaponDamageParams) {

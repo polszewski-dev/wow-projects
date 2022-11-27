@@ -135,6 +135,10 @@ public class WowheadSourceParser {
 		return "Quest:" + questName;
 	}
 
+	public static String sourceFaction(String requiredFactionName) {
+		return "Faction:" + requiredFactionName;
+	}
+
 	private String getName() {
 		return itemDetails.getName();
 	}
