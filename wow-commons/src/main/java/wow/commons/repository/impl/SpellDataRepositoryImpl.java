@@ -2,18 +2,18 @@ package wow.commons.repository.impl;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.effects.EffectInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.commons.model.spells.SpellIdAndRank;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
+import wow.commons.model.talents.TalentIdAndRank;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.repository.impl.parsers.spells.SpellExcelParser;
-import wow.commons.util.AttributesBuilder;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -26,37 +26,28 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class SpellDataRepositoryImpl implements SpellDataRepository {
-	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
-	private final Map<TalentId, List<Talent>> talentById = new LinkedHashMap<>();
+	private final Map<SpellIdAndRank, Spell> spellById = new LinkedHashMap<>();
+	private final Map<TalentIdAndRank, Talent> talentById = new LinkedHashMap<>();
 	private final Map<Integer, TalentId> talentIdByCalculatorPosition = new LinkedHashMap<>();
 	private final Map<EffectId, EffectInfo> effectInfoByEffectId = new LinkedHashMap<>();
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
 
 	@Override
 	public Optional<Spell> getSpell(SpellId spellId, Integer rank) {
-		List<Spell> spells = spellById.getOrDefault(spellId, List.of());
-		return spells.stream()
-				.filter(spell -> Objects.equals(spell.getRank(), rank))
-				.findFirst();
+		return Optional.ofNullable(spellById.get(new SpellIdAndRank(spellId, rank)));
 	}
 
 	@Override
 	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level) {
-		List<Spell> spells = spellById.get(spellId);
-		if (spells == null) {
-			return Optional.empty();
-		}
-		return spells.stream()
+		return spellById.values().stream()
+				.filter(spell -> spell.getSpellId() == spellId)
 				.filter(spell -> spell.getRequiredLevel() <= level)
 				.max(Comparator.nullsFirst(Comparator.comparing(Spell::getRank)));
 	}
 
 	@Override
 	public Optional<Talent> getTalent(TalentId talentId, int rank) {
-		List<Talent> talents = talentById.getOrDefault(talentId, List.of());
-		return talents.stream()
-				.filter(talent -> talent.getRank() == rank)
-				.findFirst();
+		return Optional.ofNullable(talentById.get(new TalentIdAndRank(talentId, rank)));
 	}
 
 	@Override
@@ -112,23 +103,22 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 		spellExcelParser.readFromXls();
 	}
 
-	public void addTalent(Talent talent, Attributes attributes) {
+	public void addTalent(Talent talent) {
 		talentIdByCalculatorPosition.put(talent.getTalentCalculatorPosition(), talent.getTalentId());
 
-		Optional<Talent> existingTalent = getTalent(talent.getTalentId(), talent.getRank());
+		Talent existingTalent = talentById.get(talent.getId());
 
-		if (existingTalent.isPresent()) {
-			talent = existingTalent.orElseThrow();
-		} else {
-			talentById.computeIfAbsent(talent.getTalentId(), x -> new ArrayList<>()).add(talent);
+		if (existingTalent == null) {
+			talentById.put(talent.getId(), talent);
+			return;
 		}
 
-		Attributes combinedAttributes = AttributesBuilder.addAttributes(talent.getAttributes(), attributes);
-		talent.setAttributes(combinedAttributes);
+		Talent combinedTalent = existingTalent.combineWith(talent);
+		talentById.put(combinedTalent.getId(), combinedTalent);
 	}
 
 	public void addSpell(Spell spell) {
-		spellById.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
+		spellById.put(spell.getId(), spell);
 	}
 
 	public void addEffectInfo(EffectInfo effectInfo) {

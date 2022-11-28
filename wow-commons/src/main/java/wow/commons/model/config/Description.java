@@ -15,4 +15,12 @@ public class Description {
 	private final String name;
 	private final String icon;
 	private final String tooltip;
+
+	public Description merge(Description secondary) {
+		return new Description(
+				name,
+				icon != null ? icon : secondary.icon,
+				tooltip != null ? tooltip : secondary.tooltip
+		);
+	}
 }

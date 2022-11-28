@@ -5,6 +5,7 @@ import lombok.NonNull;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.config.ConfigurationElement;
+import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.talents.TalentTree;
 
@@ -21,8 +22,8 @@ public class Spell extends ConfigurationElement<SpellIdAndRank> {
 	private final DirectDamageInfo directDamageInfo;
 	private final DotDamageInfo dotDamageInfo;
 
-	public Spell(SpellIdAndRank id, Restriction restriction, SpellInfo spellInfo, CastInfo castInfo, DirectDamageInfo directDamageInfo, DotDamageInfo dotDamageInfo) {
-		super(id, spellInfo.getDescription(), restriction);
+	public Spell(SpellIdAndRank id, Restriction restriction, Description description, SpellInfo spellInfo, CastInfo castInfo, DirectDamageInfo directDamageInfo, DotDamageInfo dotDamageInfo) {
+		super(id, description, restriction);
 		this.spellInfo = spellInfo;
 		this.castInfo = castInfo;
 		this.directDamageInfo = directDamageInfo;

@@ -104,7 +104,7 @@ abstract class ControllerTest {
 		CastInfo castInfo = new CastInfo(100, Duration.seconds(3), false, null, null);
 		DirectDamageInfo directDamageInfo = new DirectDamageInfo(500, 600, 0, 0);
 		DotDamageInfo dotDamageInfo = new DotDamageInfo(0, 0, null);
-		spell = new Spell(id, Restriction.builder().requiredLevel(70).build(), spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		spell = new Spell(id, Restriction.builder().requiredLevel(70).build(), description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 	}
 
 	private void createBuild() {

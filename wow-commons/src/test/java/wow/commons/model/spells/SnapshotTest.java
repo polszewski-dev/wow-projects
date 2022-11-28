@@ -46,7 +46,7 @@ class SnapshotTest {
 		DotDamageInfo dotDamageInfo = new DotDamageInfo(0, 0, null);
 		DamagingSpellInfo damagingSpellInfo = new DamagingSpellInfo(Percent.of(150), Percent.ZERO, false, null, null, null, null);
 		SpellInfo spellInfo = new SpellInfo(SHADOW_BOLT, description, noRestriction, DESTRUCTION, SHADOW, null, false, damagingSpellInfo, null);
-		spell = new Spell(id, noRestriction, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		spell = new Spell(id, noRestriction, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 		baseStatInfo = new BaseStatInfo(0, WARLOCK, ORC, 0, 0, 100, 200, 300, 1000, 2000, Percent.of(10), 100);
 		combatRatingInfo = new CombatRatingInfo(0, 10, 20, 40);
 	}

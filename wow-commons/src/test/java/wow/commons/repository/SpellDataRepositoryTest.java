@@ -78,7 +78,7 @@ class SpellDataRepositoryTest {
 		assertThat(talent.getTalentId()).isEqualTo(IMPROVED_SHADOW_BOLT);
 		assertThat(talent.getRank()).isEqualTo(5);
 		assertThat(talent.getMaxRank()).isEqualTo(5);
-		assertThat(talent.getTooltip()).isNotBlank();
+		assertThat(talent.getTooltip()).isEqualTo("Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 20% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.");
 		assertThat(talent.getAttributes().getSpecialAbilities()).hasSize(1);
 
 		SpecialAbility specialAbility = talent.getAttributes().getSpecialAbilities().get(0);

@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Duration;
+import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.effects.EffectId;
 import wow.commons.model.spells.*;
@@ -59,12 +60,13 @@ public class SpellRankSheetParser extends WowExcelSheetParser {
 
 		SpellIdAndRank id = new SpellIdAndRank(spellId, rank);
 		SpellInfo spellInfo = spellInfoById.get(spellId);
+		Description description = getDescription(spellId.getName()).merge(spellInfo.getDescription());
 		Restriction restriction = getRestriction().merge(spellInfo.getRestriction());
 		CastInfo castInfo = getCastInfo();
 		DirectDamageInfo directDamageInfo = getDirectDamageInfo();
 		DotDamageInfo dotDamageInfo = getDotDamageInfo();
 
-		return new Spell(id, restriction, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		return new Spell(id, restriction, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 	}
 
 	private CastInfo getCastInfo() {

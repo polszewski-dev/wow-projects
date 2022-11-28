@@ -1,29 +1,29 @@
 package wow.commons.repository.impl.parsers.spells;
 
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
-import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentIdAndRank;
-import wow.commons.repository.impl.SpellDataRepositoryImpl;
-import wow.commons.util.AttributesBuilder;
+import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.talents.TalentTree;
+import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
+
+import java.util.Map;
 
 /**
  * User: POlszewski
- * Date: 2022-11-22
+ * Date: 2022-11-28
  */
-public class TalentSheetParser extends BenefitSheetParser {
+public class TalentSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colTalent = column("talent");
-	private final ExcelColumn colRank = column("rank");
+	private final ExcelColumn colTree = column("tree");
 	private final ExcelColumn colMaxRank = column("max rank");
 	private final ExcelColumn colCalculatorPosition = column("talent calculator position");
 
-	private final SpellDataRepositoryImpl spellDataRepository;
+	private final Map<TalentId, TalentInfo> talentInfoById;
 
-	public TalentSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public TalentSheetParser(String sheetName, Map<TalentId, TalentInfo> talentInfoById) {
 		super(sheetName);
-		this.spellDataRepository = spellDataRepository;
+		this.talentInfoById = talentInfoById;
 	}
 
 	@Override
@@ -33,29 +33,26 @@ public class TalentSheetParser extends BenefitSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		Talent talent = getTalent();
-		Attributes talentBenefit = getTalentBenefit();
-		spellDataRepository.addTalent(talent, talentBenefit);
+		TalentInfo talentInfo = getTalentInfo();
+		talentInfoById.put(talentInfo.getTalentId(), talentInfo);
 	}
 
-	private Talent getTalent() {
+	private TalentInfo getTalentInfo() {
 		var talentId = colTalent.getEnum(TalentId::parse);
-		var rank = colRank.getInteger();
+		var tree = colTree.getEnum(TalentTree::parse);
 		var maxRank = colMaxRank.getInteger();
 		var talentCalculatorPosition = colCalculatorPosition.getInteger();
 
-		TalentIdAndRank id = new TalentIdAndRank(talentId, rank);
 		Description description = getDescription(talentId.getName());
 		Restriction restriction = getRestriction();
 
-		return new Talent(id, description, restriction, Attributes.EMPTY, maxRank, talentCalculatorPosition);
-	}
-
-	private Attributes getTalentBenefit() {
-		Attributes attributesWithoutConditions = new AttributesBuilder()
-				.addAttributes(readAttributes(4))
-				.toAttributes();
-
-		return attachConditions(attributesWithoutConditions);
+		return new TalentInfo(
+				talentId,
+				description,
+				restriction,
+				tree,
+				maxRank,
+				talentCalculatorPosition
+		);
 	}
 }
