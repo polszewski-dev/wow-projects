@@ -1,37 +1,43 @@
 package wow.minmax.model;
 
+import lombok.Getter;
 import wow.commons.model.Copyable;
-import wow.commons.model.Duration;
+import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffType;
 import wow.commons.model.equipment.Equipment;
+import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Side;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
+import wow.commons.model.talents.TalentId;
 import wow.commons.model.unit.*;
 import wow.commons.util.AttributeEvaluator;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
  * Date: 2021-11-04
  */
-
+@Getter
 public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollection {
 	private final UUID profileId;
 	private final String profileName;
 	private final CharacterInfo characterInfo;
 	private final CreatureType enemyType;
 	private final Phase phase;
-	private Build build;
-	private Equipment equipment;
+	private Equipment equipment = new Equipment();
+	private List<Buff> buffs = List.of();
 
 	private LocalDateTime lastModified;
 
@@ -51,36 +57,101 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
 		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo, enemyType, phase);
-		copy.build = Copyable.copyNullable(this.build);
 		copy.equipment = Copyable.copyNullable(this.equipment);
+		copy.buffs = new ArrayList<>(this.buffs);
 		copy.lastModified = this.lastModified;
 		return copy;
 	}
 
 	@Override
 	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
-		build.collectAttributes(collector);
 		equipment.collectAttributes(collector);
+		Attributes talentAttributes = getTalentAttributes();
+		collector.addAttributes(talentAttributes);
+		collector.addAttributes(getBuffAttributesModifiedByTalents(talentAttributes));
 	}
 
-	public LocalDateTime getLastModified() {
-		return lastModified;
+	private Attributes getTalentAttributes() {
+		return AttributeEvaluator.of()
+				.addAttributes(getTalents().values())
+				.solveAllLeaveAbilities();
+	}
+
+	public void setEquipment(Equipment equipment) {
+		this.equipment = equipment;
+	}
+
+	public void setBuffs(Collection<Buff> buffs) {
+		validateExclusionGroups(buffs);
+		this.buffs = buffs.stream()
+				.distinct()
+				.collect(Collectors.toList());
+	}
+
+	public void setBuffs(Build.BuffSetId... buffSetIds) {
+		Set<Buff> newBuffs = new HashSet<>();
+		for (Build.BuffSetId buffSetId : buffSetIds) {
+			newBuffs.addAll(getBuild().getBuffSet(buffSetId));
+		}
+		setBuffs(newBuffs);
+	}
+
+	public void enableBuff(Buff buff, boolean enable) {
+		if (!enable) {
+			buffs.removeIf(existingBuff -> Objects.equals(existingBuff.getId(), buff.getId()));
+			return;
+		}
+
+		if (hasBuff(buff)) {
+			return;
+		}
+
+		if (buff.getExclusionGroup() != null) {
+			buffs.removeIf(existingBuff -> existingBuff.getExclusionGroup() == buff.getExclusionGroup());
+		}
+
+		buffs.add(buff);
+	}
+
+	private boolean hasBuff(Buff buff) {
+		return buffs.stream().anyMatch(existingBuff -> Objects.equals(existingBuff.getId(), buff.getId()));
+	}
+
+	private void validateExclusionGroups(Collection<Buff> buffs) {
+		var groups = buffs.stream()
+				.filter(buff -> buff.getExclusionGroup() != null)
+				.collect(Collectors.groupingBy(Buff::getExclusionGroup));
+
+		for (var group : groups.entrySet()) {
+			if (group.getValue().size() > 1) {
+				throw new IllegalArgumentException("Group:  " + group.getKey() + " has more than one buff");
+			}
+		}
+	}
+
+	private List<AttributeSource> getBuffAttributesModifiedByTalents(Attributes talentAttributes) {
+		List<AttributeSource> result = new ArrayList<>(buffs.size());
+
+		for (Buff buff : buffs) {
+			if (buff.getType() == BuffType.SELF_BUFF) {
+				Percent effectIncreasePct = talentAttributes.getEffectIncreasePct(buff.getSourceSpell());
+				result.add(buff.modifyEffectByPct(effectIncreasePct));
+			} else {
+				result.add(buff);
+			}
+		}
+
+		return result;
 	}
 
 	public void setLastModified(LocalDateTime lastModified) {
 		this.lastModified = lastModified;
 	}
 
-	public UUID getProfileId() {
-		return profileId;
-	}
-
-	public String getProfileName() {
-		return profileName;
-	}
-
-	public CharacterInfo getCharacterInfo() {
-		return characterInfo;
+	public Attributes getStats() {
+		return AttributeEvaluator.of()
+				.addAttributes(this)
+				.solveAllLeaveAbilities();
 	}
 
 	public CharacterClass getCharacterClass() {
@@ -95,74 +166,96 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return characterInfo.getLevel();
 	}
 
-	public PetType getActivePet() {
-		return build.getActivePet();
-	}
-
-	public CreatureType getEnemyType() {
-		return enemyType;
-	}
-
-	public Phase getPhase() {
-		return phase;
-	}
-
 	public Build getBuild() {
-		return build;
+		return characterInfo.getBuild();
 	}
 
-	public Spell getDamagingSpell() {
-		return build.getDamagingSpell();
+	public List<CharacterProfession> getProfessions() {
+		return characterInfo.getProfessions();
 	}
 
-	public SpellId getDamagingSpellId() {
-		return build.getDamagingSpell().getSpellId();
+	public Side getSide() {
+		return characterInfo.getSide();
 	}
 
-	public Duration getDamagingSpellCastTime() {
-		return build.getDamagingSpell().getCastTime();
+	public boolean hasProfession(Profession profession) {
+		return characterInfo.hasProfession(profession);
 	}
 
-	public Equipment getEquipment() {
-		return equipment;
+	public boolean hasProfession(Profession profession, int level) {
+		return characterInfo.hasProfession(profession, level);
 	}
 
-	public void setEquipment(Equipment equipment) {
-		this.equipment = equipment;
+	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
+		return characterInfo.hasProfessionSpecialization(specialization);
 	}
 
-	public List<Buff> getBuffs() {
-		return build.getBuffs();
+	public boolean hasTalent(TalentId talentId) {
+		return characterInfo.hasTalent(talentId);
 	}
 
-	public void setBuffs(List<Buff> buffs) {
-		build.setBuffs(buffs);
+	public String getBuildId() {
+		return getBuild().getBuildId();
 	}
 
-	public void setBuffs(Build.BuffSetId... buffSetIds) {
-		build.setBuffsFromSets(buffSetIds);
+	public void setTalentLink(String talentLink) {
+		getBuild().setTalentLink(talentLink);
 	}
 
-	public Collection<Talent> getTalents() {
-		return build.getTalents().values();
+	public String getTalentLink() {
+		return getBuild().getTalentLink();
 	}
 
-	public void setBuild(Build build) {
-		this.build = build;
+	public void setRelevantSpells(List<Spell> relevantSpells) {
+		getBuild().setRelevantSpells(relevantSpells);
 	}
 
-	public void enableBuff(Buff buff, boolean enable) {
-		build.enableBuff(buff, enable);
+	public void setActivePet(PetType activePet) {
+		getBuild().setActivePet(activePet);
+	}
+
+	public Map<TalentId, Talent> getTalents() {
+		return getBuild().getTalents();
 	}
 
 	public PVERole getRole() {
-		return build.getRole();
+		return getBuild().getRole();
 	}
 
-	public Attributes getStats() {
-		return AttributeEvaluator.of()
-				.addAttributes(this)
-				.solveAllLeaveAbilities();
+	public Spell getDamagingSpell() {
+		return getBuild().getDamagingSpell();
+	}
+
+	public List<Spell> getRelevantSpells() {
+		return getBuild().getRelevantSpells();
+	}
+
+	public PetType getActivePet() {
+		return getBuild().getActivePet();
+	}
+
+	public Map<Build.BuffSetId, List<Buff>> getBuffSets() {
+		return getBuild().getBuffSets();
+	}
+
+	public void setBuffSets(Map<Build.BuffSetId, List<Buff>> buffSets) {
+		getBuild().setBuffSets(buffSets);
+	}
+
+	public void setDamagingSpell(Spell damagingSpell) {
+		getBuild().setDamagingSpell(damagingSpell);
+	}
+
+	public void setTalents(Map<TalentId, Talent> talents) {
+		getBuild().setTalents(talents);
+	}
+
+	public void setRole(PVERole role) {
+		getBuild().setRole(role);
+	}
+
+	public SpellId getDamagingSpellId() {
+		return getBuild().getDamagingSpell().getSpellId();
 	}
 
 	@Override

@@ -49,10 +49,10 @@ public class Restriction {
 		if (requiredProfession != null && !characterInfo.hasProfession(requiredProfession, requiredProfessionLevel)) {
 			return false;
 		}
-		if (requiredProfessionSpec != null) {
-			return characterInfo.hasProfessionSpecialization(requiredProfessionSpec);
+		if (requiredProfessionSpec != null && !characterInfo.hasProfessionSpecialization(requiredProfessionSpec)) {
+			return false;
 		}
-		return true;
+		return requiredTalent == null || characterInfo.hasTalent(requiredTalent);
 	}
 
 	public Restriction merge(Restriction secondary) {

@@ -9,6 +9,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.unit.Build;
 import wow.commons.model.unit.CharacterInfo;
 import wow.commons.model.unit.CharacterProfession;
 import wow.commons.repository.ItemDataRepository;
@@ -39,18 +40,17 @@ abstract class ServiceTest {
 	ItemDataRepository itemDataRepository;
 
 	PlayerProfile getPlayerProfile(String buildId) {
-		PlayerProfile playerProfile = new PlayerProfile(
+		Build build = buildRepository.getBuild(buildId, 70).orElseThrow();
+		return new PlayerProfile(
 				UUID.randomUUID(),
 				"test",
-				new CharacterInfo(WARLOCK, ORC, 70, List.of(
+				new CharacterInfo(WARLOCK, ORC, 70, build, List.of(
 						new CharacterProfession(Profession.TAILORING, 375, null),
 						new CharacterProfession(Profession.ENCHANTING, 375, null)
 				)),
 				UNDEAD,
 				Phase.TBC_P5
 		);
-		playerProfile.setBuild(buildRepository.getBuild(buildId, 70).orElseThrow());
-		return playerProfile;
 	}
 
 	Equipment getEquipment() {
@@ -92,7 +92,7 @@ abstract class ServiceTest {
 		return new EquippableItem(itemDataRepository.getItem(name).orElseThrow());
 	}
 
-	private Enchant getEnchant(String name) {
+	Enchant getEnchant(String name) {
 		return itemDataRepository.getEnchant(name).orElseThrow();
 	}
 }

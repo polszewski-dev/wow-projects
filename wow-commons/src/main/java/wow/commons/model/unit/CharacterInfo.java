@@ -4,6 +4,7 @@ import lombok.Getter;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Side;
+import wow.commons.model.talents.TalentId;
 
 import java.util.List;
 
@@ -16,12 +17,14 @@ public class CharacterInfo {
 	private final CharacterClass characterClass;
 	private final Race race;
 	private final int level;
+	private final Build build;
 	private final List<CharacterProfession> professions;
 
-	public CharacterInfo(CharacterClass characterClass, Race race, int level, List<CharacterProfession> professions) {
+	public CharacterInfo(CharacterClass characterClass, Race race, int level, Build build, List<CharacterProfession> professions) {
 		this.characterClass = characterClass;
 		this.race = race;
 		this.level = level;
+		this.build = build;
 		this.professions = professions;
 		if (professions.size() > 2) {
 			throw new IllegalArgumentException("At most 2 professions allowed");
@@ -45,5 +48,9 @@ public class CharacterInfo {
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
 		return professions.stream().anyMatch(x -> x.getSpecialization() == specialization);
+	}
+
+	public boolean hasTalent(TalentId talentId) {
+		return build.hasTalent(talentId);
 	}
 }

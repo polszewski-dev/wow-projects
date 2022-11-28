@@ -158,7 +158,7 @@ public class ItemServiceImpl implements ItemService {
 			return true;
 		}
 
-		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, playerProfile.getDamagingSpellCastTime());
+		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, playerProfile.getDamagingSpell().getCastTime());
 
 		for (SpecialAbility specialAbility : attributeSource.getSpecialAbilities()) {
 			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);

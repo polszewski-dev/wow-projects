@@ -2,15 +2,12 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.model.unit.Build;
 import wow.commons.model.unit.CharacterInfo;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.persistent.CharacterProfessionPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.BuildRepository;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -32,7 +29,7 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 				playerProfile.getCharacterClass(),
 				playerProfile.getRace(),
 				playerProfile.getLevel(),
-				convertCharacterProfessions(playerProfile),
+				characterProfessionPOConverter.convertList(playerProfile.getProfessions()),
 				playerProfile.getEnemyType(),
 				playerProfile.getPhase(),
 				playerProfile.getBuild().getBuildId(),
@@ -51,28 +48,20 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 				value.getEnemyType(),
 				value.getPhase()
 		);
-
-		playerProfile.setBuild(buildRepository.getBuild(value.getBuildId(), value.getLevel()).orElseThrow());
 		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment()));
 		playerProfile.setBuffs(buffPOConverter.convertBackList(value.getBuffs()));
 		playerProfile.setLastModified(value.getLastModified());
 		return playerProfile;
 	}
 
-	private List<CharacterProfessionPO> convertCharacterProfessions(PlayerProfile playerProfile) {
-		return playerProfile.getCharacterInfo().getProfessions().stream()
-				.map(characterProfessionPOConverter::convert)
-				.collect(Collectors.toList());
-	}
-
 	private CharacterInfo convertBackCharacterInfo(PlayerProfilePO playerProfile) {
+		Build build = buildRepository.getBuild(playerProfile.getBuildId(), playerProfile.getLevel()).orElseThrow();
 		return new CharacterInfo(
 				playerProfile.getCharacterClass(),
 				playerProfile.getRace(),
 				playerProfile.getLevel(),
-				playerProfile.getProfessions().stream()
-						.map(characterProfessionPOConverter::doConvertBack)
-						.collect(Collectors.toList())
+				build,
+				characterProfessionPOConverter.convertBackList(playerProfile.getProfessions())
 		);
 	}
 }

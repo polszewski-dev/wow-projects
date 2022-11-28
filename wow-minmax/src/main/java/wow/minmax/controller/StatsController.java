@@ -10,9 +10,7 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.unit.Build;
 import wow.minmax.converter.dto.PlayerSpellStatsConverter;
-import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.model.dto.PlayerStatsDTO;
@@ -63,7 +61,7 @@ public class StatsController {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
 
 		return List.of(
-				getPlayerStatsDTO("Current buffs", playerProfile, CURRENT),
+				getCurrentPlayerStatsDTO("Current buffs", playerProfile),
 				getEquipmentStats("Items", playerProfile),
 				getPlayerStatsDTO("No buffs", playerProfile),
 				getPlayerStatsDTO("Self-buffs", playerProfile, SELF_BUFFS),
@@ -86,40 +84,32 @@ public class StatsController {
 	}
 
 	private PlayerStatsDTO getEquipmentStats(String type, PlayerProfile playerProfile) {
-		PlayerProfile copy = playerProfile.copy();
+		return getPlayerStatsDTO(type, playerProfile, playerProfile.getEquipment().getStats());
+	}
 
-		Build emptyBuild = playerProfileService.getBuild(BuildIds.NONE, playerProfile.getLevel());
-		emptyBuild.setDamagingSpell(playerProfile.getDamagingSpell());
-
-		copy.setBuild(emptyBuild);
-		copy.setBuffs(List.of());
-
-		return getPlayerStatsDTO(type, copy, copy.getDamagingSpell());
+	private PlayerStatsDTO getCurrentPlayerStatsDTO(String type, PlayerProfile playerProfile) {
+		return getPlayerStatsDTO(type, playerProfile, playerProfile.getStats());
 	}
 
 	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, BuffSetId... buffSetIds) {
 		PlayerProfile copy = playerProfile.copy();
-
 		copy.setBuffs(buffSetIds);
-
-		Spell spell = copy.getDamagingSpell();
-		return getPlayerStatsDTO(type, copy, spell);
+		return getPlayerStatsDTO(type, copy, copy.getStats());
 	}
 
-	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, Spell spell) {
-		Attributes attributes = playerProfile.getStats();
-		Snapshot snapshot = calculationService.getSnapshot(playerProfile, spell, null);
+	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, Attributes totalStats) {
+		Snapshot snapshot = calculationService.getSnapshot(playerProfile, playerProfile.getDamagingSpell(), totalStats);
 
 		return new PlayerStatsDTO(
 				type,
-				(int) attributes.getTotalSpellDamage(),
-				(int) attributes.getTotalSpellDamage(SpellSchool.SHADOW),
-				(int) attributes.getTotalSpellDamage(SpellSchool.FIRE),
-				(int) attributes.getSpellHitRating(),
+				(int) totalStats.getTotalSpellDamage(),
+				(int) totalStats.getTotalSpellDamage(SpellSchool.SHADOW),
+				(int) totalStats.getTotalSpellDamage(SpellSchool.FIRE),
+				(int) totalStats.getSpellHitRating(),
 				snapshot.getTotalHit(),
-				(int) attributes.getSpellCritRating(),
+				(int) totalStats.getSpellCritRating(),
 				snapshot.getTotalCrit(),
-				(int) attributes.getSpellHasteRating(),
+				(int) totalStats.getSpellHasteRating(),
 				snapshot.getTotalHaste(),
 				(int) snapshot.getStamina(),
 				(int) snapshot.getIntellect(),

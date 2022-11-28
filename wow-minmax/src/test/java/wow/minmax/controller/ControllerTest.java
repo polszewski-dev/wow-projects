@@ -13,7 +13,6 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
-import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
@@ -115,16 +114,14 @@ abstract class ControllerTest {
 		build.setRelevantSpells(List.of(spell));
 		build.setActivePet(null);
 		build.setBuffSets(Map.of(Build.BuffSetId.SELF_BUFFS, List.of(buff)));
-		build.setBuffs(List.of(buff));
 	}
 
 	private void createProfile() {
-		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, List.of());
+		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, build, List.of());
 
 		profile = new PlayerProfile(UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002"), "test#1", characterInfo, CreatureType.DEMON, Phase.TBC_P5);
-		profile.setBuild(build);
-		profile.setEquipment(new Equipment());
 		profile.getEquipment().set(new EquippableItem(chest).enchant(enchant).gem(redGem, yellowGem, blueGem));
 		profile.getEquipment().set(new EquippableItem(trinket), ItemSlot.TRINKET_1);
+		profile.setBuffs(List.of(buff));
 	}
 }

@@ -35,13 +35,14 @@ public class BuildRepositoryImpl implements BuildRepository {
 
 	@Override
 	public Optional<Build> getBuild(String buildId, int level) {
-		if (buildId.equals(BuildIds.NONE)) {
-			return createEmptyBuild();
+		switch (buildId) {
+			case BuildIds.NONE:
+				return createEmptyBuild();
+			case BuildIds.DESTRO_SHADOW_BUILD:
+				return createDestroShadowBuild(buildId, level);
+			default:
+				return Optional.empty();
 		}
-		if (buildId.equals(BuildIds.DESTRO_SHADOW_BUILD)) {
-			return createDestroShadowBuild(buildId, level);
-		}
-		return Optional.empty();
 	}
 
 	private Optional<Build> createEmptyBuild() {
@@ -52,7 +53,6 @@ public class BuildRepositoryImpl implements BuildRepository {
 		build.setDamagingSpell(null);
 		build.setRelevantSpells(List.of());
 		build.setBuffSets(Map.of());
-		build.setBuffs(List.of());
 		return Optional.of(build);
 	}
 
@@ -103,7 +103,6 @@ public class BuildRepositoryImpl implements BuildRepository {
 		));
 
 		build.setBuffSets(buffSets);
-		build.setBuffs(List.of());
 
 		return Optional.of(build);
 	}

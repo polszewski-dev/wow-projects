@@ -47,10 +47,15 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
+		int level = phase.getGameVersion().getMaxLevel();
+
+		Build build = getBuild(profileConfig.getDefaultBuild(), level);
+
 		CharacterInfo characterInfo = new CharacterInfo(
 				profileConfig.getDefaultClass(),
 				profileConfig.getDefaultRace(),
-				phase.getGameVersion().getMaxLevel(),
+				level,
+				build,
 				profileConfig.getDefaultProfessions(phase)
 		);
 
@@ -62,9 +67,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				phase
 		);
 
-		playerProfile.setBuild(getBuild(profileConfig.getDefaultBuild(), characterInfo.getLevel()));
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
-		playerProfile.setEquipment(new Equipment());
 		playerProfileRepository.saveProfile(playerProfile);
 		return playerProfile;
 	}

@@ -2,7 +2,7 @@ package wow.commons.model.attributes;
 
 import wow.commons.model.attributes.complex.ComplexAttribute;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * User: POlszewski
@@ -11,7 +11,7 @@ import java.util.List;
 public interface AttributeCollector<T extends AttributeCollector<T>> {
 	T addAttributes(AttributeSource attributeSource);
 
-	default T addAttributes(List<? extends AttributeSource> attributeSources) {
+	default T addAttributes(Collection<? extends AttributeSource> attributeSources) {
 		for (AttributeSource attributeSource : attributeSources) {
 			addAttributes(attributeSource);
 		}
