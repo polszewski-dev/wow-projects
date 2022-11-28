@@ -4,7 +4,6 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.equipment.ItemSockets;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
-import wow.commons.model.item.ItemSocketsUniqueConfiguration;
 import wow.commons.model.item.SocketType;
 import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.PlayerProfile;
@@ -29,7 +28,7 @@ public class GemComboFinder {
 	}
 
 	public List<Gem[]> getGemCombos(PlayerProfile playerProfile, ItemSocketSpecification socketSpecification) {
-		ItemSocketsUniqueConfiguration uniqueConfiguration = socketSpecification.getUniqueConfiguration();
+		ItemSocketsUniqueConfiguration uniqueConfiguration = ItemSocketsUniqueConfiguration.of(socketSpecification.getSocketTypes());
 		List<Gem[]> gemCombos = getGemCombos(playerProfile, uniqueConfiguration);
 
 		return gemCombos.stream()
@@ -45,7 +44,7 @@ public class GemComboFinder {
 	}
 
 	private List<Gem[]> findGemCombos(PlayerProfile playerProfile, ItemSocketsUniqueConfiguration uniqueConfiguration) {
-		ItemSocketSpecification specification = uniqueConfiguration.getSocketSpecification();
+		ItemSocketSpecification specification = uniqueConfiguration.getSpecification();
 
 		if (specification.getSocketCount() == 1) {
 			return getSingleGemCombos(playerProfile, specification);
@@ -120,7 +119,7 @@ public class GemComboFinder {
 	}
 
 	private Gem[] changeBackGemOrder(ItemSocketsUniqueConfiguration uniqueConfiguration, Gem[] gemCombo, ItemSocketSpecification itemSpecification) {
-		ItemSocketSpecification uniqueSpecification = uniqueConfiguration.getSocketSpecification();
+		ItemSocketSpecification uniqueSpecification = uniqueConfiguration.getSpecification();
 		int socketCount = uniqueSpecification.getSocketCount();
 
 		if (gemCombo.length != socketCount) {

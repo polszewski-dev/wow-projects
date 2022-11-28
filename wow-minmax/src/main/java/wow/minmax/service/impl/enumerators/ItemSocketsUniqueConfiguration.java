@@ -1,7 +1,9 @@
-package wow.commons.model.item;
+package wow.minmax.service.impl.enumerators;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.item.ItemSocketSpecification;
+import wow.commons.model.item.SocketType;
 import wow.commons.util.EnumUtil;
 
 import java.util.List;
@@ -43,10 +45,16 @@ public enum ItemSocketsUniqueConfiguration {
 	BBB("BBB");
 
 	private final String key;
-	private ItemSocketSpecification specification;
+	private final ItemSocketSpecification specification;
 
 	ItemSocketsUniqueConfiguration(String key) {
 		this.key = key;
+		this.specification = new ItemSocketSpecification(
+				key.chars()
+						.mapToObj(letter -> parseSocketType((char)letter))
+						.collect(Collectors.toList()),
+				Attributes.EMPTY
+		);
 	}
 
 	public static ItemSocketsUniqueConfiguration parse(String value) {
@@ -60,18 +68,6 @@ public enum ItemSocketsUniqueConfiguration {
 				.map(socketType -> socketType.toString().substring(0, 1))
 				.collect(Collectors.joining());
 		return parse(key);
-	}
-
-	public ItemSocketSpecification getSocketSpecification() {
-		if (specification == null) {
-			this.specification = new ItemSocketSpecification(
-					key.chars()
-							.mapToObj(letter -> parseSocketType((char)letter))
-							.collect(Collectors.toList()),
-					Attributes.EMPTY
-			);
-		}
-		return specification;
 	}
 
 	private static SocketType parseSocketType(char firstLetter) {

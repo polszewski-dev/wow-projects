@@ -12,14 +12,12 @@ import java.util.List;
 public class ItemSocketSpecification {
 	private final List<SocketType> socketTypes;
 	private final Attributes socketBonus;
-	private final ItemSocketsUniqueConfiguration uniqueConfiguration;
 
 	public static final ItemSocketSpecification EMPTY = new ItemSocketSpecification(List.of(), Attributes.EMPTY);
 
 	public ItemSocketSpecification(List<SocketType> socketTypes, Attributes socketBonus) {
 		this.socketTypes = socketTypes;
 		this.socketBonus = socketBonus;
-		this.uniqueConfiguration = ItemSocketsUniqueConfiguration.of(socketTypes);
 	}
 
 	public int getSocketCount() {
@@ -40,9 +38,5 @@ public class ItemSocketSpecification {
 
 	public Attributes getSocketBonus() {
 		return socketBonus;
-	}
-
-	public ItemSocketsUniqueConfiguration getUniqueConfiguration() {
-		return uniqueConfiguration;
 	}
 }
