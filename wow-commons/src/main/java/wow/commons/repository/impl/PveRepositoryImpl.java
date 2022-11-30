@@ -2,10 +2,6 @@ package wow.commons.repository.impl;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.character.BaseStatInfo;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.CombatRatingInfo;
-import wow.commons.model.character.Race;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
@@ -27,8 +23,6 @@ public class PveRepositoryImpl implements PveRepository {
 	private final Map<String, Zone> zoneByName = new TreeMap<>();
 	private final Map<Integer, Boss> bossById = new TreeMap<>();
 	private final Map<String, Faction> factionByName = new TreeMap<>();
-	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
-	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
 
 	@Override
 	public Optional<Zone> getZone(int zoneId) {
@@ -64,20 +58,6 @@ public class PveRepositoryImpl implements PveRepository {
 				.collect(Collectors.toList());
 	}
 
-	@Override
-	public Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level) {
-		return baseStatInfos.stream()
-				.filter(x -> x.getCharacterClass() == characterClass && x.getRace() == race && x.getLevel() == level)
-				.findAny();
-	}
-
-	@Override
-	public Optional<CombatRatingInfo> getCombatRatings(int level) {
-		return combatRatingInfos.stream()
-				.filter(x -> x.getLevel() == level)
-				.findAny();
-	}
-
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
 		var pveExcelParser = new PveExcelParser(this);
@@ -107,13 +87,5 @@ public class PveRepositoryImpl implements PveRepository {
 
 	public void addFactionByName(Faction faction) {
 		factionByName.put(faction.getName(), faction);
-	}
-
-	public void addBaseStatInfo(BaseStatInfo baseStatInfo) {
-		baseStatInfos.add(baseStatInfo);
-	}
-
-	public void addCombatRatingInfo(CombatRatingInfo combatRatingInfo) {
-		combatRatingInfos.add(combatRatingInfo);
 	}
 }

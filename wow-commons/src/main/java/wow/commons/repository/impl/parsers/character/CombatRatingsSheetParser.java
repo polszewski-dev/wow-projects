@@ -1,7 +1,7 @@
-package wow.commons.repository.impl.parsers.pve;
+package wow.commons.repository.impl.parsers.character;
 
 import wow.commons.model.character.CombatRatingInfo;
-import wow.commons.repository.impl.PveRepositoryImpl;
+import wow.commons.repository.impl.CharacterRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
@@ -14,11 +14,11 @@ public class CombatRatingsSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colSpellHit = column("spell_hit");
 	private final ExcelColumn colSpellHaste = column("spell_haste");
 
-	private final PveRepositoryImpl pveRepository;
+	private final CharacterRepositoryImpl characterRepository;
 
-	public CombatRatingsSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
+	public CombatRatingsSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName);
-		this.pveRepository = pveRepository;
+		this.characterRepository = characterRepository;
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class CombatRatingsSheetParser extends WowExcelSheetParser {
 	@Override
 	protected void readSingleRow() {
 		CombatRatingInfo combatRatingInfo = getCombatRatingInfo();
-		pveRepository.addCombatRatingInfo(combatRatingInfo);
+		characterRepository.addCombatRatingInfo(combatRatingInfo);
 	}
 
 	private CombatRatingInfo getCombatRatingInfo() {

@@ -1,9 +1,9 @@
-package wow.commons.repository.impl.parsers.pve;
+package wow.commons.repository.impl.parsers.character;
 
 import wow.commons.model.character.BaseStatInfo;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
-import wow.commons.repository.impl.PveRepositoryImpl;
+import wow.commons.repository.impl.CharacterRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
@@ -24,11 +24,11 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colBaseSpellCrit = column("base_spell_crit");
 	private final ExcelColumn colIntPerCrit = column("int_per_crit");
 
-	private final PveRepositoryImpl pveRepository;
+	private final CharacterRepositoryImpl characterRepository;
 
-	public BaseStatsSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
+	public BaseStatsSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName);
-		this.pveRepository = pveRepository;
+		this.characterRepository = characterRepository;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 	@Override
 	protected void readSingleRow() {
 		BaseStatInfo baseStatInfo = getBaseStatInfo();
-		pveRepository.addBaseStatInfo(baseStatInfo);
+		characterRepository.addBaseStatInfo(baseStatInfo);
 	}
 
 	private BaseStatInfo getBaseStatInfo() {

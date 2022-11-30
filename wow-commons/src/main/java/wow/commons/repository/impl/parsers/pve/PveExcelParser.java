@@ -28,9 +28,7 @@ public class PveExcelParser extends ExcelParser {
 		return Stream.of(
 				new ZoneSheetParser("zones", pveRepository),
 				new BossSheetParser("bosses", pveRepository),
-				new FactionSheetParser("factions", pveRepository),
-				new BaseStatsSheetParser("base_stats", pveRepository),
-				new CombatRatingsSheetParser("combat_ratings", pveRepository)
+				new FactionSheetParser("factions", pveRepository)
 		);
 	}
 }

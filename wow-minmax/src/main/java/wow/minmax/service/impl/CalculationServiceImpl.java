@@ -12,7 +12,7 @@ import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellStatistics;
-import wow.commons.repository.PveRepository;
+import wow.commons.repository.CharacterRepository;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
@@ -28,7 +28,7 @@ import static wow.commons.model.spells.Snapshot.CritMode;
 @Service
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
-	private final PveRepository pveRepository;
+	private final CharacterRepository characterRepository;
 
 	private static final double PRECISION = 0.0001;
 
@@ -102,8 +102,8 @@ public class CalculationServiceImpl implements CalculationService {
 		spell = initOptional(playerProfile, spell);
 		totalStats = initOptional(playerProfile, totalStats);
 
-		BaseStatInfo baseStats = pveRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel()).orElseThrow();
-		CombatRatingInfo cr = pveRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
+		BaseStatInfo baseStats = characterRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel()).orElseThrow();
+		CombatRatingInfo cr = characterRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
 
 		return new Snapshot(
 				spell,
