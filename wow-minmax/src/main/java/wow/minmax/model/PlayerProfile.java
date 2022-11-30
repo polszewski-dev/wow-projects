@@ -9,6 +9,7 @@ import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffType;
+import wow.commons.model.character.*;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
@@ -18,7 +19,6 @@ import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.unit.*;
 import wow.commons.util.AttributeEvaluator;
 
 import java.time.LocalDateTime;

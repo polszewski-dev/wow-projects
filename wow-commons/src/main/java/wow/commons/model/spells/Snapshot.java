@@ -9,10 +9,10 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
-import wow.commons.model.unit.BaseStatInfo;
-import wow.commons.model.unit.CombatRatingInfo;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PetType;
+import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CombatRatingInfo;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PetType;
 
 import java.util.ArrayList;
 import java.util.Comparator;

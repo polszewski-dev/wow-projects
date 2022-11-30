@@ -1,6 +1,6 @@
 package wow.commons.repository.impl.parsers.pve;
 
-import wow.commons.model.unit.CombatRatingInfo;
+import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.repository.impl.PVERepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 

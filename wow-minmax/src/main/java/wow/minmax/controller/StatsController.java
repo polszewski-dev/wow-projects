@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static wow.commons.model.unit.Build.BuffSetId;
-import static wow.commons.model.unit.Build.BuffSetId.*;
+import static wow.commons.model.character.Build.BuffSetId;
+import static wow.commons.model.character.Build.BuffSetId.*;
 
 /**
  * User: POlszewski

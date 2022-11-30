@@ -2,10 +2,10 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.Race;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

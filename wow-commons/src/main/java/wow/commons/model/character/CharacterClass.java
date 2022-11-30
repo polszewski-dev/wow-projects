@@ -1,4 +1,4 @@
-package wow.commons.model.unit;
+package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,8 +6,8 @@ import wow.commons.util.EnumUtil;
 
 import java.util.List;
 
-import static wow.commons.model.unit.ArmorProfficiency.*;
-import static wow.commons.model.unit.WeaponProfficiency.*;
+import static wow.commons.model.character.ArmorProfficiency.*;
+import static wow.commons.model.character.WeaponProfficiency.*;
 
 /**
  * User: POlszewski

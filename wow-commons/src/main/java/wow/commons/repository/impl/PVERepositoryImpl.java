@@ -2,13 +2,13 @@ package wow.commons.repository.impl;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
+import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CombatRatingInfo;
+import wow.commons.model.character.Race;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
-import wow.commons.model.unit.BaseStatInfo;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.CombatRatingInfo;
-import wow.commons.model.unit.Race;
 import wow.commons.repository.PVERepository;
 import wow.commons.repository.impl.parsers.pve.PVEExcelParser;
 

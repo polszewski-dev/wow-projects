@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.character.Build;
+import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.Build;
-import wow.commons.model.unit.CharacterInfo;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
 import wow.minmax.config.ProfileConfig;
@@ -24,7 +24,7 @@ import wow.minmax.service.UpgradeService;
 import java.util.List;
 import java.util.UUID;
 
-import static wow.commons.model.unit.Build.BuffSetId.*;
+import static wow.commons.model.character.Build.BuffSetId.*;
 
 /**
  * User: POlszewski

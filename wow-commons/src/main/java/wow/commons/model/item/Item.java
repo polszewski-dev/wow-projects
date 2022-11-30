@@ -6,12 +6,12 @@ import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.WeaponSubType;
+import wow.commons.model.character.ArmorProfficiency;
+import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.character.WeaponProfficiency;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.ArmorProfficiency;
-import wow.commons.model.unit.CharacterInfo;
-import wow.commons.model.unit.WeaponProfficiency;
 
 import java.util.List;
 

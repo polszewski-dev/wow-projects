@@ -2,14 +2,14 @@ package wow.commons.model.config;
 
 import lombok.Builder;
 import lombok.Getter;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.character.Race;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.CharacterInfo;
-import wow.commons.model.unit.Race;
 
 import java.util.List;
 

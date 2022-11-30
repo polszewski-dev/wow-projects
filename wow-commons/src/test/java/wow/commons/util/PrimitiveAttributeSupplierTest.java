@@ -9,12 +9,12 @@ import wow.commons.model.attributes.Attributes;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
+import static wow.commons.model.character.CreatureType.DEMON;
+import static wow.commons.model.character.CreatureType.UNDEAD;
+import static wow.commons.model.character.PetType.IMP;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.commons.model.spells.SpellSchool.*;
 import static wow.commons.model.talents.TalentTree.DESTRUCTION;
-import static wow.commons.model.unit.CreatureType.DEMON;
-import static wow.commons.model.unit.CreatureType.UNDEAD;
-import static wow.commons.model.unit.PetType.IMP;
 
 /**
  * User: POlszewski

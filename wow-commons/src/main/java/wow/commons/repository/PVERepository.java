@@ -1,12 +1,12 @@
 package wow.commons.repository;
 
+import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CombatRatingInfo;
+import wow.commons.model.character.Race;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
-import wow.commons.model.unit.BaseStatInfo;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.CombatRatingInfo;
-import wow.commons.model.unit.Race;
 
 import java.util.List;
 import java.util.Optional;

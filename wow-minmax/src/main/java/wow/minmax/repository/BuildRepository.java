@@ -1,6 +1,6 @@
 package wow.minmax.repository;
 
-import wow.commons.model.unit.Build;
+import wow.commons.model.character.Build;
 
 import java.util.Optional;
 

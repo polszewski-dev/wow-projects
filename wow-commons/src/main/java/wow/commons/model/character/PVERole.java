@@ -1,4 +1,4 @@
-package wow.commons.model.unit;
+package wow.commons.model.character;
 
 /**
  * User: POlszewski

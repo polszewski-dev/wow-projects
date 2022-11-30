@@ -23,10 +23,10 @@ import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.categorization.ItemRarity.EPIC;
 import static wow.commons.model.categorization.ItemType.CHEST;
 import static wow.commons.model.categorization.ItemType.TOKEN;
+import static wow.commons.model.character.CharacterClass.*;
 import static wow.commons.model.professions.Profession.TAILORING;
 import static wow.commons.model.pve.Phase.TBC_P3;
 import static wow.commons.model.pve.Phase.TBC_P5;
-import static wow.commons.model.unit.CharacterClass.*;
 
 /**
  * User: POlszewski

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.unit.PetType;
+import wow.commons.model.character.PetType;
 
 /**
  * User: POlszewski

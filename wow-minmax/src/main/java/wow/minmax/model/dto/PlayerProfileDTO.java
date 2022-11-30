@@ -3,11 +3,11 @@ package wow.minmax.model.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PVERole;
+import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PVERole;
-import wow.commons.model.unit.Race;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

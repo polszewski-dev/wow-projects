@@ -11,6 +11,7 @@ import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.character.*;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.equipment.EquippableItem;
@@ -18,7 +19,6 @@ import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.*;
 import wow.commons.model.talents.TalentTree;
-import wow.commons.model.unit.*;
 import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 

@@ -6,10 +6,10 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.character.PetType;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentTree;
-import wow.commons.model.unit.PetType;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.util.AttributesBuilder;
 

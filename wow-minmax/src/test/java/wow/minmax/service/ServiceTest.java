@@ -3,15 +3,15 @@ package wow.minmax.service;
 import org.assertj.core.data.Offset;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.character.Build;
+import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.character.CharacterProfession;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.Build;
-import wow.commons.model.unit.CharacterInfo;
-import wow.commons.model.unit.CharacterProfession;
 import wow.commons.repository.ItemDataRepository;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.BuildRepository;
@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static wow.commons.model.unit.CharacterClass.WARLOCK;
-import static wow.commons.model.unit.CreatureType.UNDEAD;
-import static wow.commons.model.unit.Race.ORC;
+import static wow.commons.model.character.CharacterClass.WARLOCK;
+import static wow.commons.model.character.CreatureType.UNDEAD;
+import static wow.commons.model.character.Race.ORC;
 
 /**
  * User: POlszewski

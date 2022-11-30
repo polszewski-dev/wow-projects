@@ -1,8 +1,8 @@
 package wow.commons.repository.impl.parsers.pve;
 
-import wow.commons.model.unit.BaseStatInfo;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.Race;
+import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.Race;
 import wow.commons.repository.impl.PVERepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 

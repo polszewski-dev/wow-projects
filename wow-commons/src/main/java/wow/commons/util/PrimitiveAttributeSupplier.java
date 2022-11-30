@@ -5,11 +5,11 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentTree;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PetType;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -11,25 +11,25 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.special.ProcEvent;
+import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CombatRatingInfo;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
-import wow.commons.model.unit.BaseStatInfo;
-import wow.commons.model.unit.CombatRatingInfo;
-import wow.commons.model.unit.CreatureType;
-import wow.commons.model.unit.PetType;
 
 import java.util.Comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.character.CharacterClass.WARLOCK;
+import static wow.commons.model.character.CreatureType.UNDEAD;
+import static wow.commons.model.character.Race.ORC;
 import static wow.commons.model.spells.Snapshot.CritMode;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.commons.model.spells.SpellSchool.FIRE;
 import static wow.commons.model.spells.SpellSchool.SHADOW;
 import static wow.commons.model.talents.TalentTree.DESTRUCTION;
-import static wow.commons.model.unit.CharacterClass.WARLOCK;
-import static wow.commons.model.unit.CreatureType.UNDEAD;
-import static wow.commons.model.unit.Race.ORC;
 
 /**
  * User: POlszewski

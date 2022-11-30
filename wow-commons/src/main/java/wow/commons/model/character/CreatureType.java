@@ -1,27 +1,27 @@
-package wow.commons.model.unit;
+package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
- * Date: 2020-09-30
+ * Date: 2021-03-19
  */
 @AllArgsConstructor
-public enum PetType {
-	IMP("Imp"),
-	VOIDWALKER("Voidwalker"),
-	SUCCUBUS("Succubus"),
-	FELHUNTER("Felhunter"),
-	FELGUARD("Felguard");
+public enum CreatureType {
+	HUMANOID("Humanoid"),
+	UNDEAD("Undead"),
+	DEMON("Demon"),
+	BEAST("Beast"),
+	DRAGON("Dragon");
 
 	private final String name;
 
-	public static PetType parse(String value) {
+	public static CreatureType parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
-	public static PetType tryParse(String value) {
+	public static CreatureType tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.name);
 	}
 

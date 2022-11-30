@@ -3,9 +3,9 @@ package wow.commons.model.item;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.unit.CharacterInfo;
 
 import java.util.List;
 

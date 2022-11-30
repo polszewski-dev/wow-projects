@@ -2,8 +2,8 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.unit.Build;
-import wow.commons.model.unit.CharacterInfo;
+import wow.commons.model.character.Build;
+import wow.commons.model.character.CharacterInfo;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;

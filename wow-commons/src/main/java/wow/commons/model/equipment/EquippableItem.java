@@ -6,10 +6,10 @@ import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
-import wow.commons.model.unit.CharacterInfo;
 import wow.commons.util.AttributesBuilder;
 
 import java.util.List;

@@ -4,6 +4,8 @@ import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.Race;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.professions.Profession;
@@ -11,8 +13,6 @@ import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.unit.CharacterClass;
-import wow.commons.model.unit.Race;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.PrimitiveAttributeSupplier;
 

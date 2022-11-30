@@ -3,12 +3,12 @@ package wow.minmax.repository.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.character.Build;
+import wow.commons.model.character.PVERole;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.model.unit.Build;
-import wow.commons.model.unit.PVERole;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.util.TalentCalculatorUtil;
 import wow.minmax.model.BuildIds;
@@ -21,8 +21,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static wow.commons.model.character.Build.BuffSetId.*;
 import static wow.commons.model.spells.SpellId.*;
-import static wow.commons.model.unit.Build.BuffSetId.*;
 
 /**
  * User: POlszewski

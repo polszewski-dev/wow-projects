@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static wow.commons.model.unit.Build.BuffSetId.*;
+import static wow.commons.model.character.Build.BuffSetId.*;
 
 /**
  * User: POlszewski

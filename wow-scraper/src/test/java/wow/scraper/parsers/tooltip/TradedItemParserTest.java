@@ -11,8 +11,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
+import static wow.commons.model.character.CharacterClass.*;
 import static wow.commons.model.pve.GameVersion.TBC;
-import static wow.commons.model.unit.CharacterClass.*;
 
 /**
  * User: POlszewski

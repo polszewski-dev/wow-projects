@@ -8,22 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.WowCommonsTestConfig;
+import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Zone;
-import wow.commons.model.unit.BaseStatInfo;
-import wow.commons.model.unit.CombatRatingInfo;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.character.CharacterClass.WARLOCK;
+import static wow.commons.model.character.Race.ORC;
 import static wow.commons.model.pve.GameVersion.TBC;
 import static wow.commons.model.pve.ZoneType.RAID;
-import static wow.commons.model.unit.CharacterClass.WARLOCK;
-import static wow.commons.model.unit.Race.ORC;
 
 /**
  * User: POlszewski
