@@ -218,7 +218,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return getBuild().getTalents();
 	}
 
-	public PVERole getRole() {
+	public PveRole getRole() {
 		return getBuild().getRole();
 	}
 
@@ -250,7 +250,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		getBuild().setTalents(talents);
 	}
 
-	public void setRole(PVERole role) {
+	public void setRole(PveRole role) {
 		getBuild().setRole(role);
 	}
 

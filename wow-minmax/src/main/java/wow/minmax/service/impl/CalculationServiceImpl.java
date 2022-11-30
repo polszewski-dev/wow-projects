@@ -12,7 +12,7 @@ import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellStatistics;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
@@ -28,7 +28,7 @@ import static wow.commons.model.spells.Snapshot.CritMode;
 @Service
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
-	private final PVERepository pveRepository;
+	private final PveRepository pveRepository;
 
 	private static final double PRECISION = 0.0001;
 

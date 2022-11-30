@@ -4,7 +4,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.TradedItem;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 
 /**
@@ -12,7 +12,7 @@ import wow.commons.repository.impl.ItemDataRepositoryImpl;
  * Date: 2022-11-22
  */
 public class TradedItemSheetParser extends AbstractItemSheetParser {
-	public TradedItemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
+	public TradedItemSheetParser(String sheetName, PveRepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
 		super(sheetName, pveRepository, itemDataRepository);
 	}
 

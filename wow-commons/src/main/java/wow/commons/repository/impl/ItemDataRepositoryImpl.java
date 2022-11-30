@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.repository.ItemDataRepository;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
 import wow.commons.repository.impl.parsers.items.ItemExcelParser;
 
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class ItemDataRepositoryImpl implements ItemDataRepository {
-	private final PVERepository pveRepository;
+	private final PveRepository pveRepository;
 
 	private final Map<Integer, Item> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
@@ -36,7 +36,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	private final Map<Integer, TradedItem> tradedItemById = new TreeMap<>();
 
-	public ItemDataRepositoryImpl(PVERepository pveRepository) {
+	public ItemDataRepositoryImpl(PveRepository pveRepository) {
 		this.pveRepository = pveRepository;
 	}
 

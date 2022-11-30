@@ -11,7 +11,7 @@ import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.character.PVERole;
+import wow.commons.model.character.PveRole;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
@@ -143,7 +143,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean hasStatsSuitableForRole(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		if (playerProfile.getRole() == PVERole.CASTER_DPS) {
+		if (playerProfile.getRole() == PveRole.CASTER_DPS) {
 			return hasStatsSuitableForCasterDps(attributeSource, playerProfile);
 		}
 		throw new IllegalArgumentException("Unsupported role: " + playerProfile.getRole());

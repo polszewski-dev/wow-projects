@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parsers.items;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 
 import java.io.InputStream;
@@ -20,11 +20,11 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelSheetNames.
  */
 public class ItemBaseExcelParser extends ExcelParser {
 	private final ItemDataRepositoryImpl itemDataRepository;
-	private final PVERepository pveRepository;
+	private final PveRepository pveRepository;
 
 	private final Map<String, List<Item>> setPiecesByName = new HashMap<>();
 
-	public ItemBaseExcelParser(ItemDataRepositoryImpl itemDataRepository, PVERepository pveRepository) {
+	public ItemBaseExcelParser(ItemDataRepositoryImpl itemDataRepository, PveRepository pveRepository) {
 		this.itemDataRepository = itemDataRepository;
 		this.pveRepository = pveRepository;
 	}

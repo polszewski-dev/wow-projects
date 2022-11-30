@@ -1,7 +1,7 @@
 package wow.commons.repository.impl.parsers.pve;
 
 import wow.commons.model.pve.Boss;
-import wow.commons.repository.impl.PVERepositoryImpl;
+import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 import java.util.stream.Collectors;
@@ -15,9 +15,9 @@ public class BossSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colZone = column("zone");
 
-	private final PVERepositoryImpl pveRepository;
+	private final PveRepositoryImpl pveRepository;
 
-	public BossSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
+	public BossSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

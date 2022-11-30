@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.Build;
-import wow.commons.model.character.PVERole;
+import wow.commons.model.character.PveRole;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -61,7 +61,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 
 		build.setTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
 		build.setTalents(getTalents(build.getTalentLink()));
-		build.setRole(PVERole.CASTER_DPS);
+		build.setRole(PveRole.CASTER_DPS);
 		build.setDamagingSpell(spellDataRepository.getSpellHighestRank(SpellId.SHADOW_BOLT, level).orElseThrow());
 
 		build.setRelevantSpells(

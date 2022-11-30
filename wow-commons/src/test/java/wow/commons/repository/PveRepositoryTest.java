@@ -31,9 +31,9 @@ import static wow.commons.model.pve.ZoneType.RAID;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WowCommonsTestConfig.class)
-class PVERepositoryTest {
+class PveRepositoryTest {
 	@Autowired
-	PVERepository underTest;
+	PveRepository underTest;
 
 	@Test
 	@DisplayName("Zone is read correctly")

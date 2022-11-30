@@ -10,7 +10,7 @@ import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 
 	private final Map<String, List<Item>> setPiecesByName;
 	
-	public ItemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository, Map<String, List<Item>> setPiecesByName) {
+	public ItemSheetParser(String sheetName, PveRepository pveRepository, ItemDataRepositoryImpl itemDataRepository, Map<String, List<Item>> setPiecesByName) {
 		super(sheetName, pveRepository, itemDataRepository);
 		this.setPiecesByName = setPiecesByName;
 	}

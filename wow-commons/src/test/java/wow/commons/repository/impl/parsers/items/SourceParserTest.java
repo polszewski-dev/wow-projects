@@ -9,7 +9,7 @@ import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.sources.Source;
 import wow.commons.repository.ItemDataRepository;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 
 import java.util.Set;
 
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = WowCommonsTestConfig.class)
 class SourceParserTest {
 	@Autowired
-	PVERepository pveRepository;
+	PveRepository pveRepository;
 
 	@Autowired
 	ItemDataRepository itemDataRepository;

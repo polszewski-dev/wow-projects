@@ -6,7 +6,7 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.sources.Source;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
@@ -19,10 +19,10 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * Date: 2022-11-24
  */
 public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
-	protected final PVERepository pveRepository;
+	protected final PveRepository pveRepository;
 	protected final ItemDataRepositoryImpl itemDataRepository;
 
-	protected AbstractItemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
+	protected AbstractItemSheetParser(String sheetName, PveRepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 		this.itemDataRepository = itemDataRepository;

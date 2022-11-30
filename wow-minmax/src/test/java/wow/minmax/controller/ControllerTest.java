@@ -109,7 +109,7 @@ abstract class ControllerTest {
 	private void createBuild() {
 		build = new Build(BuildIds.DESTRO_SHADOW_BUILD);
 		build.setTalents(Map.of());
-		build.setRole(PVERole.CASTER_DPS);
+		build.setRole(PveRole.CASTER_DPS);
 		build.setDamagingSpell(spell);
 		build.setRelevantSpells(List.of(spell));
 		build.setActivePet(null);

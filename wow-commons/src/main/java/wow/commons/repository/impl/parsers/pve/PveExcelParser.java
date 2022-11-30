@@ -2,7 +2,7 @@ package wow.commons.repository.impl.parsers.pve;
 
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.commons.repository.impl.PVERepositoryImpl;
+import wow.commons.repository.impl.PveRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -11,10 +11,10 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-03-14
  */
-public class PVEExcelParser extends ExcelParser {
-	private final PVERepositoryImpl pveRepository;
+public class PveExcelParser extends ExcelParser {
+	private final PveRepositoryImpl pveRepository;
 
-	public PVEExcelParser(PVERepositoryImpl pveRepository) {
+	public PveExcelParser(PveRepositoryImpl pveRepository) {
 		this.pveRepository = pveRepository;
 	}
 

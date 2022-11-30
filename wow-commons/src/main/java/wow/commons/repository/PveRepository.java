@@ -15,7 +15,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2021-03-14
  */
-public interface PVERepository {
+public interface PveRepository {
 	Optional<Zone> getZone(int zoneId);
 	Optional<Zone> getZone(String name);
 	Optional<Boss> getBoss(int bossId);

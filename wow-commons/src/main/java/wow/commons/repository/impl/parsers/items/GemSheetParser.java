@@ -6,7 +6,7 @@ import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
@@ -19,7 +19,7 @@ public class GemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colColor = column(GEM_COLOR);
 	private final ExcelColumn colMetaEnablers = column(GEM_META_ENABLERS);
 
-	public GemSheetParser(String sheetName, PVERepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
+	public GemSheetParser(String sheetName, PveRepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
 		super(sheetName, pveRepository, itemDataRepository);
 	}
 

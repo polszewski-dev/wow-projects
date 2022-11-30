@@ -9,7 +9,7 @@ import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.*;
 import wow.commons.repository.ItemDataRepository;
-import wow.commons.repository.PVERepository;
+import wow.commons.repository.PveRepository;
 import wow.commons.util.parser.Rule;
 
 import java.util.LinkedHashSet;
@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @AllArgsConstructor
 public class SourceParser {
-	private final PVERepository pveRepository;
+	private final PveRepository pveRepository;
 	private final ItemDataRepository itemDataRepository;
 
 	private final Set<Source> result = new LinkedHashSet<>();

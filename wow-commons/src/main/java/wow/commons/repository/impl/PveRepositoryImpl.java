@@ -9,8 +9,8 @@ import wow.commons.model.character.Race;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
-import wow.commons.repository.PVERepository;
-import wow.commons.repository.impl.parsers.pve.PVEExcelParser;
+import wow.commons.repository.PveRepository;
+import wow.commons.repository.impl.parsers.pve.PveExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Date: 2021-03-14
  */
 @Repository
-public class PVERepositoryImpl implements PVERepository {
+public class PveRepositoryImpl implements PveRepository {
 	private final Map<Integer, Zone> zoneById = new HashMap<>();
 	private final Map<String, Zone> zoneByName = new TreeMap<>();
 	private final Map<Integer, Boss> bossById = new TreeMap<>();
@@ -80,7 +80,7 @@ public class PVERepositoryImpl implements PVERepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		var pveExcelParser = new PVEExcelParser(this);
+		var pveExcelParser = new PveExcelParser(this);
 		pveExcelParser.readFromXls();
 
 		for (Zone instance : getAllInstances()) {

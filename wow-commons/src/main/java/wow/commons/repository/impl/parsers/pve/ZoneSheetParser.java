@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parsers.pve;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.pve.ZoneType;
-import wow.commons.repository.impl.PVERepositoryImpl;
+import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
@@ -18,9 +18,9 @@ public class ZoneSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colVersion = column("version");
 	private final ExcelColumn colPartySize = column("max_players");
 
-	private final PVERepositoryImpl pveRepository;
+	private final PveRepositoryImpl pveRepository;
 
-	public ZoneSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
+	public ZoneSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

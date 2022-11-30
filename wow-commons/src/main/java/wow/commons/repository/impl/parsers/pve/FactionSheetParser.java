@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parsers.pve;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
-import wow.commons.repository.impl.PVERepositoryImpl;
+import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
@@ -16,9 +16,9 @@ public class FactionSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colVersion = column("version");
 	private final ExcelColumn colPhase = column("phase");
 
-	private final PVERepositoryImpl pveRepository;
+	private final PveRepositoryImpl pveRepository;
 
-	public FactionSheetParser(String sheetName, PVERepositoryImpl pveRepository) {
+	public FactionSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
 	}

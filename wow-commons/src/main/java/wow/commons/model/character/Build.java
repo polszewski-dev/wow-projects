@@ -23,7 +23,7 @@ public class Build implements Copyable<Build>, AttributeCollection {
 	private final String buildId;
 	private String talentLink;
 	private Map<TalentId, Talent> talents;
-	private PVERole role;
+	private PveRole role;
 	private Spell damagingSpell;
 	private List<Spell> relevantSpells;
 	private PetType activePet;

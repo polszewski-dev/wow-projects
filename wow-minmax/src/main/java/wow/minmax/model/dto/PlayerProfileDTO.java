@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PVERole;
+import wow.commons.model.character.PveRole;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 
@@ -31,7 +31,7 @@ public class PlayerProfileDTO {
 	private final int level;
 	private final CreatureType enemyType;
 
-	private final PVERole role;
+	private final PveRole role;
 	private final Phase phase;
 
 	private EquipmentDTO equipment;
