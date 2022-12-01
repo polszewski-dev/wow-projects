@@ -1,7 +1,7 @@
 package wow.minmax.service;
 
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.character.Build;
+import wow.commons.model.character.*;
 import wow.commons.model.pve.Phase;
 import wow.minmax.model.PlayerProfile;
 
@@ -17,6 +17,9 @@ public interface PlayerProfileService {
 
 	PlayerProfile createPlayerProfile(String profileName, Phase phase);
 
+	PlayerProfile createTemporaryPlayerProfile(
+			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, Phase phase);
+
 	PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase);
 
 	PlayerProfile getPlayerProfile(UUID profileId);
@@ -30,6 +33,4 @@ public interface PlayerProfileService {
 	PlayerProfile resetEquipment(UUID profileId);
 
 	PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled);
-
-	Build getBuild(String buildId, int level);
 }

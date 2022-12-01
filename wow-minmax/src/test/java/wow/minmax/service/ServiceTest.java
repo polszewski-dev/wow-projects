@@ -2,26 +2,25 @@ package wow.minmax.service;
 
 import org.assertj.core.data.Offset;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.character.Build;
-import wow.commons.model.character.CharacterInfo;
-import wow.commons.model.character.CharacterProfession;
-import wow.commons.model.character.CharacterProfessions;
+import wow.commons.model.character.*;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.spells.SpellId;
 import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.SpellDataRepository;
+import wow.commons.util.TalentCalculatorUtil;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.repository.BuildRepository;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static wow.commons.model.character.BuffSetId.*;
 import static wow.commons.model.character.CharacterClass.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.character.Race.ORC;
@@ -35,13 +34,13 @@ abstract class ServiceTest {
 	static final Offset<Double> PRECISION = Offset.offset(0.01);
 
 	@Autowired
-	BuildRepository buildRepository;
-
-	@Autowired
 	ItemDataRepository itemDataRepository;
 
-	PlayerProfile getPlayerProfile(String buildId) {
-		Build build = buildRepository.getBuild(buildId, 70).orElseThrow();
+	@Autowired
+	SpellDataRepository spellDataRepository;
+
+	PlayerProfile getPlayerProfile(BuildId buildId) {
+		Build build = getBuild(buildId);
 		CharacterProfessions characterProfessions = new CharacterProfessions(List.of(
 				new CharacterProfession(Profession.TAILORING, 375, null),
 				new CharacterProfession(Profession.ENCHANTING, 375, null)
@@ -52,6 +51,39 @@ abstract class ServiceTest {
 				new CharacterInfo(WARLOCK, ORC, 70, build, characterProfessions, Phase.TBC_P5),
 				UNDEAD
 		);
+	}
+
+	private Build getBuild(BuildId buildId) {
+		if (buildId == null) {
+			return Build.EMPTY;
+		}
+
+		String talentLink = "https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250";
+
+		return new Build(
+				BuildId.DESTRO_SHADOW,
+				talentLink,
+				TalentCalculatorUtil.parseFromLink(talentLink, spellDataRepository),
+				PveRole.CASTER_DPS,
+				spellDataRepository.getSpellHighestRank(SpellId.SHADOW_BOLT, 70).orElseThrow(),
+				List.of(),
+				null,
+				getBuffSets()
+		);
+	}
+
+	Map<BuffSetId, List<Buff>> getBuffSets() {
+		Map<BuffSetId, List<String>> map = Map.of(
+				SELF_BUFFS, List.of("Fel Armor", "Touch of Shadow"),
+				PARTY_BUFFS, List.of("Arcane Brilliance", "Gift of the Wild", "Greater Blessing of Kings"),
+				RAID_BUFFS, List.of("Curse of the Elements", "Wrath of Air Totem", "Totem of Wrath"),
+				WORLD_BUFFS, List.of(),
+				CONSUMES, List.of("Well Fed (sp)", "Brilliant Wizard Oil", "Flask of Pure Death")
+		);
+
+		return map.entrySet()
+				.stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> spellDataRepository.getBuffs(e.getValue())));
 	}
 
 	Equipment getEquipment() {

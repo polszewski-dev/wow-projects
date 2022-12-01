@@ -1,6 +1,6 @@
 package wow.minmax.repository;
 
-import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.persistent.PlayerProfilePO;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +11,9 @@ import java.util.UUID;
  * Date: 2021-12-14
  */
 public interface PlayerProfileRepository {
-	List<PlayerProfile> getPlayerProfileList();
+	List<PlayerProfilePO> getPlayerProfileList();
 
-	Optional<PlayerProfile> getPlayerProfile(UUID profileId);
+	Optional<PlayerProfilePO> getPlayerProfile(UUID profileId);
 
-	void saveProfile(PlayerProfile playerProfile);
+	void saveProfile(PlayerProfilePO playerProfile);
 }

@@ -20,6 +20,7 @@ import java.util.Optional;
 public interface SpellDataRepository {
 	Optional<Spell> getSpell(SpellId spellId, Integer rank);
 	Optional<Spell> getSpellHighestRank(SpellId spellId, int level);
+	List<Spell> getAllSpellRanks(SpellId spellId);
 	Optional<Talent> getTalent(TalentId talentId, int rank);
 	Optional<Talent> getTalent(int talentCalculatorPosition, int rank);
 	Optional<EffectInfo> getEffectInfo(EffectId effectId);

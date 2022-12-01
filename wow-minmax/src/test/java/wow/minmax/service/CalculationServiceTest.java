@@ -9,12 +9,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.character.BuildId;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellStatistics;
 import wow.minmax.WowMinMaxTestConfig;
-import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 
@@ -43,7 +43,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("No talents, no buffs, no items")
 	void noTalentsNoBuffsNoItems() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.NONE);
+		PlayerProfile playerProfile = getPlayerProfile(null);
 
 		playerProfile.setEquipment(new Equipment());
 		playerProfile.setBuffs(List.of());
@@ -84,7 +84,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Has talents, no buffs, no items")
 	void hasTalentsNoBuffsNoItems() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 
 		playerProfile.setEquipment(new Equipment());
 		playerProfile.setBuffs(List.of());
@@ -124,7 +124,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Has talents, has buffs, no items")
 	void hasTalentsHasBuffsNoItems() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 
 		playerProfile.setEquipment(new Equipment());
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
@@ -164,7 +164,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Has talents, has buffs, has items")
 	void hasTalentsHasBuffsHasItems() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 
 		playerProfile.setEquipment(getEquipment());
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
@@ -204,7 +204,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct stat quivalent")
 	void correctStatEquivalent() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 
 		playerProfile.setEquipment(getEquipment());
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
@@ -221,7 +221,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct stat quivalent")
 	void correctAbilityEquivalent() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 		playerProfile.setEquipment(getEquipment());
 
 		String line = "Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)";
@@ -237,7 +237,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct spell stats")
 	void correctSpellStats() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 
 		playerProfile.setEquipment(getEquipment());
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
@@ -254,7 +254,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct player spell stats")
 	void correctPlayerSpellStats() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 
 		playerProfile.setEquipment(getEquipment());
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);

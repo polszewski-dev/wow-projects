@@ -3,6 +3,8 @@ package wow.minmax.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -10,18 +12,22 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.BuffSetId;
-import wow.commons.model.character.Build;
-import wow.commons.model.equipment.EquippableItem;
+import wow.commons.model.character.BuildId;
 import wow.commons.model.pve.Phase;
 import wow.minmax.WowMinMaxTestConfig;
-import wow.minmax.model.BuildIds;
+import wow.minmax.converter.persistent.BuffPOConverter;
+import wow.minmax.converter.persistent.CharacterProfessionPOConverter;
+import wow.minmax.converter.persistent.EquipmentPOConverter;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.persistent.EquippableItemPO;
+import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,12 +45,24 @@ class PlayerProfileServiceTest extends ServiceTest {
 	@MockBean
 	PlayerProfileRepository playerProfileRepository;
 
+	@Autowired
+	EquipmentPOConverter equipmentPOConverter;
+
+	@Autowired
+	CharacterProfessionPOConverter characterProfessionPOConverter;
+
+	@Autowired
+	BuffPOConverter buffPOConverter;
+
+	@Captor
+	ArgumentCaptor<PlayerProfilePO> profilePOCaptor;
+
 	@Test
 	void getPlayerProfileList() {
 		List<PlayerProfile> profiles = underTest.getPlayerProfileList();
 
 		assertThat(profiles).hasSize(1);
-		assertThat(profiles.get(0)).isSameAs(profile);
+		assertThat(profiles.get(0).getProfileId()).isEqualTo(profile.getProfileId());
 
 		verify(playerProfileRepository).getPlayerProfileList();
 	}
@@ -56,7 +74,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		assertThat(newProfile.getProfileName()).isEqualTo("New");
 		assertThat(newProfile.getPhase()).isEqualTo(Phase.TBC_P1);
 
-		verify(playerProfileRepository).saveProfile(newProfile);
+		verify(playerProfileRepository).saveProfile(any());
 	}
 
 	@Test
@@ -66,130 +84,138 @@ class PlayerProfileServiceTest extends ServiceTest {
 		assertThat(copy.getProfileName()).isEqualTo("Copy");
 		assertThat(copy.getPhase()).isEqualTo(Phase.TBC_P1);
 
-		verify(playerProfileRepository).saveProfile(copy);
+		verify(playerProfileRepository).saveProfile(any());
 	}
 
 	@Test
 	void getPlayerProfile() {
 		PlayerProfile returnedProfile = underTest.getPlayerProfile(profile.getProfileId());
 
-		assertThat(returnedProfile).isSameAs(profile);
+		assertThat(returnedProfile.getProfileId()).isEqualTo(profile.getProfileId());
 	}
 
 	@Test
 	void changeItem() {
-		assertThat(profile.getEquipment().getOffHand().getName()).isEqualTo("Chronicle of Dark Secrets");
+		assertThat(profile.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 
 		underTest.changeItem(profile.getProfileId(), ItemSlot.OFF_HAND, 34179);
 
-		assertThat(profile.getEquipment().getOffHand().getName()).isEqualTo("Heart of the Pit");
+		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		verify(playerProfileRepository).saveProfile(profile);
+		assertThat(savedProfile.getEquipment().getOffHand().getItem().getName()).isEqualTo("Heart of the Pit");
 	}
 
 	@Test
 	void changeTwoHander() {
-		assertThat(profile.getEquipment().getMainHand().getName()).isEqualTo("Sunflare");
-		assertThat(profile.getEquipment().getOffHand().getName()).isEqualTo("Chronicle of Dark Secrets");
+		assertThat(profile.getEquipment().getMainHand().getItem().getName()).isEqualTo("Sunflare");
+		assertThat(profile.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 
 		underTest.changeItem(profile.getProfileId(), ItemSlot.MAIN_HAND, 34182);
 
-		assertThat(profile.getEquipment().getMainHand().getName()).isEqualTo("Grand Magister's Staff of Torrents");
-		assertThat(profile.getEquipment().getOffHand()).isNull();
+		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		EquippableItem mainHand = profile.getEquipment().getMainHand();
+		assertThat(savedProfile.getEquipment().getMainHand().getItem().getName()).isEqualTo("Grand Magister's Staff of Torrents");
+		assertThat(savedProfile.getEquipment().getOffHand()).isNull();
+
+		EquippableItemPO mainHand = savedProfile.getEquipment().getMainHand();
 
 		assertThat(mainHand.getEnchant()).isNotNull();
 
 		for (int i = 0; i < mainHand.getSocketCount(); ++i) {
-			assertThat(mainHand.getGem(i)).isNotNull();
+			assertThat(mainHand.getGems().get(i)).isNotNull();
 		}
-
-		verify(playerProfileRepository).saveProfile(profile);
 	}
 
 	@Test
 	void changeEnchant() {
-		EquippableItem mainHand = profile.getEquipment().getMainHand();
-
-		assertThat(mainHand.getEnchant().getName()).isEqualTo("Enchant Weapon – Soulfrost");
+		assertThat(profile.getEquipment().getMainHand().getEnchant().getName()).isEqualTo("Enchant Weapon – Soulfrost");
 
 		underTest.changeEnchant(profile.getProfileId(), ItemSlot.MAIN_HAND, 2669);
 
-		assertThat(mainHand.getEnchant().getName()).isEqualTo("Enchant Weapon - Major Spellpower");
+		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		verify(playerProfileRepository).saveProfile(profile);
+		assertThat(savedProfile.getEquipment().getMainHand().getEnchant().getName()).isEqualTo("Enchant Weapon - Major Spellpower");
 	}
 
 	@Test
 	void changeGem() {
-		EquippableItem chest = profile.getEquipment().getChest();
+		EquippableItemPO chest = profile.getEquipment().getChest();
 
-		assertThat(chest.getName()).isEqualTo("Sunfire Robe");
+		assertThat(chest.getItem().getName()).isEqualTo("Sunfire Robe");
 		assertThat(chest.getSocketCount()).isEqualTo(3);
-		assertThat(chest.getGem(1).getId()).isNotEqualTo(35761);
+		assertThat(chest.getGems().get(1).getId()).isNotEqualTo(35761);
 
 		underTest.changeGem(profile.getProfileId(), ItemSlot.CHEST, 1, 35761);
 
-		assertThat(chest.getGem(1).getId()).isEqualTo(35761);
+		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		verify(playerProfileRepository).saveProfile(profile);
+		assertThat(savedProfile.getEquipment().getChest().getGems().get(1).getId()).isEqualTo(35761);
 	}
 
 	@Test
 	void resetEquipment() {
 		underTest.resetEquipment(profile.getProfileId());
 
-		for (ItemSlot slot : ItemSlot.getDpsSlots()) {
-			assertThat(profile.getEquipment().get(slot)).isNull();
-		}
+		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		verify(playerProfileRepository).saveProfile(profile);
+		assertThat(savedProfile.getEquipment()).hasAllNullFieldsOrProperties();
 	}
 
 	@Test
 	void enableBuff() {
-		profile.setBuffs(BuffSetId.CONSUMES);
-
 		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 17628)).isFalse();
 		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
 
 		underTest.enableBuff(profile.getProfileId(), 17628, true);
 
-		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 17628)).isTrue();
-		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isFalse();
+		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		verify(playerProfileRepository).saveProfile(profile);
+		assertThat(savedProfile.getBuffs().stream().anyMatch(buff -> buff.getId() == 17628)).isTrue();
+		assertThat(savedProfile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isFalse();
 	}
 
 	@Test
 	void disableBuff() {
-		profile.setBuffs(BuffSetId.CONSUMES);
-
 		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
 
 		underTest.enableBuff(profile.getProfileId(), 28540, false);
 
-		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isFalse();
+		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		verify(playerProfileRepository).saveProfile(profile);
+		assertThat(savedProfile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isFalse();
 	}
 
-	@Test
-	void getBuild() {
-		Build build = underTest.getBuild(BuildIds.DESTRO_SHADOW_BUILD, profile.getLevel());
-
-		assertThat(build.getBuildId()).isEqualTo(BuildIds.DESTRO_SHADOW_BUILD);
-	}
-
-	PlayerProfile profile;
+	PlayerProfilePO profile;
 
 	@BeforeEach
 	void setup() {
-		profile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
-		profile.setEquipment(getEquipment());
+		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(BuffSetId.CONSUMES);
+
+		profile = new PlayerProfilePO(
+				playerProfile.getProfileId(),
+				playerProfile.getProfileName(),
+				playerProfile.getCharacterClass(),
+				playerProfile.getRace(),
+				playerProfile.getLevel(),
+				playerProfile.getBuildId(),
+				characterProfessionPOConverter.convertList(playerProfile.getProfessions()),
+				playerProfile.getEnemyType(),
+				playerProfile.getPhase(),
+				equipmentPOConverter.convert(playerProfile.getEquipment()),
+				buffPOConverter.convertList(playerProfile.getBuffs()),
+				playerProfile.getLastModified()
+		);
 
 		when(playerProfileRepository.getPlayerProfileList()).thenReturn(List.of(profile));
-		when(playerProfileRepository.getPlayerProfile(profile.getProfileId())).thenReturn(Optional.of(profile));
+		when(playerProfileRepository.getPlayerProfile(playerProfile.getProfileId())).thenReturn(Optional.of(profile));
 	}
 }

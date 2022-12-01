@@ -2,7 +2,6 @@ package wow.minmax.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,7 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.character.*;
+import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CombatRatingInfo;
+import wow.commons.model.character.Race;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.SpellStatistics;
 import wow.minmax.model.PlayerSpellStats;
@@ -18,7 +20,6 @@ import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -68,7 +69,6 @@ class StatsControllerTest extends ControllerTest {
 		createMockObjects();
 
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
-		when(playerProfileService.getBuild(any(), anyInt())).then((Answer<Build>) invocationOnMock -> build.copy());
 
 		BaseStatInfo baseStats = new BaseStatInfo(70, CharacterClass.WARLOCK, Race.ORC, 0, 0, 0, 0, 0, 0, 0, Percent.ZERO, 100);
 		CombatRatingInfo cr = new CombatRatingInfo(70, 10, 10, 10);

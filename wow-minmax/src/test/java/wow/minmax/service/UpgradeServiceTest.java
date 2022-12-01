@@ -10,20 +10,18 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
+import wow.commons.model.character.BuildId;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.ItemSocket;
 import wow.commons.model.spells.SpellId;
 import wow.minmax.WowMinMaxTestConfig;
-import wow.minmax.model.BuildIds;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 import static wow.commons.model.character.BuffSetId.*;
 
 /**
@@ -109,10 +107,7 @@ class UpgradeServiceTest extends ServiceTest {
 
 	@BeforeEach
 	void setup() {
-		profile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		profile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 		profile.setEquipment(getEquipment());
-
-		when(playerProfileRepository.getPlayerProfileList()).thenReturn(List.of(profile));
-		when(playerProfileRepository.getPlayerProfile(profile.getProfileId())).thenReturn(Optional.of(profile));
 	}
 }

@@ -10,12 +10,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.character.BuildId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
 import wow.minmax.WowMinMaxTestConfig;
-import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.Comparator;
@@ -199,6 +199,6 @@ class ItemServiceTest extends ServiceTest {
 
 	@BeforeEach
 	void setup() {
-		profile = getPlayerProfile(BuildIds.DESTRO_SHADOW_BUILD);
+		profile = getPlayerProfile(BuildId.DESTRO_SHADOW);
 	}
 }

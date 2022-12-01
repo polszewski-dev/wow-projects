@@ -200,24 +200,12 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return characterInfo.hasTalent(talentId);
 	}
 
-	public String getBuildId() {
+	public BuildId getBuildId() {
 		return getBuild().getBuildId();
-	}
-
-	public void setTalentLink(String talentLink) {
-		getBuild().setTalentLink(talentLink);
 	}
 
 	public String getTalentLink() {
 		return getBuild().getTalentLink();
-	}
-
-	public void setRelevantSpells(List<Spell> relevantSpells) {
-		getBuild().setRelevantSpells(relevantSpells);
-	}
-
-	public void setActivePet(PetType activePet) {
-		getBuild().setActivePet(activePet);
 	}
 
 	public Map<TalentId, Talent> getTalents() {
@@ -242,22 +230,6 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public Map<BuffSetId, List<Buff>> getBuffSets() {
 		return getBuild().getBuffSets();
-	}
-
-	public void setBuffSets(Map<BuffSetId, List<Buff>> buffSets) {
-		getBuild().setBuffSets(buffSets);
-	}
-
-	public void setDamagingSpell(Spell damagingSpell) {
-		getBuild().setDamagingSpell(damagingSpell);
-	}
-
-	public void setTalents(Map<TalentId, Talent> talents) {
-		getBuild().setTalents(talents);
-	}
-
-	public void setRole(PveRole role) {
-		getBuild().setRole(role);
 	}
 
 	public SpellId getDamagingSpellId() {

@@ -2,8 +2,7 @@ package wow.minmax.repository.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import wow.minmax.converter.persistent.PlayerPOProfileConverter;
-import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
 
 import javax.annotation.PostConstruct;
@@ -18,29 +17,27 @@ import java.util.*;
 @Repository
 @AllArgsConstructor
 public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
-	private final PlayerPOProfileConverter playerPOProfileConverter;
-
 	@Override
-	public List<PlayerProfile> getPlayerProfileList() {
+	public List<PlayerProfilePO> getPlayerProfileList() {
 		return new ArrayList<>(profiles.values());
 	}
 
 	@Override
-	public Optional<PlayerProfile> getPlayerProfile(UUID profileId) {
+	public Optional<PlayerProfilePO> getPlayerProfile(UUID profileId) {
 		return Optional.ofNullable(profiles.get(profileId));
 	}
 
 	@Override
-	public void saveProfile(PlayerProfile playerProfile) {
+	public void saveProfile(PlayerProfilePO playerProfile) {
 		playerProfile.setLastModified(LocalDateTime.now());
 		profiles.put(playerProfile.getProfileId(), playerProfile);
-		write(KEY, new TreeMap<>(playerPOProfileConverter.convertMap(profiles)));
+		write(KEY, new TreeMap<>(profiles));
 	}
 
 	@PostConstruct
 	public void init() {
 		if (has(KEY)) {
-			profiles = playerPOProfileConverter.convertBackMap(read(KEY));
+			profiles = read(KEY);
 		} else {
 			profiles = new TreeMap<>();
 		}
@@ -50,7 +47,7 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	// TODO store in a real database
 
 	private static final String KEY = "profiles";
-	private Map<UUID, PlayerProfile> profiles;
+	private Map<UUID, PlayerProfilePO> profiles;
 
 	private <T extends Serializable> void write(String id, T contents) {
 		String filePath = getFilePath(id);

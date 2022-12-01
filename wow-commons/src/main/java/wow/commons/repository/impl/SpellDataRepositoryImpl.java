@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Repository
 public class SpellDataRepositoryImpl implements SpellDataRepository {
 	private final Map<SpellIdAndRank, Spell> spellById = new LinkedHashMap<>();
+	private final Map<SpellId, List<Spell>> spellBySpellId = new LinkedHashMap<>();
 	private final Map<TalentIdAndRank, Talent> talentById = new LinkedHashMap<>();
 	private final Map<Integer, TalentId> talentIdByCalculatorPosition = new LinkedHashMap<>();
 	private final Map<EffectId, EffectInfo> effectInfoByEffectId = new LinkedHashMap<>();
@@ -43,6 +44,11 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 				.filter(spell -> spell.getSpellId() == spellId)
 				.filter(spell -> spell.getRequiredLevel() <= level)
 				.max(Comparator.nullsFirst(Comparator.comparing(Spell::getRank)));
+	}
+
+	@Override
+	public List<Spell> getAllSpellRanks(SpellId spellId) {
+		return spellBySpellId.getOrDefault(spellId, List.of());
 	}
 
 	@Override
@@ -119,6 +125,7 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 
 	public void addSpell(Spell spell) {
 		spellById.put(spell.getId(), spell);
+		spellBySpellId.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
 	}
 
 	public void addEffectInfo(EffectInfo effectInfo) {

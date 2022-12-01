@@ -19,7 +19,6 @@ import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.*;
 import wow.commons.model.talents.TalentTree;
-import wow.minmax.model.BuildIds;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.List;
@@ -107,13 +106,16 @@ abstract class ControllerTest {
 	}
 
 	private void createBuild() {
-		build = new Build(BuildIds.DESTRO_SHADOW_BUILD);
-		build.setTalents(Map.of());
-		build.setRole(PveRole.CASTER_DPS);
-		build.setDamagingSpell(spell);
-		build.setRelevantSpells(List.of(spell));
-		build.setActivePet(null);
-		build.setBuffSets(Map.of(BuffSetId.SELF_BUFFS, List.of(buff)));
+		build = new Build(
+				BuildId.DESTRO_SHADOW,
+				null,
+				Map.of(),
+				PveRole.CASTER_DPS,
+				spell,
+				List.of(spell),
+				null,
+				Map.of(BuffSetId.SELF_BUFFS, List.of(buff))
+		);
 	}
 
 	private void createProfile() {

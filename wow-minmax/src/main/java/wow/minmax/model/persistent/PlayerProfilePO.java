@@ -2,6 +2,7 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.character.BuildId;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
@@ -24,10 +25,10 @@ public class PlayerProfilePO implements Serializable {
 	private final CharacterClass characterClass;
 	private final Race race;
 	private final int level;
+	private final BuildId buildId;
 	private final List<CharacterProfessionPO> professions;
 	private final CreatureType enemyType;
 	private final Phase phase;
-	private String buildId;
 	private EquipmentPO equipment;
 	private List<BuffPO> buffs;
 	private LocalDateTime lastModified;
