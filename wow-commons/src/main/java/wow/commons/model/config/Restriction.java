@@ -28,9 +28,9 @@ public class Restriction {
 	private ProfessionSpecialization requiredProfessionSpec;
 	private TalentId requiredTalent;
 
-	public boolean isMetBy(CharacterInfo characterInfo, Phase phase) {
+	public boolean isMetBy(CharacterInfo characterInfo) {
 		return isMetBy(
-				phase,
+				characterInfo.getPhase(),
 				characterInfo.getLevel(),
 				characterInfo.getCharacterClass(),
 				characterInfo.getRace(),

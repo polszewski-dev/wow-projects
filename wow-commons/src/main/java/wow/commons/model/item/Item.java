@@ -11,7 +11,6 @@ import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.character.WeaponProfficiency;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
-import wow.commons.model.pve.Phase;
 
 import java.util.List;
 
@@ -71,14 +70,14 @@ public class Item extends AbstractItem {
 		return getItemType().getItemSlots().contains(itemSlot);
 	}
 
-	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
+	public boolean canBeEquippedBy(CharacterInfo characterInfo) {
 		if (!isCorrectCategory(characterInfo)) {
 			return false;
 		}
-		if (!getRestriction().isMetBy(characterInfo, phase)) {
+		if (!getRestriction().isMetBy(characterInfo)) {
 			return false;
 		}
-		return itemSet == null || itemSet.canBeEquippedBy(characterInfo, phase);
+		return itemSet == null || itemSet.canBeEquippedBy(characterInfo);
 	}
 
 	private boolean isCorrectCategory(CharacterInfo characterInfo) {

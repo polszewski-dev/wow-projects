@@ -49,9 +49,8 @@ abstract class ServiceTest {
 		return new PlayerProfile(
 				UUID.randomUUID(),
 				"test",
-				new CharacterInfo(WARLOCK, ORC, 70, build, characterProfessions),
-				UNDEAD,
-				Phase.TBC_P5
+				new CharacterInfo(WARLOCK, ORC, 70, build, characterProfessions, Phase.TBC_P5),
+				UNDEAD
 		);
 	}
 

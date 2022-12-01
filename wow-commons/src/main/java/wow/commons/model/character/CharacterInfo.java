@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
 
@@ -21,6 +22,7 @@ public class CharacterInfo {
 	private final int level;
 	private final Build build;
 	private final CharacterProfessions characterProfessions;
+	private final Phase phase;
 
 	public Side getSide() {
 		return race.getSide();
@@ -47,12 +49,30 @@ public class CharacterInfo {
 	}
 
 	public CharacterInfo setBuild(Build build) {
+		if (build == this.build) {
+			return this;
+		}
 		return new CharacterInfo(
 				characterClass,
 				race,
 				level,
 				build,
-				characterProfessions
+				characterProfessions,
+				phase
+		);
+	}
+
+	public CharacterInfo setPhase(Phase phase) {
+		if (phase == this.phase) {
+			return this;
+		}
+		return new CharacterInfo(
+				characterClass,
+				race,
+				level,
+				build,
+				characterProfessions,
+				phase
 		);
 	}
 }

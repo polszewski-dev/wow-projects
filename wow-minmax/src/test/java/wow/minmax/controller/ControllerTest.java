@@ -117,9 +117,9 @@ abstract class ControllerTest {
 	}
 
 	private void createProfile() {
-		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, build, new CharacterProfessions(List.of()));
+		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, build, new CharacterProfessions(List.of()), Phase.TBC_P5);
 
-		profile = new PlayerProfile(UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002"), "test#1", characterInfo, CreatureType.DEMON, Phase.TBC_P5);
+		profile = new PlayerProfile(UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002"), "test#1", characterInfo, CreatureType.DEMON);
 		profile.getEquipment().set(new EquippableItem(chest).enchant(enchant).gem(redGem, yellowGem, blueGem));
 		profile.getEquipment().set(new EquippableItem(trinket), ItemSlot.TRINKET_1);
 		profile.setBuffs(List.of(buff));

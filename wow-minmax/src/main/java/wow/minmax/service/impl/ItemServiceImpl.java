@@ -104,7 +104,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean isSuitableFor(Item item, PlayerProfile playerProfile) {
-		if (!item.canBeEquippedBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
+		if (!item.canBeEquippedBy(playerProfile.getCharacterInfo())) {
 			return false;
 		}
 		if (item.isPvPReward() && !itemConfig.isIncludePvpItems()) {
@@ -114,7 +114,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean isSuitableFor(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
-		if (!enchant.getRestriction().isMetBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
+		if (!enchant.getRestriction().isMetBy(playerProfile.getCharacterInfo())) {
 			return false;
 		}
 		if (hasStatsSuitableForRole(enchant, playerProfile)) {
@@ -136,7 +136,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private boolean isSuitableFor(Gem gem, PlayerProfile playerProfile) {
-		if (!gem.getRestriction().isMetBy(playerProfile.getCharacterInfo(), playerProfile.getPhase())) {
+		if (!gem.getRestriction().isMetBy(playerProfile.getCharacterInfo())) {
 			return false;
 		}
 		return hasStatsSuitableForRole(gem, playerProfile);

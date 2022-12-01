@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.config.Restriction;
-import wow.commons.model.pve.Phase;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class ItemSet {
 	private final List<ItemSetBonus> itemSetBonuses;
 	private final List<Item> pieces;
 
-	public boolean canBeEquippedBy(CharacterInfo characterInfo, Phase phase) {
-		return restriction.isMetBy(characterInfo, phase);
+	public boolean canBeEquippedBy(CharacterInfo characterInfo) {
+		return restriction.isMetBy(characterInfo);
 	}
 }

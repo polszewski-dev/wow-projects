@@ -35,28 +35,26 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	private final String profileName;
 	private final CharacterInfo characterInfo;
 	private final CreatureType enemyType;
-	private final Phase phase;
 	private Equipment equipment = new Equipment();
 	private List<Buff> buffs = List.of();
 
 	private LocalDateTime lastModified;
 
-	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType, Phase phase) {
+	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType) {
 		this.profileId = profileId;
 		this.profileName = profileName;
 		this.characterInfo = characterInfo;
 		this.enemyType = enemyType;
-		this.phase = phase;
 		this.lastModified = LocalDateTime.now();
 	}
 
 	@Override
 	public PlayerProfile copy() {
-		return copy(profileId, profileName, phase);
+		return copy(profileId, profileName, characterInfo.getPhase());
 	}
 
 	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo, enemyType, phase);
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo.setPhase(phase), enemyType);
 		copy.equipment = Copyable.copyNullable(this.equipment);
 		copy.buffs = new ArrayList<>(this.buffs);
 		copy.lastModified = this.lastModified;
@@ -172,6 +170,14 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public List<CharacterProfession> getProfessions() {
 		return characterInfo.getProfessions();
+	}
+
+	public CharacterProfessions getCharacterProfessions() {
+		return characterInfo.getCharacterProfessions();
+	}
+
+	public Phase getPhase() {
+		return characterInfo.getPhase();
 	}
 
 	public Side getSide() {

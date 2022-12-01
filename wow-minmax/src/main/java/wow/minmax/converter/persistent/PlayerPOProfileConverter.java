@@ -46,8 +46,7 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 				value.getProfileId(),
 				value.getProfileName(),
 				convertBackCharacterInfo(value),
-				value.getEnemyType(),
-				value.getPhase()
+				value.getEnemyType()
 		);
 		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment()));
 		playerProfile.setBuffs(buffPOConverter.convertBackList(value.getBuffs()));
@@ -62,7 +61,8 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 				playerProfile.getRace(),
 				playerProfile.getLevel(),
 				build,
-				new CharacterProfessions(characterProfessionPOConverter.convertBackList(playerProfile.getProfessions()))
+				new CharacterProfessions(characterProfessionPOConverter.convertBackList(playerProfile.getProfessions())),
+				playerProfile.getPhase()
 		);
 	}
 }

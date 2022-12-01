@@ -57,15 +57,15 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				profileConfig.getDefaultRace(),
 				level,
 				build,
-				new CharacterProfessions(profileConfig.getDefaultProfessions(phase))
+				new CharacterProfessions(profileConfig.getDefaultProfessions(phase)),
+				phase
 		);
 
 		PlayerProfile playerProfile = new PlayerProfile(
 				UUID.randomUUID(),
 				profileName,
 				characterInfo,
-				profileConfig.getDefaultEnemyType(),
-				phase
+				profileConfig.getDefaultEnemyType()
 		);
 
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
