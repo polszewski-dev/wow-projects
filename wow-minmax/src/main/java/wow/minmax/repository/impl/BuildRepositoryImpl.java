@@ -3,6 +3,7 @@ package wow.minmax.repository.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.character.BuffSetId;
 import wow.commons.model.character.Build;
 import wow.commons.model.character.PveRole;
 import wow.commons.model.spells.Spell;
@@ -21,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static wow.commons.model.character.Build.BuffSetId.*;
+import static wow.commons.model.character.BuffSetId.*;
 import static wow.commons.model.spells.SpellId.*;
 
 /**
@@ -77,7 +78,7 @@ public class BuildRepositoryImpl implements BuildRepository {
 				)
 		);
 
-		Map<Build.BuffSetId, List<Buff>> buffSets = new EnumMap<>(Build.BuffSetId.class);
+		Map<BuffSetId, List<Buff>> buffSets = new EnumMap<>(BuffSetId.class);
 
 		buffSets.put(SELF_BUFFS, getBuffs(
 				"Fel Armor",

@@ -2,18 +2,13 @@ package wow.commons.repository.impl;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.character.BaseStatInfo;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.CombatRatingInfo;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.*;
 import wow.commons.repository.CharacterRepository;
 import wow.commons.repository.impl.parsers.character.CharacterExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * User: POlszewski
@@ -23,6 +18,7 @@ import java.util.Optional;
 public class CharacterRepositoryImpl implements CharacterRepository {
 	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
 	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
+	private final Map<String, BuildTemplate> buildTemplateByIdByLevel = new HashMap<>();
 
 	@Override
 	public Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level) {
@@ -36,6 +32,12 @@ public class CharacterRepositoryImpl implements CharacterRepository {
 		return combatRatingInfos.stream()
 				.filter(x -> x.getLevel() == level)
 				.findAny();
+	}
+
+	@Override
+	public Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClass characterClass, int level) {
+		String key = getKey(buildId, characterClass, level);
+		return Optional.ofNullable(buildTemplateByIdByLevel.get(key));
 	}
 
 	@PostConstruct
@@ -52,4 +54,12 @@ public class CharacterRepositoryImpl implements CharacterRepository {
 		combatRatingInfos.add(combatRatingInfo);
 	}
 
+	public void addBuildTemplate(BuildTemplate buildTemplate) {
+		String key = getKey(buildTemplate.getBuildId(), buildTemplate.getCharacterClass(), buildTemplate.getLevel());
+		buildTemplateByIdByLevel.put(key, buildTemplate);
+	}
+
+	private static String getKey(BuildId buildId, CharacterClass characterClass, int level) {
+		return buildId + "#" + characterClass + "#" + level;
+	}
 }

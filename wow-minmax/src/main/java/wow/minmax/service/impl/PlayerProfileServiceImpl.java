@@ -24,7 +24,7 @@ import wow.minmax.service.UpgradeService;
 import java.util.List;
 import java.util.UUID;
 
-import static wow.commons.model.character.Build.BuffSetId.*;
+import static wow.commons.model.character.BuffSetId.*;
 
 /**
  * User: POlszewski

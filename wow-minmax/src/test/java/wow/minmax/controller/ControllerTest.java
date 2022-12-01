@@ -113,7 +113,7 @@ abstract class ControllerTest {
 		build.setDamagingSpell(spell);
 		build.setRelevantSpells(List.of(spell));
 		build.setActivePet(null);
-		build.setBuffSets(Map.of(Build.BuffSetId.SELF_BUFFS, List.of(buff)));
+		build.setBuffSets(Map.of(BuffSetId.SELF_BUFFS, List.of(buff)));
 	}
 
 	private void createProfile() {

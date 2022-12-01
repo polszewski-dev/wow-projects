@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.character.BuffSetId;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
@@ -24,8 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static wow.commons.model.character.Build.BuffSetId;
-import static wow.commons.model.character.Build.BuffSetId.*;
+import static wow.commons.model.character.BuffSetId.*;
 
 /**
  * User: POlszewski

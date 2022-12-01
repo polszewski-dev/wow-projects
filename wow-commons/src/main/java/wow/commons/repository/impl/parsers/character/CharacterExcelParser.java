@@ -27,7 +27,8 @@ public class CharacterExcelParser  extends ExcelParser {
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
 				new BaseStatsSheetParser("base_stats", characterRepository),
-				new CombatRatingsSheetParser("combat_ratings", characterRepository)
+				new CombatRatingsSheetParser("combat_ratings", characterRepository),
+				new BuildSheetParser("builds", characterRepository)
 		);
 	}
 }

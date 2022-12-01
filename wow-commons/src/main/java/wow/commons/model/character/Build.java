@@ -28,14 +28,6 @@ public class Build implements Copyable<Build>, AttributeCollection {
 	private List<Spell> relevantSpells;
 	private PetType activePet;
 
-	public enum BuffSetId {
-		SELF_BUFFS,
-		PARTY_BUFFS,
-		RAID_BUFFS,
-		WORLD_BUFFS,
-		CONSUMES,
-	}
-
 	private Map<BuffSetId, List<Buff>> buffSets;
 
 	public Build(String buildId) {

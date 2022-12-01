@@ -88,9 +88,9 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 				.collect(Collectors.toList());
 	}
 
-	public void setBuffs(Build.BuffSetId... buffSetIds) {
+	public void setBuffs(BuffSetId... buffSetIds) {
 		Set<Buff> newBuffs = new HashSet<>();
-		for (Build.BuffSetId buffSetId : buffSetIds) {
+		for (BuffSetId buffSetId : buffSetIds) {
 			newBuffs.addAll(getBuild().getBuffSet(buffSetId));
 		}
 		setBuffs(newBuffs);
@@ -234,11 +234,11 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 		return getBuild().getActivePet();
 	}
 
-	public Map<Build.BuffSetId, List<Buff>> getBuffSets() {
+	public Map<BuffSetId, List<Buff>> getBuffSets() {
 		return getBuild().getBuffSets();
 	}
 
-	public void setBuffSets(Map<Build.BuffSetId, List<Buff>> buffSets) {
+	public void setBuffSets(Map<BuffSetId, List<Buff>> buffSets) {
 		getBuild().setBuffSets(buffSets);
 	}
 

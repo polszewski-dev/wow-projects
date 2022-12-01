@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
-import static wow.commons.model.character.Build.BuffSetId.*;
+import static wow.commons.model.character.BuffSetId.*;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 

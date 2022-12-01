@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.character.BuffSetId;
 import wow.commons.model.character.Build;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.pve.Phase;
@@ -148,7 +149,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void enableBuff() {
-		profile.setBuffs(Build.BuffSetId.CONSUMES);
+		profile.setBuffs(BuffSetId.CONSUMES);
 
 		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 17628)).isFalse();
 		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
@@ -163,7 +164,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void disableBuff() {
-		profile.setBuffs(Build.BuffSetId.CONSUMES);
+		profile.setBuffs(BuffSetId.CONSUMES);
 
 		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
 
