@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.character.Build;
 import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.character.CharacterProfessions;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
@@ -61,7 +62,7 @@ public class PlayerPOProfileConverter extends Converter<PlayerProfile, PlayerPro
 				playerProfile.getRace(),
 				playerProfile.getLevel(),
 				build,
-				characterProfessionPOConverter.convertBackList(playerProfile.getProfessions())
+				new CharacterProfessions(characterProfessionPOConverter.convertBackList(playerProfile.getProfessions()))
 		);
 	}
 }

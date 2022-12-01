@@ -1,5 +1,6 @@
 package wow.commons.model.character;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
@@ -12,45 +13,46 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-10-31
  */
+@AllArgsConstructor
 @Getter
 public class CharacterInfo {
 	private final CharacterClass characterClass;
 	private final Race race;
 	private final int level;
 	private final Build build;
-	private final List<CharacterProfession> professions;
-
-	public CharacterInfo(CharacterClass characterClass, Race race, int level, Build build, List<CharacterProfession> professions) {
-		this.characterClass = characterClass;
-		this.race = race;
-		this.level = level;
-		this.build = build;
-		this.professions = professions;
-		if (professions.size() > 2) {
-			throw new IllegalArgumentException("At most 2 professions allowed");
-		}
-		if (professions.stream().map(CharacterProfession::getProfession).distinct().count() != professions.size()) {
-			throw new IllegalArgumentException("Can't have 2 identical professions");
-		}
-	}
+	private final CharacterProfessions characterProfessions;
 
 	public Side getSide() {
 		return race.getSide();
 	}
 
+	public List<CharacterProfession> getProfessions() {
+		return characterProfessions.getProfessions();
+	}
+
 	public boolean hasProfession(Profession profession) {
-		return professions.stream().anyMatch(x -> x.getProfession() == profession);
+		return characterProfessions.hasProfession(profession);
 	}
 
 	public boolean hasProfession(Profession profession, int level) {
-		return professions.stream().anyMatch(x -> x.getProfession() == profession && x.getLevel() >= level);
+		return characterProfessions.hasProfession(profession, level);
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
-		return professions.stream().anyMatch(x -> x.getSpecialization() == specialization);
+		return characterProfessions.hasProfessionSpecialization(specialization);
 	}
 
 	public boolean hasTalent(TalentId talentId) {
 		return build.hasTalent(talentId);
+	}
+
+	public CharacterInfo setBuild(Build build) {
+		return new CharacterInfo(
+				characterClass,
+				race,
+				level,
+				build,
+				characterProfessions
+		);
 	}
 }

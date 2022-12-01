@@ -6,6 +6,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.Build;
 import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.character.CharacterProfessions;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
@@ -56,7 +57,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				profileConfig.getDefaultRace(),
 				level,
 				build,
-				profileConfig.getDefaultProfessions(phase)
+				new CharacterProfessions(profileConfig.getDefaultProfessions(phase))
 		);
 
 		PlayerProfile playerProfile = new PlayerProfile(

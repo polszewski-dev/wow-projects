@@ -2,9 +2,7 @@ package wow.commons.model.config;
 
 import lombok.Builder;
 import lombok.Getter;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.CharacterInfo;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.*;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
@@ -31,28 +29,39 @@ public class Restriction {
 	private TalentId requiredTalent;
 
 	public boolean isMetBy(CharacterInfo characterInfo, Phase phase) {
-		if (characterInfo.getLevel() < requiredLevel) {
+		return isMetBy(
+				phase,
+				characterInfo.getLevel(),
+				characterInfo.getCharacterClass(),
+				characterInfo.getRace(),
+				characterInfo.getBuild(),
+				characterInfo.getCharacterProfessions()
+		);
+	}
+
+	public boolean isMetBy(Phase phase, int level, CharacterClass characterClass, Race race, Build build, CharacterProfessions characterProfessions) {
+		if (level < requiredLevel) {
 			return false;
 		}
 		if (this.phase != null && phase.isEarlier(this.phase)) {
 			return false;
 		}
-		if (requiredClass != null && !requiredClass.isEmpty() && !requiredClass.contains(characterInfo.getCharacterClass())) {
+		if (requiredClass != null && !requiredClass.isEmpty() && !requiredClass.contains(characterClass)) {
 			return false;
 		}
-		if (requiredRace != null && !requiredRace.isEmpty() && !requiredRace.contains(characterInfo.getRace())) {
+		if (requiredRace != null && !requiredRace.isEmpty() && !requiredRace.contains(race)) {
 			return false;
 		}
-		if (requiredSide != null && requiredSide != characterInfo.getSide()) {
+		if (requiredSide != null && requiredSide != race.getSide()) {
 			return false;
 		}
-		if (requiredProfession != null && !characterInfo.hasProfession(requiredProfession, requiredProfessionLevel)) {
+		if (requiredProfession != null && !characterProfessions.hasProfession(requiredProfession, requiredProfessionLevel)) {
 			return false;
 		}
-		if (requiredProfessionSpec != null && !characterInfo.hasProfessionSpecialization(requiredProfessionSpec)) {
+		if (requiredProfessionSpec != null && !characterProfessions.hasProfessionSpecialization(requiredProfessionSpec)) {
 			return false;
 		}
-		return requiredTalent == null || characterInfo.hasTalent(requiredTalent);
+		return requiredTalent == null || build.hasTalent(requiredTalent);
 	}
 
 	public Restriction merge(Restriction secondary) {

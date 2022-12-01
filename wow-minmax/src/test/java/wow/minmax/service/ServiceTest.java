@@ -6,6 +6,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.Build;
 import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.character.CharacterProfession;
+import wow.commons.model.character.CharacterProfessions;
 import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
@@ -41,13 +42,14 @@ abstract class ServiceTest {
 
 	PlayerProfile getPlayerProfile(String buildId) {
 		Build build = buildRepository.getBuild(buildId, 70).orElseThrow();
+		CharacterProfessions characterProfessions = new CharacterProfessions(List.of(
+				new CharacterProfession(Profession.TAILORING, 375, null),
+				new CharacterProfession(Profession.ENCHANTING, 375, null)
+		));
 		return new PlayerProfile(
 				UUID.randomUUID(),
 				"test",
-				new CharacterInfo(WARLOCK, ORC, 70, build, List.of(
-						new CharacterProfession(Profession.TAILORING, 375, null),
-						new CharacterProfession(Profession.ENCHANTING, 375, null)
-				)),
+				new CharacterInfo(WARLOCK, ORC, 70, build, characterProfessions),
 				UNDEAD,
 				Phase.TBC_P5
 		);
