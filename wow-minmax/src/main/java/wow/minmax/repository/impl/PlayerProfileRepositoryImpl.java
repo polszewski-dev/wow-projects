@@ -1,11 +1,9 @@
 package wow.minmax.repository.impl;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
 
-import javax.annotation.PostConstruct;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -15,33 +13,29 @@ import java.util.*;
  * Date: 2021-12-14
  */
 @Repository
-@AllArgsConstructor
 public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	@Override
 	public List<PlayerProfilePO> getPlayerProfileList() {
-		return new ArrayList<>(profiles.values());
+		return new ArrayList<>(getProfiles().values());
 	}
 
 	@Override
 	public Optional<PlayerProfilePO> getPlayerProfile(UUID profileId) {
-		return Optional.ofNullable(profiles.get(profileId));
+		return Optional.ofNullable(getProfiles().get(profileId));
 	}
 
 	@Override
 	public void saveProfile(PlayerProfilePO playerProfile) {
 		playerProfile.setLastModified(LocalDateTime.now());
-		profiles.put(playerProfile.getProfileId(), playerProfile);
-		write(KEY, new TreeMap<>(profiles));
+		getProfiles().put(playerProfile.getProfileId(), playerProfile);
+		write(KEY, new TreeMap<>(getProfiles()));
 	}
 
-	@PostConstruct
-	public void init() {
-		if (has(KEY)) {
-			profiles = read(KEY);
-		} else {
-			profiles = new TreeMap<>();
+	private Map<UUID, PlayerProfilePO> getProfiles() {
+		if (profiles == null) {
+			profiles = Collections.synchronizedMap(has(KEY) ? read(KEY) : new TreeMap<>());
 		}
-		profiles = Collections.synchronizedMap(profiles);
+		return profiles;
 	}
 
 	// TODO store in a real database
