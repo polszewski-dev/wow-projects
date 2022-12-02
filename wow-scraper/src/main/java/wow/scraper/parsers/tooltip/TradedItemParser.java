@@ -5,6 +5,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.parsers.stats.StatPatternRepository;
 
 /**
  * User: POlszewski
@@ -12,8 +13,8 @@ import wow.scraper.model.JsonItemDetailsAndTooltip;
  */
 @Getter
 public class TradedItemParser extends AbstractTooltipParser {
-	public TradedItemParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
-		super(itemDetailsAndTooltip, gameVersion);
+	public TradedItemParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion, StatPatternRepository statPatternRepository) {
+		super(itemDetailsAndTooltip, gameVersion, statPatternRepository);
 	}
 
 	@Override

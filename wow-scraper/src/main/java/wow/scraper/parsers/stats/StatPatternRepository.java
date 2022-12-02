@@ -1,7 +1,10 @@
 package wow.scraper.parsers.stats;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,28 +15,19 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2021-04-04
  */
+@Repository
 public class StatPatternRepository {
 	private final List<StatPattern> itemStatPatterns = new ArrayList<>();
 	private final List<StatPattern> gemStatPatterns = new ArrayList<>();
 	private final List<StatPattern> socketBonusStatPatterns = new ArrayList<>();
 
-	private static StatPatternRepository instance;
+	@Value("${stat.parsers.xls.file.path}")
+	private String xlsFilePath;
 
-	public static StatPatternRepository getInstance() {
-		if (instance == null) {
-			instance = new StatPatternRepository();
-			try {
-				instance.init();
-			} catch (Exception e) {
-				throw new IllegalStateException("Initialization failed", e);
-			}
-		}
-		return instance;
-	}
-
-	private void init() throws IOException, InvalidFormatException {
+	@PostConstruct
+	public void init() throws IOException, InvalidFormatException {
 		var statParserExcelParser = new StatPatternExcelParser(
-				"/xls/stat_parsers.xls",
+				xlsFilePath,
 				this.itemStatPatterns,
 				this.gemStatPatterns,
 				this.socketBonusStatPatterns

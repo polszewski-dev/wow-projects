@@ -1,5 +1,6 @@
 package wow.scraper.parsers.gems;
 
+import lombok.AllArgsConstructor;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.util.AttributesBuilder;
 import wow.scraper.parsers.stats.StatParser;
@@ -9,8 +10,11 @@ import wow.scraper.parsers.stats.StatPatternRepository;
  * User: POlszewski
  * Date: 2021-03-24
  */
+@AllArgsConstructor
 public final class GemStatsParser {
-	public static Attributes tryParseStats(String line) {
+	private StatPatternRepository statPatternRepository;
+
+	public Attributes tryParseStats(String line) {
 		AttributesBuilder builder = new AttributesBuilder();
 
 		for (String part : getParts(line)) {
@@ -36,10 +40,8 @@ public final class GemStatsParser {
 		}
 	}
 
-	private static Attributes tryParseSingleStat(String line) {
-		StatParser parser = StatPatternRepository.getInstance().getGemStatParser();
+	private Attributes tryParseSingleStat(String line) {
+		StatParser parser = statPatternRepository.getGemStatParser();
 		return parser.tryParseSingleStat(line);
 	}
-
-	private GemStatsParser() {}
 }

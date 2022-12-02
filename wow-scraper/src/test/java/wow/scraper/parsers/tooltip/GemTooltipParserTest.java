@@ -1,7 +1,6 @@
 package wow.scraper.parsers.tooltip;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.item.MetaEnabler;
@@ -23,7 +22,7 @@ import static wow.commons.model.pve.Phase.TBC_P3;
  * User: POlszewski
  * Date: 2022-11-15
  */
-class GemTooltipParserTest {
+class GemTooltipParserTest extends TooltipParserTest<GemTooltipParser> {
 	@Test
 	@DisplayName("Item id/name are parsed correctly")
 	void idAndName() {
@@ -91,26 +90,19 @@ class GemTooltipParserTest {
 	static GemTooltipParser purpleGem;
 	static GemTooltipParser metaGem;
 
-	@BeforeAll
-	static void readTestData() throws IOException {
-		redGem = getTooltip("32196");
-		orangeGem = getTooltip("35760");
-		yellowGem = getTooltip("35761");
-		greenGem = getTooltip("35759");
-		blueGem = getTooltip("33135");
-		purpleGem = getTooltip("32215");
-		metaGem = getTooltip("34220");
+	@BeforeEach
+	void readTestData() throws IOException {
+		redGem = getTooltip("gem/32196");
+		orangeGem = getTooltip("gem/35760");
+		yellowGem = getTooltip("gem/35761");
+		greenGem = getTooltip("gem/35759");
+		blueGem = getTooltip("gem/33135");
+		purpleGem = getTooltip("gem/32215");
+		metaGem = getTooltip("gem/34220");
 	}
 
-	static final ObjectMapper MAPPER = new ObjectMapper();
-
-	static GemTooltipParser getTooltip(String path) throws IOException {
-		JsonItemDetailsAndTooltip data = MAPPER.readValue(
-				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/gem/" + path),
-				JsonItemDetailsAndTooltip.class
-		);
-		GemTooltipParser parser = new GemTooltipParser(data, TBC);
-		parser.parse();
-		return parser;
+	@Override
+	protected GemTooltipParser createParser(JsonItemDetailsAndTooltip data) {
+		return new GemTooltipParser(data, TBC, statPatternRepository);
 	}
 }

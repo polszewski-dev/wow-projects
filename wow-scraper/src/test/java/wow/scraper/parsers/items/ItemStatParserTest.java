@@ -1,14 +1,19 @@
 package wow.scraper.parsers.items;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.complex.special.OnUseAbility;
 import wow.commons.model.attributes.complex.special.ProcAbility;
+import wow.scraper.ScraperTestConfig;
 import wow.scraper.parsers.stats.StatParser;
 import wow.scraper.parsers.stats.StatPatternRepository;
 
@@ -22,12 +27,17 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  * User: POlszewski
  * Date: 2022-10-30
  */
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = ScraperTestConfig.class)
 class ItemStatParserTest {
+	@Autowired
+	StatPatternRepository statPatternRepository;
+
 	@DisplayName("Test parsing proc strings")
 	@ParameterizedTest(name = "[{index}] LINE = {0}, STAT = {1}")
 	@MethodSource("getProcTestArguments")
 	void testParseProc(String line, String expectedStatString) {
-		StatParser parser =  StatPatternRepository.getInstance().getItemStatParser();
+		StatParser parser = statPatternRepository.getItemStatParser();
 		boolean success = parser.tryParse(line);
 		Attributes stats = parser.getParsedStats();
 
@@ -50,7 +60,7 @@ class ItemStatParserTest {
 	@ParameterizedTest(name = "[{index}] LINE = {0}, STAT = {1}")
 	@MethodSource("getOnUseTestArguments")
 	void testParseOnUse(String line, String expectedStatString) {
-		StatParser parser =  StatPatternRepository.getInstance().getItemStatParser();
+		StatParser parser = statPatternRepository.getItemStatParser();
 		boolean success = parser.tryParse(line);
 		Attributes stats = parser.getParsedStats();
 

@@ -1,7 +1,6 @@
 package wow.scraper.parsers.tooltip;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
@@ -18,7 +17,7 @@ import static wow.commons.model.pve.GameVersion.TBC;
  * User: POlszewski
  * Date: 2022-11-17
  */
-class TradedItemParserTest {
+class TradedItemParserTest extends TooltipParserTest<TradedItemParser> {
 	@Test
 	@DisplayName("Token tooltip is parsed correctly")
 	void tokenTooltipIsParsedCorrectly() {
@@ -41,24 +40,17 @@ class TradedItemParserTest {
 		assertThat(verdantSphere.isUnique()).isTrue();
 	}
 
-	@BeforeAll
-	static void readTestData() throws IOException {
-		pauldrons = getTooltip("/tooltips/token/29762");
-		verdantSphere = getTooltip("/tooltips/quest/32405");
+	@BeforeEach
+	void readTestData() throws IOException {
+		pauldrons = getTooltip("token/29762");
+		verdantSphere = getTooltip("quest/32405");
 	}
 
 	static TradedItemParser pauldrons;
 	static TradedItemParser verdantSphere;
 
-	static final ObjectMapper MAPPER = new ObjectMapper();
-
-	static TradedItemParser getTooltip(String path) throws IOException {
-		JsonItemDetailsAndTooltip data = MAPPER.readValue(
-				ItemTooltipParserTest.class.getResourceAsStream(path),
-				JsonItemDetailsAndTooltip.class
-		);
-		TradedItemParser parser = new TradedItemParser(data, TBC);
-		parser.parse();
-		return parser;
+	@Override
+	protected TradedItemParser createParser(JsonItemDetailsAndTooltip data) {
+		return new TradedItemParser(data, TBC, statPatternRepository);
 	}
 }

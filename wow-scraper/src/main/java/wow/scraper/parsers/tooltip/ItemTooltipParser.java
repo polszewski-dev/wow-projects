@@ -43,8 +43,8 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 	private boolean randomEnchantment;
 
-	public ItemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
-		super(itemDetailsAndTooltip, gameVersion);
+	public ItemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion, StatPatternRepository statPatternRepository) {
+		super(itemDetailsAndTooltip, gameVersion, statPatternRepository);
 	}
 
 	@Override
@@ -83,13 +83,13 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 				Rule.regex("(\\d+) - (\\d+) (\\S+)? ?Damage", this::parseWeaponDamage),
 				Rule.regex("\\((\\d+\\.\\d+) damage per second\\)", this::parseWeaponDps),
 				Rule.regex("Speed (\\d+.\\d+)", this::parseWeaponSpeedParams),
-				Rule.tryParse(line -> statParser.tryParse(line), x -> {}),
+				Rule.test(line -> statParser.tryParse(line), x -> {}),
 		};
 	}
 
 	@Override
 	protected void beforeParse() {
-		this.statParser = StatPatternRepository.getInstance().getItemStatParser();
+		this.statParser = statPatternRepository.getItemStatParser();
 		this.socketTypes = new ArrayList<>();
 	}
 
@@ -129,7 +129,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	}
 
 	private void parseSocketBonus(String value) {
-		this.socketBonus = SocketBonusParser.tryParseSocketBonus(value);
+		this.socketBonus = new SocketBonusParser(statPatternRepository).tryParseSocketBonus(value);
 		if (socketBonus == null) {
 			throw new IllegalArgumentException("Invalid socket bonus: " + value);
 		}
@@ -167,7 +167,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		}
 		int numPieces = (int)itemSetBonusParams[0];
 		String description = (String)itemSetBonusParams[1];
-		StatParser setBonusParser = StatPatternRepository.getInstance().getItemStatParser();
+		StatParser setBonusParser = statPatternRepository.getItemStatParser();
 		if (!setBonusParser.tryParse(description)) {
 			unmatchedLine(description);
 		}

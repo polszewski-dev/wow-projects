@@ -1,5 +1,6 @@
 package wow.scraper.parsers;
 
+import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.professions.Profession;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.*;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-10-29
  */
+@Slf4j
 public class WowheadSourceParser {
 	public static final String SOURCE_WORLD_DROP = "WorldDrop";
 	public static final String SOURCE_QUESTS = "Quests";
@@ -45,7 +47,7 @@ public class WowheadSourceParser {
 		}
 
 		if (sources.size() != 1) {
-			throw new IllegalArgumentException("Multiple sources for: " + getName());
+			log.error("Multiple sources for: " + getName());
 		}
 
 		switch (sources.get(0)) {
@@ -149,7 +151,7 @@ public class WowheadSourceParser {
 
 	private JsonSourceMore assertSingleSourceMore() {
 		if (sourceMores.size() != 1) {
-			throw new IllegalArgumentException("Multiple source mores: " + sourceMores);
+			log.error("Multiple source mores: " + sourceMores);
 		}
 		JsonSourceMore sourceMore = sourceMores.get(0);
 		fixData(sourceMore);

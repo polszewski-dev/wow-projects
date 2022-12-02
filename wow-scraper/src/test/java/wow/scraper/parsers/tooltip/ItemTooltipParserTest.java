@@ -1,7 +1,6 @@
 package wow.scraper.parsers.tooltip;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Money;
@@ -26,7 +25,7 @@ import static wow.commons.model.pve.Phase.TBC_P5;
  * User: POlszewski
  * Date: 2022-11-14
  */
-class ItemTooltipParserTest {
+class ItemTooltipParserTest extends TooltipParserTest<ItemTooltipParser> {
 	@Test
 	@DisplayName("Item id/name are parsed correctly")
 	void idAndName() {
@@ -156,24 +155,17 @@ class ItemTooltipParserTest {
 	static ItemTooltipParser magistersStaff;
 	static ItemTooltipParser wandOfDemonsoul;
 
-	@BeforeAll
-	static void readTestData() throws IOException {
-		hoodOfMalefic = getTooltip("31051");
-		sunfireRobe = getTooltip("34364");
-		scryersBlodgem = getTooltip("29132");
-		magistersStaff = getTooltip("34182");
-		wandOfDemonsoul = getTooltip("34347");
+	@BeforeEach
+	void readTestData() throws IOException {
+		hoodOfMalefic = getTooltip("item/31051");
+		sunfireRobe = getTooltip("item/34364");
+		scryersBlodgem = getTooltip("item/29132");
+		magistersStaff = getTooltip("item/34182");
+		wandOfDemonsoul = getTooltip("item/34347");
 	}
 
-	static final ObjectMapper MAPPER = new ObjectMapper();
-
-	static ItemTooltipParser getTooltip(String path) throws IOException {
-		JsonItemDetailsAndTooltip data = MAPPER.readValue(
-				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/item/" + path),
-				JsonItemDetailsAndTooltip.class
-		);
-		ItemTooltipParser parser = new ItemTooltipParser(data, TBC);
-		parser.parse();
-		return parser;
+	@Override
+	protected ItemTooltipParser createParser(JsonItemDetailsAndTooltip data) {
+		return new ItemTooltipParser(data, TBC, statPatternRepository);
 	}
 }

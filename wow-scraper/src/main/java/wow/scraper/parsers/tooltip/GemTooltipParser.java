@@ -9,6 +9,7 @@ import wow.commons.model.pve.GameVersion;
 import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.parsers.gems.GemStatsParser;
+import wow.scraper.parsers.stats.StatPatternRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,8 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	private List<MetaEnabler> metaEnablers;
 	private Attributes stats;
 
-	public GemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
-		super(itemDetailsAndTooltip, gameVersion);
+	public GemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion, StatPatternRepository statPatternRepository) {
+		super(itemDetailsAndTooltip, gameVersion, statPatternRepository);
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class GemTooltipParser extends AbstractTooltipParser {
 				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
 				ruleProfessionRestriction,
 				ruleSellPrice,
-				Rule.tryParse(GemStatsParser::tryParseStats, x -> stats = x),
+				Rule.tryParse(line -> new GemStatsParser(statPatternRepository).tryParseStats(line), x -> stats = x),
 		};
 	}
 

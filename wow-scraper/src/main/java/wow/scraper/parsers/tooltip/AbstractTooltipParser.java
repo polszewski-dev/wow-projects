@@ -17,6 +17,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.parsers.stats.StatPatternRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,8 @@ import java.util.stream.Stream;
  */
 @Getter
 public abstract class AbstractTooltipParser {
+	protected final StatPatternRepository statPatternRepository;
+
 	protected final JsonItemDetailsAndTooltip itemDetailsAndTooltip;
 	protected final GameVersion gameVersion;
 	protected List<String> lines;
@@ -99,9 +102,10 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleQuote = Rule
 			.matches("\".*\"", params -> {});
 
-	protected AbstractTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion) {
+	protected AbstractTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion, StatPatternRepository statPatternRepository) {
 		this.itemDetailsAndTooltip = itemDetailsAndTooltip;
 		this.gameVersion = gameVersion;
+		this.statPatternRepository = statPatternRepository;
 	}
 
 	public int getItemId() {

@@ -53,7 +53,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		for (WowheadItemCategory category : WowheadItemCategory.equipment()) {
 			export(
 					category,
-					itemDetailsAndTooltip -> new ItemTooltipParser(itemDetailsAndTooltip, getGameVersion()),
+					itemDetailsAndTooltip -> new ItemTooltipParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
 					builder::add
 			);
 		}
@@ -62,7 +62,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addGems(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.GEMS,
-				itemDetailsAndTooltip -> new GemTooltipParser(itemDetailsAndTooltip, getGameVersion()),
+				itemDetailsAndTooltip -> new GemTooltipParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
 				builder::add
 		);
 	}
@@ -70,7 +70,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addItemsStartingQuest(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.QUEST,
-				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion()),
+				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
 				builder::add
 		);
 	}
@@ -78,7 +78,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addTokens(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.TOKENS,
-				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion()),
+				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
 				builder::add
 		);
 	}
