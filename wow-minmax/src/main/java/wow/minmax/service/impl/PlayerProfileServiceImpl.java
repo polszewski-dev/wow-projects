@@ -30,8 +30,6 @@ import wow.minmax.service.UpgradeService;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static wow.commons.model.character.BuffSetId.*;
-
 /**
  * User: POlszewski
  * Date: 2021-12-14
@@ -88,7 +86,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				enemyType
 		);
 
-		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
+		playerProfile.setBuffs(BuffSetId.values());
 
 		return playerProfile;
 	}

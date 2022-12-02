@@ -16,7 +16,7 @@ public enum BuffType {
 	DEBUFF,
 	OIL(BuffExclusionGroup.OIL),
 	FLASK(BuffExclusionGroup.FLASK),
-	ELIXIR(BuffExclusionGroup.FLASK),
+	ELIXIR,
 	FOOD(BuffExclusionGroup.FOOD),
 	POTION(BuffExclusionGroup.POTION),
 	RACIAL;
