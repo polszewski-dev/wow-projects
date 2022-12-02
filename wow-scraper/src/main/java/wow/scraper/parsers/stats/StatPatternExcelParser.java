@@ -15,11 +15,14 @@ public class StatPatternExcelParser extends ExcelParser {
 	private final List<StatPattern> itemStatPatterns;
 	private final List<StatPattern> gemStatPatterns;
 	private final List<StatPattern> socketBonusStatPatterns;
+	private final String xlsFilePath;
 
 	public StatPatternExcelParser(
+			String xlsFilePath,
 			List<StatPattern> itemStatPatterns,
 			List<StatPattern> gemStatPatterns,
 			List<StatPattern> socketBonusStatPatterns) {
+		this.xlsFilePath = xlsFilePath;
 		this.itemStatPatterns = itemStatPatterns;
 		this.gemStatPatterns = gemStatPatterns;
 		this.socketBonusStatPatterns = socketBonusStatPatterns;
@@ -27,7 +30,7 @@ public class StatPatternExcelParser extends ExcelParser {
 
 	@Override
 	protected InputStream getExcelInputStream() {
-		return fromResourcePath("/xls/stat_parsers.xls");
+		return fromResourcePath(xlsFilePath);
 	}
 
 	@Override

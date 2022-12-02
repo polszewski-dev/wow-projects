@@ -1,6 +1,8 @@
 package wow.commons.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
  * Date: 2021-03-02
  */
 @Repository
+@RequiredArgsConstructor
 public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private final PveRepository pveRepository;
 
@@ -36,9 +39,11 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	private final Map<Integer, TradedItem> tradedItemById = new TreeMap<>();
 
-	public ItemDataRepositoryImpl(PveRepository pveRepository) {
-		this.pveRepository = pveRepository;
-	}
+	@Value("${item.base.xls.file.path}")
+	private String itemBaseXlsFilePath;
+
+	@Value("${item.data.xls.file.path}")
+	private String itemDataXlsFilePath;
 
 	@Override
 	public Optional<Item> getItem(int itemId) {
@@ -115,10 +120,10 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		var itemExcelParser = new ItemExcelParser(this);
+		var itemExcelParser = new ItemExcelParser(itemDataXlsFilePath, this);
 		itemExcelParser.readFromXls();
 
-		ItemBaseExcelParser itemBaseExcelParser = new ItemBaseExcelParser(this, pveRepository);
+		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, this, pveRepository);
 		itemBaseExcelParser.readFromXls();
 	}
 

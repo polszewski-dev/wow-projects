@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parsers.spells;
 
+import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.spells.SpellId;
@@ -17,19 +18,17 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-09-25
  */
+@AllArgsConstructor
 public class SpellExcelParser extends ExcelParser {
+	private final String xlsFilePath;
 	private final SpellDataRepositoryImpl spellDataRepository;
 
 	private final Map<SpellId, SpellInfo> spellInfoById = new EnumMap<>(SpellId.class);
 	private final Map<TalentId, TalentInfo> talentInfoById = new EnumMap<>(TalentId.class);
 
-	public SpellExcelParser(SpellDataRepositoryImpl spellDataRepository) {
-		this.spellDataRepository = spellDataRepository;
-	}
-
 	@Override
 	protected InputStream getExcelInputStream() {
-		return fromResourcePath("/xls/spell_data.xls");
+		return fromResourcePath(xlsFilePath);
 	}
 
 	@Override

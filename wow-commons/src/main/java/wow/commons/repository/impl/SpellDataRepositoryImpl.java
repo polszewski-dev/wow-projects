@@ -1,6 +1,8 @@
 package wow.commons.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
  * Date: 2020-09-28
  */
 @Repository
+@RequiredArgsConstructor
 public class SpellDataRepositoryImpl implements SpellDataRepository {
 	private final Map<SpellIdAndRank, Spell> spellById = new LinkedHashMap<>();
 	private final Map<SpellId, List<Spell>> spellBySpellId = new LinkedHashMap<>();
@@ -32,6 +35,9 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	private final Map<Integer, TalentId> talentIdByCalculatorPosition = new LinkedHashMap<>();
 	private final Map<EffectId, EffectInfo> effectInfoByEffectId = new LinkedHashMap<>();
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
+
+	@Value("${spell.xls.file.path}")
+	private String xlsFilePath;
 
 	@Override
 	public Optional<Spell> getSpell(SpellId spellId, Integer rank) {
@@ -105,7 +111,7 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		var spellExcelParser = new SpellExcelParser(this);
+		var spellExcelParser = new SpellExcelParser(xlsFilePath, this);
 		spellExcelParser.readFromXls();
 	}
 

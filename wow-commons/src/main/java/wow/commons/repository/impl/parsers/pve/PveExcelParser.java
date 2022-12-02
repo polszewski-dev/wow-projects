@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parsers.pve;
 
+import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.repository.impl.PveRepositoryImpl;
@@ -11,16 +12,14 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-03-14
  */
+@AllArgsConstructor
 public class PveExcelParser extends ExcelParser {
+	private final String xlsFilePath;
 	private final PveRepositoryImpl pveRepository;
-
-	public PveExcelParser(PveRepositoryImpl pveRepository) {
-		this.pveRepository = pveRepository;
-	}
 
 	@Override
 	protected InputStream getExcelInputStream() {
-		return fromResourcePath("/xls/pve_data.xls");
+		return fromResourcePath(xlsFilePath);
 	}
 
 	@Override

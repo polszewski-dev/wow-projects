@@ -14,11 +14,12 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public class ItemExcelParser extends ExcelParser {
+	private final String xlsFilePath;
 	private final ItemDataRepositoryImpl itemDataRepository;
 
 	@Override
 	protected InputStream getExcelInputStream() {
-		return fromResourcePath("/xls/item_data.xls");
+		return fromResourcePath(xlsFilePath);
 	}
 
 	@Override

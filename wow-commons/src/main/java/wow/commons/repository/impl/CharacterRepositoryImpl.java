@@ -1,6 +1,8 @@
 package wow.commons.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.character.*;
 import wow.commons.repository.CharacterRepository;
@@ -15,10 +17,14 @@ import java.util.*;
  * Date: 2022-11-30
  */
 @Repository
+@RequiredArgsConstructor
 public class CharacterRepositoryImpl implements CharacterRepository {
 	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
 	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
 	private final Map<String, BuildTemplate> buildTemplateByIdByLevel = new HashMap<>();
+
+	@Value("${character.xls.file.path}")
+	private String xlsFilePath;
 
 	@Override
 	public Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level) {
@@ -42,7 +48,7 @@ public class CharacterRepositoryImpl implements CharacterRepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		var excelParser = new CharacterExcelParser(this);
+		var excelParser = new CharacterExcelParser(xlsFilePath, this);
 		excelParser.readFromXls();
 	}
 

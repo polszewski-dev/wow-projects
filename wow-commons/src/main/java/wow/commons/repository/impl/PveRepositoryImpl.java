@@ -1,6 +1,8 @@
 package wow.commons.repository.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
@@ -18,11 +20,15 @@ import java.util.stream.Collectors;
  * Date: 2021-03-14
  */
 @Repository
+@RequiredArgsConstructor
 public class PveRepositoryImpl implements PveRepository {
 	private final Map<Integer, Zone> zoneById = new HashMap<>();
 	private final Map<String, Zone> zoneByName = new TreeMap<>();
 	private final Map<Integer, Boss> bossById = new TreeMap<>();
 	private final Map<String, Faction> factionByName = new TreeMap<>();
+
+	@Value("${pve.xls.file.path}")
+	private String xlsFilePath;
 
 	@Override
 	public Optional<Zone> getZone(int zoneId) {
@@ -60,7 +66,7 @@ public class PveRepositoryImpl implements PveRepository {
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		var pveExcelParser = new PveExcelParser(this);
+		var pveExcelParser = new PveExcelParser(xlsFilePath, this);
 		pveExcelParser.readFromXls();
 
 		for (Zone instance : getAllInstances()) {

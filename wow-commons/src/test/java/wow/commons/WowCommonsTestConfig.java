@@ -1,6 +1,7 @@
 package wow.commons;
 
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * User: POlszewski
@@ -9,5 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {
 		"wow.commons.repository"
 })
+@PropertySource("classpath:test.properties")
 public class WowCommonsTestConfig {
 }

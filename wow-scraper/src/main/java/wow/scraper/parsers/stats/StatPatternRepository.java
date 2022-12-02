@@ -33,6 +33,7 @@ public class StatPatternRepository {
 
 	private void init() throws IOException, InvalidFormatException {
 		var statParserExcelParser = new StatPatternExcelParser(
+				"/xls/stat_parsers.xls",
 				this.itemStatPatterns,
 				this.gemStatPatterns,
 				this.socketBonusStatPatterns

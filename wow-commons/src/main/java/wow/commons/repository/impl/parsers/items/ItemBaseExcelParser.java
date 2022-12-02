@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parsers.items;
 
+import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
@@ -18,20 +19,17 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelSheetNames.
  * User: POlszewski
  * Date: 2022-10-30
  */
+@AllArgsConstructor
 public class ItemBaseExcelParser extends ExcelParser {
+	private final String xlsFilePath;
 	private final ItemDataRepositoryImpl itemDataRepository;
 	private final PveRepository pveRepository;
 
 	private final Map<String, List<Item>> setPiecesByName = new HashMap<>();
 
-	public ItemBaseExcelParser(ItemDataRepositoryImpl itemDataRepository, PveRepository pveRepository) {
-		this.itemDataRepository = itemDataRepository;
-		this.pveRepository = pveRepository;
-	}
-
 	@Override
 	protected InputStream getExcelInputStream() {
-		return fromResourcePath("/xls/item_base.xls");
+		return fromResourcePath(xlsFilePath);
 	}
 
 	@Override
