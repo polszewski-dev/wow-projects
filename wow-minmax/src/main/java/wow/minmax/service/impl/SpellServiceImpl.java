@@ -6,9 +6,11 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.repository.SpellDataRepository;
+import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.SpellService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -25,7 +27,9 @@ public class SpellServiceImpl implements SpellService {
 	}
 
 	@Override
-	public List<Buff> getAvailableBuffs() {
-		return spellDataRepository.getAvailableBuffs();
+	public List<Buff> getAvailableBuffs(PlayerProfile playerProfile) {
+		return spellDataRepository.getAvailableBuffs().stream()
+				.filter(buff -> buff.getRestriction().isMetBy(playerProfile.getCharacterInfo()))
+				.collect(Collectors.toList());
 	}
 }

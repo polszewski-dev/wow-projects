@@ -2,11 +2,7 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.character.BuildId;
@@ -14,7 +10,6 @@ import wow.commons.model.equipment.Equipment;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellStatistics;
-import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 
@@ -30,9 +25,6 @@ import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
  * User: POlszewski
  * Date: 2022-11-12
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowMinMaxTestConfig.class)
-@TestPropertySource("classpath:application.properties")
 class CalculationServiceTest extends ServiceTest {
 	@Autowired
 	SpellService spellService;

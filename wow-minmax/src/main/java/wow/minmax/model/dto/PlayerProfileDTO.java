@@ -1,6 +1,5 @@
 package wow.minmax.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import wow.commons.model.character.CharacterClass;
@@ -10,11 +9,8 @@ import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -40,11 +36,5 @@ public class PlayerProfileDTO {
 
 	private LocalDateTime lastModified;
 
-	@JsonIgnore
-	public Collection<EquippableItemDTO> getEquippedItems() {
-		return equipment.getEquipmentSlotsByType().values().stream()
-				.map(EquipmentSlotDTO::getEquippableItem)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
-	}
+	private List<BuffDTO> availableBuffs;
 }

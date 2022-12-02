@@ -679,12 +679,8 @@ class BuffEditor {
 
 	set profile(value) {
 		this._profile = value
-    	Api.getAvailableBuffs()
-    	.then(availableBuffs => {
-    		this.availableBuffs = availableBuffs
-    		this.selectedBuffs = this._profile.buffs
-    	})
-    	.catch(err => showError(err))
+    	this.availableBuffs = this._profile.availableBuffs
+    	this.selectedBuffs = this._profile.buffs
 	}
 
 	generateUI(parent) {

@@ -1,7 +1,11 @@
 package wow.minmax.service;
 
 import org.assertj.core.data.Offset;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.*;
@@ -15,6 +19,7 @@ import wow.commons.model.spells.SpellId;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.util.TalentCalculatorUtil;
+import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.*;
@@ -29,6 +34,9 @@ import static wow.commons.model.character.Race.ORC;
  * User: POlszewski
  * Date: 2022-11-20
  */
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = WowMinMaxTestConfig.class)
+@TestPropertySource("classpath:application.properties")
 abstract class ServiceTest {
 	static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

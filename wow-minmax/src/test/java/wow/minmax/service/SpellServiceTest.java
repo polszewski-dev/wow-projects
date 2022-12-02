@@ -1,15 +1,11 @@
 package wow.minmax.service;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.character.BuildId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.minmax.WowMinMaxTestConfig;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,9 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2022-11-19
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowMinMaxTestConfig.class)
-@TestPropertySource("classpath:application.properties")
 class SpellServiceTest extends ServiceTest {
 	@Autowired
 	SpellService underTest;
@@ -37,7 +30,7 @@ class SpellServiceTest extends ServiceTest {
 
 	@Test
 	void getAvailableBuffs() {
-		List<Buff> buffs = underTest.getAvailableBuffs();
+		List<Buff> buffs = underTest.getAvailableBuffs(getPlayerProfile(BuildId.DESTRO_SHADOW));
 
 		List<String> names = buffs.stream().map(Buff::getName).collect(Collectors.toList());
 

@@ -3,6 +3,7 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
@@ -14,6 +15,7 @@ import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.dto.*;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.SpellService;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,6 +35,7 @@ import java.util.stream.Stream;
 public class PlayerProfileController {
 	private final PlayerProfileService playerProfileService;
 	private final ItemService itemService;
+	private final SpellService spellService;
 	private final PlayerProfileConverter playerProfileConverter;
 	private final EquipmentConverter equipmentConverter;
 	private final ItemConverter itemConverter;
@@ -169,6 +172,9 @@ public class PlayerProfileController {
 				addItemOptions(slotDTO.getEquippableItem(), playerProfile);
 			}
 		}
+
+		List<Buff> availableBuffs = spellService.getAvailableBuffs(playerProfile);
+		playerProfileDTO.setAvailableBuffs(buffConverter.convertList(availableBuffs));
 	}
 
 	private void addItemOptions(EquippableItemDTO dto, PlayerProfile playerProfile) {

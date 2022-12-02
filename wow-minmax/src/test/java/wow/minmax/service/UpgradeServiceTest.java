@@ -2,22 +2,15 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.BuildId;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.ItemSocket;
 import wow.commons.model.spells.SpellId;
-import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
 
@@ -28,15 +21,9 @@ import static wow.commons.model.character.BuffSetId.*;
  * User: POlszewski
  * Date: 2022-11-19
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowMinMaxTestConfig.class)
-@TestPropertySource("classpath:application.properties")
 class UpgradeServiceTest extends ServiceTest {
 	@Autowired
 	UpgradeService underTest;
-
-	@MockBean
-	PlayerProfileRepository playerProfileRepository;
 
 	@Test
 	void findUpgradesChest() {

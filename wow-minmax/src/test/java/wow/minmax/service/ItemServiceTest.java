@@ -2,12 +2,8 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.BuildId;
@@ -15,7 +11,6 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.Comparator;
@@ -29,9 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2022-11-19
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowMinMaxTestConfig.class)
-@TestPropertySource("classpath:application.properties")
 class ItemServiceTest extends ServiceTest {
 	@Autowired
 	@Qualifier("itemService")
