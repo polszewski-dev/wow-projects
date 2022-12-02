@@ -812,7 +812,7 @@ class SpellSummary {
 			data.forEach(spellStats => {
 				const html = `
 				<tr>
-					<td><strong><img src="${getIcon(spellStats.spell)}"/>&nbsp;${spellStats.spell.name}</strong></td>
+					<td><strong><img src="${getIcon(spellStats.spell)}"/>&nbsp;${spellStats.spell.name}</strong>&nbsp;(rank ${spellStats.spell.rank})</td>
 					<td>${spellStats.dps}</td>
 					<td>${spellStats.totalDamage}</td>
 					<td>${fmt(spellStats.castTime)}</td>

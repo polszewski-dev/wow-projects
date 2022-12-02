@@ -11,6 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class SpellDTO {
 	private String name;
+	private Integer rank;
 	private String icon;
 	private String tooltip;
 }

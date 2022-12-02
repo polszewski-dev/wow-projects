@@ -15,6 +15,6 @@ import wow.minmax.model.dto.SpellDTO;
 public class SpellConverter extends Converter<Spell, SpellDTO> {
 	@Override
 	protected SpellDTO doConvert(Spell spell) {
-		return new SpellDTO(spell.getName(), spell.getIcon(), spell.getTooltip());
+		return new SpellDTO(spell.getName(), spell.getRank(), spell.getIcon(), spell.getTooltip());
 	}
 }
