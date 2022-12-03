@@ -32,10 +32,6 @@ public class Buff extends ConfigurationElementWithAttributes<Integer> {
 		this.sourceSpell = sourceSpell;
 	}
 
-	public BuffExclusionGroup getExclusionGroup() {
-		return exclusionGroup != null ? exclusionGroup : type.getDefaultExclusionGroup();
-	}
-
 	public Attributes modifyEffectByPct(Percent effectIncreasePct) {
 		return getAttributes().scale(effectIncreasePct.toMultiplier());
 	}

@@ -14,18 +14,12 @@ public enum BuffType {
 	BUFF,
 	SELF_BUFF,
 	DEBUFF,
-	OIL(BuffExclusionGroup.OIL),
-	FLASK(BuffExclusionGroup.FLASK),
+	OIL,
+	FLASK,
 	ELIXIR,
-	FOOD(BuffExclusionGroup.FOOD),
-	POTION(BuffExclusionGroup.POTION),
+	FOOD,
+	POTION,
 	RACIAL;
-
-	private final BuffExclusionGroup defaultExclusionGroup;
-
-	BuffType() {
-		this(null);
-	}
 
 	public static BuffType parse(String value) {
 		return EnumUtil.parse(value, values());

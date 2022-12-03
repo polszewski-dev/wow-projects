@@ -23,8 +23,4 @@ public class BuildTemplate {
 	private final List<SpellId> relevantSpells;
 	private final PetType activePet;
 	private Map<BuffSetId, List<String>> buffSets;
-
-	public List<String> getBuffSet(BuffSetId buffSetId) {
-		return buffSets.getOrDefault(buffSetId, List.of());
-	}
 }

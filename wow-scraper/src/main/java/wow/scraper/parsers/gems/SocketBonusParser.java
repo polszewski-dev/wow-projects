@@ -17,6 +17,4 @@ public final class SocketBonusParser {
 		StatParser parser = statPatternRepository.getSocketBonusStatParser();
 		return parser.tryParseSingleStat(line);
 	}
-
-	private SocketBonusParser() {}
 }

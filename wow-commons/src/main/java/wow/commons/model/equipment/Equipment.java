@@ -113,7 +113,7 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 			}
 		} else if (slot == OFF_HAND) {
 			EquippableItem mainHand = getMainHand();
-			if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND) {
+			if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND && item != null) {
 				throw new IllegalArgumentException("Can't equip offhand while having 2-hander");
 			}
 			putOrRemove(OFF_HAND, item);

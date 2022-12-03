@@ -10,7 +10,6 @@ import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,17 +91,6 @@ public interface AttributeSource {
 
 	default <T extends ComplexAttribute> List<T> getList(ComplexAttributeId attributeId) {
 		return (List)getComplexAttributeList().getOrDefault(attributeId, List.of());
-	}
-
-	default List<ComplexAttribute> getList(ComplexAttributeId[] attributeIds) {
-		List<ComplexAttribute> result = new ArrayList<>();
-		var complexAttributeList = getComplexAttributeList();
-
-		for (ComplexAttributeId attributeId : attributeIds) {
-			result.addAll(complexAttributeList.getOrDefault(attributeId, List.of()));
-		}
-
-		return result;
 	}
 
 	default boolean scalesWithStacks() {
