@@ -57,10 +57,6 @@ class Api {
 		return Api.sendRequest(`/api/v1/upgrade/${encodeURIComponent(profileId)}/slot/${encodeURIComponent(slot)}`)
 	}
 
-	static getAvailableBuffs() {
-		return Api.sendRequest('/api/v1/buff/list')
-	}
-
 	static enableBuff(profileId, buffId, enabled) {
 		return Api.sendRequest(`/api/v1/profile/${encodeURIComponent(profileId)}/enable/buff/${encodeURIComponent(buffId)}/${enabled}`)
 	}

@@ -16,7 +16,6 @@ import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 import wow.commons.util.AttributeEvaluator;
@@ -230,10 +229,6 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public Map<BuffSetId, List<Buff>> getBuffSets() {
 		return getBuild().getBuffSets();
-	}
-
-	public SpellId getDamagingSpellId() {
-		return getBuild().getDamagingSpell().getSpellId();
 	}
 
 	@Override

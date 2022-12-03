@@ -39,7 +39,7 @@ public class UpgradeController {
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
-		List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpellId());
+		List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpell());
 
 		return toUpgradeDTOs(upgrades);
 	}
@@ -63,7 +63,7 @@ public class UpgradeController {
 
 			for (ItemSlotGroup slotGroup : ItemSlotGroup.values()) {
 				if (!IGNORED_SLOT_GROUPS.contains(slotGroup)) {
-					List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpellId());
+					List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile, slotGroup, playerProfile.getDamagingSpell());
 					result.put(slotGroup, upgrades);
 				}
 			}

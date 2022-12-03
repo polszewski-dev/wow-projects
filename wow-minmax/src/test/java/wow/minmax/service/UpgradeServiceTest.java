@@ -8,7 +8,6 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.BuildId;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.ItemSocket;
-import wow.commons.model.spells.SpellId;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
 
@@ -32,7 +31,7 @@ class UpgradeServiceTest extends ServiceTest {
 
 		profile.getEquipment().set(null, ItemSlot.CHEST);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.CHEST, SpellId.SHADOW_BOLT);
+		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.CHEST, profile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -45,7 +44,7 @@ class UpgradeServiceTest extends ServiceTest {
 		profile.getEquipment().set(null, ItemSlot.FINGER_1);
 		profile.getEquipment().set(null, ItemSlot.FINGER_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.FINGERS, SpellId.SHADOW_BOLT);
+		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.FINGERS, profile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -58,7 +57,7 @@ class UpgradeServiceTest extends ServiceTest {
 		profile.getEquipment().set(null, ItemSlot.TRINKET_1);
 		profile.getEquipment().set(null, ItemSlot.TRINKET_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.TRINKETS, SpellId.SHADOW_BOLT);
+		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.TRINKETS, profile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -71,7 +70,7 @@ class UpgradeServiceTest extends ServiceTest {
 		profile.getEquipment().set(null, ItemSlot.MAIN_HAND);
 		profile.getEquipment().set(null, ItemSlot.OFF_HAND);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.WEAPONS, SpellId.SHADOW_BOLT);
+		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.WEAPONS, profile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(3);
 	}
@@ -81,7 +80,7 @@ class UpgradeServiceTest extends ServiceTest {
 		profile.setEquipment(getEquipment());
 		profile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-		EquippableItem item = underTest.getBestItemVariant(profile, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, SpellId.SHADOW_BOLT);
+		EquippableItem item = underTest.getBestItemVariant(profile, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, profile.getDamagingSpell());
 
 		assertThat(item.getEnchant()).isNotNull();
 

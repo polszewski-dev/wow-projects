@@ -48,7 +48,7 @@ class UpgradeControllerTest extends ControllerTest {
 		;
 
 		verify(playerProfileService).getPlayerProfile(profile.getProfileId());
-		verify(upgradeService).findUpgrades(refEq(profile), eq(ItemSlotGroup.CHEST), eq(profile.getDamagingSpellId()));
+		verify(upgradeService).findUpgrades(refEq(profile), eq(ItemSlotGroup.CHEST), eq(profile.getDamagingSpell()));
 	}
 
 	@Test
@@ -61,7 +61,7 @@ class UpgradeControllerTest extends ControllerTest {
 		verify(playerProfileService).getPlayerProfile(profile.getProfileId());
 		for (ItemSlotGroup slotGroup : ItemSlotGroup.values()) {
 			if (!IGNORED_SLOT_GROUPS.contains(slotGroup)) {
-				verify(upgradeService).findUpgrades(refEq(profile), eq(slotGroup), eq(profile.getDamagingSpellId()));
+				verify(upgradeService).findUpgrades(refEq(profile), eq(slotGroup), eq(profile.getDamagingSpell()));
 			}
 		}
 	}
@@ -85,8 +85,8 @@ class UpgradeControllerTest extends ControllerTest {
 		profileCopy.getEquipment().getChest().gem(redGem, redGem, redGem);
 
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
-		when(upgradeService.findUpgrades(refEq(profile), any(), eq(profile.getDamagingSpellId()))).thenReturn(List.of());
-		when(upgradeService.findUpgrades(refEq(profile), eq(ItemSlotGroup.CHEST), eq(profile.getDamagingSpellId())))
+		when(upgradeService.findUpgrades(refEq(profile), any(), eq(profile.getDamagingSpell()))).thenReturn(List.of());
+		when(upgradeService.findUpgrades(refEq(profile), eq(ItemSlotGroup.CHEST), eq(profile.getDamagingSpell())))
 				.thenReturn(List.of(new Comparison(profileCopy.getEquipment(), profile.getEquipment(), Percent.of(1))));
 	}
 }
