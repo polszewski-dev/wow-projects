@@ -42,16 +42,12 @@ public class TalentProcAbility extends SpecialAbility {
 
 	@Override
 	public Attributes getStatEquivalent(StatProvider statProvider) {
-		return getAveragedAttributes(statProvider);
-	}
-
-	public Attributes getAveragedAttributes(StatProvider statProvider) {
 		double critChance = statProvider.getCritChance();
 		double extraCritCoeff = getExtraCritCoeff(critChance);
 		if (extraCritCoeff == 0) {
 			return Attributes.EMPTY;
 		}
-		return Attributes.of(EXTRA_CRIT_COEFF, extraCritCoeff);
+		return Attributes.of(EXTRA_CRIT_COEFF, extraCritCoeff, condition);
 	}
 
 	private double getExtraCritCoeff(double critChance) {

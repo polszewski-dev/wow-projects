@@ -180,8 +180,8 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2.76, PRECISION);
 		assertThat(snapshot.getHaste()).isEqualTo(0.3110, PRECISION);
 
-		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.37, PRECISION);
-		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.37, PRECISION);
+		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.31, PRECISION);
+		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.31, PRECISION);
 
 		assertThat(snapshot.getCastTime().getSeconds()).isEqualTo(1.91, PRECISION);
 		assertThat(snapshot.getGcd().getSeconds()).isEqualTo(1.14, PRECISION);
@@ -236,11 +236,11 @@ class CalculationServiceTest extends ServiceTest {
 
 		SpellStatistics spellStatistics = underTest.getSpellStatistics(playerProfile, null);
 
-		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5348);
-		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2806);
+		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5114);
+		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2683);
 		assertThat(spellStatistics.getCastTime().getSeconds()).isEqualTo(1.91, PRECISION);
 		assertThat(spellStatistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
-		assertThat(spellStatistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
+		assertThat(spellStatistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(12);
 	}
 
 	@Test
@@ -252,13 +252,6 @@ class CalculationServiceTest extends ServiceTest {
 		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
 		PlayerSpellStats playerSpellStats = underTest.getPlayerSpellStats(playerProfile, null);
-		SpellStatistics spellStatistics = playerSpellStats.getSpellStatistics();
-
-		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5348);
-		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2806);
-		assertThat(spellStatistics.getCastTime().getSeconds()).isEqualTo(1.91, PRECISION);
-		assertThat(spellStatistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
-		assertThat(spellStatistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
 
 		assertThat(playerSpellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
 		assertThat(playerSpellStats.getCritSpEqv()).isEqualTo(9.98, PRECISION);

@@ -7,6 +7,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.util.AttributesBuilder;
 
 /**
  * User: POlszewski
@@ -50,7 +51,7 @@ public class ProcAbility extends SpecialAbility {
 
 		double factor = Math.min(duration.divideBy(actualCooldown), 1);
 
-		return attributes.scale(factor);
+		return AttributesBuilder.attachCondition(attributes.scale(factor), condition);
 	}
 
 	private double getProcChance(double hitChance, double critChance) {

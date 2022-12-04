@@ -44,6 +44,10 @@ public class Attributes implements AttributeSource {
 		return of(List.of(Attribute.of(attributeId, value)), Map.of());
 	}
 
+	public static Attributes of(PrimitiveAttributeId attributeId, double value, AttributeCondition condition) {
+		return of(List.of(Attribute.of(attributeId, value, condition)), Map.of());
+	}
+
 	public static Attributes of(PrimitiveAttributeId attributeId, Percent value) {
 		return of(List.of(Attribute.of(attributeId, value)), Map.of());
 	}

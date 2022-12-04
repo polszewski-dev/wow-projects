@@ -139,6 +139,31 @@ public class AttributesBuilder {
 		return this;
 	}
 
+	public AttributesBuilder addAttributes(Attributes attributes, AttributeCondition condition) {
+		if (condition.isEmpty()) {
+			addAttributes(attributes);
+			return this;
+		}
+
+		for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributeList()) {
+			addAttribute(attribute.attachCondition(condition));
+		}
+
+		for (List<ComplexAttribute> complexAttributes : attributes.getComplexAttributeList().values()) {
+			for (ComplexAttribute attribute : complexAttributes) {
+				addAttribute(attribute.attachCondition(condition));
+			}
+		}
+
+		return this;
+	}
+
+	public static Attributes attachCondition(Attributes attributes, AttributeCondition condition) {
+		return new AttributesBuilder()
+				.addAttributes(attributes, condition)
+				.toAttributes();
+	}
+
 	public static Attributes list(Collection<? extends AttributeSource> attributeSources) {
 		return new AttributesBuilder().addAttributes(attributeSources).toAttributes();
 	}

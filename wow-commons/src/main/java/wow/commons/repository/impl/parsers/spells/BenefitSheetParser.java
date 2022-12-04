@@ -3,7 +3,6 @@ package wow.commons.repository.impl.parsers.spells;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.character.PetType;
@@ -33,17 +32,8 @@ public abstract class BenefitSheetParser extends WowExcelSheetParser {
 	protected Attributes attachConditions(Attributes attributes) {
 		AttributesBuilder result = new AttributesBuilder();
 
-		var conditions = getPossibleConditions();
-
-		for (AttributeCondition condition : conditions) {
-			for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributeList()) {
-				result.addAttribute(attribute.attachCondition(condition));
-			}
-			for (List<ComplexAttribute> complexAttributes : attributes.getComplexAttributeList().values()) {
-				for (ComplexAttribute attribute : complexAttributes) {
-					result.addAttribute(attribute.attachCondition(condition));
-				}
-			}
+		for (AttributeCondition condition : getPossibleConditions()) {
+			result.addAttributes(attributes, condition);
 		}
 
 		return result.toAttributes();

@@ -6,6 +6,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.util.AttributesBuilder;
 
 /**
  * User: POlszewski
@@ -35,7 +36,7 @@ public class OnUseAbility extends SpecialAbility {
 	@Override
 	public Attributes getStatEquivalent(StatProvider statProvider) {
 		double factor = duration.divideBy(cooldown);
-		return attributes.scale(factor);
+		return AttributesBuilder.attachCondition(attributes.scale(factor), condition);
 	}
 
 	@Override

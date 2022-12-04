@@ -232,13 +232,16 @@ public class Snapshot implements StatProvider {
 	}
 
 	private void accumulateStats() {
-		for (PrimitiveAttribute attribute : stats.getPrimitiveAttributeList()) {
+		accumulatePrimitiveAttributes(stats.getPrimitiveAttributeList());
+		solveAbilities();
+	}
+
+	private void accumulatePrimitiveAttributes(List<PrimitiveAttribute> attributes) {
+		for (PrimitiveAttribute attribute : attributes) {
 			if (conditions.contains(attribute.getCondition())) {
 				accumulateAttribute(attribute);
 			}
 		}
-
-		solveAbilities();
 	}
 
 	private void accumulateAttribute(PrimitiveAttribute attribute) {
@@ -333,9 +336,7 @@ public class Snapshot implements StatProvider {
 
 		for (SpecialAbility specialAbility : specialAbilities) {
 			Attributes statEquivalent = specialAbility.getStatEquivalent(this);
-			for (PrimitiveAttribute primitiveAttribute : statEquivalent.getPrimitiveAttributeList()) {
-				accumulateAttribute(primitiveAttribute);
-			}
+			accumulatePrimitiveAttributes(statEquivalent.getPrimitiveAttributeList());
 		}
 	}
 

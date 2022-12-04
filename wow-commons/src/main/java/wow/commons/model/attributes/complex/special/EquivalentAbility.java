@@ -5,6 +5,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.util.AttributesBuilder;
 
 /**
  * User: POlszewski
@@ -26,7 +27,7 @@ public class EquivalentAbility extends SpecialAbility {
 
 	@Override
 	public Attributes getStatEquivalent(StatProvider statProvider) {
-		return attributes;
+		return AttributesBuilder.attachCondition(attributes, condition);
 	}
 
 	@Override
