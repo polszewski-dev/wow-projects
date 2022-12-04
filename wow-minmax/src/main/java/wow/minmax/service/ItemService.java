@@ -17,8 +17,6 @@ import java.util.List;
 public interface ItemService {
 	Item getItem(int itemId);
 
-	List<Item> getItemsByType(PlayerProfile playerProfile, ItemType itemType);
-
 	List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot);
 
 	List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType);

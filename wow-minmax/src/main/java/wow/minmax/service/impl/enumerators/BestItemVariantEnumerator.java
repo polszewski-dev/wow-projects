@@ -2,7 +2,6 @@ package wow.minmax.service.impl.enumerators;
 
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.PlayerProfile;
@@ -35,7 +34,7 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 	}
 
 	@Override
-	protected List<Item> getItemsToAnalyze(ItemType itemType) {
+	protected List<Item> getItemsToAnalyze(ItemSlot itemSlot) {
 		return List.of(item);
 	}
 }

@@ -9,8 +9,10 @@ import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffType;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.*;
 import wow.commons.model.equipment.Equipment;
+import wow.commons.model.item.Item;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
@@ -229,6 +231,10 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public Map<BuffSetId, List<Buff>> getBuffSets() {
 		return getBuild().getBuffSets();
+	}
+
+	public boolean canEquip(ItemSlot itemSlot, Item item) {
+		return characterInfo.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
 	}
 
 	@Override

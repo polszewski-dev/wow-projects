@@ -2,13 +2,8 @@ package wow.commons.model.item;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.categorization.ArmorSubType;
-import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.WeaponSubType;
-import wow.commons.model.character.ArmorProfficiency;
 import wow.commons.model.character.CharacterInfo;
-import wow.commons.model.character.WeaponProfficiency;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 
@@ -70,24 +65,11 @@ public class Item extends AbstractItem {
 		return getItemType().getItemSlots().contains(itemSlot);
 	}
 
-	public boolean canBeEquippedBy(CharacterInfo characterInfo) {
-		if (!isCorrectCategory(characterInfo)) {
-			return false;
-		}
+	@Override
+	public boolean isAvailableTo(CharacterInfo characterInfo) {
 		if (!getRestriction().isMetBy(characterInfo)) {
 			return false;
 		}
-		return itemSet == null || itemSet.canBeEquippedBy(characterInfo);
-	}
-
-	private boolean isCorrectCategory(CharacterInfo characterInfo) {
-		ItemCategory category = getItemType().getCategory();
-		if (!(category == ItemCategory.ARMOR || category == ItemCategory.ACCESSORY || category == ItemCategory.WEAPON)) {
-			return false;
-		}
-		if (category == ItemCategory.ARMOR && !ArmorProfficiency.matches(characterInfo.getCharacterClass(), (ArmorSubType)getItemSubType())) {
-			return false;
-		}
-		return category != ItemCategory.WEAPON || WeaponProfficiency.matches(characterInfo.getCharacterClass(), getItemType(), (WeaponSubType) getItemSubType());
+		return itemSet == null || itemSet.getRestriction().isMetBy(characterInfo);
 	}
 }

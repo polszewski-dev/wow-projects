@@ -25,7 +25,6 @@ import wow.minmax.service.impl.enumerators.FilterOutWorseEnchantChoices;
 import wow.minmax.service.impl.enumerators.FilterOutWorseGemChoices;
 import wow.minmax.service.impl.enumerators.GemComboFinder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,27 +49,22 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItemsByType(PlayerProfile playerProfile, ItemType itemType) {
-		return itemDataRepository.getItemsByType(itemType).stream()
-				.filter(item -> isSuitableFor(item, playerProfile))
+	public List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot) {
+		return itemDataRepository.getItemsBySlot(itemSlot).stream()
+				.filter(item -> playerProfile.canEquip(itemSlot, item))
 				.filter(item -> item.getItemLevel() >= itemConfig.getMinItemLevel())
 				.filter(item -> item.getRarity().isAtLeastAsGoodAs(itemConfig.getMinRarity()))
+				.filter(item -> !item.isPvPReward() || itemConfig.isIncludePvpItems())
+				.filter(item -> item.isAvailableTo(playerProfile.getCharacterInfo()))
+				.filter(item -> hasStatsSuitableForRole(item, playerProfile))
 				.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot) {
-		List<Item> result = new ArrayList<>();
-		for (ItemType itemType : itemSlot.getItemTypes()) {
-			result.addAll(getItemsByType(playerProfile, itemType));
-		}
-		return result;
 	}
 
 	@Override
 	public List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType) {
 		return itemDataRepository.getEnchants(itemType).stream()
-				.filter(enchant -> isSuitableFor(enchant, itemType, playerProfile))
+				.filter(enchant -> enchant.isAvailableTo(playerProfile.getCharacterInfo()))
+				.filter(enchant -> hasStatsSuitableForRole(enchant, itemType, playerProfile))
 				.collect(Collectors.toList());
 	}
 
@@ -85,7 +79,8 @@ public class ItemServiceImpl implements ItemService {
 		return itemDataRepository.getAllGems().stream()
 				.filter(gem -> socketType.accepts(gem.getColor()))
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests()))
-				.filter(gem -> isSuitableFor(gem, playerProfile))
+				.filter(gem -> gem.isAvailableTo(playerProfile.getCharacterInfo()))
+				.filter(gem -> hasStatsSuitableForRole(gem, playerProfile))
 				.collect(Collectors.toList());
 	}
 
@@ -103,20 +98,33 @@ public class ItemServiceImpl implements ItemService {
 		return gemComboFinder.getGemCombos(playerProfile, item.getSocketSpecification());
 	}
 
-	private boolean isSuitableFor(Item item, PlayerProfile playerProfile) {
-		if (!item.canBeEquippedBy(playerProfile.getCharacterInfo())) {
-			return false;
+	private boolean hasStatsSuitableForRole(AttributeSource attributeSource, PlayerProfile playerProfile) {
+		if (playerProfile.getRole() == PveRole.CASTER_DPS) {
+			return hasStatsSuitableForCasterDps(attributeSource, playerProfile);
 		}
-		if (item.isPvPReward() && !itemConfig.isIncludePvpItems()) {
-			return false;
-		}
-		return hasStatsSuitableForRole(item, playerProfile);
+		throw new IllegalArgumentException("Unsupported role: " + playerProfile.getRole());
 	}
 
-	private boolean isSuitableFor(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
-		if (!enchant.getRestriction().isMetBy(playerProfile.getCharacterInfo())) {
+	private boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
+		if (playerProfile.getRole() == PveRole.CASTER_DPS) {
+			return hasStatsSuitableForCasterDps(enchant, itemType, playerProfile);
+		}
+		throw new IllegalArgumentException("Unsupported role: " + playerProfile.getRole());
+	}
+
+	private boolean hasStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
+		if (attributeSource.getHealingPower() > attributeSource.getSpellPower() && !itemConfig.isIncludeHealingItems()) {
 			return false;
 		}
+
+		if (hasPrimitiveStatsSuitableForCasterDps(attributeSource, playerProfile)) {
+			return true;
+		}
+
+		return hasComplexStatsSuitableForCasterDps(attributeSource, playerProfile);
+	}
+
+	private boolean hasStatsSuitableForCasterDps(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
 		if (hasStatsSuitableForRole(enchant, playerProfile)) {
 			return true;
 		}
@@ -135,29 +143,12 @@ public class ItemServiceImpl implements ItemService {
 		return false;
 	}
 
-	private boolean isSuitableFor(Gem gem, PlayerProfile playerProfile) {
-		if (!gem.getRestriction().isMetBy(playerProfile.getCharacterInfo())) {
-			return false;
-		}
-		return hasStatsSuitableForRole(gem, playerProfile);
+	private static boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
+		return attributeSource.getPrimitiveAttributeList().stream()
+				.anyMatch(attribute -> isCasterStat(attribute, playerProfile));
 	}
 
-	private boolean hasStatsSuitableForRole(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		if (playerProfile.getRole() == PveRole.CASTER_DPS) {
-			return hasStatsSuitableForCasterDps(attributeSource, playerProfile);
-		}
-		throw new IllegalArgumentException("Unsupported role: " + playerProfile.getRole());
-	}
-
-	private boolean hasStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		if (attributeSource.getHealingPower() > attributeSource.getSpellPower() && !itemConfig.isIncludeHealingItems()) {
-			return false;
-		}
-
-		if (hasPrimitiveStatsSuitableForCasterDps(attributeSource, playerProfile)) {
-			return true;
-		}
-
+	private static boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
 		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, playerProfile.getDamagingSpell().getCastTime());
 
 		for (SpecialAbility specialAbility : attributeSource.getSpecialAbilities()) {
@@ -168,11 +159,6 @@ public class ItemServiceImpl implements ItemService {
 		}
 
 		return false;
-	}
-
-	private static boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		return attributeSource.getPrimitiveAttributeList().stream()
-				.anyMatch(attribute -> isCasterStat(attribute, playerProfile));
 	}
 
 	private static boolean isCasterStat(PrimitiveAttribute attribute, PlayerProfile playerProfile) {

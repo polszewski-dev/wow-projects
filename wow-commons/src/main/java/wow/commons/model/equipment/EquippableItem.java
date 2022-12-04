@@ -6,7 +6,6 @@ import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.item.*;
 import wow.commons.model.sources.Source;
 import wow.commons.util.AttributesBuilder;
@@ -83,10 +82,6 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 
 	public boolean isUnique() {
 		return item.isUnique();
-	}
-
-	public boolean canBeEquippedBy(CharacterInfo characterInfo) {
-		return item.canBeEquippedBy(characterInfo);
 	}
 
 	public boolean isEnchantable() {

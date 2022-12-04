@@ -1,5 +1,6 @@
 package wow.commons.repository;
 
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 
@@ -17,6 +18,7 @@ public interface ItemDataRepository {
 	Optional<Item> getItem(ItemLink itemLink);
 	Collection<Item> getAllItems();
 	List<Item> getItemsByType(ItemType itemType);
+	List<Item> getItemsBySlot(ItemSlot itemSlot);
 
 	Collection<ItemSet> getAllItemSets();
 	Optional<ItemSet> getItemSet(String name);

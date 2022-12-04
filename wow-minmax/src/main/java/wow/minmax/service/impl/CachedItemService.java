@@ -26,7 +26,6 @@ public class CachedItemService implements ItemService {
 	private final ItemService itemService;
 
 	private final Map<String, List<Item>> getItemsBySlotCache = Collections.synchronizedMap(new HashMap<>());
-	private final Map<String, List<Item>> getItemsByTypeCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Enchant>> getEnchantsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Enchant>> getBestEnchantsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> getGemsCache = Collections.synchronizedMap(new HashMap<>());
@@ -41,12 +40,6 @@ public class CachedItemService implements ItemService {
 	public List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot) {
 		String key = getProfileKey(playerProfile) + "#" + itemSlot;
 		return getItemsBySlotCache.computeIfAbsent(key, x -> itemService.getItemsBySlot(playerProfile, itemSlot));
-	}
-
-	@Override
-	public List<Item> getItemsByType(PlayerProfile playerProfile, ItemType itemType) {
-		String key = getProfileKey(playerProfile) + "#" + itemType;
-		return getItemsByTypeCache.computeIfAbsent(key, x -> itemService.getItemsByType(playerProfile, itemType));
 	}
 
 	@Override

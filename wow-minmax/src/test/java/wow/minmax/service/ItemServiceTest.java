@@ -36,20 +36,6 @@ class ItemServiceTest extends ServiceTest {
 	}
 
 	@Test
-	void getItemsByType() {
-		List<Item> itemsByType = underTest.getItemsByType(profile, ItemType.TRINKET).stream()
-				.sorted(Comparator.comparing(Item::getName))
-				.collect(Collectors.toList());
-
-		List<String> names = itemsByType.stream().map(Item::getName).collect(Collectors.toList());
-
-		assertThat(names).hasSameElementsAs(List.of(
-				"Shifting Naaru Sliver",
-				"The Skull of Gul'dan"
-		));
-	}
-
-	@Test
 	void getItemsBySlot() {
 		List<Item> itemsBySlot = underTest.getItemsBySlot(profile, ItemSlot.TRINKET_1).stream()
 				.sorted(Comparator.comparing(Item::getName))

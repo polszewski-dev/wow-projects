@@ -29,7 +29,7 @@ public class SpellServiceImpl implements SpellService {
 	@Override
 	public List<Buff> getAvailableBuffs(PlayerProfile playerProfile) {
 		return spellDataRepository.getAvailableBuffs().stream()
-				.filter(buff -> buff.getRestriction().isMetBy(playerProfile.getCharacterInfo()))
+				.filter(buff -> buff.isAvailableTo(playerProfile.getCharacterInfo()))
 				.collect(Collectors.toList());
 	}
 }

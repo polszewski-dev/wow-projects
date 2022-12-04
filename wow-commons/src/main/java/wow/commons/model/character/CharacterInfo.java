@@ -2,6 +2,9 @@ package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSubType;
+import wow.commons.model.categorization.ItemType;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Phase;
@@ -46,6 +49,10 @@ public class CharacterInfo {
 
 	public boolean hasTalent(TalentId talentId) {
 		return build.hasTalent(talentId);
+	}
+
+	public boolean canEquip(ItemSlot itemSlot, ItemType itemType, ItemSubType itemSubType) {
+		return characterClass.canEquip(itemSlot, itemType, itemSubType);
 	}
 
 	public CharacterInfo setBuild(Build build) {

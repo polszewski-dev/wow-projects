@@ -11,7 +11,7 @@ import wow.commons.model.pve.Phase;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public abstract class ConfigurationElement<T> {
+public abstract class ConfigurationElement<T> implements Restricted {
 	@NonNull
 	private final T id;
 

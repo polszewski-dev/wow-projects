@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.repository.ItemDataRepository;
@@ -27,7 +28,8 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 
 	private final Map<Integer, Item> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
-	private final Map<ItemType, List<Item>> itemByType = new TreeMap<>();
+	private final Map<ItemType, List<Item>> itemByType = new EnumMap<>(ItemType.class);
+	private final Map<ItemSlot, List<Item>> itemBySlot = new EnumMap<>(ItemSlot.class);
 
 	private final Map<String, ItemSet> itemSetByName = new TreeMap<>();
 
@@ -68,6 +70,11 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	@Override
 	public List<Item> getItemsByType(ItemType itemType) {
 		return Collections.unmodifiableList(itemByType.getOrDefault(itemType, List.of()));
+	}
+
+	@Override
+	public List<Item> getItemsBySlot(ItemSlot itemSlot) {
+		return Collections.unmodifiableList(itemBySlot.getOrDefault(itemSlot, List.of()));
 	}
 
 	@Override
@@ -131,6 +138,9 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 		itemById.put(item.getId(), item);
 		itemByName.computeIfAbsent(item.getName(), x -> new ArrayList<>()).add(item);
 		itemByType.computeIfAbsent(item.getItemType(), x -> new ArrayList<>()).add(item);
+		for (ItemSlot itemSlot : item.getItemType().getItemSlots()) {
+			itemBySlot.computeIfAbsent(itemSlot, x -> new ArrayList<>()).add(item);
+		}
 	}
 
 	public void addTradedItem(TradedItem tradedItem) {

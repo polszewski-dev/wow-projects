@@ -131,7 +131,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	private Optional<Spell> getAvailableSpellHighestRank(SpellId spellId, CharacterInfo characterInfo) {
 		return spellDataRepository.getAllSpellRanks(spellId).stream()
-				.filter(spell -> spell.getRestriction().isMetBy(characterInfo))
+				.filter(spell -> spell.isAvailableTo(characterInfo))
 				.max(Comparator.comparing(Spell::getRank));
 	}
 
@@ -154,7 +154,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	private List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo) {
 		return spellDataRepository.getBuffs(buffNames).stream()
-				.filter(buff -> buff.getRestriction().isMetBy(characterInfo))
+				.filter(buff -> buff.isAvailableTo(characterInfo))
 				.collect(Collectors.toList());
 	}
 

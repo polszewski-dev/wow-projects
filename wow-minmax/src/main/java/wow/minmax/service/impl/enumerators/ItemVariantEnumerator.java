@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static wow.commons.model.categorization.ItemType.*;
+import static wow.commons.model.categorization.ItemSlot.*;
 
 /**
  * User: POlszewski
@@ -76,11 +76,16 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private void enumerateWeapons() {
-		for (EquippableItem twoHand : getItemVariants(TWO_HAND)) {
+		var isTwoHander = getItemVariants(MAIN_HAND).stream()
+				.collect(Collectors.partitioningBy(item -> item.getItemType() == ItemType.TWO_HAND));
+
+		List<EquippableItem> twoHands = isTwoHander.getOrDefault(true, List.of());
+
+		for (EquippableItem twoHand : twoHands) {
 			handleItemOption(twoHand);
 		}
 
-		List<EquippableItem> mainHands = getItemVariants(Set.of(MAIN_HAND, ONE_HAND));
+		List<EquippableItem> mainHands = isTwoHander.getOrDefault(false, List.of());
 		List<EquippableItem> offHands = getItemVariants(OFF_HAND);
 
 		for (EquippableItem mainhand : mainHands) {
@@ -91,7 +96,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private void enumerateFingers() {
-		List<EquippableItem> rings = getItemVariants(FINGER);
+		List<EquippableItem> rings = getItemVariants(FINGER_1);
 
 		for (int i = 0; i < rings.size(); i++) {
 			EquippableItem ring1 = rings.get(i);
@@ -105,7 +110,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private void enumerateTrinkets() {
-		List<EquippableItem> trinkets = getItemVariants(TRINKET);
+		List<EquippableItem> trinkets = getItemVariants(TRINKET_1);
 
 		for (int i = 0; i < trinkets.size(); i++) {
 			EquippableItem trinket1 = trinkets.get(i);
@@ -124,9 +129,8 @@ public abstract class ItemVariantEnumerator {
 		}
 
 		ItemSlot slot = slotGroup.getSlots().get(0);
-		Set<ItemType> itemTypes = slot.getItemTypes();
 
-		for (EquippableItem item : getItemVariants(itemTypes)) {
+		for (EquippableItem item : getItemVariants(slot)) {
 			handleItemOption(item);
 		}
 	}
@@ -179,15 +183,15 @@ public abstract class ItemVariantEnumerator {
 
 	protected abstract boolean isAcceptable(double changePct);
 
-	private List<EquippableItem> getItemVariants(ItemType itemType) {
-		return getItemVariants(Set.of(itemType));
+	private List<EquippableItem> getItemVariants(ItemSlot slot) {
+		return getItemVariants(Set.of(slot));
 	}
 
-	private List<EquippableItem> getItemVariants(Set<ItemType> itemTypes) {
+	private List<EquippableItem> getItemVariants(Set<ItemSlot> slots) {
 		List<EquippableItem> result = new ArrayList<>();
 
-		for (ItemType itemType : itemTypes) {
-			for (Item item : getItemsToAnalyze(itemType)) {
+		for (ItemSlot slot : slots) {
+			for (Item item : getItemsToAnalyze(slot)) {
 				result.addAll(getItemVariants(item));
 			}
 		}
@@ -195,7 +199,7 @@ public abstract class ItemVariantEnumerator {
 		return result;
 	}
 
-	protected abstract List<Item> getItemsToAnalyze(ItemType itemType);
+	protected abstract List<Item> getItemsToAnalyze(ItemSlot slot);
 
 	private List<EquippableItem> getItemVariants(Item item) {
 		if (item.isEnchantable() && item.hasSockets()) {
