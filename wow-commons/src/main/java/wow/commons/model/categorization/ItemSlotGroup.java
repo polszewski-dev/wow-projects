@@ -4,6 +4,7 @@ import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -48,12 +49,12 @@ public enum ItemSlotGroup {
 		return EnumUtil.parse(value, values());
 	}
 
-	public static ItemSlotGroup getGroup(ItemSlot slot) {
+	public static Optional<ItemSlotGroup> getGroup(ItemSlot slot) {
 		for (ItemSlotGroup group : values()) {
 			if (group.slots.contains(slot)) {
-				return group;
+				return Optional.of(group);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 }

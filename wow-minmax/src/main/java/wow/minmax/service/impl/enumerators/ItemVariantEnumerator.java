@@ -1,14 +1,17 @@
 package wow.minmax.service.impl.enumerators;
 
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
+import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;
@@ -29,24 +32,37 @@ public abstract class ItemVariantEnumerator {
 	protected final CalculationService calculationService;
 
 	protected final PlayerProfile referenceProfile;
-	protected final double referenceDps;
-	protected final PlayerProfile workingProfile;
-	protected final Spell spell;
+	private final double referenceDps;
+	private final ItemSlotGroup slotGroup;
+	private final Spell spell;
+
+	private final PlayerProfile workingProfile;
+	private final Attributes withoutSlotGroup;
 
 	private final Map<String, Comparison> bestOptions = new HashMap<>();
 
 	protected ItemVariantEnumerator(
-			PlayerProfile referenceProfile, Spell spell, ItemService itemService, CalculationService calculationService
-	) {
+			PlayerProfile referenceProfile, ItemSlotGroup slotGroup, Spell spell, ItemService itemService, CalculationService calculationService) {
 		this.itemService = itemService;
 		this.calculationService = calculationService;
+
 		this.referenceProfile = referenceProfile;
 		this.referenceDps = calculationService.getSpellStatistics(referenceProfile, spell).getDps();
-		this.workingProfile = referenceProfile.copy();
+		this.slotGroup = slotGroup;
 		this.spell = spell;
+
+		this.workingProfile = referenceProfile.copy();
+
+		for (ItemSlot slot : slotGroup.getSlots()) {
+			workingProfile.getEquipment().set(null, slot);
+		}
+
+		this.withoutSlotGroup = AttributeEvaluator.of()
+				.addAttributes(workingProfile)
+				.nothingToSolve();
 	}
 
-	public ItemVariantEnumerator run(ItemSlotGroup slotGroup) {
+	public ItemVariantEnumerator run() {
 		if (slotGroup == ItemSlotGroup.WEAPONS) {
 			enumerateWeapons();
 		} else if (slotGroup == ItemSlotGroup.FINGERS) {
@@ -123,7 +139,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private void handleItemOption(EquippableItem... itemOption) {
-		Comparison comparison = getItemScore(itemOption);
+		Comparison comparison = getItemComparison(itemOption);
 
 		if (comparison == null) {
 			return;
@@ -137,7 +153,7 @@ public abstract class ItemVariantEnumerator {
 		}
 	}
 
-	protected Comparison newComparison(double changePct) {
+	private Comparison newComparison(double changePct) {
 		return new Comparison(workingProfile.getEquipment().copy(), referenceProfile.getEquipment(), Percent.of(changePct));
 	}
 
@@ -148,7 +164,20 @@ public abstract class ItemVariantEnumerator {
 					 .collect(Collectors.joining());
 	}
 
-	protected abstract Comparison getItemScore(EquippableItem... itemOption);
+	private Comparison getItemComparison(EquippableItem... itemOption) {
+		Attributes totalStats = getTotalStats(itemOption);
+		double dps = calculationService.getSpellStatistics(workingProfile, spell, totalStats).getDps();
+		double changePct = 100 * (dps / referenceDps - 1);
+
+		if (!isAcceptable(changePct)) {
+			return null;
+		}
+
+		equipItems(workingProfile.getEquipment(), itemOption);
+		return newComparison(changePct);
+	}
+
+	protected abstract boolean isAcceptable(double changePct);
 
 	private List<EquippableItem> getItemVariants(ItemType itemType) {
 		return getItemVariants(Set.of(itemType));
@@ -215,5 +244,25 @@ public abstract class ItemVariantEnumerator {
 			result.add(new EquippableItem(item).enchant(enchant));
 		}
 		return result;
+	}
+
+	private Attributes getTotalStats(EquippableItem[] itemOption) {
+		AttributeEvaluator evaluator = AttributeEvaluator.of();
+
+		evaluator.addAttributes(withoutSlotGroup);
+
+		for (EquippableItem item : itemOption) {
+			evaluator.addAttributes(item);
+		}
+
+		return evaluator.solveAllLeaveAbilities();
+	}
+
+	private void equipItems(Equipment equipment, EquippableItem[] itemOption) {
+		for (int i = 0; i < itemOption.length; i++) {
+			EquippableItem item = itemOption[i];
+			ItemSlot slot = slotGroup.getSlots().get(i);
+			equipment.set(item, slot);
+		}
 	}
 }

@@ -33,16 +33,20 @@ public class UpgradeServiceImpl implements UpgradeService {
 				playerProfile, slotGroup, spell, itemService, calculationService
 		);
 
-		return enumerator.run(slotGroup).getResult();
+		return enumerator.run().getResult();
 	}
 
 	@Override
 	public EquippableItem getBestItemVariant(PlayerProfile playerProfile, Item item, ItemSlot slot, Spell spell) {
+		PlayerProfile referenceProfile = playerProfile.copy();
+
+		referenceProfile.getEquipment().set(new EquippableItem(item), slot);
+
 		BestItemVariantEnumerator enumerator = new BestItemVariantEnumerator(
-				playerProfile, slot, item, spell, itemService, calculationService
+				referenceProfile, slot, spell, itemService, calculationService
 		);
 
-		return enumerator.run(ItemSlotGroup.getGroup(slot))
+		return enumerator.run()
 				.getResult().get(0)
 				.getPossibleEquipment().get(slot);
 	}

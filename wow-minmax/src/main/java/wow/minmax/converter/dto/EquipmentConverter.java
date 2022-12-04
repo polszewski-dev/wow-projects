@@ -34,7 +34,7 @@ public class EquipmentConverter extends Converter<Equipment, EquipmentDTO> {
 	private EquipmentSlotDTO getEquipmentSlotDTO(ItemSlot slot, Equipment equipment) {
 		return new EquipmentSlotDTO(
 				slot,
-				ItemSlotGroup.getGroup(slot),
+				ItemSlotGroup.getGroup(slot).orElseThrow(),
 				convertItem(equipment, equipment.get(slot)),
 				null
 		);
