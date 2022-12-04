@@ -11,8 +11,6 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.commons.repository.CharacterRepository;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
@@ -25,9 +23,13 @@ import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.SpellService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class PlayerProfileServiceImpl implements PlayerProfileService {
+	private final SpellService spellService;
 	private final UpgradeService upgradeService;
 	private final PlayerProfileRepository playerProfileRepository;
 	private final ItemDataRepository itemDataRepository;
@@ -124,38 +127,18 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		characterInfo = characterInfo.setBuild(build);
 
 		return build
-				.setDamagingSpell(getAvailableSpellHighestRank(buildTemplate.getDamagingSpell(), characterInfo).orElseThrow())
-				.setRelevantSpells(getAvailableSpellsHighestRanks(buildTemplate.getRelevantSpells(), characterInfo))
+				.setDamagingSpell(spellService.getAvailableSpellHighestRank(buildTemplate.getDamagingSpell(), characterInfo).orElseThrow())
+				.setRelevantSpells(spellService.getAvailableSpellsHighestRanks(buildTemplate.getRelevantSpells(), characterInfo))
 				.setBuffSets(getBuffSets(buildTemplate, characterInfo));
-	}
-
-	private Optional<Spell> getAvailableSpellHighestRank(SpellId spellId, CharacterInfo characterInfo) {
-		return spellDataRepository.getAllSpellRanks(spellId).stream()
-				.filter(spell -> spell.isAvailableTo(characterInfo))
-				.max(Comparator.comparing(Spell::getRank));
-	}
-
-	private List<Spell> getAvailableSpellsHighestRanks(List<SpellId> spellIds, CharacterInfo characterInfo) {
-		return spellIds.stream()
-				.map(spellId -> getAvailableSpellHighestRank(spellId, characterInfo))
-				.map(optionalSpell -> optionalSpell.orElse(null))
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
 	}
 
 	private Map<BuffSetId, List<Buff>> getBuffSets(BuildTemplate buildTemplate, CharacterInfo characterInfo) {
 		Map<BuffSetId, List<Buff>> result = new EnumMap<>(BuffSetId.class);
 		for (var entry : buildTemplate.getBuffSets().entrySet()) {
-			List<Buff> buffs = getBuffs(entry.getValue(), characterInfo);
+			List<Buff> buffs = spellService.getAvailableBuffs(entry.getValue(), characterInfo);
 			result.put(entry.getKey(), buffs);
 		}
 		return result;
-	}
-
-	private List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo) {
-		return spellDataRepository.getBuffs(buffNames).stream()
-				.filter(buff -> buff.isAvailableTo(characterInfo))
-				.collect(Collectors.toList());
 	}
 
 	@Override
