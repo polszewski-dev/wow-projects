@@ -4,10 +4,17 @@ import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.config.ConfigurationElement;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.talents.TalentTree;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -115,6 +122,17 @@ public class Spell extends ConfigurationElement<SpellIdAndRank> {
 
 	public Duration getDotDuration() {
 		return getTickInterval().multiplyBy(getNumTicks());
+	}
+
+	public Set<AttributeCondition> getConditions(PetType activePet, CreatureType enemyType) {
+		return Stream.of(
+				AttributeCondition.of(getTalentTree()),
+				AttributeCondition.of(getSpellSchool()),
+				AttributeCondition.of(getSpellId()),
+				AttributeCondition.of(activePet),
+				AttributeCondition.of(enemyType),
+				AttributeCondition.EMPTY
+		).collect(Collectors.toSet());
 	}
 
 	@Override

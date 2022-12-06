@@ -2,7 +2,6 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
@@ -16,7 +15,6 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.commons.model.spells.Spell;
 import wow.commons.repository.ItemDataRepository;
 import wow.minmax.config.ItemConfig;
 import wow.minmax.model.PlayerProfile;
@@ -177,13 +175,8 @@ public class ItemServiceImpl implements ItemService {
 	);
 
 	private static boolean hasCasterStatCondition(PrimitiveAttribute attribute, PlayerProfile playerProfile) {
-		Spell damagingSpell = playerProfile.getDamagingSpell();
-		return Set.of(
-				AttributeCondition.EMPTY,
-				AttributeCondition.of(damagingSpell.getTalentTree()),
-				AttributeCondition.of(damagingSpell.getSpellSchool()),
-				AttributeCondition.of(damagingSpell.getSpellId()),
-				AttributeCondition.of(playerProfile.getEnemyType())
-			).contains(attribute.getCondition());
+		var damagingSpell = playerProfile.getDamagingSpell();
+		var conditions = damagingSpell.getConditions(playerProfile.getActivePet(), playerProfile.getEnemyType());
+		return conditions.contains(attribute.getCondition());
 	}
 }
