@@ -7,6 +7,7 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
@@ -26,6 +27,10 @@ public class CharacterInfo {
 	private final Build build;
 	private final CharacterProfessions characterProfessions;
 	private final Phase phase;
+
+	public GameVersion getGameVersion() {
+		return phase.getGameVersion();
+	}
 
 	public Side getSide() {
 		return race.getSide();

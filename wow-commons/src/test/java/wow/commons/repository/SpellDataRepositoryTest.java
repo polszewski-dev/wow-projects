@@ -57,7 +57,7 @@ class SpellDataRepositoryTest {
 		assertThat(spell.getCoeffDot()).isEqualTo(Percent.ZERO);
 		assertThat(spell.getSpellInfo().getCooldown()).isNull();
 		assertThat(spell.getSpellInfo().isIgnoresGCD()).isFalse();
-		assertThat(spell.getRestriction().getRequiredTalent()).isNull();
+		assertThat(spell.getRestriction().getTalentId()).isNull();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().isBolt()).isTrue();
 		assertThat(spell.getSpellInfo().getConversion()).isNull();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getRequiredSpellEffect()).isNull();

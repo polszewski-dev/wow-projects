@@ -22,7 +22,7 @@ public abstract class ConfigurationElement<T> implements Restricted {
 	private final Restriction restriction;
 
 	public int getRequiredLevel() {
-		return restriction.getRequiredLevel();
+		return restriction.getLevel();
 	}
 
 	public String getName() {

@@ -10,6 +10,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
@@ -95,7 +96,8 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		return new Description(name, icon, tooltip);
 	}
 
-	private final ExcelColumn colPhase = column(PHASE, true);
+	private final ExcelColumn colReqVersion = column(REQ_VERSION, true);
+	private final ExcelColumn colReqPhase = column(REQ_PHASE, true);
 	private final ExcelColumn colReqLevel = column(REQ_LEVEL, true);
 	private final ExcelColumn colReqClass = column(REQ_CLASS, true);
 	private final ExcelColumn colReqRace = column(REQ_RACE, true);
@@ -106,26 +108,28 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colReqTalent = column(REQ_TALENT, true);
 
 	protected Restriction getRestriction() {
-		var phase = colPhase.getEnum(Phase::parse, null);
-		var requiredLevel = colReqLevel.getInteger(0);
-		var requiredClass = colReqClass.getList(CharacterClass::parse);
-		var requiredRace = colReqRace.getList(Race::parse);
-		var requiredSide = colReqSide.getEnum(Side::parse, null);
-		var requiredProfession = colReqProfession.getEnum(Profession::parse, null);
-		var requiredProfessionLevel = colReqProfessionLevel.getInteger(0);
-		var requiredProfessionSpec = colReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
-		var requiredTalent = colReqTalent.getEnum(TalentId::parse, null);
+		var versions = colReqVersion.getList(GameVersion::parse);
+		var phase = colReqPhase.getEnum(Phase::parse, null);
+		var level = colReqLevel.getNullableInteger();
+		var characterClasses = colReqClass.getList(CharacterClass::parse);
+		var races = colReqRace.getList(Race::parse);
+		var side = colReqSide.getEnum(Side::parse, null);
+		var profession = colReqProfession.getEnum(Profession::parse, null);
+		var professionLevel = colReqProfessionLevel.getInteger(0);
+		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
+		var talentId = colReqTalent.getEnum(TalentId::parse, null);
 
 		return Restriction.builder()
+				.versions(versions)
 				.phase(phase)
-				.requiredLevel(requiredLevel)
-				.requiredClass(requiredClass)
-				.requiredRace(requiredRace)
-				.requiredSide(requiredSide)
-				.requiredProfession(requiredProfession)
-				.requiredProfessionLevel(requiredProfessionLevel)
-				.requiredProfessionSpec(requiredProfessionSpec)
-				.requiredTalent(requiredTalent)
+				.level(level)
+				.characterClasses(characterClasses)
+				.races(races)
+				.side(side)
+				.profession(profession)
+				.professionLevel(professionLevel)
+				.professionSpec(professionSpec)
+				.talentId(talentId)
 				.build();
 	}
 

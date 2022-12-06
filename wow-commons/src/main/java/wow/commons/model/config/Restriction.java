@@ -2,14 +2,20 @@ package wow.commons.model.config;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import wow.commons.model.character.*;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
+import wow.commons.util.CollectionUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -18,18 +24,26 @@ import java.util.List;
 @Getter
 @Builder
 public class Restriction {
+	@NonNull
+	@Builder.Default
+	private List<GameVersion> versions = List.of();
 	private Phase phase;
-	private int requiredLevel;
-	private List<CharacterClass> requiredClass;
-	private List<Race> requiredRace;
-	private Side requiredSide;
-	private Profession requiredProfession;
-	private int requiredProfessionLevel;
-	private ProfessionSpecialization requiredProfessionSpec;
-	private TalentId requiredTalent;
+	private Integer level;
+	@NonNull
+	@Builder.Default
+	private List<CharacterClass> characterClasses = List.of();
+	@NonNull
+	@Builder.Default
+	private List<Race> races = List.of();
+	private Side side;
+	private Profession profession;
+	private int professionLevel;
+	private ProfessionSpecialization professionSpec;
+	private TalentId talentId;
 
 	public boolean isMetBy(CharacterInfo characterInfo) {
 		return isMetBy(
+				characterInfo.getGameVersion(),
 				characterInfo.getPhase(),
 				characterInfo.getLevel(),
 				characterInfo.getCharacterClass(),
@@ -39,66 +53,107 @@ public class Restriction {
 		);
 	}
 
-	public boolean isMetBy(Phase phase, int level, CharacterClass characterClass, Race race, Build build, CharacterProfessions characterProfessions) {
-		if (level < requiredLevel) {
+	public boolean isMetBy(GameVersion version, Phase phase, int level, CharacterClass characterClass, Race race, Build build, CharacterProfessions characterProfessions) {
+		if (!this.versions.isEmpty() && !this.versions.contains(version)) {
 			return false;
 		}
 		if (this.phase != null && phase.isEarlier(this.phase)) {
 			return false;
 		}
-		if (requiredClass != null && !requiredClass.isEmpty() && !requiredClass.contains(characterClass)) {
+		if (this.level != null && level < this.level) {
 			return false;
 		}
-		if (requiredRace != null && !requiredRace.isEmpty() && !requiredRace.contains(race)) {
+		if (!characterClasses.isEmpty() && !characterClasses.contains(characterClass)) {
 			return false;
 		}
-		if (requiredSide != null && requiredSide != race.getSide()) {
+		if (!this.races.isEmpty() && !this.races.contains(race)) {
 			return false;
 		}
-		if (requiredProfession != null && !characterProfessions.hasProfession(requiredProfession, requiredProfessionLevel)) {
+		if (side != null && side != race.getSide()) {
 			return false;
 		}
-		if (requiredProfessionSpec != null && !characterProfessions.hasProfessionSpecialization(requiredProfessionSpec)) {
+		if (profession != null && !characterProfessions.hasProfession(profession, professionLevel)) {
 			return false;
 		}
-		return requiredTalent == null || build.hasTalent(requiredTalent);
+		if (professionSpec != null && !characterProfessions.hasProfessionSpecialization(professionSpec)) {
+			return false;
+		}
+		return talentId == null || build.hasTalent(talentId);
 	}
 
-	public Restriction merge(Restriction secondary) {
+	public Restriction merge(Restriction other) {
 		RestrictionBuilder builder = builder();
 
-		builder.phase(phase != null ? phase : secondary.phase);
+		builder.versions(merge(versions, other.versions));
+		builder.phase(merge(phase, other.phase));
+		builder.level(merge(level, other.level));
+		builder.characterClasses(merge(characterClasses, other.characterClasses));
+		builder.races(merge(races, other.races));
+		builder.side(merge(side, other.side));
 
-		builder.requiredLevel(requiredLevel > 0 ? requiredLevel : secondary.requiredLevel);
-
-		if (requiredClass != null && !requiredClass.isEmpty()) {
-			builder.requiredClass(requiredClass);
+		if (profession != null) {
+			builder.profession(profession);
+			builder.professionLevel(professionLevel);
 		} else {
-			builder.requiredClass(secondary.requiredClass);
+			builder.profession(other.profession);
+			builder.professionLevel(other.professionLevel);
 		}
 
-		if (requiredRace != null && !requiredRace.isEmpty()) {
-			builder.requiredRace(requiredRace);
-		} else {
-			builder.requiredRace(secondary.requiredRace);
-		}
-
-		builder.requiredSide(requiredSide != null ? requiredSide : secondary.requiredSide);
-
-		if (requiredProfession != null) {
-			builder
-					.requiredProfession(requiredProfession)
-					.requiredProfessionLevel(requiredProfessionLevel)
-					.requiredProfessionSpec(requiredProfessionSpec);
-		} else {
-			builder
-					.requiredProfession(secondary.requiredProfession)
-					.requiredProfessionLevel(secondary.requiredProfessionLevel)
-					.requiredProfessionSpec(secondary.requiredProfessionSpec);
-		}
-
-		builder.requiredTalent(requiredTalent != null ? requiredTalent : secondary.requiredTalent);
+		builder.professionSpec(merge(professionSpec, other.professionSpec));
+		builder.talentId(merge(talentId, other.talentId));
 
 		return builder.build();
+	}
+
+	private <T> T merge(T first, T second) {
+		if (first == null) {
+			return second;
+		}
+		if (second == null) {
+			return first;
+		}
+		if (Objects.equals(first, second)) {
+			return first;
+		}
+		throw new IllegalArgumentException(String.format("Both elements are not null: first=%s, second=%s", first, second));
+	}
+
+	private <T> List<T> merge(List<T> first, List<T> second) {
+		return CollectionUtil.getCommonCriteria(first, second)
+				.orElseThrow(() -> new IllegalArgumentException(
+						String.format("Both lists have no common elements: first=%s, second=%s", first, second)));
+	}
+
+	@Override
+	public String toString() {
+		List<String> parts = new ArrayList<>();
+		if (level != null) {
+			parts.add(String.format("level: %s", level));
+		}
+		if (!versions.isEmpty()) {
+			parts.add(String.format("versions: %s", versions));
+		}
+		if (phase != null) {
+			parts.add(String.format("phase: %s", phase));
+		}
+		if (!characterClasses.isEmpty()) {
+			parts.add(String.format("characterClasses: %s", characterClasses));
+		}
+		if (!races.isEmpty()) {
+			parts.add(String.format("races: %s", races));
+		}
+		if (side != null) {
+			parts.add(String.format("side: %s", side));
+		}
+		if (profession != null) {
+			parts.add(String.format("profession: %s", profession));
+		}
+		if (professionSpec != null) {
+			parts.add(String.format("professionSpec: %s", professionSpec));
+		}
+		if (talentId != null) {
+			parts.add(String.format("talentId: %s", talentId));
+		}
+		return parts.stream().collect(Collectors.joining(", ", "(", ")"));
 	}
 }

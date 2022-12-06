@@ -9,7 +9,8 @@ public final class CommonColumnNames {
 	public static final String ICON = "icon";
 	public static final String TOOLTIP = "tooltip";
 
-	public static final String PHASE = "phase";
+	public static final String REQ_VERSION = "req_version";
+	public static final String REQ_PHASE = "req_phase";
 	public static final String REQ_LEVEL = "req_level";
 	public static final String REQ_CLASS = "req_class";
 	public static final String REQ_RACE = "req_race";

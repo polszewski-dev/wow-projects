@@ -90,7 +90,7 @@ abstract class ControllerTest {
 
 	private void createBuffs() {
 		Description description = new Description("Test Buff", null, "...");
-		Restriction restriction = Restriction.builder().requiredLevel(1).build();
+		Restriction restriction = Restriction.builder().level(1).build();
 		buff = new Buff(401, description, restriction, BuffType.SELF_BUFF, BuffExclusionGroup.SELF_BUFF, Attributes.of(SPELL_DAMAGE, 100), SpellId.FEL_ARMOR);
 	}
 
@@ -102,7 +102,7 @@ abstract class ControllerTest {
 		CastInfo castInfo = new CastInfo(100, Duration.seconds(3), false, null, null);
 		DirectDamageInfo directDamageInfo = new DirectDamageInfo(500, 600, 0, 0);
 		DotDamageInfo dotDamageInfo = new DotDamageInfo(0, 0, null);
-		spell = new Spell(id, Restriction.builder().requiredLevel(70).build(), description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		spell = new Spell(id, Restriction.builder().level(70).build(), description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 	}
 
 	private void createBuild() {
