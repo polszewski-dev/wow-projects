@@ -79,8 +79,8 @@ class ItemDataRepositoryTest {
 		assertThat(item.getItemLevel()).isEqualTo(159);
 		assertThat(item.getRestriction().getLevel()).isEqualTo(70);
 		assertThat(item.getRestriction().getPhase()).isEqualTo(TBC_P5);
-		assertThat(item.getRestriction().getProfession()).isEqualTo(TAILORING);
-		assertThat(item.getRestriction().getProfessionLevel()).isEqualTo(350);
+		assertThat(item.getRestriction().getProfessionRestriction().getProfession()).isEqualTo(TAILORING);
+		assertThat(item.getRestriction().getProfessionRestriction().getLevel()).isEqualTo(350);
 		assertThat(item.getIcon()).isEqualTo("inv_chest_cloth_02");
 		assertThat(item.getTooltip()).isNotBlank();
 		assertThat(item.getItemType()).isEqualTo(CHEST);

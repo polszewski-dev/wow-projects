@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.character.*;
-import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
@@ -36,8 +35,7 @@ public class Restriction {
 	@Builder.Default
 	private List<Race> races = List.of();
 	private Side side;
-	private Profession profession;
-	private int professionLevel;
+	private ProfessionRestriction professionRestriction;
 	private ProfessionSpecialization professionSpec;
 	private TalentId talentId;
 
@@ -72,7 +70,7 @@ public class Restriction {
 		if (side != null && side != race.getSide()) {
 			return false;
 		}
-		if (profession != null && !characterProfessions.hasProfession(profession, professionLevel)) {
+		if (professionRestriction != null && !characterProfessions.hasProfession(professionRestriction.getProfession(), professionRestriction.getLevel())) {
 			return false;
 		}
 		if (professionSpec != null && !characterProfessions.hasProfessionSpecialization(professionSpec)) {
@@ -82,27 +80,17 @@ public class Restriction {
 	}
 
 	public Restriction merge(Restriction other) {
-		RestrictionBuilder builder = builder();
-
-		builder.versions(merge(versions, other.versions));
-		builder.phase(merge(phase, other.phase));
-		builder.level(merge(level, other.level));
-		builder.characterClasses(merge(characterClasses, other.characterClasses));
-		builder.races(merge(races, other.races));
-		builder.side(merge(side, other.side));
-
-		if (profession != null) {
-			builder.profession(profession);
-			builder.professionLevel(professionLevel);
-		} else {
-			builder.profession(other.profession);
-			builder.professionLevel(other.professionLevel);
-		}
-
-		builder.professionSpec(merge(professionSpec, other.professionSpec));
-		builder.talentId(merge(talentId, other.talentId));
-
-		return builder.build();
+		return builder()
+				.versions(merge(versions, other.versions))
+				.phase(merge(phase, other.phase))
+				.level(merge(level, other.level))
+				.characterClasses(merge(characterClasses, other.characterClasses))
+				.races(merge(races, other.races))
+				.side(merge(side, other.side))
+				.professionRestriction(merge(professionRestriction, other.professionRestriction))
+				.professionSpec(merge(professionSpec, other.professionSpec))
+				.talentId(merge(talentId, other.talentId))
+				.build();
 	}
 
 	private <T> T merge(T first, T second) {
@@ -145,8 +133,8 @@ public class Restriction {
 		if (side != null) {
 			parts.add(String.format("side: %s", side));
 		}
-		if (profession != null) {
-			parts.add(String.format("profession: %s", profession));
+		if (professionRestriction != null) {
+			parts.add(String.format("profession: %s", professionRestriction));
 		}
 		if (professionSpec != null) {
 			parts.add(String.format("professionSpec: %s", professionSpec));

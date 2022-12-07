@@ -7,6 +7,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.config.Description;
+import wow.commons.model.config.ProfessionRestriction;
 import wow.commons.model.config.Restriction;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
@@ -115,7 +116,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var races = colReqRace.getList(Race::parse);
 		var side = colReqSide.getEnum(Side::parse, null);
 		var profession = colReqProfession.getEnum(Profession::parse, null);
-		var professionLevel = colReqProfessionLevel.getInteger(0);
+		var professionLevel = colReqProfessionLevel.getNullableInteger();
 		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
 		var talentId = colReqTalent.getEnum(TalentId::parse, null);
 
@@ -126,8 +127,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				.characterClasses(characterClasses)
 				.races(races)
 				.side(side)
-				.profession(profession)
-				.professionLevel(professionLevel)
+				.professionRestriction(ProfessionRestriction.of(profession, professionLevel))
 				.professionSpec(professionSpec)
 				.talentId(talentId)
 				.build();
