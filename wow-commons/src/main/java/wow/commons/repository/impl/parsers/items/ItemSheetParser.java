@@ -4,8 +4,9 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSocketSpecification;
@@ -47,11 +48,12 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var stats = readAttributes(ITEM_MAX_STATS);
 
 		Description description = getDescription();
-		Restriction restriction = getRestriction();
+		TimeRestriction timeRestriction = getTimeRestriction();
+		CharacterRestriction characterRestriction = getRestriction();
 		BasicItemInfo basicItemInfo = getBasicItemInfo();
 		ItemSocketSpecification socketSpecification = getSocketSpecification(socketTypes);
 
-		Item item = new Item(id, description, restriction, stats, basicItemInfo, socketSpecification, null);
+		Item item = new Item(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, socketSpecification, null);
 
 		validateItem(item);
 

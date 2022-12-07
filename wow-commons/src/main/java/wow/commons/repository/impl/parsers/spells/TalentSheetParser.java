@@ -1,7 +1,8 @@
 package wow.commons.repository.impl.parsers.spells;
 
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentInfo;
 import wow.commons.model.talents.TalentTree;
@@ -34,7 +35,7 @@ public class TalentSheetParser extends WowExcelSheetParser {
 	@Override
 	protected void readSingleRow() {
 		TalentInfo talentInfo = getTalentInfo();
-		talentInfoById.put(talentInfo.getTalentId(), talentInfo);
+		talentInfoById.put(talentInfo.getId(), talentInfo);
 	}
 
 	private TalentInfo getTalentInfo() {
@@ -44,12 +45,14 @@ public class TalentSheetParser extends WowExcelSheetParser {
 		var talentCalculatorPosition = colCalculatorPosition.getInteger();
 
 		Description description = getDescription(talentId.getName());
-		Restriction restriction = getRestriction();
+		TimeRestriction timeRestriction = getTimeRestriction();
+		CharacterRestriction characterRestriction = getRestriction();
 
 		return new TalentInfo(
 				talentId,
 				description,
-				restriction,
+				timeRestriction,
+				characterRestriction,
 				tree,
 				maxRank,
 				talentCalculatorPosition

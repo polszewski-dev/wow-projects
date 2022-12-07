@@ -1,8 +1,9 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentIdAndRank;
@@ -48,10 +49,11 @@ public class TalentRankSheetParser extends BenefitSheetParser {
 		TalentIdAndRank id = new TalentIdAndRank(talentId, rank);
 		TalentInfo talentInfo = talentInfoById.get(talentId);
 		Description description = getDescription(talentId.getName()).merge(talentInfo.getDescription());
-		Restriction restriction = getRestriction().merge(talentInfo.getRestriction());
+		TimeRestriction timeRestriction = getTimeRestriction().merge(talentInfo.getTimeRestriction());
+		CharacterRestriction characterRestriction = getRestriction().merge(talentInfo.getCharacterRestriction());
 		Attributes talentBenefit = getTalentBenefit();
 
-		return new Talent(id, description, restriction, talentBenefit, talentInfo);
+		return new Talent(id, description, timeRestriction, characterRestriction, talentBenefit, talentInfo);
 	}
 
 	private Attributes getTalentBenefit() {

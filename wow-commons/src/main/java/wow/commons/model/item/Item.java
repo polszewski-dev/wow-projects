@@ -4,8 +4,9 @@ import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 
 import java.util.List;
 
@@ -22,13 +23,14 @@ public class Item extends AbstractItem {
 	public Item(
 			Integer id,
 			Description description,
-			Restriction restriction,
+			TimeRestriction timeRestriction,
+			CharacterRestriction characterRestriction,
 			Attributes attributes,
 			BasicItemInfo basicItemInfo,
 			ItemSocketSpecification socketSpecification,
 			WeaponStats weaponStats
 	) {
-		super(id, description, restriction, attributes, basicItemInfo);
+		super(id, description, timeRestriction, characterRestriction, attributes, basicItemInfo);
 		this.socketSpecification = socketSpecification;
 		this.weaponStats = weaponStats;
 	}
@@ -67,9 +69,9 @@ public class Item extends AbstractItem {
 
 	@Override
 	public boolean isAvailableTo(CharacterInfo characterInfo) {
-		if (!getRestriction().isMetBy(characterInfo)) {
+		if (!getCharacterRestriction().isMetBy(characterInfo)) {
 			return false;
 		}
-		return itemSet == null || itemSet.getRestriction().isMetBy(characterInfo);
+		return itemSet == null || itemSet.getCharacterRestriction().isMetBy(characterInfo);
 	}
 }

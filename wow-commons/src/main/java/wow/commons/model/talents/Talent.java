@@ -3,9 +3,10 @@ package wow.commons.model.talents;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.util.AttributesBuilder;
 
 /**
@@ -17,8 +18,8 @@ public class Talent extends ConfigurationElementWithAttributes<TalentIdAndRank> 
 	@NonNull
 	private final TalentInfo talentInfo;
 
-	public Talent(TalentIdAndRank id, Description description, Restriction restriction, Attributes attributes, TalentInfo talentInfo) {
-		super(id, description, restriction, attributes);
+	public Talent(TalentIdAndRank id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, TalentInfo talentInfo) {
+		super(id, description, timeRestriction, characterRestriction, attributes);
 		this.talentInfo = talentInfo;
 	}
 
@@ -40,7 +41,7 @@ public class Talent extends ConfigurationElementWithAttributes<TalentIdAndRank> 
 
 	public Talent combineWith(Talent talent) {
 		Attributes combinedAttributes = AttributesBuilder.addAttributes(getAttributes(), talent.getAttributes());
-		return new Talent(getId(), getDescription(), getRestriction(), combinedAttributes, talentInfo);
+		return new Talent(getId(), getDescription(), getTimeRestriction(), getCharacterRestriction(), combinedAttributes, talentInfo);
 	}
 
 	@Override

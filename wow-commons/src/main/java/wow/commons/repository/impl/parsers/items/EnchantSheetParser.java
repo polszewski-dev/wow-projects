@@ -2,8 +2,9 @@ package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Enchant;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
@@ -40,9 +41,10 @@ public class EnchantSheetParser extends WowExcelSheetParser {
 		var itemTypes = colItemTypes.getList(x -> ItemType.parse(x.trim()));
 
 		Description description = getDescription();
-		Restriction restriction = getRestriction();
+		TimeRestriction timeRestriction = getTimeRestriction();
+		CharacterRestriction characterRestriction = getRestriction();
 		Attributes attributes = readAttributes(2);
 
-		return new Enchant(id, description, restriction, attributes, itemTypes);
+		return new Enchant(id, description, timeRestriction, characterRestriction, attributes, itemTypes);
 	}
 }

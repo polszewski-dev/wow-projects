@@ -53,6 +53,7 @@ public class ItemServiceImpl implements ItemService {
 				.filter(item -> item.getItemLevel() >= itemConfig.getMinItemLevel())
 				.filter(item -> item.getRarity().isAtLeastAsGoodAs(itemConfig.getMinRarity()))
 				.filter(item -> !item.isPvPReward() || itemConfig.isIncludePvpItems())
+				.filter(item -> item.isAvailableDuring(playerProfile.getPhase()))
 				.filter(item -> item.isAvailableTo(playerProfile.getCharacterInfo()))
 				.filter(item -> hasStatsSuitableForRole(item, playerProfile))
 				.collect(Collectors.toList());
@@ -61,6 +62,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType) {
 		return itemDataRepository.getEnchants(itemType).stream()
+				.filter(enchant -> enchant.isAvailableDuring(playerProfile.getPhase()))
 				.filter(enchant -> enchant.isAvailableTo(playerProfile.getCharacterInfo()))
 				.filter(enchant -> hasStatsSuitableForRole(enchant, itemType, playerProfile))
 				.collect(Collectors.toList());
@@ -77,6 +79,7 @@ public class ItemServiceImpl implements ItemService {
 		return itemDataRepository.getAllGems().stream()
 				.filter(gem -> socketType.accepts(gem.getColor()))
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests()))
+				.filter(gem -> gem.isAvailableDuring(playerProfile.getPhase()))
 				.filter(gem -> gem.isAvailableTo(playerProfile.getCharacterInfo()))
 				.filter(gem -> hasStatsSuitableForRole(gem, playerProfile))
 				.collect(Collectors.toList());

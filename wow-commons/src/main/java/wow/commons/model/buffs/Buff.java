@@ -3,9 +3,10 @@ package wow.commons.model.buffs;
 import lombok.Getter;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.SpellId;
 
 /**
@@ -21,12 +22,13 @@ public class Buff extends ConfigurationElementWithAttributes<Integer> {
 	public Buff(
 			Integer id,
 			Description description,
-			Restriction restriction,
+			TimeRestriction timeRestriction,
+			CharacterRestriction characterRestriction,
 			BuffType type,
 			BuffExclusionGroup exclusionGroup,
 			Attributes attributes,
 			SpellId sourceSpell) {
-		super(id, description, restriction, attributes);
+		super(id, description, timeRestriction, characterRestriction, attributes);
 		this.type = type;
 		this.exclusionGroup = exclusionGroup;
 		this.sourceSpell = sourceSpell;

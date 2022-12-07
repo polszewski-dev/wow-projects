@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.character.*;
 import wow.commons.model.professions.ProfessionSpecialization;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
-import wow.commons.util.CollectionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static wow.commons.util.CollectionUtil.mergeCriteria;
+import static wow.commons.util.CollectionUtil.mergeValues;
 
 /**
  * User: POlszewski
@@ -22,11 +21,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Builder
-public class Restriction {
-	@NonNull
-	@Builder.Default
-	private List<GameVersion> versions = List.of();
-	private Phase phase;
+public class CharacterRestriction {
 	private Integer level;
 	@NonNull
 	@Builder.Default
@@ -39,10 +34,10 @@ public class Restriction {
 	private ProfessionSpecialization professionSpec;
 	private TalentId talentId;
 
+	public static final CharacterRestriction EMPTY = builder().build();
+
 	public boolean isMetBy(CharacterInfo characterInfo) {
 		return isMetBy(
-				characterInfo.getGameVersion(),
-				characterInfo.getPhase(),
 				characterInfo.getLevel(),
 				characterInfo.getCharacterClass(),
 				characterInfo.getRace(),
@@ -51,13 +46,7 @@ public class Restriction {
 		);
 	}
 
-	public boolean isMetBy(GameVersion version, Phase phase, int level, CharacterClass characterClass, Race race, Build build, CharacterProfessions characterProfessions) {
-		if (!this.versions.isEmpty() && !this.versions.contains(version)) {
-			return false;
-		}
-		if (this.phase != null && phase.isEarlier(this.phase)) {
-			return false;
-		}
+	public boolean isMetBy(int level, CharacterClass characterClass, Race race, Build build, CharacterProfessions characterProfessions) {
 		if (this.level != null && level < this.level) {
 			return false;
 		}
@@ -79,37 +68,16 @@ public class Restriction {
 		return talentId == null || build.hasTalent(talentId);
 	}
 
-	public Restriction merge(Restriction other) {
+	public CharacterRestriction merge(CharacterRestriction other) {
 		return builder()
-				.versions(merge(versions, other.versions))
-				.phase(merge(phase, other.phase))
-				.level(merge(level, other.level))
-				.characterClasses(merge(characterClasses, other.characterClasses))
-				.races(merge(races, other.races))
-				.side(merge(side, other.side))
-				.professionRestriction(merge(professionRestriction, other.professionRestriction))
-				.professionSpec(merge(professionSpec, other.professionSpec))
-				.talentId(merge(talentId, other.talentId))
+				.level(mergeValues(level, other.level))
+				.characterClasses(mergeCriteria(characterClasses, other.characterClasses))
+				.races(mergeCriteria(races, other.races))
+				.side(mergeValues(side, other.side))
+				.professionRestriction(mergeValues(professionRestriction, other.professionRestriction))
+				.professionSpec(mergeValues(professionSpec, other.professionSpec))
+				.talentId(mergeValues(talentId, other.talentId))
 				.build();
-	}
-
-	private <T> T merge(T first, T second) {
-		if (first == null) {
-			return second;
-		}
-		if (second == null) {
-			return first;
-		}
-		if (Objects.equals(first, second)) {
-			return first;
-		}
-		throw new IllegalArgumentException(String.format("Both elements are not null: first=%s, second=%s", first, second));
-	}
-
-	private <T> List<T> merge(List<T> first, List<T> second) {
-		return CollectionUtil.getCommonCriteria(first, second)
-				.orElseThrow(() -> new IllegalArgumentException(
-						String.format("Both lists have no common elements: first=%s, second=%s", first, second)));
 	}
 
 	@Override
@@ -117,12 +85,6 @@ public class Restriction {
 		List<String> parts = new ArrayList<>();
 		if (level != null) {
 			parts.add(String.format("level: %s", level));
-		}
-		if (!versions.isEmpty()) {
-			parts.add(String.format("versions: %s", versions));
-		}
-		if (phase != null) {
-			parts.add(String.format("phase: %s", phase));
 		}
 		if (!characterClasses.isEmpty()) {
 			parts.add(String.format("characterClasses: %s", characterClasses));

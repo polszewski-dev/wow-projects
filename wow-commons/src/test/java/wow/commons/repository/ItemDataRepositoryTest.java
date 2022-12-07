@@ -77,10 +77,10 @@ class ItemDataRepositoryTest {
 		assertThat(item.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(item.isUnique()).isFalse();
 		assertThat(item.getItemLevel()).isEqualTo(159);
-		assertThat(item.getRestriction().getLevel()).isEqualTo(70);
-		assertThat(item.getRestriction().getPhase()).isEqualTo(TBC_P5);
-		assertThat(item.getRestriction().getProfessionRestriction().getProfession()).isEqualTo(TAILORING);
-		assertThat(item.getRestriction().getProfessionRestriction().getLevel()).isEqualTo(350);
+		assertThat(item.getTimeRestriction().getPhase()).isEqualTo(TBC_P5);
+		assertThat(item.getCharacterRestriction().getLevel()).isEqualTo(70);
+		assertThat(item.getCharacterRestriction().getProfessionRestriction().getProfession()).isEqualTo(TAILORING);
+		assertThat(item.getCharacterRestriction().getProfessionRestriction().getLevel()).isEqualTo(350);
 		assertThat(item.getIcon()).isEqualTo("inv_chest_cloth_02");
 		assertThat(item.getTooltip()).isNotBlank();
 		assertThat(item.getItemType()).isEqualTo(CHEST);
@@ -148,8 +148,8 @@ class ItemDataRepositoryTest {
 		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(gem.isUnique()).isFalse();
 		assertThat(gem.getItemLevel()).isEqualTo(100);
-		assertThat(gem.getRestriction().getLevel()).isNull();
-		assertThat(gem.getRestriction().getPhase()).isEqualTo(TBC_P3);
+		assertThat(gem.getTimeRestriction().getPhase()).isEqualTo(TBC_P3);
+		assertThat(gem.getCharacterRestriction().getLevel()).isNull();
 		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
 		assertThat(gem.getTooltip()).isNotBlank();
 	}
@@ -225,8 +225,8 @@ class ItemDataRepositoryTest {
 		assertThat(tradedItem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(tradedItem.isUnique()).isFalse();
 		assertThat(tradedItem.getItemLevel()).isEqualTo(70);
-		assertThat(tradedItem.getRestriction().getLevel()).isEqualTo(70);
-		assertThat(tradedItem.getRestriction().getPhase()).isEqualTo(TBC_P3);
-		assertThat(tradedItem.getRestriction().getCharacterClasses()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
+		assertThat(tradedItem.getTimeRestriction().getPhase()).isEqualTo(TBC_P3);
+		assertThat(tradedItem.getCharacterRestriction().getLevel()).isEqualTo(70);
+		assertThat(tradedItem.getCharacterRestriction().getCharacterClasses()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
 	}
 }

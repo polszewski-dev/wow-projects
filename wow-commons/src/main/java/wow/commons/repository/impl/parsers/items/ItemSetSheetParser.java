@@ -1,7 +1,7 @@
 package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
@@ -45,8 +45,8 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		var name = colName.getString();
 		var itemSetBonuses = getItemSetBonuses();
 
-		Restriction restriction = getRestriction();
-		ItemSet itemSet = new ItemSet(name, null, restriction, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
+		CharacterRestriction characterRestriction = getRestriction();
+		ItemSet itemSet = new ItemSet(name, null, characterRestriction, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
 
 		for (Item item : itemSet.getPieces()) {
 			item.setItemSet(itemSet);

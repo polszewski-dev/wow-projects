@@ -14,8 +14,8 @@ public abstract class ConfigurationElementWithAttributes<T> extends Configuratio
 	@NonNull
 	private final Attributes attributes;
 
-	protected ConfigurationElementWithAttributes(T id, Description description, Restriction restriction, Attributes attributes) {
-		super(id, description, restriction);
+	protected ConfigurationElementWithAttributes(T id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes) {
+		super(id, description, timeRestriction, characterRestriction);
 		this.attributes = attributes;
 	}
 

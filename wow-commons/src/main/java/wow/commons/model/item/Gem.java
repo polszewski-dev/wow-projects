@@ -3,8 +3,9 @@ package wow.commons.model.item;
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class Gem extends AbstractItem {
 	private final GemColor color;
 	private final List<MetaEnabler> metaEnablers;
 
-	public Gem(Integer id, Description description, Restriction restriction, Attributes attributes, BasicItemInfo basicItemInfo, GemColor color, List<MetaEnabler> metaEnablers) {
-		super(id, description, restriction, attributes, basicItemInfo);
+	public Gem(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, BasicItemInfo basicItemInfo, GemColor color, List<MetaEnabler> metaEnablers) {
+		super(id, description, timeRestriction, characterRestriction, attributes, basicItemInfo);
 		this.color = color;
 		this.metaEnablers = metaEnablers;
 		if (getItemType() != ItemType.GEM) {

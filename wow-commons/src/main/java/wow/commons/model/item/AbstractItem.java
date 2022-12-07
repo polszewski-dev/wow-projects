@@ -6,9 +6,10 @@ import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.Source;
 
@@ -27,8 +28,8 @@ import java.util.stream.Stream;
 public abstract class AbstractItem extends ConfigurationElementWithAttributes<Integer> {
 	private final BasicItemInfo basicItemInfo;
 
-	protected AbstractItem(Integer id, Description description, Restriction restriction, Attributes attributes, BasicItemInfo basicItemInfo) {
-		super(id, description, restriction, attributes);
+	protected AbstractItem(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, BasicItemInfo basicItemInfo) {
+		super(id, description, timeRestriction, characterRestriction, attributes);
 		this.basicItemInfo = basicItemInfo;
 	}
 

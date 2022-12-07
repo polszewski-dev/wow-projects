@@ -3,9 +3,10 @@ package wow.commons.model.item;
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ import java.util.List;
 public class Enchant extends ConfigurationElementWithAttributes<Integer> {
 	private final List<ItemType> itemTypes;
 
-	public Enchant(Integer id, Description description, Restriction restriction, Attributes attributes, List<ItemType> itemTypes) {
-		super(id, description, restriction, attributes);
+	public Enchant(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, List<ItemType> itemTypes) {
+		super(id, description, timeRestriction, characterRestriction, attributes);
 		this.itemTypes = itemTypes;
 	}
 

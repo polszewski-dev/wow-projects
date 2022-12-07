@@ -3,8 +3,9 @@ package wow.commons.model.item;
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 
 /**
  * User: POlszewski
@@ -12,8 +13,8 @@ import wow.commons.model.config.Restriction;
  */
 @Getter
 public class TradedItem extends AbstractItem {
-	public TradedItem(Integer id, Description description, Restriction restriction, BasicItemInfo basicItemInfo) {
-		super(id, description, restriction, Attributes.EMPTY, basicItemInfo);
+	public TradedItem(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, BasicItemInfo basicItemInfo) {
+		super(id, description, timeRestriction, characterRestriction, Attributes.EMPTY, basicItemInfo);
 		if (getItemType() != ItemType.QUEST && getItemType() != ItemType.TOKEN) {
 			throw new IllegalArgumentException("Wrong item type: " + getItemType());
 		}

@@ -12,8 +12,9 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.*;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
@@ -58,51 +59,47 @@ abstract class ControllerTest {
 	}
 
 	private void createItems() {
-		Restriction noRestriction = Restriction.builder().build();
-
 		ItemSocketSpecification socketSpecification = new ItemSocketSpecification(List.of(SocketType.RED, SocketType.YELLOW, SocketType.BLUE), Attributes.EMPTY);
 		Description chestDescription = new Description("Test Chest Item", null, null);
 		BasicItemInfo chestBasicItemInfo = new BasicItemInfo(ItemType.CHEST, ArmorSubType.CLOTH, ItemRarity.EPIC, BINDS_ON_EQUIP, false, 0, Set.of());
-		chest = new Item(101, chestDescription, noRestriction, Attributes.EMPTY, chestBasicItemInfo, socketSpecification, null);
+		chest = new Item(101, chestDescription, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, Attributes.EMPTY, chestBasicItemInfo, socketSpecification, null);
 
 		SpecialAbility specialAbility = SpecialAbility.onUse(Attributes.of(SPELL_DAMAGE, 100), Duration.seconds(15), Duration.seconds(60), "...");
 		Description trinketDescription = new Description("Test Test", null, null);
 		BasicItemInfo trinketBasicItemInfo = new BasicItemInfo(ItemType.TRINKET, null, ItemRarity.EPIC, BINDS_ON_EQUIP, false, 0, Set.of());
-		trinket = new Item(102, trinketDescription, noRestriction, Attributes.of(specialAbility), trinketBasicItemInfo, ItemSocketSpecification.EMPTY, null);
+		trinket = new Item(102, trinketDescription, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, Attributes.of(specialAbility), trinketBasicItemInfo, ItemSocketSpecification.EMPTY, null);
 	}
 
 	private void createGems() {
 		Description redDescription = new Description("Test Red Gem", null, null);
 		Description yellowDescription = new Description("Test Red Gem", null, null);
 		Description blueDescription = new Description("Test Red Gem", null, null);
-		Restriction noRestriction = Restriction.builder().build();
 		BasicItemInfo basicItemInfo = new BasicItemInfo(ItemType.GEM, null, ItemRarity.RARE, NO_BINDING, false, 0, Set.of());
-		redGem = new Gem(301, redDescription, noRestriction, Attributes.of(SPELL_DAMAGE, 20), basicItemInfo, GemColor.RED, List.of());
-		yellowGem = new Gem(302, yellowDescription, noRestriction, Attributes.of(SPELL_HIT_RATING, 15), basicItemInfo, GemColor.RED, List.of());
-		blueGem = new Gem(303, blueDescription, noRestriction, Attributes.of(STAMINA, 10), basicItemInfo, GemColor.RED, List.of());
+
+		redGem = new Gem(301, redDescription, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, Attributes.of(SPELL_DAMAGE, 20), basicItemInfo, GemColor.RED, List.of());
+		yellowGem = new Gem(302, yellowDescription, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, Attributes.of(SPELL_HIT_RATING, 15), basicItemInfo, GemColor.RED, List.of());
+		blueGem = new Gem(303, blueDescription, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, Attributes.of(STAMINA, 10), basicItemInfo, GemColor.RED, List.of());
 	}
 
 	private void createEnchants() {
 		Description description = new Description("Test Chest Enchant", null, null);
-		Restriction restriction = Restriction.builder().build();
-		enchant = new Enchant(201, description, restriction, Attributes.of(BASE_STATS_INCREASE, 12), List.of(ItemType.CHEST));
+		enchant = new Enchant(201, description, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, Attributes.of(BASE_STATS_INCREASE, 12), List.of(ItemType.CHEST));
 	}
 
 	private void createBuffs() {
 		Description description = new Description("Test Buff", null, "...");
-		Restriction restriction = Restriction.builder().level(1).build();
-		buff = new Buff(401, description, restriction, BuffType.SELF_BUFF, BuffExclusionGroup.SELF_BUFF, Attributes.of(SPELL_DAMAGE, 100), SpellId.FEL_ARMOR);
+		buff = new Buff(401, description, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, BuffType.SELF_BUFF, BuffExclusionGroup.SELF_BUFF, Attributes.of(SPELL_DAMAGE, 100), SpellId.FEL_ARMOR);
 	}
 
 	private void createSpells() {
 		SpellIdAndRank id = new SpellIdAndRank(SHADOW_BOLT, 10);
 		Description description = new Description(SHADOW_BOLT.getName(), null, null);
 		DamagingSpellInfo damagingSpellInfo = new DamagingSpellInfo(Percent._100, Percent.ZERO, true, null, null, null, null);
-		SpellInfo spellInfo = new SpellInfo(SpellId.SHADOW_BOLT, description, Restriction.builder().build(), TalentTree.DESTRUCTION, SpellSchool.SHADOW, Duration.ZERO, false, damagingSpellInfo, null);
+		SpellInfo spellInfo = new SpellInfo(SpellId.SHADOW_BOLT, description, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, TalentTree.DESTRUCTION, SpellSchool.SHADOW, Duration.ZERO, false, damagingSpellInfo, null);
 		CastInfo castInfo = new CastInfo(100, Duration.seconds(3), false, null, null);
 		DirectDamageInfo directDamageInfo = new DirectDamageInfo(500, 600, 0, 0);
 		DotDamageInfo dotDamageInfo = new DotDamageInfo(0, 0, null);
-		spell = new Spell(id, Restriction.builder().level(70).build(), description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		spell = new Spell(id, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 	}
 
 	private void createBuild() {

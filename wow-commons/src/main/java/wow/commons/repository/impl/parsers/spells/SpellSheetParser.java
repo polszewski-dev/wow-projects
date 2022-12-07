@@ -1,8 +1,9 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Percent;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.*;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
@@ -46,11 +47,11 @@ public class SpellSheetParser extends WowExcelSheetParser {
 	protected void readSingleRow() {
 		SpellInfo spellInfo = getSpellInfo();
 
-		if (spellInfoById.containsKey(spellInfo.getSpellId())) {
-			throw new IllegalArgumentException("Duplicate: " + spellInfo.getSpellId());
+		if (spellInfoById.containsKey(spellInfo.getId())) {
+			throw new IllegalArgumentException("Duplicate: " + spellInfo.getId());
 		}
 
-		spellInfoById.put(spellInfo.getSpellId(), spellInfo);
+		spellInfoById.put(spellInfo.getId(), spellInfo);
 	}
 
 	private SpellInfo getSpellInfo() {
@@ -61,11 +62,12 @@ public class SpellSheetParser extends WowExcelSheetParser {
 		var ignoresGCD = colIgnoresGcd.getBoolean();
 
 		Description description = getDescription(spellId.getName());
-		Restriction restriction = getRestriction();
+		TimeRestriction timeRestriction = getTimeRestriction();
+		CharacterRestriction characterRestriction = getRestriction();
 		DamagingSpellInfo damagingSpellInfo = getDamagingSpellInfo();
 		Conversion conversion = getConversion();
 
-		return new SpellInfo(spellId, description, restriction, talentTree, spellSchool, cooldown, ignoresGCD, damagingSpellInfo, conversion);
+		return new SpellInfo(spellId, description, timeRestriction, characterRestriction, talentTree, spellSchool, cooldown, ignoresGCD, damagingSpellInfo, conversion);
 	}
 
 	private DamagingSpellInfo getDamagingSpellInfo() {

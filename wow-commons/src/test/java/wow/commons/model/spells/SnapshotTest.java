@@ -15,8 +15,9 @@ import wow.commons.model.character.BaseStatInfo;
 import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 
 import java.util.Comparator;
 
@@ -40,13 +41,13 @@ class SnapshotTest {
 	void setup() {
 		SpellIdAndRank id = new SpellIdAndRank(SHADOW_BOLT, 1);
 		Description description = new Description(SHADOW_BOLT.getName(), null, null);
-		Restriction noRestriction = Restriction.builder().build();
 		CastInfo castInfo = new CastInfo(200, Duration.seconds(2), false, null, null);
 		DirectDamageInfo directDamageInfo = new DirectDamageInfo(400, 600, 0, 0);
 		DotDamageInfo dotDamageInfo = new DotDamageInfo(0, 0, null);
 		DamagingSpellInfo damagingSpellInfo = new DamagingSpellInfo(Percent.of(150), Percent.ZERO, false, null, null, null, null);
-		SpellInfo spellInfo = new SpellInfo(SHADOW_BOLT, description, noRestriction, DESTRUCTION, SHADOW, null, false, damagingSpellInfo, null);
-		spell = new Spell(id, noRestriction, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		SpellInfo spellInfo = new SpellInfo(SHADOW_BOLT, description, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, DESTRUCTION, SHADOW, null, false, damagingSpellInfo, null);
+
+		spell = new Spell(id, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 		baseStatInfo = new BaseStatInfo(0, WARLOCK, ORC, 0, 0, 100, 200, 300, 1000, 2000, Percent.of(10), 100);
 		combatRatingInfo = new CombatRatingInfo(0, 10, 20, 40);
 	}

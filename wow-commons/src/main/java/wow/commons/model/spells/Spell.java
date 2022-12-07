@@ -7,9 +7,10 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElement;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.talents.TalentTree;
 
 import java.util.Set;
@@ -29,8 +30,17 @@ public class Spell extends ConfigurationElement<SpellIdAndRank> {
 	private final DirectDamageInfo directDamageInfo;
 	private final DotDamageInfo dotDamageInfo;
 
-	public Spell(SpellIdAndRank id, Restriction restriction, Description description, SpellInfo spellInfo, CastInfo castInfo, DirectDamageInfo directDamageInfo, DotDamageInfo dotDamageInfo) {
-		super(id, description, restriction);
+	public Spell(
+			SpellIdAndRank id,
+			TimeRestriction timeRestriction,
+			CharacterRestriction characterRestriction,
+			Description description,
+			SpellInfo spellInfo,
+			CastInfo castInfo,
+			DirectDamageInfo directDamageInfo,
+			DotDamageInfo dotDamageInfo
+	) {
+		super(id, description, timeRestriction, characterRestriction);
 		this.spellInfo = spellInfo;
 		this.castInfo = castInfo;
 		this.directDamageInfo = directDamageInfo;

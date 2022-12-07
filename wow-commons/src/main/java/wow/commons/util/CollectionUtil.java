@@ -1,9 +1,6 @@
 package wow.commons.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * User: POlszewski
@@ -38,6 +35,24 @@ public final class CollectionUtil {
 		return Optional.of(commonElements);
 	}
 
+	public static  <T> T mergeValues(T first, T second) {
+		if (first == null) {
+			return second;
+		}
+		if (second == null) {
+			return first;
+		}
+		if (Objects.equals(first, second)) {
+			return first;
+		}
+		throw new IllegalArgumentException(String.format("Both elements are not null: first=%s, second=%s", first, second));
+	}
+
+	public static <T> List<T> mergeCriteria(List<T> first, List<T> second) {
+		return getCommonCriteria(first, second)
+				.orElseThrow(() -> new IllegalArgumentException(
+						String.format("Both lists have no common elements: first=%s, second=%s", first, second)));
+	}
 
 	private CollectionUtil() {}
 }

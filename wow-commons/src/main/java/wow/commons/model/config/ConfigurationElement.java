@@ -1,7 +1,6 @@
 package wow.commons.model.config;
 
 import lombok.*;
-import wow.commons.model.pve.Phase;
 
 /**
  * User: POlszewski
@@ -11,7 +10,7 @@ import wow.commons.model.pve.Phase;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-public abstract class ConfigurationElement<T> implements Restricted {
+public abstract class ConfigurationElement<T> implements TimeRestricted, CharacterRestricted {
 	@NonNull
 	private final T id;
 
@@ -19,10 +18,13 @@ public abstract class ConfigurationElement<T> implements Restricted {
 	private final Description description;
 
 	@NonNull
-	private final Restriction restriction;
+	private final TimeRestriction timeRestriction;
+
+	@NonNull
+	private final CharacterRestriction characterRestriction;
 
 	public int getRequiredLevel() {
-		return restriction.getLevel();
+		return characterRestriction.getLevel();
 	}
 
 	public String getName() {
@@ -35,10 +37,6 @@ public abstract class ConfigurationElement<T> implements Restricted {
 
 	public String getTooltip() {
 		return description.getTooltip();
-	}
-
-	public boolean isAvailableDuring(Phase phase) {
-		return restriction.getPhase().isEarlierOrTheSame(phase);
 	}
 
 	@Override

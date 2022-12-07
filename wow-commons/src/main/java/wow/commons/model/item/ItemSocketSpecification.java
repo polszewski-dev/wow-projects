@@ -39,4 +39,9 @@ public class ItemSocketSpecification {
 	public Attributes getSocketBonus() {
 		return socketBonus;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s, bonus: %s", socketTypes, socketBonus);
+	}
 }

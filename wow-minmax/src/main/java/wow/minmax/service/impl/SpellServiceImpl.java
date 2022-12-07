@@ -33,6 +33,7 @@ public class SpellServiceImpl implements SpellService {
 	@Override
 	public Optional<Spell> getAvailableSpellHighestRank(SpellId spellId, CharacterInfo characterInfo) {
 		return spellDataRepository.getAllSpellRanks(spellId).stream()
+				.filter(spell -> spell.isAvailableDuring(characterInfo.getPhase()))
 				.filter(spell -> spell.isAvailableTo(characterInfo))
 				.max(Comparator.comparing(Spell::getRank));
 	}
@@ -49,6 +50,7 @@ public class SpellServiceImpl implements SpellService {
 	@Override
 	public List<Buff> getAvailableBuffs(List<String> buffNames, CharacterInfo characterInfo) {
 		return spellDataRepository.getBuffs(buffNames).stream()
+				.filter(buff -> buff.isAvailableDuring(characterInfo.getPhase()))
 				.filter(buff -> buff.isAvailableTo(characterInfo))
 				.collect(Collectors.toList());
 	}
@@ -56,6 +58,7 @@ public class SpellServiceImpl implements SpellService {
 	@Override
 	public List<Buff> getAvailableBuffs(PlayerProfile playerProfile) {
 		return spellDataRepository.getAvailableBuffs().stream()
+				.filter(buff -> buff.isAvailableDuring(playerProfile.getPhase()))
 				.filter(buff -> buff.isAvailableTo(playerProfile.getCharacterInfo()))
 				.collect(Collectors.toList());
 	}

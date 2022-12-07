@@ -6,9 +6,10 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.ProfessionRestriction;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.GameVersion;
@@ -99,6 +100,17 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 
 	private final ExcelColumn colReqVersion = column(REQ_VERSION, true);
 	private final ExcelColumn colReqPhase = column(REQ_PHASE, true);
+
+	protected TimeRestriction getTimeRestriction() {
+		var versions = colReqVersion.getList(GameVersion::parse);
+		var phase = colReqPhase.getEnum(Phase::parse, null);
+
+		return TimeRestriction.builder()
+				.versions(versions)
+				.phase(phase)
+				.build();
+	}
+
 	private final ExcelColumn colReqLevel = column(REQ_LEVEL, true);
 	private final ExcelColumn colReqClass = column(REQ_CLASS, true);
 	private final ExcelColumn colReqRace = column(REQ_RACE, true);
@@ -108,9 +120,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colReqProfessionSpec = column(REQ_PROFESSION_SPEC, true);
 	private final ExcelColumn colReqTalent = column(REQ_TALENT, true);
 
-	protected Restriction getRestriction() {
-		var versions = colReqVersion.getList(GameVersion::parse);
-		var phase = colReqPhase.getEnum(Phase::parse, null);
+	protected CharacterRestriction getRestriction() {
 		var level = colReqLevel.getNullableInteger();
 		var characterClasses = colReqClass.getList(CharacterClass::parse);
 		var races = colReqRace.getList(Race::parse);
@@ -120,9 +130,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
 		var talentId = colReqTalent.getEnum(TalentId::parse, null);
 
-		return Restriction.builder()
-				.versions(versions)
-				.phase(phase)
+		return CharacterRestriction.builder()
 				.level(level)
 				.characterClasses(characterClasses)
 				.races(races)

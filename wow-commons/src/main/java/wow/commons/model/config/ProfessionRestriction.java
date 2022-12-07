@@ -3,6 +3,7 @@ package wow.commons.model.config;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import wow.commons.model.professions.Profession;
 
 /**
@@ -13,7 +14,9 @@ import wow.commons.model.professions.Profession;
 @Getter
 @EqualsAndHashCode
 public class ProfessionRestriction {
+	@NonNull
 	private final Profession profession;
+	@NonNull
 	private final int level;
 
 	public static ProfessionRestriction of(Profession profession, Integer level) {
@@ -24,5 +27,10 @@ public class ProfessionRestriction {
 			return new ProfessionRestriction(profession, level);
 		}
 		throw new IllegalArgumentException();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s (%s)", profession, level);
 	}
 }

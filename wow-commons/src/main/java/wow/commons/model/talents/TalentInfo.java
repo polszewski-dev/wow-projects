@@ -1,21 +1,33 @@
 package wow.commons.model.talents;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import wow.commons.model.config.CharacterRestriction;
+import wow.commons.model.config.ConfigurationElement;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.Restriction;
+import wow.commons.model.config.TimeRestriction;
 
 /**
  * User: POlszewski
  * Date: 2022-11-28
  */
-@AllArgsConstructor
 @Getter
-public class TalentInfo {
-	private final TalentId talentId;
-	private final Description description;
-	private final Restriction restriction;
+public class TalentInfo extends ConfigurationElement<TalentId> {
 	private final TalentTree talentTree;
 	private final int maxRank;
 	private final int talentCalculatorPosition;
+
+	public TalentInfo(
+			TalentId id,
+			Description description,
+			TimeRestriction timeRestriction,
+			CharacterRestriction characterRestriction,
+			TalentTree talentTree,
+			int maxRank,
+			int talentCalculatorPosition
+	) {
+		super(id, description, timeRestriction, characterRestriction);
+		this.talentTree = talentTree;
+		this.maxRank = maxRank;
+		this.talentCalculatorPosition = talentCalculatorPosition;
+	}
 }
