@@ -3,11 +3,7 @@ package wow.commons.repository;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
@@ -35,9 +31,7 @@ import static wow.commons.model.talents.TalentTree.DESTRUCTION;
  * User: POlszewski
  * Date: 2022-11-11
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowCommonsTestConfig.class)
-class SpellDataRepositoryTest {
+class SpellDataRepositoryTest extends RepositoryTest {
 	@Autowired
 	SpellDataRepository underTest;
 

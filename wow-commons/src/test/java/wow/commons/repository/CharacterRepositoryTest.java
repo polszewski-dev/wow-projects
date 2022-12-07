@@ -3,11 +3,7 @@ package wow.commons.repository;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.character.BaseStatInfo;
 import wow.commons.model.character.BuildTemplate;
 import wow.commons.model.character.CombatRatingInfo;
@@ -28,9 +24,7 @@ import static wow.commons.model.spells.SpellId.*;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowCommonsTestConfig.class)
-class CharacterRepositoryTest {
+class CharacterRepositoryTest extends RepositoryTest {
 	@Autowired
 	CharacterRepository underTest;
 
