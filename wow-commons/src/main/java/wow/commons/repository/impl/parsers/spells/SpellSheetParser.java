@@ -6,15 +6,15 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.*;
 import wow.commons.model.talents.TalentTree;
-import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class SpellSheetParser extends WowExcelSheetParser {
+public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInfo> {
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colTree = column("tree");
 	private final ExcelColumn colSchool = column("school");
@@ -31,11 +31,8 @@ public class SpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colBonusDamageIfUnderEffect = column("bonus dmg if under effect");
 	private final ExcelColumn colDotScheme = column("dot scheme");
 
-	private final Map<SpellId, SpellInfo> spellInfoById;
-
-	public SpellSheetParser(String sheetName, Map<SpellId, SpellInfo> spellInfoById) {
-		super(sheetName);
-		this.spellInfoById = spellInfoById;
+	public SpellSheetParser(String sheetName, Map<SpellId, List<SpellInfo>> spellInfoById) {
+		super(sheetName, spellInfoById);
 	}
 
 	@Override
@@ -46,12 +43,7 @@ public class SpellSheetParser extends WowExcelSheetParser {
 	@Override
 	protected void readSingleRow() {
 		SpellInfo spellInfo = getSpellInfo();
-
-		if (spellInfoById.containsKey(spellInfo.getId())) {
-			throw new IllegalArgumentException("Duplicate: " + spellInfo.getId());
-		}
-
-		spellInfoById.put(spellInfo.getId(), spellInfo);
+		addElement(spellInfo.getId(), spellInfo);
 	}
 
 	private SpellInfo getSpellInfo() {

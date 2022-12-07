@@ -151,8 +151,8 @@ class CalculationServiceTest extends ServiceTest {
 		Attributes hasteEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HASTE_RATING, 10), SPELL_POWER, ADDITIONAL, playerProfile);
 
 		assertThat(hitEqv.getSpellPower()).isEqualTo(0.11, PRECISION);
-		assertThat(critEqv.getSpellPower()).isEqualTo(9.98, PRECISION);
-		assertThat(hasteEqv.getSpellPower()).isEqualTo(10.87, PRECISION);
+		assertThat(critEqv.getSpellPower()).isEqualTo(10.00, PRECISION);
+		assertThat(hasteEqv.getSpellPower()).isEqualTo(10.88, PRECISION);
 	}
 
 	@Test
@@ -178,8 +178,8 @@ class CalculationServiceTest extends ServiceTest {
 
 		SpellStatistics spellStatistics = underTest.getSpellStatistics(playerProfile, null);
 
-		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5114);
-		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2683);
+		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5121);
+		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2687);
 		assertThat(spellStatistics.getCastTime().getSeconds()).isEqualTo(1.91, PRECISION);
 		assertThat(spellStatistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 		assertThat(spellStatistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(12);
@@ -194,7 +194,7 @@ class CalculationServiceTest extends ServiceTest {
 		PlayerSpellStats playerSpellStats = underTest.getPlayerSpellStats(playerProfile, null);
 
 		assertThat(playerSpellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
-		assertThat(playerSpellStats.getCritSpEqv()).isEqualTo(9.98, PRECISION);
-		assertThat(playerSpellStats.getHasteSpEqv()).isEqualTo(10.87, PRECISION);
+		assertThat(playerSpellStats.getCritSpEqv()).isEqualTo(10.00, PRECISION);
+		assertThat(playerSpellStats.getHasteSpEqv()).isEqualTo(10.88, PRECISION);
 	}
 }

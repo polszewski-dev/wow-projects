@@ -13,13 +13,17 @@ import wow.commons.model.attributes.complex.special.TalentProcAbility;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
+import wow.commons.model.config.ConfigurationElement;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.Talent;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.complex.special.ProcEvent.SPELL_CRIT;
+import static wow.commons.model.character.CharacterClass.WARLOCK;
 import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
 import static wow.commons.model.spells.SpellId.CURSE_OF_THE_ELEMENTS;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
@@ -38,7 +42,7 @@ class SpellDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("SpellInfo is read correctly")
 	void spellInfoIsCorrect() {
-		Optional<Spell> optionalSpell = underTest.getSpell(SHADOW_BOLT, 11);
+		Optional<Spell> optionalSpell = underTest.getSpellHighestRank(SHADOW_BOLT, PHASE);
 
 		assertThat(optionalSpell).isPresent();
 
@@ -63,7 +67,7 @@ class SpellDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Talent is read correctly")
 	void talentIsCorrect() {
-		Optional<Talent> optionalTalent = underTest.getTalent(IMPROVED_SHADOW_BOLT, 5);
+		Optional<Talent> optionalTalent = underTest.getTalent(WARLOCK, 44, 5, PHASE);
 
 		assertThat(optionalTalent).isPresent();
 
@@ -92,7 +96,7 @@ class SpellDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Buff is read correctly")
 	void buffIsCorrect() {
-		Optional<Buff> optionalBuff = underTest.getBuff(27228);
+		Optional<Buff> optionalBuff = underTest.getBuff(27228, PHASE);
 
 		assertThat(optionalBuff).isPresent();
 
@@ -100,7 +104,7 @@ class SpellDataRepositoryTest extends RepositoryTest {
 
 		assertThat(buff.getId()).isEqualTo(27228);
 		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
-		assertThat(buff.getRequiredLevel()).isZero();
+		assertThat(buff.getRequiredLevel()).isNull();
 		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
 		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.COE);
 		assertThat(buff.getSourceSpell()).isEqualTo(CURSE_OF_THE_ELEMENTS);
@@ -111,6 +115,52 @@ class SpellDataRepositoryTest extends RepositoryTest {
 		assertThat(stats.getDamageTakenPct(FIRE)).isEqualTo(Percent.of(10));
 		assertThat(stats.getDamageTakenPct(FROST)).isEqualTo(Percent.of(10));
 		assertThat(stats.getDamageTakenPct(ARCANE)).isEqualTo(Percent.of(10));
+	}
+
+	@Test
+	@DisplayName("Buff by id is read correctly")
+	void buffByIdIsCorrect() {
+		Optional<Buff> optionalBuff = underTest.getBuff(27228, PHASE);
+
+		assertThat(optionalBuff).isPresent();
+
+		Buff buff = optionalBuff.orElseThrow();
+
+		assertThat(buff.getId()).isEqualTo(27228);
+		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
+	}
+
+	@Test
+	@DisplayName("Buffs are read correctly")
+	void bufByNamefIsCorrect() {
+		List<String> buffNames = underTest.getBuffs(PHASE).stream()
+				.map(ConfigurationElement::getName)
+				.collect(Collectors.toList());
+
+		assertThat(buffNames).hasSameElementsAs(List.of(
+				"Arcane Brilliance",
+				"Gift of the Wild",
+				"Greater Blessing of Kings",
+				"Fel Armor",
+				"Touch of Shadow",
+				"Burning Wish",
+				"Brilliant Wizard Oil",
+				"Superior Wizard Oil",
+				"Well Fed (sp)",
+				"Flask of Supreme Power",
+				"Flask of Pure Death",
+				"Moonkin Aura",
+				"Wrath of Air Totem",
+				"Totem of Wrath",
+				"Misery",
+				"Shadow Weaving",
+				"Improved Scorch",
+				"Curse of the Elements",
+				"Curse of the Elements (improved)",
+				"Drums of Battle",
+				"Destruction",
+				"Blood Fury"
+		));
 	}
 
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

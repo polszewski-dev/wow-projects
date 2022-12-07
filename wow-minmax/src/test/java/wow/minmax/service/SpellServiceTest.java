@@ -21,7 +21,7 @@ class SpellServiceTest extends ServiceTest {
 
 	@Test
 	void getSpell() {
-		Spell spell = underTest.getSpell(SpellId.SHADOW_BOLT, 70);
+		Spell spell = underTest.getSpellHighestRank(SpellId.SHADOW_BOLT, playerProfile.getCharacterInfo());
 
 		assertThat(spell.getSpellId()).isEqualTo(SpellId.SHADOW_BOLT);
 		assertThat(spell.getRank()).isEqualTo(11);
@@ -29,7 +29,7 @@ class SpellServiceTest extends ServiceTest {
 
 	@Test
 	void getAvailableBuffs() {
-		List<Buff> buffs = underTest.getAvailableBuffs(playerProfile);
+		List<Buff> buffs = underTest.getBuffs(playerProfile.getCharacterInfo());
 
 		List<String> names = buffs.stream().map(Buff::getName).collect(Collectors.toList());
 

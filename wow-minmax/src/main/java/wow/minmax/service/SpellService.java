@@ -4,23 +4,24 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.minmax.model.PlayerProfile;
+import wow.commons.model.talents.Talent;
+import wow.commons.model.talents.TalentId;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 /**
  * User: POlszewski
  * Date: 2021-12-28
  */
 public interface SpellService {
-	Spell getSpell(SpellId spellId, int level);
+	Spell getSpellHighestRank(SpellId spellId, CharacterInfo characterInfo);
 
-	Optional<Spell> getAvailableSpellHighestRank(SpellId spellId, CharacterInfo characterInfo);
+	List<Spell> getSpellHighestRanks(List<SpellId> spellIds, CharacterInfo characterInfo);
 
-	List<Spell> getAvailableSpellsHighestRanks(List<SpellId> spellIds, CharacterInfo characterInfo);
+	List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo);
 
-	List<Buff> getAvailableBuffs(List<String> buffNames, CharacterInfo characterInfo);
+	List<Buff> getBuffs(CharacterInfo characterInfo);
 
-	List<Buff> getAvailableBuffs(PlayerProfile playerProfile);
+	Map<TalentId, Talent> getTalentsFromTalentLink(String link, CharacterInfo characterInfo);
 }

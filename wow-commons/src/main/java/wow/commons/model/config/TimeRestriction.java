@@ -31,10 +31,7 @@ public class TimeRestriction {
 		if (!this.versions.isEmpty() && !this.versions.contains(phase.getGameVersion())) {
 			return false;
 		}
-		if (this.phase != null && phase.isEarlier(this.phase)) {
-			return false;
-		}
-		return true;
+		return this.phase == null || !phase.isEarlier(this.phase);
 	}
 
 	public TimeRestriction merge(TimeRestriction other) {

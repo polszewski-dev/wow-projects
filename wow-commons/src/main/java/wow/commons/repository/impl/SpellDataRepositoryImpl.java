@@ -5,20 +5,18 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffExclusionGroup;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellIdAndRank;
 import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentIdAndRank;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.repository.impl.parsers.spells.SpellExcelParser;
+import wow.commons.util.CollectionUtil;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -27,78 +25,50 @@ import java.util.stream.Collectors;
 @Repository
 @RequiredArgsConstructor
 public class SpellDataRepositoryImpl extends ExcelRepository implements SpellDataRepository {
-	private final Map<SpellIdAndRank, Spell> spellById = new LinkedHashMap<>();
-	private final Map<SpellId, List<Spell>> spellBySpellId = new LinkedHashMap<>();
-	private final Map<TalentIdAndRank, Talent> talentById = new LinkedHashMap<>();
-	private final Map<Integer, TalentId> talentIdByCalculatorPosition = new LinkedHashMap<>();
-	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
+	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
+	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
+	private final Map<Integer, List<Buff>> buffsById = new LinkedHashMap<>();
+	private final Map<String, List<Buff>> buffsByName = new LinkedHashMap<>();
+	private final List<Buff> buffs = new ArrayList<>();
 
 	@Value("${spell.xls.file.path}")
 	private String xlsFilePath;
 
 	@Override
-	public Optional<Spell> getSpell(SpellId spellId, Integer rank) {
-		return Optional.ofNullable(spellById.get(new SpellIdAndRank(spellId, rank)));
-	}
+	public Optional<Spell> getSpellHighestRank(SpellId spellId, Phase phase) {
+		List<Spell> spells = getList(spellById, spellId, phase);
 
-	@Override
-	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level) {
-		return spellById.values().stream()
-				.filter(spell -> spell.getSpellId() == spellId)
-				.filter(spell -> spell.getRequiredLevel() <= level)
-				.max(Comparator.nullsFirst(Comparator.comparing(Spell::getRank)));
-	}
-
-	@Override
-	public List<Spell> getAllSpellRanks(SpellId spellId) {
-		return spellBySpellId.getOrDefault(spellId, List.of());
-	}
-
-	@Override
-	public Optional<Talent> getTalent(TalentId talentId, int rank) {
-		return Optional.ofNullable(talentById.get(new TalentIdAndRank(talentId, rank)));
-	}
-
-	@Override
-	public Optional<Talent> getTalent(int talentCalculatorPosition, int rank) {
-		TalentId talentId = talentIdByCalculatorPosition.get(talentCalculatorPosition);
-		if (talentId == null) {
+		if (spells.isEmpty()) {
 			return Optional.empty();
 		}
-		return getTalent(talentId, rank);
+
+		int maxRank = spells.stream().mapToInt(Spell::getRank).max().orElseThrow();
+
+		return spells.stream()
+				.filter(spell -> spell.getRank() == maxRank)
+				.collect(CollectionUtil.toOptionalSingleton());
 	}
 
 	@Override
-	public Optional<Buff> getBuff(int buffId) {
-		return Optional.ofNullable(buffsById.get(buffId));
+	public Optional<Talent> getTalent(CharacterClass characterClass, int talentCalculatorPosition, int rank, Phase phase) {
+		String key = getTalentKey(characterClass, talentCalculatorPosition, rank);
+
+		return getUnique(talentByClassByCalcPosByRank, key, phase);
 	}
 
 	@Override
-	public Optional<Buff> getHighestRankBuff(String name, int level) {
-		return buffsById.values().stream()
-				.filter(buff -> buff.getName().equals(name) && buff.getRequiredLevel() <= level)
-				.max(Comparator.comparingInt(Buff::getRequiredLevel));
+	public Optional<Buff> getBuff(int buffId, Phase phase) {
+		return getUnique(buffsById, buffId, phase);
 	}
 
 	@Override
-	public List<Buff> getAvailableBuffs() {
-		return new ArrayList<>(buffsById.values());
+	public Optional<Buff> getBuff(String buffName, Phase phase) {
+		return getUnique(buffsByName, buffName, phase);
 	}
 
 	@Override
-	public List<Buff> getBuffs(Collection<String> buffNames) {
-		return buffsById.values()
-						.stream()
-						.filter(buff -> buffNames.contains(buff.getName()))
-						.collect(Collectors.toList());
-	}
-
-	@Override
-	public List<Buff> getBuffs(BuffExclusionGroup exclusionGroup) {
-		return buffsById.values()
-						.stream()
-						.filter(buff -> buff.getExclusionGroup() == exclusionGroup)
-						.collect(Collectors.toList());
+	public List<Buff> getBuffs(Phase phase) {
+		return getList(buffs, phase);
 	}
 
 	@PostConstruct
@@ -107,26 +77,37 @@ public class SpellDataRepositoryImpl extends ExcelRepository implements SpellDat
 		spellExcelParser.readFromXls();
 	}
 
-	public void addTalent(Talent talent) {
-		talentIdByCalculatorPosition.put(talent.getTalentCalculatorPosition(), talent.getTalentId());
-
-		Talent existingTalent = talentById.get(talent.getId());
-
-		if (existingTalent == null) {
-			talentById.put(talent.getId(), talent);
-			return;
-		}
-
-		Talent combinedTalent = existingTalent.combineWith(talent);
-		talentById.put(combinedTalent.getId(), combinedTalent);
+	private String getTalentKey(CharacterClass characterClass, int talentCalculatorPosition, int rank) {
+		return characterClass + "#" + talentCalculatorPosition + "#" + rank;
 	}
 
 	public void addSpell(Spell spell) {
-		spellById.put(spell.getId(), spell);
-		spellBySpellId.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
+		spellById.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
+	}
+
+	public void addTalent(Talent talent) {
+		String key = getTalentKey(talent.getCharacterClass(), talent.getTalentCalculatorPosition(), talent.getRank());
+		List<Talent> list = talentByClassByCalcPosByRank.computeIfAbsent(key, x -> new ArrayList<>());
+
+		Optional<Talent> optionalExistingTalent = list.stream()
+				.filter(x -> x.getTimeRestriction().getVersions().equals(talent.getTimeRestriction().getVersions()))
+				.collect(CollectionUtil.toOptionalSingleton());
+
+		if (optionalExistingTalent.isEmpty()) {
+			list.add(talent);
+			return;
+		}
+
+		Talent existingTalent = optionalExistingTalent.orElseThrow();
+		Talent combinedTalent = existingTalent.combineWith(talent);
+
+		list.remove(existingTalent);
+		list.add(combinedTalent);
 	}
 
 	public void addBuff(Buff buff) {
-		buffsById.put(buff.getId(), buff);
+		buffsById.computeIfAbsent(buff.getId(), x -> new ArrayList<>()).add(buff);
+		buffsByName.computeIfAbsent(buff.getName(), x -> new ArrayList<>()).add(buff);
+		buffs.add(buff);
 	}
 }

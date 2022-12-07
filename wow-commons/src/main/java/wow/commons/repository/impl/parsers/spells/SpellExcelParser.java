@@ -11,6 +11,7 @@ import wow.commons.repository.impl.SpellDataRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -23,8 +24,8 @@ public class SpellExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	private final Map<SpellId, SpellInfo> spellInfoById = new EnumMap<>(SpellId.class);
-	private final Map<TalentId, TalentInfo> talentInfoById = new EnumMap<>(TalentId.class);
+	private final Map<SpellId, List<SpellInfo>> spellInfoById = new EnumMap<>(SpellId.class);
+	private final Map<TalentId, List<TalentInfo>> talentInfoById = new EnumMap<>(TalentId.class);
 
 	@Override
 	protected InputStream getExcelInputStream() {

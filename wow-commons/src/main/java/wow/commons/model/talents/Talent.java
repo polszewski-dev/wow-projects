@@ -3,11 +3,13 @@ package wow.commons.model.talents;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.util.AttributesBuilder;
+import wow.commons.util.CollectionUtil;
 
 /**
  * User: POlszewski
@@ -37,6 +39,10 @@ public class Talent extends ConfigurationElementWithAttributes<TalentIdAndRank> 
 
 	public int getTalentCalculatorPosition() {
 		return talentInfo.getTalentCalculatorPosition();
+	}
+
+	public CharacterClass getCharacterClass() {
+		return CollectionUtil.getUniqueResult(getCharacterRestriction().getCharacterClasses()).orElseThrow();
 	}
 
 	public Talent combineWith(Talent talent) {

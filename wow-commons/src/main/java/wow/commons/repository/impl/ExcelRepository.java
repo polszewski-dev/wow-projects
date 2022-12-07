@@ -25,4 +25,10 @@ public abstract class ExcelRepository {
 				.filter(x -> x.isAvailableDuring(phase))
 				.collect(Collectors.toList());
 	}
+
+	protected <T extends TimeRestricted> List<T> getList(List<T> list, Phase phase) {
+		return list.stream()
+				.filter(x -> x.isAvailableDuring(phase))
+				.collect(Collectors.toList());
+	}
 }

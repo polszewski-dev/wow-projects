@@ -14,7 +14,6 @@ import wow.commons.model.pve.Phase;
 import wow.commons.repository.CharacterRepository;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
-import wow.commons.util.TalentCalculatorUtil;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
@@ -111,7 +110,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		Build build = new Build(
 				buildId,
 				buildTemplate.getTalentLink(),
-				TalentCalculatorUtil.parseFromLink(buildTemplate.getTalentLink(), spellDataRepository),
+				spellService.getTalentsFromTalentLink(buildTemplate.getTalentLink(), characterInfo),
 				buildTemplate.getRole(),
 				null,
 				List.of(),
@@ -122,15 +121,15 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		characterInfo = characterInfo.setBuild(build);
 
 		return build
-				.setDamagingSpell(spellService.getAvailableSpellHighestRank(buildTemplate.getDamagingSpell(), characterInfo).orElseThrow())
-				.setRelevantSpells(spellService.getAvailableSpellsHighestRanks(buildTemplate.getRelevantSpells(), characterInfo))
+				.setDamagingSpell(spellService.getSpellHighestRank(buildTemplate.getDamagingSpell(), characterInfo))
+				.setRelevantSpells(spellService.getSpellHighestRanks(buildTemplate.getRelevantSpells(), characterInfo))
 				.setBuffSets(getBuffSets(buildTemplate, characterInfo));
 	}
 
 	private Map<BuffSetId, List<Buff>> getBuffSets(BuildTemplate buildTemplate, CharacterInfo characterInfo) {
 		Map<BuffSetId, List<Buff>> result = new EnumMap<>(BuffSetId.class);
 		for (var entry : buildTemplate.getBuffSets().entrySet()) {
-			List<Buff> buffs = spellService.getAvailableBuffs(entry.getValue(), characterInfo);
+			List<Buff> buffs = spellService.getBuffs(entry.getValue(), characterInfo);
 			result.put(entry.getKey(), buffs);
 		}
 		return result;
@@ -194,7 +193,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Buff buff = spellDataRepository.getBuff(buffId).orElseThrow();
+		Buff buff = spellDataRepository.getBuff(buffId, playerProfile.getPhase()).orElseThrow();
 
 		playerProfile.enableBuff(buff, enabled);
 		saveProfile(playerProfile);

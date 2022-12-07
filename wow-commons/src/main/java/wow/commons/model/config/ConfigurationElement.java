@@ -23,7 +23,7 @@ public abstract class ConfigurationElement<T> implements TimeRestricted, Charact
 	@NonNull
 	private final CharacterRestriction characterRestriction;
 
-	public int getRequiredLevel() {
+	public Integer getRequiredLevel() {
 		return characterRestriction.getLevel();
 	}
 

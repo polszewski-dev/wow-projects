@@ -82,7 +82,9 @@ class CharacterRepositoryTest extends RepositoryTest {
 		assertThat(buildTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(buildTemplate.getDamagingSpell()).isEqualTo(SHADOW_BOLT);
 		assertThat(buildTemplate.getRelevantSpells()).hasSameElementsAs(List.of(
-				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE, SEARING_PAIN, SEED_OF_CORRUPTION_DIRECT
+				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE,
+				UNSTABLE_AFFLICTION, SIPHON_LIFE, SEED_OF_CORRUPTION_DIRECT, DRAIN_LIFE,
+				CONFLAGRATE, INCINERATE, SEARING_PAIN, DEATH_COIL, HELLFIRE, RAIN_OF_FIRE
 		));
 		assertThat(buildTemplate.getActivePet()).isNull();
 		assertThat(buildTemplate.getBuffSets()).isEqualTo(Map.of(

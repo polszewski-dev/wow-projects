@@ -3,6 +3,7 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.SpellDataRepository;
 import wow.minmax.converter.ParametrizedConverter;
 import wow.minmax.model.persistent.BuffPO;
@@ -25,6 +26,7 @@ public class BuffPOConverter extends ParametrizedConverter<Buff, BuffPO> {
 
 	@Override
 	protected Buff doConvertBack(BuffPO value, Map<String, Object> params) {
-		return spellDataRepository.getBuff(value.getId()).orElseThrow();
+		Phase phase = (Phase)params.get(PlayerProfilePOConverter.PARAM_PHASE);
+		return spellDataRepository.getBuff(value.getId(), phase).orElseThrow();
 	}
 }

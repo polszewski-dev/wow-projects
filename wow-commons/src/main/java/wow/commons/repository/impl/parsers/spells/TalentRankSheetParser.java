@@ -1,34 +1,34 @@
 package wow.commons.repository.impl.parsers.spells;
 
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
-import wow.commons.model.talents.TalentIdAndRank;
-import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.spells.SpellId;
+import wow.commons.model.spells.SpellSchool;
+import wow.commons.model.talents.*;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class TalentRankSheetParser extends BenefitSheetParser {
+public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, TalentInfo> {
 	private final ExcelColumn colTalent = column("talent");
 	private final ExcelColumn colRank = column("rank");
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	private final Map<TalentId, TalentInfo> talentInfoById;
-
-	public TalentRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository, Map<TalentId, TalentInfo> talentInfoById) {
-		super(sheetName);
+	public TalentRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository, Map<TalentId, List<TalentInfo>> talentInfoById) {
+		super(sheetName, talentInfoById);
 		this.spellDataRepository = spellDataRepository;
-		this.talentInfoById = talentInfoById;
 	}
 
 	@Override
@@ -38,16 +38,19 @@ public class TalentRankSheetParser extends BenefitSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		Talent talent = getTalent();
-		spellDataRepository.addTalent(talent);
+		var talentId = colTalent.getEnum(TalentId::parse);
+
+		for (TalentInfo talentInfo : getCorrespondingElements(talentId)) {
+			Talent talent = getTalent(talentInfo);
+			spellDataRepository.addTalent(talent);
+		}
 	}
 
-	private Talent getTalent() {
+	private Talent getTalent(TalentInfo talentInfo) {
 		var talentId = colTalent.getEnum(TalentId::parse);
 		var rank = colRank.getInteger();
 
 		TalentIdAndRank id = new TalentIdAndRank(talentId, rank);
-		TalentInfo talentInfo = talentInfoById.get(talentId);
 		Description description = getDescription(talentId.getName()).merge(talentInfo.getDescription());
 		TimeRestriction timeRestriction = getTimeRestriction().merge(talentInfo.getTimeRestriction());
 		CharacterRestriction characterRestriction = getRestriction().merge(talentInfo.getCharacterRestriction());
@@ -62,5 +65,61 @@ public class TalentRankSheetParser extends BenefitSheetParser {
 				.toAttributes();
 
 		return attachConditions(attributesWithoutConditions);
+	}
+
+	private Attributes attachConditions(Attributes attributes) {
+		AttributesBuilder result = new AttributesBuilder();
+
+		for (AttributeCondition condition : getPossibleConditions()) {
+			result.addAttributes(attributes, condition);
+		}
+
+		return result.toAttributes();
+	}
+
+	private final ExcelColumn colTree = column("tree");
+	private final ExcelColumn colSchool = column("school");
+	private final ExcelColumn colSpell = column("spell");
+	private final ExcelColumn colPet = column("pet");
+
+	private List<AttributeCondition> getPossibleConditions() {
+		var talentTree = colTree.getEnum(TalentTree::parse, null);
+		var spellSchool = colSchool.getEnum(SpellSchool::parse, null);
+		var spells = colSpell.getSet(SpellId::parse);
+		var petTypes = colPet.getSet(PetType::parse);
+
+		if (talentTree != null) {
+			if (spellSchool == null && spells.isEmpty() && petTypes.isEmpty()) {
+				return List.of(AttributeCondition.of(talentTree));
+			} else {
+				throw new IllegalArgumentException();
+			}
+		}
+
+		if (spellSchool != null) {
+			if (spells.isEmpty() && petTypes.isEmpty()) {
+				return List.of(AttributeCondition.of(spellSchool));
+			} else {
+				throw new IllegalArgumentException();
+			}
+		}
+
+		if (!spells.isEmpty()) {
+			if (petTypes.isEmpty()) {
+				return spells.stream()
+						.map(AttributeCondition::of)
+						.collect(Collectors.toList());
+			} else {
+				throw new IllegalArgumentException();
+			}
+		}
+
+		if (!petTypes.isEmpty()) {
+			return petTypes.stream()
+					.map(AttributeCondition::of)
+					.collect(Collectors.toList());
+		}
+
+		return List.of(AttributeCondition.EMPTY);
 	}
 }

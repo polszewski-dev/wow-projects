@@ -6,15 +6,15 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.*;
 import wow.commons.repository.impl.SpellDataRepositoryImpl;
-import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class SpellRankSheetParser extends WowExcelSheetParser {
+public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, SpellInfo> {
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colRank = column("rank");
 	private final ExcelColumn colManaCost = column("mana cost");
@@ -35,12 +35,9 @@ public class SpellRankSheetParser extends WowExcelSheetParser {
 
 	private final SpellDataRepositoryImpl spellDataRepository;
 
-	private final Map<SpellId, SpellInfo> spellInfoById;
-
-	public SpellRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository, Map<SpellId, SpellInfo> spellInfoById) {
-		super(sheetName);
+	public SpellRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository, Map<SpellId, List<SpellInfo>> spellInfoById) {
+		super(sheetName, spellInfoById);
 		this.spellDataRepository = spellDataRepository;
-		this.spellInfoById = spellInfoById;
 	}
 
 	@Override
@@ -50,16 +47,19 @@ public class SpellRankSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		Spell spell = getSpell();
-		spellDataRepository.addSpell(spell);
+		var spellId = colSpell.getEnum(SpellId::parse);
+
+		for (SpellInfo spellInfo : getCorrespondingElements(spellId)) {
+			Spell spell = getSpell(spellInfo);
+			spellDataRepository.addSpell(spell);
+		}
 	}
 
-	private Spell getSpell() {
+	private Spell getSpell(SpellInfo spellInfo) {
 		var spellId = colSpell.getEnum(SpellId::parse);
 		var rank = colRank.getInteger(0);
 
 		SpellIdAndRank id = new SpellIdAndRank(spellId, rank);
-		SpellInfo spellInfo = spellInfoById.get(spellId);
 		Description description = getDescription(spellId.getName()).merge(spellInfo.getDescription());
 		TimeRestriction timeRestriction = getTimeRestriction().merge(spellInfo.getTimeRestriction());
 		CharacterRestriction characterRestriction = getRestriction().merge(spellInfo.getCharacterRestriction());
