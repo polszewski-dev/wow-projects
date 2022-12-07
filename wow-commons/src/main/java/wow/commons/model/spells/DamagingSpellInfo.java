@@ -3,7 +3,6 @@ package wow.commons.model.spells;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.Percent;
-import wow.commons.model.effects.EffectId;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package wow.commons.model.effects;
+package wow.commons.model.spells;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

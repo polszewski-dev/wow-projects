@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.Duration;
-import wow.commons.model.effects.EffectId;
 
 /**
  * User: POlszewski

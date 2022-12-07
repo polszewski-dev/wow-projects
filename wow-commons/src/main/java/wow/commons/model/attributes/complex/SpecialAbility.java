@@ -7,7 +7,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatEquivalentProvider;
 import wow.commons.model.attributes.complex.special.*;
-import wow.commons.model.effects.EffectId;
+import wow.commons.model.spells.EffectId;
 
 /**
  * User: POlszewski

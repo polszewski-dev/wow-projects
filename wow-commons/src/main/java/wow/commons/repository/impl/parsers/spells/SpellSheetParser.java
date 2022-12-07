@@ -3,7 +3,6 @@ package wow.commons.repository.impl.parsers.spells;
 import wow.commons.model.Percent;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.Restriction;
-import wow.commons.model.effects.EffectId;
 import wow.commons.model.spells.*;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;

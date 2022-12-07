@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.complex.special.ProcEvent.SPELL_CRIT;
-import static wow.commons.model.effects.EffectId.SHADOW_VULNERABILITY_20;
+import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
 import static wow.commons.model.spells.SpellId.CURSE_OF_THE_ELEMENTS;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.commons.model.spells.SpellSchool.*;

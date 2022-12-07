@@ -7,7 +7,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.effects.EffectId;
+import wow.commons.model.spells.EffectId;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

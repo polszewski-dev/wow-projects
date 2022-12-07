@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
-import wow.commons.model.effects.EffectId;
-import wow.commons.model.effects.EffectInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellIdAndRank;
@@ -33,7 +31,6 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	private final Map<SpellId, List<Spell>> spellBySpellId = new LinkedHashMap<>();
 	private final Map<TalentIdAndRank, Talent> talentById = new LinkedHashMap<>();
 	private final Map<Integer, TalentId> talentIdByCalculatorPosition = new LinkedHashMap<>();
-	private final Map<EffectId, EffectInfo> effectInfoByEffectId = new LinkedHashMap<>();
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
 
 	@Value("${spell.xls.file.path}")
@@ -69,11 +66,6 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 			return Optional.empty();
 		}
 		return getTalent(talentId, rank);
-	}
-
-	@Override
-	public Optional<EffectInfo> getEffectInfo(EffectId effectId) {
-		return Optional.ofNullable(effectInfoByEffectId.get(effectId));
 	}
 
 	@Override
@@ -132,10 +124,6 @@ public class SpellDataRepositoryImpl implements SpellDataRepository {
 	public void addSpell(Spell spell) {
 		spellById.put(spell.getId(), spell);
 		spellBySpellId.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
-	}
-
-	public void addEffectInfo(EffectInfo effectInfo) {
-		effectInfoByEffectId.put(effectInfo.getEffectId(), effectInfo);
 	}
 
 	public void addBuff(Buff buff) {

@@ -2,8 +2,6 @@ package wow.commons.repository;
 
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
-import wow.commons.model.effects.EffectId;
-import wow.commons.model.effects.EffectInfo;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -23,7 +21,6 @@ public interface SpellDataRepository {
 	List<Spell> getAllSpellRanks(SpellId spellId);
 	Optional<Talent> getTalent(TalentId talentId, int rank);
 	Optional<Talent> getTalent(int talentCalculatorPosition, int rank);
-	Optional<EffectInfo> getEffectInfo(EffectId effectId);
 	Optional<Buff> getBuff(int buffId);
 	Optional<Buff> getHighestRankBuff(String name, int level);
 	List<Buff> getAvailableBuffs();

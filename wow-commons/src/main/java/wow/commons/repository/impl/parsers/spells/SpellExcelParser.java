@@ -38,7 +38,6 @@ public class SpellExcelParser extends ExcelParser {
 				new SpellRankSheetParser("spell_ranks", spellDataRepository, spellInfoById),
 				new TalentSheetParser("talents", talentInfoById),
 				new TalentRankSheetParser("talent_ranks", spellDataRepository, talentInfoById),
-				new EffectSheetParser("effects", spellDataRepository),
 				new BuffSheetParser("buffs", spellDataRepository)
 		);
 	}

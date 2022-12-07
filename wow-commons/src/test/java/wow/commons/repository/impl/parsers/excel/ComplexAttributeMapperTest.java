@@ -12,7 +12,7 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.complex.special.*;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
-import wow.commons.model.effects.EffectId;
+import wow.commons.model.spells.EffectId;
 import wow.commons.model.talents.TalentTree;
 
 import static org.assertj.core.api.Assertions.assertThat;
