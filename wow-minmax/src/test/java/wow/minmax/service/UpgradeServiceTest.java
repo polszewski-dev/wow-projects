@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.character.BuildId;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.ItemSocket;
 import wow.minmax.model.Comparison;
-import wow.minmax.model.PlayerProfile;
 
 import java.util.List;
 
@@ -26,61 +24,61 @@ class UpgradeServiceTest extends ServiceTest {
 
 	@Test
 	void findUpgradesChest() {
-		profile.setEquipment(getEquipment());
-		profile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-		profile.getEquipment().set(null, ItemSlot.CHEST);
+		playerProfile.getEquipment().set(null, ItemSlot.CHEST);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.CHEST, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(playerProfile, ItemSlotGroup.CHEST, playerProfile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
 
 	@Test
 	void findUpgradesRings() {
-		profile.setEquipment(getEquipment());
-		profile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-		profile.getEquipment().set(null, ItemSlot.FINGER_1);
-		profile.getEquipment().set(null, ItemSlot.FINGER_2);
+		playerProfile.getEquipment().set(null, ItemSlot.FINGER_1);
+		playerProfile.getEquipment().set(null, ItemSlot.FINGER_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.FINGERS, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(playerProfile, ItemSlotGroup.FINGERS, playerProfile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
 
 	@Test
 	void findUpgradesTrinkets() {
-		profile.setEquipment(getEquipment());
-		profile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-		profile.getEquipment().set(null, ItemSlot.TRINKET_1);
-		profile.getEquipment().set(null, ItemSlot.TRINKET_2);
+		playerProfile.getEquipment().set(null, ItemSlot.TRINKET_1);
+		playerProfile.getEquipment().set(null, ItemSlot.TRINKET_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.TRINKETS, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(playerProfile, ItemSlotGroup.TRINKETS, playerProfile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
 
 	@Test
 	void findUpgradesWeapons() {
-		profile.setEquipment(getEquipment());
-		profile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-		profile.getEquipment().set(null, ItemSlot.MAIN_HAND);
-		profile.getEquipment().set(null, ItemSlot.OFF_HAND);
+		playerProfile.getEquipment().set(null, ItemSlot.MAIN_HAND);
+		playerProfile.getEquipment().set(null, ItemSlot.OFF_HAND);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.WEAPONS, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(playerProfile, ItemSlotGroup.WEAPONS, playerProfile.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(3);
 	}
 
 	@Test
 	void getBestItemVariant() {
-		profile.setEquipment(getEquipment());
-		profile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
+		playerProfile.setEquipment(getEquipment());
+		playerProfile.setBuffs(SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES);
 
-		EquippableItem item = underTest.getBestItemVariant(profile, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, profile.getDamagingSpell());
+		EquippableItem item = underTest.getBestItemVariant(playerProfile, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, playerProfile.getDamagingSpell());
 
 		assertThat(item.getEnchant()).isNotNull();
 
@@ -89,11 +87,11 @@ class UpgradeServiceTest extends ServiceTest {
 		}
 	}
 
-	PlayerProfile profile;
-
 	@BeforeEach
+	@Override
 	void setup() {
-		profile = getPlayerProfile(BuildId.DESTRO_SHADOW);
-		profile.setEquipment(getEquipment());
+		super.setup();
+
+		playerProfile.setEquipment(getEquipment());
 	}
 }

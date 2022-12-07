@@ -5,16 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.BuffSetId;
-import wow.commons.model.character.BuildId;
-import wow.commons.model.pve.Phase;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.EquippableItemPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
-import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -32,9 +28,6 @@ import static org.mockito.Mockito.when;
 class PlayerProfileServiceTest extends ServiceTest {
 	@Autowired
 	PlayerProfileService underTest;
-
-	@MockBean
-	PlayerProfileRepository playerProfileRepository;
 
 	@Autowired
 	PlayerProfilePOConverter playerProfilePOConverter;
@@ -54,26 +47,26 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void createPlayerProfile() {
-		PlayerProfile newProfile = underTest.createPlayerProfile("New", Phase.TBC_P1);
+		PlayerProfile newProfile = underTest.createPlayerProfile("New", PHASE);
 
 		assertThat(newProfile.getProfileName()).isEqualTo("New");
-		assertThat(newProfile.getPhase()).isEqualTo(Phase.TBC_P1);
+		assertThat(newProfile.getPhase()).isEqualTo(PHASE);
 
 		verify(playerProfileRepository).saveProfile(any());
 	}
 
 	@Test
 	void copyPlayerProfile() {
-		PlayerProfile copy = underTest.copyPlayerProfile(profile.getProfileId(), "Copy", Phase.TBC_P1);
+		PlayerProfile copy = underTest.copyPlayerProfile(profile.getProfileId(), "Copy", PHASE);
 
 		assertThat(copy.getProfileName()).isEqualTo("Copy");
-		assertThat(copy.getPhase()).isEqualTo(Phase.TBC_P1);
+		assertThat(copy.getPhase()).isEqualTo(PHASE);
 
 		verify(playerProfileRepository).saveProfile(any());
 	}
 
 	@Test
-	void getPlayerProfile() {
+	void getPlayerProfileById() {
 		PlayerProfile returnedProfile = underTest.getPlayerProfile(profile.getProfileId());
 
 		assertThat(returnedProfile.getProfileId()).isEqualTo(profile.getProfileId());
@@ -180,8 +173,10 @@ class PlayerProfileServiceTest extends ServiceTest {
 	PlayerProfilePO profile;
 
 	@BeforeEach
+	@Override
 	void setup() {
-		PlayerProfile playerProfile = getPlayerProfile(BuildId.DESTRO_SHADOW);
+		super.setup();
+
 		playerProfile.setEquipment(getEquipment());
 		playerProfile.setBuffs(BuffSetId.CONSUMES);
 

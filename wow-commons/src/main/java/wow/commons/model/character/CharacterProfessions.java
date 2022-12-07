@@ -14,6 +14,8 @@ import java.util.List;
 public class CharacterProfessions {
 	private final List<CharacterProfession> professions;
 
+	public static final CharacterProfessions EMPTY = new CharacterProfessions(List.of());
+
 	public CharacterProfessions(List<CharacterProfession> professions) {
 		this.professions = professions;
 		if (professions.size() > 2) {

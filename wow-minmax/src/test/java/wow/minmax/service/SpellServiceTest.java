@@ -3,7 +3,6 @@ package wow.minmax.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.buffs.Buff;
-import wow.commons.model.character.BuildId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 
@@ -30,7 +29,7 @@ class SpellServiceTest extends ServiceTest {
 
 	@Test
 	void getAvailableBuffs() {
-		List<Buff> buffs = underTest.getAvailableBuffs(getPlayerProfile(BuildId.DESTRO_SHADOW));
+		List<Buff> buffs = underTest.getAvailableBuffs(playerProfile);
 
 		List<String> names = buffs.stream().map(Buff::getName).collect(Collectors.toList());
 

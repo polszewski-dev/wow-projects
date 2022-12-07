@@ -168,8 +168,8 @@ class PlayerProfileControllerTest extends ControllerTest {
 		when(playerProfileService.changeGem(any(), any(), anyInt(), anyInt())).thenReturn(profile);
 		when(playerProfileService.enableBuff(any(), anyInt(), anyBoolean())).thenReturn(profile);
 
-		when(itemService.getItem(chest.getId())).thenReturn(chest);
-		when(itemService.getItem(trinket.getId())).thenReturn(trinket);
+		when(itemService.getItem(chest.getId(), profile.getPhase())).thenReturn(chest);
+		when(itemService.getItem(trinket.getId(), profile.getPhase())).thenReturn(trinket);
 		when(itemService.getItemsBySlot(any(), eq(ItemSlot.CHEST))).thenReturn(List.of(chest));
 		when(itemService.getItemsBySlot(any(), eq(ItemSlot.TRINKET_1))).thenReturn(List.of(trinket));
 		when(itemService.getItemsBySlot(any(), eq(ItemSlot.TRINKET_2))).thenReturn(List.of(trinket));

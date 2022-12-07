@@ -6,6 +6,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
+import wow.commons.model.pve.Phase;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  * Date: 2021-12-13
  */
 public interface ItemService {
-	Item getItem(int itemId);
+	Item getItem(int itemId, Phase phase);
 
 	List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot);
 

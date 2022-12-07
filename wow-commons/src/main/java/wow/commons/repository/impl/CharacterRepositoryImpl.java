@@ -18,7 +18,7 @@ import java.util.*;
  */
 @Repository
 @RequiredArgsConstructor
-public class CharacterRepositoryImpl implements CharacterRepository {
+public class CharacterRepositoryImpl extends ExcelRepository implements CharacterRepository {
 	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
 	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
 	private final Map<String, BuildTemplate> buildTemplateByIdByLevel = new HashMap<>();

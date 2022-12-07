@@ -8,6 +8,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
+import wow.commons.model.pve.Phase;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.ItemService;
 
@@ -32,8 +33,8 @@ public class CachedItemService implements ItemService {
 	private final Map<String, List<Gem>> getBestGemsCache = Collections.synchronizedMap(new HashMap<>());
 
 	@Override
-	public Item getItem(int itemId) {
-		return itemService.getItem(itemId);
+	public Item getItem(int itemId, Phase phase) {
+		return itemService.getItem(itemId, phase);
 	}
 
 	@Override

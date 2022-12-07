@@ -3,6 +3,7 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemDataRepository;
 import wow.minmax.converter.ParametrizedConverter;
 import wow.minmax.model.persistent.EnchantPO;
@@ -25,6 +26,7 @@ public class EnchantPOConverter extends ParametrizedConverter<Enchant, EnchantPO
 
 	@Override
 	protected Enchant doConvertBack(EnchantPO value, Map<String, Object> params) {
-		return itemDataRepository.getEnchant(value.getId()).orElseThrow();
+		Phase phase = (Phase)params.get(PlayerProfilePOConverter.PARAM_PHASE);
+		return itemDataRepository.getEnchant(value.getId(), phase).orElseThrow();
 	}
 }

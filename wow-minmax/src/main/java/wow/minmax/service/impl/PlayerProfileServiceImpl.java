@@ -153,7 +153,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Item item = itemDataRepository.getItem(itemId).orElseThrow();
+		Item item = itemDataRepository.getItem(itemId, playerProfile.getPhase()).orElseThrow();
 		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile, item, slot, playerProfile.getDamagingSpell());
 
 		playerProfile.getEquipment().set(bestItemVariant, slot);
@@ -165,7 +165,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Enchant enchant = itemDataRepository.getEnchant(enchantId).orElseThrow();
+		Enchant enchant = itemDataRepository.getEnchant(enchantId, playerProfile.getPhase()).orElseThrow();
 
 		playerProfile.getEquipment().get(slot).enchant(enchant);
 		saveProfile(playerProfile);
@@ -175,7 +175,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile changeGem(UUID profileId, ItemSlot slot, int socketNo, int gemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Gem gem = itemDataRepository.getGem(gemId).orElseThrow();
+		Gem gem = itemDataRepository.getGem(gemId, playerProfile.getPhase()).orElseThrow();
 
 		playerProfile.getEquipment().get(slot).insertGem(socketNo, gem);
 		saveProfile(playerProfile);
@@ -202,16 +202,21 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private void saveProfile(PlayerProfile playerProfile) {
-		PlayerProfilePO playerProfilePO = playerProfilePOConverter.convert(playerProfile, getConverterParams());
+		var converterParams = getConverterParams(playerProfile.getPhase());
+		PlayerProfilePO playerProfilePO = playerProfilePOConverter.convert(playerProfile, converterParams);
 
 		playerProfileRepository.saveProfile(playerProfilePO);
 	}
 
 	private PlayerProfile getPlayerProfile(PlayerProfilePO profile) {
-		return playerProfilePOConverter.convertBack(profile, getConverterParams());
+		var converterParams = getConverterParams(profile.getPhase());
+		return playerProfilePOConverter.convertBack(profile, converterParams);
 	}
 
-	private Map<String, Object> getConverterParams() {
-		return Map.of(PlayerProfilePOConverter.PARAM_PLAYER_PROFILE_SERVICE, this);
+	private Map<String, Object> getConverterParams(Phase phase) {
+		return Map.of(
+				PlayerProfilePOConverter.PARAM_PLAYER_PROFILE_SERVICE, this,
+				PlayerProfilePOConverter.PARAM_PHASE, phase
+		);
 	}
 }

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class SpellDataRepositoryImpl implements SpellDataRepository {
+public class SpellDataRepositoryImpl extends ExcelRepository implements SpellDataRepository {
 	private final Map<SpellIdAndRank, Spell> spellById = new LinkedHashMap<>();
 	private final Map<SpellId, List<Spell>> spellBySpellId = new LinkedHashMap<>();
 	private final Map<TalentIdAndRank, Talent> talentById = new LinkedHashMap<>();

@@ -59,7 +59,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Basic Item info is read correctly")
 	void basicItemInfoIsCorrect() {
-		Optional<Item> optionalItem = underTest.getItem(34364);
+		Optional<Item> optionalItem = underTest.getItem(34364, PHASE);
 
 		assertThat(optionalItem).isPresent();
 
@@ -86,7 +86,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Socket info is read correctly")
 	void socketInfoIsCorrect() {
-		Optional<Item> optionalItem = underTest.getItem(34364);
+		Optional<Item> optionalItem = underTest.getItem(34364, PHASE);
 
 		assertThat(optionalItem).isPresent();
 
@@ -104,7 +104,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Item stats are read correctly")
 	void itemStatsAreCorrect() {
-		Optional<Item> optionalItem = underTest.getItem(34364);
+		Optional<Item> optionalItem = underTest.getItem(34364, PHASE);
 
 		assertThat(optionalItem).isPresent();
 
@@ -130,7 +130,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Basic Gem info is read correctly")
 	void basicGemInfoIsCorrect() {
-		Optional<Gem> optionalGem = underTest.getGem(35760);
+		Optional<Gem> optionalGem = underTest.getGem(35760, PHASE);
 
 		assertThat(optionalGem).isPresent();
 
@@ -151,7 +151,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Normal Gem stats are read correctly")
 	void normalGemStatsAreCorrect() {
-		Optional<Gem> optionalGem = underTest.getGem(35760);
+		Optional<Gem> optionalGem = underTest.getGem(35760, PHASE);
 
 		assertThat(optionalGem).isPresent();
 
@@ -175,7 +175,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Meta Gem stats are read correctly")
 	void metaGemStatsAreCorrect() {
-		Optional<Gem> optionalGem = underTest.getGem(34220);
+		Optional<Gem> optionalGem = underTest.getGem(34220, PHASE);
 
 		assertThat(optionalGem).isPresent();
 
@@ -190,7 +190,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Enchant is read correctly")
 	void enchantIsCorrect() {
-		Optional<Enchant> optionalEnchant = underTest.getEnchant(2748);
+		Optional<Enchant> optionalEnchant = underTest.getEnchant(2748, PHASE);
 
 		assertThat(optionalEnchant).isPresent();
 

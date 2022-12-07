@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
@@ -15,7 +16,6 @@ import wow.commons.repository.impl.parsers.items.ItemExcelParser;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -23,21 +23,23 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class ItemDataRepositoryImpl implements ItemDataRepository {
+public class ItemDataRepositoryImpl extends ExcelRepository implements ItemDataRepository {
 	private final PveRepository pveRepository;
 
-	private final Map<Integer, Item> itemById = new TreeMap<>();
+	private final Map<Integer, List<Item>> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
 	private final Map<ItemType, List<Item>> itemByType = new EnumMap<>(ItemType.class);
 	private final Map<ItemSlot, List<Item>> itemBySlot = new EnumMap<>(ItemSlot.class);
 
 	private final Map<String, ItemSet> itemSetByName = new TreeMap<>();
 
-	private final Map<Integer, Enchant> enchantById = new TreeMap<>();
-	private final Map<String, Enchant> enchantByName = new TreeMap<>();
+	private final Map<Integer, List<Enchant>> enchantById = new TreeMap<>();
+	private final Map<String, List<Enchant>> enchantByName = new TreeMap<>();
+	private final Map<ItemType, List<Enchant>> enchantByItemType = new EnumMap<>(ItemType.class);
 
-	private final Map<Integer, Gem> gemById = new TreeMap<>();
+	private final Map<Integer, List<Gem>> gemById = new TreeMap<>();
 	private final Map<String, List<Gem>> gemByName = new TreeMap<>();
+	private final Map<SocketType, List<Gem>> gemBySocketType = new EnumMap<>(SocketType.class);
 
 	private final Map<Integer, TradedItem> tradedItemById = new TreeMap<>();
 
@@ -48,38 +50,18 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	private String itemDataXlsFilePath;
 
 	@Override
-	public Optional<Item> getItem(int itemId) {
-		return Optional.ofNullable(itemById.get(itemId));
+	public Optional<Item> getItem(int itemId, Phase phase) {
+		return getUnique(itemById, itemId, phase);
 	}
 
 	@Override
-	public Optional<Item> getItem(String name) {
-		return getUniqueByName(name, itemByName);
+	public Optional<Item> getItem(String name, Phase phase) {
+		return getUnique(itemByName, name, phase);
 	}
 
 	@Override
-	public Optional<Item> getItem(ItemLink itemLink) {
-		return getItem(itemLink.getItemId());
-	}
-
-	@Override
-	public Collection<Item> getAllItems() {
-		return Collections.unmodifiableCollection(itemById.values());
-	}
-
-	@Override
-	public List<Item> getItemsByType(ItemType itemType) {
-		return Collections.unmodifiableList(itemByType.getOrDefault(itemType, List.of()));
-	}
-
-	@Override
-	public List<Item> getItemsBySlot(ItemSlot itemSlot) {
-		return Collections.unmodifiableList(itemBySlot.getOrDefault(itemSlot, List.of()));
-	}
-
-	@Override
-	public Collection<ItemSet> getAllItemSets() {
-		return Collections.unmodifiableCollection(itemSetByName.values());
+	public List<Item> getItemsBySlot(ItemSlot itemSlot, Phase phase) {
+		return getList(itemBySlot, itemSlot, phase);
 	}
 
 	@Override
@@ -88,36 +70,33 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	@Override
-	public Optional<Enchant> getEnchant(int enchantId) {
-		return Optional.ofNullable(enchantById.get(enchantId));
+	public Optional<Enchant> getEnchant(int enchantId, Phase phase) {
+		return getUnique(enchantById, enchantId, phase);
 	}
 
 	@Override
-	public Optional<Enchant> getEnchant(String name) {
-		return Optional.ofNullable(enchantByName.get(name));
+	public Optional<Enchant> getEnchant(String name, Phase phase) {
+		return getUnique(enchantByName, name, phase);
 	}
 
 	@Override
-	public List<Enchant> getEnchants(ItemType itemType) {
-		return enchantById.values()
-				.stream()
-				.filter(enchant -> enchant.matches(itemType))
-				.collect(Collectors.toList());
+	public List<Enchant> getEnchants(ItemType itemType, Phase phase) {
+		return getList(enchantByItemType, itemType, phase);
 	}
 
 	@Override
-	public Optional<Gem> getGem(int gemId) {
-		return Optional.ofNullable(gemById.get(gemId));
+	public Optional<Gem> getGem(int gemId, Phase phase) {
+		return getUnique(gemById, gemId, phase);
 	}
 
 	@Override
-	public Optional<Gem> getGem(String name) {
-		return getUniqueByName(name, gemByName);
+	public Optional<Gem> getGem(String name, Phase phase) {
+		return getUnique(gemByName, name, phase);
 	}
 
 	@Override
-	public List<Gem> getAllGems() {
-		return new ArrayList<>(gemById.values());
+	public List<Gem> getGems(SocketType socketType, Phase phase) {
+		return getList(gemBySocketType, socketType, phase);
 	}
 
 	@Override
@@ -135,7 +114,7 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	public void addItem(Item item) {
-		itemById.put(item.getId(), item);
+		itemById.computeIfAbsent(item.getId(), x -> new ArrayList<>()).add(item);
 		itemByName.computeIfAbsent(item.getName(), x -> new ArrayList<>()).add(item);
 		itemByType.computeIfAbsent(item.getItemType(), x -> new ArrayList<>()).add(item);
 		for (ItemSlot itemSlot : item.getItemType().getItemSlots()) {
@@ -148,8 +127,13 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	public void addGem(Gem gem) {
-		gemById.put(gem.getId(), gem);
+		gemById.computeIfAbsent(gem.getId(), x -> new ArrayList<>()).add(gem);
 		gemByName.computeIfAbsent(gem.getName(), x -> new ArrayList<>()).add(gem);
+		for (SocketType socketType : SocketType.values()) {
+			if (socketType.accepts(gem.getColor())) {
+				gemBySocketType.computeIfAbsent(socketType, x -> new ArrayList<>()).add(gem);
+			}
+		}
 	}
 
 	public void addItemSet(ItemSet itemSet) {
@@ -157,19 +141,10 @@ public class ItemDataRepositoryImpl implements ItemDataRepository {
 	}
 
 	public void addEnchant(Enchant enchant) {
-		enchantById.put(enchant.getId(), enchant);
-		enchantByName.put(enchant.getName(), enchant);
-	}
-
-	private <T> Optional<T> getUniqueByName(String name, Map<String, List<T>> byName) {
-		List<T> result = byName.get(name);
-
-		if (result == null || result.isEmpty()) {
-			return Optional.empty();
+		enchantById.computeIfAbsent(enchant.getId(), x -> new ArrayList<>()).add(enchant);
+		enchantByName.computeIfAbsent(enchant.getName(), x -> new ArrayList<>()).add(enchant);
+		for (ItemType itemType : enchant.getItemTypes()) {
+			enchantByItemType.computeIfAbsent(itemType, x -> new ArrayList<>()).add(enchant);
 		}
-		if (result.size() == 1) {
-			return Optional.of(result.get(0));
-		}
-		throw new IllegalArgumentException("Multiple results for: " + name);
 	}
 }

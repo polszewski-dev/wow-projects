@@ -178,7 +178,7 @@ public class PlayerProfileController {
 	}
 
 	private void addItemOptions(EquippableItemDTO dto, PlayerProfile playerProfile) {
-		Item item = itemService.getItem(dto.getItem().getId());
+		Item item = itemService.getItem(dto.getItem().getId(), playerProfile.getPhase());
 		dto.setItemOptions(new ItemOptionsDTO(
 				getEnchants(item, playerProfile),
 				getAvailableGems(playerProfile, item)

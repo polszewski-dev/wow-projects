@@ -21,6 +21,7 @@ public class PlayerProfilePOConverter extends ParametrizedConverter<PlayerProfil
 	private final BuffPOConverter buffPOConverter;
 
 	public static final String PARAM_PLAYER_PROFILE_SERVICE = "playerProfileService";
+	public static final String PARAM_PHASE = "phase";
 
 	@Override
 	protected PlayerProfilePO doConvert(PlayerProfile playerProfile, Map<String, Object> params) {

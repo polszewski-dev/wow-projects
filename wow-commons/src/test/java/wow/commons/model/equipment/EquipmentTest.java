@@ -8,6 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.item.Gem;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemDataRepository;
 
 import java.util.List;
@@ -171,10 +172,10 @@ class EquipmentTest {
 	}
 
 	private Optional<Gem> getGem(String name) {
-		return itemDataRepository.getGem(name);
+		return itemDataRepository.getGem(name, Phase.TBC_P5);
 	}
 
 	private EquippableItem getItem(String name) {
-		return new EquippableItem(itemDataRepository.getItem(name).orElseThrow());
+		return new EquippableItem(itemDataRepository.getItem(name, Phase.TBC_P5).orElseThrow());
 	}
 }

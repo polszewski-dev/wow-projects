@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class PveRepositoryImpl implements PveRepository {
+public class PveRepositoryImpl extends ExcelRepository implements PveRepository {
 	private final Map<Integer, Zone> zoneById = new HashMap<>();
 	private final Map<String, Zone> zoneByName = new TreeMap<>();
 	private final Map<Integer, Boss> bossById = new TreeMap<>();

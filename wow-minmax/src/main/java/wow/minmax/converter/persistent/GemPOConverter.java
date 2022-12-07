@@ -3,6 +3,7 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Gem;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemDataRepository;
 import wow.minmax.converter.ParametrizedConverter;
 import wow.minmax.model.persistent.GemPO;
@@ -25,6 +26,7 @@ public class GemPOConverter extends ParametrizedConverter<Gem, GemPO> {
 
 	@Override
 	protected Gem doConvertBack(GemPO value, Map<String, Object> params) {
-		return itemDataRepository.getGem(value.getId()).orElseThrow();
+		Phase phase = (Phase)params.get(PlayerProfilePOConverter.PARAM_PHASE);
+		return itemDataRepository.getGem(value.getId(), phase).orElseThrow();
 	}
 }

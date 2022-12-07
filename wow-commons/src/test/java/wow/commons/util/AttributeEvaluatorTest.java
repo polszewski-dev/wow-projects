@@ -19,6 +19,7 @@ import wow.commons.repository.ItemDataRepository;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.pve.Phase.TBC_P5;
 
 /**
  * User: POlszewski
@@ -95,14 +96,14 @@ class AttributeEvaluatorTest {
 	}
 
 	private Optional<Gem> getGem(String name) {
-		return itemDataRepository.getGem(name);
+		return itemDataRepository.getGem(name, TBC_P5);
 	}
 
 	private EquippableItem getItem(String name) {
-		return new EquippableItem(itemDataRepository.getItem(name).orElseThrow());
+		return new EquippableItem(itemDataRepository.getItem(name, TBC_P5).orElseThrow());
 	}
 
 	private Enchant getEnchant(String name) {
-		return itemDataRepository.getEnchant(name).orElseThrow();
+		return itemDataRepository.getEnchant(name, TBC_P5).orElseThrow();
 	}
 }

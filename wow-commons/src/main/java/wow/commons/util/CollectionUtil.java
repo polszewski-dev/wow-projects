@@ -1,6 +1,8 @@
 package wow.commons.util;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -52,6 +54,34 @@ public final class CollectionUtil {
 		return getCommonCriteria(first, second)
 				.orElseThrow(() -> new IllegalArgumentException(
 						String.format("Both lists have no common elements: first=%s, second=%s", first, second)));
+	}
+
+	public static <T> Collector<T, ?, T> toSingleton() {
+		return Collectors.collectingAndThen(
+				Collectors.toList(),
+				list -> {
+					if (list.size() != 1) {
+						throw new IllegalArgumentException("" + list);
+					}
+					return list.get(0);
+				}
+		);
+	}
+
+	public static <T> Collector<T, ?, Optional<T>> toOptionalSingleton() {
+		return Collectors.collectingAndThen(
+				Collectors.toList(),
+				list -> {
+					switch (list.size()) {
+						case 0:
+							return Optional.empty();
+						case 1:
+							return Optional.of(list.get(0));
+						default:
+							throw new IllegalArgumentException("" + list);
+					}
+				}
+		);
 	}
 
 	private CollectionUtil() {}
