@@ -26,7 +26,7 @@ public enum SpellId {
 	CURSE_OF_THE_ELEMENTS("Curse of the Elements"),
 	CURSE_OF_DOOM("Curse of Doom"),
 	CURSE_OF_EXHAUSTION("Curse of Exhaustion"),
-	CURSE_OF_SHADOWS("Curse of Shadows"),
+	CURSE_OF_SHADOWS("Curse of Shadow"),
 	CURSE_OF_WEAKNESS("Curse of Weakness"),
 	DARK_PACT("Dark Pact"),
 	DEATH_COIL("Death Coil"),
