@@ -10,15 +10,14 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.BuffSetId;
 import wow.commons.model.character.BuildId;
 import wow.commons.model.pve.Phase;
-import wow.minmax.converter.persistent.BuffPOConverter;
-import wow.minmax.converter.persistent.CharacterProfessionPOConverter;
-import wow.minmax.converter.persistent.EquipmentPOConverter;
+import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.EquippableItemPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,13 +37,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 	PlayerProfileRepository playerProfileRepository;
 
 	@Autowired
-	EquipmentPOConverter equipmentPOConverter;
-
-	@Autowired
-	CharacterProfessionPOConverter characterProfessionPOConverter;
-
-	@Autowired
-	BuffPOConverter buffPOConverter;
+	PlayerProfilePOConverter playerProfilePOConverter;
 
 	@Captor
 	ArgumentCaptor<PlayerProfilePO> profilePOCaptor;
@@ -192,20 +185,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		playerProfile.setEquipment(getEquipment());
 		playerProfile.setBuffs(BuffSetId.CONSUMES);
 
-		profile = new PlayerProfilePO(
-				playerProfile.getProfileId(),
-				playerProfile.getProfileName(),
-				playerProfile.getCharacterClass(),
-				playerProfile.getRace(),
-				playerProfile.getLevel(),
-				playerProfile.getBuildId(),
-				characterProfessionPOConverter.convertList(playerProfile.getProfessions()),
-				playerProfile.getEnemyType(),
-				playerProfile.getPhase(),
-				equipmentPOConverter.convert(playerProfile.getEquipment()),
-				buffPOConverter.convertList(playerProfile.getBuffs()),
-				playerProfile.getLastModified()
-		);
+		profile = playerProfilePOConverter.convert(playerProfile, Map.of());
 
 		when(playerProfileRepository.getPlayerProfileList()).thenReturn(List.of(profile));
 		when(playerProfileRepository.getPlayerProfile(playerProfile.getProfileId())).thenReturn(Optional.of(profile));

@@ -2,7 +2,6 @@ package wow.minmax.converter;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,21 +35,9 @@ public abstract class Converter<F, T> {
 					.collect(Collectors.toList());
 	}
 
-	public final <K> Map<K, T> convertMap(Map<K, F> map) {
-		return map.entrySet()
-				  .stream()
-				  .collect(Collectors.toMap(Map.Entry::getKey, e -> convert(e.getValue())));
-	}
-
 	public final List<F> convertBackList(List<T> list) {
 		return list.stream()
 				   .map(this::convertBack)
 				   .collect(Collectors.toList());
-	}
-
-	public final <K> Map<K, F> convertBackMap(Map<K, T> map) {
-		return map.entrySet()
-				  .stream()
-				  .collect(Collectors.toMap(Map.Entry::getKey, e -> convertBack(e.getValue())));
 	}
 }

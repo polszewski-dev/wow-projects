@@ -16,9 +16,7 @@ import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.SpellDataRepository;
 import wow.commons.util.TalentCalculatorUtil;
 import wow.minmax.config.ProfileConfig;
-import wow.minmax.converter.persistent.BuffPOConverter;
-import wow.minmax.converter.persistent.CharacterProfessionPOConverter;
-import wow.minmax.converter.persistent.EquipmentPOConverter;
+import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -46,10 +44,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final SpellDataRepository spellDataRepository;
 	private final CharacterRepository characterRepository;
 	private final ProfileConfig profileConfig;
-
-	private final EquipmentPOConverter equipmentPOConverter;
-	private final CharacterProfessionPOConverter characterProfessionPOConverter;
-	private final BuffPOConverter buffPOConverter;
+	private final PlayerProfilePOConverter playerProfilePOConverter;
 
 	@Override
 	public List<PlayerProfile> getPlayerProfileList() {
@@ -207,44 +202,16 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private void saveProfile(PlayerProfile playerProfile) {
-		PlayerProfilePO playerProfilePO = getPlayerProfilePO(playerProfile);
+		PlayerProfilePO playerProfilePO = playerProfilePOConverter.convert(playerProfile, getConverterParams());
 
 		playerProfileRepository.saveProfile(playerProfilePO);
 	}
 
-	private PlayerProfilePO getPlayerProfilePO(PlayerProfile playerProfile) {
-		return new PlayerProfilePO(
-				playerProfile.getProfileId(),
-				playerProfile.getProfileName(),
-				playerProfile.getCharacterClass(),
-				playerProfile.getRace(),
-				playerProfile.getLevel(),
-				playerProfile.getBuild().getBuildId(),
-				characterProfessionPOConverter.convertList(playerProfile.getProfessions()),
-				playerProfile.getEnemyType(),
-				playerProfile.getPhase(),
-				equipmentPOConverter.convert(playerProfile.getEquipment()),
-				buffPOConverter.convertList(playerProfile.getBuffs()),
-				playerProfile.getLastModified()
-		);
+	private PlayerProfile getPlayerProfile(PlayerProfilePO profile) {
+		return playerProfilePOConverter.convertBack(profile, getConverterParams());
 	}
 
-	private PlayerProfile getPlayerProfile(PlayerProfilePO value) {
-		PlayerProfile playerProfile = createTemporaryPlayerProfile(
-				value.getProfileId(),
-				value.getProfileName(),
-				value.getCharacterClass(),
-				value.getRace(),
-				value.getLevel(),
-				value.getBuildId(),
-				characterProfessionPOConverter.convertBackList(value.getProfessions()),
-				value.getEnemyType(),
-				value.getPhase()
-		);
-
-		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment()));
-		playerProfile.setBuffs(buffPOConverter.convertBackList(value.getBuffs()));
-		playerProfile.setLastModified(value.getLastModified());
-		return playerProfile;
+	private Map<String, Object> getConverterParams() {
+		return Map.of(PlayerProfilePOConverter.PARAM_PLAYER_PROFILE_SERVICE, this);
 	}
 }
