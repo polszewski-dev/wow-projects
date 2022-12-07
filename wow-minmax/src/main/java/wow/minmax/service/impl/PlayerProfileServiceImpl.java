@@ -48,7 +48,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public List<PlayerProfile> getPlayerProfileList() {
 		return playerProfileRepository.getPlayerProfileList().stream()
-				.filter(profile -> profile.getPhase().getGameVersion() == profileConfig.getGameVersion())
 				.map(this::getPlayerProfile)
 				.collect(Collectors.toList());
 	}

@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import wow.commons.model.character.*;
 import wow.commons.model.professions.Profession;
-import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class ProfileConfig {
-	private GameVersion gameVersion;
 	private CharacterClass defaultClass;
 	private Race defaultRace;
 	private CreatureType defaultEnemyType;
