@@ -31,8 +31,8 @@ public class TradedItemParser extends AbstractTooltipParser {
 				ruleDroppedBy,
 				ruleDropChance,
 				ruleQuote,
+				ruleRightClickToRead,
 				Rule.exact("This Item Begins a Quest", () -> this.itemType = ItemType.QUEST),
-				Rule.exact("<Right Click to Read>", () -> {}),
 		};
 	}
 

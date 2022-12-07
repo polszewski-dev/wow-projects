@@ -101,6 +101,8 @@ public abstract class AbstractTooltipParser {
 			prefix("Sell Price: ", x -> this.sellPrice = parseSellPrice(x));
 	protected final Rule ruleQuote = Rule
 			.matches("\".*\"", params -> {});
+	protected final Rule ruleRightClickToRead = Rule
+			.exact("<Right Click to Read>", () -> {});
 
 	protected AbstractTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion, StatPatternRepository statPatternRepository) {
 		this.itemDetailsAndTooltip = itemDetailsAndTooltip;

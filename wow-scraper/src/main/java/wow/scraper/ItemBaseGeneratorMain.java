@@ -1,6 +1,7 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
+import wow.commons.model.pve.GameVersion;
 import wow.scraper.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
@@ -11,7 +12,10 @@ import wow.scraper.parsers.tooltip.ItemTooltipParser;
 import wow.scraper.parsers.tooltip.TradedItemParser;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -51,18 +55,22 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 
 	private void addEquipment(ItemBaseExcelBuilder builder) throws IOException {
 		for (WowheadItemCategory category : WowheadItemCategory.equipment()) {
-			export(
-					category,
-					itemDetailsAndTooltip -> new ItemTooltipParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
-					builder::add
-			);
+			addItems(builder, category);
 		}
+	}
+
+	private void addItems(ItemBaseExcelBuilder builder, WowheadItemCategory category) throws IOException {
+		export(
+				category,
+				(itemDetailsAndTooltip, gameVersion) -> new ItemTooltipParser(itemDetailsAndTooltip, gameVersion, getStatPatternRepository()),
+				builder::add
+		);
 	}
 
 	private void addGems(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.GEMS,
-				itemDetailsAndTooltip -> new GemTooltipParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
+				(itemDetailsAndTooltip, gameVersion) -> new GemTooltipParser(itemDetailsAndTooltip, gameVersion, getStatPatternRepository()),
 				builder::add
 		);
 	}
@@ -70,7 +78,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addItemsStartingQuest(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.QUEST,
-				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
+				(itemDetailsAndTooltip, gameVersion) -> new TradedItemParser(itemDetailsAndTooltip, gameVersion, getStatPatternRepository()),
 				builder::add
 		);
 	}
@@ -78,30 +86,53 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	private void addTokens(ItemBaseExcelBuilder builder) throws IOException {
 		export(
 				WowheadItemCategory.TOKENS,
-				itemDetailsAndTooltip -> new TradedItemParser(itemDetailsAndTooltip, getGameVersion(), getStatPatternRepository()),
+				(itemDetailsAndTooltip, gameVersion) -> new TradedItemParser(itemDetailsAndTooltip, gameVersion, getStatPatternRepository()),
 				builder::add
 		);
 	}
 
 	private interface ParserCreator<T extends AbstractTooltipParser> {
-		T create(JsonItemDetailsAndTooltip itemDetailsAndTooltip);
+		T create(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion);
 	}
 
 	private interface ParsedDataExporter<T extends AbstractTooltipParser> {
 		void export(T parser);
 	}
 
-	private <T extends AbstractTooltipParser> void export(WowheadItemCategory category, ParserCreator<T> parserCreator, ParsedDataExporter<T> parsedDataExporter) throws IOException {
-		List<Integer> itemIds = getItemDetailRepository().getItemIds(getGameVersion(), category);
-
-		for (Integer itemId : itemIds) {
-			var itemDetailsAndTooltip = getItemDetailRepository().getDetail(getGameVersion(), category, itemId).orElseThrow();
-			var parser = parserCreator.create(itemDetailsAndTooltip);
-
-			parser.parse();
-			parsedDataExporter.export(parser);
-
-			log.info("Added {} {}", parser.getItemId(), parser.getName());
+	private <T extends AbstractTooltipParser> void export(
+			WowheadItemCategory category,
+			ParserCreator<T> parserCreator,
+			ParsedDataExporter<T> parsedDataExporter
+	) throws IOException {
+		for (Integer itemId : getItemIds(category)) {
+			for (GameVersion gameVersion : GameVersion.values()) {
+				getItemDetailRepository()
+						.getDetail(gameVersion, category, itemId)
+						.ifPresent(value -> export(value, gameVersion, parserCreator, parsedDataExporter));
+			}
 		}
+	}
+
+	private <T extends AbstractTooltipParser> void export(
+			JsonItemDetailsAndTooltip itemDetailsAndTooltip,
+			GameVersion gameVersion,
+			ParserCreator<T> parserCreator,
+			ParsedDataExporter<T> parsedDataExporter
+	) {
+		var parser = parserCreator.create(itemDetailsAndTooltip, gameVersion);
+
+		parser.parse();
+		parsedDataExporter.export(parser);
+
+		log.info("Added {} {} [{}]", parser.getItemId(), parser.getName(), gameVersion);
+	}
+
+	private List<Integer> getItemIds(WowheadItemCategory category) {
+		return Stream.of(GameVersion.values())
+				.map(gameVersion -> getItemDetailRepository().getItemIds(gameVersion, category))
+				.flatMap(Collection::stream)
+				.distinct()
+				.sorted()
+				.collect(Collectors.toList());
 	}
 }

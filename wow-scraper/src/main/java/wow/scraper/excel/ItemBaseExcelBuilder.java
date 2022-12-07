@@ -188,7 +188,8 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader(UNIQUE);
 		setHeader(ITEM_LEVEL);
 		setHeader(SOURCE, 20);
-		setHeader(PHASE);
+		setHeader(REQ_VERSION);
+		setHeader(REQ_PHASE);
 	}
 
 	private void writeCommonColumns(AbstractTooltipParser parser, String requiredFactionName) {
@@ -201,6 +202,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.isUnique() ? 1 : 0);
 		setValue(parser.getItemLevel());
 		setValue(parseSource(requiredFactionName, parser));
+		setValue(parser.getGameVersion());
 		setValue(parser.getPhase());
 	}
 
