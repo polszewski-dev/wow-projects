@@ -35,14 +35,18 @@ public class SpellDataRepositoryImpl extends ExcelRepository implements SpellDat
 	private String xlsFilePath;
 
 	@Override
-	public Optional<Spell> getSpellHighestRank(SpellId spellId, Phase phase) {
+	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level, Phase phase) {
 		List<Spell> spells = getList(spellById, spellId, phase);
 
 		if (spells.isEmpty()) {
 			return Optional.empty();
 		}
 
-		int maxRank = spells.stream().mapToInt(Spell::getRank).max().orElseThrow();
+		int maxRank = spells.stream()
+				.filter(spell -> spell.getRequiredLevel() <= level)
+				.mapToInt(Spell::getRank)
+				.max()
+				.orElseThrow();
 
 		return spells.stream()
 				.filter(spell -> spell.getRank() == maxRank)

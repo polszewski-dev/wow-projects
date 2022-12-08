@@ -11,10 +11,7 @@ import wow.commons.model.talents.TalentId;
 import wow.commons.repository.SpellDataRepository;
 import wow.minmax.service.SpellService;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,23 +25,26 @@ public class SpellServiceImpl implements SpellService {
 
 	@Override
 	public Spell getSpellHighestRank(SpellId spellId, CharacterInfo characterInfo) {
-		return spellDataRepository.getSpellHighestRank(spellId, characterInfo.getPhase()).orElseThrow();
+		return getSpellHighestRankFilteredByCharacterInfo(spellId, characterInfo).orElseThrow();
 	}
 
 	@Override
 	public List<Spell> getSpellHighestRanks(List<SpellId> spellIds, CharacterInfo characterInfo) {
 		return spellIds.stream()
-				.map(spellId -> spellDataRepository.getSpellHighestRank(spellId, characterInfo.getPhase()))
-				.map(optionalSpell -> optionalSpell.orElse(null))
+				.map(spellId -> getSpellHighestRankFilteredByCharacterInfo(spellId, characterInfo).orElse(null))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
+	}
+
+	private Optional<Spell> getSpellHighestRankFilteredByCharacterInfo(SpellId spellId, CharacterInfo characterInfo) {
+		return spellDataRepository.getSpellHighestRank(spellId, characterInfo.getLevel(), characterInfo.getPhase())
+				.filter(spell -> spell.isAvailableTo(characterInfo));
 	}
 
 	@Override
 	public List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo) {
 		return buffNames.stream()
-				.map(buffName -> spellDataRepository.getBuff(buffName, characterInfo.getPhase()))
-				.map(optionalBuff -> optionalBuff.orElse(null))
+				.map(buffName -> spellDataRepository.getBuff(buffName, characterInfo.getPhase()).orElse(null))
 				.filter(Objects::nonNull)
 				.filter(buff -> buff.isAvailableTo(characterInfo))
 				.collect(Collectors.toList());

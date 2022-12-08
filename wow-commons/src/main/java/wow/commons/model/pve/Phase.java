@@ -42,4 +42,8 @@ public enum Phase {
 	public boolean isEarlierOrTheSame(Phase phase) {
 		return this.compareTo(phase) <= 0;
 	}
+
+	public boolean isTheSameVersion(Phase phase) {
+		return this.gameVersion == phase.getGameVersion();
+	}
 }

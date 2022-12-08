@@ -2,7 +2,10 @@ package wow.commons.repository;
 
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -14,7 +17,9 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.config.ConfigurationElement;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 
 import java.util.List;
@@ -23,12 +28,12 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.complex.special.ProcEvent.SPELL_CRIT;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_CRIT_PCT;
 import static wow.commons.model.character.CharacterClass.WARLOCK;
 import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
-import static wow.commons.model.spells.SpellId.CURSE_OF_THE_ELEMENTS;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spells.SpellId.*;
 import static wow.commons.model.spells.SpellSchool.*;
-import static wow.commons.model.talents.TalentId.IMPROVED_SHADOW_BOLT;
+import static wow.commons.model.talents.TalentId.*;
 import static wow.commons.model.talents.TalentTree.DESTRUCTION;
 
 /**
@@ -42,7 +47,7 @@ class SpellDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("SpellInfo is read correctly")
 	void spellInfoIsCorrect() {
-		Optional<Spell> optionalSpell = underTest.getSpellHighestRank(SHADOW_BOLT, PHASE);
+		Optional<Spell> optionalSpell = underTest.getSpellHighestRank(SHADOW_BOLT, 70, Phase.TBC_P5);
 
 		assertThat(optionalSpell).isPresent();
 
@@ -55,7 +60,10 @@ class SpellDataRepositoryTest extends RepositoryTest {
 		assertThat(spell.getCoeffDot()).isEqualTo(Percent.ZERO);
 		assertThat(spell.getSpellInfo().getCooldown()).isNull();
 		assertThat(spell.getSpellInfo().isIgnoresGCD()).isFalse();
+		assertThat(spell.getCharacterRestriction().getCharacterClasses()).hasSameElementsAs(List.of(WARLOCK));
+		assertThat(spell.getCharacterRestriction().getRaces()).isEmpty();
 		assertThat(spell.getCharacterRestriction().getTalentId()).isNull();
+		assertThat(spell.getTimeRestriction().getVersions()).isEmpty();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().isBolt()).isTrue();
 		assertThat(spell.getSpellInfo().getConversion()).isNull();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getRequiredSpellEffect()).isNull();
@@ -64,10 +72,57 @@ class SpellDataRepositoryTest extends RepositoryTest {
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getDotScheme()).isEmpty();
 	}
 
+	@Nested
+	@DisplayName("Spell damage is correct")
+	class SpellDamage {
+		@ParameterizedTest(name = "spell = {0}, phase = {1}")
+		@CsvSource({
+			"SHADOW_BOLT, VANILLA_P1, 9, 455, 507",
+			"SHADOW_BOLT, VANILLA_P5, 10, 482, 538",
+			"SHADOW_BOLT, TBC_P1, 11, 544, 607",
+			"IMMOLATE, VANILLA_P1, 7, 258, 258",
+			"IMMOLATE, VANILLA_P5, 8, 279, 279",
+			"IMMOLATE, TBC_P1, 9, 332, 332",
+		})
+		void vanillaP1(SpellId shadowBolt, Phase phase, int rank, int min, int max) {
+			int level = phase.getGameVersion().getMaxLevel();
+
+			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phase).orElseThrow();
+
+			assertThat(spell.getRank()).isEqualTo(rank);
+			assertThat(spell.getMinDmg()).isEqualTo(min);
+			assertThat(spell.getMaxDmg()).isEqualTo(max);
+		}
+
+		@ParameterizedTest(name = "spell = {0}, phase = {1}")
+		@CsvSource({
+				"CURSE_OF_AGONY, VANILLA_P1, 6, 1044",
+				"CURSE_OF_AGONY, VANILLA_P5, 6, 1044",
+				"CURSE_OF_AGONY, TBC_P1, 7, 1356",
+				"CURSE_OF_DOOM, VANILLA_P1, 1, 3200",
+				"CURSE_OF_DOOM, VANILLA_P5, 1, 3200",
+				"CURSE_OF_DOOM, TBC_P1, 2, 4200",
+				"CORRUPTION, VANILLA_P1, 6, 666",
+				"CORRUPTION, VANILLA_P5, 7, 822",
+				"CORRUPTION, TBC_P1, 8, 900",
+				"IMMOLATE, VANILLA_P1, 7, 485",
+				"IMMOLATE, VANILLA_P5, 8, 510",
+				"IMMOLATE, TBC_P1, 9, 615",
+		})
+		void vanillaP1(SpellId shadowBolt, Phase phase, int rank, int dot) {
+			int level = phase.getGameVersion().getMaxLevel();
+
+			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phase).orElseThrow();
+
+			assertThat(spell.getRank()).isEqualTo(rank);
+			assertThat(spell.getDotDmg()).isEqualTo(dot);
+		}
+	}
+
 	@Test
 	@DisplayName("Talent is read correctly")
 	void talentIsCorrect() {
-		Optional<Talent> optionalTalent = underTest.getTalent(WARLOCK, 44, 5, PHASE);
+		Optional<Talent> optionalTalent = underTest.getTalent(WARLOCK, 44, 5, Phase.TBC_P5);
 
 		assertThat(optionalTalent).isPresent();
 
@@ -93,10 +148,43 @@ class SpellDataRepositoryTest extends RepositoryTest {
 		assertThat(ability.getStacks()).isEqualTo(4);
 	}
 
+	@Nested
+	@DisplayName("Talent attributes are correct")
+	class TalentAttributes {
+		@ParameterizedTest(name = "{0}")
+		@CsvSource({
+				"VANILLA_P1, 45, 1, 5, 2",
+				"TBC_P1, 54, 1, 3, 4",
+		})
+		void talent(Phase phase, int position, int rank, int maxRank, int statValue) {
+			Talent talent = underTest.getTalent(WARLOCK, position, rank, phase).orElseThrow();
+
+			assertThat(talent.getTalentId()).isEqualTo(IMPROVED_SEARING_PAIN);
+			assertThat(talent.getRank()).isEqualTo(rank);
+			assertThat(talent.getMaxRank()).isEqualTo(maxRank);
+
+			assertThat(talent.getDouble(SPELL_CRIT_PCT, AttributeCondition.of(SEARING_PAIN))).isEqualTo(statValue);
+		}
+	}
+
+	@Test
+	@DisplayName("Talent with multiline benefit attributes are correct")
+	void talentWithMultilineBenefit() {
+		Talent talent = underTest.getTalent(WARLOCK, 46, 5, Phase.TBC_P5).orElseThrow();
+
+		assertThat(talent.getTalentId()).isEqualTo(BANE);
+		assertThat(talent.getRank()).isEqualTo(5);
+		assertThat(talent.getMaxRank()).isEqualTo(5);
+
+		assertThat(talent.getCastTimeReduction(SHADOW_BOLT).getSeconds()).isEqualTo(0.5);
+		assertThat(talent.getCastTimeReduction(IMMOLATE).getSeconds()).isEqualTo(0.5);
+		assertThat(talent.getCastTimeReduction(SOUL_FIRE).getSeconds()).isEqualTo(2);
+	}
+
 	@Test
 	@DisplayName("Buff is read correctly")
 	void buffIsCorrect() {
-		Optional<Buff> optionalBuff = underTest.getBuff(27228, PHASE);
+		Optional<Buff> optionalBuff = underTest.getBuff(27228, Phase.TBC_P5);
 
 		assertThat(optionalBuff).isPresent();
 
@@ -118,9 +206,9 @@ class SpellDataRepositoryTest extends RepositoryTest {
 	}
 
 	@Test
-	@DisplayName("Buff by id is read correctly")
+	@DisplayName("Buff by id name read correctly")
 	void buffByIdIsCorrect() {
-		Optional<Buff> optionalBuff = underTest.getBuff(27228, PHASE);
+		Optional<Buff> optionalBuff = underTest.getBuff("Curse of the Elements", Phase.TBC_P5);
 
 		assertThat(optionalBuff).isPresent();
 
@@ -133,7 +221,7 @@ class SpellDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Buffs are read correctly")
 	void bufByNamefIsCorrect() {
-		List<String> buffNames = underTest.getBuffs(PHASE).stream()
+		List<String> buffNames = underTest.getBuffs(Phase.TBC_P5).stream()
 				.map(ConfigurationElement::getName)
 				.collect(Collectors.toList());
 
@@ -161,6 +249,21 @@ class SpellDataRepositoryTest extends RepositoryTest {
 				"Destruction",
 				"Blood Fury"
 		));
+	}
+
+	@Nested
+	@DisplayName("Buff attributes are correct")
+	class BuffAttributes {
+		@ParameterizedTest(name = "{0}")
+		@CsvSource({
+				"VANILLA_P1, 31",
+				"TBC_P1, 40",
+		})
+		void talent(Phase phase, int statValue) {
+			Buff buff = underTest.getBuff("Arcane Brilliance", phase).orElseThrow();
+
+			assertThat(buff.getIntellect()).isEqualTo(statValue);
+		}
 	}
 
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

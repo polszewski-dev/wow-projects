@@ -89,6 +89,10 @@ public interface AttributeSource {
 		return getDuration(attributeId, AttributeCondition.of(spellSchool));
 	}
 
+	default Duration getDuration(PrimitiveAttributeId attributeId, SpellId spellId) {
+		return getDuration(attributeId, AttributeCondition.of(spellId));
+	}
+
 	default <T extends ComplexAttribute> List<T> getList(ComplexAttributeId attributeId) {
 		return (List)getComplexAttributeList().getOrDefault(attributeId, List.of());
 	}
@@ -242,8 +246,8 @@ public interface AttributeSource {
 		return getPercent(SPELL_COEFF_BONUS_PCT);
 	}
 
-	default Duration getCastTimeReduction() {
-		return getDuration(CAST_TIME_REDUCTION);
+	default Duration getCastTimeReduction(SpellId spellId) {
+		return getDuration(CAST_TIME_REDUCTION, spellId);
 	}
 
 	default Percent getCostReductionPct() {
