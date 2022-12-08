@@ -8,6 +8,7 @@ import wow.commons.model.character.BaseStatInfo;
 import wow.commons.model.character.BuildTemplate;
 import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.character.PveRole;
+import wow.commons.model.pve.Phase;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ class CharacterRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("BaseStatInfo is read correctly")
 	void baseStatInfoIsCorrect() {
-		Optional<BaseStatInfo> optionalBaseStatInfo = underTest.getBaseStats(WARLOCK, ORC, 70);
+		Optional<BaseStatInfo> optionalBaseStatInfo = underTest.getBaseStats(WARLOCK, ORC, 70, Phase.TBC_P5);
 
 		assertThat(optionalBaseStatInfo).isPresent();
 
@@ -54,7 +55,7 @@ class CharacterRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("CombatRatingInfo is read correctly")
 	void combatRatingInfoIsCorrect() {
-		Optional<CombatRatingInfo> optionalCombatRatingInfo = underTest.getCombatRatings(70);
+		Optional<CombatRatingInfo> optionalCombatRatingInfo = underTest.getCombatRatings(70, Phase.TBC_P5);
 
 		assertThat(optionalCombatRatingInfo).isPresent();
 
@@ -69,7 +70,7 @@ class CharacterRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("BuildTemplate is read correctly")
 	void buildTemplateIsCorrect() {
-		Optional<BuildTemplate> optionalBuildTemplate = underTest.getBuildTemplate(DESTRO_SHADOW, WARLOCK, 70);
+		Optional<BuildTemplate> optionalBuildTemplate = underTest.getBuildTemplate(DESTRO_SHADOW, WARLOCK, 70, Phase.TBC_P5);
 
 		assertThat(optionalBuildTemplate).isPresent();
 

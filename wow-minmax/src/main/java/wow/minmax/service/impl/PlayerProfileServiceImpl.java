@@ -104,7 +104,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	private Build createBuild(BuildId buildId, CharacterInfo characterInfo) {
 		BuildTemplate buildTemplate = characterRepository.getBuildTemplate(
-				buildId, characterInfo.getCharacterClass(), characterInfo.getLevel()).orElseThrow();
+				buildId, characterInfo.getCharacterClass(), characterInfo.getLevel(), characterInfo.getPhase()).orElseThrow();
 
 		Build build = new Build(
 				buildId,

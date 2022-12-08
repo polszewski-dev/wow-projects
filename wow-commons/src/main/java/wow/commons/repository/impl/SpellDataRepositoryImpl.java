@@ -86,7 +86,7 @@ public class SpellDataRepositoryImpl extends ExcelRepository implements SpellDat
 	}
 
 	public void addSpell(Spell spell) {
-		spellById.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
+		addEntry(spellById, spell.getSpellId(), spell);
 	}
 
 	public void addTalent(Talent talent) {
@@ -110,8 +110,8 @@ public class SpellDataRepositoryImpl extends ExcelRepository implements SpellDat
 	}
 
 	public void addBuff(Buff buff) {
-		buffsById.computeIfAbsent(buff.getId(), x -> new ArrayList<>()).add(buff);
-		buffsByName.computeIfAbsent(buff.getName(), x -> new ArrayList<>()).add(buff);
+		addEntry(buffsById, buff.getId(), buff);
+		addEntry(buffsByName, buff.getName(), buff);
 		buffs.add(buff);
 	}
 }

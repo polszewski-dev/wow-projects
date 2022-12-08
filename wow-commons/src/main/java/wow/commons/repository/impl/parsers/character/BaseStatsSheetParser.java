@@ -46,6 +46,7 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 		var level = colLevel.getInteger();
 		var characterClass = colClass.getEnum(CharacterClass::parse);
 		var race = Race.parse(colRace.getString());
+		var timeRestriction = getTimeRestriction();
 		var baseStr = colBaseStr.getInteger();
 		var baseAgi = colBaseAgi.getInteger();
 		var baseSta = colBaseSta.getInteger();
@@ -56,6 +57,6 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 		var baseSpellCrit = colBaseSpellCrit.getPercent();
 		var intPerCrit = colIntPerCrit.getDouble();
 
-		return new BaseStatInfo(level, characterClass, race, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit);
+		return new BaseStatInfo(level, characterClass, race, timeRestriction, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit);
 	}
 }

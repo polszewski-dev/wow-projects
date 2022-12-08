@@ -2,6 +2,8 @@ package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.SpellId;
 
 import java.util.List;
@@ -13,10 +15,11 @@ import java.util.Map;
  */
 @AllArgsConstructor
 @Getter
-public class BuildTemplate {
+public class BuildTemplate implements TimeRestricted {
 	private final BuildId buildId;
 	private final CharacterClass characterClass;
 	private final int level;
+	private final TimeRestriction timeRestriction;
 	private final String talentLink;
 	private final PveRole role;
 	private final SpellId damagingSpell;

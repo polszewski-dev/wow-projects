@@ -4,6 +4,7 @@ import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.pve.Phase;
 import wow.commons.util.CollectionUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,5 +31,9 @@ public abstract class ExcelRepository {
 		return list.stream()
 				.filter(x -> x.isAvailableDuring(phase))
 				.collect(Collectors.toList());
+	}
+
+	protected <K, T> void addEntry(Map<K, List<T>> map, K key, T entry) {
+		map.computeIfAbsent(key, x -> new ArrayList<>()).add(entry);
 	}
 }

@@ -34,10 +34,11 @@ public class CombatRatingsSheetParser extends WowExcelSheetParser {
 
 	private CombatRatingInfo getCombatRatingInfo() {
 		var level = colLevel.getInteger();
+		var timeRestriction = getTimeRestriction();
 		var spellCrit = colSpellCrit.getDouble();
 		var spellHit = colSpellHit.getDouble();
 		var spellHaste = colSpellHaste.getDouble();
 
-		return new CombatRatingInfo(level, spellCrit, spellHit, spellHaste);
+		return new CombatRatingInfo(level, timeRestriction, spellCrit, spellHit, spellHaste);
 	}
 }

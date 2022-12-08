@@ -43,8 +43,9 @@ public class BuildSheetParser extends WowExcelSheetParser {
 
 	private BuildTemplate getBuildTemplate() {
 		var buildId = colBuild.getEnum(BuildId::parse);
-		CharacterClass characterClass = colReqClass.getEnum(CharacterClass::parse);
+		var characterClass = colReqClass.getEnum(CharacterClass::parse);
 		var level = colReqLevel.getInteger();
+		var timeRestriction = getTimeRestriction();
 		var talentLink = colTalentLink.getString();
 		var pveRole = colRole.getEnum(PveRole::parse);
 		var damagingSpell = colDamagingSpell.getEnum(SpellId::parse);
@@ -56,6 +57,7 @@ public class BuildSheetParser extends WowExcelSheetParser {
 				buildId,
 				characterClass,
 				level,
+				timeRestriction,
 				talentLink,
 				pveRole,
 				damagingSpell,

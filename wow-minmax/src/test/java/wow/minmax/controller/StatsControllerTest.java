@@ -13,6 +13,7 @@ import wow.commons.model.character.BaseStatInfo;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.character.Race;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.SpellStatistics;
 import wow.minmax.model.PlayerSpellStats;
@@ -70,8 +71,8 @@ class StatsControllerTest extends ControllerTest {
 
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
 
-		BaseStatInfo baseStats = new BaseStatInfo(70, CharacterClass.WARLOCK, Race.ORC, 0, 0, 0, 0, 0, 0, 0, Percent.ZERO, 100);
-		CombatRatingInfo cr = new CombatRatingInfo(70, 10, 10, 10);
+		BaseStatInfo baseStats = new BaseStatInfo(70, CharacterClass.WARLOCK, Race.ORC, TimeRestriction.EMPTY, 0, 0, 0, 0, 0, 0, 0, Percent.ZERO, 100);
+		CombatRatingInfo cr = new CombatRatingInfo(70, TimeRestriction.EMPTY, 10, 10, 10);
 		Snapshot snapshot = new Snapshot(profile.getDamagingSpell(), baseStats, cr, profile.getStats(), null, profile.getEnemyType());
 		SpellStatistics statistics = snapshot.getSpellStatistics(Snapshot.CritMode.AVERAGE, false);
 		statistics.setSnapshot(snapshot);

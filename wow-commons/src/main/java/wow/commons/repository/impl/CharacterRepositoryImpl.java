@@ -5,12 +5,16 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.character.*;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.CharacterRepository;
 import wow.commons.repository.impl.parsers.character.CharacterExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -19,31 +23,29 @@ import java.util.*;
 @Repository
 @RequiredArgsConstructor
 public class CharacterRepositoryImpl extends ExcelRepository implements CharacterRepository {
-	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
-	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
-	private final Map<String, BuildTemplate> buildTemplateByIdByLevel = new HashMap<>();
+	private final Map<String, List<BaseStatInfo>> baseStatInfos = new HashMap<>();
+	private final Map<String, List<CombatRatingInfo>> combatRatingInfos = new HashMap<>();
+	private final Map<String, List<BuildTemplate>> buildTemplateByKey = new HashMap<>();
 
 	@Value("${character.xls.file.path}")
 	private String xlsFilePath;
 
 	@Override
-	public Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level) {
-		return baseStatInfos.stream()
-				.filter(x -> x.getCharacterClass() == characterClass && x.getRace() == race && x.getLevel() == level)
-				.findAny();
+	public Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level, Phase phase) {
+		String key = getBaseStatInfoKey(characterClass, race, level);
+		return getUnique(baseStatInfos, key, phase);
 	}
 
 	@Override
-	public Optional<CombatRatingInfo> getCombatRatings(int level) {
-		return combatRatingInfos.stream()
-				.filter(x -> x.getLevel() == level)
-				.findAny();
+	public Optional<CombatRatingInfo> getCombatRatings(int level, Phase phase) {
+		String key = getCombatRatingInfoKey(level);
+		return getUnique(combatRatingInfos, key, phase);
 	}
 
 	@Override
-	public Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClass characterClass, int level) {
-		String key = getKey(buildId, characterClass, level);
-		return Optional.ofNullable(buildTemplateByIdByLevel.get(key));
+	public Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClass characterClass, int level, Phase phase) {
+		String key = getBuildTemplateKey(buildId, characterClass, level);
+		return getUnique(buildTemplateByKey, key, phase);
 	}
 
 	@PostConstruct
@@ -53,19 +55,29 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 	}
 
 	public void addBaseStatInfo(BaseStatInfo baseStatInfo) {
-		baseStatInfos.add(baseStatInfo);
+		String key = getBaseStatInfoKey(baseStatInfo.getCharacterClass(), baseStatInfo.getRace(), baseStatInfo.getLevel());
+		addEntry(baseStatInfos, key, baseStatInfo);
 	}
 
 	public void addCombatRatingInfo(CombatRatingInfo combatRatingInfo) {
-		combatRatingInfos.add(combatRatingInfo);
+		String key = getCombatRatingInfoKey(combatRatingInfo.getLevel());
+		addEntry(combatRatingInfos, key, combatRatingInfo);
 	}
 
 	public void addBuildTemplate(BuildTemplate buildTemplate) {
-		String key = getKey(buildTemplate.getBuildId(), buildTemplate.getCharacterClass(), buildTemplate.getLevel());
-		buildTemplateByIdByLevel.put(key, buildTemplate);
+		String key = getBuildTemplateKey(buildTemplate.getBuildId(), buildTemplate.getCharacterClass(), buildTemplate.getLevel());
+		addEntry(buildTemplateByKey, key, buildTemplate);
 	}
 
-	private static String getKey(BuildId buildId, CharacterClass characterClass, int level) {
+	private static String getBaseStatInfoKey(CharacterClass characterClass, Race race, int level) {
+		return characterClass + "#" + race + "#" + level;
+	}
+
+	private static String getCombatRatingInfoKey(int level) {
+		return level + "";
+	}
+
+	private static String getBuildTemplateKey(BuildId buildId, CharacterClass characterClass, int level) {
 		return buildId + "#" + characterClass + "#" + level;
 	}
 }

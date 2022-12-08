@@ -3,6 +3,8 @@ package wow.commons.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.Percent;
+import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.config.TimeRestriction;
 
 /**
  * User: POlszewski
@@ -10,10 +12,11 @@ import wow.commons.model.Percent;
  */
 @AllArgsConstructor
 @Getter
-public class BaseStatInfo {
+public class BaseStatInfo implements TimeRestricted {
 	private final int level;
 	private final CharacterClass characterClass;
 	private final Race race;
+	private final TimeRestriction timeRestriction;
 	private final int baseStrength;
 	private final int baseAgility;
 	private final int baseStamina;

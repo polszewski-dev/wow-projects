@@ -102,8 +102,8 @@ public class CalculationServiceImpl implements CalculationService {
 		spell = initOptional(playerProfile, spell);
 		totalStats = initOptional(playerProfile, totalStats);
 
-		BaseStatInfo baseStats = characterRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel()).orElseThrow();
-		CombatRatingInfo cr = characterRepository.getCombatRatings(playerProfile.getLevel()).orElseThrow();
+		BaseStatInfo baseStats = characterRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel(), playerProfile.getPhase()).orElseThrow();
+		CombatRatingInfo cr = characterRepository.getCombatRatings(playerProfile.getLevel(), playerProfile.getPhase()).orElseThrow();
 
 		return new Snapshot(
 				spell,

@@ -114,24 +114,24 @@ public class ItemDataRepositoryImpl extends ExcelRepository implements ItemDataR
 	}
 
 	public void addItem(Item item) {
-		itemById.computeIfAbsent(item.getId(), x -> new ArrayList<>()).add(item);
-		itemByName.computeIfAbsent(item.getName(), x -> new ArrayList<>()).add(item);
-		itemByType.computeIfAbsent(item.getItemType(), x -> new ArrayList<>()).add(item);
+		addEntry(itemById, item.getId(), item);
+		addEntry(itemByName, item.getName(), item);
+		addEntry(itemByType, item.getItemType(), item);
 		for (ItemSlot itemSlot : item.getItemType().getItemSlots()) {
-			itemBySlot.computeIfAbsent(itemSlot, x -> new ArrayList<>()).add(item);
+			addEntry(itemBySlot, itemSlot, item);
 		}
 	}
 
 	public void addTradedItem(TradedItem tradedItem) {
-		tradedItemById.computeIfAbsent(tradedItem.getId(), x -> new ArrayList<>()).add(tradedItem);
+		addEntry(tradedItemById, tradedItem.getId(), tradedItem);
 	}
 
 	public void addGem(Gem gem) {
-		gemById.computeIfAbsent(gem.getId(), x -> new ArrayList<>()).add(gem);
-		gemByName.computeIfAbsent(gem.getName(), x -> new ArrayList<>()).add(gem);
+		addEntry(gemById, gem.getId(), gem);
+		addEntry(gemByName, gem.getName(), gem);
 		for (SocketType socketType : SocketType.values()) {
 			if (socketType.accepts(gem.getColor())) {
-				gemBySocketType.computeIfAbsent(socketType, x -> new ArrayList<>()).add(gem);
+				addEntry(gemBySocketType, socketType, gem);
 			}
 		}
 	}
@@ -141,10 +141,10 @@ public class ItemDataRepositoryImpl extends ExcelRepository implements ItemDataR
 	}
 
 	public void addEnchant(Enchant enchant) {
-		enchantById.computeIfAbsent(enchant.getId(), x -> new ArrayList<>()).add(enchant);
-		enchantByName.computeIfAbsent(enchant.getName(), x -> new ArrayList<>()).add(enchant);
+		addEntry(enchantById, enchant.getId(), enchant);
+		addEntry(enchantByName, enchant.getName(), enchant);
 		for (ItemType itemType : enchant.getItemTypes()) {
-			enchantByItemType.computeIfAbsent(itemType, x -> new ArrayList<>()).add(enchant);
+			addEntry(enchantByItemType, itemType, enchant);
 		}
 	}
 }
