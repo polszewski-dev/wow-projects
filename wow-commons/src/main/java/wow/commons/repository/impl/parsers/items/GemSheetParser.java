@@ -37,8 +37,8 @@ public class GemSheetParser extends AbstractItemSheetParser {
 		var stats = readAttributes(GEM_MAX_STATS);
 
 		Description description = getDescription();
-		CharacterRestriction characterRestriction = getRestriction();
 		TimeRestriction timeRestriction = getTimeRestriction();
+		CharacterRestriction characterRestriction = getRestriction();
 		BasicItemInfo basicItemInfo = getBasicItemInfo();
 
 		return new Gem(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, color, metaEnablers);

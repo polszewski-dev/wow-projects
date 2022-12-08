@@ -6,6 +6,7 @@ import wow.commons.model.item.TradedItem;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.*;
 import wow.commons.repository.ItemDataRepository;
@@ -22,6 +23,8 @@ import java.util.Set;
  */
 @AllArgsConstructor
 public class SourceParser {
+	private final Phase phase;
+
 	private final PveRepository pveRepository;
 	private final ItemDataRepository itemDataRepository;
 
@@ -90,7 +93,7 @@ public class SourceParser {
 
 	private void parseToken(String tokenIdStr) {
 		int tokenId = Integer.parseInt(tokenIdStr);
-		TradedItem token = itemDataRepository.getTradedItem(tokenId).orElseThrow();
+		TradedItem token = getTradedItem(tokenId);
 		if (token.getItemType() != ItemType.TOKEN) {
 			throw new IllegalArgumentException("Expected token: " + tokenId);
 		}
@@ -99,11 +102,15 @@ public class SourceParser {
 
 	private void parseItemStartingQuest(String itemStartingQuestIdStr) {
 		int itemStartingQuestId = Integer.parseInt(itemStartingQuestIdStr);
-		TradedItem itemStartingQuest = itemDataRepository.getTradedItem(itemStartingQuestId).orElseThrow();
+		TradedItem itemStartingQuest = getTradedItem(itemStartingQuestId);
 		if (itemStartingQuest.getItemType() != ItemType.QUEST) {
 			throw new IllegalArgumentException("Expected item starting quest: " + itemStartingQuestId);
 		}
 		result.add(new Traded(itemStartingQuest));
+	}
+
+	private TradedItem getTradedItem(int tokenId) {
+		return itemDataRepository.getTradedItem(tokenId, phase).orElseThrow();
 	}
 
 	private void parseReputationReward(String factionName) {

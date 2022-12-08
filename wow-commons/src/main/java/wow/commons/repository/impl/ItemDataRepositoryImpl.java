@@ -41,7 +41,7 @@ public class ItemDataRepositoryImpl extends ExcelRepository implements ItemDataR
 	private final Map<String, List<Gem>> gemByName = new TreeMap<>();
 	private final Map<SocketType, List<Gem>> gemBySocketType = new EnumMap<>(SocketType.class);
 
-	private final Map<Integer, TradedItem> tradedItemById = new TreeMap<>();
+	private final Map<Integer, List<TradedItem>> tradedItemById = new TreeMap<>();
 
 	@Value("${item.base.xls.file.path}")
 	private String itemBaseXlsFilePath;
@@ -100,8 +100,8 @@ public class ItemDataRepositoryImpl extends ExcelRepository implements ItemDataR
 	}
 
 	@Override
-	public Optional<TradedItem> getTradedItem(int tradedItemId) {
-		return Optional.ofNullable(tradedItemById.get(tradedItemId));
+	public Optional<TradedItem> getTradedItem(int tradedItemId, Phase phase) {
+		return getUnique(tradedItemById, tradedItemId, phase);
 	}
 
 	@PostConstruct
@@ -123,7 +123,7 @@ public class ItemDataRepositoryImpl extends ExcelRepository implements ItemDataR
 	}
 
 	public void addTradedItem(TradedItem tradedItem) {
-		tradedItemById.put(tradedItem.getId(), tradedItem);
+		tradedItemById.computeIfAbsent(tradedItem.getId(), x -> new ArrayList<>()).add(tradedItem);
 	}
 
 	public void addGem(Gem gem) {

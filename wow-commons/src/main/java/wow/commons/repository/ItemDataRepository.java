@@ -27,5 +27,5 @@ public interface ItemDataRepository {
 	Optional<Gem> getGem(String name, Phase phase);
 	List<Gem> getGems(SocketType socketType, Phase phase);
 
-	Optional<TradedItem> getTradedItem(int tradedItemId);
+	Optional<TradedItem> getTradedItem(int tradedItemId, Phase phase);
 }

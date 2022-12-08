@@ -5,12 +5,9 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.BasicItemInfo;
-import wow.commons.model.sources.Source;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemDataRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
-
-import java.util.Set;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -50,7 +47,8 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		var unique = colUnique.getBoolean();
 		var itemLevel = colItemLevel.getInteger();
 		var source = colSource.getString();
-		Set<Source> sources = new SourceParser(pveRepository, itemDataRepository).parse(source);
+		var reqPhase = getTimeRestriction().getPhase();
+		var sources = new SourceParser(reqPhase, pveRepository, itemDataRepository).parse(source);
 
 		return new BasicItemInfo(itemType, itemSubType, rarity, binding, unique, itemLevel, sources);
 	}

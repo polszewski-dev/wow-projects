@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.professions.Profession;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.PveRepository;
@@ -174,6 +175,6 @@ class SourceParserTest {
 	}
 
 	private SourceParser getParser() {
-		return new SourceParser(pveRepository, itemDataRepository);
+		return new SourceParser(Phase.TBC_P5, pveRepository, itemDataRepository);
 	}
 }

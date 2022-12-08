@@ -206,7 +206,7 @@ class ItemDataRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Token is read correctly")
 	void tokenIsCorrect() {
-		Optional<TradedItem> optionalTradedItem = underTest.getTradedItem(31101);
+		Optional<TradedItem> optionalTradedItem = underTest.getTradedItem(31101, PHASE);
 
 		assertThat(optionalTradedItem).isPresent();
 
