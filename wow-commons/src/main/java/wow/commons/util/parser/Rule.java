@@ -61,14 +61,14 @@ public interface Rule {
 		return test(line -> line.matches("^" + pattern + "$"), consumer);
 	}
 
-	static Rule regex(String regex, Consumer<Object[]> matchedValueConsumer) {
+	static Rule regex(String regex, Consumer<ParsedMultipleValues> matchedValueConsumer) {
 		return line -> {
-			Object[] matchedValues = ParserUtil.parseMultipleValues(regex, line);
-			if (matchedValues.length > 0) {
-				matchedValueConsumer.accept(matchedValues);
-				return true;
+			ParsedMultipleValues matchedValues = ParserUtil.parseMultipleValues(regex, line);
+			if (matchedValues.isEmpty()) {
+				return false;
 			}
-			return false;
+			matchedValueConsumer.accept(matchedValues);
+			return true;
 		};
 	}
 }

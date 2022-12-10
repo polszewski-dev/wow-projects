@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,20 +16,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ParserUtilTest {
 	@Test
 	void parseMultipleValues() {
-		Object[] result = ParserUtil.parseMultipleValues("BossDrop:(.*):(.*)", "BossDrop:ABC:123");
+		ParsedMultipleValues result = ParserUtil.parseMultipleValues("BossDrop:(.*):(.*)", "BossDrop:ABC:123");
 
-		assertThat(result).hasSize(2);
-		assertThat(result[0]).isEqualTo("ABC");
-		assertThat(result[1]).isEqualTo(123);
+		assertThat(result.size()).isEqualTo(2);
+		assertThat(result.get(0)).isEqualTo("ABC");
+		assertThat(result.getInteger(1)).isEqualTo(123);
 	}
 
 	@Test
 	void parseMultipleInts() {
-		int[] result = ParserUtil.parseMultipleInts("(\\d+) Min, (\\d+) Sec", "2 Min, 30 Sec");
+		ParsedMultipleValues result = ParserUtil.parseMultipleValues("(\\d+) Min, (\\d+) Sec", "2 Min, 30 Sec");
 
-		assertThat(result).hasSize(2);
-		assertThat(result[0]).isEqualTo(2);
-		assertThat(result[1]).isEqualTo(30);
+		assertThat(result.size()).isEqualTo(2);
+		assertThat(result.getInteger(0)).isEqualTo(2);
+		assertThat(result.getInteger(1)).isEqualTo(30);
 	}
 
 	@Test

@@ -12,6 +12,7 @@ import wow.commons.model.item.WeaponStats;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.spells.SpellSchool;
+import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
@@ -137,14 +138,14 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		}
 	}
 
-	private void parseItemSet(Object[] parsedValues) {
-		this.itemSetName = (String) parsedValues[0];
-		int numPieces = (int) parsedValues[1];
+	private void parseItemSet(ParsedMultipleValues parsedValues) {
+		this.itemSetName = parsedValues.get(0);
+		int numPieces = parsedValues.getInteger(1);
 
-		Object[] setRestriction = ParserUtil.parseMultipleValues("Requires (Tailoring) \\((\\d+)\\)", lines.get(currentLineIdx + 1));
-		if (setRestriction.length > 0) {
-			this.itemSetRequiredProfession = Profession.parse((String)setRestriction[0]);
-			this.itemSetRequiredProfessionLevel = (Integer)setRestriction[1];
+		ParsedMultipleValues setRestriction = ParserUtil.parseMultipleValues("Requires (Tailoring) \\((\\d+)\\)", lines.get(currentLineIdx + 1));
+		if (!setRestriction.isEmpty()) {
+			this.itemSetRequiredProfession = Profession.parse(setRestriction.get(0));
+			this.itemSetRequiredProfessionLevel = setRestriction.getInteger(1);
 			++currentLineIdx;
 		}
 
@@ -163,12 +164,12 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		}
 	}
 
-	private void parseItemSetBonus(Object[] itemSetBonusParams) {
+	private void parseItemSetBonus(ParsedMultipleValues itemSetBonusParams) {
 		if (itemSetBonuses == null) {
 			this.itemSetBonuses = new ArrayList<>();
 		}
-		int numPieces = (int)itemSetBonusParams[0];
-		String description = (String)itemSetBonusParams[1];
+		int numPieces = itemSetBonusParams.getInteger(0);
+		String description = itemSetBonusParams.get(1);
 		StatParser setBonusParser = statPatternRepository.getItemStatParser();
 		if (!setBonusParser.tryParse(description)) {
 			unmatchedLine(description);
@@ -176,31 +177,31 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		itemSetBonuses.add(new ItemSetBonus(numPieces, description, setBonusParser.getParsedStats()));
 	}
 
-	private void parseWeaponDamage(Object[] weaponDamageParams) {
+	private void parseWeaponDamage(ParsedMultipleValues weaponDamageParams) {
 		ensureWeaponStats();
 		String damageType;
-		if (weaponDamageParams.length == 3) {
-			weaponStats.setWeaponDamageMin((int)weaponDamageParams[0]);
-			weaponStats.setWeaponDamageMax((int)weaponDamageParams[1]);
-			damageType = (String)weaponDamageParams[2];
+		if (weaponDamageParams.size() == 3) {
+			weaponStats.setWeaponDamageMin(weaponDamageParams.getInteger(0));
+			weaponStats.setWeaponDamageMax(weaponDamageParams.getInteger(1));
+			damageType = weaponDamageParams.get(2);
 		} else {
-			weaponStats.setWeaponDamageMin((int)weaponDamageParams[0]);
-			weaponStats.setWeaponDamageMax((int)weaponDamageParams[0]);
-			damageType = (String)weaponDamageParams[1];
+			weaponStats.setWeaponDamageMin(weaponDamageParams.getInteger(0));
+			weaponStats.setWeaponDamageMax(weaponDamageParams.getInteger(0));
+			damageType = weaponDamageParams.get(1);
 		}
 		if (damageType != null) {
 			weaponStats.setDamageType(SpellSchool.parse(damageType));
 		}
 	}
 
-	private void parseWeaponDps(Object[] weaponDpsParams) {
+	private void parseWeaponDps(ParsedMultipleValues weaponDpsParams) {
 		ensureWeaponStats();
-		weaponStats.setWeaponDps(Double.parseDouble((String)weaponDpsParams[0]));
+		weaponStats.setWeaponDps(Double.parseDouble(weaponDpsParams.get(0)));
 	}
 
-	private void parseWeaponSpeedParams(Object[] weaponSpeedParams) {
+	private void parseWeaponSpeedParams(ParsedMultipleValues weaponSpeedParams) {
 		ensureWeaponStats();
-		weaponStats.setWeaponSpeed(Double.parseDouble((String)weaponSpeedParams[0]));
+		weaponStats.setWeaponSpeed(Double.parseDouble(weaponSpeedParams.get(0)));
 	}
 
 	private void ensureWeaponStats() {

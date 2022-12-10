@@ -14,6 +14,7 @@ import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
@@ -62,7 +63,7 @@ public abstract class AbstractTooltipParser {
 	private static final Set<String> UNMATCHED_LINES = new TreeSet<>();
 
 	protected final Rule rulePhase = Rule.
-			regex("(SoM )?Phase (.*)", x -> this.phase = parsePhase(x[1].toString()));
+			regex("(SoM )?Phase (.*)", x -> this.phase = parsePhase(x.get(1)));
 	protected final Rule ruleRequiresLevel = Rule.
 			prefix("Requires Level ", x -> this.requiredLevel = parseRequiredLevel(x));
 	protected final Rule ruleItemLevel = Rule.
@@ -173,18 +174,18 @@ public abstract class AbstractTooltipParser {
 		return Integer.parseInt(value);
 	}
 
-	private void parseReputation(Object[] factionParams) {
-		this.requiredFactionName = (String)factionParams[0];
-		this.requiredFactionStanding = (String)factionParams[1];
+	private void parseReputation(ParsedMultipleValues factionParams) {
+		this.requiredFactionName = factionParams.get(0);
+		this.requiredFactionStanding = factionParams.get(1);
 	}
 
-	private void parseRequiredProfession(Object[] params) {
-		this.requiredProfession = Profession.parse((String)params[0]);
-		this.requiredProfessionLevel = (Integer)params[1];
+	private void parseRequiredProfession(ParsedMultipleValues params) {
+		this.requiredProfession = Profession.parse(params.get(0));
+		this.requiredProfessionLevel = params.getInteger(1);
 	}
 
-	private void parseRequiredProfessionSpec(Object[] params) {
-		this.requiredProfessionSpec = ProfessionSpecialization.parse((String)params[0]);
+	private void parseRequiredProfessionSpec(ParsedMultipleValues params) {
+		this.requiredProfessionSpec = ProfessionSpecialization.parse(params.get(0));
 	}
 
 	private Percent parseDropChance(String value) {

@@ -13,35 +13,22 @@ import java.util.stream.Stream;
  * Date: 2022-10-30
  */
 public final class ParserUtil {
-	public static Object[] parseMultipleValues(String regex, String line) {
+	public static ParsedMultipleValues parseMultipleValues(String regex, String line) {
 		Pattern pattern = Pattern.compile("^" + regex + "$");
 		Matcher matcher = pattern.matcher(line);
 		if (!matcher.find()) {
-			return new Object[0];
+			return ParsedMultipleValues.EMPTY;
 		}
 		assertHasGroups(matcher, regex);
-		Object[] result = new Object[matcher.groupCount()];
-		for (int i = 1; i <= matcher.groupCount(); ++i) {
-			String group = matcher.group(i);
-			if (group != null && group.matches("\\d+")) {
-				result[i - 1] = Integer.valueOf(group);
-			} else {
-				result[i - 1] = group;
-			}
-		}
-		return result;
+		String[] result = getMatchedGroups(matcher);
+		return new ParsedMultipleValues(result);
 	}
 
-	public static int[] parseMultipleInts(String regex, String line) {
-		Pattern pattern = Pattern.compile("^" + regex + "$");
-		Matcher matcher = pattern.matcher(line);
-		if (!matcher.find()) {
-			return new int[0];
-		}
-		assertHasGroups(matcher, regex);
-		int[] result = new int[matcher.groupCount()];
+	public static String[] getMatchedGroups(Matcher matcher) {
+		String[] result = new String[matcher.groupCount()];
 		for (int i = 1; i <= matcher.groupCount(); ++i) {
-			result[i - 1] = Integer.parseInt(matcher.group(i));
+			String group = matcher.group(i);
+			result[i - 1] = group;
 		}
 		return result;
 	}

@@ -11,6 +11,7 @@ import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.*;
 import wow.commons.repository.ItemDataRepository;
 import wow.commons.repository.PveRepository;
+import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.Rule;
 
 import java.util.LinkedHashSet;
@@ -65,10 +66,10 @@ public class SourceParser {
 		throw new IllegalArgumentException("Invalid source: " + value);
 	}
 
-	private void parseBossDrop(Object[] bossDropParams) {
-		String bossName = (String) bossDropParams[0];//optional
-		int bossId = (int) bossDropParams[1];
-		int zoneId = (int) bossDropParams[2];//optional
+	private void parseBossDrop(ParsedMultipleValues bossDropParams) {
+		String bossName = bossDropParams.get(0);//optional
+		int bossId = bossDropParams.getInteger(1);
+		int zoneId = bossDropParams.getInteger(2);//optional
 
 		if (bossId == 0) {
 			throw new IllegalArgumentException();
