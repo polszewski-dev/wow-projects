@@ -13,6 +13,7 @@ public enum CreatureType {
 	UNDEAD("Undead"),
 	DEMON("Demon"),
 	BEAST("Beast"),
+	ELEMENTAL("Elemental"),
 	DRAGON("Dragon");
 
 	private final String name;

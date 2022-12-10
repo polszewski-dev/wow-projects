@@ -22,8 +22,10 @@ public class StatParser {
 	}
 
 	public boolean tryParse(String line) {
+		StatMatcherParams params = StatMatcherParams.of(line);
+
 		for (StatMatcher matcher : matchers) {
-			if (matcher.tryParse(line)) {
+			if (matcher.tryParse(params)) {
 				successfulMatchers.add(matcher);
 				return true;
 			}

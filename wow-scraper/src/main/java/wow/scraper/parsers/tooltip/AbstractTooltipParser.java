@@ -189,7 +189,7 @@ public abstract class AbstractTooltipParser {
 	}
 
 	private Percent parseDropChance(String value) {
-		return Percent.of(Double.parseDouble(value.replace("%", "")));
+		return Percent.parse(value);
 	}
 
 	protected Money parseSellPrice(String value) {

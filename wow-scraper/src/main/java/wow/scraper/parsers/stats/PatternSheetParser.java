@@ -86,7 +86,7 @@ public class PatternSheetParser extends ExcelSheetParser {
 			case "Ignored":
 				return IgnoreStatSetter.INSTANCE;
 			default:
-				return new IntStatSetter(PrimitiveAttributeSupplier.fromString(line), Math.max(groupNo, 1));
+				return new IntStatSetter(line, Math.max(groupNo, 1));
 		}
 	}
 

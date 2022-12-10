@@ -50,7 +50,7 @@ public final class Duration implements Comparable<Duration> {
 			return null;
 		}
 
-		if (value.matches("\\d+")) {
+		if (value.matches("\\d+\\.?\\d*")) {
 			return Duration.seconds(Double.parseDouble(value));
 		}
 

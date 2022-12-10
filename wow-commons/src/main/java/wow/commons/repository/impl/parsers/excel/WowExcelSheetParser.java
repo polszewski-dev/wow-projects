@@ -54,13 +54,11 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		}
 
 		private Optional<Percent> getOptionalPercent() {
-			return getOptionalString()
-					.map(value -> Percent.of(Double.parseDouble(value)));
+			return getOptionalString().map(Percent::parse);
 		}
 
 		private Optional<Duration> getOptionalDuration() {
-			return getOptionalString()
-					.map(seconds -> Duration.seconds(Double.parseDouble(seconds)));
+			return getOptionalString().map(Duration::parse);
 		}
 	}
 

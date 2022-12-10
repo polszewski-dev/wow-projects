@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 public class StatMatcher {
 	private final StatPattern pattern;
 
-	private String matchedLine;
+	private StatMatcherParams params;
 	private String[] parsedValues;
 
 	public StatMatcher(StatPattern pattern) {
@@ -52,7 +52,7 @@ public class StatMatcher {
 			throw new IllegalArgumentException();
 		}
 		if (i == 0) {
-			return matchedLine;
+			return params.getOriginalLine();
 		}
 		return parsedValues[i - 1];
 	}
@@ -73,16 +73,25 @@ public class StatMatcher {
 	}
 
 	public Duration getParamCooldown() {
+		if (params.getParsedCooldown() != null) {
+			return params.getParsedCooldown();
+		}
 		String value = evalParams(pattern.getParams().getCooldown());
 		return CooldownParser.parseCooldown(value);
 	}
 
 	public Percent getParamProcChance() {
+		if (params.getParsedProcChance() != null) {
+			return params.getParsedProcChance();
+		}
 		String value = evalParams(pattern.getParams().getProcChance());
-		return value != null ? Percent.of(Double.parseDouble(value)) : null;
+		return Percent.parse(value);
 	}
 
 	public Duration getParamProcCooldown() {
+		if (params.getParsedProcCooldown() != null) {
+			return params.getParsedProcCooldown();
+		}
 		String value = evalParams(pattern.getParams().getProcCooldown());
 		return Duration.parse(value);
 	}
@@ -91,20 +100,16 @@ public class StatMatcher {
 		return ParserUtil.substituteParams(pattern, this::getString);
 	}
 
-	public boolean tryParse(String line) {
-		Matcher matcher = pattern.getMatcher(line);
+	public boolean tryParse(StatMatcherParams params) {
+		String lineToMatch = pattern.isLiteral() ? params.getOriginalLine() : params.getLine();
+		Matcher matcher = pattern.getMatcher(lineToMatch);
+
 		if (matcher == null) {
 			return false;
 		}
-		if (pattern.canHaveUsefulMatch() && matchedLine != null) {
-			throw new IllegalStateException("Have already parsed values: " + line);
-		}
-		this.matchedLine = line;
-		this.parsedValues = new String[matcher.groupCount()];
-		for (int i = 1; i <= matcher.groupCount(); ++i) {
-			String group = matcher.group(i);
-			parsedValues[i - 1] = group;
-		}
+
+		this.params = params;
+		this.parsedValues = ParserUtil.getMatchedGroups(matcher);
 		return true;
 	}
 
@@ -118,6 +123,6 @@ public class StatMatcher {
 
 	@Override
 	public String toString() {
-		return matchedLine;
+		return params != null ? params.getOriginalLine() : null;
 	}
 }

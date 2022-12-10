@@ -75,7 +75,44 @@ public enum SpellId {
 	SOOTHING_KISS("Soothing Kiss"),
 	LASH_OF_PAIN("Lash of Pain"),
 	LESSER_INVISIBILITY("Lesser Invisibility"),
-	SEDUCTION("Seduction");
+	SEDUCTION("Seduction"),
+
+	// mage
+
+	BLINK("Blink"),
+	COUNTERSPELL("Counterspell"),
+	FIREBALL("Fireball"),
+	FLAMESTRIKE("Flamestrike"),
+	FROSTBOLT("Frostbolt"),
+	POLYMORPH("Polymorph"),
+
+	// priest
+
+	BINDING_HEAL("Binding Heal"),
+	MIND_BLAST("Mind Blast"),
+	MIND_CONTROL("Mind Control"),
+	PSYCHIC_SCREAM("Psychic Scream"),
+
+	// rogue
+
+	BLIND("Blind"),
+	FADE("Fade"),
+	KICK("Kick"),
+
+	// hunter
+
+	CONCUSSIVE_SHOT("Concussive Shot"),
+	FEIGN_DEATH("Feign Death"),
+
+	// paladin
+
+	HOLY_LIGHT("Holy Light"),
+
+	// warrior
+
+	INTIMIDATING_SHOUT("Intimidating Shout"),
+
+	;
 
 	private final String name;
 
