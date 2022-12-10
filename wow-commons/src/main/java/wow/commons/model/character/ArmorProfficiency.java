@@ -19,8 +19,4 @@ public enum ArmorProfficiency {
 	public boolean matches(ArmorSubType armorSubType) {
 		return this.armorSubType == armorSubType;
 	}
-
-	public static boolean matches(CharacterClass characterClass, ArmorSubType armorSubType) {
-		return characterClass.getArmorProfficiencies().stream().anyMatch(x -> x.matches(armorSubType));
-	}
 }

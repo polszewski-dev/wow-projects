@@ -62,8 +62,4 @@ public enum WeaponProfficiency {
 	public boolean matches(ItemType weaponType, WeaponSubType weaponSubType) {
 		return (this.weaponType == null || this.weaponType == weaponType) && this.weaponSubType == weaponSubType;
 	}
-
-	public static boolean matches(CharacterClass characterClass, ItemType weaponType, WeaponSubType weaponSubType) {
-		return characterClass.getWeaponProfficiencies().stream().anyMatch(x -> x.matches(weaponType, weaponSubType));
-	}
 }

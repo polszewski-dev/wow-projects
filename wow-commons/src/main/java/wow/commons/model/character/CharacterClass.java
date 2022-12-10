@@ -7,9 +7,7 @@ import wow.commons.util.EnumUtil;
 
 import java.util.List;
 
-import static wow.commons.model.character.ArmorProfficiency.matches;
 import static wow.commons.model.character.ArmorProfficiency.*;
-import static wow.commons.model.character.WeaponProfficiency.matches;
 import static wow.commons.model.character.WeaponProfficiency.*;
 
 /**
@@ -110,9 +108,9 @@ public enum CharacterClass {
 				if (itemSlot == ItemSlot.OFF_HAND && !isWeaponAllowedInOffHand(itemType)) {
 					return false;
 				}
-				return matches(this, itemType, (WeaponSubType) itemSubType);
+				return matches(itemType, (WeaponSubType) itemSubType);
 			case ARMOR:
-				return matches(this, (ArmorSubType) itemSubType);
+				return matches((ArmorSubType) itemSubType);
 			case ACCESSORY:
 				return true;
 			default:
@@ -122,5 +120,13 @@ public enum CharacterClass {
 
 	private boolean isWeaponAllowedInOffHand(ItemType itemType) {
 		return dualWield || itemType == ItemType.OFF_HAND;
+	}
+
+	private boolean matches(ItemType weaponType, WeaponSubType weaponSubType) {
+		return weaponProfficiencies.stream().anyMatch(x -> x.matches(weaponType, weaponSubType));
+	}
+
+	private boolean matches(ArmorSubType armorSubType) {
+		return armorProfficiencies.stream().anyMatch(x -> x.matches(armorSubType));
 	}
 }
