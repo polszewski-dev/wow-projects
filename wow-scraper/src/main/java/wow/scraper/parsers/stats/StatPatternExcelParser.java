@@ -40,11 +40,7 @@ public class StatPatternExcelParser extends ExcelParser {
 				new PatternSheetParser("onuse", itemStatPatterns),
 				new PatternSheetParser("proc", itemStatPatterns),
 				new PatternSheetParser("set", itemStatPatterns),
-				new PatternSheetParser("ignored", itemStatPatterns),
 				new PatternSheetParser("misc_bonus", itemStatPatterns),
-				new PatternSheetParser("misc_onuse", itemStatPatterns),
-				new PatternSheetParser("misc_proc", itemStatPatterns),
-				new PatternSheetParser("misc_set", itemStatPatterns),
 				new PatternSheetParser("gem", gemStatPatterns),
 				new PatternSheetParser("socket", socketBonusStatPatterns)
 		);

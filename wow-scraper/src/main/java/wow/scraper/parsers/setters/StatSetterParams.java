@@ -13,8 +13,5 @@ public class StatSetterParams {
 	private PrimitiveAttributeSupplier statsSupplier;
 	private String amount;
 	private String duration;
-	private String cooldown;
-	private String procChance;
-	private String procCooldown;
 	private String expression;
 }

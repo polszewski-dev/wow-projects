@@ -18,6 +18,9 @@ public class EquivalentAbility extends SpecialAbility {
 	public EquivalentAbility(Attributes attributes, String line, AttributeCondition condition) {
 		super(line, 1, condition);
 		this.attributes = attributes;
+		if (!attributes.getComplexAttributeList().isEmpty()) {
+			throw new IllegalArgumentException("Equivalent can't have complex attributes");
+		}
 	}
 
 	@Override

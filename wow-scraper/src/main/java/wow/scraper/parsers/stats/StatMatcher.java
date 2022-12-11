@@ -75,27 +75,15 @@ public class StatMatcher {
 	}
 
 	public Duration getParamCooldown() {
-		if (params.getParsedCooldown() != null) {
-			return params.getParsedCooldown();
-		}
-		String value = evalParams(pattern.getParams().getCooldown());
-		return CooldownParser.parseCooldown(value);
+		return params.getParsedCooldown();
 	}
 
 	public Percent getParamProcChance() {
-		if (params.getParsedProcChance() != null) {
-			return params.getParsedProcChance();
-		}
-		String value = evalParams(pattern.getParams().getProcChance());
-		return Percent.parse(value);
+		return params.getParsedProcChance();
 	}
 
 	public Duration getParamProcCooldown() {
-		if (params.getParsedProcCooldown() != null) {
-			return params.getParsedProcCooldown();
-		}
-		String value = evalParams(pattern.getParams().getProcCooldown());
-		return Duration.parse(value);
+		return params.getParsedProcCooldown();
 	}
 
 	public ComplexAttribute getExpression() {

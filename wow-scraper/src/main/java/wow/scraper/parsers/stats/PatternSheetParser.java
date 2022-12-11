@@ -22,9 +22,6 @@ public class PatternSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colSpecialStat = column("special:stat");
 	private final ExcelColumn colSpecialAmount = column("special:amount");
 	private final ExcelColumn colSpecialDuration = column("special:duration");
-	private final ExcelColumn colSpecialCd = column("special:cd");
-	private final ExcelColumn colSpecialProcChance = column("special:proc chance");
-	private final ExcelColumn colSpecialProcCd = column("special:proc cd");
 	private final ExcelColumn colExpression = column("special:expression");
 
 	private final List<StatPattern> patterns;
@@ -100,9 +97,6 @@ public class PatternSheetParser extends ExcelSheetParser {
 		params.setStatsSupplier(colSpecialStat.getEnum(PrimitiveAttributeSupplier::fromString, null));
 		params.setAmount(colSpecialAmount.getString(null));
 		params.setDuration(colSpecialDuration.getString(null));
-		params.setCooldown(colSpecialCd.getString(null));
-		params.setProcChance(colSpecialProcChance.getString(null));
-		params.setProcCooldown(colSpecialProcCd.getString(null));
 		params.setExpression(colExpression.getString(null));
 
 		return params;
