@@ -3,6 +3,8 @@ package wow.scraper.parsers.stats;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.repository.impl.parsers.excel.ComplexAttributeMapper;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.parser.ParserUtil;
 import wow.scraper.parsers.setters.StatSetter;
@@ -94,6 +96,11 @@ public class StatMatcher {
 		}
 		String value = evalParams(pattern.getParams().getProcCooldown());
 		return Duration.parse(value);
+	}
+
+	public ComplexAttribute getExpression() {
+		String value = evalParams(pattern.getParams().getExpression());
+		return ComplexAttributeMapper.fromString(value);
 	}
 
 	private String evalParams(String pattern) {

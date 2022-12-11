@@ -25,6 +25,7 @@ public class PatternSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colSpecialCd = column("special:cd");
 	private final ExcelColumn colSpecialProcChance = column("special:proc chance");
 	private final ExcelColumn colSpecialProcCd = column("special:proc cd");
+	private final ExcelColumn colExpression = column("special:expression");
 
 	private final List<StatPattern> patterns;
 
@@ -60,7 +61,7 @@ public class PatternSheetParser extends ExcelSheetParser {
 			return setters;
 		}
 
-		return List.of(new MiscStatSetter(0));
+		return List.of(new MiscStatSetter());
 	}
 
 	private StatSetter parseStatSetter(String line) {
@@ -82,7 +83,9 @@ public class PatternSheetParser extends ExcelSheetParser {
 			case "Equivalent":
 				return new EquivalentStatSetter(Math.max(groupNo, 0));
 			case "Misc":
-				return new MiscStatSetter(0);
+				return new MiscStatSetter();
+			case "Expression":
+				return new ExpressionStatSetter();
 			case "Ignored":
 				return IgnoreStatSetter.INSTANCE;
 			default:
@@ -100,6 +103,7 @@ public class PatternSheetParser extends ExcelSheetParser {
 		params.setCooldown(colSpecialCd.getString(null));
 		params.setProcChance(colSpecialProcChance.getString(null));
 		params.setProcCooldown(colSpecialProcCd.getString(null));
+		params.setExpression(colExpression.getString(null));
 
 		return params;
 	}
