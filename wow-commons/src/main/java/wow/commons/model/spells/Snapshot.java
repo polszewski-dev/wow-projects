@@ -8,7 +8,9 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.character.BaseStatInfo;
 import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.character.CreatureType;
@@ -228,100 +230,124 @@ public class Snapshot implements StatProvider {
 
 	private void accumulateStats() {
 		accumulatePrimitiveAttributes(stats.getPrimitiveAttributeList());
+		solveStatConversions();
 		solveAbilities();
 	}
 
 	private void accumulatePrimitiveAttributes(List<PrimitiveAttribute> attributes) {
 		for (PrimitiveAttribute attribute : attributes) {
 			if (conditions.contains(attribute.getCondition())) {
-				accumulateAttribute(attribute);
+				accumulateAttribute(attribute.getId(), attribute.getDouble());
 			}
 		}
 	}
 
-	private void accumulateAttribute(PrimitiveAttribute attribute) {
-		switch (attribute.getId()) {
+	private void accumulateAttribute(PrimitiveAttributeId id, double value) {
+		switch (id) {
 			case BASE_STATS_INCREASE_PCT:
-				this.statsBaseStatsIncreasePct += attribute.getDouble();
+				this.statsBaseStatsIncreasePct += value;
 				break;
 			case STA_INCREASE_PCT:
-				this.statsStaIncreasePct += attribute.getDouble();
+				this.statsStaIncreasePct += value;
 				break;
 			case INT_INCREASE_PCT:
-				this.statsIntIncreasePct += attribute.getDouble();
+				this.statsIntIncreasePct += value;
 				break;
 			case SPI_INCREASE_PCT:
-				this.statsSpiIncreasePct += attribute.getDouble();
+				this.statsSpiIncreasePct += value;
 				break;
 			case STAMINA:
-				this.statsStamina += attribute.getDouble();
+				this.statsStamina += value;
 				break;
 			case INTELLECT:
-				this.statsIntellect += attribute.getDouble();
+				this.statsIntellect += value;
 				break;
 			case SPIRIT:
-				this.statsSpirit += attribute.getDouble();
+				this.statsSpirit += value;
 				break;
 			case BASE_STATS_INCREASE:
-				this.statsBaseStatsIncrease += attribute.getDouble();
+				this.statsBaseStatsIncrease += value;
 				break;
 			case SPELL_POWER:
 			case SPELL_DAMAGE:
-				this.statsTotalSpellDamage += attribute.getDouble();
+				this.statsTotalSpellDamage += value;
 				break;
 			case ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT:
-				this.statsAdditionalSpellDamageTakenPct += attribute.getDouble();
+				this.statsAdditionalSpellDamageTakenPct += value;
 				break;
 			case DAMAGE_TAKEN_PCT:
-				this.statsDamageTakenPct += attribute.getDouble();
+				this.statsDamageTakenPct += value;
 				break;
 			case EFFECT_INCREASE_PCT:
-				this.statsEffectIncreasePct += attribute.getDouble();
+				this.statsEffectIncreasePct += value;
 				break;
 			case DIRECT_DAMAGE_INCREASE_PCT:
-				this.statsDirectDamageIncreasePct += attribute.getDouble();
+				this.statsDirectDamageIncreasePct += value;
 				break;
 			case DOT_DAMAGE_INCREASE_PCT:
-				this.statsDoTDamageIncreasePct += attribute.getDouble();
+				this.statsDoTDamageIncreasePct += value;
 				break;
 			case SPELL_HIT_RATING:
-				this.statsSpellHitRating += attribute.getDouble();
+				this.statsSpellHitRating += value;
 				break;
 			case SPELL_HIT_PCT:
-				this.statsSpellHitPct += attribute.getDouble();
+				this.statsSpellHitPct += value;
 				break;
 			case SPELL_CRIT_RATING:
-				this.statsSpellCritRating += attribute.getDouble();
+				this.statsSpellCritRating += value;
 				break;
 			case SPELL_CRIT_PCT:
-				this.statsSpellCritPct += attribute.getDouble();
+				this.statsSpellCritPct += value;
 				break;
 			case SPELL_HASTE_RATING:
-				this.statsSpellHasteRating += attribute.getDouble();
+				this.statsSpellHasteRating += value;
 				break;
 			case SPELL_HASTE_PCT:
-				this.statsSpellHastePct += attribute.getDouble();
+				this.statsSpellHastePct += value;
 				break;
 			case INCREASED_CRITICAL_DAMAGE_PCT:
-				this.statsIncreasedCriticalDamagePct += attribute.getDouble();
+				this.statsIncreasedCriticalDamagePct += value;
 				break;
 			case CRIT_DAMAGE_INCREASE_PCT:
-				this.statsCritDamageIncreasePct += attribute.getDouble();
+				this.statsCritDamageIncreasePct += value;
 				break;
 			case EXTRA_CRIT_COEFF:
-				this.statsExtraCritCoeff += attribute.getDouble();
+				this.statsExtraCritCoeff += value;
 				break;
 			case SPELL_COEFF_BONUS_PCT:
-				this.statsSpellCoeffPct += attribute.getDouble();
+				this.statsSpellCoeffPct += value;
 				break;
 			case CAST_TIME_REDUCTION:
-				this.statsCastTimeReduction += attribute.getDouble();
+				this.statsCastTimeReduction += value;
 				break;
 			case COST_REDUCTION_PCT:
-				this.statsCostReductionPct += attribute.getDouble();
+				this.statsCostReductionPct += value;
 				break;
 			default:
 				// ignore the rest
+		}
+	}
+
+	private void solveStatConversions() {
+		List<StatConversion> statConversions = stats.getStatConversions();
+
+		for (StatConversion statConversion : statConversions) {
+			double fromAmount = getAccumulatedValue(statConversion.getFromStat());
+			double toAmount = fromAmount * statConversion.getRatioPct().getCoefficient();
+
+			accumulateAttribute(statConversion.getToStat(), toAmount);
+		}
+	}
+
+	private double getAccumulatedValue(PrimitiveAttributeId attributeId) {
+		switch (attributeId) {
+			case INTELLECT:
+				return statsIntellect;
+			case PET_STAMINA:
+			case PET_INTELLECT:
+				return 0; // pets not supported at this moment
+			default:
+				throw new IllegalArgumentException("Unhandled attribute: " + attributeId);
 		}
 	}
 

@@ -5,6 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.SpellId;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.attributes.complex.ComplexAttributeId.SPECIAL_ABILITIES;
+import static wow.commons.model.attributes.complex.ComplexAttributeId.STAT_CONVERSION;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
@@ -256,6 +258,10 @@ public interface AttributeSource {
 
 	default List<SpecialAbility> getSpecialAbilities() {
 		return getList(SPECIAL_ABILITIES);
+	}
+
+	default List<StatConversion> getStatConversions() {
+		return getList(STAT_CONVERSION);
 	}
 
 	default double getExtraCritCoeff() {

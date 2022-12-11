@@ -94,6 +94,9 @@ public enum PrimitiveAttributeId implements AttributeId {
 	MELEE_CRIT_INCREASE_PCT("MeleeCritIncreasePct", DisplayHint.PERCENT),
 	DAMAGE_TAKEN_INCREASE_PCT("DamageTakenIncreasePct", DisplayHint.PERCENT),
 
+	PET_STAMINA("PetStamina"),
+	PET_INTELLECT("PetIntellect"),
+
 	PET_STA_INCREASE_PCT("PetStaIncreasePct", "increased pet sta", DisplayHint.PERCENT),
 	PET_INT_INCREASE_PCT("PetIntIncreasePct", "increased pet int", DisplayHint.PERCENT),
 	PET_SPELL_CRIT_INCREASE_PCT("PetSpellCritIncreasePct", DisplayHint.PERCENT),

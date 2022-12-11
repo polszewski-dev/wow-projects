@@ -16,7 +16,6 @@ import wow.commons.model.spells.EffectId;
 import wow.commons.model.talents.TalentTree;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attributes.complex.StatConversion.Stat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
@@ -156,11 +155,11 @@ class ComplexAttributeMapperTest {
 	@Test
 	@DisplayName("StatConversion is mapped correctly")
 	void statConversion() {
-		StatConversion original = new StatConversion(Stat.PET_STA, Stat.SP, Percent.of(10), AttributeCondition.EMPTY);
+		StatConversion original = new StatConversion(PET_STAMINA, SPELL_DAMAGE, Percent.of(10), AttributeCondition.EMPTY);
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("StatConversion -> from=PET_STA; to=SP; ratio%=10");
+		assertThat(result).isEqualTo("StatConversion -> from=PetStamina; to=SpellDamage; ratio%=10");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -168,8 +167,8 @@ class ComplexAttributeMapperTest {
 
 		StatConversion parsed = (StatConversion)complexAttribute;
 
-		assertThat(parsed.getFromStat()).isEqualTo(Stat.PET_STA);
-		assertThat(parsed.getToStat()).isEqualTo(Stat.SP);
+		assertThat(parsed.getFromStat()).isEqualTo(PET_STAMINA);
+		assertThat(parsed.getToStat()).isEqualTo(SPELL_DAMAGE);
 		assertThat(parsed.getRatioPct().getValue()).isEqualTo(10);
 	}
 

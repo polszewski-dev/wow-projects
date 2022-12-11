@@ -10,6 +10,7 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.complex.special.*;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.EffectId;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.util.AttributesBuilder;
@@ -225,8 +226,8 @@ public final class ComplexAttributeMapper {
 	}
 
 	private static StatConversion toStatConversion(ParseResult parseResult) {
-		var fromStat = parseResult.getEnum(SC_FROM, StatConversion.Stat::parse);
-		var toStat = parseResult.getEnum(SC_TO, StatConversion.Stat::parse);
+		var fromStat = parseResult.getEnum(SC_FROM, PrimitiveAttributeId::parse);
+		var toStat = parseResult.getEnum(SC_TO, PrimitiveAttributeId::parse);
 		var ratioPct = parseResult.getPercent(SC_RATIO_PCT);
 
 		return new StatConversion(fromStat, toStat, ratioPct, AttributeCondition.EMPTY);
