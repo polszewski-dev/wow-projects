@@ -15,23 +15,23 @@ public interface AttributeCondition {
 	AttributeCondition EMPTY = new EmptyCondition();
 
 	static AttributeCondition of(TalentTree talentTree) {
-		return talentTree != null ? new TalentTreeCondition(talentTree) : EMPTY;
+		return talentTree != null ? TalentTreeCondition.of(talentTree) : EMPTY;
 	}
 
 	static AttributeCondition of(SpellSchool spellSchool) {
-		return spellSchool != null ? new SpellSchoolCondition(spellSchool) : EMPTY;
+		return spellSchool != null ? SpellSchoolCondition.of(spellSchool) : EMPTY;
 	}
 
 	static AttributeCondition of(SpellId spellId) {
-		return spellId != null ? new SpellIdCondition(spellId) : EMPTY;
+		return spellId != null ? SpellIdCondition.of(spellId) : EMPTY;
 	}
 
 	static AttributeCondition of(PetType petType) {
-		return petType != null ? new PetTypeCondition(petType) : EMPTY;
+		return petType != null ? PetTypeCondition.of(petType) : EMPTY;
 	}
 
 	static AttributeCondition of(CreatureType creatureType) {
-		return creatureType != null ? new CreatureTypeCondition(creatureType) : EMPTY;
+		return creatureType != null ? CreatureTypeCondition.of(creatureType) : EMPTY;
 	}
 
 	default boolean isEmpty() {

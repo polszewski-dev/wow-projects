@@ -1,5 +1,7 @@
 package wow.commons.util;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -36,6 +38,16 @@ public final class EnumUtil {
 		return Stream.of(enumValues)
 				.filter(value -> keyAccessor.apply(value).equalsIgnoreCase(stringToParse))
 				.findAny();
+	}
+
+	public static <T extends Enum<T>, V> Map<T, V> cache(Class<T> enumClass, T[] enumValues, Function<T, V> valueProducer) {
+		Map<T, V> result = new EnumMap<>(enumClass);
+
+		for (T enumValue : enumValues) {
+			result.put(enumValue, valueProducer.apply(enumValue));
+		}
+
+		return result;
 	}
 
 	private EnumUtil() {}
