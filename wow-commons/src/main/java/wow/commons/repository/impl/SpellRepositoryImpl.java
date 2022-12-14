@@ -10,7 +10,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
-import wow.commons.repository.SpellDataRepository;
+import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parsers.spells.SpellExcelParser;
 import wow.commons.util.CollectionUtil;
 
@@ -24,7 +24,7 @@ import java.util.*;
  */
 @Repository
 @RequiredArgsConstructor
-public class SpellDataRepositoryImpl extends ExcelRepository implements SpellDataRepository {
+public class SpellRepositoryImpl extends ExcelRepository implements SpellRepository {
 	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
 	private final Map<Integer, List<Buff>> buffsById = new LinkedHashMap<>();

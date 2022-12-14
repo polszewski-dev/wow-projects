@@ -28,9 +28,9 @@ import static wow.commons.model.pve.Phase.TBC_P5;
  * User: POlszewski
  * Date: 2022-11-11
  */
-class ItemDataRepositoryTest extends RepositoryTest {
+class ItemRepositoryTest extends RepositoryTest {
 	@Autowired
-	ItemDataRepository underTest;
+	ItemRepository underTest;
 
 	/*
 		Sunfire Robe	Phase 5

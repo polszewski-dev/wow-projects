@@ -9,7 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.Phase;
-import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.ItemRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,7 @@ import static wow.commons.model.categorization.ItemSlot.*;
 @ContextConfiguration(classes = WowCommonsTestConfig.class)
 class EquipmentTest {
 	@Autowired
-	ItemDataRepository itemDataRepository;
+	ItemRepository itemRepository;
 
 	@Test
 	@DisplayName("Equipping null does nothing")
@@ -172,10 +172,10 @@ class EquipmentTest {
 	}
 
 	private Optional<Gem> getGem(String name) {
-		return itemDataRepository.getGem(name, Phase.TBC_P5);
+		return itemRepository.getGem(name, Phase.TBC_P5);
 	}
 
 	private EquippableItem getItem(String name) {
-		return new EquippableItem(itemDataRepository.getItem(name, Phase.TBC_P5).orElseThrow());
+		return new EquippableItem(itemRepository.getItem(name, Phase.TBC_P5).orElseThrow());
 	}
 }

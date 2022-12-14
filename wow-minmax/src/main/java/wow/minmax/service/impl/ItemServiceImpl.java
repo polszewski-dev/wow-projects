@@ -16,7 +16,7 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.Phase;
-import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.ItemRepository;
 import wow.minmax.config.ItemConfig;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.ItemService;
@@ -37,29 +37,29 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 @Service("nonCachedItemService")
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
-	private final ItemDataRepository itemDataRepository;
+	private final ItemRepository itemRepository;
 	private final ItemConfig itemConfig;
 
 	private final GemComboFinder gemComboFinder = new GemComboFinder(this);
 
 	@Override
 	public Item getItem(int itemId, Phase phase) {
-		return itemDataRepository.getItem(itemId, phase).orElseThrow();
+		return itemRepository.getItem(itemId, phase).orElseThrow();
 	}
 
 	@Override
 	public Enchant getEnchant(int enchantId, Phase phase) {
-		return itemDataRepository.getEnchant(enchantId, phase).orElseThrow();
+		return itemRepository.getEnchant(enchantId, phase).orElseThrow();
 	}
 
 	@Override
 	public Gem getGem(int gemId, Phase phase) {
-		return itemDataRepository.getGem(gemId, phase).orElseThrow();
+		return itemRepository.getGem(gemId, phase).orElseThrow();
 	}
 
 	@Override
 	public List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot) {
-		return itemDataRepository.getItemsBySlot(itemSlot, playerProfile.getPhase()).stream()
+		return itemRepository.getItemsBySlot(itemSlot, playerProfile.getPhase()).stream()
 				.filter(item -> playerProfile.canEquip(itemSlot, item))
 				.filter(this::meetsConfigFilter)
 				.filter(item -> item.isAvailableTo(playerProfile.getCharacterInfo()))
@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType) {
-		return itemDataRepository.getEnchants(itemType, playerProfile.getPhase()).stream()
+		return itemRepository.getEnchants(itemType, playerProfile.getPhase()).stream()
 				.filter(enchant -> enchant.isAvailableTo(playerProfile.getCharacterInfo()))
 				.filter(enchant -> hasStatsSuitableForRole(enchant, itemType, playerProfile))
 				.collect(Collectors.toList());
@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean nonUniqueOnly) {
-		return itemDataRepository.getGems(socketType, playerProfile.getPhase()).stream()
+		return itemRepository.getGems(socketType, playerProfile.getPhase()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests()))
 				.filter(gem -> gem.isAvailableTo(playerProfile.getCharacterInfo()))
 				.filter(gem -> hasStatsSuitableForRole(gem, playerProfile))

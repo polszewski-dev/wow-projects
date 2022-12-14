@@ -6,7 +6,7 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.repository.PveRepository;
-import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.ItemRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
@@ -17,12 +17,12 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  */
 public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 	protected final PveRepository pveRepository;
-	protected final ItemDataRepositoryImpl itemDataRepository;
+	protected final ItemRepositoryImpl itemRepository;
 
-	protected AbstractItemSheetParser(String sheetName, PveRepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
+	protected AbstractItemSheetParser(String sheetName, PveRepository pveRepository, ItemRepositoryImpl itemRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
-		this.itemDataRepository = itemDataRepository;
+		this.itemRepository = itemRepository;
 	}
 
 	private final ExcelColumn colId = column(ID);
@@ -48,7 +48,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		var itemLevel = colItemLevel.getInteger();
 		var source = colSource.getString();
 		var reqPhase = getTimeRestriction().getPhase();
-		var sources = new SourceParser(reqPhase, pveRepository, itemDataRepository).parse(source);
+		var sources = new SourceParser(reqPhase, pveRepository, itemRepository).parse(source);
 
 		return new BasicItemInfo(itemType, itemSubType, rarity, binding, unique, itemLevel, sources);
 	}

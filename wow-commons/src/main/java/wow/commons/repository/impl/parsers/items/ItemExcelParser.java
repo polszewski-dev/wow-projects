@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parsers.items;
 import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.ItemRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class ItemExcelParser extends ExcelParser {
 	private final String xlsFilePath;
-	private final ItemDataRepositoryImpl itemDataRepository;
+	private final ItemRepositoryImpl itemRepository;
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -25,7 +25,7 @@ public class ItemExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new EnchantSheetParser("enchants", itemDataRepository)
+				new EnchantSheetParser("enchants", itemRepository)
 		);
 	}
 }

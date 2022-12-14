@@ -40,9 +40,9 @@ import static wow.commons.model.talents.TalentTree.DESTRUCTION;
  * User: POlszewski
  * Date: 2022-11-11
  */
-class SpellDataRepositoryTest extends RepositoryTest {
+class SpellRepositoryTest extends RepositoryTest {
 	@Autowired
-	SpellDataRepository underTest;
+	SpellRepository underTest;
 
 	@Test
 	@DisplayName("SpellInfo is read correctly")

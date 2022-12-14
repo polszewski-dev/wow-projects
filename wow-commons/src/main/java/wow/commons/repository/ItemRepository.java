@@ -12,7 +12,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2021-03-02
  */
-public interface ItemDataRepository {
+public interface ItemRepository {
 	Optional<Item> getItem(int itemId, Phase phase);
 	Optional<Item> getItem(String name, Phase phase);
 	List<Item> getItemsBySlot(ItemSlot itemSlot, Phase phase);

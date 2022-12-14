@@ -9,7 +9,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.*;
-import wow.commons.repository.impl.SpellDataRepositoryImpl;
+import wow.commons.repository.impl.SpellRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
 
 import java.util.List;
@@ -24,11 +24,11 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 	private final ExcelColumn colTalent = column("talent");
 	private final ExcelColumn colRank = column("rank");
 
-	private final SpellDataRepositoryImpl spellDataRepository;
+	private final SpellRepositoryImpl spellRepository;
 
-	public TalentRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository, Map<TalentId, List<TalentInfo>> talentInfoById) {
+	public TalentRankSheetParser(String sheetName, SpellRepositoryImpl spellRepository, Map<TalentId, List<TalentInfo>> talentInfoById) {
 		super(sheetName, talentInfoById);
-		this.spellDataRepository = spellDataRepository;
+		this.spellRepository = spellRepository;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 
 		for (TalentInfo talentInfo : getCorrespondingElements(talentId)) {
 			Talent talent = getTalent(talentInfo);
-			spellDataRepository.addTalent(talent);
+			spellRepository.addTalent(talent);
 		}
 	}
 

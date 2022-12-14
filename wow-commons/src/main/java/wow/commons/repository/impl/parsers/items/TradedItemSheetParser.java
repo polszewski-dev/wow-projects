@@ -6,21 +6,21 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.TradedItem;
 import wow.commons.repository.PveRepository;
-import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.ItemRepositoryImpl;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
 public class TradedItemSheetParser extends AbstractItemSheetParser {
-	public TradedItemSheetParser(String sheetName, PveRepository pveRepository, ItemDataRepositoryImpl itemDataRepository) {
-		super(sheetName, pveRepository, itemDataRepository);
+	public TradedItemSheetParser(String sheetName, PveRepository pveRepository, ItemRepositoryImpl itemRepository) {
+		super(sheetName, pveRepository, itemRepository);
 	}
 
 	@Override
 	protected void readSingleRow() {
 		TradedItem tradedItem = getTradedItem();
-		itemDataRepository.addTradedItem(tradedItem);
+		itemRepository.addTradedItem(tradedItem);
 	}
 
 	private TradedItem getTradedItem() {

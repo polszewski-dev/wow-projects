@@ -7,7 +7,7 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.SpellId;
-import wow.commons.repository.impl.SpellDataRepositoryImpl;
+import wow.commons.repository.impl.SpellRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
@@ -20,17 +20,17 @@ public class BuffSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colExclusionGroup = column("exclusion group");
 	private final ExcelColumn colSourceSpell = column("source spell");
 
-	private final SpellDataRepositoryImpl spellDataRepository;
+	private final SpellRepositoryImpl spellRepository;
 
-	public BuffSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository) {
+	public BuffSheetParser(String sheetName, SpellRepositoryImpl spellRepository) {
 		super(sheetName);
-		this.spellDataRepository = spellDataRepository;
+		this.spellRepository = spellRepository;
 	}
 
 	@Override
 	protected void readSingleRow() {
 		Buff buff = getBuff();
-		spellDataRepository.addBuff(buff);
+		spellRepository.addBuff(buff);
 	}
 
 	private Buff getBuff() {

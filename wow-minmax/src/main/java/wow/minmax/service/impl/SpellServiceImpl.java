@@ -9,7 +9,7 @@ import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
-import wow.commons.repository.SpellDataRepository;
+import wow.commons.repository.SpellRepository;
 import wow.minmax.service.SpellService;
 
 import java.util.*;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class SpellServiceImpl implements SpellService {
-	private final SpellDataRepository spellDataRepository;
+	private final SpellRepository spellRepository;
 
 	@Override
 	public Spell getSpellHighestRank(SpellId spellId, CharacterInfo characterInfo) {
@@ -39,18 +39,18 @@ public class SpellServiceImpl implements SpellService {
 
 	@Override
 	public Buff getBuff(int buffId, Phase phase) {
-		return spellDataRepository.getBuff(buffId, phase).orElseThrow();
+		return spellRepository.getBuff(buffId, phase).orElseThrow();
 	}
 
 	private Optional<Spell> getSpellHighestRankFilteredByCharacterInfo(SpellId spellId, CharacterInfo characterInfo) {
-		return spellDataRepository.getSpellHighestRank(spellId, characterInfo.getLevel(), characterInfo.getPhase())
+		return spellRepository.getSpellHighestRank(spellId, characterInfo.getLevel(), characterInfo.getPhase())
 				.filter(spell -> spell.isAvailableTo(characterInfo));
 	}
 
 	@Override
 	public List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo) {
 		return buffNames.stream()
-				.map(buffName -> spellDataRepository.getBuff(buffName, characterInfo.getPhase()).orElse(null))
+				.map(buffName -> spellRepository.getBuff(buffName, characterInfo.getPhase()).orElse(null))
 				.filter(Objects::nonNull)
 				.filter(buff -> buff.isAvailableTo(characterInfo))
 				.collect(Collectors.toList());
@@ -58,7 +58,7 @@ public class SpellServiceImpl implements SpellService {
 
 	@Override
 	public List<Buff> getBuffs(CharacterInfo characterInfo) {
-		return spellDataRepository.getBuffs(characterInfo.getPhase()).stream()
+		return spellRepository.getBuffs(characterInfo.getPhase()).stream()
 				.filter(buff -> buff.isAvailableTo(characterInfo))
 				.collect(Collectors.toList());
 	}
@@ -74,7 +74,7 @@ public class SpellServiceImpl implements SpellService {
 			int talentRank = talentString.charAt(position - 1) - '0';
 
 			if (talentRank > 0) {
-				Talent talent = spellDataRepository.getTalent(characterInfo.getCharacterClass(), position, talentRank, characterInfo.getPhase()).orElseThrow();
+				Talent talent = spellRepository.getTalent(characterInfo.getCharacterClass(), position, talentRank, characterInfo.getPhase()).orElseThrow();
 				result.put(talent.getTalentId(), talent);
 			}
 		}

@@ -7,7 +7,7 @@ import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellInfo;
 import wow.commons.model.talents.TalentId;
 import wow.commons.model.talents.TalentInfo;
-import wow.commons.repository.impl.SpellDataRepositoryImpl;
+import wow.commons.repository.impl.SpellRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.EnumMap;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class SpellExcelParser extends ExcelParser {
 	private final String xlsFilePath;
-	private final SpellDataRepositoryImpl spellDataRepository;
+	private final SpellRepositoryImpl spellRepository;
 
 	private final Map<SpellId, List<SpellInfo>> spellInfoById = new EnumMap<>(SpellId.class);
 	private final Map<TalentId, List<TalentInfo>> talentInfoById = new EnumMap<>(TalentId.class);
@@ -36,10 +36,10 @@ public class SpellExcelParser extends ExcelParser {
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
 				new SpellSheetParser("spells", spellInfoById),
-				new SpellRankSheetParser("spell_ranks", spellDataRepository, spellInfoById),
+				new SpellRankSheetParser("spell_ranks", spellRepository, spellInfoById),
 				new TalentSheetParser("talents", talentInfoById),
-				new TalentRankSheetParser("talent_ranks", spellDataRepository, talentInfoById),
-				new BuffSheetParser("buffs", spellDataRepository)
+				new TalentRankSheetParser("talent_ranks", spellRepository, talentInfoById),
+				new BuffSheetParser("buffs", spellRepository)
 		);
 	}
 }

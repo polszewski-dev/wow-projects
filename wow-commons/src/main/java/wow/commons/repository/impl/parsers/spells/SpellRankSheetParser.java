@@ -5,7 +5,7 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.*;
-import wow.commons.repository.impl.SpellDataRepositoryImpl;
+import wow.commons.repository.impl.SpellRepositoryImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -33,11 +33,11 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	private final ExcelColumn colAppliedEffect = column("applied effect");
 	private final ExcelColumn colAppliedEffectDuration = column("applied effect duration");
 
-	private final SpellDataRepositoryImpl spellDataRepository;
+	private final SpellRepositoryImpl spellRepository;
 
-	public SpellRankSheetParser(String sheetName, SpellDataRepositoryImpl spellDataRepository, Map<SpellId, List<SpellInfo>> spellInfoById) {
+	public SpellRankSheetParser(String sheetName, SpellRepositoryImpl spellRepository, Map<SpellId, List<SpellInfo>> spellInfoById) {
 		super(sheetName, spellInfoById);
-		this.spellDataRepository = spellDataRepository;
+		this.spellRepository = spellRepository;
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 
 		for (SpellInfo spellInfo : getCorrespondingElements(spellId)) {
 			Spell spell = getSpell(spellInfo);
-			spellDataRepository.addSpell(spell);
+			spellRepository.addSpell(spell);
 		}
 	}
 

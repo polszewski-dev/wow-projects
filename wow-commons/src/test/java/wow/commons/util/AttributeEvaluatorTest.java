@@ -14,7 +14,7 @@ import wow.commons.model.equipment.Equipment;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
-import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.ItemRepository;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ import static wow.commons.model.pve.Phase.TBC_P5;
 @ContextConfiguration(classes = WowCommonsTestConfig.class)
 class AttributeEvaluatorTest {
 	@Autowired
-	ItemDataRepository itemDataRepository;
+	ItemRepository itemRepository;
 
 	@Test
 	@DisplayName("nothingToSolve returns empty attributes if none were added")
@@ -96,14 +96,14 @@ class AttributeEvaluatorTest {
 	}
 
 	private Optional<Gem> getGem(String name) {
-		return itemDataRepository.getGem(name, TBC_P5);
+		return itemRepository.getGem(name, TBC_P5);
 	}
 
 	private EquippableItem getItem(String name) {
-		return new EquippableItem(itemDataRepository.getItem(name, TBC_P5).orElseThrow());
+		return new EquippableItem(itemRepository.getItem(name, TBC_P5).orElseThrow());
 	}
 
 	private Enchant getEnchant(String name) {
-		return itemDataRepository.getEnchant(name, TBC_P5).orElseThrow();
+		return itemRepository.getEnchant(name, TBC_P5).orElseThrow();
 	}
 }

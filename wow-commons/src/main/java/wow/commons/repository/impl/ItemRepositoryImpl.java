@@ -8,7 +8,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
-import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
 import wow.commons.repository.impl.parsers.items.ItemExcelParser;
@@ -23,7 +23,7 @@ import java.util.*;
  */
 @Repository
 @RequiredArgsConstructor
-public class ItemDataRepositoryImpl extends ExcelRepository implements ItemDataRepository {
+public class ItemRepositoryImpl extends ExcelRepository implements ItemRepository {
 	private final PveRepository pveRepository;
 
 	private final Map<Integer, List<Item>> itemById = new TreeMap<>();

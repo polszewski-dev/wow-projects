@@ -6,7 +6,7 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Enchant;
-import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.ItemRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
@@ -18,11 +18,11 @@ public class EnchantSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colName = column("name");
 	private final ExcelColumn colItemTypes = column("item_types");
 
-	private final ItemDataRepositoryImpl itemDataRepository;
+	private final ItemRepositoryImpl itemRepository;
 
-	public EnchantSheetParser(String sheetName, ItemDataRepositoryImpl itemDataRepository) {
+	public EnchantSheetParser(String sheetName, ItemRepositoryImpl itemRepository) {
 		super(sheetName);
-		this.itemDataRepository = itemDataRepository;
+		this.itemRepository = itemRepository;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class EnchantSheetParser extends WowExcelSheetParser {
 	@Override
 	protected void readSingleRow() {
 		Enchant enchant = getEnchant();
-		itemDataRepository.addEnchant(enchant);
+		itemRepository.addEnchant(enchant);
 	}
 
 	private Enchant getEnchant() {

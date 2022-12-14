@@ -17,7 +17,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
-import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.ItemRepository;
 import wow.minmax.WowMinMaxTestConfig;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -43,7 +43,7 @@ abstract class ServiceTest {
 	static final Offset<Double> PRECISION = Offset.offset(0.01);
 
 	@Autowired
-	ItemDataRepository itemDataRepository;
+	ItemRepository itemRepository;
 
 	@MockBean
 	PlayerProfileRepository playerProfileRepository;
@@ -101,15 +101,15 @@ abstract class ServiceTest {
 	}
 
 	Optional<Gem> getGem(String name) {
-		return itemDataRepository.getGem(name, PHASE);
+		return itemRepository.getGem(name, PHASE);
 	}
 
 	EquippableItem getItem(String name) {
-		return new EquippableItem(itemDataRepository.getItem(name, PHASE).orElseThrow());
+		return new EquippableItem(itemRepository.getItem(name, PHASE).orElseThrow());
 	}
 
 	Enchant getEnchant(String name) {
-		return itemDataRepository.getEnchant(name, PHASE).orElseThrow();
+		return itemRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
 	static final Phase PHASE = Phase.TBC_P5;

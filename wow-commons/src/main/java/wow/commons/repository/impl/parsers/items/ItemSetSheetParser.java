@@ -5,7 +5,7 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
-import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.ItemRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 import java.util.ArrayList;
@@ -21,12 +21,12 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
 public class ItemSetSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colName = column(ITEM_SET_NAME);
 
-	private final ItemDataRepositoryImpl itemDataRepository;
+	private final ItemRepositoryImpl itemRepository;
 	private final Map<String, List<Item>> setPiecesByName;
 
-	public ItemSetSheetParser(String sheetName, ItemDataRepositoryImpl itemDataRepository, Map<String, List<Item>> setPiecesByName) {
+	public ItemSetSheetParser(String sheetName, ItemRepositoryImpl itemRepository, Map<String, List<Item>> setPiecesByName) {
 		super(sheetName);
-		this.itemDataRepository = itemDataRepository;
+		this.itemRepository = itemRepository;
 		this.setPiecesByName = setPiecesByName;
 	}
 
@@ -38,7 +38,7 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 	@Override
 	protected void readSingleRow() {
 		ItemSet itemSet = getItemSet();
-		itemDataRepository.addItemSet(itemSet);
+		itemRepository.addItemSet(itemSet);
 	}
 
 	private ItemSet getItemSet() {

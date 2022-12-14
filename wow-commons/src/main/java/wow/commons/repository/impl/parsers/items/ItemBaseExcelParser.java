@@ -5,7 +5,7 @@ import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
 import wow.commons.repository.PveRepository;
-import wow.commons.repository.impl.ItemDataRepositoryImpl;
+import wow.commons.repository.impl.ItemRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelSheetNames.
 @AllArgsConstructor
 public class ItemBaseExcelParser extends ExcelParser {
 	private final String xlsFilePath;
-	private final ItemDataRepositoryImpl itemDataRepository;
+	private final ItemRepositoryImpl itemRepository;
 	private final PveRepository pveRepository;
 
 	private final Map<String, List<Item>> setPiecesByName = new HashMap<>();
@@ -35,10 +35,10 @@ public class ItemBaseExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new TradedItemSheetParser(TRADE, pveRepository, itemDataRepository),
-				new ItemSheetParser(ITEM, pveRepository, itemDataRepository, setPiecesByName),
-				new GemSheetParser(GEM, pveRepository, itemDataRepository),
-				new ItemSetSheetParser(SET, itemDataRepository, setPiecesByName)
+				new TradedItemSheetParser(TRADE, pveRepository, itemRepository),
+				new ItemSheetParser(ITEM, pveRepository, itemRepository, setPiecesByName),
+				new GemSheetParser(GEM, pveRepository, itemRepository),
+				new ItemSetSheetParser(SET, itemRepository, setPiecesByName)
 		);
 	}
 }

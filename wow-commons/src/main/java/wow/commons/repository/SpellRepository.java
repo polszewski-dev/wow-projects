@@ -14,7 +14,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2020-09-28
  */
-public interface SpellDataRepository {
+public interface SpellRepository {
 	Optional<Spell> getSpellHighestRank(SpellId spellId, int level, Phase phase);
 
 	Optional<Talent> getTalent(CharacterClass characterClass, int talentCalculatorPosition, int rank, Phase phase);

@@ -9,7 +9,7 @@ import wow.commons.WowCommonsTestConfig;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
-import wow.commons.repository.ItemDataRepository;
+import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
 
 import java.util.Set;
@@ -27,7 +27,7 @@ class SourceParserTest {
 	PveRepository pveRepository;
 
 	@Autowired
-	ItemDataRepository itemDataRepository;
+	ItemRepository itemRepository;
 
 	@Test
 	void empty() {
@@ -175,6 +175,6 @@ class SourceParserTest {
 	}
 
 	private SourceParser getParser() {
-		return new SourceParser(Phase.TBC_P5, pveRepository, itemDataRepository);
+		return new SourceParser(Phase.TBC_P5, pveRepository, itemRepository);
 	}
 }
