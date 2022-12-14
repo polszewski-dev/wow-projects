@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -34,6 +35,11 @@ public class SpellServiceImpl implements SpellService {
 				.map(spellId -> getSpellHighestRankFilteredByCharacterInfo(spellId, characterInfo).orElse(null))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Buff getBuff(int buffId, Phase phase) {
+		return spellDataRepository.getBuff(buffId, phase).orElseThrow();
 	}
 
 	private Optional<Spell> getSpellHighestRankFilteredByCharacterInfo(SpellId spellId, CharacterInfo characterInfo) {

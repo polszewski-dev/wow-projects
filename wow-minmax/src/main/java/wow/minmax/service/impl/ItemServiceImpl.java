@@ -48,6 +48,16 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
+	public Enchant getEnchant(int enchantId, Phase phase) {
+		return itemDataRepository.getEnchant(enchantId, phase).orElseThrow();
+	}
+
+	@Override
+	public Gem getGem(int gemId, Phase phase) {
+		return itemDataRepository.getGem(gemId, phase).orElseThrow();
+	}
+
+	@Override
 	public List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot) {
 		return itemDataRepository.getItemsBySlot(itemSlot, playerProfile.getPhase()).stream()
 				.filter(item -> playerProfile.canEquip(itemSlot, item))

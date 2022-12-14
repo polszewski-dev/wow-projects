@@ -12,11 +12,11 @@ import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellStatistics;
-import wow.commons.repository.CharacterRepository;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.service.CalculationService;
+import wow.minmax.service.CharacterService;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.spells.Snapshot.CritMode;
@@ -28,7 +28,7 @@ import static wow.commons.model.spells.Snapshot.CritMode;
 @Service
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
-	private final CharacterRepository characterRepository;
+	private final CharacterService characterService;
 
 	private static final double PRECISION = 0.0001;
 
@@ -102,8 +102,8 @@ public class CalculationServiceImpl implements CalculationService {
 		spell = initOptional(playerProfile, spell);
 		totalStats = initOptional(playerProfile, totalStats);
 
-		BaseStatInfo baseStats = characterRepository.getBaseStats(playerProfile.getCharacterClass(), playerProfile.getRace(), playerProfile.getLevel(), playerProfile.getPhase()).orElseThrow();
-		CombatRatingInfo cr = characterRepository.getCombatRatings(playerProfile.getLevel(), playerProfile.getPhase()).orElseThrow();
+		BaseStatInfo baseStats = characterService.getBaseStats(playerProfile.getCharacterInfo());
+		CombatRatingInfo cr = characterService.getCombatRatings(playerProfile.getCharacterInfo());
 
 		return new Snapshot(
 				spell,

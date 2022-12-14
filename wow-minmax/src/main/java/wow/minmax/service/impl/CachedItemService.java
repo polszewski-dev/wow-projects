@@ -38,6 +38,16 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
+	public Enchant getEnchant(int enchantId, Phase phase) {
+		return itemService.getEnchant(enchantId, phase);
+	}
+
+	@Override
+	public Gem getGem(int gemId, Phase phase) {
+		return itemService.getGem(gemId, phase);
+	}
+
+	@Override
 	public List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot) {
 		String key = getProfileKey(playerProfile) + "#" + itemSlot;
 		return getItemsBySlotCache.computeIfAbsent(key, x -> itemService.getItemsBySlot(playerProfile, itemSlot));

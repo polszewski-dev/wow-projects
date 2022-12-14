@@ -2,6 +2,7 @@ package wow.minmax.service;
 
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -18,6 +19,8 @@ public interface SpellService {
 	Spell getSpellHighestRank(SpellId spellId, CharacterInfo characterInfo);
 
 	List<Spell> getSpellHighestRanks(List<SpellId> spellIds, CharacterInfo characterInfo);
+
+	Buff getBuff(int buffId, Phase phase);
 
 	List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo);
 

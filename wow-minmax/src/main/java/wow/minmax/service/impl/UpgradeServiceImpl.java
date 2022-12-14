@@ -7,6 +7,7 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
+import wow.minmax.config.UpgradeConfig;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;
@@ -16,6 +17,7 @@ import wow.minmax.service.impl.enumerators.BestItemVariantEnumerator;
 import wow.minmax.service.impl.enumerators.FindUpgradesEnumerator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -24,6 +26,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UpgradeServiceImpl implements UpgradeService {
+	private final UpgradeConfig upgradeConfig;
+
 	private final ItemService itemService;
 	private final CalculationService calculationService;
 
@@ -33,7 +37,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 				playerProfile, slotGroup, spell, itemService, calculationService
 		);
 
-		return enumerator.run().getResult();
+		return enumerator.run().getResult().stream()
+				.limit(upgradeConfig.getMaxUpgrades())
+				.collect(Collectors.toList());
 	}
 
 	@Override

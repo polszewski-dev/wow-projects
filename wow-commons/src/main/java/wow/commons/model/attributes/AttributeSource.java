@@ -99,10 +99,6 @@ public interface AttributeSource {
 		return (List)getComplexAttributeList().getOrDefault(attributeId, List.of());
 	}
 
-	default boolean scalesWithStacks() {
-		return false;
-	}
-
 	default String statString() {
 		return getAttributes().toString();
 	}

@@ -18,6 +18,10 @@ import java.util.List;
 public interface ItemService {
 	Item getItem(int itemId, Phase phase);
 
+	Enchant getEnchant(int enchantId, Phase phase);
+
+	Gem getGem(int gemId, Phase phase);
+
 	List<Item> getItemsBySlot(PlayerProfile playerProfile, ItemSlot itemSlot);
 
 	List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType);

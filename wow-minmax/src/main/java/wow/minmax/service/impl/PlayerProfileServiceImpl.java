@@ -11,17 +11,12 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
-import wow.commons.repository.CharacterRepository;
-import wow.commons.repository.ItemDataRepository;
-import wow.commons.repository.SpellDataRepository;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
-import wow.minmax.service.PlayerProfileService;
-import wow.minmax.service.SpellService;
-import wow.minmax.service.UpgradeService;
+import wow.minmax.service.*;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -36,14 +31,14 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class PlayerProfileServiceImpl implements PlayerProfileService {
+	private final PlayerProfileRepository playerProfileRepository;
+	private final PlayerProfilePOConverter playerProfilePOConverter;
+	private final ProfileConfig profileConfig;
+
+	private final CharacterService characterService;
+	private final ItemService itemService;
 	private final SpellService spellService;
 	private final UpgradeService upgradeService;
-	private final PlayerProfileRepository playerProfileRepository;
-	private final ItemDataRepository itemDataRepository;
-	private final SpellDataRepository spellDataRepository;
-	private final CharacterRepository characterRepository;
-	private final ProfileConfig profileConfig;
-	private final PlayerProfilePOConverter playerProfilePOConverter;
 
 	@Override
 	public List<PlayerProfile> getPlayerProfileList() {
@@ -103,8 +98,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private Build createBuild(BuildId buildId, CharacterInfo characterInfo) {
-		BuildTemplate buildTemplate = characterRepository.getBuildTemplate(
-				buildId, characterInfo.getCharacterClass(), characterInfo.getLevel(), characterInfo.getPhase()).orElseThrow();
+		BuildTemplate buildTemplate = characterService.getBuildTemplate(buildId, characterInfo);
 
 		Build build = new Build(
 				buildId,
@@ -151,7 +145,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Item item = itemDataRepository.getItem(itemId, playerProfile.getPhase()).orElseThrow();
+		Item item = itemService.getItem(itemId, playerProfile.getPhase());
 		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile, item, slot, playerProfile.getDamagingSpell());
 
 		playerProfile.getEquipment().set(bestItemVariant, slot);
@@ -163,7 +157,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Enchant enchant = itemDataRepository.getEnchant(enchantId, playerProfile.getPhase()).orElseThrow();
+		Enchant enchant = itemService.getEnchant(enchantId, playerProfile.getPhase());
 
 		playerProfile.getEquipment().get(slot).enchant(enchant);
 		saveProfile(playerProfile);
@@ -173,7 +167,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile changeGem(UUID profileId, ItemSlot slot, int socketNo, int gemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Gem gem = itemDataRepository.getGem(gemId, playerProfile.getPhase()).orElseThrow();
+		Gem gem = itemService.getGem(gemId, playerProfile.getPhase());
 
 		playerProfile.getEquipment().get(slot).insertGem(socketNo, gem);
 		saveProfile(playerProfile);
@@ -192,7 +186,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	@Override
 	public PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Buff buff = spellDataRepository.getBuff(buffId, playerProfile.getPhase()).orElseThrow();
+		Buff buff = spellService.getBuff(buffId, playerProfile.getPhase());
 
 		playerProfile.enableBuff(buff, enabled);
 		saveProfile(playerProfile);
