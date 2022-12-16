@@ -7,8 +7,6 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
-import wow.commons.model.character.BaseStatInfo;
-import wow.commons.model.character.CombatRatingInfo;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellStatistics;
@@ -102,16 +100,11 @@ public class CalculationServiceImpl implements CalculationService {
 		spell = initOptional(playerProfile, spell);
 		totalStats = initOptional(playerProfile, totalStats);
 
-		BaseStatInfo baseStats = characterService.getBaseStats(playerProfile.getCharacterInfo());
-		CombatRatingInfo cr = characterService.getCombatRatings(playerProfile.getCharacterInfo());
-
 		return new Snapshot(
 				spell,
-				baseStats,
-				cr,
-				totalStats,
-				playerProfile.getActivePet(),
-				playerProfile.getEnemyType()
+				playerProfile.getCharacterInfo(),
+				playerProfile.getEnemyInfo(),
+				totalStats
 		);
 	}
 

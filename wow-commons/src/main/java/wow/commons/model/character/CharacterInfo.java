@@ -27,6 +27,8 @@ public class CharacterInfo {
 	private final Build build;
 	private final CharacterProfessions characterProfessions;
 	private final Phase phase;
+	private final BaseStatInfo baseStatInfo;
+	private final CombatRatingInfo combatRatingInfo;
 
 	public GameVersion getGameVersion() {
 		return phase.getGameVersion();
@@ -70,7 +72,9 @@ public class CharacterInfo {
 				level,
 				build,
 				characterProfessions,
-				phase
+				phase,
+				baseStatInfo,
+				combatRatingInfo
 		);
 	}
 
@@ -84,7 +88,41 @@ public class CharacterInfo {
 				level,
 				build,
 				characterProfessions,
-				phase
+				phase,
+				baseStatInfo,
+				combatRatingInfo
+		);
+	}
+
+	public CharacterInfo setBaseStatInfo(BaseStatInfo baseStatInfo) {
+		if (baseStatInfo == this.baseStatInfo) {
+			return this;
+		}
+		return new CharacterInfo(
+				characterClass,
+				race,
+				level,
+				build,
+				characterProfessions,
+				phase,
+				baseStatInfo,
+				combatRatingInfo
+		);
+	}
+
+	public CharacterInfo setCombatRatingInfo(CombatRatingInfo combatRatingInfo) {
+		if (combatRatingInfo == this.combatRatingInfo) {
+			return this;
+		}
+		return new CharacterInfo(
+				characterClass,
+				race,
+				level,
+				build,
+				characterProfessions,
+				phase,
+				baseStatInfo,
+				combatRatingInfo
 		);
 	}
 }

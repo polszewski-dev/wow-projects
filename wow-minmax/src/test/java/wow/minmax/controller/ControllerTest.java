@@ -116,7 +116,9 @@ abstract class ControllerTest {
 	}
 
 	private void createProfile() {
-		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, build, CharacterProfessions.EMPTY, Phase.TBC_P5);
+		BaseStatInfo baseStats = new BaseStatInfo(70, CharacterClass.WARLOCK, Race.ORC, TimeRestriction.EMPTY, 0, 0, 0, 0, 0, 0, 0, Percent.ZERO, 100);
+		CombatRatingInfo cr = new CombatRatingInfo(70, TimeRestriction.EMPTY, 10, 10, 10);
+		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, build, CharacterProfessions.EMPTY, Phase.TBC_P5, baseStats, cr);
 		EnemyInfo enemyInfo = new EnemyInfo(CreatureType.DEMON);
 
 		profile = new PlayerProfile(UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002"), "test#1", characterInfo, enemyInfo);

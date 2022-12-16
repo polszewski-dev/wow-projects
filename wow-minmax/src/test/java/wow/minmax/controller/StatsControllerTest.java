@@ -7,13 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.character.BaseStatInfo;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.CombatRatingInfo;
-import wow.commons.model.character.Race;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.SpellStatistics;
 import wow.minmax.model.PlayerSpellStats;
@@ -71,11 +65,8 @@ class StatsControllerTest extends ControllerTest {
 
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
 
-		BaseStatInfo baseStats = new BaseStatInfo(70, CharacterClass.WARLOCK, Race.ORC, TimeRestriction.EMPTY, 0, 0, 0, 0, 0, 0, 0, Percent.ZERO, 100);
-		CombatRatingInfo cr = new CombatRatingInfo(70, TimeRestriction.EMPTY, 10, 10, 10);
-		Snapshot snapshot = new Snapshot(profile.getDamagingSpell(), baseStats, cr, profile.getStats(), null, profile.getEnemyType());
+		Snapshot snapshot = new Snapshot(profile.getDamagingSpell(), profile.getCharacterInfo(), profile.getEnemyInfo(), profile.getStats());
 		SpellStatistics statistics = snapshot.getSpellStatistics(Snapshot.CritMode.AVERAGE, false);
-		statistics.setSnapshot(snapshot);
 
 		when(calculationService.getSnapshot(any(), any(), any())).thenReturn(snapshot);
 		when(calculationService.getAbilityEquivalent(any(), any(), any(), any())).thenReturn(Attributes.EMPTY);

@@ -11,15 +11,15 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.special.ProcEvent;
-import wow.commons.model.character.BaseStatInfo;
-import wow.commons.model.character.CombatRatingInfo;
-import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PetType;
+import wow.commons.model.character.*;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
+import wow.commons.model.pve.Phase;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
@@ -48,8 +48,22 @@ class SnapshotTest {
 		SpellInfo spellInfo = new SpellInfo(SHADOW_BOLT, description, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, DESTRUCTION, SHADOW, null, false, damagingSpellInfo, null);
 
 		spell = new Spell(id, TimeRestriction.EMPTY, CharacterRestriction.EMPTY, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
-		baseStatInfo = new BaseStatInfo(0, WARLOCK, ORC, TimeRestriction.EMPTY, 0, 0, 100, 200, 300, 1000, 2000, Percent.of(10), 100);
-		combatRatingInfo = new CombatRatingInfo(0, TimeRestriction.EMPTY, 10, 20, 40);
+
+		Build build = new Build(
+				BuildId.DESTRO_SHADOW,
+				null,
+				Map.of(),
+				PveRole.CASTER_DPS,
+				spell,
+				List.of(spell),
+				null,
+				Map.of(BuffSetId.SELF_BUFFS, List.of())
+		);
+		BaseStatInfo baseStatInfo = new BaseStatInfo(0, WARLOCK, ORC, TimeRestriction.EMPTY, 0, 0, 100, 200, 300, 1000, 2000, Percent.of(10), 100);
+		CombatRatingInfo combatRatingInfo = new CombatRatingInfo(0, TimeRestriction.EMPTY, 10, 20, 40);
+
+		characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, build, CharacterProfessions.EMPTY, Phase.TBC_P5, baseStatInfo, combatRatingInfo);
+		enemyInfo = new EnemyInfo(UNDEAD);
 	}
 
 	@Test
@@ -332,16 +346,13 @@ class SnapshotTest {
 	}
 
 	private Snapshot getSnapshot(Attributes stats) {
-		return new Snapshot(spell, baseStatInfo, combatRatingInfo, stats, activePet, enemyType);
+		return new Snapshot(spell, characterInfo, enemyInfo, stats);
 	}
 
 	static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	static final Offset<Double> PRECISION = Offset.offset(0.01);
 
 	Spell spell;
-	BaseStatInfo baseStatInfo;
-	CombatRatingInfo combatRatingInfo;
-
-	PetType activePet = null;
-	CreatureType enemyType = UNDEAD;
+	CharacterInfo characterInfo;
+	EnemyInfo enemyInfo;
 }

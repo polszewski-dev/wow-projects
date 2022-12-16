@@ -12,9 +12,9 @@ import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.character.BaseStatInfo;
+import wow.commons.model.character.CharacterInfo;
 import wow.commons.model.character.CombatRatingInfo;
-import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PetType;
+import wow.commons.model.character.EnemyInfo;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -91,12 +91,12 @@ public class Snapshot implements StatProvider {
 
 	private final boolean calcFinished;
 
-	public Snapshot(Spell spell, BaseStatInfo baseStats, CombatRatingInfo cr, Attributes stats, PetType activePet, CreatureType enemyType) {
+	public Snapshot(Spell spell, CharacterInfo characterInfo, EnemyInfo enemyInfo, Attributes stats) {
 		this.spell = spell;
-		this.baseStats = baseStats;
-		this.cr = cr;
+		this.baseStats = characterInfo.getBaseStatInfo();
+		this.cr = characterInfo.getCombatRatingInfo();
 		this.stats = stats;
-		this.conditions = spell.getConditions(activePet, enemyType);
+		this.conditions = spell.getConditions(characterInfo.getBuild().getActivePet(), enemyInfo.getEnemyType());
 
 		accumulateStats();
 		calcBaseStats();

@@ -90,12 +90,17 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				level,
 				Build.EMPTY,
 				new CharacterProfessions(professions),
-				phase
+				phase,
+				null,
+				null
 		);
 
 		Build build = createBuild(buildId, characterInfo);
 
-		return characterInfo.setBuild(build);
+		return characterInfo
+				.setBuild(build)
+				.setBaseStatInfo(characterService.getBaseStats(characterInfo))
+				.setCombatRatingInfo(characterService.getCombatRatings(characterInfo));
 	}
 
 	private Build createBuild(BuildId buildId, CharacterInfo characterInfo) {
