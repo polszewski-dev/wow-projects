@@ -35,17 +35,17 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	private final UUID profileId;
 	private final String profileName;
 	private final CharacterInfo characterInfo;
-	private final CreatureType enemyType;
+	private final EnemyInfo enemyInfo;
 	private Equipment equipment = new Equipment();
 	private List<Buff> buffs = List.of();
 
 	private LocalDateTime lastModified;
 
-	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, CreatureType enemyType) {
+	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, EnemyInfo enemyInfo) {
 		this.profileId = profileId;
 		this.profileName = profileName;
 		this.characterInfo = characterInfo;
-		this.enemyType = enemyType;
+		this.enemyInfo = enemyInfo;
 		this.lastModified = LocalDateTime.now();
 	}
 
@@ -55,7 +55,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo.setPhase(phase), enemyType);
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo.setPhase(phase), enemyInfo);
 		copy.equipment = Copyable.copyNullable(this.equipment);
 		copy.buffs = new ArrayList<>(this.buffs);
 		copy.lastModified = this.lastModified;
@@ -199,6 +199,10 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 
 	public boolean hasTalent(TalentId talentId) {
 		return characterInfo.hasTalent(talentId);
+	}
+
+	public CreatureType getEnemyType() {
+		return enemyInfo.getEnemyType();
 	}
 
 	public BuildId getBuildId() {

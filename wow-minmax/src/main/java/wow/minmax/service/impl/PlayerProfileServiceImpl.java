@@ -69,12 +69,13 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, Phase phase
 	) {
 		CharacterInfo characterInfo = createCharacterInfo(characterClass, race, level, buildId, professions, phase);
+		EnemyInfo enemyInfo = new EnemyInfo(enemyType);
 
 		PlayerProfile playerProfile = new PlayerProfile(
 				profileId,
 				profileName,
 				characterInfo,
-				enemyType
+				enemyInfo
 		);
 
 		playerProfile.setBuffs(BuffSetId.values());
