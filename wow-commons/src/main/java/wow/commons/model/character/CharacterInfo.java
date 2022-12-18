@@ -58,6 +58,10 @@ public class CharacterInfo {
 		return build.hasTalent(talentId);
 	}
 
+	public PetType getActivePet() {
+		return build.getActivePet();
+	}
+
 	public boolean canEquip(ItemSlot itemSlot, ItemType itemType, ItemSubType itemSubType) {
 		return characterClass.canEquip(itemSlot, itemType, itemSubType);
 	}

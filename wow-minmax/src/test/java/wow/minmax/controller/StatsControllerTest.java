@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.spells.CritMode;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.SpellStatistics;
 import wow.minmax.model.PlayerSpellStats;
@@ -66,7 +67,7 @@ class StatsControllerTest extends ControllerTest {
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
 
 		Snapshot snapshot = new Snapshot(profile.getDamagingSpell(), profile.getCharacterInfo(), profile.getEnemyInfo(), profile.getStats());
-		SpellStatistics statistics = snapshot.getSpellStatistics(Snapshot.CritMode.AVERAGE, false);
+		SpellStatistics statistics = snapshot.getSpellStatistics(CritMode.AVERAGE, false);
 
 		when(calculationService.getSnapshot(any(), any(), any())).thenReturn(snapshot);
 		when(calculationService.getAbilityEquivalent(any(), any(), any(), any())).thenReturn(Attributes.EMPTY);

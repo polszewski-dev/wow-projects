@@ -26,7 +26,6 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.character.CharacterClass.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.character.Race.ORC;
-import static wow.commons.model.spells.Snapshot.CritMode;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.commons.model.spells.SpellSchool.FIRE;
 import static wow.commons.model.spells.SpellSchool.SHADOW;

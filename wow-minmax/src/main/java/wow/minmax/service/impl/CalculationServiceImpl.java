@@ -7,6 +7,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.spells.CritMode;
 import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellStatistics;
@@ -14,10 +15,8 @@ import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.service.CalculationService;
-import wow.minmax.service.CharacterService;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
-import static wow.commons.model.spells.Snapshot.CritMode;
 
 /**
  * User: POlszewski
@@ -26,8 +25,6 @@ import static wow.commons.model.spells.Snapshot.CritMode;
 @Service
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
-	private final CharacterService characterService;
-
 	private static final double PRECISION = 0.0001;
 
 	@Override
