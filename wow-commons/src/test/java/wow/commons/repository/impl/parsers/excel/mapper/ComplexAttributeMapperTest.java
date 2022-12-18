@@ -1,4 +1,4 @@
-package wow.commons.repository.impl.parsers.excel;
+package wow.commons.repository.impl.parsers.excel.mapper;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

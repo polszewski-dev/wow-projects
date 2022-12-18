@@ -16,6 +16,7 @@ import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
+import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.PrimitiveAttributeSupplier;
 

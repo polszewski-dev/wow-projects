@@ -9,7 +9,7 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
-import wow.commons.repository.impl.parsers.excel.ComplexAttributeMapper;
+import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
