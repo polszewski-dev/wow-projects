@@ -2,15 +2,8 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.commons.model.attributes.AttributeSource;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
-import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.character.PveRole;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
@@ -20,15 +13,13 @@ import wow.commons.repository.ItemRepository;
 import wow.minmax.config.ItemConfig;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.ItemService;
+import wow.minmax.service.impl.classifiers.PveRoleStatClassifier;
 import wow.minmax.service.impl.enumerators.FilterOutWorseEnchantChoices;
 import wow.minmax.service.impl.enumerators.FilterOutWorseGemChoices;
 import wow.minmax.service.impl.enumerators.GemComboFinder;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
 /**
  * User: POlszewski
@@ -39,6 +30,8 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 public class ItemServiceImpl implements ItemService {
 	private final ItemRepository itemRepository;
 	private final ItemConfig itemConfig;
+
+	private final List<PveRoleStatClassifier> pveRoleStatClassifiers;
 
 	private final GemComboFinder gemComboFinder = new GemComboFinder(this);
 
@@ -63,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
 				.filter(item -> playerProfile.canEquip(itemSlot, item))
 				.filter(this::meetsConfigFilter)
 				.filter(item -> item.isAvailableTo(playerProfile.getCharacterInfo()))
-				.filter(item -> hasStatsSuitableForRole(item, playerProfile))
+				.filter(item -> getStatClassifier(playerProfile).hasStatsSuitableForRole(item, playerProfile))
 				.collect(Collectors.toList());
 	}
 
@@ -77,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
 	public List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType) {
 		return itemRepository.getEnchants(itemType, playerProfile.getPhase()).stream()
 				.filter(enchant -> enchant.isAvailableTo(playerProfile.getCharacterInfo()))
-				.filter(enchant -> hasStatsSuitableForRole(enchant, itemType, playerProfile))
+				.filter(enchant -> getStatClassifier(playerProfile).hasStatsSuitableForRole(enchant, itemType, playerProfile))
 				.collect(Collectors.toList());
 	}
 
@@ -92,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.getGems(socketType, playerProfile.getPhase()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests()))
 				.filter(gem -> gem.isAvailableTo(playerProfile.getCharacterInfo()))
-				.filter(gem -> hasStatsSuitableForRole(gem, playerProfile))
+				.filter(gem -> getStatClassifier(playerProfile).hasStatsSuitableForRole(gem, playerProfile))
 				.collect(Collectors.toList());
 	}
 
@@ -110,87 +103,10 @@ public class ItemServiceImpl implements ItemService {
 		return gemComboFinder.getGemCombos(playerProfile, item.getSocketSpecification());
 	}
 
-	private boolean hasStatsSuitableForRole(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		if (playerProfile.getRole() == PveRole.CASTER_DPS) {
-			return hasStatsSuitableForCasterDps(attributeSource, playerProfile);
-		}
-		throw new IllegalArgumentException("Unsupported role: " + playerProfile.getRole());
-	}
-
-	private boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
-		if (playerProfile.getRole() == PveRole.CASTER_DPS) {
-			return hasStatsSuitableForCasterDps(enchant, itemType, playerProfile);
-		}
-		throw new IllegalArgumentException("Unsupported role: " + playerProfile.getRole());
-	}
-
-	private boolean hasStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		if (attributeSource.getHealingPower() > attributeSource.getSpellPower() && !itemConfig.isIncludeHealingItems()) {
-			return false;
-		}
-
-		if (hasPrimitiveStatsSuitableForCasterDps(attributeSource, playerProfile)) {
-			return true;
-		}
-
-		return hasComplexStatsSuitableForCasterDps(attributeSource, playerProfile);
-	}
-
-	private boolean hasStatsSuitableForCasterDps(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
-		if (hasStatsSuitableForRole(enchant, playerProfile)) {
-			return true;
-		}
-		if (itemType == ItemType.WRIST) {
-			return enchant.getIntellect() > 0;
-		}
-		if (itemType == ItemType.CHEST) {
-			return enchant.getBaseStatsIncrease() > 0;
-		}
-		if (itemType == ItemType.BACK) {
-			return enchant.getThreatReductionPct().getValue() > 0;
-		}
-		if (itemType == ItemType.FEET) {
-			return enchant.getSpeedIncreasePct().getValue() > 0;
-		}
-		return false;
-	}
-
-	private static boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		return attributeSource.getPrimitiveAttributeList().stream()
-				.anyMatch(attribute -> isCasterStat(attribute, playerProfile));
-	}
-
-	private static boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, playerProfile.getDamagingSpell().getCastTime());
-
-		for (SpecialAbility specialAbility : attributeSource.getSpecialAbilities()) {
-			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);
-			if (hasPrimitiveStatsSuitableForCasterDps(statEquivalent, playerProfile)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private static boolean isCasterStat(PrimitiveAttribute attribute, PlayerProfile playerProfile) {
-		return CASTER_STATS.contains(attribute.getId()) && hasCasterStatCondition(attribute, playerProfile);
-	}
-
-	private static final Set<PrimitiveAttributeId> CASTER_STATS = Set.of(
-			SPELL_DAMAGE,
-			SPELL_POWER,
-			SPELL_HIT_PCT,
-			SPELL_HIT_RATING,
-			SPELL_CRIT_PCT,
-			SPELL_CRIT_RATING,
-			SPELL_HASTE_PCT,
-			SPELL_HASTE_RATING
-	);
-
-	private static boolean hasCasterStatCondition(PrimitiveAttribute attribute, PlayerProfile playerProfile) {
-		var damagingSpell = playerProfile.getDamagingSpell();
-		var conditions = damagingSpell.getConditions(playerProfile.getActivePet(), playerProfile.getEnemyType());
-		return conditions.contains(attribute.getCondition());
+	private PveRoleStatClassifier getStatClassifier(PlayerProfile playerProfile) {
+		return pveRoleStatClassifiers.stream()
+				.filter(x -> x.getRole() == playerProfile.getRole())
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("Unsupported role: " + playerProfile.getRole()));
 	}
 }

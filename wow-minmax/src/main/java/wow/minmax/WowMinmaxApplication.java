@@ -9,6 +9,9 @@ import wow.minmax.config.ItemConfig;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.impl.CachedItemService;
 import wow.minmax.service.impl.ItemServiceImpl;
+import wow.minmax.service.impl.classifiers.PveRoleStatClassifier;
+
+import java.util.List;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
@@ -21,7 +24,7 @@ public class WowMinmaxApplication {
 	}
 
 	@Bean
-	public ItemService itemService(ItemRepository itemRepository, ItemConfig itemConfig) {
-		return new CachedItemService(new ItemServiceImpl(itemRepository, itemConfig));
+	public ItemService itemService(ItemRepository itemRepository, ItemConfig itemConfig, List<PveRoleStatClassifier> pveRoleStatClassifies) {
+		return new CachedItemService(new ItemServiceImpl(itemRepository, itemConfig, pveRoleStatClassifies));
 	}
 }
