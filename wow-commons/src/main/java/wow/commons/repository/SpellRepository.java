@@ -6,6 +6,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
+import wow.commons.model.talents.TalentId;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,8 @@ import java.util.Optional;
  */
 public interface SpellRepository {
 	Optional<Spell> getSpellHighestRank(SpellId spellId, int level, Phase phase);
+
+	Optional<Talent> getTalent(CharacterClass characterClass, TalentId talentId, int rank, Phase phase);
 
 	Optional<Talent> getTalent(CharacterClass characterClass, int talentCalculatorPosition, int rank, Phase phase);
 

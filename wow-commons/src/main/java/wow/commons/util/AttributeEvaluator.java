@@ -19,6 +19,8 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 	private final Map<AttributeCondition, Map<PrimitiveAttributeId, Double>> primitiveAttributes = new HashMap<>();
 	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(ComplexAttributeId.class);
 
+	private AttributeEvaluator() {}
+
 	public static AttributeEvaluator of() {
 		return new AttributeEvaluator();
 	}

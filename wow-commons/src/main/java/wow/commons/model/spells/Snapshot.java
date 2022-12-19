@@ -87,9 +87,9 @@ public class Snapshot implements StatProvider {
 	}
 
 	private void calcSpellStats() {
-		totalHit = getTotalHit(cr);
-		totalCrit = getTotalCrit(baseStats, cr);
-		totalHaste = getTotalHaste(cr);
+		totalHit = getTotalHitValue();
+		totalCrit = getTotalCritValue();
+		totalHaste = getTotalHasteValue();
 
 		sp = stats.getTotalSpellDamage();
 
@@ -128,13 +128,13 @@ public class Snapshot implements StatProvider {
 		return critChance;
 	}
 
-	private double getTotalHit(CombatRatingInfo cr) {
+	private double getTotalHitValue() {
 		double ratingHit = stats.getSpellHitRating() / cr.getSpellHit();
 		double pctHit = stats.getSpellHitPct();
 		return ratingHit + pctHit;
 	}
 
-	private double getTotalCrit(BaseStatInfo baseStats, CombatRatingInfo cr) {
+	private double getTotalCritValue() {
 		double baseCrit = baseStats.getBaseSpellCritPct().getValue();
 		double intCrit = (intellect - baseStats.getBaseIntellect()) / baseStats.getIntellectPerCritPct();
 		double ratingCrit = stats.getSpellCritRating() / cr.getSpellCrit();
@@ -142,7 +142,7 @@ public class Snapshot implements StatProvider {
 		return baseCrit + intCrit + ratingCrit + pctCrit;
 	}
 
-	private double getTotalHaste(CombatRatingInfo cr) {
+	private double getTotalHasteValue() {
 		double ratingHaste = stats.getSpellHasteRating() / cr.getSpellHaste();
 		double pctHaste = stats.getSpellHastePct();
 		return pctHaste + ratingHaste;

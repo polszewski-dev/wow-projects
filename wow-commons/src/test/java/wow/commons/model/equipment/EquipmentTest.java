@@ -2,17 +2,10 @@ package wow.commons.model.equipment;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.commons.WowCommonsTestConfig;
+import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.item.Gem;
-import wow.commons.model.pve.Phase;
-import wow.commons.repository.ItemRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static wow.commons.model.categorization.ItemSlot.*;
@@ -21,12 +14,7 @@ import static wow.commons.model.categorization.ItemSlot.*;
  * User: POlszewski
  * Date: 2022-11-12
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowCommonsTestConfig.class)
-class EquipmentTest {
-	@Autowired
-	ItemRepository itemRepository;
-
+class EquipmentTest extends WowCommonsSpringTest {
 	@Test
 	@DisplayName("Equipping null does nothing")
 	void noItem() {
@@ -71,8 +59,8 @@ class EquipmentTest {
 	@Test
 	@DisplayName("Colored gems matchings are correct")
 	void gemCounts() {
-		Gem orangeGem = getGem("Reckless Pyrestone").orElseThrow();
-		Gem violetGem = getGem("Glowing Shadowsong Amethyst").orElseThrow();
+		Gem orangeGem = getGem("Reckless Pyrestone");
+		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
 
 		EquippableItem item = getItem("Mantle of the Malefic");// blue + yellow socket
 
@@ -92,9 +80,9 @@ class EquipmentTest {
 	@Test
 	@DisplayName("Meta matching is correct")
 	void meta() {
-		Gem metaGem = getGem("Chaotic Skyfire Diamond").orElseThrow();
-		Gem orangeGem = getGem("Reckless Pyrestone").orElseThrow();
-		Gem violetGem = getGem("Glowing Shadowsong Amethyst").orElseThrow();
+		Gem metaGem = getGem("Chaotic Skyfire Diamond");
+		Gem orangeGem = getGem("Reckless Pyrestone");
+		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
 
 		EquippableItem head = getItem("Dark Conjuror's Collar");// meta + blue socket
 		EquippableItem shoulder = getItem("Mantle of the Malefic");// blue + yellow socket
@@ -169,13 +157,5 @@ class EquipmentTest {
 		List<EquippableItem> itemDifference = equipment1.getItemDifference(equipment2);
 
 		assertThat(itemDifference).isEmpty();
-	}
-
-	private Optional<Gem> getGem(String name) {
-		return itemRepository.getGem(name, Phase.TBC_P5);
-	}
-
-	private EquippableItem getItem(String name) {
-		return new EquippableItem(itemRepository.getItem(name, Phase.TBC_P5).orElseThrow());
 	}
 }

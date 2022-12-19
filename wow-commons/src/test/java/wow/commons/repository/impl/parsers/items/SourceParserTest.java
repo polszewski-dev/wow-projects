@@ -1,16 +1,10 @@
 package wow.commons.repository.impl.parsers.items;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.commons.WowCommonsTestConfig;
+import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.sources.Source;
-import wow.commons.repository.ItemRepository;
-import wow.commons.repository.PveRepository;
 
 import java.util.Set;
 
@@ -20,15 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2022-11-22
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowCommonsTestConfig.class)
-class SourceParserTest {
-	@Autowired
-	PveRepository pveRepository;
-
-	@Autowired
-	ItemRepository itemRepository;
-
+class SourceParserTest extends WowCommonsSpringTest {
 	@Test
 	void empty() {
 		Set<Source> sources = getParser().parse(null);

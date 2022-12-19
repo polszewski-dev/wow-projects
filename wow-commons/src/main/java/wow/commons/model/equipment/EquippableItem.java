@@ -8,7 +8,6 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.sources.Source;
-import wow.commons.util.AttributesBuilder;
 
 import java.util.List;
 import java.util.Objects;
@@ -158,24 +157,6 @@ public class EquippableItem implements Copyable<EquippableItem>, AttributeCollec
 	public boolean hasGemMatchingSocketColor(int socketNo) {
 		ItemSocket socket = sockets.getSocket(socketNo);
 		return socket.hasGemMatchingSocketColor();
-	}
-
-	public Attributes getAttributes(int numRed, int numYellow, int numBlue) {
-		AttributesBuilder result = new AttributesBuilder();
-		result.addAttributes(item.getAttributes());
-		if (enchant != null) {
-			result.addAttributes(enchant);
-		}
-		for (int socketNo = 0; socketNo < sockets.getSocketCount(); ++socketNo) {
-			ItemSocket socket = sockets.getSocket(socketNo);
-			if (socket.hasMatchingGem(numRed, numYellow, numBlue)) {
-				result.addAttributes(socket.getGem());
-			}
-		}
-		if (allSocketsHaveMatchingGems(numRed, numYellow, numBlue)) {
-			result.addAttributes(getSocketBonus());
-		}
-		return result.toAttributes();
 	}
 
 	@Override

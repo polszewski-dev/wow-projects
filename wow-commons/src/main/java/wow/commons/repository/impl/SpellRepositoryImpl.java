@@ -10,6 +10,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
+import wow.commons.model.talents.TalentId;
 import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parsers.spells.SpellExcelParser;
 import wow.commons.util.CollectionUtil;
@@ -26,6 +27,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SpellRepositoryImpl extends ExcelRepository implements SpellRepository {
 	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
+	private final Map<String, List<Talent>> talentByClassByIdByRank = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
 	private final Map<Integer, List<Buff>> buffsById = new LinkedHashMap<>();
 	private final Map<String, List<Buff>> buffsByName = new LinkedHashMap<>();
@@ -51,6 +53,13 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		return spells.stream()
 				.filter(spell -> spell.getRank() == maxRank)
 				.collect(CollectionUtil.toOptionalSingleton());
+	}
+
+	@Override
+	public Optional<Talent> getTalent(CharacterClass characterClass, TalentId talentId, int rank, Phase phase) {
+		String key = getTalentKey(characterClass, talentId, rank);
+
+		return getUnique(talentByClassByIdByRank, key, phase);
 	}
 
 	@Override
@@ -81,6 +90,10 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		spellExcelParser.readFromXls();
 	}
 
+	private String getTalentKey(CharacterClass characterClass, TalentId talentId, int rank) {
+		return characterClass + "#" + talentId + "#" + rank;
+	}
+
 	private String getTalentKey(CharacterClass characterClass, int talentCalculatorPosition, int rank) {
 		return characterClass + "#" + talentCalculatorPosition + "#" + rank;
 	}
@@ -99,6 +112,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 
 		if (optionalExistingTalent.isEmpty()) {
 			list.add(talent);
+			addEntry(talentByClassByIdByRank, getTalentKey(talent.getCharacterClass(), talent.getTalentId(), talent.getRank()), talent);
 			return;
 		}
 
