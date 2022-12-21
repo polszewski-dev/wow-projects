@@ -2,9 +2,9 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.spells.Snapshot;
+import wow.character.model.snapshot.Snapshot;
+import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellStatistics;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.model.dto.SpellStatsDTO;

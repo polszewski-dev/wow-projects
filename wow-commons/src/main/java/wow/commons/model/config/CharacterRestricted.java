@@ -1,7 +1,5 @@
 package wow.commons.model.config;
 
-import wow.commons.model.character.CharacterInfo;
-
 /**
  * User: POlszewski
  * Date: 2022-12-04

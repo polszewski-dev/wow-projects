@@ -4,7 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import wow.commons.model.character.*;
+import wow.character.model.build.BuildId;
+import wow.character.model.character.CharacterProfession;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.Race;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
 

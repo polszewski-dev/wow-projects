@@ -1,11 +1,11 @@
 package wow.minmax.service.impl.enumerators;
 
+import wow.character.model.equipment.ItemSockets;
+import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.equipment.ItemSockets;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
-import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.impl.CachedItemService;

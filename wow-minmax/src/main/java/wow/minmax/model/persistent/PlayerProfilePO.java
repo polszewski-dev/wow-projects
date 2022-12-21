@@ -2,7 +2,7 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.character.BuildId;
+import wow.character.model.build.BuildId;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;

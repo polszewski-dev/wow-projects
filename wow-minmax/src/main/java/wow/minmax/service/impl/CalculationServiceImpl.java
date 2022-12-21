@@ -2,15 +2,15 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.snapshot.CritMode;
+import wow.character.model.snapshot.Snapshot;
+import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
-import wow.commons.model.spells.CritMode;
-import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellStatistics;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;

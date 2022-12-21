@@ -3,19 +3,19 @@ package wow.minmax.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.character.model.equipment.Equipment;
+import wow.character.model.snapshot.Snapshot;
+import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.equipment.Equipment;
-import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellStatistics;
 import wow.minmax.model.PlayerSpellStats;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.character.model.build.BuffSetId.*;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
-import static wow.commons.model.character.BuffSetId.*;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 
 /**

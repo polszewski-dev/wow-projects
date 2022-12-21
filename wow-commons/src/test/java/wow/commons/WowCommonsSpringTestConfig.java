@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
  * Date: 2022-11-10
  */
 @ComponentScan(basePackages = {
-		"wow.commons.repository"
+		"wow.commons"
 })
 @PropertySource("classpath:test.properties")
 public class WowCommonsSpringTestConfig {

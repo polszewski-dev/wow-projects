@@ -15,7 +15,8 @@ import java.util.List;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
-		"wow.commons.repository",
+		"wow.commons",
+		"wow.character",
 		"wow.minmax"
 })
 public class WowMinmaxApplication {

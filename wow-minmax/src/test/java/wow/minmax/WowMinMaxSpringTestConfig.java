@@ -7,7 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
  * Date: 2022-11-12
  */
 @ComponentScan(basePackages = {
-		"wow.commons.repository",
+		"wow.commons",
+		"wow.character",
 		"wow.minmax"
 })
 public class WowMinMaxSpringTestConfig {

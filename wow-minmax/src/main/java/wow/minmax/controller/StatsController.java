@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wow.character.model.build.BuffSetId;
+import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.character.BuffSetId;
-import wow.commons.model.spells.Snapshot;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.minmax.converter.dto.PlayerSpellStatsConverter;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static wow.commons.model.character.BuffSetId.*;
+import static wow.character.model.build.BuffSetId.*;
 
 /**
  * User: POlszewski

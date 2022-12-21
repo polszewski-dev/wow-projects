@@ -2,6 +2,7 @@ package wow.minmax.service.impl.classifiers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.build.PveRole;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
@@ -9,7 +10,6 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.character.PveRole;
 import wow.commons.model.item.Enchant;
 import wow.minmax.config.ItemConfig;
 import wow.minmax.model.PlayerProfile;

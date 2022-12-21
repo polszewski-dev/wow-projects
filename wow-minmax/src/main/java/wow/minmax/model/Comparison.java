@@ -1,10 +1,10 @@
 package wow.minmax.model;
 
 import lombok.Getter;
+import wow.character.model.equipment.Equipment;
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.equipment.Equipment;
-import wow.commons.model.equipment.EquippableItem;
 import wow.commons.util.AttributesDiff;
 import wow.commons.util.AttributesDiffFinder;
 

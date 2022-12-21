@@ -2,10 +2,10 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.equipment.Equipment;
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.equipment.Equipment;
-import wow.commons.model.equipment.EquippableItem;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.EquipmentDTO;
 import wow.minmax.model.dto.EquipmentSlotDTO;

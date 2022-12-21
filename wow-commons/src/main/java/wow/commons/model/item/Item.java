@@ -3,7 +3,7 @@ package wow.commons.model.item;
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.character.CharacterInfo;
+import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;

@@ -1,8 +1,8 @@
 package wow.minmax.service;
 
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.Comparison;

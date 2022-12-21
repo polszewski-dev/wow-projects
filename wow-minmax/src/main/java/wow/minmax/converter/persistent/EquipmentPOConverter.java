@@ -2,8 +2,8 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.equipment.Equipment;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.equipment.Equipment;
 import wow.minmax.converter.ParametrizedConverter;
 import wow.minmax.model.persistent.EquipmentPO;
 

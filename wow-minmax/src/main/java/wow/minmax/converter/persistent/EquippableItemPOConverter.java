@@ -2,7 +2,7 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.equipment.EquippableItem;
+import wow.character.model.equipment.EquippableItem;
 import wow.minmax.converter.ParametrizedConverter;
 import wow.minmax.model.persistent.EquippableItemPO;
 import wow.minmax.model.persistent.GemPO;

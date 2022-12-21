@@ -1,8 +1,8 @@
 package wow.minmax.service.impl.classifiers;
 
+import wow.character.model.build.PveRole;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.character.PveRole;
 import wow.commons.model.item.Enchant;
 import wow.minmax.model.PlayerProfile;
 

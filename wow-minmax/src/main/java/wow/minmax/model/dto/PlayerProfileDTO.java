@@ -2,9 +2,9 @@ package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.character.model.build.PveRole;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PveRole;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 

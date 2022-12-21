@@ -1,7 +1,11 @@
 package wow.minmax.service;
 
+import wow.character.model.build.BuildId;
+import wow.character.model.character.CharacterProfession;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.character.*;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.minmax.model.PlayerProfile;
 

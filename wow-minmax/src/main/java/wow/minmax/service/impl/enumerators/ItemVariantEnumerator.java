@@ -1,17 +1,17 @@
 package wow.minmax.service.impl.enumerators;
 
+import wow.character.model.equipment.Equipment;
+import wow.character.model.equipment.EquippableItem;
+import wow.character.util.AttributeEvaluator;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.equipment.Equipment;
-import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
-import wow.commons.util.AttributeEvaluator;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;

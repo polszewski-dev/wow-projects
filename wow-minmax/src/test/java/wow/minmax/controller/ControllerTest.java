@@ -1,5 +1,11 @@
 package wow.minmax.controller;
 
+import wow.character.model.build.BuffSetId;
+import wow.character.model.build.Build;
+import wow.character.model.build.BuildId;
+import wow.character.model.build.PveRole;
+import wow.character.model.character.*;
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
@@ -11,11 +17,12 @@ import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.character.*;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.Race;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.equipment.EquippableItem;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.*;

@@ -23,7 +23,7 @@
 
 		<dependency>
 			<groupId>polszewski</groupId>
-			<artifactId>wow-commons</artifactId>
+			<artifactId>wow-character</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>

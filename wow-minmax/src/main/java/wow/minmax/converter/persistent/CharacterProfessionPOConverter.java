@@ -2,7 +2,7 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.character.CharacterProfession;
+import wow.character.model.character.CharacterProfession;
 import wow.minmax.converter.ParametrizedConverter;
 import wow.minmax.model.persistent.CharacterProfessionPO;
 

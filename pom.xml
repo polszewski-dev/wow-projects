@@ -21,6 +21,7 @@
 
 	<modules>
 		<module>wow-commons</module>
+		<module>wow-character</module>
 		<module>wow-minmax</module>
 		<module>wow-scraper</module>
 	</modules>

@@ -3,7 +3,8 @@ package wow.commons.model.config;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.character.*;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.Race;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
@@ -37,35 +38,25 @@ public class CharacterRestriction {
 	public static final CharacterRestriction EMPTY = builder().build();
 
 	public boolean isMetBy(CharacterInfo characterInfo) {
-		return isMetBy(
-				characterInfo.getLevel(),
-				characterInfo.getCharacterClass(),
-				characterInfo.getRace(),
-				characterInfo.getBuild(),
-				characterInfo.getCharacterProfessions()
-		);
-	}
-
-	public boolean isMetBy(int level, CharacterClass characterClass, Race race, Build build, CharacterProfessions characterProfessions) {
-		if (this.level != null && level < this.level) {
+		if (this.level != null && characterInfo.getLevel() < this.level) {
 			return false;
 		}
-		if (!characterClasses.isEmpty() && !characterClasses.contains(characterClass)) {
+		if (!characterClasses.isEmpty() && !characterClasses.contains(characterInfo.getCharacterClass())) {
 			return false;
 		}
-		if (!this.races.isEmpty() && !this.races.contains(race)) {
+		if (!this.races.isEmpty() && !this.races.contains(characterInfo.getRace())) {
 			return false;
 		}
-		if (side != null && side != race.getSide()) {
+		if (side != null && side != characterInfo.getRace().getSide()) {
 			return false;
 		}
-		if (professionRestriction != null && !characterProfessions.hasProfession(professionRestriction.getProfession(), professionRestriction.getLevel())) {
+		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.getProfession(), professionRestriction.getLevel())) {
 			return false;
 		}
-		if (professionSpec != null && !characterProfessions.hasProfessionSpecialization(professionSpec)) {
+		if (professionSpec != null && !characterInfo.hasProfessionSpecialization(professionSpec)) {
 			return false;
 		}
-		return talentId == null || build.hasTalent(talentId);
+		return talentId == null || characterInfo.hasTalent(talentId);
 	}
 
 	public CharacterRestriction merge(CharacterRestriction other) {

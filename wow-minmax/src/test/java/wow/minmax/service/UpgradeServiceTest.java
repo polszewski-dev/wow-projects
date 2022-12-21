@@ -3,16 +3,16 @@ package wow.minmax.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.ItemSocket;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.equipment.EquippableItem;
-import wow.commons.model.item.ItemSocket;
 import wow.minmax.model.Comparison;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.character.BuffSetId.*;
+import static wow.character.model.build.BuffSetId.*;
 
 /**
  * User: POlszewski

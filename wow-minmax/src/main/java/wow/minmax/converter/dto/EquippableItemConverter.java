@@ -2,7 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.equipment.EquippableItem;
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.item.Gem;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.EquippableItemDTO;
