@@ -173,7 +173,7 @@ public class PlayerProfileController {
 			}
 		}
 
-		List<Buff> availableBuffs = spellService.getBuffs(playerProfile.getCharacterInfo());
+		List<Buff> availableBuffs = spellService.getBuffs(playerProfile.getCharacter());
 		playerProfileDTO.setAvailableBuffs(buffConverter.convertList(availableBuffs));
 	}
 

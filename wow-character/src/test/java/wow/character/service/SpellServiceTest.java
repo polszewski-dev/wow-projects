@@ -22,7 +22,7 @@ class SpellServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getSpell() {
-		Spell spell = underTest.getSpellHighestRank(SpellId.SHADOW_BOLT, getCharacterInfo(SpellId.SHADOW_BOLT));
+		Spell spell = underTest.getSpellHighestRank(SpellId.SHADOW_BOLT, getCharacter(SpellId.SHADOW_BOLT));
 
 		assertThat(spell.getSpellId()).isEqualTo(SpellId.SHADOW_BOLT);
 		assertThat(spell.getRank()).isEqualTo(11);
@@ -30,7 +30,7 @@ class SpellServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getAvailableBuffs() {
-		List<Buff> buffs = underTest.getBuffs(getCharacterInfo(SpellId.SHADOW_BOLT));
+		List<Buff> buffs = underTest.getBuffs(getCharacter(SpellId.SHADOW_BOLT));
 
 		List<String> names = buffs.stream().map(Buff::getName).collect(Collectors.toList());
 

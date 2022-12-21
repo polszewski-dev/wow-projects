@@ -4,6 +4,7 @@ import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Build;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.PveRole;
+import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
@@ -125,10 +126,10 @@ abstract class ControllerTest {
 	private void createProfile() {
 		BaseStatInfo baseStats = new BaseStatInfo(70, CharacterClass.WARLOCK, Race.ORC, TimeRestriction.EMPTY, 0, 0, 0, 0, 0, 0, 0, Percent.ZERO, 100);
 		CombatRatingInfo cr = new CombatRatingInfo(70, TimeRestriction.EMPTY, 10, 10, 10);
-		CharacterInfo characterInfo = new CharacterInfo(CharacterClass.WARLOCK, Race.ORC, 70, build, CharacterProfessions.EMPTY, Phase.TBC_P5, baseStats, cr);
-		EnemyInfo enemyInfo = new EnemyInfo(CreatureType.DEMON);
+		Character character = new Character(CharacterClass.WARLOCK, Race.ORC, 70, build, CharacterProfessions.EMPTY, Phase.TBC_P5, baseStats, cr);
+		Enemy enemy = new Enemy(CreatureType.DEMON);
 
-		profile = new PlayerProfile(UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002"), "test#1", characterInfo, enemyInfo);
+		profile = new PlayerProfile(UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002"), "test#1", character, enemy);
 		profile.getEquipment().set(new EquippableItem(chest).enchant(enchant).gem(redGem, yellowGem, blueGem));
 		profile.getEquipment().set(new EquippableItem(trinket), ItemSlot.TRINKET_1);
 		profile.setBuffs(List.of(buff));

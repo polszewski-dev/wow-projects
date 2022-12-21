@@ -10,6 +10,6 @@ import wow.commons.model.character.CreatureType;
  */
 @AllArgsConstructor
 @Getter
-public class EnemyInfo {
+public class Enemy {
 	private final CreatureType enemyType;
 }

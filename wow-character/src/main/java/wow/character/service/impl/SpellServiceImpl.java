@@ -2,7 +2,7 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.CharacterInfo;
+import wow.character.model.character.Character;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.pve.Phase;
@@ -25,14 +25,14 @@ public class SpellServiceImpl implements SpellService {
 	private final SpellRepository spellRepository;
 
 	@Override
-	public Spell getSpellHighestRank(SpellId spellId, CharacterInfo characterInfo) {
-		return getSpellHighestRankFilteredByCharacterInfo(spellId, characterInfo).orElseThrow();
+	public Spell getSpellHighestRank(SpellId spellId, Character character) {
+		return getSpellHighestRankFilteredByCharacter(spellId, character).orElseThrow();
 	}
 
 	@Override
-	public List<Spell> getSpellHighestRanks(List<SpellId> spellIds, CharacterInfo characterInfo) {
+	public List<Spell> getSpellHighestRanks(List<SpellId> spellIds, Character character) {
 		return spellIds.stream()
-				.map(spellId -> getSpellHighestRankFilteredByCharacterInfo(spellId, characterInfo).orElse(null))
+				.map(spellId -> getSpellHighestRankFilteredByCharacter(spellId, character).orElse(null))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
@@ -42,29 +42,29 @@ public class SpellServiceImpl implements SpellService {
 		return spellRepository.getBuff(buffId, phase).orElseThrow();
 	}
 
-	private Optional<Spell> getSpellHighestRankFilteredByCharacterInfo(SpellId spellId, CharacterInfo characterInfo) {
-		return spellRepository.getSpellHighestRank(spellId, characterInfo.getLevel(), characterInfo.getPhase())
-				.filter(spell -> spell.isAvailableTo(characterInfo));
+	private Optional<Spell> getSpellHighestRankFilteredByCharacter(SpellId spellId, Character character) {
+		return spellRepository.getSpellHighestRank(spellId, character.getLevel(), character.getPhase())
+				.filter(spell -> spell.isAvailableTo(character));
 	}
 
 	@Override
-	public List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo) {
+	public List<Buff> getBuffs(List<String> buffNames, Character character) {
 		return buffNames.stream()
-				.map(buffName -> spellRepository.getBuff(buffName, characterInfo.getPhase()).orElse(null))
+				.map(buffName -> spellRepository.getBuff(buffName, character.getPhase()).orElse(null))
 				.filter(Objects::nonNull)
-				.filter(buff -> buff.isAvailableTo(characterInfo))
+				.filter(buff -> buff.isAvailableTo(character))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Buff> getBuffs(CharacterInfo characterInfo) {
-		return spellRepository.getBuffs(characterInfo.getPhase()).stream()
-				.filter(buff -> buff.isAvailableTo(characterInfo))
+	public List<Buff> getBuffs(Character character) {
+		return spellRepository.getBuffs(character.getPhase()).stream()
+				.filter(buff -> buff.isAvailableTo(character))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Map<TalentId, Talent> getTalentsFromTalentLink(String link, CharacterInfo characterInfo) {
+	public Map<TalentId, Talent> getTalentsFromTalentLink(String link, Character character) {
 		Map<TalentId, Talent> result = new LinkedHashMap<>();
 
 		String talentStringStart = "?tal=";
@@ -74,7 +74,7 @@ public class SpellServiceImpl implements SpellService {
 			int talentRank = talentString.charAt(position - 1) - '0';
 
 			if (talentRank > 0) {
-				Talent talent = spellRepository.getTalent(characterInfo.getCharacterClass(), position, talentRank, characterInfo.getPhase()).orElseThrow();
+				Talent talent = spellRepository.getTalent(character.getCharacterClass(), position, talentRank, character.getPhase()).orElseThrow();
 				result.put(talent.getTalentId(), talent);
 			}
 		}

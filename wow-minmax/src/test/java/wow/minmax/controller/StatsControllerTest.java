@@ -66,7 +66,7 @@ class StatsControllerTest extends ControllerTest {
 
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
 
-		Snapshot snapshot = new Snapshot(profile.getDamagingSpell(), profile.getCharacterInfo(), profile.getEnemyInfo(), profile.getStats());
+		Snapshot snapshot = new Snapshot(profile.getDamagingSpell(), profile.getCharacter(), profile.getEnemy(), profile.getStats());
 		SpellStatistics statistics = snapshot.getSpellStatistics(CritMode.AVERAGE, false);
 
 		when(calculationService.getSnapshot(any(), any(), any())).thenReturn(snapshot);

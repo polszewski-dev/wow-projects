@@ -6,10 +6,10 @@ import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Build;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
-import wow.character.model.character.CharacterInfo;
+import wow.character.model.character.Character;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterProfessions;
-import wow.character.model.character.EnemyInfo;
+import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
@@ -82,14 +82,14 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	public PlayerProfile createTemporaryPlayerProfile(
 			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, Phase phase
 	) {
-		CharacterInfo characterInfo = createCharacterInfo(characterClass, race, level, buildId, professions, phase);
-		EnemyInfo enemyInfo = new EnemyInfo(enemyType);
+		Character character = createCharacter(characterClass, race, level, buildId, professions, phase);
+		Enemy enemy = new Enemy(enemyType);
 
 		PlayerProfile playerProfile = new PlayerProfile(
 				profileId,
 				profileName,
-				characterInfo,
-				enemyInfo
+				character,
+				enemy
 		);
 
 		playerProfile.setBuffs(BuffSetId.values());
@@ -97,8 +97,8 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		return playerProfile;
 	}
 
-	private CharacterInfo createCharacterInfo(CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, Phase phase) {
-		CharacterInfo characterInfo = new CharacterInfo(
+	private Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, Phase phase) {
+		Character character = new Character(
 				characterClass,
 				race,
 				level,
@@ -109,21 +109,21 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				null
 		);
 
-		Build build = createBuild(buildId, characterInfo);
+		Build build = createBuild(buildId, character);
 
-		return characterInfo
+		return character
 				.setBuild(build)
-				.setBaseStatInfo(characterService.getBaseStats(characterInfo))
-				.setCombatRatingInfo(characterService.getCombatRatings(characterInfo));
+				.setBaseStatInfo(characterService.getBaseStats(character))
+				.setCombatRatingInfo(characterService.getCombatRatings(character));
 	}
 
-	private Build createBuild(BuildId buildId, CharacterInfo characterInfo) {
-		BuildTemplate buildTemplate = characterService.getBuildTemplate(buildId, characterInfo);
+	private Build createBuild(BuildId buildId, Character character) {
+		BuildTemplate buildTemplate = characterService.getBuildTemplate(buildId, character);
 
 		Build build = new Build(
 				buildId,
 				buildTemplate.getTalentLink(),
-				spellService.getTalentsFromTalentLink(buildTemplate.getTalentLink(), characterInfo),
+				spellService.getTalentsFromTalentLink(buildTemplate.getTalentLink(), character),
 				buildTemplate.getRole(),
 				null,
 				List.of(),
@@ -131,18 +131,18 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				Map.of()
 		);
 
-		characterInfo = characterInfo.setBuild(build);
+		character = character.setBuild(build);
 
 		return build
-				.setDamagingSpell(spellService.getSpellHighestRank(buildTemplate.getDamagingSpell(), characterInfo))
-				.setRelevantSpells(spellService.getSpellHighestRanks(buildTemplate.getRelevantSpells(), characterInfo))
-				.setBuffSets(getBuffSets(buildTemplate, characterInfo));
+				.setDamagingSpell(spellService.getSpellHighestRank(buildTemplate.getDamagingSpell(), character))
+				.setRelevantSpells(spellService.getSpellHighestRanks(buildTemplate.getRelevantSpells(), character))
+				.setBuffSets(getBuffSets(buildTemplate, character));
 	}
 
-	private Map<BuffSetId, List<Buff>> getBuffSets(BuildTemplate buildTemplate, CharacterInfo characterInfo) {
+	private Map<BuffSetId, List<Buff>> getBuffSets(BuildTemplate buildTemplate, Character character) {
 		Map<BuffSetId, List<Buff>> result = new EnumMap<>(BuffSetId.class);
 		for (var entry : buildTemplate.getBuffSets().entrySet()) {
-			List<Buff> buffs = spellService.getBuffs(entry.getValue(), characterInfo);
+			List<Buff> buffs = spellService.getBuffs(entry.getValue(), character);
 			result.put(entry.getKey(), buffs);
 		}
 		return result;

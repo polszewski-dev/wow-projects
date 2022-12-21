@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.getItemsBySlot(itemSlot, playerProfile.getPhase()).stream()
 				.filter(item -> playerProfile.canEquip(itemSlot, item))
 				.filter(this::meetsConfigFilter)
-				.filter(item -> item.isAvailableTo(playerProfile.getCharacterInfo()))
+				.filter(item -> item.isAvailableTo(playerProfile.getCharacter()))
 				.filter(item -> getStatClassifier(playerProfile).hasStatsSuitableForRole(item, playerProfile))
 				.collect(Collectors.toList());
 	}
@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Enchant> getEnchants(PlayerProfile playerProfile, ItemType itemType) {
 		return itemRepository.getEnchants(itemType, playerProfile.getPhase()).stream()
-				.filter(enchant -> enchant.isAvailableTo(playerProfile.getCharacterInfo()))
+				.filter(enchant -> enchant.isAvailableTo(playerProfile.getCharacter()))
 				.filter(enchant -> getStatClassifier(playerProfile).hasStatsSuitableForRole(enchant, itemType, playerProfile))
 				.collect(Collectors.toList());
 	}
@@ -84,7 +84,7 @@ public class ItemServiceImpl implements ItemService {
 	public List<Gem> getGems(PlayerProfile playerProfile, SocketType socketType, boolean nonUniqueOnly) {
 		return itemRepository.getGems(socketType, playerProfile.getPhase()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests()))
-				.filter(gem -> gem.isAvailableTo(playerProfile.getCharacterInfo()))
+				.filter(gem -> gem.isAvailableTo(playerProfile.getCharacter()))
 				.filter(gem -> getStatClassifier(playerProfile).hasStatsSuitableForRole(gem, playerProfile))
 				.collect(Collectors.toList());
 	}

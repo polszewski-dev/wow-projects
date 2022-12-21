@@ -9,6 +9,7 @@ import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Build;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.PveRole;
+import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -160,7 +161,7 @@ public abstract class WowCharacterSpringTest {
 		return spellRepository.getTalent(CHARACTER_CLASS, talentId, rank, PHASE).orElseThrow();
 	}
 
-	protected CharacterInfo getCharacterInfo(SpellId spellId) {
+	protected Character getCharacter(SpellId spellId) {
 		Spell spell = getSpell(spellId);
 
 		Build build = new Build(
@@ -184,11 +185,11 @@ public abstract class WowCharacterSpringTest {
 				new CharacterProfession(ENCHANTING, maxLevel, null)
 		));
 
-		return new CharacterInfo(CHARACTER_CLASS, RACE, LEVEL, build, professions, PHASE, baseStatInfo, combatRatingInfo);
+		return new Character(CHARACTER_CLASS, RACE, LEVEL, build, professions, PHASE, baseStatInfo, combatRatingInfo);
 	}
 
-	protected EnemyInfo getEnemyInfo() {
-		return new EnemyInfo(UNDEAD);
+	protected Enemy getEnemy() {
+		return new Enemy(UNDEAD);
 	}
 
 	protected static final CharacterClass CHARACTER_CLASS = WARLOCK;

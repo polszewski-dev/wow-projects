@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
 import wow.character.model.character.BaseStatInfo;
-import wow.character.model.character.CharacterInfo;
+import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
@@ -20,21 +20,21 @@ public class CharacterServiceImpl implements CharacterService {
 	private final CharacterRepository characterRepository;
 
 	@Override
-	public BaseStatInfo getBaseStats(CharacterInfo characterInfo) {
+	public BaseStatInfo getBaseStats(Character character) {
 		return characterRepository.getBaseStats(
-				characterInfo.getCharacterClass(), characterInfo.getRace(), characterInfo.getLevel(), characterInfo.getPhase()
+				character.getCharacterClass(), character.getRace(), character.getLevel(), character.getPhase()
 		).orElseThrow();
 	}
 
 	@Override
-	public CombatRatingInfo getCombatRatings(CharacterInfo characterInfo) {
-		return characterRepository.getCombatRatings(characterInfo.getLevel(), characterInfo.getPhase()).orElseThrow();
+	public CombatRatingInfo getCombatRatings(Character character) {
+		return characterRepository.getCombatRatings(character.getLevel(), character.getPhase()).orElseThrow();
 	}
 
 	@Override
-	public BuildTemplate getBuildTemplate(BuildId buildId, CharacterInfo characterInfo) {
+	public BuildTemplate getBuildTemplate(BuildId buildId, Character character) {
 		return characterRepository.getBuildTemplate(
-				buildId, characterInfo.getCharacterClass(), characterInfo.getLevel(), characterInfo.getPhase()
+				buildId, character.getCharacterClass(), character.getLevel(), character.getPhase()
 		).orElseThrow();
 	}
 }

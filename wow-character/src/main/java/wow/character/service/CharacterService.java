@@ -3,7 +3,7 @@ package wow.character.service;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
 import wow.character.model.character.BaseStatInfo;
-import wow.character.model.character.CharacterInfo;
+import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 
 /**
@@ -11,9 +11,9 @@ import wow.character.model.character.CombatRatingInfo;
  * Date: 2022-12-14
  */
 public interface CharacterService {
-	BaseStatInfo getBaseStats(CharacterInfo characterInfo);
+	BaseStatInfo getBaseStats(Character character);
 
-	CombatRatingInfo getCombatRatings(CharacterInfo characterInfo);
+	CombatRatingInfo getCombatRatings(Character character);
 
-	BuildTemplate getBuildTemplate(BuildId buildId, CharacterInfo characterInfo);
+	BuildTemplate getBuildTemplate(BuildId buildId, Character character);
 }

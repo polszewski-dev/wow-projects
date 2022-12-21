@@ -99,8 +99,8 @@ public class CalculationServiceImpl implements CalculationService {
 
 		return new Snapshot(
 				spell,
-				playerProfile.getCharacterInfo(),
-				playerProfile.getEnemyInfo(),
+				playerProfile.getCharacter(),
+				playerProfile.getEnemy(),
 				totalStats
 		);
 	}

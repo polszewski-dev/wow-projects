@@ -2,8 +2,8 @@ package wow.character.model.snapshot;
 
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.character.model.character.CharacterInfo;
-import wow.character.model.character.EnemyInfo;
+import wow.character.model.character.Character;
+import wow.character.model.character.Enemy;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
@@ -104,9 +104,9 @@ class SnapshotTest extends WowCharacterSpringTest {
 
 	private Snapshot getSnapshot(Attributes stats) {
 		Spell spell = getSpell(SHADOW_BOLT);
-		CharacterInfo characterInfo = getCharacterInfo(SHADOW_BOLT);
-		EnemyInfo enemyInfo = getEnemyInfo();
+		Character character = getCharacter(SHADOW_BOLT);
+		Enemy enemy = getEnemy();
 
-		return new Snapshot(spell, characterInfo, enemyInfo, stats);
+		return new Snapshot(spell, character, enemy, stats);
 	}
 }

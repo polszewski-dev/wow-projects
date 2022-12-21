@@ -1,6 +1,6 @@
 package wow.character.service;
 
-import wow.character.model.character.CharacterInfo;
+import wow.character.model.character.Character;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
@@ -16,15 +16,15 @@ import java.util.Map;
  * Date: 2021-12-28
  */
 public interface SpellService {
-	Spell getSpellHighestRank(SpellId spellId, CharacterInfo characterInfo);
+	Spell getSpellHighestRank(SpellId spellId, Character character);
 
-	List<Spell> getSpellHighestRanks(List<SpellId> spellIds, CharacterInfo characterInfo);
+	List<Spell> getSpellHighestRanks(List<SpellId> spellIds, Character character);
 
 	Buff getBuff(int buffId, Phase phase);
 
-	List<Buff> getBuffs(List<String> buffNames, CharacterInfo characterInfo);
+	List<Buff> getBuffs(List<String> buffNames, Character character);
 
-	List<Buff> getBuffs(CharacterInfo characterInfo);
+	List<Buff> getBuffs(Character character);
 
-	Map<TalentId, Talent> getTalentsFromTalentLink(String link, CharacterInfo characterInfo);
+	Map<TalentId, Talent> getTalentsFromTalentLink(String link, Character character);
 }

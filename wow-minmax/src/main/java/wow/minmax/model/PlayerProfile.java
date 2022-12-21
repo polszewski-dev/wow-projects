@@ -6,10 +6,10 @@ import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Build;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.PveRole;
-import wow.character.model.character.CharacterInfo;
+import wow.character.model.character.Character;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterProfessions;
-import wow.character.model.character.EnemyInfo;
+import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.Percent;
@@ -45,28 +45,28 @@ import java.util.stream.Collectors;
 public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollection {
 	private final UUID profileId;
 	private final String profileName;
-	private final CharacterInfo characterInfo;
-	private final EnemyInfo enemyInfo;
+	private final Character character;
+	private final Enemy enemy;
 	private Equipment equipment = new Equipment();
 	private List<Buff> buffs = List.of();
 
 	private LocalDateTime lastModified;
 
-	public PlayerProfile(UUID profileId, String profileName, CharacterInfo characterInfo, EnemyInfo enemyInfo) {
+	public PlayerProfile(UUID profileId, String profileName, Character character, Enemy enemy) {
 		this.profileId = profileId;
 		this.profileName = profileName;
-		this.characterInfo = characterInfo;
-		this.enemyInfo = enemyInfo;
+		this.character = character;
+		this.enemy = enemy;
 		this.lastModified = LocalDateTime.now();
 	}
 
 	@Override
 	public PlayerProfile copy() {
-		return copy(profileId, profileName, characterInfo.getPhase());
+		return copy(profileId, profileName, character.getPhase());
 	}
 
 	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, characterInfo.setPhase(phase), enemyInfo);
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.setPhase(phase), enemy);
 		copy.equipment = Copyable.copyNullable(this.equipment);
 		copy.buffs = new ArrayList<>(this.buffs);
 		copy.lastModified = this.lastModified;
@@ -165,55 +165,55 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public CharacterClass getCharacterClass() {
-		return characterInfo.getCharacterClass();
+		return character.getCharacterClass();
 	}
 
 	public Race getRace() {
-		return characterInfo.getRace();
+		return character.getRace();
 	}
 
 	public int getLevel() {
-		return characterInfo.getLevel();
+		return character.getLevel();
 	}
 
 	public Build getBuild() {
-		return characterInfo.getBuild();
+		return character.getBuild();
 	}
 
 	public List<CharacterProfession> getProfessions() {
-		return characterInfo.getProfessions();
+		return character.getProfessions();
 	}
 
 	public CharacterProfessions getCharacterProfessions() {
-		return characterInfo.getCharacterProfessions();
+		return character.getCharacterProfessions();
 	}
 
 	public Phase getPhase() {
-		return characterInfo.getPhase();
+		return character.getPhase();
 	}
 
 	public Side getSide() {
-		return characterInfo.getSide();
+		return character.getSide();
 	}
 
 	public boolean hasProfession(Profession profession) {
-		return characterInfo.hasProfession(profession);
+		return character.hasProfession(profession);
 	}
 
 	public boolean hasProfession(Profession profession, int level) {
-		return characterInfo.hasProfession(profession, level);
+		return character.hasProfession(profession, level);
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
-		return characterInfo.hasProfessionSpecialization(specialization);
+		return character.hasProfessionSpecialization(specialization);
 	}
 
 	public boolean hasTalent(TalentId talentId) {
-		return characterInfo.hasTalent(talentId);
+		return character.hasTalent(talentId);
 	}
 
 	public CreatureType getEnemyType() {
-		return enemyInfo.getEnemyType();
+		return enemy.getEnemyType();
 	}
 
 	public BuildId getBuildId() {
@@ -249,7 +249,7 @@ public class PlayerProfile implements Copyable<PlayerProfile>, AttributeCollecti
 	}
 
 	public boolean canEquip(ItemSlot itemSlot, Item item) {
-		return characterInfo.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
+		return character.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
 	}
 
 	@Override

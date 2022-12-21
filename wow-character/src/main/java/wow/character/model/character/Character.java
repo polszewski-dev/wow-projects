@@ -9,6 +9,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
+import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 import wow.commons.model.pve.GameVersion;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @AllArgsConstructor
 @Getter
-public class CharacterInfo implements wow.commons.model.config.CharacterInfo {
+public class Character implements CharacterInfo {
 	private final CharacterClass characterClass;
 	private final Race race;
 	private final int level;
@@ -73,11 +74,11 @@ public class CharacterInfo implements wow.commons.model.config.CharacterInfo {
 		return characterClass.canEquip(itemSlot, itemType, itemSubType);
 	}
 
-	public CharacterInfo setBuild(Build build) {
+	public Character setBuild(Build build) {
 		if (build == this.build) {
 			return this;
 		}
-		return new CharacterInfo(
+		return new Character(
 				characterClass,
 				race,
 				level,
@@ -89,11 +90,11 @@ public class CharacterInfo implements wow.commons.model.config.CharacterInfo {
 		);
 	}
 
-	public CharacterInfo setPhase(Phase phase) {
+	public Character setPhase(Phase phase) {
 		if (phase == this.phase) {
 			return this;
 		}
-		return new CharacterInfo(
+		return new Character(
 				characterClass,
 				race,
 				level,
@@ -105,11 +106,11 @@ public class CharacterInfo implements wow.commons.model.config.CharacterInfo {
 		);
 	}
 
-	public CharacterInfo setBaseStatInfo(BaseStatInfo baseStatInfo) {
+	public Character setBaseStatInfo(BaseStatInfo baseStatInfo) {
 		if (baseStatInfo == this.baseStatInfo) {
 			return this;
 		}
-		return new CharacterInfo(
+		return new Character(
 				characterClass,
 				race,
 				level,
@@ -121,11 +122,11 @@ public class CharacterInfo implements wow.commons.model.config.CharacterInfo {
 		);
 	}
 
-	public CharacterInfo setCombatRatingInfo(CombatRatingInfo combatRatingInfo) {
+	public Character setCombatRatingInfo(CombatRatingInfo combatRatingInfo) {
 		if (combatRatingInfo == this.combatRatingInfo) {
 			return this;
 		}
-		return new CharacterInfo(
+		return new Character(
 				characterClass,
 				race,
 				level,
