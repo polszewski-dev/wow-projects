@@ -42,7 +42,7 @@ import static wow.commons.model.talents.TalentId.*;
  * Date: 2022-12-19
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowCommonsTestConfig.class)
+@ContextConfiguration(classes = WowCommonsSpringTestConfig.class)
 public abstract class WowCommonsSpringTest {
 	@Autowired
 	protected ItemRepository itemRepository;

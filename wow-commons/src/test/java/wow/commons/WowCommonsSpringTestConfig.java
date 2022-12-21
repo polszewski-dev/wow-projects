@@ -11,5 +11,5 @@ import org.springframework.context.annotation.PropertySource;
 		"wow.commons.repository"
 })
 @PropertySource("classpath:test.properties")
-public class WowCommonsTestConfig {
+public class WowCommonsSpringTestConfig {
 }

@@ -18,7 +18,7 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemRepository;
-import wow.minmax.WowMinMaxTestConfig;
+import wow.minmax.WowMinMaxSpringTestConfig;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.PlayerProfileRepository;
 
@@ -36,7 +36,7 @@ import static wow.commons.model.character.Race.ORC;
  * Date: 2022-11-20
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowMinMaxTestConfig.class)
+@ContextConfiguration(classes = WowMinMaxSpringTestConfig.class)
 @TestPropertySource("classpath:application.properties")
 abstract class ServiceTest {
 	static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);

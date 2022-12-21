@@ -10,5 +10,5 @@ import org.springframework.context.annotation.ComponentScan;
 		"wow.commons.repository",
 		"wow.minmax"
 })
-public class WowMinMaxTestConfig {
+public class WowMinMaxSpringTestConfig {
 }
