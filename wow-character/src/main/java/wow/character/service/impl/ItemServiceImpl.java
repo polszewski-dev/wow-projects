@@ -33,8 +33,6 @@ public class ItemServiceImpl implements ItemService {
 
 	private final List<PveRoleStatClassifier> pveRoleStatClassifiers;
 
-	private final GemComboFinder gemComboFinder = new GemComboFinder(this);
-
 	@Override
 	public Item getItem(int itemId, Phase phase) {
 		return itemRepository.getItem(itemId, phase).orElseThrow();
@@ -100,7 +98,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Gem[]> getBestGemCombos(Character character, Item item) {
-		return gemComboFinder.getGemCombos(character, item.getSocketSpecification());
+		return new GemComboFinder(this).getGemCombos(character, item.getSocketSpecification());
 	}
 
 	private PveRoleStatClassifier getStatClassifier(Character character) {

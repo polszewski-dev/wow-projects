@@ -32,6 +32,7 @@ public class CachedItemService implements ItemService {
 	private final Map<String, List<Enchant>> getBestEnchantsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> getGemsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> getBestGemsCache = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<Gem[]>> getBestGemCombosCache = Collections.synchronizedMap(new HashMap<>());
 
 	@Override
 	public Item getItem(int itemId, Phase phase) {
@@ -82,11 +83,14 @@ public class CachedItemService implements ItemService {
 
 	@Override
 	public List<Gem[]> getBestGemCombos(Character character, Item item) {
-		return itemService.getBestGemCombos(character, item);
+		String key = getProfileKey(character) + "#" + item.getSocketSpecification().getSocketTypes().toString();
+		return getBestGemCombosCache.computeIfAbsent(key, x -> itemService.getBestGemCombos(character, item));
 	}
 
 	private static String getProfileKey(Character character) {
 		return character.getCharacterClass() + "#" +
+				character.getLevel() + "#" +
+				character.getRace() + "#" +
 				character.getRole() + "#" +
 				character.getPhase() + "#" +
 				character.getProfessions().getList().stream()

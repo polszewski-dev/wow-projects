@@ -1,31 +1,28 @@
 package wow.character.service.impl.enumerators;
 
+import lombok.AllArgsConstructor;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.ItemSockets;
 import wow.character.service.ItemService;
-import wow.character.service.impl.CachedItemService;
-import wow.character.service.impl.ItemServiceImpl;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
  * Date: 2022-11-08
  */
+@AllArgsConstructor
 public class GemComboFinder {
 	private final ItemService itemService;
-
-	private final Map<String, List<Gem[]>> gemComboCache = Collections.synchronizedMap(new HashMap<>());
-
-	public GemComboFinder(ItemServiceImpl itemService) {
-		this.itemService = new CachedItemService(itemService);
-	}
 
 	public List<Gem[]> getGemCombos(Character character, ItemSocketSpecification socketSpecification) {
 		ItemSocketsUniqueConfiguration uniqueConfiguration = ItemSocketsUniqueConfiguration.of(socketSpecification.getSocketTypes());
@@ -37,13 +34,6 @@ public class GemComboFinder {
 	}
 
 	private List<Gem[]> getGemCombos(Character character, ItemSocketsUniqueConfiguration uniqueConfiguration) {
-		return gemComboCache.computeIfAbsent(
-				uniqueConfiguration.getKey() + "#" + character.getPhase(),
-				x -> findGemCombos(character, uniqueConfiguration)
-		);
-	}
-
-	private List<Gem[]> findGemCombos(Character character, ItemSocketsUniqueConfiguration uniqueConfiguration) {
 		ItemSocketSpecification specification = uniqueConfiguration.getSpecification();
 
 		if (specification.getSocketCount() == 1) {
