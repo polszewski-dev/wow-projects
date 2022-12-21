@@ -8,6 +8,7 @@ import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
+import wow.character.service.ItemService;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
@@ -23,7 +24,6 @@ import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
-import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 

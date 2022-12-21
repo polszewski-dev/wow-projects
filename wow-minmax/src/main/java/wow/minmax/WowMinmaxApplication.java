@@ -4,12 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import wow.character.config.ItemConfig;
+import wow.character.service.ItemService;
+import wow.character.service.impl.CachedItemService;
+import wow.character.service.impl.ItemServiceImpl;
+import wow.character.service.impl.classifiers.PveRoleStatClassifier;
 import wow.commons.repository.ItemRepository;
-import wow.minmax.config.ItemConfig;
-import wow.minmax.service.ItemService;
-import wow.minmax.service.impl.CachedItemService;
-import wow.minmax.service.impl.ItemServiceImpl;
-import wow.minmax.service.impl.classifiers.PveRoleStatClassifier;
 
 import java.util.List;
 

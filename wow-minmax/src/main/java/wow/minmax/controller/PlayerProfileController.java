@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.service.ItemService;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
@@ -14,7 +15,6 @@ import wow.commons.model.pve.Phase;
 import wow.minmax.converter.dto.*;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.dto.*;
-import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.ArrayList;
@@ -165,7 +165,7 @@ public class PlayerProfileController {
 		for (ItemSlot slot : ItemSlot.getDpsSlots()) {
 			EquipmentSlotDTO slotDTO = playerProfileDTO.getEquipment().getEquipmentSlotsByType().get(slot);
 
-			List<Item> itemsBySlot = itemService.getItemsBySlot(playerProfile, slot);
+			List<Item> itemsBySlot = itemService.getItemsBySlot(playerProfile.getCharacter(), slot);
 			slotDTO.setAvailableItems(getItemsDTOsOrderedByScore(itemsBySlot));
 
 			if (slotDTO.getEquippableItem() != null) {
@@ -192,14 +192,14 @@ public class PlayerProfileController {
 	}
 
 	private List<EnchantDTO> getEnchants(Item item, PlayerProfile playerProfile) {
-		List<Enchant> enchants = itemService.getEnchants(playerProfile, item.getItemType()).stream()
+		List<Enchant> enchants = itemService.getEnchants(playerProfile.getCharacter(), item.getItemType()).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.collect(Collectors.toList());
 		return enchantConverter.convertList(enchants);
 	}
 
 	private List<GemDTO> getAvailableGems(Item item, int socketNo, PlayerProfile playerProfile) {
-		List<Gem> gems = itemService.getGems(playerProfile, item.getSocketType(socketNo), false).stream()
+		List<Gem> gems = itemService.getGems(playerProfile.getCharacter(), item.getSocketType(socketNo), false).stream()
 				.sorted(getGemComparator())
 				.collect(Collectors.toList());
 		return gemConverter.convertList(gems);

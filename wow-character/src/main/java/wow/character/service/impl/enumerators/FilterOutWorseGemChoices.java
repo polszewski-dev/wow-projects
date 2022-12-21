@@ -1,4 +1,4 @@
-package wow.minmax.service.impl.enumerators;
+package wow.character.service.impl.enumerators;
 
 import wow.commons.model.item.Gem;
 

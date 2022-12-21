@@ -1,8 +1,10 @@
-package wow.minmax.service.impl.classifiers;
+package wow.character.service.impl.classifiers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.config.ItemConfig;
 import wow.character.model.build.PveRole;
+import wow.character.model.character.Character;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
@@ -11,8 +13,6 @@ import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
-import wow.minmax.config.ItemConfig;
-import wow.minmax.model.PlayerProfile;
 
 import java.util.Set;
 
@@ -33,21 +33,21 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	@Override
-	public boolean hasStatsSuitableForRole(AttributeSource attributeSource, PlayerProfile playerProfile) {
+	public boolean hasStatsSuitableForRole(AttributeSource attributeSource, Character character) {
 		if (!itemConfig.isIncludeHealingItems() && attributeSource.getHealingPower() > attributeSource.getSpellPower()) {
 			return false;
 		}
 
-		if (hasPrimitiveStatsSuitableForCasterDps(attributeSource, playerProfile)) {
+		if (hasPrimitiveStatsSuitableForCasterDps(attributeSource, character)) {
 			return true;
 		}
 
-		return hasComplexStatsSuitableForCasterDps(attributeSource, playerProfile);
+		return hasComplexStatsSuitableForCasterDps(attributeSource, character);
 	}
 
 	@Override
-	public boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType, PlayerProfile playerProfile) {
-		if (hasStatsSuitableForRole(enchant, playerProfile)) {
+	public boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType, Character character) {
+		if (hasStatsSuitableForRole(enchant, character)) {
 			return true;
 		}
 		if (itemType == ItemType.WRIST) {
@@ -65,17 +65,17 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 		return false;
 	}
 
-	private boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
+	private boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, Character character) {
 		return attributeSource.getPrimitiveAttributeList().stream()
-				.anyMatch(attribute -> isCasterStat(attribute, playerProfile));
+				.anyMatch(attribute -> isCasterStat(attribute, character));
 	}
 
-	private boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource, PlayerProfile playerProfile) {
-		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, playerProfile.getDamagingSpell().getCastTime());
+	private boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource, Character character) {
+		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, character.getDamagingSpell().getCastTime());
 
 		for (SpecialAbility specialAbility : attributeSource.getSpecialAbilities()) {
 			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);
-			if (hasPrimitiveStatsSuitableForCasterDps(statEquivalent, playerProfile)) {
+			if (hasPrimitiveStatsSuitableForCasterDps(statEquivalent, character)) {
 				return true;
 			}
 		}
@@ -83,8 +83,8 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 		return false;
 	}
 
-	private boolean isCasterStat(PrimitiveAttribute attribute, PlayerProfile playerProfile) {
-		return CASTER_STATS.contains(attribute.getId()) && hasCasterStatCondition(attribute, playerProfile);
+	private boolean isCasterStat(PrimitiveAttribute attribute, Character character) {
+		return CASTER_STATS.contains(attribute.getId()) && hasCasterStatCondition(attribute, character);
 	}
 
 	private static final Set<PrimitiveAttributeId> CASTER_STATS = Set.of(
@@ -98,9 +98,9 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 			SPELL_HASTE_RATING
 	);
 
-	private boolean hasCasterStatCondition(PrimitiveAttribute attribute, PlayerProfile playerProfile) {
-		var damagingSpell = playerProfile.getDamagingSpell();
-		var conditions = damagingSpell.getConditions(playerProfile.getActivePet(), playerProfile.getEnemyType());
+	private boolean hasCasterStatCondition(PrimitiveAttribute attribute, Character character) {
+		var damagingSpell = character.getDamagingSpell();
+		var conditions = damagingSpell.getConditions(character.getActivePet(), character.getEnemyType());
 		return conditions.contains(attribute.getCondition());
 	}
 }

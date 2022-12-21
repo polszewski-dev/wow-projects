@@ -1,15 +1,15 @@
-package wow.minmax.service.impl.enumerators;
+package wow.character.service.impl.enumerators;
 
+import wow.character.model.character.Character;
 import wow.character.model.equipment.ItemSockets;
+import wow.character.service.ItemService;
+import wow.character.service.impl.CachedItemService;
+import wow.character.service.impl.ItemServiceImpl;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
-import wow.minmax.model.PlayerProfile;
-import wow.minmax.service.ItemService;
-import wow.minmax.service.impl.CachedItemService;
-import wow.minmax.service.impl.ItemServiceImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,49 +27,49 @@ public class GemComboFinder {
 		this.itemService = new CachedItemService(itemService);
 	}
 
-	public List<Gem[]> getGemCombos(PlayerProfile playerProfile, ItemSocketSpecification socketSpecification) {
+	public List<Gem[]> getGemCombos(Character character, ItemSocketSpecification socketSpecification) {
 		ItemSocketsUniqueConfiguration uniqueConfiguration = ItemSocketsUniqueConfiguration.of(socketSpecification.getSocketTypes());
-		List<Gem[]> gemCombos = getGemCombos(playerProfile, uniqueConfiguration);
+		List<Gem[]> gemCombos = getGemCombos(character, uniqueConfiguration);
 
 		return gemCombos.stream()
 				.map(gemCombo -> changeBackGemOrder(uniqueConfiguration, gemCombo, socketSpecification))
 				.collect(Collectors.toList());
 	}
 
-	private List<Gem[]> getGemCombos(PlayerProfile playerProfile, ItemSocketsUniqueConfiguration uniqueConfiguration) {
+	private List<Gem[]> getGemCombos(Character character, ItemSocketsUniqueConfiguration uniqueConfiguration) {
 		return gemComboCache.computeIfAbsent(
-				uniqueConfiguration.getKey() + "#" + playerProfile.getPhase(),
-				x -> findGemCombos(playerProfile, uniqueConfiguration)
+				uniqueConfiguration.getKey() + "#" + character.getPhase(),
+				x -> findGemCombos(character, uniqueConfiguration)
 		);
 	}
 
-	private List<Gem[]> findGemCombos(PlayerProfile playerProfile, ItemSocketsUniqueConfiguration uniqueConfiguration) {
+	private List<Gem[]> findGemCombos(Character character, ItemSocketsUniqueConfiguration uniqueConfiguration) {
 		ItemSocketSpecification specification = uniqueConfiguration.getSpecification();
 
 		if (specification.getSocketCount() == 1) {
-			return getSingleGemCombos(playerProfile, specification);
+			return getSingleGemCombos(character, specification);
 		} else if (specification.getSocketCount() == 2) {
-			return getDoubleGemCombos(playerProfile, specification);
+			return getDoubleGemCombos(character, specification);
 		} else if (specification.getSocketCount() == 3) {
-			return getTripleGemCombos(playerProfile, specification);
+			return getTripleGemCombos(character, specification);
 		} else {
 			throw new IllegalArgumentException("Socket count should be at most 3 but is " + specification.getSocketCount());
 		}
 	}
 
-	private List<Gem[]> getSingleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
+	private List<Gem[]> getSingleGemCombos(Character character, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getBestGems(playerProfile, specification.getSocketType(0));
+		List<Gem> gems1 = itemService.getBestGems(character, specification.getSocketType(0));
 		for (Gem gem1 : gems1) {
 			result.add(new Gem[]{gem1});
 		}
 		return result;
 	}
 
-	private List<Gem[]> getDoubleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
+	private List<Gem[]> getDoubleGemCombos(Character character, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getBestGems(playerProfile, specification.getSocketType(0));
-		List<Gem> gems2 = itemService.getBestGems(playerProfile, specification.getSocketType(1));
+		List<Gem> gems1 = itemService.getBestGems(character, specification.getSocketType(0));
+		List<Gem> gems2 = itemService.getBestGems(character, specification.getSocketType(1));
 		for (Gem gem1 : gems1) {
 			for (Gem gem2 : gems2) {
 				result.add(new Gem[]{gem1, gem2});
@@ -78,11 +78,11 @@ public class GemComboFinder {
 		return removeEquivalents(result, specification);
 	}
 
-	private List<Gem[]> getTripleGemCombos(PlayerProfile playerProfile, ItemSocketSpecification specification) {
+	private List<Gem[]> getTripleGemCombos(Character character, ItemSocketSpecification specification) {
 		List<Gem[]> result = new ArrayList<>();
-		List<Gem> gems1 = itemService.getBestGems(playerProfile, specification.getSocketType(0));
-		List<Gem> gems2 = itemService.getBestGems(playerProfile, specification.getSocketType(1));
-		List<Gem> gems3 = itemService.getBestGems(playerProfile, specification.getSocketType(2));
+		List<Gem> gems1 = itemService.getBestGems(character, specification.getSocketType(0));
+		List<Gem> gems2 = itemService.getBestGems(character, specification.getSocketType(1));
+		List<Gem> gems3 = itemService.getBestGems(character, specification.getSocketType(2));
 		for (Gem gem1 : gems1) {
 			for (Gem gem2 : gems2) {
 				for (Gem gem3 : gems3) {

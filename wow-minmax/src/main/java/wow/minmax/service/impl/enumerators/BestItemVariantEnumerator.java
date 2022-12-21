@@ -1,12 +1,12 @@
 package wow.minmax.service.impl.enumerators;
 
+import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;
-import wow.minmax.service.ItemService;
 
 import java.util.List;
 

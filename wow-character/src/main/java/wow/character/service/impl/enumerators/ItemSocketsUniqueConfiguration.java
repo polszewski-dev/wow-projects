@@ -1,4 +1,4 @@
-package wow.minmax.service.impl.enumerators;
+package wow.character.service.impl.enumerators;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;

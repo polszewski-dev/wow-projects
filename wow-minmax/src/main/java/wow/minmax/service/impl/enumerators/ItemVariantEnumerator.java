@@ -2,6 +2,7 @@ package wow.minmax.service.impl.enumerators;
 
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.service.ItemService;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
@@ -15,7 +16,6 @@ import wow.commons.model.spells.Spell;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;
-import wow.minmax.service.ItemService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -214,8 +214,8 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedAndGemmedItems(Item item) {
-		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile, item.getItemType());
-		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile, item);
+		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile.getCharacter(), item.getItemType());
+		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile.getCharacter(), item);
 		List<EquippableItem> result = new ArrayList<>(enchants.size() * gemCombos.size());
 
 		for (Enchant enchant : enchants) {
@@ -227,7 +227,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getGemmedItems(Item item) {
-		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile, item);
+		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile.getCharacter(), item);
 		List<EquippableItem> result = new ArrayList<>(gemCombos.size());
 
 		for (Gem[] gemCombo : gemCombos) {
@@ -237,7 +237,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedItems(Item item) {
-		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile, item.getItemType());
+		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile.getCharacter(), item.getItemType());
 		List<EquippableItem> result = new ArrayList<>(enchants.size());
 
 		if (enchants.isEmpty()) {

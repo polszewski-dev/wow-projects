@@ -1,8 +1,11 @@
-package wow.minmax.service;
+package wow.character.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import wow.character.WowCharacterSpringTest;
+import wow.character.model.character.Character;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -21,20 +24,20 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2022-11-19
  */
-class ItemServiceTest extends ServiceTest {
+class ItemServiceTest extends WowCharacterSpringTest {
 	@Autowired
 	@Qualifier("itemService")
 	ItemService underTest;
 
 	@Test
 	void getItem() {
-		Item item = underTest.getItem(34364, profile.getPhase());
+		Item item = underTest.getItem(34364, character.getPhase());
 		assertThat(item.getId()).isEqualTo(34364);
 	}
 
 	@Test
 	void getItemsBySlot() {
-		List<Item> itemsBySlot = underTest.getItemsBySlot(profile, ItemSlot.TRINKET_1).stream()
+		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1).stream()
 				.sorted(Comparator.comparing(Item::getName))
 				.collect(Collectors.toList());
 
@@ -48,7 +51,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getHandEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(profile, ItemType.HANDS).stream()
+		List<Enchant> enchants = underTest.getEnchants(character, ItemType.HANDS).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.collect(Collectors.toList());
 
@@ -62,7 +65,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getChestEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(profile, ItemType.CHEST).stream()
+		List<Enchant> enchants = underTest.getEnchants(character, ItemType.CHEST).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.collect(Collectors.toList());
 
@@ -75,7 +78,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getFeetEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(profile, ItemType.FEET).stream()
+		List<Enchant> enchants = underTest.getEnchants(character, ItemType.FEET).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.collect(Collectors.toList());
 
@@ -88,8 +91,8 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGems() {
-		List<Gem> metaGems = underTest.getGems(profile, SocketType.META, true);
-		List<Gem> coloredGems = underTest.getGems(profile, SocketType.YELLOW, true);
+		List<Gem> metaGems = underTest.getGems(character, SocketType.META, true);
+		List<Gem> coloredGems = underTest.getGems(character, SocketType.YELLOW, true);
 
 		List<String> metaGemNames = metaGems.stream().map(Gem::getName).collect(Collectors.toList());
 
@@ -112,7 +115,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void testGetGems() {
-		List<Gem> coloredGems = underTest.getGems(profile, getItem("Sunfire Robe").getSocketType(1), false);
+		List<Gem> coloredGems = underTest.getGems(character, getItem("Sunfire Robe").getSocketType(1), false);
 
 		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).collect(Collectors.toList());
 
@@ -129,7 +132,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(profile, getItem("Bracers of the Malefic").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Bracers of the Malefic").getItem());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
 
@@ -146,7 +149,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos2() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(profile, getItem("Dark Conjuror's Collar").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Dark Conjuror's Collar").getItem());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
 
@@ -163,10 +166,17 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos3() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(profile, getItem("Sunfire Robe").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Sunfire Robe").getItem());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
 
 		assertThat(names).hasSize(74);
+	}
+
+	Character character;
+
+	@BeforeEach
+	void setup() {
+		character = getCharacter();
 	}
 }

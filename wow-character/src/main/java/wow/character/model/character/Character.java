@@ -10,6 +10,7 @@ import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
 import wow.commons.model.config.CharacterInfo;
@@ -203,5 +204,11 @@ public class Character implements AttributeCollection, CharacterInfo {
 
 	public void enableBuff(Buff buff, boolean enable) {
 		buffs.enableBuff(buff, enable);
+	}
+
+	// enemy
+
+	public CreatureType getEnemyType() {
+		return targetEnemy.getEnemyType();
 	}
 }

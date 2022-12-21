@@ -1,10 +1,10 @@
-package wow.minmax.service.impl.classifiers;
+package wow.character.service.impl.classifiers;
 
 import wow.character.model.build.PveRole;
+import wow.character.model.character.Character;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
-import wow.minmax.model.PlayerProfile;
 
 /**
  * User: POlszewski
@@ -13,7 +13,7 @@ import wow.minmax.model.PlayerProfile;
 public interface PveRoleStatClassifier {
 	PveRole getRole();
 
-	boolean hasStatsSuitableForRole(AttributeSource attributeSource, PlayerProfile playerProfile);
+	boolean hasStatsSuitableForRole(AttributeSource attributeSource, Character character);
 
-	boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType, PlayerProfile playerProfile);
+	boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType, Character character);
 }

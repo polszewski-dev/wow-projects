@@ -1,8 +1,8 @@
-package wow.minmax.config;
+package wow.character.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import wow.commons.model.categorization.ItemRarity;
 
@@ -11,12 +11,18 @@ import wow.commons.model.categorization.ItemRarity;
  * Date: 2022-11-14
  */
 @Configuration
-@ConfigurationProperties("wow.minmax.item")
 @Getter
 @Setter
 public class ItemConfig {
+	@Value("${wow.item.service.minItemLevel}")
 	private int minItemLevel;
+
+	@Value("${wow.item.service.minRarity}")
 	private ItemRarity minRarity;
+
+	@Value("${wow.item.service.includePvpItems}")
 	private boolean includePvpItems;
+
+	@Value("${wow.item.service.includeHealingItems}")
 	private boolean includeHealingItems;
 }
