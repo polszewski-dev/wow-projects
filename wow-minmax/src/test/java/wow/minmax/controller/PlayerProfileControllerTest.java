@@ -3,15 +3,16 @@ package wow.minmax.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import wow.character.model.equipment.EquippableItem;
+import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.ItemType;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
 import wow.commons.model.pve.Phase;
-import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
@@ -36,10 +37,6 @@ class PlayerProfileControllerTest extends ControllerTest {
 	@MockBean
 	PlayerProfileService playerProfileService;
 
-	@MockBean
-	@Qualifier("itemService")
-	ItemService itemService;
-
 	@Test
 	void getPlayerProfileList() throws Exception {
 		mockMvc.perform(get("/api/v1/profile/list"))
@@ -54,7 +51,7 @@ class PlayerProfileControllerTest extends ControllerTest {
 	}
 
 	@Test
-	void getPlayerProfile() throws Exception {
+	void getPlayerProfileTest() throws Exception {
 		mockMvc.perform(get("/api/v1/profile/{profileId}", profile.getProfileId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -107,6 +104,7 @@ class PlayerProfileControllerTest extends ControllerTest {
 	@Test
 	void changeItem() throws Exception {
 		ItemSlot slot = ItemSlot.CHEST;
+		EquippableItem chest = getItem("Sunfire Robe");
 
 		mockMvc.perform(get("/api/v1/profile/{profileId}/change/item/{slot}/{itemId}", profile.getProfileId(), slot, chest.getId()))
 				.andExpect(status().isOk())
@@ -118,6 +116,8 @@ class PlayerProfileControllerTest extends ControllerTest {
 
 	@Test
 	void changeEnchant() throws Exception {
+		Enchant enchant = getEnchant("Enchant Chest - Exceptional Stats");
+
 		mockMvc.perform(get("/api/v1/profile/{profileId}/change/enchant/{slot}/{enchantId}", profile.getProfileId(), ItemSlot.CHEST, enchant.getId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -128,16 +128,20 @@ class PlayerProfileControllerTest extends ControllerTest {
 
 	@Test
 	void changeGem() throws Exception {
-		mockMvc.perform(get("/api/v1/profile/{profileId}/change/gem/{slot}/{socketNo}/{gemId}", profile.getProfileId(), ItemSlot.CHEST, 1, blueGem.getId()))
+		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
+
+		mockMvc.perform(get("/api/v1/profile/{profileId}/change/gem/{slot}/{socketNo}/{gemId}", profile.getProfileId(), ItemSlot.CHEST, 1, violetGem.getId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).changeGem(profile.getProfileId(), ItemSlot.CHEST, 1, blueGem.getId());
+		verify(playerProfileService).changeGem(profile.getProfileId(), ItemSlot.CHEST, 1, violetGem.getId());
 	}
 
 	@Test
 	void enableBuff() throws Exception {
+		Buff buff = getBuff("Fel Armor");
+
 		mockMvc.perform(get("/api/v1/profile/{profileId}/enable/buff/{buffId}/{enabled}", profile.getProfileId(), buff.getId(), true))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -155,8 +159,11 @@ class PlayerProfileControllerTest extends ControllerTest {
 	}
 
 	@BeforeEach
+	@Override
 	void setup() {
-		createMockObjects();
+		profile = getPlayerProfile();
+
+		profile.setEquipment(getEquipment());
 
 		when(playerProfileService.getPlayerProfileList()).thenReturn(List.of(profile));
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
@@ -167,15 +174,5 @@ class PlayerProfileControllerTest extends ControllerTest {
 		when(playerProfileService.changeEnchant(any(), any(), anyInt())).thenReturn(profile);
 		when(playerProfileService.changeGem(any(), any(), anyInt(), anyInt())).thenReturn(profile);
 		when(playerProfileService.enableBuff(any(), anyInt(), anyBoolean())).thenReturn(profile);
-
-		when(itemService.getItem(chest.getId(), profile.getPhase())).thenReturn(chest);
-		when(itemService.getItem(trinket.getId(), profile.getPhase())).thenReturn(trinket);
-		when(itemService.getItemsBySlot(any(), eq(ItemSlot.CHEST))).thenReturn(List.of(chest));
-		when(itemService.getItemsBySlot(any(), eq(ItemSlot.TRINKET_1))).thenReturn(List.of(trinket));
-		when(itemService.getItemsBySlot(any(), eq(ItemSlot.TRINKET_2))).thenReturn(List.of(trinket));
-
-		when(itemService.getEnchants(any(), eq(ItemType.CHEST))).thenReturn(List.of(enchant));
-
-		when(itemService.getGems(any(), any(), anyBoolean())).thenReturn(List.of(redGem, yellowGem, blueGem));
 	}
 }

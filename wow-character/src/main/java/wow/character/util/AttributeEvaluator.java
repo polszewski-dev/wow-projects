@@ -7,6 +7,7 @@ import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.item.*;
+import wow.commons.model.spells.SpellId;
 import wow.commons.util.AttributesBuilder;
 
 import java.util.*;
@@ -45,6 +46,33 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 		}
 
 		return this;
+	}
+
+	@Override
+	public AttributeEvaluator addAttributes(AttributeSource attributeSource, SpellId sourceSpell) {
+		if (attributeSource == null) {
+			return this;
+		}
+
+		if (sourceSpell == null) {
+			return addAttributes(attributeSource);
+		}
+
+		Attributes scaledAttributes = getScaledAttributes(attributeSource, sourceSpell);
+		addAttributes(scaledAttributes);
+		return this;
+	}
+
+	private Attributes getScaledAttributes(AttributeSource attributeSource, SpellId sourceSpell) {
+		AttributeCondition condition = AttributeCondition.of(sourceSpell);
+		Double increasePct = getAttributeValue(condition);
+		return attributeSource.getAttributes().scale(1 + increasePct / 100);
+	}
+
+	private Double getAttributeValue(AttributeCondition condition) {
+		return primitiveAttributes
+				.getOrDefault(condition, Map.of())
+				.getOrDefault(PrimitiveAttributeId.EFFECT_INCREASE_PCT, 0.0);
 	}
 
 	public AttributeEvaluator addAttributes(AttributeCollection attributeCollection) {

@@ -7,18 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.commons.model.Percent;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.minmax.model.Comparison;
-import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.PlayerProfileService;
-import wow.minmax.service.UpgradeService;
-
-import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,9 +26,6 @@ class UpgradeControllerTest extends ControllerTest {
 	MockMvc mockMvc;
 
 	@MockBean
-	UpgradeService upgradeService;
-
-	@MockBean
 	PlayerProfileService playerProfileService;
 
 	@Test
@@ -48,7 +37,6 @@ class UpgradeControllerTest extends ControllerTest {
 		;
 
 		verify(playerProfileService).getPlayerProfile(profile.getProfileId());
-		verify(upgradeService).findUpgrades(refEq(profile), eq(ItemSlotGroup.CHEST), eq(profile.getDamagingSpell()));
 	}
 
 	@Test
@@ -59,34 +47,13 @@ class UpgradeControllerTest extends ControllerTest {
 		;
 
 		verify(playerProfileService).getPlayerProfile(profile.getProfileId());
-		for (ItemSlotGroup slotGroup : ItemSlotGroup.values()) {
-			if (!IGNORED_SLOT_GROUPS.contains(slotGroup)) {
-				verify(upgradeService).findUpgrades(refEq(profile), eq(slotGroup), eq(profile.getDamagingSpell()));
-			}
-		}
 	}
 
-	private static final Set<ItemSlotGroup> IGNORED_SLOT_GROUPS = Set.of(
-			ItemSlotGroup.TABARD,
-			ItemSlotGroup.SHIRT,
-			ItemSlotGroup.FINGER_1,
-			ItemSlotGroup.FINGER_2,
-			ItemSlotGroup.TRINKET_1,
-			ItemSlotGroup.TRINKET_2,
-			ItemSlotGroup.MAIN_HAND,
-			ItemSlotGroup.OFF_HAND
-	);
-
 	@BeforeEach
+	@Override
 	void setup() {
-		createMockObjects();
-
-		PlayerProfile profileCopy = profile.copy();
-		profileCopy.getEquipment().getChest().gem(redGem, redGem, redGem);
+		super.setup();
 
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
-		when(upgradeService.findUpgrades(refEq(profile), any(), eq(profile.getDamagingSpell()))).thenReturn(List.of());
-		when(upgradeService.findUpgrades(refEq(profile), eq(ItemSlotGroup.CHEST), eq(profile.getDamagingSpell())))
-				.thenReturn(List.of(new Comparison(profileCopy.getEquipment(), profile.getEquipment(), Percent.of(1))));
 	}
 }

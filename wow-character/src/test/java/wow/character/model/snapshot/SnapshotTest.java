@@ -9,7 +9,6 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_DAMAGE;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 
 /**
@@ -19,8 +18,7 @@ import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 class SnapshotTest extends WowCharacterSpringTest {
 	@Test
 	void everytingAcummulatedStats() {
-		Attributes attributes = getEverything();
-		Snapshot snapshot = getSnapshot(attributes);
+		Snapshot snapshot = getSnapshot();
 
 		AccumulatedSpellStats underTest = snapshot.getStats();
 
@@ -48,8 +46,7 @@ class SnapshotTest extends WowCharacterSpringTest {
 
 	@Test
 	void everythingSnapshot() {
-		Attributes attributes = getEverything();
-		Snapshot underTest = getSnapshot(attributes);
+		Snapshot underTest = getSnapshot();
 
 		assertThat(underTest.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
 		assertThat(underTest.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(619);
@@ -82,8 +79,7 @@ class SnapshotTest extends WowCharacterSpringTest {
 
 	@Test
 	void everythingSpellStats() {
-		Attributes attributes = getEverything();
-		Snapshot snapshot = getSnapshot(attributes);
+		Snapshot snapshot = getSnapshot();
 		SpellStatistics underTest = snapshot.getSpellStatistics(CritMode.AVERAGE, true);
 
 		assertThat(underTest.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5219);
@@ -93,20 +89,18 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
 	}
 
-	private Attributes getEverything() {
-		return AttributeEvaluator.of()
-				.addAttributes(getEquipment())
-				.addAttributes(getTalents())
-				.addAttributes(getBuffs())
-				.addAttributes(Attributes.of(SPELL_DAMAGE, 30)) // +30 sp for 2/2 Demonic Aegis bonus
-				.solveAllLeaveAbilities();
-	}
-
-	private Snapshot getSnapshot(Attributes stats) {
+	private Snapshot getSnapshot() {
 		Spell spell = getSpell(SHADOW_BOLT);
-		Character character = getCharacter(SHADOW_BOLT);
+		Character character = getCharacter();
 		Enemy enemy = getEnemy();
 
-		return new Snapshot(spell, character, enemy, stats);
+		character.setEquipment(getEquipment());
+
+		Attributes everything = AttributeEvaluator.of()
+				.addAttributes(character)
+				.addAttributes(enemy)
+				.solveAllLeaveAbilities();
+
+		return new Snapshot(spell, character, enemy, everything);
 	}
 }

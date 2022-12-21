@@ -1,6 +1,7 @@
 package wow.commons.model.attributes;
 
 import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.spells.SpellId;
 
 import java.util.Collection;
 
@@ -10,6 +11,8 @@ import java.util.Collection;
  */
 public interface AttributeCollector<T extends AttributeCollector<T>> {
 	T addAttributes(AttributeSource attributeSource);
+
+	T addAttributes(AttributeSource attributeSource, SpellId sourceSpell);
 
 	default T addAttributes(Collection<? extends AttributeSource> attributeSources) {
 		for (AttributeSource attributeSource : attributeSources) {

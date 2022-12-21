@@ -54,7 +54,7 @@ public abstract class ItemVariantEnumerator {
 		this.workingProfile = referenceProfile.copy();
 
 		for (ItemSlot slot : slotGroup.getSlots()) {
-			workingProfile.getEquipment().set(null, slot);
+			workingProfile.equip(null, slot);
 		}
 
 		this.withoutSlotGroup = AttributeEvaluator.of()
@@ -266,7 +266,7 @@ public abstract class ItemVariantEnumerator {
 		for (int i = 0; i < itemOption.length; i++) {
 			EquippableItem item = itemOption[i];
 			ItemSlot slot = slotGroup.getSlots().get(i);
-			equipment.set(item, slot);
+			equipment.equip(item, slot);
 		}
 	}
 }

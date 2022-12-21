@@ -2,15 +2,10 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.build.BuffSetId;
-import wow.character.model.build.Build;
 import wow.character.model.build.BuildId;
-import wow.character.model.build.BuildTemplate;
 import wow.character.model.character.Character;
 import wow.character.model.character.CharacterProfession;
-import wow.character.model.character.CharacterProfessions;
 import wow.character.model.character.Enemy;
-import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
@@ -32,7 +27,6 @@ import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -82,70 +76,15 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	public PlayerProfile createTemporaryPlayerProfile(
 			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, Phase phase
 	) {
-		Character character = createCharacter(characterClass, race, level, buildId, professions, phase);
-		Enemy enemy = new Enemy(enemyType);
+		Character character = characterService.createCharacter(characterClass, race, level, buildId, professions, phase);
+		Enemy enemy = characterService.createEnemy(enemyType);
 
-		PlayerProfile playerProfile = new PlayerProfile(
+		return new PlayerProfile(
 				profileId,
 				profileName,
 				character,
 				enemy
 		);
-
-		playerProfile.setBuffs(BuffSetId.values());
-
-		return playerProfile;
-	}
-
-	private Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, Phase phase) {
-		Character character = new Character(
-				characterClass,
-				race,
-				level,
-				Build.EMPTY,
-				new CharacterProfessions(professions),
-				phase,
-				null,
-				null
-		);
-
-		Build build = createBuild(buildId, character);
-
-		return character
-				.setBuild(build)
-				.setBaseStatInfo(characterService.getBaseStats(character))
-				.setCombatRatingInfo(characterService.getCombatRatings(character));
-	}
-
-	private Build createBuild(BuildId buildId, Character character) {
-		BuildTemplate buildTemplate = characterService.getBuildTemplate(buildId, character);
-
-		Build build = new Build(
-				buildId,
-				buildTemplate.getTalentLink(),
-				spellService.getTalentsFromTalentLink(buildTemplate.getTalentLink(), character),
-				buildTemplate.getRole(),
-				null,
-				List.of(),
-				buildTemplate.getActivePet(),
-				Map.of()
-		);
-
-		character = character.setBuild(build);
-
-		return build
-				.setDamagingSpell(spellService.getSpellHighestRank(buildTemplate.getDamagingSpell(), character))
-				.setRelevantSpells(spellService.getSpellHighestRanks(buildTemplate.getRelevantSpells(), character))
-				.setBuffSets(getBuffSets(buildTemplate, character));
-	}
-
-	private Map<BuffSetId, List<Buff>> getBuffSets(BuildTemplate buildTemplate, Character character) {
-		Map<BuffSetId, List<Buff>> result = new EnumMap<>(BuffSetId.class);
-		for (var entry : buildTemplate.getBuffSets().entrySet()) {
-			List<Buff> buffs = spellService.getBuffs(entry.getValue(), character);
-			result.put(entry.getKey(), buffs);
-		}
-		return result;
 	}
 
 	@Override
@@ -168,7 +107,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		Item item = itemService.getItem(itemId, playerProfile.getPhase());
 		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile, item, slot, playerProfile.getDamagingSpell());
 
-		playerProfile.getEquipment().set(bestItemVariant, slot);
+		playerProfile.equip(bestItemVariant, slot);
 		saveProfile(playerProfile);
 
 		return playerProfile;
@@ -179,7 +118,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
 		Enchant enchant = itemService.getEnchant(enchantId, playerProfile.getPhase());
 
-		playerProfile.getEquipment().get(slot).enchant(enchant);
+		playerProfile.getEquippedItem(slot).enchant(enchant);
 		saveProfile(playerProfile);
 		return playerProfile;
 	}
@@ -189,7 +128,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
 		Gem gem = itemService.getGem(gemId, playerProfile.getPhase());
 
-		playerProfile.getEquipment().get(slot).insertGem(socketNo, gem);
+		playerProfile.getEquippedItem(slot).insertGem(socketNo, gem);
 		saveProfile(playerProfile);
 		return playerProfile;
 	}
@@ -198,7 +137,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	public PlayerProfile resetEquipment(UUID profileId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
 
-		playerProfile.setEquipment(new Equipment());
+		playerProfile.resetEquipment();
 		saveProfile(playerProfile);
 		return playerProfile;
 	}

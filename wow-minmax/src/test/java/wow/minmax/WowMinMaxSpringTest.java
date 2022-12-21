@@ -1,9 +1,10 @@
-package wow.character;
+package wow.minmax;
 
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
@@ -11,7 +12,6 @@ import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
@@ -25,13 +25,12 @@ import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 import wow.commons.repository.ItemRepository;
-import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
+import wow.minmax.model.PlayerProfile;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.UUID;
 
 import static wow.character.model.build.BuildId.DESTRO_SHADOW;
 import static wow.commons.model.character.CharacterClass.WARLOCK;
@@ -41,15 +40,15 @@ import static wow.commons.model.professions.Profession.ENCHANTING;
 import static wow.commons.model.professions.Profession.TAILORING;
 import static wow.commons.model.professions.ProfessionSpecialization.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.Phase.TBC_P5;
-import static wow.commons.model.talents.TalentId.*;
 
 /**
  * User: POlszewski
  * Date: 2022-12-19
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = WowCharacterSpringTestConfig.class)
-public abstract class WowCharacterSpringTest {
+@ContextConfiguration(classes = WowMinMaxSpringTestConfig.class)
+@TestPropertySource("classpath:application.properties")
+public abstract class WowMinMaxSpringTest {
 	@Autowired
 	protected ItemRepository itemRepository;
 
@@ -57,13 +56,7 @@ public abstract class WowCharacterSpringTest {
 	protected SpellRepository spellRepository;
 
 	@Autowired
-	protected PveRepository pveRepository;
-
-	@Autowired
 	protected CharacterService characterService;
-
-	@Autowired
-	protected CharacterRepository characterRepository;
 
 	protected Equipment getEquipment() {
 		Equipment equipment = new Equipment();
@@ -110,51 +103,6 @@ public abstract class WowCharacterSpringTest {
 		return spellRepository.getSpellHighestRank(spellId, LEVEL, PHASE).orElseThrow();
 	}
 
-	protected List<Talent> getTalents() {
-		return List.of(
-				getTalent(IMPROVED_HEALTHSTONE, 2),
-				getTalent(DEMONIC_EMBRACE, 5),
-				getTalent(IMPROVED_VOIDWALKER, 1),
-				getTalent(FEL_INTELLECT, 3),
-				getTalent(FEL_DOMINATION, 1),
-				getTalent(FEL_STAMINA, 3),
-				getTalent(DEMONIC_AEGIS, 3),
-				getTalent(MASTER_SUMMONER, 2),
-				getTalent(DEMONIC_SACRIFICE, 1),
-				getTalent(IMPROVED_SHADOW_BOLT, 5),
-				getTalent(CATACLYSM, 5),
-				getTalent(BANE, 5),
-				getTalent(DEVASTATION, 5),
-				getTalent(SHADOWBURN, 1),
-				getTalent(INTENSITY, 2),
-				getTalent(DESTRUCTIVE_REACH, 2),
-				getTalent(IMPROVED_SEARING_PAIN, 1),
-				getTalent(RUIN, 1),
-				getTalent(NETHER_PROTECTION, 3),
-				getTalent(BACKLASH, 3),
-				getTalent(SOUL_LEECH, 2),
-				getTalent(SHADOW_AND_FLAME, 5)
-		);
-	}
-
-	protected List<Buff> getBuffs() {
-		return Stream.of(
-						"Arcane Brilliance",
-						"Gift of the Wild",
-						"Greater Blessing of Kings",
-						"Fel Armor",
-						"Touch of Shadow",
-						"Brilliant Wizard Oil",
-						"Well Fed (sp)",
-						"Flask of Pure Death",
-						"Wrath of Air Totem",
-						"Totem of Wrath",
-						"Curse of the Elements"
-				)
-				.map(this::getBuff)
-				.collect(Collectors.toList());
-	}
-
 	protected Buff getBuff(String name) {
 		return spellRepository.getBuff(name, PHASE).orElseThrow();
 	}
@@ -184,6 +132,16 @@ public abstract class WowCharacterSpringTest {
 	protected Enemy getEnemy() {
 		return characterService.createEnemy(UNDEAD);
 	}
+
+	protected PlayerProfile getPlayerProfile() {
+		Character character = getCharacter();
+		Enemy enemy = getEnemy();
+
+		return new PlayerProfile(PROFILE_ID, PROFILE_NAME, character, enemy);
+	}
+
+	protected static final UUID PROFILE_ID = UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002");
+	protected static final String PROFILE_NAME = "test#1";
 
 	protected static final CharacterClass CHARACTER_CLASS = WARLOCK;
 	protected static final Race RACE = ORC;

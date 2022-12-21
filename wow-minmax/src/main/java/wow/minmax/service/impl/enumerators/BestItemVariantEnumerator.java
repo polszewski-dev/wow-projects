@@ -25,7 +25,7 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 			CalculationService calculationService
 	) {
 		super(referenceProfile, ItemSlotGroup.getGroup(slot).orElseThrow(), spell, itemService, calculationService);
-		this.item = referenceProfile.getEquipment().get(slot).getItem();
+		this.item = referenceProfile.getEquippedItem(slot).getItem();
 	}
 
 	@Override

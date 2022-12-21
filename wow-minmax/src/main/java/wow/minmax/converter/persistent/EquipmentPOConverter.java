@@ -45,23 +45,23 @@ public class EquipmentPOConverter extends ParametrizedConverter<Equipment, Equip
 	protected Equipment doConvertBack(EquipmentPO value, Map<String, Object> params) {
 		Equipment equipment = new Equipment();
 
-		equipment.set(equippableItemPOConverter.convertBack(value.getHead(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getNeck(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getShoulder(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getBack(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getChest(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getWrist(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getHands(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getWaist(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getLegs(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getFeet(), params));
-		equipment.set(equippableItemPOConverter.convertBack(value.getFinger1(), params), ItemSlot.FINGER_1);
-		equipment.set(equippableItemPOConverter.convertBack(value.getFinger2(), params), ItemSlot.FINGER_2);
-		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket1(), params), ItemSlot.TRINKET_1);
-		equipment.set(equippableItemPOConverter.convertBack(value.getTrinket2(), params), ItemSlot.TRINKET_2);
-		equipment.set(equippableItemPOConverter.convertBack(value.getMainHand(), params), ItemSlot.MAIN_HAND);
-		equipment.set(equippableItemPOConverter.convertBack(value.getOffHand(), params), ItemSlot.OFF_HAND);
-		equipment.set(equippableItemPOConverter.convertBack(value.getRanged(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getHead(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getNeck(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getShoulder(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getBack(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getChest(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getWrist(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getHands(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getWaist(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getLegs(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getFeet(), params));
+		equipment.equip(equippableItemPOConverter.convertBack(value.getFinger1(), params), ItemSlot.FINGER_1);
+		equipment.equip(equippableItemPOConverter.convertBack(value.getFinger2(), params), ItemSlot.FINGER_2);
+		equipment.equip(equippableItemPOConverter.convertBack(value.getTrinket1(), params), ItemSlot.TRINKET_1);
+		equipment.equip(equippableItemPOConverter.convertBack(value.getTrinket2(), params), ItemSlot.TRINKET_2);
+		equipment.equip(equippableItemPOConverter.convertBack(value.getMainHand(), params), ItemSlot.MAIN_HAND);
+		equipment.equip(equippableItemPOConverter.convertBack(value.getOffHand(), params), ItemSlot.OFF_HAND);
+		equipment.equip(equippableItemPOConverter.convertBack(value.getRanged(), params));
 
 		return equipment;
 	}

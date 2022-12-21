@@ -9,10 +9,11 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
 import wow.commons.repository.SpellRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -64,21 +65,7 @@ public class SpellServiceImpl implements SpellService {
 	}
 
 	@Override
-	public Map<TalentId, Talent> getTalentsFromTalentLink(String link, Character character) {
-		Map<TalentId, Talent> result = new LinkedHashMap<>();
-
-		String talentStringStart = "?tal=";
-		String talentString = link.substring(link.indexOf(talentStringStart) + talentStringStart.length());
-
-		for (int position = 1; position <= talentString.length(); ++position) {
-			int talentRank = talentString.charAt(position - 1) - '0';
-
-			if (talentRank > 0) {
-				Talent talent = spellRepository.getTalent(character.getCharacterClass(), position, talentRank, character.getPhase()).orElseThrow();
-				result.put(talent.getTalentId(), talent);
-			}
-		}
-
-		return result;
+	public Talent getTalent(int position, int talentRank, Character character) {
+		return spellRepository.getTalent(character.getCharacterClass(), position, talentRank, character.getPhase()).orElseThrow();
 	}
 }

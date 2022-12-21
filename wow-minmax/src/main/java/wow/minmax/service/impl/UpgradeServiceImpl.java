@@ -46,7 +46,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 	public EquippableItem getBestItemVariant(PlayerProfile playerProfile, Item item, ItemSlot slot, Spell spell) {
 		PlayerProfile referenceProfile = playerProfile.copy();
 
-		referenceProfile.getEquipment().set(new EquippableItem(item), slot);
+		referenceProfile.equip(new EquippableItem(item), slot);
 
 		BestItemVariantEnumerator enumerator = new BestItemVariantEnumerator(
 				referenceProfile, slot, spell, itemService, calculationService

@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -22,15 +22,15 @@ class SpellServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getSpell() {
-		Spell spell = underTest.getSpellHighestRank(SpellId.SHADOW_BOLT, getCharacter(SpellId.SHADOW_BOLT));
+		Spell spell = underTest.getSpellHighestRank(SHADOW_BOLT, getCharacter());
 
-		assertThat(spell.getSpellId()).isEqualTo(SpellId.SHADOW_BOLT);
+		assertThat(spell.getSpellId()).isEqualTo(SHADOW_BOLT);
 		assertThat(spell.getRank()).isEqualTo(11);
 	}
 
 	@Test
 	void getAvailableBuffs() {
-		List<Buff> buffs = underTest.getBuffs(getCharacter(SpellId.SHADOW_BOLT));
+		List<Buff> buffs = underTest.getBuffs(getCharacter());
 
 		List<String> names = buffs.stream().map(Buff::getName).collect(Collectors.toList());
 

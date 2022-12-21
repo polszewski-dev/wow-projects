@@ -17,7 +17,7 @@ import java.util.Set;
  * User: POlszewski
  * Date: 2021-09-27
  */
-public class EquippableItem implements Copyable<EquippableItem>, AttributeCollection {
+public class EquippableItem implements AttributeCollection, Copyable<EquippableItem> {
 	private final Item item;
 	private final ItemSockets sockets;
 	private Enchant enchant;

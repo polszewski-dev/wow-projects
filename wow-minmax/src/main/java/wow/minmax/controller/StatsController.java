@@ -46,7 +46,7 @@ public class StatsController {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
 		List<SpellStatsDTO> result = new ArrayList<>();
 
-		for (Spell spell : playerProfile.getBuild().getRelevantSpells()) {
+		for (Spell spell : playerProfile.getRelevantSpells()) {
 			PlayerSpellStats playerSpellStats = calculationService.getPlayerSpellStats(playerProfile, spell);
 			result.add(playerSpellStatsConverter.convert(playerSpellStats));
 		}

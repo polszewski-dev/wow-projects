@@ -18,7 +18,7 @@ import static wow.commons.model.categorization.ItemSlot.*;
  * User: POlszewski
  * Date: 2021-09-27
  */
-public class Equipment implements Copyable<Equipment>, AttributeCollection {
+public class Equipment implements AttributeCollection, Copyable<Equipment> {
 	private final Map<ItemSlot, EquippableItem> itemsBySlot = new EnumMap<>(ItemSlot.class);
 
 	@Override
@@ -26,6 +26,11 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 		Equipment copy = new Equipment();
 		copy.itemsBySlot.putAll(itemsBySlot);
 		return copy;
+	}
+
+	@Override
+	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+		itemsBySlot.values().forEach(item -> item.collectAttributes(collector));
 	}
 
 	public EquippableItem getHead() {
@@ -100,7 +105,7 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 		return itemsBySlot.get(slot);
 	}
 
-	public void set(EquippableItem item, ItemSlot slot) {
+	public void equip(EquippableItem item, ItemSlot slot) {
 		if (item != null && !item.canBeEquippedIn(slot)) {
 			throw new IllegalArgumentException(item + " can't be equipped into " + slot);
 		}
@@ -130,11 +135,21 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 		}
 	}
 
-	public void set(EquippableItem item) {
+	public void equip(EquippableItem item) {
 		if (item == null) {
 			return;
 		}
-		set(item, item.getItemType().getUniqueItemSlot());
+		equip(item, item.getItemType().getUniqueItemSlot());
+	}
+
+	public void setEquipment(Equipment equipment) {
+		for (ItemSlot itemSlot : values()) {
+			this.equip(equipment.get(itemSlot), itemSlot);
+		}
+	}
+
+	public void reset() {
+		itemsBySlot.clear();
 	}
 
 	public List<EquippableItem> toList() {
@@ -143,13 +158,6 @@ public class Equipment implements Copyable<Equipment>, AttributeCollection {
 
 	public Map<ItemSlot, EquippableItem> toMap() {
 		return Collections.unmodifiableMap(itemsBySlot);
-	}
-
-	// item stats, gems, socket bonuses, procs, on-use, socket bonuses
-
-	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
-		itemsBySlot.values().forEach(item -> item.collectAttributes(collector));
 	}
 
 	private int numRed() {

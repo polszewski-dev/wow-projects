@@ -137,7 +137,7 @@ public class PlayerProfileController {
 			@PathVariable("enabled") boolean enabled) {
 		PlayerProfile playerProfile = playerProfileService.enableBuff(profileId, buffId, enabled);
 		log.info("Changed buff profile id: {}, buffId: {}, enabled: {}", profileId, buffId, enabled);
-		return buffConverter.convertList(new ArrayList<>(playerProfile.getBuffs()));
+		return buffConverter.convertList(new ArrayList<>(playerProfile.getBuffs().getList()));
 	}
 
 	@GetMapping("{profileId}/reset/equipment")
@@ -153,7 +153,7 @@ public class PlayerProfileController {
 	}
 
 	private EquippableItemDTO convertEquippableItem(PlayerProfile playerProfile, ItemSlot slot) {
-		EquippableItem equippableItem = playerProfile.getEquipment().get(slot);
+		EquippableItem equippableItem = playerProfile.getEquippedItem(slot);
 		return equipmentConverter.convertItem(playerProfile.getEquipment(), equippableItem);
 	}
 

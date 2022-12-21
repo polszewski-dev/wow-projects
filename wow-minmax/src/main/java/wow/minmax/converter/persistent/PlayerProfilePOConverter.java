@@ -31,12 +31,12 @@ public class PlayerProfilePOConverter extends ParametrizedConverter<PlayerProfil
 				playerProfile.getCharacterClass(),
 				playerProfile.getRace(),
 				playerProfile.getLevel(),
-				playerProfile.getBuild().getBuildId(),
-				characterProfessionPOConverter.convertList(playerProfile.getProfessions(), params),
+				playerProfile.getBuildId(),
+				characterProfessionPOConverter.convertList(playerProfile.getProfessions().getList(), params),
 				playerProfile.getEnemyType(),
 				playerProfile.getPhase(),
 				equipmentPOConverter.convert(playerProfile.getEquipment(), params),
-				buffPOConverter.convertList(playerProfile.getBuffs(), params),
+				buffPOConverter.convertList(playerProfile.getBuffs().getList(), params),
 				playerProfile.getLastModified()
 		);
 	}

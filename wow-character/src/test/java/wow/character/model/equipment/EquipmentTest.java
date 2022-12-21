@@ -21,7 +21,7 @@ class EquipmentTest extends WowCharacterSpringTest {
 	void noItem() {
 		Equipment equipment = new Equipment();
 
-		assertThatNoException().isThrownBy(() -> equipment.set(null));
+		assertThatNoException().isThrownBy(() -> equipment.equip(null));
 	}
 
 	@Test
@@ -31,7 +31,7 @@ class EquipmentTest extends WowCharacterSpringTest {
 
 		Equipment equipment = new Equipment();
 
-		assertThatThrownBy(() -> equipment.set(mainHand, HEAD))
+		assertThatThrownBy(() -> equipment.equip(mainHand, HEAD))
 				.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -43,17 +43,17 @@ class EquipmentTest extends WowCharacterSpringTest {
 		EquippableItem offHand = getItem("Heart of the Pit");
 
 		Equipment equipment = new Equipment();
-		equipment.set(twoHand);
+		equipment.equip(twoHand);
 
 		assertThat(equipment.getMainHand()).isEqualTo(twoHand);
 
-		assertThatThrownBy(() -> equipment.set(offHand))
+		assertThatThrownBy(() -> equipment.equip(offHand))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Can't equip offhand while having 2-hander");
 
 		assertThatNoException().isThrownBy(() -> {
-			equipment.set(mainHand);
-			equipment.set(offHand);
+			equipment.equip(mainHand);
+			equipment.equip(offHand);
 		});
 	}
 
@@ -67,7 +67,7 @@ class EquipmentTest extends WowCharacterSpringTest {
 
 		Equipment equipment = new Equipment();
 
-		equipment.set(item);
+		equipment.equip(item);
 
 		item.gem(violetGem, orangeGem);
 
@@ -90,8 +90,8 @@ class EquipmentTest extends WowCharacterSpringTest {
 
 		Equipment equipment = new Equipment();
 
-		equipment.set(head);
-		equipment.set(shoulder);
+		equipment.equip(head);
+		equipment.equip(shoulder);
 
 		head.gem(metaGem, violetGem);
 		shoulder.gem(violetGem, orangeGem);
@@ -109,10 +109,10 @@ class EquipmentTest extends WowCharacterSpringTest {
 		Equipment equipment1 = new Equipment();
 		Equipment equipment2 = new Equipment();
 
-		equipment1.set(ring1, FINGER_1);
-		equipment1.set(ring2, FINGER_2);
-		equipment2.set(ring2, FINGER_1);
-		equipment2.set(ring1, FINGER_2);
+		equipment1.equip(ring1, FINGER_1);
+		equipment1.equip(ring2, FINGER_2);
+		equipment2.equip(ring2, FINGER_1);
+		equipment2.equip(ring1, FINGER_2);
 
 		assertThat(equipment2).isEqualTo(equipment1).hasSameHashCodeAs(equipment1);
 	}
@@ -126,10 +126,10 @@ class EquipmentTest extends WowCharacterSpringTest {
 		Equipment equipment1 = new Equipment();
 		Equipment equipment2 = new Equipment();
 
-		equipment1.set(trinket1, TRINKET_1);
-		equipment1.set(trinket2, TRINKET_2);
-		equipment2.set(trinket2, TRINKET_1);
-		equipment2.set(trinket1, TRINKET_2);
+		equipment1.equip(trinket1, TRINKET_1);
+		equipment1.equip(trinket2, TRINKET_2);
+		equipment2.equip(trinket2, TRINKET_1);
+		equipment2.equip(trinket1, TRINKET_2);
 
 		assertThat(equipment2).isEqualTo(equipment1).hasSameHashCodeAs(equipment1);
 	}
@@ -145,15 +145,15 @@ class EquipmentTest extends WowCharacterSpringTest {
 		Equipment equipment1 = new Equipment();
 		Equipment equipment2 = new Equipment();
 
-		equipment1.set(ring1, FINGER_1);
-		equipment1.set(ring2, FINGER_2);
-		equipment1.set(trinket1, TRINKET_1);
-		equipment1.set(trinket2, TRINKET_2);
+		equipment1.equip(ring1, FINGER_1);
+		equipment1.equip(ring2, FINGER_2);
+		equipment1.equip(trinket1, TRINKET_1);
+		equipment1.equip(trinket2, TRINKET_2);
 
-		equipment2.set(ring2, FINGER_1);
-		equipment2.set(ring1, FINGER_2);
-		equipment2.set(trinket2, TRINKET_1);
-		equipment2.set(trinket1, TRINKET_2);
+		equipment2.equip(ring2, FINGER_1);
+		equipment2.equip(ring1, FINGER_2);
+		equipment2.equip(trinket2, TRINKET_1);
+		equipment2.equip(trinket1, TRINKET_2);
 
 		List<EquippableItem> itemDifference = equipment1.getItemDifference(equipment2);
 

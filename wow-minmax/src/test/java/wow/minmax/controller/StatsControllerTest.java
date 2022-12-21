@@ -7,15 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.character.model.snapshot.CritMode;
-import wow.character.model.snapshot.Snapshot;
-import wow.character.model.snapshot.SpellStatistics;
-import wow.commons.model.attributes.Attributes;
-import wow.minmax.model.PlayerSpellStats;
-import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,9 +25,6 @@ class StatsControllerTest extends ControllerTest {
 
 	@MockBean
 	PlayerProfileService playerProfileService;
-
-	@MockBean
-	CalculationService calculationService;
 
 	@Test
 	void getSpellStats() throws Exception {
@@ -61,18 +51,10 @@ class StatsControllerTest extends ControllerTest {
 	}
 
 	@BeforeEach
+	@Override
 	void setup() {
-		createMockObjects();
+		super.setup();
 
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
-
-		Snapshot snapshot = new Snapshot(profile.getDamagingSpell(), profile.getCharacter(), profile.getEnemy(), profile.getStats());
-		SpellStatistics statistics = snapshot.getSpellStatistics(CritMode.AVERAGE, false);
-
-		when(calculationService.getSnapshot(any(), any(), any())).thenReturn(snapshot);
-		when(calculationService.getAbilityEquivalent(any(), any(), any(), any())).thenReturn(Attributes.EMPTY);
-		when(calculationService.getPlayerSpellStats(any(), any())).thenReturn(new PlayerSpellStats(profile, statistics, 1, 2, 3));
-		when(calculationService.getSpellStatistics(any(), any())).thenReturn(statistics);
-		when(calculationService.getSpellStatistics(any(), any(), any())).thenReturn(statistics);
 	}
 }

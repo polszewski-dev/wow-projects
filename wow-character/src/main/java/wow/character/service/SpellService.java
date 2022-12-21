@@ -6,10 +6,8 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -26,5 +24,5 @@ public interface SpellService {
 
 	List<Buff> getBuffs(Character character);
 
-	Map<TalentId, Talent> getTalentsFromTalentLink(String link, Character character);
+	Talent getTalent(int position, int talentRank, Character character);
 }

@@ -5,12 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.build.BuffSetId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.EquippableItemPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
+import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,10 @@ class PlayerProfileServiceTest extends ServiceTest {
 	@Autowired
 	PlayerProfileService underTest;
 
+	@MockBean
+	PlayerProfileRepository playerProfileRepository;
+
+
 	@Autowired
 	PlayerProfilePOConverter playerProfilePOConverter;
 
@@ -40,7 +46,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		List<PlayerProfile> profiles = underTest.getPlayerProfileList();
 
 		assertThat(profiles).hasSize(1);
-		assertThat(profiles.get(0).getProfileId()).isEqualTo(profile.getProfileId());
+		assertThat(profiles.get(0).getProfileId()).isEqualTo(profilePO.getProfileId());
 
 		verify(playerProfileRepository).getPlayerProfileList();
 	}
@@ -57,7 +63,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void copyPlayerProfile() {
-		PlayerProfile copy = underTest.copyPlayerProfile(profile.getProfileId(), "Copy", PHASE);
+		PlayerProfile copy = underTest.copyPlayerProfile(profilePO.getProfileId(), "Copy", PHASE);
 
 		assertThat(copy.getProfileName()).isEqualTo("Copy");
 		assertThat(copy.getPhase()).isEqualTo(PHASE);
@@ -67,16 +73,16 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void getPlayerProfileById() {
-		PlayerProfile returnedProfile = underTest.getPlayerProfile(profile.getProfileId());
+		PlayerProfile returnedProfile = underTest.getPlayerProfile(profilePO.getProfileId());
 
-		assertThat(returnedProfile.getProfileId()).isEqualTo(profile.getProfileId());
+		assertThat(returnedProfile.getProfileId()).isEqualTo(profilePO.getProfileId());
 	}
 
 	@Test
 	void changeItem() {
-		assertThat(profile.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
+		assertThat(profilePO.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 
-		underTest.changeItem(profile.getProfileId(), ItemSlot.OFF_HAND, 34179);
+		underTest.changeItem(profilePO.getProfileId(), ItemSlot.OFF_HAND, 34179);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -86,10 +92,10 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void changeTwoHander() {
-		assertThat(profile.getEquipment().getMainHand().getItem().getName()).isEqualTo("Sunflare");
-		assertThat(profile.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
+		assertThat(profilePO.getEquipment().getMainHand().getItem().getName()).isEqualTo("Sunflare");
+		assertThat(profilePO.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 
-		underTest.changeItem(profile.getProfileId(), ItemSlot.MAIN_HAND, 34182);
+		underTest.changeItem(profilePO.getProfileId(), ItemSlot.MAIN_HAND, 34182);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -108,9 +114,9 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void changeEnchant() {
-		assertThat(profile.getEquipment().getMainHand().getEnchant().getName()).isEqualTo("Enchant Weapon – Soulfrost");
+		assertThat(profilePO.getEquipment().getMainHand().getEnchant().getName()).isEqualTo("Enchant Weapon – Soulfrost");
 
-		underTest.changeEnchant(profile.getProfileId(), ItemSlot.MAIN_HAND, 2669);
+		underTest.changeEnchant(profilePO.getProfileId(), ItemSlot.MAIN_HAND, 2669);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -120,13 +126,13 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void changeGem() {
-		EquippableItemPO chest = profile.getEquipment().getChest();
+		EquippableItemPO chest = profilePO.getEquipment().getChest();
 
 		assertThat(chest.getItem().getName()).isEqualTo("Sunfire Robe");
 		assertThat(chest.getSocketCount()).isEqualTo(3);
 		assertThat(chest.getGems().get(1).getId()).isNotEqualTo(35761);
 
-		underTest.changeGem(profile.getProfileId(), ItemSlot.CHEST, 1, 35761);
+		underTest.changeGem(profilePO.getProfileId(), ItemSlot.CHEST, 1, 35761);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -136,7 +142,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void resetEquipment() {
-		underTest.resetEquipment(profile.getProfileId());
+		underTest.resetEquipment(profilePO.getProfileId());
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -146,10 +152,10 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void enableBuff() {
-		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 17628)).isFalse();
-		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
+		assertThat(profilePO.getBuffs().stream().anyMatch(buff -> buff.getId() == 17628)).isFalse();
+		assertThat(profilePO.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
 
-		underTest.enableBuff(profile.getProfileId(), 17628, true);
+		underTest.enableBuff(profilePO.getProfileId(), 17628, true);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -160,9 +166,9 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void disableBuff() {
-		assertThat(profile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
+		assertThat(profilePO.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isTrue();
 
-		underTest.enableBuff(profile.getProfileId(), 28540, false);
+		underTest.enableBuff(profilePO.getProfileId(), 28540, false);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -170,19 +176,19 @@ class PlayerProfileServiceTest extends ServiceTest {
 		assertThat(savedProfile.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isFalse();
 	}
 
-	PlayerProfilePO profile;
+	PlayerProfilePO profilePO;
 
 	@BeforeEach
 	@Override
 	void setup() {
 		super.setup();
 
-		playerProfile.setEquipment(getEquipment());
-		playerProfile.setBuffs(BuffSetId.CONSUMES);
+		profile.setEquipment(getEquipment());
+		profile.setBuffs(BuffSetId.CONSUMES);
 
-		profile = playerProfilePOConverter.convert(playerProfile, Map.of());
+		profilePO = playerProfilePOConverter.convert(profile, Map.of());
 
-		when(playerProfileRepository.getPlayerProfileList()).thenReturn(List.of(profile));
-		when(playerProfileRepository.getPlayerProfile(playerProfile.getProfileId())).thenReturn(Optional.of(profile));
+		when(playerProfileRepository.getPlayerProfileList()).thenReturn(List.of(profilePO));
+		when(playerProfileRepository.getPlayerProfile(profile.getProfileId())).thenReturn(Optional.of(profilePO));
 	}
 }

@@ -1,6 +1,5 @@
 package wow.character.model.character;
 
-import lombok.Getter;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 
@@ -10,7 +9,6 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@Getter
 public class CharacterProfessions {
 	private final List<CharacterProfession> professions;
 
@@ -24,6 +22,10 @@ public class CharacterProfessions {
 		if (professions.stream().map(CharacterProfession::getProfession).distinct().count() != professions.size()) {
 			throw new IllegalArgumentException("Can't have 2 identical professions");
 		}
+	}
+
+	public List<CharacterProfession> getList() {
+		return professions;
 	}
 
 	public boolean hasProfession(Profession profession) {
