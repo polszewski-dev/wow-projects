@@ -3,7 +3,6 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
-import wow.character.model.character.Enemy;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
@@ -92,15 +91,13 @@ class SnapshotTest extends WowCharacterSpringTest {
 	private Snapshot getSnapshot() {
 		Spell spell = getSpell(SHADOW_BOLT);
 		Character character = getCharacter();
-		Enemy enemy = getEnemy();
 
 		character.setEquipment(getEquipment());
 
 		Attributes everything = AttributeEvaluator.of()
 				.addAttributes(character)
-				.addAttributes(enemy)
 				.solveAllLeaveAbilities();
 
-		return new Snapshot(spell, character, enemy, everything);
+		return new Snapshot(spell, character, everything);
 	}
 }

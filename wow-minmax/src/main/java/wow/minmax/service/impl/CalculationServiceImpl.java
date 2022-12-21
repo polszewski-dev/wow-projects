@@ -100,7 +100,6 @@ public class CalculationServiceImpl implements CalculationService {
 		return new Snapshot(
 				spell,
 				playerProfile.getCharacter(),
-				playerProfile.getEnemy(),
 				totalStats
 		);
 	}

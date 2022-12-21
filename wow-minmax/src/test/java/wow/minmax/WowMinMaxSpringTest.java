@@ -119,7 +119,7 @@ public abstract class WowMinMaxSpringTest {
 				new CharacterProfession(ENCHANTING, maxLevel, null)
 		);
 
-		return characterService.createCharacter(
+		Character character = characterService.createCharacter(
 				CHARACTER_CLASS,
 				RACE,
 				LEVEL,
@@ -127,17 +127,18 @@ public abstract class WowMinMaxSpringTest {
 				professions,
 				PHASE
 		);
-	}
 
-	protected Enemy getEnemy() {
-		return characterService.createEnemy(UNDEAD);
+		Enemy enemy = characterService.createEnemy(UNDEAD);
+
+		character.setTargetEnemy(enemy);
+
+		return character;
 	}
 
 	protected PlayerProfile getPlayerProfile() {
 		Character character = getCharacter();
-		Enemy enemy = getEnemy();
 
-		return new PlayerProfile(PROFILE_ID, PROFILE_NAME, character, enemy);
+		return new PlayerProfile(PROFILE_ID, PROFILE_NAME, character);
 	}
 
 	protected static final UUID PROFILE_ID = UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002");

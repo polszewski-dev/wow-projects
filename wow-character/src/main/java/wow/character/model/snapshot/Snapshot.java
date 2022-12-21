@@ -4,7 +4,6 @@ import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.Enemy;
 import wow.commons.constants.SpellConstants;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -54,13 +53,13 @@ public class Snapshot implements StatProvider {
 
 	private final boolean calcFinished;
 
-	public Snapshot(Spell spell, Character character, Enemy enemy, Attributes attributes) {
+	public Snapshot(Spell spell, Character character, Attributes attributes) {
 		this.spell = spell;
 		this.baseStats = character.getBaseStatInfo();
 		this.cr = character.getCombatRatingInfo();
 		this.stats = new AccumulatedSpellStats(
 				attributes,
-				spell.getConditions(character.getActivePet(), enemy.getEnemyType())
+				spell.getConditions(character.getActivePet(), character.getTargetEnemy().getEnemyType())
 		);
 
 		stats.accumulateStats(this);

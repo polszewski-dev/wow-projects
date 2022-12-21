@@ -42,14 +42,12 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 	private final UUID profileId;
 	private final String profileName;
 	private final Character character;
-	private final Enemy enemy;
 	private LocalDateTime lastModified;
 
-	public PlayerProfile(UUID profileId, String profileName, Character character, Enemy enemy) {
+	public PlayerProfile(UUID profileId, String profileName, Character character) {
 		this.profileId = profileId;
 		this.profileName = profileName;
 		this.character = character;
-		this.enemy = enemy;
 		this.lastModified = LocalDateTime.now();
 	}
 
@@ -59,7 +57,7 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 	}
 
 	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.copy(phase), enemy.copy());
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.copy(phase));
 		copy.lastModified = this.lastModified;
 		return copy;
 	}
@@ -67,7 +65,6 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 	@Override
 	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
 		character.collectAttributes(collector);
-		enemy.collectAttributes(collector);
 	}
 
 	public Attributes getStats() {
@@ -225,7 +222,7 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 	// enemy
 
 	public CreatureType getEnemyType() {
-		return enemy.getEnemyType();
+		return character.getTargetEnemy().getEnemyType();
 	}
 
 	//

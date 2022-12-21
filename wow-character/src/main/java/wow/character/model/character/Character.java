@@ -45,6 +45,8 @@ public class Character implements AttributeCollection, CharacterInfo {
 	private final BaseStatInfo baseStatInfo;
 	private final CombatRatingInfo combatRatingInfo;
 
+	private Enemy targetEnemy;
+
 	public Character(CharacterClass characterClass, Race race, int level, CharacterProfessions professions, Phase phase, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
 		this.characterClass = characterClass;
 		this.race = race;
@@ -69,7 +71,8 @@ public class Character implements AttributeCollection, CharacterInfo {
 				equipment.copy(),
 				buffs.copy(),
 				baseStatInfo,
-				combatRatingInfo
+				combatRatingInfo,
+				targetEnemy.copy()
 		);
 	}
 
@@ -78,6 +81,7 @@ public class Character implements AttributeCollection, CharacterInfo {
 		build.collectAttributes(collector);
 		equipment.collectAttributes(collector);
 		buffs.collectAttributes(collector);
+		targetEnemy.collectAttributes(collector);
 	}
 
 	public Side getSide() {
@@ -126,6 +130,10 @@ public class Character implements AttributeCollection, CharacterInfo {
 
 	public void resetBuffs() {
 		buffs.reset();
+	}
+
+	public void setTargetEnemy(Enemy targetEnemy) {
+		this.targetEnemy = targetEnemy;
 	}
 
 	// professions

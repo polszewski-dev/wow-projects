@@ -171,7 +171,7 @@ public abstract class WowCharacterSpringTest {
 				new CharacterProfession(ENCHANTING, maxLevel, null)
 		);
 
-		return characterService.createCharacter(
+		Character character = characterService.createCharacter(
 				CHARACTER_CLASS,
 				RACE,
 				LEVEL,
@@ -179,10 +179,12 @@ public abstract class WowCharacterSpringTest {
 				professions,
 				PHASE
 		);
-	}
 
-	protected Enemy getEnemy() {
-		return characterService.createEnemy(UNDEAD);
+		Enemy enemy = characterService.createEnemy(UNDEAD);
+
+		character.setTargetEnemy(enemy);
+
+		return character;
 	}
 
 	protected static final CharacterClass CHARACTER_CLASS = WARLOCK;

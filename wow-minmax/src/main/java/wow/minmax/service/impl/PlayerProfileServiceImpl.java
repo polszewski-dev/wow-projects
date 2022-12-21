@@ -79,11 +79,12 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		Character character = characterService.createCharacter(characterClass, race, level, buildId, professions, phase);
 		Enemy enemy = characterService.createEnemy(enemyType);
 
+		character.setTargetEnemy(enemy);
+
 		return new PlayerProfile(
 				profileId,
 				profileName,
-				character,
-				enemy
+				character
 		);
 	}
 
