@@ -26,11 +26,11 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Has talents, no buffs, no items")
 	void hasTalentsNoBuffsNoItems() {
-		profile.setEquipment(new Equipment());
-		profile.resetBuffs();
+		character.setEquipment(new Equipment());
+		character.resetBuffs();
 
-		Spell spell = profile.getDamagingSpell();
-		Snapshot snapshot = underTest.getSnapshot(profile, spell, profile.getStats());
+		Spell spell = character.getDamagingSpell();
+		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(89);
 		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(130);
@@ -64,10 +64,10 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Has talents, has buffs, no items")
 	void hasTalentsHasBuffsNoItems() {
-		profile.setEquipment(new Equipment());
+		character.setEquipment(new Equipment());
 
-		Spell spell = profile.getDamagingSpell();
-		Snapshot snapshot = underTest.getSnapshot(profile, spell, profile.getStats());
+		Spell spell = character.getDamagingSpell();
+		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(115);
 		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(202);
@@ -101,10 +101,10 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Has talents, has buffs, has items")
 	void hasTalentsHasBuffsHasItems() {
-		profile.setEquipment(getEquipment());
+		character.setEquipment(getEquipment());
 
-		Spell spell = profile.getDamagingSpell();
-		Snapshot snapshot = underTest.getSnapshot(profile, spell, profile.getStats());
+		Spell spell = character.getDamagingSpell();
+		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
 		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(619);
@@ -138,11 +138,11 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct stat quivalent")
 	void correctStatEquivalent() {
-		profile.setEquipment(getEquipment());
+		character.setEquipment(getEquipment());
 
-		Attributes hitEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HIT_RATING, 10), SPELL_POWER, ADDITIONAL, profile);
-		Attributes critEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_CRIT_RATING, 10), SPELL_POWER, ADDITIONAL, profile);
-		Attributes hasteEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HASTE_RATING, 10), SPELL_POWER, ADDITIONAL, profile);
+		Attributes hitEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HIT_RATING, 10), SPELL_POWER, ADDITIONAL, character);
+		Attributes critEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_CRIT_RATING, 10), SPELL_POWER, ADDITIONAL, character);
+		Attributes hasteEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HASTE_RATING, 10), SPELL_POWER, ADDITIONAL, character);
 
 		assertThat(hitEqv.getSpellPower()).isEqualTo(0.11, PRECISION);
 		assertThat(critEqv.getSpellPower()).isEqualTo(10.30, PRECISION);
@@ -152,14 +152,14 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct stat quivalent")
 	void correctAbilityEquivalent() {
-		profile.setEquipment(getEquipment());
+		character.setEquipment(getEquipment());
 
 		String line = "Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)";
-		SpecialAbility specialAbility = profile.getEquipment().getStats().getSpecialAbilities().stream()
+		SpecialAbility specialAbility = character.getEquipment().getStats().getSpecialAbilities().stream()
 				.filter(x -> line.equals(x.getLine()))
 				.findFirst()
 				.orElseThrow();
-		Attributes equivalent = underTest.getAbilityEquivalent(specialAbility, profile, null, null);
+		Attributes equivalent = underTest.getAbilityEquivalent(specialAbility, character, null, null);
 
 		assertThat(equivalent.getSpellHasteRating()).isEqualTo(29.17, PRECISION);
 	}
@@ -167,9 +167,9 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct spell stats")
 	void correctSpellStats() {
-		profile.setEquipment(getEquipment());
+		character.setEquipment(getEquipment());
 
-		SpellStatistics spellStatistics = underTest.getSpellStatistics(profile, null);
+		SpellStatistics spellStatistics = underTest.getSpellStatistics(character, null);
 
 		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5219);
 		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2691);
@@ -181,9 +181,9 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	@DisplayName("Correct player spell stats")
 	void correctPlayerSpellStats() {
-		profile.setEquipment(getEquipment());
+		character.setEquipment(getEquipment());
 
-		PlayerSpellStats playerSpellStats = underTest.getPlayerSpellStats(profile, null);
+		PlayerSpellStats playerSpellStats = underTest.getPlayerSpellStats(character, null);
 
 		assertThat(playerSpellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
 		assertThat(playerSpellStats.getCritSpEqv()).isEqualTo(10.30, PRECISION);

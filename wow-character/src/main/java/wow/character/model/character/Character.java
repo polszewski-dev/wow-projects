@@ -2,11 +2,14 @@ package wow.character.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import wow.character.model.Copyable;
 import wow.character.model.build.*;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClass;
@@ -34,7 +37,7 @@ import java.util.Set;
  */
 @AllArgsConstructor
 @Getter
-public class Character implements AttributeCollection, CharacterInfo {
+public class Character implements AttributeCollection, CharacterInfo, Copyable<Character> {
 	private final CharacterClass characterClass;
 	private final Race race;
 	private final int level;
@@ -59,6 +62,11 @@ public class Character implements AttributeCollection, CharacterInfo {
 		this.buffs = new Buffs();
 		this.baseStatInfo = baseStatInfo;
 		this.combatRatingInfo = combatRatingInfo;
+	}
+
+	@Override
+	public Character copy() {
+		return copy(phase);
 	}
 
 	public Character copy(Phase phase) {
@@ -135,6 +143,12 @@ public class Character implements AttributeCollection, CharacterInfo {
 
 	public void setTargetEnemy(Enemy targetEnemy) {
 		this.targetEnemy = targetEnemy;
+	}
+
+	public Attributes getStats() {
+		return AttributeEvaluator.of()
+				.addAttributes(this)
+				.solveAllLeaveAbilities();
 	}
 
 	// professions

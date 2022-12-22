@@ -1,6 +1,7 @@
 package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import wow.character.model.character.Character;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.PlayerProfile;
 
@@ -10,9 +11,11 @@ import wow.minmax.model.PlayerProfile;
  */
 abstract class ServiceTest extends WowMinMaxSpringTest {
 	PlayerProfile profile;
+	Character character;
 
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
+		character = profile.getCharacter();
 	}
 }

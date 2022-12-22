@@ -1,12 +1,12 @@
 package wow.minmax.service;
 
+import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.Spell;
-import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 
 /**
@@ -19,17 +19,17 @@ public interface CalculationService {
 		REPLACEMENT,
 	}
 
-	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, PlayerProfile playerProfile);
+	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character);
 
-	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, PlayerProfile playerProfile, Spell spell, Attributes totalStats);
+	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character, Spell spell, Attributes totalStats);
 
-	Attributes getAbilityEquivalent(SpecialAbility specialAbility, PlayerProfile playerProfile, Spell spell, Attributes totalStats);
+	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Spell spell, Attributes totalStats);
 
-	SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell);
+	SpellStatistics getSpellStatistics(Character character, Spell spell);
 
-	SpellStatistics getSpellStatistics(PlayerProfile playerProfile, Spell spell, Attributes totalStats);
+	SpellStatistics getSpellStatistics(Character character, Spell spell, Attributes totalStats);
 
-	Snapshot getSnapshot(PlayerProfile playerProfile, Spell spell, Attributes totalStats);
+	Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats);
 
-	PlayerSpellStats getPlayerSpellStats(PlayerProfile playerProfile, Spell spell);
+	PlayerSpellStats getPlayerSpellStats(Character character, Spell spell);
 }

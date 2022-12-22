@@ -47,7 +47,7 @@ public class StatsController {
 		List<SpellStatsDTO> result = new ArrayList<>();
 
 		for (Spell spell : playerProfile.getRelevantSpells()) {
-			PlayerSpellStats playerSpellStats = calculationService.getPlayerSpellStats(playerProfile, spell);
+			PlayerSpellStats playerSpellStats = calculationService.getPlayerSpellStats(playerProfile.getCharacter(), spell);
 			result.add(playerSpellStatsConverter.convert(playerSpellStats));
 		}
 
@@ -98,7 +98,7 @@ public class StatsController {
 	}
 
 	private PlayerStatsDTO getPlayerStatsDTO(String type, PlayerProfile playerProfile, Attributes totalStats) {
-		Snapshot snapshot = calculationService.getSnapshot(playerProfile, playerProfile.getDamagingSpell(), totalStats);
+		Snapshot snapshot = calculationService.getSnapshot(playerProfile.getCharacter(), playerProfile.getDamagingSpell(), totalStats);
 
 		return new PlayerStatsDTO(
 				type,
@@ -118,7 +118,7 @@ public class StatsController {
 	}
 
 	private SpecialAbilityStatsDTO getSpecialAbilityStatsDTO(PlayerProfile playerProfile, SpecialAbility specialAbility) {
-		Attributes statEquivalent = calculationService.getAbilityEquivalent(specialAbility, playerProfile, null, null);
+		Attributes statEquivalent = calculationService.getAbilityEquivalent(specialAbility, playerProfile.getCharacter(), null, null);
 
 		return new SpecialAbilityStatsDTO(
 				specialAbility.getLine(),

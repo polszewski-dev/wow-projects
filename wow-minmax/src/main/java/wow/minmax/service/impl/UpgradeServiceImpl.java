@@ -2,6 +2,7 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.character.Character;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
@@ -10,7 +11,6 @@ import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
 import wow.minmax.config.UpgradeConfig;
 import wow.minmax.model.Comparison;
-import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.UpgradeService;
 import wow.minmax.service.impl.enumerators.BestItemVariantEnumerator;
@@ -32,9 +32,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final CalculationService calculationService;
 
 	@Override
-	public List<Comparison> findUpgrades(PlayerProfile playerProfile, ItemSlotGroup slotGroup, Spell spell) {
+	public List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, Spell spell) {
 		FindUpgradesEnumerator enumerator = new FindUpgradesEnumerator(
-				playerProfile, slotGroup, spell, itemService, calculationService
+				character, slotGroup, spell, itemService, calculationService
 		);
 
 		return enumerator.run().getResult().stream()
@@ -43,13 +43,13 @@ public class UpgradeServiceImpl implements UpgradeService {
 	}
 
 	@Override
-	public EquippableItem getBestItemVariant(PlayerProfile playerProfile, Item item, ItemSlot slot, Spell spell) {
-		PlayerProfile referenceProfile = playerProfile.copy();
+	public EquippableItem getBestItemVariant(Character character, Item item, ItemSlot slot, Spell spell) {
+		Character referenceCharacter = character.copy();
 
-		referenceProfile.equip(new EquippableItem(item), slot);
+		referenceCharacter.equip(new EquippableItem(item), slot);
 
 		BestItemVariantEnumerator enumerator = new BestItemVariantEnumerator(
-				referenceProfile, slot, spell, itemService, calculationService
+				referenceCharacter, slot, spell, itemService, calculationService
 		);
 
 		return enumerator.run()

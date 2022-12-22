@@ -106,7 +106,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
 		Item item = itemService.getItem(itemId, playerProfile.getPhase());
-		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile, item, slot, playerProfile.getDamagingSpell());
+		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile.getCharacter(), item, slot, playerProfile.getDamagingSpell());
 
 		playerProfile.equip(bestItemVariant, slot);
 		saveProfile(playerProfile);

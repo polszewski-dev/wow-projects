@@ -1,5 +1,6 @@
 package wow.minmax.service.impl.enumerators;
 
+import wow.character.model.character.Character;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.ItemService;
@@ -14,7 +15,6 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.Comparison;
-import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.CalculationService;
 
 import java.util.*;
@@ -31,34 +31,34 @@ public abstract class ItemVariantEnumerator {
 	protected final ItemService itemService;
 	protected final CalculationService calculationService;
 
-	protected final PlayerProfile referenceProfile;
+	protected final Character referenceCharacter;
 	private final double referenceDps;
 	private final ItemSlotGroup slotGroup;
 	private final Spell spell;
 
-	private final PlayerProfile workingProfile;
+	private final Character workingCharacter;
 	private final Attributes withoutSlotGroup;
 
 	private final Map<String, Comparison> bestOptions = new HashMap<>();
 
 	protected ItemVariantEnumerator(
-			PlayerProfile referenceProfile, ItemSlotGroup slotGroup, Spell spell, ItemService itemService, CalculationService calculationService) {
+			Character referenceCharacter, ItemSlotGroup slotGroup, Spell spell, ItemService itemService, CalculationService calculationService) {
 		this.itemService = itemService;
 		this.calculationService = calculationService;
 
-		this.referenceProfile = referenceProfile;
-		this.referenceDps = calculationService.getSpellStatistics(referenceProfile, spell).getDps();
+		this.referenceCharacter = referenceCharacter;
+		this.referenceDps = calculationService.getSpellStatistics(referenceCharacter, spell).getDps();
 		this.slotGroup = slotGroup;
 		this.spell = spell;
 
-		this.workingProfile = referenceProfile.copy();
+		this.workingCharacter = referenceCharacter.copy();
 
 		for (ItemSlot slot : slotGroup.getSlots()) {
-			workingProfile.equip(null, slot);
+			workingCharacter.equip(null, slot);
 		}
 
 		this.withoutSlotGroup = AttributeEvaluator.of()
-				.addAttributes(workingProfile)
+				.addAttributes(workingCharacter)
 				.nothingToSolve();
 	}
 
@@ -158,7 +158,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private Comparison newComparison(double changePct) {
-		return new Comparison(workingProfile.getEquipment().copy(), referenceProfile.getEquipment(), Percent.of(changePct));
+		return new Comparison(workingCharacter.getEquipment().copy(), referenceCharacter.getEquipment(), Percent.of(changePct));
 	}
 
 	private String getUniqueItemKey(EquippableItem... itemOption) {
@@ -170,14 +170,14 @@ public abstract class ItemVariantEnumerator {
 
 	private Comparison getItemComparison(EquippableItem... itemOption) {
 		Attributes totalStats = getTotalStats(itemOption);
-		double dps = calculationService.getSpellStatistics(workingProfile, spell, totalStats).getDps();
+		double dps = calculationService.getSpellStatistics(workingCharacter, spell, totalStats).getDps();
 		double changePct = 100 * (dps / referenceDps - 1);
 
 		if (!isAcceptable(changePct)) {
 			return null;
 		}
 
-		equipItems(workingProfile.getEquipment(), itemOption);
+		equipItems(workingCharacter.getEquipment(), itemOption);
 		return newComparison(changePct);
 	}
 
@@ -214,8 +214,8 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedAndGemmedItems(Item item) {
-		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile.getCharacter(), item.getItemType());
-		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile.getCharacter(), item);
+		List<Enchant> enchants = itemService.getBestEnchants(referenceCharacter, item.getItemType());
+		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceCharacter, item);
 		List<EquippableItem> result = new ArrayList<>(enchants.size() * gemCombos.size());
 
 		for (Enchant enchant : enchants) {
@@ -227,7 +227,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getGemmedItems(Item item) {
-		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceProfile.getCharacter(), item);
+		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceCharacter, item);
 		List<EquippableItem> result = new ArrayList<>(gemCombos.size());
 
 		for (Gem[] gemCombo : gemCombos) {
@@ -237,7 +237,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedItems(Item item) {
-		List<Enchant> enchants = itemService.getBestEnchants(referenceProfile.getCharacter(), item.getItemType());
+		List<Enchant> enchants = itemService.getBestEnchants(referenceCharacter, item.getItemType());
 		List<EquippableItem> result = new ArrayList<>(enchants.size());
 
 		if (enchants.isEmpty()) {

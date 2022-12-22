@@ -2,6 +2,7 @@ package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.character.model.character.Character;
 import wow.character.model.snapshot.SpellStatistics;
 
 /**
@@ -11,7 +12,7 @@ import wow.character.model.snapshot.SpellStatistics;
 @Data
 @AllArgsConstructor
 public class PlayerSpellStats {
-	private PlayerProfile playerProfile;
+	private Character character;
 	private SpellStatistics spellStatistics;
 	private double hitSpEqv;
 	private double critSpEqv;

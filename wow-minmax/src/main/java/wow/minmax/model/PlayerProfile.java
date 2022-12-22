@@ -8,7 +8,6 @@ import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.attributes.Attributes;
@@ -67,13 +66,11 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		character.collectAttributes(collector);
 	}
 
-	public Attributes getStats() {
-		return AttributeEvaluator.of()
-				.addAttributes(this)
-				.solveAllLeaveAbilities();
-	}
-
 	// character
+
+	public Attributes getStats() {
+		return character.getStats();
+	}
 
 	public CharacterClass getCharacterClass() {
 		return character.getCharacterClass();

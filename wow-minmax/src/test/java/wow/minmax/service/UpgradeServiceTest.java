@@ -23,46 +23,46 @@ class UpgradeServiceTest extends ServiceTest {
 
 	@Test
 	void findUpgradesChest() {
-		profile.equip(null, ItemSlot.CHEST);
+		character.equip(null, ItemSlot.CHEST);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.CHEST, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.CHEST, character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
 
 	@Test
 	void findUpgradesRings() {
-		profile.equip(null, ItemSlot.FINGER_1);
-		profile.equip(null, ItemSlot.FINGER_2);
+		character.equip(null, ItemSlot.FINGER_1);
+		character.equip(null, ItemSlot.FINGER_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.FINGERS, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
 
 	@Test
 	void findUpgradesTrinkets() {
-		profile.equip(null, ItemSlot.TRINKET_1);
-		profile.equip(null, ItemSlot.TRINKET_2);
+		character.equip(null, ItemSlot.TRINKET_1);
+		character.equip(null, ItemSlot.TRINKET_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.TRINKETS, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
 
 	@Test
 	void findUpgradesWeapons() {
-		profile.equip(null, ItemSlot.MAIN_HAND);
-		profile.equip(null, ItemSlot.OFF_HAND);
+		character.equip(null, ItemSlot.MAIN_HAND);
+		character.equip(null, ItemSlot.OFF_HAND);
 
-		List<Comparison> upgrades = underTest.findUpgrades(profile, ItemSlotGroup.WEAPONS, profile.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(3);
 	}
 
 	@Test
 	void getBestItemVariant() {
-		EquippableItem item = underTest.getBestItemVariant(profile, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, profile.getDamagingSpell());
+		EquippableItem item = underTest.getBestItemVariant(character, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, character.getDamagingSpell());
 
 		assertThat(item.getEnchant()).isNotNull();
 
@@ -76,6 +76,6 @@ class UpgradeServiceTest extends ServiceTest {
 	void setup() {
 		super.setup();
 
-		profile.setEquipment(getEquipment());
+		character.setEquipment(getEquipment());
 	}
 }
