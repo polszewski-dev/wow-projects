@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ProfileInfo } from 'src/app/model/ProfileInfo';
 
 @Component({
 	selector: 'app-buff-editor',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
 	styleUrls: ['./buff-editor.component.css']
 })
 export class BuffEditorComponent {
-
+	@Input() selectedProfile?: ProfileInfo;
 }

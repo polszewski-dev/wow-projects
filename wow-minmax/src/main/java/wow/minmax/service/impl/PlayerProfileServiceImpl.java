@@ -22,6 +22,7 @@ import wow.commons.model.pve.Phase;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.PlayerProfileService;
@@ -47,6 +48,14 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final ItemService itemService;
 	private final SpellService spellService;
 	private final UpgradeService upgradeService;
+
+	@Override
+	public List<PlayerProfileInfo> getPlayerProfileInfos() {
+		return playerProfileRepository.getPlayerProfileList().stream()
+				.map(this::getPlayerProfile)
+				.map(this::getPlayerProfileInfo)
+				.collect(Collectors.toList());
+	}
 
 	@Override
 	public List<PlayerProfile> getPlayerProfileList() {
@@ -169,6 +178,20 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		return Map.of(
 				PlayerProfilePOConverter.PARAM_PLAYER_PROFILE_SERVICE, this,
 				PlayerProfilePOConverter.PARAM_PHASE, phase
+		);
+	}
+
+	private PlayerProfileInfo getPlayerProfileInfo(PlayerProfile playerProfile) {
+		return new PlayerProfileInfo(
+				playerProfile.getProfileId(),
+				playerProfile.getProfileName(),
+				playerProfile.getCharacterClass(),
+				playerProfile.getRace(),
+				playerProfile.getLevel(),
+				playerProfile.getEnemyType(),
+				playerProfile.getBuildId(),
+				playerProfile.getPhase(),
+				playerProfile.getLastModified()
 		);
 	}
 }

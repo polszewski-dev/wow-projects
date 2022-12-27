@@ -14,6 +14,7 @@ import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
 import wow.minmax.converter.dto.*;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.dto.*;
 import wow.minmax.service.PlayerProfileService;
 
@@ -37,6 +38,7 @@ public class PlayerProfileController {
 	private final ItemService itemService;
 	private final SpellService spellService;
 	private final PlayerProfileConverter playerProfileConverter;
+	private final PlayerProfileInfoConverter playerProfileInfoConverter;
 	private final EquipmentConverter equipmentConverter;
 	private final ItemConverter itemConverter;
 	private final EnchantConverter enchantConverter;
@@ -44,17 +46,9 @@ public class PlayerProfileController {
 	private final BuffConverter buffConverter;
 
 	@GetMapping("list")
-	public List<PlayerProfileDTO> getPlayerProfileList() {
-		List<PlayerProfile> playerProfiles = playerProfileService.getPlayerProfileList();
-		List<PlayerProfileDTO> result = playerProfileConverter.convertList(playerProfiles);
-
-		for (PlayerProfileDTO profile : result) {
-			profile.setEquipment(null);
-			profile.setBuffs(null);
-			profile.setTalents(null);
-		}
-
-		return result;
+	public List<PlayerProfileInfoDTO> getPlayerProfileList() {
+		List<PlayerProfileInfo> playerProfileInfos = playerProfileService.getPlayerProfileInfos();
+		return playerProfileInfoConverter.convertList(playerProfileInfos);
 	}
 
 	@GetMapping("{profileId}")

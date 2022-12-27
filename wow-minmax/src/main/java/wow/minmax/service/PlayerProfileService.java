@@ -8,6 +8,7 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.PlayerProfileInfo;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,8 @@ import java.util.UUID;
  * Date: 2021-12-14
  */
 public interface PlayerProfileService {
+	List<PlayerProfileInfo> getPlayerProfileInfos();
+
 	List<PlayerProfile> getPlayerProfileList();
 
 	PlayerProfile createPlayerProfile(String profileName, Phase phase);

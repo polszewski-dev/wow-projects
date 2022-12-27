@@ -1,0 +1,8 @@
+export enum CreatureType {
+	HUMANOID = 'HUMANOID',
+	UNDEAD = 'UNDEAD',
+	DEMON = 'DEMON',
+	BEAST = 'BEAST',
+	ELEMENTAL = 'ELEMENTAL',
+	DRAGON = 'DRAGON',
+}

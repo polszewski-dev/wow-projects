@@ -1,1 +1,14 @@
-<p>profile-select works!</p>
+<div class="row my-3">
+	<div class="col-md-10">
+		<select
+			class="form-select"
+			[(ngModel)]="selectedProfile"
+			(ngModelChange)="onValueChange()"
+		>
+			<option *ngFor="let profile of profileList" [ngValue]="profile">{{profile.phase}} {{profile.profileName}}</option>
+		</select>
+	</div>
+	<div class="col-md-2">
+		<button class="btn btn-outline-primary" style="width:100%" (click)="onNewProfileClick()">New Profile</button>
+	</div>
+</div>
