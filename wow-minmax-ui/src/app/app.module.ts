@@ -10,6 +10,7 @@ import { EquipmentEditorComponent } from './components/equipment-editor/equipmen
 import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor/equipment-slot-editor.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
+import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
 
 @NgModule({
 	declarations: [
@@ -18,7 +19,8 @@ import { ProfileSelectComponent } from './components/profile-select/profile-sele
 		ProfileSelectComponent,
 		EquipmentEditorComponent,
 		BuffEditorComponent,
-		EquipmentSlotEditorComponent
+		EquipmentSlotEditorComponent,
+		DropdownSelectComponent
 	],
 	imports: [
 		BrowserModule,
