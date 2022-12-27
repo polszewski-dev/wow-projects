@@ -1,17 +1,30 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BuffEditorComponent } from './components/buff-editor/buff-editor.component';
+import { EquipmentEditorComponent } from './components/equipment-editor/equipment-editor.component';
+import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor/equipment-slot-editor.component';
+import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
+import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		ProfileEditorComponent,
+		ProfileSelectComponent,
+		EquipmentEditorComponent,
+		BuffEditorComponent,
+		EquipmentSlotEditorComponent
 	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
+		HttpClientModule,
+		FormsModule,
 		NgbModule
 	],
 	providers: [],
