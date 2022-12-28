@@ -15,6 +15,6 @@ import wow.minmax.model.dto.EnchantDTO;
 public class EnchantConverter extends Converter<Enchant, EnchantDTO> {
 	@Override
 	protected EnchantDTO doConvert(Enchant enchant) {
-		return new EnchantDTO(enchant.getId(), enchant.getName(), enchant.getAttributes().statString(), enchant.getIcon(), enchant.getTooltip());
+		return new EnchantDTO(enchant.getId(), enchant.getName(), enchant.getRarity(), enchant.getAttributes().statString(), enchant.getIcon(), enchant.getTooltip());
 	}
 }

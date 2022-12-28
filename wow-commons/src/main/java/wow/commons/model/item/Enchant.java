@@ -2,6 +2,7 @@ package wow.commons.model.item;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
@@ -17,10 +18,12 @@ import java.util.List;
 @Getter
 public class Enchant extends ConfigurationElementWithAttributes<Integer> {
 	private final List<ItemType> itemTypes;
+	private final ItemRarity rarity;
 
-	public Enchant(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, List<ItemType> itemTypes) {
+	public Enchant(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, List<ItemType> itemTypes, ItemRarity rarity) {
 		super(id, description, timeRestriction, characterRestriction, attributes);
 		this.itemTypes = itemTypes;
+		this.rarity = rarity;
 	}
 
 	public boolean matches(ItemType itemType) {
