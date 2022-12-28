@@ -7,11 +7,11 @@ import java.util.List;
 
 /**
  * User: POlszewski
- * Date: 2021-12-31
+ * Date: 2022-12-29
  */
 @Data
 @AllArgsConstructor
-public class ItemOptionsDTO {
-	private List<EnchantDTO> availableEnchants;
-	private List<List<GemDTO>> availableGems;
+public class ItemSocketStatusDTO {
+	private List<SocketStatusDTO> socketStatuses;
+	private SocketBonusStatusDTO socketBonusStatus;
 }

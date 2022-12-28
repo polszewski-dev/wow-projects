@@ -1,5 +1,6 @@
 package wow.character.model.equipment;
 
+import lombok.Getter;
 import wow.character.model.Copyable;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.SocketType;
@@ -10,6 +11,7 @@ import java.util.Objects;
  * User: POlszewski
  * Date: 2021-12-14
  */
+@Getter
 public class ItemSocket implements Copyable<ItemSocket> {
 	private final SocketType socketType;
 	private Gem gem;
@@ -27,10 +29,6 @@ public class ItemSocket implements Copyable<ItemSocket> {
 
 	public boolean isMetaSocket() {
 		return socketType == SocketType.META;
-	}
-
-	public Gem getGem() {
-		return gem;
 	}
 
 	public void insertGem(Gem gem) {

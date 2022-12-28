@@ -2,14 +2,15 @@ package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.item.SocketType;
 
 /**
  * User: POlszewski
- * Date: 2022-11-21
+ * Date: 2022-12-29
  */
 @Data
 @AllArgsConstructor
-public class SocketDTO {
-	private GemDTO gem;
+public class SocketStatusDTO {
+	private SocketType socketType;
 	private boolean matching;
 }

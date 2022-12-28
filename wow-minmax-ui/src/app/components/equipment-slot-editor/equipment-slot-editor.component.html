@@ -1,1 +1,65 @@
-<p>equipment-slot-editor works!</p>
+<ng-template #template>
+	<tr>
+		<th scope="row">
+			{{itemSlot.replace('_', ' ').replace('1', '#1').replace('2', '#2') | titlecase}}
+		</th>
+		<td>
+			<app-dropdown-select
+				*ngIf="visible"
+				[elements]="getItemOptions()"
+				[selection]="equippableItem?.item"
+				[valueFormatter]="itemFormatter"
+				(selectionChanged)="onItemChange($event)"
+			></app-dropdown-select>
+		</td>
+		<td>
+			<app-dropdown-select
+				*ngIf="visible && equippableItem && getEnchantOptions().length > 0"
+				[elements]="getEnchantOptions()"
+				[selection]="equippableItem.enchant"
+				[valueFormatter]="enchantFormatter"
+				(selectionChanged)="onEnchantChange($event)"
+			></app-dropdown-select>
+		</td>
+		<td>
+			<app-dropdown-select
+				*ngIf="visible && equippableItem && equippableItem.gems.length >= 1"
+				[elements]="getGemOptions(0)"
+				[selection]="equippableItem.gems[0]"
+				[valueFormatter]="gemFormatter"
+				(selectionChanged)="onGemChange(0, $event)"
+			></app-dropdown-select>
+		</td>
+		<td>
+			<app-dropdown-select
+				*ngIf="visible && equippableItem && equippableItem.gems.length >= 2"
+				[elements]="getGemOptions(1)"
+				[selection]="equippableItem.gems[1]"
+				[valueFormatter]="gemFormatter"
+				(selectionChanged)="onGemChange(1, $event)"
+			></app-dropdown-select>
+		</td>
+		<td>
+			<app-dropdown-select
+				*ngIf="visible && equippableItem && equippableItem.gems.length >= 3"
+				[elements]="getGemOptions(2)"
+				[selection]="equippableItem.gems[2]"
+				[valueFormatter]="gemFormatter"
+				(selectionChanged)="onGemChange(2, $event)"
+			></app-dropdown-select>
+		</td>
+		<td>
+			<div *ngIf="visible && equippableItem && socketStatus">
+				<span
+					*ngFor="let socketStatus of socketStatus.socketStatuses; let i = index"
+					class="socket {{socketStatus.socketType.toLowerCase()}}-socket"
+					[ngClass]="{'socket-matching': socketStatus.matching, 'socket-notmatching': !socketStatus.matching}"
+				>[{{socketStatus.socketType.substr(0, 1)}}]</span>&nbsp;
+				<span
+					class="socket-bonus"
+					[ngClass]="{'socket-bonus-enabled': socketStatus.socketBonusStatus.enabled, 'socket-bonus-disabled': !socketStatus.socketBonusStatus.enabled}"
+				>{{socketStatus.socketBonusStatus.bonus}}</span>
+			</div>
+		</td>
+	</tr>
+</ng-template>

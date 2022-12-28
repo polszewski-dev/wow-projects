@@ -13,12 +13,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2021-03-06
  */
-public class ItemSockets extends ComplexAttribute implements Copyable<ItemSockets>, Iterable<ItemSocket>  {
+public class ItemSockets extends ComplexAttribute implements Copyable<ItemSockets>, Iterable<ItemSocket> {
 	private final ItemSocketSpecification specification;
 	private final List<ItemSocket> sockets;
 
@@ -125,6 +126,10 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	@Override
 	public Iterator<ItemSocket> iterator() {
 		return sockets.iterator();
+	}
+
+	public Stream<ItemSocket> stream() {
+		return sockets.stream();
 	}
 
 	@Override

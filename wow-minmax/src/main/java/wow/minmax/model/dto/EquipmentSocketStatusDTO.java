@@ -8,10 +8,10 @@ import java.util.Map;
 
 /**
  * User: POlszewski
- * Date: 2021-12-14
+ * Date: 2022-12-29
  */
 @Data
 @AllArgsConstructor
-public class EquipmentDTO {
-	private Map<ItemSlot, EquippableItemDTO> itemsBySlot;
+public class EquipmentSocketStatusDTO {
+	private Map<ItemSlot, ItemSocketStatusDTO> socketStatusesByItemSlot;
 }

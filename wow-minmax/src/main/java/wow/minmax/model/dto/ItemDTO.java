@@ -22,8 +22,7 @@ public class ItemDTO {
 	private double score;
 	private String source;
 	private String attributes;
-	private int socketCount;
-	private List<SocketType> socketColors;
+	private List<SocketType> socketTypes;
 	private String socketBonus;
 	private String icon;
 	private String tooltip;

@@ -14,7 +14,5 @@ import java.util.List;
 public class EquippableItemDTO {
 	private ItemDTO item;
 	private EnchantDTO enchant;
-	private List<SocketDTO> sockets;
-	private boolean socketBonusEnabled;
-	private ItemOptionsDTO itemOptions;
+	private List<GemDTO> gems;
 }

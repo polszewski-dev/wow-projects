@@ -1,1 +1,20 @@
-<p>dropdown-select works!</p>
+<div ngbDropdown style="width:100%">
+	<a
+		class="nav-link dropdown-select"
+		tabindex="0"
+		ngbDropdownToggle
+		id="{{id}}"
+		role="button"
+		style="overflow: clip"
+		[innerHTML]="formatSelection(selection)"
+		title="{{formatTooltip(selection)}}"
+	></a>
+	<div ngbDropdownMenu attr.aria-labelledby="{{id}}" class="dropdown-menu dropdown-menu-end">
+		<a
+			*ngFor="let element of elements"
+			ngbDropdownItem href="#"
+			(click)="$event.preventDefault();onSelect(element)"
+			[innerHTML]="formatElement(element)"
+		></a>
+	</div>
+</div>

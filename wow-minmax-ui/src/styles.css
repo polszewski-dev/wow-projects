@@ -1,1 +1,76 @@
-/* You can add global styles to this file, and also import other style files */
+
+.dropdown-select::after {
+	content: none;
+}
+
+.equipment-table th, .equipment-table td {
+	padding: 2px 2px 2px 4px !important;
+}
+
+table.equipment-table {
+	margin-bottom: 4px;
+	table-layout:fixed;
+}
+
+.big-btn-link {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.item-descr {
+	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+.item-header {
+	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.rarity-common { color: #000000; }
+.rarity-uncommon { color: #3da82f; }
+.rarity-rare { color: #0070dd; }
+.rarity-epic { color: #a335ee; }
+.rarity-legendary { color: #ff8000; }
+
+.socket {
+	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.red-socket { color: #FF4F3C; }
+.yellow-socket { color: #FFB432; }
+.blue-socket { color: #4187E1; }
+.meta-socket { color: grey; }
+
+.socket-matching { }
+
+.socket-notmatching {
+	text-decoration: line-through;
+	text-decoration-thickness: 0.2em;
+}
+
+.red-gem { color: #FF4F3C; }
+.orange-gem { color: #FFB432; }
+.yellow-gem { color: #CEB52A; }
+.green-gem { color: green; }
+.blue-gem { color: #4187E1; }
+.purple-gem { color: #9529c6; }
+.meta-gem { color: grey; }
+
+.socket-bonus {
+	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.socket-bonus-enabled {
+	color: green;
+}
+.socket-bonus-disabled {
+	color: grey;
+	text-decoration: line-through;
+	text-decoration-thickness: 0.2em;
+}

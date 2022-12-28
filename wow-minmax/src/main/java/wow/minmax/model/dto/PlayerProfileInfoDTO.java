@@ -18,13 +18,13 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class PlayerProfileInfoDTO {
-	private final UUID profileId;
-	private final String profileName;
-	private final CharacterClass characterClass;
-	private final Race race;
-	private final int level;
-	private final CreatureType enemyType;
-	private final BuildId buildId;
-	private final Phase phase;
-	private final LocalDateTime lastModified;
+	private UUID profileId;
+	private String profileName;
+	private CharacterClass characterClass;
+	private Race race;
+	private int level;
+	private CreatureType enemyType;
+	private BuildId buildId;
+	private Phase phase;
+	private LocalDateTime lastModified;
 }

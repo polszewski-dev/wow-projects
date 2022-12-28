@@ -16,6 +16,7 @@ public class GemDTO {
 	private String name;
 	private GemColor color;
 	private ItemRarity rarity;
+	private String source;
 	private String attributes;
 	private String shortName;
 	private String icon;

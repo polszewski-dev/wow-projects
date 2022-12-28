@@ -2,13 +2,9 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.Item;
-import wow.commons.model.sources.Source;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.ItemDTO;
-
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -17,6 +13,8 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class ItemConverter extends Converter<Item, ItemDTO> {
+	private final SourceConverter sourceConverter;
+
 	@Override
 	protected ItemDTO doConvert(Item item) {
 		return new ItemDTO(
@@ -24,40 +22,13 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 				item.getName(),
 				item.getRarity(),
 				item.getItemType(),
-				0,
-				getSources(item),
+				item.getItemLevel(),
+				sourceConverter.getSources(item),
 				item.getAttributes().statString(),
-				item.getSocketCount(),
 				item.getSocketTypes(),
 				item.getSocketBonus().statString(),
 				item.getIcon(),
 				item.getTooltip()
 		);
-	}
-
-	private String getSources(AbstractItem item) {
-		return item.getSources().stream().map(this::getSourceString).distinct().collect(Collectors.joining(", "));
-	}
-
-	private String getSourceString(Source source) {
-		if (source.getZone() != null) {
-			return source.getZone().getShortName();
-		}
-		if (source.isBadgeVendor()) {
-			return "BoJ";
-		}
-		if (source.isPvP()) {
-			return "PvP";
-		}
-		if (source.isCrafted()) {
-			return source.toString();
-		}
-		if (source.isReputationReward()) {
-			return source.getFaction().getName();
-		}
-		if (source.isTraded()) {
-			return getSources(source.getSourceItem());
-		}
-		return source.toString();
 	}
 }
