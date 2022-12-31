@@ -6,11 +6,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BuffEditorComponent } from './components/buff-editor/buff-editor.component';
+import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
 import { EquipmentEditorComponent } from './components/equipment-editor/equipment-editor.component';
 import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor/equipment-slot-editor.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
-import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
+import { SpellStatsComponent } from './components/spell-stats/spell-stats.component';
 import { IconPipe } from './pipes/icon.pipe';
 
 @NgModule({
@@ -22,6 +23,7 @@ import { IconPipe } from './pipes/icon.pipe';
 		BuffEditorComponent,
 		EquipmentSlotEditorComponent,
 		DropdownSelectComponent,
+		SpellStatsComponent,
 		IconPipe
 	],
 	imports: [
