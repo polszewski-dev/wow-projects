@@ -14,6 +14,7 @@ import { ProfileSelectComponent } from './components/profile-select/profile-sele
 import { SpellStatsComponent } from './components/spell-stats/spell-stats.component';
 import { IconPipe } from './pipes/icon.pipe';
 import { BlankZeroPipe } from './pipes/blank-zero.pipe';
+import { CharacterStatsComponent } from './components/character-stats/character-stats.component';
 
 @NgModule({
 	declarations: [
@@ -26,7 +27,8 @@ import { BlankZeroPipe } from './pipes/blank-zero.pipe';
 		DropdownSelectComponent,
 		SpellStatsComponent,
 		IconPipe,
-		BlankZeroPipe
+		BlankZeroPipe,
+		CharacterStatsComponent
 	],
 	imports: [
 		BrowserModule,
