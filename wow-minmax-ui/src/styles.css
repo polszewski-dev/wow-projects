@@ -89,6 +89,8 @@
 .stats-table {
 	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
 	font-size: 14px;
+	width: 100%;
+	margin-bottom: 0px;
 }
 
 .stats-table td, .stats-table th {
@@ -99,7 +101,7 @@
 	font-style: italic;
 	font-weight: bold !important;
 	font-size: 18px;
-	padding: 4px 0px 4px 0px;
+	padding: 4px 0px 6px 0px;
 	background-color: rgb(216, 223, 233);
 	width:100%;
 	text-align: center;

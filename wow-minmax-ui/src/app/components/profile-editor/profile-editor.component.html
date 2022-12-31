@@ -19,10 +19,12 @@
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Results</a>
 			<ng-template ngbNavContent>
-				<div class="stats-header">Spell Stats</div>				
+				<div class="stats-header">Spell Stats</div>
 				<app-spell-stats [selectedProfile]="selectedProfile"></app-spell-stats>
-				<div class="stats-header">Character Stats</div>				
+				<div class="stats-header">Character Stats</div>
 				<app-character-stats [selectedProfile]="selectedProfile"></app-character-stats>
+				<div class="stats-header">Special Abilities</div>
+				<app-special-abilities [selectedProfile]="selectedProfile"></app-special-abilities>
 			</ng-template>
 		</ng-container>
 	</nav>

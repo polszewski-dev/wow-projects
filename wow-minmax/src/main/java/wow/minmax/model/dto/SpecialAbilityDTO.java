@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class SpecialAbilityStatsDTO {
+public class SpecialAbilityDTO {
 	private String description;
 	private String ability;
 	private String statEquivalent;

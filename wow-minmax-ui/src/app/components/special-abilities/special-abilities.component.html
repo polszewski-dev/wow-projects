@@ -1,1 +1,16 @@
-<p>special-abilities works!</p>
+<table class="table table-striped stats-table">
+	<thead>
+		<tr>
+			<th scope="col">description</th>
+			<th scope="col">ability</th>
+			<th scope="col">stat equivalent</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let specialAbility of specialAbilities">
+			<td>{{specialAbility.description}}</td>
+			<td>{{specialAbility.ability}}</td>
+			<td>{{specialAbility.statEquivalent}}</td>
+		</tr>
+	</tbody>
+</table>

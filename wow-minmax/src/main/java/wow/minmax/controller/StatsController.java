@@ -15,7 +15,7 @@ import wow.minmax.converter.dto.PlayerSpellStatsConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerSpellStats;
 import wow.minmax.model.dto.CharacterStatsDTO;
-import wow.minmax.model.dto.SpecialAbilityStatsDTO;
+import wow.minmax.model.dto.SpecialAbilityDTO;
 import wow.minmax.model.dto.SpellStatsDTO;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
@@ -72,7 +72,7 @@ public class StatsController {
 	}
 
 	@GetMapping("{profileId}/special")
-	public List<SpecialAbilityStatsDTO> getSpecialAbilityStats(
+	public List<SpecialAbilityDTO> getSpecialAbilities(
 			@PathVariable("profileId") UUID profileId
 	) {
 		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
@@ -117,10 +117,10 @@ public class StatsController {
 		);
 	}
 
-	private SpecialAbilityStatsDTO getSpecialAbilityStatsDTO(PlayerProfile playerProfile, SpecialAbility specialAbility) {
+	private SpecialAbilityDTO getSpecialAbilityStatsDTO(PlayerProfile playerProfile, SpecialAbility specialAbility) {
 		Attributes statEquivalent = calculationService.getAbilityEquivalent(specialAbility, playerProfile.getCharacter(), null, null);
 
-		return new SpecialAbilityStatsDTO(
+		return new SpecialAbilityDTO(
 				specialAbility.getLine(),
 				specialAbility.toString(),
 				statEquivalent.statString()
