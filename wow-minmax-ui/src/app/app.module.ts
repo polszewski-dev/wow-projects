@@ -11,6 +11,7 @@ import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
 import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
+import { IconPipe } from './pipes/icon.pipe';
 
 @NgModule({
 	declarations: [
@@ -20,7 +21,8 @@ import { DropdownSelectComponent } from './components/dropdown-select/dropdown-s
 		EquipmentEditorComponent,
 		BuffEditorComponent,
 		EquipmentSlotEditorComponent,
-		DropdownSelectComponent
+		DropdownSelectComponent,
+		IconPipe
 	],
 	imports: [
 		BrowserModule,

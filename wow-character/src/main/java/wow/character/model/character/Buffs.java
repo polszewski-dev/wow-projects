@@ -63,7 +63,7 @@ public class Buffs implements AttributeCollection, Copyable<Buffs> {
 		buffsById.put(buff.getId(), buff);
 	}
 
-	private boolean hasBuff(Buff buff) {
+	public boolean hasBuff(Buff buff) {
 		return buffsById.containsKey(buff.getId());
 	}
 }

@@ -15,4 +15,5 @@ public class BuffDTO {
 	private String attributes;
 	private String icon;
 	private String tooltip;
+	private boolean enabled;
 }

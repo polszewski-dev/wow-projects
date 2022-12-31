@@ -7,17 +7,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.pve.Phase;
-import wow.minmax.converter.dto.BuffConverter;
 import wow.minmax.converter.dto.PlayerProfileConverter;
 import wow.minmax.converter.dto.PlayerProfileInfoConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.model.dto.BuffDTO;
 import wow.minmax.model.dto.PlayerProfileDTO;
 import wow.minmax.model.dto.PlayerProfileInfoDTO;
 import wow.minmax.service.PlayerProfileService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +30,6 @@ public class PlayerProfileController {
 	private final PlayerProfileService playerProfileService;
 	private final PlayerProfileConverter playerProfileConverter;
 	private final PlayerProfileInfoConverter playerProfileInfoConverter;
-	private final BuffConverter buffConverter;
 
 	@GetMapping("list")
 	public List<PlayerProfileInfoDTO> getPlayerProfileList() {
@@ -72,15 +68,5 @@ public class PlayerProfileController {
 
 		log.info("Copied profile id: {}, name: {}, sourceId: {}", createdProfile.getProfileId(), createdProfile.getProfileName(), copiedProfileId);
 		return createdProfileDTO;
-	}
-
-	@GetMapping("{profileId}/enable/buff/{buffId}/{enabled}")
-	public List<BuffDTO> enableBuff(
-			@PathVariable("profileId") UUID profileId,
-			@PathVariable("buffId") int buffId,
-			@PathVariable("enabled") boolean enabled) {
-		PlayerProfile playerProfile = playerProfileService.enableBuff(profileId, buffId, enabled);
-		log.info("Changed buff profile id: {}, buffId: {}, enabled: {}", profileId, buffId, enabled);
-		return buffConverter.convertList(new ArrayList<>(playerProfile.getBuffs().getList()));
 	}
 }
