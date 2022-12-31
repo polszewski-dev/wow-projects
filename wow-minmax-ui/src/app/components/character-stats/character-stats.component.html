@@ -1,1 +1,38 @@
-<p>character-stats works!</p>
+<table class="table table-striped stats-table" style="width:100%; text-align: right;">
+	<thead>
+		<tr>
+			<th scope="col" style="text-align: left">type</th>
+			<th scope="col">sp</th>
+			<th scope="col">shadow sp</th>
+			<th scope="col">fire sp</th>
+			<th scope="col">hit%</th>
+			<th scope="col">crit%</th>
+			<th scope="col">haste%</th>
+			<th scope="col">hit rating</th>
+			<th scope="col">crit rating</th>
+			<th scope="col">haste rating</th>
+			<th scope="col">stamina</th>
+			<th scope="col">intellect</th>
+			<th scope="col">spirit</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let charStats of characterStatsList">
+			<td style="text-align: left">
+				<strong>{{charStats.type}}</strong>
+			</td>
+			<td>{{charStats.sp | number:'1.0-0'}}</td>
+			<td>{{charStats.spShadow | number:'1.0-0'}}</td>
+			<td>{{charStats.spFire | number:'1.0-0'}}</td>
+			<td>{{charStats.hitPct | number:'1.2-2'}}</td>
+			<td>{{charStats.critPct| number:'1.2-2'}}</td>
+			<td>{{charStats.hastePct| number:'1.2-2'}}</td>
+			<td>{{charStats.hitRating | number:'1.0-0'}}</td>
+			<td>{{charStats.critRating | number:'1.0-0'}}</td>
+			<td>{{charStats.hasteRating | number:'1.0-0'}}</td>
+			<td>{{charStats.stamina | number:'1.0-0'}}</td>
+			<td>{{charStats.intellect | number:'1.0-0'}}</td>
+			<td>{{charStats.spirit | number:'1.0-0'}}</td>
+		</tr>
+	</tbody>
+</table>

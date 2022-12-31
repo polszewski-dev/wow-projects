@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CharacterStats } from '../model/stats/CharacterStats';
 import { SpellStats } from '../model/stats/SpellStats';
 
 @Injectable({
@@ -13,5 +14,9 @@ export class StatsService {
 
 	getSpellStats(profileId: string): Observable<SpellStats[]> {
 		return this.http.get<SpellStats[]>(`${this.apiUrl}/${profileId}/spell`);
+	}
+
+	getCharacterStats(profileId: string): Observable<CharacterStats[]> {
+		return this.http.get<CharacterStats[]>(`${this.apiUrl}/${profileId}/character`);
 	}
 }
