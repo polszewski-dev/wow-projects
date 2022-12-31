@@ -15,6 +15,7 @@ import { SpellStatsComponent } from './components/spell-stats/spell-stats.compon
 import { IconPipe } from './pipes/icon.pipe';
 import { BlankZeroPipe } from './pipes/blank-zero.pipe';
 import { CharacterStatsComponent } from './components/character-stats/character-stats.component';
+import { SpecialAbilitiesComponent } from './components/special-abilities/special-abilities.component';
 
 @NgModule({
 	declarations: [
@@ -28,7 +29,8 @@ import { CharacterStatsComponent } from './components/character-stats/character-
 		SpellStatsComponent,
 		IconPipe,
 		BlankZeroPipe,
-		CharacterStatsComponent
+		CharacterStatsComponent,
+		SpecialAbilitiesComponent
 	],
 	imports: [
 		BrowserModule,
