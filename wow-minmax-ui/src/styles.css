@@ -7,7 +7,7 @@
 	padding: 2px 2px 2px 4px !important;
 }
 
-table.equipment-table {
+.equipment-table {
 	margin-bottom: 4px;
 	table-layout:fixed;
 }
@@ -84,4 +84,23 @@ table.equipment-table {
 .buff-stats {
 	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
 	font-size: 12px;
+}
+
+.stats-table {
+	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.stats-table td, .stats-table th {
+	padding: 2px !important;
+}
+
+.stats-header {
+	font-style: italic;
+	font-weight: bold !important;
+	font-size: 18px;
+	padding: 4px 0px 4px 0px;
+	background-color: rgb(216, 223, 233);
+	width:100%;
+	text-align: center;
 }

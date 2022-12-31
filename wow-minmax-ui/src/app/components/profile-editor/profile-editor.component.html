@@ -19,12 +19,13 @@
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Results</a>
 			<ng-template ngbNavContent>
-				<p>TODO</p>
+				<div class="stats-header">Spell Stats</div>				
+				<app-spell-stats [selectedProfile]="selectedProfile"></app-spell-stats>
 			</ng-template>
 		</ng-container>
 	</nav>
 
-	<div [ngbNavOutlet]="nav" class="mt-2"></div>
+	<div [ngbNavOutlet]="nav"></div>
 
 	</div>
 </div>

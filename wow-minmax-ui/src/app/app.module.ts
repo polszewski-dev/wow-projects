@@ -13,6 +13,7 @@ import { ProfileEditorComponent } from './components/profile-editor/profile-edit
 import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
 import { SpellStatsComponent } from './components/spell-stats/spell-stats.component';
 import { IconPipe } from './pipes/icon.pipe';
+import { BlankZeroPipe } from './pipes/blank-zero.pipe';
 
 @NgModule({
 	declarations: [
@@ -24,7 +25,8 @@ import { IconPipe } from './pipes/icon.pipe';
 		EquipmentSlotEditorComponent,
 		DropdownSelectComponent,
 		SpellStatsComponent,
-		IconPipe
+		IconPipe,
+		BlankZeroPipe
 	],
 	imports: [
 		BrowserModule,

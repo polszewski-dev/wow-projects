@@ -39,7 +39,7 @@ public class StatsController {
 	private final CalculationService calculationService;
 	private final PlayerSpellStatsConverter playerSpellStatsConverter;
 
-	@GetMapping("spell/{profileId}")
+	@GetMapping("{profileId}/spell")
 	public List<SpellStatsDTO> getSpellStats(
 			@PathVariable("profileId") UUID profileId
 	) {
@@ -54,7 +54,7 @@ public class StatsController {
 		return result;
 	}
 
-	@GetMapping("player/{profileId}")
+	@GetMapping("{profileId}/player")
 	public List<PlayerStatsDTO> getPlayerStats(
 			@PathVariable("profileId") UUID profileId
 	) {
@@ -71,7 +71,7 @@ public class StatsController {
 		);
 	}
 
-	@GetMapping("special/{profileId}")
+	@GetMapping("{profileId}/special")
 	public List<SpecialAbilityStatsDTO> getSpecialAbilityStats(
 			@PathVariable("profileId") UUID profileId
 	) {

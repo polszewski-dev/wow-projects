@@ -1,1 +1,48 @@
-<p>spell-stats works!</p>
+<table class="table table-striped stats-table" style="width:100%; text-align: right;">
+	<thead>
+		<tr>
+			<th scope="col" style="text-align: left">spell</th>
+			<th scope="col">dps</th>
+			<th scope="col">dmg</th>
+			<th scope="col">cast</th>
+			<th scope="col">mana</th>
+			<th scope="col">dpm</th>
+			<th scope="col">sp</th>
+			<th scope="col">hit%</th>
+			<th scope="col">crit%</th>
+			<th scope="col">hast%</th>
+			<th scope="col">coeff dir</th>
+			<th scope="col">coeff dot</th>
+			<th scope="col">crCo</th>
+			<th scope="col">hit eqv</th>
+			<th scope="col">crit eqv</th>
+			<th scope="col">hast eqv</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let spellStats of spellStatsList">
+			<td style="text-align: left">
+				<strong>
+					<img [src]="spellStats.spell.icon | icon"/>&nbsp;{{spellStats.spell.name}}
+				</strong>
+				&nbsp;
+				(rank {{spellStats.spell.rank}})
+			</td>
+			<td>{{spellStats.dps | number:'1.0-0'}}</td>
+			<td>{{spellStats.totalDamage | number:'1.0-0'}}</td>
+			<td>{{spellStats.castTime | number:'1.2-2'}}</td>
+			<td>{{spellStats.manaCost | number:'1.0-0'}}</td>
+			<td>{{spellStats.dpm | number:'1.0-0'}}</td>
+			<td>{{spellStats.sp | number:'1.0-0'}}</td>
+			<td>{{spellStats.totalHit | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.totalCrit | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.totalHaste | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.spellCoeffDirect | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.spellCoeffDoT | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.critCoeff | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.hitSpEqv | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.critSpEqv | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.hasteSpEqv | number:'1.2-2' | blankZero}}</td>
+		</tr>
+	</tbody>
+</table>
