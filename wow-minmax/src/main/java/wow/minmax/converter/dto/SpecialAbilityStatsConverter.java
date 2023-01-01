@@ -18,7 +18,8 @@ public class SpecialAbilityStatsConverter extends Converter<SpecialAbilityStats,
 		return new SpecialAbilityStatsDTO(
 			value.getDescription(),
 			value.getAbility(),
-			value.getStatEquivalent().statString()
+			value.getStatEquivalent().statString(),
+			value.getSpEquivalent()
 		);
 	}
 }

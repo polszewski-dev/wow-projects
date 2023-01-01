@@ -14,4 +14,5 @@ public class SpecialAbilityStats {
 	private String description;
 	private String ability;
 	private Attributes statEquivalent;
+	private double spEquivalent;
 }

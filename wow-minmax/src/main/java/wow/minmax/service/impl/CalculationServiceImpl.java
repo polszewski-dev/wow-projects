@@ -196,11 +196,13 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public SpecialAbilityStats getSpecialAbilityStats(Character character, SpecialAbility specialAbility) {
 		Attributes statEquivalent = getAbilityEquivalent(specialAbility, character, null, null);
+		Attributes spEquivalent = getDpsStatEquivalent(Attributes.of(specialAbility), SPELL_POWER, EquivalentMode.REPLACEMENT, character);
 
 		return new SpecialAbilityStats(
 				specialAbility.getLine() != null ? specialAbility.getLine() : specialAbility.toString(),
 				specialAbility.toString(),
-				statEquivalent
+				statEquivalent,
+				spEquivalent.getSpellPower()
 		);
 	}
 }

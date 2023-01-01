@@ -13,4 +13,5 @@ public class SpecialAbilityStatsDTO {
 	private String description;
 	private String ability;
 	private String statEquivalent;
+	private double spEquivalent;
 }

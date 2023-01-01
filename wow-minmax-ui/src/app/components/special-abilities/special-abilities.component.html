@@ -2,15 +2,15 @@
 	<thead>
 		<tr>
 			<th scope="col">description</th>
-			<th scope="col">ability</th>
 			<th scope="col">stat equivalent</th>
+			<th scope="col">sp equivalent</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr *ngFor="let specialAbilityStats of specialAbilityStatsList">
-			<td>{{specialAbilityStats.description}}</td>
-			<td>{{specialAbilityStats.ability}}</td>
+			<td [title]="specialAbilityStats.ability">{{specialAbilityStats.description}}</td>
 			<td>{{specialAbilityStats.statEquivalent}}</td>
+			<td>{{specialAbilityStats.spEquivalent | number:'1.0-0' | blankZero}}</td>
 		</tr>
 	</tbody>
 </table>

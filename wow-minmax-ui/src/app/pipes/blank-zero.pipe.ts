@@ -11,7 +11,7 @@ export class BlankZeroPipe implements PipeTransform {
 		if (value === 0.0) {
 			return "";
 		}
-		if ((value as string).match(/^0\.0*$/)) {
+		if ((value as string).match(/^0\.?0*$/)) {
 			return "";
 		}
 		return value.toString();
