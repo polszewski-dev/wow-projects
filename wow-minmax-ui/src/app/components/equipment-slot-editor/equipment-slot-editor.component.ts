@@ -93,7 +93,7 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
 			<span class="item-descr">[${value.source}]</span>
-			<span class="item-descr">(${value.attributes})</span>
+			<span class="item-descr">(${escapeHtml(value.attributes)})</span>
 		`;
 	}
 
@@ -118,7 +118,7 @@ class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
-			<span class="item-descr">(${value.attributes})</span>
+			<span class="item-descr">(${escapeHtml(value.attributes)})</span>
 		`;
 	}
 
@@ -142,7 +142,7 @@ class GemFormatter implements DropdownSelectValueFormatter<Gem> {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
-			<span class="item-descr">(${value.attributes})</span>
+			<span class="item-descr">(${escapeHtml(value.attributes)})</span>
 		`;
 	}
 
@@ -159,4 +159,8 @@ class GemFormatter implements DropdownSelectValueFormatter<Gem> {
 	formatTooltip(value?: Gem):string {
 		return value?.attributes || "";
 	}
+}
+
+function escapeHtml(value: string): string {
+	return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 }
