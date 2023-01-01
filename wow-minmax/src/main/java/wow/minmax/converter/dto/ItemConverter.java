@@ -6,6 +6,8 @@ import wow.commons.model.item.Item;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.ItemDTO;
 
+import java.util.stream.Collectors;
+
 /**
  * User: POlszewski
  * Date: 2021-12-13
@@ -24,11 +26,38 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 				item.getItemType(),
 				item.getItemLevel(),
 				sourceConverter.getSources(item),
-				item.getAttributes().statString(),
+				getStatString(item),
 				item.getSocketTypes(),
 				item.getSocketBonus().statString(),
 				item.getIcon(),
 				item.getTooltip()
 		);
+	}
+
+	private String getStatString(Item item) {
+		return item.getAttributes().statString() +
+				getSocketString(item) +
+				getItemSetString(item);
+	}
+
+	private String getSocketString(Item item) {
+		if (!item.hasSockets()) {
+			return "";
+		}
+
+		String socketString = item.getSocketSpecification().getSocketTypes()
+				.stream()
+				.map(x -> "[" + x.name().charAt(0) + "]")
+				.collect(Collectors.joining());
+
+		return String.format(", %s+%s", socketString, item.getSocketBonus());
+	}
+
+	private String getItemSetString(Item item) {
+		if (item.getItemSet() == null) {
+			return "";
+		}
+
+		return String.format(", Set: %s", item.getItemSet().getName());
 	}
 }
