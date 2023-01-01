@@ -6,7 +6,7 @@ import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.spells.Spell;
 import wow.minmax.converter.Converter;
-import wow.minmax.model.PlayerSpellStats;
+import wow.minmax.model.SpellStats;
 import wow.minmax.model.dto.SpellStatsDTO;
 
 /**
@@ -15,12 +15,12 @@ import wow.minmax.model.dto.SpellStatsDTO;
  */
 @Component
 @AllArgsConstructor
-public class PlayerSpellStatsConverter extends Converter<PlayerSpellStats, SpellStatsDTO> {
+public class SpellStatsConverter extends Converter<SpellStats, SpellStatsDTO> {
 	private final SpellConverter spellConverter;
 
 	@Override
-	protected SpellStatsDTO doConvert(PlayerSpellStats playerSpellStats) {
-		SpellStatistics spellStatistics = playerSpellStats.getSpellStatistics();
+	protected SpellStatsDTO doConvert(SpellStats spellStats) {
+		SpellStatistics spellStatistics = spellStats.getSpellStatistics();
 		Snapshot snapshot = spellStatistics.getSnapshot();
 
 		Spell spell = snapshot.getSpell();
@@ -30,25 +30,21 @@ public class PlayerSpellStatsConverter extends Converter<PlayerSpellStats, Spell
 
 		return new SpellStatsDTO(
 				spellConverter.convert(spell),
-				(int) spellStatistics.getDps(),
-				(int) spellStatistics.getTotalDamage(),
+				spellStatistics.getDps(),
+				spellStatistics.getTotalDamage(),
 				spellStatistics.getCastTime().getSeconds(),
-				(int) spellStatistics.getManaCost(),
-				(int) spellStatistics.getDpm(),
-				(int) snapshot.getSp(),
+				spellStatistics.getManaCost(),
+				spellStatistics.getDpm(),
+				snapshot.getSp(),
 				snapshot.getTotalHit(),
 				dir ? snapshot.getTotalCrit() : 0,
 				snapshot.getTotalHaste(),
 				dir ? snapshot.getSpellCoeffDirect() : 0,
 				dot ? snapshot.getSpellCoeffDoT() : 0,
 				dir ? snapshot.getCritCoeff() : 0,
-				blankNearZeros(playerSpellStats.getHitSpEqv()),
-				blankNearZeros(playerSpellStats.getCritSpEqv()),
-				blankNearZeros(playerSpellStats.getHasteSpEqv())
+				spellStats.getHitSpEqv(),
+				spellStats.getCritSpEqv(),
+				spellStats.getHasteSpEqv()
 		);
-	}
-
-	private static double blankNearZeros(double value) {
-		return Math.abs(value) < 0.01 ? 0 : value;
 	}
 }

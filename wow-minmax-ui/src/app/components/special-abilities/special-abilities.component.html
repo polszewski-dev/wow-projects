@@ -7,10 +7,10 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let specialAbility of specialAbilities">
-			<td>{{specialAbility.description}}</td>
-			<td>{{specialAbility.ability}}</td>
-			<td>{{specialAbility.statEquivalent}}</td>
+		<tr *ngFor="let specialAbilityStats of specialAbilityStatsList">
+			<td>{{specialAbilityStats.description}}</td>
+			<td>{{specialAbilityStats.ability}}</td>
+			<td>{{specialAbilityStats.statEquivalent}}</td>
 		</tr>
 	</tbody>
 </table>

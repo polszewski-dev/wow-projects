@@ -11,12 +11,12 @@ import lombok.Data;
 @AllArgsConstructor
 public class SpellStatsDTO {
 	private SpellDTO spell;
-	private int dps;
-	private int totalDamage;
+	private double dps;
+	private double totalDamage;
 	private double castTime;
-	private int manaCost;
-	private int dpm;
-	private int sp;
+	private double manaCost;
+	private double dpm;
+	private double sp;
 	private double totalHit;
 	private double totalCrit;
 	private double totalHaste;

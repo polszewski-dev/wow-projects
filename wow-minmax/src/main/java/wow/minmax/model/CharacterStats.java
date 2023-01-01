@@ -1,16 +1,17 @@
-package wow.minmax.model.dto;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.character.model.character.Character;
 
 /**
  * User: POlszewski
- * Date: 2022-01-02
+ * Date: 2023-01-01
  */
 @Data
 @AllArgsConstructor
-public class CharacterStatsDTO {
-	private String type;
+public class CharacterStats {
+	private Character character;
 	private double sp;
 	private double spShadow;
 	private double spFire;

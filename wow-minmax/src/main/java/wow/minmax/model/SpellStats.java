@@ -11,7 +11,7 @@ import wow.character.model.snapshot.SpellStatistics;
  */
 @Data
 @AllArgsConstructor
-public class PlayerSpellStats {
+public class SpellStats {
 	private Character character;
 	private SpellStatistics spellStatistics;
 	private double hitSpEqv;

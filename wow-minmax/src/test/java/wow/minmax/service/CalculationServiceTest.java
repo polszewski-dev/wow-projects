@@ -9,7 +9,7 @@ import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.spells.Spell;
-import wow.minmax.model.PlayerSpellStats;
+import wow.minmax.model.SpellStats;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
@@ -183,10 +183,10 @@ class CalculationServiceTest extends ServiceTest {
 	void correctPlayerSpellStats() {
 		character.setEquipment(getEquipment());
 
-		PlayerSpellStats playerSpellStats = underTest.getPlayerSpellStats(character, null);
+		SpellStats spellStats = underTest.getSpellStats(character, null);
 
-		assertThat(playerSpellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
-		assertThat(playerSpellStats.getCritSpEqv()).isEqualTo(10.30, PRECISION);
-		assertThat(playerSpellStats.getHasteSpEqv()).isEqualTo(10.94, PRECISION);
+		assertThat(spellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
+		assertThat(spellStats.getCritSpEqv()).isEqualTo(10.30, PRECISION);
+		assertThat(spellStats.getHasteSpEqv()).isEqualTo(10.94, PRECISION);
 	}
 }
