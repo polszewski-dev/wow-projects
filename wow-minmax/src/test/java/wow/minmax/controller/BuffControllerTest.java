@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import wow.commons.model.buffs.Buff;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -12,32 +13,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * User: POlszewski
- * Date: 2022-11-19
+ * Date: 2023-01-02
  */
-@WebMvcTest(StatsController.class)
-class StatsControllerTest extends ControllerTest {
+@WebMvcTest(BuffController.class)
+class BuffControllerTest extends ControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 
 	@Test
-	void getSpellStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{profileId}/spell", profile.getProfileId()))
+	void getBuffs() throws Exception {
+		mockMvc.perform(get("/api/v1/buff/{profileId}/list", profile.getProfileId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 	}
 
 	@Test
-	void getCharacterStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{profileId}/character", profile.getProfileId()))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-		;
-	}
+	void changeBuff() throws Exception {
+		Buff buff = getBuff("Fel Armor");
 
-	@Test
-	void getSpecialAbilityStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{profileId}/special", profile.getProfileId()))
+		mockMvc.perform(get("/api/v1/buff/{profileId}/enable/{buffId}/{enabled}", profile.getProfileId(), buff.getId(), true))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

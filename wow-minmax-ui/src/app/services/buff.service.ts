@@ -12,10 +12,10 @@ export class BuffService {
 	constructor(private http: HttpClient) { }
 
 	getBuffs(profileId: string): Observable<Buff[]> {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${profileId}`);
+		return this.http.get<Buff[]>(`${this.apiUrl}/${profileId}/list`);
 	}
 
 	changeBuff(profileId: string, buff: Buff): Observable<Buff[]> {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${profileId}/enable/buff/${buff.id}/${buff.enabled}`);
+		return this.http.get<Buff[]>(`${this.apiUrl}/${profileId}/enable/${buff.id}/${buff.enabled}`);
 	}
 }

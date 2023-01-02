@@ -10,6 +10,7 @@ import wow.character.model.build.BuffSetId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.persistent.EquippableItemPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -43,7 +44,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void getPlayerProfileList() {
-		List<PlayerProfile> profiles = underTest.getPlayerProfileList();
+		List<PlayerProfileInfo> profiles = underTest.getPlayerProfileInfos();
 
 		assertThat(profiles).hasSize(1);
 		assertThat(profiles.get(0).getProfileId()).isEqualTo(profilePO.getProfileId());

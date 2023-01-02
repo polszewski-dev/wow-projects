@@ -31,7 +31,7 @@ public class BuffController {
 	private final SpellService spellService;
 	private final BuffConverter buffConverter;
 
-	@GetMapping("{profileId}")
+	@GetMapping("{profileId}/list")
 	public List<BuffDTO> getBuffs(
 			@PathVariable("profileId") UUID profileId
 	) {
@@ -39,7 +39,7 @@ public class BuffController {
 		return getPlayerBuffs(playerProfile);
 	}
 
-	@GetMapping("{profileId}/enable/buff/{buffId}/{enabled}")
+	@GetMapping("{profileId}/enable/{buffId}/{enabled}")
 	public List<BuffDTO> changeBuff(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("buffId") int buffId,
