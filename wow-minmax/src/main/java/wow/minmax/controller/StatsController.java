@@ -90,6 +90,15 @@ public class StatsController {
 				.collect(Collectors.toList());
 	}
 
+	@GetMapping("{profileId}/dps")
+	public double getSpellDps(
+			@PathVariable("profileId") UUID profileId
+	) {
+		Character character = playerProfileService.getPlayerProfile(profileId).getCharacter();
+
+		return calculationService.getSpellDps(character, null);
+	}
+
 	private CharacterStatsDTO convert(String type, CharacterStats characterStats) {
 		CharacterStatsDTO result = characterStatsConverter.convert(characterStats);
 		result.setType(type);

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Buff } from 'src/app/model/buff/Buff';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { BuffService as BuffService } from 'src/app/services/buff.service';
@@ -10,6 +10,8 @@ import { BuffService as BuffService } from 'src/app/services/buff.service';
 })
 export class BuffEditorComponent implements OnChanges {
 	@Input() selectedProfile?: ProfileInfo;
+	@Output() buffsChanged = new EventEmitter<void>()
+
 	buffs: Buff[] = [];
 
 	constructor(private buffService: BuffService) {}
@@ -26,6 +28,7 @@ export class BuffEditorComponent implements OnChanges {
 	onChange(buff: Buff) {
 		this.buffService.changeBuff(this.selectedProfile!.profileId, buff).subscribe((buffs: Buff[]) => {
 			this.buffs = buffs;
+			this.buffsChanged.emit();
 		});
 	}
 }

@@ -3,17 +3,19 @@
 
 	<div *ngIf="selectedProfile">
 
+	<app-dps-bar [dps]="dps" [dpsDiff]="dps && previousDps ? dps - previousDps : 0"></app-dps-bar>
+
 	<nav ngbNav #nav="ngbNav" class="nav-tabs">
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Equipment</a>
 			<ng-template ngbNavContent>
-				<app-equipment-editor [selectedProfile]="selectedProfile"></app-equipment-editor>
+				<app-equipment-editor [selectedProfile]="selectedProfile" (equipmentChanged)="onEquipmentChanged()"></app-equipment-editor>
 			</ng-template>
 		</ng-container>
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Buffs</a>
 			<ng-template ngbNavContent>
-				<app-buff-editor [selectedProfile]="selectedProfile"></app-buff-editor>
+				<app-buff-editor [selectedProfile]="selectedProfile" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
 			</ng-template>
 		</ng-container>
 		<ng-container ngbNavItem>

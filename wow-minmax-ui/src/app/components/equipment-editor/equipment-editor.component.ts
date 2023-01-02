@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Enchant } from 'src/app/model/equipment/Enchant';
 import { Equipment } from 'src/app/model/equipment/Equipment';
 import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
@@ -20,6 +20,7 @@ import { ItemChange } from '../equipment-slot-editor/ItemChange';
 })
 export class EquipmentEditorComponent implements OnChanges {
 	@Input() selectedProfile!: ProfileInfo;
+	@Output() equipmentChanged = new EventEmitter<void>()
 
 	readonly itemSlots: ItemSlot[] = Object.values(ItemSlot);
 
@@ -66,6 +67,8 @@ export class EquipmentEditorComponent implements OnChanges {
 		if (itemChange.itemSlot === ItemSlot.MAIN_HAND && itemChange.item?.item.itemType === ItemType.TWO_HAND) {
 			this.equipment!.itemsBySlot[ItemSlot.OFF_HAND] = undefined;
 		}
+
+		this.equipmentChanged.emit();
 	}
 
 	updateSocketStatus() {
@@ -77,6 +80,7 @@ export class EquipmentEditorComponent implements OnChanges {
 	resetEquipment() {
 		this.equipmentService.resetEquipment(this.selectedProfile!.profileId).subscribe((equipment: Equipment) => {
 			this.equipment = equipment;
+			this.equipmentChanged.emit();
 		});
 	}
 }

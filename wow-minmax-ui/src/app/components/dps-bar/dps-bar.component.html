@@ -1,1 +1,7 @@
-<p>dps-bar works!</p>
+<div class="dps-bar">
+	dps: {{dps | number:'1.0-0'}}&nbsp;<span
+		*ngIf="dpsDiff"
+		class="dps-diff"
+		[ngClass]="{'positive-dps-diff': dpsDiff > 0, 'negative-dps-diff': dpsDiff < 0}"
+	>({{dpsDiff > 0 ? "+" : ""}}{{dpsDiff | number:'1.0-0'}})</span>
+</div>

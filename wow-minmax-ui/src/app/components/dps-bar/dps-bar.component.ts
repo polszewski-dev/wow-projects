@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
 	selector: 'app-dps-bar',
@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
 	styleUrls: ['./dps-bar.component.css']
 })
 export class DpsBarComponent {
-
+	@Input() dps?: number;
+	@Input() dpsDiff?: number;
 }

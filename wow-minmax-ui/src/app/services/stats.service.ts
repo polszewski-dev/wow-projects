@@ -24,4 +24,8 @@ export class StatsService {
 	getSpecialAbilities(profileId: string): Observable<SpecialAbilityStats[]> {
 		return this.http.get<SpecialAbilityStats[]>(`${this.apiUrl}/${profileId}/special`);
 	}
+
+	getSpellDps(profileId: string): Observable<number> {
+		return this.http.get<number>(`${this.apiUrl}/${profileId}/dps`);
+	}
 }
