@@ -47,7 +47,7 @@ public abstract class ItemVariantEnumerator {
 		this.calculationService = calculationService;
 
 		this.referenceCharacter = referenceCharacter;
-		this.referenceDps = calculationService.getSpellStatistics(referenceCharacter, spell).getDps();
+		this.referenceDps = calculationService.getSpellDps(referenceCharacter, spell);
 		this.slotGroup = slotGroup;
 		this.spell = spell;
 
@@ -170,7 +170,7 @@ public abstract class ItemVariantEnumerator {
 
 	private Comparison getItemComparison(EquippableItem... itemOption) {
 		Attributes totalStats = getTotalStats(itemOption);
-		double dps = calculationService.getSpellStatistics(workingCharacter, spell, totalStats).getDps();
+		double dps = calculationService.getSpellDps(workingCharacter, spell, totalStats);
 		double changePct = 100 * (dps / referenceDps - 1);
 
 		if (!isAcceptable(changePct)) {

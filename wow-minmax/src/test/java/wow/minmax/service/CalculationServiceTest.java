@@ -3,12 +3,14 @@ package wow.minmax.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.character.model.build.BuffSetId;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.snapshot.Snapshot;
-import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.spells.Spell;
+import wow.minmax.model.CharacterStats;
+import wow.minmax.model.SpecialAbilityStats;
 import wow.minmax.model.SpellStats;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -165,28 +167,111 @@ class CalculationServiceTest extends ServiceTest {
 	}
 
 	@Test
+	@DisplayName("Correct spell dps")
+	void correctSpellDps() {
+		character.setEquipment(getEquipment());
+
+		double dps = underTest.getSpellDps(character, null);
+
+		assertThat(dps).usingComparator(ROUNDED_DOWN).isEqualTo(2691);
+	}
+
+	@Test
 	@DisplayName("Correct spell stats")
 	void correctSpellStats() {
 		character.setEquipment(getEquipment());
 
-		SpellStatistics spellStatistics = underTest.getSpellStatistics(character, null);
-
-		assertThat(spellStatistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5219);
-		assertThat(spellStatistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2691);
-		assertThat(spellStatistics.getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
-		assertThat(spellStatistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
-		assertThat(spellStatistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
-	}
-
-	@Test
-	@DisplayName("Correct player spell stats")
-	void correctPlayerSpellStats() {
-		character.setEquipment(getEquipment());
-
 		SpellStats spellStats = underTest.getSpellStats(character, null);
 
+		assertThat(spellStats.getCharacter()).isSameAs(character);
+		assertThat(spellStats.getSpellStatistics().getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5219);
+		assertThat(spellStats.getSpellStatistics().getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2691);
+		assertThat(spellStats.getSpellStatistics().getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
+		assertThat(spellStats.getSpellStatistics().getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
+		assertThat(spellStats.getSpellStatistics().getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
 		assertThat(spellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
 		assertThat(spellStats.getCritSpEqv()).isEqualTo(10.30, PRECISION);
 		assertThat(spellStats.getHasteSpEqv()).isEqualTo(10.94, PRECISION);
+	}
+
+	@Test
+	@DisplayName("Correct current stats")
+	void correctCurrentStats() {
+		character.setEquipment(getEquipment());
+
+		CharacterStats stats = underTest.getCurrentStats(character);
+
+		assertThat(stats.getSp()).isEqualTo(1616);
+		assertThat(stats.getSpShadow()).isEqualTo(1750);
+		assertThat(stats.getSpFire()).isEqualTo(1696);
+		assertThat(stats.getHitRating()).isEqualTo(164);
+		assertThat(stats.getHitPct()).isEqualTo(16.00, PRECISION);
+		assertThat(stats.getCritRating()).isEqualTo(331);
+		assertThat(stats.getCritPct()).isEqualTo(35.30, PRECISION);
+		assertThat(stats.getHasteRating()).isEqualTo(426);
+		assertThat(stats.getHastePct()).isEqualTo(28.88, PRECISION);
+		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
+		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(619);
+		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(161);
+	}
+
+	@Test
+	@DisplayName("Correct stats")
+	void correctStats() {
+		character.setEquipment(getEquipment());
+
+		CharacterStats stats = underTest.getStats(character, BuffSetId.SELF_BUFFS);
+
+		assertThat(stats.getSp()).isEqualTo(1456);
+		assertThat(stats.getSpShadow()).isEqualTo(1510);
+		assertThat(stats.getSpFire()).isEqualTo(1456);
+		assertThat(stats.getHitRating()).isEqualTo(164);
+		assertThat(stats.getHitPct()).isEqualTo(12.99, PRECISION);
+		assertThat(stats.getCritRating()).isEqualTo(317);
+		assertThat(stats.getCritPct()).isEqualTo(30.29, PRECISION);
+		assertThat(stats.getHasteRating()).isEqualTo(426);
+		assertThat(stats.getHastePct()).isEqualTo(28.88, PRECISION);
+		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(627);
+		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(509);
+		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(114);
+	}
+
+	@Test
+	@DisplayName("Correct equipment stats")
+	void correctEquipmentStats() {
+		character.setEquipment(getEquipment());
+
+		CharacterStats stats = underTest.getEquipmentStats(character);
+
+		assertThat(stats.getSp()).isEqualTo(1326);
+		assertThat(stats.getSpShadow()).isEqualTo(1380);
+		assertThat(stats.getSpFire()).isEqualTo(1326);
+		assertThat(stats.getHitRating()).isEqualTo(164);
+		assertThat(stats.getHitPct()).isEqualTo(13.00, PRECISION);
+		assertThat(stats.getCritRating()).isEqualTo(317);
+		assertThat(stats.getCritPct()).isEqualTo(22.29, PRECISION);
+		assertThat(stats.getHasteRating()).isEqualTo(426);
+		assertThat(stats.getHastePct()).isEqualTo(28.88, PRECISION);
+		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(546);
+		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(509);
+		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(120);
+	}
+
+	@Test
+	@DisplayName("Correct special ability stats")
+	void correctSpecialAbilityStats() {
+		character.setEquipment(getEquipment());
+
+		SpecialAbility specialAbility = character.getStats().getSpecialAbilities().stream()
+				.filter(x -> "Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)".equals(x.getLine()))
+				.findFirst()
+				.orElseThrow();
+
+		SpecialAbilityStats stats = underTest.getSpecialAbilityStats(character, specialAbility);
+
+		assertThat(stats.getDescription()).isEqualTo("Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)");
+		assertThat(stats.getAbility()).isEqualTo("(175 haste | 20s/2m)");
+		assertThat(stats.getStatEquivalent().statString()).isEqualTo("29.17 haste");
+		assertThat(stats.getSpEquivalent()).isEqualTo(35.10, PRECISION);
 	}
 }

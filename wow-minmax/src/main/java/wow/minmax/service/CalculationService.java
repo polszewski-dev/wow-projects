@@ -3,7 +3,6 @@ package wow.minmax.service;
 import wow.character.model.build.BuffSetId;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
-import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
@@ -28,9 +27,9 @@ public interface CalculationService {
 
 	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Spell spell, Attributes totalStats);
 
-	SpellStatistics getSpellStatistics(Character character, Spell spell);
+	double getSpellDps(Character character, Spell spell);
 
-	SpellStatistics getSpellStatistics(Character character, Spell spell, Attributes totalStats);
+	double getSpellDps(Character character, Spell spell, Attributes totalStats);
 
 	Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats);
 

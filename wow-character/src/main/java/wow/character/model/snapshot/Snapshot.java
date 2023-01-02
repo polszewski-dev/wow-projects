@@ -206,6 +206,12 @@ public class Snapshot implements StatProvider {
 		return result;
 	}
 
+	public double getDps(CritMode critMode, boolean useBothDamageRanges) {
+		double totalDamage = getTotalDamage(critMode, useBothDamageRanges);
+		double effectiveCastTimeSeconds = effectiveCastTime.getSeconds();
+		return totalDamage / effectiveCastTimeSeconds;
+	}
+
 	private double getTotalDamage(CritMode critMode, boolean useBothDamageRanges) {
 		return getDirectDamage(critMode, useBothDamageRanges) + getDotDamage();
 	}

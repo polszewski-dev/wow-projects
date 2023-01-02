@@ -2,7 +2,6 @@ package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.character.model.character.Character;
 
 /**
  * User: POlszewski
@@ -11,7 +10,6 @@ import wow.character.model.character.Character;
 @Data
 @AllArgsConstructor
 public class CharacterStats {
-	private Character character;
 	private double sp;
 	private double spShadow;
 	private double spFire;

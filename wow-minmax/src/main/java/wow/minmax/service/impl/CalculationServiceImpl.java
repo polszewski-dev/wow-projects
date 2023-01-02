@@ -57,7 +57,7 @@ public class CalculationServiceImpl implements CalculationService {
 		while (true) {
 			PrimitiveAttribute equivalentStat = Attribute.of(targetStat, equivalentValue + increase);
 			Attributes equivalentStats = AttributesBuilder.addAttribute(baseStats, equivalentStat);
-			double equivalentDps = getSpellStatistics(character, spell, equivalentStats).getDps();
+			double equivalentDps = getSpellDps(character, spell, equivalentStats);
 
 			if (Math.abs(equivalentDps - targetDps) <= PRECISION) {
 				return Attributes.of(targetStat, equivalentValue);
@@ -86,14 +86,13 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public SpellStatistics getSpellStatistics(Character character, Spell spell) {
-		return getSpellStatistics(character, spell, null);
+	public double getSpellDps(Character character, Spell spell) {
+		return getSpellDps(character, spell, null);
 	}
 
 	@Override
-	public SpellStatistics getSpellStatistics(Character character, Spell spell, Attributes totalStats) {
-		return getSnapshot(character, spell, totalStats)
-				.getSpellStatistics(CritMode.AVERAGE, false);
+	public double getSpellDps(Character character, Spell spell, Attributes totalStats) {
+		return getSnapshot(character, spell, totalStats).getDps(CritMode.AVERAGE, true);
 	}
 
 	@Override
@@ -106,7 +105,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public SpellStats getSpellStats(Character character, Spell spell) {
-		SpellStatistics spellStatistics = getSpellStatistics(character, spell);
+		SpellStatistics spellStatistics = getSnapshot(character, spell, null).getSpellStatistics(CritMode.AVERAGE, true);
 		double hitSpEqv = getSpEquivalent(SPELL_HIT_RATING, 10, character, spell);
 		double critSpEqv = getSpEquivalent(SPELL_CRIT_RATING, 10, character, spell);
 		double hasteSpEqv = getSpEquivalent(SPELL_HASTE_RATING, 10, character, spell);
@@ -139,21 +138,20 @@ public class CalculationServiceImpl implements CalculationService {
 	private Attributes getBaseAttributes(Attributes sourceAttributes, Attributes totalStats, EquivalentMode mode) {
 		if (mode == EquivalentMode.REPLACEMENT) {
 			return AttributesBuilder.removeAttributes(totalStats, sourceAttributes);
-		} else {
-			return totalStats;
 		}
+		return totalStats;
 	}
 
 	private double getTargetDps(Attributes attributesToFindEquivalent, Attributes totalStats, Character character, Spell spell, EquivalentMode mode) {
+		Attributes targetStats = getTargetStats(attributesToFindEquivalent, totalStats, mode);
+		return getSpellDps(character, spell, targetStats);
+	}
+
+	private static Attributes getTargetStats(Attributes attributesToFindEquivalent, Attributes totalStats, EquivalentMode mode) {
 		if (mode == EquivalentMode.REPLACEMENT) {
-			return getSpellStatistics(character, spell, totalStats).getDps();
-		} else {
-			return getSpellStatistics(
-					character,
-					spell,
-					AttributesBuilder.addAttributes(totalStats, attributesToFindEquivalent)
-			).getDps();
+			return totalStats;
 		}
+		return AttributesBuilder.addAttributes(totalStats, attributesToFindEquivalent);
 	}
 
 	@Override
@@ -177,7 +175,6 @@ public class CalculationServiceImpl implements CalculationService {
 		Snapshot snapshot = getSnapshot(character, character.getDamagingSpell(), totalStats);
 
 		return new CharacterStats(
-				character,
 				totalStats.getTotalSpellDamage(),
 				totalStats.getTotalSpellDamage(SpellSchool.SHADOW),
 				totalStats.getTotalSpellDamage(SpellSchool.FIRE),

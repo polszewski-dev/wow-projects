@@ -20,8 +20,6 @@ import java.util.UUID;
 public interface PlayerProfileService {
 	List<PlayerProfileInfo> getPlayerProfileInfos();
 
-	List<PlayerProfile> getPlayerProfileList();
-
 	PlayerProfile createPlayerProfile(String profileName, Phase phase);
 
 	PlayerProfile createTemporaryPlayerProfile(

@@ -58,13 +58,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public List<PlayerProfile> getPlayerProfileList() {
-		return playerProfileRepository.getPlayerProfileList().stream()
-				.map(this::getPlayerProfile)
-				.collect(Collectors.toList());
-	}
-
-	@Override
 	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
 		PlayerProfile playerProfile = createTemporaryPlayerProfile(
 				UUID.randomUUID(),
