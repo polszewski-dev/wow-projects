@@ -2,12 +2,15 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.converter.Converter;
+import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.Map;
+
+import static wow.minmax.converter.persistent.PoConverterParams.getPlayerProfileService;
 
 /**
  * User: POlszewski
@@ -15,16 +18,13 @@ import java.util.Map;
  */
 @Component
 @AllArgsConstructor
-public class PlayerProfilePOConverter extends ParametrizedConverter<PlayerProfile, PlayerProfilePO> {
+public class PlayerProfilePOConverter implements Converter<PlayerProfile, PlayerProfilePO>, ParametrizedBackConverter<PlayerProfile, PlayerProfilePO> {
 	private final EquipmentPOConverter equipmentPOConverter;
 	private final CharacterProfessionPOConverter characterProfessionPOConverter;
 	private final BuffPOConverter buffPOConverter;
 
-	public static final String PARAM_PLAYER_PROFILE_SERVICE = "playerProfileService";
-	public static final String PARAM_PHASE = "phase";
-
 	@Override
-	protected PlayerProfilePO doConvert(PlayerProfile playerProfile, Map<String, Object> params) {
+	public PlayerProfilePO doConvert(PlayerProfile playerProfile) {
 		return new PlayerProfilePO(
 				playerProfile.getProfileId(),
 				playerProfile.getProfileName(),
@@ -32,18 +32,18 @@ public class PlayerProfilePOConverter extends ParametrizedConverter<PlayerProfil
 				playerProfile.getRace(),
 				playerProfile.getLevel(),
 				playerProfile.getBuildId(),
-				characterProfessionPOConverter.convertList(playerProfile.getProfessions().getList(), params),
+				characterProfessionPOConverter.convertList(playerProfile.getProfessions().getList()),
 				playerProfile.getEnemyType(),
 				playerProfile.getPhase(),
-				equipmentPOConverter.convert(playerProfile.getEquipment(), params),
-				buffPOConverter.convertList(playerProfile.getBuffs().getList(), params),
+				equipmentPOConverter.convert(playerProfile.getEquipment()),
+				buffPOConverter.convertList(playerProfile.getBuffs().getList()),
 				playerProfile.getLastModified()
 		);
 	}
 
 	@Override
-	protected PlayerProfile doConvertBack(PlayerProfilePO value, Map<String, Object> params) {
-		PlayerProfileService playerProfileService = (PlayerProfileService)params.get(PARAM_PLAYER_PROFILE_SERVICE);
+	public PlayerProfile doConvertBack(PlayerProfilePO value, Map<String, Object> params) {
+		PlayerProfileService playerProfileService = getPlayerProfileService(params);
 
 		PlayerProfile playerProfile = playerProfileService.createTemporaryPlayerProfile(
 				value.getProfileId(),

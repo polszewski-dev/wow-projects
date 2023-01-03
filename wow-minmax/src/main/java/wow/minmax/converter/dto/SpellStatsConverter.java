@@ -15,11 +15,11 @@ import wow.minmax.model.dto.SpellStatsDTO;
  */
 @Component
 @AllArgsConstructor
-public class SpellStatsConverter extends Converter<SpellStats, SpellStatsDTO> {
+public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO> {
 	private final SpellConverter spellConverter;
 
 	@Override
-	protected SpellStatsDTO doConvert(SpellStats spellStats) {
+	public SpellStatsDTO doConvert(SpellStats spellStats) {
 		SpellStatistics spellStatistics = spellStats.getSpellStatistics();
 		Snapshot snapshot = spellStatistics.getSnapshot();
 

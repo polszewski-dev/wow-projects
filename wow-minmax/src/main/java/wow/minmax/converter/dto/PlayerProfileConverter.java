@@ -12,13 +12,13 @@ import wow.minmax.model.dto.PlayerProfileDTO;
  */
 @Component
 @AllArgsConstructor
-public class PlayerProfileConverter extends Converter<PlayerProfile, PlayerProfileDTO> {
+public class PlayerProfileConverter implements Converter<PlayerProfile, PlayerProfileDTO> {
 	private final EquipmentConverter equipmentConverter;
 	private final BuffConverter buffConverter;
 	private final TalentConverter talentConverter;
 
 	@Override
-	protected PlayerProfileDTO doConvert(PlayerProfile playerProfile) {
+	public PlayerProfileDTO doConvert(PlayerProfile playerProfile) {
 		return new PlayerProfileDTO(
 				playerProfile.getProfileId(),
 				playerProfile.getProfileName(),

@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.Equipment;
 import wow.commons.model.categorization.ItemSlot;
-import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.converter.Converter;
+import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.persistent.EquipmentPO;
 
 import java.util.Map;
@@ -15,34 +16,34 @@ import java.util.Map;
  */
 @Component
 @AllArgsConstructor
-public class EquipmentPOConverter extends ParametrizedConverter<Equipment, EquipmentPO> {
+public class EquipmentPOConverter implements Converter<Equipment, EquipmentPO>, ParametrizedBackConverter<Equipment, EquipmentPO> {
 	private final EquippableItemPOConverter equippableItemPOConverter;
 
 	@Override
-	protected EquipmentPO doConvert(Equipment equipment, Map<String, Object> params) {
+	public EquipmentPO doConvert(Equipment equipment) {
 		return new EquipmentPO(
-				equippableItemPOConverter.convert(equipment.getHead(), params),
-				equippableItemPOConverter.convert(equipment.getNeck(), params),
-				equippableItemPOConverter.convert(equipment.getShoulder(), params),
-				equippableItemPOConverter.convert(equipment.getBack(), params),
-				equippableItemPOConverter.convert(equipment.getChest(), params),
-				equippableItemPOConverter.convert(equipment.getWrist(), params),
-				equippableItemPOConverter.convert(equipment.getHands(), params),
-				equippableItemPOConverter.convert(equipment.getWaist(), params),
-				equippableItemPOConverter.convert(equipment.getLegs(), params),
-				equippableItemPOConverter.convert(equipment.getFeet(), params),
-				equippableItemPOConverter.convert(equipment.getFinger1(), params),
-				equippableItemPOConverter.convert(equipment.getFinger2(), params),
-				equippableItemPOConverter.convert(equipment.getTrinket1(), params),
-				equippableItemPOConverter.convert(equipment.getTrinket2(), params),
-				equippableItemPOConverter.convert(equipment.getMainHand(), params),
-				equippableItemPOConverter.convert(equipment.getOffHand(), params),
-				equippableItemPOConverter.convert(equipment.getRanged(), params)
+				equippableItemPOConverter.convert(equipment.getHead()),
+				equippableItemPOConverter.convert(equipment.getNeck()),
+				equippableItemPOConverter.convert(equipment.getShoulder()),
+				equippableItemPOConverter.convert(equipment.getBack()),
+				equippableItemPOConverter.convert(equipment.getChest()),
+				equippableItemPOConverter.convert(equipment.getWrist()),
+				equippableItemPOConverter.convert(equipment.getHands()),
+				equippableItemPOConverter.convert(equipment.getWaist()),
+				equippableItemPOConverter.convert(equipment.getLegs()),
+				equippableItemPOConverter.convert(equipment.getFeet()),
+				equippableItemPOConverter.convert(equipment.getFinger1()),
+				equippableItemPOConverter.convert(equipment.getFinger2()),
+				equippableItemPOConverter.convert(equipment.getTrinket1()),
+				equippableItemPOConverter.convert(equipment.getTrinket2()),
+				equippableItemPOConverter.convert(equipment.getMainHand()),
+				equippableItemPOConverter.convert(equipment.getOffHand()),
+				equippableItemPOConverter.convert(equipment.getRanged())
 		);
 	}
 
 	@Override
-	protected Equipment doConvertBack(EquipmentPO value, Map<String, Object> params) {
+	public Equipment doConvertBack(EquipmentPO value, Map<String, Object> params) {
 		Equipment equipment = new Equipment();
 
 		equipment.equip(equippableItemPOConverter.convertBack(value.getHead(), params));

@@ -6,21 +6,21 @@ import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
- * Date: 2021-12-15
+ * Date: 2023-01-03
  */
-public interface Converter<F, T> {
-	default T convert(F value) {
+public interface BackConverter<F, T> {
+	default F convertBack(T value) {
 		if (value == null) {
 			return null;
 		}
-		return doConvert(value);
+		return doConvertBack(value);
 	}
 
-	default List<T> convertList(Collection<F> list) {
+	default List<F> convertBackList(Collection<T> list) {
 		return list.stream()
-				.map(this::convert)
+				.map(this::convertBack)
 				.collect(Collectors.toList());
 	}
 
-	T doConvert(F value);
+	F doConvertBack(T value);
 }

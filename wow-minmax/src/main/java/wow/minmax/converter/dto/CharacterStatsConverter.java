@@ -12,9 +12,9 @@ import wow.minmax.model.dto.CharacterStatsDTO;
  */
 @Component
 @AllArgsConstructor
-public class CharacterStatsConverter extends Converter<CharacterStats, CharacterStatsDTO> {
+public class CharacterStatsConverter implements Converter<CharacterStats, CharacterStatsDTO> {
 	@Override
-	protected CharacterStatsDTO doConvert(CharacterStats value) {
+	public CharacterStatsDTO doConvert(CharacterStats value) {
 		return new CharacterStatsDTO(
 				null,
 				value.getSp(),

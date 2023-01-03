@@ -12,9 +12,9 @@ import wow.minmax.model.dto.SpecialAbilityStatsDTO;
  */
 @Component
 @AllArgsConstructor
-public class SpecialAbilityStatsConverter extends Converter<SpecialAbilityStats, SpecialAbilityStatsDTO> {
+public class SpecialAbilityStatsConverter implements Converter<SpecialAbilityStats, SpecialAbilityStatsDTO> {
 	@Override
-	protected SpecialAbilityStatsDTO doConvert(SpecialAbilityStats value) {
+	public SpecialAbilityStatsDTO doConvert(SpecialAbilityStats value) {
 		return new SpecialAbilityStatsDTO(
 			value.getDescription(),
 			value.getAbility(),

@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Enchant;
 import wow.commons.repository.ItemRepository;
-import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.converter.Converter;
+import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.dto.EnchantDTO;
 
 import java.util.Map;
@@ -17,11 +18,11 @@ import static wow.minmax.converter.dto.DtoConverterParams.getPhase;
  */
 @Component
 @AllArgsConstructor
-public class EnchantConverter extends ParametrizedConverter<Enchant, EnchantDTO> {
+public class EnchantConverter implements Converter<Enchant, EnchantDTO>, ParametrizedBackConverter<Enchant, EnchantDTO> {
 	private final ItemRepository itemRepository;
 
 	@Override
-	protected EnchantDTO doConvert(Enchant enchant, Map<String, Object> params) {
+	public EnchantDTO doConvert(Enchant enchant) {
 		return new EnchantDTO(
 				enchant.getId(),
 				enchant.getName(),
@@ -33,7 +34,7 @@ public class EnchantConverter extends ParametrizedConverter<Enchant, EnchantDTO>
 	}
 
 	@Override
-	protected Enchant doConvertBack(EnchantDTO value, Map<String, Object> params) {
+	public Enchant doConvertBack(EnchantDTO value, Map<String, Object> params) {
 		return itemRepository.getEnchant(value.getId(), getPhase(params)).orElseThrow();
 	}
 }

@@ -12,9 +12,9 @@ import wow.minmax.model.dto.TalentDTO;
  */
 @Component
 @AllArgsConstructor
-public class TalentConverter extends Converter<Talent, TalentDTO> {
+public class TalentConverter implements Converter<Talent, TalentDTO> {
 	@Override
-	protected TalentDTO doConvert(Talent talent) {
+	public TalentDTO doConvert(Talent talent) {
 		return new TalentDTO(talent.getTalentId(), talent.getRank(), talent.getTalentId().getName());
 	}
 }

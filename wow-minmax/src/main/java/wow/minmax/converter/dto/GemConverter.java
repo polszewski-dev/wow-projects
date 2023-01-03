@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Gem;
 import wow.commons.repository.ItemRepository;
-import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.converter.Converter;
+import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.dto.GemDTO;
 
 import java.util.Map;
@@ -17,12 +18,12 @@ import static wow.minmax.converter.dto.DtoConverterParams.getPhase;
  */
 @Component
 @AllArgsConstructor
-public class GemConverter extends ParametrizedConverter<Gem, GemDTO> {
+public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackConverter<Gem, GemDTO> {
 	private final SourceConverter sourceConverter;
 	private final ItemRepository itemRepository;
 
 	@Override
-	protected GemDTO doConvert(Gem gem, Map<String, Object> params) {
+	public GemDTO doConvert(Gem gem) {
 		return new GemDTO(
 				gem.getId(),
 				gem.getName(),
@@ -37,7 +38,7 @@ public class GemConverter extends ParametrizedConverter<Gem, GemDTO> {
 	}
 
 	@Override
-	protected Gem doConvertBack(GemDTO value, Map<String, Object> params) {
+	public Gem doConvertBack(GemDTO value, Map<String, Object> params) {
 		return itemRepository.getGem(value.getId(), getPhase(params)).orElseThrow();
 	}
 }

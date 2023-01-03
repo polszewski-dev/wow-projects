@@ -16,7 +16,7 @@ public final class DtoConverterParams {
 	}
 
 	public static Phase getPhase(Map<String, Object> params) {
-		return (Phase) params.get(DtoConverterParams.PHASE);
+		return (Phase) params.get(PHASE);
 	}
 
 	private DtoConverterParams() {}

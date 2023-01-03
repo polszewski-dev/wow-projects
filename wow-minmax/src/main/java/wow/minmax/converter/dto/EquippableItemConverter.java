@@ -6,7 +6,8 @@ import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
-import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.converter.Converter;
+import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.dto.EquippableItemDTO;
 
 import java.util.List;
@@ -18,22 +19,22 @@ import java.util.Map;
  */
 @Component
 @AllArgsConstructor
-public class EquippableItemConverter extends ParametrizedConverter<EquippableItem, EquippableItemDTO> {
+public class EquippableItemConverter implements Converter<EquippableItem, EquippableItemDTO>, ParametrizedBackConverter<EquippableItem, EquippableItemDTO> {
 	private final ItemConverter itemConverter;
 	private final EnchantConverter enchantConverter;
 	private final GemConverter gemConverter;
 
 	@Override
-	protected EquippableItemDTO doConvert(EquippableItem item, Map<String, Object> params) {
+	public EquippableItemDTO doConvert(EquippableItem item) {
 		return new EquippableItemDTO(
-				itemConverter.convert(item.getItem(), params),
-				enchantConverter.convert(item.getEnchant(), params),
-				gemConverter.convertList(item.getGems(), params)
+				itemConverter.convert(item.getItem()),
+				enchantConverter.convert(item.getEnchant()),
+				gemConverter.convertList(item.getGems())
 		);
 	}
 
 	@Override
-	protected EquippableItem doConvertBack(EquippableItemDTO value, Map<String, Object> params) {
+	public EquippableItem doConvertBack(EquippableItemDTO value, Map<String, Object> params) {
 		Item item = itemConverter.convertBack(value.getItem(), params);
 		Enchant enchant = enchantConverter.convertBack(value.getEnchant(), params);
 		List<Gem> gems = gemConverter.convertBackList(value.getGems(), params);

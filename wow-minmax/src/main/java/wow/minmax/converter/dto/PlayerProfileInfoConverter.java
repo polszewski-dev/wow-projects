@@ -12,9 +12,9 @@ import wow.minmax.model.dto.PlayerProfileInfoDTO;
  */
 @Component
 @AllArgsConstructor
-public class PlayerProfileInfoConverter extends Converter<PlayerProfileInfo, PlayerProfileInfoDTO> {
+public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, PlayerProfileInfoDTO> {
 	@Override
-	protected PlayerProfileInfoDTO doConvert(PlayerProfileInfo value) {
+	public PlayerProfileInfoDTO doConvert(PlayerProfileInfo value) {
 		return new PlayerProfileInfoDTO(
 			value.getProfileId(),
 			value.getProfileName(),

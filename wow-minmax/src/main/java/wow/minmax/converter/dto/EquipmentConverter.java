@@ -3,7 +3,7 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.Equipment;
-import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.EquipmentDTO;
 
 import java.util.Map;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
  */
 @Component
 @AllArgsConstructor
-public class EquipmentConverter extends ParametrizedConverter<Equipment, EquipmentDTO> {
+public class EquipmentConverter implements Converter<Equipment, EquipmentDTO> {
 	private final EquippableItemConverter equippableItemConverter;
 
 	@Override
-	protected EquipmentDTO doConvert(Equipment equipment, Map<String, Object> params) {
+	public EquipmentDTO doConvert(Equipment equipment) {
 		var itemsBySlot = equipment.toMap().entrySet().stream()
 				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemConverter.convert(e.getValue(), params))
+						Map.Entry::getKey, e -> equippableItemConverter.convert(e.getValue()))
 				);
 
 		return new EquipmentDTO(itemsBySlot);

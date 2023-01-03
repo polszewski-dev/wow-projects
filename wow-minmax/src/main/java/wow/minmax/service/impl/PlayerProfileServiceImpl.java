@@ -30,9 +30,10 @@ import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static wow.minmax.converter.persistent.PoConverterParams.createParams;
 
 /**
  * User: POlszewski
@@ -177,22 +178,14 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private void saveProfile(PlayerProfile playerProfile) {
-		var converterParams = getConverterParams(playerProfile.getPhase());
-		PlayerProfilePO playerProfilePO = playerProfilePOConverter.convert(playerProfile, converterParams);
+		PlayerProfilePO playerProfilePO = playerProfilePOConverter.convert(playerProfile);
 
 		playerProfileRepository.saveProfile(playerProfilePO);
 	}
 
 	private PlayerProfile getPlayerProfile(PlayerProfilePO profile) {
-		var converterParams = getConverterParams(profile.getPhase());
+		var converterParams = createParams(profile.getPhase(), this);
 		return playerProfilePOConverter.convertBack(profile, converterParams);
-	}
-
-	private Map<String, Object> getConverterParams(Phase phase) {
-		return Map.of(
-				PlayerProfilePOConverter.PARAM_PLAYER_PROFILE_SERVICE, this,
-				PlayerProfilePOConverter.PARAM_PHASE, phase
-		);
 	}
 
 	private PlayerProfileInfo getPlayerProfileInfo(PlayerProfile playerProfile) {

@@ -19,11 +19,11 @@ import java.util.stream.Stream;
  */
 @Component
 @AllArgsConstructor
-public class UpgradeConverter extends Converter<Comparison, UpgradeDTO> {
+public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 	private final EquippableItemConverter equippableItemConverter;
 
 	@Override
-	protected UpgradeDTO doConvert(Comparison value) {
+	public UpgradeDTO doConvert(Comparison value) {
 		AttributesDiff statDifference = value.getStatDifference();
 
 		return new UpgradeDTO(

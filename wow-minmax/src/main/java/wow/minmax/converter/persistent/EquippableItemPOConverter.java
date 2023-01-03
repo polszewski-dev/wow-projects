@@ -3,7 +3,8 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.EquippableItem;
-import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.converter.Converter;
+import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.persistent.EquippableItemPO;
 import wow.minmax.model.persistent.GemPO;
 
@@ -16,23 +17,23 @@ import java.util.Map;
  */
 @Component
 @AllArgsConstructor
-public class EquippableItemPOConverter extends ParametrizedConverter<EquippableItem, EquippableItemPO> {
+public class EquippableItemPOConverter implements Converter<EquippableItem, EquippableItemPO>, ParametrizedBackConverter<EquippableItem, EquippableItemPO> {
 	private final ItemPOConverter itemPOConverter;
 	private final EnchantPOConverter enchantPOConverter;
 	private final GemPOConverter gemPOConverter;
 
 	@Override
-	protected EquippableItemPO doConvert(EquippableItem item, Map<String, Object> params) {
+	public EquippableItemPO doConvert(EquippableItem item) {
 		return new EquippableItemPO(
-				itemPOConverter.convert(item.getItem(), params),
-				enchantPOConverter.convert(item.getEnchant(), params),
+				itemPOConverter.convert(item.getItem()),
+				enchantPOConverter.convert(item.getEnchant()),
 				item.getSocketCount(),
-				gemPOConverter.convertList(item.getGems(), params)
+				gemPOConverter.convertList(item.getGems())
 		);
 	}
 
 	@Override
-	protected EquippableItem doConvertBack(EquippableItemPO value, Map<String, Object> params) {
+	public EquippableItem doConvertBack(EquippableItemPO value, Map<String, Object> params) {
 		EquippableItem equippableItem = new EquippableItem(itemPOConverter.convertBack(value.getItem(), params));
 
 		equippableItem.enchant(enchantPOConverter.convertBack(value.getEnchant(), params));
