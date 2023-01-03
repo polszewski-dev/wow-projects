@@ -36,7 +36,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				item.getSocketTypes(),
 				item.getSocketBonus().statString(),
 				item.getIcon(),
-				item.getTooltip()
+				null
 		);
 	}
 

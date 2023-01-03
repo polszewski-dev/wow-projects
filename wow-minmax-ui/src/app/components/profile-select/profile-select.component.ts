@@ -1,4 +1,3 @@
-import { computeMsgId } from '@angular/compiler';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Phase } from 'src/app/model/character/Phase';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';

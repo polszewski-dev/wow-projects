@@ -63,49 +63,48 @@ public class EquipmentController {
 		return new EquipmentOptionsDTO(itemsByItemSlot, enchantsByItemType, gemsBySocketType);
 	}
 
-	@GetMapping("{profileId}/change/item/{slot}/{itemId}")
-	public EquippableItemDTO changeItem(
+	@GetMapping("{profileId}/change/item/{slot}/{itemId}/best/variant")
+	public EquippableItemDTO changeItemBestVariant(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("slot") ItemSlot slot,
 			@PathVariable("itemId") int itemId
 	) {
-		PlayerProfile playerProfile = playerProfileService.changeItem(profileId, slot, itemId);
+		PlayerProfile playerProfile = playerProfileService.changeItemBestVariant(profileId, slot, itemId);
 		log.info("Changed item profile id: {}, slot: {}, itemId: {}", profileId, slot, itemId);
 		return equippableItemConverter.convert(playerProfile.getEquippedItem(slot));
 	}
 
-	@PostMapping("{profileId}/change/item/group/{slotGroup}")
+	@PutMapping("{profileId}/change/item/{slot}")
+	public EquippableItemDTO changeItem(
+			@PathVariable("profileId") UUID profileId,
+			@PathVariable("slot") ItemSlot slot,
+			@RequestBody EquippableItemDTO itemDTO
+	) {
+		EquippableItem item = getEquippableItem(itemDTO, profileId);
+		PlayerProfile playerProfile = playerProfileService.changeItem(profileId, slot, item);
+		log.info("Changed item profile id: {}, slot: {}, item: {}", profileId, slot, item);
+		return equippableItemConverter.convert(playerProfile.getEquippedItem(slot));
+	}
+
+	@PutMapping("{profileId}/change/item/group/{slotGroup}")
 	public void changeItemGroup(
 			@PathVariable("profileId") UUID profileId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestBody List<EquippableItemDTO> itemDTOs
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
-		List<EquippableItem> items = equippableItemConverter.convertBackList(itemDTOs, createParams(playerProfile.getPhase()));
+		List<EquippableItem> items = getEquippableItems(profileId, itemDTOs);
 		playerProfileService.changeItemGroup(profileId, slotGroup, items);
 		log.info("Changed items profile id: {}, slotGroup: {}, items: {}", profileId, slotGroup, items);
 	}
 
-	@GetMapping("{profileId}/change/enchant/{slot}/{enchantId}")
-	public EquippableItemDTO changeEnchant(
-			@PathVariable("profileId") UUID profileId,
-			@PathVariable("slot") ItemSlot slot,
-			@PathVariable("enchantId") int enchantId
-	) {
-		PlayerProfile playerProfile = playerProfileService.changeEnchant(profileId, slot, enchantId);
-		log.info("Changed enchant profile id: {}, slot: {}, itemId: {}", profileId, slot, enchantId);
-		return equippableItemConverter.convert(playerProfile.getEquippedItem(slot));
+	private EquippableItem getEquippableItem(EquippableItemDTO itemDTO, UUID profileId) {
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
+		return equippableItemConverter.convertBack(itemDTO, createParams(playerProfile.getPhase()));
 	}
 
-	@GetMapping("{profileId}/change/gem/{slot}/{socketNo}/{gemId}")
-	public EquippableItemDTO changeGem(
-			@PathVariable("profileId") UUID profileId,
-			@PathVariable("slot") ItemSlot slot,
-			@PathVariable("socketNo") int socketNo,
-			@PathVariable("gemId") int gemId) {
-		PlayerProfile playerProfile = playerProfileService.changeGem(profileId, slot, socketNo, gemId);
-		log.info("Changed gem profile id: {}, slot: {}, socketNo: {}, gemId: {}", profileId, slot, socketNo, gemId);
-		return equippableItemConverter.convert(playerProfile.getEquippedItem(slot));
+	private List<EquippableItem> getEquippableItems(UUID profileId, List<EquippableItemDTO> itemDTOs) {
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
+		return equippableItemConverter.convertBackList(itemDTOs, createParams(playerProfile.getPhase()));
 	}
 
 	@GetMapping("{profileId}/reset")

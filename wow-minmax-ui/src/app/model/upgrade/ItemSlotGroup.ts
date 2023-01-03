@@ -37,3 +37,24 @@ export function getItemSlotGroup(itemSlot: ItemSlot): ItemSlotGroup | undefined 
 			return undefined;
 	}
 }
+
+export function getSlots(slotGroup: ItemSlotGroup): ItemSlot[] {
+	switch(slotGroup) {
+		case ItemSlotGroup.HEAD: return [ ItemSlot.HEAD ];
+		case ItemSlotGroup.NECK: return [ ItemSlot.NECK ];
+		case ItemSlotGroup.SHOULDER: return [ ItemSlot.SHOULDER ];
+		case ItemSlotGroup.BACK: return [ ItemSlot.BACK ];
+		case ItemSlotGroup.CHEST: return [ ItemSlot.CHEST ];
+		case ItemSlotGroup.WRIST: return [ ItemSlot.WRIST ];
+		case ItemSlotGroup.HANDS: return [ ItemSlot.HANDS ];
+		case ItemSlotGroup.WAIST: return [ ItemSlot.WAIST ];
+		case ItemSlotGroup.LEGS: return [ ItemSlot.LEGS ];
+		case ItemSlotGroup.FEET: return [ ItemSlot.FEET ];
+		case ItemSlotGroup.FINGERS: return [ ItemSlot.FINGER_1, ItemSlot.FINGER_2 ];
+		case ItemSlotGroup.TRINKETS: return [ ItemSlot.TRINKET_1, ItemSlot.TRINKET_2 ];
+		case ItemSlotGroup.WEAPONS: return [ ItemSlot.MAIN_HAND, ItemSlot.OFF_HAND ];
+		case ItemSlotGroup.RANGED: return [ ItemSlot.RANGED ];
+		default:
+			throw new Error('Unhandled slot group' + slotGroup);
+	}
+}

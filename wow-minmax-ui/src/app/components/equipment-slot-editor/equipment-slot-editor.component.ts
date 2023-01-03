@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { Enchant } from 'src/app/model/equipment/Enchant';
 import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
 import { EquippableItem } from 'src/app/model/equipment/EquippableItem';
@@ -10,7 +10,7 @@ import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
-import { UpgradeService } from 'src/app/services/upgrade.service';
+import { getIcon } from 'src/app/util/Icon';
 import { DropdownSelectValueFormatter } from '../dropdown-select/DropdownSelectValueFormatter';
 import { ItemChange } from './ItemChange';
 
@@ -34,11 +34,11 @@ export class EquipmentSlotEditorComponent implements OnInit {
 	@Output() gemChanged = new EventEmitter<ItemChange>();
 	@Output() upgradeCounterClicked = new EventEmitter<ItemSlotGroup>();
 
-	ItemSlot = ItemSlot;
+	readonly ItemSlot = ItemSlot;
 
-	itemFormatter = new ItemFormatter();
-	enchantFormatter = new EnchantFormatter();
-	gemFormatter = new GemFormatter();
+	readonly itemFormatter = new ItemFormatter();
+	readonly enchantFormatter = new EnchantFormatter();
+	readonly gemFormatter = new GemFormatter();
 
 	@ViewChild('template', { static: true }) template!: TemplateRef<any>;
 
@@ -48,22 +48,33 @@ export class EquipmentSlotEditorComponent implements OnInit {
 		this.viewContainerRef.createEmbeddedView(this.template);
 	}
 
-	onItemChange(item: Item) {
-		this.equipmentService.changeItem(this.selectedProfile!.profileId, this.itemSlot!, item.id).subscribe(item => {
+	onItemChange(item: Item): void {
+		this.equipmentService.changeItemBestVariant(this.selectedProfile.profileId, this.itemSlot!, item.id).subscribe(item => {
 			this.equippableItem = item;
 			this.itemChanged.emit(this.getItemChange());
 		});
 	}
 
-	onEnchantChange(enchant: Enchant) {
-		this.equipmentService.changeEnchant(this.selectedProfile!.profileId, this.itemSlot!, enchant.id).subscribe(item => {
+	onEnchantChange(enchant: Enchant): void {
+		const newItem:EquippableItem = {
+			...this.equippableItem!,
+			enchant: enchant
+		};
+		this.equipmentService.changeItem(this.selectedProfile.profileId, this.itemSlot!, newItem).subscribe(item => {
 			this.equippableItem = item;
 			this.enchantChanged.emit(this.getItemChange());
 		});
 	}
 
-	onGemChange(socketIdx: number, gem: Gem) {
-		this.equipmentService.changeGem(this.selectedProfile!.profileId, this.itemSlot!, socketIdx, gem.id).subscribe(item => {
+	onGemChange(socketIdx: number, gem: Gem): void {
+		const newItem:EquippableItem = {
+			...this.equippableItem!,
+			gems: [...this.equippableItem!.gems]
+		};
+
+		newItem.gems[socketIdx] = gem;
+
+		this.equipmentService.changeItem(this.selectedProfile.profileId, this.itemSlot!, newItem).subscribe(item => {
 			this.equippableItem = item;
 			this.gemChanged.emit(this.getItemChange());
 		});
@@ -81,8 +92,8 @@ export class EquipmentSlotEditorComponent implements OnInit {
 		return this.equipmentOptions?.gemsBySocketType[this.equippableItem!.item.socketTypes[socketIdx]] || []
 	}
 
-	onUpgradeCounterClick() {
-		this.upgradeCounterClicked.emit(this.slotGroup);		
+	onUpgradeCounterClick(): void {
+		this.upgradeCounterClicked.emit(this.slotGroup);
 	}
 
 	private getItemChange(): ItemChange {
@@ -91,10 +102,6 @@ export class EquipmentSlotEditorComponent implements OnInit {
 			item: this.equippableItem
 		};
 	}
-}
-
-function getIcon(iconId: string): string {
-	return `https://wow.zamimg.com/images/wow/icons/small/${iconId}.jpg`
 }
 
 class ItemFormatter implements DropdownSelectValueFormatter<Item> {
@@ -107,10 +114,9 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 		`;
 	}
 
-	formatSelection(value?: Item): string {
-		if (!value) {
-			return '<i>-- empty --</i>';
-		}
+	emptySelection = '<i>-- empty --</i>';
+
+	formatSelection(value: Item): string {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
@@ -132,10 +138,9 @@ class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
 		`;
 	}
 
-	formatSelection(value?: Enchant): string {
-		if (!value) {
-			return '<i>-- empty --</i>';
-		}
+	emptySelection = '<i>-- empty --</i>';
+
+	formatSelection(value: Enchant): string {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
@@ -156,10 +161,9 @@ class GemFormatter implements DropdownSelectValueFormatter<Gem> {
 		`;
 	}
 
-	formatSelection(value?: Gem): string {
-		if (!value) {
-			return '<i>-- empty --</i>';
-		}
+	emptySelection = '<i>-- empty --</i>';
+
+	formatSelection(value: Gem): string {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>

@@ -16,8 +16,6 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
 import wow.minmax.config.ProfileConfig;
@@ -107,12 +105,23 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId) {
+	public PlayerProfile changeItemBestVariant(UUID profileId, ItemSlot slot, int itemId) {
+		EquippableItem bestItemVariant = getBestItemVariant(profileId, slot, itemId);
+
+		return changeItem(profileId, slot, bestItemVariant);
+	}
+
+	private EquippableItem getBestItemVariant(UUID profileId, ItemSlot slot, int itemId) {
 		PlayerProfile playerProfile = getPlayerProfile(profileId);
 		Item item = itemService.getItem(itemId, playerProfile.getPhase());
-		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile.getCharacter(), item, slot, playerProfile.getDamagingSpell());
+		return upgradeService.getBestItemVariant(playerProfile.getCharacter(), item, slot, playerProfile.getDamagingSpell());
+	}
 
-		playerProfile.equip(bestItemVariant, slot);
+	@Override
+	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, EquippableItem item) {
+		PlayerProfile playerProfile = getPlayerProfile(profileId);
+
+		playerProfile.equip(item, slot);
 		saveProfile(playerProfile);
 
 		return playerProfile;
@@ -135,26 +144,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 		saveProfile(playerProfile);
 
-		return playerProfile;
-	}
-
-	@Override
-	public PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId) {
-		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Enchant enchant = itemService.getEnchant(enchantId, playerProfile.getPhase());
-
-		playerProfile.getEquippedItem(slot).enchant(enchant);
-		saveProfile(playerProfile);
-		return playerProfile;
-	}
-
-	@Override
-	public PlayerProfile changeGem(UUID profileId, ItemSlot slot, int socketNo, int gemId) {
-		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Gem gem = itemService.getGem(gemId, playerProfile.getPhase());
-
-		playerProfile.getEquippedItem(slot).insertGem(socketNo, gem);
-		saveProfile(playerProfile);
 		return playerProfile;
 	}
 

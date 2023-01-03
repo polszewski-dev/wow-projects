@@ -14,7 +14,7 @@ export class CharacterStatsComponent implements OnChanges {
 
 	constructor(private statsService: StatsService) {}
 
-	ngOnChanges(changes: SimpleChanges) {
+	ngOnChanges(changes: SimpleChanges): void {
 		if (!changes['selectedProfile']) {
 			return;
 		}

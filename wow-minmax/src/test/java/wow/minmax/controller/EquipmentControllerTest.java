@@ -1,5 +1,6 @@
 package wow.minmax.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -7,11 +8,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
+import wow.commons.model.categorization.ItemSlotGroup;
+import wow.minmax.converter.dto.EquippableItemConverter;
+import wow.minmax.model.dto.EquippableItemDTO;
 
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,6 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class EquipmentControllerTest extends ControllerTest {
 	@Autowired
 	MockMvc mockMvc;
+
+	@Autowired
+	EquippableItemConverter equippableItemConverter;
 
 	@Test
 	void getEquipmentTest() throws Exception {
@@ -41,40 +51,55 @@ class EquipmentControllerTest extends ControllerTest {
 	}
 
 	@Test
-	void changeItem() throws Exception {
+	void changeItemBestVariant() throws Exception {
 		ItemSlot slot = ItemSlot.CHEST;
 		EquippableItem chest = getItem("Sunfire Robe");
 
-		mockMvc.perform(get("/api/v1/equipment/{profileId}/change/item/{slot}/{itemId}", profile.getProfileId(), slot, chest.getId()))
+		mockMvc.perform(get("/api/v1/equipment/{profileId}/change/item/{slot}/{itemId}/best/variant", profile.getProfileId(), slot, chest.getId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).changeItem(profile.getProfileId(), ItemSlot.CHEST, chest.getId());
+		verify(playerProfileService).changeItemBestVariant(profile.getProfileId(), ItemSlot.CHEST, chest.getId());
 	}
 
 	@Test
-	void changeEnchant() throws Exception {
-		Enchant enchant = getEnchant("Enchant Chest - Exceptional Stats");
+	void changeItem() throws Exception {
+		EquippableItem chest = profile.getEquipment().getChest();
+		EquippableItemDTO chestDTO = equippableItemConverter.convert(chest);
 
-		mockMvc.perform(get("/api/v1/equipment/{profileId}/change/enchant/{slot}/{enchantId}", profile.getProfileId(), ItemSlot.CHEST, enchant.getId()))
+		ObjectMapper objectMapper = new ObjectMapper();
+		String requestBody = objectMapper.writeValueAsString(chestDTO);
+
+		mockMvc.perform(
+				put("/api/v1/equipment/{profileId}/change/item/{slot}", profile.getProfileId(), ItemSlot.CHEST)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+				)
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).changeEnchant(profile.getProfileId(), ItemSlot.CHEST, enchant.getId());
+		verify(playerProfileService).changeItem(eq(profile.getProfileId()), eq(ItemSlot.CHEST), any());
 	}
 
 	@Test
-	void changeGem() throws Exception {
-		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
+	void changeItemGroup() throws Exception {
+		EquippableItem chest = profile.getEquipment().getChest();
+		EquippableItemDTO chestDTO = equippableItemConverter.convert(chest);
 
-		mockMvc.perform(get("/api/v1/equipment/{profileId}/change/gem/{slot}/{socketNo}/{gemId}", profile.getProfileId(), ItemSlot.CHEST, 1, violetGem.getId()))
+		ObjectMapper objectMapper = new ObjectMapper();
+		String requestBody = objectMapper.writeValueAsString(List.of(chestDTO));
+
+		mockMvc.perform(
+				put("/api/v1/equipment/{profileId}/change/item/group/{slotGroup}", profile.getProfileId(), ItemSlotGroup.CHEST)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(requestBody)
+				)
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).changeGem(profile.getProfileId(), ItemSlot.CHEST, 1, violetGem.getId());
+		verify(playerProfileService).changeItemGroup(eq(profile.getProfileId()), eq(ItemSlotGroup.CHEST), any());
 	}
 
 	@Test

@@ -31,13 +31,11 @@ public interface PlayerProfileService {
 
 	PlayerProfile getPlayerProfile(UUID profileId);
 
-	PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId);
+	PlayerProfile changeItemBestVariant(UUID profileId, ItemSlot slot, int itemId);
+
+	PlayerProfile changeItem(UUID profileId, ItemSlot slot, EquippableItem item);
 
 	PlayerProfile changeItemGroup(UUID profileId, ItemSlotGroup slotGroup, List<EquippableItem> items);
-
-	PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId);
-
-	PlayerProfile changeGem(UUID profileId, ItemSlot slot, int socketNo, int gemId);
 
 	PlayerProfile resetEquipment(UUID profileId);
 

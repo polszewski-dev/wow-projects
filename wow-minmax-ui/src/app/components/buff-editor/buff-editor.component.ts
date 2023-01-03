@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Buff } from 'src/app/model/buff/Buff';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';
-import { BuffService as BuffService } from 'src/app/services/buff.service';
+import { BuffService } from 'src/app/services/buff.service';
 
 @Component({
 	selector: 'app-buff-editor',
@@ -16,7 +16,7 @@ export class BuffEditorComponent implements OnChanges {
 
 	constructor(private buffService: BuffService) {}
 
-	ngOnChanges(changes: SimpleChanges) {
+	ngOnChanges(changes: SimpleChanges): void {
 		if (!changes['selectedProfile']) {
 			return;
 		}
@@ -25,7 +25,7 @@ export class BuffEditorComponent implements OnChanges {
 		});
 	}
 
-	onChange(buff: Buff) {
+	onChange(buff: Buff): void {
 		this.buffService.changeBuff(this.selectedProfile!.profileId, buff).subscribe((buffs: Buff[]) => {
 			this.buffs = buffs;
 			this.buffsChanged.emit();

@@ -33,7 +33,7 @@ public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackCon
 				gem.getAttributes().statString(),
 				gem.getShorterName(),
 				gem.getIcon(),
-				gem.getTooltip()
+				null
 		);
 	}
 

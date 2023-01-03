@@ -24,16 +24,16 @@ export class EquipmentService {
 		return this.http.get<EquipmentOptions>(`${this.apiUrl}/${profileId}/options`);
 	}
 
-	changeItem(profileId: string, itemSlot: ItemSlot, itemId: number): Observable<EquippableItem> {
-		return this.http.get<EquippableItem>(`${this.apiUrl}/${profileId}/change/item/${itemSlot}/${itemId}`);
+	changeItemBestVariant(profileId: string, itemSlot: ItemSlot, itemId: number): Observable<EquippableItem> {
+		return this.http.get<EquippableItem>(`${this.apiUrl}/${profileId}/change/item/${itemSlot}/${itemId}/best/variant`);
 	}
 
-	changeEnchant(profileId: string, itemSlot: ItemSlot, enchantId: number): Observable<EquippableItem> {
-		return this.http.get<EquippableItem>(`${this.apiUrl}/${profileId}/change/enchant/${itemSlot}/${enchantId}`);
+	changeItem(profileId: string, itemSlot: ItemSlot, item: EquippableItem): Observable<EquippableItem> {
+		return this.http.put<EquippableItem>(`${this.apiUrl}/${profileId}/change/item/${itemSlot}`, item);
 	}
 
-	changeGem(profileId: string, itemSlot: ItemSlot, socketIdx: number, gemId: number): Observable<EquippableItem> {
-		return this.http.get<EquippableItem>(`${this.apiUrl}/${profileId}/change/gem/${itemSlot}/${socketIdx}/${gemId}`);
+	changeItems(profileId: string, slotGroup: ItemSlotGroup, items: EquippableItem[]): Observable<void> {
+		return this.http.put<void>(`${this.apiUrl}/${profileId}/change/item/group/${slotGroup}`, items);
 	}
 
 	resetEquipment(profileId: string): Observable<Equipment> {
@@ -42,9 +42,5 @@ export class EquipmentService {
 
 	getSocketStatus(profileId: string): Observable<EquipmentSocketStatus> {
 		return this.http.get<EquipmentSocketStatus>(`${this.apiUrl}/${profileId}/socket/status`);
-	}
-
-	changeItems(profileId: string, slotGroup: ItemSlotGroup, items: EquippableItem[]): Observable<void> {
-		return this.http.post<void>(`${this.apiUrl}/${profileId}/change/item/group/${slotGroup}`, items);
 	}
 }

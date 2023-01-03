@@ -3,7 +3,7 @@
 		<th scope="row">
 			{{itemSlot.replace('_', ' ').replace('1', '#1').replace('2', '#2') | titlecase}}
 			<span *ngIf="upgrades && upgrades.length === 0" class="no-upgrades">✓</span>
-			<span 
+			<span
 				*ngIf="upgrades && upgrades.length !== 0"
 				class="badge rounded-pill bg-danger"
 				[title]="(upgrades[0].changePct | number:'1.2-2')+'%'"

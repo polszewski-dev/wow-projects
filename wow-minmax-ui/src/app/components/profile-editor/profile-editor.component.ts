@@ -11,7 +11,7 @@ import { UpgradeService } from 'src/app/services/upgrade.service';
 	styleUrls: ['./profile-editor.component.css']
 })
 export class ProfileEditorComponent {
-	selectedProfile?: ProfileInfo;
+	selectedProfile!: ProfileInfo;
 	dps?: number;
 	previousDps?: number;
 	upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
@@ -26,25 +26,25 @@ export class ProfileEditorComponent {
 		this.updateUpgradeStatus();
 	}
 
-	onEquipmentChanged() {
+	onEquipmentChanged(): void {
 		this.updateDps();
 		this.updateUpgradeStatus();
 	}
 
-	onBuffsChanged() {
+	onBuffsChanged(): void {
 		this.updateDps();
 	}
 
-	updateDps() {
-		this.statsService.getSpellDps(this.selectedProfile!.profileId).subscribe((dps: number) => {
+	updateDps(): void {
+		this.statsService.getSpellDps(this.selectedProfile.profileId).subscribe((dps: number) => {
 			this.previousDps = this.dps;
 			this.dps = dps;
 		})
 	}
 
-	updateUpgradeStatus() {
+	updateUpgradeStatus(): void {
 		for (let slotGroup of Object.values(ItemSlotGroup)) {
-			this.upgradeService.getUpgrades(this.selectedProfile!.profileId, slotGroup).subscribe((upgrades: Upgrade[]) => {
+			this.upgradeService.getUpgrades(this.selectedProfile.profileId, slotGroup).subscribe((upgrades: Upgrade[]) => {
 				this.upgradesBySlotGroup[slotGroup] = upgrades;
 			});
 		}

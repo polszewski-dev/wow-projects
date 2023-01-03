@@ -31,6 +31,9 @@ export class DropdownSelectComponent<T> {
 	}
 
 	formatSelection(value?: T): string {
+		if (value == undefined) {
+			return this.valueFormatter.emptySelection;
+		}
 		return this.valueFormatter.formatSelection(value);
 	}
 
