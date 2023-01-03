@@ -9,7 +9,11 @@
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Equipment</a>
 			<ng-template ngbNavContent>
-				<app-equipment-editor [selectedProfile]="selectedProfile" (equipmentChanged)="onEquipmentChanged()"></app-equipment-editor>
+				<app-equipment-editor 
+					[selectedProfile]="selectedProfile"
+					[upgradesBySlotGroup]="upgradesBySlotGroup"
+					(equipmentChanged)="onEquipmentChanged()"
+				></app-equipment-editor>
 			</ng-template>
 		</ng-container>
 		<ng-container ngbNavItem>

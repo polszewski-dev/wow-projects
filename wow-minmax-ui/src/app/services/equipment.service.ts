@@ -6,6 +6,7 @@ import { EquipmentOptions } from '../model/equipment/EquipmentOptions';
 import { EquippableItem } from '../model/equipment/EquippableItem';
 import { ItemSlot } from '../model/equipment/ItemSlot';
 import { EquipmentSocketStatus } from '../model/equipment/EquipmentSocketStatus';
+import { ItemSlotGroup } from '../model/upgrade/ItemSlotGroup';
 
 @Injectable({
 	providedIn: 'root'
@@ -41,5 +42,9 @@ export class EquipmentService {
 
 	getSocketStatus(profileId: string): Observable<EquipmentSocketStatus> {
 		return this.http.get<EquipmentSocketStatus>(`${this.apiUrl}/${profileId}/socket/status`);
+	}
+
+	changeItems(profileId: string, slotGroup: ItemSlotGroup, items: EquippableItem[]): Observable<void> {
+		return this.http.post<void>(`${this.apiUrl}/${profileId}/change/item/group/${slotGroup}`, items);
 	}
 }

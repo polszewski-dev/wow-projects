@@ -17,6 +17,10 @@ public abstract class ParametrizedConverter<F, T> {
 		return doConvert(value, params);
 	}
 
+	public final T convert(F value) {
+		return convert(value, Map.of());
+	}
+
 	public final F convertBack(T value, Map<String, Object> params) {
 		if (value == null) {
 			return null;
@@ -34,6 +38,10 @@ public abstract class ParametrizedConverter<F, T> {
 		return list.stream()
 					.map(value -> convert(value, params))
 					.collect(Collectors.toList());
+	}
+
+	public final List<T> convertList(Collection<F> list) {
+		return convertList(list, Map.of());
 	}
 
 	public final List<F> convertBackList(List<T> list, Map<String, Object> params) {

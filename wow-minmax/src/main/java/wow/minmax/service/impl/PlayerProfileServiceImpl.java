@@ -12,6 +12,7 @@ import wow.character.service.ItemService;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
@@ -111,6 +112,26 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		EquippableItem bestItemVariant = upgradeService.getBestItemVariant(playerProfile.getCharacter(), item, slot, playerProfile.getDamagingSpell());
 
 		playerProfile.equip(bestItemVariant, slot);
+		saveProfile(playerProfile);
+
+		return playerProfile;
+	}
+
+	@Override
+	public PlayerProfile changeItemGroup(UUID profileId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+		PlayerProfile playerProfile = getPlayerProfile(profileId);
+		List<ItemSlot> slots = slotGroup.getSlots();
+
+		for (ItemSlot slot : slots) {
+			playerProfile.equip(null, slot);
+		}
+
+		for (int slotIdx = 0; slotIdx < slots.size(); slotIdx++) {
+			ItemSlot slot = slots.get(slotIdx);
+			EquippableItem item = items.get(slotIdx);
+			playerProfile.equip(item, slot);
+		}
+
 		saveProfile(playerProfile);
 
 		return playerProfile;

@@ -2,14 +2,12 @@ package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
 import wow.minmax.converter.dto.*;
@@ -21,6 +19,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static wow.minmax.converter.dto.DtoConverterParams.createParams;
 
 /**
  * User: POlszewski
@@ -72,6 +72,18 @@ public class EquipmentController {
 		PlayerProfile playerProfile = playerProfileService.changeItem(profileId, slot, itemId);
 		log.info("Changed item profile id: {}, slot: {}, itemId: {}", profileId, slot, itemId);
 		return equippableItemConverter.convert(playerProfile.getEquippedItem(slot));
+	}
+
+	@PostMapping("{profileId}/change/item/group/{slotGroup}")
+	public void changeItemGroup(
+			@PathVariable("profileId") UUID profileId,
+			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
+			@RequestBody List<EquippableItemDTO> itemDTOs
+	) {
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
+		List<EquippableItem> items = equippableItemConverter.convertBackList(itemDTOs, createParams(playerProfile.getPhase()));
+		playerProfileService.changeItemGroup(profileId, slotGroup, items);
+		log.info("Changed items profile id: {}, slotGroup: {}, items: {}", profileId, slotGroup, items);
 	}
 
 	@GetMapping("{profileId}/change/enchant/{slot}/{enchantId}")

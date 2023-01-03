@@ -128,3 +128,9 @@ body {
 .negative-dps-diff {
 	color: red;
 }
+
+.no-upgrades {
+	color: green;
+	font-weight: bold !important;
+	font-size: 16px;
+}

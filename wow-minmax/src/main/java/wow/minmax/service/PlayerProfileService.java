@@ -2,7 +2,9 @@ package wow.minmax.service;
 
 import wow.character.model.build.BuildId;
 import wow.character.model.character.CharacterProfession;
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
@@ -30,6 +32,8 @@ public interface PlayerProfileService {
 	PlayerProfile getPlayerProfile(UUID profileId);
 
 	PlayerProfile changeItem(UUID profileId, ItemSlot slot, int itemId);
+
+	PlayerProfile changeItemGroup(UUID profileId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
 	PlayerProfile changeEnchant(UUID profileId, ItemSlot slot, int enchantId);
 

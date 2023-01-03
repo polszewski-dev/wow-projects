@@ -7,7 +7,10 @@ import { Item } from 'src/app/model/equipment/Item';
 import { ItemSlot } from 'src/app/model/equipment/ItemSlot';
 import { ItemSocketStatus } from 'src/app/model/equipment/ItemSocketStatus';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';
+import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
+import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
+import { UpgradeService } from 'src/app/services/upgrade.service';
 import { DropdownSelectValueFormatter } from '../dropdown-select/DropdownSelectValueFormatter';
 import { ItemChange } from './ItemChange';
 
@@ -23,10 +26,13 @@ export class EquipmentSlotEditorComponent implements OnInit {
 	@Input() equipmentOptions?: EquipmentOptions;
 	@Input() socketStatus?: ItemSocketStatus;
 	@Input() visible: boolean = true;
+	@Input() slotGroup?: ItemSlotGroup;
+	@Input() upgrades?: Upgrade[];
 
 	@Output() itemChanged = new EventEmitter<ItemChange>();
 	@Output() enchantChanged = new EventEmitter<ItemChange>();
 	@Output() gemChanged = new EventEmitter<ItemChange>();
+	@Output() upgradeCounterClicked = new EventEmitter<ItemSlotGroup>();
 
 	ItemSlot = ItemSlot;
 
@@ -73,6 +79,10 @@ export class EquipmentSlotEditorComponent implements OnInit {
 
 	getGemOptions(socketIdx: number): Gem[] {
 		return this.equipmentOptions?.gemsBySocketType[this.equippableItem!.item.socketTypes[socketIdx]] || []
+	}
+
+	onUpgradeCounterClick() {
+		this.upgradeCounterClicked.emit(this.slotGroup);		
 	}
 
 	private getItemChange(): ItemChange {

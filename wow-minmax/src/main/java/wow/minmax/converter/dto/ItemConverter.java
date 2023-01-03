@@ -3,10 +3,14 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Item;
-import wow.minmax.converter.Converter;
+import wow.commons.repository.ItemRepository;
+import wow.minmax.converter.ParametrizedConverter;
 import wow.minmax.model.dto.ItemDTO;
 
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static wow.minmax.converter.dto.DtoConverterParams.getPhase;
 
 /**
  * User: POlszewski
@@ -14,11 +18,12 @@ import java.util.stream.Collectors;
  */
 @Component
 @AllArgsConstructor
-public class ItemConverter extends Converter<Item, ItemDTO> {
+public class ItemConverter extends ParametrizedConverter<Item, ItemDTO> {
 	private final SourceConverter sourceConverter;
+	private final ItemRepository itemRepository;
 
 	@Override
-	protected ItemDTO doConvert(Item item) {
+	protected ItemDTO doConvert(Item item, Map<String, Object> params) {
 		return new ItemDTO(
 				item.getId(),
 				item.getName(),
@@ -32,6 +37,11 @@ public class ItemConverter extends Converter<Item, ItemDTO> {
 				item.getIcon(),
 				item.getTooltip()
 		);
+	}
+
+	@Override
+	protected Item doConvertBack(ItemDTO value, Map<String, Object> params) {
+		return itemRepository.getItem(value.getId(), getPhase(params)).orElseThrow();
 	}
 
 	private String getStatString(Item item) {

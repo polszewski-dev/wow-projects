@@ -27,7 +27,7 @@ public class UpgradeConverter extends Converter<Comparison, UpgradeDTO> {
 		AttributesDiff statDifference = value.getStatDifference();
 
 		return new UpgradeDTO(
-				Math.round(100.0 * value.changePct.getValue()) / 100.0,
+				value.changePct.getValue(),
 				equippableItemConverter.convertList(value.getItemDifference()),
 				statDifference
 						.getAttributes()
