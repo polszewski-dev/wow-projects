@@ -17,6 +17,7 @@ import { BlankZeroPipe } from './pipes/blank-zero.pipe';
 import { CharacterStatsComponent } from './components/character-stats/character-stats.component';
 import { SpecialAbilitiesComponent } from './components/special-abilities/special-abilities.component';
 import { DpsBarComponent } from './components/dps-bar/dps-bar.component';
+import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
 
 @NgModule({
 	declarations: [
@@ -32,7 +33,8 @@ import { DpsBarComponent } from './components/dps-bar/dps-bar.component';
 		BlankZeroPipe,
 		CharacterStatsComponent,
 		SpecialAbilitiesComponent,
-		DpsBarComponent
+		DpsBarComponent,
+		UpgradeListComponent
 	],
 	imports: [
 		BrowserModule,
