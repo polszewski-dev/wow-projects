@@ -23,6 +23,7 @@ public class ItemDTO {
 	private ItemType itemType;
 	private double score;
 	private String source;
+	private String detailedSource;
 	private String attributes;
 	private List<SocketType> socketTypes;
 	private String socketBonus;

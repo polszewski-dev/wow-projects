@@ -15,5 +15,6 @@ public class UpgradeDTO {
 	private double changePct;
 	private List<EquippableItemDTO> itemDifference;
 	private List<String> statDifference;
-	private List<String> abilityDifference;
+	private List<String> addedAbilities;
+	private List<String> removedAbilities;
 }

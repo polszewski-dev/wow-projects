@@ -4,5 +4,6 @@ export interface Upgrade {
 	changePct: number;
 	itemDifference: EquippableItem[];
 	statDifference: string[];
-	abilityDifference: string[];
+	addedAbilities: string[];
+	removedAbilities: string[];
 }

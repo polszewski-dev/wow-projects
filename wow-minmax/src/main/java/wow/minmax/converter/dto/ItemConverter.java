@@ -32,6 +32,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				item.getItemType(),
 				item.getItemLevel(),
 				sourceConverter.getSources(item),
+				sourceConverter.getDetailedSources(item),
 				getStatString(item),
 				item.getSocketTypes(),
 				item.getSocketBonus().statString(),

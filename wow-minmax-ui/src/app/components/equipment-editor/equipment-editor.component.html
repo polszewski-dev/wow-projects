@@ -1,38 +1,39 @@
-<table *ngIf="equipment" class="table table-striped equipment-table" style="width:100%">
-	<thead>
-		<tr>
-			<th scope="col" style="width: 9%">Slot</th>
-			<th scope="col" style="width: 20%">Item</th>
-			<th scope="col" style="width: 16%">Enchant</th>
-			<th scope="col" style="width: 15%">Gem #1</th>
-			<th scope="col" style="width: 15%">Gem #2</th>
-			<th scope="col" style="width: 15%">Gem #3</th>
-			<th scope="col" style="width: 10%">Socket Bonus</th>
-		</tr>
-	</thead>
-	<tbody>
-		<app-equipment-slot-editor
-			*ngFor="let itemSlot of itemSlots"
-			[itemSlot]="itemSlot"
-			[equippableItem]="equipment.itemsBySlot[itemSlot]"
-			[equipmentOptions]="equipmentOptions"
-			[selectedProfileId]="selectedProfileId"
-			[socketStatus]="equipmentSocketStatus?.socketStatusesByItemSlot?.[itemSlot]"
-			[visible]="itemSlot !== ItemSlot.OFF_HAND || equipment.itemsBySlot[ItemSlot.MAIN_HAND]?.item?.itemType !== ItemType.TWO_HAND"
-			[slotGroup]="getItemSlotGroup(itemSlot)"
-			[upgrades]="getItemSlotGroup(itemSlot) ? upgradesBySlotGroup[getItemSlotGroup(itemSlot)!] : undefined"
-			(itemChanged)="onItemChange($event)"
-			(enchantChanged)="onEnchantChange($event)"
-			(gemChanged)="onGemChange($event)"
-			(upgradeCounterClicked)="onUpgradeCounterClicked($event)"
-		></app-equipment-slot-editor>
-	</tbody>
-</table>
+<div *ngIf="equipment">
+	<table class="table table-striped equipment-table" style="width:100%">
+		<thead>
+			<tr>
+				<th scope="col" style="width: 9%">Slot</th>
+				<th scope="col" style="width: 20%">Item</th>
+				<th scope="col" style="width: 16%">Enchant</th>
+				<th scope="col" style="width: 15%">Gem #1</th>
+				<th scope="col" style="width: 15%">Gem #2</th>
+				<th scope="col" style="width: 15%">Gem #3</th>
+				<th scope="col" style="width: 10%">Socket Bonus</th>
+			</tr>
+		</thead>
+		<tbody>
+			<app-equipment-slot-editor
+				*ngFor="let itemSlot of itemSlots"
+				[itemSlot]="itemSlot"
+				[equippableItem]="equipment.itemsBySlot[itemSlot]"
+				[equipmentOptions]="equipmentOptions"
+				[selectedProfileId]="selectedProfileId"
+				[socketStatus]="equipmentSocketStatus?.socketStatusesByItemSlot?.[itemSlot]"
+				[visible]="itemSlot !== ItemSlot.OFF_HAND || equipment.itemsBySlot[ItemSlot.MAIN_HAND]?.item?.itemType !== ItemType.TWO_HAND"
+				[slotGroup]="getItemSlotGroup(itemSlot)"
+				[upgrades]="getItemSlotGroup(itemSlot) ? upgradesBySlotGroup[getItemSlotGroup(itemSlot)!] : undefined"
+				(itemChanged)="onItemChange($event)"
+				(enchantChanged)="onEnchantChange($event)"
+				(gemChanged)="onGemChange($event)"
+				(upgradeCounterClicked)="onUpgradeCounterClicked($event)"
+			></app-equipment-slot-editor>
+		</tbody>
+	</table>
 
-<button
-	*ngIf="equipment"
-	type="button"
-	class="btn btn-sm btn-link big-btn-link"
-	style="padding-left: 0"
-	(click)="resetEquipment()"
->Reset</button>
+	<button
+		type="button"
+		class="btn btn-sm btn-link big-btn-link centered-button"
+		style="padding-left: 0"
+		(click)="resetEquipment()"
+	>Reset</button>
+</div>

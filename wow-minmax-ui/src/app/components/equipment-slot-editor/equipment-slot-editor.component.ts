@@ -109,7 +109,7 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
-			<span class="item-descr">[${value.source}]</span>
+			<span class="item-descr" title="${value.detailedSource}">[${value.source}]</span>
 			<span class="item-descr">(${escapeHtml(value.attributes)})</span>
 		`;
 	}
@@ -120,7 +120,7 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
-			<span class="item-descr">[${value.source}]</span>
+			<span class="item-descr" title="${value.detailedSource}">[${value.source}]</span>
 		`;
 	}
 

@@ -2,16 +2,18 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.util.AttributesDiff;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.dto.UpgradeDTO;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -29,43 +31,27 @@ public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 		return new UpgradeDTO(
 				value.changePct.getValue(),
 				equippableItemConverter.convertList(value.getItemDifference()),
-				statDifference
-						.getAttributes()
-						.getPrimitiveAttributeList()
-						.stream()
-						.map(Object::toString)
-						.collect(Collectors.toList()),
-				getAbilityDiff(statDifference)
+				getStatDiff(statDifference),
+				getAbilities(statDifference.getAddedAbilities()),
+				getAbilities(statDifference.getRemovedAbilities())
 		);
 	}
 
-	private List<String> getAbilityDiff(AttributesDiff statDifference) {
-		List<String> abilityDifference = new ArrayList<>();
+	private List<String> getStatDiff(AttributesDiff statDifference) {
+		return statDifference
+				.getAttributes()
+				.getPrimitiveAttributeList()
+				.stream()
+				.map(Object::toString)
+				.collect(Collectors.toList());
+	}
 
-		Stream.concat(
-				statDifference.getAddedAbilities()
-						.keySet()
-						.stream(),
-				statDifference.getRemovedAbilities()
-						.keySet()
-						.stream()
-		)
+	private List<String> getAbilities(Map<ComplexAttributeId, List<ComplexAttribute>> map) {
+		return map.values().stream()
+				.flatMap(Collection::stream)
+				.map(Attribute::toString)
 				.distinct()
 				.sorted()
-				.forEach(attributeId -> {
-					List<ComplexAttribute> added = statDifference.getAddedAbilities()
-							.getOrDefault(attributeId, List.of());
-					List<ComplexAttribute> removed = statDifference.getRemovedAbilities()
-							.getOrDefault(attributeId, List.of());
-
-					if (!added.isEmpty()) {
-						abilityDifference.add(String.format("++%s=%s", attributeId, added));
-					}
-					if (!removed.isEmpty()) {
-						abilityDifference.add(String.format("--%s=%s", attributeId, removed));
-					}
-				});
-
-		return abilityDifference;
+				.collect(Collectors.toList());
 	}
 }

@@ -9,6 +9,7 @@ export interface Item {
 	itemType: ItemType;
 	score: number;
 	source: string;
+	detailedSource: string;
 	attributes: string;
 	socketTypes: SocketType[];
 	socketBonus: string;

@@ -21,6 +21,23 @@ public class SourceConverter {
 				.collect(Collectors.joining(", "));
 	}
 
+	public String getDetailedSources(AbstractItem item) {
+		return item.getSources().stream()
+				.map(this::getDetailedSourceString)
+				.distinct()
+				.collect(Collectors.joining(", "));
+	}
+
+	private String getDetailedSourceString(Source source) {
+		if (source.isBossDrop()) {
+			return String.format("%s - %s", source.getZone().getShortName(), source.getBoss().getName());
+		}
+		if (source.isTraded()) {
+			return getDetailedSources(source.getSourceItem());
+		}
+		return getSourceString(source);
+	}
+
 	private String getSourceString(Source source) {
 		if (source.getZone() != null) {
 			return source.getZone().getShortName();
