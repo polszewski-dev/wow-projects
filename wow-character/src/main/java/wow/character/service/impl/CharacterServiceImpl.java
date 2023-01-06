@@ -71,12 +71,12 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, Phase phase) {
+	public Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, CharacterProfessions professions, Phase phase) {
 		Character character = new Character(
 				characterClass,
 				race,
 				level,
-				new CharacterProfessions(professions),
+				professions,
 				phase,
 				characterRepository.getBaseStats(characterClass, race, level, phase).orElseThrow(),
 				characterRepository.getCombatRatings(level, phase).orElseThrow()

@@ -2,21 +2,14 @@ package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import wow.commons.model.pve.Phase;
-import wow.minmax.converter.dto.PlayerProfileConverter;
+import org.springframework.web.bind.annotation.*;
 import wow.minmax.converter.dto.PlayerProfileInfoConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.model.dto.PlayerProfileDTO;
 import wow.minmax.model.dto.PlayerProfileInfoDTO;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * User: POlszewski
@@ -28,7 +21,6 @@ import java.util.UUID;
 @Slf4j
 public class PlayerProfileController {
 	private final PlayerProfileService playerProfileService;
-	private final PlayerProfileConverter playerProfileConverter;
 	private final PlayerProfileInfoConverter playerProfileInfoConverter;
 
 	@GetMapping("list")
@@ -37,36 +29,13 @@ public class PlayerProfileController {
 		return playerProfileInfoConverter.convertList(playerProfileInfos);
 	}
 
-	@GetMapping("{profileId}")
-	public PlayerProfileDTO getPlayerProfile(
-			@PathVariable("profileId") UUID profileId
+	@PostMapping
+	public PlayerProfileInfoDTO createPlayerProfile(
+			@RequestBody PlayerProfileInfoDTO playerProfileInfoDTO
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
-		return playerProfileConverter.convert(playerProfile);
-	}
-
-	@GetMapping("create/name/{profileName}/phase/{phase}")
-	public PlayerProfileDTO createPlayerProfile(
-			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") Phase phase
-	) {
-		PlayerProfile createdProfile = playerProfileService.createPlayerProfile(profileName, phase);
-		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
-
-		log.info("Created profile id: {}, name: {}", createdProfile.getProfileId(), createdProfile.getProfileName());
-		return createdProfileDTO;
-	}
-
-	@GetMapping("copy/{copiedProfileId}/name/{profileName}/phase/{phase}")
-	public PlayerProfileDTO createPlayerProfile(
-			@PathVariable("copiedProfileId") UUID copiedProfileId,
-			@PathVariable("profileName") String profileName,
-			@PathVariable("phase") Phase phase
-	) {
-		PlayerProfile createdProfile = playerProfileService.copyPlayerProfile(copiedProfileId, profileName, phase);
-		PlayerProfileDTO createdProfileDTO = playerProfileConverter.convert(createdProfile);
-
-		log.info("Copied profile id: {}, name: {}, sourceId: {}", createdProfile.getProfileId(), createdProfile.getProfileName(), copiedProfileId);
-		return createdProfileDTO;
+		PlayerProfileInfo playerProfileInfo = playerProfileInfoConverter.convertBack(playerProfileInfoDTO);
+		PlayerProfile createdPlayerProfile = playerProfileService.createPlayerProfile(playerProfileInfo);
+		log.info("Created profile id: {}, name: {}", createdPlayerProfile.getProfileId(), createdPlayerProfile.getProfileName());
+		return playerProfileInfoConverter.convert(createdPlayerProfile.getProfileInfo());
 	}
 }

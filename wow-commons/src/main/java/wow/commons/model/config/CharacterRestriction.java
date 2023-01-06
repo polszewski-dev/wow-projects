@@ -50,7 +50,7 @@ public class CharacterRestriction {
 		if (side != null && side != characterInfo.getRace().getSide()) {
 			return false;
 		}
-		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.getProfession(), professionRestriction.getLevel())) {
+		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.getProfession())) {
 			return false;
 		}
 		if (professionSpec != null && !characterInfo.hasProfessionSpecialization(professionSpec)) {

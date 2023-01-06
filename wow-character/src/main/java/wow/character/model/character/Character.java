@@ -153,13 +153,9 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	// professions
 
+	@Override
 	public boolean hasProfession(Profession profession) {
 		return professions.hasProfession(profession);
-	}
-
-	@Override
-	public boolean hasProfession(Profession profession, int level) {
-		return professions.hasProfession(profession, level);
 	}
 
 	@Override

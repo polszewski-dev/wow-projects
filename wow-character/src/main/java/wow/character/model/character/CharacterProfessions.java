@@ -14,7 +14,7 @@ public class CharacterProfessions {
 
 	public static final CharacterProfessions EMPTY = new CharacterProfessions(List.of());
 
-	public CharacterProfessions(List<CharacterProfession> professions) {
+	private CharacterProfessions(List<CharacterProfession> professions) {
 		this.professions = professions;
 		if (professions.size() > 2) {
 			throw new IllegalArgumentException("At most 2 professions allowed");
@@ -24,16 +24,16 @@ public class CharacterProfessions {
 		}
 	}
 
+	public static CharacterProfessions of(List<CharacterProfession> professions) {
+		return new CharacterProfessions(professions);
+	}
+
 	public List<CharacterProfession> getList() {
 		return professions;
 	}
 
 	public boolean hasProfession(Profession profession) {
 		return professions.stream().anyMatch(x -> x.getProfession() == profession);
-	}
-
-	public boolean hasProfession(Profession profession, int level) {
-		return professions.stream().anyMatch(x -> x.getProfession() == profession && x.getLevel() >= level);
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {

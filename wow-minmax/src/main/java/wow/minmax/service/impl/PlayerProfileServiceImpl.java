@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
-import wow.character.model.character.CharacterProfession;
+import wow.character.model.character.CharacterProfessions;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
@@ -18,7 +18,6 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.Phase;
-import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
@@ -27,6 +26,7 @@ import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,7 +42,6 @@ import static wow.minmax.converter.persistent.PoConverterParams.createParams;
 public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final PlayerProfileRepository playerProfileRepository;
 	private final PlayerProfilePOConverter playerProfilePOConverter;
-	private final ProfileConfig profileConfig;
 
 	private final CharacterService characterService;
 	private final ItemService itemService;
@@ -53,30 +52,31 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	public List<PlayerProfileInfo> getPlayerProfileInfos() {
 		return playerProfileRepository.getPlayerProfileList().stream()
 				.map(this::getPlayerProfile)
-				.map(this::getPlayerProfileInfo)
+				.map(PlayerProfile::getProfileInfo)
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public PlayerProfile createPlayerProfile(String profileName, Phase phase) {
+	public PlayerProfile createPlayerProfile(PlayerProfileInfo playerProfileInfo) {
 		PlayerProfile playerProfile = createTemporaryPlayerProfile(
 				UUID.randomUUID(),
-				profileName,
-				profileConfig.getDefaultClass(),
-				profileConfig.getDefaultRace(),
-				phase.getGameVersion().getMaxLevel(),
-				profileConfig.getDefaultBuild(),
-				profileConfig.getDefaultProfessions(phase), profileConfig.getDefaultEnemyType(),
-				phase
+				playerProfileInfo.getProfileName(),
+				playerProfileInfo.getCharacterClass(),
+				playerProfileInfo.getRace(),
+				playerProfileInfo.getLevel(),
+				playerProfileInfo.getBuildId(),
+				playerProfileInfo.getProfessions(),
+				playerProfileInfo.getEnemyType(),
+				playerProfileInfo.getPhase()
 		);
-		
+
 		saveProfile(playerProfile);
 		return playerProfile;
 	}
 
 	@Override
 	public PlayerProfile createTemporaryPlayerProfile(
-			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, Phase phase
+			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, CharacterProfessions professions, CreatureType enemyType, Phase phase
 	) {
 		Character character = characterService.createCharacter(characterClass, race, level, buildId, professions, phase);
 		Enemy enemy = characterService.createEnemy(enemyType);
@@ -88,15 +88,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				profileName,
 				character
 		);
-	}
-
-	@Override
-	public PlayerProfile copyPlayerProfile(UUID copiedProfileId, String profileName, Phase phase) {
-		PlayerProfile copiedProfile = getPlayerProfile(copiedProfileId);
-		PlayerProfile copy = copiedProfile.copy(UUID.randomUUID(), profileName, phase);
-
-		saveProfile(copy);
-		return copy;
 	}
 
 	@Override
@@ -134,6 +125,10 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 		for (ItemSlot slot : slots) {
 			playerProfile.equip(null, slot);
+		}
+
+		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
+			items = Arrays.asList(items.get(0), null);
 		}
 
 		for (int slotIdx = 0; slotIdx < slots.size(); slotIdx++) {
@@ -175,19 +170,5 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private PlayerProfile getPlayerProfile(PlayerProfilePO profile) {
 		var converterParams = createParams(profile.getPhase(), this);
 		return playerProfilePOConverter.convertBack(profile, converterParams);
-	}
-
-	private PlayerProfileInfo getPlayerProfileInfo(PlayerProfile playerProfile) {
-		return new PlayerProfileInfo(
-				playerProfile.getProfileId(),
-				playerProfile.getProfileName(),
-				playerProfile.getCharacterClass(),
-				playerProfile.getRace(),
-				playerProfile.getLevel(),
-				playerProfile.getEnemyType(),
-				playerProfile.getBuildId(),
-				playerProfile.getPhase(),
-				playerProfile.getLastModified()
-		);
 	}
 }

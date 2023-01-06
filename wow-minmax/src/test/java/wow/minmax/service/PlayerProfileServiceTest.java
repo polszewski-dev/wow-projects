@@ -55,20 +55,12 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void createPlayerProfile() {
-		PlayerProfile newProfile = underTest.createPlayerProfile("New", PHASE);
+		PlayerProfile newProfile = underTest.createPlayerProfile(profile.getProfileInfo());
 
-		assertThat(newProfile.getProfileName()).isEqualTo("New");
-		assertThat(newProfile.getPhase()).isEqualTo(PHASE);
-
-		verify(playerProfileRepository).saveProfile(any());
-	}
-
-	@Test
-	void copyPlayerProfile() {
-		PlayerProfile copy = underTest.copyPlayerProfile(profile.getProfileId(), "Copy", PHASE);
-
-		assertThat(copy.getProfileName()).isEqualTo("Copy");
-		assertThat(copy.getPhase()).isEqualTo(PHASE);
+		assertThat(newProfile.getProfileName()).isEqualTo(profile.getProfileName());
+		assertThat(newProfile.getPhase()).isEqualTo(profile.getPhase());
+		assertThat(newProfile.getProfileId()).isNotNull();
+		assertThat(newProfile.getLastModified()).isNotNull();
 
 		verify(playerProfileRepository).saveProfile(any());
 	}

@@ -8,6 +8,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
 import wow.character.model.character.CharacterProfession;
+import wow.character.model.character.CharacterProfessions;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -164,12 +165,10 @@ public abstract class WowCharacterSpringTest {
 	}
 
 	protected Character getCharacter() {
-		int maxLevel = PHASE.getGameVersion().getMaxProfession();
-
-		var professions = List.of(
-				new CharacterProfession(TAILORING, maxLevel, SHADOWEAVE_TAILORING),
-				new CharacterProfession(ENCHANTING, maxLevel, null)
-		);
+		CharacterProfessions professions = CharacterProfessions.of(List.of(
+				new CharacterProfession(TAILORING, SHADOWEAVE_TAILORING),
+				new CharacterProfession(ENCHANTING, null)
+		));
 
 		Character character = characterService.createCharacter(
 				CHARACTER_CLASS,

@@ -11,7 +11,11 @@ export class ProfileService {
 
 	constructor(private http: HttpClient) { }
 
-	getProfileList() : Observable<ProfileInfo[]> {
+	getProfileList(): Observable<ProfileInfo[]> {
 		return this.http.get<ProfileInfo[]>(`${this.apiUrl}/list`);
 	}
+
+	createProfile(profile: ProfileInfo): Observable<ProfileInfo> {
+		return this.http.post<ProfileInfo>(this.apiUrl, profile);
+	} 
 }

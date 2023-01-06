@@ -10,8 +10,6 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 
-import java.util.List;
-
 /**
  * User: POlszewski
  * Date: 2022-12-14
@@ -25,7 +23,7 @@ public interface CharacterService {
 
 	Talents getTalentsFromTalentLink(String link, Character character);
 
-	Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, List<CharacterProfession> professions, Phase phase);
+	Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, CharacterProfessions professions, Phase phase);
 
 	Enemy createEnemy(CreatureType enemyType);
 }

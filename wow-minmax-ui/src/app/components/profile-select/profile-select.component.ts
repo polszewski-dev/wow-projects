@@ -26,10 +26,6 @@ export class ProfileSelectComponent implements OnInit {
 		this.profileSelected.emit(this.selectedProfile);
 	}
 
-	onNewProfileClick(): void {
-		console.log('New profile clicked');
-	}
-
 	private selectMostRecentProfile(): void {
 		if (this.profileList.length === 0) {
 			return;

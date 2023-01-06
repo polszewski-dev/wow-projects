@@ -17,7 +17,7 @@ public interface CharacterInfo {
 
 	Race getRace();
 
-	boolean hasProfession(Profession profession, int level);
+	boolean hasProfession(Profession profession);
 
 	boolean hasProfessionSpecialization(ProfessionSpecialization specialization);
 

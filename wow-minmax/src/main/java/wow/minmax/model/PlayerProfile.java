@@ -66,6 +66,21 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		character.collectAttributes(collector);
 	}
 
+	public PlayerProfileInfo getProfileInfo() {
+		return new PlayerProfileInfo(
+				profileId,
+				profileName,
+				character.getCharacterClass(),
+				character.getRace(),
+				character.getLevel(),
+				character.getEnemyType(),
+				character.getBuildId(),
+				character.getProfessions(),
+				character.getPhase(),
+				lastModified
+		);
+	}
+
 	// character
 
 	public Attributes getStats() {
@@ -158,10 +173,6 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 
 	public boolean hasProfession(Profession profession) {
 		return character.hasProfession(profession);
-	}
-
-	public boolean hasProfession(Profession profession, int level) {
-		return character.hasProfession(profession, level);
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {

@@ -1,1 +1,126 @@
-<p>new-profile works!</p>
+<div class="container">
+	<div class="needs-validation" novalidate>
+		<div class="row py-2">
+			<div class="col-md-9">
+				<label for="validationCustom01" class="form-label">Profile Name</label>
+				<input type="text" class="form-control" id="validationCustom01" required [(ngModel)]="profileName">
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<label for="validationCustom08" class="form-label">Phase</label>
+				<select class="form-select" id="validationCustom08" required [(ngModel)]="phase" (change)="onPhaseChange()">
+					<option *ngFor="let phase of phaseOptions" [value]="phase">{{phase.replace('_', ' ') | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+		</div>
+
+		<div class="row py-2">
+			<div class="col-md-3">
+				<label for="validationCustom04" class="form-label">Class</label>
+				<select class="form-select" id="validationCustom04" required [(ngModel)]="characterClass">
+					<option *ngFor="let clazz of characterClassOptions" [value]="clazz">{{clazz | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<label for="validationCustom05" class="form-label">Race</label>
+				<select class="form-select" id="validationCustom05" required [(ngModel)]="race">
+					<option *ngFor="let race of raceOptions" [value]="race">{{race | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<label for="validationCustom09" class="form-label">Level</label>
+				<input type="text" class="form-control" id="validationCustom09" required disabled [(ngModel)]="level">
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<label for="validationCustom07" class="form-label">Build</label>
+				<select class="form-select" id="validationCustom07" required [(ngModel)]="buildId">
+					<option *ngFor="let buildId of buildOptions" [value]="buildId">{{buildId | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+		</div>
+
+		<div class="row py-2">
+			<div class="col-md-3">
+				<label for="validationCustom11" class="form-label">Profession #1</label>
+				<select class="form-select" id="validationCustom11" required [(ngModel)]="profession1.profession" (change)="onProfessionChange(0)">
+					<option *ngFor="let profession of professionOptions" [value]="profession">{{profession | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+
+			<div class="col-md-3" *ngIf="getSpecializationOptions(0).length > 0">
+				<label for="validationCustom12" class="form-label">Profession #1 Specialization</label>
+				<select class="form-select" id="validationCustom12" required [(ngModel)]="profession1.specialization">
+					<option *ngFor="let specialization of getSpecializationOptions(0)" [value]="specialization">{{specialization.replace('_', ' ') | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+		</div>
+
+		<div class="row py-2">
+			<div class="col-md-3">
+				<label for="validationCustom21" class="form-label">Profession #2</label>
+				<select class="form-select" id="validationCustom21" required [(ngModel)]="profession2.profession" (change)="onProfessionChange(1)">
+					<option *ngFor="let profession of professionOptions" [value]="profession">{{profession | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+
+			<div class="col-md-3" *ngIf="getSpecializationOptions(1).length > 0">
+				<label for="validationCustom22" class="form-label">Profession #2 Specialization</label>
+				<select class="form-select" id="validationCustom22" required [(ngModel)]="profession2.specialization">
+					<option *ngFor="let specialization of getSpecializationOptions(1)" [value]="specialization">{{specialization.replace('_', ' ') | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+		</div>
+		
+		<div class="row py-2">
+			<div class="col-md-3">
+				<label for="validationCustom06" class="form-label">Enemy Type</label>
+				<select class="form-select" id="validationCustom06" required [(ngModel)]="enemyType">
+					<option *ngFor="let enemyType of enemyTypeOptions" [value]="enemyType">{{enemyType | titlecase}}</option>
+				</select>
+				<div class="invalid-feedback">
+					Please select a valid state.
+				</div>
+			</div>
+		</div>
+
+		<div class="row py-2">
+			<div class="col-md-3">
+				<button class="btn btn-outline-primary" style="margin-right:10px" (click)="onAddClick($event)">Add Profile</button>
+				<button class="btn btn-outline-primary" routerLink="">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>

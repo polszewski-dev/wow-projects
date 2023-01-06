@@ -11,12 +11,10 @@ import wow.commons.model.professions.ProfessionSpecialization;
 @Getter
 public class CharacterProfession {
 	private final Profession profession;
-	private final int level;
 	private final ProfessionSpecialization specialization;
 
-	public CharacterProfession(Profession profession, int level, ProfessionSpecialization specialization) {
+	public CharacterProfession(Profession profession, ProfessionSpecialization specialization) {
 		this.profession = profession;
-		this.level = level;
 		this.specialization = specialization;
 		if (specialization != null && specialization.getProfession() != profession) {
 			throw new IllegalArgumentException("Specialization doesn't match the profession");

@@ -28,22 +28,11 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		profile = getPlayerProfile();
 		profile.setEquipment(getEquipment());
 
-		profileInfo = new PlayerProfileInfo(
-				profile.getProfileId(),
-				profile.getProfileName(),
-				profile.getCharacterClass(),
-				profile.getRace(),
-				profile.getLevel(),
-				profile.getEnemyType(),
-				profile.getBuildId(),
-				profile.getPhase(),
-				profile.getLastModified()
-		);
+		profileInfo = profile.getProfileInfo();
 
 		when(playerProfileService.getPlayerProfileInfos()).thenReturn(List.of(profileInfo));
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
-		when(playerProfileService.createPlayerProfile(any(), any())).thenReturn(profile);
-		when(playerProfileService.copyPlayerProfile(any(), any(), any())).thenReturn(profile);
+		when(playerProfileService.createPlayerProfile(any())).thenReturn(profile);
 		when(playerProfileService.resetEquipment(any())).thenReturn(profile);
 		when(playerProfileService.changeItemBestVariant(any(), any(), anyInt())).thenReturn(profile);
 		when(playerProfileService.changeItem(any(), any(), any())).thenReturn(profile);

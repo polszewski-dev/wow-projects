@@ -5,7 +5,7 @@
 			<span *ngIf="upgrades && upgrades.length === 0" class="no-upgrades">✓</span>
 			<span
 				*ngIf="upgrades && upgrades.length !== 0"
-				class="badge rounded-pill bg-danger"
+				class="badge rounded-pill bg-danger upgrade-badge"
 				[title]="(upgrades[0].changePct | number:'1.2-2')+'%'"
 				(click)="onUpgradeCounterClick()"
 			>{{upgrades.length}}</span>

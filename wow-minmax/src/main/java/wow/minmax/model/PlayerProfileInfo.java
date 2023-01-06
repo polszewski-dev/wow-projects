@@ -3,6 +3,7 @@ package wow.minmax.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.build.BuildId;
+import wow.character.model.character.CharacterProfessions;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
@@ -25,6 +26,7 @@ public class PlayerProfileInfo {
 	private final int level;
 	private final CreatureType enemyType;
 	private final BuildId buildId;
+	private final CharacterProfessions professions;
 	private final Phase phase;
 	private final LocalDateTime lastModified;
 }
