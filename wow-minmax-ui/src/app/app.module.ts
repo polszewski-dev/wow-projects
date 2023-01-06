@@ -18,6 +18,7 @@ import { CharacterStatsComponent } from './components/character-stats/character-
 import { SpecialAbilitiesComponent } from './components/special-abilities/special-abilities.component';
 import { DpsBarComponent } from './components/dps-bar/dps-bar.component';
 import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
+import { NewProfileComponent } from './components/new-profile/new-profile.component';
 
 @NgModule({
 	declarations: [
@@ -34,7 +35,8 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		CharacterStatsComponent,
 		SpecialAbilitiesComponent,
 		DpsBarComponent,
-		UpgradeListComponent
+		UpgradeListComponent,
+		NewProfileComponent
 	],
 	imports: [
 		BrowserModule,
