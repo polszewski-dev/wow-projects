@@ -35,7 +35,7 @@ export class ProfileSelectComponent implements OnInit {
 			return;
 		}
 		this.selectedProfile = this.profileList.reduce((prev: ProfileInfo, current: ProfileInfo): ProfileInfo =>
-			(prev.lastModified > current.lastModified) ? prev : current
+			(prev.lastModified! > current.lastModified!) ? prev : current
 		);
 		this.onValueChange();
 	}

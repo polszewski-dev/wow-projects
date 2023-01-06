@@ -22,7 +22,7 @@ import { ItemChange } from '../equipment-slot-editor/ItemChange';
 	styleUrls: ['./equipment-editor.component.css']
 })
 export class EquipmentEditorComponent implements OnChanges {
-	@Input() selectedProfile!: ProfileInfo;
+	@Input() selectedProfileId!: string;
 	@Input() upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
 	@Output() equipmentChanged = new EventEmitter<void>()
 
@@ -40,14 +40,14 @@ export class EquipmentEditorComponent implements OnChanges {
 	constructor(private equipmentService: EquipmentService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfile']) {
+		if (!changes['selectedProfileId']) {
 			return;
 		}
 		this.equipmentSocketStatus = undefined;
-		this.equipmentService.getEquipment(this.selectedProfile.profileId).subscribe((equipment: Equipment) => {
+		this.equipmentService.getEquipment(this.selectedProfileId).subscribe((equipment: Equipment) => {
 			this.equipment = equipment;
 		});
-		this.equipmentService.getEquipmentOptions(this.selectedProfile.profileId).subscribe((equipmentOptions: EquipmentOptions) => {
+		this.equipmentService.getEquipmentOptions(this.selectedProfileId).subscribe((equipmentOptions: EquipmentOptions) => {
 			this.equipmentOptions = sort(equipmentOptions);
 		});
 		this.updateSocketStatus();
@@ -69,7 +69,7 @@ export class EquipmentEditorComponent implements OnChanges {
 
 	onUpgradeCounterClicked(slotGroup: ItemSlotGroup): void {
 		const items = this.upgradesBySlotGroup[slotGroup]![0].itemDifference;
-		this.equipmentService.changeItems(this.selectedProfile.profileId, slotGroup, items!).subscribe(() => {
+		this.equipmentService.changeItems(this.selectedProfileId, slotGroup, items!).subscribe(() => {
 			this.updateEquipmentSlots(slotGroup, items!);
 			this.updateSocketStatus();
 		});
@@ -96,13 +96,13 @@ export class EquipmentEditorComponent implements OnChanges {
 	}
 
 	updateSocketStatus(): void {
-		this.equipmentService.getSocketStatus(this.selectedProfile.profileId).subscribe((equipmentSocketStatus: EquipmentSocketStatus) => {
+		this.equipmentService.getSocketStatus(this.selectedProfileId).subscribe((equipmentSocketStatus: EquipmentSocketStatus) => {
 			this.equipmentSocketStatus = equipmentSocketStatus;
 		});
 	}
 
 	resetEquipment(): void {
-		this.equipmentService.resetEquipment(this.selectedProfile.profileId).subscribe((equipment: Equipment) => {
+		this.equipmentService.resetEquipment(this.selectedProfileId).subscribe((equipment: Equipment) => {
 			this.equipment = equipment;
 			this.equipmentChanged.emit();
 		});

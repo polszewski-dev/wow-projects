@@ -9,16 +9,16 @@ import { StatsService } from 'src/app/services/stats.service';
 	styleUrls: ['./spell-stats.component.css']
 })
 export class SpellStatsComponent implements OnChanges {
-	@Input() selectedProfile!: ProfileInfo;
+	@Input() selectedProfileId!: string;
 	spellStatsList: SpellStats[] = [];
 
 	constructor(private statsService: StatsService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfile']) {
+		if (!changes['selectedProfileId']) {
 			return;
 		}
-		this.statsService.getSpellStats(this.selectedProfile.profileId).subscribe((spellStatsList: SpellStats[]) => {
+		this.statsService.getSpellStats(this.selectedProfileId).subscribe((spellStatsList: SpellStats[]) => {
 			this.spellStatsList = spellStatsList;
 		});
 	}

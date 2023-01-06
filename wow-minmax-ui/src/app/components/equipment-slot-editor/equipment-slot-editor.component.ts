@@ -20,7 +20,7 @@ import { ItemChange } from './ItemChange';
 	styleUrls: ['./equipment-slot-editor.component.css']
 })
 export class EquipmentSlotEditorComponent implements OnInit {
-	@Input() selectedProfile!: ProfileInfo;
+	@Input() selectedProfileId!: string;
 	@Input() itemSlot!: ItemSlot;
 	@Input() equippableItem?: EquippableItem;
 	@Input() equipmentOptions?: EquipmentOptions;
@@ -49,7 +49,7 @@ export class EquipmentSlotEditorComponent implements OnInit {
 	}
 
 	onItemChange(item: Item): void {
-		this.equipmentService.changeItemBestVariant(this.selectedProfile.profileId, this.itemSlot!, item.id).subscribe(item => {
+		this.equipmentService.changeItemBestVariant(this.selectedProfileId, this.itemSlot!, item.id).subscribe(item => {
 			this.equippableItem = item;
 			this.itemChanged.emit(this.getItemChange());
 		});
@@ -60,7 +60,7 @@ export class EquipmentSlotEditorComponent implements OnInit {
 			...this.equippableItem!,
 			enchant: enchant
 		};
-		this.equipmentService.changeItem(this.selectedProfile.profileId, this.itemSlot!, newItem).subscribe(item => {
+		this.equipmentService.changeItem(this.selectedProfileId, this.itemSlot!, newItem).subscribe(item => {
 			this.equippableItem = item;
 			this.enchantChanged.emit(this.getItemChange());
 		});
@@ -74,7 +74,7 @@ export class EquipmentSlotEditorComponent implements OnInit {
 
 		newItem.gems[socketIdx] = gem;
 
-		this.equipmentService.changeItem(this.selectedProfile.profileId, this.itemSlot!, newItem).subscribe(item => {
+		this.equipmentService.changeItem(this.selectedProfileId, this.itemSlot!, newItem).subscribe(item => {
 			this.equippableItem = item;
 			this.gemChanged.emit(this.getItemChange());
 		});

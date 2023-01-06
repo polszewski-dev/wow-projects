@@ -5,7 +5,7 @@ import { Phase } from './character/Phase';
 import { Race } from './character/Race';
 
 export interface ProfileInfo {
-	profileId: string;
+	profileId?: string;
 	profileName: string;
 	characterClass: CharacterClass;
 	race: Race;
@@ -13,5 +13,5 @@ export interface ProfileInfo {
 	enemyType: CreatureType;
 	buildId: BuildId;
 	phase: Phase;
-	lastModified: Date;
+	lastModified?: Date;
 }

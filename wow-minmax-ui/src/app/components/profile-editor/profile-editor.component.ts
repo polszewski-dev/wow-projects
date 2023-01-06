@@ -36,7 +36,7 @@ export class ProfileEditorComponent {
 	}
 
 	updateDps(): void {
-		this.statsService.getSpellDps(this.selectedProfile.profileId).subscribe((dps: number) => {
+		this.statsService.getSpellDps(this.selectedProfile.profileId!).subscribe((dps: number) => {
 			this.previousDps = this.dps;
 			this.dps = dps;
 		})
@@ -44,7 +44,7 @@ export class ProfileEditorComponent {
 
 	updateUpgradeStatus(): void {
 		for (let slotGroup of Object.values(ItemSlotGroup)) {
-			this.upgradeService.getUpgrades(this.selectedProfile.profileId, slotGroup).subscribe((upgrades: Upgrade[]) => {
+			this.upgradeService.getUpgrades(this.selectedProfile.profileId!, slotGroup).subscribe((upgrades: Upgrade[]) => {
 				this.upgradesBySlotGroup[slotGroup] = upgrades;
 			});
 		}

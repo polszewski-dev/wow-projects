@@ -9,16 +9,16 @@ import { StatsService } from 'src/app/services/stats.service';
 	styleUrls: ['./special-abilities.component.css']
 })
 export class SpecialAbilitiesComponent implements OnChanges {
-	@Input() selectedProfile!: ProfileInfo;
+	@Input() selectedProfileId!: string;
 	specialAbilityStatsList: SpecialAbilityStats[] = [];
 
 	constructor(private statsService: StatsService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfile']) {
+		if (!changes['selectedProfileId']) {
 			return;
 		}
-		this.statsService.getSpecialAbilities(this.selectedProfile.profileId).subscribe((specialAbilityStatsList: SpecialAbilityStats[]) => {
+		this.statsService.getSpecialAbilities(this.selectedProfileId).subscribe((specialAbilityStatsList: SpecialAbilityStats[]) => {
 			this.specialAbilityStatsList = specialAbilityStatsList;
 		});
 	}
