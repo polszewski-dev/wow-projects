@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Buff } from 'src/app/model/buff/Buff';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { BuffService } from 'src/app/services/buff.service';
 
 @Component({

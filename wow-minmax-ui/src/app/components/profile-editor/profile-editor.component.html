@@ -1,8 +1,4 @@
-<div class="container">
-	<app-profile-select (profileSelected)="onProfileSelected($event)"></app-profile-select>
-
-	<div *ngIf="selectedProfile">
-
+<div>
 	<app-dps-bar [dps]="dps" [dpsDiff]="dps && previousDps ? dps - previousDps : 0"></app-dps-bar>
 
 	<nav ngbNav #nav="ngbNav" class="nav-tabs">
@@ -39,6 +35,4 @@
 	</nav>
 
 	<div [ngbNavOutlet]="nav"></div>
-
-	</div>
 </div>

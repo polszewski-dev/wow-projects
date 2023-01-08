@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
@@ -10,16 +10,18 @@ import { UpgradeService } from 'src/app/services/upgrade.service';
 	templateUrl: './profile-editor.component.html',
 	styleUrls: ['./profile-editor.component.css']
 })
-export class ProfileEditorComponent {
-	selectedProfile!: ProfileInfo;
+export class ProfileEditorComponent implements OnChanges {
+	@Input() selectedProfile!: ProfileInfo;
 	dps?: number;
 	previousDps?: number;
 	upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
 
 	constructor(private statsService: StatsService, private upgradeService: UpgradeService) {}
 
-	onProfileSelected(selectedProfile: ProfileInfo): void {
-		this.selectedProfile = selectedProfile;
+	ngOnChanges(changes: SimpleChanges): void {
+		if (!changes['selectedProfile']) {
+			return;
+		}
 		this.dps = undefined;
 		this.updateDps();
 		this.upgradesBySlotGroup = {};

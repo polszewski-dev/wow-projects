@@ -17,5 +17,5 @@ export class ProfileService {
 
 	createProfile(profile: ProfileInfo): Observable<ProfileInfo> {
 		return this.http.post<ProfileInfo>(this.apiUrl, profile);
-	} 
+	}
 }

@@ -6,7 +6,6 @@ import { Gem } from 'src/app/model/equipment/Gem';
 import { Item } from 'src/app/model/equipment/Item';
 import { ItemSlot } from 'src/app/model/equipment/ItemSlot';
 import { ItemSocketStatus } from 'src/app/model/equipment/ItemSocketStatus';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';

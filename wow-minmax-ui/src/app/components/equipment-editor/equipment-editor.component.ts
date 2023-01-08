@@ -10,7 +10,6 @@ import { Item } from 'src/app/model/equipment/Item';
 import { ItemRarity } from 'src/app/model/equipment/ItemRarity';
 import { ItemSlot } from 'src/app/model/equipment/ItemSlot';
 import { ItemType } from 'src/app/model/equipment/ItemType';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { getItemSlotGroup, getSlots, ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
