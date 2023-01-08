@@ -1,4 +1,6 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { BuildId } from 'src/app/model/character/BuildId';
 import { CharacterClass } from 'src/app/model/character/CharacterClass';
 import { CharacterProfession } from 'src/app/model/character/CharacterProfession';
@@ -33,7 +35,11 @@ export class NewProfileComponent {
 	phase = Phase.TBC_P5;
 	phaseOptions = Object.values(Phase).sort();
 
-	constructor(private profileService: ProfileService) {}
+	constructor(
+		private profileService: ProfileService,
+		private router: Router,
+		private location: Location
+	) {}
 
 	onPhaseChange(): void {
 		this.level = getMaxLevel(this.phase);
@@ -61,10 +67,15 @@ export class NewProfileComponent {
 			professions: [this.profession1, this.profession2],
 			phase: this.phase
 		};
-		console.log(newProfile)
+
 		this.profileService.createProfile(newProfile).subscribe((createdProfile: ProfileInfo) => {
-			console.log('created', createdProfile);
+			this.router.navigate(['/edit-profile', createdProfile.profileId]);
 		});
+	}
+
+	onCancelClick(event: Event): void {
+		event.preventDefault();
+		this.location.back();
 	}
 
 	private validate(): boolean {
