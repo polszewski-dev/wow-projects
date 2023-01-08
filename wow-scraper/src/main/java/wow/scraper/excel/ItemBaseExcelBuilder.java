@@ -9,7 +9,9 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
+import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
@@ -32,7 +34,10 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelSheetNames.
  * User: POlszewski
  * Date: 2022-10-30
  */
+@AllArgsConstructor
 public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
+	private final ScraperConfig config;
+
 	@Override
 	public void start() {
 		writer.open();
@@ -203,7 +208,12 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getItemLevel());
 		setValue(parseSource(requiredFactionName, parser));
 		setValue(parser.getGameVersion());
-		setValue(parser.getPhase());
+		setValue(getPhase(parser));
+	}
+
+	private Phase getPhase(AbstractTooltipParser parser) {
+		Phase phase = config.getPhaseOverrides().get(parser.getItemId());
+		return phase != null ? phase : parser.getPhase();
 	}
 
 	private void writeAttributeHeader(String prefix, int maxAttributes) {

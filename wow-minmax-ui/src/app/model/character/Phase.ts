@@ -14,12 +14,15 @@ export enum Phase {
 	TBC_P5 = 'TBC_P5',
 }
 
-export function getMaxLevel(phase: Phase): number {
+export function getMaxLevel(phase?: Phase): number | undefined {
+	if (phase === undefined) {
+		return undefined;
+	}
 	if (phase.startsWith("VANILLA_")) {
 		return 60;
 	}
 	if (phase.startsWith("TBC_")) {
 		return 70;
 	}
-	return 0;
+	return undefined;
 }

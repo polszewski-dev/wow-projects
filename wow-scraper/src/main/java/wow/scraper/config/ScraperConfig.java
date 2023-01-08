@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.Phase;
 import wow.scraper.model.WowheadItemQuality;
 
 import java.util.List;
@@ -19,6 +20,9 @@ import java.util.Set;
 @Component
 @Data
 public class ScraperConfig {
+	@Value("${directory.path}")
+	private String directoryPath;
+
 	@Value("${game.version}")
 	private GameVersion gameVersion;
 
@@ -54,4 +58,7 @@ public class ScraperConfig {
 
 	@Value("#{${item.starting.quest.to.traded.for}}")
 	private Map<Integer, List<Integer>> itemStartingQuestToTradedFor;
+
+	@Value("#{${phase.overrides}}")
+	private Map<Integer, Phase> phaseOverrides;
 }

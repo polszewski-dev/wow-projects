@@ -31,7 +31,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	protected void run() throws IOException {
 		WowheadSourceParser.configure(getScraperConfig());
 
-		ItemBaseExcelBuilder builder = new ItemBaseExcelBuilder();
+		ItemBaseExcelBuilder builder = new ItemBaseExcelBuilder(getScraperConfig());
 		builder.start();
 
 		builder.addTradedItemHeader();
@@ -44,7 +44,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		builder.addGemHeader();
 		addGems(builder);
 
-		String itemFilePath = "scraper/item_base.xls";
+		String itemFilePath = getScraperConfig().getDirectoryPath() + "/item_base.xls";
 
 		builder.finish(itemFilePath);
 

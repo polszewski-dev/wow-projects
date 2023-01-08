@@ -9,6 +9,7 @@ import wow.character.service.impl.classifiers.PveRoleStatClassifier;
 import wow.character.service.impl.enumerators.FilterOutWorseEnchantChoices;
 import wow.character.service.impl.enumerators.FilterOutWorseGemChoices;
 import wow.character.service.impl.enumerators.GemComboFinder;
+import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -81,7 +82,7 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Gem> getGems(Character character, SocketType socketType, boolean nonUniqueOnly) {
 		return itemRepository.getGems(socketType, character.getPhase()).stream()
-				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests()))
+				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
 				.filter(gem -> getStatClassifier(character).hasStatsSuitableForRole(gem, character))
 				.collect(Collectors.toList());

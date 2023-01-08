@@ -23,16 +23,16 @@ export class NewProfileComponent {
 	characterClassOptions = [CharacterClass.WARLOCK].sort();
 	race = Race.ORC;
 	raceOptions = Object.values(Race).sort();
-	level = 70;
+	level?: number;
 	buildId = BuildId.DESTRO_SHADOW;
 	buildOptions = [BuildId.DESTRO_SHADOW];
 	profession1: CharacterProfession = {};
 	profession2: CharacterProfession = {};
 	professionOptions = Object.values(Profession).sort();
 	specializationOptions = Object.values(ProfessionSpecialization).sort();
-	enemyType = CreatureType.UNDEAD;
+	enemyType?: CreatureType;
 	enemyTypeOptions = Object.values(CreatureType).sort();
-	phase = Phase.TBC_P5;
+	phase?: Phase;
 	phaseOptions = Object.values(Phase).sort();
 
 	constructor(
@@ -61,11 +61,11 @@ export class NewProfileComponent {
 			profileName: this.profileName,
 			characterClass: this.characterClass,
 			race: this.race,
-			level: this.level,
-			enemyType: this.enemyType,
+			level: this.level!,
+			enemyType: this.enemyType!,
 			buildId: this.buildId,
 			professions: [this.profession1, this.profession2],
-			phase: this.phase
+			phase: this.phase!
 		};
 
 		this.profileService.createProfile(newProfile).subscribe((createdProfile: ProfileInfo) => {

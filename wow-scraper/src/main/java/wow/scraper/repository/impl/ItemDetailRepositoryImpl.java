@@ -1,8 +1,10 @@
 package wow.scraper.repository.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersion;
+import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
 
@@ -23,8 +25,11 @@ import java.util.stream.Stream;
  * Date: 2022-10-28
  */
 @Repository
+@AllArgsConstructor
 public class ItemDetailRepositoryImpl implements wow.scraper.repository.ItemDetailRepository {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
+
+	private ScraperConfig config;
 
 	@Override
 	public boolean hasItemDetail(GameVersion gameVersion, WowheadItemCategory category, int itemId) {
@@ -61,6 +66,6 @@ public class ItemDetailRepositoryImpl implements wow.scraper.repository.ItemDeta
 	}
 
 	private Path getPath(GameVersion gameVersion, WowheadItemCategory category, int itemId) {
-		return Paths.get("scraper", "items", gameVersion.toString().toLowerCase(), category.name().toLowerCase(), Integer.toString(itemId));
+		return Paths.get(config.getDirectoryPath(), "items", gameVersion.toString().toLowerCase(), category.name().toLowerCase(), Integer.toString(itemId));
 	}
 }
