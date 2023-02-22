@@ -5,8 +5,14 @@
 * wow-minmax - web UI to combine and analyze different gear choices
 * wow-scraper - tools to gather item info from Wowhead website and to generate excel input for wow-commons
 
-start: http://localhost:8080
+### Start: 
+
+* run WowMinmaxApplication at `http://localhost:8080`
+* go to wow-minmax-ui and call `ng serve`
+* the app is available at `http://localhost:4200`
+
 
 ### Used tech:
-* frontend: Bootstrap. JQuery
-* backend: Spring Boot, Lombok, REST  
+
+* frontend: Angular, Bootstrap
+* backend: Spring Boot, REST, Lombok  
