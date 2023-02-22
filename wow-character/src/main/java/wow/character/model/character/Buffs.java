@@ -24,7 +24,7 @@ public class Buffs implements AttributeCollection, Copyable<Buffs> {
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		for (Buff buff : buffsById.values()) {
 			collector.addAttributes(buff, buff.getSourceSpell());
 		}

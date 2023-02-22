@@ -9,17 +9,17 @@ import java.util.Collection;
  * User: POlszewski
  * Date: 2022-01-05
  */
-public interface AttributeCollector<T extends AttributeCollector<T>> {
-	T addAttributes(AttributeSource attributeSource);
+public interface AttributeCollector {
+	AttributeCollector addAttributes(AttributeSource attributeSource);
 
-	T addAttributes(AttributeSource attributeSource, SpellId sourceSpell);
+	AttributeCollector addAttributes(AttributeSource attributeSource, SpellId sourceSpell);
 
-	default T addAttributes(Collection<? extends AttributeSource> attributeSources) {
+	default AttributeCollector addAttributes(Collection<? extends AttributeSource> attributeSources) {
 		for (AttributeSource attributeSource : attributeSources) {
 			addAttributes(attributeSource);
 		}
-		return (T)this;
+		return this;
 	}
 
-	T addAttribute(ComplexAttribute complexAttribute);
+	AttributeCollector addAttribute(ComplexAttribute complexAttribute);
 }

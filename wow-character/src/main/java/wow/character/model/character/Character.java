@@ -86,7 +86,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		build.collectAttributes(collector);
 		equipment.collectAttributes(collector);
 		buffs.collectAttributes(collector);

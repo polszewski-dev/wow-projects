@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-01-05
  */
-public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator> {
+public class AttributeEvaluator implements AttributeCollector {
 	private final Map<AttributeCondition, Map<PrimitiveAttributeId, Double>> primitiveAttributes = new HashMap<>();
 	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(ComplexAttributeId.class);
 
@@ -60,6 +60,12 @@ public class AttributeEvaluator implements AttributeCollector<AttributeEvaluator
 
 		Attributes scaledAttributes = getScaledAttributes(attributeSource, sourceSpell);
 		addAttributes(scaledAttributes);
+		return this;
+	}
+
+	@Override
+	public AttributeEvaluator addAttributes(Collection<? extends AttributeSource> attributeSources) {
+		AttributeCollector.super.addAttributes(attributeSources);
 		return this;
 	}
 

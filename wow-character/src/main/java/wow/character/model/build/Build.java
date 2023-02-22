@@ -49,7 +49,7 @@ public class Build implements AttributeCollection, Copyable<Build> {
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		talents.collectAttributes(collector);
 	}
 

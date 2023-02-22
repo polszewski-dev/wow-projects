@@ -62,7 +62,7 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		character.collectAttributes(collector);
 	}
 

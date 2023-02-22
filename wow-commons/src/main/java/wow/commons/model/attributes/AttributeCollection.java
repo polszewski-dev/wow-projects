@@ -5,5 +5,5 @@ package wow.commons.model.attributes;
  * Date: 2022-01-05
  */
 public interface AttributeCollection {
-	<T extends AttributeCollector<T>> void collectAttributes(T collector);
+	void collectAttributes(AttributeCollector collector);
 }

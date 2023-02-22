@@ -28,7 +28,7 @@ public class Talents implements AttributeCollection {
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		collector.addAttributes(talentById.values());
 	}
 }

@@ -29,7 +29,7 @@ public class Equipment implements AttributeCollection, Copyable<Equipment> {
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		itemsBySlot.values().forEach(item -> item.collectAttributes(collector));
 	}
 

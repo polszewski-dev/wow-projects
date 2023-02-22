@@ -160,7 +160,7 @@ public class EquippableItem implements AttributeCollection, Copyable<EquippableI
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		collector.addAttributes(item);
 		collector.addAttributes(enchant);
 		if (sockets.getSocketCount() > 0) {

@@ -22,7 +22,7 @@ public class Enemy implements AttributeCollection, Copyable<Enemy> {
 	}
 
 	@Override
-	public <T extends AttributeCollector<T>> void collectAttributes(T collector) {
+	public void collectAttributes(AttributeCollector collector) {
 		// VOID atm
 	}
 }
