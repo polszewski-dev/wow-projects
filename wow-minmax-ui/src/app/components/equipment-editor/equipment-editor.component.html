@@ -2,13 +2,13 @@
 	<table class="table table-striped equipment-table" style="width:100%">
 		<thead>
 			<tr>
-				<th scope="col" style="width: 9%">Slot</th>
-				<th scope="col" style="width: 20%">Item</th>
-				<th scope="col" style="width: 16%">Enchant</th>
-				<th scope="col" style="width: 15%">Gem #1</th>
-				<th scope="col" style="width: 15%">Gem #2</th>
-				<th scope="col" style="width: 15%">Gem #3</th>
-				<th scope="col" style="width: 10%">Socket Bonus</th>
+				<th scope="col" [ngStyle]="{'width': editGems ? '9%' : '15%'}">Slot</th>
+				<th scope="col" [ngStyle]="{'width': editGems ? '20%' : '30%'}">Item</th>
+				<th scope="col" [ngStyle]="{'width': editGems ? '16%' : '55%'}">Enchant</th>
+				<th scope="col" style="width: 15%" [hidden]="!editGems">Gem #1</th>
+				<th scope="col" style="width: 15%" [hidden]="!editGems">Gem #2</th>
+				<th scope="col" style="width: 15%" [hidden]="!editGems">Gem #3</th>
+				<th scope="col" style="width: 10%" [hidden]="!editGems">Socket Bonus</th>
 			</tr>
 		</thead>
 		<tbody>

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Phase } from 'src/app/model/character/Phase';
 import { Enchant } from 'src/app/model/equipment/Enchant';
 import { Equipment } from 'src/app/model/equipment/Equipment';
 import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
@@ -22,6 +23,7 @@ import { ItemChange } from '../equipment-slot-editor/ItemChange';
 })
 export class EquipmentEditorComponent implements OnChanges {
 	@Input() selectedProfileId!: string;
+	@Input() editGems: boolean = true;
 	@Input() upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
 	@Output() equipmentChanged = new EventEmitter<void>()
 
