@@ -24,7 +24,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing zero gives empty list")
 	void zeroShouldGenerateEmptyList() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell");
 		Attributes attributes = supplier.getAttributes(0);
 
 		assertThat(attributes.getPrimitiveAttributeList()).isEmpty();
@@ -33,7 +33,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing no condition produces unconditional attribute")
 	void noConditionProducesUnconditionalAttribute() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
@@ -44,7 +44,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing TalentTree produces conditional attribute")
 	void talentTreeProducesConditionalAttribute() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Destruction");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Destruction");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
@@ -56,7 +56,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing SpellSchool produces conditional attribute")
 	void spellSchoolProducesConditionalAttribute() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Fire");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Fire");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
@@ -68,7 +68,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing SpellId produces conditional attribute")
 	void spellIdProducesConditionalAttribute() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Shadow Bolt");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Shadow Bolt");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
@@ -80,7 +80,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing PetType produces conditional attribute")
 	void petTypeProducesConditionalAttribute() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Imp");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Imp");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
@@ -92,7 +92,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing CreatureType produces conditional attribute")
 	void creatureTypeProducesConditionalAttribute() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Undead");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Undead");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
@@ -104,7 +104,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing multiple conditions of the same type produce multiple conditional attributes")
 	void multipleConditionsOfTheSameTypeProduceConditionalAttributes() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Fire,Frost,Arcane");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Fire,Frost,Arcane");
 		Attributes attributes = supplier.getAttributes(10);
 
 
@@ -123,7 +123,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing single conditions of different type produces multiple conditional attributes")
 	void singleConditionsOfDifferentTypeProduceSingleConditionalAttribute() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Fire,Undead");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Fire,Undead");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(2);
@@ -139,7 +139,7 @@ class PrimitiveAttributeSupplierTest {
 	@Test
 	@DisplayName("Providing multiple conditions of different types produces multiple conditional attributes")
 	void multipleConditionsOfDifferentTypesProduceMultipleConditionalAttributes() {
-		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("SpellPower,Fire,Frost,Undead,Demon");
+		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Fire,Frost,Undead,Demon");
 		Attributes attributes = supplier.getAttributes(10);
 
 		assertThat(attributes.getPrimitiveAttributeList()).hasSize(4);

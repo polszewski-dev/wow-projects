@@ -7,10 +7,8 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.CritMode;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SpellStatistics;
-import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
@@ -19,6 +17,7 @@ import wow.minmax.model.CharacterStats;
 import wow.minmax.model.SpecialAbilityStats;
 import wow.minmax.model.SpellStats;
 import wow.minmax.service.CalculationService;
+import wow.minmax.service.impl.enumerators.StatEquivalentFinder;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 
@@ -29,8 +28,6 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 @Service
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
-	private static final double PRECISION = 0.0001;
-
 	@Override
 	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character) {
 		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, character, null, null);
@@ -48,27 +45,11 @@ public class CalculationServiceImpl implements CalculationService {
 		spell = initOptional(character, spell);
 		totalStats = initOptional(character, totalStats);
 
-		Attributes baseStats = getBaseAttributes(attributesToFindEquivalent, totalStats, mode);
-		double targetDps = getTargetDps(attributesToFindEquivalent, totalStats, character, spell, mode);
+		var finder = new StatEquivalentFinder(
+				attributesToFindEquivalent, targetStat, mode, character, spell, totalStats, this
+		);
 
-		double equivalentValue = 0;
-		double increase = 1;
-
-		while (true) {
-			PrimitiveAttribute equivalentStat = Attribute.of(targetStat, equivalentValue + increase);
-			Attributes equivalentStats = AttributesBuilder.addAttribute(baseStats, equivalentStat);
-			double equivalentDps = getSpellDps(character, spell, equivalentStats);
-
-			if (Math.abs(equivalentDps - targetDps) <= PRECISION) {
-				return Attributes.of(targetStat, equivalentValue);
-			}
-
-			if (equivalentDps < targetDps) {
-				equivalentValue += increase;
-			} else {
-				increase /= 2;
-			}
-		}
+		return finder.getDpsStatEquivalent();
 	}
 
 	@Override
@@ -133,25 +114,6 @@ public class CalculationServiceImpl implements CalculationService {
 			return totalStats;
 		}
 		return character.getStats();
-	}
-
-	private Attributes getBaseAttributes(Attributes sourceAttributes, Attributes totalStats, EquivalentMode mode) {
-		if (mode == EquivalentMode.REPLACEMENT) {
-			return AttributesBuilder.removeAttributes(totalStats, sourceAttributes);
-		}
-		return totalStats;
-	}
-
-	private double getTargetDps(Attributes attributesToFindEquivalent, Attributes totalStats, Character character, Spell spell, EquivalentMode mode) {
-		Attributes targetStats = getTargetStats(attributesToFindEquivalent, totalStats, mode);
-		return getSpellDps(character, spell, targetStats);
-	}
-
-	private static Attributes getTargetStats(Attributes attributesToFindEquivalent, Attributes totalStats, EquivalentMode mode) {
-		if (mode == EquivalentMode.REPLACEMENT) {
-			return totalStats;
-		}
-		return AttributesBuilder.addAttributes(totalStats, attributesToFindEquivalent);
 	}
 
 	@Override

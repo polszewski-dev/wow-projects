@@ -37,13 +37,13 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 		assertThat(underTest.getStamina()).isEqualTo(462);
 		assertThat(underTest.getIntellect()).isEqualTo(373);
-		assertThat(underTest.getBaseStatsIncrease()).isEqualTo(6);
-		assertThat(underTest.getTotalSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1433);
-		assertThat(underTest.getDamageTakenPct()).isEqualTo(6);
-		assertThat(underTest.getSpellHitRating()).isEqualTo(164);
-		assertThat(underTest.getSpellCritRating()).isEqualTo(317);
-		assertThat(underTest.getSpellHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
-		assertThat(underTest.getIncreasedCriticalDamagePct()).isEqualTo(3);
+		assertThat(underTest.getBaseStats()).isEqualTo(6);
+		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1433);
+		assertThat(underTest.getDamagePct()).isEqualTo(6);
+		assertThat(underTest.getHitRating()).isEqualTo(164);
+		assertThat(underTest.getCritRating()).isEqualTo(317);
+		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
+		assertThat(underTest.getCritDamagePct()).isEqualTo(3);
 	}
 
 	@Test
@@ -54,14 +54,14 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 		AccumulatedSpellStats underTest = getAccumulatedSpellStats(attributes);
 
-		assertThat(underTest.getStaIncreasePct()).isEqualTo(15);
-		assertThat(underTest.getSpiIncreasePct()).isEqualTo(-5);
-		assertThat(underTest.getSpellCritPct()).isEqualTo(8);
-		assertThat(underTest.getCritDamageIncreasePct()).isEqualTo(100);
-		assertThat(underTest.getExtraCritCoeff()).isEqualTo(0.66, PRECISION);
-		assertThat(underTest.getSpellCoeffPct()).isEqualTo(20);
-		assertThat(underTest.getCastTimeReduction()).isEqualTo(0.5);
-		assertThat(underTest.getCostReductionPct()).isEqualTo(5);
+		assertThat(underTest.getStaminaPct()).isEqualTo(15);
+		assertThat(underTest.getSpiritPct()).isEqualTo(-5);
+		assertThat(underTest.getCritPct()).isEqualTo(8);
+		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(100);
+		assertThat(underTest.getCritCoeffPct()).isEqualTo(0.66, PRECISION);
+		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
+		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
+		assertThat(underTest.getCostPct()).isEqualTo(-5);
 	}
 
 	@Test
@@ -72,15 +72,15 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 		AccumulatedSpellStats underTest = getAccumulatedSpellStats(attributes);
 
-		assertThat(underTest.getBaseStatsIncreasePct()).isEqualTo(10);
+		assertThat(underTest.getBaseStatsPct()).isEqualTo(10);
 		assertThat(underTest.getIntellect()).isEqualTo(40);
 		assertThat(underTest.getSpirit()).isEqualTo(20);
-		assertThat(underTest.getBaseStatsIncrease()).isEqualTo(14);
-		assertThat(underTest.getTotalSpellDamage()).isEqualTo(340);
-		assertThat(underTest.getDamageTakenPct()).isEqualTo(25);
-		assertThat(underTest.getSpellHitPct()).isEqualTo(3);
-		assertThat(underTest.getSpellCritRating()).isEqualTo(14);
-		assertThat(underTest.getSpellCritPct()).isEqualTo(3);
+		assertThat(underTest.getBaseStats()).isEqualTo(14);
+		assertThat(underTest.getSpellDamage()).isEqualTo(340);
+		assertThat(underTest.getDamagePct()).isEqualTo(25);
+		assertThat(underTest.getHitPct()).isEqualTo(3);
+		assertThat(underTest.getCritRating()).isEqualTo(14);
+		assertThat(underTest.getCritPct()).isEqualTo(3);
 	}
 
 	@Test
@@ -93,26 +93,26 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 		AccumulatedSpellStats underTest = getAccumulatedSpellStats(attributes);
 
-		assertThat(underTest.getBaseStatsIncreasePct()).isEqualTo(10);
-		assertThat(underTest.getStaIncreasePct()).isEqualTo(15);
-		assertThat(underTest.getSpiIncreasePct()).isEqualTo(-5);
+		assertThat(underTest.getBaseStatsPct()).isEqualTo(10);
+		assertThat(underTest.getStaminaPct()).isEqualTo(15);
+		assertThat(underTest.getSpiritPct()).isEqualTo(-5);
 		assertThat(underTest.getStamina()).isEqualTo(462);
 		assertThat(underTest.getIntellect()).isEqualTo(413);
 		assertThat(underTest.getSpirit()).isEqualTo(20);
-		assertThat(underTest.getBaseStatsIncrease()).isEqualTo(20);
-		assertThat(underTest.getTotalSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1773);
-		assertThat(underTest.getDamageTakenPct()).isEqualTo(31);
-		assertThat(underTest.getSpellHitRating()).isEqualTo(164);
-		assertThat(underTest.getSpellHitPct()).isEqualTo(3);
-		assertThat(underTest.getSpellCritRating()).isEqualTo(331);
-		assertThat(underTest.getSpellCritPct()).isEqualTo(11);
-		assertThat(underTest.getSpellHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
-		assertThat(underTest.getIncreasedCriticalDamagePct()).isEqualTo(3);
-		assertThat(underTest.getCritDamageIncreasePct()).isEqualTo(100);
-		assertThat(underTest.getExtraCritCoeff()).isEqualTo(0.66, PRECISION);
-		assertThat(underTest.getSpellCoeffPct()).isEqualTo(20);
-		assertThat(underTest.getCastTimeReduction()).isEqualTo(0.5);
-		assertThat(underTest.getCostReductionPct()).isEqualTo(5);
+		assertThat(underTest.getBaseStats()).isEqualTo(20);
+		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1773);
+		assertThat(underTest.getDamagePct()).isEqualTo(31);
+		assertThat(underTest.getHitRating()).isEqualTo(164);
+		assertThat(underTest.getHitPct()).isEqualTo(3);
+		assertThat(underTest.getCritRating()).isEqualTo(331);
+		assertThat(underTest.getCritPct()).isEqualTo(11);
+		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
+		assertThat(underTest.getCritDamagePct()).isEqualTo(3);
+		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(100);
+		assertThat(underTest.getCritCoeffPct()).isEqualTo(0.66, PRECISION);
+		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
+		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
+		assertThat(underTest.getCostPct()).isEqualTo(-5);
 	}
 
 	@Test
@@ -142,41 +142,41 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
 	@DisplayName("Stamina increase %")
 	void staminaIncreasePct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(STA_INCREASE_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(STAMINA_PCT, 50));
 
-		assertThat(underTest.getStaIncreasePct()).isEqualTo(50);
+		assertThat(underTest.getStaminaPct()).isEqualTo(50);
 	}
 
 	@Test
 	@DisplayName("Intellect increase %")
 	void intellectIncreasePct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(INT_INCREASE_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(INTELLECT_PCT, 50));
 
-		assertThat(underTest.getIntIncreasePct()).isEqualTo(50);
+		assertThat(underTest.getIntellectPct()).isEqualTo(50);
 	}
 
 	@Test
 	@DisplayName("Spirit increase %")
 	void spiritIncreasePct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(SPI_INCREASE_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(SPIRIT_PCT, 50));
 
-		assertThat(underTest.getSpiIncreasePct()).isEqualTo(50);
+		assertThat(underTest.getSpiritPct()).isEqualTo(50);
 	}
 
 	@Test
 	@DisplayName("Base stats increase %")
 	void baseStatsIncreasePct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(BASE_STATS_INCREASE_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(BASE_STATS_PCT, 50));
 
-		assertThat(underTest.getBaseStatsIncreasePct()).isEqualTo(50);
+		assertThat(underTest.getBaseStatsPct()).isEqualTo(50);
 	}
 
 	@Test
 	@DisplayName("Base stats increase")
 	void baseStatsIncrease() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(BASE_STATS_INCREASE, 40));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(BASE_STATS, 40));
 
-		assertThat(underTest.getBaseStatsIncrease()).isEqualTo(40);
+		assertThat(underTest.getBaseStats()).isEqualTo(40);
 	}
 
 	@Test
@@ -187,8 +187,8 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 				Attribute.of(SPELL_CRIT_PCT, 2)
 		));
 
-		assertThat(underTest.getSpellCritRating()).isEqualTo(40);
-		assertThat(underTest.getSpellCritPct()).isEqualTo(2);
+		assertThat(underTest.getCritRating()).isEqualTo(40);
+		assertThat(underTest.getCritPct()).isEqualTo(2);
 	}
 
 	@Test
@@ -199,8 +199,8 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 				Attribute.of(SPELL_HIT_PCT, 2)
 		));
 
-		assertThat(underTest.getSpellHitRating()).isEqualTo(40);
-		assertThat(underTest.getSpellHitPct()).isEqualTo(2);
+		assertThat(underTest.getHitRating()).isEqualTo(40);
+		assertThat(underTest.getHitPct()).isEqualTo(2);
 	}
 
 	@Test
@@ -211,8 +211,8 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 				Attribute.of(SPELL_HASTE_PCT, 2)
 		));
 
-		assertThat(underTest.getSpellHasteRating()).isEqualTo(40);
-		assertThat(underTest.getSpellHastePct()).isEqualTo(2);
+		assertThat(underTest.getHasteRating()).isEqualTo(40);
+		assertThat(underTest.getHastePct()).isEqualTo(2);
 	}
 
 	@Test
@@ -230,61 +230,61 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 				Attribute.of(HEALING_POWER, 100)
 		));
 
-		assertThat(underTest.getTotalSpellDamage()).isEqualTo(60);
+		assertThat(underTest.getSpellDamage()).isEqualTo(60);
 	}
 
 	@Test
 	@DisplayName("Sp multiplier")
 	void spMultiplier() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT, 25));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(SPELL_DAMAGE_PCT, 25));
 
-		assertThat(underTest.getAdditionalSpellDamageTakenPct()).isEqualTo(25);
+		assertThat(underTest.getSpellDamagePct()).isEqualTo(25);
 	}
 
 	@Test
 	@DisplayName("Increased crit damage%")
 	void critCoeff() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(INCREASED_CRITICAL_DAMAGE_PCT, 10));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(CRIT_DAMAGE_PCT, 10));
 
-		assertThat(underTest.getIncreasedCriticalDamagePct()).isEqualTo(10);
+		assertThat(underTest.getCritDamagePct()).isEqualTo(10);
 	}
 
 	@Test
 	@DisplayName("Crit damage increase%")
 	void critDamageIncreasePct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(CRIT_DAMAGE_INCREASE_PCT, 10));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(CRIT_DAMAGE_MULTIPLIER_PCT, 10));
 
-		assertThat(underTest.getCritDamageIncreasePct()).isEqualTo(10);
+		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(10);
 	}
 
 	@Test
 	@DisplayName("Extra crit coeff%")
 	void extraCritCoeffPct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(EXTRA_CRIT_COEFF, 10));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(CRIT_COEFF_PCT, 10));
 
-		assertThat(underTest.getExtraCritCoeff()).isEqualTo(10);
+		assertThat(underTest.getCritCoeffPct()).isEqualTo(10);
 	}
 
 	@Test
 	@DisplayName("Spell coefficient boonus%")
 	void spellCoeff() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(SPELL_COEFF_BONUS_PCT, 20));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(POWER_COEFFICIENT_PCT, 20));
 
-		assertThat(underTest.getSpellCoeffPct()).isEqualTo(20);
+		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
 	}
 
 	@Test
 	@DisplayName("Damage taken%")
 	void damageTakenPct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DAMAGE_TAKEN_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DAMAGE_PCT, 50));
 
-		assertThat(underTest.getDamageTakenPct()).isEqualTo(50);
+		assertThat(underTest.getDamagePct()).isEqualTo(50);
 	}
 
 	@Test
 	@DisplayName("Effect increase%")
 	void effectIncreasePct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(EFFECT_INCREASE_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(EFFECT_PCT, 50));
 
 		assertThat(underTest.getEffectIncreasePct()).isEqualTo(50);
 	}
@@ -292,33 +292,33 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
 	@DisplayName("Direct damage multiplier%")
 	void directDamageMultiplierPct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DIRECT_DAMAGE_INCREASE_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DIRECT_DAMAGE_PCT, 50));
 
-		assertThat(underTest.getDirectDamageIncreasePct()).isEqualTo(50);
+		assertThat(underTest.getDirectDamagePct()).isEqualTo(50);
 	}
 
 	@Test
 	@DisplayName("DoT damage multiplier%")
 	void dotDamageMultiplierPct() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DOT_DAMAGE_INCREASE_PCT, 50));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DOT_DAMAGE_PCT, 50));
 
-		assertThat(underTest.getDotDamageIncreasePct()).isEqualTo(50);
+		assertThat(underTest.getDotDamagePct()).isEqualTo(50);
 	}
 
 	@Test
 	@DisplayName("Cast time reduction")
 	void castTime() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(CAST_TIME_REDUCTION, 0.5));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(CAST_TIME, -0.5));
 
-		assertThat(underTest.getCastTimeReduction()).isEqualTo(0.5);
+		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
 	}
 
 	@Test
 	@DisplayName("Cost reduction reduction%")
 	void manaCost() {
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(COST_REDUCTION_PCT, 25));
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(COST_PCT, -25));
 
-		assertThat(underTest.getCostReductionPct()).isEqualTo(25);
+		assertThat(underTest.getCostPct()).isEqualTo(-25);
 	}
 
 	@Test
@@ -335,7 +335,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(proc));
 
-		assertThat(underTest.getTotalSpellDamage()).isEqualTo(25);
+		assertThat(underTest.getSpellDamage()).isEqualTo(25);
 	}
 
 	private AccumulatedSpellStats getAccumulatedSpellStats(Attributes attributes) {

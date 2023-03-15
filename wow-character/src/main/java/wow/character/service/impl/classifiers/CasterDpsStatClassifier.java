@@ -11,12 +11,13 @@ import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.attributes.primitive.PrimitiveAttributeType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 
 import java.util.Set;
 
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeType.*;
 
 /**
  * User: POlszewski
@@ -54,13 +55,13 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 			return enchant.getIntellect() > 0;
 		}
 		if (itemType == ItemType.CHEST) {
-			return enchant.getBaseStatsIncrease() > 0;
+			return enchant.getBaseStats() > 0;
 		}
 		if (itemType == ItemType.BACK) {
-			return enchant.getThreatReductionPct().getValue() > 0;
+			return enchant.getThreatPct().getValue() > 0;
 		}
 		if (itemType == ItemType.FEET) {
-			return enchant.getSpeedIncreasePct().getValue() > 0;
+			return enchant.getSpeedPct().getValue() > 0;
 		}
 		return false;
 	}
@@ -84,18 +85,12 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	private boolean isCasterStat(PrimitiveAttribute attribute, Character character) {
-		return CASTER_STATS.contains(attribute.getId()) && hasCasterStatCondition(attribute, character);
+		PrimitiveAttributeId id = attribute.getId();
+		return id.getPowerType().isSpellDamage() && CASTER_STATS.contains(id.getType()) && hasCasterStatCondition(attribute, character);
 	}
 
-	private static final Set<PrimitiveAttributeId> CASTER_STATS = Set.of(
-			SPELL_DAMAGE,
-			SPELL_POWER,
-			SPELL_HIT_PCT,
-			SPELL_HIT_RATING,
-			SPELL_CRIT_PCT,
-			SPELL_CRIT_RATING,
-			SPELL_HASTE_PCT,
-			SPELL_HASTE_RATING
+	private static final Set<PrimitiveAttributeType> CASTER_STATS = Set.of(
+			POWER, HIT, CRIT, HASTE
 	);
 
 	private boolean hasCasterStatCondition(PrimitiveAttribute attribute, Character character) {

@@ -26,6 +26,18 @@ class DurationTest {
 	}
 
 	@Test
+	void parseNegative() {
+		assertThat(Duration.parse("-2").getSeconds()).isEqualTo(-2);
+		assertThat(Duration.parse("-2.0").getSeconds()).isEqualTo(-2);
+		assertThat(Duration.parse("-2.5").getSeconds()).isEqualTo(-2.5);
+		assertThat(Duration.parse("-15").getSeconds()).isEqualTo(-15);
+		assertThat(Duration.parse("-25ms").getSeconds()).isEqualTo(-0.025);
+		assertThat(Duration.parse("-25s").getSeconds()).isEqualTo(-25);
+		assertThat(Duration.parse("-25m").getSeconds()).isEqualTo(-25 * 60);
+		assertThat(Duration.parse("-25h").getSeconds()).isEqualTo(-25 * 60 * 60);
+	}
+
+	@Test
 	void add() {
 		Duration nearInf = millis(Integer.MAX_VALUE - 1000);
 
@@ -45,6 +57,10 @@ class DurationTest {
 		assertThat(nearInf.add(one)).isEqualTo(INFINITE);
 		assertThat(nearInf.add(ten)).isEqualTo(INFINITE);
 		assertThat(nearInf.add(INFINITE)).isEqualTo(INFINITE);
+
+		assertThat(NEG_INFINITE.add(three)).isEqualTo(NEG_INFINITE);
+		assertThat(two.add(NEG_INFINITE)).isEqualTo(NEG_INFINITE);
+		assertThat(NEG_INFINITE.add(NEG_INFINITE)).isEqualTo(NEG_INFINITE);
 	}
 
 	@Test
@@ -54,11 +70,15 @@ class DurationTest {
 		Duration five = seconds(5);
 
 		assertThat(five.subtract(two)).isEqualTo(three);
-		assertThatThrownBy(() -> two.subtract(five)).isInstanceOf(IllegalArgumentException.class);
+		assertThat(two.subtract(five)).isEqualTo(seconds(-3));
 
 		assertThat(INFINITE.subtract(two)).isEqualTo(INFINITE);
-		assertThatThrownBy(() -> two.subtract(INFINITE)).isInstanceOf(IllegalArgumentException.class);
+		assertThat(two.subtract(INFINITE)).isEqualTo(NEG_INFINITE);
 		assertThatThrownBy(() -> INFINITE.subtract(INFINITE)).isInstanceOf(IllegalArgumentException.class);
+
+		assertThat(NEG_INFINITE.subtract(two)).isEqualTo(NEG_INFINITE);
+		assertThat(two.subtract(NEG_INFINITE)).isEqualTo(INFINITE);
+		assertThatThrownBy(() -> NEG_INFINITE.subtract(NEG_INFINITE)).isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
@@ -69,11 +89,15 @@ class DurationTest {
 
 		assertThat(five.multiplyBy(2.5)).isEqualTo(twelveAndHalf);
 		assertThat(five.multiplyBy(0)).isEqualTo(zero);
-		assertThatThrownBy(() -> five.multiplyBy(-2.5)).isInstanceOf(IllegalArgumentException.class);
+		assertThat(five.multiplyBy(-2.5)).isEqualTo(seconds(-12.5));
 
 		assertThat(INFINITE.multiplyBy(2.5)).isEqualTo(INFINITE);
 		assertThat(INFINITE.multiplyBy(0)).isEqualTo(zero);
-		assertThatThrownBy(() -> INFINITE.multiplyBy(-2.5)).isInstanceOf(IllegalArgumentException.class);
+		assertThat(INFINITE.multiplyBy(-2.5)).isEqualTo(NEG_INFINITE);
+
+		assertThat(NEG_INFINITE.multiplyBy(2.5)).isEqualTo(NEG_INFINITE);
+		assertThat(NEG_INFINITE.multiplyBy(0)).isEqualTo(zero);
+		assertThat(NEG_INFINITE.multiplyBy(-2.5)).isEqualTo(INFINITE);
 	}
 
 	@Test
@@ -85,11 +109,16 @@ class DurationTest {
 		assertThat(five.divideBy(2)).isEqualTo(twoAndHalf);
 		assertThat(five.divideBy(0)).isEqualTo(INFINITE);
 		assertThat(zero.divideBy(5)).isEqualTo(zero);
-		assertThatThrownBy(() -> five.divideBy(-2.5)).isInstanceOf(IllegalArgumentException.class);
+		assertThat(five.divideBy(-2.5)).isEqualTo(seconds(-2));
+		assertThat(seconds(-5).divideBy(0)).isEqualTo(NEG_INFINITE);
 
 		assertThat(INFINITE.divideBy(2.5)).isEqualTo(INFINITE);
 		assertThat(INFINITE.divideBy(0)).isEqualTo(INFINITE);
-		assertThatThrownBy(() -> INFINITE.divideBy(-2.5)).isInstanceOf(IllegalArgumentException.class);
+		assertThat(INFINITE.divideBy(-2.5)).isEqualTo(NEG_INFINITE);
+
+		assertThat(NEG_INFINITE.divideBy(2.5)).isEqualTo(NEG_INFINITE);
+		assertThat(NEG_INFINITE.divideBy(0)).isEqualTo(NEG_INFINITE);
+		assertThat(NEG_INFINITE.divideBy(-2.5)).isEqualTo(INFINITE);
 	}
 
 	@Test
@@ -105,7 +134,13 @@ class DurationTest {
 		assertThatThrownBy(() -> INFINITE.divideBy(two)).isInstanceOf(IllegalArgumentException.class);
 		assertThatThrownBy(() -> INFINITE.divideBy(zero)).isInstanceOf(IllegalArgumentException.class);
 		assertThatThrownBy(() -> INFINITE.divideBy(INFINITE)).isInstanceOf(IllegalArgumentException.class);
+
+		assertThatThrownBy(() -> NEG_INFINITE.divideBy(two)).isInstanceOf(IllegalArgumentException.class);
+		assertThatThrownBy(() -> NEG_INFINITE.divideBy(zero)).isInstanceOf(IllegalArgumentException.class);
+		assertThatThrownBy(() -> NEG_INFINITE.divideBy(NEG_INFINITE)).isInstanceOf(IllegalArgumentException.class);
+
 		assertThat(five.divideBy(INFINITE)).isZero();
+		assertThat(five.divideBy(NEG_INFINITE)).isZero();
 	}
 
 	@Test
@@ -118,7 +153,14 @@ class DurationTest {
 
 		assertThat(INFINITE.min(three)).isEqualTo(three);
 		assertThat(three.min(INFINITE)).isEqualTo(three);
+
+		assertThat(NEG_INFINITE.min(three)).isEqualTo(NEG_INFINITE);
+		assertThat(three.min(NEG_INFINITE)).isEqualTo(NEG_INFINITE);
+
 		assertThat(INFINITE.min(INFINITE)).isEqualTo(INFINITE);
+		assertThat(NEG_INFINITE.min(NEG_INFINITE)).isEqualTo(NEG_INFINITE);
+		assertThat(NEG_INFINITE.min(INFINITE)).isEqualTo(NEG_INFINITE);
+		assertThat(INFINITE.min(NEG_INFINITE)).isEqualTo(NEG_INFINITE);
 	}
 
 	@Test
@@ -131,6 +173,13 @@ class DurationTest {
 
 		assertThat(INFINITE.max(three)).isEqualTo(INFINITE);
 		assertThat(three.max(INFINITE)).isEqualTo(INFINITE);
+
+		assertThat(NEG_INFINITE.max(three)).isEqualTo(three);
+		assertThat(three.max(NEG_INFINITE)).isEqualTo(three);
+
 		assertThat(INFINITE.max(INFINITE)).isEqualTo(INFINITE);
+		assertThat(NEG_INFINITE.max(NEG_INFINITE)).isEqualTo(NEG_INFINITE);
+		assertThat(NEG_INFINITE.max(INFINITE)).isEqualTo(INFINITE);
+		assertThat(INFINITE.max(NEG_INFINITE)).isEqualTo(INFINITE);
 	}
 }

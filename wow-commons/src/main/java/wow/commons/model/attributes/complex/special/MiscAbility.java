@@ -6,6 +6,8 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
+
 /**
  * User: POlszewski
  * Date: 2022-11-26
@@ -28,6 +30,6 @@ public class MiscAbility extends SpecialAbility {
 
 	@Override
 	public String toString() {
-		return String.format("%s%s", getLine(), getConditionString());
+		return String.format("%s%s", getLine(), getConditionString(condition));
 	}
 }

@@ -20,32 +20,32 @@ import java.util.Set;
  */
 @Getter
 public class AccumulatedSpellStats {
-	private double baseStatsIncreasePct;
-	private double staIncreasePct;
-	private double intIncreasePct;
-	private double spiIncreasePct;
 	private double stamina;
+	private double staminaPct;
 	private double intellect;
+	private double intellectPct;
 	private double spirit;
-	private double baseStatsIncrease;
-	private double totalSpellDamage;
-	private double additionalSpellDamageTakenPct;
-	private double damageTakenPct;
+	private double spiritPct;
+	private double baseStats;
+	private double baseStatsPct;
+	private double spellDamage;
+	private double spellDamagePct;
+	private double hitRating;
+	private double hitPct;
+	private double critRating;
+	private double critPct;
+	private double hasteRating;
+	private double hastePct;
+	private double damagePct;
 	private double effectIncreasePct;
-	private double directDamageIncreasePct;
-	private double dotDamageIncreasePct;
-	private double spellHitRating;
-	private double spellHitPct;
-	private double spellCritRating;
-	private double spellCritPct;
-	private double spellHasteRating;
-	private double spellHastePct;
-	private double increasedCriticalDamagePct;
-	private double critDamageIncreasePct;
-	private double extraCritCoeff;
-	private double spellCoeffPct;
-	private double castTimeReduction;
-	private double costReductionPct;
+	private double directDamagePct;
+	private double dotDamagePct;
+	private double critDamagePct;
+	private double critDamageMultiplierPct;
+	private double critCoeffPct;
+	private double spellPowerCoeffPct;
+	private double castTime;
+	private double costPct;
 
 	private final Attributes attributes;
 	private final Set<AttributeCondition> conditions;
@@ -63,92 +63,108 @@ public class AccumulatedSpellStats {
 
 	private void accumulatePrimitiveAttributes(List<PrimitiveAttribute> attributes) {
 		for (PrimitiveAttribute attribute : attributes) {
-			if (conditions.contains(attribute.getCondition())) {
+			if (isRelevant(attribute)) {
 				accumulateAttribute(attribute.getId(), attribute.getDouble());
 			}
 		}
 	}
 
+	private boolean isRelevant(PrimitiveAttribute attribute) {
+		if (!conditions.contains(attribute.getCondition())) {
+			return false;
+		}
+
+		PrimitiveAttributeId id = attribute.getId();
+
+		return id.getPowerType().isSpellDamage() && !id.isPetAttribute();
+	}
+
 	private void accumulateAttribute(PrimitiveAttributeId id, double value) {
 		switch (id) {
-			case BASE_STATS_INCREASE_PCT:
-				this.baseStatsIncreasePct += value;
-				break;
-			case STA_INCREASE_PCT:
-				this.staIncreasePct += value;
-				break;
-			case INT_INCREASE_PCT:
-				this.intIncreasePct += value;
-				break;
-			case SPI_INCREASE_PCT:
-				this.spiIncreasePct += value;
-				break;
 			case STAMINA:
 				this.stamina += value;
+				break;
+			case STAMINA_PCT:
+				this.staminaPct += value;
 				break;
 			case INTELLECT:
 				this.intellect += value;
 				break;
+			case INTELLECT_PCT:
+				this.intellectPct += value;
+				break;
 			case SPIRIT:
 				this.spirit += value;
 				break;
-			case BASE_STATS_INCREASE:
-				this.baseStatsIncrease += value;
+			case SPIRIT_PCT:
+				this.spiritPct += value;
+				break;
+			case BASE_STATS:
+				this.baseStats += value;
+				break;
+			case BASE_STATS_PCT:
+				this.baseStatsPct += value;
 				break;
 			case SPELL_POWER:
 			case SPELL_DAMAGE:
-				this.totalSpellDamage += value;
+				this.spellDamage += value;
 				break;
-			case ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT:
-				this.additionalSpellDamageTakenPct += value;
+			case SPELL_DAMAGE_PCT:
+				this.spellDamagePct += value;
 				break;
-			case DAMAGE_TAKEN_PCT:
-				this.damageTakenPct += value;
+			case HIT_RATING:
+			case SPELL_HIT_RATING:
+				this.hitRating += value;
 				break;
-			case EFFECT_INCREASE_PCT:
+			case HIT_PCT:
+			case SPELL_HIT_PCT:
+				this.hitPct += value;
+				break;
+			case CRIT_RATING:
+			case SPELL_CRIT_RATING:
+				this.critRating += value;
+				break;
+			case CRIT_PCT:
+			case SPELL_CRIT_PCT:
+				this.critPct += value;
+				break;
+			case HASTE_RATING:
+			case SPELL_HASTE_RATING:
+				this.hasteRating += value;
+				break;
+			case HASTE_PCT:
+			case SPELL_HASTE_PCT:
+				this.hastePct += value;
+				break;
+			case DAMAGE_PCT:
+				this.damagePct += value;
+				break;
+			case DIRECT_DAMAGE_PCT:
+				this.directDamagePct += value;
+				break;
+			case DOT_DAMAGE_PCT:
+				this.dotDamagePct += value;
+				break;
+			case CRIT_DAMAGE_PCT:
+				this.critDamagePct += value;
+				break;
+			case CRIT_DAMAGE_MULTIPLIER_PCT:
+				this.critDamageMultiplierPct += value;
+				break;
+			case CRIT_COEFF_PCT:
+				this.critCoeffPct += value;
+				break;
+			case EFFECT_PCT:
 				this.effectIncreasePct += value;
 				break;
-			case DIRECT_DAMAGE_INCREASE_PCT:
-				this.directDamageIncreasePct += value;
+			case POWER_COEFFICIENT_PCT:
+				this.spellPowerCoeffPct += value;
 				break;
-			case DOT_DAMAGE_INCREASE_PCT:
-				this.dotDamageIncreasePct += value;
+			case COST_PCT:
+				this.costPct += value;
 				break;
-			case SPELL_HIT_RATING:
-				this.spellHitRating += value;
-				break;
-			case SPELL_HIT_PCT:
-				this.spellHitPct += value;
-				break;
-			case SPELL_CRIT_RATING:
-				this.spellCritRating += value;
-				break;
-			case SPELL_CRIT_PCT:
-				this.spellCritPct += value;
-				break;
-			case SPELL_HASTE_RATING:
-				this.spellHasteRating += value;
-				break;
-			case SPELL_HASTE_PCT:
-				this.spellHastePct += value;
-				break;
-			case INCREASED_CRITICAL_DAMAGE_PCT:
-				this.increasedCriticalDamagePct += value;
-				break;
-			case CRIT_DAMAGE_INCREASE_PCT:
-				this.critDamageIncreasePct += value;
-				break;
-			case EXTRA_CRIT_COEFF:
-				this.extraCritCoeff += value;
-				break;
-			case SPELL_COEFF_BONUS_PCT:
-				this.spellCoeffPct += value;
-				break;
-			case CAST_TIME_REDUCTION:
-				this.castTimeReduction += value;
-				break;
-			case COST_REDUCTION_PCT:
-				this.costReductionPct += value;
+			case CAST_TIME:
+				this.castTime += value;
 				break;
 			default:
 				// ignore the rest

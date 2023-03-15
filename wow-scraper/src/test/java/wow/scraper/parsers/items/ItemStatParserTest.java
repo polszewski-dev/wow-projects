@@ -83,7 +83,7 @@ class ItemStatParserTest {
 		return Stream.of(
 			arguments(
 					"Equip: Your harmful spells have a chance to increase your spell haste rating by 320 for 6 secs. (Proc chance: 10%, 45s cooldown)",
-					"(event: SPELL_HIT, chance: 10%, 320 haste | 6s/45s)"
+					"(event: SPELL_HIT, chance: 10%, 320 spell haste rating | 6s/45s)"
 			),
 			arguments(
 					"Equip: 2% chance on successful spellcast to increase your spell damage by up to 120 for 15 sec. (Proc chance: 2%)",
@@ -115,7 +115,7 @@ class ItemStatParserTest {
 			),
 			arguments(
 					"Equip: Your spell critical strikes have a 50% chance to grant you 145 spell haste rating for 5 sec. (Proc chance: 50%)",
-					"(event: SPELL_CRIT, chance: 50%, 145 haste | 5s/-)"
+					"(event: SPELL_CRIT, chance: 50%, 145 spell haste rating | 5s/-)"
 			),
 			arguments(
 					"Equip: Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec. (Proc chance: 20%, 45s cooldown)",
@@ -176,11 +176,11 @@ class ItemStatParserTest {
 			),
 			arguments(
 					"Use: Increases spell hit rating by 80 for 15 sec. (1 Min, 15 Sec Cooldown)",
-					"(80 hit | 15s/1m15s)"
+					"(80 spell hit rating | 15s/1m15s)"
 			),
 			arguments(
 					"Use: Increases the spell critical hit chance of nearby party members by 2% for 30 min. (1 Hour Cooldown)",
-					"(2% crit | 30m/1h)"
+					"(2% spell crit | 30m/1h)"
 			),
 			arguments(
 					"Use: Increases your spell damage by up to 100 and your healing by up to 190 for 15 sec. (1 Min, 15 Sec Cooldown)",
@@ -188,7 +188,7 @@ class ItemStatParserTest {
 			),
 			arguments(
 					"Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)",
-					"(175 haste | 20s/2m)"
+					"(175 spell haste rating | 20s/2m)"
 			)
 		);
 	}

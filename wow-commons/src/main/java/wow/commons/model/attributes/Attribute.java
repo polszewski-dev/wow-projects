@@ -81,8 +81,4 @@ public abstract class Attribute {
 
 	@Override
 	public abstract String toString();
-
-	protected String getConditionString() {
-		return condition.isEmpty() ? "" : " | " + condition.getConditionString();
-	}
 }

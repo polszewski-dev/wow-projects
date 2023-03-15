@@ -73,13 +73,13 @@ public class Snapshot implements StatProvider {
 	}
 
 	private void calcBaseStats() {
-		double baseSta = baseStats.getBaseStamina() + stats.getBaseStatsIncrease() + stats.getStamina();
-		double baseInt = baseStats.getBaseIntellect() + stats.getBaseStatsIncrease() + stats.getIntellect();
-		double baseSpi = baseStats.getBaseSpirit() + stats.getBaseStatsIncrease() + stats.getSpirit();
+		double baseSta = baseStats.getBaseStamina() + stats.getBaseStats() + stats.getStamina();
+		double baseInt = baseStats.getBaseIntellect() + stats.getBaseStats() + stats.getIntellect();
+		double baseSpi = baseStats.getBaseSpirit() + stats.getBaseStats() + stats.getSpirit();
 
-		double baseStaMultiplier = 1 + (stats.getBaseStatsIncreasePct() + stats.getStaIncreasePct()) / 100;
-		double baseIntMultiplier = 1 + (stats.getBaseStatsIncreasePct() + stats.getIntIncreasePct()) / 100;
-		double baseSpiMultiplier = 1 + (stats.getBaseStatsIncreasePct() + stats.getSpiIncreasePct()) / 100;
+		double baseStaMultiplier = 1 + (stats.getBaseStatsPct() + stats.getStaminaPct()) / 100;
+		double baseIntMultiplier = 1 + (stats.getBaseStatsPct() + stats.getIntellectPct()) / 100;
+		double baseSpiMultiplier = 1 + (stats.getBaseStatsPct() + stats.getSpiritPct()) / 100;
 
 		stamina = baseSta * baseStaMultiplier;
 		intellect = baseInt * baseIntMultiplier;
@@ -91,9 +91,9 @@ public class Snapshot implements StatProvider {
 		totalCrit = getTotalCritValue();
 		totalHaste = getTotalHasteValue();
 
-		sp = stats.getTotalSpellDamage();
+		sp = stats.getSpellDamage();
 
-		spMultiplier = 1 + stats.getAdditionalSpellDamageTakenPct() / 100;
+		spMultiplier = 1 + stats.getSpellDamagePct() / 100;
 
 		hitChance = Math.min(SpellConstants.BASE_HIT.getValue() + totalHit, 99) / 100;
 		critChance = Math.min(totalCrit, 100) / 100;
@@ -101,8 +101,8 @@ public class Snapshot implements StatProvider {
 
 		critCoeff = getCritCoeffValue();
 
-		directDamageDoneMultiplier = 1 + (stats.getDamageTakenPct() + stats.getEffectIncreasePct() + stats.getDirectDamageIncreasePct()) / 100;
-		dotDamageDoneMultiplier = 1 + (stats.getDamageTakenPct() + stats.getEffectIncreasePct() + stats.getDotDamageIncreasePct()) / 100;
+		directDamageDoneMultiplier = 1 + (stats.getEffectIncreasePct() + stats.getDamagePct() + stats.getDirectDamagePct()) / 100;
+		dotDamageDoneMultiplier = 1 + (stats.getEffectIncreasePct() + stats.getDamagePct() + stats.getDotDamagePct()) / 100;
 
 		spellCoeffDirect = getSpellCoeffDirectValue();
 		spellCoeffDoT = getSpellCoeffDoTValue();
@@ -129,50 +129,50 @@ public class Snapshot implements StatProvider {
 	}
 
 	private double getTotalHitValue() {
-		double ratingHit = stats.getSpellHitRating() / cr.getSpellHit();
-		double pctHit = stats.getSpellHitPct();
+		double ratingHit = stats.getHitRating() / cr.getSpellHit();
+		double pctHit = stats.getHitPct();
 		return ratingHit + pctHit;
 	}
 
 	private double getTotalCritValue() {
 		double baseCrit = baseStats.getBaseSpellCritPct().getValue();
 		double intCrit = (intellect - baseStats.getBaseIntellect()) / baseStats.getIntellectPerCritPct();
-		double ratingCrit = stats.getSpellCritRating() / cr.getSpellCrit();
-		double pctCrit = stats.getSpellCritPct();
+		double ratingCrit = stats.getCritRating() / cr.getSpellCrit();
+		double pctCrit = stats.getCritPct();
 		return baseCrit + intCrit + ratingCrit + pctCrit;
 	}
 
 	private double getTotalHasteValue() {
-		double ratingHaste = stats.getSpellHasteRating() / cr.getSpellHaste();
-		double pctHaste = stats.getSpellHastePct();
+		double ratingHaste = stats.getHasteRating() / cr.getSpellHaste();
+		double pctHaste = stats.getHastePct();
 		return pctHaste + ratingHaste;
 	}
 
 	private double getCritCoeffValue() {
-		double increasedCriticalDamage = stats.getIncreasedCriticalDamagePct() / 100;
-		double talentIncrease = stats.getCritDamageIncreasePct() / 100;
-		double extraCritCoeff = stats.getExtraCritCoeff();
+		double increasedCriticalDamage = stats.getCritDamagePct() / 100;
+		double talentIncrease = stats.getCritDamageMultiplierPct() / 100;
+		double extraCritCoeff = stats.getCritCoeffPct();
 		return 1 + (0.5 + 1.5 * increasedCriticalDamage) * (1 + talentIncrease) + extraCritCoeff;
 	}
 
 	private double getSpellCoeffDirectValue() {
 		double baseSpellCoeffDirect = spell.getCoeffDirect().getCoefficient();
-		double talentSpellCoeff = stats.getSpellCoeffPct() / 100;
+		double talentSpellCoeff = stats.getSpellPowerCoeffPct() / 100;
 		return baseSpellCoeffDirect + talentSpellCoeff;
 	}
 
 	private double getSpellCoeffDoTValue() {
 		double baseSpellCoeffDoT = spell.getCoeffDot().getCoefficient();
-		double talentSpellCoeff = stats.getSpellCoeffPct() / 100;
+		double talentSpellCoeff = stats.getSpellPowerCoeffPct() / 100;
 		return baseSpellCoeffDoT + talentSpellCoeff;
 	}
 
 	private void calcCastTime() {
-		Duration castTimeReduction = Duration.seconds(stats.getCastTimeReduction());
+		Duration castTimeChange = Duration.seconds(stats.getCastTime());
 		Duration baseCastTime = spell.getCastTime();
-		Duration reducedCastTime = baseCastTime.subtract(castTimeReduction);
+		Duration changedCastTime = baseCastTime.add(castTimeChange);
 
-		castTime =  reducedCastTime.divideBy(1 + haste);
+		castTime = changedCastTime.divideBy(1 + haste);
 		gcd = SpellConstants.GCD.divideBy(1 + haste).max(SpellConstants.MIN_GCD);
 		effectiveCastTime = castTime.max(gcd);
 	}
@@ -189,8 +189,8 @@ public class Snapshot implements StatProvider {
 
 	private void calcCost() {
 		double baseManaCost = spell.getManaCost();
-		Percent costReductionPct = Percent.of(stats.getCostReductionPct());
-		manaCost = baseManaCost * costReductionPct.negate().toMultiplier();
+		Percent costChangePct = Percent.of(stats.getCostPct());
+		manaCost = baseManaCost * costChangePct.toMultiplier();
 	}
 
 	public SpellStatistics getSpellStatistics(CritMode critMode, boolean useBothDamageRanges) {

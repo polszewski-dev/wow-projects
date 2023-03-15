@@ -21,26 +21,26 @@ class SnapshotTest extends WowCharacterSpringTest {
 
 		AccumulatedSpellStats underTest = snapshot.getStats();
 
-		assertThat(underTest.getBaseStatsIncreasePct()).isEqualTo(10);
-		assertThat(underTest.getStaIncreasePct()).isEqualTo(15);
-		assertThat(underTest.getSpiIncreasePct()).isEqualTo(-5);
+		assertThat(underTest.getBaseStatsPct()).isEqualTo(10);
+		assertThat(underTest.getStaminaPct()).isEqualTo(15);
+		assertThat(underTest.getSpiritPct()).isEqualTo(-5);
 		assertThat(underTest.getStamina()).isEqualTo(462);
 		assertThat(underTest.getIntellect()).isEqualTo(413);
 		assertThat(underTest.getSpirit()).isEqualTo(20);
-		assertThat(underTest.getBaseStatsIncrease()).isEqualTo(20);
-		assertThat(underTest.getTotalSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1803);
-		assertThat(underTest.getDamageTakenPct()).isEqualTo(31);
-		assertThat(underTest.getSpellHitRating()).isEqualTo(164);
-		assertThat(underTest.getSpellHitPct()).isEqualTo(3);
-		assertThat(underTest.getSpellCritRating()).isEqualTo(331);
-		assertThat(underTest.getSpellCritPct()).isEqualTo(11);
-		assertThat(underTest.getSpellHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
-		assertThat(underTest.getIncreasedCriticalDamagePct()).isEqualTo(3);
-		assertThat(underTest.getCritDamageIncreasePct()).isEqualTo(100);
-		assertThat(underTest.getExtraCritCoeff()).isEqualTo(0.67, PRECISION);
-		assertThat(underTest.getSpellCoeffPct()).isEqualTo(20);
-		assertThat(underTest.getCastTimeReduction()).isEqualTo(0.5);
-		assertThat(underTest.getCostReductionPct()).isEqualTo(5);
+		assertThat(underTest.getBaseStats()).isEqualTo(20);
+		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1803);
+		assertThat(underTest.getDamagePct()).isEqualTo(31);
+		assertThat(underTest.getHitRating()).isEqualTo(164);
+		assertThat(underTest.getHitPct()).isEqualTo(3);
+		assertThat(underTest.getCritRating()).isEqualTo(331);
+		assertThat(underTest.getCritPct()).isEqualTo(11);
+		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
+		assertThat(underTest.getCritDamagePct()).isEqualTo(3);
+		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(100);
+		assertThat(underTest.getCritCoeffPct()).isEqualTo(0.67, PRECISION);
+		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
+		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
+		assertThat(underTest.getCostPct()).isEqualTo(-5);
 	}
 
 	@Test

@@ -103,40 +103,60 @@ public interface AttributeSource {
 		return getAttributes().toString();
 	}
 
-	default double getArmor() {
-		return getDouble(ARMOR);
+	default double getStrength() {
+		return getDouble(STRENGTH);
+	}
+
+	default Percent getStrengthPct() {
+		return getPercent(STRENGTH_PCT);
+	}
+
+	default double getAgility() {
+		return getDouble(AGILITY);
+	}
+
+	default Percent getAgilityPct() {
+		return getPercent(AGILITY_PCT);
 	}
 
 	default double getStamina() {
 		return getDouble(STAMINA);
 	}
 
+	default Percent getStaminaPct() {
+		return getPercent(STAMINA_PCT);
+	}
+
 	default double getIntellect() {
 		return getDouble(INTELLECT);
+	}
+
+	default Percent getIntellectPct() {
+		return getPercent(INTELLECT_PCT);
 	}
 
 	default double getSpirit() {
 		return getDouble(SPIRIT);
 	}
 
-	default double getBaseStatsIncrease() {
-		return getDouble(BASE_STATS_INCREASE);
+	default Percent getSpiritPct() {
+		return getPercent(SPIRIT_PCT);
 	}
 
-	default Percent getBaseStatsIncreasePct() {
-		return getPercent(BASE_STATS_INCREASE_PCT);
+	default double getBaseStats() {
+		return getDouble(BASE_STATS);
 	}
 
-	default Percent getStaIncreasePct() {
-		return getPercent(STA_INCREASE_PCT);
+	default Percent getBaseStatsPct() {
+		return getPercent(BASE_STATS_PCT);
 	}
 
-	default Percent getIntIncreasePct() {
-		return getPercent(INT_INCREASE_PCT);
+	default double getAttackPower() {
+		return getDouble(ATTACK_POWER);
 	}
 
-	default Percent getSpiIncreasePct() {
-		return getPercent(SPI_INCREASE_PCT);
+	default double getRangedAttackPower() {
+		return getDouble(RANGED_ATTACK_POWER);
 	}
 
 	default double getSpellPower() {
@@ -145,6 +165,206 @@ public interface AttributeSource {
 
 	default double getSpellDamage() {
 		return getDouble(SPELL_DAMAGE);
+	}
+
+	default Percent getSpellDamagePct() {
+		return getPercent(SPELL_DAMAGE_PCT);
+	}
+
+	default double getHealingPower() {
+		return getDouble(HEALING_POWER);
+	}
+
+	default Percent getHitPct() {
+		return getPercent(HIT_PCT);
+	}
+
+	default double getHitRating() {
+		return getDouble(HIT_RATING);
+	}
+
+	default double getPhysicalHitRating() {
+		return getDouble(PHYSICAL_HIT_RATING);
+	}
+
+	default Percent getPhysicalHitPct() {
+		return getPercent(PHYSICAL_HIT_PCT);
+	}
+
+	default double getSpellHitRating() {
+		return getDouble(SPELL_HIT_RATING);
+	}
+
+	default Percent getSpellHitPct() {
+		return getPercent(SPELL_HIT_PCT);
+	}
+
+	default double getCritRating() {
+		return getDouble(CRIT_RATING);
+	}
+
+	default Percent getCritPct() {
+		return getPercent(CRIT_PCT);
+	}
+
+	default double getPhysicalCritRating() {
+		return getDouble(PHYSICAL_CRIT_RATING);
+	}
+
+	default Percent getPhysicalCritPct() {
+		return getPercent(PHYSICAL_CRIT_PCT);
+	}
+
+	default double getSpellCritRating() {
+		return getDouble(SPELL_CRIT_RATING);
+	}
+
+	default Percent getSpellCritPct() {
+		return getPercent(SPELL_CRIT_PCT);
+	}
+
+	default Percent getHastePct() {
+		return getPercent(HASTE_PCT);
+	}
+
+	default double getHasteRating() {
+		return getDouble(HASTE_RATING);
+	}
+
+	default double getPhysicalHasteRating() {
+		return getDouble(PHYSICAL_HASTE_RATING);
+	}
+
+	default Percent getPhysicalHastePct() {
+		return getPercent(PHYSICAL_HASTE_PCT);
+	}
+
+	default double getSpellHasteRating() {
+		return getDouble(SPELL_HASTE_RATING);
+	}
+
+	default Percent getSpellHastePct() {
+		return getPercent(SPELL_HASTE_PCT);
+	}
+
+	default Percent getDamagePct() {
+		return getPercent(DAMAGE_PCT);
+	}
+
+	default Percent getDirectDamagePct() {
+		return getPercent(DIRECT_DAMAGE_PCT);
+	}
+
+	default Percent getDoTDamagePct() {
+		return getPercent(DOT_DAMAGE_PCT);
+	}
+
+	default Percent getCritDamagePct() {
+		return getPercent(CRIT_DAMAGE_PCT);
+	}
+
+	default Percent getCritMultiplierPct() {
+		return getPercent(CRIT_DAMAGE_MULTIPLIER_PCT);
+	}
+
+	default Percent getCritCoeffPct() {
+		return getPercent(CRIT_COEFF_PCT);
+	}
+
+	default Percent getEffectPct() {
+		return getPercent(EFFECT_PCT);
+	}
+
+	default Percent getPowerCoefficientPct() {
+		return getPercent(POWER_COEFFICIENT_PCT);
+	}
+
+	default double getArmorPenetration() {
+		return getDouble(ARMOR_PENETRATION);
+	}
+
+	default double getSpellPenetration() {
+		return getDouble(SPELL_PENETRATION);
+	}
+
+	default double getExpertiseRating() {
+		return getDouble(EXPERTISE_RATING);
+	}
+
+	default double getMp5() {
+		return getDouble(MP5);
+	}
+
+	default double getHp5() {
+		return getDouble(HP5);
+	}
+
+	default double getArmor() {
+		return getDouble(ARMOR);
+	}
+
+	default double getDodgeRating() {
+		return getDouble(DODGE_RATING);
+	}
+
+	default double getDefense() {
+		return getDouble(DEFENSE);
+	}
+
+	default double getDefenseRating() {
+		return getDouble(DEFENSE_RATING);
+	}
+
+	default double getBlock() {
+		return getDouble(BLOCK);
+	}
+
+	default double getBlockRating() {
+		return getDouble(BLOCK_RATING);
+	}
+
+	default Percent getBlockPct() {
+		return getPercent(BLOCK_PCT);
+	}
+
+	default double getShieldBlock() {
+		return getDouble(SHIELD_BLOCK);
+	}
+
+	default double getShieldBlockRating() {
+		return getDouble(SHIELD_BLOCK_RATING);
+	}
+
+	default double getParryRating() {
+		return getDouble(PARRY_RATING);
+	}
+
+	default double getResilienceRating() {
+		return getDouble(RESILIENCE_RATING);
+	}
+
+	default double getResistance() {
+		return getDouble(RESISTANCE);
+	}
+
+	default Percent getSpeedPct() {
+		return getPercent(SPEEED_PCT);
+	}
+
+	default Percent getCostPct() {
+		return getPercent(COST_PCT);
+	}
+
+	default Duration getCastTime() {
+		return getDuration(CAST_TIME);
+	}
+
+	default Percent getThreatPct() {
+		return getPercent(THREAT_PCT);
+	}
+
+	default Percent getPushbackPct() {
+		return getPercent(PUSHBACK_PCT);
 	}
 
 	default double getSpellDamage(SpellSchool spellSchool) {
@@ -159,97 +379,16 @@ public interface AttributeSource {
 		return getSpellPower() + getSpellDamage() + getSpellDamage(spellSchool);
 	}
 
-	default double getSpellCritRating() {
-		return getDouble(SPELL_CRIT_RATING);
-	}
-
-	default Percent getSpellCritPct() {
-		return getPercent(SPELL_CRIT_PCT);
-	}
-
-	default Percent getIncreasedCriticalDamagePct() {
-		return getPercent(INCREASED_CRITICAL_DAMAGE_PCT);
-	}
-
-	default Percent getCritDamageIncreasePct() {
-		return getPercent(CRIT_DAMAGE_INCREASE_PCT);
-	}
-
-	default double getSpellHitRating() {
-		return getDouble(SPELL_HIT_RATING);
-	}
-
-	default Percent getSpellHitPct() {
-		return getPercent(SPELL_HIT_PCT);
-	}
-
-	default double getSpellHasteRating() {
-		return getDouble(SPELL_HASTE_RATING);
-	}
-
-	default Percent getSpellHastePct() {
-		return getPercent(SPELL_HASTE_PCT);
-	}
-
-	default double getSpellPenetration() {
-		return getDouble(SPELL_PENETRATION);
-	}
-
-	default double getHealingPower() {
-		return getDouble(HEALING_POWER);
-	}
-
-	default double getMp5() {
-		return getDouble(MP5);
-	}
-
-	default double getResistance() {
-		return getDouble(RESISTANCE);
-	}
-
 	default double getResistance(SpellSchool spellSchool) {
 		return getDouble(RESISTANCE, spellSchool);
 	}
 
-	default Percent getDamageTakenPct() {
-		return getPercent(DAMAGE_TAKEN_PCT);
+	default Percent getDamagePct(SpellSchool spellSchool) {
+		return getPercent(DAMAGE_PCT, AttributeCondition.of(spellSchool));
 	}
 
-	default Percent getDamageTakenPct(SpellSchool spellSchool) {
-		return getPercent(DAMAGE_TAKEN_PCT, AttributeCondition.of(spellSchool));
-	}
-
-
-	default Percent getDirectDamageIncreasePct() {
-		return getPercent(DIRECT_DAMAGE_INCREASE_PCT);
-	}
-
-	default Percent getDoTDamageIncreasePct() {
-		return getPercent(DOT_DAMAGE_INCREASE_PCT);
-	}
-
-	default Percent getAdditionalSpellDamageTakenPct() {
-		return getPercent(ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT);
-	}
-
-	default Percent getEffectIncreasePct(SpellId spellId) {
-		return getPercent(EFFECT_INCREASE_PCT, AttributeCondition.of(spellId));
-	}
-
-	default Percent getDamageTakenIncreasePct() {
-		return getPercent(DAMAGE_TAKEN_INCREASE_PCT);
-	}
-
-	default Percent getSpellCoeffPct() {
-		return getPercent(SPELL_COEFF_BONUS_PCT);
-	}
-
-	default Duration getCastTimeReduction(SpellId spellId) {
-		return getDuration(CAST_TIME_REDUCTION, spellId);
-	}
-
-	default Percent getCostReductionPct() {
-		return getPercent(COST_REDUCTION_PCT);
+	default Duration getCastTime(SpellId spellId) {
+		return getDuration(CAST_TIME, spellId);
 	}
 
 	default List<SpecialAbility> getSpecialAbilities() {
@@ -258,17 +397,5 @@ public interface AttributeSource {
 
 	default List<StatConversion> getStatConversions() {
 		return getList(STAT_CONVERSION);
-	}
-
-	default double getExtraCritCoeff() {
-		return getDouble(EXTRA_CRIT_COEFF);
-	}
-
-	default Percent getThreatReductionPct() {
-		return getPercent(THREAT_REDUCTION_PCT);
-	}
-
-	default Percent getSpeedIncreasePct() {
-		return getPercent(SPEED_INCREASE_PCT);
 	}
 }

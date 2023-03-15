@@ -4,11 +4,9 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.util.FormatUtil;
+import wow.commons.util.PrimitiveAttributeFormatter;
 
 import java.util.Objects;
-
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.DisplayHint;
 
 /**
  * User: POlszewski
@@ -88,16 +86,6 @@ public class PrimitiveAttribute extends Attribute {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s%s", getValueString(), id.getShortName(), getConditionString());
-	}
-
-	private String getValueString() {
-		if (id.getDisplayHint() == DisplayHint.PERCENT) {
-			return getPercent().toString();
-		} else if (id.getDisplayHint() == DisplayHint.DURATION) {
-			return getDuration().toString();
-		}
-
-		return FormatUtil.decimalPointOnlyIfNecessary(value);
+		return PrimitiveAttributeFormatter.format(this);
 	}
 }

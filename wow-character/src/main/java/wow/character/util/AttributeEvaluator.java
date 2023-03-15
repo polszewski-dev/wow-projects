@@ -1,5 +1,7 @@
 package wow.character.util;
 
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import wow.character.model.equipment.ItemSockets;
 import wow.commons.model.attributes.*;
 import wow.commons.model.attributes.complex.ComplexAttribute;
@@ -13,12 +15,14 @@ import wow.commons.util.AttributesBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.EFFECT_PCT;
+
 /**
  * User: POlszewski
  * Date: 2022-01-05
  */
 public class AttributeEvaluator implements AttributeCollector {
-	private final Map<AttributeCondition, Map<PrimitiveAttributeId, Double>> primitiveAttributes = new HashMap<>();
+	private final Map<PrimitiveAttributeEntry, PrimitiveAttributeEntry> primitiveAttributes = new HashMap<>();
 	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributes = new EnumMap<>(ComplexAttributeId.class);
 
 	private AttributeEvaluator() {}
@@ -70,15 +74,13 @@ public class AttributeEvaluator implements AttributeCollector {
 	}
 
 	private Attributes getScaledAttributes(AttributeSource attributeSource, SpellId sourceSpell) {
-		AttributeCondition condition = AttributeCondition.of(sourceSpell);
-		Double increasePct = getAttributeValue(condition);
+		Double increasePct = getEffectIncreasePct(sourceSpell);
 		return attributeSource.getAttributes().scale(1 + increasePct / 100);
 	}
 
-	private Double getAttributeValue(AttributeCondition condition) {
-		return primitiveAttributes
-				.getOrDefault(condition, Map.of())
-				.getOrDefault(PrimitiveAttributeId.EFFECT_INCREASE_PCT, 0.0);
+	private Double getEffectIncreasePct(SpellId sourceSpell) {
+		var key = new PrimitiveAttributeEntry(EFFECT_PCT, AttributeCondition.of(sourceSpell));
+		return primitiveAttributes.getOrDefault(key, key).value;
 	}
 
 	public AttributeEvaluator addAttributes(AttributeCollection attributeCollection) {
@@ -94,8 +96,8 @@ public class AttributeEvaluator implements AttributeCollector {
 		AttributeCondition condition = attribute.getCondition();
 		PrimitiveAttributeId id = attribute.getId();
 
-		var map = primitiveAttributes.computeIfAbsent(condition, x -> new EnumMap<>(PrimitiveAttributeId.class));
-		map.put(id, attribute.getDouble() + map.getOrDefault(id, 0.0));
+		var key = new PrimitiveAttributeEntry(id, condition);
+		primitiveAttributes.computeIfAbsent(key, x -> key).value += attribute.getDouble();
 
 		return this;
 	}
@@ -179,13 +181,11 @@ public class AttributeEvaluator implements AttributeCollector {
 	}
 
 	private void processConditionalAttributes(AttributesBuilder result) {
-		for (var entry : primitiveAttributes.entrySet()) {
-			var condition = entry.getKey();
-			for (var entry2 : entry.getValue().entrySet()) {
-				var id = entry2.getKey();
-				var value = entry2.getValue();
-				result.addAttribute(id, value, condition);
-			}
+		for (var key : primitiveAttributes.keySet()) {
+			var id = key.id;
+			var condition = key.condition;
+			var value = key.value;
+			result.addAttribute(id, value, condition);
 		}
 	}
 
@@ -193,5 +193,13 @@ public class AttributeEvaluator implements AttributeCollector {
 		for (var entry : complexAttributes.entrySet()) {
 			result.addComplexAttributeList(entry.getValue());
 		}
+	}
+
+	@RequiredArgsConstructor
+	@EqualsAndHashCode(of = { "id", "condition" })
+	private static class PrimitiveAttributeEntry {
+		final PrimitiveAttributeId id;
+		final AttributeCondition condition;
+		double value;
 	}
 }

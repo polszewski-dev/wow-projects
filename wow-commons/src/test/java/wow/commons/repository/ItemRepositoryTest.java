@@ -142,7 +142,7 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(gem.isUnique()).isFalse();
 		assertThat(gem.getItemLevel()).isEqualTo(100);
-		assertThat(gem.getTimeRestriction().getPhase()).isEqualTo(TBC_P3);
+		assertThat(gem.getTimeRestriction().getPhase()).isEqualTo(TBC_P5);
 		assertThat(gem.getCharacterRestriction().getLevel()).isNull();
 		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
 		assertThat(gem.getTooltip()).isNotBlank();
@@ -183,7 +183,7 @@ class ItemRepositoryTest extends RepositoryTest {
 
 		assertThat(gem.getColor()).isEqualTo(GemColor.META);
 		assertThat(gem.getSpellCritRating()).isEqualTo(12);
-		assertThat(gem.getIncreasedCriticalDamagePct()).isEqualTo(Percent.of(3));
+		assertThat(gem.getCritDamagePct()).isEqualTo(Percent.of(3));
 		assertThat(gem.getMetaEnablers()).hasSameElementsAs(List.of(MetaEnabler.AT_LEAST_2_BLUES));
 	}
 

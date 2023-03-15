@@ -53,7 +53,7 @@ class AttributeEvaluatorTest extends WowCharacterSpringTest {
 
 		assertThat(attributes.getStamina()).isEqualTo(462);
 		assertThat(attributes.getIntellect()).isEqualTo(373);
-		assertThat(attributes.getBaseStatsIncrease()).isEqualTo(6);
+		assertThat(attributes.getBaseStats()).isEqualTo(6);
 		assertThat(attributes.getSpellPower()).isEqualTo(1170);
 		assertThat(attributes.getSpellDamage()).isEqualTo(156);
 		assertThat(attributes.getSpellDamage(SHADOW)).isEqualTo(54);
@@ -61,6 +61,6 @@ class AttributeEvaluatorTest extends WowCharacterSpringTest {
 		assertThat(attributes.getSpellHitRating()).isEqualTo(164);
 		assertThat(attributes.getSpellCritRating()).isEqualTo(317);
 		assertThat(attributes.getSpellHasteRating()).isEqualTo(426);
-		assertThat(attributes.getIncreasedCriticalDamagePct().getValue()).isEqualTo(3);
+		assertThat(attributes.getCritDamagePct().getValue()).isEqualTo(3);
 	}
 }

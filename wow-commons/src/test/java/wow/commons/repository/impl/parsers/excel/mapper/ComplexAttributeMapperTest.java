@@ -30,7 +30,7 @@ class ComplexAttributeMapperTest {
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("Equivalent -> stat=SpellPower; amount=100; line=This is a test");
+		assertThat(result).isEqualTo("Equivalent -> stat=Power,Spell; amount=100; line=This is a test");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -49,7 +49,7 @@ class ComplexAttributeMapperTest {
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("OnUse -> stat=SpellPower; amount=143; duration=15; cooldown=120");
+		assertThat(result).isEqualTo("OnUse -> stat=Power,Spell; amount=143; duration=15; cooldown=120");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -73,7 +73,7 @@ class ComplexAttributeMapperTest {
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("OnUse -> stat1=SpellDamage; amount1=120; stat2=SpellCritPct; amount2=2; duration=15; cooldown=120");
+		assertThat(result).isEqualTo("OnUse -> stat1=Power,SpellDamage; amount1=120; stat2=Crit,Spell,Percent; amount2=2; duration=15; cooldown=120");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -95,7 +95,7 @@ class ComplexAttributeMapperTest {
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("Proc -> event=SPELL_CRIT; chance%=20; stat=SpellPower; amount=100; duration=15; cooldown=60");
+		assertThat(result).isEqualTo("Proc -> event=SPELL_CRIT; chance%=20; stat=Power,Spell; amount=100; duration=15; cooldown=60");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -159,7 +159,7 @@ class ComplexAttributeMapperTest {
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("StatConversion -> from=PetStamina; to=SpellDamage; ratio%=10");
+		assertThat(result).isEqualTo("StatConversion -> from=Pet,Stamina; to=Power,SpellDamage; ratio%=10");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 

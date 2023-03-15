@@ -1,6 +1,6 @@
 package wow.commons.model.attributes.primitive;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.model.attributes.AttributeId;
 import wow.commons.util.EnumUtil;
 
@@ -8,128 +8,106 @@ import wow.commons.util.EnumUtil;
  * User: POlszewski
  * Date: 2022-11-09
  */
-@AllArgsConstructor
+@Getter
 public enum PrimitiveAttributeId implements AttributeId {
-	STRENGTH("Strength", "str"),
-	AGILITY("Agility", "agi"),
-	STAMINA("Stamina", "sta"),
-	INTELLECT("Intellect", "int"),
-	SPIRIT("Spirit", "spi"),
-	BASE_STATS_INCREASE("BaseStatsIncrease", "base stats"),
-
-	ATTACK_POWER("AttackPower"),
-	RANGED_ATTACK_POWER("RangedAttackPower"),
-	CRIT_RATING("CritRating"),
-	HIT_RATING("HitRating"),
-	HASTE_RATING("HasteRating"),
-	EXPERTISE_RATING("ExpertiseRating"),
-	ARMOR_PENETRATION("ArmorPenetration"),
-
-	SPELL_POWER("SpellPower", "sp"),
-	SPELL_DAMAGE("SpellDamage", "sd"),
-	SPELL_CRIT_RATING("SpellCritRating", "crit"),
-	SPELL_HIT_RATING("SpellHitRating", "hit"),
-	SPELL_HASTE_RATING("SpellHasteRating", "haste"),
-	SPELL_PENETRATION("SpellPenetration", "penetration"),
-
-	ADDITIONAL_DAMAGE("AdditionalDamage", "additional damage"),
-
-	HEALING_POWER("HealingPower", "healing"),
-
-	MP5("Mp5", "mp5"),
-	HP5("Hp5", "hp5"),
-
-	ARMOR("Armor", "armor"),
-	DODGE("Dodge"),
-	DODGE_RATING("DodgeRating"),
+	STRENGTH("Strength"),
+	STRENGTH_PCT("Strength,Percent"),
+	AGILITY("Agility"),
+	AGILITY_PCT("Agility,Percent"),
+	STAMINA("Stamina"),
+	STAMINA_PCT("Stamina,Percent"),
+	INTELLECT("Intellect"),
+	INTELLECT_PCT("Intellect,Percent"),
+	SPIRIT("Spirit"),
+	SPIRIT_PCT("Spirit,Percent"),
+	BASE_STATS("BaseStats"),
+	BASE_STATS_PCT("BaseStats,Percent"),
+	ATTACK_POWER("Power,Physical"),
+	RANGED_ATTACK_POWER("Power,Ranged"),
+	SPELL_POWER("Power,Spell"),
+	SPELL_DAMAGE("Power,SpellDamage"),
+	SPELL_DAMAGE_PCT("Power,SpellDamage,Percent"),
+	HEALING_POWER("Power,Healing"),
+	HIT_RATING("Hit,Rating"),
+	HIT_PCT("Hit,Percent"),
+	PHYSICAL_HIT_RATING("Hit,Physical,Rating"),
+	PHYSICAL_HIT_PCT("Hit,Physical,Percent"),
+	SPELL_HIT_RATING("Hit,Spell,Rating"),
+	SPELL_HIT_PCT("Hit,Spell,Percent"),
+	CRIT_RATING("Crit,Rating"),
+	CRIT_PCT("Crit,Percent"),
+	PHYSICAL_CRIT_RATING("Crit,Physical,Rating"),
+	PHYSICAL_CRIT_PCT("Crit,Physical,Percent"),
+	SPELL_CRIT_RATING("Crit,Spell,Rating"),
+	SPELL_CRIT_PCT("Crit,Spell,Percent"),
+	HASTE_RATING("Haste,Rating"),
+	HASTE_PCT("Haste,Percent"),
+	PHYSICAL_HASTE_RATING("Haste,Physical,Rating"),
+	PHYSICAL_HASTE_PCT("Haste,Physical,Percent"),
+	SPELL_HASTE_RATING("Haste,Spell,Rating"),
+	SPELL_HASTE_PCT("Haste,Spell,Percent"),
+	DAMAGE_PCT("Damage,Percent"),
+	DIRECT_DAMAGE_PCT("Damage,Direct,Percent"),
+	DOT_DAMAGE_PCT("Damage,DoT,Percent"),
+	CRIT_DAMAGE_PCT("CritDamage,Percent"),
+	CRIT_DAMAGE_MULTIPLIER_PCT("CritDamageMultiplier,Percent"),
+	CRIT_COEFF_PCT("CritCoeff,Percent"),
+	EFFECT_PCT("Effect,Percent"),
+	POWER_COEFFICIENT_PCT("PowerCoeff,Percent"),
+	ARMOR_PENETRATION("Penetration,Physical"),
+	SPELL_PENETRATION("Penetration,Spell"),
+	EXPERTISE_RATING("Expertise,Rating"),
+	MP5("Mp5"),
+	HP5("Hp5"),
+	ARMOR("Armor"),
+	DODGE_RATING("Dodge,Rating"),
 	DEFENSE("Defense"),
-	DEFENSE_RATING("DefenseRating"),
+	DEFENSE_RATING("Defense,Rating"),
 	BLOCK("Block"),
-
-	BLOCK_RATING("BlockRating"),
+	BLOCK_RATING("Block,Rating"),
+	BLOCK_PCT("Block,Percent"),
 	SHIELD_BLOCK("ShieldBlock"),
-	SHIELD_BLOCK_RATING("ShieldBlockRating"),
-	PARRY("Parry"),
-	PARRY_RATING("ParryRating"),
-	RESILIENCE_RATING("ResilienceRating", "resi"),
-
-	RESISTANCE("Resistance", "resist"),
-	RESIST_ALL("ResistAll", "resist all"),
-
-	EXTRA_CRIT_COEFF("ExtraCritCoeff", "gimmick to handle ISB"),
-
-	DURATION_INCREASE("DurationIncrease", "increased duration", DisplayHint.DURATION),
-
-	NUM_NEXT_SPELLS_CAST_INSTANTLY("#NextSpellsCastInstantly"),
-
-	// percent attributes
-
-	BASE_STATS_INCREASE_PCT("BaseStatsIncreasePct", "base stats", DisplayHint.PERCENT),
-	CRIT_PCT("CritPct", DisplayHint.PERCENT),
-	HIT_PCT("HitPct", DisplayHint.PERCENT),
-	ADDITIONAL_SPELL_DAMAGE_TAKEN_PCT("AdditionalSpellDamageTakenPct", "additinal spell dmg taken", DisplayHint.PERCENT),
-	SPELL_CRIT_PCT("SpellCritPct", "crit", DisplayHint.PERCENT),
-	SPELL_HIT_PCT("SpellHitPct", "hit", DisplayHint.PERCENT),
-	SPELL_HASTE_PCT("SpellHastePct", "haste", DisplayHint.PERCENT),
-	INCREASED_CRITICAL_DAMAGE_PCT("IncreasedCriticalDamagePct", "increased crit dmg", DisplayHint.PERCENT),
-	DAMAGE_TAKEN_PCT("DamageTakenPct", "increased spell dmg", DisplayHint.PERCENT),
-	BLOCK_PCT("BlockPct", DisplayHint.PERCENT),
-	SPEED_INCREASE_PCT("SpeedIncreasePct", "movement speed", DisplayHint.PERCENT),
-	COST_REDUCTION_PCT("CostReductionPct", "reduced cost", DisplayHint.PERCENT),
-	THREAT_REDUCTION_PCT("ThreatReductionPct", "reduced threat", DisplayHint.PERCENT),
-	PUSHBACK_REDUCTION_PCT("PushbackReductionPct", "reduced pushback", DisplayHint.PERCENT),
-	RANGE_INCREASE_PCT("RangeIncreasePct", "increased range", DisplayHint.PERCENT),
-	DURATION_INCREASE_PCT("DurationIncreasePct", "increased duration", DisplayHint.PERCENT),
-	SPELL_COEFF_BONUS_PCT("SpellCoeffBonusPct", "increased spell coefficient", DisplayHint.PERCENT),
-	EFFECT_INCREASE_PCT("EffectIncreasePct", "increased effect", DisplayHint.PERCENT),
-	DIRECT_DAMAGE_INCREASE_PCT("DirectDamageIncreasePct", "increased direct damage", DisplayHint.PERCENT),
-	DOT_DAMAGE_INCREASE_PCT("DotDamageIncreasePct", "increased dot damage", DisplayHint.PERCENT),
-	CRIT_DAMAGE_INCREASE_PCT("CritDamageIncreasePct", "increased crit damage", DisplayHint.PERCENT),
-
-	STA_INCREASE_PCT("StaIncreasePct", "increased sta", DisplayHint.PERCENT),
-	INT_INCREASE_PCT("IntIncreasePct", "increased int", DisplayHint.PERCENT),
-	SPI_INCREASE_PCT("SpiIncreasePct", "increased spi", DisplayHint.PERCENT),
-	MAX_HEALTH_INCREASE_PCT("MaxHealthIncreasePct", "increased max health", DisplayHint.PERCENT),
-	MAX_MANA_INCREASE_PCT("MaxManaIncreasePct", "increased max mana", DisplayHint.PERCENT),
-	MELEE_CRIT_INCREASE_PCT("MeleeCritIncreasePct", DisplayHint.PERCENT),
-	DAMAGE_TAKEN_INCREASE_PCT("DamageTakenIncreasePct", DisplayHint.PERCENT),
-
-	PET_STAMINA("PetStamina"),
-	PET_INTELLECT("PetIntellect"),
-
-	PET_STA_INCREASE_PCT("PetStaIncreasePct", "increased pet sta", DisplayHint.PERCENT),
-	PET_INT_INCREASE_PCT("PetIntIncreasePct", "increased pet int", DisplayHint.PERCENT),
-	PET_SPELL_CRIT_INCREASE_PCT("PetSpellCritIncreasePct", DisplayHint.PERCENT),
-	PET_MELEE_CRIT_INCREASE_PCT("PetMeleeCritIncreasePct", DisplayHint.PERCENT),
-	PET_MELEE_DAMAGE_INCREASE_PCT("PetMeleeDamageIncreasePct", DisplayHint.PERCENT),
-
-	MANA_TRANSFERRED_TO_PET_PCT("ManaTransferredToPetPct", DisplayHint.PERCENT),
-
-	// duration attributes
-
-	CAST_TIME_REDUCTION("CastTimeReduction", "reduced cast time", DisplayHint.DURATION),
-	COOLDOWN_REDUCTION("CooldownReduction", DisplayHint.DURATION),
-	COOLDOWN_REDUCTION_PCT("CooldownReductionPct", DisplayHint.PERCENT);
-
-	enum DisplayHint {
-		PERCENT,
-		DURATION
-	}
+	SHIELD_BLOCK_RATING("ShieldBlock,Rating"),
+	PARRY_RATING("Parry,Rating"),
+	RESILIENCE_RATING("Resilience,Rating"),
+	RESISTANCE("Resistance"),
+	SPEEED_PCT("Speed,Percent"),
+	COST_PCT("Cost,Percent"),
+	CAST_TIME("CastTime"),
+	DURATION_PCT("Duration,Percent"),
+	DURATION("Duration"),
+	COOLDOWN_PCT("Cooldown,Percent"),
+	COOLDOWN("Cooldown"),
+	THREAT_PCT("Threat,Percent"),
+	PUSHBACK_PCT("Pushback,Percent"),
+	RANGE_PCT("Range,Percent"),
+	MAX_HEALTH_PCT("MaxHealth,Percent"),
+	MAX_MANA_PCT("MaxMana,Percent"),
+	MANA_TRANSFERRED_TO_PET_PCT("ManaTransferredToPet,Percent"),
+	PET_STAMINA("Pet,Stamina"),
+	PET_STAMINA_PCT("Pet,Stamina,Percent"),
+	PET_INTELLECT("Pet,Intellect"),
+	PET_INTELLECT_PCT("Pet,Intellect,Percent"),
+	PET_CRIT_PCT("Pet,Crit,Percent"),
+	PET_DAMAGE_MELEE_PCT("Pet,Damage,Melee,Percent"),
+	PET_MAX_MANA_PCT("Pet,MaxMana,Percent");
 
 	private final String key;
-	private final String shortName;
-	private final DisplayHint displayHint;
+	private final PrimitiveAttributeType type;
+	private final PowerType powerType;
+	private final DamageType damageType;
+	private final boolean petAttribute;
+	private final ValueType valueType;
 
 	PrimitiveAttributeId(String key) {
-		this(key, null, null);
-	}
+		Parser parser = new Parser(key);
 
-	PrimitiveAttributeId(String key, DisplayHint displayHint) {
-		this(key, null, displayHint);
-	}
-
-	PrimitiveAttributeId(String key, String shortName) {
-		this(key, shortName, null);
+		this.key = key;
+		this.type = parser.type;
+		this.powerType = parser.powerType;
+		this.damageType = parser.damageType;
+		this.petAttribute = parser.petAttribute;
+		this.valueType = parser.valueType;
 	}
 
 	public static PrimitiveAttributeId parse(String value) {
@@ -140,16 +118,121 @@ public enum PrimitiveAttributeId implements AttributeId {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 
-	public String getShortName() {
-		return shortName != null ? shortName : key;
-	}
-
-	public DisplayHint getDisplayHint() {
-		return displayHint;
-	}
-
 	@Override
 	public String toString() {
 		return key;
+	}
+
+	private static class Parser {
+		private final String line;
+
+		private PrimitiveAttributeType type;
+		private PowerType powerType;
+		private ValueType valueType;
+		private DamageType damageType;
+		private boolean petAttribute;
+
+		public Parser(String line) {
+			this.line = line;
+			parse();
+		}
+
+		private void parse() {
+			for (String part : line.split(",")) {
+				parsePart(part);
+			}
+			ensureCorrectDefaults();
+		}
+
+		private void parsePart(String part) {
+			if (type == null) {
+				var parsedType = PrimitiveAttributeType.tryParse(part);
+				if (parsedType != null) {
+					this.type = parsedType;
+					return;
+				}
+			}
+
+			if (valueType == null) {
+				var parsedValueType = ValueType.tryParse(part);
+				if (parsedValueType != null) {
+					this.valueType = parsedValueType;
+					return;
+				}
+			}
+
+			if (powerType == null) {
+				var parsedPowerType = PowerType.tryParse(part);
+				if (parsedPowerType != null) {
+					this.powerType = parsedPowerType;
+					return;
+				}
+			}
+
+			if (damageType == null) {
+				var parsedDamageType = DamageType.tryParse(part);
+				if (parsedDamageType != null) {
+					this.damageType = parsedDamageType;
+					return;
+				}
+			}
+
+			if (part.equalsIgnoreCase("Pet")) {
+				this.petAttribute = true;
+				return;
+			}
+
+			error("Can't parse: " + part);
+		}
+
+		private void ensureCorrectDefaults() {
+			if (type == null) {
+				error("No type");
+			}
+
+			if (valueType == null) {
+				this.valueType = getDefaultValueType();
+			}
+
+			if (!type.getAcceptedValueTypes().contains(valueType)) {
+				error("Incorrect value type");
+			}
+
+			if (powerType == null) {
+				powerType = PowerType.ANY;
+			}
+
+			if (!type.getAcceptedPowerTypes().contains(powerType)) {
+				error("Not allowed power type");
+			}
+
+			if (damageType == null) {
+				damageType = DamageType.ANY;
+			}
+
+			if (!type.getAcceptedDamageTypes().contains(damageType)) {
+				error("Not allowed damage type");
+			}
+
+			if (petAttribute && !type.isPetsAllowed()) {
+				error("Not allowed for pets");
+			}
+		}
+
+		private ValueType getDefaultValueType() {
+			var acceptedValueTypes = type.getAcceptedValueTypes();
+
+			if (acceptedValueTypes.contains(ValueType.POINT) && !acceptedValueTypes.contains(ValueType.DURATION)) {
+				return ValueType.POINT;
+			} else if (acceptedValueTypes.contains(ValueType.DURATION) && !acceptedValueTypes.contains(ValueType.POINT)) {
+				return ValueType.DURATION;
+			}
+
+			return error("Can't determine default value type");
+		}
+
+		private <T> T error(String msg) {
+			throw new IllegalArgumentException(msg + ", line: " + line);
+		}
 	}
 }

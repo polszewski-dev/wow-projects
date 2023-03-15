@@ -4,6 +4,8 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.talents.TalentTree;
 
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
+
 /**
  * User: POlszewski
  * Date: 2021-01-17
@@ -39,6 +41,6 @@ public class EffectIncreasePerEffectOnTarget extends ComplexAttribute {
 
 	@Override
 	public String toString() {
-		return String.format("(tree: %s, increasePerEffect: %s, maxIncrease: %s)%s", effectTree, increasePerEffectPct, maxIncreasePct, getConditionString());
+		return String.format("(tree: %s, increasePerEffect: %s, maxIncrease: %s)%s", effectTree, increasePerEffectPct, maxIncreasePct, getConditionString(condition));
 	}
 }

@@ -8,19 +8,18 @@ import java.util.regex.Pattern;
  * Date: 2019-08-14
  */
 public final class Duration implements Comparable<Duration> {
-	private static final Pattern PATTERN = Pattern.compile("^((\\d+)h)?((\\d+)m)?((\\d+)s)?((\\d+)ms)?$");
+	private static final Pattern PATTERN = Pattern.compile("^-?((\\d+)h)?((\\d+)m)?((\\d+)s)?((\\d+)ms)?$");
 	private static final int INF_MILLIS = Integer.MAX_VALUE;
+	private static final int NEG_INF_MILLIS = Integer.MIN_VALUE;
 
 	public static final Duration ZERO = new Duration(0);
 	public static final Duration INFINITE = new Duration(INF_MILLIS);
+	public static final Duration NEG_INFINITE = new Duration(NEG_INF_MILLIS);
 
 	private final long millis;
 
 	private Duration(long millis) {
-		if (millis < 0) {
-			throw new IllegalArgumentException("Negative duration: " + millis);
-		}
-		this.millis = Math.min(millis, INF_MILLIS);
+		this.millis = Math.max(Math.min(millis, INF_MILLIS), NEG_INF_MILLIS);
 	}
 
 	public static Duration seconds(double seconds) {
@@ -42,6 +41,9 @@ public final class Duration implements Comparable<Duration> {
 		if (millis == INF_MILLIS) {
 			return INFINITE;
 		}
+		if (millis == NEG_INF_MILLIS) {
+			return NEG_INFINITE;
+		}
 		return new Duration(millis);
 	}
 
@@ -50,7 +52,7 @@ public final class Duration implements Comparable<Duration> {
 			return null;
 		}
 
-		if (value.matches("\\d+\\.?\\d*")) {
+		if (value.matches("-?\\d+\\.?\\d*")) {
 			return Duration.seconds(Double.parseDouble(value));
 		}
 
@@ -83,6 +85,10 @@ public final class Duration implements Comparable<Duration> {
 			millis += Long.parseLong(millisStr);
 		}
 
+		if (value.startsWith("-")) {
+			millis = -millis;
+		}
+
 		return millis(millis);
 	}
 
@@ -91,6 +97,9 @@ public final class Duration implements Comparable<Duration> {
 	}
 
 	public double getSeconds() {
+		if (this.isInfinite() || this.isNegInfinite()) {
+			throw new IllegalArgumentException("Too many seconds in INF");
+		}
 		return millis / 1000.0;
 	}
 
@@ -98,62 +107,96 @@ public final class Duration implements Comparable<Duration> {
 		return millis == 0;
 	}
 
+	public boolean isPositive() {
+		return millis > 0;
+	}
+
+	public boolean isNegative() {
+		return millis < 0;
+	}
+
 	public boolean isInfinite() {
 		return millis == INF_MILLIS;
 	}
 
-	public Duration add(Duration duration) {
-		if (this.isInfinite() || duration.isInfinite()) {
+	public boolean isNegInfinite() {
+		return millis == NEG_INF_MILLIS;
+	}
+
+	public Duration negate() {
+		if (this.isInfinite()) {
+			return NEG_INFINITE;
+		}
+		if (this.isNegInfinite()) {
 			return INFINITE;
+		}
+		return millis(-millis);
+	}
+
+	public Duration add(Duration duration) {
+		if (this.isInfinite() && duration.isNegInfinite()) {
+			throw new IllegalArgumentException("INF + -INF");
+		}
+		if (this.isNegInfinite() && duration.isInfinite()) {
+			throw new IllegalArgumentException("-INF + INF");
+		}
+		if (this.isInfinite() || this.isNegInfinite()) {
+			return this;
+		}
+		if (duration.isInfinite() || duration.isNegInfinite()) {
+			return duration;
 		}
 		return millis(this.millis + duration.millis);
 	}
 
 	public Duration subtract(Duration duration) {
-		if (duration.isInfinite()) {
-			throw new IllegalArgumentException("Duration can't be -INF");
+		if (this.isInfinite() && duration.isInfinite()) {
+			throw new IllegalArgumentException("INF - INF");
 		}
-		if (this.isInfinite()) {
-			return INFINITE;
+		if (this.isNegInfinite() && duration.isNegInfinite()) {
+			throw new IllegalArgumentException("-INF - (-INF)");
+		}
+		if (this.isInfinite() || this.isNegInfinite()) {
+			return this;
+		}
+		if (duration.isInfinite() || duration.isNegInfinite()) {
+			return duration.negate();
 		}
 		return millis(this.millis - duration.millis);
 	}
 
 	public Duration multiplyBy(double factor) {
-		if (factor < 0) {
-			throw new IllegalArgumentException("Can't multiply by negative");
-		}
 		if (factor == 0) {
 			return ZERO;
 		}
-		if (this.isInfinite()) {
-			return INFINITE;
+		if (this.isInfinite() || this.isNegInfinite()) {
+			return factor > 0 ? this : this.negate();
 		}
-		return millis((int)(millis * factor));
+		return millis((long)(factor * millis));
 	}
 
 	public Duration divideBy(double factor) {
-		if (factor < 0) {
-			throw new IllegalArgumentException("Can't divide by negative");
+		if (factor == 0) {
+			if (this.isZero()) {
+				throw new IllegalArgumentException("0 / 0");
+			}
+			return this.isPositive() ? INFINITE : NEG_INFINITE;
 		}
-		if (factor == 0 || this.isInfinite()) {
-			return INFINITE;
+		if (this.isInfinite() || this.isNegInfinite()) {
+			return factor > 0 ? this : this.negate();
 		}
 		return millis((int)(millis / factor));
 	}
 
 	public double divideBy(Duration duration) {
-		if (this.isInfinite() && duration.isInfinite()) {
-			throw new IllegalArgumentException("INF/INF");
+		if (this.isInfinite() || this.isNegInfinite()) {
+			throw new IllegalArgumentException("Can't divide INF");
 		}
-		if (this.isInfinite()) {
-			throw new IllegalArgumentException("INF/X");
-		}
-		if (duration.isInfinite()) {
+		if (duration.isInfinite() || duration.isNegInfinite()) {
 			return 0;
 		}
 		if (duration.isZero()) {
-			throw new IllegalArgumentException("X/0");
+			throw new IllegalArgumentException("X / 0");
 		}
 		return (double)this.millis / duration.millis;
 	}
@@ -186,7 +229,7 @@ public final class Duration implements Comparable<Duration> {
 
 	@Override
 	public String toString() {
-		if (millis == 0) {
+		if (this.isZero()) {
 			return "0";
 		}
 
@@ -194,7 +237,11 @@ public final class Duration implements Comparable<Duration> {
 			return "INFINITE";
 		}
 
-		long x = millis;
+		if (this.isNegInfinite()) {
+			return "-INFINITE";
+		}
+
+		long x = Math.abs(millis);
 		long milliseconds = x % 1000;
 		x /= 1000;
 		long seconds = x % 60;
@@ -203,7 +250,9 @@ public final class Duration implements Comparable<Duration> {
 		x /= 60;
 		long hours = x;
 
-		return (hours != 0 ? hours + "h" : "") +
+		return
+				(millis < 0 ? "-" : "") +
+				(hours != 0 ? hours + "h" : "") +
 				(minutes != 0 ? minutes + "m" : "") +
 				(seconds != 0 ? seconds + "s" : "") +
 				(milliseconds != 0 ? milliseconds + "ms" : "");

@@ -176,9 +176,9 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(talent.getRank()).isEqualTo(5);
 		assertThat(talent.getMaxRank()).isEqualTo(5);
 
-		assertThat(talent.getCastTimeReduction(SHADOW_BOLT).getSeconds()).isEqualTo(0.5);
-		assertThat(talent.getCastTimeReduction(IMMOLATE).getSeconds()).isEqualTo(0.5);
-		assertThat(talent.getCastTimeReduction(SOUL_FIRE).getSeconds()).isEqualTo(2);
+		assertThat(talent.getCastTime(SHADOW_BOLT).getSeconds()).isEqualTo(-0.5);
+		assertThat(talent.getCastTime(IMMOLATE).getSeconds()).isEqualTo(-0.5);
+		assertThat(talent.getCastTime(SOUL_FIRE).getSeconds()).isEqualTo(-2);
 	}
 
 	@Test
@@ -199,10 +199,10 @@ class SpellRepositoryTest extends RepositoryTest {
 
 		Attributes stats = buff.getAttributes();
 
-		assertThat(stats.getDamageTakenPct(SHADOW)).isEqualTo(Percent.of(10));
-		assertThat(stats.getDamageTakenPct(FIRE)).isEqualTo(Percent.of(10));
-		assertThat(stats.getDamageTakenPct(FROST)).isEqualTo(Percent.of(10));
-		assertThat(stats.getDamageTakenPct(ARCANE)).isEqualTo(Percent.of(10));
+		assertThat(stats.getDamagePct(SHADOW)).isEqualTo(Percent.of(10));
+		assertThat(stats.getDamagePct(FIRE)).isEqualTo(Percent.of(10));
+		assertThat(stats.getDamagePct(FROST)).isEqualTo(Percent.of(10));
+		assertThat(stats.getDamagePct(ARCANE)).isEqualTo(Percent.of(10));
 	}
 
 	@Test

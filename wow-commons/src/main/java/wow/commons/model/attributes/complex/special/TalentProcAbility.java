@@ -12,7 +12,7 @@ import wow.commons.model.spells.EffectId;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.EXTRA_CRIT_COEFF;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.CRIT_COEFF_PCT;
 
 /**
  * User: POlszewski
@@ -47,7 +47,7 @@ public class TalentProcAbility extends SpecialAbility {
 		if (extraCritCoeff == 0) {
 			return Attributes.EMPTY;
 		}
-		return Attributes.of(EXTRA_CRIT_COEFF, extraCritCoeff, condition);
+		return Attributes.of(CRIT_COEFF_PCT, extraCritCoeff, condition);
 	}
 
 	private double getExtraCritCoeff(double critChance) {

@@ -270,8 +270,8 @@ class CalculationServiceTest extends ServiceTest {
 		SpecialAbilityStats stats = underTest.getSpecialAbilityStats(character, specialAbility);
 
 		assertThat(stats.getDescription()).isEqualTo("Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)");
-		assertThat(stats.getAbility()).isEqualTo("(175 haste | 20s/2m)");
-		assertThat(stats.getStatEquivalent().statString()).isEqualTo("29.17 haste");
+		assertThat(stats.getAbility()).isEqualTo("(175 spell haste rating | 20s/2m)");
+		assertThat(stats.getStatEquivalent().statString()).isEqualTo("29.17 spell haste rating");
 		assertThat(stats.getSpEquivalent()).isEqualTo(35.10, PRECISION);
 	}
 }
