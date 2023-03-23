@@ -8,7 +8,6 @@ import wow.scraper.model.WowheadZoneType;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -24,7 +23,7 @@ public class ZoneGeneratorMain extends ScraperTool {
 	protected void run() throws IOException {
 		List<JsonZoneDetails> zones = getWowheadFetcher().fetchZoneDetails(getGameVersion(), "zones").stream()
 				.filter(x -> !getScraperConfig().getIgnoredZoneIds().contains(x.getId()))
-				.collect(Collectors.toList());
+				.toList();
 
 		fixData(zones);
 

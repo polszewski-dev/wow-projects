@@ -7,7 +7,6 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.spells.Spell;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
@@ -32,7 +31,7 @@ class SpellServiceTest extends WowCharacterSpringTest {
 	void getAvailableBuffs() {
 		List<Buff> buffs = underTest.getBuffs(getCharacter());
 
-		List<String> names = buffs.stream().map(Buff::getName).collect(Collectors.toList());
+		List<String> names = buffs.stream().map(Buff::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Arcane Brilliance",

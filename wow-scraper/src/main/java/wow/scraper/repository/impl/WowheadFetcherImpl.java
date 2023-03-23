@@ -95,34 +95,19 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	}
 
 	private String getRootUrlStr(GameVersion gameVersion) {
-		switch (gameVersion) {
-			case VANILLA:
-				return "https://www.wowhead.com/classic/";
-			case TBC:
-				return "https://www.wowhead.com/tbc/";
-			case WOTLK:
-				return "https://www.wowhead.com/wotlk/";
-			default:
-				throw new IllegalArgumentException("Unhandled game version: " + gameVersion);
-		}
+		return switch (gameVersion) {
+			case VANILLA -> "https://www.wowhead.com/classic/";
+			case TBC -> "https://www.wowhead.com/tbc/";
+			case WOTLK -> "https://www.wowhead.com/wotlk/";
+		};
 	}
 
 	private String getTooltipUrlStr(GameVersion gameVersion, int itemId) {
-		String urlStr;
-
-		switch (gameVersion) {
-			case VANILLA:
-				urlStr = "https://nether.wowhead.com/tooltip/item/%s?dataEnv=4&locale=0";
-				break;
-			case TBC:
-				urlStr = "https://nether.wowhead.com/tooltip/item/%s?dataEnv=5&locale=0";
-				break;
-			case WOTLK:
-				urlStr = "https://nether.wowhead.com/tooltip/item/%s?dataEnv=6&locale=0";
-				break;
-			default:
-				throw new IllegalArgumentException("Unhandled game version: " + gameVersion);
-		}
+		String urlStr = switch (gameVersion) {
+			case VANILLA -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=4&locale=0";
+			case TBC -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=5&locale=0";
+			case WOTLK -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=6&locale=0";
+		};
 
 		return String.format(urlStr, itemId);
 	}

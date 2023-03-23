@@ -22,7 +22,7 @@ public class BossGeneratorMain extends ScraperTool {
 	protected void run() throws IOException {
 		List<JsonBossDetails> bosses = getWowheadFetcher().fetchBossDetails(getGameVersion(), "npcs/classification:3/react-a:-1/react-h:-1#100").stream()
 				.filter(x -> !getScraperConfig().getIgnoredBossIds().contains(x.getId()))
-				.collect(Collectors.toList());
+				.toList();
 
 		fixData(bosses);
 

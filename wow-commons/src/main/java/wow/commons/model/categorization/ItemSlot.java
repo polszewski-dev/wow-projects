@@ -53,7 +53,7 @@ public enum ItemSlot {
 	public static List<ItemSlot> getDpsSlots() {
 		return Stream.of(values())
 				.filter(ItemSlot::isDpsSlot)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public Set<ItemType> getItemTypes() {

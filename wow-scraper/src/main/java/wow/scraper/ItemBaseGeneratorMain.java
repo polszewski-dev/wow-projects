@@ -14,7 +14,6 @@ import wow.scraper.parsers.tooltip.TradedItemParser;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -133,6 +132,6 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 				.flatMap(Collection::stream)
 				.distinct()
 				.sorted()
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

@@ -17,7 +17,6 @@ import wow.minmax.service.impl.enumerators.BestItemVariantEnumerator;
 import wow.minmax.service.impl.enumerators.FindUpgradesEnumerator;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -39,7 +38,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 		return enumerator.run().getResult().stream()
 				.limit(upgradeConfig.getMaxUpgrades())
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override

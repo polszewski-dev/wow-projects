@@ -6,7 +6,6 @@ import wow.scraper.parsers.setters.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -52,7 +51,7 @@ public class PatternSheetParser extends ExcelSheetParser {
 				)
 				.filter(Objects::nonNull)
 				.map(this::parseStatSetter)
-				.collect(Collectors.toList());
+				.toList();
 
 		if (!setters.isEmpty()) {
 			return setters;
@@ -72,22 +71,15 @@ public class PatternSheetParser extends ExcelSheetParser {
 			line = line.substring(0, pos);
 		}
 
-		switch (line) {
-			case "Proc":
-				return new ProcStatSetter(Math.max(groupNo, 0));
-			case "OnUse":
-				return new OnUseStatSetter(Math.max(groupNo, 0));
-			case "Equivalent":
-				return new EquivalentStatSetter(Math.max(groupNo, 0));
-			case "Misc":
-				return new MiscStatSetter();
-			case "Expression":
-				return new ExpressionStatSetter();
-			case "Ignored":
-				return IgnoreStatSetter.INSTANCE;
-			default:
-				return new IntStatSetter(line, Math.max(groupNo, 1));
-		}
+		return switch (line) {
+			case "Proc" -> new ProcStatSetter(Math.max(groupNo, 0));
+			case "OnUse" -> new OnUseStatSetter(Math.max(groupNo, 0));
+			case "Equivalent" -> new EquivalentStatSetter(Math.max(groupNo, 0));
+			case "Misc" -> new MiscStatSetter();
+			case "Expression" -> new ExpressionStatSetter();
+			case "Ignored" -> IgnoreStatSetter.INSTANCE;
+			default -> new IntStatSetter(line, Math.max(groupNo, 1));
+		};
 	}
 
 	private StatSetterParams getParams() {

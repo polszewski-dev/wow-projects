@@ -16,7 +16,6 @@ import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -56,7 +55,7 @@ public class BuffController {
 
 		return availableBuffs.stream()
 				.map(availableBuff -> getBuffDTO(availableBuff, buffs))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private BuffDTO getBuffDTO(Buff buff, Buffs buffs) {

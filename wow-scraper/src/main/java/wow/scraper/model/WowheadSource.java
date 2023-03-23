@@ -1,11 +1,16 @@
 package wow.scraper.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-10-27
  */
+@AllArgsConstructor
+@Getter
 public enum WowheadSource {
 	CRAFTED(1),
 	DROP(2),
@@ -15,15 +20,7 @@ public enum WowheadSource {
 
 	private final int code;
 
-	WowheadSource(int code) {
-		this.code = code;
-	}
-
 	public static WowheadSource fromCode(int code) {
 		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElseThrow();
-	}
-
-	public int getCode() {
-		return code;
 	}
 }

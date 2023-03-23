@@ -14,7 +14,6 @@ import wow.commons.util.AttributesBuilder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -108,7 +107,7 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 			if (petTypes.isEmpty()) {
 				return spells.stream()
 						.map(AttributeCondition::of)
-						.collect(Collectors.toList());
+						.toList();
 			} else {
 				throw new IllegalArgumentException();
 			}
@@ -117,7 +116,7 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 		if (!petTypes.isEmpty()) {
 			return petTypes.stream()
 					.map(AttributeCondition::of)
-					.collect(Collectors.toList());
+					.toList();
 		}
 
 		return List.of(AttributeCondition.EMPTY);

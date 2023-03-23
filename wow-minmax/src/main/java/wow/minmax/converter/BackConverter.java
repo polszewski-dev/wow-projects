@@ -2,7 +2,6 @@ package wow.minmax.converter;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -19,7 +18,7 @@ public interface BackConverter<F, T> {
 	default List<F> convertBackList(Collection<T> list) {
 		return list.stream()
 				.map(this::convertBack)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	F doConvertBack(T value);

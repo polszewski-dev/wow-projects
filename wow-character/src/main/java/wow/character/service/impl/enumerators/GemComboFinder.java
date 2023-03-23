@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -30,7 +29,7 @@ public class GemComboFinder {
 
 		return gemCombos.stream()
 				.map(gemCombo -> changeBackGemOrder(uniqueConfiguration, gemCombo, socketSpecification))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<Gem[]> getGemCombos(Character character, ItemSocketsUniqueConfiguration uniqueConfiguration) {
@@ -95,7 +94,7 @@ public class GemComboFinder {
 
 		return gemEquivalenceGroups.values().stream()
 				.map(group -> group.get(0))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private String getKey(Gem[] gemCombo, ItemSockets sockets) {

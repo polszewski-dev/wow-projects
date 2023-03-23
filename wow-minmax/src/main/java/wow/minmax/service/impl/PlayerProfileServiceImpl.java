@@ -29,7 +29,6 @@ import wow.minmax.service.UpgradeService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static wow.minmax.converter.persistent.PoConverterParams.createParams;
 
@@ -53,7 +52,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		return playerProfileRepository.getPlayerProfileList().stream()
 				.map(this::getPlayerProfile)
 				.map(PlayerProfile::getProfileInfo)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override

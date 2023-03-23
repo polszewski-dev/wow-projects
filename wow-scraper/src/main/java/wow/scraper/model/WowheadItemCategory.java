@@ -1,13 +1,17 @@
 package wow.scraper.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-10-29
  */
+@AllArgsConstructor
+@Getter
 public enum WowheadItemCategory {
 	HEAD,
 	SHOULDER,
@@ -36,21 +40,13 @@ public enum WowheadItemCategory {
 
 	private final boolean equipment;
 
-	WowheadItemCategory(boolean equipment) {
-		this.equipment = equipment;
-	}
-
 	WowheadItemCategory() {
 		this(true);
-	}
-
-	public boolean isEquipment() {
-		return equipment;
 	}
 
 	public static List<WowheadItemCategory> equipment() {
 		return Stream.of(values())
 				.filter(x -> x.equipment)
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

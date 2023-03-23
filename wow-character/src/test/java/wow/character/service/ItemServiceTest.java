@@ -39,9 +39,9 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void getItemsBySlot() {
 		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1).stream()
 				.sorted(Comparator.comparing(Item::getName))
-				.collect(Collectors.toList());
+				.toList();
 
-		List<String> names = itemsBySlot.stream().map(Item::getName).collect(Collectors.toList());
+		List<String> names = itemsBySlot.stream().map(Item::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Shifting Naaru Sliver",
@@ -53,9 +53,9 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void getHandEnchants() {
 		List<Enchant> enchants = underTest.getEnchants(character, ItemType.HANDS).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
-				.collect(Collectors.toList());
+				.toList();
 
-		List<String> names = enchants.stream().map(Enchant::getName).collect(Collectors.toList());
+		List<String> names = enchants.stream().map(Enchant::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Enchant Gloves - Major Spellpower",
@@ -67,9 +67,9 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void getChestEnchants() {
 		List<Enchant> enchants = underTest.getEnchants(character, ItemType.CHEST).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
-				.collect(Collectors.toList());
+				.toList();
 
-		List<String> names = enchants.stream().map(Enchant::getName).collect(Collectors.toList());
+		List<String> names = enchants.stream().map(Enchant::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Enchant Chest - Exceptional Stats"
@@ -80,9 +80,9 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void getFeetEnchants() {
 		List<Enchant> enchants = underTest.getEnchants(character, ItemType.FEET).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
-				.collect(Collectors.toList());
+				.toList();
 
-		List<String> names = enchants.stream().map(Enchant::getName).collect(Collectors.toList());
+		List<String> names = enchants.stream().map(Enchant::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Enchant Boots - Boar's Speed"
@@ -94,13 +94,13 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		List<Gem> metaGems = underTest.getGems(character, SocketType.META, true);
 		List<Gem> coloredGems = underTest.getGems(character, SocketType.YELLOW, true);
 
-		List<String> metaGemNames = metaGems.stream().map(Gem::getName).collect(Collectors.toList());
+		List<String> metaGemNames = metaGems.stream().map(Gem::getName).toList();
 
 		assertThat(metaGemNames).hasSameElementsAs(List.of(
 				"Chaotic Skyfire Diamond"
 		));
 
-		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).collect(Collectors.toList());
+		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
 
 		assertThat(coloredGemNames).hasSameElementsAs(List.of(
 				"Runed Crimson Spinel",
@@ -117,7 +117,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void testGetGems() {
 		List<Gem> coloredGems = underTest.getGems(character, getItem("Sunfire Robe").getSocketType(1), false);
 
-		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).collect(Collectors.toList());
+		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
 
 		assertThat(coloredGemNames).hasSameElementsAs(List.of(
 				"Runed Crimson Spinel",
@@ -134,7 +134,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void getGemCombos() {
 		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Bracers of the Malefic").getItem());
 
-		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
+		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Runed Crimson Spinel",
@@ -151,7 +151,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void getGemCombos2() {
 		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Dark Conjuror's Collar").getItem());
 
-		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
+		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Chaotic Skyfire Diamond,Runed Crimson Spinel",
@@ -168,7 +168,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	void getGemCombos3() {
 		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Sunfire Robe").getItem());
 
-		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).collect(Collectors.toList());
+		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
 		assertThat(names).hasSize(74);
 	}

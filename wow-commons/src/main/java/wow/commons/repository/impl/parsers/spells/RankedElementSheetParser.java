@@ -8,7 +8,6 @@ import wow.commons.util.CollectionUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -32,7 +31,7 @@ public abstract class RankedElementSheetParser<K, E extends TimeRestricted> exte
 
 		return elementInfoById.getOrDefault(elementId, List.of()).stream()
 				.filter(x -> hasCommonVersionRestriction(x, timeRestriction))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private void assertNoRecordWithSimilarVersionRestrictionExist(K elementId, TimeRestriction timeRestriction) {

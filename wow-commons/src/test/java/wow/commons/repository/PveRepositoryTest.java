@@ -10,7 +10,6 @@ import wow.commons.model.pve.Zone;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.pve.GameVersion.TBC;
@@ -43,7 +42,7 @@ class PveRepositoryTest extends RepositoryTest {
 		List<String> bossNames = zone.getBosses().stream()
 				.map(Boss::getName)
 				.sorted()
-				.collect(Collectors.toList());
+				.toList();
 
 		List<String> expectedBossNames = List.of(
 				"Entropius",

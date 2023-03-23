@@ -31,7 +31,6 @@ import wow.commons.repository.SpellRepository;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static wow.character.model.build.BuildId.DESTRO_SHADOW;
@@ -153,7 +152,7 @@ public abstract class WowCharacterSpringTest {
 						"Curse of the Elements"
 				)
 				.map(this::getBuff)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	protected Buff getBuff(String name) {

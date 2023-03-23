@@ -139,7 +139,7 @@ public abstract class ItemVariantEnumerator {
 		return bestOptions.values()
 						  .stream()
 						  .sorted(Comparator.<Comparison, Percent>comparing(x -> x.changePct).reversed())
-						  .collect(Collectors.toList());
+						  .toList();
 	}
 
 	private void handleItemOption(EquippableItem... itemOption) {

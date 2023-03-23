@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -62,7 +61,7 @@ public class ItemDetailRepositoryImpl implements wow.scraper.repository.ItemDeta
 		}
 		return Stream.of(files)
 				.map(file -> Integer.parseInt(file.getName()))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private Path getPath(GameVersion gameVersion, WowheadItemCategory category, int itemId) {

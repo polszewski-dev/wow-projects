@@ -16,7 +16,6 @@ import wow.commons.model.professions.Profession;
 public class ProfessionRestriction {
 	@NonNull
 	private final Profession profession;
-	@NonNull
 	private final int level;
 
 	public static ProfessionRestriction of(Profession profession, Integer level) {

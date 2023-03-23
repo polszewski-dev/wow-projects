@@ -38,7 +38,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 
 		List<ItemSocket> itemSockets = specification.getSocketTypes().stream()
 				.map(ItemSocket::new)
-				.collect(Collectors.toUnmodifiableList());
+				.toList();
 		return new ItemSockets(specification, itemSockets);
 	}
 
@@ -48,7 +48,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 				specification,
 				sockets.stream()
 					   .map(ItemSocket::copy)
-					   .collect(Collectors.toList())
+					   .toList()
 		);
 	}
 
@@ -87,7 +87,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	public List<Gem> getGems() {
 		return sockets.stream()
 				.map(ItemSocket::getGem)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public Gem getGem(int socketNo) {

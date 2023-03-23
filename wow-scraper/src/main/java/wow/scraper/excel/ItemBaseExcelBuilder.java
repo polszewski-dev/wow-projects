@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
@@ -237,7 +236,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 			++colNo;
 		}
 
-		for (ComplexAttribute attribute : attributes.getComplexAttributeList().values().stream().flatMap(Collection::stream).collect(Collectors.toList())) {
+		for (ComplexAttribute attribute : attributes.getComplexAttributeList().values().stream().flatMap(Collection::stream).toList()) {
 			setValue(ComplexAttributeMapper.toString(attribute));
 			setValue((String)null);
 			++colNo;

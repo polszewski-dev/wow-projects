@@ -81,7 +81,7 @@ public class Attributes implements AttributeSource {
 				attributeList
 				.stream()
 				.map(attribute -> attribute.scale(factor))
-				.collect(Collectors.toList()),
+				.toList(),
 				complexAttributeList
 		);
 	}

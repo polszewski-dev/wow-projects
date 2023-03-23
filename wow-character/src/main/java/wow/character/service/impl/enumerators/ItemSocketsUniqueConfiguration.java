@@ -52,7 +52,7 @@ public enum ItemSocketsUniqueConfiguration {
 		this.specification = new ItemSocketSpecification(
 				key.chars()
 						.mapToObj(letter -> parseSocketType((char)letter))
-						.collect(Collectors.toList()),
+						.toList(),
 				Attributes.EMPTY
 		);
 	}
@@ -71,18 +71,13 @@ public enum ItemSocketsUniqueConfiguration {
 	}
 
 	private static SocketType parseSocketType(char firstLetter) {
-		switch (firstLetter) {
-			case 'R':
-				return SocketType.RED;
-			case 'Y':
-				return SocketType.YELLOW;
-			case 'B':
-				return SocketType.BLUE;
-			case 'M':
-				return SocketType.META;
-			default:
-				throw new IllegalArgumentException("Can't parse: " + firstLetter);
-		}
+		return switch (firstLetter) {
+			case 'R' -> SocketType.RED;
+			case 'Y' -> SocketType.YELLOW;
+			case 'B' -> SocketType.BLUE;
+			case 'M' -> SocketType.META;
+			default -> throw new IllegalArgumentException("Can't parse: " + firstLetter);
+		};
 	}
 
 	@Override

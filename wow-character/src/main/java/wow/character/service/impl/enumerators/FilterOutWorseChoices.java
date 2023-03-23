@@ -31,13 +31,13 @@ public abstract class FilterOutWorseChoices<T extends AttributeSource> {
 				.map(this::filterOutWorseChoicesFromGroup)
 				.map(this::removeTheSameStats)
 				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<T> filterOutWorseChoicesFromGroup(List<T> group) {
 		return group.stream()
 				.filter(choice -> !isStrictlyWorseThanOthers(choice, group))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private boolean isStrictlyWorseThanOthers(T choice, List<T> choices) {
@@ -58,7 +58,7 @@ public abstract class FilterOutWorseChoices<T extends AttributeSource> {
 				.collect(Collectors.groupingBy(AttributeSource::statString))
 				.values().stream()
 				.map(this::removeBasedOnSource)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private T removeBasedOnSource(List<T> choices) {

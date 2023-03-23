@@ -7,7 +7,6 @@ import wow.scraper.model.*;
 
 import java.util.*;
 import java.util.function.IntFunction;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -31,7 +30,7 @@ public class WowheadSourceParser {
 		this.sources = itemDetails.getSources()
 				.stream()
 				.map(WowheadSource::fromCode)
-				.collect(Collectors.toList());
+				.toList();
 		this.sourceMores = itemDetails.getSourceMores();
 	}
 
@@ -50,20 +49,13 @@ public class WowheadSourceParser {
 			log.error("Multiple sources for: " + getName());
 		}
 
-		switch (sources.get(0)) {
-			case CRAFTED:
-				return List.of(parseSingleSourceCrafted());
-			case PVP_ARENA:
-				return List.of(parseSingleSourcePvP());
-			case BADGES:
-				return List.of(parseSingleBadges());
-			case QUEST:
-				return List.of(parseSingleQuest());
-			case DROP:
-				return List.of(parseSingleSourceDrop());
-			default:
-				throw new IllegalArgumentException("Unhandled source: " + sources.get(0));
-		}
+		return switch (sources.get(0)) {
+			case CRAFTED -> List.of(parseSingleSourceCrafted());
+			case PVP_ARENA -> List.of(parseSingleSourcePvP());
+			case BADGES -> List.of(parseSingleBadges());
+			case QUEST -> List.of(parseSingleQuest());
+			case DROP -> List.of(parseSingleSourceDrop());
+		};
 	}
 
 	private String parseSingleSourceDrop() {

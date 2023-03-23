@@ -13,7 +13,6 @@ import wow.minmax.model.dto.UpgradeDTO;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -43,7 +42,7 @@ public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 				.getPrimitiveAttributeList()
 				.stream()
 				.map(Object::toString)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<String> getAbilities(Map<ComplexAttributeId, List<ComplexAttribute>> map) {
@@ -52,6 +51,6 @@ public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 				.map(Attribute::toString)
 				.distinct()
 				.sorted()
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

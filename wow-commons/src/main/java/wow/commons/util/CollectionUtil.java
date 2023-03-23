@@ -76,14 +76,11 @@ public final class CollectionUtil {
 	}
 
 	public static <T> Optional<T> getUniqueResult(List<T> list) {
-		switch (list.size()) {
-			case 0:
-				return Optional.empty();
-			case 1:
-				return Optional.of(list.get(0));
-			default:
-				throw new IllegalArgumentException("" + list);
-		}
+		return switch (list.size()) {
+			case 0 -> Optional.empty();
+			case 1 -> Optional.of(list.get(0));
+			default -> throw new IllegalArgumentException("" + list);
+		};
 	}
 
 	private CollectionUtil() {}

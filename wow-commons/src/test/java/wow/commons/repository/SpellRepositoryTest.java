@@ -24,7 +24,6 @@ import wow.commons.model.talents.Talent;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.complex.special.ProcEvent.SPELL_CRIT;
@@ -223,7 +222,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	void bufByNamefIsCorrect() {
 		List<String> buffNames = underTest.getBuffs(Phase.TBC_P5).stream()
 				.map(ConfigurationElement::getName)
-				.collect(Collectors.toList());
+				.toList();
 
 		assertThat(buffNames).hasSameElementsAs(List.of(
 				"Arcane Brilliance",

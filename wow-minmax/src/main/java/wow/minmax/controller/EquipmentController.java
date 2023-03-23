@@ -139,7 +139,7 @@ public class EquipmentController {
 				.map(socketNo -> new SocketStatusDTO(
 						item.getSocketType(socketNo),
 						equipment.hasMatchingGem(item, socketNo)
-				)).collect(Collectors.toList());
+				)).toList();
 
 		var socketBonusStatus = new SocketBonusStatusDTO(
 				item.getSocketBonus().statString(),

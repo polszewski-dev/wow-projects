@@ -5,7 +5,6 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -68,7 +67,7 @@ public final class ParserUtil {
 	public static <T> List<T> getValues(String line, Function<String, T> elementMapper) {
 		return Stream.of(line.split(", "))
 				.map(elementMapper)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private ParserUtil() {}

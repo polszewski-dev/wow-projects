@@ -49,7 +49,7 @@ public class StatPatternRepository {
 				.entrySet().stream()
 				.filter(x -> x.getValue() > 1)
 				.map(Map.Entry::getKey)
-				.collect(Collectors.toList());
+				.toList();
 
 		if (!duplicatePatterns.isEmpty()) {
 			throw new IllegalArgumentException("Duplicate patterns detected: " + duplicatePatterns);

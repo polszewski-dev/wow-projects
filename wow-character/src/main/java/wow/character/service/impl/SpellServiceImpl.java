@@ -14,7 +14,6 @@ import wow.commons.repository.SpellRepository;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -35,7 +34,7 @@ public class SpellServiceImpl implements SpellService {
 		return spellIds.stream()
 				.map(spellId -> getSpellHighestRankFilteredByCharacter(spellId, character).orElse(null))
 				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override
@@ -54,14 +53,14 @@ public class SpellServiceImpl implements SpellService {
 				.map(buffName -> spellRepository.getBuff(buffName, character.getPhase()).orElse(null))
 				.filter(Objects::nonNull)
 				.filter(buff -> buff.isAvailableTo(character))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override
 	public List<Buff> getBuffs(Character character) {
 		return spellRepository.getBuffs(character.getPhase()).stream()
 				.filter(buff -> buff.isAvailableTo(character))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override

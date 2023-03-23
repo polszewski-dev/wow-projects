@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -24,13 +23,13 @@ public abstract class ExcelRepository {
 	protected <K, T extends TimeRestricted> List<T> getList(Map<K, List<T>> map, K key, Phase phase) {
 		return map.getOrDefault(key, List.of()).stream()
 				.filter(x -> x.isAvailableDuring(phase))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	protected <T extends TimeRestricted> List<T> getList(List<T> list, Phase phase) {
 		return list.stream()
 				.filter(x -> x.isAvailableDuring(phase))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	protected <K, T> void addEntry(Map<K, List<T>> map, K key, T entry) {

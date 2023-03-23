@@ -45,7 +45,7 @@ public class UpgradeController {
 	private List<UpgradeDTO> toUpgradeDTOs(List<Comparison> upgrades) {
 		return upgrades.stream()
 				.map(upgradeConverter::convert)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@GetMapping("{profileId}")

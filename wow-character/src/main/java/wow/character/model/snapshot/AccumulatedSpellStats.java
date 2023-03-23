@@ -105,35 +105,28 @@ public class AccumulatedSpellStats {
 			case BASE_STATS_PCT:
 				this.baseStatsPct += value;
 				break;
-			case SPELL_POWER:
-			case SPELL_DAMAGE:
+			case SPELL_POWER, SPELL_DAMAGE:
 				this.spellDamage += value;
 				break;
 			case SPELL_DAMAGE_PCT:
 				this.spellDamagePct += value;
 				break;
-			case HIT_RATING:
-			case SPELL_HIT_RATING:
+			case HIT_RATING, SPELL_HIT_RATING:
 				this.hitRating += value;
 				break;
-			case HIT_PCT:
-			case SPELL_HIT_PCT:
+			case HIT_PCT, SPELL_HIT_PCT:
 				this.hitPct += value;
 				break;
-			case CRIT_RATING:
-			case SPELL_CRIT_RATING:
+			case CRIT_RATING, SPELL_CRIT_RATING:
 				this.critRating += value;
 				break;
-			case CRIT_PCT:
-			case SPELL_CRIT_PCT:
+			case CRIT_PCT, SPELL_CRIT_PCT:
 				this.critPct += value;
 				break;
-			case HASTE_RATING:
-			case SPELL_HASTE_RATING:
+			case HASTE_RATING, SPELL_HASTE_RATING:
 				this.hasteRating += value;
 				break;
-			case HASTE_PCT:
-			case SPELL_HASTE_PCT:
+			case HASTE_PCT, SPELL_HASTE_PCT:
 				this.hastePct += value;
 				break;
 			case DAMAGE_PCT:
@@ -183,15 +176,11 @@ public class AccumulatedSpellStats {
 	}
 
 	private double getAccumulatedValue(PrimitiveAttributeId attributeId) {
-		switch (attributeId) {
-			case INTELLECT:
-				return intellect;
-			case PET_STAMINA:
-			case PET_INTELLECT:
-				return 0; // pets not supported at this moment
-			default:
-				throw new IllegalArgumentException("Unhandled attribute: " + attributeId);
-		}
+		return switch (attributeId) {
+			case INTELLECT -> intellect;
+			case PET_STAMINA, PET_INTELLECT -> 0; // pets not supported at this moment
+			default -> throw new IllegalArgumentException("Unhandled attribute: " + attributeId);
+		};
 	}
 
 	private void solveAbilities(StatProvider statProvider) {

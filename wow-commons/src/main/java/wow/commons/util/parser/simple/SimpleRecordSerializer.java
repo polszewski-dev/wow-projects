@@ -52,14 +52,14 @@ class SimpleRecordSerializer {
 	}
 
 	private static String mapToString(Object value) {
-		if (value instanceof Double) {
-			return prettyFormat((Double) value);
+		if (value instanceof Double v) {
+			return prettyFormat(v);
 		}
-		if (value instanceof Percent) {
-			return prettyFormat(((Percent) value).getValue());
+		if (value instanceof Percent v) {
+			return prettyFormat(v.getValue());
 		}
-		if (value instanceof Duration) {
-			return prettyFormat(((Duration) value).getSeconds());
+		if (value instanceof Duration v) {
+			return prettyFormat(v.getSeconds());
 		}
 		return value.toString();
 	}

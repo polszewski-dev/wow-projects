@@ -13,7 +13,6 @@ import wow.commons.repository.impl.parsers.pve.PveExcelParser;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -54,14 +53,14 @@ public class PveRepositoryImpl extends ExcelRepository implements PveRepository 
 	public List<Zone> getAllInstances() {
 		return zoneByName.values().stream()
 				.filter(Zone::isInstance)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override
 	public List<Zone> getAllRaids() {
 		return getAllInstances().stream()
 				.filter(Zone::isRaid)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@PostConstruct

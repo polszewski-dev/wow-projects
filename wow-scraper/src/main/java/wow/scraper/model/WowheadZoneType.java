@@ -1,5 +1,7 @@
 package wow.scraper.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.model.pve.ZoneType;
 
 import java.util.stream.Stream;
@@ -8,6 +10,8 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-01
  */
+@AllArgsConstructor
+@Getter
 public enum WowheadZoneType {
 	NORMAL(0, ZoneType.NORMAL),
 	DUNGEON(2, ZoneType.DUNGEON),
@@ -18,20 +22,7 @@ public enum WowheadZoneType {
 	private final int code;
 	private final ZoneType type;
 
-	WowheadZoneType(int code, ZoneType type) {
-		this.code = code;
-		this.type = type;
-	}
-
 	public static WowheadZoneType fromCode(int code) {
 		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElseThrow();
-	}
-
-	public int getCode() {
-		return code;
-	}
-
-	public ZoneType getType() {
-		return type;
 	}
 }

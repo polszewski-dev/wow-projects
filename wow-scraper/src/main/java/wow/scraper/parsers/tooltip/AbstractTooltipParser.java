@@ -23,7 +23,6 @@ import wow.scraper.parsers.stats.StatPatternRepository;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -234,7 +233,7 @@ public abstract class AbstractTooltipParser {
 		return Stream.of(tooltip.split("\n"))
 				.map(String::trim)
 				.filter(x -> !x.isBlank())
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	protected void unmatchedLine(String line) {

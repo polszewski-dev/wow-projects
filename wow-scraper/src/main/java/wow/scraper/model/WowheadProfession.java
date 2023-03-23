@@ -1,5 +1,7 @@
 package wow.scraper.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.model.professions.Profession;
 
 import java.util.stream.Stream;
@@ -8,6 +10,8 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-01
  */
+@AllArgsConstructor
+@Getter
 public enum WowheadProfession {
 	ENCHANTING(333, Profession.ENCHANTING),
 	JEWELCRAFTING(755, Profession.JEWELCRAFTING),
@@ -20,20 +24,7 @@ public enum WowheadProfession {
 	private final int code;
 	private final Profession profession;
 
-	WowheadProfession(int code, Profession profession) {
-		this.code = code;
-		this.profession = profession;
-	}
-
 	public static WowheadProfession fromCode(int code) {
 		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElseThrow();
-	}
-
-	public int getCode() {
-		return code;
-	}
-
-	public Profession getProfession() {
-		return profession;
 	}
 }

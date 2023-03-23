@@ -20,7 +20,6 @@ import wow.commons.model.pve.Phase;
 import wow.commons.repository.ItemRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -56,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
 				.filter(this::meetsConfigFilter)
 				.filter(item -> item.isAvailableTo(character))
 				.filter(item -> getStatClassifier(character).hasStatsSuitableForRole(item, character))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private boolean meetsConfigFilter(Item item) {
@@ -70,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.getEnchants(itemType, character.getPhase()).stream()
 				.filter(enchant -> enchant.isAvailableTo(character))
 				.filter(enchant -> getStatClassifier(character).hasStatsSuitableForRole(enchant, itemType, character))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override
@@ -85,7 +84,7 @@ public class ItemServiceImpl implements ItemService {
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
 				.filter(gem -> getStatClassifier(character).hasStatsSuitableForRole(gem, character))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@Override

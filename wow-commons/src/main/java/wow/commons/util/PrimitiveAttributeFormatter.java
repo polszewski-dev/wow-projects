@@ -48,17 +48,11 @@ public final class PrimitiveAttributeFormatter {
 	}
 
 	private static String getValueString(PrimitiveAttribute attribute) {
-		switch (attribute.getId().getValueType()) {
-			case POINT:
-			case RATING:
-				return FormatUtil.decimalPointOnlyIfNecessary(attribute.getDouble());
-			case PERCENT:
-				return attribute.getPercent().toString();
-			case DURATION:
-				return attribute.getDuration().toString();
-			default:
-				throw new IllegalArgumentException();
-		}
+		return switch (attribute.getId().getValueType()) {
+			case POINT, RATING -> FormatUtil.decimalPointOnlyIfNecessary(attribute.getDouble());
+			case PERCENT -> attribute.getPercent().toString();
+			case DURATION -> attribute.getDuration().toString();
+		};
 	}
 
 	public static String getConditionString(AttributeCondition condition) {

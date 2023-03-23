@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static wow.character.model.build.BuffSetId.*;
@@ -50,7 +49,7 @@ public class StatsController {
 		return character.getRelevantSpells().stream()
 				.map(spell -> calculationService.getSpellStats(character, spell))
 				.map(spellStatsConverter::convert)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@GetMapping("{profileId}/character")
@@ -87,7 +86,7 @@ public class StatsController {
 				.filter(x -> x.getLine() != null)
 				.map(x -> calculationService.getSpecialAbilityStats(character, x))
 				.map(specialAbilityStatsConverter::convert)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	@GetMapping("{profileId}/dps")

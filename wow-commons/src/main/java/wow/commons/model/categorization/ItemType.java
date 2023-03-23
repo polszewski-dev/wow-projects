@@ -77,27 +77,16 @@ public enum ItemType {
 	}
 
 	public boolean isEnchantable(ItemSubType subType) {
-		switch (this) {
-			case HEAD:
-			case SHOULDER:
-			case BACK:
-			case CHEST:
-			case WRIST:
-			case HANDS:
-			case LEGS:
-			case FEET:
-			case FINGER:
-			case TWO_HAND:
-			case ONE_HAND:
-			case MAIN_HAND:
-				return true;
-			case OFF_HAND:
-				return subType == WeaponSubType.SHIELD;
-			case RANGED:
-				return subType == WeaponSubType.BOW || subType == WeaponSubType.CROSSBOW || subType == WeaponSubType.GUN;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case HEAD, SHOULDER, BACK, CHEST, WRIST, HANDS, LEGS, FEET, FINGER, TWO_HAND, ONE_HAND, MAIN_HAND ->
+					true;
+			case OFF_HAND ->
+					subType == WeaponSubType.SHIELD;
+			case RANGED ->
+					subType == WeaponSubType.BOW || subType == WeaponSubType.CROSSBOW || subType == WeaponSubType.GUN;
+			default ->
+					false;
+		};
 	}
 
 	@Override

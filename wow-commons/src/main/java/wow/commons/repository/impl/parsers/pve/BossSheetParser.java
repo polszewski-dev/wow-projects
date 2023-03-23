@@ -4,8 +4,6 @@ import wow.commons.model.pve.Boss;
 import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
-import java.util.stream.Collectors;
-
 /**
  * User: POlszewski
  * Date: 2022-11-22
@@ -40,7 +38,7 @@ public class BossSheetParser extends WowExcelSheetParser {
 
 		var zones = zoneIds.stream()
 				.map(zoneId -> pveRepository.getZone(zoneId).orElseThrow())
-				.collect(Collectors.toList());
+				.toList();
 
 		return new Boss(id, name, zones);
 	}

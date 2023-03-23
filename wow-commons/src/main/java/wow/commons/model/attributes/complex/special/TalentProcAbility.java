@@ -51,26 +51,14 @@ public class TalentProcAbility extends SpecialAbility {
 	}
 
 	private double getExtraCritCoeff(double critChance) {
-		int rank;
-		switch (effectId) {
-			case SHADOW_VULNERABILITY_4:
-				rank = 1;
-				break;
-			case SHADOW_VULNERABILITY_8:
-				rank = 2;
-				break;
-			case SHADOW_VULNERABILITY_12:
-				rank = 3;
-				break;
-			case SHADOW_VULNERABILITY_16:
-				rank = 4;
-				break;
-			case SHADOW_VULNERABILITY_20:
-				rank = 5;
-				break;
-			default:
-				throw new IllegalArgumentException("Unhandled: " + effectId);
-		}
+		int rank = switch (effectId) {
+			case SHADOW_VULNERABILITY_4 -> 1;
+			case SHADOW_VULNERABILITY_8 -> 2;
+			case SHADOW_VULNERABILITY_12 -> 3;
+			case SHADOW_VULNERABILITY_16 -> 4;
+			case SHADOW_VULNERABILITY_20 -> 5;
+			default -> throw new IllegalArgumentException("Unhandled: " + effectId);
+		};
 		double c = critChance;
 		double n = 1 - c;
 		return rank * 0.04 * (2 * c + n) * (1 + n + n * n + n * n * n);

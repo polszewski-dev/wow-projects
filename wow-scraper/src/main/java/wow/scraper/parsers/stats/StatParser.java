@@ -5,7 +5,6 @@ import wow.commons.util.AttributesBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -18,7 +17,7 @@ public class StatParser {
 	public StatParser(List<StatPattern> patterns) {
 		this.matchers = patterns.stream()
 				.map(StatMatcher::new)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public boolean tryParse(String line) {

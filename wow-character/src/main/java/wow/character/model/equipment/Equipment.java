@@ -10,7 +10,6 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static wow.commons.model.categorization.ItemSlot.*;
 
@@ -201,7 +200,7 @@ public class Equipment implements AttributeCollection, Copyable<Equipment> {
 			findItemDifference(slot, equipment, result);
 		}
 
-		return result.stream().filter(Objects::nonNull).collect(Collectors.toList());
+		return result.stream().filter(Objects::nonNull).toList();
 	}
 
 	private void findItemDifference(ItemSlot slot, Equipment equipment, List<EquippableItem> result) {

@@ -3,7 +3,6 @@ package wow.minmax.converter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -20,7 +19,7 @@ public interface ParametrizedBackConverter<F, T> {
 	default List<F> convertBackList(Collection<T> list, Map<String, Object> params) {
 		return list.stream()
 				.map(x -> convertBack(x, params))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	F doConvertBack(T value, Map<String, Object> params);
