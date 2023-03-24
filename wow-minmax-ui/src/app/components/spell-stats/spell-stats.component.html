@@ -13,10 +13,14 @@
 			<th scope="col">hast%</th>
 			<th scope="col">coeff dir</th>
 			<th scope="col">coeff dot</th>
-			<th scope="col">crCo</th>
+			<th scope="col">cr coeff</th>
 			<th scope="col">hit eqv</th>
 			<th scope="col">crit eqv</th>
 			<th scope="col">hast eqv</th>
+			<th scope="col">duration</th>
+			<th scope="col">cd</th>
+			<th scope="col">threat%</th>
+			<th scope="col">pushbk%</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,7 +34,10 @@
 			</td>
 			<td>{{spellStats.dps | number:'1.0-0'}}</td>
 			<td>{{spellStats.totalDamage | number:'1.0-0'}}</td>
-			<td>{{spellStats.castTime | number:'1.2-2'}}</td>
+			<td
+				[ngClass]="{'instant-cast': spellStats.instantCast}"
+				title="{{spellStats.instantCast ? 'Instant cast' : ''}}"
+			>{{spellStats.castTime | number:'1.2-2'}}</td>
 			<td>{{spellStats.manaCost | number:'1.0-0'}}</td>
 			<td>{{spellStats.dpm | number:'1.0-0'}}</td>
 			<td>{{spellStats.sp | number:'1.0-0'}}</td>
@@ -43,6 +50,10 @@
 			<td>{{spellStats.hitSpEqv | number:'1.2-2' | blankZero}}</td>
 			<td>{{spellStats.critSpEqv | number:'1.2-2' | blankZero}}</td>
 			<td>{{spellStats.hasteSpEqv | number:'1.2-2' | blankZero}}</td>
+			<td>{{spellStats.duration | number:'1.0-2' | blankZero}}</td>
+			<td>{{spellStats.cooldown | number:'1.0-2' | blankZero}}</td>
+			<td>{{spellStats.threatPct | number:'1.0-2' | blankZero}}</td>
+			<td>{{spellStats.pushbackPct | number:'1.0-2' | blankZero}}</td>
 		</tr>
 	</tbody>
 </table>

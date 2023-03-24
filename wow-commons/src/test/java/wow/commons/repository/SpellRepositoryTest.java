@@ -57,7 +57,7 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(spell.getSpellSchool()).isEqualTo(SHADOW);
 		assertThat(spell.getCoeffDirect().getValue()).isEqualTo(85.71, PRECISION);
 		assertThat(spell.getCoeffDot()).isEqualTo(Percent.ZERO);
-		assertThat(spell.getSpellInfo().getCooldown()).isNull();
+		assertThat(spell.getSpellInfo().getCooldown().getSeconds()).isZero();
 		assertThat(spell.getSpellInfo().isIgnoresGCD()).isFalse();
 		assertThat(spell.getCharacterRestriction().getCharacterClasses()).hasSameElementsAs(List.of(WARLOCK));
 		assertThat(spell.getCharacterRestriction().getRaces()).isEmpty();

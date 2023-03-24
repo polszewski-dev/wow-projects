@@ -26,4 +26,9 @@ public class SpellStatsDTO {
 	private double hitSpEqv;
 	private double critSpEqv;
 	private double hasteSpEqv;
+	private double duration;
+	private double cooldown;
+	private double threatPct;
+	private double pushbackPct;
+	private boolean instantCast;
 }

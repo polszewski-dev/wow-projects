@@ -84,7 +84,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(buildTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(buildTemplate.getDamagingSpell()).isEqualTo(SHADOW_BOLT);
 		assertThat(buildTemplate.getRelevantSpells()).hasSameElementsAs(List.of(
-				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE,
+				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE, SHADOWBURN,
 				UNSTABLE_AFFLICTION, SIPHON_LIFE, SEED_OF_CORRUPTION_DIRECT, DRAIN_LIFE,
 				CONFLAGRATE, INCINERATE, SEARING_PAIN, DEATH_COIL, HELLFIRE, RAIN_OF_FIRE
 		));

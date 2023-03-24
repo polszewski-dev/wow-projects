@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parsers.spells;
 
+import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -50,7 +51,7 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 		var spellId = colSpell.getEnum(SpellId::parse);
 		var talentTree = colTree.getEnum(TalentTree::parse);
 		var spellSchool = colSchool.getEnum(SpellSchool::parse, null);
-		var cooldown = colCooldown.getDuration(null);
+		var cooldown = colCooldown.getDuration(Duration.ZERO);
 		var ignoresGCD = colIgnoresGcd.getBoolean();
 
 		Description description = getDescription(spellId.getName());

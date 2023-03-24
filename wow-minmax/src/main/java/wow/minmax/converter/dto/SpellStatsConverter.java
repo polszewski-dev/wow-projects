@@ -44,7 +44,12 @@ public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO>
 				dir ? snapshot.getCritCoeff() : 0,
 				spellStats.getHitSpEqv(),
 				spellStats.getCritSpEqv(),
-				spellStats.getHasteSpEqv()
+				spellStats.getHasteSpEqv(),
+				snapshot.getDuration(),
+				snapshot.getCooldown(),
+				snapshot.getThreatPct(),
+				snapshot.getPushbackPct(),
+				snapshot.isInstantCast()
 		);
 	}
 }

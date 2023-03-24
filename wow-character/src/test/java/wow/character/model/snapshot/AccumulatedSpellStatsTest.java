@@ -322,6 +322,54 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	}
 
 	@Test
+	@DisplayName("Duration")
+	void duration() {
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DURATION, 5));
+
+		assertThat(underTest.getDuration()).isEqualTo(5);
+	}
+
+	@Test
+	@DisplayName("Duration%")
+	void durationPct() {
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(DURATION_PCT, 5));
+
+		assertThat(underTest.getDurationPct()).isEqualTo(5);
+	}
+
+	@Test
+	@DisplayName("Cooldown")
+	void cooldown() {
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(COOLDOWN, 5));
+
+		assertThat(underTest.getCooldown()).isEqualTo(5);
+	}
+
+	@Test
+	@DisplayName("Cooldown%")
+	void cooldownPct() {
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(COOLDOWN_PCT, 5));
+
+		assertThat(underTest.getCooldownPct()).isEqualTo(5);
+	}
+
+	@Test
+	@DisplayName("Threat%")
+	void threatPct() {
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(THREAT_PCT, 5));
+
+		assertThat(underTest.getThreatPct()).isEqualTo(5);
+	}
+
+	@Test
+	@DisplayName("Pushback%")
+	void pushbackPct() {
+		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(PUSHBACK_PCT, 5));
+
+		assertThat(underTest.getPushbackPct()).isEqualTo(5);
+	}
+
+	@Test
 	@DisplayName("Solving special ability with internal cooldown")
 	void specialAbility() {
 		SpecialAbility proc = SpecialAbility.proc(

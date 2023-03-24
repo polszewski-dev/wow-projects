@@ -161,3 +161,7 @@ body {
 	width:100%;
 	text-align: center;
 }
+
+.instant-cast {
+	text-decoration: underline;
+}

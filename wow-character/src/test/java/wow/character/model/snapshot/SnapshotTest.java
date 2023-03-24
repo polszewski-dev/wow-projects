@@ -8,7 +8,8 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.spells.SpellId.*;
 
 /**
  * User: POlszewski
@@ -41,6 +42,12 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
 		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
 		assertThat(underTest.getCostPct()).isEqualTo(-5);
+		assertThat(underTest.getDuration()).isZero();
+		assertThat(underTest.getDurationPct()).isZero();
+		assertThat(underTest.getCooldown()).isZero();
+		assertThat(underTest.getCooldownPct()).isZero();
+		assertThat(underTest.getThreatPct()).isEqualTo(-12);
+		assertThat(underTest.getPushbackPct()).isEqualTo(-70);
 	}
 
 	@Test
@@ -72,8 +79,14 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getCastTime()).isEqualTo(1.94, PRECISION);
 		assertThat(underTest.getGcd()).isEqualTo(1.16, PRECISION);
 		assertThat(underTest.getEffectiveCastTime()).isEqualTo(1.94, PRECISION);
+		assertThat(underTest.isInstantCast()).isFalse();
 
 		assertThat(underTest.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
+
+		assertThat(underTest.getDuration()).isZero();
+		assertThat(underTest.getCooldown()).isZero();
+		assertThat(underTest.getThreatPct()).isEqualTo(88);
+		assertThat(underTest.getPushbackPct()).isEqualTo(30);
 	}
 
 	@Test
@@ -86,6 +99,111 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
 		assertThat(underTest.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 		assertThat(underTest.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
+	}
+
+	@Test
+	void testCastTimeUnmodified() {
+		Spell spell = getSpell(CORRUPTION);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of();
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+
+		assertThat(underTest.getCastTime()).isEqualTo(2.0);
+		assertThat(underTest.getGcd()).isEqualTo(1.5);
+		assertThat(underTest.getEffectiveCastTime()).isEqualTo(2.0);
+		assertThat(underTest.isInstantCast()).isFalse();
+	}
+
+	@Test
+	void testCastTimeReductionBelowGcd() {
+		Spell spell = getSpell(CORRUPTION);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of(
+				CAST_TIME, -1.0
+		);
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+
+		assertThat(underTest.getCastTime()).isEqualTo(1.0);
+		assertThat(underTest.getGcd()).isEqualTo(1.5);
+		assertThat(underTest.getEffectiveCastTime()).isEqualTo(1.5);
+		assertThat(underTest.isInstantCast()).isFalse();
+	}
+
+	@Test
+	void testCastTimeReductionToInstant() {
+		Spell spell = getSpell(CORRUPTION);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of(
+				CAST_TIME, -2.0
+		);
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+
+		assertThat(underTest.getCastTime()).isZero();
+		assertThat(underTest.getGcd()).isEqualTo(1.5);
+		assertThat(underTest.getEffectiveCastTime()).isEqualTo(1.5);
+		assertThat(underTest.isInstantCast()).isTrue();
+	}
+
+	@Test
+	void testDurationUnmodified() {
+		Spell spell = getSpell(CORRUPTION);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of();
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+		SpellStatistics stats = underTest.getSpellStatistics(CritMode.NEVER, false);
+
+		assertThat(underTest.getDuration()).isEqualTo(18);
+		assertThat(stats.getTotalDamage()).isEqualTo(747);
+	}
+
+	@Test
+	void testDurationIncreased() {
+		Spell spell = getSpell(CORRUPTION);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of(
+				DURATION, 9
+		);
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+		SpellStatistics stats = underTest.getSpellStatistics(CritMode.NEVER, false);
+
+		assertThat(underTest.getDuration()).isEqualTo(27);
+		assertThat(stats.getTotalDamage()).isEqualTo(747 * 1.5);
+	}
+
+	@Test
+	void testCooldownUnmodified() {
+		Spell spell = getSpell(CURSE_OF_DOOM);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of();
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+
+		assertThat(underTest.getCooldown()).isEqualTo(60);
+	}
+
+	@Test
+	void testCooldownIncreased() {
+		Spell spell = getSpell(CURSE_OF_DOOM);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of(
+				COOLDOWN, 30
+		);
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+
+		assertThat(underTest.getCooldown()).isEqualTo(90);
 	}
 
 	private Snapshot getSnapshot() {

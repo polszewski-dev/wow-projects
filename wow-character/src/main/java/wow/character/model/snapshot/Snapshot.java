@@ -51,8 +51,15 @@ public class Snapshot implements StatProvider {
 	private double castTime;// actual cast time
 	private double gcd;
 	private double effectiveCastTime;// max(castTime, gcd)
+	private boolean instantCast;
 
 	private double manaCost;
+
+	private double duration;
+	private double cooldown;
+
+	private double threatPct;
+	private double pushbackPct;
 
 	private final boolean calcFinished;
 
@@ -71,6 +78,9 @@ public class Snapshot implements StatProvider {
 		calcSpellStats();
 		calcCastTime();
 		calcCost();
+		calcDuration();
+		calcCooldown();
+		calcMisc();
 
 		this.calcFinished = true;
 	}
@@ -173,11 +183,12 @@ public class Snapshot implements StatProvider {
 	private void calcCastTime() {
 		double castTimeChange = stats.getCastTime();
 		double baseCastTime = spell.getCastTime().getSeconds();
-		double changedCastTime = baseCastTime + castTimeChange;
+		double changedCastTime = max(baseCastTime + castTimeChange, 0);
 
 		castTime = changedCastTime / (1 + haste);
 		gcd = max(GCD.getSeconds() / (1 + haste), MIN_GCD.getSeconds());
 		effectiveCastTime = max(castTime, gcd);
+		instantCast = castTime == 0;
 	}
 
 	@Override
@@ -194,6 +205,53 @@ public class Snapshot implements StatProvider {
 		double baseManaCost = spell.getManaCost();
 		Percent costChangePct = Percent.of(stats.getCostPct());
 		manaCost = baseManaCost * costChangePct.toMultiplier();
+	}
+
+	private void calcCooldown() {
+		double originalCooldown = spell.getSpellInfo().getCooldown().getSeconds();
+
+		if (stats.getCooldown() == 0 && stats.getCooldownPct() == 0) {
+			this.cooldown = originalCooldown;
+			return;
+		}
+
+		this.cooldown = addAndMultiplyByPct(
+				originalCooldown,
+				stats.getCooldown(),
+				stats.getCooldownPct()
+		);
+	}
+
+	private void calcDuration() {
+		if (stats.getDuration() == 0 && stats.getDurationPct() == 0) {
+			if (spell.hasDotComponent()) {
+				this.duration = spell.getDotDuration().getSeconds();
+			}
+			return;
+		}
+
+		if (spell.isChanneled()) {
+			throw new IllegalArgumentException("Channeled spell");
+		}
+
+		if (!spell.hasDotComponent()) {
+			throw new IllegalArgumentException("No DoT component");
+		}
+
+		this.duration = addAndMultiplyByPct(
+				spell.getDotDuration().getSeconds(),
+				stats.getDuration(),
+				stats.getDamagePct()
+		);
+	}
+
+	private void calcMisc() {
+		this.threatPct = max(100 + stats.getThreatPct(), 0);
+		this.pushbackPct = min(max(100 + stats.getPushbackPct(), 0), 100);
+	}
+
+	private static double addAndMultiplyByPct(double value, double modifier, double modifierPct) {
+		return max(value + modifier, 0) * max(1 + modifierPct / 100, 0);
 	}
 
 	public SpellStatistics getSpellStatistics(CritMode critMode, boolean useBothDamageRanges) {
@@ -251,6 +309,13 @@ public class Snapshot implements StatProvider {
 		dotDamage += spellCoeffDoT * sp * spMultiplier;
 		dotDamage *= dotDamageDoneMultiplier;
 		dotDamage *= hitChance;
+		dotDamage *= 1 + getDoTDamageChange();
 		return dotDamage;
+	}
+
+	private double getDoTDamageChange() {
+		double durationChange = duration - spell.getDotDuration().getSeconds();
+		double tickChange = (int)(durationChange / spell.getTickInterval().getSeconds());
+		return tickChange / spell.getNumTicks();
 	}
 }

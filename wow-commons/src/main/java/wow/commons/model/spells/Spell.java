@@ -127,7 +127,7 @@ public class Spell extends ConfigurationElement<SpellIdAndRank> {
 		if (isChanneled()) {
 			return getCastTime().divideBy(getNumTicks());
 		}
-		return getTickInterval();
+		return dotDamageInfo.getTickInterval();
 	}
 
 	public Duration getDotDuration() {

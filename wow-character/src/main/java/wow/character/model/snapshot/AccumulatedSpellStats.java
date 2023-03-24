@@ -46,6 +46,12 @@ public class AccumulatedSpellStats {
 	private double spellPowerCoeffPct;
 	private double castTime;
 	private double costPct;
+	private double duration;
+	private double durationPct;
+	private double cooldown;
+	private double cooldownPct;
+	private double threatPct;
+	private double pushbackPct;
 
 	private final Attributes attributes;
 	private final Set<AttributeCondition> conditions;
@@ -158,6 +164,24 @@ public class AccumulatedSpellStats {
 				break;
 			case CAST_TIME:
 				this.castTime += value;
+				break;
+			case DURATION:
+				this.duration += value;
+				break;
+			case DURATION_PCT:
+				this.durationPct += value;
+				break;
+			case COOLDOWN:
+				this.cooldown += value;
+				break;
+			case COOLDOWN_PCT:
+				this.cooldownPct += value;
+				break;
+			case THREAT_PCT:
+				this.threatPct += value;
+				break;
+			case PUSHBACK_PCT:
+				this.pushbackPct += value;
 				break;
 			default:
 				// ignore the rest

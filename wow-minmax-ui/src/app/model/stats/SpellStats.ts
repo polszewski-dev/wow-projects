@@ -17,4 +17,9 @@ export interface SpellStats {
 	hitSpEqv: number;
 	critSpEqv: number;
 	hasteSpEqv: number;
+	duration: number;
+	cooldown: number;
+	threatPct: number;
+	pushbackPct: number;
+	instantCast: boolean;
 }
