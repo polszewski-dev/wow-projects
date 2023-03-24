@@ -69,9 +69,9 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
 		assertThat(underTest.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
 
-		assertThat(underTest.getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
-		assertThat(underTest.getGcd().getSeconds()).isEqualTo(1.16, PRECISION);
-		assertThat(underTest.getEffectiveCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
+		assertThat(underTest.getCastTime()).isEqualTo(1.94, PRECISION);
+		assertThat(underTest.getGcd()).isEqualTo(1.16, PRECISION);
+		assertThat(underTest.getEffectiveCastTime()).isEqualTo(1.94, PRECISION);
 
 		assertThat(underTest.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 	}

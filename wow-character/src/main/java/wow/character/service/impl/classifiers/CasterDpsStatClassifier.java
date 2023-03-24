@@ -72,7 +72,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	private boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource, Character character) {
-		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, character.getDamagingSpell().getCastTime());
+		StatProvider statProvider = StatProvider.fixedValues(0.99, 0.30, character.getDamagingSpell().getCastTime().getSeconds());
 
 		for (SpecialAbility specialAbility : attributeSource.getSpecialAbilities()) {
 			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);

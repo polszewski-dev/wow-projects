@@ -9,6 +9,9 @@ import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.util.AttributesBuilder;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 /**
  * User: POlszewski
  * Date: 2022-11-26
@@ -42,14 +45,14 @@ public class ProcAbility extends SpecialAbility {
 	public Attributes getStatEquivalent(StatProvider statProvider) {
 		double hitChance = statProvider.getHitChance();
 		double critChance = statProvider.getCritChance();
-		Duration castTime = statProvider.getEffectiveCastTime();
+		double castTime = statProvider.getEffectiveCastTime();
 
 		double procChance = getProcChance(hitChance, critChance);
 
-		Duration theoreticalCooldown = castTime.divideBy(procChance * chance.getCoefficient());
-		Duration actualCooldown = cooldown != null ? cooldown.max(theoreticalCooldown) : theoreticalCooldown;
+		double theoreticalCooldown = castTime / (procChance * chance.getCoefficient());
+		double actualCooldown = cooldown != null ? max(cooldown.getSeconds(), theoreticalCooldown) : theoreticalCooldown;
 
-		double factor = Math.min(duration.divideBy(actualCooldown), 1);
+		double factor = min(duration.getSeconds() / actualCooldown, 1);
 
 		return AttributesBuilder.attachCondition(attributes.scale(factor), condition);
 	}

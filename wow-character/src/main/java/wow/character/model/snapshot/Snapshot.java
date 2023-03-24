@@ -4,12 +4,15 @@ import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
-import wow.commons.constants.SpellConstants;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.spells.Spell;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static wow.commons.constants.SpellConstants.*;
 
 /**
  * User: POlszewski
@@ -45,9 +48,9 @@ public class Snapshot implements StatProvider {
 	private double spellCoeffDirect;
 	private double spellCoeffDoT;
 
-	private Duration castTime;// actual cast time
-	private Duration gcd;
-	private Duration effectiveCastTime;// max(castTime, gcd)
+	private double castTime;// actual cast time
+	private double gcd;
+	private double effectiveCastTime;// max(castTime, gcd)
 
 	private double manaCost;
 
@@ -95,8 +98,8 @@ public class Snapshot implements StatProvider {
 
 		spMultiplier = 1 + stats.getSpellDamagePct() / 100;
 
-		hitChance = Math.min(SpellConstants.BASE_HIT.getValue() + totalHit, 99) / 100;
-		critChance = Math.min(totalCrit, 100) / 100;
+		hitChance = min(BASE_HIT.getValue() + totalHit, 99) / 100;
+		critChance = min(totalCrit, 100) / 100;
 		haste = totalHaste / 100;
 
 		critCoeff = getCritCoeffValue();
@@ -168,17 +171,17 @@ public class Snapshot implements StatProvider {
 	}
 
 	private void calcCastTime() {
-		Duration castTimeChange = Duration.seconds(stats.getCastTime());
-		Duration baseCastTime = spell.getCastTime();
-		Duration changedCastTime = baseCastTime.add(castTimeChange);
+		double castTimeChange = stats.getCastTime();
+		double baseCastTime = spell.getCastTime().getSeconds();
+		double changedCastTime = baseCastTime + castTimeChange;
 
-		castTime = changedCastTime.divideBy(1 + haste);
-		gcd = SpellConstants.GCD.divideBy(1 + haste).max(SpellConstants.MIN_GCD);
-		effectiveCastTime = castTime.max(gcd);
+		castTime = changedCastTime / (1 + haste);
+		gcd = max(GCD.getSeconds() / (1 + haste), MIN_GCD.getSeconds());
+		effectiveCastTime = max(castTime, gcd);
 	}
 
 	@Override
-	public Duration getEffectiveCastTime() {
+	public double getEffectiveCastTime() {
 		// this method can be called while solving special abilities
 		// cast time is not yet calculated, but we have all necessary values in place
 		if (!calcFinished) {
@@ -198,7 +201,7 @@ public class Snapshot implements StatProvider {
 
 		result.setSnapshot(this);
 		result.setTotalDamage(getTotalDamage(critMode, useBothDamageRanges));
-		result.setCastTime(effectiveCastTime);
+		result.setCastTime(Duration.seconds(effectiveCastTime));
 		result.setDps(result.getTotalDamage() / result.getCastTime().getSeconds());
 		result.setManaCost(manaCost);
 		result.setDpm(result.getTotalDamage() / result.getManaCost());
@@ -208,7 +211,7 @@ public class Snapshot implements StatProvider {
 
 	public double getDps(CritMode critMode, boolean useBothDamageRanges) {
 		double totalDamage = getTotalDamage(critMode, useBothDamageRanges);
-		double effectiveCastTimeSeconds = effectiveCastTime.getSeconds();
+		double effectiveCastTimeSeconds = effectiveCastTime;
 		return totalDamage / effectiveCastTimeSeconds;
 	}
 

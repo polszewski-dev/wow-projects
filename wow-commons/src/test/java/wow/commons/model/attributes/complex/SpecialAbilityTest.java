@@ -37,7 +37,7 @@ class SpecialAbilityTest {
 				"test"
 		);
 
-		Attributes statEquivalent = proc.getStatEquivalent(StatProvider.fixedValues(hitChance, critChance, Duration.seconds(castTime)));
+		Attributes statEquivalent = proc.getStatEquivalent(StatProvider.fixedValues(hitChance, critChance, castTime));
 
 		assertThat(statEquivalent.getSpellPower()).isEqualTo(expected, PRECISION);
 	}
@@ -68,7 +68,7 @@ class SpecialAbilityTest {
 				"test"
 		);
 
-		Attributes statEquivalent = proc.getStatEquivalent(StatProvider.fixedValues(hitChance, critChance, Duration.seconds(castTime)));
+		Attributes statEquivalent = proc.getStatEquivalent(StatProvider.fixedValues(hitChance, critChance, castTime));
 
 		assertThat(statEquivalent.getSpellPower()).isEqualTo(expected, PRECISION);
 	}
@@ -96,7 +96,7 @@ class SpecialAbilityTest {
 				"test"
 		);
 
-		Attributes statEquivalent = onUse.getStatEquivalent(StatProvider.fixedValues(0.9, 0.2, Duration.seconds(2)));
+		Attributes statEquivalent = onUse.getStatEquivalent(StatProvider.fixedValues(0.9, 0.2, 2));
 
 		assertThat(statEquivalent.getSpellPower()).isEqualTo(25);
 	}

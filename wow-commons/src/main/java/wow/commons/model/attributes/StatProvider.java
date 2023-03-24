@@ -1,7 +1,5 @@
 package wow.commons.model.attributes;
 
-import wow.commons.model.Duration;
-
 /**
  * User: POlszewski
  * Date: 2022-01-05
@@ -11,9 +9,9 @@ public interface StatProvider {
 
 	double getCritChance();
 
-	Duration getEffectiveCastTime();
+	double getEffectiveCastTime();
 
-	static StatProvider fixedValues(double hitChance, double critChance, Duration effectiveCastTime) {
+	static StatProvider fixedValues(double hitChance, double critChance, double effectiveCastTime) {
 		return new StatProvider() {
 			@Override
 			public double getHitChance() {
@@ -26,7 +24,7 @@ public interface StatProvider {
 			}
 
 			@Override
-			public Duration getEffectiveCastTime() {
+			public double getEffectiveCastTime() {
 				return effectiveCastTime;
 			}
 		};

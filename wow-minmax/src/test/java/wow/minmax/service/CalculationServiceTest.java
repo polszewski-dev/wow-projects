@@ -53,9 +53,9 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1, PRECISION);
 		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1, PRECISION);
 
-		assertThat(snapshot.getCastTime().getSeconds()).isEqualTo(2.5, PRECISION);
-		assertThat(snapshot.getGcd().getSeconds()).isEqualTo(1.5, PRECISION);
-		assertThat(snapshot.getEffectiveCastTime().getSeconds()).isEqualTo(2.5, PRECISION);
+		assertThat(snapshot.getCastTime()).isEqualTo(2.5, PRECISION);
+		assertThat(snapshot.getGcd()).isEqualTo(1.5, PRECISION);
+		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(2.5, PRECISION);
 
 		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
 		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
@@ -90,9 +90,9 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.25, PRECISION);
 		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.25, PRECISION);
 
-		assertThat(snapshot.getCastTime().getSeconds()).isEqualTo(2.5, PRECISION);
-		assertThat(snapshot.getGcd().getSeconds()).isEqualTo(1.5, PRECISION);
-		assertThat(snapshot.getEffectiveCastTime().getSeconds()).isEqualTo(2.5, PRECISION);
+		assertThat(snapshot.getCastTime()).isEqualTo(2.5, PRECISION);
+		assertThat(snapshot.getGcd()).isEqualTo(1.5, PRECISION);
+		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(2.5, PRECISION);
 
 		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
 		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
@@ -127,9 +127,9 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.31, PRECISION);
 		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.31, PRECISION);
 
-		assertThat(snapshot.getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
-		assertThat(snapshot.getGcd().getSeconds()).isEqualTo(1.16, PRECISION);
-		assertThat(snapshot.getEffectiveCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
+		assertThat(snapshot.getCastTime()).isEqualTo(1.94, PRECISION);
+		assertThat(snapshot.getGcd()).isEqualTo(1.16, PRECISION);
+		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(1.94, PRECISION);
 
 		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
 		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
@@ -148,7 +148,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		assertThat(hitEqv.getSpellPower()).isEqualTo(0.11, PRECISION);
 		assertThat(critEqv.getSpellPower()).isEqualTo(10.30, PRECISION);
-		assertThat(hasteEqv.getSpellPower()).isEqualTo(10.94, PRECISION);
+		assertThat(hasteEqv.getSpellPower()).isEqualTo(11.55, PRECISION);
 	}
 
 	@Test
@@ -173,7 +173,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		double dps = underTest.getSpellDps(character, null);
 
-		assertThat(dps).usingComparator(ROUNDED_DOWN).isEqualTo(2691);
+		assertThat(dps).usingComparator(ROUNDED_DOWN).isEqualTo(2690);
 	}
 
 	@Test
@@ -191,7 +191,7 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(spellStats.getSpellStatistics().getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
 		assertThat(spellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
 		assertThat(spellStats.getCritSpEqv()).isEqualTo(10.30, PRECISION);
-		assertThat(spellStats.getHasteSpEqv()).isEqualTo(10.94, PRECISION);
+		assertThat(spellStats.getHasteSpEqv()).isEqualTo(11.55, PRECISION);
 	}
 
 	@Test
@@ -272,6 +272,6 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(stats.getDescription()).isEqualTo("Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)");
 		assertThat(stats.getAbility()).isEqualTo("(175 spell haste rating | 20s/2m)");
 		assertThat(stats.getStatEquivalent().statString()).isEqualTo("29.17 spell haste rating");
-		assertThat(stats.getSpEquivalent()).isEqualTo(35.10, PRECISION);
+		assertThat(stats.getSpEquivalent()).isEqualTo(34.20, PRECISION);
 	}
 }
