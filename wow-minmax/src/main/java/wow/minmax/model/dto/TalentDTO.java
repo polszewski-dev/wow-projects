@@ -2,7 +2,6 @@ package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.talents.TalentId;
 
 /**
  * User: POlszewski
@@ -11,7 +10,11 @@ import wow.commons.model.talents.TalentId;
 @Data
 @AllArgsConstructor
 public class TalentDTO {
-	private TalentId talentId;
-	private int rank;
 	private String name;
+	private int rank;
+	private int maxRank;
+	private String icon;
+	private String tooltip;
+	private String statEquivalent;
+	private double spEquivalent;
 }

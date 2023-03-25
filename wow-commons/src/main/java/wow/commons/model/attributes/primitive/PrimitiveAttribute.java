@@ -71,6 +71,10 @@ public class PrimitiveAttribute extends Attribute {
 		return new PrimitiveAttribute(id, scaledValue, condition);
 	}
 
+	public PrimitiveAttribute negate() {
+		return new PrimitiveAttribute(id, -value, condition);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

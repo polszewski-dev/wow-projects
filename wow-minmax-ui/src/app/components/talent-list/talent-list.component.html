@@ -1,1 +1,22 @@
-<p>talent-list works!</p>
+<table class="table table-striped stats-table">
+	<thead>
+		<tr>
+			<th scope="col" style="width: 15%">name</th>
+			<th scope="col">rank</th>
+			<th scope="col">description</th>
+			<th scope="col">sp equivalent</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let talent of talentList">
+			<td style="text-align: left" [title]="talent.statEquivalent.replaceAll(', ', ',\n')">
+				<strong>
+					<img [src]="talent.icon | icon"/>&nbsp;{{talent.name}}
+				</strong>
+			</td>
+			<td>{{talent.rank + "/" + talent.maxRank}}</td>
+			<td [innerHTML]="talent.tooltip.replaceAll('\n', '<br/>')"></td>
+			<td>{{talent.spEquivalent | number:'1.0-0' | blankZero}}</td>
+		</tr>
+	</tbody>
+</table>

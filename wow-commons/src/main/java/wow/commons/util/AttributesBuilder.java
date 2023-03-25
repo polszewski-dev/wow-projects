@@ -193,9 +193,7 @@ public class AttributesBuilder {
 		var result = new ArrayList<>(attributes.getPrimitiveAttributeList());
 
 		for (var attributeToRemove : attributesToRemove.getPrimitiveAttributeList()) {
-			var minusAttributeToRemove = Attribute.of(attributeToRemove.getId(), -attributeToRemove.getDouble());
-
-			result.add(minusAttributeToRemove);
+			result.add(attributeToRemove.negate());
 		}
 
 		return result;
