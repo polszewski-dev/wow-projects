@@ -20,6 +20,7 @@ import { DpsBarComponent } from './components/dps-bar/dps-bar.component';
 import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
 import { NewProfileComponent } from './components/new-profile/new-profile.component';
 import { MainComponent } from './components/main/main.component';
+import { TalentListComponent } from './components/talent-list/talent-list.component';
 
 @NgModule({
 	declarations: [
@@ -38,7 +39,8 @@ import { MainComponent } from './components/main/main.component';
 		DpsBarComponent,
 		UpgradeListComponent,
 		NewProfileComponent,
-		MainComponent
+		MainComponent,
+		TalentListComponent
 	],
 	imports: [
 		BrowserModule,
