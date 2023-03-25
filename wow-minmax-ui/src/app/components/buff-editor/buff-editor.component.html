@@ -6,7 +6,7 @@
 		[(ngModel)]="buff.enabled"
 		(change)="onChange(buff)"
 	>
-	<label class="form-check-label" for="buff-select-{{buff.id}}" title="{{buff.attributes}}">
+	<label class="form-check-label" for="buff-select-{{buff.id}}" title="{{buff.tooltip || buff.attributes}}">
 		<img [src]="buff.icon | icon"/>
 		<span class="buff-name px-1">{{buff.name}}</span>
 		<span class="buff-stats">= {{buff.attributes}}</span>

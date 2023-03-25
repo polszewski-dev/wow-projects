@@ -20,6 +20,8 @@ import wow.minmax.service.CalculationService;
 import wow.minmax.service.impl.enumerators.StatEquivalentFinder;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
+import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 
 /**
  * User: POlszewski
@@ -87,9 +89,10 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public SpellStats getSpellStats(Character character, Spell spell) {
 		SpellStatistics spellStatistics = getSnapshot(character, spell, null).getSpellStatistics(CritMode.AVERAGE, true);
-		double hitSpEqv = getSpEquivalent(SPELL_HIT_RATING, 10, character, spell);
-		double critSpEqv = getSpEquivalent(SPELL_CRIT_RATING, 10, character, spell);
-		double hasteSpEqv = getSpEquivalent(SPELL_HASTE_RATING, 10, character, spell);
+		int amount = 10;
+		double hitSpEqv = getSpEquivalent(SPELL_HIT_RATING, amount, character, spell);
+		double critSpEqv = getSpEquivalent(SPELL_CRIT_RATING, amount, character, spell);
+		double hasteSpEqv = getSpEquivalent(SPELL_HASTE_RATING, amount, character, spell);
 		return new SpellStats(character, spellStatistics, hitSpEqv, critSpEqv, hasteSpEqv);
 	}
 
@@ -97,7 +100,7 @@ public class CalculationServiceImpl implements CalculationService {
 		return getDpsStatEquivalent(
 				Attributes.of(attributeId, amount),
 				SPELL_POWER,
-				EquivalentMode.ADDITIONAL,
+				ADDITIONAL,
 				character, spell, character.getStats()
 		).getSpellPower();
 	}
@@ -155,7 +158,7 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public SpecialAbilityStats getSpecialAbilityStats(Character character, SpecialAbility specialAbility) {
 		Attributes statEquivalent = getAbilityEquivalent(specialAbility, character, null, null);
-		Attributes spEquivalent = getDpsStatEquivalent(Attributes.of(specialAbility), SPELL_POWER, EquivalentMode.REPLACEMENT, character);
+		Attributes spEquivalent = getDpsStatEquivalent(Attributes.of(specialAbility), SPELL_POWER, REPLACEMENT, character);
 
 		return new SpecialAbilityStats(
 				specialAbility.getLine() != null ? specialAbility.getLine() : specialAbility.toString(),

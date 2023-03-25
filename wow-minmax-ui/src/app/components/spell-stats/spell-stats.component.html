@@ -1,7 +1,8 @@
 <table class="table table-striped stats-table" style="text-align: right;">
 	<thead>
 		<tr>
-			<th scope="col" style="text-align: left">spell</th>
+			<th scope="col" style="text-align: left; width: 15%">spell</th>
+			<th scope="col" style="text-align: center">rank</th>
 			<th scope="col">dps</th>
 			<th scope="col">dmg</th>
 			<th scope="col">cast</th>
@@ -28,10 +29,9 @@
 			<td style="text-align: left">
 				<strong>
 					<img [src]="spellStats.spell.icon | icon"/>&nbsp;{{spellStats.spell.name}}
-				</strong>
-				&nbsp;
-				(rank {{spellStats.spell.rank}})
+				</strong>				
 			</td>
+			<td style="text-align: center">{{spellStats.spell.rank}}</td>
 			<td>{{spellStats.dps | number:'1.0-0'}}</td>
 			<td>{{spellStats.totalDamage | number:'1.0-0'}}</td>
 			<td
