@@ -5,8 +5,6 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
-import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
-
 /**
  * User: POlszewski
  * Date: 2021-01-17
@@ -30,7 +28,7 @@ public class StatConversion extends ComplexAttribute {
 	}
 
 	@Override
-	public String toString() {
-		return String.format("(from: %s, to: %s, ratio: %s)%s", fromStat, toStat, ratioPct, getConditionString(condition));
+	protected String doToString() {
+		return String.format("(from: %s, to: %s, ratio: %s)", fromStat, toStat, ratioPct);
 	}
 }

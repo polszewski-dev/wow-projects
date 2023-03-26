@@ -65,7 +65,7 @@ public class TalentProcAbility extends SpecialAbility {
 	}
 
 	@Override
-	public String toString() {
+	protected String doToString() {
 		return Stream.of(
 				effectId != null ? "effect: " + effectId : "",
 				!duration.isZero() ? "duration: " + duration : "",

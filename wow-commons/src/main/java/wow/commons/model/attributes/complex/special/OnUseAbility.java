@@ -40,7 +40,7 @@ public class OnUseAbility extends SpecialAbility {
 	}
 
 	@Override
-	public String toString() {
+	protected String doToString() {
 		return String.format("(%s | %s/%s)", attributes, duration, cooldown);
 	}
 }

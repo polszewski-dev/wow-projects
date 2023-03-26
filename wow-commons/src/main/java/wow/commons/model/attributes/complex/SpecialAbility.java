@@ -43,6 +43,4 @@ public abstract class SpecialAbility extends ComplexAttribute implements StatEqu
 	public static MiscAbility misc(String line) {
 		return new MiscAbility(line, AttributeCondition.EMPTY);
 	}
-
-	public abstract String toString();
 }

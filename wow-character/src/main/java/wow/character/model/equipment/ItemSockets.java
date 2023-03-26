@@ -147,7 +147,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	@Override
-	public String toString() {
+	protected String doToString() {
 		if (getSocketCount() == 0) {
 			return "no sockets";
 		}

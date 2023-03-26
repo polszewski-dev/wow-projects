@@ -72,7 +72,7 @@ public class ProcAbility extends SpecialAbility {
 	}
 
 	@Override
-	public String toString() {
+	protected String doToString() {
 		return String.format("(event: %s, chance: %s, %s | %s/%s)", event, chance, attributes, duration, (cooldown != null ? cooldown : "-"));
 	}
 }

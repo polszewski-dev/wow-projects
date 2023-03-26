@@ -45,7 +45,7 @@ public class ItemSetPiece extends ComplexAttribute {
 	}
 
 	@Override
-	public String toString() {
+	protected String doToString() {
 		return String.format("%s - %s", item.getItemSet().getName(), item.getName());
 	}
 }
