@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
+import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 
@@ -116,6 +118,28 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(item.getSpellCritRating()).isEqualTo(40);
 		assertThat(item.getSpellHasteRating()).isEqualTo(40);
 		assertThat(item.getSpellPower()).isEqualTo(71);
+	}
+
+	@Test
+	@DisplayName("Item set requirement is read correctly")
+	void itemSetReqIsCorrect() {
+		Optional<Item> optionalItem = underTest.getItem(24262, PHASE);
+
+		assertThat(optionalItem).isPresent();
+
+		Item item = optionalItem.orElseThrow();
+
+		assertThat(item.getItemSet().getName()).isEqualTo("Spellstrike Infusion");
+		assertThat(item.getItemSet().getItemSetBonuses()).hasSize(1);
+
+		ItemSetBonus bonus = item.getItemSet().getItemSetBonuses().get(0);
+
+		assertThat(bonus.getBonusStats().getSpecialAbilities()).hasSize(1);
+
+		SpecialAbility ability = bonus.getBonusStats().getSpecialAbilities().get(0);
+
+		assertThat(ability.getLine()).isEqualTo("Gives a chance when your harmful spells land to increase the damage of your spells and effects by 92 for 10 sec. (Proc chance: 5%)");
+		assertThat(ability.getCondition()).isEqualTo(AttributeCondition.of(TAILORING));
 	}
 
 	/*

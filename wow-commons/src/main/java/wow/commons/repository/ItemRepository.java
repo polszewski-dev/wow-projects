@@ -17,7 +17,7 @@ public interface ItemRepository {
 	Optional<Item> getItem(String name, Phase phase);
 	List<Item> getItemsBySlot(ItemSlot itemSlot, Phase phase);
 
-	Optional<ItemSet> getItemSet(String name);
+	Optional<ItemSet> getItemSet(String name, Phase phase);
 
 	Optional<Enchant> getEnchant(int enchantId, Phase phase);
 	Optional<Enchant> getEnchant(String name, Phase phase);

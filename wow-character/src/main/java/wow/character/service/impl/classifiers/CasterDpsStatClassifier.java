@@ -95,7 +95,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 
 	private boolean hasCasterStatCondition(PrimitiveAttribute attribute, Character character) {
 		var damagingSpell = character.getDamagingSpell();
-		var conditions = damagingSpell.getConditions(character.getActivePet(), character.getEnemyType());
+		var conditions = character.getConditions(damagingSpell);
 		return conditions.contains(attribute.getCondition());
 	}
 }

@@ -3,7 +3,6 @@ package wow.commons.model.item;
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -65,13 +64,5 @@ public class Item extends AbstractItem {
 
 	public boolean canBeEquippedIn(ItemSlot itemSlot) {
 		return getItemType().getItemSlots().contains(itemSlot);
-	}
-
-	@Override
-	public boolean isAvailableTo(CharacterInfo characterInfo) {
-		if (!getCharacterRestriction().isMetBy(characterInfo)) {
-			return false;
-		}
-		return itemSet == null || itemSet.getCharacterRestriction().isMetBy(characterInfo);
 	}
 }

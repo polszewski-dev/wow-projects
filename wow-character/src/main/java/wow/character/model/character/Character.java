@@ -9,6 +9,7 @@ import wow.character.model.equipment.EquippableItem;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
@@ -220,5 +221,17 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	public CreatureType getEnemyType() {
 		return targetEnemy.getEnemyType();
+	}
+
+	public Set<AttributeCondition> getConditions(Spell spell) {
+		var result = new HashSet<AttributeCondition>();
+
+		result.addAll(spell.getConditions());
+		result.addAll(professions.getConditions());
+		result.addAll(targetEnemy.getConditions());
+		result.add(AttributeCondition.of(getActivePet()));
+		result.add(AttributeCondition.EMPTY);
+
+		return result;
 	}
 }

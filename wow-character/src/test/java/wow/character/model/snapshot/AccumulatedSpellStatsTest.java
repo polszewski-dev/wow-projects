@@ -3,6 +3,7 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
+import wow.character.model.character.Character;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -387,11 +388,12 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	}
 
 	private AccumulatedSpellStats getAccumulatedSpellStats(Attributes attributes) {
+		Character character = getCharacter();
 		Spell spell = getSpell(SHADOW_BOLT);
 
 		StatProvider dummyStatProvider = StatProvider.fixedValues(0.99, 0.30, spell.getCastTime().getSeconds());
 
-		AccumulatedSpellStats stats = new AccumulatedSpellStats(attributes, spell.getConditions(null, UNDEAD));
+		AccumulatedSpellStats stats = new AccumulatedSpellStats(attributes, character.getConditions(spell));
 
 		stats.accumulateStats(dummyStatProvider);
 

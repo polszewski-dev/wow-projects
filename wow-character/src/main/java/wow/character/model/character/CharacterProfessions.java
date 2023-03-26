@@ -1,9 +1,12 @@
 package wow.character.model.character;
 
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.professions.Profession;
 import wow.commons.model.professions.ProfessionSpecialization;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: POlszewski
@@ -38,5 +41,17 @@ public class CharacterProfessions {
 
 	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
 		return professions.stream().anyMatch(x -> x.getSpecialization() == specialization);
+	}
+
+	public Set<AttributeCondition> getConditions() {
+		var result = new HashSet<AttributeCondition>();
+
+		for (CharacterProfession profession : professions) {
+			result.add(AttributeCondition.of(profession.getProfession()));
+			result.add(AttributeCondition.of(profession.getSpecialization()));
+		}
+
+		result.remove(AttributeCondition.EMPTY);
+		return result;
 	}
 }

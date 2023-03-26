@@ -5,7 +5,10 @@ import lombok.Getter;
 import wow.character.model.Copyable;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.character.CreatureType;
+
+import java.util.Set;
 
 /**
  * User: POlszewski
@@ -24,5 +27,9 @@ public class Enemy implements AttributeCollection, Copyable<Enemy> {
 	@Override
 	public void collectAttributes(AttributeCollector collector) {
 		// VOID atm
+	}
+
+	public Set<AttributeCondition> getConditions() {
+		return Set.of(AttributeCondition.of(enemyType));
 	}
 }

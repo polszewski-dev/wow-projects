@@ -31,7 +31,7 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 	private final Map<ItemType, List<Item>> itemByType = new EnumMap<>(ItemType.class);
 	private final Map<ItemSlot, List<Item>> itemBySlot = new EnumMap<>(ItemSlot.class);
 
-	private final Map<String, ItemSet> itemSetByName = new TreeMap<>();
+	private final Map<String, List<ItemSet>> itemSetByName = new TreeMap<>();
 
 	private final Map<Integer, List<Enchant>> enchantById = new TreeMap<>();
 	private final Map<String, List<Enchant>> enchantByName = new TreeMap<>();
@@ -65,8 +65,8 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 	}
 
 	@Override
-	public Optional<ItemSet> getItemSet(String name) {
-		return Optional.ofNullable(itemSetByName.get(name));
+	public Optional<ItemSet> getItemSet(String name, Phase phase) {
+		return getUnique(itemSetByName, name, phase);
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 	}
 
 	public void addItemSet(ItemSet itemSet) {
-		itemSetByName.put(itemSet.getName(), itemSet);
+		addEntry(itemSetByName, itemSet.getName(), itemSet);
 	}
 
 	public void addEnchant(Enchant enchant) {

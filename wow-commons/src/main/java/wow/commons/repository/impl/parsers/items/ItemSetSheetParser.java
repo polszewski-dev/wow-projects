@@ -1,16 +1,19 @@
 package wow.commons.repository.impl.parsers.items;
 
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.config.CharacterRestriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
+import wow.commons.model.professions.Profession;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
+import wow.commons.util.AttributesBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -20,14 +23,15 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  */
 public class ItemSetSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colName = column(ITEM_SET_NAME);
+	private final ExcelColumn colIBonusReqProfession = column(ITEM_SET_BONUS_REQ_PROFESSION);
 
 	private final ItemRepositoryImpl itemRepository;
-	private final Map<String, List<Item>> setPiecesByName;
+	private final ItemBaseExcelParser parser;
 
-	public ItemSetSheetParser(String sheetName, ItemRepositoryImpl itemRepository, Map<String, List<Item>> setPiecesByName) {
+	public ItemSetSheetParser(String sheetName, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
 		super(sheetName);
 		this.itemRepository = itemRepository;
-		this.setPiecesByName = setPiecesByName;
+		this.parser = parser;
 	}
 
 	@Override
@@ -45,8 +49,11 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		var name = colName.getString();
 		var itemSetBonuses = getItemSetBonuses();
 
+		TimeRestriction timeRestriction = getTimeRestriction();
 		CharacterRestriction characterRestriction = getRestriction();
-		ItemSet itemSet = new ItemSet(name, null, characterRestriction, itemSetBonuses, setPiecesByName.getOrDefault(name, List.of()));
+		List<Item> pieces = parser.getPieces(name, timeRestriction.getUniqueVersion());
+
+		ItemSet itemSet = new ItemSet(name, null, timeRestriction, characterRestriction, itemSetBonuses, pieces);
 
 		for (Item item : itemSet.getPieces()) {
 			item.setItemSet(itemSet);
@@ -77,6 +84,9 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 
 		String description = column(itemSetBonusDescription(bonusIdx)).getString();
 		Attributes attributes = readAttributes(itemSetBonusStatPrefix(bonusIdx), ITEM_SET_BONUS_MAX_STATS);
+		AttributeCondition professionCondition = AttributeCondition.of(colIBonusReqProfession.getEnum(Profession::parse, null));
+
+		attributes = AttributesBuilder.attachCondition(attributes, professionCondition);
 
 		return new ItemSetBonus(numPieces, description, attributes);
 	}

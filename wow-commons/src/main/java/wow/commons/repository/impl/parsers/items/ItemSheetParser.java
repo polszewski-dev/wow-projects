@@ -14,9 +14,7 @@ import wow.commons.model.item.SocketType;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
 
@@ -28,11 +26,11 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colSocketTypes = column(ITEM_SOCKET_TYPES);
 	private final ExcelColumn colItemSet = column(ITEM_ITEM_SET);
 
-	private final Map<String, List<Item>> setPiecesByName;
+	private final ItemBaseExcelParser parser;
 	
-	public ItemSheetParser(String sheetName, PveRepository pveRepository, ItemRepositoryImpl itemRepository, Map<String, List<Item>> setPiecesByName) {
+	public ItemSheetParser(String sheetName, PveRepository pveRepository, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
 		super(sheetName, pveRepository, itemRepository);
-		this.setPiecesByName = setPiecesByName;
+		this.parser = parser;
 	}
 
 	@Override
@@ -58,7 +56,7 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		validateItem(item);
 
 		if (itemSetName != null) {
-			setPiecesByName.computeIfAbsent(itemSetName, x -> new ArrayList<>()).add(item);
+			parser.addItemSetPiece(itemSetName, item);
 		}
 
 		return item;

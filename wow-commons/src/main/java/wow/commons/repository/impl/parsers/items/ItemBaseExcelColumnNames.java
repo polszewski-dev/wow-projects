@@ -28,6 +28,8 @@ public final class ItemBaseExcelColumnNames {
 	public static final int GEM_MAX_STATS = 3;
 
 	public static final String ITEM_SET_NAME = "name";
+	public static final String ITEM_SET_BONUS_REQ_PROFESSION = "bonus_req_prof";
+	public static final String ITEM_SET_BONUS_REQ_PROFESSION_LEVEL = "bonus_req_prof_lvl";
 	public static final int ITEM_SET_MAX_BONUSES = 6;
 	public static final int ITEM_SET_BONUS_MAX_STATS = 2;
 

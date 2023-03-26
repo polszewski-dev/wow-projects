@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static wow.commons.util.CollectionUtil.mergeCriteria;
-import static wow.commons.util.CollectionUtil.mergeValues;
+import static wow.commons.util.CollectionUtil.*;
 
 /**
  * User: POlszewski
@@ -39,6 +38,10 @@ public class TimeRestriction {
 				.versions(mergeCriteria(versions, other.versions))
 				.phase(mergeValues(phase, other.phase))
 				.build();
+	}
+
+	public GameVersion getUniqueVersion() {
+		return getUniqueResult(versions).orElseThrow();
 	}
 
 	@Override

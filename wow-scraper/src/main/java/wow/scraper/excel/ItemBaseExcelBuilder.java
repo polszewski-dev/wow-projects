@@ -9,6 +9,7 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.Profession;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.scraper.config.ScraperConfig;
@@ -20,10 +21,7 @@ import wow.scraper.parsers.tooltip.ItemTooltipParser;
 import wow.scraper.parsers.tooltip.TradedItemParser;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
@@ -53,6 +51,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	public void addGemHeader() {
+		flushItems();
 		writer.nextSheet(GEM);
 		writeGemHeader();
 	}
@@ -73,8 +72,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		if (parser.isRandomEnchantment()) {
 			return;
 		}
-
-		writeItemRow(parser);
+		itemParserQueue.add(parser);
 		saveSetInfo(parser);
 	}
 
@@ -118,7 +116,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	private void writeItemRow(ItemTooltipParser parser) {
 		writeCommonColumns(parser, parser.getRequiredFactionName());
 		setValue(parser.getRequiredLevel());
-		setValue(parser.getRequiredClass());
+		setValue(getRequiredClass(parser));
 		setValue(parser.getRequiredRace());
 		setValue(parser.getRequiredSide());
 		setValue(parser.getRequiredProfession());
@@ -132,11 +130,20 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		writer.nextRow();
 	}
 
+	private List<CharacterClass> getRequiredClass(ItemTooltipParser parser) {
+		if (parser.getItemSetName() != null) {
+			SetInfo setInfo = savedSets.get(getSavedSetKey(parser));
+			return setInfo.getItemSetRequiredClass();
+		}
+		return parser.getRequiredClass();
+	}
+
 	private void writeItemSetHeader() {
 		setHeader(ITEM_SET_NAME, 30);
+		setHeader(REQ_VERSION);
 		setHeader(REQ_CLASS);
-		setHeader(REQ_PROFESSION);
-		setHeader(REQ_PROFESSION_LEVEL);
+		setHeader(ITEM_SET_BONUS_REQ_PROFESSION);
+		setHeader(ITEM_SET_BONUS_REQ_PROFESSION_LEVEL);
 
 		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
 			setHeader(itemSetBonusNumPieces(bonusIdx));
@@ -149,9 +156,10 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	private void writeItemSetRow(SetInfo setInfo) {
 		setValue(setInfo.getItemSetName());
+		setValue(setInfo.getGameVersion());
 		setValue(setInfo.getItemSetRequiredClass());
-		setValue(setInfo.getItemSetRequiredProfession());
-		setValue(setInfo.getItemSetRequiredProfessionLevel());
+		setValue(setInfo.getItemSetBonusRequiredProfession());
+		setValue(setInfo.getItemSetBonusRequiredProfessionLevel());
 		setList(setInfo.getItemSetBonuses(), ITEM_SET_MAX_BONUSES, x -> {
 			setValue(x.getNumPieces());
 			setValue(x.getDescription());
@@ -259,15 +267,25 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getTooltip());
 	}
 
+	private final List<ItemTooltipParser> itemParserQueue = new ArrayList<>();
+
+	private void flushItems() {
+		for (ItemTooltipParser parser : itemParserQueue) {
+			writeItemRow(parser);
+		}
+		itemParserQueue.clear();
+	}
+
 	@Data
 	@AllArgsConstructor
 	private static class SetInfo {
 		private String itemSetName;
 		private List<String> itemSetPieces;
 		private List<ItemSetBonus> itemSetBonuses;
+		private GameVersion gameVersion;
 		private List<CharacterClass> itemSetRequiredClass;
-		private Profession itemSetRequiredProfession;
-		private Integer itemSetRequiredProfessionLevel;
+		private Profession itemSetBonusRequiredProfession;
+		private Integer itemSetBonusRequiredProfessionLevel;
 	}
 
 	private final Map<String, SetInfo> savedSets = new TreeMap<>();
@@ -277,10 +295,11 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 			return;
 		}
 
-		SetInfo setInfo = savedSets.computeIfAbsent(parser.getItemSetName(), x -> new SetInfo(
+		SetInfo setInfo = savedSets.computeIfAbsent(getSavedSetKey(parser), x -> new SetInfo(
 				parser.getItemSetName(),
 				parser.getItemSetPieces(),
 				parser.getItemSetBonuses(),
+				parser.getGameVersion(),
 				null,
 				parser.getItemSetRequiredProfession(),
 				parser.getItemSetRequiredProfessionLevel()
@@ -293,6 +312,10 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 				assertTheSameClassRequirements(parser, setInfo);
 			}
 		}
+	}
+
+	private static String getSavedSetKey(ItemTooltipParser parser) {
+		return parser.getItemSetName() + "#" + parser.getGameVersion().ordinal();
 	}
 
 	private static void assertTheSameClassRequirements(ItemTooltipParser parser, SetInfo setInfo) {

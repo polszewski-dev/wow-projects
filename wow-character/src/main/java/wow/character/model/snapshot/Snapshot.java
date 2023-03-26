@@ -69,7 +69,7 @@ public class Snapshot implements StatProvider {
 		this.cr = character.getCombatRatingInfo();
 		this.stats = new AccumulatedSpellStats(
 				attributes,
-				spell.getConditions(character.getActivePet(), character.getTargetEnemy().getEnemyType())
+				character.getConditions(spell)
 		);
 
 		stats.accumulateStats(this);
