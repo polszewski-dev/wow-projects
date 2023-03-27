@@ -2,7 +2,8 @@ package wow.commons.model.talents.impl;
 
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.sources.TalentSource;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -28,10 +29,9 @@ public class TalentImpl extends ConfigurationElementWithAttributesImpl<TalentIdA
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
-			Attributes attributes,
 			TalentInfo talentInfo
 	) {
-		super(id, description, timeRestriction, characterRestriction, attributes);
+		super(id, description, timeRestriction, characterRestriction);
 		this.talentInfo = talentInfo;
 	}
 
@@ -42,8 +42,15 @@ public class TalentImpl extends ConfigurationElementWithAttributesImpl<TalentIdA
 
 	@Override
 	public Talent combineWith(Talent talent) {
-		Attributes combinedAttributes = AttributesBuilder.addAttributes(getAttributes(), talent.getAttributes());
-		return new TalentImpl(getId(), getDescription(), getTimeRestriction(), getCharacterRestriction(), combinedAttributes, talentInfo);
+		var combinedAttributes = AttributesBuilder.addAttributes(getAttributes(), talent.getAttributes());
+		var result = new TalentImpl(getId(), getDescription(), getTimeRestriction(), getCharacterRestriction(), talentInfo);
+		result.setAttributes(combinedAttributes);
+		return result;
+	}
+
+	@Override
+	protected SpecialAbilitySource getSpecialAbilitySource() {
+		return new TalentSource(this);
 	}
 
 	@Override

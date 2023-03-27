@@ -22,7 +22,8 @@ public class TradedItemImpl extends AbstractItemImpl implements TradedItem {
 			CharacterRestriction characterRestriction,
 			BasicItemInfo basicItemInfo
 	) {
-		super(id, description, timeRestriction, characterRestriction, Attributes.EMPTY, basicItemInfo);
+		super(id, description, timeRestriction, characterRestriction, basicItemInfo);
+		setAttributes(Attributes.EMPTY);
 		assertItemType(ItemType.QUEST, ItemType.TOKEN);
 	}
 

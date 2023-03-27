@@ -167,8 +167,14 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 			var attributeSupplier = PrimitiveAttributeSupplier.fromString(attributeStr);
 			attributeSupplier.addAttributeList(builder, colAmount.getDouble());
 		} else {
+			attributeStr = substitutePlaceholders(attributeStr);
 			var attribute = ComplexAttributeMapper.fromString(attributeStr);
 			builder.addAttribute(attribute);
 		}
+	}
+
+	private String substitutePlaceholders(String attributeStr) {
+		String tooltip = colTooltip.getString("no tooltip");
+		return attributeStr.replace("${tooltip}", tooltip);
 	}
 }

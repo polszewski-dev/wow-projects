@@ -1,7 +1,8 @@
 package wow.commons.model.buffs.impl;
 
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.sources.BuffSource;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
@@ -28,12 +29,16 @@ public class BuffImpl extends ConfigurationElementWithAttributesImpl<Integer> im
 			CharacterRestriction characterRestriction,
 			BuffType type,
 			BuffExclusionGroup exclusionGroup,
-			Attributes attributes,
 			SpellId sourceSpell
 	) {
-		super(id, description, timeRestriction, characterRestriction, attributes);
+		super(id, description, timeRestriction, characterRestriction);
 		this.type = type;
 		this.exclusionGroup = exclusionGroup;
 		this.sourceSpell = sourceSpell;
+	}
+
+	@Override
+	protected SpecialAbilitySource getSpecialAbilitySource() {
+		return new BuffSource(this);
 	}
 }

@@ -161,8 +161,7 @@ public class CalculationServiceImpl implements CalculationService {
 		Attributes spEquivalent = getDpsStatEquivalent(Attributes.of(specialAbility), SPELL_POWER, REPLACEMENT, character);
 
 		return new SpecialAbilityStats(
-				specialAbility.getLine() != null ? specialAbility.getLine() : specialAbility.toString(),
-				specialAbility.toString(),
+				specialAbility,
 				statEquivalent,
 				spEquivalent.getSpellPower()
 		);

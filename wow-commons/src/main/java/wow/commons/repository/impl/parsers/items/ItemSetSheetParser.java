@@ -2,6 +2,7 @@ package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.special.sources.ItemSetSource;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
@@ -53,7 +54,7 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		var pieces = parser.getPieces(name, timeRestriction.getUniqueVersion());
 
 		var itemSet = new ItemSetImpl(name, null, timeRestriction, characterRestriction, pieces);
-		var itemSetBonuses = getItemSetBonuses();
+		var itemSetBonuses = getItemSetBonuses(itemSet);
 
 		itemSet.setItemSetBonuses(itemSetBonuses);
 
@@ -64,11 +65,11 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		return itemSet;
 	}
 
-	private List<ItemSetBonus> getItemSetBonuses() {
+	private List<ItemSetBonus> getItemSetBonuses(ItemSet itemSet) {
 		List<ItemSetBonus> itemSetBonuses = new ArrayList<>();
 
 		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
-			ItemSetBonus itemSetBonus = getItemSetBonus(bonusIdx);
+			ItemSetBonus itemSetBonus = getItemSetBonus(bonusIdx, itemSet);
 			if (itemSetBonus != null) {
 				itemSetBonuses.add(itemSetBonus);
 			}
@@ -77,7 +78,7 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		return itemSetBonuses;
 	}
 
-	private ItemSetBonus getItemSetBonus(int bonusIdx) {
+	private ItemSetBonus getItemSetBonus(int bonusIdx, ItemSet itemSet) {
 		int numPieces = column(itemSetBonusNumPieces(bonusIdx)).getInteger(0);
 
 		if (numPieces == 0) {
@@ -89,6 +90,7 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		AttributeCondition professionCondition = AttributeCondition.of(colIBonusReqProfession.getEnum(Profession::parse, null));
 
 		attributes = AttributesBuilder.attachCondition(attributes, professionCondition);
+		attributes = AttributesBuilder.attachSource(attributes, new ItemSetSource(itemSet, numPieces));
 
 		return new ItemSetBonus(numPieces, description, attributes);
 	}

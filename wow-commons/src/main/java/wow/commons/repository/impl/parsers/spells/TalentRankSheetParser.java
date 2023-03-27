@@ -53,7 +53,10 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 		var characterRestriction = getRestriction().merge(talentInfo.getCharacterRestriction());
 		var talentBenefit = getTalentBenefit();
 
-		return new TalentImpl(id, description, timeRestriction, characterRestriction, talentBenefit, talentInfo);
+		var talent = new TalentImpl(id, description, timeRestriction, characterRestriction, talentInfo);
+
+		talent.setAttributes(talentBenefit);
+		return talent;
 	}
 
 	private Attributes getTalentBenefit() {

@@ -1,7 +1,8 @@
 package wow.commons.model.item.impl;
 
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.sources.ItemSource;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -25,10 +26,9 @@ public abstract class AbstractItemImpl extends ConfigurationElementWithAttribute
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
-			Attributes attributes,
 			BasicItemInfo basicItemInfo
 	) {
-		super(id, description, timeRestriction, characterRestriction, attributes);
+		super(id, description, timeRestriction, characterRestriction);
 		this.basicItemInfo = basicItemInfo;
 	}
 
@@ -36,5 +36,10 @@ public abstract class AbstractItemImpl extends ConfigurationElementWithAttribute
 		if (!Set.of(itemTypes).contains(getItemType())) {
 			throw new IllegalArgumentException("Wrong item type: " + getItemType());
 		}
+	}
+
+	@Override
+	protected SpecialAbilitySource getSpecialAbilitySource() {
+		return new ItemSource(this);
 	}
 }

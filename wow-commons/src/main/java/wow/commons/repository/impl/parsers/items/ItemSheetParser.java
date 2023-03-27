@@ -48,7 +48,9 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var basicItemInfo = getBasicItemInfo();
 		var socketSpecification = getSocketSpecification(socketTypes);
 
-		var item = new ItemImpl(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, socketSpecification, null);
+		var item = new ItemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, socketSpecification, null);
+
+		item.setAttributes(stats);
 
 		validateItem(item);
 

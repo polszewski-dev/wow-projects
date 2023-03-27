@@ -38,6 +38,9 @@ public class GemSheetParser extends AbstractItemSheetParser {
 		var characterRestriction = getRestriction();
 		var basicItemInfo = getBasicItemInfo();
 
-		return new GemImpl(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, color, metaEnablers);
+		var gem = new GemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, color, metaEnablers);
+
+		gem.setAttributes(stats);
+		return gem;
 	}
 }

@@ -8,6 +8,8 @@ import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
@@ -162,6 +164,24 @@ public class AttributesBuilder {
 		return new AttributesBuilder()
 				.addAttributes(attributes, condition)
 				.toAttributes();
+	}
+
+	public static Attributes attachSource(Attributes attributes, SpecialAbilitySource source) {
+		var complexAttributes = attributes.getComplexAttributes().stream()
+				.map(x -> attachSource(x, source))
+				.toList();
+
+		return new AttributesBuilder()
+				.addAttributeList(attributes.getPrimitiveAttributes())
+				.addComplexAttributeList(complexAttributes)
+				.toAttributes();
+	}
+
+	private static ComplexAttribute attachSource(ComplexAttribute attribute, SpecialAbilitySource source) {
+		if (attribute instanceof SpecialAbility specialAbility) {
+			return specialAbility.attachSource(source);
+		}
+		return attribute;
 	}
 
 	public static Attributes list(Collection<? extends AttributeSource> attributeSources) {

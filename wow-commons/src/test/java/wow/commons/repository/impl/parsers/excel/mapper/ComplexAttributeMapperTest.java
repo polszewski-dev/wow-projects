@@ -45,11 +45,11 @@ class ComplexAttributeMapperTest {
 	@Test
 	@DisplayName("OnUse is mapped correctly: 1 attribute")
 	void onUseAbility1() {
-		OnUseAbility original = SpecialAbility.onUse(Attributes.of(SPELL_POWER, 143), Duration.seconds(15), Duration.seconds(120), null);
+		OnUseAbility original = SpecialAbility.onUse(Attributes.of(SPELL_POWER, 143), Duration.seconds(15), Duration.seconds(120), "This is a test");
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("OnUse -> stat=Power,Spell; amount=143; duration=15; cooldown=120");
+		assertThat(result).isEqualTo("OnUse -> stat=Power,Spell; amount=143; duration=15; cooldown=120; line=This is a test");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -60,7 +60,7 @@ class ComplexAttributeMapperTest {
 		assertThat(parsed.getAttributes().getSpellPower()).isEqualTo(143);
 		assertThat(parsed.getDuration().getSeconds()).isEqualTo(15);
 		assertThat(parsed.getCooldown().getSeconds()).isEqualTo(120);
-		assertThat(parsed.getLine()).isNull();
+		assertThat(parsed.getLine()).isEqualTo("This is a test");
 	}
 
 	@Test
@@ -69,11 +69,11 @@ class ComplexAttributeMapperTest {
 		OnUseAbility original = SpecialAbility.onUse(Attributes.of(
 				PrimitiveAttribute.of(SPELL_DAMAGE, 120),
 				PrimitiveAttribute.of(SPELL_CRIT_PCT, 2)
-		), Duration.seconds(15), Duration.seconds(120), null);
+		), Duration.seconds(15), Duration.seconds(120), "This is a test");
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("OnUse -> stat1=Power,SpellDamage; amount1=120; stat2=Crit,Spell,Percent; amount2=2; duration=15; cooldown=120");
+		assertThat(result).isEqualTo("OnUse -> stat1=Power,SpellDamage; amount1=120; stat2=Crit,Spell,Percent; amount2=2; duration=15; cooldown=120; line=This is a test");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -85,17 +85,17 @@ class ComplexAttributeMapperTest {
 		assertThat(parsed.getAttributes().getSpellCritPct().getValue()).isEqualTo(2);
 		assertThat(parsed.getDuration().getSeconds()).isEqualTo(15);
 		assertThat(parsed.getCooldown().getSeconds()).isEqualTo(120);
-		assertThat(parsed.getLine()).isNull();
+		assertThat(parsed.getLine()).isEqualTo("This is a test");
 	}
 
 	@Test
 	@DisplayName("Proc is mapped correctly")
 	void procAbility() {
-		ProcAbility original = SpecialAbility.proc(ProcEvent.SPELL_CRIT, Percent.of(20), Attributes.of(SPELL_POWER, 100), Duration.seconds(15), Duration.seconds(60), null);
+		ProcAbility original = SpecialAbility.proc(ProcEvent.SPELL_CRIT, Percent.of(20), Attributes.of(SPELL_POWER, 100), Duration.seconds(15), Duration.seconds(60), "This is a test");
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("Proc -> event=SPELL_CRIT; chance%=20; stat=Power,Spell; amount=100; duration=15; cooldown=60");
+		assertThat(result).isEqualTo("Proc -> event=SPELL_CRIT; chance%=20; stat=Power,Spell; amount=100; duration=15; cooldown=60; line=This is a test");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -108,17 +108,17 @@ class ComplexAttributeMapperTest {
 		assertThat(parsed.getAttributes().getSpellPower()).isEqualTo(100);
 		assertThat(parsed.getDuration().getSeconds()).isEqualTo(15);
 		assertThat(parsed.getCooldown().getSeconds()).isEqualTo(60);
-		assertThat(parsed.getLine()).isNull();
+		assertThat(parsed.getLine()).isEqualTo("This is a test");
 	}
 
 	@Test
 	@DisplayName("TalentProc is mapped correctly")
 	void talentProcAbility() {
-		TalentProcAbility original = new TalentProcAbility(ProcEvent.SPELL_CRIT, Percent._100, EffectId.SHADOW_VULNERABILITY_20, Duration.seconds(12), 4, null, AttributeCondition.EMPTY);
+		TalentProcAbility original = SpecialAbility.talentProc(ProcEvent.SPELL_CRIT, Percent._100, EffectId.SHADOW_VULNERABILITY_20, Duration.seconds(12), 4, "This is a test");
 
 		String result = ComplexAttributeMapper.toString(original);
 
-		assertThat(result).isEqualTo("TalentProc -> event=SPELL_CRIT; chance%=100; effect=Shadow Vulnerability:20; duration=12; stacks=4");
+		assertThat(result).isEqualTo("TalentProc -> event=SPELL_CRIT; chance%=100; effect=Shadow Vulnerability:20; duration=12; stacks=4; line=This is a test");
 
 		ComplexAttribute complexAttribute = ComplexAttributeMapper.fromString(result);
 
@@ -131,7 +131,7 @@ class ComplexAttributeMapperTest {
 		assertThat(parsed.getEffectId()).isEqualTo(EffectId.SHADOW_VULNERABILITY_20);
 		assertThat(parsed.getDuration().getSeconds()).isEqualTo(12);
 		assertThat(parsed.getStacks()).isEqualTo(4);
-		assertThat(parsed.getLine()).isNull();
+		assertThat(parsed.getLine()).isEqualTo("This is a test");
 	}
 
 	@Test

@@ -1,7 +1,6 @@
 package wow.commons.model.item.impl;
 
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -22,12 +21,11 @@ public class ItemImpl extends AbstractItemImpl implements Item {
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
-			Attributes attributes,
 			BasicItemInfo basicItemInfo,
 			ItemSocketSpecification socketSpecification,
 			WeaponStats weaponStats
 	) {
-		super(id, description, timeRestriction, characterRestriction, attributes, basicItemInfo);
+		super(id, description, timeRestriction, characterRestriction, basicItemInfo);
 		this.socketSpecification = socketSpecification;
 		this.weaponStats = weaponStats;
 	}

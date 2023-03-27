@@ -5,6 +5,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.util.AttributesBuilder;
 
 /**
@@ -15,8 +16,8 @@ import wow.commons.util.AttributesBuilder;
 public class EquivalentAbility extends SpecialAbility {
 	private final Attributes attributes;
 
-	public EquivalentAbility(Attributes attributes, String line, AttributeCondition condition) {
-		super(line, 1, condition);
+	public EquivalentAbility(Attributes attributes, String line, AttributeCondition condition, SpecialAbilitySource source) {
+		super(line, 1, condition, source);
 		this.attributes = attributes;
 		if (!attributes.getComplexAttributeMap().isEmpty()) {
 			throw new IllegalArgumentException("Equivalent can't have complex attributes");
@@ -25,7 +26,12 @@ public class EquivalentAbility extends SpecialAbility {
 
 	@Override
 	public EquivalentAbility attachCondition(AttributeCondition condition) {
-		return new EquivalentAbility(attributes, getLine(), condition);
+		return new EquivalentAbility(attributes, getLine(), condition, getSource());
+	}
+
+	@Override
+	public EquivalentAbility attachSource(SpecialAbilitySource source) {
+		return new EquivalentAbility(attributes, getLine(), condition, source);
 	}
 
 	@Override

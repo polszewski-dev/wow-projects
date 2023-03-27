@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.build.BuffSetId;
 import wow.character.model.character.Character;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.pve.GameVersion;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
@@ -18,10 +19,7 @@ import wow.minmax.model.dto.SpellStatsDTO;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static wow.character.model.build.BuffSetId.*;
@@ -83,7 +81,7 @@ public class StatsController {
 		Character character = playerProfileService.getPlayerProfile(profileId).getCharacter();
 
 		return character.getStats().getSpecialAbilities().stream()
-				.filter(x -> x.getLine() != null)
+				.sorted(compareSources())
 				.map(x -> calculationService.getSpecialAbilityStats(character, x))
 				.map(specialAbilityStatsConverter::convert)
 				.toList();
@@ -104,15 +102,7 @@ public class StatsController {
 		return result;
 	}
 
-	private static class BuffCombo {
-		final String type;
-		final BuffSetId[] buffSetIds;
-
-		BuffCombo(String type, BuffSetId... buffSetIds) {
-			this.type = type;
-			this.buffSetIds = buffSetIds;
-		}
-
+	private record BuffCombo(String type, BuffSetId... buffSetIds) {
 		boolean allBuffSetsArePermitted(GameVersion gameVersion) {
 			return gameVersion == GameVersion.VANILLA || !Arrays.asList(buffSetIds).contains(WORLD_BUFFS);
 		}
@@ -126,4 +116,13 @@ public class StatsController {
 			new BuffCombo("Raid buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES),
 			new BuffCombo("World buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, WORLD_BUFFS, CONSUMES),
 	};
+
+	private Comparator<SpecialAbility> compareSources() {
+		return
+				Comparator.comparingInt((SpecialAbility x) -> x.getSource().getPriority())
+				.thenComparing((SpecialAbility x) -> (Comparable<Object>)x.getSource())
+				.thenComparingInt(SpecialAbility::getPriority)
+				.thenComparing(SpecialAbility::getLine)
+		;
+	}
 }

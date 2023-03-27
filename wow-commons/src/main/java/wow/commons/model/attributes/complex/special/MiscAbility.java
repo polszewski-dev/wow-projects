@@ -5,6 +5,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
 
 /**
  * User: POlszewski
@@ -12,13 +13,18 @@ import wow.commons.model.attributes.complex.SpecialAbility;
  */
 @Getter
 public class MiscAbility extends SpecialAbility {
-	public MiscAbility(String line, AttributeCondition condition) {
-		super(line, 5, condition);
+	public MiscAbility(String line, AttributeCondition condition, SpecialAbilitySource source) {
+		super(line, 5, condition, source);
 	}
 
 	@Override
 	public MiscAbility attachCondition(AttributeCondition condition) {
-		return new MiscAbility(getLine(), condition);
+		return new MiscAbility(getLine(), condition, getSource());
+	}
+
+	@Override
+	public MiscAbility attachSource(SpecialAbilitySource source) {
+		return new MiscAbility(getLine(), condition, source);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.model.spells.EffectId;
 
 import java.util.stream.Collectors;
@@ -26,8 +27,17 @@ public class TalentProcAbility extends SpecialAbility {
 	private final Duration duration;
 	private final int stacks;
 
-	public TalentProcAbility(ProcEvent event, Percent chance, EffectId effectId, Duration duration, int stacks, String line, AttributeCondition condition) {
-		super(line, 4, condition);
+	public TalentProcAbility(
+			ProcEvent event,
+			Percent chance,
+			EffectId effectId,
+			Duration duration,
+			int stacks,
+			String line,
+			AttributeCondition condition,
+			SpecialAbilitySource source
+	) {
+		super(line, 4, condition, source);
 		this.event = event;
 		this.chance = chance;
 		this.effectId = effectId;
@@ -37,7 +47,12 @@ public class TalentProcAbility extends SpecialAbility {
 
 	@Override
 	public TalentProcAbility attachCondition(AttributeCondition condition) {
-		return new TalentProcAbility(event, chance, effectId, duration, stacks, getLine(), condition);
+		return new TalentProcAbility(event, chance, effectId, duration, stacks, getLine(), condition, getSource());
+	}
+
+	@Override
+	public TalentProcAbility attachSource(SpecialAbilitySource source) {
+		return new TalentProcAbility(event, chance, effectId, duration, stacks, getLine(), condition, source);
 	}
 
 	@Override

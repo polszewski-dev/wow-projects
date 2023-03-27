@@ -43,6 +43,9 @@ public class BuffSheetParser extends WowExcelSheetParser {
 
 		var buffAttributes = readAttributes(5);
 
-		return new BuffImpl(buffId, description, timeRestriction, characterRestriction, type, exclusionGroup, buffAttributes, sourceSpell);
+		var buff = new BuffImpl(buffId, description, timeRestriction, characterRestriction, type, exclusionGroup, sourceSpell);
+
+		buff.setAttributes(buffAttributes);
+		return buff;
 	}
 }

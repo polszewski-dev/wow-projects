@@ -1,7 +1,6 @@
 package wow.commons.model.item.impl;
 
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -27,12 +26,11 @@ public class GemImpl extends AbstractItemImpl implements Gem {
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
-			Attributes attributes,
 			BasicItemInfo basicItemInfo,
 			GemColor color,
 			List<MetaEnabler> metaEnablers
 	) {
-		super(id, description, timeRestriction, characterRestriction, attributes, basicItemInfo);
+		super(id, description, timeRestriction, characterRestriction, basicItemInfo);
 		this.color = color;
 		this.metaEnablers = metaEnablers;
 		assertItemType(ItemType.GEM);

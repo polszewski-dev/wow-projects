@@ -3,6 +3,7 @@ package wow.minmax.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbility;
 
 /**
  * User: POlszewski
@@ -11,8 +12,7 @@ import wow.commons.model.attributes.Attributes;
 @Data
 @AllArgsConstructor
 public class SpecialAbilityStats {
-	private String description;
-	private String ability;
+	private SpecialAbility ability;
 	private Attributes statEquivalent;
 	private double spEquivalent;
 }

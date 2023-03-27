@@ -8,7 +8,8 @@
 	</thead>
 	<tbody>
 		<tr *ngFor="let specialAbilityStats of specialAbilityStatsList">
-			<td [title]="specialAbilityStats.ability">{{specialAbilityStats.description}}</td>
+			<td [title]="specialAbilityStats.attributes">
+				<img [src]="specialAbilityStats.sourceIcon | icon" [title]="specialAbilityStats.sourceName"/>&nbsp;{{specialAbilityStats.description}}</td>
 			<td>{{specialAbilityStats.statEquivalent}}</td>
 			<td>{{specialAbilityStats.spEquivalent | number:'1.0-0' | blankZero}}</td>
 		</tr>

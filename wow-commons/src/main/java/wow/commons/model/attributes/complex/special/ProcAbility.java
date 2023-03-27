@@ -7,6 +7,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.util.AttributesBuilder;
 
 import static java.lang.Math.max;
@@ -24,8 +25,17 @@ public class ProcAbility extends SpecialAbility {
 	private final Duration duration;
 	private final Duration cooldown;
 
-	public ProcAbility(ProcEvent event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line, AttributeCondition condition) {
-		super(line, 3, condition);
+	public ProcAbility(
+			ProcEvent event,
+			Percent chance,
+			Attributes attributes,
+			Duration duration,
+			Duration cooldown,
+			String line,
+			AttributeCondition condition,
+			SpecialAbilitySource source
+	) {
+		super(line, 3, condition, source);
 		this.event = event;
 		this.chance = chance;
 		this.attributes = attributes;
@@ -38,7 +48,12 @@ public class ProcAbility extends SpecialAbility {
 
 	@Override
 	public ProcAbility attachCondition(AttributeCondition condition) {
-		return new ProcAbility(event, chance, attributes, duration, cooldown, getLine(), condition);
+		return new ProcAbility(event, chance, attributes, duration, cooldown, getLine(), condition, getSource());
+	}
+
+	@Override
+	public ProcAbility attachSource(SpecialAbilitySource source) {
+		return new ProcAbility(event, chance, attributes, duration, cooldown, getLine(), condition, source);
 	}
 
 	@Override

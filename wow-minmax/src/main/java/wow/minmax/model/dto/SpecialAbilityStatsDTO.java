@@ -11,7 +11,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class SpecialAbilityStatsDTO {
 	private String description;
-	private String ability;
+	private String attributes;
 	private String statEquivalent;
 	private double spEquivalent;
+	private String sourceName;
+	private String sourceIcon;
 }

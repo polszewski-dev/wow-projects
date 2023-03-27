@@ -1,7 +1,8 @@
 package wow.commons.model.item.impl;
 
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.sources.EnchantSource;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
@@ -26,12 +27,16 @@ public class EnchantImpl extends ConfigurationElementWithAttributesImpl<Integer>
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
-			Attributes attributes,
 			List<ItemType> itemTypes,
 			ItemRarity rarity
 	) {
-		super(id, description, timeRestriction, characterRestriction, attributes);
+		super(id, description, timeRestriction, characterRestriction);
 		this.itemTypes = itemTypes;
 		this.rarity = rarity;
+	}
+
+	@Override
+	protected SpecialAbilitySource getSpecialAbilitySource() {
+		return new EnchantSource(this);
 	}
 }

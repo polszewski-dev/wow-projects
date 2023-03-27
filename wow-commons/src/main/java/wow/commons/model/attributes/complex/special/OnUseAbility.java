@@ -6,6 +6,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.util.AttributesBuilder;
 
 /**
@@ -18,8 +19,15 @@ public class OnUseAbility extends SpecialAbility {
 	private final Duration duration;
 	private final Duration cooldown;
 
-	public OnUseAbility(Attributes attributes, Duration duration, Duration cooldown, String line, AttributeCondition condition) {
-		super(line, 2, condition);
+	public OnUseAbility(
+			Attributes attributes,
+			Duration duration,
+			Duration cooldown,
+			String line,
+			AttributeCondition condition,
+			SpecialAbilitySource source
+	) {
+		super(line, 2, condition, source);
 		this.attributes = attributes;
 		this.duration = duration;
 		this.cooldown = cooldown;
@@ -30,7 +38,12 @@ public class OnUseAbility extends SpecialAbility {
 
 	@Override
 	public OnUseAbility attachCondition(AttributeCondition condition) {
-		return new OnUseAbility(attributes, duration, cooldown, getLine(), condition);
+		return new OnUseAbility(attributes, duration, cooldown, getLine(), condition, getSource());
+	}
+
+	@Override
+	public OnUseAbility attachSource(SpecialAbilitySource source) {
+		return new OnUseAbility(attributes, duration, cooldown, getLine(), condition, source);
 	}
 
 	@Override

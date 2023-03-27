@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.ComplexAttribute;
-import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.special.OnUseAbility;
 import wow.commons.model.attributes.complex.special.ProcAbility;
 import wow.scraper.ScraperTestConfig;
@@ -45,7 +44,7 @@ class ItemStatParserTest {
 		assertThat(stats.getPrimitiveAttributes()).isEmpty();
 		assertThat(stats.getComplexAttributeMap()).hasSize(1);
 
-		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeMap().get(ComplexAttributeId.SPECIAL_ABILITIES);
+		List<SpecialAbility> specialAbilities = stats.getSpecialAbilities();
 
 		assertThat(specialAbilities).isNotNull().hasSize(1);
 		assertThat(specialAbilities.get(0)).isInstanceOf(ProcAbility.class);
@@ -68,7 +67,7 @@ class ItemStatParserTest {
 		assertThat(stats.getPrimitiveAttributes()).isEmpty();
 		assertThat(stats.getComplexAttributeMap()).hasSize(1);
 
-		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeMap().get(ComplexAttributeId.SPECIAL_ABILITIES);
+		List<SpecialAbility> specialAbilities = stats.getSpecialAbilities();
 
 		assertThat(specialAbilities).isNotNull().hasSize(1);
 		assertThat(specialAbilities.get(0)).isInstanceOf(OnUseAbility.class);

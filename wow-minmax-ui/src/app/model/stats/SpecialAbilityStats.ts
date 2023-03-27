@@ -1,6 +1,8 @@
 export interface SpecialAbilityStats {
 	description: string;
-	ability: string;
+	attributes: string;
 	statEquivalent: string;
 	spEquivalent: number;
+	sourceName: string;
+	sourceIcon: string;
 }
