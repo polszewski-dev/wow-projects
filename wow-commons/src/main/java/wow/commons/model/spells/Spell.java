@@ -1,14 +1,9 @@
 package wow.commons.model.spells;
 
-import lombok.Getter;
-import lombok.NonNull;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElement;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.talents.TalentTree;
 
 import java.util.HashSet;
@@ -18,129 +13,107 @@ import java.util.Set;
  * User: POlszewski
  * Date: 2021-09-19
  */
-@Getter
-public class Spell extends ConfigurationElement<SpellIdAndRank> {
-	@NonNull
-	private final SpellInfo spellInfo;
-	@NonNull
-	private final CastInfo castInfo;
-	private final DirectDamageInfo directDamageInfo;
-	private final DotDamageInfo dotDamageInfo;
+public interface Spell extends ConfigurationElement<SpellIdAndRank> {
+	SpellInfo getSpellInfo();
 
-	public Spell(
-			SpellIdAndRank id,
-			TimeRestriction timeRestriction,
-			CharacterRestriction characterRestriction,
-			Description description,
-			SpellInfo spellInfo,
-			CastInfo castInfo,
-			DirectDamageInfo directDamageInfo,
-			DotDamageInfo dotDamageInfo
-	) {
-		super(id, description, timeRestriction, characterRestriction);
-		this.spellInfo = spellInfo;
-		this.castInfo = castInfo;
-		this.directDamageInfo = directDamageInfo;
-		this.dotDamageInfo = dotDamageInfo;
-	}
+	CastInfo getCastInfo();
 
-	public SpellId getSpellId() {
+	DirectDamageInfo getDirectDamageInfo();
+
+	DotDamageInfo getDotDamageInfo();
+
+	default SpellId getSpellId() {
 		return getId().getSpellId();
 	}
 
-	public Integer getRank() {
+	default Integer getRank() {
 		return getId().getRank();
 	}
 
-	public TalentTree getTalentTree() {
-		return spellInfo.getTalentTree();
+	default TalentTree getTalentTree() {
+		return getSpellInfo().getTalentTree();
 	}
 
-	public SpellSchool getSpellSchool() {
-		return spellInfo.getSpellSchool();
+	default SpellSchool getSpellSchool() {
+		return getSpellInfo().getSpellSchool();
 	}
 
-	public Percent getCoeffDirect() {
-		return spellInfo.getDamagingSpellInfo().getCoeffDirect();
+	default Percent getCoeffDirect() {
+		return getSpellInfo().getDamagingSpellInfo().getCoeffDirect();
 	}
 
-	public Percent getCoeffDot() {
-		return spellInfo.getDamagingSpellInfo().getCoeffDot();
+	default Percent getCoeffDot() {
+		return getSpellInfo().getDamagingSpellInfo().getCoeffDot();
 	}
 
-	public int getManaCost() {
-		return castInfo.getManaCost();
+	default int getManaCost() {
+		return getCastInfo().getManaCost();
 	}
 
-	public Duration getCastTime() {
-		return castInfo.getCastTime();
+	default Duration getCastTime() {
+		return getCastInfo().getCastTime();
 	}
 
-	public boolean isChanneled() {
-		return castInfo.isChanneled();
+	default boolean isChanneled() {
+		return getCastInfo().isChanneled();
 	}
 
-	public AdditionalCost getAdditionalCost() {
-		return castInfo.getAdditionalCost();
+	default AdditionalCost getAdditionalCost() {
+		return getCastInfo().getAdditionalCost();
 	}
 
-	public AppliedEffect getAppliedEffect() {
-		return castInfo.getAppliedEffect();
+	default AppliedEffect getAppliedEffect() {
+		return getCastInfo().getAppliedEffect();
 	}
 
-	public boolean hasDirectComponent() {
-		return directDamageInfo != null;
+	default boolean hasDirectComponent() {
+		return getDirectDamageInfo() != null;
 	}
 
-	public boolean hasDotComponent() {
-		return dotDamageInfo != null;
+	default boolean hasDotComponent() {
+		return getDotDamageInfo() != null;
 	}
 
-	public int getMinDmg() {
-		return directDamageInfo.getMinDmg();
+	default int getMinDmg() {
+		return getDirectDamageInfo().getMinDmg();
 	}
 
-	public int getMaxDmg() {
-		return directDamageInfo.getMaxDmg();
+	default int getMaxDmg() {
+		return getDirectDamageInfo().getMaxDmg();
 	}
 
-	public int getMinDmg2() {
-		return directDamageInfo.getMinDmg2();
+	default int getMinDmg2() {
+		return getDirectDamageInfo().getMinDmg2();
 	}
 
-	public int getMaxDmg2() {
-		return directDamageInfo.getMaxDmg2();
+	default int getMaxDmg2() {
+		return getDirectDamageInfo().getMaxDmg2();
 	}
 
-	public int getDotDmg() {
-		return dotDamageInfo.getDotDmg();
+	default int getDotDmg() {
+		return getDotDamageInfo().getDotDmg();
 	}
 
-	public int getNumTicks() {
-		return dotDamageInfo.getNumTicks();
+	default int getNumTicks() {
+		return getDotDamageInfo().getNumTicks();
 	}
 
-	public Duration getTickInterval() {
+	default Duration getTickInterval() {
 		if (isChanneled()) {
 			return getCastTime().divideBy(getNumTicks());
 		}
-		return dotDamageInfo.getTickInterval();
+		return getDotDamageInfo().getTickInterval();
 	}
 
-	public Duration getDotDuration() {
+	default Duration getDotDuration() {
 		return getTickInterval().multiplyBy(getNumTicks());
 	}
 
-	public Set<AttributeCondition> getConditions() {
+	default Set<AttributeCondition> getConditions() {
 		var result = new HashSet<AttributeCondition>();
 		result.add(AttributeCondition.of(getTalentTree()));
 		result.add(AttributeCondition.of(getSpellSchool()));
 		result.add(AttributeCondition.of(getSpellId()));
 		return result;
-	}
-
-	@Override
-	public String toString() {
-		return getId().toString();
 	}
 }

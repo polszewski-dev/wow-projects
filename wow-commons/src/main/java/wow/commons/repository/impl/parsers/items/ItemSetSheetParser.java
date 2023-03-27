@@ -2,11 +2,11 @@ package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
+import wow.commons.model.item.impl.ItemImpl;
+import wow.commons.model.item.impl.ItemSetImpl;
 import wow.commons.model.professions.Profession;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
@@ -47,16 +47,18 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 
 	private ItemSet getItemSet() {
 		var name = colName.getString();
+
+		var timeRestriction = getTimeRestriction();
+		var characterRestriction = getRestriction();
+		var pieces = parser.getPieces(name, timeRestriction.getUniqueVersion());
+
+		var itemSet = new ItemSetImpl(name, null, timeRestriction, characterRestriction, pieces);
 		var itemSetBonuses = getItemSetBonuses();
 
-		TimeRestriction timeRestriction = getTimeRestriction();
-		CharacterRestriction characterRestriction = getRestriction();
-		List<Item> pieces = parser.getPieces(name, timeRestriction.getUniqueVersion());
-
-		ItemSet itemSet = new ItemSet(name, null, timeRestriction, characterRestriction, itemSetBonuses, pieces);
+		itemSet.setItemSetBonuses(itemSetBonuses);
 
 		for (Item item : itemSet.getPieces()) {
-			item.setItemSet(itemSet);
+			((ItemImpl)item).setItemSet(itemSet);
 		}
 
 		return itemSet;

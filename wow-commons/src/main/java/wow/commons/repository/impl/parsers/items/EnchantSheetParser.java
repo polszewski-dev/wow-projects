@@ -1,12 +1,9 @@
 package wow.commons.repository.impl.parsers.items;
 
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.item.impl.EnchantImpl;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
@@ -43,11 +40,11 @@ public class EnchantSheetParser extends WowExcelSheetParser {
 		var itemTypes = colItemTypes.getList(x -> ItemType.parse(x.trim()));
 		var rarity = colRarity.getEnum(ItemRarity::parse);
 
-		Description description = getDescription();
-		TimeRestriction timeRestriction = getTimeRestriction();
-		CharacterRestriction characterRestriction = getRestriction();
-		Attributes attributes = readAttributes(2);
+		var description = getDescription();
+		var timeRestriction = getTimeRestriction();
+		var characterRestriction = getRestriction();
+		var attributes = readAttributes(2);
 
-		return new Enchant(id, description, timeRestriction, characterRestriction, attributes, itemTypes, rarity);
+		return new EnchantImpl(id, description, timeRestriction, characterRestriction, attributes, itemTypes, rarity);
 	}
 }

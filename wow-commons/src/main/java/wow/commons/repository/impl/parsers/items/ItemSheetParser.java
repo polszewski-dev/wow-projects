@@ -4,13 +4,10 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
+import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
@@ -45,13 +42,13 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var itemSetName = colItemSet.getString(null);
 		var stats = readAttributes(ITEM_MAX_STATS);
 
-		Description description = getDescription();
-		TimeRestriction timeRestriction = getTimeRestriction();
-		CharacterRestriction characterRestriction = getRestriction();
-		BasicItemInfo basicItemInfo = getBasicItemInfo();
-		ItemSocketSpecification socketSpecification = getSocketSpecification(socketTypes);
+		var description = getDescription();
+		var timeRestriction = getTimeRestriction();
+		var characterRestriction = getRestriction();
+		var basicItemInfo = getBasicItemInfo();
+		var socketSpecification = getSocketSpecification(socketTypes);
 
-		Item item = new Item(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, socketSpecification, null);
+		var item = new ItemImpl(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, socketSpecification, null);
 
 		validateItem(item);
 

@@ -1,10 +1,7 @@
 package wow.commons.repository.impl.parsers.items;
 
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.TradedItem;
+import wow.commons.model.item.impl.TradedItemImpl;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
@@ -26,11 +23,11 @@ public class TradedItemSheetParser extends AbstractItemSheetParser {
 	private TradedItem getTradedItem() {
 		var id = getId();
 
-		Description description = getDescription();
-		TimeRestriction timeRestriction = getTimeRestriction();
-		CharacterRestriction characterRestriction = getRestriction();
-		BasicItemInfo basicItemInfo = getBasicItemInfo();
+		var description = getDescription();
+		var timeRestriction = getTimeRestriction();
+		var characterRestriction = getRestriction();
+		var basicItemInfo = getBasicItemInfo();
 
-		return new TradedItem(id, description, timeRestriction, characterRestriction, basicItemInfo);
+		return new TradedItemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo);
 	}
 }

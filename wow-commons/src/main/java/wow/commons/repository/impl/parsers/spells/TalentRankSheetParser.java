@@ -3,12 +3,10 @@ package wow.commons.repository.impl.parsers.spells;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.character.PetType;
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.*;
+import wow.commons.model.talents.impl.TalentImpl;
 import wow.commons.repository.impl.SpellRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
 
@@ -49,13 +47,13 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 		var talentId = colTalent.getEnum(TalentId::parse);
 		var rank = colRank.getInteger();
 
-		TalentIdAndRank id = new TalentIdAndRank(talentId, rank);
-		Description description = getDescription(talentId.getName()).merge(talentInfo.getDescription());
-		TimeRestriction timeRestriction = getTimeRestriction().merge(talentInfo.getTimeRestriction());
-		CharacterRestriction characterRestriction = getRestriction().merge(talentInfo.getCharacterRestriction());
-		Attributes talentBenefit = getTalentBenefit();
+		var id = new TalentIdAndRank(talentId, rank);
+		var description = getDescription(talentId.getName()).merge(talentInfo.getDescription());
+		var timeRestriction = getTimeRestriction().merge(talentInfo.getTimeRestriction());
+		var characterRestriction = getRestriction().merge(talentInfo.getCharacterRestriction());
+		var talentBenefit = getTalentBenefit();
 
-		return new Talent(id, description, timeRestriction, characterRestriction, talentBenefit, talentInfo);
+		return new TalentImpl(id, description, timeRestriction, characterRestriction, talentBenefit, talentInfo);
 	}
 
 	private Attributes getTalentBenefit() {

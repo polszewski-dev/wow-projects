@@ -1,15 +1,10 @@
 package wow.commons.model.item;
 
-import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.Source;
 
@@ -24,105 +19,99 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-10-31
  */
-@Getter
-public abstract class AbstractItem extends ConfigurationElementWithAttributes<Integer> {
-	private final BasicItemInfo basicItemInfo;
+public interface AbstractItem extends ConfigurationElementWithAttributes<Integer> {
+	BasicItemInfo getBasicItemInfo();
 
-	protected AbstractItem(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, BasicItemInfo basicItemInfo) {
-		super(id, description, timeRestriction, characterRestriction, attributes);
-		this.basicItemInfo = basicItemInfo;
-	}
-
-	public ItemLink getItemLink() {
+	default ItemLink getItemLink() {
 		return new ItemLink(getId(), getName(), getRarity(), null, null, null, null);
 	}
 
-	public ItemType getItemType() {
-		return basicItemInfo.getItemType();
+	default ItemType getItemType() {
+		return getBasicItemInfo().getItemType();
 	}
 
-	public ItemSubType getItemSubType() {
-		return basicItemInfo.getItemSubType();
+	default ItemSubType getItemSubType() {
+		return getBasicItemInfo().getItemSubType();
 	}
 
-	public ItemRarity getRarity() {
-		return basicItemInfo.getRarity();
+	default ItemRarity getRarity() {
+		return getBasicItemInfo().getRarity();
 	}
 
-	public Binding getBinding() {
-		return basicItemInfo.getBinding();
+	default Binding getBinding() {
+		return getBasicItemInfo().getBinding();
 	}
 
-	public boolean isUnique() {
-		return basicItemInfo.isUnique();
+	default boolean isUnique() {
+		return getBasicItemInfo().isUnique();
 	}
 
-	public int getItemLevel() {
-		return basicItemInfo.getItemLevel();
+	default int getItemLevel() {
+		return getBasicItemInfo().getItemLevel();
 	}
 
-	public Set<Source> getSources() {
-		return basicItemInfo.getSources();
+	default Set<Source> getSources() {
+		return getBasicItemInfo().getSources();
 	}
 
-	public boolean isSourcedFromRaid() {
+	default boolean isSourcedFromRaid() {
 		return anySource(Source::isRaidDrop);
 	}
 
-	public boolean isSourcedFromInstance(String instanceName) {
+	default boolean isSourcedFromInstance(String instanceName) {
 		return anySource(source -> source.getZone() != null && source.getZone().getName().equalsIgnoreCase(instanceName));
 	}
 
-	public boolean isSourcedFromAnyInstance(String... instanceNames) {
+	default boolean isSourcedFromAnyInstance(String... instanceNames) {
 		return anySource(source -> source.getZone() != null && Arrays.asList(instanceNames).contains(source.getZone().getName()));
 	}
 
-	public boolean isPurchasedFromBadgeVendor() {
+	default boolean isPurchasedFromBadgeVendor() {
 		return anySource(Source::isBadgeVendor);
 	}
 
-	public boolean isTradedFromToken() {
+	default boolean isTradedFromToken() {
 		return anySource(Source::isTraded);
 	}
 
-	public boolean isCrafted() {
+	default boolean isCrafted() {
 		return anySource(Source::isCrafted);
 	}
 
-	public boolean isPvPReward() {
+	default boolean isPvPReward() {
 		return anySource(Source::isPvP);
 	}
 
-	public boolean isQuestReward() {
+	default boolean isQuestReward() {
 		return anySource(Source::isQuestReward);
 	}
 
-	public boolean isAvailableOnlyByQuests() {
+	default boolean isAvailableOnlyByQuests() {
 		return allSources(Source::isQuestReward);
 	}
 
-	public boolean anySource(Predicate<Source> predicate) {
+	default boolean anySource(Predicate<Source> predicate) {
 		return getSources().stream().anyMatch(predicate);
 	}
 
-	public boolean allSources(Predicate<Source> predicate) {
+	default boolean allSources(Predicate<Source> predicate) {
 		return getSources().stream().allMatch(predicate);
 	}
 
-	public Set<Zone> getRaidSources() {
+	default Set<Zone> getRaidSources() {
 		return getSourcesAfterTradingTokens()
 				.filter(Source::isRaidDrop)
 				.map(Source::getZone)
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public Set<TradedItem> getSourceItems() {
+	default Set<TradedItem> getSourceItems() {
 		return getSources().stream()
 				.map(Source::getSourceItem)
 				.collect(Collectors.toSet());
 	}
 
-	private Stream<Source> getSourcesAfterTradingTokens() {
+	default Stream<Source> getSourcesAfterTradingTokens() {
 		return getSources().stream()
 				.flatMap(source -> source.isTraded() ? source.getSourceItem().getSources().stream() : Stream.of(source));
 	}

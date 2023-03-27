@@ -1,12 +1,9 @@
 package wow.commons.repository.impl.parsers.items;
 
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
+import wow.commons.model.item.impl.GemImpl;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
@@ -36,11 +33,11 @@ public class GemSheetParser extends AbstractItemSheetParser {
 		var metaEnablers = colMetaEnablers.getList(MetaEnabler::valueOf);
 		var stats = readAttributes(GEM_MAX_STATS);
 
-		Description description = getDescription();
-		TimeRestriction timeRestriction = getTimeRestriction();
-		CharacterRestriction characterRestriction = getRestriction();
-		BasicItemInfo basicItemInfo = getBasicItemInfo();
+		var description = getDescription();
+		var timeRestriction = getTimeRestriction();
+		var characterRestriction = getRestriction();
+		var basicItemInfo = getBasicItemInfo();
 
-		return new Gem(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, color, metaEnablers);
+		return new GemImpl(id, description, timeRestriction, characterRestriction, stats, basicItemInfo, color, metaEnablers);
 	}
 }

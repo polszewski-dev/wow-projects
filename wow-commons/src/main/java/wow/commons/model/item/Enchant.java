@@ -1,13 +1,8 @@
 package wow.commons.model.item;
 
-import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
 
 import java.util.List;
 
@@ -15,18 +10,12 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-05
  */
-@Getter
-public class Enchant extends ConfigurationElementWithAttributes<Integer> {
-	private final List<ItemType> itemTypes;
-	private final ItemRarity rarity;
+public interface Enchant extends ConfigurationElementWithAttributes<Integer> {
+	List<ItemType> getItemTypes();
 
-	public Enchant(Integer id, Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Attributes attributes, List<ItemType> itemTypes, ItemRarity rarity) {
-		super(id, description, timeRestriction, characterRestriction, attributes);
-		this.itemTypes = itemTypes;
-		this.rarity = rarity;
-	}
+	ItemRarity getRarity();
 
-	public boolean matches(ItemType itemType) {
-		return this.itemTypes.contains(itemType);
+	default boolean matches(ItemType itemType) {
+		return getItemTypes().contains(itemType);
 	}
 }

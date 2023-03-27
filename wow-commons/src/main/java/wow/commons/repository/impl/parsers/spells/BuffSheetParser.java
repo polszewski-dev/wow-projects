@@ -3,9 +3,7 @@ package wow.commons.repository.impl.parsers.spells;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
+import wow.commons.model.buffs.impl.BuffImpl;
 import wow.commons.model.spells.SpellId;
 import wow.commons.repository.impl.SpellRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
@@ -39,12 +37,12 @@ public class BuffSheetParser extends WowExcelSheetParser {
 		var exclusionGroup = colExclusionGroup.getEnum(BuffExclusionGroup::parse, null);
 		var sourceSpell = colSourceSpell.getEnum(SpellId::parse, null);
 
-		Description description = getDescription();
-		TimeRestriction timeRestriction = getTimeRestriction();
-		CharacterRestriction characterRestriction = getRestriction();
+		var description = getDescription();
+		var timeRestriction = getTimeRestriction();
+		var characterRestriction = getRestriction();
 
 		var buffAttributes = readAttributes(5);
 
-		return new Buff(buffId, description, timeRestriction, characterRestriction, type, exclusionGroup, buffAttributes, sourceSpell);
+		return new BuffImpl(buffId, description, timeRestriction, characterRestriction, type, exclusionGroup, buffAttributes, sourceSpell);
 	}
 }

@@ -4,9 +4,9 @@ import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.ConfigurationElement;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
+import wow.commons.model.config.impl.ConfigurationElementImpl;
 import wow.commons.model.talents.TalentTree;
 
 /**
@@ -14,7 +14,7 @@ import wow.commons.model.talents.TalentTree;
  * Date: 2020-09-28
  */
 @Getter
-public class SpellInfo extends ConfigurationElement<SpellId> {
+public class SpellInfo extends ConfigurationElementImpl<SpellId> {
 	private final TalentTree talentTree;
 	private final SpellSchool spellSchool;
 	private final Duration cooldown;

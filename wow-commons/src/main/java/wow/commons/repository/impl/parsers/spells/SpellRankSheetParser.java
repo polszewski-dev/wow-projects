@@ -1,10 +1,8 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Duration;
-import wow.commons.model.config.CharacterRestriction;
-import wow.commons.model.config.Description;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.*;
+import wow.commons.model.spells.impl.SpellImpl;
 import wow.commons.repository.impl.SpellRepositoryImpl;
 
 import java.util.List;
@@ -59,23 +57,23 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 		var spellId = colSpell.getEnum(SpellId::parse);
 		var rank = colRank.getInteger(0);
 
-		SpellIdAndRank id = new SpellIdAndRank(spellId, rank);
-		Description description = getDescription(spellId.getName()).merge(spellInfo.getDescription());
-		TimeRestriction timeRestriction = getTimeRestriction().merge(spellInfo.getTimeRestriction());
-		CharacterRestriction characterRestriction = getRestriction().merge(spellInfo.getCharacterRestriction());
-		CastInfo castInfo = getCastInfo();
-		DirectDamageInfo directDamageInfo = getDirectDamageInfo();
-		DotDamageInfo dotDamageInfo = getDotDamageInfo();
+		var id = new SpellIdAndRank(spellId, rank);
+		var description = getDescription(spellId.getName()).merge(spellInfo.getDescription());
+		var timeRestriction = getTimeRestriction().merge(spellInfo.getTimeRestriction());
+		var characterRestriction = getRestriction().merge(spellInfo.getCharacterRestriction());
+		var castInfo = getCastInfo();
+		var directDamageInfo = getDirectDamageInfo();
+		var dotDamageInfo = getDotDamageInfo();
 
-		return new Spell(id, timeRestriction, characterRestriction, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		return new SpellImpl(id, timeRestriction, characterRestriction, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
 	}
 
 	private CastInfo getCastInfo() {
 		var manaCost = colManaCost.getInteger();
 		var castTime = colCastTime.getDuration();
 		var channeled = colChanneled.getBoolean();
-		AdditionalCost additionalCost = getAdditionalCost();
-		AppliedEffect appliedEffect = getAppliedEffect();
+		var additionalCost = getAdditionalCost();
+		var appliedEffect = getAppliedEffect();
 		return new CastInfo(manaCost, castTime, channeled, additionalCost, appliedEffect);
 	}
 

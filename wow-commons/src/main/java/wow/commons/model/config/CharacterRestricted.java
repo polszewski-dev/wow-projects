@@ -10,4 +10,8 @@ public interface CharacterRestricted {
 	default boolean isAvailableTo(CharacterInfo characterInfo) {
 		return getCharacterRestriction().isMetBy(characterInfo);
 	}
+
+	default Integer getRequiredLevel() {
+		return getCharacterRestriction().getLevel();
+	}
 }
