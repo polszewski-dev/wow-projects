@@ -10,11 +10,13 @@ import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.SpecialAbilityStats;
+import wow.minmax.model.SpellStatEquivalents;
 import wow.minmax.model.SpellStats;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.impl.enumerators.StatEquivalentFinder;
@@ -89,11 +91,32 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public SpellStats getSpellStats(Character character, Spell spell) {
 		SpellStatistics spellStatistics = getSnapshot(character, spell, null).getSpellStatistics(CritMode.AVERAGE, true);
-		int amount = 10;
-		double hitSpEqv = getSpEquivalent(SPELL_HIT_RATING, amount, character, spell);
-		double critSpEqv = getSpEquivalent(SPELL_CRIT_RATING, amount, character, spell);
-		double hasteSpEqv = getSpEquivalent(SPELL_HASTE_RATING, amount, character, spell);
-		return new SpellStats(character, spellStatistics, hitSpEqv, critSpEqv, hasteSpEqv);
+		SpellStatEquivalents statEquivalents = getStatEquivalents(character, spell);
+		return new SpellStats(character, spellStatistics, statEquivalents);
+	}
+
+	private SpellStatEquivalents getStatEquivalents(Character character, Spell spell) {
+		int amount;
+		PrimitiveAttributeId hit;
+		PrimitiveAttributeId crit;
+		PrimitiveAttributeId haste;
+
+		if (character.getGameVersion() == GameVersion.VANILLA) {
+			amount = 1;
+			hit = SPELL_HIT_PCT;
+			crit = SPELL_CRIT_PCT;
+			haste = SPELL_HASTE_PCT;
+		} else {
+			amount = 10;
+			hit = SPELL_HIT_RATING;
+			crit = SPELL_CRIT_RATING;
+			haste = SPELL_HASTE_RATING;
+		}
+
+		double hitSpEqv = getSpEquivalent(hit, amount, character, spell);
+		double critSpEqv = getSpEquivalent(crit, amount, character, spell);
+		double hasteSpEqv = getSpEquivalent(haste, amount, character, spell);
+		return new SpellStatEquivalents(hitSpEqv, critSpEqv, hasteSpEqv);
 	}
 
 	private double getSpEquivalent(PrimitiveAttributeId attributeId, int amount, Character character, Spell spell) {

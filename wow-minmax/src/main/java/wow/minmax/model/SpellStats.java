@@ -14,7 +14,5 @@ import wow.character.model.snapshot.SpellStatistics;
 public class SpellStats {
 	private Character character;
 	private SpellStatistics spellStatistics;
-	private double hitSpEqv;
-	private double critSpEqv;
-	private double hasteSpEqv;
+	private SpellStatEquivalents statEquivalents;
 }

@@ -189,9 +189,9 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(spellStats.getSpellStatistics().getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
 		assertThat(spellStats.getSpellStatistics().getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 		assertThat(spellStats.getSpellStatistics().getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
-		assertThat(spellStats.getHitSpEqv()).isEqualTo(0.11, PRECISION);
-		assertThat(spellStats.getCritSpEqv()).isEqualTo(10.30, PRECISION);
-		assertThat(spellStats.getHasteSpEqv()).isEqualTo(11.55, PRECISION);
+		assertThat(spellStats.getStatEquivalents().getHitSpEqv()).isEqualTo(0.11, PRECISION);
+		assertThat(spellStats.getStatEquivalents().getCritSpEqv()).isEqualTo(10.30, PRECISION);
+		assertThat(spellStats.getStatEquivalents().getHasteSpEqv()).isEqualTo(11.55, PRECISION);
 	}
 
 	@Test
