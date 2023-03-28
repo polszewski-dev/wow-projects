@@ -62,7 +62,7 @@ public class AccumulatedSpellStats {
 	}
 
 	public void accumulateStats(StatProvider statProvider) {
-		accumulatePrimitiveAttributes(attributes.getPrimitiveAttributeList());
+		accumulatePrimitiveAttributes(attributes.getPrimitiveAttributes());
 		solveStatConversions();
 		solveAbilities(statProvider);
 	}
@@ -213,7 +213,7 @@ public class AccumulatedSpellStats {
 
 		for (SpecialAbility specialAbility : specialAbilities) {
 			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);
-			accumulatePrimitiveAttributes(statEquivalent.getPrimitiveAttributeList());
+			accumulatePrimitiveAttributes(statEquivalent.getPrimitiveAttributes());
 		}
 	}
 }

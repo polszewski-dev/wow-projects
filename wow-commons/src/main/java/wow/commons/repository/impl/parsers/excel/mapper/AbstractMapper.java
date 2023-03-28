@@ -36,7 +36,7 @@ abstract class AbstractMapper<T extends ComplexAttribute> implements Mapper<T> {
 	}
 
 	protected void putPrimitiveAttributes(String statKey, String amountKey, Map<String, Object> map, Attributes attributes) {
-		List<PrimitiveAttribute> primitiveAttributes = attributes.getPrimitiveAttributeList();
+		List<PrimitiveAttribute> primitiveAttributes = attributes.getPrimitiveAttributes();
 
 		assertNumberOfAttributesIsWithinLimit(primitiveAttributes);
 

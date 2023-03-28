@@ -11,6 +11,7 @@ import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +26,18 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 public interface AttributeSource {
 	Attributes getAttributes();
 
-	default List<PrimitiveAttribute> getPrimitiveAttributeList() {
-		return getAttributes().getPrimitiveAttributeList();
+	default List<PrimitiveAttribute> getPrimitiveAttributes() {
+		return getAttributes().getPrimitiveAttributes();
 	}
 
-	default Map<ComplexAttributeId, List<ComplexAttribute>> getComplexAttributeList() {
-		return getAttributes().getComplexAttributeList();
+	default List<ComplexAttribute> getComplexAttributes() {
+		return getComplexAttributeMap().values().stream()
+				.flatMap(Collection::stream)
+				.toList();
+	}
+
+	default Map<ComplexAttributeId, List<ComplexAttribute>> getComplexAttributeMap() {
+		return getAttributes().getComplexAttributeMap();
 	}
 
 	default boolean isEmpty() {
@@ -39,7 +46,7 @@ public interface AttributeSource {
 
 	default double getDouble(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		double result = 0;
-		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributes()) {
 			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
 				result += attribute.getDouble();
 			}
@@ -57,7 +64,7 @@ public interface AttributeSource {
 
 	default Percent getPercent(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		Percent result = Percent.ZERO;
-		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributes()) {
 			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
 				result = result.add(attribute.getPercent());
 			}
@@ -75,7 +82,7 @@ public interface AttributeSource {
 
 	default Duration getDuration(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		Duration result = Duration.ZERO;
-		for (PrimitiveAttribute attribute : getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : getPrimitiveAttributes()) {
 			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
 				result = result.add(attribute.getDuration());
 			}
@@ -96,7 +103,7 @@ public interface AttributeSource {
 	}
 
 	default <T extends ComplexAttribute> List<T> getList(ComplexAttributeId attributeId) {
-		return (List)getComplexAttributeList().getOrDefault(attributeId, List.of());
+		return (List)getComplexAttributeMap().getOrDefault(attributeId, List.of());
 	}
 
 	default String statString() {

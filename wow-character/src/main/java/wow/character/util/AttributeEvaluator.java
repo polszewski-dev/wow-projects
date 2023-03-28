@@ -39,11 +39,11 @@ public class AttributeEvaluator implements AttributeCollector {
 
 		Attributes attributes = attributeSource.getAttributes();
 
-		for (var attribute : attributes.getPrimitiveAttributeList()) {
+		for (var attribute : attributes.getPrimitiveAttributes()) {
 			addAttribute(attribute);
 		}
 
-		for (var entry : attributes.getComplexAttributeList().entrySet()) {
+		for (var entry : attributes.getComplexAttributeMap().entrySet()) {
 			for (ComplexAttribute attribute : entry.getValue()) {
 				addAttribute(attribute);
 			}

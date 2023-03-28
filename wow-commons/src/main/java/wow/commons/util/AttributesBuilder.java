@@ -18,13 +18,13 @@ import java.util.*;
  * Date: 2021-10-16
  */
 public class AttributesBuilder {
-	private List<PrimitiveAttribute> attributeList;
-	private Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeList;
+	private List<PrimitiveAttribute> primitiveAttributes;
+	private Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeMap;
 
 	public Attributes toAttributes() {
 		Attributes result = getAttributes();
-		this.attributeList = null;
-		this.complexAttributeList = null;
+		this.primitiveAttributes = null;
+		this.complexAttributeMap = null;
 		return result;
 	}
 
@@ -34,13 +34,13 @@ public class AttributesBuilder {
 		}
 
 		return Attributes.of(
-				attributeList != null ? attributeList : List.of(),
-				complexAttributeList != null ? complexAttributeList : Map.of()
+				primitiveAttributes != null ? primitiveAttributes : List.of(),
+				complexAttributeMap != null ? complexAttributeMap : Map.of()
 		);
 	}
 
 	public boolean isEmpty() {
-		return (attributeList == null || attributeList.isEmpty()) && (complexAttributeList == null || complexAttributeList.isEmpty());
+		return (primitiveAttributes == null || primitiveAttributes.isEmpty()) && (complexAttributeMap == null || complexAttributeMap.isEmpty());
 	}
 
 	public AttributesBuilder addAttribute(PrimitiveAttribute attribute) {
@@ -52,7 +52,7 @@ public class AttributesBuilder {
 
 	public AttributesBuilder addAttribute(ComplexAttribute attribute) {
 		if (attribute != null) {
-			getOrCreateComplexAttributeList()
+			getOrCreateComplexAttributeMap()
 					.computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
 					.add(attribute);
 		}
@@ -60,17 +60,17 @@ public class AttributesBuilder {
 	}
 
 	private List<PrimitiveAttribute> getOrCreateAttributeList() {
-		if (attributeList == null) {
-			attributeList = new ArrayList<>();
+		if (primitiveAttributes == null) {
+			primitiveAttributes = new ArrayList<>();
 		}
-		return attributeList;
+		return primitiveAttributes;
 	}
 
-	private Map<ComplexAttributeId, List<ComplexAttribute>> getOrCreateComplexAttributeList() {
-		if (complexAttributeList == null) {
-			complexAttributeList = new EnumMap<>(ComplexAttributeId.class);
+	private Map<ComplexAttributeId, List<ComplexAttribute>> getOrCreateComplexAttributeMap() {
+		if (complexAttributeMap == null) {
+			complexAttributeMap = new EnumMap<>(ComplexAttributeId.class);
 		}
-		return complexAttributeList;
+		return complexAttributeMap;
 	}
 
 	public AttributesBuilder addAttributeList(Collection<PrimitiveAttribute> attributes) {
@@ -124,8 +124,8 @@ public class AttributesBuilder {
 	public AttributesBuilder addAttributes(AttributeSource attributeSource) {
 		if (attributeSource != null) {
 			Attributes attributes = attributeSource.getAttributes();
-			addAttributeList(attributes.getPrimitiveAttributeList());
-			for (var entry : attributes.getComplexAttributeList().entrySet()) {
+			addAttributeList(attributes.getPrimitiveAttributes());
+			for (var entry : attributes.getComplexAttributeMap().entrySet()) {
 				addComplexAttributeList(entry.getValue());
 			}
 		}
@@ -145,11 +145,11 @@ public class AttributesBuilder {
 			return this;
 		}
 
-		for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributes()) {
 			addAttribute(attribute.attachCondition(condition));
 		}
 
-		for (List<ComplexAttribute> complexAttributes : attributes.getComplexAttributeList().values()) {
+		for (List<ComplexAttribute> complexAttributes : attributes.getComplexAttributeMap().values()) {
 			for (ComplexAttribute attribute : complexAttributes) {
 				addAttribute(attribute.attachCondition(condition));
 			}
@@ -190,9 +190,9 @@ public class AttributesBuilder {
 	}
 
 	private static List<PrimitiveAttribute> removePrimitiveAttributes(Attributes attributes, Attributes attributesToRemove) {
-		var result = new ArrayList<>(attributes.getPrimitiveAttributeList());
+		var result = new ArrayList<>(attributes.getPrimitiveAttributes());
 
-		for (var attributeToRemove : attributesToRemove.getPrimitiveAttributeList()) {
+		for (var attributeToRemove : attributesToRemove.getPrimitiveAttributes()) {
 			result.add(attributeToRemove.negate());
 		}
 
@@ -200,13 +200,13 @@ public class AttributesBuilder {
 	}
 
 	private static Map<ComplexAttributeId, List<ComplexAttribute>> removeComplexAttributes(Attributes attributes, Attributes attributesToRemove) {
-		var result = new EnumMap<>(attributes.getComplexAttributeList());
+		var result = new EnumMap<>(attributes.getComplexAttributeMap());
 
 		for (var entry : result.entrySet()) {
 			entry.setValue(new ArrayList<>(entry.getValue()));
 		}
 
-		for (var entry : attributesToRemove.getComplexAttributeList().entrySet()) {
+		for (var entry : attributesToRemove.getComplexAttributeMap().entrySet()) {
 			for (var complexAttributeToRemove : entry.getValue()) {
 				boolean removed = result.get(entry.getKey())
 						.remove(complexAttributeToRemove);

@@ -100,7 +100,7 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(socketSpecification.getSocketType(0)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketType(1)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketType(2)).isEqualTo(SocketType.RED);
-		assertThat(socketSpecification.getSocketBonus().getPrimitiveAttributeList().get(0)).isEqualTo(Attribute.of(SPELL_POWER, 5));
+		assertThat(socketSpecification.getSocketBonus().getPrimitiveAttributes().get(0)).isEqualTo(Attribute.of(SPELL_POWER, 5));
 	}
 
 	@Test

@@ -67,7 +67,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	private boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, Character character) {
-		return attributeSource.getPrimitiveAttributeList().stream()
+		return attributeSource.getPrimitiveAttributes().stream()
 				.anyMatch(attribute -> isCasterStat(attribute, character));
 	}
 

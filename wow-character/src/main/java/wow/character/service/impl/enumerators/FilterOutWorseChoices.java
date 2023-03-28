@@ -47,7 +47,7 @@ public abstract class FilterOutWorseChoices<T extends AttributeSource> {
 	}
 
 	private boolean isStrictlyWorseThan(T choice, T otherChoice) {
-		return choice.getPrimitiveAttributeList().stream()
+		return choice.getPrimitiveAttributes().stream()
 				.map(FilterOutWorseChoices::getIdAndCondition)
 				.collect(Collectors.toSet()).stream()
 				.allMatch(x -> choice.getDouble(x.getKey(), x.getValue()) < otherChoice.getDouble(x.getKey(), x.getValue()));
@@ -76,7 +76,7 @@ public abstract class FilterOutWorseChoices<T extends AttributeSource> {
 	protected abstract Object getGroupKey(T choice);
 
 	private String getStatsKey(T choice) {
-		return choice.getPrimitiveAttributeList().stream()
+		return choice.getPrimitiveAttributes().stream()
 				.map(FilterOutWorseChoices::getIdAndCondition)
 				.map(Objects::toString)
 				.distinct()

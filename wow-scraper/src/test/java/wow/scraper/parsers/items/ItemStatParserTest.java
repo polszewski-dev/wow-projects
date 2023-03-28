@@ -42,10 +42,10 @@ class ItemStatParserTest {
 		Attributes stats = parser.getParsedStats();
 
 		assertThat(success).isTrue();
-		assertThat(stats.getPrimitiveAttributeList()).isEmpty();
-		assertThat(stats.getComplexAttributeList()).hasSize(1);
+		assertThat(stats.getPrimitiveAttributes()).isEmpty();
+		assertThat(stats.getComplexAttributeMap()).hasSize(1);
 
-		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
+		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeMap().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
 		assertThat(specialAbilities).isNotNull().hasSize(1);
 		assertThat(specialAbilities.get(0)).isInstanceOf(ProcAbility.class);
@@ -65,10 +65,10 @@ class ItemStatParserTest {
 		Attributes stats = parser.getParsedStats();
 
 		assertThat(success).isTrue();
-		assertThat(stats.getPrimitiveAttributeList()).isEmpty();
-		assertThat(stats.getComplexAttributeList()).hasSize(1);
+		assertThat(stats.getPrimitiveAttributes()).isEmpty();
+		assertThat(stats.getComplexAttributeMap()).hasSize(1);
 
-		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeList().get(ComplexAttributeId.SPECIAL_ABILITIES);
+		List<ComplexAttribute> specialAbilities = stats.getComplexAttributeMap().get(ComplexAttributeId.SPECIAL_ABILITIES);
 
 		assertThat(specialAbilities).isNotNull().hasSize(1);
 		assertThat(specialAbilities.get(0)).isInstanceOf(OnUseAbility.class);

@@ -39,7 +39,7 @@ public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 	private List<String> getStatDiff(AttributesDiff statDifference) {
 		return statDifference
 				.getAttributes()
-				.getPrimitiveAttributeList()
+				.getPrimitiveAttributes()
 				.stream()
 				.map(Object::toString)
 				.toList();

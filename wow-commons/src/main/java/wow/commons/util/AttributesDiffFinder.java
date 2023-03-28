@@ -38,11 +38,11 @@ public class AttributesDiffFinder {
 	}
 
 	private List<PrimitiveAttribute> getPrimitiveAttributeDiff() {
-		for (var attribute : attributes1.getPrimitiveAttributeList()) {
+		for (var attribute : attributes1.getPrimitiveAttributes()) {
 			getDoubleCollector(attribute).add(attribute);
 		}
 
-		for (var attribute : attributes2.getPrimitiveAttributeList()) {
+		for (var attribute : attributes2.getPrimitiveAttributes()) {
 			getDoubleCollector(attribute).subtract(attribute);
 		}
 
@@ -58,19 +58,19 @@ public class AttributesDiffFinder {
 	}
 
 	private void addComplexAttributeDiff(AttributesDiff result) {
-		for (var entry : attributes1.getComplexAttributeList().entrySet()) {
+		for (var entry : attributes1.getComplexAttributeMap().entrySet()) {
 			ensureList(entry.getKey(), result.getAddedAbilities()).addAll(entry.getValue());
 		}
 
-		for (var entry : attributes2.getComplexAttributeList().entrySet()) {
+		for (var entry : attributes2.getComplexAttributeMap().entrySet()) {
 			ensureList(entry.getKey(), result.getAddedAbilities()).removeAll(entry.getValue());
 		}
 
-		for (var entry : attributes2.getComplexAttributeList().entrySet()) {
+		for (var entry : attributes2.getComplexAttributeMap().entrySet()) {
 			ensureList(entry.getKey(), result.getRemovedAbilities()).addAll(entry.getValue());
 		}
 
-		for (var entry : attributes1.getComplexAttributeList().entrySet()) {
+		for (var entry : attributes1.getComplexAttributeMap().entrySet()) {
 			ensureList(entry.getKey(), result.getRemovedAbilities()).removeAll(entry.getValue());
 		}
 	}
@@ -80,8 +80,8 @@ public class AttributesDiffFinder {
 		return collectors.computeIfAbsent(key, x -> new PrimitiveCollector(attribute));
 	}
 
-	private static List<ComplexAttribute> ensureList(ComplexAttributeId key, Map<ComplexAttributeId, List<ComplexAttribute>> list) {
-		return list.computeIfAbsent(key, x -> new ArrayList<>());
+	private static List<ComplexAttribute> ensureList(ComplexAttributeId key, Map<ComplexAttributeId, List<ComplexAttribute>> map) {
+		return map.computeIfAbsent(key, x -> new ArrayList<>());
 	}
 
 	private static class PrimitiveCollector {

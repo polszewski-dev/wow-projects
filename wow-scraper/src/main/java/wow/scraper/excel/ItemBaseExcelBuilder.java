@@ -21,7 +21,10 @@ import wow.scraper.parsers.tooltip.ItemTooltipParser;
 import wow.scraper.parsers.tooltip.TradedItemParser;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
@@ -238,13 +241,13 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 		int colNo = 0;
 
-		for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributeList()) {
+		for (PrimitiveAttribute attribute : attributes.getPrimitiveAttributes()) {
 			setValue(ComplexAttributeMapper.getIdAndCondition(attribute));
 			setValue(attribute.getDouble());
 			++colNo;
 		}
 
-		for (ComplexAttribute attribute : attributes.getComplexAttributeList().values().stream().flatMap(Collection::stream).toList()) {
+		for (ComplexAttribute attribute : attributes.getComplexAttributes()) {
 			setValue(ComplexAttributeMapper.toString(attribute));
 			setValue((String)null);
 			++colNo;

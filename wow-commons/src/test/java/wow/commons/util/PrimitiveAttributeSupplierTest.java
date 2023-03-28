@@ -27,7 +27,7 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell");
 		Attributes attributes = supplier.getAttributes(0);
 
-		assertThat(attributes.getPrimitiveAttributeList()).isEmpty();
+		assertThat(attributes.getPrimitiveAttributes()).isEmpty();
 	}
 
 	@Test
@@ -36,9 +36,9 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(1);
 
-		assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(Attribute.of(SPELL_POWER, 10));
+		assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(Attribute.of(SPELL_POWER, 10));
 	}
 
 	@Test
@@ -47,9 +47,9 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Destruction");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(1);
 
-		assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+		assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 				Attribute.of(SPELL_POWER, 10, AttributeCondition.of(DESTRUCTION)));
 	}
 
@@ -59,9 +59,9 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Fire");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(1);
 
-		assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+		assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 				Attribute.of(SPELL_POWER, 10, AttributeCondition.of(FIRE)));
 	}
 
@@ -71,9 +71,9 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Shadow Bolt");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(1);
 
-		assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+		assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 				Attribute.of(SPELL_POWER, 10, AttributeCondition.of(SHADOW_BOLT)));
 	}
 
@@ -83,9 +83,9 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Imp");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(1);
 
-		assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+		assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 				Attribute.of(SPELL_POWER, 10, AttributeCondition.of(IMP)));
 	}
 
@@ -95,9 +95,9 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Undead");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(1);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(1);
 
-		assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+		assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 				Attribute.of(SPELL_POWER, 10, AttributeCondition.of(UNDEAD)));
 	}
 
@@ -108,14 +108,14 @@ class PrimitiveAttributeSupplierTest {
 		Attributes attributes = supplier.getAttributes(10);
 
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(3);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(3);
 
 		assertAll(
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(FIRE))),
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(1)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(1)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(FROST))),
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(2)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(2)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(ARCANE)))
 		);
 	}
@@ -126,12 +126,12 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Fire,Undead");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(2);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(2);
 
 		assertAll(
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(FIRE))),
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(1)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(1)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(UNDEAD)))
 		);
 	}
@@ -142,19 +142,19 @@ class PrimitiveAttributeSupplierTest {
 		PrimitiveAttributeSupplier supplier = PrimitiveAttributeSupplier.fromString("Power,Spell,Fire,Frost,Undead,Demon");
 		Attributes attributes = supplier.getAttributes(10);
 
-		assertThat(attributes.getPrimitiveAttributeList()).hasSize(4);
+		assertThat(attributes.getPrimitiveAttributes()).hasSize(4);
 
 		assertAll(
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(0)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(0)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(FIRE))),
 
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(1)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(1)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(FROST))),
 
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(2)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(2)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(UNDEAD))),
 
-				() -> assertThat(attributes.getPrimitiveAttributeList().get(3)).isEqualTo(
+				() -> assertThat(attributes.getPrimitiveAttributes().get(3)).isEqualTo(
 						Attribute.of(SPELL_POWER, 10, AttributeCondition.of(DEMON)))
 		);
 	}
