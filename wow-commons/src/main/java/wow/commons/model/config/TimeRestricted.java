@@ -1,6 +1,6 @@
 package wow.commons.model.config;
 
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 
 /**
  * User: POlszewski
@@ -9,7 +9,7 @@ import wow.commons.model.pve.Phase;
 public interface TimeRestricted {
 	TimeRestriction getTimeRestriction();
 
-	default boolean isAvailableDuring(Phase phase) {
-		return getTimeRestriction().isMetBy(phase);
+	default boolean isAvailableDuring(PhaseId phaseId) {
+		return getTimeRestriction().isMetBy(phaseId);
 	}
 }

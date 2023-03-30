@@ -17,8 +17,8 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 	@Override
 	public CharacterProfessionDTO doConvert(CharacterProfession value) {
 		return new CharacterProfessionDTO(
-				value.getProfession(),
-				value.getSpecialization()
+				value.getProfessionId(),
+				value.getSpecializationId()
 		);
 	}
 

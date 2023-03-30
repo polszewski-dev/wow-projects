@@ -17,7 +17,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.config.ConfigurationElement;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.complex.special.ProcEvent.SPELL_CRIT;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_CRIT_PCT;
-import static wow.commons.model.character.CharacterClass.WARLOCK;
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
 import static wow.commons.model.spells.SpellId.*;
 import static wow.commons.model.spells.SpellSchool.*;
@@ -46,7 +46,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("SpellInfo is read correctly")
 	void spellInfoIsCorrect() {
-		Optional<Spell> optionalSpell = underTest.getSpellHighestRank(SHADOW_BOLT, 70, Phase.TBC_P5);
+		Optional<Spell> optionalSpell = underTest.getSpellHighestRank(SHADOW_BOLT, 70, PhaseId.TBC_P5);
 
 		assertThat(optionalSpell).isPresent();
 
@@ -59,8 +59,8 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(spell.getCoeffDot()).isEqualTo(Percent.ZERO);
 		assertThat(spell.getSpellInfo().getCooldown().getSeconds()).isZero();
 		assertThat(spell.getSpellInfo().isIgnoresGCD()).isFalse();
-		assertThat(spell.getCharacterRestriction().getCharacterClasses()).hasSameElementsAs(List.of(WARLOCK));
-		assertThat(spell.getCharacterRestriction().getRaces()).isEmpty();
+		assertThat(spell.getCharacterRestriction().getCharacterClassIds()).hasSameElementsAs(List.of(WARLOCK));
+		assertThat(spell.getCharacterRestriction().getRaceIds()).isEmpty();
 		assertThat(spell.getCharacterRestriction().getTalentId()).isNull();
 		assertThat(spell.getTimeRestriction().getVersions()).isEmpty();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().isBolt()).isTrue();
@@ -83,10 +83,10 @@ class SpellRepositoryTest extends RepositoryTest {
 			"IMMOLATE, VANILLA_P5, 8, 279, 279",
 			"IMMOLATE, TBC_P1, 9, 332, 332",
 		})
-		void vanillaP1(SpellId shadowBolt, Phase phase, int rank, int min, int max) {
-			int level = phase.getGameVersion().getMaxLevel();
+		void vanillaP1(SpellId shadowBolt, PhaseId phaseId, int rank, int min, int max) {
+			int level = phaseId.getGameVersionId().getMaxLevel();
 
-			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phase).orElseThrow();
+			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phaseId).orElseThrow();
 
 			assertThat(spell.getRank()).isEqualTo(rank);
 			assertThat(spell.getMinDmg()).isEqualTo(min);
@@ -108,10 +108,10 @@ class SpellRepositoryTest extends RepositoryTest {
 				"IMMOLATE, VANILLA_P5, 8, 510",
 				"IMMOLATE, TBC_P1, 9, 615",
 		})
-		void vanillaP1(SpellId shadowBolt, Phase phase, int rank, int dot) {
-			int level = phase.getGameVersion().getMaxLevel();
+		void vanillaP1(SpellId shadowBolt, PhaseId phaseId, int rank, int dot) {
+			int level = phaseId.getGameVersionId().getMaxLevel();
 
-			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phase).orElseThrow();
+			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phaseId).orElseThrow();
 
 			assertThat(spell.getRank()).isEqualTo(rank);
 			assertThat(spell.getDotDmg()).isEqualTo(dot);
@@ -121,7 +121,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Talent is read correctly")
 	void talentIsCorrect() {
-		Optional<Talent> optionalTalent = underTest.getTalent(WARLOCK, 44, 5, Phase.TBC_P5);
+		Optional<Talent> optionalTalent = underTest.getTalent(WARLOCK, 44, 5, PhaseId.TBC_P5);
 
 		assertThat(optionalTalent).isPresent();
 
@@ -155,8 +155,8 @@ class SpellRepositoryTest extends RepositoryTest {
 				"VANILLA_P1, 45, 1, 5, 2",
 				"TBC_P1, 54, 1, 3, 4",
 		})
-		void talent(Phase phase, int position, int rank, int maxRank, int statValue) {
-			Talent talent = underTest.getTalent(WARLOCK, position, rank, phase).orElseThrow();
+		void talent(PhaseId phaseId, int position, int rank, int maxRank, int statValue) {
+			Talent talent = underTest.getTalent(WARLOCK, position, rank, phaseId).orElseThrow();
 
 			assertThat(talent.getTalentId()).isEqualTo(IMPROVED_SEARING_PAIN);
 			assertThat(talent.getRank()).isEqualTo(rank);
@@ -169,7 +169,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Talent with multiline benefit attributes are correct")
 	void talentWithMultilineBenefit() {
-		Talent talent = underTest.getTalent(WARLOCK, 46, 5, Phase.TBC_P5).orElseThrow();
+		Talent talent = underTest.getTalent(WARLOCK, 46, 5, PhaseId.TBC_P5).orElseThrow();
 
 		assertThat(talent.getTalentId()).isEqualTo(BANE);
 		assertThat(talent.getRank()).isEqualTo(5);
@@ -183,7 +183,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Buff is read correctly")
 	void buffIsCorrect() {
-		Optional<Buff> optionalBuff = underTest.getBuff(27228, Phase.TBC_P5);
+		Optional<Buff> optionalBuff = underTest.getBuff(27228, PhaseId.TBC_P5);
 
 		assertThat(optionalBuff).isPresent();
 
@@ -207,7 +207,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Buff by id name read correctly")
 	void buffByIdIsCorrect() {
-		Optional<Buff> optionalBuff = underTest.getBuff("Curse of the Elements", Phase.TBC_P5);
+		Optional<Buff> optionalBuff = underTest.getBuff("Curse of the Elements", PhaseId.TBC_P5);
 
 		assertThat(optionalBuff).isPresent();
 
@@ -220,7 +220,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Buffs are read correctly")
 	void bufByNamefIsCorrect() {
-		List<String> buffNames = underTest.getBuffs(Phase.TBC_P5).stream()
+		List<String> buffNames = underTest.getBuffs(PhaseId.TBC_P5).stream()
 				.map(ConfigurationElement::getName)
 				.toList();
 
@@ -258,8 +258,8 @@ class SpellRepositoryTest extends RepositoryTest {
 				"VANILLA_P1, 31",
 				"TBC_P1, 40",
 		})
-		void talent(Phase phase, int statValue) {
-			Buff buff = underTest.getBuff("Arcane Brilliance", phase).orElseThrow();
+		void talent(PhaseId phaseId, int statValue) {
+			Buff buff = underTest.getBuff("Arcane Brilliance", phaseId).orElseThrow();
 
 			assertThat(buff.getIntellect()).isEqualTo(statValue);
 		}

@@ -13,10 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.item.GemColor.*;
-import static wow.commons.model.professions.Profession.JEWELCRAFTING;
-import static wow.commons.model.pve.GameVersion.TBC;
-import static wow.commons.model.pve.Phase.TBC_P0;
-import static wow.commons.model.pve.Phase.TBC_P3;
+import static wow.commons.model.professions.ProfessionId.JEWELCRAFTING;
+import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.commons.model.pve.PhaseId.TBC_P0;
+import static wow.commons.model.pve.PhaseId.TBC_P3;
 
 /**
  * User: POlszewski

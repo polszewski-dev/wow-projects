@@ -1,7 +1,7 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
@@ -91,7 +91,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	}
 
 	private interface ParserCreator<T extends AbstractTooltipParser> {
-		T create(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion);
+		T create(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersionId gameVersion);
 	}
 
 	private interface ParsedDataExporter<T extends AbstractTooltipParser> {
@@ -104,7 +104,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 			ParsedDataExporter<T> parsedDataExporter
 	) throws IOException {
 		for (Integer itemId : getItemIds(category)) {
-			for (GameVersion gameVersion : GameVersion.values()) {
+			for (GameVersionId gameVersion : GameVersionId.values()) {
 				getItemDetailRepository()
 						.getDetail(gameVersion, category, itemId)
 						.ifPresent(value -> export(value, gameVersion, parserCreator, parsedDataExporter));
@@ -114,7 +114,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 
 	private <T extends AbstractTooltipParser> void export(
 			JsonItemDetailsAndTooltip itemDetailsAndTooltip,
-			GameVersion gameVersion,
+			GameVersionId gameVersion,
 			ParserCreator<T> parserCreator,
 			ParsedDataExporter<T> parsedDataExporter
 	) {
@@ -127,7 +127,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	}
 
 	private List<Integer> getItemIds(WowheadItemCategory category) {
-		return Stream.of(GameVersion.values())
+		return Stream.of(GameVersionId.values())
 				.map(gameVersion -> getItemDetailRepository().getItemIds(gameVersion, category))
 				.flatMap(Collection::stream)
 				.distinct()

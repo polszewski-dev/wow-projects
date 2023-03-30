@@ -9,8 +9,8 @@ import wow.commons.model.categorization.WeaponSubType;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.item.WeaponStats;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
@@ -39,12 +39,12 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	private String itemSetName;
 	private List<String> itemSetPieces;
 	private List<ItemSetBonus> itemSetBonuses;
-	private Profession itemSetRequiredProfession;
+	private ProfessionId itemSetRequiredProfession;
 	private Integer itemSetRequiredProfessionLevel;
 
 	private boolean randomEnchantment;
 
-	public ItemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion, StatPatternRepository statPatternRepository) {
+	public ItemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
 		super(itemDetailsAndTooltip, gameVersion, statPatternRepository);
 	}
 
@@ -144,7 +144,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 		ParsedMultipleValues setRestriction = ParserUtil.parseMultipleValues("Requires (Tailoring) \\((\\d+)\\)", lines.get(currentLineIdx + 1));
 		if (!setRestriction.isEmpty()) {
-			this.itemSetRequiredProfession = Profession.parse(setRestriction.get(0));
+			this.itemSetRequiredProfession = ProfessionId.parse(setRestriction.get(0));
 			this.itemSetRequiredProfessionLevel = setRestriction.getInteger(1);
 			++currentLineIdx;
 		}

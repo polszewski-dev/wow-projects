@@ -10,7 +10,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,18 +35,18 @@ public class CachedItemService implements ItemService {
 	private final Map<String, List<Gem[]>> getBestGemCombosCache = Collections.synchronizedMap(new HashMap<>());
 
 	@Override
-	public Item getItem(int itemId, Phase phase) {
-		return itemService.getItem(itemId, phase);
+	public Item getItem(int itemId, PhaseId phaseId) {
+		return itemService.getItem(itemId, phaseId);
 	}
 
 	@Override
-	public Enchant getEnchant(int enchantId, Phase phase) {
-		return itemService.getEnchant(enchantId, phase);
+	public Enchant getEnchant(int enchantId, PhaseId phaseId) {
+		return itemService.getEnchant(enchantId, phaseId);
 	}
 
 	@Override
-	public Gem getGem(int gemId, Phase phase) {
-		return itemService.getGem(gemId, phase);
+	public Gem getGem(int gemId, PhaseId phaseId) {
+		return itemService.getGem(gemId, phaseId);
 	}
 
 	@Override
@@ -88,13 +88,13 @@ public class CachedItemService implements ItemService {
 	}
 
 	private static String getProfileKey(Character character) {
-		return character.getCharacterClass() + "#" +
+		return character.getCharacterClassId() + "#" +
 				character.getLevel() + "#" +
-				character.getRace() + "#" +
+				character.getRaceId() + "#" +
 				character.getRole() + "#" +
-				character.getPhase() + "#" +
+				character.getPhaseId() + "#" +
 				character.getProfessions().getList().stream()
-						.map(x -> x.getProfession() + "#" + x.getSpecialization())
+						.map(x -> x.getProfessionId() + "#" + x.getSpecializationId())
 						.collect(Collectors.joining("#"));
 	}
 }

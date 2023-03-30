@@ -1,8 +1,8 @@
 package wow.commons.repository;
 
 import wow.commons.model.buffs.Buff;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -16,15 +16,15 @@ import java.util.Optional;
  * Date: 2020-09-28
  */
 public interface SpellRepository {
-	Optional<Spell> getSpellHighestRank(SpellId spellId, int level, Phase phase);
+	Optional<Spell> getSpellHighestRank(SpellId spellId, int level, PhaseId phaseId);
 
-	Optional<Talent> getTalent(CharacterClass characterClass, TalentId talentId, int rank, Phase phase);
+	Optional<Talent> getTalent(CharacterClassId characterClassId, TalentId talentId, int rank, PhaseId phaseId);
 
-	Optional<Talent> getTalent(CharacterClass characterClass, int talentCalculatorPosition, int rank, Phase phase);
+	Optional<Talent> getTalent(CharacterClassId characterClassId, int talentCalculatorPosition, int rank, PhaseId phaseId);
 
-	Optional<Buff> getBuff(int buffId, Phase phase);
+	Optional<Buff> getBuff(int buffId, PhaseId phaseId);
 
-	Optional<Buff> getBuff(String buffName, Phase phase);
+	Optional<Buff> getBuff(String buffName, PhaseId phaseId);
 
-	List<Buff> getBuffs(Phase phase);
+	List<Buff> getBuffs(PhaseId phaseId);
 }

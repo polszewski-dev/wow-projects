@@ -6,11 +6,11 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.categorization.ItemRarity;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.item.ItemSetBonus;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.WowheadItemQuality;
@@ -133,7 +133,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		writer.nextRow();
 	}
 
-	private List<CharacterClass> getRequiredClass(ItemTooltipParser parser) {
+	private List<CharacterClassId> getRequiredClass(ItemTooltipParser parser) {
 		if (parser.getItemSetName() != null) {
 			SetInfo setInfo = savedSets.get(getSavedSetKey(parser));
 			return setInfo.getItemSetRequiredClass();
@@ -221,8 +221,8 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(getPhase(parser));
 	}
 
-	private Phase getPhase(AbstractTooltipParser parser) {
-		Phase phase = config.getPhaseOverrides().get(parser.getItemId());
+	private PhaseId getPhase(AbstractTooltipParser parser) {
+		PhaseId phase = config.getPhaseOverrides().get(parser.getItemId());
 		return phase != null ? phase : parser.getPhase();
 	}
 
@@ -285,9 +285,9 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		private String itemSetName;
 		private List<String> itemSetPieces;
 		private List<ItemSetBonus> itemSetBonuses;
-		private GameVersion gameVersion;
-		private List<CharacterClass> itemSetRequiredClass;
-		private Profession itemSetBonusRequiredProfession;
+		private GameVersionId gameVersion;
+		private List<CharacterClassId> itemSetRequiredClass;
+		private ProfessionId itemSetBonusRequiredProfession;
 		private Integer itemSetBonusRequiredProfessionLevel;
 	}
 

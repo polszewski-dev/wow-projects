@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 @Getter
-public enum GameVersion {
+public enum GameVersionId {
 	VANILLA(60, 300),
 	TBC(70, 375),
 	WOTLK(80, 450);
@@ -20,11 +20,11 @@ public enum GameVersion {
 	private final int maxLevel;
 	private final int maxProfession;
 
-	public static GameVersion parse(String value) {
+	public static GameVersionId parse(String value) {
 		return EnumUtil.parse(value, values());
 	}
 
-	public Phase getEarliestPhase() {
-		return Stream.of(Phase.values()).filter(x -> x.getGameVersion() == this).findFirst().orElseThrow();
+	public PhaseId getEarliestPhase() {
+		return Stream.of(PhaseId.values()).filter(x -> x.getGameVersionId() == this).findFirst().orElseThrow();
 	}
 }

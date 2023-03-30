@@ -8,7 +8,7 @@ import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.item.impl.ItemSetImpl;
-import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionId;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 import wow.commons.util.AttributesBuilder;
@@ -87,7 +87,7 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 
 		String description = column(itemSetBonusDescription(bonusIdx)).getString();
 		Attributes attributes = readAttributes(itemSetBonusStatPrefix(bonusIdx), ITEM_SET_BONUS_MAX_STATS);
-		AttributeCondition professionCondition = AttributeCondition.of(colIBonusReqProfession.getEnum(Profession::parse, null));
+		AttributeCondition professionCondition = AttributeCondition.of(colIBonusReqProfession.getEnum(ProfessionId::parse, null));
 
 		attributes = AttributesBuilder.attachCondition(attributes, professionCondition);
 		attributes = AttributesBuilder.attachSource(attributes, new ItemSetSource(itemSet, numPieces));

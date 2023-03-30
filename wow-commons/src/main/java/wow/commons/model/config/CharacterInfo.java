@@ -1,9 +1,9 @@
 package wow.commons.model.config;
 
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.model.talents.TalentId;
 
 /**
@@ -13,13 +13,13 @@ import wow.commons.model.talents.TalentId;
 public interface CharacterInfo {
 	int getLevel();
 
-	CharacterClass getCharacterClass();
+	CharacterClassId getCharacterClassId();
 
-	Race getRace();
+	RaceId getRaceId();
 
-	boolean hasProfession(Profession profession);
+	boolean hasProfession(ProfessionId professionId);
 
-	boolean hasProfessionSpecialization(ProfessionSpecialization specialization);
+	boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId);
 
 	boolean hasTalent(TalentId talentId);
 }

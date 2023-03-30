@@ -1,6 +1,6 @@
 package wow.scraper.repository;
 
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
 
@@ -13,11 +13,11 @@ import java.util.Optional;
  * Date: 2022-11-15
  */
 public interface ItemDetailRepository {
-	boolean hasItemDetail(GameVersion gameVersion, WowheadItemCategory category, int itemId);
+	boolean hasItemDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId);
 
-	Optional<JsonItemDetailsAndTooltip> getDetail(GameVersion gameVersion, WowheadItemCategory category, int itemId) throws IOException;
+	Optional<JsonItemDetailsAndTooltip> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) throws IOException;
 
-	void saveItemDetail(GameVersion gameVersion, WowheadItemCategory category, int itemId, JsonItemDetailsAndTooltip detailsAndTooltip) throws IOException;
+	void saveItemDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId, JsonItemDetailsAndTooltip detailsAndTooltip) throws IOException;
 
-	List<Integer> getItemIds(GameVersion gameVersion, WowheadItemCategory category);
+	List<Integer> getItemIds(GameVersionId gameVersion, WowheadItemCategory category);
 }

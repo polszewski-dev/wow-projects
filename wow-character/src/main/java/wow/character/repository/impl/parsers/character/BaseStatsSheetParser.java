@@ -2,8 +2,8 @@ package wow.character.repository.impl.parsers.character;
 
 import wow.character.model.character.BaseStatInfo;
 import wow.character.repository.impl.CharacterRepositoryImpl;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
@@ -44,8 +44,8 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 
 	private BaseStatInfo getBaseStatInfo() {
 		var level = colLevel.getInteger();
-		var characterClass = colClass.getEnum(CharacterClass::parse);
-		var race = Race.parse(colRace.getString());
+		var characterClass = colClass.getEnum(CharacterClassId::parse);
+		var race = RaceId.parse(colRace.getString());
 		var timeRestriction = getTimeRestriction();
 		var baseStr = colBaseStr.getInteger();
 		var baseAgi = colBaseAgi.getInteger();

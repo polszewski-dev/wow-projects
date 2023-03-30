@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.pve.GameVersion.TBC;
+import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.ZoneType.RAID;
 
 /**
@@ -86,6 +86,6 @@ class PveRepositoryTest extends RepositoryTest {
 
 		assertThat(faction.getNo()).isEqualTo(18);
 		assertThat(faction.getName()).isEqualTo("Netherwing");
-		assertThat(faction.getPhase()).isEqualTo(Phase.TBC_P3);
+		assertThat(faction.getPhaseId()).isEqualTo(PhaseId.TBC_P3);
 	}
 }

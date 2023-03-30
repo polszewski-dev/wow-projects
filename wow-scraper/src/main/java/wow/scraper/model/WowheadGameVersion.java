@@ -2,7 +2,7 @@ package wow.scraper.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 
 import java.util.stream.Stream;
 
@@ -13,12 +13,12 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Getter
 public enum WowheadGameVersion {
-	VANILLA(0, GameVersion.VANILLA),
-	TBC(1, GameVersion.TBC),
-	WOTLK(2, GameVersion.WOTLK);
+	VANILLA(0, GameVersionId.VANILLA),
+	TBC(1, GameVersionId.TBC),
+	WOTLK(2, GameVersionId.WOTLK);
 
 	private final int code;
-	private final GameVersion gameVersion;
+	private final GameVersionId gameVersion;
 
 	public static WowheadGameVersion fromCode(int code) {
 		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElseThrow();

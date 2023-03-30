@@ -10,9 +10,9 @@ import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.repository.CharacterRepository;
 import wow.character.repository.impl.parsers.character.CharacterExcelParser;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.ExcelRepository;
 
 import javax.annotation.PostConstruct;
@@ -37,21 +37,21 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 	private String xlsFilePath;
 
 	@Override
-	public Optional<BaseStatInfo> getBaseStats(CharacterClass characterClass, Race race, int level, Phase phase) {
-		String key = getBaseStatInfoKey(characterClass, race, level);
-		return getUnique(baseStatInfos, key, phase);
+	public Optional<BaseStatInfo> getBaseStats(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
+		String key = getBaseStatInfoKey(characterClassId, raceId, level);
+		return getUnique(baseStatInfos, key, phaseId);
 	}
 
 	@Override
-	public Optional<CombatRatingInfo> getCombatRatings(int level, Phase phase) {
+	public Optional<CombatRatingInfo> getCombatRatings(int level, PhaseId phaseId) {
 		String key = getCombatRatingInfoKey(level);
-		return getUnique(combatRatingInfos, key, phase);
+		return getUnique(combatRatingInfos, key, phaseId);
 	}
 
 	@Override
-	public Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClass characterClass, int level, Phase phase) {
-		String key = getBuildTemplateKey(buildId, characterClass, level);
-		return getUnique(buildTemplateByKey, key, phase);
+	public Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClassId characterClassId, int level, PhaseId phaseId) {
+		String key = getBuildTemplateKey(buildId, characterClassId, level);
+		return getUnique(buildTemplateByKey, key, phaseId);
 	}
 
 	@PostConstruct
@@ -61,7 +61,7 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 	}
 
 	public void addBaseStatInfo(BaseStatInfo baseStatInfo) {
-		String key = getBaseStatInfoKey(baseStatInfo.getCharacterClass(), baseStatInfo.getRace(), baseStatInfo.getLevel());
+		String key = getBaseStatInfoKey(baseStatInfo.getCharacterClassId(), baseStatInfo.getRaceId(), baseStatInfo.getLevel());
 		addEntry(baseStatInfos, key, baseStatInfo);
 	}
 
@@ -71,19 +71,19 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 	}
 
 	public void addBuildTemplate(BuildTemplate buildTemplate) {
-		String key = getBuildTemplateKey(buildTemplate.getBuildId(), buildTemplate.getCharacterClass(), buildTemplate.getLevel());
+		String key = getBuildTemplateKey(buildTemplate.getBuildId(), buildTemplate.getCharacterClassId(), buildTemplate.getLevel());
 		addEntry(buildTemplateByKey, key, buildTemplate);
 	}
 
-	private static String getBaseStatInfoKey(CharacterClass characterClass, Race race, int level) {
-		return characterClass + "#" + race + "#" + level;
+	private static String getBaseStatInfoKey(CharacterClassId characterClassId, RaceId raceId, int level) {
+		return characterClassId + "#" + raceId + "#" + level;
 	}
 
 	private static String getCombatRatingInfoKey(int level) {
 		return level + "";
 	}
 
-	private static String getBuildTemplateKey(BuildId buildId, CharacterClass characterClass, int level) {
-		return buildId + "#" + characterClass + "#" + level;
+	private static String getBuildTemplateKey(BuildId buildId, CharacterClassId characterClassId, int level) {
+		return buildId + "#" + characterClassId + "#" + level;
 	}
 }

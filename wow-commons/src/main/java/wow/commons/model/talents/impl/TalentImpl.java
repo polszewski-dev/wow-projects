@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.model.attributes.complex.special.sources.TalentSource;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -36,8 +36,8 @@ public class TalentImpl extends ConfigurationElementWithAttributesImpl<TalentIdA
 	}
 
 	@Override
-	public CharacterClass getCharacterClass() {
-		return CollectionUtil.getUniqueResult(getCharacterRestriction().getCharacterClasses()).orElseThrow();
+	public CharacterClassId getCharacterClass() {
+		return CollectionUtil.getUniqueResult(getCharacterRestriction().getCharacterClassIds()).orElseThrow();
 	}
 
 	@Override

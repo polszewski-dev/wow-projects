@@ -3,8 +3,8 @@ package wow.commons.model.attributes;
 import wow.commons.model.attributes.condition.*;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentTree;
@@ -36,12 +36,12 @@ public interface AttributeCondition {
 		return creatureType != null ? CreatureTypeCondition.of(creatureType) : EMPTY;
 	}
 
-	static AttributeCondition of(Profession profession) {
-		return profession != null ? ProfessionCondition.of(profession) : EMPTY;
+	static AttributeCondition of(ProfessionId professionId) {
+		return professionId != null ? ProfessionCondition.of(professionId) : EMPTY;
 	}
 
-	static AttributeCondition of(ProfessionSpecialization specialization) {
-		return specialization != null ? ProfessionSpecCondition.of(specialization) : EMPTY;
+	static AttributeCondition of(ProfessionSpecializationId specializationId) {
+		return specializationId != null ? ProfessionSpecCondition.of(specializationId) : EMPTY;
 	}
 
 	default boolean isEmpty() {

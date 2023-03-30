@@ -31,7 +31,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getItem() {
-		Item item = underTest.getItem(34364, character.getPhase());
+		Item item = underTest.getItem(34364, character.getPhaseId());
 		assertThat(item.getId()).isEqualTo(34364);
 	}
 

@@ -14,8 +14,8 @@ import lombok.Getter;
 public class Faction {
 	private final int no;
 	private final String name;
-	private final GameVersion version;
-	private final Phase phase;
+	private final GameVersionId version;
+	private final PhaseId phaseId;
 
 	@Override
 	public String toString() {

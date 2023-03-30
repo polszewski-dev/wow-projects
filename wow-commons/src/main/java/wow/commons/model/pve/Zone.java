@@ -17,7 +17,7 @@ public class Zone {
 	private final int id;
 	private final String name;
 	private final String shortName;
-	private final GameVersion version;
+	private final GameVersionId version;
 	private final ZoneType zoneType;
 	private final int partySize;
 	private List<Boss> bosses;

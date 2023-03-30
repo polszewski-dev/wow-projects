@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
@@ -50,58 +50,58 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 	private String itemDataXlsFilePath;
 
 	@Override
-	public Optional<Item> getItem(int itemId, Phase phase) {
-		return getUnique(itemById, itemId, phase);
+	public Optional<Item> getItem(int itemId, PhaseId phaseId) {
+		return getUnique(itemById, itemId, phaseId);
 	}
 
 	@Override
-	public Optional<Item> getItem(String name, Phase phase) {
-		return getUnique(itemByName, name, phase);
+	public Optional<Item> getItem(String name, PhaseId phaseId) {
+		return getUnique(itemByName, name, phaseId);
 	}
 
 	@Override
-	public List<Item> getItemsBySlot(ItemSlot itemSlot, Phase phase) {
-		return getList(itemBySlot, itemSlot, phase);
+	public List<Item> getItemsBySlot(ItemSlot itemSlot, PhaseId phaseId) {
+		return getList(itemBySlot, itemSlot, phaseId);
 	}
 
 	@Override
-	public Optional<ItemSet> getItemSet(String name, Phase phase) {
-		return getUnique(itemSetByName, name, phase);
+	public Optional<ItemSet> getItemSet(String name, PhaseId phaseId) {
+		return getUnique(itemSetByName, name, phaseId);
 	}
 
 	@Override
-	public Optional<Enchant> getEnchant(int enchantId, Phase phase) {
-		return getUnique(enchantById, enchantId, phase);
+	public Optional<Enchant> getEnchant(int enchantId, PhaseId phaseId) {
+		return getUnique(enchantById, enchantId, phaseId);
 	}
 
 	@Override
-	public Optional<Enchant> getEnchant(String name, Phase phase) {
-		return getUnique(enchantByName, name, phase);
+	public Optional<Enchant> getEnchant(String name, PhaseId phaseId) {
+		return getUnique(enchantByName, name, phaseId);
 	}
 
 	@Override
-	public List<Enchant> getEnchants(ItemType itemType, Phase phase) {
-		return getList(enchantByItemType, itemType, phase);
+	public List<Enchant> getEnchants(ItemType itemType, PhaseId phaseId) {
+		return getList(enchantByItemType, itemType, phaseId);
 	}
 
 	@Override
-	public Optional<Gem> getGem(int gemId, Phase phase) {
-		return getUnique(gemById, gemId, phase);
+	public Optional<Gem> getGem(int gemId, PhaseId phaseId) {
+		return getUnique(gemById, gemId, phaseId);
 	}
 
 	@Override
-	public Optional<Gem> getGem(String name, Phase phase) {
-		return getUnique(gemByName, name, phase);
+	public Optional<Gem> getGem(String name, PhaseId phaseId) {
+		return getUnique(gemByName, name, phaseId);
 	}
 
 	@Override
-	public List<Gem> getGems(SocketType socketType, Phase phase) {
-		return getList(gemBySocketType, socketType, phase);
+	public List<Gem> getGems(SocketType socketType, PhaseId phaseId) {
+		return getList(gemBySocketType, socketType, phaseId);
 	}
 
 	@Override
-	public Optional<TradedItem> getTradedItem(int tradedItemId, Phase phase) {
-		return getUnique(tradedItemById, tradedItemId, phase);
+	public Optional<TradedItem> getTradedItem(int tradedItemId, PhaseId phaseId) {
+		return getUnique(tradedItemById, tradedItemId, phaseId);
 	}
 
 	@PostConstruct

@@ -1,8 +1,8 @@
 package wow.character.model.character;
 
 import lombok.Getter;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
 
 /**
  * User: POlszewski
@@ -10,13 +10,13 @@ import wow.commons.model.professions.ProfessionSpecialization;
  */
 @Getter
 public class CharacterProfession {
-	private final Profession profession;
-	private final ProfessionSpecialization specialization;
+	private final ProfessionId professionId;
+	private final ProfessionSpecializationId specializationId;
 
-	public CharacterProfession(Profession profession, ProfessionSpecialization specialization) {
-		this.profession = profession;
-		this.specialization = specialization;
-		if (specialization != null && specialization.getProfession() != profession) {
+	public CharacterProfession(ProfessionId professionId, ProfessionSpecializationId specializationId) {
+		this.professionId = professionId;
+		this.specializationId = specializationId;
+		if (specializationId != null && specializationId.getProfessionId() != professionId) {
 			throw new IllegalArgumentException("Specialization doesn't match the profession");
 		}
 	}

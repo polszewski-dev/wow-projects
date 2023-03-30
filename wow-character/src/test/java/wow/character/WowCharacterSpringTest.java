@@ -16,11 +16,11 @@ import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -34,13 +34,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static wow.character.model.build.BuildId.DESTRO_SHADOW;
-import static wow.commons.model.character.CharacterClass.WARLOCK;
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
-import static wow.commons.model.character.Race.ORC;
-import static wow.commons.model.professions.Profession.ENCHANTING;
-import static wow.commons.model.professions.Profession.TAILORING;
-import static wow.commons.model.professions.ProfessionSpecialization.SHADOWEAVE_TAILORING;
-import static wow.commons.model.pve.Phase.TBC_P5;
+import static wow.commons.model.character.RaceId.ORC;
+import static wow.commons.model.professions.ProfessionId.ENCHANTING;
+import static wow.commons.model.professions.ProfessionId.TAILORING;
+import static wow.commons.model.professions.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.talents.TalentId.*;
 
 /**
@@ -185,11 +185,11 @@ public abstract class WowCharacterSpringTest {
 		return character;
 	}
 
-	protected static final CharacterClass CHARACTER_CLASS = WARLOCK;
-	protected static final Race RACE = ORC;
+	protected static final CharacterClassId CHARACTER_CLASS = WARLOCK;
+	protected static final RaceId RACE = ORC;
 	protected static final BuildId BUILD_ID = DESTRO_SHADOW;
-	protected static final Phase PHASE = TBC_P5;
-	protected static final int LEVEL = PHASE.getGameVersion().getMaxLevel();
+	protected static final PhaseId PHASE = TBC_P5;
+	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
 
 	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	protected static final Offset<Double> PRECISION = Offset.offset(0.01);

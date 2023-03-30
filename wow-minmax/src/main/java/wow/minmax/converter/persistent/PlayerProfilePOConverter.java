@@ -49,13 +49,13 @@ public class PlayerProfilePOConverter implements Converter<PlayerProfile, Player
 		PlayerProfile playerProfile = playerProfileService.createTemporaryPlayerProfile(
 				value.getProfileId(),
 				value.getProfileName(),
-				value.getCharacterClass(),
+				value.getCharacterClassId(),
 				value.getRace(),
 				value.getLevel(),
 				value.getBuildId(),
 				CharacterProfessions.of(characterProfessionPOConverter.convertBackList(value.getProfessions())),
 				value.getEnemyType(),
-				value.getPhase()
+				value.getPhaseId()
 		);
 
 		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment(), params));

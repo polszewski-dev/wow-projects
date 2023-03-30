@@ -5,8 +5,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -37,8 +37,8 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	private String xlsFilePath;
 
 	@Override
-	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level, Phase phase) {
-		List<Spell> spells = getList(spellById, spellId, phase);
+	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level, PhaseId phaseId) {
+		List<Spell> spells = getList(spellById, spellId, phaseId);
 
 		if (spells.isEmpty()) {
 			return Optional.empty();
@@ -56,32 +56,32 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	}
 
 	@Override
-	public Optional<Talent> getTalent(CharacterClass characterClass, TalentId talentId, int rank, Phase phase) {
-		String key = getTalentKey(characterClass, talentId, rank);
+	public Optional<Talent> getTalent(CharacterClassId characterClassId, TalentId talentId, int rank, PhaseId phaseId) {
+		String key = getTalentKey(characterClassId, talentId, rank);
 
-		return getUnique(talentByClassByIdByRank, key, phase);
+		return getUnique(talentByClassByIdByRank, key, phaseId);
 	}
 
 	@Override
-	public Optional<Talent> getTalent(CharacterClass characterClass, int talentCalculatorPosition, int rank, Phase phase) {
-		String key = getTalentKey(characterClass, talentCalculatorPosition, rank);
+	public Optional<Talent> getTalent(CharacterClassId characterClassId, int talentCalculatorPosition, int rank, PhaseId phaseId) {
+		String key = getTalentKey(characterClassId, talentCalculatorPosition, rank);
 
-		return getUnique(talentByClassByCalcPosByRank, key, phase);
+		return getUnique(talentByClassByCalcPosByRank, key, phaseId);
 	}
 
 	@Override
-	public Optional<Buff> getBuff(int buffId, Phase phase) {
-		return getUnique(buffsById, buffId, phase);
+	public Optional<Buff> getBuff(int buffId, PhaseId phaseId) {
+		return getUnique(buffsById, buffId, phaseId);
 	}
 
 	@Override
-	public Optional<Buff> getBuff(String buffName, Phase phase) {
-		return getUnique(buffsByName, buffName, phase);
+	public Optional<Buff> getBuff(String buffName, PhaseId phaseId) {
+		return getUnique(buffsByName, buffName, phaseId);
 	}
 
 	@Override
-	public List<Buff> getBuffs(Phase phase) {
-		return getList(buffs, phase);
+	public List<Buff> getBuffs(PhaseId phaseId) {
+		return getList(buffs, phaseId);
 	}
 
 	@PostConstruct
@@ -90,12 +90,12 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		spellExcelParser.readFromXls();
 	}
 
-	private String getTalentKey(CharacterClass characterClass, TalentId talentId, int rank) {
-		return characterClass + "#" + talentId + "#" + rank;
+	private String getTalentKey(CharacterClassId characterClassId, TalentId talentId, int rank) {
+		return characterClassId + "#" + talentId + "#" + rank;
 	}
 
-	private String getTalentKey(CharacterClass characterClass, int talentCalculatorPosition, int rank) {
-		return characterClass + "#" + talentCalculatorPosition + "#" + rank;
+	private String getTalentKey(CharacterClassId characterClassId, int talentCalculatorPosition, int rank) {
+		return characterClassId + "#" + talentCalculatorPosition + "#" + rank;
 	}
 
 	public void addSpell(Spell spell) {

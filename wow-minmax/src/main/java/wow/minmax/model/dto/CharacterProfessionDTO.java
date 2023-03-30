@@ -3,8 +3,8 @@ package wow.minmax.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
 
 /**
  * User: POlszewski
@@ -14,6 +14,6 @@ import wow.commons.model.professions.ProfessionSpecialization;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CharacterProfessionDTO {
-	private Profession profession;
-	private ProfessionSpecialization specialization;
+	private ProfessionId profession;
+	private ProfessionSpecializationId specialization;
 }

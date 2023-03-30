@@ -13,15 +13,15 @@ import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Item;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.TalentId;
@@ -52,11 +52,11 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 
 	@Override
 	public PlayerProfile copy() {
-		return copy(profileId, profileName, character.getPhase());
+		return copy(profileId, profileName, character.getPhaseId());
 	}
 
-	public PlayerProfile copy(UUID profileId, String profileName, Phase phase) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.copy(phase));
+	public PlayerProfile copy(UUID profileId, String profileName, PhaseId phaseId) {
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.copy(phaseId));
 		copy.lastModified = this.lastModified;
 		return copy;
 	}
@@ -70,13 +70,13 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		return new PlayerProfileInfo(
 				profileId,
 				profileName,
-				character.getCharacterClass(),
-				character.getRace(),
+				character.getCharacterClassId(),
+				character.getRaceId(),
 				character.getLevel(),
 				character.getEnemyType(),
 				character.getBuildId(),
 				character.getProfessions(),
-				character.getPhase(),
+				character.getPhaseId(),
 				lastModified
 		);
 	}
@@ -87,12 +87,12 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		return character.getStats();
 	}
 
-	public CharacterClass getCharacterClass() {
-		return character.getCharacterClass();
+	public CharacterClassId getCharacterClass() {
+		return character.getCharacterClassId();
 	}
 
-	public Race getRace() {
-		return character.getRace();
+	public RaceId getRace() {
+		return character.getRaceId();
 	}
 
 	public int getLevel() {
@@ -103,8 +103,8 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		return character.getProfessions();
 	}
 
-	public Phase getPhase() {
-		return character.getPhase();
+	public PhaseId getPhase() {
+		return character.getPhaseId();
 	}
 
 	public CombatRatingInfo getCombatRatingInfo() {
@@ -131,8 +131,8 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		return character.getSide();
 	}
 
-	public GameVersion getGameVersion() {
-		return character.getGameVersion();
+	public GameVersionId getGameVersion() {
+		return character.getGameVersionId();
 	}
 
 	public void equip(EquippableItem item, ItemSlot slot) {
@@ -171,12 +171,12 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		character.resetBuffs();
 	}
 
-	public boolean hasProfession(Profession profession) {
-		return character.hasProfession(profession);
+	public boolean hasProfession(ProfessionId professionId) {
+		return character.hasProfession(professionId);
 	}
 
-	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
-		return character.hasProfessionSpecialization(specialization);
+	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
+		return character.hasProfessionSpecialization(specializationId);
 	}
 
 	public BuildId getBuildId() {

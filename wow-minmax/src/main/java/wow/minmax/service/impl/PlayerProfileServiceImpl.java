@@ -13,11 +13,11 @@ import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Item;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
@@ -60,13 +60,13 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		PlayerProfile playerProfile = createTemporaryPlayerProfile(
 				UUID.randomUUID(),
 				playerProfileInfo.getProfileName(),
-				playerProfileInfo.getCharacterClass(),
-				playerProfileInfo.getRace(),
+				playerProfileInfo.getCharacterClassId(),
+				playerProfileInfo.getRaceId(),
 				playerProfileInfo.getLevel(),
 				playerProfileInfo.getBuildId(),
 				playerProfileInfo.getProfessions(),
 				playerProfileInfo.getEnemyType(),
-				playerProfileInfo.getPhase()
+				playerProfileInfo.getPhaseId()
 		);
 
 		saveProfile(playerProfile);
@@ -75,9 +75,9 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile createTemporaryPlayerProfile(
-			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, CharacterProfessions professions, CreatureType enemyType, Phase phase
+			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, CharacterProfessions professions, CreatureType enemyType, PhaseId phaseId
 	) {
-		Character character = characterService.createCharacter(characterClass, race, level, buildId, professions, phase);
+		Character character = characterService.createCharacter(characterClassId, raceId, level, buildId, professions, phaseId);
 		Enemy enemy = characterService.createEnemy(enemyType);
 
 		character.setTargetEnemy(enemy);
@@ -167,7 +167,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private PlayerProfile getPlayerProfile(PlayerProfilePO profile) {
-		var converterParams = createParams(profile.getPhase(), this);
+		var converterParams = createParams(profile.getPhaseId(), this);
 		return playerProfilePOConverter.convertBack(profile, converterParams);
 	}
 }

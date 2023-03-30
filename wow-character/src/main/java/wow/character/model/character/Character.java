@@ -13,16 +13,16 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.item.Item;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.TalentId;
@@ -39,11 +39,11 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 public class Character implements AttributeCollection, CharacterInfo, Copyable<Character> {
-	private final CharacterClass characterClass;
-	private final Race race;
+	private final CharacterClassId characterClassId;
+	private final RaceId raceId;
 	private final int level;
 	private final CharacterProfessions professions;
-	private final Phase phase;
+	private final PhaseId phaseId;
 	private final Build build;
 	private final Equipment equipment;
 	private final Buffs buffs;
@@ -52,12 +52,12 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	private Enemy targetEnemy;
 
-	public Character(CharacterClass characterClass, Race race, int level, CharacterProfessions professions, Phase phase, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
-		this.characterClass = characterClass;
-		this.race = race;
+	public Character(CharacterClassId characterClassId, RaceId raceId, int level, CharacterProfessions professions, PhaseId phaseId, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+		this.characterClassId = characterClassId;
+		this.raceId = raceId;
 		this.level = level;
 		this.professions = professions;
-		this.phase = phase;
+		this.phaseId = phaseId;
 		this.build = new Build();
 		this.equipment = new Equipment();
 		this.buffs = new Buffs();
@@ -67,16 +67,16 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	@Override
 	public Character copy() {
-		return copy(phase);
+		return copy(phaseId);
 	}
 
-	public Character copy(Phase phase) {
+	public Character copy(PhaseId phaseId) {
 		return new Character(
-				characterClass,
-				race,
+				characterClassId,
+				raceId,
 				level,
 				professions,
-				phase,
+				phaseId,
 				build.copy(),
 				equipment.copy(),
 				buffs.copy(),
@@ -95,11 +95,11 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	}
 
 	public Side getSide() {
-		return race.getSide();
+		return raceId.getSide();
 	}
 
-	public GameVersion getGameVersion() {
-		return phase.getGameVersion();
+	public GameVersionId getGameVersionId() {
+		return phaseId.getGameVersionId();
 	}
 
 	public void equip(EquippableItem item, ItemSlot slot) {
@@ -119,7 +119,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	}
 
 	public boolean canEquip(ItemSlot itemSlot, Item item) {
-		return characterClass.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
+		return characterClassId.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
 	}
 
 	public void setBuffs(BuffSetId... buffSetIds) {
@@ -155,13 +155,13 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	// professions
 
 	@Override
-	public boolean hasProfession(Profession profession) {
-		return professions.hasProfession(profession);
+	public boolean hasProfession(ProfessionId professionId) {
+		return professions.hasProfession(professionId);
 	}
 
 	@Override
-	public boolean hasProfessionSpecialization(ProfessionSpecialization specialization) {
-		return professions.hasProfessionSpecialization(specialization);
+	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
+		return professions.hasProfessionSpecialization(specializationId);
 	}
 
 	// build

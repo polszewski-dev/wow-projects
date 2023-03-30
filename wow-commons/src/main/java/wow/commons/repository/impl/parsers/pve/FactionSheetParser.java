@@ -1,8 +1,8 @@
 package wow.commons.repository.impl.parsers.pve;
 
 import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
@@ -37,8 +37,8 @@ public class FactionSheetParser extends WowExcelSheetParser {
 	private Faction getFaction() {
 		var no = colNo.getInteger();
 		var name = colName.getString();
-		var version = GameVersion.parse(colVersion.getString());
-		var phase = colPhase.getEnum(Phase::parse);
+		var version = GameVersionId.parse(colVersion.getString());
+		var phase = colPhase.getEnum(PhaseId::parse);
 
 		return new Faction(no, name, version, phase);
 	}

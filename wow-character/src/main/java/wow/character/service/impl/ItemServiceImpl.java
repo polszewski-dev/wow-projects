@@ -16,7 +16,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.ItemRepository;
 
 import java.util.List;
@@ -34,23 +34,23 @@ public class ItemServiceImpl implements ItemService {
 	private final List<PveRoleStatClassifier> pveRoleStatClassifiers;
 
 	@Override
-	public Item getItem(int itemId, Phase phase) {
-		return itemRepository.getItem(itemId, phase).orElseThrow();
+	public Item getItem(int itemId, PhaseId phaseId) {
+		return itemRepository.getItem(itemId, phaseId).orElseThrow();
 	}
 
 	@Override
-	public Enchant getEnchant(int enchantId, Phase phase) {
-		return itemRepository.getEnchant(enchantId, phase).orElseThrow();
+	public Enchant getEnchant(int enchantId, PhaseId phaseId) {
+		return itemRepository.getEnchant(enchantId, phaseId).orElseThrow();
 	}
 
 	@Override
-	public Gem getGem(int gemId, Phase phase) {
-		return itemRepository.getGem(gemId, phase).orElseThrow();
+	public Gem getGem(int gemId, PhaseId phaseId) {
+		return itemRepository.getGem(gemId, phaseId).orElseThrow();
 	}
 
 	@Override
 	public List<Item> getItemsBySlot(Character character, ItemSlot itemSlot) {
-		return itemRepository.getItemsBySlot(itemSlot, character.getPhase()).stream()
+		return itemRepository.getItemsBySlot(itemSlot, character.getPhaseId()).stream()
 				.filter(item -> character.canEquip(itemSlot, item))
 				.filter(this::meetsConfigFilter)
 				.filter(item -> item.isAvailableTo(character))
@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Enchant> getEnchants(Character character, ItemType itemType) {
-		return itemRepository.getEnchants(itemType, character.getPhase()).stream()
+		return itemRepository.getEnchants(itemType, character.getPhaseId()).stream()
 				.filter(enchant -> enchant.isAvailableTo(character))
 				.filter(enchant -> getStatClassifier(character).hasStatsSuitableForRole(enchant, itemType, character))
 				.toList();
@@ -80,7 +80,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Gem> getGems(Character character, SocketType socketType, boolean nonUniqueOnly) {
-		return itemRepository.getGems(socketType, character.getPhase()).stream()
+		return itemRepository.getGems(socketType, character.getPhaseId()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
 				.filter(gem -> getStatClassifier(character).hasStatsSuitableForRole(gem, character))

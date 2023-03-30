@@ -1,6 +1,6 @@
 package wow.minmax.converter.dto;
 
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.Map;
 
@@ -11,12 +11,12 @@ import java.util.Map;
 public final class DtoConverterParams {
 	public static final String PHASE = "phase";
 
-	public static Map<String, Object> createParams(Phase phase) {
-		return Map.of(PHASE, phase);
+	public static Map<String, Object> createParams(PhaseId phaseId) {
+		return Map.of(PHASE, phaseId);
 	}
 
-	public static Phase getPhase(Map<String, Object> params) {
-		return (Phase) params.get(PHASE);
+	public static PhaseId getPhase(Map<String, Object> params) {
+		return (PhaseId) params.get(PHASE);
 	}
 
 	private DtoConverterParams() {}

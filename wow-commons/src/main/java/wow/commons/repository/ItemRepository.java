@@ -3,7 +3,7 @@ package wow.commons.repository;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,19 +13,19 @@ import java.util.Optional;
  * Date: 2021-03-02
  */
 public interface ItemRepository {
-	Optional<Item> getItem(int itemId, Phase phase);
-	Optional<Item> getItem(String name, Phase phase);
-	List<Item> getItemsBySlot(ItemSlot itemSlot, Phase phase);
+	Optional<Item> getItem(int itemId, PhaseId phaseId);
+	Optional<Item> getItem(String name, PhaseId phaseId);
+	List<Item> getItemsBySlot(ItemSlot itemSlot, PhaseId phaseId);
 
-	Optional<ItemSet> getItemSet(String name, Phase phase);
+	Optional<ItemSet> getItemSet(String name, PhaseId phaseId);
 
-	Optional<Enchant> getEnchant(int enchantId, Phase phase);
-	Optional<Enchant> getEnchant(String name, Phase phase);
-	List<Enchant> getEnchants(ItemType itemType, Phase phase);
+	Optional<Enchant> getEnchant(int enchantId, PhaseId phaseId);
+	Optional<Enchant> getEnchant(String name, PhaseId phaseId);
+	List<Enchant> getEnchants(ItemType itemType, PhaseId phaseId);
 
-	Optional<Gem> getGem(int gemId, Phase phase);
-	Optional<Gem> getGem(String name, Phase phase);
-	List<Gem> getGems(SocketType socketType, Phase phase);
+	Optional<Gem> getGem(int gemId, PhaseId phaseId);
+	Optional<Gem> getGem(String name, PhaseId phaseId);
+	List<Gem> getGems(SocketType socketType, PhaseId phaseId);
 
-	Optional<TradedItem> getTradedItem(int tradedItemId, Phase phase);
+	Optional<TradedItem> getTradedItem(int tradedItemId, PhaseId phaseId);
 }

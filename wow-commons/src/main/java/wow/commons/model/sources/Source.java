@@ -1,7 +1,7 @@
 package wow.commons.model.sources;
 
 import wow.commons.model.item.TradedItem;
-import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Zone;
@@ -31,7 +31,7 @@ public abstract class Source {
 		return null;
 	}
 
-	public Profession getProfession() { return null; }
+	public ProfessionId getProfessionId() { return null; }
 
 	public boolean isTraded() {
 		return false;

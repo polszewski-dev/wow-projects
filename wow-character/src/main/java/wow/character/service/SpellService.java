@@ -2,7 +2,7 @@ package wow.character.service;
 
 import wow.character.model.character.Character;
 import wow.commons.model.buffs.Buff;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
@@ -18,7 +18,7 @@ public interface SpellService {
 
 	List<Spell> getSpellHighestRanks(List<SpellId> spellIds, Character character);
 
-	Buff getBuff(int buffId, Phase phase);
+	Buff getBuff(int buffId, PhaseId phaseId);
 
 	List<Buff> getBuffs(List<String> buffNames, Character character);
 

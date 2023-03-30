@@ -21,10 +21,10 @@ import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.categorization.ItemRarity.EPIC;
 import static wow.commons.model.categorization.ItemType.CHEST;
 import static wow.commons.model.categorization.ItemType.TOKEN;
-import static wow.commons.model.character.CharacterClass.*;
-import static wow.commons.model.professions.Profession.TAILORING;
-import static wow.commons.model.pve.Phase.TBC_P3;
-import static wow.commons.model.pve.Phase.TBC_P5;
+import static wow.commons.model.character.CharacterClassId.*;
+import static wow.commons.model.professions.ProfessionId.TAILORING;
+import static wow.commons.model.pve.PhaseId.TBC_P3;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
  * User: POlszewski
@@ -73,9 +73,9 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(item.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(item.isUnique()).isFalse();
 		assertThat(item.getItemLevel()).isEqualTo(159);
-		assertThat(item.getTimeRestriction().getPhase()).isEqualTo(TBC_P5);
+		assertThat(item.getTimeRestriction().getPhaseId()).isEqualTo(TBC_P5);
 		assertThat(item.getCharacterRestriction().getLevel()).isEqualTo(70);
-		assertThat(item.getCharacterRestriction().getProfessionRestriction().getProfession()).isEqualTo(TAILORING);
+		assertThat(item.getCharacterRestriction().getProfessionRestriction().getProfessionId()).isEqualTo(TAILORING);
 		assertThat(item.getCharacterRestriction().getProfessionRestriction().getLevel()).isEqualTo(350);
 		assertThat(item.getIcon()).isEqualTo("inv_chest_cloth_02");
 		assertThat(item.getTooltip()).isNotBlank();
@@ -166,7 +166,7 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(gem.isUnique()).isFalse();
 		assertThat(gem.getItemLevel()).isEqualTo(100);
-		assertThat(gem.getTimeRestriction().getPhase()).isEqualTo(TBC_P5);
+		assertThat(gem.getTimeRestriction().getPhaseId()).isEqualTo(TBC_P5);
 		assertThat(gem.getCharacterRestriction().getLevel()).isNull();
 		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
 		assertThat(gem.getTooltip()).isNotBlank();
@@ -243,8 +243,8 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(tradedItem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(tradedItem.isUnique()).isFalse();
 		assertThat(tradedItem.getItemLevel()).isEqualTo(70);
-		assertThat(tradedItem.getTimeRestriction().getPhase()).isEqualTo(TBC_P3);
+		assertThat(tradedItem.getTimeRestriction().getPhaseId()).isEqualTo(TBC_P3);
 		assertThat(tradedItem.getCharacterRestriction().getLevel()).isEqualTo(70);
-		assertThat(tradedItem.getCharacterRestriction().getCharacterClasses()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
+		assertThat(tradedItem.getCharacterRestriction().getCharacterClassIds()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
 	}
 }

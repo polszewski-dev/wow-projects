@@ -3,8 +3,8 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.Percent;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.config.TimeRestriction;
 
@@ -16,8 +16,8 @@ import wow.commons.model.config.TimeRestriction;
 @Getter
 public class BaseStatInfo implements TimeRestricted {
 	private final int level;
-	private final CharacterClass characterClass;
-	private final Race race;
+	private final CharacterClassId characterClassId;
+	private final RaceId raceId;
 	private final TimeRestriction timeRestriction;
 	private final int baseStrength;
 	private final int baseAgility;
@@ -31,6 +31,6 @@ public class BaseStatInfo implements TimeRestricted {
 
 	@Override
 	public String toString() {
-		return String.format("%s,%s,%s", characterClass, race, level);
+		return String.format("%s,%s,%s", characterClassId, raceId, level);
 	}
 }

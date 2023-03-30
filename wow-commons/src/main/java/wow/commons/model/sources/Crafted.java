@@ -3,7 +3,7 @@ package wow.commons.model.sources;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionId;
 
 /**
  * User: POlszewski
@@ -13,7 +13,7 @@ import wow.commons.model.professions.Profession;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class Crafted extends Source {
-	private final Profession profession;
+	private final ProfessionId professionId;
 
 	@Override
 	public boolean isCrafted() {
@@ -22,6 +22,6 @@ public class Crafted extends Source {
 
 	@Override
 	public String toString() {
-		return profession != null ? profession.toString(): "Crafted";
+		return professionId != null ? professionId.toString(): "Crafted";
 	}
 }

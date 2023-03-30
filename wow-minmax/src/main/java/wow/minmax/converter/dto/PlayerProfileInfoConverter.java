@@ -22,13 +22,13 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 		return new PlayerProfileInfoDTO(
 			value.getProfileId(),
 			value.getProfileName(),
-			value.getCharacterClass(),
-			value.getRace(),
+			value.getCharacterClassId(),
+			value.getRaceId(),
 			value.getLevel(),
 			value.getEnemyType(),
 			value.getBuildId(),
 			characterProfessionConverter.convertList(value.getProfessions().getList()),
-			value.getPhase(),
+			value.getPhaseId(),
 			value.getLastModified()
 		);
 	}

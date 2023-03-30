@@ -5,10 +5,10 @@ import wow.character.model.character.CharacterProfessions;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Race;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.PhaseId;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 
@@ -25,7 +25,7 @@ public interface PlayerProfileService {
 	PlayerProfile createPlayerProfile(PlayerProfileInfo playerProfileInfo);
 
 	PlayerProfile createTemporaryPlayerProfile(
-			UUID profileId, String profileName, CharacterClass characterClass, Race race, int level, BuildId buildId, CharacterProfessions professions, CreatureType enemyType, Phase phase);
+			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, CharacterProfessions professions, CreatureType enemyType, PhaseId phaseId);
 
 	PlayerProfile getPlayerProfile(UUID profileId);
 

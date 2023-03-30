@@ -16,11 +16,11 @@ import wow.minmax.model.persistent.CharacterProfessionPO;
 public class CharacterProfessionPOConverter implements Converter<CharacterProfession, CharacterProfessionPO>, BackConverter<CharacterProfession, CharacterProfessionPO> {
 	@Override
 	public CharacterProfessionPO doConvert(CharacterProfession characterProfession) {
-		return new CharacterProfessionPO(characterProfession.getProfession(), characterProfession.getSpecialization());
+		return new CharacterProfessionPO(characterProfession.getProfessionId(), characterProfession.getSpecializationId());
 	}
 
 	@Override
 	public CharacterProfession doConvertBack(CharacterProfessionPO characterProfession) {
-		return new CharacterProfession(characterProfession.getProfession(), characterProfession.getSpecialization());
+		return new CharacterProfession(characterProfession.getProfessionId(), characterProfession.getSpecializationId());
 	}
 }

@@ -17,9 +17,9 @@ import static wow.commons.model.categorization.ItemType.*;
 import static wow.commons.model.categorization.WeaponSubType.STAFF;
 import static wow.commons.model.categorization.WeaponSubType.WAND;
 import static wow.commons.model.item.SocketType.*;
-import static wow.commons.model.professions.Profession.TAILORING;
-import static wow.commons.model.pve.GameVersion.TBC;
-import static wow.commons.model.pve.Phase.TBC_P5;
+import static wow.commons.model.professions.ProfessionId.TAILORING;
+import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
  * User: POlszewski

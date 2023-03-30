@@ -3,7 +3,7 @@ package wow.scraper.repository.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonBossDetails;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.JsonZoneDetails;
@@ -33,27 +33,27 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	private static final Pattern BOSS_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
 
 	@Override
-	public List<JsonItemDetails> fetchItemDetails(GameVersion gameVersion, String urlPart) throws IOException {
+	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) throws IOException {
 		String json = fetchAndParse(gameVersion, urlPart, ITEM_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
 	@Override
-	public List<JsonZoneDetails> fetchZoneDetails(GameVersion gameVersion, String urlPart) throws IOException {
+	public List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart) throws IOException {
 		String json = fetchAndParse(gameVersion, urlPart, ZONE_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
 	@Override
-	public List<JsonBossDetails> fetchBossDetails(GameVersion gameVersion, String urlPart) throws IOException {
+	public List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart) throws IOException {
 		String json = fetchAndParse(gameVersion, urlPart, BOSS_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
-	private String fetchAndParse(GameVersion gameVersion, String urlPart, Pattern itemListPattern) throws IOException {
+	private String fetchAndParse(GameVersionId gameVersion, String urlPart, Pattern itemListPattern) throws IOException {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 		String html = fetchPage(urlStr);
 
@@ -88,13 +88,13 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	}
 
 	@Override
-	public WowheadItemInfo fetchTooltip(GameVersion gameVersion, int itemId) throws IOException {
+	public WowheadItemInfo fetchTooltip(GameVersionId gameVersion, int itemId) throws IOException {
 		String urlStr = getTooltipUrlStr(gameVersion, itemId);
 		URL url = new URL(urlStr);
 		return MAPPER.readValue(url, WowheadItemInfo.class);
 	}
 
-	private String getRootUrlStr(GameVersion gameVersion) {
+	private String getRootUrlStr(GameVersionId gameVersion) {
 		return switch (gameVersion) {
 			case VANILLA -> "https://www.wowhead.com/classic/";
 			case TBC -> "https://www.wowhead.com/tbc/";
@@ -102,7 +102,7 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 		};
 	}
 
-	private String getTooltipUrlStr(GameVersion gameVersion, int itemId) {
+	private String getTooltipUrlStr(GameVersionId gameVersion, int itemId) {
 		String urlStr = switch (gameVersion) {
 			case VANILLA -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=4&locale=0";
 			case TBC -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=5&locale=0";

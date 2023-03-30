@@ -5,10 +5,10 @@ import wow.character.model.build.BuildTemplate;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Race;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.PhaseId;
 
 /**
  * User: POlszewski
@@ -23,7 +23,7 @@ public interface CharacterService {
 
 	Talents getTalentsFromTalentLink(String link, Character character);
 
-	Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, CharacterProfessions professions, Phase phase);
+	Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, CharacterProfessions professions, PhaseId phaseId);
 
 	Enemy createEnemy(CreatureType enemyType);
 }

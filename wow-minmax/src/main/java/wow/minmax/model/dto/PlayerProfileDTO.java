@@ -3,10 +3,10 @@ package wow.minmax.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import wow.character.model.build.PveRole;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Race;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.PhaseId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,13 +22,13 @@ public class PlayerProfileDTO {
 	private final UUID profileId;
 	private final String profileName;
 
-	private final CharacterClass characterClass;
-	private final Race race;
+	private final CharacterClassId characterClass;
+	private final RaceId race;
 	private final int level;
 	private final CreatureType enemyType;
 
 	private final PveRole role;
-	private final Phase phase;
+	private final PhaseId phase;
 
 	private EquipmentDTO equipment;
 	private List<BuffDTO> buffs;

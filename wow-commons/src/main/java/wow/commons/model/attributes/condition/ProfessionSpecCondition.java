@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.util.EnumUtil;
 
 import java.util.Map;
@@ -18,22 +18,22 @@ import java.util.Map;
 @EqualsAndHashCode
 public class ProfessionSpecCondition implements AttributeCondition {
 	@NonNull
-	private final ProfessionSpecialization specialization;
+	private final ProfessionSpecializationId specializationId;
 
-	public static ProfessionSpecCondition of(ProfessionSpecialization spec) {
+	public static ProfessionSpecCondition of(ProfessionSpecializationId spec) {
 		return CACHE.get(spec);
 	}
 
 	@Override
 	public String getConditionString() {
-		return "spec: " + specialization;
+		return "spec: " + specializationId;
 	}
 
 	@Override
 	public String toString() {
-		return specialization.toString();
+		return specializationId.toString();
 	}
 
-	private static final Map<ProfessionSpecialization, ProfessionSpecCondition> CACHE = EnumUtil.cache(
-			ProfessionSpecialization.class, ProfessionSpecialization.values(), ProfessionSpecCondition::new);
+	private static final Map<ProfessionSpecializationId, ProfessionSpecCondition> CACHE = EnumUtil.cache(
+			ProfessionSpecializationId.class, ProfessionSpecializationId.values(), ProfessionSpecCondition::new);
 }

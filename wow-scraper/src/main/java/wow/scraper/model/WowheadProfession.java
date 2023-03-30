@@ -2,7 +2,7 @@ package wow.scraper.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionId;
 
 import java.util.stream.Stream;
 
@@ -13,16 +13,16 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Getter
 public enum WowheadProfession {
-	ENCHANTING(333, Profession.ENCHANTING),
-	JEWELCRAFTING(755, Profession.JEWELCRAFTING),
-	ALCHEMY(171, Profession.ALCHEMY),
-	TAILORING(197, Profession.TAILORING),
-	LEATHERWORKING(165, Profession.LEATHERWORKING),
-	BLACKSMITHING(164, Profession.BLACKSMITHING),
-	ENGINEERING(202, Profession.ENGINEERING);
+	ENCHANTING(333, ProfessionId.ENCHANTING),
+	JEWELCRAFTING(755, ProfessionId.JEWELCRAFTING),
+	ALCHEMY(171, ProfessionId.ALCHEMY),
+	TAILORING(197, ProfessionId.TAILORING),
+	LEATHERWORKING(165, ProfessionId.LEATHERWORKING),
+	BLACKSMITHING(164, ProfessionId.BLACKSMITHING),
+	ENGINEERING(202, ProfessionId.ENGINEERING);
 
 	private final int code;
-	private final Profession profession;
+	private final ProfessionId profession;
 
 	public static WowheadProfession fromCode(int code) {
 		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElseThrow();

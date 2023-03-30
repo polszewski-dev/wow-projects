@@ -5,7 +5,7 @@ import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
 import wow.character.model.build.PveRole;
 import wow.character.repository.impl.CharacterRepositoryImpl;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spells.SpellId;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
@@ -48,7 +48,7 @@ public class BuildSheetParser extends WowExcelSheetParser {
 
 	private BuildTemplate getBuildTemplate() {
 		var buildId = colBuild.getEnum(BuildId::parse);
-		var characterClass = colReqClass.getEnum(CharacterClass::parse);
+		var characterClass = colReqClass.getEnum(CharacterClassId::parse);
 		var level = colReqLevel.getInteger();
 		var timeRestriction = getTimeRestriction();
 		var talentLink = colTalentLink.getString();

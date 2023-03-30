@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.build.BuffSetId;
 import wow.character.model.character.Character;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
 import wow.minmax.converter.dto.SpellStatsConverter;
@@ -65,7 +65,7 @@ public class StatsController {
 		result.add(convert("Items", itemStats));
 
 		Stream.of(BUFF_COMBOS)
-				.filter(x -> x.allBuffSetsArePermitted(character.getGameVersion()))
+				.filter(x -> x.allBuffSetsArePermitted(character.getGameVersionId()))
 				.forEach(x -> {
 					var stats = calculationService.getStats(character, x.buffSetIds);
 					result.add(convert(x.type, stats));
@@ -103,8 +103,8 @@ public class StatsController {
 	}
 
 	private record BuffCombo(String type, BuffSetId... buffSetIds) {
-		boolean allBuffSetsArePermitted(GameVersion gameVersion) {
-			return gameVersion == GameVersion.VANILLA || !Arrays.asList(buffSetIds).contains(WORLD_BUFFS);
+		boolean allBuffSetsArePermitted(GameVersionId gameVersionId) {
+			return gameVersionId == GameVersionId.VANILLA || !Arrays.asList(buffSetIds).contains(WORLD_BUFFS);
 		}
 	}
 

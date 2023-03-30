@@ -3,10 +3,10 @@ package wow.commons.repository.impl.parsers.items;
 import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.TradedItem;
-import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.*;
 import wow.commons.repository.ItemRepository;
@@ -24,7 +24,7 @@ import java.util.Set;
  */
 @AllArgsConstructor
 public class SourceParser {
-	private final Phase phase;
+	private final PhaseId phaseId;
 
 	private final PveRepository pveRepository;
 	private final ItemRepository itemRepository;
@@ -111,7 +111,7 @@ public class SourceParser {
 	}
 
 	private TradedItem getTradedItem(int tokenId) {
-		return itemRepository.getTradedItem(tokenId, phase).orElseThrow();
+		return itemRepository.getTradedItem(tokenId, phaseId).orElseThrow();
 	}
 
 	private void parseReputationReward(String factionName) {
@@ -120,9 +120,9 @@ public class SourceParser {
 	}
 
 	private void parseCrafted(String professionName) {
-		Profession profession = Profession.parse(professionName);
-		assertNotNull(profession, professionName);
-		result.add(new Crafted(profession));
+		ProfessionId professionId = ProfessionId.parse(professionName);
+		assertNotNull(professionId, professionName);
+		result.add(new Crafted(professionId));
 	}
 
 	private void parseQuest(String questName) {

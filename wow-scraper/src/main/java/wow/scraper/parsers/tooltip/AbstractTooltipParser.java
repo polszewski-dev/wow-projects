@@ -7,12 +7,12 @@ import wow.commons.model.Percent;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
@@ -34,7 +34,7 @@ public abstract class AbstractTooltipParser {
 	protected final StatPatternRepository statPatternRepository;
 
 	protected final JsonItemDetailsAndTooltip itemDetailsAndTooltip;
-	protected final GameVersion gameVersion;
+	protected final GameVersionId gameVersion;
 	protected List<String> lines;
 	protected int currentLineIdx;
 
@@ -44,14 +44,14 @@ public abstract class AbstractTooltipParser {
 	protected Binding binding;
 	protected boolean unique;
 	protected Integer itemLevel;
-	protected Phase phase;
+	protected PhaseId phase;
 	protected Integer requiredLevel;
-	protected List<CharacterClass> requiredClass;
-	protected List<Race> requiredRace;
+	protected List<CharacterClassId> requiredClass;
+	protected List<RaceId> requiredRace;
 	protected Side requiredSide;
-	protected Profession requiredProfession;
+	protected ProfessionId requiredProfession;
 	protected Integer requiredProfessionLevel;
-	protected ProfessionSpecialization requiredProfessionSpec;
+	protected ProfessionSpecializationId requiredProfessionSpec;
 	protected String requiredFactionName;
 	protected String requiredFactionStanding;
 	protected String droppedBy;
@@ -78,9 +78,9 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleUniqueEquipped = Rule.
 			exact("Unique-Equipped", () -> this.unique = true);
 	protected final Rule ruleClassRestriction = Rule.
-			prefix("Classes: ", x -> this.requiredClass = ParserUtil.getValues(x, CharacterClass::parse));
+			prefix("Classes: ", x -> this.requiredClass = ParserUtil.getValues(x, CharacterClassId::parse));
 	protected final Rule ruleRaceRestriction = Rule.
-			prefix("Races: ", x -> this.requiredRace = ParserUtil.getValues(x, Race::parse));
+			prefix("Races: ", x -> this.requiredRace = ParserUtil.getValues(x, RaceId::parse));
 	protected final Rule ruleAllianceRestriction = Rule.
 			exact("Requires any Alliance race", () -> this.requiredSide = Side.ALLIANCE);
 	protected final Rule ruleHordeRestriction = Rule.
@@ -104,7 +104,7 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleRightClickToRead = Rule
 			.exact("<Right Click to Read>", () -> {});
 
-	protected AbstractTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersion gameVersion, StatPatternRepository statPatternRepository) {
+	protected AbstractTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
 		this.itemDetailsAndTooltip = itemDetailsAndTooltip;
 		this.gameVersion = gameVersion;
 		this.statPatternRepository = statPatternRepository;
@@ -161,8 +161,8 @@ public abstract class AbstractTooltipParser {
 		}
 	}
 
-	protected Phase parsePhase(String value) {
-		return Phase.parse(gameVersion + "_P" + value.replace('.', '_'));
+	protected PhaseId parsePhase(String value) {
+		return PhaseId.parse(gameVersion + "_P" + value.replace('.', '_'));
 	}
 
 	protected int parseItemLevel(String value) {
@@ -179,12 +179,12 @@ public abstract class AbstractTooltipParser {
 	}
 
 	private void parseRequiredProfession(ParsedMultipleValues params) {
-		this.requiredProfession = Profession.parse(params.get(0));
+		this.requiredProfession = ProfessionId.parse(params.get(0));
 		this.requiredProfessionLevel = params.getInteger(1);
 	}
 
 	private void parseRequiredProfessionSpec(ParsedMultipleValues params) {
-		this.requiredProfessionSpec = ProfessionSpecialization.parse(params.get(0));
+		this.requiredProfessionSpec = ProfessionSpecializationId.parse(params.get(0));
 	}
 
 	private Percent parseDropChance(String value) {

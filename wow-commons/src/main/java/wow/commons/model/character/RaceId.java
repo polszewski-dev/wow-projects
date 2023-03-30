@@ -14,7 +14,7 @@ import static wow.commons.model.pve.Side.HORDE;
  */
 @AllArgsConstructor
 @Getter
-public enum Race {
+public enum RaceId {
 	UNDEAD(HORDE),
 	ORC(HORDE),
 	TROLL(HORDE),
@@ -29,7 +29,7 @@ public enum Race {
 
 	private final Side side;
 
-	public static Race parse(String value) {
+	public static RaceId parse(String value) {
 		return EnumUtil.parse(value, values());
 	}
 }

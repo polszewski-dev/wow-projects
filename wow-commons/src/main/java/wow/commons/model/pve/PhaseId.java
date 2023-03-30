@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
-import static wow.commons.model.pve.GameVersion.TBC;
-import static wow.commons.model.pve.GameVersion.VANILLA;
+import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.commons.model.pve.GameVersionId.VANILLA;
 
 /**
  * User: POlszewski
@@ -13,7 +13,7 @@ import static wow.commons.model.pve.GameVersion.VANILLA;
  */
 @AllArgsConstructor
 @Getter
-public enum Phase {
+public enum PhaseId {
 	VANILLA_P1(VANILLA),//mc
 	VANILLA_P2(VANILLA),//dm
 	VANILLA_P2_5(VANILLA),//
@@ -29,21 +29,21 @@ public enum Phase {
 	TBC_P4(TBC),//za
 	TBC_P5(TBC);//swp
 
-	private final GameVersion gameVersion;
+	private final GameVersionId gameVersionId;
 
-	public static Phase parse(String value) {
+	public static PhaseId parse(String value) {
 		return EnumUtil.parse(value, values());
 	}
 
-	public boolean isEarlier(Phase phase) {
-		return this.compareTo(phase) < 0;
+	public boolean isEarlier(PhaseId phaseId) {
+		return this.compareTo(phaseId) < 0;
 	}
 
-	public boolean isEarlierOrTheSame(Phase phase) {
-		return this.compareTo(phase) <= 0;
+	public boolean isEarlierOrTheSame(PhaseId phaseId) {
+		return this.compareTo(phaseId) <= 0;
 	}
 
-	public boolean isTheSameVersion(Phase phase) {
-		return this.gameVersion == phase.getGameVersion();
+	public boolean isTheSameVersion(PhaseId phaseId) {
+		return this.gameVersionId == phaseId.getGameVersionId();
 	}
 }

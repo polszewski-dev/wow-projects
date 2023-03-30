@@ -3,9 +3,9 @@ package wow.commons.model.config;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
-import wow.commons.model.professions.ProfessionSpecialization;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
 
@@ -26,13 +26,13 @@ public class CharacterRestriction {
 	private Integer level;
 	@NonNull
 	@Builder.Default
-	private List<CharacterClass> characterClasses = List.of();
+	private List<CharacterClassId> characterClassIds = List.of();
 	@NonNull
 	@Builder.Default
-	private List<Race> races = List.of();
+	private List<RaceId> raceIds = List.of();
 	private Side side;
 	private ProfessionRestriction professionRestriction;
-	private ProfessionSpecialization professionSpec;
+	private ProfessionSpecializationId professionSpecId;
 	private TalentId talentId;
 
 	public static final CharacterRestriction EMPTY = builder().build();
@@ -41,19 +41,19 @@ public class CharacterRestriction {
 		if (this.level != null && characterInfo.getLevel() < this.level) {
 			return false;
 		}
-		if (!characterClasses.isEmpty() && !characterClasses.contains(characterInfo.getCharacterClass())) {
+		if (!characterClassIds.isEmpty() && !characterClassIds.contains(characterInfo.getCharacterClassId())) {
 			return false;
 		}
-		if (!this.races.isEmpty() && !this.races.contains(characterInfo.getRace())) {
+		if (!this.raceIds.isEmpty() && !this.raceIds.contains(characterInfo.getRaceId())) {
 			return false;
 		}
-		if (side != null && side != characterInfo.getRace().getSide()) {
+		if (side != null && side != characterInfo.getRaceId().getSide()) {
 			return false;
 		}
-		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.getProfession())) {
+		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.getProfessionId())) {
 			return false;
 		}
-		if (professionSpec != null && !characterInfo.hasProfessionSpecialization(professionSpec)) {
+		if (professionSpecId != null && !characterInfo.hasProfessionSpecialization(professionSpecId)) {
 			return false;
 		}
 		return talentId == null || characterInfo.hasTalent(talentId);
@@ -62,11 +62,11 @@ public class CharacterRestriction {
 	public CharacterRestriction merge(CharacterRestriction other) {
 		return builder()
 				.level(mergeValues(level, other.level))
-				.characterClasses(mergeCriteria(characterClasses, other.characterClasses))
-				.races(mergeCriteria(races, other.races))
+				.characterClassIds(mergeCriteria(characterClassIds, other.characterClassIds))
+				.raceIds(mergeCriteria(raceIds, other.raceIds))
 				.side(mergeValues(side, other.side))
 				.professionRestriction(mergeValues(professionRestriction, other.professionRestriction))
-				.professionSpec(mergeValues(professionSpec, other.professionSpec))
+				.professionSpecId(mergeValues(professionSpecId, other.professionSpecId))
 				.talentId(mergeValues(talentId, other.talentId))
 				.build();
 	}
@@ -77,11 +77,11 @@ public class CharacterRestriction {
 		if (level != null) {
 			parts.add(String.format("level: %s", level));
 		}
-		if (!characterClasses.isEmpty()) {
-			parts.add(String.format("characterClasses: %s", characterClasses));
+		if (!characterClassIds.isEmpty()) {
+			parts.add(String.format("characterClasses: %s", characterClassIds));
 		}
-		if (!races.isEmpty()) {
-			parts.add(String.format("races: %s", races));
+		if (!raceIds.isEmpty()) {
+			parts.add(String.format("races: %s", raceIds));
 		}
 		if (side != null) {
 			parts.add(String.format("side: %s", side));
@@ -89,8 +89,8 @@ public class CharacterRestriction {
 		if (professionRestriction != null) {
 			parts.add(String.format("profession: %s", professionRestriction));
 		}
-		if (professionSpec != null) {
-			parts.add(String.format("professionSpec: %s", professionSpec));
+		if (professionSpecId != null) {
+			parts.add(String.format("professionSpec: %s", professionSpecId));
 		}
 		if (talentId != null) {
 			parts.add(String.format("talentId: %s", talentId));

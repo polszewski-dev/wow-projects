@@ -43,7 +43,7 @@ class CharacterClassTest {
 			"RANGED, RANGED, WAND",
 	})
 	void canEquip(ItemSlot itemSlot, ItemType itemType, String itemSubType) {
-		CharacterClass warlock = CharacterClass.WARLOCK;
+		CharacterClassId warlock = CharacterClassId.WARLOCK;
 
 		assertThat(warlock.canEquip(itemSlot, itemType, ItemSubType.parse(itemSubType))).isTrue();
 	}
@@ -87,7 +87,7 @@ class CharacterClassTest {
 			"RANGED, RANGED, IDOL",
 	})
 	void canNotEquip(ItemSlot itemSlot, ItemType itemType, String itemSubType) {
-		CharacterClass warlock = CharacterClass.WARLOCK;
+		CharacterClassId warlock = CharacterClassId.WARLOCK;
 
 		assertThat(warlock.isDualWield()).isFalse();
 		assertThat(warlock.canEquip(itemSlot, itemType, ItemSubType.parse(itemSubType))).isFalse();
@@ -95,7 +95,7 @@ class CharacterClassTest {
 
 	@Test
 	void testDualWield() {
-		CharacterClass warrior = CharacterClass.WARRIOR;
+		CharacterClassId warrior = CharacterClassId.WARRIOR;
 
 		assertThat(warrior.isDualWield()).isTrue();
 		assertThat(warrior.canEquip(ItemSlot.MAIN_HAND, ONE_HAND, SWORD)).isTrue();
@@ -103,12 +103,12 @@ class CharacterClassTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(CharacterClass.class)
-	void nobodyCanEquipThese(CharacterClass characterClass) {
+	@EnumSource(CharacterClassId.class)
+	void nobodyCanEquipThese(CharacterClassId characterClassId) {
 		for (ItemType itemType : ItemType.values()) {
 			ItemCategory category = itemType.getCategory();
 			if (category != ItemCategory.ARMOR && category != ItemCategory.WEAPON && category != ItemCategory.ACCESSORY) {
-				assertThat(characterClass.canEquip(ItemSlot.CHEST, itemType, null)).isFalse();
+				assertThat(characterClassId.canEquip(ItemSlot.CHEST, itemType, null)).isFalse();
 			}
 		}
 	}

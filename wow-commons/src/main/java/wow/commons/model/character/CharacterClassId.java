@@ -16,7 +16,7 @@ import static wow.commons.model.character.WeaponProfficiency.*;
  */
 @AllArgsConstructor
 @Getter
-public enum CharacterClass {
+public enum CharacterClassId {
 	MAGE(List.of(CLOTH), List.of(
 			MAIN_HAND_DAGGER, ONE_HAND_DAGGER,
 			MAIN_HAND_SWORD, ONE_HAND_SWORD,
@@ -98,7 +98,7 @@ public enum CharacterClass {
 	private final List<WeaponProfficiency> weaponProfficiencies;
 	private final boolean dualWield;
 
-	public static CharacterClass parse(String value) {
+	public static CharacterClassId parse(String value) {
 		return EnumUtil.parse(value, values());
 	}
 

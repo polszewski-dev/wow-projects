@@ -1,6 +1,6 @@
 package wow.commons.model.talents;
 
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 
 /**
@@ -26,7 +26,7 @@ public interface Talent extends ConfigurationElementWithAttributes<TalentIdAndRa
 		return getTalentInfo().getTalentCalculatorPosition();
 	}
 
-	CharacterClass getCharacterClass();
+	CharacterClassId getCharacterClass();
 
 	Talent combineWith(Talent talent);
 }

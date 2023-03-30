@@ -10,7 +10,7 @@ import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.AttributesBuilder;
@@ -101,7 +101,7 @@ public class CalculationServiceImpl implements CalculationService {
 		PrimitiveAttributeId crit;
 		PrimitiveAttributeId haste;
 
-		if (character.getGameVersion() == GameVersion.VANILLA) {
+		if (character.getGameVersionId() == GameVersionId.VANILLA) {
 			amount = 1;
 			hit = SPELL_HIT_PCT;
 			crit = SPELL_CRIT_PCT;

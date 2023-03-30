@@ -1,7 +1,7 @@
 package wow.scraper.parsers;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionId;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.*;
 
@@ -113,7 +113,7 @@ public class WowheadSourceParser {
 		return "ZoneDrop:" + zoneId;
 	}
 
-	private static String sourceCrafted(Profession profession) {
+	private static String sourceCrafted(ProfessionId profession) {
 		return "Crafted:" + profession;
 	}
 

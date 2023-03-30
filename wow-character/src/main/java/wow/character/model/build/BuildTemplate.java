@@ -2,7 +2,7 @@ package wow.character.model.build;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.config.TimeRestriction;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Getter
 public class BuildTemplate implements TimeRestricted {
 	private final BuildId buildId;
-	private final CharacterClass characterClass;
+	private final CharacterClassId characterClassId;
 	private final int level;
 	private final TimeRestriction timeRestriction;
 	private final String talentLink;

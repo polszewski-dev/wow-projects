@@ -2,8 +2,8 @@ package wow.commons.repository.impl.parsers.items;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.WowCommonsSpringTest;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.sources.Source;
 
 import java.util.Set;
@@ -100,7 +100,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isCrafted()).isTrue();
-		assertThat(source.getProfession()).isEqualTo(Profession.TAILORING);
+		assertThat(source.getProfessionId()).isEqualTo(ProfessionId.TAILORING);
 	}
 
 	@Test
@@ -161,6 +161,6 @@ class SourceParserTest extends WowCommonsSpringTest {
 	}
 
 	private SourceParser getParser() {
-		return new SourceParser(Phase.TBC_P5, pveRepository, itemRepository);
+		return new SourceParser(PhaseId.TBC_P5, pveRepository, itemRepository);
 	}
 }

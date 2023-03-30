@@ -4,16 +4,16 @@ import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.ProfessionRestriction;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.professions.Profession;
-import wow.commons.model.professions.ProfessionSpecialization;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talents.TalentId;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
@@ -101,12 +101,12 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colReqPhase = column(REQ_PHASE, true);
 
 	protected TimeRestriction getTimeRestriction() {
-		var versions = colReqVersion.getList(GameVersion::parse);
-		var phase = colReqPhase.getEnum(Phase::parse, null);
+		var versions = colReqVersion.getList(GameVersionId::parse);
+		var phase = colReqPhase.getEnum(PhaseId::parse, null);
 
 		return TimeRestriction.builder()
 				.versions(versions)
-				.phase(phase)
+				.phaseId(phase)
 				.build();
 	}
 
@@ -121,21 +121,21 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 
 	protected CharacterRestriction getRestriction() {
 		var level = colReqLevel.getNullableInteger();
-		var characterClasses = colReqClass.getList(CharacterClass::parse);
-		var races = colReqRace.getList(Race::parse);
+		var characterClasses = colReqClass.getList(CharacterClassId::parse);
+		var races = colReqRace.getList(RaceId::parse);
 		var side = colReqSide.getEnum(Side::parse, null);
-		var profession = colReqProfession.getEnum(Profession::parse, null);
+		var profession = colReqProfession.getEnum(ProfessionId::parse, null);
 		var professionLevel = colReqProfessionLevel.getNullableInteger();
-		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecialization::valueOf, null);
+		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecializationId::valueOf, null);
 		var talentId = colReqTalent.getEnum(TalentId::parse, null);
 
 		return CharacterRestriction.builder()
 				.level(level)
-				.characterClasses(characterClasses)
-				.races(races)
+				.characterClassIds(characterClasses)
+				.raceIds(races)
 				.side(side)
 				.professionRestriction(ProfessionRestriction.of(profession, professionLevel))
-				.professionSpec(professionSpec)
+				.professionSpecId(professionSpec)
 				.talentId(talentId)
 				.build();
 	}

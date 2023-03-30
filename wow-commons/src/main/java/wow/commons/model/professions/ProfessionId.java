@@ -8,7 +8,7 @@ import wow.commons.util.EnumUtil;
  * Date: 2020-07-14
  */
 @AllArgsConstructor
-public enum Profession {
+public enum ProfessionId {
 	ENCHANTING("Enchanting"),
 	JEWELCRAFTING("Jewelcrafting"),
 	INSCRIPTION("Inscription"),
@@ -26,7 +26,7 @@ public enum Profession {
 
 	private final String key;
 
-	public static Profession parse(String value) {
+	public static ProfessionId parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.key);
 	}
 

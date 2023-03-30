@@ -9,7 +9,7 @@ import wow.character.model.build.BuildTemplate;
 import wow.character.model.build.PveRole;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +18,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.build.BuffSetId.*;
 import static wow.character.model.build.BuildId.DESTRO_SHADOW;
-import static wow.commons.model.character.CharacterClass.WARLOCK;
-import static wow.commons.model.character.Race.ORC;
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.spells.SpellId.*;
 
 /**
@@ -33,15 +33,15 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 	@Test
 	@DisplayName("BaseStatInfo is read correctly")
 	void baseStatInfoIsCorrect() {
-		Optional<BaseStatInfo> optionalBaseStatInfo = underTest.getBaseStats(WARLOCK, ORC, 70, Phase.TBC_P5);
+		Optional<BaseStatInfo> optionalBaseStatInfo = underTest.getBaseStats(WARLOCK, ORC, 70, PhaseId.TBC_P5);
 
 		assertThat(optionalBaseStatInfo).isPresent();
 
 		BaseStatInfo baseStatInfo = optionalBaseStatInfo.orElseThrow();
 
 		assertThat(baseStatInfo.getLevel()).isEqualTo(70);
-		assertThat(baseStatInfo.getCharacterClass()).isEqualTo(WARLOCK);
-		assertThat(baseStatInfo.getRace()).isEqualTo(ORC);
+		assertThat(baseStatInfo.getCharacterClassId()).isEqualTo(WARLOCK);
+		assertThat(baseStatInfo.getRaceId()).isEqualTo(ORC);
 		assertThat(baseStatInfo.getBaseStrength()).isEqualTo(48);
 		assertThat(baseStatInfo.getBaseAgility()).isEqualTo(47);
 		assertThat(baseStatInfo.getBaseStamina()).isEqualTo(78);
@@ -56,7 +56,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 	@Test
 	@DisplayName("CombatRatingInfo is read correctly")
 	void combatRatingInfoIsCorrect() {
-		Optional<CombatRatingInfo> optionalCombatRatingInfo = underTest.getCombatRatings(70, Phase.TBC_P5);
+		Optional<CombatRatingInfo> optionalCombatRatingInfo = underTest.getCombatRatings(70, PhaseId.TBC_P5);
 
 		assertThat(optionalCombatRatingInfo).isPresent();
 
@@ -71,7 +71,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 	@Test
 	@DisplayName("BuildTemplate is read correctly")
 	void buildTemplateIsCorrect() {
-		Optional<BuildTemplate> optionalBuildTemplate = underTest.getBuildTemplate(DESTRO_SHADOW, WARLOCK, 70, Phase.TBC_P5);
+		Optional<BuildTemplate> optionalBuildTemplate = underTest.getBuildTemplate(DESTRO_SHADOW, WARLOCK, 70, PhaseId.TBC_P5);
 
 		assertThat(optionalBuildTemplate).isPresent();
 
@@ -79,7 +79,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(buildTemplate.getBuildId()).isEqualTo(DESTRO_SHADOW);
 		assertThat(buildTemplate.getLevel()).isEqualTo(70);
-		assertThat(buildTemplate.getCharacterClass()).isEqualTo(WARLOCK);
+		assertThat(buildTemplate.getCharacterClassId()).isEqualTo(WARLOCK);
 		assertThat(buildTemplate.getTalentLink()).isEqualTo("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
 		assertThat(buildTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(buildTemplate.getDamagingSpell()).isEqualTo(SHADOW_BOLT);

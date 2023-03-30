@@ -1,6 +1,6 @@
 package wow.commons.repository.impl.parsers.pve;
 
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.pve.ZoneType;
 import wow.commons.repository.impl.PveRepositoryImpl;
@@ -41,7 +41,7 @@ public class ZoneSheetParser extends WowExcelSheetParser {
 		var name = colName.getString();
 		var shortName = colShortName.getString(null);
 		var type = colType.getEnum(ZoneType::valueOf);
-		var version = colVersion.getEnum(GameVersion::parse);
+		var version = colVersion.getEnum(GameVersionId::parse);
 		var partySize = colPartySize.getInteger();
 
 		return new Zone(id, name, shortName, version, type, partySize, null);

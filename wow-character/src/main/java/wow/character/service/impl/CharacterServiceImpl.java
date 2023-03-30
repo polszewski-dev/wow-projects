@@ -9,10 +9,10 @@ import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Race;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 
@@ -35,19 +35,19 @@ public class CharacterServiceImpl implements CharacterService {
 	@Override
 	public BaseStatInfo getBaseStats(Character character) {
 		return characterRepository.getBaseStats(
-				character.getCharacterClass(), character.getRace(), character.getLevel(), character.getPhase()
+				character.getCharacterClassId(), character.getRaceId(), character.getLevel(), character.getPhaseId()
 		).orElseThrow();
 	}
 
 	@Override
 	public CombatRatingInfo getCombatRatings(Character character) {
-		return characterRepository.getCombatRatings(character.getLevel(), character.getPhase()).orElseThrow();
+		return characterRepository.getCombatRatings(character.getLevel(), character.getPhaseId()).orElseThrow();
 	}
 
 	@Override
 	public BuildTemplate getBuildTemplate(BuildId buildId, Character character) {
 		return characterRepository.getBuildTemplate(
-				buildId, character.getCharacterClass(), character.getLevel(), character.getPhase()
+				buildId, character.getCharacterClassId(), character.getLevel(), character.getPhaseId()
 		).orElseThrow();
 	}
 
@@ -71,15 +71,15 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public Character createCharacter(CharacterClass characterClass, Race race, int level, BuildId buildId, CharacterProfessions professions, Phase phase) {
+	public Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, CharacterProfessions professions, PhaseId phaseId) {
 		Character character = new Character(
-				characterClass,
-				race,
+				characterClassId,
+				raceId,
 				level,
 				professions,
-				phase,
-				characterRepository.getBaseStats(characterClass, race, level, phase).orElseThrow(),
-				characterRepository.getCombatRatings(level, phase).orElseThrow()
+				phaseId,
+				characterRepository.getBaseStats(characterClassId, raceId, level, phaseId).orElseThrow(),
+				characterRepository.getCombatRatings(level, phaseId).orElseThrow()
 		);
 
 		changeBuild(character, buildId);

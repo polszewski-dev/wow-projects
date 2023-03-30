@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.build.BuildId;
 import wow.character.model.character.CharacterProfessions;
-import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Race;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.PhaseId;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,12 +21,12 @@ import java.util.UUID;
 public class PlayerProfileInfo {
 	private final UUID profileId;
 	private final String profileName;
-	private final CharacterClass characterClass;
-	private final Race race;
+	private final CharacterClassId characterClassId;
+	private final RaceId raceId;
 	private final int level;
 	private final CreatureType enemyType;
 	private final BuildId buildId;
 	private final CharacterProfessions professions;
-	private final Phase phase;
+	private final PhaseId phaseId;
 	private final LocalDateTime lastModified;
 }

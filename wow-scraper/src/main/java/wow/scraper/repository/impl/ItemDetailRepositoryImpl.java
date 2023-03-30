@@ -3,7 +3,7 @@ package wow.scraper.repository.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.JsonItemDetailsAndTooltip;
 import wow.scraper.model.WowheadItemCategory;
@@ -31,13 +31,13 @@ public class ItemDetailRepositoryImpl implements wow.scraper.repository.ItemDeta
 	private ScraperConfig config;
 
 	@Override
-	public boolean hasItemDetail(GameVersion gameVersion, WowheadItemCategory category, int itemId) {
+	public boolean hasItemDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) {
 		Path path = getPath(gameVersion, category, itemId);
 		return Files.exists(path);
 	}
 
 	@Override
-	public Optional<JsonItemDetailsAndTooltip> getDetail(GameVersion gameVersion, WowheadItemCategory category, int itemId) throws IOException {
+	public Optional<JsonItemDetailsAndTooltip> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) throws IOException {
 		Path path = getPath(gameVersion, category, itemId);
 		if (!Files.exists(path)) {
 			return Optional.empty();
@@ -47,14 +47,14 @@ public class ItemDetailRepositoryImpl implements wow.scraper.repository.ItemDeta
 	}
 
 	@Override
-	public void saveItemDetail(GameVersion gameVersion, WowheadItemCategory category, int itemId, JsonItemDetailsAndTooltip detailsAndTooltip) throws IOException {
+	public void saveItemDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId, JsonItemDetailsAndTooltip detailsAndTooltip) throws IOException {
 		Path path = getPath(gameVersion, category, itemId);
 		path.toFile().getParentFile().mkdirs();
 		MAPPER.writeValue(new FileOutputStream(path.toFile()), detailsAndTooltip);
 	}
 
 	@Override
-	public List<Integer> getItemIds(GameVersion gameVersion, WowheadItemCategory category) {
+	public List<Integer> getItemIds(GameVersionId gameVersion, WowheadItemCategory category) {
 		File[] files = getPath(gameVersion, category, 0).getParent().toFile().listFiles();
 		if (files == null) {
 			return List.of();
@@ -64,7 +64,7 @@ public class ItemDetailRepositoryImpl implements wow.scraper.repository.ItemDeta
 				.toList();
 	}
 
-	private Path getPath(GameVersion gameVersion, WowheadItemCategory category, int itemId) {
+	private Path getPath(GameVersionId gameVersion, WowheadItemCategory category, int itemId) {
 		return Paths.get(config.getDirectoryPath(), "items", gameVersion.toString().toLowerCase(), category.name().toLowerCase(), Integer.toString(itemId));
 	}
 }

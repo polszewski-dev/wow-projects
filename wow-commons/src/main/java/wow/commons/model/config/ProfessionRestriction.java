@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.professions.Profession;
+import wow.commons.model.professions.ProfessionId;
 
 /**
  * User: POlszewski
@@ -15,21 +15,21 @@ import wow.commons.model.professions.Profession;
 @EqualsAndHashCode
 public class ProfessionRestriction {
 	@NonNull
-	private final Profession profession;
+	private final ProfessionId professionId;
 	private final int level;
 
-	public static ProfessionRestriction of(Profession profession, Integer level) {
-		if (profession == null && level == null) {
+	public static ProfessionRestriction of(ProfessionId professionId, Integer level) {
+		if (professionId == null && level == null) {
 			return null;
 		}
-		if (profession != null && level != null) {
-			return new ProfessionRestriction(profession, level);
+		if (professionId != null && level != null) {
+			return new ProfessionRestriction(professionId, level);
 		}
 		throw new IllegalArgumentException();
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", profession, level);
+		return String.format("%s (%s)", professionId, level);
 	}
 }

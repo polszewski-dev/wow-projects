@@ -2,7 +2,7 @@ package wow.scraper;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.parsers.stats.StatPatternRepository;
 import wow.scraper.repository.ItemDetailRepository;
@@ -39,7 +39,7 @@ public abstract class ScraperTool {
 		return context.getBean(ScraperConfig.class);
 	}
 
-	protected GameVersion getGameVersion() {
+	protected GameVersionId getGameVersion() {
 		return getScraperConfig().getGameVersion();
 	}
 }

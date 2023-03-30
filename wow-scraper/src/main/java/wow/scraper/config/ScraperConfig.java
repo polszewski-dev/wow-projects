@@ -4,8 +4,8 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.scraper.model.WowheadItemQuality;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class ScraperConfig {
 	private String directoryPath;
 
 	@Value("${game.version}")
-	private GameVersion gameVersion;
+	private GameVersionId gameVersion;
 
 	@Value("${scraper.min.quality}")
 	private WowheadItemQuality minQuality;
@@ -60,5 +60,5 @@ public class ScraperConfig {
 	private Map<Integer, List<Integer>> itemStartingQuestToTradedFor;
 
 	@Value("#{${phase.overrides}}")
-	private Map<Integer, Phase> phaseOverrides;
+	private Map<Integer, PhaseId> phaseOverrides;
 }

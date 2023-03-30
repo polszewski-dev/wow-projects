@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
-import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
@@ -49,11 +49,11 @@ public class ItemBaseExcelParser extends ExcelParser {
 		setPiecesByName.computeIfAbsent(key, x -> new ArrayList<>()).add(item);
 	}
 
-	List<Item> getPieces(String name, GameVersion version) {
+	List<Item> getPieces(String name, GameVersionId version) {
 		return setPiecesByName.getOrDefault(getSetKey(name, version), List.of());
 	}
 
-	private static String getSetKey(String setName, GameVersion version) {
+	private static String getSetKey(String setName, GameVersionId version) {
 		return setName + "#" + version;
 	}
 }
