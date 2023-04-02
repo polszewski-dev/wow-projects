@@ -2,14 +2,25 @@ package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import wow.character.model.character.CharacterClass;
+import wow.character.model.character.GameVersion;
+import wow.character.repository.CharacterRepository;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.pve.GameVersionId;
+import wow.minmax.converter.dto.CharacterClassConverter;
+import wow.minmax.converter.dto.PhaseConverter;
 import wow.minmax.converter.dto.PlayerProfileInfoConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.model.dto.PlayerProfileInfoDTO;
+import wow.minmax.model.dto.*;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -21,7 +32,11 @@ import java.util.List;
 @Slf4j
 public class PlayerProfileController {
 	private final PlayerProfileService playerProfileService;
+	private final CharacterRepository characterRepository;
+
 	private final PlayerProfileInfoConverter playerProfileInfoConverter;
+	private final CharacterClassConverter characterClassConverter;
+	private final PhaseConverter phaseConverter;
 
 	@GetMapping("list")
 	public List<PlayerProfileInfoDTO> getPlayerProfileList() {
@@ -37,5 +52,56 @@ public class PlayerProfileController {
 		PlayerProfile createdPlayerProfile = playerProfileService.createPlayerProfile(playerProfileInfo);
 		log.info("Created profile id: {}, name: {}", createdPlayerProfile.getProfileId(), createdPlayerProfile.getProfileName());
 		return playerProfileInfoConverter.convert(createdPlayerProfile.getProfileInfo());
+	}
+
+	@GetMapping("new/options")
+	public NewProfileOptionsDTO getNewProfileOptions() {
+		GameVersion gameVersion = characterRepository.getGameVersion(GameVersionId.getLatestGameVersionId()).orElseThrow();
+
+		List<CharacterClass> availableClasses = Stream.of(CharacterClassId.WARLOCK)//todo
+				.map(gameVersion::getCharacterClass)
+				.toList();
+
+		return new NewProfileOptionsDTO(
+				characterClassConverter.convertList(availableClasses)
+		);
+	}
+
+	@GetMapping("{profileId}/char/selection/options")
+	public CharacterSelectionOptionsDTO getCharacterSelectionOptions(
+			@PathVariable("profileId") UUID profileId
+	) {
+		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
+
+		return new CharacterSelectionOptionsDTO(
+				getPhases(playerProfile),
+				getEnemyTypes(),
+				getEnemyLevelDifferences(),
+				playerProfile.getLastModifiedCharacterId().toString()
+		);
+	}
+
+	private List<PhaseDTO> getPhases(PlayerProfile playerProfile) {
+		return Stream.of(GameVersionId.values())
+				.map(x -> characterRepository.getGameVersion(x).orElseThrow())
+				.filter(x -> x.has(playerProfile.getCharacterClassId(), playerProfile.getRaceId()))
+				.flatMap(x -> x.getPhases().stream())
+				.map(phaseConverter::convert)
+				.toList();
+	}
+
+	private List<EnemyTypeDTO> getEnemyTypes() {
+		return Stream.of(CreatureType.values())
+				.map(x -> new EnemyTypeDTO(x.toString(), StringUtils.capitalize(x.toString())))
+				.toList();
+	}
+
+	private List<LevelDifferenceDTO> getEnemyLevelDifferences() {
+		return List.of(
+				new LevelDifferenceDTO(0, "+0"),
+				new LevelDifferenceDTO(1, "+1"),
+				new LevelDifferenceDTO(2, "+2"),
+				new LevelDifferenceDTO(3, "+3 (Boss)")
+		);
 	}
 }

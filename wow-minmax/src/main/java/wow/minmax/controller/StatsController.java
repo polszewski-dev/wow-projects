@@ -12,6 +12,7 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
 import wow.minmax.converter.dto.SpellStatsConverter;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.dto.CharacterStatsDTO;
 import wow.minmax.model.dto.SpecialAbilityStatsDTO;
@@ -22,7 +23,6 @@ import wow.minmax.service.PlayerProfileService;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static wow.character.model.build.BuffSetId.*;
@@ -41,11 +41,11 @@ public class StatsController {
 	private final CharacterStatsConverter characterStatsConverter;
 	private final SpecialAbilityStatsConverter specialAbilityStatsConverter;
 
-	@GetMapping("{profileId}/spell")
+	@GetMapping("{characterId}/spell")
 	public List<SpellStatsDTO> getSpellStats(
-			@PathVariable("profileId") UUID profileId
+			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getPlayerProfile(profileId).getCharacter();
+		Character character = playerProfileService.getCharacter(characterId);
 
 		return character.getRelevantSpells().stream()
 				.map(spell -> calculationService.getSpellStats(character, spell))
@@ -53,11 +53,11 @@ public class StatsController {
 				.toList();
 	}
 
-	@GetMapping("{profileId}/character")
+	@GetMapping("{characterId}/character")
 	public List<CharacterStatsDTO> getCharacterStats(
-			@PathVariable("profileId") UUID profileId
+			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getPlayerProfile(profileId).getCharacter();
+		Character character = playerProfileService.getCharacter(characterId);
 
 		List<CharacterStatsDTO> result = new ArrayList<>();
 
@@ -76,11 +76,11 @@ public class StatsController {
 		return result;
 	}
 
-	@GetMapping("{profileId}/special")
+	@GetMapping("{characterId}/special")
 	public List<SpecialAbilityStatsDTO> getSpecialAbilities(
-			@PathVariable("profileId") UUID profileId
+			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getPlayerProfile(profileId).getCharacter();
+		Character character = playerProfileService.getCharacter(characterId);
 
 		return character.getStats().getSpecialAbilities().stream()
 				.sorted(compareSources())
@@ -89,11 +89,11 @@ public class StatsController {
 				.toList();
 	}
 
-	@GetMapping("{profileId}/dps")
+	@GetMapping("{characterId}/dps")
 	public double getSpellDps(
-			@PathVariable("profileId") UUID profileId
+			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getPlayerProfile(profileId).getCharacter();
+		Character character = playerProfileService.getCharacter(characterId);
 
 		return calculationService.getSpellDps(character, null);
 	}

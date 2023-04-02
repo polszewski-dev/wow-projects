@@ -18,10 +18,11 @@ import java.util.Set;
 @Getter
 public class Enemy implements AttributeCollection, Copyable<Enemy> {
 	private final CreatureType enemyType;
+	private final int levelDifference;
 
 	@Override
 	public Enemy copy() {
-		return new Enemy(enemyType);
+		return new Enemy(enemyType, levelDifference);
 	}
 
 	@Override

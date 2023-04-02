@@ -62,4 +62,18 @@ class PlayerProfileControllerTest extends ControllerTest {
 
 		verify(playerProfileService).createPlayerProfile(any());
 	}
+
+	@Test
+	void getNewProfileOptions() throws Exception {
+		mockMvc.perform(get("/api/v1/profile/new/options"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
+	}
+
+	@Test
+	void getCharacterSelectionOptions() throws Exception {
+		mockMvc.perform(get("/api/v1/profile/{profileId}/char/selection/options", PROFILE_ID))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
+	}
 }

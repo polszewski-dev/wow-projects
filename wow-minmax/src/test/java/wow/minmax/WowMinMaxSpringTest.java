@@ -15,6 +15,7 @@ import wow.character.service.CharacterService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -25,9 +26,12 @@ import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.SpellRepository;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static wow.character.model.build.BuildId.DESTRO_SHADOW;
@@ -118,7 +122,7 @@ public abstract class WowMinMaxSpringTest {
 				PHASE
 		);
 
-		Enemy enemy = characterService.createEnemy(UNDEAD);
+		Enemy enemy = characterService.createEnemy(ENEMY_TYPE, LVL_DIFF);
 
 		character.setTargetEnemy(enemy);
 
@@ -130,8 +134,12 @@ public abstract class WowMinMaxSpringTest {
 
 	protected PlayerProfile getPlayerProfile() {
 		Character character = getCharacter();
+		PlayerProfile profile = new PlayerProfile(
+				PROFILE_ID, PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), new HashMap<>(), LocalDateTime.now(), CHARACTER_KEY
+		);
 
-		return new PlayerProfile(PROFILE_ID, PROFILE_NAME, character);
+		profile.addCharacter(character);
+		return profile;
 	}
 
 	protected static final UUID PROFILE_ID = UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002");
@@ -142,6 +150,9 @@ public abstract class WowMinMaxSpringTest {
 	protected static final BuildId BUILD_ID = DESTRO_SHADOW;
 	protected static final PhaseId PHASE = TBC_P5;
 	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
+	protected static final CreatureType ENEMY_TYPE = UNDEAD;
+	protected static final int LVL_DIFF = 3;
+	protected static final CharacterId CHARACTER_KEY = new CharacterId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);
 
 	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	protected static final Offset<Double> PRECISION = Offset.offset(0.01);

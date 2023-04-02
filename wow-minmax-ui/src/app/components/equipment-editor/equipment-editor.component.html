@@ -17,7 +17,7 @@
 				[itemSlot]="itemSlot"
 				[equippableItem]="equipment.itemsBySlot[itemSlot]"
 				[equipmentOptions]="equipmentOptions"
-				[selectedProfileId]="selectedProfileId"
+				[selectedCharacterId]="selectedCharacterId"
 				[socketStatus]="equipmentSocketStatus?.socketStatusesByItemSlot?.[itemSlot]"
 				[visible]="itemSlot !== ItemSlot.OFF_HAND || equipment.itemsBySlot[ItemSlot.MAIN_HAND]?.item?.itemType !== ItemType.TWO_HAND"
 				[slotGroup]="getItemSlotGroup(itemSlot)"

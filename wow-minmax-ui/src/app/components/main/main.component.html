@@ -1,18 +1,11 @@
 <div class="container">
-	<div class="row my-3">
-		<div class="col-md-10">
-			<app-profile-select
-				[profileList]="profileList"
-				[selectedProfile]="selectedProfile"
-				(profileSelected)="onProfileSelected($event)"
-			></app-profile-select>
-		</div>
-		<div class="col-md-2">
-			<button class="btn btn-outline-primary" style="width:100%" routerLink="/new-profile">New Profile</button>
-		</div>
-	</div>
+	<app-profile-select
+		[profileList]="profileList"
+		[selectedCharacterId]="selectedCharacterId"
+		(characterSelected)="onCharacterSelected($event)"
+	></app-profile-select>
 	<app-profile-editor
-		*ngIf="selectedProfile"
-		[selectedProfile]="selectedProfile"
+		*ngIf="selectedCharacterId"
+		[selectedCharacterId]="selectedCharacterId"
 	></app-profile-editor>
 </div>

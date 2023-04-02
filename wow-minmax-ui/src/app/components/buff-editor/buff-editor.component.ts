@@ -8,7 +8,7 @@ import { BuffService } from 'src/app/services/buff.service';
 	styleUrls: ['./buff-editor.component.css']
 })
 export class BuffEditorComponent implements OnChanges {
-	@Input() selectedProfileId!: string;
+	@Input() selectedCharacterId!: string;
 	@Output() buffsChanged = new EventEmitter<void>()
 
 	buffs: Buff[] = [];
@@ -16,16 +16,16 @@ export class BuffEditorComponent implements OnChanges {
 	constructor(private buffService: BuffService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfileId']) {
+		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.buffService.getBuffs(this.selectedProfileId).subscribe((buffs: Buff[]) => {
+		this.buffService.getBuffs(this.selectedCharacterId).subscribe((buffs: Buff[]) => {
 			this.buffs = buffs;
 		});
 	}
 
 	onChange(buff: Buff): void {
-		this.buffService.changeBuff(this.selectedProfileId, buff).subscribe((buffs: Buff[]) => {
+		this.buffService.changeBuff(this.selectedCharacterId, buff).subscribe((buffs: Buff[]) => {
 			this.buffs = buffs;
 			this.buffsChanged.emit();
 		});

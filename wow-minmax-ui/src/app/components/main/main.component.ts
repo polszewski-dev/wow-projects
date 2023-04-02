@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';
+import { parseCharacterId } from 'src/app/model/character/CharacterId';
 import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { ProfileService } from 'src/app/services/profile.service';
 })
 export class MainComponent implements OnInit {
 	profileList: ProfileInfo[] = [];
-	selectedProfile?: ProfileInfo;
+	selectedCharacterId?: string;
 
 	constructor(
 		private profileService: ProfileService,
@@ -22,30 +23,37 @@ export class MainComponent implements OnInit {
 	ngOnInit(): void {
 		this.profileService.getProfileList().subscribe(profileList => {
 			this.profileList = profileList;
-			let profileToSelect = this.getProfileToSelect();
-			if (profileToSelect) {
-				this.onProfileSelected(profileToSelect);
+			let characterToSelect = this.getCharacterToSelect();
+			if (characterToSelect) {
+				this.onCharacterSelected(characterToSelect);
 			}
 		});
 	}
 
-	onProfileSelected(selectedProfile: ProfileInfo): void {
-		this.selectedProfile = selectedProfile;
-		this.location.replaceState('/edit-profile/' + selectedProfile.profileId);
+	onCharacterSelected(selectedCharacterId: string): void {
+		this.selectedCharacterId = selectedCharacterId;
+		this.location.replaceState('/edit-profile/' + this.selectedCharacterId);
 	}
 
-	private getProfileToSelect(): ProfileInfo | undefined {
+	private getCharacterToSelect(): string | undefined {
 		if (this.route.snapshot.paramMap.has('id')) {
-			const addressId = this.route.snapshot.paramMap.get('id');
-			return this.profileList.filter(x => x.profileId === addressId)[0];
+			const characterId = this.route.snapshot.paramMap.get('id');
+			const profileId = parseCharacterId(characterId!).profileId;
+
+			if (this.profileList.find(x => x.profileId === profileId)) {
+				return characterId!;
+			}
+			return undefined;
 		}
 
 		if (this.profileList.length === 0) {
 			return undefined;
 		}
 
-		return this.profileList.reduce((prev: ProfileInfo, current: ProfileInfo): ProfileInfo =>
+		const lastModifiedProfile = this.profileList.reduce((prev: ProfileInfo, current: ProfileInfo): ProfileInfo =>
 			(prev.lastModified! > current.lastModified!) ? prev : current
 		);
+
+		return lastModifiedProfile?.lastUsedCharacterId;
 	}
 }

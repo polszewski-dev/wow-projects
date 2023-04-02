@@ -8,16 +8,16 @@ import { StatsService } from 'src/app/services/stats.service';
 	styleUrls: ['./character-stats.component.css']
 })
 export class CharacterStatsComponent implements OnChanges {
-	@Input() selectedProfileId!: string;
+	@Input() selectedCharacterId!: string;
 	characterStatsList: CharacterStats[] = [];
 
 	constructor(private statsService: StatsService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfileId']) {
+		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.statsService.getCharacterStats(this.selectedProfileId).subscribe((characterStatsList: CharacterStats[]) => {
+		this.statsService.getCharacterStats(this.selectedCharacterId).subscribe((characterStatsList: CharacterStats[]) => {
 			this.characterStatsList = characterStatsList;
 		});
 	}

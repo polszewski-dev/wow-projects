@@ -21,7 +21,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getSpellStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{profileId}/spell", profile.getProfileId()))
+		mockMvc.perform(get("/api/v1/stats/{characterId}/spell", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -29,7 +29,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getCharacterStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{profileId}/character", profile.getProfileId()))
+		mockMvc.perform(get("/api/v1/stats/{characterId}/character", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -37,7 +37,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getSpecialAbilityStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{profileId}/special", profile.getProfileId()))
+		mockMvc.perform(get("/api/v1/stats/{characterId}/special", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

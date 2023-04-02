@@ -8,17 +8,17 @@ import { TalentService } from 'src/app/services/talent.service';
 	styleUrls: ['./talent-list.component.css']
 })
 export class TalentListComponent {
-	@Input() selectedProfileId!: string;
+	@Input() selectedCharacterId!: string;
 
 	talentList: Talent[] = [];
 
 	constructor(private talentService: TalentService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfileId']) {
+		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.talentService.getTalents(this.selectedProfileId).subscribe((talentList: Talent[]) => {
+		this.talentService.getTalents(this.selectedCharacterId).subscribe((talentList: Talent[]) => {
 			this.talentList = talentList;
 		});
 	}

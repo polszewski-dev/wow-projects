@@ -170,7 +170,7 @@ public abstract class WowCharacterSpringTest {
 				PHASE
 		);
 
-		Enemy enemy = characterService.createEnemy(UNDEAD);
+		Enemy enemy = characterService.createEnemy(UNDEAD, LVL_DIFF);
 
 		character.setTargetEnemy(enemy);
 
@@ -185,6 +185,7 @@ public abstract class WowCharacterSpringTest {
 	protected static final BuildId BUILD_ID = DESTRO_SHADOW;
 	protected static final PhaseId PHASE = TBC_P5;
 	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
+	protected static final int LVL_DIFF = 3;
 
 	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	protected static final Offset<Double> PRECISION = Offset.offset(0.01);

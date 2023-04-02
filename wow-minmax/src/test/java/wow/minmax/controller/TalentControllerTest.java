@@ -21,7 +21,7 @@ class TalentControllerTest extends ControllerTest {
 
 	@Test
 	void getTalents() throws Exception {
-		mockMvc.perform(get("/api/v1/talent/{profileId}/list", profile.getProfileId()))
+		mockMvc.perform(get("/api/v1/talent/{characterId}/list", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

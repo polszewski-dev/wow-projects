@@ -9,4 +9,5 @@ export interface EquipmentOptions {
 	itemsByItemSlot: Record<ItemSlot, Item[]>;
 	enchantsByItemType: Record<ItemType, Enchant[]>;
 	gemsBySocketType: Record<SocketType, Gem[]>;
+	editGems: boolean;
 }

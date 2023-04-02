@@ -23,21 +23,11 @@ class UpgradeControllerTest extends ControllerTest {
 
 	@Test
 	void findUpgrades() throws Exception {
-		mockMvc.perform(get("/api/v1/upgrade/{profileId}/slot/{slotGroup}", profile.getProfileId(), ItemSlotGroup.CHEST))
+		mockMvc.perform(get("/api/v1/upgrade/{characterId}/slot/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).getPlayerProfile(profile.getProfileId());
-	}
-
-	@Test
-	void findAllUpgrades() throws Exception {
-		mockMvc.perform(get("/api/v1/upgrade/{profileId}", profile.getProfileId()))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-		;
-
-		verify(playerProfileService).getPlayerProfile(profile.getProfileId());
+		verify(playerProfileService).getCharacter(CHARACTER_KEY);
 	}
 }

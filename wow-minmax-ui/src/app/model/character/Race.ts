@@ -1,12 +1,5 @@
-export enum Race {
-	UNDEAD = 'UNDEAD',
-	ORC = 'ORC',
-	TROLL = 'TROLL',
-	TAUREN = 'TAUREN',
-	BLOOD_ELF = 'BLOOD_ELF',
-	HUMAN = 'HUMAN',
-	DWARF = 'DWARF',
-	GNOME = 'GNOME',
-	NIGHT_ELF = 'NIGHT_ELF',
-	DRANEI = 'DRANEI',
+export interface Race {
+	id: string;
+	name: string;
+	icon: string;
 }

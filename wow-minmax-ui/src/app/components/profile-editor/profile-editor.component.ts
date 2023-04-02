@@ -11,7 +11,7 @@ import { UpgradeService } from 'src/app/services/upgrade.service';
 	styleUrls: ['./profile-editor.component.css']
 })
 export class ProfileEditorComponent implements OnChanges {
-	@Input() selectedProfile!: ProfileInfo;
+	@Input() selectedCharacterId!: string;
 	dps?: number;
 	previousDps?: number;
 	upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
@@ -19,7 +19,7 @@ export class ProfileEditorComponent implements OnChanges {
 	constructor(private statsService: StatsService, private upgradeService: UpgradeService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfile']) {
+		if (!changes['selectedCharacterId']) {
 			return;
 		}
 		this.dps = undefined;
@@ -38,7 +38,7 @@ export class ProfileEditorComponent implements OnChanges {
 	}
 
 	updateDps(): void {
-		this.statsService.getSpellDps(this.selectedProfile.profileId!).subscribe((dps: number) => {
+		this.statsService.getSpellDps(this.selectedCharacterId!).subscribe((dps: number) => {
 			this.previousDps = this.dps;
 			this.dps = dps;
 		})
@@ -46,7 +46,7 @@ export class ProfileEditorComponent implements OnChanges {
 
 	updateUpgradeStatus(): void {
 		for (let slotGroup of Object.values(ItemSlotGroup)) {
-			this.upgradeService.getUpgrades(this.selectedProfile.profileId!, slotGroup).subscribe((upgrades: Upgrade[]) => {
+			this.upgradeService.getUpgrades(this.selectedCharacterId!, slotGroup).subscribe((upgrades: Upgrade[]) => {
 				this.upgradesBySlotGroup[slotGroup] = upgrades;
 			});
 		}

@@ -75,6 +75,10 @@ public class CharacterClass implements Described {
 				.orElseThrow();
 	}
 
+	public boolean has(RaceId raceId) {
+		return races.stream().anyMatch(x -> x.getRaceId() == raceId);
+	}
+
 	@Override
 	public String toString() {
 		return getName();

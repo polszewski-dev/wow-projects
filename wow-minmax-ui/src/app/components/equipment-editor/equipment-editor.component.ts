@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Phase } from 'src/app/model/character/Phase';
 import { Enchant } from 'src/app/model/equipment/Enchant';
 import { Equipment } from 'src/app/model/equipment/Equipment';
 import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
@@ -22,8 +21,7 @@ import { ItemChange } from '../equipment-slot-editor/ItemChange';
 	styleUrls: ['./equipment-editor.component.css']
 })
 export class EquipmentEditorComponent implements OnChanges {
-	@Input() selectedProfileId!: string;
-	@Input() editGems: boolean = true;
+	@Input() selectedCharacterId!: string;
 	@Input() upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
 	@Output() equipmentChanged = new EventEmitter<void>()
 
@@ -32,6 +30,7 @@ export class EquipmentEditorComponent implements OnChanges {
 	equipment?: Equipment;
 	equipmentOptions?: EquipmentOptions;
 	equipmentSocketStatus?: EquipmentSocketStatus;
+	editGems: boolean = false;
 
 	readonly ItemSlot = ItemSlot;
 	readonly ItemType = ItemType;
@@ -41,15 +40,16 @@ export class EquipmentEditorComponent implements OnChanges {
 	constructor(private equipmentService: EquipmentService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfileId']) {
+		if (!changes['selectedCharacterId']) {
 			return;
 		}
 		this.equipmentSocketStatus = undefined;
-		this.equipmentService.getEquipment(this.selectedProfileId).subscribe((equipment: Equipment) => {
+		this.equipmentService.getEquipment(this.selectedCharacterId).subscribe((equipment: Equipment) => {
 			this.equipment = equipment;
 		});
-		this.equipmentService.getEquipmentOptions(this.selectedProfileId).subscribe((equipmentOptions: EquipmentOptions) => {
+		this.equipmentService.getEquipmentOptions(this.selectedCharacterId).subscribe((equipmentOptions: EquipmentOptions) => {
 			this.equipmentOptions = sort(equipmentOptions);
+			this.editGems = equipmentOptions.editGems;
 		});
 		this.updateSocketStatus();
 	}
@@ -70,7 +70,7 @@ export class EquipmentEditorComponent implements OnChanges {
 
 	onUpgradeCounterClicked(slotGroup: ItemSlotGroup): void {
 		const items = this.upgradesBySlotGroup[slotGroup]![0].itemDifference;
-		this.equipmentService.changeItems(this.selectedProfileId, slotGroup, items!).subscribe(() => {
+		this.equipmentService.changeItems(this.selectedCharacterId, slotGroup, items!).subscribe(() => {
 			this.updateEquipmentSlots(slotGroup, items!);
 			this.updateSocketStatus();
 		});
@@ -97,13 +97,13 @@ export class EquipmentEditorComponent implements OnChanges {
 	}
 
 	updateSocketStatus(): void {
-		this.equipmentService.getSocketStatus(this.selectedProfileId).subscribe((equipmentSocketStatus: EquipmentSocketStatus) => {
+		this.equipmentService.getSocketStatus(this.selectedCharacterId).subscribe((equipmentSocketStatus: EquipmentSocketStatus) => {
 			this.equipmentSocketStatus = equipmentSocketStatus;
 		});
 	}
 
 	resetEquipment(): void {
-		this.equipmentService.resetEquipment(this.selectedProfileId).subscribe((equipment: Equipment) => {
+		this.equipmentService.resetEquipment(this.selectedCharacterId).subscribe((equipment: Equipment) => {
 			this.equipment = equipment;
 			this.equipmentChanged.emit();
 		});

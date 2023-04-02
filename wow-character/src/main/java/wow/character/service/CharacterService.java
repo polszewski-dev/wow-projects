@@ -21,5 +21,7 @@ public interface CharacterService {
 
 	Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, PhaseId phaseId);
 
-	Enemy createEnemy(CreatureType enemyType);
+	void changeBuild(Character character, BuildId buildId);
+
+	Enemy createEnemy(CreatureType enemyType, int levelDifference);
 }

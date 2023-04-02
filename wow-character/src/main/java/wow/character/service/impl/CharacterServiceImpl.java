@@ -77,7 +77,8 @@ public class CharacterServiceImpl implements CharacterService {
 		return character;
 	}
 
-	private void changeBuild(Character character, BuildId buildId) {
+	@Override
+	public void changeBuild(Character character, BuildId buildId) {
 		BuildTemplate buildTemplate = getBuildTemplate(buildId, character);
 
 		character.resetBuild();
@@ -112,7 +113,7 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public Enemy createEnemy(CreatureType enemyType) {
-		return new Enemy(enemyType);
+	public Enemy createEnemy(CreatureType enemyType, int levelDifference) {
+		return new Enemy(enemyType, levelDifference);
 	}
 }

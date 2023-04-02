@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.Character;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.talents.Talent;
-import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.TalentDTO;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
-import java.util.UUID;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
 import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
@@ -32,14 +31,14 @@ public class TalentController {
 	private final PlayerProfileService playerProfileService;
 	private final CalculationService calculationService;
 
-	@GetMapping("{profileId}/list")
+	@GetMapping("{characterId}/list")
 	public List<TalentDTO> getTalents(
-			@PathVariable("profileId") UUID profileId
+			@PathVariable("characterId") CharacterId characterId
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
+		Character character = playerProfileService.getCharacter(characterId);
 
-		return playerProfile.getTalents().getList().stream()
-				.map(x -> getTalentStatDTO(x, playerProfile.getCharacter()))
+		return character.getTalents().getList().stream()
+				.map(x -> getTalentStatDTO(x, character))
 				.toList();
 	}
 

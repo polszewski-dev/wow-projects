@@ -13,19 +13,19 @@ export class StatsService {
 
 	constructor(private http: HttpClient) { }
 
-	getSpellStats(profileId: string): Observable<SpellStats[]> {
-		return this.http.get<SpellStats[]>(`${this.apiUrl}/${profileId}/spell`);
+	getSpellStats(characterId: string): Observable<SpellStats[]> {
+		return this.http.get<SpellStats[]>(`${this.apiUrl}/${characterId}/spell`);
 	}
 
-	getCharacterStats(profileId: string): Observable<CharacterStats[]> {
-		return this.http.get<CharacterStats[]>(`${this.apiUrl}/${profileId}/character`);
+	getCharacterStats(characterId: string): Observable<CharacterStats[]> {
+		return this.http.get<CharacterStats[]>(`${this.apiUrl}/${characterId}/character`);
 	}
 
-	getSpecialAbilities(profileId: string): Observable<SpecialAbilityStats[]> {
-		return this.http.get<SpecialAbilityStats[]>(`${this.apiUrl}/${profileId}/special`);
+	getSpecialAbilities(characterId: string): Observable<SpecialAbilityStats[]> {
+		return this.http.get<SpecialAbilityStats[]>(`${this.apiUrl}/${characterId}/special`);
 	}
 
-	getSpellDps(profileId: string): Observable<number> {
-		return this.http.get<number>(`${this.apiUrl}/${profileId}/dps`);
+	getSpellDps(characterId: string): Observable<number> {
+		return this.http.get<number>(`${this.apiUrl}/${characterId}/dps`);
 	}
 }

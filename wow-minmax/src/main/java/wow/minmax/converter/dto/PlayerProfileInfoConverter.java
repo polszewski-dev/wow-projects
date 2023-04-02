@@ -2,12 +2,16 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.character.CharacterClass;
+import wow.character.model.character.GameVersion;
+import wow.character.model.character.Race;
+import wow.character.repository.CharacterRepository;
+import wow.commons.model.pve.GameVersionId;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.dto.PlayerProfileInfoDTO;
-
-import static wow.minmax.converter.dto.DtoConverterParams.createParams;
 
 /**
  * User: POlszewski
@@ -16,21 +20,24 @@ import static wow.minmax.converter.dto.DtoConverterParams.createParams;
 @Component
 @AllArgsConstructor
 public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, PlayerProfileInfoDTO>, BackConverter<PlayerProfileInfo, PlayerProfileInfoDTO> {
-	private final CharacterProfessionConverter characterProfessionConverter;
+	private final CharacterClassConverter characterClassConverter;
+	private final RaceConverter raceConverter;
+
+	private final CharacterRepository characterRepository;
 
 	@Override
 	public PlayerProfileInfoDTO doConvert(PlayerProfileInfo source) {
+		GameVersion latestGameVersion = characterRepository.getGameVersion(GameVersionId.getLatestGameVersionId()).orElseThrow();
+		CharacterClass characterClass = latestGameVersion.getCharacterClass(source.getCharacterClassId());
+		Race race = latestGameVersion.getRace(source.getRaceId());
+
 		return new PlayerProfileInfoDTO(
 				source.getProfileId(),
 				source.getProfileName(),
-				source.getCharacterClassId(),
-				source.getRaceId(),
-				source.getLevel(),
-				source.getEnemyType(),
-				source.getBuildId(),
-				characterProfessionConverter.convertList(source.getProfessions()),
-				source.getPhaseId(),
-				source.getLastModified()
+				characterClassConverter.convert(characterClass),
+				raceConverter.convert(race),
+				source.getLastModified(),
+				source.getLastUsedCharacterId().toString()
 		);
 	}
 
@@ -39,14 +46,10 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 		return new PlayerProfileInfo(
 				source.getProfileId(),
 				source.getProfileName(),
-				source.getCharacterClass(),
-				source.getRace(),
-				source.getLevel(),
-				source.getEnemyType(),
-				source.getBuildId(),
-				characterProfessionConverter.convertBackList(source.getProfessions(), createParams(source.getPhase())),
-				source.getPhase(),
-				source.getLastModified()
+				source.getCharacterClass().getId(),
+				source.getRace().getId(),
+				source.getLastModified(),
+				CharacterId.parse(source.getLastUsedCharacterId())
 		);
 	}
 }

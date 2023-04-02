@@ -21,4 +21,5 @@ public class EquipmentOptionsDTO {
 	private Map<ItemSlot, List<ItemDTO>> itemsByItemSlot;
 	private Map<ItemType, List<EnchantDTO>> enchantsByItemType;
 	private Map<SocketType, List<GemDTO>> gemsBySocketType;
+	private boolean editGems;
 }

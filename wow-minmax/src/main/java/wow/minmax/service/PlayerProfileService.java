@@ -1,14 +1,10 @@
 package wow.minmax.service;
 
-import wow.character.model.build.BuildId;
-import wow.character.model.character.CharacterProfession;
+import wow.character.model.character.Character;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.RaceId;
-import wow.commons.model.pve.PhaseId;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 
@@ -24,18 +20,17 @@ public interface PlayerProfileService {
 
 	PlayerProfile createPlayerProfile(PlayerProfileInfo playerProfileInfo);
 
-	PlayerProfile createTemporaryPlayerProfile(
-			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, PhaseId phaseId);
-
 	PlayerProfile getPlayerProfile(UUID profileId);
 
-	PlayerProfile changeItemBestVariant(UUID profileId, ItemSlot slot, int itemId);
+	Character getCharacter(CharacterId characterId);
 
-	PlayerProfile changeItem(UUID profileId, ItemSlot slot, EquippableItem item);
+	Character changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId);
 
-	PlayerProfile changeItemGroup(UUID profileId, ItemSlotGroup slotGroup, List<EquippableItem> items);
+	Character changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
 
-	PlayerProfile resetEquipment(UUID profileId);
+	Character changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
-	PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled);
+	Character resetEquipment(CharacterId characterId);
+
+	Character enableBuff(CharacterId characterId, int buffId, boolean enabled);
 }

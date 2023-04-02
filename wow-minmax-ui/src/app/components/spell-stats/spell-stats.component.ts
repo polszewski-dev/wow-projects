@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { SpellStats } from 'src/app/model/stats/SpellStats';
 import { StatsService } from 'src/app/services/stats.service';
 
@@ -9,16 +8,16 @@ import { StatsService } from 'src/app/services/stats.service';
 	styleUrls: ['./spell-stats.component.css']
 })
 export class SpellStatsComponent implements OnChanges {
-	@Input() selectedProfileId!: string;
+	@Input() selectedCharacterId!: string;
 	spellStatsList: SpellStats[] = [];
 
 	constructor(private statsService: StatsService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfileId']) {
+		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.statsService.getSpellStats(this.selectedProfileId).subscribe((spellStatsList: SpellStats[]) => {
+		this.statsService.getSpellStats(this.selectedCharacterId).subscribe((spellStatsList: SpellStats[]) => {
 			this.spellStatsList = spellStatsList;
 		});
 	}

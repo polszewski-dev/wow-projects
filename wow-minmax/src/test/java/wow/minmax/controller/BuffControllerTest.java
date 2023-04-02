@@ -22,7 +22,7 @@ class BuffControllerTest extends ControllerTest {
 
 	@Test
 	void getBuffs() throws Exception {
-		mockMvc.perform(get("/api/v1/buff/{profileId}/list", profile.getProfileId()))
+		mockMvc.perform(get("/api/v1/buff/{characterId}/list", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -32,7 +32,7 @@ class BuffControllerTest extends ControllerTest {
 	void changeBuff() throws Exception {
 		Buff buff = getBuff("Fel Armor");
 
-		mockMvc.perform(get("/api/v1/buff/{profileId}/enable/{buffId}/{enabled}", profile.getProfileId(), buff.getId(), true))
+		mockMvc.perform(get("/api/v1/buff/{characterId}/enable/{buffId}/{enabled}", CHARACTER_KEY, buff.getId(), true))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

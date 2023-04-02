@@ -16,6 +16,6 @@ abstract class ServiceTest extends WowMinMaxSpringTest {
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
-		character = profile.getCharacter();
+		character = profile.getCharacter(CHARACTER_KEY).orElseThrow();
 	}
 }

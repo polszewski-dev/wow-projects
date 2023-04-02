@@ -11,7 +11,7 @@ export class TalentService {
 
 	constructor(private http: HttpClient) { }
 
-	getTalents(profileId: string): Observable<Talent[]> {
-		return this.http.get<Talent[]>(`${this.apiUrl}/${profileId}/list`);
+	getTalents(characterId: string): Observable<Talent[]> {
+		return this.http.get<Talent[]>(`${this.apiUrl}/${characterId}/list`);
 	}
 }

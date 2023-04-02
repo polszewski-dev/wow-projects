@@ -12,7 +12,7 @@ export class UpgradeService {
 
 	constructor(private http: HttpClient) { }
 
-	getUpgrades(profileId: string, slotGroup: ItemSlotGroup): Observable<Upgrade[]> {
-		return this.http.get<Upgrade[]>(`${this.apiUrl}/${profileId}/slot/${slotGroup}`);
+	getUpgrades(characterId: string, slotGroup: ItemSlotGroup): Observable<Upgrade[]> {
+		return this.http.get<Upgrade[]>(`${this.apiUrl}/${characterId}/slot/${slotGroup}`);
 	}
 }

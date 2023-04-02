@@ -1,28 +1,5 @@
-export enum Phase {
-	VANILLA_P1 = 'VANILLA_P1',
-	VANILLA_P2 = 'VANILLA_P2',
-	VANILLA_P2_5 = 'VANILLA_P2_5',
-	VANILLA_P3 = 'VANILLA_P3',
-	VANILLA_P4 = 'VANILLA_P4',
-	VANILLA_P5 = 'VANILLA_P5',
-	VANILLA_P6 = 'VANILLA_P6',
-	TBC_P0 = 'TBC_P0',
-	TBC_P1 = 'TBC_P1',
-	TBC_P2 = 'TBC_P2',
-	TBC_P3 = 'TBC_P3',
-	TBC_P4 = 'TBC_P4',
-	TBC_P5 = 'TBC_P5',
-}
-
-export function getMaxLevel(phase?: Phase): number | undefined {
-	if (phase === undefined) {
-		return undefined;
-	}
-	if (phase.startsWith("VANILLA_")) {
-		return 60;
-	}
-	if (phase.startsWith("TBC_")) {
-		return 70;
-	}
-	return undefined;
+export interface Phase {
+	id: string;
+	name: string;
+	maxLevel: number;
 }

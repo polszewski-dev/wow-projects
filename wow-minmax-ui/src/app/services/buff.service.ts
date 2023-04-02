@@ -11,11 +11,11 @@ export class BuffService {
 
 	constructor(private http: HttpClient) { }
 
-	getBuffs(profileId: string): Observable<Buff[]> {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${profileId}/list`);
+	getBuffs(characterId: string): Observable<Buff[]> {
+		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/list`);
 	}
 
-	changeBuff(profileId: string, buff: Buff): Observable<Buff[]> {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${profileId}/enable/${buff.id}/${buff.enabled}`);
+	changeBuff(characterId: string, buff: Buff): Observable<Buff[]> {
+		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/enable/${buff.id}/${buff.enabled}`);
 	}
 }

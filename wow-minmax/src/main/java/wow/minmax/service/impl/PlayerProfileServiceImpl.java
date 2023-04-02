@@ -4,21 +4,22 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
-import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.Enemy;
+import wow.character.model.character.Phase;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.ItemService;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Item;
+import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.PhaseId;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.persistent.PlayerProfilePO;
@@ -26,11 +27,8 @@ import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static wow.minmax.converter.persistent.PoConverterParams.createParams;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * User: POlszewski
@@ -39,13 +37,14 @@ import static wow.minmax.converter.persistent.PoConverterParams.createParams;
 @Service
 @AllArgsConstructor
 public class PlayerProfileServiceImpl implements PlayerProfileService {
+	private final CharacterRepository characterRepository;
 	private final PlayerProfileRepository playerProfileRepository;
 	private final PlayerProfilePOConverter playerProfilePOConverter;
 
-	private final CharacterService characterService;
 	private final ItemService itemService;
 	private final SpellService spellService;
 	private final UpgradeService upgradeService;
+	private final CharacterService characterService;
 
 	@Override
 	public List<PlayerProfileInfo> getPlayerProfileInfos() {
@@ -57,36 +56,32 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile createPlayerProfile(PlayerProfileInfo playerProfileInfo) {
-		PlayerProfile playerProfile = createTemporaryPlayerProfile(
-				UUID.randomUUID(),
+		UUID profileId = UUID.randomUUID();
+
+		PlayerProfile playerProfile = new PlayerProfile(
+				profileId,
 				playerProfileInfo.getProfileName(),
 				playerProfileInfo.getCharacterClassId(),
 				playerProfileInfo.getRaceId(),
-				playerProfileInfo.getLevel(),
-				playerProfileInfo.getBuildId(),
-				playerProfileInfo.getProfessions(),
-				playerProfileInfo.getEnemyType(),
-				playerProfileInfo.getPhaseId()
+				new HashMap<>(),
+				LocalDateTime.now(),
+				getDefaultCharacterId(profileId)
 		);
 
 		saveProfile(playerProfile);
 		return playerProfile;
 	}
 
-	@Override
-	public PlayerProfile createTemporaryPlayerProfile(
-			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, PhaseId phaseId
-	) {
-		Character character = characterService.createCharacter(characterClassId, raceId, level, buildId, phaseId);
-		Enemy enemy = characterService.createEnemy(enemyType);
+	private CharacterId getDefaultCharacterId(UUID profileId) {
+		PhaseId defaultPhaseId = PhaseId.TBC_P5;//todo getSupportedVersions().last().getPhases().last
+		Phase defaultPhase = characterRepository.getPhase(defaultPhaseId).orElseThrow();
 
-		character.setTargetEnemy(enemy);
-		character.setProfessions(professions);
-
-		return new PlayerProfile(
+		return new CharacterId(
 				profileId,
-				profileName,
-				character
+				defaultPhase.getPhaseId(),
+				defaultPhase.getGameVersion().getMaxLevel(),
+				CreatureType.BEAST,
+				3
 		);
 	}
 
@@ -96,35 +91,74 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public PlayerProfile changeItemBestVariant(UUID profileId, ItemSlot slot, int itemId) {
-		EquippableItem bestItemVariant = getBestItemVariant(profileId, slot, itemId);
-
-		return changeItem(profileId, slot, bestItemVariant);
+	public Character getCharacter(CharacterId characterId) {
+		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
+		return getCharacter(playerProfile, characterId);
 	}
 
-	private EquippableItem getBestItemVariant(UUID profileId, ItemSlot slot, int itemId) {
-		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Item item = itemService.getItem(itemId, playerProfile.getPhase());
-		return upgradeService.getBestItemVariant(playerProfile.getCharacter(), item, slot, playerProfile.getDamagingSpell());
+	private Character getCharacter(PlayerProfile playerProfile, CharacterId characterId) {
+		Optional<Character> character = playerProfile.getCharacter(characterId);
+
+		if (character.isPresent()) {
+			return character.orElseThrow();
+		}
+
+		Character newCharacter = createCharacter(playerProfile, characterId);
+
+		playerProfile.addCharacter(newCharacter);
+		return newCharacter;
+	}
+
+	private Character createCharacter(PlayerProfile playerProfile, CharacterId characterId) {
+		Character newCharacter = characterService.createCharacter(
+				playerProfile.getCharacterClassId(),
+				playerProfile.getRaceId(),
+				characterId.getLevel(),
+				BuildId.DESTRO_SHADOW,//todo
+				characterId.getPhaseId()
+		);
+
+		Enemy targetEnemy = new Enemy(characterId.getEnemyType(), characterId.getEnemyLevelDiff());
+
+		newCharacter.setTargetEnemy(targetEnemy);
+		newCharacter.addProfession(ProfessionId.TAILORING);//todo
+		newCharacter.addProfession(ProfessionId.ENCHANTING);//todo
+
+		return newCharacter;
 	}
 
 	@Override
-	public PlayerProfile changeItem(UUID profileId, ItemSlot slot, EquippableItem item) {
-		PlayerProfile playerProfile = getPlayerProfile(profileId);
+	public Character changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId) {
+		EquippableItem bestItemVariant = getBestItemVariant(characterId, slot, itemId);
 
-		playerProfile.equip(item, slot);
-		saveProfile(playerProfile);
+		return changeItem(characterId, slot, bestItemVariant);
+	}
 
-		return playerProfile;
+	private EquippableItem getBestItemVariant(CharacterId characterId, ItemSlot slot, int itemId) {
+		Character character = getCharacter(characterId);
+		Item item = itemService.getItem(itemId, character.getPhaseId());
+		return upgradeService.getBestItemVariant(character, item, slot, character.getDamagingSpell());
 	}
 
 	@Override
-	public PlayerProfile changeItemGroup(UUID profileId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
-		PlayerProfile playerProfile = getPlayerProfile(profileId);
+	public Character changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
+		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
+		Character character = getCharacter(playerProfile, characterId);
+
+		character.equip(item, slot);
+		saveProfile(playerProfile, character);
+
+		return character;
+	}
+
+	@Override
+	public Character changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
+		Character character = getCharacter(playerProfile, characterId);
 		List<ItemSlot> slots = slotGroup.getSlots();
 
 		for (ItemSlot slot : slots) {
-			playerProfile.equip(null, slot);
+			character.equip(null, slot);
 		}
 
 		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
@@ -134,31 +168,39 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		for (int slotIdx = 0; slotIdx < slots.size(); slotIdx++) {
 			ItemSlot slot = slots.get(slotIdx);
 			EquippableItem item = items.get(slotIdx);
-			playerProfile.equip(item, slot);
+			character.equip(item, slot);
 		}
 
-		saveProfile(playerProfile);
+		saveProfile(playerProfile, character);
 
-		return playerProfile;
+		return character;
 	}
 
 	@Override
-	public PlayerProfile resetEquipment(UUID profileId) {
-		PlayerProfile playerProfile = getPlayerProfile(profileId);
+	public Character resetEquipment(CharacterId characterId) {
+		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
+		Character character = getCharacter(playerProfile, characterId);
 
-		playerProfile.resetEquipment();
-		saveProfile(playerProfile);
-		return playerProfile;
+		character.resetEquipment();
+		saveProfile(playerProfile, character);
+		return character;
 	}
 
 	@Override
-	public PlayerProfile enableBuff(UUID profileId, int buffId, boolean enabled) {
-		PlayerProfile playerProfile = getPlayerProfile(profileId);
-		Buff buff = spellService.getBuff(buffId, playerProfile.getPhase());
+	public Character enableBuff(CharacterId characterId, int buffId, boolean enabled) {
+		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
+		Character character = getCharacter(playerProfile, characterId);
+		Buff buff = spellService.getBuff(buffId, character.getPhaseId());
 
-		playerProfile.enableBuff(buff, enabled);
+		character.enableBuff(buff, enabled);
+		saveProfile(playerProfile, character);
+		return character;
+	}
+
+	private void saveProfile(PlayerProfile playerProfile, Character changedCharacter) {
+		CharacterId characterId = playerProfile.getCharacterId(changedCharacter);
+		playerProfile.setLastModifiedCharacterId(characterId);
 		saveProfile(playerProfile);
-		return playerProfile;
 	}
 
 	private void saveProfile(PlayerProfile playerProfile) {
@@ -168,7 +210,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private PlayerProfile getPlayerProfile(PlayerProfilePO profile) {
-		var converterParams = createParams(profile.getPhaseId(), this);
-		return playerProfilePOConverter.convertBack(profile, converterParams);
+		return playerProfilePOConverter.convertBack(profile);
 	}
 }

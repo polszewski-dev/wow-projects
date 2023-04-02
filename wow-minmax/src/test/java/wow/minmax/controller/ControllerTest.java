@@ -2,6 +2,7 @@ package wow.minmax.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import wow.character.model.character.Character;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
@@ -21,22 +22,26 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	PlayerProfileService playerProfileService;
 
 	PlayerProfile profile;
+	Character character;
 	PlayerProfileInfo profileInfo;
 
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
-		profile.setEquipment(getEquipment());
+		character = profile.getCharacter(CHARACTER_KEY).orElseThrow();
+
+		character.setEquipment(getEquipment());
 
 		profileInfo = profile.getProfileInfo();
 
 		when(playerProfileService.getPlayerProfileInfos()).thenReturn(List.of(profileInfo));
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
+		when(playerProfileService.getCharacter(CHARACTER_KEY)).thenReturn(character);
 		when(playerProfileService.createPlayerProfile(any())).thenReturn(profile);
-		when(playerProfileService.resetEquipment(any())).thenReturn(profile);
-		when(playerProfileService.changeItemBestVariant(any(), any(), anyInt())).thenReturn(profile);
-		when(playerProfileService.changeItem(any(), any(), any())).thenReturn(profile);
-		when(playerProfileService.changeItemGroup(any(), any(), any())).thenReturn(profile);
-		when(playerProfileService.enableBuff(any(), anyInt(), anyBoolean())).thenReturn(profile);
+		when(playerProfileService.resetEquipment(any())).thenReturn(character);
+		when(playerProfileService.changeItemBestVariant(any(), any(), anyInt())).thenReturn(character);
+		when(playerProfileService.changeItem(any(), any(), any())).thenReturn(character);
+		when(playerProfileService.changeItemGroup(any(), any(), any())).thenReturn(character);
+		when(playerProfileService.enableBuff(any(), anyInt(), anyBoolean())).thenReturn(character);
 	}
 }

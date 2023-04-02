@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.Buffs;
+import wow.character.model.character.Character;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.minmax.converter.dto.BuffConverter;
-import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.BuffDTO;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * User: POlszewski
@@ -30,28 +30,28 @@ public class BuffController {
 	private final SpellService spellService;
 	private final BuffConverter buffConverter;
 
-	@GetMapping("{profileId}/list")
+	@GetMapping("{characterId}/list")
 	public List<BuffDTO> getBuffs(
-			@PathVariable("profileId") UUID profileId
+			@PathVariable("characterId") CharacterId characterId
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
-		return getPlayerBuffs(playerProfile);
+		Character character = playerProfileService.getCharacter(characterId);
+		return getBuffs(character);
 	}
 
-	@GetMapping("{profileId}/enable/{buffId}/{enabled}")
+	@GetMapping("{characterId}/enable/{buffId}/{enabled}")
 	public List<BuffDTO> changeBuff(
-			@PathVariable("profileId") UUID profileId,
+			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("buffId") int buffId,
 			@PathVariable("enabled") boolean enabled
 	) {
-		PlayerProfile playerProfile = playerProfileService.enableBuff(profileId, buffId, enabled);
-		log.info("Changed buff profile id: {}, buffId: {}, enabled: {}", profileId, buffId, enabled);
-		return getPlayerBuffs(playerProfile);
+		Character character = playerProfileService.enableBuff(characterId, buffId, enabled);
+		log.info("Changed buff charId: {}, buffId: {}, enabled: {}", characterId, buffId, enabled);
+		return getBuffs(character);
 	}
 
-	private List<BuffDTO> getPlayerBuffs(PlayerProfile playerProfile) {
-		Buffs buffs = playerProfile.getBuffs();
-		List<Buff> availableBuffs = spellService.getBuffs(playerProfile.getCharacter());
+	private List<BuffDTO> getBuffs(Character character) {
+		Buffs buffs = character.getBuffs();
+		List<Buff> availableBuffs = spellService.getBuffs(character);
 
 		return availableBuffs.stream()
 				.map(availableBuff -> getBuffDTO(availableBuff, buffs))

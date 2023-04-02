@@ -2,15 +2,16 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.character.Character;
+import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
-import wow.minmax.converter.ParametrizedBackConverter;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.persistent.CharacterPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
-import wow.minmax.service.PlayerProfileService;
 
 import java.util.Map;
-
-import static wow.minmax.converter.persistent.PoConverterParams.getPlayerProfileService;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -18,48 +19,48 @@ import static wow.minmax.converter.persistent.PoConverterParams.getPlayerProfile
  */
 @Component
 @AllArgsConstructor
-public class PlayerProfilePOConverter implements Converter<PlayerProfile, PlayerProfilePO>, ParametrizedBackConverter<PlayerProfile, PlayerProfilePO> {
-	private final EquipmentPOConverter equipmentPOConverter;
-	private final CharacterProfessionPOConverter characterProfessionPOConverter;
-	private final BuffPOConverter buffPOConverter;
+public class PlayerProfilePOConverter implements Converter<PlayerProfile, PlayerProfilePO>, BackConverter<PlayerProfile, PlayerProfilePO> {
+	private final CharacterPOConverter characterPOConverter;
 
 	@Override
 	public PlayerProfilePO doConvert(PlayerProfile source) {
 		return new PlayerProfilePO(
 				source.getProfileId(),
 				source.getProfileName(),
-				source.getCharacterClass(),
-				source.getRace(),
-				source.getLevel(),
-				source.getBuildId(),
-				characterProfessionPOConverter.convertList(source.getProfessions().getList()),
-				source.getEnemyType(),
-				source.getPhase(),
-				equipmentPOConverter.convert(source.getEquipment()),
-				buffPOConverter.convertList(source.getBuffs().getList()),
-				source.getLastModified()
+				source.getCharacterClassId(),
+				source.getRaceId(),
+				convertCharacters(source.getCharacterByKey()),
+				source.getLastModified(),
+				source.getLastModifiedCharacterId()
 		);
 	}
 
 	@Override
-	public PlayerProfile doConvertBack(PlayerProfilePO source, Map<String, Object> params) {
-		PlayerProfileService playerProfileService = getPlayerProfileService(params);
-
-		PlayerProfile playerProfile = playerProfileService.createTemporaryPlayerProfile(
+	public PlayerProfile doConvertBack(PlayerProfilePO source) {
+		return new PlayerProfile(
 				source.getProfileId(),
 				source.getProfileName(),
 				source.getCharacterClassId(),
-				source.getRace(),
-				source.getLevel(),
-				source.getBuildId(),
-				characterProfessionPOConverter.convertBackList(source.getProfessions(), params),
-				source.getEnemyType(),
-				source.getPhaseId()
+				source.getRaceId(),
+				convertBackCharacters(source.getCharacterByKey()),
+				source.getLastModified(),
+				source.getLastModifiedCharacterId()
 		);
+	}
 
-		playerProfile.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
-		playerProfile.setBuffs(buffPOConverter.convertBackList(source.getBuffs(), params));
-		playerProfile.setLastModified(source.getLastModified());
-		return playerProfile;
+	private Map<CharacterId, CharacterPO> convertCharacters(Map<CharacterId, Character> characterByKey) {
+		return characterByKey.entrySet().stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						e -> characterPOConverter.convert(e.getValue())
+				));
+	}
+
+	private Map<CharacterId, Character> convertBackCharacters(Map<CharacterId, CharacterPO> characterByKey) {
+		return characterByKey.entrySet().stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						e -> characterPOConverter.convertBack(e.getValue())
+				));
 	}
 }

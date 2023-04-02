@@ -6,17 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wow.character.model.character.Character;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.converter.dto.UpgradeConverter;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.Comparison;
-import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.dto.UpgradeDTO;
-import wow.minmax.model.dto.UpgradesDTO;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -31,60 +30,16 @@ public class UpgradeController {
 	private final PlayerProfileService playerProfileService;
 	private final UpgradeConverter upgradeConverter;
 
-	@GetMapping("{profileId}/slot/{slotGroup}")
+	@GetMapping("{characterId}/slot/{slotGroup}")
 	public List<UpgradeDTO> findUpgrades(
-			@PathVariable("profileId") UUID profileId,
+			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
-		List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile.getCharacter(), slotGroup, playerProfile.getDamagingSpell());
+		Character character = playerProfileService.getCharacter(characterId).copy();
+		List<Comparison> upgrades = upgradeService.findUpgrades(character, slotGroup, character.getDamagingSpell());
 
-		return toUpgradeDTOs(upgrades);
-	}
-
-	private List<UpgradeDTO> toUpgradeDTOs(List<Comparison> upgrades) {
 		return upgrades.stream()
 				.map(upgradeConverter::convert)
 				.toList();
 	}
-
-	@GetMapping("{profileId}")
-	public UpgradesDTO findUpgrades(
-			@PathVariable("profileId") UUID profileId
-	) {
-		long start = System.currentTimeMillis();
-
-		try {
-			PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId).copy();
-			var result = new EnumMap<ItemSlotGroup, List<Comparison>>(ItemSlotGroup.class);
-
-			for (ItemSlotGroup slotGroup : ItemSlotGroup.values()) {
-				if (!IGNORED_SLOT_GROUPS.contains(slotGroup)) {
-					List<Comparison> upgrades = upgradeService.findUpgrades(playerProfile.getCharacter(), slotGroup, playerProfile.getDamagingSpell());
-					result.put(slotGroup, upgrades);
-				}
-			}
-
-			return new UpgradesDTO(
-				result.entrySet().stream()
-						.collect(Collectors.toMap(
-								Map.Entry::getKey,
-								e -> toUpgradeDTOs(e.getValue())
-						))
-			);
-		} finally {
-			log.info("It took {} millis.", System.currentTimeMillis() - start);
-		}
-	}
-
-	private static final Set<ItemSlotGroup> IGNORED_SLOT_GROUPS = Set.of(
-			ItemSlotGroup.TABARD,
-			ItemSlotGroup.SHIRT,
-			ItemSlotGroup.FINGER_1,
-			ItemSlotGroup.FINGER_2,
-			ItemSlotGroup.TRINKET_1,
-			ItemSlotGroup.TRINKET_2,
-			ItemSlotGroup.MAIN_HAND,
-			ItemSlotGroup.OFF_HAND
-	);
 }

@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
 import { SpecialAbilityStats } from 'src/app/model/stats/SpecialAbilityStats';
 import { StatsService } from 'src/app/services/stats.service';
 
@@ -9,16 +8,16 @@ import { StatsService } from 'src/app/services/stats.service';
 	styleUrls: ['./special-abilities.component.css']
 })
 export class SpecialAbilitiesComponent implements OnChanges {
-	@Input() selectedProfileId!: string;
+	@Input() selectedCharacterId!: string;
 	specialAbilityStatsList: SpecialAbilityStats[] = [];
 
 	constructor(private statsService: StatsService) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfileId']) {
+		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.statsService.getSpecialAbilities(this.selectedProfileId).subscribe((specialAbilityStatsList: SpecialAbilityStats[]) => {
+		this.statsService.getSpecialAbilities(this.selectedCharacterId).subscribe((specialAbilityStatsList: SpecialAbilityStats[]) => {
 			this.specialAbilityStatsList = specialAbilityStatsList;
 		});
 	}

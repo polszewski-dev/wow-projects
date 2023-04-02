@@ -6,8 +6,7 @@
 			<a ngbNavLink>Equipment</a>
 			<ng-template ngbNavContent>
 				<app-equipment-editor
-					[selectedProfileId]="selectedProfile.profileId!"
-					[editGems]="!selectedProfile.phase.startsWith('VANILLA_')"
+					[selectedCharacterId]="selectedCharacterId"
 					[upgradesBySlotGroup]="upgradesBySlotGroup"
 					(equipmentChanged)="onEquipmentChanged()"
 				></app-equipment-editor>
@@ -19,20 +18,20 @@
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Buffs</a>
 			<ng-template ngbNavContent>
-				<app-buff-editor [selectedProfileId]="selectedProfile.profileId!" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
+				<app-buff-editor [selectedCharacterId]="selectedCharacterId" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
 			</ng-template>
 		</ng-container>
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Results</a>
 			<ng-template ngbNavContent>
 				<div class="stats-header">Spell Stats</div>
-				<app-spell-stats [selectedProfileId]="selectedProfile.profileId!"></app-spell-stats>
+				<app-spell-stats [selectedCharacterId]="selectedCharacterId"></app-spell-stats>
 				<div class="stats-header">Character Stats</div>
-				<app-character-stats [selectedProfileId]="selectedProfile.profileId!"></app-character-stats>
+				<app-character-stats [selectedCharacterId]="selectedCharacterId"></app-character-stats>
 				<div class="stats-header">Special Abilities</div>
-				<app-special-abilities [selectedProfileId]="selectedProfile.profileId!"></app-special-abilities>
+				<app-special-abilities [selectedCharacterId]="selectedCharacterId"></app-special-abilities>
 				<div class="stats-header">Talents</div>
-				<app-talent-list [selectedProfileId]="selectedProfile.profileId!"></app-talent-list>
+				<app-talent-list [selectedCharacterId]="selectedCharacterId"></app-talent-list>
 			</ng-template>
 		</ng-container>
 	</nav>

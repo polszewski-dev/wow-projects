@@ -121,6 +121,19 @@ body {
 	font-size: 18px;
 }
 
+.character-select-bar {
+	display: flex;
+	justify-content: center;
+}
+
+.character-select-bar-caption {
+	
+}
+
+.character-select-bar-data {
+	font-weight: bold;
+}
+
 .positive-dps-diff {
 	color: green;
 }

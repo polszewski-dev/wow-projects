@@ -1,7 +1,49 @@
-<select
-	class="form-select"
-	[(ngModel)]="selectedProfile"
-	(ngModelChange)="onValueChange()"
->
-	<option *ngFor="let profile of sortProfiles(profileList)" [ngValue]="profile">{{profile.phase}} {{profile.profileName}}</option>
-</select>
+<div class="row mt-3 mb-1">
+	<div class="col-md-10">
+		<select
+			class="form-select"
+			[(ngModel)]="profileId"
+			(ngModelChange)="onProfileChange($event)"
+		>
+			<option *ngFor="let profile of sortProfiles(profileList)" [ngValue]="profile.profileId">{{profile.profileName}} - {{profile.race.name}} {{profile.characterClass.name}}</option>
+		</select>
+	</div>
+	<div class="col-md-2">
+		<button class="btn btn-outline-primary" style="width:100%" routerLink="/new-profile">New Profile</button>
+	</div>
+</div>
+<div *ngIf="characterSelectionOptions" class="row mt-0 mb-3">
+	<div class="col-md-12 character-select-bar">
+		<span class="character-select-bar-caption" style="margin-right: 5px">phase:</span>
+		<app-dropdown-select
+			[elements]="characterSelectionOptions.phases"
+			[selection]="getPhase()"
+			[valueFormatter]="phaseFormatter"
+			(selectionChanged)="onPhaseChange($event)"
+		></app-dropdown-select>
+
+		<span class="character-select-bar-caption" style="margin-right: 5px">, level:</span>
+		<app-dropdown-select
+			[elements]="getLevels()"
+			[selection]="level"
+			[valueFormatter]="levelFormatter"
+			(selectionChanged)="onLevelChange($event)"
+		></app-dropdown-select>
+
+		<span class="character-select-bar-caption" style="margin-right: 5px;">, enemy:</span>
+		<app-dropdown-select
+			[elements]="characterSelectionOptions.enemyTypes"
+			[selection]="getEnemyType()"
+			[valueFormatter]="enemyTypeFormatter"
+			(selectionChanged)="onEnemyTypeChange($event)"
+		></app-dropdown-select>
+
+		<span class="character-select-bar-caption" style="margin-right: 5px">, lvl diff:</span>
+		<app-dropdown-select
+			[elements]="characterSelectionOptions.enemyLevelDiffs"
+			[selection]="getEnemyLevelDiff()"
+			[valueFormatter]="levelDifferenceFormatter"
+			(selectionChanged)="onEnemyLevelDifferenceChange($event)"
+		></app-dropdown-select>
+	</div>
+</div>

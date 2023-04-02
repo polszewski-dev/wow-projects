@@ -95,6 +95,10 @@ public class GameVersion implements Described {
 		return new CharacterProfession(profession, specialization);
 	}
 
+	public boolean has(CharacterClassId characterClassId, RaceId raceId) {
+		return characterClasses.stream().anyMatch(x -> x.getCharacterClassId() == characterClassId && x.has(raceId));
+	}
+
 	@Override
 	public String toString() {
 		return getName();

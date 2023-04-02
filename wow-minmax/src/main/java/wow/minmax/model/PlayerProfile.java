@@ -1,34 +1,15 @@
 package wow.minmax.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import wow.character.model.Copyable;
-import wow.character.model.build.*;
 import wow.character.model.character.Character;
-import wow.character.model.character.*;
-import wow.character.model.equipment.Equipment;
-import wow.character.model.equipment.EquippableItem;
-import wow.commons.model.attributes.AttributeCollection;
-import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.buffs.Buff;
-import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
-import wow.commons.model.item.Item;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionSpecializationId;
-import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.pve.PhaseId;
-import wow.commons.model.pve.Side;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.talents.TalentId;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -37,199 +18,50 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfile> {
+@AllArgsConstructor
+public class PlayerProfile {
 	private final UUID profileId;
 	private final String profileName;
-	private final Character character;
+	private final CharacterClassId characterClassId;
+	private final RaceId raceId;
+	private final Map<CharacterId, Character> characterByKey;
 	private LocalDateTime lastModified;
-
-	public PlayerProfile(UUID profileId, String profileName, Character character) {
-		this.profileId = profileId;
-		this.profileName = profileName;
-		this.character = character;
-		this.lastModified = LocalDateTime.now();
-	}
-
-	@Override
-	public PlayerProfile copy() {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.copy());
-		copy.lastModified = this.lastModified;
-		return copy;
-	}
-
-	@Override
-	public void collectAttributes(AttributeCollector collector) {
-		character.collectAttributes(collector);
-	}
+	private CharacterId lastModifiedCharacterId;
 
 	public PlayerProfileInfo getProfileInfo() {
 		return new PlayerProfileInfo(
 				profileId,
 				profileName,
-				character.getCharacterClassId(),
-				character.getRaceId(),
-				character.getLevel(),
-				character.getEnemyType(),
-				character.getBuildId(),
-				character.getProfessions().getList(),
-				character.getPhaseId(),
-				lastModified
+				characterClassId,
+				raceId,
+				lastModified,
+				lastModifiedCharacterId
 		);
 	}
 
-	// character
-
-	public Attributes getStats() {
-		return character.getStats();
+	public Optional<Character> getCharacter(CharacterId key) {
+		return Optional.ofNullable(characterByKey.get(key));
 	}
 
-	public CharacterClassId getCharacterClass() {
-		return character.getCharacterClassId();
+	public void addCharacter(Character character) {
+		CharacterId characterId = getCharacterId(character);
+
+		if (characterByKey.containsKey(characterId)) {
+			throw new IllegalArgumentException("character for key: %s already exists".formatted(characterId));
+		}
+
+		characterByKey.put(characterId, character);
 	}
 
-	public RaceId getRace() {
-		return character.getRaceId();
+	public CharacterId getCharacterId(Character character) {
+		return new CharacterId(
+				getProfileId(),
+				character.getPhaseId(),
+				character.getLevel(),
+				character.getTargetEnemy().getEnemyType(),
+				character.getTargetEnemy().getLevelDifference()
+		);
 	}
-
-	public int getLevel() {
-		return character.getLevel();
-	}
-
-	public CharacterProfessions getProfessions() {
-		return character.getProfessions();
-	}
-
-	public PhaseId getPhase() {
-		return character.getPhaseId();
-	}
-
-	public CombatRatingInfo getCombatRatingInfo() {
-		return character.getCombatRatingInfo();
-	}
-
-	public Build getBuild() {
-		return character.getBuild();
-	}
-
-	public Equipment getEquipment() {
-		return character.getEquipment();
-	}
-
-	public Buffs getBuffs() {
-		return character.getBuffs();
-	}
-
-	public BaseStatInfo getBaseStatInfo() {
-		return character.getBaseStatInfo();
-	}
-
-	public Side getSide() {
-		return character.getSide();
-	}
-
-	public GameVersionId getGameVersionId() {
-		return character.getGameVersionId();
-	}
-
-	public void equip(EquippableItem item, ItemSlot slot) {
-		character.equip(item, slot);
-	}
-
-	public void equip(EquippableItem item) {
-		character.equip(item);
-	}
-
-	public void setEquipment(Equipment equipment) {
-		character.setEquipment(equipment);
-	}
-
-	public EquippableItem getEquippedItem(ItemSlot slot) {
-		return character.getEquippedItem(slot);
-	}
-
-	public boolean canEquip(ItemSlot itemSlot, Item item) {
-		return character.canEquip(itemSlot, item);
-	}
-
-	public void setBuffs(BuffSetId... buffSetIds) {
-		character.setBuffs(buffSetIds);
-	}
-
-	public void resetBuild() {
-		character.resetBuild();
-	}
-
-	public void resetEquipment() {
-		character.resetEquipment();
-	}
-
-	public void resetBuffs() {
-		character.resetBuffs();
-	}
-
-	public boolean hasProfession(ProfessionId professionId) {
-		return character.hasProfession(professionId);
-	}
-
-	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
-		return character.hasProfessionSpecialization(specializationId);
-	}
-
-	public BuildId getBuildId() {
-		return character.getBuildId();
-	}
-
-	public String getTalentLink() {
-		return character.getTalentLink();
-	}
-
-	public Talents getTalents() {
-		return character.getTalents();
-	}
-
-	public PveRole getRole() {
-		return character.getRole();
-	}
-
-	public Spell getDamagingSpell() {
-		return character.getDamagingSpell();
-	}
-
-	public List<Spell> getRelevantSpells() {
-		return character.getRelevantSpells();
-	}
-
-	public PetType getActivePet() {
-		return character.getActivePet();
-	}
-
-	public BuffSets getBuffSets() {
-		return character.getBuffSets();
-	}
-
-	public List<Buff> getBuffSet(BuffSetId buffSetId) {
-		return character.getBuffSet(buffSetId);
-	}
-
-	public boolean hasTalent(TalentId talentId) {
-		return character.hasTalent(talentId);
-	}
-
-	public void setBuffs(Collection<Buff> buffs) {
-		character.setBuffs(buffs);
-	}
-
-	public void enableBuff(Buff buff, boolean enable) {
-		character.enableBuff(buff, enable);
-	}
-
-	// enemy
-
-	public CreatureType getEnemyType() {
-		return character.getTargetEnemy().getEnemyType();
-	}
-
-	//
 
 	@Override
 	public String toString() {

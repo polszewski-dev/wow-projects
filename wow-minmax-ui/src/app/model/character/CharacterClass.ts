@@ -1,11 +1,8 @@
-export enum CharacterClass {
-	MAGE = 'MAGE',
-	WARLOCK = 'WARLOCK',
-	PRIEST = 'PRIEST',
-	DRUID = 'DRUID',
-	ROGUE = 'ROGUE',
-	HUNTER = 'HUNTER',
-	SHAMAN = 'SHAMAN',
-	PALADIN = 'PALADIN',
-	WARRIOR = 'WARRIOR',
+import { Race } from "./Race";
+
+export interface CharacterClass {
+	id: string;
+	name: string;
+	icon: string;
+	races: Race[];
 }
