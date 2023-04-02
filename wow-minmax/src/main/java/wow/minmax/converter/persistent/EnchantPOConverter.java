@@ -10,7 +10,7 @@ import wow.minmax.model.persistent.EnchantPO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.persistent.PoConverterParams.getPhase;
+import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -22,12 +22,12 @@ public class EnchantPOConverter implements Converter<Enchant, EnchantPO>, Parame
 	private final ItemRepository itemRepository;
 
 	@Override
-	public EnchantPO doConvert(Enchant enchant) {
-		return new EnchantPO(enchant.getId(), enchant.getName());
+	public EnchantPO doConvert(Enchant source) {
+		return new EnchantPO(source.getId(), source.getName());
 	}
 
 	@Override
-	public Enchant doConvertBack(EnchantPO value, Map<String, Object> params) {
-		return itemRepository.getEnchant(value.getId(), getPhase(params)).orElseThrow();
+	public Enchant doConvertBack(EnchantPO source, Map<String, Object> params) {
+		return itemRepository.getEnchant(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 }

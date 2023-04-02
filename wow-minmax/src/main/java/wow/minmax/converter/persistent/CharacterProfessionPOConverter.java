@@ -12,7 +12,7 @@ import wow.minmax.model.persistent.CharacterProfessionPO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.persistent.PoConverterParams.getPhase;
+import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -24,17 +24,19 @@ public class CharacterProfessionPOConverter implements Converter<CharacterProfes
 	private final CharacterRepository characterRepository;
 
 	@Override
-	public CharacterProfessionPO doConvert(CharacterProfession characterProfession) {
-		return new CharacterProfessionPO(characterProfession.getProfessionId(), characterProfession.getSpecializationId());
+	public CharacterProfessionPO doConvert(CharacterProfession source) {
+		return new CharacterProfessionPO(source.getProfessionId(), source.getSpecializationId());
 	}
 
 	@Override
-	public CharacterProfession doConvertBack(CharacterProfessionPO characterProfession, Map<String, Object> params) {
-		PhaseId phase = getPhase(params);
-		GameVersion gameVersion = characterRepository.getPhase(phase).orElseThrow().getGameVersion();
+	public CharacterProfession doConvertBack(CharacterProfessionPO source, Map<String, Object> params) {
+		PhaseId phaseId = getPhaseId(params);
+		GameVersion gameVersion = characterRepository.getPhase(phaseId)
+				.orElseThrow()
+				.getGameVersion();
 
 		return gameVersion.getCharacterProfession(
-				characterProfession.getProfessionId(), characterProfession.getSpecializationId()
+				source.getProfessionId(), source.getSpecializationId()
 		);
 	}
 }

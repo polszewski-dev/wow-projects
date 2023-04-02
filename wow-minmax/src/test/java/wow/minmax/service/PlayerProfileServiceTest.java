@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static wow.commons.model.categorization.ItemSlot.*;
 
 /**
  * User: POlszewski
@@ -81,7 +82,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		assertThat(savedProfile.getEquipment().getOffHand().getItem().getName()).isEqualTo("Heart of the Pit");
+		assertThat(savedProfile.getEquipment().getItemsBySlot().get(OFF_HAND).getItem().getName()).isEqualTo("Heart of the Pit");
 	}
 
 	@Test
@@ -94,10 +95,10 @@ class PlayerProfileServiceTest extends ServiceTest {
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		assertThat(savedProfile.getEquipment().getMainHand().getItem().getName()).isEqualTo("Grand Magister's Staff of Torrents");
-		assertThat(savedProfile.getEquipment().getOffHand()).isNull();
+		assertThat(savedProfile.getEquipment().getItemsBySlot().get(MAIN_HAND).getItem().getName()).isEqualTo("Grand Magister's Staff of Torrents");
+		assertThat(savedProfile.getEquipment().getItemsBySlot().get(OFF_HAND)).isNull();
 
-		EquippableItemPO mainHand = savedProfile.getEquipment().getMainHand();
+		EquippableItemPO mainHand = savedProfile.getEquipment().getItemsBySlot().get(MAIN_HAND);
 
 		assertThat(mainHand.getEnchant()).isNotNull();
 
@@ -122,7 +123,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		assertThat(savedProfile.getEquipment().getMainHand().getEnchant().getName()).isEqualTo("Enchant Weapon - Major Spellpower");
+		assertThat(savedProfile.getEquipment().getItemsBySlot().get(MAIN_HAND).getEnchant().getName()).isEqualTo("Enchant Weapon - Major Spellpower");
 	}
 
 	@Test
@@ -143,7 +144,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		assertThat(savedProfile.getEquipment().getChest().getGems().get(1).getId()).isEqualTo(35761);
+		assertThat(savedProfile.getEquipment().getItemsBySlot().get(CHEST).getGems().get(1).getId()).isEqualTo(35761);
 	}
 
 	@Test
@@ -153,7 +154,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 
-		assertThat(savedProfile.getEquipment()).hasAllNullFieldsOrProperties();
+		assertThat(savedProfile.getEquipment().getItemsBySlot()).isEmpty();
 	}
 
 	@Test

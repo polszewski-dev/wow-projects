@@ -10,7 +10,7 @@ import wow.minmax.model.dto.EnchantDTO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.dto.DtoConverterParams.getPhase;
+import static wow.minmax.converter.dto.DtoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -22,19 +22,19 @@ public class EnchantConverter implements Converter<Enchant, EnchantDTO>, Paramet
 	private final ItemRepository itemRepository;
 
 	@Override
-	public EnchantDTO doConvert(Enchant enchant) {
+	public EnchantDTO doConvert(Enchant source) {
 		return new EnchantDTO(
-				enchant.getId(),
-				enchant.getName(),
-				enchant.getRarity(),
-				enchant.getAttributes().statString(),
-				enchant.getIcon(),
-				enchant.getTooltip()
+				source.getId(),
+				source.getName(),
+				source.getRarity(),
+				source.getAttributes().statString(),
+				source.getIcon(),
+				source.getTooltip()
 		);
 	}
 
 	@Override
-	public Enchant doConvertBack(EnchantDTO value, Map<String, Object> params) {
-		return itemRepository.getEnchant(value.getId(), getPhase(params)).orElseThrow();
+	public Enchant doConvertBack(EnchantDTO source, Map<String, Object> params) {
+		return itemRepository.getEnchant(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 }

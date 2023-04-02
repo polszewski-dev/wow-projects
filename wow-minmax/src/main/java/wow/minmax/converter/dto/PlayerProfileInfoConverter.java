@@ -19,34 +19,34 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 	private final CharacterProfessionConverter characterProfessionConverter;
 
 	@Override
-	public PlayerProfileInfoDTO doConvert(PlayerProfileInfo value) {
+	public PlayerProfileInfoDTO doConvert(PlayerProfileInfo source) {
 		return new PlayerProfileInfoDTO(
-			value.getProfileId(),
-			value.getProfileName(),
-			value.getCharacterClassId(),
-			value.getRaceId(),
-			value.getLevel(),
-			value.getEnemyType(),
-			value.getBuildId(),
-			characterProfessionConverter.convertList(value.getProfessions()),
-			value.getPhaseId(),
-			value.getLastModified()
+				source.getProfileId(),
+				source.getProfileName(),
+				source.getCharacterClassId(),
+				source.getRaceId(),
+				source.getLevel(),
+				source.getEnemyType(),
+				source.getBuildId(),
+				characterProfessionConverter.convertList(source.getProfessions()),
+				source.getPhaseId(),
+				source.getLastModified()
 		);
 	}
 
 	@Override
-	public PlayerProfileInfo doConvertBack(PlayerProfileInfoDTO value) {
+	public PlayerProfileInfo doConvertBack(PlayerProfileInfoDTO source) {
 		return new PlayerProfileInfo(
-			value.getProfileId(),
-			value.getProfileName(),
-			value.getCharacterClass(),
-			value.getRace(),
-			value.getLevel(),
-			value.getEnemyType(),
-			value.getBuildId(),
-			characterProfessionConverter.convertBackList(value.getProfessions(), createParams(value.getPhase())),
-			value.getPhase(),
-			value.getLastModified()
+				source.getProfileId(),
+				source.getProfileName(),
+				source.getCharacterClass(),
+				source.getRace(),
+				source.getLevel(),
+				source.getEnemyType(),
+				source.getBuildId(),
+				characterProfessionConverter.convertBackList(source.getProfessions(), createParams(source.getPhase())),
+				source.getPhase(),
+				source.getLastModified()
 		);
 	}
 }

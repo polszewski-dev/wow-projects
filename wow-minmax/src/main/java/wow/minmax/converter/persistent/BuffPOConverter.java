@@ -10,7 +10,7 @@ import wow.minmax.model.persistent.BuffPO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.persistent.PoConverterParams.getPhase;
+import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -22,12 +22,12 @@ public class BuffPOConverter implements Converter<Buff, BuffPO>, ParametrizedBac
 	private final SpellRepository spellRepository;
 
 	@Override
-	public BuffPO doConvert(Buff buff) {
-		return new BuffPO(buff.getId(), buff.getName());
+	public BuffPO doConvert(Buff source) {
+		return new BuffPO(source.getId(), source.getName());
 	}
 
 	@Override
-	public Buff doConvertBack(BuffPO value, Map<String, Object> params) {
-		return spellRepository.getBuff(value.getId(), getPhase(params)).orElseThrow();
+	public Buff doConvertBack(BuffPO source, Map<String, Object> params) {
+		return spellRepository.getBuff(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 }

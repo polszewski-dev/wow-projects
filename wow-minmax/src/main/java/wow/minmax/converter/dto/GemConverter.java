@@ -10,7 +10,7 @@ import wow.minmax.model.dto.GemDTO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.dto.DtoConverterParams.getPhase;
+import static wow.minmax.converter.dto.DtoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -23,22 +23,22 @@ public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackCon
 	private final ItemRepository itemRepository;
 
 	@Override
-	public GemDTO doConvert(Gem gem) {
+	public GemDTO doConvert(Gem source) {
 		return new GemDTO(
-				gem.getId(),
-				gem.getName(),
-				gem.getColor(),
-				gem.getRarity(),
-				sourceConverter.getSources(gem),
-				gem.getAttributes().statString(),
-				gem.getShorterName(),
-				gem.getIcon(),
+				source.getId(),
+				source.getName(),
+				source.getColor(),
+				source.getRarity(),
+				sourceConverter.getSources(source),
+				source.getAttributes().statString(),
+				source.getShorterName(),
+				source.getIcon(),
 				null
 		);
 	}
 
 	@Override
-	public Gem doConvertBack(GemDTO value, Map<String, Object> params) {
-		return itemRepository.getGem(value.getId(), getPhase(params)).orElseThrow();
+	public Gem doConvertBack(GemDTO source, Map<String, Object> params) {
+		return itemRepository.getGem(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 }

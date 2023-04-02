@@ -19,8 +19,8 @@ public class EquipmentConverter implements Converter<Equipment, EquipmentDTO> {
 	private final EquippableItemConverter equippableItemConverter;
 
 	@Override
-	public EquipmentDTO doConvert(Equipment equipment) {
-		var itemsBySlot = equipment.toMap().entrySet().stream()
+	public EquipmentDTO doConvert(Equipment source) {
+		var itemsBySlot = source.toMap().entrySet().stream()
 				.collect(Collectors.toMap(
 						Map.Entry::getKey, e -> equippableItemConverter.convert(e.getValue()))
 				);

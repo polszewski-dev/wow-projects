@@ -14,21 +14,21 @@ import wow.minmax.model.dto.CharacterStatsDTO;
 @AllArgsConstructor
 public class CharacterStatsConverter implements Converter<CharacterStats, CharacterStatsDTO> {
 	@Override
-	public CharacterStatsDTO doConvert(CharacterStats value) {
+	public CharacterStatsDTO doConvert(CharacterStats source) {
 		return new CharacterStatsDTO(
 				null,
-				value.getSp(),
-				value.getSpShadow(),
-				value.getSpFire(),
-				value.getHitRating(),
-				value.getHitPct(),
-				value.getCritRating(),
-				value.getCritPct(),
-				value.getHasteRating(),
-				value.getHastePct(),
-				value.getStamina(),
-				value.getIntellect(),
-				value.getSpirit()
+				source.getSp(),
+				source.getSpShadow(),
+				source.getSpFire(),
+				source.getHitRating(),
+				source.getHitPct(),
+				source.getCritRating(),
+				source.getCritPct(),
+				source.getHasteRating(),
+				source.getHastePct(),
+				source.getStamina(),
+				source.getIntellect(),
+				source.getSpirit()
 		);
 	}
 }

@@ -19,8 +19,8 @@ public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO>
 	private final SpellConverter spellConverter;
 
 	@Override
-	public SpellStatsDTO doConvert(SpellStats spellStats) {
-		SpellStatistics spellStatistics = spellStats.getSpellStatistics();
+	public SpellStatsDTO doConvert(SpellStats source) {
+		SpellStatistics spellStatistics = source.getSpellStatistics();
 		Snapshot snapshot = spellStatistics.getSnapshot();
 
 		Spell spell = snapshot.getSpell();
@@ -42,9 +42,9 @@ public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO>
 				dir ? snapshot.getSpellCoeffDirect() : 0,
 				dot ? snapshot.getSpellCoeffDoT() : 0,
 				dir ? snapshot.getCritCoeff() : 0,
-				spellStats.getStatEquivalents().getHitSpEqv(),
-				spellStats.getStatEquivalents().getCritSpEqv(),
-				spellStats.getStatEquivalents().getHasteSpEqv(),
+				source.getStatEquivalents().getHitSpEqv(),
+				source.getStatEquivalents().getCritSpEqv(),
+				source.getStatEquivalents().getHasteSpEqv(),
 				snapshot.getDuration(),
 				snapshot.getCooldown(),
 				snapshot.getThreatPct(),

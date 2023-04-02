@@ -12,7 +12,7 @@ import wow.minmax.model.dto.CharacterProfessionDTO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.dto.DtoConverterParams.getPhase;
+import static wow.minmax.converter.dto.DtoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -24,20 +24,20 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 	private final CharacterRepository characterRepository;
 
 	@Override
-	public CharacterProfessionDTO doConvert(CharacterProfession value) {
+	public CharacterProfessionDTO doConvert(CharacterProfession source) {
 		return new CharacterProfessionDTO(
-				value.getProfessionId(),
-				value.getSpecializationId()
+				source.getProfessionId(),
+				source.getSpecializationId()
 		);
 	}
 
 	@Override
-	public CharacterProfession doConvertBack(CharacterProfessionDTO value, Map<String, Object> params) {
-		PhaseId phaseId = getPhase(params);
+	public CharacterProfession doConvertBack(CharacterProfessionDTO source, Map<String, Object> params) {
+		PhaseId phaseId = getPhaseId(params);
 		GameVersion gameVersion = characterRepository.getPhase(phaseId).orElseThrow().getGameVersion();
 
 		return gameVersion.getCharacterProfession(
-				value.getProfession(), value.getSpecialization()
+				source.getProfession(), source.getSpecialization()
 		);
 	}
 }

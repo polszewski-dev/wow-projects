@@ -24,12 +24,12 @@ public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 	private final EquippableItemConverter equippableItemConverter;
 
 	@Override
-	public UpgradeDTO doConvert(Comparison value) {
-		AttributesDiff statDifference = value.getStatDifference();
+	public UpgradeDTO doConvert(Comparison source) {
+		AttributesDiff statDifference = source.getStatDifference();
 
 		return new UpgradeDTO(
-				value.changePct.getValue(),
-				equippableItemConverter.convertList(value.getItemDifference()),
+				source.changePct.getValue(),
+				equippableItemConverter.convertList(source.getItemDifference()),
 				getStatDiff(statDifference),
 				getAbilities(statDifference.getAddedAbilities()),
 				getAbilities(statDifference.getRemovedAbilities())

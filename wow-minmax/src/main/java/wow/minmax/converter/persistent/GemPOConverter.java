@@ -10,7 +10,7 @@ import wow.minmax.model.persistent.GemPO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.persistent.PoConverterParams.getPhase;
+import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -22,12 +22,12 @@ public class GemPOConverter implements Converter<Gem, GemPO>, ParametrizedBackCo
 	private final ItemRepository itemRepository;
 
 	@Override
-	public GemPO doConvert(Gem gem) {
-		return new GemPO(gem.getId(), gem.getName());
+	public GemPO doConvert(Gem source) {
+		return new GemPO(source.getId(), source.getName());
 	}
 
 	@Override
-	public Gem doConvertBack(GemPO value, Map<String, Object> params) {
-		return itemRepository.getGem(value.getId(), getPhase(params)).orElseThrow();
+	public Gem doConvertBack(GemPO source, Map<String, Object> params) {
+		return itemRepository.getGem(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 }

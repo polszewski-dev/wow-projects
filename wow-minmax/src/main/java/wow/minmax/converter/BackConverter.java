@@ -8,11 +8,11 @@ import java.util.List;
  * Date: 2023-01-03
  */
 public interface BackConverter<F, T> {
-	default F convertBack(T value) {
-		if (value == null) {
+	default F convertBack(T source) {
+		if (source == null) {
 			return null;
 		}
-		return doConvertBack(value);
+		return doConvertBack(source);
 	}
 
 	default List<F> convertBackList(Collection<T> list) {
@@ -21,5 +21,5 @@ public interface BackConverter<F, T> {
 				.toList();
 	}
 
-	F doConvertBack(T value);
+	F doConvertBack(T source);
 }

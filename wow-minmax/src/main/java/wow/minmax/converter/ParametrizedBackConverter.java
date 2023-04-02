@@ -9,11 +9,11 @@ import java.util.Map;
  * Date: 2023-01-03
  */
 public interface ParametrizedBackConverter<F, T> {
-	default F convertBack(T value, Map<String, Object> params) {
-		if (value == null) {
+	default F convertBack(T source, Map<String, Object> params) {
+		if (source == null) {
 			return null;
 		}
-		return doConvertBack(value, params);
+		return doConvertBack(source, params);
 	}
 
 	default List<F> convertBackList(Collection<T> list, Map<String, Object> params) {
@@ -22,5 +22,5 @@ public interface ParametrizedBackConverter<F, T> {
 				.toList();
 	}
 
-	F doConvertBack(T value, Map<String, Object> params);
+	F doConvertBack(T source, Map<String, Object> params);
 }

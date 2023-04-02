@@ -9,14 +9,14 @@ import java.util.Map;
  * Date: 2023-01-03
  */
 public final class DtoConverterParams {
-	public static final String PHASE = "phase";
+	public static final String PHASE_ID = "phaseId";
 
 	public static Map<String, Object> createParams(PhaseId phaseId) {
-		return Map.of(PHASE, phaseId);
+		return Map.of(PHASE_ID, phaseId);
 	}
 
-	public static PhaseId getPhase(Map<String, Object> params) {
-		return (PhaseId) params.get(PHASE);
+	public static PhaseId getPhaseId(Map<String, Object> params) {
+		return (PhaseId) params.get(PHASE_ID);
 	}
 
 	private DtoConverterParams() {}

@@ -10,7 +10,7 @@ import wow.minmax.model.persistent.ItemPO;
 
 import java.util.Map;
 
-import static wow.minmax.converter.persistent.PoConverterParams.getPhase;
+import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -22,12 +22,12 @@ public class ItemPOConverter implements Converter<Item, ItemPO>, ParametrizedBac
 	private final ItemRepository itemRepository;
 
 	@Override
-	public ItemPO doConvert(Item item) {
-		return new ItemPO(item.getId(), item.getName());
+	public ItemPO doConvert(Item source) {
+		return new ItemPO(source.getId(), source.getName());
 	}
 
 	@Override
-	public Item doConvertBack(ItemPO value, Map<String, Object> params) {
-		return itemRepository.getItem(value.getId(), getPhase(params)).orElseThrow();
+	public Item doConvertBack(ItemPO source, Map<String, Object> params) {
+		return itemRepository.getItem(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 }

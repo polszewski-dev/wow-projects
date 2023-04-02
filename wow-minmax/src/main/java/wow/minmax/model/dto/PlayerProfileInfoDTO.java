@@ -18,8 +18,8 @@ import java.util.UUID;
  * Date: 2022-12-25
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class PlayerProfileInfoDTO {
 	private UUID profileId;
 	private String profileName;

@@ -24,42 +24,42 @@ public class PlayerProfilePOConverter implements Converter<PlayerProfile, Player
 	private final BuffPOConverter buffPOConverter;
 
 	@Override
-	public PlayerProfilePO doConvert(PlayerProfile playerProfile) {
+	public PlayerProfilePO doConvert(PlayerProfile source) {
 		return new PlayerProfilePO(
-				playerProfile.getProfileId(),
-				playerProfile.getProfileName(),
-				playerProfile.getCharacterClass(),
-				playerProfile.getRace(),
-				playerProfile.getLevel(),
-				playerProfile.getBuildId(),
-				characterProfessionPOConverter.convertList(playerProfile.getProfessions().getList()),
-				playerProfile.getEnemyType(),
-				playerProfile.getPhase(),
-				equipmentPOConverter.convert(playerProfile.getEquipment()),
-				buffPOConverter.convertList(playerProfile.getBuffs().getList()),
-				playerProfile.getLastModified()
+				source.getProfileId(),
+				source.getProfileName(),
+				source.getCharacterClass(),
+				source.getRace(),
+				source.getLevel(),
+				source.getBuildId(),
+				characterProfessionPOConverter.convertList(source.getProfessions().getList()),
+				source.getEnemyType(),
+				source.getPhase(),
+				equipmentPOConverter.convert(source.getEquipment()),
+				buffPOConverter.convertList(source.getBuffs().getList()),
+				source.getLastModified()
 		);
 	}
 
 	@Override
-	public PlayerProfile doConvertBack(PlayerProfilePO value, Map<String, Object> params) {
+	public PlayerProfile doConvertBack(PlayerProfilePO source, Map<String, Object> params) {
 		PlayerProfileService playerProfileService = getPlayerProfileService(params);
 
 		PlayerProfile playerProfile = playerProfileService.createTemporaryPlayerProfile(
-				value.getProfileId(),
-				value.getProfileName(),
-				value.getCharacterClassId(),
-				value.getRace(),
-				value.getLevel(),
-				value.getBuildId(),
-				characterProfessionPOConverter.convertBackList(value.getProfessions(), params),
-				value.getEnemyType(),
-				value.getPhaseId()
+				source.getProfileId(),
+				source.getProfileName(),
+				source.getCharacterClassId(),
+				source.getRace(),
+				source.getLevel(),
+				source.getBuildId(),
+				characterProfessionPOConverter.convertBackList(source.getProfessions(), params),
+				source.getEnemyType(),
+				source.getPhaseId()
 		);
 
-		playerProfile.setEquipment(equipmentPOConverter.convertBack(value.getEquipment(), params));
-		playerProfile.setBuffs(buffPOConverter.convertBackList(value.getBuffs(), params));
-		playerProfile.setLastModified(value.getLastModified());
+		playerProfile.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
+		playerProfile.setBuffs(buffPOConverter.convertBackList(source.getBuffs(), params));
+		playerProfile.setLastModified(source.getLastModified());
 		return playerProfile;
 	}
 }

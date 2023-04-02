@@ -25,19 +25,19 @@ public class EquippableItemConverter implements Converter<EquippableItem, Equipp
 	private final GemConverter gemConverter;
 
 	@Override
-	public EquippableItemDTO doConvert(EquippableItem item) {
+	public EquippableItemDTO doConvert(EquippableItem source) {
 		return new EquippableItemDTO(
-				itemConverter.convert(item.getItem()),
-				enchantConverter.convert(item.getEnchant()),
-				gemConverter.convertList(item.getGems())
+				itemConverter.convert(source.getItem()),
+				enchantConverter.convert(source.getEnchant()),
+				gemConverter.convertList(source.getGems())
 		);
 	}
 
 	@Override
-	public EquippableItem doConvertBack(EquippableItemDTO value, Map<String, Object> params) {
-		Item item = itemConverter.convertBack(value.getItem(), params);
-		Enchant enchant = enchantConverter.convertBack(value.getEnchant(), params);
-		List<Gem> gems = gemConverter.convertBackList(value.getGems(), params);
+	public EquippableItem doConvertBack(EquippableItemDTO source, Map<String, Object> params) {
+		Item item = itemConverter.convertBack(source.getItem(), params);
+		Enchant enchant = enchantConverter.convertBack(source.getEnchant(), params);
+		List<Gem> gems = gemConverter.convertBackList(source.getGems(), params);
 
 		return new EquippableItem(item)
 				.enchant(enchant)

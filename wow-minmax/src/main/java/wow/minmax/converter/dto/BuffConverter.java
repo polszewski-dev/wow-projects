@@ -14,7 +14,14 @@ import wow.minmax.model.dto.BuffDTO;
 @AllArgsConstructor
 public class BuffConverter implements Converter<Buff, BuffDTO> {
 	@Override
-	public BuffDTO doConvert(Buff buff) {
-		return new BuffDTO(buff.getId(), buff.getName(), buff.statString(), buff.getIcon(), buff.getTooltip(), false);
+	public BuffDTO doConvert(Buff source) {
+		return new BuffDTO(
+				source.getId(),
+				source.getName(),
+				source.statString(),
+				source.getIcon(),
+				source.getTooltip(),
+				false
+		);
 	}
 }

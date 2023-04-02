@@ -58,7 +58,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 			return enchant.getBaseStats() > 0;
 		}
 		if (itemType == ItemType.BACK) {
-			return enchant.getThreatPct().getValue() > 0;
+			return enchant.getThreatPct().getValue() < 0;
 		}
 		if (itemType == ItemType.FEET) {
 			return enchant.getSpeedPct().getValue() > 0;

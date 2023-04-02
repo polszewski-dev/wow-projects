@@ -14,14 +14,14 @@ import wow.minmax.model.dto.SpecialAbilityStatsDTO;
 @AllArgsConstructor
 public class SpecialAbilityStatsConverter implements Converter<SpecialAbilityStats, SpecialAbilityStatsDTO> {
 	@Override
-	public SpecialAbilityStatsDTO doConvert(SpecialAbilityStats value) {
+	public SpecialAbilityStatsDTO doConvert(SpecialAbilityStats source) {
 		return new SpecialAbilityStatsDTO(
-			value.getAbility().getLine(),
-			value.getAbility().toString(),
-			value.getStatEquivalent().statString(),
-			value.getSpEquivalent(),
-			value.getAbility().getSource().getDescription().getName(),
-			value.getAbility().getSource().getDescription().getIcon()
+				source.getAbility().getLine(),
+				source.getAbility().toString(),
+				source.getStatEquivalent().statString(),
+				source.getSpEquivalent(),
+				source.getAbility().getSource().getDescription().getName(),
+				source.getAbility().getSource().getDescription().getIcon()
 		);
 	}
 }

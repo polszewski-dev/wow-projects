@@ -23,22 +23,22 @@ public class EquippableItemPOConverter implements Converter<EquippableItem, Equi
 	private final GemPOConverter gemPOConverter;
 
 	@Override
-	public EquippableItemPO doConvert(EquippableItem item) {
+	public EquippableItemPO doConvert(EquippableItem source) {
 		return new EquippableItemPO(
-				itemPOConverter.convert(item.getItem()),
-				enchantPOConverter.convert(item.getEnchant()),
-				item.getSocketCount(),
-				gemPOConverter.convertList(item.getGems())
+				itemPOConverter.convert(source.getItem()),
+				enchantPOConverter.convert(source.getEnchant()),
+				source.getSocketCount(),
+				gemPOConverter.convertList(source.getGems())
 		);
 	}
 
 	@Override
-	public EquippableItem doConvertBack(EquippableItemPO value, Map<String, Object> params) {
-		EquippableItem equippableItem = new EquippableItem(itemPOConverter.convertBack(value.getItem(), params));
+	public EquippableItem doConvertBack(EquippableItemPO source, Map<String, Object> params) {
+		EquippableItem equippableItem = new EquippableItem(itemPOConverter.convertBack(source.getItem(), params));
 
-		equippableItem.enchant(enchantPOConverter.convertBack(value.getEnchant(), params));
+		equippableItem.enchant(enchantPOConverter.convertBack(source.getEnchant(), params));
 
-		List<GemPO> gems = value.getGems();
+		List<GemPO> gems = source.getGems();
 
 		for (int i = 0; i < gems.size(); i++) {
 			GemPO gem = gems.get(i);

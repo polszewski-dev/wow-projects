@@ -66,6 +66,6 @@ public class PlayerProfileRepositoryImpl implements PlayerProfileRepository {
 	}
 
 	private static String getFilePath(String id) {
-		return "simple_store/" + id;
+		return "../simple_store/" + id;
 	}
 }

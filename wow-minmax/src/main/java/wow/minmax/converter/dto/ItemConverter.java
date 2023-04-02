@@ -11,7 +11,7 @@ import wow.minmax.model.dto.ItemDTO;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static wow.minmax.converter.dto.DtoConverterParams.getPhase;
+import static wow.minmax.converter.dto.DtoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -24,26 +24,26 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 	private final ItemRepository itemRepository;
 
 	@Override
-	public ItemDTO doConvert(Item item) {
+	public ItemDTO doConvert(Item source) {
 		return new ItemDTO(
-				item.getId(),
-				item.getName(),
-				item.getRarity(),
-				item.getItemType(),
-				item.getItemLevel(),
-				sourceConverter.getSources(item),
-				sourceConverter.getDetailedSources(item),
-				getStatString(item),
-				item.getSocketTypes(),
-				item.getSocketBonus().statString(),
-				item.getIcon(),
+				source.getId(),
+				source.getName(),
+				source.getRarity(),
+				source.getItemType(),
+				source.getItemLevel(),
+				sourceConverter.getSources(source),
+				sourceConverter.getDetailedSources(source),
+				getStatString(source),
+				source.getSocketTypes(),
+				source.getSocketBonus().statString(),
+				source.getIcon(),
 				null
 		);
 	}
 
 	@Override
-	public Item doConvertBack(ItemDTO value, Map<String, Object> params) {
-		return itemRepository.getItem(value.getId(), getPhase(params)).orElseThrow();
+	public Item doConvertBack(ItemDTO source, Map<String, Object> params) {
+		return itemRepository.getItem(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 
 	private String getStatString(Item item) {

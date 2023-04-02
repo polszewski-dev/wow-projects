@@ -11,17 +11,17 @@ import java.util.Map;
  */
 public class PoConverterParams {
 	public static final String PLAYER_PROFILE_SERVICE = "playerProfileService";
-	public static final String PHASE = "phase";
+	public static final String PHASE_ID = "phaseId";
 
 	public static Map<String, Object> createParams(PhaseId phaseId, PlayerProfileService playerProfileService) {
 		return Map.of(
-				PHASE, phaseId,
+				PHASE_ID, phaseId,
 				PLAYER_PROFILE_SERVICE, playerProfileService
 		);
 	}
 
-	public static PhaseId getPhase(Map<String, Object> params) {
-		return (PhaseId) params.get(PHASE);
+	public static PhaseId getPhaseId(Map<String, Object> params) {
+		return (PhaseId) params.get(PHASE_ID);
 	}
 
 	public static PlayerProfileService getPlayerProfileService(Map<String, Object> params) {

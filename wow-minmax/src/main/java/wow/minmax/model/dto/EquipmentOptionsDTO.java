@@ -2,6 +2,7 @@ package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
@@ -14,6 +15,7 @@ import java.util.Map;
  * Date: 2022-12-28
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class EquipmentOptionsDTO {
 	private Map<ItemSlot, List<ItemDTO>> itemsByItemSlot;

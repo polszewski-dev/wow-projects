@@ -11,8 +11,8 @@ import wow.commons.model.professions.ProfessionSpecializationId;
  * Date: 2023-01-07
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class CharacterProfessionDTO {
 	private ProfessionId profession;
 	private ProfessionSpecializationId specialization;
