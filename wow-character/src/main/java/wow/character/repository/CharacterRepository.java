@@ -2,10 +2,10 @@ package wow.character.repository;
 
 import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
-import wow.character.model.character.BaseStatInfo;
-import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.GameVersion;
+import wow.character.model.character.Phase;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.Optional;
@@ -15,9 +15,9 @@ import java.util.Optional;
  * Date: 2022-11-30
  */
 public interface CharacterRepository {
-	Optional<BaseStatInfo> getBaseStats(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
+	Optional<GameVersion> getGameVersion(GameVersionId gameVersionId);
 
-	Optional<CombatRatingInfo> getCombatRatings(int level, PhaseId phaseId);
+	Optional<Phase> getPhase(PhaseId phaseId);
 
 	Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClassId characterClassId, int level, PhaseId phaseId);
 }

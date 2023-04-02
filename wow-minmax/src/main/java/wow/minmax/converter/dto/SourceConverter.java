@@ -2,7 +2,11 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.character.GameVersion;
+import wow.character.model.character.Profession;
+import wow.character.repository.CharacterRepository;
 import wow.commons.model.item.AbstractItem;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.sources.Source;
 
 import java.util.stream.Collectors;
@@ -14,31 +18,33 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class SourceConverter {
+	private final CharacterRepository characterRepository;
+
 	public String getSources(AbstractItem item) {
 		return item.getSources().stream()
-				.map(this::getSourceString)
+				.map(source -> getSourceString(source, item))
 				.distinct()
 				.collect(Collectors.joining(", "));
 	}
 
 	public String getDetailedSources(AbstractItem item) {
 		return item.getSources().stream()
-				.map(this::getDetailedSourceString)
+				.map(source -> getDetailedSourceString(source, item))
 				.distinct()
 				.collect(Collectors.joining(", "));
 	}
 
-	private String getDetailedSourceString(Source source) {
+	private String getDetailedSourceString(Source source, AbstractItem item) {
 		if (source.isBossDrop()) {
 			return String.format("%s - %s", source.getZone().getShortName(), source.getBoss().getName());
 		}
 		if (source.isTraded()) {
 			return getDetailedSources(source.getSourceItem());
 		}
-		return getSourceString(source);
+		return getSourceString(source, item);
 	}
 
-	private String getSourceString(Source source) {
+	private String getSourceString(Source source, AbstractItem item) {
 		if (source.getZone() != null) {
 			return source.getZone().getShortName();
 		}
@@ -49,7 +55,8 @@ public class SourceConverter {
 			return "PvP";
 		}
 		if (source.isCrafted()) {
-			return source.toString();
+			Profession profession = getProfession(source, item);
+			return profession.getName();
 		}
 		if (source.isReputationReward()) {
 			return source.getFaction().getName();
@@ -58,5 +65,11 @@ public class SourceConverter {
 			return getSources(source.getSourceItem());
 		}
 		return source.toString();
+	}
+
+	private Profession getProfession(Source source, AbstractItem item) {
+		GameVersionId gameVersionId = item.getTimeRestriction().getUniqueVersion();
+		GameVersion gameVersion = characterRepository.getGameVersion(gameVersionId).orElseThrow();
+		return gameVersion.getProfession(source.getProfessionId());
 	}
 }

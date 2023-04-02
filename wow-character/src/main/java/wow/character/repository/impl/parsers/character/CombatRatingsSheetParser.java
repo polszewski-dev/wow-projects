@@ -1,24 +1,21 @@
 package wow.character.repository.impl.parsers.character;
 
 import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.GameVersion;
 import wow.character.repository.impl.CharacterRepositoryImpl;
-import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class CombatRatingsSheetParser extends WowExcelSheetParser {
+public class CombatRatingsSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colLevel = column("level");
 	private final ExcelColumn colSpellCrit = column("spell_crit");
 	private final ExcelColumn colSpellHit = column("spell_hit");
 	private final ExcelColumn colSpellHaste = column("spell_haste");
 
-	private final CharacterRepositoryImpl characterRepository;
-
 	public CombatRatingsSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
-		super(sheetName);
-		this.characterRepository = characterRepository;
+		super(sheetName, characterRepository);
 	}
 
 	@Override
@@ -28,17 +25,22 @@ public class CombatRatingsSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		CombatRatingInfo combatRatingInfo = getCombatRatingInfo();
-		characterRepository.addCombatRatingInfo(combatRatingInfo);
+		for (GameVersion version : getVersions()) {
+			CombatRatingInfo combatRatingInfo = getCombatRatingInfo(version);
+			addCombatRatingInfo(combatRatingInfo);
+		}
 	}
 
-	private CombatRatingInfo getCombatRatingInfo() {
+	private CombatRatingInfo getCombatRatingInfo(GameVersion version) {
 		var level = colLevel.getInteger();
-		var timeRestriction = getTimeRestriction();
 		var spellCrit = colSpellCrit.getDouble();
 		var spellHit = colSpellHit.getDouble();
 		var spellHaste = colSpellHaste.getDouble();
 
-		return new CombatRatingInfo(level, timeRestriction, spellCrit, spellHit, spellHaste);
+		return new CombatRatingInfo(level, spellCrit, spellHit, spellHaste, version);
+	}
+
+	private void addCombatRatingInfo(CombatRatingInfo combatRatingInfo) {
+		combatRatingInfo.getGameVersion().getCombatRatingInfos().add(combatRatingInfo);
 	}
 }

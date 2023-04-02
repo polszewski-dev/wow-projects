@@ -1,33 +1,23 @@
 package wow.commons.model.character;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import wow.commons.model.pve.Side;
 import wow.commons.util.EnumUtil;
-
-import static wow.commons.model.pve.Side.ALLIANCE;
-import static wow.commons.model.pve.Side.HORDE;
 
 /**
  * User: POlszewski
  * Date: 2021-03-19
  */
-@AllArgsConstructor
-@Getter
 public enum RaceId {
-	UNDEAD(HORDE),
-	ORC(HORDE),
-	TROLL(HORDE),
-	TAUREN(HORDE),
-	BLOOD_ELF(HORDE),
+	UNDEAD,
+	ORC,
+	TROLL,
+	TAUREN,
+	BLOOD_ELF,
 
-	HUMAN(ALLIANCE),
-	DWARF(ALLIANCE),
-	GNOME(ALLIANCE),
-	NIGHT_ELF(ALLIANCE),
-	DRANEI(ALLIANCE);
-
-	private final Side side;
+	HUMAN,
+	DWARF,
+	GNOME,
+	NIGHT_ELF,
+	DRANEI;
 
 	public static RaceId parse(String value) {
 		return EnumUtil.parse(value, values());

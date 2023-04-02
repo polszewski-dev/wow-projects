@@ -1,16 +1,16 @@
 package wow.character.repository.impl.parsers.character;
 
 import wow.character.model.character.BaseStatInfo;
+import wow.character.model.character.GameVersion;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
-import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class BaseStatsSheetParser extends WowExcelSheetParser {
+public class BaseStatsSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colLevel = column("level");
 	private final ExcelColumn colClass = column("class");
 	private final ExcelColumn colRace = column("race");
@@ -24,11 +24,8 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colBaseSpellCrit = column("base_spell_crit");
 	private final ExcelColumn colIntPerCrit = column("int_per_crit");
 
-	private final CharacterRepositoryImpl characterRepository;
-
 	public BaseStatsSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
-		super(sheetName);
-		this.characterRepository = characterRepository;
+		super(sheetName, characterRepository);
 	}
 
 	@Override
@@ -38,15 +35,16 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		BaseStatInfo baseStatInfo = getBaseStatInfo();
-		characterRepository.addBaseStatInfo(baseStatInfo);
+		for (GameVersion version : getVersions()) {
+			BaseStatInfo baseStatInfo = getBaseStatInfo(version);
+			addBaseStatInfo(baseStatInfo);
+		}
 	}
 
-	private BaseStatInfo getBaseStatInfo() {
+	private BaseStatInfo getBaseStatInfo(GameVersion version) {
 		var level = colLevel.getInteger();
-		var characterClass = colClass.getEnum(CharacterClassId::parse);
-		var race = RaceId.parse(colRace.getString());
-		var timeRestriction = getTimeRestriction();
+		var characterClassId = colClass.getEnum(CharacterClassId::parse);
+		var raceId = RaceId.parse(colRace.getString());
 		var baseStr = colBaseStr.getInteger();
 		var baseAgi = colBaseAgi.getInteger();
 		var baseSta = colBaseSta.getInteger();
@@ -57,6 +55,13 @@ public class BaseStatsSheetParser extends WowExcelSheetParser {
 		var baseSpellCrit = colBaseSpellCrit.getPercent();
 		var intPerCrit = colIntPerCrit.getDouble();
 
-		return new BaseStatInfo(level, characterClass, race, timeRestriction, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit);
+		var characterClass = version.getCharacterClass(characterClassId);
+		var race = version.getRace(raceId);
+
+		return new BaseStatInfo(level, characterClass, race, baseStr, baseAgi, baseSta, baseInt, baseSpi, baseHP, baseMana, baseSpellCrit, intPerCrit, version);
+	}
+
+	private void addBaseStatInfo(BaseStatInfo baseStatInfo) {
+		baseStatInfo.getCharacterClass().getBaseStatInfos().add(baseStatInfo);
 	}
 }

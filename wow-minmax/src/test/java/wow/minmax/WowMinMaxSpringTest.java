@@ -8,8 +8,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
-import wow.character.model.character.CharacterProfession;
-import wow.character.model.character.CharacterProfessions;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -30,7 +28,6 @@ import wow.commons.repository.SpellRepository;
 import wow.minmax.model.PlayerProfile;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.UUID;
 
 import static wow.character.model.build.BuildId.DESTRO_SHADOW;
@@ -113,25 +110,20 @@ public abstract class WowMinMaxSpringTest {
 	}
 
 	protected Character getCharacter() {
-		int maxLevel = PHASE.getGameVersionId().getMaxProfession();
-
-		CharacterProfessions professions = CharacterProfessions.of(List.of(
-				new CharacterProfession(TAILORING, SHADOWEAVE_TAILORING),
-				new CharacterProfession(ENCHANTING, null)
-		));
-
 		Character character = characterService.createCharacter(
 				CHARACTER_CLASS,
 				RACE,
 				LEVEL,
 				BUILD_ID,
-				professions,
 				PHASE
 		);
 
 		Enemy enemy = characterService.createEnemy(UNDEAD);
 
 		character.setTargetEnemy(enemy);
+
+		character.addProfession(TAILORING, SHADOWEAVE_TAILORING);
+		character.addProfession(ENCHANTING);
 
 		return character;
 	}

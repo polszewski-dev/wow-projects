@@ -84,9 +84,7 @@ class SpellRepositoryTest extends RepositoryTest {
 			"IMMOLATE, TBC_P1, 9, 332, 332",
 		})
 		void vanillaP1(SpellId shadowBolt, PhaseId phaseId, int rank, int min, int max) {
-			int level = phaseId.getGameVersionId().getMaxLevel();
-
-			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phaseId).orElseThrow();
+			Spell spell = getSpell(shadowBolt, phaseId);
 
 			assertThat(spell.getRank()).isEqualTo(rank);
 			assertThat(spell.getMinDmg()).isEqualTo(min);
@@ -109,13 +107,16 @@ class SpellRepositoryTest extends RepositoryTest {
 				"IMMOLATE, TBC_P1, 9, 615",
 		})
 		void vanillaP1(SpellId shadowBolt, PhaseId phaseId, int rank, int dot) {
-			int level = phaseId.getGameVersionId().getMaxLevel();
-
-			Spell spell = underTest.getSpellHighestRank(shadowBolt, level, phaseId).orElseThrow();
+			Spell spell = getSpell(shadowBolt, phaseId);
 
 			assertThat(spell.getRank()).isEqualTo(rank);
 			assertThat(spell.getDotDmg()).isEqualTo(dot);
 		}
+	}
+
+	private Spell getSpell(SpellId shadowBolt, PhaseId phaseId) {
+		int level = phaseId.getGameVersionId().getMaxLevel();
+		return underTest.getSpellHighestRank(shadowBolt, level, phaseId).orElseThrow();
 	}
 
 	@Test

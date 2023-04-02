@@ -1,37 +1,28 @@
 package wow.commons.model.professions;
 
-import lombok.AllArgsConstructor;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2020-07-14
  */
-@AllArgsConstructor
 public enum ProfessionId {
-	ENCHANTING("Enchanting"),
-	JEWELCRAFTING("Jewelcrafting"),
-	INSCRIPTION("Inscription"),
-	ALCHEMY("Alchemy"),
-	TAILORING("Tailoring"),
-	LEATHERWORKING("Leatherworking"),
-	BLACKSMITHING("Blacksmithing"),
-	ENGINEERING("Engineering"),
-	HERBALISM("Herbalism"),
-	MINING("Mining"),
-	SKINNING("Skinning"),
-	COOKING("Cooking"),
-	FISHING("Fishing"),
-	FIRST_AID("FirstAid");
-
-	private final String key;
+	ENCHANTING,
+	JEWELCRAFTING,
+	INSCRIPTION,
+	ALCHEMY,
+	TAILORING,
+	LEATHERWORKING,
+	BLACKSMITHING,
+	ENGINEERING,
+	HERBALISM,
+	MINING,
+	SKINNING,
+	COOKING,
+	FISHING,
+	FIRST_AID;
 
 	public static ProfessionId parse(String value) {
-		return EnumUtil.parse(value, values(), x -> x.key);
-	}
-
-	@Override
-	public String toString() {
-		return key;
+		return EnumUtil.parse(value, values());
 	}
 }

@@ -1,7 +1,7 @@
 package wow.minmax.service;
 
 import wow.character.model.build.BuildId;
-import wow.character.model.character.CharacterProfessions;
+import wow.character.model.character.CharacterProfession;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -25,7 +25,7 @@ public interface PlayerProfileService {
 	PlayerProfile createPlayerProfile(PlayerProfileInfo playerProfileInfo);
 
 	PlayerProfile createTemporaryPlayerProfile(
-			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, CharacterProfessions professions, CreatureType enemyType, PhaseId phaseId);
+			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, PhaseId phaseId);
 
 	PlayerProfile getPlayerProfile(UUID profileId);
 

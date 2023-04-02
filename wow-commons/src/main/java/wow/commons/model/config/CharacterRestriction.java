@@ -47,7 +47,7 @@ public class CharacterRestriction {
 		if (!this.raceIds.isEmpty() && !this.raceIds.contains(characterInfo.getRaceId())) {
 			return false;
 		}
-		if (side != null && side != characterInfo.getRaceId().getSide()) {
+		if (side != null && side != characterInfo.getSide()) {
 			return false;
 		}
 		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.getProfessionId())) {

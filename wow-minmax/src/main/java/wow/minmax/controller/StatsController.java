@@ -1,6 +1,7 @@
 package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.build.BuffSetId;
 import wow.character.model.character.Character;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.pve.GameVersionId;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
 import wow.minmax.converter.dto.SpellStatsConverter;
@@ -19,7 +19,10 @@ import wow.minmax.model.dto.SpellStatsDTO;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static wow.character.model.build.BuffSetId.*;
@@ -64,12 +67,11 @@ public class StatsController {
 		result.add(convert("Current buffs", currentStats));
 		result.add(convert("Items", itemStats));
 
-		Stream.of(BUFF_COMBOS)
-				.filter(x -> x.allBuffSetsArePermitted(character.getGameVersionId()))
-				.forEach(x -> {
-					var stats = calculationService.getStats(character, x.buffSetIds);
-					result.add(convert(x.type, stats));
-				});
+		for (BuffCombo buffCombo : BuffCombo.getBuffCombos(character)) {
+			var buffSetIds = buffCombo.buffSetIds.toArray(BuffSetId[]::new);
+			var stats = calculationService.getStats(character, buffSetIds);
+			result.add(convert(buffCombo.type, stats));
+		}
 
 		return result;
 	}
@@ -102,20 +104,31 @@ public class StatsController {
 		return result;
 	}
 
-	private record BuffCombo(String type, BuffSetId... buffSetIds) {
-		boolean allBuffSetsArePermitted(GameVersionId gameVersionId) {
-			return gameVersionId == GameVersionId.VANILLA || !Arrays.asList(buffSetIds).contains(WORLD_BUFFS);
+	@Getter
+	private enum BuffCombo {
+		C1("No buffs"),
+		C2("Self-buffs", SELF_BUFFS),
+		C3("Party buffs", SELF_BUFFS, PARTY_BUFFS),
+		C4("Party buffs & consumes", SELF_BUFFS, PARTY_BUFFS, CONSUMES),
+		C5("Raid buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES),
+		C6("World buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, WORLD_BUFFS, CONSUMES);
+
+		private final String type;
+		private final List<BuffSetId> buffSetIds;
+
+		BuffCombo(String type, BuffSetId... buffSetIds) {
+			this.type = type;
+			this.buffSetIds = List.of(buffSetIds);
+		}
+
+		static List<BuffCombo> getBuffCombos(Character character) {
+			boolean worldBuffsAllowed = character.getGameVersion().isWorldBuffs();
+
+			return Stream.of(values())
+					.filter(x -> worldBuffsAllowed || !x.buffSetIds.contains(WORLD_BUFFS))
+					.toList();
 		}
 	}
-
-	private static final BuffCombo[] BUFF_COMBOS = {
-			new BuffCombo("No buffs"),
-			new BuffCombo("Self-buffs", SELF_BUFFS),
-			new BuffCombo("Party buffs", SELF_BUFFS, PARTY_BUFFS),
-			new BuffCombo("Party buffs & consumes", SELF_BUFFS, PARTY_BUFFS, CONSUMES),
-			new BuffCombo("Raid buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES),
-			new BuffCombo("World buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, WORLD_BUFFS, CONSUMES),
-	};
 
 	private Comparator<SpecialAbility> compareSources() {
 		return

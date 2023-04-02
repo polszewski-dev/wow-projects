@@ -2,7 +2,6 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.CharacterProfessions;
 import wow.minmax.converter.Converter;
 import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.PlayerProfile;
@@ -53,7 +52,7 @@ public class PlayerProfilePOConverter implements Converter<PlayerProfile, Player
 				value.getRace(),
 				value.getLevel(),
 				value.getBuildId(),
-				CharacterProfessions.of(characterProfessionPOConverter.convertBackList(value.getProfessions())),
+				characterProfessionPOConverter.convertBackList(value.getProfessions(), params),
 				value.getEnemyType(),
 				value.getPhaseId()
 		);

@@ -1,36 +1,34 @@
 package wow.commons.model.professions;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
  * Date: 2022-10-31
  */
-@AllArgsConstructor
-@Getter
 public enum ProfessionSpecializationId {
-	GNOMISH_ENGINEER("Gnomish Engineer", ProfessionId.ENGINEERING),
-	GOBLIN_ENGINEER("Goblin Engineer", ProfessionId.ENGINEERING),
-	MASTER_SWORDSMITH("Master Swordsmith", ProfessionId.BLACKSMITHING),
-	MOONCLOTH_TAILORING("Mooncloth Tailoring", ProfessionId.TAILORING),
-	SHADOWEAVE_TAILORING("Shadoweave Tailoring", ProfessionId.TAILORING),
-	SPELLFIRE_TAILORING("Spellfire Tailoring", ProfessionId.TAILORING);
-
-	private final String key;
-	private final ProfessionId professionId;
+	ELIXIR_MASTER,
+	POTION_MASTER,
+	TRANSMUTATION_MASTER,
+	SPELLFIRE_TAILORING,
+	SHADOWEAVE_TAILORING,
+	MOONCLOTH_TAILORING,
+	DRAGONSCALE_LEATHERWORKING,
+	ELEMENTAL_LEATHERWORKING,
+	TRIBAL_LEATHERWORKING,
+	ARMORSMITH,
+	WEAPONSMITH,
+	MASTER_SWORDSMITH,
+	MASTER_AXESMITH,
+	MASTER_HAMMERSMITH,
+	GOBLIN_ENGINEER,
+	GNOMISH_ENGINEER;
 
 	public static ProfessionSpecializationId parse(String value) {
-		return EnumUtil.parse(value, values(), x -> x.key);
+		return EnumUtil.parse(value, values());
 	}
 
 	public static ProfessionSpecializationId tryParse(String value) {
-		return EnumUtil.tryParse(value, values(), x -> x.key);
-	}
-
-	@Override
-	public String toString() {
-		return key;
+		return EnumUtil.tryParse(value, values());
 	}
 }

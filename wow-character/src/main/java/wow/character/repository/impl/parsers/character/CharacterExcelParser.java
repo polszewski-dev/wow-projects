@@ -25,6 +25,13 @@ public class CharacterExcelParser  extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
+				new GameVersionSheetParser("versions", characterRepository),
+				new PhaseSheetParser("phases", characterRepository),
+				new CharacterClassSheetParser("classes", characterRepository),
+				new RaceSheetParser("races", characterRepository),
+				new RacialSheetParser("racials", characterRepository),
+				new ProfessionSheetParser("professions", characterRepository),
+				new ProfessionSpecSheetParser("profession_specs", characterRepository),
 				new BaseStatsSheetParser("base_stats", characterRepository),
 				new CombatRatingsSheetParser("combat_ratings", characterRepository),
 				new BuildSheetParser("builds", characterRepository)

@@ -25,6 +25,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
+import static wow.commons.model.professions.ProfessionSpecializationId.*;
+
 /**
  * User: POlszewski
  * Date: 2022-10-31
@@ -184,7 +186,15 @@ public abstract class AbstractTooltipParser {
 	}
 
 	private void parseRequiredProfessionSpec(ParsedMultipleValues params) {
-		this.requiredProfessionSpec = ProfessionSpecializationId.parse(params.get(0));
+		this.requiredProfessionSpec = switch (params.get(0)) {
+			case "Gnomish Engineer" -> GNOMISH_ENGINEER;
+			case "Goblin Engineer" -> GOBLIN_ENGINEER;
+			case "Master Swordsmith" -> MASTER_SWORDSMITH;
+			case "Mooncloth Tailoring" -> MOONCLOTH_TAILORING;
+			case "Shadoweave Tailoring" -> SHADOWEAVE_TAILORING;
+			case "Spellfire Tailoring" -> SPELLFIRE_TAILORING;
+			default -> throw new IllegalArgumentException(params.get(0));
+		};
 	}
 
 	private Percent parseDropChance(String value) {

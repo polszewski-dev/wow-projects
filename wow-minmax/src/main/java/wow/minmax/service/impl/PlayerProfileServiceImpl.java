@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
-import wow.character.model.character.CharacterProfessions;
+import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
@@ -75,12 +75,13 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile createTemporaryPlayerProfile(
-			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, CharacterProfessions professions, CreatureType enemyType, PhaseId phaseId
+			UUID profileId, String profileName, CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, List<CharacterProfession> professions, CreatureType enemyType, PhaseId phaseId
 	) {
-		Character character = characterService.createCharacter(characterClassId, raceId, level, buildId, professions, phaseId);
+		Character character = characterService.createCharacter(characterClassId, raceId, level, buildId, phaseId);
 		Enemy enemy = characterService.createEnemy(enemyType);
 
 		character.setTargetEnemy(enemy);
+		character.setProfessions(professions);
 
 		return new PlayerProfile(
 				profileId,

@@ -2,8 +2,7 @@ package wow.character.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.config.TimeRestricted;
-import wow.commons.model.config.TimeRestriction;
+import lombok.NonNull;
 
 /**
  * User: POlszewski
@@ -11,12 +10,14 @@ import wow.commons.model.config.TimeRestriction;
  */
 @AllArgsConstructor
 @Getter
-public class CombatRatingInfo implements TimeRestricted {
+public class CombatRatingInfo {
 	private final int level;
-	private final TimeRestriction timeRestriction;
 	private final double spellCrit;
 	private final double spellHit;
 	private final double spellHaste;
+
+	@NonNull
+	private final GameVersion gameVersion;
 
 	@Override
 	public String toString() {

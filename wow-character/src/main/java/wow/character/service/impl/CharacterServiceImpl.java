@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.*;
 import wow.character.model.character.Character;
-import wow.character.model.character.*;
+import wow.character.model.character.Enemy;
+import wow.character.model.character.GameVersion;
+import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
@@ -33,18 +35,6 @@ public class CharacterServiceImpl implements CharacterService {
 	private final SpellService spellService;
 
 	@Override
-	public BaseStatInfo getBaseStats(Character character) {
-		return characterRepository.getBaseStats(
-				character.getCharacterClassId(), character.getRaceId(), character.getLevel(), character.getPhaseId()
-		).orElseThrow();
-	}
-
-	@Override
-	public CombatRatingInfo getCombatRatings(Character character) {
-		return characterRepository.getCombatRatings(character.getLevel(), character.getPhaseId()).orElseThrow();
-	}
-
-	@Override
 	public BuildTemplate getBuildTemplate(BuildId buildId, Character character) {
 		return characterRepository.getBuildTemplate(
 				buildId, character.getCharacterClassId(), character.getLevel(), character.getPhaseId()
@@ -71,15 +61,15 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, CharacterProfessions professions, PhaseId phaseId) {
+	public Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, PhaseId phaseId) {
+		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
+		GameVersion gameVersion = phase.getGameVersion();
+
 		Character character = new Character(
-				characterClassId,
-				raceId,
+				gameVersion.getCharacterClass(characterClassId),
+				gameVersion.getRace(raceId),
 				level,
-				professions,
-				phaseId,
-				characterRepository.getBaseStats(characterClassId, raceId, level, phaseId).orElseThrow(),
-				characterRepository.getCombatRatings(level, phaseId).orElseThrow()
+				phase
 		);
 
 		changeBuild(character, buildId);

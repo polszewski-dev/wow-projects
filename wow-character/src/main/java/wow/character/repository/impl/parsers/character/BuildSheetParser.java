@@ -8,7 +8,6 @@ import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spells.SpellId;
-import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.Map;
  * User: POlszewski
  * Date: 2022-11-30
  */
-public class BuildSheetParser extends WowExcelSheetParser {
+public class BuildSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colBuild = column("build");
 	private final ExcelColumn colReqLevel = column("req_level");
 	private final ExcelColumn colReqClass = column("req_class");
@@ -28,11 +27,8 @@ public class BuildSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colRelevantSpells = column("relevant_spells");
 	private final ExcelColumn colActivePet = column("active_pet");
 
-	private final CharacterRepositoryImpl characterRepository;
-
 	public BuildSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
-		super(sheetName);
-		this.characterRepository = characterRepository;
+		super(sheetName, characterRepository);
 	}
 
 	@Override

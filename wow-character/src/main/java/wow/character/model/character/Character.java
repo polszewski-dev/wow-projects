@@ -39,46 +39,42 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 public class Character implements AttributeCollection, CharacterInfo, Copyable<Character> {
-	private final CharacterClassId characterClassId;
-	private final RaceId raceId;
+	private final CharacterClass characterClass;
+	private final Race race;
 	private final int level;
-	private final CharacterProfessions professions;
-	private final PhaseId phaseId;
+	private final Phase phase;
 	private final Build build;
 	private final Equipment equipment;
+	private final CharacterProfessions professions;
 	private final Buffs buffs;
 	private final BaseStatInfo baseStatInfo;
 	private final CombatRatingInfo combatRatingInfo;
 
 	private Enemy targetEnemy;
 
-	public Character(CharacterClassId characterClassId, RaceId raceId, int level, CharacterProfessions professions, PhaseId phaseId, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
-		this.characterClassId = characterClassId;
-		this.raceId = raceId;
+	public Character(CharacterClass characterClass, Race race, int level, Phase phase) {
+		this.characterClass = characterClass;
+		this.race = race;
 		this.level = level;
-		this.professions = professions;
-		this.phaseId = phaseId;
+		this.phase = phase;
 		this.build = new Build();
 		this.equipment = new Equipment();
+		this.professions = new CharacterProfessions();
 		this.buffs = new Buffs();
-		this.baseStatInfo = baseStatInfo;
-		this.combatRatingInfo = combatRatingInfo;
+		this.baseStatInfo = characterClass.getBaseStatInfo(level, race.getRaceId());
+		this.combatRatingInfo = characterClass.getGameVersion().getCombatRatingInfo(level);
 	}
 
 	@Override
 	public Character copy() {
-		return copy(phaseId);
-	}
-
-	public Character copy(PhaseId phaseId) {
 		return new Character(
-				characterClassId,
-				raceId,
+				characterClass,
+				race,
 				level,
-				professions,
-				phaseId,
+				phase,
 				build.copy(),
 				equipment.copy(),
+				professions.copy(),
 				buffs.copy(),
 				baseStatInfo,
 				combatRatingInfo,
@@ -94,12 +90,16 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		targetEnemy.collectAttributes(collector);
 	}
 
-	public Side getSide() {
-		return raceId.getSide();
+	public GameVersionId getGameVersionId() {
+		return phase.getGameVersionId();
 	}
 
-	public GameVersionId getGameVersionId() {
-		return phaseId.getGameVersionId();
+	public GameVersion getGameVersion() {
+		return phase.getGameVersion();
+	}
+
+	public PhaseId getPhaseId() {
+		return phase.getPhaseId();
 	}
 
 	public void equip(EquippableItem item, ItemSlot slot) {
@@ -119,7 +119,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	}
 
 	public boolean canEquip(ItemSlot itemSlot, Item item) {
-		return characterClassId.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
+		return characterClass.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
 	}
 
 	public void setBuffs(BuffSetId... buffSetIds) {
@@ -152,6 +152,25 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 				.solveAllLeaveAbilities();
 	}
 
+	// class
+
+	@Override
+	public CharacterClassId getCharacterClassId() {
+		return characterClass.getCharacterClassId();
+	}
+
+	// race
+
+	@Override
+	public RaceId getRaceId() {
+		return race.getRaceId();
+	}
+
+	@Override
+	public Side getSide() {
+		return race.getSide();
+	}
+
 	// professions
 
 	@Override
@@ -162,6 +181,21 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	@Override
 	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
 		return professions.hasProfessionSpecialization(specializationId);
+	}
+
+	public void setProfessions(List<CharacterProfession> professions) {
+		this.professions.setProfessions(professions);
+	}
+
+	public void addProfession(ProfessionId professionId, ProfessionSpecializationId specializationId) {
+		Profession profession = getGameVersion().getProfession(professionId);
+		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
+
+		this.professions.addProfession(profession, specialization);
+	}
+
+	public void addProfession(ProfessionId professionId) {
+		addProfession(professionId, null);
 	}
 
 	// build

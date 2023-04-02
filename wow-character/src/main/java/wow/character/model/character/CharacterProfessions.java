@@ -1,9 +1,11 @@
 package wow.character.model.character;
 
+import wow.character.model.Copyable;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,23 +14,28 @@ import java.util.Set;
  * User: POlszewski
  * Date: 2022-11-30
  */
-public class CharacterProfessions {
-	private final List<CharacterProfession> professions;
+public class CharacterProfessions implements Copyable<CharacterProfessions> {
+	private static final int MAX_PROFESSIONS = 2;
 
-	public static final CharacterProfessions EMPTY = new CharacterProfessions(List.of());
+	private final List<CharacterProfession> professions = new ArrayList<>();
 
-	private CharacterProfessions(List<CharacterProfession> professions) {
-		this.professions = professions;
-		if (professions.size() > 2) {
-			throw new IllegalArgumentException("At most 2 professions allowed");
-		}
-		if (professions.stream().map(CharacterProfession::getProfessionId).distinct().count() != professions.size()) {
-			throw new IllegalArgumentException("Can't have 2 identical professions");
-		}
+	@Override
+	public CharacterProfessions copy() {
+		CharacterProfessions copy = new CharacterProfessions();
+		copy.setProfessions(professions);
+		return copy;
 	}
 
-	public static CharacterProfessions of(List<CharacterProfession> professions) {
-		return new CharacterProfessions(professions);
+	public void setProfessions(List<CharacterProfession> professions) {
+		assertProfessionsAreCorrect(professions);
+		this.professions.clear();
+		this.professions.addAll(professions);
+	}
+
+	public void addProfession(Profession profession, ProfessionSpecialization specialization) {
+		var newList = new ArrayList<>(professions);
+		newList.add(new CharacterProfession(profession, specialization));
+		setProfessions(newList);
 	}
 
 	public List<CharacterProfession> getList() {
@@ -53,5 +60,14 @@ public class CharacterProfessions {
 
 		result.remove(AttributeCondition.EMPTY);
 		return result;
+	}
+
+	private static void assertProfessionsAreCorrect(List<CharacterProfession> professions) {
+		if (professions.size() > MAX_PROFESSIONS) {
+			throw new IllegalArgumentException("At most %s professions allowed".formatted(MAX_PROFESSIONS));
+		}
+		if (professions.stream().map(CharacterProfession::getProfessionId).distinct().count() != professions.size()) {
+			throw new IllegalArgumentException("Can't have 2 identical professions");
+		}
 	}
 }

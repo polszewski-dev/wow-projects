@@ -52,11 +52,7 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 
 	@Override
 	public PlayerProfile copy() {
-		return copy(profileId, profileName, character.getPhaseId());
-	}
-
-	public PlayerProfile copy(UUID profileId, String profileName, PhaseId phaseId) {
-		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.copy(phaseId));
+		PlayerProfile copy = new PlayerProfile(profileId, profileName, character.copy());
 		copy.lastModified = this.lastModified;
 		return copy;
 	}
@@ -75,7 +71,7 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 				character.getLevel(),
 				character.getEnemyType(),
 				character.getBuildId(),
-				character.getProfessions(),
+				character.getProfessions().getList(),
 				character.getPhaseId(),
 				lastModified
 		);
@@ -131,7 +127,7 @@ public class PlayerProfile implements AttributeCollection, Copyable<PlayerProfil
 		return character.getSide();
 	}
 
-	public GameVersionId getGameVersion() {
+	public GameVersionId getGameVersionId() {
 		return character.getGameVersionId();
 	}
 

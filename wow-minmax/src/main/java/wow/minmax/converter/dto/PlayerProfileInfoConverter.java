@@ -2,11 +2,12 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.CharacterProfessions;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.dto.PlayerProfileInfoDTO;
+
+import static wow.minmax.converter.dto.DtoConverterParams.createParams;
 
 /**
  * User: POlszewski
@@ -27,7 +28,7 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 			value.getLevel(),
 			value.getEnemyType(),
 			value.getBuildId(),
-			characterProfessionConverter.convertList(value.getProfessions().getList()),
+			characterProfessionConverter.convertList(value.getProfessions()),
 			value.getPhaseId(),
 			value.getLastModified()
 		);
@@ -43,7 +44,7 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 			value.getLevel(),
 			value.getEnemyType(),
 			value.getBuildId(),
-			CharacterProfessions.of(characterProfessionConverter.convertBackList(value.getProfessions())),
+			characterProfessionConverter.convertBackList(value.getProfessions(), createParams(value.getPhase())),
 			value.getPhase(),
 			value.getLastModified()
 		);

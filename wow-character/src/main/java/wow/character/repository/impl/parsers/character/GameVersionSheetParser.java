@@ -1,0 +1,49 @@
+package wow.character.repository.impl.parsers.character;
+
+import wow.character.model.character.GameVersion;
+import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.model.pve.GameVersionId;
+
+/**
+ * User: POlszewski
+ * Date: 2023-03-28
+ */
+public class GameVersionSheetParser extends CharacterSheetParser {
+	private final ExcelColumn colId = column("id");
+	private final ExcelColumn colMaxLvl = column("max_lvl");
+	private final ExcelColumn colMaxProfession = column("max_profession");
+	private final ExcelColumn colCombatRatings = column("combat_ratings");
+	private final ExcelColumn colEqvAmount = column("eqv_amount");
+	private final ExcelColumn colWorldBuffs = column("world_buffs");
+	private final ExcelColumn colGems = column("gems");
+	private final ExcelColumn colGlyphs = column("glyphs");
+
+	public GameVersionSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
+		super(sheetName, characterRepository);
+	}
+
+	@Override
+	protected ExcelColumn getColumnIndicatingOptionalRow() {
+		return colId;
+	}
+
+	@Override
+	protected void readSingleRow() {
+		GameVersion gameVersion = getGameVersion();
+		characterRepository.addGameVersion(gameVersion);
+	}
+
+	private GameVersion getGameVersion() {
+		var id = colId.getEnum(GameVersionId::parse);
+		var description = getDescription();
+		var maxLvl = colMaxLvl.getInteger();
+		var maxProfession = colMaxProfession.getInteger();
+		var combatRatings = colCombatRatings.getBoolean();
+		var eqvAmount = colEqvAmount.getDouble();
+		var worldBuffs = colWorldBuffs.getBoolean();
+		var gems = colGems.getBoolean();
+		var glyphs = colGlyphs.getBoolean();
+
+		return new GameVersion(id, description, maxLvl, maxProfession, combatRatings, eqvAmount, worldBuffs, gems, glyphs);
+	}
+}

@@ -10,14 +10,27 @@ import wow.commons.model.professions.ProfessionSpecializationId;
  */
 @Getter
 public class CharacterProfession {
-	private final ProfessionId professionId;
-	private final ProfessionSpecializationId specializationId;
+	private final Profession profession;
+	private final ProfessionSpecialization specialization;
 
-	public CharacterProfession(ProfessionId professionId, ProfessionSpecializationId specializationId) {
-		this.professionId = professionId;
-		this.specializationId = specializationId;
-		if (specializationId != null && specializationId.getProfessionId() != professionId) {
+	public CharacterProfession(Profession profession, ProfessionSpecialization specialization) {
+		this.profession = profession;
+		this.specialization = specialization;
+		if (specialization != null && specialization.getProfessionId() != profession.getProfessionId()) {
 			throw new IllegalArgumentException("Specialization doesn't match the profession");
 		}
+	}
+
+	public ProfessionId getProfessionId() {
+		return profession.getProfessionId();
+	}
+
+	public ProfessionSpecializationId getSpecializationId() {
+		return specialization != null ? specialization.getSpecializationId() : null;
+	}
+
+	@Override
+	public String toString() {
+		return "%s - %s".formatted(profession, specialization);
 	}
 }
