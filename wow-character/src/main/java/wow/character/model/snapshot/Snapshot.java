@@ -4,6 +4,7 @@ import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.GameVersion;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
@@ -12,7 +13,8 @@ import wow.commons.model.spells.Spell;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static wow.commons.constants.SpellConstants.*;
+import static wow.commons.constants.SpellConstants.GCD;
+import static wow.commons.constants.SpellConstants.MIN_GCD;
 
 /**
  * User: POlszewski
@@ -23,6 +25,9 @@ public class Snapshot implements StatProvider {
 	private final Spell spell;
 	private final BaseStatInfo baseStats;
 	private final CombatRatingInfo cr;
+
+	private final double baseSpellHitChancePct;
+	private final double maxSpellHitChancePct;
 
 	private final AccumulatedSpellStats stats;
 
@@ -67,10 +72,14 @@ public class Snapshot implements StatProvider {
 		this.spell = spell;
 		this.baseStats = character.getBaseStatInfo();
 		this.cr = character.getCombatRatingInfo();
-		this.stats = new AccumulatedSpellStats(
-				attributes,
-				character.getConditions(spell)
-		);
+
+		GameVersion gameVersion = character.getGameVersion();
+		int levelDifference = character.getTargetEnemy().getLevelDifference();
+
+		this.baseSpellHitChancePct = gameVersion.getBaseSpellHitChancePct(levelDifference);
+		this.maxSpellHitChancePct = gameVersion.getMaxPveSpellHitChancePct();
+
+		this.stats = getStats(spell, character, attributes);
 
 		stats.accumulateStats(this);
 
@@ -83,6 +92,13 @@ public class Snapshot implements StatProvider {
 		calcMisc();
 
 		this.calcFinished = true;
+	}
+
+	private AccumulatedSpellStats getStats(Spell spell, Character character, Attributes attributes) {
+		return new AccumulatedSpellStats(
+				attributes,
+				character.getConditions(spell)
+		);
 	}
 
 	private void calcBaseStats() {
@@ -108,7 +124,7 @@ public class Snapshot implements StatProvider {
 
 		spMultiplier = 1 + stats.getSpellDamagePct() / 100;
 
-		hitChance = min(BASE_HIT.getValue() + totalHit, 99) / 100;
+		hitChance = min(baseSpellHitChancePct + totalHit, maxSpellHitChancePct) / 100;
 		critChance = min(totalCrit, 100) / 100;
 		haste = totalHaste / 100;
 

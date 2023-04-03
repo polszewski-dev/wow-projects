@@ -36,6 +36,8 @@ public class GameVersion implements Described {
 	private final boolean worldBuffs;
 	private final boolean gems;
 	private final boolean glyphs;
+	private final List<Double> basePveSpellHitChancesPct;
+	private final double maxPveSpellHitChancePct;
 
 	private final List<Phase> phases = new ArrayList<>();
 	private final List<CharacterClass> characterClasses = new ArrayList<>();
@@ -104,6 +106,10 @@ public class GameVersion implements Described {
 		return phases.stream()
 				.max(Comparator.comparing(Phase::getPhaseId))
 				.orElseThrow();
+	}
+
+	public double getBaseSpellHitChancePct(int levelDifference) {
+		return basePveSpellHitChancesPct.get(levelDifference);
 	}
 
 	@Override

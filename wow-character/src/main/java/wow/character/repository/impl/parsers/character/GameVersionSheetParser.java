@@ -17,6 +17,8 @@ public class GameVersionSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colWorldBuffs = column("world_buffs");
 	private final ExcelColumn colGems = column("gems");
 	private final ExcelColumn colGlyphs = column("glyphs");
+	private final ExcelColumn colBasePveSpellHitChance = column("base_pve_spell_hit_chances");
+	private final ExcelColumn colMaxPveSpellHitChance = column("max_pve_spell_hit_chance");
 
 	public GameVersionSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
@@ -43,7 +45,11 @@ public class GameVersionSheetParser extends CharacterSheetParser {
 		var worldBuffs = colWorldBuffs.getBoolean();
 		var gems = colGems.getBoolean();
 		var glyphs = colGlyphs.getBoolean();
+		var basePveSpellHitChances = colBasePveSpellHitChance.getList(Double::valueOf, ";");
+		var maxPveSpellHitChance = colMaxPveSpellHitChance.getDouble();
 
-		return new GameVersion(id, description, maxLvl, maxProfession, combatRatings, eqvAmount, worldBuffs, gems, glyphs);
+		return new GameVersion(
+				id, description, maxLvl, maxProfession, combatRatings, eqvAmount, worldBuffs, gems, glyphs, basePveSpellHitChances, maxPveSpellHitChance
+		);
 	}
 }

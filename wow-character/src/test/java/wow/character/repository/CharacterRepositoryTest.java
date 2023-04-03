@@ -224,6 +224,8 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(gameVersion.isWorldBuffs()).isTrue();
 		assertThat(gameVersion.isGems()).isFalse();
 		assertThat(gameVersion.isGlyphs()).isFalse();
+		assertThat(gameVersion.getBasePveSpellHitChancesPct()).isEqualTo(List.of(96.0, 95.0, 94.0, 83.0));
+		assertThat(gameVersion.getMaxPveSpellHitChancePct()).isEqualTo(99.0);
 	}
 
 	@Test
@@ -239,6 +241,8 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(gameVersion.isWorldBuffs()).isFalse();
 		assertThat(gameVersion.isGems()).isTrue();
 		assertThat(gameVersion.isGlyphs()).isFalse();
+		assertThat(gameVersion.getBasePveSpellHitChancesPct()).isEqualTo(List.of(96.0, 95.0, 94.0, 83.0));
+		assertThat(gameVersion.getMaxPveSpellHitChancePct()).isEqualTo(99.0);
 	}
 
 	@Test
@@ -254,6 +258,8 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(gameVersion.isWorldBuffs()).isFalse();
 		assertThat(gameVersion.isGems()).isTrue();
 		assertThat(gameVersion.isGlyphs()).isTrue();
+		assertThat(gameVersion.getBasePveSpellHitChancesPct()).isEqualTo(List.of(96.0, 95.0, 94.0, 83.0));
+		assertThat(gameVersion.getMaxPveSpellHitChancePct()).isEqualTo(100.0);
 	}
 
 	@Test

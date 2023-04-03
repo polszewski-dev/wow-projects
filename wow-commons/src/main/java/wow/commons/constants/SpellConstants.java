@@ -11,7 +11,6 @@ public final class SpellConstants {
 	public static final Duration GCD = Duration.seconds(1.5);
 	public static final Duration MIN_GCD = Duration.seconds(1);
 
-	public static final Percent BASE_HIT = Percent.of(83);
 	public static final Percent BASE_CRIT_DAMAGE_BONUS_PCT = Percent.of(50);
 
 	public static final Duration FLIGHT_TIME = Duration.seconds(0.5);
