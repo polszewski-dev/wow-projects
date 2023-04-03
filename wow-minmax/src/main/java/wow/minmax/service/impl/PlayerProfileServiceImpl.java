@@ -2,9 +2,9 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
+import wow.character.model.character.GameVersion;
 import wow.character.model.character.Phase;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
@@ -14,10 +14,9 @@ import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.character.CreatureType;
 import wow.commons.model.item.Item;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.GameVersionId;
+import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
@@ -46,6 +45,8 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final UpgradeService upgradeService;
 	private final CharacterService characterService;
 
+	private final ProfileConfig profileConfig;
+
 	@Override
 	public List<PlayerProfileInfo> getPlayerProfileInfos() {
 		return playerProfileRepository.getPlayerProfileList().stream()
@@ -73,15 +74,17 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private CharacterId getDefaultCharacterId(UUID profileId) {
-		PhaseId defaultPhaseId = PhaseId.TBC_P5;//todo getSupportedVersions().last().getPhases().last
-		Phase defaultPhase = characterRepository.getPhase(defaultPhaseId).orElseThrow();
+		GameVersionId latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
+		GameVersion latestSupportedVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
+
+		Phase defaultPhase = latestSupportedVersion.getLastPhase();
 
 		return new CharacterId(
 				profileId,
 				defaultPhase.getPhaseId(),
 				defaultPhase.getGameVersion().getMaxLevel(),
-				CreatureType.BEAST,
-				3
+				profileConfig.getDefaultEnemyType(),
+				profileConfig.getDefaultLevelDiff()
 		);
 	}
 
@@ -114,16 +117,12 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				playerProfile.getCharacterClassId(),
 				playerProfile.getRaceId(),
 				characterId.getLevel(),
-				BuildId.DESTRO_SHADOW,//todo
 				characterId.getPhaseId()
 		);
 
 		Enemy targetEnemy = new Enemy(characterId.getEnemyType(), characterId.getEnemyLevelDiff());
 
 		newCharacter.setTargetEnemy(targetEnemy);
-		newCharacter.addProfession(ProfessionId.TAILORING);//todo
-		newCharacter.addProfession(ProfessionId.ENCHANTING);//todo
-
 		return newCharacter;
 	}
 

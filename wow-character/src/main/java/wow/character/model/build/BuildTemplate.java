@@ -2,6 +2,7 @@ package wow.character.model.build;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import wow.character.model.character.CharacterProfession;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestricted;
@@ -28,4 +29,5 @@ public class BuildTemplate implements TimeRestricted {
 	private final List<SpellId> relevantSpells;
 	private final PetType activePet;
 	private final Map<BuffSetId, List<String>> buffSets;
+	private final List<CharacterProfession> professions;
 }

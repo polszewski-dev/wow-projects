@@ -38,6 +38,10 @@ public class CharacterProfessions implements Copyable<CharacterProfessions> {
 		setProfessions(newList);
 	}
 
+	public void reset() {
+		professions.clear();
+	}
+
 	public List<CharacterProfession> getList() {
 		return professions;
 	}

@@ -3,7 +3,6 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.Character;
-import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
@@ -22,7 +21,6 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 	private final BuffPOConverter buffPOConverter;
 	private final EnemyPOConverter enemyPOConverter;
 
-	private final CharacterRepository characterRepository;
 	private final CharacterService characterService;
 
 	@Override
@@ -46,11 +44,12 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 				source.getCharacterClassId(),
 				source.getRace(),
 				source.getLevel(),
-				source.getBuild().getBuildId(),
 				source.getPhaseId()
 		);
 
 		var params = PoConverterParams.createParams(source.getPhaseId());
+
+		characterService.changeBuild(character, source.getBuild().getBuildId());
 
 		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
 		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), params));

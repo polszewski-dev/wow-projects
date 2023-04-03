@@ -13,6 +13,7 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -95,8 +96,14 @@ public class GameVersion implements Described {
 		return new CharacterProfession(profession, specialization);
 	}
 
-	public boolean has(CharacterClassId characterClassId, RaceId raceId) {
-		return characterClasses.stream().anyMatch(x -> x.getCharacterClassId() == characterClassId && x.has(raceId));
+	public boolean supports(CharacterClassId characterClassId, RaceId raceId) {
+		return characterClasses.stream().anyMatch(x -> x.getCharacterClassId() == characterClassId && x.isAvailableTo(raceId));
+	}
+
+	public Phase getLastPhase() {
+		return phases.stream()
+				.max(Comparator.comparing(Phase::getPhaseId))
+				.orElseThrow();
 	}
 
 	@Override

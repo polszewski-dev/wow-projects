@@ -191,11 +191,15 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		Profession profession = getGameVersion().getProfession(professionId);
 		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
 
-		this.professions.addProfession(profession, specialization);
+		professions.addProfession(profession, specialization);
 	}
 
 	public void addProfession(ProfessionId professionId) {
 		addProfession(professionId, null);
+	}
+
+	public void resetProfessions() {
+		professions.reset();
 	}
 
 	// build

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
-import java.util.Comparator;
 import java.util.stream.Stream;
 
 /**
@@ -22,12 +21,6 @@ public enum GameVersionId {
 
 	public static GameVersionId parse(String value) {
 		return EnumUtil.parse(value, values());
-	}
-
-	public static GameVersionId getLatestGameVersionId() {
-		return Stream.of(values())
-				.max(Comparator.comparing(Enum::ordinal))
-				.orElseThrow();
 	}
 
 	public PhaseId getEarliestPhase() {

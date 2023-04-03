@@ -4,9 +4,7 @@ import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
-import wow.character.model.character.Enemy;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 
@@ -19,9 +17,7 @@ public interface CharacterService {
 
 	Talents getTalentsFromTalentLink(String link, Character character);
 
-	Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, PhaseId phaseId);
+	Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
 
 	void changeBuild(Character character, BuildId buildId);
-
-	Enemy createEnemy(CreatureType enemyType, int levelDifference);
 }

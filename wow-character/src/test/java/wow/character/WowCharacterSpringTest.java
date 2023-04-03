@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.build.BuildId;
 import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
@@ -31,13 +30,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static wow.character.model.build.BuildId.DESTRO_SHADOW;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.character.RaceId.ORC;
-import static wow.commons.model.professions.ProfessionId.ENCHANTING;
-import static wow.commons.model.professions.ProfessionId.TAILORING;
-import static wow.commons.model.professions.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.talents.TalentId.*;
 
@@ -166,23 +161,17 @@ public abstract class WowCharacterSpringTest {
 				CHARACTER_CLASS,
 				RACE,
 				LEVEL,
-				BUILD_ID,
 				PHASE
 		);
 
-		Enemy enemy = characterService.createEnemy(UNDEAD, LVL_DIFF);
+		Enemy enemy = new Enemy(UNDEAD, LVL_DIFF);
 
 		character.setTargetEnemy(enemy);
-
-		character.addProfession(TAILORING, SHADOWEAVE_TAILORING);
-		character.addProfession(ENCHANTING);
-
 		return character;
 	}
 
 	protected static final CharacterClassId CHARACTER_CLASS = WARLOCK;
 	protected static final RaceId RACE = ORC;
-	protected static final BuildId BUILD_ID = DESTRO_SHADOW;
 	protected static final PhaseId PHASE = TBC_P5;
 	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
 	protected static final int LVL_DIFF = 3;

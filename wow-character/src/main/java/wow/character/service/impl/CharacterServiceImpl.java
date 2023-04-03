@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.*;
 import wow.character.model.character.Character;
-import wow.character.model.character.Enemy;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
@@ -12,7 +11,6 @@ import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.talents.Talent;
@@ -61,7 +59,7 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, BuildId buildId, PhaseId phaseId) {
+	public Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
 		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
 		GameVersion gameVersion = phase.getGameVersion();
 
@@ -72,7 +70,7 @@ public class CharacterServiceImpl implements CharacterService {
 				phase
 		);
 
-		changeBuild(character, buildId);
+		changeBuild(character, character.getCharacterClass().getDefaultBuildId());
 
 		return character;
 	}
@@ -83,6 +81,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 		character.resetBuild();
 		character.resetBuffs();
+		character.resetProfessions();
 
 		Build build = character.getBuild();
 
@@ -96,6 +95,7 @@ public class CharacterServiceImpl implements CharacterService {
 		build.setBuffSets(getBuffSets(buildTemplate, character));
 
 		character.setBuffs(BuffSetId.values());
+		character.setProfessions(buildTemplate.getProfessions());
 	}
 
 	private BuffSets getBuffSets(BuildTemplate buildTemplate, Character character) {
@@ -110,10 +110,5 @@ public class CharacterServiceImpl implements CharacterService {
 		}
 
 		return new BuffSets(result);
-	}
-
-	@Override
-	public Enemy createEnemy(CreatureType enemyType, int levelDifference) {
-		return new Enemy(enemyType, levelDifference);
 	}
 }

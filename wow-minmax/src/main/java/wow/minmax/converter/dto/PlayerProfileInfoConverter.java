@@ -7,6 +7,7 @@ import wow.character.model.character.GameVersion;
 import wow.character.model.character.Race;
 import wow.character.repository.CharacterRepository;
 import wow.commons.model.pve.GameVersionId;
+import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.CharacterId;
@@ -25,11 +26,15 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 
 	private final CharacterRepository characterRepository;
 
+	private final ProfileConfig profileConfig;
+
 	@Override
 	public PlayerProfileInfoDTO doConvert(PlayerProfileInfo source) {
-		GameVersion latestGameVersion = characterRepository.getGameVersion(GameVersionId.getLatestGameVersionId()).orElseThrow();
-		CharacterClass characterClass = latestGameVersion.getCharacterClass(source.getCharacterClassId());
-		Race race = latestGameVersion.getRace(source.getRaceId());
+		GameVersionId latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
+		GameVersion latestSupportedGameVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
+
+		CharacterClass characterClass = latestSupportedGameVersion.getCharacterClass(source.getCharacterClassId());
+		Race race = latestSupportedGameVersion.getRace(source.getRaceId());
 
 		return new PlayerProfileInfoDTO(
 				source.getProfileId(),

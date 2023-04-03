@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import wow.character.model.character.CharacterClass;
 import wow.character.model.character.GameVersion;
 import wow.character.repository.CharacterRepository;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.GameVersionId;
+import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.dto.CharacterClassConverter;
 import wow.minmax.converter.dto.PhaseConverter;
 import wow.minmax.converter.dto.PlayerProfileInfoConverter;
@@ -38,6 +37,8 @@ public class PlayerProfileController {
 	private final CharacterClassConverter characterClassConverter;
 	private final PhaseConverter phaseConverter;
 
+	private final ProfileConfig profileConfig;
+
 	@GetMapping("list")
 	public List<PlayerProfileInfoDTO> getPlayerProfileList() {
 		List<PlayerProfileInfo> playerProfileInfos = playerProfileService.getPlayerProfileInfos();
@@ -56,15 +57,15 @@ public class PlayerProfileController {
 
 	@GetMapping("new/options")
 	public NewProfileOptionsDTO getNewProfileOptions() {
-		GameVersion gameVersion = characterRepository.getGameVersion(GameVersionId.getLatestGameVersionId()).orElseThrow();
+		GameVersionId latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
+		GameVersion gameVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
 
-		List<CharacterClass> availableClasses = Stream.of(CharacterClassId.WARLOCK)//todo
+		var supportedClasses = profileConfig.getSupportedClasses().stream()
 				.map(gameVersion::getCharacterClass)
+				.map(characterClassConverter::convert)
 				.toList();
 
-		return new NewProfileOptionsDTO(
-				characterClassConverter.convertList(availableClasses)
-		);
+		return new NewProfileOptionsDTO(supportedClasses);
 	}
 
 	@GetMapping("{profileId}/char/selection/options")
@@ -84,7 +85,7 @@ public class PlayerProfileController {
 	private List<PhaseDTO> getPhases(PlayerProfile playerProfile) {
 		return Stream.of(GameVersionId.values())
 				.map(x -> characterRepository.getGameVersion(x).orElseThrow())
-				.filter(x -> x.has(playerProfile.getCharacterClassId(), playerProfile.getRaceId()))
+				.filter(x -> x.supports(playerProfile.getCharacterClassId(), playerProfile.getRaceId()))
 				.flatMap(x -> x.getPhases().stream())
 				.map(phaseConverter::convert)
 				.toList();

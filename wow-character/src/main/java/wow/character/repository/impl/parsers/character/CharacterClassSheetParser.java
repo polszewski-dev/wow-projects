@@ -1,5 +1,6 @@
 package wow.character.repository.impl.parsers.character;
 
+import wow.character.model.build.BuildId;
 import wow.character.model.character.ArmorProfficiency;
 import wow.character.model.character.CharacterClass;
 import wow.character.model.character.GameVersion;
@@ -16,6 +17,7 @@ public class CharacterClassSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colArmorProfficiencies = column("armor_profficiencies");
 	private final ExcelColumn colWeaponProfficiencies = column("weapon_profficiencies");
 	private final ExcelColumn colDualwield = column("dualwield");
+	private final ExcelColumn colDefaultBuild = column("default_build");
 
 	public CharacterClassSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
@@ -35,8 +37,9 @@ public class CharacterClassSheetParser extends CharacterSheetParser {
 		var armorProfficiencies = colArmorProfficiencies.getSet(ArmorProfficiency::parse);
 		var weaponProfficiencies = colWeaponProfficiencies.getSet(WeaponProfficiency::parse);
 		var dualwield = colDualwield.getBoolean();
+		var defaultBuild = colDefaultBuild.getEnum(BuildId::parse, null);
 
-		return new CharacterClass(id, description, armorProfficiencies, weaponProfficiencies, dualwield, version);
+		return new CharacterClass(id, description, armorProfficiencies, weaponProfficiencies, dualwield, defaultBuild, version);
 	}
 
 	private void addCharacterClass(CharacterClass characterClass, GameVersion version) {

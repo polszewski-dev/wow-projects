@@ -3,6 +3,7 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import wow.character.model.build.BuildId;
 import wow.commons.model.categorization.*;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
@@ -36,6 +37,8 @@ public class CharacterClass implements Described {
 	private final Set<WeaponProfficiency> weaponProfficiencies;
 
 	private final boolean dualWield;
+
+	private final BuildId defaultBuildId;
 
 	private final GameVersion gameVersion;
 	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
@@ -75,7 +78,7 @@ public class CharacterClass implements Described {
 				.orElseThrow();
 	}
 
-	public boolean has(RaceId raceId) {
+	public boolean isAvailableTo(RaceId raceId) {
 		return races.stream().anyMatch(x -> x.getRaceId() == raceId);
 	}
 

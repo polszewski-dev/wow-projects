@@ -105,6 +105,10 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 				WORLD_BUFFS, List.of(),
 				CONSUMES, List.of("Well Fed (sp)", "Brilliant Wizard Oil", "Flask of Pure Death")
 		));
+		assertThat(buildTemplate.getProfessions().get(0).getProfessionId()).isEqualTo(ENCHANTING);
+		assertThat(buildTemplate.getProfessions().get(0).getSpecializationId()).isNull();
+		assertThat(buildTemplate.getProfessions().get(1).getProfessionId()).isEqualTo(TAILORING);
+		assertThat(buildTemplate.getProfessions().get(1).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
 	}
 
 	@ParameterizedTest(name = "[{index}] Can equip: slot = {0}, type = {1}, subType = {2}")
@@ -399,6 +403,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		));
 
 		assertThat(warlock.isDualWield()).isFalse();
+		assertThat(warlock.getDefaultBuildId()).isEqualTo(DESTRO_SHADOW);
 		assertThat(warlock.getGameVersion().getGameVersionId()).isEqualTo(VANILLA);
 
 		assertThat(warlock.getRaces().stream().map(Race::getRaceId).toList()).hasSameElementsAs(List.of(
