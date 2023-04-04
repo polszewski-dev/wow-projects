@@ -54,8 +54,7 @@ class SpellServiceTest extends WowCharacterSpringTest {
 				"Curse of the Elements",
 				"Curse of the Elements (improved)",
 				"Drums of Battle",
-				"Destruction",
-				"Blood Fury"
+				"Destruction"
 		));
 	}
 }

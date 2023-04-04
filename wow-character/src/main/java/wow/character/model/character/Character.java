@@ -87,6 +87,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		build.collectAttributes(collector);
 		equipment.collectAttributes(collector);
 		buffs.collectAttributes(collector);
+		race.collectAttributes(collector, this);
 		targetEnemy.collectAttributes(collector);
 	}
 

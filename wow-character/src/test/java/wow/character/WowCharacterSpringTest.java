@@ -32,7 +32,6 @@ import java.util.stream.Stream;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
-import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.talents.TalentId.*;
 
@@ -171,7 +170,7 @@ public abstract class WowCharacterSpringTest {
 	}
 
 	protected static final CharacterClassId CHARACTER_CLASS = WARLOCK;
-	protected static final RaceId RACE = ORC;
+	protected static final RaceId RACE = RaceId.UNDEAD;
 	protected static final PhaseId PHASE = TBC_P5;
 	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
 	protected static final int LVL_DIFF = 3;

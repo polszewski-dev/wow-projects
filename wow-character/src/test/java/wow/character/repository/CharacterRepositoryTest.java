@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.build.BuildTemplate;
 import wow.character.model.build.PveRole;
+import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemSlot;
@@ -17,6 +18,7 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.Described;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
@@ -436,7 +438,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 				"Hardiness"
 		));
 
-		assertThat(orc.getRacials(WARLOCK).stream().map(Described::getName).toList()).hasSameElementsAs(List.of(
+		assertThat(orc.getRacials(getVanillaWarlock()).stream().map(Described::getName).toList()).hasSameElementsAs(List.of(
 				"Axe Specialization",
 				"Blood Fury",
 				"Command",
@@ -453,10 +455,10 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		Race tbcOrc = tbc.getRace(ORC);
 
 		assertThat(vanillaOrc.getRacials()).hasSize(4);
-		assertThat(vanillaOrc.getRacials(WARLOCK)).hasSize(4);
+		assertThat(vanillaOrc.getRacials(getVanillaWarlock())).hasSize(4);
 
 		assertThat(tbcOrc.getRacials()).hasSize(6);
-		assertThat(tbcOrc.getRacials(WARLOCK)).hasSize(4);
+		assertThat(tbcOrc.getRacials(getTbcWarlock())).hasSize(4);
 	}
 
 	@Test
@@ -466,17 +468,18 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		Racial racial = orc.getRacials().stream()
 				.filter(x -> x.getName().equals("Blood Fury"))
+				.filter(x -> x.isAvailableTo(getTbcWarlock()))
 				.findFirst()
 				.orElseThrow();
 
 		assertThat(racial.getName()).isEqualTo("Blood Fury");
 		assertThat(racial.getIcon()).isEqualTo("racial_orc_berserkerstrength");
-		assertThat(racial.getTooltip()).isEqualTo("Increases your damage and healing from spells and effects by up to 5, but reduces healing effects on you by 50%.  Lasts 15 sec.");
+		assertThat(racial.getTooltip()).isEqualTo("Increases your damage and healing from spells and effects by up to 143, but reduces healing effects on you by 50%.  Lasts 15 sec.");
 		assertThat(racial.getRace().getRaceId()).isEqualTo(ORC);
 		assertThat(racial.getRace().getGameVersion().getGameVersionId()).isEqualTo(TBC);
-		assertThat(racial.getRequiredClasses()).hasSameElementsAs(List.of(WARLOCK));
+		assertThat(racial.getCharacterRestriction().getCharacterClassIds()).hasSameElementsAs(List.of(WARLOCK));
 
-		assertThat(racial.matches(WARLOCK)).isTrue();
+		assertThat(racial.isAvailableTo(getTbcWarlock())).isTrue();
 	}
 
 	@Test
@@ -511,6 +514,21 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(specialization.getIcon()).isEqualTo("classic_spell_holy_blessingofprotection");
 
 		assertThat(specialization.getProfession().getProfessionId()).isEqualTo(TAILORING);
+	}
+
+	Character getVanillaWarlock() {
+		return getWarlock(VANILLA);
+	}
+
+	Character getTbcWarlock() {
+		return getWarlock(TBC);
+	}
+
+	private Character getWarlock(GameVersionId gameVersionId) {
+		GameVersion gameVersion = underTest.getGameVersion(gameVersionId).orElseThrow();
+		CharacterClass warlock = gameVersion.getCharacterClass(WARLOCK);
+		Race orc = gameVersion.getRace(ORC);
+		return new Character(warlock, orc, gameVersion.getMaxLevel(), gameVersion.getLastPhase());
 	}
 
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

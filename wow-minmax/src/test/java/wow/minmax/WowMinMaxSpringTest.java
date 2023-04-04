@@ -35,7 +35,6 @@ import java.util.UUID;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
-import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
@@ -137,7 +136,7 @@ public abstract class WowMinMaxSpringTest {
 	protected static final String PROFILE_NAME = "test#1";
 
 	protected static final CharacterClassId CHARACTER_CLASS = WARLOCK;
-	protected static final RaceId RACE = ORC;
+	protected static final RaceId RACE = RaceId.UNDEAD;
 	protected static final PhaseId PHASE = TBC_P5;
 	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
 	protected static final CreatureType ENEMY_TYPE = UNDEAD;

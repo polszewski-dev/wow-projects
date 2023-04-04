@@ -3,8 +3,9 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
 import wow.commons.model.pve.Side;
@@ -33,9 +34,13 @@ public class Race implements Described {
 	@NonNull
 	private final GameVersion gameVersion;
 
-	public List<Racial> getRacials(CharacterClassId characterClassId) {
+	public List<Racial> getRacials(CharacterInfo characterInfo) {
 		return racials.stream()
-				.filter(x -> x.matches(characterClassId))
+				.filter(x -> x.isAvailableTo(characterInfo))
 				.toList();
+	}
+
+	public void collectAttributes(AttributeCollector collector, CharacterInfo characterInfo) {
+		collector.addAttributes(getRacials(characterInfo));
 	}
 }

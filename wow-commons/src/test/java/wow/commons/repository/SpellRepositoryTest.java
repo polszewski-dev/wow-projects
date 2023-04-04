@@ -246,8 +246,7 @@ class SpellRepositoryTest extends RepositoryTest {
 				"Curse of the Elements",
 				"Curse of the Elements (improved)",
 				"Drums of Battle",
-				"Destruction",
-				"Blood Fury"
+				"Destruction"
 		));
 	}
 

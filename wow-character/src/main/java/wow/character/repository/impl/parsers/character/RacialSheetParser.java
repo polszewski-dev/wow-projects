@@ -3,7 +3,6 @@ package wow.character.repository.impl.parsers.character;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Racial;
 import wow.character.repository.impl.CharacterRepositoryImpl;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 
 /**
@@ -12,7 +11,6 @@ import wow.commons.model.character.RaceId;
  */
 public class RacialSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colRace = column("race");
-	private final ExcelColumn colReqClass = column("req_class");
 
 	public RacialSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
@@ -28,11 +26,16 @@ public class RacialSheetParser extends CharacterSheetParser {
 
 	private Racial getRacial(GameVersion version) {
 		var description = getDescription();
+		var timeRestriction = getTimeRestriction();
+		var restriction = getRestriction();
 		var raceId = colRace.getEnum(RaceId::parse);
 		var race = version.getRace(raceId);
-		var reqClasses = colReqClass.getSet(CharacterClassId::parse);
+		var attributes = readAttributes();
 
-		return new Racial(description, race, reqClasses);
+		Racial racial = new Racial(description, timeRestriction, restriction, race);
+
+		racial.setAttributes(attributes);
+		return racial;
 	}
 
 	private void addRacial(Racial racial) {

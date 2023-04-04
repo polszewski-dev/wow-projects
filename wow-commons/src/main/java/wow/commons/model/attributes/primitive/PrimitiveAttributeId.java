@@ -61,6 +61,7 @@ public enum PrimitiveAttributeId implements AttributeId {
 	HP5("Hp5"),
 	ARMOR("Armor"),
 	DODGE_RATING("Dodge,Rating"),
+	DODGE_PCT("Dodge,Percent"),
 	DEFENSE("Defense"),
 	DEFENSE_RATING("Defense,Rating"),
 	BLOCK("Block"),
@@ -89,6 +90,7 @@ public enum PrimitiveAttributeId implements AttributeId {
 	PET_INTELLECT("Pet,Intellect"),
 	PET_INTELLECT_PCT("Pet,Intellect,Percent"),
 	PET_CRIT_PCT("Pet,Crit,Percent"),
+	PET_DAMAGE_PCT("Pet,Damage,Percent"),
 	PET_DAMAGE_MELEE_PCT("Pet,Damage,Melee,Percent"),
 	PET_MAX_MANA_PCT("Pet,MaxMana,Percent");
 
