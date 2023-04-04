@@ -172,6 +172,10 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return race.getSide();
 	}
 
+	public List<Racial> getRacials() {
+		return race.getRacials(this);
+	}
+
 	// professions
 
 	@Override

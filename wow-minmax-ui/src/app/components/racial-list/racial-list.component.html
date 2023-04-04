@@ -1,1 +1,18 @@
-<p>racial-list works!</p>
+<table class="table table-striped stats-table">
+	<thead>
+		<tr>
+			<th scope="col" style="width: 15%">name</th>
+			<th scope="col">description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let racial of racialList">
+			<td style="text-align: left" [title]="racial.attributes.replaceAll(', ', ',\n')">
+				<strong>
+					<img [src]="racial.icon | icon"/>&nbsp;{{racial.name}}
+				</strong>
+			</td>
+			<td [innerHTML]="racial.tooltip.replaceAll('\n', '<br/>')"></td>
+		</tr>
+	</tbody>
+</table>
