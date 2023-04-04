@@ -140,22 +140,27 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				.build();
 	}
 
-	protected Attributes readAttributes(int maxAttributes) {
-		return readAttributes("", maxAttributes);
+	private static final int MAX_ATTRIBUTES = 20;
+
+	protected Attributes readAttributes() {
+		return readAttributes("");
 	}
 
-	protected Attributes readAttributes(String prefix, int maxAttributes) {
+	protected Attributes readAttributes(String prefix) {
 		AttributesBuilder builder = new AttributesBuilder();
-		for (int statNo = 1; statNo <= maxAttributes; ++statNo) {
+
+		for (int statNo = 1; statNo <= MAX_ATTRIBUTES; ++statNo) {
 			readAttribute(builder, prefix, statNo);
 		}
+
+		assertNoMoreAttributeColumns(prefix);
 
 		return builder.toAttributes();
 	}
 
 	private void readAttribute(AttributesBuilder builder, String prefix, int statNo) {
-		ExcelColumn colStat = column(colStat(prefix, statNo));
-		ExcelColumn colAmount = column(colAmount(prefix, statNo));
+		ExcelColumn colStat = getColStat(prefix, statNo);
+		ExcelColumn colAmount = getColAmount(prefix, statNo);
 
 		var attributeStr = colStat.getString(null);
 
@@ -170,6 +175,20 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 			attributeStr = substitutePlaceholders(attributeStr);
 			var attribute = ComplexAttributeMapper.fromString(attributeStr);
 			builder.addAttribute(attribute);
+		}
+	}
+
+	private ExcelColumn getColStat(String prefix, int statNo) {
+		return column(colStat(prefix, statNo), true);
+	}
+
+	private ExcelColumn getColAmount(String prefix, int statNo) {
+		return column(colAmount(prefix, statNo), true);
+	}
+
+	private void assertNoMoreAttributeColumns(String prefix) {
+		if (getColStat(prefix, MAX_ATTRIBUTES + 1).getString(null) != null || getColAmount(prefix, MAX_ATTRIBUTES + 1).getString(null) != null) {
+			throw new IllegalArgumentException("There are more attribute columns than " + MAX_ATTRIBUTES);
 		}
 	}
 

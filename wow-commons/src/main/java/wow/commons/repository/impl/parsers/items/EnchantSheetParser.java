@@ -43,7 +43,7 @@ public class EnchantSheetParser extends WowExcelSheetParser {
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
-		var attributes = readAttributes(2);
+		var attributes = readAttributes();
 
 		var enchant = new EnchantImpl(id, description, timeRestriction, characterRestriction, itemTypes, rarity);
 

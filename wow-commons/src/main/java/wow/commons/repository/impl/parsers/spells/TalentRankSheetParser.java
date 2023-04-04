@@ -61,7 +61,7 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 
 	private Attributes getTalentBenefit() {
 		Attributes attributesWithoutConditions = new AttributesBuilder()
-				.addAttributes(readAttributes(4))
+				.addAttributes(readAttributes())
 				.toAttributes();
 
 		return attachConditions(attributesWithoutConditions);

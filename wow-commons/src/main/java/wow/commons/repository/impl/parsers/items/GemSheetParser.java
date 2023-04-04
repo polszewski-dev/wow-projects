@@ -7,7 +7,8 @@ import wow.commons.model.item.impl.GemImpl;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
-import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.GEM_COLOR;
+import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.GEM_META_ENABLERS;
 
 /**
  * User: POlszewski
@@ -31,7 +32,7 @@ public class GemSheetParser extends AbstractItemSheetParser {
 		var id = getId();
 		var color = colColor.getEnum(GemColor::valueOf);
 		var metaEnablers = colMetaEnablers.getList(MetaEnabler::valueOf);
-		var stats = readAttributes(GEM_MAX_STATS);
+		var stats = readAttributes();
 
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();

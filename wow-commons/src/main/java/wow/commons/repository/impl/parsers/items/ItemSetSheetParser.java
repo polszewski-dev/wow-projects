@@ -86,7 +86,7 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		}
 
 		String description = column(itemSetBonusDescription(bonusIdx)).getString();
-		Attributes attributes = readAttributes(itemSetBonusStatPrefix(bonusIdx), ITEM_SET_BONUS_MAX_STATS);
+		Attributes attributes = readAttributes(itemSetBonusStatPrefix(bonusIdx));
 		AttributeCondition professionCondition = AttributeCondition.of(colIBonusReqProfession.getEnum(ProfessionId::parse, null));
 
 		attributes = AttributesBuilder.attachCondition(attributes, professionCondition);

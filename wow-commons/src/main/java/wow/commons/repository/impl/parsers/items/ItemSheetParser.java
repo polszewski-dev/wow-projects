@@ -40,7 +40,7 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var id = getId();
 		var socketTypes = colSocketTypes.getList(SocketType::valueOf);
 		var itemSetName = colItemSet.getString(null);
-		var stats = readAttributes(ITEM_MAX_STATS);
+		var stats = readAttributes();
 
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
@@ -66,7 +66,7 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 			return ItemSocketSpecification.EMPTY;
 		}
 
-		Attributes socketBonus = readAttributes(SOCKET_BONUS_PREFIX, SOCKET_BONUS_MAX_STATS);
+		Attributes socketBonus = readAttributes(SOCKET_BONUS_PREFIX);
 
 		return new ItemSocketSpecification(socketTypes, socketBonus);
 	}
