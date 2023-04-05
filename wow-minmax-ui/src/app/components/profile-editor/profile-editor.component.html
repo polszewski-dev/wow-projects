@@ -8,7 +8,9 @@
 				<app-equipment-editor
 					[selectedCharacterId]="selectedCharacterId"
 					[upgradesBySlotGroup]="upgradesBySlotGroup"
+					[itemFilter]="itemFilter"
 					(equipmentChanged)="onEquipmentChanged()"
+					(itemFilterChanged)="onItemFilterChanged()"
 				></app-equipment-editor>
 				<app-upgrade-list
 					[upgradesBySlotGroup]="upgradesBySlotGroup"

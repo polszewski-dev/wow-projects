@@ -96,7 +96,7 @@ class SpecialAbilityTest {
 				"test"
 		);
 
-		Attributes statEquivalent = onUse.getStatEquivalent(StatProvider.fixedValues(0.9, 0.2, 2));
+		Attributes statEquivalent = onUse.getStatEquivalent(StatProvider.dummyValues());
 
 		assertThat(statEquivalent.getSpellPower()).isEqualTo(25);
 	}

@@ -1,6 +1,7 @@
 package wow.character.service;
 
 import wow.character.model.character.Character;
+import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -22,7 +23,7 @@ public interface ItemService {
 
 	Gem getGem(int gemId, PhaseId phaseId);
 
-	List<Item> getItemsBySlot(Character character, ItemSlot itemSlot);
+	List<Item> getItemsBySlot(Character character, ItemSlot itemSlot, ItemFilter itemFilter);
 
 	List<Enchant> getEnchants(Character character, ItemType itemType);
 

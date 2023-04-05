@@ -36,6 +36,7 @@ public class GameVersion implements Described {
 	private final boolean worldBuffs;
 	private final boolean gems;
 	private final boolean glyphs;
+	private final boolean heroics;
 	private final List<Double> basePveSpellHitChancesPct;
 	private final double maxPveSpellHitChancePct;
 

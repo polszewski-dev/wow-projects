@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';
+import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { StatsService } from 'src/app/services/stats.service';
@@ -15,6 +16,16 @@ export class ProfileEditorComponent implements OnChanges {
 	dps?: number;
 	previousDps?: number;
 	upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
+
+	itemFilter: ItemFilter = {
+		heroics: true,
+		raids: true,
+		worldBosses: false,
+		healingItems: false,
+		pvpItems: false,
+		greens: true,
+		legendaries: false
+	};
 
 	constructor(private statsService: StatsService, private upgradeService: UpgradeService) {}
 
@@ -33,6 +44,10 @@ export class ProfileEditorComponent implements OnChanges {
 		this.updateUpgradeStatus();
 	}
 
+	onItemFilterChanged(): void {
+		this.updateUpgradeStatus();
+	}
+
 	onBuffsChanged(): void {
 		this.updateDps();
 	}
@@ -46,7 +61,7 @@ export class ProfileEditorComponent implements OnChanges {
 
 	updateUpgradeStatus(): void {
 		for (let slotGroup of Object.values(ItemSlotGroup)) {
-			this.upgradeService.getUpgrades(this.selectedCharacterId!, slotGroup).subscribe((upgrades: Upgrade[]) => {
+			this.upgradeService.getUpgrades(this.selectedCharacterId!, slotGroup, this.itemFilter).subscribe((upgrades: Upgrade[]) => {
 				this.upgradesBySlotGroup[slotGroup] = upgrades;
 			});
 		}

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -52,17 +53,19 @@ public class EquipmentController {
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		Character character = playerProfileService.getCharacter(characterId);
+		ItemFilter itemFilter = ItemFilter.everything().exceptHealingItems();
 
 		var itemsByItemSlot = ItemSlot.getDpsSlots().stream()
-				.collect(Collectors.toMap(x -> x, x -> itemConverter.convertList(itemService.getItemsBySlot(character, x))));
+				.collect(Collectors.toMap(x -> x, x -> itemConverter.convertList(itemService.getItemsBySlot(character, x, itemFilter))));
 		var enchantsByItemType = Stream.of(ItemType.values())
 				.collect(Collectors.toMap(x -> x, x -> enchantConverter.convertList(itemService.getEnchants(character, x))));
 		var gemsBySocketType = Stream.of(SocketType.values())
 				.collect(Collectors.toMap(x -> x, x -> gemConverter.convertList(itemService.getGems(character, x, false))));
 
 		boolean gems = character.getGameVersion().isGems();
+		boolean heroics = character.getGameVersion().isHeroics();
 
-		return new EquipmentOptionsDTO(itemsByItemSlot, enchantsByItemType, gemsBySocketType, gems);
+		return new EquipmentOptionsDTO(itemsByItemSlot, enchantsByItemType, gemsBySocketType, gems, heroics);
 	}
 
 	@GetMapping("{characterId}/change/item/{slot}/{itemId}/best/variant")

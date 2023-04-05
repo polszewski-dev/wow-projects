@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
+import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -37,7 +38,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getItemsBySlot() {
-		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1).stream()
+		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1, ItemFilter.everything()).stream()
 				.sorted(Comparator.comparing(Item::getName))
 				.toList();
 

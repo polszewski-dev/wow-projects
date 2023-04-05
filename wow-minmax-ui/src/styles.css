@@ -178,3 +178,15 @@ body {
 .instant-cast {
 	text-decoration: underline;
 }
+
+.item-filter {
+	font-size: 0.8em;
+	text-align: center;
+	padding-top: 4px;
+	padding-bottom: 10px;
+}
+
+.item-filter-header {
+	margin-right: 10px;
+	font-weight: bold;
+}

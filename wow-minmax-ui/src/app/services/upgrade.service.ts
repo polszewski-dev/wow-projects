@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ItemSlotGroup } from '../model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../model/upgrade/Upgrade';
+import { ItemFilter } from '../model/equipment/ItemFilter';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,7 +13,7 @@ export class UpgradeService {
 
 	constructor(private http: HttpClient) { }
 
-	getUpgrades(characterId: string, slotGroup: ItemSlotGroup): Observable<Upgrade[]> {
-		return this.http.get<Upgrade[]>(`${this.apiUrl}/${characterId}/slot/${slotGroup}`);
+	getUpgrades(characterId: string, slotGroup: ItemSlotGroup, itemFilter: ItemFilter): Observable<Upgrade[]> {
+		return this.http.post<Upgrade[]>(`${this.apiUrl}/${characterId}/slot/${slotGroup}`, itemFilter);
 	}
 }

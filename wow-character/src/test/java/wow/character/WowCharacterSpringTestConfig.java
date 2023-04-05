@@ -3,7 +3,6 @@ package wow.character;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
-import wow.character.config.ItemConfig;
 import wow.character.service.ItemService;
 import wow.character.service.impl.CachedItemService;
 import wow.character.service.impl.ItemServiceImpl;
@@ -23,7 +22,7 @@ import java.util.List;
 @PropertySource("classpath:test.properties")
 public class WowCharacterSpringTestConfig {
 	@Bean
-	public ItemService itemService(ItemRepository itemRepository, ItemConfig itemConfig, List<PveRoleStatClassifier> pveRoleStatClassifies) {
-		return new CachedItemService(new ItemServiceImpl(itemRepository, itemConfig, pveRoleStatClassifies));
+	public ItemService itemService(ItemRepository itemRepository, List<PveRoleStatClassifier> pveRoleStatClassifies) {
+		return new CachedItemService(new ItemServiceImpl(itemRepository, pveRoleStatClassifies));
 	}
 }

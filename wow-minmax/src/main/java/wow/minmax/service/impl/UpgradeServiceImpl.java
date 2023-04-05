@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -31,9 +32,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final CalculationService calculationService;
 
 	@Override
-	public List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, Spell spell) {
+	public List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, ItemFilter itemFilter, Spell spell) {
 		FindUpgradesEnumerator enumerator = new FindUpgradesEnumerator(
-				character, slotGroup, spell, itemService, calculationService
+				character, slotGroup, itemFilter, spell, itemService, calculationService
 		);
 
 		return enumerator.run().getResult().stream()

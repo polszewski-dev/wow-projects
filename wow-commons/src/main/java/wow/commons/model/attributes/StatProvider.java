@@ -11,6 +11,10 @@ public interface StatProvider {
 
 	double getEffectiveCastTime();
 
+	static StatProvider dummyValues() {
+		return StatProvider.fixedValues(0.99, 0.30, 2.5);
+	}
+
 	static StatProvider fixedValues(double hitChance, double critChance, double effectiveCastTime) {
 		return new StatProvider() {
 			@Override

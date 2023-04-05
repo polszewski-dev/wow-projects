@@ -45,6 +45,10 @@ public abstract class Source {
 		return (isRaidDrop() || isDungeonDrop()) && getBoss() == null;
 	}
 
+	public boolean isWorldBossDrop() {
+		return (!isRaidDrop() && !isDungeonDrop()) && getBoss() != null;
+	}
+
 	public boolean isReputationReward() {
 		return false;
 	}
@@ -59,6 +63,10 @@ public abstract class Source {
 
 	public boolean isRaidDrop() {
 		return getZone() != null && getZone().isRaid();
+	}
+
+	public boolean isHeroicDrop() {
+		return false;
 	}
 
 	public boolean isDungeonDrop() {

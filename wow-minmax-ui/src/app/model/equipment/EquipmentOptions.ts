@@ -10,4 +10,5 @@ export interface EquipmentOptions {
 	enchantsByItemType: Record<ItemType, Enchant[]>;
 	gemsBySocketType: Record<SocketType, Gem[]>;
 	editGems: boolean;
+	heroics: boolean;
 }

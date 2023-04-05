@@ -2,8 +2,8 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.config.ItemConfig;
 import wow.character.model.character.Character;
+import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.character.service.impl.classifiers.PveRoleStatClassifier;
 import wow.character.service.impl.enumerators.FilterOutWorseEnchantChoices;
@@ -29,7 +29,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 	private final ItemRepository itemRepository;
-	private final ItemConfig itemConfig;
 
 	private final List<PveRoleStatClassifier> pveRoleStatClassifiers;
 
@@ -49,19 +48,13 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItemsBySlot(Character character, ItemSlot itemSlot) {
+	public List<Item> getItemsBySlot(Character character, ItemSlot itemSlot, ItemFilter itemFilter) {
 		return itemRepository.getItemsBySlot(itemSlot, character.getPhaseId()).stream()
 				.filter(item -> character.canEquip(itemSlot, item))
-				.filter(this::meetsConfigFilter)
+				.filter(itemFilter::matchesFilter)
 				.filter(item -> item.isAvailableTo(character))
 				.filter(item -> getStatClassifier(character).hasStatsSuitableForRole(item, character))
 				.toList();
-	}
-
-	private boolean meetsConfigFilter(Item item) {
-		return item.getItemLevel() >= itemConfig.getMinItemLevel() &&
-				item.getRarity().isAtLeastAsGoodAs(itemConfig.getMinRarity()) &&
-				!item.isPvPReward() || itemConfig.isIncludePvpItems();
 	}
 
 	@Override

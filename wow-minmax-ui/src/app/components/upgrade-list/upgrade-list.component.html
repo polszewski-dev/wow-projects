@@ -1,9 +1,11 @@
 <div *ngIf="hasAnyUpgrades()">
-	<button
-		type="button"
-		class="btn btn-sm btn-link big-btn-link centered-button"
-		(click)="toggleVisibility()"
-	>{{visible ? "Hide Upgrades" : "Show Upgrades"}}</button>
+	<div style="text-align: center;">
+		<button
+			type="button"
+			class="btn btn-sm btn-link big-btn-link"
+			(click)="toggleVisibility()"
+		>{{visible ? "Hide Upgrades" : "Show Upgrades"}}</button>
+	</div>
 
 	<ul *ngIf="visible" class="upgrade-list">
 		<div *ngFor="let slotGroup of itemSlotGroups">

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.ItemFilter;
 import wow.character.model.equipment.ItemSocket;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -25,7 +26,7 @@ class UpgradeServiceTest extends ServiceTest {
 	void findUpgradesChest() {
 		character.equip(null, ItemSlot.CHEST);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.CHEST, character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.CHEST, ItemFilter.everything(), character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -35,7 +36,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.FINGER_1);
 		character.equip(null, ItemSlot.FINGER_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, ItemFilter.everything(), character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -45,7 +46,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.TRINKET_1);
 		character.equip(null, ItemSlot.TRINKET_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, ItemFilter.everything(), character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -55,7 +56,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.MAIN_HAND);
 		character.equip(null, ItemSlot.OFF_HAND);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, ItemFilter.everything(), character.getDamagingSpell());
 
 		assertThat(upgrades).hasSize(3);
 	}

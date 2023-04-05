@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import wow.character.config.ItemConfig;
 import wow.character.service.ItemService;
 import wow.character.service.impl.CachedItemService;
 import wow.character.service.impl.ItemServiceImpl;
@@ -28,8 +27,8 @@ public class WowMinmaxApplication {
 	}
 
 	@Bean
-	public ItemService itemService(ItemRepository itemRepository, ItemConfig itemConfig, List<PveRoleStatClassifier> pveRoleStatClassifies) {
-		return new CachedItemService(new ItemServiceImpl(itemRepository, itemConfig, pveRoleStatClassifies));
+	public ItemService itemService(ItemRepository itemRepository, List<PveRoleStatClassifier> pveRoleStatClassifies) {
+		return new CachedItemService(new ItemServiceImpl(itemRepository, pveRoleStatClassifies));
 	}
 
 	@Bean

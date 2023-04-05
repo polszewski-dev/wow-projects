@@ -3,6 +3,7 @@ package wow.character.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.Character;
+import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
@@ -50,9 +51,15 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItemsBySlot(Character character, ItemSlot itemSlot) {
+	public List<Item> getItemsBySlot(Character character, ItemSlot itemSlot, ItemFilter itemFilter) {
+		return getUnfilteredItems(character, itemSlot).stream()
+				.filter(itemFilter::matchesFilter)
+				.toList();
+	}
+
+	private List<Item> getUnfilteredItems(Character character, ItemSlot itemSlot) {
 		String key = getProfileKey(character) + "#" + itemSlot;
-		return getItemsBySlotCache.computeIfAbsent(key, x -> itemService.getItemsBySlot(character, itemSlot));
+		return getItemsBySlotCache.computeIfAbsent(key, x -> itemService.getItemsBySlot(character, itemSlot, ItemFilter.everything()));
 	}
 
 	@Override

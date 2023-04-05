@@ -14,6 +14,7 @@ import { getItemSlotGroup, getSlots, ItemSlotGroup } from 'src/app/model/upgrade
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
 import { ItemChange } from '../equipment-slot-editor/ItemChange';
+import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 
 @Component({
 	selector: 'app-equipment-editor',
@@ -23,7 +24,9 @@ import { ItemChange } from '../equipment-slot-editor/ItemChange';
 export class EquipmentEditorComponent implements OnChanges {
 	@Input() selectedCharacterId!: string;
 	@Input() upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
-	@Output() equipmentChanged = new EventEmitter<void>()
+	@Input() itemFilter!: ItemFilter;
+	@Output() equipmentChanged = new EventEmitter<void>();
+	@Output() itemFilterChanged = new EventEmitter<void>();
 
 	readonly itemSlots: ItemSlot[] = Object.values(ItemSlot);
 
@@ -31,6 +34,7 @@ export class EquipmentEditorComponent implements OnChanges {
 	equipmentOptions?: EquipmentOptions;
 	equipmentSocketStatus?: EquipmentSocketStatus;
 	editGems: boolean = false;
+	heroics: boolean = false;
 
 	readonly ItemSlot = ItemSlot;
 	readonly ItemType = ItemType;
@@ -50,6 +54,7 @@ export class EquipmentEditorComponent implements OnChanges {
 		this.equipmentService.getEquipmentOptions(this.selectedCharacterId).subscribe((equipmentOptions: EquipmentOptions) => {
 			this.equipmentOptions = sort(equipmentOptions);
 			this.editGems = equipmentOptions.editGems;
+			this.heroics = equipmentOptions.heroics;
 		});
 		this.updateSocketStatus();
 	}
@@ -107,6 +112,10 @@ export class EquipmentEditorComponent implements OnChanges {
 			this.equipment = equipment;
 			this.equipmentChanged.emit();
 		});
+	}
+
+	onFilterChange() {
+		this.itemFilterChanged.emit();
 	}
 }
 
