@@ -53,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
 				.filter(item -> character.canEquip(itemSlot, item))
 				.filter(itemFilter::matchesFilter)
 				.filter(item -> item.isAvailableTo(character))
-				.filter(item -> getStatClassifier(character).hasStatsSuitableForRole(item, character))
+				.filter(item -> getStatClassifier(character).hasStatsSuitableForRole(item))
 				.toList();
 	}
 
@@ -61,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
 	public List<Enchant> getEnchants(Character character, ItemType itemType) {
 		return itemRepository.getEnchants(itemType, character.getPhaseId()).stream()
 				.filter(enchant -> enchant.isAvailableTo(character))
-				.filter(enchant -> getStatClassifier(character).hasStatsSuitableForRole(enchant, itemType, character))
+				.filter(enchant -> getStatClassifier(character).hasStatsSuitableForRole(enchant, itemType))
 				.toList();
 	}
 
@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.getGems(socketType, character.getPhaseId()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
-				.filter(gem -> getStatClassifier(character).hasStatsSuitableForRole(gem, character))
+				.filter(gem -> getStatClassifier(character).hasStatsSuitableForRole(gem))
 				.toList();
 	}
 

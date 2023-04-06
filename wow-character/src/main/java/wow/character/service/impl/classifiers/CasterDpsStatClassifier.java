@@ -3,7 +3,6 @@ package wow.character.service.impl.classifiers;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.build.PveRole;
-import wow.character.model.character.Character;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
@@ -29,14 +28,14 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	@Override
-	public boolean hasStatsSuitableForRole(AttributeSource attributeSource, Character character) {
-		return hasPrimitiveStatsSuitableForCasterDps(attributeSource, character) ||
-				hasComplexStatsSuitableForCasterDps(attributeSource, character);
+	public boolean hasStatsSuitableForRole(AttributeSource attributeSource) {
+		return hasPrimitiveStatsSuitableForCasterDps(attributeSource) ||
+				hasComplexStatsSuitableForCasterDps(attributeSource);
 	}
 
 	@Override
-	public boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType, Character character) {
-		if (hasStatsSuitableForRole(enchant, character)) {
+	public boolean hasStatsSuitableForRole(Enchant enchant, ItemType itemType) {
+		if (hasStatsSuitableForRole(enchant)) {
 			return true;
 		}
 		if (itemType == ItemType.WRIST) {
@@ -54,33 +53,26 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 		return false;
 	}
 
-	private boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource, Character character) {
+	private boolean hasPrimitiveStatsSuitableForCasterDps(AttributeSource attributeSource) {
 		return attributeSource.getPrimitiveAttributes().stream()
-				.anyMatch(attribute -> isCasterStat(attribute, character));
+				.anyMatch(this::isCasterStat);
 	}
 
-	private boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource, Character character) {
+	private boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource) {
 		StatProvider statProvider = StatProvider.dummyValues();
 
 		return attributeSource.getSpecialAbilities().stream()
 				.map(x -> x.getStatEquivalent(statProvider))
-				.anyMatch(x -> hasPrimitiveStatsSuitableForCasterDps(x, character));
+				.anyMatch(this::hasPrimitiveStatsSuitableForCasterDps);
 	}
 
-	private boolean isCasterStat(PrimitiveAttribute attribute, Character character) {
+	private boolean isCasterStat(PrimitiveAttribute attribute) {
 		PrimitiveAttributeId id = attribute.getId();
 		return id.getPowerType().isSpellDamage() &&
-				CASTER_STATS.contains(id.getType()) &&
-				hasCasterStatCondition(attribute, character);
+				CASTER_STATS.contains(id.getType());
 	}
 
 	private static final Set<PrimitiveAttributeType> CASTER_STATS = Set.of(
 			POWER, HIT, CRIT, HASTE
 	);
-
-	private boolean hasCasterStatCondition(PrimitiveAttribute attribute, Character character) {
-		var damagingSpell = character.getDamagingSpell();
-		var conditions = character.getConditions(damagingSpell);
-		return conditions.contains(attribute.getCondition());
-	}
 }
