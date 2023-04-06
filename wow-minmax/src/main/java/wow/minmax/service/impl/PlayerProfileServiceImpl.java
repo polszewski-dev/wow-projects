@@ -3,9 +3,7 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.Character;
-import wow.character.model.character.Enemy;
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.Phase;
+import wow.character.model.character.*;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
@@ -123,6 +121,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		Enemy targetEnemy = new Enemy(characterId.getEnemyType(), characterId.getEnemyLevelDiff());
 
 		newCharacter.setTargetEnemy(targetEnemy);
+		characterService.setDefaultBuild(newCharacter);
 		return newCharacter;
 	}
 
@@ -186,12 +185,12 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public Character enableBuff(CharacterId characterId, int buffId, boolean enabled) {
+	public Character enableBuff(CharacterId characterId, BuffListType buffListType, int buffId, boolean enabled) {
 		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
 		Character character = getCharacter(playerProfile, characterId);
 		Buff buff = spellService.getBuff(buffId, character.getPhaseId());
 
-		character.enableBuff(buff, enabled);
+		character.getBuffList(buffListType).enable(buff, enabled);
 		saveProfile(playerProfile, character);
 		return character;
 	}

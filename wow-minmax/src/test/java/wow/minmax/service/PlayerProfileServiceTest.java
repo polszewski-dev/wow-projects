@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.commons.model.categorization.ItemSlot.*;
 
 /**
@@ -165,10 +166,10 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void enableBuff() {
-		assertThat(character.getBuffs().hasBuff(17628)).isFalse();
-		assertThat(character.getBuffs().hasBuff(28540)).isTrue();
+		assertThat(character.getBuffs().has(17628)).isFalse();
+		assertThat(character.getBuffs().has(28540)).isTrue();
 
-		underTest.enableBuff(CHARACTER_KEY, 17628, true);
+		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, 17628, true);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -180,9 +181,9 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void disableBuff() {
-		assertThat(character.getBuffs().hasBuff(28540)).isTrue();
+		assertThat(character.getBuffs().has(28540)).isTrue();
 
-		underTest.enableBuff(CHARACTER_KEY, 28540, false);
+		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, 28540, false);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();

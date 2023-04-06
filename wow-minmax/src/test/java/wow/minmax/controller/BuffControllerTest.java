@@ -10,6 +10,7 @@ import wow.commons.model.buffs.Buff;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 
 /**
  * User: POlszewski
@@ -22,17 +23,17 @@ class BuffControllerTest extends ControllerTest {
 
 	@Test
 	void getBuffs() throws Exception {
-		mockMvc.perform(get("/api/v1/buff/{characterId}/list", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/buff/{characterId}/{buffListType}/list", CHARACTER_KEY, CHARACTER_BUFF))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 	}
 
 	@Test
-	void changeBuff() throws Exception {
+	void enableBuff() throws Exception {
 		Buff buff = getBuff("Fel Armor");
 
-		mockMvc.perform(get("/api/v1/buff/{characterId}/enable/{buffId}/{enabled}", CHARACTER_KEY, buff.getId(), true))
+		mockMvc.perform(get("/api/v1/buff/{characterId}/{buffListType}/enable/{buffId}/{enabled}", CHARACTER_KEY, CHARACTER_BUFF, buff.getId(), true))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

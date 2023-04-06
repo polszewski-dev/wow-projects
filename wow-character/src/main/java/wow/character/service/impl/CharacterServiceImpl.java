@@ -63,16 +63,17 @@ public class CharacterServiceImpl implements CharacterService {
 		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
 		GameVersion gameVersion = phase.getGameVersion();
 
-		Character character = new Character(
+		return new Character(
 				gameVersion.getCharacterClass(characterClassId),
 				gameVersion.getRace(raceId),
 				level,
 				phase
 		);
+	}
 
+	@Override
+	public void setDefaultBuild(Character character) {
 		changeBuild(character, character.getCharacterClass().getDefaultBuildId());
-
-		return character;
 	}
 
 	@Override
@@ -81,6 +82,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 		character.resetBuild();
 		character.resetBuffs();
+		character.getTargetEnemy().resetDebuffs();
 		character.resetProfessions();
 
 		Build build = character.getBuild();

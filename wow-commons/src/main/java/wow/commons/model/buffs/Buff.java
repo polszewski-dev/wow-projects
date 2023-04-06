@@ -1,7 +1,5 @@
 package wow.commons.model.buffs;
 
-import wow.commons.model.Percent;
-import wow.commons.model.attributes.Attributes;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.spells.SpellId;
 
@@ -16,7 +14,7 @@ public interface Buff extends ConfigurationElementWithAttributes<Integer> {
 
 	SpellId getSourceSpell();
 
-	default Attributes modifyEffectByPct(Percent effectIncreasePct) {
-		return getAttributes().scale(effectIncreasePct.toMultiplier());
+	default boolean isDebuff() {
+		return getType() == BuffType.DEBUFF;
 	}
 }

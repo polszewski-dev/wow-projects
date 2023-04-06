@@ -20,7 +20,10 @@
 		<ng-container ngbNavItem>
 			<a ngbNavLink>Buffs</a>
 			<ng-template ngbNavContent>
-				<app-buff-editor [selectedCharacterId]="selectedCharacterId" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
+				<div class="stats-header">Buffs</div>
+				<app-buff-editor [selectedCharacterId]="selectedCharacterId" [buffListType]="CHARACTER_BUFF" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
+				<div class="stats-header">Debuffs</div>
+				<app-buff-editor [selectedCharacterId]="selectedCharacterId" [buffListType]="TARGET_DEBUFF" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
 			</ng-template>
 		</ng-container>
 		<ng-container ngbNavItem>

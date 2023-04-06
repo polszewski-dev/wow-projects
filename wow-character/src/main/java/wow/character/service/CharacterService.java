@@ -19,5 +19,7 @@ public interface CharacterService {
 
 	Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
 
+	void setDefaultBuild(Character character);
+
 	void changeBuild(Character character, BuildId buildId);
 }

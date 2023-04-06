@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
+import { BuffListType } from 'src/app/model/buff/BuffListType';
 import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
@@ -26,6 +26,9 @@ export class ProfileEditorComponent implements OnChanges {
 		greens: true,
 		legendaries: false
 	};
+
+	CHARACTER_BUFF = BuffListType.CHARACTER_BUFF;
+	TARGET_DEBUFF = BuffListType.TARGET_DEBUFF;
 
 	constructor(private statsService: StatsService, private upgradeService: UpgradeService) {}
 

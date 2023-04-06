@@ -31,6 +31,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 
 /**
  * User: POlszewski
@@ -60,7 +64,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		this.build = new Build();
 		this.equipment = new Equipment();
 		this.professions = new CharacterProfessions();
-		this.buffs = new Buffs();
+		this.buffs = new Buffs(CHARACTER_BUFF);
 		this.baseStatInfo = characterClass.getBaseStatInfo(level, race.getRaceId());
 		this.combatRatingInfo = characterClass.getGameVersion().getCombatRatingInfo(level);
 	}
@@ -124,11 +128,17 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	}
 
 	public void setBuffs(BuffSetId... buffSetIds) {
-		Set<Buff> newBuffs = new HashSet<>();
-		for (BuffSetId buffSetId : buffSetIds) {
-			newBuffs.addAll(build.getBuffSet(buffSetId));
-		}
-		buffs.setBuffs(newBuffs);
+		var collect = getBuffs(buffSetIds).stream()
+				.collect(Collectors.partitioningBy(Buff::isDebuff));
+
+		buffs.set(collect.get(false));
+		targetEnemy.getDebuffs().set(collect.get(true));
+	}
+
+	private Set<Buff> getBuffs(BuffSetId[] buffSetIds) {
+		return Stream.of(buffSetIds)
+				.flatMap(buffSetId -> build.getBuffSet(buffSetId).stream())
+				.collect(Collectors.toSet());
 	}
 
 	public void resetBuild() {
@@ -252,12 +262,19 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	// buffs
 
+	public Buffs getBuffList(BuffListType buffListType) {
+		return switch (buffListType) {
+			case CHARACTER_BUFF -> buffs;
+			case TARGET_DEBUFF -> targetEnemy.getDebuffs();
+		};
+	}
+
 	public void setBuffs(Collection<Buff> buffs) {
-		this.buffs.setBuffs(buffs);
+		this.buffs.set(buffs);
 	}
 
 	public void enableBuff(Buff buff, boolean enable) {
-		buffs.enableBuff(buff, enable);
+		buffs.enable(buff, enable);
 	}
 
 	// enemy

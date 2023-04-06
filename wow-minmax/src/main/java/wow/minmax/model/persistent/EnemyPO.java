@@ -5,6 +5,7 @@ import lombok.Data;
 import wow.commons.model.character.CreatureType;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -15,4 +16,5 @@ import java.io.Serializable;
 public class EnemyPO implements Serializable {
 	private CreatureType enemyType;
 	private int levelDifference;
+	private List<BuffPO> debuffs;
 }

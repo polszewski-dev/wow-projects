@@ -30,6 +30,7 @@ class CalculationServiceTest extends ServiceTest {
 	void hasTalentsNoBuffsNoItems() {
 		character.setEquipment(new Equipment());
 		character.resetBuffs();
+		character.getTargetEnemy().resetDebuffs();
 
 		Spell spell = character.getDamagingSpell();
 		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());

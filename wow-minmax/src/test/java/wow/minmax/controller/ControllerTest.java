@@ -42,6 +42,6 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.changeItemBestVariant(any(), any(), anyInt())).thenReturn(character);
 		when(playerProfileService.changeItem(any(), any(), any())).thenReturn(character);
 		when(playerProfileService.changeItemGroup(any(), any(), any())).thenReturn(character);
-		when(playerProfileService.enableBuff(any(), anyInt(), anyBoolean())).thenReturn(character);
+		when(playerProfileService.enableBuff(any(), any(), anyInt(), anyBoolean())).thenReturn(character);
 	}
 }

@@ -3,10 +3,15 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.Character;
+import wow.character.model.character.Enemy;
 import wow.character.service.CharacterService;
+import wow.commons.model.buffs.Buff;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.persistent.CharacterPO;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * User: POlszewski
@@ -49,12 +54,18 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 
 		var params = PoConverterParams.createParams(source.getPhaseId());
 
+		Enemy targetEnemy = enemyPOConverter.convertBack(source.getTargetEnemy(), params);
+		Collection<Buff> debuffs = new ArrayList<>(targetEnemy.getDebuffs().getList());
+
+		character.setTargetEnemy(targetEnemy);
+
 		characterService.changeBuild(character, source.getBuild().getBuildId());
+
+		targetEnemy.setDebuffs(debuffs); // changeBuild resets target's debuffs
 
 		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
 		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), params));
 		character.setBuffs(buffPOConverter.convertBackList(source.getBuffs(), params));
-		character.setTargetEnemy(enemyPOConverter.convertBack(source.getTargetEnemy()));
 
 		return character;
 	}

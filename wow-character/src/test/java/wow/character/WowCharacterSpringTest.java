@@ -14,6 +14,7 @@ import wow.character.service.CharacterService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -163,9 +164,10 @@ public abstract class WowCharacterSpringTest {
 				PHASE
 		);
 
-		Enemy enemy = new Enemy(UNDEAD, LVL_DIFF);
+		Enemy enemy = new Enemy(ENEMY_TYPE, LVL_DIFF);
 
 		character.setTargetEnemy(enemy);
+		characterService.setDefaultBuild(character);
 		return character;
 	}
 
@@ -173,6 +175,7 @@ public abstract class WowCharacterSpringTest {
 	protected static final RaceId RACE = RaceId.UNDEAD;
 	protected static final PhaseId PHASE = TBC_P5;
 	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
+	protected static final CreatureType ENEMY_TYPE = UNDEAD;
 	protected static final int LVL_DIFF = 3;
 
 	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);

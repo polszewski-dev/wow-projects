@@ -1,5 +1,6 @@
 package wow.minmax.service;
 
+import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
@@ -32,5 +33,5 @@ public interface PlayerProfileService {
 
 	Character resetEquipment(CharacterId characterId);
 
-	Character enableBuff(CharacterId characterId, int buffId, boolean enabled);
+	Character enableBuff(CharacterId characterId, BuffListType buffListType, int buffId, boolean enabled);
 }

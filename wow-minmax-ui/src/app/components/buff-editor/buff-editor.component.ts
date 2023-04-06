@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Buff } from 'src/app/model/buff/Buff';
+import { BuffListType } from 'src/app/model/buff/BuffListType';
 import { BuffService } from 'src/app/services/buff.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { BuffService } from 'src/app/services/buff.service';
 })
 export class BuffEditorComponent implements OnChanges {
 	@Input() selectedCharacterId!: string;
+	@Input() buffListType!: BuffListType;
 	@Output() buffsChanged = new EventEmitter<void>()
 
 	buffs: Buff[] = [];
@@ -19,13 +21,13 @@ export class BuffEditorComponent implements OnChanges {
 		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.buffService.getBuffs(this.selectedCharacterId).subscribe((buffs: Buff[]) => {
+		this.buffService.getBuffs(this.selectedCharacterId, this.buffListType).subscribe((buffs: Buff[]) => {
 			this.buffs = buffs;
 		});
 	}
 
 	onChange(buff: Buff): void {
-		this.buffService.changeBuff(this.selectedCharacterId, buff).subscribe((buffs: Buff[]) => {
+		this.buffService.enableBuff(this.selectedCharacterId, this.buffListType, buff).subscribe((buffs: Buff[]) => {
 			this.buffs = buffs;
 			this.buffsChanged.emit();
 		});

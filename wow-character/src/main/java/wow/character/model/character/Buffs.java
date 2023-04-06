@@ -1,5 +1,6 @@
 package wow.character.model.character;
 
+import lombok.AllArgsConstructor;
 import wow.character.model.Copyable;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
@@ -13,12 +14,14 @@ import java.util.Map;
  * User: POlszewski
  * Date: 2022-12-20
  */
+@AllArgsConstructor
 public class Buffs implements AttributeCollection, Copyable<Buffs> {
 	private final Map<Integer, Buff> buffsById = new LinkedHashMap<>();
+	private final BuffListType type;
 
 	@Override
 	public Buffs copy() {
-		Buffs copy = new Buffs();
+		Buffs copy = new Buffs(type);
 		copy.buffsById.putAll(this.buffsById);
 		return copy;
 	}
@@ -38,21 +41,23 @@ public class Buffs implements AttributeCollection, Copyable<Buffs> {
 		buffsById.clear();
 	}
 
-	public void setBuffs(Collection<Buff> buffs) {
-		this.buffsById.clear();
+	public void set(Collection<Buff> buffs) {
+		reset();
 
 		for (Buff buff : buffs) {
-			enableBuff(buff, true);
+			enable(buff, true);
 		}
 	}
 
-	public void enableBuff(Buff buff, boolean enable) {
+	public void enable(Buff buff, boolean enable) {
+		assertMeetsFilter(buff);
+
 		if (!enable) {
 			buffsById.remove(buff.getId());
 			return;
 		}
 
-		if (hasBuff(buff)) {
+		if (has(buff)) {
 			return;
 		}
 
@@ -63,11 +68,17 @@ public class Buffs implements AttributeCollection, Copyable<Buffs> {
 		buffsById.put(buff.getId(), buff);
 	}
 
-	public boolean hasBuff(int buffId) {
+	public boolean has(int buffId) {
 		return buffsById.containsKey(buffId);
 	}
 
-	public boolean hasBuff(Buff buff) {
-		return hasBuff(buff.getId());
+	public boolean has(Buff buff) {
+		return has(buff.getId());
+	}
+
+	private void assertMeetsFilter(Buff buff) {
+		if (!type.getFilter().test(buff)) {
+			throw new IllegalArgumentException(buff.getName());
+		}
 	}
 }

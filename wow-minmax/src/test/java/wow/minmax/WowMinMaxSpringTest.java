@@ -118,7 +118,7 @@ public abstract class WowMinMaxSpringTest {
 		Enemy enemy = new Enemy(ENEMY_TYPE, LVL_DIFF);
 
 		character.setTargetEnemy(enemy);
-
+		characterService.setDefaultBuild(character);
 		return character;
 	}
 
