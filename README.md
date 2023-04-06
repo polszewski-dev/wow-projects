@@ -19,6 +19,6 @@
 
 ### Screenshots:
 
-![Equipment Tab](https://user-images.githubusercontent.com/83117072/229621726-92c9c136-79ee-4547-bf92-5cba157621d9.png)
-![Buffs Tab](https://user-images.githubusercontent.com/83117072/229621883-9d3bf4a9-642b-4fe7-8356-560c47a680bc.png)
-![Results Tab](https://user-images.githubusercontent.com/83117072/229621954-63da8b72-c950-4f49-9428-ab40ca47c8c5.png)
+![screen1](https://user-images.githubusercontent.com/83117072/230472323-7622fe82-e26f-4f16-aeca-c6f2846ef121.png)
+![screen2](https://user-images.githubusercontent.com/83117072/230472362-13483a59-a8f0-4fd6-94e5-1fcd93abd1ac.png)
+![screen3](https://user-images.githubusercontent.com/83117072/230472395-de8c3ee5-3e73-4cbd-9dd0-6cb4ec998913.png)
