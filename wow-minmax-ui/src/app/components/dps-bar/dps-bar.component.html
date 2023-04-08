@@ -1,7 +1,16 @@
-<div class="dps-bar">
-	dps: {{dps | number:'1.0-0'}}&nbsp;<span
+<div *ngIf="rotationStats" class="dps-bar">
+	<span>dps: {{rotationStats.dps | number:'1.0-0'}}</span>
+	<span
 		*ngIf="dpsDiff"
 		class="dps-diff"
 		[ngClass]="{'positive-dps-diff': dpsDiff > 0, 'negative-dps-diff': dpsDiff < 0}"
-	>({{dpsDiff > 0 ? "+" : ""}}{{dpsDiff | number:'1.0-0'}})</span>
+	>
+		&nbsp;({{dpsDiff > 0 ? "+" : ""}}{{dpsDiff | number:'1.0-0'}})
+	</span>
+	<img 
+		*ngFor="let stats of rotationStats.statList; let i = index" 
+		[src]="stats.spell.icon | icon" 
+		[ngStyle]="{'margin-left': i === 0 ? '10px' : '5px'}"
+		[title]="stats.spell.name + ' - ' + (getDamageShare(stats) | number:'1.0-1') + '%'"
+	/>
 </div>

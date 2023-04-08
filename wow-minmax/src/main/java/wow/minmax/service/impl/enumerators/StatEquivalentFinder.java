@@ -1,12 +1,12 @@
 package wow.minmax.service.impl.enumerators;
 
 import lombok.AllArgsConstructor;
+import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
-import wow.commons.model.spells.Spell;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.service.CalculationService;
 
@@ -22,7 +22,7 @@ public class StatEquivalentFinder {
 	private final PrimitiveAttributeId targetStat;
 	private final CalculationService.EquivalentMode mode;
 	private final Character character;
-	private final Spell spell;
+	private final Rotation rotation;
 	private final Attributes totalStats;
 	private final CalculationService calculationService;
 
@@ -36,7 +36,7 @@ public class StatEquivalentFinder {
 		while (true) {
 			PrimitiveAttribute equivalentStat = Attribute.of(targetStat, equivalentValue + increase);
 			Attributes equivalentStats = AttributesBuilder.addAttribute(baseStats, equivalentStat);
-			double equivalentDps = calculationService.getSpellDps(character, spell, equivalentStats);
+			double equivalentDps = calculationService.getRotationDps(character, rotation, equivalentStats);
 
 			if (Math.abs(equivalentDps - targetDps) <= PRECISION) {
 				return Attributes.of(targetStat, equivalentValue);
@@ -58,11 +58,11 @@ public class StatEquivalentFinder {
 	}
 
 	private double getTargetDps() {
-		Attributes targetStats = getTargetStats(attributesToFindEquivalent, totalStats, mode);
-		return calculationService.getSpellDps(character, spell, targetStats);
+		Attributes targetStats = getTargetStats();
+		return calculationService.getRotationDps(character, rotation, targetStats);
 	}
 
-	private static Attributes getTargetStats(Attributes attributesToFindEquivalent, Attributes totalStats, CalculationService.EquivalentMode mode) {
+	private Attributes getTargetStats() {
 		if (mode == CalculationService.EquivalentMode.REPLACEMENT) {
 			return totalStats;
 		}

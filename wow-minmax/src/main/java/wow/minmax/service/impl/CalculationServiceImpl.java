@@ -3,6 +3,7 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.BuffSetId;
+import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.CritMode;
 import wow.character.model.snapshot.Snapshot;
@@ -13,11 +14,11 @@ import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.AttributesBuilder;
-import wow.minmax.model.CharacterStats;
-import wow.minmax.model.SpecialAbilityStats;
-import wow.minmax.model.SpellStatEquivalents;
-import wow.minmax.model.SpellStats;
+import wow.minmax.model.*;
 import wow.minmax.service.CalculationService;
+import wow.minmax.service.impl.enumerators.RotationAbilityEquivalentCalculator;
+import wow.minmax.service.impl.enumerators.RotationDpsCalculator;
+import wow.minmax.service.impl.enumerators.RotationStatsCalculator;
 import wow.minmax.service.impl.enumerators.StatEquivalentFinder;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
@@ -33,7 +34,7 @@ import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character) {
-		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, character, character.getDamagingSpell(), character.getStats());
+		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, character, character.getRotation(), character.getStats());
 	}
 
 	@Override
@@ -42,11 +43,11 @@ public class CalculationServiceImpl implements CalculationService {
 			PrimitiveAttributeId targetStat,
 			EquivalentMode mode,
 			Character character,
-			Spell spell,
+			Rotation rotation,
 			Attributes totalStats
 	) {
 		var finder = new StatEquivalentFinder(
-				attributesToFindEquivalent, targetStat, mode, character, spell, totalStats, this
+				attributesToFindEquivalent, targetStat, mode, character, rotation, totalStats, this
 		);
 
 		return finder.getDpsStatEquivalent();
@@ -54,28 +55,37 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character) {
-		return getAbilityEquivalent(specialAbility, character, character.getDamagingSpell(), character.getStats());
+		return getAbilityEquivalent(specialAbility, character, character.getRotation(), character.getStats());
 	}
 
 	@Override
-	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Spell spell, Attributes totalStats) {
-		Snapshot snapshot = getSnapshot(
+	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Rotation rotation, Attributes totalStats) {
+		var calculator = new RotationAbilityEquivalentCalculator(
 				character,
-				spell,
+				rotation,
 				AttributesBuilder.removeAttributes(totalStats, Attributes.of(specialAbility))
 		);
-
-		return specialAbility.getStatEquivalent(snapshot);
+		calculator.calculate();
+		return calculator.getAbilityEquivalent(specialAbility);
 	}
 
 	@Override
-	public double getSpellDps(Character character, Spell spell) {
-		return getSpellDps(character, spell, character.getStats());
+	public double getRotationDps(Character character, Rotation rotation) {
+		return getRotationDps(character, rotation, character.getStats());
 	}
 
 	@Override
-	public double getSpellDps(Character character, Spell spell, Attributes totalStats) {
-		return getSnapshot(character, spell, totalStats).getDps(CritMode.AVERAGE, true);
+	public double getRotationDps(Character character, Rotation rotation, Attributes totalStats) {
+		var calculator = new RotationDpsCalculator(character, rotation, totalStats);
+		calculator.calculate();
+		return calculator.getDps();
+	}
+
+	@Override
+	public RotationStats getRotationStats(Character character, Rotation rotation) {
+		var calculator = new RotationStatsCalculator(character, rotation, character.getStats());
+		calculator.calculate();
+		return calculator.getStats();
 	}
 
 	@Override
@@ -118,7 +128,7 @@ public class CalculationServiceImpl implements CalculationService {
 				SPELL_POWER,
 				ADDITIONAL,
 				character,
-				spell,
+				Rotation.onlyFiller(spell),
 				character.getStats()
 		).getSpellPower();
 	}

@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BuffListType } from 'src/app/model/buff/BuffListType';
+import { RotationStats } from 'src/app/model/character/RotationStats';
 import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
@@ -13,8 +14,8 @@ import { UpgradeService } from 'src/app/services/upgrade.service';
 })
 export class ProfileEditorComponent implements OnChanges {
 	@Input() selectedCharacterId!: string;
-	dps?: number;
-	previousDps?: number;
+	rotationStats?: RotationStats;
+	previousRotationStats?: RotationStats;
 	upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
 
 	itemFilter: ItemFilter = {
@@ -36,7 +37,7 @@ export class ProfileEditorComponent implements OnChanges {
 		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.dps = undefined;
+		this.rotationStats = undefined;
 		this.updateDps();
 		this.upgradesBySlotGroup = {};
 		this.updateUpgradeStatus();
@@ -56,9 +57,9 @@ export class ProfileEditorComponent implements OnChanges {
 	}
 
 	updateDps(): void {
-		this.statsService.getSpellDps(this.selectedCharacterId!).subscribe((dps: number) => {
-			this.previousDps = this.dps;
-			this.dps = dps;
+		this.statsService.getRotationStats(this.selectedCharacterId!).subscribe((rotationStats: RotationStats) => {
+			this.previousRotationStats = this.rotationStats;
+			this.rotationStats = rotationStats;
 		})
 	}
 

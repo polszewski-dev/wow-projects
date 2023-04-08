@@ -1,5 +1,6 @@
 package wow.minmax.service.impl.enumerators;
 
+import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -13,7 +14,6 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
-import wow.commons.model.spells.Spell;
 import wow.minmax.model.Comparison;
 import wow.minmax.service.CalculationService;
 
@@ -34,7 +34,7 @@ public abstract class ItemVariantEnumerator {
 	protected final Character referenceCharacter;
 	private final double referenceDps;
 	private final ItemSlotGroup slotGroup;
-	private final Spell spell;
+	private final Rotation rotation;
 
 	private final Character workingCharacter;
 	private final Attributes withoutSlotGroup;
@@ -42,14 +42,14 @@ public abstract class ItemVariantEnumerator {
 	private final Map<String, Comparison> bestOptions = new HashMap<>();
 
 	protected ItemVariantEnumerator(
-			Character referenceCharacter, ItemSlotGroup slotGroup, Spell spell, ItemService itemService, CalculationService calculationService) {
+			Character referenceCharacter, ItemSlotGroup slotGroup, Rotation rotation, ItemService itemService, CalculationService calculationService) {
 		this.itemService = itemService;
 		this.calculationService = calculationService;
 
 		this.referenceCharacter = referenceCharacter;
-		this.referenceDps = calculationService.getSpellDps(referenceCharacter, spell);
+		this.referenceDps = calculationService.getRotationDps(referenceCharacter, rotation);
 		this.slotGroup = slotGroup;
-		this.spell = spell;
+		this.rotation = rotation;
 
 		this.workingCharacter = referenceCharacter.copy();
 
@@ -170,7 +170,7 @@ public abstract class ItemVariantEnumerator {
 
 	private Comparison getItemComparison(EquippableItem... itemOption) {
 		Attributes totalStats = getTotalStats(itemOption);
-		double dps = calculationService.getSpellDps(workingCharacter, spell, totalStats);
+		double dps = calculationService.getRotationDps(workingCharacter, rotation, totalStats);
 		double changePct = 100 * (dps / referenceDps - 1);
 
 		if (!isAcceptable(changePct)) {

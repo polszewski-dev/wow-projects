@@ -10,11 +10,14 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.CharacterStats;
+import wow.minmax.model.RotationStats;
 import wow.minmax.model.SpecialAbilityStats;
 import wow.minmax.model.SpellStats;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.spells.SpellId.CURSE_OF_DOOM;
+import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 
 /**
@@ -32,7 +35,7 @@ class CalculationServiceTest extends ServiceTest {
 		character.resetBuffs();
 		character.getTargetEnemy().resetDebuffs();
 
-		Spell spell = character.getDamagingSpell();
+		Spell spell = character.getRotation().getFiller();
 		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(89);
@@ -69,7 +72,7 @@ class CalculationServiceTest extends ServiceTest {
 	void hasTalentsHasBuffsNoItems() {
 		character.setEquipment(new Equipment());
 
-		Spell spell = character.getDamagingSpell();
+		Spell spell = character.getRotation().getFiller();
 		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(115);
@@ -106,7 +109,7 @@ class CalculationServiceTest extends ServiceTest {
 	void hasTalentsHasBuffsHasItems() {
 		character.setEquipment(getEquipment());
 
-		Spell spell = character.getDamagingSpell();
+		Spell spell = character.getRotation().getFiller();
 		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
 		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
@@ -148,8 +151,8 @@ class CalculationServiceTest extends ServiceTest {
 		Attributes hasteEqv = underTest.getDpsStatEquivalent(Attributes.of(SPELL_HASTE_RATING, 10), SPELL_POWER, ADDITIONAL, character);
 
 		assertThat(hitEqv.getSpellPower()).isEqualTo(0.11, PRECISION);
-		assertThat(critEqv.getSpellPower()).isEqualTo(10.15, PRECISION);
-		assertThat(hasteEqv.getSpellPower()).isEqualTo(11.55, PRECISION);
+		assertThat(critEqv.getSpellPower()).isEqualTo(9.79, PRECISION);
+		assertThat(hasteEqv.getSpellPower()).isEqualTo(11.37, PRECISION);
 	}
 
 	@Test
@@ -168,13 +171,26 @@ class CalculationServiceTest extends ServiceTest {
 	}
 
 	@Test
-	@DisplayName("Correct spell dps")
-	void correctSpellDps() {
+	@DisplayName("Correct rotation dps")
+	void correctRotationDps() {
 		character.setEquipment(getEquipment());
 
-		double dps = underTest.getSpellDps(character, character.getDamagingSpell());
+		double dps = underTest.getRotationDps(character, character.getRotation());
 
-		assertThat(dps).usingComparator(ROUNDED_DOWN).isEqualTo(2668);
+		assertThat(dps).usingComparator(ROUNDED_DOWN).isEqualTo(2777);
+	}
+
+	@Test
+	@DisplayName("Correct rotation stats")
+	void correctRotationStats() {
+		character.setEquipment(getEquipment());
+
+		RotationStats stats = underTest.getRotationStats(character, character.getRotation());
+
+		assertThat(stats.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2777);
+		assertThat(stats.getStatList()).hasSize(2);
+		assertThat(stats.getStatList().get(0).getSpell().getSpellId()).isEqualTo(CURSE_OF_DOOM);
+		assertThat(stats.getStatList().get(1).getSpell().getSpellId()).isEqualTo(SHADOW_BOLT);
 	}
 
 	@Test
@@ -182,7 +198,7 @@ class CalculationServiceTest extends ServiceTest {
 	void correctSpellStats() {
 		character.setEquipment(getEquipment());
 
-		SpellStats spellStats = underTest.getSpellStats(character, character.getDamagingSpell());
+		SpellStats spellStats = underTest.getSpellStats(character, character.getRotation().getFiller());
 
 		assertThat(spellStats.getCharacter()).isSameAs(character);
 		assertThat(spellStats.getSpellStatistics().getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5175);
@@ -272,6 +288,6 @@ class CalculationServiceTest extends ServiceTest {
 
 		assertThat(stats.getAbility()).isSameAs(specialAbility);
 		assertThat(stats.getStatEquivalent().statString()).isEqualTo("29.17 spell haste rating");
-		assertThat(stats.getSpEquivalent()).isEqualTo(34.20, PRECISION);
+		assertThat(stats.getSpEquivalent()).isEqualTo(33.62, PRECISION);
 	}
 }

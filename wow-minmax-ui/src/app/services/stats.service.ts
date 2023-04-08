@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CharacterStats } from '../model/stats/CharacterStats';
 import { SpecialAbilityStats } from '../model/stats/SpecialAbilityStats';
 import { SpellStats } from '../model/stats/SpellStats';
+import { RotationStats } from '../model/character/RotationStats';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,7 +26,7 @@ export class StatsService {
 		return this.http.get<SpecialAbilityStats[]>(`${this.apiUrl}/${characterId}/special`);
 	}
 
-	getSpellDps(characterId: string): Observable<number> {
-		return this.http.get<number>(`${this.apiUrl}/${characterId}/dps`);
+	getRotationStats(characterId: string): Observable<RotationStats> {
+		return this.http.get<RotationStats>(`${this.apiUrl}/${characterId}/rotation/stats`);
 	}
 }

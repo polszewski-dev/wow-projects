@@ -1,12 +1,12 @@
 package wow.minmax.service.impl.enumerators;
 
+import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
-import wow.commons.model.spells.Spell;
 import wow.minmax.service.CalculationService;
 
 import java.util.List;
@@ -22,11 +22,11 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 			Character referenceCharacter,
 			ItemSlotGroup slotGroup,
 			ItemFilter itemFilter,
-			Spell spell,
+			Rotation rotation,
 			ItemService itemService,
 			CalculationService calculationService
 	) {
-		super(referenceCharacter, slotGroup, spell, itemService, calculationService);
+		super(referenceCharacter, slotGroup, rotation, itemService, calculationService);
 		this.itemFilter = itemFilter;
 	}
 

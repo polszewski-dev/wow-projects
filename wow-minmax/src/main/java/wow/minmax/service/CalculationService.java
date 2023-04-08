@@ -1,6 +1,7 @@
 package wow.minmax.service;
 
 import wow.character.model.build.BuffSetId;
+import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.attributes.Attributes;
@@ -8,6 +9,7 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.CharacterStats;
+import wow.minmax.model.RotationStats;
 import wow.minmax.model.SpecialAbilityStats;
 import wow.minmax.model.SpellStats;
 
@@ -23,15 +25,17 @@ public interface CalculationService {
 
 	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character);
 
-	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character, Spell spell, Attributes totalStats);
+	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character, Rotation rotation, Attributes totalStats);
 
 	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character);
 
-	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Spell spell, Attributes totalStats);
+	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Rotation rotation, Attributes totalStats);
 
-	double getSpellDps(Character character, Spell spell);
+	double getRotationDps(Character character, Rotation rotation);
 
-	double getSpellDps(Character character, Spell spell, Attributes totalStats);
+	double getRotationDps(Character character, Rotation rotation, Attributes totalStats);
+
+	RotationStats getRotationStats(Character character, Rotation rotation);
 
 	Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats);
 

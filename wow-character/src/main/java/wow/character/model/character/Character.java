@@ -235,8 +235,8 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return build.getRole();
 	}
 
-	public Spell getDamagingSpell() {
-		return build.getDamagingSpell();
+	public Rotation getRotation() {
+		return build.getRotation();
 	}
 
 	public List<Spell> getRelevantSpells() {

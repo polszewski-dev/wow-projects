@@ -1,11 +1,11 @@
 package wow.minmax.service.impl.enumerators;
 
+import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
-import wow.commons.model.spells.Spell;
 import wow.minmax.service.CalculationService;
 
 import java.util.List;
@@ -20,11 +20,11 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 	public BestItemVariantEnumerator(
 			Character referenceCharacter,
 			ItemSlot slot,
-			Spell spell,
+			Rotation rotation,
 			ItemService itemService,
 			CalculationService calculationService
 	) {
-		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), spell, itemService, calculationService);
+		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), rotation, itemService, calculationService);
 		this.item = referenceCharacter.getEquippedItem(slot).getItem();
 	}
 

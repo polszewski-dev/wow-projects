@@ -1,5 +1,5 @@
 <div>
-	<app-dps-bar [dps]="dps" [dpsDiff]="dps && previousDps ? dps - previousDps : 0"></app-dps-bar>
+	<app-dps-bar [rotationStats]="rotationStats" [dpsDiff]="rotationStats && previousRotationStats ? rotationStats.dps - previousRotationStats.dps : 0"></app-dps-bar>
 
 	<nav ngbNav #nav="ngbNav" class="nav-tabs">
 		<ng-container ngbNavItem>

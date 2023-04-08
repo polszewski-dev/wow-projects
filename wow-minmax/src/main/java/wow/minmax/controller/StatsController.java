@@ -10,11 +10,14 @@ import wow.character.model.build.BuffSetId;
 import wow.character.model.character.Character;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.minmax.converter.dto.CharacterStatsConverter;
+import wow.minmax.converter.dto.RotationStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
 import wow.minmax.converter.dto.SpellStatsConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.CharacterStats;
+import wow.minmax.model.RotationStats;
 import wow.minmax.model.dto.CharacterStatsDTO;
+import wow.minmax.model.dto.RotationStatsDTO;
 import wow.minmax.model.dto.SpecialAbilityStatsDTO;
 import wow.minmax.model.dto.SpellStatsDTO;
 import wow.minmax.service.CalculationService;
@@ -40,6 +43,7 @@ public class StatsController {
 	private final SpellStatsConverter spellStatsConverter;
 	private final CharacterStatsConverter characterStatsConverter;
 	private final SpecialAbilityStatsConverter specialAbilityStatsConverter;
+	private final RotationStatsConverter rotationStatsConverter;
 
 	@GetMapping("{characterId}/spell")
 	public List<SpellStatsDTO> getSpellStats(
@@ -68,12 +72,16 @@ public class StatsController {
 		result.add(convert("Items", itemStats));
 
 		for (BuffCombo buffCombo : BuffCombo.getBuffCombos(character)) {
-			var buffSetIds = buffCombo.buffSetIds.toArray(BuffSetId[]::new);
-			var stats = calculationService.getStats(character, buffSetIds);
+			CharacterStats stats = getCharacterStats(character, buffCombo);
 			result.add(convert(buffCombo.type, stats));
 		}
 
 		return result;
+	}
+
+	private CharacterStats getCharacterStats(Character character, BuffCombo buffCombo) {
+		var buffSetIds = buffCombo.buffSetIds.toArray(BuffSetId[]::new);
+		return calculationService.getStats(character, buffSetIds);
 	}
 
 	@GetMapping("{characterId}/special")
@@ -89,13 +97,14 @@ public class StatsController {
 				.toList();
 	}
 
-	@GetMapping("{characterId}/dps")
-	public double getSpellDps(
+	@GetMapping("{characterId}/rotation/stats")
+	public RotationStatsDTO getRotationStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		Character character = playerProfileService.getCharacter(characterId);
+		RotationStats rotationStats = calculationService.getRotationStats(character, character.getRotation());
 
-		return calculationService.getSpellDps(character, character.getDamagingSpell());
+		return rotationStatsConverter.convert(rotationStats);
 	}
 
 	private CharacterStatsDTO convert(String type, CharacterStats characterStats) {

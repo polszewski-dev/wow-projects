@@ -120,4 +120,11 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 	default Duration getCooldown() {
 		return getSpellInfo().getCooldown();
 	}
+
+	default Duration getEffectiveCooldown() {
+		if (hasDotComponent()) {
+			return getCooldown().max(getDotDuration());
+		}
+		return getCooldown();
+	}
 }

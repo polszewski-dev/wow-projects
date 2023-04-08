@@ -25,7 +25,7 @@ public class Build implements AttributeCollection, Copyable<Build> {
 	private String talentLink;
 	private Talents talents;
 	private PveRole role;
-	private Spell damagingSpell;
+	private Rotation rotation;
 	private List<Spell> relevantSpells;
 	private PetType activePet;
 	private BuffSets buffSets;
@@ -41,7 +41,7 @@ public class Build implements AttributeCollection, Copyable<Build> {
 				talentLink,
 				talents,
 				role,
-				damagingSpell,
+				rotation,
 				relevantSpells,
 				activePet,
 				buffSets
@@ -66,7 +66,7 @@ public class Build implements AttributeCollection, Copyable<Build> {
 		this.talentLink = null;
 		this.talents = Talents.EMPTY;
 		this.role = null;
-		this.damagingSpell = null;
+		this.rotation = null;
 		this.relevantSpells = List.of();
 		this.activePet = null;
 		this.buffSets = BuffSets.EMPTY;

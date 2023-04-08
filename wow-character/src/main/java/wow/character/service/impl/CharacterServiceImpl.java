@@ -13,13 +13,12 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: POlszewski
@@ -91,13 +90,35 @@ public class CharacterServiceImpl implements CharacterService {
 		build.setTalentLink(buildTemplate.getTalentLink());
 		build.setTalents(getTalentsFromTalentLink(buildTemplate.getTalentLink(), character));
 		build.setRole(buildTemplate.getRole());
-		build.setDamagingSpell(spellService.getSpellHighestRank(buildTemplate.getDamagingSpell(), character));
+		build.setRotation(getRotation(character, buildTemplate));
 		build.setRelevantSpells(spellService.getSpellHighestRanks(buildTemplate.getRelevantSpells(), character));
 		build.setActivePet(buildTemplate.getActivePet());
 		build.setBuffSets(getBuffSets(buildTemplate, character));
 
 		character.setBuffs(BuffSetId.values());
 		character.setProfessions(buildTemplate.getProfessions());
+	}
+
+	private Rotation getRotation(Character character, BuildTemplate buildTemplate) {
+		List<Spell> cooldowns = new ArrayList<>();
+		Spell filler = null;
+
+		for (SpellId spellId : buildTemplate.getDefaultRotation()) {
+			Spell spell = spellService.getSpellHighestRank(spellId, character);
+			if (spell.hasDotComponent() || spell.getCooldown().isPositive()) {
+				cooldowns.add(spell);
+			} else if (filler == null) {
+				filler = spell;
+			} else {
+				throw new IllegalArgumentException("Can't have two fillers: %s, %s".formatted(filler, spell));
+			}
+		}
+
+		if (filler == null) {
+			throw new IllegalArgumentException("No filler");
+		}
+
+		return new Rotation(cooldowns, filler);
 	}
 
 	private BuffSets getBuffSets(BuildTemplate buildTemplate, Character character) {
