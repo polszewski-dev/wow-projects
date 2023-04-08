@@ -26,7 +26,7 @@ class UpgradeServiceTest extends ServiceTest {
 	void findUpgradesChest() {
 		character.equip(null, ItemSlot.CHEST);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.CHEST, ItemFilter.everything(), character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.CHEST, ItemFilter.everything());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -36,7 +36,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.FINGER_1);
 		character.equip(null, ItemSlot.FINGER_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, ItemFilter.everything(), character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, ItemFilter.everything());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -46,7 +46,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.TRINKET_1);
 		character.equip(null, ItemSlot.TRINKET_2);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, ItemFilter.everything(), character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, ItemFilter.everything());
 
 		assertThat(upgrades).hasSize(1);
 	}
@@ -56,14 +56,14 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.MAIN_HAND);
 		character.equip(null, ItemSlot.OFF_HAND);
 
-		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, ItemFilter.everything(), character.getDamagingSpell());
+		List<Comparison> upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, ItemFilter.everything());
 
 		assertThat(upgrades).hasSize(3);
 	}
 
 	@Test
 	void getBestItemVariant() {
-		EquippableItem item = underTest.getBestItemVariant(character, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, character.getDamagingSpell());
+		EquippableItem item = underTest.getBestItemVariant(character, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST);
 
 		assertThat(item.getEnchant()).isNotNull();
 

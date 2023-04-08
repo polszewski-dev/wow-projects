@@ -95,7 +95,7 @@ public class StatsController {
 	) {
 		Character character = playerProfileService.getCharacter(characterId);
 
-		return calculationService.getSpellDps(character, null);
+		return calculationService.getSpellDps(character, character.getDamagingSpell());
 	}
 
 	private CharacterStatsDTO convert(String type, CharacterStats characterStats) {

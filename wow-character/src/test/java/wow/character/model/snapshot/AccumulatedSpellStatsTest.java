@@ -15,6 +15,9 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.special.ProcEvent;
 import wow.commons.model.spells.Spell;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.character.CreatureType.UNDEAD;
@@ -393,10 +396,17 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 		StatProvider dummyStatProvider = StatProvider.dummyValues();
 
-		AccumulatedSpellStats stats = new AccumulatedSpellStats(attributes, character.getConditions(spell));
+		AccumulatedSpellStats stats = new AccumulatedSpellStats(attributes, getConditions(character, spell));
 
-		stats.accumulateStats(dummyStatProvider);
+		stats.accumulatePrimitiveAttributes();
+		stats.accumulateComplexAttributes(dummyStatProvider);
 
 		return stats;
+	}
+
+	private Set<AttributeCondition> getConditions(Character character, Spell spell) {
+		var conditions = new HashSet<>(character.getConditions());
+		conditions.addAll(spell.getConditions());
+		return conditions;
 	}
 }

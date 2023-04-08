@@ -32,6 +32,11 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final CalculationService calculationService;
 
 	@Override
+	public List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, ItemFilter itemFilter) {
+		return findUpgrades(character, slotGroup, itemFilter, character.getDamagingSpell());
+	}
+
+	@Override
 	public List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, ItemFilter itemFilter, Spell spell) {
 		FindUpgradesEnumerator enumerator = new FindUpgradesEnumerator(
 				character, slotGroup, itemFilter, spell, itemService, calculationService
@@ -40,6 +45,11 @@ public class UpgradeServiceImpl implements UpgradeService {
 		return enumerator.run().getResult().stream()
 				.limit(upgradeConfig.getMaxUpgrades())
 				.toList();
+	}
+
+	@Override
+	public EquippableItem getBestItemVariant(Character character, Item item, ItemSlot slot) {
+		return getBestItemVariant(character, item, slot, character.getDamagingSpell());
 	}
 
 	@Override

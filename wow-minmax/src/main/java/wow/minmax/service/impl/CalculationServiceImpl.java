@@ -33,7 +33,7 @@ import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character) {
-		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, character, null, null);
+		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, character, character.getDamagingSpell(), character.getStats());
 	}
 
 	@Override
@@ -45,9 +45,6 @@ public class CalculationServiceImpl implements CalculationService {
 			Spell spell,
 			Attributes totalStats
 	) {
-		spell = initOptional(character, spell);
-		totalStats = initOptional(character, totalStats);
-
 		var finder = new StatEquivalentFinder(
 				attributesToFindEquivalent, targetStat, mode, character, spell, totalStats, this
 		);
@@ -56,10 +53,12 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Spell spell, Attributes totalStats) {
-		spell = initOptional(character, spell);
-		totalStats = initOptional(character, totalStats);
+	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character) {
+		return getAbilityEquivalent(specialAbility, character, character.getDamagingSpell(), character.getStats());
+	}
 
+	@Override
+	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Spell spell, Attributes totalStats) {
 		Snapshot snapshot = getSnapshot(
 				character,
 				spell,
@@ -71,7 +70,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public double getSpellDps(Character character, Spell spell) {
-		return getSpellDps(character, spell, null);
+		return getSpellDps(character, spell, character.getStats());
 	}
 
 	@Override
@@ -81,15 +80,12 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats) {
-		spell = initOptional(character, spell);
-		totalStats = initOptional(character, totalStats);
-
 		return new Snapshot(spell, character, totalStats);
 	}
 
 	@Override
 	public SpellStats getSpellStats(Character character, Spell spell) {
-		SpellStatistics spellStatistics = getSnapshot(character, spell, null).getSpellStatistics(CritMode.AVERAGE, true);
+		SpellStatistics spellStatistics = getSnapshot(character, spell, character.getStats()).getSpellStatistics(CritMode.AVERAGE, true);
 		SpellStatEquivalents statEquivalents = getStatEquivalents(character, spell);
 		return new SpellStats(character, spellStatistics, statEquivalents);
 	}
@@ -121,22 +117,10 @@ public class CalculationServiceImpl implements CalculationService {
 				Attributes.of(attributeId, amount),
 				SPELL_POWER,
 				ADDITIONAL,
-				character, spell, character.getStats()
+				character,
+				spell,
+				character.getStats()
 		).getSpellPower();
-	}
-
-	private Spell initOptional(Character character, Spell spell) {
-		if (spell != null) {
-			return spell;
-		}
-		return character.getDamagingSpell();
-	}
-
-	private Attributes initOptional(Character character, Attributes totalStats) {
-		if (totalStats != null) {
-			return totalStats;
-		}
-		return character.getStats();
 	}
 
 	@Override
@@ -157,7 +141,7 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private CharacterStats getStats(Character character, Attributes totalStats) {
-		Snapshot snapshot = getSnapshot(character, character.getDamagingSpell(), totalStats);
+		Snapshot snapshot = getSnapshot(character, null, totalStats);
 
 		return new CharacterStats(
 				totalStats.getTotalSpellDamage(),
@@ -177,7 +161,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public SpecialAbilityStats getSpecialAbilityStats(Character character, SpecialAbility specialAbility) {
-		Attributes statEquivalent = getAbilityEquivalent(specialAbility, character, null, null);
+		Attributes statEquivalent = getAbilityEquivalent(specialAbility, character);
 		Attributes spEquivalent = getDpsStatEquivalent(Attributes.of(specialAbility), SPELL_POWER, REPLACEMENT, character);
 
 		return new SpecialAbilityStats(

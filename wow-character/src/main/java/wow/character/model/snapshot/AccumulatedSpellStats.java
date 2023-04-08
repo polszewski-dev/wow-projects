@@ -1,6 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.model.character.BaseStatInfo;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
@@ -61,10 +62,20 @@ public class AccumulatedSpellStats {
 		this.conditions = conditions;
 	}
 
-	public void accumulateStats(StatProvider statProvider) {
+	public void accumulateBaseStats(BaseStatInfo baseStatInfo) {
+		stamina += baseStatInfo.getBaseStamina();
+		intellect += baseStatInfo.getBaseIntellect();
+		spirit += baseStatInfo.getBaseSpirit();
+		critPct += baseStatInfo.getBaseSpellCritPct().getValue();
+	}
+
+	public void accumulatePrimitiveAttributes() {
 		accumulatePrimitiveAttributes(attributes.getPrimitiveAttributes());
 		solveStatConversions();
-		solveAbilities(statProvider);
+	}
+
+	public boolean accumulateComplexAttributes(StatProvider statProvider) {
+		return solveAbilities(statProvider);
 	}
 
 	private void accumulatePrimitiveAttributes(List<PrimitiveAttribute> attributes) {
@@ -207,7 +218,11 @@ public class AccumulatedSpellStats {
 		};
 	}
 
-	private void solveAbilities(StatProvider statProvider) {
+	private boolean solveAbilities(StatProvider statProvider) {
+		if (attributes.getSpecialAbilities().isEmpty()) {
+			return false;
+		}
+
 		List<SpecialAbility> specialAbilities = new ArrayList<>(attributes.getSpecialAbilities());
 		specialAbilities.sort(Comparator.comparingInt(SpecialAbility::getPriority));
 
@@ -215,5 +230,7 @@ public class AccumulatedSpellStats {
 			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);
 			accumulatePrimitiveAttributes(statEquivalent.getPrimitiveAttributes());
 		}
+
+		return true;
 	}
 }

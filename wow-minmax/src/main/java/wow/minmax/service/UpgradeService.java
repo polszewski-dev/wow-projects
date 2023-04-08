@@ -16,7 +16,11 @@ import java.util.List;
  * Date: 2021-12-15
  */
 public interface UpgradeService {
+	List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, ItemFilter itemFilter);
+
 	List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, ItemFilter itemFilter, Spell spell);
+
+	EquippableItem getBestItemVariant(Character character, Item item, ItemSlot itemSlot);
 
 	EquippableItem getBestItemVariant(Character character, Item item, ItemSlot itemSlot, Spell spell);
 }

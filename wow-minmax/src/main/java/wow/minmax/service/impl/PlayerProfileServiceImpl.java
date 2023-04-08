@@ -135,7 +135,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private EquippableItem getBestItemVariant(CharacterId characterId, ItemSlot slot, int itemId) {
 		Character character = getCharacter(characterId);
 		Item item = itemService.getItem(itemId, character.getPhaseId());
-		return upgradeService.getBestItemVariant(character, item, slot, character.getDamagingSpell());
+		return upgradeService.getBestItemVariant(character, item, slot);
 	}
 
 	@Override

@@ -116,4 +116,8 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 		result.add(AttributeCondition.of(getSpellId()));
 		return result;
 	}
+
+	default Duration getCooldown() {
+		return getSpellInfo().getCooldown();
+	}
 }

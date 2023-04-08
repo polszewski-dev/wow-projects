@@ -7,9 +7,13 @@ import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.GameVersion;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.spells.Spell;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -79,32 +83,50 @@ public class Snapshot implements StatProvider {
 		this.baseSpellHitChancePct = gameVersion.getBaseSpellHitChancePct(levelDifference);
 		this.maxSpellHitChancePct = gameVersion.getMaxPveSpellHitChancePct();
 
-		this.stats = getStats(spell, character, attributes);
+		this.stats = new AccumulatedSpellStats(
+				attributes,
+				getConditions(character)
+		);
 
-		stats.accumulateStats(this);
+		stats.accumulateBaseStats(baseStats);
+		stats.accumulatePrimitiveAttributes();
 
 		calcBaseStats();
 		calcSpellStats();
-		calcCastTime();
-		calcCost();
-		calcDuration();
-		calcCooldown();
-		calcMisc();
+
+		if (spell != null) {
+			boolean recalculate = stats.accumulateComplexAttributes(this);
+
+			if (recalculate) {
+				calcBaseStats();
+				calcSpellStats();
+			}
+
+			calcSpellCoefficients();
+			calcCastTime();
+			calcCost();
+			calcDuration();
+			calcCooldown();
+			calcMisc();
+		}
 
 		this.calcFinished = true;
 	}
 
-	private AccumulatedSpellStats getStats(Spell spell, Character character, Attributes attributes) {
-		return new AccumulatedSpellStats(
-				attributes,
-				character.getConditions(spell)
-		);
+	private Set<AttributeCondition> getConditions(Character character) {
+		if (spell == null) {
+			return character.getConditions();
+		}
+
+		var conditions = new HashSet<>(character.getConditions());
+		conditions.addAll(spell.getConditions());
+		return conditions;
 	}
 
 	private void calcBaseStats() {
-		double baseSta = baseStats.getBaseStamina() + stats.getBaseStats() + stats.getStamina();
-		double baseInt = baseStats.getBaseIntellect() + stats.getBaseStats() + stats.getIntellect();
-		double baseSpi = baseStats.getBaseSpirit() + stats.getBaseStats() + stats.getSpirit();
+		double baseSta = stats.getBaseStats() + stats.getStamina();
+		double baseInt = stats.getBaseStats() + stats.getIntellect();
+		double baseSpi = stats.getBaseStats() + stats.getSpirit();
 
 		double baseStaMultiplier = 1 + (stats.getBaseStatsPct() + stats.getStaminaPct()) / 100;
 		double baseIntMultiplier = 1 + (stats.getBaseStatsPct() + stats.getIntellectPct()) / 100;
@@ -132,9 +154,6 @@ public class Snapshot implements StatProvider {
 
 		directDamageDoneMultiplier = 1 + (stats.getEffectIncreasePct() + stats.getDamagePct() + stats.getDirectDamagePct()) / 100;
 		dotDamageDoneMultiplier = 1 + (stats.getEffectIncreasePct() + stats.getDamagePct() + stats.getDotDamagePct()) / 100;
-
-		spellCoeffDirect = getSpellCoeffDirectValue();
-		spellCoeffDoT = getSpellCoeffDoTValue();
 	}
 
 	@Override
@@ -164,11 +183,10 @@ public class Snapshot implements StatProvider {
 	}
 
 	private double getTotalCritValue() {
-		double baseCrit = baseStats.getBaseSpellCritPct().getValue();
 		double intCrit = (intellect - baseStats.getBaseIntellect()) / baseStats.getIntellectPerCritPct();
 		double ratingCrit = stats.getCritRating() / cr.getSpellCrit();
 		double pctCrit = stats.getCritPct();
-		return baseCrit + intCrit + ratingCrit + pctCrit;
+		return intCrit + ratingCrit + pctCrit;
 	}
 
 	private double getTotalHasteValue() {
@@ -182,6 +200,11 @@ public class Snapshot implements StatProvider {
 		double talentIncrease = stats.getCritDamageMultiplierPct() / 100;
 		double extraCritCoeff = stats.getCritCoeffPct();
 		return 1 + (0.5 + 1.5 * increasedCriticalDamage) * (1 + talentIncrease) + extraCritCoeff;
+	}
+
+	private void calcSpellCoefficients() {
+		spellCoeffDirect = getSpellCoeffDirectValue();
+		spellCoeffDoT = getSpellCoeffDoTValue();
 	}
 
 	private double getSpellCoeffDirectValue() {
@@ -224,7 +247,7 @@ public class Snapshot implements StatProvider {
 	}
 
 	private void calcCooldown() {
-		double originalCooldown = spell.getSpellInfo().getCooldown().getSeconds();
+		double originalCooldown = spell.getCooldown().getSeconds();
 
 		if (stats.getCooldown() == 0 && stats.getCooldownPct() == 0) {
 			this.cooldown = originalCooldown;
@@ -289,7 +312,7 @@ public class Snapshot implements StatProvider {
 		return totalDamage / effectiveCastTimeSeconds;
 	}
 
-	private double getTotalDamage(CritMode critMode, boolean useBothDamageRanges) {
+	public double getTotalDamage(CritMode critMode, boolean useBothDamageRanges) {
 		return getDirectDamage(critMode, useBothDamageRanges) + getDotDamage();
 	}
 

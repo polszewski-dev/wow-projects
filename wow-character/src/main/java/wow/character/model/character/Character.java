@@ -283,15 +283,13 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return targetEnemy.getEnemyType();
 	}
 
-	public Set<AttributeCondition> getConditions(Spell spell) {
+	public Set<AttributeCondition> getConditions() {
 		var result = new HashSet<AttributeCondition>();
 
-		result.addAll(spell.getConditions());
 		result.addAll(professions.getConditions());
 		result.addAll(targetEnemy.getConditions());
 		result.add(AttributeCondition.of(getActivePet()));
 		result.add(AttributeCondition.EMPTY);
-
 		return result;
 	}
 }

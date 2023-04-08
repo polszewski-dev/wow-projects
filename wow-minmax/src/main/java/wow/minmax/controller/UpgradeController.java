@@ -38,7 +38,7 @@ public class UpgradeController {
 	) {
 		Character character = playerProfileService.getCharacter(characterId).copy();
 		List<Comparison> upgrades = upgradeService.findUpgrades(
-				character, slotGroup, itemFilterConverter.convertBack(itemFilter), character.getDamagingSpell()
+				character, slotGroup, itemFilterConverter.convertBack(itemFilter)
 		);
 
 		return upgrades.stream()

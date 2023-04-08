@@ -25,6 +25,8 @@ public interface CalculationService {
 
 	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character, Spell spell, Attributes totalStats);
 
+	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character);
+
 	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Spell spell, Attributes totalStats);
 
 	double getSpellDps(Character character, Spell spell);

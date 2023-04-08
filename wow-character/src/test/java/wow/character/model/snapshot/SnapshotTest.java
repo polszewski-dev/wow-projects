@@ -25,20 +25,20 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getBaseStatsPct()).isEqualTo(10);
 		assertThat(underTest.getStaminaPct()).isEqualTo(15);
 		assertThat(underTest.getSpiritPct()).isEqualTo(-5);
-		assertThat(underTest.getStamina()).isEqualTo(462);
-		assertThat(underTest.getIntellect()).isEqualTo(413);
-		assertThat(underTest.getSpirit()).isEqualTo(20);
+		assertThat(underTest.getStamina()).isEqualTo(540);
+		assertThat(underTest.getIntellect()).isEqualTo(543);
+		assertThat(underTest.getSpirit()).isEqualTo(134);
 		assertThat(underTest.getBaseStats()).isEqualTo(20);
 		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1803);
 		assertThat(underTest.getDamagePct()).isEqualTo(31);
 		assertThat(underTest.getHitRating()).isEqualTo(164);
 		assertThat(underTest.getHitPct()).isEqualTo(3);
 		assertThat(underTest.getCritRating()).isEqualTo(331);
-		assertThat(underTest.getCritPct()).isEqualTo(11);
+		assertThat(underTest.getCritPct()).isEqualTo(14.29);
 		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
 		assertThat(underTest.getCritDamagePct()).isEqualTo(3);
 		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(100);
-		assertThat(underTest.getCritCoeffPct()).isEqualTo(0.67, PRECISION);
+		assertThat(underTest.getCritCoeffPct()).isEqualTo(0.63, PRECISION);
 		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
 		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
 		assertThat(underTest.getCostPct()).isEqualTo(-5);
@@ -67,7 +67,7 @@ class SnapshotTest extends WowCharacterSpringTest {
 
 		assertThat(underTest.getHitChance()).isEqualTo(0.9899, PRECISION);
 		assertThat(underTest.getCritChance()).isEqualTo(0.3530, PRECISION);
-		assertThat(underTest.getCritCoeff()).isEqualTo(2.76, PRECISION);
+		assertThat(underTest.getCritCoeff()).isEqualTo(2.72, PRECISION);
 		assertThat(underTest.getHaste()).isEqualTo(0.2888, PRECISION);
 
 		assertThat(underTest.getDirectDamageDoneMultiplier()).isEqualTo(1.31);
@@ -94,11 +94,11 @@ class SnapshotTest extends WowCharacterSpringTest {
 		Snapshot snapshot = getSnapshot();
 		SpellStatistics underTest = snapshot.getSpellStatistics(CritMode.AVERAGE, true);
 
-		assertThat(underTest.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5219);
-		assertThat(underTest.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2691);
+		assertThat(underTest.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5175);
+		assertThat(underTest.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2669);
 		assertThat(underTest.getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
 		assertThat(underTest.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
-		assertThat(underTest.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(13);
+		assertThat(underTest.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(12);
 	}
 
 	@Test
