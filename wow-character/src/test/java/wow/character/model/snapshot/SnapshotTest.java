@@ -17,7 +17,7 @@ import static wow.commons.model.spells.SpellId.*;
  */
 class SnapshotTest extends WowCharacterSpringTest {
 	@Test
-	void everytingAcummulatedStats() {
+	void everytingAcummulatedStatsBaseStats() {
 		Snapshot snapshot = getSnapshot();
 
 		AccumulatedSpellStats underTest = snapshot.getStats();
@@ -29,6 +29,14 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getIntellect()).isEqualTo(543);
 		assertThat(underTest.getSpirit()).isEqualTo(134);
 		assertThat(underTest.getBaseStats()).isEqualTo(20);
+	}
+
+	@Test
+	void everytingAcummulatedStatsSpellStats() {
+		Snapshot snapshot = getSnapshot();
+
+		AccumulatedSpellStats underTest = snapshot.getStats();
+
 		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1803);
 		assertThat(underTest.getDamagePct()).isEqualTo(31);
 		assertThat(underTest.getHitRating()).isEqualTo(164);

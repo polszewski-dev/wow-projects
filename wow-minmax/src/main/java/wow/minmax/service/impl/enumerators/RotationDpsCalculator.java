@@ -92,5 +92,7 @@ public class RotationDpsCalculator {
 		return fillerSnapshot.getEffectiveCastTime();
 	}
 
-	protected void onRotationSpell(Spell spell, double numCasts, double damage, Snapshot snapshot) {}
+	protected void onRotationSpell(Spell spell, double numCasts, double damage, Snapshot snapshot) {
+		// to be overriden
+	}
 }

@@ -1,5 +1,6 @@
 package wow.commons.model.item.impl;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -11,6 +12,7 @@ import wow.commons.model.item.*;
  * Date: 2023-03-27
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class ItemImpl extends AbstractItemImpl implements Item {
 	private ItemSet itemSet;
 	private final ItemSocketSpecification socketSpecification;
