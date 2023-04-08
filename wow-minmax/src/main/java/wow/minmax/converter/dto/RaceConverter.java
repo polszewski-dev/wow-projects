@@ -13,12 +13,15 @@ import wow.minmax.model.dto.RaceDTO;
 @Component
 @AllArgsConstructor
 public class RaceConverter implements Converter<Race, RaceDTO> {
+	private final RacialConverter racialConverter;
+
 	@Override
 	public RaceDTO doConvert(Race source) {
 		return new RaceDTO(
 				source.getRaceId(),
 				source.getName(),
-				source.getIcon()
+				source.getIcon(),
+				racialConverter.convertList(source.getRacials())
 		);
 	}
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import wow.commons.model.character.RaceId;
 
+import java.util.List;
+
 /**
  * User: POlszewski
  * Date: 2023-04-01
@@ -16,4 +18,5 @@ public class RaceDTO {
 	private RaceId id;
 	private String name;
 	private String icon;
+	private List<RacialDTO> racials;
 }

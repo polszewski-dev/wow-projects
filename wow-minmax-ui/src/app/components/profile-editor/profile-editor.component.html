@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="selectedCharacter">
 	<app-dps-bar [rotationStats]="rotationStats" [dpsDiff]="rotationStats && previousRotationStats ? rotationStats.dps - previousRotationStats.dps : 0"></app-dps-bar>
 
 	<nav ngbNav #nav="ngbNav" class="nav-tabs">
@@ -32,13 +32,13 @@
 				<div class="stats-header">Spell Stats</div>
 				<app-spell-stats [selectedCharacterId]="selectedCharacterId"></app-spell-stats>
 				<div class="stats-header">Character Stats</div>
-				<app-character-stats [selectedCharacterId]="selectedCharacterId"></app-character-stats>
+				<app-character-stats [selectedCharacter]="selectedCharacter"></app-character-stats>
 				<div class="stats-header">Special Abilities</div>
 				<app-special-abilities [selectedCharacterId]="selectedCharacterId"></app-special-abilities>
 				<div class="stats-header">Talents</div>
 				<app-talent-list [selectedCharacterId]="selectedCharacterId"></app-talent-list>
 				<div class="stats-header">Racials</div>
-				<app-racial-list [selectedCharacterId]="selectedCharacterId"></app-racial-list>
+				<app-racial-list [selectedCharacter]="selectedCharacter"></app-racial-list>
 			</ng-template>
 		</ng-container>
 	</nav>

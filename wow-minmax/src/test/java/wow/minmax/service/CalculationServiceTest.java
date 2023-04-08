@@ -18,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.spells.SpellId.CURSE_OF_DOOM;
 import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spells.SpellSchool.FIRE;
+import static wow.commons.model.spells.SpellSchool.SHADOW;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 
 /**
@@ -219,8 +221,8 @@ class CalculationServiceTest extends ServiceTest {
 		CharacterStats stats = underTest.getCurrentStats(character);
 
 		assertThat(stats.getSp()).isEqualTo(1616);
-		assertThat(stats.getSpShadow()).isEqualTo(1750);
-		assertThat(stats.getSpFire()).isEqualTo(1696);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1750.0);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1696.0);
 		assertThat(stats.getHitRating()).isEqualTo(164);
 		assertThat(stats.getHitPct()).isEqualTo(16.00, PRECISION);
 		assertThat(stats.getCritRating()).isEqualTo(331);
@@ -240,8 +242,8 @@ class CalculationServiceTest extends ServiceTest {
 		CharacterStats stats = underTest.getStats(character, BuffSetId.SELF_BUFFS);
 
 		assertThat(stats.getSp()).isEqualTo(1456);
-		assertThat(stats.getSpShadow()).isEqualTo(1510);
-		assertThat(stats.getSpFire()).isEqualTo(1456);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1510.0);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1456.0);
 		assertThat(stats.getHitRating()).isEqualTo(164);
 		assertThat(stats.getHitPct()).isEqualTo(12.99, PRECISION);
 		assertThat(stats.getCritRating()).isEqualTo(317);
@@ -261,8 +263,8 @@ class CalculationServiceTest extends ServiceTest {
 		CharacterStats stats = underTest.getEquipmentStats(character);
 
 		assertThat(stats.getSp()).isEqualTo(1326);
-		assertThat(stats.getSpShadow()).isEqualTo(1380);
-		assertThat(stats.getSpFire()).isEqualTo(1326);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1380.0);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1326.0);
 		assertThat(stats.getHitRating()).isEqualTo(164);
 		assertThat(stats.getHitPct()).isEqualTo(13.00, PRECISION);
 		assertThat(stats.getCritRating()).isEqualTo(317);

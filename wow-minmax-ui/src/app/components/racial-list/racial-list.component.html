@@ -6,7 +6,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let racial of racialList">
+		<tr *ngFor="let racial of selectedCharacter?.race?.racials">
 			<td style="text-align: left" [title]="racial.attributes.replaceAll(', ', ',\n')">
 				<strong>
 					<img [src]="racial.icon | icon"/>&nbsp;{{racial.name}}

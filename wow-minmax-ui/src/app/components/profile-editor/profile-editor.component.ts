@@ -1,9 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BuffListType } from 'src/app/model/buff/BuffListType';
+import { Character } from 'src/app/model/character/Character';
 import { RotationStats } from 'src/app/model/character/RotationStats';
 import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
+import { CharacterService } from 'src/app/services/character.service';
 import { StatsService } from 'src/app/services/stats.service';
 import { UpgradeService } from 'src/app/services/upgrade.service';
 
@@ -14,6 +16,7 @@ import { UpgradeService } from 'src/app/services/upgrade.service';
 })
 export class ProfileEditorComponent implements OnChanges {
 	@Input() selectedCharacterId!: string;
+	selectedCharacter?: Character;
 	rotationStats?: RotationStats;
 	previousRotationStats?: RotationStats;
 	upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
@@ -31,7 +34,11 @@ export class ProfileEditorComponent implements OnChanges {
 	CHARACTER_BUFF = BuffListType.CHARACTER_BUFF;
 	TARGET_DEBUFF = BuffListType.TARGET_DEBUFF;
 
-	constructor(private statsService: StatsService, private upgradeService: UpgradeService) {}
+	constructor(
+			private characterService: CharacterService,
+			private statsService: StatsService,
+			private upgradeService: UpgradeService
+	) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
 		if (!changes['selectedCharacterId']) {
@@ -41,6 +48,10 @@ export class ProfileEditorComponent implements OnChanges {
 		this.updateDps();
 		this.upgradesBySlotGroup = {};
 		this.updateUpgradeStatus();
+
+		this.characterService.getCharacter(this.selectedCharacterId).subscribe((character: Character) => {
+			this.selectedCharacter = character;
+		});
 	}
 
 	onEquipmentChanged(): void {

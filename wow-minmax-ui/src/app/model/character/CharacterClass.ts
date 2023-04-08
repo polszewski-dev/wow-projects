@@ -1,3 +1,4 @@
+import { SpellSchool } from "../spell/SpellSchool";
 import { Race } from "./Race";
 
 export interface CharacterClass {
@@ -5,4 +6,5 @@ export interface CharacterClass {
 	name: string;
 	icon: string;
 	races: Race[];
+	spellSchools: SpellSchool[];
 }

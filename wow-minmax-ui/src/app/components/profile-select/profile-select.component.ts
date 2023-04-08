@@ -46,8 +46,6 @@ export class ProfileSelectComponent implements OnChanges {
 	}
 
 	setSelectedProfile(profileId: string, characterId?: string) {
-		const profile = this.profileList.find(x => x.profileId === profileId)!;
-
 		this.profileService.getCharacterSelectionOptions(profileId).subscribe((characterSelectionOptions: CharacterSelectionOptions) => {
 			this.characterSelectionOptions = sortOptions(characterSelectionOptions);
 			this.setSelectedCharacterId(characterId || characterSelectionOptions.lastModifiedCharacterId);

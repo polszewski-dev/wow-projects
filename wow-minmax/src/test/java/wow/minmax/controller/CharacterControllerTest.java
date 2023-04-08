@@ -21,7 +21,7 @@ class CharacterControllerTest extends ControllerTest {
 
 	@Test
 	void getRacials() throws Exception {
-		mockMvc.perform(get("/api/v1/character/{characterId}/racial/list", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/character/{characterId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

@@ -7,12 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.Character;
-import wow.minmax.converter.dto.RacialConverter;
+import wow.minmax.converter.dto.CharacterConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.dto.RacialDTO;
+import wow.minmax.model.dto.CharacterDTO;
 import wow.minmax.service.PlayerProfileService;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -24,16 +22,16 @@ import java.util.List;
 @Slf4j
 public class CharacterController {
 	private final PlayerProfileService playerProfileService;
-	private final RacialConverter racialConverter;
+	private final CharacterConverter characterConverter;
 
-	@GetMapping("{characterId}/racial/list")
-	public List<RacialDTO> getRacials(
+	@GetMapping("{characterId}")
+	public CharacterDTO getCharacter(
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		Character character = playerProfileService.getCharacter(characterId);
+		CharacterDTO dto = characterConverter.convert(character);
 
-		return character.getRacials().stream()
-				.map(racialConverter::convert)
-				.toList();
+		dto.setCharacterId(characterId.toString());
+		return dto;
 	}
 }

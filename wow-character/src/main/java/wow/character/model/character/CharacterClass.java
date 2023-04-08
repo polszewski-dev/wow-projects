@@ -9,6 +9,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
+import wow.commons.model.spells.SpellSchool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ public class CharacterClass implements Described {
 	private final Set<WeaponProfficiency> weaponProfficiencies;
 
 	private final boolean dualWield;
+
+	@NonNull
+	private final List<SpellSchool> spellSchools;
 
 	private final BuildId defaultBuildId;
 

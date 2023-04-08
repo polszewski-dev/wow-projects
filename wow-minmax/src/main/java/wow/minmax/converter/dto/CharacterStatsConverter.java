@@ -18,8 +18,7 @@ public class CharacterStatsConverter implements Converter<CharacterStats, Charac
 		return new CharacterStatsDTO(
 				null,
 				source.getSp(),
-				source.getSpShadow(),
-				source.getSpFire(),
+				source.getSpellDamageBySchool(),
 				source.getHitRating(),
 				source.getHitPct(),
 				source.getCritRating(),

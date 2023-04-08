@@ -1,8 +1,9 @@
+import { SpellSchool } from "../spell/SpellSchool";
+
 export interface CharacterStats {
 	type: string;
 	sp: number;
-	spShadow: number;
-	spFire: number;
+	spellDamageBySchool: Record<SpellSchool, number | undefined>;
 	hitRating: number;
 	hitPct: number;
 	critRating: number;

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Racial } from '../model/character/Racial';
+import { Character } from '../model/character/Character';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,7 +11,7 @@ export class CharacterService {
 
 	constructor(private http: HttpClient) { }
 
-	getRacials(characterId: string): Observable<Racial[]> {
-		return this.http.get<Racial[]>(`${this.apiUrl}/${characterId}/racial/list`);
+	getCharacter(characterId: string): Observable<Character> {
+		return this.http.get<Character>(`${this.apiUrl}/${characterId}`);
 	}
 }

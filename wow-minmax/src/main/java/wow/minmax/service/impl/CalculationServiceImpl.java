@@ -21,6 +21,10 @@ import wow.minmax.service.impl.enumerators.RotationDpsCalculator;
 import wow.minmax.service.impl.enumerators.RotationStatsCalculator;
 import wow.minmax.service.impl.enumerators.StatEquivalentFinder;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
@@ -155,8 +159,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 		return new CharacterStats(
 				totalStats.getTotalSpellDamage(),
-				totalStats.getTotalSpellDamage(SpellSchool.SHADOW),
-				totalStats.getTotalSpellDamage(SpellSchool.FIRE),
+				getSpellDamageBySchool(totalStats),
 				totalStats.getSpellHitRating(),
 				snapshot.getTotalHit(),
 				totalStats.getSpellCritRating(),
@@ -167,6 +170,11 @@ public class CalculationServiceImpl implements CalculationService {
 				snapshot.getIntellect(),
 				snapshot.getSpirit()
 		);
+	}
+
+	private Map<SpellSchool, Double> getSpellDamageBySchool(Attributes totalStats) {
+		return Stream.of(SpellSchool.values())
+				.collect(Collectors.toMap(x -> x, totalStats::getTotalSpellDamage));
 	}
 
 	@Override

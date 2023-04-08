@@ -2,6 +2,9 @@ package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.spells.SpellSchool;
+
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -11,8 +14,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class CharacterStats {
 	private double sp;
-	private double spShadow;
-	private double spFire;
+	private Map<SpellSchool, Double> spellDamageBySchool;
 	private double hitRating;
 	private double hitPct;
 	private double critRating;

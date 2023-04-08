@@ -7,6 +7,7 @@ import wow.character.model.character.GameVersion;
 import wow.character.model.character.WeaponProfficiency;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.spells.SpellSchool;
 
 /**
  * User: POlszewski
@@ -17,6 +18,7 @@ public class CharacterClassSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colArmorProfficiencies = column("armor_profficiencies");
 	private final ExcelColumn colWeaponProfficiencies = column("weapon_profficiencies");
 	private final ExcelColumn colDualwield = column("dualwield");
+	private final ExcelColumn colSpellSchools = column("spell_schools");
 	private final ExcelColumn colDefaultBuild = column("default_build");
 
 	public CharacterClassSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
@@ -37,9 +39,10 @@ public class CharacterClassSheetParser extends CharacterSheetParser {
 		var armorProfficiencies = colArmorProfficiencies.getSet(ArmorProfficiency::parse);
 		var weaponProfficiencies = colWeaponProfficiencies.getSet(WeaponProfficiency::parse);
 		var dualwield = colDualwield.getBoolean();
+		var spellSchools = colSpellSchools.getList(SpellSchool::parse);
 		var defaultBuild = colDefaultBuild.getEnum(BuildId::parse, null);
 
-		return new CharacterClass(id, description, armorProfficiencies, weaponProfficiencies, dualwield, defaultBuild, version);
+		return new CharacterClass(id, description, armorProfficiencies, weaponProfficiencies, dualwield, spellSchools, defaultBuild, version);
 	}
 
 	private void addCharacterClass(CharacterClass characterClass, GameVersion version) {

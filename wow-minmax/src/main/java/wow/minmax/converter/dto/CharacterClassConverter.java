@@ -21,7 +21,8 @@ public class CharacterClassConverter implements Converter<CharacterClass, Charac
 				source.getCharacterClassId(),
 				source.getName(),
 				source.getIcon(),
-				raceConverter.convertList(source.getRaces())
+				raceConverter.convertList(source.getRaces()),
+				source.getSpellSchools()
 		);
 	}
 }
