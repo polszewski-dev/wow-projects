@@ -35,12 +35,12 @@ public abstract class SpecialAbility extends ComplexAttribute implements StatEqu
 		return new OnUseAbility(attributes, duration, cooldown, line, AttributeCondition.EMPTY, null);
 	}
 
-	public static ProcAbility proc(ProcEvent event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line) {
-		return new ProcAbility(event, chance, attributes, duration, cooldown, line, AttributeCondition.EMPTY, null);
+	public static ProcAbility proc(ProcEventType event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line) {
+		return new ProcAbility(new ProcEvent(event, chance), attributes, duration, cooldown, line, AttributeCondition.EMPTY, null);
 	}
 
-	public static TalentProcAbility talentProc(ProcEvent event, Percent chance, EffectId effectId, Duration duration, int stacks, String line) {
-		return new TalentProcAbility(event, chance, effectId, duration, stacks, line, AttributeCondition.EMPTY, null);
+	public static TalentProcAbility talentProc(ProcEventType event, Percent chance, EffectId effectId, Duration duration, int stacks, String line) {
+		return new TalentProcAbility(new ProcEvent(event, chance), effectId, duration, stacks, line, AttributeCondition.EMPTY, null);
 	}
 
 	public static EquivalentAbility equivalent(Attributes attributes, String line) {

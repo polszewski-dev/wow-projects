@@ -10,13 +10,13 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.complex.special.ProcEvent;
+import wow.commons.model.attributes.complex.special.ProcEventType;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static wow.commons.model.attributes.complex.special.ProcEvent.*;
+import static wow.commons.model.attributes.complex.special.ProcEventType.*;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
 
 /**
@@ -27,7 +27,7 @@ class SpecialAbilityTest {
 	@DisplayName("Proc with internal cooldown")
 	@ParameterizedTest(name = "[{index}] (event: {0}, chance: 50%, 100 sp | 15s/60s) == {1}, hit: {2}, crit: {3}, castTime: {4}")
 	@MethodSource
-	void procWithICD(ProcEvent event, double expected, double hitChance, double critChance, double castTime) {
+	void procWithICD(ProcEventType event, double expected, double hitChance, double critChance, double castTime) {
 		SpecialAbility proc = SpecialAbility.proc(
 				event,
 				Percent.of(50),
@@ -58,7 +58,7 @@ class SpecialAbilityTest {
 	@DisplayName("Proc without internal cooldown")
 	@ParameterizedTest(name = "[{index}] (event: {0}, chance: 50%, 100 sp | 15s/60s) == {1}, hit: {2}, crit: {3}, castTime: {4}")
 	@MethodSource
-	void procWithoutICD(ProcEvent event, double expected, double hitChance, double critChance, double castTime) {
+	void procWithoutICD(ProcEventType event, double expected, double hitChance, double critChance, double castTime) {
 		SpecialAbility proc = SpecialAbility.proc(
 				event,
 				Percent.of(50),

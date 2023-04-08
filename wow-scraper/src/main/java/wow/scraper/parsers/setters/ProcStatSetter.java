@@ -5,7 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.special.ProcEvent;
+import wow.commons.model.attributes.complex.special.ProcEventType;
 import wow.commons.util.AttributesBuilder;
 import wow.scraper.parsers.stats.StatMatcher;
 
@@ -33,7 +33,7 @@ public class ProcStatSetter implements StatSetter {
 			return SpecialAbility.misc(line);
 		}
 
-		ProcEvent event = ProcEvent.parse(matcher.getParamType());
+		ProcEventType event = ProcEventType.parse(matcher.getParamType());
 		Percent chance = matcher.getParamProcChance();
 		Duration duration = matcher.getParamDuration();
 		Duration cooldown = matcher.getParamProcCooldown();

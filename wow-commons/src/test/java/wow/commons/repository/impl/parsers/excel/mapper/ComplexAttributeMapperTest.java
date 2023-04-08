@@ -91,7 +91,7 @@ class ComplexAttributeMapperTest {
 	@Test
 	@DisplayName("Proc is mapped correctly")
 	void procAbility() {
-		ProcAbility original = SpecialAbility.proc(ProcEvent.SPELL_CRIT, Percent.of(20), Attributes.of(SPELL_POWER, 100), Duration.seconds(15), Duration.seconds(60), "This is a test");
+		ProcAbility original = SpecialAbility.proc(ProcEventType.SPELL_CRIT, Percent.of(20), Attributes.of(SPELL_POWER, 100), Duration.seconds(15), Duration.seconds(60), "This is a test");
 
 		String result = ComplexAttributeMapper.toString(original);
 
@@ -103,8 +103,8 @@ class ComplexAttributeMapperTest {
 
 		ProcAbility parsed = (ProcAbility)complexAttribute;
 
-		assertThat(parsed.getEvent()).isEqualTo(ProcEvent.SPELL_CRIT);
-		assertThat(parsed.getChance().getValue()).isEqualTo(20);
+		assertThat(parsed.getEvent().getType()).isEqualTo(ProcEventType.SPELL_CRIT);
+		assertThat(parsed.getEvent().getChance().getValue()).isEqualTo(20);
 		assertThat(parsed.getAttributes().getSpellPower()).isEqualTo(100);
 		assertThat(parsed.getDuration().getSeconds()).isEqualTo(15);
 		assertThat(parsed.getCooldown().getSeconds()).isEqualTo(60);
@@ -114,7 +114,7 @@ class ComplexAttributeMapperTest {
 	@Test
 	@DisplayName("TalentProc is mapped correctly")
 	void talentProcAbility() {
-		TalentProcAbility original = SpecialAbility.talentProc(ProcEvent.SPELL_CRIT, Percent._100, EffectId.SHADOW_VULNERABILITY_20, Duration.seconds(12), 4, "This is a test");
+		TalentProcAbility original = SpecialAbility.talentProc(ProcEventType.SPELL_CRIT, Percent._100, EffectId.SHADOW_VULNERABILITY_20, Duration.seconds(12), 4, "This is a test");
 
 		String result = ComplexAttributeMapper.toString(original);
 
@@ -126,8 +126,8 @@ class ComplexAttributeMapperTest {
 
 		TalentProcAbility parsed = (TalentProcAbility)complexAttribute;
 
-		assertThat(parsed.getEvent()).isEqualTo(ProcEvent.SPELL_CRIT);
-		assertThat(parsed.getChance().getValue()).isEqualTo(100);
+		assertThat(parsed.getEvent().getType()).isEqualTo(ProcEventType.SPELL_CRIT);
+		assertThat(parsed.getEvent().getChance().getValue()).isEqualTo(100);
 		assertThat(parsed.getEffectId()).isEqualTo(EffectId.SHADOW_VULNERABILITY_20);
 		assertThat(parsed.getDuration().getSeconds()).isEqualTo(12);
 		assertThat(parsed.getStacks()).isEqualTo(4);

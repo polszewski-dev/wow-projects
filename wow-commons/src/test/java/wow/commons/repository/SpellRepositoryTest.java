@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attributes.complex.special.ProcEvent.SPELL_CRIT;
+import static wow.commons.model.attributes.complex.special.ProcEventType.SPELL_CRIT;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_CRIT_PCT;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
@@ -141,8 +141,8 @@ class SpellRepositoryTest extends RepositoryTest {
 
 		TalentProcAbility ability = (TalentProcAbility) specialAbility;
 
-		assertThat(ability.getEvent()).isEqualTo(SPELL_CRIT);
-		assertThat(ability.getChance()).isEqualTo(Percent._100);
+		assertThat(ability.getEvent().getType()).isEqualTo(SPELL_CRIT);
+		assertThat(ability.getEvent().getChance()).isEqualTo(Percent._100);
 		assertThat(ability.getEffectId()).isEqualTo(SHADOW_VULNERABILITY_20);
 		assertThat(ability.getDuration()).isEqualTo(Duration.seconds(12));
 		assertThat(ability.getStacks()).isEqualTo(4);

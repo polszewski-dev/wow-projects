@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parsers.excel.mapper;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.special.ProcEvent;
+import wow.commons.model.attributes.complex.special.ProcEventType;
 import wow.commons.model.attributes.complex.special.TalentProcAbility;
 import wow.commons.model.spells.EffectId;
 import wow.commons.util.parser.simple.ParseResult;
@@ -32,8 +32,8 @@ class TalentProcAbilityMapper extends AbstractMapper<TalentProcAbility> {
 	@Override
 	public String toString(TalentProcAbility talentProcAbility) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put(TP_EVENT, talentProcAbility.getEvent());
-		map.put(TP_CHANCE_PCT, talentProcAbility.getChance());
+		map.put(TP_EVENT, talentProcAbility.getEvent().getType());
+		map.put(TP_CHANCE_PCT, talentProcAbility.getEvent().getChance());
 		map.put(TP_EFFECT, talentProcAbility.getEffectId());
 		map.put(TP_DURATION, talentProcAbility.getDuration());
 		map.put(TP_STACKS, talentProcAbility.getStacks());
@@ -44,7 +44,7 @@ class TalentProcAbilityMapper extends AbstractMapper<TalentProcAbility> {
 
 	@Override
 	public TalentProcAbility fromString(ParseResult parseResult) {
-		var event = parseResult.getEnum(TP_EVENT, ProcEvent::parse);
+		var event = parseResult.getEnum(TP_EVENT, ProcEventType::parse);
 		var effectId = parseResult.getEnum(TP_EFFECT, EffectId::parse);
 		var chancePct = parseResult.getPercent(TP_CHANCE_PCT, Percent._100);
 		var duration = parseResult.getDuration(TP_DURATION, Duration.INFINITE);

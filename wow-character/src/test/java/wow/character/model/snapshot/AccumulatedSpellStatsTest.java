@@ -12,7 +12,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.special.ProcEvent;
+import wow.commons.model.attributes.complex.special.ProcEventType;
 import wow.commons.model.spells.Spell;
 
 import java.util.HashSet;
@@ -377,7 +377,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@DisplayName("Solving special ability with internal cooldown")
 	void specialAbility() {
 		SpecialAbility proc = SpecialAbility.proc(
-				ProcEvent.SPELL_CRIT,
+				ProcEventType.SPELL_CRIT,
 				Percent._100,
 				Attributes.of(SPELL_DAMAGE, 100),
 				Duration.seconds(15),
