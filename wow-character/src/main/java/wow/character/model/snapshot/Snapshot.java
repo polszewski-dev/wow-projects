@@ -183,6 +183,10 @@ public class Snapshot implements StatProvider {
 	}
 
 	private double getTotalCritValue() {
+		if (spell != null && !spell.hasDirectComponent()) {
+			return 0;
+		}
+
 		double intCrit = (intellect - baseStats.getBaseIntellect()) / baseStats.getIntellectPerCritPct();
 		double ratingCrit = stats.getCritRating() / cr.getSpellCrit();
 		double pctCrit = stats.getCritPct();
@@ -196,6 +200,10 @@ public class Snapshot implements StatProvider {
 	}
 
 	private double getCritCoeffValue() {
+		if (spell != null && !spell.hasDirectComponent()) {
+			return 0;
+		}
+
 		double increasedCriticalDamage = stats.getCritDamagePct() / 100;
 		double talentIncrease = stats.getCritDamageMultiplierPct() / 100;
 		double extraCritCoeff = stats.getCritCoeffPct();
@@ -208,12 +216,20 @@ public class Snapshot implements StatProvider {
 	}
 
 	private double getSpellCoeffDirectValue() {
+		if (!spell.hasDirectComponent()) {
+			return 0;
+		}
+
 		double baseSpellCoeffDirect = spell.getCoeffDirect().getCoefficient();
 		double talentSpellCoeff = stats.getSpellPowerCoeffPct() / 100;
 		return baseSpellCoeffDirect + talentSpellCoeff;
 	}
 
 	private double getSpellCoeffDoTValue() {
+		if (!spell.hasDotComponent()) {
+			return 0;
+		}
+
 		double baseSpellCoeffDoT = spell.getCoeffDot().getCoefficient();
 		double talentSpellCoeff = stats.getSpellPowerCoeffPct() / 100;
 		return baseSpellCoeffDoT + talentSpellCoeff;

@@ -64,6 +64,10 @@ public class ProcAbility extends SpecialAbility {
 
 		double procChance = getProcChance(hitChance, critChance);
 
+		if (procChance == 0) {
+			return Attributes.EMPTY;
+		}
+
 		double theoreticalCooldown = castTime / (procChance * chance.getCoefficient());
 		double actualCooldown = cooldown != null ? max(cooldown.getSeconds(), theoreticalCooldown) : theoreticalCooldown;
 

@@ -22,11 +22,7 @@ public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO>
 	public SpellStatsDTO doConvert(SpellStats source) {
 		SpellStatistics spellStatistics = source.getSpellStatistics();
 		Snapshot snapshot = spellStatistics.getSnapshot();
-
 		Spell spell = snapshot.getSpell();
-
-		boolean dir = spell.hasDirectComponent();
-		boolean dot = spell.hasDotComponent();
 
 		return new SpellStatsDTO(
 				spellConverter.convert(spell),
@@ -37,11 +33,11 @@ public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO>
 				spellStatistics.getDpm(),
 				snapshot.getSp(),
 				snapshot.getTotalHit(),
-				dir ? snapshot.getTotalCrit() : 0,
+				snapshot.getTotalCrit(),
 				snapshot.getTotalHaste(),
-				dir ? snapshot.getSpellCoeffDirect() : 0,
-				dot ? snapshot.getSpellCoeffDoT() : 0,
-				dir ? snapshot.getCritCoeff() : 0,
+				snapshot.getSpellCoeffDirect(),
+				snapshot.getSpellCoeffDoT(),
+				snapshot.getCritCoeff(),
 				source.getStatEquivalents().getHitSpEqv(),
 				source.getStatEquivalents().getCritSpEqv(),
 				source.getStatEquivalents().getHasteSpEqv(),

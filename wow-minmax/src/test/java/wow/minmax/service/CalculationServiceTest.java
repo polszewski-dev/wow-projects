@@ -59,7 +59,7 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(2.5, PRECISION);
 
 		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
-		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
+		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0, PRECISION);
 
 		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 	}
@@ -96,7 +96,7 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(2.5, PRECISION);
 
 		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
-		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
+		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0, PRECISION);
 
 		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 	}
@@ -133,7 +133,7 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(1.94, PRECISION);
 
 		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
-		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
+		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0, PRECISION);
 
 		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 	}

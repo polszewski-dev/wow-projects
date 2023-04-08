@@ -74,7 +74,7 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getDotDamageDoneMultiplier()).isEqualTo(1.31);
 
 		assertThat(underTest.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
-		assertThat(underTest.getSpellCoeffDoT()).isEqualTo(0.2, PRECISION);
+		assertThat(underTest.getSpellCoeffDoT()).isEqualTo(0, PRECISION);
 
 		assertThat(underTest.getCastTime()).isEqualTo(1.94, PRECISION);
 		assertThat(underTest.getGcd()).isEqualTo(1.16, PRECISION);
@@ -87,6 +87,21 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getCooldown()).isZero();
 		assertThat(underTest.getThreatPct()).isEqualTo(88);
 		assertThat(underTest.getPushbackPct()).isEqualTo(30);
+	}
+
+	@Test
+	void testDotsHaveNoCrit() {
+		Spell spell = getSpell(CORRUPTION);
+		Character character = getCharacter();
+
+		Attributes attributes = Attributes.of();
+
+		Snapshot underTest = new Snapshot(spell, character, attributes);
+
+		assertThat(underTest.getTotalCrit()).isZero();
+		assertThat(underTest.getCritChance()).isZero();
+		assertThat(underTest.getCritCoeff()).isZero();
+		assertThat(underTest.getSpellCoeffDirect()).isZero();
 	}
 
 	@Test
