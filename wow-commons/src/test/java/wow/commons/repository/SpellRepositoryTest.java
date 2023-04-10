@@ -227,6 +227,8 @@ class SpellRepositoryTest extends RepositoryTest {
 
 		assertThat(buffNames).hasSameElementsAs(List.of(
 				"Arcane Brilliance",
+				"Prayer of Fortitude",
+				"Prayer of Spirit",
 				"Gift of the Wild",
 				"Greater Blessing of Kings",
 				"Fel Armor",

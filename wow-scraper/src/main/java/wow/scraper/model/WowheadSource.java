@@ -16,7 +16,8 @@ public enum WowheadSource {
 	DROP(2),
 	PVP_ARENA(3),
 	QUEST(4),
-	BADGES(5);
+	BADGES(5),
+	FISHING(16);
 
 	private final int code;
 

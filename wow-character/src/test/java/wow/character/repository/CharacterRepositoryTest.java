@@ -53,13 +53,13 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(baseStatInfo.getLevel()).isEqualTo(70);
 		assertThat(baseStatInfo.getCharacterClassId()).isEqualTo(WARLOCK);
 		assertThat(baseStatInfo.getRaceId()).isEqualTo(ORC);
-		assertThat(baseStatInfo.getBaseStrength()).isEqualTo(48);
-		assertThat(baseStatInfo.getBaseAgility()).isEqualTo(47);
+		assertThat(baseStatInfo.getBaseStrength()).isEqualTo(54);
+		assertThat(baseStatInfo.getBaseAgility()).isEqualTo(55);
 		assertThat(baseStatInfo.getBaseStamina()).isEqualTo(78);
 		assertThat(baseStatInfo.getBaseIntellect()).isEqualTo(130);
-		assertThat(baseStatInfo.getBaseSpirit()).isEqualTo(114);
-		assertThat(baseStatInfo.getBaseHP()).isEqualTo(1964);
-		assertThat(baseStatInfo.getBaseMana()).isEqualTo(2698);
+		assertThat(baseStatInfo.getBaseSpirit()).isEqualTo(142);
+		assertThat(baseStatInfo.getBaseHP()).isEqualTo(4090);
+		assertThat(baseStatInfo.getBaseMana()).isEqualTo(4285);
 		assertThat(baseStatInfo.getBaseSpellCritPct().getValue()).isEqualTo(3.29, PRECISION);
 		assertThat(baseStatInfo.getIntellectPerCritPct()).isEqualTo(80, PRECISION);
 	}
@@ -98,7 +98,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(buildTemplate.getActivePet()).isNull();
 		assertThat(buildTemplate.getBuffSets()).isEqualTo(Map.of(
 				SELF_BUFFS, List.of("Fel Armor", "Touch of Shadow"),
-				PARTY_BUFFS, List.of("Arcane Brilliance", "Gift of the Wild", "Greater Blessing of Kings"),
+				PARTY_BUFFS, List.of("Arcane Brilliance", "Prayer of Fortitude", "Prayer of Spirit", "Gift of the Wild", "Greater Blessing of Kings"),
 				RAID_BUFFS, List.of("Curse of the Elements", "Wrath of Air Totem", "Totem of Wrath"),
 				WORLD_BUFFS, List.of(),
 				CONSUMES, List.of("Well Fed (sp)", "Brilliant Wizard Oil", "Flask of Pure Death")

@@ -3,8 +3,7 @@ package wow.scraper;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.excel.ItemBaseExcelBuilder;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
-import wow.scraper.model.WowheadItemCategory;
+import wow.scraper.model.*;
 import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 import wow.scraper.parsers.tooltip.GemTooltipParser;
@@ -14,6 +13,8 @@ import wow.scraper.parsers.tooltip.TradedItemParser;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -121,9 +122,43 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		var parser = parserCreator.create(itemDetailsAndTooltip, gameVersion);
 
 		parser.parse();
+		fixMissingRequiredLevel(parser);
 		parsedDataExporter.export(parser);
 
 		log.info("Added {} {} [{}]", parser.getItemId(), parser.getName(), gameVersion);
+	}
+
+	private void fixMissingRequiredLevel(AbstractTooltipParser parser) {
+		if (parser.getRequiredLevel() != null) {
+			return;
+		}
+
+		for (WowheadQuestInfo questInfo : getQuestInfos(parser)) {
+			if (questInfo.getRequiredLevel() != null) {
+				parser.setRequiredLevel(questInfo.getRequiredLevel());
+			}
+			if (questInfo.getRequiredSide() != null) {
+				parser.setRequiredSide(questInfo.getRequiredSide());
+			}
+		}
+	}
+
+	private List<WowheadQuestInfo> getQuestInfos(AbstractTooltipParser parser) {
+		return parser.getItemDetailsAndTooltip().getDetails().getSourcesOf(WowheadSource.QUEST).stream()
+				.map(JsonSourceMore::getTi)
+				.filter(Objects::nonNull)
+				.map(this::getWowheadQuestInfo)
+				.flatMap(Optional::stream)
+				.toList();
+	}
+
+	private Optional<WowheadQuestInfo> getWowheadQuestInfo(Integer questId) {
+		try {
+			return getQuestInfoRepository().getQuestInfo(getGameVersion(), questId);
+		} catch (IOException e) {
+			log.error("Error accessing quest info: " + questId, e);
+			return Optional.empty();
+		}
 	}
 
 	private List<Integer> getItemIds(WowheadItemCategory category) {

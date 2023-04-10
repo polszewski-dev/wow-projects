@@ -6,10 +6,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.Side;
+import wow.commons.util.CollectionUtil;
 import wow.scraper.model.WowheadItemQuality;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -47,6 +50,9 @@ public class ScraperConfig {
 	@Value("#{${pvp.item.name.parts}}")
 	private List<String> pvpItemNameParts;
 
+	@Value("#{${pvp.item.ids}}")
+	private Set<Integer> pvpItemIds;
+
 	@Value("#{'${world.drop.overrides}'.split(',')}")
 	private List<Integer> worldDropOverrides;
 
@@ -61,4 +67,14 @@ public class ScraperConfig {
 
 	@Value("#{${phase.overrides}}")
 	private Map<Integer, PhaseId> phaseOverrides;
+
+	@Value("#{${required.side.overrides}}")
+	private Map<Side, Set<Integer>> requiredSideOverrides;
+
+	public Optional<Side> getRequiredSideOverride(int itemId) {
+		return requiredSideOverrides.entrySet().stream()
+				.filter(x -> x.getValue().contains(itemId))
+				.map(Map.Entry::getKey)
+				.collect(CollectionUtil.toOptionalSingleton());
+	}
 }

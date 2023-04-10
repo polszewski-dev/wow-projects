@@ -40,9 +40,9 @@ class CalculationServiceTest extends ServiceTest {
 		Spell spell = character.getRotation().getFiller();
 		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
-		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(89);
-		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(130);
-		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(108);
+		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(88);
+		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(131);
+		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(136);
 
 		assertThat(snapshot.getTotalCrit()).isEqualTo(11.29, PRECISION);
 		assertThat(snapshot.getTotalHit()).isEqualTo(0, PRECISION);
@@ -77,11 +77,11 @@ class CalculationServiceTest extends ServiceTest {
 		Spell spell = character.getRotation().getFiller();
 		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
-		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(115);
-		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(202);
-		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(155);
+		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(212);
+		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(203);
+		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(239);
 
-		assertThat(snapshot.getTotalCrit()).isEqualTo(15.82, PRECISION);
+		assertThat(snapshot.getTotalCrit()).isEqualTo(15.83, PRECISION);
 		assertThat(snapshot.getTotalHit()).isEqualTo(3, PRECISION);
 		assertThat(snapshot.getTotalHaste()).isEqualTo(0, PRECISION);
 
@@ -114,11 +114,11 @@ class CalculationServiceTest extends ServiceTest {
 		Spell spell = character.getRotation().getFiller();
 		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
 
-		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
-		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(619);
-		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(161);
+		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(797);
+		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(620);
+		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(245);
 
-		assertThat(snapshot.getTotalCrit()).isEqualTo(35.30, PRECISION);
+		assertThat(snapshot.getTotalCrit()).isEqualTo(35.31, PRECISION);
 		assertThat(snapshot.getTotalHit()).isEqualTo(15.99, PRECISION);
 		assertThat(snapshot.getTotalHaste()).isEqualTo(28.88, PRECISION);
 
@@ -226,12 +226,12 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(stats.getHitRating()).isEqualTo(164);
 		assertThat(stats.getHitPct()).isEqualTo(16.00, PRECISION);
 		assertThat(stats.getCritRating()).isEqualTo(331);
-		assertThat(stats.getCritPct()).isEqualTo(30.30, PRECISION);
+		assertThat(stats.getCritPct()).isEqualTo(30.31, PRECISION);
 		assertThat(stats.getHasteRating()).isEqualTo(426);
 		assertThat(stats.getHastePct()).isEqualTo(27.03, PRECISION);
-		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
-		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(619);
-		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(161);
+		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(797);
+		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(620);
+		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(245);
 	}
 
 	@Test
@@ -247,12 +247,12 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(stats.getHitRating()).isEqualTo(164);
 		assertThat(stats.getHitPct()).isEqualTo(12.99, PRECISION);
 		assertThat(stats.getCritRating()).isEqualTo(317);
-		assertThat(stats.getCritPct()).isEqualTo(25.29, PRECISION);
+		assertThat(stats.getCritPct()).isEqualTo(25.30, PRECISION);
 		assertThat(stats.getHasteRating()).isEqualTo(426);
 		assertThat(stats.getHastePct()).isEqualTo(27.03, PRECISION);
-		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(627);
-		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(509);
-		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(114);
+		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(626);
+		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(510);
+		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(142);
 	}
 
 	@Test
@@ -268,12 +268,12 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(stats.getHitRating()).isEqualTo(164);
 		assertThat(stats.getHitPct()).isEqualTo(13.00, PRECISION);
 		assertThat(stats.getCritRating()).isEqualTo(317);
-		assertThat(stats.getCritPct()).isEqualTo(22.29, PRECISION);
+		assertThat(stats.getCritPct()).isEqualTo(22.30, PRECISION);
 		assertThat(stats.getHasteRating()).isEqualTo(426);
 		assertThat(stats.getHastePct()).isEqualTo(27.03, PRECISION);
-		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(546);
-		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(509);
-		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(120);
+		assertThat(stats.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(545);
+		assertThat(stats.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(510);
+		assertThat(stats.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(150);
 	}
 
 	@Test

@@ -78,7 +78,6 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(item.getCharacterRestriction().getProfessionRestriction().getProfessionId()).isEqualTo(TAILORING);
 		assertThat(item.getCharacterRestriction().getProfessionRestriction().getLevel()).isEqualTo(350);
 		assertThat(item.getIcon()).isEqualTo("inv_chest_cloth_02");
-		assertThat(item.getTooltip()).isNotBlank();
 		assertThat(item.getItemType()).isEqualTo(CHEST);
 		assertThat(item.getItemSubType()).isEqualTo(CLOTH);
 		assertThat(item.getItemSet()).isNull();
@@ -169,7 +168,6 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(gem.getTimeRestriction().getPhaseId()).isEqualTo(TBC_P5);
 		assertThat(gem.getCharacterRestriction().getLevel()).isNull();
 		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
-		assertThat(gem.getTooltip()).isNotBlank();
 	}
 
 	@Test

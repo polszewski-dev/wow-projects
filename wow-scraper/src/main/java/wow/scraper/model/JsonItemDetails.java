@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,4 +96,16 @@ public class JsonItemDetails {
 
 	@JsonProperty(value = "sourcemore")
 	private List<JsonSourceMore> sourceMores;
+
+	public List<JsonSourceMore> getSourcesOf(WowheadSource source) {
+		List<JsonSourceMore> result = new ArrayList<>();
+
+		for (int i = 0; i < sources.size(); i++) {
+			if (sources.get(i) == source.getCode() && sourceMores != null && !sourceMores.isEmpty()) {
+				result.add(sourceMores.get(i));
+			}
+		}
+
+		return result;
+	}
 }

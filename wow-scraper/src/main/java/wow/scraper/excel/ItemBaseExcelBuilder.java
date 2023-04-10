@@ -11,6 +11,7 @@ import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.Side;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.scraper.classifiers.PveRoleStatClassifier;
 import wow.scraper.config.ScraperConfig;
@@ -73,7 +74,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	public void add(ItemTooltipParser parser) {
-		if (parser.isRandomEnchantment()) {
+		if (parser.isRandomEnchantment() || isToBeIgnored(parser.getItemId())) {
 			return;
 		}
 		itemParserQueue.add(parser);
@@ -81,6 +82,9 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	public void add(GemTooltipParser parser) {
+		if (isToBeIgnored(parser.getItemId())) {
+			return;
+		}
 		writeGemRow(parser);
 	}
 
@@ -93,7 +97,10 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	private void writeTradedItemRow(TradedItemParser parser) {
-		writeCommonColumns(parser, null);
+		if (isToBeIgnored(parser.getItemId())) {
+			return;
+		}
+		writeCommonColumns(parser);
 		setValue(parser.getRequiredLevel());
 		setValue(parser.getRequiredClass());
 		writeIconAndTooltip(parser);
@@ -119,11 +126,11 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	private void writeItemRow(ItemTooltipParser parser) {
-		writeCommonColumns(parser, parser.getRequiredFactionName());
+		writeCommonColumns(parser);
 		setValue(parser.getRequiredLevel());
 		setValue(getRequiredClass(parser));
 		setValue(parser.getRequiredRace());
-		setValue(parser.getRequiredSide());
+		setValue(getRequiredSide(parser));
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getRequiredProfessionSpec());
@@ -134,6 +141,11 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		writeAttributes(parser.getStatParser().getParsedStats(), ITEM_MAX_STATS);
 		writeIconAndTooltip(parser);
 		writer.nextRow();
+	}
+
+	private Side getRequiredSide(AbstractTooltipParser parser) {
+		return config.getRequiredSideOverride(parser.getItemId())
+				.orElse(parser.getRequiredSide());
 	}
 
 	private List<CharacterClassId> getRequiredClass(ItemTooltipParser parser) {
@@ -178,6 +190,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		writeCommonHeader();
 		setHeader(REQ_PROFESSION);
 		setHeader(REQ_PROFESSION_LEVEL);
+		setHeader(REQ_SIDE);
 		setHeader(PVE_ROLES);
 		setHeader(GEM_COLOR);
 		writeAttributeHeader("", GEM_MAX_STATS);
@@ -187,9 +200,10 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 	}
 
 	private void writeGemRow(GemTooltipParser parser) {
-		writeCommonColumns(parser, null);
+		writeCommonColumns(parser);
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
+		setValue(getRequiredSide(parser));
 		writePveRoles(parser.getStats());
 		setValue(parser.getColor());
 		writeAttributes(parser.getStats(), GEM_MAX_STATS);
@@ -212,7 +226,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader(REQ_PHASE);
 	}
 
-	private void writeCommonColumns(AbstractTooltipParser parser, String requiredFactionName) {
+	private void writeCommonColumns(AbstractTooltipParser parser) {
 		setValue(parser.getItemId());
 		setValue(parser.getName());
 		setValue(parser.getItemType());
@@ -221,14 +235,23 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getBinding());
 		setValue(parser.isUnique() ? 1 : 0);
 		setValue(parser.getItemLevel());
-		setValue(parseSource(requiredFactionName, parser));
+		setValue(parseSource(parser));
 		setValue(parser.getGameVersion());
 		setValue(getPhase(parser));
 	}
 
+	private boolean isToBeIgnored(int itemId) {
+		return config.getIgnoredItemIds().contains(itemId);
+	}
+
 	private PhaseId getPhase(AbstractTooltipParser parser) {
-		PhaseId phase = config.getPhaseOverrides().get(parser.getItemId());
-		return phase != null ? phase : parser.getPhase();
+		PhaseId phaseOverride = config.getPhaseOverrides().get(parser.getItemId());
+		PhaseId phase = parser.getPhase();
+
+		if (phaseOverride != null && phaseOverride.getGameVersionId() == phase.getGameVersionId()) {
+			return phaseOverride;
+		}
+		return phase;
 	}
 
 	private void writeAttributeHeader(String prefix, int maxAttributes) {
@@ -276,7 +299,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 
 	private void writeIconAndTooltip(AbstractTooltipParser parser) {
 		setValue(parser.getIcon());
-		setValue(parser.getTooltip());
+		setValue("");
 	}
 
 	private final List<ItemTooltipParser> itemParserQueue = new ArrayList<>();
@@ -341,11 +364,8 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		return WowheadItemQuality.fromCode(quality).getItemRarity();
 	}
 
-	private static String parseSource(String requiredFactionName, AbstractTooltipParser parser) {
-		if (requiredFactionName != null) {
-			return WowheadSourceParser.sourceFaction(requiredFactionName);
-		}
-		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getItemDetailsAndTooltip());
+	private static String parseSource(AbstractTooltipParser parser) {
+		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getItemDetailsAndTooltip(), parser.getRequiredFactionName());
 		List<String> sources = sourceParser.getSource();
 		return String.join("#", sources);
 	}

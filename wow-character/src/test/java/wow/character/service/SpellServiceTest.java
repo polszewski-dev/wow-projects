@@ -35,6 +35,8 @@ class SpellServiceTest extends WowCharacterSpringTest {
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Arcane Brilliance",
+				"Prayer of Fortitude",
+				"Prayer of Spirit",
 				"Gift of the Wild",
 				"Greater Blessing of Kings",
 				"Fel Armor",

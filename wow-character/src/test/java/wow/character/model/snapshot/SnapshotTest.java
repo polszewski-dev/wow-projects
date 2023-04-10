@@ -25,9 +25,9 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getBaseStatsPct()).isEqualTo(10);
 		assertThat(underTest.getStaminaPct()).isEqualTo(15);
 		assertThat(underTest.getSpiritPct()).isEqualTo(-5);
-		assertThat(underTest.getStamina()).isEqualTo(540);
-		assertThat(underTest.getIntellect()).isEqualTo(543);
-		assertThat(underTest.getSpirit()).isEqualTo(134);
+		assertThat(underTest.getStamina()).isEqualTo(618);
+		assertThat(underTest.getIntellect()).isEqualTo(544);
+		assertThat(underTest.getSpirit()).isEqualTo(214);
 		assertThat(underTest.getBaseStats()).isEqualTo(20);
 	}
 
@@ -42,7 +42,7 @@ class SnapshotTest extends WowCharacterSpringTest {
 		assertThat(underTest.getHitRating()).isEqualTo(164);
 		assertThat(underTest.getHitPct()).isEqualTo(3);
 		assertThat(underTest.getCritRating()).isEqualTo(331);
-		assertThat(underTest.getCritPct()).isEqualTo(14.29);
+		assertThat(underTest.getCritPct()).isEqualTo(14.3);
 		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
 		assertThat(underTest.getCritDamagePct()).isEqualTo(3);
 		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(100);
@@ -62,11 +62,11 @@ class SnapshotTest extends WowCharacterSpringTest {
 	void everythingSnapshot() {
 		Snapshot underTest = getSnapshot();
 
-		assertThat(underTest.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(700);
-		assertThat(underTest.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(619);
-		assertThat(underTest.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(161);
+		assertThat(underTest.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(797);
+		assertThat(underTest.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(620);
+		assertThat(underTest.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(245);
 
-		assertThat(underTest.getTotalCrit()).isEqualTo(35.30, PRECISION);
+		assertThat(underTest.getTotalCrit()).isEqualTo(35.31, PRECISION);
 		assertThat(underTest.getTotalHit()).isEqualTo(15.99, PRECISION);
 		assertThat(underTest.getTotalHaste()).isEqualTo(28.88, PRECISION);
 

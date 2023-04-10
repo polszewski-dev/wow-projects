@@ -13,11 +13,12 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Getter
 public enum GameVersionId {
-	VANILLA(60),
-	TBC(70),
-	WOTLK(80);
+	VANILLA(60, 4),
+	TBC(70, 5),
+	WOTLK(80, 6);
 
 	private final int maxLevel;
+	private final int dataEnv;
 
 	public static GameVersionId parse(String value) {
 		return EnumUtil.parse(value, values());

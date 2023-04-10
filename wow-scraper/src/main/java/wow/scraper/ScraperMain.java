@@ -2,10 +2,13 @@ package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.Side;
 import wow.scraper.model.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 /**
@@ -35,6 +38,7 @@ public class ScraperMain extends ScraperTool {
 		fetch("items/armor/off-hand-frills", WowheadItemCategory.OFF_HANDS);
 		fetch("items/weapons/daggers", WowheadItemCategory.DAGGERS);
 		fetch("items/weapons/one-handed-swords", WowheadItemCategory.ONE_HANDED_SWORDS);
+		fetch("items/weapons/one-handed-maces", WowheadItemCategory.ONE_HANDED_MACES);
 		fetch("items/weapons/staves", WowheadItemCategory.STAVES);
 		fetch("items/weapons/wands", WowheadItemCategory.WANDS);
 		if (getGameVersion() != GameVersionId.VANILLA) {
@@ -120,15 +124,68 @@ public class ScraperMain extends ScraperTool {
 		}
 
 		try {
-			WowheadItemInfo itemInfo = getWowheadFetcher().fetchTooltip(getGameVersion(), itemDetails.getId());
+			WowheadItemInfo itemInfo = getWowheadFetcher().fetchItemTooltip(getGameVersion(), itemDetails.getId());
 			String tooltip = fixTooltip(itemInfo.getTooltip());
 			String icon = itemInfo.getIcon();
 			JsonItemDetailsAndTooltip detailsAndTooltip = new JsonItemDetailsAndTooltip(itemDetails, tooltip, icon);
 			getItemDetailRepository().saveItemDetail(getGameVersion(), category, itemDetails.getId(), detailsAndTooltip);
 			log.info("Fetched tooltip for item id: {} [{}]", itemDetails.getId(), itemDetails.getName());
+			fetchSourceQuest(itemDetails);
 		} catch (IOException e) {
 			log.error("Error while fetching tooltip for item id: {} [{}]: {}", itemDetails.getId(), itemDetails.getName(), e.getMessage());
 		}
+	}
+
+	private void fetchSourceQuest(JsonItemDetails itemDetails) throws IOException {
+		for (var questSource : itemDetails.getSourcesOf(WowheadSource.QUEST)) {
+			processSourceQuest(questSource, itemDetails);
+		}
+	}
+
+	private void processSourceQuest(JsonSourceMore sourceMore, JsonItemDetails itemDetails) throws IOException {
+		Integer questId = sourceMore.getTi();
+
+		if (questId == null) {
+			log.error("No Ti field for {}", itemDetails.getId());
+			return;
+		}
+
+		if (getQuestInfoRepository().hasQuestInfo(getGameVersion(), questId)) {
+			log.info("Tooltip for quest {} already exists", questId);
+			return;
+		}
+
+		String questHtml = getWowheadFetcher().fetchRaw(getGameVersion(), "quest=" + questId);
+
+		getQuestInfoRepository().saveQuestInfo(getGameVersion(), questId, parseQuestInfo(questHtml));
+
+		log.info("Fetched tooltip for quest {}", questId);
+	}
+
+	private WowheadQuestInfo parseQuestInfo(String questHtml) {
+		var questInfo = new WowheadQuestInfo();
+		questInfo.setHtml(questHtml);
+		questInfo.setRequiredLevel(parseQuestRequiredLevel(questHtml));
+		questInfo.setRequiredSide(parseRequiredSide(questHtml));
+		return questInfo;
+	}
+
+	private Integer parseQuestRequiredLevel(String html) {
+		Pattern pattern = Pattern.compile("\\[li]Requires level (\\d+)\\[\\\\/li]");
+		Matcher matcher = pattern.matcher(html);
+		if (matcher.find()) {
+			return Integer.valueOf(matcher.group(1));
+		}
+		return null;
+	}
+
+	private Side parseRequiredSide(String html) {
+		Pattern pattern = Pattern.compile("\\[li]Side: \\[span class=icon-.+](Horde|Alliance)\\[\\\\/span]\\[\\\\/li]");
+		Matcher matcher = pattern.matcher(html);
+		if (matcher.find()) {
+			return Side.parse(matcher.group(1));
+		}
+		return null;
 	}
 
 	private String fixTooltip(String tooltip) {

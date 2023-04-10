@@ -92,7 +92,7 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleProfessionRestriction = Rule.
 			regex("Requires (Alchemy|Enchanting|Jewelcrafting|Tailoring|Leatherworking|Blacksmithing|Engineering) \\((\\d+)\\)", this::parseRequiredProfession);
 	protected final Rule ruleProfessionSpecializationRestriction = Rule.
-			regex("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", this::parseRequiredProfessionSpec);
+			regex("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Master Hammersmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", this::parseRequiredProfessionSpec);
 	protected final Rule ruleDurability = Rule.
 			matches("Durability \\d+ / \\d+", x -> {});
 	protected final Rule ruleDroppedBy = Rule.
@@ -190,6 +190,7 @@ public abstract class AbstractTooltipParser {
 			case "Gnomish Engineer" -> GNOMISH_ENGINEER;
 			case "Goblin Engineer" -> GOBLIN_ENGINEER;
 			case "Master Swordsmith" -> MASTER_SWORDSMITH;
+			case "Master Hammersmith" -> MASTER_HAMMERSMITH;
 			case "Mooncloth Tailoring" -> MOONCLOTH_TAILORING;
 			case "Shadoweave Tailoring" -> SHADOWEAVE_TAILORING;
 			case "Spellfire Tailoring" -> SPELLFIRE_TAILORING;
@@ -244,6 +245,20 @@ public abstract class AbstractTooltipParser {
 				.map(String::trim)
 				.filter(x -> !x.isBlank())
 				.toList();
+	}
+
+	public void setRequiredLevel(Integer requiredLevel) {
+		if (this.requiredLevel != null && this.requiredLevel != (int)requiredLevel) {
+			throw new IllegalArgumentException();
+		}
+		this.requiredLevel = requiredLevel;
+	}
+
+	public void setRequiredSide(Side requiredSide) {
+		if (this.requiredSide != null && this.requiredSide != requiredSide) {
+			throw new IllegalArgumentException();
+		}
+		this.requiredSide = requiredSide;
 	}
 
 	protected void unmatchedLine(String line) {

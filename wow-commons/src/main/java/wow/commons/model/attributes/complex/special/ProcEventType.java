@@ -15,4 +15,13 @@ public enum ProcEventType {
 	public static ProcEventType parse(String value) {
 		return EnumUtil.parse(value, values());
 	}
+
+	public double getProcChance(double hitChance, double critChance) {
+		return switch (this) {
+			case SPELL_HIT -> hitChance;
+			case SPELL_CRIT -> critChance;
+			case SPELL_RESIST -> 1 - hitChance;
+			case SPELL_DAMAGE -> 1;
+		};
+	}
 }

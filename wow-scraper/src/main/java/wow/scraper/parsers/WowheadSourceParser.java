@@ -24,14 +24,16 @@ public class WowheadSourceParser {
 	private final JsonItemDetails itemDetails;
 	private final List<WowheadSource> sources;
 	private final List<JsonSourceMore> sourceMores;
+	private final String requiredFactionName;
 
-	public WowheadSourceParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip) {
+	public WowheadSourceParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, String requiredFactionName) {
 		this.itemDetails = itemDetailsAndTooltip.getDetails();
 		this.sources = itemDetails.getSources()
 				.stream()
 				.map(WowheadSource::fromCode)
 				.toList();
 		this.sourceMores = itemDetails.getSourceMores();
+		this.requiredFactionName = requiredFactionName;
 	}
 
 	public static void configure(ScraperConfig scraperConfig) {
@@ -45,6 +47,10 @@ public class WowheadSourceParser {
 			return new ArrayList<>(overrides);
 		}
 
+		if (requiredFactionName != null) {
+			return List.of(sourceFaction(requiredFactionName));
+		}
+
 		if (sources.size() != 1) {
 			log.error("Multiple sources for: " + getName());
 		}
@@ -55,6 +61,7 @@ public class WowheadSourceParser {
 			case BADGES -> List.of(parseSingleBadges());
 			case QUEST -> List.of(parseSingleQuest());
 			case DROP -> List.of(parseSingleSourceDrop());
+			case FISHING -> List.of(parseFishing());
 		};
 	}
 
@@ -103,6 +110,10 @@ public class WowheadSourceParser {
 		}
 
 		return sourceQuest(sourceMore.getN());
+	}
+
+	private String parseFishing() {
+		return sourceCrafted(ProfessionId.FISHING);
 	}
 
 	private static String sourceBossDrop(String bossName, Integer bossId, Integer zoneId) {
@@ -158,10 +169,11 @@ public class WowheadSourceParser {
 
 	private static class SourceOverrides {
 		private final List<String> pvpItemNameParts = new ArrayList<>();
+		private final Set<Integer> pvpItemIds = new HashSet<>();
 		private final Map<Integer, Set<String>> itemIdToSources = new HashMap<>();
 
 		public Set<String> getSources(int itemId, String itemName) {
-			if (isPvPItemName(itemName)) {
+			if (pvpItemIds.contains(itemId) || isPvPItemName(itemName)) {
 				return Set.of(SOURCE_PVP);
 			}
 
@@ -169,11 +181,19 @@ public class WowheadSourceParser {
 		}
 
 		private boolean isPvPItemName(String name) {
-			return pvpItemNameParts.stream().anyMatch(name::contains);
+			return pvpItemNameParts.stream().anyMatch(x -> isMatches(name, x));
+		}
+
+		private boolean isMatches(String name, String pattern) {
+			if (pattern.startsWith("^")) {
+				return name.startsWith(pattern.substring(1));
+			}
+			return name.contains(pattern);
 		}
 
 		public void addSourceOverrides(ScraperConfig config) {
 			pvpItemNameParts.addAll(config.getPvpItemNameParts());
+			pvpItemIds.addAll(config.getPvpItemIds());
 			addWorldDropOverrides(config);
 			addBossDropOverrides(config.getBossDropOverrides());
 			addTradedForOverrides(config.getTokenToTradedFor(), WowheadSourceParser::sourceToken);

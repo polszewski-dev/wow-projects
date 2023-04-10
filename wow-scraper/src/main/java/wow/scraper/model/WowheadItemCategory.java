@@ -31,6 +31,7 @@ public enum WowheadItemCategory {
 
 	DAGGERS,
 	ONE_HANDED_SWORDS,
+	ONE_HANDED_MACES,
 	STAVES,
 	WANDS,
 

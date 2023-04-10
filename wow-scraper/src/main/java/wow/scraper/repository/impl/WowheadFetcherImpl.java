@@ -53,6 +53,13 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
+	@Override
+	public String fetchRaw(GameVersionId gameVersion, String urlPart) throws IOException {
+		String urlStr = getRootUrlStr(gameVersion) + urlPart;
+
+		return fetchPage(urlStr);
+	}
+
 	private String fetchAndParse(GameVersionId gameVersion, String urlPart, Pattern itemListPattern) throws IOException {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 		String html = fetchPage(urlStr);
@@ -88,10 +95,14 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	}
 
 	@Override
-	public WowheadItemInfo fetchTooltip(GameVersionId gameVersion, int itemId) throws IOException {
-		String urlStr = getTooltipUrlStr(gameVersion, itemId);
+	public WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id) throws IOException {
+		return fetchTooltip(gameVersion, "item", id, WowheadItemInfo.class);
+	}
+
+	private <T> T fetchTooltip(GameVersionId gameVersion, String type, int id, Class<T> clazz) throws IOException {
+		String urlStr = getTooltipUrlStr(gameVersion, type, id);
 		URL url = new URL(urlStr);
-		return MAPPER.readValue(url, WowheadItemInfo.class);
+		return MAPPER.readValue(url, clazz);
 	}
 
 	private String getRootUrlStr(GameVersionId gameVersion) {
@@ -102,13 +113,8 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 		};
 	}
 
-	private String getTooltipUrlStr(GameVersionId gameVersion, int itemId) {
-		String urlStr = switch (gameVersion) {
-			case VANILLA -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=4&locale=0";
-			case TBC -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=5&locale=0";
-			case WOTLK -> "https://nether.wowhead.com/tooltip/item/%s?dataEnv=6&locale=0";
-		};
-
-		return String.format(urlStr, itemId);
+	private String getTooltipUrlStr(GameVersionId gameVersion, String type, int id) {
+		final String urlFormat = "https://nether.wowhead.com/tooltip/%s/%s?dataEnv=%s&locale=0";
+		return urlFormat.formatted(type, id, gameVersion.getDataEnv());
 	}
 }
