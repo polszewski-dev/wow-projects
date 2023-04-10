@@ -3,6 +3,7 @@ package wow.character.model.build;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.character.CharacterProfession;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestricted;

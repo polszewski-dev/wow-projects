@@ -10,10 +10,7 @@ import org.springframework.web.filter.CorsFilter;
 import wow.character.service.ItemService;
 import wow.character.service.impl.CachedItemService;
 import wow.character.service.impl.ItemServiceImpl;
-import wow.character.service.impl.classifiers.PveRoleStatClassifier;
 import wow.commons.repository.ItemRepository;
-
-import java.util.List;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
@@ -27,8 +24,8 @@ public class WowMinmaxApplication {
 	}
 
 	@Bean
-	public ItemService itemService(ItemRepository itemRepository, List<PveRoleStatClassifier> pveRoleStatClassifies) {
-		return new CachedItemService(new ItemServiceImpl(itemRepository, pveRoleStatClassifies));
+	public ItemService itemService(ItemRepository itemRepository) {
+		return new CachedItemService(new ItemServiceImpl(itemRepository));
 	}
 
 	@Bean

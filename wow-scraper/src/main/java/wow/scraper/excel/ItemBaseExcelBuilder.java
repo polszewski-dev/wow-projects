@@ -12,6 +12,7 @@ import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
+import wow.scraper.classifiers.PveRoleStatClassifier;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.WowheadSourceParser;
@@ -108,6 +109,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader(REQ_PROFESSION);
 		setHeader(REQ_PROFESSION_LEVEL);
 		setHeader(REQ_PROFESSION_SPEC);
+		setHeader(PVE_ROLES);
 		setHeader(ITEM_SOCKET_TYPES);
 		writeAttributeHeader(SOCKET_BONUS_PREFIX, SOCKET_BONUS_MAX_STATS);
 		setHeader(ITEM_ITEM_SET, 30);
@@ -125,6 +127,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getRequiredProfessionSpec());
+		writePveRoles(parser.getStatParser().getParsedStats());
 		setValue(parser.getSocketTypes());
 		writeAttributes(parser.getSocketBonus(), SOCKET_BONUS_MAX_STATS);
 		setValue(parser.getItemSetName());
@@ -175,6 +178,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		writeCommonHeader();
 		setHeader(REQ_PROFESSION);
 		setHeader(REQ_PROFESSION_LEVEL);
+		setHeader(PVE_ROLES);
 		setHeader(GEM_COLOR);
 		writeAttributeHeader("", GEM_MAX_STATS);
 		setHeader(GEM_META_ENABLERS, 20);
@@ -186,6 +190,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		writeCommonColumns(parser, null);
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
+		writePveRoles(parser.getStats());
 		setValue(parser.getColor());
 		writeAttributes(parser.getStats(), GEM_MAX_STATS);
 		setValue(parser.getMetaEnablers());
@@ -258,6 +263,10 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		}
 
 		fillRemainingEmptyCols(2 * (maxAttributes - colNo));
+	}
+
+	private void writePveRoles(Attributes attributes) {
+		setValue(PveRoleStatClassifier.classify(attributes));
 	}
 
 	private void writeIconAndTooltipHeader() {

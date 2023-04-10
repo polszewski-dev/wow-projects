@@ -6,10 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import wow.character.service.ItemService;
 import wow.character.service.impl.CachedItemService;
 import wow.character.service.impl.ItemServiceImpl;
-import wow.character.service.impl.classifiers.PveRoleStatClassifier;
 import wow.commons.repository.ItemRepository;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -22,7 +19,7 @@ import java.util.List;
 @PropertySource("classpath:test.properties")
 public class WowCharacterSpringTestConfig {
 	@Bean
-	public ItemService itemService(ItemRepository itemRepository, List<PveRoleStatClassifier> pveRoleStatClassifies) {
-		return new CachedItemService(new ItemServiceImpl(itemRepository, pveRoleStatClassifies));
+	public ItemService itemService(ItemRepository itemRepository) {
+		return new CachedItemService(new ItemServiceImpl(itemRepository));
 	}
 }

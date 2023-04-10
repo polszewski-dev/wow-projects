@@ -1,12 +1,14 @@
 package wow.commons.model.item;
 
+import wow.commons.model.categorization.PveRoleClassified;
+
 import java.util.List;
 
 /**
  * User: POlszewski
  * Date: 2021-03-06
  */
-public interface Gem extends AbstractItem {
+public interface Gem extends AbstractItem, PveRoleClassified {
 	GemColor getColor();
 
 	List<MetaEnabler> getMetaEnablers();

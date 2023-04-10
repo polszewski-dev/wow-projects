@@ -2,6 +2,7 @@ package wow.commons.model.item;
 
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.PveRoleClassified;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-02
  */
-public interface Item extends AbstractItem {
+public interface Item extends AbstractItem, PveRoleClassified {
 	ItemSet getItemSet();
 
 	ItemSocketSpecification getSocketSpecification();

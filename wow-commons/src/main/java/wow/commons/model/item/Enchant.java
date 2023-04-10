@@ -2,6 +2,7 @@ package wow.commons.model.item;
 
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.categorization.PveRoleClassified;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-05
  */
-public interface Enchant extends ConfigurationElementWithAttributes<Integer> {
+public interface Enchant extends ConfigurationElementWithAttributes<Integer>, PveRoleClassified {
 	List<ItemType> getItemTypes();
 
 	ItemRarity getRarity();

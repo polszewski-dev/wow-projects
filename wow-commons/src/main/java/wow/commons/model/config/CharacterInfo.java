@@ -1,5 +1,6 @@
 package wow.commons.model.config;
 
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.professions.ProfessionId;
@@ -19,6 +20,8 @@ public interface CharacterInfo {
 	RaceId getRaceId();
 
 	Side getSide();
+
+	PveRole getRole();
 
 	boolean hasProfession(ProfessionId professionId);
 

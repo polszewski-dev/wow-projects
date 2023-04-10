@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
-import wow.character.service.impl.classifiers.PveRoleStatClassifier;
 import wow.character.service.impl.enumerators.FilterOutWorseEnchantChoices;
 import wow.character.service.impl.enumerators.FilterOutWorseGemChoices;
 import wow.character.service.impl.enumerators.GemComboFinder;
@@ -30,8 +29,6 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
 	private final ItemRepository itemRepository;
 
-	private final List<PveRoleStatClassifier> pveRoleStatClassifiers;
-
 	@Override
 	public Item getItem(int itemId, PhaseId phaseId) {
 		return itemRepository.getItem(itemId, phaseId).orElseThrow();
@@ -53,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
 				.filter(item -> character.canEquip(itemSlot, item))
 				.filter(itemFilter::matchesFilter)
 				.filter(item -> item.isAvailableTo(character))
-				.filter(item -> getStatClassifier(character).hasStatsSuitableForRole(item))
+				.filter(item -> item.isSuitableFor(character))
 				.toList();
 	}
 
@@ -61,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
 	public List<Enchant> getEnchants(Character character, ItemType itemType) {
 		return itemRepository.getEnchants(itemType, character.getPhaseId()).stream()
 				.filter(enchant -> enchant.isAvailableTo(character))
-				.filter(enchant -> getStatClassifier(character).hasStatsSuitableForRole(enchant, itemType))
+				.filter(enchant -> enchant.isSuitableFor(character))
 				.toList();
 	}
 
@@ -76,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
 		return itemRepository.getGems(socketType, character.getPhaseId()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
-				.filter(gem -> getStatClassifier(character).hasStatsSuitableForRole(gem))
+				.filter(gem -> gem.isSuitableFor(character))
 				.toList();
 	}
 
@@ -92,12 +89,5 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<Gem[]> getBestGemCombos(Character character, Item item) {
 		return new GemComboFinder(this).getGemCombos(character, item.getSocketSpecification());
-	}
-
-	private PveRoleStatClassifier getStatClassifier(Character character) {
-		return pveRoleStatClassifiers.stream()
-				.filter(x -> x.getRole() == character.getRole())
-				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException("Unsupported role: " + character.getRole()));
 	}
 }

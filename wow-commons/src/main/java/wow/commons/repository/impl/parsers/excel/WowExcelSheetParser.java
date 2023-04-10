@@ -4,6 +4,7 @@ import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.CharacterRestriction;
@@ -21,6 +22,7 @@ import wow.commons.util.AttributesBuilder;
 import wow.commons.util.PrimitiveAttributeSupplier;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 
@@ -195,5 +197,11 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private String substitutePlaceholders(String attributeStr) {
 		String tooltip = colTooltip.getString("no tooltip");
 		return attributeStr.replace("${tooltip}", tooltip);
+	}
+
+	private final ExcelColumn coPveRoles = column("pve_roles");
+
+	protected Set<PveRole> getPveRoles() {
+		return coPveRoles.getSet(PveRole::parse);
 	}
 }

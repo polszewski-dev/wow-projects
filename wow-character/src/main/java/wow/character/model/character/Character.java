@@ -13,6 +13,7 @@ import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
@@ -231,6 +232,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return build.getTalents();
 	}
 
+	@Override
 	public PveRole getRole() {
 		return build.getRole();
 	}

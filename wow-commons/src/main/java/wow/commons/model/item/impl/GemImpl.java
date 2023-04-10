@@ -3,6 +3,7 @@ package wow.commons.model.item.impl;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -12,6 +13,7 @@ import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: POlszewski
@@ -22,6 +24,7 @@ import java.util.List;
 public class GemImpl extends AbstractItemImpl implements Gem {
 	private final GemColor color;
 	private final List<MetaEnabler> metaEnablers;
+	private final Set<PveRole> pveRoles;
 
 	public GemImpl(
 			Integer id,
@@ -30,11 +33,13 @@ public class GemImpl extends AbstractItemImpl implements Gem {
 			CharacterRestriction characterRestriction,
 			BasicItemInfo basicItemInfo,
 			GemColor color,
-			List<MetaEnabler> metaEnablers
+			List<MetaEnabler> metaEnablers,
+			Set<PveRole> pveRoles
 	) {
 		super(id, description, timeRestriction, characterRestriction, basicItemInfo);
 		this.color = color;
 		this.metaEnablers = metaEnablers;
+		this.pveRoles = pveRoles;
 		assertItemType(ItemType.GEM);
 	}
 }

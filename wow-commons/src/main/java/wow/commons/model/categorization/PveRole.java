@@ -1,4 +1,4 @@
-package wow.character.model.build;
+package wow.commons.model.categorization;
 
 import wow.commons.util.EnumUtil;
 

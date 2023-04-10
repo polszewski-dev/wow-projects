@@ -7,6 +7,7 @@ import wow.character.model.Copyable;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.TalentId;

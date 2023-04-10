@@ -38,8 +38,9 @@ public class GemSheetParser extends AbstractItemSheetParser {
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
 		var basicItemInfo = getBasicItemInfo();
+		var pveRoles = getPveRoles();
 
-		var gem = new GemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, color, metaEnablers);
+		var gem = new GemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, color, metaEnablers, pveRoles);
 
 		gem.setAttributes(stats);
 		return gem;
