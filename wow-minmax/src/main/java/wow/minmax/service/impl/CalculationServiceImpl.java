@@ -168,7 +168,9 @@ public class CalculationServiceImpl implements CalculationService {
 				snapshot.getTotalHaste(),
 				snapshot.getStamina(),
 				snapshot.getIntellect(),
-				snapshot.getSpirit()
+				snapshot.getSpirit(),
+				snapshot.getMaxHealth(),
+				snapshot.getMaxMana()
 		);
 	}
 

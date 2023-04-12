@@ -15,5 +15,8 @@ public final class SpellConstants {
 
 	public static final Duration FLIGHT_TIME = Duration.seconds(0.5);
 
+	public static final int HEALTH_PER_STAMINA = 10;
+	public static final int MANA_PER_INTELLECT = 15;
+
 	private SpellConstants() {}
 }

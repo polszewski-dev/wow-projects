@@ -27,7 +27,9 @@ public class CharacterStatsConverter implements Converter<CharacterStats, Charac
 				source.getHastePct(),
 				source.getStamina(),
 				source.getIntellect(),
-				source.getSpirit()
+				source.getSpirit(),
+				source.getMaxHealth(),
+				source.getMaxMana()
 		);
 	}
 }

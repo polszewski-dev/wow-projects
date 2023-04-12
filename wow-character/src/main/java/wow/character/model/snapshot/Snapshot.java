@@ -17,8 +17,7 @@ import java.util.Set;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static wow.commons.constants.SpellConstants.GCD;
-import static wow.commons.constants.SpellConstants.MIN_GCD;
+import static wow.commons.constants.SpellConstants.*;
 
 /**
  * User: POlszewski
@@ -372,5 +371,13 @@ public class Snapshot implements StatProvider {
 		double durationChange = duration - spell.getDotDuration().getSeconds();
 		double tickChange = (int)(durationChange / spell.getTickInterval().getSeconds());
 		return tickChange / spell.getNumTicks();
+	}
+
+	public double getMaxHealth() {
+		return baseStats.getBaseHP() + HEALTH_PER_STAMINA * (stamina - baseStats.getBaseStamina());
+	}
+
+	public double getMaxMana() {
+		return baseStats.getBaseMana() + MANA_PER_INTELLECT * (intellect - baseStats.getBaseIntellect());
 	}
 }

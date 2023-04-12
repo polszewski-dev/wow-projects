@@ -13,4 +13,6 @@ export interface CharacterStats {
 	stamina: number;
 	intellect: number;
 	spirit: number;
+	maxHealth: number;
+	maxMana: number;
 }

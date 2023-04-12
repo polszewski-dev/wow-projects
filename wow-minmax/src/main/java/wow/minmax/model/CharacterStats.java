@@ -24,4 +24,6 @@ public class CharacterStats {
 	private double stamina;
 	private double intellect;
 	private double spirit;
+	private double maxHealth;
+	private double maxMana;
 }
