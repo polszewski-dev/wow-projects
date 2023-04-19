@@ -15,6 +15,10 @@ public enum TalentTree {
 	DEMONOLOGY("Demonology"),
 	DESTRUCTION("Destruction"),
 
+	DISCIPLINE("Discipline"),
+	HOLY("HolyTree"),
+	SHADOW("ShadowTree"),
+
 	MAGE_ARCANE("MageArcane"),
 	MAGE_FIRE("MageFire"),
 	MAGE_FROST("MageFrost");

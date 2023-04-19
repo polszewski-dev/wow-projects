@@ -7,7 +7,8 @@ import wow.commons.util.EnumUtil;
  * Date: 2022-11-14
  */
 public enum PveRole {
-	CASTER_DPS;
+	CASTER_DPS,
+	HEALER;
 
 	public static PveRole parse(String value) {
 		return EnumUtil.parse(value, values());

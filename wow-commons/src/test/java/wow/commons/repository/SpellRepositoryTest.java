@@ -234,6 +234,7 @@ class SpellRepositoryTest extends RepositoryTest {
 				"Fel Armor",
 				"Touch of Shadow",
 				"Burning Wish",
+				"Shadowform",
 				"Brilliant Wizard Oil",
 				"Superior Wizard Oil",
 				"Well Fed (sp)",

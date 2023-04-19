@@ -224,7 +224,7 @@ public class AccumulatedSpellStats {
 		}
 
 		List<SpecialAbility> specialAbilities = new ArrayList<>(attributes.getSpecialAbilities());
-		specialAbilities.sort(Comparator.comparingInt(SpecialAbility::getPriority));
+		specialAbilities.sort(getSpecialAbilityComparator());
 
 		for (SpecialAbility specialAbility : specialAbilities) {
 			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);
@@ -232,5 +232,10 @@ public class AccumulatedSpellStats {
 		}
 
 		return true;
+	}
+
+	private static Comparator<SpecialAbility> getSpecialAbilityComparator() {
+		return Comparator.comparingInt(SpecialAbility::getPriority)
+				.thenComparing(SpecialAbility::toString);
 	}
 }

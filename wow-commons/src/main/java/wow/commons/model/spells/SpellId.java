@@ -14,6 +14,8 @@ public enum SpellId {
 	TRINKET("Trinket"),
 	POTION("Potion"),
 
+	SHOOT("Shoot"),
+
 	// racial
 
 	BLOOD_FURY("Blood Fury"),
@@ -88,10 +90,29 @@ public enum SpellId {
 
 	// priest
 
+	POWER_WORD_FORTITUDE("Power Word: Fortitude"),
+	PRAYER_OF_FORTITUDE("Prayer of Fortitude"),
+	POWER_WORD_SHIELD("Power Word: Shield"),
+	DISPEL_MAGIC("Dispel Magic"),
+	CURE_DISEASE("Cure Disease"),
+	ABOLISH_DISEASE("Abolish Disease"),
+	MASS_DISPEL("Mass Dispel"),
+	INNER_FIRE("Inner Fire"),
+	MANA_BURN("Mana Burn"),
+	SMITE("Smite"),
+
 	BINDING_HEAL("Binding Heal"),
-	MIND_BLAST("Mind Blast"),
 	MIND_CONTROL("Mind Control"),
 	PSYCHIC_SCREAM("Psychic Scream"),
+
+	DEVOURING_PLAGUE("Devouring Plague"),
+	MIND_BLAST("Mind Blast"),
+	MIND_FLAY("Mind Flay"),
+	SHADOW_WORD_DEATH("Shadow Word: Death"),
+	SHADOW_WORD_PAIN("Shadow Word: Pain"),
+	STARSHARDS("Starshards"),
+	VAMPIRIC_EMBRACE("Vampiric Embrace"),
+	VAMPIRIC_TOUCH("Vampiric Touch"),
 
 	// rogue
 

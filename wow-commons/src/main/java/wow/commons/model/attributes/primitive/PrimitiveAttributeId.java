@@ -49,6 +49,8 @@ public enum PrimitiveAttributeId implements AttributeId {
 	DAMAGE_PCT("Damage,Percent"),
 	DIRECT_DAMAGE_PCT("Damage,Direct,Percent"),
 	DOT_DAMAGE_PCT("Damage,DoT,Percent"),
+	OFFENSIVE_SPELL_DAMAGE_PCT("Damage,SpellDamage,Percent"),
+	OFFENSIVE_SPELL_CRIT_PCT("Crit,SpellDamage,Percent"),
 	CRIT_DAMAGE_PCT("CritDamage,Percent"),
 	CRIT_DAMAGE_MULTIPLIER_PCT("CritDamageMultiplier,Percent"),
 	CRIT_COEFF_PCT("CritCoeff,Percent"),

@@ -295,7 +295,7 @@ public class Snapshot implements StatProvider {
 		this.duration = addAndMultiplyByPct(
 				spell.getDotDuration().getSeconds(),
 				stats.getDuration(),
-				stats.getDamagePct()
+				stats.getDurationPct()
 		);
 	}
 
@@ -319,12 +319,6 @@ public class Snapshot implements StatProvider {
 		result.setDpm(result.getTotalDamage() / result.getManaCost());
 
 		return result;
-	}
-
-	public double getDps(CritMode critMode, boolean useBothDamageRanges) {
-		double totalDamage = getTotalDamage(critMode, useBothDamageRanges);
-		double effectiveCastTimeSeconds = effectiveCastTime;
-		return totalDamage / effectiveCastTimeSeconds;
 	}
 
 	public double getTotalDamage(CritMode critMode, boolean useBothDamageRanges) {

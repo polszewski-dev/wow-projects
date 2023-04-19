@@ -220,7 +220,12 @@ public class AttributesBuilder {
 	}
 
 	private static Map<ComplexAttributeId, List<ComplexAttribute>> removeComplexAttributes(Attributes attributes, Attributes attributesToRemove) {
-		var result = new EnumMap<>(attributes.getComplexAttributeMap());
+		if (attributesToRemove.isEmpty()) {
+			return attributes.getComplexAttributeMap();
+		}
+
+		var result = new EnumMap<ComplexAttributeId, List<ComplexAttribute>>(ComplexAttributeId.class);
+		result.putAll(attributes.getComplexAttributeMap());
 
 		for (var entry : result.entrySet()) {
 			entry.setValue(new ArrayList<>(entry.getValue()));

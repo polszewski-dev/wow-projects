@@ -14,7 +14,6 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 
@@ -103,9 +102,10 @@ public class CharacterServiceImpl implements CharacterService {
 		List<Spell> cooldowns = new ArrayList<>();
 		Spell filler = null;
 
-		for (SpellId spellId : buildTemplate.getDefaultRotation()) {
-			Spell spell = spellService.getSpellHighestRank(spellId, character);
-			if (spell.hasDotComponent() || spell.getCooldown().isPositive()) {
+		var spells = spellService.getSpellHighestRanks(buildTemplate.getDefaultRotation(), character);
+
+		for (Spell spell : spells) {
+			if ((spell.hasDotComponent() && !spell.isChanneled()) || spell.getCooldown().isPositive()) {
 				cooldowns.add(spell);
 			} else if (filler == null) {
 				filler = spell;

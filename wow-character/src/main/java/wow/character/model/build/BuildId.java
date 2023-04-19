@@ -11,7 +11,8 @@ import wow.commons.util.EnumUtil;
 @AllArgsConstructor
 @Getter
 public enum BuildId {
-	DESTRO_SHADOW;
+	DESTRO_SHADOW,
+	SHADOW;
 
 	public static BuildId parse(String value) {
 		return EnumUtil.parse(value, values());

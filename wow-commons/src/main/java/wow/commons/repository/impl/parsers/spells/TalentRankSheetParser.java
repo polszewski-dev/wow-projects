@@ -10,8 +10,10 @@ import wow.commons.model.talents.impl.TalentImpl;
 import wow.commons.repository.impl.SpellRepositoryImpl;
 import wow.commons.util.AttributesBuilder;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * User: POlszewski
@@ -83,43 +85,44 @@ public class TalentRankSheetParser extends RankedElementSheetParser<TalentId, Ta
 	private final ExcelColumn colPet = column("pet");
 
 	private List<AttributeCondition> getPossibleConditions() {
-		var talentTree = colTree.getEnum(TalentTree::parse, null);
-		var spellSchool = colSchool.getEnum(SpellSchool::parse, null);
+		var talentTrees = colTree.getSet(TalentTree::parse);
+		var spellSchools = colSchool.getSet(SpellSchool::parse);
 		var spells = colSpell.getSet(SpellId::parse);
 		var petTypes = colPet.getSet(PetType::parse);
 
-		if (talentTree != null) {
-			if (spellSchool == null && spells.isEmpty() && petTypes.isEmpty()) {
-				return List.of(AttributeCondition.of(talentTree));
-			} else {
-				throw new IllegalArgumentException();
-			}
+		if (!talentTrees.isEmpty()) {
+			assertEmpty(spellSchools, spells, petTypes);
+			return getConditions(talentTrees, AttributeCondition::of);
 		}
 
-		if (spellSchool != null) {
-			if (spells.isEmpty() && petTypes.isEmpty()) {
-				return List.of(AttributeCondition.of(spellSchool));
-			} else {
-				throw new IllegalArgumentException();
-			}
+		if (!spellSchools.isEmpty()) {
+			assertEmpty(spells, petTypes);
+			return getConditions(spellSchools, AttributeCondition::of);
 		}
 
 		if (!spells.isEmpty()) {
-			if (petTypes.isEmpty()) {
-				return spells.stream()
-						.map(AttributeCondition::of)
-						.toList();
-			} else {
-				throw new IllegalArgumentException();
-			}
+			assertEmpty(petTypes);
+			return getConditions(spells, AttributeCondition::of);
 		}
 
 		if (!petTypes.isEmpty()) {
-			return petTypes.stream()
-					.map(AttributeCondition::of)
-					.toList();
+			return getConditions(petTypes, AttributeCondition::of);
 		}
 
 		return List.of(AttributeCondition.EMPTY);
+	}
+
+	private void assertEmpty(Collection<?>... collections) {
+		for (Collection<?> collection : collections) {
+			if (!collection.isEmpty()) {
+				throw new IllegalArgumentException();
+			}
+		}
+	}
+
+	private static <T> List<AttributeCondition> getConditions(Collection<T> talentTrees, Function<T, AttributeCondition> mapper) {
+		return talentTrees.stream()
+				.map(mapper)
+				.toList();
 	}
 }
