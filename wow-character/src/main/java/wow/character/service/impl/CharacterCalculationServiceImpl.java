@@ -10,13 +10,9 @@ import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.service.CharacterCalculationService;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.spells.Spell;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -38,7 +34,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	public Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats) {
 		AccumulatedSpellStats stats = new AccumulatedSpellStats(
 				totalStats,
-				getConditions(character, spell)
+				character.getConditions(spell)
 		);
 
 		stats.accumulateBaseStats(character.getBaseStatInfo());
@@ -68,16 +64,6 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		calcMisc(snapshot);
 
 		return snapshot;
-	}
-
-	private Set<AttributeCondition> getConditions(Character character, Spell spell) {
-		if (spell == null) {
-			return character.getConditions();
-		}
-
-		var conditions = new HashSet<>(character.getConditions());
-		conditions.addAll(spell.getConditions());
-		return conditions;
 	}
 
 	private StatProvider getStatProvider(Snapshot snapshot) {

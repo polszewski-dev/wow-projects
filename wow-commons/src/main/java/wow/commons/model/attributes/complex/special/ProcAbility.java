@@ -7,7 +7,6 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
-import wow.commons.util.AttributesBuilder;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -19,7 +18,6 @@ import static java.lang.Math.min;
 @Getter
 public class ProcAbility extends SpecialAbility {
 	private final ProcEvent event;
-	private final Attributes attributes;
 	private final Duration duration;
 	private final Duration cooldown;
 
@@ -32,11 +30,10 @@ public class ProcAbility extends SpecialAbility {
 			AttributeCondition condition,
 			SpecialAbilitySource source
 	) {
-		super(line, 3, condition, source);
+		super(line, 3, attributes, condition, source);
 		this.event = event;
-		this.attributes = attributes;
 		this.duration = duration;
-		this.cooldown = cooldown;
+		this.cooldown = cooldown != null ? cooldown : Duration.ZERO;
 		if (event == null || attributes == null || duration == null) {
 			throw new NullPointerException();
 		}
@@ -44,12 +41,12 @@ public class ProcAbility extends SpecialAbility {
 
 	@Override
 	public ProcAbility attachCondition(AttributeCondition condition) {
-		return new ProcAbility(event, attributes, duration, cooldown, getLine(), condition, getSource());
+		return new ProcAbility(event, getAttributes(), duration, cooldown, getLine(), condition, getSource());
 	}
 
 	@Override
 	public ProcAbility attachSource(SpecialAbilitySource source) {
-		return new ProcAbility(event, attributes, duration, cooldown, getLine(), condition, source);
+		return new ProcAbility(event, getAttributes(), duration, cooldown, getLine(), condition, source);
 	}
 
 	@Override
@@ -65,15 +62,15 @@ public class ProcAbility extends SpecialAbility {
 		}
 
 		double theoreticalCooldown = castTime / procChance;
-		double actualCooldown = cooldown != null ? max(cooldown.getSeconds(), theoreticalCooldown) : theoreticalCooldown;
+		double actualCooldown = max(cooldown.getSeconds(), theoreticalCooldown);
 
 		double factor = min(duration.getSeconds() / actualCooldown, 1);
 
-		return AttributesBuilder.attachCondition(attributes.scale(factor), condition);
+		return getAttributes().scale(factor);
 	}
 
 	@Override
 	protected String doToString() {
-		return String.format("(event: %s, chance: %s, %s | %s/%s)", event.getType(), event.getChance(), attributes, duration, (cooldown != null ? cooldown : "-"));
+		return "(event: %s, chance: %s, %s | %s/%s)".formatted(event.getType(), event.getChance(), getAttributes(), duration, cooldown.isZero() ? "-" : cooldown);
 	}
 }

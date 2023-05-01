@@ -14,7 +14,7 @@ import wow.commons.model.attributes.complex.SpecialAbilitySource;
 @Getter
 public class MiscAbility extends SpecialAbility {
 	public MiscAbility(String line, AttributeCondition condition, SpecialAbilitySource source) {
-		super(line, 5, condition, source);
+		super(line, 5, Attributes.EMPTY, condition, source);
 	}
 
 	@Override

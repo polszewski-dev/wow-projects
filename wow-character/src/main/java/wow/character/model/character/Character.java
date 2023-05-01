@@ -26,12 +26,10 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentId;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,6 +55,8 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	private Enemy targetEnemy;
 
+	private final Map<SpellId, Set<AttributeCondition>> conditionCache;
+
 	public Character(CharacterClass characterClass, Race race, int level, Phase phase) {
 		this.characterClass = characterClass;
 		this.race = race;
@@ -68,6 +68,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		this.buffs = new Buffs(CHARACTER_BUFF);
 		this.baseStatInfo = characterClass.getBaseStatInfo(level, race.getRaceId());
 		this.combatRatingInfo = characterClass.getGameVersion().getCombatRatingInfo(level);
+		this.conditionCache = new HashMap<>();
 	}
 
 	@Override
@@ -83,7 +84,8 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 				buffs.copy(),
 				baseStatInfo,
 				combatRatingInfo,
-				targetEnemy.copy()
+				targetEnemy.copy(),
+				new HashMap<>(conditionCache)
 		);
 	}
 
@@ -285,13 +287,24 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return targetEnemy.getEnemyType();
 	}
 
-	public Set<AttributeCondition> getConditions() {
+	public Set<AttributeCondition> getConditions(Spell spell) {
+		SpellId spellId = spell != null ? spell.getSpellId() : null;
+
+		return conditionCache.computeIfAbsent(spellId, x -> newConditions(spell));
+	}
+
+	private Set<AttributeCondition> newConditions(Spell spell) {
 		var result = new HashSet<AttributeCondition>();
 
 		result.addAll(professions.getConditions());
 		result.addAll(targetEnemy.getConditions());
 		result.add(AttributeCondition.of(getActivePet()));
 		result.add(AttributeCondition.EMPTY);
+
+		if (spell != null) {
+			result.addAll(spell.getConditions());
+		}
+
 		return result;
 	}
 }

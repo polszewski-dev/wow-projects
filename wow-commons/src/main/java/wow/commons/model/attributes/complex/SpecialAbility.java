@@ -8,6 +8,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.StatEquivalentProvider;
 import wow.commons.model.attributes.complex.special.*;
 import wow.commons.model.spells.EffectId;
+import wow.commons.util.AttributesBuilder;
 
 /**
  * User: POlszewski
@@ -17,12 +18,14 @@ import wow.commons.model.spells.EffectId;
 public abstract class SpecialAbility extends ComplexAttribute implements StatEquivalentProvider {
 	private final String line;
 	private final int priority;
+	private final Attributes attributes;
 	private final SpecialAbilitySource source;
 
-	protected SpecialAbility(String line, int priority, AttributeCondition condition, SpecialAbilitySource source) {
+	protected SpecialAbility(String line, int priority, Attributes attributes, AttributeCondition condition, SpecialAbilitySource source) {
 		super(ComplexAttributeId.SPECIAL_ABILITIES, condition);
 		this.line = line;
 		this.priority = priority;
+		this.attributes = AttributesBuilder.attachCondition(attributes, condition);
 		this.source = source;
 		if (this.line == null) {
 			throw new IllegalArgumentException();

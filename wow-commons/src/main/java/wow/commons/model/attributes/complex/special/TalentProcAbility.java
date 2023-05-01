@@ -34,7 +34,7 @@ public class TalentProcAbility extends SpecialAbility {
 			AttributeCondition condition,
 			SpecialAbilitySource source
 	) {
-		super(line, 4, condition, source);
+		super(line, 4, Attributes.EMPTY, condition, source);
 		this.event = event;
 		this.effectId = effectId;
 		this.duration = duration;
@@ -62,14 +62,7 @@ public class TalentProcAbility extends SpecialAbility {
 	}
 
 	private double getExtraCritCoeff(double critChance) {
-		int rank = switch (effectId) {
-			case SHADOW_VULNERABILITY_4 -> 1;
-			case SHADOW_VULNERABILITY_8 -> 2;
-			case SHADOW_VULNERABILITY_12 -> 3;
-			case SHADOW_VULNERABILITY_16 -> 4;
-			case SHADOW_VULNERABILITY_20 -> 5;
-			default -> throw new IllegalArgumentException("Unhandled: " + effectId);
-		};
+		int rank = effectId.getRank();
 		double c = critChance;
 		double n = 1 - c;
 		return rank * 0.04 * (2 * c + n) * (1 + n + n * n + n * n * n);

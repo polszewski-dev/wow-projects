@@ -14,17 +14,17 @@ public enum EffectId {
 	// special effect
 
 	AMPLIFY_CURSE("Amplify Curse"),
-	SHADOW_EMBRACE_1("Shadow Embrace:1", Group.SHADOW_EMBRACE),
-	SHADOW_EMBRACE_2("Shadow Embrace:2", Group.SHADOW_EMBRACE),
-	SHADOW_EMBRACE_3("Shadow Embrace:3", Group.SHADOW_EMBRACE),
-	SHADOW_EMBRACE_4("Shadow Embrace:4", Group.SHADOW_EMBRACE),
-	SHADOW_EMBRACE_5("Shadow Embrace:5", Group.SHADOW_EMBRACE),
+	SHADOW_EMBRACE_1("Shadow Embrace:1", Group.SHADOW_EMBRACE, 1),
+	SHADOW_EMBRACE_2("Shadow Embrace:2", Group.SHADOW_EMBRACE, 2),
+	SHADOW_EMBRACE_3("Shadow Embrace:3", Group.SHADOW_EMBRACE, 3),
+	SHADOW_EMBRACE_4("Shadow Embrace:4", Group.SHADOW_EMBRACE, 4),
+	SHADOW_EMBRACE_5("Shadow Embrace:5", Group.SHADOW_EMBRACE, 5),
 	SHADOW_TRANCE("Shadow Trance"),
-	SHADOW_VULNERABILITY_4("Shadow Vulnerability:4", Group.SHADOW_VULNERABILITY),
-	SHADOW_VULNERABILITY_8("Shadow Vulnerability:8", Group.SHADOW_VULNERABILITY),
-	SHADOW_VULNERABILITY_12("Shadow Vulnerability:12", Group.SHADOW_VULNERABILITY),
-	SHADOW_VULNERABILITY_16("Shadow Vulnerability:16", Group.SHADOW_VULNERABILITY),
-	SHADOW_VULNERABILITY_20("Shadow Vulnerability:20", Group.SHADOW_VULNERABILITY),
+	SHADOW_VULNERABILITY_4("Shadow Vulnerability:4", Group.SHADOW_VULNERABILITY, 1),
+	SHADOW_VULNERABILITY_8("Shadow Vulnerability:8", Group.SHADOW_VULNERABILITY, 2),
+	SHADOW_VULNERABILITY_12("Shadow Vulnerability:12", Group.SHADOW_VULNERABILITY, 3),
+	SHADOW_VULNERABILITY_16("Shadow Vulnerability:16", Group.SHADOW_VULNERABILITY, 4),
+	SHADOW_VULNERABILITY_20("Shadow Vulnerability:20", Group.SHADOW_VULNERABILITY, 5),
 
 	// dot effects
 
@@ -60,9 +60,14 @@ public enum EffectId {
 
 	private final String name;
 	private final Group group;
+	private final int rank;
 
 	EffectId(String name) {
-		this(name, null);
+		this(name, null, 1);
+	}
+
+	EffectId(String name, Group group) {
+		this(name, group, 1);
 	}
 
 	public static EffectId parse(String value) {

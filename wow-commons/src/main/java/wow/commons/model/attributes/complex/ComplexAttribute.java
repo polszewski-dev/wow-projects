@@ -11,6 +11,7 @@ import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
  */
 public abstract class ComplexAttribute extends Attribute {
 	private final ComplexAttributeId id;
+	private String string;
 
 	protected ComplexAttribute(ComplexAttributeId id, AttributeCondition condition) {
 		super(condition);
@@ -27,7 +28,10 @@ public abstract class ComplexAttribute extends Attribute {
 
 	@Override
 	public final String toString() {
-		return doToString() + getConditionString(condition);
+		if (string == null) {
+			this.string = doToString() + getConditionString(condition);
+		}
+		return string;
 	}
 
 	protected abstract String doToString();

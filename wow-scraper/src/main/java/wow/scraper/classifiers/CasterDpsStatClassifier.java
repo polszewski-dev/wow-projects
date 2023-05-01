@@ -3,7 +3,7 @@ package wow.scraper.classifiers;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.attributes.AttributeSource;
-import wow.commons.model.attributes.StatProvider;
+import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeType;
@@ -37,17 +37,14 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	private boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource) {
-		StatProvider statProvider = StatProvider.dummyValues();
-
 		return attributeSource.getSpecialAbilities().stream()
-				.map(x -> x.getStatEquivalent(statProvider))
+				.map(SpecialAbility::getAttributes)
 				.anyMatch(this::hasPrimitiveStatsSuitableForCasterDps);
 	}
 
 	private boolean isCasterStat(PrimitiveAttribute attribute) {
 		PrimitiveAttributeId id = attribute.getId();
-		return id.getPowerType().isSpellDamage() &&
-				CASTER_STATS.contains(id.getType());
+		return id.getPowerType().isSpellDamage() && CASTER_STATS.contains(id.getType());
 	}
 
 	private static final Set<PrimitiveAttributeType> CASTER_STATS = Set.of(

@@ -1,7 +1,6 @@
 package wow.character.util;
 
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import wow.character.model.equipment.ItemSockets;
 import wow.commons.model.attributes.*;
 import wow.commons.model.attributes.complex.ComplexAttribute;
@@ -74,13 +73,21 @@ public class AttributeEvaluator implements AttributeCollector {
 	}
 
 	private Attributes getScaledAttributes(AttributeSource attributeSource, SpellId sourceSpell) {
-		Double increasePct = getEffectIncreasePct(sourceSpell);
+		double increasePct = getEffectIncreasePct(sourceSpell);
 		return attributeSource.getAttributes().scale(1 + increasePct / 100);
 	}
 
-	private Double getEffectIncreasePct(SpellId sourceSpell) {
-		var key = new PrimitiveAttributeEntry(EFFECT_PCT, AttributeCondition.of(sourceSpell));
+	private double getEffectIncreasePct(SpellId sourceSpell) {
+		var key = getTranscientKey(EFFECT_PCT, AttributeCondition.of(sourceSpell));
 		return primitiveAttributes.getOrDefault(key, key).value;
+	}
+
+	private final PrimitiveAttributeEntry transcientKey = new PrimitiveAttributeEntry(null, null, 0);
+
+	private PrimitiveAttributeEntry getTranscientKey(PrimitiveAttributeId id, AttributeCondition condition) {
+		transcientKey.id = id;
+		transcientKey.condition = condition;
+		return transcientKey;
 	}
 
 	public AttributeEvaluator addAttributes(AttributeCollection attributeCollection) {
@@ -88,18 +95,25 @@ public class AttributeEvaluator implements AttributeCollector {
 		return this;
 	}
 
-	public AttributeEvaluator addAttribute(PrimitiveAttribute attribute) {
+	private void addAttribute(PrimitiveAttribute attribute) {
 		if (attribute == null) {
-			return this;
+			return;
 		}
 
 		AttributeCondition condition = attribute.getCondition();
 		PrimitiveAttributeId id = attribute.getId();
 
-		var key = new PrimitiveAttributeEntry(id, condition);
-		primitiveAttributes.computeIfAbsent(key, x -> key).value += attribute.getDouble();
+		var key = getTranscientKey(id, condition);
 
-		return this;
+		PrimitiveAttributeEntry entry = primitiveAttributes.get(key);
+
+		if (entry != null) {
+			entry.value += attribute.getDouble();
+			return;
+		}
+
+		entry = new PrimitiveAttributeEntry(id, condition, attribute.getDouble());
+		primitiveAttributes.put(entry, entry);
 	}
 
 	@Override
@@ -195,11 +209,28 @@ public class AttributeEvaluator implements AttributeCollector {
 		}
 	}
 
-	@RequiredArgsConstructor
-	@EqualsAndHashCode(of = { "id", "condition" })
+	@AllArgsConstructor
 	private static class PrimitiveAttributeEntry {
-		final PrimitiveAttributeId id;
-		final AttributeCondition condition;
+		PrimitiveAttributeId id;
+		AttributeCondition condition;
 		double value;
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			PrimitiveAttributeEntry that = (PrimitiveAttributeEntry) o;
+
+			if (id != that.id) return false;
+			return condition.equals(that.condition);
+		}
+
+		@Override
+		public int hashCode() {
+			int result = id.hashCode();
+			result = 31 * result + condition.hashCode();
+			return result;
+		}
 	}
 }
