@@ -4,11 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.build.BuffSetId;
-import wow.character.model.equipment.Equipment;
-import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.spells.Spell;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.RotationStats;
 import wow.minmax.model.SpecialAbilityStats;
@@ -29,119 +26,6 @@ import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 class CalculationServiceTest extends ServiceTest {
 	@Autowired
 	CalculationService underTest;
-
-	@Test
-	@DisplayName("Has talents, no buffs, no items")
-	void hasTalentsNoBuffsNoItems() {
-		character.setEquipment(new Equipment());
-		character.resetBuffs();
-		character.getTargetEnemy().resetDebuffs();
-
-		Spell spell = character.getRotation().getFiller();
-		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
-
-		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(88);
-		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(131);
-		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(136);
-
-		assertThat(snapshot.getTotalCrit()).isEqualTo(11.29, PRECISION);
-		assertThat(snapshot.getTotalHit()).isEqualTo(0, PRECISION);
-		assertThat(snapshot.getTotalHaste()).isEqualTo(0, PRECISION);
-
-		assertThat(snapshot.getSp()).usingComparator(ROUNDED_DOWN).isEqualTo(0);
-		assertThat(snapshot.getSpMultiplier()).isEqualTo(1, PRECISION);
-
-		assertThat(snapshot.getHitChance()).isEqualTo(0.83, PRECISION);
-		assertThat(snapshot.getCritChance()).isEqualTo(0.11, PRECISION);
-		assertThat(snapshot.getCritCoeff()).isEqualTo(2.76, PRECISION);
-		assertThat(snapshot.getHaste()).isEqualTo(0, PRECISION);
-
-		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1, PRECISION);
-		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1, PRECISION);
-
-		assertThat(snapshot.getCastTime()).isEqualTo(2.5, PRECISION);
-		assertThat(snapshot.getGcd()).isEqualTo(1.5, PRECISION);
-		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(2.5, PRECISION);
-
-		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
-		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0, PRECISION);
-
-		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
-	}
-
-	@Test
-	@DisplayName("Has talents, has buffs, no items")
-	void hasTalentsHasBuffsNoItems() {
-		character.setEquipment(new Equipment());
-
-		Spell spell = character.getRotation().getFiller();
-		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
-
-		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(212);
-		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(203);
-		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(239);
-
-		assertThat(snapshot.getTotalCrit()).isEqualTo(15.83, PRECISION);
-		assertThat(snapshot.getTotalHit()).isEqualTo(3, PRECISION);
-		assertThat(snapshot.getTotalHaste()).isEqualTo(0, PRECISION);
-
-		assertThat(snapshot.getSp()).usingComparator(ROUNDED_DOWN).isEqualTo(370);
-		assertThat(snapshot.getSpMultiplier()).isEqualTo(1, PRECISION);
-
-		assertThat(snapshot.getHitChance()).isEqualTo(0.86, PRECISION);
-		assertThat(snapshot.getCritChance()).isEqualTo(0.15, PRECISION);
-		assertThat(snapshot.getCritCoeff()).isEqualTo(2.72, PRECISION);
-		assertThat(snapshot.getHaste()).isEqualTo(0, PRECISION);
-
-		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.25, PRECISION);
-		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.25, PRECISION);
-
-		assertThat(snapshot.getCastTime()).isEqualTo(2.5, PRECISION);
-		assertThat(snapshot.getGcd()).isEqualTo(1.5, PRECISION);
-		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(2.5, PRECISION);
-
-		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
-		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0, PRECISION);
-
-		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
-	}
-
-	@Test
-	@DisplayName("Has talents, has buffs, has items")
-	void hasTalentsHasBuffsHasItems() {
-		character.setEquipment(getEquipment());
-
-		Spell spell = character.getRotation().getFiller();
-		Snapshot snapshot = underTest.getSnapshot(character, spell, character.getStats());
-
-		assertThat(snapshot.getStamina()).usingComparator(ROUNDED_DOWN).isEqualTo(797);
-		assertThat(snapshot.getIntellect()).usingComparator(ROUNDED_DOWN).isEqualTo(620);
-		assertThat(snapshot.getSpirit()).usingComparator(ROUNDED_DOWN).isEqualTo(245);
-
-		assertThat(snapshot.getTotalCrit()).isEqualTo(35.31, PRECISION);
-		assertThat(snapshot.getTotalHit()).isEqualTo(15.99, PRECISION);
-		assertThat(snapshot.getTotalHaste()).isEqualTo(28.88, PRECISION);
-
-		assertThat(snapshot.getSp()).usingComparator(ROUNDED_DOWN).isEqualTo(1803);
-		assertThat(snapshot.getSpMultiplier()).isEqualTo(1, PRECISION);
-
-		assertThat(snapshot.getHitChance()).isEqualTo(0.99, PRECISION);
-		assertThat(snapshot.getCritChance()).isEqualTo(0.36, PRECISION);
-		assertThat(snapshot.getCritCoeff()).isEqualTo(2.72, PRECISION);
-		assertThat(snapshot.getHaste()).isEqualTo(0.2888, PRECISION);
-
-		assertThat(snapshot.getDirectDamageDoneMultiplier()).isEqualTo(1.31, PRECISION);
-		assertThat(snapshot.getDotDamageDoneMultiplier()).isEqualTo(1.31, PRECISION);
-
-		assertThat(snapshot.getCastTime()).isEqualTo(1.94, PRECISION);
-		assertThat(snapshot.getGcd()).isEqualTo(1.16, PRECISION);
-		assertThat(snapshot.getEffectiveCastTime()).isEqualTo(1.94, PRECISION);
-
-		assertThat(snapshot.getSpellCoeffDirect()).isEqualTo(1.0571, PRECISION);
-		assertThat(snapshot.getSpellCoeffDoT()).isEqualTo(0, PRECISION);
-
-		assertThat(snapshot.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
-	}
 
 	@Test
 	@DisplayName("Correct stat quivalent")

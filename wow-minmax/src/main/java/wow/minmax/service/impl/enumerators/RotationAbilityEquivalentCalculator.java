@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
+import wow.character.service.CharacterCalculationService;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
@@ -17,8 +18,8 @@ import java.util.List;
  * Date: 2023-04-08
  */
 public class RotationAbilityEquivalentCalculator extends RotationDpsCalculator {
-	public RotationAbilityEquivalentCalculator(Character character, Rotation rotation, Attributes totalStats) {
-		super(character, rotation, totalStats);
+	public RotationAbilityEquivalentCalculator(Character character, Rotation rotation, Attributes totalStats, CharacterCalculationService characterCalculationService) {
+		super(character, rotation, totalStats, characterCalculationService);
 	}
 
 	@Override

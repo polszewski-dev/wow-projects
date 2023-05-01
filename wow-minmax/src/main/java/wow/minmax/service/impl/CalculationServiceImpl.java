@@ -8,6 +8,7 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.CritMode;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SpellStatistics;
+import wow.character.service.CharacterCalculationService;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
@@ -36,6 +37,8 @@ import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 @Service
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
+	private final CharacterCalculationService characterCalculationService;
+
 	@Override
 	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character) {
 		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, character, character.getRotation(), character.getStats());
@@ -67,7 +70,8 @@ public class CalculationServiceImpl implements CalculationService {
 		var calculator = new RotationAbilityEquivalentCalculator(
 				character,
 				rotation,
-				AttributesBuilder.removeAttributes(totalStats, Attributes.of(specialAbility))
+				AttributesBuilder.removeAttributes(totalStats, Attributes.of(specialAbility)),
+				characterCalculationService
 		);
 		calculator.calculate();
 		return calculator.getAbilityEquivalent(specialAbility);
@@ -80,26 +84,22 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public double getRotationDps(Character character, Rotation rotation, Attributes totalStats) {
-		var calculator = new RotationDpsCalculator(character, rotation, totalStats);
+		var calculator = new RotationDpsCalculator(character, rotation, totalStats, characterCalculationService);
 		calculator.calculate();
 		return calculator.getDps();
 	}
 
 	@Override
 	public RotationStats getRotationStats(Character character, Rotation rotation) {
-		var calculator = new RotationStatsCalculator(character, rotation, character.getStats());
+		var calculator = new RotationStatsCalculator(character, rotation, character.getStats(), characterCalculationService);
 		calculator.calculate();
 		return calculator.getStats();
 	}
 
 	@Override
-	public Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats) {
-		return new Snapshot(spell, character, totalStats);
-	}
-
-	@Override
 	public SpellStats getSpellStats(Character character, Spell spell) {
-		SpellStatistics spellStatistics = getSnapshot(character, spell, character.getStats()).getSpellStatistics(CritMode.AVERAGE, true);
+		Snapshot snapshot = characterCalculationService.getSnapshot(character, spell, character.getStats());
+		SpellStatistics spellStatistics = snapshot.getSpellStatistics(CritMode.AVERAGE, true);
 		SpellStatEquivalents statEquivalents = getStatEquivalents(character, spell);
 		return new SpellStats(character, spellStatistics, statEquivalents);
 	}
@@ -155,7 +155,7 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private CharacterStats getStats(Character character, Attributes totalStats) {
-		Snapshot snapshot = getSnapshot(character, null, totalStats);
+		Snapshot snapshot = characterCalculationService.getSnapshot(character, totalStats);
 
 		return new CharacterStats(
 				totalStats.getTotalSpellDamage(),

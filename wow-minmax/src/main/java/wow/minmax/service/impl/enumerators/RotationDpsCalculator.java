@@ -6,6 +6,7 @@ import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.CritMode;
 import wow.character.model.snapshot.Snapshot;
+import wow.character.service.CharacterCalculationService;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
 
@@ -19,6 +20,8 @@ public class RotationDpsCalculator {
 	private final Character character;
 	private final Rotation rotation;
 	private final Attributes totalStats;
+
+	private final CharacterCalculationService characterCalculationService;
 
 	private double totalDamage = 0;
 	private double timeLeft = FIGHT_DURATION;
@@ -80,8 +83,8 @@ public class RotationDpsCalculator {
 		onRotationSpell(rotation.getFiller(), numCasts, fillerDamage, fillerSnapshot);
 	}
 
-	private Snapshot getSnapshot(Spell rotation) {
-		return new Snapshot(rotation, character, totalStats);
+	private Snapshot getSnapshot(Spell spell) {
+		return characterCalculationService.getSnapshot(character, spell, totalStats);
 	}
 
 	private double getDamage(Snapshot snapshot) {
