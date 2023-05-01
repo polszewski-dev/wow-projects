@@ -53,7 +53,7 @@ public class EquipmentController {
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		Character character = playerProfileService.getCharacter(characterId);
-		ItemFilter itemFilter = ItemFilter.everything().exceptHealingItems();
+		ItemFilter itemFilter = ItemFilter.everything();
 
 		var itemsByItemSlot = ItemSlot.getDpsSlots().stream()
 				.collect(Collectors.toMap(x -> x, x -> itemConverter.convertList(itemService.getItemsBySlot(character, x, itemFilter))));

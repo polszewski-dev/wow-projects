@@ -20,20 +20,13 @@ public class ItemFilter {
 	boolean heroics;
 	boolean raids;
 	boolean worldBosses;
-	boolean healingItems;
 	boolean pvpItems;
 	boolean greens;
 	boolean legendaries;
 
 	public static ItemFilter everything() {
 		return new ItemFilter(
-				true, true, true, true, true, true, true
-		);
-	}
-
-	public ItemFilter exceptHealingItems() {
-		return new ItemFilter(
-			heroics, raids, worldBosses, false, pvpItems, greens, legendaries
+				true, true, true, true, true, true
 		);
 	}
 
@@ -48,9 +41,6 @@ public class ItemFilter {
 			return false;
 		}
 		if (!pvpItems && item.allSources(Source::isPvP)) {
-			return false;
-		}
-		if (!healingItems && (item.getHealingPower() > item.getSpellPower())) {
 			return false;
 		}
 		if (!greens && item.getRarity() == UNCOMMON) {

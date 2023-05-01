@@ -25,7 +25,6 @@ export class ProfileEditorComponent implements OnChanges {
 		heroics: true,
 		raids: true,
 		worldBosses: false,
-		healingItems: false,
 		pvpItems: false,
 		greens: true,
 		legendaries: false

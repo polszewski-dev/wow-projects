@@ -20,7 +20,6 @@ public class ItemFilterPOConverter implements Converter<ItemFilter, ItemFilterPO
 				source.isHeroics(),
 				source.isRaids(),
 				source.isWorldBosses(),
-				source.isHealingItems(),
 				source.isPvpItems(),
 				source.isGreens(),
 				source.isLegendaries()
@@ -33,7 +32,6 @@ public class ItemFilterPOConverter implements Converter<ItemFilter, ItemFilterPO
 				source.isHeroics(),
 				source.isRaids(),
 				source.isWorldBosses(),
-				source.isHealingItems(),
 				source.isPvpItems(),
 				source.isGreens(),
 				source.isLegendaries()

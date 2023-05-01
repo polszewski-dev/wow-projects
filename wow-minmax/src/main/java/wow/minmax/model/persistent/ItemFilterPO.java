@@ -15,7 +15,6 @@ public class ItemFilterPO implements Serializable {
 	boolean heroics;
 	boolean raids;
 	boolean worldBosses;
-	boolean healingItems;
 	boolean pvpItems;
 	boolean greens;
 	boolean legendaries;

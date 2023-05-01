@@ -32,7 +32,7 @@
 
 	<div class="item-filter">
 		<span class="item-filter-header">Filters:&nbsp;</span>
-			
+
 		<div class="form-check form-check-inline" *ngIf="heroics">
 			<input
 				id="filter-heroics"
@@ -69,19 +69,6 @@
 			>
 			<label class="form-check-label" for="filter-world-bosses">
 				world bosses
-			</label>
-		</div>
-
-		<div class="form-check form-check-inline" *ngIf="false">
-			<input
-				id="filter-healing-items"
-				class="form-check-input"
-				type="checkbox"
-				[(ngModel)]="itemFilter.healingItems"
-				(ngModelChange)="onFilterChange()"
-			>
-			<label class="form-check-label" for="filter-healing-items">
-				healing items
 			</label>
 		</div>
 

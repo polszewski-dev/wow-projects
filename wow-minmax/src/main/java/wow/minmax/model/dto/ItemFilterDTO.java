@@ -15,7 +15,6 @@ public class ItemFilterDTO {
 	boolean heroics;
 	boolean raids;
 	boolean worldBosses;
-	boolean healingItems;
 	boolean pvpItems;
 	boolean greens;
 	boolean legendaries;
