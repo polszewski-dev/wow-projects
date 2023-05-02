@@ -4,8 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.character.Character;
 import wow.commons.model.Duration;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.spells.Spell;
+
+import static wow.character.model.snapshot.SnapshotState.INITIAL;
 
 /**
  * User: POlszewski
@@ -13,10 +14,12 @@ import wow.commons.model.spells.Spell;
  */
 @Getter
 @Setter
-public class Snapshot implements StatProvider {
+public class Snapshot {
 	private final Character character;
 	private final Spell spell;
 	private final AccumulatedSpellStats stats;
+
+	private SnapshotState state = INITIAL;
 
 	private double stamina;
 	private double intellect;

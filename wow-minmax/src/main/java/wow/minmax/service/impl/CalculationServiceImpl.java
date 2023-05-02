@@ -5,12 +5,13 @@ import org.springframework.stereotype.Service;
 import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.CritMode;
-import wow.character.model.snapshot.Snapshot;
-import wow.character.model.snapshot.SpellStatistics;
+import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.special.OnUseAbility;
+import wow.commons.model.attributes.complex.special.ProcAbility;
+import wow.commons.model.attributes.complex.special.TalentProcAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
@@ -22,10 +23,14 @@ import wow.minmax.service.impl.enumerators.RotationDpsCalculator;
 import wow.minmax.service.impl.enumerators.RotationStatsCalculator;
 import wow.minmax.service.impl.enumerators.StatEquivalentFinder;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
@@ -71,7 +76,7 @@ public class CalculationServiceImpl implements CalculationService {
 				character,
 				rotation,
 				AttributesBuilder.removeAttributes(totalStats, Attributes.of(specialAbility)),
-				characterCalculationService
+				this
 		);
 		calculator.calculate();
 		return calculator.getAbilityEquivalent(specialAbility);
@@ -84,21 +89,131 @@ public class CalculationServiceImpl implements CalculationService {
 
 	@Override
 	public double getRotationDps(Character character, Rotation rotation, Attributes totalStats) {
-		var calculator = new RotationDpsCalculator(character, rotation, totalStats, characterCalculationService);
+		var calculator = new RotationDpsCalculator(character, rotation, totalStats, this);
 		calculator.calculate();
 		return calculator.getDps();
 	}
 
 	@Override
 	public RotationStats getRotationStats(Character character, Rotation rotation) {
-		var calculator = new RotationStatsCalculator(character, rotation, character.getStats(), characterCalculationService);
+		var calculator = new RotationStatsCalculator(character, rotation, character.getStats(), this);
 		calculator.calculate();
 		return calculator.getStats();
 	}
 
 	@Override
+	public Snapshot getSnapshot(Character character, Attributes totalStats) {
+		return getSnapshot(character, null, totalStats);
+	}
+
+	@Override
+	public Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats) {
+		Snapshot snapshot = characterCalculationService.createSnapshot(character, spell, totalStats);
+
+		characterCalculationService.advanceSnapshot(snapshot, SnapshotState.SECONDARY_STATS);
+
+		if (spell == null) {
+			return snapshot;
+		}
+
+		characterCalculationService.advanceSnapshot(snapshot, SnapshotState.CAST_TIME);
+
+		boolean recalculate = solveAbilities(snapshot);
+
+		if (recalculate) {
+			snapshot.setState(SnapshotState.INITIAL);
+		}
+
+		characterCalculationService.advanceSnapshot(snapshot, SnapshotState.COMPLETE);
+
+		return snapshot;
+	}
+
+	private boolean solveAbilities(Snapshot snapshot) {
+		AccumulatedSpellStats stats = snapshot.getStats();
+		List<SpecialAbility> specialAbilities = stats.getAttributes().getSpecialAbilities();
+
+		if (specialAbilities.isEmpty()) {
+			return false;
+		}
+
+		for (SpecialAbility specialAbility : specialAbilities) {
+			Attributes statEquivalent = getStatEquivalent(specialAbility, snapshot);
+			stats.accumulatePrimitiveAttributes(statEquivalent.getPrimitiveAttributes());
+		}
+
+		return true;
+	}
+
+	@Override
+	public Attributes getStatEquivalent(SpecialAbility specialAbility, Snapshot snapshot) {
+		if (specialAbility instanceof OnUseAbility ability) {
+			return ability.getEquivalent();
+		} else if (specialAbility instanceof ProcAbility ability) {
+			return getProcStatEquivalent(ability, snapshot);
+		} else if (specialAbility instanceof TalentProcAbility ability) {
+			return getTalentProcStatEquivalent(ability, snapshot);
+		} else {
+			return specialAbility.getAttributes();
+		}
+	}
+
+	private static final Comparator<SpecialAbility> SPECIAL_ABILITY_COMPARATOR = Comparator.comparingInt(SpecialAbility::getPriority)
+				.thenComparing(SpecialAbility::toString);
+
+	private Attributes getProcStatEquivalent(ProcAbility ability, Snapshot snapshot) {
+		double procChance = getProcChance(ability, snapshot);
+
+		if (procChance == 0) {
+			return Attributes.EMPTY;
+		}
+
+		double uptime = getProcUptime(ability, snapshot, procChance);
+
+		return ability.getAttributes().scale(uptime);
+	}
+
+	private double getProcChance(ProcAbility ability, Snapshot snapshot) {
+		double hitChance = snapshot.getHitChance();
+		double critChance = snapshot.getCritChance();
+
+		return ability.getEvent().getProcChance(hitChance, critChance);
+	}
+
+	private double getProcUptime(ProcAbility ability, Snapshot snapshot, double procChance) {
+		double duration = ability.getDuration().getSeconds();
+		double cooldown = ability.getCooldown().getSeconds();
+		double castTime = snapshot.getEffectiveCastTime();
+
+		return getProcUptime(procChance, duration, cooldown, castTime);
+	}
+
+	private double getProcUptime(double procChance, double duration, double internalCooldown, double castTime) {
+		double theoreticalCooldown = castTime / procChance;
+		double actualCooldown = internalCooldown != 0 ? max(internalCooldown, theoreticalCooldown) : theoreticalCooldown;
+
+		return min(duration / actualCooldown, 1);
+	}
+
+	private Attributes getTalentProcStatEquivalent(TalentProcAbility ability, Snapshot snapshot) {
+		double critChance = snapshot.getCritChance();
+		double extraCritCoeff = getExtraCritCoeff(ability, critChance);
+		if (extraCritCoeff == 0) {
+			return Attributes.EMPTY;
+		}
+		return Attributes.of(CRIT_COEFF_PCT, extraCritCoeff, ability.getCondition());
+	}
+
+	private double getExtraCritCoeff(TalentProcAbility ability, double critChance) {
+		int rank = ability.getEffectId().getRank();
+		double c = critChance;
+		double n = 1 - c;
+		return rank * 0.04 * (2 * c + n) * (1 + n + n * n + n * n * n);
+	}
+
+	@Override
 	public SpellStats getSpellStats(Character character, Spell spell) {
-		Snapshot snapshot = characterCalculationService.getSnapshot(character, spell, character.getStats());
+		Snapshot snapshot = getSnapshot(character, spell, character.getStats());
 		SpellStatistics spellStatistics = snapshot.getSpellStatistics(CritMode.AVERAGE, true);
 		SpellStatEquivalents statEquivalents = getStatEquivalents(character, spell);
 		return new SpellStats(character, spellStatistics, statEquivalents);
@@ -155,7 +270,7 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private CharacterStats getStats(Character character, Attributes totalStats) {
-		Snapshot snapshot = characterCalculationService.getSnapshot(character, totalStats);
+		Snapshot snapshot = getSnapshot(character, totalStats);
 
 		return new CharacterStats(
 				totalStats.getTotalSpellDamage(),

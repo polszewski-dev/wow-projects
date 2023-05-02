@@ -4,12 +4,8 @@ import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
-
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 /**
  * User: POlszewski
@@ -47,26 +43,6 @@ public class ProcAbility extends SpecialAbility {
 	@Override
 	public ProcAbility attachSource(SpecialAbilitySource source) {
 		return new ProcAbility(event, getAttributes(), duration, cooldown, getLine(), condition, source);
-	}
-
-	@Override
-	public Attributes getStatEquivalent(StatProvider statProvider) {
-		double hitChance = statProvider.getHitChance();
-		double critChance = statProvider.getCritChance();
-		double castTime = statProvider.getEffectiveCastTime();
-
-		double procChance = event.getProcChance(hitChance, critChance);
-
-		if (procChance == 0) {
-			return Attributes.EMPTY;
-		}
-
-		double theoreticalCooldown = castTime / procChance;
-		double actualCooldown = max(cooldown.getSeconds(), theoreticalCooldown);
-
-		double factor = min(duration.getSeconds() / actualCooldown, 1);
-
-		return getAttributes().scale(factor);
 	}
 
 	@Override

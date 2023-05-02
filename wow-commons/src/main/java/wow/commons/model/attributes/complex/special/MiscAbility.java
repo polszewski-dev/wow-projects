@@ -3,7 +3,6 @@ package wow.commons.model.attributes.complex.special;
 import lombok.Getter;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 
@@ -25,11 +24,6 @@ public class MiscAbility extends SpecialAbility {
 	@Override
 	public MiscAbility attachSource(SpecialAbilitySource source) {
 		return new MiscAbility(getLine(), condition, source);
-	}
-
-	@Override
-	public Attributes getStatEquivalent(StatProvider statProvider) {
-		return Attributes.EMPTY;
 	}
 
 	@Override

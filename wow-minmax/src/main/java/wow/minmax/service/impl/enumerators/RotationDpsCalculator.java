@@ -6,9 +6,9 @@ import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.CritMode;
 import wow.character.model.snapshot.Snapshot;
-import wow.character.service.CharacterCalculationService;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
+import wow.minmax.service.CalculationService;
 
 /**
  * User: POlszewski
@@ -21,7 +21,7 @@ public class RotationDpsCalculator {
 	private final Rotation rotation;
 	private final Attributes totalStats;
 
-	private final CharacterCalculationService characterCalculationService;
+	private final CalculationService calculationService;
 
 	private double totalDamage = 0;
 	private double timeLeft = FIGHT_DURATION;
@@ -84,7 +84,7 @@ public class RotationDpsCalculator {
 	}
 
 	private Snapshot getSnapshot(Spell spell) {
-		return characterCalculationService.getSnapshot(character, spell, totalStats);
+		return calculationService.getSnapshot(character, spell, totalStats);
 	}
 
 	private double getDamage(Snapshot snapshot) {

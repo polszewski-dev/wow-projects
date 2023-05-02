@@ -3,11 +3,11 @@ package wow.minmax.service.impl.enumerators;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
-import wow.character.service.CharacterCalculationService;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.RotationSpellStats;
 import wow.minmax.model.RotationStats;
+import wow.minmax.service.CalculationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,8 @@ import java.util.List;
 public class RotationStatsCalculator extends RotationDpsCalculator {
 	private final List<RotationSpellStats> statList = new ArrayList<>();
 
-	public RotationStatsCalculator(Character character, Rotation rotation, Attributes totalStats, CharacterCalculationService characterCalculationService) {
-		super(character, rotation, totalStats, characterCalculationService);
+	public RotationStatsCalculator(Character character, Rotation rotation, Attributes totalStats, CalculationService calculationService) {
+		super(character, rotation, totalStats, calculationService);
 	}
 
 	@Override

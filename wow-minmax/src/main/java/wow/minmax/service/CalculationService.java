@@ -3,6 +3,7 @@ package wow.minmax.service;
 import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
+import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
@@ -35,6 +36,12 @@ public interface CalculationService {
 	double getRotationDps(Character character, Rotation rotation, Attributes totalStats);
 
 	RotationStats getRotationStats(Character character, Rotation rotation);
+
+	Snapshot getSnapshot(Character character, Attributes totalStats);
+
+	Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats);
+
+	Attributes getStatEquivalent(SpecialAbility specialAbility, Snapshot snapshot);
 
 	SpellStats getSpellStats(Character character, Spell spell);
 

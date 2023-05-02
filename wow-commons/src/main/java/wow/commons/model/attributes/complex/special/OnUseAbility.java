@@ -4,7 +4,6 @@ import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 
@@ -16,7 +15,7 @@ import wow.commons.model.attributes.complex.SpecialAbilitySource;
 public class OnUseAbility extends SpecialAbility {
 	private final Duration duration;
 	private final Duration cooldown;
-	private Attributes equivalent;
+	private final Attributes equivalent;
 
 	public OnUseAbility(
 			Attributes attributes,
@@ -29,9 +28,8 @@ public class OnUseAbility extends SpecialAbility {
 		super(line, 2, attributes, condition, source);
 		this.duration = duration;
 		this.cooldown = cooldown;
-		if (attributes == null || duration == null || cooldown == null) {
-			throw new NullPointerException();
-		}
+		double factor = duration.divideBy(cooldown);
+		this.equivalent = getAttributes().scale(factor);
 	}
 
 	@Override
@@ -42,15 +40,6 @@ public class OnUseAbility extends SpecialAbility {
 	@Override
 	public OnUseAbility attachSource(SpecialAbilitySource source) {
 		return new OnUseAbility(getAttributes(), duration, cooldown, getLine(), condition, source);
-	}
-
-	@Override
-	public Attributes getStatEquivalent(StatProvider statProvider) {
-		if (equivalent == null) {
-			double factor = duration.divideBy(cooldown);
-			equivalent = getAttributes().scale(factor);
-		}
-		return equivalent;
 	}
 
 	@Override

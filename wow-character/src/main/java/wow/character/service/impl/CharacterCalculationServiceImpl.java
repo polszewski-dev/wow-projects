@@ -8,10 +8,10 @@ import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.GameVersion;
 import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.Snapshot;
+import wow.character.model.snapshot.SnapshotState;
 import wow.character.service.CharacterCalculationService;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.spells.Spell;
 
 import static java.lang.Math.max;
@@ -26,12 +26,7 @@ import static wow.commons.constants.SpellConstants.*;
 @AllArgsConstructor
 public class CharacterCalculationServiceImpl implements CharacterCalculationService {
 	@Override
-	public Snapshot getSnapshot(Character character, Attributes totalStats) {
-		return getSnapshot(character, null, totalStats);
-	}
-
-	@Override
-	public Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats) {
+	public Snapshot createSnapshot(Character character, Spell spell, Attributes totalStats) {
 		AccumulatedSpellStats stats = new AccumulatedSpellStats(
 				totalStats,
 				character.getConditions(spell)
@@ -40,53 +35,52 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		stats.accumulateBaseStats(character.getBaseStatInfo());
 		stats.accumulatePrimitiveAttributes();
 
-		Snapshot snapshot = new Snapshot(spell, character, stats);
-
-		calcBaseStats(snapshot);
-		calcSpellStats(snapshot);
-
-		if (spell == null) {
-			return snapshot;
-		}
-
-		boolean recalculate = stats.accumulateComplexAttributes(getStatProvider(snapshot));
-
-		if (recalculate) {
-			calcBaseStats(snapshot);
-			calcSpellStats(snapshot);
-		}
-
-		calcSpellCoefficients(snapshot);
-		calcCastTime(snapshot);
-		calcCost(snapshot);
-		calcDuration(snapshot);
-		calcCooldown(snapshot);
-		calcMisc(snapshot);
-
-		return snapshot;
+		return new Snapshot(spell, character, stats);
 	}
 
-	private StatProvider getStatProvider(Snapshot snapshot) {
-		return new StatProvider() {
-			@Override
-			public double getHitChance() {
-				calcHit(snapshot);
-				return snapshot.getHitChance();
+	@Override
+	public void advanceSnapshot(Snapshot snapshot, SnapshotState targetState) {
+		for (SnapshotState state : SnapshotState.values()) {
+			if (state.compareTo(snapshot.getState()) <= 0) {
+				continue;
 			}
-
-			@Override
-			public double getCritChance() {
-				calcCrit(snapshot);
-				return snapshot.getCritChance();
+			if (state.compareTo(targetState) > 0) {
+				break;
 			}
+			stateBasedCalc(snapshot, state);
+			snapshot.setState(state);
+		}
+	}
 
-			@Override
-			public double getEffectiveCastTime() {
-				calcHaste(snapshot);
+	private void stateBasedCalc(Snapshot snapshot, SnapshotState state) {
+		switch (state) {
+			case BASE_STATS:
+				calcBaseStats(snapshot);
+				break;
+			case SECONDARY_STATS:
+				calcSecondaryStats(snapshot);
+				break;
+			case CAST_TIME:
 				calcCastTime(snapshot);
-				return snapshot.getEffectiveCastTime();
-			}
-		};
+				break;
+			case SPELL_STATS:
+				calcSpellStats(snapshot);
+				break;
+			case COST:
+				calcCost(snapshot);
+				break;
+			case DURATION:
+				calcDuration(snapshot);
+				break;
+			case COOLDOWN:
+				calcCooldown(snapshot);
+				break;
+			case MISC:
+				calcMisc(snapshot);
+				break;
+			case COMPLETE:
+				break;
+		}
 	}
 
 	private void calcBaseStats(Snapshot snapshot) {
@@ -104,11 +98,10 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		snapshot.setMaxMana(getMaxMana(snapshot));
 	}
 
-	private void calcSpellStats(Snapshot snapshot) {
+	private void calcSecondaryStats(Snapshot snapshot) {
 		calcHit(snapshot);
 		calcCrit(snapshot);
 		calcHaste(snapshot);
-		calcSpellPower(snapshot);
 	}
 
 	private void calcHit(Snapshot snapshot) {
@@ -125,6 +118,11 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	private void calcHaste(Snapshot snapshot) {
 		snapshot.setTotalHaste(getTotalHaste(snapshot));
 		snapshot.setHaste(getHaste(snapshot));
+	}
+
+	private void calcSpellStats(Snapshot snapshot) {
+		calcSpellPower(snapshot);
+		calcSpellCoefficients(snapshot);
 	}
 
 	private void calcSpellPower(Snapshot snapshot) {

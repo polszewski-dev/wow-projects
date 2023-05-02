@@ -5,14 +5,9 @@ import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
 import wow.character.util.AttributeEvaluator;
-import wow.commons.model.Duration;
-import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.special.ProcEventType;
 import wow.commons.model.spells.Spell;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,11 +34,11 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		assertThat(underTest.getStamina()).isEqualTo(462);
 		assertThat(underTest.getIntellect()).isEqualTo(373);
 		assertThat(underTest.getBaseStats()).isEqualTo(6);
-		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1433);
-		assertThat(underTest.getDamagePct()).isEqualTo(6);
+		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1380);
+		assertThat(underTest.getDamagePct()).isZero();
 		assertThat(underTest.getHitRating()).isEqualTo(164);
 		assertThat(underTest.getCritRating()).isEqualTo(317);
-		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
+		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(426);
 		assertThat(underTest.getCritDamagePct()).isEqualTo(3);
 	}
 
@@ -59,7 +54,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		assertThat(underTest.getSpiritPct()).isEqualTo(-5);
 		assertThat(underTest.getCritPct()).isEqualTo(8);
 		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(100);
-		assertThat(underTest.getCritCoeffPct()).isEqualTo(0.66, PRECISION);
+		assertThat(underTest.getCritCoeffPct()).isZero();
 		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
 		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
 		assertThat(underTest.getCostPct()).isEqualTo(-5);
@@ -101,16 +96,16 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		assertThat(underTest.getIntellect()).isEqualTo(413);
 		assertThat(underTest.getSpirit()).isEqualTo(20);
 		assertThat(underTest.getBaseStats()).isEqualTo(20);
-		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1773);
-		assertThat(underTest.getDamagePct()).isEqualTo(31);
+		assertThat(underTest.getSpellDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(1720);
+		assertThat(underTest.getDamagePct()).isEqualTo(25);
 		assertThat(underTest.getHitRating()).isEqualTo(164);
 		assertThat(underTest.getHitPct()).isEqualTo(3);
 		assertThat(underTest.getCritRating()).isEqualTo(331);
 		assertThat(underTest.getCritPct()).isEqualTo(11);
-		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(455);
+		assertThat(underTest.getHasteRating()).usingComparator(ROUNDED_DOWN).isEqualTo(426);
 		assertThat(underTest.getCritDamagePct()).isEqualTo(3);
 		assertThat(underTest.getCritDamageMultiplierPct()).isEqualTo(100);
-		assertThat(underTest.getCritCoeffPct()).isEqualTo(0.66, PRECISION);
+		assertThat(underTest.getCritCoeffPct()).isZero();
 		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
 		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
 		assertThat(underTest.getCostPct()).isEqualTo(-5);
@@ -370,33 +365,13 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		assertThat(underTest.getPushbackPct()).isEqualTo(5);
 	}
 
-	@Test
-	@DisplayName("Solving special ability with internal cooldown")
-	void specialAbility() {
-		SpecialAbility proc = SpecialAbility.proc(
-				ProcEventType.SPELL_CRIT,
-				Percent._100,
-				Attributes.of(SPELL_DAMAGE, 100),
-				Duration.seconds(15),
-				Duration.seconds(60),
-				"test"
-		);
-
-		AccumulatedSpellStats underTest = getAccumulatedSpellStats(Attributes.of(proc));
-
-		assertThat(underTest.getSpellDamage()).isEqualTo(25);
-	}
-
 	private AccumulatedSpellStats getAccumulatedSpellStats(Attributes attributes) {
 		Character character = getCharacter();
 		Spell spell = getSpell(SHADOW_BOLT);
 
-		StatProvider dummyStatProvider = StatProvider.dummyValues();
-
 		AccumulatedSpellStats stats = new AccumulatedSpellStats(attributes, character.getConditions(spell));
 
 		stats.accumulatePrimitiveAttributes();
-		stats.accumulateComplexAttributes(dummyStatProvider);
 
 		return stats;
 	}

@@ -3,7 +3,6 @@ package wow.commons.model.attributes.complex.special;
 import lombok.Getter;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 
@@ -28,11 +27,6 @@ public class EquivalentAbility extends SpecialAbility {
 	@Override
 	public EquivalentAbility attachSource(SpecialAbilitySource source) {
 		return new EquivalentAbility(getAttributes(), getLine(), condition, source);
-	}
-
-	@Override
-	public Attributes getStatEquivalent(StatProvider statProvider) {
-		return getAttributes();
 	}
 
 	@Override

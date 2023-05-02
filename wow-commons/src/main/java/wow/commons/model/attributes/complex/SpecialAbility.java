@@ -5,7 +5,6 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatEquivalentProvider;
 import wow.commons.model.attributes.complex.special.*;
 import wow.commons.model.spells.EffectId;
 import wow.commons.util.AttributesBuilder;
@@ -15,7 +14,7 @@ import wow.commons.util.AttributesBuilder;
  * Date: 2021-10-15
  */
 @Getter
-public abstract class SpecialAbility extends ComplexAttribute implements StatEquivalentProvider {
+public abstract class SpecialAbility extends ComplexAttribute {
 	private final String line;
 	private final int priority;
 	private final Attributes attributes;

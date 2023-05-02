@@ -4,14 +4,10 @@ import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
-import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -74,11 +70,7 @@ public class AccumulatedSpellStats {
 		solveStatConversions();
 	}
 
-	public boolean accumulateComplexAttributes(StatProvider statProvider) {
-		return solveAbilities(statProvider);
-	}
-
-	private void accumulatePrimitiveAttributes(List<PrimitiveAttribute> attributes) {
+	public void accumulatePrimitiveAttributes(List<PrimitiveAttribute> attributes) {
 		for (PrimitiveAttribute attribute : attributes) {
 			if (isRelevant(attribute)) {
 				accumulateAttribute(attribute.getId(), attribute.getDouble());
@@ -216,26 +208,5 @@ public class AccumulatedSpellStats {
 			case PET_STAMINA, PET_INTELLECT -> 0; // pets not supported at this moment
 			default -> throw new IllegalArgumentException("Unhandled attribute: " + attributeId);
 		};
-	}
-
-	private boolean solveAbilities(StatProvider statProvider) {
-		if (attributes.getSpecialAbilities().isEmpty()) {
-			return false;
-		}
-
-		List<SpecialAbility> specialAbilities = new ArrayList<>(attributes.getSpecialAbilities());
-		specialAbilities.sort(getSpecialAbilityComparator());
-
-		for (SpecialAbility specialAbility : specialAbilities) {
-			Attributes statEquivalent = specialAbility.getStatEquivalent(statProvider);
-			accumulatePrimitiveAttributes(statEquivalent.getPrimitiveAttributes());
-		}
-
-		return true;
-	}
-
-	private static Comparator<SpecialAbility> getSpecialAbilityComparator() {
-		return Comparator.comparingInt(SpecialAbility::getPriority)
-				.thenComparing(SpecialAbility::toString);
 	}
 }

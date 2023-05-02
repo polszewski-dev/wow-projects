@@ -4,15 +4,12 @@ import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.StatProvider;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.model.spells.EffectId;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.CRIT_COEFF_PCT;
 
 /**
  * User: POlszewski
@@ -49,23 +46,6 @@ public class TalentProcAbility extends SpecialAbility {
 	@Override
 	public TalentProcAbility attachSource(SpecialAbilitySource source) {
 		return new TalentProcAbility(event, effectId, duration, stacks, getLine(), condition, source);
-	}
-
-	@Override
-	public Attributes getStatEquivalent(StatProvider statProvider) {
-		double critChance = statProvider.getCritChance();
-		double extraCritCoeff = getExtraCritCoeff(critChance);
-		if (extraCritCoeff == 0) {
-			return Attributes.EMPTY;
-		}
-		return Attributes.of(CRIT_COEFF_PCT, extraCritCoeff, condition);
-	}
-
-	private double getExtraCritCoeff(double critChance) {
-		int rank = effectId.getRank();
-		double c = critChance;
-		double n = 1 - c;
-		return rank * 0.04 * (2 * c + n) * (1 + n + n * n + n * n * n);
 	}
 
 	@Override

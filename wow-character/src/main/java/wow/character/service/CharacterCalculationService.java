@@ -2,6 +2,7 @@ package wow.character.service;
 
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
+import wow.character.model.snapshot.SnapshotState;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
 
@@ -10,7 +11,7 @@ import wow.commons.model.spells.Spell;
  * Date: 2023-04-27
  */
 public interface CharacterCalculationService {
-	Snapshot getSnapshot(Character character, Attributes totalStats);
+	Snapshot createSnapshot(Character character, Spell spell, Attributes totalStats);
 
-	Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats);
+	void advanceSnapshot(Snapshot snapshot, SnapshotState targetState);
 }
