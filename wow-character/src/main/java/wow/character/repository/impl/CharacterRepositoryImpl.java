@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
-import wow.character.model.character.BaseStatInfo;
-import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
@@ -30,8 +28,6 @@ import java.util.*;
 public class CharacterRepositoryImpl extends ExcelRepository implements CharacterRepository {
 	private final Map<GameVersionId, GameVersion> gameVersionById = new TreeMap<>();
 	private final Map<PhaseId, Phase> phaseById = new TreeMap<>();
-	private final Map<String, List<BaseStatInfo>> baseStatInfos = new HashMap<>();
-	private final Map<String, List<CombatRatingInfo>> combatRatingInfos = new HashMap<>();
 	private final Map<String, List<BuildTemplate>> buildTemplateByKey = new HashMap<>();
 
 	@Value("${character.xls.file.path}")

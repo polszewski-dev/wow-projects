@@ -150,7 +150,7 @@ class CalculationServiceTest extends ServiceTest {
 				Percent.of(50),
 				Attributes.of(SPELL_POWER, 100),
 				Duration.seconds(15),
-				Duration.seconds(60),
+				Duration.seconds(45),
 				"test"
 		);
 
@@ -166,14 +166,14 @@ class CalculationServiceTest extends ServiceTest {
 
 	static Stream<Arguments> procWithICD() {
 		return Stream.of(
-				arguments(SPELL_HIT, 25, 0.9, 0.2, 2),
-				arguments(SPELL_HIT, 25, 0.9, 0.2, 20),
-				arguments(SPELL_CRIT, 25, 0.9, 0.2, 2),
-				arguments(SPELL_CRIT, 7.5, 0.9, 0.2, 20),
-				arguments(SPELL_RESIST, 25, 0.9, 0.2, 2),
-				arguments(SPELL_RESIST, 3.75, 0.9, 0.2, 20),
-				arguments(SPELL_DAMAGE, 25, 0.9, 0.2, 2),
-				arguments(SPELL_DAMAGE, 25, 0.9, 0.2, 20)
+				arguments(SPELL_HIT, 31.10, 0.9, 0.2, 2),
+				arguments(SPELL_HIT, 0, 0.9, 0.2, 20),
+				arguments(SPELL_CRIT, 24.31, 0.9, 0.2, 2),
+				arguments(SPELL_CRIT, 0, 0.9, 0.2, 20),
+				arguments(SPELL_RESIST, 16.41, 0.91, 0.2, 2),
+				arguments(SPELL_RESIST, 0, 0.91, 0.2, 20),
+				arguments(SPELL_DAMAGE, 31.10, 0.9, 0.2, 2),
+				arguments(SPELL_DAMAGE, 0, 0.9, 0.2, 20)
 		);
 	}
 
@@ -202,14 +202,14 @@ class CalculationServiceTest extends ServiceTest {
 
 	static Stream<Arguments> procWithoutICD() {
 		return Stream.of(
-				arguments(SPELL_HIT, 100, 0.9, 0.2, 2),
-				arguments(SPELL_HIT, 33.75, 0.9, 0.2, 20),
-				arguments(SPELL_CRIT, 75, 0.9, 0.2, 2),
-				arguments(SPELL_CRIT, 7.5, 0.9, 0.2, 20),
-				arguments(SPELL_RESIST, 37.5, 0.9, 0.2, 2),
-				arguments(SPELL_RESIST, 3.75, 0.9, 0.2, 20),
-				arguments(SPELL_DAMAGE, 100, 0.9, 0.2, 2),
-				arguments(SPELL_DAMAGE, 37.5, 0.9, 0.2, 20)
+				arguments(SPELL_HIT, 93.49, 0.9, 0.2, 2),
+				arguments(SPELL_HIT, 0, 0.9, 0.2, 20),
+				arguments(SPELL_CRIT, 46.04, 0.9, 0.2, 2),
+				arguments(SPELL_CRIT, 0, 0.9, 0.2, 20),
+				arguments(SPELL_RESIST, 23.99, 0.91, 0.2, 2),
+				arguments(SPELL_RESIST, 0, 0.9, 0.2, 20),
+				arguments(SPELL_DAMAGE, 94.95, 0.9, 0.2, 2),
+				arguments(SPELL_DAMAGE, 0, 0.9, 0.2, 20)
 		);
 	}
 

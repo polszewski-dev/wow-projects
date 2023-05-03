@@ -23,6 +23,7 @@ import wow.commons.util.PrimitiveAttributeSupplier;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 
@@ -33,6 +34,10 @@ import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	protected WowExcelSheetParser(String sheetName) {
 		super(sheetName);
+	}
+
+	protected WowExcelSheetParser(Pattern sheetNamePattern) {
+		super(sheetNamePattern);
 	}
 
 	protected class ExcelColumn extends ExcelSheetParser.ExcelColumn {

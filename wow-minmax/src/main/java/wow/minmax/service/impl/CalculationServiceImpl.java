@@ -17,6 +17,7 @@ import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.*;
+import wow.minmax.repository.ProcInfoRepository;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.impl.enumerators.RotationAbilityEquivalentCalculator;
 import wow.minmax.service.impl.enumerators.RotationDpsCalculator;
@@ -29,8 +30,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
@@ -43,6 +42,7 @@ import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
 	private final CharacterCalculationService characterCalculationService;
+	private final ProcInfoRepository procInfoRepository;
 
 	@Override
 	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character) {
@@ -189,10 +189,48 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private double getProcUptime(double procChance, double duration, double internalCooldown, double castTime) {
-		double theoreticalCooldown = castTime / procChance;
-		double actualCooldown = internalCooldown != 0 ? max(internalCooldown, theoreticalCooldown) : theoreticalCooldown;
+		double procChancePct = 100 * procChance;
 
-		return min(duration / actualCooldown, 1);
+		double p = procChancePct * ProcInfo.CHANCE_RESOLUTION;
+		double t = castTime * ProcInfo.CAST_TIME_RESOLUTION;
+
+		double modP = p % 1;
+		double modT = t % 1;
+
+		return getProcUptime((int) p, (int) t, modP, modT, (int) duration, (int) internalCooldown);
+	}
+
+	private double getProcUptime(int p, int t, double modP, double modT, int duration, int internalCooldown) {
+		double procUptime0 = procInfoRepository.getAverageUptime(p, t, duration, internalCooldown);
+
+		if (modP != 0 && modT != 0) {
+			double procUptime1 = procInfoRepository.getAverageUptime(p + 1, t, duration, internalCooldown);
+			double procUptime2 = procInfoRepository.getAverageUptime(p, t + 1, duration, internalCooldown);
+			double procUptime3 = procInfoRepository.getAverageUptime(p + 1, t + 1, duration, internalCooldown);
+
+			double v1 = interpolate(procUptime0, procUptime1, modP);
+			double v2 = interpolate(procUptime2, procUptime3, modP);
+
+			return interpolate(v1, v2, modT);
+		}
+
+		if (modP != 0) {
+			double procUptime1 = procInfoRepository.getAverageUptime(p + 1, t, duration, internalCooldown);
+
+			return interpolate(procUptime0, procUptime1, modP);
+		}
+
+		if (modT != 0) {
+			double procUptime1 = procInfoRepository.getAverageUptime(p, t + 1, duration, internalCooldown);
+
+			return interpolate(procUptime0, procUptime1, modT);
+		}
+
+		return procUptime0;
+	}
+
+	private static double interpolate(double v0, double v1, double t) {
+		return v0 + (v1 - v0) * t;
 	}
 
 	private Attributes getTalentProcStatEquivalent(TalentProcAbility ability, Snapshot snapshot) {
