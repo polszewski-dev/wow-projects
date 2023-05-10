@@ -24,7 +24,6 @@ import wow.minmax.service.impl.enumerators.RotationDpsCalculator;
 import wow.minmax.service.impl.enumerators.RotationStatsCalculator;
 import wow.minmax.service.impl.enumerators.StatEquivalentFinder;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -157,9 +156,6 @@ public class CalculationServiceImpl implements CalculationService {
 			return specialAbility.getAttributes();
 		}
 	}
-
-	private static final Comparator<SpecialAbility> SPECIAL_ABILITY_COMPARATOR = Comparator.comparingInt(SpecialAbility::getPriority)
-				.thenComparing(SpecialAbility::toString);
 
 	private Attributes getProcStatEquivalent(ProcAbility ability, Snapshot snapshot) {
 		double procChance = getProcChance(ability, snapshot);

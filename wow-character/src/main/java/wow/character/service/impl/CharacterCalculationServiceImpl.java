@@ -41,14 +41,10 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public void advanceSnapshot(Snapshot snapshot, SnapshotState targetState) {
 		for (SnapshotState state : SnapshotState.values()) {
-			if (state.compareTo(snapshot.getState()) <= 0) {
-				continue;
+			if (state.compareTo(snapshot.getState()) > 0 && state.compareTo(targetState) <= 0) {
+				stateBasedCalc(snapshot, state);
+				snapshot.setState(state);
 			}
-			if (state.compareTo(targetState) > 0) {
-				break;
-			}
-			stateBasedCalc(snapshot, state);
-			snapshot.setState(state);
 		}
 	}
 
@@ -78,8 +74,10 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			case MISC:
 				calcMisc(snapshot);
 				break;
-			case COMPLETE:
+			case INITIAL, COMPLETE:
 				break;
+			default:
+				throw new IllegalStateException("Unexpected value: " + state);
 		}
 	}
 
