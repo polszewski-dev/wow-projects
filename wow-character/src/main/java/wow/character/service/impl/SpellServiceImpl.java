@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import wow.character.model.character.Character;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.Talent;
@@ -30,6 +31,11 @@ public class SpellServiceImpl implements SpellService {
 	}
 
 	@Override
+	public List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId) {
+		return spellRepository.getAvailableTalents(characterClassId, phaseId);
+	}
+
+	@Override
 	public Buff getBuff(int buffId, PhaseId phaseId) {
 		return spellRepository.getBuff(buffId, phaseId).orElseThrow();
 	}
@@ -48,10 +54,5 @@ public class SpellServiceImpl implements SpellService {
 		return spellRepository.getBuffs(character.getPhaseId()).stream()
 				.filter(buff -> buff.isAvailableTo(character))
 				.toList();
-	}
-
-	@Override
-	public Talent getTalent(int position, int talentRank, Character character) {
-		return spellRepository.getTalent(character.getCharacterClassId(), position, talentRank, character.getPhaseId()).orElseThrow();
 	}
 }

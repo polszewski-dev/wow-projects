@@ -58,12 +58,12 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	private final Map<SpellId, Set<AttributeCondition>> conditionCache;
 
-	public Character(CharacterClass characterClass, Race race, int level, Phase phase) {
+	public Character(CharacterClass characterClass, Race race, int level, Phase phase, Talents talents) {
 		this.characterClass = characterClass;
 		this.race = race;
 		this.level = level;
 		this.phase = phase;
-		this.build = new Build();
+		this.build = new Build(talents);
 		this.spellbook = new Spellbook();
 		this.equipment = new Equipment();
 		this.professions = new CharacterProfessions();

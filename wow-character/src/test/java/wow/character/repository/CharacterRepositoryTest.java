@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.build.BuildTemplate;
+import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.commons.model.categorization.*;
@@ -527,7 +528,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		GameVersion gameVersion = underTest.getGameVersion(gameVersionId).orElseThrow();
 		CharacterClass warlock = gameVersion.getCharacterClass(WARLOCK);
 		Race orc = gameVersion.getRace(ORC);
-		return new Character(warlock, orc, gameVersion.getMaxLevel(), gameVersion.getLastPhase());
+		return new Character(warlock, orc, gameVersion.getMaxLevel(), gameVersion.getLastPhase(), new Talents(List.of()));
 	}
 
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

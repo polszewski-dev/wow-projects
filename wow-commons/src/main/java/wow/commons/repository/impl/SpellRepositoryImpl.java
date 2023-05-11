@@ -28,6 +28,7 @@ import java.util.*;
 public class SpellRepositoryImpl extends ExcelRepository implements SpellRepository {
 	private final Map<CharacterClassId, List<Spell>> spellsByClass = new LinkedHashMap<>();
 	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
+	private final Map<CharacterClassId, List<Talent>> talentsByClass = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByIdByRank = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
 	private final Map<Integer, List<Buff>> buffsById = new LinkedHashMap<>();
@@ -62,6 +63,13 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		return spells.stream()
 				.filter(spell -> spell.getRank() == maxRank)
 				.collect(CollectionUtil.toOptionalSingleton());
+	}
+
+	@Override
+	public List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId) {
+		return talentsByClass.getOrDefault(characterClassId, List.of()).stream()
+				.filter(spell -> spell.isAvailableDuring(phaseId))
+				.toList();
 	}
 
 	@Override
@@ -125,6 +133,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		if (optionalExistingTalent.isEmpty()) {
 			list.add(talent);
 			addEntry(talentByClassByIdByRank, getTalentKey(talent.getCharacterClass(), talent.getTalentId(), talent.getRank()), talent);
+			talentsByClass.computeIfAbsent(talent.getCharacterClass(), x -> new ArrayList<>()).add(talent);
 			return;
 		}
 

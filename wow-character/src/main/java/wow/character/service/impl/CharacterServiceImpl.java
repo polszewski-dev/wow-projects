@@ -15,10 +15,11 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -39,25 +40,6 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public Talents getTalentsFromTalentLink(String link, Character character) {
-		Map<TalentId, Talent> result = new LinkedHashMap<>();
-
-		String talentStringStart = "?tal=";
-		String talentString = link.substring(link.indexOf(talentStringStart) + talentStringStart.length());
-
-		for (int position = 1; position <= talentString.length(); ++position) {
-			int talentRank = talentString.charAt(position - 1) - '0';
-
-			if (talentRank > 0) {
-				Talent talent = spellService.getTalent(position, talentRank, character);
-				result.put(talent.getTalentId(), talent);
-			}
-		}
-
-		return new Talents(result);
-	}
-
-	@Override
 	public Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
 		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
 		GameVersion gameVersion = phase.getGameVersion();
@@ -66,7 +48,8 @@ public class CharacterServiceImpl implements CharacterService {
 				gameVersion.getCharacterClass(characterClassId),
 				gameVersion.getRace(raceId),
 				level,
-				phase
+				phase,
+				new Talents(spellService.getAvailableTalents(characterClassId, phaseId))
 		);
 	}
 
@@ -88,7 +71,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 		build.setBuildId(buildId);
 		build.setTalentLink(buildTemplate.getTalentLink());
-		build.setTalents(getTalentsFromTalentLink(buildTemplate.getTalentLink(), character));
+		build.getTalents().loadFromTalentLink(buildTemplate.getTalentLink());
 		build.setRole(buildTemplate.getRole());
 
 		character.getSpellbook().reset();

@@ -20,6 +20,8 @@ public interface SpellRepository {
 
 	Optional<Spell> getSpellHighestRank(SpellId spellId, int level, PhaseId phaseId);
 
+	List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId);
+
 	Optional<Talent> getTalent(CharacterClassId characterClassId, TalentId talentId, int rank, PhaseId phaseId);
 
 	Optional<Talent> getTalent(CharacterClassId characterClassId, int talentCalculatorPosition, int rank, PhaseId phaseId);

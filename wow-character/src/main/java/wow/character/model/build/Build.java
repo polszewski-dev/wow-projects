@@ -24,14 +24,15 @@ import java.util.List;
 public class Build implements AttributeCollection, Copyable<Build> {
 	private BuildId buildId;
 	private String talentLink;
-	private Talents talents;
+	private final Talents talents;
 	private PveRole role;
 	private Rotation rotation;
 	private List<Spell> relevantSpells;
 	private PetType activePet;
 	private BuffSets buffSets;
 
-	public Build() {
+	public Build(Talents talents) {
+		this.talents = talents;
 		reset();
 	}
 
@@ -40,13 +41,24 @@ public class Build implements AttributeCollection, Copyable<Build> {
 		return new Build(
 				buildId,
 				talentLink,
-				talents,
+				talents.copy(),
 				role,
 				rotation,
 				relevantSpells,
 				activePet,
 				buffSets
 		);
+	}
+
+	public void reset() {
+		this.buildId = null;
+		this.talentLink = null;
+		this.role = null;
+		this.rotation = null;
+		this.relevantSpells = List.of();
+		this.activePet = null;
+		this.buffSets = BuffSets.EMPTY;
+		this.talents.reset();
 	}
 
 	@Override
@@ -60,16 +72,5 @@ public class Build implements AttributeCollection, Copyable<Build> {
 
 	public List<Buff> getBuffSet(BuffSetId buffSetId) {
 		return buffSets.getBuffSet(buffSetId);
-	}
-
-	public void reset() {
-		this.buildId = null;
-		this.talentLink = null;
-		this.talents = Talents.EMPTY;
-		this.role = null;
-		this.rotation = null;
-		this.relevantSpells = List.of();
-		this.activePet = null;
-		this.buffSets = BuffSets.EMPTY;
 	}
 }
