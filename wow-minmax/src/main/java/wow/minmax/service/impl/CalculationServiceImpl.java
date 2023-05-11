@@ -2,8 +2,8 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Rotation;
+import wow.character.model.character.Buffs;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
@@ -13,6 +13,8 @@ import wow.commons.model.attributes.complex.special.OnUseAbility;
 import wow.commons.model.attributes.complex.special.ProcAbility;
 import wow.commons.model.attributes.complex.special.TalentProcAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.AttributesBuilder;
@@ -292,10 +294,17 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public CharacterStats getStats(Character character, BuffSetId... buffSetIds) {
+	public CharacterStats getStats(Character character, BuffCategory... buffCategories) {
 		Character copy = character.copy();
-		copy.setBuffs(buffSetIds);
+		copy.setBuffs(getFilteredBuffs(character.getBuffs(), buffCategories));
+		copy.getTargetEnemy().setDebuffs(getFilteredBuffs(character.getTargetEnemy().getDebuffs(), buffCategories));
 		return getStats(copy, copy.getStats());
+	}
+
+	private List<Buff> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
+		return buffs.getList().stream()
+				.filter(x -> Stream.of(buffCategories).anyMatch(y -> x.getCategories().contains(y)))
+				.toList();
 	}
 
 	@Override

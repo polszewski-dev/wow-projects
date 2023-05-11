@@ -6,7 +6,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.character.model.build.BuffSetId;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.CritMode;
@@ -30,6 +29,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static wow.commons.model.attributes.complex.special.ProcEventType.SPELL_DAMAGE;
 import static wow.commons.model.attributes.complex.special.ProcEventType.*;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.buffs.BuffCategory.SELF_BUFF;
 import static wow.commons.model.spells.SpellId.*;
 import static wow.commons.model.spells.SpellSchool.FIRE;
 import static wow.commons.model.spells.SpellSchool.SHADOW;
@@ -530,7 +530,7 @@ class CalculationServiceTest extends ServiceTest {
 	void correctStats() {
 		character.setEquipment(getEquipment());
 
-		CharacterStats stats = underTest.getStats(character, BuffSetId.SELF_BUFFS);
+		CharacterStats stats = underTest.getStats(character, SELF_BUFF);
 
 		assertThat(stats.getSp()).isEqualTo(1456);
 		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1510.0);

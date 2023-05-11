@@ -6,12 +6,9 @@ import lombok.Setter;
 import wow.character.model.Copyable;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.PetType;
 import wow.commons.model.talents.TalentId;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -27,7 +24,6 @@ public class Build implements AttributeCollection, Copyable<Build> {
 	private PveRole role;
 	private Rotation rotation;
 	private PetType activePet;
-	private BuffSets buffSets;
 
 	public Build(Talents talents) {
 		this.talents = talents;
@@ -42,8 +38,7 @@ public class Build implements AttributeCollection, Copyable<Build> {
 				talents.copy(),
 				role,
 				rotation,
-				activePet,
-				buffSets
+				activePet
 		);
 	}
 
@@ -53,7 +48,6 @@ public class Build implements AttributeCollection, Copyable<Build> {
 		this.role = null;
 		this.rotation = null;
 		this.activePet = null;
-		this.buffSets = BuffSets.EMPTY;
 		this.talents.reset();
 	}
 
@@ -64,9 +58,5 @@ public class Build implements AttributeCollection, Copyable<Build> {
 
 	public boolean hasTalent(TalentId talentId) {
 		return talents.hasTalent(talentId);
-	}
-
-	public List<Buff> getBuffSet(BuffSetId buffSetId) {
-		return buffSets.getBuffSet(buffSetId);
 	}
 }

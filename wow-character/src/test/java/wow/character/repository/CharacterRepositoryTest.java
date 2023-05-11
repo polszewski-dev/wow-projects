@@ -19,11 +19,9 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.build.BuffSetId.*;
 import static wow.character.model.build.BuildId.DESTRO_SHADOW;
 import static wow.character.model.character.ArmorProfficiency.CLOTH;
 import static wow.character.model.character.WeaponProfficiency.*;
@@ -92,12 +90,13 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(buildTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(buildTemplate.getDefaultRotation()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
 		assertThat(buildTemplate.getActivePet()).isNull();
-		assertThat(buildTemplate.getBuffSets()).isEqualTo(Map.of(
-				SELF_BUFFS, List.of("Fel Armor", "Touch of Shadow"),
-				PARTY_BUFFS, List.of("Arcane Brilliance", "Prayer of Fortitude", "Prayer of Spirit", "Gift of the Wild", "Greater Blessing of Kings"),
-				RAID_BUFFS, List.of("Curse of the Elements", "Wrath of Air Totem", "Totem of Wrath"),
-				WORLD_BUFFS, List.of(),
-				CONSUMES, List.of("Well Fed (sp)", "Brilliant Wizard Oil", "Flask of Pure Death")
+		assertThat(buildTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
+				"Fel Armor", "Touch of Shadow", "Arcane Brilliance", "Prayer of Fortitude", "Prayer of Spirit",
+				"Gift of the Wild", "Greater Blessing of Kings", "Wrath of Air Totem",
+				"Totem of Wrath", "Well Fed (sp)", "Brilliant Wizard Oil", "Flask of Pure Death"
+		));
+		assertThat(buildTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
+				"Curse of the Elements"
 		));
 		assertThat(buildTemplate.getProfessions().get(0).getProfessionId()).isEqualTo(ENCHANTING);
 		assertThat(buildTemplate.getProfessions().get(0).getSpecializationId()).isNull();

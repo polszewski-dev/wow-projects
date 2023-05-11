@@ -1,12 +1,12 @@
 package wow.minmax.service;
 
-import wow.character.model.build.BuffSetId;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.spells.Spell;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.RotationStats;
@@ -47,7 +47,7 @@ public interface CalculationService {
 
 	CharacterStats getCurrentStats(Character character);
 
-	CharacterStats getStats(Character character, BuffSetId... selfBuffs);
+	CharacterStats getStats(Character character, BuffCategory... buffCategories);
 
 	CharacterStats getEquipmentStats(Character character);
 

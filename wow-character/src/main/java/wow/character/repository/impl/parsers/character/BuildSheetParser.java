@@ -1,6 +1,5 @@
 package wow.character.repository.impl.parsers.character;
 
-import wow.character.model.build.BuffSetId;
 import wow.character.model.build.BuildId;
 import wow.character.model.build.BuildTemplate;
 import wow.character.model.character.CharacterProfession;
@@ -13,10 +12,9 @@ import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.model.spells.SpellId;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -31,6 +29,8 @@ public class BuildSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colRole = column("role");
 	private final ExcelColumn colDefaultRotation = column("default_rotation");
 	private final ExcelColumn colActivePet = column("active_pet");
+	private final ExcelColumn colDefaultBuffs = column("default_buffs");
+	private final ExcelColumn colDefaultDebuffs = column("default_debuffs");
 	private final ExcelColumn colProf1 = column("prof1");
 	private final ExcelColumn colProf1Spec = column("prof1_spec");
 	private final ExcelColumn colProf2 = column("prof2");
@@ -60,7 +60,8 @@ public class BuildSheetParser extends CharacterSheetParser {
 		var pveRole = colRole.getEnum(PveRole::parse);
 		var defaultRotation = colDefaultRotation.getList(SpellId::parse);
 		var activePet = colActivePet.getEnum(PetType::parse, null);
-		var buffSets = getBuffSets();
+		var defaultBuffs = colDefaultBuffs.getList(Function.identity());
+		var defaultDebuffs = colDefaultDebuffs.getList(Function.identity());
 		var professions = getProfessions(timeRestriction);
 
 		return new BuildTemplate(
@@ -72,21 +73,10 @@ public class BuildSheetParser extends CharacterSheetParser {
 				pveRole,
 				defaultRotation,
 				activePet,
-				buffSets,
+				defaultBuffs,
+				defaultDebuffs,
 				professions
 		);
-	}
-
-	private Map<BuffSetId, List<String>> getBuffSets() {
-		Map<BuffSetId, List<String>> result = new EnumMap<>(BuffSetId.class);
-
-		for (BuffSetId buffSetId : BuffSetId.values()) {
-			String columnName = "buff_set:" + buffSetId.name().toLowerCase();
-			List<String> buffNames = column(columnName, true).getList(x -> x);
-			result.put(buffSetId, buffNames);
-		}
-
-		return result;
 	}
 
 	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction) {

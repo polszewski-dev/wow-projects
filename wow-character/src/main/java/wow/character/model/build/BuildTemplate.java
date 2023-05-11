@@ -11,7 +11,6 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spells.SpellId;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -28,6 +27,7 @@ public class BuildTemplate implements TimeRestricted {
 	private final PveRole role;
 	private final List<SpellId> defaultRotation;
 	private final PetType activePet;
-	private final Map<BuffSetId, List<String>> buffSets;
+	private final List<String> defaultBuffs;
+	private final List<String> defaultDebuffs;
 	private final List<CharacterProfession> professions;
 }

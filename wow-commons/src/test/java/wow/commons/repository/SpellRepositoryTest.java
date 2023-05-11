@@ -24,10 +24,13 @@ import wow.commons.model.talents.Talent;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attributes.complex.special.ProcEventType.SPELL_CRIT;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_CRIT_PCT;
+import static wow.commons.model.buffs.BuffCategory.RAID_BUFF;
+import static wow.commons.model.categorization.PveRole.CASTER_DPS;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
 import static wow.commons.model.spells.SpellId.*;
@@ -196,6 +199,8 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
 		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.COE);
 		assertThat(buff.getSourceSpell()).isEqualTo(CURSE_OF_THE_ELEMENTS);
+		assertThat(buff.getPveRoles()).hasSameElementsAs(Set.of(CASTER_DPS));
+		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(RAID_BUFF));
 
 		Attributes stats = buff.getAttributes();
 

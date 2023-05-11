@@ -9,7 +9,6 @@ import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
-import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
@@ -17,7 +16,6 @@ import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 
 /**
@@ -78,9 +76,9 @@ public class CharacterServiceImpl implements CharacterService {
 
 		build.setRotation(getRotation(character, buildTemplate));
 		build.setActivePet(buildTemplate.getActivePet());
-		build.setBuffSets(getBuffSets(buildTemplate, character));
 
-		character.setBuffs(BuffSetId.values());
+		character.setBuffs(spellService.getBuffs(buildTemplate.getDefaultBuffs(), character));
+		character.getTargetEnemy().setDebuffs(spellService.getBuffs(buildTemplate.getDefaultDebuffs(), character));
 		character.setProfessions(buildTemplate.getProfessions());
 	}
 
@@ -111,19 +109,5 @@ public class CharacterServiceImpl implements CharacterService {
 		}
 
 		return new Rotation(cooldowns, filler);
-	}
-
-	private BuffSets getBuffSets(BuildTemplate buildTemplate, Character character) {
-		var result = new EnumMap<BuffSetId, List<Buff>>(BuffSetId.class);
-
-		for (var entry : buildTemplate.getBuffSets().entrySet()) {
-			BuffSetId buffSetId = entry.getKey();
-			List<String> buffNames = entry.getValue();
-			List<Buff> buffs = spellService.getBuffs(buffNames, character);
-
-			result.put(buffSetId, buffs);
-		}
-
-		return new BuffSets(result);
 	}
 }

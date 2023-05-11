@@ -6,8 +6,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import wow.character.model.build.BuffSetId;
 import wow.character.model.equipment.EquippableItem;
+import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
@@ -202,7 +202,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		super.setup();
 
 		character.setEquipment(getEquipment());
-		character.setBuffs(BuffSetId.CONSUMES);
+		character.setBuffs(character.getBuffs().getList().stream().filter(x -> x.getCategories().contains(BuffCategory.CONSUME)).toList());
 
 		PlayerProfilePO profilePO = playerProfilePOConverter.convert(profile);
 

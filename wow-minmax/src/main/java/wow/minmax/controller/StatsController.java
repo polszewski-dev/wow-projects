@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wow.character.model.build.BuffSetId;
 import wow.character.model.character.Character;
 import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.buffs.BuffCategory;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.RotationStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static wow.character.model.build.BuffSetId.*;
+import static wow.commons.model.buffs.BuffCategory.*;
 
 /**
  * User: POlszewski
@@ -87,8 +87,8 @@ public class StatsController {
 	}
 
 	private CharacterStats getCharacterStats(Character character, BuffCombo buffCombo) {
-		var buffSetIds = buffCombo.buffSetIds.toArray(BuffSetId[]::new);
-		return calculationService.getStats(character, buffSetIds);
+		var buffCategories = buffCombo.buffCategories.toArray(BuffCategory[]::new);
+		return calculationService.getStats(character, buffCategories);
 	}
 
 	@GetMapping("{characterId}/special")
@@ -123,25 +123,25 @@ public class StatsController {
 	@Getter
 	private enum BuffCombo {
 		C1("No buffs"),
-		C2("Self-buffs", SELF_BUFFS),
-		C3("Party buffs", SELF_BUFFS, PARTY_BUFFS),
-		C4("Party buffs & consumes", SELF_BUFFS, PARTY_BUFFS, CONSUMES),
-		C5("Raid buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, CONSUMES),
-		C6("World buffs & consumes", SELF_BUFFS, PARTY_BUFFS, RAID_BUFFS, WORLD_BUFFS, CONSUMES);
+		C2("Self-buffs", SELF_BUFF),
+		C3("Party buffs", SELF_BUFF, PARTY_BUFF),
+		C4("Party buffs & consumes", SELF_BUFF, PARTY_BUFF, CONSUME),
+		C5("Raid buffs & consumes", SELF_BUFF, PARTY_BUFF, RAID_BUFF, CONSUME),
+		C6("World buffs & consumes", SELF_BUFF, PARTY_BUFF, RAID_BUFF, WORLD_BUFF, CONSUME);
 
 		private final String type;
-		private final List<BuffSetId> buffSetIds;
+		private final List<BuffCategory> buffCategories;
 
-		BuffCombo(String type, BuffSetId... buffSetIds) {
+		BuffCombo(String type, BuffCategory... buffCategories) {
 			this.type = type;
-			this.buffSetIds = List.of(buffSetIds);
+			this.buffCategories = List.of(buffCategories);
 		}
 
 		static List<BuffCombo> getBuffCombos(Character character) {
 			boolean worldBuffsAllowed = character.getGameVersion().isWorldBuffs();
 
 			return Stream.of(values())
-					.filter(x -> worldBuffsAllowed || !x.buffSetIds.contains(WORLD_BUFFS))
+					.filter(x -> worldBuffsAllowed || !x.buffCategories.contains(WORLD_BUFF))
 					.toList();
 		}
 	}

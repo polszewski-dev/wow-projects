@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.buffs.BuffExclusionGroup;
 import wow.commons.model.buffs.BuffType;
 import wow.commons.model.buffs.impl.BuffImpl;
@@ -17,6 +18,7 @@ public class BuffSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colType = column("type");
 	private final ExcelColumn colExclusionGroup = column("exclusion group");
 	private final ExcelColumn colSourceSpell = column("source spell");
+	private final ExcelColumn colCategories = column("categories");
 
 	private final SpellRepositoryImpl spellRepository;
 
@@ -36,6 +38,8 @@ public class BuffSheetParser extends WowExcelSheetParser {
 		var type = colType.getEnum(BuffType::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(BuffExclusionGroup::parse, null);
 		var sourceSpell = colSourceSpell.getEnum(SpellId::parse, null);
+		var pveRoles = getPveRoles();
+		var categories = colCategories.getSet(BuffCategory::parse);
 
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
@@ -43,7 +47,9 @@ public class BuffSheetParser extends WowExcelSheetParser {
 
 		var buffAttributes = readAttributes();
 
-		var buff = new BuffImpl(buffId, description, timeRestriction, characterRestriction, type, exclusionGroup, sourceSpell);
+		var buff = new BuffImpl(
+				buffId, description, timeRestriction, characterRestriction, type, exclusionGroup, sourceSpell, pveRoles, categories
+		);
 
 		buff.setAttributes(buffAttributes);
 		return buff;

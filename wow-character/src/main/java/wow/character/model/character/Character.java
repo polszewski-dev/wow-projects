@@ -3,7 +3,10 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.Copyable;
-import wow.character.model.build.*;
+import wow.character.model.build.Build;
+import wow.character.model.build.BuildId;
+import wow.character.model.build.Rotation;
+import wow.character.model.build.Talents;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.util.AttributeEvaluator;
@@ -30,8 +33,6 @@ import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentId;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 
@@ -131,20 +132,6 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	public boolean canEquip(ItemSlot itemSlot, Item item) {
 		return characterClass.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
-	}
-
-	public void setBuffs(BuffSetId... buffSetIds) {
-		var collect = getBuffs(buffSetIds).stream()
-				.collect(Collectors.partitioningBy(Buff::isDebuff));
-
-		buffs.set(collect.get(false));
-		targetEnemy.getDebuffs().set(collect.get(true));
-	}
-
-	private Set<Buff> getBuffs(BuffSetId[] buffSetIds) {
-		return Stream.of(buffSetIds)
-				.flatMap(buffSetId -> build.getBuffSet(buffSetId).stream())
-				.collect(Collectors.toSet());
 	}
 
 	public void resetBuild() {
@@ -248,14 +235,6 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	public PetType getActivePet() {
 		return build.getActivePet();
-	}
-
-	public BuffSets getBuffSets() {
-		return build.getBuffSets();
-	}
-
-	public List<Buff> getBuffSet(BuffSetId buffSetId) {
-		return build.getBuffSet(buffSetId);
 	}
 
 	@Override
