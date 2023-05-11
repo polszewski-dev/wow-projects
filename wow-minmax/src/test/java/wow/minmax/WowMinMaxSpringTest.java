@@ -19,8 +19,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 import wow.commons.repository.ItemRepository;
@@ -93,10 +91,6 @@ public abstract class WowMinMaxSpringTest {
 
 	protected Enchant getEnchant(String name) {
 		return itemRepository.getEnchant(name, PHASE).orElseThrow();
-	}
-
-	protected Spell getSpell(SpellId spellId) {
-		return spellRepository.getSpellHighestRank(spellId, LEVEL, PHASE).orElseThrow();
 	}
 
 	protected Buff getBuff(String name) {

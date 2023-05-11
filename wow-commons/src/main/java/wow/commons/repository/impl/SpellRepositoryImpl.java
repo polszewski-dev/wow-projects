@@ -26,6 +26,7 @@ import java.util.*;
 @Repository
 @RequiredArgsConstructor
 public class SpellRepositoryImpl extends ExcelRepository implements SpellRepository {
+	private final Map<CharacterClassId, List<Spell>> spellsByClass = new LinkedHashMap<>();
 	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByIdByRank = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
@@ -35,6 +36,14 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 
 	@Value("${spell.xls.file.path}")
 	private String xlsFilePath;
+
+	@Override
+	public List<Spell> getAvailableSpells(CharacterClassId characterClassId, int level, PhaseId phaseId) {
+		return spellsByClass.getOrDefault(characterClassId, List.of()).stream()
+				.filter(spell -> spell.getRequiredLevel() <= level)
+				.filter(spell -> spell.isAvailableDuring(phaseId))
+				.toList();
+	}
 
 	@Override
 	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level, PhaseId phaseId) {
@@ -99,6 +108,9 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	}
 
 	public void addSpell(Spell spell) {
+		for (CharacterClassId characterClassId : spell.getCharacterRestriction().getCharacterClassIds()) {
+			spellsByClass.computeIfAbsent(characterClassId, x -> new ArrayList<>()).add(spell);
+		}
 		addEntry(spellById, spell.getSpellId(), spell);
 	}
 

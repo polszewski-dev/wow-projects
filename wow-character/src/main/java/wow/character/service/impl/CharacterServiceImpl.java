@@ -14,6 +14,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 
@@ -89,10 +90,15 @@ public class CharacterServiceImpl implements CharacterService {
 		build.setTalentLink(buildTemplate.getTalentLink());
 		build.setTalents(getTalentsFromTalentLink(buildTemplate.getTalentLink(), character));
 		build.setRole(buildTemplate.getRole());
+
+		character.getSpellbook().reset();
+		character.getSpellbook().addSpells(spellService.getAvailableSpells(character));
+
 		build.setRotation(getRotation(character, buildTemplate));
-		build.setRelevantSpells(spellService.getSpellHighestRanks(buildTemplate.getRelevantSpells(), character));
 		build.setActivePet(buildTemplate.getActivePet());
 		build.setBuffSets(getBuffSets(buildTemplate, character));
+
+		build.setRelevantSpells(getSpellHighestRanks(character, buildTemplate));
 
 		character.setBuffs(BuffSetId.values());
 		character.setProfessions(buildTemplate.getProfessions());
@@ -102,9 +108,15 @@ public class CharacterServiceImpl implements CharacterService {
 		List<Spell> cooldowns = new ArrayList<>();
 		Spell filler = null;
 
-		var spells = spellService.getSpellHighestRanks(buildTemplate.getDefaultRotation(), character);
+		for (SpellId spellId : buildTemplate.getDefaultRotation()) {
+			Optional<Spell> optionalSpell = character.getSpellbook().getSpell(spellId);
 
-		for (Spell spell : spells) {
+			if (optionalSpell.isEmpty()) {
+				continue;
+			}
+
+			Spell spell = optionalSpell.get();
+
 			if ((spell.hasDotComponent() && !spell.isChanneled()) || spell.getCooldown().isPositive()) {
 				cooldowns.add(spell);
 			} else if (filler == null) {
@@ -119,6 +131,14 @@ public class CharacterServiceImpl implements CharacterService {
 		}
 
 		return new Rotation(cooldowns, filler);
+	}
+
+	private List<Spell> getSpellHighestRanks(Character character, BuildTemplate buildTemplate) {
+		return buildTemplate.getRelevantSpells().stream()
+				.map(x -> character.getSpellbook().getSpell(x))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.toList();
 	}
 
 	private BuffSets getBuffSets(BuildTemplate buildTemplate, Character character) {

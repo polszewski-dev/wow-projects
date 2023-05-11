@@ -7,13 +7,11 @@ import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.repository.SpellRepository;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -25,26 +23,15 @@ public class SpellServiceImpl implements SpellService {
 	private final SpellRepository spellRepository;
 
 	@Override
-	public Spell getSpellHighestRank(SpellId spellId, Character character) {
-		return getSpellHighestRankFilteredByCharacter(spellId, character).orElseThrow();
-	}
-
-	@Override
-	public List<Spell> getSpellHighestRanks(List<SpellId> spellIds, Character character) {
-		return spellIds.stream()
-				.map(spellId -> getSpellHighestRankFilteredByCharacter(spellId, character).orElse(null))
-				.filter(Objects::nonNull)
+	public List<Spell> getAvailableSpells(Character character) {
+		return spellRepository.getAvailableSpells(character.getCharacterClassId(), character.getLevel(), character.getPhaseId()).stream()
+				.filter(spell -> spell.isAvailableTo(character))
 				.toList();
 	}
 
 	@Override
 	public Buff getBuff(int buffId, PhaseId phaseId) {
 		return spellRepository.getBuff(buffId, phaseId).orElseThrow();
-	}
-
-	private Optional<Spell> getSpellHighestRankFilteredByCharacter(SpellId spellId, Character character) {
-		return spellRepository.getSpellHighestRank(spellId, character.getLevel(), character.getPhaseId())
-				.filter(spell -> spell.isAvailableTo(character));
 	}
 
 	@Override

@@ -47,6 +47,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	private final int level;
 	private final Phase phase;
 	private final Build build;
+	private final Spellbook spellbook;
 	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final Buffs buffs;
@@ -63,6 +64,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		this.level = level;
 		this.phase = phase;
 		this.build = new Build();
+		this.spellbook = new Spellbook();
 		this.equipment = new Equipment();
 		this.professions = new CharacterProfessions();
 		this.buffs = new Buffs(CHARACTER_BUFF);
@@ -79,6 +81,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 				level,
 				phase,
 				build.copy(),
+				spellbook.copy(),
 				equipment.copy(),
 				professions.copy(),
 				buffs.copy(),

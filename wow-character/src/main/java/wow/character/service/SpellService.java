@@ -4,7 +4,6 @@ import wow.character.model.character.Character;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 
 import java.util.List;
@@ -14,9 +13,7 @@ import java.util.List;
  * Date: 2021-12-28
  */
 public interface SpellService {
-	Spell getSpellHighestRank(SpellId spellId, Character character);
-
-	List<Spell> getSpellHighestRanks(List<SpellId> spellIds, Character character);
+	List<Spell> getAvailableSpells(Character character);
 
 	Buff getBuff(int buffId, PhaseId phaseId);
 

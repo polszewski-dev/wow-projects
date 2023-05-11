@@ -2,6 +2,8 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import wow.character.model.character.Character;
+import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.PlayerProfile;
 
@@ -17,5 +19,9 @@ abstract class ServiceTest extends WowMinMaxSpringTest {
 	void setup() {
 		profile = getPlayerProfile();
 		character = profile.getCharacter(CHARACTER_KEY).orElseThrow();
+	}
+
+	Spell getSpell(SpellId spellId) {
+		return character.getSpellbook().getSpell(spellId).orElseThrow();
 	}
 }
