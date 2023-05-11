@@ -6,6 +6,7 @@ import wow.character.model.character.Character;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
+import wow.minmax.model.ViewConfig;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
@@ -43,5 +44,6 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.changeItem(any(), any(), any())).thenReturn(character);
 		when(playerProfileService.changeItemGroup(any(), any(), any())).thenReturn(character);
 		when(playerProfileService.enableBuff(any(), any(), anyInt(), anyBoolean())).thenReturn(character);
+		when(playerProfileService.getViewConfig(any())).thenReturn(new ViewConfig(null, null, null, List.of()));
 	}
 }

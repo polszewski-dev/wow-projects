@@ -246,10 +246,6 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return build.getRotation();
 	}
 
-	public List<Spell> getRelevantSpells() {
-		return build.getRelevantSpells();
-	}
-
 	public PetType getActivePet() {
 		return build.getActivePet();
 	}

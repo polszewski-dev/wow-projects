@@ -8,6 +8,7 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
+import wow.minmax.model.ViewConfig;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,4 +35,6 @@ public interface PlayerProfileService {
 	Character resetEquipment(CharacterId characterId);
 
 	Character enableBuff(CharacterId characterId, BuffListType buffListType, int buffId, boolean enabled);
+
+	ViewConfig getViewConfig(Character character);
 }

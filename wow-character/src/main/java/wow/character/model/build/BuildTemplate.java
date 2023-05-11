@@ -27,7 +27,6 @@ public class BuildTemplate implements TimeRestricted {
 	private final String talentLink;
 	private final PveRole role;
 	private final List<SpellId> defaultRotation;
-	private final List<SpellId> relevantSpells;
 	private final PetType activePet;
 	private final Map<BuffSetId, List<String>> buffSets;
 	private final List<CharacterProfession> professions;

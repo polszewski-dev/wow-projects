@@ -16,6 +16,7 @@ import wow.minmax.converter.dto.SpellStatsConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.RotationStats;
+import wow.minmax.model.ViewConfig;
 import wow.minmax.model.dto.CharacterStatsDTO;
 import wow.minmax.model.dto.RotationStatsDTO;
 import wow.minmax.model.dto.SpecialAbilityStatsDTO;
@@ -26,6 +27,7 @@ import wow.minmax.service.PlayerProfileService;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static wow.character.model.build.BuffSetId.*;
@@ -51,7 +53,12 @@ public class StatsController {
 	) {
 		Character character = playerProfileService.getCharacter(characterId);
 
-		return character.getRelevantSpells().stream()
+		ViewConfig viewConfig = playerProfileService.getViewConfig(character);
+
+		return viewConfig.getRelevantSpells().stream()
+				.map(spellId -> character.getSpellbook().getSpell(spellId))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.map(spell -> calculationService.getSpellStats(character, spell))
 				.map(spellStatsConverter::convert)
 				.toList();

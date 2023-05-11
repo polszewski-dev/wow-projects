@@ -91,11 +91,6 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(buildTemplate.getTalentLink()).isEqualTo("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
 		assertThat(buildTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(buildTemplate.getDefaultRotation()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
-		assertThat(buildTemplate.getRelevantSpells()).hasSameElementsAs(List.of(
-				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE, SHADOWBURN,
-				UNSTABLE_AFFLICTION, SIPHON_LIFE, SEED_OF_CORRUPTION_DIRECT, DRAIN_LIFE,
-				CONFLAGRATE, INCINERATE, SEARING_PAIN, DEATH_COIL, HELLFIRE, RAIN_OF_FIRE
-		));
 		assertThat(buildTemplate.getActivePet()).isNull();
 		assertThat(buildTemplate.getBuffSets()).isEqualTo(Map.of(
 				SELF_BUFFS, List.of("Fel Armor", "Touch of Shadow"),

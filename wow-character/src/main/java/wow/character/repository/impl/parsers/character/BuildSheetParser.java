@@ -30,7 +30,6 @@ public class BuildSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colTalentLink = column("talent_link");
 	private final ExcelColumn colRole = column("role");
 	private final ExcelColumn colDefaultRotation = column("default_rotation");
-	private final ExcelColumn colRelevantSpells = column("relevant_spells");
 	private final ExcelColumn colActivePet = column("active_pet");
 	private final ExcelColumn colProf1 = column("prof1");
 	private final ExcelColumn colProf1Spec = column("prof1_spec");
@@ -60,7 +59,6 @@ public class BuildSheetParser extends CharacterSheetParser {
 		var talentLink = colTalentLink.getString();
 		var pveRole = colRole.getEnum(PveRole::parse);
 		var defaultRotation = colDefaultRotation.getList(SpellId::parse);
-		var relevantSpells = colRelevantSpells.getList(SpellId::parse);
 		var activePet = colActivePet.getEnum(PetType::parse, null);
 		var buffSets = getBuffSets();
 		var professions = getProfessions(timeRestriction);
@@ -73,7 +71,6 @@ public class BuildSheetParser extends CharacterSheetParser {
 				talentLink,
 				pveRole,
 				defaultRotation,
-				relevantSpells,
 				activePet,
 				buffSets,
 				professions

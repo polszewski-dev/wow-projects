@@ -19,7 +19,6 @@ import wow.commons.model.spells.SpellId;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -81,8 +80,6 @@ public class CharacterServiceImpl implements CharacterService {
 		build.setActivePet(buildTemplate.getActivePet());
 		build.setBuffSets(getBuffSets(buildTemplate, character));
 
-		build.setRelevantSpells(getSpellHighestRanks(character, buildTemplate));
-
 		character.setBuffs(BuffSetId.values());
 		character.setProfessions(buildTemplate.getProfessions());
 	}
@@ -114,14 +111,6 @@ public class CharacterServiceImpl implements CharacterService {
 		}
 
 		return new Rotation(cooldowns, filler);
-	}
-
-	private List<Spell> getSpellHighestRanks(Character character, BuildTemplate buildTemplate) {
-		return buildTemplate.getRelevantSpells().stream()
-				.map(x -> character.getSpellbook().getSpell(x))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.toList();
 	}
 
 	private BuffSets getBuffSets(BuildTemplate buildTemplate, Character character) {

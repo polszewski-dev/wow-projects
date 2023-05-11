@@ -19,8 +19,10 @@ import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
+import wow.minmax.model.ViewConfig;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
+import wow.minmax.repository.ViewConfigRepository;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
@@ -36,6 +38,7 @@ import java.util.*;
 public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final CharacterRepository characterRepository;
 	private final PlayerProfileRepository playerProfileRepository;
+	private final ViewConfigRepository viewConfigRepository;
 	private final PlayerProfilePOConverter playerProfilePOConverter;
 
 	private final ItemService itemService;
@@ -193,6 +196,13 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		character.getBuffList(buffListType).enable(buff, enabled);
 		saveProfile(playerProfile, character);
 		return character;
+	}
+
+	@Override
+	public ViewConfig getViewConfig(Character character) {
+		return viewConfigRepository.getViewConfig(
+				character.getCharacterClassId(), character.getRole(), character.getGameVersionId()
+		).orElseThrow();
 	}
 
 	private void saveProfile(PlayerProfile playerProfile, Character changedCharacter) {

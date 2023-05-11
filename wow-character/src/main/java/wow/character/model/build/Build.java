@@ -9,7 +9,6 @@ import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.PetType;
-import wow.commons.model.spells.Spell;
 import wow.commons.model.talents.TalentId;
 
 import java.util.List;
@@ -27,7 +26,6 @@ public class Build implements AttributeCollection, Copyable<Build> {
 	private final Talents talents;
 	private PveRole role;
 	private Rotation rotation;
-	private List<Spell> relevantSpells;
 	private PetType activePet;
 	private BuffSets buffSets;
 
@@ -44,7 +42,6 @@ public class Build implements AttributeCollection, Copyable<Build> {
 				talents.copy(),
 				role,
 				rotation,
-				relevantSpells,
 				activePet,
 				buffSets
 		);
@@ -55,7 +52,6 @@ public class Build implements AttributeCollection, Copyable<Build> {
 		this.talentLink = null;
 		this.role = null;
 		this.rotation = null;
-		this.relevantSpells = List.of();
 		this.activePet = null;
 		this.buffSets = BuffSets.EMPTY;
 		this.talents.reset();
