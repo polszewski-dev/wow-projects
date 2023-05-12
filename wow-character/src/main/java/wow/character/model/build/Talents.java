@@ -62,11 +62,20 @@ public class Talents implements AttributeCollection, Copyable<Talents> {
 		}
 	}
 
+	private Optional<Talent> getTalent(TalentId talentId, int talentRank) {
+		return Optional.ofNullable(availableTalentsByIdByRank.getOrDefault(talentId, Map.of()).get(talentRank));
+	}
+
 	private Optional<Talent> getTalent(int position, int talentRank) {
 		return Optional.ofNullable(availableTalentsByPositionByRank.getOrDefault(position, Map.of()).get(talentRank));
 	}
 
-	private void enableTalent(int position, int talentRank) {
+	public void enableTalent(TalentId talentId, int talentRank) {
+		Talent talent = getTalent(talentId, talentRank).orElseThrow();
+		enableTalent(talent);
+	}
+
+	public void enableTalent(int position, int talentRank) {
 		Talent talent = getTalent(position, talentRank).orElseThrow();
 		enableTalent(talent);
 	}

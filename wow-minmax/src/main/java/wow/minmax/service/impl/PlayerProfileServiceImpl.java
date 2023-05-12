@@ -122,9 +122,11 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		);
 
 		Enemy targetEnemy = new Enemy(characterId.getEnemyType(), characterId.getEnemyLevelDiff());
-
 		newCharacter.setTargetEnemy(targetEnemy);
-		characterService.setDefaultBuild(newCharacter);
+
+		CharacterTemplateId templateId = newCharacter.getCharacterClass().getDefaultCharacterTemplateId();
+		characterService.applyCharacterTemplate(newCharacter, templateId);
+
 		return newCharacter;
 	}
 

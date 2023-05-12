@@ -1,5 +1,6 @@
 package wow.minmax.converter.persistent;
 
+import wow.character.model.character.Character;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.Map;
@@ -9,16 +10,20 @@ import java.util.Map;
  * Date: 2023-01-03
  */
 public class PoConverterParams {
-	public static final String PHASE_ID = "phaseId";
+	private static final String CHARACTER = "character";
 
-	public static Map<String, Object> createParams(PhaseId phaseId) {
+	public static Map<String, Object> createParams(Character character) {
 		return Map.of(
-				PHASE_ID, phaseId
+				CHARACTER, character
 		);
 	}
 
 	public static PhaseId getPhaseId(Map<String, Object> params) {
-		return (PhaseId) params.get(PHASE_ID);
+		return getCharacter(params).getPhaseId();
+	}
+
+	public static Character getCharacter(Map<String, Object> params) {
+		return (Character) params.get(CHARACTER);
 	}
 
 	private PoConverterParams() {}

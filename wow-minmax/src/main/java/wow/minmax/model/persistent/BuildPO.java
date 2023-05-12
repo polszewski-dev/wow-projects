@@ -2,9 +2,11 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.character.model.character.CharacterTemplateId;
+import wow.commons.model.categorization.PveRole;
+import wow.commons.model.character.PetType;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -13,5 +15,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class BuildPO implements Serializable {
-	private CharacterTemplateId characterTemplateId;
+	private List<TalentPO> talents;
+	private PveRole role;
+	private RotationPO rotation;
+	private PetType activePet;
 }

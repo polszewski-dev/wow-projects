@@ -13,10 +13,16 @@ import wow.minmax.model.persistent.BuildPO;
 @Component
 @AllArgsConstructor
 public class BuildPOConverter implements Converter<Build, BuildPO> {
+	private final RotationPOConverter rotationPOConverter;
+	private final TalentPOConverter talentPOConverter;
+
 	@Override
 	public BuildPO doConvert(Build source) {
 		return new BuildPO(
-				source.getCharacterTemplateId()
+				talentPOConverter.convertList(source.getTalents().getList()),
+				source.getRole(),
+				rotationPOConverter.convert(source.getRotation()),
+				source.getActivePet()
 		);
 	}
 }

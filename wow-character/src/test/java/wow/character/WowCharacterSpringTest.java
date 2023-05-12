@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.character.Character;
+import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -165,9 +166,11 @@ public abstract class WowCharacterSpringTest {
 		);
 
 		Enemy enemy = new Enemy(ENEMY_TYPE, LVL_DIFF);
-
 		character.setTargetEnemy(enemy);
-		characterService.setDefaultBuild(character);
+
+		CharacterTemplateId templateId = character.getCharacterClass().getDefaultCharacterTemplateId();
+		characterService.applyCharacterTemplate(character, templateId);
+
 		return character;
 	}
 

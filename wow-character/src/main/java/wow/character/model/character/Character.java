@@ -211,10 +211,6 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	// build
 
-	public CharacterTemplateId getCharacterTemplateId() {
-		return build.getCharacterTemplateId();
-	}
-
 	public Talents getTalents() {
 		return build.getTalents();
 	}

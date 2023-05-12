@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.Copyable;
-import wow.character.model.character.CharacterTemplateId;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.categorization.PveRole;
@@ -19,7 +18,6 @@ import wow.commons.model.talents.TalentId;
 @Getter
 @Setter
 public class Build implements AttributeCollection, Copyable<Build> {
-	private CharacterTemplateId characterTemplateId;
 	private final Talents talents;
 	private PveRole role;
 	private Rotation rotation;
@@ -33,7 +31,6 @@ public class Build implements AttributeCollection, Copyable<Build> {
 	@Override
 	public Build copy() {
 		return new Build(
-				characterTemplateId,
 				talents.copy(),
 				role,
 				rotation,
@@ -42,11 +39,10 @@ public class Build implements AttributeCollection, Copyable<Build> {
 	}
 
 	public void reset() {
-		this.characterTemplateId = null;
+		this.talents.reset();
 		this.role = null;
 		this.rotation = null;
 		this.activePet = null;
-		this.talents.reset();
 	}
 
 	@Override

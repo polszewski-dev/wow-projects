@@ -18,6 +18,7 @@ import wow.commons.model.spells.SpellId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -29,13 +30,6 @@ public class CharacterServiceImpl implements CharacterService {
 	private final CharacterRepository characterRepository;
 
 	private final SpellService spellService;
-
-	@Override
-	public CharacterTemplate getCharacterTemplate(CharacterTemplateId characterTemplateId, Character character) {
-		return characterRepository.getCharacterTemplate(
-				characterTemplateId, character.getCharacterClassId(), character.getLevel(), character.getPhaseId()
-		).orElseThrow();
-	}
 
 	@Override
 	public Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
@@ -52,34 +46,39 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public void setDefaultBuild(Character character) {
-		changeBuild(character, character.getCharacterClass().getDefaultCharacterTemplateId());
+	public void applyCharacterTemplate(Character character, CharacterTemplateId characterTemplateId) {
+		CharacterTemplate characterTemplate = getCharacterTemplate(characterTemplateId, character);
+
+		changeBuild(character, characterTemplate);
+
+		character.setProfessions(characterTemplate.getProfessions());
+		character.setBuffs(spellService.getBuffs(characterTemplate.getDefaultBuffs(), character));
+		character.getTargetEnemy().setDebuffs(spellService.getBuffs(characterTemplate.getDefaultDebuffs(), character));
+	}
+
+	private CharacterTemplate getCharacterTemplate(CharacterTemplateId characterTemplateId, Character character) {
+		return characterRepository.getCharacterTemplate(
+				characterTemplateId, character.getCharacterClassId(), character.getLevel(), character.getPhaseId()
+		).orElseThrow();
+	}
+
+	private void changeBuild(Character character, CharacterTemplate characterTemplate) {
+		Build build = character.getBuild();
+
+		build.reset();
+		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
+		build.setRole(characterTemplate.getRole());
+		build.setActivePet(characterTemplate.getActivePet());
+
+		onTalentsChange(character);
+
+		build.setRotation(getRotation(character, characterTemplate));
 	}
 
 	@Override
-	public void changeBuild(Character character, CharacterTemplateId characterTemplateId) {
-		CharacterTemplate characterTemplate = getCharacterTemplate(characterTemplateId, character);
-
-		character.resetBuild();
-		character.resetBuffs();
-		character.getTargetEnemy().resetDebuffs();
-		character.resetProfessions();
-
-		Build build = character.getBuild();
-
-		build.setCharacterTemplateId(characterTemplateId);
-		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
-		build.setRole(characterTemplate.getRole());
-
+	public void onTalentsChange(Character character) {
 		character.getSpellbook().reset();
 		character.getSpellbook().addSpells(spellService.getAvailableSpells(character));
-
-		build.setRotation(getRotation(character, characterTemplate));
-		build.setActivePet(characterTemplate.getActivePet());
-
-		character.setBuffs(spellService.getBuffs(characterTemplate.getDefaultBuffs(), character));
-		character.getTargetEnemy().setDebuffs(spellService.getBuffs(characterTemplate.getDefaultDebuffs(), character));
-		character.setProfessions(characterTemplate.getProfessions());
 	}
 
 	private Rotation getRotation(Character character, CharacterTemplate characterTemplate) {

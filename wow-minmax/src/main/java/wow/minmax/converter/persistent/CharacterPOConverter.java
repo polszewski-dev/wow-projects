@@ -2,16 +2,17 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.build.Build;
 import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
 import wow.character.service.CharacterService;
-import wow.commons.model.buffs.Buff;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
+import wow.minmax.model.persistent.BuildPO;
 import wow.minmax.model.persistent.CharacterPO;
+import wow.minmax.model.persistent.TalentPO;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -25,6 +26,7 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 	private final CharacterProfessionPOConverter characterProfessionPOConverter;
 	private final BuffPOConverter buffPOConverter;
 	private final EnemyPOConverter enemyPOConverter;
+	private final RotationPOConverter rotationPOConverter;
 
 	private final CharacterService characterService;
 
@@ -52,21 +54,34 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 				source.getPhaseId()
 		);
 
-		var params = PoConverterParams.createParams(source.getPhaseId());
+		var params = PoConverterParams.createParams(character);
 
 		Enemy targetEnemy = enemyPOConverter.convertBack(source.getTargetEnemy(), params);
-		Collection<Buff> debuffs = new ArrayList<>(targetEnemy.getDebuffs().getList());
-
 		character.setTargetEnemy(targetEnemy);
 
-		characterService.changeBuild(character, source.getBuild().getCharacterTemplateId());
+		changeBuild(character, source, params);
 
-		targetEnemy.setDebuffs(debuffs); // changeBuild resets target's debuffs
-
-		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
 		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), params));
 		character.setBuffs(buffPOConverter.convertBackList(source.getBuffs(), params));
+		character.getTargetEnemy().setDebuffs(buffPOConverter.convertBackList(source.getTargetEnemy().getDebuffs(), params));
+		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
 
 		return character;
+	}
+
+	private void changeBuild(Character character, CharacterPO source, Map<String, Object> params) {
+		Build build = character.getBuild();
+		BuildPO sourceBuild = source.getBuild();
+
+		for (TalentPO sourceTalent : sourceBuild.getTalents()) {
+			build.getTalents().enableTalent(sourceTalent.getTalentId(), sourceTalent.getRank());
+		}
+
+		build.setRole(sourceBuild.getRole());
+		build.setActivePet(sourceBuild.getActivePet());
+
+		characterService.onTalentsChange(character);
+
+		build.setRotation(rotationPOConverter.convertBack(sourceBuild.getRotation(), params));
 	}
 }
