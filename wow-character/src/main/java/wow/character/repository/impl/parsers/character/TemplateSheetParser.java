@@ -1,8 +1,8 @@
 package wow.character.repository.impl.parsers.character;
 
-import wow.character.model.build.BuildId;
-import wow.character.model.build.BuildTemplate;
 import wow.character.model.character.CharacterProfession;
+import wow.character.model.character.CharacterTemplate;
+import wow.character.model.character.CharacterTemplateId;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
@@ -21,8 +21,8 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-30
  */
-public class BuildSheetParser extends CharacterSheetParser {
-	private final ExcelColumn colBuild = column("build");
+public class TemplateSheetParser extends CharacterSheetParser {
+	private final ExcelColumn colTemplate = column("template");
 	private final ExcelColumn colReqLevel = column("req_level");
 	private final ExcelColumn colReqClass = column("req_class");
 	private final ExcelColumn colTalentLink = column("talent_link");
@@ -36,23 +36,23 @@ public class BuildSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colProf2 = column("prof2");
 	private final ExcelColumn colProf2Spec = column("prof2_spec");
 
-	public BuildSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
+	public TemplateSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
 	}
 
 	@Override
 	protected ExcelColumn getColumnIndicatingOptionalRow() {
-		return colBuild;
+		return colTemplate;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		BuildTemplate buildTemplate = getBuildTemplate();
-		characterRepository.addBuildTemplate(buildTemplate);
+		CharacterTemplate characterTemplate = getCharacterTemplate();
+		characterRepository.addCharacterTemplate(characterTemplate);
 	}
 
-	private BuildTemplate getBuildTemplate() {
-		var buildId = colBuild.getEnum(BuildId::parse);
+	private CharacterTemplate getCharacterTemplate() {
+		var templateId = colTemplate.getEnum(CharacterTemplateId::parse);
 		var characterClass = colReqClass.getEnum(CharacterClassId::parse);
 		var level = colReqLevel.getInteger();
 		var timeRestriction = getTimeRestriction();
@@ -64,8 +64,8 @@ public class BuildSheetParser extends CharacterSheetParser {
 		var defaultDebuffs = colDefaultDebuffs.getList(Function.identity());
 		var professions = getProfessions(timeRestriction);
 
-		return new BuildTemplate(
-				buildId,
+		return new CharacterTemplate(
+				templateId,
 				characterClass,
 				level,
 				timeRestriction,

@@ -59,7 +59,7 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 
 		character.setTargetEnemy(targetEnemy);
 
-		characterService.changeBuild(character, source.getBuild().getBuildId());
+		characterService.changeBuild(character, source.getBuild().getCharacterTemplateId());
 
 		targetEnemy.setDebuffs(debuffs); // changeBuild resets target's debuffs
 

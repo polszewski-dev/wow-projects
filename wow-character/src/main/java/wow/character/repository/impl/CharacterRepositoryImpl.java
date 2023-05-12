@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import wow.character.model.build.BuildId;
-import wow.character.model.build.BuildTemplate;
+import wow.character.model.character.CharacterTemplate;
+import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
@@ -28,7 +28,7 @@ import java.util.*;
 public class CharacterRepositoryImpl extends ExcelRepository implements CharacterRepository {
 	private final Map<GameVersionId, GameVersion> gameVersionById = new TreeMap<>();
 	private final Map<PhaseId, Phase> phaseById = new TreeMap<>();
-	private final Map<String, List<BuildTemplate>> buildTemplateByKey = new HashMap<>();
+	private final Map<String, List<CharacterTemplate>> characterTemplateByKey = new HashMap<>();
 
 	@Value("${character.xls.file.path}")
 	private String xlsFilePath;
@@ -44,9 +44,9 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 	}
 
 	@Override
-	public Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClassId characterClassId, int level, PhaseId phaseId) {
-		String key = getBuildTemplateKey(buildId, characterClassId, level);
-		return getUnique(buildTemplateByKey, key, phaseId);
+	public Optional<CharacterTemplate> getCharacterTemplate(CharacterTemplateId characterTemplateId, CharacterClassId characterClassId, int level, PhaseId phaseId) {
+		String key = getCharacterTemplateKey(characterTemplateId, characterClassId, level);
+		return getUnique(characterTemplateByKey, key, phaseId);
 	}
 
 	@PostConstruct
@@ -63,12 +63,12 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 		phaseById.put(phase.getPhaseId(), phase);
 	}
 
-	public void addBuildTemplate(BuildTemplate buildTemplate) {
-		String key = getBuildTemplateKey(buildTemplate.getBuildId(), buildTemplate.getCharacterClassId(), buildTemplate.getLevel());
-		addEntry(buildTemplateByKey, key, buildTemplate);
+	public void addCharacterTemplate(CharacterTemplate characterTemplate) {
+		String key = getCharacterTemplateKey(characterTemplate.getCharacterTemplateId(), characterTemplate.getCharacterClassId(), characterTemplate.getLevel());
+		addEntry(characterTemplateByKey, key, characterTemplate);
 	}
 
-	private static String getBuildTemplateKey(BuildId buildId, CharacterClassId characterClassId, int level) {
-		return buildId + "#" + characterClassId + "#" + level;
+	private static String getCharacterTemplateKey(CharacterTemplateId characterTemplateId, CharacterClassId characterClassId, int level) {
+		return characterTemplateId + "#" + characterClassId + "#" + level;
 	}
 }

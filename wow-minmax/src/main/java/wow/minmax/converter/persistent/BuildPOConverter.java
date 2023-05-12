@@ -16,7 +16,7 @@ public class BuildPOConverter implements Converter<Build, BuildPO> {
 	@Override
 	public BuildPO doConvert(Build source) {
 		return new BuildPO(
-				source.getBuildId()
+				source.getCharacterTemplateId()
 		);
 	}
 }

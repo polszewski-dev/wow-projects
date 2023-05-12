@@ -1,8 +1,8 @@
 package wow.character.service;
 
-import wow.character.model.build.BuildId;
-import wow.character.model.build.BuildTemplate;
 import wow.character.model.character.Character;
+import wow.character.model.character.CharacterTemplate;
+import wow.character.model.character.CharacterTemplateId;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
@@ -12,11 +12,11 @@ import wow.commons.model.pve.PhaseId;
  * Date: 2022-12-14
  */
 public interface CharacterService {
-	BuildTemplate getBuildTemplate(BuildId buildId, Character character);
+	CharacterTemplate getCharacterTemplate(CharacterTemplateId characterTemplateId, Character character);
 
 	Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
 
 	void setDefaultBuild(Character character);
 
-	void changeBuild(Character character, BuildId buildId);
+	void changeBuild(Character character, CharacterTemplateId characterTemplateId);
 }

@@ -1,8 +1,7 @@
-package wow.character.model.build;
+package wow.character.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.character.model.character.CharacterProfession;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
@@ -18,8 +17,8 @@ import java.util.List;
  */
 @AllArgsConstructor
 @Getter
-public class BuildTemplate implements TimeRestricted {
-	private final BuildId buildId;
+public class CharacterTemplate implements TimeRestricted {
+	private final CharacterTemplateId characterTemplateId;
 	private final CharacterClassId characterClassId;
 	private final int level;
 	private final TimeRestriction timeRestriction;

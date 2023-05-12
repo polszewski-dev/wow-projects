@@ -1,7 +1,7 @@
 package wow.character.repository;
 
-import wow.character.model.build.BuildId;
-import wow.character.model.build.BuildTemplate;
+import wow.character.model.character.CharacterTemplate;
+import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Phase;
 import wow.commons.model.character.CharacterClassId;
@@ -19,5 +19,5 @@ public interface CharacterRepository {
 
 	Optional<Phase> getPhase(PhaseId phaseId);
 
-	Optional<BuildTemplate> getBuildTemplate(BuildId buildId, CharacterClassId characterClassId, int level, PhaseId phaseId);
+	Optional<CharacterTemplate> getCharacterTemplate(CharacterTemplateId characterTemplateId, CharacterClassId characterClassId, int level, PhaseId phaseId);
 }

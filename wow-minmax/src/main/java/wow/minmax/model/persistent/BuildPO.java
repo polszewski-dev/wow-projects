@@ -2,7 +2,7 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.character.model.build.BuildId;
+import wow.character.model.character.CharacterTemplateId;
 
 import java.io.Serializable;
 
@@ -13,5 +13,5 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class BuildPO implements Serializable {
-	private BuildId buildId;
+	private CharacterTemplateId characterTemplateId;
 }

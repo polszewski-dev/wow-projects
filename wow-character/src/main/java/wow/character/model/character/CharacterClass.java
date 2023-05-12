@@ -3,7 +3,6 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.character.model.build.BuildId;
 import wow.commons.model.categorization.*;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
@@ -42,7 +41,7 @@ public class CharacterClass implements Described {
 	@NonNull
 	private final List<SpellSchool> spellSchools;
 
-	private final BuildId defaultBuildId;
+	private final CharacterTemplateId defaultCharacterTemplateId;
 
 	private final GameVersion gameVersion;
 	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();

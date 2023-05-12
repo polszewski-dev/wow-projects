@@ -34,7 +34,7 @@ public class CharacterExcelParser  extends ExcelParser {
 				new ProfessionSpecSheetParser("profession_specs", characterRepository),
 				new BaseStatsSheetParser("base_stats", characterRepository),
 				new CombatRatingsSheetParser("combat_ratings", characterRepository),
-				new BuildSheetParser("builds", characterRepository)
+				new TemplateSheetParser("templates", characterRepository)
 		);
 	}
 }

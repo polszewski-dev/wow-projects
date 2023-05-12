@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.Copyable;
 import wow.character.model.build.Build;
-import wow.character.model.build.BuildId;
 import wow.character.model.build.Rotation;
 import wow.character.model.build.Talents;
 import wow.character.model.equipment.Equipment;
@@ -212,12 +211,8 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 	// build
 
-	public BuildId getBuildId() {
-		return build.getBuildId();
-	}
-
-	public String getTalentLink() {
-		return build.getTalentLink();
+	public CharacterTemplateId getCharacterTemplateId() {
+		return build.getCharacterTemplateId();
 	}
 
 	public Talents getTalents() {

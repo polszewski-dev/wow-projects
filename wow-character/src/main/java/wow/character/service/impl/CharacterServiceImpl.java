@@ -2,10 +2,11 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.build.*;
+import wow.character.model.build.Build;
+import wow.character.model.build.Rotation;
+import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.Phase;
+import wow.character.model.character.*;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
@@ -30,9 +31,9 @@ public class CharacterServiceImpl implements CharacterService {
 	private final SpellService spellService;
 
 	@Override
-	public BuildTemplate getBuildTemplate(BuildId buildId, Character character) {
-		return characterRepository.getBuildTemplate(
-				buildId, character.getCharacterClassId(), character.getLevel(), character.getPhaseId()
+	public CharacterTemplate getCharacterTemplate(CharacterTemplateId characterTemplateId, Character character) {
+		return characterRepository.getCharacterTemplate(
+				characterTemplateId, character.getCharacterClassId(), character.getLevel(), character.getPhaseId()
 		).orElseThrow();
 	}
 
@@ -52,12 +53,12 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public void setDefaultBuild(Character character) {
-		changeBuild(character, character.getCharacterClass().getDefaultBuildId());
+		changeBuild(character, character.getCharacterClass().getDefaultCharacterTemplateId());
 	}
 
 	@Override
-	public void changeBuild(Character character, BuildId buildId) {
-		BuildTemplate buildTemplate = getBuildTemplate(buildId, character);
+	public void changeBuild(Character character, CharacterTemplateId characterTemplateId) {
+		CharacterTemplate characterTemplate = getCharacterTemplate(characterTemplateId, character);
 
 		character.resetBuild();
 		character.resetBuffs();
@@ -66,27 +67,26 @@ public class CharacterServiceImpl implements CharacterService {
 
 		Build build = character.getBuild();
 
-		build.setBuildId(buildId);
-		build.setTalentLink(buildTemplate.getTalentLink());
-		build.getTalents().loadFromTalentLink(buildTemplate.getTalentLink());
-		build.setRole(buildTemplate.getRole());
+		build.setCharacterTemplateId(characterTemplateId);
+		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
+		build.setRole(characterTemplate.getRole());
 
 		character.getSpellbook().reset();
 		character.getSpellbook().addSpells(spellService.getAvailableSpells(character));
 
-		build.setRotation(getRotation(character, buildTemplate));
-		build.setActivePet(buildTemplate.getActivePet());
+		build.setRotation(getRotation(character, characterTemplate));
+		build.setActivePet(characterTemplate.getActivePet());
 
-		character.setBuffs(spellService.getBuffs(buildTemplate.getDefaultBuffs(), character));
-		character.getTargetEnemy().setDebuffs(spellService.getBuffs(buildTemplate.getDefaultDebuffs(), character));
-		character.setProfessions(buildTemplate.getProfessions());
+		character.setBuffs(spellService.getBuffs(characterTemplate.getDefaultBuffs(), character));
+		character.getTargetEnemy().setDebuffs(spellService.getBuffs(characterTemplate.getDefaultDebuffs(), character));
+		character.setProfessions(characterTemplate.getProfessions());
 	}
 
-	private Rotation getRotation(Character character, BuildTemplate buildTemplate) {
+	private Rotation getRotation(Character character, CharacterTemplate characterTemplate) {
 		List<Spell> cooldowns = new ArrayList<>();
 		Spell filler = null;
 
-		for (SpellId spellId : buildTemplate.getDefaultRotation()) {
+		for (SpellId spellId : characterTemplate.getDefaultRotation()) {
 			Optional<Spell> optionalSpell = character.getSpellbook().getSpell(spellId);
 
 			if (optionalSpell.isEmpty()) {

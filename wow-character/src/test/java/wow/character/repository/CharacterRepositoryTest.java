@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
-import wow.character.model.build.BuildTemplate;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
@@ -22,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.build.BuildId.DESTRO_SHADOW;
 import static wow.character.model.character.ArmorProfficiency.CLOTH;
+import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
 import static wow.character.model.character.WeaponProfficiency.*;
 import static wow.commons.model.categorization.ItemType.ONE_HAND;
 import static wow.commons.model.categorization.WeaponSubType.SWORD;
@@ -75,33 +74,33 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	@DisplayName("BuildTemplate is read correctly")
-	void buildTemplateIsCorrect() {
-		Optional<BuildTemplate> optionalBuildTemplate = underTest.getBuildTemplate(DESTRO_SHADOW, WARLOCK, 70, PhaseId.TBC_P5);
+	@DisplayName("CharacterTemplate is read correctly")
+	void characterTemplateIsCorrect() {
+		Optional<CharacterTemplate> optionalCharacterTemplate = underTest.getCharacterTemplate(DESTRO_SHADOW, WARLOCK, 70, PhaseId.TBC_P5);
 
-		assertThat(optionalBuildTemplate).isPresent();
+		assertThat(optionalCharacterTemplate).isPresent();
 
-		BuildTemplate buildTemplate = optionalBuildTemplate.orElseThrow();
+		CharacterTemplate characterTemplate = optionalCharacterTemplate.orElseThrow();
 
-		assertThat(buildTemplate.getBuildId()).isEqualTo(DESTRO_SHADOW);
-		assertThat(buildTemplate.getLevel()).isEqualTo(70);
-		assertThat(buildTemplate.getCharacterClassId()).isEqualTo(WARLOCK);
-		assertThat(buildTemplate.getTalentLink()).isEqualTo("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
-		assertThat(buildTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
-		assertThat(buildTemplate.getDefaultRotation()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
-		assertThat(buildTemplate.getActivePet()).isNull();
-		assertThat(buildTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
+		assertThat(characterTemplate.getCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
+		assertThat(characterTemplate.getLevel()).isEqualTo(70);
+		assertThat(characterTemplate.getCharacterClassId()).isEqualTo(WARLOCK);
+		assertThat(characterTemplate.getTalentLink()).isEqualTo("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
+		assertThat(characterTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
+		assertThat(characterTemplate.getDefaultRotation()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
+		assertThat(characterTemplate.getActivePet()).isNull();
+		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
 				"Fel Armor", "Touch of Shadow", "Arcane Brilliance", "Prayer of Fortitude", "Prayer of Spirit",
 				"Gift of the Wild", "Greater Blessing of Kings", "Wrath of Air Totem",
 				"Totem of Wrath", "Well Fed (sp)", "Brilliant Wizard Oil", "Flask of Pure Death"
 		));
-		assertThat(buildTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
+		assertThat(characterTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
 				"Curse of the Elements"
 		));
-		assertThat(buildTemplate.getProfessions().get(0).getProfessionId()).isEqualTo(ENCHANTING);
-		assertThat(buildTemplate.getProfessions().get(0).getSpecializationId()).isNull();
-		assertThat(buildTemplate.getProfessions().get(1).getProfessionId()).isEqualTo(TAILORING);
-		assertThat(buildTemplate.getProfessions().get(1).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
+		assertThat(characterTemplate.getProfessions().get(0).getProfessionId()).isEqualTo(ENCHANTING);
+		assertThat(characterTemplate.getProfessions().get(0).getSpecializationId()).isNull();
+		assertThat(characterTemplate.getProfessions().get(1).getProfessionId()).isEqualTo(TAILORING);
+		assertThat(characterTemplate.getProfessions().get(1).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
 	}
 
 	@ParameterizedTest(name = "[{index}] Can equip: slot = {0}, type = {1}, subType = {2}")
@@ -405,7 +404,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		));
 
 		assertThat(warlock.isDualWield()).isFalse();
-		assertThat(warlock.getDefaultBuildId()).isEqualTo(DESTRO_SHADOW);
+		assertThat(warlock.getDefaultCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
 		assertThat(warlock.getGameVersion().getGameVersionId()).isEqualTo(VANILLA);
 
 		assertThat(warlock.getRaces().stream().map(Race::getRaceId).toList()).hasSameElementsAs(List.of(
