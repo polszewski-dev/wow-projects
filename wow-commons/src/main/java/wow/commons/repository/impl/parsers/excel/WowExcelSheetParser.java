@@ -7,6 +7,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
+import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -126,6 +127,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colReqProfessionLevel = column(REQ_PROFESSION_LEVEL, true);
 	private final ExcelColumn colReqProfessionSpec = column(REQ_PROFESSION_SPEC, true);
 	private final ExcelColumn colExclusiveFaction = column(REQ_XFACTION, true);
+	private final ExcelColumn colReqPet = column(REQ_PET, true);
 	private final ExcelColumn colReqTalent = column(REQ_TALENT, true);
 
 	protected CharacterRestriction getRestriction() {
@@ -137,6 +139,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var professionLevel = colReqProfessionLevel.getNullableInteger();
 		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecializationId::valueOf, null);
 		var exclusiveFaction = colExclusiveFaction.getEnum(ExclusiveFaction::parse, null);
+		var activePet = colReqPet.getEnum(PetType::parse, null);
 		var talentId = colReqTalent.getEnum(TalentId::parse, null);
 
 		return CharacterRestriction.builder()
@@ -147,6 +150,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				.professionRestriction(ProfessionRestriction.of(profession, professionLevel))
 				.professionSpecId(professionSpec)
 				.exclusiveFaction(exclusiveFaction)
+				.activePet(activePet)
 				.talentId(talentId)
 				.build();
 	}

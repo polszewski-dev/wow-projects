@@ -61,7 +61,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		this.race = race;
 		this.level = level;
 		this.phase = phase;
-		this.build = new Build(talents);
+		this.build = new Build(phase.getGameVersion(), talents);
 		this.spellbook = new Spellbook();
 		this.equipment = new Equipment();
 		this.professions = new CharacterProfessions();
@@ -190,6 +190,11 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return professions.hasProfessionSpecialization(specializationId);
 	}
 
+	@Override
+	public boolean hasActivePet(PetType petType) {
+		return getActivePet().getPetType() == petType;
+	}
+
 	public void setProfessions(List<CharacterProfession> professions) {
 		this.professions.setProfessions(professions);
 	}
@@ -229,7 +234,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return build.getRotation();
 	}
 
-	public PetType getActivePet() {
+	public Pet getActivePet() {
 		return build.getActivePet();
 	}
 
@@ -272,7 +277,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 
 		result.addAll(professions.getConditions());
 		result.addAll(targetEnemy.getConditions());
-		result.add(AttributeCondition.of(getActivePet()));
+		result.addAll(getActivePet().getConditions());
 		result.add(AttributeCondition.EMPTY);
 
 		if (spell != null) {

@@ -9,6 +9,7 @@ import wow.commons.util.EnumUtil;
  */
 @AllArgsConstructor
 public enum PetType {
+	NONE("None"),
 	IMP("Imp"),
 	VOIDWALKER("Voidwalker"),
 	SUCCUBUS("Succubus"),

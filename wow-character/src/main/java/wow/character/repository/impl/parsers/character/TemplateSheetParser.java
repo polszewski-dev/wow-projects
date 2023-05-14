@@ -61,7 +61,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var talentLink = colTalentLink.getString();
 		var pveRole = colRole.getEnum(PveRole::parse);
 		var defaultRotation = colDefaultRotation.getList(SpellId::parse);
-		var activePet = colActivePet.getEnum(PetType::parse);
+		var activePet = colActivePet.getEnum(PetType::parse, PetType.NONE);
 		var defaultBuffs = colDefaultBuffs.getList(Function.identity());
 		var defaultDebuffs = colDefaultDebuffs.getList(Function.identity());
 		var professions = getProfessions(timeRestriction);

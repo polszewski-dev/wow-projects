@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
@@ -44,6 +45,7 @@ public class GameVersion implements Described {
 	private final List<CharacterClass> characterClasses = new ArrayList<>();
 	private final List<Race> races = new ArrayList<>();
 	private final List<Profession> professions = new ArrayList<>();
+	private final List<Pet> pets = new ArrayList<>();
 	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
 
 	public Phase getPhase(PhaseId phaseId) {
@@ -82,6 +84,16 @@ public class GameVersion implements Described {
 		}
 		return professions.stream()
 				.filter(x -> x.getProfessionId() == professionId)
+				.findFirst()
+				.orElseThrow();
+	}
+
+	public Pet getPet(PetType petType) {
+		if (petType == null) {
+			return null;
+		}
+		return pets.stream()
+				.filter(x -> x.getPetType() == petType)
 				.findFirst()
 				.orElseThrow();
 	}

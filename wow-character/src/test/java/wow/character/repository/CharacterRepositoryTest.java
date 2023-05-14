@@ -28,6 +28,7 @@ import static wow.commons.model.categorization.ItemType.ONE_HAND;
 import static wow.commons.model.categorization.WeaponSubType.SWORD;
 import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
+import static wow.commons.model.character.PetType.NONE;
 import static wow.commons.model.character.RaceId.*;
 import static wow.commons.model.professions.ProfessionId.*;
 import static wow.commons.model.professions.ProfessionSpecializationId.*;
@@ -89,7 +90,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getTalentLink()).isEqualTo("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
 		assertThat(characterTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(characterTemplate.getDefaultRotation()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
-		assertThat(characterTemplate.getActivePet()).isNull();
+		assertThat(characterTemplate.getActivePet()).isEqualTo(NONE);
 		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
 				"Fel Armor", "Touch of Shadow", "Arcane Brilliance", "Prayer of Fortitude", "Prayer of Spirit",
 				"Gift of the Wild", "Greater Blessing of Kings", "Wrath of Air Totem",

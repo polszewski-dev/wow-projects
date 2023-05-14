@@ -22,7 +22,7 @@ public class BuildPOConverter implements Converter<Build, BuildPO> {
 				talentPOConverter.convertList(source.getTalents().getList()),
 				source.getRole(),
 				rotationPOConverter.convert(source.getRotation()),
-				source.getActivePet()
+				source.getActivePet().getPetType()
 		);
 	}
 }

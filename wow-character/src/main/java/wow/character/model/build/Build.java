@@ -4,11 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.Copyable;
+import wow.character.model.character.GameVersion;
+import wow.character.model.character.Pet;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.PetType;
 import wow.commons.model.talents.TalentId;
+
+import static wow.commons.model.character.PetType.NONE;
 
 /**
  * User: POlszewski
@@ -18,12 +22,14 @@ import wow.commons.model.talents.TalentId;
 @Getter
 @Setter
 public class Build implements AttributeCollection, Copyable<Build> {
+	private final GameVersion gameVersion;
 	private final Talents talents;
 	private PveRole role;
 	private Rotation rotation;
-	private PetType activePet;
+	private Pet activePet;
 
-	public Build(Talents talents) {
+	public Build(GameVersion gameVersion, Talents talents) {
+		this.gameVersion = gameVersion;
 		this.talents = talents;
 		reset();
 	}
@@ -31,6 +37,7 @@ public class Build implements AttributeCollection, Copyable<Build> {
 	@Override
 	public Build copy() {
 		return new Build(
+				gameVersion,
 				talents.copy(),
 				role,
 				rotation,
@@ -42,7 +49,14 @@ public class Build implements AttributeCollection, Copyable<Build> {
 		this.talents.reset();
 		this.role = null;
 		this.rotation = null;
-		this.activePet = null;
+		setActivePet(NONE);
+	}
+
+	public void setActivePet(PetType petType) {
+		if (petType == null) {
+			throw new IllegalArgumentException();
+		}
+		this.activePet = gameVersion.getPet(petType);
 	}
 
 	@Override
