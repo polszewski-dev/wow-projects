@@ -16,10 +16,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PetType;
-import wow.commons.model.character.RaceId;
+import wow.commons.model.character.*;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.item.Item;
 import wow.commons.model.professions.ProfessionId;
@@ -50,6 +47,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	private final Spellbook spellbook;
 	private final Equipment equipment;
 	private final CharacterProfessions professions;
+	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
 	private final BaseStatInfo baseStatInfo;
 	private final CombatRatingInfo combatRatingInfo;
@@ -67,6 +65,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		this.spellbook = new Spellbook();
 		this.equipment = new Equipment();
 		this.professions = new CharacterProfessions();
+		this.exclusiveFactions = new ExclusiveFactions();
 		this.buffs = new Buffs(CHARACTER_BUFF);
 		this.baseStatInfo = characterClass.getBaseStatInfo(level, race.getRaceId());
 		this.combatRatingInfo = characterClass.getGameVersion().getCombatRatingInfo(level);
@@ -84,6 +83,7 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 				spellbook.copy(),
 				equipment.copy(),
 				professions.copy(),
+				exclusiveFactions.copy(),
 				buffs.copy(),
 				baseStatInfo,
 				combatRatingInfo,
@@ -209,6 +209,11 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		professions.reset();
 	}
 
+	@Override
+	public boolean hasTalent(TalentId talentId) {
+		return build.hasTalent(talentId);
+	}
+
 	// build
 
 	public Talents getTalents() {
@@ -229,8 +234,8 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	}
 
 	@Override
-	public boolean hasTalent(TalentId talentId) {
-		return build.hasTalent(talentId);
+	public boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction) {
+		return exclusiveFactions.has(exclusiveFaction);
 	}
 
 	// buffs

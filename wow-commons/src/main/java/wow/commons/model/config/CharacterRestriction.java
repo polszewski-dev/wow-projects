@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
@@ -33,6 +34,7 @@ public class CharacterRestriction {
 	private Side side;
 	private ProfessionRestriction professionRestriction;
 	private ProfessionSpecializationId professionSpecId;
+	private ExclusiveFaction exclusiveFaction;
 	private TalentId talentId;
 
 	public static final CharacterRestriction EMPTY = builder().build();
@@ -56,6 +58,9 @@ public class CharacterRestriction {
 		if (professionSpecId != null && !characterInfo.hasProfessionSpecialization(professionSpecId)) {
 			return false;
 		}
+		if (exclusiveFaction != null && !characterInfo.hasExclusiveFaction(exclusiveFaction)) {
+			return false;
+		}
 		return talentId == null || characterInfo.hasTalent(talentId);
 	}
 
@@ -67,6 +72,7 @@ public class CharacterRestriction {
 				.side(mergeValues(side, other.side))
 				.professionRestriction(mergeValues(professionRestriction, other.professionRestriction))
 				.professionSpecId(mergeValues(professionSpecId, other.professionSpecId))
+				.exclusiveFaction(exclusiveFaction)
 				.talentId(mergeValues(talentId, other.talentId))
 				.build();
 	}
@@ -91,6 +97,9 @@ public class CharacterRestriction {
 		}
 		if (professionSpecId != null) {
 			parts.add(String.format("professionSpec: %s", professionSpecId));
+		}
+		if (exclusiveFaction != null) {
+			parts.add(String.format("xfaction: %s", exclusiveFaction));
 		}
 		if (talentId != null) {
 			parts.add(String.format("talentId: %s", talentId));

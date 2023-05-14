@@ -40,6 +40,7 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 				buildPOConverter.convert(source.getBuild()),
 				equipmentPOConverter.convert(source.getEquipment()),
 				characterProfessionPOConverter.convertList(source.getProfessions().getList()),
+				source.getExclusiveFactions().getList(),
 				buffPOConverter.convertList(source.getBuffs().getList()),
 				enemyPOConverter.convert(source.getTargetEnemy())
 		);
@@ -62,6 +63,7 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 		changeBuild(character, source, params);
 
 		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), params));
+		character.getExclusiveFactions().set(source.getExclusiveFactions());
 		character.setBuffs(buffPOConverter.convertBackList(source.getBuffs(), params));
 		character.getTargetEnemy().setDebuffs(buffPOConverter.convertBackList(source.getTargetEnemy().getDebuffs(), params));
 		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));

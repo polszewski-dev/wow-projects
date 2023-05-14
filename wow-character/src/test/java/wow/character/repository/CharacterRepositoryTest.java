@@ -27,6 +27,7 @@ import static wow.character.model.character.WeaponProfficiency.*;
 import static wow.commons.model.categorization.ItemType.ONE_HAND;
 import static wow.commons.model.categorization.WeaponSubType.SWORD;
 import static wow.commons.model.character.CharacterClassId.*;
+import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.character.RaceId.*;
 import static wow.commons.model.professions.ProfessionId.*;
 import static wow.commons.model.professions.ProfessionSpecializationId.*;
@@ -101,6 +102,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getProfessions().get(0).getSpecializationId()).isNull();
 		assertThat(characterTemplate.getProfessions().get(1).getProfessionId()).isEqualTo(TAILORING);
 		assertThat(characterTemplate.getProfessions().get(1).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
+		assertThat(characterTemplate.getExclusiveFactions()).hasSameElementsAs(List.of(SCRYERS));
 	}
 
 	@ParameterizedTest(name = "[{index}] Can equip: slot = {0}, type = {1}, subType = {2}")

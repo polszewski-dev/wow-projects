@@ -8,6 +8,7 @@ import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
@@ -56,6 +57,7 @@ public abstract class AbstractTooltipParser {
 	protected ProfessionSpecializationId requiredProfessionSpec;
 	protected String requiredFactionName;
 	protected String requiredFactionStanding;
+	protected ExclusiveFaction exclusiveFaction;
 	protected String droppedBy;
 	protected Percent dropChance;
 	protected Money sellPrice;
@@ -178,6 +180,7 @@ public abstract class AbstractTooltipParser {
 	private void parseReputation(ParsedMultipleValues factionParams) {
 		this.requiredFactionName = factionParams.get(0);
 		this.requiredFactionStanding = factionParams.get(1);
+		this.exclusiveFaction = ExclusiveFaction.tryParseFromName(requiredFactionName);
 	}
 
 	private void parseRequiredProfession(ParsedMultipleValues params) {

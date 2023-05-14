@@ -6,6 +6,7 @@ import wow.character.model.character.CharacterTemplateId;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.professions.ProfessionId;
@@ -35,6 +36,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colProf1Spec = column("prof1_spec");
 	private final ExcelColumn colProf2 = column("prof2");
 	private final ExcelColumn colProf2Spec = column("prof2_spec");
+	private final ExcelColumn colXFactions = column("xfactions");
 
 	public TemplateSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
@@ -59,10 +61,11 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var talentLink = colTalentLink.getString();
 		var pveRole = colRole.getEnum(PveRole::parse);
 		var defaultRotation = colDefaultRotation.getList(SpellId::parse);
-		var activePet = colActivePet.getEnum(PetType::parse, null);
+		var activePet = colActivePet.getEnum(PetType::parse);
 		var defaultBuffs = colDefaultBuffs.getList(Function.identity());
 		var defaultDebuffs = colDefaultDebuffs.getList(Function.identity());
 		var professions = getProfessions(timeRestriction);
+		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
 
 		return new CharacterTemplate(
 				templateId,
@@ -75,7 +78,8 @@ public class TemplateSheetParser extends CharacterSheetParser {
 				activePet,
 				defaultBuffs,
 				defaultDebuffs,
-				professions
+				professions,
+				exclusiveFactions
 		);
 	}
 

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -100,8 +101,14 @@ public class CachedItemService implements ItemService {
 				character.getRaceId() + "#" +
 				character.getRole() + "#" +
 				character.getPhaseId() + "#" +
-				character.getProfessions().getList().stream()
-						.map(x -> x.getProfessionId() + "#" + x.getSpecializationId())
-						.collect(Collectors.joining("#"));
+				getKey(character.getProfessions().getList(), x -> x.getProfessionId() + "#" + x.getSpecializationId()) + "#" +
+				getKey(character.getExclusiveFactions().getList(), Enum::toString);
+	}
+
+	private static <T> String getKey(List<T> list, Function<T, String> mapper) {
+		return list.stream()
+				.map(mapper)
+				.sorted()
+				.collect(Collectors.joining("#"));
 	}
 }

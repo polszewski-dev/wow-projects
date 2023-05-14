@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.config.TimeRestriction;
@@ -29,4 +30,5 @@ public class CharacterTemplate implements TimeRestricted {
 	private final List<String> defaultBuffs;
 	private final List<String> defaultDebuffs;
 	private final List<CharacterProfession> professions;
+	private final List<ExclusiveFaction> exclusiveFactions;
 }

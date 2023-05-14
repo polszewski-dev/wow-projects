@@ -116,6 +116,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setHeader(REQ_PROFESSION);
 		setHeader(REQ_PROFESSION_LEVEL);
 		setHeader(REQ_PROFESSION_SPEC);
+		setHeader(REQ_XFACTION);
 		setHeader(PVE_ROLES);
 		setHeader(ITEM_SOCKET_TYPES);
 		writeAttributeHeader(SOCKET_BONUS_PREFIX, SOCKET_BONUS_MAX_STATS);
@@ -134,6 +135,7 @@ public class ItemBaseExcelBuilder extends AbstractExcelBuilder {
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getRequiredProfessionSpec());
+		setValue(parser.getExclusiveFaction());
 		writePveRoles(parser.getStatParser().getParsedStats());
 		setValue(parser.getSocketTypes());
 		writeAttributes(parser.getSocketBonus(), SOCKET_BONUS_MAX_STATS);

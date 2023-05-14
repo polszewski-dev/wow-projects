@@ -3,6 +3,7 @@ package wow.minmax.model.persistent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 
@@ -23,6 +24,7 @@ public class CharacterPO implements Serializable {
 	private BuildPO build;
 	private EquipmentPO equipment;
 	private List<CharacterProfessionPO> professions;
+	private List<ExclusiveFaction> exclusiveFactions;
 	private List<BuffPO> buffs;
 	private EnemyPO targetEnemy;
 }

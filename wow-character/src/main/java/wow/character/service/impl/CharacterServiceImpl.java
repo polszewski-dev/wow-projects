@@ -52,6 +52,7 @@ public class CharacterServiceImpl implements CharacterService {
 		changeBuild(character, characterTemplate);
 
 		character.setProfessions(characterTemplate.getProfessions());
+		character.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
 		character.setBuffs(spellService.getBuffs(characterTemplate.getDefaultBuffs(), character));
 		character.getTargetEnemy().setDebuffs(spellService.getBuffs(characterTemplate.getDefaultDebuffs(), character));
 	}

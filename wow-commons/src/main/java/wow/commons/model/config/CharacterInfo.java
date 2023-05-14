@@ -2,6 +2,7 @@ package wow.commons.model.config;
 
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
@@ -26,6 +27,8 @@ public interface CharacterInfo {
 	boolean hasProfession(ProfessionId professionId);
 
 	boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId);
+
+	boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction);
 
 	boolean hasTalent(TalentId talentId);
 }
