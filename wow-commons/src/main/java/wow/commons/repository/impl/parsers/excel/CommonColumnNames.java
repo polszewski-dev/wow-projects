@@ -20,6 +20,7 @@ public final class CommonColumnNames {
 	public static final String REQ_PROFESSION_SPEC = "req_prof_spec";
 	public static final String REQ_XFACTION = "req_xfaction";
 	public static final String REQ_PET = "req_pet";
+	public static final String REQ_SPELL = "req_spell";
 	public static final String REQ_TALENT = "req_talent";
 
 	public static final String PVE_ROLES = "pve_roles";

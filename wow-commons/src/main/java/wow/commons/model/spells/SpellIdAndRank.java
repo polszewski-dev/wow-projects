@@ -15,11 +15,11 @@ import lombok.NonNull;
 public class SpellIdAndRank {
 	@NonNull
 	private final SpellId spellId;
-	private final Integer rank;
+	private final int rank;
 
 	@Override
 	public String toString() {
-		if (rank == null) {
+		if (rank == 0) {
 			return spellId.getName();
 		}
 		return String.format("%s (Rank %s)", spellId.getName(), rank);

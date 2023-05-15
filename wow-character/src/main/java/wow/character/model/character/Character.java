@@ -243,6 +243,11 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		return exclusiveFactions.has(exclusiveFaction);
 	}
 
+	@Override
+	public boolean hasSpell(SpellId spellId) {
+		return spellbook.getSpell(spellId).isPresent();
+	}
+
 	// buffs
 
 	public Buffs getBuffList(BuffListType buffListType) {

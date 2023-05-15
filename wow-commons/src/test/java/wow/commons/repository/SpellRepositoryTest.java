@@ -198,7 +198,7 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(buff.getRequiredLevel()).isNull();
 		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
 		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.COE);
-		assertThat(buff.getSourceSpell()).isEqualTo(CURSE_OF_THE_ELEMENTS);
+		assertThat(buff.getSourceSpell()).isNull();
 		assertThat(buff.getPveRoles()).hasSameElementsAs(Set.of(CASTER_DPS));
 		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(RAID_BUFF));
 

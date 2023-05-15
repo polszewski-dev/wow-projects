@@ -8,6 +8,7 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
+import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentId;
 
 /**
@@ -32,6 +33,8 @@ public interface CharacterInfo {
 	boolean hasActivePet(PetType petType);
 
 	boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction);
+
+	boolean hasSpell(SpellId spellId);
 
 	boolean hasTalent(TalentId talentId);
 }

@@ -48,6 +48,7 @@ public enum SpellId {
 	DEMONIC_SACRIFICE("Demonic Sacrifice"),
 	ENSLAVE_DEMON("Enslave Demon"),
 	FEL_ARMOR("Fel Armor"),
+	FEL_DOMINATION("Fel Domination"),
 	HEALTH_FUNNEL("Health Funnel"),
 	SHADOW_WARD("Shadow Ward"),
 	SUMMON_IMP("Summon Imp"),
@@ -66,6 +67,7 @@ public enum SpellId {
 	SHADOWBURN("Shadowburn"),
 	SHADOWFURY("Shadowfury"),
 	SOUL_FIRE("Soul Fire"),
+	SOUL_LINK("Soul Link"),
 
 	FIREBOLT("Firebolt"),
 	BLOOD_PACT("Blood Pact"),
@@ -108,11 +110,13 @@ public enum SpellId {
 	DEVOURING_PLAGUE("Devouring Plague"),
 	MIND_BLAST("Mind Blast"),
 	MIND_FLAY("Mind Flay"),
+	SHADOWFORM("Shadowform"),
 	SHADOW_WORD_DEATH("Shadow Word: Death"),
 	SHADOW_WORD_PAIN("Shadow Word: Pain"),
-	STARSHARDS("Starshards"),
 	VAMPIRIC_EMBRACE("Vampiric Embrace"),
 	VAMPIRIC_TOUCH("Vampiric Touch"),
+
+	STARSHARDS("Starshards"),
 
 	// rogue
 

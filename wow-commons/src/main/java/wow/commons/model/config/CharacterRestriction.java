@@ -9,6 +9,7 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.professions.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
+import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentId;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class CharacterRestriction {
 	private ProfessionSpecializationId professionSpecId;
 	private ExclusiveFaction exclusiveFaction;
 	private PetType activePet;
+	private SpellId spellId;
 	private TalentId talentId;
 
 	public static final CharacterRestriction EMPTY = builder().build();
@@ -66,6 +68,9 @@ public class CharacterRestriction {
 		if (activePet != null && !characterInfo.hasActivePet(activePet)) {
 			return false;
 		}
+		if (spellId != null && !characterInfo.hasSpell(spellId)) {
+			return false;
+		}
 		return talentId == null || characterInfo.hasTalent(talentId);
 	}
 
@@ -79,6 +84,7 @@ public class CharacterRestriction {
 				.professionSpecId(mergeValues(professionSpecId, other.professionSpecId))
 				.exclusiveFaction(exclusiveFaction)
 				.activePet(activePet)
+				.spellId(spellId)
 				.talentId(mergeValues(talentId, other.talentId))
 				.build();
 	}
@@ -109,6 +115,9 @@ public class CharacterRestriction {
 		}
 		if (activePet != null) {
 			parts.add(String.format("pet: %s", activePet));
+		}
+		if (spellId != null) {
+			parts.add(String.format("spell: %s", spellId));
 		}
 		if (talentId != null) {
 			parts.add(String.format("talentId: %s", talentId));

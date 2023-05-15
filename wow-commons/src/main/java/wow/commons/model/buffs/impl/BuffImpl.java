@@ -24,7 +24,6 @@ import java.util.Set;
 public class BuffImpl extends ConfigurationElementWithAttributesImpl<Integer> implements Buff {
 	private final BuffType type;
 	private final BuffExclusionGroup exclusionGroup;
-	private final SpellId sourceSpell;
 	private final Set<PveRole> pveRoles;
 	private final Set<BuffCategory> categories;
 
@@ -35,14 +34,12 @@ public class BuffImpl extends ConfigurationElementWithAttributesImpl<Integer> im
 			CharacterRestriction characterRestriction,
 			BuffType type,
 			BuffExclusionGroup exclusionGroup,
-			SpellId sourceSpell,
 			Set<PveRole> pveRoles,
 			Set<BuffCategory> categories
 	) {
 		super(id, description, timeRestriction, characterRestriction);
 		this.type = type;
 		this.exclusionGroup = exclusionGroup;
-		this.sourceSpell = sourceSpell;
 		this.pveRoles = pveRoles;
 		this.categories = categories;
 	}
@@ -50,5 +47,10 @@ public class BuffImpl extends ConfigurationElementWithAttributesImpl<Integer> im
 	@Override
 	protected SpecialAbilitySource getSpecialAbilitySource() {
 		return new BuffSource(this);
+	}
+
+	@Override
+	public SpellId getSourceSpell() {
+		return getCharacterRestriction().getSpellId();
 	}
 }
