@@ -17,6 +17,6 @@ import java.util.List;
 public class BuildPO implements Serializable {
 	private List<TalentPO> talents;
 	private PveRole role;
-	private RotationPO rotation;
+	private String rotation;
 	private PetType activePet;
 }

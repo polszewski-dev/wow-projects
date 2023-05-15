@@ -27,7 +27,9 @@ public class PetSheetParser extends CharacterSheetParser {
 	private Pet getPet(GameVersion version) {
 		var id = colId.getEnum(PetType::parse);
 		var description = getDescription();
-		return new Pet(id, description, version);
+		var restriction = getRestriction();
+
+		return new Pet(id, description, restriction, version);
 	}
 
 	private void addPet(Pet pet, GameVersion version) {

@@ -3,6 +3,7 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.build.Build;
+import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
 import wow.character.service.CharacterService;
@@ -11,8 +12,6 @@ import wow.minmax.converter.Converter;
 import wow.minmax.model.persistent.BuildPO;
 import wow.minmax.model.persistent.CharacterPO;
 import wow.minmax.model.persistent.TalentPO;
-
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -26,7 +25,6 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 	private final CharacterProfessionPOConverter characterProfessionPOConverter;
 	private final BuffPOConverter buffPOConverter;
 	private final EnemyPOConverter enemyPOConverter;
-	private final RotationPOConverter rotationPOConverter;
 
 	private final CharacterService characterService;
 
@@ -60,7 +58,7 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 		Enemy targetEnemy = enemyPOConverter.convertBack(source.getTargetEnemy(), params);
 		character.setTargetEnemy(targetEnemy);
 
-		changeBuild(character, source, params);
+		changeBuild(character, source);
 
 		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), params));
 		character.getExclusiveFactions().set(source.getExclusiveFactions());
@@ -68,10 +66,12 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 		character.getTargetEnemy().setDebuffs(buffPOConverter.convertBackList(source.getTargetEnemy().getDebuffs(), params));
 		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
 
+		characterService.updateAfterRestrictionChange(character);
+
 		return character;
 	}
 
-	private void changeBuild(Character character, CharacterPO source, Map<String, Object> params) {
+	private void changeBuild(Character character, CharacterPO source) {
 		Build build = character.getBuild();
 		BuildPO sourceBuild = source.getBuild();
 
@@ -81,9 +81,6 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 
 		build.setRole(sourceBuild.getRole());
 		build.setActivePet(sourceBuild.getActivePet());
-
-		characterService.onTalentsChange(character);
-
-		build.setRotation(rotationPOConverter.convertBack(sourceBuild.getRotation(), params));
+		build.setRotation(RotationTemplate.parse(sourceBuild.getRotation()).createRotation());
 	}
 }

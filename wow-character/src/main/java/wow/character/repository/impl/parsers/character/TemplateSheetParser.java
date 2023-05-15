@@ -1,5 +1,6 @@
 package wow.character.repository.impl.parsers.character;
 
+import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.CharacterTemplateId;
@@ -11,7 +12,6 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
-import wow.commons.model.spells.SpellId;
 
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +60,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var timeRestriction = getTimeRestriction();
 		var talentLink = colTalentLink.getString();
 		var pveRole = colRole.getEnum(PveRole::parse);
-		var defaultRotation = colDefaultRotation.getList(SpellId::parse);
+		var defaultRotation = RotationTemplate.parse(colDefaultRotation.getString());
 		var activePet = colActivePet.getEnum(PetType::parse, PetType.NONE);
 		var defaultBuffs = colDefaultBuffs.getList(Function.identity());
 		var defaultDebuffs = colDefaultDebuffs.getList(Function.identity());

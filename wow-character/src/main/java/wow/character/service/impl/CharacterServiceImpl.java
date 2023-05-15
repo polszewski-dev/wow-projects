@@ -3,22 +3,25 @@ package wow.character.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.Build;
-import wow.character.model.build.Rotation;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
+import wow.character.model.equipment.Equipment;
+import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
+import wow.commons.model.buffs.Buff;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import static wow.commons.model.character.PetType.NONE;
 
 /**
  * User: POlszewski
@@ -55,6 +58,8 @@ public class CharacterServiceImpl implements CharacterService {
 		character.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
 		character.setBuffs(spellService.getBuffs(characterTemplate.getDefaultBuffs(), character));
 		character.getTargetEnemy().setDebuffs(spellService.getBuffs(characterTemplate.getDefaultDebuffs(), character));
+
+		updateAfterRestrictionChange(character);
 	}
 
 	private CharacterTemplate getCharacterTemplate(CharacterTemplateId characterTemplateId, Character character) {
@@ -70,44 +75,80 @@ public class CharacterServiceImpl implements CharacterService {
 		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
 		build.setRole(characterTemplate.getRole());
 		build.setActivePet(characterTemplate.getActivePet());
+		build.setRotation(characterTemplate.getDefaultRotationTemplate().createRotation());
 
-		onTalentsChange(character);
-
-		build.setRotation(getRotation(character, characterTemplate));
+		refreshSpellbook(character);
 	}
 
 	@Override
-	public void onTalentsChange(Character character) {
+	public void updateAfterRestrictionChange(Character character) {
+		character.getBuild().getRotation().invalidate();
+		refreshSpellbook(character);
+		refreshActivePet(character);
+		refreshEquipment(character);
+		refreshBuffs(character);
+	}
+
+	private void refreshSpellbook(Character character) {
 		character.getSpellbook().reset();
 		character.getSpellbook().addSpells(spellService.getAvailableSpells(character));
 	}
 
-	private Rotation getRotation(Character character, CharacterTemplate characterTemplate) {
-		List<Spell> cooldowns = new ArrayList<>();
-		Spell filler = null;
+	private void refreshActivePet(Character character) {
+		Pet activePet = character.getActivePet();
 
-		for (SpellId spellId : characterTemplate.getDefaultRotation()) {
-			Optional<Spell> optionalSpell = character.getSpellbook().getSpell(spellId);
+		if (activePet != null && !activePet.isAvailableTo(character)) {
+			character.getBuild().setActivePet(NONE);
+		}
+	}
 
-			if (optionalSpell.isEmpty()) {
-				continue;
-			}
-
-			Spell spell = optionalSpell.get();
-
-			if ((spell.hasDotComponent() && !spell.isChanneled()) || spell.getCooldown().isPositive()) {
-				cooldowns.add(spell);
-			} else if (filler == null) {
-				filler = spell;
-			} else {
-				throw new IllegalArgumentException("Can't have two fillers: %s, %s".formatted(filler, spell));
+	private void refreshBuffs(Character character) {
+		for (Buff buff : new ArrayList<>(character.getBuffs().getList())) {
+			if (!buff.isAvailableTo(character)) {
+				character.getBuffs().enable(buff, false);
 			}
 		}
+	}
 
-		if (filler == null) {
-			throw new IllegalArgumentException("No filler");
+	private void refreshEquipment(Character character) {
+		for (ItemSlot itemSlot : ItemSlot.values()) {
+			removeInvalidItem(character, itemSlot);
+		}
+	}
+
+	private void removeInvalidItem(Character character, ItemSlot itemSlot) {
+		Equipment equipment = character.getEquipment();
+		EquippableItem item = equipment.get(itemSlot);
+
+		if (item == null) {
+			return;
 		}
 
-		return new Rotation(cooldowns, filler);
+		if (!item.getItem().isAvailableTo(character)) {
+			equipment.equip(null, itemSlot);
+			return;
+		}
+
+		removeInvalidEnchant(character, item);
+
+		for (int socketNo = 0; socketNo < item.getSocketCount(); ++socketNo) {
+			removeInvalidGem(character, item, socketNo);
+		}
+	}
+
+	private void removeInvalidEnchant(Character character, EquippableItem item) {
+		Enchant enchant = item.getEnchant();
+
+		if (enchant != null && !enchant.isAvailableTo(character)) {
+			item.enchant(null);
+		}
+	}
+
+	private void removeInvalidGem(Character character, EquippableItem item, int socketNo) {
+		Gem gem = item.getGem(socketNo);
+
+		if (gem != null && !gem.isAvailableTo(character)) {
+			item.getSockets().insertGem(socketNo, null);
+		}
 	}
 }

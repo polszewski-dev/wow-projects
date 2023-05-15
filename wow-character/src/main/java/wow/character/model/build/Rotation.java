@@ -1,22 +1,89 @@
 package wow.character.model.build;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import wow.character.model.Copyable;
+import wow.character.model.character.Character;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User: POlszewski
  * Date: 2023-04-06
  */
-@AllArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class Rotation {
-	private final List<Spell> cooldowns;
-	private final Spell filler;
+public class Rotation implements Copyable<Rotation> {
+	private final RotationTemplate template;
+
+	private List<Spell> cooldowns;
+	private Spell filler;
+
+	public static Rotation create(RotationTemplate template) {
+		return new Rotation(template);
+	}
+
+	@Override
+	public Rotation copy() {
+		Rotation copy = new Rotation(template);
+		if (this.isCompiled()) {
+			copy.cooldowns = new ArrayList<>(this.cooldowns);
+			copy.filler = this.filler;
+		}
+		return copy;
+	}
 
 	public static Rotation onlyFiller(Spell spell) {
-		return new Rotation(List.of(), spell);
+		Rotation rotation = new Rotation(null);
+		rotation.cooldowns = List.of();
+		rotation.filler = spell;
+		return rotation;
+	}
+
+	public Rotation compile(Character character) {
+		if (isCompiled()) {
+			return this;
+		}
+
+		cooldowns = new ArrayList<>();
+
+		for (SpellId spellId : template.getSpellIds()) {
+			character.getSpellbook()
+					.getSpell(spellId)
+					.ifPresent(this::addSpell);
+		}
+
+		assertFillerPresent();
+		return this;
+	}
+
+	private boolean isCompiled() {
+		return cooldowns != null;
+	}
+
+	public Rotation invalidate() {
+		this.cooldowns = null;
+		this.filler = null;
+		return this;
+	}
+
+	private void addSpell(Spell spell) {
+		if ((spell.hasDotComponent() && !spell.isChanneled()) || spell.getCooldown().isPositive()) {
+			cooldowns.add(spell);
+		} else if (filler == null) {
+			filler = spell;
+		} else {
+			throw new IllegalArgumentException("Can't have two fillers: %s, %s".formatted(filler, spell));
+		}
+	}
+
+	private void assertFillerPresent() {
+		if (filler == null) {
+			throw new IllegalArgumentException("No filler");
+		}
 	}
 }

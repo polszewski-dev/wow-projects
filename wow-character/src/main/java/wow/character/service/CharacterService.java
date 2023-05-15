@@ -15,5 +15,5 @@ public interface CharacterService {
 
 	void applyCharacterTemplate(Character character, CharacterTemplateId characterTemplateId);
 
-	void onTalentsChange(Character character);
+	void updateAfterRestrictionChange(Character character);
 }

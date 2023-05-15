@@ -40,7 +40,7 @@ public class Build implements AttributeCollection, Copyable<Build> {
 				gameVersion,
 				talents.copy(),
 				role,
-				rotation,
+				rotation.copy(),
 				activePet
 		);
 	}
