@@ -96,4 +96,8 @@ public class Talents implements AttributeCollection, Copyable<Talents> {
 	public void collectAttributes(AttributeCollector collector) {
 		collector.addAttributes(talentById.values());
 	}
+
+	public void removeTalent(TalentId talentId) {
+		talentById.remove(talentId);
+	}
 }

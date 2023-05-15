@@ -10,6 +10,7 @@ import wow.commons.util.EnumUtil;
 @AllArgsConstructor
 public enum TalentTree {
 	RACIAL("Racial"),
+	MISC("Misc"),
 
 	AFFLICTION("Affliction"),
 	DEMONOLOGY("Demonology"),

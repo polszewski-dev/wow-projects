@@ -8,6 +8,7 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.talents.TalentId;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.RotationStats;
 import wow.minmax.model.SpecialAbilityStats;
@@ -30,6 +31,8 @@ public interface CalculationService {
 	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character);
 
 	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Rotation rotation, Attributes totalStats);
+
+	Attributes getTalentEquivalent(TalentId talentId, PrimitiveAttributeId targetStat, Character character);
 
 	double getRotationDps(Character character, Rotation rotation);
 

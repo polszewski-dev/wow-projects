@@ -57,7 +57,12 @@ public class Rotation implements Copyable<Rotation> {
 					.ifPresent(this::addSpell);
 		}
 
-		assertFillerPresent();
+		if (filler == null) {
+			this.filler = character.getSpellbook()
+					.getSpell(SpellId.SHOOT)
+					.orElseThrow();
+		}
+
 		return this;
 	}
 
@@ -78,12 +83,6 @@ public class Rotation implements Copyable<Rotation> {
 			filler = spell;
 		} else {
 			throw new IllegalArgumentException("Can't have two fillers: %s, %s".formatted(filler, spell));
-		}
-	}
-
-	private void assertFillerPresent() {
-		if (filler == null) {
-			throw new IllegalArgumentException("No filler");
 		}
 	}
 }

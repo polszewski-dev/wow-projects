@@ -18,18 +18,15 @@ import wow.minmax.service.CalculationService;
 public class StatEquivalentFinder {
 	private static final double PRECISION = 0.0001;
 
-	private final Attributes attributesToFindEquivalent;
+	private final Attributes baseStats;
+	private final double targetDps;
 	private final PrimitiveAttributeId targetStat;
-	private final CalculationService.EquivalentMode mode;
 	private final Character character;
 	private final Rotation rotation;
-	private final Attributes totalStats;
+
 	private final CalculationService calculationService;
 
 	public Attributes getDpsStatEquivalent() {
-		Attributes baseStats = getBaseAttributes();
-		double targetDps = getTargetDps();
-
 		double equivalentValue = 0;
 		double increase = 1;
 
@@ -48,24 +45,5 @@ public class StatEquivalentFinder {
 				increase /= 2;
 			}
 		}
-	}
-
-	private Attributes getBaseAttributes() {
-		if (mode == CalculationService.EquivalentMode.REPLACEMENT) {
-			return AttributesBuilder.removeAttributes(totalStats, attributesToFindEquivalent);
-		}
-		return totalStats;
-	}
-
-	private double getTargetDps() {
-		Attributes targetStats = getTargetStats();
-		return calculationService.getRotationDps(character, rotation, targetStats);
-	}
-
-	private Attributes getTargetStats() {
-		if (mode == CalculationService.EquivalentMode.REPLACEMENT) {
-			return totalStats;
-		}
-		return AttributesBuilder.addAttributes(totalStats, attributesToFindEquivalent);
 	}
 }

@@ -113,7 +113,8 @@ class SpellServiceTest extends WowCharacterSpringTest {
 				"Shadowburn#5",
 				"Shadowburn#6",
 				"Shadowburn#7",
-				"Shadowburn#8"
+				"Shadowburn#8",
+				"Shoot#0"
 		));
 	}
 

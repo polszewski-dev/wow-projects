@@ -17,7 +17,6 @@ import wow.minmax.service.PlayerProfileService;
 import java.util.List;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
-import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 
 /**
  * User: POlszewski
@@ -57,10 +56,9 @@ public class TalentController {
 	}
 
 	private Attributes getSpEquivalent(Talent talent, Character character) {
-		return calculationService.getDpsStatEquivalent(
-				talent.getAttributes(),
+		return calculationService.getTalentEquivalent(
+				talent.getTalentId(),
 				SPELL_POWER,
-				REPLACEMENT,
 				character
 		);
 	}

@@ -7,6 +7,7 @@ import wow.character.model.character.Buffs;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
+import wow.character.service.CharacterService;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.special.OnUseAbility;
@@ -17,6 +18,7 @@ import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
+import wow.commons.model.talents.TalentId;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.*;
 import wow.minmax.repository.ProcInfoRepository;
@@ -43,6 +45,7 @@ import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 @AllArgsConstructor
 public class CalculationServiceImpl implements CalculationService {
 	private final CharacterCalculationService characterCalculationService;
+	private final CharacterService characterService;
 	private final ProcInfoRepository procInfoRepository;
 
 	@Override
@@ -60,10 +63,34 @@ public class CalculationServiceImpl implements CalculationService {
 			Attributes totalStats
 	) {
 		var finder = new StatEquivalentFinder(
-				attributesToFindEquivalent, targetStat, mode, character, rotation, totalStats, this
+				getBaseStats(mode, totalStats, attributesToFindEquivalent),
+				getTargetDps(mode, totalStats, attributesToFindEquivalent, character, rotation),
+				targetStat,
+				character,
+				rotation,
+				this
 		);
 
 		return finder.getDpsStatEquivalent();
+	}
+
+	private Attributes getBaseStats(EquivalentMode mode, Attributes totalStats, Attributes attributesToFindEquivalent) {
+		return switch (mode) {
+			case REPLACEMENT -> AttributesBuilder.removeAttributes(totalStats, attributesToFindEquivalent);
+			case ADDITIONAL -> totalStats;
+		};
+	}
+
+	private Attributes getTargetStats(EquivalentMode mode, Attributes totalStats, Attributes attributesToFindEquivalent) {
+		return switch (mode) {
+			case REPLACEMENT -> totalStats;
+			case ADDITIONAL -> AttributesBuilder.addAttributes(totalStats, attributesToFindEquivalent);
+		};
+	}
+
+	private double getTargetDps(EquivalentMode mode, Attributes totalStats, Attributes attributesToFindEquivalent, Character character, Rotation rotation) {
+		Attributes targetStats = getTargetStats(mode, totalStats, attributesToFindEquivalent);
+		return getRotationDps(character, rotation, targetStats);
 	}
 
 	@Override
@@ -81,6 +108,27 @@ public class CalculationServiceImpl implements CalculationService {
 		);
 		calculator.calculate();
 		return calculator.getAbilityEquivalent(specialAbility);
+	}
+
+	@Override
+	public Attributes getTalentEquivalent(
+			TalentId talentId,
+			PrimitiveAttributeId targetStat,
+			Character character
+	) {
+		Character copy = character.copy();
+		copy.getTalents().removeTalent(talentId);
+
+		characterService.updateAfterRestrictionChange(copy);
+
+		Attributes baseStats = copy.getStats();
+		double targetDps = getRotationDps(character, character.getRotation(), character.getStats());
+
+		var finder = new StatEquivalentFinder(
+				baseStats, targetDps, targetStat, copy, copy.getRotation(), this
+		);
+
+		return finder.getDpsStatEquivalent();
 	}
 
 	@Override
