@@ -3,7 +3,10 @@ package wow.scraper.parsers;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.professions.ProfessionId;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.model.*;
+import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.JsonSourceMore;
+import wow.scraper.model.WowheadProfession;
+import wow.scraper.model.WowheadSource;
 
 import java.util.*;
 import java.util.function.IntFunction;
@@ -26,8 +29,8 @@ public class WowheadSourceParser {
 	private final List<JsonSourceMore> sourceMores;
 	private final String requiredFactionName;
 
-	public WowheadSourceParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, String requiredFactionName) {
-		this.itemDetails = itemDetailsAndTooltip.getDetails();
+	public WowheadSourceParser(JsonItemDetails itemDetails, String requiredFactionName) {
+		this.itemDetails = itemDetails;
 		this.sources = itemDetails.getSources()
 				.stream()
 				.map(WowheadSource::fromCode)

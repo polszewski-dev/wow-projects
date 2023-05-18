@@ -15,7 +15,7 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.gems.SocketBonusParser;
 import wow.scraper.parsers.stats.StatParser;
 import wow.scraper.parsers.stats.StatPatternRepository;
@@ -44,8 +44,8 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 	private boolean randomEnchantment;
 
-	public ItemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		super(itemDetailsAndTooltip, gameVersion, statPatternRepository);
+	public ItemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
+		super(itemDetails, gameVersion, statPatternRepository);
 	}
 
 	@Override

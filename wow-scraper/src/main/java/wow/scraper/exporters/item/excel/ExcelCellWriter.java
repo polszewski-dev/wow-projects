@@ -1,32 +1,27 @@
-package wow.scraper.excel;
+package wow.scraper.exporters.item.excel;
 
+import lombok.AllArgsConstructor;
 import polszewski.excel.writer.ExcelWriter;
 import polszewski.excel.writer.style.Font;
 import polszewski.excel.writer.style.Style;
 import wow.commons.model.Money;
 import wow.commons.model.Percent;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
- * Date: 2022-10-31
+ * Date: 2023-05-18
  */
-public abstract class AbstractExcelBuilder {
+@AllArgsConstructor
+public abstract class ExcelCellWriter {
 	private static final Font FONT = Font.DEFAULT.name("Arial").size(9);
 	private static final Style DATA_STYLE = Style.DEFAULT.font(FONT);
 	private static final Style HEADER_STYLE = DATA_STYLE.font(FONT.bold());
 
-	protected final ExcelWriter writer = new ExcelWriter();
-
-	public abstract void start();
-
-	public void finish(String fileName) throws IOException {
-		writer.save(fileName);
-	}
+	protected final ExcelWriter writer;
 
 	protected void setHeader(String colName) {
 		setHeader(colName, null);

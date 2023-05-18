@@ -1,70 +1,60 @@
 package wow.scraper.repository.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
+import wow.scraper.repository.ItemDetailRepository;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-10-28
  */
 @Repository
-@AllArgsConstructor
-public class ItemDetailRepositoryImpl implements wow.scraper.repository.ItemDetailRepository {
-	private static final ObjectMapper MAPPER = new ObjectMapper();
+public class ItemDetailRepositoryImpl implements ItemDetailRepository {
+	private final JsonFileRepository<JsonItemDetails> repository;
 
-	private ScraperConfig config;
-
-	@Override
-	public boolean hasItemDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) {
-		Path path = getPath(gameVersion, category, itemId);
-		return Files.exists(path);
+	public ItemDetailRepositoryImpl(ScraperConfig scraperConfig) {
+		this.repository = new JsonFileRepository<>(
+				scraperConfig,
+				JsonItemDetails.class
+		);
 	}
 
 	@Override
-	public Optional<JsonItemDetailsAndTooltip> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) throws IOException {
-		Path path = getPath(gameVersion, category, itemId);
-		if (!Files.exists(path)) {
-			return Optional.empty();
-		}
-		var detailsAndTooltip = MAPPER.readValue(new FileInputStream(path.toFile()), JsonItemDetailsAndTooltip.class);
-		return Optional.of(detailsAndTooltip);
+	public boolean hasDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) {
+		return repository.has(getIdParts(gameVersion, category, itemId));
 	}
 
 	@Override
-	public void saveItemDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId, JsonItemDetailsAndTooltip detailsAndTooltip) throws IOException {
-		Path path = getPath(gameVersion, category, itemId);
-		path.toFile().getParentFile().mkdirs();
-		MAPPER.writeValue(new FileOutputStream(path.toFile()), detailsAndTooltip);
+	public Optional<JsonItemDetails> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) throws IOException {
+		return repository.get(getIdParts(gameVersion, category, itemId));
+	}
+
+	@Override
+	public void saveDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId, JsonItemDetails itemDetails) throws IOException {
+		repository.save(getIdParts(gameVersion, category, itemId), itemDetails);
 	}
 
 	@Override
 	public List<Integer> getItemIds(GameVersionId gameVersion, WowheadItemCategory category) {
-		File[] files = getPath(gameVersion, category, 0).getParent().toFile().listFiles();
-		if (files == null) {
-			return List.of();
-		}
-		return Stream.of(files)
-				.map(file -> Integer.parseInt(file.getName()))
+		return repository.getIds(getIdParts(gameVersion, category, 0)).stream()
+				.map(Integer::valueOf)
+				.sorted()
 				.toList();
 	}
 
-	private Path getPath(GameVersionId gameVersion, WowheadItemCategory category, int itemId) {
-		return Paths.get(config.getDirectoryPath(), "items", gameVersion.toString().toLowerCase(), category.name().toLowerCase(), Integer.toString(itemId));
+	private String[] getIdParts(GameVersionId gameVersion, WowheadItemCategory category, int itemId) {
+		return new String[] {
+				"items",
+				gameVersion.toString().toLowerCase(),
+				category.name().toLowerCase(),
+				Integer.toString(itemId)
+		};
 	}
 }

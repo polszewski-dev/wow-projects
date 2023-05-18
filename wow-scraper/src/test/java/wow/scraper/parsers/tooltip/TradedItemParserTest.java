@@ -3,7 +3,7 @@ package wow.scraper.parsers.tooltip;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.model.JsonItemDetails;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,7 +50,7 @@ class TradedItemParserTest extends TooltipParserTest<TradedItemParser> {
 	static TradedItemParser verdantSphere;
 
 	@Override
-	protected TradedItemParser createParser(JsonItemDetailsAndTooltip data) {
+	protected TradedItemParser createParser(JsonItemDetails data) {
 		return new TradedItemParser(data, TBC, statPatternRepository);
 	}
 }

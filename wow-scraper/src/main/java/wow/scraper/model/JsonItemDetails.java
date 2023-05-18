@@ -97,6 +97,12 @@ public class JsonItemDetails {
 	@JsonProperty(value = "sourcemore")
 	private List<JsonSourceMore> sourceMores;
 
+	@JsonProperty(value = "htmlTooltip")
+	private String htmlTooltip;
+
+	@JsonProperty(value = "icon")
+	private String icon;
+
 	public List<JsonSourceMore> getSourcesOf(WowheadSource source) {
 		List<JsonSourceMore> result = new ArrayList<>();
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Money;
 import wow.commons.model.attributes.Attributes;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.model.JsonItemDetails;
 
 import java.io.IOException;
 import java.util.List;
@@ -165,7 +165,7 @@ class ItemTooltipParserTest extends TooltipParserTest<ItemTooltipParser> {
 	}
 
 	@Override
-	protected ItemTooltipParser createParser(JsonItemDetailsAndTooltip data) {
+	protected ItemTooltipParser createParser(JsonItemDetails data) {
 		return new ItemTooltipParser(data, TBC, statPatternRepository);
 	}
 }

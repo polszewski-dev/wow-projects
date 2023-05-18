@@ -7,7 +7,7 @@ import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.parser.Rule;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.gems.GemStatsParser;
 import wow.scraper.parsers.stats.StatPatternRepository;
 
@@ -24,8 +24,8 @@ public class GemTooltipParser extends AbstractTooltipParser {
 	private List<MetaEnabler> metaEnablers;
 	private Attributes stats;
 
-	public GemTooltipParser(JsonItemDetailsAndTooltip itemDetailsAndTooltip, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		super(itemDetailsAndTooltip, gameVersion, statPatternRepository);
+	public GemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
+		super(itemDetails, gameVersion, statPatternRepository);
 	}
 
 	@Override

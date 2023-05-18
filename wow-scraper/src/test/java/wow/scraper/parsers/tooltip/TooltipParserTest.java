@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.scraper.ScraperTestConfig;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.stats.StatPatternRepository;
 
 import java.io.IOException;
@@ -24,14 +24,14 @@ public abstract class TooltipParserTest<T extends AbstractTooltipParser> {
 	static final ObjectMapper MAPPER = new ObjectMapper();
 
 	T getTooltip(String path) throws IOException {
-		JsonItemDetailsAndTooltip data = MAPPER.readValue(
+		JsonItemDetails data = MAPPER.readValue(
 				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/" + path),
-				JsonItemDetailsAndTooltip.class
+				JsonItemDetails.class
 		);
 		T parser = createParser(data);
 		parser.parse();
 		return parser;
 	}
 
-	protected abstract T createParser(JsonItemDetailsAndTooltip data);
+	protected abstract T createParser(JsonItemDetails data);
 }

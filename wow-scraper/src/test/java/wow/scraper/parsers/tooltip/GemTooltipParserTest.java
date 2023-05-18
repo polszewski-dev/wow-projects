@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.item.MetaEnabler;
-import wow.scraper.model.JsonItemDetailsAndTooltip;
+import wow.scraper.model.JsonItemDetails;
 
 import java.io.IOException;
 import java.util.List;
@@ -102,7 +102,7 @@ class GemTooltipParserTest extends TooltipParserTest<GemTooltipParser> {
 	}
 
 	@Override
-	protected GemTooltipParser createParser(JsonItemDetailsAndTooltip data) {
+	protected GemTooltipParser createParser(JsonItemDetails data) {
 		return new GemTooltipParser(data, TBC, statPatternRepository);
 	}
 }
