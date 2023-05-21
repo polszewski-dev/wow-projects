@@ -12,7 +12,7 @@ import static wow.scraper.model.WowheadItemCategory.GEMS;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class GemItemExporter extends ItemBaseExporter<GemTooltipParser> {
+public class GemItemExporter extends AbstractItemExporter<GemTooltipParser> {
 	@Override
 	public void exportAll() throws IOException {
 		builder.addGemHeader();
@@ -20,8 +20,8 @@ public class GemItemExporter extends ItemBaseExporter<GemTooltipParser> {
 	}
 
 	@Override
-	protected GemTooltipParser createParser(JsonItemDetails itemDetails, GameVersionId gameVersion) {
-		return new GemTooltipParser(itemDetails, gameVersion, statPatternRepository);
+	protected GemTooltipParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
+		return new GemTooltipParser(details, gameVersion, statPatternRepository);
 	}
 
 	@Override

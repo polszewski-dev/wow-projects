@@ -25,7 +25,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * User: POlszewski
  * Date: 2022-11-14
  */
-class ItemTooltipParserTest extends TooltipParserTest<ItemTooltipParser> {
+class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemTooltipParser> {
 	@Test
 	@DisplayName("Item id/name are parsed correctly")
 	void idAndName() {
@@ -167,5 +167,10 @@ class ItemTooltipParserTest extends TooltipParserTest<ItemTooltipParser> {
 	@Override
 	protected ItemTooltipParser createParser(JsonItemDetails data) {
 		return new ItemTooltipParser(data, TBC, statPatternRepository);
+	}
+
+	@Override
+	protected Class<JsonItemDetails> getDetailsClass() {
+		return JsonItemDetails.class;
 	}
 }

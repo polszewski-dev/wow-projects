@@ -11,6 +11,8 @@ import wow.scraper.classifiers.PveRoleStatClassifier;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.WowheadSourceParser;
+import wow.scraper.parsers.tooltip.AbstractItemTooltipParser;
+import wow.scraper.parsers.tooltip.AbstractSpellTooltipParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
 import java.util.List;
@@ -51,7 +53,7 @@ public abstract class WowExcelSheetWriter<T> extends ExcelCellWriter {
 		setHeader(REQ_PHASE);
 	}
 
-	protected void writeCommonColumns(AbstractTooltipParser parser) {
+	protected void writeCommonColumns(AbstractItemTooltipParser parser) {
 		setValue(parser.getItemId());
 		setValue(parser.getName());
 		setValue(parser.getItemType());
@@ -70,7 +72,7 @@ public abstract class WowExcelSheetWriter<T> extends ExcelCellWriter {
 		setHeader(TOOLTIP);
 	}
 
-	protected void writeIconAndTooltip(AbstractTooltipParser parser) {
+	protected void writeIconAndTooltip(AbstractTooltipParser<?> parser) {
 		setValue(parser.getIcon());
 		setValue("");
 	}
@@ -113,23 +115,34 @@ public abstract class WowExcelSheetWriter<T> extends ExcelCellWriter {
 		fillRemainingEmptyCols(2 * (maxAttributes - colNo));
 	}
 
-	protected PhaseId getPhase(AbstractTooltipParser parser) {
-		PhaseId phaseOverride = config.getPhaseOverrides().get(parser.getItemId());
+	protected PhaseId getPhase(AbstractItemTooltipParser parser) {
+		PhaseId phaseOverride = config.getItemPhaseOverrides().get(parser.getItemId());
 		PhaseId phase = parser.getPhase();
 
+		return getPhaseId(phaseOverride, phase);
+	}
+
+	protected PhaseId getPhase(AbstractSpellTooltipParser parser) {
+		PhaseId phaseOverride = config.getSpellPhaseOverrides().get(parser.getSpellId());
+		PhaseId phase = parser.getPhase();
+
+		return getPhaseId(phaseOverride, phase);
+	}
+
+	private PhaseId getPhaseId(PhaseId phaseOverride, PhaseId phase) {
 		if (phaseOverride != null && phaseOverride.getGameVersionId() == phase.getGameVersionId()) {
 			return phaseOverride;
 		}
 		return phase;
 	}
 
-	protected ItemRarity getItemRarity(AbstractTooltipParser parser) {
-		Integer quality = parser.getItemDetails().getQuality();
+	protected ItemRarity getItemRarity(AbstractTooltipParser<?> parser) {
+		Integer quality = parser.getDetails().getQuality();
 		return WowheadItemQuality.fromCode(quality).getItemRarity();
 	}
 
-	protected Side getRequiredSide(AbstractTooltipParser parser) {
-		Side side = config.getRequiredSideOverride(parser.getItemId())
+	protected Side getRequiredSide(AbstractItemTooltipParser parser) {
+		Side side = config.getItemRequiredSideOverride(parser.getItemId())
 				.orElse(parser.getRequiredSide());
 
 		if (parser.getRequiredFactionName() == null) {
@@ -150,8 +163,8 @@ public abstract class WowExcelSheetWriter<T> extends ExcelCellWriter {
 		return factionSide;
 	}
 
-	protected String parseSource(AbstractTooltipParser parser) {
-		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getItemDetails(), parser.getRequiredFactionName());
+	protected String parseSource(AbstractItemTooltipParser parser) {
+		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getDetails(), parser.getRequiredFactionName());
 		List<String> sources = sourceParser.getSource();
 		return String.join("#", sources);
 	}

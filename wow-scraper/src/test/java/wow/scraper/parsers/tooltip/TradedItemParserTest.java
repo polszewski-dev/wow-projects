@@ -17,7 +17,7 @@ import static wow.commons.model.pve.GameVersionId.TBC;
  * User: POlszewski
  * Date: 2022-11-17
  */
-class TradedItemParserTest extends TooltipParserTest<TradedItemParser> {
+class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItemParser> {
 	@Test
 	@DisplayName("Token tooltip is parsed correctly")
 	void tokenTooltipIsParsedCorrectly() {
@@ -52,5 +52,10 @@ class TradedItemParserTest extends TooltipParserTest<TradedItemParser> {
 	@Override
 	protected TradedItemParser createParser(JsonItemDetails data) {
 		return new TradedItemParser(data, TBC, statPatternRepository);
+	}
+
+	@Override
+	protected Class<JsonItemDetails> getDetailsClass() {
+		return JsonItemDetails.class;
 	}
 }

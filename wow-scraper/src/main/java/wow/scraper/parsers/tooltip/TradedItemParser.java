@@ -12,7 +12,7 @@ import wow.scraper.parsers.stats.StatPatternRepository;
  * Date: 2022-11-16
  */
 @Getter
-public class TradedItemParser extends AbstractTooltipParser {
+public class TradedItemParser extends AbstractItemTooltipParser {
 	public TradedItemParser(JsonItemDetails itemDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
 		super(itemDetails, gameVersion, statPatternRepository);
 	}

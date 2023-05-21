@@ -22,7 +22,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P3;
  * User: POlszewski
  * Date: 2022-11-15
  */
-class GemTooltipParserTest extends TooltipParserTest<GemTooltipParser> {
+class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltipParser> {
 	@Test
 	@DisplayName("Item id/name are parsed correctly")
 	void idAndName() {
@@ -104,5 +104,10 @@ class GemTooltipParserTest extends TooltipParserTest<GemTooltipParser> {
 	@Override
 	protected GemTooltipParser createParser(JsonItemDetails data) {
 		return new GemTooltipParser(data, TBC, statPatternRepository);
+	}
+
+	@Override
+	protected Class<JsonItemDetails> getDetailsClass() {
+		return JsonItemDetails.class;
 	}
 }

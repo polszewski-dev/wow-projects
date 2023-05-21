@@ -13,7 +13,7 @@ import static wow.scraper.model.WowheadItemCategory.TOKENS;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class TradedItemExporter extends ItemBaseExporter<TradedItemParser> {
+public class TradedItemExporter extends AbstractItemExporter<TradedItemParser> {
 	@Override
 	public void exportAll() throws IOException {
 		builder.addTradedItemHeader();
@@ -22,8 +22,8 @@ public class TradedItemExporter extends ItemBaseExporter<TradedItemParser> {
 	}
 
 	@Override
-	protected TradedItemParser createParser(JsonItemDetails itemDetails, GameVersionId gameVersion) {
-		return new TradedItemParser(itemDetails, gameVersion, statPatternRepository);
+	protected TradedItemParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
+		return new TradedItemParser(details, gameVersion, statPatternRepository);
 	}
 
 	@Override

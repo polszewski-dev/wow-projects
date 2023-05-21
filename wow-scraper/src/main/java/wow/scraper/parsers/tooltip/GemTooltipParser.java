@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 2022-10-31
  */
 @Getter
-public class GemTooltipParser extends AbstractTooltipParser {
+public class GemTooltipParser extends AbstractItemTooltipParser {
 	private GemColor color;
 	private List<MetaEnabler> metaEnablers;
 	private Attributes stats;

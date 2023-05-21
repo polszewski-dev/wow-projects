@@ -18,7 +18,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
-import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.parsers.stats.StatPatternRepository;
 
 import java.util.List;
@@ -33,10 +33,10 @@ import static wow.commons.model.professions.ProfessionSpecializationId.*;
  * Date: 2022-10-31
  */
 @Getter
-public abstract class AbstractTooltipParser {
+public abstract class AbstractTooltipParser<D extends JsonCommonDetails> {
 	protected final StatPatternRepository statPatternRepository;
 
-	protected final JsonItemDetails itemDetails;
+	protected final D details;
 	protected final GameVersionId gameVersion;
 	protected List<String> lines;
 	protected int currentLineIdx;
@@ -108,26 +108,22 @@ public abstract class AbstractTooltipParser {
 	protected final Rule ruleRightClickToRead = Rule
 			.exact("<Right Click to Read>", () -> {});
 
-	protected AbstractTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		this.itemDetails = itemDetails;
+	protected AbstractTooltipParser(D details, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
+		this.details = details;
 		this.gameVersion = gameVersion;
 		this.statPatternRepository = statPatternRepository;
 	}
 
-	public int getItemId() {
-		return itemDetails.getId();
-	}
-
 	public String getIcon() {
-		return itemDetails.getIcon();
+		return details.getIcon();
 	}
 
 	public String getTooltip() {
-		return itemDetails.getHtmlTooltip();
+		return details.getHtmlTooltip();
 	}
 
 	public final void parse() {
-		this.lines = cleanTooltip(itemDetails.getHtmlTooltip());
+		this.lines = cleanTooltip(details.getHtmlTooltip());
 
 		beforeParse();
 

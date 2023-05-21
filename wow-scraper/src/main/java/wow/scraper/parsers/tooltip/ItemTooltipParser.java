@@ -28,7 +28,7 @@ import java.util.List;
  * Date: 2022-10-29
  */
 @Getter
-public class ItemTooltipParser extends AbstractTooltipParser {
+public class ItemTooltipParser extends AbstractItemTooltipParser {
 	private StatParser statParser;
 
 	private List<SocketType> socketTypes;

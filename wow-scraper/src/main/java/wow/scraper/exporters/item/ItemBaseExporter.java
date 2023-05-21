@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.exporters.item.excel.ItemBaseExcelBuilder;
-import wow.scraper.model.*;
+import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.parsers.stats.StatPatternRepository;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 import wow.scraper.repository.ItemDetailRepository;
@@ -14,7 +14,6 @@ import wow.scraper.repository.SpellDetailRepository;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
  */
 @RequiredArgsConstructor
 @Slf4j
-public abstract class ItemBaseExporter<T extends AbstractTooltipParser> {
+public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends AbstractTooltipParser<D>> {
 	protected ItemDetailRepository itemDetailRepository;
 	protected SpellDetailRepository spellDetailRepository;
 	protected QuestInfoRepository questInfoRepository;
@@ -47,69 +46,41 @@ public abstract class ItemBaseExporter<T extends AbstractTooltipParser> {
 
 	public abstract void exportAll() throws IOException;
 
-	protected void export(WowheadItemCategory category) throws IOException {
-		for (Integer itemId : getItemIds(category)) {
+	protected void export(C category) throws IOException {
+		for (Integer detailId : getDetailIds(category)) {
 			for (GameVersionId gameVersion : GameVersionId.values()) {
-				itemDetailRepository
-						.getDetail(gameVersion, category, itemId)
-						.ifPresent(value -> exportItemDetails(value, gameVersion));
+				getDetail(category, detailId, gameVersion)
+						.ifPresent(details -> exportDetails(details, gameVersion));
 			}
 		}
 	}
 
-	private void exportItemDetails(JsonItemDetails itemDetails, GameVersionId gameVersion) {
-		var parser = createParser(itemDetails, gameVersion);
-
-		parser.parse();
-		fixMissingRequiredLevel(parser);
-		exportParsedData(parser);
-
-		log.info("Added {} {} [{}]", parser.getItemId(), parser.getName(), gameVersion);
-	}
-
-	protected abstract T createParser(JsonItemDetails itemDetails, GameVersionId gameVersion);
-
-	protected abstract void exportParsedData(T parser);
-
-	private void fixMissingRequiredLevel(AbstractTooltipParser parser) {
-		if (parser.getRequiredLevel() != null) {
-			return;
-		}
-
-		for (WowheadQuestInfo questInfo : getQuestInfos(parser)) {
-			if (questInfo.getRequiredLevel() != null) {
-				parser.setRequiredLevel(questInfo.getRequiredLevel());
-			}
-			if (questInfo.getRequiredSide() != null) {
-				parser.setRequiredSide(questInfo.getRequiredSide());
-			}
-		}
-	}
-
-	private List<WowheadQuestInfo> getQuestInfos(AbstractTooltipParser parser) {
-		return parser.getItemDetails().getSourcesOf(WowheadSource.QUEST).stream()
-				.map(JsonSourceMore::getTi)
-				.filter(Objects::nonNull)
-				.map(x -> getWowheadQuestInfo(x, parser.getGameVersion()))
-				.flatMap(Optional::stream)
-				.toList();
-	}
-
-	private Optional<WowheadQuestInfo> getWowheadQuestInfo(Integer questId, GameVersionId gameVersionId) {
-		try {
-			return questInfoRepository.getQuestInfo(gameVersionId, questId);
-		} catch (IOException e) {
-			log.error("Error accessing quest info: " + questId, e);
-			return Optional.empty();
-		}
-	}
-
-	private List<Integer> getItemIds(WowheadItemCategory category) {
+	private List<Integer> getDetailIds(C category) {
 		return Stream.of(GameVersionId.values())
-				.map(gameVersion -> itemDetailRepository.getItemIds(gameVersion, category))
+				.map(gameVersion -> getDetailIds(category, gameVersion))
 				.flatMap(Collection::stream)
 				.distinct()
 				.sorted()
 				.toList();
 	}
+
+	protected abstract List<Integer> getDetailIds(C category, GameVersionId gameVersion);
+
+	protected abstract Optional<D> getDetail(C category, Integer detailId, GameVersionId gameVersion) throws IOException;
+
+	private void exportDetails(D details, GameVersionId gameVersion) {
+		var parser = createParser(details, gameVersion);
+
+		parser.parse();
+		afterParse(parser);
+		exportParsedData(parser);
+
+		log.info("Added {} {} [{}]", parser.getDetails().getId(), parser.getName(), gameVersion);
+	}
+
+	protected abstract void afterParse(T parser);
+
+	protected abstract T createParser(D details, GameVersionId gameVersion);
+
+	protected abstract void exportParsedData(T parser);
 }

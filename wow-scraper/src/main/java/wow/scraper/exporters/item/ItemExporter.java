@@ -11,7 +11,7 @@ import java.io.IOException;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class ItemExporter extends ItemBaseExporter<ItemTooltipParser> {
+public class ItemExporter extends AbstractItemExporter<ItemTooltipParser> {
 	@Override
 	public void exportAll() throws IOException {
 		builder.addItemHeader();
@@ -22,8 +22,8 @@ public class ItemExporter extends ItemBaseExporter<ItemTooltipParser> {
 	}
 
 	@Override
-	protected ItemTooltipParser createParser(JsonItemDetails itemDetails, GameVersionId gameVersion) {
-		return new ItemTooltipParser(itemDetails, gameVersion, statPatternRepository);
+	protected ItemTooltipParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
+		return new ItemTooltipParser(details, gameVersion, statPatternRepository);
 	}
 
 	@Override

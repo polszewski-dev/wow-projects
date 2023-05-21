@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.scraper.ScraperTestConfig;
-import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.parsers.stats.StatPatternRepository;
 
 import java.io.IOException;
@@ -17,21 +17,23 @@ import java.io.IOException;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ScraperTestConfig.class)
-public abstract class TooltipParserTest<T extends AbstractTooltipParser> {
+public abstract class TooltipParserTest<D extends JsonCommonDetails, T extends AbstractTooltipParser<D>> {
 	@Autowired
 	StatPatternRepository statPatternRepository;
 
 	static final ObjectMapper MAPPER = new ObjectMapper();
 
 	T getTooltip(String path) throws IOException {
-		JsonItemDetails data = MAPPER.readValue(
-				ItemTooltipParserTest.class.getResourceAsStream("/tooltips/" + path),
-				JsonItemDetails.class
+		D data = MAPPER.readValue(
+				TooltipParserTest.class.getResourceAsStream("/tooltips/" + path),
+				getDetailsClass()
 		);
 		T parser = createParser(data);
 		parser.parse();
 		return parser;
 	}
 
-	protected abstract T createParser(JsonItemDetails data);
+	protected abstract T createParser(D data);
+
+	protected abstract Class<D> getDetailsClass();
 }

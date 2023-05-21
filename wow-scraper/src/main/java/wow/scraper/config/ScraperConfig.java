@@ -68,15 +68,29 @@ public class ScraperConfig {
 	@Value("#{${item.starting.quest.to.traded.for}}")
 	private Map<Integer, List<Integer>> itemStartingQuestToTradedFor;
 
-	@Value("#{${phase.overrides}}")
-	private Map<Integer, PhaseId> phaseOverrides;
+	@Value("#{${item.phase.overrides}}")
+	private Map<Integer, PhaseId> itemPhaseOverrides;
 
-	@Value("#{${required.side.overrides}}")
-	private Map<Side, Set<Integer>> requiredSideOverrides;
+	@Value("#{${spell.phase.overrides}}")
+	private Map<Integer, PhaseId> spellPhaseOverrides;
 
-	public Optional<Side> getRequiredSideOverride(int itemId) {
-		return requiredSideOverrides.entrySet().stream()
-				.filter(x -> x.getValue().contains(itemId))
+	@Value("#{${item.required.side.overrides}}")
+	private Map<Side, Set<Integer>> itemRequiredSideOverrides;
+
+	@Value("#{${spell.required.side.overrides}}")
+	private Map<Side, Set<Integer>> spellRequiredSideOverrides;
+
+	public Optional<Side> getItemRequiredSideOverride(int itemId) {
+		return getSide(itemRequiredSideOverrides, itemId);
+	}
+
+	public Optional<Side> getSpellRequiredSideOverride(int spellId) {
+		return getSide(spellRequiredSideOverrides, spellId);
+	}
+
+	private Optional<Side> getSide(Map<Side, Set<Integer>> map, int id) {
+		return map.entrySet().stream()
+				.filter(x -> x.getValue().contains(id))
 				.map(Map.Entry::getKey)
 				.collect(CollectionUtil.toOptionalSingleton());
 	}
