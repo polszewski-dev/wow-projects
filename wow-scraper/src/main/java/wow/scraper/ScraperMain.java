@@ -35,6 +35,7 @@ public class ScraperMain extends ScraperTool {
 					getScraperConfig(),
 					getWowheadFetcher(),
 					getItemDetailRepository(),
+					getSpellDetailRepository(),
 					getQuestInfoRepository()
 			);
 			importer.importAll();

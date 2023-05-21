@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.model.JsonBossDetails;
-import wow.scraper.model.JsonItemDetails;
-import wow.scraper.model.JsonZoneDetails;
-import wow.scraper.model.WowheadItemInfo;
+import wow.scraper.model.*;
 import wow.scraper.repository.WowheadFetcher;
 
 import java.io.BufferedReader;
@@ -29,12 +26,20 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private static final Pattern ITEM_LIST_PATTERN = Pattern.compile("var listviewitems = (\\[.*]);");
+	private static final Pattern SPELL_LIST_PATTERN = Pattern.compile("var listviewspells = (\\[.*]);");
 	private static final Pattern ZONE_LIST_PATTERN = Pattern.compile("id: 'zones'.*?data: (\\[.*])");
 	private static final Pattern BOSS_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
 
 	@Override
 	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) throws IOException {
 		String json = fetchAndParse(gameVersion, urlPart, ITEM_LIST_PATTERN);
+
+		return MAPPER.readValue(json, new TypeReference<>() {});
+	}
+
+	@Override
+	public List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart) throws IOException {
+		String json = fetchAndParse(gameVersion, urlPart, SPELL_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
@@ -90,6 +95,7 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	private String fixJsonErrors(String itemJson) {
 		itemJson = itemJson.replace(",firstseenpatch:", ",\"firstseenpatch\":");
 		itemJson = itemJson.replace(",popularity:", ",\"popularity\":");
+		itemJson = itemJson.replace(",quality:", ",\"quality\":");
 		itemJson = itemJson.replace(",contentPhase:", ",\"contentPhase\":");
 		return itemJson;
 	}
@@ -97,6 +103,11 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	@Override
 	public WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id) throws IOException {
 		return fetchTooltip(gameVersion, "item", id, WowheadItemInfo.class);
+	}
+
+	@Override
+	public WowheadSpellInfo fetchSpellTooltip(GameVersionId gameVersion, int id) throws IOException {
+		return fetchTooltip(gameVersion, "spell", id, WowheadSpellInfo.class);
 	}
 
 	private <T> T fetchTooltip(GameVersionId gameVersion, String type, int id, Class<T> clazz) throws IOException {

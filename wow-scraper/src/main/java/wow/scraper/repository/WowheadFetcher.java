@@ -1,10 +1,7 @@
 package wow.scraper.repository;
 
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.model.JsonBossDetails;
-import wow.scraper.model.JsonItemDetails;
-import wow.scraper.model.JsonZoneDetails;
-import wow.scraper.model.WowheadItemInfo;
+import wow.scraper.model.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +13,8 @@ import java.util.List;
 public interface WowheadFetcher {
 	List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) throws IOException;
 
+	List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+
 	List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart) throws IOException;
 
 	List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart) throws IOException;
@@ -23,4 +22,6 @@ public interface WowheadFetcher {
 	String fetchRaw(GameVersionId gameVersion, String urlPart) throws IOException;
 
 	WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id) throws IOException;
+
+	WowheadSpellInfo fetchSpellTooltip(GameVersionId gameVersion, int id) throws IOException;
 }

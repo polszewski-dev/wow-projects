@@ -38,6 +38,9 @@ public class ScraperConfig {
 	@Value("#{'${ignored.item.ids}'.split(',')}")
 	private Set<Integer> ignoredItemIds;
 
+	@Value("#{'${ignored.spell.ids}'.split(',')}")
+	private Set<Integer> ignoredSpellIds;
+
 	@Value("#{'${ignored.boss.ids}'.split(',')}")
 	private Set<Integer> ignoredBossIds;
 

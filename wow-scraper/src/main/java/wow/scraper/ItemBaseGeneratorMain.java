@@ -47,6 +47,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		for (var exporter : exporters) {
 			exporter.init(
 					getItemDetailRepository(),
+					getSpellDetailRepository(),
 					getQuestInfoRepository(),
 					getStatPatternRepository(),
 					builder

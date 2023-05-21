@@ -7,6 +7,7 @@ import wow.scraper.config.ScraperConfig;
 import wow.scraper.parsers.stats.StatPatternRepository;
 import wow.scraper.repository.ItemDetailRepository;
 import wow.scraper.repository.QuestInfoRepository;
+import wow.scraper.repository.SpellDetailRepository;
 import wow.scraper.repository.WowheadFetcher;
 
 import java.io.IOException;
@@ -30,6 +31,10 @@ public abstract class ScraperTool {
 
 	protected ItemDetailRepository getItemDetailRepository() {
 		return context.getBean(ItemDetailRepository.class);
+	}
+
+	protected SpellDetailRepository getSpellDetailRepository() {
+		return context.getBean(SpellDetailRepository.class);
 	}
 
 	protected QuestInfoRepository getQuestInfoRepository() {

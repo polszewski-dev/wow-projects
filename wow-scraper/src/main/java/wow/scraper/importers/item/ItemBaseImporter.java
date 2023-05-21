@@ -8,6 +8,7 @@ import wow.scraper.importers.item.parsers.QuestInfoParser;
 import wow.scraper.model.*;
 import wow.scraper.repository.ItemDetailRepository;
 import wow.scraper.repository.QuestInfoRepository;
+import wow.scraper.repository.SpellDetailRepository;
 import wow.scraper.repository.WowheadFetcher;
 
 import java.io.IOException;
@@ -25,18 +26,21 @@ public abstract class ItemBaseImporter {
 	protected GameVersionId gameVersion;
 	protected WowheadFetcher wowheadFetcher;
 	protected ItemDetailRepository itemDetailRepository;
+	protected SpellDetailRepository spellDetailRepository;
 	protected QuestInfoRepository questInfoRepository;
 
 	public void init(
 			ScraperConfig scraperConfig,
 			WowheadFetcher wowheadFetcher,
 			ItemDetailRepository itemDetailRepository,
+			SpellDetailRepository spellDetailRepository,
 			QuestInfoRepository questInfoRepository
 	) {
 		this.scraperConfig = scraperConfig;
 		this.gameVersion = scraperConfig.getGameVersion();
 		this.wowheadFetcher = wowheadFetcher;
 		this.itemDetailRepository = itemDetailRepository;
+		this.spellDetailRepository = spellDetailRepository;
 		this.questInfoRepository = questInfoRepository;
 	}
 

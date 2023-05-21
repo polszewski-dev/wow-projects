@@ -75,7 +75,7 @@ import java.util.List;
 		"nslots",
 		"dmgrange",
 })
-public class JsonItemDetails {
+public class JsonItemDetails implements JsonCommonDetails {
 	@JsonProperty(value = "id")
 	private Integer id;
 

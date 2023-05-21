@@ -10,10 +10,13 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties({
+		"buff",
+		"buffspells",
 		"completion_category",
-		"spells"
+		"spells",
+		"tooltip2",
 })
-public class WowheadItemInfo {
+public class WowheadSpellInfo {
 	private String name;
 	private int quality;
 	private String icon;
