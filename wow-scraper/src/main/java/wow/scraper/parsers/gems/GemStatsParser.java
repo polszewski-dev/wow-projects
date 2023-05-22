@@ -2,6 +2,7 @@ package wow.scraper.parsers.gems;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.AttributesBuilder;
 import wow.scraper.parsers.stats.StatParser;
 import wow.scraper.parsers.stats.StatPatternRepository;
@@ -12,7 +13,8 @@ import wow.scraper.parsers.stats.StatPatternRepository;
  */
 @AllArgsConstructor
 public final class GemStatsParser {
-	private StatPatternRepository statPatternRepository;
+	private final StatPatternRepository statPatternRepository;
+	private final GameVersionId gameVersion;
 
 	public Attributes tryParseStats(String line) {
 		AttributesBuilder builder = new AttributesBuilder();
@@ -41,7 +43,7 @@ public final class GemStatsParser {
 	}
 
 	private Attributes tryParseSingleStat(String line) {
-		StatParser parser = statPatternRepository.getGemStatParser();
+		StatParser parser = statPatternRepository.getGemStatParser(gameVersion);
 		return parser.tryParseSingleStat(line);
 	}
 }

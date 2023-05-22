@@ -92,7 +92,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 
 	@Override
 	protected void beforeParse() {
-		this.statParser = statPatternRepository.getItemStatParser();
+		this.statParser = statPatternRepository.getItemStatParser(gameVersion);
 		this.socketTypes = new ArrayList<>();
 	}
 
@@ -132,7 +132,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 	}
 
 	private void parseSocketBonus(String value) {
-		this.socketBonus = new SocketBonusParser(statPatternRepository).tryParseSocketBonus(value);
+		this.socketBonus = new SocketBonusParser(statPatternRepository, gameVersion).tryParseSocketBonus(value);
 		if (socketBonus == null) {
 			throw new IllegalArgumentException("Invalid socket bonus: " + value);
 		}
@@ -170,7 +170,7 @@ public class ItemTooltipParser extends AbstractTooltipParser {
 		}
 		int numPieces = itemSetBonusParams.getInteger(0);
 		String description = itemSetBonusParams.get(1);
-		StatParser setBonusParser = statPatternRepository.getItemStatParser();
+		StatParser setBonusParser = statPatternRepository.getItemStatParser(gameVersion);
 		if (!setBonusParser.tryParse(description)) {
 			unmatchedLine(description);
 		}

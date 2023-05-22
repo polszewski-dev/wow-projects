@@ -2,6 +2,7 @@ package wow.scraper.parsers.gems;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.parsers.stats.StatParser;
 import wow.scraper.parsers.stats.StatPatternRepository;
 
@@ -11,10 +12,11 @@ import wow.scraper.parsers.stats.StatPatternRepository;
  */
 @AllArgsConstructor
 public final class SocketBonusParser {
-	private StatPatternRepository statPatternRepository;
+	private final StatPatternRepository statPatternRepository;
+	private final GameVersionId gameVersion;
 
 	public Attributes tryParseSocketBonus(String line) {
-		StatParser parser = statPatternRepository.getSocketBonusStatParser();
+		StatParser parser = statPatternRepository.getSocketBonusStatParser(gameVersion);
 		return parser.tryParseSingleStat(line);
 	}
 }

@@ -1,6 +1,7 @@
 package wow.scraper.parsers.stats;
 
 import polszewski.excel.reader.templates.ExcelSheetParser;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.PrimitiveAttributeSupplier;
 import wow.scraper.parsers.setters.MiscStatSetter;
 import wow.scraper.parsers.setters.StatSetter;
@@ -25,6 +26,8 @@ public class PatternSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colSpecialDuration = column("special:duration");
 	private final ExcelColumn colExpression = column("special:expression");
 
+	private final ExcelColumn colReqVersion = column("req_version");
+
 	private final List<StatPattern> patterns;
 
 	public PatternSheetParser(String sheetName, List<StatPattern> patterns) {
@@ -42,7 +45,8 @@ public class PatternSheetParser extends ExcelSheetParser {
 		var pattern = colPattern.getString();
 		var setters = getParsedStatSetters();
 		var params = getParams();
-		var statPattern = new StatPattern(pattern.trim(), setters, params);
+		var reqVersion = colReqVersion.getSet(GameVersionId::parse);
+		var statPattern = new StatPattern(pattern.trim(), setters, params, reqVersion);
 		patterns.add(statPattern);
 	}
 

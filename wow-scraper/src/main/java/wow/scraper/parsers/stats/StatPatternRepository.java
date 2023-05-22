@@ -3,6 +3,7 @@ package wow.scraper.parsers.stats;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import wow.commons.model.pve.GameVersionId;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -56,15 +57,23 @@ public class StatPatternRepository {
 		}
 	}
 
-	public StatParser getItemStatParser() {
-		return new StatParser(itemStatPatterns);
+	public StatParser getItemStatParser(GameVersionId gameVersion) {
+		return getStatParser(itemStatPatterns, gameVersion);
 	}
 
-	public StatParser getGemStatParser() {
-		return new StatParser(gemStatPatterns);
+	public StatParser getGemStatParser(GameVersionId gameVersion) {
+		return getStatParser(gemStatPatterns, gameVersion);
 	}
 
-	public StatParser getSocketBonusStatParser() {
-		return new StatParser(socketBonusStatPatterns);
+	public StatParser getSocketBonusStatParser(GameVersionId gameVersion) {
+		return getStatParser(socketBonusStatPatterns, gameVersion);
+	}
+
+	private StatParser getStatParser(List<StatPattern> patterns, GameVersionId gameVersion) {
+		return new StatParser(
+				patterns.stream()
+						.filter(x -> x.supports(gameVersion))
+						.toList()
+		);
 	}
 }

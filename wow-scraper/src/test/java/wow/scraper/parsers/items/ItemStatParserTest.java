@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static wow.commons.model.pve.GameVersionId.TBC;
 
 /**
  * User: POlszewski
@@ -36,7 +37,7 @@ class ItemStatParserTest {
 	@ParameterizedTest(name = "[{index}] LINE = {0}, STAT = {1}")
 	@MethodSource("getProcTestArguments")
 	void testParseProc(String line, String expectedStatString) {
-		StatParser parser = statPatternRepository.getItemStatParser();
+		StatParser parser = statPatternRepository.getItemStatParser(TBC);
 		boolean success = parser.tryParse(line);
 		Attributes stats = parser.getParsedStats();
 
@@ -59,7 +60,7 @@ class ItemStatParserTest {
 	@ParameterizedTest(name = "[{index}] LINE = {0}, STAT = {1}")
 	@MethodSource("getOnUseTestArguments")
 	void testParseOnUse(String line, String expectedStatString) {
-		StatParser parser = statPatternRepository.getItemStatParser();
+		StatParser parser = statPatternRepository.getItemStatParser(TBC);
 		boolean success = parser.tryParse(line);
 		Attributes stats = parser.getParsedStats();
 

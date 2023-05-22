@@ -41,7 +41,7 @@ public class GemTooltipParser extends AbstractTooltipParser {
 				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
 				ruleProfessionRestriction,
 				ruleSellPrice,
-				Rule.tryParse(line -> new GemStatsParser(statPatternRepository).tryParseStats(line), x -> stats = x),
+				Rule.tryParse(line -> new GemStatsParser(statPatternRepository, gameVersion).tryParseStats(line), x -> stats = x),
 		};
 	}
 
