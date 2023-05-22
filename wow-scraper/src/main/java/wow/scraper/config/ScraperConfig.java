@@ -77,4 +77,22 @@ public class ScraperConfig {
 				.map(Map.Entry::getKey)
 				.collect(CollectionUtil.toOptionalSingleton());
 	}
+
+	@Value("#{${alliance.only.factions}}")
+	private Set<String> allianceOnlyFactions;
+
+	@Value("#{${horde.only.factions}}")
+	private Set<String> hordeOnlyFactions;
+
+	public Side getRequiredSideFromFaction(String faction) {
+		if (allianceOnlyFactions.contains(faction)) {
+			return Side.ALLIANCE;
+		}
+
+		if (hordeOnlyFactions.contains(faction)) {
+			return Side.HORDE;
+		}
+
+		return null;
+	}
 }

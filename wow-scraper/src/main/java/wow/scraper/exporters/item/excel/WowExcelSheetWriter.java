@@ -14,6 +14,7 @@ import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
 import java.util.List;
+import java.util.Objects;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
@@ -128,13 +129,36 @@ public abstract class WowExcelSheetWriter<T> extends ExcelCellWriter {
 	}
 
 	protected Side getRequiredSide(AbstractTooltipParser parser) {
-		return config.getRequiredSideOverride(parser.getItemId())
+		Side side = config.getRequiredSideOverride(parser.getItemId())
 				.orElse(parser.getRequiredSide());
+
+		if (parser.getRequiredFactionName() == null) {
+			return side;
+		}
+
+		Side factionSide = config.getRequiredSideFromFaction(parser.getRequiredFactionName());
+
+		if (side != null && factionSide != null) {
+			assertBothAreEqual("side", side, factionSide);
+			return side;
+		}
+
+		if (factionSide == null) {
+			return side;
+		}
+
+		return factionSide;
 	}
 
 	protected String parseSource(AbstractTooltipParser parser) {
 		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getItemDetails(), parser.getRequiredFactionName());
 		List<String> sources = sourceParser.getSource();
 		return String.join("#", sources);
+	}
+
+	protected <X> void assertBothAreEqual(String name, X x, X y) {
+		if (!Objects.equals(x, y)) {
+			throw new IllegalArgumentException("%s has different values: x = %s, y = %s".formatted(name, x, y));
+		}
 	}
 }
