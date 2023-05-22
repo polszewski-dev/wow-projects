@@ -1,6 +1,7 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
+import wow.scraper.exporters.item.EnchantExporter;
 import wow.scraper.exporters.item.GemItemExporter;
 import wow.scraper.exporters.item.ItemExporter;
 import wow.scraper.exporters.item.TradedItemExporter;
@@ -41,6 +42,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		var exporters = List.of(
 				new TradedItemExporter(),
 				new ItemExporter(),
+				new EnchantExporter(),
 				new GemItemExporter()
 		);
 

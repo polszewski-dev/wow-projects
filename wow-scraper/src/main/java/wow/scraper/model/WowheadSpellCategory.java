@@ -5,4 +5,5 @@ package wow.scraper.model;
  * Date: 2023-05-19
  */
 public enum WowheadSpellCategory {
+	ENCHANTS
 }

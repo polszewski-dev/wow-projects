@@ -30,4 +30,22 @@ public interface ItemSubType {
 		}
 		return ProjectileSubType.tryParse(value);
 	}
+
+	static String name(ItemSubType itemSubType) {
+		if (itemSubType == null) {
+			return null;
+		}
+		return ((Enum<?>)itemSubType).name();
+	}
+
+	static ItemSubType valueOf(String value) {
+		if (value == null) {
+			return null;
+		}
+		try {
+			return ArmorSubType.valueOf(value);
+		} catch (IllegalArgumentException e) {
+			return WeaponSubType.valueOf(value);
+		}
+	}
 }

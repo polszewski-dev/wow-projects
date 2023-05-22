@@ -1,6 +1,7 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
+import wow.scraper.importers.item.EnchantImporter;
 import wow.scraper.importers.item.GemImporter;
 import wow.scraper.importers.item.ItemImporter;
 import wow.scraper.importers.item.TradedItemImporter;
@@ -21,11 +22,13 @@ public class ScraperMain extends ScraperTool {
 	@Override
 	protected void run() throws IOException {
 		ItemImporter itemImporter = new ItemImporter();
+		EnchantImporter enchantImporter = new EnchantImporter();
 		GemImporter gemImporter = new GemImporter();
 		TradedItemImporter tradedItemImporter = new TradedItemImporter();
 
 		var importers = List.of(
 				itemImporter,
+				enchantImporter,
 				gemImporter,
 				tradedItemImporter
 		);

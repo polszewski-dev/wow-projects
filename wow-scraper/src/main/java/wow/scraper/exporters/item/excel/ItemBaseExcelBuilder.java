@@ -3,6 +3,7 @@ package wow.scraper.exporters.item.excel;
 import lombok.Getter;
 import polszewski.excel.writer.ExcelWriter;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.parsers.tooltip.EnchantTooltipParser;
 import wow.scraper.parsers.tooltip.GemTooltipParser;
 import wow.scraper.parsers.tooltip.ItemTooltipParser;
 import wow.scraper.parsers.tooltip.TradedItemParser;
@@ -25,6 +26,7 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 
 	private final TradedItemSheetWriter tradedItemSheetWriter;
 	private final ItemSheetWriter itemSheetWriter;
+	private final EnchantSheetWriter enchantSheetWriter;
 	private final GemSheetWriter gemSheetWriter;
 	private final ItemSetSheetWriter itemSetSheetWriter;
 
@@ -33,6 +35,7 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 		this.config = config;
 		this.tradedItemSheetWriter = new TradedItemSheetWriter(this);
 		this.itemSheetWriter = new ItemSheetWriter(this);
+		this.enchantSheetWriter = new EnchantSheetWriter(this);
 		this.gemSheetWriter = new GemSheetWriter(this);
 		this.itemSetSheetWriter = new ItemSetSheetWriter(this);
 	}
@@ -51,8 +54,13 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 		itemSheetWriter.writeHeader();
 	}
 
-	public void addGemHeader() {
+	public void addEnchantHeader() {
 		flushItems();
+		writer.nextSheet(ENCHANT);
+		enchantSheetWriter.writeHeader();
+	}
+
+	public void addGemHeader() {
 		writer.nextSheet(GEM);
 		gemSheetWriter.writeHeader();
 	}
@@ -79,6 +87,13 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 		savedSets.save(parser);
 	}
 
+	public void add(EnchantTooltipParser parser) {
+		if (isSpellToBeIgnored(parser.getSpellId())) {
+			return;
+		}
+		enchantSheetWriter.writeRow(parser);
+	}
+
 	public void add(GemTooltipParser parser) {
 		if (isToBeIgnored(parser.getItemId())) {
 			return;
@@ -88,6 +103,10 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 
 	private boolean isToBeIgnored(int itemId) {
 		return config.getIgnoredItemIds().contains(itemId);
+	}
+
+	private boolean isSpellToBeIgnored(int spellId) {
+		return config.getIgnoredSpellIds().contains(spellId);
 	}
 
 	private final List<ItemTooltipParser> itemParserQueue = new ArrayList<>();

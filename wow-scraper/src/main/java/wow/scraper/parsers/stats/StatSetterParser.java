@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 class StatSetterParser {
 	private String line;
 	private int groupNo;
+	private Double constantValue;
 
 	public StatSetterParser(String line) {
 		this.line = line.trim();
@@ -28,11 +29,19 @@ class StatSetterParser {
 		Matcher matcher = pattern.matcher(line);
 
 		if (!matcher.find()) {
+			parseConstantValue();
 			return;
 		}
 
 		this.line = matcher.group(1);
 		this.groupNo = Integer.parseInt(matcher.group(2));
+	}
+
+	private void parseConstantValue() {
+		if (line.contains("=")) {
+			this.constantValue = Double.valueOf(line.substring(line.indexOf("=") + 1));
+			this.line = line.substring(0, line.indexOf("="));
+		}
 	}
 
 	private StatSetter getStatSetter() {
@@ -43,7 +52,7 @@ class StatSetterParser {
 			case "Misc" -> new MiscStatSetter();
 			case "Expression" -> new ExpressionStatSetter();
 			case "Ignored" -> IgnoreStatSetter.INSTANCE;
-			default -> new IntStatSetter(line, Math.max(groupNo, 1));
+			default -> new IntStatSetter(line, Math.max(groupNo, 1), constantValue);
 		};
 	}
 }

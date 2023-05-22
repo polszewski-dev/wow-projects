@@ -9,6 +9,7 @@ import wow.commons.model.Percent;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -81,6 +82,14 @@ public abstract class ExcelCellWriter {
 	protected <T extends Enum<T>> void setValue(List<T> list) {
 		if (list != null && !list.isEmpty()) {
 			setValue(list.stream().map(Enum::name).collect(Collectors.joining(",")));
+		} else {
+			writer.nextCell();
+		}
+	}
+
+	protected <T> void setValue(List<T> list, Function<T, String> mapper) {
+		if (list != null && !list.isEmpty()) {
+			setValue(list.stream().map(mapper).collect(Collectors.joining(",")));
 		} else {
 			writer.nextCell();
 		}

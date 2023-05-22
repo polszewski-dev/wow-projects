@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Repository
 public class StatPatternRepository {
 	private final List<StatPattern> itemStatPatterns = new ArrayList<>();
+	private final List<StatPattern> enchantStatPatterns = new ArrayList<>();
 	private final List<StatPattern> gemStatPatterns = new ArrayList<>();
 	private final List<StatPattern> socketBonusStatPatterns = new ArrayList<>();
 
@@ -30,6 +31,7 @@ public class StatPatternRepository {
 		var statParserExcelParser = new StatPatternExcelParser(
 				xlsFilePath,
 				this.itemStatPatterns,
+				this.enchantStatPatterns,
 				this.gemStatPatterns,
 				this.socketBonusStatPatterns
 		);
@@ -39,13 +41,14 @@ public class StatPatternRepository {
 
 	private void validateAll() {
 		assertNoDuplicates(itemStatPatterns);
+		assertNoDuplicates(enchantStatPatterns);
 		assertNoDuplicates(gemStatPatterns);
 		assertNoDuplicates(socketBonusStatPatterns);
 	}
 
 	private void assertNoDuplicates(List<StatPattern> patterns) {
 		List<String> duplicatePatterns = patterns.stream()
-				.map(x -> x.getPattern().pattern())
+				.map(x -> x.getPattern().pattern() + x.getRequiredVersion().stream().sorted().map(Enum::name).collect(Collectors.joining(",")))
 				.collect(Collectors.groupingBy(x -> x, Collectors.counting()))
 				.entrySet().stream()
 				.filter(x -> x.getValue() > 1)
@@ -59,6 +62,10 @@ public class StatPatternRepository {
 
 	public StatParser getItemStatParser(GameVersionId gameVersion) {
 		return getStatParser(itemStatPatterns, gameVersion);
+	}
+
+	public StatParser getEnchantStatParser(GameVersionId gameVersion) {
+		return getStatParser(enchantStatPatterns, gameVersion);
 	}
 
 	public StatParser getGemStatParser(GameVersionId gameVersion) {

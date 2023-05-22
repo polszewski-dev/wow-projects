@@ -46,4 +46,11 @@ public class StatParser {
 		}
 		return stats.toAttributes();
 	}
+
+	public StatMatcher getUniqueSuccessfulMatcher() {
+		if (successfulMatchers.size() != 1) {
+			throw new IllegalArgumentException();
+		}
+		return successfulMatchers.get(0);
+	}
 }

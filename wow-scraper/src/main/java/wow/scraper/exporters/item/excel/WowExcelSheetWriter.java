@@ -4,6 +4,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
@@ -57,7 +58,7 @@ public abstract class WowExcelSheetWriter<T> extends ExcelCellWriter {
 		setValue(parser.getItemId());
 		setValue(parser.getName());
 		setValue(parser.getItemType());
-		setValue(parser.getItemSubType() != null ? parser.getItemSubType().toString() : null);
+		setValue(ItemSubType.name(parser.getItemSubType()));
 		setValue(getItemRarity(parser));
 		setValue(parser.getBinding());
 		setValue(parser.isUnique() ? 1 : 0);

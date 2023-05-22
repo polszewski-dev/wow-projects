@@ -7,6 +7,7 @@ package wow.commons.repository.impl.parsers.items;
 public final class ItemBaseExcelSheetNames {
 	public static final String TRADE = "trade";
 	public static final String ITEM = "item";
+	public static final String ENCHANT = "enchant";
 	public static final String GEM = "gem";
 	public static final String SET = "set";
 

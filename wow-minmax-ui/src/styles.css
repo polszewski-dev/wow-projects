@@ -31,6 +31,7 @@ body {
 	font-weight: bold;
 }
 
+.rarity-unspecified { color: #bb8c00; }
 .rarity-common { color: #000000; }
 .rarity-uncommon { color: #3da82f; }
 .rarity-rare { color: #0070dd; }
@@ -127,7 +128,7 @@ body {
 }
 
 .character-select-bar-caption {
-	
+
 }
 
 .character-select-bar-data {

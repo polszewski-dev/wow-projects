@@ -20,6 +20,11 @@ public final class ItemBaseExcelColumnNames {
 	public static final String ITEM_ITEM_SET = "item_set";
 	public static final int ITEM_MAX_STATS = 10;
 
+	public static final String ENCHANT_ITEM_TYPES = "item_types";
+	public static final String ENCHANT_ITEM_SUBTYPES = "item_subtypes";
+	public static final String ENCHANT_ENCHANT_ID = "enchant_id";
+	public static final int ENCHANT_MAX_STATS = 3;
+
 	public static final String SOCKET_BONUS_PREFIX = "sb_";
 	public static final int SOCKET_BONUS_MAX_STATS = 2;
 

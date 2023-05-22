@@ -4,11 +4,16 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.categorization.ItemSubType;
+import wow.commons.model.categorization.ItemType;
+import wow.commons.model.categorization.PveRole;
+import wow.commons.model.professions.ProfessionId;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.parser.ParserUtil;
 import wow.scraper.parsers.setters.StatSetter;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 /**
@@ -89,6 +94,26 @@ public class StatMatcher {
 	public ComplexAttribute getExpression() {
 		String value = evalParams(pattern.getParams().getExpression());
 		return ComplexAttributeMapper.fromString(value);
+	}
+
+	public List<ItemType> getParamItemTypes() {
+		return pattern.getParams().getItemTypes();
+	}
+
+	public List<ItemSubType> getParamItemSubTypes() {
+		return pattern.getParams().getItemSubTypes();
+	}
+
+	public ProfessionId getRequiredProfession() {
+		return pattern.getParams().getRequiredProfession();
+	}
+
+	public Integer getRequiredProfessionLevel() {
+		return pattern.getParams().getRequiredProfessionLevel();
+	}
+
+	public List<PveRole> getParamPveRoles() {
+		return pattern.getParams().getPveRoles();
 	}
 
 	private String evalParams(String pattern) {

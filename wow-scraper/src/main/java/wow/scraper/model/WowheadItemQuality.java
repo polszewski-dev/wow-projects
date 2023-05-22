@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Getter
 public enum WowheadItemQuality {
+	UNSPECIFIED(-1, ItemRarity.UNSPECIFIED),
 	COMMON(1, ItemRarity.COMMON),
 	UNCOMMON(2, ItemRarity.UNCOMMON),
 	RARE(3, ItemRarity.RARE),

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * User: POlszewski
  * Date: 2022-10-27
@@ -42,4 +44,10 @@ public class JsonSpellDetails implements JsonCommonDetails {
 
 	@JsonProperty(value = "icon")
 	private String icon;
+
+	@JsonProperty(value = "enchantId")
+	private Integer enchantId;
+
+	@JsonProperty(value = "sourceItemIds")
+	private Set<Integer> sourceItemIds;
 }

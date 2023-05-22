@@ -37,7 +37,9 @@ public enum WowheadItemCategory {
 
 	GEMS(false),
 	TOKENS(false),
-	QUEST(false);
+	QUEST(false),
+
+	ENCHANTS_PERMANENT(false);
 
 	private final boolean equipment;
 

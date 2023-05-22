@@ -1,6 +1,10 @@
 package wow.scraper.parsers.stats;
 
 import polszewski.excel.reader.templates.ExcelSheetParser;
+import wow.commons.model.categorization.ItemSubType;
+import wow.commons.model.categorization.ItemType;
+import wow.commons.model.categorization.PveRole;
+import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.PrimitiveAttributeSupplier;
 import wow.scraper.parsers.setters.MiscStatSetter;
@@ -19,12 +23,18 @@ public class PatternSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colPattern = column("pattern");
 	private final ExcelColumn colStat1 = column("stat1");
 	private final ExcelColumn colStat2 = column("stat2");
+	private final ExcelColumn colStat3 = column("stat3", true);
 
-	private final ExcelColumn colSpecialType = column("special:type");
-	private final ExcelColumn colSpecialStat = column("special:stat");
-	private final ExcelColumn colSpecialAmount = column("special:amount");
-	private final ExcelColumn colSpecialDuration = column("special:duration");
-	private final ExcelColumn colExpression = column("special:expression");
+	private final ExcelColumn colSpecialType = column("special:type", true);
+	private final ExcelColumn colSpecialStat = column("special:stat", true);
+	private final ExcelColumn colSpecialAmount = column("special:amount", true);
+	private final ExcelColumn colSpecialDuration = column("special:duration", true);
+	private final ExcelColumn colExpression = column("special:expression", true);
+	private final ExcelColumn colSpecialItemTypes = column("special:item_types", true);
+	private final ExcelColumn colSpecialItemSubtypes = column("special:item_subtypes", true);
+	private final ExcelColumn colRequiredProfession = column("special:req_prof", true);
+	private final ExcelColumn colRequiredProfessionLevel = column("special:req_prof_lvl", true);
+	private final ExcelColumn colPveRoles = column("special:pve_roles", true);
 
 	private final ExcelColumn colReqVersion = column("req_version");
 
@@ -53,7 +63,8 @@ public class PatternSheetParser extends ExcelSheetParser {
 	private List<StatSetter> getParsedStatSetters() {
 		var setters = Stream.of(
 						colStat1.getString(null),
-						colStat2.getString(null)
+						colStat2.getString(null),
+						colStat3.getString(null)
 				)
 				.filter(Objects::nonNull)
 				.map(StatSetterParser::new)
@@ -75,6 +86,11 @@ public class PatternSheetParser extends ExcelSheetParser {
 		params.setAmount(colSpecialAmount.getString(null));
 		params.setDuration(colSpecialDuration.getString(null));
 		params.setExpression(colExpression.getString(null));
+		params.setItemTypes(colSpecialItemTypes.getList(ItemType::parse));
+		params.setItemSubTypes(colSpecialItemSubtypes.getList(ItemSubType::parse));
+		params.setRequiredProfession(colRequiredProfession.getEnum(ProfessionId::parse, null));
+		params.setRequiredProfessionLevel(colRequiredProfessionLevel.getNullableInteger());
+		params.setPveRoles(colPveRoles.getList(PveRole::parse));
 
 		return params;
 	}

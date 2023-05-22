@@ -64,8 +64,8 @@ public enum PrimitiveAttributeType implements AttributeId {
 	PUSHBACK("Pushback", percents()),
 	RANGE("Range", percents()),
 
-	MAX_HEALTH("MaxHealth", percents(), petsAllowed()),
-	MAX_MANA("MaxMana", percents(), petsAllowed()),
+	MAX_HEALTH("MaxHealth", pointsAndPercents(), petsAllowed()),
+	MAX_MANA("MaxMana", pointsAndPercents(), petsAllowed()),
 
 	MANA_TRANSFERRED_TO_PET("ManaTransferredToPet", percents()),
 	NUM_NEXT_SPELLS_CAST_INSTANTLY("NumNextSpellsCastInstantly", points());

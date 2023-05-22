@@ -11,6 +11,7 @@ import wow.commons.util.EnumUtil;
 @AllArgsConstructor
 @Getter
 public enum ItemRarity {
+	UNSPECIFIED("ffffd100"),
 	COMMON("ffffffff"),
 	UNCOMMON("ff1eff00"),
 	RARE("ff0070dd"),
