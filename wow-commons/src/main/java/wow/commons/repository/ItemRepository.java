@@ -1,6 +1,7 @@
 package wow.commons.repository;
 
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.PhaseId;
@@ -21,7 +22,7 @@ public interface ItemRepository {
 
 	Optional<Enchant> getEnchant(int enchantId, PhaseId phaseId);
 	Optional<Enchant> getEnchant(String name, PhaseId phaseId);
-	List<Enchant> getEnchants(ItemType itemType, PhaseId phaseId);
+	List<Enchant> getEnchants(ItemType itemType, ItemSubType itemSubType, PhaseId phaseId);
 
 	Optional<Gem> getGem(int gemId, PhaseId phaseId);
 	Optional<Gem> getGem(String name, PhaseId phaseId);

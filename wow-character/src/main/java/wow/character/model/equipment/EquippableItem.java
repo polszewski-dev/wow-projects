@@ -83,10 +83,6 @@ public class EquippableItem implements AttributeCollection, Copyable<EquippableI
 		return item.isUnique();
 	}
 
-	public boolean isEnchantable() {
-		return item.isEnchantable();
-	}
-
 	public int getSocketCount() {
 		return item.getSocketCount();
 	}
@@ -112,10 +108,7 @@ public class EquippableItem implements AttributeCollection, Copyable<EquippableI
 			this.enchant = null;
 			return this;
 		}
-		if (!isEnchantable()) {
-			throw new IllegalArgumentException("Not enchantable");
-		}
-		if (!enchant.matches(item.getItemType())) {
+		if (!enchant.matches(item.getItemType(), item.getItemSubType())) {
 			throw new IllegalArgumentException("Enchanting wrong item type");
 		}
 		this.enchant = enchant;

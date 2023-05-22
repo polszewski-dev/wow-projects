@@ -30,6 +30,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				source.getName(),
 				source.getRarity(),
 				source.getItemType(),
+				source.getItemSubType(),
 				source.getItemLevel(),
 				sourceConverter.getSources(source),
 				sourceConverter.getDetailedSources(source),

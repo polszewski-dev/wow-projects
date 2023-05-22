@@ -1,14 +1,11 @@
-import { Enchant } from './Enchant';
-import { Gem } from './Gem';
-import { Item } from './Item';
-import { ItemSlot } from './ItemSlot';
-import { ItemType } from './ItemType';
-import { SocketType } from './SocketType';
+import { EnchantOptions } from './EnchantOptions';
+import { GemOptions } from './GemOptions';
+import { ItemOptions } from './ItemOptions';
 
 export interface EquipmentOptions {
-	itemsByItemSlot: Record<ItemSlot, Item[]>;
-	enchantsByItemType: Record<ItemType, Enchant[]>;
-	gemsBySocketType: Record<SocketType, Gem[]>;
+	itemOptions: ItemOptions[];
+	enchantOptions: EnchantOptions[];
+	gemOptions: GemOptions[];
 	editGems: boolean;
 	heroics: boolean;
 }

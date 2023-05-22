@@ -212,13 +212,13 @@ class ItemRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Enchant is read correctly")
 	void enchantIsCorrect() {
-		Optional<Enchant> optionalEnchant = underTest.getEnchant(2748, PHASE);
+		Optional<Enchant> optionalEnchant = underTest.getEnchant(31372, PHASE);
 
 		assertThat(optionalEnchant).isPresent();
 
 		Enchant enchant = optionalEnchant.orElseThrow();
 
-		assertThat(enchant.getId()).isEqualTo(2748);
+		assertThat(enchant.getId()).isEqualTo(31372);
 		assertThat(enchant.getName()).isEqualTo("Runic Spellthread");
 		assertThat(enchant.getItemTypes()).hasSameElementsAs(List.of(ItemType.LEGS));
 		assertThat(enchant.getAttributes().getSpellPower()).isEqualTo(35);

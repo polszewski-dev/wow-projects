@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
 
@@ -21,6 +22,7 @@ public class ItemDTO {
 	private String name;
 	private ItemRarity rarity;
 	private ItemType itemType;
+	private ItemSubType itemSubType;
 	private double score;
 	private String source;
 	private String detailedSource;

@@ -10,14 +10,19 @@ import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.item.Enchant;
 import wow.commons.model.item.SocketType;
 import wow.minmax.converter.dto.*;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.*;
 import wow.minmax.service.PlayerProfileService;
 
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,17 +60,49 @@ public class EquipmentController {
 		Character character = playerProfileService.getCharacter(characterId);
 		ItemFilter itemFilter = ItemFilter.everything();
 
-		var itemsByItemSlot = ItemSlot.getDpsSlots().stream()
-				.collect(Collectors.toMap(x -> x, x -> itemConverter.convertList(itemService.getItemsBySlot(character, x, itemFilter))));
-		var enchantsByItemType = Stream.of(ItemType.values())
-				.collect(Collectors.toMap(x -> x, x -> enchantConverter.convertList(itemService.getEnchants(character, x))));
-		var gemsBySocketType = Stream.of(SocketType.values())
-				.collect(Collectors.toMap(x -> x, x -> gemConverter.convertList(itemService.getGems(character, x, false))));
+		var itemOptions = getItemOptions(character, itemFilter);
+		var enchantOptions = getEnchantOptions(character, itemOptions);
+		var gemOptions = getGemOptions(character);
 
 		boolean gems = character.getGameVersion().isGems();
 		boolean heroics = character.getGameVersion().isHeroics();
 
-		return new EquipmentOptionsDTO(itemsByItemSlot, enchantsByItemType, gemsBySocketType, gems, heroics);
+		return new EquipmentOptionsDTO(itemOptions, enchantOptions, gemOptions, gems, heroics);
+	}
+
+	private List<ItemOptionsDTO> getItemOptions(Character character, ItemFilter itemFilter) {
+		return ItemSlot.getDpsSlots().stream()
+				.map(itemSlot -> new ItemOptionsDTO(itemSlot, itemConverter.convertList(itemService.getItemsBySlot(character, itemSlot, itemFilter))))
+				.toList();
+	}
+
+	private List<EnchantOptionsDTO> getEnchantOptions(Character character, List<ItemOptionsDTO> itemOptions) {
+		List<EnchantOptionsDTO> list = createTypeAndSubtypeGroups(itemOptions);
+
+		for (EnchantOptionsDTO x : list) {
+			List<Enchant> enchants = itemService.getEnchants(character, x.getItemType(), x.getItemSubType());
+			x.setEnchants(enchantConverter.convertList(enchants));
+		}
+
+		return list;
+	}
+
+	private static List<EnchantOptionsDTO> createTypeAndSubtypeGroups(List<ItemOptionsDTO> itemOptions) {
+		var map = new EnumMap<ItemType, Map<ItemSubType, EnchantOptionsDTO>>(ItemType.class);
+
+		itemOptions.stream()
+				.flatMap(x -> x.getItems().stream())
+				.forEach(item -> map
+						.computeIfAbsent(item.getItemType(), x -> new HashMap<>())
+						.computeIfAbsent(item.getItemSubType(), x -> new EnchantOptionsDTO(item.getItemType(), item.getItemSubType(), null)));
+
+		return map.values().stream().flatMap(x -> x.values().stream()).toList();
+	}
+
+	private List<GemOptionsDTO> getGemOptions(Character character) {
+		return Stream.of(SocketType.values())
+				.map(socketType -> new GemOptionsDTO(socketType, gemConverter.convertList(itemService.getGems(character, socketType, false))))
+				.toList();
 	}
 
 	@GetMapping("{characterId}/change/item/{slot}/{itemId}/best/variant")

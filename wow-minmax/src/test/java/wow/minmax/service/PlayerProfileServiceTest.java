@@ -115,7 +115,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 	void changeEnchant() {
 		EquippableItem mainHand = character.getEquipment().getMainHand();
 
-		assertThat(mainHand.getEnchant().getName()).isEqualTo("Enchant Weapon – Soulfrost");
+		assertThat(mainHand.getEnchant().getName()).isEqualTo("Enchant Weapon - Soulfrost");
 
 		Enchant enchant = itemRepository.getEnchant("Enchant Weapon - Major Spellpower", character.getPhaseId()).orElseThrow();
 

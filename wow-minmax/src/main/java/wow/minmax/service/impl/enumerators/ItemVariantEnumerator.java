@@ -202,19 +202,20 @@ public abstract class ItemVariantEnumerator {
 	protected abstract List<Item> getItemsToAnalyze(ItemSlot slot);
 
 	private List<EquippableItem> getItemVariants(Item item) {
-		if (item.isEnchantable() && item.hasSockets()) {
-			return getEnchantedAndGemmedItems(item);
+		List<Enchant> enchants = itemService.getBestEnchants(referenceCharacter, item.getItemType(), item.getItemSubType());
+
+		if (!enchants.isEmpty() && item.hasSockets()) {
+			return getEnchantedAndGemmedItems(item, enchants);
 		} else if (item.hasSockets()) {
 			return getGemmedItems(item);
-		} else if (item.isEnchantable()) {
-			return getEnchantedItems(item);
+		} else if (!enchants.isEmpty()) {
+			return getEnchantedItems(item, enchants);
 		} else {
 			return List.of(new EquippableItem(item));
 		}
 	}
 
-	private List<EquippableItem> getEnchantedAndGemmedItems(Item item) {
-		List<Enchant> enchants = itemService.getBestEnchants(referenceCharacter, item.getItemType());
+	private List<EquippableItem> getEnchantedAndGemmedItems(Item item, List<Enchant> enchants) {
 		List<Gem[]> gemCombos = itemService.getBestGemCombos(referenceCharacter, item);
 		List<EquippableItem> result = new ArrayList<>(enchants.size() * gemCombos.size());
 
@@ -236,8 +237,7 @@ public abstract class ItemVariantEnumerator {
 		return result;
 	}
 
-	private List<EquippableItem> getEnchantedItems(Item item) {
-		List<Enchant> enchants = itemService.getBestEnchants(referenceCharacter, item.getItemType());
+	private List<EquippableItem> getEnchantedItems(Item item, List<Enchant> enchants) {
 		List<EquippableItem> result = new ArrayList<>(enchants.size());
 
 		if (enchants.isEmpty()) {

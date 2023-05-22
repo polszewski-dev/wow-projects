@@ -3,12 +3,8 @@ package wow.minmax.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.SocketType;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -18,9 +14,9 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EquipmentOptionsDTO {
-	private Map<ItemSlot, List<ItemDTO>> itemsByItemSlot;
-	private Map<ItemType, List<EnchantDTO>> enchantsByItemType;
-	private Map<SocketType, List<GemDTO>> gemsBySocketType;
+	private List<ItemOptionsDTO> itemOptions;
+	private List<EnchantOptionsDTO> enchantOptions;
+	private List<GemOptionsDTO> gemOptions;
 	private boolean editGems;
 	private boolean heroics;
 }

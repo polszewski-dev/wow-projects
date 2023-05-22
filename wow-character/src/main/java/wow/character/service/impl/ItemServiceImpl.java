@@ -10,6 +10,7 @@ import wow.character.service.impl.enumerators.FilterOutWorseGemChoices;
 import wow.character.service.impl.enumerators.GemComboFinder;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -55,16 +56,16 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getEnchants(Character character, ItemType itemType) {
-		return itemRepository.getEnchants(itemType, character.getPhaseId()).stream()
+	public List<Enchant> getEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+		return itemRepository.getEnchants(itemType, itemSubType, character.getPhaseId()).stream()
 				.filter(enchant -> enchant.isAvailableTo(character))
 				.filter(enchant -> enchant.isSuitableFor(character))
 				.toList();
 	}
 
 	@Override
-	public List<Enchant> getBestEnchants(Character character, ItemType itemType) {
-		List<Enchant> enchants = getEnchants(character, itemType);
+	public List<Enchant> getBestEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+		List<Enchant> enchants = getEnchants(character, itemType, itemSubType);
 		return new FilterOutWorseEnchantChoices(enchants).getResult();
 	}
 

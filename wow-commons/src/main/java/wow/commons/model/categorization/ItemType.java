@@ -76,19 +76,6 @@ public enum ItemType {
 		return !itemSlots.isEmpty();
 	}
 
-	public boolean isEnchantable(ItemSubType subType) {
-		return switch (this) {
-			case HEAD, SHOULDER, BACK, CHEST, WRIST, HANDS, LEGS, FEET, FINGER, TWO_HAND, ONE_HAND, MAIN_HAND ->
-					true;
-			case OFF_HAND ->
-					subType == WeaponSubType.SHIELD;
-			case RANGED ->
-					subType == WeaponSubType.BOW || subType == WeaponSubType.CROSSBOW || subType == WeaponSubType.GUN;
-			default ->
-					false;
-		};
-	}
-
 	@Override
 	public String toString() {
 		return key;

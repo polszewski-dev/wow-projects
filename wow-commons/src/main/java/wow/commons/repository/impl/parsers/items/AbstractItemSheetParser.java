@@ -41,7 +41,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 
 	protected BasicItemInfo getBasicItemInfo() {
 		var itemType = colItemType.getEnum(ItemType::valueOf);
-		var itemSubType = colItemSubtype.getEnum(ItemSubType::tryParse, null);
+		var itemSubType = colItemSubtype.getEnum(ItemSubType::valueOf, null);
 		var rarity = colRarity.getEnum(ItemRarity::valueOf);
 		var binding = colBinding.getEnum(Binding::valueOf, Binding.BINDS_ON_EQUIP);
 		var unique = colUnique.getBoolean();

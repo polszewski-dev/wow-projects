@@ -5,6 +5,7 @@ import lombok.Getter;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.model.attributes.complex.special.sources.EnchantSource;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.config.CharacterRestriction;
@@ -24,8 +25,10 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class EnchantImpl extends ConfigurationElementWithAttributesImpl<Integer> implements Enchant {
 	private final List<ItemType> itemTypes;
+	private final List<ItemSubType> itemSubTypes;
 	private final ItemRarity rarity;
 	private final Set<PveRole> pveRoles;
+	private final int enchantId;
 
 	public EnchantImpl(
 			Integer id,
@@ -33,13 +36,17 @@ public class EnchantImpl extends ConfigurationElementWithAttributesImpl<Integer>
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
 			List<ItemType> itemTypes,
+			List<ItemSubType> itemSubTypes,
 			ItemRarity rarity,
-			Set<PveRole> pveRoles
+			Set<PveRole> pveRoles,
+			int enchantId
 	) {
 		super(id, description, timeRestriction, characterRestriction);
 		this.itemTypes = itemTypes;
+		this.itemSubTypes = itemSubTypes;
 		this.rarity = rarity;
 		this.pveRoles = pveRoles;
+		this.enchantId = enchantId;
 	}
 
 	@Override

@@ -17,10 +17,6 @@ public interface Item extends AbstractItem, PveRoleClassified {
 
 	WeaponStats getWeaponStats();
 
-	default boolean isEnchantable() {
-		return getItemType().isEnchantable(getItemSubType());
-	}
-
 	default int getSocketCount() {
 		return getSocketSpecification().getSocketCount();
 	}

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.ItemFilter;
+import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -52,34 +53,42 @@ class ItemServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getHandEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(character, ItemType.HANDS).stream()
+		List<Enchant> enchants = underTest.getEnchants(character, ItemType.HANDS, ArmorSubType.CLOTH).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.toList();
 
 		List<String> names = enchants.stream().map(Enchant::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
+				"Enchant Gloves - Blasting",
+				"Enchant Gloves - Fire Power",
+				"Enchant Gloves - Frost Power",
 				"Enchant Gloves - Major Spellpower",
+				"Enchant Gloves - Shadow Power",
 				"Enchant Gloves - Spell Strike"
 		));
 	}
 
 	@Test
 	void getChestEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(character, ItemType.CHEST).stream()
+		List<Enchant> enchants = underTest.getEnchants(character, ItemType.CHEST, ArmorSubType.CLOTH).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.toList();
 
 		List<String> names = enchants.stream().map(Enchant::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
-				"Enchant Chest - Exceptional Stats"
+				"Enchant Chest - Exceptional Stats",
+				"Enchant Chest - Greater Stats",
+				"Enchant Chest - Lesser Stats",
+				"Enchant Chest - Minor Stats",
+				"Enchant Chest - Stats"
 		));
 	}
 
 	@Test
 	void getFeetEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(character, ItemType.FEET).stream()
+		List<Enchant> enchants = underTest.getEnchants(character, ItemType.FEET, ArmorSubType.CLOTH).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.toList();
 

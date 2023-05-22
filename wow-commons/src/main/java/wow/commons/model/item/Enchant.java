@@ -1,6 +1,7 @@
 package wow.commons.model.item;
 
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.PveRoleClassified;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
@@ -14,9 +15,12 @@ import java.util.List;
 public interface Enchant extends ConfigurationElementWithAttributes<Integer>, PveRoleClassified {
 	List<ItemType> getItemTypes();
 
+	List<ItemSubType> getItemSubTypes();
+
 	ItemRarity getRarity();
 
-	default boolean matches(ItemType itemType) {
-		return getItemTypes().contains(itemType);
+	default boolean matches(ItemType itemType, ItemSubType itemSubType) {
+		return (getItemTypes().isEmpty() || getItemTypes().contains(itemType)) &&
+				(getItemSubTypes().isEmpty() || getItemSubTypes().contains(itemSubType));
 	}
 }

@@ -3,6 +3,7 @@ package wow.character.service;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -25,9 +26,9 @@ public interface ItemService {
 
 	List<Item> getItemsBySlot(Character character, ItemSlot itemSlot, ItemFilter itemFilter);
 
-	List<Enchant> getEnchants(Character character, ItemType itemType);
+	List<Enchant> getEnchants(Character character, ItemType itemType, ItemSubType itemSubType);
 
-	List<Enchant> getBestEnchants(Character character, ItemType itemType);
+	List<Enchant> getBestEnchants(Character character, ItemType itemType, ItemSubType itemSubType);
 
 	List<Gem> getGems(Character character, SocketType socketType, boolean nonUniqueOnly);
 

@@ -80,15 +80,18 @@ export class EquipmentSlotEditorComponent implements OnInit {
 	}
 
 	getItemOptions(): Item[] {
-		return this.equipmentOptions?.itemsByItemSlot[this.itemSlot] || [];
+		return this.equipmentOptions?.itemOptions
+				.find(x => x.itemSlot === this.itemSlot)?.items || [];
 	}
 
 	getEnchantOptions(): Enchant[] {
-		return this.equipmentOptions?.enchantsByItemType[this.equippableItem!.item.itemType] || []
+		return this.equipmentOptions?.enchantOptions
+				.find(x => x.itemType === this.equippableItem!.item.itemType && x.itemSubType === this.equippableItem!.item.itemSubType)?.enchants || []
 	}
 
 	getGemOptions(socketIdx: number): Gem[] {
-		return this.equipmentOptions?.gemsBySocketType[this.equippableItem!.item.socketTypes[socketIdx]] || []
+		return this.equipmentOptions?.gemOptions
+				.find(x => x.socketType === this.equippableItem!.item.socketTypes[socketIdx])?.gems || []
 	}
 
 	onUpgradeCounterClick(): void {

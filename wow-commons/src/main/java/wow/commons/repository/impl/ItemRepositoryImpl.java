@@ -5,13 +5,13 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
-import wow.commons.repository.impl.parsers.items.ItemExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -35,7 +35,6 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 
 	private final Map<Integer, List<Enchant>> enchantById = new TreeMap<>();
 	private final Map<String, List<Enchant>> enchantByName = new TreeMap<>();
-	private final Map<ItemType, List<Enchant>> enchantByItemType = new EnumMap<>(ItemType.class);
 
 	private final Map<Integer, List<Gem>> gemById = new TreeMap<>();
 	private final Map<String, List<Gem>> gemByName = new TreeMap<>();
@@ -45,9 +44,6 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 
 	@Value("${item.base.xls.file.path}")
 	private String itemBaseXlsFilePath;
-
-	@Value("${item.data.xls.file.path}")
-	private String itemDataXlsFilePath;
 
 	@Override
 	public Optional<Item> getItem(int itemId, PhaseId phaseId) {
@@ -80,8 +76,12 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 	}
 
 	@Override
-	public List<Enchant> getEnchants(ItemType itemType, PhaseId phaseId) {
-		return getList(enchantByItemType, itemType, phaseId);
+	public List<Enchant> getEnchants(ItemType itemType, ItemSubType itemSubType, PhaseId phaseId) {
+		return enchantByName.values().stream()
+				.flatMap(Collection::stream)
+				.filter(x -> x.isAvailableDuring(phaseId))
+				.filter(x -> x.matches(itemType, itemSubType))
+				.toList();
 	}
 
 	@Override
@@ -106,9 +106,6 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		var itemExcelParser = new ItemExcelParser(itemDataXlsFilePath, this);
-		itemExcelParser.readFromXls();
-
 		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, this, pveRepository);
 		itemBaseExcelParser.readFromXls();
 	}
@@ -143,8 +140,5 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 	public void addEnchant(Enchant enchant) {
 		addEntry(enchantById, enchant.getId(), enchant);
 		addEntry(enchantByName, enchant.getName(), enchant);
-		for (ItemType itemType : enchant.getItemTypes()) {
-			addEntry(enchantByItemType, itemType, enchant);
-		}
 	}
 }

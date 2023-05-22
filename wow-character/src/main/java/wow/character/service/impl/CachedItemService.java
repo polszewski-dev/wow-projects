@@ -6,6 +6,7 @@ import wow.character.model.character.Character;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -64,15 +65,15 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getEnchants(Character character, ItemType itemType) {
-		String key = getProfileKey(character) + "#" + itemType;
-		return getEnchantsCache.computeIfAbsent(key, x -> itemService.getEnchants(character, itemType));
+	public List<Enchant> getEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+		String key = getProfileKey(character) + "#" + itemType + "#" + itemSubType;
+		return getEnchantsCache.computeIfAbsent(key, x -> itemService.getEnchants(character, itemType, itemSubType));
 	}
 
 	@Override
-	public List<Enchant> getBestEnchants(Character character, ItemType itemType) {
-		String key = getProfileKey(character) + "#" + itemType;
-		return getBestEnchantsCache.computeIfAbsent(key, x -> itemService.getBestEnchants(character, itemType));
+	public List<Enchant> getBestEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+		String key = getProfileKey(character) + "#" + itemType + "#" + itemSubType;
+		return getBestEnchantsCache.computeIfAbsent(key, x -> itemService.getBestEnchants(character, itemType, itemSubType));
 	}
 
 	@Override

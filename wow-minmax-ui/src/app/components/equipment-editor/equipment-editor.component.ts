@@ -120,18 +120,9 @@ export class EquipmentEditorComponent implements OnChanges {
 }
 
 function sort(equipmentOptions: EquipmentOptions): EquipmentOptions {
-	for (let items of Object.values(equipmentOptions.itemsByItemSlot)) {
-		items.sort((a, b) => itemOrder(a, b));
-	}
-
-	for (let enchants of Object.values(equipmentOptions.enchantsByItemType)) {
-		enchants.sort((a, b) => enchantOrder(a, b));
-	}
-
-	for (let gems of Object.values(equipmentOptions.gemsBySocketType)) {
-		gems.sort((a, b) => gemOrder(a, b));
-	}
-
+	equipmentOptions.itemOptions.forEach(x => x.items.sort((a, b) => itemOrder(a, b)));
+	equipmentOptions.enchantOptions.forEach(x => x.enchants.sort((a, b) => enchantOrder(a, b)));
+	equipmentOptions.gemOptions.forEach(x => x.gems.sort((a, b) => gemOrder(a, b)));
 	return equipmentOptions;
 }
 

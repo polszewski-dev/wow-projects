@@ -39,6 +39,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 		return Stream.of(
 				new TradedItemSheetParser(TRADE, pveRepository, itemRepository),
 				new ItemSheetParser(ITEM, pveRepository, itemRepository, this),
+				new EnchantSheetParser(ENCHANT, itemRepository),
 				new GemSheetParser(GEM, pveRepository, itemRepository),
 				new ItemSetSheetParser(SET, itemRepository, this)
 		);
