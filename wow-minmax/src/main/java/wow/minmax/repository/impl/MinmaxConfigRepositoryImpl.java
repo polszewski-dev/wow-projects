@@ -6,9 +6,10 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
-import wow.minmax.model.ViewConfig;
-import wow.minmax.repository.ViewConfigRepository;
-import wow.minmax.repository.impl.parsers.view.ViewConfigExcelParser;
+import wow.minmax.model.config.FindUpgradesConfig;
+import wow.minmax.model.config.ViewConfig;
+import wow.minmax.repository.MinmaxConfigRepository;
+import wow.minmax.repository.impl.parsers.config.MinMaxConfigExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -21,10 +22,11 @@ import java.util.Optional;
  * Date: 2023-05-11
  */
 @Repository
-public class ViewConfigRepositoryImpl implements ViewConfigRepository {
+public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 	private final Map<String, ViewConfig> viewConfigByKey = new HashMap<>();
+	private final Map<String, FindUpgradesConfig> findUpgradesConfigByKey = new HashMap<>();
 
-	@Value("${view.config.xls.file.path}")
+	@Value("${config.xls.file.path}")
 	private String xlsFilePath;
 
 	@Override
@@ -33,15 +35,26 @@ public class ViewConfigRepositoryImpl implements ViewConfigRepository {
 		return Optional.ofNullable(viewConfigByKey.get(key));
 	}
 
+	@Override
+	public Optional<FindUpgradesConfig> getFindUpgradesConfig(CharacterClassId characterClassId, PveRole role, GameVersionId gameVersionId) {
+		String key = getKey(characterClassId, role, gameVersionId);
+		return Optional.ofNullable(findUpgradesConfigByKey.get(key));
+	}
+
 	@PostConstruct
 	public void init() throws IOException, InvalidFormatException {
-		var excelParser = new ViewConfigExcelParser(xlsFilePath, this);
+		var excelParser = new MinMaxConfigExcelParser(xlsFilePath, this);
 		excelParser.readFromXls();
 	}
 
-	public void add(ViewConfig viewConfig) {
-		String key = getKey(viewConfig.getCharacterClassId(), viewConfig.getPveRole(), viewConfig.getGameVersionId());
-		viewConfigByKey.put(key, viewConfig);
+	public void add(ViewConfig config) {
+		String key = getKey(config.getCharacterClassId(), config.getPveRole(), config.getGameVersionId());
+		viewConfigByKey.put(key, config);
+	}
+
+	public void add(FindUpgradesConfig config) {
+		String key = getKey(config.getCharacterClassId(), config.getPveRole(), config.getGameVersionId());
+		findUpgradesConfigByKey.put(key, config);
 	}
 
 	private static String getKey(CharacterClassId characterClassId, PveRole pveRole, GameVersionId gameVersionId) {

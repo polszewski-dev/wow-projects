@@ -1,9 +1,9 @@
-package wow.minmax.repository.impl.parsers.view;
+package wow.minmax.repository.impl.parsers.config;
 
 import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.minmax.repository.impl.ViewConfigRepositoryImpl;
+import wow.minmax.repository.impl.MinmaxConfigRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -13,9 +13,9 @@ import java.util.stream.Stream;
  * Date: 2023-05-11
  */
 @AllArgsConstructor
-public class ViewConfigExcelParser extends ExcelParser {
+public class MinMaxConfigExcelParser extends ExcelParser {
 	private final String xlsFilePath;
-	private final ViewConfigRepositoryImpl viewConfigRepository;
+	private final MinmaxConfigRepositoryImpl configRepository;
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -24,6 +24,9 @@ public class ViewConfigExcelParser extends ExcelParser {
 
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
-		return Stream.of(new ViewConfigSheetParser("view", viewConfigRepository));
+		return Stream.of(
+				new ViewConfigSheetParser("view", configRepository),
+				new FindUpgradesConfigSheetParser("find_upgrades", configRepository)
+		);
 	}
 }

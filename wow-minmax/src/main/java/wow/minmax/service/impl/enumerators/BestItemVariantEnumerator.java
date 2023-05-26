@@ -6,6 +6,7 @@ import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
 
 import java.util.List;
@@ -22,9 +23,10 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 			ItemSlot slot,
 			Rotation rotation,
 			ItemService itemService,
-			CalculationService calculationService
+			CalculationService calculationService,
+			MinmaxConfigRepository minmaxConfigRepository
 	) {
-		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), rotation, itemService, calculationService);
+		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), rotation, itemService, calculationService, minmaxConfigRepository);
 		this.item = referenceCharacter.getEquippedItem(slot).getItem();
 	}
 

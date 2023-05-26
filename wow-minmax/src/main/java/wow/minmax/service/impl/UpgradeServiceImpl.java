@@ -12,6 +12,7 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
 import wow.minmax.config.UpgradeConfig;
 import wow.minmax.model.Comparison;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.UpgradeService;
 import wow.minmax.service.impl.enumerators.BestItemVariantEnumerator;
@@ -31,6 +32,8 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final ItemService itemService;
 	private final CalculationService calculationService;
 
+	private final MinmaxConfigRepository minmaxConfigRepository;
+
 	@Override
 	public List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, ItemFilter itemFilter) {
 		return findUpgrades(character, slotGroup, itemFilter, character.getRotation());
@@ -39,7 +42,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 	@Override
 	public List<Comparison> findUpgrades(Character character, ItemSlotGroup slotGroup, ItemFilter itemFilter, Rotation rotation) {
 		FindUpgradesEnumerator enumerator = new FindUpgradesEnumerator(
-				character, slotGroup, itemFilter, character.getRotation(), itemService, calculationService
+				character, slotGroup, itemFilter, character.getRotation(), itemService, calculationService, minmaxConfigRepository
 		);
 
 		return enumerator.run().getResult().stream()
@@ -59,7 +62,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 		referenceCharacter.equip(new EquippableItem(item), slot);
 
 		BestItemVariantEnumerator enumerator = new BestItemVariantEnumerator(
-				referenceCharacter, slot, rotation, itemService, calculationService
+				referenceCharacter, slot, rotation, itemService, calculationService, minmaxConfigRepository
 		);
 
 		return enumerator.run()

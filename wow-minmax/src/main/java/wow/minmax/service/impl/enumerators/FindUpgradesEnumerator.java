@@ -7,6 +7,7 @@ import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
 
 import java.util.List;
@@ -24,9 +25,10 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 			ItemFilter itemFilter,
 			Rotation rotation,
 			ItemService itemService,
-			CalculationService calculationService
+			CalculationService calculationService,
+			MinmaxConfigRepository minmaxConfigRepository
 	) {
-		super(referenceCharacter, slotGroup, rotation, itemService, calculationService);
+		super(referenceCharacter, slotGroup, rotation, itemService, calculationService, minmaxConfigRepository);
 		this.itemFilter = itemFilter;
 	}
 

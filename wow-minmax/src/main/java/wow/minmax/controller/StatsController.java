@@ -16,7 +16,7 @@ import wow.minmax.converter.dto.SpellStatsConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.RotationStats;
-import wow.minmax.model.ViewConfig;
+import wow.minmax.model.config.ViewConfig;
 import wow.minmax.model.dto.CharacterStatsDTO;
 import wow.minmax.model.dto.RotationStatsDTO;
 import wow.minmax.model.dto.SpecialAbilityStatsDTO;

@@ -8,7 +8,7 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.model.ViewConfig;
+import wow.minmax.model.config.ViewConfig;
 
 import java.util.List;
 import java.util.UUID;

@@ -15,6 +15,8 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.minmax.model.Comparison;
+import wow.minmax.model.config.FindUpgradesConfig;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
 
 import java.util.*;
@@ -30,6 +32,7 @@ import static wow.commons.model.categorization.ItemSlot.*;
 public abstract class ItemVariantEnumerator {
 	protected final ItemService itemService;
 	protected final CalculationService calculationService;
+	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	protected final Character referenceCharacter;
 	private final double referenceDps;
@@ -42,11 +45,18 @@ public abstract class ItemVariantEnumerator {
 	private final Map<String, Comparison> bestOptions = new HashMap<>();
 
 	protected ItemVariantEnumerator(
-			Character referenceCharacter, ItemSlotGroup slotGroup, Rotation rotation, ItemService itemService, CalculationService calculationService) {
+			Character referenceCharacter,
+			ItemSlotGroup slotGroup,
+			Rotation rotation,
+			ItemService itemService,
+			CalculationService calculationService,
+			MinmaxConfigRepository minmaxConfigRepository
+	) {
 		this.itemService = itemService;
 		this.calculationService = calculationService;
 
 		this.referenceCharacter = referenceCharacter;
+		this.minmaxConfigRepository = minmaxConfigRepository;
 		this.referenceDps = calculationService.getRotationDps(referenceCharacter, rotation);
 		this.slotGroup = slotGroup;
 		this.rotation = rotation;
@@ -202,7 +212,7 @@ public abstract class ItemVariantEnumerator {
 	protected abstract List<Item> getItemsToAnalyze(ItemSlot slot);
 
 	private List<EquippableItem> getItemVariants(Item item) {
-		List<Enchant> enchants = itemService.getBestEnchants(referenceCharacter, item.getItemType(), item.getItemSubType());
+		List<Enchant> enchants = getEnchants(item);
 
 		if (!enchants.isEmpty() && item.hasSockets()) {
 			return getEnchantedAndGemmedItems(item, enchants);
@@ -213,6 +223,18 @@ public abstract class ItemVariantEnumerator {
 		} else {
 			return List.of(new EquippableItem(item));
 		}
+	}
+
+	private List<Enchant> getEnchants(Item item) {
+		FindUpgradesConfig config = minmaxConfigRepository.getFindUpgradesConfig(
+				referenceCharacter.getCharacterClassId(),
+				referenceCharacter.getRole(),
+				referenceCharacter.getGameVersionId()
+		).orElseThrow();
+
+		return itemService.getBestEnchants(referenceCharacter, item.getItemType(), item.getItemSubType()).stream()
+				.filter(config::isIncluded)
+				.toList();
 	}
 
 	private List<EquippableItem> getEnchantedAndGemmedItems(Item item, List<Enchant> enchants) {

@@ -6,7 +6,7 @@ import wow.character.model.character.Character;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.model.ViewConfig;
+import wow.minmax.model.config.ViewConfig;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
