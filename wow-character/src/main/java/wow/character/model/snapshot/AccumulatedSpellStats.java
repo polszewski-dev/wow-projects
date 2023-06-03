@@ -49,6 +49,10 @@ public class AccumulatedSpellStats {
 	private double cooldownPct;
 	private double threatPct;
 	private double pushbackPct;
+	private double maxHealth;
+	private double maxHealthPct;
+	private double maxMana;
+	private double maxManaPct;
 
 	private final Attributes attributes;
 	private final Set<AttributeCondition> conditions;
@@ -185,6 +189,18 @@ public class AccumulatedSpellStats {
 				break;
 			case PUSHBACK_PCT:
 				this.pushbackPct += value;
+				break;
+			case MAX_HEALTH:
+				this.maxHealth += value;
+				break;
+			case MAX_HEALTH_PCT:
+				this.maxHealthPct += value;
+				break;
+			case MAX_MANA:
+				this.maxMana += value;
+				break;
+			case MAX_MANA_PCT:
+				this.maxManaPct += value;
 				break;
 			default:
 				// ignore the rest

@@ -307,6 +307,9 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(snapshot.getCooldown()).isZero();
 		assertThat(snapshot.getThreatPct()).isEqualTo(88);
 		assertThat(snapshot.getPushbackPct()).isEqualTo(30);
+
+		assertThat(snapshot.getMaxHealth()).usingComparator(ROUNDED_DOWN).isEqualTo(11623);
+		assertThat(snapshot.getMaxMana()).usingComparator(ROUNDED_DOWN).isEqualTo(11990);
 	}
 
 	@Test

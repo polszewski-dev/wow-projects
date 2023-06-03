@@ -374,17 +374,27 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private double getMaxHealth(Snapshot snapshot) {
+		AccumulatedSpellStats stats = snapshot.getStats();
 		BaseStatInfo baseStats = snapshot.getCharacter().getBaseStatInfo();
 		double stamina = snapshot.getStamina();
 
-		return baseStats.getBaseHP() + HEALTH_PER_STAMINA * (stamina - baseStats.getBaseStamina());
+		return addAndMultiplyByPct(
+				baseStats.getBaseHP(),
+				HEALTH_PER_STAMINA * (stamina - baseStats.getBaseStamina()) + stats.getMaxHealth(),
+				stats.getMaxHealthPct()
+		);
 	}
 
 	private double getMaxMana(Snapshot snapshot) {
+		AccumulatedSpellStats stats = snapshot.getStats();
 		BaseStatInfo baseStats = snapshot.getCharacter().getBaseStatInfo();
 		double intellect = snapshot.getIntellect();
 
-		return baseStats.getBaseMana() + MANA_PER_INTELLECT * (intellect - baseStats.getBaseIntellect());
+		return addAndMultiplyByPct(
+				baseStats.getBaseMana(),
+				MANA_PER_INTELLECT * (intellect - baseStats.getBaseIntellect()) + stats.getMaxMana(),
+				stats.getMaxManaPct()
+		);
 	}
 
 	private static double addAndMultiplyByPct(double value, double modifier, double modifierPct) {

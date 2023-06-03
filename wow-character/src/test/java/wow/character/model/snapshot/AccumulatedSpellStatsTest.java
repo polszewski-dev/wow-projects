@@ -58,6 +58,8 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
 		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
 		assertThat(underTest.getCostPct()).isEqualTo(-5);
+		assertThat(underTest.getMaxHealthPct()).isEqualTo(3);
+		assertThat(underTest.getMaxManaPct()).isEqualTo(3);
 	}
 
 	@Test
@@ -109,6 +111,8 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		assertThat(underTest.getSpellPowerCoeffPct()).isEqualTo(20);
 		assertThat(underTest.getCastTime()).isEqualTo(-0.5);
 		assertThat(underTest.getCostPct()).isEqualTo(-5);
+		assertThat(underTest.getMaxHealthPct()).isEqualTo(3);
+		assertThat(underTest.getMaxManaPct()).isEqualTo(3);
 	}
 
 	@Test
