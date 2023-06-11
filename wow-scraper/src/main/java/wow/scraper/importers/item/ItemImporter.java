@@ -1,5 +1,7 @@
 package wow.scraper.importers.item;
 
+import wow.scraper.importers.WowheadImporter;
+
 import java.io.IOException;
 
 import static wow.scraper.model.WowheadItemCategory.*;
@@ -8,7 +10,7 @@ import static wow.scraper.model.WowheadItemCategory.*;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class ItemImporter extends ItemBaseImporter {
+public class ItemImporter extends WowheadImporter {
 	@Override
 	public void importAll() throws IOException {
 		fetch("items/armor/cloth/slot:5", CHEST);

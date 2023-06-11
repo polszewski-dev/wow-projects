@@ -1,4 +1,4 @@
-package wow.scraper.importers.item.parsers;
+package wow.scraper.importers.parsers;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.pve.Side;

@@ -4,6 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.importers.WowheadImporter;
 import wow.scraper.parsers.stats.StatPatternRepository;
 import wow.scraper.repository.ItemDetailRepository;
 import wow.scraper.repository.QuestInfoRepository;
@@ -51,5 +52,18 @@ public abstract class ScraperTool {
 
 	protected GameVersionId getGameVersion() {
 		return getScraperConfig().getGameVersion();
+	}
+
+	protected void importAll(WowheadImporter... importers) throws IOException {
+		for (var importer : importers) {
+			importer.init(
+					getScraperConfig(),
+					getWowheadFetcher(),
+					getItemDetailRepository(),
+					getSpellDetailRepository(),
+					getQuestInfoRepository()
+			);
+			importer.importAll();
+		}
 	}
 }

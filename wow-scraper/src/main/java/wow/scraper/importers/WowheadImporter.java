@@ -1,11 +1,11 @@
-package wow.scraper.importers.item;
+package wow.scraper.importers;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.importers.item.parsers.QuestInfoParser;
+import wow.scraper.importers.parsers.QuestInfoParser;
 import wow.scraper.model.*;
 import wow.scraper.repository.ItemDetailRepository;
 import wow.scraper.repository.QuestInfoRepository;
@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
  */
 @RequiredArgsConstructor
 @Slf4j
-public abstract class ItemBaseImporter {
+public abstract class WowheadImporter {
 	protected ScraperConfig scraperConfig;
 	protected GameVersionId gameVersion;
 	protected WowheadFetcher wowheadFetcher;
@@ -49,6 +49,10 @@ public abstract class ItemBaseImporter {
 
 	protected void fetch(String url, WowheadItemCategory category) throws IOException {
 		new ItemFetcher().fetch(url, category);
+	}
+
+	protected void fetch(String url, WowheadSpellCategory category) throws IOException {
+		new SpellFetcher().fetch(url, category);
 	}
 
 	protected void saveItemDetails(JsonItemDetails itemDetails, WowheadItemCategory category) {

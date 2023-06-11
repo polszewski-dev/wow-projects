@@ -1,8 +1,9 @@
 package wow.scraper.importers.item;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.scraper.importers.item.parsers.EnchantIdParser;
-import wow.scraper.importers.item.parsers.SpellIdParser;
+import wow.scraper.importers.WowheadImporter;
+import wow.scraper.importers.parsers.EnchantIdParser;
+import wow.scraper.importers.parsers.SpellIdParser;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadItemCategory;
@@ -20,24 +21,21 @@ import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
  * Date: 2023-05-19
  */
 @Slf4j
-public class EnchantImporter extends ItemBaseImporter {
+public class EnchantImporter extends WowheadImporter {
 	@Override
 	public void importAll() throws IOException {
-		fetchSpell("spells/professions/enchanting", ENCHANTS);
+		fetch("spells/professions/enchanting", ENCHANTS);
 		fetch("items/consumables/item-enhancements-permanent", ENCHANTS_PERMANENT);
 	}
 
 	@Override
 	protected void fetch(String url, WowheadItemCategory category) throws IOException {
-		var fetcher = new PermanentEnchantFetcher();
-
-		fetcher.fetch(url, category);
+		new PermanentEnchantFetcher().fetch(url, category);
 	}
 
-	private void fetchSpell(String url, WowheadSpellCategory category) throws IOException {
-		var fetcher = new SpellEnchantFetcher();
-
-		fetcher.fetch(url, category);
+	@Override
+	protected void fetch(String url, WowheadSpellCategory category) throws IOException {
+		new SpellEnchantFetcher().fetch(url, category);
 	}
 
 	private class PermanentEnchantFetcher extends ItemFetcher {

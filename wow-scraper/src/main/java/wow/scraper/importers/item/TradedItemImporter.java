@@ -1,5 +1,6 @@
 package wow.scraper.importers.item;
 
+import wow.scraper.importers.WowheadImporter;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemQuality;
 
@@ -13,7 +14,7 @@ import static wow.scraper.model.WowheadItemCategory.TOKENS;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class TradedItemImporter extends ItemBaseImporter {
+public class TradedItemImporter extends WowheadImporter {
 	@Override
 	public void importAll() throws IOException {
 		fetch("items/miscellaneous/armor-tokens", TOKENS);

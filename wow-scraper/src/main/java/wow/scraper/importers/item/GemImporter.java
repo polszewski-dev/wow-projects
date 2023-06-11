@@ -1,6 +1,7 @@
 package wow.scraper.importers.item;
 
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.importers.WowheadImporter;
 
 import java.io.IOException;
 
@@ -10,7 +11,7 @@ import static wow.scraper.model.WowheadItemCategory.GEMS;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class GemImporter extends ItemBaseImporter {
+public class GemImporter extends WowheadImporter {
 	@Override
 	public void importAll() throws IOException {
 		if (gameVersion != GameVersionId.VANILLA) {
