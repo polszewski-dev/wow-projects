@@ -20,7 +20,7 @@ public class TradedItemImporter extends WowheadImporter {
 		fetch("items/miscellaneous/armor-tokens", TOKENS);
 		fetch("items/quest/quality:3:4:5?filter=6;1;0", QUEST);
 
-		for (Integer tokenId : scraperConfig.getTokenToTradedFor().keySet()) {
+		for (Integer tokenId : getScraperConfig().getTokenToTradedFor().keySet()) {
 			fetchMissingToken(tokenId);
 		}
 	}

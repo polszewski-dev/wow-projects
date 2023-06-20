@@ -8,7 +8,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-05-18
  */
-public class ItemSetSheetWriter extends WowExcelSheetWriter<SavedSets.SetInfo> {
+public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
 	public ItemSetSheetWriter(ItemBaseExcelBuilder builder) {
 		super(builder);
 	}
@@ -26,8 +26,6 @@ public class ItemSetSheetWriter extends WowExcelSheetWriter<SavedSets.SetInfo> {
 			setHeader(itemSetBonusDescription(bonusIdx));
 			writeAttributeHeader(itemSetBonusStatPrefix(bonusIdx), ITEM_SET_BONUS_MAX_STATS);
 		}
-
-		writer.nextRow().freeze(1, 1);
 	}
 
 	@Override
@@ -43,7 +41,5 @@ public class ItemSetSheetWriter extends WowExcelSheetWriter<SavedSets.SetInfo> {
 			setValue(x.getDescription());
 			writeAttributes(x.getBonusStats(), ITEM_SET_BONUS_MAX_STATS);
 		}, 2 + 2 * ITEM_SET_BONUS_MAX_STATS);
-
-		writer.nextRow();
 	}
 }

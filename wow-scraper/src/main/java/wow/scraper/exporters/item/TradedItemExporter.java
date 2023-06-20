@@ -23,7 +23,7 @@ public class TradedItemExporter extends AbstractItemExporter<TradedItemParser> {
 
 	@Override
 	protected TradedItemParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
-		return new TradedItemParser(details, gameVersion, statPatternRepository);
+		return new TradedItemParser(details, gameVersion, getStatPatternRepository());
 	}
 
 	@Override

@@ -2,14 +2,11 @@ package wow.scraper;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import wow.commons.model.pve.GameVersionId;
-import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperContext;
+import wow.scraper.config.ScraperContextSource;
+import wow.scraper.exporters.ExcelExporter;
+import wow.scraper.exporters.excel.WowExcelBuilder;
 import wow.scraper.importers.WowheadImporter;
-import wow.scraper.parsers.stats.StatPatternRepository;
-import wow.scraper.repository.ItemDetailRepository;
-import wow.scraper.repository.QuestInfoRepository;
-import wow.scraper.repository.SpellDetailRepository;
-import wow.scraper.repository.WowheadFetcher;
 
 import java.io.IOException;
 
@@ -17,7 +14,7 @@ import java.io.IOException;
  * User: POlszewski
  * Date: 2022-11-15
  */
-public abstract class ScraperTool {
+public abstract class ScraperTool implements ScraperContextSource {
 	private final ApplicationContext context;
 
 	protected ScraperTool() {
@@ -26,44 +23,23 @@ public abstract class ScraperTool {
 
 	protected abstract void run() throws IOException;
 
-	protected WowheadFetcher getWowheadFetcher() {
-		return context.getBean(WowheadFetcher.class);
-	}
-
-	protected ItemDetailRepository getItemDetailRepository() {
-		return context.getBean(ItemDetailRepository.class);
-	}
-
-	protected SpellDetailRepository getSpellDetailRepository() {
-		return context.getBean(SpellDetailRepository.class);
-	}
-
-	protected QuestInfoRepository getQuestInfoRepository() {
-		return context.getBean(QuestInfoRepository.class);
-	}
-
-	protected StatPatternRepository getStatPatternRepository() {
-		return context.getBean(StatPatternRepository.class);
-	}
-
-	protected ScraperConfig getScraperConfig() {
-		return context.getBean(ScraperConfig.class);
-	}
-
-	protected GameVersionId getGameVersion() {
-		return getScraperConfig().getGameVersion();
+	@Override
+	public ScraperContext getScraperContext() {
+		return context.getBean(ScraperContext.class);
 	}
 
 	protected void importAll(WowheadImporter... importers) throws IOException {
 		for (var importer : importers) {
-			importer.init(
-					getScraperConfig(),
-					getWowheadFetcher(),
-					getItemDetailRepository(),
-					getSpellDetailRepository(),
-					getQuestInfoRepository()
-			);
+			importer.init(getScraperContext());
 			importer.importAll();
+		}
+	}
+
+	@SafeVarargs
+	protected final <B extends WowExcelBuilder, E extends ExcelExporter<B>> void exportAll(B builder, E... exporters) throws IOException {
+		for (var exporter : exporters) {
+			exporter.init(getScraperContext(), builder);
+			exporter.exportAll();
 		}
 	}
 }

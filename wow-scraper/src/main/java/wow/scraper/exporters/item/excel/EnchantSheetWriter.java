@@ -14,7 +14,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class EnchantSheetWriter extends WowExcelSheetWriter<EnchantTooltipParser> {
+public class EnchantSheetWriter extends ItemBaseSheetWriter<EnchantTooltipParser> {
 	public EnchantSheetWriter(ItemBaseExcelBuilder builder) {
 		super(builder);
 	}
@@ -36,7 +36,6 @@ public class EnchantSheetWriter extends WowExcelSheetWriter<EnchantTooltipParser
 		setHeader(ENCHANT_ENCHANT_ID);
 		writeAttributeHeader("", ENCHANT_MAX_STATS);
 		writeIconAndTooltipHeader();
-		writer.nextRow().freeze(2, 1);
 	}
 
 	@Override
@@ -57,7 +56,6 @@ public class EnchantSheetWriter extends WowExcelSheetWriter<EnchantTooltipParser
 		writeAttributes(parser.getParsedStats(), ENCHANT_MAX_STATS);
 		setValue(getIcon(parser));
 		setValue(parser.getTooltip());
-		writer.nextRow();
 	}
 
 	private List<PveRole> getPveRoles(EnchantTooltipParser parser) {

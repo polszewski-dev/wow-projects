@@ -1,4 +1,4 @@
-package wow.scraper.exporters.item.excel;
+package wow.scraper.exporters.excel;
 
 import lombok.AllArgsConstructor;
 import polszewski.excel.writer.ExcelWriter;

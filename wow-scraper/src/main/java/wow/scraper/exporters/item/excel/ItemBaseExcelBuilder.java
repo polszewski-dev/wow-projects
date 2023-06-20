@@ -1,8 +1,8 @@
 package wow.scraper.exporters.item.excel;
 
 import lombok.Getter;
-import polszewski.excel.writer.ExcelWriter;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.exporters.excel.WowExcelBuilder;
 import wow.scraper.parsers.tooltip.EnchantTooltipParser;
 import wow.scraper.parsers.tooltip.GemTooltipParser;
 import wow.scraper.parsers.tooltip.ItemTooltipParser;
@@ -19,9 +19,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelSheetNames.
  * Date: 2022-10-30
  */
 @Getter
-public class ItemBaseExcelBuilder extends ExcelCellWriter {
-	private final ScraperConfig config;
-
+public class ItemBaseExcelBuilder extends WowExcelBuilder {
 	private final SavedSets savedSets = new SavedSets();
 
 	private final TradedItemSheetWriter tradedItemSheetWriter;
@@ -31,8 +29,7 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 	private final ItemSetSheetWriter itemSetSheetWriter;
 
 	public ItemBaseExcelBuilder(ScraperConfig config) {
-		super(new ExcelWriter());
-		this.config = config;
+		super(config);
 		this.tradedItemSheetWriter = new TradedItemSheetWriter(this);
 		this.itemSheetWriter = new ItemSheetWriter(this);
 		this.enchantSheetWriter = new EnchantSheetWriter(this);
@@ -40,43 +37,35 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 		this.itemSetSheetWriter = new ItemSetSheetWriter(this);
 	}
 
-	public void start() {
-		writer.open();
-	}
-
 	public void addTradedItemHeader() {
-		writer.nextSheet(TRADE);
-		tradedItemSheetWriter.writeHeader();
+		writeHeader(TRADE, tradedItemSheetWriter, 2, 1);
 	}
 
 	public void addItemHeader() {
-		writer.nextSheet(ITEM);
-		itemSheetWriter.writeHeader();
+		writeHeader(ITEM, itemSheetWriter, 2, 1);
 	}
 
 	public void addEnchantHeader() {
 		flushItems();
-		writer.nextSheet(ENCHANT);
-		enchantSheetWriter.writeHeader();
+		writeHeader(ENCHANT, enchantSheetWriter, 2, 1);
 	}
 
 	public void addGemHeader() {
-		writer.nextSheet(GEM);
-		gemSheetWriter.writeHeader();
+		writeHeader(GEM, gemSheetWriter, 2, 1);
 	}
 
+	@Override
 	public void finish(String fileName) throws IOException {
-		writer.nextSheet(SET);
-		itemSetSheetWriter.writeHeader();
-		savedSets.forEach(itemSetSheetWriter::writeRow);
-		writer.save(fileName);
+		writeHeader(SET, itemSetSheetWriter, 1, 1);
+		savedSets.forEach(setInfo -> writeRow(setInfo, itemSetSheetWriter));
+		super.finish(fileName);
 	}
 
 	public void add(TradedItemParser parser) {
 		if (isToBeIgnored(parser.getItemId())) {
 			return;
 		}
-		tradedItemSheetWriter.writeRow(parser);
+		writeRow(parser, tradedItemSheetWriter);
 	}
 
 	public void add(ItemTooltipParser parser) {
@@ -91,14 +80,14 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 		if (isSpellToBeIgnored(parser.getSpellId())) {
 			return;
 		}
-		enchantSheetWriter.writeRow(parser);
+		writeRow(parser, enchantSheetWriter);
 	}
 
 	public void add(GemTooltipParser parser) {
 		if (isToBeIgnored(parser.getItemId())) {
 			return;
 		}
-		gemSheetWriter.writeRow(parser);
+		writeRow(parser, gemSheetWriter);
 	}
 
 	private boolean isToBeIgnored(int itemId) {
@@ -113,7 +102,7 @@ public class ItemBaseExcelBuilder extends ExcelCellWriter {
 
 	private void flushItems() {
 		for (ItemTooltipParser parser : itemParserQueue) {
-			itemSheetWriter.writeRow(parser);
+			writeRow(parser, itemSheetWriter);
 		}
 		itemParserQueue.clear();
 	}

@@ -10,7 +10,6 @@ import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -39,22 +38,12 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 	}
 
 	private void exportItemBase(ItemBaseExcelBuilder builder) throws IOException {
-		var exporters = List.of(
+		exportAll(
+				builder,
 				new TradedItemExporter(),
 				new ItemExporter(),
 				new EnchantExporter(),
 				new GemItemExporter()
 		);
-
-		for (var exporter : exporters) {
-			exporter.init(
-					getItemDetailRepository(),
-					getSpellDetailRepository(),
-					getQuestInfoRepository(),
-					getStatPatternRepository(),
-					builder
-			);
-			exporter.exportAll();
-		}
 	}
 }

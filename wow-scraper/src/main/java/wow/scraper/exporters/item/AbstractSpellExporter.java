@@ -18,12 +18,12 @@ import java.util.Optional;
 public abstract class AbstractSpellExporter<T extends AbstractSpellTooltipParser> extends ItemBaseExporter<WowheadSpellCategory, JsonSpellDetails, T> {
 	@Override
 	protected List<Integer> getDetailIds(WowheadSpellCategory category, GameVersionId gameVersion) {
-		return spellDetailRepository.getSpellIds(gameVersion, category);
+		return getSpellDetailRepository().getSpellIds(gameVersion, category);
 	}
 
 	@Override
 	protected Optional<JsonSpellDetails> getDetail(WowheadSpellCategory category, Integer detailId, GameVersionId gameVersion) throws IOException {
-		return spellDetailRepository.getDetail(gameVersion, category, detailId);
+		return getSpellDetailRepository().getDetail(gameVersion, category, detailId);
 	}
 
 	@Override

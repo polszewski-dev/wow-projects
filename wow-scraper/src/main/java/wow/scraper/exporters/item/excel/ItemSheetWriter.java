@@ -12,7 +12,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-05-18
  */
-public class ItemSheetWriter extends WowExcelSheetWriter<ItemTooltipParser> {
+public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 	public ItemSheetWriter(ItemBaseExcelBuilder builder) {
 		super(builder);
 	}
@@ -34,7 +34,6 @@ public class ItemSheetWriter extends WowExcelSheetWriter<ItemTooltipParser> {
 		setHeader(ITEM_ITEM_SET, 30);
 		writeAttributeHeader("", ITEM_MAX_STATS);
 		writeIconAndTooltipHeader();
-		writer.nextRow().freeze(2, 1);
 	}
 
 	@Override
@@ -54,7 +53,6 @@ public class ItemSheetWriter extends WowExcelSheetWriter<ItemTooltipParser> {
 		setValue(parser.getItemSetName());
 		writeAttributes(parser.getStatParser().getParsedStats(), ITEM_MAX_STATS);
 		writeIconAndTooltip(parser);
-		writer.nextRow();
 	}
 
 	private List<CharacterClassId> getRequiredClass(ItemTooltipParser parser) {

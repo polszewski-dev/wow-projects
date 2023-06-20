@@ -9,7 +9,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.scraper.classifiers.PveRoleStatClassifier;
-import wow.scraper.config.ScraperConfig;
+import wow.scraper.exporters.excel.ExcelSheetWriter;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractItemTooltipParser;
@@ -26,18 +26,9 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-05-18
  */
-public abstract class WowExcelSheetWriter<T> extends ExcelCellWriter {
-	protected final ItemBaseExcelBuilder builder;
-	protected final ScraperConfig config;
-
-	public abstract void writeHeader();
-
-	public abstract void writeRow(T params);
-
-	protected WowExcelSheetWriter(ItemBaseExcelBuilder builder) {
-		super(builder.writer);
-		this.builder = builder;
-		this.config = builder.getConfig();
+public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, ItemBaseExcelBuilder> {
+	protected ItemBaseSheetWriter(ItemBaseExcelBuilder builder) {
+		super(builder);
 	}
 
 	protected void writeCommonHeader() {

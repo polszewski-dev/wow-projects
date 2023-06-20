@@ -64,7 +64,7 @@ public class EnchantImporter extends WowheadImporter {
 		}
 
 		private void saveAsSpellDetail(Integer spellId, JsonItemDetails details) throws IOException {
-			var existingSpellDetails = spellDetailRepository.getDetail(gameVersion, ENCHANTS, spellId);
+			var existingSpellDetails = getSpellDetailRepository().getDetail(getGameVersion(), ENCHANTS, spellId);
 			JsonSpellDetails spellDetails;
 
 			if (existingSpellDetails.isPresent()) {
@@ -75,7 +75,7 @@ public class EnchantImporter extends WowheadImporter {
 				fetchEnchantId(spellId, spellDetails);
 			}
 
-			spellDetailRepository.saveDetail(gameVersion, ENCHANTS, spellId, spellDetails);
+			getSpellDetailRepository().saveDetail(getGameVersion(), ENCHANTS, spellId, spellDetails);
 		}
 
 		private void mergeSpellDetail(JsonSpellDetails existing, JsonItemDetails itemDetails) {
@@ -120,7 +120,7 @@ public class EnchantImporter extends WowheadImporter {
 	}
 
 	private void fetchEnchantId(Integer spellId, JsonSpellDetails spellDetails) throws IOException {
-		String spellHtml = wowheadFetcher.fetchRaw(gameVersion, "spell=" + spellId);
+		String spellHtml = getWowheadFetcher().fetchRaw(getGameVersion(), "spell=" + spellId);
 
 		Integer enchantId = new EnchantIdParser(spellHtml).parse();
 

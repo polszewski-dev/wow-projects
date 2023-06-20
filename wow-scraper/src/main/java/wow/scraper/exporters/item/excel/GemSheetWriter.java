@@ -9,7 +9,7 @@ import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-05-18
  */
-public class GemSheetWriter extends WowExcelSheetWriter<GemTooltipParser> {
+public class GemSheetWriter extends ItemBaseSheetWriter<GemTooltipParser> {
 	public GemSheetWriter(ItemBaseExcelBuilder builder) {
 		super(builder);
 	}
@@ -25,7 +25,6 @@ public class GemSheetWriter extends WowExcelSheetWriter<GemTooltipParser> {
 		writeAttributeHeader("", GEM_MAX_STATS);
 		setHeader(GEM_META_ENABLERS, 20);
 		writeIconAndTooltipHeader();
-		writer.nextRow().freeze(2, 1);
 	}
 
 	@Override
@@ -39,6 +38,5 @@ public class GemSheetWriter extends WowExcelSheetWriter<GemTooltipParser> {
 		writeAttributes(parser.getStats(), GEM_MAX_STATS);
 		setValue(parser.getMetaEnablers());
 		writeIconAndTooltip(parser);
-		writer.nextRow();
 	}
 }

@@ -14,7 +14,7 @@ import static wow.scraper.model.WowheadItemCategory.GEMS;
 public class GemImporter extends WowheadImporter {
 	@Override
 	public void importAll() throws IOException {
-		if (gameVersion != GameVersionId.VANILLA) {
+		if (getGameVersion() != GameVersionId.VANILLA) {
 			fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", GEMS);
 		}
 	}

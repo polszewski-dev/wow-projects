@@ -18,12 +18,12 @@ import java.util.Optional;
 public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> extends ItemBaseExporter<WowheadItemCategory, JsonItemDetails, T> {
 	@Override
 	protected List<Integer> getDetailIds(WowheadItemCategory category, GameVersionId gameVersion) {
-		return itemDetailRepository.getItemIds(gameVersion, category);
+		return getItemDetailRepository().getItemIds(gameVersion, category);
 	}
 
 	@Override
 	protected Optional<JsonItemDetails> getDetail(WowheadItemCategory category, Integer detailId, GameVersionId gameVersion) throws IOException {
-		return itemDetailRepository.getDetail(gameVersion, category, detailId);
+		return getItemDetailRepository().getDetail(gameVersion, category, detailId);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> 
 
 	private Optional<WowheadQuestInfo> getWowheadQuestInfo(Integer questId, GameVersionId gameVersionId) {
 		try {
-			return questInfoRepository.getQuestInfo(gameVersionId, questId);
+			return getQuestInfoRepository().getQuestInfo(gameVersionId, questId);
 		} catch (IOException e) {
 			log.error("Error accessing quest info: " + questId, e);
 			return Optional.empty();

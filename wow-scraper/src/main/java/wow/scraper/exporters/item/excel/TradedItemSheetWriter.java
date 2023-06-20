@@ -9,7 +9,7 @@ import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.REQ_LE
  * User: POlszewski
  * Date: 2023-05-18
  */
-public class TradedItemSheetWriter extends WowExcelSheetWriter<TradedItemParser> {
+public class TradedItemSheetWriter extends ItemBaseSheetWriter<TradedItemParser> {
 	public TradedItemSheetWriter(ItemBaseExcelBuilder builder) {
 		super(builder);
 	}
@@ -20,7 +20,6 @@ public class TradedItemSheetWriter extends WowExcelSheetWriter<TradedItemParser>
 		setHeader(REQ_LEVEL);
 		setHeader(REQ_CLASS);
 		writeIconAndTooltipHeader();
-		writer.nextRow().freeze(2, 1);
 	}
 
 	@Override
@@ -29,6 +28,5 @@ public class TradedItemSheetWriter extends WowExcelSheetWriter<TradedItemParser>
 		setValue(parser.getRequiredLevel());
 		setValue(parser.getRequiredClass());
 		writeIconAndTooltip(parser);
-		writer.nextRow();
 	}
 }

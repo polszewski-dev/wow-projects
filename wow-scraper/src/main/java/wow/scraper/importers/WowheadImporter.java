@@ -1,16 +1,13 @@
 package wow.scraper.importers;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.pve.GameVersionId;
-import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperContext;
+import wow.scraper.config.ScraperContextSource;
 import wow.scraper.importers.parsers.QuestInfoParser;
 import wow.scraper.model.*;
-import wow.scraper.repository.ItemDetailRepository;
-import wow.scraper.repository.QuestInfoRepository;
-import wow.scraper.repository.SpellDetailRepository;
-import wow.scraper.repository.WowheadFetcher;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,28 +18,13 @@ import java.util.stream.IntStream;
  * Date: 2023-05-19
  */
 @RequiredArgsConstructor
+@Getter
 @Slf4j
-public abstract class WowheadImporter {
-	protected ScraperConfig scraperConfig;
-	protected GameVersionId gameVersion;
-	protected WowheadFetcher wowheadFetcher;
-	protected ItemDetailRepository itemDetailRepository;
-	protected SpellDetailRepository spellDetailRepository;
-	protected QuestInfoRepository questInfoRepository;
+public abstract class WowheadImporter implements ScraperContextSource {
+	protected ScraperContext scraperContext;
 
-	public void init(
-			ScraperConfig scraperConfig,
-			WowheadFetcher wowheadFetcher,
-			ItemDetailRepository itemDetailRepository,
-			SpellDetailRepository spellDetailRepository,
-			QuestInfoRepository questInfoRepository
-	) {
-		this.scraperConfig = scraperConfig;
-		this.gameVersion = scraperConfig.getGameVersion();
-		this.wowheadFetcher = wowheadFetcher;
-		this.itemDetailRepository = itemDetailRepository;
-		this.spellDetailRepository = spellDetailRepository;
-		this.questInfoRepository = questInfoRepository;
+	public void init(ScraperContext scraperContext) {
+		this.scraperContext = scraperContext;
 	}
 
 	public abstract void importAll() throws IOException;
@@ -111,7 +93,7 @@ public abstract class WowheadImporter {
 
 		@Override
 		protected List<JsonItemDetails> fetchDetailsList(String url) throws IOException {
-			return wowheadFetcher.fetchItemDetails(gameVersion, url);
+			return getWowheadFetcher().fetchItemDetails(getGameVersion(), url);
 		}
 
 		@Override
@@ -119,18 +101,18 @@ public abstract class WowheadImporter {
 			if (details.getSources() == null) {
 				return false;
 			}
-			if (category.isEquipment() && details.getLevel() != null && details.getLevel() < scraperConfig.getMinItemLevel()) {
+			if (category.isEquipment() && details.getLevel() != null && details.getLevel() < getScraperConfig().getMinItemLevel()) {
 				return false;
 			}
-			if (details.getQuality() < scraperConfig.getMinQuality().getCode()) {
+			if (details.getQuality() < getScraperConfig().getMinQuality().getCode()) {
 				return false;
 			}
-			return !scraperConfig.getIgnoredItemIds().contains(details.getId());
+			return !getScraperConfig().getIgnoredItemIds().contains(details.getId());
 		}
 
 		@Override
 		protected boolean hasAlreadySavedDetails(WowheadItemCategory category, JsonItemDetails details) {
-			return itemDetailRepository.hasDetail(gameVersion, category, details.getId());
+			return getItemDetailRepository().hasDetail(getGameVersion(), category, details.getId());
 		}
 
 		@Override
@@ -141,7 +123,7 @@ public abstract class WowheadImporter {
 
 		@Override
 		protected void saveToRepo(WowheadItemCategory category, JsonItemDetails details) throws IOException {
-			itemDetailRepository.saveDetail(gameVersion, category, details.getId(), details);
+			getItemDetailRepository().saveDetail(getGameVersion(), category, details.getId(), details);
 		}
 
 		@Override
@@ -183,7 +165,7 @@ public abstract class WowheadImporter {
 		}
 
 		private void fetchTooltip(JsonItemDetails details) throws IOException {
-			WowheadItemInfo info = wowheadFetcher.fetchItemTooltip(gameVersion, details.getId());
+			WowheadItemInfo info = getWowheadFetcher().fetchItemTooltip(getGameVersion(), details.getId());
 			details.setHtmlTooltip(fixTooltip(info.getTooltip()));
 			details.setIcon(info.getIcon());
 		}
@@ -202,15 +184,15 @@ public abstract class WowheadImporter {
 				return;
 			}
 
-			if (questInfoRepository.hasQuestInfo(gameVersion, questId)) {
+			if (getQuestInfoRepository().hasQuestInfo(getGameVersion(), questId)) {
 				log.info("Tooltip for quest {} already exists", questId);
 				return;
 			}
 
-			String questHtml = wowheadFetcher.fetchRaw(gameVersion, "quest=" + questId);
+			String questHtml = getWowheadFetcher().fetchRaw(getGameVersion(), "quest=" + questId);
 			WowheadQuestInfo questInfo = new QuestInfoParser(questHtml).parse();
 
-			questInfoRepository.saveQuestInfo(gameVersion, questId, questInfo);
+			getQuestInfoRepository().saveQuestInfo(getGameVersion(), questId, questInfo);
 
 			log.info("Fetched tooltip for quest {}", questId);
 		}
@@ -223,17 +205,17 @@ public abstract class WowheadImporter {
 
 		@Override
 		protected List<JsonSpellDetails> fetchDetailsList(String url) throws IOException {
-			return wowheadFetcher.fetchSpellDetails(gameVersion, url);
+			return getWowheadFetcher().fetchSpellDetails(getGameVersion(), url);
 		}
 
 		@Override
 		protected boolean isToBeSaved(WowheadSpellCategory category, JsonSpellDetails details) {
-			return !scraperConfig.getIgnoredSpellIds().contains(details.getId());
+			return !getScraperConfig().getIgnoredSpellIds().contains(details.getId());
 		}
 
 		@Override
 		protected boolean hasAlreadySavedDetails(WowheadSpellCategory category, JsonSpellDetails details) {
-			return spellDetailRepository.hasDetail(gameVersion, category, details.getId());
+			return getSpellDetailRepository().hasDetail(getGameVersion(), category, details.getId());
 		}
 
 		@Override
@@ -243,7 +225,7 @@ public abstract class WowheadImporter {
 
 		@Override
 		protected void saveToRepo(WowheadSpellCategory category, JsonSpellDetails details) throws IOException {
-			spellDetailRepository.saveDetail(gameVersion, category, details.getId(), details);
+			getSpellDetailRepository().saveDetail(getGameVersion(), category, details.getId(), details);
 		}
 
 		@Override
@@ -252,7 +234,7 @@ public abstract class WowheadImporter {
 		}
 
 		private void fetchTooltip(JsonSpellDetails details) throws IOException {
-			WowheadSpellInfo info = wowheadFetcher.fetchSpellTooltip(gameVersion, details.getId());
+			WowheadSpellInfo info = getWowheadFetcher().fetchSpellTooltip(getGameVersion(), details.getId());
 			details.setHtmlTooltip(fixTooltip(info.getTooltip()));
 			details.setIcon(info.getIcon());
 		}
