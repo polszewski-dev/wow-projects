@@ -1,4 +1,4 @@
-package wow.scraper.repository;
+package wow.scraper.fetchers;
 
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.*;

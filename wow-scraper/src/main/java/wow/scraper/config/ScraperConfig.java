@@ -2,12 +2,17 @@ package wow.scraper.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.util.CollectionUtil;
+import wow.scraper.fetchers.PageCache;
+import wow.scraper.fetchers.PageFetcher;
+import wow.scraper.fetchers.impl.CachedPageFetcher;
+import wow.scraper.fetchers.impl.WebPageFetcher;
 import wow.scraper.model.WowheadItemQuality;
 
 import java.util.List;
@@ -111,5 +116,10 @@ public class ScraperConfig {
 		}
 
 		return null;
+	}
+
+	@Bean
+	public PageFetcher pageFetcher(PageCache pageCache) {
+		return new CachedPageFetcher(new WebPageFetcher(), pageCache);
 	}
 }

@@ -1,27 +1,25 @@
-package wow.scraper.repository.impl;
+package wow.scraper.fetchers.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.fetchers.PageFetcher;
+import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.model.*;
-import wow.scraper.repository.WowheadFetcher;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
  * Date: 2022-10-29
  */
-@Repository
+@Component
+@AllArgsConstructor
 public class WowheadFetcherImpl implements WowheadFetcher {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -29,6 +27,8 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	private static final Pattern SPELL_LIST_PATTERN = Pattern.compile("var listviewspells = (\\[.*]);");
 	private static final Pattern ZONE_LIST_PATTERN = Pattern.compile("id: 'zones'.*?data: (\\[.*])");
 	private static final Pattern BOSS_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
+
+	private PageFetcher pageFetcher;
 
 	@Override
 	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) throws IOException {
@@ -62,12 +62,12 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	public String fetchRaw(GameVersionId gameVersion, String urlPart) throws IOException {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 
-		return fetchPage(urlStr);
+		return pageFetcher.fetchPage(urlStr);
 	}
 
 	private String fetchAndParse(GameVersionId gameVersion, String urlPart, Pattern itemListPattern) throws IOException {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
-		String html = fetchPage(urlStr);
+		String html = pageFetcher.fetchPage(urlStr);
 
 		Matcher matcher = itemListPattern.matcher(html);
 
@@ -79,17 +79,6 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 
 		itemJson = fixJsonErrors(itemJson);
 		return itemJson;
-	}
-
-
-	private String fetchPage(String urlStr) throws IOException {
-		URL url = new URL(urlStr);
-		try (BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-			return bufferedReader
-					.lines()
-					.collect(Collectors.joining("\n"));
-		}
 	}
 
 	private String fixJsonErrors(String itemJson) {
@@ -112,8 +101,8 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 
 	private <T> T fetchTooltip(GameVersionId gameVersion, String type, int id, Class<T> clazz) throws IOException {
 		String urlStr = getTooltipUrlStr(gameVersion, type, id);
-		URL url = new URL(urlStr);
-		return MAPPER.readValue(url, clazz);
+		String json = pageFetcher.fetchPage(urlStr);
+		return MAPPER.readValue(json, clazz);
 	}
 
 	private String getRootUrlStr(GameVersionId gameVersion) {
