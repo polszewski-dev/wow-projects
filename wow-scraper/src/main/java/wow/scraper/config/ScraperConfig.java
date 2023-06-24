@@ -31,14 +31,14 @@ public class ScraperConfig {
 	@Value("${directory.path}")
 	private String directoryPath;
 
-	@Value("${game.version}")
-	private GameVersionId gameVersion;
+	@Value("#{'${game.versions}'.split(',')}")
+	private List<GameVersionId> gameVersions;
 
-	@Value("${scraper.min.quality}")
-	private WowheadItemQuality minQuality;
+	@Value("#{${scraper.min.quality}}")
+	private Map<GameVersionId, WowheadItemQuality> minQuality;
 
-	@Value("${scraper.min.item.level}")
-	private int minItemLevel;
+	@Value("#{${scraper.min.item.level}}")
+	private Map<GameVersionId, Integer> minItemLevel;
 
 	@Value("#{'${ignored.item.ids}'.split(',')}")
 	private Set<Integer> ignoredItemIds;
@@ -116,6 +116,14 @@ public class ScraperConfig {
 		}
 
 		return null;
+	}
+
+	public WowheadItemQuality getMinQuality(GameVersionId gameVersion) {
+		return minQuality.get(gameVersion);
+	}
+
+	public int getMinItemLevel(GameVersionId gameVersion) {
+		return minItemLevel.get(gameVersion);
 	}
 
 	@Bean

@@ -13,11 +13,7 @@ import java.util.Optional;
  * Date: 2022-11-15
  */
 public interface ItemDetailRepository {
-	boolean hasDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId);
-
 	Optional<JsonItemDetails> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) throws IOException;
 
-	void saveDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId, JsonItemDetails itemDetails) throws IOException;
-
-	List<Integer> getItemIds(GameVersionId gameVersion, WowheadItemCategory category);
+	List<Integer> getDetailIds(GameVersionId gameVersion, WowheadItemCategory category) throws IOException;
 }

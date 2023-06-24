@@ -11,9 +11,5 @@ import java.util.Optional;
  * Date: 2023-04-11
  */
 public interface QuestInfoRepository {
-	boolean hasQuestInfo(GameVersionId gameVersion, int questId);
-
-	void saveQuestInfo(GameVersionId gameVersion, int questId, WowheadQuestInfo questInfo) throws IOException;
-
 	Optional<WowheadQuestInfo> getQuestInfo(GameVersionId gameVersion, int questId) throws IOException;
 }

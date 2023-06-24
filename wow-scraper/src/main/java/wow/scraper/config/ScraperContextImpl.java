@@ -3,7 +3,6 @@ package wow.scraper.config;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import wow.commons.model.pve.GameVersionId;
 import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.parsers.stats.StatPatternRepository;
 import wow.scraper.repository.ItemDetailRepository;
@@ -24,9 +23,4 @@ public class ScraperContextImpl implements ScraperContext {
 	private final QuestInfoRepository questInfoRepository;
 	private final StatPatternRepository statPatternRepository;
 	private final ScraperConfig scraperConfig;
-
-	@Override
-	public GameVersionId getGameVersion() {
-		return scraperConfig.getGameVersion();
-	}
 }

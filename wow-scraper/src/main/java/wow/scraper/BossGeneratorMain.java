@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static wow.commons.model.pve.GameVersionId.TBC;
+
 /**
  * User: POlszewski
  * Date: 2022-11-01
@@ -20,7 +22,7 @@ public class BossGeneratorMain extends ScraperTool {
 
 	@Override
 	protected void run() throws IOException {
-		List<JsonBossDetails> bosses = getWowheadFetcher().fetchBossDetails(getGameVersion(), "npcs/classification:3/react-a:-1/react-h:-1#100").stream()
+		List<JsonBossDetails> bosses = getWowheadFetcher().fetchBossDetails(TBC, "npcs/classification:3/react-a:-1/react-h:-1#100").stream()
 				.filter(x -> !getScraperConfig().getIgnoredBossIds().contains(x.getId()))
 				.toList();
 

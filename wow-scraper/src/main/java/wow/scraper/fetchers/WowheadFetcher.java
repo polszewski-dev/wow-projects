@@ -4,6 +4,7 @@ import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.*;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,6 +13,8 @@ import java.util.List;
  */
 public interface WowheadFetcher {
 	List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+
+	List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> itemIds) throws IOException;
 
 	List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart) throws IOException;
 

@@ -10,9 +10,14 @@ import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.model.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -35,6 +40,11 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 		String json = fetchAndParse(gameVersion, urlPart, ITEM_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
+	}
+
+	@Override
+	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> itemIds) throws IOException {
+		return fetchIdFiltered(gameVersion, urlPart, itemIds, "151", this::fetchItemDetails);
 	}
 
 	@Override
@@ -116,5 +126,45 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	private String getTooltipUrlStr(GameVersionId gameVersion, String type, int id) {
 		final String urlFormat = "https://nether.wowhead.com/tooltip/%s/%s?dataEnv=%s&locale=0";
 		return urlFormat.formatted(type, id, gameVersion.getDataEnv());
+	}
+
+	@FunctionalInterface
+	private interface Fetcher<D> {
+		List<D> fetch(GameVersionId gameVersion, String urlPart) throws IOException;
+	}
+
+	private <D> List<D> fetchIdFiltered(GameVersionId gameVersion, String urlPart, Collection<Integer> ids, String type, Fetcher<D> fetcher) throws IOException {
+		List<Integer> orderedIds = ids.stream()
+				.distinct()
+				.sorted()
+				.toList();
+
+		List<D> result = new ArrayList<>();
+
+		for (var idChunk : getChunks(orderedIds, 5)) {
+			try {
+				result.addAll(fetcher.fetch(gameVersion, urlPart + getIdQuery(type, idChunk)));
+			} catch (IllegalArgumentException e) {
+				// IGNORE: empty result has been returned
+			}
+		}
+
+		return result;
+	}
+
+	// https://www.wowhead.com/classic/items?filter-any=151:151;3:3;20926:20927
+
+	private static <T> List<List<T>> getChunks(List<T> list, int chunkSize) {
+		return IntStream.rangeClosed(0, (list.size() - 1) / chunkSize)
+				.mapToObj(x -> list.subList(x * chunkSize, Math.min((x + 1) * chunkSize, list.size())))
+				.toList();
+	}
+
+	private String getIdQuery(String typeId, List<Integer> ids) {
+		return Stream.of(
+				ids.stream().map(x -> typeId).collect(Collectors.joining(":")),
+				ids.stream().map(x -> "3").collect(Collectors.joining(":")),
+				ids.stream().map(Object::toString).collect(Collectors.joining(":"))
+		).collect(Collectors.joining(";", "?filter-any=", ""));
 	}
 }

@@ -6,7 +6,6 @@ import wow.scraper.config.ScraperContext;
 import wow.scraper.config.ScraperContextSource;
 import wow.scraper.exporters.ExcelExporter;
 import wow.scraper.exporters.excel.WowExcelBuilder;
-import wow.scraper.importers.WowheadImporter;
 
 import java.io.IOException;
 
@@ -26,13 +25,6 @@ public abstract class ScraperTool implements ScraperContextSource {
 	@Override
 	public ScraperContext getScraperContext() {
 		return context.getBean(ScraperContext.class);
-	}
-
-	protected void importAll(WowheadImporter... importers) throws IOException {
-		for (var importer : importers) {
-			importer.init(getScraperContext());
-			importer.importAll();
-		}
 	}
 
 	@SafeVarargs

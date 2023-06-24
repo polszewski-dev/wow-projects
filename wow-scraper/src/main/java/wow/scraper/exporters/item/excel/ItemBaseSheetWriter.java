@@ -17,10 +17,10 @@ import wow.scraper.parsers.tooltip.AbstractSpellTooltipParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
 import java.util.List;
-import java.util.Objects;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parsers.items.ItemBaseExcelColumnNames.*;
+import static wow.scraper.util.CommonAssertions.assertBothAreEqual;
 
 /**
  * User: POlszewski
@@ -159,11 +159,5 @@ public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, ItemBas
 		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getDetails(), parser.getRequiredFactionName());
 		List<String> sources = sourceParser.getSource();
 		return String.join("#", sources);
-	}
-
-	protected <X> void assertBothAreEqual(String name, X x, X y) {
-		if (!Objects.equals(x, y)) {
-			throw new IllegalArgumentException("%s has different values: x = %s, y = %s".formatted(name, x, y));
-		}
 	}
 }

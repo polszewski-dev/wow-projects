@@ -17,8 +17,8 @@ import java.util.Optional;
 @Slf4j
 public abstract class AbstractSpellExporter<T extends AbstractSpellTooltipParser> extends ItemBaseExporter<WowheadSpellCategory, JsonSpellDetails, T> {
 	@Override
-	protected List<Integer> getDetailIds(WowheadSpellCategory category, GameVersionId gameVersion) {
-		return getSpellDetailRepository().getSpellIds(gameVersion, category);
+	protected List<Integer> getDetailIds(WowheadSpellCategory category, GameVersionId gameVersion) throws IOException {
+		return getSpellDetailRepository().getDetailIds(gameVersion, category);
 	}
 
 	@Override

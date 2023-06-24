@@ -1,12 +1,17 @@
 package wow.scraper.repository.impl;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.config.ScraperConfig;
+import wow.scraper.fetchers.WowheadFetcher;
+import wow.scraper.importers.parsers.QuestInfoParser;
 import wow.scraper.model.WowheadQuestInfo;
 import wow.scraper.repository.QuestInfoRepository;
 
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -14,36 +19,24 @@ import java.util.Optional;
  * Date: 2023-04-11
  */
 @Repository
+@AllArgsConstructor
 public class QuestInfoRepositoryImpl implements QuestInfoRepository {
-	private final JsonFileRepository<WowheadQuestInfo> repository;
+	private final WowheadFetcher wowheadFetcher;
 
-	public QuestInfoRepositoryImpl(ScraperConfig scraperConfig) {
-		this.repository = new JsonFileRepository<>(
-				scraperConfig,
-				WowheadQuestInfo.class
-		);
-	}
-
-	@Override
-	public boolean hasQuestInfo(GameVersionId gameVersion, int questId) {
-		return repository.has(getIdParts(gameVersion, questId));
-	}
+	private final Map<GameVersionId, Map<Integer, WowheadQuestInfo>> questsById = new EnumMap<>(GameVersionId.class);
 
 	@Override
 	public Optional<WowheadQuestInfo> getQuestInfo(GameVersionId gameVersion, int questId) throws IOException {
-		return repository.get(getIdParts(gameVersion, questId));
-	}
+		var map = questsById.computeIfAbsent(gameVersion, x -> new HashMap<>());
+		WowheadQuestInfo questInfo = map.get(questId);
 
-	@Override
-	public void saveQuestInfo(GameVersionId gameVersion, int questId, WowheadQuestInfo questInfo) throws IOException {
-		repository.save(getIdParts(gameVersion, questId), questInfo);
-	}
+		if (questInfo == null) {
+			String questHtml = wowheadFetcher.fetchRaw(gameVersion, "quest=" + questId);
+			questInfo = new QuestInfoParser(questHtml).parse();
 
-	private String[] getIdParts(GameVersionId gameVersion, int questId) {
-		return new String[] {
-				"quests",
-				gameVersion.toString().toLowerCase(),
-				Integer.toString(questId)
-		};
+			map.put(questId, questInfo);
+		}
+
+		return Optional.of(questInfo);
 	}
 }

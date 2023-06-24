@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
+import static wow.commons.model.pve.GameVersionId.TBC;
+
 /**
  * User: POlszewski
  * Date: 2022-11-01
@@ -21,7 +23,7 @@ public class ZoneGeneratorMain extends ScraperTool {
 
 	@Override
 	protected void run() throws IOException {
-		List<JsonZoneDetails> zones = getWowheadFetcher().fetchZoneDetails(getGameVersion(), "zones").stream()
+		List<JsonZoneDetails> zones = getWowheadFetcher().fetchZoneDetails(TBC, "zones").stream()
 				.filter(x -> !getScraperConfig().getIgnoredZoneIds().contains(x.getId()))
 				.toList();
 

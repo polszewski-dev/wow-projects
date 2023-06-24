@@ -1,9 +1,10 @@
 package wow.scraper.importers.item;
 
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.importers.WowheadImporter;
+import wow.scraper.model.JsonItemDetails;
 
 import java.io.IOException;
+import java.util.List;
 
 import static wow.scraper.model.WowheadItemCategory.GEMS;
 
@@ -11,11 +12,16 @@ import static wow.scraper.model.WowheadItemCategory.GEMS;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class GemImporter extends WowheadImporter {
+public class GemImporter extends ItemImporter {
+	public GemImporter() {
+		super(GEMS);
+	}
+
 	@Override
-	public void importAll() throws IOException {
-		if (getGameVersion() != GameVersionId.VANILLA) {
-			fetch("items/gems/type:0:1:2:3:4:5:6:8?filter=81;7;0", GEMS);
+	protected List<JsonItemDetails> fetchDetailsList(String url) throws IOException {
+		if (getGameVersion() == GameVersionId.VANILLA) {
+			return List.of();
 		}
+		return super.fetchDetailsList(url);
 	}
 }

@@ -14,7 +14,8 @@ import wow.scraper.parsers.stats.StatParser;
 import wow.scraper.parsers.stats.StatPatternRepository;
 
 import java.util.List;
-import java.util.Objects;
+
+import static wow.scraper.util.CommonAssertions.assertBothAreEqual;
 
 /**
  * User: POlszewski
@@ -125,12 +126,6 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 
 	public Attributes getParsedStats() {
 		return statParser.getParsedStats();
-	}
-
-	private <X> void assertBothAreEqual(String name, X x, X y) {
-		if (!Objects.equals(x, y)) {
-			throw new IllegalArgumentException("%s has different values: x = %s, y = %s".formatted(name, x, y));
-		}
 	}
 
 	private String cleanEnchantTooltip(String line) {

@@ -17,8 +17,8 @@ import java.util.Optional;
 @Slf4j
 public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> extends ItemBaseExporter<WowheadItemCategory, JsonItemDetails, T> {
 	@Override
-	protected List<Integer> getDetailIds(WowheadItemCategory category, GameVersionId gameVersion) {
-		return getItemDetailRepository().getItemIds(gameVersion, category);
+	protected List<Integer> getDetailIds(WowheadItemCategory category, GameVersionId gameVersion) throws IOException {
+		return getItemDetailRepository().getDetailIds(gameVersion, category);
 	}
 
 	@Override

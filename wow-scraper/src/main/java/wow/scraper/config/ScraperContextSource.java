@@ -1,6 +1,5 @@
 package wow.scraper.config;
 
-import wow.commons.model.pve.GameVersionId;
 import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.parsers.stats.StatPatternRepository;
 import wow.scraper.repository.ItemDetailRepository;
@@ -42,10 +41,5 @@ public interface ScraperContextSource extends ScraperContext {
 	@Override
 	default ScraperConfig getScraperConfig() {
 		return getScraperContext().getScraperConfig();
-	}
-
-	@Override
-	default GameVersionId getGameVersion() {
-		return getScraperContext().getGameVersion();
 	}
 }

@@ -8,10 +8,10 @@ import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+import java.util.Set;
 
 /**
  * User: POlszewski
@@ -21,23 +21,26 @@ import java.util.stream.Stream;
 public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends AbstractTooltipParser<D>> extends ExcelExporter<ItemBaseExcelBuilder> {
 	protected void export(C category) throws IOException {
 		for (Integer detailId : getDetailIds(category)) {
-			for (GameVersionId gameVersion : GameVersionId.values()) {
+			for (GameVersionId gameVersion : getScraperConfig().getGameVersions()) {
 				getDetail(category, detailId, gameVersion)
 						.ifPresent(details -> exportDetails(details, gameVersion));
 			}
 		}
 	}
 
-	private List<Integer> getDetailIds(C category) {
-		return Stream.of(GameVersionId.values())
-				.map(gameVersion -> getDetailIds(category, gameVersion))
-				.flatMap(Collection::stream)
-				.distinct()
+	private List<Integer> getDetailIds(C category) throws IOException {
+		Set<Integer> set = new HashSet<>();
+
+		for (GameVersionId gameVersion : getScraperConfig().getGameVersions()) {
+			set.addAll(getDetailIds(category, gameVersion));
+		}
+
+		return set.stream()
 				.sorted()
 				.toList();
 	}
 
-	protected abstract List<Integer> getDetailIds(C category, GameVersionId gameVersion);
+	protected abstract List<Integer> getDetailIds(C category, GameVersionId gameVersion) throws IOException;
 
 	protected abstract Optional<D> getDetail(C category, Integer detailId, GameVersionId gameVersion) throws IOException;
 

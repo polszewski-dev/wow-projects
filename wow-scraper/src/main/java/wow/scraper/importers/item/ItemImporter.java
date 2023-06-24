@@ -1,35 +1,84 @@
 package wow.scraper.importers.item;
 
 import wow.scraper.importers.WowheadImporter;
+import wow.scraper.model.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.IntStream;
 
-import static wow.scraper.model.WowheadItemCategory.*;
+import static wow.scraper.model.WowheadItemCategory.GEMS;
 
 /**
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class ItemImporter extends WowheadImporter {
+public class ItemImporter extends WowheadImporter<WowheadItemCategory, JsonItemDetails> {
+	public ItemImporter(WowheadItemCategory category) {
+		super(category.getUrl(), category);
+	}
+
 	@Override
-	public void importAll() throws IOException {
-		fetch("items/armor/cloth/slot:5", CHEST);
-		fetch("items/armor/cloth/slot:8", FEET);
-		fetch("items/armor/cloth/slot:10", HANDS);
-		fetch("items/armor/cloth/slot:1", HEAD);
-		fetch("items/armor/cloth/slot:7", LEGS);
-		fetch("items/armor/cloth/slot:3", SHOULDER);
-		fetch("items/armor/cloth/slot:6", WAIST);
-		fetch("items/armor/cloth/slot:9", WRIST);
-		fetch("items/armor/amulets/slot:9", AMULETS);
-		fetch("items/armor/rings", RINGS);
-		fetch("items/armor/trinkets", TRINKETS);
-		fetch("items/armor/cloaks", CLOAKS);
-		fetch("items/armor/off-hand-frills", OFF_HANDS);
-		fetch("items/weapons/daggers", DAGGERS);
-		fetch("items/weapons/one-handed-swords", ONE_HANDED_SWORDS);
-		fetch("items/weapons/one-handed-maces", ONE_HANDED_MACES);
-		fetch("items/weapons/staves", STAVES);
-		fetch("items/weapons/wands", WANDS);
+	protected List<JsonItemDetails> fetchDetailsList(String url) throws IOException {
+		return getWowheadFetcher().fetchItemDetails(getGameVersion(), url);
+	}
+
+	@Override
+	protected boolean isToBeSaved(JsonItemDetails details) {
+		if (details.getSources() == null) {
+			return false;
+		}
+		if (getCategory().isEquipment() && details.getLevel() != null && details.getLevel() < getScraperConfig().getMinItemLevel(getGameVersion())) {
+			return false;
+		}
+		if ((getCategory().isEquipment() || getCategory() == GEMS) && details.getQuality() < getScraperConfig().getMinQuality(getGameVersion()).getCode()) {
+			return false;
+		}
+		return !getScraperConfig().getIgnoredItemIds().contains(details.getId());
+	}
+
+	@Override
+	protected void beforeSave(JsonItemDetails details) throws IOException {
+		fixSource(details);
+		fetchTooltip(details);
+	}
+
+	private void fixSource(JsonItemDetails itemDetails) {
+		List<Integer> sources = itemDetails.getSources();
+
+		if (sources.size() <= 1) {
+			return;
+		}
+
+		if (tryReplaceSourcesWithCrafted(itemDetails, sources)) {
+			return;
+		}
+
+		throw new IllegalArgumentException("Unfixable double source: " + itemDetails.getName());
+	}
+
+	private boolean tryReplaceSourcesWithCrafted(JsonItemDetails itemDetails, List<Integer> sources) {
+		int craftedPosition = IntStream.iterate(0, i -> i < sources.size(), i -> i + 1)
+				.filter(i -> sources.get(i) == WowheadSource.CRAFTED.getCode())
+				.findFirst().orElse(-1);
+
+		if (craftedPosition < 0) {
+			return false;
+		}
+
+		JsonSourceMore sourceMore = itemDetails.getSourceMores().get(craftedPosition);
+
+		itemDetails.getSources().clear();
+		itemDetails.getSources().add(WowheadSource.CRAFTED.getCode());
+		itemDetails.getSourceMores().clear();
+		itemDetails.getSourceMores().add(sourceMore);
+
+		return true;
+	}
+
+	private void fetchTooltip(JsonItemDetails details) throws IOException {
+		WowheadItemInfo info = getWowheadFetcher().fetchItemTooltip(getGameVersion(), details.getId());
+		details.setHtmlTooltip(fixTooltip(info.getTooltip()));
+		details.setIcon(info.getIcon());
 	}
 }
