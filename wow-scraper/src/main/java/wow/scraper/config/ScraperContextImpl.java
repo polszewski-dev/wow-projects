@@ -5,9 +5,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.parsers.stats.StatPatternRepository;
-import wow.scraper.repository.ItemDetailRepository;
-import wow.scraper.repository.QuestInfoRepository;
-import wow.scraper.repository.SpellDetailRepository;
+import wow.scraper.repository.*;
 
 /**
  * User: POlszewski
@@ -22,5 +20,8 @@ public class ScraperContextImpl implements ScraperContext {
 	private final SpellDetailRepository spellDetailRepository;
 	private final QuestInfoRepository questInfoRepository;
 	private final StatPatternRepository statPatternRepository;
+	private final ZoneDetailRepository zoneDetailRepository;
+	private final BossDetailRepository bossDetailRepository;
+	private final FactionDetailRepository factionDetailRepository;
 	private final ScraperConfig scraperConfig;
 }

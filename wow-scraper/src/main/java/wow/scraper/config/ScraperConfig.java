@@ -52,6 +52,9 @@ public class ScraperConfig {
 	@Value("#{'${ignored.zone.ids}'.split(',')}")
 	private Set<Integer> ignoredZoneIds;
 
+	@Value("#{'${boss.ids.to.fetch}'.split(',')}")
+	private Set<Integer> bossIdsToFetch;
+
 	@Value("#{${dungeon.short.names}}")
 	private Map<String, String> dungeonShortNames;
 

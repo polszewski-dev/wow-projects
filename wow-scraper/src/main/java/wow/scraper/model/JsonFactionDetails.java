@@ -5,38 +5,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import wow.commons.model.pve.GameVersionId;
 
-import java.util.List;
-
 /**
  * User: POlszewski
  * Date: 2022-11-01
  */
 @Data
 @JsonIgnoreProperties({
-		"popularity",
-		"minlevel",
-		"maxlevel",
-		"react",
-		"type",
-		"classification",
-		"family",
-		"hasQuests"
+	"popularity",
 })
-public class JsonBossDetails implements HasRequiredVersion {
+public class JsonFactionDetails implements HasRequiredVersion {
 	@JsonProperty(value = "id")
 	private int id;
 
 	@JsonProperty(value = "name")
 	private String name;
 
-	@JsonProperty(value = "tag")
-	private String tag;
+	@JsonProperty(value = "expansion")
+	private int expansion;
 
-	@JsonProperty(value = "boss")
-	private int boss;
+	@JsonProperty(value = "side")
+	private int side;
 
-	@JsonProperty(value = "location")
-	private List<Integer> location;
+	@JsonProperty(value = "category")
+	private int category;
+
+	@JsonProperty(value = "category2")
+	private int category2;
+
+	@JsonProperty(value = "friendshiprep")
+	private int friendshiprep;
 
 	private GameVersionId reqVersion;
 }

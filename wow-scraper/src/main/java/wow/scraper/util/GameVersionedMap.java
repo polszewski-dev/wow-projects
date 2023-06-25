@@ -3,6 +3,7 @@ package wow.scraper.util;
 import wow.commons.model.pve.GameVersionId;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * User: POlszewski
@@ -23,7 +24,17 @@ public class GameVersionedMap<K, V> {
 		return map.getOrDefault(gameVersion, Map.of()).keySet();
 	}
 
+	public Collection<V> values(GameVersionId gameVersion) {
+		return map.getOrDefault(gameVersion, Map.of()).values();
+	}
+
 	public boolean containsKey(GameVersionId gameVersion) {
 		return map.containsKey(gameVersion);
+	}
+
+	public V computeIfAbsent(GameVersionId gameVersion, K key, Function<K, V> mappingFunction) {
+		return map
+				.computeIfAbsent(gameVersion, x -> new HashMap<>())
+				.computeIfAbsent(key, mappingFunction);
 	}
 }

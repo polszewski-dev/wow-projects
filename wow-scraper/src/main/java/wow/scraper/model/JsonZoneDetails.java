@@ -3,6 +3,7 @@ package wow.scraper.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import wow.commons.model.pve.GameVersionId;
 
 /**
  * User: POlszewski
@@ -12,7 +13,7 @@ import lombok.Data;
 @JsonIgnoreProperties({
 	"popularity",
 })
-public class JsonZoneDetails {
+public class JsonZoneDetails implements HasRequiredVersion {
 	@JsonProperty(value = "id")
 	private int id;
 
@@ -48,4 +49,9 @@ public class JsonZoneDetails {
 
 	@JsonProperty(value = "territory")
 	private int territory;
+
+	@JsonProperty(value =  "worldpvp")
+	private int worldpvp;
+
+	private GameVersionId reqVersion;
 }

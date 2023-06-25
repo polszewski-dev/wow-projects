@@ -22,6 +22,10 @@ public interface WowheadFetcher {
 
 	List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart) throws IOException;
 
+	List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> bossIds) throws IOException;
+
+	List<JsonFactionDetails> fetchFactionDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+
 	String fetchRaw(GameVersionId gameVersion, String urlPart) throws IOException;
 
 	WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id) throws IOException;

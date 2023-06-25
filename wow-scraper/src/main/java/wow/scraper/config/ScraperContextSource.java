@@ -2,9 +2,7 @@ package wow.scraper.config;
 
 import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.parsers.stats.StatPatternRepository;
-import wow.scraper.repository.ItemDetailRepository;
-import wow.scraper.repository.QuestInfoRepository;
-import wow.scraper.repository.SpellDetailRepository;
+import wow.scraper.repository.*;
 
 /**
  * User: POlszewski
@@ -31,6 +29,21 @@ public interface ScraperContextSource extends ScraperContext {
 	@Override
 	default QuestInfoRepository getQuestInfoRepository() {
 		return getScraperContext().getQuestInfoRepository();
+	}
+
+	@Override
+	default ZoneDetailRepository getZoneDetailRepository() {
+		return getScraperContext().getZoneDetailRepository();
+	}
+
+	@Override
+	default BossDetailRepository getBossDetailRepository() {
+		return getScraperContext().getBossDetailRepository();
+	}
+
+	@Override
+	default FactionDetailRepository getFactionDetailRepository() {
+		return getScraperContext().getFactionDetailRepository();
 	}
 
 	@Override

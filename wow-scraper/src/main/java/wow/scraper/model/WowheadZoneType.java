@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.pve.ZoneType;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -17,12 +18,19 @@ public enum WowheadZoneType {
 	DUNGEON(2, ZoneType.DUNGEON),
 	RAID(3, ZoneType.RAID),
 	BATTLEGROUND(4, ZoneType.BATTLEGROUND),
-	ARENA(6, ZoneType.ARENA);
+	ARENA(6, ZoneType.ARENA),
+	MULTIPLE_DIFFICULY_RAID(7, ZoneType.RAID);
 
 	private final int code;
 	private final ZoneType type;
 
 	public static WowheadZoneType fromCode(int code) {
 		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElseThrow();
+	}
+
+	public static List<WowheadZoneType> instances() {
+		return Stream.of(values())
+				.filter(x -> x.type == ZoneType.RAID || x.type == ZoneType.DUNGEON)
+				.toList();
 	}
 }
