@@ -3,6 +3,8 @@ package wow.commons.model.pve;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.config.TimeRestriction;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
-public class Zone {
+public class Zone implements TimeRestricted {
 	private final int id;
 	private final String name;
 	private final String shortName;
@@ -21,6 +23,7 @@ public class Zone {
 	private final ZoneType zoneType;
 	private final int partySize;
 	private List<Boss> bosses;
+	private TimeRestriction timeRestriction;
 
 	public String getShortName() {
 		return shortName != null ? shortName : name;

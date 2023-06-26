@@ -2,19 +2,22 @@ package wow.commons.repository.impl.parsers.pve;
 
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.Side;
 import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
+
+import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.NAME;
+import static wow.commons.repository.impl.parsers.pve.PveBaseExcelColumnNames.*;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
 public class FactionSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colNo = column("no.");
-	private final ExcelColumn colName = column("name");
-	private final ExcelColumn colVersion = column("version");
-	private final ExcelColumn colPhase = column("phase");
+	private final ExcelColumn colId = column(ID);
+	private final ExcelColumn colName = column(NAME);
+	private final ExcelColumn colVersion = column(FACTION_VERSION);
+	private final ExcelColumn colSide = column(FACTION_SIDE);
 
 	private final PveRepositoryImpl pveRepository;
 
@@ -35,11 +38,12 @@ public class FactionSheetParser extends WowExcelSheetParser {
 	}
 
 	private Faction getFaction() {
-		var no = colNo.getInteger();
+		var id = colId.getInteger();
 		var name = colName.getString();
 		var version = GameVersionId.parse(colVersion.getString());
-		var phase = colPhase.getEnum(PhaseId::parse);
+		var side = colSide.getEnum(Side::parse, null);
+		var timeRestriction = getTimeRestriction();
 
-		return new Faction(no, name, version, phase);
+		return new Faction(id, name, version, side, timeRestriction);
 	}
 }

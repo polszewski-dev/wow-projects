@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
-import static wow.commons.model.pve.GameVersionId.TBC;
-import static wow.commons.model.pve.GameVersionId.VANILLA;
+import static wow.commons.model.pve.GameVersionId.*;
 
 /**
  * User: POlszewski
@@ -27,7 +26,9 @@ public enum PhaseId {
 	TBC_P2(TBC),//ssc,tk
 	TBC_P3(TBC),//mh,bt
 	TBC_P4(TBC),//za
-	TBC_P5(TBC);//swp
+	TBC_P5(TBC),//swp
+
+	WOTLK_P1(WOTLK);
 
 	private final GameVersionId gameVersionId;
 

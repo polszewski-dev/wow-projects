@@ -2,6 +2,7 @@ package wow.commons.repository.impl.parsers.items;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.Boss;
@@ -75,7 +76,7 @@ public class SourceParser {
 			throw new IllegalArgumentException();
 		}
 
-		Boss boss = pveRepository.getBoss(bossId).orElseGet(() -> getMissingBoss(bossName, bossId, zoneId));
+		Boss boss = pveRepository.getBoss(bossId, phaseId).orElseGet(() -> getMissingBoss(bossName, bossId, zoneId));
 		result.add(new BossDrop(boss, boss.getZones().get(0)));
 	}
 
@@ -83,12 +84,16 @@ public class SourceParser {
 		if (bossName.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
-		return new Boss(bossId, bossName, List.of(pveRepository.getZone(zoneId).orElseThrow()));
+		List<Zone> zones = List.of(pveRepository.getZone(zoneId, phaseId).orElseThrow());
+		TimeRestriction timeRestriction = TimeRestriction.builder()
+				.versions(List.of(phaseId.getGameVersionId()))
+				.build();
+		return new Boss(bossId, bossName, zones, timeRestriction);
 	}
 
 	private void parseZoneDrop(String zoneIdStr) {
 		int zoneId = Integer.parseInt(zoneIdStr);
-		Zone zone = pveRepository.getZone(zoneId).orElseThrow();
+		Zone zone = pveRepository.getZone(zoneId, phaseId).orElseThrow();
 		result.add(new ZoneDrop(zone));
 	}
 
@@ -115,7 +120,7 @@ public class SourceParser {
 	}
 
 	private void parseReputationReward(String factionName) {
-		Faction faction = pveRepository.getFaction(factionName).orElseThrow();
+		Faction faction = pveRepository.getFaction(factionName, phaseId).orElseThrow();
 		result.add(new ReputationReward(faction));
 	}
 

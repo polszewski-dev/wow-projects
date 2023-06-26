@@ -3,16 +3,14 @@ package wow.commons.repository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.model.pve.Boss;
-import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.PhaseId;
-import wow.commons.model.pve.Zone;
+import wow.commons.model.pve.*;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.commons.model.pve.Side.HORDE;
 import static wow.commons.model.pve.ZoneType.RAID;
 
 /**
@@ -26,7 +24,7 @@ class PveRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Zone is read correctly")
 	void zoneIsCorrect() {
-		Optional<Zone> optionalZone = underTest.getZone(4075);
+		Optional<Zone> optionalZone = underTest.getZone(4075, PhaseId.TBC_P5);
 
 		assertThat(optionalZone).isPresent();
 
@@ -38,6 +36,7 @@ class PveRepositoryTest extends RepositoryTest {
 		assertThat(zone.getVersion()).isEqualTo(TBC);
 		assertThat(zone.getZoneType()).isEqualTo(RAID);
 		assertThat(zone.getPartySize()).isEqualTo(25);
+		assertThat(zone.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
 
 		List<String> bossNames = zone.getBosses().stream()
 				.map(Boss::getName)
@@ -45,23 +44,24 @@ class PveRepositoryTest extends RepositoryTest {
 				.toList();
 
 		List<String> expectedBossNames = List.of(
-				"Entropius",
+				"Kalecgos",
+				"Sathrovarr the Corruptor",
+				"Brutallus",
 				"Felmyst",
 				"Grand Warlock Alythess",
-				"Kalecgos",
-				"Kil'jaeden",
 				"Lady Sacrolash",
 				"M'uru",
-				"Sathrovarr the Corruptor"
+				"Entropius",
+				"Kil'jaeden"
 		);
 
-		assertThat(bossNames).isEqualTo(expectedBossNames);
+		assertThat(bossNames).hasSameElementsAs(expectedBossNames);
 	}
 
 	@Test
 	@DisplayName("Boss is read correctly")
 	void bossIsCorrect() {
-		Optional<Boss> optionalBoss = underTest.getBoss(25840);
+		Optional<Boss> optionalBoss = underTest.getBoss(25840, PhaseId.TBC_P5);
 
 		assertThat(optionalBoss).isPresent();
 
@@ -73,19 +73,35 @@ class PveRepositoryTest extends RepositoryTest {
 
 		assertThat(boss.getZones().get(0).getId()).isEqualTo(4075);
 		assertThat(boss.getZones().get(0).getName()).isEqualTo("Sunwell Plateau");
+
+		assertThat(boss.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
 	}
 
 	@Test
 	@DisplayName("Faction is read correctly")
 	void factionIsCorrect() {
-		Optional<Faction> optionalFaction = underTest.getFaction("Netherwing");
+		Optional<Faction> optionalFaction = underTest.getFaction("Thrallmar", PhaseId.TBC_P5);
 
 		assertThat(optionalFaction).isPresent();
 
 		Faction faction = optionalFaction.orElseThrow();
 
-		assertThat(faction.getNo()).isEqualTo(18);
-		assertThat(faction.getName()).isEqualTo("Netherwing");
-		assertThat(faction.getPhaseId()).isEqualTo(PhaseId.TBC_P3);
+		assertThat(faction.getId()).isEqualTo(947);
+		assertThat(faction.getName()).isEqualTo("Thrallmar");
+		assertThat(faction.getSide()).isEqualTo(HORDE);
+		assertThat(faction.getVersion()).isEqualTo(TBC);
+		assertThat(faction.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
+	}
+
+	@Test
+	@DisplayName("Bosses and instances have matching required versions")
+	void matchingBossAndInstanceVersions() {
+		for (GameVersionId gameVersionId : GameVersionId.values()) {
+			for (Zone instance : underTest.getAllInstances(gameVersionId.getLastPhase())) {
+				for (Boss boss : instance.getBosses()) {
+					assertThat(boss.getTimeRestriction().getUniqueVersion()).isEqualTo(instance.getTimeRestriction().getUniqueVersion());
+				}
+			}
+		}
 	}
 }

@@ -6,17 +6,20 @@ import wow.commons.model.pve.ZoneType;
 import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parsers.excel.WowExcelSheetParser;
 
+import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.NAME;
+import static wow.commons.repository.impl.parsers.pve.PveBaseExcelColumnNames.*;
+
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
 public class ZoneSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colId = column("id");
-	private final ExcelColumn colName = column("name");
-	private final ExcelColumn colShortName = column("short_name");
-	private final ExcelColumn colType = column("type");
-	private final ExcelColumn colVersion = column("version");
-	private final ExcelColumn colPartySize = column("max_players");
+	private final ExcelColumn colId = column(ID);
+	private final ExcelColumn colName = column(NAME);
+	private final ExcelColumn colShortName = column(ZONE_SHORT_NAME);
+	private final ExcelColumn colType = column(ZONE_TYPE);
+	private final ExcelColumn colVersion = column(ZONE_VERSION);
+	private final ExcelColumn colPartySize = column(ZONE_MAX_PLAYERS);
 
 	private final PveRepositoryImpl pveRepository;
 
@@ -43,7 +46,8 @@ public class ZoneSheetParser extends WowExcelSheetParser {
 		var type = colType.getEnum(ZoneType::valueOf);
 		var version = colVersion.getEnum(GameVersionId::parse);
 		var partySize = colPartySize.getInteger();
+		var timeRestriction = getTimeRestriction();
 
-		return new Zone(id, name, shortName, version, type, partySize, null);
+		return new Zone(id, name, shortName, version, type, partySize, null, timeRestriction);
 	}
 }
