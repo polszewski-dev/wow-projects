@@ -1,6 +1,5 @@
 package wow.scraper.parsers.stats;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
@@ -27,7 +26,7 @@ public class StatPatternRepository {
 	private String xlsFilePath;
 
 	@PostConstruct
-	public void init() throws IOException, InvalidFormatException {
+	public void init() throws IOException {
 		var statParserExcelParser = new StatPatternExcelParser(
 				xlsFilePath,
 				this.itemStatPatterns,

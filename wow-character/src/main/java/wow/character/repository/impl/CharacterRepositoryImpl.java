@@ -1,7 +1,6 @@
 package wow.character.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.character.model.character.CharacterTemplate;
@@ -50,7 +49,7 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 	}
 
 	@PostConstruct
-	public void init() throws IOException, InvalidFormatException {
+	public void init() throws IOException {
 		var excelParser = new CharacterExcelParser(xlsFilePath, this);
 		excelParser.readFromXls();
 	}

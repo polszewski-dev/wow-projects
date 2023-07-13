@@ -1,6 +1,5 @@
 package wow.minmax.repository.impl;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.minmax.model.ProcInfo;
@@ -49,7 +48,7 @@ public class ProcInfoRepositoryImpl implements ProcInfoRepository {
 	}
 
 	@PostConstruct
-	public void init() throws IOException, InvalidFormatException {
+	public void init() throws IOException {
 		var excelParser = new ProcExcelParser(xlsFilePath, this);
 		excelParser.readFromXls();
 	}

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public abstract class ExcelCellWriter {
 	private static final Font FONT = Font.DEFAULT.name("Arial").size(9);
 	private static final Style DATA_STYLE = Style.DEFAULT.font(FONT);
-	private static final Style HEADER_STYLE = DATA_STYLE.font(FONT.bold());
+	private static final Style HEADER_STYLE = DATA_STYLE.font(FONT.bold(true));
 
 	protected final ExcelWriter writer;
 

@@ -20,7 +20,7 @@ public interface Enchant extends ConfigurationElementWithAttributes<Integer>, Pv
 	ItemRarity getRarity();
 
 	default boolean matches(ItemType itemType, ItemSubType itemSubType) {
-		return (getItemTypes().isEmpty() || getItemTypes().contains(itemType)) &&
-				(getItemSubTypes().isEmpty() || getItemSubTypes().contains(itemSubType));
+		return (getItemTypes().isEmpty() || (itemType != null && getItemTypes().contains(itemType))) &&
+				(getItemSubTypes().isEmpty() || (itemSubType != null && getItemSubTypes().contains(itemSubType)));
 	}
 }

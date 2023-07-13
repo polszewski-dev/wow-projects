@@ -1,6 +1,5 @@
 package wow.minmax.repository.impl;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.PveRole;
@@ -42,7 +41,7 @@ public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 	}
 
 	@PostConstruct
-	public void init() throws IOException, InvalidFormatException {
+	public void init() throws IOException {
 		var excelParser = new MinMaxConfigExcelParser(xlsFilePath, this);
 		excelParser.readFromXls();
 	}

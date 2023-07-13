@@ -1,7 +1,6 @@
 package wow.commons.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
@@ -102,7 +101,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	}
 
 	@PostConstruct
-	public void init() throws IOException, InvalidFormatException {
+	public void init() throws IOException {
 		var spellExcelParser = new SpellExcelParser(xlsFilePath, this);
 		spellExcelParser.readFromXls();
 	}
