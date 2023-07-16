@@ -19,7 +19,7 @@ public interface ScraperContext {
 
 	ZoneDetailRepository getZoneDetailRepository();
 
-	BossDetailRepository getBossDetailRepository();
+	NpcDetailRepository getNpcDetailRepository();
 
 	FactionDetailRepository getFactionDetailRepository();
 

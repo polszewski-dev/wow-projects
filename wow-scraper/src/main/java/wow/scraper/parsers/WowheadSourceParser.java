@@ -76,7 +76,7 @@ public class WowheadSourceParser {
 		JsonSourceMore sourceMore = assertSingleSourceMore();
 
 		if (sourceMore.getN() != null) {
-			return sourceBossDrop(sourceMore.getN(), sourceMore.getTi(), sourceMore.getZ());
+			return sourceNpcDrop(sourceMore.getN(), sourceMore.getTi(), sourceMore.getZ());
 		}
 
 		return sourceZoneDrop(sourceMore.getZ());
@@ -119,8 +119,8 @@ public class WowheadSourceParser {
 		return sourceCrafted(ProfessionId.FISHING);
 	}
 
-	private static String sourceBossDrop(String bossName, Integer bossId, Integer zoneId) {
-		return String.format("BossDrop:%s:%s:%s", bossName != null ? bossName : "", bossId != null ? bossId : 0, zoneId != null ? zoneId : 0);
+	private static String sourceNpcDrop(String npcName, Integer npcId, Integer zoneId) {
+		return "NpcDrop:%s:%s:%s".formatted(npcName != null ? npcName : "", npcId != null ? npcId : 0, zoneId != null ? zoneId : 0);
 	}
 
 	private static String sourceZoneDrop(Integer zoneId) {
@@ -198,7 +198,7 @@ public class WowheadSourceParser {
 			pvpItemNameParts.addAll(config.getPvpItemNameParts());
 			pvpItemIds.addAll(config.getPvpItemIds());
 			addWorldDropOverrides(config);
-			addBossDropOverrides(config.getBossDropOverrides());
+			addNpcDropOverrides(config.getNpcDropOverrides());
 			addTradedForOverrides(config.getTokenToTradedFor(), WowheadSourceParser::sourceToken);
 			addTradedForOverrides(config.getItemStartingQuestToTradedFor(), WowheadSourceParser::sourceItemStartingQuest);
 		}
@@ -209,13 +209,13 @@ public class WowheadSourceParser {
 			}
 		}
 
-		private void addBossDropOverrides(Map<Integer, List<Integer>> tokenIdToBossId) {
-			for (Map.Entry<Integer, List<Integer>> entry : tokenIdToBossId.entrySet()) {
+		private void addNpcDropOverrides(Map<Integer, List<Integer>> tokenIdToNpcId) {
+			for (Map.Entry<Integer, List<Integer>> entry : tokenIdToNpcId.entrySet()) {
 				Integer tokenId = entry.getKey();
-				List<Integer> bossIds = entry.getValue();
+				List<Integer> npcIds = entry.getValue();
 
-				for (Integer bossId : bossIds) {
-					getSourceList(tokenId).add(sourceBossDrop(null, bossId, null));
+				for (Integer npcId : npcIds) {
+					getSourceList(tokenId).add(sourceNpcDrop(null, npcId, null));
 				}
 			}
 		}

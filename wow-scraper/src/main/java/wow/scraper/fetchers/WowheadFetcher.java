@@ -20,9 +20,9 @@ public interface WowheadFetcher {
 
 	List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart) throws IOException;
 
-	List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+	List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart) throws IOException;
 
-	List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> bossIds) throws IOException;
+	List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> npcIds) throws IOException;
 
 	List<JsonFactionDetails> fetchFactionDetails(GameVersionId gameVersion, String urlPart) throws IOException;
 

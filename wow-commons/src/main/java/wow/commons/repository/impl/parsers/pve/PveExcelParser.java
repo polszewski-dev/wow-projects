@@ -8,6 +8,8 @@ import wow.commons.repository.impl.PveRepositoryImpl;
 import java.io.InputStream;
 import java.util.stream.Stream;
 
+import static wow.commons.repository.impl.parsers.pve.PveBaseExcelSheetNames.*;
+
 /**
  * User: POlszewski
  * Date: 2021-03-14
@@ -25,9 +27,9 @@ public class PveExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new ZoneSheetParser("zones", pveRepository),
-				new BossSheetParser("bosses", pveRepository),
-				new FactionSheetParser("factions", pveRepository)
+				new ZoneSheetParser(ZONES, pveRepository),
+				new NpcSheetParser(NPCS, pveRepository),
+				new FactionSheetParser(FACTIONS, pveRepository)
 		);
 	}
 }

@@ -47,7 +47,6 @@ public class ZoneSheetWriter extends ExcelSheetWriter<JsonZoneDetails, PveBaseEx
 	}
 
 	private String getShortName(JsonZoneDetails zone) {
-		String shortName = config.getDungeonShortNames().get(zone.getName());
-		return shortName != null ? shortName : "";
+		return config.getDungeonShortNames().get(zone.getName());
 	}
 }

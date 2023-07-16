@@ -31,7 +31,7 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	private static final Pattern ITEM_LIST_PATTERN = Pattern.compile("var listviewitems = (\\[.*]);");
 	private static final Pattern SPELL_LIST_PATTERN = Pattern.compile("var listviewspells = (\\[.*]);");
 	private static final Pattern ZONE_LIST_PATTERN = Pattern.compile("id: 'zones'.*?data: (\\[.*])");
-	private static final Pattern BOSS_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
+	private static final Pattern NPC_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
 	private static final Pattern FACTION_LIST_PATTERN = Pattern.compile("id: 'factions'.*?data:\\s*(\\[.*])");
 
 	private PageFetcher pageFetcher;
@@ -63,15 +63,15 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	}
 
 	@Override
-	public List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart) throws IOException {
-		String json = fetchAndParse(gameVersion, urlPart, BOSS_LIST_PATTERN);
+	public List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart) throws IOException {
+		String json = fetchAndParse(gameVersion, urlPart, NPC_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
 	@Override
-	public List<JsonBossDetails> fetchBossDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> bossIds) throws IOException {
-		return fetchIdFiltered(gameVersion, urlPart, bossIds, "37", this::fetchBossDetails);
+	public List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> npcIds) throws IOException {
+		return fetchIdFiltered(gameVersion, urlPart, npcIds, "37", this::fetchNpcDetails);
 	}
 
 	@Override

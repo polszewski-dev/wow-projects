@@ -46,14 +46,14 @@ public class ScraperConfig {
 	@Value("#{'${ignored.spell.ids}'.split(',')}")
 	private Set<Integer> ignoredSpellIds;
 
-	@Value("#{'${ignored.boss.ids}'.split(',')}")
-	private Set<Integer> ignoredBossIds;
+	@Value("#{'${ignored.npc.ids}'.split(',')}")
+	private Set<Integer> ignoredNpcIds;
 
 	@Value("#{'${ignored.zone.ids}'.split(',')}")
 	private Set<Integer> ignoredZoneIds;
 
-	@Value("#{'${boss.ids.to.fetch}'.split(',')}")
-	private Set<Integer> bossIdsToFetch;
+	@Value("#{'${npc.ids.to.fetch}'.split(',')}")
+	private Set<Integer> npcIdsToFetch;
 
 	@Value("#{${dungeon.short.names}}")
 	private Map<String, String> dungeonShortNames;
@@ -67,8 +67,8 @@ public class ScraperConfig {
 	@Value("#{'${world.drop.overrides}'.split(',')}")
 	private List<Integer> worldDropOverrides;
 
-	@Value("#{${boss.drop.overrides}}")
-	private Map<Integer, List<Integer>> bossDropOverrides;
+	@Value("#{${npc.drop.overrides}}")
+	private Map<Integer, List<Integer>> npcDropOverrides;
 
 	@Value("#{${token.to.traded.for}}")
 	private Map<Integer, List<Integer>> tokenToTradedFor;

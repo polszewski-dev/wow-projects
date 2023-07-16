@@ -3,8 +3,8 @@ package wow.scraper.exporters.pve.excel;
 import lombok.Getter;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.exporters.excel.WowExcelBuilder;
-import wow.scraper.model.JsonBossDetails;
 import wow.scraper.model.JsonFactionDetails;
+import wow.scraper.model.JsonNpcDetails;
 import wow.scraper.model.JsonZoneDetails;
 
 import static wow.commons.repository.impl.parsers.pve.PveBaseExcelSheetNames.*;
@@ -16,13 +16,13 @@ import static wow.commons.repository.impl.parsers.pve.PveBaseExcelSheetNames.*;
 @Getter
 public class PveBaseExcelBuilder extends WowExcelBuilder {
 	private final ZoneSheetWriter zoneSheetWriter;
-	private final BossSheetWriter bossSheetWriter;
+	private final NpcSheetWriter npcSheetWriter;
 	private final FactionSheetWriter factionSheetWriter;
 
 	public PveBaseExcelBuilder(ScraperConfig config) {
 		super(config);
 		this.zoneSheetWriter = new ZoneSheetWriter(this);
-		this.bossSheetWriter = new BossSheetWriter(this);
+		this.npcSheetWriter = new NpcSheetWriter(this);
 		this.factionSheetWriter = new FactionSheetWriter(this);
 	}
 
@@ -34,12 +34,12 @@ public class PveBaseExcelBuilder extends WowExcelBuilder {
 		writeRow(zone, zoneSheetWriter);
 	}
 
-	public void addBossHeader() {
-		writeHeader(BOSSES, bossSheetWriter, 0, 1);
+	public void addNpcHeader() {
+		writeHeader(NPCS, npcSheetWriter, 0, 1);
 	}
 
-	public void add(JsonBossDetails boss) {
-		writeRow(boss, bossSheetWriter);
+	public void add(JsonNpcDetails npc) {
+		writeRow(npc, npcSheetWriter);
 	}
 
 	public void addFactionHeader() {

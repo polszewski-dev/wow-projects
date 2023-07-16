@@ -3,7 +3,7 @@ package wow.commons.model.sources;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import wow.commons.model.pve.Boss;
+import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.Zone;
 
 /**
@@ -13,17 +13,17 @@ import wow.commons.model.pve.Zone;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class BossDrop extends Source {
-	private final Boss boss;
+public class NpcDrop extends Source {
+	private final Npc npc;
 	private final Zone zone;
 
 	@Override
-	public boolean isBossDrop() {
+	public boolean isNpcDrop() {
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Boss: " + boss;
+		return "Npc: " + npc;
 	}
 }

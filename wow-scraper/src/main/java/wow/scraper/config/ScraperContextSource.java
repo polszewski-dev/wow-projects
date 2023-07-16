@@ -37,8 +37,8 @@ public interface ScraperContextSource extends ScraperContext {
 	}
 
 	@Override
-	default BossDetailRepository getBossDetailRepository() {
-		return getScraperContext().getBossDetailRepository();
+	default NpcDetailRepository getNpcDetailRepository() {
+		return getScraperContext().getNpcDetailRepository();
 	}
 
 	@Override

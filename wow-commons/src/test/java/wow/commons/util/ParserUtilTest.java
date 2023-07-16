@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ParserUtilTest {
 	@Test
 	void parseMultipleValues() {
-		ParsedMultipleValues result = ParserUtil.parseMultipleValues("BossDrop:(.*):(.*)", "BossDrop:ABC:123");
+		ParsedMultipleValues result = ParserUtil.parseMultipleValues("NpcDrop:(.*):(.*)", "NpcDrop:ABC:123");
 
 		assertThat(result.size()).isEqualTo(2);
 		assertThat(result.get(0)).isEqualTo("ABC");

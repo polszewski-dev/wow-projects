@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * Date: 2023-06-25
  */
 @AllArgsConstructor
-public class ZoneBossListParser {
+public class ZoneNpcListParser {
 	private final String html;
 	private final List<Integer> result = new ArrayList<>();
 
@@ -21,13 +21,13 @@ public class ZoneBossListParser {
 		Matcher matcher = pattern.matcher(html);
 
 		while (matcher.find()) {
-			parseBossIds(matcher.group(1));
+			parseNpcIds(matcher.group(1));
 		}
 
 		return result;
 	}
 
-	private void parseBossIds(String group) {
+	private void parseNpcIds(String group) {
 		Pattern pattern = Pattern.compile("\\[(url=\\?|url=\\\\/\\?|)npc=(\\d+)]");
 		Matcher matcher = pattern.matcher(group);
 

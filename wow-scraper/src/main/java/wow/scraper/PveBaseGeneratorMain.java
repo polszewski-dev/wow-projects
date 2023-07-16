@@ -1,8 +1,8 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.scraper.exporters.pve.BossExporter;
 import wow.scraper.exporters.pve.FactionExporter;
+import wow.scraper.exporters.pve.NpcExporter;
 import wow.scraper.exporters.pve.ZoneExporter;
 import wow.scraper.exporters.pve.excel.PveBaseExcelBuilder;
 import wow.scraper.parsers.WowheadSourceParser;
@@ -38,7 +38,7 @@ public class PveBaseGeneratorMain extends ScraperTool {
 		exportAll(
 				builder,
 				new ZoneExporter(),
-				new BossExporter(),
+				new NpcExporter(),
 				new FactionExporter()
 		);
 	}

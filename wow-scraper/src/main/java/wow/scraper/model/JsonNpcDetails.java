@@ -17,12 +17,11 @@ import java.util.List;
 		"minlevel",
 		"maxlevel",
 		"react",
-		"type",
-		"classification",
 		"family",
+		"type",
 		"hasQuests"
 })
-public class JsonBossDetails implements HasRequiredVersion {
+public class JsonNpcDetails implements HasRequiredVersion {
 	@JsonProperty(value = "id")
 	private int id;
 
@@ -32,10 +31,12 @@ public class JsonBossDetails implements HasRequiredVersion {
 	@JsonProperty(value = "tag")
 	private String tag;
 
+	@JsonProperty(value = "classification")
+	private int classification;
+
 	@JsonProperty(value = "boss")
 	private int boss;
 
-	@JsonProperty(value = "location")
 	private List<Integer> location;
 
 	private GameVersionId reqVersion;

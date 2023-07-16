@@ -35,8 +35,8 @@ public class SourceConverter {
 	}
 
 	private String getDetailedSourceString(Source source, AbstractItem item) {
-		if (source.isBossDrop()) {
-			return String.format("%s - %s", source.getZone().getShortName(), source.getBoss().getName());
+		if (source.isNpcDrop()) {
+			return String.format("%s - %s", source.getZone().getShortName(), source.getNpc().getName());
 		}
 		if (source.isTraded()) {
 			return getDetailedSources(source.getSourceItem());

@@ -22,15 +22,15 @@ public class Zone implements TimeRestricted {
 	private final GameVersionId version;
 	private final ZoneType zoneType;
 	private final int partySize;
-	private List<Boss> bosses;
+	private List<Npc> npcs;
 	private TimeRestriction timeRestriction;
 
 	public String getShortName() {
 		return shortName != null ? shortName : name;
 	}
 
-	public void setBosses(List<Boss> bosses) {
-		this.bosses = bosses;
+	public void setNpcs(List<Npc> npcs) {
+		this.npcs = npcs;
 	}
 
 	public boolean isRaid() {

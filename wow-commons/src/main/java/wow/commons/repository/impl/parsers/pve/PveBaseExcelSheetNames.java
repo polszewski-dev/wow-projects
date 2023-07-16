@@ -6,7 +6,7 @@ package wow.commons.repository.impl.parsers.pve;
  */
 public final class PveBaseExcelSheetNames {
 	public static final String ZONES = "zones";
-	public static final String BOSSES = "bosses";
+	public static final String NPCS = "npcs";
 	public static final String FACTIONS = "factions";
 
 	private PveBaseExcelSheetNames() {}

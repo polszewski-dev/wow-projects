@@ -15,7 +15,9 @@ public final class PveBaseExcelColumnNames {
 	public static final String ZONE_MIN_LVL = "min_lvl";
 	public static final String ZONE_MAX_LVL = "max_lvl";
 
-	public static final String BOSS_ZONE = "zone";
+	public static final String NPC_TYPE = "type";
+	public static final String NPC_BOSS = "boss";
+	public static final String NPC_ZONE = "zone";
 
 	public static final String FACTION_VERSION = "version";
 	public static final String FACTION_SIDE = "side";

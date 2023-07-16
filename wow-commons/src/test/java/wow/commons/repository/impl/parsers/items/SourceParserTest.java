@@ -30,16 +30,16 @@ class SourceParserTest extends WowCommonsSpringTest {
 	}
 
 	@Test
-	void boss() {
-		Set<Source> sources = getParser().parse("BossDrop:Kil'jaeden:25315:4075");
+	void npc() {
+		Set<Source> sources = getParser().parse("NpcDrop:Kil'jaeden:25315:4075");
 
 		assertThat(sources).hasSize(1);
 
 		Source source = sources.iterator().next();
 
-		assertThat(source.isBossDrop()).isTrue();
-		assertThat(source.getBoss().getId()).isEqualTo(25315);
-		assertThat(source.getBoss().getName()).isEqualTo("Kil'jaeden");
+		assertThat(source.isNpcDrop()).isTrue();
+		assertThat(source.getNpc().getId()).isEqualTo(25315);
+		assertThat(source.getNpc().getName()).isEqualTo("Kil'jaeden");
 		assertThat(source.getZone().getId()).isEqualTo(4075);
 	}
 

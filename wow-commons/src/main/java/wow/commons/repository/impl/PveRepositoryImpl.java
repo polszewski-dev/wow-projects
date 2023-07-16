@@ -3,8 +3,8 @@ package wow.commons.repository.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
+import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 import wow.commons.repository.PveRepository;
@@ -23,7 +23,7 @@ import java.util.*;
 public class PveRepositoryImpl extends ExcelRepository implements PveRepository {
 	private final Map<Integer, List<Zone>> zoneById = new HashMap<>();
 	private final Map<String, List<Zone>> zoneByName = new TreeMap<>();
-	private final Map<Integer, List<Boss>> bossById = new TreeMap<>();
+	private final Map<Integer, List<Npc>> npcById = new TreeMap<>();
 	private final Map<String, List<Faction>> factionByName = new TreeMap<>();
 
 	@Value("${pve.base.xls.file.path}")
@@ -40,8 +40,8 @@ public class PveRepositoryImpl extends ExcelRepository implements PveRepository 
 	}
 
 	@Override
-	public Optional<Boss> getBoss(int bossId, PhaseId phaseId) {
-		return getUnique(bossById, bossId, phaseId);
+	public Optional<Npc> getNpc(int npcId, PhaseId phaseId) {
+		return getUnique(npcById, npcId, phaseId);
 	}
 
 	@Override
@@ -69,22 +69,22 @@ public class PveRepositoryImpl extends ExcelRepository implements PveRepository 
 	public void init() throws IOException {
 		var pveExcelParser = new PveExcelParser(xlsFilePath, this);
 		pveExcelParser.readFromXls();
-
-		zoneById.values().stream()
-				.flatMap(Collection::stream)
-				.filter(Zone::isInstance)
-				.forEach(x -> x.setBosses(new ArrayList<>()));
-
-		bossById.values().stream()
-				.flatMap(Collection::stream)
-				.forEach(this::fixInstance);
+		addNpcsToZones();
 	}
 
-	private void fixInstance(Boss boss) {
-		for (Zone zone : boss.getZones()) {
-			if (zone.isInstance()) {
-				zone.getBosses().add(boss);
-			}
+	private void addNpcsToZones() {
+		zoneById.values().stream()
+				.flatMap(Collection::stream)
+				.forEach(x -> x.setNpcs(new ArrayList<>()));
+
+		npcById.values().stream()
+				.flatMap(Collection::stream)
+				.forEach(this::addNpcToZones);
+	}
+
+	private void addNpcToZones(Npc npc) {
+		for (Zone zone : npc.getZones()) {
+			zone.getNpcs().add(npc);
 		}
 	}
 
@@ -93,8 +93,8 @@ public class PveRepositoryImpl extends ExcelRepository implements PveRepository 
 		addEntry(zoneByName, zone.getName(), zone);
 	}
 
-	public void addBoss(Boss boss) {
-		addEntry(bossById, boss.getId(), boss);
+	public void addNpc(Npc npc) {
+		addEntry(npcById, npc.getId(), npc);
 	}
 
 	public void addFactionByName(Faction faction) {

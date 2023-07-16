@@ -2,8 +2,8 @@ package wow.commons.model.sources;
 
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.pve.Boss;
 import wow.commons.model.pve.Faction;
+import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.Zone;
 
 /**
@@ -19,7 +19,7 @@ public abstract class Source {
 		return null;
 	}
 
-	public Boss getBoss() {
+	public Npc getNpc() {
 		return null;
 	}
 
@@ -37,16 +37,16 @@ public abstract class Source {
 		return false;
 	}
 
-	public boolean isBossDrop() {
+	public boolean isNpcDrop() {
 		return false;
 	}
 
 	public boolean isTrashDrop() {
-		return (isRaidDrop() || isDungeonDrop()) && getBoss() == null;
+		return (isRaidDrop() || isDungeonDrop()) && getNpc() == null;
 	}
 
 	public boolean isWorldBossDrop() {
-		return (!isRaidDrop() && !isDungeonDrop()) && getBoss() != null;
+		return (!isRaidDrop() && !isDungeonDrop()) && getNpc() != null && getNpc().isBoss();
 	}
 
 	public boolean isReputationReward() {

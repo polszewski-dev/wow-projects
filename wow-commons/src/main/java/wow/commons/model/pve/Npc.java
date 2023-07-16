@@ -16,9 +16,11 @@ import java.util.Optional;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
-public class Boss implements TimeRestricted {
+public class Npc implements TimeRestricted {
 	private final int id;
 	private final String name;
+	private final NpcType type;
+	private final boolean boss;
 	private final List<Zone> zones;
 	private final TimeRestriction timeRestriction;
 

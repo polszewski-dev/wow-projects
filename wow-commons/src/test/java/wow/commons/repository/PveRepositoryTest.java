@@ -38,12 +38,12 @@ class PveRepositoryTest extends RepositoryTest {
 		assertThat(zone.getPartySize()).isEqualTo(25);
 		assertThat(zone.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
 
-		List<String> bossNames = zone.getBosses().stream()
-				.map(Boss::getName)
+		List<String> npcNames = zone.getNpcs().stream()
+				.map(Npc::getName)
 				.sorted()
 				.toList();
 
-		List<String> expectedBossNames = List.of(
+		List<String> expectedNpcNames = List.of(
 				"Kalecgos",
 				"Sathrovarr the Corruptor",
 				"Brutallus",
@@ -55,26 +55,26 @@ class PveRepositoryTest extends RepositoryTest {
 				"Kil'jaeden"
 		);
 
-		assertThat(bossNames).hasSameElementsAs(expectedBossNames);
+		assertThat(npcNames).hasSameElementsAs(expectedNpcNames);
 	}
 
 	@Test
-	@DisplayName("Boss is read correctly")
-	void bossIsCorrect() {
-		Optional<Boss> optionalBoss = underTest.getBoss(25840, PhaseId.TBC_P5);
+	@DisplayName("Npc is read correctly")
+	void npcIsCorrect() {
+		Optional<Npc> optionalNpc = underTest.getNpc(25840, PhaseId.TBC_P5);
 
-		assertThat(optionalBoss).isPresent();
+		assertThat(optionalNpc).isPresent();
 
-		Boss boss = optionalBoss.orElseThrow();
+		Npc npc = optionalNpc.orElseThrow();
 
-		assertThat(boss.getId()).isEqualTo(25840);
-		assertThat(boss.getName()).isEqualTo("Entropius");
-		assertThat(boss.getZones()).hasSize(1);
+		assertThat(npc.getId()).isEqualTo(25840);
+		assertThat(npc.getName()).isEqualTo("Entropius");
+		assertThat(npc.getZones()).hasSize(1);
 
-		assertThat(boss.getZones().get(0).getId()).isEqualTo(4075);
-		assertThat(boss.getZones().get(0).getName()).isEqualTo("Sunwell Plateau");
+		assertThat(npc.getZones().get(0).getId()).isEqualTo(4075);
+		assertThat(npc.getZones().get(0).getName()).isEqualTo("Sunwell Plateau");
 
-		assertThat(boss.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
+		assertThat(npc.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
 	}
 
 	@Test
@@ -94,12 +94,12 @@ class PveRepositoryTest extends RepositoryTest {
 	}
 
 	@Test
-	@DisplayName("Bosses and instances have matching required versions")
-	void matchingBossAndInstanceVersions() {
+	@DisplayName("Npcs and instances have matching required versions")
+	void matchingNpcsAndInstanceVersions() {
 		for (GameVersionId gameVersionId : GameVersionId.values()) {
 			for (Zone instance : underTest.getAllInstances(gameVersionId.getLastPhase())) {
-				for (Boss boss : instance.getBosses()) {
-					assertThat(boss.getTimeRestriction().getUniqueVersion()).isEqualTo(instance.getTimeRestriction().getUniqueVersion());
+				for (Npc npc : instance.getNpcs()) {
+					assertThat(npc.getTimeRestriction().getUniqueVersion()).isEqualTo(instance.getTimeRestriction().getUniqueVersion());
 				}
 			}
 		}

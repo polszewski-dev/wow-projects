@@ -5,10 +5,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.pve.Boss;
-import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.PhaseId;
-import wow.commons.model.pve.Zone;
+import wow.commons.model.pve.*;
 import wow.commons.model.sources.*;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
@@ -33,7 +30,7 @@ public class SourceParser {
 	private final Set<Source> result = new LinkedHashSet<>();
 
 	private final Rule[] rules = {
-			Rule.regex("BossDrop:(.*):(\\d+):(\\d+)", this::parseBossDrop),
+			Rule.regex("NpcDrop:(.*):(\\d+):(\\d+)", this::parseNpcDrop),
 			Rule.prefix("ZoneDrop:", this::parseZoneDrop),
 			Rule.prefix("Token:", this::parseToken),
 			Rule.prefix("ItemStartingQuest:", this::parseItemStartingQuest),
@@ -67,7 +64,7 @@ public class SourceParser {
 		throw new IllegalArgumentException("Invalid source: " + value);
 	}
 
-	private void parseBossDrop(ParsedMultipleValues bossDropParams) {
+	private void parseNpcDrop(ParsedMultipleValues bossDropParams) {
 		String bossName = bossDropParams.get(0);//optional
 		int bossId = bossDropParams.getInteger(1);
 		int zoneId = bossDropParams.getInteger(2);//optional
@@ -76,11 +73,11 @@ public class SourceParser {
 			throw new IllegalArgumentException();
 		}
 
-		Boss boss = pveRepository.getBoss(bossId, phaseId).orElseGet(() -> getMissingBoss(bossName, bossId, zoneId));
-		result.add(new BossDrop(boss, boss.getZones().get(0)));
+		Npc npc = pveRepository.getNpc(bossId, phaseId).orElseGet(() -> getMissingBoss(bossName, bossId, zoneId));
+		result.add(new NpcDrop(npc, npc.getZones().get(0)));
 	}
 
-	private Boss getMissingBoss(String bossName, int bossId, int zoneId) {
+	private Npc getMissingBoss(String bossName, int bossId, int zoneId) {
 		if (bossName.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
@@ -88,7 +85,7 @@ public class SourceParser {
 		TimeRestriction timeRestriction = TimeRestriction.builder()
 				.versions(List.of(phaseId.getGameVersionId()))
 				.build();
-		return new Boss(bossId, bossName, zones, timeRestriction);
+		return new Npc(bossId, bossName, NpcType.NORMAL, false, zones, timeRestriction);
 	}
 
 	private void parseZoneDrop(String zoneIdStr) {
