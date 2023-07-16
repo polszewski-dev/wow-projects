@@ -3,27 +3,20 @@ package wow.commons.model.sources;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import wow.commons.model.pve.Zone;
-
-import java.util.List;
 
 /**
  * User: POlszewski
- * Date: 2021-03-13
+ * Date: 2023-06-29
  */
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class ZoneDrop extends Source {
-	private final List<Zone> zones;
-
-	@Override
-	public boolean isZoneDrop() {
-		return true;
-	}
+public class ContainedInItem extends Source {
+	private final int id;
+	private final String name;
 
 	@Override
 	public String toString() {
-		return "Trash: " + getZoneShortNames();
+		return name;
 	}
 }

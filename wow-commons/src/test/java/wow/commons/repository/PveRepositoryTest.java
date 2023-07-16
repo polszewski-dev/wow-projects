@@ -50,6 +50,7 @@ class PveRepositoryTest extends RepositoryTest {
 				"Felmyst",
 				"Grand Warlock Alythess",
 				"Lady Sacrolash",
+				"Eredar Twins",
 				"M'uru",
 				"Entropius",
 				"Kil'jaeden"

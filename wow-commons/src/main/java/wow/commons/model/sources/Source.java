@@ -6,13 +6,22 @@ import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.Zone;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * User: POlszewski
  * Date: 2021-01-21
  */
 public abstract class Source {
-	public Zone getZone() {
-		return null;
+	public List<Zone> getZones() {
+		return List.of();
+	}
+
+	public String getZoneShortNames() {
+		return getZones().stream()
+				.map(Zone::getShortName)
+				.collect(Collectors.joining(", "));
 	}
 
 	public TradedItem getSourceItem() {
@@ -62,7 +71,7 @@ public abstract class Source {
 	}
 
 	public boolean isRaidDrop() {
-		return getZone() != null && getZone().isRaid();
+		return getZones().stream().anyMatch(Zone::isRaid);
 	}
 
 	public boolean isHeroicDrop() {
@@ -70,7 +79,7 @@ public abstract class Source {
 	}
 
 	public boolean isDungeonDrop() {
-		return getZone() != null && getZone().isDungeon();
+		return getZones().stream().anyMatch(Zone::isDungeon);
 	}
 
 	public boolean isZoneDrop() { return false; }

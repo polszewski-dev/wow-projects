@@ -2,10 +2,12 @@ package wow.commons.repository.impl.parsers.items;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.pve.*;
+import wow.commons.model.pve.Faction;
+import wow.commons.model.pve.Npc;
+import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.*;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
@@ -30,7 +32,7 @@ public class SourceParser {
 	private final Set<Source> result = new LinkedHashSet<>();
 
 	private final Rule[] rules = {
-			Rule.regex("NpcDrop:(.*):(\\d+):(\\d+)", this::parseNpcDrop),
+			Rule.regex("NpcDrop:(.*):(\\d+)", this::parseNpcDrop),
 			Rule.prefix("ZoneDrop:", this::parseZoneDrop),
 			Rule.prefix("Token:", this::parseToken),
 			Rule.prefix("ItemStartingQuest:", this::parseItemStartingQuest),
@@ -41,6 +43,8 @@ public class SourceParser {
 			Rule.exact("Badges", this::parseBadges),
 			Rule.exact("PvP", this::parsePvP),
 			Rule.exact("WorldDrop", this::parseWorldDrop),
+			Rule.regex("ContainerObject:(.*):(\\d+):(\\d+)", this::parseContainerObject),
+			Rule.regex("ContainerItem:(.*):(\\d+)", this::parseContainerItem),
 	};
 
 	public Set<Source> parse(String line) {
@@ -64,34 +68,16 @@ public class SourceParser {
 		throw new IllegalArgumentException("Invalid source: " + value);
 	}
 
-	private void parseNpcDrop(ParsedMultipleValues bossDropParams) {
-		String bossName = bossDropParams.get(0);//optional
-		int bossId = bossDropParams.getInteger(1);
-		int zoneId = bossDropParams.getInteger(2);//optional
-
-		if (bossId == 0) {
-			throw new IllegalArgumentException();
-		}
-
-		Npc npc = pveRepository.getNpc(bossId, phaseId).orElseGet(() -> getMissingBoss(bossName, bossId, zoneId));
-		result.add(new NpcDrop(npc, npc.getZones().get(0)));
-	}
-
-	private Npc getMissingBoss(String bossName, int bossId, int zoneId) {
-		if (bossName.isEmpty()) {
-			throw new IllegalArgumentException();
-		}
-		List<Zone> zones = List.of(pveRepository.getZone(zoneId, phaseId).orElseThrow());
-		TimeRestriction timeRestriction = TimeRestriction.builder()
-				.versions(List.of(phaseId.getGameVersionId()))
-				.build();
-		return new Npc(bossId, bossName, NpcType.NORMAL, false, zones, timeRestriction);
+	private void parseNpcDrop(ParsedMultipleValues npcDropParams) {
+		int npcId = npcDropParams.getInteger(1);
+		Npc npc = pveRepository.getNpc(npcId, phaseId).orElseThrow();
+		result.add(new NpcDrop(npc, npc.getZones()));
 	}
 
 	private void parseZoneDrop(String zoneIdStr) {
 		int zoneId = Integer.parseInt(zoneIdStr);
 		Zone zone = pveRepository.getZone(zoneId, phaseId).orElseThrow();
-		result.add(new ZoneDrop(zone));
+		result.add(new ZoneDrop(List.of(zone)));
 	}
 
 	private void parseToken(String tokenIdStr) {
@@ -145,6 +131,18 @@ public class SourceParser {
 
 	private void parseWorldDrop() {
 		result.add(new WorldDrop());
+	}
+
+	private void parseContainerObject(ParsedMultipleValues params) {
+		String containerName = params.get(0);
+		int containerId = params.getInteger(1);
+		int zoneId = params.getInteger(2);
+		Zone zone = pveRepository.getZone(zoneId, phaseId).orElseThrow();
+		result.add(new ContainedInObject(containerId, containerName, List.of(zone)));
+	}
+
+	private void parseContainerItem(ParsedMultipleValues params) {
+		result.add(new ContainedInItem(params.getInteger(1), params.get(0)));
 	}
 
 	private static void assertNotNull(Object value, String error) {

@@ -1,15 +1,18 @@
 package wow.scraper.parsers;
 
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.model.JsonItemDetails;
-import wow.scraper.model.JsonSourceMore;
-import wow.scraper.model.WowheadProfession;
-import wow.scraper.model.WowheadSource;
+import wow.scraper.config.ScraperContext;
+import wow.scraper.model.*;
 
 import java.util.*;
 import java.util.function.IntFunction;
+
+import static wow.scraper.util.CommonAssertions.assertBothAreEqual;
 
 /**
  * User: POlszewski
@@ -22,14 +25,16 @@ public class WowheadSourceParser {
 	public static final String SOURCE_BADGES = "Badges";
 	public static final String SOURCE_PVP = "PvP";
 
-	private static final SourceOverrides SOURCE_OVERRIDES = new SourceOverrides();
+	private static final Map<GameVersionId, SourceOverrides> SOURCE_OVERRIDES_MAP = new EnumMap<>(GameVersionId.class);
+	private static ScraperContext scraperContext;
 
 	private final JsonItemDetails itemDetails;
 	private final List<WowheadSource> sources;
 	private final List<JsonSourceMore> sourceMores;
 	private final String requiredFactionName;
+	private final GameVersionId gameVersion;
 
-	public WowheadSourceParser(JsonItemDetails itemDetails, String requiredFactionName) {
+	public WowheadSourceParser(JsonItemDetails itemDetails, String requiredFactionName, GameVersionId gameVersion) {
 		this.itemDetails = itemDetails;
 		this.sources = itemDetails.getSources()
 				.stream()
@@ -37,17 +42,26 @@ public class WowheadSourceParser {
 				.toList();
 		this.sourceMores = itemDetails.getSourceMores();
 		this.requiredFactionName = requiredFactionName;
+		this.gameVersion = gameVersion;
 	}
 
-	public static void configure(ScraperConfig scraperConfig) {
-		SOURCE_OVERRIDES.addSourceOverrides(scraperConfig);
+	public static void configure(ScraperContext scraperContext) {
+		WowheadSourceParser.scraperContext = scraperContext;
+
+		for (GameVersionId gameVersion : scraperContext.getScraperConfig().getGameVersions()) {
+			SOURCE_OVERRIDES_MAP
+					.computeIfAbsent(gameVersion, x -> new SourceOverrides(gameVersion))
+					.addSourceOverrides(scraperContext.getScraperConfig());
+		}
 	}
 
 	public List<String> getSource() {
-		Set<String> overrides = SOURCE_OVERRIDES.getSources(itemDetails.getId(), itemDetails.getName());
+		var overrides = SOURCE_OVERRIDES_MAP
+				.get(gameVersion)
+				.getSources(itemDetails.getId(), itemDetails.getName());
 
 		if (overrides != null) {
-			return new ArrayList<>(overrides);
+			return List.copyOf(overrides);
 		}
 
 		if (requiredFactionName != null) {
@@ -76,7 +90,12 @@ public class WowheadSourceParser {
 		JsonSourceMore sourceMore = assertSingleSourceMore();
 
 		if (sourceMore.getN() != null) {
-			return sourceNpcDrop(sourceMore.getN(), sourceMore.getTi(), sourceMore.getZ());
+			return switch (sourceMore.getT()) {
+				case 1 -> sourceNpcDrop(sourceMore.getN(), sourceMore.getTi(), sourceMore.getZ(), gameVersion);
+				case 2 -> sourceContainerObject(sourceMore.getN(), sourceMore.getTi(), sourceMore.getZ(), gameVersion);
+				case 3 -> sourceContainerItem(sourceMore.getN(), sourceMore.getTi());
+				default -> throw new IllegalArgumentException("Unknown type: %s".formatted(sourceMore.getN()));
+			};
 		}
 
 		return sourceZoneDrop(sourceMore.getZ());
@@ -119,8 +138,43 @@ public class WowheadSourceParser {
 		return sourceCrafted(ProfessionId.FISHING);
 	}
 
-	private static String sourceNpcDrop(String npcName, Integer npcId, Integer zoneId) {
-		return "NpcDrop:%s:%s:%s".formatted(npcName != null ? npcName : "", npcId != null ? npcId : 0, zoneId != null ? zoneId : 0);
+	@SneakyThrows
+	private static String sourceNpcDrop(String npcName, Integer npcId, Integer zoneId, GameVersionId gameVersion) {
+		Integer newNpcId = scraperContext.getScraperConfig().getSourceNpcToNpcReplacements().get(npcId);
+
+		if (newNpcId != null) {
+			return sourceNpcDrop(null, newNpcId, null, gameVersion);
+		}
+
+		var optionalNpc = scraperContext.getNpcDetailRepository().getById(gameVersion, npcId);
+
+		if (optionalNpc.isEmpty()) {
+			return "NONE";
+		}
+
+		JsonNpcDetails npc = optionalNpc.orElseThrow();
+
+		if (npcName == null) {
+			npcName = npc.getName();
+		} else {
+			assertBothAreEqual("npc.name", npcName, npc.getName());
+		}
+
+		return "NpcDrop:%s:%s".formatted(npcName, npcId);
+	}
+
+	private String sourceContainerObject(String containerName, Integer containerId, Integer zoneId, GameVersionId gameVersion) {
+		Integer newNpcId = scraperContext.getScraperConfig().getSourceObjectToNpcReplacements().get(containerId);
+
+		if (newNpcId != null) {
+			return sourceNpcDrop(null, newNpcId, null, gameVersion);
+		}
+
+		return "ContainerObject:%s:%s:%s".formatted(containerName, containerId, zoneId);
+	}
+
+	private static String sourceContainerItem(String containerName, Integer containerId) {
+		return "ContainerItem:%s:%s".formatted(containerName, containerId);
 	}
 
 	private static String sourceZoneDrop(Integer zoneId) {
@@ -170,10 +224,13 @@ public class WowheadSourceParser {
 		}
 	}
 
+	@RequiredArgsConstructor
 	private static class SourceOverrides {
 		private final List<String> pvpItemNameParts = new ArrayList<>();
 		private final Set<Integer> pvpItemIds = new HashSet<>();
 		private final Map<Integer, Set<String>> itemIdToSources = new HashMap<>();
+
+		private final GameVersionId gameVersion;
 
 		public Set<String> getSources(int itemId, String itemName) {
 			if (pvpItemIds.contains(itemId) || isPvPItemName(itemName)) {
@@ -210,18 +267,18 @@ public class WowheadSourceParser {
 		}
 
 		private void addNpcDropOverrides(Map<Integer, List<Integer>> tokenIdToNpcId) {
-			for (Map.Entry<Integer, List<Integer>> entry : tokenIdToNpcId.entrySet()) {
+			for (var entry : tokenIdToNpcId.entrySet()) {
 				Integer tokenId = entry.getKey();
 				List<Integer> npcIds = entry.getValue();
 
 				for (Integer npcId : npcIds) {
-					getSourceList(tokenId).add(sourceNpcDrop(null, npcId, null));
+					getSourceList(tokenId).add(sourceNpcDrop(null, npcId, null, gameVersion));
 				}
 			}
 		}
 
 		private void addTradedForOverrides(Map<Integer, List<Integer>> tokenIdToItemId, IntFunction<String> sourceCreator) {
-			for (Map.Entry<Integer, List<Integer>> entry : tokenIdToItemId.entrySet()) {
+			for (var entry : tokenIdToItemId.entrySet()) {
 				Integer tokenId = entry.getKey();
 				List<Integer> itemIds = entry.getValue();
 

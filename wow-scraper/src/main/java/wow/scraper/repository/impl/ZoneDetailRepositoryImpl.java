@@ -11,6 +11,7 @@ import wow.scraper.repository.ZoneDetailRepository;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -34,5 +35,10 @@ public class ZoneDetailRepositoryImpl implements ZoneDetailRepository {
 		return zoneImporter.getList(gameVersion).stream()
 				.filter(x -> zoneTypes.contains(WowheadZoneType.fromCode(x.getInstance())))
 				.toList();
+	}
+
+	@Override
+	public Optional<JsonZoneDetails> getById(GameVersionId gameVersion, int id) throws IOException {
+		return zoneImporter.getById(gameVersion, id);
 	}
 }

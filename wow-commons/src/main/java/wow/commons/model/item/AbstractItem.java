@@ -9,6 +9,7 @@ import wow.commons.model.pve.Zone;
 import wow.commons.model.sources.Source;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -59,11 +60,11 @@ public interface AbstractItem extends ConfigurationElementWithAttributes<Integer
 	}
 
 	default boolean isSourcedFromInstance(String instanceName) {
-		return anySource(source -> source.getZone() != null && source.getZone().getName().equalsIgnoreCase(instanceName));
+		return anySource(source -> source.getZones().stream().anyMatch(x -> x.getName().equalsIgnoreCase(instanceName)));
 	}
 
 	default boolean isSourcedFromAnyInstance(String... instanceNames) {
-		return anySource(source -> source.getZone() != null && Arrays.asList(instanceNames).contains(source.getZone().getName()));
+		return Arrays.stream(instanceNames).anyMatch(this::isSourcedFromInstance);
 	}
 
 	default boolean isPurchasedFromBadgeVendor() {
@@ -101,7 +102,8 @@ public interface AbstractItem extends ConfigurationElementWithAttributes<Integer
 	default Set<Zone> getRaidSources() {
 		return getSourcesAfterTradingTokens()
 				.filter(Source::isRaidDrop)
-				.map(Source::getZone)
+				.map(Source::getZones)
+				.flatMap(Collection::stream)
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 

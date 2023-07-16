@@ -5,7 +5,6 @@ import wow.scraper.exporters.pve.FactionExporter;
 import wow.scraper.exporters.pve.NpcExporter;
 import wow.scraper.exporters.pve.ZoneExporter;
 import wow.scraper.exporters.pve.excel.PveBaseExcelBuilder;
-import wow.scraper.parsers.WowheadSourceParser;
 
 import java.io.IOException;
 
@@ -21,8 +20,6 @@ public class PveBaseGeneratorMain extends ScraperTool {
 
 	@Override
 	protected void run() throws IOException {
-		WowheadSourceParser.configure(getScraperConfig());
-
 		PveBaseExcelBuilder builder = new PveBaseExcelBuilder(getScraperConfig());
 		builder.start();
 

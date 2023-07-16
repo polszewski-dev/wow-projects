@@ -36,7 +36,7 @@ public class SourceConverter {
 
 	private String getDetailedSourceString(Source source, AbstractItem item) {
 		if (source.isNpcDrop()) {
-			return String.format("%s - %s", source.getZone().getShortName(), source.getNpc().getName());
+			return String.format("%s - %s", source.getZoneShortNames(), source.getNpc().getName());
 		}
 		if (source.isTraded()) {
 			return getDetailedSources(source.getSourceItem());
@@ -45,8 +45,8 @@ public class SourceConverter {
 	}
 
 	private String getSourceString(Source source, AbstractItem item) {
-		if (source.getZone() != null) {
-			return source.getZone().getShortName();
+		if (!source.getZones().isEmpty()) {
+			return source.getZoneShortNames();
 		}
 		if (source.isBadgeVendor()) {
 			return "BoJ";

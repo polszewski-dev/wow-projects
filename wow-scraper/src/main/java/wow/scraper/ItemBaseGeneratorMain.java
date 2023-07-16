@@ -23,7 +23,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 
 	@Override
 	protected void run() throws IOException {
-		WowheadSourceParser.configure(getScraperConfig());
+		WowheadSourceParser.configure(getScraperContext());
 
 		ItemBaseExcelBuilder builder = new ItemBaseExcelBuilder(getScraperConfig());
 		builder.start();

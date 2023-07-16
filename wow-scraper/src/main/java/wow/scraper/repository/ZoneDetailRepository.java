@@ -6,6 +6,7 @@ import wow.scraper.model.WowheadZoneType;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -15,4 +16,6 @@ public interface ZoneDetailRepository {
 	List<JsonZoneDetails> getAll(GameVersionId gameVersion) throws IOException;
 
 	List<JsonZoneDetails> getAll(GameVersionId gameVersion, List<WowheadZoneType> zoneTypes) throws IOException;
+
+	Optional<JsonZoneDetails> getById(GameVersionId gameVersion, int id) throws IOException;
 }

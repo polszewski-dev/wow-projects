@@ -29,18 +29,11 @@ public class NpcExporter extends PveBaseExporter<JsonNpcDetails> {
 
 	@Override
 	protected void fixData(List<JsonNpcDetails> npcs) {
-		npcs.forEach(this::fixLocation);
+		npcs.removeIf(x -> getScraperConfig().getIgnoredNpcIds().contains(x.getId()));
 	}
 
 	@Override
 	protected Comparator<JsonNpcDetails> getComparator() {
 		return Comparator.comparing(JsonNpcDetails::getName);
-	}
-
-	private void fixLocation(JsonNpcDetails npc) {
-		npc.getLocation().remove(Integer.valueOf(1417));
-		if (List.of(14887, 14888, 14889, 14890).contains(npc.getId())) {
-			npc.setLocation(List.of(10, 47, 331, 357));
-		}
 	}
 }

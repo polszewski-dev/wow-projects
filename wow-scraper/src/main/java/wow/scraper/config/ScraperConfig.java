@@ -14,6 +14,7 @@ import wow.scraper.fetchers.PageFetcher;
 import wow.scraper.fetchers.impl.CachedPageFetcher;
 import wow.scraper.fetchers.impl.WebPageFetcher;
 import wow.scraper.model.WowheadItemQuality;
+import wow.scraper.model.WowheadZoneType;
 
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,15 @@ public class ScraperConfig {
 	@Value("#{'${npc.ids.to.fetch}'.split(',')}")
 	private Set<Integer> npcIdsToFetch;
 
+	@Value("#{${npc.to.create}}")
+	private Map<Integer, String> npcToCreate;
+
+	@Value("#{${zone.type.overrides}}")
+	private Map<Integer, WowheadZoneType> zoneTypeOverrides;
+
+	@Value("#{${npc.location.overrides}}")
+	private Map<Integer, List<Integer>> npcLocationOverrides;
+
 	@Value("#{${dungeon.short.names}}")
 	private Map<String, String> dungeonShortNames;
 
@@ -63,6 +73,12 @@ public class ScraperConfig {
 
 	@Value("#{${pvp.item.ids}}")
 	private Set<Integer> pvpItemIds;
+
+	@Value("#{${source.npc.to.npc.replacement}}")
+	private Map<Integer, Integer> sourceNpcToNpcReplacements;
+
+	@Value("#{${source.object.to.npc.replacement}}")
+	private Map<Integer, Integer> sourceObjectToNpcReplacements;
 
 	@Value("#{'${world.drop.overrides}'.split(',')}")
 	private List<Integer> worldDropOverrides;

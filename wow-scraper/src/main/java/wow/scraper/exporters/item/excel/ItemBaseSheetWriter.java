@@ -156,7 +156,7 @@ public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, ItemBas
 	}
 
 	protected String parseSource(AbstractItemTooltipParser parser) {
-		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getDetails(), parser.getRequiredFactionName());
+		WowheadSourceParser sourceParser = new WowheadSourceParser(parser.getDetails(), parser.getRequiredFactionName(), parser.getGameVersion());
 		List<String> sources = sourceParser.getSource();
 		return String.join("#", sources);
 	}

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static wow.scraper.importers.parsers.ZoneNpcListParser.ParseResultType.NPC;
+import static wow.scraper.importers.parsers.ZoneNpcListParser.ParseResultType.OBJECT;
+
 /**
  * User: POlszewski
  * Date: 2023-06-25
@@ -14,9 +17,18 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class ZoneNpcListParser {
 	private final String html;
-	private final List<Integer> result = new ArrayList<>();
+	private final List<ParseResult> result = new ArrayList<>();
 
-	public List<Integer> parse() {
+	public enum ParseResultType {
+		NPC, OBJECT
+	}
+
+	public record ParseResult(
+			ParseResultType type,
+			int id
+	) {}
+
+	public List<ParseResult> parse() {
 		Pattern pattern = Pattern.compile("\\[minibox](.*?)\\[\\\\/minibox]");
 		Matcher matcher = pattern.matcher(html);
 
@@ -28,11 +40,21 @@ public class ZoneNpcListParser {
 	}
 
 	private void parseNpcIds(String group) {
-		Pattern pattern = Pattern.compile("\\[(url=\\?|url=\\\\/\\?|)npc=(\\d+)]");
+		Pattern pattern = Pattern.compile("\\[(url=\\?|url=\\\\/\\?|)(npc|object)=(\\d+)]");
 		Matcher matcher = pattern.matcher(group);
 
 		while (matcher.find()) {
-			result.add(Integer.valueOf(matcher.group(2)));
+			ParseResultType type = getType(matcher.group(2));
+			int id = Integer.parseInt(matcher.group(3));
+			result.add(new ParseResult(type, id));
 		}
+	}
+
+	private ParseResultType getType(String value) {
+		return switch (value) {
+			case "npc" -> NPC;
+			case "object" -> OBJECT;
+			default -> throw new IllegalArgumentException(value);
+		};
 	}
 }

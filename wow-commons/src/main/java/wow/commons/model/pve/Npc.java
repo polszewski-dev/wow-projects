@@ -7,7 +7,6 @@ import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.config.TimeRestriction;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -23,12 +22,6 @@ public class Npc implements TimeRestricted {
 	private final boolean boss;
 	private final List<Zone> zones;
 	private final TimeRestriction timeRestriction;
-
-	public Optional<Zone> getZone(int zoneId) {
-		return zones.stream()
-				.filter(x -> x.getId() == zoneId)
-				.findFirst();
-	}
 
 	@Override
 	public String toString() {
