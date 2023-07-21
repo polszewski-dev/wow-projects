@@ -1,22 +1,17 @@
 package wow.commons.model.config;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
 import wow.commons.model.professions.ProfessionId;
+
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2022-12-07
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
-public class ProfessionRestriction {
-	@NonNull
-	private final ProfessionId professionId;
-	private final int level;
+public record ProfessionRestriction(ProfessionId professionId, int level) {
+	public ProfessionRestriction {
+		Objects.requireNonNull(professionId);
+	}
 
 	public static ProfessionRestriction of(ProfessionId professionId, Integer level) {
 		if (professionId == null && level == null) {

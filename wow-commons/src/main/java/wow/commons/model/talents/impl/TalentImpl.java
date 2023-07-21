@@ -3,7 +3,6 @@ package wow.commons.model.talents.impl;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
-import wow.commons.model.attributes.complex.special.sources.TalentSource;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -12,6 +11,7 @@ import wow.commons.model.config.impl.ConfigurationElementWithAttributesImpl;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentIdAndRank;
 import wow.commons.model.talents.TalentInfo;
+import wow.commons.model.talents.TalentSource;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.CollectionUtil;
 
@@ -37,7 +37,7 @@ public class TalentImpl extends ConfigurationElementWithAttributesImpl<TalentIdA
 
 	@Override
 	public CharacterClassId getCharacterClass() {
-		return CollectionUtil.getUniqueResult(getCharacterRestriction().getCharacterClassIds()).orElseThrow();
+		return CollectionUtil.getUniqueResult(getCharacterRestriction().characterClassIds()).orElseThrow();
 	}
 
 	@Override

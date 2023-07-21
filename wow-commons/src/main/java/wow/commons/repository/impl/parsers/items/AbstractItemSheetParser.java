@@ -47,7 +47,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		var unique = colUnique.getBoolean();
 		var itemLevel = colItemLevel.getInteger();
 		var source = colSource.getString();
-		var reqPhase = getTimeRestriction().getPhaseId();
+		var reqPhase = getTimeRestriction().phaseId();
 		var sources = new SourceParser(reqPhase, pveRepository, itemRepository).parse(source);
 
 		return new BasicItemInfo(itemType, itemSubType, rarity, binding, unique, itemLevel, sources);

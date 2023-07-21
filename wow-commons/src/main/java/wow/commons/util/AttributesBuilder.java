@@ -55,7 +55,7 @@ public class AttributesBuilder {
 	public AttributesBuilder addAttribute(ComplexAttribute attribute) {
 		if (attribute != null) {
 			getOrCreateComplexAttributeMap()
-					.computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
+					.computeIfAbsent(attribute.id(), x -> new ArrayList<>())
 					.add(attribute);
 		}
 		return this;

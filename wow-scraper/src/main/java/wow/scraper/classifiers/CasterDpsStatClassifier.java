@@ -38,12 +38,12 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 
 	private boolean hasComplexStatsSuitableForCasterDps(AttributeSource attributeSource) {
 		return attributeSource.getSpecialAbilities().stream()
-				.map(SpecialAbility::getAttributes)
+				.map(SpecialAbility::attributes)
 				.anyMatch(this::hasPrimitiveStatsSuitableForCasterDps);
 	}
 
 	private boolean isCasterStat(PrimitiveAttribute attribute) {
-		PrimitiveAttributeId id = attribute.getId();
+		PrimitiveAttributeId id = attribute.id();
 		return id.getPowerType().isSpellDamage() && CASTER_STATS.contains(id.getType());
 	}
 

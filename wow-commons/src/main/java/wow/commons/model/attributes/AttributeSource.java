@@ -47,7 +47,7 @@ public interface AttributeSource {
 	default double getDouble(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		double result = 0;
 		for (PrimitiveAttribute attribute : getPrimitiveAttributes()) {
-			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
+			if (attribute.id() == attributeId && attribute.condition().equals(condition)) {
 				result += attribute.getDouble();
 			}
 		}
@@ -65,7 +65,7 @@ public interface AttributeSource {
 	default Percent getPercent(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		Percent result = Percent.ZERO;
 		for (PrimitiveAttribute attribute : getPrimitiveAttributes()) {
-			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
+			if (attribute.id() == attributeId && attribute.condition().equals(condition)) {
 				result = result.add(attribute.getPercent());
 			}
 		}
@@ -83,7 +83,7 @@ public interface AttributeSource {
 	default Duration getDuration(PrimitiveAttributeId attributeId, AttributeCondition condition) {
 		Duration result = Duration.ZERO;
 		for (PrimitiveAttribute attribute : getPrimitiveAttributes()) {
-			if (attribute.getId() == attributeId && attribute.getCondition().equals(condition)) {
+			if (attribute.id() == attributeId && attribute.condition().equals(condition)) {
 				result = result.add(attribute.getDuration());
 			}
 		}

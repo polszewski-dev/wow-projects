@@ -100,8 +100,8 @@ public class AttributeEvaluator implements AttributeCollector {
 			return;
 		}
 
-		AttributeCondition condition = attribute.getCondition();
-		PrimitiveAttributeId id = attribute.getId();
+		AttributeCondition condition = attribute.condition();
+		PrimitiveAttributeId id = attribute.id();
 
 		var key = getTranscientKey(id, condition);
 
@@ -122,7 +122,7 @@ public class AttributeEvaluator implements AttributeCollector {
 			return this;
 		}
 
-		complexAttributes.computeIfAbsent(attribute.getId(), x -> new ArrayList<>())
+		complexAttributes.computeIfAbsent(attribute.id(), x -> new ArrayList<>())
 				.add(attribute);
 
 		return this;
@@ -140,8 +140,8 @@ public class AttributeEvaluator implements AttributeCollector {
 			int numPieces = entry.getValue().size();
 
 			for (ItemSetBonus itemSetBonus : itemSet.getItemSetBonuses()) {
-				if (numPieces >= itemSetBonus.getNumPieces()) {
-					addAttributes(itemSetBonus.getBonusStats());
+				if (numPieces >= itemSetBonus.numPieces()) {
+					addAttributes(itemSetBonus.bonusStats());
 				}
 			}
 		}

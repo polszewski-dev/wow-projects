@@ -181,32 +181,32 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 		ensureWeaponStats();
 		String damageType;
 		if (weaponDamageParams.size() == 3) {
-			weaponStats.setWeaponDamageMin(weaponDamageParams.getInteger(0));
-			weaponStats.setWeaponDamageMax(weaponDamageParams.getInteger(1));
+			weaponStats = weaponStats.weaponDamageMin(weaponDamageParams.getInteger(0));
+			weaponStats = weaponStats.weaponDamageMax(weaponDamageParams.getInteger(1));
 			damageType = weaponDamageParams.get(2);
 		} else {
-			weaponStats.setWeaponDamageMin(weaponDamageParams.getInteger(0));
-			weaponStats.setWeaponDamageMax(weaponDamageParams.getInteger(0));
+			weaponStats = weaponStats.weaponDamageMin(weaponDamageParams.getInteger(0));
+			weaponStats = weaponStats.weaponDamageMax(weaponDamageParams.getInteger(0));
 			damageType = weaponDamageParams.get(1);
 		}
 		if (damageType != null) {
-			weaponStats.setDamageType(SpellSchool.parse(damageType));
+			weaponStats = weaponStats.damageType(SpellSchool.parse(damageType));
 		}
 	}
 
 	private void parseWeaponDps(ParsedMultipleValues weaponDpsParams) {
 		ensureWeaponStats();
-		weaponStats.setWeaponDps(Double.parseDouble(weaponDpsParams.get(0)));
+		weaponStats = weaponStats.weaponDps(Double.parseDouble(weaponDpsParams.get(0)));
 	}
 
 	private void parseWeaponSpeedParams(ParsedMultipleValues weaponSpeedParams) {
 		ensureWeaponStats();
-		weaponStats.setWeaponSpeed(Double.parseDouble(weaponSpeedParams.get(0)));
+		weaponStats = weaponStats.weaponSpeed(Double.parseDouble(weaponSpeedParams.get(0)));
 	}
 
 	private void ensureWeaponStats() {
 		if (weaponStats == null) {
-			this.weaponStats = new WeaponStats();
+			this.weaponStats = new WeaponStats(0, 0, null, 0, 0);
 		}
 	}
 }

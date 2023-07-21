@@ -65,7 +65,7 @@ public abstract class ExcelCellWriter {
 
 	protected void setValue(Percent value) {
 		if (value != null) {
-			writer.setCell(value.getValue(), DATA_STYLE);
+			writer.setCell(value.value(), DATA_STYLE);
 		} else {
 			writer.setCell(null, DATA_STYLE);
 		}

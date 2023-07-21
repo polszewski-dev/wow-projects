@@ -13,92 +13,88 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2021-01-21
  */
-public abstract class Source {
-	public List<Zone> getZones() {
+public sealed interface Source
+		permits BadgeVendor, ContainedInItem, ContainedInObject, Crafted, NpcDrop, PvP, QuestReward, ReputationReward, Traded, WorldDrop, ZoneDrop {
+
+	default List<Zone> zones() {
 		return List.of();
 	}
 
-	public String getZoneShortNames() {
-		return getZones().stream()
+	default String zoneShortNames() {
+		return zones().stream()
 				.map(Zone::getShortName)
 				.collect(Collectors.joining(", "));
 	}
 
-	public TradedItem getSourceItem() {
+	default TradedItem sourceItem() {
 		return null;
 	}
 
-	public Npc getNpc() {
+	default Npc npc() {
 		return null;
 	}
 
-	public Faction getFaction() {
+	default Faction faction() {
 		return null;
 	}
 
-	public String getQuestName() {
+	default String questName() {
 		return null;
 	}
 
-	public ProfessionId getProfessionId() { return null; }
+	default ProfessionId professionId() { return null; }
 
-	public boolean isTraded() {
+	default boolean isTraded() {
 		return false;
 	}
 
-	public boolean isNpcDrop() {
+	default boolean isNpcDrop() {
 		return false;
 	}
 
-	public boolean isTrashDrop() {
-		return (isRaidDrop() || isDungeonDrop()) && getNpc() == null;
+	default boolean isTrashDrop() {
+		return (isRaidDrop() || isDungeonDrop()) && npc() == null;
 	}
 
-	public boolean isWorldBossDrop() {
-		return (!isRaidDrop() && !isDungeonDrop()) && getNpc() != null && getNpc().isBoss();
+	default boolean isWorldBossDrop() {
+		return (!isRaidDrop() && !isDungeonDrop()) && npc() != null && npc().isBoss();
 	}
 
-	public boolean isReputationReward() {
+	default boolean isReputationReward() {
 		return false;
 	}
 
-	public boolean isCrafted() {
+	default boolean isCrafted() {
 		return false;
 	}
 
-	public boolean isQuestReward() {
+	default boolean isQuestReward() {
 		return false;
 	}
 
-	public boolean isRaidDrop() {
-		return getZones().stream().anyMatch(Zone::isRaid);
+	default boolean isRaidDrop() {
+		return zones().stream().anyMatch(Zone::isRaid);
 	}
 
-	public boolean isHeroicDrop() {
+	default boolean isHeroicDrop() {
 		return false;
 	}
 
-	public boolean isDungeonDrop() {
-		return getZones().stream().anyMatch(Zone::isDungeon);
+	default boolean isDungeonDrop() {
+		return zones().stream().anyMatch(Zone::isDungeon);
 	}
 
-	public boolean isZoneDrop() { return false; }
+	default boolean isZoneDrop() { return false; }
 
-	public boolean isWorldDrop() {
+	default boolean isWorldDrop() {
 		return false;
 	}
 
-	public boolean isBadgeVendor() {
+	default boolean isBadgeVendor() {
 		return false;
 	}
 
-	public boolean isPvP() {
+	default boolean isPvP() {
 		return false;
 	}
-
-	public abstract boolean equals(Object o);
-
-	public abstract int hashCode();
-
-	public abstract String toString();
 }

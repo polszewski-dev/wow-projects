@@ -1,24 +1,20 @@
 package wow.commons.model.attributes.condition;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.util.EnumUtil;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2022-11-11
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode
-public class TalentTreeCondition implements AttributeCondition {
-	@NonNull
-	private final TalentTree talentTree;
+public record TalentTreeCondition(TalentTree talentTree) implements AttributeCondition {
+	public TalentTreeCondition {
+		Objects.requireNonNull(talentTree);
+	}
 
 	public static TalentTreeCondition of(TalentTree talentTree) {
 		return CACHE.get(talentTree);

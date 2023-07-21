@@ -58,7 +58,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 			return "";
 		}
 
-		String socketString = item.getSocketSpecification().getSocketTypes()
+		String socketString = item.getSocketSpecification().socketTypes()
 				.stream()
 				.map(x -> "[" + x.name().charAt(0) + "]")
 				.collect(Collectors.joining());

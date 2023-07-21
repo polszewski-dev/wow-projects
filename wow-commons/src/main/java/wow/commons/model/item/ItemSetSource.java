@@ -1,12 +1,7 @@
-package wow.commons.model.attributes.complex.special.sources;
+package wow.commons.model.item;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.model.config.Description;
-import wow.commons.model.item.Item;
-import wow.commons.model.item.ItemSet;
 
 import java.util.Comparator;
 
@@ -14,18 +9,12 @@ import java.util.Comparator;
  * User: POlszewski
  * Date: 2023-03-27
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
-public class ItemSetSource implements SpecialAbilitySource, Comparable<ItemSetSource> {
-	private final ItemSet itemSet;
-	private final int numPieces;
-
+public record ItemSetSource(ItemSet itemSet, int numPieces) implements SpecialAbilitySource, Comparable<ItemSetSource> {
 	@Override
 	public Description getDescription() {
 		return new Description(
-				String.format("%s (%s)", itemSet.getName(), numPieces),
-				getFirstItem().getDescription().getIcon(),
+				"%s (%s)".formatted(itemSet.getName(), numPieces),
+				getFirstItem().getDescription().icon(),
 				null
 		);
 	}

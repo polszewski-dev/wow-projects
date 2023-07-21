@@ -1,19 +1,16 @@
 package wow.commons.model.spells;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
 import wow.commons.model.Duration;
+
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2022-11-25
  */
-@AllArgsConstructor
-@Getter
-public class AppliedEffect {
-	@NonNull
-	private final EffectId effectId;
-	@NonNull
-	private final Duration duration;
+public record AppliedEffect(EffectId effectId, Duration duration) {
+	public AppliedEffect {
+		Objects.requireNonNull(effectId);
+		Objects.requireNonNull(duration);
+	}
 }

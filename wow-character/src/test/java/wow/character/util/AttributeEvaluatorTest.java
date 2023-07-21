@@ -61,6 +61,6 @@ class AttributeEvaluatorTest extends WowCharacterSpringTest {
 		assertThat(attributes.getSpellHitRating()).isEqualTo(164);
 		assertThat(attributes.getSpellCritRating()).isEqualTo(317);
 		assertThat(attributes.getSpellHasteRating()).isEqualTo(426);
-		assertThat(attributes.getCritDamagePct().getValue()).isEqualTo(3);
+		assertThat(attributes.getCritDamagePct().value()).isEqualTo(3);
 	}
 }

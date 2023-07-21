@@ -1,21 +1,15 @@
 package wow.commons.model.talents;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2022-11-25
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
-public class TalentIdAndRank {
-	@NonNull
-	private final TalentId talentId;
-	private final int rank;
+public record TalentIdAndRank(TalentId talentId, int rank) {
+	public TalentIdAndRank {
+		Objects.requireNonNull(talentId);
+	}
 
 	@Override
 	public String toString() {

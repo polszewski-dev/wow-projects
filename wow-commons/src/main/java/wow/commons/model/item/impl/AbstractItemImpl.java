@@ -2,7 +2,6 @@ package wow.commons.model.item.impl;
 
 import lombok.Getter;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
-import wow.commons.model.attributes.complex.special.sources.ItemSource;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -10,6 +9,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.config.impl.ConfigurationElementWithAttributesImpl;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.BasicItemInfo;
+import wow.commons.model.item.ItemSource;
 
 import java.util.Set;
 

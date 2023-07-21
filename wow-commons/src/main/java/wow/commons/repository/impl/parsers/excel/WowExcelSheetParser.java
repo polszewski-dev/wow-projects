@@ -114,10 +114,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var versions = colReqVersion.getList(GameVersionId::parse);
 		var phase = colReqPhase.getEnum(PhaseId::parse, null);
 
-		return TimeRestriction.builder()
-				.versions(versions)
-				.phaseId(phase)
-				.build();
+		return new TimeRestriction(versions, phase);
 	}
 
 	private final ExcelColumn colReqLevel = column(REQ_LEVEL, true);
@@ -145,18 +142,18 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var spellId = colReqSpell.getEnum(SpellId::parse, null);
 		var talentId = colReqTalent.getEnum(TalentId::parse, null);
 
-		return CharacterRestriction.builder()
-				.level(level)
-				.characterClassIds(characterClasses)
-				.raceIds(races)
-				.side(side)
-				.professionRestriction(ProfessionRestriction.of(profession, professionLevel))
-				.professionSpecId(professionSpec)
-				.exclusiveFaction(exclusiveFaction)
-				.activePet(activePet)
-				.spellId(spellId)
-				.talentId(talentId)
-				.build();
+		return new CharacterRestriction(
+				level,
+				characterClasses,
+				races,
+				side,
+				ProfessionRestriction.of(profession, professionLevel),
+				professionSpec,
+				exclusiveFaction,
+				activePet,
+				spellId,
+				talentId
+		);
 	}
 
 	private static final int MAX_ATTRIBUTES = 20;

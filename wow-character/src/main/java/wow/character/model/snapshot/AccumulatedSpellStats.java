@@ -66,7 +66,7 @@ public class AccumulatedSpellStats {
 		stamina += baseStatInfo.getBaseStamina();
 		intellect += baseStatInfo.getBaseIntellect();
 		spirit += baseStatInfo.getBaseSpirit();
-		critPct += baseStatInfo.getBaseSpellCritPct().getValue();
+		critPct += baseStatInfo.getBaseSpellCritPct().value();
 	}
 
 	public void accumulatePrimitiveAttributes() {
@@ -77,17 +77,17 @@ public class AccumulatedSpellStats {
 	public void accumulatePrimitiveAttributes(List<PrimitiveAttribute> attributes) {
 		for (PrimitiveAttribute attribute : attributes) {
 			if (isRelevant(attribute)) {
-				accumulateAttribute(attribute.getId(), attribute.getDouble());
+				accumulateAttribute(attribute.id(), attribute.getDouble());
 			}
 		}
 	}
 
 	private boolean isRelevant(PrimitiveAttribute attribute) {
-		if (!conditions.contains(attribute.getCondition())) {
+		if (!conditions.contains(attribute.condition())) {
 			return false;
 		}
 
-		PrimitiveAttributeId id = attribute.getId();
+		PrimitiveAttributeId id = attribute.id();
 
 		return id.getPowerType().isSpellDamage() && !id.isPetAttribute();
 	}
@@ -211,10 +211,10 @@ public class AccumulatedSpellStats {
 		List<StatConversion> statConversions = attributes.getStatConversions();
 
 		for (StatConversion statConversion : statConversions) {
-			double fromAmount = getAccumulatedValue(statConversion.getFromStat());
-			double toAmount = fromAmount * statConversion.getRatioPct().getCoefficient();
+			double fromAmount = getAccumulatedValue(statConversion.fromStat());
+			double toAmount = fromAmount * statConversion.ratioPct().getCoefficient();
 
-			accumulateAttribute(statConversion.getToStat(), toAmount);
+			accumulateAttribute(statConversion.toStat(), toAmount);
 		}
 	}
 

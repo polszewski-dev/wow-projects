@@ -76,7 +76,7 @@ public class AttributesDiffFinder {
 	}
 
 	private PrimitiveCollector getDoubleCollector(PrimitiveAttribute attribute) {
-		String key = attribute.getId() + " " + attribute.getCondition();
+		String key = attribute.id() + " " + attribute.condition();
 		return collectors.computeIfAbsent(key, x -> new PrimitiveCollector(attribute));
 	}
 
@@ -90,8 +90,8 @@ public class AttributesDiffFinder {
 		private double value;
 
 		PrimitiveCollector(PrimitiveAttribute prototype) {
-			this.id = prototype.getId();
-			this.condition = prototype.getCondition();
+			this.id = prototype.id();
+			this.condition = prototype.condition();
 		}
 
 		void add(PrimitiveAttribute attribute) {

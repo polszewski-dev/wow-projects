@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * User: POlszewski
  * Date: 2019-08-14
  */
-public final class Duration implements Comparable<Duration> {
+public record Duration(long millis) implements Comparable<Duration> {
 	private static final Pattern PATTERN = Pattern.compile("^-?((\\d+)h)?((\\d+)m)?((\\d+)s)?((\\d+)ms)?$");
 	private static final int INF_MILLIS = Integer.MAX_VALUE;
 	private static final int NEG_INF_MILLIS = Integer.MIN_VALUE;
@@ -16,10 +16,8 @@ public final class Duration implements Comparable<Duration> {
 	public static final Duration INFINITE = new Duration(INF_MILLIS);
 	public static final Duration NEG_INFINITE = new Duration(NEG_INF_MILLIS);
 
-	private final long millis;
-
-	private Duration(long millis) {
-		this.millis = Math.max(Math.min(millis, INF_MILLIS), NEG_INF_MILLIS);
+	public Duration {
+		millis = Math.max(Math.min(millis, INF_MILLIS), NEG_INF_MILLIS);
 	}
 
 	public static Duration seconds(double seconds) {
@@ -90,10 +88,6 @@ public final class Duration implements Comparable<Duration> {
 		}
 
 		return millis(millis);
-	}
-
-	public long getMillis() {
-		return millis;
 	}
 
 	public double getSeconds() {
@@ -207,19 +201,6 @@ public final class Duration implements Comparable<Duration> {
 
 	public Duration max(Duration duration) {
 		return this.millis > duration.millis ? this : duration;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Duration duration = (Duration) o;
-		return millis == duration.millis;
-	}
-
-	@Override
-	public int hashCode() {
-		return Long.hashCode(millis);
 	}
 
 	@Override

@@ -1,21 +1,18 @@
 package wow.commons.model.item;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import wow.commons.model.attributes.Attributes;
+
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2021-03-14
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode(of = {"numPieces", "description"})
-public class ItemSetBonus {
-	private final int numPieces;
-	private final String description;
-	private Attributes bonusStats;
+public record ItemSetBonus(int numPieces, String description, Attributes bonusStats) {
+	public ItemSetBonus {
+		Objects.requireNonNull(description);
+		Objects.requireNonNull(bonusStats);
+	}
 
 	@Override
 	public String toString() {

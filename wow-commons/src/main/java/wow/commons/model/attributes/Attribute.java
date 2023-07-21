@@ -2,6 +2,7 @@ package wow.commons.model.attributes;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
@@ -9,76 +10,62 @@ import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
  * User: POlszewski
  * Date: 2021-10-07
  */
-public abstract class Attribute {
-	protected final AttributeCondition condition;
-
-	protected Attribute(AttributeCondition condition) {
-		this.condition = condition;
-		if (condition == null) {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	public static PrimitiveAttribute of(PrimitiveAttributeId id, double value) {
+public sealed interface Attribute permits PrimitiveAttribute, ComplexAttribute {
+	static PrimitiveAttribute of(PrimitiveAttributeId id, double value) {
 		return of(id, value, AttributeCondition.EMPTY);
 	}
 
-	public static PrimitiveAttribute of(PrimitiveAttributeId id, double value, AttributeCondition condition) {
+	static PrimitiveAttribute of(PrimitiveAttributeId id, double value, AttributeCondition condition) {
 		return new PrimitiveAttribute(id, value, condition);
 	}
 
-	public static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value) {
+	static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value) {
 		return of(id, value, AttributeCondition.EMPTY);
 	}
 
-	public static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
-		return new PrimitiveAttribute(id, value, condition);
+	static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
+		return new PrimitiveAttribute(id, value.value(), condition);
 	}
 
-	public static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value) {
+	static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value) {
 		return of(id, value, AttributeCondition.EMPTY);
 	}
 
-	public static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
-		return new PrimitiveAttribute(id, value, condition);
+	static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
+		return new PrimitiveAttribute(id, value.getSeconds(), condition);
 	}
 
-	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value) {
+	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value) {
 		return ofNullable(id, value, AttributeCondition.EMPTY);
 	}
 
-	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value, AttributeCondition condition) {
+	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value, AttributeCondition condition) {
 		return value != 0 ? of(id, value, condition) : null;
 	}
 
-	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value) {
+	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value) {
 		return ofNullable(id, value, AttributeCondition.EMPTY);
 	}
 
-	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
+	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
 		return value != null && !value.isZero() ? of(id, value, condition) : null;
 	}
 
-	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value) {
+	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value) {
 		return ofNullable(id, value, AttributeCondition.EMPTY);
 	}
 
-	public static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
+	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
 		return value != null && !value.isZero() ? of(id, value, condition) : null;
 	}
 
-	public abstract AttributeId getId();
+	AttributeId id();
 
-	public AttributeCondition getCondition() {
-		return condition;
+	AttributeCondition condition();
+
+	default boolean hasCondition() {
+		return !condition().isEmpty();
 	}
 
-	public boolean hasCondition() {
-		return !condition.isEmpty();
-	}
-
-	public abstract Attribute attachCondition(AttributeCondition condition);
-
-	@Override
-	public abstract String toString();
+	Attribute attachCondition(AttributeCondition condition);
 }

@@ -18,7 +18,7 @@ public class Racial extends ConfigurationElementWithAttributesImpl<String> {
 	private final Race race;
 
 	public Racial(Description description, TimeRestriction timeRestriction, CharacterRestriction characterRestriction, Race race) {
-		super(description.getName(), description, timeRestriction, characterRestriction);
+		super(description.name(), description, timeRestriction, characterRestriction);
 		this.race = race;
 	}
 

@@ -56,7 +56,7 @@ class SimpleRecordSerializer {
 			return prettyFormat(v);
 		}
 		if (value instanceof Percent v) {
-			return prettyFormat(v.getValue());
+			return prettyFormat(v.value());
 		}
 		if (value instanceof Duration v) {
 			return prettyFormat(v.getSeconds());

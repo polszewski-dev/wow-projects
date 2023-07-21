@@ -26,9 +26,9 @@ class StatConversionMapper extends AbstractMapper<StatConversion> {
 	@Override
 	public String toString(StatConversion statConversion) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put(SC_FROM, statConversion.getFromStat());
-		map.put(SC_TO, statConversion.getToStat());
-		map.put(SC_RATIO_PCT, statConversion.getRatioPct());
+		map.put(SC_FROM, statConversion.fromStat());
+		map.put(SC_TO, statConversion.toStat());
+		map.put(SC_RATIO_PCT, statConversion.ratioPct());
 
 		return SimpleRecordMapper.toString(TYPE_STAT_CONVERSION, map);
 	}

@@ -4,32 +4,30 @@ import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.talents.TalentTree;
 
+import java.util.Objects;
+
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
+
 /**
  * User: POlszewski
  * Date: 2021-01-17
  */
-public class EffectIncreasePerEffectOnTarget extends ComplexAttribute {
-	private final TalentTree effectTree;
-	private final Percent increasePerEffectPct;
-	private final Percent maxIncreasePct;
-
-	public EffectIncreasePerEffectOnTarget(TalentTree effectTree, Percent increasePerEffectPct, Percent maxIncreasePct, AttributeCondition condition) {
-		super(ComplexAttributeId.EFFECT_INCREASE_PER_EFFECT_ON_TARGET, condition);
-		this.effectTree = effectTree;
-		this.increasePerEffectPct = increasePerEffectPct;
-		this.maxIncreasePct = maxIncreasePct;
+public record EffectIncreasePerEffectOnTarget(
+		TalentTree effectTree,
+		Percent increasePerEffectPct,
+		Percent maxIncreasePct,
+		AttributeCondition condition
+) implements ComplexAttribute {
+	public EffectIncreasePerEffectOnTarget {
+		Objects.requireNonNull(effectTree);
+		Objects.requireNonNull(increasePerEffectPct);
+		Objects.requireNonNull(maxIncreasePct);
+		Objects.requireNonNull(condition);
 	}
 
-	public TalentTree getEffectTree() {
-		return effectTree;
-	}
-
-	public Percent getIncreasePerEffectPct() {
-		return increasePerEffectPct;
-	}
-
-	public Percent getMaxIncreasePct() {
-		return maxIncreasePct;
+	@Override
+	public ComplexAttributeId id() {
+		return ComplexAttributeId.EFFECT_INCREASE_PER_EFFECT_ON_TARGET;
 	}
 
 	@Override
@@ -38,7 +36,7 @@ public class EffectIncreasePerEffectOnTarget extends ComplexAttribute {
 	}
 
 	@Override
-	protected String doToString() {
-		return String.format("(tree: %s, increasePerEffect: %s, maxIncrease: %s)", effectTree, increasePerEffectPct, maxIncreasePct);
+	public String toString() {
+		return "(tree: %s, increasePerEffect: %s, maxIncrease: %s)".formatted(effectTree, increasePerEffectPct, maxIncreasePct) + getConditionString(condition);
 	}
 }

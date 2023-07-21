@@ -26,9 +26,9 @@ class EffectIncreasePerEffectOnTargetMapper extends AbstractMapper<EffectIncreas
 	@Override
 	public String toString(EffectIncreasePerEffectOnTarget effectIncrease) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put(EI_TREE, effectIncrease.getEffectTree());
-		map.put(EI_PCT, effectIncrease.getIncreasePerEffectPct());
-		map.put(EI_MAX_PCT, effectIncrease.getMaxIncreasePct());
+		map.put(EI_TREE, effectIncrease.effectTree());
+		map.put(EI_PCT, effectIncrease.increasePerEffectPct());
+		map.put(EI_MAX_PCT, effectIncrease.maxIncreasePct());
 
 		return SimpleRecordMapper.toString(TYPE_EFFECT_INCREASE, map);
 	}

@@ -73,10 +73,10 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(item.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(item.isUnique()).isFalse();
 		assertThat(item.getItemLevel()).isEqualTo(159);
-		assertThat(item.getTimeRestriction().getPhaseId()).isEqualTo(TBC_P5);
-		assertThat(item.getCharacterRestriction().getLevel()).isEqualTo(70);
-		assertThat(item.getCharacterRestriction().getProfessionRestriction().getProfessionId()).isEqualTo(TAILORING);
-		assertThat(item.getCharacterRestriction().getProfessionRestriction().getLevel()).isEqualTo(350);
+		assertThat(item.getTimeRestriction().phaseId()).isEqualTo(TBC_P5);
+		assertThat(item.getCharacterRestriction().level()).isEqualTo(70);
+		assertThat(item.getCharacterRestriction().professionRestriction().professionId()).isEqualTo(TAILORING);
+		assertThat(item.getCharacterRestriction().professionRestriction().level()).isEqualTo(350);
 		assertThat(item.getIcon()).isEqualTo("inv_chest_cloth_02");
 		assertThat(item.getItemType()).isEqualTo(CHEST);
 		assertThat(item.getItemSubType()).isEqualTo(CLOTH);
@@ -99,7 +99,7 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(socketSpecification.getSocketType(0)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketType(1)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketType(2)).isEqualTo(SocketType.RED);
-		assertThat(socketSpecification.getSocketBonus().getPrimitiveAttributes().get(0)).isEqualTo(Attribute.of(SPELL_POWER, 5));
+		assertThat(socketSpecification.socketBonus().getPrimitiveAttributes().get(0)).isEqualTo(Attribute.of(SPELL_POWER, 5));
 	}
 
 	@Test
@@ -133,12 +133,12 @@ class ItemRepositoryTest extends RepositoryTest {
 
 		ItemSetBonus bonus = item.getItemSet().getItemSetBonuses().get(0);
 
-		assertThat(bonus.getBonusStats().getSpecialAbilities()).hasSize(1);
+		assertThat(bonus.bonusStats().getSpecialAbilities()).hasSize(1);
 
-		SpecialAbility ability = bonus.getBonusStats().getSpecialAbilities().get(0);
+		SpecialAbility ability = bonus.bonusStats().getSpecialAbilities().get(0);
 
-		assertThat(ability.getLine()).isEqualTo("Gives a chance when your harmful spells land to increase the damage of your spells and effects by 92 for 10 sec. (Proc chance: 5%)");
-		assertThat(ability.getCondition()).isEqualTo(AttributeCondition.of(TAILORING));
+		assertThat(ability.line()).isEqualTo("Gives a chance when your harmful spells land to increase the damage of your spells and effects by 92 for 10 sec. (Proc chance: 5%)");
+		assertThat(ability.condition()).isEqualTo(AttributeCondition.of(TAILORING));
 	}
 
 	/*
@@ -165,8 +165,8 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(gem.isUnique()).isFalse();
 		assertThat(gem.getItemLevel()).isEqualTo(100);
-		assertThat(gem.getTimeRestriction().getPhaseId()).isEqualTo(TBC_P5);
-		assertThat(gem.getCharacterRestriction().getLevel()).isNull();
+		assertThat(gem.getTimeRestriction().phaseId()).isEqualTo(TBC_P5);
+		assertThat(gem.getCharacterRestriction().level()).isNull();
 		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
 	}
 
@@ -241,8 +241,8 @@ class ItemRepositoryTest extends RepositoryTest {
 		assertThat(tradedItem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(tradedItem.isUnique()).isFalse();
 		assertThat(tradedItem.getItemLevel()).isEqualTo(70);
-		assertThat(tradedItem.getTimeRestriction().getPhaseId()).isEqualTo(TBC_P3);
-		assertThat(tradedItem.getCharacterRestriction().getLevel()).isEqualTo(70);
-		assertThat(tradedItem.getCharacterRestriction().getCharacterClassIds()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
+		assertThat(tradedItem.getTimeRestriction().phaseId()).isEqualTo(TBC_P3);
+		assertThat(tradedItem.getCharacterRestriction().level()).isEqualTo(70);
+		assertThat(tradedItem.getCharacterRestriction().characterClassIds()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
 	}
 }

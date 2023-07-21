@@ -6,15 +6,9 @@ import wow.commons.util.FormatUtil;
  * User: POlszewski
  * Date: 2022-09-25
  */
-public final class Percent implements Comparable<Percent> {
+public record Percent(double value) implements Comparable<Percent> {
 	public static final Percent ZERO = new Percent(0);
 	public static final Percent _100 = new Percent(100);
-
-	private final double value;
-
-	private Percent(double value) {
-		this.value = value;
-	}
 
 	public static Percent of(double value) {
 		if (value == 0) {
@@ -48,15 +42,11 @@ public final class Percent implements Comparable<Percent> {
 	}
 
 	public double getCoefficient() {
-		return getValue() / 100.0;
+		return value() / 100.0;
 	}
 
 	public boolean isZero() {
 		return value == 0;
-	}
-
-	public double getValue() {
-		return value;
 	}
 
 	public double toMultiplier() {
@@ -87,19 +77,6 @@ public final class Percent implements Comparable<Percent> {
 
 	public Percent scale(double factor) {
 		return of(value * factor);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Percent percent = (Percent) o;
-		return Double.compare(percent.value, value) == 0;
-	}
-
-	@Override
-	public int hashCode() {
-		return Double.hashCode(value);
 	}
 
 	@Override

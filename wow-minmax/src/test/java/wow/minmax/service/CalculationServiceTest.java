@@ -186,7 +186,7 @@ class CalculationServiceTest extends ServiceTest {
 				Percent.of(50),
 				Attributes.of(SPELL_POWER, 100),
 				Duration.seconds(15),
-				null,
+				Duration.ZERO,
 				"test"
 		);
 
@@ -458,7 +458,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		String line = "Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)";
 		SpecialAbility specialAbility = character.getEquipment().getStats().getSpecialAbilities().stream()
-				.filter(x -> line.equals(x.getLine()))
+				.filter(x -> line.equals(x.line()))
 				.findFirst()
 				.orElseThrow();
 		Attributes equivalent = underTest.getAbilityEquivalent(specialAbility, character);
@@ -576,7 +576,7 @@ class CalculationServiceTest extends ServiceTest {
 		character.setEquipment(getEquipment());
 
 		SpecialAbility specialAbility = character.getStats().getSpecialAbilities().stream()
-				.filter(x -> "Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)".equals(x.getLine()))
+				.filter(x -> "Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)".equals(x.line()))
 				.findFirst()
 				.orElseThrow();
 

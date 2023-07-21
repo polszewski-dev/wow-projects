@@ -1,55 +1,51 @@
 package wow.commons.model.attributes.complex;
 
-import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.special.*;
 import wow.commons.model.spells.EffectId;
-import wow.commons.util.AttributesBuilder;
 
 /**
  * User: POlszewski
  * Date: 2021-10-15
  */
-@Getter
-public abstract class SpecialAbility extends ComplexAttribute {
-	private final String line;
-	private final int priority;
-	private final Attributes attributes;
-	private final SpecialAbilitySource source;
+public sealed interface SpecialAbility extends ComplexAttribute
+		permits OnUseAbility, ProcAbility, TalentProcAbility, EquivalentAbility, MiscAbility {
 
-	protected SpecialAbility(String line, int priority, Attributes attributes, AttributeCondition condition, SpecialAbilitySource source) {
-		super(ComplexAttributeId.SPECIAL_ABILITIES, condition);
-		this.line = line;
-		this.priority = priority;
-		this.attributes = AttributesBuilder.attachCondition(attributes, condition);
-		this.source = source;
-		if (this.line == null) {
-			throw new IllegalArgumentException();
-		}
+	@Override
+	default ComplexAttributeId id() {
+		return ComplexAttributeId.SPECIAL_ABILITIES;
 	}
 
-	public abstract SpecialAbility attachSource(SpecialAbilitySource source);
+	String line();
 
-	public static OnUseAbility onUse(Attributes attributes, Duration duration, Duration cooldown, String line) {
-		return new OnUseAbility(attributes, duration, cooldown, line, AttributeCondition.EMPTY, null);
+	int priority();
+
+	Attributes attributes();
+
+	SpecialAbilitySource source();
+
+	SpecialAbility attachSource(SpecialAbilitySource source);
+
+	static OnUseAbility onUse(Attributes attributes, Duration duration, Duration cooldown, String line) {
+		return new OnUseAbility(attributes, duration, cooldown, line, AttributeCondition.EMPTY, null, null);
 	}
 
-	public static ProcAbility proc(ProcEventType event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line) {
+	static ProcAbility proc(ProcEventType event, Percent chance, Attributes attributes, Duration duration, Duration cooldown, String line) {
 		return new ProcAbility(new ProcEvent(event, chance), attributes, duration, cooldown, line, AttributeCondition.EMPTY, null);
 	}
 
-	public static TalentProcAbility talentProc(ProcEventType event, Percent chance, EffectId effectId, Duration duration, int stacks, String line) {
+	static TalentProcAbility talentProc(ProcEventType event, Percent chance, EffectId effectId, Duration duration, int stacks, String line) {
 		return new TalentProcAbility(new ProcEvent(event, chance), effectId, duration, stacks, line, AttributeCondition.EMPTY, null);
 	}
 
-	public static EquivalentAbility equivalent(Attributes attributes, String line) {
+	static EquivalentAbility equivalent(Attributes attributes, String line) {
 		return new EquivalentAbility(attributes, line, AttributeCondition.EMPTY, null);
 	}
 
-	public static MiscAbility misc(String line) {
+	static MiscAbility misc(String line) {
 		return new MiscAbility(line, AttributeCondition.EMPTY, null);
 	}
 }

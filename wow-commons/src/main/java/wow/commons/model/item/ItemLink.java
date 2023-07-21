@@ -1,8 +1,5 @@
 package wow.commons.model.item;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import wow.commons.model.categorization.ItemRarity;
 
 import java.util.regex.Matcher;
@@ -12,10 +9,26 @@ import java.util.regex.Pattern;
  * User: POlszewski
  * Date: 2021-01-22
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
-public class ItemLink {
+public record ItemLink(
+		int itemId,
+		String name,
+		ItemRarity rarity,
+		Integer enchantId,
+		Integer gem1Id,
+		Integer gem2Id,
+		Integer gem3Id,
+		Integer gem4Id,
+		Integer suffixId,
+		Integer uniqueId,
+		Integer linkLevel,
+		Integer specializationID,
+		Integer upgradeId,
+		Integer instanceDifficultyId,
+		Integer numBonusIds,
+		Integer bonusId1,
+		Integer bonusId2,
+		Integer upgradeValue
+) {
 	/*
 
 	Item String:
@@ -29,27 +42,6 @@ public class ItemLink {
 	 */
 
 	private static final Pattern ITEM_LINK_REGEX = Pattern.compile("^\\|c([0-9a-f]{8})\\|H(item:.*)\\|h\\[(.*)]\\|h\\|r$");
-
-	private final int itemId;
-	private final String name;
-	private final ItemRarity rarity;
-
-	private final Integer enchantId;
-	private final Integer gem1Id;
-	private final Integer gem2Id;
-	private final Integer gem3Id;
-	private final Integer gem4Id;
-
-	private final Integer suffixId;
-	private final Integer uniqueId;
-	private final Integer linkLevel;
-	private final Integer specializationID;
-	private final Integer upgradeId;
-	private final Integer instanceDifficultyId;
-	private final Integer numBonusIds;
-	private final Integer bonusId1;
-	private final Integer bonusId2;
-	private final Integer upgradeValue;
 
 	public ItemLink(int itemId, String name, ItemRarity rarity, Integer enchantId, Integer gem1Id, Integer gem2Id, Integer gem3Id) {
 		this(itemId, name, rarity, enchantId, gem1Id, gem2Id, gem3Id, null, null, null, null, null, null, null, null, null, null, null);
@@ -109,8 +101,7 @@ public class ItemLink {
 				blankIfNull(upgradeValue) + ':' +
 				"|h[" +
 				name +
-				"]|h|r"
-		;
+				"]|h|r";
 	}
 
 	private static ItemLink parseHelper(String itemLink, boolean returnNull) {

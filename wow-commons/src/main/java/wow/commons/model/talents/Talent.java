@@ -11,11 +11,11 @@ public interface Talent extends ConfigurationElementWithAttributes<TalentIdAndRa
 	TalentInfo getTalentInfo();
 
 	default TalentId getTalentId() {
-		return getId().getTalentId();
+		return getId().talentId();
 	}
 
 	default int getRank() {
-		return getId().getRank();
+		return getId().rank();
 	}
 
 	default int getMaxRank() {

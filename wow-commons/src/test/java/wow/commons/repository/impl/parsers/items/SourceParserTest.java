@@ -38,9 +38,9 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isNpcDrop()).isTrue();
-		assertThat(source.getNpc().getId()).isEqualTo(25315);
-		assertThat(source.getNpc().getName()).isEqualTo("Kil'jaeden");
-		assertThat(source.getZones().get(0).getId()).isEqualTo(4075);
+		assertThat(source.npc().getId()).isEqualTo(25315);
+		assertThat(source.npc().getName()).isEqualTo("Kil'jaeden");
+		assertThat(source.zones().get(0).getId()).isEqualTo(4075);
 	}
 
 	@Test
@@ -52,7 +52,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isZoneDrop()).isTrue();
-		assertThat(source.getZones().get(0).getId()).isEqualTo(4075);
+		assertThat(source.zones().get(0).getId()).isEqualTo(4075);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isTraded()).isTrue();
-		assertThat(source.getSourceItem().getId()).isEqualTo(34856);
+		assertThat(source.sourceItem().getId()).isEqualTo(34856);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isTraded()).isTrue();
-		assertThat(source.getSourceItem().getId()).isEqualTo(32405);
+		assertThat(source.sourceItem().getId()).isEqualTo(32405);
 	}
 
 	@Test
@@ -88,7 +88,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isReputationReward()).isTrue();
-		assertThat(source.getFaction().getName()).isEqualTo("The Scryers");
+		assertThat(source.faction().getName()).isEqualTo("The Scryers");
 	}
 
 	@Test
@@ -100,7 +100,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isCrafted()).isTrue();
-		assertThat(source.getProfessionId()).isEqualTo(ProfessionId.TAILORING);
+		assertThat(source.professionId()).isEqualTo(ProfessionId.TAILORING);
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isQuestReward()).isTrue();
-		assertThat(source.getQuestName()).isEqualTo("test");
+		assertThat(source.questName()).isEqualTo("test");
 	}
 
 	@Test
@@ -124,7 +124,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isQuestReward()).isTrue();
-		assertThat(source.getQuestName()).isNull();
+		assertThat(source.questName()).isNull();
 	}
 
 	@Test

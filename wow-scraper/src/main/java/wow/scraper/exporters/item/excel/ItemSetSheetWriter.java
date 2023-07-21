@@ -37,9 +37,9 @@ public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
 		setValue(setInfo.getItemSetBonusRequiredProfessionLevel());
 
 		setList(setInfo.getItemSetBonuses(), ITEM_SET_MAX_BONUSES, x -> {
-			setValue(x.getNumPieces());
-			setValue(x.getDescription());
-			writeAttributes(x.getBonusStats(), ITEM_SET_BONUS_MAX_STATS);
+			setValue(x.numPieces());
+			setValue(x.description());
+			writeAttributes(x.bonusStats(), ITEM_SET_BONUS_MAX_STATS);
 		}, 2 + 2 * ITEM_SET_BONUS_MAX_STATS);
 	}
 }

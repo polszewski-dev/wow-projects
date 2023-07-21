@@ -1,21 +1,37 @@
 package wow.commons.model.item;
 
-import lombok.Getter;
-import lombok.Setter;
 import wow.commons.model.spells.SpellSchool;
 
 /**
  * User: POlszewski
  * Date: 2021-03-06
  */
-@Getter
-@Setter
-public class WeaponStats {
-	private int weaponDamageMin;
-	private int weaponDamageMax;
-	private SpellSchool damageType;
-	private double weaponDps;
-	private double weaponSpeed;
+public record WeaponStats(
+		int weaponDamageMin,
+		int weaponDamageMax,
+		SpellSchool damageType,
+		double weaponDps,
+		double weaponSpeed
+) {
+	public WeaponStats weaponDamageMin(int weaponDamageMin) {
+		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	}
+
+	public WeaponStats weaponDamageMax(int weaponDamageMax) {
+		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	}
+
+	public WeaponStats damageType(SpellSchool damageType) {
+		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	}
+
+	public WeaponStats weaponDps(double weaponDps) {
+		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	}
+
+	public WeaponStats weaponSpeed(double weaponSpeed) {
+		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	}
 
 	@Override
 	public String toString() {

@@ -29,8 +29,8 @@ public final class PrimitiveAttributeFormatter {
 	}
 
 	private static String getFormatStr(PrimitiveAttribute attribute) {
-		String key = attribute.getId().getKey();
-		AttributeCondition condition = attribute.getCondition();
+		String key = attribute.id().getKey();
+		AttributeCondition condition = attribute.condition();
 
 		String formatStr = PROPERTIES.getProperty(key + "," + condition);
 
@@ -48,7 +48,7 @@ public final class PrimitiveAttributeFormatter {
 	}
 
 	private static String getValueString(PrimitiveAttribute attribute) {
-		return switch (attribute.getId().getValueType()) {
+		return switch (attribute.id().getValueType()) {
 			case POINT, RATING -> FormatUtil.decimalPointOnlyIfNecessary(attribute.getDouble());
 			case PERCENT -> attribute.getPercent().toString();
 			case DURATION -> attribute.getDuration().toString();

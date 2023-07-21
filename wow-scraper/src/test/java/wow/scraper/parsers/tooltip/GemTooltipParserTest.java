@@ -71,7 +71,7 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 		assertThat(blueGem.getStats().getStamina()).isEqualTo(18);
 
 		assertThat(metaGem.getStats().getSpellCritRating()).isEqualTo(12);
-		assertThat(metaGem.getStats().getCritDamagePct().getValue()).isEqualTo(3);
+		assertThat(metaGem.getStats().getCritDamagePct().value()).isEqualTo(3);
 		assertThat(metaGem.getMetaEnablers()).isEqualTo(List.of(MetaEnabler.AT_LEAST_2_BLUES));
 	}
 

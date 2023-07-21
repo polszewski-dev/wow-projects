@@ -44,6 +44,6 @@ public abstract class RankedElementSheetParser<K, E extends TimeRestricted> exte
 	}
 
 	private boolean hasCommonVersionRestriction(TimeRestricted first, TimeRestriction second) {
-		return CollectionUtil.hasCommonCriteria(first.getTimeRestriction().getVersions(), second.getVersions());
+		return CollectionUtil.hasCommonCriteria(first.getTimeRestriction().versions(), second.versions());
 	}
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
@@ -11,7 +12,6 @@ import wow.commons.model.attributes.complex.EffectIncreasePerEffectOnTarget;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.complex.special.*;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.spells.EffectId;
 import wow.commons.model.talents.TalentTree;
 
@@ -38,8 +38,8 @@ class ComplexAttributeMapperTest {
 
 		EquivalentAbility parsed = (EquivalentAbility)complexAttribute;
 
-		assertThat(parsed.getAttributes().getSpellPower()).isEqualTo(100);
-		assertThat(parsed.getLine()).isEqualTo("This is a test");
+		assertThat(parsed.attributes().getSpellPower()).isEqualTo(100);
+		assertThat(parsed.line()).isEqualTo("This is a test");
 	}
 
 	@Test
@@ -57,18 +57,18 @@ class ComplexAttributeMapperTest {
 
 		OnUseAbility parsed = (OnUseAbility)complexAttribute;
 
-		assertThat(parsed.getAttributes().getSpellPower()).isEqualTo(143);
-		assertThat(parsed.getDuration().getSeconds()).isEqualTo(15);
-		assertThat(parsed.getCooldown().getSeconds()).isEqualTo(120);
-		assertThat(parsed.getLine()).isEqualTo("This is a test");
+		assertThat(parsed.attributes().getSpellPower()).isEqualTo(143);
+		assertThat(parsed.duration().getSeconds()).isEqualTo(15);
+		assertThat(parsed.cooldown().getSeconds()).isEqualTo(120);
+		assertThat(parsed.line()).isEqualTo("This is a test");
 	}
 
 	@Test
 	@DisplayName("OnUse is mapped correctly: 2 attributes")
 	void onUseAbility2() {
 		OnUseAbility original = SpecialAbility.onUse(Attributes.of(
-				PrimitiveAttribute.of(SPELL_DAMAGE, 120),
-				PrimitiveAttribute.of(SPELL_CRIT_PCT, 2)
+				Attribute.of(SPELL_DAMAGE, 120),
+				Attribute.of(SPELL_CRIT_PCT, 2)
 		), Duration.seconds(15), Duration.seconds(120), "This is a test");
 
 		String result = ComplexAttributeMapper.toString(original);
@@ -81,11 +81,11 @@ class ComplexAttributeMapperTest {
 
 		OnUseAbility parsed = (OnUseAbility)complexAttribute;
 
-		assertThat(parsed.getAttributes().getSpellDamage()).isEqualTo(120);
-		assertThat(parsed.getAttributes().getSpellCritPct().getValue()).isEqualTo(2);
-		assertThat(parsed.getDuration().getSeconds()).isEqualTo(15);
-		assertThat(parsed.getCooldown().getSeconds()).isEqualTo(120);
-		assertThat(parsed.getLine()).isEqualTo("This is a test");
+		assertThat(parsed.attributes().getSpellDamage()).isEqualTo(120);
+		assertThat(parsed.attributes().getSpellCritPct().value()).isEqualTo(2);
+		assertThat(parsed.duration().getSeconds()).isEqualTo(15);
+		assertThat(parsed.cooldown().getSeconds()).isEqualTo(120);
+		assertThat(parsed.line()).isEqualTo("This is a test");
 	}
 
 	@Test
@@ -103,12 +103,12 @@ class ComplexAttributeMapperTest {
 
 		ProcAbility parsed = (ProcAbility)complexAttribute;
 
-		assertThat(parsed.getEvent().getType()).isEqualTo(ProcEventType.SPELL_CRIT);
-		assertThat(parsed.getEvent().getChance().getValue()).isEqualTo(20);
-		assertThat(parsed.getAttributes().getSpellPower()).isEqualTo(100);
-		assertThat(parsed.getDuration().getSeconds()).isEqualTo(15);
-		assertThat(parsed.getCooldown().getSeconds()).isEqualTo(60);
-		assertThat(parsed.getLine()).isEqualTo("This is a test");
+		assertThat(parsed.event().type()).isEqualTo(ProcEventType.SPELL_CRIT);
+		assertThat(parsed.event().chance().value()).isEqualTo(20);
+		assertThat(parsed.attributes().getSpellPower()).isEqualTo(100);
+		assertThat(parsed.duration().getSeconds()).isEqualTo(15);
+		assertThat(parsed.cooldown().getSeconds()).isEqualTo(60);
+		assertThat(parsed.line()).isEqualTo("This is a test");
 	}
 
 	@Test
@@ -126,12 +126,12 @@ class ComplexAttributeMapperTest {
 
 		TalentProcAbility parsed = (TalentProcAbility)complexAttribute;
 
-		assertThat(parsed.getEvent().getType()).isEqualTo(ProcEventType.SPELL_CRIT);
-		assertThat(parsed.getEvent().getChance().getValue()).isEqualTo(100);
-		assertThat(parsed.getEffectId()).isEqualTo(EffectId.SHADOW_VULNERABILITY_20);
-		assertThat(parsed.getDuration().getSeconds()).isEqualTo(12);
-		assertThat(parsed.getStacks()).isEqualTo(4);
-		assertThat(parsed.getLine()).isEqualTo("This is a test");
+		assertThat(parsed.event().type()).isEqualTo(ProcEventType.SPELL_CRIT);
+		assertThat(parsed.event().chance().value()).isEqualTo(100);
+		assertThat(parsed.effectId()).isEqualTo(EffectId.SHADOW_VULNERABILITY_20);
+		assertThat(parsed.duration().getSeconds()).isEqualTo(12);
+		assertThat(parsed.stacks()).isEqualTo(4);
+		assertThat(parsed.line()).isEqualTo("This is a test");
 	}
 
 	@Test
@@ -149,7 +149,7 @@ class ComplexAttributeMapperTest {
 
 		MiscAbility parsed = (MiscAbility)complexAttribute;
 
-		assertThat(parsed.getLine()).isEqualTo("This is a test");
+		assertThat(parsed.line()).isEqualTo("This is a test");
 	}
 
 	@Test
@@ -167,9 +167,9 @@ class ComplexAttributeMapperTest {
 
 		StatConversion parsed = (StatConversion)complexAttribute;
 
-		assertThat(parsed.getFromStat()).isEqualTo(PET_STAMINA);
-		assertThat(parsed.getToStat()).isEqualTo(SPELL_DAMAGE);
-		assertThat(parsed.getRatioPct().getValue()).isEqualTo(10);
+		assertThat(parsed.fromStat()).isEqualTo(PET_STAMINA);
+		assertThat(parsed.toStat()).isEqualTo(SPELL_DAMAGE);
+		assertThat(parsed.ratioPct().value()).isEqualTo(10);
 	}
 
 	@Test
@@ -187,8 +187,8 @@ class ComplexAttributeMapperTest {
 
 		EffectIncreasePerEffectOnTarget parsed = (EffectIncreasePerEffectOnTarget)complexAttribute;
 
-		assertThat(parsed.getEffectTree()).isEqualTo(TalentTree.AFFLICTION);
-		assertThat(parsed.getIncreasePerEffectPct().getValue()).isEqualTo(2);
-		assertThat(parsed.getMaxIncreasePct().getValue()).isEqualTo(10);
+		assertThat(parsed.effectTree()).isEqualTo(TalentTree.AFFLICTION);
+		assertThat(parsed.increasePerEffectPct().value()).isEqualTo(2);
+		assertThat(parsed.maxIncreasePct().value()).isEqualTo(10);
 	}
 }

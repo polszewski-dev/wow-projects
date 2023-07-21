@@ -1,22 +1,28 @@
 package wow.commons.model.spells;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
 import wow.commons.model.Percent;
 import wow.commons.util.EnumUtil;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2020-10-17
  */
-@AllArgsConstructor
-@Getter
-public class Conversion {
+public record Conversion(
+		wow.commons.model.spells.Conversion.From from,
+		wow.commons.model.spells.Conversion.To to,
+		Percent percent
+) {
+	public Conversion {
+		Objects.requireNonNull(from);
+		Objects.requireNonNull(to);
+		Objects.requireNonNull(percent);
+	}
+
 	public enum From {
-		DAMAGE{
+		DAMAGE {
 			@Override
 			public int getValue(int actualDamage, List<Cost> paidCosts) {
 				return actualDamage;
@@ -27,8 +33,8 @@ public class Conversion {
 			@Override
 			public int getValue(int actualDamage, List<Cost> paidCosts) {
 				for (Cost paidCost : paidCosts) {
-					if (paidCost.getType() == CostType.HEALTH) {
-						return paidCost.getAmount();
+					if (paidCost.type() == CostType.HEALTH) {
+						return paidCost.amount();
 					}
 				}
 				return 0;
@@ -50,13 +56,6 @@ public class Conversion {
 			return EnumUtil.parse(value, values());
 		}
 	}
-
-	@NonNull
-	private final From from;
-	@NonNull
-	private final To to;
-	@NonNull
-	private final Percent percent;
 
 	public boolean is(From from, To to) {
 		return this.from == from && this.to == to;

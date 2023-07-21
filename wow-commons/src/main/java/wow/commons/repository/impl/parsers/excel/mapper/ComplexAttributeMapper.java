@@ -54,9 +54,9 @@ public final class ComplexAttributeMapper {
 
 	public static String getIdAndCondition(PrimitiveAttribute attribute) {
 		if (!attribute.hasCondition()) {
-			return attribute.getId().toString();
+			return attribute.id().toString();
 		}
-		return attribute.getId() + "," + attribute.getCondition();
+		return attribute.id() + "," + attribute.condition();
 	}
 
 	private static void assertNoCondition(ComplexAttribute attribute) {

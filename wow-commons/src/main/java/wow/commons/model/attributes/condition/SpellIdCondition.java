@@ -1,24 +1,20 @@
 package wow.commons.model.attributes.condition;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.spells.SpellId;
 import wow.commons.util.EnumUtil;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2022-11-11
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode
-public class SpellIdCondition implements AttributeCondition {
-	@NonNull
-	private final SpellId spellId;
+public record SpellIdCondition(SpellId spellId) implements AttributeCondition {
+	public SpellIdCondition {
+		Objects.requireNonNull(spellId);
+	}
 
 	public static SpellIdCondition of(SpellId spellId) {
 		return CACHE.get(spellId);

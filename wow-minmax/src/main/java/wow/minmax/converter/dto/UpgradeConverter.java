@@ -28,7 +28,7 @@ public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 		AttributesDiff statDifference = source.getStatDifference();
 
 		return new UpgradeDTO(
-				source.changePct.getValue(),
+				source.changePct.value(),
 				equippableItemConverter.convertList(source.getItemDifference()),
 				getStatDiff(statDifference),
 				getAbilities(statDifference.getAddedAbilities()),

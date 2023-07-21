@@ -1,6 +1,5 @@
 package wow.commons.model;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,9 +7,7 @@ import java.util.regex.Pattern;
  * User: POlszewski
  * Date: 2019-07-22
  */
-public final class Money implements Comparable<Money> {
-	private final int coppers;
-
+public record Money(int coppers) implements Comparable<Money> {
 	public static final Money ZERO = new Money(0);
 	public static final Money MAX_MONEY = new Money(Integer.MAX_VALUE);
 
@@ -45,10 +42,6 @@ public final class Money implements Comparable<Money> {
 		return new Money(value);
 	}
 
-	private Money(int coppers) {
-		this.coppers = coppers;
-	}
-
 	public int getG() {
 		return Math.abs(coppers) / 100_00;
 	}
@@ -71,19 +64,6 @@ public final class Money implements Comparable<Money> {
 
 	public boolean isNegative() {
 		return coppers < 0;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Money money = (Money) o;
-		return coppers == money.coppers;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(coppers);
 	}
 
 	@Override

@@ -8,14 +8,14 @@ public interface Described {
 	Description getDescription();
 
 	default String getName() {
-		return getDescription().getName();
+		return getDescription().name();
 	}
 
 	default String getIcon() {
-		return getDescription().getIcon();
+		return getDescription().icon();
 	}
 
 	default String getTooltip() {
-		return getDescription().getTooltip();
+		return getDescription().tooltip();
 	}
 }

@@ -1,20 +1,12 @@
 package wow.commons.model.sources;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import wow.commons.model.pve.Faction;
 
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode(callSuper = false)
-public class ReputationReward extends Source {
-	private final Faction faction;
-
+public record ReputationReward(Faction faction) implements Source {
 	@Override
 	public boolean isReputationReward() {
 		return true;

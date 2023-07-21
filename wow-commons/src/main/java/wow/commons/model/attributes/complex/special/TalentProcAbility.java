@@ -1,6 +1,5 @@
 package wow.commons.model.attributes.complex.special;
 
-import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
@@ -8,52 +7,59 @@ import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 import wow.commons.model.spells.EffectId;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
 
 /**
  * User: POlszewski
  * Date: 2022-11-26
  */
-@Getter
-public class TalentProcAbility extends SpecialAbility {
-	private final ProcEvent event;
-	private final EffectId effectId;
-	private final Duration duration;
-	private final int stacks;
+public record TalentProcAbility(
+		ProcEvent event,
+		EffectId effectId,
+		Duration duration,
+		int stacks,
+		String line,
+		AttributeCondition condition,
+		SpecialAbilitySource source
+) implements SpecialAbility {
+	public TalentProcAbility {
+		Objects.requireNonNull(event);
+		Objects.requireNonNull(effectId);
+		Objects.requireNonNull(duration);
+		Objects.requireNonNull(line);
+		Objects.requireNonNull(condition);
+	}
 
-	public TalentProcAbility(
-			ProcEvent event,
-			EffectId effectId,
-			Duration duration,
-			int stacks,
-			String line,
-			AttributeCondition condition,
-			SpecialAbilitySource source
-	) {
-		super(line, 4, Attributes.EMPTY, condition, source);
-		this.event = event;
-		this.effectId = effectId;
-		this.duration = duration;
-		this.stacks = stacks;
+	@Override
+	public int priority() {
+		return 4;
+	}
+
+	@Override
+	public Attributes attributes() {
+		return Attributes.EMPTY;
 	}
 
 	@Override
 	public TalentProcAbility attachCondition(AttributeCondition condition) {
-		return new TalentProcAbility(event, effectId, duration, stacks, getLine(), condition, getSource());
+		return new TalentProcAbility(event, effectId, duration, stacks, line, condition, source);
 	}
 
 	@Override
 	public TalentProcAbility attachSource(SpecialAbilitySource source) {
-		return new TalentProcAbility(event, effectId, duration, stacks, getLine(), condition, source);
+		return new TalentProcAbility(event, effectId, duration, stacks, line, condition, source);
 	}
 
 	@Override
-	protected String doToString() {
+	public String toString() {
 		return Stream.of(
 				effectId != null ? "effect: " + effectId : "",
 				!duration.isZero() ? "duration: " + duration : "",
 				stacks != 0 ? "stacks: " + stacks : ""
-		).filter(x -> !x.isEmpty()).collect(Collectors.joining(", ", "(", ")"));
+		).filter(x -> !x.isEmpty()).collect(Collectors.joining(", ", "(", ")")) + getConditionString(condition);
 	}
 }

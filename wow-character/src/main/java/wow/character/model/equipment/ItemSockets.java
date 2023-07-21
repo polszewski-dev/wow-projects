@@ -19,16 +19,15 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-03-06
  */
-public class ItemSockets extends ComplexAttribute implements Copyable<ItemSockets>, Iterable<ItemSocket> {
-	private final ItemSocketSpecification specification;
-	private final List<ItemSocket> sockets;
-
+public record ItemSockets(
+		ItemSocketSpecification specification,
+		List<ItemSocket> sockets
+) implements ComplexAttribute, Copyable<ItemSockets>, Iterable<ItemSocket> {
 	public static final ItemSockets EMPTY = new ItemSockets(ItemSocketSpecification.EMPTY, List.of());
 
-	private ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets) {
-		super(ComplexAttributeId.SOCKETS, AttributeCondition.EMPTY);
-		this.specification = specification;
-		this.sockets = sockets;
+	public ItemSockets {
+		Objects.requireNonNull(specification);
+		Objects.requireNonNull(sockets);
 	}
 
 	public static ItemSockets create(ItemSocketSpecification specification) {
@@ -36,7 +35,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 			return ItemSockets.EMPTY;
 		}
 
-		List<ItemSocket> itemSockets = specification.getSocketTypes().stream()
+		List<ItemSocket> itemSockets = specification.socketTypes().stream()
 				.map(ItemSocket::new)
 				.toList();
 		return new ItemSockets(specification, itemSockets);
@@ -52,6 +51,16 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 		);
 	}
 
+	@Override
+	public ComplexAttributeId id() {
+		return ComplexAttributeId.SOCKETS;
+	}
+
+	@Override
+	public AttributeCondition condition() {
+		return AttributeCondition.EMPTY;
+	}
+
 	public int getSocketCount() {
 		return specification.getSocketCount();
 	}
@@ -61,11 +70,11 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	public List<SocketType> getSocketTypes() {
-		return specification.getSocketTypes();
+		return specification.socketTypes();
 	}
 
 	public Attributes getSocketBonus() {
-		return specification.getSocketBonus();
+		return specification.socketBonus();
 	}
 
 	public boolean allSocketsHaveMatchingGems(int numRed, int numYellow, int numBlue) {
@@ -133,21 +142,7 @@ public class ItemSockets extends ComplexAttribute implements Copyable<ItemSocket
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof ItemSockets)) return false;
-		ItemSockets that = (ItemSockets) o;
-		return specification.equals(that.specification) &&
-				sockets.equals(that.sockets);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(specification, sockets);
-	}
-
-	@Override
-	protected String doToString() {
+	public String toString() {
 		if (getSocketCount() == 0) {
 			return "no sockets";
 		}

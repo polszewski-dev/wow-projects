@@ -1,49 +1,61 @@
 package wow.commons.model.attributes.complex.special;
 
-import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.util.AttributesBuilder;
+
+import java.util.Objects;
+
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
 
 /**
  * User: POlszewski
  * Date: 2022-11-26
  */
-@Getter
-public class OnUseAbility extends SpecialAbility {
-	private final Duration duration;
-	private final Duration cooldown;
-	private final Attributes equivalent;
+public record OnUseAbility(
+		Attributes attributes,
+		Duration duration,
+		Duration cooldown,
+		String line,
+		AttributeCondition condition,
+		SpecialAbilitySource source,
+		Attributes equivalent
+) implements SpecialAbility {
+	public OnUseAbility {
+		Objects.requireNonNull(attributes);
+		Objects.requireNonNull(duration);
+		Objects.requireNonNull(cooldown);
+		Objects.requireNonNull(line);
+		Objects.requireNonNull(condition);
 
-	public OnUseAbility(
-			Attributes attributes,
-			Duration duration,
-			Duration cooldown,
-			String line,
-			AttributeCondition condition,
-			SpecialAbilitySource source
-	) {
-		super(line, 2, attributes, condition, source);
-		this.duration = duration;
-		this.cooldown = cooldown;
-		double factor = duration.divideBy(cooldown);
-		this.equivalent = getAttributes().scale(factor);
+		attributes = AttributesBuilder.attachCondition(attributes, condition);
+
+		if (equivalent == null) {
+			double factor = duration.divideBy(cooldown);
+			equivalent = attributes.scale(factor);
+		}
+	}
+
+	@Override
+	public int priority() {
+		return 2;
 	}
 
 	@Override
 	public OnUseAbility attachCondition(AttributeCondition condition) {
-		return new OnUseAbility(getAttributes(), duration, cooldown, getLine(), condition, getSource());
+		return new OnUseAbility(attributes, duration, cooldown, line, condition, source, equivalent);
 	}
 
 	@Override
 	public OnUseAbility attachSource(SpecialAbilitySource source) {
-		return new OnUseAbility(getAttributes(), duration, cooldown, getLine(), condition, source);
+		return new OnUseAbility(attributes, duration, cooldown, line, condition, source, equivalent);
 	}
 
 	@Override
-	protected String doToString() {
-		return "(%s | %s/%s)".formatted(getAttributes(), duration, cooldown);
+	public String toString() {
+		return "(%s | %s/%s)".formatted(attributes, duration, cooldown) + getConditionString(condition);
 	}
 }

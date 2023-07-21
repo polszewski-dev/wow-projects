@@ -13,7 +13,10 @@ import wow.commons.model.talents.TalentTree;
  * User: POlszewski
  * Date: 2021-10-25
  */
-public interface AttributeCondition {
+public sealed interface AttributeCondition permits
+		CreatureTypeCondition, EmptyCondition, PetTypeCondition, ProfessionCondition, ProfessionSpecCondition,
+		SpellIdCondition, SpellSchoolCondition, TalentTreeCondition {
+
 	AttributeCondition EMPTY = new EmptyCondition();
 
 	static AttributeCondition of(TalentTree talentTree) {

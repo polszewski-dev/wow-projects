@@ -197,13 +197,13 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public Attributes getStatEquivalent(SpecialAbility specialAbility, Snapshot snapshot) {
 		if (specialAbility instanceof OnUseAbility ability) {
-			return ability.getEquivalent();
+			return ability.equivalent();
 		} else if (specialAbility instanceof ProcAbility ability) {
 			return getProcStatEquivalent(ability, snapshot);
 		} else if (specialAbility instanceof TalentProcAbility ability) {
 			return getTalentProcStatEquivalent(ability, snapshot);
 		} else {
-			return specialAbility.getAttributes();
+			return specialAbility.attributes();
 		}
 	}
 
@@ -216,19 +216,19 @@ public class CalculationServiceImpl implements CalculationService {
 
 		double uptime = getProcUptime(ability, snapshot, procChance);
 
-		return ability.getAttributes().scale(uptime);
+		return ability.attributes().scale(uptime);
 	}
 
 	private double getProcChance(ProcAbility ability, Snapshot snapshot) {
 		double hitChance = snapshot.getHitChance();
 		double critChance = snapshot.getCritChance();
 
-		return ability.getEvent().getProcChance(hitChance, critChance);
+		return ability.event().getProcChance(hitChance, critChance);
 	}
 
 	private double getProcUptime(ProcAbility ability, Snapshot snapshot, double procChance) {
-		double duration = ability.getDuration().getSeconds();
-		double cooldown = ability.getCooldown().getSeconds();
+		double duration = ability.duration().getSeconds();
+		double cooldown = ability.cooldown().getSeconds();
 		double castTime = snapshot.getEffectiveCastTime();
 
 		return getProcUptime(procChance, duration, cooldown, castTime);
@@ -285,11 +285,11 @@ public class CalculationServiceImpl implements CalculationService {
 		if (extraCritCoeff == 0) {
 			return Attributes.EMPTY;
 		}
-		return Attributes.of(CRIT_COEFF_PCT, extraCritCoeff, ability.getCondition());
+		return Attributes.of(CRIT_COEFF_PCT, extraCritCoeff, ability.condition());
 	}
 
 	private double getExtraCritCoeff(TalentProcAbility ability, double critChance) {
-		int rank = ability.getEffectId().getRank();
+		int rank = ability.effectId().getRank();
 		double c = critChance;
 		double n = 1 - c;
 		return rank * 0.04 * (2 * c + n) * (1 + n + n * n + n * n * n);

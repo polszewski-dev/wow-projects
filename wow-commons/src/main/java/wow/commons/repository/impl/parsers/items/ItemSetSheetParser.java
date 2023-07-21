@@ -2,10 +2,10 @@ package wow.commons.repository.impl.parsers.items;
 
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.special.sources.ItemSetSource;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
+import wow.commons.model.item.ItemSetSource;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.item.impl.ItemSetImpl;
 import wow.commons.model.professions.ProfessionId;

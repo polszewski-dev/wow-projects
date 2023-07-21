@@ -24,7 +24,7 @@ public class GemComboFinder {
 	private final ItemService itemService;
 
 	public List<Gem[]> getGemCombos(Character character, ItemSocketSpecification socketSpecification) {
-		ItemSocketsUniqueConfiguration uniqueConfiguration = ItemSocketsUniqueConfiguration.of(socketSpecification.getSocketTypes());
+		ItemSocketsUniqueConfiguration uniqueConfiguration = ItemSocketsUniqueConfiguration.of(socketSpecification.socketTypes());
 		List<Gem[]> gemCombos = getGemCombos(character, uniqueConfiguration);
 
 		return gemCombos.stream()

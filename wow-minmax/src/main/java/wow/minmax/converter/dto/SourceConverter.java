@@ -36,17 +36,17 @@ public class SourceConverter {
 
 	private String getDetailedSourceString(Source source, AbstractItem item) {
 		if (source.isNpcDrop()) {
-			return String.format("%s - %s", source.getZoneShortNames(), source.getNpc().getName());
+			return String.format("%s - %s", source.zoneShortNames(), source.npc().getName());
 		}
 		if (source.isTraded()) {
-			return getDetailedSources(source.getSourceItem());
+			return getDetailedSources(source.sourceItem());
 		}
 		return getSourceString(source, item);
 	}
 
 	private String getSourceString(Source source, AbstractItem item) {
-		if (!source.getZones().isEmpty()) {
-			return source.getZoneShortNames();
+		if (!source.zones().isEmpty()) {
+			return source.zoneShortNames();
 		}
 		if (source.isBadgeVendor()) {
 			return "BoJ";
@@ -59,10 +59,10 @@ public class SourceConverter {
 			return profession.getName();
 		}
 		if (source.isReputationReward()) {
-			return source.getFaction().getName();
+			return source.faction().getName();
 		}
 		if (source.isTraded()) {
-			return getSources(source.getSourceItem());
+			return getSources(source.sourceItem());
 		}
 		return source.toString();
 	}
@@ -70,6 +70,6 @@ public class SourceConverter {
 	private Profession getProfession(Source source, AbstractItem item) {
 		GameVersionId gameVersionId = item.getTimeRestriction().getUniqueVersion();
 		GameVersion gameVersion = characterRepository.getGameVersion(gameVersionId).orElseThrow();
-		return gameVersion.getProfession(source.getProfessionId());
+		return gameVersion.getProfession(source.professionId());
 	}
 }

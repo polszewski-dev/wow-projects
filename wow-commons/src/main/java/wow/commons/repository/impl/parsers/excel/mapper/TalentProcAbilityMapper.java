@@ -32,12 +32,12 @@ class TalentProcAbilityMapper extends AbstractMapper<TalentProcAbility> {
 	@Override
 	public String toString(TalentProcAbility talentProcAbility) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put(TP_EVENT, talentProcAbility.getEvent().getType());
-		map.put(TP_CHANCE_PCT, talentProcAbility.getEvent().getChance());
-		map.put(TP_EFFECT, talentProcAbility.getEffectId());
-		map.put(TP_DURATION, talentProcAbility.getDuration());
-		map.put(TP_STACKS, talentProcAbility.getStacks());
-		map.put(TP_LINE, talentProcAbility.getLine());
+		map.put(TP_EVENT, talentProcAbility.event().type());
+		map.put(TP_CHANCE_PCT, talentProcAbility.event().chance());
+		map.put(TP_EFFECT, talentProcAbility.effectId());
+		map.put(TP_DURATION, talentProcAbility.duration());
+		map.put(TP_STACKS, talentProcAbility.stacks());
+		map.put(TP_LINE, talentProcAbility.line());
 
 		return SimpleRecordMapper.toString(TYPE_TALENT_PROC, map);
 	}

@@ -27,10 +27,10 @@ class OnUseAbilityMapper extends AbstractMapper<OnUseAbility> {
 	@Override
 	public String toString(OnUseAbility onUseAbility) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		putPrimitiveAttributes(OU_STAT, OU_AMOUNT, map, onUseAbility.getAttributes());
-		map.put(OU_DURATION, onUseAbility.getDuration());
-		map.put(OU_COOLDOWN, onUseAbility.getCooldown());
-		map.put(OU_LINE, onUseAbility.getLine());
+		putPrimitiveAttributes(OU_STAT, OU_AMOUNT, map, onUseAbility.attributes());
+		map.put(OU_DURATION, onUseAbility.duration());
+		map.put(OU_COOLDOWN, onUseAbility.cooldown());
+		map.put(OU_LINE, onUseAbility.line());
 
 		return SimpleRecordMapper.toString(TYPE_ON_USE, map);
 	}

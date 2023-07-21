@@ -1,8 +1,5 @@
 package wow.commons.model.config;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
@@ -14,6 +11,7 @@ import wow.commons.model.talents.TalentId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static wow.commons.util.CollectionUtil.mergeCriteria;
@@ -23,25 +21,24 @@ import static wow.commons.util.CollectionUtil.mergeValues;
  * User: POlszewski
  * Date: 2022-10-31
  */
-@Getter
-@Builder
-public class CharacterRestriction {
-	private Integer level;
-	@NonNull
-	@Builder.Default
-	private List<CharacterClassId> characterClassIds = List.of();
-	@NonNull
-	@Builder.Default
-	private List<RaceId> raceIds = List.of();
-	private Side side;
-	private ProfessionRestriction professionRestriction;
-	private ProfessionSpecializationId professionSpecId;
-	private ExclusiveFaction exclusiveFaction;
-	private PetType activePet;
-	private SpellId spellId;
-	private TalentId talentId;
+public record CharacterRestriction(
+		Integer level,
+		List<CharacterClassId> characterClassIds,
+		List<RaceId> raceIds,
+		Side side,
+		ProfessionRestriction professionRestriction,
+		ProfessionSpecializationId professionSpecId,
+		ExclusiveFaction exclusiveFaction,
+		PetType activePet,
+		SpellId spellId,
+		TalentId talentId
+) {
+	public static final CharacterRestriction EMPTY = new CharacterRestriction(null, List.of(), List.of(), null, null, null, null, null, null, null);
 
-	public static final CharacterRestriction EMPTY = builder().build();
+	public CharacterRestriction {
+		Objects.requireNonNull(characterClassIds);
+		Objects.requireNonNull(raceIds);
+	}
 
 	public boolean isMetBy(CharacterInfo characterInfo) {
 		if (this.level != null && characterInfo.getLevel() < this.level) {
@@ -56,7 +53,7 @@ public class CharacterRestriction {
 		if (side != null && side != characterInfo.getSide()) {
 			return false;
 		}
-		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.getProfessionId())) {
+		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.professionId())) {
 			return false;
 		}
 		if (professionSpecId != null && !characterInfo.hasProfessionSpecialization(professionSpecId)) {
@@ -75,18 +72,18 @@ public class CharacterRestriction {
 	}
 
 	public CharacterRestriction merge(CharacterRestriction other) {
-		return builder()
-				.level(mergeValues(level, other.level))
-				.characterClassIds(mergeCriteria(characterClassIds, other.characterClassIds))
-				.raceIds(mergeCriteria(raceIds, other.raceIds))
-				.side(mergeValues(side, other.side))
-				.professionRestriction(mergeValues(professionRestriction, other.professionRestriction))
-				.professionSpecId(mergeValues(professionSpecId, other.professionSpecId))
-				.exclusiveFaction(exclusiveFaction)
-				.activePet(activePet)
-				.spellId(spellId)
-				.talentId(mergeValues(talentId, other.talentId))
-				.build();
+		return new CharacterRestriction(
+				mergeValues(level, other.level),
+				mergeCriteria(characterClassIds, other.characterClassIds),
+				mergeCriteria(raceIds, other.raceIds),
+				mergeValues(side, other.side),
+				mergeValues(professionRestriction, other.professionRestriction),
+				mergeValues(professionSpecId, other.professionSpecId),
+				exclusiveFaction,
+				activePet,
+				spellId,
+				mergeValues(talentId, other.talentId)
+		);
 	}
 
 	@Override

@@ -28,31 +28,31 @@ public interface AbstractItem extends ConfigurationElementWithAttributes<Integer
 	}
 
 	default ItemType getItemType() {
-		return getBasicItemInfo().getItemType();
+		return getBasicItemInfo().itemType();
 	}
 
 	default ItemSubType getItemSubType() {
-		return getBasicItemInfo().getItemSubType();
+		return getBasicItemInfo().itemSubType();
 	}
 
 	default ItemRarity getRarity() {
-		return getBasicItemInfo().getRarity();
+		return getBasicItemInfo().rarity();
 	}
 
 	default Binding getBinding() {
-		return getBasicItemInfo().getBinding();
+		return getBasicItemInfo().binding();
 	}
 
 	default boolean isUnique() {
-		return getBasicItemInfo().isUnique();
+		return getBasicItemInfo().unique();
 	}
 
 	default int getItemLevel() {
-		return getBasicItemInfo().getItemLevel();
+		return getBasicItemInfo().itemLevel();
 	}
 
 	default Set<Source> getSources() {
-		return getBasicItemInfo().getSources();
+		return getBasicItemInfo().sources();
 	}
 
 	default boolean isSourcedFromRaid() {
@@ -60,7 +60,7 @@ public interface AbstractItem extends ConfigurationElementWithAttributes<Integer
 	}
 
 	default boolean isSourcedFromInstance(String instanceName) {
-		return anySource(source -> source.getZones().stream().anyMatch(x -> x.getName().equalsIgnoreCase(instanceName)));
+		return anySource(source -> source.zones().stream().anyMatch(x -> x.getName().equalsIgnoreCase(instanceName)));
 	}
 
 	default boolean isSourcedFromAnyInstance(String... instanceNames) {
@@ -102,19 +102,19 @@ public interface AbstractItem extends ConfigurationElementWithAttributes<Integer
 	default Set<Zone> getRaidSources() {
 		return getSourcesAfterTradingTokens()
 				.filter(Source::isRaidDrop)
-				.map(Source::getZones)
+				.map(Source::zones)
 				.flatMap(Collection::stream)
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	default Set<TradedItem> getSourceItems() {
 		return getSources().stream()
-				.map(Source::getSourceItem)
+				.map(Source::sourceItem)
 				.collect(Collectors.toSet());
 	}
 
 	default Stream<Source> getSourcesAfterTradingTokens() {
 		return getSources().stream()
-				.flatMap(source -> source.isTraded() ? source.getSourceItem().getSources().stream() : Stream.of(source));
+				.flatMap(source -> source.isTraded() ? source.sourceItem().getSources().stream() : Stream.of(source));
 	}
 }

@@ -1,21 +1,15 @@
 package wow.commons.model.spells;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2022-11-25
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
-public class SpellIdAndRank {
-	@NonNull
-	private final SpellId spellId;
-	private final int rank;
+public record SpellIdAndRank(SpellId spellId, int rank) {
+	public SpellIdAndRank {
+		Objects.requireNonNull(spellId);
+	}
 
 	@Override
 	public String toString() {

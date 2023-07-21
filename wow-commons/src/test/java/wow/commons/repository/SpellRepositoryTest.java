@@ -58,20 +58,20 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(spell.getSpellId()).isEqualTo(SHADOW_BOLT);
 		assertThat(spell.getTalentTree()).isEqualTo(DESTRUCTION);
 		assertThat(spell.getSpellSchool()).isEqualTo(SHADOW);
-		assertThat(spell.getCoeffDirect().getValue()).isEqualTo(85.71, PRECISION);
+		assertThat(spell.getCoeffDirect().value()).isEqualTo(85.71, PRECISION);
 		assertThat(spell.getCoeffDot()).isEqualTo(Percent.ZERO);
 		assertThat(spell.getSpellInfo().getCooldown().getSeconds()).isZero();
 		assertThat(spell.getSpellInfo().isIgnoresGCD()).isFalse();
-		assertThat(spell.getCharacterRestriction().getCharacterClassIds()).hasSameElementsAs(List.of(WARLOCK));
-		assertThat(spell.getCharacterRestriction().getRaceIds()).isEmpty();
-		assertThat(spell.getCharacterRestriction().getTalentId()).isNull();
-		assertThat(spell.getTimeRestriction().getVersions()).isEmpty();
-		assertThat(spell.getSpellInfo().getDamagingSpellInfo().isBolt()).isTrue();
+		assertThat(spell.getCharacterRestriction().characterClassIds()).hasSameElementsAs(List.of(WARLOCK));
+		assertThat(spell.getCharacterRestriction().raceIds()).isEmpty();
+		assertThat(spell.getCharacterRestriction().talentId()).isNull();
+		assertThat(spell.getTimeRestriction().versions()).isEmpty();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().bolt()).isTrue();
 		assertThat(spell.getSpellInfo().getConversion()).isNull();
-		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getRequiredSpellEffect()).isNull();
-		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getSpellEffectRemovedOnHit()).isNull();
-		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getBonusDamageIfUnderSpellEffect()).isNull();
-		assertThat(spell.getSpellInfo().getDamagingSpellInfo().getDotScheme()).isEmpty();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().requiredSpellEffect()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().spellEffectRemovedOnHit()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().bonusDamageIfUnderSpellEffect()).isNull();
+		assertThat(spell.getSpellInfo().getDamagingSpellInfo().dotScheme()).isEmpty();
 	}
 
 	@Nested
@@ -139,16 +139,16 @@ class SpellRepositoryTest extends RepositoryTest {
 
 		SpecialAbility specialAbility = talent.getAttributes().getSpecialAbilities().get(0);
 
-		assertThat(specialAbility.getCondition()).isEqualTo(AttributeCondition.of(SHADOW_BOLT));
+		assertThat(specialAbility.condition()).isEqualTo(AttributeCondition.of(SHADOW_BOLT));
 		assertThat(specialAbility).isInstanceOf(TalentProcAbility.class);
 
 		TalentProcAbility ability = (TalentProcAbility) specialAbility;
 
-		assertThat(ability.getEvent().getType()).isEqualTo(SPELL_CRIT);
-		assertThat(ability.getEvent().getChance()).isEqualTo(Percent._100);
-		assertThat(ability.getEffectId()).isEqualTo(SHADOW_VULNERABILITY_20);
-		assertThat(ability.getDuration()).isEqualTo(Duration.seconds(12));
-		assertThat(ability.getStacks()).isEqualTo(4);
+		assertThat(ability.event().type()).isEqualTo(SPELL_CRIT);
+		assertThat(ability.event().chance()).isEqualTo(Percent._100);
+		assertThat(ability.effectId()).isEqualTo(SHADOW_VULNERABILITY_20);
+		assertThat(ability.duration()).isEqualTo(Duration.seconds(12));
+		assertThat(ability.stacks()).isEqualTo(4);
 	}
 
 	@Nested

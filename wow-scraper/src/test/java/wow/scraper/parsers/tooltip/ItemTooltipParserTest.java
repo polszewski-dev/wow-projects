@@ -86,11 +86,11 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	void weaponStats() {
 		assertThat(sunfireRobe.getWeaponStats()).isNull();
 		assertThat(magistersStaff.getWeaponStats()).isNotNull();
-		assertThat(magistersStaff.getWeaponStats().getWeaponDamageMin()).isEqualTo(146);
-		assertThat(magistersStaff.getWeaponStats().getWeaponDamageMax()).isEqualTo(326);
-		assertThat(magistersStaff.getWeaponStats().getDamageType()).isNull();
-		assertThat(magistersStaff.getWeaponStats().getWeaponDps()).isEqualTo(73.75);
-		assertThat(magistersStaff.getWeaponStats().getWeaponSpeed()).isEqualTo(3.20);
+		assertThat(magistersStaff.getWeaponStats().weaponDamageMin()).isEqualTo(146);
+		assertThat(magistersStaff.getWeaponStats().weaponDamageMax()).isEqualTo(326);
+		assertThat(magistersStaff.getWeaponStats().damageType()).isNull();
+		assertThat(magistersStaff.getWeaponStats().weaponDps()).isEqualTo(73.75);
+		assertThat(magistersStaff.getWeaponStats().weaponSpeed()).isEqualTo(3.20);
 	}
 
 	@Test
@@ -108,10 +108,10 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 				"Belt of the Malefic"
 		));
 		assertThat(hoodOfMalefic.getItemSetBonuses()).hasSize(2);
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(0).getNumPieces()).isEqualTo(2);
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(0).getDescription()).isEqualTo("Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(1).getNumPieces()).isEqualTo(4);
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(1).getDescription()).isEqualTo("Increases the damage dealt by your Shadow Bolt and Incinerate abilities by 6%.");
+		assertThat(hoodOfMalefic.getItemSetBonuses().get(0).numPieces()).isEqualTo(2);
+		assertThat(hoodOfMalefic.getItemSetBonuses().get(0).description()).isEqualTo("Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
+		assertThat(hoodOfMalefic.getItemSetBonuses().get(1).numPieces()).isEqualTo(4);
+		assertThat(hoodOfMalefic.getItemSetBonuses().get(1).description()).isEqualTo("Increases the damage dealt by your Shadow Bolt and Incinerate abilities by 6%.");
 		assertThat(hoodOfMalefic.getItemSetRequiredProfession()).isNull();
 		assertThat(hoodOfMalefic.getItemSetRequiredProfessionLevel()).isNull();
 	}

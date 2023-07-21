@@ -23,7 +23,7 @@ class MiscAbilityMapper extends AbstractMapper<MiscAbility> {
 	@Override
 	public String toString(MiscAbility talentProcAbility) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put(M_LINE, talentProcAbility.getLine());
+		map.put(M_LINE, talentProcAbility.line());
 
 		return SimpleRecordMapper.toString(TYPE_MISC, map);
 	}

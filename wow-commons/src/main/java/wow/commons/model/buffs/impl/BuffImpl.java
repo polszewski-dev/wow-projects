@@ -2,11 +2,7 @@ package wow.commons.model.buffs.impl;
 
 import lombok.Getter;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
-import wow.commons.model.attributes.complex.special.sources.BuffSource;
-import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffCategory;
-import wow.commons.model.buffs.BuffExclusionGroup;
-import wow.commons.model.buffs.BuffType;
+import wow.commons.model.buffs.*;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -51,6 +47,6 @@ public class BuffImpl extends ConfigurationElementWithAttributesImpl<Integer> im
 
 	@Override
 	public SpellId getSourceSpell() {
-		return getCharacterRestriction().getSpellId();
+		return getCharacterRestriction().spellId();
 	}
 }

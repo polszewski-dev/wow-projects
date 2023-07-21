@@ -92,7 +92,7 @@ public class CachedItemService implements ItemService {
 
 	@Override
 	public List<Gem[]> getBestGemCombos(Character character, Item item) {
-		String key = getProfileKey(character) + "#" + item.getSocketSpecification().getSocketTypes().toString();
+		String key = getProfileKey(character) + "#" + item.getSocketSpecification().socketTypes();
 		return getBestGemCombosCache.computeIfAbsent(key, x -> itemService.getBestGemCombos(character, item));
 	}
 

@@ -115,7 +115,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	}
 
 	public void addSpell(Spell spell) {
-		for (CharacterClassId characterClassId : spell.getCharacterRestriction().getCharacterClassIds()) {
+		for (CharacterClassId characterClassId : spell.getCharacterRestriction().characterClassIds()) {
 			spellsByClass.computeIfAbsent(characterClassId, x -> new ArrayList<>()).add(spell);
 		}
 		addEntry(spellById, spell.getSpellId(), spell);
@@ -126,7 +126,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		List<Talent> list = talentByClassByCalcPosByRank.computeIfAbsent(key, x -> new ArrayList<>());
 
 		Optional<Talent> optionalExistingTalent = list.stream()
-				.filter(x -> x.getTimeRestriction().getVersions().equals(talent.getTimeRestriction().getVersions()))
+				.filter(x -> x.getTimeRestriction().versions().equals(talent.getTimeRestriction().versions()))
 				.collect(CollectionUtil.toOptionalSingleton());
 
 		if (optionalExistingTalent.isEmpty()) {

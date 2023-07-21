@@ -52,7 +52,7 @@ class ItemStatParserTest {
 
 		ProcAbility specialAbility = (ProcAbility)specialAbilities.get(0);
 
-		assertThat(specialAbility.getLine()).isEqualTo(line);
+		assertThat(specialAbility.line()).isEqualTo(line);
 		assertThat(specialAbility).hasToString(expectedStatString);
 	}
 
@@ -75,7 +75,7 @@ class ItemStatParserTest {
 
 		OnUseAbility specialAbility = (OnUseAbility)specialAbilities.get(0);
 
-		assertThat(specialAbility.getLine()).isEqualTo(line);
+		assertThat(specialAbility.line()).isEqualTo(line);
 		assertThat(specialAbility).hasToString(expectedStatString);
 	}
 

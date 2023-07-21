@@ -1,36 +1,54 @@
 package wow.commons.model.attributes.complex.special;
 
-import lombok.Getter;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.util.AttributesBuilder;
+
+import java.util.Objects;
+
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
 
 /**
  * User: POlszewski
  * Date: 2022-11-26
  */
-@Getter
-public class EquivalentAbility extends SpecialAbility {
-	public EquivalentAbility(Attributes attributes, String line, AttributeCondition condition, SpecialAbilitySource source) {
-		super(line, 1, attributes, condition, source);
+public record EquivalentAbility(
+		Attributes attributes,
+		String line,
+		AttributeCondition condition,
+		SpecialAbilitySource source
+) implements SpecialAbility {
+	public EquivalentAbility {
+		Objects.requireNonNull(attributes);
+		Objects.requireNonNull(line);
+		Objects.requireNonNull(condition);
+
 		if (!attributes.getComplexAttributeMap().isEmpty()) {
 			throw new IllegalArgumentException("Equivalent can't have complex attributes");
 		}
+
+		attributes = AttributesBuilder.attachCondition(attributes, condition);
+	}
+
+	@Override
+	public int priority() {
+		return 1;
 	}
 
 	@Override
 	public EquivalentAbility attachCondition(AttributeCondition condition) {
-		return new EquivalentAbility(getAttributes(), getLine(), condition, getSource());
+		return new EquivalentAbility(attributes, line, condition, source);
 	}
 
 	@Override
 	public EquivalentAbility attachSource(SpecialAbilitySource source) {
-		return new EquivalentAbility(getAttributes(), getLine(), condition, source);
+		return new EquivalentAbility(attributes, line, condition, source);
 	}
 
 	@Override
-	protected String doToString() {
-		return getAttributes().toString();
+	public String toString() {
+		return attributes + getConditionString(condition);
 	}
 }

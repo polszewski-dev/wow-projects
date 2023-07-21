@@ -1,13 +1,11 @@
 package wow.commons.model.config;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static wow.commons.util.CollectionUtil.*;
@@ -16,15 +14,20 @@ import static wow.commons.util.CollectionUtil.*;
  * User: POlszewski
  * Date: 2022-12-07
  */
-@Getter
-@Builder
-public class TimeRestriction {
-	@NonNull
-	@Builder.Default
-	private List<GameVersionId> versions = List.of();
-	private PhaseId phaseId;
+public record TimeRestriction(List<GameVersionId> versions, PhaseId phaseId) {
+	public static final TimeRestriction EMPTY = new TimeRestriction(List.of(), null);
 
-	public static final TimeRestriction EMPTY = builder().build();
+	public TimeRestriction {
+		Objects.requireNonNull(versions);
+	}
+
+	public static TimeRestriction of(GameVersionId gameVersionId) {
+		return new TimeRestriction(List.of(gameVersionId), null);
+	}
+
+	public static TimeRestriction of(PhaseId phaseId) {
+		return new TimeRestriction(List.of(), phaseId);
+	}
 
 	public boolean isMetBy(PhaseId phaseId) {
 		if (!this.versions.isEmpty() && !this.versions.contains(phaseId.getGameVersionId())) {
@@ -34,10 +37,10 @@ public class TimeRestriction {
 	}
 
 	public TimeRestriction merge(TimeRestriction other) {
-		return builder()
-				.versions(mergeCriteria(versions, other.versions))
-				.phaseId(mergeValues(phaseId, other.phaseId))
-				.build();
+		return new TimeRestriction(
+				mergeCriteria(versions, other.versions),
+				mergeValues(phaseId, other.phaseId)
+		);
 	}
 
 	public GameVersionId getUniqueVersion() {

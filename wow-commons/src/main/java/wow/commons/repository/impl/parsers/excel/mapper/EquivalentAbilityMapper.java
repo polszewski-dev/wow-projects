@@ -25,8 +25,8 @@ class EquivalentAbilityMapper extends AbstractMapper<EquivalentAbility> {
 	@Override
 	public String toString(EquivalentAbility equivalentAbility) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		putPrimitiveAttributes(EQ_STAT, EQ_AMOUNT, map, equivalentAbility.getAttributes().getAttributes());
-		map.put(EQ_LINE, equivalentAbility.getLine());
+		putPrimitiveAttributes(EQ_STAT, EQ_AMOUNT, map, equivalentAbility.attributes().getAttributes());
+		map.put(EQ_LINE, equivalentAbility.line());
 
 		return SimpleRecordMapper.toString(TYPE_EQUIVALENT, map);
 	}

@@ -148,10 +148,10 @@ public class StatsController {
 
 	private Comparator<SpecialAbility> compareSources() {
 		return
-				Comparator.comparingInt((SpecialAbility x) -> x.getSource().getPriority())
-				.thenComparing((SpecialAbility x) -> (Comparable<Object>)x.getSource())
-				.thenComparingInt(SpecialAbility::getPriority)
-				.thenComparing(SpecialAbility::getLine)
+				Comparator.comparingInt((SpecialAbility x) -> x.source().getPriority())
+				.thenComparing((SpecialAbility x) -> (Comparable<Object>)x.source())
+				.thenComparingInt(SpecialAbility::priority)
+				.thenComparing(SpecialAbility::line)
 		;
 	}
 }

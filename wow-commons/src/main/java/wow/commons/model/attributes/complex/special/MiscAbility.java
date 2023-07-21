@@ -1,33 +1,50 @@
 package wow.commons.model.attributes.complex.special;
 
-import lombok.Getter;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
 
+import java.util.Objects;
+
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
+
 /**
  * User: POlszewski
  * Date: 2022-11-26
  */
-@Getter
-public class MiscAbility extends SpecialAbility {
-	public MiscAbility(String line, AttributeCondition condition, SpecialAbilitySource source) {
-		super(line, 5, Attributes.EMPTY, condition, source);
+public record MiscAbility(
+		String line,
+		AttributeCondition condition,
+		SpecialAbilitySource source
+) implements SpecialAbility {
+	public MiscAbility {
+		Objects.requireNonNull(line);
+		Objects.requireNonNull(condition);
+	}
+
+	@Override
+	public int priority() {
+		return 5;
+	}
+
+	@Override
+	public Attributes attributes() {
+		return Attributes.EMPTY;
 	}
 
 	@Override
 	public MiscAbility attachCondition(AttributeCondition condition) {
-		return new MiscAbility(getLine(), condition, getSource());
+		return new MiscAbility(line, condition, source);
 	}
 
 	@Override
 	public MiscAbility attachSource(SpecialAbilitySource source) {
-		return new MiscAbility(getLine(), condition, source);
+		return new MiscAbility(line, condition, source);
 	}
 
 	@Override
-	protected String doToString() {
-		return getLine();
+	public String toString() {
+		return line + getConditionString(condition);
 	}
 }

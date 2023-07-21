@@ -16,9 +16,9 @@ class ItemLinkTest {
 	void testParse() {
 		ItemLink itemLink = ItemLink.parse("|cffa335ee|Hitem:34333::::::::68::::::::|h[Coif of Alleria]|h|r");
 
-		assertThat(itemLink.getItemId()).isEqualTo(34333);
-		assertThat(itemLink.getName()).isEqualTo("Coif of Alleria");
-		assertThat(itemLink.getRarity()).isEqualTo(ItemRarity.EPIC);
+		assertThat(itemLink.itemId()).isEqualTo(34333);
+		assertThat(itemLink.name()).isEqualTo("Coif of Alleria");
+		assertThat(itemLink.rarity()).isEqualTo(ItemRarity.EPIC);
 	}
 
 	@ParameterizedTest

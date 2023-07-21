@@ -84,6 +84,6 @@ public abstract class FilterOutWorseChoices<T extends AttributeSource> {
 	}
 
 	private static SimpleImmutableEntry<PrimitiveAttributeId, AttributeCondition> getIdAndCondition(PrimitiveAttribute x) {
-		return new SimpleImmutableEntry<>(x.getId(), x.getCondition());
+		return new SimpleImmutableEntry<>(x.id(), x.condition());
 	}
 }

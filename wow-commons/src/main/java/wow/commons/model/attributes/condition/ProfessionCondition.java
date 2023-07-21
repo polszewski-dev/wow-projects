@@ -1,24 +1,20 @@
 package wow.commons.model.attributes.condition;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.util.EnumUtil;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2023-03-25
  */
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode
-public class ProfessionCondition implements AttributeCondition {
-	@NonNull
-	private final ProfessionId professionId;
+public record ProfessionCondition(ProfessionId professionId) implements AttributeCondition {
+	public ProfessionCondition {
+		Objects.requireNonNull(professionId);
+	}
 
 	public static ProfessionCondition of(ProfessionId professionId) {
 		return CACHE.get(professionId);

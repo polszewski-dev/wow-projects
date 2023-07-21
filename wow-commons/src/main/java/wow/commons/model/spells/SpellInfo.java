@@ -44,6 +44,6 @@ public class SpellInfo extends ConfigurationElementImpl<SpellId> {
 	}
 
 	public Percent getConversionPct(Conversion.From from, Conversion.To to) {
-		return conversion != null && conversion.is(from, to) ? conversion.getPercent() : Percent.ZERO;
+		return conversion != null && conversion.is(from, to) ? conversion.percent() : Percent.ZERO;
 	}
 }

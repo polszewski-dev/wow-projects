@@ -88,7 +88,8 @@ public class StatMatcher {
 	}
 
 	public Duration getParamProcCooldown() {
-		return params.getParsedProcCooldown();
+		Duration cooldown = params.getParsedProcCooldown();
+		return cooldown != null ? cooldown : Duration.ZERO;
 	}
 
 	public ComplexAttribute getExpression() {

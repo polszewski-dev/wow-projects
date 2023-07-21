@@ -12,35 +12,14 @@ import java.util.Objects;
  * User: POlszewski
  * Date: 2022-01-04
  */
-public class PrimitiveAttribute extends Attribute {
-	private final PrimitiveAttributeId id;
-	private final double value;
-	private Percent percentValue;
-	private Duration durationValue;
-
-	private PrimitiveAttribute(PrimitiveAttributeId id, double value, AttributeCondition condition, Percent percentValue, Duration durationValue) {
-		super(condition);
-		this.id = id;
-		this.value = value;
-		this.percentValue = percentValue;
-		this.durationValue = durationValue;
-	}
-
-	public PrimitiveAttribute(PrimitiveAttributeId id, double value, AttributeCondition condition) {
-		this(id, value, condition, null, null);
-	}
-
-	public PrimitiveAttribute(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
-		this(id, value.getValue(), condition, value, null);
-	}
-
-	public PrimitiveAttribute(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
-		this(id, value.getSeconds(), condition, null, value);
-	}
-
-	@Override
-	public PrimitiveAttributeId getId() {
-		return id;
+public record PrimitiveAttribute(
+		PrimitiveAttributeId id,
+		double value,
+		AttributeCondition condition
+) implements Attribute {
+	public PrimitiveAttribute {
+		Objects.requireNonNull(id);
+		Objects.requireNonNull(condition);
 	}
 
 	public double getDouble() {
@@ -48,22 +27,16 @@ public class PrimitiveAttribute extends Attribute {
 	}
 
 	public Percent getPercent() {
-		if (percentValue == null) {
-			this.percentValue = Percent.of(value);
-		}
-		return percentValue;
+		return Percent.of(value);
 	}
 
 	public Duration getDuration() {
-		if (durationValue == null) {
-			this.durationValue = Duration.seconds(value);
-		}
-		return durationValue;
+		return Duration.seconds(value);
 	}
 
 	@Override
 	public PrimitiveAttribute attachCondition(AttributeCondition condition) {
-		return new PrimitiveAttribute(id, value, condition, percentValue, durationValue);
+		return new PrimitiveAttribute(id, value, condition);
 	}
 
 	public PrimitiveAttribute scale(double factor) {
@@ -73,19 +46,6 @@ public class PrimitiveAttribute extends Attribute {
 
 	public PrimitiveAttribute negate() {
 		return new PrimitiveAttribute(id, -value, condition);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof PrimitiveAttribute)) return false;
-		PrimitiveAttribute that = (PrimitiveAttribute) o;
-		return Double.compare(that.value, value) == 0 && id == that.id && Objects.equals(condition, that.condition);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, value, condition);
 	}
 
 	@Override

@@ -12,6 +12,6 @@ public interface CharacterRestricted {
 	}
 
 	default Integer getRequiredLevel() {
-		return getCharacterRestriction().getLevel();
+		return getCharacterRestriction().level();
 	}
 }

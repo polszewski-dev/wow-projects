@@ -60,7 +60,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(baseStatInfo.getBaseSpirit()).isEqualTo(142);
 		assertThat(baseStatInfo.getBaseHP()).isEqualTo(4090);
 		assertThat(baseStatInfo.getBaseMana()).isEqualTo(4285);
-		assertThat(baseStatInfo.getBaseSpellCritPct().getValue()).isEqualTo(3.29, PRECISION);
+		assertThat(baseStatInfo.getBaseSpellCritPct().value()).isEqualTo(3.29, PRECISION);
 		assertThat(baseStatInfo.getIntellectPerCritPct()).isEqualTo(80, PRECISION);
 	}
 
@@ -473,7 +473,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(racial.getTooltip()).isEqualTo("Increases your damage and healing from spells and effects by up to 143, but reduces healing effects on you by 50%.  Lasts 15 sec.");
 		assertThat(racial.getRace().getRaceId()).isEqualTo(ORC);
 		assertThat(racial.getRace().getGameVersion().getGameVersionId()).isEqualTo(TBC);
-		assertThat(racial.getCharacterRestriction().getCharacterClassIds()).hasSameElementsAs(List.of(WARLOCK));
+		assertThat(racial.getCharacterRestriction().characterClassIds()).hasSameElementsAs(List.of(WARLOCK));
 
 		assertThat(racial.isAvailableTo(getTbcWarlock())).isTrue();
 	}

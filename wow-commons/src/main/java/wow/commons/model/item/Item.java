@@ -30,11 +30,11 @@ public interface Item extends AbstractItem, PveRoleClassified {
 	}
 
 	default List<SocketType> getSocketTypes() {
-		return getSocketSpecification().getSocketTypes();
+		return getSocketSpecification().socketTypes();
 	}
 
 	default Attributes getSocketBonus() {
-		return getSocketSpecification().getSocketBonus();
+		return getSocketSpecification().socketBonus();
 	}
 
 	default boolean canBeEquippedIn(ItemSlot itemSlot) {

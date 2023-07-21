@@ -3,7 +3,6 @@ package wow.commons.model.item.impl;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import wow.commons.model.attributes.complex.SpecialAbilitySource;
-import wow.commons.model.attributes.complex.special.sources.EnchantSource;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
@@ -13,6 +12,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.config.impl.ConfigurationElementWithAttributesImpl;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.item.EnchantSource;
 
 import java.util.List;
 import java.util.Set;

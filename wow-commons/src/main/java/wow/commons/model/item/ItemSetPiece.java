@@ -10,12 +10,19 @@ import java.util.Objects;
  * User: POlszewski
  * Date: 2022-01-05
  */
-public class ItemSetPiece extends ComplexAttribute {
-	private final Item item;
+public record ItemSetPiece(Item item) implements ComplexAttribute {
+	public ItemSetPiece {
+		Objects.requireNonNull(item);
+	}
 
-	public ItemSetPiece(Item item) {
-		super(ComplexAttributeId.SET_PIECES, AttributeCondition.EMPTY);
-		this.item = item;
+	@Override
+	public ComplexAttributeId id() {
+		return ComplexAttributeId.SET_PIECES;
+	}
+
+	@Override
+	public AttributeCondition condition() {
+		return AttributeCondition.EMPTY;
 	}
 
 	public Item getItem() {
@@ -32,20 +39,7 @@ public class ItemSetPiece extends ComplexAttribute {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof ItemSetPiece)) return false;
-		ItemSetPiece that = (ItemSetPiece) o;
-		return item.equals(that.item);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(item);
-	}
-
-	@Override
-	protected String doToString() {
+	public String toString() {
 		return String.format("%s - %s", item.getItemSet().getName(), item.getName());
 	}
 }

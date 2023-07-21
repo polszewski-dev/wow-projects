@@ -1,8 +1,5 @@
 package wow.commons.model.sources;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import wow.commons.model.pve.Zone;
 
 import java.util.List;
@@ -11,12 +8,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-13
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode(callSuper = false)
-public class ZoneDrop extends Source {
-	private final List<Zone> zones;
-
+public record ZoneDrop(List<Zone> zones) implements Source {
 	@Override
 	public boolean isZoneDrop() {
 		return true;
@@ -24,6 +16,6 @@ public class ZoneDrop extends Source {
 
 	@Override
 	public String toString() {
-		return "Trash: " + getZoneShortNames();
+		return "Trash: " + zoneShortNames();
 	}
 }

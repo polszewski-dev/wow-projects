@@ -1,25 +1,33 @@
 package wow.commons.model.attributes.complex;
 
-import lombok.Getter;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+
+import java.util.Objects;
+
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
 
 /**
  * User: POlszewski
  * Date: 2021-01-17
  */
-@Getter
-public class StatConversion extends ComplexAttribute {
-	private final PrimitiveAttributeId fromStat;
-	private final PrimitiveAttributeId toStat;
-	private final Percent ratioPct;
+public record StatConversion(
+		PrimitiveAttributeId fromStat,
+		PrimitiveAttributeId toStat,
+		Percent ratioPct,
+		AttributeCondition condition
+) implements ComplexAttribute {
+	public StatConversion {
+		Objects.requireNonNull(fromStat);
+		Objects.requireNonNull(toStat);
+		Objects.requireNonNull(ratioPct);
+		Objects.requireNonNull(condition);
+	}
 
-	public StatConversion(PrimitiveAttributeId fromStat, PrimitiveAttributeId toStat, Percent ratioPct, AttributeCondition condition) {
-		super(ComplexAttributeId.STAT_CONVERSION, condition);
-		this.fromStat = fromStat;
-		this.toStat = toStat;
-		this.ratioPct = ratioPct;
+	@Override
+	public ComplexAttributeId id() {
+		return ComplexAttributeId.STAT_CONVERSION;
 	}
 
 	@Override
@@ -27,8 +35,7 @@ public class StatConversion extends ComplexAttribute {
 		return new StatConversion(fromStat, toStat, ratioPct, condition);
 	}
 
-	@Override
-	protected String doToString() {
-		return String.format("(from: %s, to: %s, ratio: %s)", fromStat, toStat, ratioPct);
+	public String toString() {
+		return "(from: %s, to: %s, ratio: %s)".formatted(fromStat, toStat, ratioPct) + getConditionString(condition);
 	}
 }

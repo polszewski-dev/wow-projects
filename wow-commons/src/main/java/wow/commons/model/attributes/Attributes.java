@@ -1,16 +1,12 @@
 package wow.commons.model.attributes;
 
-import lombok.Getter;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,16 +14,15 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2021-03-04
  */
-@Getter
-public class Attributes implements AttributeSource {
+public record Attributes(
+		List<PrimitiveAttribute> primitiveAttributes,
+		Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeMap
+) implements AttributeSource {
 	public static final Attributes EMPTY = of(List.of(), Map.of());
 
-	private final List<PrimitiveAttribute> primitiveAttributes;
-	private final Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeMap;
-
-	private Attributes(List<PrimitiveAttribute> primitiveAttributes, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeMap) {
-		this.primitiveAttributes = primitiveAttributes;
-		this.complexAttributeMap = complexAttributeMap;
+	public Attributes {
+		Objects.requireNonNull(primitiveAttributes);
+		Objects.requireNonNull(complexAttributeMap);
 	}
 
 	public static Attributes of(List<PrimitiveAttribute> primitiveAttributes, Map<ComplexAttributeId, List<ComplexAttribute>> complexAttributeMap) {
@@ -55,7 +50,17 @@ public class Attributes implements AttributeSource {
 	}
 
 	public static Attributes of(ComplexAttribute complexAttribute) {
-		return of(List.of(), Map.of(complexAttribute.getId(), List.of(complexAttribute)));
+		return of(List.of(), Map.of(complexAttribute.id(), List.of(complexAttribute)));
+	}
+
+	@Override
+	public List<PrimitiveAttribute> getPrimitiveAttributes() {
+		return primitiveAttributes;
+	}
+
+	@Override
+	public Map<ComplexAttributeId, List<ComplexAttribute>> getComplexAttributeMap() {
+		return complexAttributeMap;
 	}
 
 	@Override
@@ -82,8 +87,8 @@ public class Attributes implements AttributeSource {
 	public String toString() {
 		return Stream.concat(
 						primitiveAttributes.stream().sorted(
-						Comparator.comparing(PrimitiveAttribute::getId)
-								.thenComparing(x -> x.getCondition().toString())
+						Comparator.comparing(PrimitiveAttribute::id)
+								.thenComparing(x -> x.condition().toString())
 				),
 				complexAttributeMap.values().stream().flatMap(Collection::stream)
 		)
