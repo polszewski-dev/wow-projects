@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.scraper.ScraperTestConfig;
 import wow.scraper.model.JsonCommonDetails;
-import wow.scraper.parsers.stats.StatPatternRepository;
+import wow.scraper.repository.StatPatternRepository;
 
 import java.io.IOException;
 

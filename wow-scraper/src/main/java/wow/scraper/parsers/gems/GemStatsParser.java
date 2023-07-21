@@ -5,7 +5,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.AttributesBuilder;
 import wow.scraper.parsers.stats.StatParser;
-import wow.scraper.parsers.stats.StatPatternRepository;
+import wow.scraper.repository.StatPatternRepository;
 
 /**
  * User: POlszewski

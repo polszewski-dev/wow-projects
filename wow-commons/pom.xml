@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>polszewski</groupId>
 			<artifactId>excel-utils</artifactId>
-			<version>1.7</version>
+			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>
@@ -31,10 +31,17 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
+					<annotationProcessorPaths>
+						<annotationProcessorPath>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</annotationProcessorPath>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 		</plugins>

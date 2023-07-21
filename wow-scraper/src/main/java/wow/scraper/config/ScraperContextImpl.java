@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import wow.scraper.fetchers.WowheadFetcher;
-import wow.scraper.parsers.stats.StatPatternRepository;
 import wow.scraper.repository.*;
 
 /**

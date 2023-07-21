@@ -14,7 +14,7 @@ import wow.commons.model.attributes.complex.special.OnUseAbility;
 import wow.commons.model.attributes.complex.special.ProcAbility;
 import wow.scraper.ScraperTestConfig;
 import wow.scraper.parsers.stats.StatParser;
-import wow.scraper.parsers.stats.StatPatternRepository;
+import wow.scraper.repository.StatPatternRepository;
 
 import java.util.List;
 import java.util.stream.Stream;

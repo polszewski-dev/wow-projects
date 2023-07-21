@@ -18,7 +18,7 @@ import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.gems.SocketBonusParser;
 import wow.scraper.parsers.stats.StatParser;
-import wow.scraper.parsers.stats.StatPatternRepository;
+import wow.scraper.repository.StatPatternRepository;
 
 import java.util.ArrayList;
 import java.util.List;

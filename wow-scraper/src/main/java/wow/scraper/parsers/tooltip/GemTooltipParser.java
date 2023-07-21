@@ -9,7 +9,7 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.gems.GemStatsParser;
-import wow.scraper.parsers.stats.StatPatternRepository;
+import wow.scraper.repository.StatPatternRepository;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,7 +3,7 @@ package wow.scraper.parsers.tooltip;
 import lombok.Getter;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonSpellDetails;
-import wow.scraper.parsers.stats.StatPatternRepository;
+import wow.scraper.repository.StatPatternRepository;
 
 /**
  * User: POlszewski
