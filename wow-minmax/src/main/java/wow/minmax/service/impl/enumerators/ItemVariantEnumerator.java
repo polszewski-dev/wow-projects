@@ -148,7 +148,7 @@ public abstract class ItemVariantEnumerator {
 	public List<Comparison> getResult() {
 		return bestOptions.values()
 						  .stream()
-						  .sorted(Comparator.<Comparison, Percent>comparing(x -> x.changePct).reversed())
+						  .sorted(Comparator.comparing(Comparison::changePct).reversed())
 						  .toList();
 	}
 
@@ -162,7 +162,7 @@ public abstract class ItemVariantEnumerator {
 		String key = getUniqueItemKey(itemOption);
 		Comparison currentBestComparison = bestOptions.get(key);
 
-		if (currentBestComparison == null || comparison.changePct.compareTo(currentBestComparison.changePct) > 0) {
+		if (currentBestComparison == null || comparison.changePct().compareTo(currentBestComparison.changePct()) > 0) {
 			bestOptions.put(key, comparison);
 		}
 	}

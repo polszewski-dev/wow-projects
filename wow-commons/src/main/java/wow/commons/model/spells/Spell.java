@@ -2,7 +2,7 @@ package wow.commons.model.spells;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.config.ConfigurationElement;
 import wow.commons.model.talents.TalentTree;
 

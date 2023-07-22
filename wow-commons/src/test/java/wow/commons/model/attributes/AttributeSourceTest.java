@@ -2,6 +2,7 @@ package wow.commons.model.attributes;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wow.commons.model.attributes.condition.AttributeCondition;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;

@@ -1,7 +1,7 @@
 package wow.character.model.character;
 
 import wow.character.model.Copyable;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
 

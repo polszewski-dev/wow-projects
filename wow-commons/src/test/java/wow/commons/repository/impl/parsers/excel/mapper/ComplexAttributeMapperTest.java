@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.EffectIncreasePerEffectOnTarget;
-import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.StatConversion;
 import wow.commons.model.attributes.complex.special.*;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.spells.EffectId;
 import wow.commons.model.talents.TalentTree;
 

@@ -33,6 +33,7 @@ module wow.minmax {
 	exports wow.minmax.repository.impl;
 	exports wow.minmax.service;
 	exports wow.minmax.service.impl;
+	exports wow.minmax.util;
 
 	opens wow.minmax to spring.core;
 	opens wow.minmax.config to spring.core;

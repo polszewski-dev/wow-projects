@@ -1,7 +1,7 @@
 package wow.commons.model.attributes.complex;
 
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 
 /**
  * User: POlszewski

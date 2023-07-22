@@ -2,9 +2,9 @@ package wow.commons.repository.impl.parsers.excel.mapper;
 
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.SpecialAbility;
 import wow.commons.model.attributes.complex.special.ProcAbility;
 import wow.commons.model.attributes.complex.special.ProcEventType;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
 import wow.commons.util.parser.simple.ParseResult;
 import wow.commons.util.parser.simple.SimpleRecordMapper;
 

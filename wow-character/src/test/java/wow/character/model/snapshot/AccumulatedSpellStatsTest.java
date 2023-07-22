@@ -6,8 +6,8 @@ import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.spells.Spell;
 
 import static org.assertj.core.api.Assertions.assertThat;

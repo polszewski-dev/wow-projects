@@ -2,9 +2,13 @@ package wow.character.util;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.equipment.ItemSockets;
-import wow.commons.model.attributes.*;
+import wow.commons.model.attributes.AttributeCollection;
+import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attributes.AttributeSource;
+import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.item.*;

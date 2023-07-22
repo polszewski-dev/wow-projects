@@ -1,10 +1,10 @@
 package wow.character.model.equipment;
 
 import wow.character.model.Copyable;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;

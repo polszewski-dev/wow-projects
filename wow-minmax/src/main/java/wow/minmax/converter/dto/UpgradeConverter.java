@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 import wow.commons.model.attributes.Attribute;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.util.AttributesDiff;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.Comparison;
 import wow.minmax.model.dto.UpgradeDTO;
+import wow.minmax.util.AttributesDiff;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +28,7 @@ public class UpgradeConverter implements Converter<Comparison, UpgradeDTO> {
 		AttributesDiff statDifference = source.getStatDifference();
 
 		return new UpgradeDTO(
-				source.changePct.value(),
+				source.changePct().value(),
 				equippableItemConverter.convertList(source.getItemDifference()),
 				getStatDiff(statDifference),
 				getAbilities(statDifference.getAddedAbilities()),

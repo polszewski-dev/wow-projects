@@ -3,13 +3,13 @@ package wow.commons.util;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeSource;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
+import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 

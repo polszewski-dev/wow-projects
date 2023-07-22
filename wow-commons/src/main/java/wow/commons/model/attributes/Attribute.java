@@ -3,6 +3,7 @@ package wow.commons.model.attributes;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 

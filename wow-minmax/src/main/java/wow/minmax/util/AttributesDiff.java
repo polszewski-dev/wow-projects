@@ -1,4 +1,4 @@
-package wow.commons.util;
+package wow.minmax.util;
 
 import lombok.Getter;
 import wow.commons.model.attributes.Attributes;

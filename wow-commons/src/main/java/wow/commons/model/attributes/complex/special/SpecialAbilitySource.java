@@ -1,4 +1,4 @@
-package wow.commons.model.attributes.complex;
+package wow.commons.model.attributes.complex.special;
 
 import wow.commons.model.config.Described;
 

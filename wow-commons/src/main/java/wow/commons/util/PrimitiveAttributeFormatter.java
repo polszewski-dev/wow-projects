@@ -1,6 +1,6 @@
 package wow.commons.util;
 
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 
 import java.io.IOException;

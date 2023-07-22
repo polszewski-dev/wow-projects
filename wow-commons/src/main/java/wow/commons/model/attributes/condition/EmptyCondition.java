@@ -1,7 +1,5 @@
 package wow.commons.model.attributes.condition;
 
-import wow.commons.model.attributes.AttributeCondition;
-
 /**
  * User: POlszewski
  * Date: 2022-11-11

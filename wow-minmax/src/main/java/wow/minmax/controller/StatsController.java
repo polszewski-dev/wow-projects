@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.Character;
-import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
 import wow.commons.model.buffs.BuffCategory;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.RotationStatsConverter;

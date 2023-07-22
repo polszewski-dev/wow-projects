@@ -3,7 +3,7 @@ package wow.scraper.classifiers;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.attributes.AttributeSource;
-import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeType;

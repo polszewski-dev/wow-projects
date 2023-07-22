@@ -1,10 +1,10 @@
-package wow.commons.util;
+package wow.minmax.util;
 
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
@@ -33,11 +33,11 @@ public class AttributesDiffFinder {
 	}
 
 	private void addPrimitiveAttributeDiff(AttributesDiff result) {
-		List<PrimitiveAttribute> attributes = getPrimitiveAttributeDiff();
-		result.setAttributes(Attributes.of(attributes));
+		Attributes attributes = getPrimitiveAttributeDiff();
+		result.setAttributes(attributes);
 	}
 
-	private List<PrimitiveAttribute> getPrimitiveAttributeDiff() {
+	private Attributes getPrimitiveAttributeDiff() {
 		for (var attribute : attributes1.getPrimitiveAttributes()) {
 			getDoubleCollector(attribute).add(attribute);
 		}
@@ -46,6 +46,10 @@ public class AttributesDiffFinder {
 			getDoubleCollector(attribute).subtract(attribute);
 		}
 
+		return getPrimitiveAttributes();
+	}
+
+	private Attributes getPrimitiveAttributes() {
 		List<PrimitiveAttribute> attributes = new ArrayList<>();
 
 		for (PrimitiveCollector collector : collectors.values()) {
@@ -54,7 +58,7 @@ public class AttributesDiffFinder {
 
 		attributes.removeIf(Objects::isNull);
 
-		return attributes;
+		return Attributes.of(attributes);
 	}
 
 	private void addComplexAttributeDiff(AttributesDiff result) {

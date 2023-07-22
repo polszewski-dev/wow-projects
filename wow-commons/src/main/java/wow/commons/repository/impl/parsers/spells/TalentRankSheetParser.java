@@ -1,7 +1,7 @@
 package wow.commons.repository.impl.parsers.spells;
 
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.spells.SpellSchool;

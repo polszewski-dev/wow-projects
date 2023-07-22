@@ -3,7 +3,7 @@ package wow.commons.model.attributes.primitive;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.util.PrimitiveAttributeFormatter;
 
 import java.util.Objects;

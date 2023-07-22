@@ -1,7 +1,7 @@
 package wow.commons.repository.impl.parsers.items;
 
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;

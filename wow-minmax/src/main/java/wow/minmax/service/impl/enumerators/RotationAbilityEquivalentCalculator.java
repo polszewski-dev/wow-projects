@@ -6,7 +6,7 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.util.AttributeEvaluator;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
 import wow.commons.model.spells.Spell;
 import wow.minmax.service.CalculationService;
 

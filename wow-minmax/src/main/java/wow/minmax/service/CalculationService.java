@@ -4,7 +4,7 @@ import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.spells.Spell;

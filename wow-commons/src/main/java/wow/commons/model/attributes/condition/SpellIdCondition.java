@@ -1,6 +1,5 @@
 package wow.commons.model.attributes.condition;
 
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.spells.SpellId;
 import wow.commons.util.EnumUtil;
 

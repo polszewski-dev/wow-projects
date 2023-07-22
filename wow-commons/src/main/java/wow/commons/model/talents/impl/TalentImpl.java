@@ -2,7 +2,7 @@ package wow.commons.model.talents.impl;
 
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;

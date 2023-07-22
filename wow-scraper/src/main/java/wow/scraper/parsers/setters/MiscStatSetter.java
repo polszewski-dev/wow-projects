@@ -1,6 +1,6 @@
 package wow.scraper.parsers.setters;
 
-import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
 import wow.commons.util.AttributesBuilder;
 import wow.scraper.parsers.stats.StatMatcher;
 

@@ -1,7 +1,7 @@
 package wow.commons.model.attributes.complex;
 
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 
 import java.util.Objects;

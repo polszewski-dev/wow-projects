@@ -1,4 +1,4 @@
-package wow.commons.util;
+package wow.minmax.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -6,8 +6,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attributes.condition.AttributeCondition;
 
 import java.util.stream.Stream;
 

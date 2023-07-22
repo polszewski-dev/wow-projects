@@ -1,7 +1,7 @@
 package wow.character.service.impl.enumerators;
 
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.AttributeSource;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 

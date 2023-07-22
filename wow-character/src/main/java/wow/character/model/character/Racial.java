@@ -2,7 +2,7 @@ package wow.character.model.character;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;

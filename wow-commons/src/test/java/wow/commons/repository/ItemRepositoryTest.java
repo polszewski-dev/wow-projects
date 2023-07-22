@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.AttributeCondition;
-import wow.commons.model.attributes.complex.SpecialAbility;
+import wow.commons.model.attributes.complex.special.SpecialAbility;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 

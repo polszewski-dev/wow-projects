@@ -1,9 +1,7 @@
 package wow.commons.model.attributes.complex.special;
 
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.SpecialAbility;
-import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.condition.AttributeCondition;
 
 import java.util.Objects;
 

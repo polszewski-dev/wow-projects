@@ -1,6 +1,5 @@
-package wow.commons.model.attributes;
+package wow.commons.model.attributes.condition;
 
-import wow.commons.model.attributes.condition.*;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.professions.ProfessionId;

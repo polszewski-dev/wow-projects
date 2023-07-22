@@ -2,9 +2,9 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.complex.StatConversion;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 

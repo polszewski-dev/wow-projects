@@ -1,12 +1,11 @@
 package wow.minmax.model;
 
-import lombok.Getter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.util.AttributesDiff;
-import wow.commons.util.AttributesDiffFinder;
+import wow.minmax.util.AttributesDiff;
+import wow.minmax.util.AttributesDiffFinder;
 
 import java.util.List;
 
@@ -14,18 +13,11 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-10-27
  */
-@Getter
-public class Comparison {
-	public final Equipment referenceEquipment;
-	public final Equipment possibleEquipment;
-	public final Percent changePct;
-
-	public Comparison(Equipment possibleEquipment, Equipment referenceEquipment, Percent changePct) {
-		this.referenceEquipment = referenceEquipment;
-		this.possibleEquipment = possibleEquipment;
-		this.changePct = changePct;
-	}
-
+public record Comparison(
+		Equipment possibleEquipment,
+		Equipment referenceEquipment,
+		Percent changePct
+) {
 	public List<EquippableItem> getItemDifference() {
 		return possibleEquipment.getItemDifference(referenceEquipment);
 	}

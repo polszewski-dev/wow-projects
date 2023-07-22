@@ -1,8 +1,8 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.condition.AttributeCondition;
 
 import java.util.Objects;
 

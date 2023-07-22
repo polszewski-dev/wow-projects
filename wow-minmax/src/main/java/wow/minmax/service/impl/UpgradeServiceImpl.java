@@ -67,6 +67,6 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 		return enumerator.run()
 				.getResult().get(0)
-				.getPossibleEquipment().get(slot);
+				.possibleEquipment().get(slot);
 	}
 }

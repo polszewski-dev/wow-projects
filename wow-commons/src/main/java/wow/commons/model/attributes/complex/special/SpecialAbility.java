@@ -1,10 +1,11 @@
-package wow.commons.model.attributes.complex;
+package wow.commons.model.attributes.complex.special;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.AttributeCondition;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.special.*;
+import wow.commons.model.attributes.complex.ComplexAttribute;
+import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.spells.EffectId;
 
 /**

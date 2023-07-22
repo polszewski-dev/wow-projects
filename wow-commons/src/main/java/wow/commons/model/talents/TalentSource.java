@@ -1,6 +1,6 @@
 package wow.commons.model.talents;
 
-import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
 
 /**

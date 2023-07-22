@@ -2,7 +2,7 @@ package wow.commons.model.item.impl;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;

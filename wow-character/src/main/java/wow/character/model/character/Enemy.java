@@ -5,7 +5,7 @@ import lombok.Getter;
 import wow.character.model.Copyable;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CreatureType;
 

@@ -3,7 +3,7 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.attributes.AttributeCondition;
+import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;

@@ -1,7 +1,7 @@
 package wow.commons.model.item.impl;
 
 import lombok.Getter;
-import wow.commons.model.attributes.complex.SpecialAbilitySource;
+import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
