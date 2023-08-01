@@ -28,6 +28,7 @@ class SpellServiceTest extends WowCharacterSpringTest {
 				"Corruption#4",
 				"Corruption#5",
 				"Corruption#6",
+				"Corruption#7",
 				"Corruption#8",
 				"Curse of Agony#1",
 				"Curse of Agony#2",

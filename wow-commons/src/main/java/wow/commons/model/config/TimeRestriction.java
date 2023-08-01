@@ -19,6 +19,10 @@ public record TimeRestriction(List<GameVersionId> versions, PhaseId phaseId) {
 
 	public TimeRestriction {
 		Objects.requireNonNull(versions);
+
+		if (phaseId != null && versions.stream().anyMatch(version -> version != phaseId.getGameVersionId())) {
+			throw new IllegalArgumentException("Phase and version filters must match");
+		}
 	}
 
 	public static TimeRestriction of(GameVersionId gameVersionId) {
