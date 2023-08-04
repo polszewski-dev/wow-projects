@@ -3,7 +3,6 @@ package wow.scraper.fetchers;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.*;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,23 +11,23 @@ import java.util.List;
  * Date: 2022-11-15
  */
 public interface WowheadFetcher {
-	List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+	List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart);
 
-	List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> itemIds) throws IOException;
+	List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> itemIds);
 
-	List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+	List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart);
 
-	List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+	List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart);
 
-	List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+	List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart);
 
-	List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> npcIds) throws IOException;
+	List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> npcIds);
 
-	List<JsonFactionDetails> fetchFactionDetails(GameVersionId gameVersion, String urlPart) throws IOException;
+	List<JsonFactionDetails> fetchFactionDetails(GameVersionId gameVersion, String urlPart);
 
-	String fetchRaw(GameVersionId gameVersion, String urlPart) throws IOException;
+	String fetchRaw(GameVersionId gameVersion, String urlPart);
 
-	WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id) throws IOException;
+	WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id);
 
-	WowheadSpellInfo fetchSpellTooltip(GameVersionId gameVersion, int id) throws IOException;
+	WowheadSpellInfo fetchSpellTooltip(GameVersionId gameVersion, int id);
 }

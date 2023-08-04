@@ -11,7 +11,6 @@ import wow.scraper.model.WowheadNpcClassification;
 import wow.scraper.model.WowheadZoneType;
 import wow.scraper.repository.ZoneDetailRepository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +30,14 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 	}
 
 	@Override
-	protected void doImport(GameVersionId gameVersion) throws IOException {
+	protected void doImport(GameVersionId gameVersion) {
 		importInstanceNpcs(gameVersion);
 		importWorldNpcs(gameVersion);
 		createPseudoNpcs(gameVersion);
 		getResult().values(gameVersion).forEach(this::fixLocation);
 	}
 
-	private void importInstanceNpcs(GameVersionId gameVersion) throws IOException {
+	private void importInstanceNpcs(GameVersionId gameVersion) {
 		var instances = zoneDetailRepository.getAll(gameVersion, WowheadZoneType.instances());
 
 		for (var instance : instances) {
@@ -46,7 +45,7 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 		}
 	}
 
-	private void importInstanceNpcs(GameVersionId gameVersion, JsonZoneDetails instance) throws IOException {
+	private void importInstanceNpcs(GameVersionId gameVersion, JsonZoneDetails instance) {
 		var npcs = getInstanceNpcs(gameVersion, instance);
 
 		for (var npc : npcs) {
@@ -58,7 +57,7 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 		}
 	}
 
-	private List<JsonNpcDetails> getInstanceNpcs(GameVersionId gameVersion, JsonZoneDetails instance) throws IOException {
+	private List<JsonNpcDetails> getInstanceNpcs(GameVersionId gameVersion, JsonZoneDetails instance) {
 		String zoneHtml = getWowheadFetcher().fetchRaw(gameVersion, "zone=" + instance.getId());
 		List<Integer> npcIds = new ZoneNpcListParser(zoneHtml).parse().stream()
 				.filter(x -> x.type() == NPC)
@@ -67,7 +66,7 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 		return getWowheadFetcher().fetchNpcDetails(gameVersion, "npcs", npcIds);
 	}
 
-	private void importWorldNpcs(GameVersionId gameVersion) throws IOException {
+	private void importWorldNpcs(GameVersionId gameVersion) {
 		var npcs = getWowheadFetcher().fetchNpcDetails(gameVersion, "npcs", getScraperConfig().getNpcIdsToFetch());
 
 		for (var npc : npcs) {

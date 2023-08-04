@@ -9,7 +9,6 @@ import wow.scraper.model.JsonNpcDetails;
 import wow.scraper.repository.NpcDetailRepository;
 import wow.scraper.repository.ZoneDetailRepository;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +25,12 @@ public class NpcDetailRepositoryImpl implements NpcDetailRepository {
 	}
 
 	@Override
-	public List<JsonNpcDetails> getAll(GameVersionId gameVersion) throws IOException {
+	public List<JsonNpcDetails> getAll(GameVersionId gameVersion) {
 		return npcImporter.getList(gameVersion);
 	}
 
 	@Override
-	public Optional<JsonNpcDetails> getById(GameVersionId gameVersion, int id) throws IOException {
+	public Optional<JsonNpcDetails> getById(GameVersionId gameVersion, int id) {
 		return npcImporter.getById(gameVersion, id);
 	}
 }

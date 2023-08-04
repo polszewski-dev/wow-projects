@@ -5,8 +5,6 @@ import wow.scraper.config.ScraperContext;
 import wow.scraper.config.ScraperContextSource;
 import wow.scraper.exporters.excel.WowExcelBuilder;
 
-import java.io.IOException;
-
 /**
  * User: POlszewski
  * Date: 2023-06-20
@@ -24,5 +22,5 @@ public abstract class ExcelExporter<B extends WowExcelBuilder> implements Scrape
 		this.builder = builder;
 	}
 
-	public abstract void exportAll() throws IOException;
+	public abstract void exportAll();
 }

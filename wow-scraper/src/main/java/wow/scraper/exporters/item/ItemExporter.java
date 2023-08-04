@@ -5,15 +5,13 @@ import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parsers.tooltip.ItemTooltipParser;
 
-import java.io.IOException;
-
 /**
  * User: POlszewski
  * Date: 2023-05-19
  */
 public class ItemExporter extends AbstractItemExporter<ItemTooltipParser> {
 	@Override
-	public void exportAll() throws IOException {
+	public void exportAll() {
 		builder.addItemHeader();
 
 		for (WowheadItemCategory category : WowheadItemCategory.equipment()) {

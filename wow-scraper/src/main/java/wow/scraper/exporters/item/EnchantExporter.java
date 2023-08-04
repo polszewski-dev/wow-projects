@@ -9,7 +9,6 @@ import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.parsers.tooltip.EnchantTooltipParser;
 
-import java.io.IOException;
 import java.util.*;
 
 import static wow.scraper.model.WowheadItemCategory.ENCHANTS_PERMANENT;
@@ -24,7 +23,7 @@ public class EnchantExporter extends AbstractSpellExporter<EnchantTooltipParser>
 	private final Map<GameVersionId, Map<Integer, JsonSpellDetails>> detailsById = new EnumMap<>(GameVersionId.class);
 
 	@Override
-	public void exportAll() throws IOException {
+	public void exportAll() {
 		builder.addEnchantHeader();
 
 		export(ENCHANTS);
@@ -41,7 +40,7 @@ public class EnchantExporter extends AbstractSpellExporter<EnchantTooltipParser>
 	}
 
 	@Override
-	protected List<Integer> getDetailIds(WowheadSpellCategory category, GameVersionId gameVersion) throws IOException {
+	protected List<Integer> getDetailIds(WowheadSpellCategory category, GameVersionId gameVersion) {
 		assertOnlyEnchants(category);
 		mergeSpellAndItemEnchants(gameVersion);
 
@@ -51,14 +50,14 @@ public class EnchantExporter extends AbstractSpellExporter<EnchantTooltipParser>
 	}
 
 	@Override
-	protected Optional<JsonSpellDetails> getDetail(WowheadSpellCategory category, Integer detailId, GameVersionId gameVersion) throws IOException {
+	protected Optional<JsonSpellDetails> getDetail(WowheadSpellCategory category, Integer detailId, GameVersionId gameVersion) {
 		assertOnlyEnchants(category);
 		mergeSpellAndItemEnchants(gameVersion);
 
 		return Optional.ofNullable(detailsById.get(gameVersion).get(detailId));
 	}
 
-	private void mergeSpellAndItemEnchants(GameVersionId gameVersion) throws IOException {
+	private void mergeSpellAndItemEnchants(GameVersionId gameVersion) {
 		if (detailsById.containsKey(gameVersion)) {
 			return;
 		}
@@ -87,13 +86,13 @@ public class EnchantExporter extends AbstractSpellExporter<EnchantTooltipParser>
 		}
 	}
 
-	private JsonSpellDetails getEnchantSpell(GameVersionId gameVersion, Integer spellId) throws IOException {
+	private JsonSpellDetails getEnchantSpell(GameVersionId gameVersion, Integer spellId) {
 		return getSpellDetailRepository()
 				.getDetail(gameVersion, ENCHANTS, spellId)
 				.orElseThrow();
 	}
 
-	private JsonItemDetails getEnchantItem(GameVersionId gameVersion, Integer itemId) throws IOException {
+	private JsonItemDetails getEnchantItem(GameVersionId gameVersion, Integer itemId) {
 		return getItemDetailRepository()
 				.getDetail(gameVersion, ENCHANTS_PERMANENT, itemId)
 				.orElseThrow();
@@ -147,7 +146,7 @@ public class EnchantExporter extends AbstractSpellExporter<EnchantTooltipParser>
 		existing.getSourceItemIds().add(itemDetails.getId());
 	}
 
-	private void fetchEnchantId(JsonSpellDetails spellDetails, GameVersionId gameVersion) throws IOException {
+	private void fetchEnchantId(JsonSpellDetails spellDetails, GameVersionId gameVersion) {
 		String spellHtml = getWowheadFetcher().fetchRaw(gameVersion, "spell=" + spellDetails.getId());
 
 		Integer enchantId = new EnchantIdParser(spellHtml).parse();

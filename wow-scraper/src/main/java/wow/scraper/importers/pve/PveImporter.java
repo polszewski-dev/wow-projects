@@ -8,7 +8,6 @@ import wow.scraper.config.ScraperConfig;
 import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.util.GameVersionedMap;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,17 +22,17 @@ public abstract class PveImporter<T> {
 	private WowheadFetcher wowheadFetcher;
 	private final GameVersionedMap<Integer, T> result = new GameVersionedMap<>();
 
-	public List<T> getList(GameVersionId gameVersion) throws IOException {
+	public List<T> getList(GameVersionId gameVersion) {
 		importAll(gameVersion);
 		return result.values(gameVersion).stream().toList();
 	}
 
-	public Optional<T> getById(GameVersionId gameVersion, Integer id) throws IOException {
+	public Optional<T> getById(GameVersionId gameVersion, Integer id) {
 		importAll(gameVersion);
 		return result.getOptional(gameVersion, id);
 	}
 
-	private void importAll(GameVersionId gameVersion) throws IOException {
+	private void importAll(GameVersionId gameVersion) {
 		if (result.containsKey(gameVersion)) {
 			return;
 		}
@@ -41,7 +40,7 @@ public abstract class PveImporter<T> {
 		doImport(gameVersion);
 	}
 
-	protected abstract void doImport(GameVersionId gameVersion) throws IOException;
+	protected abstract void doImport(GameVersionId gameVersion);
 
 	protected void saveDetails(GameVersionId gameVersion, int id, T value) {
 		result.put(gameVersion, id, value);

@@ -2,7 +2,6 @@ package wow.scraper.importers.item;
 
 import wow.scraper.model.JsonItemDetails;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ public class TokenImporter extends ItemImporter {
 	}
 
 	@Override
-	protected List<JsonItemDetails> fetchDetailsList(String url) throws IOException {
+	protected List<JsonItemDetails> fetchDetailsList(String url) {
 		List<JsonItemDetails> result = super.fetchDetailsList(url);
 
 		result.addAll(getWowheadFetcher().fetchItemDetails(getGameVersion(), "items", getIdsToFetch(result)));

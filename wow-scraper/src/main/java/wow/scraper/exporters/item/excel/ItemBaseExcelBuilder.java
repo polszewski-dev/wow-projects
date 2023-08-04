@@ -1,6 +1,7 @@
 package wow.scraper.exporters.item.excel;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.exporters.excel.WowExcelBuilder;
 import wow.scraper.parsers.tooltip.EnchantTooltipParser;
@@ -8,7 +9,6 @@ import wow.scraper.parsers.tooltip.GemTooltipParser;
 import wow.scraper.parsers.tooltip.ItemTooltipParser;
 import wow.scraper.parsers.tooltip.TradedItemParser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +54,9 @@ public class ItemBaseExcelBuilder extends WowExcelBuilder {
 		writeHeader(GEM, gemSheetWriter, 2, 1);
 	}
 
+	@SneakyThrows
 	@Override
-	public void finish(String fileName) throws IOException {
+	public void finish(String fileName) {
 		writeHeader(SET, itemSetSheetWriter, 1, 1);
 		savedSets.forEach(setInfo -> writeRow(setInfo, itemSetSheetWriter));
 		super.finish(fileName);

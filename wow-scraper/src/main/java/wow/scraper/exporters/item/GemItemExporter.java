@@ -4,8 +4,6 @@ import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.tooltip.GemTooltipParser;
 
-import java.io.IOException;
-
 import static wow.scraper.model.WowheadItemCategory.GEMS;
 
 /**
@@ -14,7 +12,7 @@ import static wow.scraper.model.WowheadItemCategory.GEMS;
  */
 public class GemItemExporter extends AbstractItemExporter<GemTooltipParser> {
 	@Override
-	public void exportAll() throws IOException {
+	public void exportAll() {
 		builder.addGemHeader();
 		export(GEMS);
 	}

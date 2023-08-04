@@ -8,7 +8,6 @@ import wow.scraper.importers.pve.FactionImporter;
 import wow.scraper.model.JsonFactionDetails;
 import wow.scraper.repository.FactionDetailRepository;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public class FactionDetailRepositoryImpl implements FactionDetailRepository {
 	}
 
 	@Override
-	public List<JsonFactionDetails> getAll(GameVersionId gameVersion) throws IOException {
+	public List<JsonFactionDetails> getAll(GameVersionId gameVersion) {
 		return factionImporter.getList(gameVersion);
 	}
 }

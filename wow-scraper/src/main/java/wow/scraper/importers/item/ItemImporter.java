@@ -3,7 +3,6 @@ package wow.scraper.importers.item;
 import wow.scraper.importers.WowheadImporter;
 import wow.scraper.model.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -19,7 +18,7 @@ public class ItemImporter extends WowheadImporter<WowheadItemCategory, JsonItemD
 	}
 
 	@Override
-	protected List<JsonItemDetails> fetchDetailsList(String url) throws IOException {
+	protected List<JsonItemDetails> fetchDetailsList(String url) {
 		return getWowheadFetcher().fetchItemDetails(getGameVersion(), url);
 	}
 
@@ -38,7 +37,7 @@ public class ItemImporter extends WowheadImporter<WowheadItemCategory, JsonItemD
 	}
 
 	@Override
-	protected void beforeSave(JsonItemDetails details) throws IOException {
+	protected void beforeSave(JsonItemDetails details) {
 		fixSource(details);
 		fetchTooltip(details);
 	}
@@ -76,7 +75,7 @@ public class ItemImporter extends WowheadImporter<WowheadItemCategory, JsonItemD
 		return true;
 	}
 
-	private void fetchTooltip(JsonItemDetails details) throws IOException {
+	private void fetchTooltip(JsonItemDetails details) {
 		WowheadItemInfo info = getWowheadFetcher().fetchItemTooltip(getGameVersion(), details.getId());
 		details.setHtmlTooltip(fixTooltip(info.getTooltip()));
 		details.setIcon(info.getIcon());

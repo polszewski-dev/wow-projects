@@ -7,7 +7,6 @@ import wow.scraper.exporters.item.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,7 @@ import java.util.Set;
  */
 @Slf4j
 public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends AbstractTooltipParser<D>> extends ExcelExporter<ItemBaseExcelBuilder> {
-	protected void export(C category) throws IOException {
+	protected void export(C category) {
 		for (Integer detailId : getDetailIds(category)) {
 			for (GameVersionId gameVersion : getScraperConfig().getGameVersions()) {
 				getDetail(category, detailId, gameVersion)
@@ -28,7 +27,7 @@ public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends
 		}
 	}
 
-	private List<Integer> getDetailIds(C category) throws IOException {
+	private List<Integer> getDetailIds(C category) {
 		Set<Integer> set = new HashSet<>();
 
 		for (GameVersionId gameVersion : getScraperConfig().getGameVersions()) {
@@ -40,9 +39,9 @@ public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends
 				.toList();
 	}
 
-	protected abstract List<Integer> getDetailIds(C category, GameVersionId gameVersion) throws IOException;
+	protected abstract List<Integer> getDetailIds(C category, GameVersionId gameVersion);
 
-	protected abstract Optional<D> getDetail(C category, Integer detailId, GameVersionId gameVersion) throws IOException;
+	protected abstract Optional<D> getDetail(C category, Integer detailId, GameVersionId gameVersion);
 
 	private void exportDetails(D details, GameVersionId gameVersion) {
 		var parser = createParser(details, gameVersion);

@@ -6,8 +6,6 @@ import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.model.JsonZoneDetails;
 import wow.scraper.model.WowheadZoneType;
 
-import java.io.IOException;
-
 /**
  * User: POlszewski
  * Date: 2023-06-26
@@ -18,7 +16,7 @@ public class ZoneImporter extends PveImporter<JsonZoneDetails> {
 	}
 
 	@Override
-	protected void doImport(GameVersionId gameVersion) throws IOException {
+	protected void doImport(GameVersionId gameVersion) {
 		var zones = getWowheadFetcher().fetchZoneDetails(gameVersion, "zones");
 
 		for (var zone : zones) {

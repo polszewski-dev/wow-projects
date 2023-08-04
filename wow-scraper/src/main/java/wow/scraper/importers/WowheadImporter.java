@@ -9,7 +9,6 @@ import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.util.GameVersionedMap;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,19 +32,19 @@ public abstract class WowheadImporter<C, D extends JsonCommonDetails>  {
 		this.wowheadFetcher = wowheadFetcher;
 	}
 
-	public Optional<D> get(GameVersionId gameVersion, int id) throws IOException {
+	public Optional<D> get(GameVersionId gameVersion, int id) {
 		importAll(gameVersion);
 		return result.getOptional(gameVersion, id);
 	}
 
-	public List<Integer> getIds(GameVersionId gameVersion) throws IOException {
+	public List<Integer> getIds(GameVersionId gameVersion) {
 		importAll(gameVersion);
 		return result.keySet(gameVersion).stream()
 				.sorted()
 				.toList();
 	}
 
-	private void importAll(GameVersionId gameVersion) throws IOException {
+	private void importAll(GameVersionId gameVersion) {
 		if (result.containsKey(gameVersion)) {
 			return;
 		}
@@ -70,11 +69,11 @@ public abstract class WowheadImporter<C, D extends JsonCommonDetails>  {
 		}
 	}
 
-	protected abstract List<D> fetchDetailsList(String url) throws IOException;
+	protected abstract List<D> fetchDetailsList(String url);
 
 	protected abstract boolean isToBeSaved(D details);
 
-	protected abstract void beforeSave(D details) throws IOException;
+	protected abstract void beforeSave(D details);
 
 	protected String fixTooltip(String tooltip) {
 		//replace with something that doesn't change line numbers unlike <br>

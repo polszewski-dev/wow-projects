@@ -149,11 +149,11 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 		assertThat(sunfireRobe.getSellPrice()).isEqualTo(Money.parse("6g8s49c"));
 	}
 
-	static ItemTooltipParser hoodOfMalefic;
-	static ItemTooltipParser sunfireRobe;
-	static ItemTooltipParser scryersBlodgem;
-	static ItemTooltipParser magistersStaff;
-	static ItemTooltipParser wandOfDemonsoul;
+	ItemTooltipParser hoodOfMalefic;
+	ItemTooltipParser sunfireRobe;
+	ItemTooltipParser scryersBlodgem;
+	ItemTooltipParser magistersStaff;
+	ItemTooltipParser wandOfDemonsoul;
 
 	@BeforeEach
 	void readTestData() throws IOException {

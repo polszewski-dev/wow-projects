@@ -46,8 +46,8 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 		verdantSphere = getTooltip("quest/32405");
 	}
 
-	static TradedItemParser pauldrons;
-	static TradedItemParser verdantSphere;
+	TradedItemParser pauldrons;
+	TradedItemParser verdantSphere;
 
 	@Override
 	protected TradedItemParser createParser(JsonItemDetails data) {

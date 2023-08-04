@@ -3,7 +3,6 @@ package wow.scraper.exporters.pve;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonZoneDetails;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class ZoneExporter extends PveBaseExporter<JsonZoneDetails> {
 	}
 
 	@Override
-	protected List<JsonZoneDetails> getData(GameVersionId gameVersion) throws IOException {
+	protected List<JsonZoneDetails> getData(GameVersionId gameVersion) {
 		return getZoneDetailRepository().getAll(gameVersion);
 	}
 

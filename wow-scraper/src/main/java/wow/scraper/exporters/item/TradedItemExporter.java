@@ -4,8 +4,6 @@ import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.tooltip.TradedItemParser;
 
-import java.io.IOException;
-
 import static wow.scraper.model.WowheadItemCategory.QUEST;
 import static wow.scraper.model.WowheadItemCategory.TOKENS;
 
@@ -15,7 +13,7 @@ import static wow.scraper.model.WowheadItemCategory.TOKENS;
  */
 public class TradedItemExporter extends AbstractItemExporter<TradedItemParser> {
 	@Override
-	public void exportAll() throws IOException {
+	public void exportAll() {
 		builder.addTradedItemHeader();
 		export(TOKENS);
 		export(QUEST);

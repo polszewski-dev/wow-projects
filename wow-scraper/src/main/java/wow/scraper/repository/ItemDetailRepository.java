@@ -4,7 +4,6 @@ import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,7 @@ import java.util.Optional;
  * Date: 2022-11-15
  */
 public interface ItemDetailRepository {
-	Optional<JsonItemDetails> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId) throws IOException;
+	Optional<JsonItemDetails> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId);
 
-	List<Integer> getDetailIds(GameVersionId gameVersion, WowheadItemCategory category) throws IOException;
+	List<Integer> getDetailIds(GameVersionId gameVersion, WowheadItemCategory category);
 }

@@ -5,7 +5,6 @@ import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.*;
 import wow.scraper.parsers.tooltip.AbstractItemTooltipParser;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,12 +16,12 @@ import java.util.Optional;
 @Slf4j
 public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> extends ItemBaseExporter<WowheadItemCategory, JsonItemDetails, T> {
 	@Override
-	protected List<Integer> getDetailIds(WowheadItemCategory category, GameVersionId gameVersion) throws IOException {
+	protected List<Integer> getDetailIds(WowheadItemCategory category, GameVersionId gameVersion) {
 		return getItemDetailRepository().getDetailIds(gameVersion, category);
 	}
 
 	@Override
-	protected Optional<JsonItemDetails> getDetail(WowheadItemCategory category, Integer detailId, GameVersionId gameVersion) throws IOException {
+	protected Optional<JsonItemDetails> getDetail(WowheadItemCategory category, Integer detailId, GameVersionId gameVersion) {
 		return getItemDetailRepository().getDetail(gameVersion, category, detailId);
 	}
 
@@ -58,7 +57,7 @@ public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> 
 	private Optional<WowheadQuestInfo> getWowheadQuestInfo(Integer questId, GameVersionId gameVersionId) {
 		try {
 			return getQuestInfoRepository().getQuestInfo(gameVersionId, questId);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("Error accessing quest info: " + questId, e);
 			return Optional.empty();
 		}

@@ -9,20 +9,18 @@ import wow.scraper.exporters.item.excel.ItemBaseExcelBuilder;
 import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
-import java.io.IOException;
-
 /**
  * User: POlszewski
  * Date: 2022-10-29
  */
 @Slf4j
 public class ItemBaseGeneratorMain extends ScraperTool {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		new ItemBaseGeneratorMain().run();
 	}
 
 	@Override
-	protected void run() throws IOException {
+	protected void run() {
 		WowheadSourceParser.configure(getScraperContext());
 
 		ItemBaseExcelBuilder builder = new ItemBaseExcelBuilder(getScraperConfig());
@@ -37,7 +35,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		AbstractTooltipParser.reportUnmatchedLines(log);
 	}
 
-	private void exportItemBase(ItemBaseExcelBuilder builder) throws IOException {
+	private void exportItemBase(ItemBaseExcelBuilder builder) {
 		exportAll(
 				builder,
 				new TradedItemExporter(),

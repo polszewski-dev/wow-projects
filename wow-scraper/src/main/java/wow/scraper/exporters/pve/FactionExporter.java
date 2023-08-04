@@ -3,7 +3,6 @@ package wow.scraper.exporters.pve;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonFactionDetails;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class FactionExporter extends PveBaseExporter<JsonFactionDetails> {
 	}
 
 	@Override
-	protected List<JsonFactionDetails> getData(GameVersionId gameVersion) throws IOException {
+	protected List<JsonFactionDetails> getData(GameVersionId gameVersion) {
 		return getFactionDetailRepository().getAll(gameVersion);
 	}
 

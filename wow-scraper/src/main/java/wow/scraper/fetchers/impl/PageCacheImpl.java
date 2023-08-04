@@ -1,11 +1,11 @@
 package wow.scraper.fetchers.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.fetchers.PageCache;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,8 +25,9 @@ public class PageCacheImpl implements PageCache {
 
 	private final ScraperConfig scraperConfig;
 
+	@SneakyThrows
 	@Override
-	public String fetch(String urlStr) throws IOException {
+	public String fetch(String urlStr) {
 		Path path = getPath(urlStr);
 		if (!path.toFile().exists()) {
 			return null;
@@ -36,8 +37,9 @@ public class PageCacheImpl implements PageCache {
 		}
 	}
 
+	@SneakyThrows
 	@Override
-	public void save(String urlStr, String value) throws IOException {
+	public void save(String urlStr, String value) {
 		Path path = getPath(urlStr);
 		path.toFile().getParentFile().mkdirs();
 		Files.writeString(path, value, CHARSET);

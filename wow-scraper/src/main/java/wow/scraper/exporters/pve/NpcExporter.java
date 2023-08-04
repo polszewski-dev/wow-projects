@@ -3,7 +3,6 @@ package wow.scraper.exporters.pve;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonNpcDetails;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class NpcExporter extends PveBaseExporter<JsonNpcDetails> {
 	}
 
 	@Override
-	protected List<JsonNpcDetails> getData(GameVersionId gameVersion) throws IOException {
+	protected List<JsonNpcDetails> getData(GameVersionId gameVersion) {
 		return getNpcDetailRepository().getAll(gameVersion);
 	}
 

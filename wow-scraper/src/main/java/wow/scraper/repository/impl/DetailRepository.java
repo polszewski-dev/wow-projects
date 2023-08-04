@@ -6,7 +6,6 @@ import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.importers.WowheadImporter;
 import wow.scraper.model.JsonCommonDetails;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,11 +27,11 @@ public abstract class DetailRepository<C, D extends JsonCommonDetails, I extends
 
 	protected abstract Stream<I> createImporters();
 
-	public Optional<D> getDetail(GameVersionId gameVersion, C category, int id) throws IOException {
+	public Optional<D> getDetail(GameVersionId gameVersion, C category, int id) {
 		return importers.get(category).get(gameVersion, id);
 	}
 
-	public List<Integer> getDetailIds(GameVersionId gameVersion, C category) throws IOException {
+	public List<Integer> getDetailIds(GameVersionId gameVersion, C category) {
 		return importers.get(category).getIds(gameVersion);
 	}
 }

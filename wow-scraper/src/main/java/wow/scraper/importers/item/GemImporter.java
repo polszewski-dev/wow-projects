@@ -3,7 +3,6 @@ package wow.scraper.importers.item;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonItemDetails;
 
-import java.io.IOException;
 import java.util.List;
 
 import static wow.scraper.model.WowheadItemCategory.GEMS;
@@ -18,7 +17,7 @@ public class GemImporter extends ItemImporter {
 	}
 
 	@Override
-	protected List<JsonItemDetails> fetchDetailsList(String url) throws IOException {
+	protected List<JsonItemDetails> fetchDetailsList(String url) {
 		if (getGameVersion() == GameVersionId.VANILLA) {
 			return List.of();
 		}

@@ -3,13 +3,13 @@ package wow.scraper.fetchers.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.fetchers.PageFetcher;
 import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.model.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,59 +36,66 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 
 	private PageFetcher pageFetcher;
 
+	@SneakyThrows
 	@Override
-	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) throws IOException {
+	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart) {
 		String json = fetchAndParse(gameVersion, urlPart, ITEM_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
 	@Override
-	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> itemIds) throws IOException {
+	public List<JsonItemDetails> fetchItemDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> itemIds) {
 		return fetchIdFiltered(gameVersion, urlPart, itemIds, "151", this::fetchItemDetails);
 	}
 
+	@SneakyThrows
 	@Override
-	public List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart) throws IOException {
+	public List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart) {
 		String json = fetchAndParse(gameVersion, urlPart, SPELL_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
+	@SneakyThrows
 	@Override
-	public List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart) throws IOException {
+	public List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart) {
 		String json = fetchAndParse(gameVersion, urlPart, ZONE_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
+	@SneakyThrows
 	@Override
-	public List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart) throws IOException {
+	public List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart) {
 		String json = fetchAndParse(gameVersion, urlPart, NPC_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
 	@Override
-	public List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> npcIds) throws IOException {
+	public List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> npcIds) {
 		return fetchIdFiltered(gameVersion, urlPart, npcIds, "37", this::fetchNpcDetails);
 	}
 
+	@SneakyThrows
 	@Override
-	public List<JsonFactionDetails> fetchFactionDetails(GameVersionId gameVersion, String urlPart) throws IOException {
+	public List<JsonFactionDetails> fetchFactionDetails(GameVersionId gameVersion, String urlPart) {
 		String json = fetchAndParse(gameVersion, urlPart, FACTION_LIST_PATTERN);
 
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
+	@SneakyThrows
 	@Override
-	public String fetchRaw(GameVersionId gameVersion, String urlPart) throws IOException {
+	public String fetchRaw(GameVersionId gameVersion, String urlPart) {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 
 		return pageFetcher.fetchPage(urlStr);
 	}
 
-	private String fetchAndParse(GameVersionId gameVersion, String urlPart, Pattern itemListPattern) throws IOException {
+	@SneakyThrows
+	private String fetchAndParse(GameVersionId gameVersion, String urlPart, Pattern itemListPattern) {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 		String html = pageFetcher.fetchPage(urlStr);
 
@@ -113,16 +120,17 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	}
 
 	@Override
-	public WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id) throws IOException {
+	public WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id) {
 		return fetchTooltip(gameVersion, "item", id, WowheadItemInfo.class);
 	}
 
 	@Override
-	public WowheadSpellInfo fetchSpellTooltip(GameVersionId gameVersion, int id) throws IOException {
+	public WowheadSpellInfo fetchSpellTooltip(GameVersionId gameVersion, int id) {
 		return fetchTooltip(gameVersion, "spell", id, WowheadSpellInfo.class);
 	}
 
-	private <T> T fetchTooltip(GameVersionId gameVersion, String type, int id, Class<T> clazz) throws IOException {
+	@SneakyThrows
+	private <T> T fetchTooltip(GameVersionId gameVersion, String type, int id, Class<T> clazz) {
 		String urlStr = getTooltipUrlStr(gameVersion, type, id);
 		String json = pageFetcher.fetchPage(urlStr);
 		return MAPPER.readValue(json, clazz);
@@ -143,10 +151,10 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 
 	@FunctionalInterface
 	private interface Fetcher<D> {
-		List<D> fetch(GameVersionId gameVersion, String urlPart) throws IOException;
+		List<D> fetch(GameVersionId gameVersion, String urlPart);
 	}
 
-	private <D> List<D> fetchIdFiltered(GameVersionId gameVersion, String urlPart, Collection<Integer> ids, String type, Fetcher<D> fetcher) throws IOException {
+	private <D> List<D> fetchIdFiltered(GameVersionId gameVersion, String urlPart, Collection<Integer> ids, String type, Fetcher<D> fetcher) {
 		List<Integer> orderedIds = ids.stream()
 				.distinct()
 				.sorted()

@@ -9,7 +9,6 @@ import wow.scraper.model.JsonZoneDetails;
 import wow.scraper.model.WowheadZoneType;
 import wow.scraper.repository.ZoneDetailRepository;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,19 +25,19 @@ public class ZoneDetailRepositoryImpl implements ZoneDetailRepository {
 	}
 
 	@Override
-	public List<JsonZoneDetails> getAll(GameVersionId gameVersion) throws IOException {
+	public List<JsonZoneDetails> getAll(GameVersionId gameVersion) {
 		return zoneImporter.getList(gameVersion);
 	}
 
 	@Override
-	public List<JsonZoneDetails> getAll(GameVersionId gameVersion, List<WowheadZoneType> zoneTypes) throws IOException {
+	public List<JsonZoneDetails> getAll(GameVersionId gameVersion, List<WowheadZoneType> zoneTypes) {
 		return zoneImporter.getList(gameVersion).stream()
 				.filter(x -> zoneTypes.contains(WowheadZoneType.fromCode(x.getInstance())))
 				.toList();
 	}
 
 	@Override
-	public Optional<JsonZoneDetails> getById(GameVersionId gameVersion, int id) throws IOException {
+	public Optional<JsonZoneDetails> getById(GameVersionId gameVersion, int id) {
 		return zoneImporter.getById(gameVersion, id);
 	}
 }

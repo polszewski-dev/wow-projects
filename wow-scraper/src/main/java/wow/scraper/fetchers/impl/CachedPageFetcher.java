@@ -1,12 +1,11 @@
 package wow.scraper.fetchers.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import wow.scraper.fetchers.PageCache;
 import wow.scraper.fetchers.PageFetcher;
-
-import java.io.IOException;
 
 /**
  * User: POlszewski
@@ -19,8 +18,9 @@ public class CachedPageFetcher implements PageFetcher {
 	private final PageFetcher pageFetcher;
 	private final PageCache pageCache;
 
+	@SneakyThrows
 	@Override
-	public String fetchPage(String urlStr) throws IOException {
+	public String fetchPage(String urlStr) {
 		String cached = pageCache.fetch(urlStr);
 		if (cached != null) {
 			return cached;

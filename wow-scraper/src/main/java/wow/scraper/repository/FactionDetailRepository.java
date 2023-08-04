@@ -3,7 +3,6 @@ package wow.scraper.repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonFactionDetails;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -11,5 +10,5 @@ import java.util.List;
  * Date: 2023-06-25
  */
 public interface FactionDetailRepository {
-	List<JsonFactionDetails> getAll(GameVersionId gameVersion) throws IOException;
+	List<JsonFactionDetails> getAll(GameVersionId gameVersion);
 }

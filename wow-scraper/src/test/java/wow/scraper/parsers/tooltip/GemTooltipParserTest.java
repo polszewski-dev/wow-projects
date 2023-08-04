@@ -82,13 +82,13 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 		assertThat(blueGem.getRequiredProfessionLevel()).isEqualTo(360);
 	}
 
-	static GemTooltipParser redGem;
-	static GemTooltipParser orangeGem;
-	static GemTooltipParser yellowGem;
-	static GemTooltipParser greenGem;
-	static GemTooltipParser blueGem;
-	static GemTooltipParser purpleGem;
-	static GemTooltipParser metaGem;
+	GemTooltipParser redGem;
+	GemTooltipParser orangeGem;
+	GemTooltipParser yellowGem;
+	GemTooltipParser greenGem;
+	GemTooltipParser blueGem;
+	GemTooltipParser purpleGem;
+	GemTooltipParser metaGem;
 
 	@BeforeEach
 	void readTestData() throws IOException {

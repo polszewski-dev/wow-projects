@@ -5,8 +5,6 @@ import wow.scraper.config.ScraperConfig;
 import wow.scraper.fetchers.WowheadFetcher;
 import wow.scraper.model.JsonFactionDetails;
 
-import java.io.IOException;
-
 /**
  * User: POlszewski
  * Date: 2023-06-26
@@ -17,7 +15,7 @@ public class FactionImporter extends PveImporter<JsonFactionDetails> {
 	}
 
 	@Override
-	protected void doImport(GameVersionId gameVersion) throws IOException {
+	protected void doImport(GameVersionId gameVersion) {
 		var factions = getWowheadFetcher().fetchFactionDetails(gameVersion, "factions");
 
 		for (var faction : factions) {

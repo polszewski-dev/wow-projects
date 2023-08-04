@@ -1,5 +1,6 @@
 package wow.scraper.repository.impl;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
@@ -9,7 +10,6 @@ import wow.scraper.parsers.stats.StatPatternExcelParser;
 import wow.scraper.repository.StatPatternRepository;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +29,9 @@ public class StatPatternRepositoryImpl implements StatPatternRepository {
 	@Value("${stat.parsers.xls.file.path}")
 	private String xlsFilePath;
 
+	@SneakyThrows
 	@PostConstruct
-	public void init() throws IOException {
+	public void init() {
 		var statParserExcelParser = new StatPatternExcelParser(
 				xlsFilePath,
 				this.itemStatPatterns,

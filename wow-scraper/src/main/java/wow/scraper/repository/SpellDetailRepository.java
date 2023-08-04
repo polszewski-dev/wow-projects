@@ -4,7 +4,6 @@ import wow.commons.model.pve.GameVersionId;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,7 @@ import java.util.Optional;
  * Date: 2022-11-15
  */
 public interface SpellDetailRepository {
-	Optional<JsonSpellDetails> getDetail(GameVersionId gameVersion, WowheadSpellCategory category, int spellId) throws IOException;
+	Optional<JsonSpellDetails> getDetail(GameVersionId gameVersion, WowheadSpellCategory category, int spellId);
 
-	List<Integer> getDetailIds(GameVersionId gameVersion, WowheadSpellCategory category) throws IOException;
+	List<Integer> getDetailIds(GameVersionId gameVersion, WowheadSpellCategory category);
 }

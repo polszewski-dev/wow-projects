@@ -1,10 +1,9 @@
 package wow.scraper.exporters.excel;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import polszewski.excel.writer.ExcelWriter;
 import wow.scraper.config.ScraperConfig;
-
-import java.io.IOException;
 
 /**
  * User: POlszewski
@@ -24,7 +23,8 @@ public abstract class WowExcelBuilder {
 		writer.open();
 	}
 
-	public void finish(String fileName) throws IOException {
+	@SneakyThrows
+	public void finish(String fileName) {
 		writer.save(fileName);
 	}
 
