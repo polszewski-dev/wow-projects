@@ -16,6 +16,7 @@ import wow.commons.model.attributes.complex.special.TalentProcAbility;
 import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffCategory;
+import wow.commons.model.buffs.BuffIdAndRank;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentId;
@@ -349,9 +350,10 @@ public class CalculationServiceImpl implements CalculationService {
 		return getStats(copy, copy.getStats());
 	}
 
-	private List<Buff> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
+	private List<BuffIdAndRank> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
 		return buffs.getList().stream()
 				.filter(x -> Stream.of(buffCategories).anyMatch(y -> x.getCategories().contains(y)))
+				.map(Buff::getId)
 				.toList();
 	}
 

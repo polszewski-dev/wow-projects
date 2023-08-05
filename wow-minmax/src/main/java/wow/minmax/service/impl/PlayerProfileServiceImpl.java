@@ -9,7 +9,7 @@ import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.ItemService;
 import wow.character.service.SpellService;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
@@ -190,12 +190,11 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public Character enableBuff(CharacterId characterId, BuffListType buffListType, int buffId, boolean enabled) {
+	public Character enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
 		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
 		Character character = getCharacter(playerProfile, characterId);
-		Buff buff = spellService.getBuff(buffId, character.getPhaseId());
 
-		character.getBuffList(buffListType).enable(buff, enabled);
+		character.getBuffList(buffListType).enable(buffId, rank, enabled);
 		saveProfile(playerProfile, character);
 		return character;
 	}

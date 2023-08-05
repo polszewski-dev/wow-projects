@@ -6,7 +6,7 @@ import wow.character.model.Copyable;
 import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffIdAndRank;
 import wow.commons.model.character.CreatureType;
 
 import java.util.Collection;
@@ -45,12 +45,8 @@ public class Enemy implements AttributeCollection, Copyable<Enemy> {
 		return Set.of(AttributeCondition.of(enemyType));
 	}
 
-	public void setDebuffs(Collection<Buff> debuffs) {
-		this.debuffs.set(debuffs);
-	}
-
-	public void enableDebuff(Buff debuff, boolean enable) {
-		debuffs.enable(debuff, enable);
+	public void setDebuffs(Collection<BuffIdAndRank> debuffIds) {
+		this.debuffs.set(debuffIds);
 	}
 
 	public void resetDebuffs() {

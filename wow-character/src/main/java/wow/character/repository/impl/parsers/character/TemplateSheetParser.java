@@ -6,6 +6,7 @@ import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.Phase;
 import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
@@ -17,7 +18,6 @@ import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -64,8 +64,8 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var pveRole = colRole.getEnum(PveRole::parse);
 		var defaultRotation = RotationTemplate.parse(colDefaultRotation.getString());
 		var activePet = colActivePet.getEnum(PetType::parse, PetType.NONE);
-		var defaultBuffs = colDefaultBuffs.getList(Function.identity());
-		var defaultDebuffs = colDefaultDebuffs.getList(Function.identity());
+		var defaultBuffs = colDefaultBuffs.getList(BuffId::parse);
+		var defaultDebuffs = colDefaultDebuffs.getList(BuffId::parse);
 		var professions = getProfessions(timeRestriction, level);
 		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
 

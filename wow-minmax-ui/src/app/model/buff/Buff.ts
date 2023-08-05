@@ -1,5 +1,6 @@
 export interface Buff {
-	id: number;
+	buffId: string;
+	rank: number;
 	name: string;
 	attributes: string;
 	icon: string;

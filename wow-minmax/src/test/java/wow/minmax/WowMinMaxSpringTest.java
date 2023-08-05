@@ -12,7 +12,6 @@ import wow.character.model.character.Enemy;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
-import wow.commons.model.buffs.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
@@ -20,8 +19,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.SpellRepository;
 import wow.minmax.model.CharacterId;
@@ -92,14 +89,6 @@ public abstract class WowMinMaxSpringTest {
 
 	protected Enchant getEnchant(String name) {
 		return itemRepository.getEnchant(name, PHASE).orElseThrow();
-	}
-
-	protected Buff getBuff(String name) {
-		return spellRepository.getBuff(name, PHASE).orElseThrow();
-	}
-
-	protected Talent getTalent(TalentId talentId, int rank) {
-		return spellRepository.getTalent(CHARACTER_CLASS, talentId, rank, PHASE).orElseThrow();
 	}
 
 	protected Character getCharacter() {

@@ -10,7 +10,15 @@ import java.util.Set;
  * User: POlszewski
  * Date: 2021-03-26
  */
-public interface Buff extends ConfigurationElementWithAttributes<Integer>, PveRoleClassified {
+public interface Buff extends ConfigurationElementWithAttributes<BuffIdAndRank>, PveRoleClassified {
+	default BuffId getBuffId() {
+		return getId().buffId();
+	}
+
+	default Integer getRank() {
+		return getId().rank();
+	}
+
 	BuffType getType();
 
 	BuffExclusionGroup getExclusionGroup();

@@ -7,6 +7,7 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.equipment.EquippableItem;
+import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffCategory;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -26,6 +27,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
+import static wow.commons.model.buffs.BuffId.FLASK_OF_PURE_DEATH;
+import static wow.commons.model.buffs.BuffId.FLASK_OF_SUPREME_POWER;
 import static wow.commons.model.categorization.ItemSlot.*;
 
 /**
@@ -166,30 +169,30 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void enableBuff() {
-		assertThat(character.getBuffs().has(17628)).isFalse();
-		assertThat(character.getBuffs().has(28540)).isTrue();
+		assertThat(character.getBuffs().has(FLASK_OF_SUPREME_POWER)).isFalse();
+		assertThat(character.getBuffs().has(FLASK_OF_PURE_DEATH)).isTrue();
 
-		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, 17628, true);
+		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_SUPREME_POWER, 0, true);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
-		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getId() == 17628)).isTrue();
-		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isFalse();
+		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_SUPREME_POWER)).isTrue();
+		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
 	}
 
 	@Test
 	void disableBuff() {
-		assertThat(character.getBuffs().has(28540)).isTrue();
+		assertThat(character.getBuffs().has(FLASK_OF_PURE_DEATH)).isTrue();
 
-		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, 28540, false);
+		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_PURE_DEATH, 0, false);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
-		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getId() == 28540)).isFalse();
+		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
 	}
 
 	CharacterPO getSavedCharacter(PlayerProfilePO savedProfile) {
@@ -202,7 +205,12 @@ class PlayerProfileServiceTest extends ServiceTest {
 		super.setup();
 
 		character.setEquipment(getEquipment());
-		character.setBuffs(character.getBuffs().getList().stream().filter(x -> x.getCategories().contains(BuffCategory.CONSUME)).toList());
+
+		var consumes = character.getBuffs().getList().stream()
+				.filter(x -> x.getCategories().contains(BuffCategory.CONSUME))
+				.map(Buff::getId)
+				.toList();
+		character.setBuffs(consumes);
 
 		PlayerProfilePO profilePO = playerProfilePOConverter.convert(profile);
 

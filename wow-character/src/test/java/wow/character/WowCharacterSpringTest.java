@@ -13,6 +13,7 @@ import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
@@ -20,8 +21,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 import wow.commons.repository.ItemRepository;
@@ -30,8 +29,8 @@ import wow.commons.repository.SpellRepository;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
+import static wow.commons.model.buffs.BuffId.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
@@ -100,10 +99,6 @@ public abstract class WowCharacterSpringTest {
 		return itemRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected Spell getSpell(SpellId spellId) {
-		return spellRepository.getSpellHighestRank(spellId, LEVEL, PHASE).orElseThrow();
-	}
-
 	protected List<Talent> getTalents() {
 		return List.of(
 				getTalent(IMPROVED_HEALTHSTONE, 2),
@@ -132,25 +127,23 @@ public abstract class WowCharacterSpringTest {
 	}
 
 	protected List<Buff> getBuffs() {
-		return Stream.of(
-						"Arcane Brilliance",
-						"Gift of the Wild",
-						"Greater Blessing of Kings",
-						"Fel Armor",
-						"Touch of Shadow",
-						"Brilliant Wizard Oil",
-						"Well Fed (sp)",
-						"Flask of Pure Death",
-						"Wrath of Air Totem",
-						"Totem of Wrath",
-						"Curse of the Elements"
-				)
-				.map(this::getBuff)
-				.toList();
+		return List.of(
+				getBuff(ARCANE_BRILLIANCE, 2),
+				getBuff(GIFT_OF_THE_WILD, 3),
+				getBuff(GREATER_BLESSING_OF_KINGS, 0),
+				getBuff(FEL_ARMOR, 2),
+				getBuff(TOUCH_OF_SHADOW, 0),
+				getBuff(BRILLIANT_WIZARD_OIL, 0),
+				getBuff(WELL_FED_SP, 0),
+				getBuff(FLASK_OF_PURE_DEATH, 0),
+				getBuff(WRATH_OF_AIR_TOTEM, 1),
+				getBuff(TOTEM_OF_WRATH, 1),
+				getBuff(CURSE_OF_THE_ELEMENTS, 4)
+		);
 	}
 
-	protected Buff getBuff(String name) {
-		return spellRepository.getBuff(name, PHASE).orElseThrow();
+	protected Buff getBuff(BuffId buffId, int rank) {
+		return spellRepository.getBuff(buffId, rank, PHASE).orElseThrow();
 	}
 
 	protected Talent getTalent(TalentId talentId, int rank) {

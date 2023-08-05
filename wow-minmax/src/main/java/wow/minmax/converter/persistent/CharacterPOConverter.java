@@ -7,11 +7,15 @@ import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
 import wow.character.service.CharacterService;
+import wow.commons.model.buffs.BuffIdAndRank;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
+import wow.minmax.model.persistent.BuffPO;
 import wow.minmax.model.persistent.BuildPO;
 import wow.minmax.model.persistent.CharacterPO;
 import wow.minmax.model.persistent.TalentPO;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -55,18 +59,19 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 
 		var params = PoConverterParams.createParams(character);
 
-		Enemy targetEnemy = enemyPOConverter.convertBack(source.getTargetEnemy(), params);
-		character.setTargetEnemy(targetEnemy);
-
 		changeBuild(character, source);
 
 		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), params));
 		character.getExclusiveFactions().set(source.getExclusiveFactions());
-		character.setBuffs(buffPOConverter.convertBackList(source.getBuffs(), params));
-		character.getTargetEnemy().setDebuffs(buffPOConverter.convertBackList(source.getTargetEnemy().getDebuffs(), params));
 		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
 
+		Enemy targetEnemy = enemyPOConverter.convertBack(source.getTargetEnemy(), params);
+		character.setTargetEnemy(targetEnemy);
+
 		characterService.updateAfterRestrictionChange(character);
+
+		character.setBuffs(getBuffIds(source.getBuffs()));
+		character.getTargetEnemy().setDebuffs(getBuffIds(source.getTargetEnemy().getDebuffs()));
 
 		return character;
 	}
@@ -82,5 +87,11 @@ public class CharacterPOConverter implements Converter<Character, CharacterPO>, 
 		build.setRole(sourceBuild.getRole());
 		build.setActivePet(sourceBuild.getActivePet());
 		build.setRotation(RotationTemplate.parse(sourceBuild.getRotation()).createRotation());
+	}
+
+	private List<BuffIdAndRank> getBuffIds(List<BuffPO> buffs) {
+		return buffs.stream()
+				.map(BuffPO::getId)
+				.toList();
 	}
 }

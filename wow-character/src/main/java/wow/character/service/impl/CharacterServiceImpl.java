@@ -19,8 +19,10 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
+import static wow.character.model.character.BuffListType.TARGET_DEBUFF;
 import static wow.commons.model.character.PetType.NONE;
 
 /**
@@ -56,8 +58,8 @@ public class CharacterServiceImpl implements CharacterService {
 
 		character.setProfessions(characterTemplate.getProfessions());
 		character.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
-		character.setBuffs(spellService.getBuffs(characterTemplate.getDefaultBuffs(), character));
-		character.getTargetEnemy().setDebuffs(spellService.getBuffs(characterTemplate.getDefaultDebuffs(), character));
+		character.getBuffs().setHighestRanks(characterTemplate.getDefaultBuffs());
+		character.getTargetEnemy().getDebuffs().setHighestRanks(characterTemplate.getDefaultDebuffs());
 
 		updateAfterRestrictionChange(character);
 	}
@@ -78,6 +80,7 @@ public class CharacterServiceImpl implements CharacterService {
 		build.setRotation(characterTemplate.getDefaultRotationTemplate().createRotation());
 
 		refreshSpellbook(character);
+		refreshBuffs(character);
 	}
 
 	@Override
@@ -103,11 +106,11 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void refreshBuffs(Character character) {
-		for (Buff buff : new ArrayList<>(character.getBuffs().getList())) {
-			if (!buff.isAvailableTo(character)) {
-				character.getBuffs().enable(buff, false);
-			}
-		}
+		List<Buff> buffs = spellService.getAvailableBuffs(character, CHARACTER_BUFF);
+		List<Buff> debuffs = spellService.getAvailableBuffs(character, TARGET_DEBUFF);
+
+		character.getBuffs().setAvailable(buffs);
+		character.getTargetEnemy().getDebuffs().setAvailable(debuffs);
 	}
 
 	private void refreshEquipment(Character character) {

@@ -3,6 +3,7 @@ package wow.minmax.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import wow.commons.model.buffs.BuffId;
 
 /**
  * User: POlszewski
@@ -12,7 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BuffDTO {
-	private int id;
+	private BuffId buffId;
+	private int rank;
 	private String name;
 	private String attributes;
 	private String icon;

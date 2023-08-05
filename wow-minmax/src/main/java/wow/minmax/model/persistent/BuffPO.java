@@ -2,6 +2,8 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import wow.commons.model.buffs.BuffId;
+import wow.commons.model.buffs.BuffIdAndRank;
 
 import java.io.Serializable;
 
@@ -12,6 +14,11 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class BuffPO implements Serializable {
-	private int id;
+	private BuffId buffId;
+	private int rank;
 	private String name;
+
+	public BuffIdAndRank getId() {
+		return new BuffIdAndRank(buffId, rank);
+	}
 }

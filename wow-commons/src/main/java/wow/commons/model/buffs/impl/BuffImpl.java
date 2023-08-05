@@ -17,14 +17,14 @@ import java.util.Set;
  * Date: 2023-03-27
  */
 @Getter
-public class BuffImpl extends ConfigurationElementWithAttributesImpl<Integer> implements Buff {
+public class BuffImpl extends ConfigurationElementWithAttributesImpl<BuffIdAndRank> implements Buff {
 	private final BuffType type;
 	private final BuffExclusionGroup exclusionGroup;
 	private final Set<PveRole> pveRoles;
 	private final Set<BuffCategory> categories;
 
 	public BuffImpl(
-			Integer id,
+			BuffIdAndRank id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,

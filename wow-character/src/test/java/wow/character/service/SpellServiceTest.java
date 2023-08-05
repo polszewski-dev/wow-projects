@@ -8,6 +8,8 @@ import wow.commons.model.buffs.Buff;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
+import static wow.character.model.character.BuffListType.TARGET_DEBUFF;
 
 /**
  * User: POlszewski
@@ -313,34 +315,53 @@ class SpellServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getAvailableBuffs() {
-		List<Buff> buffs = underTest.getBuffs(getCharacter());
+		List<Buff> buffs = underTest.getAvailableBuffs(getCharacter(), CHARACTER_BUFF);
 
-		List<String> names = buffs.stream().map(Buff::getName).toList();
+		List<String> names = buffs.stream().map(buff -> buff.getName() + "#" + buff.getRank()).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
-				"Arcane Brilliance",
-				"Prayer of Fortitude",
-				"Prayer of Spirit",
-				"Gift of the Wild",
-				"Greater Blessing of Kings",
-				"Fel Armor",
-				"Touch of Shadow",
-				"Burning Wish",
-				"Brilliant Wizard Oil",
-				"Superior Wizard Oil",
-				"Well Fed (sp)",
-				"Flask of Supreme Power",
-				"Flask of Pure Death",
-				"Moonkin Aura",
-				"Wrath of Air Totem",
-				"Totem of Wrath",
-				"Misery",
-				"Shadow Weaving",
-				"Improved Scorch",
-				"Curse of the Elements",
-				"Curse of the Elements (improved)",
-				"Drums of Battle",
-				"Destruction"
+				"Arcane Brilliance#1",
+				"Arcane Brilliance#2",
+				"Prayer of Fortitude#2",
+				"Prayer of Fortitude#3",
+				"Prayer of Spirit#1",
+				"Prayer of Spirit#2",
+				"Gift of the Wild#2",
+				"Gift of the Wild#3",
+				"Greater Blessing of Kings#0",
+				"Demon Armor#5",
+				"Demon Armor#6",
+				"Fel Armor#1",
+				"Fel Armor#2",
+				"Touch of Shadow#0",
+				"Burning Wish#0",
+				"Brilliant Wizard Oil#0",
+				"Superior Wizard Oil#0",
+				"Well Fed (sp)#0",
+				"Flask of Supreme Power#0",
+				"Flask of Pure Death#0",
+				"Moonkin Aura#0",
+				"Wrath of Air Totem#1",
+				"Totem of Wrath#1",
+				"Drums of Battle#0",
+				"Destruction#0"
+		));
+	}
+
+	@Test
+	void getAvailableDebuffs() {
+		List<Buff> buffs = underTest.getAvailableBuffs(getCharacter(), TARGET_DEBUFF);
+
+		List<String> names = buffs.stream().map(buff -> buff.getName() + "#" + buff.getRank()).toList();
+
+		assertThat(names).hasSameElementsAs(List.of(
+				"Misery#0",
+				"Shadow Weaving#0",
+				"Improved Scorch#0",
+				"Curse of the Elements#3",
+				"Curse of the Elements#4",
+				"Curse of the Elements (improved)#3",
+				"Curse of the Elements (improved)#4"
 		));
 	}
 }

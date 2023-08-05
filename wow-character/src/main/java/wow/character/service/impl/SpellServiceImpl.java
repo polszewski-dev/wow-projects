@@ -2,6 +2,7 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
 import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
@@ -12,7 +13,6 @@ import wow.commons.model.talents.Talent;
 import wow.commons.repository.SpellRepository;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * User: POlszewski
@@ -36,23 +36,10 @@ public class SpellServiceImpl implements SpellService {
 	}
 
 	@Override
-	public Buff getBuff(int buffId, PhaseId phaseId) {
-		return spellRepository.getBuff(buffId, phaseId).orElseThrow();
-	}
-
-	@Override
-	public List<Buff> getBuffs(List<String> buffNames, Character character) {
-		return buffNames.stream()
-				.map(buffName -> spellRepository.getBuff(buffName, character.getPhaseId()).orElse(null))
-				.filter(Objects::nonNull)
+	public List<Buff> getAvailableBuffs(Character character, BuffListType buffListType) {
+		return spellRepository.getAvailableBuffs(character.getPhaseId()).stream()
 				.filter(buff -> buff.isAvailableTo(character))
-				.toList();
-	}
-
-	@Override
-	public List<Buff> getBuffs(Character character) {
-		return spellRepository.getBuffs(character.getPhaseId()).stream()
-				.filter(buff -> buff.isAvailableTo(character))
+				.filter(buffListType.getFilter())
 				.toList();
 	}
 }

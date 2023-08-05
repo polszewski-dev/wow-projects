@@ -1,5 +1,6 @@
 package wow.character.service;
 
+import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.character.CharacterClassId;
@@ -18,9 +19,5 @@ public interface SpellService {
 
 	List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId);
 
-	Buff getBuff(int buffId, PhaseId phaseId);
-
-	List<Buff> getBuffs(List<String> buffNames, Character character);
-
-	List<Buff> getBuffs(Character character);
+	List<Buff> getAvailableBuffs(Character character, BuffListType buffListType);
 }

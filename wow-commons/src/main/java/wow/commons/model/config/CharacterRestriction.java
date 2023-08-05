@@ -31,9 +31,10 @@ public record CharacterRestriction(
 		ExclusiveFaction exclusiveFaction,
 		PetType activePet,
 		SpellId spellId,
-		TalentId talentId
+		TalentId talentId,
+		Integer maxLevel
 ) {
-	public static final CharacterRestriction EMPTY = new CharacterRestriction(null, List.of(), List.of(), null, null, null, null, null, null, null);
+	public static final CharacterRestriction EMPTY = new CharacterRestriction(null, List.of(), List.of(), null, null, null, null, null, null, null, null);
 
 	public CharacterRestriction {
 		Objects.requireNonNull(characterClassIds);
@@ -68,7 +69,10 @@ public record CharacterRestriction(
 		if (spellId != null && !characterInfo.hasSpell(spellId)) {
 			return false;
 		}
-		return talentId == null || characterInfo.hasTalent(talentId);
+		if (talentId != null && !characterInfo.hasTalent(talentId)) {
+			return false;
+		}
+		return maxLevel == null || characterInfo.getLevel() <= maxLevel;
 	}
 
 	public CharacterRestriction merge(CharacterRestriction other) {
@@ -82,7 +86,8 @@ public record CharacterRestriction(
 				exclusiveFaction,
 				activePet,
 				spellId,
-				mergeValues(talentId, other.talentId)
+				mergeValues(talentId, other.talentId),
+				mergeValues(maxLevel, other.maxLevel)
 		);
 	}
 

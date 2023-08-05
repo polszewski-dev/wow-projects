@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffId;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -31,9 +31,7 @@ class BuffControllerTest extends ControllerTest {
 
 	@Test
 	void enableBuff() throws Exception {
-		Buff buff = getBuff("Fel Armor");
-
-		mockMvc.perform(get("/api/v1/buff/{characterId}/{buffListType}/enable/{buffId}/{enabled}", CHARACTER_KEY, CHARACTER_BUFF, buff.getId(), true))
+		mockMvc.perform(get("/api/v1/buff/{characterId}/{buffListType}/enable/{buffId}/{rank}/{enabled}", CHARACTER_KEY, CHARACTER_BUFF, BuffId.FEL_ARMOR.name(), 2, true))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

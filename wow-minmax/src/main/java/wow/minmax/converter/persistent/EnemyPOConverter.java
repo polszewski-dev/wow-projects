@@ -29,9 +29,6 @@ public class EnemyPOConverter implements Converter<Enemy, EnemyPO>, Parametrized
 
 	@Override
 	public Enemy doConvertBack(EnemyPO source, Map<String, Object> params) {
-		Enemy enemy = new Enemy(source.getEnemyType(), source.getLevelDifference());
-
-		enemy.setDebuffs(buffPOConverter.convertBackList(source.getDebuffs(), params));
-		return enemy;
+		return new Enemy(source.getEnemyType(), source.getLevelDifference());
 	}
 }

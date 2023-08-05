@@ -17,6 +17,6 @@ export class BuffService {
 	}
 
 	enableBuff(characterId: string, buffListType: BuffListType, buff: Buff): Observable<Buff[]> {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}/enable/${buff.id}/${buff.enabled}`);
+		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}/enable/${buff.buffId}/${buff.rank}/${buff.enabled}`);
 	}
 }

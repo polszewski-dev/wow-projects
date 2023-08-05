@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.BuffListType;
 import wow.character.model.character.Buffs;
 import wow.character.model.character.Character;
-import wow.character.service.SpellService;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffId;
 import wow.minmax.converter.dto.BuffConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.BuffDTO;
@@ -28,7 +28,6 @@ import java.util.List;
 @Slf4j
 public class BuffController {
 	private final PlayerProfileService playerProfileService;
-	private final SpellService spellService;
 	private final BuffConverter buffConverter;
 
 	@GetMapping("{characterId}/{buffListType}/list")
@@ -40,34 +39,30 @@ public class BuffController {
 		return getBuffs(character, buffListType);
 	}
 
-	@GetMapping("{characterId}/{buffListType}/enable/{buffId}/{enabled}")
+	@GetMapping("{characterId}/{buffListType}/enable/{buffId}/{rank}/{enabled}")
 	public List<BuffDTO> enableBuff(
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("buffListType") BuffListType buffListType,
-			@PathVariable("buffId") int buffId,
+			@PathVariable("buffId") BuffId buffId,
+			@PathVariable("rank") int rank,
 			@PathVariable("enabled") boolean enabled
 	) {
-		Character character = playerProfileService.enableBuff(characterId, buffListType, buffId, enabled);
-		log.info("Changed buff charId: {}, list: {}, buffId: {}, enabled: {}", characterId, buffListType, buffId, enabled);
+		Character character = playerProfileService.enableBuff(characterId, buffListType, buffId, rank, enabled);
+		log.info("Changed buff charId: {}, list: {}, buffId: {}, rank: {}, enabled: {}", characterId, buffListType, buffId, rank, enabled);
 		return getBuffs(character, buffListType);
 	}
 
 	private List<BuffDTO> getBuffs(Character character, BuffListType buffListType) {
 		Buffs buffs = character.getBuffList(buffListType);
 
-		return getBuffDTOs(buffs, character, buffListType);
-	}
-
-	private List<BuffDTO> getBuffDTOs(Buffs buffs, Character character, BuffListType buffListType) {
-		return spellService.getBuffs(character).stream()
-				.filter(buffListType.getFilter())
-				.map(buff -> getBuffDTO(buff, buffs))
+		return buffs.getAvailableHighestRanks().stream()
+				.map(buff -> getBuffDTO(buff, buffs.has(buff.getBuffId())))
 				.toList();
 	}
 
-	private BuffDTO getBuffDTO(Buff buff, Buffs buffs) {
+	private BuffDTO getBuffDTO(Buff buff, boolean enabled) {
 		BuffDTO dto = buffConverter.convert(buff);
-		dto.setEnabled(buffs.has(buff));
+		dto.setEnabled(enabled);
 		return dto;
 	}
 }

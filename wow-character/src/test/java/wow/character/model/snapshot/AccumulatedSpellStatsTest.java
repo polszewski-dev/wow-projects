@@ -371,7 +371,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 	private AccumulatedSpellStats getAccumulatedSpellStats(Attributes attributes) {
 		Character character = getCharacter();
-		Spell spell = getSpell(SHADOW_BOLT);
+		Spell spell = character.getSpellbook().getSpell(SHADOW_BOLT).orElseThrow();
 
 		AccumulatedSpellStats stats = new AccumulatedSpellStats(attributes, character.getConditions(spell));
 

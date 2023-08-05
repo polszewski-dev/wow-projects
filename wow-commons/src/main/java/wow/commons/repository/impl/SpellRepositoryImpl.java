@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffId;
+import wow.commons.model.buffs.BuffIdAndRank;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.commons.model.spells.SpellIdAndRank;
 import wow.commons.model.talents.Talent;
 import wow.commons.model.talents.TalentId;
 import wow.commons.repository.SpellRepository;
@@ -26,12 +29,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SpellRepositoryImpl extends ExcelRepository implements SpellRepository {
 	private final Map<CharacterClassId, List<Spell>> spellsByClass = new LinkedHashMap<>();
-	private final Map<SpellId, List<Spell>> spellById = new LinkedHashMap<>();
+	private final Map<SpellIdAndRank, List<Spell>> spellById = new LinkedHashMap<>();
 	private final Map<CharacterClassId, List<Talent>> talentsByClass = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByIdByRank = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
-	private final Map<Integer, List<Buff>> buffsById = new LinkedHashMap<>();
-	private final Map<String, List<Buff>> buffsByName = new LinkedHashMap<>();
+	private final Map<BuffIdAndRank, List<Buff>> buffsById = new LinkedHashMap<>();
 	private final List<Buff> buffs = new ArrayList<>();
 
 	@Value("${spell.xls.file.path}")
@@ -46,22 +48,8 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	}
 
 	@Override
-	public Optional<Spell> getSpellHighestRank(SpellId spellId, int level, PhaseId phaseId) {
-		List<Spell> spells = getList(spellById, spellId, phaseId);
-
-		if (spells.isEmpty()) {
-			return Optional.empty();
-		}
-
-		int maxRank = spells.stream()
-				.filter(spell -> spell.getRequiredLevel() <= level)
-				.mapToInt(Spell::getRank)
-				.max()
-				.orElseThrow();
-
-		return spells.stream()
-				.filter(spell -> spell.getRank() == maxRank)
-				.collect(CollectionUtil.toOptionalSingleton());
+	public Optional<Spell> getSpell(SpellId spellId, int rank, PhaseId phaseId) {
+		return getUnique(spellById, new SpellIdAndRank(spellId, rank), phaseId);
 	}
 
 	@Override
@@ -86,18 +74,13 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	}
 
 	@Override
-	public Optional<Buff> getBuff(int buffId, PhaseId phaseId) {
-		return getUnique(buffsById, buffId, phaseId);
-	}
-
-	@Override
-	public Optional<Buff> getBuff(String buffName, PhaseId phaseId) {
-		return getUnique(buffsByName, buffName, phaseId);
-	}
-
-	@Override
-	public List<Buff> getBuffs(PhaseId phaseId) {
+	public List<Buff> getAvailableBuffs(PhaseId phaseId) {
 		return getList(buffs, phaseId);
+	}
+
+	@Override
+	public Optional<Buff> getBuff(BuffId buffId, int rank, PhaseId phaseId) {
+		return getUnique(buffsById, new BuffIdAndRank(buffId, rank), phaseId);
 	}
 
 	@PostConstruct
@@ -118,7 +101,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		for (CharacterClassId characterClassId : spell.getCharacterRestriction().characterClassIds()) {
 			spellsByClass.computeIfAbsent(characterClassId, x -> new ArrayList<>()).add(spell);
 		}
-		addEntry(spellById, spell.getSpellId(), spell);
+		addEntry(spellById, spell.getId(), spell);
 	}
 
 	public void addTalent(Talent talent) {
@@ -145,7 +128,6 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 
 	public void addBuff(Buff buff) {
 		addEntry(buffsById, buff.getId(), buff);
-		addEntry(buffsByName, buff.getName(), buff);
 		buffs.add(buff);
 	}
 }

@@ -13,7 +13,7 @@ import wow.commons.model.attributes.AttributeCollection;
 import wow.commons.model.attributes.AttributeCollector;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buffs.BuffIdAndRank;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
@@ -262,12 +262,8 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		};
 	}
 
-	public void setBuffs(Collection<Buff> buffs) {
-		this.buffs.set(buffs);
-	}
-
-	public void enableBuff(Buff buff, boolean enable) {
-		buffs.enable(buff, enable);
+	public void setBuffs(Collection<BuffIdAndRank> buffIds) {
+		this.buffs.set(buffIds);
 	}
 
 	// enemy

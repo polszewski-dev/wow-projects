@@ -3,6 +3,7 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.build.RotationTemplate;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
@@ -27,8 +28,8 @@ public class CharacterTemplate implements TimeRestricted {
 	private final PveRole role;
 	private final RotationTemplate defaultRotationTemplate;
 	private final PetType activePet;
-	private final List<String> defaultBuffs;
-	private final List<String> defaultDebuffs;
+	private final List<BuffId> defaultBuffs;
+	private final List<BuffId> defaultDebuffs;
 	private final List<CharacterProfession> professions;
 	private final List<ExclusiveFaction> exclusiveFactions;
 }

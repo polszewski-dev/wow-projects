@@ -16,7 +16,8 @@ public class BuffConverter implements Converter<Buff, BuffDTO> {
 	@Override
 	public BuffDTO doConvert(Buff source) {
 		return new BuffDTO(
-				source.getId(),
+				source.getBuffId(),
+				source.getRank(),
 				source.getName(),
 				source.statString(),
 				source.getIcon(),

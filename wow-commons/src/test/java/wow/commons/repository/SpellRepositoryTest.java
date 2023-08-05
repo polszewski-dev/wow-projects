@@ -15,8 +15,8 @@ import wow.commons.model.attributes.complex.special.TalentProcAbility;
 import wow.commons.model.attributes.condition.AttributeCondition;
 import wow.commons.model.buffs.Buff;
 import wow.commons.model.buffs.BuffExclusionGroup;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.buffs.BuffType;
-import wow.commons.model.config.ConfigurationElement;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
@@ -49,7 +49,7 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("SpellInfo is read correctly")
 	void spellInfoIsCorrect() {
-		Optional<Spell> optionalSpell = underTest.getSpellHighestRank(SHADOW_BOLT, 70, PhaseId.TBC_P5);
+		Optional<Spell> optionalSpell = underTest.getSpell(SHADOW_BOLT, 11, PhaseId.TBC_P5);
 
 		assertThat(optionalSpell).isPresent();
 
@@ -86,8 +86,8 @@ class SpellRepositoryTest extends RepositoryTest {
 			"IMMOLATE, VANILLA_P5, 8, 279, 279",
 			"IMMOLATE, TBC_P1, 9, 332, 332",
 		})
-		void vanillaP1(SpellId shadowBolt, PhaseId phaseId, int rank, int min, int max) {
-			Spell spell = getSpell(shadowBolt, phaseId);
+		void vanillaP1(SpellId spellId, PhaseId phaseId, int rank, int min, int max) {
+			Spell spell = getSpell(spellId, rank, phaseId);
 
 			assertThat(spell.getRank()).isEqualTo(rank);
 			assertThat(spell.getMinDmg()).isEqualTo(min);
@@ -109,17 +109,16 @@ class SpellRepositoryTest extends RepositoryTest {
 				"IMMOLATE, VANILLA_P5, 8, 510",
 				"IMMOLATE, TBC_P1, 9, 615",
 		})
-		void vanillaP1(SpellId shadowBolt, PhaseId phaseId, int rank, int dot) {
-			Spell spell = getSpell(shadowBolt, phaseId);
+		void vanillaP1(SpellId spellId, PhaseId phaseId, int rank, int dot) {
+			Spell spell = getSpell(spellId, rank, phaseId);
 
 			assertThat(spell.getRank()).isEqualTo(rank);
 			assertThat(spell.getDotDmg()).isEqualTo(dot);
 		}
 	}
 
-	private Spell getSpell(SpellId shadowBolt, PhaseId phaseId) {
-		int level = phaseId.getGameVersionId().getMaxLevel();
-		return underTest.getSpellHighestRank(shadowBolt, level, phaseId).orElseThrow();
+	private Spell getSpell(SpellId spellId, int rank, PhaseId phaseId) {
+		return underTest.getSpell(spellId, rank, phaseId).orElseThrow();
 	}
 
 	@Test
@@ -187,13 +186,14 @@ class SpellRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Buff is read correctly")
 	void buffIsCorrect() {
-		Optional<Buff> optionalBuff = underTest.getBuff(27228, PhaseId.TBC_P5);
+		Optional<Buff> optionalBuff = underTest.getBuff(BuffId.CURSE_OF_THE_ELEMENTS, 4, PhaseId.TBC_P5);
 
 		assertThat(optionalBuff).isPresent();
 
 		Buff buff = optionalBuff.orElseThrow();
 
-		assertThat(buff.getId()).isEqualTo(27228);
+		assertThat(buff.getBuffId()).isEqualTo(BuffId.CURSE_OF_THE_ELEMENTS);
+		assertThat(buff.getRank()).isEqualTo(4);
 		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
 		assertThat(buff.getRequiredLevel()).isNull();
 		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
@@ -211,50 +211,57 @@ class SpellRepositoryTest extends RepositoryTest {
 	}
 
 	@Test
-	@DisplayName("Buff by id name read correctly")
-	void buffByIdIsCorrect() {
-		Optional<Buff> optionalBuff = underTest.getBuff("Curse of the Elements", PhaseId.TBC_P5);
-
-		assertThat(optionalBuff).isPresent();
-
-		Buff buff = optionalBuff.orElseThrow();
-
-		assertThat(buff.getId()).isEqualTo(27228);
-		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
-	}
-
-	@Test
 	@DisplayName("Buffs are read correctly")
 	void bufByNamefIsCorrect() {
-		List<String> buffNames = underTest.getBuffs(PhaseId.TBC_P5).stream()
-				.map(ConfigurationElement::getName)
+		List<String> buffNames = underTest.getAvailableBuffs(PhaseId.TBC_P5).stream()
+				.map(buff -> buff.getName() + "#" + buff.getRank())
 				.toList();
 
 		assertThat(buffNames).hasSameElementsAs(List.of(
-				"Arcane Brilliance",
-				"Prayer of Fortitude",
-				"Prayer of Spirit",
-				"Gift of the Wild",
-				"Greater Blessing of Kings",
-				"Fel Armor",
-				"Touch of Shadow",
-				"Burning Wish",
-				"Shadowform",
-				"Brilliant Wizard Oil",
-				"Superior Wizard Oil",
-				"Well Fed (sp)",
-				"Flask of Supreme Power",
-				"Flask of Pure Death",
-				"Moonkin Aura",
-				"Wrath of Air Totem",
-				"Totem of Wrath",
-				"Misery",
-				"Shadow Weaving",
-				"Improved Scorch",
-				"Curse of the Elements",
-				"Curse of the Elements (improved)",
-				"Drums of Battle",
-				"Destruction"
+				"Arcane Brilliance#1",
+				"Arcane Brilliance#2",
+				"Prayer of Fortitude#2",
+				"Prayer of Fortitude#3",
+				"Prayer of Spirit#1",
+				"Prayer of Spirit#2",
+				"Gift of the Wild#2",
+				"Gift of the Wild#3",
+				"Greater Blessing of Kings#0",
+				"Demon Armor#5",
+				"Demon Armor#6",
+				"Fel Armor#1",
+				"Fel Armor#2",
+				"Touch of Shadow#0",
+				"Burning Wish#0",
+				"Shadowform#0",
+				"Brilliant Wizard Oil#0",
+				"Superior Wizard Oil#0",
+				"Runn Tum Tuber#0",
+				"Well Fed (sp)#0",
+				"Flask of Supreme Power#0",
+				"Flask of Pure Death#0",
+				"Spirit of Zanza#0",
+				"Greater Arcane Elixir#0",
+				"Elixir of Shadow Power#0",
+				"Moonkin Aura#0",
+				"Wrath of Air Totem#1",
+				"Totem of Wrath#1",
+				"Drums of Battle#0",
+				"Destruction#0",
+				"Misery#0",
+				"Rallying Cry of the Dragonslayer#0",
+				"Spirit of Zandalar#0",
+				"Warchief's Blessing#0",
+				"Sayge's Dark Fortune of Damage#0",
+				"Mol'dar's Moxie#0",
+				"Slip'kik's Savvy#0",
+				"Songflower Serenade#0",
+				"Shadow Weaving#0",
+				"Improved Scorch#0",
+				"Curse of the Elements#3",
+				"Curse of the Elements#4",
+				"Curse of the Elements (improved)#3",
+				"Curse of the Elements (improved)#4"
 		));
 	}
 
@@ -263,11 +270,11 @@ class SpellRepositoryTest extends RepositoryTest {
 	class BuffAttributes {
 		@ParameterizedTest(name = "{0}")
 		@CsvSource({
-				"VANILLA_P1, 31",
-				"TBC_P1, 40",
+				"VANILLA_P1, 1, 31",
+				"TBC_P1, 2, 40",
 		})
-		void talent(PhaseId phaseId, int statValue) {
-			Buff buff = underTest.getBuff("Arcane Brilliance", phaseId).orElseThrow();
+		void talent(PhaseId phaseId, int rank, int statValue) {
+			Buff buff = underTest.getBuff(BuffId.ARCANE_BRILLIANCE, rank, phaseId).orElseThrow();
 
 			assertThat(buff.getIntellect()).isEqualTo(statValue);
 		}

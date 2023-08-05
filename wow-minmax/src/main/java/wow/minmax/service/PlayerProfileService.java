@@ -3,6 +3,7 @@ package wow.minmax.service;
 import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.EquippableItem;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
@@ -34,7 +35,7 @@ public interface PlayerProfileService {
 
 	Character resetEquipment(CharacterId characterId);
 
-	Character enableBuff(CharacterId characterId, BuffListType buffListType, int buffId, boolean enabled);
+	Character enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled);
 
 	ViewConfig getViewConfig(Character character);
 }

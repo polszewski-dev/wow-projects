@@ -11,6 +11,7 @@ import wow.character.WowCharacterSpringTest;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.categorization.*;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.Described;
@@ -25,6 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.character.ArmorProfficiency.CLOTH;
 import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
 import static wow.character.model.character.WeaponProfficiency.*;
+import static wow.commons.model.buffs.BuffId.FEL_ARMOR;
+import static wow.commons.model.buffs.BuffId.*;
 import static wow.commons.model.categorization.ItemType.ONE_HAND;
 import static wow.commons.model.categorization.WeaponSubType.SWORD;
 import static wow.commons.model.character.CharacterClassId.*;
@@ -95,12 +98,12 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getDefaultRotationTemplate().getSpellIds()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
 		assertThat(characterTemplate.getActivePet()).isEqualTo(NONE);
 		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
-				"Fel Armor", "Touch of Shadow", "Arcane Brilliance", "Prayer of Fortitude", "Prayer of Spirit",
-				"Gift of the Wild", "Greater Blessing of Kings", "Wrath of Air Totem",
-				"Totem of Wrath", "Well Fed (sp)", "Brilliant Wizard Oil", "Flask of Pure Death"
+				FEL_ARMOR, TOUCH_OF_SHADOW, ARCANE_BRILLIANCE, BuffId.PRAYER_OF_FORTITUDE, PRAYER_OF_SPIRIT,
+				GIFT_OF_THE_WILD, GREATER_BLESSING_OF_KINGS, WRATH_OF_AIR_TOTEM,
+				TOTEM_OF_WRATH, WELL_FED_SP, BRILLIANT_WIZARD_OIL, FLASK_OF_PURE_DEATH
 		));
 		assertThat(characterTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
-				"Curse of the Elements"
+				BuffId.CURSE_OF_THE_ELEMENTS
 		));
 		assertThat(characterTemplate.getProfessions().get(0).getProfessionId()).isEqualTo(ENCHANTING);
 		assertThat(characterTemplate.getProfessions().get(0).getSpecializationId()).isNull();
