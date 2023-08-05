@@ -46,7 +46,7 @@ public class EnchantSheetWriter extends ItemBaseSheetWriter<EnchantTooltipParser
 		setValue(parser.getItemSubTypes(), ItemSubType::name);
 		setValue(getItemRarity(parser));
 		setValue(parser.getGameVersion());
-		setValue(getPhase(parser));
+		setValue(parser.getPhase());
 		setValue(parser.getRequiredClass());
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());

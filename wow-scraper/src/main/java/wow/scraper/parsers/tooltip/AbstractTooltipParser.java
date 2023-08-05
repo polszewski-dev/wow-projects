@@ -153,9 +153,17 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> {
 	protected abstract void afterParse();
 
 	private void fixCommonFields() {
+		fixPhase();
+		fixBinding();
+	}
+
+	private void fixPhase() {
 		if (phase == null) {
-			phase = getGameVersion().getEarliestPhase();
+			phase = getGameVersion().getEarliestNonPrepatchPhase();
 		}
+	}
+
+	private void fixBinding() {
 		if (binding == null) {
 			binding = Binding.NO_BINDING;
 		}
@@ -258,6 +266,10 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> {
 			throw new IllegalArgumentException();
 		}
 		this.requiredSide = requiredSide;
+	}
+
+	public void setPhase(PhaseId phase) {
+		this.phase = phase;
 	}
 
 	protected void unmatchedLine(String line) {

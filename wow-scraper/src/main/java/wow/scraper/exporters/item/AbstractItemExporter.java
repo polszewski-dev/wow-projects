@@ -2,6 +2,7 @@ package wow.scraper.exporters.item;
 
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.scraper.model.*;
 import wow.scraper.parsers.tooltip.AbstractItemTooltipParser;
 
@@ -26,7 +27,8 @@ public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> 
 	}
 
 	@Override
-	protected void afterParse(T parser) {
+	protected void afterParse(T parser, WowheadItemCategory category) {
+		super.afterParse(parser, category);
 		fixMissingRequiredLevel(parser);
 	}
 
@@ -61,5 +63,10 @@ public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> 
 			log.error("Error accessing quest info: " + questId, e);
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	protected PhaseId getPhaseOverride(int id) {
+		return getScraperConfig().getItemPhaseOverrides().get(id);
 	}
 }

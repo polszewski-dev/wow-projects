@@ -13,7 +13,7 @@ import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.professions.ProfessionId.ENCHANTING;
 import static wow.commons.model.pve.GameVersionId.TBC;
-import static wow.commons.model.pve.PhaseId.TBC_P0;
+import static wow.commons.model.pve.PhaseId.TBC_P1;
 
 /**
  * User: POlszewski
@@ -35,7 +35,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2928);
 		assertThat(underTest.getExclusiveFaction()).isNull();
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(-1);
-		assertThat(underTest.getPhase()).isEqualTo(TBC_P0);
+		assertThat(underTest.getPhase()).isEqualTo(TBC_P1);
 	}
 
 	@Test
@@ -54,7 +54,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2995);
 		assertThat(underTest.getExclusiveFaction()).isEqualTo(SCRYERS);
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(WowheadItemQuality.RARE.getCode());
-		assertThat(underTest.getPhase()).isEqualTo(TBC_P0);
+		assertThat(underTest.getPhase()).isEqualTo(TBC_P1);
 	}
 
 	@Test
@@ -73,7 +73,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2589);
 		assertThat(underTest.getExclusiveFaction()).isNull();
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(WowheadItemQuality.RARE.getCode());
-		assertThat(underTest.getPhase()).isEqualTo(TBC_P0);
+		assertThat(underTest.getPhase()).isEqualTo(TBC_P1);
 	}
 
 	@Override

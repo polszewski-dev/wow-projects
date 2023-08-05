@@ -15,7 +15,7 @@ import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.item.GemColor.*;
 import static wow.commons.model.professions.ProfessionId.JEWELCRAFTING;
 import static wow.commons.model.pve.GameVersionId.TBC;
-import static wow.commons.model.pve.PhaseId.TBC_P0;
+import static wow.commons.model.pve.PhaseId.TBC_P1;
 import static wow.commons.model.pve.PhaseId.TBC_P3;
 
 /**
@@ -36,15 +36,21 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 	@Test
 	@DisplayName("Basic info is parsed correctly")
 	void basicInfo() {
-		assertThat(redGem.getPhase()).isEqualTo(TBC_P3);
 		assertThat(redGem.getItemLevel()).isEqualTo(100);
 		assertThat(redGem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(redGem.isUnique()).isFalse();
 
-		assertThat(blueGem.getPhase()).isEqualTo(TBC_P0);
 		assertThat(blueGem.getItemLevel()).isEqualTo(130);
 		assertThat(blueGem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(blueGem.isUnique()).isTrue();
+	}
+
+	@Test
+	@DisplayName("Phase is parsed correctly")
+	void gameVersionPhase() {
+		assertThat(redGem.getPhase()).isEqualTo(TBC_P3);
+		assertThat(blueGem.getPhase()).isEqualTo(TBC_P1);
+		assertThat(metaGem.getPhase()).isEqualTo(TBC_P1);
 	}
 
 	@Test

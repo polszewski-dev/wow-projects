@@ -5,7 +5,6 @@ import wow.commons.model.attributes.complex.ComplexAttribute;
 import wow.commons.model.attributes.primitive.PrimitiveAttribute;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
-import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.scraper.classifiers.PveRoleStatClassifier;
@@ -13,7 +12,6 @@ import wow.scraper.exporters.excel.ExcelSheetWriter;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parsers.WowheadSourceParser;
 import wow.scraper.parsers.tooltip.AbstractItemTooltipParser;
-import wow.scraper.parsers.tooltip.AbstractSpellTooltipParser;
 import wow.scraper.parsers.tooltip.AbstractTooltipParser;
 
 import java.util.List;
@@ -56,7 +54,7 @@ public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, ItemBas
 		setValue(parser.getItemLevel());
 		setValue(parseSource(parser));
 		setValue(parser.getGameVersion());
-		setValue(getPhase(parser));
+		setValue(parser.getPhase());
 	}
 
 	protected void writeIconAndTooltipHeader() {
@@ -105,27 +103,6 @@ public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, ItemBas
 		}
 
 		fillRemainingEmptyCols(2 * (maxAttributes - colNo));
-	}
-
-	protected PhaseId getPhase(AbstractItemTooltipParser parser) {
-		PhaseId phaseOverride = config.getItemPhaseOverrides().get(parser.getItemId());
-		PhaseId phase = parser.getPhase();
-
-		return getPhaseId(phaseOverride, phase);
-	}
-
-	protected PhaseId getPhase(AbstractSpellTooltipParser parser) {
-		PhaseId phaseOverride = config.getSpellPhaseOverrides().get(parser.getSpellId());
-		PhaseId phase = parser.getPhase();
-
-		return getPhaseId(phaseOverride, phase);
-	}
-
-	private PhaseId getPhaseId(PhaseId phaseOverride, PhaseId phase) {
-		if (phaseOverride != null && phaseOverride.getGameVersionId() == phase.getGameVersionId()) {
-			return phaseOverride;
-		}
-		return phase;
 	}
 
 	protected ItemRarity getItemRarity(AbstractTooltipParser<?> parser) {

@@ -12,6 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.commons.model.pve.PhaseId.TBC_P1;
+import static wow.commons.model.pve.PhaseId.TBC_P2;
 
 /**
  * User: POlszewski
@@ -27,6 +29,7 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 		assertThat(pauldrons.getRequiredLevel()).isEqualTo(70);
 		assertThat(pauldrons.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(pauldrons.getRequiredClass()).isEqualTo(List.of(HUNTER, MAGE, WARLOCK));
+		assertThat(pauldrons.getPhase()).isEqualTo(TBC_P1);
 	}
 
 	@Test
@@ -38,6 +41,7 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 		assertThat(verdantSphere.getRequiredLevel()).isEqualTo(70);
 		assertThat(verdantSphere.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(verdantSphere.isUnique()).isTrue();
+		assertThat(verdantSphere.getPhase()).isEqualTo(TBC_P2);
 	}
 
 	@BeforeEach

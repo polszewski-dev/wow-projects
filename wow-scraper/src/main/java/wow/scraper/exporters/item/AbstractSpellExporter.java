@@ -2,6 +2,7 @@ package wow.scraper.exporters.item;
 
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.parsers.tooltip.AbstractSpellTooltipParser;
@@ -26,7 +27,7 @@ public abstract class AbstractSpellExporter<T extends AbstractSpellTooltipParser
 	}
 
 	@Override
-	protected void afterParse(T parser) {
-		// void
+	protected PhaseId getPhaseOverride(int id) {
+		return getScraperConfig().getSpellPhaseOverrides().get(id);
 	}
 }

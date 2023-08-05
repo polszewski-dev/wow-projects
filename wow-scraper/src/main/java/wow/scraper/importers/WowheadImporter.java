@@ -58,6 +58,8 @@ public abstract class WowheadImporter<C, D extends JsonCommonDetails>  {
 				saveDetails(details);
 			}
 		}
+
+		this.gameVersion = null;
 	}
 
 	private void saveDetails(D details) {
