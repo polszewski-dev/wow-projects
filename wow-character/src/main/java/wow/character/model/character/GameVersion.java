@@ -9,7 +9,7 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
 import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.professions.ProfessionProficiencyId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
@@ -30,8 +30,6 @@ public class GameVersion implements Described {
 	@NonNull
 	private final Description description;
 
-	private final int maxLevel;
-	private final int maxProfession;
 	private final boolean combatRatings;
 	private final double evivalentAmount;
 	private final boolean worldBuffs;
@@ -45,6 +43,7 @@ public class GameVersion implements Described {
 	private final List<CharacterClass> characterClasses = new ArrayList<>();
 	private final List<Race> races = new ArrayList<>();
 	private final List<Profession> professions = new ArrayList<>();
+	private final List<ProfessionProficiency> proficiencies = new ArrayList<>();
 	private final List<Pet> pets = new ArrayList<>();
 	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
 
@@ -88,6 +87,13 @@ public class GameVersion implements Described {
 				.orElseThrow();
 	}
 
+	public ProfessionProficiency getProficiency(ProfessionProficiencyId proficiencyId) {
+		return proficiencies.stream()
+				.filter(x -> x.getProficiencyId() == proficiencyId)
+				.findFirst()
+				.orElseThrow();
+	}
+
 	public Pet getPet(PetType petType) {
 		if (petType == null) {
 			return null;
@@ -103,12 +109,6 @@ public class GameVersion implements Described {
 				.filter(x -> x.getLevel() == level)
 				.findFirst()
 				.orElseThrow();
-	}
-
-	public CharacterProfession getCharacterProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
-		Profession profession = getProfession(professionId);
-		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
-		return new CharacterProfession(profession, specialization, level);
 	}
 
 	public boolean supports(CharacterClassId characterClassId, RaceId raceId) {

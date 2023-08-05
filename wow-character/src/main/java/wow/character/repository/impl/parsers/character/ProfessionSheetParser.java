@@ -4,6 +4,7 @@ import wow.character.model.character.GameVersion;
 import wow.character.model.character.Profession;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.professions.ProfessionType;
 
 /**
  * User: POlszewski
@@ -11,6 +12,7 @@ import wow.commons.model.professions.ProfessionId;
  */
 public class ProfessionSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colId = column("id");
+	private final ExcelColumn colType = column("type");
 
 	public ProfessionSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
@@ -27,8 +29,9 @@ public class ProfessionSheetParser extends CharacterSheetParser {
 	private Profession getProfession(GameVersion version) {
 		var id = colId.getEnum(ProfessionId::parse);
 		var description = getDescription();
+		var type = colType.getEnum(ProfessionType::parse);
 
-		return new Profession(id, description, version);
+		return new Profession(id, description, type, version);
 	}
 
 	private void addProfession(Profession profession, GameVersion version) {

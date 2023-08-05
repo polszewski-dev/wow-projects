@@ -3,7 +3,7 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterProfession;
-import wow.character.model.character.GameVersion;
+import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
 import wow.commons.model.pve.PhaseId;
 import wow.minmax.converter.Converter;
@@ -33,11 +33,9 @@ public class CharacterProfessionPOConverter implements Converter<CharacterProfes
 	@Override
 	public CharacterProfession doConvertBack(CharacterProfessionPO source, Map<String, Object> params) {
 		PhaseId phaseId = getPhaseId(params);
-		GameVersion gameVersion = characterRepository.getPhase(phaseId)
-				.orElseThrow()
-				.getGameVersion();
+		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
 
-		return gameVersion.getCharacterProfession(
+		return phase.getCharacterProfession(
 				source.getProfessionId(), source.getSpecializationId(), source.getLevel()
 		);
 	}

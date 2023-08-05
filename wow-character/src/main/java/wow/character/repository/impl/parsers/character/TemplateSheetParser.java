@@ -4,6 +4,7 @@ import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.CharacterTemplateId;
+import wow.character.model.character.Phase;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
@@ -12,6 +13,7 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.Objects;
@@ -64,7 +66,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var activePet = colActivePet.getEnum(PetType::parse, PetType.NONE);
 		var defaultBuffs = colDefaultBuffs.getList(Function.identity());
 		var defaultDebuffs = colDefaultDebuffs.getList(Function.identity());
-		var professions = getProfessions(timeRestriction);
+		var professions = getProfessions(timeRestriction, level);
 		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
 
 		return new CharacterTemplate(
@@ -83,16 +85,16 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		);
 	}
 
-	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction) {
+	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction, int characterLevel) {
 		return Stream.of(
-				getProfession(colProf1, colProf1Spec, timeRestriction),
-				getProfession(colProf2, colProf2Spec, timeRestriction)
+				getProfession(colProf1, colProf1Spec, timeRestriction, characterLevel),
+				getProfession(colProf2, colProf2Spec, timeRestriction, characterLevel)
 		)
 				.filter(Objects::nonNull)
 				.toList();
 	}
 
-	private CharacterProfession getProfession(ExcelColumn colProf, ExcelColumn colProfSpec, TimeRestriction timeRestriction) {
+	private CharacterProfession getProfession(ExcelColumn colProf, ExcelColumn colProfSpec, TimeRestriction timeRestriction, int characterLevel) {
 		var prof = colProf.getEnum(ProfessionId::parse, null);
 		var spec = colProfSpec.getEnum(ProfessionSpecializationId::parse, null);
 
@@ -100,9 +102,20 @@ public class TemplateSheetParser extends CharacterSheetParser {
 			return null;
 		}
 
-		var gameVersion = characterRepository.getGameVersion(timeRestriction.getUniqueVersion()).orElseThrow();
-		var profession = gameVersion.getProfession(prof);
+		var phase = getPhase(timeRestriction);
 
-		return new CharacterProfession(profession, profession.getSpecialization(spec), gameVersion.getMaxProfession());
+		return phase.getCharacterProfessionMaxLevel(prof, spec, characterLevel);
+	}
+
+	private Phase getPhase(TimeRestriction timeRestriction) {
+		PhaseId phaseId;
+
+		if (timeRestriction.phaseId() != null) {
+			phaseId = timeRestriction.phaseId();
+		} else {
+			phaseId = timeRestriction.getUniqueVersion().getLastPhase();
+		}
+
+		return characterRepository.getPhase(phaseId).orElseThrow();
 	}
 }

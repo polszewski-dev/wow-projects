@@ -83,7 +83,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		return new CharacterId(
 				profileId,
 				defaultPhase.getPhaseId(),
-				defaultPhase.getGameVersion().getMaxLevel(),
+				defaultPhase.getMaxLevel(),
 				profileConfig.getDefaultEnemyType(),
 				profileConfig.getDefaultLevelDiff()
 		);

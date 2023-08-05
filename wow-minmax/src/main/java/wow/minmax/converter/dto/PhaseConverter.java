@@ -15,6 +15,6 @@ import wow.minmax.model.dto.PhaseDTO;
 public class PhaseConverter implements Converter<Phase, PhaseDTO> {
 	@Override
 	public PhaseDTO doConvert(Phase source) {
-		return new PhaseDTO(source.getPhaseId(), source.getName(), source.getGameVersion().getMaxLevel());
+		return new PhaseDTO(source.getPhaseId(), source.getName(), source.getMaxLevel());
 	}
 }

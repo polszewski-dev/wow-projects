@@ -10,8 +10,6 @@ import wow.commons.model.pve.GameVersionId;
  */
 public class GameVersionSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colId = column("id");
-	private final ExcelColumn colMaxLvl = column("max_lvl");
-	private final ExcelColumn colMaxProfession = column("max_profession");
 	private final ExcelColumn colCombatRatings = column("combat_ratings");
 	private final ExcelColumn colEqvAmount = column("eqv_amount");
 	private final ExcelColumn colWorldBuffs = column("world_buffs");
@@ -39,8 +37,6 @@ public class GameVersionSheetParser extends CharacterSheetParser {
 	private GameVersion getGameVersion() {
 		var id = colId.getEnum(GameVersionId::parse);
 		var description = getDescription();
-		var maxLvl = colMaxLvl.getInteger();
-		var maxProfession = colMaxProfession.getInteger();
 		var combatRatings = colCombatRatings.getBoolean();
 		var eqvAmount = colEqvAmount.getDouble();
 		var worldBuffs = colWorldBuffs.getBoolean();
@@ -51,7 +47,7 @@ public class GameVersionSheetParser extends CharacterSheetParser {
 		var maxPveSpellHitChance = colMaxPveSpellHitChance.getDouble();
 
 		return new GameVersion(
-				id, description, maxLvl, maxProfession, combatRatings, eqvAmount, worldBuffs, gems, glyphs, heroics, basePveSpellHitChances, maxPveSpellHitChance
+				id, description, combatRatings, eqvAmount, worldBuffs, gems, glyphs, heroics, basePveSpellHitChances, maxPveSpellHitChance
 		);
 	}
 }

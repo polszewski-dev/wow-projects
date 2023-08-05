@@ -24,9 +24,13 @@ import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.commons.util.AttributesBuilder;
 import wow.commons.util.PrimitiveAttributeSupplier;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static wow.commons.repository.impl.parsers.excel.CommonColumnNames.*;
 
@@ -70,6 +74,18 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 
 		private Optional<Duration> getOptionalDuration() {
 			return getOptionalString().map(Duration::parse);
+		}
+
+		public <K, V> Map<K, V> getMap(K[] keys, Function<ExcelColumn, V> mapper) {
+			return Stream.of(keys)
+					.collect(Collectors.toMap(
+							Function.identity(),
+							key -> mapper.apply(subColumn(key.toString().toLowerCase()))
+					));
+		}
+
+		private ExcelColumn subColumn(String subName) {
+			return new ExcelColumn(getName() + subName, isOptional());
 		}
 	}
 

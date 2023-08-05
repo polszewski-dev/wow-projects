@@ -14,6 +14,7 @@ import wow.character.model.character.*;
 import wow.commons.model.categorization.*;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.Described;
+import wow.commons.model.professions.ProfessionType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
@@ -31,6 +32,8 @@ import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.character.PetType.NONE;
 import static wow.commons.model.character.RaceId.*;
 import static wow.commons.model.professions.ProfessionId.*;
+import static wow.commons.model.professions.ProfessionProficiencyId.ARTISAN;
+import static wow.commons.model.professions.ProfessionProficiencyId.MASTER;
 import static wow.commons.model.professions.ProfessionSpecializationId.*;
 import static wow.commons.model.pve.GameVersionId.*;
 import static wow.commons.model.pve.PhaseId.*;
@@ -212,8 +215,6 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(gameVersion.getGameVersionId()).isEqualTo(VANILLA);
 		assertThat(gameVersion.getName()).isEqualTo("Vanilla");
-		assertThat(gameVersion.getMaxLevel()).isEqualTo(60);
-		assertThat(gameVersion.getMaxProfession()).isEqualTo(300);
 		assertThat(gameVersion.isCombatRatings()).isFalse();
 		assertThat(gameVersion.getEvivalentAmount()).isEqualTo(1);
 		assertThat(gameVersion.isWorldBuffs()).isTrue();
@@ -230,8 +231,6 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(gameVersion.getGameVersionId()).isEqualTo(TBC);
 		assertThat(gameVersion.getName()).isEqualTo("TBC");
-		assertThat(gameVersion.getMaxLevel()).isEqualTo(70);
-		assertThat(gameVersion.getMaxProfession()).isEqualTo(375);
 		assertThat(gameVersion.isCombatRatings()).isTrue();
 		assertThat(gameVersion.getEvivalentAmount()).isEqualTo(10);
 		assertThat(gameVersion.isWorldBuffs()).isFalse();
@@ -248,8 +247,6 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(gameVersion.getGameVersionId()).isEqualTo(WOTLK);
 		assertThat(gameVersion.getName()).isEqualTo("WotLK");
-		assertThat(gameVersion.getMaxLevel()).isEqualTo(80);
-		assertThat(gameVersion.getMaxProfession()).isEqualTo(450);
 		assertThat(gameVersion.isCombatRatings()).isTrue();
 		assertThat(gameVersion.getEvivalentAmount()).isEqualTo(20);
 		assertThat(gameVersion.isWorldBuffs()).isFalse();
@@ -383,12 +380,36 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	void phasesAreCorrect() {
+	void vanillaPhasesAreCorrect() {
 		GameVersion vanilla = underTest.getGameVersion(VANILLA).orElseThrow();
 		Phase phase = vanilla.getPhase(VANILLA_P1);
 
 		assertThat(phase.getPhaseId()).isEqualTo(VANILLA_P1);
 		assertThat(phase.getName()).isEqualTo("Vanilla P1");
+		assertThat(phase.getMaxLevel()).isEqualTo(60);
+		assertThat(phase.getMaxProficiencyId()).isEqualTo(ARTISAN);
+	}
+
+	@Test
+	void tbcPrepatchIsCorrect() {
+		GameVersion vanilla = underTest.getGameVersion(TBC).orElseThrow();
+		Phase phase = vanilla.getPhase(TBC_P0);
+
+		assertThat(phase.getPhaseId()).isEqualTo(TBC_P0);
+		assertThat(phase.getName()).isEqualTo("TBC Pre-Patch");
+		assertThat(phase.getMaxLevel()).isEqualTo(60);
+		assertThat(phase.getMaxProficiencyId()).isEqualTo(ARTISAN);
+	}
+
+	@Test
+	void tbcPhasesAreCorrect() {
+		GameVersion vanilla = underTest.getGameVersion(TBC).orElseThrow();
+		Phase phase = vanilla.getPhase(TBC_P1);
+
+		assertThat(phase.getPhaseId()).isEqualTo(TBC_P1);
+		assertThat(phase.getName()).isEqualTo("TBC P1");
+		assertThat(phase.getMaxLevel()).isEqualTo(70);
+		assertThat(phase.getMaxProficiencyId()).isEqualTo(MASTER);
 	}
 
 	@Test
@@ -512,6 +533,20 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(specialization.getProfession().getProfessionId()).isEqualTo(TAILORING);
 	}
 
+	@Test
+	void professionProficienciesAreCorrect() {
+		GameVersion tbc = underTest.getGameVersion(TBC).orElseThrow();
+
+		ProfessionProficiency proficiency = tbc.getProficiency(MASTER);
+
+		assertThat(proficiency.getProficiencyId()).isEqualTo(MASTER);
+		assertThat(proficiency.getName()).isEqualTo("Master");
+		assertThat(proficiency.getMaxSkilll()).isEqualTo(375);
+		assertThat(proficiency.getReqLevel(ProfessionType.CRAFTING)).isEqualTo(50);
+		assertThat(proficiency.getReqLevel(ProfessionType.GATHERING)).isEqualTo(40);
+		assertThat(proficiency.getReqLevel(ProfessionType.SECONDARY)).isEqualTo(50);
+	}
+
 	Character getVanillaWarlock() {
 		return getWarlock(VANILLA);
 	}
@@ -524,7 +559,8 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		GameVersion gameVersion = underTest.getGameVersion(gameVersionId).orElseThrow();
 		CharacterClass warlock = gameVersion.getCharacterClass(WARLOCK);
 		Race orc = gameVersion.getRace(ORC);
-		return new Character(warlock, orc, gameVersion.getMaxLevel(), gameVersion.getLastPhase(), new Talents(List.of()));
+		Phase phase = gameVersion.getLastPhase();
+		return new Character(warlock, orc, phase.getMaxLevel(), phase, new Talents(List.of()));
 	}
 
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

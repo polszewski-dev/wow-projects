@@ -7,6 +7,7 @@ import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.professions.ProfessionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,9 @@ public class Profession implements Described {
 
 	@NonNull
 	private final Description description;
+
+	@NonNull
+	private final ProfessionType type;
 
 	private final List<ProfessionSpecialization> specializations = new ArrayList<>();
 
