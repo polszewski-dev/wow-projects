@@ -124,7 +124,7 @@ public abstract class WowMinMaxSpringTest {
 	protected static final CharacterClassId CHARACTER_CLASS = WARLOCK;
 	protected static final RaceId RACE = RaceId.UNDEAD;
 	protected static final PhaseId PHASE = TBC_P5;
-	protected static final int LEVEL = PHASE.getGameVersionId().getMaxLevel();
+	protected static final int LEVEL = 70;
 	protected static final CreatureType ENEMY_TYPE = UNDEAD;
 	protected static final int LVL_DIFF = 3;
 	protected static final CharacterId CHARACTER_KEY = new CharacterId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);

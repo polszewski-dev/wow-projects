@@ -144,9 +144,17 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 		};
 	}
 
+	private int getDataEnv(GameVersionId gameVersion) {
+		return switch (gameVersion) {
+			case VANILLA -> 4;
+			case TBC -> 5;
+			case WOTLK -> 6;
+		};
+	}
+
 	private String getTooltipUrlStr(GameVersionId gameVersion, String type, int id) {
 		final String urlFormat = "https://nether.wowhead.com/tooltip/%s/%s?dataEnv=%s&locale=0";
-		return urlFormat.formatted(type, id, gameVersion.getDataEnv());
+		return urlFormat.formatted(type, id, getDataEnv(gameVersion));
 	}
 
 	@FunctionalInterface
