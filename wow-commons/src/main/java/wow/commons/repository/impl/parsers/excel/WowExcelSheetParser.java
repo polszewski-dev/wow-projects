@@ -144,6 +144,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colReqPet = column(REQ_PET, true);
 	private final ExcelColumn colReqSpell = column(REQ_SPELL, true);
 	private final ExcelColumn colReqTalent = column(REQ_TALENT, true);
+	private final ExcelColumn colReqRole = column(REQ_ROLE, true);
 	private final ExcelColumn colReqMaxLevel = column(REQ_MAX_LEVEL, true);
 
 	protected CharacterRestriction getRestriction() {
@@ -158,6 +159,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var activePet = colReqPet.getEnum(PetType::parse, null);
 		var spellId = colReqSpell.getEnum(SpellId::parse, null);
 		var talentId = colReqTalent.getEnum(TalentId::parse, null);
+		var role = colReqRole.getEnum(PveRole::parse, null);
 		var maxLevel = colReqMaxLevel.getNullableInteger();
 
 		return new CharacterRestriction(
@@ -171,6 +173,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				activePet,
 				spellId,
 				talentId,
+				role,
 				maxLevel
 		);
 	}

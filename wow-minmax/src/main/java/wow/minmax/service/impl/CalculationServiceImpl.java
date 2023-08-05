@@ -22,6 +22,7 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.model.talents.TalentId;
 import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.*;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.ProcInfoRepository;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.impl.enumerators.RotationAbilityEquivalentCalculator;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.minmax.model.config.CharacterFeature.COMBAT_RATINGS;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 
@@ -48,6 +50,7 @@ public class CalculationServiceImpl implements CalculationService {
 	private final CharacterCalculationService characterCalculationService;
 	private final CharacterService characterService;
 	private final ProcInfoRepository procInfoRepository;
+	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
 	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character) {
@@ -309,7 +312,9 @@ public class CalculationServiceImpl implements CalculationService {
 		PrimitiveAttributeId crit;
 		PrimitiveAttributeId haste;
 
-		if (character.getGameVersion().isCombatRatings()) {
+		boolean combatRatings = minmaxConfigRepository.hasFeature(character, COMBAT_RATINGS);
+
+		if (combatRatings) {
 			hit = SPELL_HIT_RATING;
 			crit = SPELL_CRIT_RATING;
 			haste = SPELL_HASTE_RATING;
@@ -319,7 +324,7 @@ public class CalculationServiceImpl implements CalculationService {
 			haste = SPELL_HASTE_PCT;
 		}
 
-		double amount = character.getGameVersion().getEvivalentAmount();
+		double amount = minmaxConfigRepository.getViewConfig(character).orElseThrow().evivalentAmount();
 		double hitSpEqv = getSpEquivalent(hit, amount, character, spell);
 		double critSpEqv = getSpEquivalent(crit, amount, character, spell);
 		double hasteSpEqv = getSpEquivalent(haste, amount, character, spell);

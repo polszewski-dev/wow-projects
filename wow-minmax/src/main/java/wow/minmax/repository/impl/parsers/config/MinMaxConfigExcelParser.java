@@ -26,6 +26,7 @@ public class MinMaxConfigExcelParser extends ExcelParser {
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
 				new ViewConfigSheetParser("view", configRepository),
+				new CharacterFeatureConfigSheetParser("features", configRepository),
 				new FindUpgradesConfigSheetParser("find_upgrades", configRepository)
 		);
 	}

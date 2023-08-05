@@ -1,5 +1,6 @@
 package wow.commons.model.config;
 
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
@@ -32,9 +33,10 @@ public record CharacterRestriction(
 		PetType activePet,
 		SpellId spellId,
 		TalentId talentId,
+		PveRole role,
 		Integer maxLevel
 ) {
-	public static final CharacterRestriction EMPTY = new CharacterRestriction(null, List.of(), List.of(), null, null, null, null, null, null, null, null);
+	public static final CharacterRestriction EMPTY = new CharacterRestriction(null, List.of(), List.of(), null, null, null, null, null, null, null, null, null);
 
 	public CharacterRestriction {
 		Objects.requireNonNull(characterClassIds);
@@ -83,10 +85,11 @@ public record CharacterRestriction(
 				mergeValues(side, other.side),
 				mergeValues(professionRestriction, other.professionRestriction),
 				mergeValues(professionSpecId, other.professionSpecId),
-				exclusiveFaction,
-				activePet,
-				spellId,
+				mergeValues(exclusiveFaction, other.exclusiveFaction),
+				mergeValues(activePet, other.activePet),
+				mergeValues(spellId, other.spellId),
 				mergeValues(talentId, other.talentId),
+				mergeValues(role, other.role),
 				mergeValues(maxLevel, other.maxLevel)
 		);
 	}
@@ -95,34 +98,40 @@ public record CharacterRestriction(
 	public String toString() {
 		List<String> parts = new ArrayList<>();
 		if (level != null) {
-			parts.add(String.format("level: %s", level));
+			parts.add("level: " + level);
 		}
 		if (!characterClassIds.isEmpty()) {
-			parts.add(String.format("characterClasses: %s", characterClassIds));
+			parts.add("characterClasses: " + characterClassIds);
 		}
 		if (!raceIds.isEmpty()) {
-			parts.add(String.format("races: %s", raceIds));
+			parts.add("races: " + raceIds);
 		}
 		if (side != null) {
-			parts.add(String.format("side: %s", side));
+			parts.add("side: " + side);
 		}
 		if (professionRestriction != null) {
-			parts.add(String.format("profession: %s", professionRestriction));
+			parts.add("profession: " + professionRestriction);
 		}
 		if (professionSpecId != null) {
-			parts.add(String.format("professionSpec: %s", professionSpecId));
+			parts.add("professionSpec: " + professionSpecId);
 		}
 		if (exclusiveFaction != null) {
-			parts.add(String.format("xfaction: %s", exclusiveFaction));
+			parts.add("xfaction: " + exclusiveFaction);
 		}
 		if (activePet != null) {
-			parts.add(String.format("pet: %s", activePet));
+			parts.add("pet: " + activePet);
 		}
 		if (spellId != null) {
-			parts.add(String.format("spell: %s", spellId));
+			parts.add("spell: " + spellId);
 		}
 		if (talentId != null) {
-			parts.add(String.format("talentId: %s", talentId));
+			parts.add("talentId: " + talentId);
+		}
+		if (role != null) {
+			parts.add("role: " + role);
+		}
+		if (maxLevel != null) {
+			parts.add("maxLvl: " + maxLevel);
 		}
 		return parts.stream().collect(Collectors.joining(", ", "(", ")"));
 	}

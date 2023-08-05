@@ -1,25 +1,38 @@
 package wow.minmax.model.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.config.CharacterRestricted;
+import wow.commons.model.config.CharacterRestriction;
+import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Enchant;
-import wow.commons.model.pve.GameVersionId;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * User: POlszewski
  * Date: 2023-05-26
  */
-@Data
-@AllArgsConstructor
-public class FindUpgradesConfig {
-	private CharacterClassId characterClassId;
-	private PveRole pveRole;
-	private GameVersionId gameVersionId;
-	private Set<String> enchantNames;
+public record FindUpgradesConfig(
+		CharacterRestriction characterRestriction,
+		TimeRestriction timeRestriction,
+		Set<String> enchantNames
+) implements CharacterRestricted, TimeRestricted {
+	public FindUpgradesConfig {
+		Objects.requireNonNull(characterRestriction);
+		Objects.requireNonNull(timeRestriction);
+		Objects.requireNonNull(enchantNames);
+	}
+
+	@Override
+	public CharacterRestriction getCharacterRestriction() {
+		return characterRestriction;
+	}
+
+	@Override
+	public TimeRestriction getTimeRestriction() {
+		return timeRestriction;
+	}
 
 	public boolean isIncluded(Enchant x) {
 		return enchantNames.contains(x.getName());

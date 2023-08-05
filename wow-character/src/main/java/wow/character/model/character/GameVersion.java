@@ -30,12 +30,6 @@ public class GameVersion implements Described {
 	@NonNull
 	private final Description description;
 
-	private final boolean combatRatings;
-	private final double evivalentAmount;
-	private final boolean worldBuffs;
-	private final boolean gems;
-	private final boolean glyphs;
-	private final boolean heroics;
 	private final List<Double> basePveSpellHitChancesPct;
 	private final double maxPveSpellHitChancePct;
 

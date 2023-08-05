@@ -2,17 +2,17 @@ package wow.minmax.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.character.model.character.Character;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.categorization.PveRole.CASTER_DPS;
-import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.spells.SpellId.*;
+import static wow.minmax.model.config.CharacterFeature.*;
 
 /**
  * User: POlszewski
@@ -24,9 +24,9 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void getViewConfig() {
-		ViewConfig config = underTest.getViewConfig(WARLOCK, CASTER_DPS, TBC).orElseThrow();
+		ViewConfig config = underTest.getViewConfig(getCharacter()).orElseThrow();
 
-		assertThat(config.getRelevantSpells()).hasSameElementsAs(List.of(
+		assertThat(config.relevantSpells()).hasSameElementsAs(List.of(
 				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE, SHADOWBURN,
 				UNSTABLE_AFFLICTION, SIPHON_LIFE, SEED_OF_CORRUPTION_DIRECT, DRAIN_LIFE,
 				CONFLAGRATE, INCINERATE, SEARING_PAIN, DEATH_COIL, HELLFIRE, RAIN_OF_FIRE
@@ -34,10 +34,33 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 	}
 
 	@Test
-	void getFindUpgradesConfig() {
-		FindUpgradesConfig config = underTest.getFindUpgradesConfig(WARLOCK, CASTER_DPS, TBC).orElseThrow();
+	void getFeatures() {
+		var features = underTest.getFeatures(getCharacter());
 
-		assertThat(config.getEnchantNames()).hasSameElementsAs(List.of(
+		assertThat(features).hasSameElementsAs(Set.of(
+				COMBAT_RATINGS,
+				GEMS,
+				HEROICS
+		));
+	}
+
+	@Test
+	void hasFeature() {
+		Character character = getCharacter();
+
+		assertThat(underTest.hasFeature(character, COMBAT_RATINGS)).isTrue();
+		assertThat(underTest.hasFeature(character, GEMS)).isTrue();
+		assertThat(underTest.hasFeature(character, HEROICS)).isTrue();
+
+		assertThat(underTest.hasFeature(character, WORLD_BUFFS)).isFalse();
+		assertThat(underTest.hasFeature(character, GLYPHS)).isFalse();
+	}
+
+	@Test
+	void getFindUpgradesConfig() {
+		FindUpgradesConfig config = underTest.getFindUpgradesConfig(getCharacter()).orElseThrow();
+
+		assertThat(config.enchantNames()).hasSameElementsAs(List.of(
 				"Glyph of Power",
 				"Greater Inscription of the Orb",
 				"Greater Inscription of Discipline",

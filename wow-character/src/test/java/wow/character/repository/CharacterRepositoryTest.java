@@ -218,12 +218,6 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(gameVersion.getGameVersionId()).isEqualTo(VANILLA);
 		assertThat(gameVersion.getName()).isEqualTo("Vanilla");
-		assertThat(gameVersion.isCombatRatings()).isFalse();
-		assertThat(gameVersion.getEvivalentAmount()).isEqualTo(1);
-		assertThat(gameVersion.isWorldBuffs()).isTrue();
-		assertThat(gameVersion.isGems()).isFalse();
-		assertThat(gameVersion.isGlyphs()).isFalse();
-		assertThat(gameVersion.isHeroics()).isFalse();
 		assertThat(gameVersion.getBasePveSpellHitChancesPct()).isEqualTo(List.of(96.0, 95.0, 94.0, 83.0));
 		assertThat(gameVersion.getMaxPveSpellHitChancePct()).isEqualTo(99.0);
 	}
@@ -234,12 +228,6 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(gameVersion.getGameVersionId()).isEqualTo(TBC);
 		assertThat(gameVersion.getName()).isEqualTo("TBC");
-		assertThat(gameVersion.isCombatRatings()).isTrue();
-		assertThat(gameVersion.getEvivalentAmount()).isEqualTo(10);
-		assertThat(gameVersion.isWorldBuffs()).isFalse();
-		assertThat(gameVersion.isGems()).isTrue();
-		assertThat(gameVersion.isGlyphs()).isFalse();
-		assertThat(gameVersion.isHeroics()).isTrue();
 		assertThat(gameVersion.getBasePveSpellHitChancesPct()).isEqualTo(List.of(96.0, 95.0, 94.0, 83.0));
 		assertThat(gameVersion.getMaxPveSpellHitChancePct()).isEqualTo(99.0);
 	}
@@ -250,12 +238,6 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(gameVersion.getGameVersionId()).isEqualTo(WOTLK);
 		assertThat(gameVersion.getName()).isEqualTo("WotLK");
-		assertThat(gameVersion.isCombatRatings()).isTrue();
-		assertThat(gameVersion.getEvivalentAmount()).isEqualTo(20);
-		assertThat(gameVersion.isWorldBuffs()).isFalse();
-		assertThat(gameVersion.isGems()).isTrue();
-		assertThat(gameVersion.isGlyphs()).isTrue();
-		assertThat(gameVersion.isHeroics()).isTrue();
 		assertThat(gameVersion.getBasePveSpellHitChancesPct()).isEqualTo(List.of(96.0, 95.0, 94.0, 83.0));
 		assertThat(gameVersion.getMaxPveSpellHitChancePct()).isEqualTo(100.0);
 	}

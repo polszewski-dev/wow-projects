@@ -1,19 +1,23 @@
 package wow.minmax.repository;
 
-import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.pve.GameVersionId;
+import wow.character.model.character.Character;
+import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * User: POlszewski
  * Date: 2023-05-11
  */
 public interface MinmaxConfigRepository {
-	Optional<ViewConfig> getViewConfig(CharacterClassId characterClassId, PveRole role, GameVersionId gameVersionId);
+	Optional<ViewConfig> getViewConfig(Character character);
 
-	Optional<FindUpgradesConfig> getFindUpgradesConfig(CharacterClassId characterClassId, PveRole role, GameVersionId gameVersionId);
+	Set<CharacterFeature> getFeatures(Character character);
+
+	boolean hasFeature(Character character, CharacterFeature feature);
+
+	Optional<FindUpgradesConfig> getFindUpgradesConfig(Character character);
 }

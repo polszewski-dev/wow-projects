@@ -16,7 +16,9 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.SocketType;
 import wow.minmax.converter.dto.*;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.dto.*;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.EnumMap;
@@ -39,6 +41,7 @@ import static wow.minmax.converter.dto.DtoConverterParams.createParams;
 public class EquipmentController {
 	private final PlayerProfileService playerProfileService;
 	private final ItemService itemService;
+	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final EquipmentConverter equipmentConverter;
 	private final EquippableItemConverter equippableItemConverter;
 	private final ItemConverter itemConverter;
@@ -64,8 +67,8 @@ public class EquipmentController {
 		var enchantOptions = getEnchantOptions(character, itemOptions);
 		var gemOptions = getGemOptions(character);
 
-		boolean gems = character.getGameVersion().isGems();
-		boolean heroics = character.getGameVersion().isHeroics();
+		boolean gems = minmaxConfigRepository.hasFeature(character, CharacterFeature.GEMS);
+		boolean heroics = minmaxConfigRepository.hasFeature(character, CharacterFeature.HEROICS);
 
 		return new EquipmentOptionsDTO(itemOptions, enchantOptions, gemOptions, gems, heroics);
 	}

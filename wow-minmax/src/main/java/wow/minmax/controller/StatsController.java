@@ -16,11 +16,13 @@ import wow.minmax.converter.dto.SpellStatsConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.RotationStats;
+import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.model.dto.CharacterStatsDTO;
 import wow.minmax.model.dto.RotationStatsDTO;
 import wow.minmax.model.dto.SpecialAbilityStatsDTO;
 import wow.minmax.model.dto.SpellStatsDTO;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 
@@ -42,6 +44,7 @@ import static wow.commons.model.buffs.BuffCategory.*;
 public class StatsController {
 	private final PlayerProfileService playerProfileService;
 	private final CalculationService calculationService;
+	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final SpellStatsConverter spellStatsConverter;
 	private final CharacterStatsConverter characterStatsConverter;
 	private final SpecialAbilityStatsConverter specialAbilityStatsConverter;
@@ -55,7 +58,7 @@ public class StatsController {
 
 		ViewConfig viewConfig = playerProfileService.getViewConfig(character);
 
-		return viewConfig.getRelevantSpells().stream()
+		return viewConfig.relevantSpells().stream()
 				.map(spellId -> character.getSpellbook().getSpell(spellId))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -78,7 +81,7 @@ public class StatsController {
 		result.add(convert("Current buffs", currentStats));
 		result.add(convert("Items", itemStats));
 
-		for (BuffCombo buffCombo : BuffCombo.getBuffCombos(character)) {
+		for (BuffCombo buffCombo : getBuffCombos(character)) {
 			CharacterStats stats = getCharacterStats(character, buffCombo);
 			result.add(convert(buffCombo.type, stats));
 		}
@@ -136,14 +139,14 @@ public class StatsController {
 			this.type = type;
 			this.buffCategories = List.of(buffCategories);
 		}
+	}
 
-		static List<BuffCombo> getBuffCombos(Character character) {
-			boolean worldBuffsAllowed = character.getGameVersion().isWorldBuffs();
+	private List<BuffCombo> getBuffCombos(Character character) {
+		boolean worldBuffsAllowed = minmaxConfigRepository.hasFeature(character, CharacterFeature.WORLD_BUFFS);
 
-			return Stream.of(values())
-					.filter(x -> worldBuffsAllowed || !x.buffCategories.contains(WORLD_BUFF))
-					.toList();
-		}
+		return Stream.of(BuffCombo.values())
+				.filter(x -> worldBuffsAllowed || !x.buffCategories.contains(WORLD_BUFF))
+				.toList();
 	}
 
 	private Comparator<SpecialAbility> compareSources() {

@@ -226,11 +226,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<Enchant> getEnchants(Item item) {
-		FindUpgradesConfig config = minmaxConfigRepository.getFindUpgradesConfig(
-				referenceCharacter.getCharacterClassId(),
-				referenceCharacter.getRole(),
-				referenceCharacter.getGameVersionId()
-		).orElseThrow();
+		FindUpgradesConfig config = minmaxConfigRepository.getFindUpgradesConfig(referenceCharacter).orElseThrow();
 
 		return itemService.getBestEnchants(referenceCharacter, item.getItemType(), item.getItemSubType()).stream()
 				.filter(config::isIncluded)

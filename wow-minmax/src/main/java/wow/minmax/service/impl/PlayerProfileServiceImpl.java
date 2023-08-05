@@ -201,9 +201,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public ViewConfig getViewConfig(Character character) {
-		return minmaxConfigRepository.getViewConfig(
-				character.getCharacterClassId(), character.getRole(), character.getGameVersionId()
-		).orElseThrow();
+		return minmaxConfigRepository.getViewConfig(character).orElseThrow();
 	}
 
 	private void saveProfile(PlayerProfile playerProfile, Character changedCharacter) {

@@ -4,25 +4,22 @@ import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.spells.SpellId;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
  * User: POlszewski
- * Date: 2023-05-11
+ * Date: 2023-08-06
  */
-public record ViewConfig(
+public record CharacterFeatureConfig(
 		CharacterRestriction characterRestriction,
 		TimeRestriction timeRestriction,
-		double evivalentAmount,
-		List<SpellId> relevantSpells
+		CharacterFeature feature
 ) implements CharacterRestricted, TimeRestricted {
-	public ViewConfig {
+	public CharacterFeatureConfig {
 		Objects.requireNonNull(characterRestriction);
 		Objects.requireNonNull(timeRestriction);
-		Objects.requireNonNull(relevantSpells);
+		Objects.requireNonNull(feature);
 	}
 
 	@Override
