@@ -16,4 +16,5 @@ import java.io.Serializable;
 public class CharacterProfessionPO implements Serializable {
 	private ProfessionId professionId;
 	private ProfessionSpecializationId specializationId;
+	private int level;
 }

@@ -16,4 +16,5 @@ import wow.commons.model.professions.ProfessionSpecializationId;
 public class CharacterProfessionDTO {
 	private ProfessionId profession;
 	private ProfessionSpecializationId specialization;
+	private int level;
 }

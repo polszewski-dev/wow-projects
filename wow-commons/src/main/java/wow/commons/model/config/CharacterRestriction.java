@@ -53,7 +53,7 @@ public record CharacterRestriction(
 		if (side != null && side != characterInfo.getSide()) {
 			return false;
 		}
-		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.professionId())) {
+		if (professionRestriction != null && !characterInfo.hasProfession(professionRestriction.professionId(), professionRestriction.level())) {
 			return false;
 		}
 		if (professionSpecId != null && !characterInfo.hasProfessionSpecialization(professionSpecId)) {

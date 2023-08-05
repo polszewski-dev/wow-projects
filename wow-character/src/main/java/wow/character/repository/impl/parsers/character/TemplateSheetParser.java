@@ -103,6 +103,6 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var gameVersion = characterRepository.getGameVersion(timeRestriction.getUniqueVersion()).orElseThrow();
 		var profession = gameVersion.getProfession(prof);
 
-		return new CharacterProfession(profession, profession.getSpecialization(spec));
+		return new CharacterProfession(profession, profession.getSpecialization(spec), gameVersion.getMaxProfession());
 	}
 }

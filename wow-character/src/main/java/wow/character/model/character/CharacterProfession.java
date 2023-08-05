@@ -12,13 +12,15 @@ import wow.commons.model.professions.ProfessionSpecializationId;
 public class CharacterProfession {
 	private final Profession profession;
 	private final ProfessionSpecialization specialization;
+	private final int level;
 
-	public CharacterProfession(Profession profession, ProfessionSpecialization specialization) {
-		this.profession = profession;
-		this.specialization = specialization;
+	public CharacterProfession(Profession profession, ProfessionSpecialization specialization, int level) {
 		if (specialization != null && specialization.getProfessionId() != profession.getProfessionId()) {
 			throw new IllegalArgumentException("Specialization doesn't match the profession");
 		}
+		this.profession = profession;
+		this.specialization = specialization;
+		this.level = level;
 	}
 
 	public ProfessionId getProfessionId() {

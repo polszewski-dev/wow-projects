@@ -25,7 +25,9 @@ public class CharacterProfessionPOConverter implements Converter<CharacterProfes
 
 	@Override
 	public CharacterProfessionPO doConvert(CharacterProfession source) {
-		return new CharacterProfessionPO(source.getProfessionId(), source.getSpecializationId());
+		return new CharacterProfessionPO(
+				source.getProfessionId(), source.getSpecializationId(), source.getLevel()
+		);
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class CharacterProfessionPOConverter implements Converter<CharacterProfes
 				.getGameVersion();
 
 		return gameVersion.getCharacterProfession(
-				source.getProfessionId(), source.getSpecializationId()
+				source.getProfessionId(), source.getSpecializationId(), source.getLevel()
 		);
 	}
 }

@@ -105,10 +105,10 @@ public class GameVersion implements Described {
 				.orElseThrow();
 	}
 
-	public CharacterProfession getCharacterProfession(ProfessionId professionId, ProfessionSpecializationId specializationId) {
+	public CharacterProfession getCharacterProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
 		Profession profession = getProfession(professionId);
 		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
-		return new CharacterProfession(profession, specialization);
+		return new CharacterProfession(profession, specialization, level);
 	}
 
 	public boolean supports(CharacterClassId characterClassId, RaceId raceId) {

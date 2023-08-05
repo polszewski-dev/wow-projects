@@ -27,7 +27,8 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 	public CharacterProfessionDTO doConvert(CharacterProfession source) {
 		return new CharacterProfessionDTO(
 				source.getProfessionId(),
-				source.getSpecializationId()
+				source.getSpecializationId(),
+				source.getLevel()
 		);
 	}
 
@@ -37,7 +38,7 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 		GameVersion gameVersion = characterRepository.getPhase(phaseId).orElseThrow().getGameVersion();
 
 		return gameVersion.getCharacterProfession(
-				source.getProfession(), source.getSpecialization()
+				source.getProfession(), source.getSpecialization(), source.getLevel()
 		);
 	}
 }

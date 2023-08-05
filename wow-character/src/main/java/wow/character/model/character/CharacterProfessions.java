@@ -32,9 +32,9 @@ public class CharacterProfessions implements Copyable<CharacterProfessions> {
 		this.professions.addAll(professions);
 	}
 
-	public void addProfession(Profession profession, ProfessionSpecialization specialization) {
+	public void addProfession(Profession profession, ProfessionSpecialization specialization, int level) {
 		var newList = new ArrayList<>(professions);
-		newList.add(new CharacterProfession(profession, specialization));
+		newList.add(new CharacterProfession(profession, specialization, level));
 		setProfessions(newList);
 	}
 
@@ -48,6 +48,10 @@ public class CharacterProfessions implements Copyable<CharacterProfessions> {
 
 	public boolean hasProfession(ProfessionId professionId) {
 		return professions.stream().anyMatch(x -> x.getProfessionId() == professionId);
+	}
+
+	public boolean hasProfession(ProfessionId professionId, int level) {
+		return professions.stream().anyMatch(x -> x.getProfessionId() == professionId && x.getLevel() >= level);
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {

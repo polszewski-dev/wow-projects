@@ -4,4 +4,5 @@ import { ProfessionSpecialization } from './ProfessionSpecialization';
 export interface CharacterProfession {
 	profession?: Profession;
 	specialization?: ProfessionSpecialization;
+	level: int;
 }

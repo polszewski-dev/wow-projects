@@ -28,6 +28,8 @@ public interface CharacterInfo {
 
 	boolean hasProfession(ProfessionId professionId);
 
+	boolean hasProfession(ProfessionId professionId, int level);
+
 	boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId);
 
 	boolean hasActivePet(PetType petType);

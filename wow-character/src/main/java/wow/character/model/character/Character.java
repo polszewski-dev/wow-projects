@@ -186,6 +186,11 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 	}
 
 	@Override
+	public boolean hasProfession(ProfessionId professionId, int level) {
+		return professions.hasProfession(professionId, level);
+	}
+
+	@Override
 	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
 		return professions.hasProfessionSpecialization(specializationId);
 	}
@@ -199,15 +204,15 @@ public class Character implements AttributeCollection, CharacterInfo, Copyable<C
 		this.professions.setProfessions(professions);
 	}
 
-	public void addProfession(ProfessionId professionId, ProfessionSpecializationId specializationId) {
+	public void addProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
 		Profession profession = getGameVersion().getProfession(professionId);
 		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
 
-		professions.addProfession(profession, specialization);
+		professions.addProfession(profession, specialization, level);
 	}
 
-	public void addProfession(ProfessionId professionId) {
-		addProfession(professionId, null);
+	public void addProfession(ProfessionId professionId, int level) {
+		addProfession(professionId, null, level);
 	}
 
 	public void resetProfessions() {
