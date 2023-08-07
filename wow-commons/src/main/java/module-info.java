@@ -36,5 +36,5 @@ module wow.commons {
 	exports wow.commons.util;
 	exports wow.commons.util.parser;
 
-	opens wow.commons.repository.impl to spring.core;
+	opens wow.commons.repository.impl;
 }

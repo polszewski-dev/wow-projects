@@ -22,6 +22,6 @@ module wow.character {
 	exports wow.character.service.impl;
 	exports wow.character.util;
 
-	opens wow.character.repository.impl to spring.core;
-	opens wow.character.service.impl to spring.core;
+	opens wow.character.repository.impl;
+	opens wow.character.service.impl;
 }

@@ -11,8 +11,8 @@ import java.util.Objects;
  * Date: 2020-10-17
  */
 public record Conversion(
-		wow.commons.model.spells.Conversion.From from,
-		wow.commons.model.spells.Conversion.To to,
+		From from,
+		To to,
 		Percent percent
 ) {
 	public Conversion {
@@ -33,7 +33,7 @@ public record Conversion(
 			@Override
 			public int getValue(int actualDamage, List<Cost> paidCosts) {
 				for (Cost paidCost : paidCosts) {
-					if (paidCost.type() == CostType.HEALTH) {
+					if (paidCost.resourceType() == ResourceType.HEALTH) {
 						return paidCost.amount();
 					}
 				}

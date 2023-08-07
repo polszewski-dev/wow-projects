@@ -26,6 +26,7 @@
 		<module>wow-character</module>
 		<module>wow-minmax</module>
 		<module>wow-scraper</module>
+		<module>wow-simulator</module>
 	</modules>
 
 	<dependencyManagement>

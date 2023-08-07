@@ -3,6 +3,7 @@
 * wow-commons - item and spell database
 * wow-character - character definitions and related services
 * wow-minmax - web UI to combine and analyze different gear choices
+* wow-simulator - dps simulator
 * wow-scraper - tools to gather item info from Wowhead website and to generate excel input for wow-commons
 
 ### Start: 

@@ -318,7 +318,7 @@ class CalculationServiceTest extends ServiceTest {
 		SpellStatistics statistics = snapshot.getSpellStatistics(CritMode.AVERAGE, true);
 
 		assertThat(statistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5175);
-		assertThat(statistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2669);
+		assertThat(statistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2667);
 		assertThat(statistics.getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
 		assertThat(statistics.getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 		assertThat(statistics.getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(12);
@@ -498,7 +498,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		assertThat(spellStats.getCharacter()).isSameAs(character);
 		assertThat(spellStats.getSpellStatistics().getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5175);
-		assertThat(spellStats.getSpellStatistics().getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2669);
+		assertThat(spellStats.getSpellStatistics().getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2667);
 		assertThat(spellStats.getSpellStatistics().getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
 		assertThat(spellStats.getSpellStatistics().getManaCost()).usingComparator(ROUNDED_DOWN).isEqualTo(399);
 		assertThat(spellStats.getSpellStatistics().getDpm()).usingComparator(ROUNDED_DOWN).isEqualTo(12);

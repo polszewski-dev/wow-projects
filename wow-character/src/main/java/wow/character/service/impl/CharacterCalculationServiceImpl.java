@@ -139,6 +139,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		double castTime = getCastTime(snapshot);
 		double gcd = getGcd(snapshot);
 
+		snapshot.setCastTime(castTime);
+		snapshot.setGcd(gcd);
 		snapshot.setEffectiveCastTime(max(castTime, gcd));
 		snapshot.setInstantCast(castTime == 0);
 	}

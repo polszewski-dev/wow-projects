@@ -1,0 +1,99 @@
+package wow.simulator.model.unit;
+
+import wow.commons.model.spells.Cost;
+import wow.commons.model.spells.ResourceType;
+import wow.commons.model.spells.Spell;
+import wow.simulator.simulation.SimulationContext;
+import wow.simulator.simulation.SimulationContextSource;
+
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import static wow.commons.model.spells.ResourceType.HEALTH;
+import static wow.commons.model.spells.ResourceType.MANA;
+
+/**
+ * User: POlszewski
+ * Date: 2023-08-12
+ */
+public class UnitResources implements SimulationContextSource {
+	private final Unit owner;
+
+	private final Map<ResourceType, UnitResource> resourceMap = new EnumMap<>(ResourceType.class);
+
+	public UnitResources(Unit owner) {
+		this.owner = owner;
+		add(new UnitResource(HEALTH, owner));
+		add(new UnitResource(MANA, owner));
+	}
+
+	public int getCurrentHealth() {
+		return get(HEALTH).getCurrent();
+	}
+
+	public int getCurrentMana() {
+		return get(MANA).getCurrent();
+	}
+
+	public void setHealth(int current, int max) {
+		get(HEALTH).set(current, max);
+	}
+
+	public void setMana(int current, int max) {
+		get(MANA).set(current, max);
+	}
+
+	public void increaseHealth(int amount, Spell spell) {
+		get(HEALTH).increase(amount, spell);
+	}
+
+	public void decreaseHealth(int amount, Spell spell) {
+		get(HEALTH).decrease(amount, spell);
+	}
+
+	public void increaseMana(int amount, Spell spell) {
+		get(MANA).increase(amount, spell);
+	}
+
+	public void decreaseMana(int amount, Spell spell) {
+		get(MANA).decrease(amount, spell);
+	}
+
+	public boolean canPay(List<Cost> costs) {
+		return costs.stream().allMatch(this::canPay);
+	}
+
+	private boolean canPay(Cost cost) {
+		ResourceType type = cost.resourceType();
+		return get(type).canPay(cost.amount());
+	}
+
+	public void pay(List<Cost> costs, Spell spell) {
+		if (!canPay(costs)) {
+			throw new IllegalArgumentException("Can't pay spell costs: " + costs);
+		}
+
+		for (Cost cost : costs) {
+			pay(cost, spell);
+		}
+	}
+
+	private void pay(Cost cost, Spell spell) {
+		ResourceType type = cost.resourceType();
+		get(type).pay(cost.amount(), spell);
+	}
+
+	private void add(UnitResource resource) {
+		this.resourceMap.put(resource.getType(), resource);
+	}
+
+	private UnitResource get(ResourceType type) {
+		return resourceMap.get(type);
+	}
+
+	@Override
+	public SimulationContext getSimulationContext() {
+		return owner.getSimulationContext();
+	}
+}

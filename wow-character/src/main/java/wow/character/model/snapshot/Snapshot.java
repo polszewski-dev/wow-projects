@@ -43,6 +43,8 @@ public class Snapshot {
 	private double spellCoeffDirect;
 	private double spellCoeffDoT;
 
+	private double castTime;
+	private double gcd;
 	private double effectiveCastTime;// max(castTime, gcd)
 	private boolean instantCast;
 
@@ -80,7 +82,7 @@ public class Snapshot {
 		return getDirectDamage(critMode, useBothDamageRanges) + getDotDamage();
 	}
 
-	private double getDirectDamage(CritMode critMode, boolean useBothDamageRanges) {
+	public double getDirectDamage(CritMode critMode, boolean useBothDamageRanges) {
 		if (!spell.hasDirectComponent()) {
 			return 0;
 		}
@@ -103,7 +105,7 @@ public class Snapshot {
 		return directDamage;
 	}
 
-	private double getDotDamage() {
+	public double getDotDamage() {
 		if (!spell.hasDotComponent()) {
 			return 0;
 		}

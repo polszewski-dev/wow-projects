@@ -1,0 +1,80 @@
+package wow.simulator.model.unit;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import wow.commons.model.spells.ResourceType;
+import wow.commons.model.spells.Spell;
+import wow.simulator.simulation.SimulationContext;
+import wow.simulator.simulation.SimulationContextSource;
+
+/**
+ * User: POlszewski
+ * Date: 2023-08-12
+ */
+@RequiredArgsConstructor
+@Getter
+public class UnitResource implements SimulationContextSource {
+	private final ResourceType type;
+	private final Unit owner;
+	private int current;
+	private int max;
+
+	public void set(int current, int max) {
+		this.current = current;
+		this.max = max;
+	}
+
+	public void increase(int amount, Spell spell) {
+		if (amount == 0) {
+			return;
+		}
+
+		assertNonNegative(amount);
+
+		int previous = current;
+		this.current = Math.min(current + amount, max);
+		getGameLog().increasedResource(type, spell, owner, amount, current, previous);
+	}
+
+	public void decrease(int amount, Spell spell) {
+		if (amount == 0) {
+			return;
+		}
+
+		assertNonNegative(amount);
+
+		int previous = current;
+		this.current = Math.max(current - amount, 0);
+		getGameLog().decreasedResource(type, spell, owner, amount, current, previous);
+	}
+
+	public void pay(int amount, Spell spell) {
+		if (!canPay(amount)) {
+			throw new IllegalArgumentException("Can't pay %s when having only %s".formatted(amount, current));
+		}
+		decrease(amount, spell);
+	}
+
+	public boolean canPay(int amount) {
+		if (canSpendAll(type)) {
+			return amount <= current;
+		} else {
+			return amount < current;
+		}
+	}
+
+	private boolean canSpendAll(ResourceType type) {
+		return type != ResourceType.HEALTH;
+	}
+
+	private static void assertNonNegative(int amount) {
+		if (amount < 0) {
+			throw new IllegalArgumentException("Unexpected negative value: " + amount);
+		}
+	}
+
+	@Override
+	public SimulationContext getSimulationContext() {
+		return owner.getSimulationContext();
+	}
+}

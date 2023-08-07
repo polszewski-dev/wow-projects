@@ -116,7 +116,7 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	}
 
 	private AdditionalCost getAdditionalCost() {
-		var additionalCostType = colAdditionalCostType.getEnum(CostType::parse, null);
+		var additionalCostType = colAdditionalCostType.getEnum(ResourceType::parse, null);
 
 		if (additionalCostType == null) {
 			return null;

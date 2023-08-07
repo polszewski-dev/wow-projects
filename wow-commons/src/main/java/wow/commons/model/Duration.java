@@ -20,8 +20,12 @@ public record Duration(long millis) implements Comparable<Duration> {
 		millis = Math.max(Math.min(millis, INF_MILLIS), NEG_INF_MILLIS);
 	}
 
+	public static Duration seconds(long seconds) {
+		return millis(seconds * 1000);
+	}
+
 	public static Duration seconds(double seconds) {
-		return millis((long)(seconds * 1000));
+		return millis(Math.round(seconds * 1000));
 	}
 
 	public static Duration seconds(Double seconds) {

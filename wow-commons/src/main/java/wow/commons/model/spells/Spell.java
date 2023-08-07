@@ -74,6 +74,10 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 		return getDotDamageInfo() != null;
 	}
 
+	default boolean hasDamageComponent() {
+		return hasDirectComponent() || hasDotComponent();
+	}
+
 	default int getMinDmg() {
 		return getDirectDamageInfo().minDmg();
 	}
