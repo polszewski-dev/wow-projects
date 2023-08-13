@@ -7,7 +7,6 @@ import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.spells.ResourceType.HEALTH;
@@ -60,26 +59,16 @@ public class UnitResources implements SimulationContextSource {
 		get(MANA).decrease(amount, spell);
 	}
 
-	public boolean canPay(List<Cost> costs) {
-		return costs.stream().allMatch(this::canPay);
-	}
-
-	private boolean canPay(Cost cost) {
+	public boolean canPay(Cost cost) {
 		ResourceType type = cost.resourceType();
 		return get(type).canPay(cost.amount());
 	}
 
-	public void pay(List<Cost> costs, Spell spell) {
-		if (!canPay(costs)) {
-			throw new IllegalArgumentException("Can't pay spell costs: " + costs);
+	public void pay(Cost cost, Spell spell) {
+		if (!canPay(cost)) {
+			throw new IllegalArgumentException("Can't pay spell cost: " + cost);
 		}
 
-		for (Cost cost : costs) {
-			pay(cost, spell);
-		}
-	}
-
-	private void pay(Cost cost, Spell spell) {
 		ResourceType type = cost.resourceType();
 		get(type).pay(cost.amount(), spell);
 	}

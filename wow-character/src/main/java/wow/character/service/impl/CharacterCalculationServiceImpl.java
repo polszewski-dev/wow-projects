@@ -10,8 +10,9 @@ import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SnapshotState;
 import wow.character.service.CharacterCalculationService;
-import wow.commons.model.Percent;
 import wow.commons.model.attributes.Attributes;
+import wow.commons.model.spells.Cost;
+import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 
 import static java.lang.Math.max;
@@ -146,7 +147,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private void calcCost(Snapshot snapshot) {
-		snapshot.setManaCost(getManaCost(snapshot));
+		double cost = getCost(snapshot);
+
+		snapshot.setCost(cost);
 	}
 
 	private void calcCooldown(Snapshot snapshot) {
@@ -310,14 +313,43 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return max(GCD.getSeconds() / (1 + haste), MIN_GCD.getSeconds());
 	}
 
-	private double getManaCost(Snapshot snapshot) {
-		AccumulatedSpellStats stats = snapshot.getStats();
-		Spell spell = snapshot.getSpell();
+	private double getCost(Snapshot snapshot) {
+		double baseCost = getBaseCost(snapshot);
+		double costModifierPct = snapshot.getStats().getCostPct();
 
-		double baseManaCost = spell.getManaCost();
-		Percent costChangePct = Percent.of(stats.getCostPct());
+		return baseCost * (1 + costModifierPct / 100);
+	}
 
-		return baseManaCost * costChangePct.toMultiplier();
+	private double getBaseCost(Snapshot snapshot) {
+		Cost cost = snapshot.getSpell().getCost();
+
+		double baseCost = cost.amount();
+
+		if (!cost.baseStatPct().isZero()) {
+			double baseStatValue = getBaseStatValue(cost.resourceType(), snapshot);
+			double pct = cost.baseStatPct().getCoefficient();
+
+			baseCost += baseStatValue * pct;
+		}
+
+		if (!cost.coeff().isZero()) {
+			double sp = snapshot.getSp();
+			double coeff = cost.coeff().getCoefficient();
+
+			baseCost += sp * coeff;
+		}
+
+		return baseCost;
+	}
+
+	private double getBaseStatValue(ResourceType resourceType, Snapshot snapshot) {
+		BaseStatInfo baseStatInfo = snapshot.getCharacter().getBaseStatInfo();
+
+		return switch (resourceType) {
+			case HEALTH -> baseStatInfo.getBaseHealth();
+			case MANA -> baseStatInfo.getBaseMana();
+			case PET_MANA -> throw new IllegalArgumentException("pets not supported");
+		};
 	}
 
 	private double getCooldown(Snapshot snapshot) {
@@ -381,7 +413,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		double stamina = snapshot.getStamina();
 
 		return addAndMultiplyByPct(
-				baseStats.getBaseHP(),
+				baseStats.getBaseHealth(),
 				HEALTH_PER_STAMINA * (stamina - baseStats.getBaseStamina()) + stats.getMaxHealth(),
 				stats.getMaxHealthPct()
 		);

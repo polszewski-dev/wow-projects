@@ -5,8 +5,6 @@ import wow.commons.model.Duration;
 import wow.commons.model.spells.Cost;
 import wow.commons.model.spells.Spell;
 
-import java.util.List;
-
 /**
  * User: POlszewski
  * Date: 2023-08-13
@@ -15,7 +13,7 @@ public record SpellCastContext(
 		Unit caster,
 		Unit target,
 		Snapshot snapshot,
-		List<Cost> costs
+		Cost cost
 ) {
 	public Spell spell() {
 		return snapshot.getSpell();

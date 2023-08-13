@@ -46,8 +46,8 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 		return getSpellInfo().getDamagingSpellInfo().coeffDot();
 	}
 
-	default int getManaCost() {
-		return getCastInfo().manaCost();
+	default Cost getCost() {
+		return getCastInfo().cost();
 	}
 
 	default Duration getCastTime() {
@@ -56,10 +56,6 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 
 	default boolean isChanneled() {
 		return getCastInfo().channeled();
-	}
-
-	default AdditionalCost getAdditionalCost() {
-		return getCastInfo().additionalCost();
 	}
 
 	default AppliedEffect getAppliedEffect() {

@@ -4,7 +4,9 @@ import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SnapshotState;
 import wow.commons.model.Duration;
 import wow.commons.model.attributes.Attributes;
-import wow.commons.model.spells.*;
+import wow.commons.model.spells.Cost;
+import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.action.CastSpellAction;
@@ -16,8 +18,6 @@ import wow.simulator.simulation.SimulationContextAware;
 import wow.simulator.simulation.SimulationContextSource;
 import wow.simulator.util.IdGenerator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -158,48 +158,20 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	}
 
 	public boolean canCast(SpellCastContext context) {
-		return canPaySpellCosts(context);
+		return canPaySpellCost(context);
 	}
 
-	private boolean canPaySpellCosts(SpellCastContext context) {
-		return resources.canPay(context.costs());
+	private boolean canPaySpellCost(SpellCastContext context) {
+		return resources.canPay(context.cost());
 	}
 
-	public void paySpellCosts(SpellCastContext context) {
-		resources.pay(context.costs(), context.spell());
+	public void paySpellCost(SpellCastContext context) {
+		resources.pay(context.cost(), context.spell());
 	}
 
-	private List<Cost> getSpellCosts(Snapshot snapshot) {
+	private Cost getSpellCost(Snapshot snapshot) {
 		Spell spell = snapshot.getSpell();
-		List<Cost> result = new ArrayList<>();
-
-		int manaCost = spell.getManaCost();
-
-		if (manaCost > 0) {
-			result.add(new Cost(ResourceType.MANA, (int)snapshot.getManaCost()));
-		}
-
-		AdditionalCost additionalCost = spell.getAdditionalCost();
-
-		if (additionalCost != null) {
-			result.add(getAdditionalCost(additionalCost));
-		}
-
-		return result;
-	}
-
-	private Cost getAdditionalCost(AdditionalCost additionalCost) {
-		int costAmount;
-		if (additionalCost.scaled()) {
-			costAmount = getScaledCost(additionalCost.amount());
-		} else {
-			costAmount = additionalCost.amount();
-		}
-		return new Cost(additionalCost.resourceType(), costAmount);
-	}
-
-	private int getScaledCost(int baseCost) {
-		return baseCost;
+		return new Cost(spell.getCost().resourceType(), (int) snapshot.getCost());
 	}
 
 	public abstract Optional<Spell> getSpell(SpellId spellId);
@@ -221,8 +193,8 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	public SpellCastContext getSpellCastContext(Spell spell, Unit target) {
 		Snapshot snapshot = getSnapshot(spell);
-		List<Cost> costs = getSpellCosts(snapshot);
-		return new SpellCastContext(this, target, snapshot, costs);
+		Cost cost = getSpellCost(snapshot);
+		return new SpellCastContext(this, target, snapshot, cost);
 	}
 
 	public Snapshot getSnapshot(Spell spell) {

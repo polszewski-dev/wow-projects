@@ -64,7 +64,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(baseStatInfo.getBaseStamina()).isEqualTo(78);
 		assertThat(baseStatInfo.getBaseIntellect()).isEqualTo(130);
 		assertThat(baseStatInfo.getBaseSpirit()).isEqualTo(142);
-		assertThat(baseStatInfo.getBaseHP()).isEqualTo(4090);
+		assertThat(baseStatInfo.getBaseHealth()).isEqualTo(4090);
 		assertThat(baseStatInfo.getBaseMana()).isEqualTo(4285);
 		assertThat(baseStatInfo.getBaseSpellCritPct().value()).isEqualTo(3.29, PRECISION);
 		assertThat(baseStatInfo.getIntellectPerCritPct()).isEqualTo(80, PRECISION);

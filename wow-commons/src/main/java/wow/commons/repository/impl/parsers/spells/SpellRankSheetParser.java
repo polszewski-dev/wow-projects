@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Duration;
+import wow.commons.model.Percent;
 import wow.commons.model.spells.*;
 import wow.commons.model.spells.impl.SpellImpl;
 import wow.commons.repository.impl.SpellRepositoryImpl;
@@ -15,7 +16,10 @@ import java.util.Map;
 public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, SpellInfo> {
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colRank = column("rank");
-	private final ExcelColumn colManaCost = column("mana cost");
+	private final ExcelColumn colCostAmount = column("cost: amount");
+	private final ExcelColumn colCostType = column("cost: type");
+	private final ExcelColumn colCostBaseStatPct = column("cost: base stat%");
+	private final ExcelColumn colCostCoeff = column("cost: coeff");
 	private final ExcelColumn colCastTime = column("cast time");
 	private final ExcelColumn colChanneled = column("channeled");
 	private final ExcelColumn colMinDmg = column("min dmg");
@@ -25,9 +29,6 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	private final ExcelColumn colTickInterval = column("tick interval");
 	private final ExcelColumn colMinDmg2 = column("min dmg2");
 	private final ExcelColumn colMaxDmg2 = column("max dmg2");
-	private final ExcelColumn colAdditionalCostType = column("additional cost: type");
-	private final ExcelColumn colAdditionalCostAmount = column("additional cost: amount");
-	private final ExcelColumn colAdditionalCostScaled = column("additional cost: scaled");
 	private final ExcelColumn colAppliedEffect = column("applied effect");
 	private final ExcelColumn colAppliedEffectDuration = column("applied effect duration");
 
@@ -69,12 +70,19 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	}
 
 	private CastInfo getCastInfo() {
-		var manaCost = colManaCost.getInteger();
+		var cost = getCost();
 		var castTime = colCastTime.getDuration();
 		var channeled = colChanneled.getBoolean();
-		var additionalCost = getAdditionalCost();
 		var appliedEffect = getAppliedEffect();
-		return new CastInfo(manaCost, castTime, channeled, additionalCost, appliedEffect);
+		return new CastInfo(cost, castTime, channeled, appliedEffect);
+	}
+
+	private Cost getCost() {
+		var type = colCostType.getEnum(ResourceType::parse, ResourceType.MANA);
+		var amount = colCostAmount.getInteger();
+		var baseStatPct = colCostBaseStatPct.getPercent(Percent.ZERO);
+		var coeff = colCostCoeff.getPercent(Percent.ZERO);
+		return new Cost(type, amount, baseStatPct, coeff);
 	}
 
 	private DirectDamageInfo getDirectDamageInfo() {
@@ -113,18 +121,5 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 		}
 
 		return new AppliedEffect(effectId, duration);
-	}
-
-	private AdditionalCost getAdditionalCost() {
-		var additionalCostType = colAdditionalCostType.getEnum(ResourceType::parse, null);
-
-		if (additionalCostType == null) {
-			return null;
-		}
-
-		var additionalCostAmount = colAdditionalCostAmount.getInteger();
-		var additionalCostScaled = colAdditionalCostScaled.getBoolean();
-
-		return new AdditionalCost(additionalCostType, additionalCostAmount, additionalCostScaled);
 	}
 }

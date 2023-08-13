@@ -35,13 +35,13 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		assertThat(snapshot.getState()).isEqualTo(INITIAL);
 		assertThat(snapshot.getSp()).isZero();
-		assertThat(snapshot.getManaCost()).isZero();
+		assertThat(snapshot.getCost()).isZero();
 
 		underTest.advanceSnapshot(snapshot, SPELL_STATS);
 
 		assertThat(snapshot.getState()).isEqualTo(SPELL_STATS);
 		assertThat(snapshot.getSp()).isEqualTo(370);
-		assertThat(snapshot.getManaCost()).isZero();
+		assertThat(snapshot.getCost()).isZero();
 	}
 
 	@Test
@@ -56,7 +56,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		assertThat(snapshot.getState()).isEqualTo(COMPLETE);
 		assertThat(snapshot.getSp()).isEqualTo(370);
-		assertThat(snapshot.getManaCost()).isEqualTo(399);
+		assertThat(snapshot.getCost()).isEqualTo(399);
 	}
 
 	Character character;

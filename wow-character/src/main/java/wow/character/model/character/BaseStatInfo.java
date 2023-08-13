@@ -22,7 +22,7 @@ public class BaseStatInfo {
 	private final int baseStamina;
 	private final int baseIntellect;
 	private final int baseSpirit;
-	private final int baseHP;
+	private final int baseHealth;
 	private final int baseMana;
 	private final Percent baseSpellCritPct;
 	private final double intellectPerCritPct;

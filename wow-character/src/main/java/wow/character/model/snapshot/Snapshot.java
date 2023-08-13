@@ -48,7 +48,7 @@ public class Snapshot {
 	private double effectiveCastTime;// max(castTime, gcd)
 	private boolean instantCast;
 
-	private double manaCost;
+	private double cost;
 
 	private double duration;
 	private double cooldown;
@@ -72,7 +72,7 @@ public class Snapshot {
 		result.setTotalDamage(getTotalDamage(critMode, useBothDamageRanges));
 		result.setCastTime(Duration.seconds(effectiveCastTime));
 		result.setDps(result.getTotalDamage() / result.getCastTime().getSeconds());
-		result.setManaCost(manaCost);
+		result.setManaCost(cost);
 		result.setDpm(result.getTotalDamage() / result.getManaCost());
 
 		return result;

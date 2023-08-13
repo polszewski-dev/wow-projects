@@ -86,12 +86,12 @@ public class CastSpellAction extends UnitAction {
 	private void endCast() {
 		getGameLog().endCast(owner, spell, target, actionId);
 		onEndCast();
-		owner.paySpellCosts(context);
+		owner.paySpellCost(context);
 		resolveSpell();
 	}
 
 	private void beginChannel() {
-		owner.paySpellCosts(context);
+		owner.paySpellCost(context);
 		getGameLog().beginCast(owner, spell, target, actionId);
 		resolveSpell();
 		onBeginCast();

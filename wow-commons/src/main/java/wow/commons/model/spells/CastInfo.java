@@ -9,13 +9,13 @@ import java.util.Objects;
  * Date: 2022-11-25
  */
 public record CastInfo(
-		int manaCost,
+		Cost cost,
 		Duration castTime,
 		boolean channeled,
-		AdditionalCost additionalCost,
 		AppliedEffect appliedEffect
 ) {
 	public CastInfo {
 		Objects.requireNonNull(castTime);
+		Objects.requireNonNull(cost);
 	}
 }

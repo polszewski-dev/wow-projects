@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.spells.Cost;
 import wow.simulator.WowSimulatorSpringTest;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wow.commons.model.spells.ResourceType.HEALTH;
@@ -84,76 +82,65 @@ class UnitResourcesTest extends WowSimulatorSpringTest {
 	}
 
 	@Test
-	void canPay() {
+	void canPayHealth() {
 		resources.setHealth(500, 1000);
-		resources.setMana(500, 1000);
 
-		var costs1 = List.of(
-			new Cost(HEALTH, 100),
-			new Cost(MANA, 200)
-		);
+		Cost cost1 = new Cost(HEALTH, 100);
+		Cost cost2 = new Cost(HEALTH, 499);
+		Cost cost3 = new Cost(HEALTH, 500);
 
-		assertThat(resources.canPay(costs1)).isTrue();
-
-		var costs2 = List.of(
-				new Cost(HEALTH, 100),
-				new Cost(MANA, 600)
-		);
-
-		assertThat(resources.canPay(costs2)).isFalse();
-
-		var costs3 = List.of(
-				new Cost(HEALTH, 500),
-				new Cost(MANA, 500)
-		);
-
-		assertThat(resources.canPay(costs3)).isFalse();
-
-		var costs4 = List.of(
-				new Cost(HEALTH, 499),
-				new Cost(MANA, 500)
-		);
-
-		assertThat(resources.canPay(costs4)).isTrue();
+		assertThat(resources.canPay(cost1)).isTrue();
+		assertThat(resources.canPay(cost2)).isTrue();
+		assertThat(resources.canPay(cost3)).isFalse();
 	}
 
 	@Test
-	void pay() {
-		resources.setHealth(500, 1000);
+	void canPayMana() {
 		resources.setMana(500, 1000);
 
-		var costs1 = List.of(
-				new Cost(HEALTH, 200),
-				new Cost(MANA, 100)
-		);
+		Cost cost1 = new Cost(MANA, 200);
+		Cost cost2 = new Cost(MANA, 500);
+		Cost cost3 = new Cost(MANA, 600);
 
-		resources.pay(costs1, null);
+		assertThat(resources.canPay(cost1)).isTrue();
+		assertThat(resources.canPay(cost2)).isTrue();
+		assertThat(resources.canPay(cost3)).isFalse();
+	}
 
+	@Test
+	void payHealth() {
+		resources.setHealth(500, 1000);
+
+		Cost cost1 = new Cost(HEALTH, 200);
+		Cost cost2 = new Cost(HEALTH, 100);
+		Cost cost3 = new Cost(HEALTH, 99);
+
+		resources.pay(cost1, null);
 		assertThat(resources.getCurrentHealth()).isEqualTo(300);
+
+		resources.pay(cost1, null);
+		assertThat(resources.getCurrentHealth()).isEqualTo(100);
+
+		assertThatThrownBy(() -> resources.pay(cost2, null)).isInstanceOf(IllegalArgumentException.class);
+
+		resources.pay(cost3, null);
+		assertThat(resources.getCurrentHealth()).isEqualTo(1);
+	}
+
+	@Test
+	void payMana() {
+		resources.setMana(500, 1000);
+
+		Cost cost1 = new Cost(MANA, 100);
+		Cost cost2 = new Cost(MANA, 300);
+
+		resources.pay(cost1, null);
 		assertThat(resources.getCurrentMana()).isEqualTo(400);
 
-		resources.pay(costs1, null);
-
-		assertThat(resources.getCurrentHealth()).isEqualTo(100);
+		resources.pay(cost1, null);
 		assertThat(resources.getCurrentMana()).isEqualTo(300);
 
-		assertThatThrownBy(() -> resources.pay(costs1, null)).isInstanceOf(IllegalArgumentException.class);
-
-		var costs2 = List.of(
-				new Cost(HEALTH, 100),
-				new Cost(MANA, 300)
-		);
-
-		assertThatThrownBy(() -> resources.pay(costs2, null)).isInstanceOf(IllegalArgumentException.class);
-
-		var costs3 = List.of(
-				new Cost(HEALTH, 99),
-				new Cost(MANA, 300)
-		);
-
-		resources.pay(costs3, null);
-
-		assertThat(resources.getCurrentHealth()).isEqualTo(1);
+		resources.pay(cost2, null);
 		assertThat(resources.getCurrentMana()).isZero();
 	}
 
