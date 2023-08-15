@@ -86,12 +86,12 @@ public class CastSpellAction extends UnitAction {
 	private void endCast() {
 		getGameLog().endCast(owner, spell, target, actionId);
 		onEndCast();
-		owner.paySpellCost(context);
+		paySpellCost();
 		resolveSpell();
 	}
 
 	private void beginChannel() {
-		owner.paySpellCost(context);
+		paySpellCost();
 		getGameLog().beginCast(owner, spell, target, actionId);
 		resolveSpell();
 		onBeginCast();
@@ -125,6 +125,11 @@ public class CastSpellAction extends UnitAction {
 		// void atm
 	}
 
+	private void paySpellCost() {
+		owner.paySpellCost(context);
+		context.getConversions().performPaidCostConversion();
+	}
+
 	private void resolveSpell() {
 		Duration delay = getDelay();
 
@@ -147,8 +152,8 @@ public class CastSpellAction extends UnitAction {
 	private void harmfulSpellAction() {
 		if (spell.hasDirectComponent()) {
 			int directDamage = (int) context.snapshot().getDirectDamage(CritMode.AVERAGE, true);
-
-			target.decreaseHealth(directDamage, spell);
+			int actualDamage = target.decreaseHealth(directDamage, spell);
+			context.getConversions().performDamageDoneConversion(actualDamage);
 		}
 
 		if (spell.hasDotComponent()) {

@@ -33,52 +33,60 @@ class UnitResourcesTest extends WowSimulatorSpringTest {
 	void increaseHealth() {
 		resources.setHealth(500, 1000);
 
-		resources.increaseHealth(300, null);
+		int actualAmount1 = resources.increaseHealth(300, null);
 
 		assertThat(resources.getCurrentHealth()).isEqualTo(800);
+		assertThat(actualAmount1).isEqualTo(300);
 
-		resources.increaseHealth(300, null);
+		int actualAmount2 = resources.increaseHealth(300, null);
 
 		assertThat(resources.getCurrentHealth()).isEqualTo(1000);
+		assertThat(actualAmount2).isEqualTo(200);
 	}
 
 	@Test
 	void decreaseHealth() {
 		resources.setHealth(500, 1000);
 
-		resources.decreaseHealth(300, null);
+		int actualAmount1 = resources.decreaseHealth(300, null);
 
 		assertThat(resources.getCurrentHealth()).isEqualTo(200);
+		assertThat(actualAmount1).isEqualTo(300);
 
-		resources.decreaseHealth(300, null);
+		int actualAmount2 = resources.decreaseHealth(300, null);
 
 		assertThat(resources.getCurrentHealth()).isZero();
+		assertThat(actualAmount2).isEqualTo(200);
 	}
 
 	@Test
 	void increaseMana() {
 		resources.setMana(500, 1000);
 
-		resources.increaseMana(300, null);
+		int actualAmount1 = resources.increaseMana(300, null);
 
 		assertThat(resources.getCurrentMana()).isEqualTo(800);
+		assertThat(actualAmount1).isEqualTo(300);
 
-		resources.increaseMana(300, null);
+		int actualAmount2 = resources.increaseMana(300, null);
 
 		assertThat(resources.getCurrentMana()).isEqualTo(1000);
+		assertThat(actualAmount2).isEqualTo(200);
 	}
 
 	@Test
 	void decreaseMana() {
 		resources.setMana(500, 1000);
 
-		resources.decreaseMana(300, null);
+		int actualAmount1 = resources.decreaseMana(300, null);
 
 		assertThat(resources.getCurrentMana()).isEqualTo(200);
+		assertThat(actualAmount1).isEqualTo(300);
 
-		resources.decreaseMana(300, null);
+		int actualAmount2 = resources.decreaseMana(300, null);
 
 		assertThat(resources.getCurrentMana()).isZero();
+		assertThat(actualAmount2).isEqualTo(200);
 	}
 
 	@Test

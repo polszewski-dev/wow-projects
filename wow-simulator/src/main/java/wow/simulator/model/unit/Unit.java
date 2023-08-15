@@ -220,19 +220,19 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 		return resources.getCurrentMana();
 	}
 
-	public void increaseHealth(int amount, Spell spell) {
-		resources.increaseHealth(amount, spell);
+	public int increaseHealth(int amount, Spell spell) {
+		return resources.increaseHealth(amount, spell);
 	}
 
-	public void decreaseHealth(int amount, Spell spell) {
-		resources.decreaseHealth(amount, spell);
+	public int decreaseHealth(int amount, Spell spell) {
+		return resources.decreaseHealth(amount, spell);
 	}
 
-	public void increaseMana(int amount, Spell spell) {
-		resources.increaseMana(amount, spell);
+	public int increaseMana(int amount, Spell spell) {
+		return resources.increaseMana(amount, spell);
 	}
 
-	public void decreaseMana(int amount, Spell spell) {
-		resources.decreaseMana(amount, spell);
+	public int decreaseMana(int amount, Spell spell) {
+		return resources.decreaseMana(amount, spell);
 	}
 }

@@ -30,4 +30,8 @@ public record SpellCastContext(
 	public boolean isInstantCast() {
 		return snapshot.isInstantCast();
 	}
+
+	public SpellConversions getConversions() {
+		return new SpellConversions(this);
+	}
 }

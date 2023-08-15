@@ -155,7 +155,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void cantPayManaCost() {
 		CastSpellAction action = getCastSpellAction(SpellId.CORRUPTION);
 
-		player.decreaseMana(1_000_000, null);
+		setMana(player, 0);
 
 		assertThat(player.getCurrentMana()).isZero();
 

@@ -133,6 +133,14 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		};
 	}
 
+	protected void setHealth(Unit unit, int amount) {
+		unit.decreaseHealth(unit.getCurrentHealth() - amount, null);
+	}
+
+	protected void setMana(Unit unit, int amount) {
+		unit.decreaseMana(unit.getCurrentMana() - amount, null);
+	}
+
 	protected SimulationContext simulationContext;
 	protected Clock clock;
 	protected Player player;

@@ -2,7 +2,6 @@ package wow.commons.model.spells;
 
 import lombok.Getter;
 import wow.commons.model.Duration;
-import wow.commons.model.Percent;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -47,9 +46,5 @@ public class SpellInfo extends ConfigurationElementImpl<SpellId> {
 		this.target = target;
 		this.damagingSpellInfo = damagingSpellInfo;
 		this.conversion = conversion;
-	}
-
-	public Percent getConversionPct(Conversion.From from, Conversion.To to) {
-		return conversion != null && conversion.is(from, to) ? conversion.percent() : Percent.ZERO;
 	}
 }

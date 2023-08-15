@@ -43,20 +43,20 @@ public class UnitResources implements SimulationContextSource {
 		get(MANA).set(current, max);
 	}
 
-	public void increaseHealth(int amount, Spell spell) {
-		get(HEALTH).increase(amount, spell);
+	public int increaseHealth(int amount, Spell spell) {
+		return get(HEALTH).increase(amount, spell);
 	}
 
-	public void decreaseHealth(int amount, Spell spell) {
-		get(HEALTH).decrease(amount, spell);
+	public int decreaseHealth(int amount, Spell spell) {
+		return get(HEALTH).decrease(amount, spell);
 	}
 
-	public void increaseMana(int amount, Spell spell) {
-		get(MANA).increase(amount, spell);
+	public int increaseMana(int amount, Spell spell) {
+		return get(MANA).increase(amount, spell);
 	}
 
-	public void decreaseMana(int amount, Spell spell) {
-		get(MANA).decrease(amount, spell);
+	public int decreaseMana(int amount, Spell spell) {
+		return get(MANA).decrease(amount, spell);
 	}
 
 	public boolean canPay(Cost cost) {
