@@ -49,6 +49,7 @@ public class Snapshot {
 	private boolean instantCast;
 
 	private double cost;
+	private double costUnreduced;
 
 	private double duration;
 	private double cooldown;

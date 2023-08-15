@@ -147,9 +147,14 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private void calcCost(Snapshot snapshot) {
-		double cost = getCost(snapshot);
+		double baseCost = getBaseCost(snapshot);
+		double costPct = snapshot.getStats().getCostPct();
+		double costReductionPct = snapshot.getStats().getCostReductionPct();
+		double cost = getCost(baseCost, costPct - costReductionPct);
+		double costUnreduced = getCost(baseCost, costPct);
 
 		snapshot.setCost(cost);
+		snapshot.setCostUnreduced(costUnreduced);
 	}
 
 	private void calcCooldown(Snapshot snapshot) {
@@ -313,10 +318,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return max(GCD.getSeconds() / (1 + haste), MIN_GCD.getSeconds());
 	}
 
-	private double getCost(Snapshot snapshot) {
-		double baseCost = getBaseCost(snapshot);
-		double costModifierPct = snapshot.getStats().getCostPct();
-
+	private double getCost(double baseCost, double costModifierPct) {
 		return baseCost * (1 + costModifierPct / 100);
 	}
 

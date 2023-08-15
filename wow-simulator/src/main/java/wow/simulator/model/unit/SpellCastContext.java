@@ -13,7 +13,8 @@ public record SpellCastContext(
 		Unit caster,
 		Unit target,
 		Snapshot snapshot,
-		Cost cost
+		Cost cost,
+		Cost costUnreduced
 ) {
 	public Spell spell() {
 		return snapshot.getSpell();

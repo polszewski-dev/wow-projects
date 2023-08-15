@@ -84,6 +84,7 @@ public enum PrimitiveAttributeId implements AttributeId {
 	RESISTANCE("Resistance"),
 	SPEEED_PCT("Speed,Percent"),
 	COST_PCT("Cost,Percent"),
+	COST_REDUCTION_PCT("CostReduction,Percent"),
 	CAST_TIME("CastTime"),
 	DURATION_PCT("Duration,Percent"),
 	DURATION("Duration"),

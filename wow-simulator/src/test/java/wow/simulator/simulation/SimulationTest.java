@@ -150,6 +150,42 @@ class SimulationTest extends WowSimulatorSpringTest {
 		));
 	}
 
+	@Test
+	void lifeTapWithT3Bonus() {
+		equip("Plagueheart Belt");
+		equip("Plagueheart Bindings");
+		equip("Plagueheart Circlet");
+		equip("Plagueheart Gloves");
+		equip("Plagueheart Leggings");
+		equip("Plagueheart Robe");
+		equip("Plagueheart Sandals");
+		equip("Plagueheart Shoulderpads");
+
+		player.getCharacter().getTalents().enableTalent(TalentId.IMPROVED_LIFE_TAP, 2);
+		getCharacterService().updateAfterRestrictionChange(player.getCharacter());
+
+		setMana(player, 0);
+		handler.getEvents().clear();
+
+		assertThat(player.getCurrentMana()).isZero();
+
+		player.cast(LIFE_TAP);
+
+		simulation.updateUntil(Time.at(30));
+
+		assertThat(player.getCurrentMana()).isEqualTo(959);
+
+		assertThat(handler.getEvents()).isEqualTo(List.of(
+				"0.000> beginCast: caster = Player, spell = Life Tap (Rank 7), target = Player",
+				"0.000> endCast: caster = Player, spell = Life Tap (Rank 7), target = Player",
+				"0.000> decreasedResource: target = Player, spell = Life Tap (Rank 7), amount = 863, type = HEALTH",
+				"0.000> increasedResource: target = Player, spell = Life Tap (Rank 7), amount = 959, type = MANA",
+				"0.000> beginGcd: caster = Player, spell = Life Tap (Rank 7), target = Player",
+				"1.500> endGcd: caster = Player, spell = Life Tap (Rank 7), target = Player",
+				"30.000> simulationEnded"
+		));
+	}
+
 	Simulation simulation;
 	EventCollectingHandler handler;
 

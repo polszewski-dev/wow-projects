@@ -43,6 +43,7 @@ public class AccumulatedSpellStats {
 	private double spellPowerCoeffPct;
 	private double castTime;
 	private double costPct;
+	private double costReductionPct;
 	private double duration;
 	private double durationPct;
 	private double cooldown;
@@ -168,6 +169,9 @@ public class AccumulatedSpellStats {
 				break;
 			case COST_PCT:
 				this.costPct += value;
+				break;
+			case COST_REDUCTION_PCT:
+				this.costReductionPct += value;
 				break;
 			case CAST_TIME:
 				this.castTime += value;

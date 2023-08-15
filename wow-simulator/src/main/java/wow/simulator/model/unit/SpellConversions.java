@@ -31,7 +31,7 @@ public class SpellConversions {
 
 	public void performPaidCostConversion() {
 		var from = getFrom();
-		var amount = context.cost().amount();
+		var amount = context.costUnreduced().amount();
 		performConversions(from, amount);
 	}
 

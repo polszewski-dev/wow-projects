@@ -57,6 +57,7 @@ public enum PrimitiveAttributeType implements AttributeId {
 	SPEED("Speed", percents()),
 
 	COST("Cost", percents()),
+	COST_REDUCTION_PCT("CostReduction", percents()),
 	CAST_TIME("CastTime", durationAndPercents()),
 	DURATION("Duration", durationAndPercents()),
 	COOLDOWN("Cooldown", durationAndPercents()),

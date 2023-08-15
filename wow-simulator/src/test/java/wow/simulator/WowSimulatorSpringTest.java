@@ -8,7 +8,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
+import wow.commons.model.item.Item;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
@@ -131,6 +133,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				fromNowOnEachTick(numTicks, Duration.seconds(interval), consumer);
 			}
 		};
+	}
+
+	protected void equip(String itemName) {
+		Item item = getItemRepository().getItem(itemName, player.getCharacter().getPhaseId()).orElseThrow();
+		player.equip(new EquippableItem(item));
 	}
 
 	protected void setHealth(Unit unit, int amount) {

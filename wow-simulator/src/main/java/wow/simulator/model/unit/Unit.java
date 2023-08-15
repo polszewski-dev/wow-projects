@@ -179,8 +179,16 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	}
 
 	private Cost getSpellCost(Snapshot snapshot) {
+		return getSpellCost(snapshot, (int) snapshot.getCost());
+	}
+
+	private Cost getSpellCostUnreduced(Snapshot snapshot) {
+		return getSpellCost(snapshot, (int) snapshot.getCostUnreduced());
+	}
+
+	private static Cost getSpellCost(Snapshot snapshot, int cost) {
 		Spell spell = snapshot.getSpell();
-		return new Cost(spell.getCost().resourceType(), (int) snapshot.getCost());
+		return new Cost(spell.getCost().resourceType(), cost);
 	}
 
 	public abstract Optional<Spell> getSpell(SpellId spellId);
@@ -203,7 +211,8 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	public SpellCastContext getSpellCastContext(Spell spell, Unit target) {
 		Snapshot snapshot = getSnapshot(spell);
 		Cost cost = getSpellCost(snapshot);
-		return new SpellCastContext(this, target, snapshot, cost);
+		Cost costUnreduced = getSpellCostUnreduced(snapshot);
+		return new SpellCastContext(this, target, snapshot, cost, costUnreduced);
 	}
 
 	public Snapshot getSnapshot(Spell spell) {
