@@ -22,7 +22,9 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 	private final ExcelColumn colCoeffDirect = column("coeff direct");
 	private final ExcelColumn colCoeffDot = column("coeff dot");
 	private final ExcelColumn colCooldown = column("cooldown");
+	private final ExcelColumn colChanneled = column("channeled");
 	private final ExcelColumn colIgnoresGcd = column("ignores gcd");
+	private final ExcelColumn colTarget = column("target");
 	private final ExcelColumn colBolt = column("bolt");
 	private final ExcelColumn colConversionFrom = column("conversion: from");
 	private final ExcelColumn colConversionTo = column("conversion: to");
@@ -52,7 +54,9 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 		var talentTree = colTree.getEnum(TalentTree::parse);
 		var spellSchool = colSchool.getEnum(SpellSchool::parse, null);
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
+		var channeled = colChanneled.getBoolean();
 		var ignoresGCD = colIgnoresGcd.getBoolean();
+		var target = colTarget.getEnum(SpellTarget::parse, SpellTarget.ENEMY);
 
 		Description description = getDescription(spellId.getName());
 		TimeRestriction timeRestriction = getTimeRestriction();
@@ -60,7 +64,9 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 		DamagingSpellInfo damagingSpellInfo = getDamagingSpellInfo();
 		Conversion conversion = getConversion();
 
-		return new SpellInfo(spellId, description, timeRestriction, characterRestriction, talentTree, spellSchool, cooldown, ignoresGCD, damagingSpellInfo, conversion);
+		return new SpellInfo(
+				spellId, description, timeRestriction, characterRestriction, talentTree, spellSchool, cooldown, channeled, ignoresGCD, target, damagingSpellInfo, conversion
+		);
 	}
 
 	private DamagingSpellInfo getDamagingSpellInfo() {

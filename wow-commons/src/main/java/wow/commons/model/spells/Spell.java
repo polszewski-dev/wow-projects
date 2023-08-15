@@ -55,7 +55,23 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 	}
 
 	default boolean isChanneled() {
-		return getCastInfo().channeled();
+		return getSpellInfo().isChanneled();
+	}
+
+	default boolean isBolt() {
+		return getSpellInfo().getDamagingSpellInfo().bolt();
+	}
+
+	default SpellTarget getTarget() {
+		return getSpellInfo().getTarget();
+	}
+
+	default boolean isFriendly() {
+		return getTarget().isFriendly();
+	}
+
+	default boolean isHostile() {
+		return getTarget().isHostile();
 	}
 
 	default AppliedEffect getAppliedEffect() {

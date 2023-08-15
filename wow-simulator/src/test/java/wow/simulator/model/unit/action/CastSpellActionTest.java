@@ -2,11 +2,13 @@ package wow.simulator.model.unit.action;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.commons.model.talents.TalentId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.Time;
+import wow.simulator.model.unit.Unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,7 +92,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void instantIgnoringGcd() {
 		enableTalent(TalentId.AMPLIFY_CURSE, 1);
 
-		CastSpellAction action = getCastSpellAction(SpellId.AMPLIFY_CURSE);
+		CastSpellAction action = getCastSpellOnSelfAction(SpellId.AMPLIFY_CURSE);
 
 		clock.advanceTo(Time.at(10));
 
@@ -171,7 +173,16 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	}
 
 	CastSpellAction getCastSpellAction(SpellId spellId) {
-		return new CastSpellAction(player, player.getSpell(spellId).orElseThrow(), target);
+		return getSpellAction(spellId, target);
+	}
+
+	CastSpellAction getCastSpellOnSelfAction(SpellId spellId) {
+		return getSpellAction(spellId, player);
+	}
+
+	private CastSpellAction getSpellAction(SpellId spellId, Unit target) {
+		Spell spell = player.getSpell(spellId).orElseThrow();
+		return new CastSpellAction(player, spell, target);
 	}
 
 	@BeforeEach

@@ -127,7 +127,7 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	public void cast(SpellId spellId) {
 		Spell spell = getSpell(spellId).orElseThrow();
-		pendingActionQueue.add(new CastSpellAction(this, spell, getDefaultTarget(spellId)));
+		pendingActionQueue.add(new CastSpellAction(this, spell, getDefaultTarget(spell)));
 	}
 
 	public void idleUntil(Time time) {
@@ -139,12 +139,8 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	}
 
 	public boolean canCast(SpellId spellId) {
-		return canCast(spellId, getDefaultTarget(spellId));
-	}
-
-	private Unit getDefaultTarget(SpellId spellId) {
 		Spell spell = getSpell(spellId).orElseThrow();
-		return spell.hasDamageComponent() ? target : this;
+		return canCast(spell, getDefaultTarget(spell));
 	}
 
 	public boolean canCast(SpellId spellId, Unit target) {
@@ -158,7 +154,20 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	}
 
 	public boolean canCast(SpellCastContext context) {
-		return canPaySpellCost(context);
+		return isValidTarget(context) && canPaySpellCost(context);
+	}
+
+	private boolean isValidTarget(SpellCastContext context) {
+		return switch (context.spell().getTarget()) {
+			case SELF -> context.target() == this;
+			case PET -> throw new UnsupportedOperationException("No pets atm");
+			case FRIEND, FRIENDS_IN_AREA -> context.target() instanceof Player;
+			case ENEMY, ENEMIES_IN_AREA -> context.target() instanceof Target;
+		};
+	}
+
+	private Unit getDefaultTarget(Spell spell) {
+		return spell.isFriendly() ? this : target;
 	}
 
 	private boolean canPaySpellCost(SpellCastContext context) {

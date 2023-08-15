@@ -132,21 +132,16 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private Duration getDelay() {
-		boolean bolt = spell.getSpellInfo().getDamagingSpellInfo().bolt();
 		Duration flightTime = Duration.ZERO;
-		return bolt ? flightTime : Duration.ZERO;
+		return spell.isBolt() ? flightTime : Duration.ZERO;
 	}
 
 	private void spellAction() {
-		if (spell.hasDamageComponent()) {
+		if (spell.isHostile()) {
 			harmfulSpellAction();
 		} else {
 			friendlySpellAction();
 		}
-	}
-
-	private void friendlySpellAction() {
-		// void atm
 	}
 
 	private void harmfulSpellAction() {
@@ -159,5 +154,9 @@ public class CastSpellAction extends UnitAction {
 		if (spell.hasDotComponent()) {
 			// void atm
 		}
+	}
+
+	private void friendlySpellAction() {
+		// void atm
 	}
 }

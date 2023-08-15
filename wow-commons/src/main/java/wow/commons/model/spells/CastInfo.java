@@ -11,7 +11,6 @@ import java.util.Objects;
 public record CastInfo(
 		Cost cost,
 		Duration castTime,
-		boolean channeled,
 		AppliedEffect appliedEffect
 ) {
 	public CastInfo {

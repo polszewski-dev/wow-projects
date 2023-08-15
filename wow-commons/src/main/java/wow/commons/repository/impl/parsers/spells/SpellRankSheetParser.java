@@ -21,7 +21,6 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	private final ExcelColumn colCostBaseStatPct = column("cost: base stat%");
 	private final ExcelColumn colCostCoeff = column("cost: coeff");
 	private final ExcelColumn colCastTime = column("cast time");
-	private final ExcelColumn colChanneled = column("channeled");
 	private final ExcelColumn colMinDmg = column("min dmg");
 	private final ExcelColumn colMaxDmg = column("max dmg");
 	private final ExcelColumn colDotDmg = column("dot dmg");
@@ -72,9 +71,8 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	private CastInfo getCastInfo() {
 		var cost = getCost();
 		var castTime = colCastTime.getDuration();
-		var channeled = colChanneled.getBoolean();
 		var appliedEffect = getAppliedEffect();
-		return new CastInfo(cost, castTime, channeled, appliedEffect);
+		return new CastInfo(cost, castTime, appliedEffect);
 	}
 
 	private Cost getCost() {
