@@ -1,11 +1,9 @@
-package wow.simulator.model.unit.action;
+package wow.simulator.model.action;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.simulator.WowSimulatorSpringTest;
-import wow.simulator.model.action.Action;
-import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.Time;
 
 import java.util.ArrayList;

@@ -167,11 +167,6 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 		assertThat(action.getStatus()).isEqualTo(ActionStatus.INTERRUPTED);
 	}
 
-	void enableTalent(TalentId talentId, int rank) {
-		player.getCharacter().getTalents().enableTalent(talentId, rank);
-		getCharacterService().updateAfterRestrictionChange(player.getCharacter());
-	}
-
 	CastSpellAction getCastSpellAction(SpellId spellId) {
 		return getSpellAction(spellId, target);
 	}

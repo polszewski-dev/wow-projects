@@ -1,5 +1,6 @@
 package wow.simulator;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,11 +11,13 @@ import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
+import wow.commons.model.buffs.BuffId;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.commons.model.talents.TalentId;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
@@ -33,11 +36,14 @@ import wow.simulator.simulation.TimeAware;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.IntConsumer;
+import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
+import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.*;
 
 /**
  * User: POlszewski
@@ -72,57 +78,146 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	@Getter
 	@Setter
 	public static class EventCollectingHandler implements GameLogHandler, TimeAware {
-		List<String> events = new ArrayList<>();
+		List<Event> events = new ArrayList<>();
 		Clock clock;
+
+		protected interface Event {}
+
+		public record BeginGcd(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record EndGcd(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record BeginCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record EndCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record CanNotBeCasted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record SpellMissed(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
+		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
+		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
 		public void beginGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-			addEvent("beginGcd: caster = %s, spell = %s, target = %s", caster, spell, target);
+			addEvent(new BeginGcd(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
 		public void endGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-			addEvent("endGcd: caster = %s, spell = %s, target = %s", caster, spell, target);
+			addEvent(new EndGcd(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
 		public void beginCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
-			addEvent("beginCast: caster = %s, spell = %s, target = %s", caster, spell, target);
+			addEvent(new BeginCast(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
 		public void endCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
-			addEvent("endCast: caster = %s, spell = %s, target = %s", caster, spell, target);
+			addEvent(new EndCast(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
 		public void canNotBeCasted(Unit caster, Spell spell, Unit target, ActionId actionId) {
-			addEvent("canNotBeCasted: caster = %s, spell = %s, target = %s", caster, spell, target);
+			addEvent(new CanNotBeCasted(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
 		public void spellMissed(Unit caster, Spell spell, Unit target) {
-			addEvent("spellMissed: caster = %s, spell = %s, target = %s", caster, spell, target);
+			addEvent(new SpellMissed(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
 		public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-			addEvent("increasedResource: target = %s, spell = %s, amount = %s, type = %s", target, spell, amount, type);
+			addEvent(new IncreasedResource(now(), amount, type, crit, target, getSpellId(spell)));
 		}
 
 		@Override
 		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-			addEvent("decreasedResource: target = %s, spell = %s, amount = %s, type = %s", target, spell, amount, type);
+			addEvent(new DecreasedResource(now(), amount, type, crit, target, getSpellId(spell)));
+		}
+
+		private SpellId getSpellId(Spell spell) {
+			return spell != null ? spell.getSpellId() : null;
 		}
 
 		@Override
 		public void simulationEnded() {
-			addEvent("simulationEnded");
+			// ignored
 		}
 
-		private void addEvent(String str, Object... args) {
-			events.add("%s> %s".formatted(clock.now(), str.formatted(args)));
+		private void addEvent(Event event) {
+			events.add(event);
 		}
+
+		private Time now() {
+			return clock.now();
+		}
+	}
+
+	@AllArgsConstructor
+	protected static class EventListBuilder {
+		private final Time time;
+		private final List<Event> events = new ArrayList<>();
+
+		public EventListBuilder beginGcd(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new BeginGcd(time, caster, spellId, target));
+		}
+
+		public EventListBuilder endGcd(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new EndGcd(time, caster, spellId, target));
+		}
+
+		public EventListBuilder beginCast(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new BeginCast(time, caster, spellId, target));
+		}
+
+		public EventListBuilder endCast(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new EndCast(time, caster, spellId, target));
+		}
+
+		public EventListBuilder canNotBeCasted(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new CanNotBeCasted(time, caster, spellId, target));
+		}
+
+		public EventListBuilder spellMissed(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new SpellMissed(time, caster, spellId, target));
+		}
+
+		public EventListBuilder increasedResource(int amount, ResourceType type, Unit target, SpellId spellId) {
+			return increasedResource(amount, type, false, target, spellId);
+		}
+
+		public EventListBuilder increasedResource(int amount, ResourceType type, boolean crit, Unit target, SpellId spellId) {
+			return addEvent(new IncreasedResource(time, amount, type, crit, target, spellId));
+		}
+
+		public EventListBuilder decreasedResource(int amount, ResourceType type, Unit target, SpellId spellId) {
+			return decreasedResource(amount, type, false, target, spellId);
+		}
+
+		public EventListBuilder decreasedResource(int amount, ResourceType type, boolean crit, Unit target, SpellId spellId) {
+			return addEvent(new DecreasedResource(time, amount, type, crit, target, spellId));
+		}
+
+		public EventListBuilder simulationEnded() {
+			return addEvent(new SimulationEnded(time));
+		}
+
+		private EventListBuilder addEvent(Event event) {
+			events.add(event);
+			return this;
+		}
+	}
+
+	protected static EventListBuilder at(double time) {
+		return new EventListBuilder(Time.at(time));
+	}
+
+	private static List<Event> eventList(EventListBuilder... builders) {
+		return Stream.of(builders)
+				.flatMap(x -> x.events.stream())
+				.toList();
+	}
+
+	protected void assertEvents(EventListBuilder... expected) {
+		assertThat(handler.getEvents()).isEqualTo(eventList(expected));
 	}
 
 	protected Action newAction(int delay, Runnable runnable) {
@@ -148,22 +243,40 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		player.equip(new EquippableItem(item));
 	}
 
+	protected void enableTalent(TalentId talentId, int rank) {
+		player.getCharacter().getTalents().enableTalent(talentId, rank);
+		getCharacterService().updateAfterRestrictionChange(player.getCharacter());
+	}
+
+	protected void enableBuff(BuffId buffId, int rank) {
+		player.getCharacter().getBuffs().enable(buffId, rank);
+	}
+
 	protected void setHealth(Unit unit, int amount) {
 		unit.decreaseHealth(unit.getCurrentHealth() - amount, false, null);
+		clearEvents();
 	}
 
 	protected void setMana(Unit unit, int amount) {
 		unit.decreaseMana(unit.getCurrentMana() - amount, false, null);
+		clearEvents();
+	}
+
+	protected void clearEvents() {
+		if (handler != null) {
+			handler.getEvents().clear();
+		}
 	}
 
 	protected SimulationContext simulationContext;
 	protected Clock clock;
 	protected Player player;
 	protected Target target;
+	protected EventCollectingHandler handler;
 
-	protected Rng rng = new Rng() {
-		protected boolean hitRoll = true;
-		protected boolean critRoll = false;
+	protected static class TestRng implements Rng {
+		public boolean hitRoll = true;
+		public boolean critRoll = false;
 
 		@Override
 		public boolean hitRoll(double chance, SpellId spellId) {
@@ -175,6 +288,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return critRoll;
 		}
 	};
+
+	protected TestRng rng = new TestRng();
 
 	protected void setupTestObjects() {
 		simulationContext = getSimulationContext();
