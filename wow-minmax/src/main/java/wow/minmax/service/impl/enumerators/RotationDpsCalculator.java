@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.CritMode;
+import wow.character.model.snapshot.RngStrategy;
 import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Spell;
@@ -88,7 +88,7 @@ public class RotationDpsCalculator {
 	}
 
 	private double getDamage(Snapshot snapshot) {
-		return snapshot.getTotalDamage(CritMode.AVERAGE, true);
+		return snapshot.getTotalDamage(RngStrategy.AVERAGED, true);
 	}
 
 	private double getEffectiveCastTime(Snapshot fillerSnapshot) {

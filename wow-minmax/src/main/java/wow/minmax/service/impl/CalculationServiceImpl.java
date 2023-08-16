@@ -302,7 +302,7 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public SpellStats getSpellStats(Character character, Spell spell) {
 		Snapshot snapshot = getSnapshot(character, spell, character.getStats());
-		SpellStatistics spellStatistics = snapshot.getSpellStatistics(CritMode.AVERAGE, true);
+		SpellStatistics spellStatistics = snapshot.getSpellStatistics(RngStrategy.AVERAGED, true);
 		SpellStatEquivalents statEquivalents = getStatEquivalents(character, spell);
 		return new SpellStats(character, spellStatistics, statEquivalents);
 	}

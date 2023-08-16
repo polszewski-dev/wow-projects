@@ -40,17 +40,22 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void canNotBeCasted(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		print("%s can't cast %s", caster, spell);
+		print("%s can't cast %s on %s", caster, spell, target);
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous) {
-		print("%s increased %s %s by %s", spell, target, type.toString().toLowerCase(), amount);
+	public void spellMissed(Unit caster, Spell spell, Unit target) {
+		print("%s's %s missed %s", caster, spell, target);
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous) {
-		print("%s decreased %s %s by %s", spell, target, type.toString().toLowerCase(), amount);
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		print("%s increased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
+	}
+
+	@Override
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		print("%s decreased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
 	}
 
 	@Override

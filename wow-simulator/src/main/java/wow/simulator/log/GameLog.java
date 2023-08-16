@@ -46,13 +46,18 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous) {
-		handlers.forEach(handler -> handler.increasedResource(type, spell, target, amount, current, previous));
+	public void spellMissed(Unit caster, Spell spell, Unit target) {
+		handlers.forEach(handler -> handler.spellMissed(caster, spell, target));
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous) {
-		handlers.forEach(handler -> handler.decreasedResource(type, spell, target, amount, current, previous));
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		handlers.forEach(handler -> handler.increasedResource(type, spell, target, amount, current, previous, crit));
+	}
+
+	@Override
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		handlers.forEach(handler -> handler.decreasedResource(type, spell, target, amount, current, previous, crit));
 	}
 
 	@Override

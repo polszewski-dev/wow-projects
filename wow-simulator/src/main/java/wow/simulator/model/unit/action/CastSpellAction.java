@@ -1,6 +1,6 @@
 package wow.simulator.model.unit.action;
 
-import wow.character.model.snapshot.CritMode;
+import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.Duration;
 import wow.commons.model.spells.Spell;
 import wow.simulator.model.time.Time;
@@ -150,10 +150,13 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void harmfulSpellAction() {
+		if (!hitRoll()) {
+			getGameLog().spellMissed(owner, spell, target);
+			return;
+		}
+
 		if (spell.hasDirectComponent()) {
-			int directDamage = (int) context.snapshot().getDirectDamage(CritMode.AVERAGE, true);
-			int actualDamage = target.decreaseHealth(directDamage, spell);
-			context.getConversions().performDamageDoneConversion(actualDamage);
+			directDamageAction();
 		}
 
 		if (spell.hasDotComponent()) {
@@ -161,7 +164,40 @@ public class CastSpellAction extends UnitAction {
 		}
 	}
 
+	private void directDamageAction() {
+		boolean critRoll = critRoll();
+		RngStrategy rngStrategy = getRngStrategy(critRoll);
+
+		int directDamage = (int) context.snapshot().getDirectDamage(rngStrategy, true);
+		int actualDamage = target.decreaseHealth(directDamage, critRoll, spell);
+		context.getConversions().performDamageDoneConversion(actualDamage);
+	}
+
+	private boolean hitRoll() {
+		double hitChance = context.snapshot().getHitChance();
+		return owner.getRng().hitRoll(hitChance, spell.getSpellId());
+	}
+
+	private boolean critRoll() {
+		double critChance = context.snapshot().getCritChance();
+		return owner.getRng().critRoll(critChance, spell.getSpellId());
+	}
+
 	private void friendlySpellAction() {
 		// void atm
+	}
+
+	private static RngStrategy getRngStrategy(boolean critRoll) {
+		return new RngStrategy() {
+			@Override
+			public double getHitChance(double hitChance) {
+				return 1;
+			}
+
+			@Override
+			public double getCritChance(double critChance) {
+				return critRoll ? 1 : 0;
+			}
+		};
 	}
 }

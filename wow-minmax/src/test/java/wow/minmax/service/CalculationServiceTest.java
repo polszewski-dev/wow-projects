@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.snapshot.AccumulatedSpellStats;
-import wow.character.model.snapshot.CritMode;
+import wow.character.model.snapshot.RngStrategy;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.Duration;
@@ -99,7 +99,7 @@ class CalculationServiceTest extends ServiceTest {
 		Attributes attributes = Attributes.of();
 
 		Snapshot snapshot = underTest.getSnapshot(character, spell, attributes);
-		SpellStatistics stats = snapshot.getSpellStatistics(CritMode.NEVER, false);
+		SpellStatistics stats = snapshot.getSpellStatistics(averagedHitNoCrit(), false);
 
 		assertThat(snapshot.getDuration()).isEqualTo(18);
 		assertThat(stats.getTotalDamage()).isEqualTo(747);
@@ -113,10 +113,24 @@ class CalculationServiceTest extends ServiceTest {
 		);
 
 		Snapshot snapshot = underTest.getSnapshot(character, spell, attributes);
-		SpellStatistics stats = snapshot.getSpellStatistics(CritMode.NEVER, false);
+		SpellStatistics stats = snapshot.getSpellStatistics(averagedHitNoCrit(), false);
 
 		assertThat(snapshot.getDuration()).isEqualTo(27);
 		assertThat(stats.getTotalDamage()).isEqualTo(747 * 1.5);
+	}
+
+	private static RngStrategy averagedHitNoCrit() {
+		return new RngStrategy() {
+			@Override
+			public double getHitChance(double hitChance) {
+				return hitChance;
+			}
+
+			@Override
+			public double getCritChance(double critChance) {
+				return 0;
+			}
+		};
 	}
 
 	@Test
@@ -315,7 +329,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	void everythingSpellStats() {
 		Snapshot snapshot = getSnapshot();
-		SpellStatistics statistics = snapshot.getSpellStatistics(CritMode.AVERAGE, true);
+		SpellStatistics statistics = snapshot.getSpellStatistics(RngStrategy.AVERAGED, true);
 
 		assertThat(statistics.getTotalDamage()).usingComparator(ROUNDED_DOWN).isEqualTo(5175);
 		assertThat(statistics.getDps()).usingComparator(ROUNDED_DOWN).isEqualTo(2667);

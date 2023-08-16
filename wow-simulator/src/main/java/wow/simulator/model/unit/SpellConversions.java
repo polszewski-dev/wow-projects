@@ -55,8 +55,8 @@ public class SpellConversions {
 		int convertedAmount = (int)(conversion.ratioPct().getCoefficient() * amount);
 
 		switch (conversion.to()) {
-			case HEALTH -> caster.increaseHealth(convertedAmount, spell);
-			case MANA -> caster.increaseMana(convertedAmount, spell);
+			case HEALTH -> caster.increaseHealth(convertedAmount, false, spell);
+			case MANA -> caster.increaseMana(convertedAmount, false, spell);
 			default -> throw new IllegalArgumentException();
 		}
 	}

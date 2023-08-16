@@ -8,6 +8,7 @@ import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.ConsoleGameLogHandler;
+import wow.simulator.model.rng.PredeterminedRng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
@@ -70,7 +71,7 @@ public class WowDpsSimulatorMain implements SimulatorContextSource {
 		Clock clock = new Clock();
 		GameLog gameLog = new GameLog();
 		SimulationContext simulationContext = new SimulationContext(
-				clock, gameLog, getCharacterCalculationService()
+				clock, gameLog, PredeterminedRng::new, getCharacterCalculationService()
 		);
 		return new Simulation(simulationContext);
 	}

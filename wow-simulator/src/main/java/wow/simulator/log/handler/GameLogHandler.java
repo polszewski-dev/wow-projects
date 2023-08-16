@@ -20,9 +20,11 @@ public interface GameLogHandler {
 
 	void canNotBeCasted(Unit caster, Spell spell, Unit target, ActionId actionId);
 
-	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous);
+	void spellMissed(Unit caster, Spell spell, Unit target);
 
-	void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous);
+	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
+
+	void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
 
 	void simulationEnded();
 }

@@ -45,7 +45,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 				"0.000> beginCast: caster = Player, spell = Shadow Bolt (Rank 11), target = Target",
 				"3.000> endCast: caster = Player, spell = Shadow Bolt (Rank 11), target = Target",
 				"3.000> decreasedResource: target = Player, spell = Shadow Bolt (Rank 11), amount = 420, type = MANA",
-				"3.000> decreasedResource: target = Target, spell = Shadow Bolt (Rank 11), amount = 534, type = HEALTH",
+				"3.000> decreasedResource: target = Target, spell = Shadow Bolt (Rank 11), amount = 575, type = HEALTH",
 				"30.000> simulationEnded"
 		));
 	}
@@ -61,11 +61,11 @@ class SimulationTest extends WowSimulatorSpringTest {
 				"0.000> beginCast: caster = Player, spell = Shadow Bolt (Rank 11), target = Target",
 				"3.000> endCast: caster = Player, spell = Shadow Bolt (Rank 11), target = Target",
 				"3.000> decreasedResource: target = Player, spell = Shadow Bolt (Rank 11), amount = 420, type = MANA",
-				"3.000> decreasedResource: target = Target, spell = Shadow Bolt (Rank 11), amount = 534, type = HEALTH",
+				"3.000> decreasedResource: target = Target, spell = Shadow Bolt (Rank 11), amount = 575, type = HEALTH",
 				"3.000> beginCast: caster = Player, spell = Shadow Bolt (Rank 11), target = Target",
 				"6.000> endCast: caster = Player, spell = Shadow Bolt (Rank 11), target = Target",
 				"6.000> decreasedResource: target = Player, spell = Shadow Bolt (Rank 11), amount = 420, type = MANA",
-				"6.000> decreasedResource: target = Target, spell = Shadow Bolt (Rank 11), amount = 534, type = HEALTH",
+				"6.000> decreasedResource: target = Target, spell = Shadow Bolt (Rank 11), amount = 575, type = HEALTH",
 				"30.000> simulationEnded"
 		));
 	}

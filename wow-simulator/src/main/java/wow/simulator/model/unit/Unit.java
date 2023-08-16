@@ -8,6 +8,7 @@ import wow.commons.model.spells.Cost;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.IdleAction;
@@ -39,6 +40,8 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	private Action currentAction;
 
 	private Consumer<Unit> onPendingActionQueueEmpty;
+
+	private Rng rng;
 
 	private SimulationContext simulationContext;
 
@@ -221,6 +224,13 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 		return snapshot;
 	}
 
+	public Rng getRng() {
+		if (rng == null) {
+			rng = getRngFactory().newRng();
+		}
+		return rng;
+	}
+
 	public int getCurrentHealth() {
 		return resources.getCurrentHealth();
 	}
@@ -229,19 +239,19 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 		return resources.getCurrentMana();
 	}
 
-	public int increaseHealth(int amount, Spell spell) {
-		return resources.increaseHealth(amount, spell);
+	public int increaseHealth(int amount, boolean crit, Spell spell) {
+		return resources.increaseHealth(amount, crit, spell);
 	}
 
-	public int decreaseHealth(int amount, Spell spell) {
-		return resources.decreaseHealth(amount, spell);
+	public int decreaseHealth(int amount, boolean crit, Spell spell) {
+		return resources.decreaseHealth(amount, crit, spell);
 	}
 
-	public int increaseMana(int amount, Spell spell) {
-		return resources.increaseMana(amount, spell);
+	public int increaseMana(int amount, boolean crit, Spell spell) {
+		return resources.increaseMana(amount, crit, spell);
 	}
 
-	public int decreaseMana(int amount, Spell spell) {
-		return resources.decreaseMana(amount, spell);
+	public int decreaseMana(int amount, boolean crit, Spell spell) {
+		return resources.decreaseMana(amount, crit, spell);
 	}
 }

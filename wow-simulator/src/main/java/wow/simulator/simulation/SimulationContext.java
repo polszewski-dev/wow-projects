@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.service.CharacterCalculationService;
 import wow.simulator.log.GameLog;
+import wow.simulator.model.rng.RngFactory;
 import wow.simulator.model.time.Clock;
 
 /**
@@ -15,6 +16,7 @@ import wow.simulator.model.time.Clock;
 public class SimulationContext implements SimulationContextSource {
 	private final Clock clock;
 	private final GameLog gameLog;
+	private final RngFactory rngFactory;
 	private final CharacterCalculationService characterCalculationService;
 
 	@Override

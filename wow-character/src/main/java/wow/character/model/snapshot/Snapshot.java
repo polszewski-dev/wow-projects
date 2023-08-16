@@ -66,11 +66,11 @@ public class Snapshot {
 		this.stats = stats;
 	}
 
-	public SpellStatistics getSpellStatistics(CritMode critMode, boolean useBothDamageRanges) {
+	public SpellStatistics getSpellStatistics(RngStrategy rngStrategy, boolean useBothDamageRanges) {
 		SpellStatistics result = new SpellStatistics();
 
 		result.setSnapshot(this);
-		result.setTotalDamage(getTotalDamage(critMode, useBothDamageRanges));
+		result.setTotalDamage(getTotalDamage(rngStrategy, useBothDamageRanges));
 		result.setCastTime(Duration.seconds(effectiveCastTime));
 		result.setDps(result.getTotalDamage() / result.getCastTime().getSeconds());
 		result.setManaCost(cost);
@@ -79,11 +79,11 @@ public class Snapshot {
 		return result;
 	}
 
-	public double getTotalDamage(CritMode critMode, boolean useBothDamageRanges) {
-		return getDirectDamage(critMode, useBothDamageRanges) + getDotDamage();
+	public double getTotalDamage(RngStrategy rngStrategy, boolean useBothDamageRanges) {
+		return getDirectDamage(rngStrategy, useBothDamageRanges) + getDotDamage(rngStrategy);
 	}
 
-	public double getDirectDamage(CritMode critMode, boolean useBothDamageRanges) {
+	public double getDirectDamage(RngStrategy rngStrategy, boolean useBothDamageRanges) {
 		if (!spell.hasDirectComponent()) {
 			return 0;
 		}
@@ -96,25 +96,28 @@ public class Snapshot {
 			baseDmgMax += spell.getMaxDmg2();
 		}
 
-		double actualCritChance = critMode.getActualCritChance(this);
+		double actualHitChance = rngStrategy.getHitChance(hitChance);
+		double actualCritChance = rngStrategy.getCritChance(critChance);
 
-		double directDamage = (baseDmgMin + baseDmgMax) / 2.0;
+		double directDamage = rngStrategy.getDamage(baseDmgMin, baseDmgMax);
 		directDamage += spellCoeffDirect * sp * spMultiplier;
 		directDamage *= directDamageDoneMultiplier;
-		directDamage *= hitChance;
+		directDamage *= actualHitChance;
 		directDamage *= (1 - actualCritChance) * 1 + actualCritChance * critCoeff;
 		return directDamage;
 	}
 
-	public double getDotDamage() {
+	public double getDotDamage(RngStrategy rngStrategy) {
 		if (!spell.hasDotComponent()) {
 			return 0;
 		}
 
+		double actualHitChance = rngStrategy.getHitChance(hitChance);
+
 		double dotDamage = spell.getDotDmg();
 		dotDamage += spellCoeffDoT * sp * spMultiplier;
 		dotDamage *= dotDamageDoneMultiplier;
-		dotDamage *= hitChance;
+		dotDamage *= actualHitChance;
 		dotDamage *= 1 + getDoTDamageChange();
 		return dotDamage;
 	}

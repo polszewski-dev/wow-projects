@@ -14,12 +14,14 @@ import wow.commons.model.item.Item;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.action.ActionId;
+import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
@@ -51,7 +53,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected SimulationContext getSimulationContext() {
 		Clock clock = new Clock();
 		GameLog gameLog = new GameLog();
-		return new SimulationContext(clock, gameLog, getCharacterCalculationService());
+		return new SimulationContext(clock, gameLog, () -> rng, getCharacterCalculationService());
 	}
 
 	protected Character getNakedCharacter() {
@@ -62,6 +64,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		character.getEquipment().reset();
 		character.getBuffs().reset();
 		character.getTalents().reset();
+		enemy.getDebuffs().reset();
 		getCharacterService().updateAfterRestrictionChange(character);
 		return character;
 	}
@@ -98,12 +101,17 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		@Override
-		public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous) {
+		public void spellMissed(Unit caster, Spell spell, Unit target) {
+			addEvent("spellMissed: caster = %s, spell = %s, target = %s", caster, spell, target);
+		}
+
+		@Override
+		public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
 			addEvent("increasedResource: target = %s, spell = %s, amount = %s, type = %s", target, spell, amount, type);
 		}
 
 		@Override
-		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous) {
+		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
 			addEvent("decreasedResource: target = %s, spell = %s, amount = %s, type = %s", target, spell, amount, type);
 		}
 
@@ -141,17 +149,32 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void setHealth(Unit unit, int amount) {
-		unit.decreaseHealth(unit.getCurrentHealth() - amount, null);
+		unit.decreaseHealth(unit.getCurrentHealth() - amount, false, null);
 	}
 
 	protected void setMana(Unit unit, int amount) {
-		unit.decreaseMana(unit.getCurrentMana() - amount, null);
+		unit.decreaseMana(unit.getCurrentMana() - amount, false, null);
 	}
 
 	protected SimulationContext simulationContext;
 	protected Clock clock;
 	protected Player player;
 	protected Target target;
+
+	protected Rng rng = new Rng() {
+		protected boolean hitRoll = true;
+		protected boolean critRoll = false;
+
+		@Override
+		public boolean hitRoll(double chance, SpellId spellId) {
+			return hitRoll;
+		}
+
+		@Override
+		public boolean critRoll(double chance, SpellId spellId) {
+			return critRoll;
+		}
+	};
 
 	protected void setupTestObjects() {
 		simulationContext = getSimulationContext();
