@@ -44,6 +44,11 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
+	public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
+		print("%s's s% cast on %s interrupted", caster, spell, target);
+	}
+
+	@Override
 	public void spellMissed(Unit caster, Spell spell, Unit target) {
 		print("%s's %s missed %s", caster, spell, target);
 	}

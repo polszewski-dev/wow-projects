@@ -1,6 +1,7 @@
 package wow.simulator.simulation;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.buffs.BuffId;
@@ -261,6 +262,52 @@ class SimulationTest extends WowSimulatorSpringTest {
 				at(1.5)
 						.endGcd(player)
 		);
+	}
+
+	@Nested
+	class Interruptions {
+		@Test
+		void shadowBolt() {
+			player.cast(SHADOW_BOLT);
+
+			simulation.updateUntil(Time.at(1));
+
+			player.interruptCurrentAction();
+
+			simulation.updateUntil(Time.at(30));
+
+			assertEvents(
+					at(0)
+							.beginCast(player, SHADOW_BOLT, target)
+							.beginGcd(player),
+					at(1)
+							.castInterrupted(player, SHADOW_BOLT, target)
+			);
+		}
+
+		@Test
+		void shadowBurn() {
+			enableTalent(TalentId.SHADOWBURN, 1);
+
+			player.cast(SHADOWBURN);
+
+			simulation.updateUntil(Time.at(1));
+
+			player.interruptCurrentAction();
+
+			simulation.updateUntil(Time.at(30));
+
+			assertEvents(
+					at(0)
+							.beginCast(player, SHADOWBURN, target)
+							.endCast(player, SHADOWBURN, target)
+							.decreasedResource(515, MANA, player, SHADOWBURN)
+							.decreasedResource(631, HEALTH, target, SHADOWBURN)
+							.beginGcd(player),
+					at(1.5)
+							.endGcd(player)
+			);
+		}
 	}
 
 	@BeforeEach

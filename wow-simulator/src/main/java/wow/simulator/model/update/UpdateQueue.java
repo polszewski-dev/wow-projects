@@ -4,9 +4,8 @@ import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.TimeAware;
 
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.PriorityQueue;
+import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * User: POlszewski
@@ -63,6 +62,20 @@ public class UpdateQueue<T extends Updateable> implements TimeAware {
 		handle.get().onRemovedFromQueue();
 	}
 
+	public void removeIf(Predicate<T> predicate) {
+		queue.stream()
+				.filter(x -> predicate.test(x.get()))
+				.sorted(Handle.orderComparator())
+				.forEach(this::remove);
+	}
+
+	public void clear() {
+		while (!queue.isEmpty()) {
+			Handle<T> handle = queue.poll();
+			handle.get().onRemovedFromQueue();
+		}
+	}
+
 	public boolean isEmpty() {
 		return queue.isEmpty();
 	}
@@ -74,5 +87,9 @@ public class UpdateQueue<T extends Updateable> implements TimeAware {
 
 	private long newOrder() {
 		return orderGenerator++;
+	}
+
+	public Collection<Handle<T>> getElements() {
+		return Collections.unmodifiableCollection(queue);
 	}
 }

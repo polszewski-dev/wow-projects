@@ -20,6 +20,8 @@ public interface GameLogHandler {
 
 	void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action);
 
+	void castInterrupted(Unit caster, Spell spell, Unit target, Action action);
+
 	void spellMissed(Unit caster, Spell spell, Unit target);
 
 	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);

@@ -185,18 +185,7 @@ class UpdateQueueTest extends WowSimulatorSpringTest {
 	void remove() {
 		List<String> results = new ArrayList<>();
 
-		Action action = new Action(clock) {
-			@Override
-			protected void setUp() {
-				fromNowOnEachTick(3, Duration.seconds(10), tickNo -> results.add(tickNo + " " + clock.now()));
-			}
-
-			@Override
-			public void onRemovedFromQueue() {
-				super.onRemovedFromQueue();
-				results.add("removed");
-			}
-		};
+		Action action = removeAction("1", results);
 
 		var handle = updateQueue.add(action);
 		updateQueue.updateAllPresentActions();
@@ -209,7 +198,7 @@ class UpdateQueueTest extends WowSimulatorSpringTest {
 
 		assertThat(updateQueue.isEmpty()).isFalse();
 		assertThat(results).isEqualTo(List.of(
-				"1 10.000"
+				"1 1 10.000"
 		));
 
 		assertThat(action.getStatus()).isEqualTo(IN_PROGRESS);
@@ -219,15 +208,193 @@ class UpdateQueueTest extends WowSimulatorSpringTest {
 		assertThat(action.getStatus()).isEqualTo(INTERRUPTED);
 
 		assertThat(updateQueue.isEmpty()).isTrue();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"1 removed"
+		));
 
 		clock.advanceTo(Time.at(20));
 		updateQueue.updateAllPresentActions();
 
 		assertThat(updateQueue.isEmpty()).isTrue();
 		assertThat(results).isEqualTo(List.of(
-				"1 10.000",
-				"removed"
+				"1 1 10.000",
+				"1 removed"
 		));
+	}
+
+	@Test
+	void removeIf() {
+		List<String> results = new ArrayList<>();
+
+		Action action1 = removeAction("1", results);
+		Action action2 = removeAction("2", results);
+		Action action3 = removeAction("3", results);
+		Action action4 = removeAction("4", results);
+		Action action5 = removeAction("5", results);
+
+		updateQueue.add(action1);
+		updateQueue.add(action2);
+		updateQueue.add(action3);
+		updateQueue.add(action4);
+		updateQueue.add(action5);
+		updateQueue.updateAllPresentActions();
+
+		assertThat(updateQueue.isEmpty()).isFalse();
+		assertThat(results).isEmpty();
+
+		clock.advanceTo(Time.at(10));
+		updateQueue.updateAllPresentActions();
+
+		assertThat(updateQueue.isEmpty()).isFalse();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"2 1 10.000",
+				"3 1 10.000",
+				"4 1 10.000",
+				"5 1 10.000"
+		));
+
+		assertThat(action1.getStatus()).isEqualTo(IN_PROGRESS);
+		assertThat(action2.getStatus()).isEqualTo(IN_PROGRESS);
+
+		updateQueue.removeIf(x -> List.of("1", "3", "5").contains(((RemoveAction) x).name));
+
+		assertThat(action1.getStatus()).isEqualTo(INTERRUPTED);
+		assertThat(action2.getStatus()).isEqualTo(IN_PROGRESS);
+		assertThat(action3.getStatus()).isEqualTo(INTERRUPTED);
+		assertThat(action4.getStatus()).isEqualTo(IN_PROGRESS);
+		assertThat(action5.getStatus()).isEqualTo(INTERRUPTED);
+
+		assertThat(updateQueue.isEmpty()).isFalse();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"2 1 10.000",
+				"3 1 10.000",
+				"4 1 10.000",
+				"5 1 10.000",
+				"1 removed",
+				"3 removed",
+				"5 removed"
+		));
+
+		clock.advanceTo(Time.at(20));
+		updateQueue.updateAllPresentActions();
+
+		assertThat(updateQueue.isEmpty()).isFalse();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"2 1 10.000",
+				"3 1 10.000",
+				"4 1 10.000",
+				"5 1 10.000",
+				"1 removed",
+				"3 removed",
+				"5 removed",
+				"2 2 20.000",
+				"4 2 20.000"
+		));
+
+		updateQueue.removeIf(x -> true);
+
+		assertThat(action1.getStatus()).isEqualTo(INTERRUPTED);
+		assertThat(action2.getStatus()).isEqualTo(INTERRUPTED);
+		assertThat(action3.getStatus()).isEqualTo(INTERRUPTED);
+		assertThat(action4.getStatus()).isEqualTo(INTERRUPTED);
+		assertThat(action5.getStatus()).isEqualTo(INTERRUPTED);
+
+		assertThat(updateQueue.isEmpty()).isTrue();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"2 1 10.000",
+				"3 1 10.000",
+				"4 1 10.000",
+				"5 1 10.000",
+				"1 removed",
+				"3 removed",
+				"5 removed",
+				"2 2 20.000",
+				"4 2 20.000",
+				"2 removed",
+				"4 removed"
+		));
+	}
+
+	@Test
+	void clear() {
+		List<String> results = new ArrayList<>();
+
+		Action action1 = removeAction("1", results);
+		Action action2 = removeAction("2", results);
+
+		updateQueue.add(action1);
+		updateQueue.add(action2);
+		updateQueue.updateAllPresentActions();
+
+		assertThat(updateQueue.isEmpty()).isFalse();
+		assertThat(results).isEmpty();
+
+		clock.advanceTo(Time.at(10));
+		updateQueue.updateAllPresentActions();
+
+		assertThat(updateQueue.isEmpty()).isFalse();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"2 1 10.000"
+		));
+
+		assertThat(action1.getStatus()).isEqualTo(IN_PROGRESS);
+		assertThat(action2.getStatus()).isEqualTo(IN_PROGRESS);
+
+		updateQueue.clear();
+
+		assertThat(action1.getStatus()).isEqualTo(INTERRUPTED);
+		assertThat(action2.getStatus()).isEqualTo(INTERRUPTED);
+
+		assertThat(updateQueue.isEmpty()).isTrue();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"2 1 10.000",
+				"1 removed",
+				"2 removed"
+		));
+
+		clock.advanceTo(Time.at(20));
+		updateQueue.updateAllPresentActions();
+
+		assertThat(updateQueue.isEmpty()).isTrue();
+		assertThat(results).isEqualTo(List.of(
+				"1 1 10.000",
+				"2 1 10.000",
+				"1 removed",
+				"2 removed"
+		));
+	}
+
+	private RemoveAction removeAction(String actionName, List<String> results) {
+		return new RemoveAction(actionName, results);
+	}
+
+	private class RemoveAction extends Action {
+		private final String name;
+		private final List<String> results;
+
+		public RemoveAction(String name, List<String> results) {
+			super(UpdateQueueTest.this.clock);
+			this.name = name;
+			this.results = results;
+		}
+
+		@Override
+		protected void setUp() {
+			fromNowOnEachTick(3, Duration.seconds(10), tickNo -> results.add(name + " " + tickNo + " " + clock.now()));
+		}
+
+		@Override
+		public void onRemovedFromQueue() {
+			super.onRemovedFromQueue();
+			results.add(name + " removed");
+		}
 	}
 
 	UpdateQueue<Action> updateQueue;

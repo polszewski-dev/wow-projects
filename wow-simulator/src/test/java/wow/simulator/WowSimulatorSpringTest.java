@@ -88,6 +88,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record BeginCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record EndCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record CanNotBeCasted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record CastInterrupted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record SpellMissed(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
 		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
@@ -116,6 +117,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		@Override
 		public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
 			addEvent(new CanNotBeCasted(now(), caster, getSpellId(spell), target));
+		}
+
+		@Override
+		public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
+			addEvent(new CastInterrupted(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
@@ -174,6 +180,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		public EventListBuilder canNotBeCasted(Unit caster, SpellId spellId, Unit target) {
 			return addEvent(new CanNotBeCasted(time, caster, spellId, target));
+		}
+
+		public EventListBuilder castInterrupted(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new CastInterrupted(time, caster, spellId, target));
 		}
 
 		public EventListBuilder spellMissed(Unit caster, SpellId spellId, Unit target) {

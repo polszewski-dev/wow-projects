@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import wow.simulator.model.time.Time;
 
+import java.util.Comparator;
+
 /**
  * User: POlszewski
  * Date: 2023-08-18
@@ -27,5 +29,9 @@ public class Handle<T extends Updateable> {
 
 	Time getNextUpdateTime() {
 		return element.getNextUpdateTime().orElseThrow();
+	}
+
+	public static <T extends Updateable> Comparator<Handle<T>> orderComparator() {
+		return Comparator.comparingLong(Handle::getOrder);
 	}
 }

@@ -22,6 +22,7 @@ import wow.simulator.util.IdGenerator;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * User: POlszewski
@@ -138,6 +139,32 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	public void triggerGcd(Duration gcd, UnitAction sourceAction) {
 		GcdAction gcdAction = new GcdAction(gcd, sourceAction);
 		updateQueue.add(gcdAction);
+	}
+
+	public void interruptCurrentAction() {
+		if (updateQueue.isEmpty() || !isCurrentActionInterruptible()) {
+			return;
+		}
+
+		Predicate<UnitAction> isGcd = GcdAction.class::isInstance;
+
+		updateQueue.removeIf(isGcd.negate());
+		updateQueue.removeIf(isGcd);
+	}
+
+	// possible cases: (gdc, something), (something), (gcd)
+	// (gcd) can't be interrupted
+
+	private boolean isCurrentActionInterruptible() {
+		var elements = updateQueue.getElements();
+
+		if (elements.size() != 1) {
+			return true;
+		}
+
+		UnitAction action = elements.iterator().next().get();
+
+		return !(action instanceof GcdAction);
 	}
 
 	public boolean canCast(SpellId spellId) {

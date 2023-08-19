@@ -150,7 +150,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 		action.start();
 		action.update();
 
-		assertThat(action.getStatus()).isEqualTo(ActionStatus.INTERRUPTED);
+		assertThat(action.getStatus()).isEqualTo(ActionStatus.FINISHED);
 	}
 
 	CastSpellAction getCastSpellAction(SpellId spellId) {

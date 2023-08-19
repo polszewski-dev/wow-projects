@@ -31,7 +31,7 @@ public class CastSpellAction extends UnitAction {
 
 		if (!owner.canCast(context)) {
 			getGameLog().canNotBeCasted(owner, spell, target, this);
-			interrupt();
+			finish();
 			return;
 		}
 
@@ -181,5 +181,11 @@ public class CastSpellAction extends UnitAction {
 				return critRoll ? 1 : 0;
 			}
 		};
+	}
+
+	@Override
+	public void onRemovedFromQueue() {
+		super.onRemovedFromQueue();
+		getGameLog().castInterrupted(owner, spell, target, this);
 	}
 }

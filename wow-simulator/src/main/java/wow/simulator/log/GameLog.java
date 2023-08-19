@@ -46,6 +46,11 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
+	public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
+		handlers.forEach(handler -> handler.castInterrupted(caster, spell, target, action));
+	}
+
+	@Override
 	public void spellMissed(Unit caster, Spell spell, Unit target) {
 		handlers.forEach(handler -> handler.spellMissed(caster, spell, target));
 	}
