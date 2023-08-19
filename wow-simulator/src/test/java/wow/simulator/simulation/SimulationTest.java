@@ -61,7 +61,10 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT, target),
+						.beginCast(player, SHADOW_BOLT, target)
+						.beginGcd(player),
+				at(1.5)
+						.endGcd(player),
 				at(3)
 						.endCast(player, SHADOW_BOLT, target)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
@@ -78,12 +81,18 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT, target),
+						.beginCast(player, SHADOW_BOLT, target)
+						.beginGcd(player),
+				at(1.5)
+						.endGcd(player),
 				at(3)
 						.endCast(player, SHADOW_BOLT, target)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
-						.beginCast(player, SHADOW_BOLT, target),
+						.beginCast(player, SHADOW_BOLT, target)
+						.beginGcd(player),
+				at(4.5)
+						.endGcd(player),
 				at(6)
 						.endCast(player, SHADOW_BOLT, target)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
@@ -101,7 +110,10 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT, target),
+						.beginCast(player, SHADOW_BOLT, target)
+						.beginGcd(player),
+				at(1.5)
+						.endGcd(player),
 				at(2.5)
 						.endCast(player, SHADOW_BOLT, target)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
@@ -119,7 +131,10 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT, target),
+						.beginCast(player, SHADOW_BOLT, target)
+						.beginGcd(player),
+				at(1.5)
+						.endGcd(player),
 				at(3)
 						.endCast(player, SHADOW_BOLT, target)
 						.decreasedResource(399, MANA, player, SHADOW_BOLT)
@@ -141,9 +156,9 @@ class SimulationTest extends WowSimulatorSpringTest {
 						.endCast(player, SHADOWBURN, target)
 						.decreasedResource(515, MANA, player, SHADOWBURN)
 						.decreasedResource(631, HEALTH, target, SHADOWBURN)
-						.beginGcd(player, SHADOWBURN, target),
+						.beginGcd(player),
 				at(1.5)
-						.endGcd(player, SHADOWBURN, target)
+						.endGcd(player)
 		);
 	}
 
@@ -163,9 +178,9 @@ class SimulationTest extends WowSimulatorSpringTest {
 						.endCast(player, LIFE_TAP, player)
 						.decreasedResource(582, HEALTH, player, LIFE_TAP)
 						.increasedResource(582, MANA, player, LIFE_TAP)
-						.beginGcd(player, LIFE_TAP, player),
+						.beginGcd(player),
 				at(1.5)
-						.endGcd(player, LIFE_TAP, player)
+						.endGcd(player)
 		);
 	}
 
@@ -186,9 +201,9 @@ class SimulationTest extends WowSimulatorSpringTest {
 						.endCast(player, LIFE_TAP, player)
 						.decreasedResource(698, HEALTH, player, LIFE_TAP)
 						.increasedResource(698, MANA, player, LIFE_TAP)
-						.beginGcd(player, LIFE_TAP, player),
+						.beginGcd(player),
 				at(1.5)
-						.endGcd(player, LIFE_TAP, player)
+						.endGcd(player)
 		);
 	}
 
@@ -210,9 +225,9 @@ class SimulationTest extends WowSimulatorSpringTest {
 						.endCast(player, LIFE_TAP, player)
 						.decreasedResource(794, HEALTH, player, LIFE_TAP)
 						.increasedResource(794, MANA, player, LIFE_TAP)
-						.beginGcd(player, LIFE_TAP, player),
+						.beginGcd(player),
 				at(1.5)
-						.endGcd(player, LIFE_TAP, player)
+						.endGcd(player)
 		);
 	}
 
@@ -242,9 +257,9 @@ class SimulationTest extends WowSimulatorSpringTest {
 						.endCast(player, LIFE_TAP, player)
 						.decreasedResource(863, HEALTH, player, LIFE_TAP)
 						.increasedResource(959, MANA, player, LIFE_TAP)
-						.beginGcd(player, LIFE_TAP, player),
+						.beginGcd(player),
 				at(1.5)
-						.endGcd(player, LIFE_TAP, player)
+						.endGcd(player)
 		);
 	}
 

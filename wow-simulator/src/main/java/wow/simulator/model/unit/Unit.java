@@ -10,6 +10,7 @@ import wow.commons.model.spells.SpellId;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.GcdAction;
 import wow.simulator.model.unit.action.IdleAction;
 import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.model.update.UpdateQueue;
@@ -37,7 +38,6 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
 	private final UpdateQueue<UnitAction> updateQueue = new UpdateQueue<>();
-	private UnitAction currentAction;
 
 	private Consumer<Unit> onPendingActionQueueEmpty;
 
@@ -64,31 +64,26 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	@Override
 	public void update() {
-		ensureCurrentAction();
-
+		ensureAction();
 		updateQueue.updateAllPresentActions();
 	}
 
-	private void ensureCurrentAction() {
-		if (hasCurrentAction()) {
+	private void ensureAction() {
+		if (!updateQueue.isEmpty()) {
 			return;
 		}
 
-		currentAction = null;
-
 		if (pendingActionQueue.isEmpty()) {
 			onPendingActionQueueEmpty.accept(this);
-			if (pendingActionQueue.isEmpty()) {
-				return;
-			}
 		}
 
-		currentAction = pendingActionQueue.removeEarliestAction();
-		updateQueue.add(currentAction);
-	}
+		if (pendingActionQueue.isEmpty()) {
+			throw new IllegalStateException();
+		}
 
-	private boolean hasCurrentAction() {
-		return currentAction != null && !currentAction.isTerminated();
+		UnitAction newAction = pendingActionQueue.removeEarliestAction();
+
+		updateQueue.add(newAction);
 	}
 
 	@Override
@@ -138,6 +133,11 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	public void idleFor(Duration duration) {
 		idleUntil(getClock().now().add(duration));
+	}
+
+	public void triggerGcd(Duration gcd, UnitAction sourceAction) {
+		GcdAction gcdAction = new GcdAction(gcd, sourceAction);
+		updateQueue.add(gcdAction);
 	}
 
 	public boolean canCast(SpellId spellId) {

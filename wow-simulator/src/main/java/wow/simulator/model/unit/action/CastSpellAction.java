@@ -16,7 +16,6 @@ public class CastSpellAction extends UnitAction {
 	private final Unit target;
 
 	private Duration castTime;
-	private Duration gcd;
 
 	private SpellCastContext context;
 
@@ -31,13 +30,12 @@ public class CastSpellAction extends UnitAction {
 		this.context = owner.getSpellCastContext(spell, target);
 
 		if (!owner.canCast(context)) {
-			getGameLog().canNotBeCasted(owner, spell, target, actionId);
+			getGameLog().canNotBeCasted(owner, spell, target, this);
 			interrupt();
 			return;
 		}
 
 		this.castTime = context.getCastTime();
-		this.gcd = context.getGcd();
 
 		if (spell.isChanneled()) {
 			channelSpell();
@@ -46,12 +44,15 @@ public class CastSpellAction extends UnitAction {
 		} else {
 			castSpell();
 		}
+
+		if (!spell.getSpellInfo().isIgnoresGCD()) {
+			owner.triggerGcd(context.getGcd(), this);
+		}
 	}
 
 	private void instaCastSpell() {
 		beginCast();
 		endCast();
-		triggerGcd();
 	}
 
 	private void castSpell() {
@@ -60,7 +61,6 @@ public class CastSpellAction extends UnitAction {
 		fromNowAfter(castTime, () -> {
 			this.context = owner.getSpellCastContext(spell, target);
 			endCast();
-			triggerGcd();
 		});
 	}
 
@@ -72,19 +72,16 @@ public class CastSpellAction extends UnitAction {
 
 		Time castEnd = fromNowOnEachTick(numTicks, tickInterval, tickNo -> {});
 
-		on(castEnd, () -> {
-			endChannel();
-			triggerGcd();
-		});
+		on(castEnd, this::endChannel);
 	}
 
 	private void beginCast() {
-		getGameLog().beginCast(owner, spell, target, actionId);
+		getGameLog().beginCast(owner, spell, target, this);
 		onBeginCast();
 	}
 
 	private void endCast() {
-		getGameLog().endCast(owner, spell, target, actionId);
+		getGameLog().endCast(owner, spell, target, this);
 		onEndCast();
 		paySpellCost();
 		resolveSpell();
@@ -92,29 +89,14 @@ public class CastSpellAction extends UnitAction {
 
 	private void beginChannel() {
 		paySpellCost();
-		getGameLog().beginCast(owner, spell, target, actionId);
+		getGameLog().beginCast(owner, spell, target, this);
 		resolveSpell();
 		onBeginCast();
 	}
 
 	private void endChannel() {
-		getGameLog().endCast(owner, spell, target, actionId);
+		getGameLog().endCast(owner, spell, target, this);
 		onEndCast();
-	}
-
-	private void triggerGcd() {
-		if (!triggersGcd()) {
-			return;
-		}
-
-		Duration remainingGcd = gcd.subtract(castTime);
-		getGameLog().beginGcd(owner, spell, target, actionId);
-
-		fromNowAfter(remainingGcd, () -> getGameLog().endGcd(owner, spell, target, actionId));
-	}
-
-	private boolean triggersGcd() {
-		return castTime.compareTo(gcd) < 0 && !spell.getSpellInfo().isIgnoresGCD();
 	}
 
 	private void onBeginCast() {

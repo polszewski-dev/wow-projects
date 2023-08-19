@@ -23,7 +23,6 @@ import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
-import wow.simulator.model.action.ActionId;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -84,8 +83,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		protected interface Event {}
 
-		public record BeginGcd(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
-		public record EndGcd(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record BeginGcd(Time time, Unit caster) implements Event {}
+		public record EndGcd(Time time, Unit caster) implements Event {}
 		public record BeginCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record EndCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record CanNotBeCasted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
@@ -95,27 +94,27 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
-		public void beginGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-			addEvent(new BeginGcd(now(), caster, getSpellId(spell), target));
+		public void beginGcd(Unit caster, Action action) {
+			addEvent(new BeginGcd(now(), caster));
 		}
 
 		@Override
-		public void endGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-			addEvent(new EndGcd(now(), caster, getSpellId(spell), target));
+		public void endGcd(Unit caster, Action action) {
+			addEvent(new EndGcd(now(), caster));
 		}
 
 		@Override
-		public void beginCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
+		public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
 			addEvent(new BeginCast(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
-		public void endCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
+		public void endCast(Unit caster, Spell spell, Unit target, Action action) {
 			addEvent(new EndCast(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
-		public void canNotBeCasted(Unit caster, Spell spell, Unit target, ActionId actionId) {
+		public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
 			addEvent(new CanNotBeCasted(now(), caster, getSpellId(spell), target));
 		}
 
@@ -157,12 +156,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		private final Time time;
 		private final List<Event> events = new ArrayList<>();
 
-		public EventListBuilder beginGcd(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new BeginGcd(time, caster, spellId, target));
+		public EventListBuilder beginGcd(Unit caster) {
+			return addEvent(new BeginGcd(time, caster));
 		}
 
-		public EventListBuilder endGcd(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new EndGcd(time, caster, spellId, target));
+		public EventListBuilder endGcd(Unit caster) {
+			return addEvent(new EndGcd(time, caster));
 		}
 
 		public EventListBuilder beginCast(Unit caster, SpellId spellId, Unit target) {

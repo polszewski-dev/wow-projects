@@ -17,6 +17,10 @@ public abstract class UnitAction extends Action implements SimulationContextSour
 		this.owner = owner;
 	}
 
+	public Unit getOwner() {
+		return owner;
+	}
+
 	@Override
 	public SimulationContext getSimulationContext() {
 		return owner.getSimulationContext();

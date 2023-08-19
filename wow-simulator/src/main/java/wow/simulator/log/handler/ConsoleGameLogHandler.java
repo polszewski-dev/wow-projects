@@ -4,7 +4,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
-import wow.simulator.model.action.ActionId;
+import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.TimeAware;
@@ -19,27 +19,27 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	private Clock clock;
 
 	@Override
-	public void beginGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		print("%s begin GCD %s", caster, spell);
+	public void beginGcd(Unit caster, Action action) {
+		print("%s begin GCD", caster);
 	}
 
 	@Override
-	public void endGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		print("%s end GCD %s", caster, spell);
+	public void endGcd(Unit caster, Action action) {
+		print("%s end GCD", caster);
 	}
 
 	@Override
-	public void beginCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
+	public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
 		print("%s begin cast %s", caster, spell);
 	}
 
 	@Override
-	public void endCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
+	public void endCast(Unit caster, Spell spell, Unit target, Action action) {
 		print("%s end cast %s", caster, spell);
 	}
 
 	@Override
-	public void canNotBeCasted(Unit caster, Spell spell, Unit target, ActionId actionId) {
+	public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
 		print("%s can't cast %s on %s", caster, spell, target);
 	}
 

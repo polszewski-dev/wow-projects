@@ -56,13 +56,6 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 		action.update();
 
-		assertThat(action.getStatus()).isEqualTo(ActionStatus.IN_PROGRESS);
-		assertThat(action.getNextUpdateTime()).hasValue(Time.at(11.5));
-
-		clock.advanceTo(Time.at(11.5));
-
-		action.update();
-
 		assertThat(action.getStatus()).isEqualTo(ActionStatus.FINISHED);
 	}
 
@@ -75,13 +68,6 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 		clock.advanceTo(Time.at(10));
 
 		action.start();
-
-		action.update();
-
-		assertThat(action.getStatus()).isEqualTo(ActionStatus.IN_PROGRESS);
-		assertThat(action.getNextUpdateTime()).hasValue(Time.at(11.5));
-
-		clock.advanceTo(Time.at(11.5));
 
 		action.update();
 

@@ -3,7 +3,7 @@ package wow.simulator.log;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.simulator.log.handler.GameLogHandler;
-import wow.simulator.model.action.ActionId;
+import wow.simulator.model.action.Action;
 import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
@@ -21,28 +21,28 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void beginGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		handlers.forEach(handler -> handler.beginGcd(caster, spell, target, actionId));
+	public void beginGcd(Unit caster, Action action) {
+		handlers.forEach(handler -> handler.beginGcd(caster, action));
 	}
 
 	@Override
-	public void endGcd(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		handlers.forEach(handler -> handler.endGcd(caster, spell, target, actionId));
+	public void endGcd(Unit caster, Action action) {
+		handlers.forEach(handler -> handler.endGcd(caster, action));
 	}
 
 	@Override
-	public void beginCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		handlers.forEach(handler -> handler.beginCast(caster, spell, target, actionId));
+	public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
+		handlers.forEach(handler -> handler.beginCast(caster, spell, target, action));
 	}
 
 	@Override
-	public void endCast(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		handlers.forEach(handler -> handler.endCast(caster, spell, target, actionId));
+	public void endCast(Unit caster, Spell spell, Unit target, Action action) {
+		handlers.forEach(handler -> handler.endCast(caster, spell, target, action));
 	}
 
 	@Override
-	public void canNotBeCasted(Unit caster, Spell spell, Unit target, ActionId actionId) {
-		handlers.forEach(handler -> handler.canNotBeCasted(caster, spell, target, actionId));
+	public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
+		handlers.forEach(handler -> handler.canNotBeCasted(caster, spell, target, action));
 	}
 
 	@Override
