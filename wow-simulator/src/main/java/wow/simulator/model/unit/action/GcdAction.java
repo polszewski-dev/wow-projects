@@ -21,6 +21,16 @@ public class GcdAction extends UnitAction {
 	protected void setUp() {
 		getGameLog().beginGcd(owner, sourceAction);
 
-		fromNowAfter(gcd, () -> getGameLog().endGcd(owner, sourceAction));
+		fromNowAfter(gcd, () -> {});
+	}
+
+	@Override
+	protected void onFinished() {
+		getGameLog().endGcd(owner, sourceAction);
+	}
+
+	@Override
+	protected void onInterrupted() {
+		getGameLog().endGcd(owner, sourceAction);
 	}
 }

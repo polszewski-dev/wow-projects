@@ -7,6 +7,8 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Cost;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.simulator.model.effect.Effect;
+import wow.simulator.model.effect.Effects;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.action.CastSpellAction;
@@ -20,9 +22,11 @@ import wow.simulator.simulation.SimulationContextAware;
 import wow.simulator.simulation.SimulationContextSource;
 import wow.simulator.util.IdGenerator;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -36,6 +40,7 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	protected Unit target;
 
 	protected final UnitResources resources = new UnitResources(this);
+	private final Effects effects = new Effects(this);
 
 	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
 	private final UpdateQueue<UnitAction> updateQueue = new UpdateQueue<>();
@@ -60,13 +65,16 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	@Override
 	public void setSimulationContext(SimulationContext simulationContext) {
 		this.simulationContext = simulationContext;
+		shareClock(effects);
 		shareClock(updateQueue);
 	}
 
 	@Override
 	public void update() {
 		ensureAction();
+
 		updateQueue.updateAllPresentActions();
+		effects.updateAllPresentActions();
 	}
 
 	private void ensureAction() {
@@ -89,11 +97,10 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	@Override
 	public Optional<Time> getNextUpdateTime() {
-		if (!updateQueue.isEmpty()) {
-			return updateQueue.getNextUpdateTime();
-		}
-		// force onPendingActionQueueEmpty call
-		return Optional.of(getClock().now());
+		return Stream.of(updateQueue.getNextUpdateTime(), effects.getNextUpdateTime())
+				.flatMap(Optional::stream)
+				.min(Comparator.naturalOrder())
+				.or(() -> Optional.of(getClock().now()));// force call of onPendingActionQueueEmpty
 	}
 
 	public UnitId getId() {
@@ -264,5 +271,13 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	public int decreaseMana(int amount, boolean crit, Spell spell) {
 		return resources.decreaseMana(amount, crit, spell);
+	}
+
+	public void addEffect(Effect effect) {
+		effects.addEffect(effect);
+	}
+
+	public void removeEffect(Effect effect) {
+		effects.removeEffect(effect);
 	}
 }

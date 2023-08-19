@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.effect.Effect;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.TimeAware;
@@ -61,6 +62,26 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
 		print("%s decreased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
+	}
+
+	@Override
+	public void effectApplied(Effect effect) {
+		print("Effect of %s applied", effect);
+	}
+
+	@Override
+	public void effectStacked(Effect effect) {
+		print("Effect of %s stacked", effect);
+	}
+
+	@Override
+	public void effectExpired(Effect effect) {
+		print("Effect of %s expired", effect);
+	}
+
+	@Override
+	public void effectRemoved(Effect effect) {
+		print("Effect of %s removed", effect);
 	}
 
 	@Override

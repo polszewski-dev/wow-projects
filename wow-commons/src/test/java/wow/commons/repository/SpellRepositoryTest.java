@@ -71,7 +71,6 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().requiredSpellEffect()).isNull();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().spellEffectRemovedOnHit()).isNull();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().bonusDamageIfUnderSpellEffect()).isNull();
-		assertThat(spell.getSpellInfo().getDamagingSpellInfo().dotScheme()).isEmpty();
 	}
 
 	@Nested

@@ -5,6 +5,7 @@ import lombok.Setter;
 import wow.character.model.character.Character;
 import wow.commons.model.Duration;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.TickScheme;
 
 import static wow.character.model.snapshot.SnapshotState.INITIAL;
 
@@ -59,6 +60,8 @@ public class Snapshot {
 
 	private double maxHealth;
 	private double maxMana;
+
+	private TickScheme tickScheme;
 
 	public Snapshot(Spell spell, Character character, AccumulatedSpellStats stats) {
 		this.character = character;
@@ -118,13 +121,20 @@ public class Snapshot {
 		dotDamage += spellCoeffDoT * sp * spMultiplier;
 		dotDamage *= dotDamageDoneMultiplier;
 		dotDamage *= actualHitChance;
-		dotDamage *= 1 + getDoTDamageChange();
+		dotDamage *= getDoTDamageChange();
 		return dotDamage;
 	}
 
 	private double getDoTDamageChange() {
-		double durationChange = duration - spell.getDotDuration().getSeconds();
-		double tickChange = (int)(durationChange / spell.getTickInterval().getSeconds());
-		return tickChange / spell.getNumTicks();
+		double originalWeights = spell.getTickScheme().weightSum();
+		double adjustedWeights = getTickScheme().weightSum();
+		return adjustedWeights / originalWeights;
+	}
+
+	public TickScheme getTickScheme() {
+		if (tickScheme == null) {
+			tickScheme = spell.getTickScheme().adjustBaseDuration(Duration.seconds(duration));
+		}
+		return tickScheme;
 	}
 }

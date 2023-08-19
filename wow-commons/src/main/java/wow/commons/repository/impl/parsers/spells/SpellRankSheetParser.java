@@ -26,6 +26,7 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	private final ExcelColumn colDotDmg = column("dot dmg");
 	private final ExcelColumn colNumTicks = column("num ticks");
 	private final ExcelColumn colTickInterval = column("tick interval");
+	private final ExcelColumn colTickWeights = column("tick weights");
 	private final ExcelColumn colMinDmg2 = column("min dmg2");
 	private final ExcelColumn colMaxDmg2 = column("max dmg2");
 	private final ExcelColumn colAppliedEffect = column("applied effect");
@@ -96,12 +97,27 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 
 	private DotDamageInfo getDotDamageInfo() {
 		var dotDmg = colDotDmg.getInteger(0);
-		var numTicks = colNumTicks.getInteger(0);
-		var tickInterval = colTickInterval.getDuration(null);
 		if (dotDmg == 0) {
 			return null;
 		}
-		return new DotDamageInfo(dotDmg, numTicks, tickInterval);
+		var tickScheme = getTickScheme();
+		return new DotDamageInfo(dotDmg, tickScheme);
+	}
+
+	private TickScheme getTickScheme() {
+		var numTicks = colNumTicks.getInteger();
+		var tickInterval = colTickInterval.getDuration();
+		var tickWeights = colTickWeights.getList(Integer::parseInt);
+
+		if (tickWeights.isEmpty()) {
+			return TickScheme.create(numTicks, tickInterval);
+		}
+
+		if (numTicks != tickWeights.size()) {
+			throw new IllegalArgumentException();
+		}
+
+		return TickScheme.create(tickWeights, tickInterval);
 	}
 
 	private AppliedEffect getAppliedEffect() {

@@ -3,6 +3,7 @@ package wow.simulator.log.handler;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.effect.Effect;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -27,6 +28,14 @@ public interface GameLogHandler {
 	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
 
 	void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
+
+	void effectApplied(Effect effect);
+
+	void effectStacked(Effect effect);
+
+	void effectExpired(Effect effect);
+
+	void effectRemoved(Effect effect);
 
 	void simulationEnded();
 }

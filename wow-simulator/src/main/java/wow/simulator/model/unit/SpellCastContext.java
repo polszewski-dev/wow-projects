@@ -35,4 +35,16 @@ public record SpellCastContext(
 	public SpellConversions getConversions() {
 		return new SpellConversions(this);
 	}
+
+	public void paySpellCost() {
+		caster.paySpellCost(this);
+
+		getConversions().performPaidCostConversion();
+	}
+
+	public void decreaseHealth(int amount, boolean critRoll) {
+		int actualDamage = target.decreaseHealth(amount, critRoll, spell());
+
+		getConversions().performDamageDoneConversion(actualDamage);
+	}
 }

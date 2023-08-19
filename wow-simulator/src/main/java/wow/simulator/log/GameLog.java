@@ -4,6 +4,7 @@ import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.effect.Effect;
 import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
@@ -63,6 +64,26 @@ public class GameLog implements GameLogHandler {
 	@Override
 	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
 		handlers.forEach(handler -> handler.decreasedResource(type, spell, target, amount, current, previous, crit));
+	}
+
+	@Override
+	public void effectApplied(Effect effect) {
+		handlers.forEach(handler -> handler.effectApplied(effect));
+	}
+
+	@Override
+	public void effectStacked(Effect effect) {
+		handlers.forEach(handler -> handler.effectStacked(effect));
+	}
+
+	@Override
+	public void effectExpired(Effect effect) {
+		handlers.forEach(handler -> handler.effectExpired(effect));
+	}
+
+	@Override
+	public void effectRemoved(Effect effect) {
+		handlers.forEach(handler -> handler.effectRemoved(effect));
 	}
 
 	@Override

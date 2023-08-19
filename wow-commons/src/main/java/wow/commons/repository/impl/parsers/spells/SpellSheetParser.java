@@ -32,7 +32,6 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 	private final ExcelColumn colRequiredEffect = column("required effect");
 	private final ExcelColumn colEffectRemovedOnHit = column("effect removed on hit");
 	private final ExcelColumn colBonusDamageIfUnderEffect = column("bonus dmg if under effect");
-	private final ExcelColumn colDotScheme = column("dot scheme");
 
 	public SpellSheetParser(String sheetName, Map<SpellId, List<SpellInfo>> spellInfoById) {
 		super(sheetName, spellInfoById);
@@ -76,9 +75,8 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 		var requiredEffect = colRequiredEffect.getEnum(EffectId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(EffectId::parse, null);
 		var bonusDamageIfUnderEffect = colBonusDamageIfUnderEffect.getEnum(EffectId::parse, null);
-		var dotScheme = colDotScheme.getList(Integer::parseInt);
 
-		return new DamagingSpellInfo(coeffDirect, coeffDot, bolt, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect, dotScheme);
+		return new DamagingSpellInfo(coeffDirect, coeffDot, bolt, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect);
 	}
 
 	private Conversion getConversion() {

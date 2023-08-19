@@ -23,6 +23,7 @@ import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.effect.Effect;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -92,6 +93,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record SpellMissed(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
 		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
+		public record EffectApplied(Time time, SpellId spell, Unit target) implements Event {}
+		public record EffectStacked(Time time, SpellId spell, Unit target) implements Event {}
+		public record EffectExpired(Time time, SpellId spell, Unit target) implements Event {}
+		public record EffectRemoved(Time time, SpellId spell, Unit target) implements Event {}
 		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
@@ -137,6 +142,26 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		@Override
 		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
 			addEvent(new DecreasedResource(now(), amount, type, crit, target, getSpellId(spell)));
+		}
+
+		@Override
+		public void effectApplied(Effect effect) {
+			addEvent(new EffectApplied(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		}
+
+		@Override
+		public void effectStacked(Effect effect) {
+			addEvent(new EffectStacked(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		}
+
+		@Override
+		public void effectExpired(Effect effect) {
+			addEvent(new EffectExpired(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		}
+
+		@Override
+		public void effectRemoved(Effect effect) {
+			addEvent(new EffectRemoved(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
 		}
 
 		private SpellId getSpellId(Spell spell) {
@@ -204,6 +229,22 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		public EventListBuilder decreasedResource(int amount, ResourceType type, boolean crit, Unit target, SpellId spellId) {
 			return addEvent(new DecreasedResource(time, amount, type, crit, target, spellId));
+		}
+
+		public EventListBuilder effectApplied(SpellId spellId, Unit target) {
+			return addEvent(new EffectApplied(time, spellId, target));
+		}
+
+		public EventListBuilder effectStacked(SpellId spellId, Unit target) {
+			return addEvent(new EffectStacked(time, spellId, target));
+		}
+
+		public EventListBuilder effectExpired(SpellId spellId, Unit target) {
+			return addEvent(new EffectExpired(time, spellId, target));
+		}
+
+		public EventListBuilder effectRemoved(SpellId spellId, Unit target) {
+			return addEvent(new EffectRemoved(time, spellId, target));
 		}
 
 		public EventListBuilder simulationEnded() {

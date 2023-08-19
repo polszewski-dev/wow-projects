@@ -110,15 +110,16 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 		return getDotDamageInfo().dotDmg();
 	}
 
+	default TickScheme getTickScheme() {
+		return getDotDamageInfo().tickScheme();
+	}
+
 	default int getNumTicks() {
-		return getDotDamageInfo().numTicks();
+		return getTickScheme().numTicks();
 	}
 
 	default Duration getTickInterval() {
-		if (isChanneled()) {
-			return getCastTime().divideBy(getNumTicks());
-		}
-		return getDotDamageInfo().tickInterval();
+		return getTickScheme().tickInterval();
 	}
 
 	default Duration getDotDuration() {

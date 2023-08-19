@@ -3,7 +3,9 @@ package wow.simulator.model.unit.action;
 import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.Duration;
 import wow.commons.model.spells.Spell;
-import wow.simulator.model.time.Time;
+import wow.simulator.model.effect.DoT;
+import wow.simulator.model.effect.PeriodicEffect;
+import wow.simulator.model.rng.RngStrategies;
 import wow.simulator.model.unit.SpellCastContext;
 import wow.simulator.model.unit.Unit;
 
@@ -16,6 +18,9 @@ public class CastSpellAction extends UnitAction {
 	private final Unit target;
 
 	private Duration castTime;
+	private Boolean hitRoll;
+
+	private PeriodicEffect periodicEffect;
 
 	private SpellCastContext context;
 
@@ -64,52 +69,44 @@ public class CastSpellAction extends UnitAction {
 		});
 	}
 
-	private void channelSpell() {
-		beginChannel();
-
-		int numTicks = spell.getNumTicks();
-		Duration tickInterval = castTime.divideBy(numTicks);
-
-		Time castEnd = fromNowOnEachTick(numTicks, tickInterval, tickNo -> {});
-
-		on(castEnd, this::endChannel);
-	}
-
 	private void beginCast() {
-		getGameLog().beginCast(owner, spell, target, this);
 		onBeginCast();
 	}
 
 	private void endCast() {
-		getGameLog().endCast(owner, spell, target, this);
 		onEndCast();
 		paySpellCost();
 		resolveSpell();
 	}
 
-	private void beginChannel() {
+	private void channelSpell() {
 		paySpellCost();
-		getGameLog().beginCast(owner, spell, target, this);
-		resolveSpell();
+
+		if (!hitRoll()) {
+			onBeginCast();
+			getGameLog().spellMissed(owner, spell, target);
+			onEndCast();
+			return;
+		}
+
 		onBeginCast();
-	}
+		spellAction();
 
-	private void endChannel() {
-		getGameLog().endCast(owner, spell, target, this);
-		onEndCast();
+		fromNowOnEachTick(periodicEffect.getNumTicks(), periodicEffect.getTickInterval(), tickNo -> {});
 	}
 
 	private void onBeginCast() {
-		// void atm
+		getGameLog().beginCast(owner, spell, target, this);
+		// events here
 	}
 
 	private void onEndCast() {
-		// void atm
+		getGameLog().endCast(owner, spell, target, this);
+		// events here
 	}
 
 	private void paySpellCost() {
-		owner.paySpellCost(context);
-		context.getConversions().performPaidCostConversion();
+		context.paySpellCost();
 	}
 
 	private void resolveSpell() {
@@ -142,22 +139,46 @@ public class CastSpellAction extends UnitAction {
 		}
 
 		if (spell.hasDotComponent()) {
-			// void atm
+			dotAction();
 		}
 	}
 
 	private void directDamageAction() {
 		boolean critRoll = critRoll();
-		RngStrategy rngStrategy = getRngStrategy(critRoll);
+		RngStrategy rngStrategy = RngStrategies.directDamageStrategy(critRoll);
 
 		int directDamage = (int) context.snapshot().getDirectDamage(rngStrategy, true);
-		int actualDamage = target.decreaseHealth(directDamage, critRoll, spell);
-		context.getConversions().performDamageDoneConversion(actualDamage);
+
+		context.decreaseHealth(directDamage, critRoll);
+	}
+
+	private void dotAction() {
+		periodicEffect = spell.isChanneled() ? new ChannelDoT(context) : new DoT(context);
+		target.addEffect(periodicEffect);
+	}
+
+	private class ChannelDoT extends DoT {
+		public ChannelDoT(SpellCastContext context) {
+			super(context);
+		}
+
+		@Override
+		protected void onFinished() {
+			endChannel();
+			super.onFinished();
+		}
+
+		private void endChannel() {
+			onEndCast();
+		}
 	}
 
 	private boolean hitRoll() {
-		double hitChance = context.snapshot().getHitChance();
-		return owner.getRng().hitRoll(hitChance, spell.getSpellId());
+		if (hitRoll == null) {
+			double hitChance = context.snapshot().getHitChance();
+			this.hitRoll = owner.getRng().hitRoll(hitChance, spell.getSpellId());
+		}
+		return hitRoll;
 	}
 
 	private boolean critRoll() {
@@ -169,23 +190,12 @@ public class CastSpellAction extends UnitAction {
 		// void atm
 	}
 
-	private static RngStrategy getRngStrategy(boolean critRoll) {
-		return new RngStrategy() {
-			@Override
-			public double getHitChance(double hitChance) {
-				return 1;
-			}
-
-			@Override
-			public double getCritChance(double critChance) {
-				return critRoll ? 1 : 0;
-			}
-		};
-	}
-
 	@Override
 	public void onRemovedFromQueue() {
-		super.onRemovedFromQueue();
 		getGameLog().castInterrupted(owner, spell, target, this);
+		super.onRemovedFromQueue();
+		if (spell.isChanneled()) {
+			target.removeEffect(periodicEffect);
+		}
 	}
 }
