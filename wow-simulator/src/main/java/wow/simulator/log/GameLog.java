@@ -2,6 +2,7 @@ package wow.simulator.log;
 
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.effect.Effect;
@@ -84,6 +85,16 @@ public class GameLog implements GameLogHandler {
 	@Override
 	public void effectRemoved(Effect effect) {
 		handlers.forEach(handler -> handler.effectRemoved(effect));
+	}
+
+	@Override
+	public void cooldownStarted(Unit caster, SpellId spellId) {
+		handlers.forEach(handler -> handler.cooldownStarted(caster, spellId));
+	}
+
+	@Override
+	public void cooldownExpired(Unit caster, SpellId spellId) {
+		handlers.forEach(handler -> handler.cooldownExpired(caster, spellId));
 	}
 
 	@Override

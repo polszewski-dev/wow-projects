@@ -3,7 +3,6 @@ package wow.simulator.model.effect;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.update.Handle;
 import wow.simulator.model.update.UpdateQueue;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
@@ -24,8 +23,7 @@ public class Effects implements SimulationContextSource, TimeAware {
 	}
 
 	public void addEffect(Effect effect) {
-		effect.start();
-		Handle<Effect> handle = updateQueue.add(effect);
+		var handle = updateQueue.add(effect);
 		effect.setHandle(handle);
 	}
 

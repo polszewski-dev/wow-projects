@@ -97,6 +97,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record EffectStacked(Time time, SpellId spell, Unit target) implements Event {}
 		public record EffectExpired(Time time, SpellId spell, Unit target) implements Event {}
 		public record EffectRemoved(Time time, SpellId spell, Unit target) implements Event {}
+		public record CooldownStarted(Time time, Unit caster, SpellId spell) implements Event {}
+		public record CooldownExpired(Time time, Unit caster, SpellId spell) implements Event {}
 		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
@@ -162,6 +164,16 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		@Override
 		public void effectRemoved(Effect effect) {
 			addEvent(new EffectRemoved(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		}
+
+		@Override
+		public void cooldownStarted(Unit caster, SpellId spellId) {
+			addEvent(new CooldownStarted(now(), caster, spellId));
+		}
+
+		@Override
+		public void cooldownExpired(Unit caster, SpellId spellId) {
+			addEvent(new CooldownExpired(now(), caster, spellId));
 		}
 
 		private SpellId getSpellId(Spell spell) {
@@ -245,6 +257,14 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		public EventListBuilder effectRemoved(SpellId spellId, Unit target) {
 			return addEvent(new EffectRemoved(time, spellId, target));
+		}
+
+		public EventListBuilder cooldownStarted(Unit caster, SpellId spellId) {
+			return addEvent(new CooldownStarted(time, caster, spellId));
+		}
+
+		public EventListBuilder cooldownExpired(Unit caster, SpellId spellId) {
+			return addEvent(new CooldownExpired(time, caster, spellId));
 		}
 
 		public EventListBuilder simulationEnded() {

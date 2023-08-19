@@ -39,6 +39,8 @@ public record SpellCastContext(
 	public void paySpellCost() {
 		caster.paySpellCost(this);
 
+		caster.triggerCooldown(spell(), Duration.seconds(snapshot.getCooldown()));
+
 		getConversions().performPaidCostConversion();
 	}
 

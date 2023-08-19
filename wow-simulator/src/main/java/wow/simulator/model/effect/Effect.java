@@ -38,11 +38,6 @@ public abstract class Effect implements Updateable, SimulationContextSource {
 
 	protected abstract void setUp();
 
-	public void start() {
-		effectAction.start();
-		getGameLog().effectApplied(this);
-	}
-
 	@Override
 	public void update() {
 		effectAction.update();
@@ -51,6 +46,12 @@ public abstract class Effect implements Updateable, SimulationContextSource {
 	@Override
 	public Optional<Time> getNextUpdateTime() {
 		return effectAction.getNextUpdateTime();
+	}
+
+	@Override
+	public void onAddedToQueue() {
+		effectAction.start();
+		getGameLog().effectApplied(this);
 	}
 
 	@Override
@@ -118,6 +119,8 @@ public abstract class Effect implements Updateable, SimulationContextSource {
 	}
 
 	public abstract Spell getSourceSpell();
+
+	public abstract Duration getRemainingDuration();
 
 	@Override
 	public SimulationContext getSimulationContext() {

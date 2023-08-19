@@ -156,10 +156,13 @@ class SimulationTest extends WowSimulatorSpringTest {
 						.beginCast(player, SHADOWBURN, target)
 						.endCast(player, SHADOWBURN, target)
 						.decreasedResource(515, MANA, player, SHADOWBURN)
+						.cooldownStarted(player, SHADOWBURN)
 						.decreasedResource(631, HEALTH, target, SHADOWBURN)
 						.beginGcd(player),
 				at(1.5)
-						.endGcd(player)
+						.endGcd(player),
+				at(15)
+						.cooldownExpired(player, SHADOWBURN)
 		);
 	}
 
@@ -576,10 +579,13 @@ class SimulationTest extends WowSimulatorSpringTest {
 							.beginCast(player, SHADOWBURN, target)
 							.endCast(player, SHADOWBURN, target)
 							.decreasedResource(515, MANA, player, SHADOWBURN)
+							.cooldownStarted(player, SHADOWBURN)
 							.spellMissed(player, SHADOWBURN, target)
 							.beginGcd(player),
 					at(1.5)
-							.endGcd(player)
+							.endGcd(player),
+					at(15)
+							.cooldownExpired(player, SHADOWBURN)
 			);
 		}
 
@@ -707,10 +713,13 @@ class SimulationTest extends WowSimulatorSpringTest {
 							.beginCast(player, SHADOWBURN, target)
 							.endCast(player, SHADOWBURN, target)
 							.decreasedResource(515, MANA, player, SHADOWBURN)
+							.cooldownStarted(player, SHADOWBURN)
 							.decreasedResource(631, HEALTH, target, SHADOWBURN)
 							.beginGcd(player),
 					at(1.5)
-							.endGcd(player)
+							.endGcd(player),
+					at(15)
+							.cooldownExpired(player, SHADOWBURN)
 			);
 		}
 

@@ -3,6 +3,7 @@ package wow.simulator.model.effect;
 import wow.commons.model.Duration;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.TickScheme;
+import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.SpellCastContext;
 
 /**
@@ -19,6 +20,8 @@ public abstract class PeriodicEffect extends Effect {
 	protected int numTicks;
 	protected Duration tickInterval;
 
+	private Time endTime;
+
 	protected PeriodicEffect(SpellCastContext context) {
 		super(context.caster(), context.target());
 		this.context = context;
@@ -33,7 +36,7 @@ public abstract class PeriodicEffect extends Effect {
 
 	@Override
 	protected void setUp() {
-		fromNowOnEachTick(numTicks, tickInterval, this::tick);
+		endTime = fromNowOnEachTick(numTicks, tickInterval, this::tick);
 	}
 
 	protected abstract double getTotalAmount();
@@ -67,6 +70,11 @@ public abstract class PeriodicEffect extends Effect {
 	@Override
 	public Spell getSourceSpell() {
 		return context.spell();
+	}
+
+	@Override
+	public Duration getRemainingDuration() {
+		return endTime.subtract(now()).min(Duration.ZERO);
 	}
 
 	public int getNumTicks() {

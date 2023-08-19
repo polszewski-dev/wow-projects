@@ -7,6 +7,7 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Cost;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
+import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.effect.Effects;
 import wow.simulator.model.rng.Rng;
@@ -41,6 +42,7 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	protected final UnitResources resources = new UnitResources(this);
 	private final Effects effects = new Effects(this);
+	private final Cooldowns cooldowns = new Cooldowns(this);
 
 	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
 	private final UpdateQueue<UnitAction> updateQueue = new UpdateQueue<>();
@@ -66,6 +68,7 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	public void setSimulationContext(SimulationContext simulationContext) {
 		this.simulationContext = simulationContext;
 		shareClock(effects);
+		shareClock(cooldowns);
 		shareClock(updateQueue);
 	}
 
@@ -73,6 +76,7 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	public void update() {
 		ensureAction();
 
+		cooldowns.updateAllPresentCooldowns();
 		updateQueue.updateAllPresentActions();
 		effects.updateAllPresentActions();
 	}
@@ -97,10 +101,15 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	@Override
 	public Optional<Time> getNextUpdateTime() {
-		return Stream.of(updateQueue.getNextUpdateTime(), effects.getNextUpdateTime())
+		Optional<Time> nextActionUpdateTime = updateQueue.getNextUpdateTime();
+
+		if (nextActionUpdateTime.isEmpty()) {
+			nextActionUpdateTime = Optional.of(getClock().now());
+		}
+
+		return Stream.of(nextActionUpdateTime, effects.getNextUpdateTime(), cooldowns.getNextUpdateTime())
 				.flatMap(Optional::stream)
-				.min(Comparator.naturalOrder())
-				.or(() -> Optional.of(getClock().now()));// force call of onPendingActionQueueEmpty
+				.min(Comparator.naturalOrder());
 	}
 
 	public UnitId getId() {
@@ -190,7 +199,7 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	}
 
 	public boolean canCast(SpellCastContext context) {
-		return isValidTarget(context) && canPaySpellCost(context);
+		return isValidTarget(context) && !isOnCooldown(context.spell()) && canPaySpellCost(context);
 	}
 
 	private boolean isValidTarget(SpellCastContext context) {
@@ -279,5 +288,17 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	public void removeEffect(Effect effect) {
 		effects.removeEffect(effect);
+	}
+
+	public boolean isOnCooldown(SpellId spellId) {
+		return cooldowns.isOnCooldown(spellId);
+	}
+
+	public boolean isOnCooldown(Spell spell) {
+		return isOnCooldown(spell.getSpellId());
+	}
+
+	public void triggerCooldown(Spell spell, Duration actualDuration) {
+		cooldowns.triggerCooldown(spell, actualDuration);
 	}
 }

@@ -2,6 +2,7 @@ package wow.simulator.log.handler;
 
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.unit.Unit;
@@ -36,6 +37,10 @@ public interface GameLogHandler {
 	void effectExpired(Effect effect);
 
 	void effectRemoved(Effect effect);
+
+	void cooldownStarted(Unit caster, SpellId spellId);
+
+	void cooldownExpired(Unit caster, SpellId spellId);
 
 	void simulationEnded();
 }

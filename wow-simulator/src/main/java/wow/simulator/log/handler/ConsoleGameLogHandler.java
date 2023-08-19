@@ -4,6 +4,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.time.Clock;
@@ -82,6 +83,16 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void effectRemoved(Effect effect) {
 		print("Effect of %s removed", effect);
+	}
+
+	@Override
+	public void cooldownStarted(Unit caster, SpellId spellId) {
+		print("%s's %s cooldown started", caster, spellId);
+	}
+
+	@Override
+	public void cooldownExpired(Unit caster, SpellId spellId) {
+		print("%s's %s cooldown expired", caster, spellId);
 	}
 
 	@Override
