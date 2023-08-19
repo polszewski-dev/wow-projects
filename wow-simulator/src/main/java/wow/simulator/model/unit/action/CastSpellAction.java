@@ -133,7 +133,7 @@ public class CastSpellAction extends UnitAction {
 	private void resolveSpell() {
 		Duration delay = getDelay();
 
-		target.delayedAction(delay, this::spellAction);
+		getSimulation().delayedAction(delay, this::spellAction);
 	}
 
 	private Duration getDelay() {

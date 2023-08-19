@@ -432,7 +432,7 @@ class ActionTest extends WowSimulatorSpringTest {
 
 		assertThat(action.getStatus()).isEqualTo(IN_PROGRESS);
 
-		action.finish();
+		action.update();
 
 		assertThat(action.getStatus()).isEqualTo(FINISHED);
 	}

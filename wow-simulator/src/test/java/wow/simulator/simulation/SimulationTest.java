@@ -2,10 +2,14 @@ package wow.simulator.simulation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import wow.commons.model.Duration;
 import wow.commons.model.buffs.BuffId;
 import wow.commons.model.talents.TalentId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.time.Time;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spells.ResourceType.HEALTH;
@@ -32,6 +36,21 @@ class SimulationTest extends WowSimulatorSpringTest {
 		simulation.updateUntil(Time.at(30));
 
 		assertEvents();
+	}
+
+	@Test
+	void delayedAction() {
+		List<String> result = new ArrayList<>();
+
+		simulation.delayedAction(Duration.seconds(5), () -> result.add(getClock().now() + ""));
+
+		simulation.updateUntil(Time.at(4));
+
+		assertThat(result).isEmpty();
+
+		simulation.updateUntil(Time.at(5));
+
+		assertThat(result).isEqualTo(List.of("5.000"));
 	}
 
 	@Test
@@ -229,12 +248,9 @@ class SimulationTest extends WowSimulatorSpringTest {
 		);
 	}
 
-	Simulation simulation;
-
 	@BeforeEach
 	void setUp() {
 		setupTestObjects();
-		simulation = new Simulation(simulationContext);
 
 		handler = new EventCollectingHandler();
 

@@ -30,6 +30,7 @@ import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Target;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.TimeAware;
 
@@ -270,6 +271,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected SimulationContext simulationContext;
 	protected Clock clock;
+	protected Simulation simulation;
 	protected Player player;
 	protected Target target;
 	protected EventCollectingHandler handler;
@@ -294,6 +296,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected void setupTestObjects() {
 		simulationContext = getSimulationContext();
 		clock = simulationContext.getClock();
+
+		simulation = new Simulation(simulationContext);
 
 		player = new Player("Player", getNakedCharacter());
 		target = new Target("Target", player.getCharacter().getTargetEnemy());

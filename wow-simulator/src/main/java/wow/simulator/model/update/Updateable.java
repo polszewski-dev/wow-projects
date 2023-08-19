@@ -12,4 +12,8 @@ public interface Updateable {
 	void update();
 
 	Optional<Time> getNextUpdateTime();
+
+	default void onAddedToQueue() {}
+
+	default void onRemovedFromQueue() {}
 }

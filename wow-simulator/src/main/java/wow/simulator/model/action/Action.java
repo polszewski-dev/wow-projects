@@ -38,7 +38,7 @@ public abstract class Action implements Updateable {
 	protected final Clock clock;
 
 	@Override
-	public void update() {
+	public final void update() {
 		assertStatus(IN_PROGRESS);
 
 		for (Step step; (step = steps.peek()) != null && clock.timeInThePresent(step.time()); ) {
@@ -55,7 +55,7 @@ public abstract class Action implements Updateable {
 	}
 
 	@Override
-	public Optional<Time> getNextUpdateTime() {
+	public final Optional<Time> getNextUpdateTime() {
 		if (status.isTerminal()) {
 			return Optional.empty();
 		}
@@ -65,16 +65,42 @@ public abstract class Action implements Updateable {
 		return Optional.empty();
 	}
 
-	public void start() {
+	@Override
+	public void onAddedToQueue() {
+		if (status != CREATED) {
+			throw new IllegalStateException("Only CREATED actions can be added to queue");
+		}
+		start();
+	}
+
+	@Override
+	public void onRemovedFromQueue() {
+		interrupt();
+	}
+
+	public final void start() {
 		setStatus(IN_PROGRESS);
 	}
 
-	public void finish() {
+	protected final void finish() {
 		setStatus(FINISHED);
+		onFinished();
 	}
 
-	public void interrupt() {
+	public final void interrupt() {
+		if (isTerminated()) {
+			return;
+		}
 		setStatus(INTERRUPTED);
+		onInterrupted();
+	}
+
+	protected void onFinished() {
+		// void
+	}
+
+	protected void onInterrupted() {
+		// void
 	}
 
 	protected abstract void setUp();
@@ -139,6 +165,6 @@ public abstract class Action implements Updateable {
 
 	@Override
 	public String toString() {
-		return "actionId=" + actionId + ", status=" + status;
+		return "(actionId=%s, status=%s)".formatted(actionId, status);
 	}
 }

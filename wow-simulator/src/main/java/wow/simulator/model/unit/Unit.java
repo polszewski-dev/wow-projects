@@ -7,11 +7,11 @@ import wow.commons.model.attributes.Attributes;
 import wow.commons.model.spells.Cost;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
-import wow.simulator.model.action.Action;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.IdleAction;
+import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.model.update.UpdateQueue;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.simulation.SimulationContext;
@@ -35,9 +35,9 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	protected final UnitResources resources = new UnitResources(this);
 
-	private final PendingActionQueue pendingActionQueue = new PendingActionQueue();
-	private final UpdateQueue updateQueue = new UpdateQueue();
-	private Action currentAction;
+	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
+	private final UpdateQueue<UnitAction> updateQueue = new UpdateQueue<>();
+	private UnitAction currentAction;
 
 	private Consumer<Unit> onPendingActionQueueEmpty;
 
@@ -84,7 +84,6 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 		}
 
 		currentAction = pendingActionQueue.removeEarliestAction();
-		currentAction.start();
 		updateQueue.add(currentAction);
 	}
 
@@ -195,21 +194,6 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 	}
 
 	public abstract Optional<Spell> getSpell(SpellId spellId);
-
-	public void delayedAction(Duration delay, Runnable handler) {
-		if (delay.isZero()) {
-			handler.run();
-			return;
-		}
-		Action action = new Action(getClock()) {
-			@Override
-			protected void setUp() {
-				fromNowAfter(delay, handler);
-			}
-		};
-		action.start();
-		updateQueue.add(action);
-	}
 
 	public SpellCastContext getSpellCastContext(Spell spell, Unit target) {
 		Snapshot snapshot = getSnapshot(spell);

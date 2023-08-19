@@ -29,6 +29,8 @@ public interface SimulationContextSource extends TimeSource {
 		return getSimulationContext().getRngFactory();
 	}
 
+	default Simulation getSimulation() { return getSimulationContext().getSimulation(); }
+
 	default void shareSimulationContext(SimulationContextAware simulationContextAware) {
 		simulationContextAware.setSimulationContext(getSimulationContext());
 	}

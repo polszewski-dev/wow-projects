@@ -1,7 +1,9 @@
 package wow.simulator.simulation;
 
 import lombok.Getter;
+import wow.commons.model.Duration;
 import wow.simulator.log.handler.GameLogHandler;
+import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.update.UpdateQueue;
 import wow.simulator.model.update.Updateable;
@@ -12,11 +14,12 @@ import wow.simulator.model.update.Updateable;
  */
 @Getter
 public class Simulation implements SimulationContextSource {
-	private final UpdateQueue updateQueue = new UpdateQueue();
+	private final UpdateQueue<Updateable> updateQueue = new UpdateQueue<>();
 	private final SimulationContext simulationContext;
 
 	public Simulation(SimulationContext simulationContext) {
 		this.simulationContext = simulationContext;
+		simulationContext.setSimulation(this);
 		shareClock(updateQueue);
 	}
 
@@ -44,5 +47,19 @@ public class Simulation implements SimulationContextSource {
 	public void addHandler(GameLogHandler handler) {
 		shareClock(handler);
 		getGameLog().addHandler(handler);
+	}
+
+	public void delayedAction(Duration delay, Runnable handler) {
+		if (delay.isZero()) {
+			handler.run();
+			return;
+		}
+		Action action = new Action(getClock()) {
+			@Override
+			protected void setUp() {
+				fromNowAfter(delay, handler);
+			}
+		};
+		updateQueue.add(action);
 	}
 }

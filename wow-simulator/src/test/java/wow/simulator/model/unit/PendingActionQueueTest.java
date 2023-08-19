@@ -52,7 +52,7 @@ class PendingActionQueueTest extends WowSimulatorSpringTest {
 
 		assertThatThrownBy(() -> queue.add(action)).isInstanceOf(IllegalStateException.class);
 
-		action.finish();
+		action.update();
 
 		assertThatThrownBy(() -> queue.add(action)).isInstanceOf(IllegalStateException.class);
 	}
@@ -61,11 +61,11 @@ class PendingActionQueueTest extends WowSimulatorSpringTest {
 		return newAction(0, () -> {});
 	}
 
-	PendingActionQueue queue;
+	PendingActionQueue<Action> queue;
 
 	@BeforeEach
 	void setup() {
 		setupTestObjects();
-		queue = new PendingActionQueue();
+		queue = new PendingActionQueue<>();
 	}
 }

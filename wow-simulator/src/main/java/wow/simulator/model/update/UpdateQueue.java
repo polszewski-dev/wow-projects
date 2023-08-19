@@ -12,43 +12,36 @@ import java.util.PriorityQueue;
  * User: POlszewski
  * Date: 2023-08-11
  */
-public class UpdateQueue implements TimeAware {
-	private record QueueElement(
-			Updateable updateable,
-			int order
-	) {
-		Time getNextUpdateTime() {
-			return updateable.getNextUpdateTime().orElseThrow();
-		}
-	}
-
-	private static final Comparator<QueueElement> QUEUE_ELEMENT_COMPARATOR = Comparator
-			.comparing(QueueElement::getNextUpdateTime)
-			.thenComparingInt(QueueElement::order);
-
-	private final PriorityQueue<QueueElement> queue = new PriorityQueue<>(QUEUE_ELEMENT_COMPARATOR);
-	private int orderGenerator;
+public class UpdateQueue<T extends Updateable> implements TimeAware {
+	private final PriorityQueue<Handle<T>> queue = new PriorityQueue<>(Comparator
+			.comparing(Handle<T>::getNextUpdateTime)
+			.thenComparingLong(Handle::getOrder)
+	);
+	private long orderGenerator;
 	private Clock clock;
 
-	public void add(Updateable updateable) {
+	public Handle<T> add(T updateable) {
+		updateable.onAddedToQueue();
 		if (updateable.getNextUpdateTime().isEmpty()) {
 			throw new IllegalArgumentException();
 		}
-		var element = new QueueElement(updateable, orderGenerator++);
-		queue.add(element);
+		var handle = new Handle<>(updateable, newOrder());
+		queue.add(handle);
+		return handle;
 	}
 
 	public void updateAllPresentActions() {
-		for (QueueElement queueElement; (queueElement = queue.peek()) != null && queueElement.getNextUpdateTime().equals(clock.now()); ) {
+		for (Handle<T> handle; (handle = queue.peek()) != null && handle.getNextUpdateTime().equals(clock.now()); ) {
 			queue.poll();
 
-			Updateable updateable = queueElement.updateable();
+			T updateable = handle.get();
 
 			updateable.update();
 
 			if (updateable.getNextUpdateTime().isPresent()) {
 				// placing after earlier actions with the same nextUpdateTime
-				add(updateable);
+				handle.refreshOrder(newOrder());
+				queue.add(handle);
 			}
 		}
 	}
@@ -60,6 +53,16 @@ public class UpdateQueue implements TimeAware {
 		return Optional.of(queue.peek().getNextUpdateTime());
 	}
 
+	public void remove(Handle<T> handle) {
+		boolean removed = queue.remove(handle);
+
+		if (!removed) {
+			throw new IllegalArgumentException("Remove failed");
+		}
+
+		handle.get().onRemovedFromQueue();
+	}
+
 	public boolean isEmpty() {
 		return queue.isEmpty();
 	}
@@ -67,5 +70,9 @@ public class UpdateQueue implements TimeAware {
 	@Override
 	public void setClock(Clock clock) {
 		this.clock = clock;
+	}
+
+	private long newOrder() {
+		return orderGenerator++;
 	}
 }

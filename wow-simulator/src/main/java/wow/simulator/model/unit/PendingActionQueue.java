@@ -13,21 +13,21 @@ import static wow.simulator.model.action.ActionStatus.CREATED;
  * Date: 2023-08-07
  */
 @AllArgsConstructor
-public class PendingActionQueue {
-	private final List<Action> pendingActions = new ArrayList<>();
+public class PendingActionQueue<T extends Action> {
+	private final List<T> pendingActions = new ArrayList<>();
 
 	public boolean isEmpty() {
 		return pendingActions.isEmpty();
 	}
 
-	public void add(Action action) {
+	public void add(T action) {
 		if (action.getStatus() != CREATED) {
 			throw new IllegalStateException();
 		}
 		pendingActions.add(action);
 	}
 
-	public Action removeEarliestAction() {
+	public T removeEarliestAction() {
 		return pendingActions.remove(0);
 	}
 }
