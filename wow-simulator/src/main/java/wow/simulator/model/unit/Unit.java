@@ -245,6 +245,11 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 		return new SpellCastContext(this, target, snapshot, cost, costUnreduced);
 	}
 
+	public Snapshot getSnapshot(SpellId spellId) {
+		Spell spell = getSpell(spellId).orElseThrow();
+		return getSnapshot(spell);
+	}
+
 	public Snapshot getSnapshot(Spell spell) {
 		Snapshot snapshot = getCharacterCalculationService().createSnapshot(((Player) this).getCharacter(), spell, this.getStats());
 		getCharacterCalculationService().advanceSnapshot(snapshot, SnapshotState.COMPLETE);
@@ -288,6 +293,14 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 
 	public void removeEffect(Effect effect) {
 		effects.removeEffect(effect);
+	}
+
+	public boolean isUnderEffect(SpellId spellId, Unit owner) {
+		return effects.isUnderEffect(spellId, owner);
+	}
+
+	public Optional<Effect> getEffect(SpellId spellId, Unit owner) {
+		return effects.getEffect(spellId, owner);
 	}
 
 	public boolean isOnCooldown(SpellId spellId) {

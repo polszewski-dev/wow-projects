@@ -2,6 +2,7 @@ package wow.simulator.model.effect;
 
 import wow.commons.model.Duration;
 import wow.commons.model.spells.Spell;
+import wow.commons.model.spells.SpellId;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -75,6 +76,10 @@ public abstract class Effect implements Updateable, SimulationContextSource {
 		return effectAction.fromNowOnEachTick(numTicks, tickInterval, action);
 	}
 
+	public boolean matches(SpellId spellId, Unit owner) {
+		return getSourceSpell().getSpellId() == spellId && this.owner == owner;
+	}
+
 	private class EffectAction extends Action {
 		public EffectAction(Clock clock) {
 			super(clock);
@@ -133,5 +138,10 @@ public abstract class Effect implements Updateable, SimulationContextSource {
 
 	void setHandle(Handle<Effect> handle) {
 		this.handle = handle;
+	}
+
+	@Override
+	public String toString() {
+		return getSourceSpell().toString();
 	}
 }

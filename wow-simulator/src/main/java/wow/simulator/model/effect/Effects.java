@@ -1,8 +1,10 @@
 package wow.simulator.model.effect;
 
+import wow.commons.model.spells.SpellId;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.update.Handle;
 import wow.simulator.model.update.UpdateQueue;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
@@ -37,6 +39,19 @@ public class Effects implements SimulationContextSource, TimeAware {
 
 	public Optional<Time> getNextUpdateTime() {
 		return updateQueue.getNextUpdateTime();
+	}
+
+	public boolean isUnderEffect(SpellId spellId, Unit owner) {
+		return updateQueue.getElements().stream()
+				.map(Handle::get)
+				.anyMatch(x -> x.matches(spellId, owner));
+	}
+
+	public Optional<Effect> getEffect(SpellId spellId, Unit owner) {
+		return updateQueue.getElements().stream()
+				.map(Handle::get)
+				.filter(x -> x.matches(spellId, owner))
+				.findAny();
 	}
 
 	@Override

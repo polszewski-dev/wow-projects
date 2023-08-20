@@ -20,7 +20,8 @@ import wow.simulator.scripts.ConditionalSpellCast;
 import java.util.stream.Stream;
 
 import static wow.commons.model.spells.SpellId.LIFE_TAP;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.simulator.scripts.warlock.WarlockActionConditions.CURSE_OF_DOOM_COND;
+import static wow.simulator.scripts.warlock.WarlockActionConditions.SHADOW_BOLT_COND;
 
 /**
  * User: POlszewski
@@ -51,51 +52,77 @@ public class WarlockPriorityScript implements AIScript, SimulatorContextSource {
 	}
 
 	private SpellId getSpellToCast(Player player) {
-		for (var conditionalSpellCast : getPriorityList()) {
-			if (conditionalSpellCast.check(player)) {
-				return conditionalSpellCast.spellToCast();
-			}
-		}
-
-		return SHADOW_BOLT;
+		return getPriorityList()
+				.filter(x -> x.check(player))
+				.map(ConditionalSpellCast::spellId)
+				.findFirst()
+				.orElseThrow();
 	}
 
-	private ConditionalSpellCast[] getPriorityList() {
-		return new ConditionalSpellCast[] {
-				// no spells atm
-		};
+	private Stream<ConditionalSpellCast> getPriorityList() {
+		return Stream.of(
+				CURSE_OF_DOOM_COND,
+				SHADOW_BOLT_COND
+		);
 	}
 
 	private void equipSampleItems(Player player) {
-		// no items atm
+		Gem meta = getGem(player, "Chaotic Skyfire Diamond");
+		Gem red = getGem(player, 32196);// "Runed Crimson Spinel" - there are 2 with the same name
+		Gem orange = getGem(player, "Reckless Pyrestone");
+		Gem purple = getGem(player, "Glowing Shadowsong Amethyst");
+
+		equip(player, "Dark Conjuror's Collar", "Glyph of Power").gem(meta, purple);
+		equip(player, "Amulet of Unfettered Magics", null);
+		equip(player, "Mantle of the Malefic", "Greater Inscription of the Orb").gem(purple, orange);
+		equip(player, "Tattered Cape of Antonidas", "Enchant Cloak - Subtlety").gem(red);
+		equip(player, "Sunfire Robe", "Enchant Chest - Exceptional Stats").gem(red, red, red);
+		equip(player, "Bracers of the Malefic", "Enchant Bracer - Spellpower").gem(orange);
+		equip(player, "Handguards of Defiled Worlds", "Enchant Gloves - Major Spellpower").gem(orange, red);
+		equip(player, "Belt of the Malefic", null).gem(orange);
+		equip(player, "Leggings of Calamity", "Runic Spellthread").gem(red, red, orange);
+		equip(player, "Boots of the Malefic", "Enchant Boots - Boar's Speed").gem(orange);
+		equip(player, ItemSlot.FINGER_1, "Ring of Omnipotence", "Enchant Ring - Spellpower");
+		equip(player, ItemSlot.FINGER_2, "Loop of Forged Power", "Enchant Ring - Spellpower");
+		equip(player, ItemSlot.TRINKET_1, "The Skull of Gul'dan", null);
+		equip(player, ItemSlot.TRINKET_2, "Shifting Naaru Sliver", null);
+		equip(player, "Sunflare", "Enchant Weapon - Soulfrost");
+		equip(player, "Heart of the Pit", null);
+		equip(player, "Wand of the Demonsoul", null).gem(orange);
 	}
 
-	private void equip(Player player, String itemName, String enchantName, String... gemNames) {
-		EquippableItem item = getItem(player, itemName, enchantName, gemNames);
-
-		player.equip(item);
+	private EquippableItem equip(Player player, String itemName, String enchantName) {
+		EquippableItem equippableItem = getEquippableItem(player, itemName, enchantName);
+		player.equip(equippableItem);
+		return equippableItem;
 	}
 
-	private void equip(Player player, ItemSlot slot, String itemName, String enchantName, String... gemNames) {
-		EquippableItem item = getItem(player, itemName, enchantName, gemNames);
-
-		player.equip(item, slot);
+	private EquippableItem equip(Player player, ItemSlot slot, String itemName, String enchantName) {
+		EquippableItem equippableItem = getEquippableItem(player, itemName, enchantName);
+		player.equip(equippableItem, slot);
+		return equippableItem;
 	}
 
-	private EquippableItem getItem(Player player, String itemName, String enchantName, String[] gemNames) {
+	private EquippableItem getEquippableItem(Player player, String itemName, String enchantName) {
 		PhaseId phaseId = player.getCharacter().getPhaseId();
-		return getItem(phaseId, itemName, enchantName, gemNames);
+		Item item = getItemRepository().getItem(itemName, phaseId).orElseThrow();
+
+		EquippableItem equippableItem = new EquippableItem(item);
+
+		if (enchantName != null) {
+			Enchant enchant = getItemRepository().getEnchant(enchantName, phaseId).orElseThrow();
+			equippableItem.enchant(enchant);
+		}
+		return equippableItem;
 	}
 
-	private EquippableItem getItem(PhaseId phaseId, String itemName, String enchantName, String... gemNames) {
-		Item item = getItemRepository().getItem(itemName, phaseId).orElseThrow();
-		Enchant enchant = null;
-		if (enchantName != null) {
-			enchant = getItemRepository().getEnchant(enchantName, phaseId).orElseThrow();
-		}
-		var gems = Stream.of(gemNames)
-				.map(x -> getItemRepository().getGem(x, phaseId).orElseThrow())
-				.toArray(Gem[]::new);
-		return new EquippableItem(item).enchant(enchant).gem(gems);
+	private Gem getGem(Player player, String name) {
+		PhaseId phaseId = player.getCharacter().getPhaseId();
+		return getItemRepository().getGem(name, phaseId).orElseThrow();
+	}
+
+	private Gem getGem(Player player, int gemId) {
+		PhaseId phaseId = player.getCharacter().getPhaseId();
+		return getItemRepository().getGem(gemId, phaseId).orElseThrow();
 	}
 }

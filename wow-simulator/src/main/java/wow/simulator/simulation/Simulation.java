@@ -16,6 +16,7 @@ import wow.simulator.model.update.Updateable;
 public class Simulation implements SimulationContextSource {
 	private final UpdateQueue<Updateable> updateQueue = new UpdateQueue<>();
 	private final SimulationContext simulationContext;
+	private Time timeUntilSimulationEnd;
 
 	public Simulation(SimulationContext simulationContext) {
 		this.simulationContext = simulationContext;
@@ -29,6 +30,8 @@ public class Simulation implements SimulationContextSource {
 	}
 
 	public void updateUntil(Time timeUntil) {
+		this.timeUntilSimulationEnd = timeUntil;
+
 		while (!updateQueue.isEmpty()) {
 			Time nextUpdateTime = updateQueue.getNextUpdateTime().orElseThrow();
 
@@ -61,5 +64,9 @@ public class Simulation implements SimulationContextSource {
 			}
 		};
 		updateQueue.add(action);
+	}
+
+	public Duration getRemainingTime() {
+		return timeUntilSimulationEnd.subtract(now());
 	}
 }

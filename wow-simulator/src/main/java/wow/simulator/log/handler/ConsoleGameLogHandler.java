@@ -22,12 +22,12 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void beginGcd(Unit caster, Action action) {
-		print("%s begin GCD", caster);
+		// ignored
 	}
 
 	@Override
 	public void endGcd(Unit caster, Action action) {
-		print("%s end GCD", caster);
+		// ignored
 	}
 
 	@Override
