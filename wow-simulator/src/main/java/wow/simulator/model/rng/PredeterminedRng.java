@@ -10,19 +10,21 @@ import java.util.Map;
  * Date: 2023-08-16
  */
 public class PredeterminedRng implements Rng {
-	private final Map<Object, Double> luck = new LinkedHashMap<>();
+	private final Map<Object, Double> hitLuck = new LinkedHashMap<>();
+	private final Map<Object, Double> critLuck = new LinkedHashMap<>();
 
 	@Override
 	public boolean hitRoll(double chance, SpellId spellId) {
-		return true;
+		double initialLuck = 0.2 + Math.abs(spellId.toString().hashCode() % 20) / 100.0;
+		return roll(chance, initialLuck, spellId, hitLuck);
 	}
 
 	@Override
 	public boolean critRoll(double chance, SpellId spellId) {
-		return roll(chance, 0, spellId);
+		return roll(chance, 0, spellId, critLuck);
 	}
 
-	private boolean roll(double chance, double initialLuck, Object id) {
+	private boolean roll(double chance, double initialLuck, Object id, Map<Object, Double> luck) {
 		assertChanceInRange(chance);
 
 		double currentLuck = luck.getOrDefault(id, initialLuck);

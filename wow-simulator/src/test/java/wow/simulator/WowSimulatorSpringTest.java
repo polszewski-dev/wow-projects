@@ -23,6 +23,7 @@ import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Clock;
@@ -102,12 +103,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
-		public void beginGcd(Unit caster, Action action) {
+		public void beginGcd(Unit caster, Action sourceAction) {
 			addEvent(new BeginGcd(now(), caster));
 		}
 
 		@Override
-		public void endGcd(Unit caster, Action action) {
+		public void endGcd(Unit caster, Action sourceAction) {
 			addEvent(new EndGcd(now(), caster));
 		}
 
@@ -132,7 +133,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		@Override
-		public void spellMissed(Unit caster, Spell spell, Unit target) {
+		public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
 			addEvent(new SpellMissed(now(), caster, getSpellId(spell), target));
 		}
 
@@ -167,22 +168,27 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		@Override
-		public void cooldownStarted(Unit caster, SpellId spellId) {
-			addEvent(new CooldownStarted(now(), caster, spellId));
+		public void cooldownStarted(Cooldown cooldown) {
+			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getSpellId()));
 		}
 
 		@Override
-		public void cooldownExpired(Unit caster, SpellId spellId) {
-			addEvent(new CooldownExpired(now(), caster, spellId));
+		public void cooldownExpired(Cooldown cooldown) {
+			addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getSpellId()));
 		}
 
-		private SpellId getSpellId(Spell spell) {
-			return spell != null ? spell.getSpellId() : null;
+		@Override
+		public void simulationStarted() {
+			// ignored
 		}
 
 		@Override
 		public void simulationEnded() {
 			// ignored
+		}
+
+		private SpellId getSpellId(Spell spell) {
+			return spell != null ? spell.getSpellId() : null;
 		}
 
 		private void addEvent(Event event) {

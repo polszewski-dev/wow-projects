@@ -256,6 +256,12 @@ public abstract class Unit implements Updateable, SimulationContextSource, Simul
 		return snapshot;
 	}
 
+	public Snapshot getSnapshot() {
+		Snapshot snapshot = getCharacterCalculationService().createSnapshot(((Player) this).getCharacter(), null, this.getStats());
+		getCharacterCalculationService().advanceSnapshot(snapshot, SnapshotState.SECONDARY_STATS);
+		return snapshot;
+	}
+
 	public Rng getRng() {
 		if (rng == null) {
 			rng = getRngFactory().newRng();

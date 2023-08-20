@@ -163,6 +163,10 @@ public abstract class Action implements Updateable {
 		}
 	}
 
+	public ActionId getActionId() {
+		return actionId;
+	}
+
 	@Override
 	public String toString() {
 		return "(actionId=%s, status=%s)".formatted(actionId, status);

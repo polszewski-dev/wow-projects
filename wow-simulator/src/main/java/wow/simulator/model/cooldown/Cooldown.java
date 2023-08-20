@@ -9,6 +9,7 @@ import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
+import wow.simulator.util.IdGenerator;
 
 import java.util.Optional;
 
@@ -17,6 +18,10 @@ import java.util.Optional;
  * Date: 2023-08-19
  */
 public class Cooldown implements Updateable, SimulationContextSource {
+	private static final IdGenerator<CooldownId> ID_GENERATOR = new IdGenerator<>(CooldownId::new);
+
+	protected final CooldownId cooldownId = ID_GENERATOR.newId();
+
 	private final Unit owner;
 	private final SpellId spellId;
 	private final Time endTime;
@@ -42,7 +47,7 @@ public class Cooldown implements Updateable, SimulationContextSource {
 	@Override
 	public void onAddedToQueue() {
 		cooldownAction.start();
-		getGameLog().cooldownStarted(owner, spellId);
+		getGameLog().cooldownStarted(this);
 	}
 
 	@Override
@@ -70,18 +75,26 @@ public class Cooldown implements Updateable, SimulationContextSource {
 
 		@Override
 		protected void onFinished() {
-			getGameLog().cooldownExpired(owner, spellId);
+			getGameLog().cooldownExpired(Cooldown.this);
 		}
 
 		@Override
 		protected void onInterrupted() {
-			getGameLog().cooldownExpired(owner, spellId);
+			getGameLog().cooldownExpired(Cooldown.this);
 		}
 	}
 
 	@Override
 	public SimulationContext getSimulationContext() {
 		return owner.getSimulationContext();
+	}
+
+	public CooldownId getCooldownId() {
+		return cooldownId;
+	}
+
+	public Unit getOwner() {
+		return owner;
 	}
 
 	public SpellId getSpellId() {

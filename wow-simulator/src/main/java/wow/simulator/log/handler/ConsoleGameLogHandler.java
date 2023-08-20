@@ -4,8 +4,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
@@ -21,12 +21,12 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	private Clock clock;
 
 	@Override
-	public void beginGcd(Unit caster, Action action) {
+	public void beginGcd(Unit caster, Action sourceAction) {
 		// ignored
 	}
 
 	@Override
-	public void endGcd(Unit caster, Action action) {
+	public void endGcd(Unit caster, Action sourceAction) {
 		// ignored
 	}
 
@@ -51,7 +51,7 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void spellMissed(Unit caster, Spell spell, Unit target) {
+	public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
 		print("%s's %s missed %s", caster, spell, target);
 	}
 
@@ -86,13 +86,18 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void cooldownStarted(Unit caster, SpellId spellId) {
-		print("%s's %s cooldown started", caster, spellId);
+	public void cooldownStarted(Cooldown cooldown) {
+		print("%s's %s cooldown started", cooldown.getOwner(), cooldown.getSpellId());
 	}
 
 	@Override
-	public void cooldownExpired(Unit caster, SpellId spellId) {
-		print("%s's %s cooldown expired", caster, spellId);
+	public void cooldownExpired(Cooldown cooldown) {
+		print("%s's %s cooldown expired", cooldown.getOwner(), cooldown.getSpellId());
+	}
+
+	@Override
+	public void simulationStarted() {
+		print("Simulation started");
 	}
 
 	@Override

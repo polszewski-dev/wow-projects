@@ -8,6 +8,6 @@ import wow.simulator.util.SimpleId;
  */
 public class EffectId extends SimpleId {
 	public EffectId(long value) {
-		super("E", value);
+		super(value);
 	}
 }

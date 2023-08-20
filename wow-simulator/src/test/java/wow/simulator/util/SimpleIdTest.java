@@ -37,12 +37,12 @@ class SimpleIdTest {
 	void testToString() {
 		TestId id = new TestId(1);
 
-		assertThat(id).hasToString("T0001");
+		assertThat(id).hasToString("1");
 	}
 
 	static class TestId extends SimpleId {
 		TestId(long value) {
-			super("T", value);
+			super(value);
 		}
 	}
 }

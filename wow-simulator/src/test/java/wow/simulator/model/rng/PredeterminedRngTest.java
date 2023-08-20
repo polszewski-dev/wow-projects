@@ -14,12 +14,12 @@ class PredeterminedRngTest {
 	void hitRoll() {
 		PredeterminedRng rng = new PredeterminedRng();
 
-		assertThat(rng.hitRoll(0.4, SHADOW_BOLT)).isTrue();
-		assertThat(rng.hitRoll(0.4, SHADOW_BOLT)).isTrue();
-		assertThat(rng.hitRoll(0.4, SHADOW_BOLT)).isTrue();
-		assertThat(rng.hitRoll(0.4, SHADOW_BOLT)).isTrue();
-		assertThat(rng.hitRoll(0.4, SHADOW_BOLT)).isTrue();
-		assertThat(rng.hitRoll(0.4, SHADOW_BOLT)).isTrue();
+		assertThat(rng.hitRoll(0.8, SHADOW_BOLT)).isTrue();
+		assertThat(rng.hitRoll(0.8, SHADOW_BOLT)).isFalse();
+		assertThat(rng.hitRoll(0.8, SHADOW_BOLT)).isTrue();
+		assertThat(rng.hitRoll(0.8, SHADOW_BOLT)).isTrue();
+		assertThat(rng.hitRoll(0.8, SHADOW_BOLT)).isTrue();
+		assertThat(rng.hitRoll(0.8, SHADOW_BOLT)).isTrue();
 	}
 
 	@Test

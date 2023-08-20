@@ -1,31 +1,31 @@
 package wow.simulator.util;
 
+import lombok.Getter;
+
 /**
  * User: POlszewski
  * Date: 2023-08-10
  */
+@Getter
 public abstract class SimpleId {
-	private final String id;
+	private final long value;
 
-	protected SimpleId(String prefix, long value) {
-		this.id = prefix + "%04d".formatted(value);
+	protected SimpleId(long value) {
+		this.value = value;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof SimpleId simpleId)) return false;
-
-		return id.equals(simpleId.id);
+		return o != null && o.getClass() == this.getClass() && value == ((SimpleId) o).value;
 	}
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return Long.hashCode(value);
 	}
 
 	@Override
 	public String toString() {
-		return id;
+		return Long.toString(value);
 	}
 }

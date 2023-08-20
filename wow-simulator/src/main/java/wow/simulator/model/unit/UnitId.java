@@ -8,6 +8,6 @@ import wow.simulator.util.SimpleId;
  */
 public class UnitId extends SimpleId {
 	public UnitId(long value) {
-		super("U", value);
+		super(value);
 	}
 }

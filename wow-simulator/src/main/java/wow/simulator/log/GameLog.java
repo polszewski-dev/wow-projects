@@ -2,9 +2,9 @@ package wow.simulator.log;
 
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.unit.Unit;
 
@@ -23,13 +23,13 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void beginGcd(Unit caster, Action action) {
-		handlers.forEach(handler -> handler.beginGcd(caster, action));
+	public void beginGcd(Unit caster, Action sourceAction) {
+		handlers.forEach(handler -> handler.beginGcd(caster, sourceAction));
 	}
 
 	@Override
-	public void endGcd(Unit caster, Action action) {
-		handlers.forEach(handler -> handler.endGcd(caster, action));
+	public void endGcd(Unit caster, Action sourceAction) {
+		handlers.forEach(handler -> handler.endGcd(caster, sourceAction));
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void spellMissed(Unit caster, Spell spell, Unit target) {
-		handlers.forEach(handler -> handler.spellMissed(caster, spell, target));
+	public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
+		handlers.forEach(handler -> handler.spellMissed(caster, spell, target, action));
 	}
 
 	@Override
@@ -88,13 +88,18 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void cooldownStarted(Unit caster, SpellId spellId) {
-		handlers.forEach(handler -> handler.cooldownStarted(caster, spellId));
+	public void cooldownStarted(Cooldown cooldown) {
+		handlers.forEach(handler -> handler.cooldownStarted(cooldown));
 	}
 
 	@Override
-	public void cooldownExpired(Unit caster, SpellId spellId) {
-		handlers.forEach(handler -> handler.cooldownExpired(caster, spellId));
+	public void cooldownExpired(Cooldown cooldown) {
+		handlers.forEach(handler -> handler.cooldownExpired(cooldown));
+	}
+
+	@Override
+	public void simulationStarted() {
+		handlers.forEach(GameLogHandler::simulationStarted);
 	}
 
 	@Override

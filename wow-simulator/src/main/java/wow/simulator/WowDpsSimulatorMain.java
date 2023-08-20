@@ -6,6 +6,10 @@ import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
+import wow.simulator.graph.GraphGameLogHandler;
+import wow.simulator.graph.Statistics;
+import wow.simulator.graph.StatisticsGatheringHandler;
+import wow.simulator.graph.TimeGraph;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.ConsoleGameLogHandler;
 import wow.simulator.model.rng.PredeterminedRng;
@@ -17,6 +21,10 @@ import wow.simulator.scripts.AIScript;
 import wow.simulator.scripts.warlock.WarlockPriorityScript;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.BEAST;
@@ -35,19 +43,57 @@ public class WowDpsSimulatorMain implements SimulatorContextSource {
 
 	private final SimulatorContext simulatorContext;
 
+	private Simulation simulation;
+
+	private Player player;
+	private Target target;
+
+	private TimeGraph graph;
+	private Statistics statistics;
+
 	private WowDpsSimulatorMain() {
 		var context = new AnnotationConfigApplicationContext("wow.simulator");
 		this.simulatorContext = context.getBean(SimulatorContext.class);
 	}
 
 	private void run() {
+		createSimulation();
+		createUnits();
+		createGraph();
+
+		simulation.updateUntil(Time.at(180));
+
+		saveGraph();
+	}
+
+	private void createGraph() {
+		graph = new TimeGraph();
+
+		statistics = new Statistics();
+
+		simulation.addHandler(new StatisticsGatheringHandler(player, statistics));
+		simulation.addHandler(new GraphGameLogHandler(player, graph));
+	}
+
+	private void createSimulation() {
+		Clock clock = new Clock();
+		GameLog gameLog = new GameLog();
+		SimulationContext simulationContext = new SimulationContext(
+				clock, gameLog, PredeterminedRng::new, getCharacterCalculationService()
+		);
+
+		simulation = new Simulation(simulationContext);
+		simulation.addHandler(new ConsoleGameLogHandler());
+	}
+
+	private void createUnits() {
 		AIScript aiScript = new WarlockPriorityScript(this);
 
 		Character character = getCharacterService().createCharacter(WARLOCK, ORC, 70, TBC_P5);
 		Enemy enemy = new Enemy(BEAST, 3);
 
-		Player player = new Player("Player", character);
-		Target target = new Target("Target", enemy);
+		player = new Player("Player", character);
+		target = new Target("Target", enemy);
 
 		character.setTargetEnemy(enemy);
 		player.setTarget(target);
@@ -57,22 +103,14 @@ public class WowDpsSimulatorMain implements SimulatorContextSource {
 
 		aiScript.setupPlayer(player);
 
-		Simulation simulation = getSimulation();
-
-		simulation.addHandler(new ConsoleGameLogHandler());
-
 		simulation.add(player);
 		simulation.add(target);
-
-		simulation.updateUntil(Time.at(180));
 	}
 
-	private Simulation getSimulation() {
-		Clock clock = new Clock();
-		GameLog gameLog = new GameLog();
-		SimulationContext simulationContext = new SimulationContext(
-				clock, gameLog, PredeterminedRng::new, getCharacterCalculationService()
-		);
-		return new Simulation(simulationContext);
+	private void saveGraph() {
+		String path = "%s/graph_%s.png".formatted("../graphs", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+
+		graph.addSummary(player, statistics);
+		graph.saveToFile(new File(path));
 	}
 }

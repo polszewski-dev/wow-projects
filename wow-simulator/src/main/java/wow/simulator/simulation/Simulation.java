@@ -32,6 +32,8 @@ public class Simulation implements SimulationContextSource {
 	public void updateUntil(Time timeUntil) {
 		this.timeUntilSimulationEnd = timeUntil;
 
+		getGameLog().simulationStarted();
+
 		while (!updateQueue.isEmpty()) {
 			Time nextUpdateTime = updateQueue.getNextUpdateTime().orElseThrow();
 
