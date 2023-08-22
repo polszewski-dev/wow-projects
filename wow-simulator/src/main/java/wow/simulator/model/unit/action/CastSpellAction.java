@@ -84,7 +84,7 @@ public class CastSpellAction extends UnitAction {
 
 		if (!hitRoll()) {
 			onBeginCast();
-			getGameLog().spellMissed(owner, spell, target, this);
+			getGameLog().spellResisted(owner, spell, target, this);
 			onEndCast();
 			return;
 		}
@@ -130,7 +130,7 @@ public class CastSpellAction extends UnitAction {
 
 	private void harmfulSpellAction() {
 		if (!hitRoll()) {
-			getGameLog().spellMissed(owner, spell, target, this);
+			getGameLog().spellResisted(owner, spell, target, this);
 			return;
 		}
 

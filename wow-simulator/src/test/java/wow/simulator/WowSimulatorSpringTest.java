@@ -91,7 +91,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record EndCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record CanNotBeCasted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record CastInterrupted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
-		public record SpellMissed(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
+		public record SpellResisted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
 		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
 		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
 		public record EffectApplied(Time time, SpellId spell, Unit target) implements Event {}
@@ -133,8 +133,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		@Override
-		public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
-			addEvent(new SpellMissed(now(), caster, getSpellId(spell), target));
+		public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
+			addEvent(new SpellResisted(now(), caster, getSpellId(spell), target));
 		}
 
 		@Override
@@ -229,8 +229,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new CastInterrupted(time, caster, spellId, target));
 		}
 
-		public EventListBuilder spellMissed(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new SpellMissed(time, caster, spellId, target));
+		public EventListBuilder spellResisted(Unit caster, SpellId spellId, Unit target) {
+			return addEvent(new SpellResisted(time, caster, spellId, target));
 		}
 
 		public EventListBuilder increasedResource(int amount, ResourceType type, Unit target, SpellId spellId) {

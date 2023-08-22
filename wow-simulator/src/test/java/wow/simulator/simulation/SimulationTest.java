@@ -546,7 +546,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 	}
 
 	@Nested
-	class Misses {
+	class Resists {
 		@Test
 		void shadowBolt() {
 			player.cast(SHADOW_BOLT);
@@ -562,7 +562,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 					at(3)
 							.endCast(player, SHADOW_BOLT, target)
 							.decreasedResource(420, MANA, player, SHADOW_BOLT)
-							.spellMissed(player, SHADOW_BOLT, target)
+							.spellResisted(player, SHADOW_BOLT, target)
 			);
 		}
 
@@ -580,7 +580,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 							.endCast(player, SHADOWBURN, target)
 							.decreasedResource(515, MANA, player, SHADOWBURN)
 							.cooldownStarted(player, SHADOWBURN)
-							.spellMissed(player, SHADOWBURN, target)
+							.spellResisted(player, SHADOWBURN, target)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player),
@@ -599,7 +599,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 			assertThat(player.getCurrentMana()).isEqualTo(582);
 
-			//can't miss on friendly spell
+			//can't resist friendly spell
 
 			assertEvents(
 					at(0)
@@ -624,7 +624,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 							.beginCast(player, CURSE_OF_AGONY, target)
 							.endCast(player, CURSE_OF_AGONY, target)
 							.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
-							.spellMissed(player, CURSE_OF_AGONY, target)
+							.spellResisted(player, CURSE_OF_AGONY, target)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player)
@@ -646,7 +646,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 					at(2)
 							.endCast(player, CORRUPTION, target)
 							.decreasedResource(370, MANA, player, CORRUPTION)
-							.spellMissed(player, CORRUPTION, target)
+							.spellResisted(player, CORRUPTION, target)
 			);
 		}
 
@@ -660,7 +660,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 					at(0)
 							.decreasedResource(425, MANA, player, DRAIN_LIFE)
 							.beginCast(player, DRAIN_LIFE, target)
-							.spellMissed(player, DRAIN_LIFE, target)
+							.spellResisted(player, DRAIN_LIFE, target)
 							.endCast(player, DRAIN_LIFE, target)
 							.beginGcd(player),
 					at(1.5)

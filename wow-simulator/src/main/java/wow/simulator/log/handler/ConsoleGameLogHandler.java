@@ -51,8 +51,8 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
-		print("%s's %s missed %s", caster, spell, target);
+	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
+		print("%s's %s resisted %s", caster, spell, target);
 	}
 
 	@Override

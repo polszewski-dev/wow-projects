@@ -53,8 +53,8 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
-		handlers.forEach(handler -> handler.spellMissed(caster, spell, target, action));
+	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
+		handlers.forEach(handler -> handler.spellResisted(caster, spell, target, action));
 	}
 
 	@Override

@@ -73,7 +73,7 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 	}
 
 	@Override
-	public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
+	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
 		graph.addResistedMark(castLane, action.getActionId());
 	}
 

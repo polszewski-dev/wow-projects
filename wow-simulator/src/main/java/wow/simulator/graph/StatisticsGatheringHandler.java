@@ -98,7 +98,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void spellMissed(Unit caster, Spell spell, Unit target, Action action) {
+	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
 		// ignored
 	}
 
