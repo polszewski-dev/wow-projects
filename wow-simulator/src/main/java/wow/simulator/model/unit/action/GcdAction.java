@@ -1,7 +1,6 @@
 package wow.simulator.model.unit.action;
 
 import wow.commons.model.Duration;
-import wow.simulator.model.action.Action;
 
 /**
  * User: POlszewski
@@ -9,7 +8,7 @@ import wow.simulator.model.action.Action;
  */
 public class GcdAction extends UnitAction {
 	private final Duration gcd;
-	private final Action sourceAction;
+	private final UnitAction sourceAction;
 
 	public GcdAction(Duration gcd, UnitAction sourceAction) {
 		super(sourceAction.getOwner());
@@ -19,18 +18,18 @@ public class GcdAction extends UnitAction {
 
 	@Override
 	protected void setUp() {
-		getGameLog().beginGcd(owner, sourceAction);
+		getGameLog().beginGcd(sourceAction);
 
 		fromNowAfter(gcd, () -> {});
 	}
 
 	@Override
 	protected void onFinished() {
-		getGameLog().endGcd(owner, sourceAction);
+		getGameLog().endGcd(sourceAction);
 	}
 
 	@Override
 	protected void onInterrupted() {
-		getGameLog().endGcd(owner, sourceAction);
+		getGameLog().endGcd(sourceAction);
 	}
 }

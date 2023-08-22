@@ -2,29 +2,30 @@ package wow.simulator.log.handler;
 
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
-import wow.simulator.model.action.Action;
 import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.UnitAction;
 
 /**
  * User: POlszewski
  * Date: 2023-08-07
  */
 public interface GameLogHandler {
-	void beginGcd(Unit caster, Action sourceAction);
+	void beginGcd(UnitAction sourceAction);
 
-	void endGcd(Unit caster, Action sourceAction);
+	void endGcd(UnitAction sourceAction);
 
-	void beginCast(Unit caster, Spell spell, Unit target, Action action);
+	void beginCast(CastSpellAction action);
 
-	void endCast(Unit caster, Spell spell, Unit target, Action action);
+	void endCast(CastSpellAction action);
 
-	void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action);
+	void canNotBeCasted(CastSpellAction action);
 
-	void castInterrupted(Unit caster, Spell spell, Unit target, Action action);
+	void castInterrupted(CastSpellAction action);
 
-	void spellResisted(Unit caster, Spell spell, Unit target, Action action);
+	void spellResisted(CastSpellAction action);
 
 	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
 

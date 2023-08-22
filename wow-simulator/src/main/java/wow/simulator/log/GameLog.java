@@ -3,10 +3,11 @@ package wow.simulator.log;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.simulator.log.handler.GameLogHandler;
-import wow.simulator.model.action.Action;
 import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.UnitAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,38 +24,38 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void beginGcd(Unit caster, Action sourceAction) {
-		handlers.forEach(handler -> handler.beginGcd(caster, sourceAction));
+	public void beginGcd(UnitAction sourceAction) {
+		handlers.forEach(handler -> handler.beginGcd(sourceAction));
 	}
 
 	@Override
-	public void endGcd(Unit caster, Action sourceAction) {
-		handlers.forEach(handler -> handler.endGcd(caster, sourceAction));
+	public void endGcd(UnitAction sourceAction) {
+		handlers.forEach(handler -> handler.endGcd(sourceAction));
 	}
 
 	@Override
-	public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
-		handlers.forEach(handler -> handler.beginCast(caster, spell, target, action));
+	public void beginCast(CastSpellAction action) {
+		handlers.forEach(handler -> handler.beginCast(action));
 	}
 
 	@Override
-	public void endCast(Unit caster, Spell spell, Unit target, Action action) {
-		handlers.forEach(handler -> handler.endCast(caster, spell, target, action));
+	public void endCast(CastSpellAction action) {
+		handlers.forEach(handler -> handler.endCast(action));
 	}
 
 	@Override
-	public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
-		handlers.forEach(handler -> handler.canNotBeCasted(caster, spell, target, action));
+	public void canNotBeCasted(CastSpellAction action) {
+		handlers.forEach(handler -> handler.canNotBeCasted(action));
 	}
 
 	@Override
-	public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
-		handlers.forEach(handler -> handler.castInterrupted(caster, spell, target, action));
+	public void castInterrupted(CastSpellAction action) {
+		handlers.forEach(handler -> handler.castInterrupted(action));
 	}
 
 	@Override
-	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
-		handlers.forEach(handler -> handler.spellResisted(caster, spell, target, action));
+	public void spellResisted(CastSpellAction action) {
+		handlers.forEach(handler -> handler.spellResisted(action));
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.commons.model.spells.SpellId;
 import wow.simulator.log.handler.GameLogHandler;
-import wow.simulator.model.action.Action;
 import wow.simulator.model.action.ActionId;
 import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.cooldown.CooldownId;
@@ -16,6 +15,8 @@ import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 import wow.simulator.simulation.TimeSource;
 
@@ -49,31 +50,31 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void beginGcd(Unit caster, Action sourceAction) {
+	public void beginGcd(UnitAction sourceAction) {
 		// ignored
 	}
 
 	@Override
-	public void endGcd(Unit caster, Action sourceAction) {
-		endCast(caster, sourceAction, timeEntry -> timeEntry.setGcdEnd(now()));
+	public void endGcd(UnitAction sourceAction) {
+		endCast(sourceAction, timeEntry -> timeEntry.setGcdEnd(now()));
 	}
 
 	@Override
-	public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
-		if (caster != player) {
+	public void beginCast(CastSpellAction action) {
+		if (action.getOwner() != player) {
 			return;
 		}
 
-		casts.put(action.getActionId(), new TimeEntry(spell.getSpellId(), now()));
+		casts.put(action.getActionId(), new TimeEntry(action.getSpell().getSpellId(), now()));
 	}
 
 	@Override
-	public void endCast(Unit caster, Spell spell, Unit target, Action action) {
-		endCast(caster, action, timeEntry -> timeEntry.setEnd(now()));
+	public void endCast(CastSpellAction action) {
+		endCast(action, timeEntry -> timeEntry.setEnd(now()));
 	}
 
-	private void endCast(Unit caster, Action action, Consumer<TimeEntry> consumer) {
-		if (caster != player) {
+	private void endCast(UnitAction action, Consumer<TimeEntry> consumer) {
+		if (action.getOwner() != player) {
 			return;
 		}
 
@@ -88,17 +89,17 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
+	public void canNotBeCasted(CastSpellAction action) {
 		// ignored
 	}
 
 	@Override
-	public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
-		endCast(caster, spell, target, action);
+	public void castInterrupted(CastSpellAction action) {
+		endCast(action);
 	}
 
 	@Override
-	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
+	public void spellResisted(CastSpellAction action) {
 		// ignored
 	}
 

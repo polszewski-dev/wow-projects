@@ -31,6 +31,8 @@ import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Target;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.TimeAware;
@@ -103,38 +105,38 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
-		public void beginGcd(Unit caster, Action sourceAction) {
-			addEvent(new BeginGcd(now(), caster));
+		public void beginGcd(UnitAction sourceAction) {
+			addEvent(new BeginGcd(now(), sourceAction.getOwner()));
 		}
 
 		@Override
-		public void endGcd(Unit caster, Action sourceAction) {
-			addEvent(new EndGcd(now(), caster));
+		public void endGcd(UnitAction sourceAction) {
+			addEvent(new EndGcd(now(), sourceAction.getOwner()));
 		}
 
 		@Override
-		public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
-			addEvent(new BeginCast(now(), caster, getSpellId(spell), target));
+		public void beginCast(CastSpellAction action) {
+			addEvent(new BeginCast(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
 		}
 
 		@Override
-		public void endCast(Unit caster, Spell spell, Unit target, Action action) {
-			addEvent(new EndCast(now(), caster, getSpellId(spell), target));
+		public void endCast(CastSpellAction action) {
+			addEvent(new EndCast(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
 		}
 
 		@Override
-		public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
-			addEvent(new CanNotBeCasted(now(), caster, getSpellId(spell), target));
+		public void canNotBeCasted(CastSpellAction action) {
+			addEvent(new CanNotBeCasted(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
 		}
 
 		@Override
-		public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
-			addEvent(new CastInterrupted(now(), caster, getSpellId(spell), target));
+		public void castInterrupted(CastSpellAction action) {
+			addEvent(new CastInterrupted(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
 		}
 
 		@Override
-		public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
-			addEvent(new SpellResisted(now(), caster, getSpellId(spell), target));
+		public void spellResisted(CastSpellAction action) {
+			addEvent(new SpellResisted(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
 		}
 
 		@Override

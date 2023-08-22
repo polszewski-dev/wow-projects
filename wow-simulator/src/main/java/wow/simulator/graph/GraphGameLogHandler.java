@@ -3,12 +3,13 @@ package wow.simulator.graph;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
 import wow.simulator.log.handler.GameLogHandler;
-import wow.simulator.model.action.Action;
 import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 import wow.simulator.simulation.TimeSource;
 
@@ -33,47 +34,47 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 	}
 
 	@Override
-	public void beginGcd(Unit caster, Action sourceAction) {
+	public void beginGcd(UnitAction sourceAction) {
 		// ignored
 	}
 
 	@Override
-	public void endGcd(Unit caster, Action sourceAction) {
-		if (caster != player) {
+	public void endGcd(UnitAction sourceAction) {
+		if (sourceAction.getOwner() != player) {
 			return;
 		}
 		graph.gcdEndSegment(castLane, sourceAction.getActionId(), now());
 	}
 
 	@Override
-	public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
-		if (caster != player) {
+	public void beginCast(CastSpellAction action) {
+		if (action.getOwner() != player) {
 			return;
 		}
-		Color color = laneDefinitions.getSpellColor(spell);
+		Color color = laneDefinitions.getSpellColor(action.getSpell());
 		graph.beginSegment(castLane, action.getActionId(), color, now());
 	}
 
 	@Override
-	public void endCast(Unit caster, Spell spell, Unit target, Action action) {
-		if (caster != player) {
+	public void endCast(CastSpellAction action) {
+		if (action.getOwner() != player) {
 			return;
 		}
 		graph.endSegment(castLane, action.getActionId(), now());
 	}
 
 	@Override
-	public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
+	public void canNotBeCasted(CastSpellAction action) {
 		// ignored
 	}
 
 	@Override
-	public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
-		endCast(caster, spell, target, action);
+	public void castInterrupted(CastSpellAction action) {
+		endCast(action);
 	}
 
 	@Override
-	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
+	public void spellResisted(CastSpellAction action) {
 		graph.addResistedMark(castLane, action.getActionId());
 	}
 

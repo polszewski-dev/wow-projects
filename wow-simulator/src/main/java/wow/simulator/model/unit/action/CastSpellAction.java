@@ -35,7 +35,7 @@ public class CastSpellAction extends UnitAction {
 		this.context = owner.getSpellCastContext(spell, target);
 
 		if (!owner.canCast(context)) {
-			getGameLog().canNotBeCasted(owner, spell, target, this);
+			getGameLog().canNotBeCasted(this);
 			finish();
 			return;
 		}
@@ -84,7 +84,7 @@ public class CastSpellAction extends UnitAction {
 
 		if (!hitRoll()) {
 			onBeginCast();
-			getGameLog().spellResisted(owner, spell, target, this);
+			getGameLog().spellResisted(this);
 			onEndCast();
 			return;
 		}
@@ -96,12 +96,12 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void onBeginCast() {
-		getGameLog().beginCast(owner, spell, target, this);
+		getGameLog().beginCast(this);
 		// events here
 	}
 
 	private void onEndCast() {
-		getGameLog().endCast(owner, spell, target, this);
+		getGameLog().endCast(this);
 		// events here
 	}
 
@@ -130,7 +130,7 @@ public class CastSpellAction extends UnitAction {
 
 	private void harmfulSpellAction() {
 		if (!hitRoll()) {
-			getGameLog().spellResisted(owner, spell, target, this);
+			getGameLog().spellResisted(this);
 			return;
 		}
 
@@ -192,10 +192,18 @@ public class CastSpellAction extends UnitAction {
 
 	@Override
 	public void onRemovedFromQueue() {
-		getGameLog().castInterrupted(owner, spell, target, this);
+		getGameLog().castInterrupted(this);
 		super.onRemovedFromQueue();
 		if (spell.isChanneled()) {
 			target.removeEffect(periodicEffect);
 		}
+	}
+
+	public Spell getSpell() {
+		return spell;
+	}
+
+	public Unit getTarget() {
+		return target;
 	}
 }

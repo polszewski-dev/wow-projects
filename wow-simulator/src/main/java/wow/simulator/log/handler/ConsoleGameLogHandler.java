@@ -4,11 +4,12 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.Spell;
-import wow.simulator.model.action.Action;
 import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 
 /**
@@ -21,38 +22,38 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	private Clock clock;
 
 	@Override
-	public void beginGcd(Unit caster, Action sourceAction) {
+	public void beginGcd(UnitAction sourceAction) {
 		// ignored
 	}
 
 	@Override
-	public void endGcd(Unit caster, Action sourceAction) {
+	public void endGcd(UnitAction sourceAction) {
 		// ignored
 	}
 
 	@Override
-	public void beginCast(Unit caster, Spell spell, Unit target, Action action) {
-		print("%s begin cast %s", caster, spell);
+	public void beginCast(CastSpellAction action) {
+		print("%s begin cast %s", action.getOwner(), action.getSpell());
 	}
 
 	@Override
-	public void endCast(Unit caster, Spell spell, Unit target, Action action) {
-		print("%s end cast %s", caster, spell);
+	public void endCast(CastSpellAction action) {
+		print("%s end cast %s", action.getOwner(), action.getSpell());
 	}
 
 	@Override
-	public void canNotBeCasted(Unit caster, Spell spell, Unit target, Action action) {
-		print("%s can't cast %s on %s", caster, spell, target);
+	public void canNotBeCasted(CastSpellAction action) {
+		print("%s can't cast %s on %s", action.getOwner(), action.getSpell(), action.getTarget());
 	}
 
 	@Override
-	public void castInterrupted(Unit caster, Spell spell, Unit target, Action action) {
-		print("%s's s% cast on %s interrupted", caster, spell, target);
+	public void castInterrupted(CastSpellAction action) {
+		print("%s's s% cast on %s interrupted", action.getOwner(), action.getSpell(), action.getTarget());
 	}
 
 	@Override
-	public void spellResisted(Unit caster, Spell spell, Unit target, Action action) {
-		print("%s's %s resisted %s", caster, spell, target);
+	public void spellResisted(CastSpellAction action) {
+		print("%s's %s resisted %s", action.getOwner(), action.getSpell(), action.getTarget());
 	}
 
 	@Override
