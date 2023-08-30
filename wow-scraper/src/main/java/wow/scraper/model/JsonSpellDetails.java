@@ -3,6 +3,7 @@ package wow.scraper.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import wow.commons.model.pve.GameVersionId;
 
 import java.util.Set;
 
@@ -25,6 +26,11 @@ import java.util.Set;
 		"reagents",
 		"creates",
 		"contentPhase",
+		"chrclass",
+		"reqclass",
+		"races",
+		"reqrace",
+		"talentspec",
 })
 public class JsonSpellDetails implements JsonCommonDetails {
 	@JsonProperty(value = "id")
@@ -50,4 +56,10 @@ public class JsonSpellDetails implements JsonCommonDetails {
 
 	@JsonProperty(value = "sourceItemIds")
 	private Set<Integer> sourceItemIds;
+
+	private GameVersionId reqVersion;
+
+	private WowheadSpellCategory category;
+
+	private Integer maxRank;
 }

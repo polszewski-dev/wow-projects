@@ -18,6 +18,7 @@ public class SpellImpl extends ConfigurationElementImpl<SpellIdAndRank> implemen
 	private final SpellInfo spellInfo;
 	@NonNull
 	private final CastInfo castInfo;
+	private final AppliedEffect appliedEffect;
 	private final DirectDamageInfo directDamageInfo;
 	private final DotDamageInfo dotDamageInfo;
 
@@ -28,12 +29,14 @@ public class SpellImpl extends ConfigurationElementImpl<SpellIdAndRank> implemen
 			Description description,
 			SpellInfo spellInfo,
 			CastInfo castInfo,
+			AppliedEffect appliedEffect,
 			DirectDamageInfo directDamageInfo,
 			DotDamageInfo dotDamageInfo
 	) {
 		super(id, description, timeRestriction, characterRestriction);
 		this.spellInfo = spellInfo;
 		this.castInfo = castInfo;
+		this.appliedEffect = appliedEffect;
 		this.directDamageInfo = directDamageInfo;
 		this.dotDamageInfo = dotDamageInfo;
 	}

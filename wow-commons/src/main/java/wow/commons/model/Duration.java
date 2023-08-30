@@ -36,6 +36,14 @@ public record Duration(long millis) implements Comparable<Duration> {
 		return seconds != null ? seconds((double)seconds) : null;
 	}
 
+	public static Duration minutes(long minutes) {
+		return seconds(minutes * 60);
+	}
+
+	public static Duration hours(long hours) {
+		return seconds(hours * 60 * 60);
+	}
+
 	public static Duration millis(long millis) {
 		if (millis == 0) {
 			return ZERO;
@@ -56,6 +64,10 @@ public record Duration(long millis) implements Comparable<Duration> {
 
 		if (value.matches("-?\\d+\\.?\\d*")) {
 			return Duration.seconds(Double.parseDouble(value));
+		}
+
+		if (value.equalsIgnoreCase("INF")) {
+			return INFINITE;
 		}
 
 		Matcher matcher = PATTERN.matcher(value);

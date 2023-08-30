@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.scraper.ScraperTestConfig;
 import wow.scraper.model.JsonCommonDetails;
+import wow.scraper.repository.SpellPatternRepository;
 import wow.scraper.repository.StatPatternRepository;
 
 import java.io.IOException;
@@ -20,6 +21,9 @@ import java.io.IOException;
 public abstract class TooltipParserTest<D extends JsonCommonDetails, T extends AbstractTooltipParser<D>> {
 	@Autowired
 	StatPatternRepository statPatternRepository;
+
+	@Autowired
+	SpellPatternRepository spellPatternRepository;
 
 	static final ObjectMapper MAPPER = new ObjectMapper();
 

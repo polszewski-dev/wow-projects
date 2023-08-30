@@ -22,6 +22,7 @@ public record Conversion(
 
 	public enum From {
 		DAMAGE_DONE,
+		MANA_DRAINED,
 		HEALTH_PAID,
 		MANA_PAID;
 

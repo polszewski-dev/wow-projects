@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import polszewski.excel.writer.ExcelWriter;
 import polszewski.excel.writer.style.Font;
 import polszewski.excel.writer.style.Style;
+import wow.commons.model.Duration;
 import wow.commons.model.Money;
 import wow.commons.model.Percent;
 
@@ -61,6 +62,14 @@ public abstract class ExcelCellWriter {
 
 	protected void setValue(String value) {
 		writer.setCell(value, DATA_STYLE);
+	}
+
+	protected void setValue(Duration value) {
+		if (value != null) {
+			writer.setCell(value.getSeconds(), DATA_STYLE);
+		} else {
+			writer.setCell(null, DATA_STYLE);
+		}
 	}
 
 	protected void setValue(Percent value) {

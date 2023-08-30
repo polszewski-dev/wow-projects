@@ -11,6 +11,7 @@ import wow.commons.util.parser.Rule;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.parsers.stats.StatMatcher;
 import wow.scraper.parsers.stats.StatParser;
+import wow.scraper.repository.SpellPatternRepository;
 import wow.scraper.repository.StatPatternRepository;
 
 import java.util.List;
@@ -26,8 +27,8 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 	private StatParser statParser;
 	private String tooltip;
 
-	public EnchantTooltipParser(JsonSpellDetails spellDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		super(spellDetails, gameVersion, statPatternRepository);
+	public EnchantTooltipParser(JsonSpellDetails spellDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository, SpellPatternRepository spellPatternRepository) {
+		super(spellDetails, gameVersion, statPatternRepository, spellPatternRepository);
 	}
 
 	@Override

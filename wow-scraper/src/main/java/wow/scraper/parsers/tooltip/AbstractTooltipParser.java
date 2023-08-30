@@ -227,7 +227,7 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> {
 				.replaceAll("<span class=\"moneysilver\">(\\d+)</span>", "$1s")
 				.replaceAll("<span class=\"moneycopper\">(\\d+)</span>", "$1c")
 
-				.replace("<dfn title=\"her\">his</dfn>", "his")
+				.replaceAll("<dfn title=\".*?\">(.*)</dfn>", "$1")
 
 				.replaceAll("</[^>]+?>", "\n")
 				.replaceAll("<[^>]+?>", "")

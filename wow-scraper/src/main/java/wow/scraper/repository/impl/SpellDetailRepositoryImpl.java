@@ -23,8 +23,11 @@ public class SpellDetailRepositoryImpl extends DetailRepository<WowheadSpellCate
 
 	@Override
 	protected Stream<SpellImporter> createImporters() {
-		return Stream.of(
-				new SpellEnchantImporter()
-		);
+		var stream1 = Stream.of(WowheadSpellCategory.values())
+				.filter(x -> x.getType() != WowheadSpellCategory.Type.ENCHANT)
+				.map(SpellImporter::new);
+		var stream2 = Stream.of(new SpellEnchantImporter());
+
+		return Stream.concat(stream1, stream2);
 	}
 }

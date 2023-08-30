@@ -2,8 +2,10 @@ package wow.scraper.exporters.item.excel;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.exporters.excel.WowExcelBuilder;
+import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.parsers.tooltip.EnchantTooltipParser;
 import wow.scraper.parsers.tooltip.GemTooltipParser;
 import wow.scraper.parsers.tooltip.ItemTooltipParser;
@@ -78,7 +80,7 @@ public class ItemBaseExcelBuilder extends WowExcelBuilder {
 	}
 
 	public void add(EnchantTooltipParser parser) {
-		if (isSpellToBeIgnored(parser.getSpellId())) {
+		if (isSpellToBeIgnored(parser.getSpellId(), parser.getGameVersion())) {
 			return;
 		}
 		writeRow(parser, enchantSheetWriter);
@@ -95,8 +97,8 @@ public class ItemBaseExcelBuilder extends WowExcelBuilder {
 		return config.getIgnoredItemIds().contains(itemId);
 	}
 
-	private boolean isSpellToBeIgnored(int spellId) {
-		return config.getIgnoredSpellIds().contains(spellId);
+	private boolean isSpellToBeIgnored(int spellId, GameVersionId gameVersion) {
+		return config.isSpellIgnored(spellId, WowheadSpellCategory.ENCHANTS, gameVersion);
 	}
 
 	private final List<ItemTooltipParser> itemParserQueue = new ArrayList<>();

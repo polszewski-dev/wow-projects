@@ -21,16 +21,19 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 	private final ExcelColumn colCostBaseStatPct = column("cost: base stat%");
 	private final ExcelColumn colCostCoeff = column("cost: coeff");
 	private final ExcelColumn colCastTime = column("cast time");
+	private final ExcelColumn colChanneled = column("channeled");
+	private final ExcelColumn colCoeffDirect = column("coeff direct");
 	private final ExcelColumn colMinDmg = column("min dmg");
 	private final ExcelColumn colMaxDmg = column("max dmg");
-	private final ExcelColumn colDotDmg = column("dot dmg");
-	private final ExcelColumn colNumTicks = column("num ticks");
-	private final ExcelColumn colTickInterval = column("tick interval");
-	private final ExcelColumn colTickWeights = column("tick weights");
 	private final ExcelColumn colMinDmg2 = column("min dmg2");
 	private final ExcelColumn colMaxDmg2 = column("max dmg2");
 	private final ExcelColumn colAppliedEffect = column("applied effect");
 	private final ExcelColumn colAppliedEffectDuration = column("applied effect duration");
+	private final ExcelColumn colCoeffDot = column("coeff dot");
+	private final ExcelColumn colDotDmg = column("dot dmg");
+	private final ExcelColumn colNumTicks = column("num ticks");
+	private final ExcelColumn colTickInterval = column("tick interval");
+	private final ExcelColumn colTickWeights = column("tick weights");
 
 	private final SpellRepositoryImpl spellRepository;
 
@@ -63,28 +66,30 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 		var timeRestriction = getTimeRestriction().merge(spellInfo.getTimeRestriction());
 		var characterRestriction = getRestriction().merge(spellInfo.getCharacterRestriction());
 		var castInfo = getCastInfo();
+		var appliedEffect = getAppliedEffect();
 		var directDamageInfo = getDirectDamageInfo();
 		var dotDamageInfo = getDotDamageInfo();
 
-		return new SpellImpl(id, timeRestriction, characterRestriction, description, spellInfo, castInfo, directDamageInfo, dotDamageInfo);
+		return new SpellImpl(id, timeRestriction, characterRestriction, description, spellInfo, castInfo, appliedEffect, directDamageInfo, dotDamageInfo);
 	}
 
 	private CastInfo getCastInfo() {
 		var cost = getCost();
 		var castTime = colCastTime.getDuration();
-		var appliedEffect = getAppliedEffect();
-		return new CastInfo(cost, castTime, appliedEffect);
+		var channeled = colChanneled.getBoolean();
+		return new CastInfo(cost, castTime, channeled);
 	}
 
 	private Cost getCost() {
 		var type = colCostType.getEnum(ResourceType::parse, ResourceType.MANA);
-		var amount = colCostAmount.getInteger();
+		var amount = colCostAmount.getInteger(0);
 		var baseStatPct = colCostBaseStatPct.getPercent(Percent.ZERO);
 		var coeff = colCostCoeff.getPercent(Percent.ZERO);
 		return new Cost(type, amount, baseStatPct, coeff);
 	}
 
 	private DirectDamageInfo getDirectDamageInfo() {
+		var coeffDirect = colCoeffDirect.getPercent(Percent.ZERO);
 		var minDmg = colMinDmg.getInteger(0);
 		var maxDmg = colMaxDmg.getInteger(0);
 		var minDmg2 = colMinDmg2.getInteger(0);
@@ -92,16 +97,17 @@ public class SpellRankSheetParser extends RankedElementSheetParser<SpellId, Spel
 		if (minDmg == 0 && maxDmg == 0) {
 			return null;
 		}
-		return new DirectDamageInfo(minDmg, maxDmg, minDmg2, maxDmg2);
+		return new DirectDamageInfo(coeffDirect, minDmg, maxDmg, minDmg2, maxDmg2);
 	}
 
 	private DotDamageInfo getDotDamageInfo() {
+		var coeffDot = colCoeffDot.getPercent(Percent.ZERO);
 		var dotDmg = colDotDmg.getInteger(0);
 		if (dotDmg == 0) {
 			return null;
 		}
 		var tickScheme = getTickScheme();
-		return new DotDamageInfo(dotDmg, tickScheme);
+		return new DotDamageInfo(coeffDot, dotDmg, tickScheme);
 	}
 
 	private TickScheme getTickScheme() {

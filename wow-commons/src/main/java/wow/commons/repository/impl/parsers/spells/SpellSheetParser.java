@@ -1,7 +1,6 @@
 package wow.commons.repository.impl.parsers.spells;
 
 import wow.commons.model.Duration;
-import wow.commons.model.Percent;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -19,13 +18,11 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 	private final ExcelColumn colSpell = column("spell");
 	private final ExcelColumn colTree = column("tree");
 	private final ExcelColumn colSchool = column("school");
-	private final ExcelColumn colCoeffDirect = column("coeff direct");
-	private final ExcelColumn colCoeffDot = column("coeff dot");
 	private final ExcelColumn colCooldown = column("cooldown");
-	private final ExcelColumn colChanneled = column("channeled");
 	private final ExcelColumn colIgnoresGcd = column("ignores gcd");
-	private final ExcelColumn colTarget = column("target");
 	private final ExcelColumn colBolt = column("bolt");
+	private final ExcelColumn colTarget = column("target");
+	private final ExcelColumn colRange = column("range");
 	private final ExcelColumn colConversionFrom = column("conversion: from");
 	private final ExcelColumn colConversionTo = column("conversion: to");
 	private final ExcelColumn colConversionPct = column("conversion: %");
@@ -53,9 +50,9 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 		var talentTree = colTree.getEnum(TalentTree::parse);
 		var spellSchool = colSchool.getEnum(SpellSchool::parse, null);
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
-		var channeled = colChanneled.getBoolean();
-		var ignoresGCD = colIgnoresGcd.getBoolean();
+		var ignoresGcd = colIgnoresGcd.getBoolean();
 		var target = colTarget.getEnum(SpellTarget::parse, SpellTarget.ENEMY);
+		var range = colRange.getInteger();
 
 		Description description = getDescription(spellId.getName());
 		TimeRestriction timeRestriction = getTimeRestriction();
@@ -64,19 +61,17 @@ public class SpellSheetParser extends RankedElementSheetParser<SpellId, SpellInf
 		Conversion conversion = getConversion();
 
 		return new SpellInfo(
-				spellId, description, timeRestriction, characterRestriction, talentTree, spellSchool, cooldown, channeled, ignoresGCD, target, damagingSpellInfo, conversion
+				spellId, description, timeRestriction, characterRestriction, talentTree, spellSchool, cooldown, ignoresGcd, target, range, damagingSpellInfo, conversion
 		);
 	}
 
 	private DamagingSpellInfo getDamagingSpellInfo() {
-		var coeffDirect = colCoeffDirect.getPercent(Percent.ZERO);
-		var coeffDot = colCoeffDot.getPercent(Percent.ZERO);
 		var bolt = colBolt.getBoolean();
 		var requiredEffect = colRequiredEffect.getEnum(EffectId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(EffectId::parse, null);
 		var bonusDamageIfUnderEffect = colBonusDamageIfUnderEffect.getEnum(EffectId::parse, null);
 
-		return new DamagingSpellInfo(coeffDirect, coeffDot, bolt, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect);
+		return new DamagingSpellInfo(bolt, requiredEffect, effectRemovedOnHit, bonusDamageIfUnderEffect);
 	}
 
 	private Conversion getConversion() {

@@ -1,6 +1,7 @@
 package wow.commons.model.spells;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
@@ -8,6 +9,7 @@ import wow.commons.util.EnumUtil;
  * Date: 2019-11-02
  */
 @AllArgsConstructor
+@Getter
 public enum SpellSchool {
 	FROST("Frost"),
 	FIRE("Fire"),

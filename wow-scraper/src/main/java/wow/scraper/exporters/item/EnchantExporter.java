@@ -19,7 +19,7 @@ import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
  * Date: 2023-05-19
  */
 @Slf4j
-public class EnchantExporter extends AbstractSpellExporter<EnchantTooltipParser> {
+public class EnchantExporter extends AbstractItemSpellExporter<EnchantTooltipParser> {
 	private final Map<GameVersionId, Map<Integer, JsonSpellDetails>> detailsById = new EnumMap<>(GameVersionId.class);
 
 	@Override
@@ -31,7 +31,7 @@ public class EnchantExporter extends AbstractSpellExporter<EnchantTooltipParser>
 
 	@Override
 	protected EnchantTooltipParser createParser(JsonSpellDetails details, GameVersionId gameVersion) {
-		return new EnchantTooltipParser(details, gameVersion, getStatPatternRepository());
+		return new EnchantTooltipParser(details, gameVersion, getStatPatternRepository(), getSpellPatternRepository());
 	}
 
 	@Override

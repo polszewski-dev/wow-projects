@@ -15,7 +15,7 @@ import java.util.Optional;
  * Date: 2023-05-20
  */
 @Slf4j
-public abstract class AbstractSpellExporter<T extends AbstractSpellTooltipParser> extends ItemBaseExporter<WowheadSpellCategory, JsonSpellDetails, T> {
+public abstract class AbstractItemSpellExporter<T extends AbstractSpellTooltipParser> extends ItemBaseExporter<WowheadSpellCategory, JsonSpellDetails, T> {
 	@Override
 	protected List<Integer> getDetailIds(WowheadSpellCategory category, GameVersionId gameVersion) {
 		return getSpellDetailRepository().getDetailIds(gameVersion, category);

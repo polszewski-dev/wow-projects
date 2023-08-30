@@ -98,7 +98,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getDefaultRotationTemplate().getSpellIds()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
 		assertThat(characterTemplate.getActivePet()).isEqualTo(NONE);
 		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
-				FEL_ARMOR, TOUCH_OF_SHADOW, ARCANE_BRILLIANCE, BuffId.PRAYER_OF_FORTITUDE, PRAYER_OF_SPIRIT,
+				FEL_ARMOR, TOUCH_OF_SHADOW, ARCANE_BRILLIANCE, BuffId.PRAYER_OF_FORTITUDE, BuffId.PRAYER_OF_SPIRIT,
 				GIFT_OF_THE_WILD, GREATER_BLESSING_OF_KINGS, WRATH_OF_AIR_TOTEM,
 				TOTEM_OF_WRATH, WELL_FED_SP, BRILLIANT_WIZARD_OIL, FLASK_OF_PURE_DEATH
 		));

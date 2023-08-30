@@ -8,18 +8,22 @@ import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
+import wow.commons.model.talents.TalentId;
 import wow.commons.util.CollectionUtil;
 import wow.scraper.fetchers.PageCache;
 import wow.scraper.fetchers.PageFetcher;
 import wow.scraper.fetchers.impl.CachedPageFetcher;
 import wow.scraper.fetchers.impl.WebPageFetcher;
 import wow.scraper.model.WowheadItemQuality;
+import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.model.WowheadZoneType;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
 
 /**
  * User: POlszewski
@@ -43,9 +47,6 @@ public class ScraperConfig {
 
 	@Value("#{'${ignored.item.ids}'.split(',')}")
 	private Set<Integer> ignoredItemIds;
-
-	@Value("#{'${ignored.spell.ids}'.split(',')}")
-	private Set<Integer> ignoredSpellIds;
 
 	@Value("#{'${ignored.npc.ids}'.split(',')}")
 	private Set<Integer> ignoredNpcIds;
@@ -104,6 +105,31 @@ public class ScraperConfig {
 	@Value("#{${spell.required.side.overrides}}")
 	private Map<Side, Set<Integer>> spellRequiredSideOverrides;
 
+	@Value("#{${alliance.only.factions}}")
+	private Set<String> allianceOnlyFactions;
+
+	@Value("#{${horde.only.factions}}")
+	private Set<String> hordeOnlyFactions;
+
+	@Value("#{${talent.spells}}")
+	private Map<WowheadSpellCategory, Map<GameVersionId, List<String>>> talentSpells;
+
+	@Value("#{${rank.overrides}}")
+	private Map<Integer, Integer> rankOverrides;
+
+	@Value("#{${spell.name.overrides}}")
+	private Map<String, String> spellNameOverrides;
+
+	@Value("#{${talent.calculator.positions}}")
+	private Map<GameVersionId, Map<String, Integer>> talentCalculatorPositions;
+
+	@Value("#{${missing.spell.ids}}")
+	private Map<WowheadSpellCategory, Map<GameVersionId, List<Integer>>> missingSpells;
+
+	@Value("#{${ignored.spell.ids}}")
+	private Map<WowheadSpellCategory, Map<GameVersionId, List<Integer>>> ignoredSpellIds;
+
+
 	public Optional<Side> getItemRequiredSideOverride(int itemId) {
 		return getSide(itemRequiredSideOverrides, itemId);
 	}
@@ -118,12 +144,6 @@ public class ScraperConfig {
 				.map(Map.Entry::getKey)
 				.collect(CollectionUtil.toOptionalSingleton());
 	}
-
-	@Value("#{${alliance.only.factions}}")
-	private Set<String> allianceOnlyFactions;
-
-	@Value("#{${horde.only.factions}}")
-	private Set<String> hordeOnlyFactions;
 
 	public Side getRequiredSideFromFaction(String faction) {
 		if (allianceOnlyFactions.contains(faction)) {
@@ -148,5 +168,25 @@ public class ScraperConfig {
 	@Bean
 	public PageFetcher pageFetcher(PageCache pageCache) {
 		return new CachedPageFetcher(new WebPageFetcher(), pageCache);
+	}
+
+	public boolean isTalentSpell(String name, WowheadSpellCategory category, GameVersionId gameVersion) {
+		WowheadSpellCategory abilityCategory = WowheadSpellCategory.abilitiesOf(category.getCharacterClass(), category.getTalentTree()).orElseThrow();
+		return talentSpells.get(abilityCategory).get(gameVersion).contains(name);
+	}
+
+	public Integer getTalentCalculatorPosition(GameVersionId gameVersion, TalentId talentId) {
+		return talentCalculatorPositions.get(gameVersion).get(talentId.getName());
+	}
+
+	public List<Integer> getMissingSpellIds(WowheadSpellCategory category, GameVersionId gameVersion) {
+		if (category == ENCHANTS) {
+			return List.of();
+		}
+		return missingSpells.get(category).get(gameVersion);
+	}
+
+	public boolean isSpellIgnored(Integer spellId, WowheadSpellCategory category, GameVersionId gameVersion) {
+		return ignoredSpellIds.getOrDefault(category, Map.of()).getOrDefault(gameVersion, List.of()).contains(spellId);
 	}
 }

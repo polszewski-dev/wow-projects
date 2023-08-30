@@ -78,7 +78,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 
 	@Override
 	protected EnchantTooltipParser createParser(JsonSpellDetails data) {
-		return new EnchantTooltipParser(data, TBC, statPatternRepository);
+		return new EnchantTooltipParser(data, TBC, statPatternRepository, spellPatternRepository);
 	}
 
 	@Override

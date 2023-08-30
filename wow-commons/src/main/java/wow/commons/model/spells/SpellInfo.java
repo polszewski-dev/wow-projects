@@ -17,9 +17,9 @@ public class SpellInfo extends ConfigurationElementImpl<SpellId> {
 	private final TalentTree talentTree;
 	private final SpellSchool spellSchool;
 	private final Duration cooldown;
-	private final boolean channeled;
-	private final boolean ignoresGCD;
+	private final boolean ignoresGcd;
 	private final SpellTarget target;
+	private final int range;
 	private final DamagingSpellInfo damagingSpellInfo;
 	private final Conversion conversion;
 
@@ -31,9 +31,9 @@ public class SpellInfo extends ConfigurationElementImpl<SpellId> {
 			TalentTree talentTree,
 			SpellSchool spellSchool,
 			Duration cooldown,
-			boolean channeled,
-			boolean ignoresGCD,
+			boolean ignoresGcd,
 			SpellTarget target,
+			int range,
 			DamagingSpellInfo damagingSpellInfo,
 			Conversion conversion
 	) {
@@ -41,9 +41,9 @@ public class SpellInfo extends ConfigurationElementImpl<SpellId> {
 		this.talentTree = talentTree;
 		this.spellSchool = spellSchool;
 		this.cooldown = cooldown;
-		this.channeled = channeled;
-		this.ignoresGCD = ignoresGCD;
+		this.ignoresGcd = ignoresGcd;
 		this.target = target;
+		this.range = range;
 		this.damagingSpellInfo = damagingSpellInfo;
 		this.conversion = conversion;
 	}

@@ -11,7 +11,7 @@ import java.util.Objects;
 public record CastInfo(
 		Cost cost,
 		Duration castTime,
-		AppliedEffect appliedEffect
+		boolean channeled
 ) {
 	public CastInfo {
 		Objects.requireNonNull(castTime);

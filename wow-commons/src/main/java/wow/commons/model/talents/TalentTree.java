@@ -1,6 +1,7 @@
 package wow.commons.model.talents;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
@@ -8,6 +9,7 @@ import wow.commons.util.EnumUtil;
  * Date: 2020-09-19
  */
 @AllArgsConstructor
+@Getter
 public enum TalentTree {
 	RACIAL("Racial"),
 	MISC("Misc"),

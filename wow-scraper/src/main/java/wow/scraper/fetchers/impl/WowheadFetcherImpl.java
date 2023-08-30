@@ -57,6 +57,11 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 		return MAPPER.readValue(json, new TypeReference<>() {});
 	}
 
+	@Override
+	public List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> spellIds) {
+		return fetchIdFiltered(gameVersion, urlPart, spellIds, "14", this::fetchSpellDetails);
+	}
+
 	@SneakyThrows
 	@Override
 	public List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart) {

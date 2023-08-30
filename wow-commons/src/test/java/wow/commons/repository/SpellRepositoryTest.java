@@ -32,6 +32,7 @@ import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_
 import static wow.commons.model.buffs.BuffCategory.RAID_BUFF;
 import static wow.commons.model.categorization.PveRole.CASTER_DPS;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
 import static wow.commons.model.spells.SpellId.*;
 import static wow.commons.model.spells.SpellSchool.*;
@@ -59,13 +60,12 @@ class SpellRepositoryTest extends RepositoryTest {
 		assertThat(spell.getTalentTree()).isEqualTo(DESTRUCTION);
 		assertThat(spell.getSpellSchool()).isEqualTo(SHADOW);
 		assertThat(spell.getCoeffDirect().value()).isEqualTo(85.71, PRECISION);
-		assertThat(spell.getCoeffDot()).isEqualTo(Percent.ZERO);
 		assertThat(spell.getSpellInfo().getCooldown().getSeconds()).isZero();
-		assertThat(spell.getSpellInfo().isIgnoresGCD()).isFalse();
+		assertThat(spell.getSpellInfo().isIgnoresGcd()).isFalse();
 		assertThat(spell.getCharacterRestriction().characterClassIds()).hasSameElementsAs(List.of(WARLOCK));
 		assertThat(spell.getCharacterRestriction().raceIds()).isEmpty();
 		assertThat(spell.getCharacterRestriction().talentId()).isNull();
-		assertThat(spell.getTimeRestriction().versions()).isEmpty();
+		assertThat(spell.getTimeRestriction().versions()).isEqualTo(List.of(TBC));
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().bolt()).isTrue();
 		assertThat(spell.getSpellInfo().getConversion()).isNull();
 		assertThat(spell.getSpellInfo().getDamagingSpellInfo().requiredSpellEffect()).isNull();

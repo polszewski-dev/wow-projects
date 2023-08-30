@@ -50,7 +50,7 @@ public class CastSpellAction extends UnitAction {
 			castSpell();
 		}
 
-		if (!spell.getSpellInfo().isIgnoresGCD()) {
+		if (!spell.getSpellInfo().isIgnoresGcd()) {
 			owner.triggerGcd(context.getGcd(), this);
 		}
 	}

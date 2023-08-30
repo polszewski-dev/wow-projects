@@ -17,6 +17,8 @@ public interface WowheadFetcher {
 
 	List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart);
 
+	List<JsonSpellDetails> fetchSpellDetails(GameVersionId gameVersion, String urlPart, Collection<Integer> spellIds);
+
 	List<JsonZoneDetails> fetchZoneDetails(GameVersionId gameVersion, String urlPart);
 
 	List<JsonNpcDetails> fetchNpcDetails(GameVersionId gameVersion, String urlPart);

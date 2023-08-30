@@ -39,11 +39,11 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 	}
 
 	default Percent getCoeffDirect() {
-		return getSpellInfo().getDamagingSpellInfo().coeffDirect();
+		return getDirectDamageInfo().coeffDirect();
 	}
 
 	default Percent getCoeffDot() {
-		return getSpellInfo().getDamagingSpellInfo().coeffDot();
+		return getDotDamageInfo().coeffDot();
 	}
 
 	default Cost getCost() {
@@ -55,7 +55,7 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 	}
 
 	default boolean isChanneled() {
-		return getSpellInfo().isChanneled();
+		return getCastInfo().channeled();
 	}
 
 	default boolean isBolt() {
@@ -72,10 +72,6 @@ public interface Spell extends ConfigurationElement<SpellIdAndRank> {
 
 	default boolean isHostile() {
 		return getTarget().isHostile();
-	}
-
-	default AppliedEffect getAppliedEffect() {
-		return getCastInfo().appliedEffect();
 	}
 
 	default boolean hasDirectComponent() {
