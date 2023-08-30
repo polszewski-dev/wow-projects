@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.parsers.stats.StatParser;
 import wow.scraper.parsers.stats.StatPattern;
-import wow.scraper.parsers.stats.StatPatternExcelParser;
 import wow.scraper.repository.StatPatternRepository;
+import wow.scraper.repository.impl.excel.StatPatternExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;

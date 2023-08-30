@@ -1,4 +1,4 @@
-package wow.scraper.parsers.stats;
+package wow.scraper.repository.impl.excel;
 
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.categorization.ItemSubType;
@@ -9,7 +9,9 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.PrimitiveAttributeSupplier;
 import wow.scraper.parsers.setters.MiscStatSetter;
 import wow.scraper.parsers.setters.StatSetter;
-import wow.scraper.parsers.setters.StatSetterParams;
+import wow.scraper.parsers.stats.StatPattern;
+import wow.scraper.parsers.stats.StatPatternParams;
+import wow.scraper.parsers.stats.StatSetterParser;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +21,7 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class PatternSheetParser extends ExcelSheetParser {
+public class StatPatternSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colPattern = column("pattern");
 	private final ExcelColumn colStat1 = column("stat1");
 	private final ExcelColumn colStat2 = column("stat2");
@@ -40,7 +42,7 @@ public class PatternSheetParser extends ExcelSheetParser {
 
 	private final List<StatPattern> patterns;
 
-	public PatternSheetParser(String sheetName, List<StatPattern> patterns) {
+	public StatPatternSheetParser(String sheetName, List<StatPattern> patterns) {
 		super(sheetName);
 		this.patterns = patterns;
 	}
@@ -78,8 +80,8 @@ public class PatternSheetParser extends ExcelSheetParser {
 		return List.of(new MiscStatSetter());
 	}
 
-	private StatSetterParams getParams() {
-		StatSetterParams params = new StatSetterParams();
+	private StatPatternParams getParams() {
+		StatPatternParams params = new StatPatternParams();
 
 		params.setType(colSpecialType.getString(null));
 		params.setStatsSupplier(colSpecialStat.getEnum(PrimitiveAttributeSupplier::fromString, null));

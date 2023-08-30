@@ -2,34 +2,27 @@ package wow.scraper.parsers.stats;
 
 import wow.commons.model.attributes.Attributes;
 import wow.commons.util.AttributesBuilder;
+import wow.scraper.parsers.scraper.ScraperParser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * User: POlszewski
  * Date: 2022-10-23
  */
-public class StatParser {
-	private final List<StatMatcher> matchers;
-	private final List<StatMatcher> successfulMatchers = new ArrayList<>();
-
+public class StatParser extends ScraperParser<StatPattern, StatMatcher, StatMatcherParams> {
 	public StatParser(List<StatPattern> patterns) {
-		this.matchers = patterns.stream()
-				.map(StatMatcher::new)
-				.toList();
+		super(patterns);
 	}
 
-	public boolean tryParse(String line) {
-		StatMatcherParams params = StatMatcherParams.of(line);
+	@Override
+	protected StatMatcher createMatcher(StatPattern pattern) {
+		return new StatMatcher(pattern);
+	}
 
-		for (StatMatcher matcher : matchers) {
-			if (matcher.tryParse(params)) {
-				successfulMatchers.add(matcher);
-				return true;
-			}
-		}
-		return false;
+	@Override
+	protected StatMatcherParams createMatcherParams(String line) {
+		return StatMatcherParams.of(line);
 	}
 
 	public Attributes tryParseSingleStat(String line) {
@@ -45,12 +38,5 @@ public class StatParser {
 			matcher.setStat(stats);
 		}
 		return stats.toAttributes();
-	}
-
-	public StatMatcher getUniqueSuccessfulMatcher() {
-		if (successfulMatchers.size() != 1) {
-			throw new IllegalArgumentException();
-		}
-		return successfulMatchers.get(0);
 	}
 }

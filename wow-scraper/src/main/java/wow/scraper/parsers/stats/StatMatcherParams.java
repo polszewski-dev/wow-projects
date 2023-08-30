@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.scraper.parsers.scraper.ScraperMatcherParams;
 
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
  */
 @Getter
 @Builder
-public class StatMatcherParams {
+public class StatMatcherParams implements ScraperMatcherParams {
 	private final String originalLine;
 	private final String line;
 	private final Duration parsedCooldown;

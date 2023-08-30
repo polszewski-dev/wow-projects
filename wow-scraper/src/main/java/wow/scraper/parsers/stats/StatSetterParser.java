@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * User: POlszewski
  * Date: 2023-04-22
  */
-class StatSetterParser {
+public class StatSetterParser {
 	private String line;
 	private int groupNo;
 	private Double constantValue;

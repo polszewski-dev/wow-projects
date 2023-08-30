@@ -10,128 +10,71 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.repository.impl.parsers.excel.mapper.ComplexAttributeMapper;
 import wow.commons.util.AttributesBuilder;
-import wow.commons.util.parser.ParserUtil;
+import wow.scraper.parsers.scraper.ScraperMatcher;
 import wow.scraper.parsers.setters.StatSetter;
 
 import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * User: POlszewski
  * Date: 2021-03-25
  */
-public class StatMatcher {
-	private final StatPattern pattern;
-
-	private StatMatcherParams params;
-	private String[] parsedValues;
-
+public class StatMatcher extends ScraperMatcher<StatPattern, StatPatternParams, StatMatcherParams> {
 	public StatMatcher(StatPattern pattern) {
-		this.pattern = pattern;
-	}
-
-	public boolean hasMatch() {
-		return parsedValues != null;
-	}
-
-	public int getInt() {
-		return getInt(1);
-	}
-
-	public double getDouble() {
-		return getDouble(1);
-	}
-
-	public String getString() {
-		return getString(1);
-	}
-
-	public int getInt(int i) {
-		return Integer.parseInt(getString(i));
-	}
-
-	public double getDouble(int i) {
-		return Double.parseDouble(getString(i));
-	}
-
-	public String getString(int i) {
-		if (!hasMatch()) {
-			throw new IllegalArgumentException();
-		}
-		if (i == 0) {
-			return params.getOriginalLine();
-		}
-		return parsedValues[i - 1];
+		super(pattern);
 	}
 
 	public String getParamType() {
-		return pattern.getParams().getType();
+		return getPatternParams().getType();
 	}
 
 	public Attributes getParamStats() {
-		String value = evalParams(pattern.getParams().getAmount());
+		String value = evalParams(getPatternParams().getAmount());
 		double amount = Double.parseDouble(value);
-		return pattern.getParams().getStatsSupplier().getAttributes(amount);
+		return getPatternParams().getStatsSupplier().getAttributes(amount);
 	}
 
 	public Duration getParamDuration() {
-		String value = evalParams(pattern.getParams().getDuration());
+		String value = evalParams(getPatternParams().getDuration());
 		return Duration.parse(value);
 	}
 
 	public Duration getParamCooldown() {
-		return params.getParsedCooldown();
+		return matcherParams.getParsedCooldown();
 	}
 
 	public Percent getParamProcChance() {
-		return params.getParsedProcChance();
+		return matcherParams.getParsedProcChance();
 	}
 
 	public Duration getParamProcCooldown() {
-		Duration cooldown = params.getParsedProcCooldown();
+		Duration cooldown = matcherParams.getParsedProcCooldown();
 		return cooldown != null ? cooldown : Duration.ZERO;
 	}
 
 	public ComplexAttribute getExpression() {
-		String value = evalParams(pattern.getParams().getExpression());
+		String value = evalParams(getPatternParams().getExpression());
 		return ComplexAttributeMapper.fromString(value);
 	}
 
 	public List<ItemType> getParamItemTypes() {
-		return pattern.getParams().getItemTypes();
+		return getPatternParams().getItemTypes();
 	}
 
 	public List<ItemSubType> getParamItemSubTypes() {
-		return pattern.getParams().getItemSubTypes();
+		return getPatternParams().getItemSubTypes();
 	}
 
 	public ProfessionId getRequiredProfession() {
-		return pattern.getParams().getRequiredProfession();
+		return getPatternParams().getRequiredProfession();
 	}
 
 	public Integer getRequiredProfessionLevel() {
-		return pattern.getParams().getRequiredProfessionLevel();
+		return getPatternParams().getRequiredProfessionLevel();
 	}
 
 	public List<PveRole> getParamPveRoles() {
-		return pattern.getParams().getPveRoles();
-	}
-
-	private String evalParams(String pattern) {
-		return ParserUtil.substituteParams(pattern, this::getString);
-	}
-
-	public boolean tryParse(StatMatcherParams params) {
-		String lineToMatch = pattern.isLiteral() ? params.getOriginalLine() : params.getLine();
-		Matcher matcher = pattern.getMatcher(lineToMatch);
-
-		if (matcher == null) {
-			return false;
-		}
-
-		this.params = params;
-		this.parsedValues = ParserUtil.getMatchedGroups(matcher);
-		return true;
+		return getPatternParams().getPveRoles();
 	}
 
 	public void setStat(AttributesBuilder stats) {
@@ -143,7 +86,12 @@ public class StatMatcher {
 	}
 
 	@Override
+	protected String getLineToMatch(StatMatcherParams params) {
+		return pattern.isLiteral() ? params.getOriginalLine() : params.getLine();
+	}
+
+	@Override
 	public String toString() {
-		return params != null ? params.getOriginalLine() : null;
+		return matcherParams != null ? matcherParams.getOriginalLine() : null;
 	}
 }
