@@ -19,6 +19,7 @@ public class ScraperContextImpl implements ScraperContext {
 	private final SpellDetailRepository spellDetailRepository;
 	private final QuestInfoRepository questInfoRepository;
 	private final StatPatternRepository statPatternRepository;
+	private final SpellPatternRepository spellPatternRepository;
 	private final ZoneDetailRepository zoneDetailRepository;
 	private final NpcDetailRepository npcDetailRepository;
 	private final FactionDetailRepository factionDetailRepository;

@@ -24,5 +24,7 @@ public interface ScraperContext {
 
 	StatPatternRepository getStatPatternRepository();
 
+	SpellPatternRepository getSpellPatternRepository();
+
 	ScraperConfig getScraperConfig();
 }

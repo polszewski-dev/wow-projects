@@ -51,6 +51,11 @@ public interface ScraperContextSource extends ScraperContext {
 	}
 
 	@Override
+	default SpellPatternRepository getSpellPatternRepository() {
+		return getScraperContext().getSpellPatternRepository();
+	}
+
+	@Override
 	default ScraperConfig getScraperConfig() {
 		return getScraperContext().getScraperConfig();
 	}
