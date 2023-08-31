@@ -1,19 +1,20 @@
 package wow.scraper.parser.tooltip;
 
 import lombok.Getter;
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.PveRole;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
+import wow.scraper.parser.effect.ItemStatParser;
 import wow.scraper.parser.stat.StatMatcher;
-import wow.scraper.parser.stat.StatParser;
 
 import java.util.List;
+import java.util.Optional;
 
 import static wow.scraper.util.CommonAssertions.assertBothAreEqual;
 
@@ -23,8 +24,10 @@ import static wow.scraper.util.CommonAssertions.assertBothAreEqual;
  */
 @Getter
 public class EnchantTooltipParser extends AbstractSpellTooltipParser {
-	private StatParser statParser;
+	private ItemStatParser itemStatParser;
+	private StatMatcher matcher;
 	private String tooltip;
+	private Integer requiredItemLevel;
 
 	public EnchantTooltipParser(JsonSpellDetails spellDetails, GameVersionId gameVersion, ScraperContext scraperContext) {
 		super(spellDetails, gameVersion, scraperContext);
@@ -47,8 +50,6 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 				ruleDropChance,
 				ruleSellPrice,
 
-				Rule.test(line -> statParser.tryParse(cleanEnchantTooltip(line)), x -> tooltip = x),
-
 				Rule.exact("5 sec cast", () -> {}),
 				Rule.exact("Quest Item", () -> {}),
 				Rule.regex("Max Stack: (\\d+)", x -> {}),
@@ -56,13 +57,19 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 				Rule.exact("Reagents:", () -> ++currentLineIdx),
 				Rule.exact("Tools:", () -> ++currentLineIdx),
 				Rule.regex("Requires (Armor|Boots|Bracers|Chest|Chest, Chest|Cloak|Gloves|Melee Weapon|Weapons)", x -> {}),
+
+				Rule.test(this::tryParseItemEffect, x -> tooltip = x),
 		};
 	}
 
 	@Override
 	protected void beforeParse() {
 		this.itemType = ItemType.ENCHANT;
-		this.statParser = getStatPatternRepository().getEnchantStatParser(gameVersion);
+		this.itemStatParser = new ItemStatParser(
+				gameVersion,
+				getStatPatternRepository()::getEnchantStatParser,
+				getItemSpellRepository()
+		);
 	}
 
 	@Override
@@ -70,17 +77,32 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 		//VOID
 	}
 
+	private boolean tryParseItemEffect(String line) {
+		var statParser = getStatPatternRepository().getEnchantStatParser(gameVersion);
+		var tooltipCleaner = new EnchantTooltipCleaner(line);
+		var cleanedLine = tooltipCleaner.cleanEnchantTooltip();
+
+		if (!statParser.tryParse(cleanedLine)) {
+			return false;
+		}
+
+		this.matcher = statParser.getSuccessfulMatcher().orElseThrow();
+		this.itemStatParser.tryParseItemEffect(cleanedLine);
+		this.requiredItemLevel = tooltipCleaner.getRequiredItemLevel();
+		return true;
+	}
+
 	public List<ItemType> getItemTypes() {
-		return getMatcher().getParamItemTypes();
+		return matcher.getParamItemTypes();
 	}
 
 	public List<ItemSubType> getItemSubTypes() {
-		return getMatcher().getParamItemSubTypes();
+		return matcher.getParamItemSubTypes();
 	}
 
 	@Override
 	public ProfessionId getRequiredProfession() {
-		ProfessionId matchedRequiredProfession = getMatcher().getRequiredProfession();
+		ProfessionId matchedRequiredProfession = matcher.getRequiredProfession();
 
 		if (matchedRequiredProfession != null && requiredProfession != null) {
 			assertBothAreEqual("required profession", matchedRequiredProfession, requiredProfession);
@@ -96,8 +118,8 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 
 	@Override
 	public Integer getRequiredProfessionLevel() {
-		ProfessionId matchedRequiredProfession = getMatcher().getRequiredProfession();
-		Integer matchedRequiredProfessionLevel = getMatcher().getRequiredProfessionLevel();
+		ProfessionId matchedRequiredProfession = matcher.getRequiredProfession();
+		Integer matchedRequiredProfessionLevel = matcher.getRequiredProfessionLevel();
 
 		if (matchedRequiredProfession != null && requiredProfession != null) {
 			assertBothAreEqual("required profession", matchedRequiredProfessionLevel, requiredProfessionLevel);
@@ -117,24 +139,19 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 	}
 
 	public List<PveRole> getPveRoles() {
-		return getMatcher().getParamPveRoles();
+		return matcher.getParamPveRoles();
 	}
 
-	private StatMatcher getMatcher() {
-		return statParser.getUniqueSuccessfulMatcher();
+	public Optional<Effect> getEffect() {
+		return itemStatParser.getUniqueItemEffect();
 	}
 
-	public Attributes getParsedStats() {
-		return statParser.getParsedStats();
-	}
-
-	private String cleanEnchantTooltip(String line) {
-		return line
-				.replaceAll("Requires a level (\\d+) or higher item\\.", "")
-				.replaceAll("Can only be attached to level (\\d+) and higher items\\.", "")
-				.replaceAll("Only usable on items level (\\d+) and above\\.", "")
-				.replaceAll("Only useable on items level (\\d+) and above\\.", "")
-				.replace("Does not stack with other enchantments for the selected equipment slot.", "")
-				.trim();
+	@Override
+	public String getIcon() {
+		String icon = details.getIcon();
+		if ("inv_misc_note_01".equals(icon)) {
+			return "spell_holy_greaterheal";
+		}
+		return icon;
 	}
 }

@@ -2,8 +2,6 @@ package wow.simulator;
 
 import lombok.Getter;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import wow.character.model.character.Character;
-import wow.character.model.character.Enemy;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.graph.GraphGameLogHandler;
@@ -15,9 +13,11 @@ import wow.simulator.log.handler.ConsoleGameLogHandler;
 import wow.simulator.model.rng.PredeterminedRng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
+import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
-import wow.simulator.model.unit.Target;
-import wow.simulator.script.AIScript;
+import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.impl.NonPlayerImpl;
+import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.script.warlock.WarlockPriorityScript;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
@@ -46,7 +46,7 @@ public class WowDpsSimulatorMain implements SimulatorContextSource {
 	private Simulation simulation;
 
 	private Player player;
-	private Target target;
+	private Unit target;
 
 	private TimeGraph graph;
 	private Statistics statistics;
@@ -87,15 +87,11 @@ public class WowDpsSimulatorMain implements SimulatorContextSource {
 	}
 
 	private void createUnits() {
-		AIScript aiScript = new WarlockPriorityScript(this);
+		var aiScript = new WarlockPriorityScript(this);
 
-		Character character = getCharacterService().createCharacter(WARLOCK, ORC, 70, TBC_P5);
-		Enemy enemy = new Enemy(BEAST, 3);
+		player = createPlayer();
+		target = createTarget();
 
-		player = new Player("Player", character);
-		target = new Target("Target", enemy);
-
-		character.setTargetEnemy(enemy);
 		player.setTarget(target);
 
 		player.setOnPendingActionQueueEmpty(x -> aiScript.execute(player));
@@ -105,6 +101,16 @@ public class WowDpsSimulatorMain implements SimulatorContextSource {
 
 		simulation.add(player);
 		simulation.add(target);
+	}
+
+	private Player createPlayer() {
+		var character = getCharacterService().createPlayerCharacter(WARLOCK, ORC, 70, TBC_P5);
+		return new PlayerImpl("Player", character);
+	}
+
+	private NonPlayer createTarget() {
+		var enemy = getCharacterService().createNonPlayerCharacter(BEAST, 73, TBC_P5);
+		return new NonPlayerImpl("Target", enemy);
 	}
 
 	private void saveGraph() {

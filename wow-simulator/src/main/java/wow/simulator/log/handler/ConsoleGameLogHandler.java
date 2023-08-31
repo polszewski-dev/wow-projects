@@ -2,10 +2,10 @@ package wow.simulator.log.handler;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
 import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.Effect;
+import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
@@ -33,67 +33,82 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void beginCast(CastSpellAction action) {
-		print("%s begin cast %s", action.getOwner(), action.getSpell());
+		print("%s begin cast %s", action.getOwner(), action.getAbility());
 	}
 
 	@Override
 	public void endCast(CastSpellAction action) {
-		print("%s end cast %s", action.getOwner(), action.getSpell());
+		print("%s end cast %s", action.getOwner(), action.getAbility());
+	}
+
+	@Override
+	public void beginChannel(CastSpellAction action) {
+		print("%s begin channel %s", action.getOwner(), action.getAbility());
+	}
+
+	@Override
+	public void endChannel(CastSpellAction action) {
+		print("%s end channel %s", action.getOwner(), action.getAbility());
 	}
 
 	@Override
 	public void canNotBeCasted(CastSpellAction action) {
-		print("%s can't cast %s on %s", action.getOwner(), action.getSpell(), action.getTarget());
+		print("%s can't cast %s", action.getOwner(), action.getAbility());
 	}
 
 	@Override
 	public void castInterrupted(CastSpellAction action) {
-		print("%s's s% cast on %s interrupted", action.getOwner(), action.getSpell(), action.getTarget());
+		print("%s's s% cast interrupted", action.getOwner(), action.getAbility());
 	}
 
 	@Override
-	public void spellResisted(CastSpellAction action) {
-		print("%s's %s resisted %s", action.getOwner(), action.getSpell(), action.getTarget());
+	public void channelInterrupted(CastSpellAction action) {
+		print("%s's s% channel interrupted", action.getOwner(), action.getAbility());
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-		print("%s increased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
+	public void spellResisted(CastSpellAction action, Unit target) {
+		print("%s's %s resisted by %s", action.getOwner(), action.getAbility(), target);
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-		print("%s decreased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
+	public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+		print("%s increased %s %s by %s%s", ability, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
 	}
 
 	@Override
-	public void effectApplied(Effect effect) {
+	public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+		print("%s decreased %s %s by %s%s", ability, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
+	}
+
+	@Override
+	public void effectApplied(UnitEffect effect) {
 		print("Effect of %s applied", effect);
 	}
 
 	@Override
-	public void effectStacked(Effect effect) {
+	public void effectStacked(UnitEffect effect) {
 		print("Effect of %s stacked", effect);
 	}
 
 	@Override
-	public void effectExpired(Effect effect) {
+	public void effectExpired(UnitEffect effect) {
 		print("Effect of %s expired", effect);
 	}
 
 	@Override
-	public void effectRemoved(Effect effect) {
+	public void effectRemoved(UnitEffect effect) {
 		print("Effect of %s removed", effect);
 	}
 
 	@Override
 	public void cooldownStarted(Cooldown cooldown) {
-		print("%s's %s cooldown started", cooldown.getOwner(), cooldown.getSpellId());
+		print("%s's %s cooldown started", cooldown.getOwner(), cooldown.getAbilityId());
 	}
 
 	@Override
 	public void cooldownExpired(Cooldown cooldown) {
-		print("%s's %s cooldown expired", cooldown.getOwner(), cooldown.getSpellId());
+		print("%s's %s cooldown expired", cooldown.getOwner(), cooldown.getAbilityId());
 	}
 
 	@Override

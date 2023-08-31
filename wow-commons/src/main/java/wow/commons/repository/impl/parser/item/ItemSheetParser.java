@@ -1,17 +1,19 @@
 package wow.commons.repository.impl.parser.item;
 
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSocketSpecification;
+import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.item.impl.ItemImpl;
+import wow.commons.model.spell.ActivatedAbility;
+import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.repository.PveRepository;
+import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
-
-import java.util.List;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 
@@ -22,11 +24,12 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
 public class ItemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colSocketTypes = column(ITEM_SOCKET_TYPES);
 	private final ExcelColumn colItemSet = column(ITEM_ITEM_SET);
+	private final ExcelColumn colActivatedAbility = column(ITEM_ACTIVATED_ABILITY);
 
 	private final ItemBaseExcelParser parser;
 	
-	public ItemSheetParser(String sheetName, PveRepository pveRepository, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
-		super(sheetName, pveRepository, itemRepository);
+	public ItemSheetParser(String sheetName, PveRepository pveRepository, SpellRepository spellRepository, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
+		super(sheetName, pveRepository, spellRepository, itemRepository);
 		this.parser = parser;
 	}
 
@@ -38,20 +41,23 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 
 	private Item getItem() {
 		var id = getId();
-		var socketTypes = colSocketTypes.getList(SocketType::valueOf);
-		var itemSetName = colItemSet.getString(null);
-		var stats = readAttributes();
-
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
 		var basicItemInfo = getBasicItemInfo();
-		var socketSpecification = getSocketSpecification(socketTypes);
 		var pveRoles = getPveRoles();
+		var itemSetName = colItemSet.getString(null);
 
-		var item = new ItemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, socketSpecification, null, pveRoles);
+		var item = new ItemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, null, pveRoles);
 
-		item.setAttributes(stats);
+		var source = new ItemSource(item);
+		var effects = readItemEffects(ITEM_EFFECT_PREFIX, ITEM_MAX_EFFECTS, timeRestriction, source);
+		var socketSpecification = getSocketSpecification(timeRestriction, source);
+		var activatedAbility = getActivatedAbility(source);
+
+		item.setEffects(effects);
+		item.setSocketSpecification(socketSpecification);
+		item.setActivatedAbility(activatedAbility);
 
 		validateItem(item);
 
@@ -62,14 +68,30 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		return item;
 	}
 
-	private ItemSocketSpecification getSocketSpecification(List<SocketType> socketTypes) {
+	private ItemSocketSpecification getSocketSpecification(TimeRestriction timeRestriction, ItemSource source) {
+		var socketTypes = colSocketTypes.getList(SocketType::valueOf);
+
 		if (socketTypes.isEmpty()) {
 			return ItemSocketSpecification.EMPTY;
 		}
 
-		Attributes socketBonus = readAttributes(SOCKET_BONUS_PREFIX);
+		var socketBonus = readItemEffect(SOCKET_BONUS_PREFIX, 1, timeRestriction, source);
 
 		return new ItemSocketSpecification(socketTypes, socketBonus);
+	}
+
+	private ActivatedAbility getActivatedAbility(ItemSource source) {
+		var spellId = colActivatedAbility.getNullableInteger();
+
+		if (spellId == null) {
+			return null;
+		}
+
+		var activatedAbility = (ActivatedAbilityImpl) spellRepository.getSpell(spellId, getTimeRestriction().getUniqueVersion().getLastPhase()).orElseThrow();
+
+		activatedAbility.attachSource(source);
+
+		return activatedAbility;
 	}
 
 	private void validateItem(Item item) {

@@ -42,6 +42,9 @@ public class ProcInfoRepositoryImpl implements ProcInfoRepository {
 		ProcInfo procInfo = procInfoByKey.get(key);
 
 		if (procInfo == null) {
+			if (duration == 8) {
+				return getProcInfo(procChance, castTime, 10, internalCooldown);
+			}
 			throw new IllegalArgumentException("Missing entry for " + key);
 		}
 		return procInfo;

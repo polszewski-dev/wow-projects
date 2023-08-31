@@ -1,6 +1,7 @@
 package wow.scraper.exporter.pve;
 
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.exporter.pve.excel.PveBaseExcelBuilder;
 import wow.scraper.model.JsonNpcDetails;
 
 import java.util.Comparator;
@@ -12,12 +13,12 @@ import java.util.List;
  */
 public class NpcExporter extends PveBaseExporter<JsonNpcDetails> {
 	@Override
-	protected void addHeader() {
+	protected void addHeader(PveBaseExcelBuilder builder) {
 		builder.addNpcHeader();
 	}
 
 	@Override
-	protected void addRow(JsonNpcDetails npc) {
+	protected void addRow(JsonNpcDetails npc, PveBaseExcelBuilder builder) {
 		builder.add(npc);
 	}
 
@@ -27,8 +28,8 @@ public class NpcExporter extends PveBaseExporter<JsonNpcDetails> {
 	}
 
 	@Override
-	protected void fixData(List<JsonNpcDetails> npcs) {
-		npcs.removeIf(x -> getScraperConfig().getIgnoredNpcIds().contains(x.getId()));
+	protected void fixData() {
+		data.removeIf(x -> getScraperConfig().getIgnoredNpcIds().contains(x.getId()));
 	}
 
 	@Override

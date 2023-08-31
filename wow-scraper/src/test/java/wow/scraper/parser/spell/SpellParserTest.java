@@ -1,16 +1,17 @@
 package wow.scraper.parser.spell;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.Duration;
-import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.SpellId;
-import wow.scraper.ScraperTestConfig;
-import wow.scraper.repository.SpellPatternRepository;
+import wow.commons.model.Percent;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.component.*;
+import wow.commons.model.spell.*;
+import wow.commons.model.spell.component.DirectComponent;
+import wow.scraper.ScraperSpringTest;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,101 +19,90 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2023-08-29
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ScraperTestConfig.class)
-class SpellParserTest {
-	@Autowired
-	SpellPatternRepository spellPatternRepository;
-
-	@Test
-	void parseIncinerate() {
-		SpellMatcher matcher = getMatcher(SpellId.INCINERATE, "Deals 444 to 514 Fire damage to your target and an additional 111 to 128 Fire damage if the target is affected by an Immolate spell.");
-
-		assertThat(matcher.getMinDmg()).hasValue(444);
-		assertThat(matcher.getMaxDmg()).hasValue(514);
-		assertThat(matcher.getMinDmg2()).hasValue(111);
-		assertThat(matcher.getMaxDmg2()).hasValue(128);
-		assertThat(matcher.getDotDmg()).isEmpty();
-		assertThat(matcher.getTickDmg()).isEmpty();
-		assertThat(matcher.getTickInterval()).isEmpty();
-		assertThat(matcher.getDotDuration()).isEmpty();
-		assertThat(matcher.getCostAmount()).isEmpty();
-		assertThat(matcher.getCostType()).isEmpty();
+abstract class SpellParserTest extends ScraperSpringTest {
+	static void assertCost(Cost cost, int amount, ResourceType resourceType, double baseStatPct, double coeff, SpellSchool school) {
+		assertThat(cost.amount()).isEqualTo(amount);
+		assertThat(cost.resourceType()).isEqualTo(resourceType);
+		assertThat(cost.baseStatPct()).isEqualTo(Percent.of(baseStatPct));
+		assertCoefficient(coeff, school, cost.coefficient());
 	}
 
-	@Test
-	void parseImmolate() {
-		SpellMatcher matcher = getMatcher(SpellId.IMMOLATE, "Burns the enemy for 332 Fire damage and then an additional 615 Fire damage over 15 sec.");
-
-		assertThat(matcher.getMinDmg()).hasValue(332);
-		assertThat(matcher.getMaxDmg()).hasValue(332);
-		assertThat(matcher.getMinDmg2()).isEmpty();
-		assertThat(matcher.getMaxDmg2()).isEmpty();
-		assertThat(matcher.getDotDmg()).hasValue(615);
-		assertThat(matcher.getTickDmg()).isEmpty();
-		assertThat(matcher.getTickInterval()).hasValue(Duration.seconds(3));
-		assertThat(matcher.getDotDuration()).hasValue(Duration.seconds(15));
-		assertThat(matcher.getCostAmount()).isEmpty();
-		assertThat(matcher.getCostType()).isEmpty();
+	static void assertDirectComponent(DirectComponent direct, ComponentType type, double coeff, SpellSchool school, int min, int max) {
+		assertThat(direct.type()).isEqualTo(type);
+		assertCoefficient(coeff, school, direct.coefficient());
+		assertThat(direct.min()).isEqualTo(min);
+		assertThat(direct.max()).isEqualTo(max);
 	}
 
-	@Test
-	void parseDrainLife() {
-		SpellMatcher matcher = getMatcher(SpellId.DRAIN_LIFE, "Transfers 108 health every 1 sec from the target to the caster.  Lasts 5 sec.");
-
-		assertThat(matcher.getMinDmg()).isEmpty();
-		assertThat(matcher.getMaxDmg()).isEmpty();
-		assertThat(matcher.getMinDmg2()).isEmpty();
-		assertThat(matcher.getMaxDmg2()).isEmpty();
-		assertThat(matcher.getDotDmg()).isEmpty();
-		assertThat(matcher.getTickDmg()).hasValue(108);
-		assertThat(matcher.getTickInterval()).hasValue(Duration.seconds(1));
-		assertThat(matcher.getDotDuration()).hasValue(Duration.seconds(5));
-		assertThat(matcher.getCostAmount()).isEmpty();
-		assertThat(matcher.getCostType()).isEmpty();
+	static void assertDirectComponent(DirectComponent direct, ComponentType type, double coeff, SpellSchool school, int min, int max, int minBonus, int maxBonus, AbilityId bonusRequiredEffect) {
+		assertDirectComponent(direct, type, coeff, school, min, max);
+		assertThat(direct.bonus()).isNotNull();
+		assertThat(direct.bonus().min()).isEqualTo(minBonus);
+		assertThat(direct.bonus().max()).isEqualTo(maxBonus);
+		assertThat(direct.bonus().requiredEffect()).isEqualTo(bonusRequiredEffect);
 	}
 
-	@Test
-	void parseLifeTap() {
-		SpellMatcher matcher = getMatcher(SpellId.LIFE_TAP, "Converts 582 health into 582 mana.");
-
-		assertThat(matcher.getMinDmg()).isEmpty();
-		assertThat(matcher.getMaxDmg()).isEmpty();
-		assertThat(matcher.getMinDmg2()).isEmpty();
-		assertThat(matcher.getMaxDmg2()).isEmpty();
-		assertThat(matcher.getDotDmg()).isEmpty();
-		assertThat(matcher.getTickDmg()).isEmpty();
-		assertThat(matcher.getTickInterval()).isEmpty();
-		assertThat(matcher.getDotDuration()).isEmpty();
-		assertThat(matcher.getCostAmount()).hasValue(582);
-		assertThat(matcher.getCostType()).hasValue(ResourceType.HEALTH);
+	static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double tickCoeff, SpellSchool school, int amount, int numTicks, TickScheme tickScheme) {
+		assertThat(periodic.type()).isEqualTo(type);
+		assertCoefficient(tickCoeff, school, periodic.coefficient());
+		assertThat(periodic.amount()).isEqualTo(amount);
+		assertThat(periodic.numTicks()).isEqualTo(numTicks);
+		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
 	}
 
-	@Test
-	void noSpell() {
-		SpellParser parser = spellPatternRepository.getSpellParser(SpellId.AMPLIFY_CURSE, GameVersionId.TBC);
-
-		boolean success = parser.tryParse("Increases the effect of your next Curse of Doom or Curse of Agony by 50%, or your next Curse of Exhaustion by an additional 20%.  Lasts 30 sec.");
-
-		assertThat(success).isFalse();
+	static void assertDuration(Duration duration, double seconds) {
+		assertDuration(duration, Duration.seconds(seconds));
 	}
 
-	@Test
-	void incorrectDescription() {
-		SpellParser parser = spellPatternRepository.getSpellParser(SpellId.LIFE_TAP, GameVersionId.TBC);
-
-		boolean success = parser.tryParse("xyz");
-
-		assertThat(success).isFalse();
+	static void assertDuration(Duration duration, Duration expectedDuration) {
+		assertThat(duration).isEqualTo(expectedDuration);
 	}
 
-	private SpellMatcher getMatcher(SpellId spellId, String line) {
-		SpellParser parser = spellPatternRepository.getSpellParser(spellId, GameVersionId.TBC);
+	static void assertEffectApplication(Spell spell, SpellTarget target, int duration, int numCharges, int numStacks, int maxStacks) {
+		var effectApplication = spell.getEffectApplication();
 
-		boolean success = parser.tryParse(line);
+		assertThat(effectApplication).isNotNull();
+		assertThat(effectApplication.target()).isEqualTo(target);
+		assertThat(effectApplication.duration()).isEqualTo(Duration.seconds(duration));
+		assertThat(effectApplication.numCharges()).isEqualTo(numCharges);
+		assertThat(effectApplication.numStacks()).isEqualTo(numStacks);
+		assertThat(effectApplication.effect()).isNotNull();
+		assertThat(effectApplication.effect().getMaxStacks()).isEqualTo(maxStacks);
+	}
 
-		assertThat(success).isTrue();
+	static void assertModifier(Effect effect, List<PrimitiveAttribute> attributes) {
+		assertThat(effect.getModifierAttributeList()).isNotNull();
+		assertThat(effect.getModifierAttributeList()).isEqualTo(attributes);
+	}
 
-		return parser.getUniqueSuccessfulMatcher();
+	static void assertEvent(Event event, List<EventType> types, AttributeCondition condition, double chance, List<EventAction> actions, Duration cooldown) {
+		assertThat(event.types()).isEqualTo(types);
+		assertThat(event.condition()).isEqualTo(condition);
+		assertThat(event.chance()).isEqualTo(Percent.of(chance));
+		assertThat(event.actions()).isEqualTo(actions);
+		assertThat(event.cooldown()).isEqualTo(cooldown);
+	}
+
+	static void assertConversion(Conversion conversion, AttributeCondition condition, Conversion.From from, Conversion.To to, double ratioPct) {
+		assertThat(conversion.condition()).isEqualTo(condition);
+		assertThat(conversion.from()).isEqualTo(from);
+		assertThat(conversion.to()).isEqualTo(to);
+		assertThat(conversion.ratioPct()).isEqualTo(Percent.of(ratioPct));
+	}
+
+	static void assertStatConversion(Effect effect, int idx, PrimitiveAttributeId from, PrimitiveAttributeId to, AttributeCondition toCondition, int ratio) {
+		assertThat(effect.getStatConversions()).hasSizeGreaterThan(idx);
+
+		var statConversion = effect.getStatConversions().get(idx);
+
+		assertThat(statConversion.from()).isEqualTo(from);
+		assertThat(statConversion.to()).isEqualTo(to);
+		assertThat(statConversion.toCondition()).isEqualTo(toCondition);
+		assertThat(statConversion.ratioPct()).isEqualTo(Percent.of(ratio));
+	}
+
+	static void assertCoefficient(double tickCoeff, SpellSchool school, Coefficient coefficient) {
+		assertThat(coefficient.value().getCoefficient()).isEqualTo(Percent.of(tickCoeff).getCoefficient(), PRECISION);
+		assertThat(coefficient.school()).isEqualTo(school);
 	}
 }

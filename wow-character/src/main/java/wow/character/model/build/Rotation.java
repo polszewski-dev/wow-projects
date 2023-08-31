@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.Copyable;
 import wow.character.model.character.Character;
+import wow.commons.model.effect.component.ComponentType;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,8 @@ import java.util.List;
 public class Rotation implements Copyable<Rotation> {
 	private final RotationTemplate template;
 
-	private List<Spell> cooldowns;
-	private Spell filler;
+	private List<Ability> cooldowns;
+	private Ability filler;
 
 	public static Rotation create(RotationTemplate template) {
 		return new Rotation(template);
@@ -37,10 +39,10 @@ public class Rotation implements Copyable<Rotation> {
 		return copy;
 	}
 
-	public static Rotation onlyFiller(Spell spell) {
+	public static Rotation onlyFiller(Ability ability) {
 		Rotation rotation = new Rotation(null);
 		rotation.cooldowns = List.of();
-		rotation.filler = spell;
+		rotation.filler = ability;
 		return rotation;
 	}
 
@@ -51,16 +53,12 @@ public class Rotation implements Copyable<Rotation> {
 
 		cooldowns = new ArrayList<>();
 
-		for (SpellId spellId : template.getSpellIds()) {
-			character.getSpellbook()
-					.getSpell(spellId)
-					.ifPresent(this::addSpell);
+		for (AbilityId abilityId : template.getAbilityIds()) {
+			character.getAbility(abilityId).ifPresent(this::addAbility);
 		}
 
 		if (filler == null) {
-			this.filler = character.getSpellbook()
-					.getSpell(SpellId.SHOOT)
-					.orElseThrow();
+			this.filler = character.getAbility(AbilityId.SHOOT).orElseThrow();
 		}
 
 		return this;
@@ -76,13 +74,29 @@ public class Rotation implements Copyable<Rotation> {
 		return this;
 	}
 
-	private void addSpell(Spell spell) {
-		if ((spell.hasDotComponent() && !spell.isChanneled()) || spell.getCooldown().isPositive()) {
-			cooldowns.add(spell);
+	private void addAbility(Ability ability) {
+		if ((hasDotComponent(ability) && !ability.isChanneled()) || ability.getCooldown().isPositive()) {
+			cooldowns.add(ability);
 		} else if (filler == null) {
-			filler = spell;
+			filler = ability;
 		} else {
-			throw new IllegalArgumentException("Can't have two fillers: %s, %s".formatted(filler, spell));
+			throw new IllegalArgumentException("Can't have two fillers: %s, %s".formatted(filler, ability));
 		}
+	}
+
+	private boolean hasDotComponent(Spell spell) {
+		var effect = spell.getAppliedEffect();
+		if (effect == null) {
+			return false;
+		}
+		var periodicComponent = effect.getPeriodicComponent();
+		return periodicComponent != null && periodicComponent.type() == ComponentType.DAMAGE;
+	}
+
+	public List<Ability> getAbilities() {
+		var result = new ArrayList<Ability>(cooldowns.size() + 1);
+		result.addAll(cooldowns);
+		result.add(filler);
+		return result;
 	}
 }

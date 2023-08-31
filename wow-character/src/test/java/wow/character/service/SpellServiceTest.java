@@ -21,9 +21,9 @@ class SpellServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getAvailableSpells() {
-		var spells = underTest.getAvailableSpells(getCharacter());
+		var abilities = underTest.getAvailableAbilities(getCharacter());
 
-		assertThat(spells.stream().map(spell -> spell.getSpellId() + "#" + spell.getRank()).toList()).hasSameElementsAs(List.of(
+		assertThat(abilities.stream().map(spell -> spell.getName() + "#" + spell.getRank()).toList()).hasSameElementsAs(List.of(
 				"Corruption#1",
 				"Corruption#2",
 				"Corruption#3",
@@ -96,7 +96,6 @@ class SpellServiceTest extends WowCharacterSpringTest {
 				"Life Tap#6",
 				"Life Tap#7",
 				"Seed of Corruption#1",
-				"Seed of Corruption (direct)#1",
 				"Banish#1",
 				"Banish#2",
 				"Create Firestone#1",
@@ -222,7 +221,7 @@ class SpellServiceTest extends WowCharacterSpringTest {
 	void getAvailableTalents() {
 		var talents = underTest.getAvailableTalents(CHARACTER_CLASS, PHASE);
 
-		assertThat(talents.stream().map(talent -> talent.getTalentId() + "#" + talent.getRank()).toList()).hasSameElementsAs(List.of(
+		assertThat(talents.stream().map(talent -> talent.getName() + "#" + talent.getRank()).toList()).hasSameElementsAs(List.of(
 				"Suppression#1",
 				"Suppression#2",
 				"Suppression#3",
@@ -430,6 +429,7 @@ class SpellServiceTest extends WowCharacterSpringTest {
 				"Demon Armor#6",
 				"Fel Armor#1",
 				"Fel Armor#2",
+				"Fel Armor (improved)#2",
 				"Touch of Shadow#0",
 				"Burning Wish#0",
 				"Brilliant Wizard Oil#0",

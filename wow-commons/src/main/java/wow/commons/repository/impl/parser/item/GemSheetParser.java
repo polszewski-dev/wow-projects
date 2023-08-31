@@ -2,13 +2,14 @@ package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.GemColor;
+import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.item.impl.GemImpl;
 import wow.commons.repository.PveRepository;
+import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
-import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.GEM_COLOR;
-import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.GEM_META_ENABLERS;
+import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 
 /**
  * User: POlszewski
@@ -18,8 +19,8 @@ public class GemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colColor = column(GEM_COLOR);
 	private final ExcelColumn colMetaEnablers = column(GEM_META_ENABLERS);
 
-	public GemSheetParser(String sheetName, PveRepository pveRepository, ItemRepositoryImpl itemRepository) {
-		super(sheetName, pveRepository, itemRepository);
+	public GemSheetParser(String sheetName, PveRepository pveRepository, SpellRepository spellRepository, ItemRepositoryImpl itemRepository) {
+		super(sheetName, pveRepository, spellRepository, itemRepository);
 	}
 
 	@Override
@@ -31,8 +32,7 @@ public class GemSheetParser extends AbstractItemSheetParser {
 	private Gem getGem() {
 		var id = getId();
 		var color = colColor.getEnum(GemColor::valueOf);
-		var metaEnablers = colMetaEnablers.getList(MetaEnabler::valueOf);
-		var stats = readAttributes();
+		var metaEnablers = colMetaEnablers.getList(MetaEnabler::parse);
 
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
@@ -41,8 +41,9 @@ public class GemSheetParser extends AbstractItemSheetParser {
 		var pveRoles = getPveRoles();
 
 		var gem = new GemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, color, metaEnablers, pveRoles);
+		var effects = readItemEffects(GEM_EFFECT_PREFIX, GEM_MAX_EFFECTS, timeRestriction, new ItemSource(gem));
 
-		gem.setAttributes(stats);
+		gem.setEffects(effects);
 		return gem;
 	}
 }

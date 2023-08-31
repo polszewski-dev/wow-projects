@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.talent.TalentTree;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
@@ -26,7 +27,7 @@ public abstract class AbstractSpellTooltipParser extends AbstractTooltipParser<J
 	protected final Rule ruleRank = Rule.regex("Rank (\\d+)", x -> this.rank = x.getInteger(0));
 	protected final Rule ruleReqCLass = Rule.regex("Requires (\\S+)", x -> this.requiredClass = List.of(CharacterClassId.parse(x.get(0))));
 	protected final Rule ruleTalent = Rule.exact("Talent", () -> this.talent = true);
-	protected final Rule ruleDescription = Rule.regex("(.+)", x -> parseDescription(x.get(0)));
+	protected final Rule ruleDescription = Rule.regex("(.+)", x -> parseTooltip(x.get(0)));
 
 	protected AbstractSpellTooltipParser(JsonSpellDetails details, GameVersionId gameVersion, ScraperContext scraperContext) {
 		super(details, gameVersion, scraperContext);
@@ -52,11 +53,16 @@ public abstract class AbstractSpellTooltipParser extends AbstractTooltipParser<J
 		return getCategory().getTalentTree();
 	}
 
-	private void parseDescription(String line) {
+	private void parseTooltip(String line) {
 		if (description != null) {
 			this.description += "\n" + line;
 			return;
 		}
 		this.description = line;
+	}
+
+	@Override
+	protected PhaseId getPhaseOverride() {
+		return getScraperConfig().getSpellPhaseOverrides().get(details.getId());
 	}
 }

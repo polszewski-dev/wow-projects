@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.BuffListType;
-import wow.character.model.character.Buffs;
 import wow.character.model.character.Character;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
@@ -35,7 +34,7 @@ public class BuffController {
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("buffListType") BuffListType buffListType
 	) {
-		Character character = playerProfileService.getCharacter(characterId);
+		var character = playerProfileService.getCharacter(characterId);
 		return getBuffs(character, buffListType);
 	}
 
@@ -47,13 +46,13 @@ public class BuffController {
 			@PathVariable("rank") int rank,
 			@PathVariable("enabled") boolean enabled
 	) {
-		Character character = playerProfileService.enableBuff(characterId, buffListType, buffId, rank, enabled);
+		var character = playerProfileService.enableBuff(characterId, buffListType, buffId, rank, enabled);
 		log.info("Changed buff charId: {}, list: {}, buffId: {}, rank: {}, enabled: {}", characterId, buffListType, buffId, rank, enabled);
 		return getBuffs(character, buffListType);
 	}
 
 	private List<BuffDTO> getBuffs(Character character, BuffListType buffListType) {
-		Buffs buffs = character.getBuffList(buffListType);
+		var buffs = character.getBuffList(buffListType);
 
 		return buffs.getAvailableHighestRanks().stream()
 				.map(buff -> getBuffDTO(buff, buffs.has(buff.getBuffId())))
@@ -61,7 +60,7 @@ public class BuffController {
 	}
 
 	private BuffDTO getBuffDTO(Buff buff, boolean enabled) {
-		BuffDTO dto = buffConverter.convert(buff);
+		var dto = buffConverter.convert(buff);
 		dto.setEnabled(enabled);
 		return dto;
 	}

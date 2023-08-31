@@ -3,8 +3,8 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.Copyable;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.*;
 
@@ -15,43 +15,41 @@ import java.util.*;
 @AllArgsConstructor
 @Getter
 public class Spellbook implements Copyable<Spellbook> {
-	private final Map<SpellId, List<Spell>> spellById = new EnumMap<>(SpellId.class);
+	private final Map<AbilityId, List<Ability>> abilityById = new EnumMap<>(AbilityId.class);
 
 	@Override
 	public Spellbook copy() {
 		Spellbook copy = new Spellbook();
 
-		for (Map.Entry<SpellId, List<Spell>> entry : this.spellById.entrySet()) {
-			copy.spellById.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+		for (var entry : this.abilityById.entrySet()) {
+			copy.abilityById.put(entry.getKey(), new ArrayList<>(entry.getValue()));
 		}
 
 		return copy;
 	}
 
 	public void reset() {
-		this.spellById.clear();
+		this.abilityById.clear();
 	}
 
-	public void addSpell(Spell spell) {
-		if (getSpell(spell.getSpellId(), spell.getRank()).isPresent()) {
+	public void addAbility(Ability ability) {
+		if (getAbility(ability.getAbilityId(), ability.getRank()).isPresent()) {
 			return;
 		}
-		spellById.computeIfAbsent(spell.getSpellId(), x -> new ArrayList<>()).add(spell);
+		abilityById.computeIfAbsent(ability.getAbilityId(), x -> new ArrayList<>()).add(ability);
 	}
 
-	public void addSpells(List<Spell> spells) {
-		for (Spell spell : spells) {
-			addSpell(spell);
-		}
+	public void addAbilities(List<Ability> abilities) {
+		abilities.forEach(this::addAbility);
 	}
 
-	public Optional<Spell> getSpell(SpellId spellId) {
-		return spellById.getOrDefault(spellId, List.of()).stream()
-				.max(Comparator.comparingInt(Spell::getRank));
+	public Optional<Ability> getAbility(AbilityId abilityId) {
+		return abilityById.getOrDefault(abilityId, List.of()).stream()
+				.max(Comparator.comparingInt(Ability::getRank));
 	}
 
-	public Optional<Spell> getSpell(SpellId spellId, int rank) {
-		return spellById.getOrDefault(spellId, List.of()).stream()
+	public Optional<Ability> getAbility(AbilityId abilityId, int rank) {
+		return abilityById.getOrDefault(abilityId, List.of()).stream()
 				.filter(x -> x.getRank() == rank)
 				.findAny();
 	}

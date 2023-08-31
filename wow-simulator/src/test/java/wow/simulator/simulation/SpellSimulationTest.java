@@ -9,12 +9,12 @@ import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.time.Time;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.spell.AbilityId.SHADOWBURN;
+import static wow.commons.model.spell.AbilityId.SIPHON_LIFE;
+import static wow.commons.model.spell.AbilityId.UNSTABLE_AFFLICTION;
+import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.spell.SpellId.SHADOWBURN;
-import static wow.commons.model.spell.SpellId.SIPHON_LIFE;
-import static wow.commons.model.spell.SpellId.UNSTABLE_AFFLICTION;
-import static wow.commons.model.spell.SpellId.*;
 import static wow.commons.model.talent.TalentId.*;
 
 /**
@@ -40,12 +40,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SHADOW_BOLT, target)
+							.beginCast(player, SHADOW_BOLT)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player),
 					at(3)
-							.endCast(player, SHADOW_BOLT, target)
+							.endCast(player, SHADOW_BOLT)
 							.decreasedResource(420, MANA, player, SHADOW_BOLT)
 							.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
 			);
@@ -61,12 +61,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SHADOW_BOLT, target)
+							.beginCast(player, SHADOW_BOLT)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player),
 					at(3)
-							.endCast(player, SHADOW_BOLT, target)
+							.endCast(player, SHADOW_BOLT)
 							.decreasedResource(420, MANA, player, SHADOW_BOLT)
 							.spellResisted(player, SHADOW_BOLT, target)
 			);
@@ -84,10 +84,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SHADOW_BOLT, target)
+							.beginCast(player, SHADOW_BOLT)
 							.beginGcd(player),
 					at(1)
-							.castInterrupted(player, SHADOW_BOLT, target)
+							.castInterrupted(player, SHADOW_BOLT)
 							.endGcd(player)
 			);
 		}
@@ -104,12 +104,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, SHADOW_BOLT, target)
+								.beginCast(player, SHADOW_BOLT)
 								.beginGcd(player),
 						at(1.5)
 								.endGcd(player),
 						at(2.5)
-								.endCast(player, SHADOW_BOLT, target)
+								.endCast(player, SHADOW_BOLT)
 								.decreasedResource(420, MANA, player, SHADOW_BOLT)
 								.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
 				);
@@ -125,12 +125,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, SHADOW_BOLT, target)
+								.beginCast(player, SHADOW_BOLT)
 								.beginGcd(player),
 						at(1.5)
 								.endGcd(player),
 						at(3)
-								.endCast(player, SHADOW_BOLT, target)
+								.endCast(player, SHADOW_BOLT)
 								.decreasedResource(399, MANA, player, SHADOW_BOLT)
 								.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
 				);
@@ -150,8 +150,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SHADOWBURN, target)
-							.endCast(player, SHADOWBURN, target)
+							.beginCast(player, SHADOWBURN)
+							.endCast(player, SHADOWBURN)
 							.decreasedResource(515, MANA, player, SHADOWBURN)
 							.cooldownStarted(player, SHADOWBURN)
 							.decreasedResource(631, HEALTH, target, SHADOWBURN)
@@ -175,8 +175,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SHADOWBURN, target)
-							.endCast(player, SHADOWBURN, target)
+							.beginCast(player, SHADOWBURN)
+							.endCast(player, SHADOWBURN)
 							.decreasedResource(515, MANA, player, SHADOWBURN)
 							.cooldownStarted(player, SHADOWBURN)
 							.spellResisted(player, SHADOWBURN, target)
@@ -202,8 +202,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SHADOWBURN, target)
-							.endCast(player, SHADOWBURN, target)
+							.beginCast(player, SHADOWBURN)
+							.endCast(player, SHADOWBURN)
 							.decreasedResource(515, MANA, player, SHADOWBURN)
 							.cooldownStarted(player, SHADOWBURN)
 							.decreasedResource(631, HEALTH, target, SHADOWBURN)
@@ -226,8 +226,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, CURSE_OF_AGONY, target)
-							.endCast(player, CURSE_OF_AGONY, target)
+							.beginCast(player, CURSE_OF_AGONY)
+							.endCast(player, CURSE_OF_AGONY)
 							.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
 							.effectApplied(CURSE_OF_AGONY, target)
 							.beginGcd(player),
@@ -236,11 +236,11 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 					at(2)
 							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
 					at(4)
-							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
+							.decreasedResource(57, HEALTH, target, CURSE_OF_AGONY),
 					at(6)
 							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
 					at(8)
-							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
+							.decreasedResource(57, HEALTH, target, CURSE_OF_AGONY),
 					at(10)
 							.decreasedResource(113, HEALTH, target, CURSE_OF_AGONY),
 					at(12)
@@ -252,11 +252,11 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 					at(18)
 							.decreasedResource(169, HEALTH, target, CURSE_OF_AGONY),
 					at(20)
-							.decreasedResource(169, HEALTH, target, CURSE_OF_AGONY),
+							.decreasedResource(170, HEALTH, target, CURSE_OF_AGONY),
 					at(22)
 							.decreasedResource(169, HEALTH, target, CURSE_OF_AGONY),
 					at(24)
-							.decreasedResource(173, HEALTH, target, CURSE_OF_AGONY)
+							.decreasedResource(170, HEALTH, target, CURSE_OF_AGONY)
 							.effectExpired(CURSE_OF_AGONY, target)
 			);
 		}
@@ -271,8 +271,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, CURSE_OF_AGONY, target)
-							.endCast(player, CURSE_OF_AGONY, target)
+							.beginCast(player, CURSE_OF_AGONY)
+							.endCast(player, CURSE_OF_AGONY)
 							.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
 							.spellResisted(player, CURSE_OF_AGONY, target)
 							.beginGcd(player),
@@ -297,8 +297,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, CURSE_OF_AGONY, target)
-							.endCast(player, CURSE_OF_AGONY, target)
+							.beginCast(player, CURSE_OF_AGONY)
+							.endCast(player, CURSE_OF_AGONY)
 							.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
 							.effectApplied(CURSE_OF_AGONY, target)
 							.beginGcd(player),
@@ -307,11 +307,11 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 					at(2)
 							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
 					at(4)
-							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
+							.decreasedResource(57, HEALTH, target, CURSE_OF_AGONY),
 					at(6)
 							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
 					at(8)
-							.decreasedResource(56, HEALTH, target, CURSE_OF_AGONY),
+							.decreasedResource(57, HEALTH, target, CURSE_OF_AGONY),
 					at(10)
 							.decreasedResource(113, HEALTH, target, CURSE_OF_AGONY),
 					at(12)
@@ -323,11 +323,11 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 					at(18)
 							.decreasedResource(169, HEALTH, target, CURSE_OF_AGONY),
 					at(20)
-							.decreasedResource(169, HEALTH, target, CURSE_OF_AGONY),
+							.decreasedResource(170, HEALTH, target, CURSE_OF_AGONY),
 					at(22)
 							.decreasedResource(169, HEALTH, target, CURSE_OF_AGONY),
 					at(24)
-							.decreasedResource(173, HEALTH, target, CURSE_OF_AGONY)
+							.decreasedResource(170, HEALTH, target, CURSE_OF_AGONY)
 							.effectExpired(CURSE_OF_AGONY, target)
 			);
 		}
@@ -344,8 +344,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, CURSE_OF_AGONY, target)
-								.endCast(player, CURSE_OF_AGONY, target)
+								.beginCast(player, CURSE_OF_AGONY)
+								.endCast(player, CURSE_OF_AGONY)
 								.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
 								.effectApplied(CURSE_OF_AGONY, target)
 								.beginGcd(player),
@@ -362,19 +362,19 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 						at(10)
 								.decreasedResource(124, HEALTH, target, CURSE_OF_AGONY),
 						at(12)
-								.decreasedResource(124, HEALTH, target, CURSE_OF_AGONY),
+								.decreasedResource(125, HEALTH, target, CURSE_OF_AGONY),
 						at(14)
 								.decreasedResource(124, HEALTH, target, CURSE_OF_AGONY),
 						at(16)
 								.decreasedResource(124, HEALTH, target, CURSE_OF_AGONY),
 						at(18)
-								.decreasedResource(186, HEALTH, target, CURSE_OF_AGONY),
+								.decreasedResource(187, HEALTH, target, CURSE_OF_AGONY),
 						at(20)
 								.decreasedResource(186, HEALTH, target, CURSE_OF_AGONY),
 						at(22)
-								.decreasedResource(186, HEALTH, target, CURSE_OF_AGONY),
+								.decreasedResource(187, HEALTH, target, CURSE_OF_AGONY),
 						at(24)
-								.decreasedResource(189, HEALTH, target, CURSE_OF_AGONY)
+								.decreasedResource(186, HEALTH, target, CURSE_OF_AGONY)
 								.effectExpired(CURSE_OF_AGONY, target)
 				);
 			}
@@ -391,12 +391,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, CORRUPTION, target)
+							.beginCast(player, CORRUPTION)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player),
 					at(2)
-							.endCast(player, CORRUPTION, target)
+							.endCast(player, CORRUPTION)
 							.decreasedResource(370, MANA, player, CORRUPTION)
 							.effectApplied(CORRUPTION, target),
 					at(5)
@@ -425,12 +425,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, CORRUPTION, target)
+							.beginCast(player, CORRUPTION)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player),
 					at(2)
-							.endCast(player, CORRUPTION, target)
+							.endCast(player, CORRUPTION)
 							.decreasedResource(370, MANA, player, CORRUPTION)
 							.spellResisted(player, CORRUPTION, target)
 			);
@@ -450,10 +450,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, CORRUPTION, target)
+							.beginCast(player, CORRUPTION)
 							.beginGcd(player),
 					at(1)
-							.castInterrupted(player, CORRUPTION, target)
+							.castInterrupted(player, CORRUPTION)
 							.endGcd(player)
 			);
 		}
@@ -470,8 +470,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, CORRUPTION, target)
-								.endCast(player, CORRUPTION, target)
+								.beginCast(player, CORRUPTION)
+								.endCast(player, CORRUPTION)
 								.decreasedResource(370, MANA, player, CORRUPTION)
 								.effectApplied(CORRUPTION, target)
 								.beginGcd(player),
@@ -505,8 +505,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, CORRUPTION, target)
-								.endCast(player, CORRUPTION, target)
+								.beginCast(player, CORRUPTION)
+								.endCast(player, CORRUPTION)
 								.decreasedResource(370, MANA, player, CORRUPTION)
 								.effectApplied(CORRUPTION, target)
 								.beginGcd(player),
@@ -515,15 +515,15 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 						at(3)
 								.decreasedResource(171, HEALTH, target, CORRUPTION),
 						at(6)
-								.decreasedResource(171, HEALTH, target, CORRUPTION),
+								.decreasedResource(172, HEALTH, target, CORRUPTION),
 						at(9)
 								.decreasedResource(171, HEALTH, target, CORRUPTION),
 						at(12)
-								.decreasedResource(171, HEALTH, target, CORRUPTION),
+								.decreasedResource(172, HEALTH, target, CORRUPTION),
 						at(15)
 								.decreasedResource(171, HEALTH, target, CORRUPTION),
 						at(18)
-								.decreasedResource(174, HEALTH, target, CORRUPTION)
+								.decreasedResource(172, HEALTH, target, CORRUPTION)
 								.effectExpired(CORRUPTION, target)
 				);
 			}
@@ -543,8 +543,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, CORRUPTION, target)
-								.endCast(player, CORRUPTION, target)
+								.beginCast(player, CORRUPTION)
+								.endCast(player, CORRUPTION)
 								.decreasedResource(370, MANA, player, CORRUPTION)
 								.effectApplied(CORRUPTION, target)
 								.beginGcd(player),
@@ -580,12 +580,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, IMMOLATE, target)
+							.beginCast(player, IMMOLATE)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player),
 					at(2)
-							.endCast(player, IMMOLATE, target)
+							.endCast(player, IMMOLATE)
 							.decreasedResource(445, MANA, player, IMMOLATE)
 							.decreasedResource(332, HEALTH, target, IMMOLATE)
 							.effectApplied(IMMOLATE, target),
@@ -613,12 +613,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, IMMOLATE, target)
+							.beginCast(player, IMMOLATE)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player),
 					at(2)
-							.endCast(player, IMMOLATE, target)
+							.endCast(player, IMMOLATE)
 							.decreasedResource(445, MANA, player, IMMOLATE)
 							.spellResisted(player, IMMOLATE, target)
 			);
@@ -636,10 +636,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, IMMOLATE, target)
+							.beginCast(player, IMMOLATE)
 							.beginGcd(player),
 					at(1)
-							.castInterrupted(player, IMMOLATE, target)
+							.castInterrupted(player, IMMOLATE)
 							.endGcd(player)
 			);
 		}
@@ -656,10 +656,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, IMMOLATE, target)
+								.beginCast(player, IMMOLATE)
 								.beginGcd(player),
 						at(1.5)
-								.endCast(player, IMMOLATE, target)
+								.endCast(player, IMMOLATE)
 								.decreasedResource(445, MANA, player, IMMOLATE)
 								.decreasedResource(332, HEALTH, target, IMMOLATE)
 								.effectApplied(IMMOLATE, target)
@@ -688,12 +688,12 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, IMMOLATE, target)
+								.beginCast(player, IMMOLATE)
 								.beginGcd(player),
 						at(1.5)
 								.endGcd(player),
 						at(2)
-								.endCast(player, IMMOLATE, target)
+								.endCast(player, IMMOLATE)
 								.decreasedResource(445, MANA, player, IMMOLATE)
 								.decreasedResource(415, HEALTH, target, IMMOLATE)
 								.effectApplied(IMMOLATE, target),
@@ -725,10 +725,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, UNSTABLE_AFFLICTION, target)
+							.beginCast(player, UNSTABLE_AFFLICTION)
 							.beginGcd(player),
 					at(1.5)
-							.endCast(player, UNSTABLE_AFFLICTION, target)
+							.endCast(player, UNSTABLE_AFFLICTION)
 							.decreasedResource(400, MANA, player, UNSTABLE_AFFLICTION)
 							.effectApplied(UNSTABLE_AFFLICTION, target)
 							.endGcd(player),
@@ -760,10 +760,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, UNSTABLE_AFFLICTION, target)
+							.beginCast(player, UNSTABLE_AFFLICTION)
 							.beginGcd(player),
 					at(1.5)
-							.endCast(player, UNSTABLE_AFFLICTION, target)
+							.endCast(player, UNSTABLE_AFFLICTION)
 							.decreasedResource(400, MANA, player, UNSTABLE_AFFLICTION)
 							.spellResisted(player, UNSTABLE_AFFLICTION, target)
 							.endGcd(player)
@@ -784,10 +784,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, UNSTABLE_AFFLICTION, target)
+							.beginCast(player, UNSTABLE_AFFLICTION)
 							.beginGcd(player),
 					at(1)
-							.castInterrupted(player, UNSTABLE_AFFLICTION, target)
+							.castInterrupted(player, UNSTABLE_AFFLICTION)
 							.endGcd(player)
 			);
 		}
@@ -805,8 +805,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SIPHON_LIFE, target)
-							.endCast(player, SIPHON_LIFE, target)
+							.beginCast(player, SIPHON_LIFE)
+							.endCast(player, SIPHON_LIFE)
 							.decreasedResource(410, MANA, player, SIPHON_LIFE)
 							.effectApplied(SIPHON_LIFE, target)
 							.beginGcd(player),
@@ -858,8 +858,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SIPHON_LIFE, target)
-							.endCast(player, SIPHON_LIFE, target)
+							.beginCast(player, SIPHON_LIFE)
+							.endCast(player, SIPHON_LIFE)
 							.decreasedResource(410, MANA, player, SIPHON_LIFE)
 							.spellResisted(player, SIPHON_LIFE, target)
 							.beginGcd(player),
@@ -882,8 +882,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, SIPHON_LIFE, target)
-							.endCast(player, SIPHON_LIFE, target)
+							.beginCast(player, SIPHON_LIFE)
+							.endCast(player, SIPHON_LIFE)
 							.decreasedResource(410, MANA, player, SIPHON_LIFE)
 							.effectApplied(SIPHON_LIFE, target)
 							.beginGcd(player),
@@ -934,8 +934,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
+							.beginCast(player, DRAIN_LIFE)
+							.endCast(player, DRAIN_LIFE)
 							.decreasedResource(425, MANA, player, DRAIN_LIFE)
-							.beginCast(player, DRAIN_LIFE, target)
+							.beginChannel(player, DRAIN_LIFE)
 							.effectApplied(DRAIN_LIFE, target)
 							.beginGcd(player),
 					at(1)
@@ -955,8 +957,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 					at(5)
 							.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
 							.increasedResource(108, HEALTH, player, DRAIN_LIFE)
-							.endCast(player, DRAIN_LIFE, target)
 							.effectExpired(DRAIN_LIFE, target)
+							.endChannel(player, DRAIN_LIFE)
 			);
 		}
 
@@ -970,10 +972,10 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
+							.beginCast(player, DRAIN_LIFE)
+							.endCast(player, DRAIN_LIFE)
 							.decreasedResource(425, MANA, player, DRAIN_LIFE)
-							.beginCast(player, DRAIN_LIFE, target)
 							.spellResisted(player, DRAIN_LIFE, target)
-							.endCast(player, DRAIN_LIFE, target)
 							.beginGcd(player),
 					at(1.5)
 							.endGcd(player)
@@ -992,15 +994,17 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
+							.beginCast(player, DRAIN_LIFE)
+							.endCast(player, DRAIN_LIFE)
 							.decreasedResource(425, MANA, player, DRAIN_LIFE)
-							.beginCast(player, DRAIN_LIFE, target)
+							.beginChannel(player, DRAIN_LIFE)
 							.effectApplied(DRAIN_LIFE, target)
 							.beginGcd(player),
 					at(1)
 							.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
 							.increasedResource(108, HEALTH, player, DRAIN_LIFE),
 					at(1.25)
-							.castInterrupted(player, DRAIN_LIFE, target)
+							.channelInterrupted(player, DRAIN_LIFE)
 							.effectRemoved(DRAIN_LIFE, target)
 							.endGcd(player)
 			);
@@ -1021,8 +1025,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, LIFE_TAP, player)
-							.endCast(player, LIFE_TAP, player)
+							.beginCast(player, LIFE_TAP)
+							.endCast(player, LIFE_TAP)
 							.decreasedResource(582, HEALTH, player, LIFE_TAP)
 							.increasedResource(582, MANA, player, LIFE_TAP)
 							.beginGcd(player),
@@ -1047,8 +1051,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, LIFE_TAP, player)
-							.endCast(player, LIFE_TAP, player)
+							.beginCast(player, LIFE_TAP)
+							.endCast(player, LIFE_TAP)
 							.decreasedResource(582, HEALTH, player, LIFE_TAP)
 							.increasedResource(582, MANA, player, LIFE_TAP)
 							.beginGcd(player),
@@ -1073,8 +1077,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					at(0)
-							.beginCast(player, LIFE_TAP, player)
-							.endCast(player, LIFE_TAP, player)
+							.beginCast(player, LIFE_TAP)
+							.endCast(player, LIFE_TAP)
 							.decreasedResource(582, HEALTH, player, LIFE_TAP)
 							.increasedResource(582, MANA, player, LIFE_TAP)
 							.beginGcd(player),
@@ -1098,8 +1102,8 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				assertEvents(
 						at(0)
-								.beginCast(player, LIFE_TAP, player)
-								.endCast(player, LIFE_TAP, player)
+								.beginCast(player, LIFE_TAP)
+								.endCast(player, LIFE_TAP)
 								.decreasedResource(698, HEALTH, player, LIFE_TAP)
 								.increasedResource(698, MANA, player, LIFE_TAP)
 								.beginGcd(player),
@@ -1111,21 +1115,22 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 			@Test
 			void improvedLifeTapAndSp() {
 				enableTalent(IMPROVED_LIFE_TAP, 2);
-				enableBuff(BuffId.FEL_ARMOR, 2);
 				setMana(player, 0);
+
+				equip("Tempest of Chaos");
 
 				player.cast(LIFE_TAP);
 
 				simulation.updateUntil(Time.at(30));
 
-				assertThat(player.getCurrentMana()).isEqualTo(794);
+				assertThat(player.getCurrentMana()).isEqualTo(947);// (582 + 0.8 * 259) * 1.2
 
 				assertEvents(
 						at(0)
-								.beginCast(player, LIFE_TAP, player)
-								.endCast(player, LIFE_TAP, player)
-								.decreasedResource(794, HEALTH, player, LIFE_TAP)
-								.increasedResource(794, MANA, player, LIFE_TAP)
+								.beginCast(player, LIFE_TAP)
+								.endCast(player, LIFE_TAP)
+								.decreasedResource(947, HEALTH, player, LIFE_TAP)
+								.increasedResource(947, MANA, player, LIFE_TAP)
 								.beginGcd(player),
 						at(1.5)
 								.endGcd(player)
@@ -1150,13 +1155,13 @@ class SpellSimulationTest extends WowSimulatorSpringTest {
 
 				simulation.updateUntil(Time.at(30));
 
-				assertThat(player.getCurrentMana()).isEqualTo(959);
+				assertThat(player.getCurrentMana()).isEqualTo(959);// (582 + 0.8*272) * 1.2
 
 				assertEvents(
 						at(0)
-								.beginCast(player, LIFE_TAP, player)
-								.endCast(player, LIFE_TAP, player)
-								.decreasedResource(863, HEALTH, player, LIFE_TAP)
+								.beginCast(player, LIFE_TAP)
+								.endCast(player, LIFE_TAP)
+								.decreasedResource(843, HEALTH, player, LIFE_TAP)
 								.increasedResource(959, MANA, player, LIFE_TAP)
 								.beginGcd(player),
 						at(1.5)

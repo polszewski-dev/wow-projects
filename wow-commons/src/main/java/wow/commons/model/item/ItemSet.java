@@ -2,6 +2,7 @@ package wow.commons.model.item;
 
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.profession.ProfessionId;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ import java.util.List;
 public interface ItemSet extends TimeRestricted, CharacterRestricted {
 	String getName();
 
-	Tier getTier();
-
 	List<ItemSetBonus> getItemSetBonuses();
 
 	List<Item> getPieces();
+
+	ProfessionId getRequiredProfession();
 }

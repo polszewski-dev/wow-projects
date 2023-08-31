@@ -5,8 +5,6 @@ package wow.commons.repository.impl.parser.pve;
  * Date: 2023-06-21
  */
 public final class PveBaseExcelColumnNames {
-	public static final String ID = "id";
-
 	public static final String ZONE_SHORT_NAME = "short_name";
 	public static final String ZONE_TYPE = "type";
 	public static final String ZONE_VERSION = "version";

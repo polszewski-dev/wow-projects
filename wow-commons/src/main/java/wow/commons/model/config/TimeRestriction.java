@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static wow.commons.util.CollectionUtil.*;
+import static wow.commons.util.CollectionUtil.getUniqueResult;
 
 /**
  * User: POlszewski
@@ -33,6 +33,16 @@ public record TimeRestriction(List<GameVersionId> versions, PhaseId phaseId) {
 		return new TimeRestriction(List.of(), phaseId);
 	}
 
+	public static TimeRestriction of(GameVersionId gameVersionId, PhaseId phaseId) {
+		if (gameVersionId == null) {
+			return of(phaseId);
+		}
+		if (phaseId == null || phaseId == gameVersionId.getEarliestPhase()) {
+			return of(gameVersionId);
+		}
+		return new TimeRestriction(List.of(gameVersionId), phaseId);
+	}
+
 	public boolean isMetBy(PhaseId phaseId) {
 		if (!this.versions.isEmpty() && !this.versions.contains(phaseId.getGameVersionId())) {
 			return false;
@@ -40,14 +50,10 @@ public record TimeRestriction(List<GameVersionId> versions, PhaseId phaseId) {
 		return this.phaseId == null || this.phaseId.isEarlierOrTheSame(phaseId) && this.phaseId.isTheSameVersion(phaseId);
 	}
 
-	public TimeRestriction merge(TimeRestriction other) {
-		return new TimeRestriction(
-				mergeCriteria(versions, other.versions),
-				mergeValues(phaseId, other.phaseId)
-		);
-	}
-
 	public GameVersionId getUniqueVersion() {
+		if (versions.isEmpty()) {
+			return phaseId.getGameVersionId();
+		}
 		return getUniqueResult(versions).orElseThrow();
 	}
 

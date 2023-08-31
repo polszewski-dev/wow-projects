@@ -1,6 +1,12 @@
 package wow.scraper.exporter.spell.excel;
 
+import wow.commons.model.effect.impl.EffectImpl;
 import wow.scraper.parser.tooltip.TalentTooltipParser;
+
+import java.util.List;
+
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
  * User: POlszewski
@@ -13,23 +19,43 @@ public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser>
 
 	@Override
 	public void writeHeader() {
-		setHeader("talent", 40);
-		setHeader("req_class");
-		setHeader("req_version");
-		setHeader("tree");
-		setHeader("max rank");
-		setHeader("talent calculator position");
-		setHeader("icon");
+		setHeader(ID);
+		setHeader(NAME, 40);
+		setHeader(TALENT_RANK);
+		setHeader(TALENT_MAX_RANK);
+		setHeader(TALENT_CALCULATOR_POSITION);
+		setHeader(REQ_VERSION);
+		setHeader(REQ_CLASS);
+		setHeader(TALENT_TREE);
+		setHeader(AUGMENTED_ABILITY);
+		writeModifierComponentHeader(MAX_TALENT_MODIFIER_ATTRIBUTES);
+		writeConversionHeader();
+		writeStatConversionHeader();
+		writeEffectIncreasePerEffectOnTargetHeader();
+		writeEventHeader(MAX_TALENT_EVENTS);
+		writeIconAndTooltipHeader();
 	}
 
 	@Override
 	public void writeRow(TalentTooltipParser parser) {
+		var effect = new EffectImpl(null);
+		effect.setStatConversions(List.of());
+		effect.setEvents(List.of());
+
+		setValue(parser.getDetails().getId());
 		setValue(parser.getName());
-		setValue(parser.getCharacterClass());
-		setValue(parser.getGameVersion());
-		setValue(parser.getTalentTree().getName().toLowerCase());
+		setValue(parser.getRank());
 		setValue(parser.getMaxRank());
 		setValue(parser.getTalentCalculatorPosition());
-		setValue(parser.getIcon());
+		setValue(parser.getGameVersion());
+		setValue(parser.getCharacterClass());
+		setValue(parser.getTalentTree());
+		setValue(effect.getAugmentedAbility());
+		writeModifierComponent(effect, MAX_TALENT_MODIFIER_ATTRIBUTES);
+		writeConversion(effect.getConversion());
+		writeStatConversions(effect);
+		writeEffectIncreasePerEffectOnTarget(effect);
+		writeEvents(effect, MAX_TALENT_EVENTS);
+		writeIconAndTooltip(parser.getIcon(), parser.getDescription());
 	}
 }

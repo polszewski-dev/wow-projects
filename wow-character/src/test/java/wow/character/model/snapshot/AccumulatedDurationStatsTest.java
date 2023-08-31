@@ -1,0 +1,80 @@
+package wow.character.model.snapshot;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.condition.AttributeConditionArgs;
+import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.commons.model.spell.ActionType;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+
+/**
+ * User: POlszewski
+ * Date: 2023-11-04
+ */
+class AccumulatedDurationStatsTest {
+	@Test
+	void getDuration() {
+		accumulateTestAttributes(PrimitiveAttributeId.DURATION);
+		assertThat(durationStats.getDuration()).isEqualTo(160);
+	}
+
+	@Test
+	void getDurationPct() {
+		accumulateTestAttributes(PrimitiveAttributeId.DURATION_PCT);
+		assertThat(durationStats.getDurationPct()).isEqualTo(160);
+	}
+
+	@Test
+	void getHasteRating() {
+		accumulateTestAttributes(PrimitiveAttributeId.HASTE_RATING);
+		assertThat(durationStats.getHasteRating()).isEqualTo(160);
+	}
+
+	@Test
+	void getHastePct() {
+		accumulateTestAttributes(PrimitiveAttributeId.HASTE_PCT);
+		assertThat(durationStats.getHastePct()).isEqualTo(160);
+	}
+
+	@Test
+	void copy() {
+		durationStats.accumulateAttribute(DURATION, 1);
+		durationStats.accumulateAttribute(DURATION_PCT, 2);
+		durationStats.accumulateAttribute(HASTE_RATING, 3);
+		durationStats.accumulateAttribute(HASTE_PCT, 4);
+
+		var copy = durationStats.copy();
+
+		assertThat(copy.getDuration()).isEqualTo(durationStats.getDuration());
+		assertThat(copy.getDurationPct()).isEqualTo(durationStats.getDurationPct());
+		assertThat(copy.getHasteRating()).isEqualTo(durationStats.getHasteRating());
+		assertThat(copy.getHastePct()).isEqualTo(durationStats.getHastePct());
+	}
+
+	void accumulateTestAttributes(PrimitiveAttributeId attributeId) {
+		var list = List.of(
+				Attribute.of(attributeId, 10),
+				Attribute.of(attributeId, 20, MiscCondition.PHYSICAL),
+				Attribute.of(attributeId, 30, MiscCondition.SPELL),
+				Attribute.of(attributeId, 40)
+		);
+
+		durationStats.accumulateAttributes(list, 2);
+	}
+
+	int level = 70;
+	AccumulatedDurationStats durationStats;
+
+	@BeforeEach
+	void setUp() {
+		var conditionArgs = new AttributeConditionArgs(ActionType.SPELL);
+
+		this.durationStats = new AccumulatedDurationStats(conditionArgs, level);
+	}
+}

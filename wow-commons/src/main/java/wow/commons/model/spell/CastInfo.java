@@ -9,12 +9,11 @@ import java.util.Objects;
  * Date: 2022-11-25
  */
 public record CastInfo(
-		Cost cost,
 		Duration castTime,
-		boolean channeled
+		boolean channeled,
+		boolean ignoresGcd
 ) {
 	public CastInfo {
 		Objects.requireNonNull(castTime);
-		Objects.requireNonNull(cost);
 	}
 }

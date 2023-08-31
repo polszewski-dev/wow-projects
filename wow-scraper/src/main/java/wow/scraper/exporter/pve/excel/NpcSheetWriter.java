@@ -6,8 +6,7 @@ import wow.scraper.model.WowheadNpcClassification;
 
 import java.util.Objects;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.REQ_VERSION;
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
 
 /**

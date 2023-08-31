@@ -1,5 +1,6 @@
 package wow.character.service.impl.enumerator;
 
+import wow.commons.model.effect.Effect;
 import wow.commons.model.item.Gem;
 
 import java.util.List;
@@ -11,6 +12,11 @@ import java.util.List;
 public class FilterOutWorseGemChoices extends FilterOutWorseChoices<Gem> {
 	public FilterOutWorseGemChoices(List<Gem> gems) {
 		super(gems);
+	}
+
+	@Override
+	protected List<Effect> getEffects(Gem choice) {
+		return choice.getEffects();
 	}
 
 	@Override

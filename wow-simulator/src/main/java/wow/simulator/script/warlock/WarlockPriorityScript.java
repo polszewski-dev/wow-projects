@@ -10,7 +10,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.model.unit.Player;
@@ -19,7 +19,7 @@ import wow.simulator.script.ConditionalSpellCast;
 
 import java.util.stream.Stream;
 
-import static wow.commons.model.spell.SpellId.LIFE_TAP;
+import static wow.commons.model.spell.AbilityId.LIFE_TAP;
 import static wow.simulator.script.warlock.WarlockActionConditions.CURSE_OF_DOOM_COND;
 import static wow.simulator.script.warlock.WarlockActionConditions.SHADOW_BOLT_COND;
 
@@ -34,13 +34,13 @@ public class WarlockPriorityScript implements AIScript, SimulatorContextSource {
 
 	@Override
 	public void setupPlayer(Player player) {
-		getCharacterService().applyCharacterTemplate(player.getCharacter(), CharacterTemplateId.DESTRO_SHADOW);
+		getCharacterService().applyCharacterTemplate(player, CharacterTemplateId.DESTRO_SHADOW);
 		equipSampleItems(player);
 	}
 
 	@Override
 	public void execute(Player player) {
-		SpellId spellToCast = getSpellToCast(player);
+		AbilityId spellToCast = getSpellToCast(player);
 
 		if (player.canCast(spellToCast)) {
 			player.cast(spellToCast);
@@ -51,10 +51,10 @@ public class WarlockPriorityScript implements AIScript, SimulatorContextSource {
 		}
 	}
 
-	private SpellId getSpellToCast(Player player) {
+	private AbilityId getSpellToCast(Player player) {
 		return getPriorityList()
 				.filter(x -> x.check(player))
-				.map(ConditionalSpellCast::spellId)
+				.map(ConditionalSpellCast::abilityId)
 				.findFirst()
 				.orElseThrow();
 	}
@@ -104,7 +104,7 @@ public class WarlockPriorityScript implements AIScript, SimulatorContextSource {
 	}
 
 	private EquippableItem getEquippableItem(Player player, String itemName, String enchantName) {
-		PhaseId phaseId = player.getCharacter().getPhaseId();
+		PhaseId phaseId = player.getPhaseId();
 		Item item = getItemRepository().getItem(itemName, phaseId).orElseThrow();
 
 		EquippableItem equippableItem = new EquippableItem(item);
@@ -117,12 +117,12 @@ public class WarlockPriorityScript implements AIScript, SimulatorContextSource {
 	}
 
 	private Gem getGem(Player player, String name) {
-		PhaseId phaseId = player.getCharacter().getPhaseId();
+		PhaseId phaseId = player.getPhaseId();
 		return getItemRepository().getGem(name, phaseId).orElseThrow();
 	}
 
 	private Gem getGem(Player player, int gemId) {
-		PhaseId phaseId = player.getCharacter().getPhaseId();
+		PhaseId phaseId = player.getPhaseId();
 		return getItemRepository().getGem(gemId, phaseId).orElseThrow();
 	}
 }

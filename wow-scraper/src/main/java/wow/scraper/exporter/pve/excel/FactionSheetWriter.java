@@ -5,9 +5,9 @@ import wow.scraper.model.JsonFactionDetails;
 import wow.scraper.model.WowheadGameVersion;
 import wow.scraper.model.WowheadSide;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.REQ_VERSION;
-import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
+import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.FACTION_SIDE;
+import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.FACTION_VERSION;
 
 /**
  * User: POlszewski

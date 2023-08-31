@@ -1,6 +1,7 @@
 package wow.scraper.exporter.pve;
 
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.exporter.pve.excel.PveBaseExcelBuilder;
 import wow.scraper.model.JsonFactionDetails;
 
 import java.util.Comparator;
@@ -12,12 +13,12 @@ import java.util.List;
  */
 public class FactionExporter extends PveBaseExporter<JsonFactionDetails> {
 	@Override
-	protected void addHeader() {
+	protected void addHeader(PveBaseExcelBuilder builder) {
 		builder.addFactionHeader();
 	}
 
 	@Override
-	protected void addRow(JsonFactionDetails faction) {
+	protected void addRow(JsonFactionDetails faction, PveBaseExcelBuilder builder) {
 		builder.add(faction);
 	}
 
@@ -27,7 +28,7 @@ public class FactionExporter extends PveBaseExporter<JsonFactionDetails> {
 	}
 
 	@Override
-	protected void fixData(List<JsonFactionDetails> factions) {
+	protected void fixData() {
 		// VOID
 	}
 

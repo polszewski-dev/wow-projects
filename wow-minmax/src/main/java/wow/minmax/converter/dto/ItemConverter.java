@@ -2,6 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.model.config.Described;
 import wow.commons.model.item.Item;
 import wow.commons.repository.ItemRepository;
 import wow.minmax.converter.Converter;
@@ -10,6 +11,7 @@ import wow.minmax.model.dto.ItemDTO;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static wow.minmax.converter.dto.DtoConverterParams.getPhaseId;
 
@@ -36,7 +38,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				sourceConverter.getDetailedSources(source),
 				getStatString(source),
 				source.getSocketTypes(),
-				source.getSocketBonus().statString(),
+				source.getSocketBonus().getTooltip(),
 				source.getIcon(),
 				null
 		);
@@ -48,9 +50,27 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 	}
 
 	private String getStatString(Item item) {
-		return item.getAttributes().statString() +
-				getSocketString(item) +
-				getItemSetString(item);
+		return Stream.of(
+				getEffectString(item),
+				getActivatedAbilityString(item),
+				getSocketString(item),
+				getItemSetString(item)
+		)
+				.filter(x -> !x.isEmpty())
+				.collect(Collectors.joining("\n"));
+	}
+
+	private String getEffectString(Item item) {
+		return item.getEffects().stream()
+				.map(Described::getTooltip)
+				.collect(Collectors.joining("\n"));
+	}
+
+	private String getActivatedAbilityString(Item item) {
+		if (item.getActivatedAbility() == null) {
+			return "";
+		}
+		return item.getActivatedAbility().getTooltip();
 	}
 
 	private String getSocketString(Item item) {
@@ -63,7 +83,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				.map(x -> "[" + x.name().charAt(0) + "]")
 				.collect(Collectors.joining());
 
-		return String.format(", %s+%s", socketString, item.getSocketBonus());
+		return String.format("Sockets: %s %s", socketString, item.getSocketBonus().getTooltip());
 	}
 
 	private String getItemSetString(Item item) {
@@ -71,6 +91,6 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 			return "";
 		}
 
-		return String.format(", Set: %s", item.getItemSet().getName());
+		return String.format("Set: %s", item.getItemSet().getName());
 	}
 }

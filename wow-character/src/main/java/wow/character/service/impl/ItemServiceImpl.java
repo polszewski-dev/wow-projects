@@ -2,7 +2,7 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.character.service.impl.enumerator.FilterOutWorseEnchantChoices;
@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItemsBySlot(Character character, ItemSlot itemSlot, ItemFilter itemFilter) {
+	public List<Item> getItemsBySlot(PlayerCharacter character, ItemSlot itemSlot, ItemFilter itemFilter) {
 		return itemRepository.getItemsBySlot(itemSlot, character.getPhaseId()).stream()
 				.filter(item -> character.canEquip(itemSlot, item))
 				.filter(itemFilter::matchesFilter)
@@ -56,7 +56,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+	public List<Enchant> getEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType) {
 		return itemRepository.getEnchants(itemType, itemSubType, character.getPhaseId()).stream()
 				.filter(enchant -> enchant.isAvailableTo(character))
 				.filter(enchant -> enchant.isSuitableFor(character))
@@ -64,13 +64,13 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getBestEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+	public List<Enchant> getBestEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType) {
 		List<Enchant> enchants = getEnchants(character, itemType, itemSubType);
 		return new FilterOutWorseEnchantChoices(enchants).getResult();
 	}
 
 	@Override
-	public List<Gem> getGems(Character character, SocketType socketType, boolean nonUniqueOnly) {
+	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean nonUniqueOnly) {
 		return itemRepository.getGems(socketType, character.getPhaseId()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
@@ -79,7 +79,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getBestGems(Character character, SocketType socketType) {
+	public List<Gem> getBestGems(PlayerCharacter character, SocketType socketType) {
 		List<Gem> gems = getGems(character, socketType, true);
 		if (socketType == SocketType.META) {
 			return gems;
@@ -88,7 +88,8 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem[]> getBestGemCombos(Character character, Item item) {
-		return new GemComboFinder(this).getGemCombos(character, item.getSocketSpecification());
+	public List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item) {
+		var finder = new GemComboFinder(character, item.getSocketSpecification(), this);
+		return finder.getGemCombos();
 	}
 }

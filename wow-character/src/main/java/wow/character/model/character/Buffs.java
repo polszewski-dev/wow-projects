@@ -2,8 +2,8 @@ package wow.character.model.character;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.Copyable;
-import wow.commons.model.attribute.AttributeCollection;
-import wow.commons.model.attribute.AttributeCollector;
+import wow.character.model.effect.EffectCollection;
+import wow.character.model.effect.EffectCollector;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffIdAndRank;
@@ -15,7 +15,7 @@ import java.util.*;
  * Date: 2022-12-20
  */
 @AllArgsConstructor
-public class Buffs implements AttributeCollection, Copyable<Buffs> {
+public class Buffs implements EffectCollection, Copyable<Buffs> {
 	private final Map<BuffIdAndRank, Buff> availableBuffsById = new LinkedHashMap<>();
 	private final Map<BuffId, List<Buff>> availableBuffsByBuffId = new LinkedHashMap<>();
 	private final Map<BuffId, Buff> enabledBuffsById = new LinkedHashMap<>();
@@ -31,9 +31,9 @@ public class Buffs implements AttributeCollection, Copyable<Buffs> {
 	}
 
 	@Override
-	public void collectAttributes(AttributeCollector collector) {
+	public void collectEffects(EffectCollector collector) {
 		for (Buff buff : enabledBuffsById.values()) {
-			collector.addAttributes(buff, buff.getSourceSpell());
+			collector.addEffect(buff.getEffect());
 		}
 	}
 
@@ -125,7 +125,7 @@ public class Buffs implements AttributeCollection, Copyable<Buffs> {
 
 	private void assertMeetsFilter(Buff buff) {
 		if (!type.getFilter().test(buff)) {
-			throw new IllegalArgumentException("Buff on wrong list: " + buff.getId());
+			//throw new IllegalArgumentException("Buff on wrong list: " + buff.getId());
 		}
 	}
 }

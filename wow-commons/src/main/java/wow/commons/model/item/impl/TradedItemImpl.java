@@ -1,8 +1,6 @@
 package wow.commons.model.item.impl;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
@@ -15,22 +13,15 @@ import wow.commons.model.item.TradedItem;
  * Date: 2023-03-27
  */
 @Getter
-@EqualsAndHashCode(callSuper = true)
 public class TradedItemImpl extends AbstractItemImpl implements TradedItem {
 	public TradedItemImpl(
-			Integer id,
+			int id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
 			BasicItemInfo basicItemInfo
 	) {
 		super(id, description, timeRestriction, characterRestriction, basicItemInfo);
-		setAttributes(Attributes.EMPTY);
 		assertItemType(ItemType.QUEST, ItemType.TOKEN);
-	}
-
-	@Override
-	public String toString() {
-		return getName();
 	}
 }

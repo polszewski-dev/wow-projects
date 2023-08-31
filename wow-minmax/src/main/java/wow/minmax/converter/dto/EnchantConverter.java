@@ -27,7 +27,7 @@ public class EnchantConverter implements Converter<Enchant, EnchantDTO>, Paramet
 				source.getId(),
 				source.getName(),
 				source.getRarity(),
-				source.getAttributes().statString(),
+				source.getEffect().getTooltip(),
 				source.getIcon(),
 				source.getTooltip()
 		);

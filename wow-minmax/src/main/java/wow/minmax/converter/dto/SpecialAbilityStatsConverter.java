@@ -16,12 +16,12 @@ public class SpecialAbilityStatsConverter implements Converter<SpecialAbilitySta
 	@Override
 	public SpecialAbilityStatsDTO doConvert(SpecialAbilityStats source) {
 		return new SpecialAbilityStatsDTO(
-				source.getAbility().line(),
+				source.getAbility().getTooltip(),
 				source.getAbility().toString(),
-				source.getStatEquivalent().statString(),
+				"",
 				source.getSpEquivalent(),
-				source.getAbility().source().getDescription().name(),
-				source.getAbility().source().getDescription().icon()
+				source.getAbility().getSource().getName(),
+				source.getAbility().getSource().getIcon()
 		);
 	}
 }

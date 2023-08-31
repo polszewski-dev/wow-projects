@@ -1,13 +1,13 @@
 package wow.commons.model.buff;
 
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
+import wow.commons.model.effect.EffectSource;
 
 /**
  * User: POlszewski
  * Date: 2023-03-27
  */
-public record BuffSource(Buff buff) implements SpecialAbilitySource, Comparable<BuffSource> {
+public record BuffSource(Buff buff) implements EffectSource, Comparable<BuffSource> {
 	@Override
 	public Description getDescription() {
 		return buff.getDescription();

@@ -10,7 +10,6 @@ import wow.commons.model.pve.PhaseId;
  * Date: 2023-03-30
  */
 public class PhaseSheetParser extends CharacterSheetParser {
-	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colMaxLvl = column("max_lvl");
 	private final ExcelColumn colMaxProficiency = column("max_proficiency");
 

@@ -4,41 +4,40 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Buffs;
-import wow.character.model.character.Character;
-import wow.character.model.snapshot.*;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.model.snapshot.AccumulatedBaseStats;
+import wow.character.model.snapshot.BaseStatsSnapshot;
+import wow.character.model.snapshot.StatSummary;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
+import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.complex.special.OnUseAbility;
-import wow.commons.model.attribute.complex.special.ProcAbility;
-import wow.commons.model.attribute.complex.special.SpecialAbility;
-import wow.commons.model.attribute.complex.special.TalentProcAbility;
+import wow.commons.model.attribute.primitive.PowerType;
 import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.buff.BuffIdAndRank;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellSchool;
+import wow.commons.model.effect.component.ComponentType;
+import wow.commons.model.effect.component.PeriodicComponent;
+import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentId;
-import wow.commons.util.AttributesBuilder;
 import wow.minmax.model.*;
 import wow.minmax.repository.MinmaxConfigRepository;
-import wow.minmax.repository.ProcInfoRepository;
 import wow.minmax.service.CalculationService;
-import wow.minmax.service.impl.enumerator.RotationAbilityEquivalentCalculator;
 import wow.minmax.service.impl.enumerator.RotationDpsCalculator;
 import wow.minmax.service.impl.enumerator.RotationStatsCalculator;
+import wow.minmax.service.impl.enumerator.SpecialAbilitySolver;
 import wow.minmax.service.impl.enumerator.StatEquivalentFinder;
+import wow.minmax.util.EffectList;
+import wow.minmax.util.NonModifierHandler;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
 import static wow.minmax.model.config.CharacterFeature.COMBAT_RATINGS;
-import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
-import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 
 /**
  * User: POlszewski
@@ -49,310 +48,275 @@ import static wow.minmax.service.CalculationService.EquivalentMode.REPLACEMENT;
 public class CalculationServiceImpl implements CalculationService {
 	private final CharacterCalculationService characterCalculationService;
 	private final CharacterService characterService;
-	private final ProcInfoRepository procInfoRepository;
 	private final MinmaxConfigRepository minmaxConfigRepository;
+	private final SpecialAbilitySolver specialAbilitySolver;
 
 	@Override
-	public Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character) {
-		return getDpsStatEquivalent(attributesToFindEquivalent, targetStat, mode, character, character.getRotation(), character.getStats());
-	}
+	public double getSpEquivalent(TalentId talentId, PlayerCharacter character) {
+		var copy = character.copy();
 
-	@Override
-	public Attributes getDpsStatEquivalent(
-			Attributes attributesToFindEquivalent,
-			PrimitiveAttributeId targetStat,
-			EquivalentMode mode,
-			Character character,
-			Rotation rotation,
-			Attributes totalStats
-	) {
-		var finder = new StatEquivalentFinder(
-				getBaseStats(mode, totalStats, attributesToFindEquivalent),
-				getTargetDps(mode, totalStats, attributesToFindEquivalent, character, rotation),
-				targetStat,
-				character,
-				rotation,
-				this
-		);
-
-		return finder.getDpsStatEquivalent();
-	}
-
-	private Attributes getBaseStats(EquivalentMode mode, Attributes totalStats, Attributes attributesToFindEquivalent) {
-		return switch (mode) {
-			case REPLACEMENT -> AttributesBuilder.removeAttributes(totalStats, attributesToFindEquivalent);
-			case ADDITIONAL -> totalStats;
-		};
-	}
-
-	private Attributes getTargetStats(EquivalentMode mode, Attributes totalStats, Attributes attributesToFindEquivalent) {
-		return switch (mode) {
-			case REPLACEMENT -> totalStats;
-			case ADDITIONAL -> AttributesBuilder.addAttributes(totalStats, attributesToFindEquivalent);
-		};
-	}
-
-	private double getTargetDps(EquivalentMode mode, Attributes totalStats, Attributes attributesToFindEquivalent, Character character, Rotation rotation) {
-		Attributes targetStats = getTargetStats(mode, totalStats, attributesToFindEquivalent);
-		return getRotationDps(character, rotation, targetStats);
-	}
-
-	@Override
-	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character) {
-		return getAbilityEquivalent(specialAbility, character, character.getRotation(), character.getStats());
-	}
-
-	@Override
-	public Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Rotation rotation, Attributes totalStats) {
-		var calculator = new RotationAbilityEquivalentCalculator(
-				character,
-				rotation,
-				AttributesBuilder.removeAttributes(totalStats, Attributes.of(specialAbility)),
-				this
-		);
-		calculator.calculate();
-		return calculator.getAbilityEquivalent(specialAbility);
-	}
-
-	@Override
-	public Attributes getTalentEquivalent(
-			TalentId talentId,
-			PrimitiveAttributeId targetStat,
-			Character character
-	) {
-		Character copy = character.copy();
 		copy.getTalents().removeTalent(talentId);
-
 		characterService.updateAfterRestrictionChange(copy);
 
-		Attributes baseStats = copy.getStats();
-		double targetDps = getRotationDps(character, character.getRotation(), character.getStats());
+		var baseEffectList = EffectList.createSolved(copy);
+		var rotationStats = getAccumulatedRotationStats(character, character.getRotation());
+		var targetDps = getRotationDps(character, character.getRotation(), rotationStats);
 
-		var finder = new StatEquivalentFinder(
-				baseStats, targetDps, targetStat, copy, copy.getRotation(), this
+		var finder = StatEquivalentFinder.forTargetDps(
+				baseEffectList, targetDps, copy, copy.getRotation(), this
 		);
 
 		return finder.getDpsStatEquivalent();
 	}
 
 	@Override
-	public double getRotationDps(Character character, Rotation rotation) {
-		return getRotationDps(character, rotation, character.getStats());
+	public double getRotationDps(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList) {
+		var rotationStats = getAccumulatedRotationStats(character, rotation, effectList, targetEffectList);
+
+		return getRotationDps(character, rotation, rotationStats);
 	}
 
 	@Override
-	public double getRotationDps(Character character, Rotation rotation, Attributes totalStats) {
-		var calculator = new RotationDpsCalculator(character, rotation, totalStats, this);
+	public double getRotationDps(PlayerCharacter character, Rotation rotation, AccumulatedRotationStats rotationStats) {
+		var calculator = new RotationDpsCalculator(
+				rotation,
+				ability -> getSnapshot(character, ability, rotationStats)
+		);
+
 		calculator.calculate();
 		return calculator.getDps();
 	}
 
 	@Override
-	public RotationStats getRotationStats(Character character, Rotation rotation) {
-		var calculator = new RotationStatsCalculator(character, rotation, character.getStats(), this);
+	public AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation) {
+		var effectList = EffectList.createSolved(character);
+		var targetEffectList = EffectList.createSolvedForTarget(character);
+
+		return getAccumulatedRotationStats(character, rotation, effectList, targetEffectList);
+	}
+
+	@Override
+	public AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList) {
+		var result = new AccumulatedRotationStats();
+		var baseStats = getAccumulatedBaseStats(character, effectList, result);
+
+		result.setBaseStats(baseStats);
+
+		for (var ability : rotation.getAbilities()) {
+			var abilityStats = getAccumulatedDamagingAbilityStats(character, ability, effectList, targetEffectList);
+
+			result.addStats(ability, abilityStats);
+		}
+
+		return result;
+	}
+
+	private AccumulatedBaseStats getAccumulatedBaseStats(PlayerCharacter character, EffectList effectList, NonModifierHandler nonModifierHandler) {
+		var stats = characterCalculationService.newAccumulatedBaseStats(character);
+		effectList.accumulateAttributes(stats, nonModifierHandler);
+		return stats;
+	}
+
+	private AccumulatedDamagingAbilityStats getAccumulatedDamagingAbilityStats(PlayerCharacter character, Ability ability, EffectList effectList, EffectList targetEffectList) {
+		var stats = newAccumulatedDamagingAbilityStats(character, ability);
+		effectList.accumulateAttributes(stats, null);
+		targetEffectList.accumulateAttributes(stats.getTarget(), null);
+		return stats;
+	}
+
+	private AccumulatedDamagingAbilityStats newAccumulatedDamagingAbilityStats(PlayerCharacter character, Ability ability) {
+		var stats = new AccumulatedDamagingAbilityStats(character.getLevel());
+
+		var target = character.getTarget();
+		var directComponent = getDamagingDirectComponent(ability);
+		var periodicComponent = getDamagingPeriodicComponent(ability);
+
+		stats.setAbility(ability);
+		stats.setDirectComponent(directComponent);
+		stats.setPeriodicComponent(periodicComponent);
+
+		var castStats = characterCalculationService.newAccumulatedCastStats(character, ability);
+		var costStats = characterCalculationService.newAccumulatedCostStats(character, ability);
+		var targetStats = characterCalculationService.newAccumulatedTargetStats(character, ability, PowerType.SPELL_DAMAGE, ability.getSchool());
+		var hitStats = characterCalculationService.newAccumulatedHitStats(character, ability, target);
+
+		stats.setCast(castStats);
+		stats.setCost(costStats);
+		stats.setTarget(targetStats);
+		stats.setHit(hitStats);
+
+		if (directComponent != null) {
+			var directComponentStats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, directComponent);
+
+			stats.setDirect(directComponentStats);
+		}
+
+		if (ability.getAppliedEffect() != null) {
+			var periodicStats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, periodicComponent);
+			var effectDurationStats = characterCalculationService.newAccumulatedDurationStats(character, ability, target);
+
+			stats.setPeriodic(periodicStats);
+			stats.setEffectDuration(effectDurationStats);
+		}
+
+		return stats;
+	}
+
+	private DirectComponent getDamagingDirectComponent(Ability ability) {
+		return ability.getDirectComponents().stream()
+				.filter(x -> x.type() == ComponentType.DAMAGE)
+				.findAny()
+				.orElse(null);
+	}
+
+	private PeriodicComponent getDamagingPeriodicComponent(Ability ability) {
+		var effectApplication = ability.getEffectApplication();
+
+		if (effectApplication == null) {
+			return null;
+		}
+
+		var periodicComponent = effectApplication.effect().getPeriodicComponent();
+
+		if (periodicComponent == null) {
+			return null;
+		}
+
+		return periodicComponent.type() == ComponentType.DAMAGE ? periodicComponent : null;
+	}
+
+	@Override
+	public RotationStats getRotationStats(PlayerCharacter character, Rotation rotation) {
+		var rotationStats = getAccumulatedRotationStats(character, rotation);
+
+		var calculator = new RotationStatsCalculator(
+				rotation,
+				ability -> getSnapshot(character, ability, rotationStats.copy())
+		);
+
 		calculator.calculate();
 		return calculator.getStats();
 	}
 
-	@Override
-	public Snapshot getSnapshot(Character character, Attributes totalStats) {
-		return getSnapshot(character, null, totalStats);
+	private Snapshot getSnapshot(PlayerCharacter character, Ability ability) {
+		var rotationStats = getAccumulatedRotationStats(character, Rotation.onlyFiller(ability));
+
+		return getSnapshot(character, ability, rotationStats);
 	}
 
-	@Override
-	public Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats) {
-		Snapshot snapshot = characterCalculationService.createSnapshot(character, spell, totalStats);
+	private Snapshot getSnapshot(PlayerCharacter character, Ability ability, AccumulatedRotationStats rotationStats) {
+		var abilityStats = rotationStats.get(ability.getAbilityId());
+		var baseStats = rotationStats.getBaseStats();
+		var target = character.getTarget();
+		var snapshot = new Snapshot();
 
-		characterCalculationService.advanceSnapshot(snapshot, SnapshotState.SECONDARY_STATS);
+		snapshot.setAbility(ability);
 
-		if (spell == null) {
-			return snapshot;
-		}
+		var base = characterCalculationService.getBaseStatsSnapshot(character, baseStats);
 
-		characterCalculationService.advanceSnapshot(snapshot, SnapshotState.CAST_TIME);
+		snapshot.setBase(base);
+		abilityStats.solveStatConversions(rotationStats.getStatConversions(), base);
+		calculateDamagingSpellStats(character, ability, abilityStats, target, snapshot, base);
 
-		boolean recalculate = solveAbilities(snapshot);
+		var recalculate = specialAbilitySolver.solveAbilities(snapshot, abilityStats, rotationStats);
 
 		if (recalculate) {
-			snapshot.setState(SnapshotState.INITIAL);
+			calculateDamagingSpellStats(character, ability, abilityStats, target, snapshot, base);
 		}
-
-		characterCalculationService.advanceSnapshot(snapshot, SnapshotState.COMPLETE);
 
 		return snapshot;
 	}
 
-	private boolean solveAbilities(Snapshot snapshot) {
-		AccumulatedSpellStats stats = snapshot.getStats();
-		List<SpecialAbility> specialAbilities = stats.getAttributes().getSpecialAbilities();
+	private void calculateDamagingSpellStats(PlayerCharacter character, Ability ability, AccumulatedDamagingAbilityStats abilityStats, wow.character.model.character.Character target, Snapshot snapshot, BaseStatsSnapshot base) {
+		var cast = characterCalculationService.getSpellCastSnapshot(character, ability, abilityStats.getCast());
+		var cost = characterCalculationService.getSpellCostSnapshot(character, ability, abilityStats.getCost());
+		var hitPct = characterCalculationService.getSpellHitPct(character, ability, target, abilityStats.getHit());
 
-		if (specialAbilities.isEmpty()) {
-			return false;
+		snapshot.setCast(cast);
+		snapshot.setCost(cost);
+		snapshot.setHitPct(hitPct);
+
+		var targetStats = abilityStats.getTarget();
+
+		if (abilityStats.getDirectComponent() != null) {
+			var direct = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, abilityStats.getDirectComponent(), base, abilityStats.getDirect(), targetStats);
+
+			snapshot.setDirect(direct);
 		}
 
-		for (SpecialAbility specialAbility : specialAbilities) {
-			Attributes statEquivalent = getStatEquivalent(specialAbility, snapshot);
-			stats.accumulatePrimitiveAttributes(statEquivalent.getPrimitiveAttributes());
-		}
+		if (ability.getAppliedEffect() != null) {
+			var periodic = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, abilityStats.getPeriodic(), targetStats);
+			var effectDuration = characterCalculationService.getEffectDurationSnapshot(character, ability, target, abilityStats.getEffectDuration(), targetStats);
 
-		return true;
+			snapshot.setPeriodic(periodic);
+			snapshot.setEffectDuration(effectDuration);
+		}
 	}
 
 	@Override
-	public Attributes getStatEquivalent(SpecialAbility specialAbility, Snapshot snapshot) {
-		if (specialAbility instanceof OnUseAbility ability) {
-			return ability.equivalent();
-		} else if (specialAbility instanceof ProcAbility ability) {
-			return getProcStatEquivalent(ability, snapshot);
-		} else if (specialAbility instanceof TalentProcAbility ability) {
-			return getTalentProcStatEquivalent(ability, snapshot);
-		} else {
-			return specialAbility.attributes();
-		}
-	}
+	public SpellStats getSpellStats(PlayerCharacter character, Ability ability) {
+		var snapshot = getSnapshot(character, ability);
+		var totalDamage = snapshot.getTotalDamage();
+		var effectiveCastTime = snapshot.getEffectiveCastTime();
+		var manaCost = snapshot.getManaCost();
 
-	private Attributes getProcStatEquivalent(ProcAbility ability, Snapshot snapshot) {
-		double procChance = getProcChance(ability, snapshot);
-
-		if (procChance == 0) {
-			return Attributes.EMPTY;
-		}
-
-		double uptime = getProcUptime(ability, snapshot, procChance);
-
-		return ability.attributes().scale(uptime);
-	}
-
-	private double getProcChance(ProcAbility ability, Snapshot snapshot) {
-		double hitChance = snapshot.getHitChance();
-		double critChance = snapshot.getCritChance();
-
-		return ability.event().getProcChance(hitChance, critChance);
-	}
-
-	private double getProcUptime(ProcAbility ability, Snapshot snapshot, double procChance) {
-		double duration = ability.duration().getSeconds();
-		double cooldown = ability.cooldown().getSeconds();
-		double castTime = snapshot.getEffectiveCastTime();
-
-		return getProcUptime(procChance, duration, cooldown, castTime);
-	}
-
-	private double getProcUptime(double procChance, double duration, double internalCooldown, double castTime) {
-		double procChancePct = 100 * procChance;
-
-		double p = procChancePct * ProcInfo.CHANCE_RESOLUTION;
-		double t = castTime * ProcInfo.CAST_TIME_RESOLUTION;
-
-		double modP = p % 1;
-		double modT = t % 1;
-
-		return getProcUptime((int) p, (int) t, modP, modT, (int) duration, (int) internalCooldown);
-	}
-
-	private double getProcUptime(int p, int t, double modP, double modT, int duration, int internalCooldown) {
-		double procUptime0 = procInfoRepository.getAverageUptime(p, t, duration, internalCooldown);
-
-		if (modP != 0 && modT != 0) {
-			double procUptime1 = procInfoRepository.getAverageUptime(p + 1, t, duration, internalCooldown);
-			double procUptime2 = procInfoRepository.getAverageUptime(p, t + 1, duration, internalCooldown);
-			double procUptime3 = procInfoRepository.getAverageUptime(p + 1, t + 1, duration, internalCooldown);
-
-			double v1 = interpolate(procUptime0, procUptime1, modP);
-			double v2 = interpolate(procUptime2, procUptime3, modP);
-
-			return interpolate(v1, v2, modT);
-		}
-
-		if (modP != 0) {
-			double procUptime1 = procInfoRepository.getAverageUptime(p + 1, t, duration, internalCooldown);
-
-			return interpolate(procUptime0, procUptime1, modP);
-		}
-
-		if (modT != 0) {
-			double procUptime1 = procInfoRepository.getAverageUptime(p, t + 1, duration, internalCooldown);
-
-			return interpolate(procUptime0, procUptime1, modT);
-		}
-
-		return procUptime0;
-	}
-
-	private static double interpolate(double v0, double v1, double t) {
-		return v0 + (v1 - v0) * t;
-	}
-
-	private Attributes getTalentProcStatEquivalent(TalentProcAbility ability, Snapshot snapshot) {
-		double critChance = snapshot.getCritChance();
-		double extraCritCoeff = getExtraCritCoeff(ability, critChance);
-		if (extraCritCoeff == 0) {
-			return Attributes.EMPTY;
-		}
-		return Attributes.of(CRIT_COEFF_PCT, extraCritCoeff, ability.condition());
-	}
-
-	private double getExtraCritCoeff(TalentProcAbility ability, double critChance) {
-		int rank = ability.effectId().getRank();
-		double c = critChance;
-		double n = 1 - c;
-		return rank * 0.04 * (2 * c + n) * (1 + n + n * n + n * n * n);
-	}
-
-	@Override
-	public SpellStats getSpellStats(Character character, Spell spell) {
-		Snapshot snapshot = getSnapshot(character, spell, character.getStats());
-		SpellStatistics spellStatistics = snapshot.getSpellStatistics(RngStrategy.AVERAGED, true);
-		SpellStatEquivalents statEquivalents = getStatEquivalents(character, spell);
-		return new SpellStats(character, spellStatistics, statEquivalents);
-	}
-
-	private SpellStatEquivalents getStatEquivalents(Character character, Spell spell) {
-		PrimitiveAttributeId hit;
-		PrimitiveAttributeId crit;
-		PrimitiveAttributeId haste;
-
-		boolean combatRatings = minmaxConfigRepository.hasFeature(character, COMBAT_RATINGS);
-
-		if (combatRatings) {
-			hit = SPELL_HIT_RATING;
-			crit = SPELL_CRIT_RATING;
-			haste = SPELL_HASTE_RATING;
-		} else {
-			hit = SPELL_HIT_PCT;
-			crit = SPELL_CRIT_PCT;
-			haste = SPELL_HASTE_PCT;
-		}
-
-		double amount = minmaxConfigRepository.getViewConfig(character).orElseThrow().evivalentAmount();
-		double hitSpEqv = getSpEquivalent(hit, amount, character, spell);
-		double critSpEqv = getSpEquivalent(crit, amount, character, spell);
-		double hasteSpEqv = getSpEquivalent(haste, amount, character, spell);
-		return new SpellStatEquivalents(hitSpEqv, critSpEqv, hasteSpEqv);
-	}
-
-	private double getSpEquivalent(PrimitiveAttributeId attributeId, double amount, Character character, Spell spell) {
-		return getDpsStatEquivalent(
-				Attributes.of(attributeId, amount),
-				SPELL_POWER,
-				ADDITIONAL,
+		return new SpellStats(
 				character,
-				Rotation.onlyFiller(spell),
-				character.getStats()
-		).getSpellPower();
+				ability,
+				totalDamage,
+				totalDamage / effectiveCastTime,
+				Duration.seconds(effectiveCastTime),
+				snapshot.isInstantCast(),
+				manaCost,
+				totalDamage / manaCost,
+				snapshot.getPower(),
+				snapshot.getHitPct(),
+				snapshot.getCritPct(),
+				snapshot.getHastePct(),
+				snapshot.getCoeffDirect(),
+				snapshot.getCoeffDoT(),
+				snapshot.getCritCoeff(),
+				getStatEquivalent(character, ability, HIT_RATING, HIT_PCT),
+				getStatEquivalent(character, ability, CRIT_RATING, CRIT_PCT),
+				getStatEquivalent(character, ability, HASTE_RATING, HASTE_PCT),
+				snapshot.getDuration(),
+				snapshot.getCooldown(),
+				0,
+				0
+		);
+	}
+
+	private double getStatEquivalent(PlayerCharacter character, Ability ability, PrimitiveAttributeId ratingStat, PrimitiveAttributeId pctStat) {
+		var usesCombatRatings = minmaxConfigRepository.hasFeature(character, COMBAT_RATINGS);
+		var stat = usesCombatRatings ? ratingStat : pctStat;
+		var amount = minmaxConfigRepository.getViewConfig(character).orElseThrow().equivalentAmount();
+
+		var specialAbility = SpecialAbility.of(
+				EffectImpl.newAttributeEffect(
+						Attributes.of(stat, amount)
+				)
+		);
+
+		var finder = StatEquivalentFinder.forAdditionalSpecialAbility(
+				specialAbility,
+				character,
+				Rotation.onlyFiller(ability),
+				this
+		);
+
+		return finder.getDpsStatEquivalent();
 	}
 
 	@Override
-	public CharacterStats getCurrentStats(Character character) {
-		return getStats(character, character.getStats());
+	public StatSummary getCurrentStats(PlayerCharacter character) {
+		return getStats(character);
 	}
 
 	@Override
-	public CharacterStats getStats(Character character, BuffCategory... buffCategories) {
-		Character copy = character.copy();
+	public StatSummary getStats(PlayerCharacter character, BuffCategory... buffCategories) {
+		var copy = character.copy();
 		copy.setBuffs(getFilteredBuffs(character.getBuffs(), buffCategories));
-		copy.getTargetEnemy().setDebuffs(getFilteredBuffs(character.getTargetEnemy().getDebuffs(), buffCategories));
-		return getStats(copy, copy.getStats());
+		return getStats(copy);
 	}
 
 	private List<BuffIdAndRank> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
@@ -363,44 +327,44 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public CharacterStats getEquipmentStats(Character character) {
-		return getStats(character, character.getEquipment().getStats());
+	public StatSummary getEquipmentStats(PlayerCharacter character) {
+		var copy = character.copy();
+
+		copy.resetBuild();
+		copy.resetBuffs();
+		characterService.updateAfterRestrictionChange(copy);
+
+		var withEquipment = getStats(copy);
+
+		copy.resetEquipment();
+
+		var withoutEquipment = getStats(copy);
+
+		return withEquipment.difference(withoutEquipment);
 	}
 
-	private CharacterStats getStats(Character character, Attributes totalStats) {
-		Snapshot snapshot = getSnapshot(character, totalStats);
-
-		return new CharacterStats(
-				totalStats.getTotalSpellDamage(),
-				getSpellDamageBySchool(totalStats),
-				totalStats.getSpellHitRating(),
-				snapshot.getTotalHit(),
-				totalStats.getSpellCritRating(),
-				snapshot.getTotalCrit(),
-				totalStats.getSpellHasteRating(),
-				snapshot.getTotalHaste(),
-				snapshot.getStamina(),
-				snapshot.getIntellect(),
-				snapshot.getSpirit(),
-				snapshot.getMaxHealth(),
-				snapshot.getMaxMana()
-		);
-	}
-
-	private Map<SpellSchool, Double> getSpellDamageBySchool(Attributes totalStats) {
-		return Stream.of(SpellSchool.values())
-				.collect(Collectors.toMap(x -> x, totalStats::getTotalSpellDamage));
+	private StatSummary getStats(PlayerCharacter character) {
+		return characterCalculationService.getStatSummary(character);
 	}
 
 	@Override
-	public SpecialAbilityStats getSpecialAbilityStats(Character character, SpecialAbility specialAbility) {
-		Attributes statEquivalent = getAbilityEquivalent(specialAbility, character);
-		Attributes spEquivalent = getDpsStatEquivalent(Attributes.of(specialAbility), SPELL_POWER, REPLACEMENT, character);
+	public SpecialAbilityStats getSpecialAbilityStats(SpecialAbility specialAbility, PlayerCharacter character) {
+		var spEquivalent = getSpEquivalent(specialAbility, character);
 
 		return new SpecialAbilityStats(
 				specialAbility,
-				statEquivalent,
-				spEquivalent.getSpellPower()
+				spEquivalent
 		);
+	}
+
+	private double getSpEquivalent(SpecialAbility specialAbility, PlayerCharacter character) {
+		var finder = StatEquivalentFinder.forReplacedSpecialAbility(
+				specialAbility,
+				character,
+				character.getRotation(),
+				this
+		);
+
+		return finder.getDpsStatEquivalent();
 	}
 }

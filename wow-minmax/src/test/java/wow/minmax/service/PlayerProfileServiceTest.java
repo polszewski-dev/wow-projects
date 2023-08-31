@@ -14,8 +14,8 @@ import wow.commons.model.item.Gem;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.model.persistent.CharacterPO;
 import wow.minmax.model.persistent.EquippableItemPO;
+import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
 import wow.minmax.repository.PlayerProfileRepository;
 
@@ -86,7 +86,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
-		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
+		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND).getItem().getName()).isEqualTo("Heart of the Pit");
 	}
@@ -100,7 +100,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
-		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
+		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND).getItem().getName()).isEqualTo("Grand Magister's Staff of Torrents");
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND)).isNull();
@@ -129,7 +129,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
-		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
+		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND).getEnchant().getName()).isEqualTo("Enchant Weapon - Major Spellpower");
 	}
@@ -151,7 +151,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
-		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
+		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(CHEST).getGems().get(1).getId()).isEqualTo(35761);
 	}
@@ -162,7 +162,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
-		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
+		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot()).isEmpty();
 	}
@@ -176,7 +176,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
-		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
+		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
 		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_SUPREME_POWER)).isTrue();
 		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
@@ -190,12 +190,12 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
-		CharacterPO savedCharacter = getSavedCharacter(savedProfile);
+		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
 		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
 	}
 
-	CharacterPO getSavedCharacter(PlayerProfilePO savedProfile) {
+	PlayerCharacterPO getSavedCharacter(PlayerProfilePO savedProfile) {
 		return savedProfile.getCharacterByKey().get(CHARACTER_KEY);
 	}
 

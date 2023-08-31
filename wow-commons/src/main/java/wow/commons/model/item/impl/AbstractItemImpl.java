@@ -1,15 +1,12 @@
 package wow.commons.model.item.impl;
 
 import lombok.Getter;
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.config.impl.ConfigurationElementWithAttributesImpl;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.BasicItemInfo;
-import wow.commons.model.item.ItemSource;
 
 import java.util.Set;
 
@@ -18,17 +15,24 @@ import java.util.Set;
  * Date: 2023-03-27
  */
 @Getter
-public abstract class AbstractItemImpl extends ConfigurationElementWithAttributesImpl<Integer> implements AbstractItem {
+public abstract class AbstractItemImpl implements AbstractItem {
+	private final int id;
+	private final Description description;
+	private final TimeRestriction timeRestriction;
+	private final CharacterRestriction characterRestriction;
 	private final BasicItemInfo basicItemInfo;
 
 	protected AbstractItemImpl(
-			Integer id,
+			int id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
 			BasicItemInfo basicItemInfo
 	) {
-		super(id, description, timeRestriction, characterRestriction);
+		this.id = id;
+		this.description = description;
+		this.timeRestriction = timeRestriction;
+		this.characterRestriction = characterRestriction;
 		this.basicItemInfo = basicItemInfo;
 	}
 
@@ -39,7 +43,7 @@ public abstract class AbstractItemImpl extends ConfigurationElementWithAttribute
 	}
 
 	@Override
-	protected SpecialAbilitySource getSpecialAbilitySource() {
-		return new ItemSource(this);
+	public String toString() {
+		return getName();
 	}
 }

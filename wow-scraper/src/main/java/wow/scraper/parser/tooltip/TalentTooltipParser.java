@@ -20,7 +20,7 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 	protected Rule[] getRules() {
 		if (isTalentSpell()) {
 			return new Rule[] {
-				Rule.matches(".*", x -> {})// ignore everything
+				ruleIgnoreEverything
 			};
 		}
 

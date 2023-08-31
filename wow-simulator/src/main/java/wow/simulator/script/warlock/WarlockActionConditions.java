@@ -2,7 +2,7 @@ package wow.simulator.script.warlock;
 
 import wow.simulator.script.ConditionalSpellCast;
 
-import static wow.commons.model.spell.SpellId.*;
+import static wow.commons.model.spell.AbilityId.*;
 import static wow.simulator.script.ConditionalSpellCast.of;
 
 /**

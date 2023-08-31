@@ -1,8 +1,8 @@
 package wow.simulator.model.unit;
 
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
@@ -43,20 +43,20 @@ public class UnitResources implements SimulationContextSource {
 		get(MANA).set(current, max);
 	}
 
-	public int increaseHealth(int amount, boolean crit, Spell spell) {
-		return get(HEALTH).increase(amount, crit, spell);
+	public int increaseHealth(int amount, boolean crit, Ability ability) {
+		return get(HEALTH).increase(amount, crit, ability);
 	}
 
-	public int decreaseHealth(int amount, boolean crit, Spell spell) {
-		return get(HEALTH).decrease(amount, crit, spell);
+	public int decreaseHealth(int amount, boolean crit, Ability ability) {
+		return get(HEALTH).decrease(amount, crit, ability);
 	}
 
-	public int increaseMana(int amount, boolean crit, Spell spell) {
-		return get(MANA).increase(amount, crit, spell);
+	public int increaseMana(int amount, boolean crit, Ability ability) {
+		return get(MANA).increase(amount, crit, ability);
 	}
 
-	public int decreaseMana(int amount, boolean crit, Spell spell) {
-		return get(MANA).decrease(amount, crit, spell);
+	public int decreaseMana(int amount, boolean crit, Ability ability) {
+		return get(MANA).decrease(amount, crit, ability);
 	}
 
 	public boolean canPay(Cost cost) {
@@ -64,13 +64,13 @@ public class UnitResources implements SimulationContextSource {
 		return get(type).canPay(cost.amount());
 	}
 
-	public void pay(Cost cost, Spell spell) {
+	public void pay(Cost cost, Ability ability) {
 		if (!canPay(cost)) {
 			throw new IllegalArgumentException("Can't pay spell cost: " + cost);
 		}
 
 		ResourceType type = cost.resourceType();
-		get(type).pay(cost.amount(), spell);
+		get(type).pay(cost.amount(), ability);
 	}
 
 	private void add(UnitResource resource) {

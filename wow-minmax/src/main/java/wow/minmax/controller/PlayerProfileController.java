@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import wow.character.model.character.GameVersion;
 import wow.character.repository.CharacterRepository;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.GameVersionId;
@@ -13,7 +12,6 @@ import wow.minmax.converter.dto.CharacterClassConverter;
 import wow.minmax.converter.dto.PhaseConverter;
 import wow.minmax.converter.dto.PlayerProfileInfoConverter;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.dto.*;
 import wow.minmax.service.PlayerProfileService;
 
@@ -41,7 +39,7 @@ public class PlayerProfileController {
 
 	@GetMapping("list")
 	public List<PlayerProfileInfoDTO> getPlayerProfileList() {
-		List<PlayerProfileInfo> playerProfileInfos = playerProfileService.getPlayerProfileInfos();
+		var playerProfileInfos = playerProfileService.getPlayerProfileInfos();
 		return playerProfileInfoConverter.convertList(playerProfileInfos);
 	}
 
@@ -49,16 +47,16 @@ public class PlayerProfileController {
 	public PlayerProfileInfoDTO createPlayerProfile(
 			@RequestBody PlayerProfileInfoDTO playerProfileInfoDTO
 	) {
-		PlayerProfileInfo playerProfileInfo = playerProfileInfoConverter.convertBack(playerProfileInfoDTO);
-		PlayerProfile createdPlayerProfile = playerProfileService.createPlayerProfile(playerProfileInfo);
+		var playerProfileInfo = playerProfileInfoConverter.convertBack(playerProfileInfoDTO);
+		var createdPlayerProfile = playerProfileService.createPlayerProfile(playerProfileInfo);
 		log.info("Created profile id: {}, name: {}", createdPlayerProfile.getProfileId(), createdPlayerProfile.getProfileName());
 		return playerProfileInfoConverter.convert(createdPlayerProfile.getProfileInfo());
 	}
 
 	@GetMapping("new/options")
 	public NewProfileOptionsDTO getNewProfileOptions() {
-		GameVersionId latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
-		GameVersion gameVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
+		var latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
+		var gameVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
 
 		var supportedClasses = profileConfig.getSupportedClasses().stream()
 				.map(gameVersion::getCharacterClass)
@@ -72,7 +70,7 @@ public class PlayerProfileController {
 	public CharacterSelectionOptionsDTO getCharacterSelectionOptions(
 			@PathVariable("profileId") UUID profileId
 	) {
-		PlayerProfile playerProfile = playerProfileService.getPlayerProfile(profileId);
+		var playerProfile = playerProfileService.getPlayerProfile(profileId);
 
 		return new CharacterSelectionOptionsDTO(
 				getPhases(playerProfile),

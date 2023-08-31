@@ -5,8 +5,7 @@ import wow.scraper.model.JsonZoneDetails;
 import wow.scraper.model.WowheadGameVersion;
 import wow.scraper.model.WowheadZoneType;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.REQ_VERSION;
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
 
 /**

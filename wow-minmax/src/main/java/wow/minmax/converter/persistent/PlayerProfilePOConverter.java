@@ -2,12 +2,12 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.persistent.CharacterPO;
+import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class PlayerProfilePOConverter implements Converter<PlayerProfile, PlayerProfilePO>, BackConverter<PlayerProfile, PlayerProfilePO> {
-	private final CharacterPOConverter characterPOConverter;
+	private final PlayerCharacterPOConverter playerCharacterPOConverter;
 
 	@Override
 	public PlayerProfilePO doConvert(PlayerProfile source) {
@@ -48,19 +48,19 @@ public class PlayerProfilePOConverter implements Converter<PlayerProfile, Player
 		);
 	}
 
-	private Map<CharacterId, CharacterPO> convertCharacters(Map<CharacterId, Character> characterByKey) {
+	private Map<CharacterId, PlayerCharacterPO> convertCharacters(Map<CharacterId, PlayerCharacter> characterByKey) {
 		return characterByKey.entrySet().stream()
 				.collect(Collectors.toMap(
 						Map.Entry::getKey,
-						e -> characterPOConverter.convert(e.getValue())
+						e -> playerCharacterPOConverter.convert(e.getValue())
 				));
 	}
 
-	private Map<CharacterId, Character> convertBackCharacters(Map<CharacterId, CharacterPO> characterByKey) {
+	private Map<CharacterId, PlayerCharacter> convertBackCharacters(Map<CharacterId, PlayerCharacterPO> characterByKey) {
 		return characterByKey.entrySet().stream()
 				.collect(Collectors.toMap(
 						Map.Entry::getKey,
-						e -> characterPOConverter.convertBack(e.getValue())
+						e -> playerCharacterPOConverter.convertBack(e.getValue())
 				));
 	}
 }

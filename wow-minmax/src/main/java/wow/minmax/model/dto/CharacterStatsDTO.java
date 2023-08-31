@@ -17,7 +17,7 @@ import java.util.Map;
 public class CharacterStatsDTO {
 	private String type;
 	private double sp;
-	private Map<SpellSchool, Double> spellDamageBySchool;
+	private Map<SpellSchool, Integer> spellDamageBySchool;
 	private double hitRating;
 	private double hitPct;
 	private double critRating;

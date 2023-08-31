@@ -1,13 +1,13 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
+import wow.commons.model.effect.EffectSource;
 
 /**
  * User: POlszewski
  * Date: 2023-03-27
  */
-public record EnchantSource(Enchant enchant) implements SpecialAbilitySource, Comparable<EnchantSource> {
+public record EnchantSource(Enchant enchant) implements EffectSource, Comparable<EnchantSource> {
 	@Override
 	public Description getDescription() {
 		return enchant.getDescription();
@@ -20,6 +20,6 @@ public record EnchantSource(Enchant enchant) implements SpecialAbilitySource, Co
 
 	@Override
 	public int compareTo(EnchantSource o) {
-		return this.enchant.getId().compareTo(o.enchant.getId());
+		return Integer.compare(this.enchant.getId(), o.enchant.getId());
 	}
 }

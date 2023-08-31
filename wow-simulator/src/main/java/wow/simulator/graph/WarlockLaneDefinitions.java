@@ -1,20 +1,22 @@
 package wow.simulator.graph;
 
-import wow.commons.model.effect.EffectId;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static wow.commons.model.spell.SpellId.*;
+import static wow.commons.model.spell.AbilityId.*;
 
 /**
  * User: POlszewski
  * Date: 2023-08-21
  */
 public class WarlockLaneDefinitions extends LaneDefinitions {
+	private static final String SHADOW_VULNERABILITY = "Shadow Vulnerability";
+	private static final String SHADOW_TRANCE = "Shadow Trance";
+
 	private final Map<String, Color> colorsByName = Map.ofEntries(
 			color(SHADOW_BOLT, new Color(169, 178, 0xF0)),
 			color(SHADOWBURN, new Color(240, 137, 231)),
@@ -28,21 +30,21 @@ public class WarlockLaneDefinitions extends LaneDefinitions {
 			color(IMMOLATE,new Color(240, 170, 124)),
 			color(BLOOD_FURY, new Color(240, 61, 85)),
 			color(AMPLIFY_CURSE, new Color(196, 240, 56)),
-			color(EffectId.SHADOW_VULNERABILITY_20, new Color(197, 67, 240)),
-			color(EffectId.SHADOW_TRANCE, new Color(197, 67, 240))
+			color(SHADOW_VULNERABILITY, new Color(197, 67, 240)),
+			color(SHADOW_TRANCE, new Color(197, 67, 240))
 	);
 
 	private final List<Lane> effectLanes = List.of(
-			lane(2, EffectId.CURSE_OF_AGONY),
-			lane(2, EffectId.CURSE_OF_DOOM),
-			lane(3, EffectId.CORRUPTION),
-			lane(4, EffectId.UNSTABLE_AFFLICTION),
-			lane(5, EffectId.SIPHON_LIFE),
-			lane(6, EffectId.IMMOLATE),
-			lane(7, EffectId.BLOOD_FURY),
-			lane(8, EffectId.SHADOW_VULNERABILITY_20, "Shadow Vulnerability"),
-			lane(9, EffectId.SHADOW_TRANCE),
-			lane(10, EffectId.DRAIN_LIFE)
+			lane(2, CURSE_OF_AGONY),
+			lane(2, CURSE_OF_DOOM),
+			lane(3, CORRUPTION),
+			lane(4, UNSTABLE_AFFLICTION),
+			lane(5, SIPHON_LIFE),
+			lane(6, IMMOLATE),
+			lane(7, BLOOD_FURY),
+			lane(8, SHADOW_VULNERABILITY),
+			lane(9, SHADOW_TRANCE),
+			lane(10, DRAIN_LIFE)
 	);
 
 	private final List<Lane> cooldownLanes = List.of(
@@ -52,7 +54,7 @@ public class WarlockLaneDefinitions extends LaneDefinitions {
 			lane(26, BLOOD_FURY, "Blood Fury cd")
 	);
 
-	private static final Set<SpellId> IGNORED_EFFECTS = Set.of();
+	private static final Set<AbilityId> IGNORED_EFFECTS = Set.of();
 
 	@Override
 	public Map<String, Color> getColorsByName() {
@@ -70,7 +72,7 @@ public class WarlockLaneDefinitions extends LaneDefinitions {
 	}
 
 	@Override
-	protected Set<SpellId> getIgnoredEffects() {
+	protected Set<AbilityId> getIgnoredEffects() {
 		return IGNORED_EFFECTS;
 	}
 }

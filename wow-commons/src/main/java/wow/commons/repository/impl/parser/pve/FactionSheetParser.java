@@ -6,16 +6,14 @@ import wow.commons.model.pve.Side;
 import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
-import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.FACTION_SIDE;
+import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.FACTION_VERSION;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
 public class FactionSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colId = column(ID);
-	private final ExcelColumn colName = column(NAME);
 	private final ExcelColumn colVersion = column(FACTION_VERSION);
 	private final ExcelColumn colSide = column(FACTION_SIDE);
 
@@ -24,11 +22,6 @@ public class FactionSheetParser extends WowExcelSheetParser {
 	public FactionSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
-	}
-
-	@Override
-	protected ExcelColumn getColumnIndicatingOptionalRow() {
-		return colName;
 	}
 
 	@Override

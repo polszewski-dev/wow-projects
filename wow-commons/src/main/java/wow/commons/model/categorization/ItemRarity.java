@@ -32,8 +32,4 @@ public enum ItemRarity {
 		}
 		throw new IllegalArgumentException("Can't parse rarity from: " + color);
 	}
-
-	public boolean isAtLeastAsGoodAs(ItemRarity itemRarity) {
-		return this.ordinal() >= itemRarity.ordinal();
-	}
 }

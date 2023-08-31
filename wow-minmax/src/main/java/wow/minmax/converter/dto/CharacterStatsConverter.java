@@ -2,8 +2,8 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.snapshot.StatSummary;
 import wow.minmax.converter.Converter;
-import wow.minmax.model.CharacterStats;
 import wow.minmax.model.dto.CharacterStatsDTO;
 
 /**
@@ -12,19 +12,19 @@ import wow.minmax.model.dto.CharacterStatsDTO;
  */
 @Component
 @AllArgsConstructor
-public class CharacterStatsConverter implements Converter<CharacterStats, CharacterStatsDTO> {
+public class CharacterStatsConverter implements Converter<StatSummary, CharacterStatsDTO> {
 	@Override
-	public CharacterStatsDTO doConvert(CharacterStats source) {
+	public CharacterStatsDTO doConvert(StatSummary source) {
 		return new CharacterStatsDTO(
 				null,
-				source.getSp(),
+				source.getSpellPower(),
 				source.getSpellDamageBySchool(),
-				source.getHitRating(),
-				source.getHitPct(),
-				source.getCritRating(),
-				source.getCritPct(),
-				source.getHasteRating(),
-				source.getHastePct(),
+				source.getSpellHitRating(),
+				source.getSpellHitPct(),
+				source.getSpellCritRating(),
+				source.getSpellCritPct(),
+				source.getSpellHasteRating(),
+				source.getSpellHastePct(),
 				source.getStamina(),
 				source.getIntellect(),
 				source.getSpirit(),

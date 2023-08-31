@@ -3,8 +3,6 @@ package wow.commons.model.categorization;
 import wow.commons.util.EnumUtil;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -54,11 +52,5 @@ public enum ItemSlot {
 		return Stream.of(values())
 				.filter(ItemSlot::isDpsSlot)
 				.toList();
-	}
-
-	public Set<ItemType> getItemTypes() {
-		return Stream.of(ItemType.values())
-					 .filter(itemType -> itemType.getItemSlots().contains(this))
-					 .collect(Collectors.toSet());
 	}
 }

@@ -1,7 +1,6 @@
 package wow.minmax.service.impl.enumerator;
 
-import wow.character.model.build.Rotation;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -19,14 +18,13 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 	private final Item item;
 
 	public BestItemVariantEnumerator(
-			Character referenceCharacter,
+			PlayerCharacter referenceCharacter,
 			ItemSlot slot,
-			Rotation rotation,
 			ItemService itemService,
 			CalculationService calculationService,
 			MinmaxConfigRepository minmaxConfigRepository
 	) {
-		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), rotation, itemService, calculationService, minmaxConfigRepository);
+		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), itemService, calculationService, minmaxConfigRepository);
 		this.item = referenceCharacter.getEquippedItem(slot).getItem();
 	}
 

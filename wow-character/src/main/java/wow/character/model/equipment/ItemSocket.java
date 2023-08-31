@@ -5,8 +5,6 @@ import wow.character.model.Copyable;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.SocketType;
 
-import java.util.Objects;
-
 /**
  * User: POlszewski
  * Date: 2021-12-14
@@ -52,21 +50,7 @@ public class ItemSocket implements Copyable<ItemSocket> {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof ItemSocket)) return false;
-		ItemSocket that = (ItemSocket) o;
-		return socketType == that.socketType &&
-				Objects.equals(gem, that.gem);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(socketType, gem);
-	}
-
-	@Override
 	public String toString() {
-		return gem != null ? "[" + gem.getShorterName() + "]" : "[]";
+		return gem != null ? "[" + gem.getName() + "]" : "[]";
 	}
 }

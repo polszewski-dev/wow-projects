@@ -42,10 +42,6 @@ public enum PhaseId {
 		return EnumUtil.parse(value, values());
 	}
 
-	public boolean isEarlier(PhaseId phaseId) {
-		return this.compareTo(phaseId) < 0;
-	}
-
 	public boolean isEarlierOrTheSame(PhaseId phaseId) {
 		return this.compareTo(phaseId) <= 0;
 	}

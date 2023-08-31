@@ -21,17 +21,22 @@ public enum ExclusiveFaction {
 
 	public enum Group {
 		SCRYERS_ALDOR,
-		ORACLES_FRENZYHEART_TRIBE;
+		ORACLES_FRENZYHEART_TRIBE
 	}
 
 	private final String name;
 	private final Group group;
 
 	public static ExclusiveFaction parse(String value) {
-		return EnumUtil.parse(value, values());
+		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
-	public static ExclusiveFaction tryParseFromName(String value) {
+	public static ExclusiveFaction tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.name);
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }

@@ -1,17 +1,11 @@
 package wow.scraper.parser.stat;
 
-import wow.commons.model.Duration;
-import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.complex.ComplexAttribute;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.profession.ProfessionId;
-import wow.commons.repository.impl.parser.excel.mapper.ComplexAttributeMapper;
-import wow.commons.util.AttributesBuilder;
 import wow.scraper.parser.scraper.ScraperMatcher;
-import wow.scraper.parser.setter.StatSetter;
 
 import java.util.List;
 
@@ -24,74 +18,27 @@ public class StatMatcher extends ScraperMatcher<StatPattern, StatPatternParams, 
 		super(pattern);
 	}
 
-	public String getParamType() {
-		return getPatternParams().getType();
-	}
-
-	public Attributes getParamStats() {
-		String value = evalParams(getPatternParams().getAmount());
-		double amount = Double.parseDouble(value);
-		return getPatternParams().getStatsSupplier().getAttributes(amount);
-	}
-
-	public Duration getParamDuration() {
-		String value = evalParams(getPatternParams().getDuration());
-		return Duration.parse(value);
-	}
-
-	public Duration getParamCooldown() {
-		return matcherParams.getParsedCooldown();
-	}
-
-	public Percent getParamProcChance() {
-		return matcherParams.getParsedProcChance();
-	}
-
-	public Duration getParamProcCooldown() {
-		Duration cooldown = matcherParams.getParsedProcCooldown();
-		return cooldown != null ? cooldown : Duration.ZERO;
-	}
-
-	public ComplexAttribute getExpression() {
-		String value = evalParams(getPatternParams().getExpression());
-		return ComplexAttributeMapper.fromString(value);
-	}
-
 	public List<ItemType> getParamItemTypes() {
-		return getPatternParams().getItemTypes();
+		return getPatternParams().itemTypes();
 	}
 
 	public List<ItemSubType> getParamItemSubTypes() {
-		return getPatternParams().getItemSubTypes();
+		return getPatternParams().itemSubTypes();
 	}
 
 	public ProfessionId getRequiredProfession() {
-		return getPatternParams().getRequiredProfession();
+		return getPatternParams().requiredProfession();
 	}
 
 	public Integer getRequiredProfessionLevel() {
-		return getPatternParams().getRequiredProfessionLevel();
+		return getPatternParams().requiredProfessionLevel();
 	}
 
 	public List<PveRole> getParamPveRoles() {
-		return getPatternParams().getPveRoles();
+		return getPatternParams().pveRoles();
 	}
 
-	public void setStat(AttributesBuilder stats) {
-		if (hasMatch()) {
-			for (StatSetter setter : pattern.getSetters()) {
-				setter.set(stats, this);
-			}
-		}
-	}
-
-	@Override
-	protected String getLineToMatch(StatMatcherParams params) {
-		return pattern.isLiteral() ? params.getOriginalLine() : params.getLine();
-	}
-
-	@Override
-	public String toString() {
-		return matcherParams != null ? matcherParams.getOriginalLine() : null;
+	public Attributes getAttributes() {
+		return getAttributes(pattern.getAttributePatterns());
 	}
 }

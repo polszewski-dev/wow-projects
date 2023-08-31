@@ -71,12 +71,12 @@ public record Percent(double value) implements Comparable<Percent> {
 		return of(this.value - percent.value);
 	}
 
-	public Percent addMultiplicatively(Percent percent) {
-		return fromMultiplier(this.toMultiplier() * percent.toMultiplier());
-	}
-
 	public Percent scale(double factor) {
 		return of(value * factor);
+	}
+
+	public Percent divide(double factor) {
+		return Percent.of(value / factor);
 	}
 
 	@Override

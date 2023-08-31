@@ -1,6 +1,7 @@
 package wow.scraper.exporter.item;
 
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
@@ -11,21 +12,20 @@ import wow.scraper.parser.tooltip.ItemTooltipParser;
  */
 public class ItemExporter extends AbstractItemExporter<ItemTooltipParser> {
 	@Override
-	public void exportAll() {
-		builder.addItemHeader();
-
+	protected void prepareData() {
 		for (WowheadItemCategory category : WowheadItemCategory.equipment()) {
 			export(category);
 		}
 	}
 
 	@Override
-	protected ItemTooltipParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
-		return new ItemTooltipParser(details, gameVersion, getScraperContext());
+	protected void exportPreparedData(ItemBaseExcelBuilder builder) {
+		builder.addItemHeader();
+		parsers.forEach(builder::add);
 	}
 
 	@Override
-	protected void exportParsedData(ItemTooltipParser parser) {
-		builder.add(parser);
+	protected ItemTooltipParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
+		return new ItemTooltipParser(details, gameVersion, getScraperContext());
 	}
 }

@@ -12,8 +12,8 @@ import wow.scraper.repository.impl.excel.stat.StatPatternExcelParser;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import static wow.scraper.parser.scraper.ScraperPattern.assertNoDuplicates;
 
 /**
  * User: POlszewski
@@ -43,27 +43,6 @@ public class StatPatternRepositoryImpl implements StatPatternRepository {
 		validateAll();
 	}
 
-	private void validateAll() {
-		assertNoDuplicates(itemStatPatterns);
-		assertNoDuplicates(enchantStatPatterns);
-		assertNoDuplicates(gemStatPatterns);
-		assertNoDuplicates(socketBonusStatPatterns);
-	}
-
-	private void assertNoDuplicates(List<StatPattern> patterns) {
-		List<String> duplicatePatterns = patterns.stream()
-				.map(x -> x.getPattern().pattern() + x.getRequiredVersion().stream().sorted().map(Enum::name).collect(Collectors.joining(",")))
-				.collect(Collectors.groupingBy(x -> x, Collectors.counting()))
-				.entrySet().stream()
-				.filter(x -> x.getValue() > 1)
-				.map(Map.Entry::getKey)
-				.toList();
-
-		if (!duplicatePatterns.isEmpty()) {
-			throw new IllegalArgumentException("Duplicate patterns detected: " + duplicatePatterns);
-		}
-	}
-
 	@Override
 	public StatParser getItemStatParser(GameVersionId gameVersion) {
 		return getStatParser(itemStatPatterns, gameVersion);
@@ -90,5 +69,12 @@ public class StatPatternRepositoryImpl implements StatPatternRepository {
 						.filter(x -> x.supports(gameVersion))
 						.toList()
 		);
+	}
+
+	private void validateAll() {
+		assertNoDuplicates(itemStatPatterns);
+		assertNoDuplicates(enchantStatPatterns);
+		assertNoDuplicates(gemStatPatterns);
+		assertNoDuplicates(socketBonusStatPatterns);
 	}
 }

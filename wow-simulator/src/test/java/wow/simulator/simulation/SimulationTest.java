@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.spell.SpellId.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -80,12 +80,12 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT, target)
+						.beginCast(player, SHADOW_BOLT)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
 				at(3)
-						.endCast(player, SHADOW_BOLT, target)
+						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
 		);
@@ -100,20 +100,20 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT, target)
+						.beginCast(player, SHADOW_BOLT)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
 				at(3)
-						.endCast(player, SHADOW_BOLT, target)
+						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
-						.beginCast(player, SHADOW_BOLT, target)
+						.beginCast(player, SHADOW_BOLT)
 						.beginGcd(player),
 				at(4.5)
 						.endGcd(player),
 				at(6)
-						.endCast(player, SHADOW_BOLT, target)
+						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
 		);

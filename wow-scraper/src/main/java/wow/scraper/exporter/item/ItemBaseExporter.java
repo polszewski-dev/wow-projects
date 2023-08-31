@@ -2,7 +2,6 @@ package wow.scraper.exporter.item;
 
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.pve.PhaseId;
 import wow.scraper.exporter.ExcelExporter;
 import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonCommonDetails;
@@ -16,6 +15,8 @@ import java.util.*;
  */
 @Slf4j
 public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends AbstractTooltipParser<D>> extends ExcelExporter<ItemBaseExcelBuilder> {
+	protected List<T> parsers = new ArrayList<>();
+
 	protected void export(C category) {
 		for (Integer detailId : getDetailIds(category)) {
 			for (GameVersionId gameVersion : getScraperConfig().getGameVersions()) {
@@ -43,7 +44,7 @@ public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends
 
 		parser.parse();
 		afterParse(parser, category);
-		exportParsedData(parser);
+		this.parsers.add(parser);
 
 		log.info("Added {} {} [{}]", parser.getDetails().getId(), parser.getName(), gameVersion);
 	}
@@ -54,27 +55,13 @@ public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends
 		fixPhase(parser, category);
 	}
 
-	protected abstract void exportParsedData(T parser);
-
 	private void fixPhase(T parser, C category) {
-		PhaseId correctPhase = getCorrectPhase(parser, category);
-		parser.setPhase(correctPhase);
-	}
-
-	private PhaseId getCorrectPhase(T parser, C category) {
 		Integer detailId = parser.getDetails().getId();
-		PhaseId phaseOverride = getPhaseOverride(detailId);
 		GameVersionId gameVersion = parser.getGameVersion();
 
-		if (phaseOverride != null && phaseOverride.getGameVersionId() == gameVersion) {
-			return phaseOverride;
-		}
-
 		if (appearedInPreviousVersion(detailId, gameVersion, category)) {
-			return gameVersion.getPrepatchPhase().orElseThrow();
+			parser.setPhase(gameVersion.getPrepatchPhase().orElseThrow());
 		}
-
-		return parser.getPhase();
 	}
 
 	private boolean appearedInPreviousVersion(Integer detailId, GameVersionId gameVersion, C category) {
@@ -88,8 +75,6 @@ public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends
 
 		return gameVersions.contains(previousVersion.get());
 	}
-
-	protected abstract PhaseId getPhaseOverride(int id);
 
 	private List<GameVersionId> getGameVersions(C category, Integer detailId) {
 		return getGameVersionMap(category).getOrDefault(detailId, List.of());

@@ -62,6 +62,7 @@ class BuffsTest extends WowCharacterSpringTest {
 				"Greater Blessing of Kings#0",
 				"Demon Armor#6",
 				"Fel Armor#2",
+				"Fel Armor (improved)#2",
 				"Touch of Shadow#0",
 				"Burning Wish#0",
 				"Brilliant Wizard Oil#0",

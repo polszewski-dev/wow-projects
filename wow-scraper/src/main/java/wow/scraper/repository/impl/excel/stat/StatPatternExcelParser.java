@@ -29,11 +29,7 @@ public class StatPatternExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new StatPatternSheetParser("base", itemStatPatterns),
-				new StatPatternSheetParser("onuse", itemStatPatterns),
-				new StatPatternSheetParser("proc", itemStatPatterns),
-				new StatPatternSheetParser("set", itemStatPatterns),
-				new StatPatternSheetParser("misc_bonus", itemStatPatterns),
+				new StatPatternSheetParser("item", itemStatPatterns),
 				new StatPatternSheetParser("enchant", enchantStatPatterns),
 				new StatPatternSheetParser("gem", gemStatPatterns),
 				new StatPatternSheetParser("socket", socketBonusStatPatterns)

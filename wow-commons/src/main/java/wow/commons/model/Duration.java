@@ -231,11 +231,11 @@ public record Duration(long millis) implements Comparable<Duration> {
 		}
 
 		if (this.isInfinite()) {
-			return "INFINITE";
+			return "INF";
 		}
 
 		if (this.isNegInfinite()) {
-			return "-INFINITE";
+			return "-INF";
 		}
 
 		long x = Math.abs(millis);

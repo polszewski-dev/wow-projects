@@ -14,6 +14,8 @@ module wow.character {
 	exports wow.character.model;
 	exports wow.character.model.build;
 	exports wow.character.model.character;
+	exports wow.character.model.character.impl;
+	exports wow.character.model.effect;
 	exports wow.character.model.equipment;
 	exports wow.character.model.snapshot;
 	exports wow.character.repository;

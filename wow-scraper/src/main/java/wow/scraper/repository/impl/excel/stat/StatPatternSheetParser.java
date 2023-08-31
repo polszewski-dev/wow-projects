@@ -1,44 +1,21 @@
 package wow.scraper.repository.impl.excel.stat;
 
-import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.profession.ProfessionId;
-import wow.commons.model.pve.GameVersionId;
-import wow.commons.util.PrimitiveAttributeSupplier;
-import wow.scraper.parser.setter.MiscStatSetter;
-import wow.scraper.parser.setter.StatSetter;
 import wow.scraper.parser.stat.StatPattern;
 import wow.scraper.parser.stat.StatPatternParams;
-import wow.scraper.parser.stat.StatSetterParser;
+import wow.scraper.repository.impl.excel.AbstractPatternSheetParser;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class StatPatternSheetParser extends ExcelSheetParser {
-	private final ExcelColumn colPattern = column("pattern");
-	private final ExcelColumn colStat1 = column("stat1");
-	private final ExcelColumn colStat2 = column("stat2");
-	private final ExcelColumn colStat3 = column("stat3", true);
-
-	private final ExcelColumn colSpecialType = column("special:type", true);
-	private final ExcelColumn colSpecialStat = column("special:stat", true);
-	private final ExcelColumn colSpecialAmount = column("special:amount", true);
-	private final ExcelColumn colSpecialDuration = column("special:duration", true);
-	private final ExcelColumn colExpression = column("special:expression", true);
-	private final ExcelColumn colSpecialItemTypes = column("special:item_types", true);
-	private final ExcelColumn colSpecialItemSubtypes = column("special:item_subtypes", true);
-	private final ExcelColumn colRequiredProfession = column("special:req_prof", true);
-	private final ExcelColumn colRequiredProfessionLevel = column("special:req_prof_lvl", true);
-	private final ExcelColumn colPveRoles = column("special:pve_roles", true);
-
-	private final ExcelColumn colReqVersion = column("req_version");
+public class StatPatternSheetParser extends AbstractPatternSheetParser {
+	private static final int MAX_ATTRIBUTE_PATTERNS = 3;
 
 	private final List<StatPattern> patterns;
 
@@ -48,52 +25,29 @@ public class StatPatternSheetParser extends ExcelSheetParser {
 	}
 
 	@Override
-	protected ExcelColumn getColumnIndicatingOptionalRow() {
-		return colPattern;
-	}
-
-	@Override
 	protected void readSingleRow() {
-		var pattern = colPattern.getString();
-		var setters = getParsedStatSetters();
+		var pattern = getPattern();
+		var attributePatterns = getAttributes("", MAX_ATTRIBUTE_PATTERNS);
 		var params = getParams();
-		var reqVersion = colReqVersion.getSet(GameVersionId::parse);
-		var statPattern = new StatPattern(pattern.trim(), setters, params, reqVersion);
+		var reqVersion = getReqVersion();
+		var statPattern = new StatPattern(pattern.trim(), attributePatterns, params, reqVersion);
+
 		patterns.add(statPattern);
 	}
 
-	private List<StatSetter> getParsedStatSetters() {
-		var setters = Stream.of(
-						colStat1.getString(null),
-						colStat2.getString(null),
-						colStat3.getString(null)
-				)
-				.filter(Objects::nonNull)
-				.map(StatSetterParser::new)
-				.map(StatSetterParser::parse)
-				.toList();
-
-		if (!setters.isEmpty()) {
-			return setters;
-		}
-
-		return List.of(new MiscStatSetter());
-	}
+	private final ExcelColumn colItemTypes = column("item_types", true);
+	private final ExcelColumn colItemSubtypes = column("item_subtypes", true);
+	private final ExcelColumn colRequiredProfession = column("req_prof", true);
+	private final ExcelColumn colRequiredProfessionLevel = column("req_prof_lvl", true);
+	private final ExcelColumn colPveRoles = column("pve_roles", true);
 
 	private StatPatternParams getParams() {
-		StatPatternParams params = new StatPatternParams();
+		var itemTypes = colItemTypes.getList(ItemType::parse);
+		var itemSubTypes = colItemSubtypes.getList(ItemSubType::parse);
+		var reqProfession = colRequiredProfession.getEnum(ProfessionId::parse, null);
+		var reqProfessionLvl = colRequiredProfessionLevel.getNullableInteger();
+		var pveRoles = colPveRoles.getList(PveRole::parse);
 
-		params.setType(colSpecialType.getString(null));
-		params.setStatsSupplier(colSpecialStat.getEnum(PrimitiveAttributeSupplier::fromString, null));
-		params.setAmount(colSpecialAmount.getString(null));
-		params.setDuration(colSpecialDuration.getString(null));
-		params.setExpression(colExpression.getString(null));
-		params.setItemTypes(colSpecialItemTypes.getList(ItemType::parse));
-		params.setItemSubTypes(colSpecialItemSubtypes.getList(ItemSubType::parse));
-		params.setRequiredProfession(colRequiredProfession.getEnum(ProfessionId::parse, null));
-		params.setRequiredProfessionLevel(colRequiredProfessionLevel.getNullableInteger());
-		params.setPveRoles(colPveRoles.getList(PveRole::parse));
-
-		return params;
+		return new StatPatternParams(itemTypes, itemSubTypes, reqProfession, reqProfessionLvl, pveRoles);
 	}
 }

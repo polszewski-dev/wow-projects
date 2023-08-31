@@ -25,7 +25,10 @@ public class SpellPatternExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new SpellPatternSheetParser("spells", spellPatternRepository)
+				new AbilityPatternSheetParser("abilities", spellPatternRepository),
+				new ActivatedAbilitySheetParser("activated", spellPatternRepository),
+				new ProcSheetParser("procs", spellPatternRepository),
+				new MiscEffectsSheetParser("misc_effects", spellPatternRepository)
 		);
 	}
 }

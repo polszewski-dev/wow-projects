@@ -2,18 +2,15 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.Character;
-import wow.character.model.character.*;
+import wow.character.model.character.BuffListType;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.ItemService;
-import wow.character.service.SpellService;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.item.Item;
-import wow.commons.model.pve.GameVersionId;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.CharacterId;
@@ -27,7 +24,10 @@ import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * User: POlszewski
@@ -42,7 +42,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final PlayerProfilePOConverter playerProfilePOConverter;
 
 	private final ItemService itemService;
-	private final SpellService spellService;
 	private final UpgradeService upgradeService;
 	private final CharacterService characterService;
 
@@ -58,9 +57,9 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile createPlayerProfile(PlayerProfileInfo playerProfileInfo) {
-		UUID profileId = UUID.randomUUID();
+		var profileId = UUID.randomUUID();
 
-		PlayerProfile playerProfile = new PlayerProfile(
+		var playerProfile = new PlayerProfile(
 				profileId,
 				playerProfileInfo.getProfileName(),
 				playerProfileInfo.getCharacterClassId(),
@@ -75,10 +74,10 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	private CharacterId getDefaultCharacterId(UUID profileId) {
-		GameVersionId latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
-		GameVersion latestSupportedVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
+		var latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
+		var latestSupportedVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
 
-		Phase defaultPhase = latestSupportedVersion.getLastPhase();
+		var defaultPhase = latestSupportedVersion.getLastPhase();
 
 		return new CharacterId(
 				profileId,
@@ -95,58 +94,63 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public Character getCharacter(CharacterId characterId) {
-		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
+	public PlayerCharacter getCharacter(CharacterId characterId) {
+		var playerProfile = getPlayerProfile(characterId.getProfileId());
 		return getCharacter(playerProfile, characterId);
 	}
 
-	private Character getCharacter(PlayerProfile playerProfile, CharacterId characterId) {
-		Optional<Character> character = playerProfile.getCharacter(characterId);
+	private PlayerCharacter getCharacter(PlayerProfile playerProfile, CharacterId characterId) {
+		var character = playerProfile.getCharacter(characterId);
 
 		if (character.isPresent()) {
 			return character.orElseThrow();
 		}
 
-		Character newCharacter = createCharacter(playerProfile, characterId);
+		var newCharacter = createCharacter(playerProfile, characterId);
 
 		playerProfile.addCharacter(newCharacter);
 		return newCharacter;
 	}
 
-	private Character createCharacter(PlayerProfile playerProfile, CharacterId characterId) {
-		Character newCharacter = characterService.createCharacter(
+	private PlayerCharacter createCharacter(PlayerProfile playerProfile, CharacterId characterId) {
+		var newCharacter = characterService.createPlayerCharacter(
 				playerProfile.getCharacterClassId(),
 				playerProfile.getRaceId(),
 				characterId.getLevel(),
 				characterId.getPhaseId()
 		);
 
-		Enemy targetEnemy = new Enemy(characterId.getEnemyType(), characterId.getEnemyLevelDiff());
-		newCharacter.setTargetEnemy(targetEnemy);
+		var targetEnemy = characterService.createNonPlayerCharacter(
+				characterId.getEnemyType(),
+				newCharacter.getLevel() + characterId.getEnemyLevelDiff(),
+				characterId.getPhaseId()
+		);
 
-		CharacterTemplateId templateId = newCharacter.getCharacterClass().getDefaultCharacterTemplateId();
+		newCharacter.setTarget(targetEnemy);
+
+		var templateId = newCharacter.getCharacterClass().getDefaultCharacterTemplateId();
 		characterService.applyCharacterTemplate(newCharacter, templateId);
 
 		return newCharacter;
 	}
 
 	@Override
-	public Character changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId) {
-		EquippableItem bestItemVariant = getBestItemVariant(characterId, slot, itemId);
+	public PlayerCharacter changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId) {
+		var bestItemVariant = getBestItemVariant(characterId, slot, itemId);
 
 		return changeItem(characterId, slot, bestItemVariant);
 	}
 
 	private EquippableItem getBestItemVariant(CharacterId characterId, ItemSlot slot, int itemId) {
-		Character character = getCharacter(characterId);
-		Item item = itemService.getItem(itemId, character.getPhaseId());
+		var character = getCharacter(characterId);
+		var item = itemService.getItem(itemId, character.getPhaseId());
 		return upgradeService.getBestItemVariant(character, item, slot);
 	}
 
 	@Override
-	public Character changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
-		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
-		Character character = getCharacter(playerProfile, characterId);
+	public PlayerCharacter changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
+		var playerProfile = getPlayerProfile(characterId.getProfileId());
+		var character = getCharacter(playerProfile, characterId);
 
 		character.equip(item, slot);
 		saveProfile(playerProfile, character);
@@ -155,12 +159,12 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public Character changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
-		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
-		Character character = getCharacter(playerProfile, characterId);
-		List<ItemSlot> slots = slotGroup.getSlots();
+	public PlayerCharacter changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+		var playerProfile = getPlayerProfile(characterId.getProfileId());
+		var character = getCharacter(playerProfile, characterId);
+		var slots = slotGroup.getSlots();
 
-		for (ItemSlot slot : slots) {
+		for (var slot : slots) {
 			character.equip(null, slot);
 		}
 
@@ -169,8 +173,8 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 		}
 
 		for (int slotIdx = 0; slotIdx < slots.size(); slotIdx++) {
-			ItemSlot slot = slots.get(slotIdx);
-			EquippableItem item = items.get(slotIdx);
+			var slot = slots.get(slotIdx);
+			var item = items.get(slotIdx);
 			character.equip(item, slot);
 		}
 
@@ -180,9 +184,9 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public Character resetEquipment(CharacterId characterId) {
-		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
-		Character character = getCharacter(playerProfile, characterId);
+	public PlayerCharacter resetEquipment(CharacterId characterId) {
+		var playerProfile = getPlayerProfile(characterId.getProfileId());
+		var character = getCharacter(playerProfile, characterId);
 
 		character.resetEquipment();
 		saveProfile(playerProfile, character);
@@ -190,9 +194,9 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public Character enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
-		PlayerProfile playerProfile = getPlayerProfile(characterId.getProfileId());
-		Character character = getCharacter(playerProfile, characterId);
+	public PlayerCharacter enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
+		var playerProfile = getPlayerProfile(characterId.getProfileId());
+		var character = getCharacter(playerProfile, characterId);
 
 		character.getBuffList(buffListType).enable(buffId, rank, enabled);
 		saveProfile(playerProfile, character);
@@ -200,18 +204,18 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public ViewConfig getViewConfig(Character character) {
+	public ViewConfig getViewConfig(PlayerCharacter character) {
 		return minmaxConfigRepository.getViewConfig(character).orElseThrow();
 	}
 
-	private void saveProfile(PlayerProfile playerProfile, Character changedCharacter) {
-		CharacterId characterId = playerProfile.getCharacterId(changedCharacter);
+	private void saveProfile(PlayerProfile playerProfile, PlayerCharacter changedCharacter) {
+		var characterId = playerProfile.getCharacterId(changedCharacter);
 		playerProfile.setLastModifiedCharacterId(characterId);
 		saveProfile(playerProfile);
 	}
 
 	private void saveProfile(PlayerProfile playerProfile) {
-		PlayerProfilePO playerProfilePO = playerProfilePOConverter.convert(playerProfile);
+		var playerProfilePO = playerProfilePOConverter.convert(playerProfile);
 
 		playerProfileRepository.saveProfile(playerProfilePO);
 	}

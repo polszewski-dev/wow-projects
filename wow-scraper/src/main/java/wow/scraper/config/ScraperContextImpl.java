@@ -23,5 +23,6 @@ public class ScraperContextImpl implements ScraperContext {
 	private final ZoneDetailRepository zoneDetailRepository;
 	private final NpcDetailRepository npcDetailRepository;
 	private final FactionDetailRepository factionDetailRepository;
+	private final ItemSpellRepository itemSpellRepository;
 	private final ScraperConfig scraperConfig;
 }

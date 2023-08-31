@@ -8,10 +8,8 @@ import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.parser.QuestInfoParser;
 import wow.scraper.model.WowheadQuestInfo;
 import wow.scraper.repository.QuestInfoRepository;
+import wow.scraper.util.GameVersionedMap;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,12 +21,11 @@ import java.util.Optional;
 public class QuestInfoRepositoryImpl implements QuestInfoRepository {
 	private final WowheadFetcher wowheadFetcher;
 
-	private final Map<GameVersionId, Map<Integer, WowheadQuestInfo>> questsById = new EnumMap<>(GameVersionId.class);
+	private final GameVersionedMap<Integer, WowheadQuestInfo> questsById = new GameVersionedMap<>();
 
 	@Override
 	public Optional<WowheadQuestInfo> getQuestInfo(GameVersionId gameVersion, int questId) {
-		var map = questsById.computeIfAbsent(gameVersion, x -> new HashMap<>());
-		var questInfo = map.computeIfAbsent(questId, x -> getWowheadQuestInfo(gameVersion, questId));
+		var questInfo = questsById.computeIfAbsent(gameVersion, questId, x -> getWowheadQuestInfo(gameVersion, questId));
 
 		return Optional.of(questInfo);
 	}

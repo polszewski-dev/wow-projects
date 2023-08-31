@@ -1,7 +1,7 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
+import wow.commons.model.effect.EffectSource;
 
 import java.util.Comparator;
 
@@ -9,7 +9,7 @@ import java.util.Comparator;
  * User: POlszewski
  * Date: 2023-03-27
  */
-public record ItemSetSource(ItemSet itemSet, int numPieces) implements SpecialAbilitySource, Comparable<ItemSetSource> {
+public record ItemSetSource(ItemSet itemSet, int numPieces) implements EffectSource, Comparable<ItemSetSource> {
 	@Override
 	public Description getDescription() {
 		return new Description(

@@ -1,8 +1,12 @@
 package wow.scraper.exporter.item.excel;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.REQ_CLASS;
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.REQ_VERSION;
+import wow.commons.model.item.ItemSetBonus;
+
+import java.util.List;
+
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
+import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
 
 /**
  * User: POlszewski
@@ -15,7 +19,7 @@ public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
 
 	@Override
 	public void writeHeader() {
-		setHeader(ITEM_SET_NAME, 30);
+		setHeader(NAME, 30);
 		setHeader(REQ_VERSION);
 		setHeader(REQ_CLASS);
 		setHeader(ITEM_SET_BONUS_REQ_PROFESSION);
@@ -23,8 +27,7 @@ public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
 
 		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
 			setHeader(itemSetBonusNumPieces(bonusIdx));
-			setHeader(itemSetBonusDescription(bonusIdx));
-			writeAttributeHeader(itemSetBonusStatPrefix(bonusIdx), ITEM_SET_BONUS_MAX_STATS);
+			writeEffectHeader(itemSetBonusStatPrefix(bonusIdx), 1);
 		}
 	}
 
@@ -35,11 +38,20 @@ public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
 		setValue(setInfo.getItemSetRequiredClass());
 		setValue(setInfo.getItemSetBonusRequiredProfession());
 		setValue(setInfo.getItemSetBonusRequiredProfessionLevel());
+		writeBonuses(setInfo.getItemSetBonuses());
+	}
 
-		setList(setInfo.getItemSetBonuses(), ITEM_SET_MAX_BONUSES, x -> {
-			setValue(x.numPieces());
-			setValue(x.description());
-			writeAttributes(x.bonusStats(), ITEM_SET_BONUS_MAX_STATS);
-		}, 2 + 2 * ITEM_SET_BONUS_MAX_STATS);
+	private void writeBonuses(List<ItemSetBonus> bonuses) {
+		assertSizeNoLargerThan("set bonuses", bonuses, ITEM_SET_MAX_BONUSES);
+
+		for (int i = 0; i < ITEM_SET_MAX_BONUSES; ++i) {
+			if (i < bonuses.size()) {
+				var bonus = bonuses.get(i);
+				setValue(bonus.numPieces());
+				writeEffect(bonus.bonusEffect());
+			} else {
+				fillRemainingEmptyCols(3);
+			}
+		}
 	}
 }

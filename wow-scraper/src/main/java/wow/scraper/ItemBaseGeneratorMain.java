@@ -32,7 +32,7 @@ public class ItemBaseGeneratorMain extends ScraperTool {
 		builder.finish(itemFilePath);
 
 		log.info("Saved to {}", itemFilePath);
-		AbstractTooltipParser.reportUnmatchedLines(log);
+		AbstractTooltipParser.reportUnmatchedLines();
 	}
 
 	private void exportItemBase(ItemBaseExcelBuilder builder) {

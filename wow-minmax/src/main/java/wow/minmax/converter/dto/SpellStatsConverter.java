@@ -2,9 +2,6 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.snapshot.Snapshot;
-import wow.character.model.snapshot.SpellStatistics;
-import wow.commons.model.spell.Spell;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.SpellStats;
 import wow.minmax.model.dto.SpellStatsDTO;
@@ -16,36 +13,32 @@ import wow.minmax.model.dto.SpellStatsDTO;
 @Component
 @AllArgsConstructor
 public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO> {
-	private final SpellConverter spellConverter;
+	private final AbilityConverter abilityConverter;
 
 	@Override
 	public SpellStatsDTO doConvert(SpellStats source) {
-		SpellStatistics spellStatistics = source.getSpellStatistics();
-		Snapshot snapshot = spellStatistics.getSnapshot();
-		Spell spell = snapshot.getSpell();
-
 		return new SpellStatsDTO(
-				spellConverter.convert(spell),
-				spellStatistics.getDps(),
-				spellStatistics.getTotalDamage(),
-				spellStatistics.getCastTime().getSeconds(),
-				spellStatistics.getManaCost(),
-				spellStatistics.getDpm(),
-				snapshot.getSp(),
-				snapshot.getTotalHit(),
-				snapshot.getTotalCrit(),
-				snapshot.getTotalHaste(),
-				snapshot.getSpellCoeffDirect(),
-				snapshot.getSpellCoeffDoT(),
-				snapshot.getCritCoeff(),
-				source.getStatEquivalents().getHitSpEqv(),
-				source.getStatEquivalents().getCritSpEqv(),
-				source.getStatEquivalents().getHasteSpEqv(),
-				snapshot.getDuration(),
-				snapshot.getCooldown(),
-				snapshot.getThreatPct(),
-				snapshot.getPushbackPct(),
-				snapshot.isInstantCast()
+				abilityConverter.convert(source.getAbility()),
+				source.getTotalDamage(),
+				source.getDps(),
+				source.getCastTime().getSeconds(),
+				source.isInstantCast(),
+				source.getManaCost(),
+				source.getDpm(),
+				source.getSp(),
+				source.getTotalHit(),
+				source.getTotalCrit(),
+				source.getTotalHaste(),
+				source.getSpellCoeffDirect(),
+				source.getSpellCoeffDoT(),
+				source.getCritCoeff(),
+				source.getHitSpEqv(),
+				source.getCritSpEqv(),
+				source.getHasteSpEqv(),
+				source.getDuration(),
+				source.getCooldown(),
+				source.getThreatPct(),
+				source.getPushbackPct()
 		);
 	}
 }

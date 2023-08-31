@@ -28,16 +28,16 @@ class SimpleRecordParser {
 
 		int arrowIndex = string.indexOf(ARROW);
 
-		if (arrowIndex < 0) {
-			throw new IllegalArgumentException(String.format("Missing '%s' element", ARROW));
-		}
-
 		result.setType(parseType(arrowIndex));
 		result.setMap(parseMap(arrowIndex));
+
 		return result;
 	}
 
 	private String parseType(int arrowIndex) {
+		if (arrowIndex < 0) {
+			return null;
+		}
 		String type = string.substring(0, arrowIndex).trim();
 		if (type.isEmpty()) {
 			throw new IllegalArgumentException("Type can't be empty");
@@ -46,7 +46,7 @@ class SimpleRecordParser {
 	}
 
 	private Map<String, String> parseMap(int arrowIndex) {
-		this.line = string.substring(arrowIndex + ARROW.length()).trim();
+		this.line = arrowIndex >= 0 ? string.substring(arrowIndex + ARROW.length()).trim() : string;
 		this.position = 0;
 
 		Map<String, String> result = new LinkedHashMap<>();

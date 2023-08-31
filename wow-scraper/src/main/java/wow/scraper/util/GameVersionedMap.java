@@ -28,8 +28,16 @@ public class GameVersionedMap<K, V> {
 		return map.getOrDefault(gameVersion, Map.of()).values();
 	}
 
+	public List<V> allValues() {
+		return map.values().stream().flatMap(x -> x.values().stream()).toList();
+	}
+
 	public boolean containsKey(GameVersionId gameVersion) {
 		return map.containsKey(gameVersion);
+	}
+
+	public boolean containsKey(GameVersionId gameVersion, K key) {
+		return map.getOrDefault(gameVersion, Map.of()).containsKey(key);
 	}
 
 	public V computeIfAbsent(GameVersionId gameVersion, K key, Function<K, V> mappingFunction) {

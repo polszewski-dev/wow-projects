@@ -4,7 +4,10 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.PveRoleClassified;
-import wow.commons.model.config.ConfigurationElementWithAttributes;
+import wow.commons.model.config.CharacterRestricted;
+import wow.commons.model.config.Described;
+import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.effect.Effect;
 
 import java.util.List;
 
@@ -12,12 +15,16 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-05
  */
-public interface Enchant extends ConfigurationElementWithAttributes<Integer>, PveRoleClassified {
+public interface Enchant extends Described, TimeRestricted, CharacterRestricted, PveRoleClassified {
+	int getId();
+
 	List<ItemType> getItemTypes();
 
 	List<ItemSubType> getItemSubTypes();
 
 	ItemRarity getRarity();
+
+	Effect getEffect();
 
 	default boolean matches(ItemType itemType, ItemSubType itemSubType) {
 		return (getItemTypes().isEmpty() || (itemType != null && getItemTypes().contains(itemType))) &&

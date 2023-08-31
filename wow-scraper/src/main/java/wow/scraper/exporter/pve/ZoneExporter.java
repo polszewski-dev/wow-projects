@@ -1,6 +1,7 @@
 package wow.scraper.exporter.pve;
 
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.exporter.pve.excel.PveBaseExcelBuilder;
 import wow.scraper.model.JsonZoneDetails;
 
 import java.util.Comparator;
@@ -12,12 +13,12 @@ import java.util.List;
  */
 public class ZoneExporter extends PveBaseExporter<JsonZoneDetails> {
 	@Override
-	protected void addHeader() {
+	protected void addHeader(PveBaseExcelBuilder builder) {
 		builder.addZoneHeader();
 	}
 
 	@Override
-	protected void addRow(JsonZoneDetails zone) {
+	protected void addRow(JsonZoneDetails zone, PveBaseExcelBuilder builder) {
 		builder.add(zone);
 	}
 
@@ -27,8 +28,8 @@ public class ZoneExporter extends PveBaseExporter<JsonZoneDetails> {
 	}
 
 	@Override
-	protected void fixData(List<JsonZoneDetails> zones) {
-		zones.removeIf(x -> getScraperConfig().getIgnoredZoneIds().contains(x.getId()));
+	protected void fixData() {
+		data.removeIf(x -> getScraperConfig().getIgnoredZoneIds().contains(x.getId()));
 	}
 
 	@Override

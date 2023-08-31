@@ -7,10 +7,14 @@ import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.config.TimeRestriction;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.component.ComponentType;
+import wow.commons.model.effect.component.Event;
+import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
-import wow.commons.model.spell.SpellIdAndRank;
+import wow.commons.model.spell.*;
+import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 import wow.commons.repository.SpellRepository;
@@ -28,8 +32,10 @@ import java.util.*;
 @Repository
 @RequiredArgsConstructor
 public class SpellRepositoryImpl extends ExcelRepository implements SpellRepository {
-	private final Map<CharacterClassId, List<Spell>> spellsByClass = new LinkedHashMap<>();
-	private final Map<SpellIdAndRank, List<Spell>> spellById = new LinkedHashMap<>();
+	private final Map<CharacterClassId, List<Ability>> abilitiesByClass = new LinkedHashMap<>();
+	private final Map<AbilityIdAndRank, List<Ability>> abilitiesByRankedId = new LinkedHashMap<>();
+	private final Map<Integer, List<Spell>> spellsById = new LinkedHashMap<>();
+	private final Map<Integer, List<Effect>> effectById = new LinkedHashMap<>();
 	private final Map<CharacterClassId, List<Talent>> talentsByClass = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByIdByRank = new LinkedHashMap<>();
 	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
@@ -40,16 +46,26 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	private String xlsFilePath;
 
 	@Override
-	public List<Spell> getAvailableSpells(CharacterClassId characterClassId, int level, PhaseId phaseId) {
-		return spellsByClass.getOrDefault(characterClassId, List.of()).stream()
+	public List<Ability> getAvailableAbilities(CharacterClassId characterClassId, int level, PhaseId phaseId) {
+		return abilitiesByClass.getOrDefault(characterClassId, List.of()).stream()
 				.filter(spell -> spell.getRequiredLevel() <= level)
 				.filter(spell -> spell.isAvailableDuring(phaseId))
 				.toList();
 	}
 
 	@Override
-	public Optional<Spell> getSpell(SpellId spellId, int rank, PhaseId phaseId) {
-		return getUnique(spellById, new SpellIdAndRank(spellId, rank), phaseId);
+	public Optional<Ability> getAbility(AbilityId abilityId, int rank, PhaseId phaseId) {
+		return getUnique(abilitiesByRankedId, new AbilityIdAndRank(abilityId, rank), phaseId);
+	}
+
+	@Override
+	public Optional<Spell> getSpell(int spellId, PhaseId phaseId) {
+		return getUnique(spellsById, spellId, phaseId);
+	}
+
+	@Override
+	public Optional<Effect> getEffect(int effectId, PhaseId phaseId) {
+		return getUnique(effectById, effectId, phaseId);
 	}
 
 	@Override
@@ -87,6 +103,91 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	public void init() throws IOException {
 		var spellExcelParser = new SpellExcelParser(xlsFilePath, this);
 		spellExcelParser.readFromXls();
+
+		spellsById.values().stream().flatMap(Collection::stream).forEach(this::replaceDummyEffects);
+		effectById.values().stream().flatMap(Collection::stream).forEach(this::replaceDummySpells);
+		spellsById.values().stream().flatMap(Collection::stream).forEach(this::setMissingSpellFields);
+	}
+
+	private void replaceDummyEffects(Spell spell) {
+		var effectApplication = spell.getEffectApplication();
+
+		if (effectApplication == null) {
+			return;
+		}
+
+		var effectId = effectApplication.effect().getEffectId();
+		var phaseId = spell.getTimeRestriction().getUniqueVersion().getLastPhase();
+		var effect = getEffect(effectId, phaseId).orElseThrow();
+		var newEffectApplication = effectApplication.setEffect(effect);
+
+		((SpellImpl) spell).setEffectApplication(newEffectApplication);
+	}
+
+	private void replaceDummySpells(Effect effect) {
+		var newEvents = effect.getEvents().stream()
+				.map(event -> replaceDummySpell(event, effect.getTimeRestriction()))
+				.toList();
+
+		((EffectImpl) effect).setEvents(newEvents);
+	}
+
+	private Event replaceDummySpell(Event event, TimeRestriction timeRestriction) {
+		if (event.triggeredSpell() == null) {
+			return event;
+		}
+
+		var spellId = event.triggeredSpell().getId();
+		var phaseId = timeRestriction.getUniqueVersion().getLastPhase();
+		var spell = getSpell(spellId, phaseId).orElseThrow();
+
+		return event.setTriggeredSpell(spell);
+	}
+
+	private void setMissingSpellFields(Spell spell) {
+		var school = getSpellSchool(spell).orElse(null);
+		var componentTypes = getComponentTypes(spell);
+		var spellImpl = (SpellImpl) spell;
+
+		spellImpl.setSchool(school);
+		spellImpl.setHasDamagingComponent(componentTypes.contains(ComponentType.DAMAGE));
+		spellImpl.setHasHealingComponent(componentTypes.contains(ComponentType.HEAL));
+	}
+
+	private Set<ComponentType> getComponentTypes(Spell spell) {
+		var result = new HashSet<ComponentType>();
+
+		for (var directComponent : spell.getDirectComponents()) {
+			result.add(directComponent.type());
+		}
+
+		var appliedEffect = spell.getAppliedEffect();
+
+		if (appliedEffect != null && appliedEffect.getPeriodicComponent() != null) {
+			result.add(appliedEffect.getPeriodicComponent().type());
+		}
+
+		return result;
+	}
+
+	private Optional<SpellSchool> getSpellSchool(Spell spell) {
+		var result = new HashSet<SpellSchool>();
+
+		for (var directComponent : spell.getDirectComponents()) {
+			var school = directComponent.school();
+			result.add(school);
+		}
+
+		var appliedEffect = spell.getAppliedEffect();
+
+		if (appliedEffect != null && appliedEffect.getPeriodicComponent() != null) {
+			var school = appliedEffect.getPeriodicComponent().school();
+			result.add(school);
+		}
+
+		result.remove(null);
+
+		return CollectionUtil.getUniqueResult(List.copyOf(result));
 	}
 
 	private String getTalentKey(CharacterClassId characterClassId, TalentId talentId, int rank) {
@@ -98,32 +199,40 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	}
 
 	public void addSpell(Spell spell) {
-		for (CharacterClassId characterClassId : spell.getCharacterRestriction().characterClassIds()) {
-			spellsByClass.computeIfAbsent(characterClassId, x -> new ArrayList<>()).add(spell);
+		if (spell instanceof Ability ability) {
+			for (var characterClassId : ability.getCharacterRestriction().characterClassIds()) {
+				abilitiesByClass.computeIfAbsent(characterClassId, x -> new ArrayList<>()).add(ability);
+			}
+
+			addEntry(abilitiesByRankedId, ability.getRankedAbilityId(), ability);
 		}
-		addEntry(spellById, spell.getId(), spell);
+		addEntry(spellsById, spell.getId(), spell);
+	}
+
+	public void addEffect(Effect effect) {
+		validateEffect(effect);
+		addEntry(effectById, effect.getEffectId(), effect);
+	}
+
+	private void validateEffect(Effect effect) {
+		if (effect.getAugmentedAbility() != null &&
+			(effect.getPeriodicComponent() != null || effect.getAbsorptionComponent() != null || effect.getTickInterval() != null)) {
+			throw new IllegalArgumentException();
+		}
+		if (effect.getPeriodicComponent() != null) {
+			Objects.requireNonNull(effect.getTickInterval());
+		}
 	}
 
 	public void addTalent(Talent talent) {
-		String key = getTalentKey(talent.getCharacterClass(), talent.getTalentCalculatorPosition(), talent.getRank());
-		List<Talent> list = talentByClassByCalcPosByRank.computeIfAbsent(key, x -> new ArrayList<>());
+		String key1 = getTalentKey(talent.getCharacterClass(), talent.getTalentId(), talent.getRank());
+		String key2 = getTalentKey(talent.getCharacterClass(), talent.getTalentCalculatorPosition(), talent.getRank());
 
-		Optional<Talent> optionalExistingTalent = list.stream()
-				.filter(x -> x.getTimeRestriction().versions().equals(talent.getTimeRestriction().versions()))
-				.collect(CollectionUtil.toOptionalSingleton());
+		addEntry(talentsByClass, talent.getCharacterClass(), talent);
+		addEntry(talentByClassByIdByRank, key1, talent);
+		addEntry(talentByClassByCalcPosByRank, key2, talent);
 
-		if (optionalExistingTalent.isEmpty()) {
-			list.add(talent);
-			addEntry(talentByClassByIdByRank, getTalentKey(talent.getCharacterClass(), talent.getTalentId(), talent.getRank()), talent);
-			talentsByClass.computeIfAbsent(talent.getCharacterClass(), x -> new ArrayList<>()).add(talent);
-			return;
-		}
-
-		Talent existingTalent = optionalExistingTalent.orElseThrow();
-		Talent combinedTalent = existingTalent.combineWith(talent);
-
-		list.remove(existingTalent);
-		list.add(combinedTalent);
+		addEffect(talent.getEffect());
 	}
 
 	public void addBuff(Buff buff) {

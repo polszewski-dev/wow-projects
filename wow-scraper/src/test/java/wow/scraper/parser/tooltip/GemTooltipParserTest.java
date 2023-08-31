@@ -3,13 +3,14 @@ package wow.scraper.parser.tooltip;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.item.MetaEnabler;
 import wow.scraper.model.JsonItemDetails;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.item.GemColor.*;
@@ -48,9 +49,9 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 	@Test
 	@DisplayName("Phase is parsed correctly")
 	void gameVersionPhase() {
-		assertThat(redGem.getPhase()).isEqualTo(TBC_P3);
-		assertThat(blueGem.getPhase()).isEqualTo(TBC_P1);
-		assertThat(metaGem.getPhase()).isEqualTo(TBC_P1);
+		assertThat(redGem.getTimeRestriction().phaseId()).isEqualTo(TBC_P3);
+		assertThat(blueGem.getTimeRestriction().phaseId()).isNull();
+		assertThat(metaGem.getTimeRestriction().phaseId()).isEqualTo(TBC_P1);
 	}
 
 	@Test
@@ -68,16 +69,16 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 	@Test
 	@DisplayName("Stats are parsed correctly")
 	void stats() {
-		assertThat(redGem.getStats().getSpellDamage()).isEqualTo(12);
-		assertThat(orangeGem.getStats().getSpellHasteRating()).isEqualTo(5);
-		assertThat(orangeGem.getStats().getSpellDamage()).isEqualTo(6);
-		assertThat(yellowGem.getStats().getSpellHasteRating()).isEqualTo(10);
-		assertThat(greenGem.getStats().getSpellHasteRating()).isEqualTo(5);
-		assertThat(greenGem.getStats().getStamina()).isEqualTo(7);
-		assertThat(blueGem.getStats().getStamina()).isEqualTo(18);
+		assertEffect(redGem.getEffects(), 0, POWER, 12, MiscCondition.SPELL_DAMAGE, "+12 Spell Damage");
+		assertEffect(orangeGem.getEffects(), 0, HASTE_RATING, 5, MiscCondition.SPELL, "+5 Spell Haste Rating");
+		assertEffect(orangeGem.getEffects(), 1, POWER, 6, MiscCondition.SPELL_DAMAGE, "+6 Spell Damage");
+		assertEffect(yellowGem.getEffects(), 0, HASTE_RATING, 10, MiscCondition.SPELL, "+10 Spell Haste Rating");
+		assertEffect(greenGem.getEffects(), 0, HASTE_RATING, 5, MiscCondition.SPELL, "+5 Spell Haste Rating");
+		assertEffect(greenGem.getEffects(), 1, STAMINA, 7, "+7 Stamina");
+		assertEffect(blueGem.getEffects(), 0, STAMINA, 18, "+18 Stamina");
 
-		assertThat(metaGem.getStats().getSpellCritRating()).isEqualTo(12);
-		assertThat(metaGem.getStats().getCritDamagePct().value()).isEqualTo(3);
+		assertEffect(metaGem.getEffects(), 0, CRIT_RATING, 12, MiscCondition.SPELL, "+12 Spell Critical");
+		assertEffect(metaGem.getEffects(), 1, CRIT_DAMAGE_PCT, 3, "3% Increased Critical Damage");
 		assertThat(metaGem.getMetaEnablers()).isEqualTo(List.of(MetaEnabler.AT_LEAST_2_BLUES));
 	}
 
@@ -97,7 +98,7 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 	GemTooltipParser metaGem;
 
 	@BeforeEach
-	void readTestData() throws IOException {
+	void readTestData() {
 		redGem = getTooltip("gem/32196");
 		orangeGem = getTooltip("gem/35760");
 		yellowGem = getTooltip("gem/35761");

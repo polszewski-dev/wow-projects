@@ -1,73 +1,86 @@
 package wow.scraper.exporter.spell.excel;
 
-import wow.scraper.parser.tooltip.AbilityTooltipParser;
+import wow.commons.model.Percent;
+import wow.commons.model.spell.ClassAbility;
+import wow.commons.model.spell.Cost;
+import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.SpellType;
+
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
  * User: POlszewski
  * Date: 2023-06-20
  */
-public class AbilitySheetWriter extends SpellBaseSheetWriter<AbilityTooltipParser> {
+public class AbilitySheetWriter extends AbstractSpellSheetWriter<ClassAbility> {
 	public AbilitySheetWriter(SpellBaseExcelBuilder builder) {
 		super(builder);
 	}
 
 	@Override
 	public void writeHeader() {
-		setHeader("spell", 40);
-		setHeader("req_class");
-		setHeader("req_race");
-		setHeader("req_talent");
-		setHeader("req_version");
-		setHeader("tree");
-		setHeader("school");
-		setHeader("cooldown");
-		setHeader("ignores gcd");
-		setHeader("bolt");
-		setHeader("target");
-		setHeader("range");
-		setHeader("conversion: from");
-		setHeader("conversion: to");
-		setHeader("conversion: %");
-		setHeader("required effect");
-		setHeader("effect removed on hit");
-		setHeader("bonus dmg if under effect");
-		setHeader("icon");
+		writeIdNameHeader();
+		writeAbilityInfoHeader();
+		writeTimeRestrictionHeader();
+		setHeader(SPELL_TYPE);
+		setHeader(ABILITY_CATEGORY);
+		writeCostHeader();
+		writeSpellInfoHeader();
 	}
 
 	@Override
-	public void writeRow(AbilityTooltipParser parser) {
-		setValue(parser.getName());
-		setValue(parser.getCharacterClass());
-		setValue("");//race
-		setValue(parser.isTalent() ? parser.getName() : "");
-		setValue(parser.getGameVersion());
-		setValue(parser.getTalentTree().getName().toLowerCase());
-		setValue("");//school
-		setValue(parser.getCooldown());
-		setValue("");//ignores gcd
-		setValue("");//bolt
-		setValue("");//target
-		writeRange(parser);
-		setValue("");//conversion: from
-		setValue("");//conversion: to
-		setValue("");//conversion: %
-		setValue("");//required effect
-		setValue("");//effect removed on hit
-		setValue("");//bonus dmg if under effect
-		setValue(parser.getIcon());
+	public void writeRow(ClassAbility ability) {
+		writeIdName(ability);
+		writeAbilityInfo(ability);
+		writeTimeRestriction(ability.getTimeRestriction());
+		setValue(ability.getType(), SpellType.TRIGGERED_SPELL);
+		setValue(ability.getCategory());
+		writeCost(ability.getCost());
+		writeSpellInfo(ability);
 	}
 
-	private void writeRange(AbilityTooltipParser parser) {
-		if (parser.getRange() != null && parser.isUnlimitedRange()) {
-			throw new IllegalArgumentException("Both range types specified " + parser.getName());
+	private void writeAbilityInfoHeader() {
+		setHeader(ABILITY_RANK);
+		setHeader(ABILITY_TREE);
+		setHeader(REQ_CLASS);
+		setHeader(REQ_LEVEL);
+		setHeader(REQ_RACE);
+		setHeader(REQ_TALENT);
+		setHeader(REQ_PET);
+	}
+
+	private void writeAbilityInfo(ClassAbility ability) {
+		setValue(ability.getRank());
+		setValue(ability.getTalentTree());
+		setValue(ability.getCharacterRestriction().characterClassIds());
+		setValue(ability.getCharacterRestriction().level());
+		setValue(ability.getCharacterRestriction().raceIds());
+		setValue(ability.getCharacterRestriction().talentId());
+		setValue(ability.getCharacterRestriction().activePet());
+	}
+
+	private void writeCostHeader() {
+		String prefix = COST_PREFIX;
+		setHeader(COST_AMOUNT, prefix);
+		setHeader(COST_TYPE, prefix);
+		setHeader(COST_BASE_STAT_PCT, prefix);
+		setHeader(COEFF_VALUE, prefix);
+		setHeader(COEFF_SCHOOL, prefix);
+		setHeader(COST_REAGENT, prefix);
+	}
+
+	private void writeCost(Cost cost) {
+		if (cost == null) {
+			fillRemainingEmptyCols(6);
+			return;
 		}
 
-		if (parser.getRange() != null) {
-			setValue(parser.getRange());
-		} else if (parser.isUnlimitedRange()) {
-			setValue(-1);
-		} else {
-			setValue(0);
-		}
+		setValue(cost.amount(), 0);
+		setValue(cost.resourceType(), ResourceType.MANA);
+		setValue(cost.baseStatPct(), Percent.ZERO);
+		setValue(cost.coefficient().value(), Percent.ZERO);
+		setValue(cost.coefficient().school());
+		setValue(cost.reagent());
 	}
 }

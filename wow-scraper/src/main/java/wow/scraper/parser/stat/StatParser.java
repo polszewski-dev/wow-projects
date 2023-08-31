@@ -1,7 +1,6 @@
 package wow.scraper.parser.stat;
 
 import wow.commons.model.attribute.Attributes;
-import wow.commons.util.AttributesBuilder;
 import wow.scraper.parser.scraper.ScraperParser;
 
 import java.util.List;
@@ -22,21 +21,12 @@ public class StatParser extends ScraperParser<StatPattern, StatMatcher, StatMatc
 
 	@Override
 	protected StatMatcherParams createMatcherParams(String line) {
-		return StatMatcherParams.of(line);
-	}
-
-	public Attributes tryParseSingleStat(String line) {
-		if (tryParse(line)) {
-			return getParsedStats();
-		}
-		return null;
+		return new StatMatcherParams(line);
 	}
 
 	public Attributes getParsedStats() {
-		AttributesBuilder stats = new AttributesBuilder();
-		for (StatMatcher matcher : successfulMatchers) {
-			matcher.setStat(stats);
-		}
-		return stats.toAttributes();
+		return getSuccessfulMatcher()
+				.map(StatMatcher::getAttributes)
+				.orElse(Attributes.EMPTY);
 	}
 }

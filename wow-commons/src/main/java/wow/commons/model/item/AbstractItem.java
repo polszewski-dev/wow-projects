@@ -4,23 +4,22 @@ import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.config.ConfigurationElementWithAttributes;
-import wow.commons.model.pve.Zone;
+import wow.commons.model.config.CharacterRestricted;
+import wow.commons.model.config.Described;
+import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.source.Source;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-10-31
  */
-public interface AbstractItem extends ConfigurationElementWithAttributes<Integer> {
+public interface AbstractItem extends Described, TimeRestricted, CharacterRestricted {
+	int getId();
+
 	BasicItemInfo getBasicItemInfo();
 
 	default ItemLink getItemLink() {
@@ -97,24 +96,5 @@ public interface AbstractItem extends ConfigurationElementWithAttributes<Integer
 
 	default boolean allSources(Predicate<Source> predicate) {
 		return getSources().stream().allMatch(predicate);
-	}
-
-	default Set<Zone> getRaidSources() {
-		return getSourcesAfterTradingTokens()
-				.filter(Source::isRaidDrop)
-				.map(Source::zones)
-				.flatMap(Collection::stream)
-				.collect(Collectors.toCollection(LinkedHashSet::new));
-	}
-
-	default Set<TradedItem> getSourceItems() {
-		return getSources().stream()
-				.map(Source::sourceItem)
-				.collect(Collectors.toSet());
-	}
-
-	default Stream<Source> getSourcesAfterTradingTokens() {
-		return getSources().stream()
-				.flatMap(source -> source.isTraded() ? source.sourceItem().getSources().stream() : Stream.of(source));
 	}
 }

@@ -10,7 +10,6 @@ import wow.commons.model.spell.SpellSchool;
  * Date: 2023-03-28
  */
 public class CharacterClassSheetParser extends CharacterSheetParser {
-	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colArmorProfficiencies = column("armor_profficiencies");
 	private final ExcelColumn colWeaponProfficiencies = column("weapon_profficiencies");
 	private final ExcelColumn colDualwield = column("dualwield");

@@ -1,7 +1,7 @@
 package wow.scraper.parser.scraper;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public abstract class ScraperParser<P extends ScraperPattern<?>, M extends ScraperMatcher<P, ?, N>, N extends ScraperMatcherParams> {
 	private final List<M> matchers;
-	protected final List<M> successfulMatchers = new ArrayList<>();
+	private M successfulMatcher;
 
 	protected ScraperParser(List<P> patterns) {
 		this.matchers = patterns.stream()
@@ -22,21 +22,22 @@ public abstract class ScraperParser<P extends ScraperPattern<?>, M extends Scrap
 	protected abstract N createMatcherParams(String line);
 
 	public boolean tryParse(String line) {
+		if (successfulMatcher != null) {
+			throw new IllegalStateException();
+		}
+
 		N params = createMatcherParams(line);
 
 		for (var matcher : matchers) {
 			if (matcher.tryParse(params)) {
-				successfulMatchers.add(matcher);
+				successfulMatcher = matcher;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public M getUniqueSuccessfulMatcher() {
-		if (successfulMatchers.size() != 1) {
-			throw new IllegalArgumentException();
-		}
-		return successfulMatchers.get(0);
+	public Optional<M> getSuccessfulMatcher() {
+		return Optional.ofNullable(successfulMatcher);
 	}
 }

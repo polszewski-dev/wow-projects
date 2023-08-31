@@ -3,7 +3,11 @@ package wow.commons.repository.impl.parser.excel;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
@@ -18,18 +22,17 @@ import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.talent.TalentId;
-import wow.commons.repository.impl.parser.excel.mapper.ComplexAttributeMapper;
-import wow.commons.util.AttributesBuilder;
-import wow.commons.util.PrimitiveAttributeSupplier;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
@@ -87,6 +90,14 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		private ExcelColumn subColumn(String subName) {
 			return new ExcelColumn(getName() + subName, isOptional());
 		}
+
+		@Override
+		public ExcelColumn prefixed(String prefix) {
+			if (prefix == null || prefix.isEmpty()) {
+				return this;
+			}
+			return new ExcelColumn(prefix + getName(), isOptional());
+		}
 	}
 
 	@Override
@@ -104,19 +115,14 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		return colName;
 	}
 
-	private final ExcelColumn colName = column(NAME);
+	protected final ExcelColumn colId = column(ID);
+	protected final ExcelColumn colName = column(NAME);
+
 	private final ExcelColumn colIcon = column(ICON, true);
 	private final ExcelColumn colTooltip = column(TOOLTIP, true);
 
 	protected Description getDescription() {
 		var name = colName.getString();
-		var icon = colIcon.getString(null);
-		var tooltip = colTooltip.getString(null);
-
-		return new Description(name, icon, tooltip);
-	}
-
-	protected Description getDescription(String name) {
 		var icon = colIcon.getString(null);
 		var tooltip = colTooltip.getString(null);
 
@@ -154,10 +160,10 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var side = colReqSide.getEnum(Side::parse, null);
 		var profession = colReqProfession.getEnum(ProfessionId::parse, null);
 		var professionLevel = colReqProfessionLevel.getNullableInteger();
-		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecializationId::valueOf, null);
+		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecializationId::parse, null);
 		var exclusiveFaction = colExclusiveFaction.getEnum(ExclusiveFaction::parse, null);
-		var activePet = colReqPet.getEnum(PetType::parse, null);
-		var spellId = colReqSpell.getEnum(SpellId::parse, null);
+		var activePet = colReqPet.getList(PetType::parse);
+		var spellId = colReqSpell.getEnum(AbilityId::parse, null);
 		var talentId = colReqTalent.getEnum(TalentId::parse, null);
 		var role = colReqRole.getEnum(PveRole::parse, null);
 		var maxLevel = colReqMaxLevel.getNullableInteger();
@@ -178,61 +184,32 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		);
 	}
 
-	private static final int MAX_ATTRIBUTES = 20;
+	protected Attributes readAttributes(String prefix, int maxAttributes) {
+		var list = IntStream.rangeClosed(1, maxAttributes)
+				.mapToObj(idx -> readAttribute(prefix, idx))
+				.filter(Objects::nonNull)
+				.toList();
 
-	protected Attributes readAttributes() {
-		return readAttributes("");
+		return Attributes.of(list);
 	}
 
-	protected Attributes readAttributes(String prefix) {
-		AttributesBuilder builder = new AttributesBuilder();
+	private PrimitiveAttribute readAttribute(String prefix, int statNo) {
+		var colAttrId = column(getAttrId(statNo), true).prefixed(prefix);
 
-		for (int statNo = 1; statNo <= MAX_ATTRIBUTES; ++statNo) {
-			readAttribute(builder, prefix, statNo);
+		if (colAttrId.isEmpty()) {
+			return null;
 		}
 
-		assertNoMoreAttributeColumns(prefix);
+		var colAttrValue = column(getAttrValue(statNo)).prefixed(prefix);
+		var colAttrCondition = column(getAttrCondition(statNo), true).prefixed(prefix);
+		var colAttrLevelScaled = column(getAttrLevelScaled(statNo), true).prefixed(prefix);
 
-		return builder.toAttributes();
-	}
+		var id = colAttrId.getEnum(PrimitiveAttributeId::parse);
+		var value = colAttrValue.getDouble();
+		var condition = colAttrCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
+		var levelScaled = colAttrLevelScaled.getBoolean();
 
-	private void readAttribute(AttributesBuilder builder, String prefix, int statNo) {
-		ExcelColumn colStat = getColStat(prefix, statNo);
-		ExcelColumn colAmount = getColAmount(prefix, statNo);
-
-		var attributeStr = colStat.getString(null);
-
-		if (attributeStr == null) {
-			return;
-		}
-
-		if (colAmount.getString(null) != null) {
-			var attributeSupplier = PrimitiveAttributeSupplier.fromString(attributeStr);
-			attributeSupplier.addAttributeList(builder, colAmount.getDouble());
-		} else {
-			attributeStr = substitutePlaceholders(attributeStr);
-			var attribute = ComplexAttributeMapper.fromString(attributeStr);
-			builder.addAttribute(attribute);
-		}
-	}
-
-	private ExcelColumn getColStat(String prefix, int statNo) {
-		return column(colStat(prefix, statNo), true);
-	}
-
-	private ExcelColumn getColAmount(String prefix, int statNo) {
-		return column(colAmount(prefix, statNo), true);
-	}
-
-	private void assertNoMoreAttributeColumns(String prefix) {
-		if (getColStat(prefix, MAX_ATTRIBUTES + 1).getString(null) != null || getColAmount(prefix, MAX_ATTRIBUTES + 1).getString(null) != null) {
-			throw new IllegalArgumentException("There are more attribute columns than " + MAX_ATTRIBUTES);
-		}
-	}
-
-	private String substitutePlaceholders(String attributeStr) {
-		String tooltip = colTooltip.getString("no tooltip");
-		return attributeStr.replace("${tooltip}", tooltip);
+		return Attribute.of(id, value, condition, levelScaled);
 	}
 
 	private final ExcelColumn coPveRoles = column("pve_roles");

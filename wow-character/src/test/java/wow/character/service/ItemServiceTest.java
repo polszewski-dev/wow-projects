@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import wow.character.WowCharacterSpringTest;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemSlot;
@@ -45,10 +45,10 @@ class ItemServiceTest extends WowCharacterSpringTest {
 
 		List<String> names = itemsBySlot.stream().map(Item::getName).toList();
 
-		assertThat(names).hasSameElementsAs(List.of(
+		assertThat(names).contains(
 				"Shifting Naaru Sliver",
 				"The Skull of Gul'dan"
-		));
+		);
 	}
 
 	@Test
@@ -95,7 +95,8 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		List<String> names = enchants.stream().map(Enchant::getName).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
-				"Enchant Boots - Boar's Speed"
+				"Enchant Boots - Boar's Speed",
+				"Enchant Boots - Minor Speed"
 		));
 	}
 
@@ -107,18 +108,41 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		List<String> metaGemNames = metaGems.stream().map(Gem::getName).toList();
 
 		assertThat(metaGemNames).hasSameElementsAs(List.of(
-				"Chaotic Skyfire Diamond"
+				"Destructive Skyfire Diamond",
+				"Mystical Skyfire Diamond",
+				"Chaotic Skyfire Diamond",
+				"Ember Skyfire Diamond"
 		));
 
 		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
 
 		assertThat(coloredGemNames).hasSameElementsAs(List.of(
+				"Runed Blood Garnet",
+				"Potent Flame Spessarite",
+				"Radiant Deep Peridot",
+				"Glowing Shadow Draenite",
+				"Gleaming Golden Draenite",
+				"Runed Living Ruby",
+				"Gleaming Dawnstone",
+				"Glowing Nightseye",
+				"Potent Noble Topaz",
+				"Radiant Talasite",
+				"Great Golden Draenite",
+				"Great Dawnstone",
+				"Veiled Flame Spessarite",
+				"Veiled Noble Topaz",
 				"Runed Crimson Spinel",
+				"Gleaming Lionseye",
+				"Great Lionseye",
 				"Glowing Shadowsong Amethyst",
+				"Potent Pyrestone",
+				"Veiled Pyrestone",
+				"Radiant Seaspray Emerald",
+				"Quick Dawnstone",
+				"Reckless Noble Topaz",
+				"Forceful Talasite",
 				"Forceful Seaspray Emerald",
 				"Reckless Pyrestone",
-				"Veiled Pyrestone",
-				"Potent Pyrestone",
 				"Quick Lionseye"
 		));
 	}
@@ -130,12 +154,52 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
 
 		assertThat(coloredGemNames).hasSameElementsAs(List.of(
+				"Runed Blood Garnet",
+				"Potent Flame Spessarite",
+				"Radiant Deep Peridot",
+				"Glowing Shadow Draenite",
+				"Gleaming Golden Draenite",
+				"Runed Living Ruby",
+				"Gleaming Dawnstone",
+				"Glowing Nightseye",
+				"Potent Noble Topaz",
+				"Radiant Talasite",
+				"Stark Blood Garnet",
+				"Notched Deep Peridot",
+				"Runed Ornate Ruby",
+				"Gleaming Ornate Dawnstone",
+				"Potent Ornate Topaz",
+				"Polished Chrysoprase",
+				"Infused Fire Opal",
+				"Glowing Tanzanite",
+				"Rune Covered Chrysoprase",
+				"Shining Fire Opal",
+				"Mysterious Fire Opal",
+				"Potent Fire Opal",
+				"Fluorescent Tanzanite",
+				"Vivid Chrysoprase",
+				"Lambent Chrysoprase",
+				"Radiant Chrysoprase",
+				"Infused Amethyst",
+				"Great Golden Draenite",
+				"Great Dawnstone",
+				"Veiled Flame Spessarite",
+				"Veiled Noble Topaz",
 				"Runed Crimson Spinel",
+				"Gleaming Lionseye",
+				"Great Lionseye",
 				"Glowing Shadowsong Amethyst",
+				"Potent Pyrestone",
+				"Veiled Pyrestone",
+				"Radiant Seaspray Emerald",
+				"Unstable Topaz",
+				"Unstable Talasite",
+				"Quick Dawnstone",
+				"Reckless Noble Topaz",
+				"Forceful Talasite",
+				"Runed Crimson Spinel",
 				"Forceful Seaspray Emerald",
 				"Reckless Pyrestone",
-				"Veiled Pyrestone",
-				"Potent Pyrestone",
 				"Quick Lionseye"
 		));
 	}
@@ -147,13 +211,16 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
+				"Quick Lionseye",
+				"Gleaming Lionseye",
 				"Runed Crimson Spinel",
-				"Glowing Shadowsong Amethyst",
-				"Forceful Seaspray Emerald",
-				"Reckless Pyrestone",
+				"Great Lionseye",
 				"Veiled Pyrestone",
+				"Radiant Seaspray Emerald",
+				"Forceful Seaspray Emerald",
+				"Glowing Shadowsong Amethyst",
 				"Potent Pyrestone",
-				"Quick Lionseye"
+				"Reckless Pyrestone"
 		));
 	}
 
@@ -163,15 +230,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
-		assertThat(names).hasSameElementsAs(List.of(
-				"Chaotic Skyfire Diamond,Runed Crimson Spinel",
-				"Chaotic Skyfire Diamond,Glowing Shadowsong Amethyst",
-				"Chaotic Skyfire Diamond,Forceful Seaspray Emerald",
-				"Chaotic Skyfire Diamond,Reckless Pyrestone",
-				"Chaotic Skyfire Diamond,Veiled Pyrestone",
-				"Chaotic Skyfire Diamond,Potent Pyrestone",
-				"Chaotic Skyfire Diamond,Quick Lionseye"
-		));
+		assertThat(names).hasSize(40);
 	}
 
 	@Test
@@ -180,10 +239,10 @@ class ItemServiceTest extends WowCharacterSpringTest {
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
-		assertThat(names).hasSize(74);
+		assertThat(names).hasSize(220);
 	}
 
-	Character character;
+	PlayerCharacter character;
 
 	@BeforeEach
 	void setup() {

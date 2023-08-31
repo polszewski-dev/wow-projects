@@ -56,6 +56,11 @@ public interface ScraperContextSource extends ScraperContext {
 	}
 
 	@Override
+	default ItemSpellRepository getItemSpellRepository() {
+		return getScraperContext().getItemSpellRepository();
+	}
+
+	@Override
 	default ScraperConfig getScraperConfig() {
 		return getScraperContext().getScraperConfig();
 	}

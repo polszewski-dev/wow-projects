@@ -3,14 +3,11 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-
-import java.util.Set;
 
 /**
  * User: POlszewski
@@ -30,10 +27,6 @@ public class Pet implements Described, CharacterRestricted {
 
 	@NonNull
 	private final GameVersion gameVersion;
-
-	public Set<AttributeCondition> getConditions() {
-		return Set.of(AttributeCondition.of(petType));
-	}
 
 	@Override
 	public String toString() {

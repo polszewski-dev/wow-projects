@@ -5,7 +5,7 @@ import wow.character.model.character.Character;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  * Date: 2021-12-28
  */
 public interface SpellService {
-	List<Spell> getAvailableSpells(Character character);
+	List<Ability> getAvailableAbilities(Character character);
 
 	List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId);
 

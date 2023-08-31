@@ -7,16 +7,13 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.talent.TalentId;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static wow.commons.util.CollectionUtil.mergeCriteria;
-import static wow.commons.util.CollectionUtil.mergeValues;
 
 /**
  * User: POlszewski
@@ -30,17 +27,18 @@ public record CharacterRestriction(
 		ProfessionRestriction professionRestriction,
 		ProfessionSpecializationId professionSpecId,
 		ExclusiveFaction exclusiveFaction,
-		PetType activePet,
-		SpellId spellId,
+		List<PetType> activePet,
+		AbilityId abilityId,
 		TalentId talentId,
 		PveRole role,
 		Integer maxLevel
 ) {
-	public static final CharacterRestriction EMPTY = new CharacterRestriction(null, List.of(), List.of(), null, null, null, null, null, null, null, null, null);
+	public static final CharacterRestriction EMPTY = new CharacterRestriction(null, List.of(), List.of(), null, null, null, null, List.of(), null, null, null, null);
 
 	public CharacterRestriction {
 		Objects.requireNonNull(characterClassIds);
 		Objects.requireNonNull(raceIds);
+		Objects.requireNonNull(activePet);
 	}
 
 	public boolean isMetBy(CharacterInfo characterInfo) {
@@ -65,33 +63,16 @@ public record CharacterRestriction(
 		if (exclusiveFaction != null && !characterInfo.hasExclusiveFaction(exclusiveFaction)) {
 			return false;
 		}
-		if (activePet != null && !characterInfo.hasActivePet(activePet)) {
+		if (!activePet.isEmpty() && activePet.stream().noneMatch(characterInfo::hasActivePet)) {
 			return false;
 		}
-		if (spellId != null && !characterInfo.hasSpell(spellId)) {
+		if (abilityId != null && !characterInfo.hasAbility(abilityId)) {
 			return false;
 		}
 		if (talentId != null && !characterInfo.hasTalent(talentId)) {
 			return false;
 		}
 		return maxLevel == null || characterInfo.getLevel() <= maxLevel;
-	}
-
-	public CharacterRestriction merge(CharacterRestriction other) {
-		return new CharacterRestriction(
-				mergeValues(level, other.level),
-				mergeCriteria(characterClassIds, other.characterClassIds),
-				mergeCriteria(raceIds, other.raceIds),
-				mergeValues(side, other.side),
-				mergeValues(professionRestriction, other.professionRestriction),
-				mergeValues(professionSpecId, other.professionSpecId),
-				mergeValues(exclusiveFaction, other.exclusiveFaction),
-				mergeValues(activePet, other.activePet),
-				mergeValues(spellId, other.spellId),
-				mergeValues(talentId, other.talentId),
-				mergeValues(role, other.role),
-				mergeValues(maxLevel, other.maxLevel)
-		);
 	}
 
 	@Override
@@ -118,11 +99,11 @@ public record CharacterRestriction(
 		if (exclusiveFaction != null) {
 			parts.add("xfaction: " + exclusiveFaction);
 		}
-		if (activePet != null) {
+		if (!activePet.isEmpty()) {
 			parts.add("pet: " + activePet);
 		}
-		if (spellId != null) {
-			parts.add("spell: " + spellId);
+		if (abilityId != null) {
+			parts.add("spell: " + abilityId);
 		}
 		if (talentId != null) {
 			parts.add("talentId: " + talentId);

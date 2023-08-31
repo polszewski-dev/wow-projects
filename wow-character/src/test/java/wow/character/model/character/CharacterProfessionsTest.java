@@ -3,7 +3,6 @@ package wow.character.model.character;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.commons.model.attribute.condition.AttributeCondition;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ class CharacterProfessionsTest extends WowCharacterSpringTest {
 		assertThat(professions.hasProfession(TAILORING)).isFalse();
 		assertThat(professions.hasProfessionSpecialization(SHADOWEAVE_TAILORING)).isFalse();
 		assertThat(professions.hasProfession(ENCHANTING)).isFalse();
-		assertThat(professions.getConditions()).isEmpty();
 	}
 
 	@Test
@@ -54,12 +52,6 @@ class CharacterProfessionsTest extends WowCharacterSpringTest {
 		assertThat(professions.hasProfession(ENCHANTING, 300)).isTrue();
 		assertThat(professions.hasProfession(ENCHANTING, 375)).isFalse();
 		assertThat(professions.hasProfession(ENCHANTING, 400)).isFalse();
-
-		assertThat(professions.getConditions()).hasSameElementsAs(List.of(
-				AttributeCondition.of(TAILORING),
-				AttributeCondition.of(SHADOWEAVE_TAILORING),
-				AttributeCondition.of(ENCHANTING)
-		));
 	}
 
 	@Test
@@ -77,7 +69,6 @@ class CharacterProfessionsTest extends WowCharacterSpringTest {
 		assertThat(professions.hasProfession(TAILORING)).isFalse();
 		assertThat(professions.hasProfessionSpecialization(SHADOWEAVE_TAILORING)).isFalse();
 		assertThat(professions.hasProfession(ENCHANTING)).isFalse();
-		assertThat(professions.getConditions()).isEmpty();
 	}
 
 	@Test

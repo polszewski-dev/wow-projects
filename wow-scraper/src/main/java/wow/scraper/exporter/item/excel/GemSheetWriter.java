@@ -22,7 +22,7 @@ public class GemSheetWriter extends ItemBaseSheetWriter<GemTooltipParser> {
 		setHeader(REQ_SIDE);
 		setHeader(PVE_ROLES);
 		setHeader(GEM_COLOR);
-		writeAttributeHeader("", GEM_MAX_STATS);
+		writeEffectHeader(GEM_EFFECT_PREFIX, GEM_MAX_EFFECTS);
 		setHeader(GEM_META_ENABLERS, 20);
 		writeIconAndTooltipHeader();
 	}
@@ -33,9 +33,9 @@ public class GemSheetWriter extends ItemBaseSheetWriter<GemTooltipParser> {
 		setValue(parser.getRequiredProfession());
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(getRequiredSide(parser));
-		writePveRoles(parser.getStats());
+		writePveRoles(parser.getEffects(), null, parser.getItemId());
 		setValue(parser.getColor());
-		writeAttributes(parser.getStats(), GEM_MAX_STATS);
+		writeEffects(parser.getEffects(), GEM_MAX_EFFECTS);
 		setValue(parser.getMetaEnablers());
 		writeIconAndTooltip(parser);
 	}

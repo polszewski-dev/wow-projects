@@ -7,17 +7,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.Character;
-import wow.commons.model.attribute.complex.special.SpecialAbility;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.model.snapshot.StatSummary;
 import wow.commons.model.buff.BuffCategory;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.RotationStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
 import wow.minmax.converter.dto.SpellStatsConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.CharacterStats;
-import wow.minmax.model.RotationStats;
+import wow.minmax.model.SpecialAbility;
 import wow.minmax.model.config.CharacterFeature;
-import wow.minmax.model.config.ViewConfig;
 import wow.minmax.model.dto.CharacterStatsDTO;
 import wow.minmax.model.dto.RotationStatsDTO;
 import wow.minmax.model.dto.SpecialAbilityStatsDTO;
@@ -54,15 +53,15 @@ public class StatsController {
 	public List<SpellStatsDTO> getSpellStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getCharacter(characterId);
+		var character = playerProfileService.getCharacter(characterId);
 
-		ViewConfig viewConfig = playerProfileService.getViewConfig(character);
+		var viewConfig = playerProfileService.getViewConfig(character);
 
 		return viewConfig.relevantSpells().stream()
-				.map(spellId -> character.getSpellbook().getSpell(spellId))
+				.map(character::getAbility)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
-				.map(spell -> calculationService.getSpellStats(character, spell))
+				.map(ability -> calculationService.getSpellStats(character, ability))
 				.map(spellStatsConverter::convert)
 				.toList();
 	}
@@ -71,9 +70,9 @@ public class StatsController {
 	public List<CharacterStatsDTO> getCharacterStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getCharacter(characterId);
+		var character = playerProfileService.getCharacter(characterId);
 
-		List<CharacterStatsDTO> result = new ArrayList<>();
+		var result = new ArrayList<CharacterStatsDTO>();
 
 		var currentStats = calculationService.getCurrentStats(character);
 		var itemStats = calculationService.getEquipmentStats(character);
@@ -82,14 +81,14 @@ public class StatsController {
 		result.add(convert("Items", itemStats));
 
 		for (BuffCombo buffCombo : getBuffCombos(character)) {
-			CharacterStats stats = getCharacterStats(character, buffCombo);
+			var stats = getCharacterStats(character, buffCombo);
 			result.add(convert(buffCombo.type, stats));
 		}
 
 		return result;
 	}
 
-	private CharacterStats getCharacterStats(Character character, BuffCombo buffCombo) {
+	private StatSummary getCharacterStats(PlayerCharacter character, BuffCombo buffCombo) {
 		var buffCategories = buffCombo.buffCategories.toArray(BuffCategory[]::new);
 		return calculationService.getStats(character, buffCategories);
 	}
@@ -98,27 +97,36 @@ public class StatsController {
 	public List<SpecialAbilityStatsDTO> getSpecialAbilities(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getCharacter(characterId);
+		var character = playerProfileService.getCharacter(characterId);
 
-		return character.getStats().getSpecialAbilities().stream()
+		return getSpecialAbilities(character)
 				.sorted(compareSources())
-				.map(x -> calculationService.getSpecialAbilityStats(character, x))
+				.map(specialAbility -> calculationService.getSpecialAbilityStats(specialAbility, character))
 				.map(specialAbilityStatsConverter::convert)
 				.toList();
+	}
+
+	private Stream<SpecialAbility> getSpecialAbilities(PlayerCharacter character) {
+		var rotationStats = calculationService.getAccumulatedRotationStats(character, character.getRotation());
+
+		return Stream.concat(
+				rotationStats.getActivatedAbilities().stream().map(SpecialAbility::of),
+				rotationStats.getNonModifierEffects().stream().map(SpecialAbility::of)
+		);
 	}
 
 	@GetMapping("{characterId}/rotation/stats")
 	public RotationStatsDTO getRotationStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		Character character = playerProfileService.getCharacter(characterId);
-		RotationStats rotationStats = calculationService.getRotationStats(character, character.getRotation());
+		var character = playerProfileService.getCharacter(characterId);
+		var rotationStats = calculationService.getRotationStats(character, character.getRotation());
 
 		return rotationStatsConverter.convert(rotationStats);
 	}
 
-	private CharacterStatsDTO convert(String type, CharacterStats characterStats) {
-		CharacterStatsDTO result = characterStatsConverter.convert(characterStats);
+	private CharacterStatsDTO convert(String type, StatSummary statSummary) {
+		var result = characterStatsConverter.convert(statSummary);
 		result.setType(type);
 		return result;
 	}
@@ -151,10 +159,10 @@ public class StatsController {
 
 	private Comparator<SpecialAbility> compareSources() {
 		return
-				Comparator.comparingInt((SpecialAbility x) -> x.source().getPriority())
-				.thenComparing((SpecialAbility x) -> (Comparable<Object>)x.source())
-				.thenComparingInt(SpecialAbility::priority)
-				.thenComparing(SpecialAbility::line)
+				Comparator.comparingInt((SpecialAbility x) -> x.getSource().getPriority())
+				.thenComparing((SpecialAbility x) -> (Comparable<Object>)x.getSource())
+				.thenComparingInt(SpecialAbility::getPriority)
+				.thenComparing(SpecialAbility::getTooltip)
 		;
 	}
 }

@@ -1,13 +1,13 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
+import wow.commons.model.effect.EffectSource;
 
 /**
  * User: POlszewski
  * Date: 2023-03-27
  */
-public record ItemSource(AbstractItem item) implements SpecialAbilitySource, Comparable<ItemSource> {
+public record ItemSource(AbstractItem item) implements EffectSource, Comparable<ItemSource> {
 	@Override
 	public Description getDescription() {
 		return item.getDescription();
@@ -20,6 +20,6 @@ public record ItemSource(AbstractItem item) implements SpecialAbilitySource, Com
 
 	@Override
 	public int compareTo(ItemSource o) {
-		return this.item.getId().compareTo(o.item.getId());
+		return Integer.compare(this.item.getId(), o.item.getId());
 	}
 }

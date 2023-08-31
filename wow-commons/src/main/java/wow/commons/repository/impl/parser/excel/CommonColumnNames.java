@@ -5,6 +5,7 @@ package wow.commons.repository.impl.parser.excel;
  * Date: 2022-11-24
  */
 public final class CommonColumnNames {
+	public static final String ID = "id";
 	public static final String NAME = "name";
 	public static final String ICON = "icon";
 	public static final String TOOLTIP = "tooltip";
@@ -27,15 +28,33 @@ public final class CommonColumnNames {
 
 	public static final String PVE_ROLES = "pve_roles";
 
-	public static final String STAT = "stat";
-	public static final String AMOUNT = "amount";
+	private static final String ATTR_ID = "id";
+	private static final String ATTR_VALUE = "value";
+	private static final String ATTR_CONDITION = "condition";
+	private static final String ATTR_LVL_SCALED = "lvl scaled";
 
-	public static String colStat(String prefix, int statIdx) {
-		return prefix + STAT + statIdx;
+	public static String getAttrId(int idx) {
+		return ATTR_ID + idx;
 	}
 
-	public static String colAmount(String prefix, int statIdx) {
-		return prefix + AMOUNT + statIdx;
+	public static String getAttrValue(int idx) {
+		return ATTR_VALUE + idx;
+	}
+
+	public static String getAttrCondition(int idx) {
+		return ATTR_CONDITION + idx;
+	}
+
+	public static String getAttrLevelScaled(int idx) {
+		return ATTR_LVL_SCALED + idx;
+	}
+
+	public static String colEffectStats(String prefix, int statIdx) {
+		return prefix + "stat" + (statIdx != 1 ? statIdx : "");
+	}
+
+	public static String colEffectDescr(String prefix, int statIdx) {
+		return prefix + "descr" + (statIdx != 1 ? statIdx : "");
 	}
 
 	private CommonColumnNames() {}

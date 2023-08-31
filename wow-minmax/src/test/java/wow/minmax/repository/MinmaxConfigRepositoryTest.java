@@ -2,7 +2,7 @@ package wow.minmax.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.SpellId.*;
+import static wow.commons.model.spell.AbilityId.*;
 import static wow.minmax.model.config.CharacterFeature.*;
 
 /**
@@ -28,7 +28,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 		assertThat(config.relevantSpells()).hasSameElementsAs(List.of(
 				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE, SHADOWBURN,
-				UNSTABLE_AFFLICTION, SIPHON_LIFE, SEED_OF_CORRUPTION_DIRECT, DRAIN_LIFE,
+				UNSTABLE_AFFLICTION, SIPHON_LIFE, SEED_OF_CORRUPTION, DRAIN_LIFE,
 				CONFLAGRATE, INCINERATE, SEARING_PAIN, DEATH_COIL, HELLFIRE, RAIN_OF_FIRE
 		));
 	}
@@ -46,7 +46,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void hasFeature() {
-		Character character = getCharacter();
+		PlayerCharacter character = getCharacter();
 
 		assertThat(underTest.hasFeature(character, COMBAT_RATINGS)).isTrue();
 		assertThat(underTest.hasFeature(character, GEMS)).isTrue();

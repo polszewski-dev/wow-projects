@@ -1,7 +1,7 @@
 package wow.scraper.parser.tooltip;
 
 import lombok.Getter;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.Money;
 import wow.commons.model.Percent;
 import wow.commons.model.categorization.Binding;
@@ -10,6 +10,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.GameVersionId;
@@ -23,17 +24,18 @@ import wow.scraper.config.ScraperContextSource;
 import wow.scraper.model.JsonCommonDetails;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static wow.commons.model.profession.ProfessionSpecializationId.*;
 
 /**
  * User: POlszewski
  * Date: 2022-10-31
  */
 @Getter
+@Slf4j
 public abstract class AbstractTooltipParser<D extends JsonCommonDetails> implements ScraperContextSource {
 	protected final ScraperContext scraperContext;
 
@@ -63,7 +65,6 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	protected Percent dropChance;
 	protected Money sellPrice;
 
-	private static final boolean ERROR_ON_UNMATCHED_LINE = true;
 	private static final Set<String> UNMATCHED_LINES = new TreeSet<>();
 
 	protected final Rule rulePhase = Rule.
@@ -93,9 +94,9 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	protected final Rule ruleFactionRestriction = Rule.
 			regex("Requires (.*?) - (Neutral|Friendly|Honored|Revered|Exalted)", this::parseReputation);
 	protected final Rule ruleProfessionRestriction = Rule.
-			regex("Requires (Alchemy|Enchanting|Jewelcrafting|Tailoring|Leatherworking|Blacksmithing|Engineering) \\((\\d+)\\)", this::parseRequiredProfession);
+			regex("Requires (" + regexAny(ProfessionId.values()) + ") \\((\\d+)\\)", this::parseRequiredProfession);
 	protected final Rule ruleProfessionSpecializationRestriction = Rule.
-			regex("Requires (Gnomish Engineer|Goblin Engineer|Master Swordsmith|Master Hammersmith|Mooncloth Tailoring|Shadoweave Tailoring|Spellfire Tailoring)", this::parseRequiredProfessionSpec);
+			regex("Requires (" + regexAny(ProfessionSpecializationId.values()) + ")", this::parseRequiredProfessionSpec);
 	protected final Rule ruleDurability = Rule.
 			matches("Durability \\d+ / \\d+", x -> {});
 	protected final Rule ruleDroppedBy = Rule.
@@ -108,8 +109,11 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 			.matches("\".*\"", params -> {});
 	protected final Rule ruleRightClickToRead = Rule
 			.exact("<Right Click to Read>", () -> {});
+	protected final Rule ruleIgnoreEverything = Rule.matches(".*", x -> {});
 
 	protected AbstractTooltipParser(D details, GameVersionId gameVersion, ScraperContext scraperContext) {
+		Objects.requireNonNull(details);
+		Objects.requireNonNull(gameVersion);
 		this.details = details;
 		this.gameVersion = gameVersion;
 		this.scraperContext = scraperContext;
@@ -132,11 +136,15 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 
 		for (currentLineIdx = 1; currentLineIdx < lines.size(); ++currentLineIdx) {
 			String currentLine = lines.get(currentLineIdx);
-			parseLine(currentLine);
+			parseLine(prepareLine(currentLine));
 		}
 
 		fixCommonFields();
 		afterParse();
+	}
+
+	protected String prepareLine(String line) {
+		return line;
 	}
 
 	private void parseLine(String currentLine) {
@@ -154,17 +162,6 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	protected abstract void afterParse();
 
 	private void fixCommonFields() {
-		fixPhase();
-		fixBinding();
-	}
-
-	private void fixPhase() {
-		if (phase == null) {
-			phase = getGameVersion().getEarliestNonPrepatchPhase();
-		}
-	}
-
-	private void fixBinding() {
 		if (binding == null) {
 			binding = Binding.NO_BINDING;
 		}
@@ -185,7 +182,7 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	private void parseReputation(ParsedMultipleValues factionParams) {
 		this.requiredFactionName = factionParams.get(0);
 		this.requiredFactionStanding = factionParams.get(1);
-		this.exclusiveFaction = ExclusiveFaction.tryParseFromName(requiredFactionName);
+		this.exclusiveFaction = ExclusiveFaction.tryParse(requiredFactionName);
 	}
 
 	private void parseRequiredProfession(ParsedMultipleValues params) {
@@ -194,16 +191,7 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	}
 
 	private void parseRequiredProfessionSpec(ParsedMultipleValues params) {
-		this.requiredProfessionSpec = switch (params.get(0)) {
-			case "Gnomish Engineer" -> GNOMISH_ENGINEER;
-			case "Goblin Engineer" -> GOBLIN_ENGINEER;
-			case "Master Swordsmith" -> MASTER_SWORDSMITH;
-			case "Master Hammersmith" -> MASTER_HAMMERSMITH;
-			case "Mooncloth Tailoring" -> MOONCLOTH_TAILORING;
-			case "Shadoweave Tailoring" -> SHADOWEAVE_TAILORING;
-			case "Spellfire Tailoring" -> SPELLFIRE_TAILORING;
-			default -> throw new IllegalArgumentException(params.get(0));
-		};
+		this.requiredProfessionSpec = ProfessionSpecializationId.parse(params.get(0));
 	}
 
 	private Percent parseDropChance(String value) {
@@ -273,8 +261,26 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 		this.phase = phase;
 	}
 
+	public TimeRestriction getTimeRestriction() {
+		return TimeRestriction.of(
+				gameVersion, getActualPhase()
+		);
+	}
+
+	private PhaseId getActualPhase() {
+		PhaseId phaseOverride = getPhaseOverride();
+
+		if (phaseOverride != null && phaseOverride.getGameVersionId() == gameVersion) {
+			return phaseOverride;
+		}
+
+		return phase;
+	}
+
+	protected abstract PhaseId getPhaseOverride();
+
 	protected void unmatchedLine(String line) {
-		if (ERROR_ON_UNMATCHED_LINE) {
+		if (getScraperConfig().isErrorOnUnmatchedLine()) {
 			throw new IllegalArgumentException(line);
 		}
 
@@ -291,7 +297,11 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 		UNMATCHED_LINES.add(line);
 	}
 
-	public static void reportUnmatchedLines(Logger log) {
+	public static void reportUnmatchedLines() {
 		UNMATCHED_LINES.forEach(log::info);
+	}
+
+	protected static <T> String regexAny(T[] values) {
+		return Stream.of(values).map(Object::toString).collect(Collectors.joining("|"));
 	}
 }

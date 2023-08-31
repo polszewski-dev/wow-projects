@@ -1,7 +1,8 @@
 package wow.scraper.classifier;
 
-import wow.commons.model.attribute.AttributeSource;
 import wow.commons.model.categorization.PveRole;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.ActivatedAbility;
 
 import java.util.List;
 
@@ -12,15 +13,15 @@ import java.util.List;
 public interface PveRoleStatClassifier {
 	PveRole getRole();
 
-	boolean hasStatsSuitableForRole(AttributeSource attributeSource);
+	boolean hasStatsSuitableForRole(List<Effect> effects, ActivatedAbility activatedAbility);
 
 	List<PveRoleStatClassifier> CLASSIFIERS = List.of(
 			new CasterDpsStatClassifier()
 	);
 
-	static List<PveRole> classify(AttributeSource attributeSource) {
+	static List<PveRole> classify(List<Effect> effects, ActivatedAbility activatedAbility) {
 		return CLASSIFIERS.stream()
-				.filter(x -> x.hasStatsSuitableForRole(attributeSource))
+				.filter(x -> x.hasStatsSuitableForRole(effects, activatedAbility))
 				.map(PveRoleStatClassifier::getRole)
 				.distinct()
 				.toList();

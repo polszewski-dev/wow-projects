@@ -1,7 +1,7 @@
 package wow.minmax.service;
 
 import wow.character.model.character.BuffListType;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
@@ -25,17 +25,17 @@ public interface PlayerProfileService {
 
 	PlayerProfile getPlayerProfile(UUID profileId);
 
-	Character getCharacter(CharacterId characterId);
+	PlayerCharacter getCharacter(CharacterId characterId);
 
-	Character changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId);
+	PlayerCharacter changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId);
 
-	Character changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
+	PlayerCharacter changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
 
-	Character changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
+	PlayerCharacter changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
-	Character resetEquipment(CharacterId characterId);
+	PlayerCharacter resetEquipment(CharacterId characterId);
 
-	Character enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled);
+	PlayerCharacter enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled);
 
-	ViewConfig getViewConfig(Character character);
+	ViewConfig getViewConfig(PlayerCharacter character);
 }

@@ -22,9 +22,9 @@ public enum TalentTree {
 	HOLY("HolyTree"),
 	SHADOW("ShadowTree"),
 
-	MAGE_ARCANE("MageArcane"),
-	MAGE_FIRE("MageFire"),
-	MAGE_FROST("MageFrost");
+	ARCANE("ArcaneTree"),
+	FIRE("FireTree"),
+	FROST("FrostTree");
 
 	private final String name;
 

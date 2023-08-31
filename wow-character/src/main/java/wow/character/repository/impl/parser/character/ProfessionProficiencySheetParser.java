@@ -12,7 +12,6 @@ import wow.commons.model.profession.ProfessionType;
  * Date: 2023-07-31
  */
 public class ProfessionProficiencySheetParser extends CharacterSheetParser {
-	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colMaxSkill = column("max_skill");
 	private final ExcelColumn colReqLvl = column("req_lvl:");
 

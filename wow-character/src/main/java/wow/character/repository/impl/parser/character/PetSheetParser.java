@@ -10,8 +10,6 @@ import wow.commons.model.character.PetType;
  * Date: 2023-03-28
  */
 public class PetSheetParser extends CharacterSheetParser {
-	private final ExcelColumn colId = column("id");
-
 	public PetSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
 	}

@@ -1,6 +1,7 @@
 package wow.scraper.exporter.item;
 
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parser.tooltip.TradedItemParser;
 
@@ -13,19 +14,19 @@ import static wow.scraper.model.WowheadItemCategory.TOKENS;
  */
 public class TradedItemExporter extends AbstractItemExporter<TradedItemParser> {
 	@Override
-	public void exportAll() {
-		builder.addTradedItemHeader();
+	protected void prepareData() {
 		export(TOKENS);
 		export(QUEST);
 	}
 
 	@Override
-	protected TradedItemParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
-		return new TradedItemParser(details, gameVersion, getScraperContext());
+	protected void exportPreparedData(ItemBaseExcelBuilder builder) {
+		builder.addTradedItemHeader();
+		parsers.forEach(builder::add);
 	}
 
 	@Override
-	protected void exportParsedData(TradedItemParser parser) {
-		builder.add(parser);
+	protected TradedItemParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
+		return new TradedItemParser(details, gameVersion, getScraperContext());
 	}
 }

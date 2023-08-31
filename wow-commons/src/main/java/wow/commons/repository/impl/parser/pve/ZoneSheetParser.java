@@ -6,7 +6,6 @@ import wow.commons.model.pve.ZoneType;
 import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
 
 /**
@@ -14,8 +13,6 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
  * Date: 2022-11-22
  */
 public class ZoneSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colId = column(ID);
-	private final ExcelColumn colName = column(NAME);
 	private final ExcelColumn colShortName = column(ZONE_SHORT_NAME);
 	private final ExcelColumn colType = column(ZONE_TYPE);
 	private final ExcelColumn colVersion = column(ZONE_VERSION);
@@ -26,11 +23,6 @@ public class ZoneSheetParser extends WowExcelSheetParser {
 	public ZoneSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
-	}
-
-	@Override
-	protected ExcelColumn getColumnIndicatingOptionalRow() {
-		return colName;
 	}
 
 	@Override

@@ -6,9 +6,10 @@ import wow.scraper.exporter.ExcelExporter;
 import wow.scraper.exporter.pve.excel.PveBaseExcelBuilder;
 import wow.scraper.model.HasRequiredVersion;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: POlszewski
@@ -16,39 +17,41 @@ import java.util.List;
  */
 @Getter
 public abstract class PveBaseExporter<T extends HasRequiredVersion> extends ExcelExporter<PveBaseExcelBuilder> {
-	@Override
-	public void exportAll() {
-		addHeader();
+	protected List<T> data;
 
-		getSortedData().forEach(this::addRow);
+	@Override
+	protected void prepareData() {
+		this.data = getAllData();
+		fixData();
+		data.sort(getComparator());
 	}
 
-	protected abstract void addHeader();
+	@Override
+	protected void exportPreparedData(PveBaseExcelBuilder builder) {
+		addHeader(builder);
+		data.forEach(row -> addRow(row, builder));
+	}
 
-	protected abstract void addRow(T row);
+	protected abstract void addHeader(PveBaseExcelBuilder builder);
+
+	protected abstract void addRow(T row, PveBaseExcelBuilder builder);
 
 	protected abstract List<T> getData(GameVersionId gameVersion);
 
-	protected abstract void fixData(List<T> data);
+	protected abstract void fixData();
 
 	protected abstract Comparator<T> getComparator();
 
-	private List<T> getSortedData() {
-		List<T> data = getAllData();
-		fixData(data);
-		data.sort(getComparator());
-		return data;
+	private List<T> getAllData() {
+		return getScraperConfig().getGameVersions().stream()
+				.map(this::getVersionData)
+				.flatMap(Collection::stream)
+				.collect(Collectors.toList());
 	}
 
-	private List<T> getAllData() {
-		List<T> data = new ArrayList<>();
-
-		for (GameVersionId gameVersion : getScraperConfig().getGameVersions()) {
-			List<T> versionData = getData(gameVersion);
-			versionData.forEach(x -> x.setReqVersion(gameVersion));
-			data.addAll(versionData);
-		}
-
-		return data;
+	private List<T> getVersionData(GameVersionId gameVersion) {
+		var versionData = getData(gameVersion);
+		versionData.forEach(x -> x.setReqVersion(gameVersion));
+		return versionData;
 	}
 }

@@ -11,7 +11,6 @@ import wow.commons.model.profession.ProfessionType;
  * Date: 2023-03-28
  */
 public class ProfessionSheetParser extends CharacterSheetParser {
-	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colType = column("type");
 
 	public ProfessionSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {

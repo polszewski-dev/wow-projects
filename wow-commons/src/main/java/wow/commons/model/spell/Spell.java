@@ -1,143 +1,52 @@
 package wow.commons.model.spell;
 
-import wow.commons.model.Duration;
-import wow.commons.model.Percent;
-import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.config.ConfigurationElement;
-import wow.commons.model.talent.TalentTree;
+import wow.commons.model.config.Described;
+import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.component.DirectComponent;
 
-import java.util.HashSet;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * User: POlszewski
  * Date: 2021-09-19
  */
-public interface Spell extends ConfigurationElement<SpellIdAndRank> {
-	SpellInfo getSpellInfo();
+public interface Spell extends Described, TimeRestricted {
+	int getId();
 
-	CastInfo getCastInfo();
+	SpellType getType();
 
-	DirectDamageInfo getDirectDamageInfo();
+	SpellSchool getSchool();
 
-	DotDamageInfo getDotDamageInfo();
+	List<DirectComponent> getDirectComponents();
 
-	default SpellId getSpellId() {
-		return getId().spellId();
+	Conversion getConversion();
+
+	EffectApplication getEffectApplication();
+
+	default Effect getAppliedEffect() {
+		return getEffectApplication() != null ? getEffectApplication().effect() : null;
 	}
 
-	default Integer getRank() {
-		return getId().rank();
-	}
+	default Set<SpellTarget> getTargets() {
+		var result = EnumSet.noneOf(SpellTarget.class);
 
-	default TalentTree getTalentTree() {
-		return getSpellInfo().getTalentTree();
-	}
-
-	default SpellSchool getSpellSchool() {
-		return getSpellInfo().getSpellSchool();
-	}
-
-	default Percent getCoeffDirect() {
-		return getDirectDamageInfo().coeffDirect();
-	}
-
-	default Percent getCoeffDot() {
-		return getDotDamageInfo().coeffDot();
-	}
-
-	default Cost getCost() {
-		return getCastInfo().cost();
-	}
-
-	default Duration getCastTime() {
-		return getCastInfo().castTime();
-	}
-
-	default boolean isChanneled() {
-		return getCastInfo().channeled();
-	}
-
-	default boolean isBolt() {
-		return getSpellInfo().getDamagingSpellInfo().bolt();
-	}
-
-	default SpellTarget getTarget() {
-		return getSpellInfo().getTarget();
-	}
-
-	default boolean isFriendly() {
-		return getTarget().isFriendly();
-	}
-
-	default boolean isHostile() {
-		return getTarget().isHostile();
-	}
-
-	default boolean hasDirectComponent() {
-		return getDirectDamageInfo() != null;
-	}
-
-	default boolean hasDotComponent() {
-		return getDotDamageInfo() != null;
-	}
-
-	default boolean hasDamageComponent() {
-		return hasDirectComponent() || hasDotComponent();
-	}
-
-	default int getMinDmg() {
-		return getDirectDamageInfo().minDmg();
-	}
-
-	default int getMaxDmg() {
-		return getDirectDamageInfo().maxDmg();
-	}
-
-	default int getMinDmg2() {
-		return getDirectDamageInfo().minDmg2();
-	}
-
-	default int getMaxDmg2() {
-		return getDirectDamageInfo().maxDmg2();
-	}
-
-	default int getDotDmg() {
-		return getDotDamageInfo().dotDmg();
-	}
-
-	default TickScheme getTickScheme() {
-		return getDotDamageInfo().tickScheme();
-	}
-
-	default int getNumTicks() {
-		return getTickScheme().numTicks();
-	}
-
-	default Duration getTickInterval() {
-		return getTickScheme().tickInterval();
-	}
-
-	default Duration getDotDuration() {
-		return getTickInterval().multiplyBy(getNumTicks());
-	}
-
-	default Set<AttributeCondition> getConditions() {
-		var result = new HashSet<AttributeCondition>();
-		result.add(AttributeCondition.of(getTalentTree()));
-		result.add(AttributeCondition.of(getSpellSchool()));
-		result.add(AttributeCondition.of(getSpellId()));
-		return result;
-	}
-
-	default Duration getCooldown() {
-		return getSpellInfo().getCooldown();
-	}
-
-	default Duration getEffectiveCooldown() {
-		if (hasDotComponent()) {
-			return getCooldown().max(getDotDuration());
+		for (var directComponent : getDirectComponents()) {
+			result.add(directComponent.target());
 		}
-		return getCooldown();
+
+		var effectApplication = getEffectApplication();
+
+		if (effectApplication != null) {
+			result.add(effectApplication.target());
+		}
+
+		return  result;
 	}
+
+	boolean hasDamagingComponent();
+
+	boolean hasHealingComponent();
 }

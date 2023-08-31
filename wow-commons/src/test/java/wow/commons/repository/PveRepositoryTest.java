@@ -2,7 +2,7 @@ package wow.commons.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.pve.*;
 
 import java.util.List;
@@ -17,14 +17,11 @@ import static wow.commons.model.pve.ZoneType.RAID;
  * User: POlszewski
  * Date: 2022-11-10
  */
-class PveRepositoryTest extends RepositoryTest {
-	@Autowired
-	PveRepository underTest;
-
+class PveRepositoryTest extends WowCommonsSpringTest {
 	@Test
 	@DisplayName("Zone is read correctly")
 	void zoneIsCorrect() {
-		Optional<Zone> optionalZone = underTest.getZone(4075, PhaseId.TBC_P5);
+		Optional<Zone> optionalZone = pveRepository.getZone(4075, PhaseId.TBC_P5);
 
 		assertThat(optionalZone).isPresent();
 
@@ -62,7 +59,7 @@ class PveRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Npc is read correctly")
 	void npcIsCorrect() {
-		Optional<Npc> optionalNpc = underTest.getNpc(25840, PhaseId.TBC_P5);
+		Optional<Npc> optionalNpc = pveRepository.getNpc(25840, PhaseId.TBC_P5);
 
 		assertThat(optionalNpc).isPresent();
 
@@ -81,7 +78,7 @@ class PveRepositoryTest extends RepositoryTest {
 	@Test
 	@DisplayName("Faction is read correctly")
 	void factionIsCorrect() {
-		Optional<Faction> optionalFaction = underTest.getFaction("Thrallmar", PhaseId.TBC_P5);
+		Optional<Faction> optionalFaction = pveRepository.getFaction("Thrallmar", PhaseId.TBC_P5);
 
 		assertThat(optionalFaction).isPresent();
 
@@ -98,7 +95,7 @@ class PveRepositoryTest extends RepositoryTest {
 	@DisplayName("Npcs and instances have matching required versions")
 	void matchingNpcsAndInstanceVersions() {
 		for (GameVersionId gameVersionId : GameVersionId.values()) {
-			for (Zone instance : underTest.getAllInstances(gameVersionId.getLastPhase())) {
+			for (Zone instance : pveRepository.getAllInstances(gameVersionId.getLastPhase())) {
 				for (Npc npc : instance.getNpcs()) {
 					assertThat(npc.getTimeRestriction().getUniqueVersion()).isEqualTo(instance.getTimeRestriction().getUniqueVersion());
 				}

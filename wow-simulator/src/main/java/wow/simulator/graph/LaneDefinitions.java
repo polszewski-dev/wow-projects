@@ -1,10 +1,9 @@
 package wow.simulator.graph;
 
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.effect.EffectId;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
-import wow.simulator.model.effect.Effect;
+import wow.simulator.model.effect.UnitEffect;
 
 import java.awt.*;
 import java.util.List;
@@ -32,54 +31,58 @@ public abstract class LaneDefinitions {
 	public abstract List<Lane> getCooldownLanes();
 
 	public Color getSpellColor(Spell spell) {
-		Color color = getColorsByName().get(spell.getSpellId().getName());
+		Color color = getColorsByName().get(spell.getName());
 		if (color == null) {
 			throw new IllegalArgumentException("" + spell);
 		}
 		return color;
 	}
 
-	public Lane getCooldownLane(SpellId spellId) {
+	public Lane getCooldownLane(AbilityId abilityId) {
 		return getCooldownLanes().stream()
-				.filter(x -> x.matches(spellId))
+				.filter(x -> x.matches(abilityId))
 				.findAny()
 				.orElseThrow();
 	}
 
-	public Lane getEffectLane(SpellId spellId) {
+	public Lane getEffectLane(AbilityId abilityId) {
 		return getEffectLanes().stream()
-				.filter(x -> x.matches(spellId))
+				.filter(x -> x.matches(abilityId))
 				.findAny()
 				.orElseThrow();
 	}
 
-	protected Map.Entry<String, Color> color(SpellId spellId, Color color) {
-		return Map.entry(spellId.getName(), color);
+	protected Map.Entry<String, Color> color(AbilityId abilityId, Color color) {
+		return color(abilityId.getName(), color);
 	}
 
-	protected Map.Entry<String, Color> color(EffectId effectId, Color color) {
-		return Map.entry(effectId.getName(), color);
+	protected Map.Entry<String, Color> color(String name, Color color) {
+		return Map.entry(name, color);
 	}
 
-	protected Lane lane(int laneId, SpellId spellId, String label) {
-		return new Lane(laneId, spellId, label, getColor(spellId.getName()).orElseThrow());
+	protected Lane lane(int laneId, AbilityId abilityId, String label) {
+		return lane(laneId, abilityId.getName(), label);
 	}
 
-	protected Lane lane(int laneId, EffectId effectId) {
-		return lane(laneId, effectId, null);
+	protected Lane lane(int laneId, AbilityId abilityId) {
+		return lane(laneId, abilityId, abilityId.getName());
 	}
 
-	protected Lane lane(int laneId, EffectId effectId, String label) {
-		return new Lane(laneId, effectId, label, getColor(effectId.getName()).orElseThrow());
+	protected Lane lane(int laneId, String name, String label) {
+		return new Lane(laneId, name, label, getColor(name).orElseThrow());
+	}
+
+	protected Lane lane(int laneId, String name) {
+		return lane(laneId, name, name);
 	}
 
 	protected Optional<Color> getColor(String name) {
 		return Optional.ofNullable(getColorsByName().get(name));
 	}
 
-	public boolean isIgnored(Effect effect) {
-		return getIgnoredEffects().contains(effect.getSourceSpell().getSpellId());
+	public boolean isIgnored(UnitEffect effect) {
+		return getIgnoredEffects().contains(effect.getSourceAbilityId());
 	}
 
-	protected abstract Set<SpellId> getIgnoredEffects();
+	protected abstract Set<AbilityId> getIgnoredEffects();
 }

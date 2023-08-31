@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 
@@ -24,7 +25,7 @@ public class PlayerProfile {
 	private final String profileName;
 	private final CharacterClassId characterClassId;
 	private final RaceId raceId;
-	private final Map<CharacterId, Character> characterByKey;
+	private final Map<CharacterId, PlayerCharacter> characterByKey;
 	private LocalDateTime lastModified;
 	private CharacterId lastModifiedCharacterId;
 
@@ -39,11 +40,11 @@ public class PlayerProfile {
 		);
 	}
 
-	public Optional<Character> getCharacter(CharacterId key) {
+	public Optional<PlayerCharacter> getCharacter(CharacterId key) {
 		return Optional.ofNullable(characterByKey.get(key));
 	}
 
-	public void addCharacter(Character character) {
+	public void addCharacter(PlayerCharacter character) {
 		CharacterId characterId = getCharacterId(character);
 
 		if (characterByKey.containsKey(characterId)) {
@@ -53,13 +54,13 @@ public class PlayerProfile {
 		characterByKey.put(characterId, character);
 	}
 
-	public CharacterId getCharacterId(Character character) {
+	public CharacterId getCharacterId(PlayerCharacter character) {
 		return new CharacterId(
 				getProfileId(),
 				character.getPhaseId(),
 				character.getLevel(),
-				character.getTargetEnemy().getEnemyType(),
-				character.getTargetEnemy().getLevelDifference()
+				character.getTarget().getCreatureType(),
+				Character.getLevelDifference(character, character.getTarget())
 		);
 	}
 

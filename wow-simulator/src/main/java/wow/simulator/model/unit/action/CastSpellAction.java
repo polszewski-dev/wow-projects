@@ -1,12 +1,13 @@
 package wow.simulator.model.unit.action;
 
-import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.Spell;
-import wow.simulator.model.effect.DoT;
-import wow.simulator.model.effect.PeriodicEffect;
-import wow.simulator.model.rng.RngStrategies;
-import wow.simulator.model.unit.SpellCastContext;
+import wow.commons.model.effect.component.ComponentType;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.component.DirectComponent;
+import wow.simulator.model.context.SpellCastContext;
+import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -14,44 +15,39 @@ import wow.simulator.model.unit.Unit;
  * Date: 2023-08-10
  */
 public class CastSpellAction extends UnitAction {
-	private final Spell spell;
-	private final Unit target;
+	private final Ability ability;
+	private final TargetResolver targetResolver;
 
-	private Duration castTime;
-	private Boolean hitRoll;
+	private SpellCastContext castContext;
 
-	private PeriodicEffect periodicEffect;
+	private UnitEffect channeledEffect;
 
-	private SpellCastContext context;
-
-	public CastSpellAction(Unit owner, Spell spell, Unit target) {
+	public CastSpellAction(Unit owner, Ability ability, TargetResolver targetResolver) {
 		super(owner);
-		this.spell = spell;
-		this.target = target;
+		this.ability = ability;
+		this.targetResolver = targetResolver;
 	}
 
 	@Override
 	protected void setUp() {
-		this.context = owner.getSpellCastContext(spell, target);
-
-		if (!owner.canCast(context)) {
+		if (!owner.canCast(ability, targetResolver)) {
 			getGameLog().canNotBeCasted(this);
 			finish();
 			return;
 		}
 
-		this.castTime = context.getCastTime();
+		this.castContext = owner.getSpellCastContext(ability);
 
-		if (spell.isChanneled()) {
+		if (ability.isChanneled()) {
 			channelSpell();
-		} else if (context.isInstantCast()) {
+		} else if (castContext.isInstantCast()) {
 			instaCastSpell();
 		} else {
 			castSpell();
 		}
 
-		if (!spell.getSpellInfo().isIgnoresGcd()) {
-			owner.triggerGcd(context.getGcd(), this);
+		if (!ability.getCastInfo().ignoresGcd()) {
+			owner.triggerGcd(castContext.getGcd(), this);
 		}
 	}
 
@@ -63,10 +59,7 @@ public class CastSpellAction extends UnitAction {
 	private void castSpell() {
 		beginCast();
 
-		fromNowAfter(castTime, () -> {
-			this.context = owner.getSpellCastContext(spell, target);
-			endCast();
-		});
+		fromNowAfter(castContext.getCastTime(), this::endCast);
 	}
 
 	private void beginCast() {
@@ -80,19 +73,8 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void channelSpell() {
-		paySpellCost();
-
-		if (!hitRoll()) {
-			onBeginCast();
-			getGameLog().spellResisted(this);
-			onEndCast();
-			return;
-		}
-
-		onBeginCast();
-		spellAction();
-
-		fromNowOnEachTick(periodicEffect.getNumTicks(), periodicEffect.getTickInterval(), tickNo -> {});
+		beginCast();
+		endCast();
 	}
 
 	private void onBeginCast() {
@@ -105,105 +87,92 @@ public class CastSpellAction extends UnitAction {
 		// events here
 	}
 
+	private void onBeginChannel() {
+		getGameLog().beginChannel(this);
+	}
+
+	private void onEndChannel() {
+		getGameLog().endChannel(this);
+	}
+
 	private void paySpellCost() {
-		context.paySpellCost();
+		castContext.paySpellCost();
 	}
 
 	private void resolveSpell() {
-		Duration delay = getDelay();
-
-		getSimulation().delayedAction(delay, this::spellAction);
+		for (var directComponent : ability.getDirectComponents()) {
+			getSimulation().delayedAction(
+					getDelay(directComponent),
+					() -> directComponentAction(directComponent)
+			);
+		}
+		applyEffect();
 	}
 
-	private Duration getDelay() {
-		Duration flightTime = Duration.ZERO;
-		return spell.isBolt() ? flightTime : Duration.ZERO;
+	private Duration getDelay(DirectComponent directComponent) {
+		var flightTime = Duration.ZERO;
+		return directComponent.bolt() ? flightTime : Duration.ZERO;
 	}
 
-	private void spellAction() {
-		if (spell.isHostile()) {
-			harmfulSpellAction();
+	private void directComponentAction(DirectComponent directComponent) {
+		if (directComponent.type() == ComponentType.DAMAGE) {
+			dealDirectDamage(directComponent);
 		} else {
-			friendlySpellAction();
+			throw new UnsupportedOperationException();
 		}
 	}
 
-	private void harmfulSpellAction() {
-		if (!hitRoll()) {
-			getGameLog().spellResisted(this);
+	private void dealDirectDamage(DirectComponent directComponent) {
+		var target = targetResolver.getTarget(directComponent.target());
+		var resolutionContext = castContext.getSpellResolutionContext(target);
+
+		resolutionContext.dealDirectDamage(directComponent, this);
+	}
+
+	private void applyEffect() {
+		var effectApplication = ability.getEffectApplication();
+
+		if (effectApplication == null) {
 			return;
 		}
 
-		if (spell.hasDirectComponent()) {
-			directDamageAction();
+		var target = targetResolver.getTarget(effectApplication.target());
+		var resolutionContext = castContext.getSpellResolutionContext(target);
+
+		if (ability.isChanneled()) {
+			if (!resolutionContext.hitRoll(this)) {
+				return;
+			}
+			onBeginChannel();
 		}
 
-		if (spell.hasDotComponent()) {
-			dotAction();
+		var appliedEffect = resolutionContext.applyEffect(this);
+
+		if (ability.isChanneled()) {
+			this.channeledEffect = appliedEffect;
+			this.channeledEffect.setOnEffectFinished(this::onEndChannel);
+			fromNowAfter(channeledEffect.getDuration(), () -> {});
 		}
-	}
-
-	private void directDamageAction() {
-		boolean critRoll = critRoll();
-		RngStrategy rngStrategy = RngStrategies.directDamageStrategy(critRoll);
-
-		int directDamage = (int) context.snapshot().getDirectDamage(rngStrategy, true);
-
-		context.decreaseHealth(directDamage, critRoll);
-	}
-
-	private void dotAction() {
-		periodicEffect = spell.isChanneled() ? new ChannelDoT(context) : new DoT(context);
-		target.addEffect(periodicEffect);
-	}
-
-	private class ChannelDoT extends DoT {
-		public ChannelDoT(SpellCastContext context) {
-			super(context);
-		}
-
-		@Override
-		protected void onFinished() {
-			endChannel();
-			super.onFinished();
-		}
-
-		private void endChannel() {
-			onEndCast();
-		}
-	}
-
-	private boolean hitRoll() {
-		if (hitRoll == null) {
-			double hitChance = context.snapshot().getHitChance();
-			this.hitRoll = owner.getRng().hitRoll(hitChance, spell.getSpellId());
-		}
-		return hitRoll;
-	}
-
-	private boolean critRoll() {
-		double critChance = context.snapshot().getCritChance();
-		return owner.getRng().critRoll(critChance, spell.getSpellId());
-	}
-
-	private void friendlySpellAction() {
-		// void atm
 	}
 
 	@Override
 	public void onRemovedFromQueue() {
-		getGameLog().castInterrupted(this);
+		if (ability.isChanneled()) {
+			getGameLog().channelInterrupted(this);
+		} else {
+			getGameLog().castInterrupted(this);
+		}
 		super.onRemovedFromQueue();
-		if (spell.isChanneled()) {
-			target.removeEffect(periodicEffect);
+		if (ability.isChanneled()) {
+			channeledEffect.removeSelf();
 		}
 	}
 
-	public Spell getSpell() {
-		return spell;
+	public Ability getAbility() {
+		return ability;
 	}
 
-	public Unit getTarget() {
-		return target;
+	public AbilityId getAbilityId() {
+		return ability.getAbilityId();
 	}
 }

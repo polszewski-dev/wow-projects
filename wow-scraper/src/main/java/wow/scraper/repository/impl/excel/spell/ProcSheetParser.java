@@ -1,0 +1,66 @@
+package wow.scraper.repository.impl.excel.spell;
+
+import wow.scraper.parser.spell.SpellPatternType;
+import wow.scraper.parser.spell.params.EffectPatternParams;
+import wow.scraper.parser.spell.proc.ProcPattern;
+import wow.scraper.repository.impl.SpellPatternRepositoryImpl;
+
+import java.util.List;
+import java.util.TreeMap;
+
+import static wow.scraper.parser.spell.SpellPatternType.TRIGGER_1;
+
+/**
+ * User: POlszewski
+ * Date: 2023-09-08
+ */
+public class ProcSheetParser extends AbstractSpellPatternSheetParser {
+	public ProcSheetParser(String sheetName, SpellPatternRepositoryImpl spellPatternRepository) {
+		super(sheetName, spellPatternRepository);
+	}
+
+	@Override
+	protected void readSingleRow() {
+		var type = getPatternType(TRIGGER_1);
+
+		switch (type) {
+			case TRIGGER_1, TRIGGER_2, TRIGGER_3, TRIGGER_4, TRIGGER_5 -> readTrigger(type);
+			case TRIGGERED_SPELL_1, TRIGGERED_SPELL_2, TRIGGERED_SPELL_3, TRIGGERED_SPELL_4, TRIGGERED_SPELL_5 -> readTriggeredSpell(type);
+			default -> throw new IllegalArgumentException(type + "");
+		}
+	}
+
+	private void readTrigger(SpellPatternType type) {
+		var triggerEffect = getTriggerEffect();
+
+		var trigger = getEventParams(TRIGGER_PREFIX);
+		var triggeredSpell = getSpellPatternParams();
+
+		triggerEffect.setEvent(type.getTriggerIdx(), trigger);
+		triggerEffect.setTriggeredSpell(type.getTriggerIdx(), triggeredSpell);
+	}
+
+	private void readTriggeredSpell(SpellPatternType type) {
+		var triggeredSpell = getSpellPatternParams();
+
+		getTriggerEffect()
+				.getTriggeredSpell(type.getTriggerIdx())
+				.effectApplication()
+				.effect()
+				.setTriggeredSpell(type.getTriggerIdx(), triggeredSpell);
+	}
+
+	private EffectPatternParams getTriggerEffect() {
+		var pattern = getPattern();
+		var reqVersion = getReqVersion();
+		var procPattern = spellPatternRepository.getProcPattern(pattern, reqVersion).orElse(null);
+
+		if (procPattern == null) {
+			var params = new EffectPatternParams(null, null, null, null, null, null, List.of(), new TreeMap<>(), null, null);
+			procPattern = new ProcPattern(pattern, params, reqVersion);
+			spellPatternRepository.add(procPattern);
+		}
+
+		return procPattern.getParams();
+	}
+}

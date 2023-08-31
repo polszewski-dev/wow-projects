@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class RotationSpellStatsDTO {
-	private final SpellDTO spell;
+	private final AbilityDTO spell;
 	private final double numCasts;
 	private final double damage;
 }

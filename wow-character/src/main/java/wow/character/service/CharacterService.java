@@ -1,8 +1,10 @@
 package wow.character.service;
 
-import wow.character.model.character.Character;
 import wow.character.model.character.CharacterTemplateId;
+import wow.character.model.character.NonPlayerCharacter;
+import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 
@@ -11,9 +13,11 @@ import wow.commons.model.pve.PhaseId;
  * Date: 2022-12-14
  */
 public interface CharacterService {
-	Character createCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
+	PlayerCharacter createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
 
-	void applyCharacterTemplate(Character character, CharacterTemplateId characterTemplateId);
+	NonPlayerCharacter createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId);
 
-	void updateAfterRestrictionChange(Character character);
+	void applyCharacterTemplate(PlayerCharacter character, CharacterTemplateId characterTemplateId);
+
+	void updateAfterRestrictionChange(PlayerCharacter character);
 }

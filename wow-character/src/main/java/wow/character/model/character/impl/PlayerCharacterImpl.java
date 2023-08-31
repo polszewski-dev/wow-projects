@@ -1,0 +1,83 @@
+package wow.character.model.character.impl;
+
+import lombok.Getter;
+import wow.character.model.build.Build;
+import wow.character.model.build.Talents;
+import wow.character.model.character.*;
+import wow.character.model.effect.EffectCollector;
+import wow.character.model.equipment.Equipment;
+import wow.commons.model.racial.Racial;
+
+/**
+ * User: POlszewski
+ * Date: 2023-10-31
+ */
+@Getter
+public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacter {
+	private final Race race;
+	private final Build build;
+	private final Equipment equipment;
+	private final CharacterProfessions professions;
+	private final ExclusiveFactions exclusiveFactions;
+
+	public PlayerCharacterImpl(Phase phase, CharacterClass characterClass, Race race, int level, Talents talents) {
+		super(phase, characterClass, level, characterClass.getBaseStatInfo(level, race.getRaceId()));
+		this.race = race;
+		this.build = new Build(phase.getGameVersion(), talents);
+		this.equipment = new Equipment();
+		this.professions = new CharacterProfessions();
+		this.exclusiveFactions = new ExclusiveFactions();
+	}
+
+	private PlayerCharacterImpl(
+			Phase phase,
+			CharacterClass characterClass,
+			int level,
+			BaseStatInfo baseStatInfo,
+			CombatRatingInfo combatRatingInfo,
+			Spellbook spellbook,
+			Buffs buffs,
+			Race race,
+			Build build,
+			Equipment equipment,
+			CharacterProfessions professions,
+			ExclusiveFactions exclusiveFactions
+	) {
+		super(phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
+		this.race = race;
+		this.build = build;
+		this.equipment = equipment;
+		this.professions = professions;
+		this.exclusiveFactions = exclusiveFactions;
+	}
+
+	@Override
+	public PlayerCharacterImpl copy() {
+		var copy = new PlayerCharacterImpl(
+				getPhase(),
+				getCharacterClass(),
+				getLevel(),
+				getBaseStatInfo(),
+				getCombatRatingInfo(),
+				getSpellbook().copy(),
+				getBuffs().copy(),
+				race,
+				build.copy(),
+				equipment.copy(),
+				professions.copy(),
+				exclusiveFactions.copy()
+		);
+		copy.setTarget(getTarget());
+		return copy;
+	}
+
+	@Override
+	public void collectEffects(EffectCollector collector) {
+		build.collectEffects(collector);
+		equipment.collectEffects(collector);
+		getBuffs().collectEffects(collector);
+		for (Racial racial : race.getRacials(this)) {
+			collector.addEffects(racial.getEffects());
+		}
+	}
+}

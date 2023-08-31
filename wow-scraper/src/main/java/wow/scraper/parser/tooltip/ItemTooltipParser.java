@@ -1,27 +1,30 @@
 package wow.scraper.parser.tooltip;
 
 import lombok.Getter;
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.WeaponSubType;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.item.WeaponStats;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
-import wow.scraper.parser.gem.SocketBonusParser;
+import wow.scraper.parser.effect.ItemStatParser;
 import wow.scraper.parser.stat.StatParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * User: POlszewski
@@ -29,10 +32,10 @@ import java.util.List;
  */
 @Getter
 public class ItemTooltipParser extends AbstractItemTooltipParser {
-	private StatParser statParser;
-
+	private ItemStatParser itemStatParser;
+	private ItemStatParser socketBonusParser;
 	private List<SocketType> socketTypes;
-	private Attributes socketBonus;
+	private ActivatedAbility activatedAbility;
 
 	private WeaponStats weaponStats;
 
@@ -79,6 +82,7 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 				ruleSellPrice,
 				ruleQuote,
 				ruleRightClickToRead,
+				Rule.exact("Quest Item", () -> {}),
 				Rule.regex("(.*) \\(\\d/(\\d)\\)", this::parseItemSet),
 				Rule.regex("\\((\\d+)\\) Set ?: (.*)", this::parseItemSetBonus),
 				Rule.exact("<Random enchantment>", () -> this.randomEnchantment = true),
@@ -86,13 +90,15 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 				Rule.regex("\\((\\d+\\.\\d+) damage per second\\)", this::parseWeaponDps),
 				Rule.regex("Speed (\\d+.\\d+)", this::parseWeaponSpeedParams),
 				Rule.regex("(\\d+) Charges", x -> {}),
-				Rule.test(line -> statParser.tryParse(line), x -> {}),
+				Rule.test(itemStatParser::tryParseItemEffect, x -> {}),
+				Rule.test(this::parseActivatedAbility, x -> {})
 		};
 	}
 
 	@Override
 	protected void beforeParse() {
-		this.statParser = getStatPatternRepository().getItemStatParser(gameVersion);
+		this.itemStatParser = newItemStatParser(gameVersion -> getStatPatternRepository().getItemStatParser(gameVersion));
+		this.socketBonusParser = newItemStatParser(gameVersion -> getStatPatternRepository().getSocketBonusStatParser(gameVersion));
 		this.socketTypes = new ArrayList<>();
 	}
 
@@ -132,8 +138,7 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 	}
 
 	private void parseSocketBonus(String value) {
-		this.socketBonus = new SocketBonusParser(getStatPatternRepository(), gameVersion).tryParseSocketBonus(value);
-		if (socketBonus == null) {
+		if (!socketBonusParser.tryParseItemEffect(value)) {
 			throw new IllegalArgumentException("Invalid socket bonus: " + value);
 		}
 	}
@@ -168,13 +173,42 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 		if (itemSetBonuses == null) {
 			this.itemSetBonuses = new ArrayList<>();
 		}
-		int numPieces = itemSetBonusParams.getInteger(0);
-		String description = itemSetBonusParams.get(1);
-		StatParser setBonusParser = getStatPatternRepository().getItemStatParser(gameVersion);
-		if (!setBonusParser.tryParse(description)) {
-			unmatchedLine(description);
+
+		ItemSetBonus itemSetBonus = getItemSetBonus(itemSetBonusParams);
+
+		if (itemSetBonus != null) {
+			itemSetBonuses.add(itemSetBonus);
 		}
-		itemSetBonuses.add(new ItemSetBonus(numPieces, description, setBonusParser.getParsedStats()));
+	}
+
+	private ItemSetBonus getItemSetBonus(ParsedMultipleValues itemSetBonusParams) {
+		var numPieces = itemSetBonusParams.getInteger(0);
+		var description = itemSetBonusParams.get(1);
+		var bonusParser = newItemStatParser(gameVersion -> getStatPatternRepository().getItemStatParser(gameVersion));
+
+		if (bonusParser.tryParseItemEffect(description)) {
+			var bonusEffect = bonusParser.getUniqueItemEffect().orElseThrow();
+			return new ItemSetBonus(numPieces, bonusEffect);
+		}
+
+		unmatchedLine(description);
+		return null;
+	}
+
+	private boolean parseActivatedAbility(String line) {
+		var spell = getItemSpellRepository().getActivatedAbility(gameVersion, line);
+		if (spell.isEmpty()) {
+			return false;
+		}
+		if (activatedAbility != null) {
+			throw new IllegalArgumentException("Multiple activated abilities!!!");
+		}
+		this.activatedAbility = spell.get();
+		return true;
+	}
+
+	private ItemStatParser newItemStatParser(Function<GameVersionId, StatParser> statParserFactory) {
+		return new ItemStatParser(gameVersion, statParserFactory, getItemSpellRepository());
 	}
 
 	private void parseWeaponDamage(ParsedMultipleValues weaponDamageParams) {
@@ -208,5 +242,17 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 		if (weaponStats == null) {
 			this.weaponStats = new WeaponStats(0, 0, null, 0, 0);
 		}
+	}
+
+	public List<Effect> getEffects() {
+		return itemStatParser.getItemEffects();
+	}
+
+	public Optional<Effect> getSocketBonus() {
+		return socketBonusParser.getUniqueItemEffect();
+	}
+
+	public Optional<ActivatedAbility> getActivatedAbility() {
+		return Optional.ofNullable(activatedAbility);
 	}
 }

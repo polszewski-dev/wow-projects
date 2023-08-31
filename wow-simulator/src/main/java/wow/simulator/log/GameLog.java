@@ -1,10 +1,10 @@
 package wow.simulator.log;
 
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.Effect;
+import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
@@ -44,6 +44,16 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
+	public void beginChannel(CastSpellAction action) {
+		handlers.forEach(handler -> handler.beginChannel(action));
+	}
+
+	@Override
+	public void endChannel(CastSpellAction action) {
+		handlers.forEach(handler -> handler.endChannel(action));
+	}
+
+	@Override
 	public void canNotBeCasted(CastSpellAction action) {
 		handlers.forEach(handler -> handler.canNotBeCasted(action));
 	}
@@ -54,37 +64,42 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void spellResisted(CastSpellAction action) {
-		handlers.forEach(handler -> handler.spellResisted(action));
+	public void channelInterrupted(CastSpellAction action) {
+		handlers.forEach(handler -> handler.channelInterrupted(action));
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-		handlers.forEach(handler -> handler.increasedResource(type, spell, target, amount, current, previous, crit));
+	public void spellResisted(CastSpellAction action, Unit target) {
+		handlers.forEach(handler -> handler.spellResisted(action, target));
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-		handlers.forEach(handler -> handler.decreasedResource(type, spell, target, amount, current, previous, crit));
+	public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+		handlers.forEach(handler -> handler.increasedResource(type, ability, target, amount, current, previous, crit));
 	}
 
 	@Override
-	public void effectApplied(Effect effect) {
+	public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+		handlers.forEach(handler -> handler.decreasedResource(type, ability, target, amount, current, previous, crit));
+	}
+
+	@Override
+	public void effectApplied(UnitEffect effect) {
 		handlers.forEach(handler -> handler.effectApplied(effect));
 	}
 
 	@Override
-	public void effectStacked(Effect effect) {
+	public void effectStacked(UnitEffect effect) {
 		handlers.forEach(handler -> handler.effectStacked(effect));
 	}
 
 	@Override
-	public void effectExpired(Effect effect) {
+	public void effectExpired(UnitEffect effect) {
 		handlers.forEach(handler -> handler.effectExpired(effect));
 	}
 
 	@Override
-	public void effectRemoved(Effect effect) {
+	public void effectRemoved(UnitEffect effect) {
 		handlers.forEach(handler -> handler.effectRemoved(effect));
 	}
 

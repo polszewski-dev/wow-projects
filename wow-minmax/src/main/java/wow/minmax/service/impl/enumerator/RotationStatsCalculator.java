@@ -1,16 +1,14 @@
 package wow.minmax.service.impl.enumerator;
 
 import wow.character.model.build.Rotation;
-import wow.character.model.character.Character;
-import wow.character.model.snapshot.Snapshot;
-import wow.commons.model.attribute.Attributes;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.Ability;
 import wow.minmax.model.RotationSpellStats;
 import wow.minmax.model.RotationStats;
-import wow.minmax.service.CalculationService;
+import wow.minmax.model.Snapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * User: POlszewski
@@ -19,13 +17,13 @@ import java.util.List;
 public class RotationStatsCalculator extends RotationDpsCalculator {
 	private final List<RotationSpellStats> statList = new ArrayList<>();
 
-	public RotationStatsCalculator(Character character, Rotation rotation, Attributes totalStats, CalculationService calculationService) {
-		super(character, rotation, totalStats, calculationService);
+	public RotationStatsCalculator(Rotation rotation, Function<Ability, Snapshot> snapshotFunction) {
+		super(rotation, snapshotFunction);
 	}
 
 	@Override
-	protected void onRotationSpell(Spell spell, double numCasts, double damage, Snapshot snapshot) {
-		statList.add(new RotationSpellStats(spell, numCasts, damage));
+	protected void onRotationSpell(Ability ability, double numCasts, double damage, Snapshot snapshot) {
+		statList.add(new RotationSpellStats(ability, numCasts, damage));
 	}
 
 	public RotationStats getStats() {

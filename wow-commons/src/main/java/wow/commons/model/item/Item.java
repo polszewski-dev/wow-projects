@@ -1,8 +1,9 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRoleClassified;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.ActivatedAbility;
 
 import java.util.List;
 
@@ -16,6 +17,10 @@ public interface Item extends AbstractItem, PveRoleClassified {
 	ItemSocketSpecification getSocketSpecification();
 
 	WeaponStats getWeaponStats();
+
+	List<Effect> getEffects();
+
+	ActivatedAbility getActivatedAbility();
 
 	default int getSocketCount() {
 		return getSocketSpecification().getSocketCount();
@@ -33,7 +38,7 @@ public interface Item extends AbstractItem, PveRoleClassified {
 		return getSocketSpecification().socketTypes();
 	}
 
-	default Attributes getSocketBonus() {
+	default Effect getSocketBonus() {
 		return getSocketSpecification().socketBonus();
 	}
 

@@ -1,15 +1,15 @@
 package wow.scraper.parser.tooltip;
 
 import lombok.Getter;
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
-import wow.scraper.parser.gem.GemStatsParser;
+import wow.scraper.parser.effect.ItemStatParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public class GemTooltipParser extends AbstractItemTooltipParser {
 	private GemColor color;
 	private List<MetaEnabler> metaEnablers;
-	private Attributes stats;
+	private ItemStatParser itemStatParser;
 
 	public GemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, ScraperContext scraperContext) {
 		super(itemDetails, gameVersion, scraperContext);
@@ -33,20 +33,25 @@ public class GemTooltipParser extends AbstractItemTooltipParser {
 		return new Rule[] {
 				rulePhase,
 				ruleItemLevel,
-				Rule.tryParse(GemTooltipParser::tryParseColor, x -> this.color = x),
 				ruleBindsWhenPickedUp,
 				ruleBindsWhenEquipped,
 				ruleUnique,
 				ruleUniqueEquipped,
-				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
 				ruleProfessionRestriction,
 				ruleSellPrice,
-				Rule.tryParse(line -> new GemStatsParser(getStatPatternRepository(), gameVersion).tryParseStats(line), x -> stats = x),
+				Rule.tryParse(GemTooltipParser::tryParseColor, x -> this.color = x),
+				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
+				Rule.tryParse(this::tryParseItemEffect, x -> {}),
 		};
 	}
 
 	@Override
 	protected void beforeParse() {
+		this.itemStatParser = new ItemStatParser(
+				gameVersion,
+				getStatPatternRepository()::getGemStatParser,
+				getItemSpellRepository()
+		);
 		this.itemType = ItemType.GEM;
 		this.metaEnablers = new ArrayList<>();
 	}
@@ -57,8 +62,29 @@ public class GemTooltipParser extends AbstractItemTooltipParser {
 			throw new IllegalArgumentException("Couldn't parse color for: " + name);
 		}
 
-		if (stats.isEmpty()) {
+		if (!itemStatParser.hasAnyEffects()) {
 			throw new IllegalArgumentException("Couldn't parse any stat for: " + name);
+		}
+	}
+
+	private boolean tryParseItemEffect(String line) {
+		for (String part : getParts(line)) {
+			if (!itemStatParser.tryParseItemEffect(part)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static String[] getParts(String line) {
+		if (line.contains(" & ")) {
+			return line.split(" & ");
+		} else if (line.contains(", ")) {
+			return line.split(", ");
+		} else if (line.contains(" and ")) {
+			return line.split(" and ");
+		} else {
+			return new String[] {line};
 		}
 	}
 
@@ -88,5 +114,9 @@ public class GemTooltipParser extends AbstractItemTooltipParser {
 			return GemColor.META;
 		}
 		return null;
+	}
+
+	public List<Effect> getEffects() {
+		return itemStatParser.getItemEffects();
 	}
 }

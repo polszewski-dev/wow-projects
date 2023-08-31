@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
@@ -35,6 +36,9 @@ import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
 public class ScraperConfig {
 	@Value("${directory.path}")
 	private String directoryPath;
+
+	@Value("${error.on.unmatched.line}")
+	private boolean errorOnUnmatchedLine;
 
 	@Value("#{'${game.versions}'.split(',')}")
 	private List<GameVersionId> gameVersions;
@@ -96,14 +100,14 @@ public class ScraperConfig {
 	@Value("#{${item.phase.overrides}}")
 	private Map<Integer, PhaseId> itemPhaseOverrides;
 
+	@Value("#{${pve.role.overrides}}")
+	private Map<Integer, PveRole> pveRoleOverrides;
+
 	@Value("#{${spell.phase.overrides}}")
 	private Map<Integer, PhaseId> spellPhaseOverrides;
 
 	@Value("#{${item.required.side.overrides}}")
 	private Map<Side, Set<Integer>> itemRequiredSideOverrides;
-
-	@Value("#{${spell.required.side.overrides}}")
-	private Map<Side, Set<Integer>> spellRequiredSideOverrides;
 
 	@Value("#{${alliance.only.factions}}")
 	private Set<String> allianceOnlyFactions;
@@ -132,10 +136,6 @@ public class ScraperConfig {
 
 	public Optional<Side> getItemRequiredSideOverride(int itemId) {
 		return getSide(itemRequiredSideOverrides, itemId);
-	}
-
-	public Optional<Side> getSpellRequiredSideOverride(int spellId) {
-		return getSide(spellRequiredSideOverrides, spellId);
 	}
 
 	private Optional<Side> getSide(Map<Side, Set<Integer>> map, int id) {

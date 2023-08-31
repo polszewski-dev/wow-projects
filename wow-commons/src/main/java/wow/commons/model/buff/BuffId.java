@@ -39,6 +39,7 @@ public enum BuffId {
 	CURSE_OF_THE_ELEMENTS("Curse of the Elements"),
 	CURSE_OF_SHADOW("Curse of Shadow"),
 	FEL_ARMOR("Fel Armor"),
+	FEL_ARMOR_IMPROVED("Fel Armor (improved)"),
 	SUPERIOR_WIZARD_OIL("Superior Wizard Oil"),
 	WELL_FED_SP("Well Fed (sp)"),
 	FLASK_OF_PURE_DEATH("Flask of Pure Death"),

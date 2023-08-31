@@ -2,7 +2,7 @@ package wow.simulator.graph;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.time.Time;
 import wow.simulator.util.SimpleId;
 
@@ -26,8 +26,8 @@ public class Lane {
 
 	private final Map<SimpleId, Segment> segmentById = new LinkedHashMap<>();
 
-	public boolean matches(SpellId spellId) {
-		return objectId.toString().equals(spellId.getName());
+	public boolean matches(AbilityId abilityId) {
+		return objectId.toString().equals(abilityId.getName());
 	}
 
 	public void addSegment(SimpleId segmentId, Time time, Color color) {

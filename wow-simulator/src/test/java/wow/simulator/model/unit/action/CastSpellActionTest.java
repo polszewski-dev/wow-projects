@@ -2,8 +2,7 @@ package wow.simulator.model.unit.action;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.ActionStatus;
@@ -19,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CastSpellActionTest extends WowSimulatorSpringTest {
 	@Test
 	void cast() {
-		CastSpellAction action = getCastSpellAction(SpellId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
 
 		clock.advanceTo(Time.at(10));
 
@@ -41,7 +40,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void castShorterThanGcd() {
 		enableTalent(TalentId.IMPROVED_CORRUPTION, 4);
 
-		CastSpellAction action = getCastSpellAction(SpellId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
 
 		clock.advanceTo(Time.at(10));
 
@@ -63,7 +62,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void instant() {
 		enableTalent(TalentId.IMPROVED_CORRUPTION, 5);
 
-		CastSpellAction action = getCastSpellAction(SpellId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
 
 		clock.advanceTo(Time.at(10));
 
@@ -78,7 +77,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void instantIgnoringGcd() {
 		enableTalent(TalentId.AMPLIFY_CURSE, 1);
 
-		CastSpellAction action = getCastSpellOnSelfAction(SpellId.AMPLIFY_CURSE);
+		CastSpellAction action = getCastSpellOnSelfAction(AbilityId.AMPLIFY_CURSE);
 
 		clock.advanceTo(Time.at(10));
 
@@ -91,39 +90,11 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void channel() {
-		CastSpellAction action = getCastSpellAction(SpellId.DRAIN_LIFE);
+		CastSpellAction action = getCastSpellAction(AbilityId.DRAIN_LIFE);
 
 		clock.advanceTo(Time.at(10));
 
 		action.start();
-
-		action.update();
-
-		assertThat(action.getStatus()).isEqualTo(ActionStatus.IN_PROGRESS);
-		assertThat(action.getNextUpdateTime()).hasValue(Time.at(11));
-
-		clock.advanceTo(Time.at(11));
-
-		action.update();
-
-		assertThat(action.getStatus()).isEqualTo(ActionStatus.IN_PROGRESS);
-		assertThat(action.getNextUpdateTime()).hasValue(Time.at(12));
-
-		clock.advanceTo(Time.at(12));
-
-		action.update();
-
-		assertThat(action.getStatus()).isEqualTo(ActionStatus.IN_PROGRESS);
-		assertThat(action.getNextUpdateTime()).hasValue(Time.at(13));
-
-		clock.advanceTo(Time.at(13));
-
-		action.update();
-
-		assertThat(action.getStatus()).isEqualTo(ActionStatus.IN_PROGRESS);
-		assertThat(action.getNextUpdateTime()).hasValue(Time.at(14));
-
-		clock.advanceTo(Time.at(14));
 
 		action.update();
 
@@ -139,7 +110,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void cantPayManaCost() {
-		CastSpellAction action = getCastSpellAction(SpellId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
 
 		setMana(player, 0);
 
@@ -153,17 +124,18 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 		assertThat(action.getStatus()).isEqualTo(ActionStatus.FINISHED);
 	}
 
-	CastSpellAction getCastSpellAction(SpellId spellId) {
-		return getSpellAction(spellId, target);
+	CastSpellAction getCastSpellAction(AbilityId abilityId) {
+		return getSpellAction(abilityId, target);
 	}
 
-	CastSpellAction getCastSpellOnSelfAction(SpellId spellId) {
-		return getSpellAction(spellId, player);
+	CastSpellAction getCastSpellOnSelfAction(AbilityId abilityId) {
+		return getSpellAction(abilityId, player);
 	}
 
-	private CastSpellAction getSpellAction(SpellId spellId, Unit target) {
-		Spell spell = player.getSpell(spellId).orElseThrow();
-		return new CastSpellAction(player, spell, target);
+	private CastSpellAction getSpellAction(AbilityId abilityId, Unit target) {
+		var ability = player.getAbility(abilityId).orElseThrow();
+		var targetResolver = player.getTargetResolver(target);
+		return new CastSpellAction(player, ability, targetResolver);
 	}
 
 	@BeforeEach

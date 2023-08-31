@@ -7,16 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.Character;
-import wow.character.model.character.Enemy;
+import wow.character.model.character.NonPlayerCharacter;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.Item;
-import wow.commons.model.pve.PhaseId;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
@@ -24,15 +23,16 @@ import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.Effect;
+import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
-import wow.simulator.model.unit.Target;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
+import wow.simulator.model.unit.impl.NonPlayerImpl;
+import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.TimeAware;
@@ -47,6 +47,7 @@ import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.*;
 
 /**
@@ -66,17 +67,20 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return new SimulationContext(clock, gameLog, () -> rng, getCharacterCalculationService());
 	}
 
-	protected Character getNakedCharacter() {
-		Character character = getCharacterService().createCharacter(WARLOCK, ORC, 70, PhaseId.TBC_P5);
-		Enemy enemy = new Enemy(BEAST, 3);
-		character.setTargetEnemy(enemy);
+	protected PlayerCharacter getNakedCharacter() {
+		var character = getCharacterService().createPlayerCharacter(WARLOCK, ORC, 70, TBC_P5);
 		getCharacterService().applyCharacterTemplate(character, DESTRO_SHADOW);
-		character.getEquipment().reset();
-		character.getBuffs().reset();
+		character.resetEquipment();
+		character.resetBuffs();
 		character.getTalents().reset();
-		enemy.getDebuffs().reset();
 		getCharacterService().updateAfterRestrictionChange(character);
 		return character;
+	}
+
+	protected NonPlayerCharacter getEnemy() {
+		var enemy = getCharacterService().createNonPlayerCharacter(BEAST, 73, TBC_P5);
+		enemy.resetBuffs();
+		return enemy;
 	}
 
 	@Getter
@@ -89,19 +93,22 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		public record BeginGcd(Time time, Unit caster) implements Event {}
 		public record EndGcd(Time time, Unit caster) implements Event {}
-		public record BeginCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
-		public record EndCast(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
-		public record CanNotBeCasted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
-		public record CastInterrupted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
-		public record SpellResisted(Time time, Unit caster, SpellId spell, Unit target) implements Event {}
-		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
-		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, SpellId spell) implements Event {}
-		public record EffectApplied(Time time, SpellId spell, Unit target) implements Event {}
-		public record EffectStacked(Time time, SpellId spell, Unit target) implements Event {}
-		public record EffectExpired(Time time, SpellId spell, Unit target) implements Event {}
-		public record EffectRemoved(Time time, SpellId spell, Unit target) implements Event {}
-		public record CooldownStarted(Time time, Unit caster, SpellId spell) implements Event {}
-		public record CooldownExpired(Time time, Unit caster, SpellId spell) implements Event {}
+		public record BeginCast(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record EndCast(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record BeginChannel(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record EndChannel(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record CanNotBeCasted(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record CastInterrupted(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record ChannelInterrupted(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record SpellResisted(Time time, Unit caster, AbilityId spell, Unit target) implements Event {}
+		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, AbilityId spell) implements Event {}
+		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, AbilityId spell) implements Event {}
+		public record EffectApplied(Time time, AbilityId spell, Unit target) implements Event {}
+		public record EffectStacked(Time time, AbilityId spell, Unit target) implements Event {}
+		public record EffectExpired(Time time, AbilityId spell, Unit target) implements Event {}
+		public record EffectRemoved(Time time, AbilityId spell, Unit target) implements Event {}
+		public record CooldownStarted(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record CooldownExpired(Time time, Unit caster, AbilityId spell) implements Event {}
 		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
@@ -116,67 +123,86 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		@Override
 		public void beginCast(CastSpellAction action) {
-			addEvent(new BeginCast(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
+			addEvent(new BeginCast(now(), action.getOwner(), action.getAbilityId()));
 		}
 
 		@Override
 		public void endCast(CastSpellAction action) {
-			addEvent(new EndCast(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
+			addEvent(new EndCast(now(), action.getOwner(), action.getAbilityId()));
+		}
+
+		@Override
+		public void beginChannel(CastSpellAction action) {
+			addEvent(new BeginChannel(now(), action.getOwner(), action.getAbilityId()));
+		}
+
+		@Override
+		public void endChannel(CastSpellAction action) {
+			addEvent(new EndChannel(now(), action.getOwner(), action.getAbilityId()));
 		}
 
 		@Override
 		public void canNotBeCasted(CastSpellAction action) {
-			addEvent(new CanNotBeCasted(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
+			addEvent(new CanNotBeCasted(now(), action.getOwner(), action.getAbilityId()));
 		}
 
 		@Override
 		public void castInterrupted(CastSpellAction action) {
-			addEvent(new CastInterrupted(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
+			addEvent(new CastInterrupted(now(), action.getOwner(), action.getAbilityId()));
 		}
 
 		@Override
-		public void spellResisted(CastSpellAction action) {
-			addEvent(new SpellResisted(now(), action.getOwner(), getSpellId(action.getSpell()), action.getTarget()));
+		public void channelInterrupted(CastSpellAction action) {
+			addEvent(new ChannelInterrupted(now(), action.getOwner(), action.getAbilityId()));
 		}
 
 		@Override
-		public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-			addEvent(new IncreasedResource(now(), amount, type, crit, target, getSpellId(spell)));
+		public void spellResisted(CastSpellAction action, Unit target) {
+			addEvent(new SpellResisted(now(), action.getOwner(), action.getAbilityId(), target));
 		}
 
 		@Override
-		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-			addEvent(new DecreasedResource(now(), amount, type, crit, target, getSpellId(spell)));
+		public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+			addEvent(new IncreasedResource(now(), amount, type, crit, target, getAbilityId(ability)));
 		}
 
 		@Override
-		public void effectApplied(Effect effect) {
-			addEvent(new EffectApplied(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+			addEvent(new DecreasedResource(now(), amount, type, crit, target, getAbilityId(ability)));
+		}
+
+		private static AbilityId getAbilityId(Ability ability) {
+			return ability != null ? ability.getAbilityId() : null;
 		}
 
 		@Override
-		public void effectStacked(Effect effect) {
-			addEvent(new EffectStacked(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		public void effectApplied(UnitEffect effect) {
+			addEvent(new EffectApplied(now(), effect.getSourceAbilityId(), effect.getTarget()));
 		}
 
 		@Override
-		public void effectExpired(Effect effect) {
-			addEvent(new EffectExpired(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		public void effectStacked(UnitEffect effect) {
+			addEvent(new EffectStacked(now(), effect.getSourceAbilityId(), effect.getTarget()));
 		}
 
 		@Override
-		public void effectRemoved(Effect effect) {
-			addEvent(new EffectRemoved(now(), effect.getSourceSpell().getSpellId(), effect.getTarget()));
+		public void effectExpired(UnitEffect effect) {
+			addEvent(new EffectExpired(now(), effect.getSourceAbilityId(), effect.getTarget()));
+		}
+
+		@Override
+		public void effectRemoved(UnitEffect effect) {
+			addEvent(new EffectRemoved(now(), effect.getSourceAbilityId(), effect.getTarget()));
 		}
 
 		@Override
 		public void cooldownStarted(Cooldown cooldown) {
-			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getSpellId()));
+			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getAbilityId()));
 		}
 
 		@Override
 		public void cooldownExpired(Cooldown cooldown) {
-			addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getSpellId()));
+			addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getAbilityId()));
 		}
 
 		@Override
@@ -187,10 +213,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		@Override
 		public void simulationEnded() {
 			// ignored
-		}
-
-		private SpellId getSpellId(Spell spell) {
-			return spell != null ? spell.getSpellId() : null;
 		}
 
 		private void addEvent(Event event) {
@@ -215,64 +237,76 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new EndGcd(time, caster));
 		}
 
-		public EventListBuilder beginCast(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new BeginCast(time, caster, spellId, target));
+		public EventListBuilder beginCast(Unit caster, AbilityId abilityId) {
+			return addEvent(new BeginCast(time, caster, abilityId));
 		}
 
-		public EventListBuilder endCast(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new EndCast(time, caster, spellId, target));
+		public EventListBuilder endCast(Unit caster, AbilityId abilityId) {
+			return addEvent(new EndCast(time, caster, abilityId));
 		}
 
-		public EventListBuilder canNotBeCasted(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new CanNotBeCasted(time, caster, spellId, target));
+		public EventListBuilder beginChannel(Unit caster, AbilityId abilityId) {
+			return addEvent(new BeginChannel(time, caster, abilityId));
 		}
 
-		public EventListBuilder castInterrupted(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new CastInterrupted(time, caster, spellId, target));
+		public EventListBuilder endChannel(Unit caster, AbilityId abilityId) {
+			return addEvent(new EndChannel(time, caster, abilityId));
 		}
 
-		public EventListBuilder spellResisted(Unit caster, SpellId spellId, Unit target) {
-			return addEvent(new SpellResisted(time, caster, spellId, target));
+		public EventListBuilder canNotBeCasted(Unit caster, AbilityId abilityId) {
+			return addEvent(new CanNotBeCasted(time, caster, abilityId));
 		}
 
-		public EventListBuilder increasedResource(int amount, ResourceType type, Unit target, SpellId spellId) {
-			return increasedResource(amount, type, false, target, spellId);
+		public EventListBuilder castInterrupted(Unit caster, AbilityId abilityId) {
+			return addEvent(new CastInterrupted(time, caster, abilityId));
 		}
 
-		public EventListBuilder increasedResource(int amount, ResourceType type, boolean crit, Unit target, SpellId spellId) {
-			return addEvent(new IncreasedResource(time, amount, type, crit, target, spellId));
+		public EventListBuilder channelInterrupted(Unit caster, AbilityId abilityId) {
+			return addEvent(new ChannelInterrupted(time, caster, abilityId));
 		}
 
-		public EventListBuilder decreasedResource(int amount, ResourceType type, Unit target, SpellId spellId) {
-			return decreasedResource(amount, type, false, target, spellId);
+		public EventListBuilder spellResisted(Unit caster, AbilityId abilityId, Unit target) {
+			return addEvent(new SpellResisted(time, caster, abilityId, target));
 		}
 
-		public EventListBuilder decreasedResource(int amount, ResourceType type, boolean crit, Unit target, SpellId spellId) {
-			return addEvent(new DecreasedResource(time, amount, type, crit, target, spellId));
+		public EventListBuilder increasedResource(int amount, ResourceType type, Unit target, AbilityId abilityId) {
+			return increasedResource(amount, type, false, target, abilityId);
 		}
 
-		public EventListBuilder effectApplied(SpellId spellId, Unit target) {
-			return addEvent(new EffectApplied(time, spellId, target));
+		public EventListBuilder increasedResource(int amount, ResourceType type, boolean crit, Unit target, AbilityId abilityId) {
+			return addEvent(new IncreasedResource(time, amount, type, crit, target, abilityId));
 		}
 
-		public EventListBuilder effectStacked(SpellId spellId, Unit target) {
-			return addEvent(new EffectStacked(time, spellId, target));
+		public EventListBuilder decreasedResource(int amount, ResourceType type, Unit target, AbilityId abilityId) {
+			return decreasedResource(amount, type, false, target, abilityId);
 		}
 
-		public EventListBuilder effectExpired(SpellId spellId, Unit target) {
-			return addEvent(new EffectExpired(time, spellId, target));
+		public EventListBuilder decreasedResource(int amount, ResourceType type, boolean crit, Unit target, AbilityId abilityId) {
+			return addEvent(new DecreasedResource(time, amount, type, crit, target, abilityId));
 		}
 
-		public EventListBuilder effectRemoved(SpellId spellId, Unit target) {
-			return addEvent(new EffectRemoved(time, spellId, target));
+		public EventListBuilder effectApplied(AbilityId abilityId, Unit target) {
+			return addEvent(new EffectApplied(time, abilityId, target));
 		}
 
-		public EventListBuilder cooldownStarted(Unit caster, SpellId spellId) {
-			return addEvent(new CooldownStarted(time, caster, spellId));
+		public EventListBuilder effectStacked(AbilityId abilityId, Unit target) {
+			return addEvent(new EffectStacked(time, abilityId, target));
 		}
 
-		public EventListBuilder cooldownExpired(Unit caster, SpellId spellId) {
-			return addEvent(new CooldownExpired(time, caster, spellId));
+		public EventListBuilder effectExpired(AbilityId abilityId, Unit target) {
+			return addEvent(new EffectExpired(time, abilityId, target));
+		}
+
+		public EventListBuilder effectRemoved(AbilityId abilityId, Unit target) {
+			return addEvent(new EffectRemoved(time, abilityId, target));
+		}
+
+		public EventListBuilder cooldownStarted(Unit caster, AbilityId abilityId) {
+			return addEvent(new CooldownStarted(time, caster, abilityId));
+		}
+
+		public EventListBuilder cooldownExpired(Unit caster, AbilityId abilityId) {
+			return addEvent(new CooldownExpired(time, caster, abilityId));
 		}
 
 		public EventListBuilder simulationEnded() {
@@ -318,17 +352,17 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void equip(String itemName) {
-		Item item = getItemRepository().getItem(itemName, player.getCharacter().getPhaseId()).orElseThrow();
+		Item item = getItemRepository().getItem(itemName, player.getPhaseId()).orElseThrow();
 		player.equip(new EquippableItem(item));
 	}
 
 	protected void enableTalent(TalentId talentId, int rank) {
-		player.getCharacter().getTalents().enableTalent(talentId, rank);
-		getCharacterService().updateAfterRestrictionChange(player.getCharacter());
+		player.getTalents().enableTalent(talentId, rank);
+		getCharacterService().updateAfterRestrictionChange(player);
 	}
 
 	protected void enableBuff(BuffId buffId, int rank) {
-		player.getCharacter().getBuffs().enable(buffId, rank);
+		player.getBuffs().enable(buffId, rank);
 	}
 
 	protected void setHealth(Unit unit, int amount) {
@@ -351,7 +385,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected Clock clock;
 	protected Simulation simulation;
 	protected Player player;
-	protected Target target;
+	protected Unit target;
 	protected EventCollectingHandler handler;
 
 	protected static class TestRng implements Rng {
@@ -359,12 +393,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public boolean critRoll = false;
 
 		@Override
-		public boolean hitRoll(double chance, SpellId spellId) {
+		public boolean hitRoll(double chancePct, AbilityId abilityId) {
 			return hitRoll;
 		}
 
 		@Override
-		public boolean critRoll(double chance, SpellId spellId) {
+		public boolean critRoll(double chancePct, AbilityId abilityId) {
 			return critRoll;
 		}
 	};
@@ -377,15 +411,15 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		simulation = new Simulation(simulationContext);
 
-		player = new Player("Player", getNakedCharacter());
-		target = new Target("Target", player.getCharacter().getTargetEnemy());
+		player = new PlayerImpl("Player", getNakedCharacter());
+		target = new NonPlayerImpl("Target", getEnemy());
 
 		player.setTarget(target);
 
-		player.setSimulationContext(simulationContext);
-		target.setSimulationContext(simulationContext);
-
 		player.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
 		target.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
+
+		simulationContext.shareSimulationContext(player);
+		simulationContext.shareSimulationContext(target);
 	}
 }

@@ -12,15 +12,18 @@ public record Cost(
 		ResourceType resourceType,
 		int amount,
 		Percent baseStatPct,
-		Percent coeff
+		Coefficient coefficient,
+		Reagent reagent
 ) {
+	public static final Cost NONE = new Cost(ResourceType.MANA, 0, Percent.ZERO, Coefficient.NONE, null);
+
 	public Cost {
 		Objects.requireNonNull(resourceType);
 		Objects.requireNonNull(baseStatPct);
-		Objects.requireNonNull(coeff);
+		Objects.requireNonNull(coefficient);
 	}
 
 	public Cost(ResourceType resourceType, int amount) {
-		this(resourceType, amount, Percent.ZERO, Percent.ZERO);
+		this(resourceType, amount, Percent.ZERO, Coefficient.NONE, null);
 	}
 }

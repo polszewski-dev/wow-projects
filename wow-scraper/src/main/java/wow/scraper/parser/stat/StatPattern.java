@@ -3,7 +3,7 @@ package wow.scraper.parser.stat;
 import lombok.Getter;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.parser.scraper.ScraperPattern;
-import wow.scraper.parser.setter.StatSetter;
+import wow.scraper.parser.spell.params.AttributePattern;
 
 import java.util.List;
 import java.util.Set;
@@ -14,19 +14,10 @@ import java.util.Set;
  */
 @Getter
 public class StatPattern extends ScraperPattern<StatPatternParams> {
-	private final boolean literal;
-	private final List<StatSetter> setters;
-	private final Set<GameVersionId> requiredVersion;
+	private final List<AttributePattern> attributePatterns;
 
-	public StatPattern(String pattern, List<StatSetter> setters, StatPatternParams params, Set<GameVersionId> requiredVersion) {
-		super(generalize(pattern), params, requiredVersion);
-		this.literal = pattern.startsWith("\\Q") && pattern.endsWith("\\E");
-		this.setters = setters;
-		this.requiredVersion = requiredVersion;
-	}
-
-	private static String generalize(String pattern) {
-		pattern = pattern.replace("(\\d+)", "([+-]?\\d+|[+-]?\\d+\\.\\d+)");
-		return "^" + pattern + "$";
+	public StatPattern(String pattern, List<AttributePattern> attributePatterns, StatPatternParams params, Set<GameVersionId> requiredVersion) {
+		super(pattern, params, requiredVersion);
+		this.attributePatterns = attributePatterns;
 	}
 }

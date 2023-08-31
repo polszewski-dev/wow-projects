@@ -12,7 +12,6 @@ import wow.commons.model.pve.Side;
  * Date: 2023-03-28
  */
 public class RaceSheetParser extends CharacterSheetParser {
-	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colSide = column("side");
 	private final ExcelColumn colClasses = column("classes");
 
@@ -32,7 +31,12 @@ public class RaceSheetParser extends CharacterSheetParser {
 		var id = colId.getEnum(RaceId::parse);
 		var description = getDescription();
 		var side = colSide.getEnum(Side::parse);
-		return new Race(id, description, side, version);
+		Race race = new Race(id, description, side, version);
+
+//		//todo
+//		race.getRacials().add();
+
+		return race;
 	}
 
 	private void addRace(Race race, GameVersion version) {

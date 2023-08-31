@@ -10,6 +10,7 @@ import wow.commons.model.item.*;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
+import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.item.ItemBaseExcelParser;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +25,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ItemRepositoryImpl extends ExcelRepository implements ItemRepository {
 	private final PveRepository pveRepository;
+	private final SpellRepository spellRepository;
 
 	private final Map<Integer, List<Item>> itemById = new TreeMap<>();
 	private final Map<String, List<Item>> itemByName = new TreeMap<>();
@@ -105,7 +107,7 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 
 	@PostConstruct
 	public void init() throws IOException {
-		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, this, pveRepository);
+		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, this, pveRepository, spellRepository);
 		itemBaseExcelParser.readFromXls();
 	}
 

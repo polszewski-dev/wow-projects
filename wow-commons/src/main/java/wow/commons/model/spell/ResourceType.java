@@ -7,8 +7,10 @@ import wow.commons.util.EnumUtil;
  * Date: 2021-09-25
  */
 public enum ResourceType {
-	HEALTH,
 	MANA,
+	ENERGY,
+	RAGE,
+	HEALTH,
 	PET_MANA;
 
 	public static ResourceType parse(String value) {

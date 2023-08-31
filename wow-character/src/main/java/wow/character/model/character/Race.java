@@ -3,12 +3,12 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.attribute.AttributeCollector;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
 import wow.commons.model.pve.Side;
+import wow.commons.model.racial.Racial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +38,5 @@ public class Race implements Described {
 		return racials.stream()
 				.filter(x -> x.isAvailableTo(characterInfo))
 				.toList();
-	}
-
-	public void collectAttributes(AttributeCollector collector, CharacterInfo characterInfo) {
-		collector.addAttributes(getRacials(characterInfo));
 	}
 }

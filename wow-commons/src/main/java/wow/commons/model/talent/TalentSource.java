@@ -1,13 +1,13 @@
 package wow.commons.model.talent;
 
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
+import wow.commons.model.effect.EffectSource;
 
 /**
  * User: POlszewski
  * Date: 2023-03-27
  */
-public record TalentSource(Talent talent) implements SpecialAbilitySource, Comparable<TalentSource> {
+public record TalentSource(Talent talent) implements EffectSource, Comparable<TalentSource> {
 	@Override
 	public Description getDescription() {
 		return talent.getDescription();

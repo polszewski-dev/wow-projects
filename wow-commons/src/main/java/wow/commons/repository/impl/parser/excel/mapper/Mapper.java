@@ -1,18 +1,15 @@
 package wow.commons.repository.impl.parser.excel.mapper;
 
-import wow.commons.model.attribute.complex.ComplexAttribute;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.util.parser.simple.ParseResult;
 
 /**
  * User: POlszewski
  * Date: 2022-12-18
  */
-interface Mapper<T extends ComplexAttribute> {
-	String toString(T attribute);
+interface Mapper {
+	String toString(Effect effect);
 
-	T fromString(ParseResult parseResult);
-
-	<C> boolean accepts(Class<C> attributeClass);
-
-	boolean accepts(String typeName);
+	Effect fromString(ParseResult parseResult, PhaseId phaseId);
 }

@@ -2,9 +2,8 @@ package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
 import wow.scraper.exporter.spell.AbilityExporter;
-import wow.scraper.exporter.spell.AbilityRankExporter;
+import wow.scraper.exporter.spell.ItemEffectExporter;
 import wow.scraper.exporter.spell.TalentExporter;
-import wow.scraper.exporter.spell.TalentRankExporter;
 import wow.scraper.exporter.spell.excel.SpellBaseExcelBuilder;
 
 /**
@@ -34,9 +33,8 @@ public class SpellBaseGeneratorMain extends ScraperTool {
 		exportAll(
 				builder,
 				new AbilityExporter(),
-				new AbilityRankExporter(),
-				new TalentExporter(),
-				new TalentRankExporter()
+				new ItemEffectExporter(),
+				new TalentExporter()
 		);
 	}
 }

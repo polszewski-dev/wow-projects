@@ -1,7 +1,6 @@
 package wow.minmax.service.impl.enumerator;
 
-import wow.character.model.build.Rotation;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
@@ -20,15 +19,14 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 	private final ItemFilter itemFilter;
 
 	public FindUpgradesEnumerator(
-			Character referenceCharacter,
+			PlayerCharacter referenceCharacter,
 			ItemSlotGroup slotGroup,
 			ItemFilter itemFilter,
-			Rotation rotation,
 			ItemService itemService,
 			CalculationService calculationService,
 			MinmaxConfigRepository minmaxConfigRepository
 	) {
-		super(referenceCharacter, slotGroup, rotation, itemService, calculationService, minmaxConfigRepository);
+		super(referenceCharacter, slotGroup, itemService, calculationService, minmaxConfigRepository);
 		this.itemFilter = itemFilter;
 	}
 

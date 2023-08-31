@@ -13,10 +13,20 @@ import wow.commons.util.EnumUtil;
 public enum SpellTarget {
 	SELF(true),
 	PET(true),
+
 	FRIEND(true),
-	FRIENDS_IN_AREA(true),
+	FRIEND_AOE(true),
+	FRIENDS_PARTY(true),
+
+	PARTY(true),
+	PARTY_AOE(true),
+
 	ENEMY(false),
-	ENEMIES_IN_AREA(false);
+	ENEMY_AOE(false),
+
+	TARGET(false),
+	ATTACKER(false)
+	;
 
 	private final boolean friendly;
 

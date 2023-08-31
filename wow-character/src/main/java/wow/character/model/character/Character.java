@@ -1,295 +1,99 @@
 package wow.character.model.character;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import wow.character.model.Copyable;
-import wow.character.model.build.Build;
-import wow.character.model.build.Rotation;
-import wow.character.model.build.Talents;
-import wow.character.model.equipment.Equipment;
-import wow.character.model.equipment.EquippableItem;
-import wow.character.util.AttributeEvaluator;
-import wow.commons.model.attribute.AttributeCollection;
-import wow.commons.model.attribute.AttributeCollector;
-import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.character.model.effect.EffectCollection;
 import wow.commons.model.buff.BuffIdAndRank;
-import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.*;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterInfo;
-import wow.commons.model.item.Item;
-import wow.commons.model.profession.ProfessionId;
-import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.pve.Side;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
-import wow.commons.model.talent.TalentId;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.ResourceType;
 
-import java.util.*;
-
-import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * User: POlszewski
  * Date: 2022-10-31
  */
-@AllArgsConstructor
-@Getter
-public class Character implements AttributeCollection, CharacterInfo, Copyable<Character> {
-	private final CharacterClass characterClass;
-	private final Race race;
-	private final int level;
-	private final Phase phase;
-	private final Build build;
-	private final Spellbook spellbook;
-	private final Equipment equipment;
-	private final CharacterProfessions professions;
-	private final ExclusiveFactions exclusiveFactions;
-	private final Buffs buffs;
-	private final BaseStatInfo baseStatInfo;
-	private final CombatRatingInfo combatRatingInfo;
+public interface Character extends CharacterInfo, EffectCollection {
+	Phase getPhase();
 
-	private Enemy targetEnemy;
-
-	private final Map<SpellId, Set<AttributeCondition>> conditionCache;
-
-	public Character(CharacterClass characterClass, Race race, int level, Phase phase, Talents talents) {
-		this.characterClass = characterClass;
-		this.race = race;
-		this.level = level;
-		this.phase = phase;
-		this.build = new Build(phase.getGameVersion(), talents);
-		this.spellbook = new Spellbook();
-		this.equipment = new Equipment();
-		this.professions = new CharacterProfessions();
-		this.exclusiveFactions = new ExclusiveFactions();
-		this.buffs = new Buffs(CHARACTER_BUFF);
-		this.baseStatInfo = characterClass.getBaseStatInfo(level, race.getRaceId());
-		this.combatRatingInfo = characterClass.getGameVersion().getCombatRatingInfo(level);
-		this.conditionCache = new HashMap<>();
+	default PhaseId getPhaseId() {
+		return getPhase().getPhaseId();
 	}
+
+	default GameVersion getGameVersion() {
+		return getPhase().getGameVersion();
+	}
+
+	default GameVersionId getGameVersionId() {
+		return getPhase().getGameVersionId();
+	}
+
+	CharacterClass getCharacterClass();
 
 	@Override
-	public Character copy() {
-		return new Character(
-				characterClass,
-				race,
-				level,
-				phase,
-				build.copy(),
-				spellbook.copy(),
-				equipment.copy(),
-				professions.copy(),
-				exclusiveFactions.copy(),
-				buffs.copy(),
-				baseStatInfo,
-				combatRatingInfo,
-				targetEnemy.copy(),
-				new HashMap<>(conditionCache)
-		);
+	default CharacterClassId getCharacterClassId() {
+		return getCharacterClass().getCharacterClassId();
 	}
 
-	@Override
-	public void collectAttributes(AttributeCollector collector) {
-		build.collectAttributes(collector);
-		equipment.collectAttributes(collector);
-		buffs.collectAttributes(collector);
-		race.collectAttributes(collector, this);
-		targetEnemy.collectAttributes(collector);
-	}
+	CreatureType getCreatureType();
 
-	public GameVersionId getGameVersionId() {
-		return phase.getGameVersionId();
-	}
+	PetType getActivePetType();
 
-	public GameVersion getGameVersion() {
-		return phase.getGameVersion();
-	}
+	Character getTarget();
 
-	public PhaseId getPhaseId() {
-		return phase.getPhaseId();
-	}
+	void setTarget(Character target);
 
-	public void equip(EquippableItem item, ItemSlot slot) {
-		equipment.equip(item, slot);
-	}
+	BaseStatInfo getBaseStatInfo();
 
-	public void equip(EquippableItem item) {
-		equipment.equip(item);
-	}
+	CombatRatingInfo getCombatRatingInfo();
 
-	public void setEquipment(Equipment equipment) {
-		this.equipment.setEquipment(equipment);
-	}
-
-	public EquippableItem getEquippedItem(ItemSlot slot) {
-		return equipment.get(slot);
-	}
-
-	public boolean canEquip(ItemSlot itemSlot, Item item) {
-		return characterClass.canEquip(itemSlot, item.getItemType(), item.getItemSubType());
-	}
-
-	public void resetBuild() {
-		build.reset();
-	}
-
-	public void resetEquipment() {
-		equipment.reset();
-	}
-
-	public void resetBuffs() {
-		buffs.reset();
-	}
-
-	public void setTargetEnemy(Enemy targetEnemy) {
-		this.targetEnemy = targetEnemy;
-	}
-
-	public Attributes getStats() {
-		return AttributeEvaluator.of()
-				.addAttributes(this)
-				.solveAllLeaveAbilities();
-	}
-
-	// class
-
-	@Override
-	public CharacterClassId getCharacterClassId() {
-		return characterClass.getCharacterClassId();
-	}
-
-	// race
-
-	@Override
-	public RaceId getRaceId() {
-		return race.getRaceId();
-	}
-
-	@Override
-	public Side getSide() {
-		return race.getSide();
-	}
-
-	public List<Racial> getRacials() {
-		return race.getRacials(this);
-	}
-
-	// professions
-
-	@Override
-	public boolean hasProfession(ProfessionId professionId) {
-		return professions.hasProfession(professionId);
-	}
-
-	@Override
-	public boolean hasProfession(ProfessionId professionId, int level) {
-		return professions.hasProfession(professionId, level);
-	}
-
-	@Override
-	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
-		return professions.hasProfessionSpecialization(specializationId);
-	}
-
-	@Override
-	public boolean hasActivePet(PetType petType) {
-		return getActivePet().getPetType() == petType;
-	}
-
-	public void setProfessions(List<CharacterProfession> professions) {
-		this.professions.setProfessions(professions);
-	}
-
-	public void addProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
-		Profession profession = getGameVersion().getProfession(professionId);
-		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
-
-		professions.addProfession(profession, specialization, level);
-	}
-
-	public void addProfession(ProfessionId professionId, int level) {
-		addProfession(professionId, null, level);
-	}
-
-	public void resetProfessions() {
-		professions.reset();
-	}
-
-	@Override
-	public boolean hasTalent(TalentId talentId) {
-		return build.hasTalent(talentId);
-	}
-
-	// build
-
-	public Talents getTalents() {
-		return build.getTalents();
-	}
-
-	@Override
-	public PveRole getRole() {
-		return build.getRole();
-	}
-
-	public Rotation getRotation() {
-		return build.getRotation().compile(this);
-	}
-
-	public Pet getActivePet() {
-		return build.getActivePet();
-	}
-
-	@Override
-	public boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction) {
-		return exclusiveFactions.has(exclusiveFaction);
-	}
-
-	@Override
-	public boolean hasSpell(SpellId spellId) {
-		return spellbook.getSpell(spellId).isPresent();
-	}
-
-	// buffs
-
-	public Buffs getBuffList(BuffListType buffListType) {
-		return switch (buffListType) {
-			case CHARACTER_BUFF -> buffs;
-			case TARGET_DEBUFF -> targetEnemy.getDebuffs();
+	default double getBaseStatValue(ResourceType resourceType) {
+		return switch (resourceType) {
+			case HEALTH -> getBaseStatInfo().getBaseHealth();
+			case MANA -> getBaseStatInfo().getBaseMana();
+			default -> throw new IllegalArgumentException("Unhandled resource: " + resourceType);
 		};
 	}
 
-	public void setBuffs(Collection<BuffIdAndRank> buffIds) {
-		this.buffs.set(buffIds);
+	Spellbook getSpellbook();
+
+	default Optional<Ability> getAbility(AbilityId abilityId) {
+		return getSpellbook().getAbility(abilityId);
 	}
 
-	// enemy
-
-	public CreatureType getEnemyType() {
-		return targetEnemy.getEnemyType();
+	default Optional<Ability> getAbility(AbilityId abilityId, int rank) {
+		return getSpellbook().getAbility(abilityId, rank);
 	}
 
-	public Set<AttributeCondition> getConditions(Spell spell) {
-		SpellId spellId = spell != null ? spell.getSpellId() : null;
-
-		return conditionCache.computeIfAbsent(spellId, x -> newConditions(spell));
+	@Override
+	default boolean hasAbility(AbilityId abilityId) {
+		return getAbility(abilityId).isPresent();
 	}
 
-	private Set<AttributeCondition> newConditions(Spell spell) {
-		var result = new HashSet<AttributeCondition>();
+	Buffs getBuffs();
 
-		result.addAll(professions.getConditions());
-		result.addAll(targetEnemy.getConditions());
-		result.addAll(getActivePet().getConditions());
-		result.add(AttributeCondition.EMPTY);
+	default void setBuffs(Collection<BuffIdAndRank> buffIds) {
+		getBuffs().set(buffIds);
+	}
 
-		if (spell != null) {
-			result.addAll(spell.getConditions());
-		}
+	default void resetBuffs() {
+		getBuffs().reset();
+	}
 
-		return result;
+	default Buffs getBuffList(BuffListType buffListType) {
+		return switch (buffListType) {
+			case CHARACTER_BUFF -> getBuffs();
+			case TARGET_DEBUFF -> getTarget().getBuffs();
+		};
+	}
+
+	static int getLevelDifference(Character caster, Character target) {
+		return target.getLevel() - caster.getLevel();
 	}
 }

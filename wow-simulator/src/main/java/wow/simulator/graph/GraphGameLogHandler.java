@@ -1,10 +1,10 @@
 package wow.simulator.graph;
 
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.Effect;
+import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
@@ -30,7 +30,7 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 	public GraphGameLogHandler(Player player, TimeGraph graph) {
 		this.player = player;
 		this.graph = graph;
-		this.laneDefinitions = LaneDefinitions.get(player.getCharacter().getCharacterClassId());
+		this.laneDefinitions = LaneDefinitions.get(player.getCharacterClassId());
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 		if (action.getOwner() != player) {
 			return;
 		}
-		Color color = laneDefinitions.getSpellColor(action.getSpell());
+		Color color = laneDefinitions.getSpellColor(action.getAbility());
 		graph.beginSegment(castLane, action.getActionId(), color, now());
 	}
 
@@ -64,68 +64,73 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 	}
 
 	@Override
+	public void beginChannel(CastSpellAction action) {
+		beginCast(action);
+	}
+
+	@Override
+	public void endChannel(CastSpellAction action) {
+		endCast(action);
+	}
+
+	@Override
 	public void canNotBeCasted(CastSpellAction action) {
 		// ignored
 	}
 
 	@Override
-	public void castInterrupted(CastSpellAction action) {
-		endCast(action);
-	}
-
-	@Override
-	public void spellResisted(CastSpellAction action) {
+	public void spellResisted(CastSpellAction action, Unit target) {
 		graph.addResistedMark(castLane, action.getActionId());
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+	public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
 		// ignored
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+	public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
 		// ignored
 	}
 
 	@Override
-	public void effectApplied(Effect effect) {
+	public void effectApplied(UnitEffect effect) {
 		if (laneDefinitions.isIgnored(effect)) {
 			return;
 		}
-		Lane lane = laneDefinitions.getEffectLane(effect.getSourceSpell().getSpellId());
-		graph.beginSegment(lane, effect.getEffectId(), null, now());
+		Lane lane = laneDefinitions.getEffectLane(effect.getSourceAbilityId());
+		graph.beginSegment(lane, effect.getId(), null, now());
 	}
 
 	@Override
-	public void effectStacked(Effect effect) {
+	public void effectStacked(UnitEffect effect) {
 		// ignored
 	}
 
 	@Override
-	public void effectExpired(Effect effect) {
+	public void effectExpired(UnitEffect effect) {
 		if (laneDefinitions.isIgnored(effect)) {
 			return;
 		}
-		Lane lane = laneDefinitions.getEffectLane(effect.getSourceSpell().getSpellId());
-		graph.endSegment(lane, effect.getEffectId(), now());
+		Lane lane = laneDefinitions.getEffectLane(effect.getSourceAbilityId());
+		graph.endSegment(lane, effect.getId(), now());
 	}
 
 	@Override
-	public void effectRemoved(Effect effect) {
+	public void effectRemoved(UnitEffect effect) {
 		effectExpired(effect);
 	}
 
 	@Override
 	public void cooldownStarted(Cooldown cooldown) {
-		Lane lane = laneDefinitions.getCooldownLane(cooldown.getSpellId());
-		graph.beginSegment(lane, cooldown.getCooldownId(), null, now());
+		Lane lane = laneDefinitions.getCooldownLane(cooldown.getAbilityId());
+		graph.beginSegment(lane, cooldown.getId(), null, now());
 	}
 
 	@Override
 	public void cooldownExpired(Cooldown cooldown) {
-		Lane lane = laneDefinitions.getCooldownLane(cooldown.getSpellId());
-		graph.endSegment(lane, cooldown.getCooldownId(), now());
+		Lane lane = laneDefinitions.getCooldownLane(cooldown.getAbilityId());
+		graph.endSegment(lane, cooldown.getId(), now());
 	}
 
 	@Override

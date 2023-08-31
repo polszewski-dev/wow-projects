@@ -1,8 +1,8 @@
 package wow.simulator.model.cooldown;
 
 import wow.commons.model.Duration;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
@@ -34,29 +34,29 @@ public class Cooldowns implements SimulationContextSource, TimeAware {
 		return updateQueue.getNextUpdateTime();
 	}
 
-	public void triggerCooldown(Spell spell, Duration actualDuration) {
+	public void triggerCooldown(Ability ability, Duration actualDuration) {
 		if (actualDuration.isZero()) {
 			return;
 		}
 
-		if (isOnCooldown(spell.getSpellId())) {
+		if (isOnCooldown(ability.getAbilityId())) {
 			throw new IllegalStateException();
 		}
 
-		Cooldown cooldown = new Cooldown(owner, spell.getSpellId(), actualDuration);
+		Cooldown cooldown = new Cooldown(owner, ability.getAbilityId(), actualDuration);
 
 		updateQueue.add(cooldown);
 	}
 
-	public boolean isOnCooldown(SpellId spellId) {
-		var cooldown = getCooldown(spellId);
+	public boolean isOnCooldown(AbilityId abilityId) {
+		var cooldown = getCooldown(abilityId);
 		return cooldown.isPresent() && cooldown.get().isActive();
 	}
 
-	private Optional<Cooldown> getCooldown(SpellId spellId) {
+	private Optional<Cooldown> getCooldown(AbilityId abilityId) {
 		return updateQueue.getElements().stream()
 				.map(Handle::get)
-				.filter(x -> x.getSpellId() == spellId)
+				.filter(x -> x.getAbilityId() == abilityId)
 				.findAny();
 	}
 

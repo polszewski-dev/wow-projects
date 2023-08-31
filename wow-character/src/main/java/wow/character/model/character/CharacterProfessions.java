@@ -1,14 +1,11 @@
 package wow.character.model.character;
 
 import wow.character.model.Copyable;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: POlszewski
@@ -56,18 +53,6 @@ public class CharacterProfessions implements Copyable<CharacterProfessions> {
 
 	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
 		return professions.stream().anyMatch(x -> x.getSpecializationId() == specializationId);
-	}
-
-	public Set<AttributeCondition> getConditions() {
-		var result = new HashSet<AttributeCondition>();
-
-		for (CharacterProfession profession : professions) {
-			result.add(AttributeCondition.of(profession.getProfessionId()));
-			result.add(AttributeCondition.of(profession.getSpecializationId()));
-		}
-
-		result.remove(AttributeCondition.EMPTY);
-		return result;
 	}
 
 	private static void assertProfessionsAreCorrect(List<CharacterProfession> professions) {

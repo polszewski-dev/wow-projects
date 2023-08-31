@@ -9,12 +9,13 @@ import wow.commons.util.EnumUtil;
  */
 @AllArgsConstructor
 public enum PetType {
-	NONE("None"),
 	IMP("Imp"),
 	VOIDWALKER("Voidwalker"),
 	SUCCUBUS("Succubus"),
+	INCUBUS("Incubus"),
 	FELHUNTER("Felhunter"),
-	FELGUARD("Felguard");
+	FELGUARD("Felguard"),
+	ENSLAVED("Enslaved");
 
 	private final String name;
 

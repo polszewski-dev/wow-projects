@@ -2,7 +2,7 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
@@ -53,50 +53,50 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItemsBySlot(Character character, ItemSlot itemSlot, ItemFilter itemFilter) {
+	public List<Item> getItemsBySlot(PlayerCharacter character, ItemSlot itemSlot, ItemFilter itemFilter) {
 		return getUnfilteredItems(character, itemSlot).stream()
 				.filter(itemFilter::matchesFilter)
 				.toList();
 	}
 
-	private List<Item> getUnfilteredItems(Character character, ItemSlot itemSlot) {
+	private List<Item> getUnfilteredItems(PlayerCharacter character, ItemSlot itemSlot) {
 		String key = getProfileKey(character) + "#" + itemSlot;
 		return getItemsBySlotCache.computeIfAbsent(key, x -> itemService.getItemsBySlot(character, itemSlot, ItemFilter.everything()));
 	}
 
 	@Override
-	public List<Enchant> getEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+	public List<Enchant> getEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType) {
 		String key = getProfileKey(character) + "#" + itemType + "#" + itemSubType;
 		return getEnchantsCache.computeIfAbsent(key, x -> itemService.getEnchants(character, itemType, itemSubType));
 	}
 
 	@Override
-	public List<Enchant> getBestEnchants(Character character, ItemType itemType, ItemSubType itemSubType) {
+	public List<Enchant> getBestEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType) {
 		String key = getProfileKey(character) + "#" + itemType + "#" + itemSubType;
 		return getBestEnchantsCache.computeIfAbsent(key, x -> itemService.getBestEnchants(character, itemType, itemSubType));
 	}
 
 	@Override
-	public List<Gem> getGems(Character character, SocketType socketType, boolean nonUniqueOnly) {
+	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean nonUniqueOnly) {
 		boolean meta = socketType == SocketType.META;
 		String key = getProfileKey(character) + "#" + meta + "#" + nonUniqueOnly;
 		return getGemsCache.computeIfAbsent(key, x -> itemService.getGems(character, socketType, nonUniqueOnly));
 	}
 
 	@Override
-	public List<Gem> getBestGems(Character character, SocketType socketType) {
+	public List<Gem> getBestGems(PlayerCharacter character, SocketType socketType) {
 		boolean meta = socketType == SocketType.META;
 		String key = getProfileKey(character) + "#" + meta;
 		return getBestGemsCache.computeIfAbsent(key, x -> itemService.getBestGems(character, socketType));
 	}
 
 	@Override
-	public List<Gem[]> getBestGemCombos(Character character, Item item) {
+	public List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item) {
 		String key = getProfileKey(character) + "#" + item.getSocketSpecification().socketTypes();
 		return getBestGemCombosCache.computeIfAbsent(key, x -> itemService.getBestGemCombos(character, item));
 	}
 
-	private static String getProfileKey(Character character) {
+	private static String getProfileKey(PlayerCharacter character) {
 		return character.getCharacterClassId() + "#" +
 				character.getLevel() + "#" +
 				character.getRaceId() + "#" +

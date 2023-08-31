@@ -1,13 +1,16 @@
 package wow.commons.model.item.impl;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.item.*;
+import wow.commons.model.spell.ActivatedAbility;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,30 +18,26 @@ import java.util.Set;
  * Date: 2023-03-27
  */
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@Setter
 public class ItemImpl extends AbstractItemImpl implements Item {
+	private List<Effect> effects;
+	private ActivatedAbility activatedAbility;
 	private ItemSet itemSet;
-	private final ItemSocketSpecification socketSpecification;
+	private ItemSocketSpecification socketSpecification;
 	private final WeaponStats weaponStats;
 	private final Set<PveRole> pveRoles;
 
 	public ItemImpl(
-			Integer id,
+			int id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
 			BasicItemInfo basicItemInfo,
-			ItemSocketSpecification socketSpecification,
 			WeaponStats weaponStats,
 			Set<PveRole> pveRoles
 	) {
 		super(id, description, timeRestriction, characterRestriction, basicItemInfo);
-		this.socketSpecification = socketSpecification;
 		this.weaponStats = weaponStats;
 		this.pveRoles = pveRoles;
-	}
-
-	public void setItemSet(ItemSet itemSet) {
-		this.itemSet = itemSet;
 	}
 }

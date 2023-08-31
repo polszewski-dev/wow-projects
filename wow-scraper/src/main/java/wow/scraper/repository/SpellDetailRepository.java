@@ -15,4 +15,8 @@ public interface SpellDetailRepository {
 	Optional<JsonSpellDetails> getDetail(GameVersionId gameVersion, WowheadSpellCategory category, int spellId);
 
 	List<Integer> getDetailIds(GameVersionId gameVersion, WowheadSpellCategory category);
+
+	Optional<JsonSpellDetails> getEnchantDetail(GameVersionId gameVersion, int enchantId);
+
+	List<Integer> getEnchantDetailIds(GameVersionId gameVersion);
 }

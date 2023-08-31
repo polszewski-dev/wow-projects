@@ -1,37 +1,43 @@
 package wow.character.service.impl.enumerator;
 
-import wow.commons.model.attribute.AttributeSource;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.primitive.PrimitiveAttribute;
 import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.commons.model.effect.Effect;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-11-23
  */
-public abstract class FilterOutWorseChoices<T extends AttributeSource> {
-	private final List<T> choices;
+public abstract class FilterOutWorseChoices<T> {
+	private final List<T> nonModifiers;
+	private final List<T> modifiers;
 
 	protected FilterOutWorseChoices(List<T> choices) {
-		this.choices = choices;
+		var isModifier = choices.stream().collect(Collectors.partitioningBy(
+				x -> getEffects(x).stream().allMatch(Effect::hasModifierComponentOnly)
+		));
+		this.nonModifiers = isModifier.get(false);
+		this.modifiers = isModifier.get(true);
 	}
 
 	public List<T> getResult() {
-		return choices.stream()
+		var filteredModifiers = modifiers.stream()
 				.collect(Collectors.groupingBy(this::getGroupAndStatsKey))
 				.values().stream()
 				.map(this::filterOutWorseChoicesFromGroup)
 				.map(this::removeTheSameStats)
-				.flatMap(Collection::stream)
-				.toList();
+				.flatMap(Collection::stream);
+
+		return Stream.concat(nonModifiers.stream(), filteredModifiers).toList();
 	}
 
 	private List<T> filterOutWorseChoicesFromGroup(List<T> group) {
@@ -47,15 +53,30 @@ public abstract class FilterOutWorseChoices<T extends AttributeSource> {
 	}
 
 	private boolean isStrictlyWorseThan(T choice, T otherChoice) {
-		return choice.getPrimitiveAttributes().stream()
+		return getAttributes(choice).stream()
 				.map(FilterOutWorseChoices::getIdAndCondition)
-				.collect(Collectors.toSet()).stream()
-				.allMatch(x -> choice.getDouble(x.getKey(), x.getValue()) < otherChoice.getDouble(x.getKey(), x.getValue()));
+				.distinct()
+				.allMatch(x -> sum(choice, x.id(), x.condition()) < sum(otherChoice, x.id(), x.condition()));
+	}
+
+	private double sum(T choice, PrimitiveAttributeId id, AttributeCondition condition) {
+		return getAttributes(choice).stream()
+				.filter(x -> x.id() == id && x.condition().equals(condition))
+				.mapToDouble(PrimitiveAttribute::value)
+				.sum();
+	}
+
+	protected abstract List<Effect> getEffects(T choice);
+
+	private List<PrimitiveAttribute> getAttributes(T choice) {
+		return getEffects(choice).stream()
+				.flatMap(x -> x.getModifierAttributeList().stream())
+				.toList();
 	}
 
 	private List<T> removeTheSameStats(List<T> group) {
 		return group.stream()
-				.collect(Collectors.groupingBy(AttributeSource::statString))
+				.collect(Collectors.groupingBy(this::getStatsKey))
 				.values().stream()
 				.map(this::removeBasedOnSource)
 				.toList();
@@ -76,14 +97,14 @@ public abstract class FilterOutWorseChoices<T extends AttributeSource> {
 	protected abstract Object getGroupKey(T choice);
 
 	private String getStatsKey(T choice) {
-		return choice.getPrimitiveAttributes().stream()
+		return getAttributes(choice).stream()
 				.map(FilterOutWorseChoices::getIdAndCondition)
 				.map(Objects::toString)
 				.distinct()
 				.collect(Collectors.joining("#"));
 	}
 
-	private static SimpleImmutableEntry<PrimitiveAttributeId, AttributeCondition> getIdAndCondition(PrimitiveAttribute x) {
-		return new SimpleImmutableEntry<>(x.id(), x.condition());
+	private static PrimitiveAttribute getIdAndCondition(PrimitiveAttribute x) {
+		return Attribute.of(x.id(), 1, x.condition(), x.levelScaled());
 	}
 }

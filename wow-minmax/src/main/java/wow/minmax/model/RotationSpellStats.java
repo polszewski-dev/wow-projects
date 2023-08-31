@@ -2,7 +2,7 @@ package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.Ability;
 
 /**
  * User: POlszewski
@@ -11,7 +11,7 @@ import wow.commons.model.spell.Spell;
 @AllArgsConstructor
 @Getter
 public class RotationSpellStats {
-	private final Spell spell;
+	private final Ability spell;
 	private final double numCasts;
 	private final double damage;
 }

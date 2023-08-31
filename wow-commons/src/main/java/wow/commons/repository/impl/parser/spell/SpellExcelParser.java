@@ -3,18 +3,12 @@ package wow.commons.repository.impl.parser.spell;
 import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.commons.model.spell.SpellId;
-import wow.commons.model.spell.SpellInfo;
-import wow.commons.model.talent.TalentId;
-import wow.commons.model.talent.TalentInfo;
 import wow.commons.repository.impl.SpellRepositoryImpl;
 
 import java.io.InputStream;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
 
 /**
@@ -26,9 +20,6 @@ public class SpellExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 	private final SpellRepositoryImpl spellRepository;
 
-	private final Map<SpellId, List<SpellInfo>> spellInfoById = new EnumMap<>(SpellId.class);
-	private final Map<TalentId, List<TalentInfo>> talentInfoById = new EnumMap<>(TalentId.class);
-
 	@Override
 	protected InputStream getExcelInputStream() {
 		return fromResourcePath(xlsFilePath);
@@ -37,10 +28,15 @@ public class SpellExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new SpellSheetParser(SPELLS, spellInfoById),
-				new SpellRankSheetParser(SPELL_RANKS, spellRepository, spellInfoById),
-				new TalentSheetParser(TALENTS, talentInfoById),
-				new TalentRankSheetParser(TALENT_RANKS, spellRepository, talentInfoById),
+				new AbilitySheetParser(ABILITIES, spellRepository),
+				new SpellSheetParser(ABILITY_SPELLS, spellRepository),
+				new SpellEffectSheetParser(ABILITY_EFFECTS, spellRepository, MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES, MAX_ABILITY_EFFECT_EVENTS),
+				new SpellSheetParser(ITEM_SPELLS, spellRepository),
+				new SpellEffectSheetParser(ITEM_EFFECTS, spellRepository, MAX_ITEM_EFFECT_MODIFIER_ATTRIBUTES, MAX_ITEM_EFFECT_EVENTS),
+				new TalentSheetParser(TALENTS, spellRepository),
+				new SpellSheetParser(TALENT_SPELLS, spellRepository),
+				new SpellEffectSheetParser(TALENT_EFFECTS, spellRepository, MAX_TALENT_EFFECT_MODIFIER_ATTRIBUTES, MAX_TALENT_EFFECT_EVENTS),//3,1
+				new SpellEffectSheetParser(RACIAL_EFFECTS, spellRepository, MAX_RACIAL_EFFECT_MODIFIER_ATTRIBUTES, MAX_RACIAL_EFFECT_EVENTS),
 				new BuffSheetParser(BUFFS, spellRepository)
 		);
 	}

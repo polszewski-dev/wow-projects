@@ -1,58 +1,38 @@
 package wow.minmax.service;
 
 import wow.character.model.build.Rotation;
-import wow.character.model.character.Character;
-import wow.character.model.snapshot.Snapshot;
-import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.complex.special.SpecialAbility;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.model.snapshot.StatSummary;
 import wow.commons.model.buff.BuffCategory;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.TalentId;
-import wow.minmax.model.CharacterStats;
-import wow.minmax.model.RotationStats;
-import wow.minmax.model.SpecialAbilityStats;
-import wow.minmax.model.SpellStats;
+import wow.minmax.model.*;
+import wow.minmax.util.EffectList;
 
 /**
  * User: POlszewski
  * Date: 2021-12-15
  */
 public interface CalculationService {
-	enum EquivalentMode {
-		ADDITIONAL,
-		REPLACEMENT,
-	}
+	double getSpEquivalent(TalentId talentId, PlayerCharacter character);
 
-	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character);
+	double getRotationDps(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList);
 
-	Attributes getDpsStatEquivalent(Attributes attributesToFindEquivalent, PrimitiveAttributeId targetStat, EquivalentMode mode, Character character, Rotation rotation, Attributes totalStats);
+	double getRotationDps(PlayerCharacter character, Rotation rotation, AccumulatedRotationStats rotationStats);
 
-	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character);
+	AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation);
 
-	Attributes getAbilityEquivalent(SpecialAbility specialAbility, Character character, Rotation rotation, Attributes totalStats);
+	AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList);
 
-	Attributes getTalentEquivalent(TalentId talentId, PrimitiveAttributeId targetStat, Character character);
+	RotationStats getRotationStats(PlayerCharacter character, Rotation rotation);
 
-	double getRotationDps(Character character, Rotation rotation);
+	SpellStats getSpellStats(PlayerCharacter character, Ability ability);
 
-	double getRotationDps(Character character, Rotation rotation, Attributes totalStats);
+	StatSummary getCurrentStats(PlayerCharacter character);
 
-	RotationStats getRotationStats(Character character, Rotation rotation);
+	StatSummary getStats(PlayerCharacter character, BuffCategory... buffCategories);
 
-	Snapshot getSnapshot(Character character, Attributes totalStats);
+	StatSummary getEquipmentStats(PlayerCharacter character);
 
-	Snapshot getSnapshot(Character character, Spell spell, Attributes totalStats);
-
-	Attributes getStatEquivalent(SpecialAbility specialAbility, Snapshot snapshot);
-
-	SpellStats getSpellStats(Character character, Spell spell);
-
-	CharacterStats getCurrentStats(Character character);
-
-	CharacterStats getStats(Character character, BuffCategory... buffCategories);
-
-	CharacterStats getEquipmentStats(Character character);
-
-	SpecialAbilityStats getSpecialAbilityStats(Character character, SpecialAbility specialAbility);
+	SpecialAbilityStats getSpecialAbilityStats(SpecialAbility specialAbility, PlayerCharacter character);
 }

@@ -1,14 +1,14 @@
 package wow.commons.model.buff.impl;
 
 import lombok.Getter;
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
+import lombok.Setter;
 import wow.commons.model.buff.*;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.config.impl.ConfigurationElementWithAttributesImpl;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.Set;
 
@@ -17,11 +17,17 @@ import java.util.Set;
  * Date: 2023-03-27
  */
 @Getter
-public class BuffImpl extends ConfigurationElementWithAttributesImpl<BuffIdAndRank> implements Buff {
+@Setter
+public class BuffImpl implements Buff {
+	private final BuffIdAndRank id;
+	private final Description description;
+	private final TimeRestriction timeRestriction;
+	private final CharacterRestriction characterRestriction;
 	private final BuffType type;
 	private final BuffExclusionGroup exclusionGroup;
 	private final Set<PveRole> pveRoles;
 	private final Set<BuffCategory> categories;
+	private Effect effect;
 
 	public BuffImpl(
 			BuffIdAndRank id,
@@ -33,7 +39,10 @@ public class BuffImpl extends ConfigurationElementWithAttributesImpl<BuffIdAndRa
 			Set<PveRole> pveRoles,
 			Set<BuffCategory> categories
 	) {
-		super(id, description, timeRestriction, characterRestriction);
+		this.id = id;
+		this.description = description;
+		this.timeRestriction = timeRestriction;
+		this.characterRestriction = characterRestriction;
 		this.type = type;
 		this.exclusionGroup = exclusionGroup;
 		this.pveRoles = pveRoles;
@@ -41,12 +50,12 @@ public class BuffImpl extends ConfigurationElementWithAttributesImpl<BuffIdAndRa
 	}
 
 	@Override
-	protected SpecialAbilitySource getSpecialAbilitySource() {
-		return new BuffSource(this);
+	public AbilityId getSourceSpell() {
+		return getCharacterRestriction().abilityId();
 	}
 
 	@Override
-	public SpellId getSourceSpell() {
-		return getCharacterRestriction().spellId();
+	public String toString() {
+		return getName();
 	}
 }

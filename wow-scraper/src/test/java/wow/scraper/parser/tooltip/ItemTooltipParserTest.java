@@ -4,13 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Money;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.condition.ConditionOperator;
+import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.spell.AbilityId;
 import wow.scraper.model.JsonItemDetails;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.categorization.ArmorSubType.CLOTH;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.categorization.ItemType.*;
@@ -36,7 +41,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	@Test
 	@DisplayName("Basic info is parsed correctly")
 	void basicInfo() {
-		assertThat(sunfireRobe.getPhase()).isEqualTo(TBC_P5);
+		assertThat(sunfireRobe.getTimeRestriction().phaseId()).isEqualTo(TBC_P5);
 		assertThat(sunfireRobe.getRequiredLevel()).isEqualTo(70);
 		assertThat(sunfireRobe.getItemLevel()).isEqualTo(159);
 		assertThat(sunfireRobe.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
@@ -62,23 +67,29 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	@DisplayName("Socket info is parsed correctly")
 	void socketInfo() {
 		assertThat(hoodOfMalefic.getSocketTypes()).isEqualTo(List.of(META, YELLOW));
-		assertThat(hoodOfMalefic.getSocketBonus().getSpellPower()).isEqualTo(5);
+
+		var hoodSocketBonus = hoodOfMalefic.getSocketBonus().orElseThrow();
+		assertEffect(hoodSocketBonus, POWER, 5, MiscCondition.SPELL, "+5 Spell Damage and Healing");
 
 		assertThat(sunfireRobe.getSocketTypes()).isEqualTo(List.of(RED, RED, RED));
-		assertThat(sunfireRobe.getSocketBonus().getSpellPower()).isEqualTo(5);
+
+		var robeSocketBonus = sunfireRobe.getSocketBonus().orElseThrow();
+		assertEffect(robeSocketBonus, POWER, 5, MiscCondition.SPELL, "+5 Spell Damage and Healing");
 	}
 
 	@Test
 	@DisplayName("Stats are parsed correctly")
 	void stats() {
-		Attributes parsedStats = sunfireRobe.getStatParser().getParsedStats();
+		var parsedEffects = sunfireRobe.getItemStatParser().getItemEffects();
 
-		assertThat(parsedStats.getArmor()).isEqualTo(266);
-		assertThat(parsedStats.getStamina()).isEqualTo(36);
-		assertThat(parsedStats.getIntellect()).isEqualTo(34);
-		assertThat(parsedStats.getSpellCritRating()).isEqualTo(40);
-		assertThat(parsedStats.getSpellHasteRating()).isEqualTo(40);
-		assertThat(parsedStats.getSpellPower()).isEqualTo(71);
+		assertThat(parsedEffects).hasSize(6);
+
+		assertEffect(parsedEffects, 0, ARMOR, 266, "266 Armor");
+		assertEffect(parsedEffects, 1, STAMINA, 36, "+36 Stamina");
+		assertEffect(parsedEffects, 2, INTELLECT, 34, "+34 Intellect");
+		assertEffect(parsedEffects, 3, CRIT_RATING, 40, MiscCondition.SPELL, "Equip: Improves spell critical strike rating by 40.");
+		assertEffect(parsedEffects, 4, HASTE_RATING, 40, MiscCondition.SPELL, "Equip: Improves spell haste rating by 40.");
+		assertEffect(parsedEffects, 5, POWER, 71, MiscCondition.SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 71.");
 	}
 
 	@Test
@@ -107,11 +118,21 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 				"Bracers of the Malefic",
 				"Belt of the Malefic"
 		));
-		assertThat(hoodOfMalefic.getItemSetBonuses()).hasSize(2);
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(0).numPieces()).isEqualTo(2);
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(0).description()).isEqualTo("Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(1).numPieces()).isEqualTo(4);
-		assertThat(hoodOfMalefic.getItemSetBonuses().get(1).description()).isEqualTo("Increases the damage dealt by your Shadow Bolt and Incinerate abilities by 6%.");
+		var itemSetBonuses = hoodOfMalefic.getItemSetBonuses();
+		assertThat(itemSetBonuses).hasSize(2);
+		assertThat(itemSetBonuses.get(0).numPieces()).isEqualTo(2);
+		assertEffect(itemSetBonuses.get(0).bonusEffect(), 0, "Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
+		assertThat(itemSetBonuses.get(1).numPieces()).isEqualTo(4);
+		assertEffect(
+				itemSetBonuses.get(1).bonusEffect(),
+				Attributes.of(
+						 Attribute.of(DAMAGE_PCT, 6, ConditionOperator.comma(
+								 AttributeCondition.of(AbilityId.SHADOW_BOLT),
+								 AttributeCondition.of(AbilityId.INCINERATE)
+						 ))
+				 ),
+				"Increases the damage dealt by your Shadow Bolt and Incinerate abilities by 6%."
+		);
 		assertThat(hoodOfMalefic.getItemSetRequiredProfession()).isNull();
 		assertThat(hoodOfMalefic.getItemSetRequiredProfessionLevel()).isNull();
 	}
@@ -156,7 +177,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	ItemTooltipParser wandOfDemonsoul;
 
 	@BeforeEach
-	void readTestData() throws IOException {
+	void readTestData() {
 		hoodOfMalefic = getTooltip("item/31051");
 		sunfireRobe = getTooltip("item/34364");
 		scryersBlodgem = getTooltip("item/29132");

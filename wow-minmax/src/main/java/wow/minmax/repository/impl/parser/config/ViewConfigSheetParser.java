@@ -1,6 +1,6 @@
 package wow.minmax.repository.impl.parser.config;
 
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.repository.impl.MinmaxConfigRepositoryImpl;
@@ -35,7 +35,7 @@ public class ViewConfigSheetParser extends WowExcelSheetParser {
 		var characterRestriction = getRestriction();
 		var timeRestriction = getTimeRestriction();
 		var eqvAmount = colEqvAmount.getDouble();
-		var relevantSpells = colRelevantSpells.getList(SpellId::parse);
+		var relevantSpells = colRelevantSpells.getList(AbilityId::parse);
 
 		return new ViewConfig(
 				characterRestriction, timeRestriction, eqvAmount, relevantSpells

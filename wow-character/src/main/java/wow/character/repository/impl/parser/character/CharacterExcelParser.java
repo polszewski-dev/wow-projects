@@ -29,7 +29,6 @@ public class CharacterExcelParser  extends ExcelParser {
 				new PhaseSheetParser("phases", characterRepository),
 				new CharacterClassSheetParser("classes", characterRepository),
 				new RaceSheetParser("races", characterRepository),
-				new RacialSheetParser("racials", characterRepository),
 				new ProfessionSheetParser("professions", characterRepository),
 				new ProfessionSpecSheetParser("profession_specs", characterRepository),
 				new ProfessionProficiencySheetParser("profession_proficiencies", characterRepository),

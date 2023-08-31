@@ -12,10 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SpellStatsDTO {
-	private SpellDTO spell;
-	private double dps;
+	private AbilityDTO spell;
 	private double totalDamage;
+	private double dps;
 	private double castTime;
+	private boolean instantCast;
 	private double manaCost;
 	private double dpm;
 	private double sp;
@@ -32,5 +33,4 @@ public class SpellStatsDTO {
 	private double cooldown;
 	private double threatPct;
 	private double pushbackPct;
-	private boolean instantCast;
 }

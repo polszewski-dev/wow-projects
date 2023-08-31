@@ -1,6 +1,6 @@
 package wow.character.service;
 
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
@@ -24,15 +24,15 @@ public interface ItemService {
 
 	Gem getGem(int gemId, PhaseId phaseId);
 
-	List<Item> getItemsBySlot(Character character, ItemSlot itemSlot, ItemFilter itemFilter);
+	List<Item> getItemsBySlot(PlayerCharacter character, ItemSlot itemSlot, ItemFilter itemFilter);
 
-	List<Enchant> getEnchants(Character character, ItemType itemType, ItemSubType itemSubType);
+	List<Enchant> getEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType);
 
-	List<Enchant> getBestEnchants(Character character, ItemType itemType, ItemSubType itemSubType);
+	List<Enchant> getBestEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType);
 
-	List<Gem> getGems(Character character, SocketType socketType, boolean nonUniqueOnly);
+	List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean nonUniqueOnly);
 
-	List<Gem> getBestGems(Character character, SocketType socketType);
+	List<Gem> getBestGems(PlayerCharacter character, SocketType socketType);
 
-	List<Gem[]> getBestGemCombos(Character character, Item item);
+	List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item);
 }

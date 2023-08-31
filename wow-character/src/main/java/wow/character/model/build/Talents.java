@@ -2,8 +2,8 @@ package wow.character.model.build;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.Copyable;
-import wow.commons.model.attribute.AttributeCollection;
-import wow.commons.model.attribute.AttributeCollector;
+import wow.character.model.effect.EffectCollection;
+import wow.character.model.effect.EffectCollector;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 
@@ -14,7 +14,7 @@ import java.util.*;
  * Date: 2022-12-20
  */
 @AllArgsConstructor
-public class Talents implements AttributeCollection, Copyable<Talents> {
+public class Talents implements EffectCollection, Copyable<Talents> {
 	private final Map<TalentId, Map<Integer, Talent>> availableTalentsByIdByRank;
 	private final Map<Integer, Map<Integer, Talent>> availableTalentsByPositionByRank;
 	private final Map<TalentId, Talent> talentById = new EnumMap<>(TalentId.class);
@@ -92,9 +92,15 @@ public class Talents implements AttributeCollection, Copyable<Talents> {
 		return talentById.containsKey(talentId);
 	}
 
+	public Optional<Talent> getTalent(TalentId talentId) {
+		return Optional.ofNullable(talentById.get(talentId));
+	}
+
 	@Override
-	public void collectAttributes(AttributeCollector collector) {
-		collector.addAttributes(talentById.values());
+	public void collectEffects(EffectCollector collector) {
+		for (Talent talent : talentById.values()) {
+			collector.addEffect(talent.getEffect());
+		}
 	}
 
 	public void removeTalent(TalentId talentId) {

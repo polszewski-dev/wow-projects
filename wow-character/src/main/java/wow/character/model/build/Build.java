@@ -6,13 +6,11 @@ import lombok.Setter;
 import wow.character.model.Copyable;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Pet;
-import wow.commons.model.attribute.AttributeCollection;
-import wow.commons.model.attribute.AttributeCollector;
+import wow.character.model.effect.EffectCollection;
+import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.PetType;
 import wow.commons.model.talent.TalentId;
-
-import static wow.commons.model.character.PetType.NONE;
 
 /**
  * User: POlszewski
@@ -21,7 +19,7 @@ import static wow.commons.model.character.PetType.NONE;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Build implements AttributeCollection, Copyable<Build> {
+public class Build implements EffectCollection, Copyable<Build> {
 	private final GameVersion gameVersion;
 	private final Talents talents;
 	private PveRole role;
@@ -49,19 +47,20 @@ public class Build implements AttributeCollection, Copyable<Build> {
 		this.talents.reset();
 		this.role = null;
 		this.rotation = null;
-		setActivePet(NONE);
+		setActivePet(null);
 	}
 
 	public void setActivePet(PetType petType) {
-		if (petType == null) {
-			throw new IllegalArgumentException();
-		}
 		this.activePet = gameVersion.getPet(petType);
 	}
 
+	public PetType getActivePetType() {
+		return activePet != null ? activePet.getPetType() : null;
+	}
+
 	@Override
-	public void collectAttributes(AttributeCollector collector) {
-		talents.collectAttributes(collector);
+	public void collectEffects(EffectCollector collector) {
+		talents.collectEffects(collector);
 	}
 
 	public boolean hasTalent(TalentId talentId) {

@@ -1,9 +1,9 @@
 package wow.simulator.log.handler;
 
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
 import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.Effect;
+import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
@@ -21,23 +21,33 @@ public interface GameLogHandler {
 
 	void endCast(CastSpellAction action);
 
+	void beginChannel(CastSpellAction action);
+
+	void endChannel(CastSpellAction action);
+
 	void canNotBeCasted(CastSpellAction action);
 
-	void castInterrupted(CastSpellAction action);
+	default void castInterrupted(CastSpellAction action) {
+		endCast(action);
+	}
 
-	void spellResisted(CastSpellAction action);
+	default void channelInterrupted(CastSpellAction action) {
+		endChannel(action);
+	}
 
-	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
+	void spellResisted(CastSpellAction action, Unit target);
 
-	void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
+	void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit);
 
-	void effectApplied(Effect effect);
+	void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit);
 
-	void effectStacked(Effect effect);
+	void effectApplied(UnitEffect effect);
 
-	void effectExpired(Effect effect);
+	void effectStacked(UnitEffect effect);
 
-	void effectRemoved(Effect effect);
+	void effectExpired(UnitEffect effect);
+
+	void effectRemoved(UnitEffect effect);
 
 	void cooldownStarted(Cooldown cooldown);
 

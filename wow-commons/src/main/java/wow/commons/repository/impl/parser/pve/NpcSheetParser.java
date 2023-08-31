@@ -5,7 +5,6 @@ import wow.commons.model.pve.NpcType;
 import wow.commons.repository.impl.PveRepositoryImpl;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
 
 /**
@@ -13,8 +12,6 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
  * Date: 2022-11-22
  */
 public class NpcSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colId = column(ID);
-	private final ExcelColumn colName = column(NAME);
 	private final ExcelColumn colType = column(NPC_TYPE);
 	private final ExcelColumn colBoss = column(NPC_BOSS);
 	private final ExcelColumn colZone = column(NPC_ZONE);
@@ -24,11 +21,6 @@ public class NpcSheetParser extends WowExcelSheetParser {
 	public NpcSheetParser(String sheetName, PveRepositoryImpl pveRepository) {
 		super(sheetName);
 		this.pveRepository = pveRepository;
-	}
-
-	@Override
-	protected ExcelColumn getColumnIndicatingOptionalRow() {
-		return colName;
 	}
 
 	@Override

@@ -1,8 +1,15 @@
 package wow.scraper.exporter.spell.excel;
 
-import wow.commons.model.pve.PhaseId;
+import wow.commons.model.Duration;
+import wow.commons.model.Percent;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.component.Event;
+import wow.commons.model.effect.component.StatConversion;
+import wow.commons.model.spell.Conversion;
 import wow.scraper.exporter.excel.ExcelSheetWriter;
-import wow.scraper.parser.tooltip.AbilityTooltipParser;
+
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
+import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
 
 /**
  * User: POlszewski
@@ -13,26 +20,137 @@ public abstract class SpellBaseSheetWriter<P> extends ExcelSheetWriter<P, SpellB
 		super(builder);
 	}
 
-	protected PhaseId getPhase(AbilityTooltipParser parser) {
-		PhaseId phaseOverride = config.getSpellPhaseOverrides().get(parser.getSpellId());
+	protected void writeModifierComponentHeader(int maxAttributes) {
+		writeAttributeHeader(MOD_PREFIX, maxAttributes);
+	}
 
-		if (phaseOverride != null) {
-			return phaseOverride;
+	protected void writeModifierComponent(Effect effect, int maxAttributes) {
+		var modifierComponent = effect.getModifierComponent();
+		var attributes = modifierComponent != null ? modifierComponent.attributes() : null;
+
+		writeAttributes(attributes, maxAttributes);
+	}
+
+	protected void writeConversionHeader() {
+		var prefix = CONVERSION_PREFIX;
+		setHeader(CONVERSION_CONDITION, prefix);
+		setHeader(CONVERSION_FROM, prefix);
+		setHeader(CONVERSION_TO, prefix);
+		setHeader(CONVERSION_RATIO, prefix);
+	}
+
+	protected void writeConversion(Conversion conversion) {
+		if (conversion == null) {
+			fillRemainingEmptyCols(4);
+			return;
 		}
 
-		if (parser.getPhase() != parser.getGameVersion().getEarliestNonPrepatchPhase()) {
-			return parser.getPhase();
+		setValue(conversion.condition());
+		setValue(conversion.from());
+		setValue(conversion.to());
+		setValue(conversion.ratioPct());
+	}
+
+	protected void writeStatConversionHeader() {
+		for (int i = 1; i <= MAX_STAT_CONVERSIONS; ++i) {
+			writeStatConversionHeader(i);
+		}
+	}
+
+	private void writeStatConversionHeader(int idx) {
+		var prefix = getStatConversionPrefix(idx);
+		setHeader(STAT_CONVERSION_FROM, prefix);
+		setHeader(STAT_CONVERSION_TO, prefix);
+		setHeader(STAT_CONVERSION_TO_CONDITION, prefix);
+		setHeader(STAT_CONVERSION_RATIO, prefix);
+	}
+
+	protected void writeStatConversions(Effect effect) {
+		for (int i = 0; i < MAX_STAT_CONVERSIONS; ++i) {
+			if (i < effect.getStatConversions().size()) {
+				writeStatConversion(effect.getStatConversions().get(i));
+			} else {
+				writeStatConversion(null);
+			}
+		}
+	}
+
+	private void writeStatConversion(StatConversion statConversion) {
+		if (statConversion == null) {
+			fillRemainingEmptyCols(4);
+			return;
 		}
 
-		return null;
+		setValue(statConversion.from());
+		setValue(statConversion.to());
+		setValue(statConversion.toCondition());
+		setValue(statConversion.ratioPct());
+	}
+
+	protected void writeEffectIncreasePerEffectOnTargetHeader() {
+		setHeader(EFFECT_INCREASE_CONDITION);
+		setHeader(EFFECT_INCREASE_RATIO);
+		setHeader(EFFECT_INCREASE_MAX);
+	}
+
+	protected void writeEffectIncreasePerEffectOnTarget(Effect effect) {
+		var effectIncreasePerEffectOnTarget = effect.getEffectIncreasePerEffectOnTarget();
+
+		if (effectIncreasePerEffectOnTarget == null) {
+			fillRemainingEmptyCols(3);
+			return;
+		}
+
+		setValue(effectIncreasePerEffectOnTarget.condition());
+		setValue(effectIncreasePerEffectOnTarget.value());
+		setValue(effectIncreasePerEffectOnTarget.max());
+	}
+
+	protected void writeEventHeader(int maxEvents) {
+		for (int i = 1; i <= maxEvents; ++i) {
+			writeSingleEventHeader(i);
+		}
+	}
+
+	private void writeSingleEventHeader(int i) {
+		String prefix = getEventPrefix(i);
+		setHeader(EVENT_ON, prefix);
+		setHeader(EVENT_CONDITION, prefix);
+		setHeader(EVENT_CHANCE_PCT, prefix);
+		setHeader(EVENT_ACTION, prefix);
+		setHeader(EVENT_COOLDOWN, prefix);
+		setHeader(EVENT_TRIGGERED_SPELL, prefix);
+	}
+
+	protected void writeEvents(Effect effect, int maxEvents) {
+		assertSizeNoLargerThan("events", effect.getEvents(), maxEvents);
+
+		for (int i = 0; i < maxEvents; ++i) {
+			if (i < effect.getEvents().size()) {
+				writeEvent(effect.getEvents().get(i));
+			} else {
+				writeEvent(null);
+			}
+		}
+	}
+
+	private void writeEvent(Event event) {
+		if (event == null) {
+			fillRemainingEmptyCols(6);
+			return;
+		}
+
+		setValue(event.types());
+		setValue(event.condition());
+		setValue(event.chance(), Percent._100);
+		setValue(event.actions());
+		setValue(event.cooldown(), Duration.ZERO);
+		setValue(event.triggeredSpell() != null ? event.triggeredSpell().getId() : null);
 	}
 
 	@Override
-	protected <T extends Enum<T>> void setValue(Enum<T> value) {
-		if (value != null) {
-			setValue(value.name().toLowerCase());
-		} else {
-			setValue((String)null);
-		}
+	protected <T extends Enum<T>> String formatEnum(Enum<T> value) {
+		boolean defaultName = value.name().equals(value.toString());
+		return defaultName ? value.toString().toLowerCase() : value.toString();
 	}
 }

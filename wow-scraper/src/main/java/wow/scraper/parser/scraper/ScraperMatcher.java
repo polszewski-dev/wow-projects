@@ -1,7 +1,17 @@
 package wow.scraper.parser.scraper;
 
+import wow.commons.model.Duration;
+import wow.commons.model.Percent;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
 import wow.commons.util.parser.ParserUtil;
+import wow.scraper.parser.spell.params.AttributePattern;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 
 /**
@@ -30,30 +40,16 @@ public abstract class ScraperMatcher<P extends ScraperPattern<Q>, Q extends Scra
 		return true;
 	}
 
-	protected abstract String getLineToMatch(N params);
+	protected String getLineToMatch(N params) {
+		return params.getLine();
+	}
+
+	public String getOriginalLine() {
+		return matcherParams != null ? matcherParams.getOriginalLine() : null;
+	}
 
 	public boolean hasMatch() {
 		return parsedValues != null;
-	}
-
-	public int getInt() {
-		return getInt(1);
-	}
-
-	public double getDouble() {
-		return getDouble(1);
-	}
-
-	public String getString() {
-		return getString(1);
-	}
-
-	public int getInt(int i) {
-		return Integer.parseInt(getString(i));
-	}
-
-	public double getDouble(int i) {
-		return Double.parseDouble(getString(i));
 	}
 
 	public String getString(int i) {
@@ -72,5 +68,50 @@ public abstract class ScraperMatcher<P extends ScraperPattern<Q>, Q extends Scra
 
 	protected Q getPatternParams() {
 		return pattern.getParams();
+	}
+
+	protected Optional<Integer> getOptionalInteger(String pattern) {
+		return getOptional(pattern, Integer::valueOf);
+	}
+
+	protected Optional<Double> getOptionalDouble(String pattern) {
+		return getOptional(pattern, Double::valueOf);
+	}
+
+	protected Optional<Duration> getOptionalDuration(String pattern) {
+		return getOptional(pattern, Duration::parse);
+	}
+
+	protected Optional<Percent> getOptionalPercent(String pattern) {
+		return getOptional(pattern, Percent::parse);
+	}
+
+	protected  <T> Optional<T> getOptional(String pattern, Function<String, T> mapper) {
+		String value = evalParams(pattern);
+		if (value != null && !value.isEmpty()) {
+			return Optional.of(value).map(mapper);
+		}
+		return Optional.empty();
+	}
+
+	protected Attributes getAttributes(List<AttributePattern> attributes) {
+		var list = attributes.stream()
+				.map(this::getAttribute)
+				.toList();
+		return Attributes.of(list);
+	}
+
+	private PrimitiveAttribute getAttribute(AttributePattern attributePattern) {
+		var id = attributePattern.id();
+		var value = getOptionalDouble(attributePattern.value()).orElseThrow();
+		var condition = AttributeCondition.parse(evalParams(attributePattern.condition()));
+		var levelScaled = attributePattern.levelScaled();
+
+		return Attribute.of(id, value, condition, levelScaled);
+	}
+
+	@Override
+	public String toString() {
+		return getOriginalLine();
 	}
 }

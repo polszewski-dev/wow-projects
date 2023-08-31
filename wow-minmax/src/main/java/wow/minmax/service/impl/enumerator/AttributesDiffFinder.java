@@ -1,0 +1,171 @@
+package wow.minmax.service.impl.enumerator;
+
+import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.model.equipment.EquippableItem;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.commons.model.categorization.ItemSlotGroup;
+import wow.commons.model.config.Described;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.ActivatedAbility;
+import wow.minmax.model.AttributesDiff;
+import wow.minmax.model.SpecialAbility;
+import wow.minmax.util.EffectList;
+
+import java.util.*;
+
+/**
+ * User: POlszewski
+ * Date: 2022-11-09
+ */
+public class AttributesDiffFinder {
+	private final Character character;
+	private final EffectList reference;
+	private final EffectList equipped;
+
+	private final Map<String, AttributeValueAccumulator> accumulators = new HashMap<>();
+
+	private final List<PrimitiveAttribute> attributes = new ArrayList<>();
+	private final List<SpecialAbility> addedAbilities = new ArrayList<>();
+	private final List<SpecialAbility> removedAbilities = new ArrayList<>();
+
+	public AttributesDiffFinder(PlayerCharacter referenceCharacter, ItemSlotGroup slotGroup, List<EquippableItem> itemOption) {
+		this.character = referenceCharacter;
+
+		var equippedCharacter = referenceCharacter.copy();
+		equippedCharacter.getEquipment().equip(slotGroup, itemOption.toArray(EquippableItem[]::new));
+
+		this.reference = new EffectList(referenceCharacter);
+		this.equipped = new EffectList(equippedCharacter);
+
+		referenceCharacter.getEquipment().collectEffects(reference);
+		equippedCharacter.getEquipment().collectEffects(equipped);
+
+		reference.collectRest();
+		equipped.collectRest();
+	}
+
+	public AttributesDiff getDiff() {
+		modifierDiff();
+		effectDiff();
+		activatedAbilityDiff();
+		sortResults();
+
+		return new AttributesDiff(
+				Attributes.of(attributes),
+				addedAbilities,
+				removedAbilities
+		);
+	}
+
+	private void modifierDiff() {
+		var equippedAttributes = getModifierAttributes(equipped);
+		var referenceAttributes = getModifierAttributes(reference);
+
+		for (var attribute : equippedAttributes) {
+			getAccumulator(attribute).add(attribute, character.getLevel());
+		}
+
+		for (var attribute : referenceAttributes) {
+			getAccumulator(attribute).subtract(attribute, character.getLevel());
+		}
+
+		for (var accumulator : accumulators.values()) {
+			var attribute = accumulator.getResult();
+			if (attribute.value() != 0) {
+				attributes.add(attribute);
+			}
+		}
+	}
+
+	private List<PrimitiveAttribute> getModifierAttributes(EffectList list) {
+		return list.getEffects().stream()
+				.filter(Effect::hasModifierComponentOnly)
+				.map(Effect::getModifierAttributeList)
+				.flatMap(Collection::stream)
+				.toList();
+	}
+
+	private void effectDiff() {
+		var addedEffects = getEfectDiff(equipped, reference);
+		var removedEffects = getEfectDiff(reference, equipped);
+
+		addedEffects.stream()
+				.map(SpecialAbility::of)
+				.forEach(addedAbilities::add);
+
+		removedEffects.stream()
+				.map(SpecialAbility::of)
+				.forEach(removedAbilities::add);
+	}
+
+	private void activatedAbilityDiff() {
+		getActivatedAbilityDiff(equipped, reference).stream()
+				.map(SpecialAbility::of)
+				.forEach(addedAbilities::add);
+
+		getActivatedAbilityDiff(reference, equipped).stream()
+				.map(SpecialAbility::of).
+				forEach(removedAbilities::add);
+	}
+
+	private Set<Effect> getEfectDiff(EffectList list1, EffectList list2) {
+		var set = new HashSet<Effect>();
+
+		list1.getEffects().stream().filter(x -> !x.hasModifierComponentOnly()).forEach(set::add);
+		list2.getEffects().stream().filter(x -> !x.hasModifierComponentOnly()).forEach(set::remove);
+
+		return set;
+	}
+
+	private Set<ActivatedAbility> getActivatedAbilityDiff(EffectList list1, EffectList list2) {
+		var set = new HashSet<>(list1.getActivatedAbilities());
+
+		for (var activatedAbility : list2.getActivatedAbilities()) {
+			set.remove(activatedAbility);
+		}
+
+		return set;
+	}
+
+	private AttributeValueAccumulator getAccumulator(PrimitiveAttribute attribute) {
+		String key = attribute.id() + "#" + attribute.condition();
+		return accumulators.computeIfAbsent(key, x -> new AttributeValueAccumulator(attribute));
+	}
+
+	private static class AttributeValueAccumulator {
+		private final PrimitiveAttributeId id;
+		private final AttributeCondition condition;
+		private double value;
+
+		AttributeValueAccumulator(PrimitiveAttribute prototype) {
+			this.id = prototype.id();
+			this.condition = prototype.condition();
+		}
+
+		void add(PrimitiveAttribute attribute, int characterLevel) {
+			this.value += attribute.getLevelScaledValue(characterLevel);
+		}
+
+		void subtract(PrimitiveAttribute attribute, int characterLevel) {
+			this.value -= attribute.getLevelScaledValue(characterLevel);
+		}
+
+		PrimitiveAttribute getResult() {
+			return Attribute.of(id, value, condition);
+		}
+	}
+
+	private void sortResults() {
+		attributes.sort(Comparator
+								.comparing(PrimitiveAttribute::id)
+								.thenComparing(x -> x.condition().toString())
+		);
+		addedAbilities.sort(Comparator.comparing(Described::getTooltip));
+		removedAbilities.sort(Comparator.comparing(Described::getTooltip));
+	}
+}

@@ -8,7 +8,7 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.talent.TalentId;
 
 /**
@@ -36,7 +36,7 @@ public interface CharacterInfo {
 
 	boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction);
 
-	boolean hasSpell(SpellId spellId);
+	boolean hasAbility(AbilityId abilityId);
 
 	boolean hasTalent(TalentId talentId);
 }

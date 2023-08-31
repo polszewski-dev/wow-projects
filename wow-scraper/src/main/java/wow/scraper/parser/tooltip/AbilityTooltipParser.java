@@ -2,14 +2,20 @@ package wow.scraper.parser.tooltip;
 
 import lombok.Getter;
 import wow.commons.model.Duration;
-import wow.commons.model.effect.EffectId;
-import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.Percent;
+import wow.commons.model.config.CharacterRestriction;
+import wow.commons.model.config.Description;
+import wow.commons.model.spell.*;
+import wow.commons.model.talent.TalentId;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
-import wow.scraper.parser.spell.SpellMatcher;
-import wow.scraper.parser.spell.SpellParser;
+import wow.scraper.parser.spell.ability.AbilityMatcher;
+import wow.scraper.parser.spell.ability.AbilityParser;
+
+import java.util.List;
+
+import static wow.commons.constant.SpellConstants.UNLIMITED_RANGE;
 
 /**
  * User: POlszewski
@@ -24,6 +30,7 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 	private Integer healthCost;
 	private Integer baseHealthCost;
 	private Integer healthChannelCost;
+	private Reagent reagent;
 
 	private Duration castTime;
 	private Duration channelTime;
@@ -33,13 +40,8 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 
 	private boolean summon;
 	private boolean conjured;
-	private String reagent;
 
-	private SpellMatcher spellMatcher;
-	private ParsedCosts parsedCosts;
-	private ParsedCastTime parsedCastTime;
-	private ParsedDirectComponent parsedDirectComponent;
-	private ParsedDoTComponent parsedDoTComponent;
+	private AbilityMatcher abilityMatcher;
 
 	public AbilityTooltipParser(JsonSpellDetails details, ScraperContext scraperContext) {
 		super(details, scraperContext);
@@ -80,7 +82,7 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 				Rule.exact("Summon", () -> this.summon = true),
 
 				Rule.exact("Reagents:", () -> {}),
-				Rule.regex("(Soul Shard|Infernal Stone|Demonic Figurine|Light Feather|Holy Candle|Sacred Candle)", x -> this.reagent = x.get(0)),
+				Rule.regex("(" + regexAny(Reagent.values()) + ")", x -> this.reagent = Reagent.parse(x.get(0))),
 
 				Rule.exact("Conjured items disappear if logged out for more than 15 minutes.", () -> this.conjured = true),
 
@@ -109,26 +111,14 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 		}
 
 		parseSpellDetails();
-
-		parsedCosts = new ParsedCosts();
-		parsedCosts.parse();
-
-		parsedCastTime = new ParsedCastTime();
-		parsedCastTime.parse();
-
-		parsedDirectComponent = new ParsedDirectComponent();
-		parsedDirectComponent.parse();
-
-		parsedDoTComponent = new ParsedDoTComponent();
-		parsedDoTComponent.parse();
 	}
 
 	private void parseSpellDetails() {
-		SpellId spellId = SpellId.parse(getName());
-		SpellParser spellParser = getSpellPatternRepository().getSpellParser(spellId, gameVersion);
+		AbilityId abilityId = AbilityId.parse(getName());
+		AbilityParser abilityParser = getSpellPatternRepository().getAbilityParser(abilityId, gameVersion);
 
-		if (spellParser.tryParse(description)) {
-			this.spellMatcher = spellParser.getUniqueSuccessfulMatcher();
+		if (abilityParser.tryParse(description)) {
+			this.abilityMatcher = abilityParser.getSuccessfulMatcher().orElseThrow();
 		}
 	}
 
@@ -137,174 +127,97 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 		return details.getName();
 	}
 
-	@Getter
-	public class ParsedCosts {
-		private Integer amount;
-		private ResourceType type;
-		private Integer baseStatPct;
+	public Cost getCost() {
+		int amount = 0;
+		ResourceType type = null;
+		Percent baseStatPct = Percent.ZERO;
 
-		private Integer matchedAmount;
-		private ResourceType matchedType;
-
-		protected void parse() {
-			parseTooltipValues();
-			parseSpellPatternValues();
+		if (manaCost != null) {
+			amount = manaCost;
+			type = ResourceType.MANA;
 		}
 
-		private void parseTooltipValues() {
-			if (manaCost != null) {
-				amount = manaCost;
-				type = ResourceType.MANA;
-			}
-
-			if (baseManaCost != null) {
-				baseStatPct = baseManaCost;
-				type = ResourceType.MANA;
-			}
-
-			if (healthCost != null) {
-				if (type == ResourceType.MANA) {
-					throw new IllegalArgumentException("Using both health and mana");
-				}
-				amount = healthCost;
-				type = ResourceType.HEALTH;
-			}
-
-			if (baseHealthCost != null) {
-				if (type == ResourceType.MANA) {
-					throw new IllegalArgumentException("Using both health and mana");
-				}
-				baseStatPct = baseHealthCost;
-				type = ResourceType.HEALTH;
-			}
+		if (baseManaCost != null) {
+			baseStatPct = Percent.of(baseManaCost);
+			type = ResourceType.MANA;
 		}
 
-		private void parseSpellPatternValues() {
-			if (spellMatcher == null) {
-				return;
+		if (healthCost != null) {
+			if (type == ResourceType.MANA) {
+				throw new IllegalArgumentException("Using both health and mana");
 			}
-
-			matchedAmount = spellMatcher.getCostAmount().orElse(null);
-			matchedType = spellMatcher.getCostType().orElse(null);
-
-			assertMatchedAmountAndTypeIsFilledOrEmpty();
-
-			if (matchedAmount == null) {
-				return;
-			}
-
-			if (amount == null) {
-				amount = matchedAmount;
-				type = matchedType;
-			} else {
-				assertMatchedAmountAndTypeMatchCorrespondingTooltipValues();
-			}
+			amount = healthCost;
+			type = ResourceType.HEALTH;
 		}
 
-		private void assertMatchedAmountAndTypeIsFilledOrEmpty() {
-			if ((matchedAmount != null && matchedType == null) || (matchedAmount == null && matchedType != null)) {
-				throw new IllegalArgumentException("Both type and amount have to be either null or not null");
+		if (baseHealthCost != null) {
+			if (type == ResourceType.MANA) {
+				throw new IllegalArgumentException("Using both health and mana");
 			}
+			baseStatPct = Percent.of(baseHealthCost);
+			type = ResourceType.HEALTH;
 		}
 
-		private void assertMatchedAmountAndTypeMatchCorrespondingTooltipValues() {
-			if ((int)amount != matchedAmount || type != matchedType) {
-				throw new IllegalArgumentException();
+		if (amount == 0 && type == null && baseStatPct.isZero()) {
+			return null;
+		}
+
+		return new Cost(type, amount, baseStatPct, Coefficient.NONE, reagent);
+	}
+
+	public CastInfo getCastInfo() {
+		if (this.castTime != null) {
+			if (channelTime != null) {
+				throw new IllegalArgumentException("Both cast and channel time are present");
 			}
+			return new CastInfo(castTime, false, false);
+		} else if (this.channelTime != null) {
+			return new CastInfo(channelTime, true, false);
+		} else {
+			throw new IllegalArgumentException("No cast time: " + getName());
 		}
 	}
 
-	@Getter
-	public class ParsedCastTime {
-		private Duration castTime;
-		private boolean channeled;
+	public Duration getCooldown() {
+		return cooldown != null ? cooldown : Duration.ZERO;
+	}
 
-		protected void parse() {
-			if (AbilityTooltipParser.this.castTime != null) {
-				this.castTime = AbilityTooltipParser.this.castTime;
-				this.channeled = false;
+	public int getRange() {
+		if (range != null && unlimitedRange) {
+			throw new IllegalArgumentException("Both range types specified " + name);
+		}
 
-				if (channelTime != null) {
-					throw new IllegalArgumentException("Both cast and channel time are present");
-				}
-			} else if (channelTime != null) {
-				this.castTime = channelTime;
-				this.channeled = true;
-			} else {
-				throw new IllegalArgumentException("No cast time: " + getName());
-			}
+		if (range != null) {
+			return range;
+		} else if (unlimitedRange) {
+			return UNLIMITED_RANGE;
+		} else {
+			return 0;
 		}
 	}
 
-	@Getter
-	public class ParsedDirectComponent {
-		private Integer minDmg;
-		private Integer maxDmg;
-		private Integer minDmg2;
-		private Integer maxDmg2;
-
-		protected void parse() {
-			if (spellMatcher == null) {
-				return;
-			}
-
-			this.minDmg = spellMatcher.getMinDmg().orElse(null);
-			this.maxDmg = spellMatcher.getMaxDmg().orElse(null);
-			this.minDmg2 = spellMatcher.getMinDmg2().orElse(null);
-			this.maxDmg2 = spellMatcher.getMaxDmg2().orElse(null);
-		}
+	public AbilityCategory getAbilityCategory() {
+		return abilityMatcher != null ? abilityMatcher.getAbilityCategory() : null;
 	}
 
-	@Getter
-	public class ParsedDoTComponent {
-		private Duration dotDuration;
-		private Duration tickInterval;
-		private Integer numTicks;
-		private Integer dotDamage;
-		private Integer tickDamage;
-		private EffectId appliedEffect;
-		private Duration appliedEffectDuration;
+	public CharacterRestriction getCharacterRestriction() {
+		return new CharacterRestriction(
+				getRequiredLevel(),
+				requiredClass,
+				List.of(),
+				requiredSide,
+				null,
+				null,
+				null,
+				List.of(),
+				null,
+				talent ? TalentId.parse(getName()) : null,
+				null,
+				null
+		);
+	}
 
-		protected void parse() {
-			if (spellMatcher == null || !hasDotComponent()) {
-				return;
-			}
-
-			dotDuration = spellMatcher.getDotDuration().orElseThrow();
-			tickInterval = spellMatcher.getTickInterval().orElseThrow();
-
-			numTicks = (int)dotDuration.divideBy(tickInterval);
-
-			var optionalDotDmg = spellMatcher.getDotDmg();
-			var optionalTickDmg = spellMatcher.getTickDmg();
-
-			if (optionalDotDmg.isPresent() && optionalTickDmg.isEmpty()) {
-				dotDamage = optionalDotDmg.get();
-				tickDamage = dotDamage / numTicks;
-			} else if (optionalDotDmg.isEmpty() && optionalTickDmg.isPresent()) {
-				tickDamage = optionalTickDmg.get();
-				dotDamage = tickDamage * numTicks;
-			} else {
-				throw new IllegalArgumentException();
-			}
-
-			assertAllValuesAreInteger();
-
-			appliedEffect = EffectId.parse(getName());
-			appliedEffectDuration = dotDuration;
-		}
-
-		private boolean hasDotComponent() {
-			return spellMatcher.getDotDuration().isPresent();
-		}
-
-		private void assertAllValuesAreInteger() {
-			if (dotDuration.divideBy(tickInterval) % 1 != 0) {
-				throw new IllegalArgumentException("#ticks is not integer: " + getName());
-			}
-			if (tickDamage * numTicks != dotDamage) {
-				throw new IllegalArgumentException("Tick damage is not integer: " + getName());
-			}
-		}
+	public Description getSpellDescription() {
+		return new Description(getName(), getIcon(), getDescription());
 	}
 }

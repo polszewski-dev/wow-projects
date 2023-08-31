@@ -3,7 +3,7 @@ package wow.simulator.graph;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.time.Time;
 
 /**
@@ -13,12 +13,12 @@ import wow.simulator.model.time.Time;
 @Getter
 @Setter
 public class TimeEntry {
-	private final SpellId spell;
+	private final AbilityId spell;
 	private final Time begin;
 	private Time end;
 	private Time gcdEnd;
 
-	public TimeEntry(SpellId spell, Time begin) {
+	public TimeEntry(AbilityId spell, Time begin) {
 		this.spell = spell;
 		this.begin = begin;
 	}

@@ -13,12 +13,12 @@ import wow.minmax.model.dto.RotationSpellStatsDTO;
 @Component
 @AllArgsConstructor
 public class RotationSpellStatsConverter implements Converter<RotationSpellStats, RotationSpellStatsDTO> {
-	private final SpellConverter spellConverter;
+	private final AbilityConverter abilityConverter;
 
 	@Override
 	public RotationSpellStatsDTO doConvert(RotationSpellStats source) {
 		return new RotationSpellStatsDTO(
-				spellConverter.convert(source.getSpell()),
+				abilityConverter.convert(source.getSpell()),
 				source.getNumCasts(),
 				source.getDamage()
 		);

@@ -3,7 +3,7 @@ package wow.character.model.build;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.util.parser.ParserUtil;
 
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
 @Getter
 public class RotationTemplate {
 	private final String value;
-	private final List<SpellId> spellIds;
+	private final List<AbilityId> abilityIds;
 
 	public static RotationTemplate parse(String value) {
-		List<SpellId> spellIds = ParserUtil.getValues(value, SpellId::parse);
+		List<AbilityId> abilityIds = ParserUtil.getValues(value, AbilityId::parse);
 
-		return new RotationTemplate(value, spellIds);
+		return new RotationTemplate(value, abilityIds);
 	}
 
 	public Rotation createRotation() {

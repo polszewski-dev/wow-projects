@@ -1,10 +1,7 @@
 package wow.character.model.equipment;
 
 import wow.character.model.Copyable;
-import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.complex.ComplexAttribute;
-import wow.commons.model.attribute.complex.ComplexAttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
@@ -22,7 +19,7 @@ import java.util.stream.Stream;
 public record ItemSockets(
 		ItemSocketSpecification specification,
 		List<ItemSocket> sockets
-) implements ComplexAttribute, Copyable<ItemSockets>, Iterable<ItemSocket> {
+) implements Copyable<ItemSockets>, Iterable<ItemSocket> {
 	public static final ItemSockets EMPTY = new ItemSockets(ItemSocketSpecification.EMPTY, List.of());
 
 	public ItemSockets {
@@ -51,16 +48,6 @@ public record ItemSockets(
 		);
 	}
 
-	@Override
-	public ComplexAttributeId id() {
-		return ComplexAttributeId.SOCKETS;
-	}
-
-	@Override
-	public AttributeCondition condition() {
-		return AttributeCondition.EMPTY;
-	}
-
 	public int getSocketCount() {
 		return specification.getSocketCount();
 	}
@@ -69,11 +56,7 @@ public record ItemSockets(
 		return specification.getSocketType(socketNo);
 	}
 
-	public List<SocketType> getSocketTypes() {
-		return specification.socketTypes();
-	}
-
-	public Attributes getSocketBonus() {
+	public Effect getSocketBonus() {
 		return specification.socketBonus();
 	}
 
@@ -127,9 +110,8 @@ public record ItemSockets(
 		return true;
 	}
 
-	@Override
-	public ItemSockets attachCondition(AttributeCondition condition) {
-		throw new UnsupportedOperationException();
+	public boolean hasMetaSocket() {
+		return specification.hasMetaSocket();
 	}
 
 	@Override

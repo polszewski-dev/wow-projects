@@ -1,7 +1,6 @@
 package wow.commons.repository.impl.parser.item;
 
-import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
@@ -9,9 +8,9 @@ import wow.commons.model.item.ItemSetSource;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.item.impl.ItemSetImpl;
 import wow.commons.model.profession.ProfessionId;
+import wow.commons.repository.PveRepository;
+import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
-import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
-import wow.commons.util.AttributesBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,22 +21,14 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class ItemSetSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colName = column(ITEM_SET_NAME);
+public class ItemSetSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colIBonusReqProfession = column(ITEM_SET_BONUS_REQ_PROFESSION);
 
-	private final ItemRepositoryImpl itemRepository;
 	private final ItemBaseExcelParser parser;
 
-	public ItemSetSheetParser(String sheetName, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
-		super(sheetName);
-		this.itemRepository = itemRepository;
+	public ItemSetSheetParser(String sheetName, PveRepository pveRepository, SpellRepository spellRepository, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
+		super(sheetName, pveRepository, spellRepository, itemRepository);
 		this.parser = parser;
-	}
-
-	@Override
-	protected ExcelColumn getColumnIndicatingOptionalRow() {
-		return colName;
 	}
 
 	@Override
@@ -52,9 +43,10 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
 		var pieces = parser.getPieces(name, timeRestriction.getUniqueVersion());
+		var requiredProfession = colIBonusReqProfession.getEnum(ProfessionId::parse, null);
 
-		var itemSet = new ItemSetImpl(name, null, timeRestriction, characterRestriction, pieces);
-		var itemSetBonuses = getItemSetBonuses(itemSet);
+		var itemSet = new ItemSetImpl(name, timeRestriction, characterRestriction, pieces, requiredProfession);
+		var itemSetBonuses = getItemSetBonuses(itemSet, timeRestriction);
 
 		itemSet.setItemSetBonuses(itemSetBonuses);
 
@@ -65,11 +57,11 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		return itemSet;
 	}
 
-	private List<ItemSetBonus> getItemSetBonuses(ItemSet itemSet) {
+	private List<ItemSetBonus> getItemSetBonuses(ItemSet itemSet, TimeRestriction timeRestriction) {
 		List<ItemSetBonus> itemSetBonuses = new ArrayList<>();
 
 		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
-			ItemSetBonus itemSetBonus = getItemSetBonus(bonusIdx, itemSet);
+			ItemSetBonus itemSetBonus = getItemSetBonus(bonusIdx, itemSet, timeRestriction);
 			if (itemSetBonus != null) {
 				itemSetBonuses.add(itemSetBonus);
 			}
@@ -78,20 +70,16 @@ public class ItemSetSheetParser extends WowExcelSheetParser {
 		return itemSetBonuses;
 	}
 
-	private ItemSetBonus getItemSetBonus(int bonusIdx, ItemSet itemSet) {
+	private ItemSetBonus getItemSetBonus(int bonusIdx, ItemSet itemSet, TimeRestriction timeRestriction) {
 		int numPieces = column(itemSetBonusNumPieces(bonusIdx)).getInteger(0);
 
 		if (numPieces == 0) {
 			return null;
 		}
 
-		String description = column(itemSetBonusDescription(bonusIdx)).getString();
-		Attributes attributes = readAttributes(itemSetBonusStatPrefix(bonusIdx));
-		AttributeCondition professionCondition = AttributeCondition.of(colIBonusReqProfession.getEnum(ProfessionId::parse, null));
+		var prefix = itemSetBonusStatPrefix(bonusIdx);
+		var bonusEffect = readItemEffect(prefix, 1, timeRestriction, new ItemSetSource(itemSet, numPieces));
 
-		attributes = AttributesBuilder.attachCondition(attributes, professionCondition);
-		attributes = AttributesBuilder.attachSource(attributes, new ItemSetSource(itemSet, numPieces));
-
-		return new ItemSetBonus(numPieces, description, attributes);
+		return new ItemSetBonus(numPieces, bonusEffect);
 	}
 }

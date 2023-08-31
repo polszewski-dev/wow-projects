@@ -3,6 +3,7 @@ package wow.commons.repository.impl.parser.item;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.item.impl.TradedItemImpl;
 import wow.commons.repository.PveRepository;
+import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
 /**
@@ -10,8 +11,8 @@ import wow.commons.repository.impl.ItemRepositoryImpl;
  * Date: 2022-11-22
  */
 public class TradedItemSheetParser extends AbstractItemSheetParser {
-	public TradedItemSheetParser(String sheetName, PveRepository pveRepository, ItemRepositoryImpl itemRepository) {
-		super(sheetName, pveRepository, itemRepository);
+	public TradedItemSheetParser(String sheetName, PveRepository pveRepository, SpellRepository spellRepository, ItemRepositoryImpl itemRepository) {
+		super(sheetName, pveRepository, spellRepository, itemRepository);
 	}
 
 	@Override

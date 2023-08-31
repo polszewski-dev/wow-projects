@@ -1,9 +1,9 @@
 package wow.simulator.script;
 
-import wow.commons.model.spell.SpellId;
-import wow.simulator.model.effect.Effect;
+import wow.commons.model.spell.AbilityId;
+import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.unit.Player;
-import wow.simulator.model.unit.Target;
+import wow.simulator.model.unit.Unit;
 
 import java.util.function.BiPredicate;
 
@@ -12,56 +12,57 @@ import java.util.function.BiPredicate;
  * Date: 2023-08-08
  */
 public record ConditionalSpellCast(
-		SpellId spellId,
-		BiPredicate<Player, Target> condition
+		AbilityId abilityId,
+		BiPredicate<Player, Unit> condition
 ) {
 	public boolean check(Player player) {
-		return condition.test(player, (Target) player.getTarget());
+		return condition.test(player, player.getTarget());
 	}
 
-	public static ConditionalSpellCast of(SpellId spellToCast) {
+	public static ConditionalSpellCast of(AbilityId spellToCast) {
 		return new ConditionalSpellCast(spellToCast, (player, target) -> true);
 	}
 
 	public ConditionalSpellCast dotCondition() {
-		return new ConditionalSpellCast(spellId, condition.and(this::dotCondition));
+		return new ConditionalSpellCast(abilityId, condition.and(this::dotCondition));
 	}
 
 	public ConditionalSpellCast notOnCooldown() {
-		return new ConditionalSpellCast(spellId, condition.and(this::notOnCooldown));
+		return new ConditionalSpellCast(abilityId, condition.and(this::notOnCooldown));
 	}
 
-	private boolean dotCondition(Player player, Target target) {
-		if (player.isOnCooldown(spellId)) {
+	private boolean dotCondition(Player player, Unit target) {
+		if (player.isOnCooldown(abilityId)) {
 			return false;
 		}
-		if (target.isUnderEffect(spellId, player)) {
+		if (target.isUnderEffect(abilityId, player)) {
 			return false;
 		}
 		if (!remainingDurationBelowSpellCastTime(player, target)) {
 			return false;
 		}
-		return remainingSimulationDurationBelowSpellDuration(player);
+		return remainingSimulationDurationBelowSpellDuration(player, target);
 	}
 
-	private boolean notOnCooldown(Player player, Target target) {
-		return !player.isOnCooldown(spellId);
+	private boolean notOnCooldown(Player player, Unit target) {
+		return !player.isOnCooldown(abilityId);
 	}
 
-	private boolean remainingDurationBelowSpellCastTime(Player player, Target target) {
-		var optionalEffect = target.getEffect(spellId, player);
+	private boolean remainingDurationBelowSpellCastTime(Player player, Unit target) {
+		var optionalEffect = target.getEffect(abilityId, player);
 		if (optionalEffect.isEmpty()) {
 			return true;
 		}
-		Effect effect = optionalEffect.get();
+		UnitEffect effect = optionalEffect.get();
 		double remainingDuration = effect.getRemainingDuration().getSeconds();
-		double castTime = player.getSnapshot(spellId).getCastTime();
+		double castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
 		return remainingDuration <= castTime;
 	}
 
-	private boolean remainingSimulationDurationBelowSpellDuration(Player player) {
-		double duration = player.getSnapshot(spellId).getDuration();
+	private boolean remainingSimulationDurationBelowSpellDuration(Player player, Unit target) {
+		double castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
+		double duration = player.getEffectDurationSnapshot(abilityId, target).getDuration();
 		double remainingTime = player.getSimulation().getRemainingTime().getSeconds();
-		return duration <= remainingTime;
+		return castTime + duration <= remainingTime;
 	}
 }

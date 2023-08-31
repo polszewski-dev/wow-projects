@@ -19,4 +19,9 @@ public enum ArmorSubType implements ItemSubType {
 	public static ArmorSubType tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
+
+	@Override
+	public String toString() {
+		return key;
+	}
 }

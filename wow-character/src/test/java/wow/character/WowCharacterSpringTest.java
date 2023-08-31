@@ -5,9 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.Character;
 import wow.character.model.character.CharacterTemplateId;
-import wow.character.model.character.Enemy;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
@@ -62,7 +61,7 @@ public abstract class WowCharacterSpringTest {
 		Equipment equipment = new Equipment();
 
 		Gem metaGem = getGem("Chaotic Skyfire Diamond");
-		Gem redGem = getGem("Runed Crimson Spinel");
+		Gem redGem = getGem(32196);
 		Gem orangeGem = getGem("Reckless Pyrestone");
 		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
 
@@ -93,6 +92,10 @@ public abstract class WowCharacterSpringTest {
 
 	protected Gem getGem(String name) {
 		return itemRepository.getGem(name, PHASE).orElseThrow();
+	}
+
+	protected Gem getGem(int gemId) {
+		return itemRepository.getGem(gemId, PHASE).orElseThrow();
 	}
 
 	protected Enchant getEnchant(String name) {
@@ -150,20 +153,28 @@ public abstract class WowCharacterSpringTest {
 		return spellRepository.getTalent(CHARACTER_CLASS, talentId, rank, PHASE).orElseThrow();
 	}
 
-	protected Character getCharacter() {
-		Character character = characterService.createCharacter(
-				CHARACTER_CLASS,
-				RACE,
+	protected PlayerCharacter getCharacter() {
+		return getCharacter(CHARACTER_CLASS, RACE);
+	}
+
+	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race) {
+		var character = characterService.createPlayerCharacter(
+				characterClass,
+				race,
 				LEVEL,
 				PHASE
 		);
 
-		Enemy enemy = new Enemy(ENEMY_TYPE, LVL_DIFF);
-		character.setTargetEnemy(enemy);
+		var target = characterService.createNonPlayerCharacter(
+				ENEMY_TYPE,
+				LEVEL + LVL_DIFF,
+				PHASE
+		);
+
+		character.setTarget(target);
 
 		CharacterTemplateId templateId = character.getCharacterClass().getDefaultCharacterTemplateId();
 		characterService.applyCharacterTemplate(character, templateId);
-
 		return character;
 	}
 

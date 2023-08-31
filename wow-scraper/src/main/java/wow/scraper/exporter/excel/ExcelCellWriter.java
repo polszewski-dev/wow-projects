@@ -9,7 +9,7 @@ import wow.commons.model.Money;
 import wow.commons.model.Percent;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,7 +26,11 @@ public abstract class ExcelCellWriter {
 	protected final ExcelWriter writer;
 
 	protected void setHeader(String colName) {
-		setHeader(colName, null);
+		setHeader(colName, (Integer) null);
+	}
+
+	protected void setHeader(String colName, String prefix) {
+		setHeader(prefix + colName, (Integer) null);
 	}
 
 	protected void setHeader(String colName, Integer width) {
@@ -44,6 +48,14 @@ public abstract class ExcelCellWriter {
 		}
 	}
 
+	protected void setValue(Integer value, Integer defaultValue) {
+		if (Objects.equals(value, defaultValue)) {
+			setValue((Integer) null);
+		} else {
+			setValue(value);
+		}
+	}
+
 	protected void setValue(Double value) {
 		if (value != null) {
 			writer.setCell(value, DATA_STYLE);
@@ -54,7 +66,27 @@ public abstract class ExcelCellWriter {
 
 	protected <T extends Enum<T>> void setValue(Enum<T> value) {
 		if (value != null) {
-			writer.setCell(value.name(), DATA_STYLE);
+			writer.setCell(formatEnum(value), DATA_STYLE);
+		} else {
+			writer.setCell(null, DATA_STYLE);
+		}
+	}
+
+	protected <T extends Enum<T>> void setValue(Enum<T> value, Enum<T> defaultValue) {
+		if (Objects.equals(value, defaultValue)) {
+			setValue((Enum<T>) null);
+		} else {
+			setValue(value);
+		}
+	}
+
+	protected <T extends Enum<T>> String formatEnum(Enum<T> value) {
+		return value.toString();
+	}
+
+	protected void setValue(Boolean value) {
+		if (value != null && value) {
+			writer.setCell("true", DATA_STYLE);
 		} else {
 			writer.setCell(null, DATA_STYLE);
 		}
@@ -66,9 +98,21 @@ public abstract class ExcelCellWriter {
 
 	protected void setValue(Duration value) {
 		if (value != null) {
-			writer.setCell(value.getSeconds(), DATA_STYLE);
+			if (value.isInfinite()) {
+				writer.setCell(value.toString(), DATA_STYLE);
+			} else {
+				writer.setCell(value.getSeconds(), DATA_STYLE);
+			}
 		} else {
 			writer.setCell(null, DATA_STYLE);
+		}
+	}
+
+	protected void setValue(Duration value, Duration defaultValue) {
+		if (Objects.equals(value, defaultValue)) {
+			setValue((Duration) null);
+		} else {
+			setValue(value);
 		}
 	}
 
@@ -80,6 +124,14 @@ public abstract class ExcelCellWriter {
 		}
 	}
 
+	protected void setValue(Percent value, Percent defaultValue) {
+		if (Objects.equals(value, defaultValue)) {
+			setValue((Percent) null);
+		} else {
+			setValue(value);
+		}
+	}
+
 	protected void setValue(Money value) {
 		if (value != null) {
 			writer.setCell(value.toString(), DATA_STYLE);
@@ -88,12 +140,9 @@ public abstract class ExcelCellWriter {
 		}
 	}
 
-	protected <T extends Enum<T>> void setValue(List<T> list) {
-		if (list != null && !list.isEmpty()) {
-			setValue(list.stream().map(Enum::name).collect(Collectors.joining(",")));
-		} else {
-			writer.nextCell();
-		}
+	protected <T> void setValue(List<T> list) {
+		Function<T, String> mapper = (T x) -> x instanceof Enum<?> ? formatEnum((Enum<?>) x) : x.toString();
+		setValue(list, mapper);
 	}
 
 	protected <T> void setValue(List<T> list, Function<T, String> mapper) {
@@ -101,24 +150,6 @@ public abstract class ExcelCellWriter {
 			setValue(list.stream().map(mapper).collect(Collectors.joining(",")));
 		} else {
 			writer.nextCell();
-		}
-	}
-
-	protected void setList(List<String> values, int maxValues) {
-		setList(values, maxValues, this::setValue, 1);
-	}
-
-	protected <T> void setList(List<T> values, int maxValues, Consumer<T> valueSetter, int numEmptyCells) {
-		if (values.size() > maxValues) {
-			throw new IllegalArgumentException("Too many values: " + values.size());
-		}
-
-		for (int i = 1; i <= maxValues; ++i) {
-			if (values.size() >= i) {
-				valueSetter.accept(values.get(i - 1));
-			} else {
-				fillRemainingEmptyCols(numEmptyCells);
-			}
 		}
 	}
 

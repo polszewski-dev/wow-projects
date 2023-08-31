@@ -1,6 +1,7 @@
 package wow.scraper.exporter.item.excel;
 
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.spell.Spell;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
 
 import java.util.List;
@@ -30,9 +31,10 @@ public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 		setHeader(REQ_XFACTION);
 		setHeader(PVE_ROLES);
 		setHeader(ITEM_SOCKET_TYPES);
-		writeAttributeHeader(SOCKET_BONUS_PREFIX, SOCKET_BONUS_MAX_STATS);
+		writeEffectHeader(SOCKET_BONUS_PREFIX, 1);
 		setHeader(ITEM_ITEM_SET, 30);
-		writeAttributeHeader("", ITEM_MAX_STATS);
+		writeEffectHeader(ITEM_EFFECT_PREFIX, ITEM_MAX_EFFECTS);
+		setHeader(ITEM_ACTIVATED_ABILITY);
 		writeIconAndTooltipHeader();
 	}
 
@@ -47,11 +49,12 @@ public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 		setValue(parser.getRequiredProfessionLevel());
 		setValue(parser.getRequiredProfessionSpec());
 		setValue(parser.getExclusiveFaction());
-		writePveRoles(parser.getStatParser().getParsedStats());
+		writePveRoles(parser.getEffects(), parser.getActivatedAbility().orElse(null), parser.getItemId());
 		setValue(parser.getSocketTypes());
-		writeAttributes(parser.getSocketBonus(), SOCKET_BONUS_MAX_STATS);
+		writeEffect(parser.getSocketBonus().orElse(null));
 		setValue(parser.getItemSetName());
-		writeAttributes(parser.getStatParser().getParsedStats(), ITEM_MAX_STATS);
+		writeEffects(parser.getEffects(), ITEM_MAX_EFFECTS);
+		setValue(parser.getActivatedAbility().map(Spell::getId).orElse(null));
 		writeIconAndTooltip(parser);
 	}
 

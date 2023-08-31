@@ -1,7 +1,7 @@
 package wow.simulator.graph;
 
 import wow.commons.model.Duration;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.time.Time;
 
 import java.util.Comparator;
@@ -22,35 +22,35 @@ public class Statistics {
 		private int numCasts;
 	}
 
-	private final Map<SpellId, Statistic> statistics = new LinkedHashMap<>();
+	private final Map<AbilityId, Statistic> statistics = new LinkedHashMap<>();
 	private Time simulationStart;
 	private Time simulationEnd;
 	private int totalDamage = 0;
 
-	public void addCastTime(SpellId spellId, Duration duration, boolean castFinished) {
-		Statistic statistic = getStatistic(spellId);
+	public void addCastTime(AbilityId abilityId, Duration duration, boolean castFinished) {
+		Statistic statistic = getStatistic(abilityId);
 		statistic.totalCastTime = statistic.totalCastTime.add(duration);
 		if (castFinished) {
 			++statistic.numCasts;
 		}
 	}
 
-	public void addCooldownUptime(SpellId spellId, Duration duration) {
-		Statistic statistic = getStatistic(spellId);
+	public void addCooldownUptime(AbilityId abilityId, Duration duration) {
+		Statistic statistic = getStatistic(abilityId);
 		statistic.cdUptime = statistic.cdUptime.add(duration);
 	}
 
-	public void addEffectUptime(SpellId spellId, Duration duration) {
-		Statistic statistic = getStatistic(spellId);
+	public void addEffectUptime(AbilityId abilityId, Duration duration) {
+		Statistic statistic = getStatistic(abilityId);
 		statistic.effectUptime = statistic.effectUptime.add(duration);
 	}
 
-	public void addDamage(SpellId spellId, int damage) {
-		getStatistic(spellId).totalDamage += damage;
+	public void addDamage(AbilityId abilityId, int damage) {
+		getStatistic(abilityId).totalDamage += damage;
 		this.totalDamage += damage;
 	}
 
-	public List<SpellId> getEffects() {
+	public List<AbilityId> getEffects() {
 		return statistics.entrySet().stream()
 				.filter(x -> !x.getValue().effectUptime.isZero())
 				.map(Map.Entry::getKey)
@@ -58,7 +58,7 @@ public class Statistics {
 				.toList();
 	}
 
-	public List<SpellId> getCooldowns() {
+	public List<AbilityId> getCooldowns() {
 		return statistics.entrySet().stream()
 				.filter(x -> !x.getValue().cdUptime.isZero())
 				.map(Map.Entry::getKey)
@@ -66,7 +66,7 @@ public class Statistics {
 				.toList();
 	}
 
-	public List<SpellId> getDamageSpells() {
+	public List<AbilityId> getDamageSpells() {
 		return statistics.entrySet().stream()
 				.filter(x -> x.getValue().totalDamage != 0)
 				.map(Map.Entry::getKey)
@@ -74,28 +74,28 @@ public class Statistics {
 				.toList();
 	}
 
-	public double getEffectUptimePct(SpellId spellId) {
-		return getDurationPct(getStatistic(spellId).effectUptime);
+	public double getEffectUptimePct(AbilityId abilityId) {
+		return getDurationPct(getStatistic(abilityId).effectUptime);
 	}
 
-	public double getCooldownUptimePct(SpellId spellId) {
-		return getDurationPct(getStatistic(spellId).cdUptime);
+	public double getCooldownUptimePct(AbilityId abilityId) {
+		return getDurationPct(getStatistic(abilityId).cdUptime);
 	}
 
-	public int getTotalDamage(SpellId spellId) {
-		return getStatistic(spellId).totalDamage;
+	public int getTotalDamage(AbilityId abilityId) {
+		return getStatistic(abilityId).totalDamage;
 	}
 
-	public double getTotalDamagePct(SpellId spellId) {
-		return 100.0 * getStatistic(spellId).totalDamage / totalDamage;
+	public double getTotalDamagePct(AbilityId abilityId) {
+		return 100.0 * getStatistic(abilityId).totalDamage / totalDamage;
 	}
 
 	public int getTotalDamage() {
 		return totalDamage;
 	}
 
-	public int getDps(SpellId spellId) {
-		Statistic statistic = getStatistic(spellId);
+	public int getDps(AbilityId abilityId) {
+		Statistic statistic = getStatistic(abilityId);
 		return (int)(statistic.totalDamage / statistic.totalCastTime.getSeconds());
 	}
 
@@ -103,12 +103,12 @@ public class Statistics {
 		return (int)(totalDamage / getTotalDuration().getSeconds());
 	}
 
-	public int getNumCasts(SpellId spellId) {
-		return getStatistic(spellId).numCasts;
+	public int getNumCasts(AbilityId abilityId) {
+		return getStatistic(abilityId).numCasts;
 	}
 
-	private Statistic getStatistic(SpellId spellId) {
-		return statistics.computeIfAbsent(spellId, x -> new Statistic());
+	private Statistic getStatistic(AbilityId abilityId) {
+		return statistics.computeIfAbsent(abilityId, x -> new Statistic());
 	}
 
 	private double getDurationPct(Duration duration) {

@@ -1,23 +1,22 @@
 package wow.character.model.equipment;
 
 import wow.character.model.Copyable;
-import wow.commons.model.attribute.AttributeCollection;
-import wow.commons.model.attribute.AttributeCollector;
-import wow.commons.model.attribute.Attributes;
+import wow.character.model.effect.EffectCollection;
+import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.item.*;
 import wow.commons.model.source.Source;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * User: POlszewski
  * Date: 2021-09-27
  */
-public class EquippableItem implements AttributeCollection, Copyable<EquippableItem> {
+public class EquippableItem implements EffectCollection, Copyable<EquippableItem> {
 	private final Item item;
 	private final ItemSockets sockets;
 	private Enchant enchant;
@@ -95,7 +94,7 @@ public class EquippableItem implements AttributeCollection, Copyable<EquippableI
 		return sockets.getSocketType(i);
 	}
 
-	public Attributes getSocketBonus() {
+	public Effect getSocketBonus() {
 		return sockets.getSocketBonus();
 	}
 
@@ -153,34 +152,24 @@ public class EquippableItem implements AttributeCollection, Copyable<EquippableI
 	}
 
 	@Override
-	public void collectAttributes(AttributeCollector collector) {
-		collector.addAttributes(item);
-		collector.addAttributes(enchant);
+	public void collectEffects(EffectCollector collector) {
+		collector.addEffects(item.getEffects());
+		if (enchant != null) {
+			collector.addEffect(enchant.getEffect());
+		}
 		if (sockets.getSocketCount() > 0) {
-			collector.addAttribute(sockets);
+			collector.addItemSockets(sockets);
 		}
 		if (item.getItemSet() != null) {
-			collector.addAttribute(new ItemSetPiece(item));
+			collector.addItemSet(item.getItemSet());
+		}
+		if (item.getActivatedAbility() != null) {
+			collector.addActivatedAbility(item.getActivatedAbility());
 		}
 	}
 
 	public int getGemCount(SocketType socketType) {
 		return sockets.getGemCount(socketType);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof EquippableItem)) return false;
-		EquippableItem that = (EquippableItem) o;
-		return Objects.equals(item, that.item) &&
-				Objects.equals(sockets, that.sockets) &&
-				Objects.equals(enchant, that.enchant);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(item, sockets, enchant);
 	}
 
 	@Override

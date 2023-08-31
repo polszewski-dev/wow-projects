@@ -91,7 +91,7 @@ public class WowheadSourceParser {
 
 		if (sourceMore.getN() != null) {
 			return switch (sourceMore.getT()) {
-				case 1 -> sourceNpcDrop(sourceMore.getN(), sourceMore.getTi(), sourceMore.getZ(), gameVersion);
+				case 1 -> sourceNpcDrop(sourceMore.getN(), sourceMore.getTi(), gameVersion);
 				case 2 -> sourceContainerObject(sourceMore.getN(), sourceMore.getTi(), sourceMore.getZ(), gameVersion);
 				case 3 -> sourceContainerItem(sourceMore.getN(), sourceMore.getTi());
 				default -> throw new IllegalArgumentException("Unknown type: %s".formatted(sourceMore.getN()));
@@ -139,11 +139,11 @@ public class WowheadSourceParser {
 	}
 
 	@SneakyThrows
-	private static String sourceNpcDrop(String npcName, Integer npcId, Integer zoneId, GameVersionId gameVersion) {
+	private static String sourceNpcDrop(String npcName, Integer npcId, GameVersionId gameVersion) {
 		Integer newNpcId = scraperContext.getScraperConfig().getSourceNpcToNpcReplacements().get(npcId);
 
 		if (newNpcId != null) {
-			return sourceNpcDrop(null, newNpcId, null, gameVersion);
+			return sourceNpcDrop(null, newNpcId, gameVersion);
 		}
 
 		var optionalNpc = scraperContext.getNpcDetailRepository().getById(gameVersion, npcId);
@@ -167,7 +167,7 @@ public class WowheadSourceParser {
 		Integer newNpcId = scraperContext.getScraperConfig().getSourceObjectToNpcReplacements().get(containerId);
 
 		if (newNpcId != null) {
-			return sourceNpcDrop(null, newNpcId, null, gameVersion);
+			return sourceNpcDrop(null, newNpcId, gameVersion);
 		}
 
 		return "ContainerObject:%s:%s:%s".formatted(containerName, containerId, zoneId);
@@ -272,7 +272,7 @@ public class WowheadSourceParser {
 				List<Integer> npcIds = entry.getValue();
 
 				for (Integer npcId : npcIds) {
-					getSourceList(tokenId).add(sourceNpcDrop(null, npcId, null, gameVersion));
+					getSourceList(tokenId).add(sourceNpcDrop(null, npcId, gameVersion));
 				}
 			}
 		}

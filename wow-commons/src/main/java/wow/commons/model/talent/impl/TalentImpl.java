@@ -1,18 +1,16 @@
 package wow.commons.model.talent.impl;
 
 import lombok.Getter;
-import lombok.NonNull;
-import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
+import lombok.Setter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.config.impl.ConfigurationElementWithAttributesImpl;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.talent.Talent;
+import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentIdAndRank;
-import wow.commons.model.talent.TalentInfo;
-import wow.commons.model.talent.TalentSource;
-import wow.commons.util.AttributesBuilder;
+import wow.commons.model.talent.TalentTree;
 import wow.commons.util.CollectionUtil;
 
 /**
@@ -20,19 +18,38 @@ import wow.commons.util.CollectionUtil;
  * Date: 2023-03-27
  */
 @Getter
-public class TalentImpl extends ConfigurationElementWithAttributesImpl<TalentIdAndRank> implements Talent {
-	@NonNull
-	private final TalentInfo talentInfo;
+@Setter
+public class TalentImpl implements Talent {
+	private final int id;
+	private final int rank;
+	private final int maxRank;
+	private final int talentCalculatorPosition;
+	private final TalentTree talentTree;
+	private final TalentIdAndRank rankedTalentId;
+	private final Description description;
+	private final TimeRestriction timeRestriction;
+	private final CharacterRestriction characterRestriction;
+	private Effect effect;
 
 	public TalentImpl(
-			TalentIdAndRank id,
+			int id,
+			int rank,
+			int maxRank,
+			int talentCalculatorPosition,
+			TalentTree talentTree,
 			Description description,
 			TimeRestriction timeRestriction,
-			CharacterRestriction characterRestriction,
-			TalentInfo talentInfo
+			CharacterRestriction characterRestriction
 	) {
-		super(id, description, timeRestriction, characterRestriction);
-		this.talentInfo = talentInfo;
+		this.id = id;
+		this.rank = rank;
+		this.maxRank = maxRank;
+		this.talentCalculatorPosition = talentCalculatorPosition;
+		this.talentTree = talentTree;
+		this.rankedTalentId = new TalentIdAndRank(TalentId.parse(description.name()), rank);
+		this.description = description;
+		this.timeRestriction = timeRestriction;
+		this.characterRestriction = characterRestriction;
 	}
 
 	@Override
@@ -41,24 +58,11 @@ public class TalentImpl extends ConfigurationElementWithAttributesImpl<TalentIdA
 	}
 
 	@Override
-	public Talent combineWith(Talent talent) {
-		var combinedAttributes = AttributesBuilder.addAttributes(getAttributes(), talent.getAttributes());
-		var result = new TalentImpl(getId(), getDescription(), getTimeRestriction(), getCharacterRestriction(), talentInfo);
-		result.setAttributes(combinedAttributes);
-		return result;
-	}
-
-	@Override
-	protected SpecialAbilitySource getSpecialAbilitySource() {
-		return new TalentSource(this);
-	}
-
-	@Override
 	public String toString() {
 		if (getMaxRank() == 1) {
 			return getName();
 		} else {
-			return String.format("%s %s/%s", getName(), getRank(), getMaxRank());
+			return rankedTalentId.toString();
 		}
 	}
 }

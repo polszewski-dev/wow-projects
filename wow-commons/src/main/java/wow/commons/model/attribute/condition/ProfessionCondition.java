@@ -20,8 +20,8 @@ public record ProfessionCondition(ProfessionId professionId) implements Attribut
 	}
 
 	@Override
-	public String getConditionString() {
-		return "prof: " + professionId;
+	public boolean test(AttributeConditionArgs args) {
+		return args.getProfessionId() == professionId;
 	}
 
 	@Override

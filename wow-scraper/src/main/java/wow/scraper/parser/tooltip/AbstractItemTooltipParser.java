@@ -2,6 +2,7 @@ package wow.scraper.parser.tooltip;
 
 import lombok.Getter;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.PhaseId;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
 
@@ -17,5 +18,10 @@ public abstract class AbstractItemTooltipParser extends AbstractTooltipParser<Js
 
 	public int getItemId() {
 		return details.getId();
+	}
+
+	@Override
+	protected PhaseId getPhaseOverride() {
+		return getScraperConfig().getItemPhaseOverrides().get(details.getId());
 	}
 }

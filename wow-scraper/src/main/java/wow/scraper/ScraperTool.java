@@ -29,7 +29,7 @@ public abstract class ScraperTool implements ScraperContextSource {
 	protected final <B extends WowExcelBuilder, E extends ExcelExporter<B>> void exportAll(B builder, E... exporters) {
 		for (var exporter : exporters) {
 			exporter.init(getScraperContext(), builder);
-			exporter.exportAll();
+			exporter.prepareAndExport();
 		}
 	}
 }

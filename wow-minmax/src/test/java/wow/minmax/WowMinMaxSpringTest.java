@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.Character;
 import wow.character.model.character.CharacterTemplateId;
-import wow.character.model.character.Enemy;
+import wow.character.model.character.NonPlayerCharacter;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
@@ -54,7 +54,7 @@ public abstract class WowMinMaxSpringTest {
 		Equipment equipment = new Equipment();
 
 		Gem metaGem = getGem("Chaotic Skyfire Diamond");
-		Gem redGem = getGem("Runed Crimson Spinel");
+		Gem redGem = getGem(32196);
 		Gem orangeGem = getGem("Reckless Pyrestone");
 		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
 
@@ -87,20 +87,29 @@ public abstract class WowMinMaxSpringTest {
 		return itemRepository.getGem(name, PHASE).orElseThrow();
 	}
 
+	protected Gem getGem(int gemId) {
+		return itemRepository.getGem(gemId, PHASE).orElseThrow();
+	}
+
 	protected Enchant getEnchant(String name) {
 		return itemRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected Character getCharacter() {
-		Character character = characterService.createCharacter(
+	protected PlayerCharacter getCharacter() {
+		PlayerCharacter character = characterService.createPlayerCharacter(
 				CHARACTER_CLASS,
 				RACE,
 				LEVEL,
 				PHASE
 		);
 
-		Enemy enemy = new Enemy(ENEMY_TYPE, LVL_DIFF);
-		character.setTargetEnemy(enemy);
+		NonPlayerCharacter enemy = characterService.createNonPlayerCharacter(
+				ENEMY_TYPE,
+				LEVEL + LVL_DIFF,
+				PHASE
+		);
+
+		character.setTarget(enemy);
 
 		CharacterTemplateId templateId = character.getCharacterClass().getDefaultCharacterTemplateId();
 		characterService.applyCharacterTemplate(character, templateId);
@@ -109,7 +118,7 @@ public abstract class WowMinMaxSpringTest {
 	}
 
 	protected PlayerProfile getPlayerProfile() {
-		Character character = getCharacter();
+		PlayerCharacter character = getCharacter();
 		PlayerProfile profile = new PlayerProfile(
 				PROFILE_ID, PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), new HashMap<>(), LocalDateTime.now(), CHARACTER_KEY
 		);

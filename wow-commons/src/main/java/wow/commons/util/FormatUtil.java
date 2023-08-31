@@ -6,7 +6,7 @@ package wow.commons.util;
  */
 public final class FormatUtil {
 	public static String decimalPointOnlyIfNecessary(double value) {
-		if (value % 1 <= PRECISION) {
+		if (Math.abs(value % 1) <= PRECISION) {
 			return Integer.toString((int)value);
 		} else {
 			return String.format("%.2f", value);

@@ -4,7 +4,7 @@ import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,8 +16,8 @@ import java.util.Objects;
 public record ViewConfig(
 		CharacterRestriction characterRestriction,
 		TimeRestriction timeRestriction,
-		double evivalentAmount,
-		List<SpellId> relevantSpells
+		double equivalentAmount,
+		List<AbilityId> relevantSpells
 ) implements CharacterRestricted, TimeRestricted {
 	public ViewConfig {
 		Objects.requireNonNull(characterRestriction);

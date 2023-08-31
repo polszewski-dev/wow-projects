@@ -3,7 +3,7 @@ package wow.character.model.build;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.talent.TalentId;
 
 import java.util.List;
@@ -35,7 +35,7 @@ class TalentsTest extends WowCharacterSpringTest {
 	void loadFromTalentLink() {
 		talents.loadFromTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030240");
 
-		assertThat(talents.getList().stream().map(x -> x.getTalentId() + "#" + x.getRank())).hasSameElementsAs(List.of(
+		assertThat(talents.getList().stream().map(x -> x.getName() + "#" + x.getRank())).hasSameElementsAs(List.of(
 				"Improved Healthstone#2",
 				"Demonic Embrace#5",
 				"Improved Voidwalker#1",
@@ -67,7 +67,7 @@ class TalentsTest extends WowCharacterSpringTest {
 		assertThat(talents.hasTalent(TalentId.SHADOW_MASTERY)).isFalse();
 	}
 
-	Character character;
+	PlayerCharacter character;
 	Talents talents;
 
 	@BeforeEach

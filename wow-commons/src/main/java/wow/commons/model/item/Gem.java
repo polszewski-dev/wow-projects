@@ -1,6 +1,7 @@
 package wow.commons.model.item;
 
 import wow.commons.model.categorization.PveRoleClassified;
+import wow.commons.model.effect.Effect;
 
 import java.util.List;
 
@@ -13,18 +14,7 @@ public interface Gem extends AbstractItem, PveRoleClassified {
 
 	List<MetaEnabler> getMetaEnablers();
 
-	default String getShorterName() {
-		if (getColor() == GemColor.META) {
-			return getName();
-		}
-		return getAttributes().toString();
-	}
+	List<Effect> getEffects();
 
-	default boolean isMetaConditionTrue(int numRed, int numYellow, int numBlue) {
-		if (getMetaEnablers() == null) {
-			return true;
-		}
-
-		return getMetaEnablers().stream().allMatch(metaEnabler -> metaEnabler.isMetaConditionTrue(numRed, numYellow, numBlue));
-	}
+	boolean isMetaConditionTrue(int numRed, int numYellow, int numBlue);
 }

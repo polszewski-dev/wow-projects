@@ -9,7 +9,6 @@ import wow.commons.model.pve.GameVersionId;
  * Date: 2023-03-28
  */
 public class GameVersionSheetParser extends CharacterSheetParser {
-	private final ExcelColumn colId = column("id");
 	private final ExcelColumn colBasePveSpellHitChance = column("base_pve_spell_hit_chances");
 	private final ExcelColumn colMaxPveSpellHitChance = column("max_pve_spell_hit_chance");
 

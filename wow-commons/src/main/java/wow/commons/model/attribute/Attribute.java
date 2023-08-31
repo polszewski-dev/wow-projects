@@ -1,8 +1,5 @@
 package wow.commons.model.attribute;
 
-import wow.commons.model.Duration;
-import wow.commons.model.Percent;
-import wow.commons.model.attribute.complex.ComplexAttribute;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.primitive.PrimitiveAttribute;
 import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
@@ -11,53 +8,17 @@ import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
  * User: POlszewski
  * Date: 2021-10-07
  */
-public sealed interface Attribute permits PrimitiveAttribute, ComplexAttribute {
+public sealed interface Attribute permits PrimitiveAttribute {
 	static PrimitiveAttribute of(PrimitiveAttributeId id, double value) {
-		return of(id, value, AttributeCondition.EMPTY);
+		return of(id, value, AttributeCondition.EMPTY, false);
 	}
 
 	static PrimitiveAttribute of(PrimitiveAttributeId id, double value, AttributeCondition condition) {
-		return new PrimitiveAttribute(id, value, condition);
+		return of(id, value, condition, false);
 	}
 
-	static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value) {
-		return of(id, value, AttributeCondition.EMPTY);
-	}
-
-	static PrimitiveAttribute of(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
-		return new PrimitiveAttribute(id, value.value(), condition);
-	}
-
-	static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value) {
-		return of(id, value, AttributeCondition.EMPTY);
-	}
-
-	static PrimitiveAttribute of(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
-		return new PrimitiveAttribute(id, value.getSeconds(), condition);
-	}
-
-	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value) {
-		return ofNullable(id, value, AttributeCondition.EMPTY);
-	}
-
-	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, double value, AttributeCondition condition) {
-		return value != 0 ? of(id, value, condition) : null;
-	}
-
-	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value) {
-		return ofNullable(id, value, AttributeCondition.EMPTY);
-	}
-
-	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Percent value, AttributeCondition condition) {
-		return value != null && !value.isZero() ? of(id, value, condition) : null;
-	}
-
-	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value) {
-		return ofNullable(id, value, AttributeCondition.EMPTY);
-	}
-
-	static PrimitiveAttribute ofNullable(PrimitiveAttributeId id, Duration value, AttributeCondition condition) {
-		return value != null && !value.isZero() ? of(id, value, condition) : null;
+	static PrimitiveAttribute of(PrimitiveAttributeId id, double value, AttributeCondition condition, boolean levelScaled) {
+		return new PrimitiveAttribute(id, value, condition, levelScaled);
 	}
 
 	AttributeId id();
@@ -67,6 +28,4 @@ public sealed interface Attribute permits PrimitiveAttribute, ComplexAttribute {
 	default boolean hasCondition() {
 		return !condition().isEmpty();
 	}
-
-	Attribute attachCondition(AttributeCondition condition);
 }

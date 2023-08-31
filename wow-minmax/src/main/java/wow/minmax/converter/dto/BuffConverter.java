@@ -19,7 +19,7 @@ public class BuffConverter implements Converter<Buff, BuffDTO> {
 				source.getBuffId(),
 				source.getRank(),
 				source.getName(),
-				source.statString(),
+				source.getEffect().getTooltip(),
 				source.getIcon(),
 				source.getTooltip(),
 				false

@@ -17,8 +17,9 @@ import static wow.commons.util.parser.simple.SimpleRecordConstants.*;
 class SimpleRecordSerializer {
 	public String serialize(String type, Map<String, ?> fields) {
 		StringBuilder sb = new StringBuilder();
-		assertTypeIsCorrect(type);
-		sb.append(type).append(" " + ARROW + " ");
+		if (type != null) {
+			sb.append(type).append(" " + ARROW + " ");
+		}
 		sb.append(fields.entrySet().stream()
 				.map(this::keyValuePair)
 				.filter(Objects::nonNull)
@@ -30,7 +31,7 @@ class SimpleRecordSerializer {
 	private String keyValuePair(Map.Entry<String, ?> e) {
 		String key = serializeKey(e.getKey());
 		String value = serializeValue(e.getValue());
-		if (value == null) {
+		if (value == null || value.isEmpty()) {
 			return null;
 		}
 		return key + EQUALS + value;
@@ -59,19 +60,13 @@ class SimpleRecordSerializer {
 			return prettyFormat(v.value());
 		}
 		if (value instanceof Duration v) {
-			return prettyFormat(v.getSeconds());
+			return v.isInfinite() ? v.toString() : prettyFormat(v.getSeconds());
 		}
 		return value.toString();
 	}
 
 	private static String prettyFormat(Double value) {
 		return FormatUtil.decimalPointOnlyIfNecessary(value);
-	}
-
-	private static void assertTypeIsCorrect(String type) {
-		if (type == null || type.isBlank()) {
-			throw new IllegalArgumentException("null!");
-		}
 	}
 
 	private static void assertKeyIsCorrect(String key) {

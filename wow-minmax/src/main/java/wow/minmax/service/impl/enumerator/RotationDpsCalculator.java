@@ -3,12 +3,10 @@ package wow.minmax.service.impl.enumerator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.build.Rotation;
-import wow.character.model.character.Character;
-import wow.character.model.snapshot.RngStrategy;
-import wow.character.model.snapshot.Snapshot;
-import wow.commons.model.attribute.Attributes;
-import wow.commons.model.spell.Spell;
-import wow.minmax.service.CalculationService;
+import wow.commons.model.spell.Ability;
+import wow.minmax.model.Snapshot;
+
+import java.util.function.Function;
 
 /**
  * User: POlszewski
@@ -17,11 +15,8 @@ import wow.minmax.service.CalculationService;
 @RequiredArgsConstructor
 @Getter
 public class RotationDpsCalculator {
-	private final Character character;
 	private final Rotation rotation;
-	private final Attributes totalStats;
-
-	private final CalculationService calculationService;
+	private final Function<Ability, Snapshot> snapshotFunction;
 
 	private double totalDamage = 0;
 	private double timeLeft = FIGHT_DURATION;
@@ -35,8 +30,8 @@ public class RotationDpsCalculator {
 
 	public void calculate() {
 		setFiller();
-		for (Spell spell : rotation.getCooldowns()) {
-			addSpell(spell);
+		for (Ability ability : rotation.getCooldowns()) {
+			addSpell(ability);
 		}
 		addFillerDamage();
 	}
@@ -47,22 +42,22 @@ public class RotationDpsCalculator {
 
 	private void setFiller() {
 		fillerSnapshot = getSnapshot(rotation.getFiller());
-		fillerDamage = getDamage(fillerSnapshot);
-		fillerEffectiveCastTime = getEffectiveCastTime(fillerSnapshot);
+		fillerDamage = fillerSnapshot.getTotalDamage();
+		fillerEffectiveCastTime = fillerSnapshot.getEffectiveCastTime();
 		fillerDps = fillerDamage / fillerEffectiveCastTime;
 	}
 
-	private void addSpell(Spell spell) {
-		Snapshot snapshot = getSnapshot(spell);
-		double damage = getDamage(snapshot);
-		double effectiveCastTime = getEffectiveCastTime(snapshot);
+	private void addSpell(Ability ability) {
+		Snapshot snapshot = getSnapshot(ability);
+		double damage = snapshot.getTotalDamage();
+		double effectiveCastTime = snapshot.getEffectiveCastTime();
 		double dps = damage / effectiveCastTime;
 
 		if (dps <= fillerDps) {
 			return;
 		}
 
-		double effectiveCooldown = spell.getEffectiveCooldown().getSeconds();
+		double effectiveCooldown = snapshot.getEffectiveCooldown();
 		double numCasts = FIGHT_DURATION / effectiveCooldown;
 
 		totalDamage += numCasts * damage;
@@ -72,7 +67,7 @@ public class RotationDpsCalculator {
 			throw new IllegalArgumentException();
 		}
 
-		onRotationSpell(spell, numCasts, damage, snapshot);
+		onRotationSpell(ability, numCasts, damage, snapshot);
 	}
 
 	private void addFillerDamage() {
@@ -83,19 +78,11 @@ public class RotationDpsCalculator {
 		onRotationSpell(rotation.getFiller(), numCasts, fillerDamage, fillerSnapshot);
 	}
 
-	private Snapshot getSnapshot(Spell spell) {
-		return calculationService.getSnapshot(character, spell, totalStats);
+	private Snapshot getSnapshot(Ability ability) {
+		return snapshotFunction.apply(ability);
 	}
 
-	private double getDamage(Snapshot snapshot) {
-		return snapshot.getTotalDamage(RngStrategy.AVERAGED, true);
-	}
-
-	private double getEffectiveCastTime(Snapshot fillerSnapshot) {
-		return fillerSnapshot.getEffectiveCastTime();
-	}
-
-	protected void onRotationSpell(Spell spell, double numCasts, double damage, Snapshot snapshot) {
+	protected void onRotationSpell(Ability ability, double numCasts, double damage, Snapshot snapshot) {
 		// to be overriden
 	}
 }

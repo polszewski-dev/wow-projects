@@ -1,11 +1,10 @@
 package wow.character.model.equipment;
 
 import wow.character.model.Copyable;
-import wow.character.util.AttributeEvaluator;
-import wow.commons.model.attribute.AttributeCollection;
-import wow.commons.model.attribute.AttributeCollector;
-import wow.commons.model.attribute.Attributes;
+import wow.character.model.effect.EffectCollection;
+import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
 
@@ -17,7 +16,7 @@ import static wow.commons.model.categorization.ItemSlot.*;
  * User: POlszewski
  * Date: 2021-09-27
  */
-public class Equipment implements AttributeCollection, Copyable<Equipment> {
+public class Equipment implements EffectCollection, Copyable<Equipment> {
 	private final Map<ItemSlot, EquippableItem> itemsBySlot = new EnumMap<>(ItemSlot.class);
 
 	@Override
@@ -28,8 +27,8 @@ public class Equipment implements AttributeCollection, Copyable<Equipment> {
 	}
 
 	@Override
-	public void collectAttributes(AttributeCollector collector) {
-		itemsBySlot.values().forEach(item -> item.collectAttributes(collector));
+	public void collectEffects(EffectCollector collector) {
+		itemsBySlot.values().forEach(item -> item.collectEffects(collector));
 	}
 
 	public EquippableItem getHead() {
@@ -141,6 +140,20 @@ public class Equipment implements AttributeCollection, Copyable<Equipment> {
 		equip(item, item.getItemType().getUniqueItemSlot());
 	}
 
+	public void equip(ItemSlotGroup slotGroup, EquippableItem[] items) {
+		for (int i = 0; i < items.length; i++) {
+			var item = items[i];
+			var slot = slotGroup.getSlots().get(i);
+			equip(item, slot);
+		}
+	}
+
+	public void unequip(ItemSlotGroup slotGroup) {
+		for (var slot : slotGroup.getSlots()) {
+			equip(null, slot);
+		}
+	}
+
 	public void setEquipment(Equipment equipment) {
 		for (ItemSlot itemSlot : values()) {
 			this.equip(equipment.get(itemSlot), itemSlot);
@@ -187,89 +200,8 @@ public class Equipment implements AttributeCollection, Copyable<Equipment> {
 		return item.allSocketsHaveMatchingGems(numRed(), numYellow(), numBlue());
 	}
 
-	public Attributes getStats() {
-		return AttributeEvaluator.of()
-				.addAttributes(this)
-				.solveAllLeaveAbilities();
-	}
-
-	public List<EquippableItem> getItemDifference(Equipment equipment) {
-		List<EquippableItem> result = new ArrayList<>();
-
-		for (ItemSlot slot : ItemSlot.values()) {
-			findItemDifference(slot, equipment, result);
-		}
-
-		return result.stream().filter(Objects::nonNull).toList();
-	}
-
-	private void findItemDifference(ItemSlot slot, Equipment equipment, List<EquippableItem> result) {
-		if (slot == MAIN_HAND) {
-			if (!pairEquals(this.getMainHand(), this.getOffHand(), equipment.getMainHand(), equipment.getOffHand())) {
-				result.add(this.getMainHand());
-				result.add(this.getOffHand());
-			}
-		} else if (slot == FINGER_1) {
-			if (!pairEquals(this.getFinger1(), this.getFinger2(), equipment.getFinger1(), equipment.getFinger2())) {
-				result.add(this.getFinger1());
-				result.add(this.getFinger2());
-			}
-		} else if (slot == TRINKET_1) {
-			if (!pairEquals(this.getTrinket1(), this.getTrinket2(), equipment.getTrinket1(), equipment.getTrinket2())) {
-				result.add(this.getTrinket1());
-				result.add(this.getTrinket2());
-			}
-		} else if (slot != FINGER_2 && slot != TRINKET_2 && slot != OFF_HAND) {
-			EquippableItem mine = this.get(slot);
-			EquippableItem theirs = equipment.get(slot);
-
-			if (!Objects.equals(mine, theirs)) {
-				result.add(mine);
-			}
-		}
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Equipment that = (Equipment) o;
-
-		for (ItemSlot slot : values()) {
-			if (slot != FINGER_1 && slot != FINGER_2 && slot != TRINKET_1 && slot != TRINKET_2 && !Objects.equals(this.get(slot), that.get(slot))) {
-				return false;
-			}
-		}
-
-		return pairEquals(this.getFinger1(), this.getFinger2(), that.getFinger1(), that.getFinger2()) &&
-				pairEquals(this.getTrinket1(), this.getTrinket2(), that.getTrinket1(), that.getTrinket2());
-	}
-
-	@Override
-	public int hashCode() {
-		int finger1Hash = getHash(getFinger1());
-		int finger2Hash = getHash(getFinger2());
-		int trinket1Hash = getHash(getTrinket1());
-		int trinket2Hash = getHash(getTrinket2());
-
-		int fingerHash = 31 * Math.min(finger1Hash, finger2Hash) + Math.max(finger1Hash, finger2Hash);
-		int trinketHash = 31 * Math.min(trinket1Hash, trinket2Hash) + Math.max(trinket1Hash, trinket2Hash);
-
-		return Objects.hash(getHead(), getNeck(), getShoulder(), getBack(), getChest(), getWrist(), getHands(),
-							getWaist(), getLegs(), getFeet(), fingerHash, trinketHash, getMainHand(), getOffHand(), getRanged());
-	}
-
 	@Override
 	public String toString() {
 		return itemsBySlot.values().toString();
-	}
-
-	private static boolean pairEquals(EquippableItem pair1A, EquippableItem pair1B, EquippableItem pair2A, EquippableItem pair2B) {
-		return Objects.equals(pair1A, pair2A) && Objects.equals(pair1B, pair2B) ||
-				Objects.equals(pair1A, pair2B) && Objects.equals(pair1B, pair2A);
-	}
-
-	private static int getHash(EquippableItem item) {
-		return item != null ? item.hashCode() : 0;
 	}
 }

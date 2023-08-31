@@ -3,12 +3,10 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import wow.character.model.character.Character;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.converter.dto.ItemFilterConverter;
 import wow.minmax.converter.dto.UpgradeConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.Comparison;
 import wow.minmax.model.dto.ItemFilterDTO;
 import wow.minmax.model.dto.UpgradeDTO;
 import wow.minmax.service.PlayerProfileService;
@@ -36,8 +34,8 @@ public class UpgradeController {
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestBody ItemFilterDTO itemFilter
 	) {
-		Character character = playerProfileService.getCharacter(characterId).copy();
-		List<Comparison> upgrades = upgradeService.findUpgrades(
+		var character = playerProfileService.getCharacter(characterId).copy();
+		var upgrades = upgradeService.findUpgrades(
 				character, slotGroup, itemFilterConverter.convertBack(itemFilter)
 		);
 

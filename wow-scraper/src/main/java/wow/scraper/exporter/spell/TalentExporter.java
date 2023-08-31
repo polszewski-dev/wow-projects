@@ -1,6 +1,8 @@
 package wow.scraper.exporter.spell;
 
+import wow.scraper.exporter.spell.excel.SpellBaseExcelBuilder;
 import wow.scraper.model.JsonSpellDetails;
+import wow.scraper.model.WowheadSpellCategory.Type;
 import wow.scraper.parser.tooltip.TalentTooltipParser;
 
 import java.util.Comparator;
@@ -11,30 +13,22 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2023-08-24
  */
-public class TalentExporter extends TalentRankExporter {
+public class TalentExporter extends SinglePageSpellBaseExporter<TalentTooltipParser> {
 	@Override
-	protected void addHeader() {
+	protected void addHeader(SpellBaseExcelBuilder builder) {
 		builder.addTalentHeader();
 	}
 
 	@Override
-	protected void addRow(TalentTooltipParser parser) {
+	protected void addRow(TalentTooltipParser parser, SpellBaseExcelBuilder builder) {
 		builder.addTalent(parser);
 	}
 
 	@Override
 	protected List<JsonSpellDetails> getAllData() {
-		var allData = super.getAllData();
+		var allData = getData(Type.TALENT);
 		fillMaxRank(allData);
-		return stripRankInfo(allData);
-	}
-
-	@Override
-	protected Comparator<TalentTooltipParser> getComparator() {
-		return Comparator
-				.comparing(TalentTooltipParser::getCharacterClass)
-				.thenComparing(TalentTooltipParser::getGameVersion)
-				.thenComparing(TalentTooltipParser::getTalentCalculatorPosition);
+		return allData;
 	}
 
 	private void fillMaxRank(List<JsonSpellDetails> allData) {
@@ -47,5 +41,24 @@ public class TalentExporter extends TalentRankExporter {
 
 	private void setMaxRank(List<JsonSpellDetails> details) {
 		details.forEach(x -> x.setMaxRank(details.size()));
+	}
+
+	@Override
+	protected boolean isToBeIgnored(TalentTooltipParser parser) {
+		return parser.isTalentSpell() && parser.getRank() != 1;
+	}
+
+	@Override
+	protected Comparator<TalentTooltipParser> getComparator() {
+		return Comparator
+				.comparing(TalentTooltipParser::getCharacterClass)
+				.thenComparing(TalentTooltipParser::getGameVersion)
+				.thenComparing(TalentTooltipParser::getTalentCalculatorPosition)
+				.thenComparing(TalentTooltipParser::getRank);
+	}
+
+	@Override
+	protected TalentTooltipParser createParser(JsonSpellDetails details) {
+		return new TalentTooltipParser(details, getScraperContext());
 	}
 }

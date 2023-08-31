@@ -8,7 +8,7 @@ import wow.character.service.SpellService;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
 import wow.commons.repository.SpellRepository;
 
@@ -24,8 +24,8 @@ public class SpellServiceImpl implements SpellService {
 	private final SpellRepository spellRepository;
 
 	@Override
-	public List<Spell> getAvailableSpells(Character character) {
-		return spellRepository.getAvailableSpells(character.getCharacterClassId(), character.getLevel(), character.getPhaseId()).stream()
+	public List<Ability> getAvailableAbilities(Character character) {
+		return spellRepository.getAvailableAbilities(character.getCharacterClassId(), character.getLevel(), character.getPhaseId()).stream()
 				.filter(spell -> spell.isAvailableTo(character))
 				.toList();
 	}

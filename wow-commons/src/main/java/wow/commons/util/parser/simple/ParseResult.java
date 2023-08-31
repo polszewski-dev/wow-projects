@@ -1,8 +1,6 @@
 package wow.commons.util.parser.simple;
 
 import lombok.Data;
-import wow.commons.model.Duration;
-import wow.commons.model.Percent;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -44,26 +42,6 @@ public class ParseResult {
 	public Double getDouble(String key, Double defaultValue) {
 		String str = map.get(key);
 		return str != null ? Double.valueOf(str) : defaultValue;
-	}
-
-	public Percent getPercent(String key) {
-		assertHasKey(key);
-		return Percent.parse(map.get(key));
-	}
-
-	public Percent getPercent(String key, Percent defaultValue) {
-		Percent result = Percent.parse(map.get(key));
-		return result != null ? result : defaultValue;
-	}
-
-	public Duration getDuration(String key) {
-		assertHasKey(key);
-		return Duration.parse(map.get(key));
-	}
-
-	public Duration getDuration(String key, Duration defaultValue) {
-		Duration result = Duration.parse(map.get(key));
-		return result != null ? result : defaultValue;
 	}
 
 	public <T> T getEnum(String key, Function<String, T> producer) {

@@ -3,12 +3,11 @@ package wow.character.model.character;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.commons.model.spell.Spell;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -21,51 +20,51 @@ class SpellbookTest extends WowCharacterSpringTest {
 
 		spellbook.reset();
 
-		assertThat(copy.getSpellById()).isNotEmpty();
+		assertThat(copy.getAbilityById()).isNotEmpty();
 	}
 
 	@Test
 	void reset() {
 		spellbook.reset();
 
-		assertThat(spellbook.getSpellById()).isEmpty();
+		assertThat(spellbook.getAbilityById()).isEmpty();
 	}
 
 	@Test
-	void addSpell() {
-		Spell spell = spellbook.getSpell(SHADOW_BOLT).orElseThrow();
+	void addAbility() {
+		var ability = spellbook.getAbility(SHADOW_BOLT).orElseThrow();
 
 		spellbook.reset();
-		spellbook.addSpell(spell);
+		spellbook.addAbility(ability);
 
-		assertThat(spellbook.getSpell(spell.getSpellId()).orElseThrow()).isSameAs(spell);
+		assertThat(spellbook.getAbility(ability.getAbilityId()).orElseThrow()).isSameAs(ability);
 	}
 
 	@Test
-	void addSpells() {
-		Spell spell1 = spellbook.getSpell(SHADOW_BOLT, 1).orElseThrow();
-		Spell spell2 = spellbook.getSpell(SHADOW_BOLT, 2).orElseThrow();
+	void addAbilities() {
+		var ability1 = spellbook.getAbility(SHADOW_BOLT, 1).orElseThrow();
+		var ability2 = spellbook.getAbility(SHADOW_BOLT, 2).orElseThrow();
 
 		spellbook.reset();
-		spellbook.addSpells(List.of(spell1, spell2));
+		spellbook.addAbilities(List.of(ability1, ability2));
 
-		assertThat(spellbook.getSpell(SHADOW_BOLT, 1).orElseThrow()).isSameAs(spell1);
-		assertThat(spellbook.getSpell(SHADOW_BOLT, 2).orElseThrow()).isSameAs(spell2);
+		assertThat(spellbook.getAbility(SHADOW_BOLT, 1).orElseThrow()).isSameAs(ability1);
+		assertThat(spellbook.getAbility(SHADOW_BOLT, 2).orElseThrow()).isSameAs(ability2);
 	}
 
 	@Test
-	void getSpell() {
-		Spell spell = spellbook.getSpell(SHADOW_BOLT).orElseThrow();
+	void getAbility() {
+		var spell = spellbook.getAbility(SHADOW_BOLT).orElseThrow();
 
-		assertThat(spell.getSpellId()).isEqualTo(SHADOW_BOLT);
+		assertThat(spell.getAbilityId()).isEqualTo(SHADOW_BOLT);
 		assertThat(spell.getRank()).isEqualTo(11);
 	}
 
 	@Test
-	void getSpellByRank() {
-		Spell spell = spellbook.getSpell(SHADOW_BOLT, 1).orElseThrow();
+	void getAbilityByRank() {
+		var spell = spellbook.getAbility(SHADOW_BOLT, 1).orElseThrow();
 
-		assertThat(spell.getSpellId()).isEqualTo(SHADOW_BOLT);
+		assertThat(spell.getAbilityId()).isEqualTo(SHADOW_BOLT);
 		assertThat(spell.getRank()).isEqualTo(1);
 	}
 

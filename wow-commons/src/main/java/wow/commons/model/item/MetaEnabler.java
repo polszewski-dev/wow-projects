@@ -41,6 +41,10 @@ public enum MetaEnabler {
 		this(string, 0, 0, 0, moreRedThanYellow, moreRedThanBlue, moreBlueThanYellow);
 	}
 
+	public static MetaEnabler parse(String value) {
+		return EnumUtil.parse(value, values(), x -> x.string);
+	}
+
 	public static MetaEnabler tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.string);
 	}

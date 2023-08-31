@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.scraper.model.JsonItemDetails;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +28,7 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 		assertThat(pauldrons.getRequiredLevel()).isEqualTo(70);
 		assertThat(pauldrons.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(pauldrons.getRequiredClass()).isEqualTo(List.of(HUNTER, MAGE, WARLOCK));
-		assertThat(pauldrons.getPhase()).isEqualTo(TBC_P1);
+		assertThat(pauldrons.getTimeRestriction().phaseId()).isEqualTo(TBC_P1);
 	}
 
 	@Test
@@ -41,11 +40,11 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 		assertThat(verdantSphere.getRequiredLevel()).isEqualTo(70);
 		assertThat(verdantSphere.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(verdantSphere.isUnique()).isTrue();
-		assertThat(verdantSphere.getPhase()).isEqualTo(TBC_P2);
+		assertThat(verdantSphere.getTimeRestriction().phaseId()).isEqualTo(TBC_P2);
 	}
 
 	@BeforeEach
-	void readTestData() throws IOException {
+	void readTestData() {
 		pauldrons = getTooltip("token/29762");
 		verdantSphere = getTooltip("quest/32405");
 	}

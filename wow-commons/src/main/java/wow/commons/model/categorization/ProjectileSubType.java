@@ -17,4 +17,9 @@ public enum ProjectileSubType implements ItemSubType {
 	public static ProjectileSubType tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
+
+	@Override
+	public String toString() {
+		return key;
+	}
 }

@@ -8,18 +8,8 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-08-29
  */
-public class SpellParser extends ScraperParser<SpellPattern, SpellMatcher, SpellMatcherParams> {
-	public SpellParser(List<SpellPattern> patterns) {
+public abstract class SpellParser<P extends SpellPattern<?>, M extends SpellMatcher<P, ?, N>, N extends SpellMatcherParams> extends ScraperParser<P, M, N> {
+	protected SpellParser(List<P> patterns) {
 		super(patterns);
-	}
-
-	@Override
-	protected SpellMatcher createMatcher(SpellPattern pattern) {
-		return new SpellMatcher(pattern);
-	}
-
-	@Override
-	protected SpellMatcherParams createMatcherParams(String line) {
-		return new SpellMatcherParams(line);
 	}
 }

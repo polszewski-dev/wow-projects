@@ -1,7 +1,7 @@
 package wow.simulator.model.cooldown;
 
 import wow.commons.model.Duration;
-import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -20,16 +20,16 @@ import java.util.Optional;
 public class Cooldown implements Updateable, SimulationContextSource {
 	private static final IdGenerator<CooldownId> ID_GENERATOR = new IdGenerator<>(CooldownId::new);
 
-	protected final CooldownId cooldownId = ID_GENERATOR.newId();
+	protected final CooldownId id = ID_GENERATOR.newId();
 
 	private final Unit owner;
-	private final SpellId spellId;
+	private final AbilityId abilityId;
 	private final Time endTime;
 	private final CooldownAction cooldownAction;
 
-	public Cooldown(Unit owner, SpellId spellId, Duration duration) {
+	public Cooldown(Unit owner, AbilityId abilityId, Duration duration) {
 		this.owner = owner;
-		this.spellId = spellId;
+		this.abilityId = abilityId;
 		this.endTime = now().add(duration);
 		this.cooldownAction = new CooldownAction(owner.getClock());
 	}
@@ -89,15 +89,15 @@ public class Cooldown implements Updateable, SimulationContextSource {
 		return owner.getSimulationContext();
 	}
 
-	public CooldownId getCooldownId() {
-		return cooldownId;
+	public CooldownId getId() {
+		return id;
 	}
 
 	public Unit getOwner() {
 		return owner;
 	}
 
-	public SpellId getSpellId() {
-		return spellId;
+	public AbilityId getAbilityId() {
+		return abilityId;
 	}
 }

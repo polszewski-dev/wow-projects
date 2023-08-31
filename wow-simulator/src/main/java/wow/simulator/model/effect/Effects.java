@@ -1,6 +1,9 @@
 package wow.simulator.model.effect;
 
-import wow.commons.model.spell.SpellId;
+import wow.character.model.effect.EffectCollection;
+import wow.character.model.effect.EffectCollector;
+import wow.commons.model.spell.AbilityId;
+import wow.simulator.model.effect.impl.UnitEffectImpl;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
@@ -16,21 +19,21 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2023-08-16
  */
-public class Effects implements SimulationContextSource, TimeAware {
+public class Effects implements SimulationContextSource, TimeAware, EffectCollection {
 	private final Unit owner;
-	private final UpdateQueue<Effect> updateQueue = new UpdateQueue<>();
+	private final UpdateQueue<UnitEffect> updateQueue = new UpdateQueue<>();
 
 	public Effects(Unit owner) {
 		this.owner = owner;
 	}
 
-	public void addEffect(Effect effect) {
+	public void addEffect(UnitEffect effect) {
 		var handle = updateQueue.add(effect);
-		effect.setHandle(handle);
+		((UnitEffectImpl) effect).setHandle(handle);
 	}
 
-	public void removeEffect(Effect effect) {
-		updateQueue.remove(effect.getHandle());
+	public void removeEffect(UnitEffect effect) {
+		updateQueue.remove(((UnitEffectImpl) effect).getHandle());
 	}
 
 	public void updateAllPresentActions() {
@@ -41,16 +44,16 @@ public class Effects implements SimulationContextSource, TimeAware {
 		return updateQueue.getNextUpdateTime();
 	}
 
-	public boolean isUnderEffect(SpellId spellId, Unit owner) {
+	public boolean isUnderEffect(AbilityId abilityId, Unit owner) {
 		return updateQueue.getElements().stream()
 				.map(Handle::get)
-				.anyMatch(x -> x.matches(spellId, owner));
+				.anyMatch(x -> x.matches(abilityId, owner));
 	}
 
-	public Optional<Effect> getEffect(SpellId spellId, Unit owner) {
+	public Optional<UnitEffect> getEffect(AbilityId abilityId, Unit owner) {
 		return updateQueue.getElements().stream()
 				.map(Handle::get)
-				.filter(x -> x.matches(spellId, owner))
+				.filter(x -> x.matches(abilityId, owner))
 				.findAny();
 	}
 
@@ -62,5 +65,13 @@ public class Effects implements SimulationContextSource, TimeAware {
 	@Override
 	public void setClock(Clock clock) {
 		updateQueue.setClock(clock);
+	}
+
+	@Override
+	public void collectEffects(EffectCollector collector) {
+		for (var elementHandle : updateQueue.getElements()) {
+			UnitEffect effect = elementHandle.get();
+			collector.addEffect(effect, effect.getNumStacks());
+		}
 	}
 }

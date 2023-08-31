@@ -41,4 +41,5 @@ module wow.minmax {
 	opens wow.minmax.converter.spring to spring.core;
 	opens wow.minmax.repository.impl to spring.core;
 	opens wow.minmax.service.impl to spring.core;
+	opens wow.minmax.service.impl.enumerator to spring.beans;
 }
