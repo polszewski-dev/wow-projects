@@ -15,10 +15,10 @@ import wow.commons.model.spells.SpellSchool;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.gems.SocketBonusParser;
 import wow.scraper.parsers.stats.StatParser;
-import wow.scraper.repository.StatPatternRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,8 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 
 	private boolean randomEnchantment;
 
-	public ItemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		super(itemDetails, gameVersion, statPatternRepository);
+	public ItemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, ScraperContext scraperContext) {
+		super(itemDetails, gameVersion, scraperContext);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 
 	@Override
 	protected void beforeParse() {
-		this.statParser = statPatternRepository.getItemStatParser(gameVersion);
+		this.statParser = getStatPatternRepository().getItemStatParser(gameVersion);
 		this.socketTypes = new ArrayList<>();
 	}
 
@@ -132,7 +132,7 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 	}
 
 	private void parseSocketBonus(String value) {
-		this.socketBonus = new SocketBonusParser(statPatternRepository, gameVersion).tryParseSocketBonus(value);
+		this.socketBonus = new SocketBonusParser(getStatPatternRepository(), gameVersion).tryParseSocketBonus(value);
 		if (socketBonus == null) {
 			throw new IllegalArgumentException("Invalid socket bonus: " + value);
 		}
@@ -170,7 +170,7 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 		}
 		int numPieces = itemSetBonusParams.getInteger(0);
 		String description = itemSetBonusParams.get(1);
-		StatParser setBonusParser = statPatternRepository.getItemStatParser(gameVersion);
+		StatParser setBonusParser = getStatPatternRepository().getItemStatParser(gameVersion);
 		if (!setBonusParser.tryParse(description)) {
 			unmatchedLine(description);
 		}

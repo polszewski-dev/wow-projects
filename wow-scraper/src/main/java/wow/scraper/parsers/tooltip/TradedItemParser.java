@@ -4,8 +4,8 @@ import lombok.Getter;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
-import wow.scraper.repository.StatPatternRepository;
 
 /**
  * User: POlszewski
@@ -13,8 +13,8 @@ import wow.scraper.repository.StatPatternRepository;
  */
 @Getter
 public class TradedItemParser extends AbstractItemTooltipParser {
-	public TradedItemParser(JsonItemDetails itemDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		super(itemDetails, gameVersion, statPatternRepository);
+	public TradedItemParser(JsonItemDetails itemDetails, GameVersionId gameVersion, ScraperContext scraperContext) {
+		super(itemDetails, gameVersion, scraperContext);
 	}
 
 	@Override

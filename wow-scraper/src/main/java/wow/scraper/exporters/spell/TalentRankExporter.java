@@ -44,6 +44,6 @@ public class TalentRankExporter extends SpellBaseExporter<TalentTooltipParser> {
 
 	@Override
 	protected TalentTooltipParser createParser(JsonSpellDetails details) {
-		return new TalentTooltipParser(details, getStatPatternRepository(), getSpellPatternRepository(), getScraperConfig());
+		return new TalentTooltipParser(details, getScraperContext());
 	}
 }

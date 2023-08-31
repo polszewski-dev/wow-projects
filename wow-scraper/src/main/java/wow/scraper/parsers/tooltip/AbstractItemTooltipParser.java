@@ -2,8 +2,8 @@ package wow.scraper.parsers.tooltip;
 
 import lombok.Getter;
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
-import wow.scraper.repository.StatPatternRepository;
 
 /**
  * User: POlszewski
@@ -11,8 +11,8 @@ import wow.scraper.repository.StatPatternRepository;
  */
 @Getter
 public abstract class AbstractItemTooltipParser extends AbstractTooltipParser<JsonItemDetails> {
-	protected AbstractItemTooltipParser(JsonItemDetails details, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		super(details, gameVersion, statPatternRepository);
+	protected AbstractItemTooltipParser(JsonItemDetails details, GameVersionId gameVersion, ScraperContext scraperContext) {
+		super(details, gameVersion, scraperContext);
 	}
 
 	public int getItemId() {

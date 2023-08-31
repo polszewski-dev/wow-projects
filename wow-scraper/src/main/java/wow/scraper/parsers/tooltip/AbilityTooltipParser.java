@@ -6,11 +6,10 @@ import wow.commons.model.spells.EffectId;
 import wow.commons.model.spells.ResourceType;
 import wow.commons.model.spells.SpellId;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.parsers.spell.SpellMatcher;
 import wow.scraper.parsers.spell.SpellParser;
-import wow.scraper.repository.SpellPatternRepository;
-import wow.scraper.repository.StatPatternRepository;
 
 /**
  * User: POlszewski
@@ -42,8 +41,8 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 	private ParsedDirectComponent parsedDirectComponent;
 	private ParsedDoTComponent parsedDoTComponent;
 
-	public AbilityTooltipParser(JsonSpellDetails details, StatPatternRepository statPatternRepository, SpellPatternRepository spellPatternRepository) {
-		super(details, statPatternRepository, spellPatternRepository);
+	public AbilityTooltipParser(JsonSpellDetails details, ScraperContext scraperContext) {
+		super(details, scraperContext);
 	}
 
 	@Override
@@ -99,7 +98,10 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 	@Override
 	protected void afterParse() {
 		if (rank == null) {
-			rank = 0;
+			rank = getScraperConfig().getRankOverrides().get(getSpellId());
+			if (rank == null) {
+				rank = 0;
+			}
 		}
 
 		if (requiredLevel == null) {
@@ -123,7 +125,7 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 
 	private void parseSpellDetails() {
 		SpellId spellId = SpellId.parse(getName());
-		SpellParser spellParser = spellPatternRepository.getSpellParser(spellId, gameVersion);
+		SpellParser spellParser = getSpellPatternRepository().getSpellParser(spellId, gameVersion);
 
 		if (spellParser.tryParse(description)) {
 			this.spellMatcher = spellParser.getUniqueSuccessfulMatcher();

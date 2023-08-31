@@ -109,7 +109,7 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 
 	@Override
 	protected GemTooltipParser createParser(JsonItemDetails data) {
-		return new GemTooltipParser(data, TBC, statPatternRepository);
+		return new GemTooltipParser(data, TBC, scraperContext);
 	}
 
 	@Override

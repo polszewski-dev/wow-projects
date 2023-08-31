@@ -45,6 +45,6 @@ public class AbilityRankExporter extends SpellBaseExporter<AbilityTooltipParser>
 
 	@Override
 	protected AbilityTooltipParser createParser(JsonSpellDetails details) {
-		return new AbilityTooltipParser(details, getStatPatternRepository(), getSpellPatternRepository());
+		return new AbilityTooltipParser(details, getScraperContext());
 	}
 }

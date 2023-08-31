@@ -21,7 +21,7 @@ public class ItemExporter extends AbstractItemExporter<ItemTooltipParser> {
 
 	@Override
 	protected ItemTooltipParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
-		return new ItemTooltipParser(details, gameVersion, getStatPatternRepository());
+		return new ItemTooltipParser(details, gameVersion, getScraperContext());
 	}
 
 	@Override

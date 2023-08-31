@@ -166,7 +166,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 
 	@Override
 	protected ItemTooltipParser createParser(JsonItemDetails data) {
-		return new ItemTooltipParser(data, TBC, statPatternRepository);
+		return new ItemTooltipParser(data, TBC, scraperContext);
 	}
 
 	@Override

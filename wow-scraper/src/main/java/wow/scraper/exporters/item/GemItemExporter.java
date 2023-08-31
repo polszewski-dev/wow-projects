@@ -19,7 +19,7 @@ public class GemItemExporter extends AbstractItemExporter<GemTooltipParser> {
 
 	@Override
 	protected GemTooltipParser createParser(JsonItemDetails details, GameVersionId gameVersion) {
-		return new GemTooltipParser(details, gameVersion, getStatPatternRepository());
+		return new GemTooltipParser(details, gameVersion, getScraperContext());
 	}
 
 	@Override

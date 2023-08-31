@@ -33,6 +33,7 @@ module wow.commons {
 	exports wow.commons.repository.impl.parsers.excel.mapper to wow.scraper;
 	exports wow.commons.repository.impl.parsers.items to wow.scraper;
 	exports wow.commons.repository.impl.parsers.pve to wow.scraper;
+	exports wow.commons.repository.impl.parsers.spells to wow.scraper;
 	exports wow.commons.util;
 	exports wow.commons.util.parser;
 

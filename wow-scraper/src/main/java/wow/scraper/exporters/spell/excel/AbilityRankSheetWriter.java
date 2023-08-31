@@ -1,6 +1,5 @@
 package wow.scraper.exporters.spell.excel;
 
-import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spells.ResourceType;
 import wow.scraper.parsers.tooltip.AbilityTooltipParser;
 
@@ -56,20 +55,6 @@ public class AbilityRankSheetWriter extends SpellBaseSheetWriter<AbilityTooltipP
 		writeDotDamage(parser);
 		setValue(parser.getReagent());
 		setValue(parser.getDescription());
-	}
-
-	private PhaseId getPhase(AbilityTooltipParser parser) {
-		PhaseId phaseOverride = config.getSpellPhaseOverrides().get(parser.getSpellId());
-
-		if (phaseOverride != null) {
-			return phaseOverride;
-		}
-
-		if (parser.getPhase() != parser.getGameVersion().getEarliestNonPrepatchPhase()) {
-			return parser.getPhase();
-		}
-
-		return null;
 	}
 
 	private void writeCost(AbilityTooltipParser parser) {

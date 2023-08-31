@@ -3,10 +3,8 @@ package wow.scraper.parsers.tooltip;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.talents.TalentId;
 import wow.commons.util.parser.Rule;
-import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
-import wow.scraper.repository.SpellPatternRepository;
-import wow.scraper.repository.StatPatternRepository;
 
 /**
  * User: POlszewski
@@ -14,11 +12,8 @@ import wow.scraper.repository.StatPatternRepository;
  */
 @Slf4j
 public class TalentTooltipParser extends AbstractSpellTooltipParser {
-	private final ScraperConfig scraperConfig;
-
-	public TalentTooltipParser(JsonSpellDetails details, StatPatternRepository statPatternRepository, SpellPatternRepository spellPatternRepository, ScraperConfig scraperConfig) {
-		super(details, statPatternRepository, spellPatternRepository);
-		this.scraperConfig = scraperConfig;
+	public TalentTooltipParser(JsonSpellDetails details, ScraperContext scraperContext) {
+		super(details, scraperContext);
 	}
 
 	@Override
@@ -54,7 +49,7 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 			return;
 		}
 
-		rank = scraperConfig.getRankOverrides().get(getSpellId());
+		rank = getScraperConfig().getRankOverrides().get(getSpellId());
 
 		if (rank == null) {
 			throw new IllegalArgumentException("No rank: " + name);
@@ -62,7 +57,7 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 	}
 
 	private void parseTalentSpell() {
-		AbilityTooltipParser abilityParser = new AbilityTooltipParser(details, getStatPatternRepository(), getSpellPatternRepository());
+		AbilityTooltipParser abilityParser = new AbilityTooltipParser(details, getScraperContext());
 		abilityParser.parse();
 		this.description = abilityParser.getDescription();
 		this.rank = abilityParser.rank;
@@ -81,10 +76,10 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 	}
 
 	public Integer getTalentCalculatorPosition() {
-		return scraperConfig.getTalentCalculatorPosition(getGameVersion(), TalentId.parse(getName()));
+		return getScraperConfig().getTalentCalculatorPosition(getGameVersion(), TalentId.parse(getName()));
 	}
 
 	public boolean isTalentSpell() {
-		return scraperConfig.isTalentSpell(getName(), getCategory(), getGameVersion());
+		return getScraperConfig().isTalentSpell(getName(), getCategory(), getGameVersion());
 	}
 }

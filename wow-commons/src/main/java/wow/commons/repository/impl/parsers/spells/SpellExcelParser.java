@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static wow.commons.repository.impl.parsers.spells.SpellBaseExcelSheetNames.*;
+
 /**
  * User: POlszewski
  * Date: 2021-09-25
@@ -35,11 +37,11 @@ public class SpellExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new SpellSheetParser("spells", spellInfoById),
-				new SpellRankSheetParser("spell_ranks", spellRepository, spellInfoById),
-				new TalentSheetParser("talents", talentInfoById),
-				new TalentRankSheetParser("talent_ranks", spellRepository, talentInfoById),
-				new BuffSheetParser("buffs", spellRepository)
+				new SpellSheetParser(SPELLS, spellInfoById),
+				new SpellRankSheetParser(SPELL_RANKS, spellRepository, spellInfoById),
+				new TalentSheetParser(TALENTS, talentInfoById),
+				new TalentRankSheetParser(TALENT_RANKS, spellRepository, talentInfoById),
+				new BuffSheetParser(BUFFS, spellRepository)
 		);
 	}
 }

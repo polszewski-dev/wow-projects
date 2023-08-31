@@ -6,6 +6,8 @@ import wow.scraper.exporters.excel.WowExcelBuilder;
 import wow.scraper.parsers.tooltip.AbilityTooltipParser;
 import wow.scraper.parsers.tooltip.TalentTooltipParser;
 
+import static wow.commons.repository.impl.parsers.spells.SpellBaseExcelSheetNames.*;
+
 /**
  * User: POlszewski
  * Date: 2023-08-24
@@ -28,7 +30,7 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 	}
 
 	public void addAbilityHeader() {
-		writeHeader("spells", abilitySheetWriter, 0, 1);
+		writeHeader(SPELLS, abilitySheetWriter, 0, 1);
 		resetSeparators();
 	}
 
@@ -38,7 +40,7 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 	}
 
 	public void addAbilityRankHeader() {
-		writeHeader("spell_ranks", abilityRankSheetWriter, 0, 1);
+		writeHeader(SPELL_RANKS, abilityRankSheetWriter, 0, 1);
 		resetSeparators();
 	}
 
@@ -48,7 +50,7 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 	}
 
 	public void addTalentHeader() {
-		writeHeader("talents", talentSheetWriter, 0, 1);
+		writeHeader(TALENTS, talentSheetWriter, 0, 1);
 		resetSeparators();
 	}
 
@@ -58,7 +60,7 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 	}
 
 	public void addTalentRankHeader() {
-		writeHeader("talent_ranks", talentRankSheetWriter, 0, 1);
+		writeHeader(TALENT_RANKS, talentRankSheetWriter, 0, 1);
 		resetSeparators();
 	}
 

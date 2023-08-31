@@ -8,11 +8,10 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.professions.ProfessionId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.parsers.stats.StatMatcher;
 import wow.scraper.parsers.stats.StatParser;
-import wow.scraper.repository.SpellPatternRepository;
-import wow.scraper.repository.StatPatternRepository;
 
 import java.util.List;
 
@@ -27,8 +26,8 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 	private StatParser statParser;
 	private String tooltip;
 
-	public EnchantTooltipParser(JsonSpellDetails spellDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository, SpellPatternRepository spellPatternRepository) {
-		super(spellDetails, gameVersion, statPatternRepository, spellPatternRepository);
+	public EnchantTooltipParser(JsonSpellDetails spellDetails, GameVersionId gameVersion, ScraperContext scraperContext) {
+		super(spellDetails, gameVersion, scraperContext);
 	}
 
 	@Override
@@ -63,7 +62,7 @@ public class EnchantTooltipParser extends AbstractSpellTooltipParser {
 	@Override
 	protected void beforeParse() {
 		this.itemType = ItemType.ENCHANT;
-		this.statParser = statPatternRepository.getEnchantStatParser(gameVersion);
+		this.statParser = getStatPatternRepository().getEnchantStatParser(gameVersion);
 	}
 
 	@Override

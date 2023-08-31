@@ -7,9 +7,9 @@ import wow.commons.model.item.GemColor;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parsers.gems.GemStatsParser;
-import wow.scraper.repository.StatPatternRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class GemTooltipParser extends AbstractItemTooltipParser {
 	private List<MetaEnabler> metaEnablers;
 	private Attributes stats;
 
-	public GemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
-		super(itemDetails, gameVersion, statPatternRepository);
+	public GemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, ScraperContext scraperContext) {
+		super(itemDetails, gameVersion, scraperContext);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class GemTooltipParser extends AbstractItemTooltipParser {
 				Rule.tryParse(MetaEnabler::tryParse, x -> metaEnablers.add(x)),
 				ruleProfessionRestriction,
 				ruleSellPrice,
-				Rule.tryParse(line -> new GemStatsParser(statPatternRepository, gameVersion).tryParseStats(line), x -> stats = x),
+				Rule.tryParse(line -> new GemStatsParser(getStatPatternRepository(), gameVersion).tryParseStats(line), x -> stats = x),
 		};
 	}
 

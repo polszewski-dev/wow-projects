@@ -18,8 +18,9 @@ import wow.commons.model.pve.Side;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
+import wow.scraper.config.ScraperContextSource;
 import wow.scraper.model.JsonCommonDetails;
-import wow.scraper.repository.StatPatternRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -33,8 +34,8 @@ import static wow.commons.model.professions.ProfessionSpecializationId.*;
  * Date: 2022-10-31
  */
 @Getter
-public abstract class AbstractTooltipParser<D extends JsonCommonDetails> {
-	protected final StatPatternRepository statPatternRepository;
+public abstract class AbstractTooltipParser<D extends JsonCommonDetails> implements ScraperContextSource {
+	protected final ScraperContext scraperContext;
 
 	protected final D details;
 	protected final GameVersionId gameVersion;
@@ -108,10 +109,10 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> {
 	protected final Rule ruleRightClickToRead = Rule
 			.exact("<Right Click to Read>", () -> {});
 
-	protected AbstractTooltipParser(D details, GameVersionId gameVersion, StatPatternRepository statPatternRepository) {
+	protected AbstractTooltipParser(D details, GameVersionId gameVersion, ScraperContext scraperContext) {
 		this.details = details;
 		this.gameVersion = gameVersion;
-		this.statPatternRepository = statPatternRepository;
+		this.scraperContext = scraperContext;
 	}
 
 	public String getIcon() {

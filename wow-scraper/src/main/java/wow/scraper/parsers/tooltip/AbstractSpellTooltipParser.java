@@ -6,10 +6,9 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.talents.TalentTree;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
-import wow.scraper.repository.SpellPatternRepository;
-import wow.scraper.repository.StatPatternRepository;
 
 import java.util.List;
 
@@ -29,15 +28,12 @@ public abstract class AbstractSpellTooltipParser extends AbstractTooltipParser<J
 	protected final Rule ruleTalent = Rule.exact("Talent", () -> this.talent = true);
 	protected final Rule ruleDescription = Rule.regex("(.+)", x -> parseDescription(x.get(0)));
 
-	protected final SpellPatternRepository spellPatternRepository;
-
-	protected AbstractSpellTooltipParser(JsonSpellDetails details, GameVersionId gameVersion, StatPatternRepository statPatternRepository, SpellPatternRepository spellPatternRepository) {
-		super(details, gameVersion, statPatternRepository);
-		this.spellPatternRepository = spellPatternRepository;
+	protected AbstractSpellTooltipParser(JsonSpellDetails details, GameVersionId gameVersion, ScraperContext scraperContext) {
+		super(details, gameVersion, scraperContext);
 	}
 
-	protected AbstractSpellTooltipParser(JsonSpellDetails details, StatPatternRepository statPatternRepository, SpellPatternRepository spellPatternRepository) {
-		this(details, details.getReqVersion(), statPatternRepository, spellPatternRepository);
+	protected AbstractSpellTooltipParser(JsonSpellDetails details, ScraperContext scraperContext) {
+		this(details, details.getReqVersion(), scraperContext);
 	}
 
 	public int getSpellId() {

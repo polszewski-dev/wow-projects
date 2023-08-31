@@ -31,7 +31,7 @@ public class EnchantExporter extends AbstractItemSpellExporter<EnchantTooltipPar
 
 	@Override
 	protected EnchantTooltipParser createParser(JsonSpellDetails details, GameVersionId gameVersion) {
-		return new EnchantTooltipParser(details, gameVersion, getStatPatternRepository(), getSpellPatternRepository());
+		return new EnchantTooltipParser(details, gameVersion, getScraperContext());
 	}
 
 	@Override

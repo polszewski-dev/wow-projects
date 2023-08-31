@@ -55,7 +55,7 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 
 	@Override
 	protected TradedItemParser createParser(JsonItemDetails data) {
-		return new TradedItemParser(data, TBC, statPatternRepository);
+		return new TradedItemParser(data, TBC, scraperContext);
 	}
 
 	@Override
