@@ -2,7 +2,7 @@ package wow.simulator.model.unit.action;
 
 import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.Duration;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.DoT;
 import wow.simulator.model.effect.PeriodicEffect;
 import wow.simulator.model.rng.RngStrategies;

@@ -2,10 +2,10 @@ package wow.character.model.build;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.Copyable;
-import wow.commons.model.attributes.AttributeCollection;
-import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.attribute.AttributeCollection;
+import wow.commons.model.attribute.AttributeCollector;
+import wow.commons.model.talent.Talent;
+import wow.commons.model.talent.TalentId;
 
 import java.util.*;
 

@@ -4,7 +4,7 @@ import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.sources.Source;
+import wow.commons.model.source.Source;
 
 import java.util.Objects;
 import java.util.Set;

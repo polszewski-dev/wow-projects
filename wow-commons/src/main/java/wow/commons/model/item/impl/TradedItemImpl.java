@@ -2,7 +2,7 @@ package wow.commons.model.item.impl;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;

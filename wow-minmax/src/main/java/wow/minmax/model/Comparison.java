@@ -3,7 +3,7 @@ package wow.minmax.model;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attribute.Attributes;
 import wow.minmax.util.AttributesDiff;
 import wow.minmax.util.AttributesDiffFinder;
 

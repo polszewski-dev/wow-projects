@@ -2,7 +2,7 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.talent.TalentId;
 
 import java.io.Serializable;
 

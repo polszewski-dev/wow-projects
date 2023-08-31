@@ -2,8 +2,8 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.buffs.BuffId;
-import wow.commons.model.buffs.BuffIdAndRank;
+import wow.commons.model.buff.BuffId;
+import wow.commons.model.buff.BuffIdAndRank;
 
 import java.io.Serializable;
 

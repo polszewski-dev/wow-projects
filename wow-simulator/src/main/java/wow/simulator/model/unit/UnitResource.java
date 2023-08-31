@@ -2,8 +2,8 @@ package wow.simulator.model.unit;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import wow.commons.model.spells.ResourceType;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 

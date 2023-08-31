@@ -1,8 +1,8 @@
 package wow.scraper.repository;
 
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.spells.SpellId;
-import wow.scraper.parsers.spell.SpellParser;
+import wow.commons.model.spell.SpellId;
+import wow.scraper.parser.spell.SpellParser;
 
 /**
  * User: POlszewski

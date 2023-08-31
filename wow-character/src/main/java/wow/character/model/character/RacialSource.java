@@ -1,6 +1,6 @@
 package wow.character.model.character;
 
-import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
+import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
 
 /**

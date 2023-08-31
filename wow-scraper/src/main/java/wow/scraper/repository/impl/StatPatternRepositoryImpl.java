@@ -4,10 +4,10 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.parsers.stats.StatParser;
-import wow.scraper.parsers.stats.StatPattern;
+import wow.scraper.parser.stat.StatParser;
+import wow.scraper.parser.stat.StatPattern;
 import wow.scraper.repository.StatPatternRepository;
-import wow.scraper.repository.impl.excel.StatPatternExcelParser;
+import wow.scraper.repository.impl.excel.stat.StatPatternExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;

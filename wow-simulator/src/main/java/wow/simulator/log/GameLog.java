@@ -1,7 +1,7 @@
 package wow.simulator.log;
 
-import wow.commons.model.spells.ResourceType;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;

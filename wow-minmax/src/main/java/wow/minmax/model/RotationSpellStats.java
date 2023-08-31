@@ -2,7 +2,7 @@ package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.Spell;
 
 /**
  * User: POlszewski

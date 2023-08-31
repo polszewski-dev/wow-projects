@@ -2,13 +2,13 @@ package wow.simulator.model.unit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spells.Cost;
+import wow.commons.model.spell.Cost;
 import wow.simulator.WowSimulatorSpringTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wow.commons.model.spells.ResourceType.HEALTH;
-import static wow.commons.model.spells.ResourceType.MANA;
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
 
 /**
  * User: POlszewski

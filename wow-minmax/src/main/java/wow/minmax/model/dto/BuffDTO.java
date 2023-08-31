@@ -3,7 +3,7 @@ package wow.minmax.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import wow.commons.model.buffs.BuffId;
+import wow.commons.model.buff.BuffId;
 
 /**
  * User: POlszewski

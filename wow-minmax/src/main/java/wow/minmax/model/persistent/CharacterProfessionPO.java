@@ -2,8 +2,8 @@ package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecializationId;
 
 import java.io.Serializable;
 

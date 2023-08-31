@@ -5,16 +5,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.condition.AttributeCondition;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
-import static wow.commons.model.spells.SpellSchool.*;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.spell.SpellSchool.*;
 
 /**
  * User: POlszewski

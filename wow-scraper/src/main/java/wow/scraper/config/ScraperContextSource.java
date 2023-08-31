@@ -1,6 +1,6 @@
 package wow.scraper.config;
 
-import wow.scraper.fetchers.WowheadFetcher;
+import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.repository.*;
 
 /**

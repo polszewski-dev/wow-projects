@@ -1,16 +1,16 @@
 package wow.commons.util;
 
 import lombok.AllArgsConstructor;
-import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
-import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellSchool;
-import wow.commons.model.talents.TalentTree;
+import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.SpellSchool;
+import wow.commons.model.talent.TalentTree;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -17,8 +17,8 @@ import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Target;
-import wow.simulator.scripts.AIScript;
-import wow.simulator.scripts.warlock.WarlockPriorityScript;
+import wow.simulator.script.AIScript;
+import wow.simulator.script.warlock.WarlockPriorityScript;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 

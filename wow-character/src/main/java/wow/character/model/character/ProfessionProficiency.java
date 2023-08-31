@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-import wow.commons.model.professions.ProfessionProficiencyId;
-import wow.commons.model.professions.ProfessionType;
+import wow.commons.model.profession.ProfessionProficiencyId;
+import wow.commons.model.profession.ProfessionType;
 
 import java.util.Map;
 

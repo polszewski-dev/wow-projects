@@ -2,8 +2,8 @@ package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.special.SpecialAbility;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.special.SpecialAbility;
 
 /**
  * User: POlszewski

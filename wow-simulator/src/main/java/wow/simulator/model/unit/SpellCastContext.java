@@ -2,8 +2,8 @@ package wow.simulator.model.unit;
 
 import wow.character.model.snapshot.Snapshot;
 import wow.commons.model.Duration;
-import wow.commons.model.spells.Cost;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.Cost;
+import wow.commons.model.spell.Spell;
 
 /**
  * User: POlszewski

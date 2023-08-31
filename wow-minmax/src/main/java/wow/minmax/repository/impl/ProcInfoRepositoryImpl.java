@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.minmax.model.ProcInfo;
 import wow.minmax.repository.ProcInfoRepository;
-import wow.minmax.repository.impl.parsers.proc.ProcExcelParser;
+import wow.minmax.repository.impl.parser.proc.ProcExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

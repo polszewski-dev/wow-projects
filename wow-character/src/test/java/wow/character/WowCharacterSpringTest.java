@@ -12,8 +12,8 @@ import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
-import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffId;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
@@ -21,8 +21,8 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.talents.Talent;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.talent.Talent;
+import wow.commons.model.talent.TalentId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
@@ -30,11 +30,11 @@ import wow.commons.repository.SpellRepository;
 import java.util.Comparator;
 import java.util.List;
 
-import static wow.commons.model.buffs.BuffId.*;
+import static wow.commons.model.buff.BuffId.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.talents.TalentId.*;
+import static wow.commons.model.talent.TalentId.*;
 
 /**
  * User: POlszewski

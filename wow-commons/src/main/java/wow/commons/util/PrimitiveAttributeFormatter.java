@@ -1,7 +1,7 @@
 package wow.commons.util;
 
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -2,19 +2,19 @@ package wow.commons.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.condition.AttributeCondition;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.SPELL_POWER;
 import static wow.commons.model.character.CreatureType.DEMON;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.character.PetType.IMP;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
-import static wow.commons.model.spells.SpellSchool.*;
-import static wow.commons.model.talents.TalentTree.DESTRUCTION;
+import static wow.commons.model.spell.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spell.SpellSchool.*;
+import static wow.commons.model.talent.TalentTree.DESTRUCTION;
 
 /**
  * User: POlszewski

@@ -3,7 +3,7 @@ package wow.character.model.build;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.SpellId;
 import wow.commons.util.parser.ParserUtil;
 
 import java.util.List;

@@ -10,7 +10,7 @@ import wow.commons.model.item.*;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
-import wow.commons.repository.impl.parsers.items.ItemBaseExcelParser;
+import wow.commons.repository.impl.parser.item.ItemBaseExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

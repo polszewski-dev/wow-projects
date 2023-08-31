@@ -3,7 +3,7 @@ package wow.scraper.config;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import wow.scraper.fetchers.WowheadFetcher;
+import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.repository.*;
 
 /**

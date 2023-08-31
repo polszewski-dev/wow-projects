@@ -6,7 +6,7 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.pve.Zone;
-import wow.commons.model.sources.Source;
+import wow.commons.model.source.Source;
 
 import java.util.Arrays;
 import java.util.Collection;

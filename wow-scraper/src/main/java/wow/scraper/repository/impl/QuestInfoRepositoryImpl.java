@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.fetchers.WowheadFetcher;
-import wow.scraper.importers.parsers.QuestInfoParser;
+import wow.scraper.fetcher.WowheadFetcher;
+import wow.scraper.importer.parser.QuestInfoParser;
 import wow.scraper.model.WowheadQuestInfo;
 import wow.scraper.repository.QuestInfoRepository;
 

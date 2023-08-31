@@ -4,12 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.equipment.Equipment;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.ComplexAttributeId;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.SpellSchool.FROST;
-import static wow.commons.model.spells.SpellSchool.SHADOW;
+import static wow.commons.model.spell.SpellSchool.FROST;
+import static wow.commons.model.spell.SpellSchool.SHADOW;
 
 /**
  * User: POlszewski

@@ -3,8 +3,8 @@ package wow.scraper.repository.impl;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.fetchers.WowheadFetcher;
-import wow.scraper.importers.pve.FactionImporter;
+import wow.scraper.fetcher.WowheadFetcher;
+import wow.scraper.importer.pve.FactionImporter;
 import wow.scraper.model.JsonFactionDetails;
 import wow.scraper.repository.FactionDetailRepository;
 

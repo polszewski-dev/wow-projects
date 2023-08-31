@@ -2,8 +2,8 @@ package wow.scraper.repository.impl;
 
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.fetchers.WowheadFetcher;
-import wow.scraper.importers.WowheadImporter;
+import wow.scraper.fetcher.WowheadFetcher;
+import wow.scraper.importer.WowheadImporter;
 import wow.scraper.model.JsonCommonDetails;
 
 import java.util.List;

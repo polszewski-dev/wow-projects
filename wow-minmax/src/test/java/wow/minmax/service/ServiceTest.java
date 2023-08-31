@@ -2,8 +2,8 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import wow.character.model.character.Character;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.PlayerProfile;
 

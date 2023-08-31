@@ -10,7 +10,7 @@ import wow.minmax.model.config.CharacterFeatureConfig;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.repository.MinmaxConfigRepository;
-import wow.minmax.repository.impl.parsers.config.MinMaxConfigExcelParser;
+import wow.minmax.repository.impl.parser.config.MinMaxConfigExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

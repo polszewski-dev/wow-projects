@@ -7,7 +7,7 @@ import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.Character;
 import wow.character.model.character.Enemy;
 import wow.character.service.CharacterService;
-import wow.commons.model.buffs.BuffIdAndRank;
+import wow.commons.model.buff.BuffIdAndRank;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.persistent.BuffPO;

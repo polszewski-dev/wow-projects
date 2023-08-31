@@ -3,8 +3,8 @@ package wow.minmax.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecializationId;
 
 /**
  * User: POlszewski

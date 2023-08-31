@@ -15,8 +15,8 @@ import wow.minmax.model.Comparison;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.UpgradeService;
-import wow.minmax.service.impl.enumerators.BestItemVariantEnumerator;
-import wow.minmax.service.impl.enumerators.FindUpgradesEnumerator;
+import wow.minmax.service.impl.enumerator.BestItemVariantEnumerator;
+import wow.minmax.service.impl.enumerator.FindUpgradesEnumerator;
 
 import java.util.List;
 

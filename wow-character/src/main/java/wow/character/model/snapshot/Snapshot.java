@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.character.Character;
 import wow.commons.model.Duration;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.TickScheme;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.TickScheme;
 
 import static wow.character.model.snapshot.SnapshotState.INITIAL;
 

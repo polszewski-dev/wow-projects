@@ -9,7 +9,7 @@ import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.ItemService;
 import wow.character.service.SpellService;
-import wow.commons.model.buffs.BuffId;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;

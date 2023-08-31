@@ -8,7 +8,7 @@ import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
-import wow.character.repository.impl.parsers.character.CharacterExcelParser;
+import wow.character.repository.impl.parser.character.CharacterExcelParser;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;

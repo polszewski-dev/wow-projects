@@ -3,7 +3,7 @@ package wow.minmax.service;
 import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
 import wow.character.model.equipment.EquippableItem;
-import wow.commons.model.buffs.BuffId;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;

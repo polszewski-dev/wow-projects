@@ -2,7 +2,7 @@ package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import wow.commons.model.spells.SpellSchool;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Map;
 

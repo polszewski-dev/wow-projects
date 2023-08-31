@@ -3,7 +3,7 @@ package wow.scraper.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.talents.TalentTree;
+import wow.commons.model.talent.TalentTree;
 
 import java.util.Optional;
 import java.util.stream.Stream;

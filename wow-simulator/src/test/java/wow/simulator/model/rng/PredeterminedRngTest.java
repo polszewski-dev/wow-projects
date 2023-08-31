@@ -3,7 +3,7 @@ package wow.simulator.model.rng;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spell.SpellId.SHADOW_BOLT;
 
 /**
  * User: POlszewski

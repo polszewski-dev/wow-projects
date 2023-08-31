@@ -4,8 +4,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.config.ScraperContextSource;
-import wow.scraper.exporters.ExcelExporter;
-import wow.scraper.exporters.excel.WowExcelBuilder;
+import wow.scraper.exporter.ExcelExporter;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 
 /**
  * User: POlszewski

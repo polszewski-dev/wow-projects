@@ -1,13 +1,13 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.scraper.exporters.item.EnchantExporter;
-import wow.scraper.exporters.item.GemItemExporter;
-import wow.scraper.exporters.item.ItemExporter;
-import wow.scraper.exporters.item.TradedItemExporter;
-import wow.scraper.exporters.item.excel.ItemBaseExcelBuilder;
-import wow.scraper.parsers.WowheadSourceParser;
-import wow.scraper.parsers.tooltip.AbstractTooltipParser;
+import wow.scraper.exporter.item.EnchantExporter;
+import wow.scraper.exporter.item.GemItemExporter;
+import wow.scraper.exporter.item.ItemExporter;
+import wow.scraper.exporter.item.TradedItemExporter;
+import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
+import wow.scraper.parser.WowheadSourceParser;
+import wow.scraper.parser.tooltip.AbstractTooltipParser;
 
 /**
  * User: POlszewski

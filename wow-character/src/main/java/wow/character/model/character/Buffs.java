@@ -2,11 +2,11 @@ package wow.character.model.character;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.Copyable;
-import wow.commons.model.attributes.AttributeCollection;
-import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffId;
-import wow.commons.model.buffs.BuffIdAndRank;
+import wow.commons.model.attribute.AttributeCollection;
+import wow.commons.model.attribute.AttributeCollector;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffId;
+import wow.commons.model.buff.BuffIdAndRank;
 
 import java.util.*;
 

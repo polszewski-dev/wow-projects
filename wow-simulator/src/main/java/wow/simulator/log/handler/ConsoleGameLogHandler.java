@@ -2,8 +2,8 @@ package wow.simulator.log.handler;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.spells.ResourceType;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.cooldown.Cooldown;
 import wow.simulator.model.effect.Effect;
 import wow.simulator.model.time.Clock;

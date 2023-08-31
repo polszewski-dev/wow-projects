@@ -1,7 +1,7 @@
 package wow.scraper.repository;
 
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.parsers.stats.StatParser;
+import wow.scraper.parser.stat.StatParser;
 
 /**
  * User: POlszewski

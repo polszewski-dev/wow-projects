@@ -1,0 +1,48 @@
+package wow.commons.model.attribute.complex.special;
+
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
+
+import java.util.Objects;
+
+import static wow.commons.util.PrimitiveAttributeFormatter.getConditionString;
+
+/**
+ * User: POlszewski
+ * Date: 2022-11-26
+ */
+public record MiscAbility(
+		String line,
+		AttributeCondition condition,
+		SpecialAbilitySource source
+) implements SpecialAbility {
+	public MiscAbility {
+		Objects.requireNonNull(line);
+		Objects.requireNonNull(condition);
+	}
+
+	@Override
+	public int priority() {
+		return 5;
+	}
+
+	@Override
+	public Attributes attributes() {
+		return Attributes.EMPTY;
+	}
+
+	@Override
+	public MiscAbility attachCondition(AttributeCondition condition) {
+		return new MiscAbility(line, condition, source);
+	}
+
+	@Override
+	public MiscAbility attachSource(SpecialAbilitySource source) {
+		return new MiscAbility(line, condition, source);
+	}
+
+	@Override
+	public String toString() {
+		return line + getConditionString(condition);
+	}
+}

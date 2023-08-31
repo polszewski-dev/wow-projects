@@ -1,12 +1,12 @@
 package wow.minmax.util;
 
-import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.ComplexAttribute;
-import wow.commons.model.attributes.complex.ComplexAttributeId;
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
-import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.ComplexAttribute;
+import wow.commons.model.attribute.complex.ComplexAttributeId;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 
 import java.util.*;
 

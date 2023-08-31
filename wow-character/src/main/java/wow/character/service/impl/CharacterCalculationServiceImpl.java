@@ -10,14 +10,14 @@ import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SnapshotState;
 import wow.character.service.CharacterCalculationService;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.spells.Cost;
-import wow.commons.model.spells.ResourceType;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.spell.Cost;
+import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static wow.commons.constants.SpellConstants.*;
+import static wow.commons.constant.SpellConstants.*;
 
 /**
  * User: POlszewski

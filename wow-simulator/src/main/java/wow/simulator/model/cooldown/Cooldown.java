@@ -1,7 +1,7 @@
 package wow.simulator.model.cooldown;
 
 import wow.commons.model.Duration;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;

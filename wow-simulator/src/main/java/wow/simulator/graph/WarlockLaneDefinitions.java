@@ -1,14 +1,14 @@
 package wow.simulator.graph;
 
-import wow.commons.model.spells.EffectId;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.effect.EffectId;
+import wow.commons.model.spell.SpellId;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static wow.commons.model.spells.SpellId.*;
+import static wow.commons.model.spell.SpellId.*;
 
 /**
  * User: POlszewski

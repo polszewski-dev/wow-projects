@@ -4,7 +4,7 @@ import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.SpellId;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,11 +1,11 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.scraper.exporters.spell.AbilityExporter;
-import wow.scraper.exporters.spell.AbilityRankExporter;
-import wow.scraper.exporters.spell.TalentExporter;
-import wow.scraper.exporters.spell.TalentRankExporter;
-import wow.scraper.exporters.spell.excel.SpellBaseExcelBuilder;
+import wow.scraper.exporter.spell.AbilityExporter;
+import wow.scraper.exporter.spell.AbilityRankExporter;
+import wow.scraper.exporter.spell.TalentExporter;
+import wow.scraper.exporter.spell.TalentRankExporter;
+import wow.scraper.exporter.spell.excel.SpellBaseExcelBuilder;
 
 /**
  * User: POlszewski

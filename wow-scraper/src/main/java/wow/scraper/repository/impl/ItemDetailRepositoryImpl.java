@@ -2,8 +2,8 @@ package wow.scraper.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.fetchers.WowheadFetcher;
-import wow.scraper.importers.item.*;
+import wow.scraper.fetcher.WowheadFetcher;
+import wow.scraper.importer.item.*;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.repository.ItemDetailRepository;

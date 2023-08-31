@@ -1,9 +1,9 @@
 package wow.character.model.character;
 
 import wow.character.model.Copyable;
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecializationId;
 
 import java.util.ArrayList;
 import java.util.HashSet;

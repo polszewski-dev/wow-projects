@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.Character;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.talents.Talent;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.talent.Talent;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.TalentDTO;
 import wow.minmax.service.CalculationService;
@@ -16,7 +16,7 @@ import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
 
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.SPELL_POWER;
 
 /**
  * User: POlszewski

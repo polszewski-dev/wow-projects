@@ -3,19 +3,19 @@ package wow.simulator.simulation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.buffs.BuffId;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.buff.BuffId;
+import wow.commons.model.talent.TalentId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.time.Time;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.ResourceType.HEALTH;
-import static wow.commons.model.spells.ResourceType.MANA;
-import static wow.commons.model.spells.SpellId.SHADOWBURN;
-import static wow.commons.model.spells.SpellId.SIPHON_LIFE;
-import static wow.commons.model.spells.SpellId.UNSTABLE_AFFLICTION;
-import static wow.commons.model.spells.SpellId.*;
-import static wow.commons.model.talents.TalentId.*;
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.commons.model.spell.SpellId.SHADOWBURN;
+import static wow.commons.model.spell.SpellId.SIPHON_LIFE;
+import static wow.commons.model.spell.SpellId.UNSTABLE_AFFLICTION;
+import static wow.commons.model.spell.SpellId.*;
+import static wow.commons.model.talent.TalentId.*;
 
 /**
  * User: POlszewski

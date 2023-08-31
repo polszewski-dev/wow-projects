@@ -2,7 +2,7 @@ package wow.simulator.graph;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.model.time.Time;
 import wow.simulator.util.SimpleId;
 

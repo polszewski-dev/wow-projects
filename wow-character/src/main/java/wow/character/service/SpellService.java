@@ -2,11 +2,11 @@ package wow.character.service;
 
 import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.talents.Talent;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.talent.Talent;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.Copyable;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 
 import java.util.*;
 

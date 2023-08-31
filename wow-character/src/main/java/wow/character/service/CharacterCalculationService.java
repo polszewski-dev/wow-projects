@@ -3,8 +3,8 @@ package wow.character.service;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SnapshotState;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.spell.Spell;
 
 /**
  * User: POlszewski

@@ -4,11 +4,11 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.spells.SpellId;
-import wow.scraper.parsers.spell.SpellParser;
-import wow.scraper.parsers.spell.SpellPattern;
+import wow.commons.model.spell.SpellId;
+import wow.scraper.parser.spell.SpellParser;
+import wow.scraper.parser.spell.SpellPattern;
 import wow.scraper.repository.SpellPatternRepository;
-import wow.scraper.repository.impl.excel.SpellPatternExcelParser;
+import wow.scraper.repository.impl.excel.spell.SpellPatternExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.SpellId.*;
+import static wow.commons.model.spell.SpellId.*;
 import static wow.minmax.model.config.CharacterFeature.*;
 
 /**

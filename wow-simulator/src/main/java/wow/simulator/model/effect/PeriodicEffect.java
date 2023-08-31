@@ -1,8 +1,8 @@
 package wow.simulator.model.effect;
 
 import wow.commons.model.Duration;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.TickScheme;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.TickScheme;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.SpellCastContext;
 

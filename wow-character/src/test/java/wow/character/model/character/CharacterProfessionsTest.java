@@ -3,14 +3,14 @@ package wow.character.model.character;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.commons.model.attributes.condition.AttributeCondition;
+import wow.commons.model.attribute.condition.AttributeCondition;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static wow.commons.model.professions.ProfessionId.*;
-import static wow.commons.model.professions.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
+import static wow.commons.model.profession.ProfessionId.*;
+import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.GameVersionId.TBC;
 
 /**

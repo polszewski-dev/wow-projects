@@ -13,10 +13,10 @@ import wow.character.model.snapshot.Snapshot;
 import wow.character.model.snapshot.SpellStatistics;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.special.ProcEventType;
-import wow.commons.model.attributes.complex.special.SpecialAbility;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.special.ProcEventType;
+import wow.commons.model.attribute.complex.special.SpecialAbility;
+import wow.commons.model.spell.Spell;
 import wow.minmax.model.CharacterStats;
 import wow.minmax.model.RotationStats;
 import wow.minmax.model.SpecialAbilityStats;
@@ -26,13 +26,13 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static wow.commons.model.attributes.complex.special.ProcEventType.SPELL_DAMAGE;
-import static wow.commons.model.attributes.complex.special.ProcEventType.*;
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
-import static wow.commons.model.buffs.BuffCategory.SELF_BUFF;
-import static wow.commons.model.spells.SpellId.*;
-import static wow.commons.model.spells.SpellSchool.FIRE;
-import static wow.commons.model.spells.SpellSchool.SHADOW;
+import static wow.commons.model.attribute.complex.special.ProcEventType.SPELL_DAMAGE;
+import static wow.commons.model.attribute.complex.special.ProcEventType.*;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.buff.BuffCategory.SELF_BUFF;
+import static wow.commons.model.spell.SpellId.*;
+import static wow.commons.model.spell.SpellSchool.FIRE;
+import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.minmax.service.CalculationService.EquivalentMode.ADDITIONAL;
 
 /**

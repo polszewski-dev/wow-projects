@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.Snapshot;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.Spell;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.snapshot.SnapshotState.*;

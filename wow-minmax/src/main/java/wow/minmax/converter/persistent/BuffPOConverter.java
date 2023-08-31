@@ -2,7 +2,7 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buff.Buff;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.persistent.BuffPO;
 

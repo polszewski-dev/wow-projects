@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.ResourceType.HEALTH;
-import static wow.commons.model.spells.ResourceType.MANA;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.commons.model.spell.SpellId.SHADOW_BOLT;
 
 /**
  * User: POlszewski

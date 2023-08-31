@@ -1,7 +1,7 @@
 package wow.character.model.character;
 
 import lombok.Getter;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buff.Buff;
 
 import java.util.function.Predicate;
 

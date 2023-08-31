@@ -2,9 +2,9 @@ package wow.simulator.graph;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.commons.model.spells.ResourceType;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.ActionId;
 import wow.simulator.model.cooldown.Cooldown;
@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static wow.commons.model.spells.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.HEALTH;
 
 /**
  * User: POlszewski

@@ -3,10 +3,10 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.Copyable;
-import wow.commons.model.attributes.AttributeCollection;
-import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.buffs.BuffIdAndRank;
+import wow.commons.model.attribute.AttributeCollection;
+import wow.commons.model.attribute.AttributeCollector;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.model.character.CreatureType;
 
 import java.util.Collection;

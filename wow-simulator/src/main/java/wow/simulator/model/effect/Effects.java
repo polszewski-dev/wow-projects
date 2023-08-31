@@ -1,6 +1,6 @@
 package wow.simulator.model.effect;
 
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;

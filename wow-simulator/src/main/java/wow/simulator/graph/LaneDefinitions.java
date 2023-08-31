@@ -1,9 +1,9 @@
 package wow.simulator.graph;
 
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.spells.EffectId;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.effect.EffectId;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.model.effect.Effect;
 
 import java.awt.*;

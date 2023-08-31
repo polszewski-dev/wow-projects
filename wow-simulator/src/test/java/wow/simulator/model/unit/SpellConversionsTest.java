@@ -2,13 +2,13 @@ package wow.simulator.model.unit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.WowSimulatorSpringTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.SpellId.DRAIN_LIFE;
-import static wow.commons.model.spells.SpellId.LIFE_TAP;
+import static wow.commons.model.spell.SpellId.DRAIN_LIFE;
+import static wow.commons.model.spell.SpellId.LIFE_TAP;
 
 
 /**

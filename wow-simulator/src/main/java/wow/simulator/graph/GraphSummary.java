@@ -2,8 +2,8 @@ package wow.simulator.graph;
 
 import lombok.Getter;
 import wow.character.model.snapshot.Snapshot;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.spells.SpellSchool;
+import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.SpellSchool;
 import wow.simulator.model.unit.Player;
 
 import java.util.*;

@@ -1,6 +1,6 @@
 package wow.commons.model.config;
 
-import wow.commons.model.attributes.AttributeSource;
+import wow.commons.model.attribute.AttributeSource;
 
 /**
  * User: POlszewski

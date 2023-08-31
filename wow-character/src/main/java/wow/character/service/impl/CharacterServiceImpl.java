@@ -11,7 +11,7 @@ import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;

@@ -2,9 +2,9 @@ package wow.simulator.model.unit.action;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
+import wow.commons.model.talent.TalentId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.Time;

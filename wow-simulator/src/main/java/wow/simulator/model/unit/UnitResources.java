@@ -1,16 +1,16 @@
 package wow.simulator.model.unit;
 
-import wow.commons.model.spells.Cost;
-import wow.commons.model.spells.ResourceType;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.Cost;
+import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-import static wow.commons.model.spells.ResourceType.HEALTH;
-import static wow.commons.model.spells.ResourceType.MANA;
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
 
 /**
  * User: POlszewski

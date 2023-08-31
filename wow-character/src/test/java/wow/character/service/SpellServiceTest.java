@@ -3,7 +3,7 @@ package wow.character.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
-import wow.commons.model.buffs.Buff;
+import wow.commons.model.buff.Buff;
 
 import java.util.List;
 

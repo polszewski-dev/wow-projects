@@ -5,18 +5,18 @@ import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
 import wow.character.util.AttributeEvaluator;
-import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.spell.Spell;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
 import static wow.commons.model.character.CreatureType.UNDEAD;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
-import static wow.commons.model.spells.SpellSchool.FIRE;
-import static wow.commons.model.spells.SpellSchool.SHADOW;
-import static wow.commons.model.talents.TalentTree.DESTRUCTION;
+import static wow.commons.model.spell.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spell.SpellSchool.FIRE;
+import static wow.commons.model.spell.SpellSchool.SHADOW;
+import static wow.commons.model.talent.TalentTree.DESTRUCTION;
 
 /**
  * User: POlszewski

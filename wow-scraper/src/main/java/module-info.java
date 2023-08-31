@@ -15,8 +15,8 @@ module wow.scraper {
 
 	requires wow.commons;
 
-	exports wow.scraper.classifiers;
-	exports wow.scraper.fetchers.impl;
+	exports wow.scraper.classifier;
+	exports wow.scraper.fetcher.impl;
 	exports wow.scraper.model;
 
 	opens wow.scraper.config;

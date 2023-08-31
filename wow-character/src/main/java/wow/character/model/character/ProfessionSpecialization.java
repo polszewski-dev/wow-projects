@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecializationId;
 
 /**
  * User: POlszewski

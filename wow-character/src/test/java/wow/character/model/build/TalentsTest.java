@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.talent.TalentId;
 
 import java.util.List;
 

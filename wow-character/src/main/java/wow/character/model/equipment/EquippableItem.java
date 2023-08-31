@@ -1,13 +1,13 @@
 package wow.character.model.equipment;
 
 import wow.character.model.Copyable;
-import wow.commons.model.attributes.AttributeCollection;
-import wow.commons.model.attributes.AttributeCollector;
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attribute.AttributeCollection;
+import wow.commons.model.attribute.AttributeCollector;
+import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
-import wow.commons.model.sources.Source;
+import wow.commons.model.source.Source;
 
 import java.util.List;
 import java.util.Objects;

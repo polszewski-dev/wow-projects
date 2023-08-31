@@ -1,6 +1,6 @@
 package wow.commons.model.item;
 
-import wow.commons.model.spells.SpellSchool;
+import wow.commons.model.spell.SpellSchool;
 
 /**
  * User: POlszewski

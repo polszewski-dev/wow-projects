@@ -1,8 +1,8 @@
 package wow.character.model.character;
 
 import lombok.Getter;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionSpecializationId;
+import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecializationId;
 
 /**
  * User: POlszewski

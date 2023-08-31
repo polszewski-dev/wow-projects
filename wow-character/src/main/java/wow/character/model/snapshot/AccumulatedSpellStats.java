@@ -2,11 +2,11 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.StatConversion;
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.attributes.primitive.PrimitiveAttribute;
-import wow.commons.model.attributes.primitive.PrimitiveAttributeId;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.StatConversion;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 
 import java.util.List;
 import java.util.Set;

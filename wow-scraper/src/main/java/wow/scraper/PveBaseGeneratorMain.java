@@ -1,10 +1,10 @@
 package wow.scraper;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.scraper.exporters.pve.FactionExporter;
-import wow.scraper.exporters.pve.NpcExporter;
-import wow.scraper.exporters.pve.ZoneExporter;
-import wow.scraper.exporters.pve.excel.PveBaseExcelBuilder;
+import wow.scraper.exporter.pve.FactionExporter;
+import wow.scraper.exporter.pve.NpcExporter;
+import wow.scraper.exporter.pve.ZoneExporter;
+import wow.scraper.exporter.pve.excel.PveBaseExcelBuilder;
 
 /**
  * User: POlszewski

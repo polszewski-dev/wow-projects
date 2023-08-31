@@ -3,12 +3,12 @@ package wow.character.model.character;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.Spell;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spells.SpellId.SHADOW_BOLT;
+import static wow.commons.model.spell.SpellId.SHADOW_BOLT;
 
 /**
  * User: POlszewski

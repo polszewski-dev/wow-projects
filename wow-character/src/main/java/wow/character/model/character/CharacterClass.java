@@ -8,7 +8,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-import wow.commons.model.spells.SpellSchool;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.ArrayList;
 import java.util.List;

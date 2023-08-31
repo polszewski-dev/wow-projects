@@ -1,0 +1,49 @@
+package wow.minmax.service.impl.enumerator;
+
+import lombok.AllArgsConstructor;
+import wow.character.model.build.Rotation;
+import wow.character.model.character.Character;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.commons.util.AttributesBuilder;
+import wow.minmax.service.CalculationService;
+
+/**
+ * User: POlszewski
+ * Date: 2023-03-20
+ */
+@AllArgsConstructor
+public class StatEquivalentFinder {
+	private static final double PRECISION = 0.0001;
+
+	private final Attributes baseStats;
+	private final double targetDps;
+	private final PrimitiveAttributeId targetStat;
+	private final Character character;
+	private final Rotation rotation;
+
+	private final CalculationService calculationService;
+
+	public Attributes getDpsStatEquivalent() {
+		double equivalentValue = 0;
+		double increase = 1;
+
+		while (true) {
+			PrimitiveAttribute equivalentStat = Attribute.of(targetStat, equivalentValue + increase);
+			Attributes equivalentStats = AttributesBuilder.addAttribute(baseStats, equivalentStat);
+			double equivalentDps = calculationService.getRotationDps(character, rotation, equivalentStats);
+
+			if (Math.abs(equivalentDps - targetDps) <= PRECISION) {
+				return Attributes.of(targetStat, equivalentValue);
+			}
+
+			if (equivalentDps < targetDps) {
+				equivalentValue += increase;
+			} else {
+				increase /= 2;
+			}
+		}
+	}
+}

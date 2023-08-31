@@ -1,6 +1,6 @@
 package wow.commons.model.config;
 
-import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.profession.ProfessionId;
 
 import java.util.Objects;
 

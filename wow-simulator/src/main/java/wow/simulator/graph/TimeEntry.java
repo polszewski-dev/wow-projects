@@ -3,7 +3,7 @@ package wow.simulator.graph;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.Duration;
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.model.time.Time;
 
 /**

@@ -8,7 +8,7 @@ import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 import wow.commons.repository.PveRepository;
-import wow.commons.repository.impl.parsers.pve.PveExcelParser;
+import wow.commons.repository.impl.parser.pve.PveExcelParser;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

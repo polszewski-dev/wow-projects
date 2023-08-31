@@ -7,8 +7,8 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.equipment.EquippableItem;
-import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffCategory;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
@@ -27,8 +27,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
-import static wow.commons.model.buffs.BuffId.FLASK_OF_PURE_DEATH;
-import static wow.commons.model.buffs.BuffId.FLASK_OF_SUPREME_POWER;
+import static wow.commons.model.buff.BuffId.FLASK_OF_PURE_DEATH;
+import static wow.commons.model.buff.BuffId.FLASK_OF_SUPREME_POWER;
 import static wow.commons.model.categorization.ItemSlot.*;
 
 /**

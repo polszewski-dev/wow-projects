@@ -1,6 +1,6 @@
 package wow.simulator.model.rng;
 
-import wow.commons.model.spells.SpellId;
+import wow.commons.model.spell.SpellId;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

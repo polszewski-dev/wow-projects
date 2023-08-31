@@ -6,11 +6,11 @@ import lombok.Setter;
 import wow.character.model.Copyable;
 import wow.character.model.character.GameVersion;
 import wow.character.model.character.Pet;
-import wow.commons.model.attributes.AttributeCollection;
-import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attribute.AttributeCollection;
+import wow.commons.model.attribute.AttributeCollector;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.PetType;
-import wow.commons.model.talents.TalentId;
+import wow.commons.model.talent.TalentId;
 
 import static wow.commons.model.character.PetType.NONE;
 

@@ -1,6 +1,6 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attributes.Attributes;
+import wow.commons.model.attribute.Attributes;
 
 import java.util.Collections;
 import java.util.List;

@@ -2,7 +2,7 @@ package wow.scraper.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.professions.ProfessionId;
+import wow.commons.model.profession.ProfessionId;
 
 import java.util.stream.Stream;
 

@@ -11,11 +11,11 @@ import wow.character.WowCharacterSpringTest;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
-import wow.commons.model.buffs.BuffId;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.*;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.Described;
-import wow.commons.model.professions.ProfessionType;
+import wow.commons.model.profession.ProfessionType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
@@ -26,22 +26,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.character.ArmorProfficiency.CLOTH;
 import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
 import static wow.character.model.character.WeaponProfficiency.*;
-import static wow.commons.model.buffs.BuffId.FEL_ARMOR;
-import static wow.commons.model.buffs.BuffId.*;
+import static wow.commons.model.buff.BuffId.FEL_ARMOR;
+import static wow.commons.model.buff.BuffId.*;
 import static wow.commons.model.categorization.ItemType.ONE_HAND;
 import static wow.commons.model.categorization.WeaponSubType.SWORD;
 import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.character.PetType.NONE;
 import static wow.commons.model.character.RaceId.*;
-import static wow.commons.model.professions.ProfessionId.*;
-import static wow.commons.model.professions.ProfessionProficiencyId.ARTISAN;
-import static wow.commons.model.professions.ProfessionProficiencyId.MASTER;
-import static wow.commons.model.professions.ProfessionSpecializationId.*;
+import static wow.commons.model.profession.ProfessionId.*;
+import static wow.commons.model.profession.ProfessionProficiencyId.ARTISAN;
+import static wow.commons.model.profession.ProfessionProficiencyId.MASTER;
+import static wow.commons.model.profession.ProfessionSpecializationId.*;
 import static wow.commons.model.pve.GameVersionId.*;
 import static wow.commons.model.pve.PhaseId.*;
 import static wow.commons.model.pve.Side.HORDE;
-import static wow.commons.model.spells.SpellId.*;
+import static wow.commons.model.spell.SpellId.*;
 
 /**
  * User: POlszewski

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.Character;
-import wow.commons.model.attributes.complex.special.SpecialAbility;
-import wow.commons.model.buffs.BuffCategory;
+import wow.commons.model.attribute.complex.special.SpecialAbility;
+import wow.commons.model.buff.BuffCategory;
 import wow.minmax.converter.dto.CharacterStatsConverter;
 import wow.minmax.converter.dto.RotationStatsConverter;
 import wow.minmax.converter.dto.SpecialAbilityStatsConverter;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static wow.commons.model.buffs.BuffCategory.*;
+import static wow.commons.model.buff.BuffCategory.*;
 
 /**
  * User: POlszewski

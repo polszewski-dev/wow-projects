@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.item.Item;
-import wow.commons.model.sources.Source;
+import wow.commons.model.source.Source;
 
 import static wow.commons.model.categorization.ItemRarity.LEGENDARY;
 import static wow.commons.model.categorization.ItemRarity.UNCOMMON;

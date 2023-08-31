@@ -1,9 +1,9 @@
 package wow.minmax.util;
 
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.ComplexAttribute;
-import wow.commons.model.attributes.complex.ComplexAttributeId;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.ComplexAttribute;
+import wow.commons.model.attribute.complex.ComplexAttributeId;
 
 import java.util.EnumMap;
 import java.util.List;

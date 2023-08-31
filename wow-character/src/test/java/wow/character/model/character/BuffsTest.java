@@ -3,15 +3,15 @@ package wow.character.model.character;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffIdAndRank;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
-import static wow.commons.model.buffs.BuffId.*;
+import static wow.commons.model.buff.BuffId.*;
 
 /**
  * User: POlszewski

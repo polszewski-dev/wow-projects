@@ -7,7 +7,7 @@ import wow.character.model.character.Profession;
 import wow.character.repository.CharacterRepository;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.sources.Source;
+import wow.commons.model.source.Source;
 
 import java.util.stream.Collectors;
 

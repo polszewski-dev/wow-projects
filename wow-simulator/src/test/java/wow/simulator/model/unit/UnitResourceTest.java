@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.WowSimulatorSpringTest;
 
 import static org.assertj.core.api.Assertions.*;
-import static wow.commons.model.spells.ResourceType.HEALTH;
-import static wow.commons.model.spells.ResourceType.MANA;
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
 
 /**
  * User: POlszewski

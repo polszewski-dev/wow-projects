@@ -9,35 +9,35 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.special.SpecialAbility;
-import wow.commons.model.attributes.complex.special.TalentProcAbility;
-import wow.commons.model.attributes.condition.AttributeCondition;
-import wow.commons.model.buffs.Buff;
-import wow.commons.model.buffs.BuffExclusionGroup;
-import wow.commons.model.buffs.BuffId;
-import wow.commons.model.buffs.BuffType;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.special.SpecialAbility;
+import wow.commons.model.attribute.complex.special.TalentProcAbility;
+import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffExclusionGroup;
+import wow.commons.model.buff.BuffId;
+import wow.commons.model.buff.BuffType;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spells.Spell;
-import wow.commons.model.spells.SpellId;
-import wow.commons.model.talents.Talent;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
+import wow.commons.model.talent.Talent;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attributes.complex.special.ProcEventType.SPELL_CRIT;
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_CRIT_PCT;
-import static wow.commons.model.buffs.BuffCategory.RAID_BUFF;
+import static wow.commons.model.attribute.complex.special.ProcEventType.SPELL_CRIT;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.SPELL_CRIT_PCT;
+import static wow.commons.model.buff.BuffCategory.RAID_BUFF;
 import static wow.commons.model.categorization.PveRole.CASTER_DPS;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.effect.EffectId.SHADOW_VULNERABILITY_20;
 import static wow.commons.model.pve.GameVersionId.TBC;
-import static wow.commons.model.spells.EffectId.SHADOW_VULNERABILITY_20;
-import static wow.commons.model.spells.SpellId.*;
-import static wow.commons.model.spells.SpellSchool.*;
-import static wow.commons.model.talents.TalentId.*;
-import static wow.commons.model.talents.TalentTree.DESTRUCTION;
+import static wow.commons.model.spell.SpellId.*;
+import static wow.commons.model.spell.SpellSchool.*;
+import static wow.commons.model.talent.TalentId.*;
+import static wow.commons.model.talent.TalentTree.DESTRUCTION;
 
 /**
  * User: POlszewski

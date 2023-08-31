@@ -3,7 +3,7 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.attributes.AttributeCollector;
+import wow.commons.model.attribute.AttributeCollector;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.config.Described;

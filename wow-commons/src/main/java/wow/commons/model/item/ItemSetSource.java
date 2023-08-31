@@ -1,6 +1,6 @@
 package wow.commons.model.item;
 
-import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
+import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.Description;
 
 import java.util.Comparator;

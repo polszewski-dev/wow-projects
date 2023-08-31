@@ -1,12 +1,12 @@
 package wow.simulator.model.unit;
 
-import wow.commons.model.spells.Conversion;
-import wow.commons.model.spells.Spell;
+import wow.commons.model.spell.Conversion;
+import wow.commons.model.spell.Spell;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static wow.commons.model.spells.Conversion.From.*;
+import static wow.commons.model.spell.Conversion.From.*;
 
 /**
  * User: POlszewski

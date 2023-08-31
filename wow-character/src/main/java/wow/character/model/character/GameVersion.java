@@ -8,8 +8,8 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-import wow.commons.model.professions.ProfessionId;
-import wow.commons.model.professions.ProfessionProficiencyId;
+import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionProficiencyId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 

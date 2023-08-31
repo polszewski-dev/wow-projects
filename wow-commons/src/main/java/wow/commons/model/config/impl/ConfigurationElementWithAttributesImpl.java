@@ -1,8 +1,8 @@
 package wow.commons.model.config.impl;
 
 import lombok.Getter;
-import wow.commons.model.attributes.Attributes;
-import wow.commons.model.attributes.complex.special.SpecialAbilitySource;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.complex.special.SpecialAbilitySource;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.ConfigurationElementWithAttributes;
 import wow.commons.model.config.Description;

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.Percent;
-import wow.commons.model.attributes.Attribute;
-import wow.commons.model.attributes.complex.special.SpecialAbility;
-import wow.commons.model.attributes.condition.AttributeCondition;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.complex.special.SpecialAbility;
+import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attributes.primitive.PrimitiveAttributeId.SPELL_POWER;
+import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.SPELL_POWER;
 import static wow.commons.model.categorization.ArmorSubType.CLOTH;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.categorization.Binding.NO_BINDING;
@@ -22,7 +22,7 @@ import static wow.commons.model.categorization.ItemRarity.EPIC;
 import static wow.commons.model.categorization.ItemType.CHEST;
 import static wow.commons.model.categorization.ItemType.TOKEN;
 import static wow.commons.model.character.CharacterClassId.*;
-import static wow.commons.model.professions.ProfessionId.TAILORING;
+import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P3;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 

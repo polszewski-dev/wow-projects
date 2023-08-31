@@ -2,9 +2,9 @@ package wow.scraper.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import wow.scraper.config.ScraperConfig;
-import wow.scraper.fetchers.WowheadFetcher;
-import wow.scraper.importers.spell.SpellEnchantImporter;
-import wow.scraper.importers.spell.SpellImporter;
+import wow.scraper.fetcher.WowheadFetcher;
+import wow.scraper.importer.spell.SpellEnchantImporter;
+import wow.scraper.importer.spell.SpellImporter;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.repository.SpellDetailRepository;
