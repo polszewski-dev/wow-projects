@@ -1,14 +1,17 @@
 package wow.scraper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * User: POlszewski
  * Date: 2022-10-26
  */
-
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @JsonIgnoreProperties({
 		"completion_category",
 		"spells"

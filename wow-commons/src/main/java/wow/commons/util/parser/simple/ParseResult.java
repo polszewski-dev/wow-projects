@@ -1,6 +1,8 @@
 package wow.commons.util.parser.simple;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -9,7 +11,9 @@ import java.util.function.Function;
  * User: POlszewski
  * Date: 2022-11-26
  */
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class ParseResult {
 	private String type;
 	private Map<String, String> map;

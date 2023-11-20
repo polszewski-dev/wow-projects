@@ -1,8 +1,9 @@
 package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -10,9 +11,10 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-12-28
  */
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class EquipmentOptionsDTO {
 	private List<ItemOptionsDTO> itemOptions;
 	private List<EnchantOptionsDTO> enchantOptions;

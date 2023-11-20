@@ -1,16 +1,18 @@
 package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * User: POlszewski
  * Date: 2022-01-11
  */
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class SpecialAbilityStatsDTO {
 	private String description;
 	private String attributes;

@@ -1,7 +1,8 @@
 package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -9,8 +10,9 @@ import java.io.Serializable;
  * User: POlszewski
  * Date: 2023-04-05
  */
-@Data
 @AllArgsConstructor
+@Getter
+@Setter
 public class ItemFilterPO implements Serializable {
 	boolean heroics;
 	boolean raids;

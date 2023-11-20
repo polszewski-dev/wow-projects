@@ -1,16 +1,18 @@
 package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * User: POlszewski
  * Date: 2023-04-05
  */
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class ItemFilterDTO {
 	boolean heroics;
 	boolean raids;

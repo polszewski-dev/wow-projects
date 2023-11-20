@@ -2,7 +2,9 @@ package wow.scraper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import wow.commons.model.pve.GameVersionId;
 
 import java.util.Set;
@@ -11,7 +13,9 @@ import java.util.Set;
  * User: POlszewski
  * Date: 2022-10-27
  */
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @JsonIgnoreProperties({
 		"cat",
 		"learnedat",

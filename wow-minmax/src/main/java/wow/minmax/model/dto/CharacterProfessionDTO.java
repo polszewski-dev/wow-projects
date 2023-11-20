@@ -1,8 +1,9 @@
 package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
@@ -10,9 +11,10 @@ import wow.commons.model.profession.ProfessionSpecializationId;
  * User: POlszewski
  * Date: 2023-01-07
  */
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class CharacterProfessionDTO {
 	private ProfessionId profession;
 	private ProfessionSpecializationId specialization;

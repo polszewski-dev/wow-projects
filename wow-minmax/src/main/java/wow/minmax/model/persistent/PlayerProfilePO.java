@@ -1,7 +1,8 @@
 package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.minmax.model.CharacterId;
@@ -15,8 +16,9 @@ import java.util.UUID;
  * User: POlszewski
  * Date: 2021-12-17
  */
-@Data
 @AllArgsConstructor
+@Getter
+@Setter
 public class PlayerProfilePO implements Serializable {
 	private UUID profileId;
 	private String profileName;

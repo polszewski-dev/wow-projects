@@ -1,8 +1,9 @@
 package wow.minmax.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,9 +12,10 @@ import java.util.UUID;
  * User: POlszewski
  * Date: 2022-12-25
  */
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class PlayerProfileInfoDTO {
 	private UUID profileId;
 	private String profileName;

@@ -2,7 +2,9 @@ package wow.scraper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import wow.commons.model.pve.GameVersionId;
 
 import java.util.List;
@@ -11,7 +13,9 @@ import java.util.List;
  * User: POlszewski
  * Date: 2022-11-01
  */
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @JsonIgnoreProperties({
 		"popularity",
 		"minlevel",

@@ -1,6 +1,8 @@
 package wow.scraper.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -32,7 +34,9 @@ import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
  */
 @PropertySource("classpath:scraper.properties")
 @Component
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class ScraperConfig {
 	@Value("${directory.path}")
 	private String directoryPath;

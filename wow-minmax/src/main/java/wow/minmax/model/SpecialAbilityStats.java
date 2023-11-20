@@ -1,14 +1,16 @@
 package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * User: POlszewski
  * Date: 2023-01-01
  */
-@Data
 @AllArgsConstructor
+@Getter
+@Setter
 public class SpecialAbilityStats {
 	private SpecialAbility ability;
 	private double spEquivalent;

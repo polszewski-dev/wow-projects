@@ -1,7 +1,8 @@
 package wow.scraper.exporter.item.excel;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.profession.ProfessionId;
@@ -19,7 +20,8 @@ import java.util.function.Consumer;
  */
 @AllArgsConstructor
 public class SavedSets {
-	@Data
+	@Getter
+	@Setter
 	@AllArgsConstructor
 	static class SetInfo {
 		private String itemSetName;

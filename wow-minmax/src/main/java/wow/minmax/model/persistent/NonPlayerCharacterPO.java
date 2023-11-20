@@ -1,7 +1,8 @@
 package wow.minmax.model.persistent;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.PhaseId;
@@ -13,8 +14,9 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-04-01
  */
-@Data
 @AllArgsConstructor
+@Getter
+@Setter
 public class NonPlayerCharacterPO implements Serializable {
 	private PhaseId phaseId;
 	private CharacterClassId characterClassId;
