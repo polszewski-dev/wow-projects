@@ -3,8 +3,8 @@ package wow.commons.model.effect.impl;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.Duration;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
@@ -33,7 +33,7 @@ public class EffectImpl implements Effect {
 	private PeriodicComponent periodicComponent;
 	private Duration tickInterval;
 	private ModifierComponent modifierComponent;
-	private List<PrimitiveAttribute> modifierAttributeList;
+	private List<Attribute> modifierAttributeList;
 	private AbsorptionComponent absorptionComponent;
 	private Conversion conversion;
 	private List<StatConversion> statConversions;
@@ -70,7 +70,7 @@ public class EffectImpl implements Effect {
 	public void setModifierComponent(ModifierComponent modifierComponent) {
 		this.modifierComponent = modifierComponent;
 		if (modifierComponent != null) {
-			this.modifierAttributeList = modifierComponent.attributes().primitiveAttributes();
+			this.modifierAttributeList = modifierComponent.attributes().list();
 		}
 	}
 

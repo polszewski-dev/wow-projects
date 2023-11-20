@@ -15,7 +15,7 @@ import wow.scraper.model.JsonItemDetails;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.categorization.ArmorSubType.CLOTH;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.categorization.ItemType.*;

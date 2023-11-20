@@ -13,7 +13,6 @@ module wow.commons {
 	exports wow.commons.model;
 	exports wow.commons.model.attribute;
 	exports wow.commons.model.attribute.condition;
-	exports wow.commons.model.attribute.primitive;
 	exports wow.commons.model.buff;
 	exports wow.commons.model.categorization;
 	exports wow.commons.model.character;

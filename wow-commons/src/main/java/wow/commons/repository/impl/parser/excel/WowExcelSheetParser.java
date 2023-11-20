@@ -4,10 +4,9 @@ import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
@@ -193,7 +192,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		return Attributes.of(list);
 	}
 
-	private PrimitiveAttribute readAttribute(String prefix, int statNo) {
+	private Attribute readAttribute(String prefix, int statNo) {
 		var colAttrId = column(getAttrId(statNo), true).prefixed(prefix);
 
 		if (colAttrId.isEmpty()) {
@@ -204,7 +203,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var colAttrCondition = column(getAttrCondition(statNo), true).prefixed(prefix);
 		var colAttrLevelScaled = column(getAttrLevelScaled(statNo), true).prefixed(prefix);
 
-		var id = colAttrId.getEnum(PrimitiveAttributeId::parse);
+		var id = colAttrId.getEnum(AttributeId::parse);
 		var value = colAttrValue.getDouble();
 		var condition = colAttrCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
 		var levelScaled = colAttrLevelScaled.getBoolean();

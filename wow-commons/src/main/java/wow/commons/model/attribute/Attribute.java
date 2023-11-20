@@ -1,31 +1,49 @@
 package wow.commons.model.attribute;
 
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+
+import java.util.Objects;
 
 /**
  * User: POlszewski
  * Date: 2021-10-07
  */
-public sealed interface Attribute permits PrimitiveAttribute {
-	static PrimitiveAttribute of(PrimitiveAttributeId id, double value) {
+public record Attribute(
+		AttributeId id,
+		double value,
+		AttributeCondition condition,
+		boolean levelScaled
+) {
+	public Attribute {
+		Objects.requireNonNull(id);
+		Objects.requireNonNull(condition);
+	}
+
+	public static Attribute of(AttributeId id, double value) {
 		return of(id, value, AttributeCondition.EMPTY, false);
 	}
 
-	static PrimitiveAttribute of(PrimitiveAttributeId id, double value, AttributeCondition condition) {
+	public static Attribute of(AttributeId id, double value, AttributeCondition condition) {
 		return of(id, value, condition, false);
 	}
 
-	static PrimitiveAttribute of(PrimitiveAttributeId id, double value, AttributeCondition condition, boolean levelScaled) {
-		return new PrimitiveAttribute(id, value, condition, levelScaled);
+	public static Attribute of(AttributeId id, double value, AttributeCondition condition, boolean levelScaled) {
+		return new Attribute(id, value, condition, levelScaled);
 	}
 
-	AttributeId id();
+	public double getLevelScaledValue(int level) {
+		return levelScaled ? value * level : value;
+	}
 
-	AttributeCondition condition();
+	public Attribute negate() {
+		return new Attribute(id, -value, condition, levelScaled);
+	}
 
-	default boolean hasCondition() {
+	public Attribute scale(double factor) {
+		return new Attribute(id, value * factor, condition, levelScaled);
+	}
+
+	public boolean hasCondition() {
 		return !condition().isEmpty();
 	}
 }

@@ -2,11 +2,11 @@ package wow.scraper.classifier;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.AttributeType;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.attribute.condition.*;
-import wow.commons.model.attribute.primitive.PowerType;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeType;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
@@ -21,8 +21,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static wow.commons.model.attribute.AttributeType.*;
 import static wow.commons.model.attribute.condition.ConditionOperator.BinaryConditionOperator;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeType.*;
 
 /**
  * User: POlszewski
@@ -51,7 +51,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 		return permanentEffects.stream().anyMatch(this::isCasterEffect);
 	}
 
-	private List<PrimitiveAttribute> getTopLevelAttributes(List<Effect> effects) {
+	private List<Attribute> getTopLevelAttributes(List<Effect> effects) {
 		return effects.stream()
 				.map(Effect::getModifierAttributeList)
 				.filter(Objects::nonNull)
@@ -59,27 +59,27 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 				.toList();
 	}
 
-	private boolean hasCasterAttributes(List<PrimitiveAttribute> attributes) {
+	private boolean hasCasterAttributes(List<Attribute> attributes) {
 		return attributes.stream().anyMatch(this::isCasterAttribute) && getSpellDamage(attributes) >= getHealingPower(attributes);
 	}
 
-	private double getSpellDamage(List<PrimitiveAttribute> attributes) {
+	private double getSpellDamage(List<Attribute> attributes) {
 		return getPower(attributes, PowerType.SPELL_DAMAGE);
 	}
 
-	private double getHealingPower(List<PrimitiveAttribute> attributes) {
+	private double getHealingPower(List<Attribute> attributes) {
 		return getPower(attributes, PowerType.HEALING);
 	}
 
-	private double getPower(List<PrimitiveAttribute> attributes, PowerType powerType) {
+	private double getPower(List<Attribute> attributes, PowerType powerType) {
 		var args = new AttributeConditionArgs(ActionType.SPELL);
 
 		args.setPowerType(powerType);
 
 		return attributes.stream()
-				.filter(x -> x.id() == PrimitiveAttributeId.POWER)
+				.filter(x -> x.id() == AttributeId.POWER)
 				.filter(x -> x.condition().test(args))
-				.mapToDouble(PrimitiveAttribute::value)
+				.mapToDouble(Attribute::value)
 				.sum();
 	}
 
@@ -124,7 +124,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 		return isCasterEffect(effectApplication.effect());
 	}
 
-	private boolean isCasterAttribute(PrimitiveAttribute attribute) {
+	private boolean isCasterAttribute(Attribute attribute) {
 		return CASTER_STATS.contains(attribute.id().getType()) && isCasterCondition(attribute.condition());
 	}
 
@@ -155,7 +155,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 		;
 	}
 
-	private static final Set<PrimitiveAttributeType> CASTER_STATS = Set.of(
+	private static final Set<AttributeType> CASTER_STATS = Set.of(
 			POWER, HIT, CRIT, HASTE
 	);
 }

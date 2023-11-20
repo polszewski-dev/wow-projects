@@ -1,7 +1,7 @@
 package wow.scraper.repository.impl.excel.spell;
 
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
@@ -249,8 +249,8 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		}
 
 		var target = getTarget(prefix);
-		var from = colStatConversionFrom.prefixed(prefix).getEnum(PrimitiveAttributeId::parse);
-		var to = colStatConversionTo.prefixed(prefix).getEnum(PrimitiveAttributeId::parse);
+		var from = colStatConversionFrom.prefixed(prefix).getEnum(AttributeId::parse);
+		var to = colStatConversionTo.prefixed(prefix).getEnum(AttributeId::parse);
 		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
 		var ratio = colStatConversionRatio.prefixed(prefix).getString();
 

@@ -11,9 +11,9 @@ import wow.character.model.snapshot.StatSummary;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.primitive.PowerType;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.buff.BuffIdAndRank;
@@ -36,7 +36,7 @@ import wow.minmax.util.NonModifierHandler;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 import static wow.minmax.model.config.CharacterFeature.COMBAT_RATINGS;
 
 /**
@@ -286,7 +286,7 @@ public class CalculationServiceImpl implements CalculationService {
 		);
 	}
 
-	private double getStatEquivalent(PlayerCharacter character, Ability ability, PrimitiveAttributeId ratingStat, PrimitiveAttributeId pctStat) {
+	private double getStatEquivalent(PlayerCharacter character, Ability ability, AttributeId ratingStat, AttributeId pctStat) {
 		var usesCombatRatings = minmaxConfigRepository.hasFeature(character, COMBAT_RATINGS);
 		var stat = usesCombatRatings ? ratingStat : pctStat;
 		var amount = minmaxConfigRepository.getViewConfig(character).orElseThrow().equivalentAmount();

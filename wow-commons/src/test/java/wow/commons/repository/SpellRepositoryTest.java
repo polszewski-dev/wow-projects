@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.buff.BuffCategory.RAID_BUFF;
 import static wow.commons.model.categorization.PveRole.CASTER_DPS;
 import static wow.commons.model.character.CharacterClassId.*;

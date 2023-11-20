@@ -1,7 +1,7 @@
 package wow.commons.model.effect;
 
 import wow.commons.model.Duration;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.component.*;
@@ -34,7 +34,7 @@ public interface Effect extends Described, TimeRestricted {
 
 	ModifierComponent getModifierComponent();
 
-	List<PrimitiveAttribute> getModifierAttributeList();
+	List<Attribute> getModifierAttributeList();
 
 	AbsorptionComponent getAbsorptionComponent();
 

@@ -2,7 +2,7 @@ package wow.character.service;
 
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
-import wow.commons.model.attribute.primitive.PowerType;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;

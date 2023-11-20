@@ -37,7 +37,7 @@ public class UpgradeConverter implements Converter<Upgrade, UpgradeDTO> {
 	private List<String> getStatDiff(AttributesDiff statDifference) {
 		return statDifference
 				.attributes()
-				.primitiveAttributes()
+				.list()
 				.stream()
 				.map(AttributeFormatter::format)
 				.toList();

@@ -1,8 +1,8 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 
 /**
  * User: POlszewski
@@ -32,7 +32,7 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(PrimitiveAttributeId id, double value) {
+	public void accumulateAttribute(AttributeId id, double value) {
 		switch (id) {
 			case DAMAGE_TAKEN:
 				this.damageTaken += value;

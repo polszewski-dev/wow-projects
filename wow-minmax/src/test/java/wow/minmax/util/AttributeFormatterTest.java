@@ -3,8 +3,8 @@ package wow.minmax.util;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,7 +39,7 @@ class AttributeFormatterTest {
 			"HasteRating,      Spell,       1 haste",
 	})
 	void format(String idStr, String condStr, String expected) {
-		var id = PrimitiveAttributeId.parse(idStr);
+		var id = AttributeId.parse(idStr);
 		var condition = AttributeCondition.parse(condStr);
 		var attribute = Attribute.of(id, 1, condition);
 

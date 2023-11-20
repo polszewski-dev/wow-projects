@@ -1,13 +1,12 @@
-package wow.commons.model.attribute.primitive;
+package wow.commons.model.attribute;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.commons.model.attribute.AttributeId;
 import wow.commons.util.EnumUtil;
 
 import java.util.Set;
 
-import static wow.commons.model.attribute.primitive.ValueType.*;
+import static wow.commons.model.attribute.ValueType.*;
 
 /**
  * User: POlszewski
@@ -15,7 +14,7 @@ import static wow.commons.model.attribute.primitive.ValueType.*;
  */
 @AllArgsConstructor
 @Getter
-public enum PrimitiveAttributeType implements AttributeId {
+public enum AttributeType {
 	STRENGTH("Strength", pointsAndPercents()),
 	AGILITY("Agility", pointsAndPercents()),
 	STAMINA("Stamina", pointsAndPercents()),
@@ -101,11 +100,11 @@ public enum PrimitiveAttributeType implements AttributeId {
 	private final String key;
 	private final Set<ValueType> acceptedValueTypes;
 
-	public static PrimitiveAttributeType parse(String value) {
+	public static AttributeType parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.key);
 	}
 
-	public static PrimitiveAttributeType tryParse(String value) {
+	public static AttributeType tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 

@@ -3,15 +3,15 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.spell.ActionType;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 
 /**
  * User: POlszewski
@@ -20,25 +20,25 @@ import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
 class AccumulatedDurationStatsTest {
 	@Test
 	void getDuration() {
-		accumulateTestAttributes(PrimitiveAttributeId.DURATION);
+		accumulateTestAttributes(AttributeId.DURATION);
 		assertThat(durationStats.getDuration()).isEqualTo(160);
 	}
 
 	@Test
 	void getDurationPct() {
-		accumulateTestAttributes(PrimitiveAttributeId.DURATION_PCT);
+		accumulateTestAttributes(AttributeId.DURATION_PCT);
 		assertThat(durationStats.getDurationPct()).isEqualTo(160);
 	}
 
 	@Test
 	void getHasteRating() {
-		accumulateTestAttributes(PrimitiveAttributeId.HASTE_RATING);
+		accumulateTestAttributes(AttributeId.HASTE_RATING);
 		assertThat(durationStats.getHasteRating()).isEqualTo(160);
 	}
 
 	@Test
 	void getHastePct() {
-		accumulateTestAttributes(PrimitiveAttributeId.HASTE_PCT);
+		accumulateTestAttributes(AttributeId.HASTE_PCT);
 		assertThat(durationStats.getHastePct()).isEqualTo(160);
 	}
 
@@ -57,7 +57,7 @@ class AccumulatedDurationStatsTest {
 		assertThat(copy.getHastePct()).isEqualTo(durationStats.getHastePct());
 	}
 
-	void accumulateTestAttributes(PrimitiveAttributeId attributeId) {
+	void accumulateTestAttributes(AttributeId attributeId) {
 		var list = List.of(
 				Attribute.of(attributeId, 10),
 				Attribute.of(attributeId, 20, MiscCondition.PHYSICAL),

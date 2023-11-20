@@ -5,7 +5,6 @@ import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
 import wow.commons.util.parser.ParserUtil;
 import wow.scraper.parser.spell.params.AttributePattern;
 
@@ -101,7 +100,7 @@ public abstract class ScraperMatcher<P extends ScraperPattern<Q>, Q extends Scra
 		return Attributes.of(list);
 	}
 
-	private PrimitiveAttribute getAttribute(AttributePattern attributePattern) {
+	private Attribute getAttribute(AttributePattern attributePattern) {
 		var id = attributePattern.id();
 		var value = getOptionalDouble(attributePattern.value()).orElseThrow();
 		var condition = AttributeCondition.parse(evalParams(attributePattern.condition()));

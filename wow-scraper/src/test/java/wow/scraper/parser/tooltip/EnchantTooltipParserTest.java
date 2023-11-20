@@ -10,7 +10,7 @@ import wow.scraper.model.WowheadItemQuality;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.categorization.ItemType.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;

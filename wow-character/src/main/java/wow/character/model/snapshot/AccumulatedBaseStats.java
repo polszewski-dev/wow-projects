@@ -2,8 +2,8 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 
 /**
  * User: POlszewski
@@ -65,7 +65,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(PrimitiveAttributeId id, double value) {
+	public void accumulateAttribute(AttributeId id, double value) {
 		switch (id) {
 			case STRENGTH:
 				this.strength += value;

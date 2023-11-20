@@ -1,7 +1,7 @@
 package wow.simulator.model.effect.impl;
 
 import wow.commons.model.Duration;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
@@ -151,7 +151,7 @@ public class TickingEffect extends UnitEffectImpl {
 	}
 
 	@Override
-	public List<PrimitiveAttribute> getModifierAttributeList() {
+	public List<Attribute> getModifierAttributeList() {
 		return effect.getModifierAttributeList();
 	}
 

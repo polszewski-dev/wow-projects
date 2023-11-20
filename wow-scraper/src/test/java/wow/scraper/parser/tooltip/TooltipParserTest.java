@@ -2,9 +2,9 @@ package wow.scraper.parser.tooltip;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.Effect;
 import wow.scraper.ScraperSpringTest;
 import wow.scraper.model.JsonCommonDetails;
@@ -43,15 +43,15 @@ public abstract class TooltipParserTest<D extends JsonCommonDetails, P extends A
 
 	protected abstract Class<D> getDetailsClass();
 
-	protected static void assertEffect(List<Effect> effects, int idx, PrimitiveAttributeId id, int value, String description) {
+	protected static void assertEffect(List<Effect> effects, int idx, AttributeId id, int value, String description) {
 		assertEffect(effects.get(idx), id, value, AttributeCondition.EMPTY, description);
 	}
 
-	protected static void assertEffect(List<Effect> effects, int idx, PrimitiveAttributeId id, int value, AttributeCondition condition, String description) {
+	protected static void assertEffect(List<Effect> effects, int idx, AttributeId id, int value, AttributeCondition condition, String description) {
 		assertEffect(effects.get(idx), id, value, condition, description);
 	}
 
-	protected static void assertEffect(Effect effect, PrimitiveAttributeId id, int value, AttributeCondition condition, String description) {
+	protected static void assertEffect(Effect effect, AttributeId id, int value, AttributeCondition condition, String description) {
 		assertEffect(effect, Attributes.of(id, value, condition), description);
 	}
 

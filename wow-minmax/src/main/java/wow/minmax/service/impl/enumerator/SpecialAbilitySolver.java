@@ -16,7 +16,7 @@ import wow.minmax.repository.ProcInfoRepository;
 
 import java.util.List;
 
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.CRIT_COEFF_PCT;
+import static wow.commons.model.attribute.AttributeId.CRIT_COEFF_PCT;
 import static wow.commons.model.effect.component.EventType.*;
 
 /**

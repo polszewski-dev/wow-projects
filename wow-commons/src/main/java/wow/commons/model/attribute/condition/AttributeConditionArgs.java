@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.primitive.PowerType;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.categorization.WeaponSubType;
 import wow.commons.model.character.*;
 import wow.commons.model.effect.EffectCategory;

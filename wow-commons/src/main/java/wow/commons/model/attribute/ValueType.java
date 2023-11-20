@@ -1,4 +1,4 @@
-package wow.commons.model.attribute.primitive;
+package wow.commons.model.attribute;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,24 +6,23 @@ import wow.commons.util.EnumUtil;
 
 /**
  * User: POlszewski
- * Date: 2023-03-15
+ * Date: 2023-03-16
  */
 @AllArgsConstructor
 @Getter
-public enum PowerType {
-	WEAPON("Weapon"),
-	MELEE("Melee"),
-	RANGED("Ranged"),
-	SPELL_DAMAGE("SpellDamage"),
-	HEALING("Healing");
+public enum ValueType {
+	POINT("Point"),
+	RATING("Rating"),
+	PERCENT("Percent"),
+	DURATION("Duration");
 
 	private final String key;
 
-	public static PowerType parse(String value) {
+	public static ValueType parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.key);
 	}
 
-	public static PowerType tryParse(String value) {
+	public static ValueType tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 

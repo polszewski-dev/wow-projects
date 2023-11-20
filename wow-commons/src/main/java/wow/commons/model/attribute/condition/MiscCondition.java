@@ -1,7 +1,7 @@
 package wow.commons.model.attribute.condition;
 
 import lombok.AllArgsConstructor;
-import wow.commons.model.attribute.primitive.PowerType;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.ActionType;
 import wow.commons.util.EnumUtil;
 

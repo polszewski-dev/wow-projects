@@ -2,8 +2,8 @@ package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.*;
@@ -238,8 +238,8 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 			return null;
 		}
 
-		var from = colStatConversionFrom.prefixed(prefix).getEnum(PrimitiveAttributeId::parse);
-		var to = colStatConversionTo.prefixed(prefix).getEnum(PrimitiveAttributeId::parse);
+		var from = colStatConversionFrom.prefixed(prefix).getEnum(AttributeId::parse);
+		var to = colStatConversionTo.prefixed(prefix).getEnum(AttributeId::parse);
 		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
 		var ratio = colStatConversionRatio.prefixed(prefix).getPercent();
 

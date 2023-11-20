@@ -2,8 +2,8 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 
 /**
  * User: POlszewski
@@ -47,7 +47,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(PrimitiveAttributeId id, double value) {
+	public void accumulateAttribute(AttributeId id, double value) {
 		switch (id) {
 			case DAMAGE:
 				this.damage += value;

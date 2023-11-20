@@ -4,10 +4,9 @@ import wow.character.model.character.Character;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.config.Described;
 import wow.commons.model.effect.Effect;
@@ -29,7 +28,7 @@ public class AttributesDiffFinder {
 
 	private final Map<String, AttributeValueAccumulator> accumulators = new HashMap<>();
 
-	private final List<PrimitiveAttribute> attributes = new ArrayList<>();
+	private final List<Attribute> attributes = new ArrayList<>();
 	private final List<SpecialAbility> addedAbilities = new ArrayList<>();
 	private final List<SpecialAbility> removedAbilities = new ArrayList<>();
 
@@ -82,7 +81,7 @@ public class AttributesDiffFinder {
 		}
 	}
 
-	private List<PrimitiveAttribute> getModifierAttributes(EffectList list) {
+	private List<Attribute> getModifierAttributes(EffectList list) {
 		return list.getEffects().stream()
 				.filter(Effect::hasModifierComponentOnly)
 				.map(Effect::getModifierAttributeList)
@@ -132,37 +131,37 @@ public class AttributesDiffFinder {
 		return set;
 	}
 
-	private AttributeValueAccumulator getAccumulator(PrimitiveAttribute attribute) {
+	private AttributeValueAccumulator getAccumulator(Attribute attribute) {
 		String key = attribute.id() + "#" + attribute.condition();
 		return accumulators.computeIfAbsent(key, x -> new AttributeValueAccumulator(attribute));
 	}
 
 	private static class AttributeValueAccumulator {
-		private final PrimitiveAttributeId id;
+		private final AttributeId id;
 		private final AttributeCondition condition;
 		private double value;
 
-		AttributeValueAccumulator(PrimitiveAttribute prototype) {
+		AttributeValueAccumulator(Attribute prototype) {
 			this.id = prototype.id();
 			this.condition = prototype.condition();
 		}
 
-		void add(PrimitiveAttribute attribute, int characterLevel) {
+		void add(Attribute attribute, int characterLevel) {
 			this.value += attribute.getLevelScaledValue(characterLevel);
 		}
 
-		void subtract(PrimitiveAttribute attribute, int characterLevel) {
+		void subtract(Attribute attribute, int characterLevel) {
 			this.value -= attribute.getLevelScaledValue(characterLevel);
 		}
 
-		PrimitiveAttribute getResult() {
+		Attribute getResult() {
 			return Attribute.of(id, value, condition);
 		}
 	}
 
 	private void sortResults() {
 		attributes.sort(Comparator
-								.comparing(PrimitiveAttribute::id)
+								.comparing(Attribute::id)
 								.thenComparing(x -> x.condition().toString())
 		);
 		addedAbilities.sort(Comparator.comparing(Described::getTooltip));

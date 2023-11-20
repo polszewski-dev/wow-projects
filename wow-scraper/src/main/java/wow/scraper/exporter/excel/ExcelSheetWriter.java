@@ -60,7 +60,7 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 
 		int attrNo = 0;
 
-		for (var attribute : attributes.primitiveAttributes()) {
+		for (var attribute : attributes.list()) {
 			setValue(attribute.value());
 			setValue(attribute.id());
 			setValue(attribute.condition());

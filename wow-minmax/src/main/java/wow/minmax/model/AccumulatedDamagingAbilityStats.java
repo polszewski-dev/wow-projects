@@ -3,9 +3,9 @@ package wow.minmax.model;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.snapshot.*;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.Ability;
@@ -53,7 +53,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	@Override
-	protected void accumulateAttribute(PrimitiveAttribute attribute, double scaleFactor) {
+	protected void accumulateAttribute(Attribute attribute, double scaleFactor) {
 		var id = attribute.id();
 		var value = scaleFactor * attribute.getLevelScaledValue(characterLevel);
 		var condition = attribute.condition();
@@ -71,7 +71,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		accumulateAttribute(statConversion.to(), valueTo, condition);
 	}
 
-	public void accumulateAttribute(PrimitiveAttributeId id, double value, AttributeCondition condition) {
+	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
 		cast.accumulateAttribute(id, value, condition);
 		cost.accumulateAttribute(id, value, condition);
 		hit.accumulateAttribute(id, value, condition);
@@ -87,6 +87,6 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	public void increasePower(double value) {
-		accumulateAttribute(PrimitiveAttributeId.POWER, value, AttributeCondition.EMPTY);
+		accumulateAttribute(AttributeId.POWER, value, AttributeCondition.EMPTY);
 	}
 }

@@ -2,9 +2,9 @@ package wow.scraper.parser.spell;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
@@ -70,7 +70,7 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertThat(effectApplication.effect().getMaxStacks()).isEqualTo(maxStacks);
 	}
 
-	static void assertModifier(Effect effect, List<PrimitiveAttribute> attributes) {
+	static void assertModifier(Effect effect, List<Attribute> attributes) {
 		assertThat(effect.getModifierAttributeList()).isNotNull();
 		assertThat(effect.getModifierAttributeList()).isEqualTo(attributes);
 	}
@@ -90,7 +90,7 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertThat(conversion.ratioPct()).isEqualTo(Percent.of(ratioPct));
 	}
 
-	static void assertStatConversion(Effect effect, int idx, PrimitiveAttributeId from, PrimitiveAttributeId to, AttributeCondition toCondition, int ratio) {
+	static void assertStatConversion(Effect effect, int idx, AttributeId from, AttributeId to, AttributeCondition toCondition, int ratio) {
 		assertThat(effect.getStatConversions()).hasSizeGreaterThan(idx);
 
 		var statConversion = effect.getStatConversions().get(idx);

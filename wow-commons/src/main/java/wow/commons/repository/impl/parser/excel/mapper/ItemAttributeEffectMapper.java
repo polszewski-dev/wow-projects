@@ -21,13 +21,13 @@ class ItemAttributeEffectMapper extends AbstractMapper {
 	@Override
 	public String toString(Effect effect) {
 		var map = new LinkedHashMap<String, Object>();
-		putPrimitiveAttributes(map, effect.getModifierComponent().attributes());
+		putAttributes(map, effect.getModifierComponent().attributes());
 		return SimpleRecordMapper.toString(null, map);
 	}
 
 	@Override
 	public Effect fromString(ParseResult parseResult, PhaseId phaseId) {
-		var attributes = getPrimitiveAttributes(parseResult);
+		var attributes = getAttributes(parseResult);
 		return EffectImpl.newAttributeEffect(attributes);
 	}
 }

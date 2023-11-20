@@ -12,9 +12,9 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.snapshot.*;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PowerType;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
@@ -271,8 +271,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
 
-	private <T extends AccumulatedStats> void assertAccumulatedValue(String idStr, int value, int expectedValue, String condStr, T stats, ToDoubleBiFunction<T, PrimitiveAttributeId> valueAccessor) {
-		var id = PrimitiveAttributeId.parse(idStr);
+	private <T extends AccumulatedStats> void assertAccumulatedValue(String idStr, int value, int expectedValue, String condStr, T stats, ToDoubleBiFunction<T, AttributeId> valueAccessor) {
+		var id = AttributeId.parse(idStr);
 		var condition = AttributeCondition.parse(condStr);
 		var attribute = Attribute.of(id, value, condition);
 
@@ -509,7 +509,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(snapshot.getSpellHasteRating()).isEqualTo(426);
 	}
 
-	private double getValue(AccumulatedBaseStats stats, PrimitiveAttributeId id) {
+	private double getValue(AccumulatedBaseStats stats, AttributeId id) {
 		return switch (id) {
 			case STRENGTH -> stats.getStrength();
 			case STRENGTH_PCT -> stats.getStrengthPct();
@@ -531,7 +531,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private double getValue(AccumulatedCastStats stats, PrimitiveAttributeId id) {
+	private double getValue(AccumulatedCastStats stats, AttributeId id) {
 		return switch (id) {
 			case HASTE_RATING -> stats.getHasteRating();
 			case HASTE_PCT -> stats.getHastePct();
@@ -541,7 +541,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private double getValue(AccumulatedCostStats stats, PrimitiveAttributeId id) {
+	private double getValue(AccumulatedCostStats stats, AttributeId id) {
 		return switch (id) {
 			case MANA_COST -> stats.getManaCost();
 			case MANA_COST_PCT -> stats.getManaCostPct();
@@ -559,7 +559,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private double getValue(AccumulatedTargetStats stats, PrimitiveAttributeId id) {
+	private double getValue(AccumulatedTargetStats stats, AttributeId id) {
 		return switch (id) {
 			case DAMAGE_TAKEN -> stats.getDamageTaken();
 			case DAMAGE_TAKEN_PCT -> stats.getDamageTakenPct();
@@ -571,7 +571,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private double getValue(AccumulatedHitStats stats, PrimitiveAttributeId id) {
+	private double getValue(AccumulatedHitStats stats, AttributeId id) {
 		return switch (id) {
 			case HIT_RATING -> stats.getHitRating();
 			case HIT_PCT -> stats.getHitPct();
@@ -579,7 +579,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private double getValue(AccumulatedDurationStats stats, PrimitiveAttributeId id) {
+	private double getValue(AccumulatedDurationStats stats, AttributeId id) {
 		return switch (id) {
 			case DURATION -> stats.getDuration();
 			case DURATION_PCT -> stats.getDurationPct();
@@ -589,7 +589,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private double getValue(AccumulatedSpellStats stats, PrimitiveAttributeId id) {
+	private double getValue(AccumulatedSpellStats stats, AttributeId id) {
 		return switch (id) {
 			case DAMAGE -> stats.getDamage();
 			case DAMAGE_PCT -> stats.getDamagePct();

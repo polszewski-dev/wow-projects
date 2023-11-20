@@ -7,10 +7,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
@@ -60,7 +60,7 @@ public abstract class WowCommonsSpringTest {
 		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
 	}
 
-	protected static void assertModifier(Effect effect, List<PrimitiveAttribute> attributes) {
+	protected static void assertModifier(Effect effect, List<Attribute> attributes) {
 		assertThat(effect.getModifierAttributeList()).isNotNull();
 		assertThat(effect.getModifierAttributeList()).isEqualTo(attributes);
 	}
@@ -72,7 +72,7 @@ public abstract class WowCommonsSpringTest {
 		assertThat(conversion.ratioPct()).isEqualTo(Percent.of(ratioPct));
 	}
 
-	protected static void assertStatConversion(Effect effect, int idx, PrimitiveAttributeId from, PrimitiveAttributeId to, int ratio, AttributeCondition toCondition) {
+	protected static void assertStatConversion(Effect effect, int idx, AttributeId from, AttributeId to, int ratio, AttributeCondition toCondition) {
 		assertThat(effect.getStatConversions()).hasSizeGreaterThan(idx);
 
 		var statConversion = effect.getStatConversions().get(idx);
@@ -96,11 +96,11 @@ public abstract class WowCommonsSpringTest {
 		assertThat(coefficient.school()).isEqualTo(school);
 	}
 
-	protected static void assertEffect(Effect effect, PrimitiveAttributeId id, int value, String tooltip, EffectSource source) {
+	protected static void assertEffect(Effect effect, AttributeId id, int value, String tooltip, EffectSource source) {
 		assertEffect(effect, id, value, AttributeCondition.EMPTY, tooltip, source);
 	}
 
-	protected static void assertEffect(Effect effect, PrimitiveAttributeId id, int value, AttributeCondition condition, String tooltip, EffectSource source) {
+	protected static void assertEffect(Effect effect, AttributeId id, int value, AttributeCondition condition, String tooltip, EffectSource source) {
 		assertEffect(effect, Attributes.of(id, value, condition), tooltip, source);
 	}
 

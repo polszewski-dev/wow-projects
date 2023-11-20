@@ -1,4 +1,4 @@
-package wow.commons.model.attribute.primitive;
+package wow.commons.model.attribute;
 
 /**
  * User: POlszewski

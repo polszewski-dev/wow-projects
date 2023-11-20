@@ -1,9 +1,9 @@
 package wow.commons.model.effect.component;
 
 import wow.commons.model.Percent;
+import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.ValueType;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
-import wow.commons.model.attribute.primitive.ValueType;
 
 import java.util.Objects;
 
@@ -12,8 +12,8 @@ import java.util.Objects;
  * Date: 2021-01-17
  */
 public record StatConversion(
-		PrimitiveAttributeId from,
-		PrimitiveAttributeId to,
+		AttributeId from,
+		AttributeId to,
 		AttributeCondition toCondition,
 		Percent ratioPct
 ) implements EffectComponent {

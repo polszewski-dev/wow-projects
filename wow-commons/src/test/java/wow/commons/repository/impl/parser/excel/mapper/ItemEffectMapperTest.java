@@ -12,7 +12,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 
 /**
  * User: POlszewski

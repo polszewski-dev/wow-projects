@@ -1,7 +1,7 @@
 package wow.scraper.repository.impl.excel;
 
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.scraper.parser.spell.params.AttributePattern;
@@ -56,7 +56,7 @@ public abstract class AbstractPatternSheetParser extends WowExcelSheetParser {
 			return null;
 		}
 
-		var id = colId.getEnum(PrimitiveAttributeId::parse);
+		var id = colId.getEnum(AttributeId::parse);
 		var value = colValue.getString();
 		var condition = colCondition.getString(null);
 

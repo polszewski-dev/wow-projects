@@ -1,8 +1,8 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.spell.ResourceType;
 
 /**
@@ -45,7 +45,7 @@ public class AccumulatedCostStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(PrimitiveAttributeId id, double value) {
+	public void accumulateAttribute(AttributeId id, double value) {
 		switch (id) {
 			case MANA_COST:
 				this.manaCost += value;

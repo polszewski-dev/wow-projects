@@ -1,6 +1,6 @@
 package wow.scraper.parser.spell.params;
 
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
+import wow.commons.model.attribute.AttributeId;
 
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
  * Date: 2023-09-05
  */
 public record AttributePattern(
-		PrimitiveAttributeId id,
+		AttributeId id,
 		String value,
 		String condition,
 		boolean levelScaled

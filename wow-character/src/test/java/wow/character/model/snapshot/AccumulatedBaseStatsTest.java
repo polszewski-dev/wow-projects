@@ -4,14 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.character.CharacterClassId;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.pve.GameVersionId.TBC;
 
@@ -172,7 +172,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 		assertThat(copy.getMaxManaPct()).isEqualTo(baseStats.getMaxManaPct());
 	}
 
-	void accumulateTestAttributes(PrimitiveAttributeId attributeId) {
+	void accumulateTestAttributes(AttributeId attributeId) {
 		var list = List.of(
 				Attribute.of(attributeId, 10),
 				Attribute.of(attributeId, 20, MiscCondition.PHYSICAL),

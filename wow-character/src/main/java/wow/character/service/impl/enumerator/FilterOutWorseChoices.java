@@ -1,9 +1,8 @@
 package wow.character.service.impl.enumerator;
 
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.Effect;
 
 import java.util.Collection;
@@ -59,16 +58,16 @@ public abstract class FilterOutWorseChoices<T> {
 				.allMatch(x -> sum(choice, x.id(), x.condition()) < sum(otherChoice, x.id(), x.condition()));
 	}
 
-	private double sum(T choice, PrimitiveAttributeId id, AttributeCondition condition) {
+	private double sum(T choice, AttributeId id, AttributeCondition condition) {
 		return getAttributes(choice).stream()
 				.filter(x -> x.id() == id && x.condition().equals(condition))
-				.mapToDouble(PrimitiveAttribute::value)
+				.mapToDouble(Attribute::value)
 				.sum();
 	}
 
 	protected abstract List<Effect> getEffects(T choice);
 
-	private List<PrimitiveAttribute> getAttributes(T choice) {
+	private List<Attribute> getAttributes(T choice) {
 		return getEffects(choice).stream()
 				.flatMap(x -> x.getModifierAttributeList().stream())
 				.toList();
@@ -104,7 +103,7 @@ public abstract class FilterOutWorseChoices<T> {
 				.collect(Collectors.joining("#"));
 	}
 
-	private static PrimitiveAttribute getIdAndCondition(PrimitiveAttribute x) {
+	private static Attribute getIdAndCondition(Attribute x) {
 		return Attribute.of(x.id(), 1, x.condition(), x.levelScaled());
 	}
 }

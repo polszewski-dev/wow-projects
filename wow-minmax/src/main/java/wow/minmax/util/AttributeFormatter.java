@@ -2,7 +2,7 @@ package wow.minmax.util;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.util.FormatUtil;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public final class AttributeFormatter {
 		}
 	}
 
-	public static String format(PrimitiveAttribute attribute) {
+	public static String format(Attribute attribute) {
 		var formatStr = getFormatStr(attribute);
 
 		if (formatStr != null) {
@@ -33,7 +33,7 @@ public final class AttributeFormatter {
 		}
 	}
 
-	private static String getFormatStr(PrimitiveAttribute attribute) {
+	private static String getFormatStr(Attribute attribute) {
 		var key = attribute.id().getKey();
 		var condition = attribute.condition();
 		var propertyKey = condition.isEmpty() ? key : key + "," + condition.toString().replace(" ", "");
@@ -41,7 +41,7 @@ public final class AttributeFormatter {
 		return PROPERTIES.getProperty(propertyKey);
 	}
 
-	private static String getValueString(PrimitiveAttribute attribute) {
+	private static String getValueString(Attribute attribute) {
 		return switch (attribute.id().getValueType()) {
 			case POINT, RATING -> FormatUtil.decimalPointOnlyIfNecessary(attribute.value());
 			case PERCENT -> Percent.of(attribute.value()).toString();

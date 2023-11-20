@@ -3,15 +3,15 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.spell.ActionType;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 
 /**
  * User: POlszewski
@@ -73,7 +73,7 @@ class AccumulatedTargetStatsTest {
 		assertThat(copy.getReceivedEffectDurationPct()).isEqualTo(targetStats.getReceivedEffectDurationPct());
 	}
 
-	void accumulateTestAttributes(PrimitiveAttributeId attributeId) {
+	void accumulateTestAttributes(AttributeId attributeId) {
 		var list = List.of(
 				Attribute.of(attributeId, 10),
 				Attribute.of(attributeId, 20, MiscCondition.PHYSICAL),

@@ -15,7 +15,7 @@ import wow.minmax.model.SpecialAbility;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.*;
+import static wow.commons.model.attribute.AttributeId.*;
 
 /**
  * User: POlszewski
@@ -29,7 +29,7 @@ class AttributesDiffFinderTest extends WowMinMaxSpringTest {
 		var finder = new AttributesDiffFinder(character, ItemSlotGroup.CHEST, List.of(chest));
 		var diff = finder.getDiff();
 
-		assertThat(diff.attributes().primitiveAttributes()).isEqualTo(List.of(
+		assertThat(diff.attributes().list()).isEqualTo(List.of(
 				Attribute.of(STAMINA, 36),
 				Attribute.of(INTELLECT, 34),
 				Attribute.of(POWER, 76, AttributeCondition.parse("Spell")),
@@ -54,7 +54,7 @@ class AttributesDiffFinderTest extends WowMinMaxSpringTest {
 		var finder = new AttributesDiffFinder(character, ItemSlotGroup.SHOULDER, List.of(shoulder));
 		var diff = finder.getDiff();
 
-		assertThat(diff.attributes().primitiveAttributes()).isEqualTo(List.of(
+		assertThat(diff.attributes().list()).isEqualTo(List.of(
 				Attribute.of(STAMINA, 7),
 				Attribute.of(POWER, 9, AttributeCondition.parse("Spell")),
 				Attribute.of(CRIT_RATING, 12, AttributeCondition.parse("Spell")),
@@ -80,7 +80,7 @@ class AttributesDiffFinderTest extends WowMinMaxSpringTest {
 		var finder = new AttributesDiffFinder(character, ItemSlotGroup.SHOULDER, List.of(t6Shoulder));
 		var diff = finder.getDiff();
 
-		assertThat(diff.attributes().primitiveAttributes()).isEqualTo(List.of(
+		assertThat(diff.attributes().list()).isEqualTo(List.of(
 				Attribute.of(STAMINA, 19),
 				Attribute.of(POWER, 9, AttributeCondition.parse("Spell")),
 				Attribute.of(HIT_RATING, 7, AttributeCondition.parse("Spell")),
@@ -106,7 +106,7 @@ class AttributesDiffFinderTest extends WowMinMaxSpringTest {
 		var finder = new AttributesDiffFinder(character, ItemSlotGroup.TRINKET_1, List.of(silver));
 		var diff = finder.getDiff();
 
-		assertThat(diff.attributes().primitiveAttributes()).isEqualTo(List.of(
+		assertThat(diff.attributes().list()).isEqualTo(List.of(
 				Attribute.of(HIT_RATING, -32, AttributeCondition.parse("Spell")),
 				Attribute.of(HASTE_RATING, 54, AttributeCondition.parse("Spell"))
 		));

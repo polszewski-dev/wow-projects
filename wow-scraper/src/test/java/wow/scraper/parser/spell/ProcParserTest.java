@@ -15,7 +15,7 @@ import wow.commons.model.spell.SpellTarget;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.POWER;
+import static wow.commons.model.attribute.AttributeId.POWER;
 import static wow.commons.model.effect.component.ComponentType.MANA_GAIN;
 import static wow.commons.model.effect.component.EventType.*;
 import static wow.commons.model.spell.AbilityId.*;

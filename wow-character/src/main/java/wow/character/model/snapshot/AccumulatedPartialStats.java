@@ -1,9 +1,9 @@
 package wow.character.model.snapshot;
 
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
-import wow.commons.model.attribute.primitive.PrimitiveAttribute;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.effect.component.StatConversion;
 
 /**
@@ -23,7 +23,7 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	}
 
 	@Override
-	protected void accumulateAttribute(PrimitiveAttribute attribute, double scaleFactor) {
+	protected void accumulateAttribute(Attribute attribute, double scaleFactor) {
 		if(!attribute.condition().test(conditionArgs)) {
 			return;
 		}
@@ -34,9 +34,9 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 		accumulateAttribute(id, value);
 	}
 
-	public abstract void accumulateAttribute(PrimitiveAttributeId id, double value);
+	public abstract void accumulateAttribute(AttributeId id, double value);
 
-	public void accumulateAttribute(PrimitiveAttributeId id, double value, AttributeCondition condition) {
+	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
 		if (condition.test(conditionArgs)) {
 			accumulateAttribute(id, value);
 		}

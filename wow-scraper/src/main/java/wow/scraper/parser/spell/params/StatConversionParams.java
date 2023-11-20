@@ -1,7 +1,7 @@
 package wow.scraper.parser.spell.params;
 
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.primitive.PrimitiveAttributeId;
 import wow.commons.model.spell.SpellTarget;
 
 import java.util.Objects;
@@ -12,8 +12,8 @@ import java.util.Objects;
  */
 public record StatConversionParams(
 		SpellTarget target,
-		PrimitiveAttributeId from,
-		PrimitiveAttributeId to,
+		AttributeId from,
+		AttributeId to,
 		AttributeCondition toCondition,
 		String ratioPct
 ) {

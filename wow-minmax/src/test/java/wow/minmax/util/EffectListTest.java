@@ -15,7 +15,7 @@ import wow.minmax.model.SpecialAbility;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.primitive.PrimitiveAttributeId.POWER_PCT;
+import static wow.commons.model.attribute.AttributeId.POWER_PCT;
 
 /**
  * User: POlszewski
