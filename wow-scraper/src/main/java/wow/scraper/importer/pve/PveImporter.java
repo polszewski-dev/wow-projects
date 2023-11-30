@@ -4,9 +4,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.fetcher.WowheadFetcher;
-import wow.scraper.util.GameVersionedMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public abstract class PveImporter<T> {
 	private ScraperConfig scraperConfig;
 	private WowheadFetcher wowheadFetcher;
-	private final GameVersionedMap<Integer, T> result = new GameVersionedMap<>();
+	private final GameVersionMap<Integer, T> result = new GameVersionMap<>();
 
 	public List<T> getList(GameVersionId gameVersion) {
 		importAll(gameVersion);

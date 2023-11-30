@@ -3,6 +3,7 @@ package wow.scraper.repository.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.parser.EnchantIdParser;
@@ -14,7 +15,6 @@ import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.repository.ItemDetailRepository;
 import wow.scraper.repository.SpellDetailRepository;
-import wow.scraper.util.GameVersionedMap;
 
 import java.util.HashSet;
 import java.util.List;
@@ -64,7 +64,7 @@ public class SpellDetailRepositoryImpl extends DetailRepository<WowheadSpellCate
 				.toList();
 	}
 
-	private final GameVersionedMap<Integer, JsonSpellDetails> enchantDetailsById = new GameVersionedMap<>();
+	private final GameVersionMap<Integer, JsonSpellDetails> enchantDetailsById = new GameVersionMap<>();
 
 	private void mergeSpellAndItemEnchants(GameVersionId gameVersion) {
 		if (enchantDetailsById.containsKey(gameVersion)) {

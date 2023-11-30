@@ -9,6 +9,7 @@ import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.model.spell.impl.SpellImpl;
+import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parser.tooltip.AbstractTooltipParser;
@@ -17,7 +18,6 @@ import wow.scraper.repository.ItemDetailRepository;
 import wow.scraper.repository.ItemSpellRepository;
 import wow.scraper.repository.SpellDetailRepository;
 import wow.scraper.repository.SpellPatternRepository;
-import wow.scraper.util.GameVersionedMap;
 import wow.scraper.util.SpellTraverser;
 
 import java.util.ArrayList;
@@ -41,8 +41,8 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	private final SpellDetailRepository spellDetailRepository;
 	private final SpellPatternRepository spellPatternRepository;
 
-	private final GameVersionedMap<String, ActivatedAbility> spellsByTooltip = new GameVersionedMap<>();
-	private final GameVersionedMap<String, Effect> effectsByTooltip = new GameVersionedMap<>();
+	private final GameVersionMap<String, ActivatedAbility> spellsByTooltip = new GameVersionMap<>();
+	private final GameVersionMap<String, Effect> effectsByTooltip = new GameVersionMap<>();
 	private boolean prepared;
 
 	@Override

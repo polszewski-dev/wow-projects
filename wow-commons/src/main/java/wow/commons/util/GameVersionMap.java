@@ -1,4 +1,4 @@
-package wow.scraper.util;
+package wow.commons.util;
 
 import wow.commons.model.pve.GameVersionId;
 
@@ -9,7 +9,7 @@ import java.util.function.Function;
  * User: POlszewski
  * Date: 2023-06-26
  */
-public class GameVersionedMap<K, V> {
+public class GameVersionMap<K, V> {
 	private final Map<GameVersionId, Map<K, V>> map = new EnumMap<>(GameVersionId.class);
 
 	public void put(GameVersionId gameVersion, K key, V value) {

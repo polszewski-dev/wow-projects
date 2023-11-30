@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.util.GameVersionMap;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.parser.QuestInfoParser;
 import wow.scraper.model.WowheadQuestInfo;
 import wow.scraper.repository.QuestInfoRepository;
-import wow.scraper.util.GameVersionedMap;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class QuestInfoRepositoryImpl implements QuestInfoRepository {
 	private final WowheadFetcher wowheadFetcher;
 
-	private final GameVersionedMap<Integer, WowheadQuestInfo> questsById = new GameVersionedMap<>();
+	private final GameVersionMap<Integer, WowheadQuestInfo> questsById = new GameVersionMap<>();
 
 	@Override
 	public Optional<WowheadQuestInfo> getQuestInfo(GameVersionId gameVersion, int questId) {

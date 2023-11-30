@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.model.JsonCommonDetails;
-import wow.scraper.util.GameVersionedMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,7 @@ public abstract class WowheadImporter<C, D extends JsonCommonDetails>  {
 	private GameVersionId gameVersion;
 	private ScraperConfig scraperConfig;
 	private WowheadFetcher wowheadFetcher;
-	private final GameVersionedMap<Integer, D> result = new GameVersionedMap<>();
+	private final GameVersionMap<Integer, D> result = new GameVersionMap<>();
 
 	public void init(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher) {
 		this.scraperConfig = scraperConfig;
