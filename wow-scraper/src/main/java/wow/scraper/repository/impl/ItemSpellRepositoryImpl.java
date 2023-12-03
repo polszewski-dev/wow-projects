@@ -2,6 +2,7 @@ package wow.scraper.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.GameVersionId;
@@ -11,6 +12,8 @@ import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperContext;
+import wow.scraper.config.ScraperContextImpl;
 import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parser.tooltip.AbstractTooltipParser;
 import wow.scraper.parser.tooltip.ItemEffectParser;
@@ -78,8 +81,8 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	}
 
 	private void validateIds() {
-		assertNoDuplicates(spellsByTooltip.allValues(), x -> x.getId() + "#" + x.getTimeRestriction().getUniqueVersion());
-		assertNoDuplicates(effectsByTooltip.allValues(), x -> x.getEffectId() + "#" + x.getTimeRestriction().getUniqueVersion());
+		assertNoDuplicates(spellsByTooltip.allValues(), x -> x.getId() + "#" + x.getTimeRestriction().getGameVersionId());
+		assertNoDuplicates(effectsByTooltip.allValues(), x -> x.getEffectId() + "#" + x.getTimeRestriction().getGameVersionId());
 	}
 
 	private void createItemSpellsAndEffects(ItemEffectParser parser) {
@@ -157,23 +160,52 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	}
 
 	private boolean addNewSpell(ActivatedAbility spell) {
-		var version = spell.getTimeRestriction().getUniqueVersion();
-		var tooltip = spell.getTooltip();
-		if (spellsByTooltip.containsKey(version, tooltip)) {
+		if (!isToBeUpdated(spell)) {
 			return false;
 		}
+
+		var version = spell.getTimeRestriction().getGameVersionId();
+		var tooltip = spell.getTooltip();
+
 		spellsByTooltip.put(version, tooltip, spell);
 		return true;
 	}
 
 	private boolean addNewEffect(Effect effect) {
-		var version = effect.getTimeRestriction().getUniqueVersion();
-		var tooltip = effect.getTooltip();
-		if (effectsByTooltip.containsKey(version, tooltip)) {
+		if (!isToBeUpdated(effect)) {
 			return false;
 		}
+
+		var version = effect.getTimeRestriction().getGameVersionId();
+		var tooltip = effect.getTooltip();
+
 		effectsByTooltip.put(version, tooltip, effect);
 		return true;
+	}
+
+	private boolean isToBeUpdated(ActivatedAbility spell) {
+		var version = spell.getTimeRestriction().getGameVersionId();
+		var tooltip = spell.getTooltip();
+
+		var existingOptional = spellsByTooltip.getOptional(version, tooltip);
+
+		return existingOptional.isEmpty() || hasEarlierPhase(spell, existingOptional.get());
+	}
+
+	private boolean isToBeUpdated(Effect effect) {
+		var version = effect.getTimeRestriction().getGameVersionId();
+		var tooltip = effect.getTooltip();
+
+		var existingOptional = effectsByTooltip.getOptional(version, tooltip);
+
+		return existingOptional.isEmpty() || hasEarlierPhase(effect, existingOptional.get());
+	}
+
+	private boolean hasEarlierPhase(TimeRestricted newOne, TimeRestricted existingOne) {
+		var newPhaseId = newOne.getEarliestPhaseId();
+		var existingPhaseId = existingOne.getEarliestPhaseId();
+
+		return newPhaseId.isEarlier(existingPhaseId);
 	}
 
 	private List<ItemEffectParser> getParsedItemTooltips() {
@@ -187,33 +219,39 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 		var parsers = new ArrayList<ItemEffectParser>();
 
 		for (var category : WowheadItemCategory.equipment()) {
-			addParsersItemCategory(category, parsers);
+			addItemParsers(category, parsers);
 		}
 
-		addParsersItemCategory(WowheadItemCategory.GEMS, parsers);
+		addItemParsers(WowheadItemCategory.GEMS, parsers);
 		addEnchantParsers(parsers);
 
 		return parsers;
 	}
 
-	private void addParsersItemCategory(WowheadItemCategory category, ArrayList<ItemEffectParser> parsers) {
+	private void addItemParsers(WowheadItemCategory category, List<ItemEffectParser> parsers) {
 		for (var gameVersion : scraperConfig.getGameVersions()) {
 			for (var detailId : itemDetailRepository.getDetailIds(gameVersion, category)) {
 				var details = itemDetailRepository.getDetail(gameVersion, category, detailId).orElseThrow();
-				var parser = new ItemEffectParser(details, gameVersion, spellPatternRepository);
+				var parser = new ItemEffectParser(details, gameVersion, getScraperContext());
 				parsers.add(parser);
 			}
 		}
 	}
 
-	private void addEnchantParsers(ArrayList<ItemEffectParser> parsers) {
+	private void addEnchantParsers(List<ItemEffectParser> parsers) {
 		for (var gameVersion : scraperConfig.getGameVersions()) {
 			for (var enchantId : spellDetailRepository.getEnchantDetailIds(gameVersion)) {
 				var enchant = spellDetailRepository.getEnchantDetail(gameVersion, enchantId).orElseThrow();
-				var parser = new ItemEffectParser(enchant, gameVersion, spellPatternRepository);
+				var parser = new ItemEffectParser(enchant, gameVersion, getScraperContext());
 				parsers.add(parser);
 			}
 		}
+	}
+
+	private ScraperContext getScraperContext() {
+		return new ScraperContextImpl(
+				null, itemDetailRepository, spellDetailRepository, null, null, spellPatternRepository, null, null, null, null, scraperConfig
+		);
 	}
 
 	private static Comparator<ItemEffectParser> getComparator() {

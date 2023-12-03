@@ -23,7 +23,7 @@ public class Zone implements TimeRestricted {
 	private final ZoneType zoneType;
 	private final int partySize;
 	private List<Npc> npcs;
-	private TimeRestriction timeRestriction;
+	private final TimeRestriction timeRestriction;
 
 	public String getShortName() {
 		return shortName != null ? shortName : name;

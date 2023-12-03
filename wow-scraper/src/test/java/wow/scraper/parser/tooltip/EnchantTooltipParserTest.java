@@ -42,7 +42,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2928);
 		assertThat(underTest.getExclusiveFaction()).isNull();
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(-1);
-		assertThat(underTest.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P0));
+		assertThat(underTest.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P0));
 	}
 
 	@Test
@@ -67,7 +67,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2995);
 		assertThat(underTest.getExclusiveFaction()).isEqualTo(SCRYERS);
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(WowheadItemQuality.RARE.getCode());
-		assertThat(underTest.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P1));
+		assertThat(underTest.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P1));
 	}
 
 	@Test
@@ -92,7 +92,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2589);
 		assertThat(underTest.getExclusiveFaction()).isNull();
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(WowheadItemQuality.RARE.getCode());
-		assertThat(underTest.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P0));
+		assertThat(underTest.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P0));
 	}
 
 	@Override

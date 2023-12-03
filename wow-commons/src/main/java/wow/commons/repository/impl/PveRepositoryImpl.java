@@ -9,10 +9,14 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.impl.parser.pve.PveExcelParser;
+import wow.commons.util.CollectionUtil;
+import wow.commons.util.GameVersionMap;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -20,40 +24,39 @@ import java.util.*;
  */
 @Repository
 @RequiredArgsConstructor
-public class PveRepositoryImpl extends ExcelRepository implements PveRepository {
-	private final Map<Integer, List<Zone>> zoneById = new HashMap<>();
-	private final Map<String, List<Zone>> zoneByName = new TreeMap<>();
-	private final Map<Integer, List<Npc>> npcById = new TreeMap<>();
-	private final Map<String, List<Faction>> factionByName = new TreeMap<>();
+public class PveRepositoryImpl implements PveRepository {
+	private final GameVersionMap<Integer, Zone> zoneById = new GameVersionMap<>();
+	private final GameVersionMap<String, List<Zone>> zoneByName = new GameVersionMap<>();
+	private final GameVersionMap<Integer, Npc> npcById = new GameVersionMap<>();
+	private final GameVersionMap<String, Faction> factionByName = new GameVersionMap<>();
 
 	@Value("${pve.base.xls.file.path}")
 	private String xlsFilePath;
 
 	@Override
 	public Optional<Zone> getZone(int zoneId, PhaseId phaseId) {
-		return getUnique(zoneById, zoneId, phaseId);
+		return zoneById.getOptional(phaseId.getGameVersionId(), zoneId);
 	}
 
 	@Override
 	public Optional<Zone> getZone(String name, PhaseId phaseId) {
-		return getUnique(zoneByName, name, phaseId);
+		return zoneByName.getOptional(phaseId.getGameVersionId(), name)
+				.flatMap(CollectionUtil::getUniqueResult);
 	}
 
 	@Override
 	public Optional<Npc> getNpc(int npcId, PhaseId phaseId) {
-		return getUnique(npcById, npcId, phaseId);
+		return npcById.getOptional(phaseId.getGameVersionId(), npcId);
 	}
 
 	@Override
 	public Optional<Faction> getFaction(String name, PhaseId phaseId) {
-		return getUnique(factionByName, name, phaseId);
+		return factionByName.getOptional(phaseId.getGameVersionId(), name);
 	}
 
 	@Override
 	public List<Zone> getAllInstances(PhaseId phaseId) {
-		return zoneByName.values().stream()
-				.flatMap(Collection::stream)
-				.filter(x -> x.isAvailableDuring(phaseId))
+		return zoneById.values(phaseId.getGameVersionId()).stream()
 				.filter(Zone::isInstance)
 				.toList();
 	}
@@ -69,17 +72,6 @@ public class PveRepositoryImpl extends ExcelRepository implements PveRepository 
 	public void init() throws IOException {
 		var pveExcelParser = new PveExcelParser(xlsFilePath, this);
 		pveExcelParser.readFromXls();
-		addNpcsToZones();
-	}
-
-	private void addNpcsToZones() {
-		zoneById.values().stream()
-				.flatMap(Collection::stream)
-				.forEach(x -> x.setNpcs(new ArrayList<>()));
-
-		npcById.values().stream()
-				.flatMap(Collection::stream)
-				.forEach(this::addNpcToZones);
 	}
 
 	private void addNpcToZones(Npc npc) {
@@ -89,15 +81,17 @@ public class PveRepositoryImpl extends ExcelRepository implements PveRepository 
 	}
 
 	public void addZone(Zone zone) {
-		addEntry(zoneById, zone.getId(), zone);
-		addEntry(zoneByName, zone.getName(), zone);
+		zone.setNpcs(new ArrayList<>());
+		zoneById.put(zone.getTimeRestriction().getGameVersionId(), zone.getId(), zone);
+		zoneByName.computeIfAbsent(zone.getTimeRestriction().getGameVersionId(), zone.getName(), x -> new ArrayList<>()).add(zone);
 	}
 
 	public void addNpc(Npc npc) {
-		addEntry(npcById, npc.getId(), npc);
+		addNpcToZones(npc);
+		npcById.put(npc.getTimeRestriction().getGameVersionId(), npc.getId(), npc);
 	}
 
 	public void addFactionByName(Faction faction) {
-		addEntry(factionByName, faction.getName(), faction);
+		factionByName.put(faction.getTimeRestriction().getGameVersionId(), faction.getName(), faction);
 	}
 }

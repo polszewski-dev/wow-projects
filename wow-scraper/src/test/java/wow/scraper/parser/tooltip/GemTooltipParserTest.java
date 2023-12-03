@@ -51,9 +51,9 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 	@Test
 	@DisplayName("Phase is parsed correctly")
 	void gameVersionPhase() {
-		assertThat(redGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P3));
-		assertThat(blueGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P0));
-		assertThat(metaGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P1));
+		assertThat(redGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P3));
+		assertThat(blueGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P0));
+		assertThat(metaGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P1));
 	}
 
 	@Test

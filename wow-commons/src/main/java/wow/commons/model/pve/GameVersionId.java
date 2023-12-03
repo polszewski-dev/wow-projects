@@ -5,6 +5,7 @@ import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -62,5 +63,12 @@ public enum GameVersionId {
 			previous = value;
 		}
 		return Optional.ofNullable(previous);
+	}
+
+	public List<PhaseId> getPhasesStartingFrom(PhaseId earliestPhaseId) {
+		return getPhaseIdStream()
+				.filter(earliestPhaseId::isTheSameVersion)
+				.filter(earliestPhaseId::isEarlierOrTheSame)
+				.toList();
 	}
 }

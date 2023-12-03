@@ -6,6 +6,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.*;
 
 import java.util.List;
@@ -62,7 +63,7 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(item.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(item.isUnique()).isFalse();
 		assertThat(item.getItemLevel()).isEqualTo(159);
-		assertThat(item.getTimeRestriction().phaseId()).isEqualTo(TBC_P5);
+		assertThat(item.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P5));
 		assertThat(item.getCharacterRestriction().level()).isEqualTo(70);
 		assertThat(item.getCharacterRestriction().professionRestriction().professionId()).isEqualTo(TAILORING);
 		assertThat(item.getCharacterRestriction().professionRestriction().level()).isEqualTo(350);
@@ -135,7 +136,7 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
 		assertThat(gem.isUnique()).isFalse();
 		assertThat(gem.getItemLevel()).isEqualTo(100);
-		assertThat(gem.getTimeRestriction().phaseId()).isEqualTo(TBC_P5);
+		assertThat(gem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P5));
 		assertThat(gem.getCharacterRestriction().level()).isNull();
 		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
 	}
@@ -213,7 +214,7 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(tradedItem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(tradedItem.isUnique()).isFalse();
 		assertThat(tradedItem.getItemLevel()).isEqualTo(70);
-		assertThat(tradedItem.getTimeRestriction().phaseId()).isEqualTo(TBC_P3);
+		assertThat(tradedItem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P3));
 		assertThat(tradedItem.getCharacterRestriction().level()).isEqualTo(70);
 		assertThat(tradedItem.getCharacterRestriction().characterClassIds()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
 	}

@@ -48,7 +48,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 	}
 
 	void addItemSetPiece(String itemSetName, Item item) {
-		String key = getSetKey(itemSetName, item.getTimeRestriction().getUniqueVersion());
+		String key = getSetKey(itemSetName, item.getTimeRestriction().getGameVersionId());
 		setPiecesByName.computeIfAbsent(key, x -> new ArrayList<>()).add(item);
 	}
 

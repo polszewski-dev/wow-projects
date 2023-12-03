@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
+import java.util.List;
+
 import static wow.commons.model.pve.GameVersionId.*;
 
 /**
@@ -46,7 +48,15 @@ public enum PhaseId {
 		return this.compareTo(phaseId) <= 0;
 	}
 
+	public boolean isEarlier(PhaseId phaseId) {
+		return this.compareTo(phaseId) < 0;
+	}
+
 	public boolean isTheSameVersion(PhaseId phaseId) {
 		return this.gameVersionId == phaseId.getGameVersionId();
+	}
+
+	public List<PhaseId> getPhasesStartingFromThisOne() {
+		return gameVersionId.getPhasesStartingFrom(this);
 	}
 }

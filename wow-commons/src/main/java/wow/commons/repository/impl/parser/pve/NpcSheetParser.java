@@ -38,7 +38,7 @@ public class NpcSheetParser extends WowExcelSheetParser {
 		var timeRestriction = getTimeRestriction();
 
 		var zones = zoneIds.stream()
-				.map(zoneId -> pveRepository.getZone(zoneId, timeRestriction.getUniqueVersion().getLastPhase()).orElseThrow())
+				.map(zoneId -> pveRepository.getZone(zoneId, timeRestriction.earliestPhaseId()).orElseThrow())
 				.toList();
 
 		return new Npc(id, name, type, boss, zones, timeRestriction);

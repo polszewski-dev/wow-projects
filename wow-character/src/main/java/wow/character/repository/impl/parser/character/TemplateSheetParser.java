@@ -14,7 +14,6 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
-import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.Objects;
@@ -66,7 +65,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var activePet = colActivePet.getEnum(PetType::parse, null);
 		var defaultBuffs = colDefaultBuffs.getList(BuffId::parse);
 		var defaultDebuffs = colDefaultDebuffs.getList(BuffId::parse);
-		var professions = getProfessions(timeRestriction, level);
+		var professions = getProfessions(timeRestriction);
 		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
 
 		return new CharacterTemplate(
@@ -85,16 +84,16 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		);
 	}
 
-	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction, int characterLevel) {
+	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction) {
 		return Stream.of(
-				getProfession(colProf1, colProf1Spec, timeRestriction, characterLevel),
-				getProfession(colProf2, colProf2Spec, timeRestriction, characterLevel)
+				getProfession(colProf1, colProf1Spec, timeRestriction),
+				getProfession(colProf2, colProf2Spec, timeRestriction)
 		)
 				.filter(Objects::nonNull)
 				.toList();
 	}
 
-	private CharacterProfession getProfession(ExcelColumn colProf, ExcelColumn colProfSpec, TimeRestriction timeRestriction, int characterLevel) {
+	private CharacterProfession getProfession(ExcelColumn colProf, ExcelColumn colProfSpec, TimeRestriction timeRestriction) {
 		var prof = colProf.getEnum(ProfessionId::parse, null);
 		var spec = colProfSpec.getEnum(ProfessionSpecializationId::parse, null);
 
@@ -104,17 +103,11 @@ public class TemplateSheetParser extends CharacterSheetParser {
 
 		var phase = getPhase(timeRestriction);
 
-		return phase.getCharacterProfessionMaxLevel(prof, spec, characterLevel);
+		return phase.getCharacterProfession(prof, spec, 1);
 	}
 
 	private Phase getPhase(TimeRestriction timeRestriction) {
-		PhaseId phaseId;
-
-		if (timeRestriction.phaseId() != null) {
-			phaseId = timeRestriction.phaseId();
-		} else {
-			phaseId = timeRestriction.getUniqueVersion().getLastPhase();
-		}
+		var phaseId = timeRestriction.earliestPhaseId();
 
 		return characterRepository.getPhase(phaseId).orElseThrow();
 	}

@@ -32,7 +32,7 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 		assertThat(pauldrons.getRequiredLevel()).isEqualTo(70);
 		assertThat(pauldrons.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(pauldrons.getRequiredClass()).isEqualTo(List.of(HUNTER, MAGE, WARLOCK));
-		assertThat(pauldrons.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P1));
+		assertThat(pauldrons.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P1));
 	}
 
 	@Test
@@ -44,7 +44,7 @@ class TradedItemParserTest extends TooltipParserTest<JsonItemDetails, TradedItem
 		assertThat(verdantSphere.getRequiredLevel()).isEqualTo(70);
 		assertThat(verdantSphere.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
 		assertThat(verdantSphere.isUnique()).isTrue();
-		assertThat(verdantSphere.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P2));
+		assertThat(verdantSphere.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P2));
 	}
 
 	@BeforeEach

@@ -43,7 +43,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	@Test
 	@DisplayName("Basic info is parsed correctly")
 	void basicInfo() {
-		assertThat(sunfireRobe.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P5));
+		assertThat(sunfireRobe.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P5));
 		assertThat(sunfireRobe.getRequiredLevel()).isEqualTo(70);
 		assertThat(sunfireRobe.getItemLevel()).isEqualTo(159);
 		assertThat(sunfireRobe.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
@@ -123,7 +123,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 		var itemSetBonuses = hoodOfMalefic.getItemSetBonuses();
 		assertThat(itemSetBonuses).hasSize(2);
 		assertThat(itemSetBonuses.get(0).numPieces()).isEqualTo(2);
-		assertEffect(itemSetBonuses.get(0).bonusEffect(), 234541, "Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
+		assertEffect(itemSetBonuses.get(0).bonusEffect(), 231051, "Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
 		assertThat(itemSetBonuses.get(1).numPieces()).isEqualTo(4);
 		assertEffect(
 				itemSetBonuses.get(1).bonusEffect(),

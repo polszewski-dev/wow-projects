@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.profession.ProfessionId;
-import wow.commons.model.pve.GameVersionId;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class SavedSets {
 		private String itemSetName;
 		private List<String> itemSetPieces;
 		private List<ItemSetBonus> itemSetBonuses;
-		private GameVersionId gameVersion;
+		private TimeRestriction timeRestriction;
 		private List<CharacterClassId> itemSetRequiredClass;
 		private ProfessionId itemSetBonusRequiredProfession;
 		private Integer itemSetBonusRequiredProfessionLevel;
@@ -43,6 +43,7 @@ public class SavedSets {
 		SetInfo setInfo = map.computeIfAbsent(getKey(parser), x -> newSetInfo(parser));
 
 		syncRequiredClass(setInfo, parser);
+		syncTimeRestriction(setInfo, parser);
 	}
 
 	public SetInfo get(ItemTooltipParser parser) {
@@ -58,7 +59,7 @@ public class SavedSets {
 				parser.getItemSetName(),
 				parser.getItemSetPieces(),
 				parser.getItemSetBonuses(),
-				parser.getGameVersion(),
+				parser.getTimeRestriction(),
 				null,
 				parser.getItemSetRequiredProfession(),
 				parser.getItemSetRequiredProfessionLevel()
@@ -82,6 +83,15 @@ public class SavedSets {
 	private void assertTheSameClassRequirements(ItemTooltipParser parser, SetInfo setInfo) {
 		if (!setInfo.getItemSetRequiredClass().equals(parser.getRequiredClass())) {
 			throw new IllegalArgumentException("Set pieces have different class requirements: " + setInfo.itemSetName);
+		}
+	}
+
+	private void syncTimeRestriction(SetInfo setInfo, ItemTooltipParser parser) {
+		var existing = setInfo.getTimeRestriction().earliestPhaseId();
+		var newOne = parser.getTimeRestriction().earliestPhaseId();
+
+		if (newOne.isEarlier(existing)) {
+			setInfo.setTimeRestriction(parser.getTimeRestriction());
 		}
 	}
 }

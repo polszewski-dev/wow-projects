@@ -12,10 +12,17 @@ import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.item.ItemBaseExcelParser;
+import wow.commons.util.CollectionUtil;
+import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
+import static wow.commons.util.PhaseMap.putForEveryPhase;
 
 /**
  * User: POlszewski
@@ -23,62 +30,64 @@ import java.util.*;
  */
 @Repository
 @RequiredArgsConstructor
-public class ItemRepositoryImpl extends ExcelRepository implements ItemRepository {
+public class ItemRepositoryImpl implements ItemRepository {
 	private final PveRepository pveRepository;
 	private final SpellRepository spellRepository;
 
-	private final Map<Integer, List<Item>> itemById = new TreeMap<>();
-	private final Map<String, List<Item>> itemByName = new TreeMap<>();
-	private final Map<ItemType, List<Item>> itemByType = new EnumMap<>(ItemType.class);
-	private final Map<ItemSlot, List<Item>> itemBySlot = new EnumMap<>(ItemSlot.class);
+	private final PhaseMap<Integer, Item> itemById = new PhaseMap<>();
+	private final PhaseMap<String, List<Item>> itemByName = new PhaseMap<>();
+	private final PhaseMap<ItemSlot, List<Item>> itemBySlot = new PhaseMap<>();
 
-	private final Map<String, List<ItemSet>> itemSetByName = new TreeMap<>();
+	private final PhaseMap<String, ItemSet> itemSetByName = new PhaseMap<>();
 
-	private final Map<Integer, List<Enchant>> enchantById = new TreeMap<>();
-	private final Map<String, List<Enchant>> enchantByName = new TreeMap<>();
+	private final PhaseMap<Integer, Enchant> enchantById = new PhaseMap<>();
+	private final PhaseMap<String, List<Enchant>> enchantByName = new PhaseMap<>();
 
-	private final Map<Integer, List<Gem>> gemById = new TreeMap<>();
-	private final Map<String, List<Gem>> gemByName = new TreeMap<>();
-	private final Map<SocketType, List<Gem>> gemBySocketType = new EnumMap<>(SocketType.class);
+	private final PhaseMap<Integer, Gem> gemById = new PhaseMap<>();
+	private final PhaseMap<String, List<Gem>> gemByName = new PhaseMap<>();
+	private final PhaseMap<SocketType, List<Gem>> gemBySocketType = new PhaseMap<>();
 
-	private final Map<Integer, List<TradedItem>> tradedItemById = new TreeMap<>();
+	private final PhaseMap<Integer, TradedItem> tradedItemById = new PhaseMap<>();
 
 	@Value("${item.base.xls.file.path}")
 	private String itemBaseXlsFilePath;
 
 	@Override
 	public Optional<Item> getItem(int itemId, PhaseId phaseId) {
-		return getUnique(itemById, itemId, phaseId);
+		return itemById.getOptional(phaseId, itemId);
 	}
 
 	@Override
 	public Optional<Item> getItem(String name, PhaseId phaseId) {
-		return getUnique(itemByName, name, phaseId);
+		return itemByName.getOptional(phaseId, name)
+				.flatMap(CollectionUtil::getUniqueResult);
 	}
 
 	@Override
 	public List<Item> getItemsBySlot(ItemSlot itemSlot, PhaseId phaseId) {
-		return getList(itemBySlot, itemSlot, phaseId);
+		return itemBySlot.getOptional(phaseId, itemSlot)
+				.orElse(List.of());
 	}
 
 	@Override
 	public Optional<ItemSet> getItemSet(String name, PhaseId phaseId) {
-		return getUnique(itemSetByName, name, phaseId);
+		return itemSetByName.getOptional(phaseId, name);
 	}
 
 	@Override
 	public Optional<Enchant> getEnchant(int enchantId, PhaseId phaseId) {
-		return getUnique(enchantById, enchantId, phaseId);
+		return enchantById.getOptional(phaseId, enchantId);
 	}
 
 	@Override
 	public Optional<Enchant> getEnchant(String name, PhaseId phaseId) {
-		return getUnique(enchantByName, name, phaseId);
+		return enchantByName.getOptional(phaseId, name)
+				.flatMap(CollectionUtil::getUniqueResult);
 	}
 
 	@Override
 	public List<Enchant> getEnchants(ItemType itemType, ItemSubType itemSubType, PhaseId phaseId) {
-		return enchantByName.values().stream()
+		return enchantByName.values(phaseId).stream()
 				.flatMap(Collection::stream)
 				.filter(x -> x.isAvailableDuring(phaseId))
 				.filter(x -> x.matches(itemType, itemSubType))
@@ -87,22 +96,24 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 
 	@Override
 	public Optional<Gem> getGem(int gemId, PhaseId phaseId) {
-		return getUnique(gemById, gemId, phaseId);
+		return gemById.getOptional(phaseId, gemId);
 	}
 
 	@Override
 	public Optional<Gem> getGem(String name, PhaseId phaseId) {
-		return getUnique(gemByName, name, phaseId);
+		return gemByName.getOptional(phaseId, name)
+				.flatMap(CollectionUtil::getUniqueResult);
 	}
 
 	@Override
 	public List<Gem> getGems(SocketType socketType, PhaseId phaseId) {
-		return getList(gemBySocketType, socketType, phaseId);
+		return gemBySocketType.getOptional(phaseId, socketType)
+				.orElse(List.of());
 	}
 
 	@Override
 	public Optional<TradedItem> getTradedItem(int tradedItemId, PhaseId phaseId) {
-		return getUnique(tradedItemById, tradedItemId, phaseId);
+		return tradedItemById.getOptional(phaseId, tradedItemId);
 	}
 
 	@PostConstruct
@@ -112,34 +123,33 @@ public class ItemRepositoryImpl extends ExcelRepository implements ItemRepositor
 	}
 
 	public void addItem(Item item) {
-		addEntry(itemById, item.getId(), item);
-		addEntry(itemByName, item.getName(), item);
-		addEntry(itemByType, item.getItemType(), item);
-		for (ItemSlot itemSlot : item.getItemType().getItemSlots()) {
-			addEntry(itemBySlot, itemSlot, item);
+		putForEveryPhase(itemById, item.getId(), item);
+		addEntryForEveryPhase(itemByName, item.getName(), item);
+		for (var itemSlot : item.getItemType().getItemSlots()) {
+			addEntryForEveryPhase(itemBySlot, itemSlot, item);
 		}
 	}
 
 	public void addTradedItem(TradedItem tradedItem) {
-		addEntry(tradedItemById, tradedItem.getId(), tradedItem);
+		putForEveryPhase(tradedItemById, tradedItem.getId(), tradedItem);
 	}
 
 	public void addGem(Gem gem) {
-		addEntry(gemById, gem.getId(), gem);
-		addEntry(gemByName, gem.getName(), gem);
-		for (SocketType socketType : SocketType.values()) {
+		putForEveryPhase(gemById, gem.getId(), gem);
+		addEntryForEveryPhase(gemByName, gem.getName(), gem);
+		for (var socketType : SocketType.values()) {
 			if (socketType.accepts(gem.getColor())) {
-				addEntry(gemBySocketType, socketType, gem);
+				addEntryForEveryPhase(gemBySocketType, socketType, gem);
 			}
 		}
 	}
 
 	public void addItemSet(ItemSet itemSet) {
-		addEntry(itemSetByName, itemSet.getName(), itemSet);
+		putForEveryPhase(itemSetByName, itemSet.getName(), itemSet);
 	}
 
 	public void addEnchant(Enchant enchant) {
-		addEntry(enchantById, enchant.getId(), enchant);
-		addEntry(enchantByName, enchant.getName(), enchant);
+		putForEveryPhase(enchantById, enchant.getId(), enchant);
+		addEntryForEveryPhase(enchantByName, enchant.getName(), enchant);
 	}
 }

@@ -18,7 +18,6 @@ public record CharacterFeatureConfig(
 ) implements CharacterRestricted, TimeRestricted {
 	public CharacterFeatureConfig {
 		Objects.requireNonNull(characterRestriction);
-		Objects.requireNonNull(timeRestriction);
 		Objects.requireNonNull(feature);
 	}
 

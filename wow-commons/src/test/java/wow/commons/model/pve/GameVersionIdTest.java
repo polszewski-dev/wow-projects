@@ -2,6 +2,8 @@ package wow.commons.model.pve;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.pve.GameVersionId.*;
 import static wow.commons.model.pve.PhaseId.*;
@@ -44,5 +46,10 @@ class GameVersionIdTest {
 		assertThat(VANILLA.getPreviousVersion()).isEmpty();
 		assertThat(TBC.getPreviousVersion()).hasValue(VANILLA);
 		assertThat(WOTLK.getPreviousVersion()).hasValue(TBC);
+	}
+
+	@Test
+	void getPhasesStartingFrom() {
+		assertThat(TBC.getPhasesStartingFrom(TBC_P3)).isEqualTo(List.of(TBC_P3, TBC_P4, TBC_P5));
 	}
 }

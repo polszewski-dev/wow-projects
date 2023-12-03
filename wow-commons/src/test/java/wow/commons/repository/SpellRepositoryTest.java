@@ -17,6 +17,7 @@ import wow.commons.model.buff.BuffType;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.pve.PhaseId;
@@ -38,7 +39,6 @@ import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.*;
 import static wow.commons.model.pve.GameVersionId.TBC;
-import static wow.commons.model.pve.GameVersionId.VANILLA;
 import static wow.commons.model.pve.PhaseId.*;
 import static wow.commons.model.spell.AbilityId.CURSE_OF_EXHAUSTION;
 import static wow.commons.model.spell.AbilityId.*;
@@ -90,8 +90,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
 		var timeRestriction = ability.getTimeRestriction();
 
-		assertThat(timeRestriction.versions()).isEqualTo(List.of(TBC));
-		assertThat(timeRestriction.phaseId()).isNull();
+		assertThat(timeRestriction).isEqualTo(TimeRestriction.of(TBC_P0));
 	}
 
 	@Test
@@ -232,8 +231,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getEffectId()).isEqualTo(25311);
 		assertThat(effect.getName()).isEqualTo("Corruption");
-		assertThat(effect.getTimeRestriction().versions()).isEqualTo(List.of(VANILLA));
-		assertThat(effect.getTimeRestriction().phaseId()).isEqualTo(VANILLA_P5);
+		assertThat(effect.getTimeRestriction()).isEqualTo(TimeRestriction.of(VANILLA_P5));
 		assertThat(effect.getMaxStacks()).isEqualTo(1);
 		assertThat(effect.getIcon()).isEqualTo("spell_shadow_abominationexplosion");
 		assertThat(effect.getTooltip()).isEqualTo("Corrupts the target, causing 822 Shadow damage over 18 sec.");
@@ -556,7 +554,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(talent.getRank()).isEqualTo(1);
 		assertThat(talent.getMaxRank()).isEqualTo(5);
 		assertThat(talent.getTalentCalculatorPosition()).isEqualTo(2);
-		assertThat(talent.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
+		assertThat(talent.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC));
 		assertThat(talent.getCharacterClass()).isEqualTo(WARLOCK);
 		assertThat(talent.getTalentTree()).isEqualTo(AFFLICTION);
 		assertThat(talent.getIcon()).isEqualTo("spell_shadow_abominationexplosion");

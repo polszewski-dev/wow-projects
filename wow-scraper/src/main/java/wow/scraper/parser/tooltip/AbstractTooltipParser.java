@@ -22,6 +22,8 @@ import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.config.ScraperContextSource;
 import wow.scraper.model.JsonCommonDetails;
+import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.JsonSpellDetails;
 
 import java.util.List;
 import java.util.Objects;
@@ -257,10 +259,6 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 		this.requiredSide = requiredSide;
 	}
 
-	public void setPhase(PhaseId phase) {
-		this.phase = phase;
-	}
-
 	public TimeRestriction getTimeRestriction() {
 		return TimeRestriction.of(
 				gameVersion, getActualPhase()
@@ -274,7 +272,21 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 			return phaseOverride;
 		}
 
+		if (appearedInPreviousVersion()) {
+			return gameVersion.getPrepatchPhase().orElseThrow();
+		}
+
 		return phase;
+	}
+
+	private boolean appearedInPreviousVersion() {
+		if (details instanceof JsonItemDetails itemDetails) {
+			return getItemDetailRepository().appearedInPreviousVersion(details.getId(), gameVersion, itemDetails.getCategory());
+		}
+		if (details instanceof JsonSpellDetails spellDetails) {
+			return getSpellDetailRepository().appearedInPreviousVersion(details.getId(), gameVersion, spellDetails.getCategory());
+		}
+		throw new IllegalArgumentException();
 	}
 
 	protected abstract PhaseId getPhaseOverride();

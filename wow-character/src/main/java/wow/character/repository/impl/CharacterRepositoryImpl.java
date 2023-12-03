@@ -12,11 +12,15 @@ import wow.character.repository.impl.parser.character.CharacterExcelParser;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.impl.ExcelRepository;
+import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+import static wow.commons.util.PhaseMap.putForEveryPhase;
 
 /**
  * User: POlszewski
@@ -24,10 +28,10 @@ import java.util.*;
  */
 @Repository
 @RequiredArgsConstructor
-public class CharacterRepositoryImpl extends ExcelRepository implements CharacterRepository {
+public class CharacterRepositoryImpl implements CharacterRepository {
 	private final Map<GameVersionId, GameVersion> gameVersionById = new TreeMap<>();
 	private final Map<PhaseId, Phase> phaseById = new TreeMap<>();
-	private final Map<String, List<CharacterTemplate>> characterTemplateByKey = new HashMap<>();
+	private final PhaseMap<String, CharacterTemplate> characterTemplateByKey = new PhaseMap<>();
 
 	@Value("${character.xls.file.path}")
 	private String xlsFilePath;
@@ -45,7 +49,7 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 	@Override
 	public Optional<CharacterTemplate> getCharacterTemplate(CharacterTemplateId characterTemplateId, CharacterClassId characterClassId, int level, PhaseId phaseId) {
 		String key = getCharacterTemplateKey(characterTemplateId, characterClassId, level);
-		return getUnique(characterTemplateByKey, key, phaseId);
+		return characterTemplateByKey.getOptional(phaseId, key);
 	}
 
 	@PostConstruct
@@ -64,7 +68,7 @@ public class CharacterRepositoryImpl extends ExcelRepository implements Characte
 
 	public void addCharacterTemplate(CharacterTemplate characterTemplate) {
 		String key = getCharacterTemplateKey(characterTemplate.getCharacterTemplateId(), characterTemplate.getCharacterClassId(), characterTemplate.getLevel());
-		addEntry(characterTemplateByKey, key, characterTemplate);
+		putForEveryPhase(characterTemplateByKey, key, characterTemplate);
 	}
 
 	private static String getCharacterTemplateKey(CharacterTemplateId characterTemplateId, CharacterClassId characterClassId, int level) {

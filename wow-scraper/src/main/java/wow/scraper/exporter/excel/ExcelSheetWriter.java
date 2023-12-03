@@ -38,8 +38,15 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 	}
 
 	protected void writeTimeRestriction(TimeRestriction timeRestriction) {
-		setValue(timeRestriction.getUniqueVersion());
-		setValue(timeRestriction.phaseId());
+		setValue(timeRestriction.getGameVersionId());
+
+		var phase = timeRestriction.earliestPhaseId();
+
+		if (phase == timeRestriction.getGameVersionId().getEarliestPhase()) {
+			phase = null;
+		}
+
+		setValue(phase);
 	}
 
 	protected void writeAttributeHeader(String prefix, int maxAttributes) {

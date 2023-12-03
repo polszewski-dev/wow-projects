@@ -15,4 +15,6 @@ public interface ItemDetailRepository {
 	Optional<JsonItemDetails> getDetail(GameVersionId gameVersion, WowheadItemCategory category, int itemId);
 
 	List<Integer> getDetailIds(GameVersionId gameVersion, WowheadItemCategory category);
+
+	boolean appearedInPreviousVersion(Integer detailId, GameVersionId gameVersion, WowheadItemCategory category);
 }

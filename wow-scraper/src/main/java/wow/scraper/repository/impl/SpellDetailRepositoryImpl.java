@@ -111,7 +111,7 @@ public class SpellDetailRepositoryImpl extends DetailRepository<WowheadSpellCate
 		}
 
 		return enchantDetailsById.getOptional(gameVersion, spellId)
-				.orElseGet(() -> newSpellDetails(spellId, enchantItem));
+				.orElseGet(() -> newSpellDetails(spellId, enchantItem, ENCHANTS));
 	}
 
 	private void mergeIntoEnchantSpell(JsonSpellDetails existing, JsonItemDetails itemDetails) {
@@ -146,7 +146,7 @@ public class SpellDetailRepositoryImpl extends DetailRepository<WowheadSpellCate
 		return spellId;
 	}
 
-	private JsonSpellDetails newSpellDetails(Integer spellId, JsonItemDetails itemDetails) {
+	private JsonSpellDetails newSpellDetails(Integer spellId, JsonItemDetails itemDetails, WowheadSpellCategory category) {
 		JsonSpellDetails spellDetails = new JsonSpellDetails();
 
 		spellDetails.setId(spellId);
@@ -156,6 +156,22 @@ public class SpellDetailRepositoryImpl extends DetailRepository<WowheadSpellCate
 		spellDetails.setHtmlTooltip(itemDetails.getHtmlTooltip());
 		spellDetails.setIcon(itemDetails.getIcon());
 		spellDetails.setSourceItemIds(new HashSet<>());
+		spellDetails.setCategory(category);
 		return spellDetails;
+	}
+
+	@Override
+	public boolean appearedInPreviousVersion(Integer detailId, GameVersionId gameVersion, WowheadSpellCategory category) {
+		if (category != ENCHANTS) {
+			return super.appearedInPreviousVersion(detailId, gameVersion, category);
+		}
+
+		var previousVersion = gameVersion.getPreviousVersion();
+
+		if (previousVersion.isEmpty()) {
+			return false;
+		}
+
+		return getEnchantDetail(previousVersion.get(), detailId).isPresent();
 	}
 }

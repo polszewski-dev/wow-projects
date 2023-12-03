@@ -20,10 +20,14 @@ import wow.commons.model.talent.TalentId;
 import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.spell.SpellExcelParser;
 import wow.commons.util.CollectionUtil;
+import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
+
+import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
+import static wow.commons.util.PhaseMap.putForEveryPhase;
 
 /**
  * User: POlszewski
@@ -31,47 +35,44 @@ import java.util.*;
  */
 @Repository
 @RequiredArgsConstructor
-public class SpellRepositoryImpl extends ExcelRepository implements SpellRepository {
-	private final Map<CharacterClassId, List<Ability>> abilitiesByClass = new LinkedHashMap<>();
-	private final Map<AbilityIdAndRank, List<Ability>> abilitiesByRankedId = new LinkedHashMap<>();
-	private final Map<Integer, List<Spell>> spellsById = new LinkedHashMap<>();
-	private final Map<Integer, List<Effect>> effectById = new LinkedHashMap<>();
-	private final Map<CharacterClassId, List<Talent>> talentsByClass = new LinkedHashMap<>();
-	private final Map<String, List<Talent>> talentByClassByIdByRank = new LinkedHashMap<>();
-	private final Map<String, List<Talent>> talentByClassByCalcPosByRank = new LinkedHashMap<>();
-	private final Map<BuffIdAndRank, List<Buff>> buffsById = new LinkedHashMap<>();
-	private final List<Buff> buffs = new ArrayList<>();
+public class SpellRepositoryImpl implements SpellRepository {
+	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();
+	private final PhaseMap<AbilityIdAndRank, Ability> abilitiesByRankedId = new PhaseMap<>();
+	private final PhaseMap<Integer, Spell> spellsById = new PhaseMap<>();
+	private final PhaseMap<Integer, Effect> effectById = new PhaseMap<>();
+	private final PhaseMap<CharacterClassId, List<Talent>> talentsByClass = new PhaseMap<>();
+	private final PhaseMap<String, Talent> talentByClassByIdByRank = new PhaseMap<>();
+	private final PhaseMap<String, Talent> talentByClassByCalcPosByRank = new PhaseMap<>();
+	private final PhaseMap<BuffIdAndRank, Buff> buffsById = new PhaseMap<>();
 
 	@Value("${spell.xls.file.path}")
 	private String xlsFilePath;
 
 	@Override
 	public List<Ability> getAvailableAbilities(CharacterClassId characterClassId, int level, PhaseId phaseId) {
-		return abilitiesByClass.getOrDefault(characterClassId, List.of()).stream()
+		return abilitiesByClass.getOptional(phaseId, characterClassId).orElse(List.of()).stream()
 				.filter(spell -> spell.getRequiredLevel() <= level)
-				.filter(spell -> spell.isAvailableDuring(phaseId))
 				.toList();
 	}
 
 	@Override
 	public Optional<Ability> getAbility(AbilityId abilityId, int rank, PhaseId phaseId) {
-		return getUnique(abilitiesByRankedId, new AbilityIdAndRank(abilityId, rank), phaseId);
+		return abilitiesByRankedId.getOptional(phaseId, new AbilityIdAndRank(abilityId, rank));
 	}
 
 	@Override
 	public Optional<Spell> getSpell(int spellId, PhaseId phaseId) {
-		return getUnique(spellsById, spellId, phaseId);
+		return spellsById.getOptional(phaseId, spellId);
 	}
 
 	@Override
 	public Optional<Effect> getEffect(int effectId, PhaseId phaseId) {
-		return getUnique(effectById, effectId, phaseId);
+		return effectById.getOptional(phaseId, effectId);
 	}
 
 	@Override
 	public List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId) {
-		return talentsByClass.getOrDefault(characterClassId, List.of()).stream()
-				.filter(spell -> spell.isAvailableDuring(phaseId))
+		return talentsByClass.getOptional(phaseId, characterClassId).orElse(List.of()).stream()
 				.toList();
 	}
 
@@ -79,24 +80,24 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	public Optional<Talent> getTalent(CharacterClassId characterClassId, TalentId talentId, int rank, PhaseId phaseId) {
 		String key = getTalentKey(characterClassId, talentId, rank);
 
-		return getUnique(talentByClassByIdByRank, key, phaseId);
+		return talentByClassByIdByRank.getOptional(phaseId, key);
 	}
 
 	@Override
 	public Optional<Talent> getTalent(CharacterClassId characterClassId, int talentCalculatorPosition, int rank, PhaseId phaseId) {
 		String key = getTalentKey(characterClassId, talentCalculatorPosition, rank);
 
-		return getUnique(talentByClassByCalcPosByRank, key, phaseId);
+		return talentByClassByCalcPosByRank.getOptional(phaseId, key);
 	}
 
 	@Override
 	public List<Buff> getAvailableBuffs(PhaseId phaseId) {
-		return getList(buffs, phaseId);
+		return buffsById.values(phaseId).stream().toList();
 	}
 
 	@Override
 	public Optional<Buff> getBuff(BuffId buffId, int rank, PhaseId phaseId) {
-		return getUnique(buffsById, new BuffIdAndRank(buffId, rank), phaseId);
+		return buffsById.getOptional(phaseId, new BuffIdAndRank(buffId, rank));
 	}
 
 	@PostConstruct
@@ -104,9 +105,9 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		var spellExcelParser = new SpellExcelParser(xlsFilePath, this);
 		spellExcelParser.readFromXls();
 
-		spellsById.values().stream().flatMap(Collection::stream).forEach(this::replaceDummyEffects);
-		effectById.values().stream().flatMap(Collection::stream).forEach(this::replaceDummySpells);
-		spellsById.values().stream().flatMap(Collection::stream).forEach(this::setMissingSpellFields);
+		spellsById.allValues().forEach(this::replaceDummyEffects);
+		effectById.allValues().forEach(this::replaceDummySpells);
+		spellsById.allValues().forEach(this::setMissingSpellFields);
 	}
 
 	private void replaceDummyEffects(Spell spell) {
@@ -117,7 +118,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		}
 
 		var effectId = effectApplication.effect().getEffectId();
-		var phaseId = spell.getTimeRestriction().getUniqueVersion().getLastPhase();
+		var phaseId = spell.getEarliestPhaseId();
 		var effect = getEffect(effectId, phaseId).orElseThrow();
 		var newEffectApplication = effectApplication.setEffect(effect);
 
@@ -138,7 +139,7 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		}
 
 		var spellId = event.triggeredSpell().getId();
-		var phaseId = timeRestriction.getUniqueVersion().getLastPhase();
+		var phaseId = timeRestriction.earliestPhaseId();
 		var spell = getSpell(spellId, phaseId).orElseThrow();
 
 		return event.setTriggeredSpell(spell);
@@ -201,17 +202,17 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 	public void addSpell(Spell spell) {
 		if (spell instanceof Ability ability) {
 			for (var characterClassId : ability.getCharacterRestriction().characterClassIds()) {
-				abilitiesByClass.computeIfAbsent(characterClassId, x -> new ArrayList<>()).add(ability);
+				addEntryForEveryPhase(abilitiesByClass, characterClassId, ability);
 			}
 
-			addEntry(abilitiesByRankedId, ability.getRankedAbilityId(), ability);
+			putForEveryPhase(abilitiesByRankedId, ability.getRankedAbilityId(), ability);
 		}
-		addEntry(spellsById, spell.getId(), spell);
+		putForEveryPhase(spellsById, spell.getId(), spell);
 	}
 
 	public void addEffect(Effect effect) {
 		validateEffect(effect);
-		addEntry(effectById, effect.getEffectId(), effect);
+		putForEveryPhase(effectById, effect.getEffectId(), effect);
 	}
 
 	private void validateEffect(Effect effect) {
@@ -228,15 +229,14 @@ public class SpellRepositoryImpl extends ExcelRepository implements SpellReposit
 		String key1 = getTalentKey(talent.getCharacterClass(), talent.getTalentId(), talent.getRank());
 		String key2 = getTalentKey(talent.getCharacterClass(), talent.getTalentCalculatorPosition(), talent.getRank());
 
-		addEntry(talentsByClass, talent.getCharacterClass(), talent);
-		addEntry(talentByClassByIdByRank, key1, talent);
-		addEntry(talentByClassByCalcPosByRank, key2, talent);
+		addEntryForEveryPhase(talentsByClass, talent.getCharacterClass(), talent);
+		putForEveryPhase(talentByClassByIdByRank, key1, talent);
+		putForEveryPhase(talentByClassByCalcPosByRank, key2, talent);
 
 		addEffect(talent.getEffect());
 	}
 
 	public void addBuff(Buff buff) {
-		addEntry(buffsById, buff.getId(), buff);
-		buffs.add(buff);
+		putForEveryPhase(buffsById, buff.getId(), buff);
 	}
 }

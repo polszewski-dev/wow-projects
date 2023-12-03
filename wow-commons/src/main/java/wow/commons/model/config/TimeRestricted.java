@@ -9,7 +9,12 @@ import wow.commons.model.pve.PhaseId;
 public interface TimeRestricted {
 	TimeRestriction getTimeRestriction();
 
+	default PhaseId getEarliestPhaseId() {
+		return getTimeRestriction().earliestPhaseId();
+	}
+
 	default boolean isAvailableDuring(PhaseId phaseId) {
-		return getTimeRestriction().isMetBy(phaseId);
+		var timeRestriction = getTimeRestriction();
+		return timeRestriction == null || timeRestriction.isMetBy(phaseId);
 	}
 }

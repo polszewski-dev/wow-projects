@@ -107,6 +107,8 @@ public class JsonItemDetails implements JsonCommonDetails {
 	@JsonProperty(value = "icon")
 	private String icon;
 
+	private WowheadItemCategory category;
+
 	public List<JsonSourceMore> getSourcesOf(WowheadSource source) {
 		List<JsonSourceMore> result = new ArrayList<>();
 

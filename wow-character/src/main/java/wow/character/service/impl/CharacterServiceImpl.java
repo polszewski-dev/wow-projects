@@ -72,14 +72,29 @@ public class CharacterServiceImpl implements CharacterService {
 
 		changeBuild(character, characterTemplate);
 
-		character.setProfessions(characterTemplate.getProfessions());
+		character.setProfessions(getMaxedProfessions(characterTemplate, character));
 		character.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
 		character.getBuffs().setHighestRanks(characterTemplate.getDefaultBuffs());
+
 		if (character.getTarget() != null) {
 			character.getTarget().getBuffs().setHighestRanks(characterTemplate.getDefaultDebuffs());
 		}
 
 		updateAfterRestrictionChange(character);
+	}
+
+	private List<CharacterProfession> getMaxedProfessions(CharacterTemplate characterTemplate, PlayerCharacter character) {
+		return characterTemplate.getProfessions().stream()
+				.map(x -> getCharacterProfessionMaxLevel(x, character))
+				.toList();
+	}
+
+	private CharacterProfession getCharacterProfessionMaxLevel(CharacterProfession characterProfession, PlayerCharacter character) {
+		return character.getPhase().getCharacterProfessionMaxLevel(
+				characterProfession.getProfessionId(),
+				characterProfession.getSpecializationId(),
+				character.getLevel()
+		);
 	}
 
 	private CharacterTemplate getCharacterTemplate(CharacterTemplateId characterTemplateId, PlayerCharacter character) {

@@ -34,4 +34,14 @@ public abstract class DetailRepository<C, D extends JsonCommonDetails, I extends
 	public List<Integer> getDetailIds(GameVersionId gameVersion, C category) {
 		return importers.get(category).getIds(gameVersion);
 	}
+
+	public boolean appearedInPreviousVersion(Integer detailId, GameVersionId gameVersion, C category) {
+		var previousVersion = gameVersion.getPreviousVersion();
+
+		if (previousVersion.isEmpty()) {
+			return false;
+		}
+
+		return getDetail(previousVersion.get(), category, detailId).isPresent();
+	}
 }

@@ -87,7 +87,8 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 			return null;
 		}
 
-		var activatedAbility = (ActivatedAbilityImpl) spellRepository.getSpell(spellId, getTimeRestriction().getUniqueVersion().getLastPhase()).orElseThrow();
+		var phaseId = getTimeRestriction().earliestPhaseId();
+		var activatedAbility = (ActivatedAbilityImpl) spellRepository.getSpell(spellId, phaseId).orElseThrow();
 
 		activatedAbility.attachSource(source);
 

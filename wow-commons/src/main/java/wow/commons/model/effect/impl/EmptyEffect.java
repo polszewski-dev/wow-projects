@@ -25,7 +25,7 @@ public class EmptyEffect implements Effect {
 
 	@Override
 	public TimeRestriction getTimeRestriction() {
-		return TimeRestriction.EMPTY;
+		return null;
 	}
 
 	@Override

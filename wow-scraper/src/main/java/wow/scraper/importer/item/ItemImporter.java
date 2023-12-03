@@ -40,6 +40,7 @@ public class ItemImporter extends WowheadImporter<WowheadItemCategory, JsonItemD
 	protected void beforeSave(JsonItemDetails details) {
 		fixSource(details);
 		fetchTooltip(details);
+		details.setCategory(getCategory());
 	}
 
 	private void fixSource(JsonItemDetails itemDetails) {

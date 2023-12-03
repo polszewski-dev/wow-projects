@@ -3,6 +3,7 @@ package wow.commons.repository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.pve.*;
 
 import java.util.List;
@@ -33,7 +34,7 @@ class PveRepositoryTest extends WowCommonsSpringTest {
 		assertThat(zone.getVersion()).isEqualTo(TBC);
 		assertThat(zone.getZoneType()).isEqualTo(RAID);
 		assertThat(zone.getPartySize()).isEqualTo(25);
-		assertThat(zone.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
+		assertThat(zone.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC));
 
 		List<String> npcNames = zone.getNpcs().stream()
 				.map(Npc::getName)
@@ -72,7 +73,7 @@ class PveRepositoryTest extends WowCommonsSpringTest {
 		assertThat(npc.getZones().get(0).getId()).isEqualTo(4075);
 		assertThat(npc.getZones().get(0).getName()).isEqualTo("Sunwell Plateau");
 
-		assertThat(npc.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
+		assertThat(npc.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC));
 	}
 
 	@Test
@@ -88,7 +89,7 @@ class PveRepositoryTest extends WowCommonsSpringTest {
 		assertThat(faction.getName()).isEqualTo("Thrallmar");
 		assertThat(faction.getSide()).isEqualTo(HORDE);
 		assertThat(faction.getVersion()).isEqualTo(TBC);
-		assertThat(faction.getTimeRestriction().getUniqueVersion()).isEqualTo(TBC);
+		assertThat(faction.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC));
 	}
 
 	@Test
@@ -97,7 +98,7 @@ class PveRepositoryTest extends WowCommonsSpringTest {
 		for (GameVersionId gameVersionId : GameVersionId.values()) {
 			for (Zone instance : pveRepository.getAllInstances(gameVersionId.getLastPhase())) {
 				for (Npc npc : instance.getNpcs()) {
-					assertThat(npc.getTimeRestriction().getUniqueVersion()).isEqualTo(instance.getTimeRestriction().getUniqueVersion());
+					assertThat(npc.getTimeRestriction()).isEqualTo(instance.getTimeRestriction());
 				}
 			}
 		}

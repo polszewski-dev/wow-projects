@@ -42,7 +42,7 @@ public class ItemSetSheetParser extends AbstractItemSheetParser {
 
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
-		var pieces = parser.getPieces(name, timeRestriction.getUniqueVersion());
+		var pieces = parser.getPieces(name, timeRestriction.getGameVersionId());
 		var requiredProfession = colIBonusReqProfession.getEnum(ProfessionId::parse, null);
 
 		var itemSet = new ItemSetImpl(name, timeRestriction, characterRestriction, pieces, requiredProfession);

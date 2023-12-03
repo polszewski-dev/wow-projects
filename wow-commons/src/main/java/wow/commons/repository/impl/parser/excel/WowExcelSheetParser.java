@@ -132,10 +132,14 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colReqPhase = column(REQ_PHASE, true);
 
 	protected TimeRestriction getTimeRestriction() {
-		var versions = colReqVersion.getList(GameVersionId::parse);
+		var version = colReqVersion.getEnum(GameVersionId::parse, null);
 		var phase = colReqPhase.getEnum(PhaseId::parse, null);
 
-		return new TimeRestriction(versions, phase);
+		if (version == null && phase == null) {
+			return null;
+		}
+
+		return TimeRestriction.of(version, phase);
 	}
 
 	private final ExcelColumn colReqLevel = column(REQ_LEVEL, true);

@@ -70,10 +70,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 	}
 
 	private Set<Source> getSources(String source) {
-		var reqPhase = getTimeRestriction().phaseId();
-		if (reqPhase == null) {
-			reqPhase = getTimeRestriction().getUniqueVersion().getLastPhase();
-		}
+		var reqPhase = getTimeRestriction().earliestPhaseId();
 		return new SourceParser(reqPhase, pveRepository, itemRepository).parse(source);
 	}
 
@@ -98,7 +95,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 			return null;
 		}
 
-		var phaseId = timeRestriction.getUniqueVersion().getLastPhase();
+		var phaseId = timeRestriction.earliestPhaseId();
 		var effect = (EffectImpl) itemEffectMapper.fromString(stats, phaseId);
 
 		if (effect.getDescription() == null) {

@@ -11,10 +11,11 @@ import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.Rule;
+import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonCommonDetails;
+import wow.scraper.model.JsonItemDetails;
 import wow.scraper.parser.scraper.ScraperMatcher;
 import wow.scraper.parser.scraper.ScraperParser;
-import wow.scraper.repository.SpellPatternRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,17 +32,18 @@ import static wow.scraper.util.ExportUtil.getId;
  */
 @Getter
 public class ItemEffectParser extends AbstractTooltipParser<JsonCommonDetails> {
-	private final SpellPatternRepository spellPatternRepository;
-
 	private ActivatedAbility activatedAbility;
 	private final List<Effect> effects = new ArrayList<>();
 	private final List<Effect> itemSetBonusEffects = new ArrayList<>();
 
 	private String itemSetName;
 
-	public ItemEffectParser(JsonCommonDetails details, GameVersionId gameVersion, SpellPatternRepository spellPatternRepository) {
-		super(details, gameVersion, null);
-		this.spellPatternRepository = spellPatternRepository;
+	public ItemEffectParser(
+			JsonCommonDetails details,
+			GameVersionId gameVersion,
+			ScraperContext scraperContext
+	) {
+		super(details, gameVersion, scraperContext);
 	}
 
 	@Override
@@ -181,7 +183,11 @@ public class ItemEffectParser extends AbstractTooltipParser<JsonCommonDetails> {
 
 	@Override
 	protected PhaseId getPhaseOverride() {
-		return null;
+		if (details instanceof JsonItemDetails) {
+			return getScraperConfig().getItemPhaseOverrides().get(details.getId());
+		} else {
+			return getScraperConfig().getSpellPhaseOverrides().get(details.getId());
+		}
 	}
 
 	public Optional<ActivatedAbility> getActivatedAbility() {

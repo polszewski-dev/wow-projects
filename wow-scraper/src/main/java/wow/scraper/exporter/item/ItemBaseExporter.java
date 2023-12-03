@@ -7,7 +7,10 @@ import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
 import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.parser.tooltip.AbstractTooltipParser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -52,41 +55,6 @@ public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends
 	protected abstract T createParser(D details, GameVersionId gameVersion);
 
 	protected void afterParse(T parser, C category) {
-		fixPhase(parser, category);
-	}
-
-	private void fixPhase(T parser, C category) {
-		Integer detailId = parser.getDetails().getId();
-		GameVersionId gameVersion = parser.getGameVersion();
-
-		if (appearedInPreviousVersion(detailId, gameVersion, category)) {
-			parser.setPhase(gameVersion.getPrepatchPhase().orElseThrow());
-		}
-	}
-
-	private boolean appearedInPreviousVersion(Integer detailId, GameVersionId gameVersion, C category) {
-		var previousVersion = gameVersion.getPreviousVersion();
-
-		if (previousVersion.isEmpty()) {
-			return false;
-		}
-
-		List<GameVersionId> gameVersions = getGameVersions(category, detailId);
-
-		return gameVersions.contains(previousVersion.get());
-	}
-
-	private List<GameVersionId> getGameVersions(C category, Integer detailId) {
-		return getGameVersionMap(category).getOrDefault(detailId, List.of());
-	}
-
-	private Map<Integer, List<GameVersionId>> getGameVersionMap(C category) {
-		Map<Integer, List<GameVersionId>> map = new HashMap<>();
-
-		for (GameVersionId gameVersion : getScraperConfig().getGameVersions()) {
-			getDetailIds(category, gameVersion).forEach(id -> map.computeIfAbsent(id, x -> new ArrayList<>()).add(gameVersion));
-		}
-
-		return map;
+		// optional
 	}
 }
