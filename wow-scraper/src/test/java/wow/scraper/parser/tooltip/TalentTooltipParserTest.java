@@ -3,21 +3,21 @@ package wow.scraper.parser.tooltip;
 import org.junit.jupiter.api.Test;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
-import wow.scraper.model.WowheadSpellInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
+import static wow.scraper.model.WowheadSpellCategory.TALENTS_WARLOCK_DESTRO;
 
 /**
  * User: POlszewski
  * Date: 2023-10-01
  */
-class TalentTooltipParserTest extends TooltipParserTest<JsonSpellDetails, TalentTooltipParser> {
+class TalentTooltipParserTest extends TooltipParserTest<JsonSpellDetails, TalentTooltipParser, WowheadSpellCategory> {
 	@Test
 	void test() {
-		TalentTooltipParser parser = getTooltip("talent/17803");
+		TalentTooltipParser parser = getTooltip(17803, TALENTS_WARLOCK_DESTRO);
 
 		assertThat(parser.getName()).isEqualTo("Improved Shadow Bolt");
 		assertThat(parser.getRank()).isEqualTo(5);
@@ -30,24 +30,12 @@ class TalentTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Talent
 	}
 
 	@Override
+	protected JsonSpellDetails getData(int id, WowheadSpellCategory category) {
+		return spellDetailRepository.getDetail(TBC, category, id).orElseThrow();
+	}
+
+	@Override
 	protected TalentTooltipParser createParser(JsonSpellDetails data) {
 		return new TalentTooltipParser(data, scraperContext);
-	}
-
-	@Override
-	protected JsonSpellDetails getData(String path) {
-		var info = read(path, WowheadSpellInfo.class);
-		var details = new JsonSpellDetails();
-		details.setCategory(WowheadSpellCategory.TALENTS_WARLOCK_DESTRO);
-		details.setName(info.getName());
-		details.setReqVersion(TBC);
-		details.setHtmlTooltip(info.getTooltip());
-		details.setIcon(info.getIcon());
-		return details;
-	}
-
-	@Override
-	protected Class<JsonSpellDetails> getDetailsClass() {
-		return JsonSpellDetails.class;
 	}
 }

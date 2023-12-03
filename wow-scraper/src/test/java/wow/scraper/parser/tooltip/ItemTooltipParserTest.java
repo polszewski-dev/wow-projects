@@ -9,8 +9,10 @@ import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.spell.AbilityId;
 import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.WowheadItemCategory;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * User: POlszewski
  * Date: 2022-11-14
  */
-class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemTooltipParser> {
+class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemTooltipParser, WowheadItemCategory> {
 	@Test
 	@DisplayName("Item id/name are parsed correctly")
 	void idAndName() {
@@ -41,7 +43,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	@Test
 	@DisplayName("Basic info is parsed correctly")
 	void basicInfo() {
-		assertThat(sunfireRobe.getTimeRestriction().phaseId()).isEqualTo(TBC_P5);
+		assertThat(sunfireRobe.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P5));
 		assertThat(sunfireRobe.getRequiredLevel()).isEqualTo(70);
 		assertThat(sunfireRobe.getItemLevel()).isEqualTo(159);
 		assertThat(sunfireRobe.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
@@ -121,7 +123,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 		var itemSetBonuses = hoodOfMalefic.getItemSetBonuses();
 		assertThat(itemSetBonuses).hasSize(2);
 		assertThat(itemSetBonuses.get(0).numPieces()).isEqualTo(2);
-		assertEffect(itemSetBonuses.get(0).bonusEffect(), 0, "Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
+		assertEffect(itemSetBonuses.get(0).bonusEffect(), 234541, "Each time one of your Corruption or Immolate spells deals periodic damage, you heal 70 health.");
 		assertThat(itemSetBonuses.get(1).numPieces()).isEqualTo(4);
 		assertEffect(
 				itemSetBonuses.get(1).bonusEffect(),
@@ -178,11 +180,16 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 
 	@BeforeEach
 	void readTestData() {
-		hoodOfMalefic = getTooltip("item/31051");
-		sunfireRobe = getTooltip("item/34364");
-		scryersBlodgem = getTooltip("item/29132");
-		magistersStaff = getTooltip("item/34182");
-		wandOfDemonsoul = getTooltip("item/34347");
+		hoodOfMalefic = getTooltip(31051, WowheadItemCategory.HEAD);
+		sunfireRobe = getTooltip(34364, WowheadItemCategory.CHEST);
+		scryersBlodgem = getTooltip(29132, WowheadItemCategory.TRINKETS);
+		magistersStaff = getTooltip(34182, WowheadItemCategory.STAVES);
+		wandOfDemonsoul = getTooltip(34347, WowheadItemCategory.WANDS);
+	}
+
+	@Override
+	protected JsonItemDetails getData(int id, WowheadItemCategory category) {
+		return itemDetailRepository.getDetail(TBC, category, id).orElseThrow();
 	}
 
 	@Override
@@ -190,8 +197,4 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 		return new ItemTooltipParser(data, TBC, scraperContext);
 	}
 
-	@Override
-	protected Class<JsonItemDetails> getDetailsClass() {
-		return JsonItemDetails.class;
-	}
 }

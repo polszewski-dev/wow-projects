@@ -9,22 +9,22 @@ import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.Reagent;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
-import wow.scraper.model.WowheadSpellInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
+import static wow.scraper.model.WowheadSpellCategory.ABILITIES_WARLOCK_DESTRO;
 
 /**
  * User: POlszewski
  * Date: 2023-10-01
  */
-class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, AbilityTooltipParser> {
+class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, AbilityTooltipParser, WowheadSpellCategory> {
 	@Test
 	void shadowBolt() {
-		AbilityTooltipParser parser = getTooltip("ability/27209");
+		AbilityTooltipParser parser = getTooltip(27209, ABILITIES_WARLOCK_DESTRO);
 
 		assertThat(parser.getName()).isEqualTo("Shadow Bolt");
 		assertThat(parser.getRank()).isEqualTo(11);
@@ -48,7 +48,7 @@ class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Abili
 
 	@Test
 	void shadowBurn() {
-		AbilityTooltipParser parser = getTooltip("ability/30546");
+		AbilityTooltipParser parser = getTooltip(30546, ABILITIES_WARLOCK_DESTRO);
 
 		assertThat(parser.getName()).isEqualTo("Shadowburn");
 		assertThat(parser.getRank()).isEqualTo(8);
@@ -72,7 +72,7 @@ class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Abili
 
 	@Test
 	void immolate() {
-		AbilityTooltipParser parser = getTooltip("ability/27215");
+		AbilityTooltipParser parser = getTooltip(27215, ABILITIES_WARLOCK_DESTRO);
 
 		assertThat(parser.getName()).isEqualTo("Immolate");
 		assertThat(parser.getRank()).isEqualTo(9);
@@ -95,24 +95,12 @@ class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Abili
 	}
 
 	@Override
-	protected JsonSpellDetails getData(String path) {
-		var info = read(path, WowheadSpellInfo.class);
-		var details = new JsonSpellDetails();
-		details.setCategory(WowheadSpellCategory.ABILITIES_WARLOCK_DESTRO);
-		details.setName(info.getName());
-		details.setReqVersion(TBC);
-		details.setHtmlTooltip(info.getTooltip());
-		details.setIcon(info.getIcon());
-		return details;
+	protected JsonSpellDetails getData(int id, WowheadSpellCategory category) {
+		return spellDetailRepository.getDetail(TBC, category, id).orElseThrow();
 	}
 
 	@Override
 	protected AbilityTooltipParser createParser(JsonSpellDetails data) {
 		return new AbilityTooltipParser(data, scraperContext);
-	}
-
-	@Override
-	protected Class<JsonSpellDetails> getDetailsClass() {
-		return JsonSpellDetails.class;
 	}
 }

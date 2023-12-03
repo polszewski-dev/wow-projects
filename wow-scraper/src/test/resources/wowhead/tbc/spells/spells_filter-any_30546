@@ -1,0 +1,1 @@
+var listviewspells = [{"cat":-2,"chrclass":256,"id":30546,"level":70,"name":"Shadowburn","nskillup":1,"rank":"Rank 8","reagents":[[6265,1]],"reqclass":256,"schools":32,"skill":[593],"source":[6],"trainingcost":3900,quality:-1,popularity:4}];

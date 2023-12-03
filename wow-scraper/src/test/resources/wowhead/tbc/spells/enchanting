@@ -1,0 +1,1 @@
+var listviewspells = [{"cat":11,"colors":[360,370,385,400],"id":27924,"learnedat":360,"level":0,"name":"Enchant Ring - Spellpower","nskillup":1,"reagents":[[22449,2],[22446,2]],"schools":1,"skill":[333],"source":[5],quality:-1,popularity:34}];

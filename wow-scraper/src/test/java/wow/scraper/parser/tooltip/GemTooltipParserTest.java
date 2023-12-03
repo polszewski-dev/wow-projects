@@ -4,8 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.MetaEnabler;
 import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.WowheadItemCategory;
 
 import java.util.List;
 
@@ -16,14 +18,14 @@ import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.item.GemColor.*;
 import static wow.commons.model.profession.ProfessionId.JEWELCRAFTING;
 import static wow.commons.model.pve.GameVersionId.TBC;
-import static wow.commons.model.pve.PhaseId.TBC_P1;
-import static wow.commons.model.pve.PhaseId.TBC_P3;
+import static wow.commons.model.pve.PhaseId.*;
+import static wow.scraper.model.WowheadItemCategory.GEMS;
 
 /**
  * User: POlszewski
  * Date: 2022-11-15
  */
-class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltipParser> {
+class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltipParser, WowheadItemCategory> {
 	@Test
 	@DisplayName("Item id/name are parsed correctly")
 	void idAndName() {
@@ -49,9 +51,9 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 	@Test
 	@DisplayName("Phase is parsed correctly")
 	void gameVersionPhase() {
-		assertThat(redGem.getTimeRestriction().phaseId()).isEqualTo(TBC_P3);
-		assertThat(blueGem.getTimeRestriction().phaseId()).isNull();
-		assertThat(metaGem.getTimeRestriction().phaseId()).isEqualTo(TBC_P1);
+		assertThat(redGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P3));
+		assertThat(blueGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P0));
+		assertThat(metaGem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC, TBC_P1));
 	}
 
 	@Test
@@ -99,22 +101,22 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 
 	@BeforeEach
 	void readTestData() {
-		redGem = getTooltip("gem/32196");
-		orangeGem = getTooltip("gem/35760");
-		yellowGem = getTooltip("gem/35761");
-		greenGem = getTooltip("gem/35759");
-		blueGem = getTooltip("gem/33135");
-		purpleGem = getTooltip("gem/32215");
-		metaGem = getTooltip("gem/34220");
+		redGem = getTooltip(32196, GEMS);
+		orangeGem = getTooltip(35760, GEMS);
+		yellowGem = getTooltip(35761, GEMS);
+		greenGem = getTooltip(35759, GEMS);
+		blueGem = getTooltip(33135, GEMS);
+		purpleGem = getTooltip(32215, GEMS);
+		metaGem = getTooltip(34220, GEMS);
+	}
+
+	@Override
+	protected JsonItemDetails getData(int id, WowheadItemCategory category) {
+		return itemDetailRepository.getDetail(TBC, category, id).orElseThrow();
 	}
 
 	@Override
 	protected GemTooltipParser createParser(JsonItemDetails data) {
 		return new GemTooltipParser(data, TBC, scraperContext);
-	}
-
-	@Override
-	protected Class<JsonItemDetails> getDetailsClass() {
-		return JsonItemDetails.class;
 	}
 }
