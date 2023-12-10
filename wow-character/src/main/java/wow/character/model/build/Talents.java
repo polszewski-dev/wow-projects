@@ -16,28 +16,20 @@ import java.util.*;
 @AllArgsConstructor
 public class Talents implements EffectCollection, Copyable<Talents> {
 	private final Map<TalentId, Map<Integer, Talent>> availableTalentsByIdByRank;
-	private final Map<Integer, Map<Integer, Talent>> availableTalentsByPositionByRank;
 	private final Map<TalentId, Talent> talentById = new EnumMap<>(TalentId.class);
 
 	public Talents(List<Talent> availableTalents) {
 		this.availableTalentsByIdByRank = new EnumMap<>(TalentId.class);
-		this.availableTalentsByPositionByRank = new HashMap<>();
 
 		for (Talent talent : availableTalents) {
 			availableTalentsByIdByRank.computeIfAbsent(talent.getTalentId(), x -> new HashMap<>())
-					.put(talent.getRank(), talent);
-
-			availableTalentsByPositionByRank.computeIfAbsent(talent.getTalentCalculatorPosition(), x -> new HashMap<>())
 					.put(talent.getRank(), talent);
 		}
 	}
 
 	@Override
 	public Talents copy() {
-		Talents copy = new Talents(
-				availableTalentsByIdByRank,
-				availableTalentsByPositionByRank
-		);
+		Talents copy = new Talents(availableTalentsByIdByRank);
 
 		copy.talentById.putAll(talentById);
 		return copy;
@@ -47,18 +39,11 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		talentById.clear();
 	}
 
-	public void loadFromTalentLink(String link) {
+	public void loadFromTalentLink(TalentLink link) {
 		reset();
 
-		String talentStringStart = "?tal=";
-		String talentString = link.substring(link.indexOf(talentStringStart) + talentStringStart.length());
-
-		for (int position = 1; position <= talentString.length(); ++position) {
-			int talentRank = talentString.charAt(position - 1) - '0';
-
-			if (talentRank > 0) {
-				enableTalent(position, talentRank);
-			}
+		for (var talent : link.talents()) {
+			enableTalent(talent.talentId(), talent.rank());
 		}
 	}
 
@@ -66,17 +51,8 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		return Optional.ofNullable(availableTalentsByIdByRank.getOrDefault(talentId, Map.of()).get(talentRank));
 	}
 
-	private Optional<Talent> getTalent(int position, int talentRank) {
-		return Optional.ofNullable(availableTalentsByPositionByRank.getOrDefault(position, Map.of()).get(talentRank));
-	}
-
 	public void enableTalent(TalentId talentId, int talentRank) {
 		Talent talent = getTalent(talentId, talentRank).orElseThrow();
-		enableTalent(talent);
-	}
-
-	public void enableTalent(int position, int talentRank) {
-		Talent talent = getTalent(position, talentRank).orElseThrow();
 		enableTalent(talent);
 	}
 

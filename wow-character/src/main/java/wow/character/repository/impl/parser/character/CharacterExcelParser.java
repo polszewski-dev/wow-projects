@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.repository.SpellRepository;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -13,9 +14,10 @@ import java.util.stream.Stream;
  * Date: 2022-11-30
  */
 @AllArgsConstructor
-public class CharacterExcelParser  extends ExcelParser {
+public class CharacterExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 	private final CharacterRepositoryImpl characterRepository;
+	private final SpellRepository spellRepository;
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -35,7 +37,7 @@ public class CharacterExcelParser  extends ExcelParser {
 				new PetSheetParser("pets", characterRepository),
 				new BaseStatsSheetParser("base_stats", characterRepository),
 				new CombatRatingsSheetParser("combat_ratings", characterRepository),
-				new TemplateSheetParser("templates", characterRepository)
+				new TemplateSheetParser("templates", characterRepository, spellRepository)
 		);
 	}
 }

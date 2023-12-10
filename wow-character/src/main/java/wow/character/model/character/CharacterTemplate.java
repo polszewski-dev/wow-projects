@@ -3,6 +3,7 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.build.RotationTemplate;
+import wow.character.model.build.TalentLink;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
@@ -24,7 +25,7 @@ public class CharacterTemplate implements TimeRestricted {
 	private final CharacterClassId characterClassId;
 	private final int level;
 	private final TimeRestriction timeRestriction;
-	private final String talentLink;
+	private final TalentLink talentLink;
 	private final PveRole role;
 	private final RotationTemplate defaultRotationTemplate;
 	private final PetType activePet;

@@ -10,6 +10,7 @@ import wow.character.model.character.Character;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.snapshot.*;
+import wow.character.util.TalentLinkParser;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -332,7 +333,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getSpellCostSnapshot2() {
 		character.resetEquipment();
 
-		character.getTalents().loadFromTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=5502202002030000000000000000000000000000000555000512210013030250");
+		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025", spellRepository);
+		character.getTalents().loadFromTalentLink(link);
 
 		assertThat(character.hasTalent(TalentId.IMPROVED_LIFE_TAP)).isTrue();
 
@@ -364,7 +366,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getSpellHitPct() {
 		character.resetEquipment();
 
-		character.getTalents().loadFromTalentLink("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=5502202002030000000000000000000000000000000555000512210013030250");
+		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025", spellRepository);
+		character.getTalents().loadFromTalentLink(link);
 
 		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();
 		var hitPct = characterCalculationService.getSpellHitPct(character, ability, target);

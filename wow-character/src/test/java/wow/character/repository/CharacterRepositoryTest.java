@@ -12,6 +12,7 @@ import wow.character.WowCharacterSpringTest;
 import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.PlayerCharacterImpl;
+import wow.character.util.TalentLinkParser;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.*;
 import wow.commons.model.character.CharacterClassId;
@@ -93,7 +94,8 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
 		assertThat(characterTemplate.getLevel()).isEqualTo(70);
 		assertThat(characterTemplate.getCharacterClassId()).isEqualTo(WARLOCK);
-		assertThat(characterTemplate.getTalentLink()).isEqualTo("https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250");
+		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025", spellRepository);
+		assertThat(characterTemplate.getTalentLink()).isEqualTo(link);
 		assertThat(characterTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(characterTemplate.getDefaultRotationTemplate().getAbilityIds()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
 		assertThat(characterTemplate.getActivePet()).isNull();
