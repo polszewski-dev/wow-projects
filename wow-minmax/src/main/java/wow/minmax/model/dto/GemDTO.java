@@ -21,7 +21,6 @@ public class GemDTO {
 	private GemColor color;
 	private ItemRarity rarity;
 	private String source;
-	private String attributes;
 	private String shortName;
 	private String icon;
 	private String tooltip;

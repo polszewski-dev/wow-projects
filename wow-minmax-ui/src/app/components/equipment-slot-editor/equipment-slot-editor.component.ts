@@ -112,7 +112,7 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
 			<span class="item-descr" title="${value.detailedSource}">[${value.source}]</span>
-			<span class="item-descr">(${escapeHtml(value.attributes)})</span>
+			<span class="item-descr">${value.shortTooltip !== '' ? '(' + escapeHtml(value.shortTooltip) + ')' : ''}</span>
 		`;
 	}
 
@@ -127,7 +127,7 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 	}
 
 	formatTooltip(value?: Item):string {
-		return value?.attributes || "";
+		return value?.tooltip || "";
 	}
 }
 
@@ -136,7 +136,6 @@ class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
-			<span class="item-descr">(${escapeHtml(value.attributes)})</span>
 		`;
 	}
 
@@ -150,7 +149,7 @@ class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
 	}
 
 	formatTooltip(value?: Enchant):string {
-		return value?.attributes || "";
+		return value?.tooltip || "";
 	}
 }
 
@@ -159,7 +158,6 @@ class GemFormatter implements DropdownSelectValueFormatter<Gem> {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
-			<span class="item-descr">(${escapeHtml(value.attributes)})</span>
 		`;
 	}
 
@@ -173,7 +171,7 @@ class GemFormatter implements DropdownSelectValueFormatter<Gem> {
 	}
 
 	formatTooltip(value?: Gem):string {
-		return value?.attributes || "";
+		return value?.tooltip || "";
 	}
 }
 

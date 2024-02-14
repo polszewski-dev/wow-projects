@@ -15,6 +15,7 @@
 			ngbDropdownItem href="#"
 			(click)="$event.preventDefault();onSelect(element)"
 			[innerHTML]="formatElement(element)"
+			title="{{formatTooltip(element)}}"
 		></a>
 	</div>
 </div>

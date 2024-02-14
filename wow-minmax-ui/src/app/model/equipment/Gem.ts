@@ -7,7 +7,6 @@ export interface Gem {
 	color: GemColor;
 	rarity: ItemRarity;
 	source: string;
-	attributes: string;
 	shortName: string;
 	icon: string;
 	tooltip: string;

@@ -18,7 +18,6 @@ public class EnchantDTO {
 	private int id;
 	private String name;
 	private ItemRarity rarity;
-	private String attributes;
 	private String icon;
 	private String tooltip;
 }

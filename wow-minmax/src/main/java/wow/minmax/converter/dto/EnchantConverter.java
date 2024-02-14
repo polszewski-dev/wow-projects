@@ -27,14 +27,17 @@ public class EnchantConverter implements Converter<Enchant, EnchantDTO>, Paramet
 				source.getId(),
 				source.getName(),
 				source.getRarity(),
-				source.getEffect().getTooltip(),
 				source.getIcon(),
-				source.getTooltip()
+				getTooltip(source)
 		);
 	}
 
 	@Override
 	public Enchant doConvertBack(EnchantDTO source, Map<String, Object> params) {
 		return itemRepository.getEnchant(source.getId(), getPhaseId(params)).orElseThrow();
+	}
+
+	private String getTooltip(Enchant source) {
+		return source.getEffect().getTooltip();
 	}
 }

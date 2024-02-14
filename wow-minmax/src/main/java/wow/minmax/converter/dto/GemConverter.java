@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.MetaEnabler;
 import wow.commons.repository.ItemRepository;
 import wow.minmax.converter.Converter;
 import wow.minmax.converter.ParametrizedBackConverter;
@@ -32,15 +33,30 @@ public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackCon
 				source.getColor(),
 				source.getRarity(),
 				sourceConverter.getSources(source),
-				source.getEffects().stream().map(Described::getTooltip).collect(Collectors.joining("\n")),
 				source.getName(),
 				source.getIcon(),
-				null
+				getTooltip(source)
 		);
 	}
 
 	@Override
 	public Gem doConvertBack(GemDTO source, Map<String, Object> params) {
 		return itemRepository.getGem(source.getId(), getPhaseId(params)).orElseThrow();
+	}
+
+	private String getTooltip(Gem gem) {
+		var attributeString = gem.getEffects().stream()
+				.map(Described::getTooltip)
+				.collect(Collectors.joining("\n"));
+		var metaEnablerString = gem.getMetaEnablers().stream()
+				.map(MetaEnabler::toString)
+				.collect(Collectors.joining("\n"));
+
+		if (metaEnablerString.isEmpty()) {
+			return attributeString;
+		}
+		return attributeString + "\n" +
+				"_".repeat(60) + "\n\n" +
+				metaEnablerString;
 	}
 }

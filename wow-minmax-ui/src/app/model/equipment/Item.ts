@@ -12,9 +12,9 @@ export interface Item {
 	score: number;
 	source: string;
 	detailedSource: string;
-	attributes: string;
 	socketTypes: SocketType[];
 	socketBonus: string;
 	icon: string;
 	tooltip: string;
+	shortTooltip: string;
 }

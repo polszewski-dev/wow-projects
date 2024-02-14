@@ -36,11 +36,11 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				source.getItemLevel(),
 				sourceConverter.getSources(source),
 				sourceConverter.getDetailedSources(source),
-				getStatString(source),
 				source.getSocketTypes(),
 				source.getSocketBonus().getTooltip(),
 				source.getIcon(),
-				null
+				getTooltip(source),
+				getShortTooltip(source)
 		);
 	}
 
@@ -49,12 +49,12 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 		return itemRepository.getItem(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 
-	private String getStatString(Item item) {
+	private String getTooltip(Item source) {
 		return Stream.of(
-				getEffectString(item),
-				getActivatedAbilityString(item),
-				getSocketString(item),
-				getItemSetString(item)
+				getEffectString(source),
+				getActivatedAbilityString(source),
+				getSocketString(source),
+				getItemSetString(source)
 		)
 				.filter(x -> !x.isEmpty())
 				.collect(Collectors.joining("\n"));
@@ -92,5 +92,9 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 		}
 
 		return String.format("Set: %s", item.getItemSet().getName());
+	}
+
+	private String getShortTooltip(Item item) {
+		return getItemSetString(item);
 	}
 }
