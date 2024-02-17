@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static wow.commons.model.pve.GameVersionId.*;
 
@@ -58,5 +61,15 @@ public enum PhaseId {
 
 	public List<PhaseId> getPhasesStartingFromThisOne() {
 		return gameVersionId.getPhasesStartingFrom(this);
+	}
+
+	public Optional<PhaseId> getPreviousPhase() {
+		return getPhaseIdStream()
+				.takeWhile(x -> x.compareTo(this) < 0)
+				.max(Comparator.naturalOrder());
+	}
+
+	static Stream<PhaseId> getPhaseIdStream() {
+		return Stream.of(values());
 	}
 }

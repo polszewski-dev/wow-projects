@@ -2,12 +2,14 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.repository.CharacterRepository;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Item;
 import wow.commons.repository.ItemRepository;
 import wow.minmax.converter.Converter;
 import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.dto.ItemDTO;
+import wow.minmax.model.dto.PhaseDTO;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,7 +25,9 @@ import static wow.minmax.converter.dto.DtoConverterParams.getPhaseId;
 @AllArgsConstructor
 public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBackConverter<Item, ItemDTO> {
 	private final SourceConverter sourceConverter;
+	private final PhaseConverter phaseConverter;
 	private final ItemRepository itemRepository;
+	private final CharacterRepository characterRepository;
 
 	@Override
 	public ItemDTO doConvert(Item source) {
@@ -40,7 +44,8 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				source.getSocketBonus().getTooltip(),
 				source.getIcon(),
 				getTooltip(source),
-				getShortTooltip(source)
+				getShortTooltip(source),
+				getFirstAppearedInPhase(source)
 		);
 	}
 
@@ -96,5 +101,12 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 
 	private String getShortTooltip(Item item) {
 		return getItemSetString(item);
+	}
+
+	private PhaseDTO getFirstAppearedInPhase(Item item) {
+		var phaseId = item.getFirstAppearedInPhase();
+		var phase = characterRepository.getPhase(phaseId).orElseThrow();
+
+		return phaseConverter.convert(phase);
 	}
 }

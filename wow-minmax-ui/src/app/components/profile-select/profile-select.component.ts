@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Phase } from 'src/app/model/character/Phase';
 import { ProfileInfo } from 'src/app/model/ProfileInfo';
-import { DropdownSelectValueFormatter } from '../dropdown-select/DropdownSelectValueFormatter';
-import { ProfileService } from 'src/app/services/profile.service';
-import { CharacterSelectionOptions } from 'src/app/model/character/CharacterSelectionOptions';
 import { formatCharacterId, parseCharacterId } from 'src/app/model/character/CharacterId';
+import { CharacterSelectionOptions } from 'src/app/model/character/CharacterSelectionOptions';
 import { EnemyType } from 'src/app/model/character/EnemyType';
 import { LevelDifference } from 'src/app/model/character/LevelDifference';
+import { Phase } from 'src/app/model/character/Phase';
+import { PhaseId } from 'src/app/model/character/PhaseId';
+import { ProfileService } from 'src/app/services/profile.service';
+import { DropdownSelectValueFormatter, ElementComparatorFn } from '../dropdown-select/dropdown-select.component';
 
 @Component({
 	selector: 'app-profile-select',
@@ -21,7 +22,7 @@ export class ProfileSelectComponent implements OnChanges {
 	characterSelectionOptions?: CharacterSelectionOptions;
 
 	profileId?: string;
-	phaseId?: string;
+	phaseId?: PhaseId;
 	level?: number;
 	enemyTypeId?: string;
 	enemyLevelDiff?: number;
@@ -47,7 +48,7 @@ export class ProfileSelectComponent implements OnChanges {
 
 	setSelectedProfile(profileId: string, characterId?: string) {
 		this.profileService.getCharacterSelectionOptions(profileId).subscribe((characterSelectionOptions: CharacterSelectionOptions) => {
-			this.characterSelectionOptions = sortOptions(characterSelectionOptions);
+			this.characterSelectionOptions = characterSelectionOptions;
 			this.setSelectedCharacterId(characterId || characterSelectionOptions.lastModifiedCharacterId);
 		});
 	}
@@ -120,23 +121,18 @@ export class ProfileSelectComponent implements OnChanges {
 	getEnemyLevelDiff() {
 		return this.characterSelectionOptions!.enemyLevelDiffs.find(x => x.id === this.enemyLevelDiff);
 	}
+
+	readonly enemyTypeComparator: ElementComparatorFn<EnemyType> = (a, b) => a.name.localeCompare(b.name);
 }
 
 function sortProfiles(profileList: ProfileInfo[]): ProfileInfo[] {
 	return profileList.sort((a: ProfileInfo, b: ProfileInfo) => a.profileName.localeCompare(b.profileName));
 }
 
-function sortOptions(characterSelectionOptions: CharacterSelectionOptions): CharacterSelectionOptions {
-	characterSelectionOptions.enemyTypes.sort((a: EnemyType, b: EnemyType) => a.name.localeCompare(b.name));
-	return characterSelectionOptions;
-}
-
 class PhaseFormatter implements DropdownSelectValueFormatter<Phase> {
 	formatElement(value: Phase): string {
 		return value.name;
 	}
-
-	emptySelection = '<i>-- empty --</i>';
 
 	formatSelection(value: Phase): string {
 		return '<span class="character-select-bar-data">' + value.name + '</span>';
@@ -152,8 +148,6 @@ class LevelFormatter implements DropdownSelectValueFormatter<number> {
 		return '' + value;
 	}
 
-	emptySelection = '<i>-- empty --</i>';
-
 	formatSelection(value: number): string {
 		return '<span class="character-select-bar-data">' + value + '</span>';
 	}
@@ -168,8 +162,6 @@ class EnemyTypeFormatter implements DropdownSelectValueFormatter<EnemyType> {
 		return value.name;
 	}
 
-	emptySelection = '<i>-- empty --</i>';
-
 	formatSelection(value: EnemyType): string {
 		return '<span class="character-select-bar-data">' + value.name + '</span>';
 	}
@@ -183,8 +175,6 @@ class LevelDifferenceFormatter implements DropdownSelectValueFormatter<LevelDiff
 	formatElement(value: LevelDifference): string {
 		return value.name;
 	}
-
-	emptySelection = '<i>-- empty --</i>';
 
 	formatSelection(value: LevelDifference): string {
 		return '<span class="character-select-bar-data">' + value.name + '</span>';

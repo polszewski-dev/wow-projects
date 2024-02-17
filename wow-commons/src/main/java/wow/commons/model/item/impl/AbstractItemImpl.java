@@ -1,12 +1,14 @@
 package wow.commons.model.item.impl;
 
 import lombok.Getter;
+import lombok.Setter;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.BasicItemInfo;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.Set;
 
@@ -21,6 +23,8 @@ public abstract class AbstractItemImpl implements AbstractItem {
 	private final TimeRestriction timeRestriction;
 	private final CharacterRestriction characterRestriction;
 	private final BasicItemInfo basicItemInfo;
+	@Setter
+	private PhaseId firstAppearedInPhase;
 
 	protected AbstractItemImpl(
 			int id,

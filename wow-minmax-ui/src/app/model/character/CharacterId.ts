@@ -1,6 +1,8 @@
+import { PhaseId } from "./PhaseId";
+
 export interface CharacterIdParts {
 	profileId: string;
-	phaseId: string;
+	phaseId: PhaseId;
 	level: number
 	enemyTypeId: string;
 	enemyLevelDiff: number;
@@ -18,9 +20,10 @@ export function formatCharacterId(idParts: CharacterIdParts) {
 
 export function parseCharacterId(value: string): CharacterIdParts {
 	const parts = value.split(SEPARATOR);
+
 	return {
 			profileId: parts[0],
-			phaseId: parts[1],
+			phaseId: parts[1] as PhaseId,
 			level: Number.parseInt(parts[2]),
 			enemyTypeId: parts[3],
 			enemyLevelDiff: Number.parseInt(parts[4])

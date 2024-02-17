@@ -1,3 +1,4 @@
+import { Phase } from '../character/Phase';
 import { ItemRarity } from './ItemRarity';
 import { ItemSubType } from './ItemSubType';
 import { ItemType } from './ItemType';
@@ -17,4 +18,5 @@ export interface Item {
 	icon: string;
 	tooltip: string;
 	shortTooltip: string;
+	firstAppearedInPhase: Phase;
 }

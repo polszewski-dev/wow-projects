@@ -7,6 +7,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.*;
+import wow.commons.model.item.impl.AbstractItemImpl;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.ItemRepository;
 import wow.commons.repository.PveRepository;
@@ -120,6 +121,28 @@ public class ItemRepositoryImpl implements ItemRepository {
 	public void init() throws IOException {
 		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, this, pveRepository, spellRepository);
 		itemBaseExcelParser.readFromXls();
+		for (Item item : itemById.allValues()) {
+			((AbstractItemImpl) item).setFirstAppearedInPhase(getFirstAppearedInPhase(item));
+		}
+	}
+
+	private PhaseId getFirstAppearedInPhase(Item item) {
+		var earliestPhaseId = item.getEarliestPhaseId();
+
+		if (earliestPhaseId.isPrepatch()) {
+			var optionalPreviousPhase = earliestPhaseId.getPreviousPhase();
+
+			if (optionalPreviousPhase.isPresent()) {
+				var previousVersionsLastPhase = optionalPreviousPhase.get().getGameVersionId().getLastPhase();
+				var optionalItem = itemById.getOptional(previousVersionsLastPhase, item.getId());
+
+				if (optionalItem.isPresent()) {
+					return getFirstAppearedInPhase(optionalItem.get());
+				}
+			}
+		}
+
+		return earliestPhaseId;
 	}
 
 	public void addItem(Item item) {

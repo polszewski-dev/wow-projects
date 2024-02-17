@@ -7,6 +7,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.source.Source;
 
 import java.util.Arrays;
@@ -21,6 +22,8 @@ public interface AbstractItem extends Described, TimeRestricted, CharacterRestri
 	int getId();
 
 	BasicItemInfo getBasicItemInfo();
+
+	PhaseId getFirstAppearedInPhase();
 
 	default ItemLink getItemLink() {
 		return new ItemLink(getId(), getName(), getRarity(), null, null, null, null);

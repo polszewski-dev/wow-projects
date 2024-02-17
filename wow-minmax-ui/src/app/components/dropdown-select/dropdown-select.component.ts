@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { DropdownSelectValueFormatter } from './DropdownSelectValueFormatter';
 
 @Component({
 	selector: 'app-dropdown-select',
@@ -16,6 +15,9 @@ export class DropdownSelectComponent<T> {
 	static idGen: number = 0;
 
 	@Input() valueFormatter!: DropdownSelectValueFormatter<T>;
+	@Input() elementComparator?: ElementComparatorFn<T>;
+	@Input() groupKeyComparator? : GroupKeyComparatorFn<T>;
+	@Input() groupKeyToString?: GroupKeyToStringFn<T>;
 
 	constructor() {
 		this.id = 'dropdown-select-' + ++DropdownSelectComponent.idGen;
@@ -26,13 +28,53 @@ export class DropdownSelectComponent<T> {
 		this.selectionChanged.emit(this.selection);
 	}
 
+	getItems() {
+		const copy = [...this.elements];
+
+		if (this.elementComparator) {
+			copy.sort(this.elementComparator);
+		}
+
+		if (this.groupKeyComparator) {
+			copy.sort(this.groupKeyComparator);
+		}
+
+		return this.createItems(copy);
+	}
+
+	private createItems(sortedElements: T[]) {
+		const result: DropdownSelectItem<T>[] = [];
+		let currentGroup: string | undefined = undefined;
+
+		for (const element of sortedElements) {
+			if (this.groupKeyToString !== undefined) {
+				const elementGroup = this.groupKeyToString(element);
+
+				if (currentGroup === undefined || currentGroup !== elementGroup) {
+					currentGroup = elementGroup;
+					result.push({
+						type: 'group',
+						name: currentGroup
+					});
+				}
+			}
+
+			result.push({
+				type: 'value',
+				value: element
+			});
+		}
+
+		return result;
+	}
+
 	formatElement(value: T): string {
 		return this.valueFormatter.formatElement(value);
 	}
 
 	formatSelection(value?: T): string {
-		if (value == undefined) {
-			return this.valueFormatter.emptySelection;
+		if (value === undefined || value === null) {
+			return this.valueFormatter.emptySelection || '<i>-- empty --</i>';
 		}
 		return this.valueFormatter.formatSelection(value);
 	}
@@ -41,3 +83,26 @@ export class DropdownSelectComponent<T> {
 		return this.valueFormatter.formatTooltip(value);
 	}
 }
+
+export type ElementComparatorFn<T> = (a: T, b: T) => number;
+export type GroupKeyComparatorFn<T> = (a: T, b: T) => number;
+export type GroupKeyToStringFn<T> = (a: T) => string;
+
+export interface DropdownSelectValueFormatter<T> {
+	formatElement:(value: T) => string;
+	emptySelection?: string;
+	formatSelection:(value: T) => string;
+	formatTooltip:(value?: T) => string;
+}
+
+interface DropdownSelectGroup {
+	type: 'group';
+	name: string;
+}
+
+interface DropdownSelectValue<T> {
+	type: 'value';
+	value: T;
+}
+
+type DropdownSelectItem<T> = DropdownSelectGroup | DropdownSelectValue<T>;

@@ -15,6 +15,9 @@
 				*ngIf="visible"
 				[elements]="getItemOptions()"
 				[selection]="equippableItem?.item"
+				[elementComparator]="itemComparator"
+				[groupKeyToString]="itemGroupToString"
+				[groupKeyComparator]="itemGroupComparator"
 				[valueFormatter]="itemFormatter"
 				(selectionChanged)="onItemChange($event)"
 			></app-dropdown-select>
@@ -24,6 +27,7 @@
 				*ngIf="visible && equippableItem && getEnchantOptions().length > 0"
 				[elements]="getEnchantOptions()"
 				[selection]="equippableItem.enchant"
+				[elementComparator]="enchantComparator"
 				[valueFormatter]="enchantFormatter"
 				(selectionChanged)="onEnchantChange($event)"
 			></app-dropdown-select>
@@ -33,6 +37,7 @@
 				*ngIf="visible && equippableItem && equippableItem.gems.length >= 1"
 				[elements]="getGemOptions(0)"
 				[selection]="equippableItem.gems[0]"
+				[elementComparator]="gemComparator"
 				[valueFormatter]="gemFormatter"
 				(selectionChanged)="onGemChange(0, $event)"
 			></app-dropdown-select>
@@ -42,6 +47,7 @@
 				*ngIf="visible && equippableItem && equippableItem.gems.length >= 2"
 				[elements]="getGemOptions(1)"
 				[selection]="equippableItem.gems[1]"
+				[elementComparator]="gemComparator"
 				[valueFormatter]="gemFormatter"
 				(selectionChanged)="onGemChange(1, $event)"
 			></app-dropdown-select>
@@ -51,6 +57,7 @@
 				*ngIf="visible && equippableItem && equippableItem.gems.length >= 3"
 				[elements]="getGemOptions(2)"
 				[selection]="equippableItem.gems[2]"
+				[elementComparator]="gemComparator"
 				[valueFormatter]="gemFormatter"
 				(selectionChanged)="onGemChange(2, $event)"
 			></app-dropdown-select>

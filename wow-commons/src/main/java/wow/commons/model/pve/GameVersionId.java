@@ -50,19 +50,14 @@ public enum GameVersionId {
 	}
 
 	private Stream<PhaseId> getPhaseIdStream() {
-		return Stream.of(PhaseId.values())
+		return PhaseId.getPhaseIdStream()
 				.filter(x -> x.getGameVersionId() == this);
 	}
 
 	public Optional<GameVersionId> getPreviousVersion() {
-		GameVersionId previous = null;
-		for (GameVersionId value : values()) {
-			if (value == this) {
-				return Optional.ofNullable(previous);
-			}
-			previous = value;
-		}
-		return Optional.ofNullable(previous);
+		return Stream.of(values())
+				.takeWhile(x -> x.compareTo(this) < 0)
+				.max(Comparator.naturalOrder());
 	}
 
 	public List<PhaseId> getPhasesStartingFrom(PhaseId earliestPhaseId) {

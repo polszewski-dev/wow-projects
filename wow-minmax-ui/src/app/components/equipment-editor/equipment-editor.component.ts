@@ -1,20 +1,15 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Enchant } from 'src/app/model/equipment/Enchant';
 import { Equipment } from 'src/app/model/equipment/Equipment';
 import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
 import { EquipmentSocketStatus } from 'src/app/model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from 'src/app/model/equipment/EquippableItem';
-import { Gem } from 'src/app/model/equipment/Gem';
-import { GemColor } from 'src/app/model/equipment/GemColor';
-import { Item } from 'src/app/model/equipment/Item';
-import { ItemRarity } from 'src/app/model/equipment/ItemRarity';
+import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 import { ItemSlot } from 'src/app/model/equipment/ItemSlot';
 import { ItemType } from 'src/app/model/equipment/ItemType';
-import { getItemSlotGroup, getSlots, ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
+import { ItemSlotGroup, getItemSlotGroup, getSlots } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
 import { ItemChange } from '../equipment-slot-editor/ItemChange';
-import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 
 @Component({
 	selector: 'app-equipment-editor',
@@ -52,7 +47,7 @@ export class EquipmentEditorComponent implements OnChanges {
 			this.equipment = equipment;
 		});
 		this.equipmentService.getEquipmentOptions(this.selectedCharacterId).subscribe((equipmentOptions: EquipmentOptions) => {
-			this.equipmentOptions = sort(equipmentOptions);
+			this.equipmentOptions = equipmentOptions;
 			this.editGems = equipmentOptions.editGems;
 			this.heroics = equipmentOptions.heroics;
 		});
@@ -117,58 +112,4 @@ export class EquipmentEditorComponent implements OnChanges {
 	onFilterChange() {
 		this.itemFilterChanged.emit();
 	}
-}
-
-function sort(equipmentOptions: EquipmentOptions): EquipmentOptions {
-	equipmentOptions.itemOptions.forEach(x => x.items.sort((a, b) => itemOrder(a, b)));
-	equipmentOptions.enchantOptions.forEach(x => x.enchants.sort((a, b) => enchantOrder(a, b)));
-	equipmentOptions.gemOptions.forEach(x => x.gems.sort((a, b) => gemOrder(a, b)));
-	return equipmentOptions;
-}
-
-function itemOrder(a: Item, b: Item): number {
-	let cmp = a.score - b.score;
-	if (cmp !== 0) {
-		return -cmp;
-	}
-	return a.name.localeCompare(b.name);
-}
-
-function enchantOrder(a: Enchant, b: Enchant): number {
-	return a.name.localeCompare(b.name);
-}
-
-function gemOrder(a: Gem, b: Gem): number {
-	const aSourceIndex = sourceIndex(a);
-	const bSourceIndex = sourceIndex(b);
-
-	let cmp = aSourceIndex - bSourceIndex;
-	if (cmp !== 0) {
-		return cmp;
-	}
-
-	const aRarityIndex = Object.keys(ItemRarity).indexOf(a.rarity);
-	const bRarityIndex = Object.keys(ItemRarity).indexOf(b.rarity);
-
-	cmp = aRarityIndex - bRarityIndex;
-	if (cmp !== 0) {
-		return -cmp;
-	}
-
-	const aColorIndex = Object.keys(GemColor).indexOf(a.color);
-	const bColorIndex = Object.keys(GemColor).indexOf(b.color);
-
-	cmp = aColorIndex - bColorIndex;
-	if (cmp !== 0) {
-		return cmp;
-	}
-
-	return a.name.localeCompare(b.name);
-}
-
-function sourceIndex(gem: Gem): number {
-	if (gem.source === 'Jewelcrafting' || gem.source === 'Enchanting') {
-		return 1;
-	}
-	return 2;
 }

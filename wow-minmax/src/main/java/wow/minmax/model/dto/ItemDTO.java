@@ -33,4 +33,5 @@ public class ItemDTO {
 	private String icon;
 	private String tooltip;
 	private String shortTooltip;
+	private PhaseDTO firstAppearedInPhase;
 }

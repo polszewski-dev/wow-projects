@@ -10,8 +10,11 @@ import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
 import { getIcon } from 'src/app/util/Icon';
-import { DropdownSelectValueFormatter } from '../dropdown-select/DropdownSelectValueFormatter';
 import { ItemChange } from './ItemChange';
+import { ItemRarity } from 'src/app/model/equipment/ItemRarity';
+import { GemColor } from 'src/app/model/equipment/GemColor';
+import { PhaseId } from 'src/app/model/character/PhaseId';
+import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../dropdown-select/dropdown-select.component';
 
 @Component({
 	selector: 'app-equipment-slot-editor',
@@ -104,6 +107,54 @@ export class EquipmentSlotEditorComponent implements OnInit {
 			item: this.equippableItem
 		};
 	}
+
+	readonly itemComparator: ElementComparatorFn<Item> = (a, b) => a.name.localeCompare(b.name);
+
+	readonly itemGroupComparator: GroupKeyComparatorFn<Item> = (a, b) => {
+		const positionA = Object.keys(PhaseId).indexOf(PhaseId[a.firstAppearedInPhase.id]);
+		const positionB = Object.keys(PhaseId).indexOf(PhaseId[b.firstAppearedInPhase.id]);
+
+		return positionB - positionA;
+	}
+
+	readonly itemGroupToString: GroupKeyToStringFn<Item> = item => item.firstAppearedInPhase.name;
+
+	readonly enchantComparator: ElementComparatorFn<Enchant> = (a, b) => a.name.localeCompare(b.name);
+
+	readonly gemComparator: ElementComparatorFn<Gem> = (a, b) => {
+		const aSourceIndex = EquipmentSlotEditorComponent.sourceIndex(a);
+		const bSourceIndex = EquipmentSlotEditorComponent.sourceIndex(b);
+
+		let cmp = aSourceIndex - bSourceIndex;
+		if (cmp !== 0) {
+			return cmp;
+		}
+
+		const aRarityIndex = Object.keys(ItemRarity).indexOf(a.rarity);
+		const bRarityIndex = Object.keys(ItemRarity).indexOf(b.rarity);
+
+		cmp = aRarityIndex - bRarityIndex;
+		if (cmp !== 0) {
+			return -cmp;
+		}
+
+		const aColorIndex = Object.keys(GemColor).indexOf(a.color);
+		const bColorIndex = Object.keys(GemColor).indexOf(b.color);
+
+		cmp = aColorIndex - bColorIndex;
+		if (cmp !== 0) {
+			return cmp;
+		}
+
+		return a.name.localeCompare(b.name);
+	}
+
+	private static sourceIndex(gem: Gem): number {
+		if (gem.source === 'Jewelcrafting' || gem.source === 'Enchanting') {
+			return 1;
+		}
+		return 2;
+	}
 }
 
 class ItemFormatter implements DropdownSelectValueFormatter<Item> {
@@ -115,8 +166,6 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 			<span class="item-descr">${value.shortTooltip !== '' ? '(' + escapeHtml(value.shortTooltip) + ')' : ''}</span>
 		`;
 	}
-
-	emptySelection = '<i>-- empty --</i>';
 
 	formatSelection(value: Item): string {
 		return `
@@ -139,8 +188,6 @@ class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
 		`;
 	}
 
-	emptySelection = '<i>-- empty --</i>';
-
 	formatSelection(value: Enchant): string {
 		return `
 			<img src="${getIcon(value.icon)}"/>
@@ -160,8 +207,6 @@ class GemFormatter implements DropdownSelectValueFormatter<Gem> {
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
 		`;
 	}
-
-	emptySelection = '<i>-- empty --</i>';
 
 	formatSelection(value: Gem): string {
 		return `
