@@ -1,20 +1,20 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { PhaseId } from 'src/app/model/character/PhaseId';
 import { Enchant } from 'src/app/model/equipment/Enchant';
 import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
 import { EquippableItem } from 'src/app/model/equipment/EquippableItem';
 import { Gem } from 'src/app/model/equipment/Gem';
+import { GemColor } from 'src/app/model/equipment/GemColor';
 import { Item } from 'src/app/model/equipment/Item';
+import { ItemRarity } from 'src/app/model/equipment/ItemRarity';
 import { ItemSlot } from 'src/app/model/equipment/ItemSlot';
 import { ItemSocketStatus } from 'src/app/model/equipment/ItemSocketStatus';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
 import { getIcon } from 'src/app/util/Icon';
-import { ItemChange } from './ItemChange';
-import { ItemRarity } from 'src/app/model/equipment/ItemRarity';
-import { GemColor } from 'src/app/model/equipment/GemColor';
-import { PhaseId } from 'src/app/model/character/PhaseId';
 import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../dropdown-select/dropdown-select.component';
+import { ItemChange } from './ItemChange';
 
 @Component({
 	selector: 'app-equipment-slot-editor',
@@ -154,6 +154,14 @@ export class EquipmentSlotEditorComponent implements OnInit {
 			return 1;
 		}
 		return 2;
+	}
+
+	getUpgradeLevel(changePct: number) {
+		return changePct > 10 ? 5 :
+			changePct > 5 ? 4 :
+			changePct > 3 ? 3 :
+			changePct > 1 ? 2 :
+			1;
 	}
 }
 

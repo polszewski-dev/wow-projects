@@ -5,10 +5,9 @@
 			<span *ngIf="upgrades && upgrades.length === 0" class="no-upgrades">✓</span>
 			<span
 				*ngIf="upgrades && upgrades.length !== 0"
-				class="badge rounded-pill bg-danger upgrade-badge"
-				[title]="(upgrades[0].changePct | number:'1.2-2')+'%'"
+				class="badge rounded-pill upgrade-badge upgrade-level-{{getUpgradeLevel(upgrades[0].changePct)}}"
 				(click)="onUpgradeCounterClick()"
-			>{{upgrades.length}}</span>
+			>+{{upgrades[0].changePct | number:'1.1-1'}}%</span>
 		</th>
 		<td>
 			<app-dropdown-select
