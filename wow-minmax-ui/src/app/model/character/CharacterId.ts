@@ -1,4 +1,4 @@
-import { PhaseId } from "./PhaseId";
+import { PhaseId } from "../../modules/shared/model/character/PhaseId";
 
 export interface CharacterIdParts {
 	profileId: string;

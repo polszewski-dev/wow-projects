@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { PhaseId } from 'src/app/model/character/PhaseId';
+import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
 import { Enchant } from 'src/app/model/equipment/Enchant';
 import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
 import { EquippableItem } from 'src/app/model/equipment/EquippableItem';
@@ -12,8 +12,8 @@ import { ItemSocketStatus } from 'src/app/model/equipment/ItemSocketStatus';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';
 import { EquipmentService } from 'src/app/services/equipment.service';
-import { getIcon } from 'src/app/util/Icon';
-import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../dropdown-select/dropdown-select.component';
+import { getIcon } from 'src/app/modules/shared/util/Icon';
+import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../../modules/shared/components/dropdown-select/dropdown-select.component';
 import { ItemChange } from './ItemChange';
 
 @Component({

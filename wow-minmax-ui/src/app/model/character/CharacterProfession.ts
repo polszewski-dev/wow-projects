@@ -1,8 +1,8 @@
-import { Profession } from './Profession';
-import { ProfessionSpecialization } from './ProfessionSpecialization';
+import { Profession } from '../../modules/shared/model/character/Profession';
+import { ProfessionSpecialization } from '../../modules/shared/model/character/ProfessionSpecialization';
 
 export interface CharacterProfession {
 	profession?: Profession;
 	specialization?: ProfessionSpecialization;
-	level: int;
+	level: number;
 }

@@ -1,4 +1,4 @@
-import { CharacterClass } from "./character/CharacterClass";
+import { CharacterClass } from "../modules/shared/model/character/CharacterClass";
 
 export interface NewProfileOptions {
 	classOptions: CharacterClass[];

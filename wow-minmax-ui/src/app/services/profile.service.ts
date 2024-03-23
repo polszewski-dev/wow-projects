@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NewProfileOptions } from '../model/NewProfileOptions';
-import { ProfileInfo } from '../model/ProfileInfo';
+import { ProfileInfo } from '../modules/shared/model/ProfileInfo';
 import { CharacterSelectionOptions } from '../model/character/CharacterSelectionOptions';
 
 @Injectable({

@@ -1,6 +1,6 @@
-import { EnemyType } from "./EnemyType";
-import { LevelDifference } from "./LevelDifference";
-import { Phase } from "./Phase";
+import { EnemyType } from "../../modules/shared/model/character/EnemyType";
+import { LevelDifference } from "../../modules/shared/model/character/LevelDifference";
+import { Phase } from "../../modules/shared/model/character/Phase";
 
 export interface CharacterSelectionOptions {
 	phases: Phase[];

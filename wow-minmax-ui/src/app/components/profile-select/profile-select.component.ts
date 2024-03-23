@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
+import { ProfileInfo } from 'src/app/modules/shared/model/ProfileInfo';
 import { formatCharacterId, parseCharacterId } from 'src/app/model/character/CharacterId';
 import { CharacterSelectionOptions } from 'src/app/model/character/CharacterSelectionOptions';
-import { EnemyType } from 'src/app/model/character/EnemyType';
-import { LevelDifference } from 'src/app/model/character/LevelDifference';
-import { Phase } from 'src/app/model/character/Phase';
-import { PhaseId } from 'src/app/model/character/PhaseId';
+import { EnemyType } from 'src/app/modules/shared/model/character/EnemyType';
+import { LevelDifference } from 'src/app/modules/shared/model/character/LevelDifference';
+import { Phase } from 'src/app/modules/shared/model/character/Phase';
+import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
 import { ProfileService } from 'src/app/services/profile.service';
-import { DropdownSelectValueFormatter, ElementComparatorFn } from '../dropdown-select/dropdown-select.component';
+import { DropdownSelectValueFormatter, ElementComparatorFn } from '../../modules/shared/components/dropdown-select/dropdown-select.component';
 
 @Component({
 	selector: 'app-profile-select',

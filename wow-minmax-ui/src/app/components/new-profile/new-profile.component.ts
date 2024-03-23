@@ -2,9 +2,9 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NewProfileOptions } from 'src/app/model/NewProfileOptions';
-import { ProfileInfo } from 'src/app/model/ProfileInfo';
-import { CharacterClass } from 'src/app/model/character/CharacterClass';
-import { Race } from 'src/app/model/character/Race';
+import { ProfileInfo } from 'src/app/modules/shared/model/ProfileInfo';
+import { CharacterClass } from 'src/app/modules/shared/model/character/CharacterClass';
+import { Race } from 'src/app/modules/shared/model/character/Race';
 import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({

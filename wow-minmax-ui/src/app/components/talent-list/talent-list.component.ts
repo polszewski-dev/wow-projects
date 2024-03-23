@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { Talent } from 'src/app/model/talent/Talent';
+import { Talent } from 'src/app/modules/shared/model/talent/Talent';
 import { TalentService } from 'src/app/services/talent.service';
 
 @Component({

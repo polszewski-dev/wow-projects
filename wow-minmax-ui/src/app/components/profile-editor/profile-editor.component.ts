@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BuffListType } from 'src/app/model/buff/BuffListType';
 import { Character } from 'src/app/model/character/Character';
-import { RotationStats } from 'src/app/model/character/RotationStats';
+import { RotationStats } from 'src/app/model/stats/RotationStats';
 import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
 import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/model/upgrade/Upgrade';

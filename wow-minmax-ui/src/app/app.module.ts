@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { BuffEditorComponent } from './components/buff-editor/buff-editor.component';
 import { CharacterStatsComponent } from './components/character-stats/character-stats.component';
 import { DpsBarComponent } from './components/dps-bar/dps-bar.component';
-import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
 import { EquipmentEditorComponent } from './components/equipment-editor/equipment-editor.component';
 import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor/equipment-slot-editor.component';
 import { MainComponent } from './components/main/main.component';
@@ -20,8 +19,7 @@ import { SpecialAbilitiesComponent } from './components/special-abilities/specia
 import { SpellStatsComponent } from './components/spell-stats/spell-stats.component';
 import { TalentListComponent } from './components/talent-list/talent-list.component';
 import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
-import { BlankZeroPipe } from './pipes/blank-zero.pipe';
-import { IconPipe } from './pipes/icon.pipe';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
 	declarations: [
@@ -31,10 +29,7 @@ import { IconPipe } from './pipes/icon.pipe';
 		EquipmentEditorComponent,
 		BuffEditorComponent,
 		EquipmentSlotEditorComponent,
-		DropdownSelectComponent,
 		SpellStatsComponent,
-		IconPipe,
-		BlankZeroPipe,
 		CharacterStatsComponent,
 		SpecialAbilitiesComponent,
 		DpsBarComponent,
@@ -49,7 +44,8 @@ import { IconPipe } from './pipes/icon.pipe';
 		AppRoutingModule,
 		HttpClientModule,
 		FormsModule,
-		NgbModule
+		NgbModule,
+		SharedModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

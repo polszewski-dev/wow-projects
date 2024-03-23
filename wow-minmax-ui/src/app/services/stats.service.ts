@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { CharacterStats } from '../model/stats/CharacterStats';
 import { SpecialAbilityStats } from '../model/stats/SpecialAbilityStats';
 import { SpellStats } from '../model/stats/SpellStats';
-import { RotationStats } from '../model/character/RotationStats';
+import { RotationStats } from '../model/stats/RotationStats';
 
 @Injectable({
 	providedIn: 'root'

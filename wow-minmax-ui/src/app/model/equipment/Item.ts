@@ -1,4 +1,4 @@
-import { Phase } from '../character/Phase';
+import { Phase } from '../../modules/shared/model/character/Phase';
 import { ItemRarity } from './ItemRarity';
 import { ItemSubType } from './ItemSubType';
 import { ItemType } from './ItemType';
