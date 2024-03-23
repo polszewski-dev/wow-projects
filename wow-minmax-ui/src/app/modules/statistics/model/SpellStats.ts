@@ -1,4 +1,4 @@
-import { Spell } from "../../modules/shared/model/spell/Spell";
+import { Spell } from "../../shared/model/spell/Spell";
 
 export interface SpellStats {
 	spell: Spell;

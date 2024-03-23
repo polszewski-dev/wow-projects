@@ -4,6 +4,4 @@ export interface Talent {
 	maxRank: number;
 	icon: string;
 	tooltip: string;
-	statEquivalent: string;
-	spEquivalent: number;
 }

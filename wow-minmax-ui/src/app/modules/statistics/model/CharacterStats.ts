@@ -1,4 +1,4 @@
-import { SpellSchool } from "../../modules/shared/model/spell/SpellSchool";
+import { SpellSchool } from "../../shared/model/spell/SpellSchool";
 
 export interface CharacterStats {
 	type: string;

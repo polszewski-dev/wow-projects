@@ -7,16 +7,14 @@ import lombok.Setter;
 
 /**
  * User: POlszewski
- * Date: 2021-12-14
+ * Date: 2024-03-28
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class TalentDTO {
-	private String name;
-	private int rank;
-	private int maxRank;
-	private String icon;
-	private String tooltip;
+public class TalentStatsDTO {
+	private TalentDTO talent;
+	private String statEquivalent;
+	private double spEquivalent;
 }

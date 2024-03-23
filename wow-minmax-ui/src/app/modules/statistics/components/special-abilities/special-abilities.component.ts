@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { SpecialAbilityStats } from 'src/app/model/stats/SpecialAbilityStats';
-import { StatsService } from 'src/app/services/stats.service';
+import { SpecialAbilityStats } from '../../model/SpecialAbilityStats';
+import { StatsService } from '../../services/stats.service';
 
 @Component({
 	selector: 'app-special-abilities',

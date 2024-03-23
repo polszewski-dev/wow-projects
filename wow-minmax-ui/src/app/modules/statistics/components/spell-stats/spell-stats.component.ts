@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { SpellStats } from 'src/app/model/stats/SpellStats';
-import { StatsService } from 'src/app/services/stats.service';
+import { SpellStats } from '../../model/SpellStats';
+import { StatsService } from '../../services/stats.service';
 
 @Component({
 	selector: 'app-spell-stats',

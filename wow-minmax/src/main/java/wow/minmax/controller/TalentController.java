@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wow.character.model.character.PlayerCharacter;
-import wow.commons.model.talent.Talent;
+import wow.minmax.converter.dto.TalentConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.TalentDTO;
 import wow.minmax.service.CalculationService;
@@ -26,6 +25,7 @@ import java.util.List;
 public class TalentController {
 	private final PlayerProfileService playerProfileService;
 	private final CalculationService calculationService;
+	private final TalentConverter talentConverter;
 
 	@GetMapping("{characterId}/list")
 	public List<TalentDTO> getTalents(
@@ -34,28 +34,7 @@ public class TalentController {
 		var character = playerProfileService.getCharacter(characterId);
 
 		return character.getTalents().getList().stream()
-				.map(x -> getTalentStatDTO(x, character))
+				.map(talentConverter::convert)
 				.toList();
-	}
-
-	private TalentDTO getTalentStatDTO(Talent talent, PlayerCharacter character) {
-		var spEquivalent = getSpEquivalent(talent, character);
-
-		return new TalentDTO(
-				talent.getName(),
-				talent.getRank(),
-				talent.getMaxRank(),
-				talent.getIcon(),
-				talent.getTooltip(),
-				talent.getEffect().getTooltip(),
-				spEquivalent
-		);
-	}
-
-	private double getSpEquivalent(Talent talent, PlayerCharacter character) {
-		return calculationService.getSpEquivalent(
-				talent.getTalentId(),
-				character
-		);
 	}
 }

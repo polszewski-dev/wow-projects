@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CharacterStats } from '../model/stats/CharacterStats';
-import { SpecialAbilityStats } from '../model/stats/SpecialAbilityStats';
-import { SpellStats } from '../model/stats/SpellStats';
-import { RotationStats } from '../model/stats/RotationStats';
+import { CharacterStats } from '../model/CharacterStats';
+import { RotationStats } from '../model/RotationStats';
+import { SpecialAbilityStats } from '../model/SpecialAbilityStats';
+import { SpellStats } from '../model/SpellStats';
+import { TalentStats } from '../model/TalentStats';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,6 +28,10 @@ export class StatsService {
 	}
 
 	getRotationStats(characterId: string): Observable<RotationStats> {
-		return this.http.get<RotationStats>(`${this.apiUrl}/${characterId}/rotation/stats`);
+		return this.http.get<RotationStats>(`${this.apiUrl}/${characterId}/rotation`);
+	}
+
+	getTalentStats(characterId: string): Observable<TalentStats[]> {
+		return this.http.get<TalentStats[]>(`${this.apiUrl}/${characterId}/talent`);
 	}
 }

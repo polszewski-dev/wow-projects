@@ -42,4 +42,20 @@ class StatsControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 	}
+
+	@Test
+	void getRotationStats() throws Exception {
+		mockMvc.perform(get("/api/v1/stats/{characterId}/rotation", CHARACTER_KEY))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
+	void getTalentStats() throws Exception {
+		mockMvc.perform(get("/api/v1/stats/{characterId}/talent", CHARACTER_KEY))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
 }

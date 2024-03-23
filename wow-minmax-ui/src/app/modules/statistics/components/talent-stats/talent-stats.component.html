@@ -1,0 +1,22 @@
+<table class="table table-striped stats-table">
+	<thead>
+		<tr>
+			<th scope="col" style="width: 15%">name</th>
+			<th scope="col">rank</th>
+			<th scope="col">description</th>
+			<th scope="col">sp equivalent</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let talentStats of talentStats">
+			<td style="text-align: left" [title]="talentStats.statEquivalent.replaceAll(', ', ',\n')">
+				<strong>
+					<img [src]="talentStats.talent.icon | icon"/>&nbsp;{{talentStats.talent.name}}
+				</strong>
+			</td>
+			<td>{{talentStats.talent.rank + "/" + talentStats.talent.maxRank}}</td>
+			<td [innerHTML]="talentStats.talent.tooltip.replaceAll('\n', '<br/>')"></td>
+			<td>{{talentStats.spEquivalent | number:'1.0-0' | blankZero}}</td>
+		</tr>
+	</tbody>
+</table>

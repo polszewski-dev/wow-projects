@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { RotationSpellStats } from 'src/app/model/stats/RotationSpellStats';
-import { RotationStats } from 'src/app/model/stats/RotationStats';
+import { RotationSpellStats } from '../../model/RotationSpellStats';
+import { RotationStats } from '../../model/RotationStats';
 
 @Component({
 	selector: 'app-dps-bar',

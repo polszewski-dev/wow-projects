@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Character } from 'src/app/modules/character/model/Character';
-import { CharacterStats } from 'src/app/model/stats/CharacterStats';
-import { StatsService } from 'src/app/services/stats.service';
+import { Character } from '../../../character/model/Character';
+import { CharacterStats } from '../../model/CharacterStats';
+import { StatsService } from '../../services/stats.service';
 
 @Component({
 	selector: 'app-character-stats',

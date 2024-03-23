@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Character } from 'src/app/modules/character/model/Character';
-import { RotationStats } from 'src/app/model/stats/RotationStats';
 import { BuffListType } from 'src/app/modules/character/model/buff/BuffListType';
 import { ItemFilter } from 'src/app/modules/character/model/equipment/ItemFilter';
 import { ItemSlotGroup } from 'src/app/modules/character/model/upgrade/ItemSlotGroup';
 import { Upgrade } from 'src/app/modules/character/model/upgrade/Upgrade';
 import { CharacterService } from 'src/app/modules/character/services/character.service';
 import { UpgradeService } from 'src/app/modules/character/services/upgrade.service';
-import { StatsService } from 'src/app/services/stats.service';
+import { RotationStats } from 'src/app/modules/statistics/model/RotationStats';
+import { StatsService } from 'src/app/modules/statistics/services/stats.service';
 
 @Component({
 	selector: 'app-profile-editor',
