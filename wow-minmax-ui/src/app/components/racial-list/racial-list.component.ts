@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Character } from 'src/app/model/character/Character';
+import { Character } from 'src/app/modules/character/model/Character';
 
 @Component({
 	selector: 'app-racial-list',

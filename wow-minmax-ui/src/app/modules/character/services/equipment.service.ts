@@ -1,11 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Equipment } from '../model/equipment/Equipment';
 import { EquipmentOptions } from '../model/equipment/EquipmentOptions';
+import { EquipmentSocketStatus } from '../model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from '../model/equipment/EquippableItem';
 import { ItemSlot } from '../model/equipment/ItemSlot';
-import { EquipmentSocketStatus } from '../model/equipment/EquipmentSocketStatus';
 import { ItemSlotGroup } from '../model/upgrade/ItemSlotGroup';
 
 @Injectable({

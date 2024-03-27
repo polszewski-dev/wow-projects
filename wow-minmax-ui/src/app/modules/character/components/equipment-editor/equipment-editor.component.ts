@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Equipment } from 'src/app/model/equipment/Equipment';
-import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
-import { EquipmentSocketStatus } from 'src/app/model/equipment/EquipmentSocketStatus';
-import { EquippableItem } from 'src/app/model/equipment/EquippableItem';
-import { ItemFilter } from 'src/app/model/equipment/ItemFilter';
-import { ItemSlot } from 'src/app/model/equipment/ItemSlot';
-import { ItemType } from 'src/app/model/equipment/ItemType';
-import { ItemSlotGroup, getItemSlotGroup, getSlots } from 'src/app/model/upgrade/ItemSlotGroup';
-import { Upgrade } from 'src/app/model/upgrade/Upgrade';
-import { EquipmentService } from 'src/app/services/equipment.service';
-import { ItemChange } from '../equipment-slot-editor/ItemChange';
+import { Equipment } from '../../model/equipment/Equipment';
+import { EquipmentOptions } from '../../model/equipment/EquipmentOptions';
+import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
+import { EquippableItem } from '../../model/equipment/EquippableItem';
+import { ItemFilter } from '../../model/equipment/ItemFilter';
+import { ItemSlot } from '../../model/equipment/ItemSlot';
+import { ItemType } from '../../model/equipment/ItemType';
+import { ItemSlotGroup, getItemSlotGroup, getSlots } from '../../model/upgrade/ItemSlotGroup';
+import { Upgrade } from '../../model/upgrade/Upgrade';
+import { EquipmentService } from '../../services/equipment.service';
+import { ItemChange } from '../equipment-slot-editor/equipment-slot-editor.component';
 
 @Component({
 	selector: 'app-equipment-editor',

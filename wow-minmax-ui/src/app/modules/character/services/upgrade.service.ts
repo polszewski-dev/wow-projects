@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ItemFilter } from '../model/equipment/ItemFilter';
 import { ItemSlotGroup } from '../model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../model/upgrade/Upgrade';
-import { ItemFilter } from '../model/equipment/ItemFilter';
 
 @Injectable({
 	providedIn: 'root'

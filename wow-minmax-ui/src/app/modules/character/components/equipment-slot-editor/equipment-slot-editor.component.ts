@@ -1,20 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
-import { Enchant } from 'src/app/model/equipment/Enchant';
-import { EquipmentOptions } from 'src/app/model/equipment/EquipmentOptions';
-import { EquippableItem } from 'src/app/model/equipment/EquippableItem';
-import { Gem } from 'src/app/model/equipment/Gem';
-import { GemColor } from 'src/app/model/equipment/GemColor';
-import { Item } from 'src/app/model/equipment/Item';
-import { ItemRarity } from 'src/app/model/equipment/ItemRarity';
-import { ItemSlot } from 'src/app/model/equipment/ItemSlot';
-import { ItemSocketStatus } from 'src/app/model/equipment/ItemSocketStatus';
-import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
-import { Upgrade } from 'src/app/model/upgrade/Upgrade';
-import { EquipmentService } from 'src/app/services/equipment.service';
-import { getIcon } from 'src/app/modules/shared/util/Icon';
-import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../../modules/shared/components/dropdown-select/dropdown-select.component';
-import { ItemChange } from './ItemChange';
+import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../../../shared/components/dropdown-select/dropdown-select.component';
+import { PhaseId } from '../../../shared/model/character/PhaseId';
+import { getIcon } from '../../../shared/util/Icon';
+import { Enchant } from '../../model/equipment/Enchant';
+import { EquipmentOptions } from '../../model/equipment/EquipmentOptions';
+import { EquippableItem } from '../../model/equipment/EquippableItem';
+import { Gem } from '../../model/equipment/Gem';
+import { GemColor } from '../../model/equipment/GemColor';
+import { Item } from '../../model/equipment/Item';
+import { ItemRarity } from '../../model/equipment/ItemRarity';
+import { ItemSlot } from '../../model/equipment/ItemSlot';
+import { ItemSocketStatus } from '../../model/equipment/ItemSocketStatus';
+import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
+import { Upgrade } from '../../model/upgrade/Upgrade';
+import { EquipmentService } from '../../services/equipment.service';
 
 @Component({
 	selector: 'app-equipment-slot-editor',
@@ -163,6 +162,11 @@ export class EquipmentSlotEditorComponent implements OnInit {
 			changePct > 1 ? 2 :
 			1;
 	}
+}
+
+export interface ItemChange {
+	itemSlot: ItemSlot;
+	item?: EquippableItem;
 }
 
 class ItemFormatter implements DropdownSelectValueFormatter<Item> {

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ProfileInfo } from 'src/app/modules/shared/model/ProfileInfo';
-import { formatCharacterId, parseCharacterId } from 'src/app/model/character/CharacterId';
-import { CharacterSelectionOptions } from 'src/app/model/character/CharacterSelectionOptions';
+import { formatCharacterId, parseCharacterId } from 'src/app/modules/character/model/CharacterId';
 import { EnemyType } from 'src/app/modules/shared/model/character/EnemyType';
 import { LevelDifference } from 'src/app/modules/shared/model/character/LevelDifference';
 import { Phase } from 'src/app/modules/shared/model/character/Phase';
 import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
 import { ProfileService } from 'src/app/services/profile.service';
 import { DropdownSelectValueFormatter, ElementComparatorFn } from '../../modules/shared/components/dropdown-select/dropdown-select.component';
+import { CharacterSelectionOptions } from 'src/app/modules/character/model/CharacterSelectionOptions';
 
 @Component({
 	selector: 'app-profile-select',

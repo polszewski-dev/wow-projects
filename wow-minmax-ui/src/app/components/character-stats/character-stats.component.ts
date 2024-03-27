@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Character } from 'src/app/model/character/Character';
+import { Character } from 'src/app/modules/character/model/Character';
 import { CharacterStats } from 'src/app/model/stats/CharacterStats';
 import { StatsService } from 'src/app/services/stats.service';
 

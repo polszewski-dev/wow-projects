@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ItemSlotGroup } from 'src/app/model/upgrade/ItemSlotGroup';
-import { Upgrade } from 'src/app/model/upgrade/Upgrade';
+import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
+import { Upgrade } from '../../model/upgrade/Upgrade';
 
 @Component({
 	selector: 'app-upgrade-list',

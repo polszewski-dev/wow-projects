@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NewProfileOptions } from '../model/NewProfileOptions';
 import { ProfileInfo } from '../modules/shared/model/ProfileInfo';
-import { CharacterSelectionOptions } from '../model/character/CharacterSelectionOptions';
+import { CharacterSelectionOptions } from '../modules/character/model/CharacterSelectionOptions';
 
 @Injectable({
 	providedIn: 'root'

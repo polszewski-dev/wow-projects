@@ -1,6 +1,6 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { Talent } from 'src/app/modules/shared/model/talent/Talent';
-import { TalentService } from 'src/app/services/talent.service';
+import { TalentService } from 'src/app/modules/character/services/talent.service';
 
 @Component({
 	selector: 'app-talent-list',

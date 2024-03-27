@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { Buff } from 'src/app/model/buff/Buff';
-import { BuffListType } from 'src/app/model/buff/BuffListType';
-import { BuffService } from 'src/app/services/buff.service';
+import { Buff } from '../../model/buff/Buff';
+import { BuffListType } from '../../model/buff/BuffListType';
+import { BuffService } from '../../services/buff.service';
 
 @Component({
 	selector: 'app-buff-editor',
