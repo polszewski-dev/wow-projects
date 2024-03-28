@@ -6,20 +6,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main/main.component';
-import { NewProfileComponent } from './components/new-profile/new-profile.component';
-import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
-import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
 import { CharacterModule } from './modules/character/character.module';
+import { ProfileModule } from './modules/profile/profile.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		ProfileEditorComponent,
-		ProfileSelectComponent,
-		NewProfileComponent,
-		MainComponent
+		MainComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -28,8 +23,9 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
 		FormsModule,
 		NgbModule,
 		SharedModule,
+		StatisticsModule,
 		CharacterModule,
-		StatisticsModule
+		ProfileModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

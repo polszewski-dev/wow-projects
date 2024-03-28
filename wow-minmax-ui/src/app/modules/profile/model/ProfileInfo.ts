@@ -1,5 +1,5 @@
-import { CharacterClass } from './character/CharacterClass';
-import { Race } from './character/Race';
+import { CharacterClass } from '../../shared/model/character/CharacterClass';
+import { Race } from '../../shared/model/character/Race';
 
 export interface ProfileInfo {
 	profileId?: string;

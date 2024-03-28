@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { ProfileInfo } from 'src/app/modules/shared/model/ProfileInfo';
-import { formatCharacterId, parseCharacterId } from 'src/app/modules/character/model/CharacterId';
-import { EnemyType } from 'src/app/modules/shared/model/character/EnemyType';
-import { LevelDifference } from 'src/app/modules/shared/model/character/LevelDifference';
-import { Phase } from 'src/app/modules/shared/model/character/Phase';
-import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
-import { ProfileService } from 'src/app/services/profile.service';
-import { DropdownSelectValueFormatter, ElementComparatorFn } from '../../modules/shared/components/dropdown-select/dropdown-select.component';
-import { CharacterSelectionOptions } from 'src/app/modules/character/model/CharacterSelectionOptions';
+import { formatCharacterId, parseCharacterId } from '../../../character/model/CharacterId';
+import { CharacterSelectionOptions } from '../../../character/model/CharacterSelectionOptions';
+import { DropdownSelectValueFormatter, ElementComparatorFn } from '../../../shared/components/dropdown-select/dropdown-select.component';
+import { EnemyType } from '../../../shared/model/character/EnemyType';
+import { LevelDifference } from '../../../shared/model/character/LevelDifference';
+import { Phase } from '../../../shared/model/character/Phase';
+import { PhaseId } from '../../../shared/model/character/PhaseId';
+import { ProfileInfo } from '../../model/ProfileInfo';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
 	selector: 'app-profile-select',

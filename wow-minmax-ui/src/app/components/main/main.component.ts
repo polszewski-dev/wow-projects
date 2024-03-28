@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProfileInfo } from 'src/app/modules/shared/model/ProfileInfo';
 import { parseCharacterId } from 'src/app/modules/character/model/CharacterId';
-import { ProfileService } from 'src/app/services/profile.service';
+import { ProfileInfo } from 'src/app/modules/profile/model/ProfileInfo';
+import { ProfileService } from 'src/app/modules/profile/services/profile.service';
 
 @Component({
 	selector: 'app-main',

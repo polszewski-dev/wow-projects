@@ -1,11 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NewProfileOptions } from 'src/app/model/NewProfileOptions';
-import { ProfileInfo } from 'src/app/modules/shared/model/ProfileInfo';
-import { CharacterClass } from 'src/app/modules/shared/model/character/CharacterClass';
-import { Race } from 'src/app/modules/shared/model/character/Race';
-import { ProfileService } from 'src/app/services/profile.service';
+import { CharacterClass } from '../../../shared/model/character/CharacterClass';
+import { Race } from '../../../shared/model/character/Race';
+import { NewProfileOptions } from '../../model/NewProfileOptions';
+import { ProfileInfo } from '../../model/ProfileInfo';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
 	selector: 'app-new-profile',

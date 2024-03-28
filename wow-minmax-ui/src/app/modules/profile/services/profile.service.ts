@@ -1,9 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NewProfileOptions } from '../model/NewProfileOptions';
-import { ProfileInfo } from '../modules/shared/model/ProfileInfo';
-import { CharacterSelectionOptions } from '../modules/character/model/CharacterSelectionOptions';
+import { CharacterSelectionOptions } from '../../character/model/CharacterSelectionOptions';
+import { ProfileInfo } from '../model/ProfileInfo';
 
 @Injectable({
 	providedIn: 'root'
