@@ -18,18 +18,18 @@ import { ItemChange } from '../equipment-slot-editor/equipment-slot-editor.compo
 })
 export class EquipmentEditorComponent implements OnChanges {
 	@Input() selectedCharacterId!: string;
-	@Input() upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
+	@Input() upgradesBySlotGroup: Partial<Record<ItemSlotGroup, Upgrade[]>> = {};
 	@Input() itemFilter!: ItemFilter;
 	@Output() equipmentChanged = new EventEmitter<void>();
 	@Output() itemFilterChanged = new EventEmitter<void>();
 
-	readonly itemSlots: ItemSlot[] = Object.values(ItemSlot);
+	readonly itemSlots = Object.values(ItemSlot);
 
 	equipment?: Equipment;
 	equipmentOptions?: EquipmentOptions;
 	equipmentSocketStatus?: EquipmentSocketStatus;
-	editGems: boolean = false;
-	heroics: boolean = false;
+	editGems = false;
+	heroics = false;
 
 	readonly ItemSlot = ItemSlot;
 	readonly ItemType = ItemType;
@@ -43,10 +43,10 @@ export class EquipmentEditorComponent implements OnChanges {
 			return;
 		}
 		this.equipmentSocketStatus = undefined;
-		this.equipmentService.getEquipment(this.selectedCharacterId).subscribe((equipment: Equipment) => {
+		this.equipmentService.getEquipment(this.selectedCharacterId).subscribe(equipment => {
 			this.equipment = equipment;
 		});
-		this.equipmentService.getEquipmentOptions(this.selectedCharacterId).subscribe((equipmentOptions: EquipmentOptions) => {
+		this.equipmentService.getEquipmentOptions(this.selectedCharacterId).subscribe(equipmentOptions => {
 			this.equipmentOptions = equipmentOptions;
 			this.editGems = equipmentOptions.editGems;
 			this.heroics = equipmentOptions.heroics;
@@ -54,21 +54,21 @@ export class EquipmentEditorComponent implements OnChanges {
 		this.updateSocketStatus();
 	}
 
-	onItemChange(itemChange: ItemChange): void {
+	onItemChange(itemChange: ItemChange) {
 		this.updateEquipment(itemChange);
 		this.updateSocketStatus();
 	}
 
-	onEnchantChange(itemChange: ItemChange): void {
+	onEnchantChange(itemChange: ItemChange) {
 		this.updateEquipment(itemChange);
 	}
 
-	onGemChange(itemChange: ItemChange): void {
+	onGemChange(itemChange: ItemChange) {
 		this.updateEquipment(itemChange);
 		this.updateSocketStatus();
 	}
 
-	onUpgradeCounterClicked(slotGroup: ItemSlotGroup): void {
+	onUpgradeCounterClicked(slotGroup: ItemSlotGroup) {
 		const items = this.upgradesBySlotGroup[slotGroup]![0].itemDifference;
 		this.equipmentService.changeItems(this.selectedCharacterId, slotGroup, items!).subscribe(() => {
 			this.updateEquipmentSlots(slotGroup, items!);
@@ -76,7 +76,7 @@ export class EquipmentEditorComponent implements OnChanges {
 		});
 	}
 
-	updateEquipment(itemChange: ItemChange): void {
+	updateEquipment(itemChange: ItemChange) {
 		this.equipment!.itemsBySlot[itemChange.itemSlot] = itemChange.item;
 
 		if (itemChange.itemSlot === ItemSlot.MAIN_HAND && itemChange.item?.item.itemType === ItemType.TWO_HAND) {
@@ -86,7 +86,7 @@ export class EquipmentEditorComponent implements OnChanges {
 		this.equipmentChanged.emit();
 	}
 
-	updateEquipmentSlots(slotGroup: ItemSlotGroup, items: EquippableItem[]): void {
+	updateEquipmentSlots(slotGroup: ItemSlotGroup, items: EquippableItem[]) {
 		let itemSlots = getSlots(slotGroup);
 
 		for (let i = 0; i < itemSlots.length; ++i) {
@@ -96,14 +96,14 @@ export class EquipmentEditorComponent implements OnChanges {
 		this.equipmentChanged.emit();
 	}
 
-	updateSocketStatus(): void {
-		this.equipmentService.getSocketStatus(this.selectedCharacterId).subscribe((equipmentSocketStatus: EquipmentSocketStatus) => {
+	updateSocketStatus() {
+		this.equipmentService.getSocketStatus(this.selectedCharacterId).subscribe(equipmentSocketStatus => {
 			this.equipmentSocketStatus = equipmentSocketStatus;
 		});
 	}
 
-	resetEquipment(): void {
-		this.equipmentService.resetEquipment(this.selectedCharacterId).subscribe((equipment: Equipment) => {
+	resetEquipment() {
+		this.equipmentService.resetEquipment(this.selectedCharacterId).subscribe(equipment => {
 			this.equipment = equipment;
 			this.equipmentChanged.emit();
 		});

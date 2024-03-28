@@ -9,7 +9,7 @@ export enum ProfessionSpecialization {
 	SPELLFIRE_TAILORING = 'SPELLFIRE_TAILORING',
 }
 
-export function getProfessionSpecializations(profession?: Profession): ProfessionSpecialization[] {
+export function getProfessionSpecializations(profession?: Profession) {
 	if (!profession) {
 		return [];
 	}

@@ -8,16 +8,16 @@ import { Upgrade } from '../../model/upgrade/Upgrade';
 	styleUrls: ['./upgrade-list.component.css']
 })
 export class UpgradeListComponent {
-	@Input() upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
-	visible=false;
+	@Input() upgradesBySlotGroup: Partial<Record<ItemSlotGroup, Upgrade[]>> = {};
+	visible = false;
 
-	readonly itemSlotGroups: ItemSlotGroup[] = Object.values(ItemSlotGroup);
+	readonly itemSlotGroups = Object.values(ItemSlotGroup);
 
-	hasAnyUpgrades(): boolean {
+	hasAnyUpgrades() {
 		return Object.values(this.upgradesBySlotGroup).some(x => x.length > 0);
 	}
 
-	toggleVisibility(): void {
+	toggleVisibility() {
 		this.visible = !this.visible;
 	}
 }

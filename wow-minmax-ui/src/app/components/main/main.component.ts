@@ -30,12 +30,12 @@ export class MainComponent implements OnInit {
 		});
 	}
 
-	onCharacterSelected(selectedCharacterId: string): void {
+	onCharacterSelected(selectedCharacterId: string) {
 		this.selectedCharacterId = selectedCharacterId;
 		this.location.replaceState('/edit-profile/' + this.selectedCharacterId);
 	}
 
-	private getCharacterToSelect(): string | undefined {
+	private getCharacterToSelect() {
 		if (this.route.snapshot.paramMap.has('id')) {
 			const characterId = this.route.snapshot.paramMap.get('id');
 			const profileId = parseCharacterId(characterId!).profileId;

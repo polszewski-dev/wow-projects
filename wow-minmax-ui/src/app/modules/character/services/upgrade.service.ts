@@ -13,7 +13,7 @@ export class UpgradeService {
 
 	constructor(private http: HttpClient) { }
 
-	getUpgrades(characterId: string, slotGroup: ItemSlotGroup, itemFilter: ItemFilter): Observable<Upgrade[]> {
+	getUpgrades(characterId: string, slotGroup: ItemSlotGroup, itemFilter: ItemFilter) {
 		return this.http.post<Upgrade[]>(`${this.apiUrl}/${characterId}/slot/${slotGroup}`, itemFilter);
 	}
 }

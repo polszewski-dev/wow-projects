@@ -26,7 +26,7 @@ export class EquipmentSlotEditorComponent implements OnInit {
 	@Input() equippableItem?: EquippableItem;
 	@Input() equipmentOptions?: EquipmentOptions;
 	@Input() socketStatus?: ItemSocketStatus;
-	@Input() visible: boolean = true;
+	@Input() visible = true;
 	@Input() slotGroup?: ItemSlotGroup;
 	@Input() upgrades?: Upgrade[];
 
@@ -49,15 +49,15 @@ export class EquipmentSlotEditorComponent implements OnInit {
 		this.viewContainerRef.createEmbeddedView(this.template);
 	}
 
-	onItemChange(item: Item): void {
+	onItemChange(item: Item) {
 		this.equipmentService.changeItemBestVariant(this.selectedCharacterId, this.itemSlot!, item.id).subscribe(item => {
 			this.equippableItem = item;
 			this.itemChanged.emit(this.getItemChange());
 		});
 	}
 
-	onEnchantChange(enchant: Enchant): void {
-		const newItem:EquippableItem = {
+	onEnchantChange(enchant: Enchant) {
+		const newItem: EquippableItem = {
 			...this.equippableItem!,
 			enchant: enchant
 		};
@@ -67,8 +67,8 @@ export class EquipmentSlotEditorComponent implements OnInit {
 		});
 	}
 
-	onGemChange(socketIdx: number, gem: Gem): void {
-		const newItem:EquippableItem = {
+	onGemChange(socketIdx: number, gem: Gem) {
+		const newItem: EquippableItem = {
 			...this.equippableItem!,
 			gems: [...this.equippableItem!.gems]
 		};
@@ -81,26 +81,26 @@ export class EquipmentSlotEditorComponent implements OnInit {
 		});
 	}
 
-	getItemOptions(): Item[] {
+	getItemOptions(){
 		return this.equipmentOptions?.itemOptions
 				.find(x => x.itemSlot === this.itemSlot)?.items || [];
 	}
 
-	getEnchantOptions(): Enchant[] {
+	getEnchantOptions() {
 		return this.equipmentOptions?.enchantOptions
 				.find(x => x.itemType === this.equippableItem!.item.itemType && x.itemSubType === this.equippableItem!.item.itemSubType)?.enchants || []
 	}
 
-	getGemOptions(socketIdx: number): Gem[] {
+	getGemOptions(socketIdx: number) {
 		return this.equipmentOptions?.gemOptions
 				.find(x => x.socketType === this.equippableItem!.item.socketTypes[socketIdx])?.gems || []
 	}
 
-	onUpgradeCounterClick(): void {
+	onUpgradeCounterClick() {
 		this.upgradeCounterClicked.emit(this.slotGroup);
 	}
 
-	private getItemChange(): ItemChange {
+	private getItemChange() {
 		return {
 			itemSlot: this.itemSlot,
 			item: this.equippableItem
@@ -148,7 +148,7 @@ export class EquipmentSlotEditorComponent implements OnInit {
 		return a.name.localeCompare(b.name);
 	}
 
-	private static sourceIndex(gem: Gem): number {
+	private static sourceIndex(gem: Gem) {
 		if (gem.source === 'Jewelcrafting' || gem.source === 'Enchanting') {
 			return 1;
 		}
@@ -170,7 +170,7 @@ export interface ItemChange {
 }
 
 class ItemFormatter implements DropdownSelectValueFormatter<Item> {
-	formatElement(value: Item): string {
+	formatElement(value: Item) {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
@@ -179,7 +179,7 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 		`;
 	}
 
-	formatSelection(value: Item): string {
+	formatSelection(value: Item) {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
@@ -187,51 +187,51 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 		`;
 	}
 
-	formatTooltip(value?: Item):string {
+	formatTooltip(value?: Item) {
 		return value?.tooltip || "";
 	}
 }
 
 class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
-	formatElement(value: Enchant): string {
+	formatElement(value: Enchant) {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
 		`;
 	}
 
-	formatSelection(value: Enchant): string {
+	formatSelection(value: Enchant) {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
 		`;
 	}
 
-	formatTooltip(value?: Enchant):string {
+	formatTooltip(value?: Enchant) {
 		return value?.tooltip || "";
 	}
 }
 
 class GemFormatter implements DropdownSelectValueFormatter<Gem> {
-	formatElement(value: Gem): string {
+	formatElement(value: Gem) {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
 		`;
 	}
 
-	formatSelection(value: Gem): string {
+	formatSelection(value: Gem) {
 		return `
 			<img src="${getIcon(value.icon)}"/>
 			<span class="rarity-${value.rarity.toLowerCase()} item-header">&nbsp;${value.name}</span>
 		`;
 	}
 
-	formatTooltip(value?: Gem):string {
+	formatTooltip(value?: Gem) {
 		return value?.tooltip || "";
 	}
 }
 
-function escapeHtml(value: string): string {
+function escapeHtml(value: string) {
 	return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 }

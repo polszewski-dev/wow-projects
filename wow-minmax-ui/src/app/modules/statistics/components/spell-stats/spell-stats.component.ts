@@ -17,7 +17,7 @@ export class SpellStatsComponent implements OnChanges {
 		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.statsService.getSpellStats(this.selectedCharacterId).subscribe((spellStatsList: SpellStats[]) => {
+		this.statsService.getSpellStats(this.selectedCharacterId).subscribe(spellStatsList => {
 			this.spellStatsList = spellStatsList;
 		});
 	}

@@ -17,7 +17,7 @@ export enum ItemSlotGroup {
 	RANGED = 'RANGED',
 }
 
-export function getItemSlotGroup(itemSlot: ItemSlot): ItemSlotGroup | undefined {
+export function getItemSlotGroup(itemSlot: ItemSlot) {
 	switch(itemSlot) {
 		case ItemSlot.HEAD: return ItemSlotGroup.HEAD;
 		case ItemSlot.NECK: return ItemSlotGroup.NECK;
@@ -38,7 +38,7 @@ export function getItemSlotGroup(itemSlot: ItemSlot): ItemSlotGroup | undefined 
 	}
 }
 
-export function getSlots(slotGroup: ItemSlotGroup): ItemSlot[] {
+export function getSlots(slotGroup: ItemSlotGroup) {
 	switch(slotGroup) {
 		case ItemSlotGroup.HEAD: return [ ItemSlot.HEAD ];
 		case ItemSlotGroup.NECK: return [ ItemSlot.NECK ];

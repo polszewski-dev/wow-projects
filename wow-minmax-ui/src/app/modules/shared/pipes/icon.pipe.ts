@@ -5,7 +5,7 @@ import { getIcon } from '../util/Icon';
 	name: 'icon'
 })
 export class IconPipe implements PipeTransform {
-	transform(value: string, ...args: unknown[]): string {
+	transform(value: string, ...args: unknown[]) {
 		return getIcon(value);
 	}
 }

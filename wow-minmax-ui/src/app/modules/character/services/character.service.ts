@@ -11,7 +11,7 @@ export class CharacterService {
 
 	constructor(private http: HttpClient) { }
 
-	getCharacter(characterId: string): Observable<Character> {
+	getCharacter(characterId: string) {
 		return this.http.get<Character>(`${this.apiUrl}/${characterId}`);
 	}
 }

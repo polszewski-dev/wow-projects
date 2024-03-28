@@ -19,7 +19,7 @@ export class ProfileEditorComponent implements OnChanges {
 	selectedCharacter?: Character;
 	rotationStats?: RotationStats;
 	previousRotationStats?: RotationStats;
-	upgradesBySlotGroup: { [key in ItemSlotGroup]?: Upgrade[] } = {};
+	upgradesBySlotGroup: Partial<Record<ItemSlotGroup, Upgrade[]>> = {};
 
 	itemFilter: ItemFilter = {
 		heroics: true,
@@ -48,34 +48,34 @@ export class ProfileEditorComponent implements OnChanges {
 		this.upgradesBySlotGroup = {};
 		this.updateUpgradeStatus();
 
-		this.characterService.getCharacter(this.selectedCharacterId).subscribe((character: Character) => {
+		this.characterService.getCharacter(this.selectedCharacterId).subscribe(character => {
 			this.selectedCharacter = character;
 		});
 	}
 
-	onEquipmentChanged(): void {
+	onEquipmentChanged() {
 		this.updateDps();
 		this.updateUpgradeStatus();
 	}
 
-	onItemFilterChanged(): void {
+	onItemFilterChanged() {
 		this.updateUpgradeStatus();
 	}
 
-	onBuffsChanged(): void {
+	onBuffsChanged() {
 		this.updateDps();
 	}
 
-	updateDps(): void {
-		this.statsService.getRotationStats(this.selectedCharacterId!).subscribe((rotationStats: RotationStats) => {
+	updateDps() {
+		this.statsService.getRotationStats(this.selectedCharacterId!).subscribe(rotationStats => {
 			this.previousRotationStats = this.rotationStats;
 			this.rotationStats = rotationStats;
 		})
 	}
 
-	updateUpgradeStatus(): void {
+	updateUpgradeStatus() {
 		for (let slotGroup of Object.values(ItemSlotGroup)) {
-			this.upgradeService.getUpgrades(this.selectedCharacterId!, slotGroup, this.itemFilter).subscribe((upgrades: Upgrade[]) => {
+			this.upgradeService.getUpgrades(this.selectedCharacterId!, slotGroup, this.itemFilter).subscribe(upgrades => {
 				this.upgradesBySlotGroup[slotGroup] = upgrades;
 			});
 		}

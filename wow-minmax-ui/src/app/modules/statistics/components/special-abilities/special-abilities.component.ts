@@ -17,7 +17,7 @@ export class SpecialAbilitiesComponent implements OnChanges {
 		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.statsService.getSpecialAbilities(this.selectedCharacterId).subscribe((specialAbilityStatsList: SpecialAbilityStats[]) => {
+		this.statsService.getSpecialAbilities(this.selectedCharacterId).subscribe(specialAbilityStatsList => {
 			this.specialAbilityStatsList = specialAbilityStatsList;
 		});
 	}

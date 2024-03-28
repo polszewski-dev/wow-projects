@@ -12,7 +12,7 @@ export class DropdownSelectComponent<T> {
 	@Output() selectionChanged = new EventEmitter<T>();
 
 	readonly id: string;
-	static idGen: number = 0;
+	static idGen = 0;
 
 	@Input() valueFormatter!: DropdownSelectValueFormatter<T>;
 	@Input() elementComparator?: ElementComparatorFn<T>;
@@ -23,7 +23,7 @@ export class DropdownSelectComponent<T> {
 		this.id = 'dropdown-select-' + ++DropdownSelectComponent.idGen;
 	}
 
-	onSelect(value: T): void {
+	onSelect(value: T) {
 		this.selection = value;
 		this.selectionChanged.emit(this.selection);
 	}
@@ -44,7 +44,7 @@ export class DropdownSelectComponent<T> {
 
 	private createItems(sortedElements: T[]) {
 		const result: DropdownSelectItem<T>[] = [];
-		let currentGroup: string | undefined = undefined;
+		let currentGroup = undefined;
 
 		for (const element of sortedElements) {
 			if (this.groupKeyToString !== undefined) {
@@ -68,18 +68,18 @@ export class DropdownSelectComponent<T> {
 		return result;
 	}
 
-	formatElement(value: T): string {
+	formatElement(value: T) {
 		return this.valueFormatter.formatElement(value);
 	}
 
-	formatSelection(value?: T): string {
+	formatSelection(value?: T) {
 		if (value === undefined || value === null) {
 			return this.valueFormatter.emptySelection || '<i>-- empty --</i>';
 		}
 		return this.valueFormatter.formatSelection(value);
 	}
 
-	formatTooltip(value?: T): string {
+	formatTooltip(value?: T) {
 		return this.valueFormatter.formatTooltip(value);
 	}
 }
@@ -89,10 +89,10 @@ export type GroupKeyComparatorFn<T> = (a: T, b: T) => number;
 export type GroupKeyToStringFn<T> = (a: T) => string;
 
 export interface DropdownSelectValueFormatter<T> {
-	formatElement:(value: T) => string;
+	formatElement: (value: T) => string;
 	emptySelection?: string;
-	formatSelection:(value: T) => string;
-	formatTooltip:(value?: T) => string;
+	formatSelection: (value: T) => string;
+	formatTooltip: (value?: T) => string;
 }
 
 interface DropdownSelectGroup {

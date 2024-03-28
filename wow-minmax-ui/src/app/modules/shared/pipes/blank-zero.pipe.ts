@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 	name: 'blankZero'
 })
 export class BlankZeroPipe implements PipeTransform {
-	transform(value: number | string | null, ...args: unknown[]): string {
+	transform(value: number | string | null, ...args: unknown[]) {
 		if (value === null) {
 			return "";
 		}

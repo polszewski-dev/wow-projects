@@ -47,7 +47,7 @@ export class ProfileSelectComponent implements OnChanges {
 	}
 
 	setSelectedProfile(profileId: string, characterId?: string) {
-		this.profileService.getCharacterSelectionOptions(profileId).subscribe((characterSelectionOptions: CharacterSelectionOptions) => {
+		this.profileService.getCharacterSelectionOptions(profileId).subscribe(characterSelectionOptions => {
 			this.characterSelectionOptions = characterSelectionOptions;
 			this.setSelectedCharacterId(characterId || characterSelectionOptions.lastModifiedCharacterId);
 		});
@@ -125,62 +125,62 @@ export class ProfileSelectComponent implements OnChanges {
 	readonly enemyTypeComparator: ElementComparatorFn<EnemyType> = (a, b) => a.name.localeCompare(b.name);
 }
 
-function sortProfiles(profileList: ProfileInfo[]): ProfileInfo[] {
-	return profileList.sort((a: ProfileInfo, b: ProfileInfo) => a.profileName.localeCompare(b.profileName));
+function sortProfiles(profileList: ProfileInfo[]) {
+	return profileList.sort((a, b) => a.profileName.localeCompare(b.profileName));
 }
 
 class PhaseFormatter implements DropdownSelectValueFormatter<Phase> {
-	formatElement(value: Phase): string {
+	formatElement(value: Phase) {
 		return value.name;
 	}
 
-	formatSelection(value: Phase): string {
+	formatSelection(value: Phase) {
 		return '<span class="character-select-bar-data">' + value.name + '</span>';
 	}
 
-	formatTooltip(value?: Phase):string {
+	formatTooltip(value?: Phase) {
 		return '';
 	}
 }
 
 class LevelFormatter implements DropdownSelectValueFormatter<number> {
-	formatElement(value: number): string {
+	formatElement(value: number) {
 		return '' + value;
 	}
 
-	formatSelection(value: number): string {
+	formatSelection(value: number) {
 		return '<span class="character-select-bar-data">' + value + '</span>';
 	}
 
-	formatTooltip(value?: number):string {
+	formatTooltip(value?: number) {
 		return '';
 	}
 }
 
 class EnemyTypeFormatter implements DropdownSelectValueFormatter<EnemyType> {
-	formatElement(value: EnemyType): string {
+	formatElement(value: EnemyType) {
 		return value.name;
 	}
 
-	formatSelection(value: EnemyType): string {
+	formatSelection(value: EnemyType) {
 		return '<span class="character-select-bar-data">' + value.name + '</span>';
 	}
 
-	formatTooltip(value?: EnemyType):string {
+	formatTooltip(value?: EnemyType) {
 		return '';
 	}
 }
 
 class LevelDifferenceFormatter implements DropdownSelectValueFormatter<LevelDifference> {
-	formatElement(value: LevelDifference): string {
+	formatElement(value: LevelDifference) {
 		return value.name;
 	}
 
-	formatSelection(value: LevelDifference): string {
+	formatSelection(value: LevelDifference) {
 		return '<span class="character-select-bar-data">' + value.name + '</span>';
 	}
 
-	formatTooltip(value?: LevelDifference):string {
+	formatTooltip(value?: LevelDifference) {
 		return '';
 	}
 }

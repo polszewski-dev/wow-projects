@@ -18,7 +18,7 @@ export class CharacterStatsComponent implements OnChanges {
 		if (!changes['selectedCharacter']) {
 			return;
 		}
-		this.statsService.getCharacterStats(this.selectedCharacter.characterId).subscribe((characterStatsList: CharacterStats[]) => {
+		this.statsService.getCharacterStats(this.selectedCharacter.characterId).subscribe(characterStatsList => {
 			this.characterStatsList = characterStatsList;
 		});
 	}

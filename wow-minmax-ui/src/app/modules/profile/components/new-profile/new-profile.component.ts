@@ -25,12 +25,12 @@ export class NewProfileComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.profileService.getNewProfileOptions().subscribe((newProfileOptions: NewProfileOptions) => {
+		this.profileService.getNewProfileOptions().subscribe(newProfileOptions => {
 			this.newProfileOptions = newProfileOptions;
 		});
 	}
 
-	onAddClick(event: Event): void {
+	onAddClick(event: Event) {
 		event.preventDefault();
 
 		if (!this.validate()) {
@@ -44,12 +44,12 @@ export class NewProfileComponent implements OnInit {
 			race: this.race!,
 		};
 
-		this.profileService.createProfile(newProfile).subscribe((createdProfile: ProfileInfo) => {
+		this.profileService.createProfile(newProfile).subscribe(createdProfile => {
 			this.router.navigate(['/edit-profile', createdProfile.lastUsedCharacterId]);
 		});
 	}
 
-	onCancelClick(event: Event): void {
+	onCancelClick(event: Event) {
 		event.preventDefault();
 		this.location.back();
 	}
@@ -58,7 +58,7 @@ export class NewProfileComponent implements OnInit {
 		this.race = undefined;
 	}
 
-	private validate(): boolean {
+	private validate() {
 		if (this.profileName === undefined || this.profileName === '') {
 			return false;
 		}

@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { NewProfileOptions } from '../model/NewProfileOptions';
 import { CharacterSelectionOptions } from '../../character/model/CharacterSelectionOptions';
+import { NewProfileOptions } from '../model/NewProfileOptions';
 import { ProfileInfo } from '../model/ProfileInfo';
 
 @Injectable({
@@ -13,19 +12,19 @@ export class ProfileService {
 
 	constructor(private http: HttpClient) { }
 
-	getProfileList(): Observable<ProfileInfo[]> {
+	getProfileList() {
 		return this.http.get<ProfileInfo[]>(`${this.apiUrl}/list`);
 	}
 
-	createProfile(profile: ProfileInfo): Observable<ProfileInfo> {
+	createProfile(profile: ProfileInfo) {
 		return this.http.post<ProfileInfo>(this.apiUrl, profile);
 	}
 
-	getNewProfileOptions(): Observable<NewProfileOptions> {
+	getNewProfileOptions() {
 		return this.http.get<NewProfileOptions>(`${this.apiUrl}/new/options`);
 	}
 
-	getCharacterSelectionOptions(profileId: string): Observable<CharacterSelectionOptions> {
+	getCharacterSelectionOptions(profileId: string) {
 		return this.http.get<CharacterSelectionOptions>(`${this.apiUrl}/${profileId}/char/selection/options`);
 	}
 }

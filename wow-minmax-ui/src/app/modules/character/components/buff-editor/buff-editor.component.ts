@@ -21,13 +21,13 @@ export class BuffEditorComponent implements OnChanges {
 		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.buffService.getBuffs(this.selectedCharacterId, this.buffListType).subscribe((buffs: Buff[]) => {
+		this.buffService.getBuffs(this.selectedCharacterId, this.buffListType).subscribe(buffs => {
 			this.buffs = buffs;
 		});
 	}
 
-	onChange(buff: Buff): void {
-		this.buffService.enableBuff(this.selectedCharacterId, this.buffListType, buff).subscribe((buffs: Buff[]) => {
+	onChange(buff: Buff) {
+		this.buffService.enableBuff(this.selectedCharacterId, this.buffListType, buff).subscribe(buffs => {
 			this.buffs = buffs;
 			this.buffsChanged.emit();
 		});
