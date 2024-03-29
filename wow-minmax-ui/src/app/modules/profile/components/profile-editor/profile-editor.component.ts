@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { DpsBarComponent } from '../../../statistics/components/dps-bar/dps-bar.component';
 import { Character } from '../../../character/model/Character';
 import { BuffListType } from '../../../character/model/buff/BuffListType';
 import { ItemFilter } from '../../../character/model/equipment/ItemFilter';
@@ -6,8 +7,6 @@ import { ItemSlotGroup } from '../../../character/model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../../../character/model/upgrade/Upgrade';
 import { CharacterService } from '../../../character/services/character.service';
 import { UpgradeService } from '../../../character/services/upgrade.service';
-import { RotationStats } from '../../../statistics/model/RotationStats';
-import { StatsService } from '../../../statistics/services/stats.service';
 
 @Component({
 	selector: 'app-profile-editor',
@@ -16,9 +15,10 @@ import { StatsService } from '../../../statistics/services/stats.service';
 })
 export class ProfileEditorComponent implements OnChanges {
 	@Input() selectedCharacterId!: string;
+
+	@ViewChild(DpsBarComponent, { static: false }) dpsBar!: DpsBarComponent;
+
 	selectedCharacter?: Character;
-	rotationStats?: RotationStats;
-	previousRotationStats?: RotationStats;
 	upgradesBySlotGroup: Partial<Record<ItemSlotGroup, Upgrade[]>> = {};
 
 	itemFilter: ItemFilter = {
@@ -35,7 +35,6 @@ export class ProfileEditorComponent implements OnChanges {
 
 	constructor(
 			private characterService: CharacterService,
-			private statsService: StatsService,
 			private upgradeService: UpgradeService
 	) {}
 
@@ -43,7 +42,7 @@ export class ProfileEditorComponent implements OnChanges {
 		if (!changes['selectedCharacterId']) {
 			return;
 		}
-		this.rotationStats = undefined;
+
 		this.updateDps();
 		this.upgradesBySlotGroup = {};
 		this.updateUpgradeStatus();
@@ -67,10 +66,7 @@ export class ProfileEditorComponent implements OnChanges {
 	}
 
 	updateDps() {
-		this.statsService.getRotationStats(this.selectedCharacterId!).subscribe(rotationStats => {
-			this.previousRotationStats = this.rotationStats;
-			this.rotationStats = rotationStats;
-		})
+		this.dpsBar?.updateDps();
 	}
 
 	updateUpgradeStatus() {

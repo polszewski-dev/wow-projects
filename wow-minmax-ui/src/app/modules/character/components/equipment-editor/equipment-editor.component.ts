@@ -69,37 +69,41 @@ export class EquipmentEditorComponent implements OnChanges {
 	}
 
 	onUpgradeCounterClicked(slotGroup: ItemSlotGroup) {
-		const items = this.upgradesBySlotGroup[slotGroup]![0].itemDifference;
-		this.equipmentService.changeItems(this.selectedCharacterId, slotGroup, items!).subscribe(() => {
-			this.updateEquipmentSlots(slotGroup, items!);
+		const items = this.upgradesBySlotGroup[slotGroup]![0].itemDifference!;
+		this.equipmentService.changeItems(this.selectedCharacterId, slotGroup, items).subscribe(() => {
+			this.updateEquipmentSlots(slotGroup, items);
 			this.updateSocketStatus();
 		});
 	}
 
-	updateEquipment(itemChange: ItemChange) {
-		this.equipment!.itemsBySlot[itemChange.itemSlot] = itemChange.item;
+	private updateEquipment(itemChange: ItemChange) {
+		this.equipItem(itemChange.itemSlot, itemChange.item);
 
 		if (itemChange.itemSlot === ItemSlot.MAIN_HAND && itemChange.item?.item.itemType === ItemType.TWO_HAND) {
-			this.equipment!.itemsBySlot[ItemSlot.OFF_HAND] = undefined;
+			this.equipItem(ItemSlot.OFF_HAND, undefined);
 		}
 
 		this.equipmentChanged.emit();
 	}
 
-	updateEquipmentSlots(slotGroup: ItemSlotGroup, items: EquippableItem[]) {
+	private updateEquipmentSlots(slotGroup: ItemSlotGroup, items: EquippableItem[]) {
 		let itemSlots = getSlots(slotGroup);
 
 		for (let i = 0; i < itemSlots.length; ++i) {
-			this.equipment!.itemsBySlot[itemSlots[i]] = items[i];
+			this.equipItem(itemSlots[i], items[i]);
 		}
 
 		this.equipmentChanged.emit();
 	}
 
-	updateSocketStatus() {
+	private updateSocketStatus() {
 		this.equipmentService.getSocketStatus(this.selectedCharacterId).subscribe(equipmentSocketStatus => {
 			this.equipmentSocketStatus = equipmentSocketStatus;
 		});
+	}
+
+	private equipItem(itemSlot: ItemSlot, item?: EquippableItem) {
+		this.equipment!.itemsBySlot[itemSlot] = item;
 	}
 
 	resetEquipment() {

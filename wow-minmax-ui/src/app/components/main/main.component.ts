@@ -23,11 +23,15 @@ export class MainComponent implements OnInit {
 	ngOnInit(): void {
 		this.profileService.getProfileList().subscribe(profileList => {
 			this.profileList = profileList;
-			let characterToSelect = this.getCharacterToSelect();
-			if (characterToSelect) {
-				this.onCharacterSelected(characterToSelect);
-			}
+			this.selectCharacter();
 		});
+	}
+
+	private selectCharacter() {
+		const characterToSelect = this.getCharacterToSelect();
+		if (characterToSelect) {
+			this.onCharacterSelected(characterToSelect);
+		}
 	}
 
 	onCharacterSelected(selectedCharacterId: string) {

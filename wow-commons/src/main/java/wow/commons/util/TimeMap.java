@@ -15,8 +15,11 @@ public abstract class TimeMap<K, V, T extends Enum<T>> {
 	}
 
 	public void put(T timeKey, K key, V value) {
-		map.computeIfAbsent(timeKey, x -> new HashMap<>())
-				.put(key, value);
+		getMap(timeKey).put(key, value);
+	}
+
+	private Map<K, V> getMap(T timeKey) {
+		return map.computeIfAbsent(timeKey, x -> new LinkedHashMap<>());
 	}
 
 	public Optional<V> getOptional(T timeKey, K key) {
@@ -25,9 +28,7 @@ public abstract class TimeMap<K, V, T extends Enum<T>> {
 	}
 
 	public V computeIfAbsent(T timeKey, K key, Function<K, V> mappingFunction) {
-		return map
-				.computeIfAbsent(timeKey, x -> new HashMap<>())
-				.computeIfAbsent(key, mappingFunction);
+		return getMap(timeKey).computeIfAbsent(key, mappingFunction);
 	}
 
 	public Set<K> keySet(T timeKey) {

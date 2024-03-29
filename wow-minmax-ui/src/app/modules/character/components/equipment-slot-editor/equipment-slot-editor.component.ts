@@ -81,7 +81,7 @@ export class EquipmentSlotEditorComponent implements OnInit {
 		});
 	}
 
-	getItemOptions(){
+	getItemOptions() {
 		return this.equipmentOptions?.itemOptions
 				.find(x => x.itemSlot === this.itemSlot)?.items || [];
 	}
