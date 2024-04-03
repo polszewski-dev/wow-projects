@@ -57,7 +57,11 @@ export class ProfileEditorComponent implements OnChanges {
 		this.updateUpgradeStatus();
 	}
 
-	onItemFilterChanged() {
+	onItemFilterChanged(itemFilter: ItemFilter) {
+		Object.keys(itemFilter).forEach(key => {
+			this.itemFilter[key as keyof ItemFilter] = itemFilter[key as keyof ItemFilter];
+		});
+
 		this.updateUpgradeStatus();
 	}
 

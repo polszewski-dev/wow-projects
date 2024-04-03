@@ -1,42 +1,36 @@
-<div *ngIf="newProfileOptions" class="container">
+<form *ngIf="newProfileOptions" [formGroup]="form" (ngSubmit)="onAddClick()" class="container">
 	<div class="needs-validation" novalidate>
 		<div class="row py-2">
 			<div class="col-md-9">
-				<label for="validationCustom01" class="form-label">Profile Name</label>
-				<input type="text" class="form-control" id="validationCustom01" required [(ngModel)]="profileName">
-				<div class="valid-feedback">
-					Looks good!
-				</div>
+				<label for="profileName" class="form-label">Profile Name</label>
+				<input id="profileName" type="text" class="form-control" formControlName="profileName">
+				<span *ngIf="profileNameControl.touched && profileNameControl.hasError('required')">missing value</span>
 			</div>
 		</div>
 
 		<div class="row py-2">
 			<div class="col-md-3">
-				<label for="validationCustom04" class="form-label">Class</label>
-				<select class="form-select" id="validationCustom04" required [(ngModel)]="characterClass" (change)="onClassChange()">
+				<label for="characterClass" class="form-label">Class</label>
+				<select id="characterClass" class="form-select" formControlName="characterClass" (change)="onClassChange()">
 					<option *ngFor="let clazz of newProfileOptions.classOptions" [ngValue]="clazz">{{clazz.name}}</option>
 				</select>
-				<div class="invalid-feedback">
-					Please select a valid state.
-				</div>
+				<span *ngIf="characterClassControl.touched && characterClassControl.hasError('required')">missing value</span>
 			</div>
 
 			<div class="col-md-3">
-				<label for="validationCustom05" class="form-label">Race</label>
-				<select class="form-select" id="validationCustom05" required [(ngModel)]="race">
+				<label for="race" class="form-label">Race</label>
+				<select id="race" class="form-select" formControlName="race">
 					<option *ngFor="let race of (characterClass?.races || [])" [ngValue]="race">{{race.name}}</option>
 				</select>
-				<div class="invalid-feedback">
-					Please select a valid state.
-				</div>
+				<span *ngIf="raceControl.touched && raceControl.hasError('required')">missing value</span>
 			</div>
 		</div>
 
 		<div class="row py-2">
 			<div class="col-md-3">
-				<button class="btn btn-outline-primary" style="margin-right:10px" (click)="onAddClick($event)">Add Profile</button>
+				<button class="btn btn-outline-primary" style="margin-right:10px" type="submit" [disabled]="!form.valid">Add Profile</button>
 				<button class="btn btn-outline-primary" (click)="onCancelClick($event)">Cancel</button>
 			</div>
 		</div>
 	</div>
-</div>
+</form>

@@ -6,6 +6,7 @@ import { Race } from '../../../shared/model/character/Race';
 import { NewProfileOptions } from '../../model/NewProfileOptions';
 import { ProfileInfo } from '../../model/ProfileInfo';
 import { ProfileService } from '../../services/profile.service';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-new-profile',
@@ -13,15 +14,19 @@ import { ProfileService } from '../../services/profile.service';
 	styleUrls: ['./new-profile.component.css']
 })
 export class NewProfileComponent implements OnInit {
-	profileName = '';
-	characterClass?: CharacterClass;
-	race?: Race;
-	newProfileOptions?: NewProfileOptions;
+	form = this.formBuilder.group({
+		profileName: [ '', Validators.required ],
+		characterClass: [ null as unknown as CharacterClass, Validators.required ],
+		race: [ null as unknown as Race, Validators.required ]
+	});
+
+	newProfileOptions!: NewProfileOptions;
 
 	constructor(
 		private profileService: ProfileService,
 		private router: Router,
-		private location: Location
+		private location: Location,
+		private formBuilder: FormBuilder
 	) {}
 
 	ngOnInit(): void {
@@ -30,16 +35,9 @@ export class NewProfileComponent implements OnInit {
 		});
 	}
 
-	onAddClick(event: Event) {
-		event.preventDefault();
-
-		if (!this.validate()) {
-			alert('Some fields are missing');
-			return;
-		}
-
+	onAddClick() {
 		let newProfile: ProfileInfo = {
-			profileName: this.profileName,
+			profileName: this.profileName!,
 			characterClass: this.characterClass!,
 			race: this.race!,
 		};
@@ -55,22 +53,30 @@ export class NewProfileComponent implements OnInit {
 	}
 
 	onClassChange() {
-		this.race = undefined;
+		this.form.patchValue({ race: null });
 	}
 
-	private validate() {
-		if (this.profileName === undefined || this.profileName === '') {
-			return false;
-		}
+	get profileName() {
+		return this.form.value.profileName;
+	}
 
-		if (this.characterClass === undefined) {
-			return false;
-		}
+	get characterClass() {
+		return this.form.value.characterClass;
+	}
 
-		if (this.race === undefined) {
-			return false;
-		}
+	get race() {
+		return this.form.value.race;
+	}
 
-		return true;
+	get profileNameControl() {
+		return this.form.controls.profileName;
+	}
+
+	get characterClassControl() {
+		return this.form.controls.characterClass;
+	}
+
+	get raceControl() {
+		return this.form.controls.race;
 	}
 }

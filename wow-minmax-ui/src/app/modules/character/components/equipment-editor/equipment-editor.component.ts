@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentOptions } from '../../model/equipment/EquipmentOptions';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
@@ -21,7 +22,16 @@ export class EquipmentEditorComponent implements OnChanges {
 	@Input() upgradesBySlotGroup: Partial<Record<ItemSlotGroup, Upgrade[]>> = {};
 	@Input() itemFilter!: ItemFilter;
 	@Output() equipmentChanged = new EventEmitter<void>();
-	@Output() itemFilterChanged = new EventEmitter<void>();
+	@Output() itemFilterChanged = new EventEmitter<ItemFilter>();
+
+	form = this.formBuilder.nonNullable.group({
+		heroics: false,
+		raids: false,
+		worldBosses: false,
+		pvpItems: false,
+		greens: false,
+		legendaries: false
+	});
 
 	readonly itemSlots = Object.values(ItemSlot);
 
@@ -36,9 +46,19 @@ export class EquipmentEditorComponent implements OnChanges {
 
 	readonly getItemSlotGroup = getItemSlotGroup;
 
-	constructor(private equipmentService: EquipmentService) {}
+	constructor(
+		private equipmentService: EquipmentService,
+		private formBuilder: FormBuilder
+	) {
+		this.form.valueChanges.subscribe(value => {
+			this.itemFilterChanged.emit(value as ItemFilter);
+		});
+	}
 
 	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['itemFilter']) {
+			this.form.setValue(this.itemFilter);
+		}
 		if (!changes['selectedCharacterId']) {
 			return;
 		}
@@ -111,9 +131,5 @@ export class EquipmentEditorComponent implements OnChanges {
 			this.equipment = equipment;
 			this.equipmentChanged.emit();
 		});
-	}
-
-	onFilterChange() {
-		this.itemFilterChanged.emit();
 	}
 }

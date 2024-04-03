@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { BuffEditorComponent } from './components/buff-editor/buff-editor.component';
 import { EquipmentEditorComponent } from './components/equipment-editor/equipment-editor.component';
@@ -27,6 +27,7 @@ import { EquipUpgradeButtonComponent } from './components/equip-upgrade-button/e
 	imports: [
 		CommonModule,
 		FormsModule,
+		ReactiveFormsModule,
 		SharedModule
 	],
 	exports: [

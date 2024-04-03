@@ -10,7 +10,7 @@
 					[upgradesBySlotGroup]="upgradesBySlotGroup"
 					[itemFilter]="itemFilter"
 					(equipmentChanged)="onEquipmentChanged()"
-					(itemFilterChanged)="onItemFilterChanged()"
+					(itemFilterChanged)="onItemFilterChanged($event)"
 				></app-equipment-editor>
 				<app-upgrade-list
 					[upgradesBySlotGroup]="upgradesBySlotGroup"
