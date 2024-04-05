@@ -1,35 +1,26 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable, filter, map } from 'rxjs';
 import { Buff } from '../../model/buff/Buff';
 import { BuffListType } from '../../model/buff/BuffListType';
-import { BuffService } from '../../services/buff.service';
+import { CharacterStateService } from '../../services/character-state.service';
 
 @Component({
 	selector: 'app-buff-editor',
 	templateUrl: './buff-editor.component.html',
 	styleUrls: ['./buff-editor.component.css']
 })
-export class BuffEditorComponent implements OnChanges {
-	@Input() selectedCharacterId!: string;
+export class BuffEditorComponent implements OnInit {
 	@Input() buffListType!: BuffListType;
-	@Output() buffsChanged = new EventEmitter<void>()
 
-	buffs: Buff[] = [];
+	buffs$!: Observable<Buff[] | undefined>;
 
-	constructor(private buffService: BuffService) {}
+	constructor(private characterStateService: CharacterStateService) {}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedCharacterId']) {
-			return;
-		}
-		this.buffService.getBuffs(this.selectedCharacterId, this.buffListType).subscribe(buffs => {
-			this.buffs = buffs;
-		});
+	ngOnInit(): void {
+		this.buffs$ = this.characterStateService.buffListByType$(this.buffListType);
 	}
 
 	onChange(buff: Buff) {
-		this.buffService.enableBuff(this.selectedCharacterId, this.buffListType, buff).subscribe(buffs => {
-			this.buffs = buffs;
-			this.buffsChanged.emit();
-		});
+		this.characterStateService.enableBuff(this.buffListType, buff);
 	}
 }

@@ -13,6 +13,9 @@ import wow.minmax.service.PlayerProfileService;
 import wow.minmax.service.UpgradeService;
 
 import java.util.List;
+import java.util.Map;
+
+import static java.lang.Boolean.parseBoolean;
 
 /**
  * User: POlszewski
@@ -28,13 +31,14 @@ public class UpgradeController {
 	private final UpgradeConverter upgradeConverter;
 	private final ItemFilterConverter itemFilterConverter;
 
-	@PostMapping("{characterId}/slot/{slotGroup}")
+	@GetMapping("{characterId}/slot/{slotGroup}")
 	public List<UpgradeDTO> findUpgrades(
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
-			@RequestBody ItemFilterDTO itemFilter
+			@RequestParam Map<String, String> requestParams
 	) {
 		var character = playerProfileService.getCharacter(characterId).copy();
+		var itemFilter = getItemFilter(requestParams);
 		var upgrades = upgradeService.findUpgrades(
 				character, slotGroup, itemFilterConverter.convertBack(itemFilter)
 		);
@@ -42,5 +46,21 @@ public class UpgradeController {
 		return upgrades.stream()
 				.map(upgradeConverter::convert)
 				.toList();
+	}
+
+	private ItemFilterDTO getItemFilter(Map<String, String> requestParams) {
+		var result = new ItemFilterDTO();
+		requestParams.forEach((key, value) -> {
+			switch (key) {
+				case "heroics" -> result.setHeroics(parseBoolean(value));
+				case "raids" -> result.setRaids(parseBoolean(value));
+				case "worldBosses" -> result.setWorldBosses(parseBoolean(value));
+				case "pvpItems" -> result.setPvpItems(parseBoolean(value));
+				case "greens" -> result.setGreens(parseBoolean(value));
+				case "legendaries" -> result.setLegendaries(parseBoolean(value));
+				default -> throw new IllegalArgumentException();
+			}
+		});
+		return result;
 	}
 }

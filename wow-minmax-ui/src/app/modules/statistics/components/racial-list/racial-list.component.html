@@ -5,8 +5,8 @@
 			<th scope="col">description</th>
 		</tr>
 	</thead>
-	<tbody>
-		<tr *ngFor="let racial of selectedCharacter?.race?.racials">
+	<tbody *ngIf="character$ | async as character">
+		<tr *ngFor="let racial of character.race.racials">
 			<td style="text-align: left" [title]="racial.attributes.replaceAll(', ', ',\n')">
 				<strong>
 					<img [src]="racial.icon | icon"/>&nbsp;{{racial.name}}

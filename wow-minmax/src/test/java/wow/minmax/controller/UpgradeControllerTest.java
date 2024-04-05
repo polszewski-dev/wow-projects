@@ -13,7 +13,7 @@ import wow.minmax.converter.dto.ItemFilterConverter;
 import wow.minmax.model.dto.ItemFilterDTO;
 
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,7 +38,7 @@ class UpgradeControllerTest extends ControllerTest {
 		String requestBody = objectMapper.writeValueAsString(convert);
 
 		mockMvc.perform(
-						post("/api/v1/upgrade/{characterId}/slot/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
+						get("/api/v1/upgrade/{characterId}/slot/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)

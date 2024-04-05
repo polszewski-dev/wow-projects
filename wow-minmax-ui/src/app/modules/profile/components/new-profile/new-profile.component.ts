@@ -1,12 +1,12 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CharacterClass } from '../../../shared/model/character/CharacterClass';
 import { Race } from '../../../shared/model/character/Race';
 import { NewProfileOptions } from '../../model/NewProfileOptions';
 import { ProfileInfo } from '../../model/ProfileInfo';
 import { ProfileService } from '../../services/profile.service';
-import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-new-profile',

@@ -25,7 +25,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let spellStats of spellStatsList">
+		<tr *ngFor="let spellStats of spellStatsList$ | async">
 			<td style="text-align: left" title="{{spellStats.spell.tooltip}}">
 				<strong>
 					<img [src]="spellStats.spell.icon | icon"/>&nbsp;{{spellStats.spell.name}}

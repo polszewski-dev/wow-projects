@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Character } from '../../../character/model/Character';
-import { CharacterStats } from '../../model/CharacterStats';
+import { Component } from '@angular/core';
+import { switchMap } from 'rxjs';
+import { CharacterStateService } from '../../../character/services/character-state.service';
 import { StatsService } from '../../services/stats.service';
 
 @Component({
@@ -8,18 +8,17 @@ import { StatsService } from '../../services/stats.service';
 	templateUrl: './character-stats.component.html',
 	styleUrls: ['./character-stats.component.css']
 })
-export class CharacterStatsComponent implements OnChanges {
-	@Input() selectedCharacter!: Character;
-	characterStatsList: CharacterStats[] = [];
+export class CharacterStatsComponent {
+	characterStats$ = this.characterStateService.characterStatChange$.pipe(
+		switchMap(character => this.statsService.getCharacterStats(character.characterId))
+	);
 
-	constructor(private statsService: StatsService) {}
+	constructor(
+		private characterStateService: CharacterStateService,
+		private statsService: StatsService
+	) {}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedCharacter']) {
-			return;
-		}
-		this.statsService.getCharacterStats(this.selectedCharacter.characterId).subscribe(characterStatsList => {
-			this.characterStatsList = characterStatsList;
-		});
+	get character() {
+		return this.characterStateService.characterSnapshot!;
 	}
 }

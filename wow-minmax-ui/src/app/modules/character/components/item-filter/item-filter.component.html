@@ -1,0 +1,75 @@
+<div class="item-filter" [formGroup]="form">
+	<span class="item-filter-header">Filters:&nbsp;</span>
+
+	<div class="form-check form-check-inline" *ngIf="heroics">
+		<input
+			id="filter-heroics"
+			class="form-check-input"
+			type="checkbox"
+			formControlName="heroics"
+		>
+		<label class="form-check-label" for="filter-heroics">
+			heroics
+		</label>
+	</div>
+
+	<div class="form-check form-check-inline">
+		<input
+			id="filter-raids"
+			class="form-check-input"
+			type="checkbox"
+			formControlName="raids"
+		>
+		<label class="form-check-label" for="filter-raids">
+			raids
+		</label>
+	</div>
+
+	<div class="form-check form-check-inline">
+		<input
+			id="filter-world-bosses"
+			class="form-check-input"
+			type="checkbox"
+			formControlName="worldBosses"
+		>
+		<label class="form-check-label" for="filter-world-bosses">
+			world bosses
+		</label>
+	</div>
+
+	<div class="form-check form-check-inline">
+		<input
+			id="filter-pvp-items"
+			class="form-check-input"
+			type="checkbox"
+			formControlName="pvpItems"
+		>
+		<label class="form-check-label" for="filter-pvp-items">
+			pvp items
+		</label>
+	</div>
+
+	<div class="form-check form-check-inline">
+		<input
+			id="filter-greens"
+			class="form-check-input"
+			type="checkbox"
+			formControlName="greens"
+		>
+		<label class="form-check-label" for="filter-greens">
+			greens
+		</label>
+	</div>
+
+	<div class="form-check form-check-inline">
+		<input
+			id="filter-legendaries"
+			class="form-check-input"
+			type="checkbox"
+			formControlName="legendaries"
+		>
+		<label class="form-check-label" for="filter-legendaries">
+			legendaries
+		</label>
+	</div>
+</div>

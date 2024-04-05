@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { SpellStats } from '../../model/SpellStats';
+import { Component } from '@angular/core';
+import { switchMap } from 'rxjs';
+import { CharacterStateService } from '../../../character/services/character-state.service';
 import { StatsService } from '../../services/stats.service';
 
 @Component({
@@ -7,18 +8,13 @@ import { StatsService } from '../../services/stats.service';
 	templateUrl: './spell-stats.component.html',
 	styleUrls: ['./spell-stats.component.css']
 })
-export class SpellStatsComponent implements OnChanges {
-	@Input() selectedCharacterId!: string;
-	spellStatsList: SpellStats[] = [];
+export class SpellStatsComponent {
+	spellStatsList$ = this.characterStateService.characterStatChange$.pipe(
+		switchMap(character => this.statsService.getSpellStats(character.characterId))
+	);
 
-	constructor(private statsService: StatsService) {}
-
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedCharacterId']) {
-			return;
-		}
-		this.statsService.getSpellStats(this.selectedCharacterId).subscribe(spellStatsList => {
-			this.spellStatsList = spellStatsList;
-		});
-	}
+	constructor(
+		private characterStateService: CharacterStateService,
+		private statsService: StatsService
+	) {}
 }

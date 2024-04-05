@@ -1,47 +1,42 @@
-<div *ngIf="selectedCharacter">
-	<app-dps-bar [selectedCharacterId]="selectedCharacterId"></app-dps-bar>
+<div *ngIf="selectedCharacterId">
+	<div *ngIf="dataLoaded$ | async else loadingData">
+		<app-dps-bar></app-dps-bar>
 
-	<nav ngbNav #nav="ngbNav" class="nav-tabs">
-		<ng-container ngbNavItem>
-			<a ngbNavLink>Equipment</a>
-			<ng-template ngbNavContent>
-				<app-equipment-editor
-					[selectedCharacterId]="selectedCharacterId"
-					[upgradesBySlotGroup]="upgradesBySlotGroup"
-					[itemFilter]="itemFilter"
-					(equipmentChanged)="onEquipmentChanged()"
-					(itemFilterChanged)="onItemFilterChanged($event)"
-				></app-equipment-editor>
-				<app-upgrade-list
-					[upgradesBySlotGroup]="upgradesBySlotGroup"
-				></app-upgrade-list>
-			</ng-template>
-		</ng-container>
-		<ng-container ngbNavItem>
-			<a ngbNavLink>Buffs</a>
-			<ng-template ngbNavContent>
-				<div class="stats-header">Buffs</div>
-				<app-buff-editor [selectedCharacterId]="selectedCharacterId" [buffListType]="CHARACTER_BUFF" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
-				<div class="stats-header">Debuffs</div>
-				<app-buff-editor [selectedCharacterId]="selectedCharacterId" [buffListType]="TARGET_DEBUFF" (buffsChanged)="onBuffsChanged()"></app-buff-editor>
-			</ng-template>
-		</ng-container>
-		<ng-container ngbNavItem>
-			<a ngbNavLink>Results</a>
-			<ng-template ngbNavContent>
-				<div class="stats-header">Spell Stats</div>
-				<app-spell-stats [selectedCharacterId]="selectedCharacterId"></app-spell-stats>
-				<div class="stats-header">Character Stats</div>
-				<app-character-stats [selectedCharacter]="selectedCharacter"></app-character-stats>
-				<div class="stats-header">Special Abilities</div>
-				<app-special-abilities [selectedCharacterId]="selectedCharacterId"></app-special-abilities>
-				<div class="stats-header">Talents</div>
-				<app-talent-stats [selectedCharacterId]="selectedCharacterId"></app-talent-stats>
-				<div class="stats-header">Racials</div>
-				<app-racial-list [selectedCharacter]="selectedCharacter"></app-racial-list>
-			</ng-template>
-		</ng-container>
-	</nav>
+		<nav ngbNav #nav="ngbNav" class="nav-tabs">
+			<ng-container ngbNavItem>
+				<a ngbNavLink>Equipment</a>
+				<ng-template ngbNavContent>
+					<app-equipment-editor></app-equipment-editor>
+					<app-upgrade-list></app-upgrade-list>
+				</ng-template>
+			</ng-container>
+			<ng-container ngbNavItem>
+				<a ngbNavLink>Buffs</a>
+				<ng-template ngbNavContent>
+					<div class="stats-header">Buffs</div>
+					<app-buff-editor [buffListType]="CHARACTER_BUFF"></app-buff-editor>
+					<div class="stats-header">Debuffs</div>
+					<app-buff-editor [buffListType]="TARGET_DEBUFF"></app-buff-editor>
+				</ng-template>
+			</ng-container>
+			<ng-container ngbNavItem>
+				<a ngbNavLink>Results</a>
+				<ng-template ngbNavContent>
+					<div class="stats-header">Spell Stats</div>
+					<app-spell-stats></app-spell-stats>
+					<div class="stats-header">Character Stats</div>
+					<app-character-stats></app-character-stats>
+					<div class="stats-header">Special Abilities</div>
+					<app-special-abilities></app-special-abilities>
+					<div class="stats-header">Talents</div>
+					<app-talent-stats></app-talent-stats>
+					<div class="stats-header">Racials</div>
+					<app-racial-list></app-racial-list>
+				</ng-template>
+			</ng-container>
+		</nav>
 
-	<div [ngbNavOutlet]="nav"></div>
+		<div [ngbNavOutlet]="nav"></div>
+	</div>
+	<ng-template #loadingData>loading...</ng-template>
 </div>

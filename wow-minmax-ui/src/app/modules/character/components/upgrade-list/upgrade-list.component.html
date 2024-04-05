@@ -1,39 +1,41 @@
-<div *ngIf="hasAnyUpgrades()">
-	<div style="text-align: center;">
-		<button
-			type="button"
-			class="btn btn-sm btn-link big-btn-link"
-			(click)="toggleVisibility()"
-		>{{visible ? "Hide Upgrades" : "Show Upgrades"}}</button>
-	</div>
-
-	<ul *ngIf="visible" class="upgrade-list">
-		<div *ngFor="let slotGroup of itemSlotGroups">
-			<li *ngIf="(upgradesBySlotGroup[slotGroup] || []).length > 0">
-				<span class="upgrade-list-slot-group">{{slotGroup | titlecase}}</span>
-				<ul>
-					<li *ngFor="let upgrade of upgradesBySlotGroup[slotGroup]">
-						<b>+{{upgrade.changePct | number:'1.2-2'}}%:</b>&nbsp;
-
-						<span *ngFor="let item of upgrade.itemDifference;let last = last">
-							<span title="{{item.item.detailedSource}}">[{{item.item.source}}]</span>&nbsp;
-							<span class="rarity-{{item.item.rarity.toLowerCase()}} item-header">{{item.item.name}}</span>
-
-							<span *ngFor="let gem of item.gems">
-								<span *ngIf="gem !== undefined">
-									<span class="{{gem!.color.toLowerCase()}}-gem item-header">[{{gem!.shortName}}]</span>
-								</span>
-							</span>
-
-							<span *ngIf="!last"> + </span>
-						</span>,
-						<b>diff:</b>
-						{{upgrade.statDifference.join(",&nbsp;")}}
-						<span *ngFor="let added of upgrade.addedAbilities" class="added-ability">{{added}},&nbsp;</span>
-						<span *ngFor="let removed of upgrade.removedAbilities" class="removed-ability">{{removed}},&nbsp;</span>
-					</li>
-				</ul>
-			</li>
+<ng-container *ngIf="allUpgrades$ | async as allUpgrades">
+	<div *ngIf="hasAnyUpgrades(allUpgrades)">
+		<div style="text-align: center;">
+			<button
+				type="button"
+				class="btn btn-sm btn-link big-btn-link"
+				(click)="toggleVisibility()"
+			>{{visible ? "Hide Upgrades" : "Show Upgrades"}}</button>
 		</div>
-	</ul>
-</div>
+
+		<ul *ngIf="visible" class="upgrade-list">
+			<div *ngFor="let slotGroup of itemSlotGroups">
+				<li *ngIf="(allUpgrades[slotGroup] || []).length > 0">
+					<span class="upgrade-list-slot-group">{{slotGroup | titlecase}}</span>
+					<ul>
+						<li *ngFor="let upgrade of allUpgrades[slotGroup]">
+							<b>+{{upgrade.changePct | number:'1.2-2'}}%:</b>&nbsp;
+
+							<span *ngFor="let item of upgrade.itemDifference;let last = last">
+								<span title="{{item.item.detailedSource}}">[{{item.item.source}}]</span>&nbsp;
+								<span class="rarity-{{item.item.rarity.toLowerCase()}} item-header">{{item.item.name}}</span>
+
+								<span *ngFor="let gem of item.gems">
+									<span *ngIf="gem !== undefined">
+										<span class="{{gem!.color.toLowerCase()}}-gem item-header">[{{gem!.shortName}}]</span>
+									</span>
+								</span>
+
+								<span *ngIf="!last"> + </span>
+							</span>,
+							<b>diff:</b>
+							{{upgrade.statDifference.join(",&nbsp;")}}
+							<span *ngFor="let added of upgrade.addedAbilities" class="added-ability">{{added}},&nbsp;</span>
+							<span *ngFor="let removed of upgrade.removedAbilities" class="removed-ability">{{removed}},&nbsp;</span>
+						</li>
+					</ul>
+				</li>
+			</div>
+		</ul>
+	</div>
+</ng-container>

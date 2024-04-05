@@ -1,4 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
+import { filter, switchMap, tap } from 'rxjs';
+import { CharacterStateService } from '../../../character/services/character-state.service';
 import { RotationSpellStats } from '../../model/RotationSpellStats';
 import { RotationStats } from '../../model/RotationStats';
 import { StatsService } from '../../services/stats.service';
@@ -8,35 +10,32 @@ import { StatsService } from '../../services/stats.service';
 	templateUrl: './dps-bar.component.html',
 	styleUrls: ['./dps-bar.component.css']
 })
-export class DpsBarComponent implements OnChanges {
-	@Input() selectedCharacterId!: string;
+export class DpsBarComponent {
+	rotationStats$ = this.characterStateService.characterStatChange$.pipe(
+		switchMap(character => this.statsService.getRotationStats(character.characterId).pipe(
+			tap(rotationStats => {
+				this.previousRotationStats = this.currentRotationStats;
+				this.currentRotationStats = rotationStats;
+			})
+		))
+	);
 
-	rotationStats?: RotationStats;
-	previousRotationStats?: RotationStats;
-	dpsDiff = 0;
+	private currentRotationStats?: RotationStats;
+	private previousRotationStats?: RotationStats;
 
-	constructor(private statsService: StatsService) {}
+	constructor(
+		private characterStateService: CharacterStateService,
+		private statsService: StatsService
+	) {}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedCharacterId']) {
-			return;
+	get dpsDiff() {
+		if (this.previousRotationStats === undefined) {
+			return 0;
 		}
-		this.updateDps();
-	}
-
-	updateDps() {
-		this.statsService.getRotationStats(this.selectedCharacterId!).subscribe(rotationStats => {
-			this.previousRotationStats = this.rotationStats;
-			this.rotationStats = rotationStats;
-			if (this.previousRotationStats !== undefined) {
-				this.dpsDiff = this.rotationStats.dps - this.previousRotationStats.dps;
-			} else {
-				this.dpsDiff = 0;
-			}
-		})
+		return this.currentRotationStats!.dps - this.previousRotationStats.dps;
 	}
 
 	getDamageShare(stats: RotationSpellStats) {
-		return 100 * (stats.numCasts * stats.damage) / this.rotationStats!.totalDamage;
+		return 100 * (stats.numCasts * stats.damage) / this.currentRotationStats!.totalDamage;
 	}
 }

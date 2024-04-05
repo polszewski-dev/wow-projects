@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Buff } from '../model/buff/Buff';
 import { BuffListType } from '../model/buff/BuffListType';
 

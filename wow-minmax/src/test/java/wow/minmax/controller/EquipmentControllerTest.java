@@ -51,6 +51,30 @@ class EquipmentControllerTest extends ControllerTest {
 	}
 
 	@Test
+	void getItemOptions() throws Exception {
+		mockMvc.perform(get("/api/v1/equipment/{characterId}/options/item/{slot}", CHARACTER_KEY, ItemSlot.CHEST))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
+	void getEnchantOptions() throws Exception {
+		mockMvc.perform(get("/api/v1/equipment/{characterId}/options/enchant", CHARACTER_KEY))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
+	void getGemOptions() throws Exception {
+		mockMvc.perform(get("/api/v1/equipment/{characterId}/options/gem", CHARACTER_KEY))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
 	void changeItemBestVariant() throws Exception {
 		ItemSlot slot = ItemSlot.CHEST;
 		EquippableItem chest = getItem("Sunfire Robe");
@@ -77,7 +101,6 @@ class EquipmentControllerTest extends ControllerTest {
 						.content(requestBody)
 				)
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
 		verify(playerProfileService).changeItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any());

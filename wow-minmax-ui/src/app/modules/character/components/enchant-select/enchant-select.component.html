@@ -1,8 +1,12 @@
-<app-dropdown-select
-	*ngIf="enchantOptions.length > 0"
-	[elements]="enchantOptions"
-	[selection]="equippableItem.enchant"
-	[elementComparator]="enchantComparator"
-	[valueFormatter]="enchantFormatter"
-	(selectionChanged)="onChange($event)"
-></app-dropdown-select>
+<ng-container *ngIf="equippedItem$ | async as equippedItem">
+	<ng-container *ngIf="enchantOptions$ | async as enchantOptions">
+		<app-dropdown-select
+			*ngIf="getEnchantOptions(enchantOptions, equippedItem).length > 0"
+			[elements]="getEnchantOptions(enchantOptions, equippedItem)"
+			[selection]="equippedItem.enchant"
+			[elementComparator]="enchantComparator"
+			[valueFormatter]="enchantFormatter"
+			(selectionChanged)="onChange($event)"
+		></app-dropdown-select>
+	</ng-container>
+</ng-container>

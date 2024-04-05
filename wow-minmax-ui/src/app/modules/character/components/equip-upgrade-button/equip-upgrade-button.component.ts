@@ -1,19 +1,34 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable, map } from 'rxjs';
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../../model/upgrade/Upgrade';
+import { CharacterStateService } from '../../services/character-state.service';
+import { UpgradeStateService } from '../../services/upgrade-state.service';
 
 @Component({
 	selector: 'app-equip-upgrade-button',
 	templateUrl: './equip-upgrade-button.component.html',
 	styleUrls: ['./equip-upgrade-button.component.css']
 })
-export class EquipUpgradeButtonComponent {
-	@Input() slotGroup?: ItemSlotGroup;
-	@Input() upgrades?: Upgrade[];
-	@Output() clicked = new EventEmitter<ItemSlotGroup>();
+export class EquipUpgradeButtonComponent implements OnInit {
+	@Input() slotGroup!: ItemSlotGroup;
 
-	onEquipUpgradeClicked() {
-		this.clicked.emit(this.slotGroup);
+	upgrade$!: Observable<Upgrade | undefined>;
+
+	constructor(
+		private characterStateService: CharacterStateService,
+		private upgradeStateService: UpgradeStateService
+	) {}
+
+	ngOnInit(): void {
+		this.upgrade$ = this.upgradeStateService.upgrade$(this.slotGroup).pipe(
+			map(upgrades => upgrades?.[0])
+		);
+	}
+
+	onEquipUpgradeClick(upgrade: Upgrade) {
+		const items = upgrade.itemDifference;
+		this.characterStateService.equipItemGroup(this.slotGroup, items);
 	}
 
 	getUpgradeLevel(changePct: number) {

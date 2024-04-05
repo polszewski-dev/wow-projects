@@ -1,34 +1,39 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable, map } from 'rxjs';
 import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../../../shared/components/dropdown-select/dropdown-select.component';
 import { PhaseId } from '../../../shared/model/character/PhaseId';
 import { getIcon } from '../../../shared/util/Icon';
-import { EquipmentOptions } from '../../model/equipment/EquipmentOptions';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { Item } from '../../model/equipment/Item';
-import { ItemChange, newItemChange } from '../../model/equipment/ItemChange';
+import { ItemOptions } from '../../model/equipment/ItemOptions';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
-import { EquipmentService } from '../../services/equipment.service';
+import { CharacterStateService } from '../../services/character-state.service';
+import { EquipmentOptionsStateService } from '../../services/equipment-options-state.service';
 
 @Component({
 	selector: 'app-item-select',
 	templateUrl: './item-select.component.html',
 	styleUrls: ['./item-select.component.css']
 })
-export class ItemSelectComponent {
-	@Input() selectedCharacterId!: string;
+export class ItemSelectComponent implements OnInit {
 	@Input() itemSlot!: ItemSlot;
-	@Input() equippableItem?: EquippableItem;
-	@Input() equipmentOptions?: EquipmentOptions;
-	@Output() changed = new EventEmitter<ItemChange>();
+
+	equippedItem$!: Observable<[EquippableItem | undefined]>;
+	itemOptions$!: Observable<ItemOptions | undefined>;
+
+	constructor(
+		private characterStateService: CharacterStateService,
+		private equipmentOptionsStateService: EquipmentOptionsStateService
+	) {}
+
+	ngOnInit(): void {
+		this.equippedItem$ = this.characterStateService.itemSlotByType$(this.itemSlot).pipe(
+			map(item => [ item ])
+		);
+		this.itemOptions$ = this.equipmentOptionsStateService.itemOptionsByItemSlot$(this.itemSlot);
+	}
 
 	readonly itemFormatter = new ItemFormatter();
-
-	constructor(private equipmentService: EquipmentService) {}
-
-	get itemOptions() {
-		return this.equipmentOptions?.itemOptions
-				.find(x => x.itemSlot === this.itemSlot)?.items || [];
-	}
 
 	readonly itemComparator: ElementComparatorFn<Item> = (a, b) => a.name.localeCompare(b.name);
 
@@ -42,10 +47,7 @@ export class ItemSelectComponent {
 	readonly itemGroupToString: GroupKeyToStringFn<Item> = item => item.firstAppearedInPhase.name;
 
 	onChange(item: Item) {
-		this.equipmentService.changeItemBestVariant(this.selectedCharacterId, this.itemSlot!, item.id).subscribe(item => {
-			this.equippableItem = item;
-			this.changed.emit(newItemChange(this.itemSlot, item));
-		});
+		this.characterStateService.equipItemBestVariant(this.itemSlot!, item);
 	}
 }
 

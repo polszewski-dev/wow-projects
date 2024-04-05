@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { SpecialAbilityStats } from '../../model/SpecialAbilityStats';
+import { Component } from '@angular/core';
+import { switchMap } from 'rxjs';
+import { CharacterStateService } from '../../../character/services/character-state.service';
 import { StatsService } from '../../services/stats.service';
 
 @Component({
@@ -7,18 +8,13 @@ import { StatsService } from '../../services/stats.service';
 	templateUrl: './special-abilities.component.html',
 	styleUrls: ['./special-abilities.component.css']
 })
-export class SpecialAbilitiesComponent implements OnChanges {
-	@Input() selectedCharacterId!: string;
-	specialAbilityStatsList: SpecialAbilityStats[] = [];
+export class SpecialAbilitiesComponent {
+	specialAbilityStats$ = this.characterStateService.characterStatChange$.pipe(
+		switchMap(character => this.statsService.getSpecialAbilities(character.characterId))
+	);
 
-	constructor(private statsService: StatsService) {}
-
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedCharacterId']) {
-			return;
-		}
-		this.statsService.getSpecialAbilities(this.selectedCharacterId).subscribe(specialAbilityStatsList => {
-			this.specialAbilityStatsList = specialAbilityStatsList;
-		});
-	}
+	constructor(
+		private characterStateService: CharacterStateService,
+		private statsService: StatsService
+	) {}
 }

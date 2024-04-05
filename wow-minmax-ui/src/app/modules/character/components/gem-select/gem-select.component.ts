@@ -1,36 +1,42 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { DropdownSelectValueFormatter, ElementComparatorFn } from '../../../shared/components/dropdown-select/dropdown-select.component';
 import { getIcon } from '../../../shared/util/Icon';
-import { EquipmentOptions } from '../../model/equipment/EquipmentOptions';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { Gem } from '../../model/equipment/Gem';
 import { GemColor } from '../../model/equipment/GemColor';
-import { ItemChange, newItemChange } from '../../model/equipment/ItemChange';
+import { GemOptions, getMatchingGemOptions } from '../../model/equipment/GemOptions';
 import { ItemRarity } from '../../model/equipment/ItemRarity';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
-import { EquipmentService } from '../../services/equipment.service';
+import { CharacterStateService } from '../../services/character-state.service';
+import { EquipmentOptionsStateService } from '../../services/equipment-options-state.service';
 
 @Component({
 	selector: 'app-gem-select',
 	templateUrl: './gem-select.component.html',
 	styleUrls: ['./gem-select.component.css']
 })
-export class GemSelectComponent {
-	@Input() selectedCharacterId!: string;
+export class GemSelectComponent implements OnInit {
 	@Input() itemSlot!: ItemSlot;
-	@Input() equippableItem!: EquippableItem;
-	@Input() equipmentOptions?: EquipmentOptions;
 	@Input() socketNo!: number;
-	@Output() changed = new EventEmitter<ItemChange>();
+
+	equippedItem$!: Observable<EquippableItem | undefined>;
+	gemOptions$ = this.equipmentOptionsStateService.gemOptions$;
+
+	constructor(
+		private characterStateService: CharacterStateService,
+		private equipmentOptionsStateService: EquipmentOptionsStateService
+	) {}
+
+	ngOnInit(): void {
+		this.equippedItem$ = this.characterStateService.itemSlotByType$(this.itemSlot);
+	}
+
+	getGemOptions(gemOptions: GemOptions[], equippedItem: EquippableItem) {
+		return getMatchingGemOptions(gemOptions, equippedItem, this.socketNo);
+	}
 
 	readonly gemFormatter = new GemFormatter();
-
-	constructor(private equipmentService: EquipmentService) {}
-
-	getGemOptions(socketIdx: number) {
-		return this.equipmentOptions?.gemOptions
-				.find(x => x.socketType === this.equippableItem!.item.socketTypes[socketIdx])?.gems || []
-	}
 
 	readonly gemComparator: ElementComparatorFn<Gem> = (a, b) => {
 		const aSourceIndex = sourceIndex(a);
@@ -60,18 +66,8 @@ export class GemSelectComponent {
 		return a.name.localeCompare(b.name);
 	}
 
-	onGemChange(socketIdx: number, gem: Gem) {
-		const newItem: EquippableItem = {
-			...this.equippableItem!,
-			gems: [...this.equippableItem!.gems]
-		};
-
-		newItem.gems[socketIdx] = gem;
-
-		this.equipmentService.changeItem(this.selectedCharacterId, this.itemSlot!, newItem).subscribe(item => {
-			this.equippableItem = item;
-			this.changed.emit(newItemChange(this.itemSlot, item));
-		});
+	onGemChange(gem: Gem) {
+		this.characterStateService.equipGem(this.itemSlot, this.socketNo, gem);
 	}
 }
 

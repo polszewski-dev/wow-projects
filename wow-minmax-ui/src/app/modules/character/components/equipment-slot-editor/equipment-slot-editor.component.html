@@ -1,72 +1,26 @@
-<ng-template #template>
+<ng-template #template>	
 	<tr>
 		<th scope="row">
 			{{itemSlot.replace('_', ' ').replace('1', '#1').replace('2', '#2') | titlecase}}
-			<app-equip-upgrade-button
-				*ngIf="visible"
-				[slotGroup]="slotGroup"
-				[upgrades]="upgrades"
-				(clicked)="onEquipUpgradeClicked($event)"
-			></app-equip-upgrade-button>
+			<app-equip-upgrade-button *ngIf="visible && slotGroup" [slotGroup]="slotGroup"></app-equip-upgrade-button>
 		</th>
 		<td>
-			<app-item-select
-				*ngIf="visible"
-				[selectedCharacterId]="selectedCharacterId"
-				[itemSlot]="itemSlot"
-				[equippableItem]="equippableItem"
-				[equipmentOptions]="equipmentOptions"
-				(changed)="onItemChange($event)"
-			></app-item-select>
+			<app-item-select *ngIf="visible" [itemSlot]="itemSlot"></app-item-select>
 		</td>
 		<td>
-			<app-enchant-select
-				*ngIf="visible && equippableItem"
-				[selectedCharacterId]="selectedCharacterId"
-				[itemSlot]="itemSlot"
-				[equippableItem]="equippableItem"
-				[equipmentOptions]="equipmentOptions"
-				(changed)="onEnchantChange($event)"
-			></app-enchant-select>
+			<app-enchant-select *ngIf="visible" [itemSlot]="itemSlot"></app-enchant-select>
 		</td>
 		<td>
-			<app-gem-select
-				*ngIf="visible && equippableItem"
-				[selectedCharacterId]="selectedCharacterId"
-				[itemSlot]="itemSlot"
-				[equippableItem]="equippableItem"
-				[equipmentOptions]="equipmentOptions"
-				[socketNo]="0"
-				(changed)="onGemChange($event)"
-			></app-gem-select>
+			<app-gem-select *ngIf="visible" [itemSlot]="itemSlot" [socketNo]="0"></app-gem-select>
 		</td>
 		<td>
-			<app-gem-select
-				*ngIf="visible && equippableItem"
-				[selectedCharacterId]="selectedCharacterId"
-				[itemSlot]="itemSlot"
-				[equippableItem]="equippableItem"
-				[equipmentOptions]="equipmentOptions"
-				[socketNo]="1"
-				(changed)="onGemChange($event)"
-			></app-gem-select>
+			<app-gem-select *ngIf="visible" [itemSlot]="itemSlot" [socketNo]="1"></app-gem-select>
 		</td>
 		<td>
-			<app-gem-select
-				*ngIf="visible && equippableItem"
-				[selectedCharacterId]="selectedCharacterId"
-				[itemSlot]="itemSlot"
-				[equippableItem]="equippableItem"
-				[equipmentOptions]="equipmentOptions"
-				[socketNo]="2"
-				(changed)="onGemChange($event)"
-			></app-gem-select>
+			<app-gem-select *ngIf="visible" [itemSlot]="itemSlot" [socketNo]="2"></app-gem-select>
 		</td>
 		<td>
-			<app-socket-status
-				*ngIf="visible && equippableItem"
-				[socketStatus]="socketStatus"
-			></app-socket-status>
+			<app-socket-status *ngIf="visible" [itemSlot]="itemSlot"></app-socket-status>
 		</td>
 	</tr>
 </ng-template>

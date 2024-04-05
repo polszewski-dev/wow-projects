@@ -1,9 +1,13 @@
-<app-dropdown-select
-	[elements]="itemOptions"
-	[selection]="equippableItem?.item"
-	[elementComparator]="itemComparator"
-	[groupKeyToString]="itemGroupToString"
-	[groupKeyComparator]="itemGroupComparator"
-	[valueFormatter]="itemFormatter"
-	(selectionChanged)="onChange($event)"
-></app-dropdown-select>
+<ng-container *ngIf="equippedItem$ | async as equippedItem">
+	<ng-container *ngIf="itemOptions$ | async as itemOptions">
+		<app-dropdown-select
+			[elements]="itemOptions.items"
+			[selection]="equippedItem[0]?.item"
+			[elementComparator]="itemComparator"
+			[groupKeyToString]="itemGroupToString"
+			[groupKeyComparator]="itemGroupComparator"
+			[valueFormatter]="itemFormatter"
+			(selectionChanged)="onChange($event)"
+		></app-dropdown-select>
+	</ng-container>
+</ng-container>

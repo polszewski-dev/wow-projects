@@ -8,7 +8,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let talentStats of talentStats">
+		<tr *ngFor="let talentStats of talentStats$ | async">
 			<td style="text-align: left" [title]="talentStats.statEquivalent.replaceAll(', ', ',\n')">
 				<strong>
 					<img [src]="talentStats.talent.icon | icon"/>&nbsp;{{talentStats.talent.name}}

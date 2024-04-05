@@ -1,5 +1,6 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
-import { TalentStats } from '../../model/TalentStats';
+import { Component } from '@angular/core';
+import { switchMap } from 'rxjs';
+import { CharacterStateService } from '../../../character/services/character-state.service';
 import { StatsService } from '../../services/stats.service';
 
 @Component({
@@ -8,18 +9,12 @@ import { StatsService } from '../../services/stats.service';
 	styleUrls: ['./talent-stats.component.css']
 })
 export class TalentStatsComponent {
-	@Input() selectedCharacterId!: string;
+	talentStats$ = this.characterStateService.characterStatChange$.pipe(
+		switchMap(character => this.statsService.getTalentStats(character.characterId))
+	);
 
-	talentStats: TalentStats[] = [];
-
-	constructor(private statsService: StatsService) {}
-
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedCharacterId']) {
-			return;
-		}
-		this.statsService.getTalentStats(this.selectedCharacterId).subscribe(talentStats => {
-			this.talentStats = talentStats;
-		});
-	}
+	constructor(
+		private characterStateService: CharacterStateService,
+		private statsService: StatsService
+	) {}
 }

@@ -7,7 +7,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let specialAbilityStats of specialAbilityStatsList">
+		<tr *ngFor="let specialAbilityStats of specialAbilityStats$ | async">
 			<td [title]="specialAbilityStats.attributes">
 				<img [src]="specialAbilityStats.sourceIcon | icon" [title]="specialAbilityStats.sourceName"/>&nbsp;{{specialAbilityStats.description}}</td>
 			<td>{{specialAbilityStats.statEquivalent}}</td>

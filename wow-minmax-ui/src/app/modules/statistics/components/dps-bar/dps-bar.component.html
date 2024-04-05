@@ -1,4 +1,4 @@
-<div *ngIf="rotationStats" class="dps-bar">
+<div *ngIf="rotationStats$ | async as rotationStats" class="dps-bar">
 	<span>dps: {{rotationStats.dps | number:'1.0-0'}}</span>
 	<span
 		*ngIf="dpsDiff"

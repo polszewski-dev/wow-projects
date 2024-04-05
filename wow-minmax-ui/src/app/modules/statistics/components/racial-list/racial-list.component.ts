@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Character } from '../../../character/model/Character';
+import { Component } from '@angular/core';
+import { CharacterStateService } from '../../../character/services/character-state.service';
 
 @Component({
 	selector: 'app-racial-list',
@@ -7,5 +7,7 @@ import { Character } from '../../../character/model/Character';
 	styleUrls: ['./racial-list.component.css']
 })
 export class RacialListComponent {
-	@Input() selectedCharacter!: Character;
+	character$ = this.characterStateService.character$;
+
+	constructor(private characterStateService: CharacterStateService) {}
 }
