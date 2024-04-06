@@ -1,0 +1,8 @@
+<app-dropdown-select
+	*ngIf="enchantOptions.length > 0"
+	[elements]="enchantOptions"
+	[selection]="equippableItem.enchant"
+	[elementComparator]="enchantComparator"
+	[valueFormatter]="enchantFormatter"
+	(selectionChanged)="onChange($event)"
+></app-dropdown-select>

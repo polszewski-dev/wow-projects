@@ -1,0 +1,30 @@
+.no-upgrades {
+	color: green;
+	font-weight: bold !important;
+	font-size: 16px;
+}
+
+.upgrade-badge {
+	cursor: pointer;
+	--bs-badge-padding-x: 0.35em;
+}
+
+.upgrade-level-1 {
+	background-color: rgb(69, 189, 45) !important;
+}
+
+.upgrade-level-2 {
+	background-color: rgb(226, 199, 43) !important;
+}
+
+.upgrade-level-3 {
+	background-color: rgb(255, 153, 0) !important;
+}
+
+.upgrade-level-4 {
+	background-color: rgb(255, 94, 0) !important;
+}
+
+.upgrade-level-5 {
+	background-color: rgb(255, 0, 0) !important;
+}

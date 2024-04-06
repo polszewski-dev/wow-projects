@@ -1,0 +1,6 @@
+<span *ngIf="upgrades && upgrades.length === 0" class="no-upgrades">✓</span>
+<span
+	*ngIf="upgrades && upgrades.length !== 0"
+	class="badge rounded-pill upgrade-badge upgrade-level-{{getUpgradeLevel(upgrades[0].changePct)}}"
+	(click)="onEquipUpgradeClicked()"
+>+{{upgrades[0].changePct | number:'1.1-1'}}%</span>

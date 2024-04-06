@@ -3,13 +3,13 @@ import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentOptions } from '../../model/equipment/EquipmentOptions';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
+import { ItemChange } from '../../model/equipment/ItemChange';
 import { ItemFilter } from '../../model/equipment/ItemFilter';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemType } from '../../model/equipment/ItemType';
 import { ItemSlotGroup, getItemSlotGroup, getSlots } from '../../model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../../model/upgrade/Upgrade';
 import { EquipmentService } from '../../services/equipment.service';
-import { ItemChange } from '../equipment-slot-editor/equipment-slot-editor.component';
 
 @Component({
 	selector: 'app-equipment-editor',
@@ -68,7 +68,7 @@ export class EquipmentEditorComponent implements OnChanges {
 		this.updateSocketStatus();
 	}
 
-	onUpgradeCounterClicked(slotGroup: ItemSlotGroup) {
+	onEquipUpgradeClicked(slotGroup: ItemSlotGroup) {
 		const items = this.upgradesBySlotGroup[slotGroup]![0].itemDifference!;
 		this.equipmentService.changeItems(this.selectedCharacterId, slotGroup, items).subscribe(() => {
 			this.updateEquipmentSlots(slotGroup, items);

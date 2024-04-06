@@ -1,0 +1,9 @@
+<app-dropdown-select
+	[elements]="itemOptions"
+	[selection]="equippableItem?.item"
+	[elementComparator]="itemComparator"
+	[groupKeyToString]="itemGroupToString"
+	[groupKeyComparator]="itemGroupComparator"
+	[valueFormatter]="itemFormatter"
+	(selectionChanged)="onChange($event)"
+></app-dropdown-select>

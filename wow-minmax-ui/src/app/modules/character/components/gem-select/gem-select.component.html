@@ -1,0 +1,8 @@
+<app-dropdown-select
+	*ngIf="equippableItem.gems.length >= (socketNo + 1)"
+	[elements]="getGemOptions(socketNo)"
+	[selection]="equippableItem.gems[socketNo]"
+	[elementComparator]="gemComparator"
+	[valueFormatter]="gemFormatter"
+	(selectionChanged)="onGemChange(socketNo, $event)"
+></app-dropdown-select>
