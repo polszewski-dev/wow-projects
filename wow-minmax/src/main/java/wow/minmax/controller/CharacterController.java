@@ -16,7 +16,7 @@ import wow.minmax.service.PlayerProfileService;
  * Date: 2023-04-04
  */
 @RestController
-@RequestMapping("api/v1/character")
+@RequestMapping("api/v1/characters")
 @AllArgsConstructor
 @Slf4j
 public class CharacterController {

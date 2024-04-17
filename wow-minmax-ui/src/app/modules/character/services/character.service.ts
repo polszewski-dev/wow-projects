@@ -6,7 +6,7 @@ import { Character } from '../model/Character';
 	providedIn: 'root'
 })
 export class CharacterService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/character';
+	private readonly apiUrl = 'http://localhost:8080/api/v1/characters';
 
 	constructor(private http: HttpClient) { }
 

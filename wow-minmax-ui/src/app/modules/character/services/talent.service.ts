@@ -6,11 +6,11 @@ import { Talent } from '../../shared/model/talent/Talent';
 	providedIn: 'root'
 })
 export class TalentService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/talent';
+	private readonly apiUrl = 'http://localhost:8080/api/v1/talents';
 
 	constructor(private http: HttpClient) { }
 
 	getTalents(characterId: string) {
-		return this.http.get<Talent[]>(`${this.apiUrl}/${characterId}/list`);
+		return this.http.get<Talent[]>(`${this.apiUrl}/${characterId}`);
 	}
 }

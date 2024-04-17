@@ -5,7 +5,7 @@ import { EquipmentOptions } from '../model/equipment/EquipmentOptions';
 import { GemOptions } from '../model/equipment/GemOptions';
 import { ItemOptions } from '../model/equipment/ItemOptions';
 import { ItemSlot } from '../model/equipment/ItemSlot';
-import { EquipmentService } from './equipment.service';
+import { EquipmentOptionsService } from './equipment-options.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,7 +30,7 @@ export class EquipmentOptionsStateService {
 		return this.equipmentOptions;
 	}
 
-	constructor(private equipmentService: EquipmentService) { }
+	constructor(private equipmentOptionsService: EquipmentOptionsService) { }
 
 	clearOptions() {
 		this.equipmentOptions = undefined;
@@ -41,17 +41,17 @@ export class EquipmentOptionsStateService {
 	}
 
 	loadOptions(characterId: string) {
-		this.equipmentService.getEquipmentOptions(characterId).subscribe(equipmentOptions => {
+		this.equipmentOptionsService.getEquipmentOptions(characterId).subscribe(equipmentOptions => {
 			this.equipmentOptions = equipmentOptions;
 			this.equipmentOptionsSubject.next(equipmentOptions);
 		});
 		Object.keys(this.itemOptionsSubjects).forEach(itemSlot => {
 			this.loadItemOptions(characterId, itemSlot as ItemSlot);
 		});
-		this.equipmentService.getEnchantOptions(characterId).subscribe(enchantOptions => {
+		this.equipmentOptionsService.getEnchantOptions(characterId).subscribe(enchantOptions => {
 			this.enchantOptionsSubject.next(enchantOptions);
 		});
-		this.equipmentService.getGemOptions(characterId).subscribe(gemOptions => {
+		this.equipmentOptionsService.getGemOptions(characterId).subscribe(gemOptions => {
 			this.gemOptionsSubject.next(gemOptions);
 		});
 	}
@@ -61,7 +61,7 @@ export class EquipmentOptionsStateService {
 			return;
 		}
 
-		this.equipmentService.getItemOptions(characterId, itemSlot).subscribe(itemOptions => {
+		this.equipmentOptionsService.getItemOptions(characterId, itemSlot).subscribe(itemOptions => {
 			this.itemOptionsSubjects[itemSlot].next(itemOptions);
 			if (itemSlot === ItemSlot.FINGER_1) {
 				this.itemOptionsSubjects[ItemSlot.FINGER_2].next(itemOptions);

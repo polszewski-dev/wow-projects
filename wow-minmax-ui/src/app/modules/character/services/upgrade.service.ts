@@ -8,7 +8,7 @@ import { Upgrade } from '../model/upgrade/Upgrade';
 	providedIn: 'root'
 })
 export class UpgradeService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/upgrade';
+	private readonly apiUrl = 'http://localhost:8080/api/v1/upgrades';
 
 	constructor(private http: HttpClient) { }
 

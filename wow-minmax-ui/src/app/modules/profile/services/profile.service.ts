@@ -8,12 +8,12 @@ import { ProfileInfo } from '../model/ProfileInfo';
 	providedIn: 'root'
 })
 export class ProfileService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/profile';
+	private readonly apiUrl = 'http://localhost:8080/api/v1/profiles';
 
 	constructor(private http: HttpClient) { }
 
 	getProfileList() {
-		return this.http.get<ProfileInfo[]>(`${this.apiUrl}/list`);
+		return this.http.get<ProfileInfo[]>(`${this.apiUrl}`);
 	}
 
 	createProfile(profile: ProfileInfo) {
@@ -21,10 +21,10 @@ export class ProfileService {
 	}
 
 	getNewProfileOptions() {
-		return this.http.get<NewProfileOptions>(`${this.apiUrl}/new/options`);
+		return this.http.get<NewProfileOptions>(`${this.apiUrl}/new-options`);
 	}
 
 	getCharacterSelectionOptions(profileId: string) {
-		return this.http.get<CharacterSelectionOptions>(`${this.apiUrl}/${profileId}/char/selection/options`);
+		return this.http.get<CharacterSelectionOptions>(`${this.apiUrl}/${profileId}/char-selection-options`);
 	}
 }

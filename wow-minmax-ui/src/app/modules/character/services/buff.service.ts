@@ -7,15 +7,15 @@ import { BuffListType } from '../model/buff/BuffListType';
 	providedIn: 'root'
 })
 export class BuffService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/buff';
+	private readonly apiUrl = 'http://localhost:8080/api/v1/buffs';
 
 	constructor(private http: HttpClient) { }
 
 	getBuffs(characterId: string, buffListType: BuffListType) {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}/list`);
+		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}`);
 	}
 
 	enableBuff(characterId: string, buffListType: BuffListType, buff: Buff) {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}/enable/${buff.buffId}/${buff.rank}/${buff.enabled}`);
+		return this.http.put<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}`, buff);
 	}
 }

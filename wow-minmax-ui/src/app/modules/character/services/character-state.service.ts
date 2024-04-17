@@ -105,7 +105,7 @@ export class CharacterStateService {
 	}
 
 	equipItemBestVariant(itemSlot: ItemSlot, item: Item) {
-		this.equipmentService.changeItemBestVariant(this.characterId!, itemSlot, item.id).subscribe(item => {
+		this.equipmentService.equipItemBestVariant(this.characterId!, itemSlot, item).subscribe(item => {
 			this.setEquippedItem(itemSlot, item);
 			this.updateUpgrades();
 			this.updateSocketStatus();
@@ -140,7 +140,7 @@ export class CharacterStateService {
 	}
 
 	equipItemGroup(slotGroup: ItemSlotGroup, items: EquippableItem[]) {
-		this.equipmentService.changeItems(this.characterId!, slotGroup, items).subscribe(() => {
+		this.equipmentService.equipItems(this.characterId!, slotGroup, items).subscribe(() => {
 			const itemSlots = getSlots(slotGroup);
 
 			for (let i = 0; i < itemSlots.length; ++i) {
@@ -178,7 +178,7 @@ export class CharacterStateService {
 	}
 
 	private equipItem(itemSlot: ItemSlot, item: EquippableItem | undefined, afterChange: () => void) {
-		this.equipmentService.changeItem(this.characterId!, itemSlot, item).subscribe(() => {
+		this.equipmentService.equipItem(this.characterId!, itemSlot, item).subscribe(() => {
 			this.setEquippedItem(itemSlot, item);
 			afterChange();
 		});

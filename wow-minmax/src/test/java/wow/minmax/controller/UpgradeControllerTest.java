@@ -38,7 +38,7 @@ class UpgradeControllerTest extends ControllerTest {
 		String requestBody = objectMapper.writeValueAsString(convert);
 
 		mockMvc.perform(
-						get("/api/v1/upgrade/{characterId}/slot/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
+						get("/api/v1/upgrades/{characterId}/slot/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)

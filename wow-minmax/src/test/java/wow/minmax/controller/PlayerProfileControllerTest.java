@@ -32,7 +32,7 @@ class PlayerProfileControllerTest extends ControllerTest {
 
 	@Test
 	void getPlayerProfileList() throws Exception {
-		mockMvc.perform(get("/api/v1/profile/list"))
+		mockMvc.perform(get("/api/v1/profiles"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$", hasSize(1)))
@@ -52,7 +52,7 @@ class PlayerProfileControllerTest extends ControllerTest {
 		String requestBody = objectMapper.writeValueAsString(convert);
 
 		mockMvc.perform(
-					post("/api/v1/profile", requestBody)
+					post("/api/v1/profiles", requestBody)
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(requestBody)
 				)
@@ -65,14 +65,14 @@ class PlayerProfileControllerTest extends ControllerTest {
 
 	@Test
 	void getNewProfileOptions() throws Exception {
-		mockMvc.perform(get("/api/v1/profile/new/options"))
+		mockMvc.perform(get("/api/v1/profiles/new-options"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
 	}
 
 	@Test
 	void getCharacterSelectionOptions() throws Exception {
-		mockMvc.perform(get("/api/v1/profile/{profileId}/char/selection/options", PROFILE_ID))
+		mockMvc.perform(get("/api/v1/profiles/{profileId}/char-selection-options", PROFILE_ID))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
 	}

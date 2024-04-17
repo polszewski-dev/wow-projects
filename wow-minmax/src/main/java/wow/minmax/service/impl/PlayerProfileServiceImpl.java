@@ -135,31 +135,31 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	}
 
 	@Override
-	public PlayerCharacter changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId) {
-		var bestItemVariant = getBestItemVariant(characterId, slot, itemId);
-
-		return changeItem(characterId, slot, bestItemVariant);
-	}
-
-	private EquippableItem getBestItemVariant(CharacterId characterId, ItemSlot slot, int itemId) {
-		var character = getCharacter(characterId);
-		var item = itemService.getItem(itemId, character.getPhaseId());
-		return upgradeService.getBestItemVariant(character, item, slot);
+	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
+		return equipItem(characterId, slot, item, false);
 	}
 
 	@Override
-	public PlayerCharacter changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
+	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant) {
 		var playerProfile = getPlayerProfile(characterId.getProfileId());
 		var character = getCharacter(playerProfile, characterId);
+		var itemToEquip = getItemToEquip(slot, item, bestVariant, character);
 
-		character.equip(item, slot);
+		character.equip(itemToEquip, slot);
 		saveProfile(playerProfile, character);
-
 		return character;
 	}
 
+	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, PlayerCharacter character) {
+		if (bestVariant) {
+			return upgradeService.getBestItemVariant(character, item.getItem(), slot);
+		} else {
+			return item;
+		}
+	}
+
 	@Override
-	public PlayerCharacter changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+	public PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
 		var playerProfile = getPlayerProfile(characterId.getProfileId());
 		var character = getCharacter(playerProfile, characterId);
 		var slots = slotGroup.getSlots();

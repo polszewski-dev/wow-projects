@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * Date: 2021-12-14
  */
 @RestController
-@RequestMapping("api/v1/profile")
+@RequestMapping("api/v1/profiles")
 @AllArgsConstructor
 @Slf4j
 public class PlayerProfileController {
@@ -37,7 +37,7 @@ public class PlayerProfileController {
 
 	private final ProfileConfig profileConfig;
 
-	@GetMapping("list")
+	@GetMapping
 	public List<PlayerProfileInfoDTO> getPlayerProfileList() {
 		var playerProfileInfos = playerProfileService.getPlayerProfileInfos();
 		return playerProfileInfoConverter.convertList(playerProfileInfos);
@@ -53,7 +53,7 @@ public class PlayerProfileController {
 		return playerProfileInfoConverter.convert(createdPlayerProfile.getProfileInfo());
 	}
 
-	@GetMapping("new/options")
+	@GetMapping("new-options")
 	public NewProfileOptionsDTO getNewProfileOptions() {
 		var latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
 		var gameVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
@@ -66,7 +66,7 @@ public class PlayerProfileController {
 		return new NewProfileOptionsDTO(supportedClasses);
 	}
 
-	@GetMapping("{profileId}/char/selection/options")
+	@GetMapping("{profileId}/char-selection-options")
 	public CharacterSelectionOptionsDTO getCharacterSelectionOptions(
 			@PathVariable("profileId") UUID profileId
 	) {

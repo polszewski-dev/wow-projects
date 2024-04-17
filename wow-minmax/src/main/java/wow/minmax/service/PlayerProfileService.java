@@ -27,11 +27,11 @@ public interface PlayerProfileService {
 
 	PlayerCharacter getCharacter(CharacterId characterId);
 
-	PlayerCharacter changeItemBestVariant(CharacterId characterId, ItemSlot slot, int itemId);
+	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
 
-	PlayerCharacter changeItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
+	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant);
 
-	PlayerCharacter changeItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
+	PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
 	PlayerCharacter resetEquipment(CharacterId characterId);
 

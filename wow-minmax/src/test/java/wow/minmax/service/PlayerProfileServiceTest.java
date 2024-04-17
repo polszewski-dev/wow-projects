@@ -82,7 +82,9 @@ class PlayerProfileServiceTest extends ServiceTest {
 	void changeItem() {
 		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 
-		underTest.changeItemBestVariant(CHARACTER_KEY, OFF_HAND, 34179);
+		var item = getItem("Heart of the Pit");
+
+		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -96,7 +98,9 @@ class PlayerProfileServiceTest extends ServiceTest {
 		assertThat(character.getEquipment().getMainHand().getItem().getName()).isEqualTo("Sunflare");
 		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 
-		underTest.changeItemBestVariant(CHARACTER_KEY, MAIN_HAND, 34182);
+		var item = getItem("Grand Magister's Staff of Torrents");
+
+		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, item, true);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -125,7 +129,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		mainHand = mainHand.copy();
 		mainHand.enchant(enchant);
 
-		underTest.changeItem(CHARACTER_KEY, MAIN_HAND, mainHand);
+		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, mainHand);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
@@ -147,7 +151,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		chest = chest.copy();
 		chest.getSockets().insertGem(1, gem);
 
-		underTest.changeItem(CHARACTER_KEY, CHEST, chest);
+		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
 
 		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();

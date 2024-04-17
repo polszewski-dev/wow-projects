@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.minmax.converter.dto.TalentConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.TalentDTO;
-import wow.minmax.service.CalculationService;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
@@ -19,15 +18,14 @@ import java.util.List;
  * Date: 2022-12-31
  */
 @RestController
-@RequestMapping("api/v1/talent")
+@RequestMapping("api/v1/talents")
 @AllArgsConstructor
 @Slf4j
 public class TalentController {
 	private final PlayerProfileService playerProfileService;
-	private final CalculationService calculationService;
 	private final TalentConverter talentConverter;
 
-	@GetMapping("{characterId}/list")
+	@GetMapping("{characterId}")
 	public List<TalentDTO> getTalents(
 			@PathVariable("characterId") CharacterId characterId
 	) {

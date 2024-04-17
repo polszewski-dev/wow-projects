@@ -6,25 +6,16 @@ import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.model.equipment.ItemFilter;
-import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.commons.model.categorization.ItemSubType;
-import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.SocketType;
-import wow.minmax.converter.dto.*;
+import wow.minmax.converter.dto.EquipmentConverter;
+import wow.minmax.converter.dto.EquippableItemConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.dto.*;
-import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.PlayerProfileService;
 import wow.minmax.util.AttributeFormatter;
 
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,18 +26,13 @@ import static wow.minmax.converter.dto.DtoConverterParams.createParams;
  * Date: 2022-12-28
  */
 @RestController
-@RequestMapping("api/v1/equipment")
+@RequestMapping("api/v1/equipments")
 @AllArgsConstructor
 @Slf4j
 public class EquipmentController {
 	private final PlayerProfileService playerProfileService;
-	private final ItemService itemService;
-	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final EquipmentConverter equipmentConverter;
 	private final EquippableItemConverter equippableItemConverter;
-	private final ItemConverter itemConverter;
-	private final EnchantConverter enchantConverter;
-	private final GemConverter gemConverter;
 
 	@GetMapping("{characterId}")
 	public EquipmentDTO getEquipment(
@@ -56,143 +42,40 @@ public class EquipmentController {
 		return equipmentConverter.convert(character.getEquipment());
 	}
 
-	@GetMapping("{characterId}/options")
-	public EquipmentOptionsDTO getEquipmentOptions(
-			@PathVariable("characterId") CharacterId characterId
-	) {
-		var character = playerProfileService.getCharacter(characterId);
-
-		var gems = minmaxConfigRepository.hasFeature(character, CharacterFeature.GEMS);
-		var heroics = minmaxConfigRepository.hasFeature(character, CharacterFeature.HEROICS);
-
-		return new EquipmentOptionsDTO(gems, heroics);
-	}
-
-	@GetMapping("{characterId}/options/item/{slot}")
-	public ItemOptionsDTO getItemOptions(
-			@PathVariable("characterId") CharacterId characterId,
-			@PathVariable("slot") ItemSlot slot
-	) {
-		var character = playerProfileService.getCharacter(characterId);
-		var itemFilter = ItemFilter.everything();
-
-		return getItemOptions(character, slot, itemFilter);
-	}
-
-	@GetMapping("{characterId}/options/enchant")
-	public List<EnchantOptionsDTO> getEnchantOptions(
-			@PathVariable("characterId") CharacterId characterId
-	) {
-		var character = playerProfileService.getCharacter(characterId);
-		var itemFilter = ItemFilter.everything();
-
-		var itemOptions = getItemOptions(character, itemFilter);
-
-		return getEnchantOptions(character, itemOptions);
-	}
-
-	@GetMapping("{characterId}/options/gem")
-	public List<GemOptionsDTO> getGemOptions(
-			@PathVariable("characterId") CharacterId characterId
-	) {
-		var character = playerProfileService.getCharacter(characterId);
-
-		return getGemOptions(character);
-	}
-
-	private List<ItemOptionsDTO> getItemOptions(PlayerCharacter character, ItemFilter itemFilter) {
-		return ItemSlot.getDpsSlots().stream()
-				.map(itemSlot -> getItemOptions(character, itemSlot, itemFilter))
-				.toList();
-	}
-
-	private ItemOptionsDTO getItemOptions(PlayerCharacter character, ItemSlot itemSlot, ItemFilter itemFilter) {
-		var items = itemService.getItemsBySlot(character, itemSlot, itemFilter);
-		var itemDTOs = itemConverter.convertList(items);
-
-		return new ItemOptionsDTO(itemSlot, itemDTOs);
-	}
-
-	private List<EnchantOptionsDTO> getEnchantOptions(PlayerCharacter character, List<ItemOptionsDTO> itemOptions) {
-		var list = createTypeAndSubtypeGroups(itemOptions);
-
-		for (EnchantOptionsDTO x : list) {
-			var enchants = itemService.getEnchants(character, x.getItemType(), x.getItemSubType());
-			x.setEnchants(enchantConverter.convertList(enchants));
-		}
-
-		return list;
-	}
-
-	private static List<EnchantOptionsDTO> createTypeAndSubtypeGroups(List<ItemOptionsDTO> itemOptions) {
-		var map = new EnumMap<ItemType, Map<ItemSubType, EnchantOptionsDTO>>(ItemType.class);
-
-		itemOptions.stream()
-				.flatMap(x -> x.getItems().stream())
-				.forEach(item -> map
-						.computeIfAbsent(item.getItemType(), x -> new HashMap<>())
-						.computeIfAbsent(item.getItemSubType(), x -> new EnchantOptionsDTO(item.getItemType(), item.getItemSubType(), null)));
-
-		return map.values().stream().flatMap(x -> x.values().stream()).toList();
-	}
-
-	private List<GemOptionsDTO> getGemOptions(PlayerCharacter character) {
-		return Stream.of(SocketType.values())
-				.map(socketType -> getGemOptions(character, socketType))
-				.toList();
-	}
-
-	private GemOptionsDTO getGemOptions(PlayerCharacter character, SocketType socketType) {
-		var gems = itemService.getGems(character, socketType, false);
-		var gemDTOs = gemConverter.convertList(gems);
-
-		return new GemOptionsDTO(socketType, gemDTOs);
-	}
-
-	@GetMapping("{characterId}/change/item/{slot}/{itemId}/best/variant")
-	public EquippableItemDTO changeItemBestVariant(
+	@PutMapping("{characterId}/slot/{slot}")
+	public EquippableItemDTO equipItem(
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slot") ItemSlot slot,
-			@PathVariable("itemId") int itemId
-	) {
-		var character = playerProfileService.changeItemBestVariant(characterId, slot, itemId);
-		log.info("Changed item charId: {}, slot: {}, itemId: {}", characterId, slot, itemId);
-		return equippableItemConverter.convert(character.getEquippedItem(slot));
-	}
-
-	@PutMapping("{characterId}/change/item/{slot}")
-	public void changeItem(
-			@PathVariable("characterId") CharacterId characterId,
-			@PathVariable("slot") ItemSlot slot,
-			@RequestBody EquippableItemDTO itemDTO
+			@RequestBody EquippableItemDTO itemDTO,
+			@RequestParam(name = "best-variant", required = false, defaultValue = "false") boolean bestVariant
 	) {
 		var item = getEquippableItem(itemDTO, characterId);
-		playerProfileService.changeItem(characterId, slot, item);
-		log.info("Changed item charId: {}, slot: {}, item: {}", characterId, slot, item);
+		var character = playerProfileService.equipItem(characterId, slot, item, bestVariant);
+		var equippedItem = character.getEquippedItem(slot);
+		log.info("Equipped item charId: {}, slot: {}, item: {}", characterId, slot, equippedItem);
+		return equippableItemConverter.convert(equippedItem);
 	}
 
-	@PutMapping("{characterId}/change/item/group/{slotGroup}")
-	public void changeItemGroup(
+	@PutMapping("{characterId}/slot-group/{slotGroup}")
+	public void equipItemGroup(
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestBody List<EquippableItemDTO> itemDTOs
 	) {
-		var items = getEquippableItems(characterId, itemDTOs);
-		playerProfileService.changeItemGroup(characterId, slotGroup, items);
-		log.info("Changed items charId: {}, slotGroup: {}, items: {}", characterId, slotGroup, items);
+		var items = getEquippableItems(itemDTOs, characterId);
+		playerProfileService.equipItemGroup(characterId, slotGroup, items);
+		log.info("Equipped items charId: {}, slotGroup: {}, items: {}", characterId, slotGroup, items);
 	}
 
 	private EquippableItem getEquippableItem(EquippableItemDTO itemDTO, CharacterId characterId) {
-		var character = playerProfileService.getCharacter(characterId);
-		return equippableItemConverter.convertBack(itemDTO, createParams(character.getPhaseId()));
+		return equippableItemConverter.convertBack(itemDTO, createParams(characterId.getPhaseId()));
 	}
 
-	private List<EquippableItem> getEquippableItems(CharacterId characterId, List<EquippableItemDTO> itemDTOs) {
-		var character = playerProfileService.getCharacter(characterId);
-		return equippableItemConverter.convertBackList(itemDTOs, createParams(character.getPhaseId()));
+	private List<EquippableItem> getEquippableItems(List<EquippableItemDTO> itemDTOs, CharacterId characterId) {
+		return equippableItemConverter.convertBackList(itemDTOs, createParams(characterId.getPhaseId()));
 	}
 
-	@GetMapping("{characterId}/reset")
+	@DeleteMapping("{characterId}")
 	public EquipmentDTO resetEquipment(
 			@PathVariable("characterId") CharacterId characterId
 	) {
@@ -201,7 +84,7 @@ public class EquipmentController {
 		return equipmentConverter.convert(character.getEquipment());
 	}
 
-	@GetMapping("{characterId}/socket/status")
+	@GetMapping("{characterId}/socket-status")
 	public EquipmentSocketStatusDTO getEquipmentSocketStatus(
 			@PathVariable("characterId") CharacterId characterId
 	) {

@@ -22,7 +22,7 @@ import static java.lang.Boolean.parseBoolean;
  * Date: 2021-12-15
  */
 @RestController
-@RequestMapping("api/v1/upgrade")
+@RequestMapping("api/v1/upgrades")
 @AllArgsConstructor
 @Slf4j
 public class UpgradeController {
