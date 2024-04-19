@@ -17,7 +17,7 @@ public record Duration(long millis) implements Comparable<Duration> {
 	public static final Duration NEG_INFINITE = new Duration(NEG_INF_MILLIS);
 
 	public Duration {
-		millis = Math.max(Math.min(millis, INF_MILLIS), NEG_INF_MILLIS);
+		millis = Math.clamp(millis, NEG_INF_MILLIS, INF_MILLIS);
 	}
 
 	public static Duration seconds(long seconds) {

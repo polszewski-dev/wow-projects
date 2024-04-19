@@ -7,7 +7,6 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
-import wow.character.service.ItemService;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -41,7 +40,6 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final PlayerProfilePOConverter playerProfilePOConverter;
 
-	private final ItemService itemService;
 	private final UpgradeService upgradeService;
 	private final CharacterService characterService;
 

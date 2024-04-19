@@ -108,20 +108,22 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 			throw new IllegalArgumentException(item + " can't be equipped into " + slot);
 		}
 
-		if (slot == MAIN_HAND) {
-			putOrRemove(MAIN_HAND, item);
-			EquippableItem mainHand = getMainHand();
-			if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND) {
-				putOrRemove(OFF_HAND, null);
+		switch (slot) {
+			case MAIN_HAND -> {
+				putOrRemove(MAIN_HAND, item);
+				EquippableItem mainHand = getMainHand();
+				if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND) {
+					putOrRemove(OFF_HAND, null);
+				}
 			}
-		} else if (slot == OFF_HAND) {
-			EquippableItem mainHand = getMainHand();
-			if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND && item != null) {
-				throw new IllegalArgumentException("Can't equip offhand while having 2-hander");
+			case OFF_HAND -> {
+				EquippableItem mainHand = getMainHand();
+				if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND && item != null) {
+					throw new IllegalArgumentException("Can't equip offhand while having 2-hander");
+				}
+				putOrRemove(OFF_HAND, item);
 			}
-			putOrRemove(OFF_HAND, item);
-		} else {
-			putOrRemove(slot, item);
+			default -> putOrRemove(slot, item);
 		}
 	}
 

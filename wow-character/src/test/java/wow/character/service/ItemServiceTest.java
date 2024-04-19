@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ItemServiceTest extends WowCharacterSpringTest {
 	@Autowired
-	@Qualifier("itemService")
+	@Qualifier("itemServiceImpl")
 	ItemService underTest;
 
 	@Test

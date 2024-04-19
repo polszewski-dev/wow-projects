@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import wow.commons.util.parser.ParserUtil;
 import wow.scraper.fetcher.PageCache;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 })
 @PropertySource("classpath:test.properties")
 public class ScraperSpringTestConfig {
+	@Primary
 	@Bean
 	public PageFetcher pageFetcher(PageCache pageCache) {
 		return new DummyPageFetcher();

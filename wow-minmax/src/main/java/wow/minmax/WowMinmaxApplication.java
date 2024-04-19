@@ -7,10 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import wow.character.service.ItemService;
-import wow.character.service.impl.CachedItemService;
-import wow.character.service.impl.ItemServiceImpl;
-import wow.commons.repository.ItemRepository;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
@@ -21,11 +17,6 @@ import wow.commons.repository.ItemRepository;
 public class WowMinmaxApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WowMinmaxApplication.class, args);
-	}
-
-	@Bean
-	public ItemService itemService(ItemRepository itemRepository) {
-		return new CachedItemService(new ItemServiceImpl(itemRepository));
 	}
 
 	@Bean

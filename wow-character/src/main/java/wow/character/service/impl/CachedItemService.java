@@ -1,6 +1,7 @@
 package wow.character.service.impl;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
@@ -25,8 +26,8 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2022-11-14
  */
+@Primary
 @Service
-@AllArgsConstructor
 public class CachedItemService implements ItemService {
 	private final ItemService itemService;
 
@@ -36,6 +37,10 @@ public class CachedItemService implements ItemService {
 	private final Map<String, List<Gem>> getGemsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> getBestGemsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem[]>> getBestGemCombosCache = Collections.synchronizedMap(new HashMap<>());
+
+	public CachedItemService(@Qualifier("itemServiceImpl") ItemService itemService) {
+		this.itemService = itemService;
+	}
 
 	@Override
 	public Item getItem(int itemId, PhaseId phaseId) {
