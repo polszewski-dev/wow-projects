@@ -1,8 +1,6 @@
 package wow.character.service.impl.enumerator;
 
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 
 import java.util.Collection;
@@ -29,9 +27,11 @@ public abstract class FilterOutWorseChoices<T> {
 	}
 
 	public List<T> getResult() {
-		var filteredModifiers = modifiers.stream()
-				.collect(Collectors.groupingBy(this::getGroupAndStatsKey))
-				.values().stream()
+		var groups = modifiers.stream()
+				.collect(Collectors.groupingBy(this::getGroupKey))
+				.values();
+
+		var filteredModifiers = groups.stream()
 				.map(this::filterOutWorseChoicesFromGroup)
 				.map(this::removeTheSameStats)
 				.flatMap(Collection::stream);
@@ -40,27 +40,38 @@ public abstract class FilterOutWorseChoices<T> {
 	}
 
 	private List<T> filterOutWorseChoicesFromGroup(List<T> group) {
+		var keys = getAttributeKeys(group);
 		return group.stream()
-				.filter(choice -> !isStrictlyWorseThanOthers(choice, group))
+				.filter(choice -> !isStrictlyWorseThanOthers(choice, group, keys))
 				.toList();
 	}
 
-	private boolean isStrictlyWorseThanOthers(T choice, List<T> choices) {
+	private boolean isStrictlyWorseThanOthers(T choice, List<T> choices, List<Attribute> keys) {
 		return choices.stream()
 				.filter(otherChoice -> choice != otherChoice)
-				.anyMatch(otherChoice -> isStrictlyWorseThan(choice, otherChoice));
+				.anyMatch(otherChoice -> isStrictlyWorseThan(choice, otherChoice, keys));
 	}
 
-	private boolean isStrictlyWorseThan(T choice, T otherChoice) {
-		return getAttributes(choice).stream()
-				.map(FilterOutWorseChoices::getIdAndCondition)
-				.distinct()
-				.allMatch(x -> sum(choice, x.id(), x.condition()) < sum(otherChoice, x.id(), x.condition()));
+	private boolean isStrictlyWorseThan(T left, T right, List<Attribute> keys) {
+		int ltCnt = 0;
+
+		for (var key : keys) {
+			var leftValue = sum(left, key);
+			var rightValue = sum(right, key);
+
+			if (leftValue < rightValue) {
+				++ltCnt;
+			} else if (leftValue > rightValue) {
+				return false;
+			}
+		}
+
+		return ltCnt > 0;
 	}
 
-	private double sum(T choice, AttributeId id, AttributeCondition condition) {
+	private double sum(T choice, Attribute key) {
 		return getAttributes(choice).stream()
-				.filter(x -> x.id() == id && x.condition().equals(condition))
+				.filter(x -> x.id() == key.id() && x.condition().equals(key.condition()) && x.levelScaled() == key.levelScaled())
 				.mapToDouble(Attribute::value)
 				.sum();
 	}
@@ -89,21 +100,22 @@ public abstract class FilterOutWorseChoices<T> {
 
 	protected abstract int getOrderWithinTheSameStatChoices(T choice);
 
-	private String getGroupAndStatsKey(T choice) {
-		return getGroupKey(choice) + "#" + getStatsKey(choice);
-	}
-
 	protected abstract Object getGroupKey(T choice);
 
 	private String getStatsKey(T choice) {
 		return getAttributes(choice).stream()
-				.map(FilterOutWorseChoices::getIdAndCondition)
 				.map(Objects::toString)
 				.distinct()
+				.sorted()
 				.collect(Collectors.joining("#"));
 	}
 
-	private static Attribute getIdAndCondition(Attribute x) {
-		return Attribute.of(x.id(), 1, x.condition(), x.levelScaled());
+	private List<Attribute> getAttributeKeys(List<T> group) {
+		return group.stream()
+				.map(this::getAttributes)
+				.flatMap(Collection::stream)
+				.map(x -> Attribute.of(x.id(), 1, x.condition(), x.levelScaled()))
+				.distinct()
+				.toList();
 	}
 }

@@ -6,7 +6,6 @@ import wow.commons.model.config.Described;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,20 +16,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FilterOutWorseEnchantChoicesTest extends WowCharacterSpringTest {
 	@Test
 	void singleAttribute() {
-		var enchantNames = new String[] {
+		var enchantNames = List.of(
 				"Enchant Chest - Minor Stats",
 				"Enchant Chest - Lesser Stats",
 				"Enchant Chest - Stats",
 				"Enchant Chest - Greater Stats"
-		};
+		);
 
 		var result = getResult(enchantNames);
 
-		assertThat(result).isEqualTo(List.of("Enchant Chest - Greater Stats"));
+		assertThat(result).hasSameElementsAs(List.of(
+				"Enchant Chest - Greater Stats"
+		));
 	}
 
-	private List<String> getResult(String[] enchantNames) {
-		var enchants = Stream.of(enchantNames)
+	@Test
+	void multipleAttributes() {
+		var enchantNames = List.of(
+				"Zandalar Signet of Mojo",
+				"Power of the Scourge",
+				"Inscription of Discipline",
+				"Greater Inscription of Discipline"
+		);
+
+		var result = getResult(enchantNames);
+
+		assertThat(result).hasSameElementsAs(List.of(
+				"Greater Inscription of Discipline",
+				"Power of the Scourge"
+		));
+	}
+
+	private List<String> getResult(List<String> enchantNames) {
+		var enchants = enchantNames.stream()
 				.map(x -> itemRepository.getEnchant(x, PhaseId.TBC_P5).orElseThrow())
 				.toList();
 

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -158,22 +157,26 @@ public abstract class WowCharacterSpringTest {
 	}
 
 	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race) {
+		return getCharacter(characterClass, race, LEVEL, PHASE);
+	}
+
+	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
 				characterClass,
 				race,
-				LEVEL,
-				PHASE
+				level,
+				phase
 		);
 
 		var target = characterService.createNonPlayerCharacter(
 				ENEMY_TYPE,
-				LEVEL + LVL_DIFF,
-				PHASE
+				level + LVL_DIFF,
+				phase
 		);
 
 		character.setTarget(target);
 
-		CharacterTemplateId templateId = character.getCharacterClass().getDefaultCharacterTemplateId();
+		var templateId = character.getCharacterClass().getDefaultCharacterTemplateId();
 		characterService.applyCharacterTemplate(character, templateId);
 		return character;
 	}
