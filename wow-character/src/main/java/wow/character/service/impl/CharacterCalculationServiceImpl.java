@@ -7,7 +7,6 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
 import wow.character.util.AbstractEffectCollector;
-import wow.commons.model.Percent;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.effect.Effect;
@@ -20,13 +19,13 @@ import wow.commons.model.spell.component.DirectComponent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static wow.character.util.AttributeConditionArgsUtil.*;
 import static wow.commons.constant.SpellConstants.*;
 
 /**
@@ -60,10 +59,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	@Override
 	public AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school) {
-		var conditionArgs = getCommonSpellConditionArgs(target, spell);
-
-		conditionArgs.setSpellSchool(school);
-		conditionArgs.setPowerType(powerType);
+		var conditionArgs = getTargetConditionArgs(target, spell, powerType, school);
 
 		return new AccumulatedTargetStats(conditionArgs, target.getLevel());
 	}
@@ -84,22 +80,14 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	@Override
 	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, DirectComponent directComponent) {
-		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target, directComponent.school());
-
-		conditionArgs.setDirect(true);
-		conditionArgs.setCanCrit(true);
-		conditionArgs.setHadCrit(false);
+		var conditionArgs = getDirectComponentConditionArgs(character, spell, target, directComponent);
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
 
 	@Override
 	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PeriodicComponent periodicComponent) {
-		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target, periodicComponent.school());
-
-		conditionArgs.setPeriodic(true);
-		conditionArgs.setCanCrit(false);
-		conditionArgs.setHadCrit(false);
+		var conditionArgs = getPeriodicComponentConditionArgs(character, spell, target, periodicComponent);
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
@@ -108,58 +96,6 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var spellStats = new AccumulatedSpellStats(conditionArgs, character.getLevel());
 		spellStats.accumulateBaseStatInfo(character.getBaseStatInfo());
 		return spellStats;
-	}
-
-	private AttributeConditionArgs getDamagingComponentConditionArgs(Character character, Spell spell, Character target, SpellSchool school) {
-		var conditionArgs = getCommonSpellConditionArgs(character, spell);
-
-		conditionArgs.setSpellSchool(school);
-		conditionArgs.setPowerType(PowerType.SPELL_DAMAGE);
-		conditionArgs.setHostileSpell(true);
-		conditionArgs.setTargetingOthers(true);
-		conditionArgs.setTargetType(target.getCreatureType());
-		conditionArgs.setTargetClass(target.getCharacterClassId());
-		conditionArgs.setTargetHealth(Percent._100);
-		conditionArgs.setOwnerEffects(Set.of());
-
-		return conditionArgs;
-	}
-
-	private AttributeConditionArgs getCommonSpellConditionArgs(Character character, Spell spell) {
-		var conditionArgs = new AttributeConditionArgs(ActionType.SPELL);
-
-		if (spell instanceof Ability ability) {
-			setAbilityConditionArgs(conditionArgs, ability);
-		}
-
-		conditionArgs.setSpellSchool(spell.getSchool());
-		conditionArgs.setHasDamagingComponent(spell.hasDamagingComponent());
-		conditionArgs.setHasHealingComponent(spell.hasHealingComponent());
-
-		if (spell.getAppliedEffect() != null) {
-			conditionArgs.setEffectCategory(spell.getAppliedEffect().getCategory());
-		}
-
-		conditionArgs.setOwnerHealth(Percent._100);
-		conditionArgs.setPetType(character.getActivePetType());
-
-		return conditionArgs;
-	}
-
-	private void setAbilityConditionArgs(AttributeConditionArgs conditionArgs, Ability ability) {
-		if (ability instanceof ClassAbility classAbility) {
-			conditionArgs.setTalentTree(classAbility.getTalentTree());
-		}
-
-		conditionArgs.setAbilityId(ability.getAbilityId());
-		conditionArgs.setAbilityCategory(ability.getCategory());
-		conditionArgs.setBaseCastTime(ability.getCastTime());
-
-		var cost = ability.getCost();
-
-		if (cost != null) {
-			conditionArgs.setHasManaCost(cost.resourceType() == ResourceType.MANA);
-		}
 	}
 
 	@Override

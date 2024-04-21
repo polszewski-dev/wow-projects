@@ -41,6 +41,6 @@ public class EquippableItemConverter implements Converter<EquippableItem, Equipp
 
 		return new EquippableItem(item)
 				.enchant(enchant)
-				.gem(gems.toArray(Gem[]::new));
+				.gem(!gems.isEmpty() ? gems.toArray(Gem[]::new) : new Gem[item.getSocketCount()]);
 	}
 }

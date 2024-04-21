@@ -6,6 +6,7 @@ import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventType;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.minmax.model.AccumulatedDamagingAbilityStats;
@@ -14,8 +15,7 @@ import wow.minmax.model.ProcInfo;
 import wow.minmax.model.Snapshot;
 import wow.minmax.repository.ProcInfoRepository;
 
-import java.util.List;
-
+import static wow.character.util.AttributeConditionArgsUtil.getCommonSpellConditionArgs;
 import static wow.commons.model.attribute.AttributeId.CRIT_COEFF_PCT;
 import static wow.commons.model.effect.component.EventType.*;
 
@@ -57,7 +57,7 @@ public class SpecialAbilitySolver {
 	}
 
 	private boolean solveProc(Effect effect, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats) {
-		var procEvent = getProcEvent(effect);
+		var procEvent = getProcEvent(effect, snapshot.getAbility());
 
 		if (procEvent == null) {
 			return false;
@@ -95,18 +95,26 @@ public class SpecialAbilitySolver {
 		return true;
 	}
 
-	private Event getProcEvent(Effect effect) {
-		var events = effect.getEvents().stream().filter(x -> hasDamagingSpellEvent(x.types())).toList();
+	private Event getProcEvent(Effect effect, Ability ability) {
+		var events = effect.getEvents().stream().filter(x -> hasDamagingSpellEvent(x) && isConditionMet(x, ability)).toList();
 
 		return switch (events.size()) {
 			case 0 -> null;
-			case 1 -> events.get(0);
+			case 1 -> events.getFirst();
 			default -> throw new IllegalArgumentException(effect.getName());
 		};
 	}
 
-	private boolean hasDamagingSpellEvent(List<EventType> types) {
-		return types.stream().anyMatch(this::isDamagingSpellEvent);
+	private boolean isConditionMet(Event event, Ability ability) {
+		if (event.condition().isEmpty()) {
+			return true;
+		}
+		var args = getCommonSpellConditionArgs(null, ability);
+		return event.condition().test(args);
+	}
+
+	private boolean hasDamagingSpellEvent(Event event) {
+		return event.types().stream().anyMatch(this::isDamagingSpellEvent);
 	}
 
 	private boolean isDamagingSpellEvent(EventType eventType) {
