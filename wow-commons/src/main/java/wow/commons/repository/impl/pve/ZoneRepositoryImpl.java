@@ -1,14 +1,12 @@
-package wow.commons.repository.impl;
+package wow.commons.repository.impl.pve;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import wow.commons.model.pve.Faction;
-import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
-import wow.commons.repository.PveRepository;
-import wow.commons.repository.impl.parser.pve.PveExcelParser;
+import wow.commons.repository.impl.parser.pve.ZoneExcelParser;
+import wow.commons.repository.pve.ZoneRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.GameVersionMap;
 
@@ -24,13 +22,11 @@ import java.util.Optional;
  */
 @Repository
 @RequiredArgsConstructor
-public class PveRepositoryImpl implements PveRepository {
+public class ZoneRepositoryImpl implements ZoneRepository {
 	private final GameVersionMap<Integer, Zone> zoneById = new GameVersionMap<>();
 	private final GameVersionMap<String, List<Zone>> zoneByName = new GameVersionMap<>();
-	private final GameVersionMap<Integer, Npc> npcById = new GameVersionMap<>();
-	private final GameVersionMap<String, Faction> factionByName = new GameVersionMap<>();
 
-	@Value("${pve.base.xls.file.path}")
+	@Value("${zones.xls.file.path}")
 	private String xlsFilePath;
 
 	@Override
@@ -42,16 +38,6 @@ public class PveRepositoryImpl implements PveRepository {
 	public Optional<Zone> getZone(String name, PhaseId phaseId) {
 		return zoneByName.getOptional(phaseId.getGameVersionId(), name)
 				.flatMap(CollectionUtil::getUniqueResult);
-	}
-
-	@Override
-	public Optional<Npc> getNpc(int npcId, PhaseId phaseId) {
-		return npcById.getOptional(phaseId.getGameVersionId(), npcId);
-	}
-
-	@Override
-	public Optional<Faction> getFaction(String name, PhaseId phaseId) {
-		return factionByName.getOptional(phaseId.getGameVersionId(), name);
 	}
 
 	@Override
@@ -70,28 +56,13 @@ public class PveRepositoryImpl implements PveRepository {
 
 	@PostConstruct
 	public void init() throws IOException {
-		var pveExcelParser = new PveExcelParser(xlsFilePath, this);
+		var pveExcelParser = new ZoneExcelParser(xlsFilePath, this);
 		pveExcelParser.readFromXls();
-	}
-
-	private void addNpcToZones(Npc npc) {
-		for (Zone zone : npc.getZones()) {
-			zone.getNpcs().add(npc);
-		}
 	}
 
 	public void addZone(Zone zone) {
 		zone.setNpcs(new ArrayList<>());
 		zoneById.put(zone.getTimeRestriction().getGameVersionId(), zone.getId(), zone);
 		zoneByName.computeIfAbsent(zone.getTimeRestriction().getGameVersionId(), zone.getName(), x -> new ArrayList<>()).add(zone);
-	}
-
-	public void addNpc(Npc npc) {
-		addNpcToZones(npc);
-		npcById.put(npc.getTimeRestriction().getGameVersionId(), npc.getId(), npc);
-	}
-
-	public void addFactionByName(Faction faction) {
-		factionByName.put(faction.getTimeRestriction().getGameVersionId(), faction.getName(), faction);
 	}
 }

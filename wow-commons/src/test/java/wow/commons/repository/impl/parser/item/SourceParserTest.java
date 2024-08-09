@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parser.item;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.pve.PhaseId;
@@ -15,6 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Date: 2022-11-22
  */
 class SourceParserTest extends WowCommonsSpringTest {
+	@Autowired
+	SourceParserFactory sourceParserFactory;
+
 	@Test
 	void empty() {
 		Set<Source> sources = getParser().parse(null);
@@ -161,6 +165,6 @@ class SourceParserTest extends WowCommonsSpringTest {
 	}
 
 	private SourceParser getParser() {
-		return new SourceParser(PhaseId.TBC_P5, pveRepository, itemRepository);
+		return sourceParserFactory.create(PhaseId.TBC_P5, itemRepository);
 	}
 }

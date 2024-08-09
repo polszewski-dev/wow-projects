@@ -3,7 +3,7 @@ package wow.scraper.exporter.pve;
 import lombok.Getter;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.exporter.ExcelExporter;
-import wow.scraper.exporter.pve.excel.PveBaseExcelBuilder;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.HasRequiredVersion;
 
 import java.util.Collection;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Date: 2023-06-20
  */
 @Getter
-public abstract class PveBaseExporter<T extends HasRequiredVersion> extends ExcelExporter<PveBaseExcelBuilder> {
+public abstract class PveBaseExporter<T extends HasRequiredVersion, B extends WowExcelBuilder> extends ExcelExporter<B> {
 	protected List<T> data;
 
 	@Override
@@ -27,14 +27,14 @@ public abstract class PveBaseExporter<T extends HasRequiredVersion> extends Exce
 	}
 
 	@Override
-	protected void exportPreparedData(PveBaseExcelBuilder builder) {
+	protected void exportPreparedData(B builder) {
 		addHeader(builder);
 		data.forEach(row -> addRow(row, builder));
 	}
 
-	protected abstract void addHeader(PveBaseExcelBuilder builder);
+	protected abstract void addHeader(B builder);
 
-	protected abstract void addRow(T row, PveBaseExcelBuilder builder);
+	protected abstract void addRow(T row, B builder);
 
 	protected abstract List<T> getData(GameVersionId gameVersion);
 

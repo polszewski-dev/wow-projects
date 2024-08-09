@@ -5,6 +5,8 @@ import lombok.SneakyThrows;
 import polszewski.excel.writer.ExcelWriter;
 import wow.scraper.config.ScraperConfig;
 
+import java.io.File;
+
 /**
  * User: POlszewski
  * Date: 2023-06-20
@@ -25,6 +27,7 @@ public abstract class WowExcelBuilder {
 
 	@SneakyThrows
 	public void finish(String fileName) {
+		new File(fileName).getParentFile().mkdirs();
 		writer.save(fileName);
 	}
 

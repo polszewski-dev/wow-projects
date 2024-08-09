@@ -16,7 +16,6 @@ import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
 import wow.commons.repository.ItemRepository;
-import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
 
 import java.util.Comparator;
@@ -36,9 +35,6 @@ public abstract class WowCommonsSpringTest {
 
 	@Autowired
 	protected SpellRepository spellRepository;
-
-	@Autowired
-	protected PveRepository pveRepository;
 
 	protected static void assertEffectApplication(Spell spell, SpellTarget target, int duration, int numCharges, int numStacks, int maxStacks) {
 		var effectApplication = spell.getEffectApplication();

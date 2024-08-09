@@ -30,7 +30,9 @@ module wow.commons {
 	exports wow.commons.model.spell.impl to wow.scraper;
 	exports wow.commons.model.talent;
 	exports wow.commons.repository;
+	exports wow.commons.repository.pve;
 	exports wow.commons.repository.impl;
+	exports wow.commons.repository.impl.pve;
 	exports wow.commons.repository.impl.parser.excel;
 	exports wow.commons.repository.impl.parser.excel.mapper to wow.scraper;
 	exports wow.commons.repository.impl.parser.item to wow.scraper;
@@ -39,6 +41,10 @@ module wow.commons {
 	exports wow.commons.util;
 	exports wow.commons.util.parser;
 
+	opens wow.commons.data.pve;
+
 	opens wow.commons.repository.impl;
 	opens wow.commons.repository.impl.parser.excel.mapper;
+	opens wow.commons.repository.impl.parser.item;
+	opens wow.commons.repository.impl.pve;
 }

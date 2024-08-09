@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import wow.commons.model.categorization.PveRole;
@@ -170,6 +171,7 @@ public class ScraperConfig {
 	}
 
 	@Bean
+	@Primary
 	public PageFetcher pageFetcher(PageCache pageCache) {
 		return new CachedPageFetcher(new WebPageFetcher(), pageCache);
 	}

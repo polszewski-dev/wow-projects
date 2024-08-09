@@ -12,8 +12,8 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
  * User: POlszewski
  * Date: 2023-06-20
  */
-public class ZoneSheetWriter extends ExcelSheetWriter<JsonZoneDetails, PveBaseExcelBuilder> {
-	public ZoneSheetWriter(PveBaseExcelBuilder builder) {
+public class ZoneSheetWriter extends ExcelSheetWriter<JsonZoneDetails, ZoneExcelBuilder> {
+	public ZoneSheetWriter(ZoneExcelBuilder builder) {
 		super(builder);
 	}
 

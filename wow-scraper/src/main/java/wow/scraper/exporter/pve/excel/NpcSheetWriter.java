@@ -13,8 +13,8 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
  * User: POlszewski
  * Date: 2023-06-20
  */
-public class NpcSheetWriter extends ExcelSheetWriter<JsonNpcDetails, PveBaseExcelBuilder> {
-	public NpcSheetWriter(PveBaseExcelBuilder builder) {
+public class NpcSheetWriter extends ExcelSheetWriter<JsonNpcDetails, NpcExcelBuilder> {
+	public NpcSheetWriter(NpcExcelBuilder builder) {
 		super(builder);
 	}
 

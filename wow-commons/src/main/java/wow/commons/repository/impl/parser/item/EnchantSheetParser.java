@@ -6,7 +6,6 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.EnchantSource;
 import wow.commons.model.item.impl.EnchantImpl;
-import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
@@ -23,8 +22,8 @@ public class EnchantSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colRarity = column(RARITY);
 	private final ExcelColumn colEnchantId = column(ENCHANT_ENCHANT_ID);
 
-	public EnchantSheetParser(String sheetName, PveRepository pveRepository, SpellRepository spellRepository, ItemRepositoryImpl itemRepository) {
-		super(sheetName, pveRepository, spellRepository, itemRepository);
+	public EnchantSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemRepositoryImpl itemRepository) {
+		super(sheetName, sourceParserFactory, spellRepository, itemRepository);
 	}
 
 	@Override

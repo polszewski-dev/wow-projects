@@ -11,7 +11,6 @@ import wow.commons.model.item.SocketType;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.impl.ActivatedAbilityImpl;
-import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.ItemRepositoryImpl;
 
@@ -28,8 +27,8 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 
 	private final ItemBaseExcelParser parser;
 	
-	public ItemSheetParser(String sheetName, PveRepository pveRepository, SpellRepository spellRepository, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
-		super(sheetName, pveRepository, spellRepository, itemRepository);
+	public ItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
+		super(sheetName, sourceParserFactory, spellRepository, itemRepository);
 		this.parser = parser;
 	}
 

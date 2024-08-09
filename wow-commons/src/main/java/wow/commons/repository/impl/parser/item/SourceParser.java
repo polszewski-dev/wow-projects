@@ -10,7 +10,9 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.source.*;
 import wow.commons.repository.ItemRepository;
-import wow.commons.repository.PveRepository;
+import wow.commons.repository.pve.FactionRepository;
+import wow.commons.repository.pve.NpcRepository;
+import wow.commons.repository.pve.ZoneRepository;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.Rule;
 
@@ -26,7 +28,9 @@ import java.util.Set;
 public class SourceParser {
 	private final PhaseId phaseId;
 
-	private final PveRepository pveRepository;
+	private final ZoneRepository zoneRepository;
+	private final NpcRepository npcRepository;
+	private final FactionRepository factionRepository;
 	private final ItemRepository itemRepository;
 
 	private final Set<Source> result = new LinkedHashSet<>();
@@ -70,13 +74,13 @@ public class SourceParser {
 
 	private void parseNpcDrop(ParsedMultipleValues npcDropParams) {
 		int npcId = npcDropParams.getInteger(1);
-		Npc npc = pveRepository.getNpc(npcId, phaseId).orElseThrow();
+		Npc npc = npcRepository.getNpc(npcId, phaseId).orElseThrow();
 		result.add(new NpcDrop(npc, npc.getZones()));
 	}
 
 	private void parseZoneDrop(String zoneIdStr) {
 		int zoneId = Integer.parseInt(zoneIdStr);
-		Zone zone = pveRepository.getZone(zoneId, phaseId).orElseThrow();
+		Zone zone = zoneRepository.getZone(zoneId, phaseId).orElseThrow();
 		result.add(new ZoneDrop(List.of(zone)));
 	}
 
@@ -103,7 +107,7 @@ public class SourceParser {
 	}
 
 	private void parseReputationReward(String factionName) {
-		Faction faction = pveRepository.getFaction(factionName, phaseId).orElseThrow();
+		Faction faction = factionRepository.getFaction(factionName, phaseId).orElseThrow();
 		result.add(new ReputationReward(faction));
 	}
 
@@ -137,7 +141,7 @@ public class SourceParser {
 		String containerName = params.get(0);
 		int containerId = params.getInteger(1);
 		int zoneId = params.getInteger(2);
-		Zone zone = pveRepository.getZone(zoneId, phaseId).orElseThrow();
+		Zone zone = zoneRepository.getZone(zoneId, phaseId).orElseThrow();
 		result.add(new ContainedInObject(containerId, containerName, List.of(zone)));
 	}
 

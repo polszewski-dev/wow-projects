@@ -13,8 +13,8 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.FAC
  * User: POlszewski
  * Date: 2023-06-20
  */
-public class FactionSheetWriter extends ExcelSheetWriter<JsonFactionDetails, PveBaseExcelBuilder> {
-	public FactionSheetWriter(PveBaseExcelBuilder builder) {
+public class FactionSheetWriter extends ExcelSheetWriter<JsonFactionDetails, FactionExcelBuilder> {
+	public FactionSheetWriter(FactionExcelBuilder builder) {
 		super(builder);
 	}
 

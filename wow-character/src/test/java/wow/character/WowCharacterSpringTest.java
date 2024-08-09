@@ -22,7 +22,6 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 import wow.commons.repository.ItemRepository;
-import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
 
 import java.util.Comparator;
@@ -46,9 +45,6 @@ public abstract class WowCharacterSpringTest {
 
 	@Autowired
 	protected SpellRepository spellRepository;
-
-	@Autowired
-	protected PveRepository pveRepository;
 
 	@Autowired
 	protected CharacterService characterService;

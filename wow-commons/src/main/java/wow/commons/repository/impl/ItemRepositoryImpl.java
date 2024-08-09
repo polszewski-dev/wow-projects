@@ -10,9 +10,9 @@ import wow.commons.model.item.*;
 import wow.commons.model.item.impl.AbstractItemImpl;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.ItemRepository;
-import wow.commons.repository.PveRepository;
 import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.item.ItemBaseExcelParser;
+import wow.commons.repository.impl.parser.item.SourceParserFactory;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 
@@ -32,7 +32,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
 @Repository
 @RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
-	private final PveRepository pveRepository;
+	private final SourceParserFactory sourceParserFactory;
 	private final SpellRepository spellRepository;
 
 	private final PhaseMap<Integer, Item> itemById = new PhaseMap<>();
@@ -119,7 +119,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
 	@PostConstruct
 	public void init() throws IOException {
-		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, this, pveRepository, spellRepository);
+		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, sourceParserFactory, this, spellRepository);
 		itemBaseExcelParser.readFromXls();
 		for (Item item : itemById.allValues()) {
 			((AbstractItemImpl) item).setFirstAppearedInPhase(getFirstAppearedInPhase(item));
