@@ -1,7 +1,7 @@
 package wow.scraper.exporter.item;
 
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
+import wow.scraper.exporter.item.excel.ItemExcelBuilder;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
@@ -10,7 +10,7 @@ import wow.scraper.parser.tooltip.ItemTooltipParser;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class ItemExporter extends AbstractItemExporter<ItemTooltipParser> {
+public class ItemExporter extends AbstractItemExporter<ItemTooltipParser, ItemExcelBuilder> {
 	@Override
 	protected void prepareData() {
 		for (WowheadItemCategory category : WowheadItemCategory.equipment()) {
@@ -19,7 +19,7 @@ public class ItemExporter extends AbstractItemExporter<ItemTooltipParser> {
 	}
 
 	@Override
-	protected void exportPreparedData(ItemBaseExcelBuilder builder) {
+	protected void exportPreparedData(ItemExcelBuilder builder) {
 		builder.addItemHeader();
 		parsers.forEach(builder::add);
 	}

@@ -23,7 +23,7 @@ public class SavedSets {
 	@Getter
 	@Setter
 	@AllArgsConstructor
-	static class SetInfo {
+	public static class SetInfo {
 		private String itemSetName;
 		private List<String> itemSetPieces;
 		private List<ItemSetBonus> itemSetBonuses;

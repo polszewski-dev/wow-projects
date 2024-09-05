@@ -2,6 +2,7 @@ package wow.scraper.exporter.item;
 
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.*;
 import wow.scraper.parser.tooltip.AbstractItemTooltipParser;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
  * Date: 2023-05-20
  */
 @Slf4j
-public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser> extends ItemBaseExporter<WowheadItemCategory, JsonItemDetails, T> {
+public abstract class AbstractItemExporter<T extends AbstractItemTooltipParser, B extends WowExcelBuilder> extends ItemBaseExporter<WowheadItemCategory, JsonItemDetails, T, B> {
 	@Override
 	protected List<Integer> getDetailIds(WowheadItemCategory category, GameVersionId gameVersion) {
 		return getItemDetailRepository().getDetailIds(gameVersion, category);

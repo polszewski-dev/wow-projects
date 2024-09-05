@@ -14,7 +14,7 @@ import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
  * Date: 2023-05-18
  */
 public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
-	public ItemSetSheetWriter(ItemBaseExcelBuilder builder) {
+	public ItemSetSheetWriter(ItemExcelBuilder builder) {
 		super(builder);
 	}
 

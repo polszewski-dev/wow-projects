@@ -49,7 +49,7 @@ class FilterOutWorseEnchantChoicesTest extends WowCharacterSpringTest {
 
 	private List<String> getResult(List<String> enchantNames) {
 		var enchants = enchantNames.stream()
-				.map(x -> itemRepository.getEnchant(x, PhaseId.TBC_P5).orElseThrow())
+				.map(x -> enchantRepository.getEnchant(x, PhaseId.TBC_P5).orElseThrow())
 				.toList();
 
 		return new FilterOutWorseEnchantChoices(enchants)

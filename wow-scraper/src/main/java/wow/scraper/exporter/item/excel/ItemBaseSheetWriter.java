@@ -7,6 +7,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.scraper.classifier.PveRoleStatClassifier;
 import wow.scraper.exporter.excel.ExcelSheetWriter;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.WowheadItemQuality;
 import wow.scraper.parser.WowheadSourceParser;
 import wow.scraper.parser.tooltip.AbstractItemTooltipParser;
@@ -23,8 +24,8 @@ import static wow.scraper.util.CommonAssertions.assertBothAreEqual;
  * User: POlszewski
  * Date: 2023-05-18
  */
-public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, ItemBaseExcelBuilder> {
-	protected ItemBaseSheetWriter(ItemBaseExcelBuilder builder) {
+public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, WowExcelBuilder> {
+	protected ItemBaseSheetWriter(WowExcelBuilder builder) {
 		super(builder);
 	}
 

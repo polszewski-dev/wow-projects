@@ -15,7 +15,6 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
-import wow.commons.repository.ItemRepository;
 import wow.commons.repository.SpellRepository;
 
 import java.util.Comparator;
@@ -30,9 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WowCommonsSpringTestConfig.class)
 public abstract class WowCommonsSpringTest {
-	@Autowired
-	protected ItemRepository itemRepository;
-
 	@Autowired
 	protected SpellRepository spellRepository;
 

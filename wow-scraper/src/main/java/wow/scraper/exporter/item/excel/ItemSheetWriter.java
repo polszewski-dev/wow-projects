@@ -14,8 +14,11 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
  * Date: 2023-05-18
  */
 public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
-	public ItemSheetWriter(ItemBaseExcelBuilder builder) {
+	private final ItemExcelBuilder builder;
+
+	public ItemSheetWriter(ItemExcelBuilder builder) {
 		super(builder);
+		this.builder = builder;
 	}
 
 	@Override

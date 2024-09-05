@@ -3,7 +3,7 @@ package wow.scraper.exporter.item;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.exporter.ExcelExporter;
-import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.parser.tooltip.AbstractTooltipParser;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
  * Date: 2023-05-19
  */
 @Slf4j
-public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends AbstractTooltipParser<D>> extends ExcelExporter<ItemBaseExcelBuilder> {
+public abstract class ItemBaseExporter<C, D extends JsonCommonDetails, T extends AbstractTooltipParser<D>, B extends WowExcelBuilder> extends ExcelExporter<B> {
 	protected List<T> parsers = new ArrayList<>();
 
 	protected void export(C category) {

@@ -19,8 +19,10 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.ItemRepository;
 import wow.commons.repository.SpellRepository;
+import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.item.GemRepository;
+import wow.commons.repository.item.ItemRepository;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 
@@ -47,6 +49,12 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 public abstract class WowMinMaxSpringTest {
 	@Autowired
 	protected ItemRepository itemRepository;
+
+	@Autowired
+	protected EnchantRepository enchantRepository;
+
+	@Autowired
+	protected GemRepository gemRepository;
 
 	@Autowired
 	protected SpellRepository spellRepository;
@@ -88,15 +96,15 @@ public abstract class WowMinMaxSpringTest {
 	}
 
 	protected Gem getGem(String name) {
-		return itemRepository.getGem(name, PHASE).orElseThrow();
+		return gemRepository.getGem(name, PHASE).orElseThrow();
 	}
 
 	protected Gem getGem(int gemId) {
-		return itemRepository.getGem(gemId, PHASE).orElseThrow();
+		return gemRepository.getGem(gemId, PHASE).orElseThrow();
 	}
 
 	protected Enchant getEnchant(String name) {
-		return itemRepository.getEnchant(name, PHASE).orElseThrow();
+		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
 	protected PlayerCharacter getCharacter() {

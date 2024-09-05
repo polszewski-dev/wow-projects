@@ -110,7 +110,7 @@ public class WarlockPriorityScript implements AIScript, SimulatorContextSource {
 		EquippableItem equippableItem = new EquippableItem(item);
 
 		if (enchantName != null) {
-			Enchant enchant = getItemRepository().getEnchant(enchantName, phaseId).orElseThrow();
+			Enchant enchant = getEnchantRepository().getEnchant(enchantName, phaseId).orElseThrow();
 			equippableItem.enchant(enchant);
 		}
 		return equippableItem;
@@ -118,11 +118,11 @@ public class WarlockPriorityScript implements AIScript, SimulatorContextSource {
 
 	private Gem getGem(Player player, String name) {
 		PhaseId phaseId = player.getPhaseId();
-		return getItemRepository().getGem(name, phaseId).orElseThrow();
+		return getGemRepository().getGem(name, phaseId).orElseThrow();
 	}
 
 	private Gem getGem(Player player, int gemId) {
 		PhaseId phaseId = player.getPhaseId();
-		return getItemRepository().getGem(gemId, phaseId).orElseThrow();
+		return getGemRepository().getGem(gemId, phaseId).orElseThrow();
 	}
 }

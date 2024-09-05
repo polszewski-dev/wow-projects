@@ -49,7 +49,7 @@ class FilterOutWorseGemChoicesTest extends WowCharacterSpringTest {
 
 	private List<String> getResult(String[] gemNames) {
 		var gems = Stream.of(gemNames)
-				.map(x -> itemRepository.getGem(x, PhaseId.TBC_P5).orElseThrow())
+				.map(x -> gemRepository.getGem(x, PhaseId.TBC_P5).orElseThrow())
 				.toList();
 
 		return new FilterOutWorseGemChoices(gems)

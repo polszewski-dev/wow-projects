@@ -17,13 +17,11 @@ import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
  * Date: 2023-06-20
  */
 public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends ExcelCellWriter {
-	protected final B builder;
 	protected final ScraperConfig config;
 	private final ItemEffectMapper itemEffectMapper;
 
 	protected ExcelSheetWriter(B builder) {
 		super(builder.getWriter());
-		this.builder = builder;
 		this.config = builder.getConfig();
 		this.itemEffectMapper = new ItemEffectMapper(null);
 	}

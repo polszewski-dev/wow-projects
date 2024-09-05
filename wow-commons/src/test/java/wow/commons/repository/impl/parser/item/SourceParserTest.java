@@ -165,6 +165,6 @@ class SourceParserTest extends WowCommonsSpringTest {
 	}
 
 	private SourceParser getParser() {
-		return sourceParserFactory.create(PhaseId.TBC_P5, itemRepository);
+		return sourceParserFactory.create(PhaseId.TBC_P5);
 	}
 }

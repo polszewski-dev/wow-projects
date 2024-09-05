@@ -17,7 +17,9 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.ItemRepository;
+import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.item.GemRepository;
+import wow.commons.repository.item.ItemRepository;
 
 import java.util.List;
 
@@ -29,6 +31,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 	private final ItemRepository itemRepository;
+	private final EnchantRepository enchantRepository;
+	private final GemRepository gemRepository;
 
 	@Override
 	public Item getItem(int itemId, PhaseId phaseId) {
@@ -37,12 +41,12 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Enchant getEnchant(int enchantId, PhaseId phaseId) {
-		return itemRepository.getEnchant(enchantId, phaseId).orElseThrow();
+		return enchantRepository.getEnchant(enchantId, phaseId).orElseThrow();
 	}
 
 	@Override
 	public Gem getGem(int gemId, PhaseId phaseId) {
-		return itemRepository.getGem(gemId, phaseId).orElseThrow();
+		return gemRepository.getGem(gemId, phaseId).orElseThrow();
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Enchant> getEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType) {
-		return itemRepository.getEnchants(itemType, itemSubType, character.getPhaseId()).stream()
+		return enchantRepository.getEnchants(itemType, itemSubType, character.getPhaseId()).stream()
 				.filter(enchant -> enchant.isAvailableTo(character))
 				.filter(enchant -> enchant.isSuitableFor(character))
 				.toList();
@@ -71,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean nonUniqueOnly) {
-		return itemRepository.getGems(socketType, character.getPhaseId()).stream()
+		return gemRepository.getGems(socketType, character.getPhaseId()).stream()
 				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
 				.filter(gem -> gem.isSuitableFor(character))

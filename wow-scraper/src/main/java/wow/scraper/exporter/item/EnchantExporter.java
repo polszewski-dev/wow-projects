@@ -1,7 +1,7 @@
 package wow.scraper.exporter.item;
 
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.exporter.item.excel.ItemBaseExcelBuilder;
+import wow.scraper.exporter.item.excel.EnchantExcelBuilder;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.parser.tooltip.EnchantTooltipParser;
@@ -15,14 +15,14 @@ import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
  * User: POlszewski
  * Date: 2023-05-19
  */
-public class EnchantExporter extends AbstractItemSpellExporter<EnchantTooltipParser> {
+public class EnchantExporter extends AbstractItemSpellExporter<EnchantTooltipParser, EnchantExcelBuilder> {
 	@Override
 	protected void prepareData() {
 		export(ENCHANTS);
 	}
 
 	@Override
-	protected void exportPreparedData(ItemBaseExcelBuilder builder) {
+	protected void exportPreparedData(EnchantExcelBuilder builder) {
 		builder.addEnchantHeader();
 		parsers.forEach(builder::add);
 	}

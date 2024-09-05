@@ -10,7 +10,7 @@ import static wow.commons.repository.impl.parser.excel.CommonColumnNames.REQ_LEV
  * Date: 2023-05-18
  */
 public class TradedItemSheetWriter extends ItemBaseSheetWriter<TradedItemParser> {
-	public TradedItemSheetWriter(ItemBaseExcelBuilder builder) {
+	public TradedItemSheetWriter(TradedItemExcelBuilder builder) {
 		super(builder);
 	}
 

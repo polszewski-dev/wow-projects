@@ -124,7 +124,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		assertThat(mainHand.getEnchant().getName()).isEqualTo("Enchant Weapon - Soulfrost");
 
-		Enchant enchant = itemRepository.getEnchant("Enchant Weapon - Major Spellpower", character.getPhaseId()).orElseThrow();
+		Enchant enchant = enchantRepository.getEnchant("Enchant Weapon - Major Spellpower", character.getPhaseId()).orElseThrow();
 
 		mainHand = mainHand.copy();
 		mainHand.enchant(enchant);
@@ -146,7 +146,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		assertThat(chest.getSocketCount()).isEqualTo(3);
 		assertThat(chest.getGems().get(1).getId()).isNotEqualTo(35761);
 
-		Gem gem = itemRepository.getGem(35761, character.getPhaseId()).orElseThrow();
+		Gem gem = gemRepository.getGem(35761, character.getPhaseId()).orElseThrow();
 
 		chest = chest.copy();
 		chest.getSockets().insertGem(1, gem);

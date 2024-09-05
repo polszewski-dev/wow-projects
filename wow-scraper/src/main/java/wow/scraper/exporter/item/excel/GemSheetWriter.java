@@ -10,7 +10,7 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
  * Date: 2023-05-18
  */
 public class GemSheetWriter extends ItemBaseSheetWriter<GemTooltipParser> {
-	public GemSheetWriter(ItemBaseExcelBuilder builder) {
+	public GemSheetWriter(GemExcelBuilder builder) {
 		super(builder);
 	}
 

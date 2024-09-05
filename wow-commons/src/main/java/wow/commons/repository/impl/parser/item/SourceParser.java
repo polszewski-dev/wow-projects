@@ -9,7 +9,7 @@ import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.source.*;
-import wow.commons.repository.ItemRepository;
+import wow.commons.repository.item.TradedItemRepository;
 import wow.commons.repository.pve.FactionRepository;
 import wow.commons.repository.pve.NpcRepository;
 import wow.commons.repository.pve.ZoneRepository;
@@ -31,7 +31,7 @@ public class SourceParser {
 	private final ZoneRepository zoneRepository;
 	private final NpcRepository npcRepository;
 	private final FactionRepository factionRepository;
-	private final ItemRepository itemRepository;
+	private final TradedItemRepository tradedItemRepository;
 
 	private final Set<Source> result = new LinkedHashSet<>();
 
@@ -103,7 +103,7 @@ public class SourceParser {
 	}
 
 	private TradedItem getTradedItem(int tokenId) {
-		return itemRepository.getTradedItem(tokenId, phaseId).orElseThrow();
+		return tradedItemRepository.getTradedItem(tokenId, phaseId).orElseThrow();
 	}
 
 	private void parseReputationReward(String factionName) {

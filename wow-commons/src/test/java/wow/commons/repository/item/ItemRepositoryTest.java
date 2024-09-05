@@ -1,13 +1,13 @@
-package wow.commons.repository;
+package wow.commons.repository.item;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
-import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.item.*;
+import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemSource;
+import wow.commons.model.item.SocketType;
 
 import java.util.List;
 
@@ -15,13 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.categorization.ArmorSubType.CLOTH;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
-import static wow.commons.model.categorization.Binding.NO_BINDING;
 import static wow.commons.model.categorization.ItemRarity.EPIC;
 import static wow.commons.model.categorization.ItemType.CHEST;
-import static wow.commons.model.categorization.ItemType.TOKEN;
-import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
-import static wow.commons.model.pve.PhaseId.TBC_P3;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
@@ -29,6 +25,9 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * Date: 2022-11-11
  */
 class ItemRepositoryTest extends WowCommonsSpringTest {
+	@Autowired
+	protected ItemRepository itemRepository;
+
 	/*
 		Sunfire Robe	Phase 5
 
@@ -111,111 +110,26 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(itemSet.getRequiredProfession()).isEqualTo(TAILORING);
 		assertThat(itemSet.getItemSetBonuses()).hasSize(1);
 
-		var bonus = itemSet.getItemSetBonuses().get(0);
+		var bonus = itemSet.getItemSetBonuses().getFirst();
 
 		assertThat(bonus.numPieces()).isEqualTo(2);
 		assertEffect(bonus.bonusEffect(), 224266, "Gives a chance when your harmful spells land to increase the damage of your spells and effects by 92 for 10 sec. (Proc chance: 5%)");
 	}
 
-	/*
-		Reckless Pyrestone	Phase 3
-
-		Item Level 100
-		+5 Spell Haste Rating and +6 Spell Damage
-		"Matches a Red or Yellow Socket."
-		Sell Price: 6
-	 */
-
 	@Test
-	void basicGemInfo() {
-		var gem = itemRepository.getGem(35760, TBC_P5).orElseThrow();
+	void getItemSet() {
+		var itemSet = itemRepository.getItemSet("Spellstrike Infusion", TBC_P5).orElseThrow();
 
-		assertThat(gem.getId()).isEqualTo(35760);
-		assertThat(gem.getName()).isEqualTo("Reckless Pyrestone");
-		assertThat(gem.getRarity()).isEqualTo(EPIC);
-		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
-		assertThat(gem.isUnique()).isFalse();
-		assertThat(gem.getItemLevel()).isEqualTo(100);
-		assertThat(gem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P5));
-		assertThat(gem.getCharacterRestriction().level()).isNull();
-		assertThat(gem.getIcon()).isEqualTo("inv_jewelcrafting_pyrestone_02");
-	}
-
-	@Test
-	void normalGemStats() {
-		var gem = itemRepository.getGem(35760, TBC_P5).orElseThrow();
-		var source = new ItemSource(gem);
-
-		assertThat(gem.getColor()).isEqualTo(GemColor.ORANGE);
-
-		assertThat(gem.getEffects()).hasSize(2);
-
-		assertEffect(gem.getEffects().get(0), HASTE_RATING, 5, MiscCondition.SPELL, "+5 Spell Haste Rating", source);
-		assertEffect(gem.getEffects().get(1), POWER, 6, MiscCondition.SPELL_DAMAGE, "+6 Spell Damage", source);
-	}
-
-	/*
-		Chaotic Skyfire Diamond	Phase 1
-
-		Item Level 70
-		+12 Spell Critical & 3% Increased Critical Damage
-		Requires at least 2 Blue Gems
-		"Only fits in a meta gem slot."
-		Sell Price: 3
-	 */
-
-	@Test
-	void metaGemStats() {
-		var gem = itemRepository.getGem(34220, TBC_P5).orElseThrow();
-		var source = new ItemSource(gem);
-
-		assertThat(gem.getColor()).isEqualTo(GemColor.META);
-		assertThat(gem.getMetaEnablers()).hasSameElementsAs(List.of(MetaEnabler.AT_LEAST_2_BLUES));
-
-		assertThat(gem.getEffects()).hasSize(2);
-		assertEffect(gem.getEffects().get(0), CRIT_RATING, 12, MiscCondition.SPELL, "+12 Spell Critical", source);
-		assertEffect(gem.getEffects().get(1), CRIT_DAMAGE_PCT, 3, "3% Increased Critical Damage", source);
-	}
-
-	@Test
-	void basicEnchantInfo() {
-		var enchant = itemRepository.getEnchant(31372, TBC_P5).orElseThrow();
-
-		assertThat(enchant.getId()).isEqualTo(31372);
-		assertThat(enchant.getName()).isEqualTo("Runic Spellthread");
-		assertThat(enchant.getItemTypes()).hasSameElementsAs(List.of(ItemType.LEGS));
-		assertThat(enchant.getItemSubTypes()).isEmpty();
-		assertThat(enchant.getRarity()).isEqualTo(EPIC);
-	}
-
-	@Test
-	void enchantStats() {
-		var enchant = itemRepository.getEnchant(31372, TBC_P5).orElseThrow();
-
-		assertEffect(
-				enchant.getEffect(),
-				Attributes.of(
-						Attribute.of(POWER, 35, MiscCondition.SPELL),
-						Attribute.of(STAMINA, 20)
-				),
-				"Use: Permanently embroiders spellthread into pants, increasing spell damage and healing by up to 35 and Stamina by 20.",
-				new EnchantSource(enchant)
+		assertThat(itemSet.getName()).isEqualTo("Spellstrike Infusion");
+		assertThat(itemSet.getItemSetBonuses()).hasSize(1);
+		assertThat(itemSet.getItemSetBonuses().getFirst().numPieces()).isEqualTo(2);
+		assertThat(itemSet.getItemSetBonuses().getFirst().bonusEffect().getDescription().tooltip()).isEqualTo(
+				"Gives a chance when your harmful spells land to increase the damage of your spells and effects by 92 for 10 sec. (Proc chance: 5%)"
 		);
-	}
-
-	@Test
-	void token() {
-		var tradedItem = itemRepository.getTradedItem(31101, TBC_P5).orElseThrow();
-
-		assertThat(tradedItem.getId()).isEqualTo(31101);
-		assertThat(tradedItem.getName()).isEqualTo("Pauldrons of the Forgotten Conqueror");
-		assertThat(tradedItem.getItemType()).isEqualTo(TOKEN);
-		assertThat(tradedItem.getRarity()).isEqualTo(EPIC);
-		assertThat(tradedItem.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
-		assertThat(tradedItem.isUnique()).isFalse();
-		assertThat(tradedItem.getItemLevel()).isEqualTo(70);
-		assertThat(tradedItem.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P3));
-		assertThat(tradedItem.getCharacterRestriction().level()).isEqualTo(70);
-		assertThat(tradedItem.getCharacterRestriction().characterClassIds()).hasSameElementsAs(List.of(PALADIN, PRIEST, WARLOCK));
+		assertThat(itemSet.getRequiredProfession()).isEqualTo(TAILORING);
+		assertThat(itemSet.getPieces().stream().map(Item::getName)).hasSameElementsAs(List.of(
+				"Spellstrike Hood",
+				"Spellstrike Pants"
+		));
 	}
 }

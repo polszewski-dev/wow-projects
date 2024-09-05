@@ -1,24 +1,22 @@
-package wow.commons.repository.impl;
+package wow.commons.repository.impl.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.ItemSubType;
-import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.*;
+import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.impl.AbstractItemImpl;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.ItemRepository;
 import wow.commons.repository.SpellRepository;
-import wow.commons.repository.impl.parser.item.ItemBaseExcelParser;
+import wow.commons.repository.impl.parser.item.ItemExcelParser;
 import wow.commons.repository.impl.parser.item.SourceParserFactory;
+import wow.commons.repository.item.ItemRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,17 +39,8 @@ public class ItemRepositoryImpl implements ItemRepository {
 
 	private final PhaseMap<String, ItemSet> itemSetByName = new PhaseMap<>();
 
-	private final PhaseMap<Integer, Enchant> enchantById = new PhaseMap<>();
-	private final PhaseMap<String, List<Enchant>> enchantByName = new PhaseMap<>();
-
-	private final PhaseMap<Integer, Gem> gemById = new PhaseMap<>();
-	private final PhaseMap<String, List<Gem>> gemByName = new PhaseMap<>();
-	private final PhaseMap<SocketType, List<Gem>> gemBySocketType = new PhaseMap<>();
-
-	private final PhaseMap<Integer, TradedItem> tradedItemById = new PhaseMap<>();
-
-	@Value("${item.base.xls.file.path}")
-	private String itemBaseXlsFilePath;
+	@Value("${items.xls.file.path}")
+	private String xlsFilePath;
 
 	@Override
 	public Optional<Item> getItem(int itemId, PhaseId phaseId) {
@@ -75,52 +64,10 @@ public class ItemRepositoryImpl implements ItemRepository {
 		return itemSetByName.getOptional(phaseId, name);
 	}
 
-	@Override
-	public Optional<Enchant> getEnchant(int enchantId, PhaseId phaseId) {
-		return enchantById.getOptional(phaseId, enchantId);
-	}
-
-	@Override
-	public Optional<Enchant> getEnchant(String name, PhaseId phaseId) {
-		return enchantByName.getOptional(phaseId, name)
-				.flatMap(CollectionUtil::getUniqueResult);
-	}
-
-	@Override
-	public List<Enchant> getEnchants(ItemType itemType, ItemSubType itemSubType, PhaseId phaseId) {
-		return enchantByName.values(phaseId).stream()
-				.flatMap(Collection::stream)
-				.filter(x -> x.isAvailableDuring(phaseId))
-				.filter(x -> x.matches(itemType, itemSubType))
-				.toList();
-	}
-
-	@Override
-	public Optional<Gem> getGem(int gemId, PhaseId phaseId) {
-		return gemById.getOptional(phaseId, gemId);
-	}
-
-	@Override
-	public Optional<Gem> getGem(String name, PhaseId phaseId) {
-		return gemByName.getOptional(phaseId, name)
-				.flatMap(CollectionUtil::getUniqueResult);
-	}
-
-	@Override
-	public List<Gem> getGems(SocketType socketType, PhaseId phaseId) {
-		return gemBySocketType.getOptional(phaseId, socketType)
-				.orElse(List.of());
-	}
-
-	@Override
-	public Optional<TradedItem> getTradedItem(int tradedItemId, PhaseId phaseId) {
-		return tradedItemById.getOptional(phaseId, tradedItemId);
-	}
-
 	@PostConstruct
 	public void init() throws IOException {
-		var itemBaseExcelParser = new ItemBaseExcelParser(itemBaseXlsFilePath, sourceParserFactory, this, spellRepository);
-		itemBaseExcelParser.readFromXls();
+		var parser = new ItemExcelParser(xlsFilePath, sourceParserFactory, this, spellRepository);
+		parser.readFromXls();
 		for (Item item : itemById.allValues()) {
 			((AbstractItemImpl) item).setFirstAppearedInPhase(getFirstAppearedInPhase(item));
 		}
@@ -153,26 +100,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 		}
 	}
 
-	public void addTradedItem(TradedItem tradedItem) {
-		putForEveryPhase(tradedItemById, tradedItem.getId(), tradedItem);
-	}
-
-	public void addGem(Gem gem) {
-		putForEveryPhase(gemById, gem.getId(), gem);
-		addEntryForEveryPhase(gemByName, gem.getName(), gem);
-		for (var socketType : SocketType.values()) {
-			if (socketType.accepts(gem.getColor())) {
-				addEntryForEveryPhase(gemBySocketType, socketType, gem);
-			}
-		}
-	}
-
 	public void addItemSet(ItemSet itemSet) {
 		putForEveryPhase(itemSetByName, itemSet.getName(), itemSet);
-	}
-
-	public void addEnchant(Enchant enchant) {
-		putForEveryPhase(enchantById, enchant.getId(), enchant);
-		addEntryForEveryPhase(enchantByName, enchant.getName(), enchant);
 	}
 }

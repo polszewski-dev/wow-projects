@@ -6,7 +6,7 @@ import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.SpellRepository;
-import wow.commons.repository.impl.ItemRepositoryImpl;
+import wow.commons.repository.impl.item.ItemRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -15,14 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.*;
+import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.ITEM;
+import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.SET;
 
 /**
  * User: POlszewski
  * Date: 2022-10-30
  */
 @AllArgsConstructor
-public class ItemBaseExcelParser extends ExcelParser {
+public class ItemExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 	private final SourceParserFactory sourceParserFactory;
 	private final ItemRepositoryImpl itemRepository;
@@ -38,10 +39,7 @@ public class ItemBaseExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new TradedItemSheetParser(TRADE, sourceParserFactory, spellRepository, itemRepository),
 				new ItemSheetParser(ITEM, sourceParserFactory, spellRepository, itemRepository, this),
-				new EnchantSheetParser(ENCHANT, sourceParserFactory, spellRepository, itemRepository),
-				new GemSheetParser(GEM, sourceParserFactory, spellRepository, itemRepository),
 				new ItemSetSheetParser(SET, sourceParserFactory, spellRepository, itemRepository, this)
 		);
 	}

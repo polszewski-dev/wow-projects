@@ -4,7 +4,9 @@ import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
 import wow.character.service.ItemService;
 import wow.character.service.SpellService;
-import wow.commons.repository.ItemRepository;
+import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.item.GemRepository;
+import wow.commons.repository.item.ItemRepository;
 
 /**
  * User: POlszewski
@@ -36,5 +38,15 @@ public interface SimulatorContextSource extends SimulatorContext {
 	@Override
 	default ItemRepository getItemRepository() {
 		return getSimulatorContext().getItemRepository();
+	}
+
+	@Override
+	default EnchantRepository getEnchantRepository() {
+		return getSimulatorContext().getEnchantRepository();
+	}
+
+	@Override
+	default GemRepository getGemRepository() {
+		return getSimulatorContext().getGemRepository();
 	}
 }

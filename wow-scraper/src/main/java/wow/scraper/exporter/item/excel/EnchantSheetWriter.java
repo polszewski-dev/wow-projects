@@ -10,7 +10,7 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
  * Date: 2023-05-19
  */
 public class EnchantSheetWriter extends ItemBaseSheetWriter<EnchantTooltipParser> {
-	public EnchantSheetWriter(ItemBaseExcelBuilder builder) {
+	public EnchantSheetWriter(EnchantExcelBuilder builder) {
 		super(builder);
 	}
 

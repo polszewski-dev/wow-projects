@@ -4,7 +4,9 @@ import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
 import wow.character.service.ItemService;
 import wow.character.service.SpellService;
-import wow.commons.repository.ItemRepository;
+import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.item.GemRepository;
+import wow.commons.repository.item.ItemRepository;
 
 /**
  * User: POlszewski
@@ -20,4 +22,8 @@ public interface SimulatorContext {
 	CharacterCalculationService getCharacterCalculationService();
 
 	ItemRepository getItemRepository();
+
+	EnchantRepository getEnchantRepository();
+
+	GemRepository getGemRepository();
 }

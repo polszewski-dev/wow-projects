@@ -9,7 +9,7 @@ import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.item.impl.ItemSetImpl;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.repository.SpellRepository;
-import wow.commons.repository.impl.ItemRepositoryImpl;
+import wow.commons.repository.impl.item.ItemRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +23,13 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
 public class ItemSetSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colIBonusReqProfession = column(ITEM_SET_BONUS_REQ_PROFESSION);
 
-	private final ItemBaseExcelParser parser;
+	private final ItemExcelParser parser;
+	private final ItemRepositoryImpl itemRepository;
 
-	public ItemSetSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemRepositoryImpl itemRepository, ItemBaseExcelParser parser) {
-		super(sheetName, sourceParserFactory, spellRepository, itemRepository);
+	public ItemSetSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemRepositoryImpl itemRepository, ItemExcelParser parser) {
+		super(sheetName, sourceParserFactory, spellRepository);
 		this.parser = parser;
+		this.itemRepository = itemRepository;
 	}
 
 	@Override

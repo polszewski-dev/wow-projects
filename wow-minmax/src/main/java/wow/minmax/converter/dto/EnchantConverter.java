@@ -3,7 +3,7 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Enchant;
-import wow.commons.repository.ItemRepository;
+import wow.commons.repository.item.EnchantRepository;
 import wow.minmax.converter.Converter;
 import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.dto.EnchantDTO;
@@ -19,7 +19,7 @@ import static wow.minmax.converter.dto.DtoConverterParams.getPhaseId;
 @Component
 @AllArgsConstructor
 public class EnchantConverter implements Converter<Enchant, EnchantDTO>, ParametrizedBackConverter<Enchant, EnchantDTO> {
-	private final ItemRepository itemRepository;
+	private final EnchantRepository enchantRepository;
 
 	@Override
 	public EnchantDTO doConvert(Enchant source) {
@@ -34,7 +34,7 @@ public class EnchantConverter implements Converter<Enchant, EnchantDTO>, Paramet
 
 	@Override
 	public Enchant doConvertBack(EnchantDTO source, Map<String, Object> params) {
-		return itemRepository.getEnchant(source.getId(), getPhaseId(params)).orElseThrow();
+		return enchantRepository.getEnchant(source.getId(), getPhaseId(params)).orElseThrow();
 	}
 
 	private String getTooltip(Enchant source) {
