@@ -1,6 +1,6 @@
 package wow.scraper.exporter.spell;
 
-import wow.scraper.exporter.spell.excel.SpellBaseExcelBuilder;
+import wow.scraper.exporter.spell.excel.TalentExcelBuilder;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory.Type;
 import wow.scraper.parser.tooltip.TalentTooltipParser;
@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2023-08-24
  */
-public class TalentExporter extends SinglePageSpellBaseExporter<TalentTooltipParser> {
+public class TalentExporter extends SinglePageSpellBaseExporter<TalentTooltipParser, TalentExcelBuilder> {
 	@Override
-	protected void addHeader(SpellBaseExcelBuilder builder) {
+	protected void addHeader(TalentExcelBuilder builder) {
 		builder.addTalentHeader();
 	}
 
 	@Override
-	protected void addRow(TalentTooltipParser parser, SpellBaseExcelBuilder builder) {
+	protected void addRow(TalentTooltipParser parser, TalentExcelBuilder builder) {
 		builder.addTalent(parser);
 	}
 

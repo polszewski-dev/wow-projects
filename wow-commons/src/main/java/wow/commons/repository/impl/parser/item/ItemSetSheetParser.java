@@ -8,8 +8,8 @@ import wow.commons.model.item.ItemSetSource;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.item.impl.ItemSetImpl;
 import wow.commons.model.profession.ProfessionId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.item.ItemRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 import java.util.ArrayList;
 import java.util.List;

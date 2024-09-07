@@ -5,6 +5,7 @@ import wow.scraper.exporter.spell.AbilityExporter;
 import wow.scraper.exporter.spell.ItemEffectExporter;
 import wow.scraper.exporter.spell.TalentExporter;
 import wow.scraper.exporter.spell.excel.SpellBaseExcelBuilder;
+import wow.scraper.exporter.spell.excel.TalentExcelBuilder;
 
 /**
  * User: POlszewski
@@ -18,23 +19,7 @@ public class SpellBaseGeneratorMain extends ScraperTool {
 
 	@Override
 	protected void run() {
-		SpellBaseExcelBuilder builder = new SpellBaseExcelBuilder(getScraperConfig());
-		builder.start();
-
-		exportSpellBase(builder);
-
-		String filePath = getScraperConfig().getDirectoryPath() + "/spell_base.xls";
-		builder.finish(filePath);
-
-		log.info("Saved to {}", filePath);
-	}
-
-	private void exportSpellBase(SpellBaseExcelBuilder builder) {
-		exportAll(
-				builder,
-				new AbilityExporter(),
-				new ItemEffectExporter(),
-				new TalentExporter()
-		);
+		export("spell/spells.xls", SpellBaseExcelBuilder::new, new AbilityExporter(), new ItemEffectExporter());
+		export("spell/talents.xls", TalentExcelBuilder::new, new TalentExporter());
 	}
 }

@@ -34,7 +34,7 @@ class TalentsTest extends WowCharacterSpringTest {
 
 	@Test
 	void loadFromTalentLink() {
-		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303024", spellRepository);
+		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303024", talentRepository);
 		talents.loadFromTalentLink(link);
 
 		assertThat(talents.getList().stream().map(x -> x.getName() + "#" + x.getRank())).hasSameElementsAs(List.of(

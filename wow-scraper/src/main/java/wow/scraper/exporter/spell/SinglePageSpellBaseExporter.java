@@ -1,6 +1,6 @@
 package wow.scraper.exporter.spell;
 
-import wow.scraper.exporter.spell.excel.SpellBaseExcelBuilder;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.parser.tooltip.AbstractSpellTooltipParser;
 import wow.scraper.parser.tooltip.AbstractTooltipParser;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2023-09-19
  */
-public abstract class SinglePageSpellBaseExporter<T extends AbstractSpellTooltipParser> extends SpellBaseExporter {
+public abstract class SinglePageSpellBaseExporter<T extends AbstractSpellTooltipParser, B extends WowExcelBuilder> extends SpellBaseExporter<B> {
 	protected List<T> parsers;
 
 	@Override
@@ -28,16 +28,16 @@ public abstract class SinglePageSpellBaseExporter<T extends AbstractSpellTooltip
 	}
 
 	@Override
-	protected void exportPreparedData(SpellBaseExcelBuilder builder) {
+	protected void exportPreparedData(B builder) {
 		addHeader(builder);
 		parsers.forEach(parser -> addRow(parser, builder));
 	}
 
 	protected abstract List<JsonSpellDetails> getAllData();
 
-	protected abstract void addHeader(SpellBaseExcelBuilder builder);
+	protected abstract void addHeader(B builder);
 
-	protected abstract void addRow(T parser, SpellBaseExcelBuilder builder);
+	protected abstract void addRow(T parser, B builder);
 
 	protected abstract Comparator<T> getComparator();
 

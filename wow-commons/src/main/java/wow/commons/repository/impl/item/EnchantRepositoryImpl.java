@@ -7,10 +7,10 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.item.EnchantExcelParser;
 import wow.commons.repository.impl.parser.item.SourceParserFactory;
 import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 

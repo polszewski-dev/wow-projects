@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parser.spell;
 import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.commons.repository.impl.SpellRepositoryImpl;
+import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -33,11 +33,9 @@ public class SpellExcelParser extends ExcelParser {
 				new SpellEffectSheetParser(ABILITY_EFFECTS, spellRepository, MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES, MAX_ABILITY_EFFECT_EVENTS),
 				new SpellSheetParser(ITEM_SPELLS, spellRepository),
 				new SpellEffectSheetParser(ITEM_EFFECTS, spellRepository, MAX_ITEM_EFFECT_MODIFIER_ATTRIBUTES, MAX_ITEM_EFFECT_EVENTS),
-				new TalentSheetParser(TALENTS, spellRepository),
 				new SpellSheetParser(TALENT_SPELLS, spellRepository),
 				new SpellEffectSheetParser(TALENT_EFFECTS, spellRepository, MAX_TALENT_EFFECT_MODIFIER_ATTRIBUTES, MAX_TALENT_EFFECT_EVENTS),//3,1
-				new SpellEffectSheetParser(RACIAL_EFFECTS, spellRepository, MAX_RACIAL_EFFECT_MODIFIER_ATTRIBUTES, MAX_RACIAL_EFFECT_EVENTS),
-				new BuffSheetParser(BUFFS, spellRepository)
+				new SpellEffectSheetParser(RACIAL_EFFECTS, spellRepository, MAX_RACIAL_EFFECT_MODIFIER_ATTRIBUTES, MAX_RACIAL_EFFECT_EVENTS)
 		);
 	}
 }

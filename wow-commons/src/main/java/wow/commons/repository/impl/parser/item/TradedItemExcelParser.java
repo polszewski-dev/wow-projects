@@ -3,8 +3,8 @@ package wow.commons.repository.impl.parser.item;
 import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.item.TradedItemRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 import java.io.InputStream;
 import java.util.stream.Stream;

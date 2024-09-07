@@ -185,7 +185,7 @@ class BuffsTest extends WowCharacterSpringTest {
 
 	@BeforeEach
 	void setup() {
-		List<Buff> availableBuffs = spellRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
+		List<Buff> availableBuffs = buffRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
 				.filter(x -> x.isAvailableTo(getCharacter()))
 				.filter(CHARACTER_BUFF.getFilter())
 				.toList();

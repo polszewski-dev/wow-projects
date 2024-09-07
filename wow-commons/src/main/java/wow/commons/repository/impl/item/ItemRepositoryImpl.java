@@ -8,10 +8,10 @@ import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.impl.AbstractItemImpl;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.item.ItemExcelParser;
 import wow.commons.repository.impl.parser.item.SourceParserFactory;
 import wow.commons.repository.item.ItemRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 

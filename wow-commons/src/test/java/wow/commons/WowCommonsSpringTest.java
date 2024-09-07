@@ -2,7 +2,6 @@ package wow.commons;
 
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.Duration;
@@ -15,7 +14,6 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
-import wow.commons.repository.SpellRepository;
 
 import java.util.Comparator;
 import java.util.List;
@@ -29,9 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WowCommonsSpringTestConfig.class)
 public abstract class WowCommonsSpringTest {
-	@Autowired
-	protected SpellRepository spellRepository;
-
 	protected static void assertEffectApplication(Spell spell, SpellTarget target, int duration, int numCharges, int numStacks, int maxStacks) {
 		var effectApplication = spell.getEffectApplication();
 

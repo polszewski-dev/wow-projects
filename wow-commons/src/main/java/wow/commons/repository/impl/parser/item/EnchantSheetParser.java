@@ -6,8 +6,8 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.EnchantSource;
 import wow.commons.model.item.impl.EnchantImpl;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.item.EnchantRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 

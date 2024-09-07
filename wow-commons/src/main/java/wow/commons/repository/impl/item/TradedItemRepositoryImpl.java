@@ -5,13 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.item.SourceParserFactory;
 import wow.commons.repository.impl.parser.item.TradedItemExcelParser;
 import wow.commons.repository.item.TradedItemRepository;
 import wow.commons.repository.pve.FactionRepository;
 import wow.commons.repository.pve.NpcRepository;
 import wow.commons.repository.pve.ZoneRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;

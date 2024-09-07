@@ -3,7 +3,7 @@ package wow.scraper.exporter.spell;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.exporter.ExcelExporter;
-import wow.scraper.exporter.spell.excel.SpellBaseExcelBuilder;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadSpellCategory;
 
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * Date: 2023-05-20
  */
 @Slf4j
-public abstract class SpellBaseExporter extends ExcelExporter<SpellBaseExcelBuilder> {
+public abstract class SpellBaseExporter<B extends WowExcelBuilder> extends ExcelExporter<B> {
 	protected List<JsonSpellDetails> getData(WowheadSpellCategory.Type type) {
 		return getScraperConfig().getGameVersions().stream()
 				.map(gameVersion -> getData(gameVersion, type))

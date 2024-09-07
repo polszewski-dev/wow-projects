@@ -333,7 +333,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getSpellCostSnapshot2() {
 		character.resetEquipment();
 
-		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025", spellRepository);
+		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025", talentRepository);
 		character.getTalents().loadFromTalentLink(link);
 
 		assertThat(character.hasTalent(TalentId.IMPROVED_LIFE_TAP)).isTrue();
@@ -366,7 +366,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getSpellHitPct() {
 		character.resetEquipment();
 
-		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025", spellRepository);
+		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025", talentRepository);
 		character.getTalents().loadFromTalentLink(link);
 
 		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();

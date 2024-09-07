@@ -5,8 +5,8 @@ import wow.commons.model.item.GemColor;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.item.impl.GemImpl;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.item.GemRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 

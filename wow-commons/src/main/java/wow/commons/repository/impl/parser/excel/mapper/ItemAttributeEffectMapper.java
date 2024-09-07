@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parser.excel.mapper;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.SpellRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.parser.simple.ParseResult;
 import wow.commons.util.parser.simple.SimpleRecordMapper;
 

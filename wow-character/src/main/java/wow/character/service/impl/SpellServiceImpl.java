@@ -10,7 +10,9 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
-import wow.commons.repository.SpellRepository;
+import wow.commons.repository.spell.BuffRepository;
+import wow.commons.repository.spell.SpellRepository;
+import wow.commons.repository.spell.TalentRepository;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SpellServiceImpl implements SpellService {
 	private final SpellRepository spellRepository;
+	private final TalentRepository talentRepository;
+	private final BuffRepository buffRepository;
 
 	@Override
 	public List<Ability> getAvailableAbilities(Character character) {
@@ -32,12 +36,12 @@ public class SpellServiceImpl implements SpellService {
 
 	@Override
 	public List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId) {
-		return spellRepository.getAvailableTalents(characterClassId, phaseId);
+		return talentRepository.getAvailableTalents(characterClassId, phaseId);
 	}
 
 	@Override
 	public List<Buff> getAvailableBuffs(Character character, BuffListType buffListType) {
-		return spellRepository.getAvailableBuffs(character.getPhaseId()).stream()
+		return buffRepository.getAvailableBuffs(character.getPhaseId()).stream()
 				.filter(buff -> buff.isAvailableTo(character))
 				.filter(buffListType.getFilter())
 				.toList();

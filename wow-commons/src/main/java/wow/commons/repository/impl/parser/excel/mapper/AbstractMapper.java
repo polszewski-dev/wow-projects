@@ -4,7 +4,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.repository.SpellRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.parser.simple.ParseResult;
 
 import java.util.List;

@@ -5,8 +5,8 @@ import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.item.ItemRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 import java.io.InputStream;
 import java.util.ArrayList;

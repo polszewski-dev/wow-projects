@@ -15,7 +15,7 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
-import wow.commons.repository.SpellRepository;
+import wow.commons.repository.spell.TalentRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,11 +41,11 @@ public class TemplateSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colProf2Spec = column("prof2_spec");
 	private final ExcelColumn colXFactions = column("xfactions");
 
-	private final SpellRepository spellRepository;
+	private final TalentRepository talentRepository;
 
-	public TemplateSheetParser(String sheetName, CharacterRepositoryImpl characterRepository, SpellRepository spellRepository) {
+	public TemplateSheetParser(String sheetName, CharacterRepositoryImpl characterRepository, TalentRepository talentRepository) {
 		super(sheetName, characterRepository);
-		this.spellRepository = spellRepository;
+		this.talentRepository = talentRepository;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var characterClass = colReqClass.getEnum(CharacterClassId::parse);
 		var level = colReqLevel.getInteger();
 		var timeRestriction = getTimeRestriction();
-		var talentLink = colTalentLink.getEnum(x -> TalentLinkParser.parse(x, spellRepository));
+		var talentLink = colTalentLink.getEnum(x -> TalentLinkParser.parse(x, talentRepository));
 		var pveRole = colRole.getEnum(PveRole::parse);
 		var defaultRotation = RotationTemplate.parse(colDefaultRotation.getString());
 		var activePet = colActivePet.getEnum(PetType::parse, null);

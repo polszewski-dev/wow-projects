@@ -1,11 +1,13 @@
 package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentSource;
 import wow.commons.model.talent.TalentTree;
 import wow.commons.model.talent.impl.TalentImpl;
-import wow.commons.repository.impl.SpellRepositoryImpl;
+import wow.commons.repository.impl.spell.SpellRepositoryImpl;
+import wow.commons.repository.impl.spell.TalentRepositoryImpl;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
@@ -14,14 +16,20 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2022-11-22
  */
 public class TalentSheetParser extends AbstractSpellSheetParser {
-	public TalentSheetParser(String sheetName, SpellRepositoryImpl spellRepository) {
-		super(sheetName, spellRepository);
+	private final TalentRepositoryImpl talentRepository;
+	private final SpellRepositoryImpl spellRepository;
+
+	public TalentSheetParser(String sheetName, TalentRepositoryImpl talentRepository, SpellRepositoryImpl spellRepository) {
+		super(sheetName);
+		this.talentRepository = talentRepository;
+		this.spellRepository = spellRepository;
 	}
 
 	@Override
 	protected void readSingleRow() {
 		Talent talent = getTalent();
-		spellRepository.addTalent(talent);
+		talentRepository.addTalent(talent);
+		spellRepository.addEffect(talent.getEffect());
 	}
 
 	private final ExcelColumn colRank = column(TALENT_RANK);
@@ -76,5 +84,18 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 		effect.setEffectIncreasePerEffectOnTarget(effectIncreasePerEffectOnTarget);
 		effect.setEvents(events);
 		return effect;
+	}
+
+	@Override
+	protected EffectImpl getDummyEffect(int effectId) {
+		return (EffectImpl) spellRepository.getEffect(effectId, getTimeRestriction().earliestPhaseId()).orElseThrow();
+	}
+
+	@Override
+	protected SpellImpl getDummySpell(Integer spellId) {
+		if (spellId == null) {
+			return null;
+		}
+		return (SpellImpl) spellRepository.getSpell(spellId, getTimeRestriction().earliestPhaseId()).orElseThrow();
 	}
 }

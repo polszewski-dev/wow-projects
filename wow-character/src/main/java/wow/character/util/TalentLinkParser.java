@@ -6,7 +6,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentIdAndRank;
-import wow.commons.repository.SpellRepository;
+import wow.commons.repository.spell.TalentRepository;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
 
@@ -24,17 +24,17 @@ public abstract class TalentLinkParser {
 	protected final GameVersionId gameVersionId;
 	protected final CharacterClassId characterClassId;
 	private final List<TalentIdAndRank> talents = new ArrayList<>();
-	protected final SpellRepository spellRepository;
+	protected final TalentRepository talentRepository;
 
 	protected final ParsedMultipleValues parseResult;
 
-	TalentLinkParser(String link, TalentLinkType type, ParsedMultipleValues parseResult, SpellRepository spellRepository) {
+	TalentLinkParser(String link, TalentLinkType type, ParsedMultipleValues parseResult, TalentRepository talentRepository) {
 		this.link = link;
 		this.type = type;
 		this.gameVersionId = parseGameVersion(parseResult);
 		this.characterClassId = CharacterClassId.parse(parseResult.get(1));
 		this.parseResult = parseResult;
-		this.spellRepository = spellRepository;
+		this.talentRepository = talentRepository;
 	}
 
 	private static GameVersionId parseGameVersion(ParsedMultipleValues parseResult) {
@@ -47,22 +47,22 @@ public abstract class TalentLinkParser {
 		return GameVersionId.parse(gameVersionStr);
 	}
 
-	public static TalentLink parse(String link, SpellRepository spellRepository) {
-		var parser = getParser(link, spellRepository);
+	public static TalentLink parse(String link, TalentRepository talentRepository) {
+		var parser = getParser(link, talentRepository);
 		return parser.parse();
 	}
 
-	private static TalentLinkParser getParser(String link, SpellRepository spellRepository) {
+	private static TalentLinkParser getParser(String link, TalentRepository talentRepository) {
 		var parseResult = ParserUtil.parseMultipleValues("https://www\\.wowhead\\.com/([^/]+)/talent-calc/([^/]+)/?(.*)", link);
 
 		if (!parseResult.isEmpty()) {
-			return new WowheadLinkParser(link, parseResult, spellRepository);
+			return new WowheadLinkParser(link, parseResult, talentRepository);
 		}
 
 		parseResult = ParserUtil.parseMultipleValues("https://legacy-wow\\.com/(.+)-talents/(.+)-talents/\\?tal=(.+)", link);
 
 		if (!parseResult.isEmpty()) {
-			return new LegacyWowLinkParser(link, parseResult, spellRepository);
+			return new LegacyWowLinkParser(link, parseResult, talentRepository);
 		}
 
 		throw new IllegalArgumentException("Unsupported link format: " + link);
@@ -90,7 +90,7 @@ public abstract class TalentLinkParser {
 
 	private void addTalent(int position, int talentRank) {
 		var phaseId = gameVersionId.getEarliestPhase();
-		var talent = spellRepository.getTalent(characterClassId, position, talentRank, phaseId).orElseThrow();
+		var talent = talentRepository.getTalent(characterClassId, position, talentRank, phaseId).orElseThrow();
 
 		talents.add(new TalentIdAndRank(talent.getTalentId(), talentRank));
 	}
@@ -101,8 +101,8 @@ public abstract class TalentLinkParser {
 */
 
 class WowheadLinkParser extends TalentLinkParser {
-	WowheadLinkParser(String link, ParsedMultipleValues parseResult, SpellRepository spellRepository) {
-		super(link, TalentLinkType.WOWHEAD, parseResult, spellRepository);
+	WowheadLinkParser(String link, ParsedMultipleValues parseResult, TalentRepository talentRepository) {
+		super(link, TalentLinkType.WOWHEAD, parseResult, talentRepository);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ class WowheadLinkParser extends TalentLinkParser {
 			firstTree = talentListString;
 		}
 
-		var talents = spellRepository.getAvailableTalents(characterClassId, gameVersionId.getEarliestPhase());
+		var talents = talentRepository.getAvailableTalents(characterClassId, gameVersionId.getEarliestPhase());
 
 		var talentTreeToPosition = talents.stream().collect(Collectors.toMap(
 				Talent::getTalentTree,
@@ -153,8 +153,8 @@ class WowheadLinkParser extends TalentLinkParser {
 */
 
 class LegacyWowLinkParser extends TalentLinkParser {
-	LegacyWowLinkParser(String link, ParsedMultipleValues parseResult, SpellRepository spellRepository) {
-		super(link, TalentLinkType.LEGACY_WOW, parseResult, spellRepository);
+	LegacyWowLinkParser(String link, ParsedMultipleValues parseResult, TalentRepository talentRepository) {
+		super(link, TalentLinkType.LEGACY_WOW, parseResult, talentRepository);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
-package wow.commons.repository;
+package wow.commons.repository.spell;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -11,9 +11,6 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.buff.BuffExclusionGroup;
-import wow.commons.model.buff.BuffId;
-import wow.commons.model.buff.BuffType;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
@@ -22,31 +19,25 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
-import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.buff.BuffCategory.RAID_BUFF;
-import static wow.commons.model.categorization.PveRole.CASTER_DPS;
-import static wow.commons.model.character.CharacterClassId.*;
+import static wow.commons.model.character.CharacterClassId.SHAMAN;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
-import static wow.commons.model.effect.component.EventType.*;
-import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.commons.model.effect.component.EventType.SPELL_CAST;
+import static wow.commons.model.effect.component.EventType.SPELL_HIT;
 import static wow.commons.model.pve.PhaseId.*;
-import static wow.commons.model.spell.AbilityId.CURSE_OF_EXHAUSTION;
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.Conversion.From.*;
 import static wow.commons.model.spell.Conversion.To.*;
-import static wow.commons.model.spell.SpellSchool.*;
-import static wow.commons.model.talent.TalentId.*;
-import static wow.commons.model.talent.TalentTree.AFFLICTION;
+import static wow.commons.model.spell.SpellSchool.FIRE;
+import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
 
 /**
@@ -54,6 +45,9 @@ import static wow.commons.model.talent.TalentTree.DESTRUCTION;
  * Date: 2022-11-11
  */
 class SpellRepositoryTest extends WowCommonsSpringTest {
+	@Autowired
+	SpellRepository spellRepository;
+
 	@Test
 	void abilityInfo() {
 		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
@@ -546,145 +540,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	}
 
 	@Test
-	void talentInfo() {
-		var talent = getTalent(WARLOCK, IMPROVED_CORRUPTION, 1, TBC_P5);
-
-		assertThat(talent.getId()).isEqualTo(17810);
-		assertThat(talent.getName()).isEqualTo("Improved Corruption");
-		assertThat(talent.getRank()).isEqualTo(1);
-		assertThat(talent.getMaxRank()).isEqualTo(5);
-		assertThat(talent.getTalentCalculatorPosition()).isEqualTo(2);
-		assertThat(talent.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC));
-		assertThat(talent.getCharacterClass()).isEqualTo(WARLOCK);
-		assertThat(talent.getTalentTree()).isEqualTo(AFFLICTION);
-		assertThat(talent.getIcon()).isEqualTo("spell_shadow_abominationexplosion");
-		assertThat(talent.getTooltip()).isEqualTo("Reduces the casting time of your Corruption spell by 0.4 sec.");
-	}
-
-	@ParameterizedTest
-	@CsvSource({
-			"1, -0.4",
-			"2, -0.8",
-			"3, -1.2",
-			"4, -1.6",
-			"5, -2.0"
-	})
-	void talentModifier(int rank, double value) {
-		Talent talent = getTalent(WARLOCK, IMPROVED_CORRUPTION, rank, TBC_P5);
-
-		assertModifier(talent.getEffect(), List.of(
-				Attribute.of(CAST_TIME, value, AttributeCondition.of(CORRUPTION))
-		));
-	}
-
-	@Test void talentWithTwoAttributeTagets() {
-		Talent talent = getTalent(WARLOCK, FEL_INTELLECT, 3, TBC_P5);
-
-		assertModifier(talent.getEffect(), List.of(
-				Attribute.of(PET_INTELLECT_PCT, 15),
-				Attribute.of(MAX_MANA_PCT, 3)
-		));
-	}
-
-	@ParameterizedTest
-	@CsvSource({
-			"1, VANILLA_P6",
-			"2, VANILLA_P6",
-			"3, VANILLA_P6",
-			"4, VANILLA_P6",
-			"5, VANILLA_P6",
-			"1, TBC_P5",
-			"2, TBC_P5",
-			"3, TBC_P5",
-			"4, TBC_P5",
-			"5, TBC_P5",
-	})
-	void talentProc(int rank, PhaseId phaseId) {
-		var talent = getTalent(WARLOCK, IMPROVED_SHADOW_BOLT, rank, phaseId);
-
-		assertThat(talent.getTooltip()).isEqualTo(
-				"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by " + (rank * 4) + "% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec."
-		);
-
-		var effect = talent.getEffect();
-
-		assertThat(effect.getEvents()).hasSize(1);
-
-		var event = effect.getEvents().get(0);
-
-		assertEvent(
-				event,
-				List.of(SPELL_CRIT),
-				AttributeCondition.of(SHADOW_BOLT),
-				100,
-				List.of(TRIGGER_SPELL),
-				Duration.ZERO
-		);
-
-		var spell = event.triggeredSpell();
-
-		assertEffectApplication(spell, SpellTarget.TARGET, 12, 4, rank, 5);
-
-		var appliedEffect = spell.getEffectApplication().effect();
-
-		assertModifier(appliedEffect, List.of(
-				Attribute.of(DAMAGE_PCT, 4, AttributeCondition.of(SHADOW))
-		));
-	}
-
-	@Test
-	void talentEffectWithMultipleAttributes() {
-		var talent = getTalent(WARLOCK, BANE, 5, TBC_P5);
-
-		assertModifier(talent.getEffect(), List.of(
-				Attribute.of(CAST_TIME, -0.5, ConditionOperator.comma(
-						AttributeCondition.of(SHADOW_BOLT),
-						AttributeCondition.of(IMMOLATE)
-				)),
-				Attribute.of(CAST_TIME, -2, AttributeCondition.of(SOUL_FIRE))
-		));
-	}
-
-	@Test
-	void talentWithConversion() {
-		var talent = getTalent(PRIEST, IMPROVED_VAMPIRIC_EMBRACE, 2, TBC_P5);
-		var effect = talent.getEffect();
-
-		assertThat(effect.getAugmentedAbility()).isEqualTo(AbilityId.VAMPIRIC_EMBRACE);
-		assertConversion(effect.getConversion(), AttributeCondition.of(SHADOW), DAMAGE_DONE, PARTY_HEALTH, 10);
-	}
-
-	@Test
-	void talentWithStatConversion() {
-		var talent = getTalent(PRIEST, IMPROVED_DIVINE_SPIRIT, 2, TBC_P5);
-		var effect = talent.getEffect();
-
-		assertThat(effect.getAugmentedAbility()).isEqualTo(AbilityId.DIVINE_SPIRIT);
-		assertStatConversion(effect, 0, SPIRIT, POWER, 10, MiscCondition.SPELL);
-	}
-
-	@Test
-	void talentWithDoubleConversion() {
-		var talent = getTalent(WARLOCK, DEMONIC_KNOWLEDGE, 3, TBC_P5);
-		var effect = talent.getEffect();
-
-		assertStatConversion(effect, 0, PET_STAMINA, POWER, 12, MiscCondition.SPELL_DAMAGE);
-		assertStatConversion(effect, 1, PET_INTELLECT, POWER, 12, MiscCondition.SPELL_DAMAGE);
-	}
-
-	@Test
-	void talentWithEffectIncrease() {
-		var talent = getTalent(WARLOCK, SOUL_SIPHON, 2, TBC_P5);
-		var effect = talent.getEffect();
-		var effectIncrease = effect.getEffectIncreasePerEffectOnTarget();
-
-		assertThat(effectIncrease).isNotNull();
-		assertThat(effectIncrease.condition()).isEqualTo(AttributeCondition.of(AFFLICTION));
-		assertThat(effectIncrease.value()).isEqualTo(Percent.of(4));
-		assertThat(effectIncrease.max()).isEqualTo(Percent.of(60));
-	}
-
-	@Test
 	void racialAbility() {
 		var ability = (RacialAbility) getSpell(33697, TBC_P5);
 
@@ -724,101 +579,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		));
 	}
 
-	@Test
-	void buffIsCorrect() {
-		var buff = spellRepository.getBuff(BuffId.CURSE_OF_THE_ELEMENTS, 4, PhaseId.TBC_P5).orElseThrow();
-
-		assertThat(buff.getBuffId()).isEqualTo(BuffId.CURSE_OF_THE_ELEMENTS);
-		assertThat(buff.getRank()).isEqualTo(4);
-		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
-		assertThat(buff.getRequiredLevel()).isNull();
-		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
-		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.COE);
-		assertThat(buff.getSourceSpell()).isNull();
-		assertThat(buff.getPveRoles()).hasSameElementsAs(Set.of(CASTER_DPS));
-		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(RAID_BUFF));
-
-		assertModifier(buff.getEffect(), List.of(
-				Attribute.of(DAMAGE_TAKEN_PCT, 10, ConditionOperator.comma(
-						AttributeCondition.of(SHADOW),
-						AttributeCondition.of(FIRE),
-						AttributeCondition.of(FROST),
-						AttributeCondition.of(ARCANE)
-				))
-		));
-	}
-
-	@Test
-	void bufByNamefIsCorrect() {
-		var buffNames = spellRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
-				.map(buff -> buff.getName() + "#" + buff.getRank())
-				.toList();
-
-		assertThat(buffNames).hasSameElementsAs(List.of(
-				"Arcane Brilliance#1",
-				"Arcane Brilliance#2",
-				"Prayer of Fortitude#2",
-				"Prayer of Fortitude#3",
-				"Prayer of Spirit#1",
-				"Prayer of Spirit#2",
-				"Gift of the Wild#2",
-				"Gift of the Wild#3",
-				"Greater Blessing of Kings#0",
-				"Demon Armor#5",
-				"Demon Armor#6",
-				"Fel Armor#1",
-				"Fel Armor#2",
-				"Fel Armor (improved)#2",
-				"Touch of Shadow#0",
-				"Burning Wish#0",
-				"Shadowform#0",
-				"Brilliant Wizard Oil#0",
-				"Superior Wizard Oil#0",
-				"Runn Tum Tuber#0",
-				"Well Fed (sp)#0",
-				"Flask of Supreme Power#0",
-				"Flask of Pure Death#0",
-				"Spirit of Zanza#0",
-				"Greater Arcane Elixir#0",
-				"Elixir of Shadow Power#0",
-				"Moonkin Aura#0",
-				"Wrath of Air Totem#1",
-				"Totem of Wrath#1",
-				"Drums of Battle#0",
-				"Destruction#0",
-				"Misery#0",
-				"Rallying Cry of the Dragonslayer#0",
-				"Spirit of Zandalar#0",
-				"Warchief's Blessing#0",
-				"Sayge's Dark Fortune of Damage#0",
-				"Mol'dar's Moxie#0",
-				"Slip'kik's Savvy#0",
-				"Songflower Serenade#0",
-				"Shadow Weaving#0",
-				"Improved Scorch#0",
-				"Curse of the Elements#3",
-				"Curse of the Elements#4",
-				"Curse of the Elements (improved)#3",
-				"Curse of the Elements (improved)#4"
-		));
-	}
-
-	@Nested
-	class BuffAttributes {
-		@ParameterizedTest(name = "{0}")
-		@CsvSource({
-				"VANILLA_P1, 1, 31",
-				"TBC_P1, 2, 40",
-		})
-		void talent(PhaseId phaseId, int rank, int statValue) {
-			var buff = spellRepository.getBuff(BuffId.ARCANE_BRILLIANCE, rank, phaseId).orElseThrow();
-
-			assertModifier(buff.getEffect(), List.of(
-					Attribute.of(INTELLECT, statValue)
-			));
-		}
-	}
-
 	private ClassAbility getClassAbility(AbilityId abilityId, int rank, PhaseId phaseId) {
 		return (ClassAbility) spellRepository.getAbility(abilityId, rank, phaseId).orElseThrow();
 	}
@@ -829,9 +589,5 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	private Effect getEffect(int effectId, PhaseId phaseId) {
 		return spellRepository.getEffect(effectId, phaseId).orElseThrow();
-	}
-
-	private Talent getTalent(CharacterClassId classId, TalentId talentId, int rank, PhaseId phaseId) {
-		return spellRepository.getTalent(classId, talentId, rank, phaseId).orElseThrow();
 	}
 }

@@ -11,7 +11,6 @@ import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.spell.component.DirectComponentBonus;
 import wow.commons.model.spell.impl.*;
 import wow.commons.model.talent.TalentTree;
-import wow.commons.repository.impl.SpellRepositoryImpl;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 
 import java.util.List;
@@ -25,11 +24,8 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2023-10-05
  */
 public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
-	protected final SpellRepositoryImpl spellRepository;
-
-	protected AbstractSpellSheetParser(String sheetName, SpellRepositoryImpl spellRepository) {
+	protected AbstractSpellSheetParser(String sheetName) {
 		super(sheetName);
-		this.spellRepository = spellRepository;
 	}
 
 	private final ExcelColumn colType = column(SPELL_TYPE);
@@ -280,10 +276,15 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var numStacks = colAppliedEffectStacks.prefixed(prefix).getInteger();
 		var numCharges = colAppliedEffectCharges.prefixed(prefix).getInteger();
 
-		var dummy = new EffectImpl(null);
-		dummy.setEffectId(effectId);
+		var dummy = getDummyEffect(effectId);
 
 		return new EffectApplication(target, dummy, duration, numStacks, numCharges);
+	}
+
+	protected EffectImpl getDummyEffect(int effectId) {
+		var dummy = new EffectImpl(null);
+		dummy.setEffectId(effectId);
+		return dummy;
 	}
 
 	private final ExcelColumn colAugmentedAbility = column(AUGMENTED_ABILITY, true);
@@ -337,7 +338,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return new Event(types, condition, chance, actions, cooldown, dummy);
 	}
 
-	private SpellImpl getDummySpell(Integer spellId) {
+	protected SpellImpl getDummySpell(Integer spellId) {
 		if (spellId == null) {
 			return null;
 		}

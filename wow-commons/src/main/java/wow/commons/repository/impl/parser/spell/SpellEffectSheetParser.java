@@ -6,7 +6,7 @@ import wow.commons.model.effect.component.AbsorptionComponent;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.TickScheme;
-import wow.commons.repository.impl.SpellRepositoryImpl;
+import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
@@ -15,11 +15,14 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2023-08-31
  */
 public class SpellEffectSheetParser extends AbstractSpellSheetParser {
+	private final SpellRepositoryImpl spellRepository;
+
 	private final int maxModAttributes;
 	private final int maxEvents;
 
 	public SpellEffectSheetParser(String sheetName, SpellRepositoryImpl spellRepository, int maxModAttributes, int maxEvents) {
-		super(sheetName, spellRepository);
+		super(sheetName);
+		this.spellRepository = spellRepository;
 		this.maxModAttributes = maxModAttributes;
 		this.maxEvents = maxEvents;
 	}

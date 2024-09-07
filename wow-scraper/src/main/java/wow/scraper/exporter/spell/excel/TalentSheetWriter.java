@@ -12,8 +12,8 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-06-20
  */
-public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser> {
-	public TalentSheetWriter(SpellBaseExcelBuilder builder) {
+public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser, TalentExcelBuilder> {
+	public TalentSheetWriter(TalentExcelBuilder builder) {
 		super(builder);
 	}
 

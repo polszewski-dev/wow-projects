@@ -24,7 +24,7 @@ class TalentLinkParserTest extends WowCharacterSpringTest {
 	@Test
 	void legacyWow() {
 		var linkString = "https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250";
-		var link = TalentLinkParser.parse(linkString, spellRepository);
+		var link = TalentLinkParser.parse(linkString, talentRepository);
 
 		assertThat(link.link()).isEqualTo(linkString);
 		assertThat(link.type()).isEqualTo(TalentLinkType.LEGACY_WOW);
@@ -60,7 +60,7 @@ class TalentLinkParserTest extends WowCharacterSpringTest {
 	@Test
 	void wowhead() {
 		var linkString = "https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025";
-		var link = TalentLinkParser.parse(linkString, spellRepository);
+		var link = TalentLinkParser.parse(linkString, talentRepository);
 
 		assertThat(link.link()).isEqualTo(linkString);
 		assertThat(link.type()).isEqualTo(TalentLinkType.WOWHEAD);
@@ -96,7 +96,7 @@ class TalentLinkParserTest extends WowCharacterSpringTest {
 	@ParameterizedTest
 	@MethodSource
 	void wowheadSpecialCases(String linkString, List<String> talentStrings) {
-		var link = TalentLinkParser.parse(linkString, spellRepository);
+		var link = TalentLinkParser.parse(linkString, talentRepository);
 
 		assertTalents(link, talentStrings);
 	}

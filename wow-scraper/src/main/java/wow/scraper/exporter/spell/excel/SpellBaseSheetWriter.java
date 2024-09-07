@@ -7,6 +7,7 @@ import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.Conversion;
 import wow.scraper.exporter.excel.ExcelSheetWriter;
+import wow.scraper.exporter.excel.WowExcelBuilder;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
@@ -15,8 +16,8 @@ import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
  * User: POlszewski
  * Date: 2023-08-27
  */
-public abstract class SpellBaseSheetWriter<P> extends ExcelSheetWriter<P, SpellBaseExcelBuilder> {
-	protected SpellBaseSheetWriter(SpellBaseExcelBuilder builder) {
+public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends ExcelSheetWriter<P, B> {
+	protected SpellBaseSheetWriter(B builder) {
 		super(builder);
 	}
 

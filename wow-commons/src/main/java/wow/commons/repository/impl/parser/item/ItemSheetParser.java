@@ -11,8 +11,8 @@ import wow.commons.model.item.SocketType;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.impl.ActivatedAbilityImpl;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.item.ItemRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 

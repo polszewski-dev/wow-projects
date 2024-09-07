@@ -16,7 +16,7 @@ import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
  * User: POlszewski
  * Date: 2023-06-20
  */
-public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBaseSheetWriter<T> {
+public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBaseSheetWriter<T, SpellBaseExcelBuilder> {
 	protected AbstractSpellSheetWriter(SpellBaseExcelBuilder builder) {
 		super(builder);
 	}

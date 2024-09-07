@@ -6,7 +6,6 @@ import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentTree;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.exporter.excel.WowExcelBuilder;
-import wow.scraper.parser.tooltip.TalentTooltipParser;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
@@ -21,10 +20,8 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 	private final EffectSheetWriter abilityEffectSheetWriter;
 	private final SpellSheetWriter itemSpellSheetWriter;
 	private final EffectSheetWriter itemEffectSheetWriter;
-	private final TalentSheetWriter talentSheetWriter;
 
 	private TalentTree currentTree;
-	private String currentName;
 
 	public SpellBaseExcelBuilder(ScraperConfig config) {
 		super(config);
@@ -33,7 +30,6 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 		this.abilityEffectSheetWriter = new EffectSheetWriter(this, MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES, MAX_ABILITY_EFFECT_EVENTS);
 		this.itemSpellSheetWriter = new SpellSheetWriter(this);
 		this.itemEffectSheetWriter = new EffectSheetWriter(this, MAX_ITEM_EFFECT_MODIFIER_ATTRIBUTES, MAX_ITEM_EFFECT_EVENTS);
-		this.talentSheetWriter = new TalentSheetWriter(this);
 	}
 
 	public void addAbilityHeader() {
@@ -80,19 +76,8 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 		writeRow(effect, itemEffectSheetWriter);
 	}
 
-	public void addTalentHeader() {
-		writeHeader(TALENTS, talentSheetWriter, 2, 1);
-		resetSeparators();
-	}
-
-	public void addTalent(TalentTooltipParser parser) {
-		separateByName(parser.getName());
-		writeRow(parser, talentSheetWriter);
-	}
-
 	private void resetSeparators() {
 		currentTree = null;
-		currentName = null;
 	}
 
 	private void separateByTree(TalentTree tree) {
@@ -100,12 +85,5 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 			writer.nextRow();
 		}
 		currentTree = tree;
-	}
-
-	private void separateByName(String name) {
-		if (currentName != null && !name.equals(currentName)) {
-			writer.nextRow();
-		}
-		currentName = name;
 	}
 }

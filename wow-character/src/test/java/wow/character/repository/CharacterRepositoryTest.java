@@ -94,7 +94,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
 		assertThat(characterTemplate.getLevel()).isEqualTo(70);
 		assertThat(characterTemplate.getCharacterClassId()).isEqualTo(WARLOCK);
-		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025", spellRepository);
+		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025", talentRepository);
 		assertThat(characterTemplate.getTalentLink()).isEqualTo(link);
 		assertThat(characterTemplate.getRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(characterTemplate.getDefaultRotationTemplate().getAbilityIds()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));

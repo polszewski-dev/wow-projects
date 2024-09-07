@@ -19,10 +19,10 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfile;
 

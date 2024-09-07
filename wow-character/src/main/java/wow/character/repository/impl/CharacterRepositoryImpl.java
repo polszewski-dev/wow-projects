@@ -12,7 +12,7 @@ import wow.character.repository.impl.parser.character.CharacterExcelParser;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.SpellRepository;
+import wow.commons.repository.spell.TalentRepository;
 import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
@@ -34,7 +34,7 @@ public class CharacterRepositoryImpl implements CharacterRepository {
 	private final Map<PhaseId, Phase> phaseById = new TreeMap<>();
 	private final PhaseMap<String, CharacterTemplate> characterTemplateByKey = new PhaseMap<>();
 
-	private final SpellRepository spellRepository;
+	private final TalentRepository talentRepository;
 
 	@Value("${character.xls.file.path}")
 	private String xlsFilePath;
@@ -57,7 +57,7 @@ public class CharacterRepositoryImpl implements CharacterRepository {
 
 	@PostConstruct
 	public void init() throws IOException {
-		var excelParser = new CharacterExcelParser(xlsFilePath, this, spellRepository);
+		var excelParser = new CharacterExcelParser(xlsFilePath, this, talentRepository);
 		excelParser.readFromXls();
 	}
 

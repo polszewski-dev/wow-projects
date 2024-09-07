@@ -21,10 +21,12 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
+import wow.commons.repository.spell.BuffRepository;
+import wow.commons.repository.spell.SpellRepository;
+import wow.commons.repository.spell.TalentRepository;
 
 import java.util.Comparator;
 import java.util.List;
@@ -53,6 +55,12 @@ public abstract class WowCharacterSpringTest {
 
 	@Autowired
 	protected SpellRepository spellRepository;
+
+	@Autowired
+	protected TalentRepository talentRepository;
+
+	@Autowired
+	protected BuffRepository buffRepository;
 
 	@Autowired
 	protected CharacterService characterService;
@@ -149,11 +157,11 @@ public abstract class WowCharacterSpringTest {
 	}
 
 	protected Buff getBuff(BuffId buffId, int rank) {
-		return spellRepository.getBuff(buffId, rank, PHASE).orElseThrow();
+		return buffRepository.getBuff(buffId, rank, PHASE).orElseThrow();
 	}
 
 	protected Talent getTalent(TalentId talentId, int rank) {
-		return spellRepository.getTalent(CHARACTER_CLASS, talentId, rank, PHASE).orElseThrow();
+		return talentRepository.getTalent(CHARACTER_CLASS, talentId, rank, PHASE).orElseThrow();
 	}
 
 	protected PlayerCharacter getCharacter() {

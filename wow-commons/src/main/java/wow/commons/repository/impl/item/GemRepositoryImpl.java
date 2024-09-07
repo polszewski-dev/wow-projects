@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.item.GemExcelParser;
 import wow.commons.repository.impl.parser.item.SourceParserFactory;
 import wow.commons.repository.item.GemRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 

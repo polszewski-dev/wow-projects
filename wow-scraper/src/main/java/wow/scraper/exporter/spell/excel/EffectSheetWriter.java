@@ -13,7 +13,7 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-08-31
  */
-public class EffectSheetWriter extends SpellBaseSheetWriter<Effect> {
+public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExcelBuilder> {
 	private final int maxModAttributes;
 	private final int maxEvents;
 

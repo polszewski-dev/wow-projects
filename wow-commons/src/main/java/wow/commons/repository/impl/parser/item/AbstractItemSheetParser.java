@@ -11,9 +11,9 @@ import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.source.Source;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
+import wow.commons.repository.spell.SpellRepository;
 
 import java.util.List;
 import java.util.Objects;

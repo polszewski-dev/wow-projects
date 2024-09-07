@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parser.spell;
 import wow.commons.model.buff.*;
 import wow.commons.model.buff.impl.BuffImpl;
 import wow.commons.model.effect.impl.EffectImpl;
-import wow.commons.repository.impl.SpellRepositoryImpl;
+import wow.commons.repository.impl.spell.BuffRepositoryImpl;
 
 import java.util.List;
 
@@ -19,14 +19,17 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colExclusionGroup = column("exclusion group");
 	private final ExcelColumn colCategories = column("categories");
 
-	public BuffSheetParser(String sheetName, SpellRepositoryImpl spellRepository) {
-		super(sheetName, spellRepository);
+	private final BuffRepositoryImpl buffRepository;
+
+	public BuffSheetParser(String sheetName, BuffRepositoryImpl buffRepository) {
+		super(sheetName);
+		this.buffRepository = buffRepository;
 	}
 
 	@Override
 	protected void readSingleRow() {
 		Buff buff = getBuff();
-		spellRepository.addBuff(buff);
+		buffRepository.addBuff(buff);
 	}
 
 	private Buff getBuff() {

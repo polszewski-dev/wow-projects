@@ -2,8 +2,8 @@ package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.item.impl.TradedItemImpl;
-import wow.commons.repository.SpellRepository;
 import wow.commons.repository.impl.item.TradedItemRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 /**
  * User: POlszewski
