@@ -1,17 +1,15 @@
-package wow.character.model.character;
+package wow.commons.model.pve;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.PetType;
-import wow.commons.model.character.RaceId;
+import wow.commons.model.character.*;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
+import wow.commons.model.profession.Profession;
 import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionProficiency;
 import wow.commons.model.profession.ProfessionProficiencyId;
-import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.pve.PhaseId;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -39,7 +37,6 @@ public class GameVersion implements Described {
 	private final List<Profession> professions = new ArrayList<>();
 	private final List<ProfessionProficiency> proficiencies = new ArrayList<>();
 	private final List<Pet> pets = new ArrayList<>();
-	private final List<CombatRatingInfo> combatRatingInfos = new ArrayList<>();
 
 	public Phase getPhase(PhaseId phaseId) {
 		if (phaseId == null) {
@@ -94,13 +91,6 @@ public class GameVersion implements Described {
 		}
 		return pets.stream()
 				.filter(x -> x.getPetType() == petType)
-				.findFirst()
-				.orElseThrow();
-	}
-
-	public CombatRatingInfo getCombatRatingInfo(int level) {
-		return combatRatingInfos.stream()
-				.filter(x -> x.getLevel() == level)
 				.findFirst()
 				.orElseThrow();
 	}

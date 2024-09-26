@@ -1,8 +1,8 @@
 package wow.character.repository.impl.parser.character;
 
 import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.GameVersion;
 import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.model.pve.GameVersion;
 
 /**
  * User: POlszewski
@@ -41,6 +41,6 @@ public class CombatRatingsSheetParser extends CharacterSheetParser {
 	}
 
 	private void addCombatRatingInfo(CombatRatingInfo combatRatingInfo) {
-		combatRatingInfo.getGameVersion().getCombatRatingInfos().add(combatRatingInfo);
+		characterRepository.addCombatRatingInfo(combatRatingInfo);
 	}
 }

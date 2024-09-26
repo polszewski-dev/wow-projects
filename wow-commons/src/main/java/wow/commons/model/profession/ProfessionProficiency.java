@@ -1,12 +1,11 @@
-package wow.character.model.character;
+package wow.commons.model.profession;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-import wow.commons.model.profession.ProfessionProficiencyId;
-import wow.commons.model.profession.ProfessionType;
+import wow.commons.model.pve.GameVersion;
 
 import java.util.Map;
 

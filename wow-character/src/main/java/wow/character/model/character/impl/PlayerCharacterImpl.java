@@ -6,6 +6,9 @@ import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.Race;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.racial.Racial;
 
 /**
@@ -20,8 +23,8 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 
-	public PlayerCharacterImpl(Phase phase, CharacterClass characterClass, Race race, int level, Talents talents) {
-		super(phase, characterClass, level, characterClass.getBaseStatInfo(level, race.getRaceId()));
+	public PlayerCharacterImpl(Phase phase, CharacterClass characterClass, Race race, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo, Talents talents) {
+		super(phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
 		this.equipment = new Equipment();

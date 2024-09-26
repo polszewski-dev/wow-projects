@@ -1,13 +1,13 @@
-package wow.character.model.character;
+package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
+import wow.commons.model.pve.GameVersion;
 
 /**
  * User: POlszewski

@@ -4,8 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.Percent;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.Race;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.GameVersion;
+import wow.commons.model.pve.GameVersionId;
 
 /**
  * User: POlszewski
@@ -38,6 +42,10 @@ public class BaseStatInfo {
 	@NonNull
 	public CharacterClassId getCharacterClassId() {
 		return characterClass.getCharacterClassId();
+	}
+
+	public GameVersionId getGameVersionId() {
+		return gameVersion.getGameVersionId();
 	}
 
 	@Override

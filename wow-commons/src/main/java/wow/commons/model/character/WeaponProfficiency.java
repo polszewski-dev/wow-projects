@@ -1,4 +1,4 @@
-package wow.character.model.character;
+package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ItemType;

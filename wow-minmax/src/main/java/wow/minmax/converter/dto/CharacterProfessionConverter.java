@@ -3,8 +3,8 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterProfession;
-import wow.character.model.character.Phase;
 import wow.character.repository.CharacterRepository;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.minmax.converter.Converter;
 import wow.minmax.converter.ParametrizedBackConverter;
@@ -37,8 +37,8 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 		PhaseId phaseId = getPhaseId(params);
 		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
 
-		return phase.getCharacterProfession(
-				source.getProfession(), source.getSpecialization(), source.getLevel()
+		return CharacterProfession.getCharacterProfession(
+				phase, source.getProfession(), source.getSpecialization(), source.getLevel()
 		);
 	}
 }

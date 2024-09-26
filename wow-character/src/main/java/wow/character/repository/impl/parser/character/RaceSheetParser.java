@@ -1,10 +1,10 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.Race;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.Race;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Side;
 
 /**

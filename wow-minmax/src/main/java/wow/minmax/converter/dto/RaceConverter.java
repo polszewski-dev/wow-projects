@@ -2,7 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.Race;
+import wow.commons.model.character.Race;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.RaceDTO;
 

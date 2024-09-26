@@ -2,11 +2,14 @@ package wow.character.model.character;
 
 import wow.character.model.effect.EffectCollection;
 import wow.commons.model.buff.BuffIdAndRank;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterInfo;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;

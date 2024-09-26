@@ -35,12 +35,15 @@ public class NonPlayerCharacterPOConverter implements Converter<NonPlayerCharact
 	@Override
 	public NonPlayerCharacter doConvertBack(NonPlayerCharacterPO source, Map<String, Object> params) {
 		var phase = characterRepository.getPhase(source.getPhaseId()).orElseThrow();
+		var characterClass = phase.getGameVersion().getCharacterClass(source.getCharacterClassId());
+		var combatRatingInfo = characterRepository.getCombatRatingInfo(phase.getGameVersionId(), source.getLevel()).orElseThrow();
 
 		return new NonPlayerCharacterImpl(
 				phase,
-				phase.getGameVersion().getCharacterClass(source.getCharacterClassId()),
+				characterClass,
 				source.getCreatureType(),
-				source.getLevel()
+				source.getLevel(),
+				combatRatingInfo
 		);
 	}
 }

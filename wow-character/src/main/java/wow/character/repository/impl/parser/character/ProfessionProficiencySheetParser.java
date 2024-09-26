@@ -1,11 +1,11 @@
 package wow.character.repository.impl.parser.character;
 
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.ProfessionProficiency;
 import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.model.profession.ProfessionProficiency;
 import wow.commons.model.profession.ProfessionProficiencyId;
 import wow.commons.model.profession.ProfessionType;
+import wow.commons.model.pve.GameVersion;
 
 /**
  * User: POlszewski

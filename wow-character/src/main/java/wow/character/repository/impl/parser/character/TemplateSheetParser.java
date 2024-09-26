@@ -4,7 +4,6 @@ import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.CharacterTemplateId;
-import wow.character.model.character.Phase;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.character.util.TalentLinkParser;
 import wow.commons.model.buff.BuffId;
@@ -15,6 +14,7 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
+import wow.commons.model.pve.Phase;
 import wow.commons.repository.spell.TalentRepository;
 
 import java.util.List;
@@ -40,6 +40,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colProf2 = column("prof2");
 	private final ExcelColumn colProf2Spec = column("prof2_spec");
 	private final ExcelColumn colXFactions = column("xfactions");
+	private final ExcelColumn colDefault = column("default");
 
 	private final TalentRepository talentRepository;
 
@@ -72,6 +73,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 		var defaultDebuffs = colDefaultDebuffs.getList(BuffId::parse);
 		var professions = getProfessions(timeRestriction);
 		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
+		var isDefault = true; //todo colDefault.getBoolean();
 
 		return new CharacterTemplate(
 				templateId,
@@ -85,7 +87,8 @@ public class TemplateSheetParser extends CharacterSheetParser {
 				defaultBuffs,
 				defaultDebuffs,
 				professions,
-				exclusiveFactions
+				exclusiveFactions,
+				isDefault
 		);
 	}
 
@@ -108,7 +111,7 @@ public class TemplateSheetParser extends CharacterSheetParser {
 
 		var phase = getPhase(timeRestriction);
 
-		return phase.getCharacterProfession(prof, spec, 1);
+		return CharacterProfession.getCharacterProfession(phase, prof, spec, 1);
 	}
 
 	private Phase getPhase(TimeRestriction timeRestriction) {

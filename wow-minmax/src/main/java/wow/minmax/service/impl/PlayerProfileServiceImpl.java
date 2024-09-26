@@ -126,8 +126,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 		newCharacter.setTarget(targetEnemy);
 
-		var templateId = newCharacter.getCharacterClass().getDefaultCharacterTemplateId();
-		characterService.applyCharacterTemplate(newCharacter, templateId);
+		characterService.applyDefaultCharacterTemplate(newCharacter);
 
 		return newCharacter;
 	}

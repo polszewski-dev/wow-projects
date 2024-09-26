@@ -1,12 +1,10 @@
-package wow.character.model.character;
+package wow.commons.model.profession;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-import wow.commons.model.profession.ProfessionId;
-import wow.commons.model.profession.ProfessionSpecializationId;
 
 /**
  * User: POlszewski

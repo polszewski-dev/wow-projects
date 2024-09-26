@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.pve.Phase;
 
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 
@@ -23,12 +25,12 @@ public abstract class CharacterImpl implements Character {
 	private final Buffs buffs;
 	private Character target;
 
-	protected CharacterImpl(Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo) {
+	protected CharacterImpl(Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
 		this.phase = phase;
 		this.characterClass = characterClass;
 		this.level = level;
 		this.baseStatInfo = baseStatInfo;
-		this.combatRatingInfo = characterClass.getGameVersion().getCombatRatingInfo(level);
+		this.combatRatingInfo = combatRatingInfo;
 		this.spellbook = new Spellbook();
 		this.buffs = new Buffs(CHARACTER_BUFF);
 	}

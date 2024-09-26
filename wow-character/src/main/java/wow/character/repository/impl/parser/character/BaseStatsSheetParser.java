@@ -1,10 +1,10 @@
 package wow.character.repository.impl.parser.character;
 
 import wow.character.model.character.BaseStatInfo;
-import wow.character.model.character.GameVersion;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.GameVersion;
 
 /**
  * User: POlszewski
@@ -62,6 +62,6 @@ public class BaseStatsSheetParser extends CharacterSheetParser {
 	}
 
 	private void addBaseStatInfo(BaseStatInfo baseStatInfo) {
-		baseStatInfo.getCharacterClass().getBaseStatInfos().add(baseStatInfo);
+		characterRepository.addBaseStatInfo(baseStatInfo);
 	}
 }

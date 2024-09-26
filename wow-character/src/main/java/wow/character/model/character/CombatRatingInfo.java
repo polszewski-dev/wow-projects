@@ -3,6 +3,7 @@ package wow.character.model.character;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import wow.commons.model.pve.GameVersion;
 
 /**
  * User: POlszewski

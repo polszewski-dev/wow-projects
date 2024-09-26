@@ -1,12 +1,12 @@
-package wow.character.model.character;
+package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.character.RaceId;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Side;
 import wow.commons.model.racial.Racial;
 

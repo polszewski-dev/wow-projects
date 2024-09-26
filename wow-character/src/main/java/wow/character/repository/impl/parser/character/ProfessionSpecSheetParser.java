@@ -1,10 +1,10 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.ProfessionSpecialization;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecialization;
 import wow.commons.model.profession.ProfessionSpecializationId;
+import wow.commons.model.pve.GameVersion;
 
 /**
  * User: POlszewski

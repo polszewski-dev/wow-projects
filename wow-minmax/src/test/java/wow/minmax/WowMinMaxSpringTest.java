@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
@@ -123,8 +122,7 @@ public abstract class WowMinMaxSpringTest {
 
 		character.setTarget(enemy);
 
-		CharacterTemplateId templateId = character.getCharacterClass().getDefaultCharacterTemplateId();
-		characterService.applyCharacterTemplate(character, templateId);
+		characterService.applyDefaultCharacterTemplate(character);
 
 		return character;
 	}

@@ -2,10 +2,10 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.Profession;
 import wow.character.repository.CharacterRepository;
 import wow.commons.model.item.AbstractItem;
+import wow.commons.model.profession.Profession;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.source.Source;
 

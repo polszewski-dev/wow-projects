@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.Copyable;
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.Pet;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.PveRole;
+import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.talent.TalentId;
 
 /**

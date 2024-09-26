@@ -17,6 +17,7 @@ import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.Pet;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -40,36 +41,66 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public PlayerCharacter createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
-		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
-		GameVersion gameVersion = phase.getGameVersion();
+		var phase = characterRepository.getPhase(phaseId).orElseThrow();
+		var gameVersion = phase.getGameVersion();
+		var characterClass = gameVersion.getCharacterClass(characterClassId);
+		var race = gameVersion.getRace(raceId);
+		var baseStatInfo = characterRepository.getBaseStatInfo(gameVersion.getGameVersionId(), characterClass.getCharacterClassId(), race.getRaceId(), level).orElseThrow();
+		var combatRatingInfo = characterRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
+		var talents = new Talents(spellService.getAvailableTalents(characterClassId, phaseId));
 
 		return new PlayerCharacterImpl(
 				phase,
-				gameVersion.getCharacterClass(characterClassId),
-				gameVersion.getRace(raceId),
+				characterClass,
+				race,
 				level,
-				new Talents(spellService.getAvailableTalents(characterClassId, phaseId))
+				baseStatInfo,
+				combatRatingInfo,
+				talents
 		);
 	}
 
 	@Override
 	public NonPlayerCharacter createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId) {
-		Phase phase = characterRepository.getPhase(phaseId).orElseThrow();
-		GameVersion gameVersion = phase.getGameVersion();
-		CharacterClassId characterClassId = CharacterClassId.WARRIOR;
+		var phase = characterRepository.getPhase(phaseId).orElseThrow();
+		var gameVersion = phase.getGameVersion();
+		var characterClassId = CharacterClassId.WARRIOR;
+		var characterClass = gameVersion.getCharacterClass(characterClassId);
+		var combatRatingInfo = characterRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 
 		return new NonPlayerCharacterImpl(
 				phase,
-				gameVersion.getCharacterClass(characterClassId),
+				characterClass,
 				creatureType,
-				level
+				level,
+				combatRatingInfo
 		);
 	}
 
 	@Override
-	public void applyCharacterTemplate(PlayerCharacter character, CharacterTemplateId characterTemplateId) {
-		CharacterTemplate characterTemplate = getCharacterTemplate(characterTemplateId, character);
+	public void applyDefaultCharacterTemplate(PlayerCharacter character) {
+		var characterTemplate = characterRepository.getDefaultCharacterTemplate(
+				character.getCharacterClassId(),
+				character.getLevel(),
+				character.getPhaseId()
+		).orElseThrow();
 
+		applyCharacterTemplate(character, characterTemplate);
+	}
+
+	@Override
+	public void applyCharacterTemplate(PlayerCharacter character, CharacterTemplateId characterTemplateId) {
+		var characterTemplate = characterRepository.getCharacterTemplate(
+				characterTemplateId,
+				character.getCharacterClassId(),
+				character.getLevel(),
+				character.getPhaseId()
+		).orElseThrow();
+
+		applyCharacterTemplate(character, characterTemplate);
+	}
+
+	private void applyCharacterTemplate(PlayerCharacter character, CharacterTemplate characterTemplate) {
 		changeBuild(character, characterTemplate);
 
 		character.setProfessions(getMaxedProfessions(characterTemplate, character));
@@ -90,17 +121,12 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private CharacterProfession getCharacterProfessionMaxLevel(CharacterProfession characterProfession, PlayerCharacter character) {
-		return character.getPhase().getCharacterProfessionMaxLevel(
+		return CharacterProfession.getCharacterProfessionMaxLevel(
+				character.getPhase(),
 				characterProfession.getProfessionId(),
 				characterProfession.getSpecializationId(),
 				character.getLevel()
 		);
-	}
-
-	private CharacterTemplate getCharacterTemplate(CharacterTemplateId characterTemplateId, PlayerCharacter character) {
-		return characterRepository.getCharacterTemplate(
-				characterTemplateId, character.getCharacterClassId(), character.getLevel(), character.getPhaseId()
-		).orElseThrow();
 	}
 
 	private void changeBuild(PlayerCharacter character, CharacterTemplate characterTemplate) {

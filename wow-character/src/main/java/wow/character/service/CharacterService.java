@@ -17,6 +17,8 @@ public interface CharacterService {
 
 	NonPlayerCharacter createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId);
 
+	void applyDefaultCharacterTemplate(PlayerCharacter character);
+
 	void applyCharacterTemplate(PlayerCharacter character, CharacterTemplateId characterTemplateId);
 
 	void updateAfterRestrictionChange(PlayerCharacter character);

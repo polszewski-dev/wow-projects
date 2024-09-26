@@ -1,13 +1,12 @@
-package wow.character.model.character;
+package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.categorization.*;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.spell.SpellSchool;
 
 import java.util.ArrayList;
@@ -41,10 +40,7 @@ public class CharacterClass implements Described {
 	@NonNull
 	private final List<SpellSchool> spellSchools;
 
-	private final CharacterTemplateId defaultCharacterTemplateId;
-
 	private final GameVersion gameVersion;
-	private final List<BaseStatInfo> baseStatInfos = new ArrayList<>();
 
 	public boolean canEquip(ItemSlot itemSlot, ItemType itemType, ItemSubType itemSubType) {
 		switch (itemType.getCategory()) {
@@ -72,13 +68,6 @@ public class CharacterClass implements Described {
 
 	private boolean matches(ArmorSubType armorSubType) {
 		return armorProfficiencies.stream().anyMatch(x -> x.matches(armorSubType));
-	}
-
-	public BaseStatInfo getBaseStatInfo(int level, RaceId raceId) {
-		return baseStatInfos.stream()
-				.filter(x -> x.getLevel() == level && x.getRaceId() == raceId)
-				.findFirst()
-				.orElseThrow();
 	}
 
 	public boolean isAvailableTo(RaceId raceId) {

@@ -7,7 +7,6 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.ActionType;
 
@@ -15,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.pve.GameVersionId.TBC;
 
@@ -25,8 +25,7 @@ import static wow.commons.model.pve.GameVersionId.TBC;
 class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
 	void accumulateBaseStatInfo() {
-		var gameVersion = characterRepository.getGameVersion(TBC).orElseThrow();
-		var baseStatInfo = gameVersion.getCharacterClass(CharacterClassId.WARLOCK).getBaseStatInfo(level, ORC);
+		var baseStatInfo = characterRepository.getBaseStatInfo(TBC, WARLOCK, ORC, level).orElseThrow();
 
 		spellStats.accumulateBaseStatInfo(baseStatInfo);
 

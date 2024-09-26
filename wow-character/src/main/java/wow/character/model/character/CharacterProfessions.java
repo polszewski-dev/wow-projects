@@ -1,7 +1,9 @@
 package wow.character.model.character;
 
 import wow.character.model.Copyable;
+import wow.commons.model.profession.Profession;
 import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecialization;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
 import java.util.ArrayList;

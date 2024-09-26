@@ -10,15 +10,25 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.build.Talents;
-import wow.character.model.character.*;
+import wow.character.model.character.BaseStatInfo;
+import wow.character.model.character.CharacterTemplate;
+import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.util.TalentLinkParser;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.*;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.Race;
 import wow.commons.model.config.Described;
+import wow.commons.model.profession.Profession;
+import wow.commons.model.profession.ProfessionProficiency;
+import wow.commons.model.profession.ProfessionSpecialization;
 import wow.commons.model.profession.ProfessionType;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.racial.Racial;
 
@@ -26,15 +36,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.character.ArmorProfficiency.CLOTH;
 import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
-import static wow.character.model.character.WeaponProfficiency.*;
 import static wow.commons.model.buff.BuffId.*;
 import static wow.commons.model.categorization.ItemType.ONE_HAND;
 import static wow.commons.model.categorization.WeaponSubType.SWORD;
+import static wow.commons.model.character.ArmorProfficiency.CLOTH;
 import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.character.RaceId.*;
+import static wow.commons.model.character.WeaponProfficiency.*;
 import static wow.commons.model.profession.ProfessionId.*;
 import static wow.commons.model.profession.ProfessionProficiencyId.ARTISAN;
 import static wow.commons.model.profession.ProfessionProficiencyId.MASTER;
@@ -55,7 +65,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 	@Test
 	@DisplayName("BaseStatInfo is read correctly")
 	void baseStatInfoIsCorrect() {
-		BaseStatInfo baseStatInfo = underTest.getPhase(TBC_P5).orElseThrow().getGameVersion().getCharacterClass(WARLOCK).getBaseStatInfo(70, ORC);
+		BaseStatInfo baseStatInfo = underTest.getBaseStatInfo(TBC, WARLOCK, ORC, 70).orElseThrow();
 
 		assertThat(baseStatInfo.getLevel()).isEqualTo(70);
 		assertThat(baseStatInfo.getCharacterClassId()).isEqualTo(WARLOCK);
@@ -74,7 +84,7 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 	@Test
 	@DisplayName("CombatRatingInfo is read correctly")
 	void combatRatingInfoIsCorrect() {
-		CombatRatingInfo combatRatingInfo = underTest.getPhase(TBC_P5).orElseThrow().getGameVersion().getCombatRatingInfo(70);
+		CombatRatingInfo combatRatingInfo = underTest.getCombatRatingInfo(TBC, 70).orElseThrow();
 
 		assertThat(combatRatingInfo.getLevel()).isEqualTo(70);
 		assertThat(combatRatingInfo.getSpellCrit()).isEqualTo(22.22, PRECISION);
@@ -112,6 +122,15 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getProfessions().get(1).getProfessionId()).isEqualTo(TAILORING);
 		assertThat(characterTemplate.getProfessions().get(1).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
 		assertThat(characterTemplate.getExclusiveFactions()).hasSameElementsAs(List.of(SCRYERS));
+		assertThat(characterTemplate.isDefault()).isTrue();
+	}
+
+	@Test
+	void getDefaultCharacterTemplate() {
+		var characterTemplate = underTest.getDefaultCharacterTemplate(WARLOCK, 70, PhaseId.TBC_P5).orElseThrow();
+
+		assertThat(characterTemplate.getCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
+		assertThat(characterTemplate.isDefault()).isTrue();
 	}
 
 	@ParameterizedTest(name = "[{index}] Can equip: slot = {0}, type = {1}, subType = {2}")
@@ -415,14 +434,11 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		));
 
 		assertThat(warlock.isDualWield()).isFalse();
-		assertThat(warlock.getDefaultCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
 		assertThat(warlock.getGameVersion().getGameVersionId()).isEqualTo(VANILLA);
 
 		assertThat(warlock.getRaces().stream().map(Race::getRaceId).toList()).hasSameElementsAs(List.of(
 				UNDEAD, ORC, HUMAN, GNOME
 		));
-
-		assertThat(warlock.getBaseStatInfo(60, ORC)).isNotNull();
 	}
 
 	@Disabled("doesn't work")
@@ -547,7 +563,11 @@ class CharacterRepositoryTest extends WowCharacterSpringTest {
 		CharacterClass warlock = gameVersion.getCharacterClass(WARLOCK);
 		Race orc = gameVersion.getRace(ORC);
 		Phase phase = gameVersion.getLastPhase();
-		return new PlayerCharacterImpl(phase, warlock, orc, phase.getMaxLevel(), new Talents(List.of()));
+		int level = phase.getMaxLevel();
+		BaseStatInfo baseStatInfo = underTest.getBaseStatInfo(gameVersionId, warlock.getCharacterClassId(), orc.getRaceId(), level).orElseThrow();
+		CombatRatingInfo combatRatingInfo = underTest.getCombatRatingInfo(gameVersionId, level).orElseThrow();
+
+		return new PlayerCharacterImpl(phase, warlock, orc, level, baseStatInfo, combatRatingInfo, new Talents(List.of()));
 	}
 
 	static final Offset<Double> PRECISION = Offset.offset(0.01);

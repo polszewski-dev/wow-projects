@@ -1,8 +1,8 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.character.Phase;
 import wow.character.repository.impl.CharacterRepositoryImpl;
 import wow.commons.model.profession.ProfessionProficiencyId;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 
 /**

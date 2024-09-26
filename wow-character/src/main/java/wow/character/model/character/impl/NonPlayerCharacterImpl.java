@@ -4,7 +4,9 @@ import lombok.Getter;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.Percent;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.pve.Phase;
 
 /**
  * User: POlszewski
@@ -14,8 +16,8 @@ import wow.commons.model.character.CreatureType;
 public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCharacter {
 	private final CreatureType creatureType;
 
-	public NonPlayerCharacterImpl(Phase phase, CharacterClass characterClass, CreatureType creatureType, int level) {
-		super(phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase));
+	public NonPlayerCharacterImpl(Phase phase, CharacterClass characterClass, CreatureType creatureType, int level, CombatRatingInfo combatRatingInfo) {
+		super(phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
 	}
 

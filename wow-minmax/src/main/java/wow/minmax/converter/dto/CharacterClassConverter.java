@@ -2,7 +2,7 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClass;
 import wow.minmax.converter.Converter;
 import wow.minmax.model.dto.CharacterClassDTO;
 

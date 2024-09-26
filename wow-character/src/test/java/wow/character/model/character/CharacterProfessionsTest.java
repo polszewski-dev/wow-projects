@@ -3,6 +3,9 @@ package wow.character.model.character;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
+import wow.commons.model.profession.Profession;
+import wow.commons.model.profession.ProfessionSpecialization;
+import wow.commons.model.pve.GameVersion;
 
 import java.util.List;
 

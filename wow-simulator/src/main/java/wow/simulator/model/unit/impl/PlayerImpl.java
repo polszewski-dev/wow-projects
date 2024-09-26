@@ -5,8 +5,8 @@ import wow.character.model.build.Build;
 import wow.character.model.character.CharacterProfessions;
 import wow.character.model.character.ExclusiveFactions;
 import wow.character.model.character.PlayerCharacter;
-import wow.character.model.character.Race;
 import wow.character.model.equipment.Equipment;
+import wow.commons.model.character.Race;
 import wow.simulator.model.unit.Player;
 
 /**

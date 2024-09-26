@@ -1,9 +1,9 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.Pet;
 import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
+import wow.commons.model.pve.GameVersion;
 
 /**
  * User: POlszewski

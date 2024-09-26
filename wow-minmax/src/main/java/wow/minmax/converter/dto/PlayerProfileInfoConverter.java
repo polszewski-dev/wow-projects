@@ -2,10 +2,10 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.CharacterClass;
-import wow.character.model.character.GameVersion;
-import wow.character.model.character.Race;
 import wow.character.repository.CharacterRepository;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.Race;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.BackConverter;

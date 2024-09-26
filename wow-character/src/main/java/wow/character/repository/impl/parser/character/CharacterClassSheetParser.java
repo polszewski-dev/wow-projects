@@ -1,8 +1,11 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.character.*;
 import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.model.character.ArmorProfficiency;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.WeaponProfficiency;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.spell.SpellSchool;
 
 /**
@@ -14,7 +17,6 @@ public class CharacterClassSheetParser extends CharacterSheetParser {
 	private final ExcelColumn colWeaponProfficiencies = column("weapon_profficiencies");
 	private final ExcelColumn colDualwield = column("dualwield");
 	private final ExcelColumn colSpellSchools = column("spell_schools");
-	private final ExcelColumn colDefaultTemplate = column("default_template");
 
 	public CharacterClassSheetParser(String sheetName, CharacterRepositoryImpl characterRepository) {
 		super(sheetName, characterRepository);
@@ -35,9 +37,8 @@ public class CharacterClassSheetParser extends CharacterSheetParser {
 		var weaponProfficiencies = colWeaponProfficiencies.getSet(WeaponProfficiency::parse);
 		var dualwield = colDualwield.getBoolean();
 		var spellSchools = colSpellSchools.getList(SpellSchool::parse);
-		var defaultTemplate = colDefaultTemplate.getEnum(CharacterTemplateId::parse, null);
 
-		return new CharacterClass(id, description, armorProfficiencies, weaponProfficiencies, dualwield, spellSchools, defaultTemplate, version);
+		return new CharacterClass(id, description, armorProfficiencies, weaponProfficiencies, dualwield, spellSchools, version);
 	}
 
 	private void addCharacterClass(CharacterClass characterClass, GameVersion version) {

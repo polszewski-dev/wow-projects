@@ -1,15 +1,13 @@
-package wow.character.model.character;
+package wow.commons.model.pve;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
-import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.Profession;
+import wow.commons.model.profession.ProfessionProficiency;
 import wow.commons.model.profession.ProfessionProficiencyId;
-import wow.commons.model.profession.ProfessionSpecializationId;
-import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 
@@ -38,20 +36,7 @@ public class Phase implements Described {
 		return gameVersion.getGameVersionId();
 	}
 
-	public CharacterProfession getCharacterProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
-		Profession profession = gameVersion.getProfession(professionId);
-		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
-		return new CharacterProfession(profession, specialization, level);
-	}
-
-	public CharacterProfession getCharacterProfessionMaxLevel(ProfessionId professionId, ProfessionSpecializationId specializationId, int characterLevel) {
-		Profession profession = gameVersion.getProfession(professionId);
-		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
-		int skillLevel = getMaxProfessionLevel(profession, characterLevel);
-		return new CharacterProfession(profession, specialization, skillLevel);
-	}
-
-	private int getMaxProfessionLevel(Profession profession, int characterLevel) {
+	public int getMaxProfessionLevel(Profession profession, int characterLevel) {
 		return getAvailableProficiencies().stream()
 				.filter(x -> characterLevel >= x.getReqLevel(profession.getType()))
 				.map(ProfessionProficiency::getMaxSkilll)

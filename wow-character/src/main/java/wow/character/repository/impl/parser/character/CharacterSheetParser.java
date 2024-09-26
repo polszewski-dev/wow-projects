@@ -1,7 +1,7 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.character.GameVersion;
 import wow.character.repository.impl.CharacterRepositoryImpl;
+import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 

@@ -188,8 +188,7 @@ public abstract class WowCharacterSpringTest {
 
 		character.setTarget(target);
 
-		var templateId = character.getCharacterClass().getDefaultCharacterTemplateId();
-		characterService.applyCharacterTemplate(character, templateId);
+		characterService.applyDefaultCharacterTemplate(character);
 		return character;
 	}
 

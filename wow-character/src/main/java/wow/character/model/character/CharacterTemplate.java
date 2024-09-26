@@ -33,4 +33,5 @@ public class CharacterTemplate implements TimeRestricted {
 	private final List<BuffId> defaultDebuffs;
 	private final List<CharacterProfession> professions;
 	private final List<ExclusiveFaction> exclusiveFactions;
+	private final boolean isDefault;
 }
