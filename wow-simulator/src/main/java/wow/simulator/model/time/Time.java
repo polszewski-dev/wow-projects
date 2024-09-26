@@ -1,6 +1,7 @@
 package wow.simulator.model.time;
 
 import wow.commons.model.Duration;
+import wow.commons.util.FormatUtil;
 
 import java.text.DecimalFormat;
 
@@ -89,6 +90,6 @@ public record Time(long timestamp) implements Comparable<Time> {
 		if (isInInfinity()) {
 			return "INF";
 		}
-		return new DecimalFormat("0.000").format(asDecimal());
+		return new DecimalFormat("0.000", FormatUtil.DECIMAL_FORMAT_SYMBOLS).format(asDecimal());
 	}
 }
