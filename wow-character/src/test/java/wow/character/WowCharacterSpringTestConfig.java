@@ -11,6 +11,9 @@ import org.springframework.context.annotation.PropertySource;
 		"wow.commons",
 		"wow.character"
 })
-@PropertySource("classpath:test.properties")
+@PropertySource({
+		"classpath:wow-commons.properties",
+		"classpath:wow-character.properties"
+})
 public class WowCharacterSpringTestConfig {
 }

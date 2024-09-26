@@ -39,7 +39,11 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WowMinMaxSpringTestConfig.class)
-@TestPropertySource("classpath:application.properties")
+@TestPropertySource({
+		"classpath:wow-commons.properties",
+		"classpath:wow-character.properties",
+		"classpath:wow-minmax.properties"
+})
 public abstract class WowMinMaxSpringTest {
 	@Autowired
 	protected ItemRepository itemRepository;

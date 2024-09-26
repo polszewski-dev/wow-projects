@@ -10,6 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 @ComponentScan(basePackages = {
 		"wow.commons"
 })
-@PropertySource("classpath:test.properties")
+@PropertySource("classpath:wow-commons.properties")
 public class WowCommonsSpringTestConfig {
 }

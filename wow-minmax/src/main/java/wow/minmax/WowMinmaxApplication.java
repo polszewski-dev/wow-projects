@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -13,6 +14,11 @@ import org.springframework.web.filter.CorsFilter;
 		"wow.commons",
 		"wow.character",
 		"wow.minmax"
+})
+@PropertySource({
+		"classpath:wow-commons.properties",
+		"classpath:wow-character.properties",
+		"classpath:wow-minmax.properties"
 })
 public class WowMinmaxApplication {
 	public static void main(String[] args) {

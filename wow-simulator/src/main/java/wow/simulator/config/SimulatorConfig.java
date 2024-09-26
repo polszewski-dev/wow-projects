@@ -15,7 +15,11 @@ import org.springframework.stereotype.Component;
 		"wow.commons",
 		"wow.character"
 })
-@PropertySource("classpath:simulator.properties")
+@PropertySource({
+		"classpath:wow-commons.properties",
+		"classpath:wow-character.properties",
+		"classpath:wow-simulator.properties"
+})
 @Getter
 @Setter
 public class SimulatorConfig {
