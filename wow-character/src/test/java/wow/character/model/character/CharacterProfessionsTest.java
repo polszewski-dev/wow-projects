@@ -160,14 +160,14 @@ class CharacterProfessionsTest extends WowCharacterSpringTest {
 
 	@BeforeEach
 	void setup() {
-		gameVersion = characterRepository.getGameVersion(TBC).orElseThrow();
+		gameVersion = gameVersionRepository.getGameVersion(TBC).orElseThrow();
 
-		tailoring = gameVersion.getProfession(TAILORING);
-		tailoringSpecialization = tailoring.getSpecialization(SHADOWEAVE_TAILORING);
+		tailoring = gameVersion.getProfession(TAILORING).orElseThrow();
+		tailoringSpecialization = tailoring.getSpecialization(SHADOWEAVE_TAILORING).orElseThrow();
 
-		enchanting = gameVersion.getProfession(ENCHANTING);
+		enchanting = gameVersion.getProfession(ENCHANTING).orElseThrow();
 
-		herbalism = gameVersion.getProfession(HERBALISM);
-		mining = gameVersion.getProfession(MINING);
+		herbalism = gameVersion.getProfession(HERBALISM).orElseThrow();
+		mining = gameVersion.getProfession(MINING).orElseThrow();
 	}
 }

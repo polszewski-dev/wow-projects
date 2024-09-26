@@ -24,6 +24,8 @@ module wow.character {
 	exports wow.character.service.impl;
 	exports wow.character.util;
 
+	opens wow.character.data;
+
 	opens wow.character.repository.impl;
 	opens wow.character.service.impl;
 }

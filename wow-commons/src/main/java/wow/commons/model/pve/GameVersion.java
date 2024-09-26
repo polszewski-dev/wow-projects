@@ -14,6 +14,7 @@ import wow.commons.model.profession.ProfessionProficiencyId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -38,61 +39,52 @@ public class GameVersion implements Described {
 	private final List<ProfessionProficiency> proficiencies = new ArrayList<>();
 	private final List<Pet> pets = new ArrayList<>();
 
-	public Phase getPhase(PhaseId phaseId) {
+	public Optional<Phase> getPhase(PhaseId phaseId) {
 		if (phaseId == null) {
-			return null;
+			return Optional.empty();
 		}
 		return phases.stream()
 				.filter(x -> x.getPhaseId() == phaseId)
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
 	}
 
-	public CharacterClass getCharacterClass(CharacterClassId characterClassId) {
+	public Optional<CharacterClass> getCharacterClass(CharacterClassId characterClassId) {
 		if (characterClassId == null) {
-			return null;
+			return Optional.empty();
 		}
 		return characterClasses.stream()
 				.filter(x -> x.getCharacterClassId() == characterClassId)
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
 	}
 
-	public Race getRace(RaceId raceId) {
+	public Optional<Race> getRace(RaceId raceId) {
 		if (raceId == null) {
-			return null;
+			return Optional.empty();
 		}
 		return races.stream()
 				.filter(x -> x.getRaceId() == raceId)
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
 	}
 
-	public Profession getProfession(ProfessionId professionId) {
+	public Optional<Profession> getProfession(ProfessionId professionId) {
 		if (professionId == null) {
-			return null;
+			return Optional.empty();
 		}
 		return professions.stream()
 				.filter(x -> x.getProfessionId() == professionId)
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
 	}
 
-	public ProfessionProficiency getProficiency(ProfessionProficiencyId proficiencyId) {
+	public Optional<ProfessionProficiency> getProficiency(ProfessionProficiencyId proficiencyId) {
 		return proficiencies.stream()
 				.filter(x -> x.getProficiencyId() == proficiencyId)
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
 	}
 
-	public Pet getPet(PetType petType) {
-		if (petType == null) {
-			return null;
-		}
+	public Optional<Pet> getPet(PetType petType) {
 		return pets.stream()
 				.filter(x -> x.getPetType() == petType)
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
 	}
 
 	public boolean supports(CharacterClassId characterClassId, RaceId raceId) {

@@ -17,8 +17,6 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.character.PetType;
-import wow.commons.model.profession.ProfessionId;
-import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.talent.TalentId;
@@ -30,6 +28,8 @@ import java.util.function.ToDoubleBiFunction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.RaceId.UNDEAD;
+import static wow.commons.model.profession.ProfessionId.TAILORING;
+import static wow.commons.model.profession.ProfessionSpecializationId.SPELLFIRE_TAILORING;
 import static wow.commons.model.spell.AbilityId.*;
 
 /**
@@ -435,12 +435,9 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getDirectSpellDamageSnapshotIntToSpConversion() {
 		character.resetEquipment();
 
-		var tailoring = character.getGameVersion().getProfession(ProfessionId.TAILORING);
-		var spellfireTailoring = tailoring.getSpecialization(ProfessionSpecializationId.SPELLFIRE_TAILORING);
-
 		character.resetProfessions();
 		character.setProfessions(List.of(
-				new CharacterProfession(tailoring, spellfireTailoring, 375)
+				CharacterProfession.getCharacterProfessionMaxLevel(character.getPhase(), TAILORING, SPELLFIRE_TAILORING, character.getLevel())
 		));
 
 		character.equip(getItem("Spellfire Robe"));

@@ -2,7 +2,9 @@ package wow.character.model.snapshot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
+import wow.character.repository.BaseStatInfoRepository;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeConditionArgs;
@@ -23,9 +25,12 @@ import static wow.commons.model.pve.GameVersionId.TBC;
  * Date: 2022-12-19
  */
 class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
+	@Autowired
+	BaseStatInfoRepository baseStatInfoRepository;
+
 	@Test
 	void accumulateBaseStatInfo() {
-		var baseStatInfo = characterRepository.getBaseStatInfo(TBC, WARLOCK, ORC, level).orElseThrow();
+		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(TBC, WARLOCK, ORC, level).orElseThrow();
 
 		spellStats.accumulateBaseStatInfo(baseStatInfo);
 

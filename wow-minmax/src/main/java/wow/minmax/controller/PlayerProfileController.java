@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import wow.character.repository.CharacterRepository;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.repository.pve.GameVersionRepository;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.dto.CharacterClassConverter;
 import wow.minmax.converter.dto.PhaseConverter;
@@ -16,6 +16,7 @@ import wow.minmax.model.dto.*;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -29,7 +30,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class PlayerProfileController {
 	private final PlayerProfileService playerProfileService;
-	private final CharacterRepository characterRepository;
+	private final GameVersionRepository gameVersionRepository;
 
 	private final PlayerProfileInfoConverter playerProfileInfoConverter;
 	private final CharacterClassConverter characterClassConverter;
@@ -56,10 +57,11 @@ public class PlayerProfileController {
 	@GetMapping("new-options")
 	public NewProfileOptionsDTO getNewProfileOptions() {
 		var latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
-		var gameVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
+		var gameVersion = gameVersionRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
 
 		var supportedClasses = profileConfig.getSupportedClasses().stream()
 				.map(gameVersion::getCharacterClass)
+				.map(Optional::orElseThrow)
 				.map(characterClassConverter::convert)
 				.toList();
 
@@ -82,7 +84,7 @@ public class PlayerProfileController {
 
 	private List<PhaseDTO> getPhases(PlayerProfile playerProfile) {
 		return Stream.of(GameVersionId.values())
-				.map(x -> characterRepository.getGameVersion(x).orElseThrow())
+				.map(x -> gameVersionRepository.getGameVersion(x).orElseThrow())
 				.filter(x -> x.supports(playerProfile.getCharacterClassId(), playerProfile.getRaceId()))
 				.flatMap(x -> x.getPhases().stream())
 				.map(phaseConverter::convert)

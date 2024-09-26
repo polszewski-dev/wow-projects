@@ -51,7 +51,11 @@ public class Build implements EffectCollection, Copyable<Build> {
 	}
 
 	public void setActivePet(PetType petType) {
-		this.activePet = gameVersion.getPet(petType);
+		if (petType == null) {
+			this.activePet = null;
+		} else {
+			this.activePet = gameVersion.getPet(petType).orElseThrow();
+		}
 	}
 
 	public PetType getActivePetType() {

@@ -2,12 +2,10 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.repository.CharacterRepository;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.profession.Profession;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.source.Source;
+import wow.commons.repository.character.ProfessionRepository;
 
 import java.util.stream.Collectors;
 
@@ -18,7 +16,7 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class SourceConverter {
-	private final CharacterRepository characterRepository;
+	private final ProfessionRepository professionRepository;
 
 	public String getSources(AbstractItem item) {
 		return item.getSources().stream()
@@ -68,8 +66,8 @@ public class SourceConverter {
 	}
 
 	private Profession getProfession(Source source, AbstractItem item) {
-		GameVersionId gameVersionId = item.getTimeRestriction().getGameVersionId();
-		GameVersion gameVersion = characterRepository.getGameVersion(gameVersionId).orElseThrow();
-		return gameVersion.getProfession(source.professionId());
+		var gameVersionId = item.getTimeRestriction().getGameVersionId();
+
+		return professionRepository.getProfession(source.professionId(), gameVersionId).orElseThrow();
 	}
 }

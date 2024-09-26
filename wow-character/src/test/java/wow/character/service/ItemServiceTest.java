@@ -461,7 +461,7 @@ class ItemServiceTest extends WowCharacterSpringTest {
 	}
 
 	private void assertBestEnchants(CharacterClassId characterClassId, GameVersionId gameVersionId, ExclusiveFaction exclusiveFaction, ItemType itemType, ItemSubType itemSubType, List<String> expectedResult) {
-		var gameVersion = characterRepository.getGameVersion(gameVersionId).orElseThrow();
+		var gameVersion = gameVersionRepository.getGameVersion(gameVersionId).orElseThrow();
 		var lastPhase = gameVersion.getLastPhase();
 		var maxLevel = lastPhase.getMaxLevel();
 		var character = getCharacter(characterClassId, RaceId.UNDEAD, maxLevel, lastPhase.getPhaseId());

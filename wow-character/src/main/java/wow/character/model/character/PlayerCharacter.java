@@ -10,9 +10,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
 import wow.commons.model.item.Item;
-import wow.commons.model.profession.Profession;
 import wow.commons.model.profession.ProfessionId;
-import wow.commons.model.profession.ProfessionSpecialization;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.racial.Racial;
@@ -107,8 +105,8 @@ public interface PlayerCharacter extends Character, Copyable<PlayerCharacter> {
 	}
 
 	default void addProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
-		Profession profession = getGameVersion().getProfession(professionId);
-		ProfessionSpecialization specialization = profession.getSpecialization(specializationId);
+		var profession = getGameVersion().getProfession(professionId).orElseThrow();
+		var specialization = specializationId == null ? null : profession.getSpecialization(specializationId).orElseThrow();
 
 		getProfessions().addProfession(profession, specialization, level);
 	}

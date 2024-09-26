@@ -2,10 +2,10 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.repository.CharacterRepository;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Item;
 import wow.commons.repository.item.ItemRepository;
+import wow.commons.repository.pve.PhaseRepository;
 import wow.minmax.converter.Converter;
 import wow.minmax.converter.ParametrizedBackConverter;
 import wow.minmax.model.dto.ItemDTO;
@@ -27,7 +27,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 	private final SourceConverter sourceConverter;
 	private final PhaseConverter phaseConverter;
 	private final ItemRepository itemRepository;
-	private final CharacterRepository characterRepository;
+	private final PhaseRepository phaseRepository;
 
 	@Override
 	public ItemDTO doConvert(Item source) {
@@ -105,7 +105,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 
 	private PhaseDTO getFirstAppearedInPhase(Item item) {
 		var phaseId = item.getFirstAppearedInPhase();
-		var phase = characterRepository.getPhase(phaseId).orElseThrow();
+		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 
 		return phaseConverter.convert(phase);
 	}

@@ -2,11 +2,8 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.repository.CharacterRepository;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.Race;
-import wow.commons.model.pve.GameVersion;
-import wow.commons.model.pve.GameVersionId;
+import wow.commons.repository.character.CharacterClassRepository;
+import wow.commons.repository.character.RaceRepository;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.BackConverter;
 import wow.minmax.converter.Converter;
@@ -24,17 +21,16 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 	private final CharacterClassConverter characterClassConverter;
 	private final RaceConverter raceConverter;
 
-	private final CharacterRepository characterRepository;
+	private final CharacterClassRepository characterClassRepository;
+	private final RaceRepository raceRepository;
 
 	private final ProfileConfig profileConfig;
 
 	@Override
 	public PlayerProfileInfoDTO doConvert(PlayerProfileInfo source) {
-		GameVersionId latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
-		GameVersion latestSupportedGameVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
-
-		CharacterClass characterClass = latestSupportedGameVersion.getCharacterClass(source.getCharacterClassId());
-		Race race = latestSupportedGameVersion.getRace(source.getRaceId());
+		var latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
+		var characterClass = characterClassRepository.getCharacterClass(source.getCharacterClassId(), latestSupportedVersionId).orElseThrow();
+		var race = raceRepository.getRace(source.getRaceId(), latestSupportedVersionId).orElseThrow();
 
 		return new PlayerProfileInfoDTO(
 				source.getProfileId(),

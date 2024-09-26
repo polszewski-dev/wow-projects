@@ -8,7 +8,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
@@ -24,6 +23,7 @@ import wow.commons.model.talent.TalentId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
+import wow.commons.repository.pve.GameVersionRepository;
 import wow.commons.repository.spell.BuffRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.commons.repository.spell.TalentRepository;
@@ -66,7 +66,7 @@ public abstract class WowCharacterSpringTest {
 	protected CharacterService characterService;
 
 	@Autowired
-	protected CharacterRepository characterRepository;
+	protected GameVersionRepository gameVersionRepository;
 
 	protected Equipment getEquipment() {
 		Equipment equipment = new Equipment();

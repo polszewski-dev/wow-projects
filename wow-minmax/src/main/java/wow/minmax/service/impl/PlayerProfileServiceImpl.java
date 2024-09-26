@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import wow.character.model.character.BuffListType;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.repository.CharacterRepository;
 import wow.character.service.CharacterService;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
+import wow.commons.repository.pve.GameVersionRepository;
 import wow.minmax.config.ProfileConfig;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.CharacterId;
@@ -35,7 +35,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class PlayerProfileServiceImpl implements PlayerProfileService {
-	private final CharacterRepository characterRepository;
+	private final GameVersionRepository gameVersionRepository;
 	private final PlayerProfileRepository playerProfileRepository;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final PlayerProfilePOConverter playerProfilePOConverter;
@@ -73,7 +73,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	private CharacterId getDefaultCharacterId(UUID profileId) {
 		var latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
-		var latestSupportedVersion = characterRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
+		var latestSupportedVersion = gameVersionRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
 
 		var defaultPhase = latestSupportedVersion.getLastPhase();
 

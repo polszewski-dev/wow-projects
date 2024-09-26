@@ -10,7 +10,9 @@ import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.repository.CharacterRepository;
+import wow.character.repository.BaseStatInfoRepository;
+import wow.character.repository.CharacterTemplateRepository;
+import wow.character.repository.CombatRatingInfoRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.SpellService;
 import wow.commons.model.buff.Buff;
@@ -22,6 +24,7 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.repository.pve.PhaseRepository;
 
 import java.util.List;
 
@@ -35,18 +38,21 @@ import static wow.character.model.character.BuffListType.TARGET_DEBUFF;
 @Service
 @AllArgsConstructor
 public class CharacterServiceImpl implements CharacterService {
-	private final CharacterRepository characterRepository;
+	private final PhaseRepository phaseRepository;
+	private final BaseStatInfoRepository baseStatInfoRepository;
+	private final CombatRatingInfoRepository combatRatingInfoRepository;
+	private final CharacterTemplateRepository characterTemplateRepository;
 
 	private final SpellService spellService;
 
 	@Override
 	public PlayerCharacter createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
-		var phase = characterRepository.getPhase(phaseId).orElseThrow();
+		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 		var gameVersion = phase.getGameVersion();
-		var characterClass = gameVersion.getCharacterClass(characterClassId);
-		var race = gameVersion.getRace(raceId);
-		var baseStatInfo = characterRepository.getBaseStatInfo(gameVersion.getGameVersionId(), characterClass.getCharacterClassId(), race.getRaceId(), level).orElseThrow();
-		var combatRatingInfo = characterRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
+		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
+		var race = gameVersion.getRace(raceId).orElseThrow();
+		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(gameVersion.getGameVersionId(), characterClassId, raceId, level).orElseThrow();
+		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 		var talents = new Talents(spellService.getAvailableTalents(characterClassId, phaseId));
 
 		return new PlayerCharacterImpl(
@@ -62,11 +68,11 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public NonPlayerCharacter createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId) {
-		var phase = characterRepository.getPhase(phaseId).orElseThrow();
+		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 		var gameVersion = phase.getGameVersion();
 		var characterClassId = CharacterClassId.WARRIOR;
-		var characterClass = gameVersion.getCharacterClass(characterClassId);
-		var combatRatingInfo = characterRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
+		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
+		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 
 		return new NonPlayerCharacterImpl(
 				phase,
@@ -79,7 +85,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public void applyDefaultCharacterTemplate(PlayerCharacter character) {
-		var characterTemplate = characterRepository.getDefaultCharacterTemplate(
+		var characterTemplate = characterTemplateRepository.getDefaultCharacterTemplate(
 				character.getCharacterClassId(),
 				character.getLevel(),
 				character.getPhaseId()
@@ -90,7 +96,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public void applyCharacterTemplate(PlayerCharacter character, CharacterTemplateId characterTemplateId) {
-		var characterTemplate = characterRepository.getCharacterTemplate(
+		var characterTemplate = characterTemplateRepository.getCharacterTemplate(
 				characterTemplateId,
 				character.getCharacterClassId(),
 				character.getLevel(),

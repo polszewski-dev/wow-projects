@@ -9,6 +9,7 @@ import wow.commons.model.pve.GameVersion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -31,14 +32,10 @@ public class Profession implements Described {
 	@NonNull
 	private final GameVersion gameVersion;
 
-	public ProfessionSpecialization getSpecialization(ProfessionSpecializationId specializationId) {
-		if (specializationId == null) {
-			return null;
-		}
+	public Optional<ProfessionSpecialization> getSpecialization(ProfessionSpecializationId specializationId) {
 		return specializations.stream()
 				.filter(x -> x.getSpecializationId() == specializationId)
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
 	}
 
 	@Override

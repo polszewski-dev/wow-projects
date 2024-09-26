@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Date: 2024-04-17
  */
 @WebMvcTest(EquipmentOptionsController.class)
-public class EquipmentOptionsControllerTest extends ControllerTest {
+class EquipmentOptionsControllerTest extends ControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 
