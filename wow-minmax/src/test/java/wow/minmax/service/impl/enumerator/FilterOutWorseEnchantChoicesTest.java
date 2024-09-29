@@ -1,9 +1,9 @@
-package wow.character.service.impl.enumerator;
+package wow.minmax.service.impl.enumerator;
 
 import org.junit.jupiter.api.Test;
-import wow.character.WowCharacterSpringTest;
 import wow.commons.model.config.Described;
 import wow.commons.model.pve.PhaseId;
+import wow.minmax.WowMinMaxSpringTest;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2023-10-26
  */
-class FilterOutWorseEnchantChoicesTest extends WowCharacterSpringTest {
+class FilterOutWorseEnchantChoicesTest extends WowMinMaxSpringTest {
 	@Test
 	void singleAttribute() {
 		var enchantNames = List.of(

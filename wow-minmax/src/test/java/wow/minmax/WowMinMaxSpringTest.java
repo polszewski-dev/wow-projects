@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -107,23 +106,30 @@ public abstract class WowMinMaxSpringTest {
 	}
 
 	protected PlayerCharacter getCharacter() {
-		PlayerCharacter character = characterService.createPlayerCharacter(
-				CHARACTER_CLASS,
-				RACE,
-				LEVEL,
-				PHASE
+		return getCharacter(CHARACTER_CLASS, RACE);
+	}
+
+	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race) {
+		return getCharacter(characterClass, race, LEVEL, PHASE);
+	}
+
+	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+		var character = characterService.createPlayerCharacter(
+				characterClass,
+				race,
+				level,
+				phase
 		);
 
-		NonPlayerCharacter enemy = characterService.createNonPlayerCharacter(
+		var target = characterService.createNonPlayerCharacter(
 				ENEMY_TYPE,
-				LEVEL + LVL_DIFF,
-				PHASE
+				level + LVL_DIFF,
+				phase
 		);
 
-		character.setTarget(enemy);
+		character.setTarget(target);
 
 		characterService.applyDefaultCharacterTemplate(character);
-
 		return character;
 	}
 

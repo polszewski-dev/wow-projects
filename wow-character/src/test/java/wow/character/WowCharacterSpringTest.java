@@ -29,13 +29,10 @@ import wow.commons.repository.spell.SpellRepository;
 import wow.commons.repository.spell.TalentRepository;
 
 import java.util.Comparator;
-import java.util.List;
 
-import static wow.commons.model.buff.BuffId.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.talent.TalentId.*;
 
 /**
  * User: POlszewski
@@ -111,49 +108,6 @@ public abstract class WowCharacterSpringTest {
 
 	protected Enchant getEnchant(String name) {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
-	}
-
-	protected List<Talent> getTalents() {
-		return List.of(
-				getTalent(IMPROVED_HEALTHSTONE, 2),
-				getTalent(DEMONIC_EMBRACE, 5),
-				getTalent(IMPROVED_VOIDWALKER, 1),
-				getTalent(FEL_INTELLECT, 3),
-				getTalent(FEL_DOMINATION, 1),
-				getTalent(FEL_STAMINA, 3),
-				getTalent(DEMONIC_AEGIS, 3),
-				getTalent(MASTER_SUMMONER, 2),
-				getTalent(DEMONIC_SACRIFICE, 1),
-				getTalent(IMPROVED_SHADOW_BOLT, 5),
-				getTalent(CATACLYSM, 5),
-				getTalent(BANE, 5),
-				getTalent(DEVASTATION, 5),
-				getTalent(SHADOWBURN, 1),
-				getTalent(INTENSITY, 2),
-				getTalent(DESTRUCTIVE_REACH, 2),
-				getTalent(IMPROVED_SEARING_PAIN, 1),
-				getTalent(RUIN, 1),
-				getTalent(NETHER_PROTECTION, 3),
-				getTalent(BACKLASH, 3),
-				getTalent(SOUL_LEECH, 2),
-				getTalent(SHADOW_AND_FLAME, 5)
-		);
-	}
-
-	protected List<Buff> getBuffs() {
-		return List.of(
-				getBuff(ARCANE_BRILLIANCE, 2),
-				getBuff(GIFT_OF_THE_WILD, 3),
-				getBuff(GREATER_BLESSING_OF_KINGS, 0),
-				getBuff(FEL_ARMOR, 2),
-				getBuff(TOUCH_OF_SHADOW, 0),
-				getBuff(BRILLIANT_WIZARD_OIL, 0),
-				getBuff(WELL_FED_SP, 0),
-				getBuff(FLASK_OF_PURE_DEATH, 0),
-				getBuff(WRATH_OF_AIR_TOTEM, 1),
-				getBuff(TOTEM_OF_WRATH, 1),
-				getBuff(CURSE_OF_THE_ELEMENTS, 4)
-		);
 	}
 
 	protected Buff getBuff(BuffId buffId, int rank) {

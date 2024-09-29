@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
-import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
@@ -23,6 +22,7 @@ import wow.minmax.model.dto.EquipmentOptionsDTO;
 import wow.minmax.model.dto.GemOptionsDTO;
 import wow.minmax.model.dto.ItemOptionsDTO;
 import wow.minmax.repository.MinmaxConfigRepository;
+import wow.minmax.service.ItemService;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.EnumMap;

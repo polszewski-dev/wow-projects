@@ -2,12 +2,12 @@ package wow.minmax.service.impl.enumerator;
 
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
-import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
+import wow.minmax.service.ItemService;
 
 import java.util.List;
 

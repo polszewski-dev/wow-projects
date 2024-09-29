@@ -1,11 +1,10 @@
-package wow.character.service.impl;
+package wow.minmax.service.impl;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
-import wow.character.service.ItemService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
@@ -13,7 +12,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.commons.model.pve.PhaseId;
+import wow.minmax.service.ItemService;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,21 +39,6 @@ public class CachedItemService implements ItemService {
 
 	public CachedItemService(@Qualifier("itemServiceImpl") ItemService itemService) {
 		this.itemService = itemService;
-	}
-
-	@Override
-	public Item getItem(int itemId, PhaseId phaseId) {
-		return itemService.getItem(itemId, phaseId);
-	}
-
-	@Override
-	public Enchant getEnchant(int enchantId, PhaseId phaseId) {
-		return itemService.getEnchant(enchantId, phaseId);
-	}
-
-	@Override
-	public Gem getGem(int gemId, PhaseId phaseId) {
-		return itemService.getGem(gemId, phaseId);
 	}
 
 	@Override

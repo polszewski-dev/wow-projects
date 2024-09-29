@@ -1,14 +1,14 @@
-package wow.character.service.impl.enumerator;
+package wow.minmax.service.impl.enumerator;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.character.WowCharacterSpringTest;
 import wow.character.model.equipment.ItemSockets;
-import wow.character.service.ItemService;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.service.ItemService;
 
 import java.util.stream.Stream;
 
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2023-10-26
  */
-class GemComboFinderTest extends WowCharacterSpringTest {
+class GemComboFinderTest extends WowMinMaxSpringTest {
 	@Autowired
 	ItemService itemService;
 

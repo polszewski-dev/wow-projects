@@ -1,13 +1,9 @@
-package wow.character.service.impl;
+package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
-import wow.character.service.ItemService;
-import wow.character.service.impl.enumerator.FilterOutWorseEnchantChoices;
-import wow.character.service.impl.enumerator.FilterOutWorseGemChoices;
-import wow.character.service.impl.enumerator.GemComboFinder;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
@@ -16,10 +12,13 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
+import wow.minmax.service.ItemService;
+import wow.minmax.service.impl.enumerator.FilterOutWorseEnchantChoices;
+import wow.minmax.service.impl.enumerator.FilterOutWorseGemChoices;
+import wow.minmax.service.impl.enumerator.GemComboFinder;
 
 import java.util.List;
 
@@ -33,21 +32,6 @@ public class ItemServiceImpl implements ItemService {
 	private final ItemRepository itemRepository;
 	private final EnchantRepository enchantRepository;
 	private final GemRepository gemRepository;
-
-	@Override
-	public Item getItem(int itemId, PhaseId phaseId) {
-		return itemRepository.getItem(itemId, phaseId).orElseThrow();
-	}
-
-	@Override
-	public Enchant getEnchant(int enchantId, PhaseId phaseId) {
-		return enchantRepository.getEnchant(enchantId, phaseId).orElseThrow();
-	}
-
-	@Override
-	public Gem getGem(int gemId, PhaseId phaseId) {
-		return gemRepository.getGem(gemId, phaseId).orElseThrow();
-	}
 
 	@Override
 	public List<Item> getItemsBySlot(PlayerCharacter character, ItemSlot itemSlot, ItemFilter itemFilter) {

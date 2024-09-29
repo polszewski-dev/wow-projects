@@ -2,7 +2,6 @@ package wow.simulator.config;
 
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
-import wow.character.service.ItemService;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
@@ -13,8 +12,6 @@ import wow.commons.repository.item.ItemRepository;
  */
 public interface SimulatorContext {
 	CharacterService getCharacterService();
-
-	ItemService getItemService();
 
 	CharacterCalculationService getCharacterCalculationService();
 

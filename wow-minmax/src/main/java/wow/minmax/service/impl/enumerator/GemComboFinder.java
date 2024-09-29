@@ -1,11 +1,11 @@
-package wow.character.service.impl.enumerator;
+package wow.minmax.service.impl.enumerator;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemSockets;
-import wow.character.service.ItemService;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
+import wow.minmax.service.ItemService;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,4 +1,4 @@
-package wow.character.service.impl.enumerator;
+package wow.minmax.service.impl.enumerator;
 
 import wow.commons.model.effect.Effect;
 import wow.commons.model.item.Enchant;

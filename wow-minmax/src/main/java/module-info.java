@@ -6,6 +6,7 @@ module wow.minmax {
 	requires static lombok;
 	requires excel.utils;
 	requires java.annotation;
+	requires spring.beans;
 	requires spring.boot;
 	requires spring.boot.autoconfigure;
 	requires spring.context;

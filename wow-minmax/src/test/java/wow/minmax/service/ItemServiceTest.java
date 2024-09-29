@@ -1,6 +1,5 @@
-package wow.character.service;
+package wow.minmax.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,8 +8,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import wow.character.WowCharacterSpringTest;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemSlot;
@@ -24,6 +21,7 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.repository.pve.GameVersionRepository;
 
 import java.util.Comparator;
 import java.util.List;
@@ -40,16 +38,13 @@ import static wow.commons.model.pve.GameVersionId.VANILLA;
  * User: POlszewski
  * Date: 2022-11-19
  */
-class ItemServiceTest extends WowCharacterSpringTest {
+class ItemServiceTest extends ServiceTest {
 	@Autowired
 	@Qualifier("itemServiceImpl")
 	ItemService underTest;
 
-	@Test
-	void getItem() {
-		Item item = underTest.getItem(34364, character.getPhaseId());
-		assertThat(item.getId()).isEqualTo(34364);
-	}
+	@Autowired
+	GameVersionRepository gameVersionRepository;
 
 	@Test
 	void getItemsBySlot() {
@@ -263,14 +258,14 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		class Warlock {
 			@DisplayName("Vanilla")
 			@ParameterizedTest(name = "{0}")
-			@MethodSource("wow.character.service.ItemServiceTest#getBestEnchantsWarlockVanilla")
+			@MethodSource("wow.minmax.service.ItemServiceTest#getBestEnchantsWarlockVanilla")
 			void vanilla(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(WARLOCK, VANILLA, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
 
 			@DisplayName("TBC")
 			@ParameterizedTest(name = "{0} {2}")
-			@MethodSource("wow.character.service.ItemServiceTest#getBestEnchantsWarlockTBC")
+			@MethodSource("wow.minmax.service.ItemServiceTest#getBestEnchantsWarlockTBC")
 			void tbc(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(WARLOCK, TBC, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
@@ -280,14 +275,14 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		class Priest {
 			@DisplayName("Vanilla")
 			@ParameterizedTest(name = "{0}")
-			@MethodSource("wow.character.service.ItemServiceTest#getBestEnchantsPriestVanilla")
+			@MethodSource("wow.minmax.service.ItemServiceTest#getBestEnchantsPriestVanilla")
 			void vanilla(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(PRIEST, VANILLA, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
 
 			@DisplayName("TBC")
 			@ParameterizedTest(name = "{0} {2}")
-			@MethodSource("wow.character.service.ItemServiceTest#getBestEnchantsPriestTBC")
+			@MethodSource("wow.minmax.service.ItemServiceTest#getBestEnchantsPriestTBC")
 			void tbc(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(PRIEST, TBC, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
@@ -473,12 +468,5 @@ class ItemServiceTest extends WowCharacterSpringTest {
 		var enchants = underTest.getBestEnchants(character, itemType, itemSubType);
 
 		assertThat(enchants.stream().map(Enchant::getName)).hasSameElementsAs(expectedResult);
-	}
-
-	PlayerCharacter character;
-
-	@BeforeEach
-	void setup() {
-		character = getCharacter();
 	}
 }
