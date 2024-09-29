@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import wow.character.model.build.Build;
 import wow.character.model.build.Rotation;
 import wow.character.model.build.Talents;
+import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
@@ -14,7 +15,6 @@ import wow.character.repository.BaseStatInfoRepository;
 import wow.character.repository.CharacterTemplateRepository;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.character.service.CharacterService;
-import wow.character.service.SpellService;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
@@ -24,7 +24,12 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.talent.Talent;
 import wow.commons.repository.pve.PhaseRepository;
+import wow.commons.repository.spell.BuffRepository;
+import wow.commons.repository.spell.SpellRepository;
+import wow.commons.repository.spell.TalentRepository;
 
 import java.util.List;
 
@@ -39,11 +44,12 @@ import static wow.character.model.character.BuffListType.TARGET_DEBUFF;
 @AllArgsConstructor
 public class CharacterServiceImpl implements CharacterService {
 	private final PhaseRepository phaseRepository;
+	private final SpellRepository spellRepository;
+	private final TalentRepository talentRepository;
+	private final BuffRepository buffRepository;
 	private final BaseStatInfoRepository baseStatInfoRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 	private final CharacterTemplateRepository characterTemplateRepository;
-
-	private final SpellService spellService;
 
 	@Override
 	public PlayerCharacter createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
@@ -53,7 +59,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var race = gameVersion.getRace(raceId).orElseThrow();
 		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(gameVersion.getGameVersionId(), characterClassId, raceId, level).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
-		var talents = new Talents(spellService.getAvailableTalents(characterClassId, phaseId));
+		var talents = new Talents(getAvailableTalents(characterClassId, phaseId));
 
 		return new PlayerCharacterImpl(
 				phase,
@@ -164,7 +170,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 	private void refreshSpellbook(PlayerCharacter character) {
 		character.getSpellbook().reset();
-		character.getSpellbook().addAbilities(spellService.getAvailableAbilities(character));
+		character.getSpellbook().addAbilities(getAvailableAbilities(character));
 	}
 
 	private void refreshActivePet(PlayerCharacter character) {
@@ -176,11 +182,13 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void refreshBuffs(PlayerCharacter character) {
-		List<Buff> buffs = spellService.getAvailableBuffs(character, CHARACTER_BUFF);
-		List<Buff> debuffs = spellService.getAvailableBuffs(character, TARGET_DEBUFF);
+		List<Buff> buffs = getAvailableBuffs(character, CHARACTER_BUFF);
 
 		character.getBuffs().setAvailable(buffs);
+
 		if (character.getTarget() != null) {
+			List<Buff> debuffs = getAvailableBuffs(character, TARGET_DEBUFF);
+
 			character.getTarget().getBuffs().setAvailable(debuffs);
 		}
 	}
@@ -225,5 +233,22 @@ public class CharacterServiceImpl implements CharacterService {
 		if (gem != null && !gem.isAvailableTo(character)) {
 			item.getSockets().insertGem(socketNo, null);
 		}
+	}
+
+	private List<Ability> getAvailableAbilities(Character character) {
+		return spellRepository.getAvailableAbilities(character.getCharacterClassId(), character.getLevel(), character.getPhaseId()).stream()
+				.filter(spell -> spell.isAvailableTo(character))
+				.toList();
+	}
+
+	private List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId) {
+		return talentRepository.getAvailableTalents(characterClassId, phaseId);
+	}
+
+	private List<Buff> getAvailableBuffs(Character character, BuffListType buffListType) {
+		return buffRepository.getAvailableBuffs(character.getPhaseId()).stream()
+				.filter(buff -> buff.isAvailableTo(character))
+				.filter(buffListType.getFilter())
+				.toList();
 	}
 }

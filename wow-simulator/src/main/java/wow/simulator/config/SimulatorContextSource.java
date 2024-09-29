@@ -3,7 +3,6 @@ package wow.simulator.config;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
 import wow.character.service.ItemService;
-import wow.character.service.SpellService;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
@@ -23,11 +22,6 @@ public interface SimulatorContextSource extends SimulatorContext {
 	@Override
 	default ItemService getItemService() {
 		return getSimulatorContext().getItemService();
-	}
-
-	@Override
-	default SpellService getSpellService() {
-		return getSimulatorContext().getSpellService();
 	}
 
 	@Override

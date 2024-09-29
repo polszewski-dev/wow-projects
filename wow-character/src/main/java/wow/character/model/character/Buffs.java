@@ -48,6 +48,9 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 	}
 
 	public void setAvailable(List<Buff> availableBuffs) {
+		availableBuffsById.clear();
+		availableBuffsByBuffId.clear();
+
 		for (Buff buff : availableBuffs) {
 			assertMeetsFilter(buff);
 			availableBuffsById.put(buff.getId(), buff);
