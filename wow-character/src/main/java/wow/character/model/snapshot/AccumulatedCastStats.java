@@ -1,8 +1,8 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 
 /**
  * User: POlszewski
@@ -15,8 +15,8 @@ public class AccumulatedCastStats extends AccumulatedPartialStats {
 	private double castTime;
 	private double castTimePct;
 
-	public AccumulatedCastStats(AttributeConditionArgs conditionArgs, int characterLevel) {
-		super(conditionArgs, characterLevel);
+	public AccumulatedCastStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs);
 	}
 
 	private AccumulatedCastStats(AccumulatedCastStats stats) {

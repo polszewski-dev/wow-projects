@@ -20,11 +20,6 @@ public record TargetTypeCondition(CreatureType creatureType) implements Attribut
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getTargetType() == creatureType;
-	}
-
-	@Override
 	public String toString() {
 		return creatureType.toString();
 	}

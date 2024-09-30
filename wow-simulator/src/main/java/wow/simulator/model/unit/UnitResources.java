@@ -31,6 +31,10 @@ public class UnitResources implements SimulationContextSource {
 		return get(HEALTH).getCurrent();
 	}
 
+	public int geMaxHealth() {
+		return get(HEALTH).getMax();
+	}
+
 	public int getCurrentMana() {
 		return get(MANA).getCurrent();
 	}

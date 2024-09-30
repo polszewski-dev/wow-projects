@@ -1,8 +1,8 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 
 /**
  * User: POlszewski
@@ -15,8 +15,8 @@ public class AccumulatedDurationStats extends AccumulatedPartialStats {
 	private double hasteRating;
 	private double hastePct;
 
-	public AccumulatedDurationStats(AttributeConditionArgs conditionArgs, int characterLevel) {
-		super(conditionArgs, characterLevel);
+	public AccumulatedDurationStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs);
 	}
 
 	private AccumulatedDurationStats(AccumulatedDurationStats stats) {

@@ -20,11 +20,6 @@ public record AbilityCategoryCondition(AbilityCategory abilityCategory) implemen
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getAbilityCategory() == abilityCategory;
-	}
-
-	@Override
 	public String toString() {
 		return abilityCategory.toString();
 	}

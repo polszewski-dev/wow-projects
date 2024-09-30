@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.repository.BaseStatInfoRepository;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.MiscCondition;
@@ -27,6 +28,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 
 	@Test
 	void accumulateBaseStatInfo() {
+		var level = baseStats.conditionArgs.getCaster().getLevel();
 		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(TBC, WARLOCK, ORC, level).orElseThrow();
 
 		baseStats.accumulateBaseStatInfo(baseStatInfo);
@@ -186,11 +188,13 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 		baseStats.accumulateAttributes(list, 2);
 	}
 
-	int level = 70;
 	AccumulatedBaseStats baseStats;
 
 	@BeforeEach
 	void setUp() {
-		this.baseStats = new AccumulatedBaseStats(level);
+		var caster = getCharacter();
+		var conditionArgs = AttributeConditionArgs.forBaseStats(caster);
+
+		this.baseStats = new AccumulatedBaseStats(conditionArgs);
 	}
 }

@@ -20,11 +20,6 @@ public record EffectCategoryCondition(EffectCategory type) implements AttributeC
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getEffectCategory() == type;
-	}
-
-	@Override
 	public String toString() {
 		return type.toString();
 	}

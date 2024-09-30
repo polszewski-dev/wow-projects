@@ -25,11 +25,6 @@ public record TargetClassCondition(CharacterClassId characterClassId) implements
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getTargetClass() == characterClassId;
-	}
-
-	@Override
 	public String toString() {
 		return PREFIX + characterClassId;
 	}

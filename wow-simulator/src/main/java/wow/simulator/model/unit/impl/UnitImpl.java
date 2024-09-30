@@ -5,6 +5,7 @@ import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.snapshot.*;
 import wow.commons.model.Duration;
+import wow.commons.model.Percent;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
 import wow.commons.model.profession.ProfessionId;
@@ -274,7 +275,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public SpellCastSnapshot getSpellCastSnapshot(Ability ability) {
-		return getCharacterCalculationService().getSpellCastSnapshot(this, ability);
+		return getCharacterCalculationService().getSpellCastSnapshot(this, ability, (Character) null);
 	}
 
 	@Override
@@ -286,7 +287,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	@Override
 	public SpellCostSnapshot getSpellCostSnapshot(Ability ability) {
 		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getSpellCostSnapshot(this, ability, baseStats);
+		return getCharacterCalculationService().getSpellCostSnapshot(this, ability, null, baseStats);
 	}
 
 	@Override
@@ -501,5 +502,15 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	@Override
 	public boolean hasTalent(TalentId talentId) {
 		return character.hasTalent(talentId);
+	}
+
+	@Override
+	public Percent getHealthPct() {
+		return Percent.of(100.0 * resources.getCurrentHealth() / resources.geMaxHealth());
+	}
+
+	@Override
+	public void setHealthPct(Percent healthPct) {
+		throw new UnsupportedOperationException();
 	}
 }

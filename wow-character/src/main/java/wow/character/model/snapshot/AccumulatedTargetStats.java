@@ -1,8 +1,8 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 
 /**
  * User: POlszewski
@@ -17,8 +17,8 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 	private double receivedEffectDuration;
 	private double receivedEffectDurationPct;
 
-	public AccumulatedTargetStats(AttributeConditionArgs conditionArgs, int characterLevel) {
-		super(conditionArgs, characterLevel);
+	public AccumulatedTargetStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs);
 	}
 
 	private AccumulatedTargetStats(AccumulatedTargetStats stats) {

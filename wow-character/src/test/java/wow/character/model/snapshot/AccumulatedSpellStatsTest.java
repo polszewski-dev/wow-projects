@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.repository.BaseStatInfoRepository;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.ActionType;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 	@Test
 	void accumulateBaseStatInfo() {
+		var level = spellStats.conditionArgs.getCaster().getLevel();
 		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(TBC, WARLOCK, ORC, level).orElseThrow();
 
 		spellStats.accumulateBaseStatInfo(baseStatInfo);
@@ -153,12 +154,14 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		spellStats.accumulateAttributes(list, 2);
 	}
 
-	int level = 70;
 	AccumulatedSpellStats spellStats;
 
 	@BeforeEach
 	void setUp() {
-		var conditionArgs = new AttributeConditionArgs(ActionType.SPELL);
-		this.spellStats = new AccumulatedSpellStats(conditionArgs, level);
+		var caster = getCharacter();
+		var spell = caster.getAbility(AbilityId.SHADOW_BOLT).orElseThrow();
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
+
+		this.spellStats = new AccumulatedSpellStats(conditionArgs);
 	}
 }

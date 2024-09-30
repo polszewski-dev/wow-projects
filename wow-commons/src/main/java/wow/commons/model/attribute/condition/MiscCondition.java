@@ -1,8 +1,6 @@
 package wow.commons.model.attribute.condition;
 
 import lombok.AllArgsConstructor;
-import wow.commons.model.attribute.PowerType;
-import wow.commons.model.spell.ActionType;
 import wow.commons.util.EnumUtil;
 
 /**
@@ -11,183 +9,43 @@ import wow.commons.util.EnumUtil;
  */
 @AllArgsConstructor
 public enum MiscCondition implements AttributeCondition {
-	SPELL("Spell") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getActionType() == ActionType.SPELL;
-		}
-	},
-	PHYSICAL("Physical") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getActionType() == ActionType.PHYSICAL;
-		}
-	},
+	SPELL("Spell"),
+	PHYSICAL("Physical"),
 
-	SPELL_DAMAGE("SpellDamage") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getPowerType() == PowerType.SPELL_DAMAGE;
-		}
-	},
-	HEALING("Healing") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getPowerType() == PowerType.HEALING;
-		}
-	},
-	MELEE("Melee") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getPowerType() == PowerType.MELEE;
-		}
-	},
-	RANGED("Ranged") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getPowerType() == PowerType.RANGED;
-		}
-	},
-	WEAPON("Weapon") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getPowerType() == PowerType.WEAPON;
-		}
-	},
+	SPELL_DAMAGE("SpellDamage"),
+	HEALING("Healing"),
+	MELEE("Melee"),
+	RANGED("Ranged"),
+	WEAPON("Weapon"),
 
-	DIRECT("Direct") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isDirect();
-		}
-	},
-	PERIODIC("Periodic") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isPeriodic();
-		}
-	},
+	DIRECT("Direct"),
+	PERIODIC("Periodic"),
 
-	HAS_DAMAGING_COMPONENT("HasDamagingComponent") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isHasDamagingComponent();
-		}
-	},
-	HAS_HEALING_COMPONENT("HasHealingComponent") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isHasHealingComponent();
-		}
-	},
+	HAS_DAMAGING_COMPONENT("HasDamagingComponent"),
+	HAS_HEALING_COMPONENT("HasHealingComponent"),
 
-	HOSTILE_SPELL("HostileSpell") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isHostileSpell();
-		}
-	},
-	NORMAL_MELEE_ATTACK("NormalMeleeAttack") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isNormalMeleeAttack();
-		}
-	},
-	SPECIAL_ATTACK("SpecialAttack") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isSpecialAttack();
-		}
-	},
+	HOSTILE_SPELL("HostileSpell"),
+	NORMAL_MELEE_ATTACK("NormalMeleeAttack"),
+	SPECIAL_ATTACK("SpecialAttack"),
 
-	HAS_MANA_COST("HasManaCost") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isHasManaCost();
-		}
-	},
-	HAS_CAST_TIME("HasCastTime") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getBaseCastTime().isPositive();
-		}
-	},
-	IS_INSTANT_CAST("IsInstantCast") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getBaseCastTime().isZero();
-		}
-	},
-	HAS_CAST_TIME_UNDER_10_SEC("HasCastTimeUnder10Sec") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getBaseCastTime().getSeconds() < 10;
-		}
-	},
+	HAS_MANA_COST("HasManaCost"),
+	HAS_CAST_TIME("HasCastTime"),
+	IS_INSTANT_CAST("IsInstantCast"),
+	HAS_CAST_TIME_UNDER_10_SEC("HasCastTimeUnder10Sec"),
 
-	CAN_CRIT("CanCrit") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isCanCrit();
-		}
-	},
-	HAD_CRITICAL("HadCrit") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isHadCrit();
-		}
-	},
-	HAD_NO_CRITICAL("HadNoCrit") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isCanCrit() && !args.isHadCrit();
-		}
-	},
+	CAN_CRIT("CanCrit"),
+	HAD_CRITICAL("HadCrit"),
+	HAD_NO_CRITICAL("HadNoCrit"),
 
-	HAS_PET("HasPet") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getPetType() != null;
-		}
-	},
+	HAS_PET("HasPet"),
 
-	TARGETING_OTHERS("TargetingOthers") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.isTargetingOthers();
-		}
-	},
+	TARGETING_OTHERS("TargetingOthers"),
 
-	OWNER_HEALTH_BELOW_20("OwnerHealthBelow20%") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getOwnerHealth().value() < 20;
-		}
-	},
-	OWNER_HEALTH_BELOW_35("OwnerHealthBelow35%") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getOwnerHealth().value() < 3;
-		}
-	},
-	OWNER_HEALTH_BELOW_40("OwnerHealthBelow40%") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getOwnerHealth().value() < 40;
-		}
-	},
-	OWNER_HEALTH_BELOW_70("OwnerHealthBelow70%") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getOwnerHealth().value() < 70;
-		}
-	},
-	TARGET_HEALTH_BELOW_50("TargetHealthBelow50%") {
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return args.getTargetHealth().value() < 50;
-		}
-	},
+	OWNER_HEALTH_BELOW_20_PCT("OwnerHealthBelow20%"),
+	OWNER_HEALTH_BELOW_35_PCT("OwnerHealthBelow35%"),
+	OWNER_HEALTH_BELOW_40_PCT("OwnerHealthBelow40%"),
+	OWNER_HEALTH_BELOW_70_PCT("OwnerHealthBelow70%"),
+	TARGET_HEALTH_BELOW_50_PCT("TargetHealthBelow50%"),
 
 	;
 

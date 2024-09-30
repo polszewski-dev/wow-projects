@@ -11,7 +11,6 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventType;
-import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.Spell;
 
@@ -72,15 +71,17 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	private double getPower(List<Attribute> attributes, PowerType powerType) {
-		var args = new AttributeConditionArgs(ActionType.SPELL);
-
-		args.setPowerType(powerType);
-
 		return attributes.stream()
 				.filter(x -> x.id() == AttributeId.POWER)
-				.filter(x -> x.condition().test(args))
+				.filter(x -> hasMatchingPowerType(x.condition(), powerType))
 				.mapToDouble(Attribute::value)
 				.sum();
+	}
+
+	private boolean hasMatchingPowerType(AttributeCondition condition, PowerType powerType) {
+		return
+				condition == MiscCondition.SPELL_DAMAGE && powerType == PowerType.SPELL_DAMAGE ||
+				condition == MiscCondition.HEALING && powerType == PowerType.HEALING;
 	}
 
 	private boolean isCasterEffect(Effect effect) {

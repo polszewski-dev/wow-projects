@@ -2,8 +2,8 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 
 /**
  * User: POlszewski
@@ -23,8 +23,8 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 	private double critDamageMultiplierPct;
 	private double critCoeffPct;
 
-	public AccumulatedSpellStats(AttributeConditionArgs conditionArgs, int characterLevel) {
-		super(conditionArgs, characterLevel);
+	public AccumulatedSpellStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs);
 	}
 
 	private AccumulatedSpellStats(AccumulatedSpellStats stats) {

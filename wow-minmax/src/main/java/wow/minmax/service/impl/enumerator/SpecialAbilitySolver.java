@@ -2,6 +2,8 @@ package wow.minmax.service.impl.enumerator;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
@@ -15,7 +17,7 @@ import wow.minmax.model.ProcInfo;
 import wow.minmax.model.Snapshot;
 import wow.minmax.repository.ProcInfoRepository;
 
-import static wow.character.util.AttributeConditionArgsUtil.getCommonSpellConditionArgs;
+import static wow.character.util.AttributeConditionChecker.check;
 import static wow.commons.model.attribute.AttributeId.CRIT_COEFF_PCT;
 import static wow.commons.model.effect.component.EventType.*;
 
@@ -28,14 +30,14 @@ import static wow.commons.model.effect.component.EventType.*;
 public class SpecialAbilitySolver {
 	private final ProcInfoRepository procInfoRepository;
 
-	public boolean solveAbilities(Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, AccumulatedRotationStats rotationStats) {
+	public boolean solveAbilities(Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, AccumulatedRotationStats rotationStats, PlayerCharacter character) {
 		boolean recalculate = false;
 
 		for (int i = 0; i < rotationStats.getNonModifierEffectCount(); ++i) {
 			var effect = rotationStats.getNonModifierEffect(i);
 			var stackCount = rotationStats.getNonModifierStackCount(i);
 
-			recalculate |= solveNonModifierEffect(effect, stackCount, snapshot, abilityStats);
+			recalculate |= solveNonModifierEffect(effect, stackCount, snapshot, abilityStats, character);
 		}
 
 		for (var activatedAbility : rotationStats.getActivatedAbilities()) {
@@ -45,19 +47,19 @@ public class SpecialAbilitySolver {
 		return recalculate;
 	}
 
-	private boolean solveNonModifierEffect(Effect effect, int stackCount, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats) {
+	private boolean solveNonModifierEffect(Effect effect, int stackCount, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, PlayerCharacter character) {
 		return switch (effect.getEffectId()) {
 			case -17793 -> solveImprovedShadowBoltProc(1, snapshot, abilityStats);
 			case -17796 -> solveImprovedShadowBoltProc(2, snapshot, abilityStats);
 			case -17801 -> solveImprovedShadowBoltProc(3, snapshot, abilityStats);
 			case -17802 -> solveImprovedShadowBoltProc(4, snapshot, abilityStats);
 			case -17803 -> solveImprovedShadowBoltProc(5, snapshot, abilityStats);
-			default -> solveProc(effect, snapshot, abilityStats);
+			default -> solveProc(effect, snapshot, abilityStats, character);
 		};
 	}
 
-	private boolean solveProc(Effect effect, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats) {
-		var procEvent = getProcEvent(effect, snapshot.getAbility());
+	private boolean solveProc(Effect effect, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, PlayerCharacter character) {
+		var procEvent = getProcEvent(effect, snapshot.getAbility(), character);
 
 		if (procEvent == null) {
 			return false;
@@ -95,8 +97,8 @@ public class SpecialAbilitySolver {
 		return true;
 	}
 
-	private Event getProcEvent(Effect effect, Ability ability) {
-		var events = effect.getEvents().stream().filter(x -> hasDamagingSpellEvent(x) && isConditionMet(x, ability)).toList();
+	private Event getProcEvent(Effect effect, Ability ability, PlayerCharacter character) {
+		var events = effect.getEvents().stream().filter(x -> hasDamagingSpellEvent(x) && isConditionMet(x, ability, character)).toList();
 
 		return switch (events.size()) {
 			case 0 -> null;
@@ -105,12 +107,12 @@ public class SpecialAbilitySolver {
 		};
 	}
 
-	private boolean isConditionMet(Event event, Ability ability) {
+	private boolean isConditionMet(Event event, Ability ability, PlayerCharacter character) {
 		if (event.condition().isEmpty()) {
 			return true;
 		}
-		var args = getCommonSpellConditionArgs(null, ability);
-		return event.condition().test(args);
+		var args = AttributeConditionArgs.forSpell(character, ability, null);
+		return check(event.condition(), args);
 	}
 
 	private boolean hasDamagingSpellEvent(Event event) {

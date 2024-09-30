@@ -64,11 +64,6 @@ public sealed interface ConditionOperator extends AttributeCondition {
 		}
 
 		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return left.test(args) || right.test(args);
-		}
-
-		@Override
 		public String toString() {
 			return conditionToString(this);
 		}
@@ -78,11 +73,6 @@ public sealed interface ConditionOperator extends AttributeCondition {
 		public And {
 			Objects.requireNonNull(left);
 			Objects.requireNonNull(right);
-		}
-
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return left.test(args) && right.test(args);
 		}
 
 		@Override
@@ -101,11 +91,6 @@ public sealed interface ConditionOperator extends AttributeCondition {
 			if (leaves.stream().anyMatch(ConditionOperator.class::isInstance)) {
 				throw new IllegalArgumentException("Only simple types");
 			}
-		}
-
-		@Override
-		public boolean test(AttributeConditionArgs args) {
-			return left.test(args) || right.test(args);
 		}
 
 		@Override

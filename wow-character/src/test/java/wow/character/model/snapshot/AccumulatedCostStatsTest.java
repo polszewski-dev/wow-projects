@@ -2,11 +2,12 @@ package wow.character.model.snapshot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import wow.character.WowCharacterSpringTest;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.spell.ActionType;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import static wow.commons.model.attribute.AttributeId.*;
  * User: POlszewski
  * Date: 2023-10-21
  */
-class AccumulatedCostStatsTest {
+class AccumulatedCostStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getManaCost() {
 		accumulateTestAttributes(MANA_COST);
@@ -126,13 +127,14 @@ class AccumulatedCostStatsTest {
 		costStats.accumulateAttributes(list, 2);
 	}
 
-	int level = 70;
 	AccumulatedCostStats costStats;
 
 	@BeforeEach
 	void setUp() {
-		var conditionArgs = new AttributeConditionArgs(ActionType.SPELL);
+		var caster = getCharacter();
+		var spell = caster.getAbility(AbilityId.SHADOW_BOLT).orElseThrow();
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
 
-		this.costStats = new AccumulatedCostStats(conditionArgs, level);
+		this.costStats = new AccumulatedCostStats(conditionArgs);
 	}
 }

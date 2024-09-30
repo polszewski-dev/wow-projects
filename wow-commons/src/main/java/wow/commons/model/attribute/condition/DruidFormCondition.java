@@ -20,11 +20,6 @@ public record DruidFormCondition(DruidFormType type) implements AttributeConditi
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getDruidForm() == type;
-	}
-
-	@Override
 	public String toString() {
 		return type.toString();
 	}

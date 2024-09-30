@@ -1,8 +1,8 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 
 /**
  * User: POlszewski
@@ -13,8 +13,8 @@ public class AccumulatedHitStats extends AccumulatedPartialStats {
 	private double hitRating;
 	private double hitPct;
 
-	public AccumulatedHitStats(AttributeConditionArgs conditionArgs, int characterLevel) {
-		super(conditionArgs, characterLevel);
+	public AccumulatedHitStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs);
 	}
 
 	private AccumulatedHitStats(AccumulatedHitStats stats) {

@@ -1,10 +1,12 @@
 package wow.character.model.snapshot;
 
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.effect.component.StatConversion;
+
+import static wow.character.util.AttributeConditionChecker.check;
 
 /**
  * User: POlszewski
@@ -13,18 +15,18 @@ import wow.commons.model.effect.component.StatConversion;
 public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	protected final AttributeConditionArgs conditionArgs;
 
-	protected AccumulatedPartialStats(AttributeConditionArgs conditionArgs, int characterLevel) {
-		super(characterLevel);
+	protected AccumulatedPartialStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs.getCaster().getLevel());
 		this.conditionArgs = conditionArgs;
 	}
 
 	protected AccumulatedPartialStats(AccumulatedPartialStats stats) {
-		this(stats.conditionArgs, stats.characterLevel);
+		this(stats.conditionArgs);
 	}
 
 	@Override
 	protected void accumulateAttribute(Attribute attribute, double scaleFactor) {
-		if(!attribute.condition().test(conditionArgs)) {
+		if(!check(attribute.condition(), conditionArgs)) {
 			return;
 		}
 
@@ -37,14 +39,14 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	public abstract void accumulateAttribute(AttributeId id, double value);
 
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
-		if (condition.test(conditionArgs)) {
+		if (check(condition, conditionArgs)) {
 			accumulateAttribute(id, value);
 		}
 	}
 
 	@Override
 	protected void accumulateConvertedStat(StatConversion statConversion, BaseStatsSnapshot baseStats) {
-		if (!statConversion.toCondition().test(conditionArgs)) {
+		if (!check(statConversion.toCondition(), conditionArgs)) {
 			return;
 		}
 

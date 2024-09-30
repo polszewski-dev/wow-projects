@@ -20,11 +20,6 @@ public record WeaponTypeCondition(WeaponSubType weaponType) implements Attribute
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getWeaponType() == weaponType;
-	}
-
-	@Override
 	public String toString() {
 		return weaponType.toString();
 	}

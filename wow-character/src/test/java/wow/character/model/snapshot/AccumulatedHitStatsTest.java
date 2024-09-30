@@ -2,11 +2,12 @@ package wow.character.model.snapshot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import wow.character.WowCharacterSpringTest;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.spell.ActionType;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import static wow.commons.model.attribute.AttributeId.HIT_RATING;
  * User: POlszewski
  * Date: 2023-10-25
  */
-class AccumulatedHitStatsTest {
+class AccumulatedHitStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getHitRating() {
 		accumulateTestAttributes(HIT_RATING);
@@ -53,12 +54,14 @@ class AccumulatedHitStatsTest {
 		hitStats.accumulateAttributes(list, 2);
 	}
 
-	int level = 70;
 	AccumulatedHitStats hitStats;
 
 	@BeforeEach
 	void setUp() {
-		var conditionArgs = new AttributeConditionArgs(ActionType.SPELL);
-		this.hitStats = new AccumulatedHitStats(conditionArgs, level);
+		var caster = getCharacter();
+		var spell = caster.getAbility(AbilityId.SHADOW_BOLT).orElseThrow();
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
+
+		this.hitStats = new AccumulatedHitStats(conditionArgs);
 	}
 }

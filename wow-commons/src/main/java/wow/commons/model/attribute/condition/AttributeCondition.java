@@ -12,13 +12,11 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.talent.TalentTree;
 
-import java.util.function.Predicate;
-
 /**
  * User: POlszewski
  * Date: 2021-10-25
  */
-public sealed interface AttributeCondition extends Predicate<AttributeConditionArgs> permits
+public sealed interface AttributeCondition permits
 		AbilityCategoryCondition,
 		ConditionOperator,
 		DruidFormCondition,

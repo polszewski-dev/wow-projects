@@ -24,7 +24,9 @@ public enum TalentTree {
 
 	ARCANE("ArcaneTree"),
 	FIRE("FireTree"),
-	FROST("FrostTree");
+	FROST("FrostTree"),
+
+	ELEMENTAL("ElementalTree");
 
 	private final String name;
 

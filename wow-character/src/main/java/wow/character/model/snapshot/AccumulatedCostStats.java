@@ -1,8 +1,8 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.spell.ResourceType;
 
 /**
@@ -24,8 +24,8 @@ public class AccumulatedCostStats extends AccumulatedPartialStats {
 	private double cooldown;
 	private double cooldownPct;
 
-	public AccumulatedCostStats(AttributeConditionArgs conditionArgs, int characterLevel) {
-		super(conditionArgs, characterLevel);
+	public AccumulatedCostStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs);
 	}
 
 	private AccumulatedCostStats(AccumulatedCostStats stats) {

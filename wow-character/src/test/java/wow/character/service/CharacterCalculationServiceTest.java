@@ -77,9 +77,9 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCastStats(String idStr, String conditionStr) {
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCastStats(character, ability);
+		var stats = characterCalculationService.newAccumulatedCastStats(character, ability, null);
 
-		stats.getConditionArgs().setOwnerHealth(Percent.of(30));
+		character.setHealthPct(Percent.of(30));
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -92,7 +92,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCastStatsNotMatchingCondition(String idStr, String conditionStr) {
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCastStats(character, ability);
+		var stats = characterCalculationService.newAccumulatedCastStats(character, ability, null);
 
 		assertAccumulatedValue(idStr, 10, 0, conditionStr, stats, this::getValue);
 	}
@@ -120,7 +120,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCostStats(String idStr, String conditionStr) {
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCostStats(character, ability);
+		var stats = characterCalculationService.newAccumulatedCostStats(character, ability, null);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -307,7 +307,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.resetEquipment();
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCastSnapshot(character, ability);
+		var snapshot = characterCalculationService.getSpellCastSnapshot(character, ability, (Character) null);
 
 		assertThat(snapshot.getHastePct()).isZero();
 		assertThat(snapshot.getCastTime()).isEqualTo(2.5);
@@ -321,7 +321,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, baseStats);
+		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, null, baseStats);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.MANA);
 		assertThat(snapshot.getCost()).isEqualTo(399);
@@ -340,7 +340,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
 		var ability = character.getAbility(LIFE_TAP).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, baseStats);
+		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, null, baseStats);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.HEALTH);
 		assertThat(snapshot.getCost()).isEqualTo(698);
@@ -354,7 +354,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
 		var ability = character.getAbility(SHADOWBURN).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, baseStats);
+		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, null, baseStats);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.MANA);
 		assertThat(snapshot.getCost()).isEqualTo(489);

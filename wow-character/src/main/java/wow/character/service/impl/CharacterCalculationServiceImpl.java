@@ -7,14 +7,15 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
 import wow.character.util.AbstractEffectCollector;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.PowerType;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
+import wow.commons.repository.spell.SpellRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,65 +36,72 @@ import static wow.commons.constant.SpellConstants.*;
 @Service
 @AllArgsConstructor
 public class CharacterCalculationServiceImpl implements CharacterCalculationService {
+	private final SpellRepository spellRepository;
+
 	@Override
 	public AccumulatedBaseStats newAccumulatedBaseStats(Character character) {
-		var stats = new AccumulatedBaseStats(character.getLevel());
+		var conditionArgs = AttributeConditionArgs.forBaseStats(character);
+		var stats = new AccumulatedBaseStats(conditionArgs);
 
 		stats.accumulateBaseStatInfo(character.getBaseStatInfo());
 		return stats;
 	}
 
 	@Override
-	public AccumulatedCastStats newAccumulatedCastStats(Character character, Ability ability) {
-		var conditionArgs = getCommonSpellConditionArgs(character, ability);
+	public AccumulatedCastStats newAccumulatedCastStats(Character character, Ability ability, Character target) {
+		var conditionArgs = AttributeConditionArgs.forSpell(character, ability, target);
 
-		return new AccumulatedCastStats(conditionArgs, character.getLevel());
+		return new AccumulatedCastStats(conditionArgs);
 	}
 
 	@Override
-	public AccumulatedCostStats newAccumulatedCostStats(Character character, Ability ability) {
-		var conditionArgs = getCommonSpellConditionArgs(character, ability);
+	public AccumulatedCostStats newAccumulatedCostStats(Character character, Ability ability, Character target) {
+		var conditionArgs = AttributeConditionArgs.forSpell(character, ability, target);
 
-		return new AccumulatedCostStats(conditionArgs, character.getLevel());
+		return new AccumulatedCostStats(conditionArgs);
 	}
 
 	@Override
 	public AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school) {
-		var conditionArgs = getTargetConditionArgs(target, spell, powerType, school);
+		var conditionArgs = getTargetConditionArgs(target, spell, powerType);
 
-		return new AccumulatedTargetStats(conditionArgs, target.getLevel());
+		return new AccumulatedTargetStats(conditionArgs);
 	}
 
 	@Override
 	public AccumulatedHitStats newAccumulatedHitStats(Character character, Spell spell, Character target) {
-		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target, spell.getSchool());
+		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target);
 
-		return new AccumulatedHitStats(conditionArgs, character.getLevel());
+		return new AccumulatedHitStats(conditionArgs);
 	}
 
 	@Override
 	public AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target) {
-		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target, null);
+		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target);
 
-		return new AccumulatedDurationStats(conditionArgs, character.getLevel());
+		return new AccumulatedDurationStats(conditionArgs);
 	}
 
 	@Override
 	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, DirectComponent directComponent) {
-		var conditionArgs = getDirectComponentConditionArgs(character, spell, target, directComponent);
+		var conditionArgs = getDirectComponentConditionArgs(character, spell, target);
+
+		conditionArgs.setSpellSchool(directComponent.school());
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
 
 	@Override
 	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PeriodicComponent periodicComponent) {
-		var conditionArgs = getPeriodicComponentConditionArgs(character, spell, target, periodicComponent);
+		var conditionArgs = getPeriodicComponentConditionArgs(character, spell, target);
+
+		conditionArgs.setSpellSchool(periodicComponent.school());
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
 
 	private AccumulatedSpellStats newAccumulatedSpellStats(Character character, AttributeConditionArgs conditionArgs) {
-		var spellStats = new AccumulatedSpellStats(conditionArgs, character.getLevel());
+		var spellStats = new AccumulatedSpellStats(conditionArgs);
 		spellStats.accumulateBaseStatInfo(character.getBaseStatInfo());
 		return spellStats;
 	}
@@ -157,14 +165,14 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public SpellCastSnapshot getSpellCastSnapshot(Character character, Ability ability) {
-		var castStats = getAccumulatedCastStats(character, ability);
+	public SpellCastSnapshot getSpellCastSnapshot(Character character, Ability ability, Character target) {
+		var castStats = getAccumulatedCastStats(character, ability, target);
 
 		return getSpellCastSnapshot(character, ability, castStats);
 	}
 
-	private AccumulatedCastStats getAccumulatedCastStats(Character character, Ability ability) {
-		var castStats = newAccumulatedCastStats(character, ability);
+	private AccumulatedCastStats getAccumulatedCastStats(Character character, Ability ability, Character target) {
+		var castStats = newAccumulatedCastStats(character, ability, target);
 
 		accumulateEffects(character, castStats);
 		return castStats;
@@ -222,18 +230,18 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, BaseStatsSnapshot baseStats) {
+	public SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, Character target, BaseStatsSnapshot baseStats) {
 		if (ability.getCost() == null) {
 			return null;
 		}
 
-		var costStats = getAccumulatedCostStats(character, ability, baseStats);
+		var costStats = getAccumulatedCostStats(character, ability, target, baseStats);
 
 		return getSpellCostSnapshot(character, ability, costStats);
 	}
 
-	private AccumulatedCostStats getAccumulatedCostStats(Character character, Ability ability, BaseStatsSnapshot baseStats) {
-		var costStats = newAccumulatedCostStats(character, ability);
+	private AccumulatedCostStats getAccumulatedCostStats(Character character, Ability ability, Character target, BaseStatsSnapshot baseStats) {
+		var costStats = newAccumulatedCostStats(character, ability, target);
 
 		accumulateEffects(character, costStats, baseStats);
 		return costStats;
@@ -479,13 +487,13 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		var baseStatsSnapshot = getBaseStatsSnapshot(character);
 
-		var conditionArgs = new AttributeConditionArgs(ActionType.SPELL);
+		var conditionArgs = AttributeConditionArgs.forAnySpell(character);
 		var levelDifference = 3;
 
-		var castStats = new AccumulatedCastStats(conditionArgs, character.getLevel());
-		var hitStats = new AccumulatedHitStats(conditionArgs, character.getLevel());
-		var spellStats = new AccumulatedSpellStats(conditionArgs, character.getLevel());
-		var targetStats = new AccumulatedTargetStats(conditionArgs, character.getLevel());
+		var castStats = new AccumulatedCastStats(conditionArgs);
+		var hitStats = new AccumulatedHitStats(conditionArgs);
+		var spellStats = new AccumulatedSpellStats(conditionArgs);
+		var targetStats = new AccumulatedTargetStats(conditionArgs);
 
 		spellStats.accumulateBaseStatInfo(character.getBaseStatInfo());
 
@@ -495,9 +503,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		snapshot.setBaseStatsSnapshot(baseStatsSnapshot);
 		snapshot.setSpellPower((int) spellStats.getPower());
-		snapshot.setSpellDamage(getSpellDamage(character, conditionArgs, null));
+		snapshot.setSpellDamage(getSpellDamage(character, conditionArgs));
 
-		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character, conditionArgs));
+		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character));
 		snapshot.setSpellHitPctBonus(getSpellHitPctBonus(character, hitStats));
 		snapshot.setSpellHitPct(getSpellHitPct(character, hitStats, levelDifference));
 		snapshot.setSpellCritPct(getSpellCritPct(character, spellStats, baseStatsSnapshot, targetStats));
@@ -509,17 +517,23 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return snapshot;
 	}
 
-	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character, AttributeConditionArgs conditionArgs) {
+	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character) {
 		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
 				Function.identity(),
-				school -> getSpellDamage(character, conditionArgs, school)
+				school -> getSpellDamage(character, school)
 		));
 	}
 
-	private int getSpellDamage(Character character, AttributeConditionArgs conditionArgs, SpellSchool school) {
-		var spellStats = new AccumulatedSpellStats(conditionArgs, character.getLevel());
-		conditionArgs.setPowerType(PowerType.SPELL_DAMAGE);
+	private int getSpellDamage(Character character, SpellSchool school) {
+		var conditionArgs = AttributeConditionArgs.forAnySpell(character);
+
 		conditionArgs.setSpellSchool(school);
+		return getSpellDamage(character, conditionArgs);
+	}
+
+	private int getSpellDamage(Character character, AttributeConditionArgs conditionArgs) {
+		var spellStats = new AccumulatedSpellStats(conditionArgs);
+		conditionArgs.setPowerType(PowerType.SPELL_DAMAGE);
 		accumulateEffects(character, spellStats);
 		return (int) spellStats.getPower();
 	}

@@ -20,11 +20,6 @@ public record AbilityIdCondition(AbilityId abilityId) implements AttributeCondit
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getAbilityId() == abilityId;
-	}
-
-	@Override
 	public String toString() {
 		return abilityId.toString();
 	}

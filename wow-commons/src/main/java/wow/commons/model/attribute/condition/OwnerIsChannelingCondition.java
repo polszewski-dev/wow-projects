@@ -25,11 +25,6 @@ public record OwnerIsChannelingCondition(AbilityId abilityId) implements Attribu
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.isOwnerChannelig(abilityId);
-	}
-
-	@Override
 	public String toString() {
 		return PREFIX + abilityId;
 	}

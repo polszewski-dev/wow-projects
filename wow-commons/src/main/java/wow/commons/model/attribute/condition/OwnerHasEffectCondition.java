@@ -25,11 +25,6 @@ public record OwnerHasEffectCondition(AbilityId abilityId) implements AttributeC
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.hasOwnerEffect(abilityId);
-	}
-
-	@Override
 	public String toString() {
 		return PREFIX + abilityId;
 	}

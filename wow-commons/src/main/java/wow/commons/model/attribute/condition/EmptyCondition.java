@@ -6,11 +6,6 @@ package wow.commons.model.attribute.condition;
  */
 public record EmptyCondition() implements AttributeCondition {
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return true;
-	}
-
-	@Override
 	public boolean isEmpty() {
 		return true;
 	}

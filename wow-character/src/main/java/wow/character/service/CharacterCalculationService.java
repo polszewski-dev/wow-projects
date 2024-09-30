@@ -16,9 +16,9 @@ import wow.commons.model.spell.component.DirectComponent;
 public interface CharacterCalculationService {
 	AccumulatedBaseStats newAccumulatedBaseStats(Character character);
 
-	AccumulatedCastStats newAccumulatedCastStats(Character character, Ability ability);
+	AccumulatedCastStats newAccumulatedCastStats(Character character, Ability ability, Character target);
 
-	AccumulatedCostStats newAccumulatedCostStats(Character character, Ability ability);
+	AccumulatedCostStats newAccumulatedCostStats(Character character, Ability ability, Character target);
 
 	AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school);
 
@@ -34,11 +34,11 @@ public interface CharacterCalculationService {
 
 	BaseStatsSnapshot getBaseStatsSnapshot(Character character, AccumulatedBaseStats stats);
 
-	SpellCastSnapshot getSpellCastSnapshot(Character character, Ability ability);
+	SpellCastSnapshot getSpellCastSnapshot(Character character, Ability ability, Character target);
 
 	SpellCastSnapshot getSpellCastSnapshot(Character character, Ability ability, AccumulatedCastStats castStats);
 
-	SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, BaseStatsSnapshot baseStats);
+	SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, Character target, BaseStatsSnapshot baseStats);
 
 	SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, AccumulatedCostStats costStats);
 

@@ -20,11 +20,6 @@ public record SpellSchoolCondition(SpellSchool spellSchool) implements Attribute
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getSpellSchool() == spellSchool;
-	}
-
-	@Override
 	public String toString() {
 		return spellSchool.toString();
 	}

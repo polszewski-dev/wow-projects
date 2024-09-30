@@ -1,11 +1,9 @@
 package wow.character.model.character;
 
 import wow.character.model.effect.EffectCollection;
+import wow.commons.model.Percent;
 import wow.commons.model.buff.BuffIdAndRank;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PetType;
+import wow.commons.model.character.*;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
@@ -98,5 +96,21 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	static int getLevelDifference(Character caster, Character target) {
 		return target.getLevel() - caster.getLevel();
+	}
+
+	Percent getHealthPct();
+
+	void setHealthPct(Percent healthPct);
+
+	default MovementType getMovementType() {
+		return MovementType.RUNNING;
+	}
+
+	default DruidFormType getDruidForm() {
+		return null;
+	}
+
+	default boolean hasEffect(AbilityId abilityId) {
+		return false;
 	}
 }

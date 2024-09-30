@@ -2,8 +2,8 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 
 /**
  * User: POlszewski
@@ -28,10 +28,8 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	private double maxMana;
 	private double maxManaPct;
 
-	private static final AttributeConditionArgs NO_ARGS = new AttributeConditionArgs(null);
-
-	public AccumulatedBaseStats(int characterLevel) {
-		super(NO_ARGS, characterLevel);
+	public AccumulatedBaseStats(AttributeConditionArgs conditionArgs) {
+		super(conditionArgs);
 	}
 
 	private AccumulatedBaseStats(AccumulatedBaseStats stats) {

@@ -20,16 +20,10 @@ public record MovementTypeCondition(MovementType type) implements AttributeCondi
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getMovementType() == type;
-	}
-
-	@Override
 	public String toString() {
 		return type.toString();
 	}
 
 	private static final Map<MovementType, MovementTypeCondition> CACHE = EnumUtil.cache(
 			MovementType.class, MovementType.values(), MovementTypeCondition::new);
-
 }

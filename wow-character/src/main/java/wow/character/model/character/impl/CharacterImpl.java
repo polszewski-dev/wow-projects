@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
+import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.pve.Phase;
 
@@ -24,6 +25,7 @@ public abstract class CharacterImpl implements Character {
 	private final Spellbook spellbook;
 	private final Buffs buffs;
 	private Character target;
+	private Percent healthPct = Percent._100;
 
 	protected CharacterImpl(Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
 		this.phase = phase;
@@ -38,5 +40,10 @@ public abstract class CharacterImpl implements Character {
 	@Override
 	public void setTarget(Character target) {
 		this.target = target;
+	}
+
+	@Override
+	public void setHealthPct(Percent healthPct) {
+		this.healthPct = healthPct;
 	}
 }

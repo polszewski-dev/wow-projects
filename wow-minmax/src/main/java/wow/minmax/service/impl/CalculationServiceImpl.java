@@ -135,8 +135,8 @@ public class CalculationServiceImpl implements CalculationService {
 		stats.setDirectComponent(directComponent);
 		stats.setPeriodicComponent(periodicComponent);
 
-		var castStats = characterCalculationService.newAccumulatedCastStats(character, ability);
-		var costStats = characterCalculationService.newAccumulatedCostStats(character, ability);
+		var castStats = characterCalculationService.newAccumulatedCastStats(character, ability, target);
+		var costStats = characterCalculationService.newAccumulatedCostStats(character, ability, target);
 		var targetStats = characterCalculationService.newAccumulatedTargetStats(character, ability, PowerType.SPELL_DAMAGE, ability.getSchool());
 		var hitStats = characterCalculationService.newAccumulatedHitStats(character, ability, target);
 
@@ -218,7 +218,7 @@ public class CalculationServiceImpl implements CalculationService {
 		abilityStats.solveStatConversions(rotationStats.getStatConversions(), base);
 		calculateDamagingSpellStats(character, ability, abilityStats, target, snapshot, base);
 
-		var recalculate = specialAbilitySolver.solveAbilities(snapshot, abilityStats, rotationStats);
+		var recalculate = specialAbilitySolver.solveAbilities(snapshot, abilityStats, rotationStats, character);
 
 		if (recalculate) {
 			calculateDamagingSpellStats(character, ability, abilityStats, target, snapshot, base);

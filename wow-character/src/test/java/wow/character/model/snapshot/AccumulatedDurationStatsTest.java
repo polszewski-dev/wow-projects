@@ -2,11 +2,12 @@ package wow.character.model.snapshot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import wow.character.WowCharacterSpringTest;
+import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.spell.ActionType;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import static wow.commons.model.attribute.AttributeId.*;
  * User: POlszewski
  * Date: 2023-11-04
  */
-class AccumulatedDurationStatsTest {
+class AccumulatedDurationStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getDuration() {
 		accumulateTestAttributes(AttributeId.DURATION);
@@ -68,13 +69,14 @@ class AccumulatedDurationStatsTest {
 		durationStats.accumulateAttributes(list, 2);
 	}
 
-	int level = 70;
 	AccumulatedDurationStats durationStats;
 
 	@BeforeEach
 	void setUp() {
-		var conditionArgs = new AttributeConditionArgs(ActionType.SPELL);
+		var caster = getCharacter();
+		var spell = caster.getAbility(AbilityId.SHADOW_BOLT).orElseThrow();
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
 
-		this.durationStats = new AccumulatedDurationStats(conditionArgs, level);
+		this.durationStats = new AccumulatedDurationStats(conditionArgs);
 	}
 }

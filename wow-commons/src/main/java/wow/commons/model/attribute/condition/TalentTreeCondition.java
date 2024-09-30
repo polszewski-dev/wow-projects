@@ -20,11 +20,6 @@ public record TalentTreeCondition(TalentTree talentTree) implements AttributeCon
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getTalentTree() == talentTree;
-	}
-
-	@Override
 	public String toString() {
 		return talentTree.toString();
 	}

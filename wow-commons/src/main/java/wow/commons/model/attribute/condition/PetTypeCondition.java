@@ -20,11 +20,6 @@ public record PetTypeCondition(PetType petType) implements AttributeCondition {
 	}
 
 	@Override
-	public boolean test(AttributeConditionArgs args) {
-		return args.getPetType() == petType;
-	}
-
-	@Override
 	public String toString() {
 		return petType.toString();
 	}
