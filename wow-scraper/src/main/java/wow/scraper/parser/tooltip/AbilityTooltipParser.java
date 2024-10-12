@@ -100,7 +100,7 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 	@Override
 	protected void afterParse() {
 		if (rank == null) {
-			rank = getScraperConfig().getRankOverrides().get(getSpellId());
+			rank = getScraperDatafixes().getRankOverrides().get(getSpellId());
 			if (rank == null) {
 				rank = 0;
 			}

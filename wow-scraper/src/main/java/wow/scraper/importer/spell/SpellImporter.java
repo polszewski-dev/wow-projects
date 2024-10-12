@@ -28,7 +28,7 @@ public class SpellImporter extends WowheadImporter<WowheadSpellCategory, JsonSpe
 
 	private List<JsonSpellDetails> getMissingSpells(List<JsonSpellDetails> details) {
 		var existingIds = details.stream().map(JsonSpellDetails::getId).collect(Collectors.toSet());
-		var missingSpellsIds = getScraperConfig().getMissingSpellIds(getCategory(), getGameVersion()).stream()
+		var missingSpellsIds = getScraperDatafixes().getMissingSpellIds(getCategory(), getGameVersion()).stream()
 				.filter(x -> !existingIds.contains(x))
 				.toList();
 
@@ -37,7 +37,7 @@ public class SpellImporter extends WowheadImporter<WowheadSpellCategory, JsonSpe
 
 	@Override
 	protected boolean isToBeSaved(JsonSpellDetails details) {
-		return !getScraperConfig().isSpellIgnored(details.getId(), getCategory(), getGameVersion());
+		return !getScraperDatafixes().isSpellIgnored(details.getId(), getCategory(), getGameVersion());
 	}
 
 	@Override

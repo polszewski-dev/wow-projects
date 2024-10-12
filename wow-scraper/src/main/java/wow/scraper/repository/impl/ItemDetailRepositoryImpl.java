@@ -2,6 +2,7 @@ package wow.scraper.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.item.*;
 import wow.scraper.model.JsonItemDetails;
@@ -16,8 +17,8 @@ import java.util.stream.Stream;
  */
 @Repository
 public class ItemDetailRepositoryImpl extends DetailRepository<WowheadItemCategory, JsonItemDetails, ItemImporter> implements ItemDetailRepository {
-	public ItemDetailRepositoryImpl(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher) {
-		super(scraperConfig, wowheadFetcher);
+	public ItemDetailRepositoryImpl(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher) {
+		super(scraperConfig, scraperDatafixes, wowheadFetcher);
 	}
 
 	@Override

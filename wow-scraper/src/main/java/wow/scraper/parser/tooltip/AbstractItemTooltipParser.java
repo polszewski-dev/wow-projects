@@ -22,6 +22,6 @@ public abstract class AbstractItemTooltipParser extends AbstractTooltipParser<Js
 
 	@Override
 	protected PhaseId getPhaseOverride() {
-		return getScraperConfig().getItemPhaseOverrides().get(details.getId());
+		return getScraperDatafixes().getItemPhaseOverrides().get(details.getId());
 	}
 }

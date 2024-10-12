@@ -2,6 +2,7 @@ package wow.scraper.repository.impl;
 
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.WowheadImporter;
 import wow.scraper.model.JsonCommonDetails;
@@ -19,10 +20,10 @@ import java.util.stream.Stream;
 public abstract class DetailRepository<C, D extends JsonCommonDetails, I extends WowheadImporter<C, D>> {
 	private final Map<C, I> importers;
 
-	protected DetailRepository(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher) {
+	protected DetailRepository(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher) {
 		this.importers = createImporters()
 				.collect(Collectors.toMap(WowheadImporter::getCategory, x -> x));
-		importers.values().forEach(x -> x.init(scraperConfig, wowheadFetcher));
+		importers.values().forEach(x -> x.init(scraperConfig, scraperDatafixes, wowheadFetcher));
 	}
 
 	protected abstract Stream<I> createImporters();

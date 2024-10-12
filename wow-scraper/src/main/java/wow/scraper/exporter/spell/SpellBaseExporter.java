@@ -50,7 +50,7 @@ public abstract class SpellBaseExporter<B extends WowExcelBuilder> extends Excel
 	}
 
 	private void fixData(JsonSpellDetails details) {
-		String nameOverride = getScraperConfig().getSpellNameOverrides().get(details.getName());
+		String nameOverride = getScraperDatafixes().getSpellNameOverrides().get(details.getName());
 
 		if (nameOverride != null) {
 			details.setName(nameOverride);
@@ -60,7 +60,7 @@ public abstract class SpellBaseExporter<B extends WowExcelBuilder> extends Excel
 	}
 
 	protected boolean isTalentSpell(JsonSpellDetails details) {
-		return getScraperConfig().isTalentSpell(details.getName(), details.getCategory(), details.getReqVersion());
+		return getScraperDatafixes().isTalentSpell(details.getName(), details.getCategory(), details.getReqVersion());
 	}
 
 	protected String getNameVersionKey(JsonSpellDetails x) {

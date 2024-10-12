@@ -6,10 +6,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.config.ScraperContextSource;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.ExcelExporter;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * User: POlszewski
@@ -30,9 +31,14 @@ public abstract class ScraperTool implements ScraperContextSource {
 		return context.getBean(ScraperContext.class);
 	}
 
-	protected <B extends WowExcelBuilder, E extends ExcelExporter<B>> void export(String fileName, Function<ScraperConfig, B> builderFactory, E... exporters) {
+	protected <B extends WowExcelBuilder, E extends ExcelExporter<B>> void export(
+			String fileName,
+			BiFunction<ScraperConfig, ScraperDatafixes, B> builderFactory,
+			E... exporters
+	) {
 		var config = getScraperConfig();
-		var builder = builderFactory.apply(config);
+		var datafixes = getScraperDatafixes();
+		var builder = builderFactory.apply(config, datafixes);
 
 		builder.start();
 

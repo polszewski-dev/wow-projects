@@ -2,6 +2,7 @@ package wow.scraper.exporter.pve.excel;
 
 import lombok.Getter;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.JsonFactionDetails;
 
@@ -15,8 +16,8 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelSheetNames.FACT
 public class FactionExcelBuilder extends WowExcelBuilder {
 	private final FactionSheetWriter factionSheetWriter;
 
-	public FactionExcelBuilder(ScraperConfig config) {
-		super(config);
+	public FactionExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.factionSheetWriter = new FactionSheetWriter(this);
 	}
 

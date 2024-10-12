@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.model.JsonCommonDetails;
 
@@ -24,11 +25,13 @@ public abstract class WowheadImporter<C, D extends JsonCommonDetails>  {
 	private final C category;
 	private GameVersionId gameVersion;
 	private ScraperConfig scraperConfig;
+	private ScraperDatafixes scraperDatafixes;
 	private WowheadFetcher wowheadFetcher;
 	private final GameVersionMap<Integer, D> result = new GameVersionMap<>();
 
-	public void init(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher) {
+	public void init(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher) {
 		this.scraperConfig = scraperConfig;
+		this.scraperDatafixes = scraperDatafixes;
 		this.wowheadFetcher = wowheadFetcher;
 	}
 

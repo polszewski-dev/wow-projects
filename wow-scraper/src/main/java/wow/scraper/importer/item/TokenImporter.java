@@ -30,7 +30,7 @@ public class TokenImporter extends ItemImporter {
 				.map(JsonItemDetails::getId)
 				.collect(Collectors.toSet());
 
-		return getScraperConfig().getTokenToTradedFor().keySet().stream()
+		return getScraperDatafixes().getTokenToTradedFor().keySet().stream()
 				.filter(x -> !existingIds.contains(x))
 				.toList();
 	}

@@ -29,7 +29,7 @@ public class NpcExporter extends PveBaseExporter<JsonNpcDetails, NpcExcelBuilder
 
 	@Override
 	protected void fixData() {
-		data.removeIf(x -> getScraperConfig().getIgnoredNpcIds().contains(x.getId()));
+		data.removeIf(x -> getScraperDatafixes().getIgnoredNpcIds().contains(x.getId()));
 	}
 
 	@Override

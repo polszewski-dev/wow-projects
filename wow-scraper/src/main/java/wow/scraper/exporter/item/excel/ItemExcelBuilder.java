@@ -3,6 +3,7 @@ package wow.scraper.exporter.item.excel;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
 
@@ -23,8 +24,8 @@ public class ItemExcelBuilder extends WowExcelBuilder {
 	private final ItemSheetWriter itemSheetWriter;
 	private final ItemSetSheetWriter itemSetSheetWriter;
 
-	public ItemExcelBuilder(ScraperConfig config) {
-		super(config);
+	public ItemExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.itemSheetWriter = new ItemSheetWriter(this);
 		this.itemSetSheetWriter = new ItemSetSheetWriter(this);
 	}
@@ -51,7 +52,7 @@ public class ItemExcelBuilder extends WowExcelBuilder {
 	}
 
 	private boolean isToBeIgnored(int itemId) {
-		return config.getIgnoredItemIds().contains(itemId);
+		return datafixes.getIgnoredItemIds().contains(itemId);
 	}
 
 	private final List<ItemTooltipParser> itemParserQueue = new ArrayList<>();

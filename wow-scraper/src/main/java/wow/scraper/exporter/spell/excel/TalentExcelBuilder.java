@@ -1,6 +1,7 @@
 package wow.scraper.exporter.spell.excel;
 
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.parser.tooltip.TalentTooltipParser;
 
@@ -15,8 +16,8 @@ public class TalentExcelBuilder extends WowExcelBuilder {
 
 	private String currentName;
 
-	public TalentExcelBuilder(ScraperConfig config) {
-		super(config);
+	public TalentExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.talentSheetWriter = new TalentSheetWriter(this);
 	}
 

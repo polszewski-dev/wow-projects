@@ -46,6 +46,6 @@ public class ZoneSheetWriter extends ExcelSheetWriter<JsonZoneDetails, ZoneExcel
 	}
 
 	private String getShortName(JsonZoneDetails zone) {
-		return config.getDungeonShortNames().get(zone.getName());
+		return datafixes.getDungeonShortNames().get(zone.getName());
 	}
 }

@@ -14,6 +14,7 @@ import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.config.ScraperContextImpl;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parser.tooltip.AbstractTooltipParser;
 import wow.scraper.parser.tooltip.ItemEffectParser;
@@ -40,6 +41,7 @@ import static wow.scraper.util.ExportUtil.getId;
 @RequiredArgsConstructor
 public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	private final ScraperConfig scraperConfig;
+	private final ScraperDatafixes scraperDatafixes;
 	private final ItemDetailRepository itemDetailRepository;
 	private final SpellDetailRepository spellDetailRepository;
 	private final SpellPatternRepository spellPatternRepository;
@@ -250,7 +252,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 
 	private ScraperContext getScraperContext() {
 		return new ScraperContextImpl(
-				null, itemDetailRepository, spellDetailRepository, null, null, spellPatternRepository, null, null, null, null, scraperConfig
+				null, itemDetailRepository, spellDetailRepository, null, null, spellPatternRepository, null, null, null, null, scraperConfig, scraperDatafixes
 		);
 	}
 

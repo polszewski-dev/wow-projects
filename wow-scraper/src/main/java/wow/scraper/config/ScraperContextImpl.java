@@ -25,4 +25,5 @@ public class ScraperContextImpl implements ScraperContext {
 	private final FactionDetailRepository factionDetailRepository;
 	private final ItemSpellRepository itemSpellRepository;
 	private final ScraperConfig scraperConfig;
+	private final ScraperDatafixes scraperDatafixes;
 }

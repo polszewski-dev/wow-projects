@@ -2,6 +2,7 @@ package wow.scraper.exporter.pve.excel;
 
 import lombok.Getter;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.JsonNpcDetails;
 
@@ -15,8 +16,8 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelSheetNames.NPCS
 public class NpcExcelBuilder extends WowExcelBuilder {
 	private final NpcSheetWriter npcSheetWriter;
 
-	public NpcExcelBuilder(ScraperConfig config) {
-		super(config);
+	public NpcExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.npcSheetWriter = new NpcSheetWriter(this);
 	}
 

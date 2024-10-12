@@ -49,7 +49,7 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 			return;
 		}
 
-		rank = getScraperConfig().getRankOverrides().get(getSpellId());
+		rank = getScraperDatafixes().getRankOverrides().get(getSpellId());
 
 		if (rank == null) {
 			throw new IllegalArgumentException("No rank: " + name);
@@ -76,10 +76,10 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 	}
 
 	public Integer getTalentCalculatorPosition() {
-		return getScraperConfig().getTalentCalculatorPosition(getGameVersion(), TalentId.parse(getName()));
+		return getScraperDatafixes().getTalentCalculatorPosition(getGameVersion(), TalentId.parse(getName()));
 	}
 
 	public boolean isTalentSpell() {
-		return getScraperConfig().isTalentSpell(getName(), getCategory(), getGameVersion());
+		return getScraperDatafixes().isTalentSpell(getName(), getCategory(), getGameVersion());
 	}
 }

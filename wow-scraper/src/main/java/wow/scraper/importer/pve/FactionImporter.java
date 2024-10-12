@@ -2,6 +2,7 @@ package wow.scraper.importer.pve;
 
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.model.JsonFactionDetails;
 
@@ -10,8 +11,8 @@ import wow.scraper.model.JsonFactionDetails;
  * Date: 2023-06-26
  */
 public class FactionImporter extends PveImporter<JsonFactionDetails> {
-	public FactionImporter(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher) {
-		super(scraperConfig, wowheadFetcher);
+	public FactionImporter(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher) {
+		super(scraperConfig, scraperDatafixes, wowheadFetcher);
 	}
 
 	@Override

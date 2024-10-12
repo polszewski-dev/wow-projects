@@ -5,8 +5,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.pve.GameVersionId;
-import wow.scraper.config.ScraperConfig;
 import wow.scraper.config.ScraperContext;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.model.*;
 
 import java.util.*;
@@ -51,7 +51,7 @@ public class WowheadSourceParser {
 		for (GameVersionId gameVersion : scraperContext.getScraperConfig().getGameVersions()) {
 			SOURCE_OVERRIDES_MAP
 					.computeIfAbsent(gameVersion, x -> new SourceOverrides(gameVersion))
-					.addSourceOverrides(scraperContext.getScraperConfig());
+					.addSourceOverrides(scraperContext.getScraperDatafixes());
 		}
 	}
 
@@ -140,7 +140,7 @@ public class WowheadSourceParser {
 
 	@SneakyThrows
 	private static String sourceNpcDrop(String npcName, Integer npcId, GameVersionId gameVersion) {
-		Integer newNpcId = scraperContext.getScraperConfig().getSourceNpcToNpcReplacements().get(npcId);
+		Integer newNpcId = scraperContext.getScraperDatafixes().getSourceNpcToNpcReplacements().get(npcId);
 
 		if (newNpcId != null) {
 			return sourceNpcDrop(null, newNpcId, gameVersion);
@@ -164,7 +164,7 @@ public class WowheadSourceParser {
 	}
 
 	private String sourceContainerObject(String containerName, Integer containerId, Integer zoneId, GameVersionId gameVersion) {
-		Integer newNpcId = scraperContext.getScraperConfig().getSourceObjectToNpcReplacements().get(containerId);
+		Integer newNpcId = scraperContext.getScraperDatafixes().getSourceObjectToNpcReplacements().get(containerId);
 
 		if (newNpcId != null) {
 			return sourceNpcDrop(null, newNpcId, gameVersion);
@@ -251,17 +251,17 @@ public class WowheadSourceParser {
 			return name.contains(pattern);
 		}
 
-		public void addSourceOverrides(ScraperConfig config) {
-			pvpItemNameParts.addAll(config.getPvpItemNameParts());
-			pvpItemIds.addAll(config.getPvpItemIds());
-			addWorldDropOverrides(config);
-			addNpcDropOverrides(config.getNpcDropOverrides());
-			addTradedForOverrides(config.getTokenToTradedFor(), WowheadSourceParser::sourceToken);
-			addTradedForOverrides(config.getItemStartingQuestToTradedFor(), WowheadSourceParser::sourceItemStartingQuest);
+		public void addSourceOverrides(ScraperDatafixes datafixes) {
+			pvpItemNameParts.addAll(datafixes.getPvpItemNameParts());
+			pvpItemIds.addAll(datafixes.getPvpItemIds());
+			addWorldDropOverrides(datafixes);
+			addNpcDropOverrides(datafixes.getNpcDropOverrides());
+			addTradedForOverrides(datafixes.getTokenToTradedFor(), WowheadSourceParser::sourceToken);
+			addTradedForOverrides(datafixes.getItemStartingQuestToTradedFor(), WowheadSourceParser::sourceItemStartingQuest);
 		}
 
-		private void addWorldDropOverrides(ScraperConfig config) {
-			for (Integer itemId : config.getWorldDropOverrides()) {
+		private void addWorldDropOverrides(ScraperDatafixes datafixes) {
+			for (Integer itemId : datafixes.getWorldDropOverrides()) {
 				getSourceList(itemId).add(SOURCE_WORLD_DROP);
 			}
 		}

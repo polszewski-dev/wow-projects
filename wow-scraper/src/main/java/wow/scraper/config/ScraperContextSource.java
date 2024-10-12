@@ -64,4 +64,9 @@ public interface ScraperContextSource extends ScraperContext {
 	default ScraperConfig getScraperConfig() {
 		return getScraperContext().getScraperConfig();
 	}
+
+	@Override
+	default ScraperDatafixes getScraperDatafixes() {
+		return getScraperContext().getScraperDatafixes();
+	}
 }

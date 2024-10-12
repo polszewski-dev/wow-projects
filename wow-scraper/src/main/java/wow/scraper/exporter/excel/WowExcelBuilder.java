@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import polszewski.excel.writer.ExcelWriter;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 
 import java.io.File;
 
@@ -14,10 +15,12 @@ import java.io.File;
 @Getter
 public abstract class WowExcelBuilder {
 	protected final ScraperConfig config;
+	protected final ScraperDatafixes datafixes;
 	protected final ExcelWriter writer;
 
-	protected WowExcelBuilder(ScraperConfig config) {
+	protected WowExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
 		this.config = config;
+		this.datafixes = datafixes;
 		this.writer = new ExcelWriter();
 	}
 

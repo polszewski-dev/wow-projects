@@ -3,6 +3,7 @@ package wow.scraper.importer.pve;
 import lombok.SneakyThrows;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.parser.ZoneNpcListParser;
 import wow.scraper.model.JsonNpcDetails;
@@ -24,8 +25,8 @@ import static wow.scraper.importer.parser.ZoneNpcListParser.ParseResultType.NPC;
 public class NpcImporter extends PveImporter<JsonNpcDetails> {
 	private final ZoneDetailRepository zoneDetailRepository;
 
-	public NpcImporter(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher, ZoneDetailRepository zoneDetailRepository) {
-		super(scraperConfig, wowheadFetcher);
+	public NpcImporter(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher, ZoneDetailRepository zoneDetailRepository) {
+		super(scraperConfig, scraperDatafixes, wowheadFetcher);
 		this.zoneDetailRepository = zoneDetailRepository;
 	}
 
@@ -67,7 +68,7 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 	}
 
 	private void importWorldNpcs(GameVersionId gameVersion) {
-		var npcs = getWowheadFetcher().fetchNpcDetails(gameVersion, "npcs", getScraperConfig().getNpcIdsToFetch());
+		var npcs = getWowheadFetcher().fetchNpcDetails(gameVersion, "npcs", getScraperDatafixes().getNpcIdsToFetch());
 
 		for (var npc : npcs) {
 			assertNotPresent(gameVersion, npc);
@@ -79,7 +80,7 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 	}
 
 	private void createPseudoNpcs(GameVersionId gameVersion) {
-		getScraperConfig().getNpcToCreate().forEach((id, name) -> createPseudoNpc(gameVersion, id, name));
+		getScraperDatafixes().getNpcToCreate().forEach((id, name) -> createPseudoNpc(gameVersion, id, name));
 	}
 
 	@SneakyThrows
@@ -105,7 +106,7 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 	}
 
 	private List<Integer> getZoneId(JsonNpcDetails npc) {
-		return getScraperConfig().getNpcLocationOverrides().get(npc.getId());
+		return getScraperDatafixes().getNpcLocationOverrides().get(npc.getId());
 	}
 
 	private void assertNotPresent(GameVersionId gameVersion, JsonNpcDetails npc) {

@@ -29,7 +29,7 @@ public class ZoneExporter extends PveBaseExporter<JsonZoneDetails, ZoneExcelBuil
 
 	@Override
 	protected void fixData() {
-		data.removeIf(x -> getScraperConfig().getIgnoredZoneIds().contains(x.getId()));
+		data.removeIf(x -> getScraperDatafixes().getIgnoredZoneIds().contains(x.getId()));
 	}
 
 	@Override

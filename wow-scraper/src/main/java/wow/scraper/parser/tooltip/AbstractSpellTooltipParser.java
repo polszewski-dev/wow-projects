@@ -63,6 +63,6 @@ public abstract class AbstractSpellTooltipParser extends AbstractTooltipParser<J
 
 	@Override
 	protected PhaseId getPhaseOverride() {
-		return getScraperConfig().getSpellPhaseOverrides().get(details.getId());
+		return getScraperDatafixes().getSpellPhaseOverrides().get(details.getId());
 	}
 }

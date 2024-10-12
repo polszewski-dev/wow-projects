@@ -3,6 +3,7 @@ package wow.scraper.repository.impl;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.pve.ZoneImporter;
 import wow.scraper.model.JsonZoneDetails;
@@ -20,8 +21,8 @@ import java.util.Optional;
 public class ZoneDetailRepositoryImpl implements ZoneDetailRepository {
 	private final ZoneImporter zoneImporter;
 
-	public ZoneDetailRepositoryImpl(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher) {
-		this.zoneImporter = new ZoneImporter(scraperConfig, wowheadFetcher);
+	public ZoneDetailRepositoryImpl(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher) {
+		this.zoneImporter = new ZoneImporter(scraperConfig, scraperDatafixes, wowheadFetcher);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 
 import java.util.List;
 
@@ -18,11 +19,13 @@ import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
  */
 public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends ExcelCellWriter {
 	protected final ScraperConfig config;
+	protected final ScraperDatafixes datafixes;
 	private final ItemEffectMapper itemEffectMapper;
 
 	protected ExcelSheetWriter(B builder) {
 		super(builder.getWriter());
 		this.config = builder.getConfig();
+		this.datafixes = builder.getDatafixes();
 		this.itemEffectMapper = new ItemEffectMapper(null);
 	}
 

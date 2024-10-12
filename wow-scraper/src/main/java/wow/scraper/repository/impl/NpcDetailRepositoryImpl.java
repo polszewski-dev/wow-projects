@@ -3,6 +3,7 @@ package wow.scraper.repository.impl;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.pve.NpcImporter;
 import wow.scraper.model.JsonNpcDetails;
@@ -20,8 +21,8 @@ import java.util.Optional;
 public class NpcDetailRepositoryImpl implements NpcDetailRepository {
 	private final NpcImporter npcImporter;
 
-	public NpcDetailRepositoryImpl(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher, ZoneDetailRepository zoneDetailRepository) {
-		this.npcImporter = new NpcImporter(scraperConfig, wowheadFetcher, zoneDetailRepository);
+	public NpcDetailRepositoryImpl(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher, ZoneDetailRepository zoneDetailRepository) {
+		this.npcImporter = new NpcImporter(scraperConfig, scraperDatafixes, wowheadFetcher, zoneDetailRepository);
 	}
 
 	@Override

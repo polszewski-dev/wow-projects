@@ -65,7 +65,7 @@ public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, WowExce
 	}
 
 	private List<PveRole> getPveRoles(List<Effect> effects, ActivatedAbility activatedAbility, int itemId) {
-		var override = config.getPveRoleOverrides().get(itemId);
+		var override = datafixes.getPveRoleOverrides().get(itemId);
 		if (override != null) {
 			return List.of(override);
 		}
@@ -78,14 +78,14 @@ public abstract class ItemBaseSheetWriter<T> extends ExcelSheetWriter<T, WowExce
 	}
 
 	protected Side getRequiredSide(AbstractItemTooltipParser parser) {
-		Side side = config.getItemRequiredSideOverride(parser.getItemId())
+		Side side = datafixes.getItemRequiredSideOverride(parser.getItemId())
 				.orElse(parser.getRequiredSide());
 
 		if (parser.getRequiredFactionName() == null) {
 			return side;
 		}
 
-		Side factionSide = config.getRequiredSideFromFaction(parser.getRequiredFactionName());
+		Side factionSide = datafixes.getRequiredSideFromFaction(parser.getRequiredFactionName());
 
 		if (side != null && factionSide != null) {
 			assertBothAreEqual("side", side, factionSide);

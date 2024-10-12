@@ -5,6 +5,7 @@ import wow.commons.model.spell.ClassAbility;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentTree;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
@@ -23,8 +24,8 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 
 	private TalentTree currentTree;
 
-	public SpellBaseExcelBuilder(ScraperConfig config) {
-		super(config);
+	public SpellBaseExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.abilitySheetWriter = new AbilitySheetWriter(this);
 		this.abilitySpellSheetWriter = new SpellSheetWriter(this);
 		this.abilityEffectSheetWriter = new EffectSheetWriter(this, MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES, MAX_ABILITY_EFFECT_EVENTS);

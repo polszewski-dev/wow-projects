@@ -3,6 +3,7 @@ package wow.scraper.repository.impl;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.pve.FactionImporter;
 import wow.scraper.model.JsonFactionDetails;
@@ -18,8 +19,8 @@ import java.util.List;
 public class FactionDetailRepositoryImpl implements FactionDetailRepository {
 	private final FactionImporter factionImporter;
 
-	public FactionDetailRepositoryImpl(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher) {
-		this.factionImporter = new FactionImporter(scraperConfig, wowheadFetcher);
+	public FactionDetailRepositoryImpl(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher) {
+		this.factionImporter = new FactionImporter(scraperConfig, scraperDatafixes, wowheadFetcher);
 	}
 
 	@Override

@@ -184,9 +184,9 @@ public class ItemEffectParser extends AbstractTooltipParser<JsonCommonDetails> {
 	@Override
 	protected PhaseId getPhaseOverride() {
 		if (details instanceof JsonItemDetails) {
-			return getScraperConfig().getItemPhaseOverrides().get(details.getId());
+			return getScraperDatafixes().getItemPhaseOverrides().get(details.getId());
 		} else {
-			return getScraperConfig().getSpellPhaseOverrides().get(details.getId());
+			return getScraperDatafixes().getSpellPhaseOverrides().get(details.getId());
 		}
 	}
 

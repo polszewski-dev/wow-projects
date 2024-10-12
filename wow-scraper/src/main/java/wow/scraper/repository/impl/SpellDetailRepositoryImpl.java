@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.GameVersionMap;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.fetcher.WowheadFetcher;
 import wow.scraper.importer.parser.EnchantIdParser;
 import wow.scraper.importer.parser.SpellIdParser;
@@ -34,8 +35,8 @@ public class SpellDetailRepositoryImpl extends DetailRepository<WowheadSpellCate
 	private final ItemDetailRepository itemDetailRepository;
 	private final WowheadFetcher wowheadFetcher;
 
-	public SpellDetailRepositoryImpl(ScraperConfig scraperConfig, WowheadFetcher wowheadFetcher, ItemDetailRepository itemDetailRepository) {
-		super(scraperConfig, wowheadFetcher);
+	public SpellDetailRepositoryImpl(ScraperConfig scraperConfig, ScraperDatafixes scraperDatafixes, WowheadFetcher wowheadFetcher, ItemDetailRepository itemDetailRepository) {
+		super(scraperConfig, scraperDatafixes, wowheadFetcher);
 		this.itemDetailRepository = itemDetailRepository;
 		this.wowheadFetcher = wowheadFetcher;
 	}

@@ -2,6 +2,7 @@ package wow.scraper.exporter.pve.excel;
 
 import lombok.Getter;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.JsonZoneDetails;
 
@@ -15,8 +16,8 @@ import static wow.commons.repository.impl.parser.pve.PveBaseExcelSheetNames.ZONE
 public class ZoneExcelBuilder extends WowExcelBuilder {
 	private final ZoneSheetWriter zoneSheetWriter;
 
-	public ZoneExcelBuilder(ScraperConfig config) {
-		super(config);
+	public ZoneExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.zoneSheetWriter = new ZoneSheetWriter(this);
 	}
 

@@ -29,4 +29,6 @@ public interface ScraperContext {
 	ItemSpellRepository getItemSpellRepository();
 
 	ScraperConfig getScraperConfig();
+
+	ScraperDatafixes getScraperDatafixes();
 }

@@ -3,6 +3,7 @@ package wow.scraper.exporter.item.excel;
 import lombok.Getter;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.model.WowheadSpellCategory;
 import wow.scraper.parser.tooltip.EnchantTooltipParser;
@@ -17,8 +18,8 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.EN
 public class EnchantExcelBuilder extends WowExcelBuilder {
 	private final EnchantSheetWriter enchantSheetWriter;
 
-	public EnchantExcelBuilder(ScraperConfig config) {
-		super(config);
+	public EnchantExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.enchantSheetWriter = new EnchantSheetWriter(this);
 	}
 
@@ -34,6 +35,6 @@ public class EnchantExcelBuilder extends WowExcelBuilder {
 	}
 
 	private boolean isSpellToBeIgnored(int spellId, GameVersionId gameVersion) {
-		return config.isSpellIgnored(spellId, WowheadSpellCategory.ENCHANTS, gameVersion);
+		return datafixes.isSpellIgnored(spellId, WowheadSpellCategory.ENCHANTS, gameVersion);
 	}
 }

@@ -2,6 +2,7 @@ package wow.scraper.exporter.item.excel;
 
 import lombok.Getter;
 import wow.scraper.config.ScraperConfig;
+import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 import wow.scraper.parser.tooltip.TradedItemParser;
 
@@ -15,8 +16,8 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.TR
 public class TradedItemExcelBuilder extends WowExcelBuilder {
 	private final TradedItemSheetWriter tradedItemSheetWriter;
 
-	public TradedItemExcelBuilder(ScraperConfig config) {
-		super(config);
+	public TradedItemExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
+		super(config, datafixes);
 		this.tradedItemSheetWriter = new TradedItemSheetWriter(this);
 	}
 
@@ -32,6 +33,6 @@ public class TradedItemExcelBuilder extends WowExcelBuilder {
 	}
 
 	private boolean isToBeIgnored(int itemId) {
-		return config.getIgnoredItemIds().contains(itemId);
+		return datafixes.getIgnoredItemIds().contains(itemId);
 	}
 }
