@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { CharacterSelectionOptions } from '../../character/model/CharacterSelectionOptions';
 import { NewProfileOptions } from '../model/NewProfileOptions';
 import { ProfileInfo } from '../model/ProfileInfo';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class ProfileService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/profiles';
+	private readonly apiUrl = environment.profileApiUrl;
 
 	constructor(private http: HttpClient) { }
 

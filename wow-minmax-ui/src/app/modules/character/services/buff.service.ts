@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Buff } from '../model/buff/Buff';
 import { BuffListType } from '../model/buff/BuffListType';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class BuffService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/buffs';
+	private readonly apiUrl = environment.buffApiUrl;
 
 	constructor(private http: HttpClient) { }
 

@@ -6,12 +6,13 @@ import { RotationStats } from '../model/RotationStats';
 import { SpecialAbilityStats } from '../model/SpecialAbilityStats';
 import { SpellStats } from '../model/SpellStats';
 import { TalentStats } from '../model/TalentStats';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class StatsService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/stats';
+	private readonly apiUrl = environment.statsApiUrl;
 
 	constructor(private http: HttpClient) { }
 

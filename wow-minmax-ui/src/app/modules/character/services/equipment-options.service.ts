@@ -5,12 +5,13 @@ import { EquipmentOptions } from '../model/equipment/EquipmentOptions';
 import { GemOptions } from '../model/equipment/GemOptions';
 import { ItemOptions } from '../model/equipment/ItemOptions';
 import { ItemSlot } from '../model/equipment/ItemSlot';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EquipmentOptionsService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/equipment-options';
+	private readonly apiUrl = environment.equipmentOptionApiUrl;
 
 	constructor(private http: HttpClient) {}
 

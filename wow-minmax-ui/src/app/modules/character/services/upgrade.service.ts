@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { ItemFilter } from '../model/equipment/ItemFilter';
 import { ItemSlotGroup } from '../model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../model/upgrade/Upgrade';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class UpgradeService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/upgrades';
+	private readonly apiUrl = environment.upgradeApiUrl;
 
 	constructor(private http: HttpClient) { }
 

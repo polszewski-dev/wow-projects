@@ -6,12 +6,13 @@ import { EquippableItem } from '../model/equipment/EquippableItem';
 import { ItemSlot } from '../model/equipment/ItemSlot';
 import { ItemSlotGroup } from '../model/upgrade/ItemSlotGroup';
 import { Item } from '../model/equipment/Item';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EquipmentService {
-	private readonly apiUrl = 'http://localhost:8080/api/v1/equipments';
+	private readonly apiUrl = environment.equipmentApiUrl;
 
 	constructor(private http: HttpClient) {}
 
