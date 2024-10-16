@@ -1,17 +1,19 @@
 <div class="item-filter" [formGroup]="form">
 	<span class="item-filter-header">Filters:&nbsp;</span>
 
-	<div class="form-check form-check-inline" *ngIf="heroics">
-		<input
-			id="filter-heroics"
-			class="form-check-input"
-			type="checkbox"
-			formControlName="heroics"
-		>
-		<label class="form-check-label" for="filter-heroics">
-			heroics
-		</label>
-	</div>
+	@if (heroics) {
+		<div class="form-check form-check-inline">
+			<input
+				id="filter-heroics"
+				class="form-check-input"
+				type="checkbox"
+				formControlName="heroics"
+			>
+			<label class="form-check-label" for="filter-heroics">
+				heroics
+			</label>
+		</div>
+	}
 
 	<div class="form-check form-check-inline">
 		<input

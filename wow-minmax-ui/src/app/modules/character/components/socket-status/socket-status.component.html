@@ -1,11 +1,15 @@
-<div *ngIf="socketStatus$ | async as socketStatuses">
-	<span
-		*ngFor="let socketStatus of socketStatuses.socketStatuses; let i = index"
-		class="socket {{socketStatus.socketType.toLowerCase()}}-socket"
-		[ngClass]="{'socket-matching': socketStatus.matching, 'socket-notmatching': !socketStatus.matching}"
-	>[{{socketStatus.socketType.substr(0, 1)}}]</span>&nbsp;
-	<span
-		class="socket-bonus"
-		[ngClass]="{'socket-bonus-enabled': socketStatuses.socketBonusStatus.enabled, 'socket-bonus-disabled': !socketStatuses.socketBonusStatus.enabled}"
-	>{{socketStatuses.socketBonusStatus.bonus}}</span>
-</div>
+@if (socketStatus$ | async; as socketStatuses) {
+	<div>
+		@for (socketStatus of socketStatuses.socketStatuses; track socketStatus) {
+			<span
+				class="socket {{socketStatus.socketType.toLowerCase()}}-socket"
+				[ngClass]="{'socket-matching': socketStatus.matching, 'socket-notmatching': !socketStatus.matching}"
+			>[{{socketStatus.socketType.substr(0, 1)}}]</span>
+			@if ($last) {&nbsp;}
+		}
+		<span
+			class="socket-bonus"
+			[ngClass]="{'socket-bonus-enabled': socketStatuses.socketBonusStatus.enabled, 'socket-bonus-disabled': !socketStatuses.socketBonusStatus.enabled}"
+		>{{socketStatuses.socketBonusStatus.bonus}}</span>
+	</div>
+}

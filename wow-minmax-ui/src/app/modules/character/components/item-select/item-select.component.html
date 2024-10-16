@@ -1,5 +1,5 @@
-<ng-container *ngIf="equippedItem$ | async as equippedItem">
-	<ng-container *ngIf="itemOptions$ | async as itemOptions">
+@if (equippedItem$ | async; as equippedItem) {
+	@if (itemOptions$ | async; as itemOptions) {
 		<app-dropdown-select
 			[elements]="itemOptions.items"
 			[selection]="equippedItem[0]?.item"
@@ -9,5 +9,5 @@
 			[valueFormatter]="itemFormatter"
 			(selectionChanged)="onChange($event)"
 		></app-dropdown-select>
-	</ng-container>
-</ng-container>
+	}
+}

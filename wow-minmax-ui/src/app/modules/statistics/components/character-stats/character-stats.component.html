@@ -3,7 +3,9 @@
 		<tr>
 			<th scope="col" style="text-align: left">type</th>
 			<th scope="col">sp</th>
-			<th *ngFor="let school of character.characterClass.spellSchools" scope="col">{{school.toLowerCase()}}</th>
+			@for (school of character.characterClass.spellSchools; track school) {
+				<th scope="col">{{school.toLowerCase()}}</th>
+			}
 			<th scope="col">hit%</th>
 			<th scope="col">crit%</th>
 			<th scope="col">haste%</th>
@@ -18,23 +20,27 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let charStats of characterStats$ | async">
-			<td style="text-align: left">
-				<strong>{{charStats.type}}</strong>
-			</td>
-			<td>{{charStats.sp | number:'1.0-0'}}</td>
-			<td *ngFor="let school of character.characterClass.spellSchools">{{charStats.spellDamageBySchool[school] | number:'1.0-0'}}</td>
-			<td>{{charStats.hitPct | number:'1.2-2'}}</td>
-			<td>{{charStats.critPct| number:'1.2-2'}}</td>
-			<td>{{charStats.hastePct| number:'1.2-2'}}</td>
-			<td>{{charStats.hitRating | number:'1.0-0'}}</td>
-			<td>{{charStats.critRating | number:'1.0-0'}}</td>
-			<td>{{charStats.hasteRating | number:'1.0-0'}}</td>
-			<td>{{charStats.stamina | number:'1.0-0'}}</td>
-			<td>{{charStats.intellect | number:'1.0-0'}}</td>
-			<td>{{charStats.spirit | number:'1.0-0'}}</td>
-			<td>{{charStats.maxHealth | number:'1.0-0'}}</td>
-			<td>{{charStats.maxMana | number:'1.0-0'}}</td>
-		</tr>
+		@for (charStats of characterStats$ | async; track charStats) {
+			<tr>
+				<td style="text-align: left">
+					<strong>{{charStats.type}}</strong>
+				</td>
+				<td>{{charStats.sp | number:'1.0-0'}}</td>
+				@for (school of character.characterClass.spellSchools; track school) {
+					<td>{{charStats.spellDamageBySchool[school] | number:'1.0-0'}}</td>
+				}
+				<td>{{charStats.hitPct | number:'1.2-2'}}</td>
+				<td>{{charStats.critPct| number:'1.2-2'}}</td>
+				<td>{{charStats.hastePct| number:'1.2-2'}}</td>
+				<td>{{charStats.hitRating | number:'1.0-0'}}</td>
+				<td>{{charStats.critRating | number:'1.0-0'}}</td>
+				<td>{{charStats.hasteRating | number:'1.0-0'}}</td>
+				<td>{{charStats.stamina | number:'1.0-0'}}</td>
+				<td>{{charStats.intellect | number:'1.0-0'}}</td>
+				<td>{{charStats.spirit | number:'1.0-0'}}</td>
+				<td>{{charStats.maxHealth | number:'1.0-0'}}</td>
+				<td>{{charStats.maxMana | number:'1.0-0'}}</td>
+			</tr>
+		}
 	</tbody>
 </table>

@@ -7,11 +7,13 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let specialAbilityStats of specialAbilityStats$ | async">
-			<td [title]="specialAbilityStats.attributes">
-				<img [src]="specialAbilityStats.sourceIcon | icon" [title]="specialAbilityStats.sourceName"/>&nbsp;{{specialAbilityStats.description}}</td>
-			<td>{{specialAbilityStats.statEquivalent}}</td>
-			<td>{{specialAbilityStats.spEquivalent | number:'1.0-0' | blankZero}}</td>
-		</tr>
+		@for (specialAbilityStats of specialAbilityStats$ | async; track specialAbilityStats) {
+			<tr>
+				<td [title]="specialAbilityStats.attributes">
+					<img [src]="specialAbilityStats.sourceIcon | icon" [title]="specialAbilityStats.sourceName"/>&nbsp;{{specialAbilityStats.description}}</td>
+				<td>{{specialAbilityStats.statEquivalent}}</td>
+				<td>{{specialAbilityStats.spEquivalent | number:'1.0-0' | blankZero}}</td>
+			</tr>
+		}
 	</tbody>
 </table>

@@ -1,4 +1,4 @@
-<div *ngIf="dataLoaded$ | async">
+@if (dataLoaded$ | async) {
 	<table class="table table-striped equipment-table" style="width:100%">
 		<thead>
 			<tr>
@@ -12,11 +12,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<app-equipment-slot-editor
-				*ngFor="let itemSlot of itemSlots"
-				[itemSlot]="itemSlot"
-				[visible]="isSlotVisible(itemSlot)"
-			></app-equipment-slot-editor>
+			@for (itemSlot of itemSlots; track itemSlot) {
+				<app-equipment-slot-editor
+					[itemSlot]="itemSlot"
+					[visible]="isSlotVisible(itemSlot)"
+				></app-equipment-slot-editor>
+			}
 		</tbody>
 	</table>
 
@@ -29,4 +30,4 @@
 			(click)="resetEquipment()"
 		>Reset</button>
 	</div>
-</div>
+}

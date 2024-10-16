@@ -1,12 +1,13 @@
-<ng-container *ngIf="equippedItem$ | async as equippedItem">
-	<ng-container *ngIf="gemOptions$ | async as gemOptions">
-		<app-dropdown-select
-			*ngIf="equippedItem.gems.length >= (socketNo + 1)"
-			[elements]="getGemOptions(gemOptions, equippedItem)"
-			[selection]="equippedItem.gems[socketNo]"
-			[elementComparator]="gemComparator"
-			[valueFormatter]="gemFormatter"
-			(selectionChanged)="onGemChange($event)"
-		></app-dropdown-select>
-	</ng-container>
-</ng-container>
+@if (equippedItem$ | async; as equippedItem) {
+	@if (gemOptions$ | async; as gemOptions) {
+		@if (equippedItem.gems.length >= (socketNo + 1)) {
+			<app-dropdown-select
+				[elements]="getGemOptions(gemOptions, equippedItem)"
+				[selection]="equippedItem.gems[socketNo]"
+				[elementComparator]="gemComparator"
+				[valueFormatter]="gemFormatter"
+				(selectionChanged)="onGemChange($event)"
+			></app-dropdown-select>
+		}
+	}
+}

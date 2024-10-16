@@ -4,8 +4,7 @@
 		[selectedCharacterId]="selectedCharacterId"
 		(characterSelected)="onCharacterSelected($event)"
 	></app-profile-select>
-	<app-profile-editor
-		*ngIf="selectedCharacterId"
-		[selectedCharacterId]="selectedCharacterId"
-	></app-profile-editor>
+	@if (selectedCharacterId) {
+		<app-profile-editor [selectedCharacterId]="selectedCharacterId"></app-profile-editor>
+	}
 </div>

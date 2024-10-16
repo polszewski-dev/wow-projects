@@ -1,9 +1,9 @@
-<span
-	*ngIf="upgrade$ | async as upgrade else noUpgrades"
-	class="badge rounded-pill upgrade-badge upgrade-level-{{getUpgradeLevel(upgrade.changePct)}}"
-	title="Click to equip the best upgrade"
-	(click)="onEquipUpgradeClick(upgrade)"
->+{{upgrade.changePct | number:'1.1-1'}}%</span>
-<ng-template #noUpgrades>
+@if (upgrade$ | async; as upgrade) {
+	<span
+		class="badge rounded-pill upgrade-badge upgrade-level-{{getUpgradeLevel(upgrade.changePct)}}"
+		title="Click to equip the best upgrade"
+		(click)="onEquipUpgradeClick(upgrade)"
+	>+{{upgrade.changePct | number:'1.1-1'}}%</span>
+} @else {
 	<span class="no-upgrades">✓</span>
-</ng-template>
+}

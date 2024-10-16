@@ -1,16 +1,20 @@
-<div *ngIf="rotationStats$ | async as rotationStats" class="dps-bar">
-	<span>dps: {{rotationStats.dps | number:'1.0-0'}}</span>
-	<span
-		*ngIf="dpsDiff"
-		class="dps-diff"
-		[ngClass]="{'positive-dps-diff': dpsDiff > 0, 'negative-dps-diff': dpsDiff < 0}"
-	>
-		&nbsp;({{dpsDiff > 0 ? "+" : ""}}{{dpsDiff | number:'1.0-0'}})
-	</span>
-	<img 
-		*ngFor="let stats of rotationStats.statList; let i = index" 
-		[src]="stats.spell.icon | icon" 
-		[ngStyle]="{'margin-left': i === 0 ? '10px' : '5px'}"
-		[title]="stats.spell.name + ' - ' + (getDamageShare(stats) | number:'1.0-1') + '%'"
-	/>
-</div>
+@if (rotationStats$ | async; as rotationStats) {
+	<div class="dps-bar">
+		<span>dps: {{rotationStats.dps | number:'1.0-0'}}</span>
+		@if (dpsDiff) {
+			<span
+				class="dps-diff"
+				[ngClass]="{'positive-dps-diff': dpsDiff > 0, 'negative-dps-diff': dpsDiff < 0}"
+			>
+				&nbsp;({{dpsDiff > 0 ? "+" : ""}}{{dpsDiff | number:'1.0-0'}})
+			</span>
+		}
+		@for (stats of rotationStats.statList; track stats) {
+			<img
+				[src]="stats.spell.icon | icon"
+				[ngStyle]="{'margin-left': $index === 0 ? '10px' : '5px'}"
+				[title]="stats.spell.name + ' - ' + (getDamageShare(stats) | number:'1.0-1') + '%'"
+			/>
+		}
+	</div>
+}

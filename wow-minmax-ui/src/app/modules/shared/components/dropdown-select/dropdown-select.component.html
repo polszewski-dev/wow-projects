@@ -10,21 +10,25 @@
 		title="{{formatTooltip(selection)}}"
 	></a>
 	<div ngbDropdownMenu attr.aria-labelledby="{{id}}" class="dropdown-menu dropdown-menu-end">
-		<ng-container *ngFor="let item of getItems()">
-			<a 
-				*ngIf="item.type === 'group'"
-				ngbDropdownItem 
-				href="#" 
-				[disabled]="true"
-			>{{item.name}}</a>
-			<a
-				*ngIf="item.type === 'value'"
-				ngbDropdownItem 
-				href="#"
-				(click)="$event.preventDefault();onSelect(item.value)"
-				[innerHTML]="formatElement(item.value)"
-				title="{{formatTooltip(item.value)}}"
-			></a>
-		</ng-container>
+		@for (item of getItems(); track item) {
+			@switch (item.type) {
+				@case ('group') {
+					<a 
+						ngbDropdownItem 
+						href="#" 
+						[disabled]="true"
+					>{{item.name}}</a>
+				}
+				@case ('value') {
+					<a
+						ngbDropdownItem 
+						href="#"
+						(click)="$event.preventDefault();onSelect(item.value)"
+						[innerHTML]="formatElement(item.value)"
+						title="{{formatTooltip(item.value)}}"
+					></a>
+				}
+			}
+		}
 	</div>
 </div>

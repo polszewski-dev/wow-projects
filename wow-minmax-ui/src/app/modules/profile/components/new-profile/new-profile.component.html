@@ -1,36 +1,48 @@
-<form *ngIf="newProfileOptions" [formGroup]="form" (ngSubmit)="onAddClick()" class="container">
-	<div class="needs-validation" novalidate>
-		<div class="row py-2">
-			<div class="col-md-9">
-				<label for="profileName" class="form-label">Profile Name</label>
-				<input id="profileName" type="text" class="form-control" formControlName="profileName">
-				<span *ngIf="profileNameControl.touched && profileNameControl.hasError('required')">missing value</span>
-			</div>
-		</div>
-
-		<div class="row py-2">
-			<div class="col-md-3">
-				<label for="characterClass" class="form-label">Class</label>
-				<select id="characterClass" class="form-select" formControlName="characterClass" (change)="onClassChange()">
-					<option *ngFor="let clazz of newProfileOptions.classOptions" [ngValue]="clazz">{{clazz.name}}</option>
-				</select>
-				<span *ngIf="characterClassControl.touched && characterClassControl.hasError('required')">missing value</span>
+@if (newProfileOptions) {
+	<form [formGroup]="form" (ngSubmit)="onAddClick()" class="container">
+		<div class="needs-validation" novalidate>
+			<div class="row py-2">
+				<div class="col-md-9">
+					<label for="profileName" class="form-label">Profile Name</label>
+					<input id="profileName" type="text" class="form-control" formControlName="profileName">
+					@if (profileNameControl.touched && profileNameControl.hasError('required')) {
+						<span>missing value</span>
+					}
+				</div>
 			</div>
 
-			<div class="col-md-3">
-				<label for="race" class="form-label">Race</label>
-				<select id="race" class="form-select" formControlName="race">
-					<option *ngFor="let race of (characterClass?.races || [])" [ngValue]="race">{{race.name}}</option>
-				</select>
-				<span *ngIf="raceControl.touched && raceControl.hasError('required')">missing value</span>
-			</div>
-		</div>
+			<div class="row py-2">
+				<div class="col-md-3">
+					<label for="characterClass" class="form-label">Class</label>
+					<select id="characterClass" class="form-select" formControlName="characterClass" (change)="onClassChange()">
+						@for (clazz of newProfileOptions.classOptions; track clazz) {
+							<option [ngValue]="clazz">{{clazz.name}}</option>
+						}
+					</select>
+					@if (characterClassControl.touched && characterClassControl.hasError('required')) {
+						<span>missing value</span>
+					}
+				</div>
 
-		<div class="row py-2">
-			<div class="col-md-3">
-				<button class="btn btn-outline-primary" style="margin-right:10px" type="submit" [disabled]="!form.valid">Add Profile</button>
-				<button class="btn btn-outline-primary" (click)="onCancelClick($event)">Cancel</button>
+				<div class="col-md-3">
+					<label for="race" class="form-label">Race</label>
+					<select id="race" class="form-select" formControlName="race">
+						@for (race of (characterClass?.races || []); track race) {
+							<option [ngValue]="race">{{race.name}}</option>
+						}
+					</select>
+					@if (raceControl.touched && raceControl.hasError('required')) {
+						<span>missing value</span>
+					}
+				</div>
+			</div>
+
+			<div class="row py-2">
+				<div class="col-md-3">
+					<button class="btn btn-outline-primary" style="margin-right:10px" type="submit" [disabled]="!form.valid">Add Profile</button>
+					<button class="btn btn-outline-primary" (click)="onCancelClick($event)">Cancel</button>
+				</div>
 			</div>
 		</div>
-	</div>
-</form>
+	</form>
+}

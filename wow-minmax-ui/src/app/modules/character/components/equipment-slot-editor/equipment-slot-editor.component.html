@@ -2,25 +2,39 @@
 	<tr>
 		<th scope="row">
 			{{itemSlot.replace('_', ' ').replace('1', '#1').replace('2', '#2') | titlecase}}
-			<app-equip-upgrade-button *ngIf="visible && slotGroup" [slotGroup]="slotGroup"></app-equip-upgrade-button>
+			@if (visible && slotGroup) {
+				<app-equip-upgrade-button [slotGroup]="slotGroup"></app-equip-upgrade-button>
+			}
 		</th>
 		<td>
-			<app-item-select *ngIf="visible" [itemSlot]="itemSlot"></app-item-select>
+			@if (visible) {
+				<app-item-select [itemSlot]="itemSlot"></app-item-select>
+			}
 		</td>
 		<td>
-			<app-enchant-select *ngIf="visible" [itemSlot]="itemSlot"></app-enchant-select>
+			@if (visible) {
+				<app-enchant-select [itemSlot]="itemSlot"></app-enchant-select>
+			}
 		</td>
 		<td>
-			<app-gem-select *ngIf="visible" [itemSlot]="itemSlot" [socketNo]="0"></app-gem-select>
+			@if (visible) {
+				<app-gem-select [itemSlot]="itemSlot" [socketNo]="0"></app-gem-select>
+			}
 		</td>
 		<td>
-			<app-gem-select *ngIf="visible" [itemSlot]="itemSlot" [socketNo]="1"></app-gem-select>
+			@if (visible) {
+				<app-gem-select [itemSlot]="itemSlot" [socketNo]="1"></app-gem-select>
+			}
 		</td>
 		<td>
-			<app-gem-select *ngIf="visible" [itemSlot]="itemSlot" [socketNo]="2"></app-gem-select>
+			@if (visible) {
+				<app-gem-select [itemSlot]="itemSlot" [socketNo]="2"></app-gem-select>
+			}
 		</td>
 		<td>
-			<app-socket-status *ngIf="visible" [itemSlot]="itemSlot"></app-socket-status>
+			@if (visible) {
+				<app-socket-status [itemSlot]="itemSlot"></app-socket-status>
+			}
 		</td>
 	</tr>
 </ng-template>

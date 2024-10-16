@@ -1,5 +1,5 @@
-<div *ngIf="selectedCharacterId">
-	<div *ngIf="dataLoaded$ | async else loadingData">
+@if (selectedCharacterId) {
+	@if (dataLoaded$ | async) {
 		<app-dps-bar></app-dps-bar>
 
 		<nav ngbNav #nav="ngbNav" class="nav-tabs">
@@ -37,6 +37,7 @@
 		</nav>
 
 		<div [ngbNavOutlet]="nav"></div>
-	</div>
-	<ng-template #loadingData>loading...</ng-template>
-</div>
+	} @else {
+		loading...
+	}
+}

@@ -25,35 +25,37 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let spellStats of spellStatsList$ | async">
-			<td style="text-align: left" title="{{spellStats.spell.tooltip}}">
-				<strong>
-					<img [src]="spellStats.spell.icon | icon"/>&nbsp;{{spellStats.spell.name}}
-				</strong>				
-			</td>
-			<td style="text-align: center">{{spellStats.spell.rank}}</td>
-			<td>{{spellStats.dps | number:'1.0-0'}}</td>
-			<td>{{spellStats.totalDamage | number:'1.0-0'}}</td>
-			<td
-				[ngClass]="{'instant-cast': spellStats.instantCast}"
-				title="{{spellStats.instantCast ? 'Instant cast' : ''}}"
-			>{{spellStats.castTime | number:'1.2-2'}}</td>
-			<td>{{spellStats.manaCost | number:'1.0-0'}}</td>
-			<td>{{spellStats.dpm | number:'1.0-0'}}</td>
-			<td>{{spellStats.sp | number:'1.0-0'}}</td>
-			<td>{{spellStats.totalHit | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.totalCrit | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.totalHaste | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.spellCoeffDirect | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.spellCoeffDoT | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.critCoeff | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.hitSpEqv | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.critSpEqv | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.hasteSpEqv | number:'1.2-2' | blankZero}}</td>
-			<td>{{spellStats.duration | number:'1.0-2' | blankZero}}</td>
-			<td>{{spellStats.cooldown | number:'1.0-2' | blankZero}}</td>
-			<td>{{spellStats.threatPct | number:'1.0-2' | blankZero}}</td>
-			<td>{{spellStats.pushbackPct | number:'1.0-2' | blankZero}}</td>
-		</tr>
+		@for (spellStats of spellStatsList$ | async; track spellStats) {
+			<tr>
+				<td style="text-align: left" title="{{spellStats.spell.tooltip}}">
+					<strong>
+						<img [src]="spellStats.spell.icon | icon"/>&nbsp;{{spellStats.spell.name}}
+					</strong>				
+				</td>
+				<td style="text-align: center">{{spellStats.spell.rank}}</td>
+				<td>{{spellStats.dps | number:'1.0-0'}}</td>
+				<td>{{spellStats.totalDamage | number:'1.0-0'}}</td>
+				<td
+					[ngClass]="{'instant-cast': spellStats.instantCast}"
+					title="{{spellStats.instantCast ? 'Instant cast' : ''}}"
+				>{{spellStats.castTime | number:'1.2-2'}}</td>
+				<td>{{spellStats.manaCost | number:'1.0-0'}}</td>
+				<td>{{spellStats.dpm | number:'1.0-0'}}</td>
+				<td>{{spellStats.sp | number:'1.0-0'}}</td>
+				<td>{{spellStats.totalHit | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.totalCrit | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.totalHaste | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.spellCoeffDirect | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.spellCoeffDoT | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.critCoeff | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.hitSpEqv | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.critSpEqv | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.hasteSpEqv | number:'1.2-2' | blankZero}}</td>
+				<td>{{spellStats.duration | number:'1.0-2' | blankZero}}</td>
+				<td>{{spellStats.cooldown | number:'1.0-2' | blankZero}}</td>
+				<td>{{spellStats.threatPct | number:'1.0-2' | blankZero}}</td>
+				<td>{{spellStats.pushbackPct | number:'1.0-2' | blankZero}}</td>
+			</tr>
+		}
 	</tbody>
 </table>
