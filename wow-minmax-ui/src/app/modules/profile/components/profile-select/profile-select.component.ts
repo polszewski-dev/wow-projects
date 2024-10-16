@@ -141,6 +141,10 @@ class PhaseFormatter implements DropdownSelectValueFormatter<Phase> {
 	formatTooltip(value?: Phase) {
 		return '';
 	}
+
+	trackKey(value: Phase) {
+		return value.id;
+	}
 }
 
 class LevelFormatter implements DropdownSelectValueFormatter<number> {
@@ -154,6 +158,10 @@ class LevelFormatter implements DropdownSelectValueFormatter<number> {
 
 	formatTooltip(value?: number) {
 		return '';
+	}
+
+	trackKey(value: number) {
+		return '' + value;
 	}
 }
 
@@ -169,6 +177,10 @@ class EnemyTypeFormatter implements DropdownSelectValueFormatter<EnemyType> {
 	formatTooltip(value?: EnemyType) {
 		return '';
 	}
+
+	trackKey(value: EnemyType) {
+		return value.id;
+	}
 }
 
 class LevelDifferenceFormatter implements DropdownSelectValueFormatter<LevelDifference> {
@@ -182,5 +194,9 @@ class LevelDifferenceFormatter implements DropdownSelectValueFormatter<LevelDiff
 
 	formatTooltip(value?: LevelDifference) {
 		return '';
+	}
+
+	trackKey(value: LevelDifference) {
+		return '' + value.id;
 	}
 }

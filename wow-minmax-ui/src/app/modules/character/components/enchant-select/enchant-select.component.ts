@@ -60,4 +60,8 @@ class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
 	formatTooltip(value?: Enchant) {
 		return value?.tooltip || "";
 	}
+
+	trackKey(value: Enchant) {
+		return '' + value.id;
+	}
 }

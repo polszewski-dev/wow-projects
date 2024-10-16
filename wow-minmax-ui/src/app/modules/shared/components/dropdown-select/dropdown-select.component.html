@@ -10,7 +10,7 @@
 		title="{{formatTooltip(selection)}}"
 	></a>
 	<div ngbDropdownMenu attr.aria-labelledby="{{id}}" class="dropdown-menu dropdown-menu-end">
-		@for (item of getItems(); track item) {
+		@for (item of getItems(); track trackKey(item)) {
 			@switch (item.type) {
 				@case ('group') {
 					<a 

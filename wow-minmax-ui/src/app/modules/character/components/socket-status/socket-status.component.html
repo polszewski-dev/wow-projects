@@ -1,6 +1,6 @@
 @if (socketStatus$ | async; as socketStatuses) {
 	<div>
-		@for (socketStatus of socketStatuses.socketStatuses; track socketStatus) {
+		@for (socketStatus of socketStatuses.socketStatuses; track socketStatus.socketNo) {
 			<span
 				class="socket {{socketStatus.socketType.toLowerCase()}}-socket"
 				[ngClass]="{'socket-matching': socketStatus.matching, 'socket-notmatching': !socketStatus.matching}"

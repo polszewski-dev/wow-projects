@@ -123,6 +123,7 @@ public class EquipmentController {
 
 	private SocketStatusDTO getSocketStatusDTO(EquippableItem item, Equipment equipment, Integer socketNo) {
 		return new SocketStatusDTO(
+				socketNo,
 				item.getSocketType(socketNo),
 				equipment.hasMatchingGem(item, socketNo)
 		);

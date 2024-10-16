@@ -15,6 +15,7 @@ import wow.commons.model.item.SocketType;
 @Getter
 @Setter
 public class SocketStatusDTO {
+	private int socketNo;
 	private SocketType socketType;
 	private boolean matching;
 }

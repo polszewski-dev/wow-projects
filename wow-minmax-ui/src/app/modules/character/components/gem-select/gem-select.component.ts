@@ -96,4 +96,8 @@ class GemFormatter implements DropdownSelectValueFormatter<Gem> {
 	formatTooltip(value?: Gem) {
 		return value?.tooltip || "";
 	}
+
+	trackKey(value: Gem) {
+		return '' + value.id;
+	}
 }

@@ -82,6 +82,13 @@ export class DropdownSelectComponent<T> {
 	formatTooltip(value?: T) {
 		return this.valueFormatter.formatTooltip(value);
 	}
+
+	trackKey(item: DropdownSelectItem<T>) {
+		if (item.type == 'group') {
+			return "G@" + item.name;
+		} 
+		return "V@" + this.valueFormatter.trackKey(item.value);
+	}
 }
 
 export type ElementComparatorFn<T> = (a: T, b: T) => number;
@@ -93,6 +100,7 @@ export interface DropdownSelectValueFormatter<T> {
 	emptySelection?: string;
 	formatSelection: (value: T) => string;
 	formatTooltip: (value?: T) => string;
+	trackKey: (value: T) => string;
 }
 
 interface DropdownSelectGroup {

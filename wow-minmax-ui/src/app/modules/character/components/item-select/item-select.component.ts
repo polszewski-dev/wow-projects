@@ -72,6 +72,10 @@ class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 	formatTooltip(value?: Item) {
 		return value?.tooltip || "";
 	}
+
+	trackKey(value: Item) {
+		return '' + value.id;
+	}
 }
 
 function escapeHtml(value: string) {
