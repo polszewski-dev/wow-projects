@@ -2,6 +2,7 @@
 	@if (enchantOptions$ | async; as enchantOptions) {
 		@if (getEnchantOptions(enchantOptions, equippedItem).length > 0) {
 			<app-dropdown-select
+				id="{{itemSlot}}-enchant"
 				[elements]="getEnchantOptions(enchantOptions, equippedItem)"
 				[selection]="equippedItem.enchant"
 				[elementComparator]="enchantComparator"

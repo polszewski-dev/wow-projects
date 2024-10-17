@@ -1,6 +1,7 @@
 @if (equippedItem$ | async; as equippedItem) {
 	@if (itemOptions$ | async; as itemOptions) {
 		<app-dropdown-select
+			id="{{itemSlot}}-item"
 			[elements]="itemOptions.items"
 			[selection]="equippedItem[0]?.item"
 			[elementComparator]="itemComparator"

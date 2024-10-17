@@ -19,6 +19,7 @@
 		<div class="col-md-12 character-select-bar">
 			<span class="character-select-bar-caption" style="margin-right: 5px">phase:</span>
 			<app-dropdown-select
+				id="phase-select"
 				[elements]="characterSelectionOptions.phases"
 				[selection]="getPhase()"
 				[valueFormatter]="phaseFormatter"
@@ -27,6 +28,7 @@
 
 			<span class="character-select-bar-caption" style="margin-right: 5px">, level:</span>
 			<app-dropdown-select
+				id="level-select"
 				[elements]="getLevels()"
 				[selection]="level"
 				[valueFormatter]="levelFormatter"
@@ -35,6 +37,7 @@
 
 			<span class="character-select-bar-caption" style="margin-right: 5px;">, enemy:</span>
 			<app-dropdown-select
+				id="enemy-type-select"
 				[elements]="characterSelectionOptions.enemyTypes"
 				[selection]="getEnemyType()"
 				[elementComparator]="enemyTypeComparator"
@@ -44,6 +47,7 @@
 
 			<span class="character-select-bar-caption" style="margin-right: 5px">, lvl diff:</span>
 			<app-dropdown-select
+				id="level-diff-select"
 				[elements]="characterSelectionOptions.enemyLevelDiffs"
 				[selection]="getEnemyLevelDiff()"
 				[valueFormatter]="levelDifferenceFormatter"

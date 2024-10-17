@@ -7,21 +7,15 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownSelectComponent<T> {
+	@Input() id!: string;
 	@Input() elements: T[] = [];
 	@Input() selection?: T;
 	@Output() selectionChanged = new EventEmitter<T>();
-
-	readonly id: string;
-	static idGen = 0;
 
 	@Input() valueFormatter!: DropdownSelectValueFormatter<T>;
 	@Input() elementComparator?: ElementComparatorFn<T>;
 	@Input() groupKeyComparator? : GroupKeyComparatorFn<T>;
 	@Input() groupKeyToString?: GroupKeyToStringFn<T>;
-
-	constructor() {
-		this.id = 'dropdown-select-' + ++DropdownSelectComponent.idGen;
-	}
 
 	onSelect(value: T) {
 		this.selection = value;
@@ -86,7 +80,7 @@ export class DropdownSelectComponent<T> {
 	trackKey(item: DropdownSelectItem<T>) {
 		if (item.type == 'group') {
 			return "G@" + item.name;
-		} 
+		}
 		return "V@" + this.valueFormatter.trackKey(item.value);
 	}
 }

@@ -3,13 +3,13 @@
 		class="nav-link dropdown-select"
 		tabindex="0"
 		ngbDropdownToggle
-		id="{{id}}"
+		id="{{id}}-selection"
 		role="button"
 		style="overflow: clip"
 		[innerHTML]="formatSelection(selection)"
 		title="{{formatTooltip(selection)}}"
 	></a>
-	<div ngbDropdownMenu attr.aria-labelledby="{{id}}" class="dropdown-menu dropdown-menu-end">
+	<div ngbDropdownMenu attr.aria-labelledby="{{id}}-selection" class="dropdown-menu dropdown-menu-end">
 		@for (item of getItems(); track trackKey(item)) {
 			@switch (item.type) {
 				@case ('group') {
