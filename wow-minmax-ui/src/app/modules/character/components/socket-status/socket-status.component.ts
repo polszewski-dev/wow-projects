@@ -10,7 +10,7 @@ import { CharacterStateService } from '../../services/character-state.service';
 	styleUrls: ['./socket-status.component.css']
 })
 export class SocketStatusComponent implements OnInit {
-	@Input() itemSlot!: ItemSlot;
+	@Input({ required: true }) itemSlot!: ItemSlot;
 
 	socketStatus$!: Observable<ItemSocketStatus | undefined>;
 

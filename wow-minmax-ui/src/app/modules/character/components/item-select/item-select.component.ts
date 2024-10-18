@@ -16,7 +16,7 @@ import { EquipmentOptionsStateService } from '../../services/equipment-options-s
 	styleUrls: ['./item-select.component.css']
 })
 export class ItemSelectComponent implements OnInit {
-	@Input() itemSlot!: ItemSlot;
+	@Input({ required: true }) itemSlot!: ItemSlot;
 
 	equippedItem$!: Observable<[EquippableItem | undefined]>;
 	itemOptions$!: Observable<ItemOptions | undefined>;

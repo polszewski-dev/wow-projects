@@ -8,7 +8,7 @@ import { CharacterStateService } from '../../../character/services/character-sta
 	styleUrls: ['./profile-editor.component.css']
 })
 export class ProfileEditorComponent implements OnChanges {
-	@Input() selectedCharacterId!: string;
+	@Input({ required: true }) selectedCharacterId!: string;
 
 	dataLoaded$ = this.characterStateService.character$;
 

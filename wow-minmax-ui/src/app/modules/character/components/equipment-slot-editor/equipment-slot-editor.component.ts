@@ -8,7 +8,7 @@ import { getItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 	styleUrls: ['./equipment-slot-editor.component.css']
 })
 export class EquipmentSlotEditorComponent implements OnInit {
-	@Input() itemSlot!: ItemSlot;
+	@Input({ required: true }) itemSlot!: ItemSlot;
 	@Input() visible = true;
 
 	@ViewChild('template', { static: true }) template!: TemplateRef<any>;

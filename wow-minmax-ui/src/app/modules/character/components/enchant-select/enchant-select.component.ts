@@ -15,7 +15,7 @@ import { EquipmentOptionsStateService } from '../../services/equipment-options-s
 	styleUrls: ['./enchant-select.component.css']
 })
 export class EnchantSelectComponent implements OnInit {
-	@Input() itemSlot!: ItemSlot;
+	@Input({ required: true }) itemSlot!: ItemSlot;
 
 	equippedItem$!: Observable<EquippableItem | undefined>;
 	enchantOptions$ = this.equipmentOptionsStateService.enchantOptions$;

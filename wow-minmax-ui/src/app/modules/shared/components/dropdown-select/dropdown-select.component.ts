@@ -7,12 +7,12 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownSelectComponent<T> {
-	@Input() id!: string;
-	@Input() elements: T[] = [];
+	@Input({ required: true }) id!: string;
+	@Input({ required: true }) elements: T[] = [];
 	@Input() selection?: T;
 	@Output() selectionChanged = new EventEmitter<T>();
 
-	@Input() valueFormatter!: DropdownSelectValueFormatter<T>;
+	@Input({ required: true }) valueFormatter!: DropdownSelectValueFormatter<T>;
 	@Input() elementComparator?: ElementComparatorFn<T>;
 	@Input() groupKeyComparator? : GroupKeyComparatorFn<T>;
 	@Input() groupKeyToString?: GroupKeyToStringFn<T>;

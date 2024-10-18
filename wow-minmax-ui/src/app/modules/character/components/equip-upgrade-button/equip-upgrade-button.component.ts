@@ -11,7 +11,7 @@ import { UpgradeStateService } from '../../services/upgrade-state.service';
 	styleUrls: ['./equip-upgrade-button.component.css']
 })
 export class EquipUpgradeButtonComponent implements OnInit {
-	@Input() slotGroup!: ItemSlotGroup;
+	@Input({ required: true }) slotGroup!: ItemSlotGroup;
 
 	upgrade$!: Observable<Upgrade | undefined>;
 

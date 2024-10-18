@@ -10,7 +10,7 @@ import { CharacterStateService } from '../../services/character-state.service';
 	styleUrls: ['./buff-editor.component.css']
 })
 export class BuffEditorComponent implements OnInit {
-	@Input() buffListType!: BuffListType;
+	@Input({ required: true }) buffListType!: BuffListType;
 
 	buffs$!: Observable<Buff[] | undefined>;
 

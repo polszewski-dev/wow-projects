@@ -17,8 +17,8 @@ import { EquipmentOptionsStateService } from '../../services/equipment-options-s
 	styleUrls: ['./gem-select.component.css']
 })
 export class GemSelectComponent implements OnInit {
-	@Input() itemSlot!: ItemSlot;
-	@Input() socketNo!: number;
+	@Input({ required: true }) itemSlot!: ItemSlot;
+	@Input({ required: true }) socketNo!: number;
 
 	equippedItem$!: Observable<EquippableItem | undefined>;
 	gemOptions$ = this.equipmentOptionsStateService.gemOptions$;
