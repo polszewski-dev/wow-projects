@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CharacterModule } from '../character/character.module';
 import { SharedModule } from '../shared/shared.module';
 import { StatisticsModule } from '../statistics/statistics.module';
+import { CharacterSelectComponent } from './components/character-select/character-select.component';
 import { NewProfileComponent } from './components/new-profile/new-profile.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
@@ -15,6 +16,7 @@ import { ProfileSelectComponent } from './components/profile-select/profile-sele
 		ProfileEditorComponent,
 		ProfileSelectComponent,
 		NewProfileComponent,
+		CharacterSelectComponent,
 	],
 	imports: [
 		CommonModule,
@@ -30,6 +32,7 @@ import { ProfileSelectComponent } from './components/profile-select/profile-sele
 		ProfileEditorComponent,
 		ProfileSelectComponent,
 		NewProfileComponent,
+		CharacterSelectComponent,
 	]
 })
 export class ProfileModule { }

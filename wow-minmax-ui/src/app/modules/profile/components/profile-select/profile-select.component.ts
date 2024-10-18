@@ -1,11 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { formatCharacterId, parseCharacterId } from '../../../character/model/CharacterId';
-import { CharacterSelectionOptions } from '../../../character/model/CharacterSelectionOptions';
-import { DropdownSelectValueFormatter, ElementComparatorFn } from '../../../shared/components/dropdown-select/dropdown-select.component';
-import { EnemyType } from '../../../shared/model/character/EnemyType';
-import { LevelDifference } from '../../../shared/model/character/LevelDifference';
-import { Phase } from '../../../shared/model/character/Phase';
-import { PhaseId } from '../../../shared/model/character/PhaseId';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProfileInfo } from '../../model/ProfileInfo';
 import { ProfileService } from '../../services/profile.service';
 
@@ -14,189 +7,52 @@ import { ProfileService } from '../../services/profile.service';
 	templateUrl: './profile-select.component.html',
 	styleUrls: ['./profile-select.component.css']
 })
-export class ProfileSelectComponent implements OnChanges {
-	@Input() profileList: ProfileInfo[] = [];
-	@Input() selectedCharacterId?: string;
-	@Output() characterSelected = new EventEmitter<string>();
+export class ProfileSelectComponent implements OnInit {
+	@Input({ required: true }) selectedProfileId!: string | null;
+	@Output() profileSelected = new EventEmitter<string | null>();
 
-	characterSelectionOptions?: CharacterSelectionOptions;
-
-	profileId?: string;
-	phaseId?: PhaseId;
-	level?: number;
-	enemyTypeId?: string;
-	enemyLevelDiff?: number;
+	profileList: ProfileInfo[] = [];
 
 	constructor(private profileService: ProfileService) {}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedCharacterId']) {
-			return;
-		}
-		if (!this.selectedCharacterId) {
-			return;
-		}
+	ngOnInit(): void {
+		this.profileService.getProfileList().subscribe(profileList => {
+			this.profileList = profileList;
 
-		const profileId = parseCharacterId(this.selectedCharacterId).profileId;
+			const profileId = this.pickProfile();
 
-		this.setSelectedProfile(profileId, this.selectedCharacterId);
-	}
-
-	onProfileChange(profileId: string) {
-		this.setSelectedProfile(profileId, undefined);
-	}
-
-	setSelectedProfile(profileId: string, characterId?: string) {
-		this.profileService.getCharacterSelectionOptions(profileId).subscribe(characterSelectionOptions => {
-			this.characterSelectionOptions = characterSelectionOptions;
-			this.setSelectedCharacterId(characterId || characterSelectionOptions.lastModifiedCharacterId);
+			if (this.selectedProfileId !== profileId) {
+				this.selectedProfileId = profileId;
+				this.onProfileChange(profileId);
+			}
 		});
 	}
 
-	setSelectedCharacterId(selectedCharacterId: string) {
-		this.selectedCharacterId = selectedCharacterId;
-
-		const parts = parseCharacterId(selectedCharacterId);
-
-		this.profileId = parts.profileId;
-		this.phaseId = parts.phaseId;
-		this.level = parts.level;
-		this.enemyTypeId = parts.enemyTypeId;
-		this.enemyLevelDiff = parts.enemyLevelDiff;
-
-		this.characterSelected.emit(selectedCharacterId);
+	onProfileChange(profileId: string | null) {
+		this.profileSelected.emit(profileId);
 	}
 
-	onPhaseChange(phase: Phase) {
-		this.phaseId = phase.id;
-		this.level = phase.maxLevel;
-		this.loadFilteredCharacter();
+	private pickProfile() {
+		if (this.selectedProfileId && this.profileList.some(x => x.profileId === this.selectedProfileId)) {
+			return this.selectedProfileId;
+		}
+		return this.getLastModifiedProfile()?.profileId || null;
 	}
 
-	onLevelChange(level: number) {
-		this.level = level;
-		this.loadFilteredCharacter();
+	private getLastModifiedProfile() {
+		if (this.profileList.length === 0) {
+			return null;
+		}
+		return this.profileList.reduce((prev: ProfileInfo, current: ProfileInfo) =>
+			(prev.lastModified! > current.lastModified!) ? prev : current
+		);
 	}
 
-	onEnemyTypeChange(enemyType: EnemyType) {
-		this.enemyTypeId = enemyType.id;
-		this.loadFilteredCharacter();
+	get sortedProfileList() {
+		return sortProfiles(this.profileList);
 	}
-
-	onEnemyLevelDifferenceChange(enemyLevelDifference: LevelDifference) {
-		this.enemyLevelDiff = enemyLevelDifference.id;
-		this.loadFilteredCharacter();
-	}
-
-	loadFilteredCharacter() {
-		const newCharacterId = formatCharacterId({
-			profileId: this.profileId!,
-			phaseId: this.phaseId!,
-			level: this.level!,
-			enemyTypeId: this.enemyTypeId!,
-			enemyLevelDiff: this.enemyLevelDiff!
-		});
-		this.setSelectedCharacterId(newCharacterId);
-	}
-
-	sortProfiles = sortProfiles;
-
-	readonly phaseFormatter = new PhaseFormatter();
-	readonly levelFormatter = new LevelFormatter();
-	readonly enemyTypeFormatter = new EnemyTypeFormatter();
-	readonly levelDifferenceFormatter = new LevelDifferenceFormatter();
-
-	getPhase() {
-		return this.characterSelectionOptions!.phases.find(x => x.id.toLowerCase() === this.phaseId?.toLowerCase());
-	}
-
-	getLevels() {
-		return [ this.getPhase()!.maxLevel ];
-	}
-
-	getEnemyType() {
-		return this.characterSelectionOptions!.enemyTypes.find(x => x.id.toLowerCase() === this.enemyTypeId?.toLowerCase());
-	}
-
-	getEnemyLevelDiff() {
-		return this.characterSelectionOptions!.enemyLevelDiffs.find(x => x.id === this.enemyLevelDiff);
-	}
-
-	readonly enemyTypeComparator: ElementComparatorFn<EnemyType> = (a, b) => a.name.localeCompare(b.name);
 }
 
 function sortProfiles(profileList: ProfileInfo[]) {
 	return profileList.sort((a, b) => a.profileName.localeCompare(b.profileName));
-}
-
-class PhaseFormatter implements DropdownSelectValueFormatter<Phase> {
-	formatElement(value: Phase) {
-		return value.name;
-	}
-
-	formatSelection(value: Phase) {
-		return '<span class="character-select-bar-data">' + value.name + '</span>';
-	}
-
-	formatTooltip(value?: Phase) {
-		return '';
-	}
-
-	trackKey(value: Phase) {
-		return value.id;
-	}
-}
-
-class LevelFormatter implements DropdownSelectValueFormatter<number> {
-	formatElement(value: number) {
-		return '' + value;
-	}
-
-	formatSelection(value: number) {
-		return '<span class="character-select-bar-data">' + value + '</span>';
-	}
-
-	formatTooltip(value?: number) {
-		return '';
-	}
-
-	trackKey(value: number) {
-		return '' + value;
-	}
-}
-
-class EnemyTypeFormatter implements DropdownSelectValueFormatter<EnemyType> {
-	formatElement(value: EnemyType) {
-		return value.name;
-	}
-
-	formatSelection(value: EnemyType) {
-		return '<span class="character-select-bar-data">' + value.name + '</span>';
-	}
-
-	formatTooltip(value?: EnemyType) {
-		return '';
-	}
-
-	trackKey(value: EnemyType) {
-		return value.id;
-	}
-}
-
-class LevelDifferenceFormatter implements DropdownSelectValueFormatter<LevelDifference> {
-	formatElement(value: LevelDifference) {
-		return value.name;
-	}
-
-	formatSelection(value: LevelDifference) {
-		return '<span class="character-select-bar-data">' + value.name + '</span>';
-	}
-
-	formatTooltip(value?: LevelDifference) {
-		return '';
-	}
-
-	trackKey(value: LevelDifference) {
-		return '' + value.id;
-	}
 }
