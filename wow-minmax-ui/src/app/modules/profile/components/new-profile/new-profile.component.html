@@ -13,24 +13,28 @@
 
 			<div class="row py-2">
 				<div class="col-md-3">
-					<label for="characterClass" class="form-label">Class</label>
-					<select id="characterClass" class="form-select" formControlName="characterClass" (change)="onClassChange()">
-						@for (clazz of newProfileOptions.classOptions; track clazz) {
-							<option [ngValue]="clazz">{{clazz.name}}</option>
-						}
-					</select>
+					<label for="character-class-select-selection" class="form-label">Class</label>
+					<app-dropdown-select
+						id="character-class-select"
+						formControlName="characterClass"
+						[elements]="newProfileOptions.classOptions"
+						[valueFormatter]="characterClassFormatter"
+					></app-dropdown-select>
+
 					@if (characterClassControl.touched && characterClassControl.hasError('required')) {
 						<span>missing value</span>
 					}
 				</div>
 
 				<div class="col-md-3">
-					<label for="race" class="form-label">Race</label>
-					<select id="race" class="form-select" formControlName="race">
-						@for (race of (characterClass?.races || []); track race) {
-							<option [ngValue]="race">{{race.name}}</option>
-						}
-					</select>
+					<label for="race-select-selection" class="form-label">Race</label>
+					<app-dropdown-select
+						id="race-select"
+						formControlName="race"
+						[elements]="characterClass?.races || []"
+						[valueFormatter]="raceFormatter"
+					></app-dropdown-select>
+
 					@if (raceControl.touched && raceControl.hasError('required')) {
 						<span>missing value</span>
 					}

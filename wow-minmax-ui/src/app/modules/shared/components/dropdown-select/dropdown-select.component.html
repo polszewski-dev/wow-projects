@@ -6,8 +6,9 @@
 		id="{{id}}-selection"
 		role="button"
 		style="overflow: clip"
-		[innerHTML]="formatSelection(selection)"
-		title="{{formatTooltip(selection)}}"
+		[innerHTML]="formatSelection(value)"
+		[title]="formatTooltip(value)"
+		(blur)="onBlur()"
 	></a>
 	<div ngbDropdownMenu attr.aria-labelledby="{{id}}-selection" class="dropdown-menu dropdown-menu-end">
 		@for (item of getItems(); track trackKey(item)) {

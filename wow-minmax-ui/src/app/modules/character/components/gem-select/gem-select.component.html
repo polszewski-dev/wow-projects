@@ -4,10 +4,10 @@
 			<app-dropdown-select
 				id="{{itemSlot}}-socket-{{socketNo}}"
 				[elements]="getGemOptions(gemOptions, equippedItem)"
-				[selection]="equippedItem.gems[socketNo]"
+				[value]="equippedItem.gems[socketNo]"
 				[elementComparator]="gemComparator"
 				[valueFormatter]="gemFormatter"
-				(selectionChanged)="onGemChange($event)"
+				(valueChanged)="onGemChange($event)"
 			></app-dropdown-select>
 		}
 	}

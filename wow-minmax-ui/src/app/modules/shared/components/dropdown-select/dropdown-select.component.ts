@@ -1,25 +1,60 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
 	selector: 'app-dropdown-select',
 	templateUrl: './dropdown-select.component.html',
 	styleUrls: ['./dropdown-select.component.css'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: DropdownSelectComponent,
+			multi: true
+		}
+	]
 })
-export class DropdownSelectComponent<T> {
+export class DropdownSelectComponent<T> implements ControlValueAccessor {
 	@Input({ required: true }) id!: string;
 	@Input({ required: true }) elements: T[] = [];
-	@Input() selection?: T;
-	@Output() selectionChanged = new EventEmitter<T>();
+	@Input() value!: T | null | undefined;
+	@Output() valueChanged = new EventEmitter<T>();
 
 	@Input({ required: true }) valueFormatter!: DropdownSelectValueFormatter<T>;
 	@Input() elementComparator?: ElementComparatorFn<T>;
 	@Input() groupKeyComparator? : GroupKeyComparatorFn<T>;
 	@Input() groupKeyToString?: GroupKeyToStringFn<T>;
 
+	disabled: boolean = false;
+
+	private onChange = (value: T): void => {};
+	private onTouched = (): void => {};
+
+	writeValue(obj: any): void {
+		this.value = obj;
+	}
+
+	registerOnChange(fn: any): void {
+		this.onChange = fn;
+	}
+
+	registerOnTouched(fn: any): void {
+		this.onTouched = fn;
+	}
+
+	setDisabledState(isDisabled: boolean): void {
+		this.disabled = isDisabled;
+	}
+
 	onSelect(value: T) {
-		this.selection = value;
-		this.selectionChanged.emit(this.selection);
+		this.value = value;
+		this.onChange(value);
+		this.onBlur();
+		this.valueChanged.emit(value);
+	}
+
+	onBlur() {
+		this.onTouched();
 	}
 
 	getItems() {
@@ -66,14 +101,17 @@ export class DropdownSelectComponent<T> {
 		return this.valueFormatter.formatElement(value);
 	}
 
-	formatSelection(value?: T) {
+	formatSelection(value: T | null | undefined) {
 		if (value === undefined || value === null) {
 			return this.valueFormatter.emptySelection || '<i>-- empty --</i>';
 		}
 		return this.valueFormatter.formatSelection(value);
 	}
 
-	formatTooltip(value?: T) {
+	formatTooltip(value: T | null | undefined) {
+		if (value === undefined || value === null) {
+			return '';
+		}
 		return this.valueFormatter.formatTooltip(value);
 	}
 

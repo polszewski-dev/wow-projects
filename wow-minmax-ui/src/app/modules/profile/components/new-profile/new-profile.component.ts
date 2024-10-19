@@ -1,7 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DropdownSelectValueFormatter } from 'src/app/modules/shared/components/dropdown-select/dropdown-select.component';
+import { getMediumIcon } from 'src/app/modules/shared/util/Icon';
 import { CharacterClass } from '../../../shared/model/character/CharacterClass';
 import { Race } from '../../../shared/model/character/Race';
 import { NewProfileOptions } from '../../model/NewProfileOptions';
@@ -14,10 +16,10 @@ import { ProfileService } from '../../services/profile.service';
 	styleUrls: ['./new-profile.component.css']
 })
 export class NewProfileComponent implements OnInit {
-	form = this.formBuilder.group({
-		profileName: [ '', Validators.required ],
-		characterClass: [ null as unknown as CharacterClass, Validators.required ],
-		race: [ null as unknown as Race, Validators.required ]
+	readonly form = new FormGroup({
+		profileName: new FormControl<string | null>(null, Validators.required),
+		characterClass: new FormControl<CharacterClass | null>(null, Validators.required),
+		race: new FormControl<Race | null>(null, Validators.required)
 	});
 
 	newProfileOptions!: NewProfileOptions;
@@ -25,14 +27,16 @@ export class NewProfileComponent implements OnInit {
 	constructor(
 		private profileService: ProfileService,
 		private router: Router,
-		private location: Location,
-		private formBuilder: FormBuilder
+		private location: Location
 	) {}
 
 	ngOnInit(): void {
 		this.profileService.getNewProfileOptions().subscribe(newProfileOptions => {
 			this.newProfileOptions = newProfileOptions;
 		});
+
+		this.characterClassControl.valueChanges
+			.subscribe(newCharacterClass => this.onClassChange(newCharacterClass));
 	}
 
 	onAddClick() {
@@ -52,8 +56,16 @@ export class NewProfileComponent implements OnInit {
 		this.location.back();
 	}
 
-	onClassChange() {
-		this.form.patchValue({ race: null });
+	private onClassChange(newCharacterClass: CharacterClass | null) {
+		if (!this.shouldKeepSelectedRace(newCharacterClass)) {
+			this.form.patchValue({ race: null });
+		}
+	}
+
+	private shouldKeepSelectedRace(newCharacterClass: CharacterClass | null) {
+		const currentRace = this.race;
+
+		return newCharacterClass?.races.some(x => x.id === currentRace?.id)
 	}
 
 	get profileName() {
@@ -78,5 +90,50 @@ export class NewProfileComponent implements OnInit {
 
 	get raceControl() {
 		return this.form.controls.race;
+	}
+
+	readonly characterClassFormatter = new CharacterClassFormatter();
+	readonly raceFormatter = new RaceFormatter();
+}
+
+class CharacterClassFormatter implements DropdownSelectValueFormatter<CharacterClass> {
+	formatElement(value: CharacterClass) {
+		return `
+			<img src="${getMediumIcon(value.icon)}"/>
+			<span>&nbsp;${value.name}</span>
+		`;
+	}
+
+	formatSelection(value: CharacterClass) {
+		return this.formatElement(value);
+	}
+
+	formatTooltip(value?: CharacterClass) {
+		return "";
+	}
+
+	trackKey(value: CharacterClass) {
+		return value.id;
+	}
+}
+
+class RaceFormatter implements DropdownSelectValueFormatter<Race> {
+	formatElement(value: Race) {
+		return `
+			<img src="${getMediumIcon(value.icon)}"/>
+			<span>&nbsp;${value.name}</span>
+		`;
+	}
+
+	formatSelection(value: Race) {
+		return this.formatElement(value);
+	}
+
+	formatTooltip(value?: Race) {
+		return "";
+	}
+
+	trackKey(value: Race) {
+		return value.id;
 	}
 }

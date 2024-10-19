@@ -3,12 +3,12 @@
 		<app-dropdown-select
 			id="{{itemSlot}}-item"
 			[elements]="itemOptions.items"
-			[selection]="equippedItem[0]?.item"
+			[value]="equippedItem[0]?.item"
 			[elementComparator]="itemComparator"
 			[groupKeyToString]="itemGroupToString"
 			[groupKeyComparator]="itemGroupComparator"
 			[valueFormatter]="itemFormatter"
-			(selectionChanged)="onChange($event)"
+			(valueChanged)="onChange($event)"
 		></app-dropdown-select>
 	}
 }

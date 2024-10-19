@@ -4,10 +4,10 @@
 			<app-dropdown-select
 				id="{{itemSlot}}-enchant"
 				[elements]="getEnchantOptions(enchantOptions, equippedItem)"
-				[selection]="equippedItem.enchant"
+				[value]="equippedItem.enchant"
 				[elementComparator]="enchantComparator"
 				[valueFormatter]="enchantFormatter"
-				(selectionChanged)="onChange($event)"
+				(valueChanged)="onChange($event)"
 			></app-dropdown-select>
 		}
 	}

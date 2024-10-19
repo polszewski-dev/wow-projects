@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { formatCharacterId, parseCharacterId } from 'src/app/modules/character/model/CharacterId';
 import { CharacterSelectionOptions } from 'src/app/modules/character/model/CharacterSelectionOptions';
 import { DropdownSelectValueFormatter, ElementComparatorFn } from 'src/app/modules/shared/components/dropdown-select/dropdown-select.component';
@@ -14,19 +15,28 @@ import { ProfileService } from '../../services/profile.service';
 	templateUrl: './character-select.component.html',
 	styleUrl: './character-select.component.css'
 })
-export class CharacterSelectComponent implements OnChanges {
+export class CharacterSelectComponent implements OnInit, OnChanges {
 	@Input({ required: true }) selectedProfileId!: string;
 	@Input({ required: true }) selectedCharacterId!: string;
 	@Output() characterSelected = new EventEmitter<string>();
 
 	characterSelectionOptions?: CharacterSelectionOptions;
 
-	phaseId?: PhaseId;
-	level?: number;
-	enemyTypeId?: string;
-	enemyLevelDiff?: number;
+	readonly form = new FormGroup<CharacterFilterForm>({
+		phase: new FormControl(null, Validators.required),
+		level: new FormControl(null, Validators.required),
+		enemyType: new FormControl(null, Validators.required),
+		levelDiff: new FormControl(null, Validators.required),
+	});
 
 	constructor(private profileService: ProfileService) {}
+
+	ngOnInit(): void {
+		this.form.controls.phase.valueChanges.subscribe(() => this.onFilterChange('phase'));
+		this.form.controls.level.valueChanges.subscribe(() => this.onFilterChange('level'));
+		this.form.controls.enemyType.valueChanges.subscribe(() => this.onFilterChange('enemyType'));
+		this.form.controls.levelDiff.valueChanges.subscribe(() => this.onFilterChange('levelDiff'));
+	}
 
 	ngOnChanges(changes: SimpleChanges): void {
 		if (!changes['selectedProfileId']) {
@@ -58,44 +68,30 @@ export class CharacterSelectComponent implements OnChanges {
 	private setSelectBoxes() {
 		const parts = parseCharacterId(this.selectedCharacterId);
 
-		this.phaseId = parts.phaseId;
-		this.level = parts.level;
-		this.enemyTypeId = parts.enemyTypeId;
-		this.enemyLevelDiff = parts.enemyLevelDiff;
+		this.form.setValue({
+			phase: this.getPhase(parts.phaseId)!,
+			level: parts.level,
+			enemyType: this.getEnemyType(parts.enemyTypeId)!,
+			levelDiff: this.getEnemyLevelDiff(parts.enemyLevelDiff)!
+		}, { emitEvent: false });
 	}
 
-	onPhaseChange(phase: Phase) {
-		this.phaseId = phase.id;
-		this.level = phase.maxLevel;
-		this.loadFilteredCharacter();
-	}
+	private onFilterChange(field: keyof CharacterFilterForm) {
+		this.form.updateValueAndValidity({ emitEvent: false });
 
-	onLevelChange(level: number) {
-		this.level = level;
-		this.loadFilteredCharacter();
-	}
+		if (field === 'phase') {
+			this.form.patchValue({ level: this.form.value.phase?.maxLevel }, { emitEvent: false });
+		}
 
-	onEnemyTypeChange(enemyType: EnemyType) {
-		this.enemyTypeId = enemyType.id;
-		this.loadFilteredCharacter();
-	}
-
-	onEnemyLevelDifferenceChange(enemyLevelDifference: LevelDifference) {
-		this.enemyLevelDiff = enemyLevelDifference.id;
-		this.loadFilteredCharacter();
-	}
-
-	loadFilteredCharacter() {
 		const newCharacterId = formatCharacterId({
 			profileId: this.selectedProfileId,
-			phaseId: this.phaseId!,
-			level: this.level!,
-			enemyTypeId: this.enemyTypeId!,
-			enemyLevelDiff: this.enemyLevelDiff!
+			phaseId: this.form.value.phase!.id,
+			level: this.form.value.level!,
+			enemyTypeId: this.form.value.enemyType!.id,
+			enemyLevelDiff: this.form.value.levelDiff!.id
 		});
 
 		this.selectedCharacterId = newCharacterId;
-		this.setSelectBoxes();
 		this.characterSelected.emit(newCharacterId);
 	}
 
@@ -105,20 +101,21 @@ export class CharacterSelectComponent implements OnChanges {
 	readonly levelDifferenceFormatter = new LevelDifferenceFormatter();
 	readonly sortProfiles = sortProfiles;
 
-	getPhase() {
-		return this.characterSelectionOptions!.phases.find(x => x.id.toLowerCase() === this.phaseId?.toLowerCase());
+	private getPhase(phaseId: PhaseId) {
+		return this.characterSelectionOptions!.phases.find(x => x.id.toLowerCase() === phaseId.toLowerCase());
 	}
 
-	getLevels() {
-		return [ this.getPhase()!.maxLevel ];
+	private getEnemyType(enemyTypeId: string) {
+		return this.characterSelectionOptions!.enemyTypes.find(x => x.id.toLowerCase() === enemyTypeId.toLowerCase());
 	}
 
-	getEnemyType() {
-		return this.characterSelectionOptions!.enemyTypes.find(x => x.id.toLowerCase() === this.enemyTypeId?.toLowerCase());
+	private getEnemyLevelDiff(enemyLevelDiff: number) {
+		return this.characterSelectionOptions!.enemyLevelDiffs.find(x => x.id === enemyLevelDiff);
 	}
 
-	getEnemyLevelDiff() {
-		return this.characterSelectionOptions!.enemyLevelDiffs.find(x => x.id === this.enemyLevelDiff);
+	get levels() {
+		const phase = this.form.value.phase;
+		return phase ? [ phase!.maxLevel ] : [];
 	}
 
 	readonly enemyTypeComparator: ElementComparatorFn<EnemyType> = (a, b) => a.name.localeCompare(b.name);
@@ -198,4 +195,11 @@ class LevelDifferenceFormatter implements DropdownSelectValueFormatter<LevelDiff
 	trackKey(value: LevelDifference) {
 		return '' + value.id;
 	}
+}
+
+type CharacterFilterForm = {
+	phase: FormControl<Phase | null>,
+	level: FormControl<number | null>,
+	enemyType: FormControl<EnemyType | null>,
+	levelDiff: FormControl<LevelDifference | null>,
 }
