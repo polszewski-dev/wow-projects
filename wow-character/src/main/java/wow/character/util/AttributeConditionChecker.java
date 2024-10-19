@@ -50,9 +50,9 @@ public final class AttributeConditionChecker {
 					args.getSpell() instanceof ClassAbility a &&
 					a.getTalentTree() == c.talentTree();
 			case TargetClassCondition c ->
-					args.getTarget().getCharacterClassId() == c.characterClassId();
+					args.getTarget() != null && args.getTarget().getCharacterClassId() == c.characterClassId();
 			case TargetTypeCondition c ->
-					args.getTarget().getCreatureType() == c.creatureType();
+					args.getTarget() != null && args.getTarget().getCreatureType() == c.creatureType();
 			case WeaponTypeCondition c ->
 					args.getWeaponType() == c.weaponType();
 		};

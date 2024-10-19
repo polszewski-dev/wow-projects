@@ -2,6 +2,7 @@ package wow.commons.repository.impl.character;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.character.Race;
 import wow.commons.model.character.RaceId;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * Date: 27.09.2024
  */
 @Repository
+@DependsOn("characterClassRepositoryImpl")
 @RequiredArgsConstructor
 public class RaceRepositoryImpl implements RaceRepository {
 	private final GameVersionRepository gameVersionRepository;
