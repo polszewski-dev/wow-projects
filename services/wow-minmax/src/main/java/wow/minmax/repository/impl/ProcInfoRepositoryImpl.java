@@ -1,7 +1,7 @@
 package wow.minmax.repository.impl;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.minmax.model.ProcInfo;
 import wow.minmax.repository.ProcInfoRepository;
 import wow.minmax.repository.impl.parser.proc.ProcExcelParser;
@@ -15,7 +15,7 @@ import java.util.Map;
  * User: POlszewski
  * Date: 2023-05-03
  */
-@Repository
+@Component
 public class ProcInfoRepositoryImpl implements ProcInfoRepository {
 	private final Map<String, ProcInfo> procInfoByKey = new HashMap<>();
 

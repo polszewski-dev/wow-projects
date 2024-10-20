@@ -2,7 +2,7 @@ package wow.character.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.repository.BaseStatInfoRepository;
 import wow.character.repository.impl.parser.character.BaseStatInfoExcelParser;
@@ -20,7 +20,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class BaseStatInfoRepositoryImpl implements BaseStatInfoRepository {
 	private final GameVersionMap<String, BaseStatInfo> baseStatInfoByKey = new GameVersionMap<>();

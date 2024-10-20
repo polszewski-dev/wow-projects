@@ -2,7 +2,7 @@ package wow.character.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.character.repository.impl.parser.character.CombatRatingInfoExcelParser;
@@ -18,7 +18,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class CombatRatingInfoRepositoryImpl implements CombatRatingInfoRepository {
 	private final GameVersionMap<Integer, CombatRatingInfo> combatRatingInfoByLevel = new GameVersionMap<>();

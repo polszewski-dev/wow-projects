@@ -2,7 +2,7 @@ package wow.commons.repository.impl.pve;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.pve.PhaseExcelParser;
@@ -19,7 +19,7 @@ import java.util.TreeMap;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class PhaseRepositoryImpl implements PhaseRepository {
 	private final Map<PhaseId, Phase> phaseById = new TreeMap<>();

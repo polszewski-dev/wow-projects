@@ -2,7 +2,7 @@ package wow.commons.repository.impl.spell;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.talent.Talent;
@@ -23,7 +23,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  * User: POlszewski
  * Date: 2020-09-28
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class TalentRepositoryImpl implements TalentRepository {
 	private final PhaseMap<CharacterClassId, List<Talent>> talentsByClass = new PhaseMap<>();
