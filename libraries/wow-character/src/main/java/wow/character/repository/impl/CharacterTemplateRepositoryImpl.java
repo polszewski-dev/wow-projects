@@ -2,7 +2,7 @@ package wow.character.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.CharacterTemplateId;
 import wow.character.repository.CharacterTemplateRepository;
@@ -23,7 +23,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class CharacterTemplateRepositoryImpl implements CharacterTemplateRepository {
 	private final PhaseMap<String, CharacterTemplate> characterTemplateByKey = new PhaseMap<>();

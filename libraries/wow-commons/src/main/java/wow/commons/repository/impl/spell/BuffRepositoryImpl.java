@@ -3,7 +3,7 @@ package wow.commons.repository.impl.spell;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffIdAndRank;
@@ -23,7 +23,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  * User: POlszewski
  * Date: 2020-09-28
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class BuffRepositoryImpl implements BuffRepository {
 	private final PhaseMap<BuffIdAndRank, Buff> buffsById = new PhaseMap<>();

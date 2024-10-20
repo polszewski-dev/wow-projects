@@ -2,7 +2,7 @@ package wow.commons.repository.impl.spell;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
@@ -28,7 +28,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  * User: POlszewski
  * Date: 2020-09-28
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();

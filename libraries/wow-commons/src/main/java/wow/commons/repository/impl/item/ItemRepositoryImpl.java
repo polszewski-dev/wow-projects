@@ -2,7 +2,7 @@ package wow.commons.repository.impl.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
@@ -27,7 +27,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  * User: POlszewski
  * Date: 2021-03-02
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
 	private final SourceParserFactory sourceParserFactory;

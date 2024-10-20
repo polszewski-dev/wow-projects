@@ -2,7 +2,7 @@ package wow.commons.repository.impl.pve;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
 import wow.commons.repository.impl.parser.pve.ZoneExcelParser;
@@ -20,7 +20,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2021-03-14
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class ZoneRepositoryImpl implements ZoneRepository {
 	private final GameVersionMap<Integer, Zone> zoneById = new GameVersionMap<>();

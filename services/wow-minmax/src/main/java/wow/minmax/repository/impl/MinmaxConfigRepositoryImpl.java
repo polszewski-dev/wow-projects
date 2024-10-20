@@ -1,7 +1,7 @@
 package wow.minmax.repository.impl;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.character.model.character.Character;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.TimeRestricted;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2023-05-11
  */
-@Repository
+@Component
 public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 	private final List<ViewConfig> viewConfigs = new ArrayList<>();
 	private final List<CharacterFeatureConfig> featureConfigs = new ArrayList<>();

@@ -2,7 +2,7 @@ package wow.commons.repository.impl.pve;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.impl.parser.pve.GameVersionExcelParser;
@@ -18,7 +18,7 @@ import java.util.TreeMap;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class GameVersionRepositoryImpl implements GameVersionRepository {
 	private final Map<GameVersionId, GameVersion> gameVersionById = new TreeMap<>();

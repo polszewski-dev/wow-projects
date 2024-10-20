@@ -2,7 +2,7 @@ package wow.commons.repository.impl.character;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import wow.commons.model.profession.Profession;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionProficiency;
@@ -20,7 +20,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 27.09.2024
  */
-@Repository
+@Component
 @RequiredArgsConstructor
 public class ProfessionRepositoryImpl implements ProfessionRepository {
 	private final GameVersionRepository gameVersionRepository;
