@@ -47,7 +47,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public List<PlayerProfileInfo> getPlayerProfileInfos() {
-		return playerProfileRepository.getPlayerProfileList().stream()
+		return playerProfileRepository.findAll().stream()
 				.map(this::getPlayerProfile)
 				.map(PlayerProfile::getProfileInfo)
 				.toList();
@@ -88,7 +88,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 
 	@Override
 	public PlayerProfile getPlayerProfile(UUID profileId) {
-		return getPlayerProfile(playerProfileRepository.getPlayerProfile(profileId).orElseThrow());
+		return getPlayerProfile(playerProfileRepository.findById(profileId.toString()).orElseThrow());
 	}
 
 	@Override
@@ -214,7 +214,7 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 	private void saveProfile(PlayerProfile playerProfile) {
 		var playerProfilePO = playerProfilePOConverter.convert(playerProfile);
 
-		playerProfileRepository.saveProfile(playerProfilePO);
+		playerProfileRepository.save(playerProfilePO);
 	}
 
 	private PlayerProfile getPlayerProfile(PlayerProfilePO profile) {

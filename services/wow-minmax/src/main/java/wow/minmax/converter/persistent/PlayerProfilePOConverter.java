@@ -11,6 +11,7 @@ import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.model.persistent.PlayerProfilePO;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -25,41 +26,41 @@ public class PlayerProfilePOConverter implements Converter<PlayerProfile, Player
 	@Override
 	public PlayerProfilePO doConvert(PlayerProfile source) {
 		return new PlayerProfilePO(
-				source.getProfileId(),
+				source.getProfileId().toString(),
 				source.getProfileName(),
 				source.getCharacterClassId(),
 				source.getRaceId(),
 				convertCharacters(source.getCharacterByKey()),
 				source.getLastModified(),
-				source.getLastModifiedCharacterId()
+				source.getLastModifiedCharacterId().toString()
 		);
 	}
 
 	@Override
 	public PlayerProfile doConvertBack(PlayerProfilePO source) {
 		return new PlayerProfile(
-				source.getProfileId(),
+				UUID.fromString(source.getProfileId()),
 				source.getProfileName(),
 				source.getCharacterClassId(),
 				source.getRaceId(),
 				convertBackCharacters(source.getCharacterByKey()),
 				source.getLastModified(),
-				source.getLastModifiedCharacterId()
+				CharacterId.parse(source.getLastModifiedCharacterId())
 		);
 	}
 
-	private Map<CharacterId, PlayerCharacterPO> convertCharacters(Map<CharacterId, PlayerCharacter> characterByKey) {
+	private Map<String, PlayerCharacterPO> convertCharacters(Map<CharacterId, PlayerCharacter> characterByKey) {
 		return characterByKey.entrySet().stream()
 				.collect(Collectors.toMap(
-						Map.Entry::getKey,
-						e -> playerCharacterPOConverter.convert(e.getValue())
+						t -> t.getKey().toString(),
+						e -> playerCharacterPOConverter.convert(e.getValue(), e.getKey())
 				));
 	}
 
-	private Map<CharacterId, PlayerCharacter> convertBackCharacters(Map<CharacterId, PlayerCharacterPO> characterByKey) {
+	private Map<CharacterId, PlayerCharacter> convertBackCharacters(Map<String, PlayerCharacterPO> characterByKey) {
 		return characterByKey.entrySet().stream()
 				.collect(Collectors.toMap(
-						Map.Entry::getKey,
+						t -> CharacterId.parse(t.getKey()),
 						e -> playerCharacterPOConverter.convertBack(e.getValue())
 				));
 	}

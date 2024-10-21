@@ -17,6 +17,5 @@ import java.util.List;
 public class EquippableItemPO implements Serializable {
 	private ItemPO item;
 	private EnchantPO enchant;
-	private int socketCount;
 	private List<GemPO> gems;
 }

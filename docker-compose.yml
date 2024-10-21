@@ -1,4 +1,16 @@
 services:
+    mongodb:
+        image: mongodb/mongodb-community-server:6.0-ubi8
+        environment:
+            - MONGODB_INITDB_ROOT_USERNAME=user
+            - MONGODB_INITDB_ROOT_PASSWORD=pass
+        ports:
+            - 27017:27017
+        volumes:
+            - ../data:/data/db
+        networks:
+            - internalnet
+        restart: unless-stopped
     backend:
         container_name: wow-minmax_container
         build:
@@ -12,6 +24,8 @@ services:
         networks:
             - internalnet
         restart: unless-stopped
+        depends_on:
+            - mongodb
     frontend:
         container_name: wow-minmax-ui_container
         build: apps/wow-minmax-ui
