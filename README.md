@@ -4,19 +4,17 @@
 * wow-character - character definitions and related services
 * wow-minmax - web UI to combine and analyze different gear choices
 * wow-simulator - dps simulator
-* wow-scraper - tools to gather item info from Wowhead website and to generate excel input for wow-commons
+* wow-scraper - dev tools to scrape info Wowhead.com and to generate excel input for wow-commons
 
 ### Start: 
 
-* run WowMinmaxApplication at `http://localhost:8080`
-* go to wow-minmax-ui and call `ng serve`
-* the app is available at `http://localhost:4200`
-
+* `docker compose up -d --build`
+* app starts at http://localhost
 
 ### Used tech:
 
-* frontend: Angular, Bootstrap
-* backend: Spring Boot, REST, Lombok  
+* frontend: Angular, RxJS, NgRX, Bootstrap
+* backend: Spring Boot, REST, MongoDB  
 
 ### Screenshots:
 

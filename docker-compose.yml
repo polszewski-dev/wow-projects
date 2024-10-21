@@ -1,0 +1,31 @@
+services:
+    backend:
+        container_name: wow-minmax_container
+        build:
+            context: .
+            dockerfile: services/wow-minmax/Dockerfile
+        image: wow-minmax
+        ports:
+            - 8080:8080
+        expose:
+            - 8080
+        networks:
+            - internalnet
+        restart: unless-stopped
+    frontend:
+        container_name: wow-minmax-ui_container
+        build: apps/wow-minmax-ui
+        image: wow-minmax-ui
+        ports:
+            - 80:80
+        expose:
+            - 80
+        networks:
+            - internalnet
+        restart: unless-stopped
+        depends_on:
+            - backend
+
+networks:
+    internalnet:
+        driver: bridge
