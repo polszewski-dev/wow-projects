@@ -42,7 +42,8 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 @TestPropertySource({
 		"classpath:wow-commons.properties",
 		"classpath:wow-character.properties",
-		"classpath:wow-minmax.properties"
+		"classpath:wow-minmax.properties",
+		"classpath:application.properties"
 })
 public abstract class WowMinMaxSpringTest {
 	@Autowired

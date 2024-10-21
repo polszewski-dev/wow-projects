@@ -27,7 +27,6 @@ public class EquippableItemPOConverter implements Converter<EquippableItem, Equi
 		return new EquippableItemPO(
 				itemPOConverter.convert(source.getItem()),
 				enchantPOConverter.convert(source.getEnchant()),
-				source.getSocketCount(),
 				gemPOConverter.convertList(source.getGems())
 		);
 	}

@@ -9,13 +9,17 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.commons.model.buff.BuffIdAndRank;
 import wow.minmax.converter.BackConverter;
-import wow.minmax.converter.Converter;
+import wow.minmax.converter.ParametrizedConverter;
+import wow.minmax.model.CharacterId;
 import wow.minmax.model.persistent.BuffPO;
 import wow.minmax.model.persistent.BuildPO;
 import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.model.persistent.TalentPO;
 
 import java.util.List;
+import java.util.Map;
+
+import static wow.minmax.converter.persistent.PoConverterParams.*;
 
 /**
  * User: POlszewski
@@ -23,7 +27,7 @@ import java.util.List;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterPOConverter implements Converter<PlayerCharacter, PlayerCharacterPO>, BackConverter<PlayerCharacter, PlayerCharacterPO> {
+public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerCharacter, PlayerCharacterPO>, BackConverter<PlayerCharacter, PlayerCharacterPO> {
 	private final BuildPOConverter buildPOConverter;
 	private final EquipmentPOConverter equipmentPOConverter;
 	private final CharacterProfessionPOConverter characterProfessionPOConverter;
@@ -33,8 +37,9 @@ public class PlayerCharacterPOConverter implements Converter<PlayerCharacter, Pl
 	private final CharacterService characterService;
 
 	@Override
-	public PlayerCharacterPO doConvert(PlayerCharacter source) {
+	public PlayerCharacterPO doConvert(PlayerCharacter source, Map<String, Object> params) {
 		return new PlayerCharacterPO(
+				getCharacterId(params).toString(),
 				source.getCharacterClassId(),
 				source.getRaceId(),
 				source.getLevel(),
@@ -48,6 +53,10 @@ public class PlayerCharacterPOConverter implements Converter<PlayerCharacter, Pl
 		);
 	}
 
+	public PlayerCharacterPO convert(PlayerCharacter source, CharacterId characterId) {
+		return convert(source, createCharacterIdParams(characterId));
+	}
+
 	@Override
 	public PlayerCharacter doConvertBack(PlayerCharacterPO source) {
 		PlayerCharacter character = characterService.createPlayerCharacter(
@@ -57,7 +66,7 @@ public class PlayerCharacterPOConverter implements Converter<PlayerCharacter, Pl
 				source.getPhaseId()
 		);
 
-		var params = PoConverterParams.createParams(character);
+		var params = createParams(character);
 
 		changeBuild(character, source);
 

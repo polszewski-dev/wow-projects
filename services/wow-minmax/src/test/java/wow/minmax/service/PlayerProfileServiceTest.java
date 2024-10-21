@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
@@ -39,7 +38,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 	@Autowired
 	PlayerProfileService underTest;
 
-	@MockBean
+	@Autowired
 	PlayerProfileRepository playerProfileRepository;
 
 	@Autowired
@@ -55,7 +54,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		assertThat(profiles).hasSize(1);
 		assertThat(profiles.get(0).getProfileId()).isEqualTo(profile.getProfileId());
 
-		verify(playerProfileRepository).getPlayerProfileList();
+		verify(playerProfileRepository).findAll();
 	}
 
 	@Test
@@ -68,7 +67,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 		assertThat(newProfile.getProfileId()).isNotNull();
 		assertThat(newProfile.getLastModified()).isNotNull();
 
-		verify(playerProfileRepository).saveProfile(any());
+		verify(playerProfileRepository).save(any());
 	}
 
 	@Test
@@ -86,7 +85,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true);
 
-		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		verify(playerProfileRepository).save(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
@@ -102,7 +101,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, item, true);
 
-		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		verify(playerProfileRepository).save(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
@@ -113,8 +112,8 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		assertThat(mainHand.getEnchant()).isNotNull();
 
-		for (int i = 0; i < mainHand.getSocketCount(); ++i) {
-			assertThat(mainHand.getGems().get(i)).isNotNull();
+		for (var gem : mainHand.getGems()) {
+			assertThat(gem).isNotNull();
 		}
 	}
 
@@ -131,7 +130,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, mainHand);
 
-		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		verify(playerProfileRepository).save(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
@@ -153,7 +152,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
 
-		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		verify(playerProfileRepository).save(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
@@ -164,7 +163,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 	void resetEquipment() {
 		underTest.resetEquipment(CHARACTER_KEY);
 
-		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		verify(playerProfileRepository).save(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
@@ -178,7 +177,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_SUPREME_POWER, 0, true);
 
-		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		verify(playerProfileRepository).save(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
@@ -192,7 +191,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_PURE_DEATH, 0, false);
 
-		verify(playerProfileRepository).saveProfile(profilePOCaptor.capture());
+		verify(playerProfileRepository).save(profilePOCaptor.capture());
 		PlayerProfilePO savedProfile = profilePOCaptor.getValue();
 		PlayerCharacterPO savedCharacter = getSavedCharacter(savedProfile);
 
@@ -200,7 +199,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 	}
 
 	PlayerCharacterPO getSavedCharacter(PlayerProfilePO savedProfile) {
-		return savedProfile.getCharacterByKey().get(CHARACTER_KEY);
+		return savedProfile.getCharacterByKey().get(CHARACTER_KEY.toString());
 	}
 
 	@BeforeEach
@@ -218,7 +217,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 		PlayerProfilePO profilePO = playerProfilePOConverter.convert(profile);
 
-		when(playerProfileRepository.getPlayerProfileList()).thenReturn(List.of(profilePO));
-		when(playerProfileRepository.getPlayerProfile(profile.getProfileId())).thenReturn(Optional.of(profilePO));
+		when(playerProfileRepository.findAll()).thenReturn(List.of(profilePO));
+		when(playerProfileRepository.findById(profile.getProfileId().toString())).thenReturn(Optional.of(profilePO));
 	}
 }
