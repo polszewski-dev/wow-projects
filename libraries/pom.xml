@@ -27,6 +27,7 @@
 	</properties>
 
 	<modules>
+		<module>excel-utils</module>
 		<module>wow-commons</module>
 		<module>wow-character</module>
 		<module>wow-simulator</module>
