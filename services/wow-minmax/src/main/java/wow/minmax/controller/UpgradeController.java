@@ -9,7 +9,7 @@ import wow.minmax.converter.dto.UpgradeConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.ItemFilterDTO;
 import wow.minmax.model.dto.UpgradeDTO;
-import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.UpgradeService;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import static java.lang.Boolean.parseBoolean;
 @Slf4j
 public class UpgradeController {
 	private final UpgradeService upgradeService;
-	private final PlayerProfileService playerProfileService;
+	private final PlayerCharacterService playerCharacterService;
 	private final UpgradeConverter upgradeConverter;
 	private final ItemFilterConverter itemFilterConverter;
 
@@ -37,7 +37,7 @@ public class UpgradeController {
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestParam Map<String, String> requestParams
 	) {
-		var character = playerProfileService.getCharacter(characterId).copy();
+		var character = playerCharacterService.getCharacter(characterId).copy();
 		var itemFilter = getItemFilter(requestParams);
 		var upgrades = upgradeService.findUpgrades(
 				character, slotGroup, itemFilterConverter.convertBack(itemFilter)

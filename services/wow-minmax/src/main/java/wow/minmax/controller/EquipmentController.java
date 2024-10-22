@@ -12,7 +12,7 @@ import wow.minmax.converter.dto.EquipmentConverter;
 import wow.minmax.converter.dto.EquippableItemConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.*;
-import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.util.AttributeFormatter;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import static wow.minmax.converter.dto.DtoConverterParams.createParams;
 @AllArgsConstructor
 @Slf4j
 public class EquipmentController {
-	private final PlayerProfileService playerProfileService;
+	private final PlayerCharacterService playerCharacterService;
 	private final EquipmentConverter equipmentConverter;
 	private final EquippableItemConverter equippableItemConverter;
 
@@ -38,7 +38,7 @@ public class EquipmentController {
 	public EquipmentDTO getEquipment(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 		return equipmentConverter.convert(character.getEquipment());
 	}
 
@@ -50,7 +50,7 @@ public class EquipmentController {
 			@RequestParam(name = "best-variant", required = false, defaultValue = "false") boolean bestVariant
 	) {
 		var item = getEquippableItem(itemDTO, characterId);
-		var character = playerProfileService.equipItem(characterId, slot, item, bestVariant);
+		var character = playerCharacterService.equipItem(characterId, slot, item, bestVariant);
 		var equippedItem = character.getEquippedItem(slot);
 		log.info("Equipped item charId: {}, slot: {}, item: {}", characterId, slot, equippedItem);
 		return equippableItemConverter.convert(equippedItem);
@@ -63,7 +63,7 @@ public class EquipmentController {
 			@RequestBody List<EquippableItemDTO> itemDTOs
 	) {
 		var items = getEquippableItems(itemDTOs, characterId);
-		playerProfileService.equipItemGroup(characterId, slotGroup, items);
+		playerCharacterService.equipItemGroup(characterId, slotGroup, items);
 		log.info("Equipped items charId: {}, slotGroup: {}, items: {}", characterId, slotGroup, items);
 	}
 
@@ -79,7 +79,7 @@ public class EquipmentController {
 	public EquipmentDTO resetEquipment(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.resetEquipment(characterId);
+		var character = playerCharacterService.resetEquipment(characterId);
 		log.info("Reset charId: {}", characterId);
 		return equipmentConverter.convert(character.getEquipment());
 	}
@@ -88,7 +88,7 @@ public class EquipmentController {
 	public EquipmentSocketStatusDTO getEquipmentSocketStatus(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 		return new EquipmentSocketStatusDTO(ItemSlot.getDpsSlots().stream()
 				.collect(Collectors.toMap(x -> x, x -> getItemSocketStatus(character, x)))
 		);

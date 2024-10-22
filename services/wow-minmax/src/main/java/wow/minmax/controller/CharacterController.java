@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.minmax.converter.dto.PlayerCharacterConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.PlayerCharacterDTO;
-import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.PlayerCharacterService;
 
 /**
  * User: POlszewski
@@ -20,14 +20,14 @@ import wow.minmax.service.PlayerProfileService;
 @AllArgsConstructor
 @Slf4j
 public class CharacterController {
-	private final PlayerProfileService playerProfileService;
+	private final PlayerCharacterService playerCharacterService;
 	private final PlayerCharacterConverter playerCharacterConverter;
 
 	@GetMapping("{characterId}")
 	public PlayerCharacterDTO getCharacter(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 		var dto = playerCharacterConverter.convert(character);
 
 		dto.setCharacterId(characterId.toString());

@@ -26,7 +26,6 @@ import wow.minmax.model.PlayerProfile;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.UUID;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
@@ -136,12 +135,10 @@ public abstract class WowMinMaxSpringTest {
 
 	protected PlayerProfile getPlayerProfile() {
 		PlayerCharacter character = getCharacter();
-		PlayerProfile profile = new PlayerProfile(
-				PROFILE_ID, PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), new HashMap<>(), LocalDateTime.now(), CHARACTER_KEY
-		);
 
-		profile.addCharacter(character);
-		return profile;
+		return new PlayerProfile(
+				PROFILE_ID, PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), LocalDateTime.now(), CHARACTER_KEY
+		);
 	}
 
 	protected static final UUID PROFILE_ID = UUID.fromString("88cc7c80-523a-11ed-bdc3-0242ac120002");

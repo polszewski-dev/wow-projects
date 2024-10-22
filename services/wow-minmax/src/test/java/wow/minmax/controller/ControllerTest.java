@@ -9,6 +9,7 @@ import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.config.ViewConfig;
+import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.PlayerProfileService;
 
 import java.util.List;
@@ -24,6 +25,9 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	@MockBean
 	PlayerProfileService playerProfileService;
 
+	@MockBean
+	PlayerCharacterService playerCharacterService;
+
 	PlayerProfile profile;
 	PlayerCharacter character;
 	PlayerProfileInfo profileInfo;
@@ -31,7 +35,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
-		character = profile.getCharacter(CHARACTER_KEY).orElseThrow();
+		character = getCharacter();
 
 		character.setEquipment(getEquipment());
 
@@ -39,13 +43,13 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 
 		when(playerProfileService.getPlayerProfileInfos()).thenReturn(List.of(profileInfo));
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
-		when(playerProfileService.getCharacter(CHARACTER_KEY)).thenReturn(character);
 		when(playerProfileService.createPlayerProfile(any())).thenReturn(profile);
-		when(playerProfileService.resetEquipment(any())).thenReturn(character);
-		when(playerProfileService.equipItem(any(), any(), any())).thenReturn(character);
-		when(playerProfileService.equipItem(any(), any(), any(), anyBoolean())).thenReturn(character);
-		when(playerProfileService.equipItemGroup(any(), any(), any())).thenReturn(character);
-		when(playerProfileService.enableBuff(any(), any(), any(), anyInt(), anyBoolean())).thenReturn(character);
-		when(playerProfileService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
+		when(playerCharacterService.getCharacter(CHARACTER_KEY)).thenReturn(character);
+		when(playerCharacterService.resetEquipment(any())).thenReturn(character);
+		when(playerCharacterService.equipItem(any(), any(), any())).thenReturn(character);
+		when(playerCharacterService.equipItem(any(), any(), any(), anyBoolean())).thenReturn(character);
+		when(playerCharacterService.equipItemGroup(any(), any(), any())).thenReturn(character);
+		when(playerCharacterService.enableBuff(any(), any(), any(), anyInt(), anyBoolean())).thenReturn(character);
+		when(playerCharacterService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
 	}
 }

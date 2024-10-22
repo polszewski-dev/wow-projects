@@ -23,7 +23,7 @@ import wow.minmax.model.dto.GemOptionsDTO;
 import wow.minmax.model.dto.ItemOptionsDTO;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.ItemService;
-import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.PlayerCharacterService;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Slf4j
 public class EquipmentOptionsController {
-	private final PlayerProfileService playerProfileService;
+	private final PlayerCharacterService playerCharacterService;
 	private final ItemService itemService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final ItemConverter itemConverter;
@@ -51,7 +51,7 @@ public class EquipmentOptionsController {
 	public EquipmentOptionsDTO getEquipmentOptions(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 
 		var gems = minmaxConfigRepository.hasFeature(character, CharacterFeature.GEMS);
 		var heroics = minmaxConfigRepository.hasFeature(character, CharacterFeature.HEROICS);
@@ -64,7 +64,7 @@ public class EquipmentOptionsController {
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slot") ItemSlot slot
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 		var itemFilter = ItemFilter.everything();
 
 		return getItemOptions(character, slot, itemFilter);
@@ -74,7 +74,7 @@ public class EquipmentOptionsController {
 	public List<EnchantOptionsDTO> getEnchantOptions(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 		var itemFilter = ItemFilter.everything();
 
 		var itemOptions = getItemOptions(character, itemFilter);
@@ -86,7 +86,7 @@ public class EquipmentOptionsController {
 	public List<GemOptionsDTO> getGemOptions(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 
 		return getGemOptions(character);
 	}

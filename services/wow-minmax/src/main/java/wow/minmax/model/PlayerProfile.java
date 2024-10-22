@@ -9,8 +9,6 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,7 +23,6 @@ public class PlayerProfile {
 	private final String profileName;
 	private final CharacterClassId characterClassId;
 	private final RaceId raceId;
-	private final Map<CharacterId, PlayerCharacter> characterByKey;
 	private LocalDateTime lastModified;
 	private CharacterId lastModifiedCharacterId;
 
@@ -38,20 +35,6 @@ public class PlayerProfile {
 				lastModified,
 				lastModifiedCharacterId
 		);
-	}
-
-	public Optional<PlayerCharacter> getCharacter(CharacterId key) {
-		return Optional.ofNullable(characterByKey.get(key));
-	}
-
-	public void addCharacter(PlayerCharacter character) {
-		CharacterId characterId = getCharacterId(character);
-
-		if (characterByKey.containsKey(characterId)) {
-			throw new IllegalArgumentException("character for key: %s already exists".formatted(characterId));
-		}
-
-		characterByKey.put(characterId, character);
 	}
 
 	public CharacterId getCharacterId(PlayerCharacter character) {
