@@ -133,7 +133,7 @@ class AttributesDiffFinderTest extends WowMinMaxSpringTest {
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
-		character = profile.getCharacter(CHARACTER_KEY).orElseThrow();
+		character = getCharacter();
 		character.resetEquipment();
 
 		metaGem = getGem("Chaotic Skyfire Diamond");

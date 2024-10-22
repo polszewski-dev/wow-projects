@@ -2,6 +2,7 @@ package wow.minmax;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import wow.minmax.repository.PlayerCharacterRepository;
 import wow.minmax.repository.PlayerProfileRepository;
 
 /**
@@ -16,4 +17,7 @@ import wow.minmax.repository.PlayerProfileRepository;
 public class WowMinMaxSpringTestConfig {
 	@MockBean
 	PlayerProfileRepository playerProfileRepository;
+
+	@MockBean
+	PlayerCharacterRepository playerCharacterRepository;
 }

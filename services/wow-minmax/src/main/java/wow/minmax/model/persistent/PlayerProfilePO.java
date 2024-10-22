@@ -10,7 +10,6 @@ import wow.commons.model.character.RaceId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -26,7 +25,6 @@ public class PlayerProfilePO implements Serializable {
 	private String profileName;
 	private CharacterClassId characterClassId;
 	private RaceId raceId;
-	private Map<String, PlayerCharacterPO> characterByKey;
 	private LocalDateTime lastModified;
 	private String lastModifiedCharacterId;
 }

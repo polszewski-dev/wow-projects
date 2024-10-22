@@ -18,7 +18,7 @@ import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.dto.*;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
-import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.PlayerCharacterService;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,7 +36,7 @@ import static wow.commons.model.buff.BuffCategory.*;
 @RequestMapping("api/v1/stats")
 @AllArgsConstructor
 public class StatsController {
-	private final PlayerProfileService playerProfileService;
+	private final PlayerCharacterService playerCharacterService;
 	private final CalculationService calculationService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final SpellStatsConverter spellStatsConverter;
@@ -49,9 +49,9 @@ public class StatsController {
 	public List<SpellStatsDTO> getSpellStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 
-		var viewConfig = playerProfileService.getViewConfig(character);
+		var viewConfig = playerCharacterService.getViewConfig(character);
 
 		return viewConfig.relevantSpells().stream()
 				.map(character::getAbility)
@@ -66,7 +66,7 @@ public class StatsController {
 	public List<CharacterStatsDTO> getCharacterStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 
 		var result = new ArrayList<CharacterStatsDTO>();
 
@@ -93,7 +93,7 @@ public class StatsController {
 	public List<SpecialAbilityStatsDTO> getSpecialAbilityStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 
 		return getSpecialAbilities(character)
 				.sorted(compareSources())
@@ -115,7 +115,7 @@ public class StatsController {
 	public RotationStatsDTO getRotationStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 		var rotationStats = calculationService.getRotationStats(character, character.getRotation());
 
 		return rotationStatsConverter.convert(rotationStats);
@@ -166,7 +166,7 @@ public class StatsController {
 	public List<TalentStatsDTO> getTalentStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 
 		return character.getTalents().getList().stream()
 				.map(x -> getTalentStatDTO(x, character))

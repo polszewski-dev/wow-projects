@@ -58,7 +58,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(true));
+		verify(playerCharacterService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(true));
 	}
 
 	@Test
@@ -78,7 +78,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(false));
+		verify(playerCharacterService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(false));
 	}
 
 	@Test
@@ -97,7 +97,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(status().isOk())
 		;
 
-		verify(playerProfileService).equipItemGroup(eq(CHARACTER_KEY), eq(ItemSlotGroup.CHEST), any());
+		verify(playerCharacterService).equipItemGroup(eq(CHARACTER_KEY), eq(ItemSlotGroup.CHEST), any());
 	}
 
 	@Test
@@ -107,7 +107,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerProfileService).resetEquipment(CHARACTER_KEY);
+		verify(playerCharacterService).resetEquipment(CHARACTER_KEY);
 	}
 
 	@Test

@@ -9,7 +9,7 @@ import wow.commons.model.buff.Buff;
 import wow.minmax.converter.dto.BuffConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.dto.BuffDTO;
-import wow.minmax.service.PlayerProfileService;
+import wow.minmax.service.PlayerCharacterService;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class BuffController {
-	private final PlayerProfileService playerProfileService;
+	private final PlayerCharacterService playerCharacterService;
 	private final BuffConverter buffConverter;
 
 	@GetMapping("{characterId}/{buffListType}")
@@ -30,7 +30,7 @@ public class BuffController {
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("buffListType") BuffListType buffListType
 	) {
-		var character = playerProfileService.getCharacter(characterId);
+		var character = playerCharacterService.getCharacter(characterId);
 		return getBuffs(character, buffListType);
 	}
 
@@ -43,7 +43,7 @@ public class BuffController {
 		var buffId = buff.getBuffId();
 		var rank = buff.getRank();
 		var enabled = buff.isEnabled();
-		var character = playerProfileService.enableBuff(characterId, buffListType, buffId, rank, enabled);
+		var character = playerCharacterService.enableBuff(characterId, buffListType, buffId, rank, enabled);
 
 		log.info("Changed buff charId: {}, list: {}, buffId: {}, rank: {}, enabled: {}", characterId, buffListType, buffId, rank, enabled);
 		return getBuffs(character, buffListType);

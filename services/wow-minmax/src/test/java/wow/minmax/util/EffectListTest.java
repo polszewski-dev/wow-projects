@@ -140,7 +140,7 @@ class EffectListTest extends WowMinMaxSpringTest {
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
-		character = profile.getCharacter(CHARACTER_KEY).orElseThrow();
+		character = getCharacter();
 		character.setEquipment(getEquipment());
 	}
 }
