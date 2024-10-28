@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { CharacterStateService } from '../../../character/services/character-state.service';
+import { Store } from '@ngrx/store';
+import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
+import { selectCharacter } from '../../../character/state/character/character.selectors';
 
 @Component({
 	selector: 'app-racial-list',
@@ -7,7 +9,7 @@ import { CharacterStateService } from '../../../character/services/character-sta
 	styleUrls: ['./racial-list.component.css']
 })
 export class RacialListComponent {
-	character$ = this.characterStateService.character$;
+	character$ = this.store.select(selectCharacter);
 
-	constructor(private characterStateService: CharacterStateService) {}
+	constructor(private store: Store<CharacterModuleState>) {}
 }

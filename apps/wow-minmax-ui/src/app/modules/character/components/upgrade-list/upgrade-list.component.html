@@ -1,19 +1,18 @@
 @if (allUpgrades$ | async; as allUpgrades) {
-	@if (hasAnyUpgrades(allUpgrades)) {
-		<div>
-			<div style="text-align: center;">
-				<button
-					type="button"
-					class="btn btn-sm btn-link big-btn-link"
-					(click)="toggleVisibility()"
-				>{{visible ? "Hide Upgrades" : "Show Upgrades"}}</button>
-			</div>
+	<div>
+		<div style="text-align: center;">
+			<button
+				type="button"
+				class="btn btn-sm btn-link big-btn-link"
+				(click)="toggleVisibility()"
+			>{{visible ? "Hide Upgrades" : "Show Upgrades"}}</button>
+		</div>
 
-			@if (visible) {
+		@if (visible) {
 			<ul class="upgrade-list">
 				@for (slotGroup of itemSlotGroups; track slotGroup) {
 					<div>
-						@if ((allUpgrades[slotGroup] || []).length > 0) {
+						@if (allUpgrades[slotGroup].length > 0) {
 							<li>
 								<span class="upgrade-list-slot-group">{{slotGroup | titlecase}}</span>
 								<ul>
@@ -29,7 +28,7 @@
 													@for (gem of item.gems; track gem) {
 														<span>
 															@if (!!gem) {
-																<span class="{{gem!.color.toLowerCase()}}-gem item-header">[{{gem!.shortName}}]</span>
+																<span class="{{gem.color.toLowerCase()}}-gem item-header">[{{gem.shortName}}]</span>
 															}
 														</span>
 													}
@@ -55,7 +54,6 @@
 					</div>
 				}
 			</ul>
-			}
-		</div>
-	}
+		}
+	</div>
 }

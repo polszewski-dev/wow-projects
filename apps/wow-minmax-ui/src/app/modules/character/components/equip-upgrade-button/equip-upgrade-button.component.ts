@@ -1,9 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { createSelector, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../../model/upgrade/Upgrade';
-import { CharacterStateService } from '../../services/character-state.service';
-import { UpgradeStateService } from '../../services/upgrade-state.service';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { equipItemGroup } from '../../state/character/character.actions';
+import { selectCharacterId } from '../../state/character/character.selectors';
+import { selectUpgrades } from '../../state/upgrades/upgrades.selectors';
 
 @Component({
 	selector: 'app-equip-upgrade-button',
@@ -13,22 +16,17 @@ import { UpgradeStateService } from '../../services/upgrade-state.service';
 export class EquipUpgradeButtonComponent implements OnInit {
 	@Input({ required: true }) slotGroup!: ItemSlotGroup;
 
-	upgrade$!: Observable<Upgrade | undefined>;
+	data$!: Observable<DataView>;
 
-	constructor(
-		private characterStateService: CharacterStateService,
-		private upgradeStateService: UpgradeStateService
-	) {}
+	constructor(private store: Store<CharacterModuleState>) {}
 
 	ngOnInit(): void {
-		this.upgrade$ = this.upgradeStateService.upgrade$(this.slotGroup).pipe(
-			map(upgrades => upgrades?.[0])
-		);
+		this.data$ = this.store.select(createDataSelector(this.slotGroup));
 	}
 
-	onEquipUpgradeClick(upgrade: Upgrade) {
+	onEquipUpgradeClick(characterId: string, upgrade: Upgrade) {
 		const items = upgrade.itemDifference;
-		this.characterStateService.equipItemGroup(this.slotGroup, items);
+		this.store.dispatch(equipItemGroup({ characterId, slotGroup: this.slotGroup, items }));
 	}
 
 	getUpgradeLevel(changePct: number) {
@@ -38,4 +36,26 @@ export class EquipUpgradeButtonComponent implements OnInit {
 			changePct > 1 ? 2 :
 			1;
 	}
+}
+
+type DataView = {
+	characterId: string;
+	upgrade: Upgrade;
+} | null;
+
+function createDataSelector(slotGroup: ItemSlotGroup) {
+	return createSelector(
+		selectCharacterId,
+		selectUpgrades(slotGroup),
+		(characterId, upgrades): DataView => {
+			if (!characterId) {
+				return null;
+			}
+
+			return {
+				characterId: characterId!,
+				upgrade: upgrades[0] || null
+			};
+		}
+	);
 }

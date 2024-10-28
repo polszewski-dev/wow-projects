@@ -1,14 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { createSelector, Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { DropdownSelectValueFormatter, ElementComparatorFn, GroupKeyComparatorFn, GroupKeyToStringFn } from '../../../shared/components/dropdown-select/dropdown-select.component';
 import { PhaseId } from '../../../shared/model/character/PhaseId';
 import { getIcon } from '../../../shared/util/Icon';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { Item } from '../../model/equipment/Item';
-import { ItemOptions } from '../../model/equipment/ItemOptions';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
-import { CharacterStateService } from '../../services/character-state.service';
-import { EquipmentOptionsStateService } from '../../services/equipment-options-state.service';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { equipItemBestVariant } from '../../state/character/character.actions';
+import { selectCharacterId, selectEquipmentSlot } from '../../state/character/character.selectors';
+import { selectItemOptions } from '../../state/equipment-options/equipment-options.selectors';
 
 @Component({
 	selector: 'app-item-select',
@@ -18,38 +20,59 @@ import { EquipmentOptionsStateService } from '../../services/equipment-options-s
 export class ItemSelectComponent implements OnInit {
 	@Input({ required: true }) itemSlot!: ItemSlot;
 
-	equippedItem$!: Observable<[EquippableItem | undefined]>;
-	itemOptions$!: Observable<ItemOptions | undefined>;
+	data$!: Observable<DataView>;
 
-	constructor(
-		private characterStateService: CharacterStateService,
-		private equipmentOptionsStateService: EquipmentOptionsStateService
-	) {}
+	constructor(private store: Store<CharacterModuleState>) {}
 
 	ngOnInit(): void {
-		this.equippedItem$ = this.characterStateService.itemSlotByType$(this.itemSlot).pipe(
-			map(item => [ item ])
-		);
-		this.itemOptions$ = this.equipmentOptionsStateService.itemOptionsByItemSlot$(this.itemSlot);
+		this.data$ = this.store.select(createDataSelector(this.itemSlot));
+	}
+
+	onChange(characterId: string, item: Item) {
+		this.store.dispatch(equipItemBestVariant({ characterId, itemSlot: this.itemSlot, item }));
 	}
 
 	readonly itemFormatter = new ItemFormatter();
-
-	readonly itemComparator: ElementComparatorFn<Item> = (a, b) => a.name.localeCompare(b.name);
-
-	readonly itemGroupComparator: GroupKeyComparatorFn<Item> = (a, b) => {
-		const positionA = Object.keys(PhaseId).indexOf(PhaseId[a.firstAppearedInPhase.id]);
-		const positionB = Object.keys(PhaseId).indexOf(PhaseId[b.firstAppearedInPhase.id]);
-
-		return positionB - positionA;
-	}
-
-	readonly itemGroupToString: GroupKeyToStringFn<Item> = item => item.firstAppearedInPhase.name;
-
-	onChange(item: Item) {
-		this.characterStateService.equipItemBestVariant(this.itemSlot!, item);
-	}
+	readonly itemComparator = itemComparator;
+	readonly itemGroupComparator = itemGroupComparator;
+	readonly itemGroupToString = itemGroupToString;
 }
+
+type DataView = {
+	characterId: string;
+    equippedItem: EquippableItem | null;
+    itemOptions: Item[];
+} | null;
+
+function createDataSelector(itemSlot: ItemSlot) {
+	return createSelector(
+		selectCharacterId,
+		selectEquipmentSlot(itemSlot),
+		selectItemOptions(itemSlot),
+		(characterId, equippedItem, itemOptions): DataView => {
+			if (!characterId) {
+				return null;
+			}
+
+			return {
+				characterId,
+				equippedItem,
+				itemOptions: itemOptions?.items || []
+			};
+		}
+	);
+}
+
+const itemComparator: ElementComparatorFn<Item> = (a, b) => a.name.localeCompare(b.name);
+
+const itemGroupComparator: GroupKeyComparatorFn<Item> = (a, b) => {
+	const positionA = Object.keys(PhaseId).indexOf(PhaseId[a.firstAppearedInPhase.id]);
+	const positionB = Object.keys(PhaseId).indexOf(PhaseId[b.firstAppearedInPhase.id]);
+
+	return positionB - positionA;
+}
+
+const itemGroupToString: GroupKeyToStringFn<Item> = item => item.firstAppearedInPhase.name;
 
 class ItemFormatter implements DropdownSelectValueFormatter<Item> {
 	formatElement(value: Item) {

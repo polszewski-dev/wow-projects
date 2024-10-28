@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { filter, switchMap, tap } from 'rxjs';
-import { CharacterStateService } from '../../../character/services/character-state.service';
+import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
+import { selectDpsChanges } from 'src/app/modules/character/state/character/character.selectors';
 import { RotationSpellStats } from '../../model/RotationSpellStats';
 import { RotationStats } from '../../model/RotationStats';
 import { StatsService } from '../../services/stats.service';
@@ -11,8 +13,11 @@ import { StatsService } from '../../services/stats.service';
 	styleUrls: ['./dps-bar.component.css']
 })
 export class DpsBarComponent {
-	rotationStats$ = this.characterStateService.characterStatChange$.pipe(
-		switchMap(character => this.statsService.getRotationStats(character.characterId).pipe(
+	rotationStats$ = this.store.select(selectDpsChanges).pipe(
+		filter(change => !!change.characterId),
+		filter(change => change.dpsChangeIdx !== this.dpsChangeIdx),
+		tap(change => this.dpsChangeIdx = change.dpsChangeIdx),
+		switchMap(change => this.statsService.getRotationStats(change.characterId!).pipe(
 			tap(rotationStats => {
 				this.previousRotationStats = this.currentRotationStats;
 				this.currentRotationStats = rotationStats;
@@ -20,16 +25,17 @@ export class DpsBarComponent {
 		))
 	);
 
+	private dpsChangeIdx = -1;
 	private currentRotationStats?: RotationStats;
 	private previousRotationStats?: RotationStats;
 
 	constructor(
-		private characterStateService: CharacterStateService,
+		private store: Store<CharacterModuleState>,
 		private statsService: StatsService
 	) {}
 
 	get dpsDiff() {
-		if (this.previousRotationStats === undefined) {
+		if (!this.previousRotationStats) {
 			return 0;
 		}
 		return this.currentRotationStats!.dps - this.previousRotationStats.dps;

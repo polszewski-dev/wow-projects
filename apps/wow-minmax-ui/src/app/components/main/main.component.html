@@ -1,21 +1,9 @@
 <div class="container">
-	<app-profile-select
-		[profileList]="profileList"
-		[selectedProfile]="selectedProfile"
-		(profileSelected)="onProfileSelected($event)"
-	></app-profile-select>
+	<app-profile-select></app-profile-select>
 
-	@if (selectedProfile) {
-		<app-character-select
-			[selectedProfileId]="selectedProfile.profileId!"
-			[selectedCharacterId]="selectedCharacterId!"
-			(characterSelected)="onCharacterSelected($event)"
-		></app-character-select>
-	}
+	<app-character-select></app-character-select>
 
-	@if (selectedCharacterId) {
-		<app-profile-editor
-			[selectedCharacterId]="selectedCharacterId"
-		></app-profile-editor>
+	@if (selectedCharacterId$ | async) {
+		<app-profile-editor></app-profile-editor>
 	}
 </div>

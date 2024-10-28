@@ -1,21 +1,21 @@
-@if (dataLoaded$ | async) {
+@if (data$ | async; as data) {
 	<table class="table table-striped equipment-table" style="width:100%">
 		<thead>
 			<tr>
-				<th scope="col" [ngStyle]="{'width': editGems ? '12%' : '15%'}">Slot</th>
-				<th scope="col" [ngStyle]="{'width': editGems ? '17%' : '30%'}">Item</th>
-				<th scope="col" [ngStyle]="{'width': editGems ? '16%' : '55%'}">Enchant</th>
-				<th scope="col" style="width: 15%" [hidden]="!editGems">Gem #1</th>
-				<th scope="col" style="width: 15%" [hidden]="!editGems">Gem #2</th>
-				<th scope="col" style="width: 15%" [hidden]="!editGems">Gem #3</th>
-				<th scope="col" style="width: 10%" [hidden]="!editGems">Socket Bonus</th>
+				<th scope="col" [ngStyle]="{'width': data.canEditGems ? '12%' : '15%'}">Slot</th>
+				<th scope="col" [ngStyle]="{'width': data.canEditGems ? '17%' : '30%'}">Item</th>
+				<th scope="col" [ngStyle]="{'width': data.canEditGems ? '16%' : '55%'}">Enchant</th>
+				<th scope="col" style="width: 15%" [hidden]="!data.canEditGems">Gem #1</th>
+				<th scope="col" style="width: 15%" [hidden]="!data.canEditGems">Gem #2</th>
+				<th scope="col" style="width: 15%" [hidden]="!data.canEditGems">Gem #3</th>
+				<th scope="col" style="width: 10%" [hidden]="!data.canEditGems">Socket Bonus</th>
 			</tr>
 		</thead>
 		<tbody>
 			@for (itemSlot of itemSlots; track itemSlot) {
 				<app-equipment-slot-editor
 					[itemSlot]="itemSlot"
-					[visible]="isSlotVisible(itemSlot)"
+					[visible]="data.isSlotVisible(itemSlot)"
 				></app-equipment-slot-editor>
 			}
 		</tbody>
@@ -27,7 +27,7 @@
 		<button
 			type="button"
 			class="btn btn-sm btn-link big-btn-link"
-			(click)="resetEquipment()"
+			(click)="resetEquipment(data.characterId)"
 		>Reset</button>
 	</div>
 }

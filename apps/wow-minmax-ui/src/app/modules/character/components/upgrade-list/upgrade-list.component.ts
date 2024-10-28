@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
-import { Upgrade } from '../../model/upgrade/Upgrade';
-import { UpgradeStateService } from '../../services/upgrade-state.service';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { selectAllUpgrades } from '../../state/upgrades/upgrades.selectors';
 
 @Component({
 	selector: 'app-upgrade-list',
@@ -9,19 +10,15 @@ import { UpgradeStateService } from '../../services/upgrade-state.service';
 	styleUrls: ['./upgrade-list.component.css']
 })
 export class UpgradeListComponent {
-	allUpgrades$ = this.upgradeStateService.allUpgrades$;
+	allUpgrades$ = this.store.select(selectAllUpgrades);
 
 	visible = false;
 
-	readonly itemSlotGroups = Object.values(ItemSlotGroup);
-
-	constructor(private upgradeStateService: UpgradeStateService) {}
-
-	hasAnyUpgrades(allUpgrades: Partial<Record<ItemSlotGroup, Upgrade[]>>) {
-		return Object.values(allUpgrades).some(x => x.length > 0);
-	}
+	constructor(private store: Store<CharacterModuleState>) {}
 
 	toggleVisibility() {
 		this.visible = !this.visible;
 	}
+
+	readonly itemSlotGroups = Object.values(ItemSlotGroup);
 }

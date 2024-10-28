@@ -1,38 +1,40 @@
-@if (characterSelectionOptions) {
-	<div [formGroup]="form" class="row mt-0 mb-3">
-		<div class="col-md-12 character-select-bar">
-			<span class="character-select-bar-caption" style="margin-right: 5px">phase:</span>
-			<app-dropdown-select
-				id="phase-select"
-				formControlName="phase"
-				[elements]="characterSelectionOptions.phases"
-				[valueFormatter]="phaseFormatter"
-			></app-dropdown-select>
+@if (data$ | async; as data) {
+	@if (data.characterSelectionOptions) {
+		<div [formGroup]="form" class="row mt-0 mb-3">
+			<div class="col-md-12 character-select-bar">
+				<span class="character-select-bar-caption" style="margin-right: 5px">phase:</span>
+				<app-dropdown-select
+					id="phase-select"
+					formControlName="phase"
+					[elements]="data.characterSelectionOptions.phases"
+					[valueFormatter]="phaseFormatter"
+				></app-dropdown-select>
 
-			<span class="character-select-bar-caption" style="margin-right: 5px">, level:</span>
-			<app-dropdown-select
-				id="level-select"
-				formControlName="level"
-				[elements]="levels"
-				[valueFormatter]="levelFormatter"
-			></app-dropdown-select>
+				<span class="character-select-bar-caption" style="margin-right: 5px">, level:</span>
+				<app-dropdown-select
+					id="level-select"
+					formControlName="level"
+					[elements]="levels"
+					[valueFormatter]="levelFormatter"
+				></app-dropdown-select>
 
-			<span class="character-select-bar-caption" style="margin-right: 5px;">, enemy:</span>
-			<app-dropdown-select
-				id="enemy-type-select"
-				formControlName="enemyType"
-				[elements]="characterSelectionOptions.enemyTypes"
-				[elementComparator]="enemyTypeComparator"
-				[valueFormatter]="enemyTypeFormatter"
-			></app-dropdown-select>
+				<span class="character-select-bar-caption" style="margin-right: 5px;">, enemy:</span>
+				<app-dropdown-select
+					id="enemy-type-select"
+					formControlName="enemyType"
+					[elements]="data.characterSelectionOptions.enemyTypes"
+					[elementComparator]="enemyTypeComparator"
+					[valueFormatter]="enemyTypeFormatter"
+				></app-dropdown-select>
 
-			<span class="character-select-bar-caption" style="margin-right: 5px">, lvl diff:</span>
-			<app-dropdown-select
-				id="level-diff-select"
-				formControlName="levelDiff"
-				[elements]="characterSelectionOptions.enemyLevelDiffs"
-				[valueFormatter]="levelDifferenceFormatter"
-			></app-dropdown-select>
+				<span class="character-select-bar-caption" style="margin-right: 5px">, lvl diff:</span>
+				<app-dropdown-select
+					id="level-diff-select"
+					formControlName="levelDiff"
+					[elements]="data.characterSelectionOptions.enemyLevelDiffs"
+					[valueFormatter]="levelDifferenceFormatter"
+				></app-dropdown-select>
+			</div>
 		</div>
-	</div>
+	}
 }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { switchMap } from 'rxjs';
-import { CharacterStateService } from '../../../character/services/character-state.service';
+import { Store } from '@ngrx/store';
+import { combineLatest, filter, map, switchMap } from 'rxjs';
+import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
+import { selectCharacter, selectDpsChanges } from 'src/app/modules/character/state/character/character.selectors';
 import { StatsService } from '../../services/stats.service';
 
 @Component({
@@ -9,16 +11,19 @@ import { StatsService } from '../../services/stats.service';
 	styleUrls: ['./character-stats.component.css']
 })
 export class CharacterStatsComponent {
-	characterStats$ = this.characterStateService.characterStatChange$.pipe(
-		switchMap(character => this.statsService.getCharacterStats(character.characterId))
+	data$ = combineLatest({
+		change: this.store.select(selectDpsChanges),
+		character: this.store.select(selectCharacter),
+	}).pipe(
+		filter(({ change }) => !!change.characterId),
+		filter(({ character }) => !!character),
+		switchMap(({ character }) => this.statsService.getCharacterStats(character!.characterId).pipe(
+			map(characterStats => ({ characterStats, character: character! }))
+		))
 	);
 
 	constructor(
-		private characterStateService: CharacterStateService,
+		private store: Store<CharacterModuleState>,
 		private statsService: StatsService
 	) {}
-
-	get character() {
-		return this.characterStateService.characterSnapshot!;
-	}
 }

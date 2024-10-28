@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemSocketStatus } from '../../model/equipment/ItemSocketStatus';
-import { CharacterStateService } from '../../services/character-state.service';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { selectSocketStatus } from '../../state/character/character.selectors';
 
 @Component({
 	selector: 'app-socket-status',
@@ -12,13 +14,11 @@ import { CharacterStateService } from '../../services/character-state.service';
 export class SocketStatusComponent implements OnInit {
 	@Input({ required: true }) itemSlot!: ItemSlot;
 
-	socketStatus$!: Observable<ItemSocketStatus | undefined>;
+	socketStatus$!: Observable<ItemSocketStatus | null>;
 
-	constructor(private characterStateService: CharacterStateService) {}
+	constructor(private store: Store<CharacterModuleState>) {}
 
 	ngOnInit(): void {
-		this.socketStatus$ = this.characterStateService.socketStatus$.pipe(
-			map(status => status?.socketStatusesByItemSlot[this.itemSlot])
-		);
+		this.socketStatus$ = this.store.select(selectSocketStatus(this.itemSlot));
 	}
 }

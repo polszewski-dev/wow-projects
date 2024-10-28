@@ -1,14 +1,10 @@
-@if (equippedItem$ | async; as equippedItem) {
-	@if (enchantOptions$ | async; as enchantOptions) {
-		@if (getEnchantOptions(enchantOptions, equippedItem).length > 0) {
-			<app-dropdown-select
-				id="{{itemSlot}}-enchant"
-				[elements]="getEnchantOptions(enchantOptions, equippedItem)"
-				[value]="equippedItem.enchant"
-				[elementComparator]="enchantComparator"
-				[valueFormatter]="enchantFormatter"
-				(valueChanged)="onChange($event)"
-			></app-dropdown-select>
-		}
-	}
+@if (data$ | async; as data) {
+	<app-dropdown-select
+		id="{{itemSlot}}-enchant"
+		[elements]="data.enchantOptions"
+		[value]="data.equippedItem.enchant"
+		[elementComparator]="enchantComparator"
+		[valueFormatter]="enchantFormatter"
+		(valueChanged)="onChange(data.characterId, data.equippedItem, $event)"
+	></app-dropdown-select>
 }

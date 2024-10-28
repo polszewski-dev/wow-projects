@@ -4,6 +4,6 @@ import { Item } from './Item';
 
 export interface EquippableItem {
 	item: Item;
-	enchant?: Enchant;
-	gems: (Gem|undefined)[];
+	enchant: Enchant | null;
+	gems: (Gem | null)[];
 }

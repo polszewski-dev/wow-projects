@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CharacterModule } from '../character/character.module';
 import { StatisticsModule } from '../statistics/statistics.module';
 import { CharacterSelectComponent } from './components/character-select/character-select.component';
 import { NewProfileComponent } from './components/new-profile/new-profile.component';
@@ -16,12 +15,10 @@ import { ProfileSelectComponent } from './components/profile-select/profile-sele
 	],
 	imports: [
 		RouterModule,
-		CharacterModule,
 		StatisticsModule,
 	],
 	exports: [
 		RouterModule,
-		CharacterModule,
 		StatisticsModule,
 		ProfileEditorComponent,
 		ProfileSelectComponent,

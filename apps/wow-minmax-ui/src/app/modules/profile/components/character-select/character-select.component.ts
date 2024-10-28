@@ -1,34 +1,59 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { formatCharacterId, parseCharacterId } from 'src/app/modules/character/model/CharacterId';
 import { CharacterSelectionOptions } from 'src/app/modules/character/model/CharacterSelectionOptions';
+import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
+import { selectCharacter } from 'src/app/modules/character/state/character/character.actions';
+import { selectCharacterId } from 'src/app/modules/character/state/character/character.selectors';
 import { DropdownSelectValueFormatter, ElementComparatorFn } from 'src/app/modules/shared/components/dropdown-select/dropdown-select.component';
 import { EnemyType } from 'src/app/modules/shared/model/character/EnemyType';
 import { LevelDifference } from 'src/app/modules/shared/model/character/LevelDifference';
 import { Phase } from 'src/app/modules/shared/model/character/Phase';
 import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
 import { ProfileService } from '../../services/profile.service';
+import { ProfileModuleState } from '../../state/profile-module.state';
+import { selectSelectedProfile } from '../../state/profile.selectors';
 
 @Component({
 	selector: 'app-character-select',
 	templateUrl: './character-select.component.html',
 	styleUrl: './character-select.component.css'
 })
-export class CharacterSelectComponent implements OnInit, OnChanges {
-	@Input({ required: true }) selectedProfileId!: string;
-	@Input({ required: true }) selectedCharacterId!: string;
-	@Output() characterSelected = new EventEmitter<string>();
-
-	characterSelectionOptions?: CharacterSelectionOptions;
-
+export class CharacterSelectComponent implements OnInit {
 	readonly form = new FormGroup<CharacterFilterForm>({
+		profileId: new FormControl(null, Validators.required),
 		phase: new FormControl(null, Validators.required),
 		level: new FormControl(null, Validators.required),
 		enemyType: new FormControl(null, Validators.required),
 		levelDiff: new FormControl(null, Validators.required),
 	});
 
-	constructor(private profileService: ProfileService) {}
+	data$ = combineLatest({
+		profile: this.store.select(selectSelectedProfile),
+		characterId: this.store.select(selectCharacterId),
+	}).pipe(
+		// p and c have either matching profileId or both are null
+		filter(({ profile, characterId }) => (!!profile && !!characterId && profile.profileId === parseCharacterId(characterId).profileId) || (!profile && !characterId)),
+		// attach options to the result
+		switchMap(({ profile, characterId }) => profile
+			? this.profileService.getCharacterSelectionOptions(profile.profileId!).pipe(
+				map(characterSelectionOptions => ({ profile, characterId, characterSelectionOptions }))
+			)
+			: of({ profile: null, characterId: null, characterSelectionOptions: null })
+		),
+		tap(({ profile, characterId, characterSelectionOptions }) => {
+			if (profile) {
+				this.setSelectBoxes(characterId!, characterSelectionOptions!);
+			}
+		})
+	);
+
+	constructor(
+		private profileService: ProfileService,
+		private store: Store<ProfileModuleState & CharacterModuleState>
+	) {}
 
 	ngOnInit(): void {
 		this.form.controls.phase.valueChanges.subscribe(() => this.onFilterChange('phase'));
@@ -37,31 +62,15 @@ export class CharacterSelectComponent implements OnInit, OnChanges {
 		this.form.controls.levelDiff.valueChanges.subscribe(() => this.onFilterChange('levelDiff'));
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['selectedProfileId']) {
-			this.profileService.getCharacterSelectionOptions(this.selectedProfileId).subscribe(characterSelectionOptions => {
-				this.characterSelectionOptions = characterSelectionOptions;
-				this.setSelectBoxes();
-			});
-		}
-
-		if (changes['selectedCharacterId']) {
-			this.setSelectBoxes();
-		}
-	}
-
-	private setSelectBoxes() {
-		if (!this.characterSelectionOptions) {
-			return;
-		}
-
-		const parts = parseCharacterId(this.selectedCharacterId);
+	private setSelectBoxes(selectedCharacterId: string, characterSelectionOptions: CharacterSelectionOptions) {
+		const parts = parseCharacterId(selectedCharacterId);
 
 		this.form.setValue({
-			phase: this.getPhase(parts.phaseId)!,
+			profileId: parts.profileId,
+			phase: this.getPhase(parts.phaseId, characterSelectionOptions)!,
 			level: parts.level,
-			enemyType: this.getEnemyType(parts.enemyTypeId)!,
-			levelDiff: this.getEnemyLevelDiff(parts.enemyLevelDiff)!
+			enemyType: this.getEnemyType(parts.enemyTypeId, characterSelectionOptions)!,
+			levelDiff: this.getEnemyLevelDiff(parts.enemyLevelDiff, characterSelectionOptions)!
 		}, { emitEvent: false });
 	}
 
@@ -73,15 +82,14 @@ export class CharacterSelectComponent implements OnInit, OnChanges {
 		}
 
 		const newCharacterId = formatCharacterId({
-			profileId: this.selectedProfileId,
+			profileId: this.form.value.profileId!,
 			phaseId: this.form.value.phase!.id,
 			level: this.form.value.level!,
 			enemyTypeId: this.form.value.enemyType!.id,
 			enemyLevelDiff: this.form.value.levelDiff!.id
 		});
 
-		this.selectedCharacterId = newCharacterId;
-		this.characterSelected.emit(newCharacterId);
+		this.store.dispatch(selectCharacter({ characterId: newCharacterId }));
 	}
 
 	readonly phaseFormatter = new PhaseFormatter();
@@ -89,16 +97,16 @@ export class CharacterSelectComponent implements OnInit, OnChanges {
 	readonly enemyTypeFormatter = new EnemyTypeFormatter();
 	readonly levelDifferenceFormatter = new LevelDifferenceFormatter();
 
-	private getPhase(phaseId: PhaseId) {
-		return this.characterSelectionOptions!.phases.find(x => x.id.toLowerCase() === phaseId.toLowerCase());
+	private getPhase(phaseId: PhaseId, characterSelectionOptions: CharacterSelectionOptions) {
+		return characterSelectionOptions!.phases.find(x => x.id.toLowerCase() === phaseId.toLowerCase());
 	}
 
-	private getEnemyType(enemyTypeId: string) {
-		return this.characterSelectionOptions!.enemyTypes.find(x => x.id.toLowerCase() === enemyTypeId.toLowerCase());
+	private getEnemyType(enemyTypeId: string, characterSelectionOptions: CharacterSelectionOptions) {
+		return characterSelectionOptions!.enemyTypes.find(x => x.id.toLowerCase() === enemyTypeId.toLowerCase());
 	}
 
-	private getEnemyLevelDiff(enemyLevelDiff: number) {
-		return this.characterSelectionOptions!.enemyLevelDiffs.find(x => x.id === enemyLevelDiff);
+	private getEnemyLevelDiff(enemyLevelDiff: number, characterSelectionOptions: CharacterSelectionOptions) {
+		return characterSelectionOptions!.enemyLevelDiffs.find(x => x.id === enemyLevelDiff);
 	}
 
 	get levels() {
@@ -182,6 +190,7 @@ class LevelDifferenceFormatter implements DropdownSelectValueFormatter<LevelDiff
 }
 
 type CharacterFilterForm = {
+	profileId: FormControl<string | null>,
 	phase: FormControl<Phase | null>,
 	level: FormControl<number | null>,
 	enemyType: FormControl<EnemyType | null>,

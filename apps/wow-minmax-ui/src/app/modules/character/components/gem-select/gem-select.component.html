@@ -1,14 +1,10 @@
-@if (equippedItem$ | async; as equippedItem) {
-	@if (gemOptions$ | async; as gemOptions) {
-		@if (equippedItem.gems.length >= (socketNo + 1)) {
-			<app-dropdown-select
-				id="{{itemSlot}}-socket-{{socketNo}}"
-				[elements]="getGemOptions(gemOptions, equippedItem)"
-				[value]="equippedItem.gems[socketNo]"
-				[elementComparator]="gemComparator"
-				[valueFormatter]="gemFormatter"
-				(valueChanged)="onGemChange($event)"
-			></app-dropdown-select>
-		}
-	}
+@if (data$ | async; as data) {
+	<app-dropdown-select
+		id="{{itemSlot}}-socket-{{socketNo}}"
+		[elements]="data.gemOptions"
+		[value]="data.equippedItem.gems[socketNo]"
+		[elementComparator]="gemComparator"
+		[valueFormatter]="gemFormatter"
+		(valueChanged)="onGemChange(data.characterId, data.equippedItem, $event)"
+	></app-dropdown-select>
 }

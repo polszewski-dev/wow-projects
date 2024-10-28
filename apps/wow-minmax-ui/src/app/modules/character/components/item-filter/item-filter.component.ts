@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ItemFilter } from '../../model/equipment/ItemFilter';
-import { EquipmentOptionsStateService } from '../../services/equipment-options-state.service';
-import { UpgradeStateService } from '../../services/upgrade-state.service';
+import { createSelector, Store } from '@ngrx/store';
+import { filter, tap } from 'rxjs';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { selectCharacterId } from '../../state/character/character.selectors';
+import { selectEquipmentOptions } from '../../state/equipment-options/equipment-options.selectors';
+import { updateItemFilter } from '../../state/upgrades/upgrades.actions';
+import { selectItemFilter } from '../../state/upgrades/upgrades.selectors';
 
 @Component({
 	selector: 'app-item-filter',
@@ -19,21 +23,39 @@ export class ItemFilterComponent {
 		legendaries: false
 	});
 
+	characterId!: string;
+
+	$data = this.store.select(dataSelector).pipe(
+		filter(x => !!x),
+		tap(x => this.characterId = x!.characterId),
+		tap(x => this.form.patchValue(x!.itemFilter, { emitEvent: false }))
+	)
+
 	constructor(
-		private upgradeStateService: UpgradeStateService,
-		private equipmentOptionsStateService: EquipmentOptionsStateService,
+		private store: Store<CharacterModuleState>,
 		private formBuilder: FormBuilder
 	) {}
 
 	ngOnInit(): void {
-		this.form.setValue(this.upgradeStateService.itemFilterSnapshot);
-
 		this.form.valueChanges.subscribe(value => {
-			this.upgradeStateService.updateItemFilter(value);
+			this.store.dispatch(updateItemFilter({ characterId: this.characterId, itemFilter: value }));
 		});
 	}
-
-	get heroics() {
-		return this.equipmentOptionsStateService.equipmentOptionsSnapshot!.heroics;
-	}
 }
+
+const dataSelector = createSelector(
+	selectCharacterId,
+	selectItemFilter,
+	selectEquipmentOptions,
+	(characterId, itemFilter, equipmentOptions) => {
+		if (!characterId || !equipmentOptions) {
+			return null;
+		}
+
+		return {
+			characterId,
+			itemFilter,
+			equipmentOptions
+		}
+	}
+);

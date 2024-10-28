@@ -1,16 +1,18 @@
-@for (buff of buffs$ | async; track buff.buffId) {
-	<div class="form-check">
-		<input
-			class="form-check-input"
-			type="checkbox"
-			id="buff-select-{{buff.buffId}}-{{buff.rank}}"
-			[(ngModel)]="buff.enabled"
-			(change)="onChange(buff)"
-		>
-		<label class="form-check-label" for="buff-select-{{buff.buffId}}-{{buff.rank}}" title="{{buff.tooltip || buff.attributes}}">
-			<img [src]="buff.icon | icon"/>
-			<span class="buff-name px-1">{{buff.name}}</span>
-			<span class="buff-stats">= {{buff.attributes}}</span>
-		</label>
-	</div>
+@if (data$ | async; as data) {
+	@for (buff of data.buffList; track buff.buffId) {
+		<div class="form-check">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="buff-select-{{buff.buffId}}-{{buff.rank}}"
+				[(ngModel)]="buff.enabled"
+				(change)="onChange(data.characterId, buff)"
+			>
+			<label class="form-check-label" for="buff-select-{{buff.buffId}}-{{buff.rank}}" title="{{buff.tooltip || buff.attributes}}">
+				<img [src]="buff.icon | icon"/>
+				<span class="buff-name px-1">{{buff.name}}</span>
+				<span class="buff-stats">= {{buff.attributes}}</span>
+			</label>
+		</div>
+	}
 }

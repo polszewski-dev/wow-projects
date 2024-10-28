@@ -1,14 +1,12 @@
-@if (equippedItem$ | async; as equippedItem) {
-	@if (itemOptions$ | async; as itemOptions) {
-		<app-dropdown-select
-			id="{{itemSlot}}-item"
-			[elements]="itemOptions.items"
-			[value]="equippedItem[0]?.item"
-			[elementComparator]="itemComparator"
-			[groupKeyToString]="itemGroupToString"
-			[groupKeyComparator]="itemGroupComparator"
-			[valueFormatter]="itemFormatter"
-			(valueChanged)="onChange($event)"
-		></app-dropdown-select>
-	}
+@if (data$ | async; as data) {
+	<app-dropdown-select
+		id="{{itemSlot}}-item"
+		[elements]="data.itemOptions"
+		[value]="data.equippedItem?.item || null"
+		[elementComparator]="itemComparator"
+		[groupKeyToString]="itemGroupToString"
+		[groupKeyComparator]="itemGroupComparator"
+		[valueFormatter]="itemFormatter"
+		(valueChanged)="onChange(data.characterId, $event)"
+	></app-dropdown-select>
 }

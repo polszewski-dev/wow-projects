@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { switchMap } from 'rxjs';
-import { CharacterStateService } from '../../../character/services/character-state.service';
+import { Store } from '@ngrx/store';
+import { filter, switchMap } from 'rxjs';
+import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
+import { selectDpsChanges } from 'src/app/modules/character/state/character/character.selectors';
 import { StatsService } from '../../services/stats.service';
 
 @Component({
@@ -9,12 +11,13 @@ import { StatsService } from '../../services/stats.service';
 	styleUrls: ['./spell-stats.component.css']
 })
 export class SpellStatsComponent {
-	spellStatsList$ = this.characterStateService.characterStatChange$.pipe(
-		switchMap(character => this.statsService.getSpellStats(character.characterId))
+	spellStatsList$ = this.store.select(selectDpsChanges).pipe(
+		filter(change => !!change.characterId),
+		switchMap(change => this.statsService.getSpellStats(change.characterId!))
 	);
 
 	constructor(
-		private characterStateService: CharacterStateService,
+		private store: Store<CharacterModuleState>,
 		private statsService: StatsService
 	) {}
 }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { combineLatest, map } from 'rxjs';
+import { createSelector, Store } from '@ngrx/store';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemType } from '../../model/equipment/ItemType';
-import { CharacterStateService } from '../../services/character-state.service';
-import { EquipmentOptionsStateService } from '../../services/equipment-options-state.service';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { resetEquipment } from '../../state/character/character.actions';
+import { selectCharacterId, selectEquipment } from '../../state/character/character.selectors';
+import { selectEquipmentOptions } from '../../state/equipment-options/equipment-options.selectors';
 
 @Component({
 	selector: 'app-equipment-editor',
@@ -11,31 +13,34 @@ import { EquipmentOptionsStateService } from '../../services/equipment-options-s
 	styleUrls: ['./equipment-editor.component.css']
 })
 export class EquipmentEditorComponent {
-	readonly dataLoaded$ = combineLatest([
-		this.characterStateService.equipment$,
-		this.equipmentOptionsStateService.equipmentOptions$
-	]).pipe(
-		map(([equipment, equipmentOptions]) => !!equipment && !!equipmentOptions)
-	);
+	readonly data$ = this.store.select(dataSelector);
+
+	constructor(private store: Store<CharacterModuleState>) {}
+
+	resetEquipment(characterId: string) {
+		this.store.dispatch(resetEquipment({ characterId }));
+	}
 
 	readonly itemSlots = Object.values(ItemSlot);
 	readonly ItemSlot = ItemSlot;
 	readonly ItemType = ItemType;
-
-	constructor(
-		private characterStateService: CharacterStateService,
-		private equipmentOptionsStateService: EquipmentOptionsStateService
-	) {}
-
-	isSlotVisible(itemSlot: ItemSlot) {
-		return itemSlot !== ItemSlot.OFF_HAND || this.characterStateService.equipmentSnapshot!.itemsBySlot[ItemSlot.MAIN_HAND]?.item?.itemType !== ItemType.TWO_HAND
-	}
-
-	get editGems() {
-		 return this.equipmentOptionsStateService.equipmentOptionsSnapshot!.editGems;
-	}
-
-	resetEquipment() {
-		this.characterStateService.resetEquipment();
-	}
 }
+
+const dataSelector = createSelector(
+	selectCharacterId,
+	selectEquipment,
+	selectEquipmentOptions,
+	(characterId, equipment, equipmentOptions) => {
+		if (!characterId || !equipment || !equipmentOptions) {
+			return null;
+		}
+
+		return {
+			characterId,
+			equipment,
+			equipmentOptions,
+			canEditGems: equipmentOptions.editGems,
+			isSlotVisible: (itemSlot: ItemSlot) => (itemSlot !== ItemSlot.OFF_HAND) || (equipment[ItemSlot.MAIN_HAND]?.item?.itemType !== ItemType.TWO_HAND)
+		};
+	}
+);

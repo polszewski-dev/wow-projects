@@ -5,7 +5,7 @@
 			[(ngModel)]="selectedProfile"
 			(ngModelChange)="onProfileChange($event)"
 		>
-			@for (profile of sortedProfileList; track profile.profileId) {
+			@for (profile of profileList$ | async; track profile.profileId) {
 				<option [ngValue]="profile">{{profile.profileName}} - {{profile.race.name}} {{profile.characterClass.name}}</option>
 			}
 		</select>

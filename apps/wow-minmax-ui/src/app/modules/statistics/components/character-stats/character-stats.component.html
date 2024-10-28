@@ -1,9 +1,10 @@
+@if (data$ | async; as data) {
 <table class="table table-striped stats-table" style="text-align: right;">
 	<thead>
 		<tr>
 			<th scope="col" style="text-align: left">type</th>
 			<th scope="col">sp</th>
-			@for (school of character.characterClass.spellSchools; track school) {
+			@for (school of data.character.characterClass.spellSchools; track school) {
 				<th scope="col">{{school.toLowerCase()}}</th>
 			}
 			<th scope="col">hit%</th>
@@ -20,13 +21,13 @@
 		</tr>
 	</thead>
 	<tbody>
-		@for (charStats of characterStats$ | async; track charStats) {
+		@for (charStats of data.characterStats; track charStats) {
 			<tr>
 				<td style="text-align: left">
 					<strong>{{charStats.type}}</strong>
 				</td>
 				<td>{{charStats.sp | number:'1.0-0'}}</td>
-				@for (school of character.characterClass.spellSchools; track school) {
+				@for (school of data.character.characterClass.spellSchools; track school) {
 					<td>{{charStats.spellDamageBySchool[school] | number:'1.0-0'}}</td>
 				}
 				<td>{{charStats.hitPct | number:'1.2-2'}}</td>
@@ -44,3 +45,4 @@
 		}
 	</tbody>
 </table>
+}

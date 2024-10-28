@@ -1,7 +1,8 @@
+@if ($data | async; as data) {
 <div class="item-filter" [formGroup]="form">
 	<span class="item-filter-header">Filters:&nbsp;</span>
 
-	@if (heroics) {
+	@if (data.equipmentOptions.heroics) {
 		<div class="form-check form-check-inline">
 			<input
 				id="filter-heroics"
@@ -75,3 +76,4 @@
 		</label>
 	</div>
 </div>
+}

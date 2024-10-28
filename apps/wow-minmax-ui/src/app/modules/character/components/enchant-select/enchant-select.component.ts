@@ -1,13 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { createSelector, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { DropdownSelectValueFormatter, ElementComparatorFn } from '../../../shared/components/dropdown-select/dropdown-select.component';
 import { getIcon } from '../../../shared/util/Icon';
 import { Enchant } from '../../model/equipment/Enchant';
-import { EnchantOptions, getMatchingEnchantOptions } from '../../model/equipment/EnchantOptions';
+import { getMatchingEnchantOptions } from '../../model/equipment/EnchantOptions';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
-import { CharacterStateService } from '../../services/character-state.service';
-import { EquipmentOptionsStateService } from '../../services/equipment-options-state.service';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { equipEnchant } from '../../state/character/character.actions';
+import { selectCharacterId, selectEquipmentSlot } from '../../state/character/character.selectors';
+import { selectEnchantOptions } from '../../state/equipment-options/equipment-options.selectors';
 
 @Component({
 	selector: 'app-enchant-select',
@@ -17,30 +20,54 @@ import { EquipmentOptionsStateService } from '../../services/equipment-options-s
 export class EnchantSelectComponent implements OnInit {
 	@Input({ required: true }) itemSlot!: ItemSlot;
 
-	equippedItem$!: Observable<EquippableItem | undefined>;
-	enchantOptions$ = this.equipmentOptionsStateService.enchantOptions$;
+	data$!: Observable<DataView>;
 
-	constructor(
-		private characterStateService: CharacterStateService,
-		private equipmentOptionsStateService: EquipmentOptionsStateService
-	) {}
+	constructor(private store: Store<CharacterModuleState>) {}
 
 	ngOnInit(): void {
-		this.equippedItem$ = this.characterStateService.itemSlotByType$(this.itemSlot);
+		this.data$ = this.store.select(createDataSelector(this.itemSlot));
 	}
 
-	getEnchantOptions(enchantOptions: EnchantOptions[], equippedItem: EquippableItem) {
-		return getMatchingEnchantOptions(enchantOptions, equippedItem);
+	onChange(characterId: string, equippedItem: EquippableItem, enchant: Enchant) {
+		this.store.dispatch(equipEnchant({ characterId, equippedItem, itemSlot: this.itemSlot, enchant }));
 	}
 
 	readonly enchantFormatter = new EnchantFormatter();
-
-	readonly enchantComparator: ElementComparatorFn<Enchant> = (a, b) => a.name.localeCompare(b.name);
-
-	onChange(enchant: Enchant) {
-		this.characterStateService.equipEnchant(this.itemSlot, enchant);
-	}
+	readonly enchantComparator = enchantComparator;
 }
+
+type DataView = {
+	characterId: string;
+	equippedItem: EquippableItem;
+	enchantOptions: Enchant[];
+} | null;
+
+function createDataSelector(itemSlot: ItemSlot) {
+	return createSelector(
+		selectCharacterId,
+		selectEquipmentSlot(itemSlot),
+		selectEnchantOptions,
+		(characterId, equippedItem, enchantOptions): DataView => {
+			if (!characterId || !equippedItem) {
+				return null;
+			}
+
+			const filteredEnchantOptions = getMatchingEnchantOptions(enchantOptions, equippedItem);
+
+			if (filteredEnchantOptions.length == 0) {
+				return null;
+			}
+
+			return {
+				characterId,
+				equippedItem,
+				enchantOptions: filteredEnchantOptions
+			};
+		}
+	)
+}
+
+const enchantComparator: ElementComparatorFn<Enchant> = (a, b) => a.name.localeCompare(b.name);
 
 class EnchantFormatter implements DropdownSelectValueFormatter<Enchant> {
 	formatElement(value: Enchant) {
