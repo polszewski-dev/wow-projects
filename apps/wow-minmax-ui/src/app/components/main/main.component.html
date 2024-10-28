@@ -1,12 +1,13 @@
 <div class="container">
 	<app-profile-select
-		[selectedProfileId]="selectedProfileId"
+		[profileList]="profileList"
+		[selectedProfile]="selectedProfile"
 		(profileSelected)="onProfileSelected($event)"
 	></app-profile-select>
 
-	@if (selectedProfileId) {
+	@if (selectedProfile) {
 		<app-character-select
-			[selectedProfileId]="selectedProfileId"
+			[selectedProfileId]="selectedProfile.profileId!"
 			[selectedCharacterId]="selectedCharacterId!"
 			(characterSelected)="onCharacterSelected($event)"
 		></app-character-select>

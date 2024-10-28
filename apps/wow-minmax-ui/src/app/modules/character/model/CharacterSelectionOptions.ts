@@ -6,5 +6,4 @@ export interface CharacterSelectionOptions {
 	phases: Phase[];
 	enemyTypes: EnemyType[];
 	enemyLevelDiffs: LevelDifference[];
-	lastModifiedCharacterId: string;
 }

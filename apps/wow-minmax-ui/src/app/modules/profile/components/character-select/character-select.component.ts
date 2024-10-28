@@ -7,7 +7,6 @@ import { EnemyType } from 'src/app/modules/shared/model/character/EnemyType';
 import { LevelDifference } from 'src/app/modules/shared/model/character/LevelDifference';
 import { Phase } from 'src/app/modules/shared/model/character/Phase';
 import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
-import { ProfileInfo } from '../../model/ProfileInfo';
 import { ProfileService } from '../../services/profile.service';
 
 @Component({
@@ -39,33 +38,23 @@ export class CharacterSelectComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (!changes['selectedProfileId']) {
-			return;
+		if (changes['selectedProfileId']) {
+			this.profileService.getCharacterSelectionOptions(this.selectedProfileId).subscribe(characterSelectionOptions => {
+				this.characterSelectionOptions = characterSelectionOptions;
+				this.setSelectBoxes();
+			});
 		}
 
-		this.profileService.getCharacterSelectionOptions(this.selectedProfileId).subscribe(characterSelectionOptions => {
-			this.characterSelectionOptions = characterSelectionOptions;
-
-			const characterId = this.pickCharacterId();
-
-			if (this.selectedCharacterId !== characterId) {
-				this.selectedCharacterId = characterId;
-				this.setSelectBoxes();
-				this.characterSelected.emit(characterId);
-			} else {
-				this.setSelectBoxes();
-			}
-		});
-	}
-
-	private pickCharacterId() {
-		if (this.selectedCharacterId && this.selectedProfileId === parseCharacterId(this.selectedCharacterId).profileId) {
-			return this.selectedCharacterId;
+		if (changes['selectedCharacterId']) {
+			this.setSelectBoxes();
 		}
-		return this.characterSelectionOptions!.lastModifiedCharacterId;
 	}
 
 	private setSelectBoxes() {
+		if (!this.characterSelectionOptions) {
+			return;
+		}
+
 		const parts = parseCharacterId(this.selectedCharacterId);
 
 		this.form.setValue({
@@ -99,7 +88,6 @@ export class CharacterSelectComponent implements OnInit, OnChanges {
 	readonly levelFormatter = new LevelFormatter();
 	readonly enemyTypeFormatter = new EnemyTypeFormatter();
 	readonly levelDifferenceFormatter = new LevelDifferenceFormatter();
-	readonly sortProfiles = sortProfiles;
 
 	private getPhase(phaseId: PhaseId) {
 		return this.characterSelectionOptions!.phases.find(x => x.id.toLowerCase() === phaseId.toLowerCase());
@@ -119,10 +107,6 @@ export class CharacterSelectComponent implements OnInit, OnChanges {
 	}
 
 	readonly enemyTypeComparator: ElementComparatorFn<EnemyType> = (a, b) => a.name.localeCompare(b.name);
-}
-
-function sortProfiles(profileList: ProfileInfo[]) {
-	return profileList.sort((a, b) => a.profileName.localeCompare(b.profileName));
 }
 
 class PhaseFormatter implements DropdownSelectValueFormatter<Phase> {

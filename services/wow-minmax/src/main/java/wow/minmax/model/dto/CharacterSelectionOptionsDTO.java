@@ -19,5 +19,4 @@ public class CharacterSelectionOptionsDTO {
 	private List<PhaseDTO> phases;
 	private List<EnemyTypeDTO> enemyTypes;
 	private List<LevelDifferenceDTO> enemyLevelDiffs;
-	private String lastModifiedCharacterId;
 }

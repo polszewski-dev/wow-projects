@@ -47,7 +47,7 @@ export class NewProfileComponent implements OnInit {
 		};
 
 		this.profileService.createProfile(newProfile).subscribe(createdProfile => {
-			this.router.navigate(['/edit-profile', createdProfile.lastUsedCharacterId]);
+			this.router.navigate(['/edit-profile', createdProfile.profileId]);
 		});
 	}
 

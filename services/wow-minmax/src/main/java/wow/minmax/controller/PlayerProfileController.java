@@ -77,8 +77,7 @@ public class PlayerProfileController {
 		return new CharacterSelectionOptionsDTO(
 				getPhases(playerProfile),
 				getEnemyTypes(),
-				getEnemyLevelDifferences(),
-				playerProfile.getLastModifiedCharacterId().toString()
+				getEnemyLevelDifferences()
 		);
 	}
 

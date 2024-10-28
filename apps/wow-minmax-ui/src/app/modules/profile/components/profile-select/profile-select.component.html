@@ -2,11 +2,11 @@
 	<div class="col-md-10">
 		<select
 			class="form-select"
-			[(ngModel)]="selectedProfileId"
+			[(ngModel)]="selectedProfile"
 			(ngModelChange)="onProfileChange($event)"
 		>
 			@for (profile of sortedProfileList; track profile.profileId) {
-				<option [ngValue]="profile.profileId">{{profile.profileName}} - {{profile.race.name}} {{profile.characterClass.name}}</option>
+				<option [ngValue]="profile">{{profile.profileName}} - {{profile.race.name}} {{profile.characterClass.name}}</option>
 			}
 		</select>
 	</div>
