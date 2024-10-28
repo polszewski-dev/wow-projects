@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
-import { IconPipe } from './pipes/icon.pipe';
-import { BlankZeroPipe } from './pipes/blank-zero.pipe';
+import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DropdownSelectComponent } from './components/dropdown-select/dropdown-select.component';
+import { BlankZeroPipe } from './pipes/blank-zero.pipe';
+import { IconPipe } from './pipes/icon.pipe';
 
 @NgModule({
 	declarations: [
@@ -16,6 +16,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		NgbModule
 	],
 	exports: [
+		CommonModule,
+		NgbModule,
 		DropdownSelectComponent,
 		IconPipe,
 		BlankZeroPipe

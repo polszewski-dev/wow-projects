@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
@@ -27,12 +26,14 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		UpgradeListComponent
 	],
 	imports: [
-		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
 		SharedModule
 	],
 	exports: [
+		FormsModule,
+		ReactiveFormsModule,
+		SharedModule,
 		BuffEditorComponent,
 		EquipmentEditorComponent,
 		EquipmentSlotEditorComponent,

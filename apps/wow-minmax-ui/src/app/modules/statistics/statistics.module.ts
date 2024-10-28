@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { CharacterStatsComponent } from './components/character-stats/character-stats.component';
@@ -18,10 +17,10 @@ import { TalentStatsComponent } from './components/talent-stats/talent-stats.com
 		TalentStatsComponent
 	],
 	imports: [
-		CommonModule,
 		SharedModule
 	],
 	exports: [
+		SharedModule,
 		CharacterStatsComponent,
 		DpsBarComponent,
 		RacialListComponent,
