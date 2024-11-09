@@ -22,13 +22,13 @@ WORKDIR /app
 
 # copy pom.xml and fetch dependencies
 
-COPY services/wow-minmax/pom.xml pom.xml
+COPY services/wow-simulator/pom.xml pom.xml
 
 RUN mvn dependency:go-offline -DexcludeGroupIds=polszewski
 
 # copy sources and compile
 
-COPY services/wow-minmax .
+COPY services/wow-simulator .
 
 RUN mvn clean
 RUN mvn package -DskipTests

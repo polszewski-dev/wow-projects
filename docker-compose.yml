@@ -11,8 +11,8 @@ services:
         networks:
             - internalnet
         restart: unless-stopped
-    backend:
-        container_name: wow-minmax_container
+    backend-minmax:
+        container_name: wow-minmax-container
         build:
             context: .
             dockerfile: services/wow-minmax/Dockerfile
@@ -26,8 +26,22 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
+            - backend-simulator
+    backend-simulator:
+        container_name: wow-simulator-container
+        build:
+            context: .
+            dockerfile: services/wow-simulator/Dockerfile
+        image: wow-simulator
+        ports:
+            - 8090:8090
+        expose:
+            - 8090
+        networks:
+            - internalnet
+        restart: unless-stopped
     frontend:
-        container_name: wow-minmax-ui_container
+        container_name: wow-minmax-ui-container
         build: apps/wow-minmax-ui
         image: wow-minmax-ui
         ports:
@@ -38,7 +52,7 @@ services:
             - internalnet
         restart: unless-stopped
         depends_on:
-            - backend
+            - backend-minmax
 
 networks:
     internalnet:

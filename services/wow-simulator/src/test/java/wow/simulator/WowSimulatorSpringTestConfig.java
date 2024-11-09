@@ -12,10 +12,5 @@ import org.springframework.context.annotation.PropertySource;
 		"wow.character",
 		"wow.simulator"
 })
-@PropertySource({
-		"classpath:wow-commons.properties",
-		"classpath:wow-character.properties",
-		"classpath:wow-simulator.properties"
-})
 public final class WowSimulatorSpringTestConfig {
 }

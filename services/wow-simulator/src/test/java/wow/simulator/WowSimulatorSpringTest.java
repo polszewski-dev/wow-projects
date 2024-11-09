@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
@@ -56,6 +57,12 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.*;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WowSimulatorSpringTestConfig.class)
+@TestPropertySource({
+		"classpath:wow-commons.properties",
+		"classpath:wow-character.properties",
+		"classpath:wow-simulator.properties",
+		"classpath:application.properties"
+})
 @Getter
 public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	@Autowired

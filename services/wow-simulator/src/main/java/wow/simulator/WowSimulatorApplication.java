@@ -1,7 +1,5 @@
-package wow.minmax;
+package wow.simulator;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -10,22 +8,21 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
 		"wow.commons",
 		"wow.character",
-		"wow.minmax"
+		"wow.simulator"
 })
 @PropertySource({
 		"classpath:wow-commons.properties",
 		"classpath:wow-character.properties",
-		"classpath:wow-minmax.properties"
+		"classpath:wow-simulator.properties"
 })
-public class WowMinmaxApplication {
+public class WowSimulatorApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(WowMinmaxApplication.class, args);
+		SpringApplication.run(WowSimulatorApplication.class, args);
 	}
 
 	@Bean
@@ -43,14 +40,5 @@ public class WowMinmaxApplication {
 		config.addAllowedMethod("PATCH");
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);
-	}
-
-	@Bean
-	@Qualifier("simulator")
-	public WebClient simulatorWebClient(
-			WebClient.Builder webClientBuilder,
-			@Value("${simulator.api.url}") String simulatorApiUrl
-	) {
-		return webClientBuilder.baseUrl(simulatorApiUrl).build();
 	}
 }

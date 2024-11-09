@@ -13,5 +13,6 @@
 
 	<modules>
 		<module>wow-minmax</module>
+		<module>wow-simulator</module>
 	</modules>
 </project>
