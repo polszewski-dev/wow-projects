@@ -2,16 +2,16 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.CharacterClassConverter;
+import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.RaceConverter;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.character.RaceRepository;
+import wow.minmax.client.dto.PlayerProfileInfoDTO;
 import wow.minmax.config.ProfileConfig;
-import wow.commons.client.converter.BackConverter;
-import wow.commons.client.converter.Converter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.client.dto.PlayerProfileInfoDTO;
 
 /**
  * User: POlszewski
@@ -47,12 +47,12 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 	@Override
 	public PlayerProfileInfo doConvertBack(PlayerProfileInfoDTO source) {
 		return new PlayerProfileInfo(
-				source.getProfileId(),
-				source.getProfileName(),
-				source.getCharacterClass().getId(),
-				source.getRace().getId(),
-				source.getLastModified(),
-				CharacterId.parse(source.getLastUsedCharacterId())
+				source.profileId(),
+				source.profileName(),
+				source.characterClass().id(),
+				source.race().id(),
+				source.lastModified(),
+				CharacterId.parse(source.lastUsedCharacterId())
 		);
 	}
 }

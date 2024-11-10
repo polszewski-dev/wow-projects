@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
+import wow.commons.client.converter.EnchantConverter;
+import wow.commons.client.converter.GemConverter;
+import wow.commons.client.converter.ItemConverter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
-import wow.commons.client.converter.EnchantConverter;
-import wow.commons.client.converter.GemConverter;
-import wow.commons.client.converter.ItemConverter;
 import wow.minmax.client.dto.EnchantOptionsDTO;
 import wow.minmax.client.dto.EquipmentOptionsDTO;
 import wow.minmax.client.dto.GemOptionsDTO;
@@ -106,26 +106,27 @@ public class EquipmentOptionsController {
 
 
 	private List<EnchantOptionsDTO> getEnchantOptions(PlayerCharacter character, List<ItemOptionsDTO> itemOptions) {
-		var list = createTypeAndSubtypeGroups(itemOptions);
-
-		for (EnchantOptionsDTO x : list) {
-			var enchants = itemService.getEnchants(character, x.getItemType(), x.getItemSubType());
-			x.setEnchants(enchantConverter.convertList(enchants));
-		}
-
-		return list;
+		return createTypeAndSubtypeGroups(itemOptions).stream()
+				.map(x -> attachEnchants(character, x))
+				.toList();
 	}
 
 	private static List<EnchantOptionsDTO> createTypeAndSubtypeGroups(List<ItemOptionsDTO> itemOptions) {
 		var map = new EnumMap<ItemType, Map<ItemSubType, EnchantOptionsDTO>>(ItemType.class);
 
 		itemOptions.stream()
-				.flatMap(x -> x.getItems().stream())
+				.flatMap(x -> x.items().stream())
 				.forEach(item -> map
-						.computeIfAbsent(item.getItemType(), x -> new HashMap<>())
-						.computeIfAbsent(item.getItemSubType(), x -> new EnchantOptionsDTO(item.getItemType(), item.getItemSubType(), null)));
+						.computeIfAbsent(item.itemType(), x -> new HashMap<>())
+						.computeIfAbsent(item.itemSubType(), x -> new EnchantOptionsDTO(item.itemType(), item.itemSubType(), null)));
 
 		return map.values().stream().flatMap(x -> x.values().stream()).toList();
+	}
+
+	private EnchantOptionsDTO attachEnchants(PlayerCharacter character, EnchantOptionsDTO dto) {
+		var enchants = itemService.getEnchants(character, dto.itemType(), dto.itemSubType());
+
+		return dto.withEnchants(enchantConverter.convertList(enchants));
 	}
 
 	private List<GemOptionsDTO> getGemOptions(PlayerCharacter character) {

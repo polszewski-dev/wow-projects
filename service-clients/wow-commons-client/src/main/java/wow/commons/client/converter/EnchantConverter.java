@@ -2,9 +2,9 @@ package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.client.dto.EnchantDTO;
 import wow.commons.model.item.Enchant;
 import wow.commons.repository.item.EnchantRepository;
-import wow.commons.client.dto.EnchantDTO;
 
 import java.util.Map;
 
@@ -32,7 +32,7 @@ public class EnchantConverter implements Converter<Enchant, EnchantDTO>, Paramet
 
 	@Override
 	public Enchant doConvertBack(EnchantDTO source, Map<String, Object> params) {
-		return enchantRepository.getEnchant(source.getId(), getPhaseId(params)).orElseThrow();
+		return enchantRepository.getEnchant(source.id(), getPhaseId(params)).orElseThrow();
 	}
 
 	private String getTooltip(Enchant source) {

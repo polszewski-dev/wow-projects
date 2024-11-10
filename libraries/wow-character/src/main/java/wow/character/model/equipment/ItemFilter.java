@@ -30,6 +30,12 @@ public class ItemFilter {
 		);
 	}
 
+	public static ItemFilter empty() {
+		return new ItemFilter(
+				false, false, false, false, false, false
+		);
+	}
+
 	public boolean matchesFilter(Item item) {
 		if (!heroics && item.allSources(Source::isHeroicDrop)) {
 			return false;

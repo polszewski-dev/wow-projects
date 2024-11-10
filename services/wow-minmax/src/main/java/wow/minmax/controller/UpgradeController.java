@@ -3,10 +3,9 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.minmax.client.dto.ItemFilterDTO;
 import wow.minmax.client.dto.UpgradeDTO;
-import wow.minmax.converter.dto.ItemFilterConverter;
 import wow.minmax.converter.dto.UpgradeConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
@@ -29,7 +28,6 @@ public class UpgradeController {
 	private final UpgradeService upgradeService;
 	private final PlayerCharacterService playerCharacterService;
 	private final UpgradeConverter upgradeConverter;
-	private final ItemFilterConverter itemFilterConverter;
 
 	@GetMapping("{characterId}/slot/{slotGroup}")
 	public List<UpgradeDTO> findUpgrades(
@@ -40,7 +38,7 @@ public class UpgradeController {
 		var character = playerCharacterService.getCharacter(characterId).copy();
 		var itemFilter = getItemFilter(requestParams);
 		var upgrades = upgradeService.findUpgrades(
-				character, slotGroup, itemFilterConverter.convertBack(itemFilter)
+				character, slotGroup, itemFilter
 		);
 
 		return upgrades.stream()
@@ -48,8 +46,9 @@ public class UpgradeController {
 				.toList();
 	}
 
-	private ItemFilterDTO getItemFilter(Map<String, String> requestParams) {
-		var result = new ItemFilterDTO();
+	private ItemFilter getItemFilter(Map<String, String> requestParams) {
+		var result = ItemFilter.empty();
+
 		requestParams.forEach((key, value) -> {
 			switch (key) {
 				case "heroics" -> result.setHeroics(parseBoolean(value));

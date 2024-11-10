@@ -3,10 +3,10 @@ package wow.commons.client.converter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.EquippableItem;
+import wow.commons.client.dto.EquippableItemDTO;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
-import wow.commons.client.dto.EquippableItemDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -33,9 +33,9 @@ public class EquippableItemConverter implements Converter<EquippableItem, Equipp
 
 	@Override
 	public EquippableItem doConvertBack(EquippableItemDTO source, Map<String, Object> params) {
-		Item item = itemConverter.convertBack(source.getItem(), params);
-		Enchant enchant = enchantConverter.convertBack(source.getEnchant(), params);
-		List<Gem> gems = gemConverter.convertBackList(source.getGems(), params);
+		Item item = itemConverter.convertBack(source.item(), params);
+		Enchant enchant = enchantConverter.convertBack(source.enchant(), params);
+		List<Gem> gems = gemConverter.convertBackList(source.gems(), params);
 
 		return new EquippableItem(item)
 				.enchant(enchant)

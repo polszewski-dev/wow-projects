@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
-import wow.commons.model.buff.Buff;
 import wow.commons.client.converter.BuffConverter;
-import wow.minmax.model.CharacterId;
 import wow.commons.client.dto.BuffDTO;
+import wow.commons.model.buff.Buff;
+import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 
 import java.util.List;
@@ -40,9 +40,9 @@ public class BuffController {
 			@PathVariable("buffListType") BuffListType buffListType,
 			@RequestBody BuffDTO buff
 	) {
-		var buffId = buff.getBuffId();
-		var rank = buff.getRank();
-		var enabled = buff.isEnabled();
+		var buffId = buff.buffId();
+		var rank = buff.rank();
+		var enabled = buff.enabled();
 		var character = playerCharacterService.enableBuff(characterId, buffListType, buffId, rank, enabled);
 
 		log.info("Changed buff charId: {}, list: {}, buffId: {}, rank: {}, enabled: {}", characterId, buffListType, buffId, rank, enabled);
@@ -58,8 +58,8 @@ public class BuffController {
 	}
 
 	private BuffDTO getBuffDTO(Buff buff, boolean enabled) {
-		var dto = buffConverter.convert(buff);
-		dto.setEnabled(enabled);
-		return dto;
+		return buffConverter
+				.convert(buff)
+				.withEnabled(enabled);
 	}
 }

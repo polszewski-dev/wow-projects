@@ -126,9 +126,9 @@ public class StatsController {
 	}
 
 	private CharacterStatsDTO convert(String type, StatSummary statSummary) {
-		var result = characterStatsConverter.convert(statSummary);
-		result.setType(type);
-		return result;
+		return characterStatsConverter
+				.convert(statSummary)
+				.withType(type);
 	}
 
 	@Getter

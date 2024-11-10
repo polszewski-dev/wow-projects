@@ -28,9 +28,9 @@ public class CharacterController {
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		var character = playerCharacterService.getCharacter(characterId);
-		var dto = playerCharacterConverter.convert(character);
 
-		dto.setCharacterId(characterId.toString());
-		return dto;
+		return playerCharacterConverter
+				.convert(character)
+				.withCharacterId(characterId.toString());
 	}
 }

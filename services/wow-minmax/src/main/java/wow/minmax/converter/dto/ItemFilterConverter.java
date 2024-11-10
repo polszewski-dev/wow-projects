@@ -29,12 +29,12 @@ public class ItemFilterConverter implements Converter<ItemFilter, ItemFilterDTO>
 	@Override
 	public ItemFilter doConvertBack(ItemFilterDTO source) {
 		return new ItemFilter(
-				source.isHeroics(),
-				source.isRaids(),
-				source.isWorldBosses(),
-				source.isPvpItems(),
-				source.isGreens(),
-				source.isLegendaries()
+				source.heroics(),
+				source.raids(),
+				source.worldBosses(),
+				source.pvpItems(),
+				source.greens(),
+				source.legendaries()
 		);
 	}
 }

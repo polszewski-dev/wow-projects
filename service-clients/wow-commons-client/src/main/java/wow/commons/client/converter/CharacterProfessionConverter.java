@@ -3,10 +3,10 @@ package wow.commons.client.converter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterProfession;
+import wow.commons.client.dto.CharacterProfessionDTO;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.pve.PhaseRepository;
-import wow.commons.client.dto.CharacterProfessionDTO;
 
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 		Phase phase = phaseRepository.getPhase(phaseId).orElseThrow();
 
 		return CharacterProfession.getCharacterProfession(
-				phase, source.getProfession(), source.getSpecialization(), source.getLevel()
+				phase, source.profession(), source.specialization(), source.level()
 		);
 	}
 }

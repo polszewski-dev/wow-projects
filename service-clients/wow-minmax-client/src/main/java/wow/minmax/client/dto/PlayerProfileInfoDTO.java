@@ -1,9 +1,5 @@
 package wow.minmax.client.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import wow.commons.client.dto.CharacterClassDTO;
 import wow.commons.client.dto.RaceDTO;
 
@@ -14,15 +10,12 @@ import java.util.UUID;
  * User: POlszewski
  * Date: 2022-12-25
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class PlayerProfileInfoDTO {
-	private UUID profileId;
-	private String profileName;
-	private CharacterClassDTO characterClass;
-	private RaceDTO race;
-	private LocalDateTime lastModified;
-	private String lastUsedCharacterId;
+public record PlayerProfileInfoDTO(
+		UUID profileId,
+		String profileName,
+		CharacterClassDTO characterClass,
+		RaceDTO race,
+		LocalDateTime lastModified,
+		String lastUsedCharacterId
+) {
 }

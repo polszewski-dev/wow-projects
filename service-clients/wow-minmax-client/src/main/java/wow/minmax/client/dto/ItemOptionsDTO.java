@@ -1,9 +1,5 @@
 package wow.minmax.client.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import wow.commons.client.dto.ItemDTO;
 import wow.commons.model.categorization.ItemSlot;
 
@@ -13,11 +9,8 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-05-23
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class ItemOptionsDTO {
-	private ItemSlot itemSlot;
-	private List<ItemDTO> items;
+public record ItemOptionsDTO(
+		ItemSlot itemSlot,
+		List<ItemDTO> items
+) {
 }

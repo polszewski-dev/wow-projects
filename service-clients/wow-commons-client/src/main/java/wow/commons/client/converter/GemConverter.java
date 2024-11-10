@@ -2,11 +2,11 @@ package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.client.dto.GemDTO;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.repository.item.GemRepository;
-import wow.commons.client.dto.GemDTO;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,7 +39,7 @@ public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackCon
 
 	@Override
 	public Gem doConvertBack(GemDTO source, Map<String, Object> params) {
-		return gemRepository.getGem(source.getId(), getPhaseId(params)).orElseThrow();
+		return gemRepository.getGem(source.id(), getPhaseId(params)).orElseThrow();
 	}
 
 	private String getTooltip(Gem gem) {

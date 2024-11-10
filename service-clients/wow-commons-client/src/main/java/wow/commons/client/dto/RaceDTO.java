@@ -1,9 +1,5 @@
 package wow.commons.client.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import wow.commons.model.character.RaceId;
 
 import java.util.List;
@@ -12,13 +8,15 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-04-01
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class RaceDTO {
-	private RaceId id;
-	private String name;
-	private String icon;
-	private List<RacialDTO> racials;
+public record RaceDTO(
+		RaceId id,
+		String name,
+		String icon,
+		List<RacialDTO> racials
+) {
+	public RaceDTO withRacials(List<RacialDTO> racials) {
+		return new RaceDTO(
+				id, name, icon, racials
+		);
+	}
 }

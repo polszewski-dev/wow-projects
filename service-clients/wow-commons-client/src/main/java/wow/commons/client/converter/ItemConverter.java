@@ -47,7 +47,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 
 	@Override
 	public Item doConvertBack(ItemDTO source, Map<String, Object> params) {
-		return itemRepository.getItem(source.getId(), DtoConverterParams.getPhaseId(params)).orElseThrow();
+		return itemRepository.getItem(source.id(), DtoConverterParams.getPhaseId(params)).orElseThrow();
 	}
 
 	private String getTooltip(Item source) {

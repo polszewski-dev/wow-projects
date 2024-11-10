@@ -31,8 +31,10 @@ public class PlayerCharacterConverter implements Converter<PlayerCharacter, Play
 	}
 
 	private RaceDTO getRace(PlayerCharacter source) {
-		RaceDTO dto = raceConverter.convert(source.getRace());
-		dto.setRacials(racialConverter.convertList(source.getRacials())); // replace with racials filtered by character
-		return dto;
+		var racials = racialConverter.convertList(source.getRacials());
+
+		return raceConverter
+				.convert(source.getRace())
+				.withRacials(racials);
 	}
 }

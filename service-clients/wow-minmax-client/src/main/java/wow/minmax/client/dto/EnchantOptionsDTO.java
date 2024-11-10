@@ -1,9 +1,5 @@
 package wow.minmax.client.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import wow.commons.client.dto.EnchantDTO;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
@@ -14,12 +10,12 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-05-23
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class EnchantOptionsDTO {
-	private ItemType itemType;
-	private ItemSubType itemSubType;
-	private List<EnchantDTO> enchants;
+public record EnchantOptionsDTO(
+		ItemType itemType,
+		ItemSubType itemSubType,
+		List<EnchantDTO> enchants
+) {
+	public EnchantOptionsDTO withEnchants(List<EnchantDTO> enchants) {
+		return new EnchantOptionsDTO(itemType, itemSubType, enchants);
+	}
 }
