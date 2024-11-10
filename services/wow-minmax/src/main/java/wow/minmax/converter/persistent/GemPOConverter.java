@@ -2,15 +2,12 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.item.Gem;
-import wow.commons.repository.item.GemRepository;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
+import wow.commons.model.item.Gem;
+import wow.commons.model.pve.PhaseId;
+import wow.commons.repository.item.GemRepository;
 import wow.minmax.model.persistent.GemPO;
-
-import java.util.Map;
-
-import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -18,7 +15,7 @@ import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
  */
 @Component
 @AllArgsConstructor
-public class GemPOConverter implements Converter<Gem, GemPO>, ParametrizedBackConverter<Gem, GemPO> {
+public class GemPOConverter implements Converter<Gem, GemPO>, ParametrizedBackConverter<Gem, GemPO, PhaseId> {
 	private final GemRepository gemRepository;
 
 	@Override
@@ -27,7 +24,7 @@ public class GemPOConverter implements Converter<Gem, GemPO>, ParametrizedBackCo
 	}
 
 	@Override
-	public Gem doConvertBack(GemPO source, Map<String, Object> params) {
-		return gemRepository.getGem(source.getId(), getPhaseId(params)).orElseThrow();
+	public Gem doConvertBack(GemPO source, PhaseId phaseId) {
+		return gemRepository.getGem(source.getId(), phaseId).orElseThrow();
 	}
 }

@@ -7,9 +7,9 @@ import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
-import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
+import wow.commons.model.buff.BuffIdAndRank;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.persistent.BuffPO;
 import wow.minmax.model.persistent.BuildPO;
@@ -17,9 +17,6 @@ import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.model.persistent.TalentPO;
 
 import java.util.List;
-import java.util.Map;
-
-import static wow.minmax.converter.persistent.PoConverterParams.*;
 
 /**
  * User: POlszewski
@@ -27,7 +24,7 @@ import static wow.minmax.converter.persistent.PoConverterParams.*;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerCharacter, PlayerCharacterPO>, BackConverter<PlayerCharacter, PlayerCharacterPO> {
+public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerCharacter, PlayerCharacterPO, CharacterId>, BackConverter<PlayerCharacter, PlayerCharacterPO> {
 	private final BuildPOConverter buildPOConverter;
 	private final EquipmentPOConverter equipmentPOConverter;
 	private final CharacterProfessionPOConverter characterProfessionPOConverter;
@@ -37,9 +34,9 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 	private final CharacterService characterService;
 
 	@Override
-	public PlayerCharacterPO doConvert(PlayerCharacter source, Map<String, Object> params) {
+	public PlayerCharacterPO doConvert(PlayerCharacter source, CharacterId characterId) {
 		return new PlayerCharacterPO(
-				getCharacterId(params).toString(),
+				characterId.toString(),
 				source.getCharacterClassId(),
 				source.getRaceId(),
 				source.getLevel(),
@@ -53,10 +50,6 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 		);
 	}
 
-	public PlayerCharacterPO convert(PlayerCharacter source, CharacterId characterId) {
-		return convert(source, createCharacterIdParams(characterId));
-	}
-
 	@Override
 	public PlayerCharacter doConvertBack(PlayerCharacterPO source) {
 		PlayerCharacter character = characterService.createPlayerCharacter(
@@ -66,15 +59,13 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 				source.getPhaseId()
 		);
 
-		var params = createParams(character);
-
 		changeBuild(character, source);
 
-		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), params));
+		character.setProfessions(characterProfessionPOConverter.convertBackList(source.getProfessions(), character.getPhaseId()));
 		character.getExclusiveFactions().set(source.getExclusiveFactions());
-		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), params));
+		character.setEquipment(equipmentPOConverter.convertBack(source.getEquipment(), character.getPhaseId()));
 
-		var target = nonPlayerCharacterPOConverter.convertBack(source.getTarget(), params);
+		var target = nonPlayerCharacterPOConverter.convertBack(source.getTarget());
 		character.setTarget(target);
 
 		characterService.updateAfterRestrictionChange(character);

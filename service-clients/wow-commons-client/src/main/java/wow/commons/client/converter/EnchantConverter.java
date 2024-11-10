@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.dto.EnchantDTO;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.EnchantRepository;
-
-import java.util.Map;
-
-import static wow.commons.client.converter.DtoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -16,7 +13,7 @@ import static wow.commons.client.converter.DtoConverterParams.getPhaseId;
  */
 @Component
 @AllArgsConstructor
-public class EnchantConverter implements Converter<Enchant, EnchantDTO>, ParametrizedBackConverter<Enchant, EnchantDTO> {
+public class EnchantConverter implements Converter<Enchant, EnchantDTO>, ParametrizedBackConverter<Enchant, EnchantDTO, PhaseId> {
 	private final EnchantRepository enchantRepository;
 
 	@Override
@@ -31,8 +28,8 @@ public class EnchantConverter implements Converter<Enchant, EnchantDTO>, Paramet
 	}
 
 	@Override
-	public Enchant doConvertBack(EnchantDTO source, Map<String, Object> params) {
-		return enchantRepository.getEnchant(source.id(), getPhaseId(params)).orElseThrow();
+	public Enchant doConvertBack(EnchantDTO source, PhaseId phaseId) {
+		return enchantRepository.getEnchant(source.id(), phaseId).orElseThrow();
 	}
 
 	private String getTooltip(Enchant source) {

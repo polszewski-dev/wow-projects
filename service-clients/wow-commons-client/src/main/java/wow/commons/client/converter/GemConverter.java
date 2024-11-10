@@ -6,12 +6,10 @@ import wow.commons.client.dto.GemDTO;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.MetaEnabler;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.GemRepository;
 
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static wow.commons.client.converter.DtoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -19,7 +17,7 @@ import static wow.commons.client.converter.DtoConverterParams.getPhaseId;
  */
 @Component
 @AllArgsConstructor
-public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackConverter<Gem, GemDTO> {
+public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackConverter<Gem, GemDTO, PhaseId> {
 	private final SourceConverter sourceConverter;
 	private final GemRepository gemRepository;
 
@@ -38,8 +36,8 @@ public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackCon
 	}
 
 	@Override
-	public Gem doConvertBack(GemDTO source, Map<String, Object> params) {
-		return gemRepository.getGem(source.id(), getPhaseId(params)).orElseThrow();
+	public Gem doConvertBack(GemDTO source, PhaseId phaseId) {
+		return gemRepository.getGem(source.id(), phaseId).orElseThrow();
 	}
 
 	private String getTooltip(Gem gem) {

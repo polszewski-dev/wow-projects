@@ -5,13 +5,11 @@ import org.springframework.stereotype.Component;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.repository.CombatRatingInfoRepository;
+import wow.commons.client.converter.BackConverter;
+import wow.commons.client.converter.Converter;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
-import wow.commons.client.converter.Converter;
-import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.minmax.model.persistent.NonPlayerCharacterPO;
-
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -19,7 +17,7 @@ import java.util.Map;
  */
 @Component
 @AllArgsConstructor
-public class NonPlayerCharacterPOConverter implements Converter<NonPlayerCharacter, NonPlayerCharacterPO>, ParametrizedBackConverter<NonPlayerCharacter, NonPlayerCharacterPO> {
+public class NonPlayerCharacterPOConverter implements Converter<NonPlayerCharacter, NonPlayerCharacterPO>, BackConverter<NonPlayerCharacter, NonPlayerCharacterPO> {
 	private final PhaseRepository phaseRepository;
 	private final CharacterClassRepository characterClassRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
@@ -37,7 +35,7 @@ public class NonPlayerCharacterPOConverter implements Converter<NonPlayerCharact
 	}
 
 	@Override
-	public NonPlayerCharacter doConvertBack(NonPlayerCharacterPO source, Map<String, Object> params) {
+	public NonPlayerCharacter doConvertBack(NonPlayerCharacterPO source) {
 		var phase = phaseRepository.getPhase(source.getPhaseId()).orElseThrow();
 		var characterClass = characterClassRepository.getCharacterClass(source.getCharacterClassId(), phase.getGameVersionId()).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(phase.getGameVersionId(), source.getLevel()).orElseThrow();

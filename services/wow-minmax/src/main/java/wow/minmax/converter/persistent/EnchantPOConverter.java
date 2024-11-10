@@ -2,15 +2,12 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.item.Enchant;
-import wow.commons.repository.item.EnchantRepository;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.pve.PhaseId;
+import wow.commons.repository.item.EnchantRepository;
 import wow.minmax.model.persistent.EnchantPO;
-
-import java.util.Map;
-
-import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
 
 /**
  * User: POlszewski
@@ -18,7 +15,7 @@ import static wow.minmax.converter.persistent.PoConverterParams.getPhaseId;
  */
 @Component
 @AllArgsConstructor
-public class EnchantPOConverter implements Converter<Enchant, EnchantPO>, ParametrizedBackConverter<Enchant, EnchantPO> {
+public class EnchantPOConverter implements Converter<Enchant, EnchantPO>, ParametrizedBackConverter<Enchant, EnchantPO, PhaseId> {
 	private final EnchantRepository enchantRepository;
 
 	@Override
@@ -27,7 +24,7 @@ public class EnchantPOConverter implements Converter<Enchant, EnchantPO>, Parame
 	}
 
 	@Override
-	public Enchant doConvertBack(EnchantPO source, Map<String, Object> params) {
-		return enchantRepository.getEnchant(source.getId(), getPhaseId(params)).orElseThrow();
+	public Enchant doConvertBack(EnchantPO source, PhaseId phaseId) {
+		return enchantRepository.getEnchant(source.getId(), phaseId).orElseThrow();
 	}
 }

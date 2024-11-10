@@ -6,10 +6,10 @@ import wow.commons.client.dto.ItemDTO;
 import wow.commons.client.dto.PhaseDTO;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Item;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.pve.PhaseRepository;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  */
 @Component
 @AllArgsConstructor
-public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBackConverter<Item, ItemDTO> {
+public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBackConverter<Item, ItemDTO, PhaseId> {
 	private final SourceConverter sourceConverter;
 	private final PhaseConverter phaseConverter;
 	private final ItemRepository itemRepository;
@@ -46,8 +46,8 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 	}
 
 	@Override
-	public Item doConvertBack(ItemDTO source, Map<String, Object> params) {
-		return itemRepository.getItem(source.id(), DtoConverterParams.getPhaseId(params)).orElseThrow();
+	public Item doConvertBack(ItemDTO source, PhaseId phaseId) {
+		return itemRepository.getItem(source.id(), phaseId).orElseThrow();
 	}
 
 	private String getTooltip(Item source) {

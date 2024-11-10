@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.character.model.equipment.Equipment;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
+import wow.commons.model.pve.PhaseId;
 import wow.minmax.model.persistent.EquipmentPO;
 
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @AllArgsConstructor
-public class EquipmentPOConverter implements Converter<Equipment, EquipmentPO>, ParametrizedBackConverter<Equipment, EquipmentPO> {
+public class EquipmentPOConverter implements Converter<Equipment, EquipmentPO>, ParametrizedBackConverter<Equipment, EquipmentPO, PhaseId> {
 	private final EquippableItemPOConverter equippableItemPOConverter;
 
 	@Override
@@ -30,10 +31,10 @@ public class EquipmentPOConverter implements Converter<Equipment, EquipmentPO>, 
 	}
 
 	@Override
-	public Equipment doConvertBack(EquipmentPO source, Map<String, Object> params) {
+	public Equipment doConvertBack(EquipmentPO source, PhaseId phaseId) {
 		var itemsBySlot = source.getItemsBySlot().entrySet().stream()
 				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemPOConverter.convertBack(e.getValue(), params))
+						Map.Entry::getKey, e -> equippableItemPOConverter.convertBack(e.getValue(), phaseId))
 				);
 
 		Equipment equipment = new Equipment();

@@ -8,17 +8,13 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.pve.PhaseRepository;
 
-import java.util.Map;
-
-import static wow.commons.client.converter.DtoConverterParams.getPhaseId;
-
 /**
  * User: POlszewski
  * Date: 2023-01-07
  */
 @Component
 @AllArgsConstructor
-public class CharacterProfessionConverter implements Converter<CharacterProfession, CharacterProfessionDTO>, ParametrizedBackConverter<CharacterProfession, CharacterProfessionDTO> {
+public class CharacterProfessionConverter implements Converter<CharacterProfession, CharacterProfessionDTO>, ParametrizedBackConverter<CharacterProfession, CharacterProfessionDTO, PhaseId> {
 	private final PhaseRepository phaseRepository;
 
 	@Override
@@ -31,8 +27,7 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 	}
 
 	@Override
-	public CharacterProfession doConvertBack(CharacterProfessionDTO source, Map<String, Object> params) {
-		PhaseId phaseId = getPhaseId(params);
+	public CharacterProfession doConvertBack(CharacterProfessionDTO source, PhaseId phaseId) {
 		Phase phase = phaseRepository.getPhase(phaseId).orElseThrow();
 
 		return CharacterProfession.getCharacterProfession(

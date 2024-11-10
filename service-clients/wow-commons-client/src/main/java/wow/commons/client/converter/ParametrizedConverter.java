@@ -2,25 +2,24 @@ package wow.commons.client.converter;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
  * Date: 2021-12-15
  */
-public interface ParametrizedConverter<F, T> {
-	default T convert(F source, Map<String, Object> params) {
+public interface ParametrizedConverter<F, T, P> {
+	default T convert(F source, P param) {
 		if (source == null) {
 			return null;
 		}
-		return doConvert(source, params);
+		return doConvert(source, param);
 	}
 
-	default List<T> convertList(Collection<F> list, Map<String, Object> params) {
+	default List<T> convertList(Collection<F> list, P param) {
 		return list.stream()
-				.map(x -> convert(x, params))
+				.map(x -> convert(x, param))
 				.toList();
 	}
 
-	T doConvert(F source, Map<String, Object> params);
+	T doConvert(F source, P param);
 }
