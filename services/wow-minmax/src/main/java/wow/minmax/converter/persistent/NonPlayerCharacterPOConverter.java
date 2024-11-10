@@ -7,8 +7,8 @@ import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
-import wow.minmax.converter.Converter;
-import wow.minmax.converter.ParametrizedBackConverter;
+import wow.commons.client.converter.Converter;
+import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.minmax.model.persistent.NonPlayerCharacterPO;
 
 import java.util.Map;

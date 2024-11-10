@@ -56,7 +56,7 @@
 
 		<dependency>
 			<groupId>polszewski</groupId>
-			<artifactId>wow-character</artifactId>
+			<artifactId>wow-simulator-client</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>

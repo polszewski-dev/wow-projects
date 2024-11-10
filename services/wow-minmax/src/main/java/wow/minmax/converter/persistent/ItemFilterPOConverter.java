@@ -3,8 +3,8 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.ItemFilter;
-import wow.minmax.converter.BackConverter;
-import wow.minmax.converter.Converter;
+import wow.commons.client.converter.BackConverter;
+import wow.commons.client.converter.Converter;
 import wow.minmax.model.persistent.ItemFilterPO;
 
 /**

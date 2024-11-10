@@ -6,8 +6,8 @@ import wow.character.model.character.CharacterProfession;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.pve.PhaseRepository;
-import wow.minmax.converter.Converter;
-import wow.minmax.converter.ParametrizedBackConverter;
+import wow.commons.client.converter.Converter;
+import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.minmax.model.persistent.CharacterProfessionPO;
 
 import java.util.Map;

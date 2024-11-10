@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Item;
 import wow.commons.repository.item.ItemRepository;
-import wow.minmax.converter.Converter;
-import wow.minmax.converter.ParametrizedBackConverter;
+import wow.commons.client.converter.Converter;
+import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.minmax.model.persistent.ItemPO;
 
 import java.util.Map;

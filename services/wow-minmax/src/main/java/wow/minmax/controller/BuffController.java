@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.BuffListType;
 import wow.character.model.character.Character;
 import wow.commons.model.buff.Buff;
-import wow.minmax.converter.dto.BuffConverter;
+import wow.commons.client.converter.BuffConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.dto.BuffDTO;
+import wow.commons.client.dto.BuffDTO;
 import wow.minmax.service.PlayerCharacterService;
 
 import java.util.List;

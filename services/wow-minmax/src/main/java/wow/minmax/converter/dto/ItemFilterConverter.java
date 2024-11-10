@@ -3,9 +3,9 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.ItemFilter;
-import wow.minmax.converter.BackConverter;
-import wow.minmax.converter.Converter;
-import wow.minmax.model.dto.ItemFilterDTO;
+import wow.commons.client.converter.BackConverter;
+import wow.commons.client.converter.Converter;
+import wow.minmax.client.dto.ItemFilterDTO;
 
 /**
  * User: POlszewski

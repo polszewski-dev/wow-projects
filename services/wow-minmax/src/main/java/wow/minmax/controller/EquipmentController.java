@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
+import wow.commons.client.dto.EquipmentDTO;
+import wow.commons.client.dto.EquippableItemDTO;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.minmax.converter.dto.EquipmentConverter;
-import wow.minmax.converter.dto.EquippableItemConverter;
+import wow.commons.client.converter.EquipmentConverter;
+import wow.commons.client.converter.EquippableItemConverter;
+import wow.minmax.client.dto.EquipmentSocketStatusDTO;
+import wow.minmax.client.dto.ItemSocketStatusDTO;
+import wow.minmax.client.dto.SocketBonusStatusDTO;
+import wow.minmax.client.dto.SocketStatusDTO;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.dto.*;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.util.AttributeFormatter;
 
@@ -19,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static wow.minmax.converter.dto.DtoConverterParams.createParams;
+import static wow.commons.client.converter.DtoConverterParams.createParams;
 
 /**
  * User: POlszewski

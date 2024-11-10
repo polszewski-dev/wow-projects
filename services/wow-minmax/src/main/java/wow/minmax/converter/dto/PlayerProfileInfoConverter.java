@@ -2,14 +2,16 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.client.converter.CharacterClassConverter;
+import wow.commons.client.converter.RaceConverter;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.character.RaceRepository;
 import wow.minmax.config.ProfileConfig;
-import wow.minmax.converter.BackConverter;
-import wow.minmax.converter.Converter;
+import wow.commons.client.converter.BackConverter;
+import wow.commons.client.converter.Converter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerProfileInfo;
-import wow.minmax.model.dto.PlayerProfileInfoDTO;
+import wow.minmax.client.dto.PlayerProfileInfoDTO;
 
 /**
  * User: POlszewski

@@ -13,6 +13,7 @@
 
 	<modules>
 		<module>libraries</module>
+		<module>service-clients</module>
 		<module>services</module>
 		<module>tools</module>
 	</modules>

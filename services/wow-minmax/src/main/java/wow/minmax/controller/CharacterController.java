@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wow.minmax.client.dto.PlayerCharacterDTO;
 import wow.minmax.converter.dto.PlayerCharacterConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.dto.PlayerCharacterDTO;
 import wow.minmax.service.PlayerCharacterService;
 
 /**

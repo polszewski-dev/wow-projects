@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import wow.minmax.client.dto.PlayerProfileInfoDTO;
 import wow.minmax.converter.dto.PlayerProfileInfoConverter;
-import wow.minmax.model.dto.PlayerProfileInfoDTO;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;

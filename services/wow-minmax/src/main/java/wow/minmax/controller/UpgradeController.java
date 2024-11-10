@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.commons.model.categorization.ItemSlotGroup;
+import wow.minmax.client.dto.ItemFilterDTO;
+import wow.minmax.client.dto.UpgradeDTO;
 import wow.minmax.converter.dto.ItemFilterConverter;
 import wow.minmax.converter.dto.UpgradeConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.dto.ItemFilterDTO;
-import wow.minmax.model.dto.UpgradeDTO;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.UpgradeService;
 

@@ -9,8 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.minmax.converter.dto.EquippableItemConverter;
-import wow.minmax.model.dto.EquippableItemDTO;
+import wow.commons.client.converter.EquippableItemConverter;
+import wow.commons.client.dto.EquippableItemDTO;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.snapshot.StatSummary;
-import wow.minmax.converter.Converter;
-import wow.minmax.model.dto.CharacterStatsDTO;
+import wow.commons.client.converter.Converter;
+import wow.minmax.client.dto.CharacterStatsDTO;
 
 /**
  * User: POlszewski

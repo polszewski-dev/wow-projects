@@ -18,6 +18,13 @@ COPY libraries .
 RUN mvn clean
 RUN mvn install -DskipTests
 
+WORKDIR /service-clients
+
+COPY service-clients .
+
+RUN mvn clean
+RUN mvn install -DskipTests
+
 WORKDIR /app
 
 # copy pom.xml and fetch dependencies
