@@ -43,7 +43,7 @@ public class Cooldowns implements SimulationContextSource, TimeAware {
 			throw new IllegalStateException();
 		}
 
-		var cooldown = new CooldownInstance(owner, ability.getAbilityId(), actualDuration);
+		var cooldown = CooldownInstance.forAbility(ability.getAbilityId(), owner, actualDuration);
 
 		updateQueue.add(cooldown);
 	}
@@ -56,7 +56,7 @@ public class Cooldowns implements SimulationContextSource, TimeAware {
 	private Optional<CooldownInstance> getCooldown(AbilityId abilityId) {
 		return updateQueue.getElements().stream()
 				.map(Handle::get)
-				.filter(x -> x.getAbilityId() == abilityId)
+				.filter(x -> x.isForAbility(abilityId))
 				.findAny();
 	}
 

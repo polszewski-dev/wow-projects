@@ -16,6 +16,7 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.Item;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.config.SimulatorContext;
@@ -114,8 +115,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record EffectStacked(Time time, AbilityId spell, Unit target) implements Event {}
 		public record EffectExpired(Time time, AbilityId spell, Unit target) implements Event {}
 		public record EffectRemoved(Time time, AbilityId spell, Unit target) implements Event {}
-		public record CooldownStarted(Time time, Unit caster, AbilityId spell) implements Event {}
-		public record CooldownExpired(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record CooldownStarted(Time time, Unit caster, CooldownId cooldownId) implements Event {}
+		public record CooldownExpired(Time time, Unit caster, CooldownId cooldownId) implements Event {}
 		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
@@ -204,12 +205,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		@Override
 		public void cooldownStarted(CooldownInstance cooldown) {
-			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getAbilityId()));
+			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getCooldownId()));
 		}
 
 		@Override
 		public void cooldownExpired(CooldownInstance cooldown) {
-			addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getAbilityId()));
+			addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getCooldownId()));
 		}
 
 		@Override
@@ -309,11 +310,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		public EventListBuilder cooldownStarted(Unit caster, AbilityId abilityId) {
-			return addEvent(new CooldownStarted(time, caster, abilityId));
+			return addEvent(new CooldownStarted(time, caster, CooldownId.of(abilityId)));
 		}
 
 		public EventListBuilder cooldownExpired(Unit caster, AbilityId abilityId) {
-			return addEvent(new CooldownExpired(time, caster, abilityId));
+			return addEvent(new CooldownExpired(time, caster, CooldownId.of(abilityId)));
 		}
 
 		public EventListBuilder simulationEnded() {

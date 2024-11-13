@@ -1,7 +1,7 @@
 package wow.simulator.model.stats;
 
 import lombok.Getter;
-import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
 
 /**
@@ -10,10 +10,10 @@ import wow.simulator.model.time.Time;
  */
 @Getter
 public final class CooldownTimeEntry extends TimeEntry {
-	private final AbilityId abilityId;
+	private final CooldownId cooldownId;
 
-	public CooldownTimeEntry(AbilityId abilityId, Time begin) {
+	public CooldownTimeEntry(CooldownId cooldownId, Time begin) {
 		super(begin);
-		this.abilityId = abilityId;
+		this.cooldownId = cooldownId;
 	}
 }

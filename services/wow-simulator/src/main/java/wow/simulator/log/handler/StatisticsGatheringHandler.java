@@ -145,14 +145,14 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void cooldownStarted(CooldownInstance cooldown) {
-		cooldowns.put(cooldown.getId(), new CooldownTimeEntry(cooldown.getAbilityId(), now()));
+		cooldowns.put(cooldown.getId(), new CooldownTimeEntry(cooldown.getCooldownId(), now()));
 	}
 
 	@Override
 	public void cooldownExpired(CooldownInstance cooldown) {
 		var timeEntry = cooldowns.remove(cooldown.getId());
 		timeEntry.complete(now());
-		stats.addCooldownUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
+		stats.addCooldownUptime(timeEntry.getCooldownId(), timeEntry.getElapsedTime());
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 		}
 		for (var timeEntry : cooldowns.values()) {
 			timeEntry.complete(now());
-			stats.addCooldownUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
+			stats.addCooldownUptime(timeEntry.getCooldownId(), timeEntry.getElapsedTime());
 		}
 	}
 }

@@ -6,6 +6,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.AbilityIdAndRank;
+import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
 
 import java.util.LinkedHashMap;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class Stats {
 	private final Map<AbilityIdAndRank, AbilityStats> abilityStatsById = new LinkedHashMap<>();
 	private final Map<AbilityId, EffectStats> effectStatsById = new LinkedHashMap<>();
-	private final Map<AbilityId, CooldownStats> cooldownStatsById = new LinkedHashMap<>();
+	private final Map<CooldownId, CooldownStats> cooldownStatsById = new LinkedHashMap<>();
 
 	@Getter
 	private int totalDamage;
@@ -40,8 +41,8 @@ public class Stats {
 		}
 	}
 
-	public void addCooldownUptime(AbilityId abilityId, Duration duration) {
-		getCooldownStats(abilityId).addUptime(duration);
+	public void addCooldownUptime(CooldownId cooldownId, Duration duration) {
+		getCooldownStats(cooldownId).addUptime(duration);
 	}
 
 	public void addEffectUptime(AbilityId abilityId, Duration duration) {
@@ -58,11 +59,11 @@ public class Stats {
 	}
 
 	private EffectStats getEffectStats(AbilityId abilityId) {
-		return effectStatsById.computeIfAbsent(abilityId, x -> new EffectStats(abilityId));
+		return effectStatsById.computeIfAbsent(abilityId, EffectStats::new);
 	}
 
-	private CooldownStats getCooldownStats(AbilityId abilityId) {
-		return cooldownStatsById.computeIfAbsent(abilityId, x -> new CooldownStats(abilityId));
+	private CooldownStats getCooldownStats(CooldownId cooldownId) {
+		return cooldownStatsById.computeIfAbsent(cooldownId, CooldownStats::new);
 	}
 
 	public List<AbilityStats> getAbilityStats() {

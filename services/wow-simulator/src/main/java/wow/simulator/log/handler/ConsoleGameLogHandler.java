@@ -3,6 +3,8 @@ package wow.simulator.log.handler;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityCooldownId;
+import wow.commons.model.spell.GroupCooldownId;
 import wow.commons.model.spell.ResourceType;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
@@ -103,12 +105,19 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void cooldownStarted(CooldownInstance cooldown) {
-		print("%s's %s cooldown started", cooldown.getOwner(), cooldown.getAbilityId());
+		print("%s's %s cooldown started", cooldown.getOwner(), toString(cooldown));
 	}
 
 	@Override
 	public void cooldownExpired(CooldownInstance cooldown) {
-		print("%s's %s cooldown expired", cooldown.getOwner(), cooldown.getAbilityId());
+		print("%s's %s cooldown expired", cooldown.getOwner(), toString(cooldown));
+	}
+
+	private String toString(CooldownInstance cooldown) {
+		return switch (cooldown.getCooldownId()) {
+			case AbilityCooldownId ac -> ac.abilityId().toString();
+			case GroupCooldownId gc -> gc.group().toString();
+		};
 	}
 
 	@Override
