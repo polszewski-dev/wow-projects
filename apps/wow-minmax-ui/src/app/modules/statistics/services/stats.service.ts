@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { CharacterStats } from '../model/CharacterStats';
 import { RotationStats } from '../model/RotationStats';
 import { SpecialAbilityStats } from '../model/SpecialAbilityStats';
 import { SpellStats } from '../model/SpellStats';
 import { TalentStats } from '../model/TalentStats';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
 	providedIn: 'root'

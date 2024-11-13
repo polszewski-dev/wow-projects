@@ -8,4 +8,5 @@ export const environment = {
 	talentApiUrl: 'http://localhost:8080/api/v1/talents',
 	buffApiUrl: 'http://localhost:8080/api/v1/buffs',
 	statsApiUrl: 'http://localhost:8080/api/v1/stats',
+	simulationApiUrl:  'http://localhost:8080/api/v1/simulations',
 };

@@ -20,7 +20,7 @@
 				</ng-template>
 			</ng-container>
 			<ng-container ngbNavItem>
-				<a ngbNavLink>Results</a>
+				<a ngbNavLink>Estimates</a>
 				<ng-template ngbNavContent>
 					<div class="stats-header">Spell Stats</div>
 					<app-spell-stats></app-spell-stats>
@@ -33,6 +33,12 @@
 					<div class="stats-header">Racials</div>
 					<app-racial-list></app-racial-list>
 				</ng-template>
+				<ng-container ngbNavItem>
+					<a ngbNavLink>Simulation</a>
+					<ng-template ngbNavContent>
+						<app-simulation></app-simulation>
+					</ng-template>
+				</ng-container>
 			</ng-container>
 		</nav>
 

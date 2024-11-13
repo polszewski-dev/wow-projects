@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CharacterModule } from '../character/character.module';
-import { SharedModule } from '../shared/shared.module';
 import { CharacterStatsComponent } from './components/character-stats/character-stats.component';
 import { DpsBarComponent } from './components/dps-bar/dps-bar.component';
 import { RacialListComponent } from './components/racial-list/racial-list.component';
@@ -21,7 +20,6 @@ import { TalentStatsComponent } from './components/talent-stats/talent-stats.com
 		CharacterModule,
 	],
 	exports: [
-		CharacterModule,
 		CharacterStatsComponent,
 		DpsBarComponent,
 		RacialListComponent,

@@ -5,6 +5,8 @@ import { CharacterSelectComponent } from './components/character-select/characte
 import { NewProfileComponent } from './components/new-profile/new-profile.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { ProfileSelectComponent } from './components/profile-select/profile-select.component';
+import { CharacterModule } from '../character/character.module';
+import { SimulationModule } from '../simulation/simulation.module';
 
 @NgModule({
 	declarations: [
@@ -15,7 +17,9 @@ import { ProfileSelectComponent } from './components/profile-select/profile-sele
 	],
 	imports: [
 		RouterModule,
+		CharacterModule,
 		StatisticsModule,
+		SimulationModule,
 	],
 	exports: [
 		RouterModule,

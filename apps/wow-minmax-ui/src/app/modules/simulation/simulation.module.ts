@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CharacterModule } from '../character/character.module';
+import { SimulationComponent } from './components/simulation/simulation.component';
 
 @NgModule({
-	declarations: [],
+	declarations: [
+		SimulationComponent
+	],
 	imports: [
-		CommonModule
+		CharacterModule,
+	],
+	exports: [
+		SimulationComponent
 	]
 })
 export class SimulationModule { }
