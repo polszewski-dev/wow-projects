@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.Equipment;
 import wow.commons.client.dto.EquipmentDTO;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @AllArgsConstructor
-public class EquipmentConverter implements Converter<Equipment, EquipmentDTO> {
+public class EquipmentConverter implements Converter<Equipment, EquipmentDTO>, ParametrizedBackConverter<Equipment, EquipmentDTO, PhaseId> {
 	private final EquippableItemConverter equippableItemConverter;
 
 	@Override
@@ -25,5 +26,21 @@ public class EquipmentConverter implements Converter<Equipment, EquipmentDTO> {
 				);
 
 		return new EquipmentDTO(itemsBySlot);
+	}
+
+	@Override
+	public Equipment doConvertBack(EquipmentDTO source, PhaseId phaseId) {
+		var itemsBySlot = source.itemsBySlot().entrySet().stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey, e -> equippableItemConverter.convertBack(e.getValue(), phaseId))
+				);
+
+		var equipment = new Equipment();
+
+		for (var entry : itemsBySlot.entrySet()) {
+			equipment.equip(entry.getValue(), entry.getKey());
+		}
+
+		return equipment;
 	}
 }

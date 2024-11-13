@@ -1,6 +1,12 @@
 package wow.simulator.script.warlock;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.script.ConditionalSpellCast;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.simulator.script.ConditionalSpellCast.of;
@@ -9,29 +15,27 @@ import static wow.simulator.script.ConditionalSpellCast.of;
  * User: POlszewski
  * Date: 2023-08-20
  */
-final class WarlockActionConditions {
-	static final ConditionalSpellCast CURSE_OF_DOOM_COND = of(CURSE_OF_DOOM).dotCondition();
+@AllArgsConstructor
+@Getter
+public enum WarlockActionConditions {
+	CURSE_OF_DOOM_COND(of(CURSE_OF_DOOM).dotCondition()),
+	CURSE_OF_AGONY_COND(of(CURSE_OF_AGONY).dotCondition()),
+	CORRUPTION_COND(of(CORRUPTION).dotCondition()),
+	UNSTABLE_AFFLICTION_COND(of(UNSTABLE_AFFLICTION).dotCondition()),
+	IMMOLATE_COND(of(IMMOLATE).dotCondition()),
+	SIPHON_LIFE_COND(of(SIPHON_LIFE).dotCondition()),
+	SHADOWBURN_COND(of(SHADOWBURN).notOnCooldown()),
+	AMPLIFY_CURSE_COND(of(AMPLIFY_CURSE).notOnCooldown()),
+	BLOOD_FURY_COND(of(BLOOD_FURY).notOnCooldown()),
+	SHADOW_BOLT_COND(of(SHADOW_BOLT)),
+	DRAIN_LIFE_COND(of(DRAIN_LIFE));
 
-	static final ConditionalSpellCast CURSE_OF_AGONY_COND = of(CURSE_OF_AGONY).dotCondition();
+	private final ConditionalSpellCast cast;
 
-	static final ConditionalSpellCast CORRUPTION_COND = of(CORRUPTION).dotCondition();
-
-	static final ConditionalSpellCast UNSTABLE_AFFLICTION_COND = of(UNSTABLE_AFFLICTION).dotCondition();
-
-	static final ConditionalSpellCast IMMOLATE_COND = of(IMMOLATE).dotCondition();
-
-	static final ConditionalSpellCast SIPHON_LIFE_COND = of(SIPHON_LIFE).dotCondition();
-
-	static final ConditionalSpellCast SHADOWBURN_COND = of(SHADOWBURN).notOnCooldown();
-
-	static final ConditionalSpellCast AMPLIFY_CURSE_COND = of(AMPLIFY_CURSE).notOnCooldown();
-
-	static final ConditionalSpellCast BLOOD_FURY_COND = of(BLOOD_FURY).notOnCooldown();
-
-	static final ConditionalSpellCast SHADOW_BOLT_COND = of(SHADOW_BOLT);
-
-	static final ConditionalSpellCast DRAIN_LIFE_COND = of(DRAIN_LIFE);
-
-	private WarlockActionConditions() {
+	public static Optional<ConditionalSpellCast> forAbility(AbilityId abilityId) {
+		return Stream.of(values())
+				.map(x -> x.cast)
+				.filter(x -> x.abilityId() == abilityId)
+				.findAny();
 	}
 }

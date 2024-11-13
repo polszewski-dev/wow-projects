@@ -6,8 +6,11 @@ import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.WowCommonsClientSpringTest;
 import wow.commons.client.dto.EquipmentDTO;
+import wow.commons.client.dto.EquippableItemDTO;
+import wow.commons.client.dto.ItemDTO;
 import wow.commons.repository.item.ItemRepository;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,5 +52,22 @@ class EquipmentConverterTest extends WowCommonsClientSpringTest {
 						)
 				)
 		);
+	}
+
+	@Test
+	void convertBack() {
+		var trinket1 = new EquippableItemDTO(new ItemDTO(32483, null, null, null, null, 0, null, null, null, null, null, null, null, null), null, List.of());
+		var trinket2 = new EquippableItemDTO(new ItemDTO(33829, null, null, null, null, 0, null, null, null, null, null, null, null, null), null, List.of());
+
+		var equipment = new EquipmentDTO(Map.ofEntries(
+				Map.entry(TRINKET_1, trinket1),
+				Map.entry(TRINKET_2, trinket2)
+		));
+
+
+		var converted = equipmentConverter.convertBack(equipment, TBC_P5);
+
+		assertThat(converted.getTrinket1().getId()).isEqualTo(32483);
+		assertThat(converted.getTrinket2().getId()).isEqualTo(33829);
 	}
 }

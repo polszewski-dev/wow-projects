@@ -1,16 +1,16 @@
-package wow.simulator.graph;
+package wow.simulator.log.handler;
 
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
-import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.ActionId;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.CooldownInstanceId;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
+import wow.simulator.model.stats.*;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
@@ -34,19 +34,17 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
 @Setter
 public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, TimeSource {
 	private final Player player;
-	private final Statistics statistics;
+	private final Stats stats;
 	private Clock clock;
 	private Time simulationStart;
-	private final LaneDefinitions laneDefinitions;
 
-	private Map<ActionId, TimeEntry> casts = new LinkedHashMap<>();
-	private Map<EffectInstanceId, TimeEntry> effects = new LinkedHashMap<>();
-	private Map<CooldownInstanceId, TimeEntry> cooldowns = new LinkedHashMap<>();
+	private final Map<ActionId, AbilityTimeEntry> casts = new LinkedHashMap<>();
+	private final Map<EffectInstanceId, EffectTimeEntry> effects = new LinkedHashMap<>();
+	private final Map<CooldownInstanceId, CooldownTimeEntry> cooldowns = new LinkedHashMap<>();
 
-	public StatisticsGatheringHandler(Player player, Statistics statistics) {
+	public StatisticsGatheringHandler(Player player, Stats stats) {
 		this.player = player;
-		this.statistics = statistics;
-		this.laneDefinitions = LaneDefinitions.get(player.getCharacterClassId());
+		this.stats = stats;
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 			return;
 		}
 
-		casts.put(action.getActionId(), new TimeEntry(action.getAbility().getAbilityId(), now()));
+		casts.put(action.getActionId(), new AbilityTimeEntry(action.getAbility(), now()));
 	}
 
 	@Override
@@ -88,13 +86,13 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 			return;
 		}
 
-		TimeEntry timeEntry = casts.get(action.getActionId());
+		var timeEntry = casts.get(action.getActionId());
 
 		consumer.accept(timeEntry);
 
 		if (timeEntry.isComplete()) {
 			casts.remove(action.getActionId());
-			statistics.addCastTime(timeEntry.getSpell(), timeEntry.getElapsedTime(), true);
+			stats.addCastTime(timeEntry.getAbility(), timeEntry.getElapsedTime(), true);
 		}
 	}
 
@@ -119,16 +117,13 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 			return;
 		}
 		if (target != player && type == HEALTH) {
-			statistics.addDamage(ability.getAbilityId(), amount);
+			stats.addDamage(ability, amount, crit);
 		}
 	}
 
 	@Override
 	public void effectApplied(EffectInstance effect) {
-		if (laneDefinitions.isIgnored(effect)) {
-			return;
-		}
-		effects.put(effect.getId(), new TimeEntry(effect.getSourceAbilityId(), now()));
+		effects.put(effect.getId(), new EffectTimeEntry(effect.getSourceAbilityId(), now()));
 	}
 
 	@Override
@@ -138,12 +133,9 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void effectExpired(EffectInstance effect) {
-		if (laneDefinitions.isIgnored(effect)) {
-			return;
-		}
-		TimeEntry timeEntry = effects.remove(effect.getId());
+		var timeEntry = effects.remove(effect.getId());
 		timeEntry.complete(now());
-		statistics.addEffectUptime(timeEntry.getSpell(), timeEntry.getElapsedTime());
+		stats.addEffectUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
 	}
 
 	@Override
@@ -153,35 +145,35 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void cooldownStarted(CooldownInstance cooldown) {
-		cooldowns.put(cooldown.getId(), new TimeEntry(cooldown.getAbilityId(), now()));
+		cooldowns.put(cooldown.getId(), new CooldownTimeEntry(cooldown.getAbilityId(), now()));
 	}
 
 	@Override
 	public void cooldownExpired(CooldownInstance cooldown) {
-		TimeEntry timeEntry = cooldowns.remove(cooldown.getId());
+		var timeEntry = cooldowns.remove(cooldown.getId());
 		timeEntry.complete(now());
-		statistics.addCooldownUptime(timeEntry.getSpell(), timeEntry.getElapsedTime());
+		stats.addCooldownUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
 	}
 
 	@Override
 	public void simulationStarted() {
-		statistics.setSimulationStart(now());
+		stats.setSimulationStart(now());
 	}
 
 	@Override
 	public void simulationEnded() {
-		statistics.setSimulationEnd(now());
-		for (TimeEntry timeEntry : casts.values()) {
+		stats.setSimulationEnd(now());
+		for (var timeEntry : casts.values()) {
 			timeEntry.complete(now());
-			statistics.addCastTime(timeEntry.getSpell(), timeEntry.getElapsedTime(), false);
+			stats.addCastTime(timeEntry.getAbility(), timeEntry.getElapsedTime(), false);
 		}
-		for (TimeEntry timeEntry : effects.values()) {
+		for (var timeEntry : effects.values()) {
 			timeEntry.complete(now());
-			statistics.addEffectUptime(timeEntry.getSpell(), timeEntry.getElapsedTime());
+			stats.addEffectUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
 		}
-		for (TimeEntry timeEntry : cooldowns.values()) {
+		for (var timeEntry : cooldowns.values()) {
 			timeEntry.complete(now());
-			statistics.addCooldownUptime(timeEntry.getSpell(), timeEntry.getElapsedTime());
+			stats.addCooldownUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
 		}
 	}
 }

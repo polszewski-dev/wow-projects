@@ -29,6 +29,7 @@ class TalentConverterTest extends WowCommonsClientSpringTest {
 
 		assertThat(converted).isEqualTo(
 				new TalentDTO(
+						IMPROVED_SHADOW_BOLT,
 						"Improved Shadow Bolt",
 						1,
 						5,

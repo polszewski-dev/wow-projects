@@ -2,9 +2,12 @@ package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wow.minmax.model.CharacterId;
 import wow.minmax.service.SimulatorService;
+import wow.simulator.client.dto.SimulationResponseDTO;
 
 /**
  * User: POlszewski
@@ -16,8 +19,10 @@ import wow.minmax.service.SimulatorService;
 public class SimulationController {
 	private final SimulatorService simulatorService;
 
-	@GetMapping
-	public String hello() {
-		return simulatorService.hello();
+	@GetMapping("{characterId}")
+	public SimulationResponseDTO simulate(
+			@PathVariable("characterId") CharacterId characterId
+	) {
+		return simulatorService.simulate(characterId);
 	}
 }

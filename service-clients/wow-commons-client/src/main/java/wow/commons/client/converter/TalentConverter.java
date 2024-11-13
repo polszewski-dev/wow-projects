@@ -2,8 +2,8 @@ package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.talent.Talent;
 import wow.commons.client.dto.TalentDTO;
+import wow.commons.model.talent.Talent;
 
 /**
  * User: POlszewski
@@ -15,6 +15,7 @@ public class TalentConverter implements Converter<Talent, TalentDTO> {
 	@Override
 	public TalentDTO doConvert(Talent source) {
 		return new TalentDTO(
+				source.getTalentId(),
 				source.getName(),
 				source.getRank(),
 				source.getMaxRank(),

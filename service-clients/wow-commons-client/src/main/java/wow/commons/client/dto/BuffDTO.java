@@ -1,6 +1,7 @@
 package wow.commons.client.dto;
 
 import wow.commons.model.buff.BuffId;
+import wow.commons.model.buff.BuffIdAndRank;
 
 /**
  * User: POlszewski
@@ -19,5 +20,9 @@ public record BuffDTO(
 		return new BuffDTO(
 			buffId, rank, name, attributes, icon, tooltip, enabled
 		);
+	}
+
+	public BuffIdAndRank getId() {
+		return new BuffIdAndRank(buffId, rank);
 	}
 }
