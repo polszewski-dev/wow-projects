@@ -30,6 +30,11 @@ public class EffectUpdateContext extends Context {
 		decreaseHealth(target, roundedTickDamage, false);
 	}
 
+	public void periodicManaGain(int numStacks) {
+		var amount = numStacks * effect.getPeriodicComponent().amount();
+		increaseMana(target, amount);
+	}
+
 	@Override
 	protected Conversions getConversions() {
 		return new EffectUpdateConversions(caster, effect);

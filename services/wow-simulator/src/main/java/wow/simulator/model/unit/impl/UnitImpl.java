@@ -135,7 +135,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public StatSummary getStats() {
-		return getCharacterCalculationService().getStatSummary(character);
+		return getCharacterCalculationService().getStatSummary(this);
 	}
 
 	@Override

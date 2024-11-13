@@ -23,4 +23,8 @@ public abstract class Context {
 
 		getConversions().performDamageDoneConversion(actualDamage);
 	}
+
+	protected void increaseMana(Unit target, int amount) {
+		target.increaseMana(amount, false, ability);
+	}
 }
