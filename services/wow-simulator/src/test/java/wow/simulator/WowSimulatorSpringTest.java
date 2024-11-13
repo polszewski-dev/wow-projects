@@ -23,8 +23,8 @@ import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
-import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.cooldown.CooldownInstance;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -183,32 +183,32 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		@Override
-		public void effectApplied(UnitEffect effect) {
+		public void effectApplied(EffectInstance effect) {
 			addEvent(new EffectApplied(now(), effect.getSourceAbilityId(), effect.getTarget()));
 		}
 
 		@Override
-		public void effectStacked(UnitEffect effect) {
+		public void effectStacked(EffectInstance effect) {
 			addEvent(new EffectStacked(now(), effect.getSourceAbilityId(), effect.getTarget()));
 		}
 
 		@Override
-		public void effectExpired(UnitEffect effect) {
+		public void effectExpired(EffectInstance effect) {
 			addEvent(new EffectExpired(now(), effect.getSourceAbilityId(), effect.getTarget()));
 		}
 
 		@Override
-		public void effectRemoved(UnitEffect effect) {
+		public void effectRemoved(EffectInstance effect) {
 			addEvent(new EffectRemoved(now(), effect.getSourceAbilityId(), effect.getTarget()));
 		}
 
 		@Override
-		public void cooldownStarted(Cooldown cooldown) {
+		public void cooldownStarted(CooldownInstance cooldown) {
 			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getAbilityId()));
 		}
 
 		@Override
-		public void cooldownExpired(Cooldown cooldown) {
+		public void cooldownExpired(CooldownInstance cooldown) {
 			addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getAbilityId()));
 		}
 

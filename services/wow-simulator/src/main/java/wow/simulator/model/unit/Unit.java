@@ -8,7 +8,7 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.context.SpellCastContext;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.action.UnitAction;
@@ -96,13 +96,13 @@ public interface Unit extends Character, Updateable, SimulationContextSource {
 
 	int decreaseMana(int amount, boolean crit, Ability ability);
 
-	void addEffect(UnitEffect effect);
+	void addEffect(EffectInstance effect);
 
-	void removeEffect(UnitEffect effect);
+	void removeEffect(EffectInstance effect);
 
 	boolean isUnderEffect(AbilityId abilityId, Unit owner);
 
-	Optional<UnitEffect> getEffect(AbilityId abilityId, Unit owner);
+	Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner);
 
 	boolean hasEffect(AbilityId requiredEffect, Unit effectOwner);
 

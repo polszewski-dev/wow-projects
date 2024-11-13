@@ -6,7 +6,7 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.context.SpellCastContext;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
@@ -20,7 +20,7 @@ public class CastSpellAction extends UnitAction {
 
 	private SpellCastContext castContext;
 
-	private UnitEffect channeledEffect;
+	private EffectInstance channeledEffect;
 
 	public CastSpellAction(Unit owner, Ability ability, TargetResolver targetResolver) {
 		super(owner);

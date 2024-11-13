@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 public class Cooldowns implements SimulationContextSource, TimeAware {
 	private final Unit owner;
-	private final UpdateQueue<Cooldown> updateQueue = new UpdateQueue<>();
+	private final UpdateQueue<CooldownInstance> updateQueue = new UpdateQueue<>();
 
 	public Cooldowns(Unit owner) {
 		this.owner = owner;
@@ -43,7 +43,7 @@ public class Cooldowns implements SimulationContextSource, TimeAware {
 			throw new IllegalStateException();
 		}
 
-		Cooldown cooldown = new Cooldown(owner, ability.getAbilityId(), actualDuration);
+		var cooldown = new CooldownInstance(owner, ability.getAbilityId(), actualDuration);
 
 		updateQueue.add(cooldown);
 	}
@@ -53,7 +53,7 @@ public class Cooldowns implements SimulationContextSource, TimeAware {
 		return cooldown.isPresent() && cooldown.get().isActive();
 	}
 
-	private Optional<Cooldown> getCooldown(AbilityId abilityId) {
+	private Optional<CooldownInstance> getCooldown(AbilityId abilityId) {
 		return updateQueue.getElements().stream()
 				.map(Handle::get)
 				.filter(x -> x.getAbilityId() == abilityId)

@@ -3,8 +3,8 @@ package wow.simulator.log;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
 import wow.simulator.log.handler.GameLogHandler;
-import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.cooldown.CooldownInstance;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
@@ -84,32 +84,32 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void effectApplied(UnitEffect effect) {
+	public void effectApplied(EffectInstance effect) {
 		handlers.forEach(handler -> handler.effectApplied(effect));
 	}
 
 	@Override
-	public void effectStacked(UnitEffect effect) {
+	public void effectStacked(EffectInstance effect) {
 		handlers.forEach(handler -> handler.effectStacked(effect));
 	}
 
 	@Override
-	public void effectExpired(UnitEffect effect) {
+	public void effectExpired(EffectInstance effect) {
 		handlers.forEach(handler -> handler.effectExpired(effect));
 	}
 
 	@Override
-	public void effectRemoved(UnitEffect effect) {
+	public void effectRemoved(EffectInstance effect) {
 		handlers.forEach(handler -> handler.effectRemoved(effect));
 	}
 
 	@Override
-	public void cooldownStarted(Cooldown cooldown) {
+	public void cooldownStarted(CooldownInstance cooldown) {
 		handlers.forEach(handler -> handler.cooldownStarted(cooldown));
 	}
 
 	@Override
-	public void cooldownExpired(Cooldown cooldown) {
+	public void cooldownExpired(CooldownInstance cooldown) {
 		handlers.forEach(handler -> handler.cooldownExpired(cooldown));
 	}
 

@@ -3,7 +3,7 @@ package wow.simulator.graph;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.effect.EffectInstance;
 
 import java.awt.*;
 import java.util.List;
@@ -80,7 +80,7 @@ public abstract class LaneDefinitions {
 		return Optional.ofNullable(getColorsByName().get(name));
 	}
 
-	public boolean isIgnored(UnitEffect effect) {
+	public boolean isIgnored(EffectInstance effect) {
 		return getIgnoredEffects().contains(effect.getSourceAbilityId());
 	}
 

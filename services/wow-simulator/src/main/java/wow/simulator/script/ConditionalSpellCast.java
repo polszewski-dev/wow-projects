@@ -1,7 +1,6 @@
 package wow.simulator.script;
 
 import wow.commons.model.spell.AbilityId;
-import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 
@@ -53,16 +52,16 @@ public record ConditionalSpellCast(
 		if (optionalEffect.isEmpty()) {
 			return true;
 		}
-		UnitEffect effect = optionalEffect.get();
-		double remainingDuration = effect.getRemainingDuration().getSeconds();
-		double castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
+		var effect = optionalEffect.get();
+		var remainingDuration = effect.getRemainingDuration().getSeconds();
+		var castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
 		return remainingDuration <= castTime;
 	}
 
 	private boolean remainingSimulationDurationBelowSpellDuration(Player player, Unit target) {
-		double castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
-		double duration = player.getEffectDurationSnapshot(abilityId, target).getDuration();
-		double remainingTime = player.getSimulation().getRemainingTime().getSeconds();
+		var castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
+		var duration = player.getEffectDurationSnapshot(abilityId, target).getDuration();
+		var remainingTime = player.getSimulation().getRemainingTime().getSeconds();
 		return castTime + duration <= remainingTime;
 	}
 }

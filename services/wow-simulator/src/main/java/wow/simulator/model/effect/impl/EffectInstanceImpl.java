@@ -1,9 +1,11 @@
 package wow.simulator.model.effect.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.action.Action;
-import wow.simulator.model.effect.UnitEffect;
-import wow.simulator.model.effect.UnitEffectId;
+import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.effect.EffectInstanceId;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Handle;
 import wow.simulator.simulation.SimulationContext;
@@ -13,18 +15,20 @@ import wow.simulator.util.IdGenerator;
  * User: POlszewski
  * Date: 2023-11-03
  */
-public abstract class UnitEffectImpl extends Action implements UnitEffect {
-	private static final IdGenerator<UnitEffectId> ID_GENERATOR = new IdGenerator<>(UnitEffectId::new);
+public abstract class EffectInstanceImpl extends Action implements EffectInstance {
+	private static final IdGenerator<EffectInstanceId> ID_GENERATOR = new IdGenerator<>(EffectInstanceId::new);
 
-	protected final UnitEffectId id = ID_GENERATOR.newId();
+	protected final EffectInstanceId id = ID_GENERATOR.newId();
 
 	protected final Unit owner;
 	protected final Unit target;
 
-	private Handle<UnitEffect> handle;
+	@Getter
+	@Setter
+	private Handle<EffectInstance> handle;
 	private Runnable onEffectFinished;
 
-	protected UnitEffectImpl(Unit owner, Unit target) {
+	protected EffectInstanceImpl(Unit owner, Unit target) {
 		super(owner.getClock());
 		this.owner = owner;
 		this.target = target;
@@ -57,7 +61,7 @@ public abstract class UnitEffectImpl extends Action implements UnitEffect {
 	}
 
 	@Override
-	public UnitEffectId getId() {
+	public EffectInstanceId getId() {
 		return id;
 	}
 
@@ -84,13 +88,5 @@ public abstract class UnitEffectImpl extends Action implements UnitEffect {
 	@Override
 	public SimulationContext getSimulationContext() {
 		return owner.getSimulationContext();
-	}
-
-	public Handle<UnitEffect> getHandle() {
-		return handle;
-	}
-
-	public void setHandle(Handle<UnitEffect> handle) {
-		this.handle = handle;
 	}
 }

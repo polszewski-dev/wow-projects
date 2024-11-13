@@ -4,8 +4,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
-import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.cooldown.CooldownInstance;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
@@ -82,32 +82,32 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void effectApplied(UnitEffect effect) {
+	public void effectApplied(EffectInstance effect) {
 		print("Effect of %s applied", effect);
 	}
 
 	@Override
-	public void effectStacked(UnitEffect effect) {
+	public void effectStacked(EffectInstance effect) {
 		print("Effect of %s stacked", effect);
 	}
 
 	@Override
-	public void effectExpired(UnitEffect effect) {
+	public void effectExpired(EffectInstance effect) {
 		print("Effect of %s expired", effect);
 	}
 
 	@Override
-	public void effectRemoved(UnitEffect effect) {
+	public void effectRemoved(EffectInstance effect) {
 		print("Effect of %s removed", effect);
 	}
 
 	@Override
-	public void cooldownStarted(Cooldown cooldown) {
+	public void cooldownStarted(CooldownInstance cooldown) {
 		print("%s's %s cooldown started", cooldown.getOwner(), cooldown.getAbilityId());
 	}
 
 	@Override
-	public void cooldownExpired(Cooldown cooldown) {
+	public void cooldownExpired(CooldownInstance cooldown) {
 		print("%s's %s cooldown expired", cooldown.getOwner(), cooldown.getAbilityId());
 	}
 

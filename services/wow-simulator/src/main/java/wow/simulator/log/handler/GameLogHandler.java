@@ -2,8 +2,8 @@ package wow.simulator.log.handler;
 
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
-import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.cooldown.CooldownInstance;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
@@ -41,17 +41,17 @@ public interface GameLogHandler {
 
 	void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit);
 
-	void effectApplied(UnitEffect effect);
+	void effectApplied(EffectInstance effect);
 
-	void effectStacked(UnitEffect effect);
+	void effectStacked(EffectInstance effect);
 
-	void effectExpired(UnitEffect effect);
+	void effectExpired(EffectInstance effect);
 
-	void effectRemoved(UnitEffect effect);
+	void effectRemoved(EffectInstance effect);
 
-	void cooldownStarted(Cooldown cooldown);
+	void cooldownStarted(CooldownInstance cooldown);
 
-	void cooldownExpired(Cooldown cooldown);
+	void cooldownExpired(CooldownInstance cooldown);
 
 	void simulationStarted();
 

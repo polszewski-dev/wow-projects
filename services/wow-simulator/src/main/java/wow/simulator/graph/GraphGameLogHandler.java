@@ -3,8 +3,8 @@ package wow.simulator.graph;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
 import wow.simulator.log.handler.GameLogHandler;
-import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.cooldown.CooldownInstance;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
@@ -94,7 +94,7 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 	}
 
 	@Override
-	public void effectApplied(UnitEffect effect) {
+	public void effectApplied(EffectInstance effect) {
 		if (laneDefinitions.isIgnored(effect)) {
 			return;
 		}
@@ -103,12 +103,12 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 	}
 
 	@Override
-	public void effectStacked(UnitEffect effect) {
+	public void effectStacked(EffectInstance effect) {
 		// ignored
 	}
 
 	@Override
-	public void effectExpired(UnitEffect effect) {
+	public void effectExpired(EffectInstance effect) {
 		if (laneDefinitions.isIgnored(effect)) {
 			return;
 		}
@@ -117,18 +117,18 @@ public class GraphGameLogHandler implements GameLogHandler, TimeAware, TimeSourc
 	}
 
 	@Override
-	public void effectRemoved(UnitEffect effect) {
+	public void effectRemoved(EffectInstance effect) {
 		effectExpired(effect);
 	}
 
 	@Override
-	public void cooldownStarted(Cooldown cooldown) {
+	public void cooldownStarted(CooldownInstance cooldown) {
 		Lane lane = laneDefinitions.getCooldownLane(cooldown.getAbilityId());
 		graph.beginSegment(lane, cooldown.getId(), null, now());
 	}
 
 	@Override
-	public void cooldownExpired(Cooldown cooldown) {
+	public void cooldownExpired(CooldownInstance cooldown) {
 		Lane lane = laneDefinitions.getCooldownLane(cooldown.getAbilityId());
 		graph.endSegment(lane, cooldown.getId(), now());
 	}

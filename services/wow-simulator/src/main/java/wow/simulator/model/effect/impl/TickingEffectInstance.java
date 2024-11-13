@@ -21,7 +21,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-11-01
  */
-public class TickingEffect extends UnitEffectImpl {
+public class TickingEffectInstance extends EffectInstanceImpl {
 	private final Effect effect;
 	private final Ability sourceAbility;
 	private final Duration duration;
@@ -33,7 +33,7 @@ public class TickingEffect extends UnitEffectImpl {
 
 	private final EffectUpdateContext resolutionContext;
 
-	public TickingEffect(
+	public TickingEffectInstance(
 			Unit owner,
 			Unit target,
 			Effect effect,

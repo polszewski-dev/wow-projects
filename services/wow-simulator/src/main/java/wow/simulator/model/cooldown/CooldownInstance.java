@@ -1,5 +1,6 @@
 package wow.simulator.model.cooldown;
 
+import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.action.Action;
@@ -17,17 +18,19 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2023-08-19
  */
-public class Cooldown implements Updateable, SimulationContextSource {
-	private static final IdGenerator<CooldownId> ID_GENERATOR = new IdGenerator<>(CooldownId::new);
+public class CooldownInstance implements Updateable, SimulationContextSource {
+	private static final IdGenerator<CooldownInstanceId> ID_GENERATOR = new IdGenerator<>(CooldownInstanceId::new);
 
-	protected final CooldownId id = ID_GENERATOR.newId();
-
+	@Getter
+	protected final CooldownInstanceId id = ID_GENERATOR.newId();
+	@Getter
 	private final Unit owner;
+	@Getter
 	private final AbilityId abilityId;
 	private final Time endTime;
 	private final CooldownAction cooldownAction;
 
-	public Cooldown(Unit owner, AbilityId abilityId, Duration duration) {
+	public CooldownInstance(Unit owner, AbilityId abilityId, Duration duration) {
 		this.owner = owner;
 		this.abilityId = abilityId;
 		this.endTime = now().add(duration);
@@ -75,29 +78,17 @@ public class Cooldown implements Updateable, SimulationContextSource {
 
 		@Override
 		protected void onFinished() {
-			getGameLog().cooldownExpired(Cooldown.this);
+			getGameLog().cooldownExpired(CooldownInstance.this);
 		}
 
 		@Override
 		protected void onInterrupted() {
-			getGameLog().cooldownExpired(Cooldown.this);
+			getGameLog().cooldownExpired(CooldownInstance.this);
 		}
 	}
 
 	@Override
 	public SimulationContext getSimulationContext() {
 		return owner.getSimulationContext();
-	}
-
-	public CooldownId getId() {
-		return id;
-	}
-
-	public Unit getOwner() {
-		return owner;
-	}
-
-	public AbilityId getAbilityId() {
-		return abilityId;
 	}
 }

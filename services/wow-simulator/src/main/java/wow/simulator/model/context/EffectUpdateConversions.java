@@ -1,6 +1,6 @@
 package wow.simulator.model.context;
 
-import wow.simulator.model.effect.UnitEffect;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -8,15 +8,15 @@ import wow.simulator.model.unit.Unit;
  * Date: 2023-11-04
  */
 public class EffectUpdateConversions extends Conversions {
-	private final UnitEffect effect;
+	private final EffectInstance effect;
 
-	public EffectUpdateConversions(Unit caster, UnitEffect effect) {
+	public EffectUpdateConversions(Unit caster, EffectInstance effect) {
 		super(caster, effect.getSourceAbility());
 		this.effect = effect;
 		addEffectConversion(effect);
 	}
 
-	private void addEffectConversion(UnitEffect effect) {
+	private void addEffectConversion(EffectInstance effect) {
 		var conversion = effect.getConversion();
 
 		if (conversion != null) {

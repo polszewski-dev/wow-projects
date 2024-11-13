@@ -19,8 +19,8 @@ import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.cooldown.Cooldowns;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.Effects;
-import wow.simulator.model.effect.UnitEffect;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.*;
@@ -362,12 +362,12 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public void addEffect(UnitEffect effect) {
+	public void addEffect(EffectInstance effect) {
 		effects.addEffect(effect);
 	}
 
 	@Override
-	public void removeEffect(UnitEffect effect) {
+	public void removeEffect(EffectInstance effect) {
 		effects.removeEffect(effect);
 	}
 
@@ -377,7 +377,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public Optional<UnitEffect> getEffect(AbilityId abilityId, Unit owner) {
+	public Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner) {
 		return effects.getEffect(abilityId, owner);
 	}
 

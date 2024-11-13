@@ -7,10 +7,10 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.ActionId;
-import wow.simulator.model.cooldown.Cooldown;
-import wow.simulator.model.cooldown.CooldownId;
-import wow.simulator.model.effect.UnitEffect;
-import wow.simulator.model.effect.UnitEffectId;
+import wow.simulator.model.cooldown.CooldownInstance;
+import wow.simulator.model.cooldown.CooldownInstanceId;
+import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.effect.EffectInstanceId;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
@@ -40,8 +40,8 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	private final LaneDefinitions laneDefinitions;
 
 	private Map<ActionId, TimeEntry> casts = new LinkedHashMap<>();
-	private Map<UnitEffectId, TimeEntry> effects = new LinkedHashMap<>();
-	private Map<CooldownId, TimeEntry> cooldowns = new LinkedHashMap<>();
+	private Map<EffectInstanceId, TimeEntry> effects = new LinkedHashMap<>();
+	private Map<CooldownInstanceId, TimeEntry> cooldowns = new LinkedHashMap<>();
 
 	public StatisticsGatheringHandler(Player player, Statistics statistics) {
 		this.player = player;
@@ -124,7 +124,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void effectApplied(UnitEffect effect) {
+	public void effectApplied(EffectInstance effect) {
 		if (laneDefinitions.isIgnored(effect)) {
 			return;
 		}
@@ -132,12 +132,12 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void effectStacked(UnitEffect effect) {
+	public void effectStacked(EffectInstance effect) {
 		// ignored
 	}
 
 	@Override
-	public void effectExpired(UnitEffect effect) {
+	public void effectExpired(EffectInstance effect) {
 		if (laneDefinitions.isIgnored(effect)) {
 			return;
 		}
@@ -147,17 +147,17 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void effectRemoved(UnitEffect effect) {
+	public void effectRemoved(EffectInstance effect) {
 		effectExpired(effect);
 	}
 
 	@Override
-	public void cooldownStarted(Cooldown cooldown) {
+	public void cooldownStarted(CooldownInstance cooldown) {
 		cooldowns.put(cooldown.getId(), new TimeEntry(cooldown.getAbilityId(), now()));
 	}
 
 	@Override
-	public void cooldownExpired(Cooldown cooldown) {
+	public void cooldownExpired(CooldownInstance cooldown) {
 		TimeEntry timeEntry = cooldowns.remove(cooldown.getId());
 		timeEntry.complete(now());
 		statistics.addCooldownUptime(timeEntry.getSpell(), timeEntry.getElapsedTime());

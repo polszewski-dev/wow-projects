@@ -6,7 +6,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Cost;
 import wow.simulator.WowSimulatorSpringTest;
-import wow.simulator.model.effect.impl.TickingEffect;
+import wow.simulator.model.effect.impl.TickingEffectInstance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.AbilityId.DRAIN_LIFE;
@@ -58,7 +58,7 @@ class ConversionsTest extends WowSimulatorSpringTest {
 
 	EffectUpdateConversions getEffectUpdateConversions(AbilityId abilityId) {
 		var ability = player.getAbility(abilityId).orElseThrow();
-		var effect = new TickingEffect(
+		var effect = new TickingEffectInstance(
 				player,
 				target,
 				ability.getEffectApplication().effect(),

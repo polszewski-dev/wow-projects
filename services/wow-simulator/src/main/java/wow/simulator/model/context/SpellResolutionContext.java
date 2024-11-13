@@ -4,7 +4,7 @@ import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.component.DirectComponent;
-import wow.simulator.model.effect.impl.TickingEffect;
+import wow.simulator.model.effect.impl.TickingEffectInstance;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 
@@ -55,7 +55,7 @@ public class SpellResolutionContext extends Context {
 		decreaseHealth(target, directDamage, critRoll);
 	}
 
-	public TickingEffect applyEffect(CastSpellAction action) {
+	public TickingEffectInstance applyEffect(CastSpellAction action) {
 		if (!hitRoll(action)) {
 			return null;
 		}
@@ -65,7 +65,7 @@ public class SpellResolutionContext extends Context {
 		var duration = Duration.seconds(durationSnapshot.getDuration());
 		var tickInterval = Duration.seconds(durationSnapshot.getTickInterval());
 
-		var appliedEffect = new TickingEffect(
+		var appliedEffect = new TickingEffectInstance(
 				caster,
 				target,
 				effectApplication.effect(),

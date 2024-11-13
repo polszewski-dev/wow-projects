@@ -3,7 +3,7 @@ package wow.simulator.model.effect;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.spell.AbilityId;
-import wow.simulator.model.effect.impl.UnitEffectImpl;
+import wow.simulator.model.effect.impl.EffectInstanceImpl;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
@@ -21,19 +21,19 @@ import java.util.Optional;
  */
 public class Effects implements SimulationContextSource, TimeAware, EffectCollection {
 	private final Unit owner;
-	private final UpdateQueue<UnitEffect> updateQueue = new UpdateQueue<>();
+	private final UpdateQueue<EffectInstance> updateQueue = new UpdateQueue<>();
 
 	public Effects(Unit owner) {
 		this.owner = owner;
 	}
 
-	public void addEffect(UnitEffect effect) {
+	public void addEffect(EffectInstance effect) {
 		var handle = updateQueue.add(effect);
-		((UnitEffectImpl) effect).setHandle(handle);
+		((EffectInstanceImpl) effect).setHandle(handle);
 	}
 
-	public void removeEffect(UnitEffect effect) {
-		updateQueue.remove(((UnitEffectImpl) effect).getHandle());
+	public void removeEffect(EffectInstance effect) {
+		updateQueue.remove(((EffectInstanceImpl) effect).getHandle());
 	}
 
 	public void updateAllPresentActions() {
@@ -50,7 +50,7 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 				.anyMatch(x -> x.matches(abilityId, owner));
 	}
 
-	public Optional<UnitEffect> getEffect(AbilityId abilityId, Unit owner) {
+	public Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner) {
 		return updateQueue.getElements().stream()
 				.map(Handle::get)
 				.filter(x -> x.matches(abilityId, owner))
@@ -70,7 +70,7 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		for (var elementHandle : updateQueue.getElements()) {
-			UnitEffect effect = elementHandle.get();
+			var effect = elementHandle.get();
 			collector.addEffect(effect, effect.getNumStacks());
 		}
 	}
