@@ -12,7 +12,7 @@ import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.action.UnitAction;
-import wow.simulator.model.update.Updateable;
+import wow.simulator.model.update.StageUpdateable;
 import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.Optional;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
  * User: POlszewski
  * Date: 2023-08-07
  */
-public interface Unit extends Character, Updateable, SimulationContextSource {
+public interface Unit extends Character, StageUpdateable, SimulationContextSource {
 	UnitId getId();
 
 	String getName();

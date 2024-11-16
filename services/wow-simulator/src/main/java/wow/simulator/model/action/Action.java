@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import wow.commons.model.Duration;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
+import wow.simulator.model.update.StageUpdateable;
+import wow.simulator.model.update.UpdateStage;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.util.IdGenerator;
 
@@ -19,7 +21,7 @@ import static wow.simulator.model.action.ActionStatus.*;
  * Date: 2023-08-10
  */
 @RequiredArgsConstructor
-public abstract class Action implements Updateable {
+public abstract class Action implements Updateable, StageUpdateable {
 	private static final IdGenerator<ActionId> ID_GENERATOR = new IdGenerator<>(ActionId::new);
 
 	protected final ActionId actionId = ID_GENERATOR.newId();
@@ -51,6 +53,13 @@ public abstract class Action implements Updateable {
 
 		if (steps.isEmpty()) {
 			finish();
+		}
+	}
+
+	@Override
+	public void update(UpdateStage stage) {
+		if (stage == UpdateStage.UNIT) {
+			update();
 		}
 	}
 

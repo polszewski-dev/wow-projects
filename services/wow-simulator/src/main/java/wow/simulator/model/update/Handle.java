@@ -11,7 +11,7 @@ import java.util.Comparator;
  * Date: 2023-08-18
  */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public class Handle<T extends Updateable> {
+public class Handle<T extends AbstractUpdateable> {
 	private final T element;
 	private long order;
 
@@ -31,7 +31,7 @@ public class Handle<T extends Updateable> {
 		return element.getNextUpdateTime().orElseThrow();
 	}
 
-	public static <T extends Updateable> Comparator<Handle<T>> orderComparator() {
+	public static <T extends AbstractUpdateable> Comparator<Handle<T>> orderComparator() {
 		return Comparator.comparingLong(Handle::getOrder);
 	}
 }

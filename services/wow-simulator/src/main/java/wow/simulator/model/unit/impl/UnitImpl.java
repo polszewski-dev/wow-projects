@@ -29,6 +29,7 @@ import wow.simulator.model.unit.action.GcdAction;
 import wow.simulator.model.unit.action.IdleAction;
 import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.model.update.UpdateQueue;
+import wow.simulator.model.update.UpdateStage;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextAware;
 import wow.simulator.util.IdGenerator;
@@ -84,12 +85,18 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public void update() {
-		ensureAction();
-
-		cooldowns.updateAllPresentCooldowns();
-		updateQueue.updateAllPresentActions();
-		effects.updateAllPresentActions();
+	public void update(UpdateStage updateStage) {
+		switch (updateStage) {
+			case COOLDOWN -> cooldowns.updateAllPresentCooldowns();
+			case UNIT -> {
+				ensureAction();
+				updateQueue.updateAllPresentActions();
+			}
+			case EFFECT -> effects.updateAllPresentActions();
+			case ACTION -> {
+				// ignore
+			}
+		}
 	}
 
 	private void ensureAction() {

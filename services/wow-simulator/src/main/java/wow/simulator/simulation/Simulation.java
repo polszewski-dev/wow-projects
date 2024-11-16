@@ -5,8 +5,8 @@ import wow.commons.model.Duration;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Time;
-import wow.simulator.model.update.UpdateQueue;
-import wow.simulator.model.update.Updateable;
+import wow.simulator.model.update.StageUpdateable;
+import wow.simulator.model.update.StagedUpdateQueue;
 
 /**
  * User: POlszewski
@@ -14,7 +14,7 @@ import wow.simulator.model.update.Updateable;
  */
 @Getter
 public class Simulation implements SimulationContextSource {
-	private final UpdateQueue<Updateable> updateQueue = new UpdateQueue<>();
+	private final StagedUpdateQueue<StageUpdateable> updateQueue = new StagedUpdateQueue<>();
 	private final SimulationContext simulationContext;
 	private Time timeUntilSimulationEnd;
 
@@ -24,7 +24,7 @@ public class Simulation implements SimulationContextSource {
 		shareClock(updateQueue);
 	}
 
-	public void add(Updateable updateable) {
+	public void add(StageUpdateable updateable) {
 		shareSimulationContext(updateable);
 		updateQueue.add(updateable);
 	}
@@ -42,6 +42,7 @@ public class Simulation implements SimulationContextSource {
 			}
 
 			getClock().advanceTo(nextUpdateTime);
+
 			updateQueue.updateAllPresentActions();
 		}
 
