@@ -14,10 +14,7 @@ import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.Item;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.CooldownId;
-import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
@@ -170,17 +167,17 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		@Override
-		public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
-			addEvent(new IncreasedResource(now(), amount, type, crit, target, getAbilityId(ability)));
+		public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+			addEvent(new IncreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
 		}
 
 		@Override
-		public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
-			addEvent(new DecreasedResource(now(), amount, type, crit, target, getAbilityId(ability)));
+		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+			addEvent(new DecreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
 		}
 
-		private static AbilityId getAbilityId(Ability ability) {
-			return ability != null ? ability.getAbilityId() : null;
+		private static AbilityId getAbilityId(Spell spell) {
+			return spell instanceof Ability a ? a.getAbilityId() : null;
 		}
 
 		@Override
@@ -401,12 +398,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public boolean critRoll = false;
 
 		@Override
-		public boolean hitRoll(double chancePct, AbilityId abilityId) {
+		public boolean hitRoll(double chancePct, Spell spell) {
 			return hitRoll;
 		}
 
 		@Override
-		public boolean critRoll(double chancePct, AbilityId abilityId) {
+		public boolean critRoll(double chancePct, Spell spell) {
 			return critRoll;
 		}
 	};

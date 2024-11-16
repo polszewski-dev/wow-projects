@@ -14,13 +14,13 @@ public class EffectUpdateContext extends Context {
 	private double roundingReminder;
 
 	public EffectUpdateContext(Unit caster, EffectInstance effect) {
-		super(caster, effect.getSourceAbility());
+		super(caster, effect.getSourceSpell());
 		this.effect = effect;
 		this.target = effect.getTarget();
 	}
 
 	public void dealPeriodicDamage(int tickNo, int numStacks) {
-		var snapshot = caster.getPeriodicSpellDamageSnapshot(ability, target);
+		var snapshot = caster.getPeriodicSpellDamageSnapshot(spell, target);
 
 		var tickDamage = numStacks * snapshot.getTickDamage(tickNo) + roundingReminder;
 		var roundedTickDamage = (int) tickDamage;

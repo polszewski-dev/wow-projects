@@ -1,7 +1,7 @@
 package wow.simulator.log.handler;
 
-import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
@@ -37,9 +37,9 @@ public interface GameLogHandler {
 
 	void spellResisted(CastSpellAction action, Unit target);
 
-	void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit);
+	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
 
-	void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit);
+	void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);
 
 	void effectApplied(EffectInstance effect);
 

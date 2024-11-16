@@ -3,7 +3,6 @@ package wow.simulator.model.stats;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.AbilityId;
 
 /**
  * User: POlszewski
@@ -12,7 +11,7 @@ import wow.commons.model.spell.AbilityId;
 @RequiredArgsConstructor
 @Getter
 public class EffectStats {
-	private final AbilityId abilityId;
+	private final int effectId;
 	private Duration uptime = Duration.ZERO;
 
 	public void addUptime(Duration duration) {

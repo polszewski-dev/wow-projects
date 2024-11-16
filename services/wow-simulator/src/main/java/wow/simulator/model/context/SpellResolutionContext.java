@@ -2,7 +2,7 @@ package wow.simulator.model.context;
 
 import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
@@ -19,8 +19,8 @@ public class SpellResolutionContext extends Context {
 
 	private Boolean hitRoll;
 
-	public SpellResolutionContext(Unit caster, Ability ability, Unit target) {
-		super(caster, ability);
+	public SpellResolutionContext(Unit caster, Spell spell, Unit target) {
+		super(caster, spell);
 		this.target = target;
 	}
 
@@ -30,8 +30,8 @@ public class SpellResolutionContext extends Context {
 		}
 
 		if (hitRoll == null) {
-			double hitChancePct = caster.getSpellHitPct(ability, target);
-			this.hitRoll = caster.getRng().hitRoll(hitChancePct, ability.getAbilityId());
+			double hitChancePct = caster.getSpellHitPct(spell, target);
+			this.hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
 			if (!hitRoll) {
 				caster.getGameLog().spellResisted(action, target);
 			}
@@ -40,12 +40,12 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private boolean critRoll(double critChancePct) {
-		return caster.getRng().critRoll(critChancePct, ability.getAbilityId());
+		return caster.getRng().critRoll(critChancePct, spell);
 	}
 
 	@Override
 	protected SpellResolutionConversions getConversions() {
-		return new SpellResolutionConversions(caster, ability);
+		return new SpellResolutionConversions(caster, spell);
 	}
 
 	public void dealDirectDamage(DirectComponent directComponent, CastSpellAction action) {
@@ -53,7 +53,7 @@ public class SpellResolutionContext extends Context {
 			return;
 		}
 
-		var snapshot = caster.getDirectSpellDamageSnapshot(ability, target, directComponent);
+		var snapshot = caster.getDirectSpellDamageSnapshot(spell, target, directComponent);
 		var critRoll = critRoll(snapshot.getCritPct());
 		var addBonus = shouldAddBonus(directComponent, target);
 		var directDamage = snapshot.getDirectDamage(RngStrategy.AVERAGED, addBonus, critRoll);
@@ -74,8 +74,8 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private EffectInstance createEffect() {
-		var effectApplication = ability.getEffectApplication();
-		var durationSnapshot = caster.getEffectDurationSnapshot(ability, target);
+		var effectApplication = spell.getEffectApplication();
+		var durationSnapshot = caster.getEffectDurationSnapshot(spell, target);
 		var duration = durationSnapshot.getDuration();
 		var tickInterval = durationSnapshot.getTickInterval();
 
@@ -84,7 +84,7 @@ public class SpellResolutionContext extends Context {
 					caster,
 					target,
 					effectApplication.effect(),
-					ability,
+					spell,
 					Duration.seconds(duration),
 					Duration.seconds(tickInterval),
 					effectApplication.numStacks(),
@@ -95,7 +95,7 @@ public class SpellResolutionContext extends Context {
 					caster,
 					target,
 					effectApplication.effect(),
-					ability,
+					spell,
 					Duration.seconds(duration),
 					effectApplication.numStacks(),
 					effectApplication.numCharges()

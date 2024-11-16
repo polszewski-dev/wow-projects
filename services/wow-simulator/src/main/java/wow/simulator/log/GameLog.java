@@ -1,7 +1,7 @@
 package wow.simulator.log;
 
-import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
@@ -74,13 +74,13 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
-		handlers.forEach(handler -> handler.increasedResource(type, ability, target, amount, current, previous, crit));
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		handlers.forEach(handler -> handler.increasedResource(type, spell, target, amount, current, previous, crit));
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
-		handlers.forEach(handler -> handler.decreasedResource(type, ability, target, amount, current, previous, crit));
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		handlers.forEach(handler -> handler.decreasedResource(type, spell, target, amount, current, previous, crit));
 	}
 
 	@Override

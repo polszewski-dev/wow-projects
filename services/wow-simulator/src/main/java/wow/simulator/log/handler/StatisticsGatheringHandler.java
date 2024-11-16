@@ -5,6 +5,7 @@ import lombok.Setter;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.action.ActionId;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.CooldownInstanceId;
@@ -107,12 +108,16 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
 		// ignored
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		if (!(spell instanceof Ability ability)) {
+			return;
+		}
+
 		if (ability.getAbilityId() == AbilityId.LIFE_TAP) {
 			return;
 		}
@@ -123,7 +128,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void effectApplied(EffectInstance effect) {
-		effects.put(effect.getId(), new EffectTimeEntry(effect.getSourceAbilityId(), now()));
+		effects.put(effect.getId(), new EffectTimeEntry(effect.getEffectId(), now()));
 	}
 
 	@Override
@@ -135,7 +140,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	public void effectExpired(EffectInstance effect) {
 		var timeEntry = effects.remove(effect.getId());
 		timeEntry.complete(now());
-		stats.addEffectUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
+		stats.addEffectUptime(timeEntry.getEffectId(), timeEntry.getElapsedTime());
 	}
 
 	@Override
@@ -169,7 +174,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 		}
 		for (var timeEntry : effects.values()) {
 			timeEntry.complete(now());
-			stats.addEffectUptime(timeEntry.getAbilityId(), timeEntry.getElapsedTime());
+			stats.addEffectUptime(timeEntry.getEffectId(), timeEntry.getElapsedTime());
 		}
 		for (var timeEntry : cooldowns.values()) {
 			timeEntry.complete(now());

@@ -15,16 +15,13 @@ import java.util.Map;
  */
 public class SpellCastContext extends Context {
 	private final SpellCastSnapshot snapshot;
-
+	private final Ability ability;
 	private final Map<UnitId, SpellResolutionContext> spellResolutionContextMap = new HashMap<>();
 
 	public SpellCastContext(Unit caster, Ability ability, SpellCastSnapshot snapshot) {
 		super(caster, ability);
 		this.snapshot = snapshot;
-	}
-
-	public Ability getAbility() {
-		return ability;
+		this.ability = ability;
 	}
 
 	public Duration getGcd() {

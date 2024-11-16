@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
@@ -24,7 +25,7 @@ public class UnitResource implements SimulationContextSource {
 		this.max = max;
 	}
 
-	public int increase(int amount, boolean crit, Ability ability) {
+	public int increase(int amount, boolean crit, Spell spell) {
 		if (amount == 0) {
 			return 0;
 		}
@@ -33,11 +34,11 @@ public class UnitResource implements SimulationContextSource {
 
 		int previous = current;
 		this.current = Math.min(current + amount, max);
-		getGameLog().increasedResource(type, ability, owner, amount, current, previous, crit);
+		getGameLog().increasedResource(type, spell, owner, amount, current, previous, crit);
 		return current - previous;
 	}
 
-	public int decrease(int amount, boolean crit, Ability ability) {
+	public int decrease(int amount, boolean crit, Spell spell) {
 		if (amount == 0) {
 			return 0;
 		}
@@ -46,7 +47,7 @@ public class UnitResource implements SimulationContextSource {
 
 		int previous = current;
 		this.current = Math.max(current - amount, 0);
-		getGameLog().decreasedResource(type, ability, owner, amount, current, previous, crit);
+		getGameLog().decreasedResource(type, spell, owner, amount, current, previous, crit);
 		return previous - current;
 	}
 

@@ -314,15 +314,15 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Ability ability, Unit target, DirectComponent directComponent) {
+	public DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent) {
 		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, ability, target, directComponent, baseStats);
+		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, spell, target, directComponent, baseStats);
 	}
 
 	@Override
-	public PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Ability ability, Unit target) {
+	public PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target) {
 		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, ability, target, baseStats);
+		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, spell, target, baseStats);
 	}
 
 	@Override
@@ -349,18 +349,18 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public int increaseHealth(int amount, boolean crit, Ability ability) {
-		return resources.increaseHealth(amount, crit, ability);
+	public int increaseHealth(int amount, boolean crit, Spell spell) {
+		return resources.increaseHealth(amount, crit, spell);
 	}
 
 	@Override
-	public int decreaseHealth(int amount, boolean crit, Ability ability) {
-		return resources.decreaseHealth(amount, crit, ability);
+	public int decreaseHealth(int amount, boolean crit, Spell spell) {
+		return resources.decreaseHealth(amount, crit, spell);
 	}
 
 	@Override
-	public int increaseMana(int amount, boolean crit, Ability ability) {
-		return resources.increaseMana(amount, crit, ability);
+	public int increaseMana(int amount, boolean crit, Spell spell) {
+		return resources.increaseMana(amount, crit, spell);
 	}
 
 	@Override

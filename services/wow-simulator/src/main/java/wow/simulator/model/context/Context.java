@@ -1,6 +1,6 @@
 package wow.simulator.model.context;
 
-import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -9,22 +9,22 @@ import wow.simulator.model.unit.Unit;
  */
 public abstract class Context {
 	protected final Unit caster;
-	protected final Ability ability;
+	protected final Spell spell;
 
-	protected Context(Unit caster, Ability ability) {
+	protected Context(Unit caster, Spell spell) {
 		this.caster = caster;
-		this.ability = ability;
+		this.spell = spell;
 	}
 
 	protected abstract Conversions getConversions();
 
 	protected void decreaseHealth(Unit target, int amount, boolean critRoll) {
-		int actualDamage = target.decreaseHealth(amount, critRoll, ability);
+		int actualDamage = target.decreaseHealth(amount, critRoll, spell);
 
 		getConversions().performDamageDoneConversion(actualDamage);
 	}
 
 	protected void increaseMana(Unit target, int amount) {
-		target.increaseMana(amount, false, ability);
+		target.increaseMana(amount, false, spell);
 	}
 }

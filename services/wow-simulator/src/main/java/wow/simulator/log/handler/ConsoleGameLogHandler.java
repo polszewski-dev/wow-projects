@@ -2,10 +2,10 @@ package wow.simulator.log.handler;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityCooldownId;
 import wow.commons.model.spell.GroupCooldownId;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
@@ -74,13 +74,13 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
-		print("%s increased %s %s by %s%s", ability, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		print("%s increased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Ability ability, Unit target, int amount, int current, int previous, boolean crit) {
-		print("%s decreased %s %s by %s%s", ability, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		print("%s decreased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
 	}
 
 	@Override

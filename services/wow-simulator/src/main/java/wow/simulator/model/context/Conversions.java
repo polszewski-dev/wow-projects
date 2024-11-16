@@ -1,7 +1,7 @@
 package wow.simulator.model.context;
 
-import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Conversion;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
@@ -15,16 +15,20 @@ import static wow.commons.model.spell.Conversion.From.DAMAGE_DONE;
  */
 public abstract class Conversions {
 	protected final Unit caster;
-	protected final Ability ability;
+	protected final Spell spell;
 	protected final List<Conversion> list = new ArrayList<>();
 
-	protected Conversions(Unit caster, Ability ability) {
+	protected Conversions(Unit caster, Spell spell) {
 		this.caster = caster;
-		this.ability = ability;
+		this.spell = spell;
 	}
 
 	protected void addAbilityConversion() {
-		var conversion = ability.getConversion();
+		if (spell == null) {
+			return;
+		}
+
+		var conversion = spell.getConversion();
 
 		if (conversion != null) {
 			list.add(conversion);
@@ -51,8 +55,8 @@ public abstract class Conversions {
 		int convertedAmount = (int)(conversion.ratioPct().getCoefficient() * amount);
 
 		switch (conversion.to()) {
-			case HEALTH -> caster.increaseHealth(convertedAmount, false, ability);
-			case MANA -> caster.increaseMana(convertedAmount, false, ability);
+			case HEALTH -> caster.increaseHealth(convertedAmount, false, spell);
+			case MANA -> caster.increaseMana(convertedAmount, false, spell);
 			default -> throw new IllegalArgumentException();
 		}
 	}

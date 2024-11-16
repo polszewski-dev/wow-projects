@@ -76,9 +76,9 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target);
 
-	DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Ability ability, Unit target, DirectComponent directComponent);
+	DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent);
 
-	PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Ability ability, Unit target);
+	PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target);
 
 	BaseStatsSnapshot getBaseStatsSnapshot();
 
@@ -88,11 +88,11 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	int getCurrentMana();
 
-	int increaseHealth(int amount, boolean crit, Ability ability);
+	int increaseHealth(int amount, boolean crit, Spell spell);
 
-	int decreaseHealth(int amount, boolean crit, Ability ability);
+	int decreaseHealth(int amount, boolean crit, Spell spell);
 
-	int increaseMana(int amount, boolean crit, Ability ability);
+	int increaseMana(int amount, boolean crit, Spell spell);
 
 	int decreaseMana(int amount, boolean crit, Ability ability);
 

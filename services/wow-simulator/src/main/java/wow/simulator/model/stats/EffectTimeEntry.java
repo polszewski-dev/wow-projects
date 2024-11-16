@@ -1,7 +1,6 @@
 package wow.simulator.model.stats;
 
 import lombok.Getter;
-import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.time.Time;
 
 /**
@@ -10,10 +9,10 @@ import wow.simulator.model.time.Time;
  */
 @Getter
 public final class EffectTimeEntry extends TimeEntry {
-	private final AbilityId abilityId;
+	private final int effectId;
 
-	public EffectTimeEntry(AbilityId abilityId, Time begin) {
+	public EffectTimeEntry(int effectId, Time begin) {
 		super(begin);
-		this.abilityId = abilityId;
+		this.effectId = effectId;
 	}
 }

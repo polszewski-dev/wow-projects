@@ -1,6 +1,6 @@
 package wow.simulator.model.rng;
 
-import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.Spell;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,14 +16,14 @@ public class PredeterminedRng implements Rng {
 	private static final int MAX_LUCK = 100;
 
 	@Override
-	public boolean hitRoll(double chancePct, AbilityId abilityId) {
-		double initialLuck = 20.0 + Math.abs(abilityId.toString().hashCode() % 20);
-		return roll(chancePct, initialLuck, abilityId, hitLuck);
+	public boolean hitRoll(double chancePct, Spell spell) {
+		double initialLuck = 20.0 + Math.abs(spell.getName().hashCode() % 20);
+		return roll(chancePct, initialLuck, spell, hitLuck);
 	}
 
 	@Override
-	public boolean critRoll(double chancePct, AbilityId abilityId) {
-		return roll(chancePct, 0, abilityId, critLuck);
+	public boolean critRoll(double chancePct, Spell spell) {
+		return roll(chancePct, 0, spell, critLuck);
 	}
 
 	private boolean roll(double chance, double initialLuck, Object id, Map<Object, Double> luck) {

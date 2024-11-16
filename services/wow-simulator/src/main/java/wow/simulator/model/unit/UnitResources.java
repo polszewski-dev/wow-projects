@@ -3,6 +3,7 @@ package wow.simulator.model.unit;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
@@ -47,20 +48,20 @@ public class UnitResources implements SimulationContextSource {
 		get(MANA).set(current, max);
 	}
 
-	public int increaseHealth(int amount, boolean crit, Ability ability) {
-		return get(HEALTH).increase(amount, crit, ability);
+	public int increaseHealth(int amount, boolean crit, Spell spell) {
+		return get(HEALTH).increase(amount, crit, spell);
 	}
 
-	public int decreaseHealth(int amount, boolean crit, Ability ability) {
-		return get(HEALTH).decrease(amount, crit, ability);
+	public int decreaseHealth(int amount, boolean crit, Spell spell) {
+		return get(HEALTH).decrease(amount, crit, spell);
 	}
 
-	public int increaseMana(int amount, boolean crit, Ability ability) {
-		return get(MANA).increase(amount, crit, ability);
+	public int increaseMana(int amount, boolean crit, Spell spell) {
+		return get(MANA).increase(amount, crit, spell);
 	}
 
-	public int decreaseMana(int amount, boolean crit, Ability ability) {
-		return get(MANA).decrease(amount, crit, ability);
+	public int decreaseMana(int amount, boolean crit, Spell spell) {
+		return get(MANA).decrease(amount, crit, spell);
 	}
 
 	public boolean canPay(Cost cost) {

@@ -13,6 +13,7 @@ import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Conversion;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.context.EffectUpdateContext;
 import wow.simulator.model.effect.EffectInstance;
@@ -38,12 +39,12 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected final Unit target;
 
 	protected final Effect effect;
-	protected final Ability sourceAbility;
 	protected final Duration duration;
 
 	protected int numStacks;
 	protected int numCharges;
 
+	protected final Spell sourceSpell;
 	protected final EffectUpdateContext resolutionContext;
 
 	protected Time endTime;
@@ -57,7 +58,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			Unit owner,
 			Unit target,
 			Effect effect,
-			Ability sourceAbility,
+			Spell sourceSpell,
 			Duration duration,
 			int numStacks,
 			int numCharges
@@ -66,7 +67,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.owner = owner;
 		this.target = target;
 		this.effect = effect;
-		this.sourceAbility = sourceAbility;
+		this.sourceSpell = sourceSpell;
 		this.duration = duration;
 		this.numStacks = numStacks;
 		this.numCharges = numCharges;
@@ -108,7 +109,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public boolean matches(AbilityId abilityId, Unit owner) {
-		return getSourceAbilityId() == abilityId && this.owner == owner;
+		return getSourceSpell() instanceof Ability a && a.getAbilityId() == abilityId && this.owner == owner;
 	}
 
 	@Override
@@ -137,13 +138,13 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
-	public SimulationContext getSimulationContext() {
-		return owner.getSimulationContext();
+	public Spell getSourceSpell() {
+		return sourceSpell;
 	}
 
 	@Override
-	public Ability getSourceAbility() {
-		return sourceAbility;
+	public SimulationContext getSimulationContext() {
+		return owner.getSimulationContext();
 	}
 
 	@Override

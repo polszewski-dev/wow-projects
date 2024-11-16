@@ -3,7 +3,7 @@ package wow.simulator.model.effect.impl;
 import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.PeriodicComponent;
-import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -18,7 +18,7 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 			Unit owner,
 			Unit target,
 			Effect effect,
-			Ability sourceAbility,
+			Spell sourceAbility,
 			Duration duration,
 			Duration tickInterval,
 			int numStacks,

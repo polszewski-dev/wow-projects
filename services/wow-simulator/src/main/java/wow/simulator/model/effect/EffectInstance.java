@@ -4,6 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.simulation.SimulationContextSource;
@@ -19,12 +20,6 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	Unit getTarget();
 
-	Ability getSourceAbility();
-
-	default AbilityId getSourceAbilityId() {
-		return getSourceAbility().getAbilityId();
-	}
-
 	boolean matches(AbilityId abilityId, Unit owner);
 
 	Duration getRemainingDuration();
@@ -36,4 +31,10 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	int getNumStacks();
 
 	void setOnEffectFinished(Runnable onEffectFinished);
+
+	Spell getSourceSpell();
+
+	default AbilityId getSourceAbilityId() {
+		return getSourceSpell() instanceof Ability a ? a.getAbilityId() : null;
+	}
 }
