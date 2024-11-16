@@ -8,6 +8,10 @@ import wow.commons.model.effect.EffectSource;
  * Date: 2023-03-27
  */
 public record TalentSource(Talent talent) implements EffectSource, Comparable<TalentSource> {
+	public TalentId getTalentId() {
+		return talent.getTalentId();
+	}
+
 	@Override
 	public Description getDescription() {
 		return talent.getDescription();

@@ -2,6 +2,8 @@ package wow.simulator.model.context;
 
 import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.Duration;
+import wow.commons.model.effect.AbilitySource;
+import wow.commons.model.effect.EffectSource;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
@@ -66,14 +68,14 @@ public class SpellResolutionContext extends Context {
 			return null;
 		}
 
-		var appliedEffect = createEffect();
+		var appliedEffect = createEffect(new AbilitySource(action.getAbility()));
 
 		target.addEffect(appliedEffect);
 
 		return appliedEffect;
 	}
 
-	private EffectInstance createEffect() {
+	private EffectInstance createEffect(EffectSource effectSource) {
 		var effectApplication = spell.getEffectApplication();
 		var durationSnapshot = caster.getEffectDurationSnapshot(spell, target);
 		var duration = durationSnapshot.getDuration();
@@ -84,21 +86,21 @@ public class SpellResolutionContext extends Context {
 					caster,
 					target,
 					effectApplication.effect(),
-					spell,
 					Duration.seconds(duration),
 					Duration.seconds(tickInterval),
 					effectApplication.numStacks(),
-					effectApplication.numCharges()
+					effectApplication.numCharges(),
+					effectSource
 			);
 		} else {
 			return new NonPeriodicEffectInstance(
 					caster,
 					target,
 					effectApplication.effect(),
-					spell,
 					Duration.seconds(duration),
 					effectApplication.numStacks(),
-					effectApplication.numCharges()
+					effectApplication.numCharges(),
+					effectSource
 			);
 		}
 	}

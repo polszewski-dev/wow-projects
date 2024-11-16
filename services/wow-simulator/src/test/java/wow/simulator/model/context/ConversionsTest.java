@@ -3,6 +3,7 @@ package wow.simulator.model.context;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
+import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Cost;
 import wow.simulator.WowSimulatorSpringTest;
@@ -62,11 +63,11 @@ class ConversionsTest extends WowSimulatorSpringTest {
 				player,
 				target,
 				ability.getEffectApplication().effect(),
-				ability,
 				Duration.seconds(5),
 				Duration.seconds(1),
 				1,
-				1
+				1,
+				new AbilitySource(ability)
 		);
 		return new EffectUpdateConversions(player, effect);
 	}

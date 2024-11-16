@@ -2,7 +2,7 @@ package wow.simulator.model.effect.impl;
 
 import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.effect.EffectSource;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -14,12 +14,12 @@ public class NonPeriodicEffectInstance extends EffectInstanceImpl {
 			Unit owner,
 			Unit target,
 			Effect effect,
-			Spell sourceAbility,
 			Duration duration,
 			int numStacks,
-			int numCharges
+			int numCharges,
+			EffectSource effectSource
 	) {
-		super(owner, target, effect, sourceAbility, duration, numStacks, numCharges);
+		super(owner, target, effect, duration, numStacks, numCharges, effectSource);
 	}
 
 	@Override

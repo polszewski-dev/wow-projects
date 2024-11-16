@@ -13,9 +13,11 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
 import wow.commons.model.buff.BuffId;
+import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.Item;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentId;
+import wow.commons.model.talent.TalentSource;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
@@ -109,9 +111,13 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, AbilityId spell) implements Event {}
 		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, AbilityId spell) implements Event {}
 		public record EffectApplied(Time time, AbilityId spell, Unit target) implements Event {}
+		public record TalentEffectApplied(Time time, TalentId talentId, Unit target) implements Event {}
 		public record EffectStacked(Time time, AbilityId spell, Unit target) implements Event {}
+		public record TalentEffectStacked(Time time, TalentId talentId, Unit target) implements Event {}
 		public record EffectExpired(Time time, AbilityId spell, Unit target) implements Event {}
+		public record TalentEffectExpired(Time time, TalentId talentId, Unit target) implements Event {}
 		public record EffectRemoved(Time time, AbilityId spell, Unit target) implements Event {}
+		public record TalentEffectRemoved(Time time, TalentId talentId, Unit target) implements Event {}
 		public record CooldownStarted(Time time, Unit caster, CooldownId cooldownId) implements Event {}
 		public record CooldownExpired(Time time, Unit caster, CooldownId cooldownId) implements Event {}
 		public record SimulationEnded(Time time) implements Event {}
@@ -182,22 +188,46 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		@Override
 		public void effectApplied(EffectInstance effect) {
-			addEvent(new EffectApplied(now(), effect.getSourceAbilityId(), effect.getTarget()));
+			switch (effect.getSource()) {
+				case AbilitySource as ->
+						addEvent(new EffectApplied(now(), as.getAbilityId(), effect.getTarget()));
+				case TalentSource ts ->
+						addEvent(new TalentEffectApplied(now(), ts.getTalentId(), effect.getTarget()));
+				default -> {}
+			}
 		}
 
 		@Override
 		public void effectStacked(EffectInstance effect) {
-			addEvent(new EffectStacked(now(), effect.getSourceAbilityId(), effect.getTarget()));
+			switch (effect.getSource()) {
+				case AbilitySource as ->
+						addEvent(new EffectStacked(now(), as.getAbilityId(), effect.getTarget()));
+				case TalentSource ts ->
+						addEvent(new TalentEffectStacked(now(), ts.getTalentId(), effect.getTarget()));
+				default -> {}
+			}
 		}
 
 		@Override
 		public void effectExpired(EffectInstance effect) {
-			addEvent(new EffectExpired(now(), effect.getSourceAbilityId(), effect.getTarget()));
+			switch (effect.getSource()) {
+				case AbilitySource as ->
+						addEvent(new EffectExpired(now(), as.getAbilityId(), effect.getTarget()));
+				case TalentSource ts ->
+						addEvent(new TalentEffectExpired(now(), ts.getTalentId(), effect.getTarget()));
+				default -> {}
+			}
 		}
 
 		@Override
 		public void effectRemoved(EffectInstance effect) {
-			addEvent(new EffectRemoved(now(), effect.getSourceAbilityId(), effect.getTarget()));
+			switch (effect.getSource()) {
+				case AbilitySource as ->
+						addEvent(new EffectRemoved(now(), as.getAbilityId(), effect.getTarget()));
+				case TalentSource ts ->
+						addEvent(new TalentEffectRemoved(now(), ts.getTalentId(), effect.getTarget()));
+				default -> {}
+			}
 		}
 
 		@Override
