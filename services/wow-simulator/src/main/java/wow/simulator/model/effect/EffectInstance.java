@@ -29,6 +29,8 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	int getNumStacks();
 
+	int getNumCharges();
+
 	void setOnEffectFinished(Runnable onEffectFinished);
 
 	Spell getSourceSpell();

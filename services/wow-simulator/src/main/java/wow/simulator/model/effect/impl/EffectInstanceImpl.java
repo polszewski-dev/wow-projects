@@ -167,6 +167,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		return numStacks;
 	}
 
+	@Override
+	public int getNumCharges() {
+		return numCharges;
+	}
+
 	// effect interface
 
 	@Override

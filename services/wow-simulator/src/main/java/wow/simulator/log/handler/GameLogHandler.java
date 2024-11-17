@@ -45,6 +45,12 @@ public interface GameLogHandler {
 
 	void effectStacked(EffectInstance effect);
 
+	void effectStacksIncreased(EffectInstance effect);
+
+	void effectStacksDecreased(EffectInstance effect);
+
+	void effectChargesDecreased(EffectInstance effect);
+
 	void effectExpired(EffectInstance effect);
 
 	void effectRemoved(EffectInstance effect);

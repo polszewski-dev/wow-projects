@@ -94,6 +94,21 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
+	public void effectStacksIncreased(EffectInstance effect) {
+		print("Effect of %s stacks increased", effect);
+	}
+
+	@Override
+	public void effectStacksDecreased(EffectInstance effect) {
+		print("Effect of %s stacks decreased", effect);
+	}
+
+	@Override
+	public void effectChargesDecreased(EffectInstance effect) {
+		print("Effect of %s chargest decreased", effect);
+	}
+
+	@Override
 	public void effectExpired(EffectInstance effect) {
 		print("Effect of %s expired", effect);
 	}

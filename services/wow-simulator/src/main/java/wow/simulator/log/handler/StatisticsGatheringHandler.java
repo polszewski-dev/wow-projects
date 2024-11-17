@@ -121,6 +121,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 		if (ability.getAbilityId() == AbilityId.LIFE_TAP) {
 			return;
 		}
+
 		if (target != player && type == HEALTH) {
 			stats.addDamage(ability, amount, crit);
 		}
@@ -133,6 +134,21 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void effectStacked(EffectInstance effect) {
+		// ignored
+	}
+
+	@Override
+	public void effectStacksIncreased(EffectInstance effect) {
+		// ignored
+	}
+
+	@Override
+	public void effectStacksDecreased(EffectInstance effect) {
+		// ignored
+	}
+
+	@Override
+	public void effectChargesDecreased(EffectInstance effect) {
 		// ignored
 	}
 
