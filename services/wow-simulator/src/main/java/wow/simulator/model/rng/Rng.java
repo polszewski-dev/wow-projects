@@ -1,5 +1,6 @@
 package wow.simulator.model.rng;
 
+import wow.commons.model.effect.component.Event;
 import wow.commons.model.spell.Spell;
 
 /**
@@ -10,4 +11,6 @@ public interface Rng {
 	boolean hitRoll(double chancePct, Spell spell);
 
 	boolean critRoll(double chancePct, Spell spell);
+
+	boolean eventRoll(double chancePct, Event event);
 }

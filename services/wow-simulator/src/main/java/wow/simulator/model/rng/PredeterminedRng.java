@@ -1,5 +1,6 @@
 package wow.simulator.model.rng;
 
+import wow.commons.model.effect.component.Event;
 import wow.commons.model.spell.Spell;
 
 import java.util.LinkedHashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 public class PredeterminedRng implements Rng {
 	private final Map<Object, Double> hitLuck = new LinkedHashMap<>();
 	private final Map<Object, Double> critLuck = new LinkedHashMap<>();
+	private final Map<Object, Double> eventLuck = new LinkedHashMap<>();
 
 	private static final int MAX_LUCK = 100;
 
@@ -24,6 +26,11 @@ public class PredeterminedRng implements Rng {
 	@Override
 	public boolean critRoll(double chancePct, Spell spell) {
 		return roll(chancePct, 0, spell, critLuck);
+	}
+
+	@Override
+	public boolean eventRoll(double chancePct, Event event) {
+		return roll(chancePct, 0, event, eventLuck);
 	}
 
 	private boolean roll(double chance, double initialLuck, Object id, Map<Object, Double> luck) {

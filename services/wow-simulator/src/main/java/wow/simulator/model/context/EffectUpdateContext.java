@@ -27,7 +27,7 @@ public class EffectUpdateContext extends Context {
 
 		roundingReminder = tickDamage - roundedTickDamage;
 
-		decreaseHealth(target, roundedTickDamage, false);
+		decreaseHealth(target, roundedTickDamage, false, false);
 	}
 
 	public void periodicManaGain(int numStacks) {

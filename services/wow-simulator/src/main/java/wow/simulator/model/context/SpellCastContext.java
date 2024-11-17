@@ -3,6 +3,8 @@ package wow.simulator.model.context;
 import wow.character.model.snapshot.SpellCastSnapshot;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.SpellTarget;
+import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.UnitId;
 
@@ -48,6 +50,12 @@ public class SpellCastContext extends Context {
 
 		caster.triggerCooldown(ability, cooldown);
 		getConversions().performPaidCostConversion(cost);
+	}
+
+	public SpellResolutionContext getSpellResolutionContext(SpellTarget spellTarget, TargetResolver targetResolver) {
+		var target = targetResolver.getTarget(spellTarget);
+
+		return getSpellResolutionContext(target);
 	}
 
 	public SpellResolutionContext getSpellResolutionContext(Unit target) {

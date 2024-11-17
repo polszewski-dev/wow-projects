@@ -20,6 +20,7 @@ public class SpellResolutionContext extends Context {
 	private final Unit target;
 
 	private Boolean hitRoll;
+	private boolean spellHitFired;
 
 	public SpellResolutionContext(Unit caster, Spell spell, Unit target) {
 		super(caster, spell);
@@ -27,7 +28,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	public boolean hitRoll(CastSpellAction action) {
-		if (Unit.areFriendly(caster, target)) {
+		if (action == null || Unit.areFriendly(caster, target)) {
 			return true;
 		}
 
@@ -36,6 +37,7 @@ public class SpellResolutionContext extends Context {
 			this.hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
 			if (!hitRoll) {
 				caster.getGameLog().spellResisted(action, target);
+				EventContext.fireSpellResistedEvent(caster, target, spell);
 			}
 		}
 		return hitRoll;
@@ -50,17 +52,31 @@ public class SpellResolutionContext extends Context {
 		return new SpellResolutionConversions(caster, spell);
 	}
 
-	public void dealDirectDamage(DirectComponent directComponent, CastSpellAction action) {
+	public void directComponentAction(DirectComponent directComponent, CastSpellAction action) {
+		switch (directComponent.type()) {
+			case DAMAGE ->
+					dealDirectDamage(directComponent, action);
+			default ->
+					throw new UnsupportedOperationException();
+		}
+		fireSpellHitEvent();
+	}
+
+	private void dealDirectDamage(DirectComponent directComponent, CastSpellAction action) {
 		if (!hitRoll(action)) {
 			return;
 		}
 
+		dealDirectDamage(directComponent);
+	}
+
+	private void dealDirectDamage(DirectComponent directComponent) {
 		var snapshot = caster.getDirectSpellDamageSnapshot(spell, target, directComponent);
 		var critRoll = critRoll(snapshot.getCritPct());
 		var addBonus = shouldAddBonus(directComponent, target);
 		var directDamage = snapshot.getDirectDamage(RngStrategy.AVERAGED, addBonus, critRoll);
 
-		decreaseHealth(target, directDamage, critRoll);
+		decreaseHealth(target, directDamage, true, critRoll);
 	}
 
 	public EffectInstance applyEffect(CastSpellAction action) {
@@ -68,10 +84,13 @@ public class SpellResolutionContext extends Context {
 			return null;
 		}
 
-		var appliedEffect = createEffect(new AbilitySource(action.getAbility()));
+		return applyEffect(new AbilitySource(action.getAbility()));
+	}
 
+	public EffectInstance applyEffect(EffectSource effectSource) {
+		var appliedEffect = createEffect(effectSource);
 		target.addEffect(appliedEffect);
-
+		fireSpellHitEvent();
 		return appliedEffect;
 	}
 
@@ -113,5 +132,14 @@ public class SpellResolutionContext extends Context {
 		}
 
 		return bonus.requiredEffect() == null || target.hasEffect(bonus.requiredEffect(), caster);
+	}
+
+	private void fireSpellHitEvent() {
+		if (spellHitFired || Unit.areFriendly(caster, target)) {
+			return;
+		}
+
+		EventContext.fireSpellHitEvent(caster, target, spell);
+		this.spellHitFired = true;
 	}
 }

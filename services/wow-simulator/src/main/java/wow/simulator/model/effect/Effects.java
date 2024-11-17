@@ -14,6 +14,7 @@ import wow.simulator.simulation.SimulationContextSource;
 import wow.simulator.simulation.TimeAware;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -28,8 +29,23 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 	}
 
 	public void addEffect(EffectInstance effect) {
+		var matchingEffect = getMatchingEffect(effect);
+
+		if (matchingEffect != null) {
+			removeEffect(matchingEffect);
+		}
+
 		var handle = updateQueue.add(effect);
+
 		((EffectInstanceImpl) effect).setHandle(handle);
+	}
+
+	private EffectInstance getMatchingEffect(EffectInstance effect) {
+		return getEffectInstanceStream()
+				.filter(x -> x.getEffectId() == effect.getEffectId())//todo scope
+				.filter(x -> x.getOwner() == effect.getOwner())
+				.findAny()
+				.orElse(null);
 	}
 
 	public void removeEffect(EffectInstance effect) {
@@ -45,14 +61,12 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 	}
 
 	public boolean isUnderEffect(AbilityId abilityId, Unit owner) {
-		return updateQueue.getElements().stream()
-				.map(Handle::get)
+		return getEffectInstanceStream()
 				.anyMatch(x -> x.matches(abilityId, owner));
 	}
 
 	public Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner) {
-		return updateQueue.getElements().stream()
-				.map(Handle::get)
+		return getEffectInstanceStream()
 				.filter(x -> x.matches(abilityId, owner))
 				.findAny();
 	}
@@ -73,5 +87,10 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 			var effect = elementHandle.get();
 			collector.addEffect(effect, effect.getNumStacks());
 		}
+	}
+
+	private Stream<EffectInstance> getEffectInstanceStream() {
+		return updateQueue.getElements().stream()
+				.map(Handle::get);
 	}
 }

@@ -18,10 +18,12 @@ public abstract class Context {
 
 	protected abstract Conversions getConversions();
 
-	protected void decreaseHealth(Unit target, int amount, boolean critRoll) {
+	protected void decreaseHealth(Unit target, int amount, boolean directDamage, boolean critRoll) {
 		int actualDamage = target.decreaseHealth(amount, critRoll, spell);
 
 		getConversions().performDamageDoneConversion(actualDamage);
+
+		EventContext.fireSpellDamageEvent(caster, target, spell, directDamage, critRoll);
 	}
 
 	protected void increaseMana(Unit target, int amount) {

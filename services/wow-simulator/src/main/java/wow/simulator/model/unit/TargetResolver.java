@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import wow.commons.model.spell.SpellTarget;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * User: POlszewski
@@ -20,24 +21,31 @@ public class TargetResolver {
 					caster;
 			case PET ->
 					throw new UnsupportedOperationException("No pets atm");
-			case FRIEND, FRIEND_AOE, FRIENDS_PARTY, PARTY, PARTY_AOE ->
-					getFriendlyTarget();
-			case ENEMY, ENEMY_AOE ->
+			case FRIEND ->
+					getFriendlyTargetOrSelf();
+			case ENEMY ->
 					getHostileTarget();
-			case TARGET, ATTACKER ->
-					throw new IllegalArgumentException();
+			case TARGET ->
+					Objects.requireNonNull(target);
+			default ->
+					throw new UnsupportedOperationException("No AoE targets atm");
 		};
 	}
 
 	public boolean hasValidTarget(SpellTarget targetType) {
-		return getTarget(targetType) != null;
+		return switch (targetType) {
+			case FRIEND_AOE, FRIENDS_PARTY, PARTY, PARTY_AOE, ENEMY_AOE ->
+					true;
+			default ->
+					getTarget(targetType) != null;
+		};
 	}
 
 	public boolean hasAllValidTargets(Collection<SpellTarget> targetTypes) {
 		return targetTypes.stream().allMatch(this::hasValidTarget);
 	}
 
-	private Unit getFriendlyTarget() {
+	private Unit getFriendlyTargetOrSelf() {
 		if (target == null) {
 			return caster;
 		}

@@ -135,6 +135,31 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
+	public void addStack() {
+		numStacks = Math.min(numStacks + 1, getMaxStacks());
+		endTime = now().add(duration);
+		getGameLog().effectStacksIncreased(this);
+	}
+
+	@Override
+	public void removeStack() {
+		if (--numStacks <= 0) {
+			removeSelf();
+		} else {
+			getGameLog().effectStacksDecreased(this);
+		}
+	}
+
+	@Override
+	public void removeCharge() {
+		if (--numCharges <= 0) {
+			removeSelf();
+		} else {
+			getGameLog().effectChargesDecreased(this);
+		}
+	}
+
+	@Override
 	public void setOnEffectFinished(Runnable onEffectFinished) {
 		this.onEffectFinished = onEffectFinished;
 	}

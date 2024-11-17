@@ -25,6 +25,12 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	void removeSelf();
 
+	void addStack();
+
+	void removeStack();
+
+	void removeCharge();
+
 	Duration getDuration();
 
 	int getNumStacks();

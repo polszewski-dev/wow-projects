@@ -42,8 +42,6 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 			execPeriodicComponent(periodicComponent);
 		}
 
-		// todo fire tick event!!!
-
 		scheduleNextTick();
 	}
 

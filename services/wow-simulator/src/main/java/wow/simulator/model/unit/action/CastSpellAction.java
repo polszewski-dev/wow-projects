@@ -1,10 +1,10 @@
 package wow.simulator.model.unit.action;
 
 import wow.commons.model.Duration;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.component.DirectComponent;
+import wow.simulator.model.context.EventContext;
 import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.TargetResolver;
@@ -84,7 +84,7 @@ public class CastSpellAction extends UnitAction {
 
 	private void onEndCast() {
 		getGameLog().endCast(this);
-		// events here
+		EventContext.fireSpellCastEvent(owner, null, ability);//todo primary target w przypadku non-AoE
 	}
 
 	private void onBeginChannel() {
@@ -115,18 +115,9 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void directComponentAction(DirectComponent directComponent) {
-		if (directComponent.type() == ComponentType.DAMAGE) {
-			dealDirectDamage(directComponent);
-		} else {
-			throw new UnsupportedOperationException();
-		}
-	}
+		var resolutionContext = castContext.getSpellResolutionContext(directComponent.target(), targetResolver);
 
-	private void dealDirectDamage(DirectComponent directComponent) {
-		var target = targetResolver.getTarget(directComponent.target());
-		var resolutionContext = castContext.getSpellResolutionContext(target);
-
-		resolutionContext.dealDirectDamage(directComponent, this);
+		resolutionContext.directComponentAction(directComponent, this);
 	}
 
 	private void applyEffect() {
@@ -136,8 +127,7 @@ public class CastSpellAction extends UnitAction {
 			return;
 		}
 
-		var target = targetResolver.getTarget(effectApplication.target());
-		var resolutionContext = castContext.getSpellResolutionContext(target);
+		var resolutionContext = castContext.getSpellResolutionContext(effectApplication.target(), targetResolver);
 
 		if (ability.isChanneled()) {
 			if (!resolutionContext.hitRoll(this)) {

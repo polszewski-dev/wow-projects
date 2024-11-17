@@ -551,6 +551,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected static class TestRng implements Rng {
 		public boolean hitRoll = true;
 		public boolean critRoll = false;
+		public boolean eventRoll = false;
 
 		@Override
 		public boolean hitRoll(double chancePct, Spell spell) {
@@ -560,6 +561,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		@Override
 		public boolean critRoll(double chancePct, Spell spell) {
 			return critRoll;
+		}
+
+		@Override
+		public boolean eventRoll(double chancePct, wow.commons.model.effect.component.Event event) {
+			return eventRoll;
 		}
 	};
 
