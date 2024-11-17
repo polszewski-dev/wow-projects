@@ -2,10 +2,7 @@ package wow.simulator.log.handler;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.spell.AbilityCooldownId;
-import wow.commons.model.spell.GroupCooldownId;
-import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.*;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
@@ -132,6 +129,7 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 		return switch (cooldown.getCooldownId()) {
 			case AbilityCooldownId ac -> ac.abilityId().toString();
 			case GroupCooldownId gc -> gc.group().toString();
+			case EventCooldownId ec -> ec.effectSource().getName();
 		};
 	}
 

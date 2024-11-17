@@ -14,6 +14,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentId;
@@ -404,8 +405,18 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
+	public boolean isOnCooldown(CooldownId cooldownId) {
+		return cooldowns.isOnCooldown(cooldownId);
+	}
+
+	@Override
 	public void triggerCooldown(Ability ability, Duration actualDuration) {
 		cooldowns.triggerCooldown(ability, actualDuration);
+	}
+
+	@Override
+	public void triggerCooldown(CooldownId cooldownId, Duration actualDuration) {
+		cooldowns.triggerCooldown(cooldownId, actualDuration);
 	}
 
 	// character interface

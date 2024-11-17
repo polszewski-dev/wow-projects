@@ -9,6 +9,7 @@ import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.effect.impl.PeriodicEffectInstance;
+import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 
@@ -56,10 +57,22 @@ public class SpellResolutionContext extends Context {
 		switch (directComponent.type()) {
 			case DAMAGE ->
 					dealDirectDamage(directComponent, action);
+			case MANA_GAIN ->
+					increaseMana(directComponent);
+			case COPY_DAMAGE_AS_HEAL_PCT -> {
+					// void
+			}
 			default ->
 					throw new UnsupportedOperationException();
 		}
 		fireSpellHitEvent();
+	}
+
+	private void increaseMana(DirectComponent directComponent) {
+		var targetResolver = new TargetResolver(caster, target);
+		var componentTarget = targetResolver.getTarget(directComponent.target());
+
+		increaseMana(componentTarget, (directComponent.min() + directComponent.max()) / 2);
 	}
 
 	private void dealDirectDamage(DirectComponent directComponent, CastSpellAction action) {

@@ -28,6 +28,10 @@ public record Event(
 		Objects.requireNonNull(cooldown);
 	}
 
+	public boolean hasCooldown() {
+		return cooldown.isPositive();
+	}
+
 	public Event setTriggeredSpell(Spell triggeredSpell) {
 		return new Event(types, condition, chance, actions, cooldown, triggeredSpell);
 	}

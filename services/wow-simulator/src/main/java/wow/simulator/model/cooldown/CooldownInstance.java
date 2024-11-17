@@ -2,8 +2,6 @@ package wow.simulator.model.cooldown;
 
 import lombok.Getter;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.AbilityCooldownId;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Clock;
@@ -32,15 +30,11 @@ public class CooldownInstance implements Updateable, SimulationContextSource {
 	private final Time endTime;
 	private final CooldownAction cooldownAction;
 
-	private CooldownInstance(CooldownId cooldownId, Unit owner, Duration duration) {
+	public CooldownInstance(CooldownId cooldownId, Unit owner, Duration duration) {
 		this.cooldownId = cooldownId;
 		this.owner = owner;
 		this.endTime = now().add(duration);
 		this.cooldownAction = new CooldownAction(owner.getClock());
-	}
-
-	public static CooldownInstance forAbility(AbilityId abilityId, Unit owner, Duration duration) {
-		return new CooldownInstance(CooldownId.of(abilityId), owner, duration);
 	}
 
 	@Override
@@ -70,10 +64,6 @@ public class CooldownInstance implements Updateable, SimulationContextSource {
 
 	public Duration getRemainingDuration() {
 		return endTime.subtract(now()).min(Duration.ZERO);
-	}
-
-	public boolean isForAbility(AbilityId abilityId) {
-		return cooldownId instanceof AbilityCooldownId ac && ac.abilityId() == abilityId;
 	}
 
 	private class CooldownAction extends Action {

@@ -1,5 +1,6 @@
 package wow.simulator.model.rng;
 
+import wow.commons.model.Percent;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.spell.Spell;
 
@@ -13,4 +14,8 @@ public interface Rng {
 	boolean critRoll(double chancePct, Spell spell);
 
 	boolean eventRoll(double chancePct, Event event);
+
+	default boolean eventRoll(Percent chance, Event event) {
+		return eventRoll(chance.value(), event);
+	}
 }

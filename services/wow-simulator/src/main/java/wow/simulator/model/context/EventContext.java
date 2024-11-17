@@ -11,6 +11,8 @@ import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.ActivatedAbility;
+import wow.commons.model.spell.CooldownId;
+import wow.commons.model.spell.EventCooldownId;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
@@ -80,23 +82,37 @@ public class EventContext {
 		eventCollector.collectEffects();
 
 		for (var entry : eventCollector.list) {
-			processEvent(entry.event, entry.effect, unit);
+			processEvent(entry, unit);
 		}
 	}
 
-	private void processEvent(Event event, Effect effect, Unit unit) {
-		var args = getConditionArgs(unit);
+	private void processEvent(EventAndEffect entry, Unit unit) {
+		var event = entry.event();
+		var effect = entry.effect();
 
-		if (check(event.condition(), args)) {
-			var eventRoll = caster.getRng().eventRoll(event.chance().value(), event);
-
-			if (eventRoll) {
-				for (var action : event.actions()) {
-					performEventAction(action, event, effect);
-				}
-				//todo event.cooldown();
+		if (meetsAllConditions(entry, unit)) {
+			if (event.hasCooldown()) {
+				caster.triggerCooldown(entry.getEventCooldownId(), event.cooldown());
+			}
+			for (var action : event.actions()) {
+				performEventAction(action, event, effect);
 			}
 		}
+	}
+
+	private boolean meetsAllConditions(EventAndEffect entry, Unit unit) {
+		var event = entry.event();
+		var args = getConditionArgs(unit);
+
+		if (!check(event.condition(), args)) {
+			return false;
+		}
+
+		if (event.hasCooldown() && caster.isOnCooldown(entry.getEventCooldownId())) {
+			return false;
+		}
+
+		return caster.getRng().eventRoll(event.chance(), event);
 	}
 
 	private AttributeConditionArgs getConditionArgs(Unit unit) {
@@ -138,10 +154,16 @@ public class EventContext {
 			resolutionContext.directComponentAction(directComponent, null);
 		}
 
-		resolutionContext.applyEffect(effectSource);
+		if (spell.getEffectApplication() != null) {
+			resolutionContext.applyEffect(effectSource);
+		}
 	}
 
-	private record EventAndEffect(Event event, Effect effect) {}
+	private record EventAndEffect(int idx, Event event, Effect effect) {
+		EventCooldownId getEventCooldownId() {
+			return CooldownId.of(effect.getSource(), idx);
+		}
+	}
 
 	private static class EventCollector extends AbstractEffectCollector {
 		final EventType eventType;
@@ -154,9 +176,11 @@ public class EventContext {
 
 		@Override
 		public void addEffect(Effect effect, int stackCount) {
-			for (var event : effect.getEvents()) {
+			var events = effect.getEvents();
+			for (int i = 0; i < events.size(); i++) {
+				var event = events.get(i);
 				if (event.types().contains(eventType)) {
-					list.add(new EventAndEffect(event, effect));
+					list.add(new EventAndEffect(i, event, effect));
 				}
 			}
 		}

@@ -5,6 +5,7 @@ import wow.character.model.snapshot.*;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.context.SpellCastContext;
@@ -110,7 +111,11 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	boolean isOnCooldown(Ability ability);
 
+	boolean isOnCooldown(CooldownId cooldownId);
+
 	void triggerCooldown(Ability ability, Duration actualDuration);
+
+	void triggerCooldown(CooldownId cooldownId, Duration actualDuration);
 
 	static boolean areFriendly(Unit first, Unit second) {
 		return first.getClass() == second.getClass();
