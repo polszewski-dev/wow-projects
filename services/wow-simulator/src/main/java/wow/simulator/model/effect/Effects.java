@@ -32,6 +32,7 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 		var matchingEffect = getMatchingEffect(effect);
 
 		if (matchingEffect != null) {
+			((EffectInstanceImpl) effect).stack(matchingEffect);
 			removeEffect(matchingEffect);
 		}
 

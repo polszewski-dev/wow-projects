@@ -51,6 +51,9 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	protected Time endTime;
 
+	private boolean silentRemoval = false;
+	private boolean stacked = false;
+
 	@Getter
 	@Setter
 	private Handle<EffectInstance> handle;
@@ -91,7 +94,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public void onAddedToQueue() {
 		super.onAddedToQueue();
-		getGameLog().effectApplied(this);
+		if (stacked) {
+			getGameLog().effectStacked(this);
+		} else {
+			getGameLog().effectApplied(this);
+		}
 	}
 
 	@Override
@@ -106,7 +113,10 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	protected void onInterrupted() {
 		super.onInterrupted();
-		getGameLog().effectRemoved(this);
+
+		if (!silentRemoval) {
+			getGameLog().effectRemoved(this);
+		}
 	}
 
 	@Override
@@ -134,11 +144,24 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		target.removeEffect(this);
 	}
 
+	public void stack(EffectInstance existingEffect) {
+		if (getMaxStacks() == 1) {
+			return;
+		}
+		this.stacked = true;
+		this.addStacks(existingEffect.getNumStacks());
+		((EffectInstanceImpl) existingEffect).silentRemoval = true;
+	}
+
 	@Override
 	public void addStack() {
-		numStacks = Math.min(numStacks + 1, getMaxStacks());
+		addStacks(1);
 		endTime = now().add(duration);
 		getGameLog().effectStacksIncreased(this);
+	}
+
+	private void addStacks(int stacksToAdd) {
+		numStacks = Math.min(numStacks + stacksToAdd, getMaxStacks());
 	}
 
 	@Override

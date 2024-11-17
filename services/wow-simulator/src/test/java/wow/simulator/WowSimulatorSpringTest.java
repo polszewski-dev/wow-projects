@@ -13,6 +13,8 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
 import wow.commons.model.buff.BuffId;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.Item;
 import wow.commons.model.spell.AbilityId;
@@ -49,9 +51,12 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
+import static wow.character.model.character.CharacterTemplateId.SHADOW;
+import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.*;
 
@@ -79,13 +84,25 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected PlayerCharacter getNakedCharacter() {
-		var character = getCharacterService().createPlayerCharacter(WARLOCK, ORC, 70, TBC_P5);
-		getCharacterService().applyCharacterTemplate(character, DESTRO_SHADOW);
+		var raceId = ORC;
+		var charTemplateId = DESTRO_SHADOW;
+
+		if (characterClassId == PRIEST) {
+			raceId = UNDEAD;
+			charTemplateId = SHADOW;
+		}
+
+		var character = getPlayerCharacter(characterClassId, raceId);
+		getCharacterService().applyCharacterTemplate(character, charTemplateId);
 		character.resetEquipment();
 		character.resetBuffs();
 		character.getTalents().reset();
 		getCharacterService().updateAfterRestrictionChange(character);
 		return character;
+	}
+
+	private PlayerCharacter getPlayerCharacter(CharacterClassId characterClassId, RaceId raceId) {
+		return getCharacterService().createPlayerCharacter(characterClassId, raceId, 70, TBC_P5);
 	}
 
 	protected NonPlayerCharacter getEnemy() {
@@ -547,6 +564,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected Player player;
 	protected Unit target;
 	protected EventCollectingHandler handler;
+
+	protected CharacterClassId characterClassId = WARLOCK;
 
 	protected static class TestRng implements Rng {
 		public boolean hitRoll = true;
