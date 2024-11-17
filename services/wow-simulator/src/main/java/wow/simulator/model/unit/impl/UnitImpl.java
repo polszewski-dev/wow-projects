@@ -12,10 +12,7 @@ import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.CooldownId;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.model.context.SpellCastContext;
@@ -174,6 +171,10 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	@Override
 	public void cast(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
+		cast(ability, target);
+	}
+
+	protected void cast(Ability ability, Unit target) {
 		var targetResolver = getTargetResolver(target);
 		var action = new CastSpellAction(this, ability, targetResolver);
 		pendingActionQueue.add(action);
@@ -255,6 +256,9 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	private boolean canPaySpellCost(Ability ability) {
+		if (ability instanceof ActivatedAbility) {
+			return true;
+		}
 		var costSnapshot = getSpellCostSnapshot(ability);
 		return resources.canPay(costSnapshot.getCostToPay());
 	}
@@ -401,7 +405,16 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public boolean isOnCooldown(Ability ability) {
-		return isOnCooldown(ability.getAbilityId());
+		if (isOnCooldown(ability.getAbilityId())) {
+			return true;
+		}
+
+		if (ability instanceof ActivatedAbility activatedAbility) {
+			var groupCooldownId = activatedAbility.getGroupCooldownId();
+			return groupCooldownId != null && isOnCooldown(groupCooldownId);
+		}
+
+		return false;
 	}
 
 	@Override

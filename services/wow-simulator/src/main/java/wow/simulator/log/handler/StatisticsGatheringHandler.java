@@ -69,7 +69,13 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void endCast(CastSpellAction action) {
-		endCast(action, timeEntry -> timeEntry.setEnd(now()));
+		endCast(action, timeEntry -> {
+			if (action.getAbility().getCastInfo().ignoresGcd()) {
+				timeEntry.complete(now());
+			} else {
+				timeEntry.setEnd(now());
+			}
+		});
 	}
 
 	@Override

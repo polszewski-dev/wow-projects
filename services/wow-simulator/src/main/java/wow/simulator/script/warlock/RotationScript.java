@@ -2,6 +2,7 @@ package wow.simulator.script.warlock;
 
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Duration;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Player;
@@ -9,6 +10,7 @@ import wow.simulator.script.AIScript;
 import wow.simulator.script.ConditionalSpellCast;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.spell.AbilityId.LIFE_TAP;
@@ -22,17 +24,25 @@ public class RotationScript implements AIScript {
 	private final Player player;
 	private List<Ability> rotationCooldowns;
 	private Ability filler;
-	//todo onUse, racials, talents (?)
+	private List<ItemSlot> abilitySlots;
 
 	@Override
 	public void setupPlayer() {
 		this.rotationCooldowns = player.getRotation().getCooldowns();
 		this.filler = player.getRotation().getFiller();
+		this.abilitySlots = getAbilitySlots();
 	}
 
 	@Override
 	public void execute() {
 		player.increaseMana(1000, false, null);
+
+		var itemSlot = getItemSlotToUse();
+
+		if (itemSlot != null) {
+			player.cast(itemSlot);
+			return;
+		}
 
 		var spell = getSpellToCast();
 
@@ -44,6 +54,17 @@ public class RotationScript implements AIScript {
 			player.idleFor(Duration.seconds(1));
 		}
 	}
+
+	private ItemSlot getItemSlotToUse() {
+		for (var abilitySlot : abilitySlots) {
+			if (player.canCast(abilitySlot)) {
+				return abilitySlot;
+			}
+		}
+
+		return null;
+	}
+
 
 	private AbilityId getSpellToCast() {
 		for (var ability : rotationCooldowns) {
@@ -60,5 +81,11 @@ public class RotationScript implements AIScript {
 			return WarlockActionConditions.forAbility(ability.getAbilityId()).orElseThrow();
 		}
 		throw new IllegalArgumentException();
+	}
+
+	private List<ItemSlot> getAbilitySlots() {
+		return Stream.of(ItemSlot.values())
+				.filter(slot -> player.getEquippedItem(slot) != null && player.getEquippedItem(slot).hasActivatedAbility())
+				.toList();
 	}
 }

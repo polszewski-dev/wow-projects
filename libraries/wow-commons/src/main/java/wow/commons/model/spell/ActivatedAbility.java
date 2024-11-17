@@ -14,6 +14,8 @@ public interface ActivatedAbility extends Ability {
 
 	EffectSource getSource();
 
+	GroupCooldownId getGroupCooldownId();
+
 	@Override
 	default int getRank() {
 		return 0;

@@ -172,6 +172,10 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		return sockets.getGemCount(socketType);
 	}
 
+	public boolean hasActivatedAbility() {
+		return item.getActivatedAbility() != null;
+	}
+
 	@Override
 	public String toString() {
 		return item.toString();

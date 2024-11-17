@@ -13,6 +13,7 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
 import wow.commons.model.buff.BuffId;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.AbilitySource;
@@ -531,6 +532,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected void equip(String itemName) {
 		Item item = getItemRepository().getItem(itemName, player.getPhaseId()).orElseThrow();
 		player.equip(new EquippableItem(item));
+	}
+
+	protected void equip(String itemName, ItemSlot itemSlot) {
+		Item item = getItemRepository().getItem(itemName, player.getPhaseId()).orElseThrow();
+		player.equip(new EquippableItem(item), itemSlot);
 	}
 
 	protected void enableTalent(TalentId talentId, int rank) {

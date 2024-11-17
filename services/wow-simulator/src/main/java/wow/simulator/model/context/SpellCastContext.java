@@ -3,6 +3,7 @@ package wow.simulator.model.context;
 import wow.character.model.snapshot.SpellCastSnapshot;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.SpellTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
@@ -44,12 +45,26 @@ public class SpellCastContext extends Context {
 	}
 
 	public void paySpellCost() {
-		var costSnapshot = caster.paySpellCost(ability);
-		var cooldown = Duration.seconds(costSnapshot.getCooldown());
-		var cost = costSnapshot.getCostToPayUnreduced();
+		if (ability instanceof ActivatedAbility activatedAbility) {
+			caster.triggerCooldown(ability, ability.getCooldown());
+			triggerGroupCooldown(activatedAbility);
+		} else {
+			var costSnapshot = caster.paySpellCost(ability);
+			var cooldown = Duration.seconds(costSnapshot.getCooldown());
+			var cost = costSnapshot.getCostToPayUnreduced();
 
-		caster.triggerCooldown(ability, cooldown);
-		getConversions().performPaidCostConversion(cost);
+			caster.triggerCooldown(ability, cooldown);
+			getConversions().performPaidCostConversion(cost);
+		}
+	}
+
+	private void triggerGroupCooldown(ActivatedAbility activatedAbility) {
+		var groupCooldownId = activatedAbility.getGroupCooldownId();
+
+		if (groupCooldownId != null) {
+			var duration = ability.getEffectApplication().duration();
+			caster.triggerCooldown(groupCooldownId, duration);
+		}
 	}
 
 	public SpellResolutionContext getSpellResolutionContext(SpellTarget spellTarget, TargetResolver targetResolver) {

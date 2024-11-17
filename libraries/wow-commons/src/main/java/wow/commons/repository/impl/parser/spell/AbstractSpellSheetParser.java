@@ -110,7 +110,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		initSpell(ability);
 
 		var category = colCategory.getEnum(AbilityCategory::parse, null);
-		var castInfo = getCastInfo();
+		var castInfo = getCastInfo(ability instanceof ActivatedAbility);
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
 		var range = colRange.getInteger();
 		var requiredEffect = colRequiredEffect.getEnum(AbilityId::parse, null);
@@ -144,10 +144,10 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colChanneled = column(CAST_CHANNELED);
 	private final ExcelColumn colIgnoresGcd = column(CAST_IGNORES_GCD);
 
-	private CastInfo getCastInfo() {
+	private CastInfo getCastInfo(boolean activatedAbility) {
 		var castTime = colCastTime.getDuration(Duration.ZERO);
 		var channeled = colChanneled.getBoolean();
-		var ignoresGcd = colIgnoresGcd.getBoolean();
+		var ignoresGcd = activatedAbility || colIgnoresGcd.getBoolean();
 		return new CastInfo(castTime, channeled, ignoresGcd);
 	}
 
