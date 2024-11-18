@@ -31,10 +31,11 @@ public class SimulationController {
 	public SimulationResponseDTO simulate(@RequestBody SimulationRequestDTO request) {
 		var player = playerConverter.convert(request);
 		var duration = Duration.seconds(request.duration());
+		var rngType = request.rngType();
 
 		long start = System.currentTimeMillis();
 
-		var stats = simulatorService.simulate(player, duration);
+		var stats = simulatorService.simulate(player, duration, rngType);
 
 		long end = System.currentTimeMillis();
 

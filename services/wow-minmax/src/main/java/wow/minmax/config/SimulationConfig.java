@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import wow.simulator.client.dto.RngType;
 
 /**
  * User: POlszewski
@@ -15,4 +16,5 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class SimulationConfig {
 	private int duration;
+	private RngType rngType;
 }

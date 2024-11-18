@@ -57,7 +57,8 @@ public class SimulatorServiceImpl implements SimulatorService {
 		return new SimulationRequestDTO(
 				getCharacterDTO(character),
 				getEnemyDTO(character.getTarget()),
-				simulationConfig.getDuration()
+				simulationConfig.getDuration(),
+				simulationConfig.getRngType()
 		);
 	}
 

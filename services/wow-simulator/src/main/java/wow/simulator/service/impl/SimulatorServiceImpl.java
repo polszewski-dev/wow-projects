@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.service.CharacterCalculationService;
 import wow.commons.model.Duration;
+import wow.simulator.client.dto.RngType;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.ConsoleGameLogHandler;
 import wow.simulator.log.handler.StatisticsGatheringHandler;
 import wow.simulator.model.rng.PredeterminedRng;
+import wow.simulator.model.rng.RealRng;
+import wow.simulator.model.rng.RngFactory;
 import wow.simulator.model.stats.Stats;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -29,10 +32,10 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final CharacterCalculationService characterCalculationService;
 
 	@Override
-	public Stats simulate(Player player, Duration duration) {
+	public Stats simulate(Player player, Duration duration, RngType rngType) {
 		var target = player.getTarget();
 		var aiScript = new RotationScript(player);
-		var simulation = createSimulation();
+		var simulation = createSimulation(rngType);
 		var endTime = Time.at(duration.getSeconds());
 
 		aiScript.setupPlayer();
@@ -52,13 +55,21 @@ public class SimulatorServiceImpl implements SimulatorService {
 		return stats;
 	}
 
-	private Simulation createSimulation() {
+	private Simulation createSimulation(RngType rngType) {
 		var clock = new Clock();
 		var gameLog = new GameLog();
+		var rngFactory = createRngFactory(rngType);
 		var simulationContext = new SimulationContext(
-				clock, gameLog, PredeterminedRng::new, characterCalculationService
+				clock, gameLog, rngFactory, characterCalculationService
 		);
 
 		return new Simulation(simulationContext);
+	}
+
+	private RngFactory createRngFactory(RngType rngType) {
+		return switch (rngType) {
+			case REAL -> RealRng::new;
+			case PREDETERMINED -> PredeterminedRng::new;
+		};
 	}
 }

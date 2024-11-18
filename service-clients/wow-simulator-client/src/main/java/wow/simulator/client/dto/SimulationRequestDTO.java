@@ -7,6 +7,7 @@ package wow.simulator.client.dto;
 public record SimulationRequestDTO(
 		CharacterDTO character,
 		EnemyDTO targetEnemy,
-		double duration
+		double duration,
+		RngType rngType
 ) {
 }
