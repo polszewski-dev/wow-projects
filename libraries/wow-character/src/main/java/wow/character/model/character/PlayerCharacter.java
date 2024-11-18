@@ -9,11 +9,11 @@ import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
+import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.item.Item;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
-import wow.commons.model.racial.Racial;
 import wow.commons.model.talent.TalentId;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public interface PlayerCharacter extends Character, Copyable<PlayerCharacter> {
 		return getRace().getSide();
 	}
 
-	default List<Racial> getRacials() {
+	default List<RacialEffect> getRacials() {
 		return getRace().getRacials(this);
 	}
 

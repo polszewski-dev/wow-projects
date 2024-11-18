@@ -10,6 +10,7 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.character.RaceRepository;
 import wow.commons.repository.impl.parser.character.RaceExcelParser;
 import wow.commons.repository.pve.GameVersionRepository;
+import wow.commons.repository.spell.SpellRepository;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RaceRepositoryImpl implements RaceRepository {
 	private final GameVersionRepository gameVersionRepository;
+	private final SpellRepository spellRepository;
 
 	@Value("${races.xls.file.path}")
 	private String xlsFilePath;
@@ -37,7 +39,7 @@ public class RaceRepositoryImpl implements RaceRepository {
 
 	@PostConstruct
 	public void init() throws IOException {
-		var parser = new RaceExcelParser(xlsFilePath, gameVersionRepository);
+		var parser = new RaceExcelParser(xlsFilePath, gameVersionRepository, spellRepository);
 		parser.readFromXls();
 	}
 }

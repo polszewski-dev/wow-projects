@@ -2,11 +2,8 @@ package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.config.Described;
-import wow.commons.model.racial.Racial;
 import wow.commons.client.dto.RacialDTO;
-
-import java.util.stream.Collectors;
+import wow.commons.model.effect.RacialEffect;
 
 /**
  * User: POlszewski
@@ -14,12 +11,12 @@ import java.util.stream.Collectors;
  */
 @Component
 @AllArgsConstructor
-public class RacialConverter implements Converter<Racial, RacialDTO> {
+public class RacialConverter implements Converter<RacialEffect, RacialDTO> {
 	@Override
-	public RacialDTO doConvert(Racial source) {
+	public RacialDTO doConvert(RacialEffect source) {
 		return new RacialDTO(
 				source.getName(),
-				source.getEffects().stream().map(Described::getTooltip).collect(Collectors.joining("\n")),
+				source.getTooltip(),
 				source.getIcon(),
 				source.getTooltip()
 		);

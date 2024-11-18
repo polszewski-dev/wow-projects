@@ -4,17 +4,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.repository.impl.parser.spell.SpellExcelParser;
 import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.CollectionUtil;
+import wow.commons.util.GameVersionMap;
 import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
@@ -35,6 +39,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<AbilityIdAndRank, Ability> abilitiesByRankedId = new PhaseMap<>();
 	private final PhaseMap<Integer, Spell> spellsById = new PhaseMap<>();
 	private final PhaseMap<Integer, Effect> effectById = new PhaseMap<>();
+	private final GameVersionMap<RaceId, List<RacialEffect>> racialEffects = new GameVersionMap<>();
 
 	@Value("${spells.xls.file.path}")
 	private String xlsFilePath;
@@ -59,6 +64,11 @@ public class SpellRepositoryImpl implements SpellRepository {
 	@Override
 	public Optional<Effect> getEffect(int effectId, PhaseId phaseId) {
 		return effectById.getOptional(phaseId, effectId);
+	}
+
+	@Override
+	public List<RacialEffect> getRacialEffects(RaceId raceId, GameVersionId gameVersionId) {
+		return racialEffects.getOptional(gameVersionId, raceId).orElse(List.of());
 	}
 
 	@PostConstruct
@@ -166,6 +176,15 @@ public class SpellRepositoryImpl implements SpellRepository {
 	public void addEffect(Effect effect) {
 		validateEffect(effect);
 		putForEveryPhase(effectById, effect.getEffectId(), effect);
+
+		var gameVersionId = effect.getTimeRestriction().getGameVersionId();
+
+		if (effect instanceof RacialEffect racial) {
+			for (var raceId : racial.getCharacterRestriction().raceIds()) {
+				racialEffects.computeIfAbsent(gameVersionId, raceId, x -> new ArrayList<>())
+						.add(racial);
+			}
+		}
 	}
 
 	private void validateEffect(Effect effect) {

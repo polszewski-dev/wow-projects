@@ -9,7 +9,6 @@ import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.racial.Racial;
 
 /**
  * User: POlszewski
@@ -79,8 +78,8 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		build.collectEffects(collector);
 		equipment.collectEffects(collector);
 		getBuffs().collectEffects(collector);
-		for (Racial racial : race.getRacials(this)) {
-			collector.addEffects(racial.getEffects());
+		for (var racial : race.getRacials(this)) {
+			collector.addEffect(racial);
 		}
 	}
 }

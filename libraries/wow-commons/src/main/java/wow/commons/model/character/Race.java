@@ -6,9 +6,9 @@ import lombok.NonNull;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
+import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.Side;
-import wow.commons.model.racial.Racial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +29,12 @@ public class Race implements Described {
 	@NonNull
 	private final Side side;
 
-	private final List<Racial> racials = new ArrayList<>();
+	private final List<RacialEffect> racials = new ArrayList<>();
 
 	@NonNull
 	private final GameVersion gameVersion;
 
-	public List<Racial> getRacials(CharacterInfo characterInfo) {
+	public List<RacialEffect> getRacials(CharacterInfo characterInfo) {
 		return racials.stream()
 				.filter(x -> x.isAvailableTo(characterInfo))
 				.toList();

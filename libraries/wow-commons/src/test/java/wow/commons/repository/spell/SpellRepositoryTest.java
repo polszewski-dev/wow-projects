@@ -14,9 +14,11 @@ import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentId;
@@ -567,11 +569,20 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	}
 
 	@Test
+	void getRacialEffects() {
+		var effects = spellRepository.getRacialEffects(ORC, GameVersionId.TBC);
+		var effectNames = effects.stream().map(Described::getName).toList();
+
+		assertThat(effectNames).hasSameElementsAs(List.of(
+				"Axe Specialization",
+				"Command",
+				"Hardiness"
+		));
+	}
+
+	@Test
 	void racialEffect() {
 		var effect = getEffect(20555, TBC_P5);
-
-		// todo sprawdzic wymagany race i type == RACIAL_PASSIVE!!!
-		// albo obudowac to w race!!!!
 
 		assertModifier(effect, List.of(
 				Attribute.of(HEALTH_REGEN_PCT, 10),

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.client.WowCommonsClientSpringTest;
 import wow.commons.client.dto.RaceDTO;
+import wow.commons.client.dto.RacialDTO;
 import wow.commons.repository.character.RaceRepository;
 
 import java.util.List;
@@ -30,7 +31,25 @@ class RaceConverterTest extends WowCommonsClientSpringTest {
 		var converted = raceConverter.convert(race);
 
 		assertThat(converted).isEqualTo(
-				new RaceDTO(ORC, "Orc", "race_orc_male", List.of())
+				new RaceDTO(ORC, "Orc", "race_orc_male", List.of(
+						new RacialDTO(
+								"Axe Specialization",
+								"Expertise with Axes and Two-Handed Axes increased by 5.",
+								"inv_axe_02",
+								"Expertise with Axes and Two-Handed Axes increased by 5."
+						),
+						new RacialDTO(
+								"Command",
+								"Damage dealt by Hunter and Warlock pets increased by 5%.",
+								"ability_warrior_warcry",
+								"Damage dealt by Hunter and Warlock pets increased by 5%."),
+						new RacialDTO(
+								"Hardiness",
+								"Chance to resist Stun effects increased by an additional 15%.",
+								"inv_helmet_23",
+								"Chance to resist Stun effects increased by an additional 15%."
+						)
+				))
 		);
 	}
 }

@@ -287,7 +287,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return dummy;
 	}
 
-	private final ExcelColumn colAugmentedAbility = column(AUGMENTED_ABILITY, true);
+	protected final ExcelColumn colAugmentedAbility = column(AUGMENTED_ABILITY, true);
 
 	protected EffectImpl newEffect() {
 		var augmentedAbility = colAugmentedAbility.getEnum(AbilityId::parse, null);

@@ -36,7 +36,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colMaxStacks = column(STACKS_MAX);
 	private final ExcelColumn colTickInterval = column(TICK_INTERVAL);
 
-	private Effect getEffect() {
+	protected Effect getEffect() {
 		var effect = newEffect();
 		var effectId = colId.getInteger();
 		var description = getDescription();

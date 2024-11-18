@@ -18,7 +18,7 @@ public interface EffectCollector {
 
 	void addEffect(Effect effect, int stackCount);
 
-	default void addEffects(List<Effect> effects) {
+	default <T extends Effect> void addEffects(List<T> effects) {
 		for (var effect : effects) {
 			addEffect(effect);
 		}

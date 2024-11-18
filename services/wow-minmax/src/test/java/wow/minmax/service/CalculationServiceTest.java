@@ -81,6 +81,7 @@ class CalculationServiceTest extends ServiceTest {
 				"Shadowburn",
 				"Nether Protection",
 				"Soul Leech",
+				"Underwater Breathing",
 				"Malefic Raiment - P2 bonus"
 		));
 		assertThat(stats.getActivatedAbilities().stream().map(Described::getName).toList()).isEqualTo(List.of(
