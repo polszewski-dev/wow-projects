@@ -10,10 +10,11 @@ import wow.simulator.script.AIScript;
 import wow.simulator.script.ConditionalSpellCast;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.spell.AbilityId.LIFE_TAP;
+import static wow.commons.model.spell.AbilityId.*;
 
 /**
  * User: POlszewski
@@ -25,12 +26,14 @@ public class RotationScript implements AIScript {
 	private List<Ability> rotationCooldowns;
 	private Ability filler;
 	private List<ItemSlot> abilitySlots;
+	private List<Ability> racialAbilities;
 
 	@Override
 	public void setupPlayer() {
 		this.rotationCooldowns = player.getRotation().getCooldowns();
 		this.filler = player.getRotation().getFiller();
 		this.abilitySlots = getAbilitySlots();
+		this.racialAbilities = getRacialAbilities();
 	}
 
 	@Override
@@ -65,8 +68,13 @@ public class RotationScript implements AIScript {
 		return null;
 	}
 
-
 	private AbilityId getSpellToCast() {
+		for (var ability : racialAbilities) {
+			if (player.canCast(ability.getAbilityId())) {
+				return ability.getAbilityId();
+			}
+		}
+
 		for (var ability : rotationCooldowns) {
 			if (getConditionalCast(ability).check(player)) {
 				return ability.getAbilityId();
@@ -86,6 +94,13 @@ public class RotationScript implements AIScript {
 	private List<ItemSlot> getAbilitySlots() {
 		return Stream.of(ItemSlot.values())
 				.filter(slot -> player.getEquippedItem(slot) != null && player.getEquippedItem(slot).hasActivatedAbility())
+				.toList();
+	}
+
+	private List<Ability> getRacialAbilities() {
+		return Stream.of(BLOOD_FURY, BERSERKING)
+				.map(player::getAbility)
+				.flatMap(Optional::stream)
 				.toList();
 	}
 }
