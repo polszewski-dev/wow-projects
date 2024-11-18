@@ -11,6 +11,7 @@ import wow.commons.client.converter.BuffConverter;
 import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.converter.TalentConverter;
+import wow.minmax.config.SimulationConfig;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
@@ -33,6 +34,8 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final TalentConverter talentConverter;
 	private final BuffConverter buffConverter;
 
+	private final SimulationConfig simulationConfig;
+
 	@Qualifier("simulator")
 	private final WebClient webClient;
 
@@ -54,7 +57,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		return new SimulationRequestDTO(
 				getCharacterDTO(character),
 				getEnemyDTO(character.getTarget()),
-				180
+				simulationConfig.getDuration()
 		);
 	}
 
