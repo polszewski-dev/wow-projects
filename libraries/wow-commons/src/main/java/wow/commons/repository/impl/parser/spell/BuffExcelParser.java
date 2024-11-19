@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.repository.impl.spell.BuffRepositoryImpl;
+import wow.commons.repository.spell.SpellRepository;
 
 import java.io.InputStream;
 import java.util.stream.Stream;
@@ -18,6 +19,7 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.
 public class BuffExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 	private final BuffRepositoryImpl buffRepository;
+	private final SpellRepository spellRepository;
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -27,7 +29,7 @@ public class BuffExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new BuffSheetParser(BUFFS, buffRepository)
+				new BuffSheetParser(BUFFS, buffRepository, spellRepository)
 		);
 	}
 }

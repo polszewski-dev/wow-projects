@@ -73,8 +73,7 @@ class BuffsTest extends WowCharacterSpringTest {
 				"Moonkin Aura#0",
 				"Wrath of Air Totem#1",
 				"Totem of Wrath#1",
-				"Drums of Battle#0",
-				"Destruction#0"
+				"Drums of Battle#0"
 		));
 	}
 

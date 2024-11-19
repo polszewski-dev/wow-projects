@@ -14,6 +14,7 @@ public final class SpellBaseExcelSheetNames {
 	public static final String TALENT_SPELLS = "talent_spells";
 	public static final String TALENT_EFFECTS = "talent_effects";
 	public static final String RACIAL_EFFECTS = "racial_effects";
+	public static final String BUFF_EFFECTS = "buff_effects";
 	public static final String BUFFS = "buffs";
 
 	private SpellBaseExcelSheetNames() {}

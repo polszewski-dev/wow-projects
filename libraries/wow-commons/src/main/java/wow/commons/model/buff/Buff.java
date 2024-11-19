@@ -37,4 +37,6 @@ public interface Buff extends Described, TimeRestricted, CharacterRestricted, Pv
 	}
 
 	Effect getEffect();
+
+	int getStacks();
 }

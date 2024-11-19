@@ -7,10 +7,10 @@ import wow.commons.model.effect.EffectSource;
  * User: POlszewski
  * Date: 2023-03-27
  */
-public record BuffSource(Buff buff) implements EffectSource, Comparable<BuffSource> {
+public record BuffSource(Description description) implements EffectSource, Comparable<BuffSource> {
 	@Override
 	public Description getDescription() {
-		return buff.getDescription();
+		return description;
 	}
 
 	@Override
@@ -20,6 +20,6 @@ public record BuffSource(Buff buff) implements EffectSource, Comparable<BuffSour
 
 	@Override
 	public int compareTo(BuffSource o) {
-		return this.buff.getId().compareTo(o.buff.getId());
+		return this.getName().compareTo(o.getName());
 	}
 }

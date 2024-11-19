@@ -10,6 +10,7 @@ import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.spell.BuffExcelParser;
 import wow.commons.repository.spell.BuffRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
@@ -31,6 +32,8 @@ public class BuffRepositoryImpl implements BuffRepository {
 	@Value("${buffs.xls.file.path}")
 	private String xlsFilePath;
 
+	private final SpellRepository spellRepository;
+
 	@Override
 	public List<Buff> getAvailableBuffs(PhaseId phaseId) {
 		return buffsById.values(phaseId).stream().toList();
@@ -43,7 +46,7 @@ public class BuffRepositoryImpl implements BuffRepository {
 
 	@PostConstruct
 	public void init() throws IOException {
-		var parser = new BuffExcelParser(xlsFilePath, this);
+		var parser = new BuffExcelParser(xlsFilePath, this, spellRepository);
 		parser.readFromXls();
 	}
 

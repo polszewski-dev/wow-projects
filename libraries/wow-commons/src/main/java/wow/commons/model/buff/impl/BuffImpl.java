@@ -1,7 +1,6 @@
 package wow.commons.model.buff.impl;
 
 import lombok.Getter;
-import lombok.Setter;
 import wow.commons.model.buff.*;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.config.CharacterRestriction;
@@ -17,7 +16,6 @@ import java.util.Set;
  * Date: 2023-03-27
  */
 @Getter
-@Setter
 public class BuffImpl implements Buff {
 	private final BuffIdAndRank id;
 	private final Description description;
@@ -27,26 +25,30 @@ public class BuffImpl implements Buff {
 	private final BuffExclusionGroup exclusionGroup;
 	private final Set<PveRole> pveRoles;
 	private final Set<BuffCategory> categories;
-	private Effect effect;
+	private final Effect effect;
+	private final int stacks;
 
 	public BuffImpl(
 			BuffIdAndRank id,
-			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
 			BuffType type,
 			BuffExclusionGroup exclusionGroup,
 			Set<PveRole> pveRoles,
-			Set<BuffCategory> categories
+			Set<BuffCategory> categories,
+			Effect effect,
+			int stacks
 	) {
 		this.id = id;
-		this.description = description;
+		this.description = effect.getDescription();
 		this.timeRestriction = timeRestriction;
 		this.characterRestriction = characterRestriction;
 		this.type = type;
 		this.exclusionGroup = exclusionGroup;
 		this.pveRoles = pveRoles;
 		this.categories = categories;
+		this.effect = effect;
+		this.stacks = stacks;
 	}
 
 	@Override

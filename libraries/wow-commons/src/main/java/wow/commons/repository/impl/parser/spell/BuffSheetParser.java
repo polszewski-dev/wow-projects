@@ -4,10 +4,7 @@ import wow.commons.model.buff.*;
 import wow.commons.model.buff.impl.BuffImpl;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.repository.impl.spell.BuffRepositoryImpl;
-
-import java.util.List;
-
-import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.MAX_BUFF_MODIFIER_ATTRIBUTES;
+import wow.commons.repository.spell.SpellRepository;
 
 /**
  * User: POlszewski
@@ -18,12 +15,15 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colType = column("type");
 	private final ExcelColumn colExclusionGroup = column("exclusion group");
 	private final ExcelColumn colCategories = column("categories");
+	private final ExcelColumn colStacks = column("stacks");
 
 	private final BuffRepositoryImpl buffRepository;
+	private final SpellRepository spellRepository;
 
-	public BuffSheetParser(String sheetName, BuffRepositoryImpl buffRepository) {
+	public BuffSheetParser(String sheetName, BuffRepositoryImpl buffRepository, SpellRepository spellRepository) {
 		super(sheetName);
 		this.buffRepository = buffRepository;
+		this.spellRepository = spellRepository;
 	}
 
 	@Override
@@ -33,6 +33,7 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 	}
 
 	private Buff getBuff() {
+		var effectId = colId.getInteger();
 		var buffId = colName.getEnum(BuffId::parse);
 		var rank = colRank.getInteger(0);
 		var type = colType.getEnum(BuffType::parse);
@@ -40,35 +41,18 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 		var pveRoles = getPveRoles();
 		var categories = colCategories.getSet(BuffCategory::parse);
 
-		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
 
-		var buff = new BuffImpl(
-				new BuffIdAndRank(buffId, rank), description, timeRestriction, characterRestriction, type, exclusionGroup, pveRoles, categories
+		var effect = spellRepository.getEffect(effectId, timeRestriction.getGameVersionId().getLastPhase()).orElseThrow();
+		var stacks = colStacks.getInteger(1);
+
+		if (effect.getSource() == null) {
+			((EffectImpl) effect).setSource(new BuffSource(effect.getDescription()));
+		}
+
+		return new BuffImpl(
+				new BuffIdAndRank(buffId, rank), timeRestriction, characterRestriction, type, exclusionGroup, pveRoles, categories, effect, stacks
 		);
-
-		var effect = getEffect();
-
-		effect.attachSource(new BuffSource(buff));
-		buff.setEffect(effect);
-
-		return buff;
-	}
-
-	private EffectImpl getEffect() {
-		var effect = newEffect();
-		var description = getDescription();
-		var timeRestriction = getTimeRestriction();
-		var maxStacks = 1;
-		var modifierComponent = getModifierComponent(MAX_BUFF_MODIFIER_ATTRIBUTES);
-
-		effect.setDescription(description);
-		effect.setTimeRestriction(timeRestriction);
-		effect.setMaxStacks(maxStacks);
-		effect.setModifierComponent(modifierComponent);
-		effect.setStatConversions(List.of());
-		effect.setEvents(List.of());
-		return effect;
 	}
 }

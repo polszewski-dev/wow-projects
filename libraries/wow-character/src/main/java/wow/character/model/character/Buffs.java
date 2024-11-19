@@ -33,7 +33,7 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		for (Buff buff : enabledBuffsById.values()) {
-			collector.addEffect(buff.getEffect());
+			collector.addEffect(buff.getEffect(), buff.getStacks());
 		}
 	}
 

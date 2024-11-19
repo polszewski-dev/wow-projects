@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.AttributeId.DAMAGE_TAKEN_PCT;
-import static wow.commons.model.attribute.AttributeId.INTELLECT;
+import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.buff.BuffCategory.RAID_BUFF;
 import static wow.commons.model.categorization.PveRole.CASTER_DPS;
 import static wow.commons.model.spell.SpellSchool.*;
@@ -47,13 +46,19 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(RAID_BUFF));
 
 		assertModifier(buff.getEffect(), List.of(
-				Attribute.of(DAMAGE_TAKEN_PCT, 10, ConditionOperator.comma(
-						AttributeCondition.of(SHADOW),
+				Attribute.of(RESISTANCE, -88, ConditionOperator.comma(
+						AttributeCondition.of(ARCANE),
 						AttributeCondition.of(FIRE),
 						AttributeCondition.of(FROST),
-						AttributeCondition.of(ARCANE)
+						AttributeCondition.of(SHADOW)
+				)),
+				Attribute.of(DAMAGE_TAKEN_PCT, 10, ConditionOperator.comma(
+						AttributeCondition.of(ARCANE),
+						AttributeCondition.of(FIRE),
+						AttributeCondition.of(FROST),
+						AttributeCondition.of(SHADOW)
 				))
-		));
+		 ));
 	}
 
 	@Test
@@ -93,7 +98,6 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 				"Wrath of Air Totem#1",
 				"Totem of Wrath#1",
 				"Drums of Battle#0",
-				"Destruction#0",
 				"Misery#0",
 				"Rallying Cry of the Dragonslayer#0",
 				"Spirit of Zandalar#0",
