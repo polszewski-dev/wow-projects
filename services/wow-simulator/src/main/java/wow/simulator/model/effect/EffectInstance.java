@@ -21,6 +21,8 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	boolean matches(AbilityId abilityId, Unit owner);
 
+	boolean matches(AbilityId abilityId);
+
 	Duration getRemainingDuration();
 
 	void removeSelf();

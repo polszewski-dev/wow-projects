@@ -66,6 +66,11 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 				.anyMatch(x -> x.matches(abilityId, owner));
 	}
 
+	public boolean isUnderEffect(AbilityId abilityId) {
+		return getEffectInstanceStream()
+				.anyMatch(x -> x.matches(abilityId));
+	}
+
 	public Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner) {
 		return getEffectInstanceStream()
 				.filter(x -> x.matches(abilityId, owner))

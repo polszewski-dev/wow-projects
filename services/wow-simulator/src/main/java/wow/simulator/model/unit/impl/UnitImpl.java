@@ -399,6 +399,11 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
+	public boolean hasEffect(AbilityId abilityId) {
+		return effects.isUnderEffect(abilityId);
+	}
+
+	@Override
 	public boolean isOnCooldown(AbilityId abilityId) {
 		return cooldowns.isOnCooldown(abilityId);
 	}
