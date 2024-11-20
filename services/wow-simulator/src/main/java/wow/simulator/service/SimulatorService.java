@@ -10,5 +10,5 @@ import wow.simulator.model.unit.Player;
  * Date: 2024-11-10
  */
 public interface SimulatorService {
-	Stats simulate(Player player, Duration duration, RngType rngType);
+	Stats simulate(Player player, Duration duration, RngType rngType, Runnable withinSimulationContext);
 }

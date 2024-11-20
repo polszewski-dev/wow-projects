@@ -8,12 +8,8 @@ import wow.character.service.CharacterService;
 import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.EquipmentConverter;
-import wow.commons.client.dto.BuffDTO;
-import wow.commons.model.buff.BuffIdAndRank;
 import wow.simulator.client.dto.CharacterDTO;
 import wow.simulator.model.unit.Player;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -51,9 +47,6 @@ public class PlayerConverter implements Converter<CharacterDTO, Player> {
 
 		characterService.updateAfterRestrictionChange(player);
 
-		player.setBuffs(getBuffIds(source.buffs()));
-		target.setBuffs(getBuffIds(source.target().debuffs()));
-
 		return player;
 	}
 
@@ -67,11 +60,5 @@ public class PlayerConverter implements Converter<CharacterDTO, Player> {
 		build.setRole(source.role());
 		build.setActivePet(source.activePet());
 		build.setRotation(RotationTemplate.parse(source.rotation()).createRotation());
-	}
-
-	private static List<BuffIdAndRank> getBuffIds(List<BuffDTO> buffs) {
-		return buffs.stream()
-				.map(BuffDTO::getId)
-				.toList();
 	}
 }

@@ -1,6 +1,5 @@
 package wow.simulator.client.dto;
 
-import wow.commons.client.dto.BuffDTO;
 import wow.commons.client.dto.CharacterProfessionDTO;
 import wow.commons.client.dto.EquipmentDTO;
 import wow.commons.client.dto.TalentDTO;
@@ -27,10 +26,10 @@ public record CharacterDTO(
 		List<ExclusiveFaction> exclusiveFactions,
 		EquipmentDTO equipment,
 		List<TalentDTO> talents,
-		List<BuffDTO> buffs,
 		PveRole role,
 		PetType activePet,
 		String rotation,
+		List<ActiveEffectDTO> activeEffects,
 		EnemyDTO target
 ) {
 }

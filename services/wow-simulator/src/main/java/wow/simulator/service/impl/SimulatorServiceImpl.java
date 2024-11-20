@@ -32,7 +32,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final CharacterCalculationService characterCalculationService;
 
 	@Override
-	public Stats simulate(Player player, Duration duration, RngType rngType) {
+	public Stats simulate(Player player, Duration duration, RngType rngType, Runnable withinSimulationContext) {
 		var target = player.getTarget();
 		var aiScript = new RotationScript(player);
 		var simulation = createSimulation(rngType);
@@ -50,6 +50,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.add(player);
 		simulation.add(target);
+
+		withinSimulationContext.run();
+
 		simulation.updateUntil(endTime);
 
 		return stats;

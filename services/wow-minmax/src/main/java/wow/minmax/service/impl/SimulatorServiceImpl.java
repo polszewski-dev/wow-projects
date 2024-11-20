@@ -6,11 +6,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import wow.character.model.character.Character;
-import wow.commons.client.converter.BuffConverter;
 import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.converter.TalentConverter;
 import wow.minmax.config.SimulationConfig;
+import wow.minmax.converter.dto.ActiveEffectConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerCharacter;
 import wow.minmax.service.PlayerCharacterService;
@@ -32,7 +32,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final CharacterProfessionConverter characterProfessionConverter;
 	private final EquipmentConverter equipmentConverter;
 	private final TalentConverter talentConverter;
-	private final BuffConverter buffConverter;
+	private final ActiveEffectConverter activeEffectConverter;
 
 	private final SimulationConfig simulationConfig;
 
@@ -72,10 +72,10 @@ public class SimulatorServiceImpl implements SimulatorService {
 				character.getExclusiveFactions().getList(),
 				equipmentConverter.convert(character.getEquipment()),
 				talentConverter.convertList(character.getTalents().getList()),
-				buffConverter.convertList(character.getBuffs().getList()),
 				character.getRole(),
 				character.getActivePetType(),
 				character.getRotation().getTemplate().toString(),
+				activeEffectConverter.convertList(character.getBuffs().getList()),
 				getEnemyDTO(character.getTarget())
 		);
 	}
@@ -85,7 +85,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 				"Target",
 				target.getCreatureType(),
 				target.getLevel(),
-				buffConverter.convertList(target.getBuffs().getList())
+				activeEffectConverter.convertList(target.getBuffs().getList())
 		);
 	}
 }
