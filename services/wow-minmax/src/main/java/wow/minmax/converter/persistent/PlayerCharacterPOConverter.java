@@ -2,17 +2,16 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.build.Build;
 import wow.character.model.build.RotationTemplate;
-import wow.character.model.character.NonPlayerCharacter;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.buff.BuffIdAndRank;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.NonPlayerCharacter;
+import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.impl.PlayerCharacterImpl;
 import wow.minmax.model.persistent.BuffPO;
-import wow.minmax.model.persistent.BuildPO;
 import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.model.persistent.TalentPO;
 
@@ -52,11 +51,12 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 
 	@Override
 	public PlayerCharacter doConvertBack(PlayerCharacterPO source) {
-		PlayerCharacter character = characterService.createPlayerCharacter(
+		var character = characterService.createPlayerCharacter(
 				source.getCharacterClassId(),
 				source.getRace(),
 				source.getLevel(),
-				source.getPhaseId()
+				source.getPhaseId(),
+				PlayerCharacterImpl::new
 		);
 
 		changeBuild(character, source);
@@ -77,8 +77,8 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 	}
 
 	private void changeBuild(PlayerCharacter character, PlayerCharacterPO source) {
-		Build build = character.getBuild();
-		BuildPO sourceBuild = source.getBuild();
+		var build = character.getBuild();
+		var sourceBuild = source.getBuild();
 
 		for (TalentPO sourceTalent : sourceBuild.getTalents()) {
 			build.getTalents().enableTalent(sourceTalent.getTalentId(), sourceTalent.getRank());

@@ -26,11 +26,6 @@ public class PlayerImpl extends UnitImpl implements Player {
 	}
 
 	@Override
-	public PlayerCharacter copy() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public Equipment getEquipment() {
 		return getCharacter().getEquipment();
 	}

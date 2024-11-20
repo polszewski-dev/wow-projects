@@ -1,6 +1,5 @@
 package wow.character.model.character;
 
-import wow.character.model.Copyable;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
@@ -14,7 +13,7 @@ import wow.commons.model.talent.TalentId;
  * User: POlszewski
  * Date: 2023-10-31
  */
-public interface NonPlayerCharacter extends Character, Copyable<NonPlayerCharacter> {
+public interface NonPlayerCharacter extends Character {
 	@Override
 	default PetType getActivePetType() {
 		return null;

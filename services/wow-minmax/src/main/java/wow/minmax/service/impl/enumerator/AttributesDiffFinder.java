@@ -1,7 +1,6 @@
 package wow.minmax.service.impl.enumerator;
 
 import wow.character.model.character.Character;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -12,6 +11,7 @@ import wow.commons.model.config.Described;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.minmax.model.AttributesDiff;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.SpecialAbility;
 import wow.minmax.util.EffectList;
 

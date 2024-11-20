@@ -2,13 +2,13 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.NonPlayerCharacter;
-import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
+import wow.minmax.model.NonPlayerCharacter;
+import wow.minmax.model.impl.NonPlayerCharacterImpl;
 import wow.minmax.model.persistent.NonPlayerCharacterPO;
 
 /**

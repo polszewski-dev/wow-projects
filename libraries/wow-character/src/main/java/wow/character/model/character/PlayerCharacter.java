@@ -1,6 +1,5 @@
 package wow.character.model.character;
 
-import wow.character.model.Copyable;
 import wow.character.model.build.Build;
 import wow.character.model.build.Rotation;
 import wow.character.model.build.Talents;
@@ -22,7 +21,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-10-31
  */
-public interface PlayerCharacter extends Character, Copyable<PlayerCharacter> {
+public interface PlayerCharacter extends Character {
 	Equipment getEquipment();
 
 	default void equip(EquippableItem item, ItemSlot slot) {

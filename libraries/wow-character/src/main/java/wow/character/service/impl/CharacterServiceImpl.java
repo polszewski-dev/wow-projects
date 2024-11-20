@@ -15,6 +15,8 @@ import wow.character.repository.BaseStatInfoRepository;
 import wow.character.repository.CharacterTemplateRepository;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.character.service.CharacterService;
+import wow.character.service.NonPlayerCharacterFactory;
+import wow.character.service.PlayerCharacterFactory;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
@@ -53,6 +55,13 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public PlayerCharacter createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
+		return createPlayerCharacter(characterClassId, raceId, level, phaseId, PlayerCharacterImpl::new);
+	}
+
+	@Override
+	public <T extends PlayerCharacter> T createPlayerCharacter(
+			CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory
+	) {
 		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 		var gameVersion = phase.getGameVersion();
 		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
@@ -61,7 +70,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 		var talents = new Talents(getAvailableTalents(characterClassId, phaseId));
 
-		return new PlayerCharacterImpl(
+		return factory.newPlayerCharacter(
 				phase,
 				characterClass,
 				race,
@@ -74,13 +83,20 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public NonPlayerCharacter createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId) {
+		return createNonPlayerCharacter(creatureType, level, phaseId, NonPlayerCharacterImpl::new);
+	}
+
+	@Override
+	public <T extends NonPlayerCharacter> T createNonPlayerCharacter(
+			CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory
+	) {
 		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 		var gameVersion = phase.getGameVersion();
 		var characterClassId = CharacterClassId.WARRIOR;
 		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 
-		return new NonPlayerCharacterImpl(
+		return factory.newPlayerCharacter(
 				phase,
 				characterClass,
 				creatureType,

@@ -1,10 +1,10 @@
 package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.PlayerProfile;
 
 /**

@@ -2,7 +2,6 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSlot;
@@ -15,6 +14,7 @@ import wow.commons.model.item.SocketType;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.impl.enumerator.FilterOutWorseEnchantChoices;
 import wow.minmax.service.impl.enumerator.FilterOutWorseGemChoices;

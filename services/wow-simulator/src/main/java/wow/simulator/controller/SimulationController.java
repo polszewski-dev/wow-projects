@@ -29,7 +29,7 @@ public class SimulationController {
 
 	@PostMapping
 	public SimulationResponseDTO simulate(@RequestBody SimulationRequestDTO request) {
-		var player = playerConverter.convert(request);
+		var player = playerConverter.convert(request.player());
 		var duration = Duration.seconds(request.duration());
 		var rngType = request.rngType();
 

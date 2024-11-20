@@ -21,7 +21,7 @@ public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCh
 		this.creatureType = creatureType;
 	}
 
-	private NonPlayerCharacterImpl(
+	protected NonPlayerCharacterImpl(
 			Phase phase,
 			CharacterClass characterClass,
 			int level,
@@ -38,22 +38,6 @@ public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCh
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		getBuffs().collectEffects(collector);
-	}
-
-	@Override
-	public NonPlayerCharacter copy() {
-		var copy = new NonPlayerCharacterImpl(
-				getPhase(),
-				getCharacterClass(),
-				getLevel(),
-				getBaseStatInfo(),
-				getCombatRatingInfo(),
-				getSpellbook().copy(),
-				getBuffs().copy(),
-				getCreatureType()
-		);
-		copy.setTarget(getTarget());
-		return copy;
 	}
 
 	private static BaseStatInfo getDummyBaseStatInfo(CharacterClass characterClass, int level, Phase phase) {

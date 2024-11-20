@@ -3,7 +3,6 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.BuffListType;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
 import wow.commons.model.buff.BuffId;
@@ -11,7 +10,10 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.converter.persistent.PlayerCharacterPOConverter;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.config.ViewConfig;
+import wow.minmax.model.impl.NonPlayerCharacterImpl;
+import wow.minmax.model.impl.PlayerCharacterImpl;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.PlayerCharacterRepository;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -50,19 +52,22 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	private PlayerCharacter createCharacter(CharacterId characterId) {
-		var playerProfile = playerProfileRepository.findById(characterId.getProfileId().toString()).orElseThrow();
+		var profileId = characterId.getProfileId().toString();
+		var playerProfile = playerProfileRepository.findById(profileId).orElseThrow();
 
 		var newCharacter = characterService.createPlayerCharacter(
 				playerProfile.getCharacterClassId(),
 				playerProfile.getRaceId(),
 				characterId.getLevel(),
-				characterId.getPhaseId()
+				characterId.getPhaseId(),
+				PlayerCharacterImpl::new
 		);
 
 		var targetEnemy = characterService.createNonPlayerCharacter(
 				characterId.getEnemyType(),
 				newCharacter.getLevel() + characterId.getEnemyLevelDiff(),
-				characterId.getPhaseId()
+				characterId.getPhaseId(),
+				NonPlayerCharacterImpl::new
 		);
 
 		newCharacter.setTarget(targetEnemy);

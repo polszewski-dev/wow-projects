@@ -8,14 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.NonPlayerCharacter;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.Item;
 import wow.commons.model.spell.AbilityId;
@@ -34,12 +31,11 @@ import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
+import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
-import wow.simulator.model.unit.impl.NonPlayerImpl;
-import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.TimeAware;
@@ -84,7 +80,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return new SimulationContext(clock, gameLog, () -> rng, getCharacterCalculationService());
 	}
 
-	protected PlayerCharacter getNakedCharacter() {
+	protected Player getNakedPlayer() {
 		var raceId = ORC;
 		var charTemplateId = DESTRO_SHADOW;
 
@@ -93,21 +89,21 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			charTemplateId = SHADOW;
 		}
 
-		var character = getPlayerCharacter(characterClassId, raceId);
-		getCharacterService().applyCharacterTemplate(character, charTemplateId);
-		character.resetEquipment();
-		character.resetBuffs();
-		character.getTalents().reset();
-		getCharacterService().updateAfterRestrictionChange(character);
-		return character;
+		var player = getCharacterService().createPlayerCharacter(
+				characterClassId, raceId, 70, TBC_P5, Player.getFactory("Player")
+		);
+
+		getCharacterService().applyCharacterTemplate(player, charTemplateId);
+		player.resetEquipment();
+		player.resetBuffs();
+		player.getTalents().reset();
+		getCharacterService().updateAfterRestrictionChange(player);
+
+		return player;
 	}
 
-	private PlayerCharacter getPlayerCharacter(CharacterClassId characterClassId, RaceId raceId) {
-		return getCharacterService().createPlayerCharacter(characterClassId, raceId, 70, TBC_P5);
-	}
-
-	protected NonPlayerCharacter getEnemy() {
-		var enemy = getCharacterService().createNonPlayerCharacter(BEAST, 73, TBC_P5);
+	protected NonPlayer getEnemy() {
+		var enemy = getCharacterService().createNonPlayerCharacter(BEAST, 73, TBC_P5, NonPlayer.getFactory("Target"));
 		enemy.resetBuffs();
 		return enemy;
 	}
@@ -602,8 +598,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		simulation = new Simulation(simulationContext);
 
-		player = new PlayerImpl("Player", getNakedCharacter());
-		target = new NonPlayerImpl("Target", getEnemy());
+		player = getNakedPlayer();
+		target = getEnemy();
 
 		player.setTarget(target);
 

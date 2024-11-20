@@ -13,6 +13,6 @@ public record EnemyDTO(
 		String name,
 		CreatureType enemyType,
 		int enemyLevel,
-		List<BuffDTO> targetDebuffs
+		List<BuffDTO> debuffs
 ) {
 }

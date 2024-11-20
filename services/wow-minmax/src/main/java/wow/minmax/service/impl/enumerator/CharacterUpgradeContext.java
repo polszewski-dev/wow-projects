@@ -1,10 +1,10 @@
 package wow.minmax.service.impl.enumerator;
 
 import wow.character.model.build.Rotation;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.AccumulatedRotationStats;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.Upgrade;
 import wow.minmax.service.CalculationService;
 import wow.minmax.util.EffectList;

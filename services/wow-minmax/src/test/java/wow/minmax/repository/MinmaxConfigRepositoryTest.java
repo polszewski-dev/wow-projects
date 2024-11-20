@@ -2,8 +2,8 @@ package wow.minmax.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.character.model.character.PlayerCharacter;
 import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
 

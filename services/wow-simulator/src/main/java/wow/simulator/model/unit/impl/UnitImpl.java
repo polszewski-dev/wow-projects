@@ -456,6 +456,9 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public void setTarget(Character target) {
+		if (!(target instanceof Unit)) {
+			throw new IllegalArgumentException();
+		}
 		character.setTarget(target);
 	}
 

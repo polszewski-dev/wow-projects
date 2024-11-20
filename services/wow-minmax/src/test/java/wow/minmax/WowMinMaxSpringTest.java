@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
@@ -22,7 +21,10 @@ import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.impl.NonPlayerCharacterImpl;
+import wow.minmax.model.impl.PlayerCharacterImpl;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -118,13 +120,15 @@ public abstract class WowMinMaxSpringTest {
 				characterClass,
 				race,
 				level,
-				phase
+				phase,
+				PlayerCharacterImpl::new
 		);
 
 		var target = characterService.createNonPlayerCharacter(
 				ENEMY_TYPE,
 				level + LVL_DIFF,
-				phase
+				phase,
+				NonPlayerCharacterImpl::new
 		);
 
 		character.setTarget(target);

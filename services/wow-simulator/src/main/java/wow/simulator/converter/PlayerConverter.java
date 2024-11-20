@@ -2,15 +2,16 @@ package wow.simulator.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.NonPlayerCharacter;
+import wow.character.model.build.RotationTemplate;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
+import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.Converter;
+import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.dto.BuffDTO;
 import wow.commons.model.buff.BuffIdAndRank;
-import wow.simulator.client.dto.SimulationRequestDTO;
+import wow.simulator.client.dto.CharacterDTO;
 import wow.simulator.model.unit.Player;
-import wow.simulator.model.unit.impl.NonPlayerImpl;
-import wow.simulator.model.unit.impl.PlayerImpl;
 
 import java.util.List;
 
@@ -20,30 +21,52 @@ import java.util.List;
  */
 @Component
 @AllArgsConstructor
-public class PlayerConverter implements Converter<SimulationRequestDTO, Player> {
+public class PlayerConverter implements Converter<CharacterDTO, Player> {
 	private final CharacterService characterService;
 
-	private final PlayerCharacterConverter playerCharacterConverter;
-	private final NonPlayerCharacterConverter nonPlayerCharacterConverter;
+	private final CharacterProfessionConverter characterProfessionConverter;
+	private final EquipmentConverter equipmentConverter;
+
+	private final NonPlayerConverter nonPlayerConverter;
 
 	@Override
-	public Player doConvert(SimulationRequestDTO source) {
-		var character = playerCharacterConverter.convert(source.character());
-		var targetEnemy = nonPlayerCharacterConverter.convert(source.targetEnemy(), source.character().phaseId());
+	public Player doConvert(CharacterDTO source) {
+		var player = characterService.createPlayerCharacter(
+				source.characterClassId(),
+				source.raceId(),
+				source.level(),
+				source.phaseId(),
+				Player.getFactory(source.name())
+		);
 
-		character.setTarget(targetEnemy);
+		changeBuild(player, source);
 
-		characterService.updateAfterRestrictionChange(character);
+		player.setProfessions(characterProfessionConverter.convertBackList(source.professions(), source.phaseId()));
+		player.getExclusiveFactions().set(source.exclusiveFactions());
+		player.setEquipment(equipmentConverter.convertBack(source.equipment(), source.phaseId()));
 
-		character.setBuffs(getBuffIds(source.character().buffs()));
-		targetEnemy.setBuffs(getBuffIds(source.targetEnemy().targetDebuffs()));
-
-		var player = new PlayerImpl(source.character().name(), character);
-		var target = new NonPlayerImpl(source.targetEnemy().name(), (NonPlayerCharacter) character.getTarget());
+		var target = nonPlayerConverter.convert(source.target(), source.phaseId());
 
 		player.setTarget(target);
 
+		characterService.updateAfterRestrictionChange(player);
+
+		player.setBuffs(getBuffIds(source.buffs()));
+		target.setBuffs(getBuffIds(source.target().debuffs()));
+
 		return player;
+	}
+
+	private void changeBuild(PlayerCharacter character, CharacterDTO source) {
+		var build = character.getBuild();
+
+		for (var sourceTalent : source.talents()) {
+			build.getTalents().enableTalent(sourceTalent.talentId(), sourceTalent.rank());
+		}
+
+		build.setRole(source.role());
+		build.setActivePet(source.activePet());
+		build.setRotation(RotationTemplate.parse(source.rotation()).createRotation());
 	}
 
 	private static List<BuffIdAndRank> getBuffIds(List<BuffDTO> buffs) {

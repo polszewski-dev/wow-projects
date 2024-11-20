@@ -1,6 +1,5 @@
 package wow.minmax.service;
 
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
@@ -9,6 +8,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
+import wow.minmax.model.PlayerCharacter;
 
 import java.util.List;
 

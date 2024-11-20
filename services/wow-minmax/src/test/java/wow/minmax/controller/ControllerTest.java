@@ -2,10 +2,10 @@ package wow.minmax.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestriction;
 import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.config.ViewConfig;

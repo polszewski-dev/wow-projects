@@ -2,13 +2,13 @@ package wow.minmax.service.impl.enumerator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Gem;
 import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.SpecialAbility;
 

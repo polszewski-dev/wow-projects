@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.character.Character;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 

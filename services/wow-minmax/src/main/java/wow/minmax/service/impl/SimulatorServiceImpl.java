@@ -6,13 +6,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import wow.character.model.character.Character;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.client.converter.BuffConverter;
 import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.converter.TalentConverter;
 import wow.minmax.config.SimulationConfig;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.CharacterDTO;
@@ -56,7 +56,6 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		return new SimulationRequestDTO(
 				getCharacterDTO(character),
-				getEnemyDTO(character.getTarget()),
 				simulationConfig.getDuration(),
 				simulationConfig.getRngType()
 		);
@@ -76,7 +75,8 @@ public class SimulatorServiceImpl implements SimulatorService {
 				buffConverter.convertList(character.getBuffs().getList()),
 				character.getRole(),
 				character.getActivePetType(),
-				character.getRotation().getTemplate().toString()
+				character.getRotation().getTemplate().toString(),
+				getEnemyDTO(character.getTarget())
 		);
 	}
 

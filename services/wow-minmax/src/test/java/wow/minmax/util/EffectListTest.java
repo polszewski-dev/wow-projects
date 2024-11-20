@@ -2,13 +2,13 @@ package wow.minmax.util;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.SpecialAbility;
 

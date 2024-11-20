@@ -147,7 +147,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void newAccumulatedTargetStatsTargetHasPet() {
-		var playerTarget = character.copy();
+		var playerTarget = character;
 
 		playerTarget.getBuild().setActivePet(PetType.VOIDWALKER);
 

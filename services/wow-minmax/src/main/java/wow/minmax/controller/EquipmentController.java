@@ -3,7 +3,6 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.converter.EquipmentConverter;
@@ -17,6 +16,7 @@ import wow.minmax.client.dto.ItemSocketStatusDTO;
 import wow.minmax.client.dto.SocketBonusStatusDTO;
 import wow.minmax.client.dto.SocketStatusDTO;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.util.AttributeFormatter;
 

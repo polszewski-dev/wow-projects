@@ -1,12 +1,12 @@
 package wow.minmax.service;
 
 import wow.character.model.character.BuffListType;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.config.ViewConfig;
 
 import java.util.List;

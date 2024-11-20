@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Buffs;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.snapshot.AccumulatedBaseStats;
 import wow.character.model.snapshot.BaseStatsSnapshot;
 import wow.character.model.snapshot.StatSummary;

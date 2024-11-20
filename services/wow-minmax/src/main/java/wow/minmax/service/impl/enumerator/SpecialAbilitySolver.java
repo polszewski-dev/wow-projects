@@ -2,7 +2,6 @@ package wow.minmax.service.impl.enumerator;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
@@ -11,10 +10,7 @@ import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActivatedAbility;
-import wow.minmax.model.AccumulatedDamagingAbilityStats;
-import wow.minmax.model.AccumulatedRotationStats;
-import wow.minmax.model.ProcInfo;
-import wow.minmax.model.Snapshot;
+import wow.minmax.model.*;
 import wow.minmax.repository.ProcInfoRepository;
 
 import static wow.character.util.AttributeConditionChecker.check;

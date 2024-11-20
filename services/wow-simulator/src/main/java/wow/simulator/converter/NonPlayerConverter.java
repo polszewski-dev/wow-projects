@@ -2,11 +2,11 @@ package wow.simulator.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.NonPlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.pve.PhaseId;
 import wow.simulator.client.dto.EnemyDTO;
+import wow.simulator.model.unit.NonPlayer;
 
 /**
  * User: POlszewski
@@ -14,15 +14,16 @@ import wow.simulator.client.dto.EnemyDTO;
  */
 @Component
 @AllArgsConstructor
-public class NonPlayerCharacterConverter implements ParametrizedConverter<EnemyDTO, NonPlayerCharacter, PhaseId> {
+public class NonPlayerConverter implements ParametrizedConverter<EnemyDTO, NonPlayer, PhaseId> {
 	private final CharacterService characterService;
 
 	@Override
-	public NonPlayerCharacter doConvert(EnemyDTO source, PhaseId phaseId) {
+	public NonPlayer doConvert(EnemyDTO source, PhaseId phaseId) {
 		return characterService.createNonPlayerCharacter(
 				source.enemyType(),
 				source.enemyLevel(),
-				phaseId
+				phaseId,
+				NonPlayer.getFactory(source.name())
 		);
 	}
 }

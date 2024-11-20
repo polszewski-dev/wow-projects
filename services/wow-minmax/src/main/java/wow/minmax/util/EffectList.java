@@ -1,12 +1,12 @@
 package wow.minmax.util;
 
 import wow.character.model.character.Character;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.snapshot.AccumulatedStats;
 import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.ActivatedAbility;
+import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.SpecialAbility;
 
 import java.util.ArrayList;

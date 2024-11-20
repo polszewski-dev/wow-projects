@@ -30,6 +30,7 @@ public record CharacterDTO(
 		List<BuffDTO> buffs,
 		PveRole role,
 		PetType activePet,
-		String rotation
+		String rotation,
+		EnemyDTO target
 ) {
 }

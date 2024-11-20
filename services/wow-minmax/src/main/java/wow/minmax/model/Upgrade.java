@@ -1,6 +1,5 @@
 package wow.minmax.model;
 
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.service.impl.enumerator.AttributesDiffFinder;

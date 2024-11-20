@@ -15,7 +15,11 @@ import wow.commons.model.pve.PhaseId;
 public interface CharacterService {
 	PlayerCharacter createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
 
+	<T extends PlayerCharacter> T createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory);
+
 	NonPlayerCharacter createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId);
+
+	<T extends NonPlayerCharacter> T createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory);
 
 	void applyDefaultCharacterTemplate(PlayerCharacter character);
 

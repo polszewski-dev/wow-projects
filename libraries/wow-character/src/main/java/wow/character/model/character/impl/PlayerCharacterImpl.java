@@ -31,7 +31,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		this.exclusiveFactions = new ExclusiveFactions();
 	}
 
-	private PlayerCharacterImpl(
+	protected PlayerCharacterImpl(
 			Phase phase,
 			CharacterClass characterClass,
 			int level,
@@ -51,26 +51,6 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		this.equipment = equipment;
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-	}
-
-	@Override
-	public PlayerCharacterImpl copy() {
-		var copy = new PlayerCharacterImpl(
-				getPhase(),
-				getCharacterClass(),
-				getLevel(),
-				getBaseStatInfo(),
-				getCombatRatingInfo(),
-				getSpellbook().copy(),
-				getBuffs().copy(),
-				race,
-				build.copy(),
-				equipment.copy(),
-				professions.copy(),
-				exclusiveFactions.copy()
-		);
-		copy.setTarget(getTarget());
-		return copy;
 	}
 
 	@Override
