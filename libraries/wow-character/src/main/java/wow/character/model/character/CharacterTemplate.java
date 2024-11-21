@@ -31,6 +31,7 @@ public class CharacterTemplate implements TimeRestricted {
 	private final PetType activePet;
 	private final List<BuffId> defaultBuffs;
 	private final List<BuffId> defaultDebuffs;
+	private final List<String> consumables;
 	private final List<CharacterProfession> professions;
 	private final List<ExclusiveFaction> exclusiveFactions;
 	private final boolean isDefault;

@@ -10,7 +10,10 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.item.BasicItemInfo;
+import wow.commons.model.item.ItemSource;
 import wow.commons.model.source.Source;
+import wow.commons.model.spell.ActivatedAbility;
+import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
 import wow.commons.repository.spell.SpellRepository;
@@ -51,6 +54,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colUnique = column(UNIQUE);
 	private final ExcelColumn colItemLevel = column(ITEM_LEVEL);
 	private final ExcelColumn colSource = column(SOURCE);
+	private final ExcelColumn colActivatedAbility = column(ITEM_ACTIVATED_ABILITY);
 
 	protected BasicItemInfo getBasicItemInfo() {
 		var itemType = colItemType.getEnum(ItemType::parse);
@@ -105,5 +109,20 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		effect.attachSource(source);
 
 		return effect;
+	}
+
+	protected ActivatedAbility getActivatedAbility(ItemSource source) {
+		var spellId = colActivatedAbility.getNullableInteger();
+
+		if (spellId == null) {
+			return null;
+		}
+
+		var phaseId = getTimeRestriction().earliestPhaseId();
+		var activatedAbility = (ActivatedAbilityImpl) spellRepository.getSpell(spellId, phaseId).orElseThrow();
+
+		activatedAbility.attachSource(source);
+
+		return activatedAbility;
 	}
 }

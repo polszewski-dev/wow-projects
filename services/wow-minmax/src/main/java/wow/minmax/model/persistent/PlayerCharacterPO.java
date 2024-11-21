@@ -33,5 +33,6 @@ public class PlayerCharacterPO implements Serializable {
 	private List<CharacterProfessionPO> professions;
 	private List<ExclusiveFaction> exclusiveFactions;
 	private List<BuffPO> buffs;
+	private List<ConsumablePO> consumables;
 	private NonPlayerCharacterPO target;
 }

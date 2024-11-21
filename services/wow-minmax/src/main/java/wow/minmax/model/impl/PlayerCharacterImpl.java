@@ -39,9 +39,10 @@ public class PlayerCharacterImpl extends wow.character.model.character.impl.Play
 			Build build,
 			Equipment equipment,
 			CharacterProfessions professions,
-			ExclusiveFactions exclusiveFactions
+			ExclusiveFactions exclusiveFactions,
+			Consumables consumables
 	) {
-		super(phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs, race, build, equipment, professions, exclusiveFactions);
+		super(phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs, race, build, equipment, professions, exclusiveFactions, consumables);
 	}
 
 	@Override
@@ -71,7 +72,8 @@ public class PlayerCharacterImpl extends wow.character.model.character.impl.Play
 				getBuild().copy(),
 				getEquipment().copy(),
 				getProfessions().copy(),
-				getExclusiveFactions().copy()
+				getExclusiveFactions().copy(),
+				getConsumables().copy()
 		);
 		copy.setTarget(getTarget());
 		return copy;

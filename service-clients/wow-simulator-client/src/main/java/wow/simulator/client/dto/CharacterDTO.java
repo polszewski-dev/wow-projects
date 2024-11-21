@@ -1,6 +1,7 @@
 package wow.simulator.client.dto;
 
 import wow.commons.client.dto.CharacterProfessionDTO;
+import wow.commons.client.dto.ConsumableDTO;
 import wow.commons.client.dto.EquipmentDTO;
 import wow.commons.client.dto.TalentDTO;
 import wow.commons.model.categorization.PveRole;
@@ -30,6 +31,7 @@ public record CharacterDTO(
 		PetType activePet,
 		String rotation,
 		List<ActiveEffectDTO> activeEffects,
+		List<ConsumableDTO> consumables,
 		EnemyDTO target
 ) {
 }

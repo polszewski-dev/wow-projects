@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import wow.character.model.character.Character;
 import wow.commons.client.converter.CharacterProfessionConverter;
+import wow.commons.client.converter.ConsumableConverter;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.converter.TalentConverter;
 import wow.minmax.config.SimulationConfig;
@@ -33,6 +34,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final EquipmentConverter equipmentConverter;
 	private final TalentConverter talentConverter;
 	private final ActiveEffectConverter activeEffectConverter;
+	private final ConsumableConverter consumableConverter;
 
 	private final SimulationConfig simulationConfig;
 
@@ -76,6 +78,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 				character.getActivePetType(),
 				character.getRotation().getTemplate().toString(),
 				activeEffectConverter.convertList(character.getBuffs().getList()),
+				consumableConverter.convertList(character.getConsumables().getList()),
 				getEnemyDTO(character.getTarget())
 		);
 	}

@@ -9,8 +9,6 @@ import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.item.impl.ItemImpl;
-import wow.commons.model.spell.ActivatedAbility;
-import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.repository.impl.item.ItemRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
@@ -23,7 +21,6 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
 public class ItemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colSocketTypes = column(ITEM_SOCKET_TYPES);
 	private final ExcelColumn colItemSet = column(ITEM_ITEM_SET);
-	private final ExcelColumn colActivatedAbility = column(ITEM_ACTIVATED_ABILITY);
 
 	private final ItemExcelParser parser;
 	private final ItemRepositoryImpl itemRepository;
@@ -79,21 +76,6 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var socketBonus = readItemEffect(SOCKET_BONUS_PREFIX, 1, timeRestriction, source);
 
 		return new ItemSocketSpecification(socketTypes, socketBonus);
-	}
-
-	private ActivatedAbility getActivatedAbility(ItemSource source) {
-		var spellId = colActivatedAbility.getNullableInteger();
-
-		if (spellId == null) {
-			return null;
-		}
-
-		var phaseId = getTimeRestriction().earliestPhaseId();
-		var activatedAbility = (ActivatedAbilityImpl) spellRepository.getSpell(spellId, phaseId).orElseThrow();
-
-		activatedAbility.attachSource(source);
-
-		return activatedAbility;
 	}
 
 	private void validateItem(Item item) {

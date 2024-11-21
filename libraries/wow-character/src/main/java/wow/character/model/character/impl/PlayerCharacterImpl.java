@@ -21,6 +21,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
+	private final Consumables consumables;
 
 	public PlayerCharacterImpl(Phase phase, CharacterClass characterClass, Race race, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo, Talents talents) {
 		super(phase, characterClass, level, baseStatInfo, combatRatingInfo);
@@ -29,6 +30,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		this.equipment = new Equipment();
 		this.professions = new CharacterProfessions();
 		this.exclusiveFactions = new ExclusiveFactions();
+		this.consumables = new Consumables();
 	}
 
 	protected PlayerCharacterImpl(
@@ -43,7 +45,8 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 			Build build,
 			Equipment equipment,
 			CharacterProfessions professions,
-			ExclusiveFactions exclusiveFactions
+			ExclusiveFactions exclusiveFactions,
+			Consumables consumables
 	) {
 		super(phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
 		this.race = race;
@@ -51,6 +54,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		this.equipment = equipment;
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
+		this.consumables = consumables;
 	}
 
 	@Override
@@ -58,6 +62,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		build.collectEffects(collector);
 		equipment.collectEffects(collector);
 		getBuffs().collectEffects(collector);
+		getConsumables().collectEffects(collector);
 		for (var racial : race.getRacials(this)) {
 			collector.addEffect(racial);
 		}

@@ -10,6 +10,7 @@ public final class ItemBaseExcelSheetNames {
 	public static final String ENCHANT = "enchant";
 	public static final String GEM = "gem";
 	public static final String SET = "set";
+	public static final String CONSUMABLE = "consumable";
 
 	private ItemBaseExcelSheetNames() {}
 }

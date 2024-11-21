@@ -97,6 +97,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		player.resetEquipment();
 		player.resetBuffs();
 		player.getTalents().reset();
+		player.getConsumables().reset();
 		getCharacterService().updateAfterRestrictionChange(player);
 
 		return player;

@@ -23,11 +23,13 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Pet;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.item.Consumable;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
+import wow.commons.repository.item.ConsumableRepository;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.BuffRepository;
 import wow.commons.repository.spell.SpellRepository;
@@ -49,6 +51,7 @@ public class CharacterServiceImpl implements CharacterService {
 	private final SpellRepository spellRepository;
 	private final TalentRepository talentRepository;
 	private final BuffRepository buffRepository;
+	private final ConsumableRepository consumableRepository;
 	private final BaseStatInfoRepository baseStatInfoRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 	private final CharacterTemplateRepository characterTemplateRepository;
@@ -139,6 +142,8 @@ public class CharacterServiceImpl implements CharacterService {
 			character.getTarget().getBuffs().setHighestRanks(characterTemplate.getDefaultDebuffs());
 		}
 
+		character.getConsumables().setConsumables(characterTemplate.getConsumables());
+
 		updateAfterRestrictionChange(character);
 	}
 
@@ -168,6 +173,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 		refreshSpellbook(character);
 		refreshBuffs(character);
+		refreshConsumables(character);
 	}
 
 	@Override
@@ -182,6 +188,7 @@ public class CharacterServiceImpl implements CharacterService {
 		refreshActivePet(character);
 		refreshEquipment(character);
 		refreshBuffs(character);
+		refreshConsumables(character);
 	}
 
 	private void refreshSpellbook(PlayerCharacter character) {
@@ -207,6 +214,12 @@ public class CharacterServiceImpl implements CharacterService {
 
 			character.getTarget().getBuffs().setAvailable(debuffs);
 		}
+	}
+
+	private void refreshConsumables(PlayerCharacter character) {
+		var consumables = getAvailableConsumes(character);
+
+		character.getConsumables().setAvailable(consumables);
 	}
 
 	private void refreshEquipment(PlayerCharacter character) {
@@ -265,6 +278,12 @@ public class CharacterServiceImpl implements CharacterService {
 		return buffRepository.getAvailableBuffs(character.getPhaseId()).stream()
 				.filter(buff -> buff.isAvailableTo(character))
 				.filter(buffListType.getFilter())
+				.toList();
+	}
+
+	private List<Consumable> getAvailableConsumes(Character character) {
+		return consumableRepository.getAvailableConsumables(character.getPhaseId()).stream()
+				.filter(consumable -> consumable.isAvailableTo(character))
 				.toList();
 	}
 }

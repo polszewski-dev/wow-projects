@@ -13,6 +13,7 @@ public enum ItemCategory {
 	QUEST,
 	CONTAINER,
 	PROJECTILE,
+	CONSUMABLE,
 	TOKEN,
 	ENCHANT,
 	GEM,

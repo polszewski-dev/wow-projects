@@ -21,7 +21,10 @@ public class StatsConverter implements Converter<Stats, StatsDTO> {
 	@Override
 	public StatsDTO doConvert(Stats source) {
 		var abilityStats = source.getAbilityStats().stream()
-				.sorted(comparingDouble(AbilityStats::getDps).reversed())
+				.sorted(
+						comparingDouble(AbilityStats::getDps).reversed()
+						.thenComparing(x -> x.getAbility().getAbilityId())
+				)
 				.toList();
 
 		return new StatsDTO(

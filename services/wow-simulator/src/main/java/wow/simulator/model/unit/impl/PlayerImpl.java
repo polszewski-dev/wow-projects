@@ -3,6 +3,7 @@ package wow.simulator.model.unit.impl;
 import lombok.Getter;
 import wow.character.model.build.Build;
 import wow.character.model.character.CharacterProfessions;
+import wow.character.model.character.Consumables;
 import wow.character.model.character.ExclusiveFactions;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
@@ -47,5 +48,10 @@ public class PlayerImpl extends UnitImpl implements Player {
 	@Override
 	public ExclusiveFactions getExclusiveFactions() {
 		return getCharacter().getExclusiveFactions();
+	}
+
+	@Override
+	public Consumables getConsumables() {
+		return getCharacter().getConsumables();
 	}
 }

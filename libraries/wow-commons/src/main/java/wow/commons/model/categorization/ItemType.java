@@ -44,6 +44,8 @@ public enum ItemType {
 	BAG("Bag", ItemCategory.CONTAINER),
 	PROJECTILE("Projectile", ItemCategory.PROJECTILE),
 
+	CONSUMABLE("Consumable", ItemCategory.CONSUMABLE),
+
 	CRAFTING_MATERIAL("Crafting Material", ItemCategory.CRAFTING_MATERIAL),
 	PATTERN("Pattern", ItemCategory.PATTERN);
 
@@ -69,7 +71,7 @@ public enum ItemType {
 		if (itemSlots.size() != 1) {
 			throw new IllegalArgumentException("Required unique item slot for: " + this);
 		}
-		return itemSlots.get(0);
+		return itemSlots.getFirst();
 	}
 
 	@Override

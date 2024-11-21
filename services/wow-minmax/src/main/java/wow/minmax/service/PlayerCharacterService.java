@@ -28,5 +28,7 @@ public interface PlayerCharacterService {
 
 	PlayerCharacter enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled);
 
+	PlayerCharacter enableConsumable(CharacterId characterId, String consumableName, boolean enabled);
+
 	ViewConfig getViewConfig(PlayerCharacter character);
 }

@@ -123,7 +123,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		}
 
 		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
-			items = Arrays.asList(items.get(0), null);
+			items = Arrays.asList(items.getFirst(), null);
 		}
 
 		for (int slotIdx = 0; slotIdx < slots.size(); slotIdx++) {
@@ -151,6 +151,15 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		var character = getCharacter(characterId);
 
 		character.getBuffList(buffListType).enable(buffId, rank, enabled);
+		saveCharacter(characterId, character);
+		return character;
+	}
+
+	@Override
+	public PlayerCharacter enableConsumable(CharacterId characterId, String consumableName, boolean enabled) {
+		var character = getCharacter(characterId);
+
+		character.getConsumables().enable(consumableName, enabled);
 		saveCharacter(characterId, character);
 		return character;
 	}

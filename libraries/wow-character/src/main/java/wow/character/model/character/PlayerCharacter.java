@@ -20,6 +20,8 @@ import wow.commons.model.talent.TalentId;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.function.Function.identity;
+
 /**
  * User: POlszewski
  * Date: 2023-10-31
@@ -159,6 +161,8 @@ public interface PlayerCharacter extends Character {
 		return getExclusiveFactions().has(exclusiveFaction);
 	}
 
+	Consumables getConsumables();
+
 	@Override
 	default Optional<Ability> getAbility(AbilityId abilityId) {
 		var ability = Character.super.getAbility(abilityId);
@@ -167,6 +171,12 @@ public interface PlayerCharacter extends Character {
 			return ability;
 		}
 
-		return getEquipment().getAbility(abilityId);
+		ability = getEquipment().getAbility(abilityId).map(identity());
+
+		if (ability.isPresent()) {
+			return ability;
+		}
+
+		return getConsumables().getAbility(abilityId).map(identity());
 	}
 }

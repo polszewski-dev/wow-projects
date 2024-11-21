@@ -12,6 +12,7 @@ import wow.minmax.model.NonPlayerCharacter;
 import wow.minmax.model.PlayerCharacter;
 import wow.minmax.model.impl.PlayerCharacterImpl;
 import wow.minmax.model.persistent.BuffPO;
+import wow.minmax.model.persistent.ConsumablePO;
 import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.model.persistent.TalentPO;
 
@@ -28,6 +29,7 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 	private final EquipmentPOConverter equipmentPOConverter;
 	private final CharacterProfessionPOConverter characterProfessionPOConverter;
 	private final BuffPOConverter buffPOConverter;
+	private final ConsumablePOConverter consumablePOConverter;
 	private final NonPlayerCharacterPOConverter nonPlayerCharacterPOConverter;
 
 	private final CharacterService characterService;
@@ -45,6 +47,7 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 				characterProfessionPOConverter.convertList(source.getProfessions().getList()),
 				source.getExclusiveFactions().getList(),
 				buffPOConverter.convertList(source.getBuffs().getList()),
+				consumablePOConverter.convertList(source.getConsumables().getList()),
 				nonPlayerCharacterPOConverter.convert((NonPlayerCharacter) source.getTarget())
 		);
 	}
@@ -73,6 +76,8 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 		character.setBuffs(getBuffIds(source.getBuffs()));
 		character.getTarget().setBuffs(getBuffIds(source.getTarget().getDebuffs()));
 
+		character.getConsumables().setConsumables(getConsumableNames(source.getConsumables()));
+
 		return character;
 	}
 
@@ -92,6 +97,12 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerC
 	private List<BuffIdAndRank> getBuffIds(List<BuffPO> buffs) {
 		return buffs.stream()
 				.map(BuffPO::getId)
+				.toList();
+	}
+
+	private List<String> getConsumableNames(List<ConsumablePO> consumables) {
+		return consumables.stream()
+				.map(ConsumablePO::getName)
 				.toList();
 	}
 }

@@ -37,6 +37,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colActivePet = column("active_pet");
 	private final ExcelColumn colDefaultBuffs = column("default_buffs");
 	private final ExcelColumn colDefaultDebuffs = column("default_debuffs");
+	private final ExcelColumn colDefaultConsumables = column("default_consumables");
 	private final ExcelColumn colProf1 = column("prof1");
 	private final ExcelColumn colProf1Spec = column("prof1_spec");
 	private final ExcelColumn colProf2 = column("prof2");
@@ -77,6 +78,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var activePet = colActivePet.getEnum(PetType::parse, null);
 		var defaultBuffs = colDefaultBuffs.getList(BuffId::parse);
 		var defaultDebuffs = colDefaultDebuffs.getList(BuffId::parse);
+		var consumables = colDefaultConsumables.getList(x -> x);
 		var professions = getProfessions(timeRestriction);
 		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
 		var isDefault = colDefault.getBoolean();
@@ -92,6 +94,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 				activePet,
 				defaultBuffs,
 				defaultDebuffs,
+				consumables,
 				professions,
 				exclusiveFactions,
 				isDefault
