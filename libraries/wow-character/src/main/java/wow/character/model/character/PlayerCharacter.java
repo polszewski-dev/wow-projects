@@ -13,9 +13,12 @@ import wow.commons.model.item.Item;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.model.talent.TalentId;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -154,5 +157,16 @@ public interface PlayerCharacter extends Character {
 	@Override
 	default boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction) {
 		return getExclusiveFactions().has(exclusiveFaction);
+	}
+
+	@Override
+	default Optional<Ability> getAbility(AbilityId abilityId) {
+		var ability = Character.super.getAbility(abilityId);
+
+		if (ability.isPresent()) {
+			return ability;
+		}
+
+		return getEquipment().getAbility(abilityId);
 	}
 }

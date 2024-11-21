@@ -7,6 +7,8 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.*;
 
@@ -200,6 +202,18 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 
 	public boolean allSocketsHaveMatchingGems(EquippableItem item) {
 		return item.allSocketsHaveMatchingGems(numRed(), numYellow(), numBlue());
+	}
+
+	public Optional<Ability> getAbility(AbilityId abilityId) {
+		for (var item : itemsBySlot.values()) {
+			var ability = item.getItem().getActivatedAbility();
+
+			if (ability != null && ability.getAbilityId() == abilityId) {
+				return Optional.of(ability);
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	@Override

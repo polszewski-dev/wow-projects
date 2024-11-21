@@ -8,6 +8,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.item.*;
 import wow.commons.model.source.Source;
+import wow.commons.model.spell.ActivatedAbility;
 
 import java.util.List;
 import java.util.Set;
@@ -174,6 +175,10 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 
 	public boolean hasActivatedAbility() {
 		return item.getActivatedAbility() != null;
+	}
+
+	public ActivatedAbility getActivatedAbility() {
+		return item.getActivatedAbility();
 	}
 
 	@Override

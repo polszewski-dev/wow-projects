@@ -6,7 +6,6 @@ import wow.character.model.character.CharacterProfessions;
 import wow.character.model.character.ExclusiveFactions;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
-import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.Race;
 import wow.simulator.model.unit.Player;
 
@@ -48,21 +47,5 @@ public class PlayerImpl extends UnitImpl implements Player {
 	@Override
 	public ExclusiveFactions getExclusiveFactions() {
 		return getCharacter().getExclusiveFactions();
-	}
-
-	@Override
-	public boolean canCast(ItemSlot itemSlot) {
-		var item = getEquippedItem(itemSlot);
-		var ability = item.getItem().getActivatedAbility();
-
-		return canCast(ability, getTarget());
-	}
-
-	@Override
-	public void cast(ItemSlot itemSlot) {
-		var item = getEquippedItem(itemSlot);
-		var ability = item.getItem().getActivatedAbility();
-
-		cast(ability, getTarget());
 	}
 }

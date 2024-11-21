@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_2;
 import static wow.commons.model.spell.AbilityId.HEX_SHRUNKEN_HEAD;
+import static wow.commons.model.spell.AbilityId.SHIFTING_NAARU_SLIVER;
 
 /**
  * User: POlszewski
@@ -17,9 +18,9 @@ import static wow.commons.model.spell.AbilityId.HEX_SHRUNKEN_HEAD;
 class HexShrunkenHeadTest extends SpellSimulationTest {
 	@Test
 	void effectActivatesAndCooldownTriggers() {
-		equip("Hex Shrunken Head", TRINKET_1);
+		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
 
-		player.cast(TRINKET_1);
+		player.cast(HEX_SHRUNKEN_HEAD);
 
 		simulation.updateUntil(Time.at(150));
 
@@ -40,11 +41,11 @@ class HexShrunkenHeadTest extends SpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		equip("Hex Shrunken Head", TRINKET_1);
+		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
 
 		var dmgBefore = player.getStats().getSpellPower();
 
-		player.cast(TRINKET_1);
+		player.cast(HEX_SHRUNKEN_HEAD);
 
 		simulation.updateUntil(Time.at(10));
 
@@ -56,27 +57,27 @@ class HexShrunkenHeadTest extends SpellSimulationTest {
 
 	@Test
 	void canNotUseSecondTrinketWhileFirstIsActive() {
-		equip("Hex Shrunken Head", TRINKET_1);
-		equip("Shifting Naaru Sliver", TRINKET_2);
+		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
+		equip(SHIFTING_NAARU_SLIVER.getName(), TRINKET_2);
 
-		player.cast(TRINKET_1);
+		player.cast(HEX_SHRUNKEN_HEAD);
 
 		simulation.updateUntil(Time.at(10));
 
-		assertThat(player.canCast(TRINKET_1)).isFalse();
-		assertThat(player.canCast(TRINKET_2)).isFalse();
+		assertThat(player.canCast(HEX_SHRUNKEN_HEAD)).isFalse();
+		assertThat(player.canCast(SHIFTING_NAARU_SLIVER)).isFalse();
 	}
 
 	@Test
 	void canUseSecondTrinketWhileFirstIsNotActive() {
-		equip("Hex Shrunken Head", TRINKET_1);
-		equip("Shifting Naaru Sliver", TRINKET_2);
+		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
+		equip(SHIFTING_NAARU_SLIVER.getName(), TRINKET_2);
 
-		player.cast(TRINKET_1);
+		player.cast(HEX_SHRUNKEN_HEAD);
 
 		simulation.updateUntil(Time.at(20));
 
-		assertThat(player.canCast(TRINKET_1)).isFalse();
-		assertThat(player.canCast(TRINKET_2)).isTrue();
+		assertThat(player.canCast(HEX_SHRUNKEN_HEAD)).isFalse();
+		assertThat(player.canCast(SHIFTING_NAARU_SLIVER)).isTrue();
 	}
 }

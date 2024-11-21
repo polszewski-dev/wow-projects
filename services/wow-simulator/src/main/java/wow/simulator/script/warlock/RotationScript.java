@@ -1,8 +1,8 @@
 package wow.simulator.script.warlock;
 
 import lombok.RequiredArgsConstructor;
+import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
-import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Player;
@@ -10,7 +10,6 @@ import wow.simulator.script.AIScript;
 import wow.simulator.script.ConditionalSpellCast;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
@@ -23,29 +22,25 @@ import static wow.commons.model.spell.AbilityId.*;
 @RequiredArgsConstructor
 public class RotationScript implements AIScript {
 	private final Player player;
-	private List<Ability> rotationCooldowns;
-	private Ability filler;
-	private List<ItemSlot> abilitySlots;
-	private List<Ability> racialAbilities;
+	private List<AbilityId> cooldowns;
+	private AbilityId filler;
+	private List<AbilityId> activatedAbilities;
+	private List<AbilityId> consumes;
+	private List<AbilityId> racialAbilities;
 
 	@Override
 	public void setupPlayer() {
-		this.rotationCooldowns = player.getRotation().getCooldowns();
-		this.filler = player.getRotation().getFiller();
-		this.abilitySlots = getAbilitySlots();
+		this.cooldowns = getCooldowns();
+		this.filler = getFiller();
+		this.activatedAbilities = getActivatedAbilities();
+		this.consumes = getConsumes();
 		this.racialAbilities = getRacialAbilities();
 	}
 
 	@Override
 	public void execute() {
+		player.increaseHealth(1000, false, null);
 		player.increaseMana(1000, false, null);
-
-		var itemSlot = getItemSlotToUse();
-
-		if (itemSlot != null) {
-			player.cast(itemSlot);
-			return;
-		}
 
 		var spell = getSpellToCast();
 
@@ -58,49 +53,67 @@ public class RotationScript implements AIScript {
 		}
 	}
 
-	private ItemSlot getItemSlotToUse() {
-		for (var abilitySlot : abilitySlots) {
-			if (player.canCast(abilitySlot)) {
-				return abilitySlot;
-			}
-		}
-
-		return null;
-	}
-
 	private AbilityId getSpellToCast() {
-		for (var ability : racialAbilities) {
-			if (player.canCast(ability.getAbilityId())) {
-				return ability.getAbilityId();
+		for (var abilityId : activatedAbilities) {
+			if (player.canCast(abilityId)) {
+				return abilityId;
 			}
 		}
 
-		for (var ability : rotationCooldowns) {
-			if (getConditionalCast(ability).check(player)) {
-				return ability.getAbilityId();
+		for (var abilityId : consumes) {
+			if (player.canCast(abilityId)) {
+				return abilityId;
 			}
 		}
 
-		return filler.getAbilityId();
+		for (var abilityId : racialAbilities) {
+			if (player.canCast(abilityId)) {
+				return abilityId;
+			}
+		}
+
+		for (var abilityId : cooldowns) {
+			if (getConditionalCast(abilityId).check(player)) {
+				return abilityId;
+			}
+		}
+
+		return filler;
 	}
 
-	private ConditionalSpellCast getConditionalCast(Ability ability) {
+	private ConditionalSpellCast getConditionalCast(AbilityId abilityId) {
 		if (player.getCharacterClassId() == WARLOCK) {
-			return WarlockActionConditions.forAbility(ability.getAbilityId()).orElseThrow();
+			return WarlockActionConditions.forAbility(abilityId).orElseThrow();
 		}
 		throw new IllegalArgumentException();
 	}
 
-	private List<ItemSlot> getAbilitySlots() {
-		return Stream.of(ItemSlot.values())
-				.filter(slot -> player.getEquippedItem(slot) != null && player.getEquippedItem(slot).hasActivatedAbility())
+	private AbilityId getFiller() {
+		return player.getRotation().getFiller().getAbilityId();
+	}
+
+	private List<AbilityId> getCooldowns() {
+		return player.getRotation().getCooldowns().stream().map(Ability::getAbilityId).toList();
+	}
+
+	private List<AbilityId> getActivatedAbilities() {
+		return player.getEquipment().toList()
+				.stream()
+				.filter(EquippableItem::hasActivatedAbility)
+				.map(EquippableItem::getActivatedAbility)
+				.map(Ability::getAbilityId)
 				.toList();
 	}
 
-	private List<Ability> getRacialAbilities() {
+	private List<AbilityId> getConsumes() {
+		return Stream.of(DESTRUCTION_POTION)
+				.filter(player::hasAbility)
+				.toList();
+	}
+
+	private List<AbilityId> getRacialAbilities() {
 		return Stream.of(BLOOD_FURY, BERSERKING)
-				.map(player::getAbility)
-				.flatMap(Optional::stream)
+				.filter(player::hasAbility)
 				.toList();
 	}
 }
