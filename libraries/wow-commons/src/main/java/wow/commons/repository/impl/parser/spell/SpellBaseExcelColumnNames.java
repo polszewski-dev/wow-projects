@@ -111,6 +111,9 @@ public final class SpellBaseExcelColumnNames {
 	public static final int MAX_BUFF_EFFECT_MODIFIER_ATTRIBUTES = 3;
 	public static final int MAX_BUFF_EFFECT_EVENTS = 0;
 
+	public static final int MAX_CONSUME_EFFECT_MODIFIER_ATTRIBUTES = 3;
+	public static final int MAX_CONSUME_EFFECT_EVENTS = 0;
+
 	public static final int MAX_STAT_CONVERSIONS = 2;
 
 	public static final String EFFECT_ID = "id";

@@ -517,6 +517,8 @@ public enum AbilityId {
 	ZANDALARIAN_HERO_CHARM("Zandalarian Hero Charm"),
 	ZANDALARIAN_HERO_MEDALLION("Zandalarian Hero Medallion"),
 
+	DESTRUCTION_POTION("Destruction Potion"),
+
 	;
 
 	private final String name;

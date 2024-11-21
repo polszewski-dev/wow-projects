@@ -36,7 +36,9 @@ public class SpellExcelParser extends ExcelParser {
 				new SpellSheetParser(TALENT_SPELLS, spellRepository),
 				new SpellEffectSheetParser(TALENT_EFFECTS, spellRepository, MAX_TALENT_EFFECT_MODIFIER_ATTRIBUTES, MAX_TALENT_EFFECT_EVENTS),
 				new RacialEffectSheetParser(RACIAL_EFFECTS, spellRepository, MAX_RACIAL_EFFECT_MODIFIER_ATTRIBUTES, MAX_RACIAL_EFFECT_EVENTS),
-				new SpellEffectSheetParser(BUFF_EFFECTS, spellRepository, MAX_BUFF_EFFECT_MODIFIER_ATTRIBUTES, MAX_BUFF_EFFECT_EVENTS)
+				new SpellEffectSheetParser(BUFF_EFFECTS, spellRepository, MAX_BUFF_EFFECT_MODIFIER_ATTRIBUTES, MAX_BUFF_EFFECT_EVENTS),
+				new SpellSheetParser(CONSUME_SPELLS, spellRepository),
+				new SpellEffectSheetParser(CONSUME_EFFECTS, spellRepository, MAX_CONSUME_EFFECT_MODIFIER_ATTRIBUTES, MAX_CONSUME_EFFECT_EVENTS)
 		);
 	}
 }
