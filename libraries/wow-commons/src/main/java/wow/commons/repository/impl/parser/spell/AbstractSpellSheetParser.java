@@ -68,8 +68,11 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return racialAbility;
 	}
 
+	private final ExcelColumn colCooldownGroup = column(COOLDOWN_GROUP, true);
+
 	private ActivatedAbilityImpl getActivatedAbility() {
-		var activatedAbility = new ActivatedAbilityImpl();
+		var cooldownGroup = colCooldownGroup.getEnum(CooldownGroup::parse, null);
+		var activatedAbility = new ActivatedAbilityImpl(cooldownGroup);
 
 		initAbility(activatedAbility);
 		activatedAbility.setRankedAbilityId(0);

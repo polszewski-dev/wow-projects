@@ -21,6 +21,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String COST_BASE_STAT_PCT = "base stat%";
 	public static final String COST_REAGENT = "reagent";
 	public static final String COOLDOWN = "cooldown";
+	public static final String COOLDOWN_GROUP = "cooldown: group";
 	public static final String RANGE = "range";
 	public static final String REQUIRED_EFFECT = "required effect on target";
 	public static final String EFFECT_REMOVED_ON_HIT = "effect removed on hit";

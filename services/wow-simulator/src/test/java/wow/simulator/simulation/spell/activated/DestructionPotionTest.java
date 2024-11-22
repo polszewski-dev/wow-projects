@@ -1,6 +1,7 @@
 package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
+import wow.commons.model.spell.GroupCooldownId;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
@@ -25,11 +26,13 @@ public class DestructionPotionTest extends SpellSimulationTest {
 						.beginCast(player, DESTRUCTION_POTION)
 						.endCast(player, DESTRUCTION_POTION)
 						.cooldownStarted(player, DESTRUCTION_POTION)
+						.cooldownStarted(player, GroupCooldownId.POTION)
 						.effectApplied(DESTRUCTION_POTION, player),
 				at(15)
 						.effectExpired(DESTRUCTION_POTION, player),
 				at(120)
 						.cooldownExpired(player, DESTRUCTION_POTION)
+						.cooldownExpired(player, GroupCooldownId.POTION)
 		);
 	}
 

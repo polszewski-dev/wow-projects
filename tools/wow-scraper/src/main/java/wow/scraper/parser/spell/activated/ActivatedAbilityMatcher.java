@@ -19,7 +19,7 @@ public class ActivatedAbilityMatcher extends SpellMatcher<ActivatedAbilityPatter
 	}
 
 	public ActivatedAbility getActivatedAbility() {
-		var spell = getSpell(getPatternParams(), ActivatedAbilityImpl::new);
+		var spell = getSpell(getPatternParams(), () -> new ActivatedAbilityImpl(null));
 		spell.setCooldown(getCooldown().orElse(Duration.ZERO));
 		spell.setDescription(new Description("", null, getOriginalLine()));
 		return spell;

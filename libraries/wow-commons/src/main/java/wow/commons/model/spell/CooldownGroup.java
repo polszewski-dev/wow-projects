@@ -1,5 +1,7 @@
 package wow.commons.model.spell;
 
+import wow.commons.util.EnumUtil;
+
 /**
  * User: POlszewski
  * Date: 2024-11-13
@@ -7,5 +9,9 @@ package wow.commons.model.spell;
 public enum CooldownGroup {
 	POTION,
 	CONJURED_ITEM,
-	TRINKET
+	TRINKET;
+
+	public static CooldownGroup parse(String value) {
+		return EnumUtil.parse(value, values(), Enum::name);
+	}
 }

@@ -4,6 +4,7 @@ import wow.character.model.snapshot.SpellCastSnapshot;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ActivatedAbility;
+import wow.commons.model.spell.GroupCooldownId;
 import wow.commons.model.spell.SpellTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
@@ -62,9 +63,18 @@ public class SpellCastContext extends Context {
 		var groupCooldownId = activatedAbility.getGroupCooldownId();
 
 		if (groupCooldownId != null) {
-			var duration = ability.getEffectApplication().duration();
+			var duration = getGroupCooldownDuration(groupCooldownId);
 			caster.triggerCooldown(groupCooldownId, duration);
 		}
+	}
+
+	private Duration getGroupCooldownDuration(GroupCooldownId groupCooldownId) {
+		return switch (groupCooldownId.group()) {
+			case POTION, CONJURED_ITEM ->
+					Duration.seconds(120);
+			case TRINKET ->
+					ability.getEffectApplication().duration();
+		};
 	}
 
 	public SpellResolutionContext getSpellResolutionContext(SpellTarget spellTarget, TargetResolver targetResolver) {
