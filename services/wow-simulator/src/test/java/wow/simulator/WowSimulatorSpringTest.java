@@ -211,6 +211,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		@Override
+		public void spellHit(CastSpellAction action, Unit target) {
+			// ignore
+		}
+
+		@Override
 		public void spellResisted(CastSpellAction action, Unit target) {
 			addEvent(new SpellResisted(now(), action.getOwner(), action.getAbilityId(), target));
 		}

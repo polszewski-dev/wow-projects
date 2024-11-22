@@ -109,6 +109,11 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
+	public void spellHit(CastSpellAction action, Unit target) {
+		stats.increaseNumHit(action.getAbility());
+	}
+
+	@Override
 	public void spellResisted(CastSpellAction action, Unit target) {
 		// ignored
 	}

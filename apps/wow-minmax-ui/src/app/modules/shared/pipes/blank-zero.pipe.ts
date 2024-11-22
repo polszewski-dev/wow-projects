@@ -4,14 +4,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 	name: 'blankZero'
 })
 export class BlankZeroPipe implements PipeTransform {
-	transform(value: number | string | null, ...args: unknown[]) {
-		if (value === null) {
+	transform(value: number | string | null | undefined, ...args: unknown[]) {
+		if (value === null || value === undefined) {
 			return "";
 		}
 		if (value === 0.0) {
 			return "";
 		}
-		if ((value as string).match(/^0\.?0*$/)) {
+		if ((typeof value === 'string') && value.match(/^0\.?0*$/)) {
 			return "";
 		}
 		return value.toString();

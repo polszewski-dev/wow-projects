@@ -35,6 +35,8 @@ public interface GameLogHandler {
 		endChannel(action);
 	}
 
+	void spellHit(CastSpellAction action, Unit target);
+
 	void spellResisted(CastSpellAction action, Unit target);
 
 	void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit);

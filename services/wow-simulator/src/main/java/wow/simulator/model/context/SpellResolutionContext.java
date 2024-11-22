@@ -39,6 +39,8 @@ public class SpellResolutionContext extends Context {
 			if (!hitRoll) {
 				caster.getGameLog().spellResisted(action, target);
 				EventContext.fireSpellResistedEvent(caster, target, spell);
+			} else {
+				caster.getGameLog().spellHit(action, target);
 			}
 		}
 		return hitRoll;

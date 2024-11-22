@@ -10,6 +10,7 @@ public record StatsDTO(
 		List<AbilityStatsDTO> abilityStats,
 		double simulationDuration,
 		int totalDamage,
-		int dps
+		int dps,
+		int numCasts
 ) {
 }

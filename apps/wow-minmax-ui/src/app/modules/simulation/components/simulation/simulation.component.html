@@ -1,20 +1,20 @@
 @if (simulation$ | async; as result) {
 	<p>
 		<b>duration:</b> {{result.stats.simulationDuration}} sec.<br>
-		<b>total damage:</b> {{result.stats.totalDamage | number:'1.0-0'}}<br>
-		<b>dps:</b> {{result.stats.dps | number:'1.0-0'}}
 	</p>
 
 	<table class="table table-striped stats-table" style="text-align: right;">
 		<thead>
 			<tr>
-				<th scope="col" style="text-align: left; width: 15%">spell</th>
-				<th scope="col" style="text-align: center">rank</th>
-				<th scope="col">numCasts</th>
-				<th scope="col">numHit</th>
-				<th scope="col">numCrit</th>
-				<th scope="col">totalDamage</th>
-				<th scope="col">dps</th>
+				<th scope="col" style="text-align: left; width: 25%">spell</th>
+				<th scope="col" style="text-align: center; width: 5%">rank</th>
+				<th scope="col" style="width: 10%">numCasts</th>
+				<th scope="col" style="width: 10%">numHit</th>
+				<th scope="col" style="width: 10%">hit%</th>
+				<th scope="col" style="width: 10%">numCrit</th>
+				<th scope="col" style="width: 10%">crit%</th>
+				<th scope="col" style="width: 10%">totalDamage</th>
+				<th scope="col" style="width: 10%">dps</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -23,16 +23,31 @@
 					<td style="text-align: left" title="{{abilityStats.ability.tooltip}}">
 						<strong>
 							<img [src]="abilityStats.ability.icon | icon"/>&nbsp;{{abilityStats.ability.name}}
-						</strong>				
+						</strong>
 					</td>
-					<td style="text-align: center">{{abilityStats.ability.rank}}</td>
+					<td style="text-align: center">{{abilityStats.ability.rank | blankZero}}</td>
 					<td>{{abilityStats.numCasts}}</td>
-					<td>{{abilityStats.numHit}}</td>
-					<td>{{abilityStats.numCrit}}</td>
-					<td>{{abilityStats.totalDamage | number:'1.0-0'}}</td>
-					<td>{{abilityStats.dps | number:'1.0-0'}}</td>
+					<td>{{abilityStats.numHit | blankZero}}</td>
+					<td>{{(100 * abilityStats.numHit / abilityStats.numCasts) | number:'1.2-2' | blankZero}}</td>
+					<td>{{abilityStats.numCrit | blankZero}}</td>
+					<td>{{(100 * abilityStats.numCrit / abilityStats.numCasts) | number:'1.2-2' | blankZero}}</td>
+					<td>{{abilityStats.totalDamage | number:'1.0-0' | blankZero}}</td>
+					<td>{{abilityStats.dps | number:'1.0-0' | blankZero}}</td>
 				</tr>
 			}
+			<tr class="stat-summary">
+				<td style="text-align: left">
+					Summary
+				</td>
+				<td></td>
+				<td>{{result.stats.numCasts}}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>{{result.stats.totalDamage | number:'1.0-0' | blankZero}}</td>
+				<td>{{result.stats.dps | number:'1.0-0' | blankZero}}</td>
+			</tr>
 		</tbody>
 	</table>
 } @else {

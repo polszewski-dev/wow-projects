@@ -5,4 +5,5 @@ export interface Stats {
 	simulationDuration: number;
 	totalDamage: number;
 	dps: number;
+	numCasts: number;
 }

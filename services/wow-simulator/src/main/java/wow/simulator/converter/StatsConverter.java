@@ -31,7 +31,8 @@ public class StatsConverter implements Converter<Stats, StatsDTO> {
 				abilityStatsConverter.convertList(abilityStats),
 				source.getSimulationDuration().getSeconds(),
 				source.getTotalDamage(),
-				source.getDps()
+				source.getDps(),
+				source.getNumCasts()
 		);
 	}
 }

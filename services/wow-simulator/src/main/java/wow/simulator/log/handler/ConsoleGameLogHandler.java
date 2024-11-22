@@ -66,6 +66,11 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
+	public void spellHit(CastSpellAction action, Unit target) {
+		// ignore
+	}
+
+	@Override
 	public void spellResisted(CastSpellAction action, Unit target) {
 		print("%s's %s resisted by %s", action.getOwner(), action.getAbility(), target);
 	}

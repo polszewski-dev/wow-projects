@@ -24,6 +24,9 @@ public class Stats {
 	@Getter
 	private int totalDamage;
 
+	@Getter
+	private int numCasts;
+
 	@Setter
 	private Time simulationStart;
 
@@ -37,7 +40,12 @@ public class Stats {
 
 		if (castFinished) {
 			abilityStats.increaseNumCasts();
+			++numCasts;
 		}
+	}
+
+	public void increaseNumHit(Ability ability) {
+		getAbilityStats(ability).increaseNumHit();
 	}
 
 	public void addCooldownUptime(CooldownId cooldownId, Duration duration) {
