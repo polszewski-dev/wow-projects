@@ -38,17 +38,6 @@ body {
 .rarity-epic { color: #a335ee; }
 .rarity-legendary { color: #ff8000; }
 
-.buff-name {
-	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
-	font-size: 12px;
-	font-weight: bold;
-}
-
-.buff-stats {
-	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
-	font-size: 12px;
-}
-
 .stats-table {
 	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
 	font-size: 14px;

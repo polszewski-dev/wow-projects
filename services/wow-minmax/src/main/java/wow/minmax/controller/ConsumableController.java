@@ -47,8 +47,9 @@ public class ConsumableController {
 
 	private List<ConsumableDTO> getConsumableDTOs(PlayerCharacter character) {
 		var consumables = character.getConsumables();
+		var availableConsumables = consumables.getAvailable();
 
-		return consumables.getList().stream()
+		return availableConsumables.stream()
 				.map(consumable -> getConsumableDTO(
 						consumable, consumables.has(consumable.getName()))
 				)

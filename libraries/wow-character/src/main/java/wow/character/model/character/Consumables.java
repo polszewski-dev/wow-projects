@@ -43,6 +43,10 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		return List.copyOf(enabledConsumables.values());
 	}
 
+	public List<Consumable> getAvailable() {
+		return List.copyOf(availableConsumablesByName.values());
+	}
+
 	public void setAvailable(List<Consumable> consumables) {
 		for (Consumable consumable : consumables) {
 			availableConsumablesByName.put(consumable.getName(), consumable);

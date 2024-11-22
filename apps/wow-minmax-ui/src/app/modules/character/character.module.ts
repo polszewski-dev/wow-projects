@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { BuffEditorComponent } from './components/buff-editor/buff-editor.component';
+import { ConsumableEditorComponent } from './components/consumable-editor/consumable-editor.component';
 import { EnchantSelectComponent } from './components/enchant-select/enchant-select.component';
 import { EquipUpgradeButtonComponent } from './components/equip-upgrade-button/equip-upgrade-button.component';
 import { EquipmentEditorComponent } from './components/equipment-editor/equipment-editor.component';
@@ -15,6 +16,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 @NgModule({
 	declarations: [
 		BuffEditorComponent,
+		ConsumableEditorComponent,
 		EquipmentEditorComponent,
 		EquipmentSlotEditorComponent,
 		ItemSelectComponent,
@@ -35,6 +37,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		ReactiveFormsModule,
 		SharedModule,
 		BuffEditorComponent,
+		ConsumableEditorComponent,
 		EquipmentEditorComponent,
 		EquipmentSlotEditorComponent,
 		ItemSelectComponent,

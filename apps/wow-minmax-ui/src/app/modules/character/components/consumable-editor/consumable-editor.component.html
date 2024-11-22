@@ -1,0 +1,18 @@
+@if (data$ | async; as data) {
+	@for (consumable of data.consumables; track consumable.id) {
+		<div class="form-check">
+			<input
+				class="form-check-input"
+				type="checkbox"
+				id="consumable-select-{{consumable.id}}"
+				[(ngModel)]="consumable.enabled"
+				(change)="onChange(data.characterId, consumable)"
+			>
+			<label class="form-check-label" for="consumable-select-{{consumable.id}}" title="{{consumable.tooltip || consumable.attributes}}">
+				<img [src]="consumable.icon | icon"/>
+				<span class="consumable-name px-1">{{consumable.name}}</span>
+				<span class="consumable-stats">= {{consumable.attributes}}</span>
+			</label>
+		</div>
+	}
+}

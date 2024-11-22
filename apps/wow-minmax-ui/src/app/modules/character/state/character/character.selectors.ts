@@ -54,6 +54,12 @@ export function selectBuffList(buffListType: BuffListType) {
 	);
 }
 
+export const selectConsumables = createSelector(
+	selectCharacterState,
+	state => state.consumables.value
+);
+
+
 export const selectDpsChangeIdx = createSelector(
 	selectCharacterState,
 	state => state.dpsChangeIdx

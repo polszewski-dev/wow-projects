@@ -10,6 +10,7 @@ import { Item } from "../../model/equipment/Item";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
+import { Consumable } from "../../model/consumable/Consumable";
 
 export const selectCharacter = createAction(
 	"[Character] Select Character",
@@ -74,6 +75,21 @@ export const loadBuffListSuccess = createAction(
 export const loadBuffListFailure = createAction(
 	"[Character] Load Buff List Failure",
 	props<{ buffListType: BuffListType, error: string }>()
+);
+
+export const loadConsumables = createAction(
+	"[Character] Load Consumables",
+	props<{ characterId: string }>()
+);
+
+export const loadConsumablesSuccess = createAction(
+	"[Character] Load Consumables Success",
+	props<{ consumables: Consumable[] }>()
+);
+
+export const loadConsumablesFailure = createAction(
+	"[Character] Load Consumables Failure",
+	props<{ error: string }>()
 );
 
 export const equipItemBestVariant = createAction(
@@ -164,6 +180,21 @@ export const enableBuffSuccess = createAction(
 export const enableBuffFailure = createAction(
 	"[Character] EnableBuff Failure",
 	props<{ buffListType: BuffListType, error: string }>()
+);
+
+export const enableConsumable = createAction(
+	"[Character] Enable Consumable",
+	props<{ characterId: string, consumable: Consumable }>()
+);
+
+export const enableConsumableSuccess = createAction(
+	"[Character] Enable Consumable Success",
+	props<{ characterId: string, consumables: Consumable[] }>()
+);
+
+export const enableConsumableFailure = createAction(
+	"[Character] Enable Consumable Failure",
+	props<{ error: string }>()
 );
 
 export const dpsChanged = createAction(
