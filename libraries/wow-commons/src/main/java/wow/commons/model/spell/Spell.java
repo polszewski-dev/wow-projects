@@ -43,6 +43,10 @@ public interface Spell extends Described, TimeRestricted {
 			result.add(effectApplication.target());
 		}
 
+		if (getConversion() != null) {
+			result.add(SpellTarget.SELF);
+		}
+
 		return  result;
 	}
 

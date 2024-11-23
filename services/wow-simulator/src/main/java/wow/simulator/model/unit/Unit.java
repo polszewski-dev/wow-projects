@@ -57,8 +57,6 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	boolean canCast(Ability ability, TargetResolver targetResolver);
 
-	TargetResolver getTargetResolver(Unit target);
-
 	SpellCostSnapshot paySpellCost(Ability ability);
 
 	SpellCastContext getSpellCastContext(Ability ability);

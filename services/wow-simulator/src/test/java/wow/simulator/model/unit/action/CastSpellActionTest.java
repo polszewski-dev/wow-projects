@@ -7,7 +7,7 @@ import wow.commons.model.talent.TalentId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.Time;
-import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.PrimaryTarget;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -125,17 +125,16 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	}
 
 	CastSpellAction getCastSpellAction(AbilityId abilityId) {
-		return getSpellAction(abilityId, target);
+		return getSpellAction(abilityId, PrimaryTarget.ofEnemy(target));
 	}
 
 	CastSpellAction getCastSpellOnSelfAction(AbilityId abilityId) {
-		return getSpellAction(abilityId, player);
+		return getSpellAction(abilityId, PrimaryTarget.ofSelf(player));
 	}
 
-	private CastSpellAction getSpellAction(AbilityId abilityId, Unit target) {
+	private CastSpellAction getSpellAction(AbilityId abilityId, PrimaryTarget primaryTarget) {
 		var ability = player.getAbility(abilityId).orElseThrow();
-		var targetResolver = player.getTargetResolver(target);
-		return new CastSpellAction(player, ability, targetResolver);
+		return new CastSpellAction(player, ability, primaryTarget);
 	}
 
 	@BeforeEach

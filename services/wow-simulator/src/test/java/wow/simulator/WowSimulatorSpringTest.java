@@ -81,6 +81,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected Player getNakedPlayer() {
+		return getNakedPlayer(characterClassId, "Player");
+	}
+
+	protected Player getNakedPlayer(CharacterClassId characterClassId, String name) {
 		var raceId = ORC;
 		var charTemplateId = DESTRO_SHADOW;
 
@@ -90,7 +94,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		var player = getCharacterService().createPlayerCharacter(
-				characterClassId, raceId, 70, TBC_P5, Player.getFactory("Player")
+				characterClassId, raceId, 70, TBC_P5, Player.getFactory(name)
 		);
 
 		getCharacterService().applyCharacterTemplate(player, charTemplateId);
@@ -100,12 +104,24 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		player.getConsumables().reset();
 		getCharacterService().updateAfterRestrictionChange(player);
 
+		player.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
+		simulationContext.shareSimulationContext(player);
+
 		return player;
 	}
 
 	protected NonPlayer getEnemy() {
-		var enemy = getCharacterService().createNonPlayerCharacter(BEAST, 73, TBC_P5, NonPlayer.getFactory("Target"));
+		return getEnemy("Target");
+	}
+
+	protected NonPlayer getEnemy(String name) {
+		var enemy = getCharacterService().createNonPlayerCharacter(BEAST, 73, TBC_P5, NonPlayer.getFactory(name));
+
 		enemy.resetBuffs();
+
+		enemy.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
+		simulationContext.shareSimulationContext(enemy);
+
 		return enemy;
 	}
 
@@ -132,6 +148,14 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 			default boolean isCooldown() {
 				return nameContains("Cooldown");
+			}
+
+			default boolean isSpellResisted() {
+				return this instanceof SpellResisted;
+			}
+
+			default boolean isEffectApplied() {
+				return this instanceof EffectApplied;
 			}
 		}
 
@@ -608,11 +632,5 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		target = getEnemy();
 
 		player.setTarget(target);
-
-		player.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
-		target.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
-
-		simulationContext.shareSimulationContext(player);
-		simulationContext.shareSimulationContext(target);
 	}
 }

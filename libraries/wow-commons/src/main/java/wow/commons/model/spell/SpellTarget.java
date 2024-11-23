@@ -11,24 +11,25 @@ import wow.commons.util.EnumUtil;
 @AllArgsConstructor
 @Getter
 public enum SpellTarget {
-	SELF(true),
-	PET(true),
+	SELF(true, true),
+	PET(true, true),
 
-	FRIEND(true),
-	FRIEND_AOE(true),
-	FRIENDS_PARTY(true),
+	FRIEND(true, true),
+	FRIEND_AOE(true, false),
+	FRIENDS_PARTY(true, false),
 
-	PARTY(true),
-	PARTY_AOE(true),
+	PARTY(true, false),
+	PARTY_AOE(true, false),
 
-	ENEMY(false),
-	ENEMY_AOE(false),
+	ENEMY(false, true),
+	ENEMY_AOE(false, false),
 
-	TARGET(false),
-	ATTACKER(false)
+	TARGET(false, true),
+	ATTACKER(false, true)
 	;
 
 	private final boolean friendly;
+	private final boolean single;
 
 	public static SpellTarget parse(String value) {
 		return EnumUtil.parse(value, values());
@@ -36,5 +37,9 @@ public enum SpellTarget {
 
 	public boolean isHostile() {
 		return !friendly;
+	}
+
+	public boolean isAoE() {
+		return !single;
 	}
 }

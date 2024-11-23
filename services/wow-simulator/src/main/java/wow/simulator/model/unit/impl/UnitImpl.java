@@ -165,19 +165,24 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public void cast(AbilityId abilityId) {
-		cast(abilityId, getTarget());
+		var ability = getAbility(abilityId).orElseThrow();
+		cast(ability, getPrimaryTarget(ability, null));
 	}
 
 	@Override
 	public void cast(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
-		cast(ability, target);
+		cast(ability, getPrimaryTarget(ability, target));
 	}
 
-	protected void cast(Ability ability, Unit target) {
-		var targetResolver = getTargetResolver(target);
-		var action = new CastSpellAction(this, ability, targetResolver);
+	private void cast(Ability ability, PrimaryTarget primaryTarget) {
+		var action = new CastSpellAction(this, ability, primaryTarget);
 		pendingActionQueue.add(action);
+	}
+
+	private PrimaryTarget getPrimaryTarget(Ability ability, Unit explicitTarget) {
+		var resolver = new PrimaryTargetResolver(ability, this, getTarget(), explicitTarget);
+		return resolver.getPrimaryTarget();
 	}
 
 	@Override
@@ -225,19 +230,23 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public boolean canCast(AbilityId abilityId) {
-		return canCast(abilityId, getTarget());
+		var ability = getAbility(abilityId).orElseThrow();
+		return canCast(ability, getPrimaryTarget(ability, null));
 	}
 
 	@Override
 	public boolean canCast(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
-		return canCast(ability, target);
+		return canCast(ability, getPrimaryTarget(ability, target));
 	}
 
 	@Override
 	public boolean canCast(Ability ability, Unit target) {
-		var targetResolver = getTargetResolver(target);
-		return canCast(ability, targetResolver);
+		return canCast(ability, getPrimaryTarget(ability, target));
+	}
+
+	private boolean canCast(Ability ability, PrimaryTarget primaryTarget) {
+		return canCast(ability, primaryTarget.getTargetResolver(this));
 	}
 
 	@Override
@@ -246,13 +255,11 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	private boolean hasAllValidTargets(Ability ability, TargetResolver targetResolver) {
+		if (targetResolver == null) {
+			return false;
+		}
 		var targets = ability.getTargets();
 		return targetResolver.hasAllValidTargets(targets);
-	}
-
-	@Override
-	public TargetResolver getTargetResolver(Unit target) {
-		return new TargetResolver(this, target);
 	}
 
 	private boolean canPaySpellCost(Ability ability) {
@@ -461,7 +468,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public void setTarget(Character target) {
-		if (!(target instanceof Unit)) {
+		if (target != null && !(target instanceof Unit)) {
 			throw new IllegalArgumentException();
 		}
 		character.setTarget(target);

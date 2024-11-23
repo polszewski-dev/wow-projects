@@ -1,5 +1,6 @@
 package wow.simulator.model.unit.action;
 
+import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
@@ -7,6 +8,7 @@ import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.context.EventContext;
 import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.unit.PrimaryTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
@@ -15,21 +17,25 @@ import wow.simulator.model.unit.Unit;
  * Date: 2023-08-10
  */
 public class CastSpellAction extends UnitAction {
+	@Getter
 	private final Ability ability;
-	private final TargetResolver targetResolver;
+	private final PrimaryTarget primaryTarget;
 
+	private TargetResolver targetResolver;
 	private SpellCastContext castContext;
 
 	private EffectInstance channeledEffect;
 
-	public CastSpellAction(Unit owner, Ability ability, TargetResolver targetResolver) {
+	public CastSpellAction(Unit owner, Ability ability, PrimaryTarget primaryTarget) {
 		super(owner);
 		this.ability = ability;
-		this.targetResolver = targetResolver;
+		this.primaryTarget = primaryTarget;
 	}
 
 	@Override
 	protected void setUp() {
+		this.targetResolver = primaryTarget.getTargetResolver(owner);
+
 		if (!owner.canCast(ability, targetResolver)) {
 			getGameLog().canNotBeCasted(this);
 			finish();
@@ -79,12 +85,11 @@ public class CastSpellAction extends UnitAction {
 
 	private void onBeginCast() {
 		getGameLog().beginCast(this);
-		// events here
 	}
 
 	private void onEndCast() {
 		getGameLog().endCast(this);
-		EventContext.fireSpellCastEvent(owner, null, ability);//todo primary target w przypadku non-AoE
+		EventContext.fireSpellCastEvent(owner, primaryTarget.getSingleTarget(), ability);
 	}
 
 	private void onBeginChannel() {
@@ -156,10 +161,6 @@ public class CastSpellAction extends UnitAction {
 		if (ability.isChanneled()) {
 			channeledEffect.removeSelf();
 		}
-	}
-
-	public Ability getAbility() {
-		return ability;
 	}
 
 	public AbilityId getAbilityId() {

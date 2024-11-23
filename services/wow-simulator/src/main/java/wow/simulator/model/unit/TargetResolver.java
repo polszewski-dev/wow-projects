@@ -1,61 +1,71 @@
 package wow.simulator.model.unit;
 
-import lombok.RequiredArgsConstructor;
 import wow.commons.model.spell.SpellTarget;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
+
+import static wow.commons.model.spell.SpellTarget.*;
 
 /**
  * User: POlszewski
  * Date: 2023-11-02
  */
-@RequiredArgsConstructor
 public class TargetResolver {
-	private final Unit caster;
-	private final Unit target;
+	private final Unit self;
+	private final Map<SpellTarget, Unit> targets;
+
+	private TargetResolver(Unit self, Map<SpellTarget, Unit> targets) {
+		Objects.requireNonNull(self);
+		this.self = self;
+		this.targets = targets;
+	}
+
+	public static TargetResolver ofSelf(Unit self) {
+		return new TargetResolver(self, Map.of());
+	}
+
+	public static TargetResolver ofFriend(Unit self, Unit friend) {
+		Objects.requireNonNull(friend);
+		if (!Unit.areFriendly(self, friend)) {
+			throw new IllegalArgumentException();
+		}
+		return new TargetResolver(self, Map.of(FRIEND, friend));
+	}
+
+	public static TargetResolver ofEnemy(Unit self, Unit enemy) {
+		Objects.requireNonNull(enemy);
+		if (!Unit.areHostile(self, enemy)) {
+			throw new IllegalArgumentException();
+		}
+		return new TargetResolver(self, Map.of(ENEMY, enemy));
+	}
+
+	public static TargetResolver ofTarget(Unit self, Unit target) {
+		Objects.requireNonNull(target);
+		return new TargetResolver(self, Map.of(TARGET, target));
+	}
 
 	public Unit getTarget(SpellTarget targetType) {
 		return switch (targetType) {
 			case SELF ->
-					caster;
+					self;
 			case PET ->
 					throw new UnsupportedOperationException("No pets atm");
-			case FRIEND ->
-					getFriendlyTargetOrSelf();
-			case ENEMY ->
-					getHostileTarget();
-			case TARGET ->
-					Objects.requireNonNull(target);
 			default ->
-					throw new UnsupportedOperationException("No AoE targets atm");
+					targets.get(targetType);
 		};
 	}
 
 	public boolean hasValidTarget(SpellTarget targetType) {
-		return switch (targetType) {
-			case FRIEND_AOE, FRIENDS_PARTY, PARTY, PARTY_AOE, ENEMY_AOE ->
-					true;
-			default ->
-					getTarget(targetType) != null;
-		};
+		if (targetType.isAoE()) {
+			return true;
+		}
+		return getTarget(targetType) != null;
 	}
 
 	public boolean hasAllValidTargets(Collection<SpellTarget> targetTypes) {
 		return targetTypes.stream().allMatch(this::hasValidTarget);
-	}
-
-	private Unit getFriendlyTargetOrSelf() {
-		if (target == null) {
-			return caster;
-		}
-		return Unit.areFriendly(caster, target) ? target : null;
-	}
-
-	private Unit getHostileTarget() {
-		if (target == null) {
-			return null;
-		}
-		return Unit.areHostile(caster, target) ? target : null;
 	}
 }

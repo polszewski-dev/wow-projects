@@ -71,7 +71,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void increaseMana(DirectComponent directComponent) {
-		var targetResolver = new TargetResolver(caster, target);
+		var targetResolver = TargetResolver.ofTarget(caster, target);
 		var componentTarget = targetResolver.getTarget(directComponent.target());
 
 		increaseMana(componentTarget, (directComponent.min() + directComponent.max()) / 2);
