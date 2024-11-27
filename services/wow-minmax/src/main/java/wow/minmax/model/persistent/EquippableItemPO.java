@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EquippableItemPO implements Serializable {
+public class EquippableItemPO {
 	private ItemPO item;
 	private EnchantPO enchant;
 	private List<GemPO> gems;

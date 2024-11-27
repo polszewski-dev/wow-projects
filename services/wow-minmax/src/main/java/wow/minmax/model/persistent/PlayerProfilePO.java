@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PlayerProfilePO implements Serializable {
+public class PlayerProfilePO {
 	@Id
 	private String profileId;
 	private String profileName;

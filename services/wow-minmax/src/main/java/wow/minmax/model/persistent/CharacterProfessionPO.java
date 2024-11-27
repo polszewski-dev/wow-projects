@@ -6,8 +6,6 @@ import lombok.Setter;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
-import java.io.Serializable;
-
 /**
  * User: POlszewski
  * Date: 2022-11-15
@@ -15,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CharacterProfessionPO implements Serializable {
+public class CharacterProfessionPO {
 	private ProfessionId professionId;
 	private ProfessionSpecializationId specializationId;
 	private int level;

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 /**
  * User: POlszewski
  * Date: 2023-04-05
@@ -13,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ItemFilterPO implements Serializable {
+public class ItemFilterPO {
 	boolean heroics;
 	boolean raids;
 	boolean worldBosses;

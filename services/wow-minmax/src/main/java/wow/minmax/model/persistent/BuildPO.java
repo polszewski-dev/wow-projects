@@ -6,7 +6,6 @@ import lombok.Setter;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.PetType;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BuildPO implements Serializable {
+public class BuildPO {
 	private List<TalentPO> talents;
 	private PveRole role;
 	private String rotation;

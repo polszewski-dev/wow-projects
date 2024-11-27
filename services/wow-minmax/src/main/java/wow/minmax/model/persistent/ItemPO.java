@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 /**
  * User: POlszewski
  * Date: 2021-12-13
@@ -13,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ItemPO implements Serializable {
+public class ItemPO {
 	private int id;
 	private String name;
 }

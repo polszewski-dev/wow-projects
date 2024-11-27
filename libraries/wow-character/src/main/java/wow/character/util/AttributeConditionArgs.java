@@ -64,6 +64,12 @@ public class AttributeConditionArgs {
 	}
 
 	public SpellSchool getSpellSchool() {
-		return spellSchool != null ? spellSchool : spell != null ? spell.getSchool() : null;
+		if (spellSchool != null) {
+			return spellSchool;
+		}
+		if (spell != null) {
+			return spell.getSchool();
+		}
+		return null;
 	}
 }

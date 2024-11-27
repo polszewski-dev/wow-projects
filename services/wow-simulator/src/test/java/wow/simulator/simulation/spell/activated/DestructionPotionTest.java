@@ -12,7 +12,7 @@ import static wow.commons.model.spell.AbilityId.DESTRUCTION_POTION;
  * User: POlszewski
  * Date: 2024-11-22
  */
-public class DestructionPotionTest extends SpellSimulationTest {
+class DestructionPotionTest extends SpellSimulationTest {
 	@Test
 	void effectActivatesAndCooldownTriggers() {
 		player.getConsumables().enable(DESTRUCTION_POTION.getName());

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.categorization.ItemSlot;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -15,6 +14,6 @@ import java.util.Map;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EquipmentPO implements Serializable {
+public class EquipmentPO {
 	private Map<ItemSlot, EquippableItemPO> itemsBySlot;
 }

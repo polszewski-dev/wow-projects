@@ -20,7 +20,7 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
  * User: POlszewski
  * Date: 2024-11-23
  */
-public class SpellTargetTest extends SpellSimulationTest {
+class SpellTargetTest extends SpellSimulationTest {
 	enum DefaultTarget {
 		NONE,
 		ENEMY_1,

@@ -10,7 +10,6 @@ import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PlayerCharacterPO implements Serializable {
+public class PlayerCharacterPO {
 	@Id
 	private String characterId;
 	private CharacterClassId characterClassId;

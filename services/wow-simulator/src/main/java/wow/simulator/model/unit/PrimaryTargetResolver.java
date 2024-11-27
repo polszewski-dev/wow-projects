@@ -75,10 +75,8 @@ public class PrimaryTargetResolver {
 			}
 		}
 
-		if (defaultTarget != null) {
-			if (areFriendly(self, defaultTarget)) {
-				return PrimaryTarget.ofFriend(defaultTarget);
-			}
+		if (defaultTarget != null && areFriendly(self, defaultTarget)) {
+			return PrimaryTarget.ofFriend(defaultTarget);
 		}
 
 		return PrimaryTarget.ofFriend(self);
@@ -93,10 +91,8 @@ public class PrimaryTargetResolver {
 			}
 		}
 
-		if (defaultTarget != null) {
-			if (areHostile(self, defaultTarget)) {
-				return PrimaryTarget.ofEnemy(defaultTarget);
-			}
+		if (defaultTarget != null && areHostile(self, defaultTarget)) {
+			return PrimaryTarget.ofEnemy(defaultTarget);
 		}
 
 		return PrimaryTarget.INVALID;

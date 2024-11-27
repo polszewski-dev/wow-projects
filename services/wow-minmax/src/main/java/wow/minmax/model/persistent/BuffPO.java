@@ -6,8 +6,6 @@ import lombok.Setter;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffIdAndRank;
 
-import java.io.Serializable;
-
 /**
  * User: POlszewski
  * Date: 2021-12-14
@@ -15,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BuffPO implements Serializable {
+public class BuffPO {
 	private BuffId buffId;
 	private int rank;
 	private String name;
