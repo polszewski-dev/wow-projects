@@ -20,7 +20,7 @@ public class FilterOutWorseGemChoices extends FilterOutWorseChoices<Gem> {
 	}
 
 	@Override
-	protected int getOrderWithinTheSameStatChoices(Gem gem) {
+	protected int getOrderWithinTheSameStatTotal(Gem gem) {
 		if (gem.isCrafted()) {
 			return 1;
 		}

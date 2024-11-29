@@ -20,7 +20,7 @@ public class FilterOutWorseEnchantChoices extends FilterOutWorseChoices<Enchant>
 	}
 
 	@Override
-	protected int getOrderWithinTheSameStatChoices(Enchant enchant) {
+	protected int getOrderWithinTheSameStatTotal(Enchant enchant) {
 		return 0;
 	}
 
