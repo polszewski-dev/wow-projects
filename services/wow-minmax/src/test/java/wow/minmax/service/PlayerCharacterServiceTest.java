@@ -6,6 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.GemFilter;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.item.Enchant;
@@ -57,7 +58,7 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		var item = getItem("Heart of the Pit");
 
-		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true);
+		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true, GemFilter.empty());
 
 		verify(playerCharacterRepository).save(characterPOCaptor.capture());
 
@@ -73,7 +74,7 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		var item = getItem("Grand Magister's Staff of Torrents");
 
-		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, item, true);
+		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, item, true, GemFilter.empty());
 
 		verify(playerCharacterRepository).save(characterPOCaptor.capture());
 

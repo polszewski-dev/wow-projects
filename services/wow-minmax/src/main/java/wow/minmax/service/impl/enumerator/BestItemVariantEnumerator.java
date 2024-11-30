@@ -1,5 +1,6 @@
 package wow.minmax.service.impl.enumerator;
 
+import wow.character.model.equipment.GemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
@@ -20,11 +21,12 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 	public BestItemVariantEnumerator(
 			PlayerCharacter referenceCharacter,
 			ItemSlot slot,
+			GemFilter gemFilter,
 			ItemService itemService,
 			CalculationService calculationService,
 			MinmaxConfigRepository minmaxConfigRepository
 	) {
-		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), itemService, calculationService, minmaxConfigRepository);
+		super(referenceCharacter, ItemSlotGroup.getGroup(slot).orElseThrow(), gemFilter, itemService, calculationService, minmaxConfigRepository);
 		this.item = referenceCharacter.getEquippedItem(slot).getItem();
 	}
 

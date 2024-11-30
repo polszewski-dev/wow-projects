@@ -2,6 +2,7 @@ package wow.minmax.service.impl.enumerator;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.equipment.ItemSockets;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.minmax.model.PlayerCharacter;
@@ -20,16 +21,26 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public class GemComboFinder {
-	private final ItemService itemService;
 	private final PlayerCharacter character;
 	private final ItemSocketSpecification socketSpecification;
 	private final ItemSockets itemSockets;
+	private final ItemSlotGroup slotGroup;
+	private final boolean includeUniqueGems;
+	private final ItemService itemService;
 
-	public GemComboFinder(PlayerCharacter character, ItemSocketSpecification socketSpecification, ItemService itemService) {
-		this.itemService = itemService;
+	public GemComboFinder(
+			PlayerCharacter character,
+			ItemSocketSpecification socketSpecification,
+			ItemSlotGroup slotGroup,
+			boolean includeUniqueGems,
+			ItemService itemService
+	) {
 		this.character = character;
 		this.socketSpecification = socketSpecification;
 		this.itemSockets = ItemSockets.create(socketSpecification);
+		this.slotGroup = slotGroup;
+		this.includeUniqueGems = includeUniqueGems;
+		this.itemService = itemService;
 	}
 
 	public List<Gem[]> getGemCombos() {
@@ -58,7 +69,9 @@ public class GemComboFinder {
 		var gems2 = getBestGems(1);
 		for (var gem1 : gems1) {
 			for (var gem2 : gems2) {
-				result.add(new Gem[]{gem1, gem2});
+				if (!uniquenessIsViolated(gem1, gem2)) {
+					result.add(new Gem[]{gem1, gem2});
+				}
 			}
 		}
 		return removeEquivalents(result);
@@ -72,7 +85,9 @@ public class GemComboFinder {
 		for (var gem1 : gems1) {
 			for (var gem2 : gems2) {
 				for (var gem3 : gems3) {
-					result.add(new Gem[]{gem1, gem2, gem3});
+					if (!uniquenessIsViolated(gem1, gem2, gem3)) {
+						result.add(new Gem[]{gem1, gem2, gem3});
+					}
 				}
 			}
 		}
@@ -80,7 +95,58 @@ public class GemComboFinder {
 	}
 
 	private List<Gem> getBestGems(int socketNo) {
-		return itemService.getBestGems(character, socketSpecification.getSocketType(socketNo));
+		var socketType = socketSpecification.getSocketType(socketNo);
+		var nonUniqueGems = itemService.getBestNonUniqueGems(character, socketType);
+
+		if (!includeUniqueGems) {
+			return nonUniqueGems;
+		}
+
+		var uniqueGems = itemService.getGems(character, socketType, true);
+		
+		uniqueGems = filterOutAlreadyEquipped(uniqueGems);
+
+		if (uniqueGems.isEmpty()) {
+			return nonUniqueGems;
+		}
+
+		var combined = new ArrayList<>(nonUniqueGems);
+		combined.addAll(uniqueGems);
+		return new FilterOutWorseGemChoices(combined).getResult();
+	}
+
+	private List<Gem> filterOutAlreadyEquipped(List<Gem> uniqueGems) {
+		if (uniqueGems.isEmpty()) {
+			return uniqueGems;
+		}
+
+		var result = new ArrayList<>(uniqueGems);
+		var equippedUniqueGems = getEquippedUniqueGems();
+
+		result.removeAll(equippedUniqueGems);
+		return result;
+	}
+
+	private List<Gem> getEquippedUniqueGems() {
+		var result = new ArrayList<Gem>();
+
+		for (var entry : character.getEquipment().toMap().entrySet()) {
+			var slot = entry.getKey();
+
+			if (slotGroup.getSlots().contains(slot)) {
+				continue;
+			}
+
+			var item = entry.getValue();
+
+			for (var gem : item.getGems()) {
+				if (gem.isEffectivelyUnique()) {
+					result.add(gem);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private List<Gem[]> removeEquivalents(List<Gem[]> gemCombos) {
@@ -106,10 +172,21 @@ public class GemComboFinder {
 
 	private Comparator<Gem[]> equivalentComparator = Comparator
 			.comparingInt((Gem[] gems) -> matchesSockets(gems) ? 0 : 1)
+			.thenComparingInt(this::getUniqueGemCount)
 			.thenComparingInt(gems -> -getMatchingGemCount(gems));
 
 	private boolean matchesSockets(Gem[] gems) {
 		return itemSockets.matchesSockets(gems);
+	}
+
+	private int getUniqueGemCount(Gem[] gems) {
+		int count = 0;
+		for (var gem : gems) {
+			if (gem.isEffectivelyUnique()) {
+				++count;
+			}
+		}
+		return count;
 	}
 
 	private int getMatchingGemCount(Gem[] gems) {
@@ -128,5 +205,13 @@ public class GemComboFinder {
 				.sorted()
 				.mapToObj(String::valueOf)
 				.collect(Collectors.joining(","));
+	}
+
+	private boolean uniquenessIsViolated(Gem gem1, Gem gem2) {
+		return gem1.isEffectivelyUnique() && gem2 == gem1;
+	}
+
+	private boolean uniquenessIsViolated(Gem gem1, Gem gem2, Gem gem3) {
+		return uniquenessIsViolated(gem1, gem2) || uniquenessIsViolated(gem1, gem3) || uniquenessIsViolated(gem2, gem3);
 	}
 }

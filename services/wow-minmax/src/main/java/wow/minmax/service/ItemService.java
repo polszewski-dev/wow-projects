@@ -1,7 +1,9 @@
 package wow.minmax.service;
 
+import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -23,9 +25,11 @@ public interface ItemService {
 
 	List<Enchant> getBestEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType);
 
-	List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean nonUniqueOnly);
+	List<Gem> getGems(PlayerCharacter character, SocketType socketType);
 
-	List<Gem> getBestGems(PlayerCharacter character, SocketType socketType);
+	List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean uniqueness);
 
-	List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item);
+	List<Gem> getBestNonUniqueGems(PlayerCharacter character, SocketType socketType);
+
+	List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter);
 }

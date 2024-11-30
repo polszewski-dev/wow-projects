@@ -15,12 +15,14 @@ import wow.minmax.client.dto.EquipmentSocketStatusDTO;
 import wow.minmax.client.dto.ItemSocketStatusDTO;
 import wow.minmax.client.dto.SocketBonusStatusDTO;
 import wow.minmax.client.dto.SocketStatusDTO;
+import wow.minmax.converter.dto.ParamToGemFilterConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerCharacter;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.util.AttributeFormatter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,6 +38,7 @@ public class EquipmentController {
 	private final PlayerCharacterService playerCharacterService;
 	private final EquipmentConverter equipmentConverter;
 	private final EquippableItemConverter equippableItemConverter;
+	private final ParamToGemFilterConverter paramToGemFilterConverter;
 
 	@GetMapping("{characterId}")
 	public EquipmentDTO getEquipment(
@@ -50,11 +53,15 @@ public class EquipmentController {
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slot") ItemSlot slot,
 			@RequestBody EquippableItemDTO itemDTO,
-			@RequestParam(name = "best-variant", required = false, defaultValue = "false") boolean bestVariant
+			@RequestParam(name="best-variant", required=false, defaultValue="false") boolean bestVariant,
+			@RequestParam Map<String, String> requestParams
 	) {
 		var item = getEquippableItem(itemDTO, characterId);
-		var character = playerCharacterService.equipItem(characterId, slot, item, bestVariant);
+		var gemFilter = paramToGemFilterConverter.convert(requestParams);
+		var character = playerCharacterService.equipItem(characterId, slot, item, bestVariant, gemFilter);
+
 		var equippedItem = character.getEquippedItem(slot);
+
 		log.info("Equipped item charId: {}, slot: {}, item: {}", characterId, slot, equippedItem);
 		return equippableItemConverter.convert(equippedItem);
 	}

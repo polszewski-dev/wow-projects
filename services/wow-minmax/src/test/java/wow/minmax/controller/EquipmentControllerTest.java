@@ -7,10 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.character.model.equipment.EquippableItem;
-import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.client.converter.EquippableItemConverter;
 import wow.commons.client.dto.EquippableItemDTO;
+import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerCharacterService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(true));
+		verify(playerCharacterService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(true), any());
 	}
 
 	@Test
@@ -78,7 +78,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerCharacterService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(false));
+		verify(playerCharacterService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(false), any());
 	}
 
 	@Test

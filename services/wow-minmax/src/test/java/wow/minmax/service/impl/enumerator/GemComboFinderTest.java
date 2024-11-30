@@ -13,6 +13,7 @@ import wow.minmax.service.ItemService;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.categorization.ItemSlotGroup.HEAD;
 
 /**
  * User: POlszewski
@@ -57,7 +58,51 @@ class GemComboFinderTest extends WowMinMaxSpringTest {
 		var specification = new ItemSocketSpecification(socketTypes, Effect.EMPTY);
 		var sockets = ItemSockets.create(specification);
 
-		var finder = new GemComboFinder(character, specification, itemService);
+		var finder = new GemComboFinder(character, specification, HEAD, false, itemService);
+
+		var gemCombos = finder.getGemCombos();
+		var matchingCount = gemCombos.stream().filter(sockets::matchesSockets).count();
+
+		assertThat(gemCombos).hasSize(expectedComboCount);
+		assertThat(matchingCount).isEqualTo(expectedMatchingComboCount);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"RED,                  17, 8",
+			"YELLOW,               17, 14",
+			"BLUE,                 17, 8",
+			"META,                 6,  6",
+
+			"RED;RED,              146, 33",
+			"RED;YELLOW,           146, 100",
+			"RED;BLUE,             146, 62",
+			"YELLOW;YELLOW,        146, 99",
+			"YELLOW;BLUE,          146, 93",
+			"BLUE;BLUE,            146, 31",
+
+			"META;RED,             102, 48",
+			"META;YELLOW,          102, 84",
+			"META;BLUE,            102, 48",
+
+			"RED;RED;RED,          850, 96",
+			"RED;RED;YELLOW,       850, 386",
+			"RED;RED;BLUE,         850, 250",
+			"RED;YELLOW;YELLOW,    850, 644",
+			"RED;YELLOW;BLUE,      850, 560",
+			"RED;BLUE;BLUE,        850, 234",
+			"YELLOW;YELLOW;YELLOW, 850, 476",
+			"YELLOW;YELLOW;BLUE,   850, 570",
+			"YELLOW;BLUE;BLUE,     850, 326",
+			"BLUE;BLUE;BLUE,       850, 80",
+	})
+	void getGemCombosWithUniqueGems(String colorStr, int expectedComboCount, int expectedMatchingComboCount) {
+		var socketTypes = Stream.of(colorStr.split(";")).map(SocketType::valueOf).toList();
+		var character = getCharacter();
+		var specification = new ItemSocketSpecification(socketTypes, Effect.EMPTY);
+		var sockets = ItemSockets.create(specification);
+
+		var finder = new GemComboFinder(character, specification, HEAD, true, itemService);
 
 		var gemCombos = finder.getGemCombos();
 		var matchingCount = gemCombos.stream().filter(sockets::matchesSockets).count();

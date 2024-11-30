@@ -136,7 +136,7 @@ public class EquipmentOptionsController {
 	}
 
 	private GemOptionsDTO getGemOptions(PlayerCharacter character, SocketType socketType) {
-		var gems = itemService.getGems(character, socketType, false);
+		var gems = itemService.getGems(character, socketType);
 		var gemDTOs = gemConverter.convertList(gems);
 
 		return new GemOptionsDTO(socketType, gemDTOs);

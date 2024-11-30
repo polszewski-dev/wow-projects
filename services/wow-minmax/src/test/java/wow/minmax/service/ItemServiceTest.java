@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemSlot;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.categorization.ItemSlotGroup.*;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.pve.GameVersionId.TBC;
@@ -111,8 +113,8 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGems() {
-		List<Gem> metaGems = underTest.getGems(character, SocketType.META, true);
-		List<Gem> coloredGems = underTest.getGems(character, SocketType.YELLOW, true);
+		List<Gem> metaGems = underTest.getGems(character, SocketType.META, false);
+		List<Gem> coloredGems = underTest.getGems(character, SocketType.YELLOW, false);
 
 		List<String> metaGemNames = metaGems.stream().map(Gem::getName).toList();
 
@@ -158,7 +160,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void testGetGems() {
-		List<Gem> coloredGems = underTest.getGems(character, getItem("Sunfire Robe").getSocketType(1), false);
+		List<Gem> coloredGems = underTest.getGems(character, getItem("Sunfire Robe").getSocketType(1));
 
 		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
 
@@ -215,7 +217,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Bracers of the Malefic").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Bracers of the Malefic").getItem(), WRIST, GemFilter.empty());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
@@ -235,7 +237,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos2() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Dark Conjuror's Collar").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Dark Conjuror's Collar").getItem(), HEAD, GemFilter.empty());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
@@ -244,7 +246,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos3() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Sunfire Robe").getItem());
+		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Sunfire Robe").getItem(), CHEST, GemFilter.empty());
 
 		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 

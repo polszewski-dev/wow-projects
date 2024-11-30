@@ -2,6 +2,7 @@ package wow.minmax.service;
 
 import wow.character.model.character.BuffListType;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.GemFilter;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -20,7 +21,7 @@ public interface PlayerCharacterService {
 
 	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
 
-	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant);
+	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter);
 
 	PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 

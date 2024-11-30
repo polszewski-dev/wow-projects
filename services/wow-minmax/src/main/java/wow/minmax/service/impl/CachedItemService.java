@@ -3,8 +3,10 @@ package wow.minmax.service.impl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -34,7 +36,8 @@ public class CachedItemService implements ItemService {
 	private final Map<String, List<Enchant>> getEnchantsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Enchant>> getBestEnchantsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem>> getGemsCache = Collections.synchronizedMap(new HashMap<>());
-	private final Map<String, List<Gem>> getBestGemsCache = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<Gem>> getGemsByUniquenessCache = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<Gem>> getBestNonUniqueGemsCache = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, List<Gem[]>> getBestGemCombosCache = Collections.synchronizedMap(new HashMap<>());
 
 	public CachedItemService(@Qualifier("itemServiceImpl") ItemService itemService) {
@@ -66,23 +69,34 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean nonUniqueOnly) {
-		boolean meta = socketType == SocketType.META;
-		String key = getProfileKey(character) + "#" + meta + "#" + nonUniqueOnly;
-		return getGemsCache.computeIfAbsent(key, x -> itemService.getGems(character, socketType, nonUniqueOnly));
-	}
-
-	@Override
-	public List<Gem> getBestGems(PlayerCharacter character, SocketType socketType) {
+	public List<Gem> getGems(PlayerCharacter character, SocketType socketType) {
 		boolean meta = socketType == SocketType.META;
 		String key = getProfileKey(character) + "#" + meta;
-		return getBestGemsCache.computeIfAbsent(key, x -> itemService.getBestGems(character, socketType));
+		return getGemsCache.computeIfAbsent(key, x -> itemService.getGems(character, socketType));
 	}
 
 	@Override
-	public List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item) {
-		String key = getProfileKey(character) + "#" + item.getSocketSpecification().socketTypes();
-		return getBestGemCombosCache.computeIfAbsent(key, x -> itemService.getBestGemCombos(character, item));
+	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean uniqueness) {
+		boolean meta = socketType == SocketType.META;
+		String key = getProfileKey(character) + "#" + meta + "#" + uniqueness;
+		return getGemsByUniquenessCache.computeIfAbsent(key, x -> itemService.getGems(character, socketType, uniqueness));
+	}
+
+	@Override
+	public List<Gem> getBestNonUniqueGems(PlayerCharacter character, SocketType socketType) {
+		boolean meta = socketType == SocketType.META;
+		String key = getProfileKey(character) + "#" + meta;
+		return getBestNonUniqueGemsCache.computeIfAbsent(key, x -> itemService.getBestNonUniqueGems(character, socketType));
+	}
+
+	@Override
+	public List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter) {
+		if (gemFilter.isUnique()) {
+			return itemService.getBestGemCombos(character, item, slotGroup, gemFilter);
+		} else {
+			String key = getProfileKey(character) + "#" + item.getSocketSpecification().socketTypes();
+			return getBestGemCombosCache.computeIfAbsent(key, x -> itemService.getBestGemCombos(character, item, slotGroup, gemFilter));
+		}
 	}
 
 	private static String getProfileKey(PlayerCharacter character) {

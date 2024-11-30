@@ -2,9 +2,10 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
-import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -58,17 +59,25 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean nonUniqueOnly) {
+	public List<Gem> getGems(PlayerCharacter character, SocketType socketType) {
 		return gemRepository.getGems(socketType, character.getPhaseId()).stream()
-				.filter(gem -> !nonUniqueOnly || !(gem.isUnique() || gem.isAvailableOnlyByQuests() || gem.getBinding() == Binding.BINDS_ON_PICK_UP))
 				.filter(gem -> gem.isAvailableTo(character))
 				.filter(gem -> gem.isSuitableFor(character))
 				.toList();
 	}
 
 	@Override
-	public List<Gem> getBestGems(PlayerCharacter character, SocketType socketType) {
-		List<Gem> gems = getGems(character, socketType, true);
+	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean uniqueness) {
+		return gemRepository.getGems(socketType, character.getPhaseId()).stream()
+				.filter(gem -> gem.isEffectivelyUnique() == uniqueness)
+				.filter(gem -> gem.isAvailableTo(character))
+				.filter(gem -> gem.isSuitableFor(character))
+				.toList();
+	}
+
+	@Override
+	public List<Gem> getBestNonUniqueGems(PlayerCharacter character, SocketType socketType) {
+		List<Gem> gems = getGems(character, socketType, false);
 		if (socketType == SocketType.META) {
 			return gems;
 		}
@@ -76,8 +85,8 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item) {
-		var finder = new GemComboFinder(character, item.getSocketSpecification(), this);
+	public List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter) {
+		var finder = new GemComboFinder(character, item.getSocketSpecification(), slotGroup, gemFilter.isUnique(), this);
 		return finder.getGemCombos();
 	}
 }

@@ -47,7 +47,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerCharacterService.getCharacter(CHARACTER_KEY)).thenReturn(character);
 		when(playerCharacterService.resetEquipment(any())).thenReturn(character);
 		when(playerCharacterService.equipItem(any(), any(), any())).thenReturn(character);
-		when(playerCharacterService.equipItem(any(), any(), any(), anyBoolean())).thenReturn(character);
+		when(playerCharacterService.equipItem(any(), any(), any(), anyBoolean(), any())).thenReturn(character);
 		when(playerCharacterService.equipItemGroup(any(), any(), any())).thenReturn(character);
 		when(playerCharacterService.enableBuff(any(), any(), any(), anyInt(), anyBoolean())).thenReturn(character);
 		when(playerCharacterService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));

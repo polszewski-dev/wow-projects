@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.BuffListType;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.GemFilter;
 import wow.character.service.CharacterService;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
@@ -79,13 +80,13 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 
 	@Override
 	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
-		return equipItem(characterId, slot, item, false);
+		return equipItem(characterId, slot, item, false, GemFilter.empty());
 	}
 
 	@Override
-	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant) {
+	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
 		var character = getCharacter(characterId);
-		var itemToEquip = getItemToEquip(slot, item, bestVariant, character);
+		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, character);
 
 		character.equip(itemToEquip, slot);
 		saveCharacter(characterId, character);
@@ -105,9 +106,9 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		playerProfileRepository.save(profile);
 	}
 
-	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, PlayerCharacter character) {
+	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, PlayerCharacter character) {
 		if (bestVariant) {
-			return upgradeService.getBestItemVariant(character, item.getItem(), slot);
+			return upgradeService.getBestItemVariant(character, item.getItem(), slot, gemFilter);
 		} else {
 			return item;
 		}

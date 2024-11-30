@@ -1,5 +1,6 @@
 package wow.minmax.service.impl.enumerator;
 
+import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -22,11 +23,12 @@ public class FindUpgradesEnumerator extends ItemVariantEnumerator {
 			PlayerCharacter referenceCharacter,
 			ItemSlotGroup slotGroup,
 			ItemFilter itemFilter,
+			GemFilter gemFilter,
 			ItemService itemService,
 			CalculationService calculationService,
 			MinmaxConfigRepository minmaxConfigRepository
 	) {
-		super(referenceCharacter, slotGroup, itemService, calculationService, minmaxConfigRepository);
+		super(referenceCharacter, slotGroup, gemFilter, itemService, calculationService, minmaxConfigRepository);
 		this.itemFilter = itemFilter;
 	}
 

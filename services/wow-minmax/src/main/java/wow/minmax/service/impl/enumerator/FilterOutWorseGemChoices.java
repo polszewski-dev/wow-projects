@@ -21,13 +21,16 @@ public class FilterOutWorseGemChoices extends FilterOutWorseChoices<Gem> {
 
 	@Override
 	protected int getOrderWithinTheSameStatTotal(Gem gem) {
-		if (gem.isCrafted()) {
+		if (gem.isCrafted() && !gem.isUnique()) {
 			return 1;
 		}
-		if(gem.isPvPReward()) {
+		if (gem.isCrafted()) {
 			return 2;
 		}
-		return 3;
+		if(gem.isPvPReward()) {
+			return 3;
+		}
+		return 4;
 	}
 
 	@Override

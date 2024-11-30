@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.model.equipment.ItemSocket;
 import wow.commons.model.categorization.ItemSlot;
@@ -38,7 +39,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.getEquipment().reset();
 
 		var slotGroup = ItemSlotGroup.getGroup(itemSlot).orElseThrow();
-		var upgrades = underTest.findUpgrades(character, slotGroup, ItemFilter.everything());
+		var upgrades = underTest.findUpgrades(character, slotGroup, ItemFilter.everything(), GemFilter.empty());
 
 		assertThat(upgrades).hasSize(10);
 	}
@@ -61,7 +62,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, itemSlot);
 
 		var slotGroup = ItemSlotGroup.getGroup(itemSlot).orElseThrow();
-		var upgrades = underTest.findUpgrades(character, slotGroup, ItemFilter.everything());
+		var upgrades = underTest.findUpgrades(character, slotGroup, ItemFilter.everything(), GemFilter.empty());
 
 		assertThat(upgrades).hasSize(10);
 	}
@@ -71,7 +72,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.FINGER_1);
 		character.equip(null, ItemSlot.FINGER_2);
 
-		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, ItemFilter.everything());
+		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, ItemFilter.everything(), GemFilter.empty());
 
 		assertThat(upgrades).hasSize(10);
 	}
@@ -81,7 +82,7 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.TRINKET_1);
 		character.equip(null, ItemSlot.TRINKET_2);
 
-		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, ItemFilter.everything());
+		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, ItemFilter.everything(), GemFilter.empty());
 
 		assertThat(upgrades).hasSize(10);
 	}
@@ -91,14 +92,14 @@ class UpgradeServiceTest extends ServiceTest {
 		character.equip(null, ItemSlot.MAIN_HAND);
 		character.equip(null, ItemSlot.OFF_HAND);
 
-		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, ItemFilter.everything());
+		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, ItemFilter.everything(), GemFilter.empty());
 
 		assertThat(upgrades).hasSize(10);
 	}
 
 	@Test
 	void getBestItemVariant() {
-		var item = underTest.getBestItemVariant(character, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST);
+		var item = underTest.getBestItemVariant(character, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, GemFilter.empty());
 
 		assertThat(item.getEnchant()).isNotNull();
 

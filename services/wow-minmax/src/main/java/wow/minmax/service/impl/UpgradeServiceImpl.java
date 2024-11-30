@@ -3,6 +3,7 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
@@ -34,9 +35,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
-	public List<Upgrade> findUpgrades(PlayerCharacter character, ItemSlotGroup slotGroup, ItemFilter itemFilter) {
+	public List<Upgrade> findUpgrades(PlayerCharacter character, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
 		var enumerator = new FindUpgradesEnumerator(
-				character, slotGroup, itemFilter, itemService, calculationService, minmaxConfigRepository
+				character, slotGroup, itemFilter, gemFilter, itemService, calculationService, minmaxConfigRepository
 		);
 
 		return enumerator.run().getResult().stream()
@@ -45,17 +46,17 @@ public class UpgradeServiceImpl implements UpgradeService {
 	}
 
 	@Override
-	public EquippableItem getBestItemVariant(PlayerCharacter character, Item item, ItemSlot slot) {
+	public EquippableItem getBestItemVariant(PlayerCharacter character, Item item, ItemSlot slot, GemFilter gemFilter) {
 		var referenceCharacter = character.copy();
 
 		referenceCharacter.equip(new EquippableItem(item), slot);
 
 		var enumerator = new BestItemVariantEnumerator(
-				referenceCharacter, slot, itemService, calculationService, minmaxConfigRepository
+				referenceCharacter, slot, gemFilter, itemService, calculationService, minmaxConfigRepository
 		);
 
 		return enumerator.run()
-				.getResult().get(0)
-				.itemOption().get(0);
+				.getResult().getFirst()
+				.itemOption().getFirst();
 	}
 }

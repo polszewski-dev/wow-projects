@@ -1,6 +1,7 @@
 package wow.minmax.service.impl.enumerator;
 
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.equipment.GemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
@@ -24,6 +25,7 @@ import static wow.commons.model.categorization.ItemSlot.*;
 public abstract class ItemVariantEnumerator {
 	protected final PlayerCharacter referenceCharacter;
 	private final ItemSlotGroup slotGroup;
+	private final GemFilter gemFilter;
 	private final CharacterUpgradeContext characterUpgradeContext;
 	private final Map<String, Upgrade> bestUpgrades = new HashMap<>();
 
@@ -33,6 +35,7 @@ public abstract class ItemVariantEnumerator {
 	protected ItemVariantEnumerator(
 			PlayerCharacter referenceCharacter,
 			ItemSlotGroup slotGroup,
+			GemFilter gemFilter,
 			ItemService itemService,
 			CalculationService calculationService,
 			MinmaxConfigRepository minmaxConfigRepository
@@ -41,6 +44,7 @@ public abstract class ItemVariantEnumerator {
 		this.minmaxConfigRepository = minmaxConfigRepository;
 		this.referenceCharacter = referenceCharacter;
 		this.slotGroup = slotGroup;
+		this.gemFilter = gemFilter;
 
 		this.characterUpgradeContext = new CharacterUpgradeContext(referenceCharacter, slotGroup, calculationService);
 	}
@@ -108,7 +112,7 @@ public abstract class ItemVariantEnumerator {
 			throw new IllegalArgumentException(slotGroup + " should have only 1 slot");
 		}
 
-		var slot = slotGroup.getSlots().get(0);
+		var slot = slotGroup.getSlots().getFirst();
 
 		for (var item : getItemVariants(slot)) {
 			handleItemOption(item);
@@ -202,7 +206,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getEnchantedAndGemmedItems(Item item, List<Enchant> enchants) {
-		var gemCombos = itemService.getBestGemCombos(referenceCharacter, item);
+		var gemCombos = itemService.getBestGemCombos(referenceCharacter, item, slotGroup, gemFilter);
 		var result = new ArrayList<EquippableItem>(enchants.size() * gemCombos.size());
 
 		for (var enchant : enchants) {
@@ -215,7 +219,7 @@ public abstract class ItemVariantEnumerator {
 	}
 
 	private List<EquippableItem> getGemmedItems(Item item) {
-		var gemCombos = itemService.getBestGemCombos(referenceCharacter, item);
+		var gemCombos = itemService.getBestGemCombos(referenceCharacter, item, slotGroup, gemFilter);
 		var result = new ArrayList<EquippableItem>(gemCombos.size());
 
 		for (var gemCombo : gemCombos) {
