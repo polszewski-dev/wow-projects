@@ -1,4 +1,4 @@
-package wow.simulator.simulation.spell.priest;
+package wow.simulator.simulation.spell.talent.priest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import static wow.commons.model.spell.AbilityId.MIND_BLAST;
 import static wow.commons.model.spell.AbilityId.SHADOW_WORD_PAIN;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.talent.TalentId.SHADOW_WEAVING;
+import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
@@ -33,7 +34,7 @@ class ShadowWeavingTest extends SpellSimulationTest {
 		simulation.updateUntil(Time.at(30));
 
 		assertEvents(
-				event -> event.isTalentEffect(),
+				Event::isTalentEffect,
 				at(0)
 						.effectApplied(SHADOW_WEAVING, target),
 				at(1.5)

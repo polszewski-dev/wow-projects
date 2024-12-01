@@ -12,7 +12,7 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest {
 	public void setUp() {
 		setupTestObjects();
 
-		handler = new WowSimulatorSpringTest.EventCollectingHandler();
+		handler = new EventCollectingHandler();
 
 		simulation.addHandler(handler);
 

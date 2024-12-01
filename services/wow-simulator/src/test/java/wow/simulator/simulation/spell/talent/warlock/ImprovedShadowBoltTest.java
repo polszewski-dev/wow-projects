@@ -1,4 +1,4 @@
-package wow.simulator.simulation.spell.warlock;
+package wow.simulator.simulation.spell.talent.warlock;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;

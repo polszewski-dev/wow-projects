@@ -1,14 +1,14 @@
-package wow.simulator.simulation.spell.misc;
+package wow.simulator.simulation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import wow.commons.model.spell.AbilityId;
+import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.simulation.spell.SpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
@@ -20,7 +20,7 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
  * User: POlszewski
  * Date: 2024-11-23
  */
-class SpellTargetTest extends SpellSimulationTest {
+class SpellTargetTest extends WowSimulatorSpringTest {
 	enum DefaultTarget {
 		NONE,
 		ENEMY_1,
@@ -150,13 +150,17 @@ class SpellTargetTest extends SpellSimulationTest {
 	public void setUp() {
 		characterClassId = PRIEST;
 
-		super.setUp();
+		setupTestObjects();
+
+		handler = new EventCollectingHandler();
+		simulation.addHandler(handler);
 
 		friend = getNakedPlayer(WARLOCK, "Friend");
 		otherFriend = getNakedPlayer(WARLOCK, "OtherFriend");
 		enemy = getEnemy("Enemy");
 		otherEnemy = getEnemy("OtherEnemy");
 
+		simulation.add(player);
 		simulation.add(friend);
 		simulation.add(otherFriend);
 		simulation.add(enemy);

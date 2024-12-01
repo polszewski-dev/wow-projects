@@ -1,4 +1,4 @@
-package wow.simulator.simulation.spell.warlock;
+package wow.simulator.simulation.spell.ability.warlock;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;

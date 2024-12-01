@@ -1,4 +1,4 @@
-package wow.simulator.simulation.spell.procs;
+package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
@@ -59,7 +60,7 @@ class MarkOfDefianceTest extends SpellSimulationTest {
 		simulation.updateUntil(Time.at(30));
 
 		assertEvents(
-				event -> event.isCooldown(),
+				Event::isCooldown,
 				at(3)
 						.cooldownStarted(player, cooldownId),
 				at(20)
