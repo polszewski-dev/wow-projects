@@ -13,9 +13,9 @@ import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
  * User: POlszewski
  * Date: 2024-12-01
  */
-class WarlockT5P4BonusTest extends SpellSimulationTest {
+class WarlockT4P4BonusTest extends SpellSimulationTest {
 	@Test
-	void t5Bonus() {
+	void t4Bonus() {
 		enableTalent(IMPROVED_CORRUPTION, 5);
 
 		equip("Voidheart Crown");

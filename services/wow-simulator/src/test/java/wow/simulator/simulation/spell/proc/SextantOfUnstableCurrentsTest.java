@@ -6,24 +6,28 @@ import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
- * Date: 2024-11-16
+ * Date: 2024-12-02
  */
-class MarkOfDefianceTest extends SpellSimulationTest {
+class SextantOfUnstableCurrentsTest extends SpellSimulationTest {
+	/*
+	Equip: Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec. (Proc chance: 20%, 45s cooldown)
+	 */
 	@Test
-	void eventAndItsCooldownAreTriggered() {
+	void procIsTriggered() {
+		rng.critRoll = true;
 		rng.eventRoll = true;
 
 		player.cast(SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(30));
+		simulation.updateUntil(Time.at(60));
 
 		assertEvents(
 				at(0)
@@ -34,37 +38,28 @@ class MarkOfDefianceTest extends SpellSimulationTest {
 				at(3)
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
-						.decreasedResource(602, HEALTH, false, target, SHADOW_BOLT)
+						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId)
-						.increasedResource(150, MANA, player, "Mark of Defiance - proc #1 - triggered"),
-				at(20)
+						.effectApplied("Sextant of Unstable Currents", player),
+				at(18)
+						.effectExpired("Sextant of Unstable Currents", player),
+				at(48)
 						.cooldownExpired(player, cooldownId)
 		);
 	}
 
 	@Test
-	void cooldownIsTriggeredAfterItExpires() {
+	void modifierIsTakenIntoAccount() {
+		var spBefore = player.getStats().getSpellPower();
+
+		rng.critRoll = true;
 		rng.eventRoll = true;
+		player.cast(SHADOW_BOLT);
+		simulation.updateUntil(Time.at(10));
 
-		player.cast(SHADOW_BOLT);
-		player.cast(SHADOW_BOLT);
-		player.cast(SHADOW_BOLT);
-		player.cast(SHADOW_BOLT);
-		player.cast(SHADOW_BOLT);
-		player.cast(SHADOW_BOLT);
-		player.cast(SHADOW_BOLT);
+		var spAfter = player.getStats().getSpellPower();
 
-		simulation.updateUntil(Time.at(30));
-
-		assertEvents(
-				Event::isCooldown,
-				at(3)
-						.cooldownStarted(player, cooldownId),
-				at(20)
-						.cooldownExpired(player, cooldownId),
-				at(21)
-						.cooldownStarted(player, cooldownId)
-		);
+		assertThat(spAfter).isEqualTo(spBefore + 190);
 	}
 
 	CooldownId cooldownId;
@@ -73,8 +68,8 @@ class MarkOfDefianceTest extends SpellSimulationTest {
 	public void setUp() {
 		super.setUp();
 
-		equip(27924, TRINKET_1);
+		equip("Sextant of Unstable Currents", TRINKET_1);
 
-		cooldownId = itemProcCooldownId(27924);
+		cooldownId = itemProcCooldownId("Sextant of Unstable Currents");
 	}
 }

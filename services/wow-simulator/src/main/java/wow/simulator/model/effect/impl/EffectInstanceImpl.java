@@ -17,6 +17,7 @@ import wow.commons.model.spell.Conversion;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.context.EffectUpdateContext;
+import wow.simulator.model.context.EventContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
 import wow.simulator.model.time.Time;
@@ -25,6 +26,7 @@ import wow.simulator.model.update.Handle;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.util.IdGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +55,9 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	private boolean silentRemoval = false;
 	private boolean stacked = false;
+	private boolean removed;
+
+	private final List<Runnable> deferredEvents = new ArrayList<>();
 
 	@Getter
 	@Setter
@@ -87,6 +92,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected final void setUp() {
 		endTime = now().add(duration);
 		doSetUp();
+		checkIfStacksAreMaxed();
 	}
 
 	protected abstract void doSetUp();
@@ -104,7 +110,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	protected void onFinished() {
 		super.onFinished();
+
+		this.removed = true;
+
 		getGameLog().effectExpired(this);
+
 		if (onEffectFinished != null) {
 			onEffectFinished.run();
 		}
@@ -113,6 +123,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	protected void onInterrupted() {
 		super.onInterrupted();
+
+		this.removed = true;
 
 		if (!silentRemoval) {
 			getGameLog().effectRemoved(this);
@@ -150,7 +162,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	public void stack(EffectInstance existingEffect) {
-		if (getMaxStacks() == 1) {
+		if (removed || getMaxStacks() == 1) {
 			return;
 		}
 		this.stacked = true;
@@ -160,6 +172,9 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public void addStack() {
+		if (removed) {
+			return;
+		}
 		addStacks(1);
 		endTime = now().add(duration);
 		getGameLog().effectStacksIncreased(this);
@@ -167,6 +182,31 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	private void addStacks(int stacksToAdd) {
 		numStacks = Math.min(numStacks + stacksToAdd, getMaxStacks());
+		checkIfStacksAreMaxed();
+	}
+
+	private void checkIfStacksAreMaxed() {
+		if (effect.getMaxStacks() > 1 && numStacks == effect.getMaxStacks() && !silentRemoval) {
+			fireStacksMaxed();
+		}
+	}
+
+	private void fireStacksMaxed() {
+		Runnable event = () -> EventContext.fireStacksMaxed(this);
+
+		if (handle != null) {
+			event.run();
+		} else {
+			deferredEvents.add(event);
+		}
+	}
+
+	public void fireDeferredEvents() {
+		var copy = List.copyOf(deferredEvents);
+		deferredEvents.clear();
+		for (var event : copy) {
+			event.run();
+		}
 	}
 
 	@Override

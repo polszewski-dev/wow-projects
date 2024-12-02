@@ -42,7 +42,7 @@ public class CastSpellAction extends UnitAction {
 			return;
 		}
 
-		this.castContext = owner.getSpellCastContext(ability);
+		createSpellCastContext();
 
 		if (ability.isChanneled()) {
 			channelSpell();
@@ -55,6 +55,12 @@ public class CastSpellAction extends UnitAction {
 		if (!ability.getCastInfo().ignoresGcd()) {
 			owner.triggerGcd(castContext.getGcd(), this);
 		}
+	}
+
+	private void createSpellCastContext() {
+		var castSnapshot = owner.getSpellCastSnapshot(ability);
+
+		this.castContext = new SpellCastContext(owner, ability, targetResolver, castSnapshot);
 	}
 
 	private void instaCastSpell() {
@@ -105,12 +111,14 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void resolveSpell() {
+		castContext.createSpellResolutionContext();
+
 		for (var directComponent : ability.getDirectComponents()) {
 			getSimulation().delayedAction(
-					getDelay(directComponent),
-					() -> directComponentAction(directComponent)
+					getDelay(directComponent), () -> directComponentAction(directComponent)
 			);
 		}
+
 		applyEffect();
 	}
 
@@ -120,7 +128,7 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void directComponentAction(DirectComponent directComponent) {
-		var resolutionContext = castContext.getSpellResolutionContext(directComponent.target(), targetResolver);
+		var resolutionContext = castContext.getSpellResolutionContext();
 
 		resolutionContext.directComponentAction(directComponent, this);
 	}
@@ -132,16 +140,16 @@ public class CastSpellAction extends UnitAction {
 			return;
 		}
 
-		var resolutionContext = castContext.getSpellResolutionContext(effectApplication.target(), targetResolver);
+		var resolutionContext = castContext.getSpellResolutionContext();
 
 		if (ability.isChanneled()) {
-			if (!resolutionContext.hitRoll(this)) {
+			if (!resolutionContext.hitRoll(this, primaryTarget.requireSingleTarget())) {
 				return;
 			}
 			onBeginChannel();
 		}
 
-		var appliedEffect = resolutionContext.applyEffect(this);
+		var appliedEffect = resolutionContext.applyEffect(this, primaryTarget.requireSingleTarget());
 
 		if (ability.isChanneled()) {
 			this.channeledEffect = appliedEffect;

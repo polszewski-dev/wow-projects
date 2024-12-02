@@ -28,7 +28,9 @@ public class ParamToItemFilterConverter implements Converter<Map<String, String>
 				case "pvpItems" -> result.setPvpItems(parseBoolean(value));
 				case "greens" -> result.setGreens(parseBoolean(value));
 				case "legendaries" -> result.setLegendaries(parseBoolean(value));
-				default -> {}
+				default -> {
+					// ignore
+				}
 			}
 		});
 

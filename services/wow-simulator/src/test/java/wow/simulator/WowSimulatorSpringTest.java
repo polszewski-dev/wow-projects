@@ -15,6 +15,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemSource;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
@@ -146,6 +147,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				return nameContains("TalentEffect");
 			}
 
+			default boolean isEffect() {
+				return nameContains("Effect");
+			}
+
 			default boolean isCooldown() {
 				return nameContains("Cooldown");
 			}
@@ -173,18 +178,25 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements Event {}
 		public record EffectApplied(Time time, AbilityId spell, Unit target) implements Event {}
 		public record TalentEffectApplied(Time time, TalentId talentId, Unit target) implements Event {}
+		public record ItemEffectApplied(Time time, String itemName, Unit target) implements Event {}
 		public record EffectStacked(Time time, AbilityId spell, Unit target, int numStacks) implements Event {}
 		public record TalentEffectStacked(Time time, TalentId talentId, Unit target, int numStacks) implements Event {}
+		public record ItemEffectStacked(Time time, String itemName, Unit target, int numStacks) implements Event {}
 		public record EffectStacksIncreased(Time time, AbilityId spell, Unit target, int numStacks) implements Event {}
 		public record TalentEffectStacksIncreased(Time time, TalentId talentId, Unit target, int numStacks) implements Event {}
+		public record ItemEffectStacksIncreased(Time time, String itemName, Unit target, int numStacks) implements Event {}
 		public record EffectStacksDecreased(Time time, AbilityId spell, Unit target, int numStacks) implements Event {}
 		public record TalentEffectStacksDecreased(Time time, TalentId talentId, Unit target, int numStacks) implements Event {}
+		public record ItemEffectStacksDecreased(Time time, String itemName, Unit target, int numStacks) implements Event {}
 		public record EffectChargesDecreased(Time time, AbilityId spell, Unit target, int numCharges) implements Event {}
 		public record TalentEffectChargesDecreased(Time time, TalentId talentId, Unit target, int numCharges) implements Event {}
+		public record ItemEffectChargesDecreased(Time time, String itemName, Unit target, int numCharges) implements Event {}
 		public record EffectExpired(Time time, AbilityId spell, Unit target) implements Event {}
 		public record TalentEffectExpired(Time time, TalentId talentId, Unit target) implements Event {}
+		public record ItemEffectExpired(Time time, String itemName, Unit target) implements Event {}
 		public record EffectRemoved(Time time, AbilityId spell, Unit target) implements Event {}
 		public record TalentEffectRemoved(Time time, TalentId talentId, Unit target) implements Event {}
+		public record ItemEffectRemoved(Time time, String itemName, Unit target) implements Event {}
 		public record CooldownStarted(Time time, Unit caster, CooldownId cooldownId) implements Event {}
 		public record CooldownExpired(Time time, Unit caster, CooldownId cooldownId) implements Event {}
 		public record SimulationEnded(Time time) implements Event {}
@@ -261,55 +273,65 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		@Override
 		public void effectApplied(EffectInstance effect) {
 			switch (effect.getSource()) {
-				case AbilitySource as ->
-						addEvent(new EffectApplied(now(), as.getAbilityId(), effect.getTarget()));
-				case TalentSource ts ->
-						addEvent(new TalentEffectApplied(now(), ts.getTalentId(), effect.getTarget()));
-				default -> {}
+				case AbilitySource s ->
+						addEvent(new EffectApplied(now(), s.getAbilityId(), effect.getTarget()));
+				case TalentSource s ->
+						addEvent(new TalentEffectApplied(now(), s.getTalentId(), effect.getTarget()));
+				case ItemSource s ->
+						addEvent(new ItemEffectApplied(now(), s.getName(), effect.getTarget()));
+				default -> throw new IllegalArgumentException();
 			}
 		}
 
 		@Override
 		public void effectStacked(EffectInstance effect) {
 			switch (effect.getSource()) {
-				case AbilitySource as ->
-						addEvent(new EffectStacked(now(), as.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
-				case TalentSource ts ->
-						addEvent(new TalentEffectStacked(now(), ts.getTalentId(), effect.getTarget(), effect.getNumStacks()));
-				default -> {}
+				case AbilitySource s ->
+						addEvent(new EffectStacked(now(), s.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
+				case TalentSource s ->
+						addEvent(new TalentEffectStacked(now(), s.getTalentId(), effect.getTarget(), effect.getNumStacks()));
+				case ItemSource s ->
+						addEvent(new ItemEffectStacked(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
+				default -> throw new IllegalArgumentException();
 			}
 		}
 
 		@Override
 		public void effectStacksIncreased(EffectInstance effect) {
 			switch (effect.getSource()) {
-				case AbilitySource as ->
-						addEvent(new EffectStacksIncreased(now(), as.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
-				case TalentSource ts ->
-						addEvent(new TalentEffectStacksIncreased(now(), ts.getTalentId(), effect.getTarget(), effect.getNumStacks()));
-				default -> {}
+				case AbilitySource s ->
+						addEvent(new EffectStacksIncreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
+				case TalentSource s ->
+						addEvent(new TalentEffectStacksIncreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumStacks()));
+				case ItemSource s ->
+						addEvent(new ItemEffectStacksIncreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
+				default -> throw new IllegalArgumentException();
 			}
 		}
 
 		@Override
 		public void effectStacksDecreased(EffectInstance effect) {
 			switch (effect.getSource()) {
-				case AbilitySource as ->
-						addEvent(new EffectStacksDecreased(now(), as.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
-				case TalentSource ts ->
-						addEvent(new TalentEffectStacksDecreased(now(), ts.getTalentId(), effect.getTarget(), effect.getNumStacks()));
-				default -> {}
+				case AbilitySource s ->
+						addEvent(new EffectStacksDecreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
+				case TalentSource s ->
+						addEvent(new TalentEffectStacksDecreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumStacks()));
+				case ItemSource s ->
+						addEvent(new ItemEffectStacksDecreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
+				default -> throw new IllegalArgumentException();
 			}
 		}
 
 		@Override
 		public void effectChargesDecreased(EffectInstance effect) {
 			switch (effect.getSource()) {
-				case AbilitySource as ->
-						addEvent(new EffectChargesDecreased(now(), as.getAbilityId(), effect.getTarget(), effect.getNumCharges()));
-				case TalentSource ts ->
-						addEvent(new TalentEffectChargesDecreased(now(), ts.getTalentId(), effect.getTarget(), effect.getNumCharges()));
-				default -> {}
+				case AbilitySource s ->
+						addEvent(new EffectChargesDecreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumCharges()));
+				case TalentSource s ->
+						addEvent(new TalentEffectChargesDecreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumCharges()));
+				case ItemSource s ->
+						addEvent(new ItemEffectChargesDecreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
+				default -> throw new IllegalArgumentException();
 			}
 		}
 
@@ -320,18 +342,22 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 						addEvent(new EffectExpired(now(), as.getAbilityId(), effect.getTarget()));
 				case TalentSource ts ->
 						addEvent(new TalentEffectExpired(now(), ts.getTalentId(), effect.getTarget()));
-				default -> {}
+				case ItemSource s ->
+						addEvent(new ItemEffectExpired(now(), s.getName(), effect.getTarget()));
+				default -> throw new IllegalArgumentException();
 			}
 		}
 
 		@Override
 		public void effectRemoved(EffectInstance effect) {
 			switch (effect.getSource()) {
-				case AbilitySource as ->
-						addEvent(new EffectRemoved(now(), as.getAbilityId(), effect.getTarget()));
-				case TalentSource ts ->
-						addEvent(new TalentEffectRemoved(now(), ts.getTalentId(), effect.getTarget()));
-				default -> {}
+				case AbilitySource s ->
+						addEvent(new EffectRemoved(now(), s.getAbilityId(), effect.getTarget()));
+				case TalentSource s ->
+						addEvent(new TalentEffectRemoved(now(), s.getTalentId(), effect.getTarget()));
+				case ItemSource s ->
+						addEvent(new ItemEffectRemoved(now(), s.getName(), effect.getTarget()));
+				default -> throw new IllegalArgumentException();
 			}
 		}
 
@@ -433,12 +459,24 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new DecreasedResource(time, amount, type, crit, target, abilityId.getName()));
 		}
 
+		public EventListBuilder decreasedResource(int amount, ResourceType type, Unit target, String itemName) {
+			return decreasedResource(amount, type, false, target,itemName);
+		}
+
+		public EventListBuilder decreasedResource(int amount, ResourceType type, boolean crit, Unit target, String itemName) {
+			return addEvent(new DecreasedResource(time, amount, type, crit, target, itemName));
+		}
+
 		public EventListBuilder effectApplied(AbilityId abilityId, Unit target) {
 			return addEvent(new EffectApplied(time, abilityId, target));
 		}
 
 		public EventListBuilder effectApplied(TalentId talentId, Unit target) {
 			return addEvent(new TalentEffectApplied(time, talentId, target));
+		}
+
+		public EventListBuilder effectApplied(String itemName, Unit target) {
+			return addEvent(new ItemEffectApplied(time, itemName, target));
 		}
 
 		public EventListBuilder effectStacked(AbilityId abilityId, Unit target, int numStacks) {
@@ -449,12 +487,20 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new TalentEffectStacked(time, talentId, target, numStacks));
 		}
 
+		public EventListBuilder effectStacked(String itemName, Unit target, int numStacks) {
+			return addEvent(new ItemEffectStacked(time, itemName, target, numStacks));
+		}
+
 		public EventListBuilder effectStacksIncreased(AbilityId abilityId, Unit target, int numStacks) {
 			return addEvent(new EffectStacksIncreased(time, abilityId, target, numStacks));
 		}
 
 		public EventListBuilder effectStacksIncreased(TalentId talentId, Unit target, int numStacks) {
 			return addEvent(new TalentEffectStacksIncreased(time, talentId, target, numStacks));
+		}
+
+		public EventListBuilder effectStacksIncreased(String itemName, Unit target, int numStacks) {
+			return addEvent(new ItemEffectStacksIncreased(time, itemName, target, numStacks));
 		}
 
 		public EventListBuilder effectStacksDecreased(AbilityId abilityId, Unit target, int numStacks) {
@@ -481,12 +527,20 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new TalentEffectExpired(time, talentId, target));
 		}
 
+		public EventListBuilder effectExpired(String itemName, Unit target) {
+			return addEvent(new ItemEffectExpired(time, itemName, target));
+		}
+
 		public EventListBuilder effectRemoved(AbilityId abilityId, Unit target) {
 			return addEvent(new EffectRemoved(time, abilityId, target));
 		}
 
 		public EventListBuilder effectRemoved(TalentId talentId, Unit target) {
 			return addEvent(new TalentEffectRemoved(time, talentId, target));
+		}
+
+		public EventListBuilder effectRemoved(String itemName, Unit target) {
+			return addEvent(new ItemEffectRemoved(time, itemName, target));
 		}
 
 		public EventListBuilder cooldownStarted(Unit caster, AbilityId abilityId) {
@@ -562,6 +616,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void equip(String itemName, ItemSlot itemSlot) {
 		Item item = getItemRepository().getItem(itemName, player.getPhaseId()).orElseThrow();
+		player.equip(new EquippableItem(item), itemSlot);
+	}
+
+	protected void equip(int itemId, ItemSlot itemSlot) {
+		Item item = getItemRepository().getItem(itemId, player.getPhaseId()).orElseThrow();
 		player.equip(new EquippableItem(item), itemSlot);
 	}
 

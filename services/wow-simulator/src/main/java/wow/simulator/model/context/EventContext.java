@@ -15,6 +15,7 @@ import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.EventCooldownId;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
@@ -68,41 +69,58 @@ public class EventContext {
 		}
 	}
 
+	public static void fireStacksMaxed(EffectInstance effect) {
+		var context = new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell());
+
+		for (var event : effect.getEvents()) {
+			if (event.types().contains(STACKS_MAXED)) {
+				var entry = new EventAndEffect(0, event, effect, effect.getTarget());
+				context.performEventActions(entry, event, effect);
+			}
+		}
+	}
+
 	private void fireEvent(EventType eventType) {
-		fireEvent(eventType, caster);
+		var eventEntries = collectEvents(eventType);
+
+		for (var entry : eventEntries) {
+			processEvent(entry);
+		}
+	}
+
+	private List<EventAndEffect> collectEvents(EventType eventType) {
+		var list = new ArrayList<EventAndEffect>();
+
+		new EventCollector(eventType, caster, list).collectEffects();
 
 		if (target != null && target != caster) {
-			fireEvent(eventType, target);
+			new EventCollector(eventType, target, list).collectEffects();
 		}
+
+		return list;
 	}
 
-	private void fireEvent(EventType eventType, Unit unit) {
-		var eventCollector = new EventCollector(eventType, unit);
-
-		eventCollector.collectEffects();
-
-		for (var entry : eventCollector.list) {
-			processEvent(entry, unit);
-		}
-	}
-
-	private void processEvent(EventAndEffect entry, Unit unit) {
+	private void processEvent(EventAndEffect entry) {
 		var event = entry.event();
 		var effect = entry.effect();
 
-		if (meetsAllConditions(entry, unit)) {
-			if (event.hasCooldown()) {
-				caster.triggerCooldown(entry.getEventCooldownId(), event.cooldown());
-			}
-			for (var action : event.actions()) {
-				performEventAction(action, event, effect);
-			}
+		if (meetsAllConditions(entry)) {
+			performEventActions(entry, event, effect);
 		}
 	}
 
-	private boolean meetsAllConditions(EventAndEffect entry, Unit unit) {
+	private void performEventActions(EventAndEffect entry, Event event, Effect effect) {
+		if (event.hasCooldown()) {
+			caster.triggerCooldown(entry.getEventCooldownId(), event.cooldown());
+		}
+		for (var action : event.actions()) {
+			performEventAction(action, event, effect);
+		}
+	}
+
+	private boolean meetsAllConditions(EventAndEffect entry) {
 		var event = entry.event();
-		var args = getConditionArgs(unit);
+		var args = getConditionArgs(entry.effectTarget());
 
 		if (!check(event.condition(), args)) {
 			return false;
@@ -120,9 +138,14 @@ public class EventContext {
 				? AttributeConditionArgs.forSpell(caster, spell, target)
 				: AttributeConditionArgs.forSpellTarget(target, spell);
 
+		args.setHostileSpell(target != null && Unit.areHostile(caster, target));
+
+		if (spell.hasDamagingComponent()) {
+			args.setPowerType(PowerType.SPELL_DAMAGE);
+		}
+
 		if (damage) {
 			args.setPowerType(PowerType.SPELL_DAMAGE);
-			args.setHostileSpell(true);
 			args.setDirect(directDamage);
 			args.setPeriodic(!directDamage);
 			args.setCanCrit(directDamage);
@@ -148,7 +171,8 @@ public class EventContext {
 	}
 
 	private void triggerSpell(Spell spell, EffectSource effectSource) {
-		var resolutionContext = new SpellResolutionContext(caster, spell, target);
+		var targetResolver = TargetResolver.ofTarget(caster, target);
+		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver);
 
 		for (var directComponent : spell.getDirectComponents()) {
 			resolutionContext.directComponentAction(directComponent, null);
@@ -159,7 +183,7 @@ public class EventContext {
 		}
 	}
 
-	private record EventAndEffect(int idx, Event event, Effect effect) {
+	private record EventAndEffect(int idx, Event event, Effect effect, Unit effectTarget) {
 		EventCooldownId getEventCooldownId() {
 			return CooldownId.of(effect.getSource(), idx);
 		}
@@ -167,11 +191,14 @@ public class EventContext {
 
 	private static class EventCollector extends AbstractEffectCollector {
 		final EventType eventType;
-		final List<EventAndEffect> list = new ArrayList<>();
+		final Unit unit;
+		final List<EventAndEffect> list;
 
-		EventCollector(EventType eventType, Unit unit) {
+		EventCollector(EventType eventType, Unit unit, List<EventAndEffect> list) {
 			super(unit);
 			this.eventType = eventType;
+			this.unit = unit;
+			this.list = list;
 		}
 
 		@Override
@@ -180,7 +207,7 @@ public class EventContext {
 			for (int i = 0; i < events.size(); i++) {
 				var event = events.get(i);
 				if (event.types().contains(eventType)) {
-					list.add(new EventAndEffect(i, event, effect));
+					list.add(new EventAndEffect(i, event, effect, unit));
 				}
 			}
 		}

@@ -60,7 +60,7 @@ public record ConditionalSpellCast(
 
 	private boolean remainingSimulationDurationBelowSpellDuration(Player player, Unit target) {
 		var castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
-		var duration = player.getEffectDurationSnapshot(abilityId, target).getDuration();
+		var duration = player.getEffectDurationSnapshot(abilityId, target).getDuration().getSeconds();
 		var remainingTime = player.getSimulation().getRemainingTime().getSeconds();
 		return castTime + duration <= remainingTime;
 	}

@@ -8,7 +8,6 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.component.DirectComponent;
-import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
@@ -58,8 +57,6 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 	boolean canCast(Ability ability, TargetResolver targetResolver);
 
 	SpellCostSnapshot paySpellCost(Ability ability);
-
-	SpellCastContext getSpellCastContext(Ability ability);
 
 	SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId);
 

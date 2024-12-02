@@ -8,6 +8,7 @@ import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
 import wow.character.util.AbstractEffectCollector;
 import wow.character.util.AttributeConditionArgs;
+import wow.commons.model.Duration;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
@@ -358,35 +359,41 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, AccumulatedDurationStats durationStats, AccumulatedTargetStats targetStats) {
 		var effectApplication = spell.getEffectApplication();
 		var effect = effectApplication.effect();
-		var baseDuration = effectApplication.duration().getSeconds();
 
 		var durationSnapshot = new EffectDurationSnapshot();
 
 		if (spell instanceof Ability ability && ability.isChanneled()) {
 			var hastePct = getHastePct(character, durationStats);
+			var baseDuration = effectApplication.duration().getSeconds();
 			var actualChannelTime = getActualCastTime(baseDuration, hastePct);
 			var baseTickInterval = effect.getTickInterval().getSeconds();
 			var numTicks = (int) (baseDuration / baseTickInterval);
 			var tickInterval = actualChannelTime / numTicks;
 
-			durationSnapshot.setDuration(actualChannelTime);
-			durationSnapshot.setTickInterval(tickInterval);
+			durationSnapshot.setDuration(Duration.seconds(actualChannelTime));
+			durationSnapshot.setTickInterval(Duration.seconds(tickInterval));
 		} else {
+			var baseDuration = effectApplication.duration();
 			var duration = getEffectDuration(baseDuration, durationStats, targetStats);
 			var tickInterval = effect.getTickInterval() != null ? effect.getTickInterval().getSeconds() : 0;
 
 			durationSnapshot.setDuration(duration);
-			durationSnapshot.setTickInterval(tickInterval);
+			durationSnapshot.setTickInterval(Duration.seconds(tickInterval));
 		}
 
 		return durationSnapshot;
 	}
 
-	private double getEffectDuration(double baseDuration, AccumulatedDurationStats durationStats, AccumulatedTargetStats targetStats) {
+	private Duration getEffectDuration(Duration baseDuration, AccumulatedDurationStats durationStats, AccumulatedTargetStats targetStats) {
+		if (baseDuration.isInfinite()) {
+			return baseDuration;
+		}
+
 		var duration = durationStats.getDuration() + targetStats.getReceivedEffectDuration();
 		var durationPct = durationStats.getDurationPct() + targetStats.getReceivedEffectDurationPct();
+		var result = addAndMultiplyByPct(baseDuration.getSeconds(), duration, durationPct);
 
-		return addAndMultiplyByPct(baseDuration, duration, durationPct);
+		return Duration.seconds(result);
 	}
 
 	@Override

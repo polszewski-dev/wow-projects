@@ -1,17 +1,13 @@
 package wow.simulator.model.context;
 
+import lombok.Getter;
 import wow.character.model.snapshot.SpellCastSnapshot;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.GroupCooldownId;
-import wow.commons.model.spell.SpellTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.unit.UnitId;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -20,12 +16,15 @@ import java.util.Map;
 public class SpellCastContext extends Context {
 	private final SpellCastSnapshot snapshot;
 	private final Ability ability;
-	private final Map<UnitId, SpellResolutionContext> spellResolutionContextMap = new HashMap<>();
+	private final TargetResolver targetResolver;
+	@Getter
+	private SpellResolutionContext spellResolutionContext;
 
-	public SpellCastContext(Unit caster, Ability ability, SpellCastSnapshot snapshot) {
+	public SpellCastContext(Unit caster, Ability ability, TargetResolver targetResolver, SpellCastSnapshot snapshot) {
 		super(caster, ability);
 		this.snapshot = snapshot;
 		this.ability = ability;
+		this.targetResolver = targetResolver;
 	}
 
 	public Duration getGcd() {
@@ -77,16 +76,7 @@ public class SpellCastContext extends Context {
 		};
 	}
 
-	public SpellResolutionContext getSpellResolutionContext(SpellTarget spellTarget, TargetResolver targetResolver) {
-		var target = targetResolver.getTarget(spellTarget);
-
-		return getSpellResolutionContext(target);
-	}
-
-	public SpellResolutionContext getSpellResolutionContext(Unit target) {
-		return spellResolutionContextMap.computeIfAbsent(
-				target.getId(),
-				x -> new SpellResolutionContext(caster, ability, target)
-		);
+	public void createSpellResolutionContext() {
+		this.spellResolutionContext = new SpellResolutionContext(caster, spell, targetResolver);
 	}
 }

@@ -2,6 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.commons.model.Duration;
 
 /**
  * User: POlszewski
@@ -10,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EffectDurationSnapshot {
-	private double duration;
-	private double tickInterval;
+	private Duration duration;
+	private Duration tickInterval;
 }

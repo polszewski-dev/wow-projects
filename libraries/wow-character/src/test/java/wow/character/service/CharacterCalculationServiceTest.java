@@ -11,6 +11,7 @@ import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.snapshot.*;
 import wow.character.util.TalentLinkParser;
+import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -226,7 +227,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.getBuild().setActivePet(PetType.SUCCUBUS);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directComponent = ability.getDirectComponents().get(0);
+		var directComponent = ability.getDirectComponents().getFirst();
 		var stats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, directComponent);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
@@ -384,8 +385,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var ability = priest.getAbility(SHADOW_WORD_PAIN).orElseThrow();
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget());
 
-		assertThat(durationSnapshot.getDuration()).isEqualTo(24);
-		assertThat(durationSnapshot.getTickInterval()).isEqualTo(3);
+		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(24));
+		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.seconds(3));
 	}
 
 	@Test
@@ -395,8 +396,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target);
 
-		assertThat(durationSnapshot.getDuration()).isEqualTo(5);
-		assertThat(durationSnapshot.getTickInterval()).isEqualTo(1);
+		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(5));
+		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.seconds(1));
 	}
 
 	@Test
@@ -406,8 +407,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target);
 
-		assertThat(durationSnapshot.getDuration()).isEqualTo(3.93, PRECISION);
-		assertThat(durationSnapshot.getTickInterval()).isEqualTo(0.78, PRECISION);
+		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.millis(3936));
+		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.millis(787));
 	}
 
 	@Test
@@ -419,7 +420,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(baseStats.getIntellect()).isEqualTo(203);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directComponent = ability.getDirectComponents().get(0);
+		var directComponent = ability.getDirectComponents().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directComponent, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(15.83, PRECISION);
@@ -449,7 +450,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(baseStats.getIntellect()).isEqualTo(253);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directComponent = ability.getDirectComponents().get(0);
+		var directComponent = ability.getDirectComponents().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directComponent, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(19.56, PRECISION);

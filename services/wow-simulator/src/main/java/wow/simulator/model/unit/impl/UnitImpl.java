@@ -15,7 +15,6 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentId;
-import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.Effects;
@@ -278,12 +277,6 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 		resources.pay(cost, ability);
 
 		return costSnapshot;
-	}
-
-	@Override
-	public SpellCastContext getSpellCastContext(Ability ability) {
-		var castSnapshot = getSpellCastSnapshot(ability);
-		return new SpellCastContext(this, ability, castSnapshot);
 	}
 
 	@Override

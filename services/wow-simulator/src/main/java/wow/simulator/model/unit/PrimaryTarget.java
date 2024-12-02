@@ -1,5 +1,7 @@
 package wow.simulator.model.unit;
 
+import java.util.Objects;
+
 /**
  * User: POlszewski
  * Date: 2024-11-24
@@ -37,6 +39,10 @@ public sealed interface PrimaryTarget {
 
 	default Unit getSingleTarget() {
 		return this instanceof PrimaryTarget.Specified s ? s.unit() : null;
+	}
+
+	default Unit requireSingleTarget() {
+		return Objects.requireNonNull(getSingleTarget());
 	}
 
 	default TargetResolver getTargetResolver(Unit caster) {
