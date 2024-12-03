@@ -61,14 +61,12 @@ class TimbalsFocusingCrystalTest extends SpellSimulationTest {
 		);
 	}
 
-	CooldownId cooldownId;
+	CooldownId cooldownId = CooldownId.of(100134470);
 
 	@BeforeEach
 	public void setUp() {
 		super.setUp();
 
 		equip("Timbal's Focusing Crystal", TRINKET_1);
-
-		cooldownId = itemProcCooldownId("Timbal's Focusing Crystal");
 	}
 }

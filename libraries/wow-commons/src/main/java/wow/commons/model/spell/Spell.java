@@ -1,5 +1,6 @@
 package wow.commons.model.spell;
 
+import wow.commons.model.Duration;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.Effect;
@@ -19,6 +20,8 @@ public interface Spell extends Described, TimeRestricted {
 	SpellType getType();
 
 	SpellSchool getSchool();
+
+	Duration getCooldown();
 
 	List<DirectComponent> getDirectComponents();
 
@@ -53,4 +56,8 @@ public interface Spell extends Described, TimeRestricted {
 	boolean hasDamagingComponent();
 
 	boolean hasHealingComponent();
+
+	default boolean hasCooldown() {
+		return getCooldown().isPositive();
+	}
 }

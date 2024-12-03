@@ -2,7 +2,6 @@ package wow.commons.model.spell.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.commons.model.Duration;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.spell.*;
 
@@ -15,7 +14,6 @@ import wow.commons.model.spell.*;
 public abstract class AbilityImpl extends SpellImpl implements Ability {
 	private AbilityCategory category;
 	private CastInfo castInfo;
-	private Duration cooldown;
 	private int range;
 	private AbilityId requiredEffect;
 	private AbilityId effectRemovedOnHit;

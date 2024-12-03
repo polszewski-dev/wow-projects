@@ -6,13 +6,11 @@ import wow.character.util.AbstractEffectCollector;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.CooldownId;
-import wow.commons.model.spell.EventCooldownId;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.TargetResolver;
@@ -74,8 +72,7 @@ public class EventContext {
 
 		for (var event : effect.getEvents()) {
 			if (event.types().contains(STACKS_MAXED)) {
-				var entry = new EventAndEffect(0, event, effect, effect.getTarget());
-				context.performEventActions(entry, event, effect);
+				context.performEventActions(event, effect);
 			}
 		}
 	}
@@ -104,15 +101,12 @@ public class EventContext {
 		var event = entry.event();
 		var effect = entry.effect();
 
-		if (meetsAllConditions(entry)) {
-			performEventActions(entry, event, effect);
+		if (meetsAllConditions(entry) && eventRoll(event)) {
+			performEventActions(event, effect);
 		}
 	}
 
-	private void performEventActions(EventAndEffect entry, Event event, Effect effect) {
-		if (event.hasCooldown()) {
-			caster.triggerCooldown(entry.getEventCooldownId(), event.cooldown());
-		}
+	private void performEventActions(Event event, Effect effect) {
 		for (var action : event.actions()) {
 			performEventAction(action, event, effect);
 		}
@@ -122,14 +116,10 @@ public class EventContext {
 		var event = entry.event();
 		var args = getConditionArgs(entry.effectTarget());
 
-		if (!check(event.condition(), args)) {
-			return false;
-		}
+		return check(event.condition(), args);
+	}
 
-		if (event.hasCooldown() && caster.isOnCooldown(entry.getEventCooldownId())) {
-			return false;
-		}
-
+	private boolean eventRoll(Event event) {
 		return caster.getRng().eventRoll(event.chance(), event);
 	}
 
@@ -158,7 +148,7 @@ public class EventContext {
 	private void performEventAction(EventAction action, Event event, Effect effect) {
 		switch (action) {
 			case TRIGGER_SPELL ->
-					triggerSpell(event.triggeredSpell(), effect.getSource());
+					triggerSpell(event.triggeredSpell(), effect, false);
 			case REMOVE ->
 					((EffectInstance) effect).removeSelf();
 			case ADD_STACK ->
@@ -167,10 +157,26 @@ public class EventContext {
 					((EffectInstance) effect).removeStack();
 			case REMOVE_CHARGE ->
 					((EffectInstance) effect).removeCharge();
+			case REMOVE_CHARGE_AND_TRIGGER_SPELL ->
+					triggerSpell(event.triggeredSpell(), effect, true);
 		}
 	}
 
-	private void triggerSpell(Spell spell, EffectSource effectSource) {
+	private void triggerSpell(Spell spell, Effect effect, boolean removeCharge) {
+		if (spell.hasCooldown()) {
+			var cooldownId = CooldownId.of(spell);
+
+			if (caster.isOnCooldown(cooldownId)) {
+				return;
+			}
+
+			caster.triggerCooldown(cooldownId, spell.getCooldown());
+		}
+
+		if (removeCharge) {
+			((EffectInstance) effect).removeCharge();
+		}
+
 		var targetResolver = TargetResolver.ofTarget(caster, target);
 		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver);
 
@@ -179,15 +185,11 @@ public class EventContext {
 		}
 
 		if (spell.getEffectApplication() != null) {
-			resolutionContext.applyEffect(effectSource);
+			resolutionContext.applyEffect(effect.getSource());
 		}
 	}
 
-	private record EventAndEffect(int idx, Event event, Effect effect, Unit effectTarget) {
-		EventCooldownId getEventCooldownId() {
-			return CooldownId.of(effect.getSource(), idx);
-		}
-	}
+	private record EventAndEffect(Event event, Effect effect, Unit effectTarget) {}
 
 	private static class EventCollector extends AbstractEffectCollector {
 		final EventType eventType;
@@ -204,10 +206,9 @@ public class EventContext {
 		@Override
 		public void addEffect(Effect effect, int stackCount) {
 			var events = effect.getEvents();
-			for (int i = 0; i < events.size(); i++) {
-				var event = events.get(i);
+			for (var event : events) {
 				if (event.types().contains(eventType)) {
-					list.add(new EventAndEffect(i, event, effect, unit));
+					list.add(new EventAndEffect(event, effect, unit));
 				}
 			}
 		}

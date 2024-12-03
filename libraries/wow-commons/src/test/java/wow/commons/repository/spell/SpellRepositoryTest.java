@@ -304,7 +304,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getName()).isEqualTo("Amplify Curse");
 
-		var event = effect.getEvents().get(0);
+		var event = effect.getEvents().getFirst();
 
 		assertThat(event.types()).isEqualTo(List.of(SPELL_CAST));
 		assertThat(event.condition()).isEqualTo(ConditionOperator.comma(
@@ -314,7 +314,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		));
 		assertThat(event.chance()).isEqualTo(Percent._100);
 		assertThat(event.actions()).isEqualTo(List.of(REMOVE_CHARGE));
-		assertThat(event.cooldown()).isEqualTo(Duration.ZERO);
 		assertThat(event.triggeredSpell()).isNull();
 	}
 

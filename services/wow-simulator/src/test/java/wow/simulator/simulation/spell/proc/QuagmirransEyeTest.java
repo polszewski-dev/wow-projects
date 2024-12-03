@@ -60,14 +60,12 @@ class QuagmirransEyeTest extends SpellSimulationTest {
 		assertThat(hasteAfter).isEqualTo(hasteBefore + 320);
 	}
 
-	CooldownId cooldownId;
+	CooldownId cooldownId = CooldownId.of(100127683);
 
 	@BeforeEach
 	public void setUp() {
 		super.setUp();
 
 		equip("Quagmirran's Eye", TRINKET_1);
-
-		cooldownId = itemProcCooldownId("Quagmirran's Eye");
 	}
 }

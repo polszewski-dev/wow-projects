@@ -75,7 +75,9 @@ public abstract class WowCommonsSpringTest {
 		assertThat(event.condition()).isEqualTo(condition);
 		assertThat(event.chance()).isEqualTo(Percent.of(chance));
 		assertThat(event.actions()).isEqualTo(actions);
-		assertThat(event.cooldown()).isEqualTo(cooldown);
+		if (event.triggeredSpell() != null) {
+			assertThat(event.triggeredSpell().getCooldown()).isEqualTo(cooldown);
+		}
 	}
 
 	protected static void assertCoefficient(double tickCoeff, SpellSchool school, Coefficient coefficient) {

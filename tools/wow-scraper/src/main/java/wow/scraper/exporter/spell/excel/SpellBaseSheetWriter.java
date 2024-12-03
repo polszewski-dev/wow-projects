@@ -1,6 +1,5 @@
 package wow.scraper.exporter.spell.excel;
 
-import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
@@ -119,7 +118,6 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		setHeader(EVENT_CONDITION, prefix);
 		setHeader(EVENT_CHANCE_PCT, prefix);
 		setHeader(EVENT_ACTION, prefix);
-		setHeader(EVENT_COOLDOWN, prefix);
 		setHeader(EVENT_TRIGGERED_SPELL, prefix);
 	}
 
@@ -145,7 +143,6 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		setValue(event.condition());
 		setValue(event.chance(), Percent._100);
 		setValue(event.actions());
-		setValue(event.cooldown(), Duration.ZERO);
 		setValue(event.triggeredSpell() != null ? event.triggeredSpell().getId() : null);
 	}
 

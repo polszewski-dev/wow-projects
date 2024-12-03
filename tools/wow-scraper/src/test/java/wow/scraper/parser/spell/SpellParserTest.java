@@ -80,7 +80,9 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertThat(event.condition()).isEqualTo(condition);
 		assertThat(event.chance()).isEqualTo(Percent.of(chance));
 		assertThat(event.actions()).isEqualTo(actions);
-		assertThat(event.cooldown()).isEqualTo(cooldown);
+		if (event.triggeredSpell() != null) {
+			assertThat(event.triggeredSpell().getCooldown()).isEqualTo(cooldown);
+		}
 	}
 
 	static void assertConversion(Conversion conversion, AttributeCondition condition, Conversion.From from, Conversion.To to, double ratioPct) {

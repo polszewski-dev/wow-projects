@@ -1,17 +1,22 @@
 package wow.commons.model.spell;
 
-import wow.commons.model.effect.EffectSource;
-
 /**
  * User: POlszewski
  * Date: 2024-11-13
  */
-public sealed interface CooldownId permits AbilityCooldownId, EventCooldownId, GroupCooldownId {
+public sealed interface CooldownId permits AbilityCooldownId, SpellCooldownId, GroupCooldownId {
 	static AbilityCooldownId of(AbilityId abilityId) {
 		return AbilityCooldownId.of(abilityId);
 	}
 
-	static EventCooldownId of(EffectSource effectSource, int idx) {
-		return EventCooldownId.of(effectSource, idx);
+	static SpellCooldownId of(int spellId) {
+		return SpellCooldownId.of(spellId);
+	}
+
+	static CooldownId of(Spell spell) {
+		if (spell instanceof Ability a) {
+			return of(a.getAbilityId());
+		}
+		return of(spell.getId());
 	}
 }

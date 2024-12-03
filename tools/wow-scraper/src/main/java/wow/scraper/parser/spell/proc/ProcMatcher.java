@@ -5,6 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
+import wow.commons.model.spell.impl.SpellImpl;
 import wow.scraper.parser.spell.SpellMatcher;
 import wow.scraper.parser.spell.params.EffectPatternParams;
 import wow.scraper.parser.spell.params.EventParams;
@@ -28,13 +29,19 @@ public class ProcMatcher extends SpellMatcher<ProcPattern, EffectPatternParams, 
 	}
 
 	private Event addMissingTriggerData(EventParams eventParams, Event event) {
+		var triggeredSpell = event.triggeredSpell();
+
+		if (triggeredSpell != null) {
+			var cooldown = getCooldown(eventParams).orElse(Duration.ZERO);
+			((SpellImpl) triggeredSpell).setCooldown(cooldown);
+		}
+
 		return new Event(
 				event.types(),
 				event.condition(),
 				getProcChance(eventParams).orElseThrow(),
 				List.of(EventAction.TRIGGER_SPELL),
-				getCooldown(eventParams).orElse(Duration.ZERO),
-				event.triggeredSpell()
+				triggeredSpell
 		);
 	}
 

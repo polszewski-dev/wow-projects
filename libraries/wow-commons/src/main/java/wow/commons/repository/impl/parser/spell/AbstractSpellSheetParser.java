@@ -90,6 +90,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var spellId = colId.getInteger();
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
+		var cooldown = colCooldown.getDuration(Duration.ZERO);
 		var directComponents = getDirectComponents();
 		var conversion = getConversion();
 		var effectApplication = getEffectApplication();
@@ -98,6 +99,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		spell.setDescription(description);
 		spell.setTimeRestriction(timeRestriction);
 
+		spell.setCooldown(cooldown);
 		spell.setDirectComponents(directComponents);
 		spell.setConversion(conversion);
 		spell.setEffectApplication(effectApplication);
@@ -114,7 +116,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 
 		var category = colCategory.getEnum(AbilityCategory::parse, null);
 		var castInfo = getCastInfo(ability instanceof ActivatedAbility);
-		var cooldown = colCooldown.getDuration(Duration.ZERO);
 		var range = colRange.getInteger();
 		var requiredEffect = colRequiredEffect.getEnum(AbilityId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(AbilityId::parse, null);
@@ -122,7 +123,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 
 		ability.setCategory(category);
 		ability.setCastInfo(castInfo);
-		ability.setCooldown(cooldown);
 		ability.setRange(range);
 		ability.setRequiredEffect(requiredEffect);
 		ability.setEffectRemovedOnHit(effectRemovedOnHit);
@@ -319,7 +319,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colEventCondition = column(EVENT_CONDITION);
 	private final ExcelColumn colEventChance = column(EVENT_CHANCE_PCT);
 	private final ExcelColumn colEventAction = column(EVENT_ACTION);
-	private final ExcelColumn colEventCooldown = column(EVENT_COOLDOWN);
 	private final ExcelColumn colEventTriggeredSpell = column(EVENT_TRIGGERED_SPELL);
 
 	private Event getEvent(int idx) {
@@ -333,12 +332,11 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var condition = colEventCondition.prefixed(prefix).getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
 		var chance = colEventChance.prefixed(prefix).getPercent(Percent._100);
 		var actions = colEventAction.prefixed(prefix).getList(EventAction::parse);
-		var cooldown = colEventCooldown.prefixed(prefix).getDuration(Duration.ZERO);
 		var triggeredSpellId = colEventTriggeredSpell.prefixed(prefix).getNullableInteger();
 
 		var dummy = getDummySpell(triggeredSpellId);
 
-		return new Event(types, condition, chance, actions, cooldown, dummy);
+		return new Event(types, condition, chance, actions, dummy);
 	}
 
 	protected SpellImpl getDummySpell(Integer spellId) {

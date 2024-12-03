@@ -75,7 +75,7 @@ public class Rotation implements Copyable<Rotation> {
 	}
 
 	private void addAbility(Ability ability) {
-		if ((hasDotComponent(ability) && !ability.isChanneled()) || ability.getCooldown().isPositive()) {
+		if ((hasDotComponent(ability) && !ability.isChanneled()) || ability.hasCooldown()) {
 			cooldowns.add(ability);
 		} else if (filler == null) {
 			filler = ability;

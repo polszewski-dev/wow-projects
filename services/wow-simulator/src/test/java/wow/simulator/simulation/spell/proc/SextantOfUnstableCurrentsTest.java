@@ -62,14 +62,12 @@ class SextantOfUnstableCurrentsTest extends SpellSimulationTest {
 		assertThat(spAfter).isEqualTo(spBefore + 190);
 	}
 
-	CooldownId cooldownId;
+	CooldownId cooldownId = CooldownId.of(100130626);
 
 	@BeforeEach
 	public void setUp() {
 		super.setUp();
 
 		equip("Sextant of Unstable Currents", TRINKET_1);
-
-		cooldownId = itemProcCooldownId("Sextant of Unstable Currents");
 	}
 }

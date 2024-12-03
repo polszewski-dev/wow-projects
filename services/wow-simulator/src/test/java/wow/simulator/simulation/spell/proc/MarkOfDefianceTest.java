@@ -67,14 +67,12 @@ class MarkOfDefianceTest extends SpellSimulationTest {
 		);
 	}
 
-	CooldownId cooldownId;
+	CooldownId cooldownId = CooldownId.of(100127922);
 
 	@BeforeEach
 	public void setUp() {
 		super.setUp();
 
 		equip(27924, TRINKET_1);
-
-		cooldownId = itemProcCooldownId(27924);
 	}
 }

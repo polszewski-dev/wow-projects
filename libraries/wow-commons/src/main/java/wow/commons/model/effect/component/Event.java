@@ -1,6 +1,5 @@
 package wow.commons.model.effect.component;
 
-import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.spell.Spell;
@@ -17,7 +16,6 @@ public record Event(
 		AttributeCondition condition,
 		Percent chance,
 		List<EventAction> actions,
-		Duration cooldown,
 		Spell triggeredSpell
 ) implements EffectComponent {
 	public Event {
@@ -25,14 +23,9 @@ public record Event(
 		Objects.requireNonNull(condition);
 		Objects.requireNonNull(chance);
 		Objects.requireNonNull(actions);
-		Objects.requireNonNull(cooldown);
-	}
-
-	public boolean hasCooldown() {
-		return cooldown.isPositive();
 	}
 
 	public Event setTriggeredSpell(Spell triggeredSpell) {
-		return new Event(types, condition, chance, actions, cooldown, triggeredSpell);
+		return new Event(types, condition, chance, actions, triggeredSpell);
 	}
 }

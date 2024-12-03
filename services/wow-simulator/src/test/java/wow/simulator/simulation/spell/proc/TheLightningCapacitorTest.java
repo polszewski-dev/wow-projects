@@ -74,15 +74,13 @@ class TheLightningCapacitorTest extends SpellSimulationTest {
 						.decreasedResource(1125, HEALTH, true, player, "The Lightning Capacitor - proc #1 - triggered - triggered")//todo wrong target
 		);
 	}
-	
-	CooldownId cooldownId;
+
+	CooldownId cooldownId = CooldownId.of(100128785);
 
 	@BeforeEach
 	public void setUp() {
 		super.setUp();
 
 		equip("The Lightning Capacitor", TRINKET_1);
-
-		cooldownId = itemProcCooldownId("The Lightning Capacitor");
 	}
 }

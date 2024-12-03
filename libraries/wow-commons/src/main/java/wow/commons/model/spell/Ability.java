@@ -14,8 +14,6 @@ public interface Ability extends Spell, CharacterRestricted {
 
 	Cost getCost();
 
-	Duration getCooldown();
-
 	int getRange();
 
 	AbilityId getRequiredEffect();

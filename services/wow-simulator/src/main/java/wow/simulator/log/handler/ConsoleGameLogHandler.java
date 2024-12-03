@@ -132,9 +132,9 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 
 	private String toString(CooldownInstance cooldown) {
 		return switch (cooldown.getCooldownId()) {
-			case AbilityCooldownId ac -> ac.abilityId().toString();
-			case GroupCooldownId gc -> gc.group().toString();
-			case EventCooldownId ec -> ec.effectSource().getName();
+			case AbilityCooldownId c -> c.abilityId().toString();
+			case GroupCooldownId c -> c.group().toString();
+			case SpellCooldownId c -> c.spellId() + "";
 		};
 	}
 

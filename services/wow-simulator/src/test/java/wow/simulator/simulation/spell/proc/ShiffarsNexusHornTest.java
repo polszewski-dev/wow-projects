@@ -62,14 +62,12 @@ class ShiffarsNexusHornTest extends SpellSimulationTest {
 		assertThat(spAfter).isEqualTo(spBefore + 225);
 	}
 
-	CooldownId cooldownId;
+	CooldownId cooldownId = CooldownId.of(100128418);
 
 	@BeforeEach
 	public void setUp() {
 		super.setUp();
 
 		equip("Shiffar's Nexus-Horn", TRINKET_1);
-
-		cooldownId = itemProcCooldownId("Shiffar's Nexus-Horn");
 	}
 }
