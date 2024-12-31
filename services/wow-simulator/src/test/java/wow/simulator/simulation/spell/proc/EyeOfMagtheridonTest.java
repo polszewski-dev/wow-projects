@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.SpellSimulationTest;
@@ -57,10 +56,8 @@ class EyeOfMagtheridonTest extends SpellSimulationTest {
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 170);
 	}
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip("Eye of Magtheridon", TRINKET_1);
 	}
 }

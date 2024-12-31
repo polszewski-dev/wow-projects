@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
@@ -69,10 +68,8 @@ class MarkOfDefianceTest extends SpellSimulationTest {
 
 	CooldownId cooldownId = CooldownId.of(100127922);
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip(27924, TRINKET_1);
 	}
 }

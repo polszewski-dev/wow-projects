@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
@@ -63,10 +62,8 @@ class TimbalsFocusingCrystalTest extends SpellSimulationTest {
 
 	CooldownId cooldownId = CooldownId.of(100134470);
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip("Timbal's Focusing Crystal", TRINKET_1);
 	}
 }

@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.activated;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.SpellSimulationTest;
@@ -78,10 +77,8 @@ class TalismanOfAscendanceTest extends SpellSimulationTest {
 		);
 	}
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip(TALISMAN_OF_ASCENDANCE.getName(), TRINKET_1);
 	}
 }

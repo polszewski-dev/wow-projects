@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -105,10 +104,8 @@ class DarkmoonCardWrathTest extends SpellSimulationTest {
 		assertThat(critRatingAfter).isEqualTo(critRatingBefore + numCasts * 17);
 	}
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip("Darkmoon Card: Wrath", TRINKET_1);
 	}
 }

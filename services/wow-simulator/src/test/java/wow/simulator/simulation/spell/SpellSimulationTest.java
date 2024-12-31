@@ -9,7 +9,9 @@ import wow.simulator.WowSimulatorSpringTest;
  */
 public abstract class SpellSimulationTest extends WowSimulatorSpringTest {
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
+		beforeSetUp();
+
 		setupTestObjects();
 
 		handler = new EventCollectingHandler();
@@ -18,5 +20,11 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest {
 
 		simulation.add(player);
 		simulation.add(target);
+
+		afterSetUp();
 	}
+
+	protected void beforeSetUp() {}
+
+	protected void afterSetUp() {}
 }

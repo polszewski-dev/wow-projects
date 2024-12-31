@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.character.CharacterClassId;
 import wow.simulator.model.time.Time;
@@ -80,11 +79,13 @@ class AshtongueTalismanOfAcumenTest extends SpellSimulationTest {
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 220);
 	}
 
-	@BeforeEach
-	public void setUp() {
+	@Override
+	protected void beforeSetUp() {
 		characterClassId = CharacterClassId.PRIEST;
-		super.setUp();
+	}
 
+	@Override
+	protected void afterSetUp() {
 		equip("Ashtongue Talisman of Acumen", TRINKET_1);
 	}
 }

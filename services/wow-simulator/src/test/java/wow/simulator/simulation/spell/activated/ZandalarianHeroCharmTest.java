@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.activated;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.SpellSimulationTest;
@@ -112,10 +111,8 @@ class ZandalarianHeroCharmTest extends SpellSimulationTest {
 		);
 	}
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip(ZANDALARIAN_HERO_CHARM.getName(), TRINKET_1);
 	}
 }

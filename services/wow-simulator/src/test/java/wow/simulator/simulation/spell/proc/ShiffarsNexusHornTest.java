@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
@@ -64,10 +63,8 @@ class ShiffarsNexusHornTest extends SpellSimulationTest {
 
 	CooldownId cooldownId = CooldownId.of(100128418);
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip("Shiffar's Nexus-Horn", TRINKET_1);
 	}
 }

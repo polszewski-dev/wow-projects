@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.SpellSimulationTest;
@@ -82,10 +81,8 @@ class AshtongueTalismanOfShadowsTest extends SpellSimulationTest {
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 220);
 	}
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip("Ashtongue Talisman of Shadows", TRINKET_1);
 	}
 }

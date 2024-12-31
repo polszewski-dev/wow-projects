@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.talent.priest;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.talent.TalentId;
@@ -98,9 +97,8 @@ class ShadowWeavingTest extends SpellSimulationTest {
 		);
 	}
 
-	@BeforeEach
-	public void setUp() {
+	@Override
+	protected void beforeSetUp() {
 		characterClassId = CharacterClassId.PRIEST;
-		super.setUp();
 	}
 }

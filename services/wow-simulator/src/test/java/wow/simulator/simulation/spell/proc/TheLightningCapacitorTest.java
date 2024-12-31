@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.proc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
@@ -77,10 +76,8 @@ class TheLightningCapacitorTest extends SpellSimulationTest {
 
 	CooldownId cooldownId = CooldownId.of(100128785);
 
-	@BeforeEach
-	public void setUp() {
-		super.setUp();
-
+	@Override
+	protected void afterSetUp() {
 		equip("The Lightning Capacitor", TRINKET_1);
 	}
 }
