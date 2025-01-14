@@ -13,15 +13,19 @@ import wow.commons.model.Duration;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSource;
+import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentSource;
+import wow.commons.repository.pve.PhaseRepository;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
@@ -48,9 +52,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
-import static wow.character.model.character.CharacterTemplateId.SHADOW;
-import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
@@ -75,6 +76,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	@Autowired
 	protected SimulatorContext simulatorContext;
 
+	@Autowired
+	private PhaseRepository phaseRepository;
+
 	protected SimulationContext getSimulationContext() {
 		Clock clock = new Clock();
 		GameLog gameLog = new GameLog();
@@ -86,23 +90,13 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected Player getNakedPlayer(CharacterClassId characterClassId, String name) {
-		var raceId = ORC;
-		var charTemplateId = DESTRO_SHADOW;
-
-		if (characterClassId == PRIEST) {
-			raceId = UNDEAD;
-			charTemplateId = SHADOW;
-		}
+		var raceId = getRaceId(characterClassId);
+		int level = getLevel();
 
 		var player = getCharacterService().createPlayerCharacter(
-				characterClassId, raceId, 70, TBC_P5, Player.getFactory(name)
+				characterClassId, raceId, level, phaseId, Player.getFactory(name)
 		);
 
-		getCharacterService().applyCharacterTemplate(player, charTemplateId);
-		player.resetEquipment();
-		player.resetBuffs();
-		player.getTalents().reset();
-		player.getConsumables().reset();
 		getCharacterService().updateAfterRestrictionChange(player);
 
 		player.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
@@ -111,14 +105,34 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return player;
 	}
 
+	private RaceId getRaceId(CharacterClassId characterClassId) {
+		if (raceId != null) {
+			return raceId;
+		}
+		return switch (characterClassId) {
+			case PRIEST -> UNDEAD;
+			case WARLOCK -> ORC;
+			default -> throw new IllegalArgumentException();
+		};
+	}
+
+	private int getLevel() {
+		if (level != null) {
+			return level;
+		}
+		return phaseRepository.getPhase(phaseId).orElseThrow().getMaxLevel();
+	}
+
 	protected NonPlayer getEnemy() {
 		return getEnemy("Target");
 	}
 
 	protected NonPlayer getEnemy(String name) {
-		var enemy = getCharacterService().createNonPlayerCharacter(BEAST, 73, TBC_P5, NonPlayer.getFactory(name));
+		int level = getLevel();
 
-		enemy.resetBuffs();
+		var enemy = getCharacterService().createNonPlayerCharacter(
+				enemyType, level + enemyLevelDiff, phaseId, NonPlayer.getFactory(name)
+		);
 
 		enemy.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
 		simulationContext.shareSimulationContext(enemy);
@@ -657,6 +671,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected EventCollectingHandler handler;
 
 	protected CharacterClassId characterClassId = WARLOCK;
+	protected RaceId raceId;
+	protected Integer level;
+	protected PhaseId phaseId = TBC_P5;
+	protected CreatureType enemyType = BEAST;
+	protected int enemyLevelDiff = 3;
 
 	protected static class TestRng implements Rng {
 		public boolean hitRoll = true;
@@ -677,7 +696,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public boolean eventRoll(double chancePct, wow.commons.model.effect.component.Event event) {
 			return eventRoll;
 		}
-	};
+	}
 
 	protected TestRng rng = new TestRng();
 
