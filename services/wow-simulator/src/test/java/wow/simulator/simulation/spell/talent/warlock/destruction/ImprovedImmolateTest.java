@@ -1,11 +1,10 @@
 package wow.simulator.simulation.spell.talent.warlock.destruction;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.IMMOLATE;
-import static wow.commons.model.spell.ResourceType.HEALTH;
-import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.talent.TalentId.IMPROVED_IMMOLATE;
 
 /**
@@ -13,36 +12,19 @@ import static wow.commons.model.talent.TalentId.IMPROVED_IMMOLATE;
  * Date: 2024-12-01
  */
 class ImprovedImmolateTest extends WarlockSpellSimulationTest {
-	@Test
-	void improvedImmolate() {
-		enableTalent(IMPROVED_IMMOLATE, 5);
+	/*
+	Increases the initial damage of your Immolate spell by 25%.
+	 */
+
+	@ParameterizedTest
+	@ValueSource(ints = { 1, 2, 3, 4, 5 })
+	void improvedImmolate(int rank) {
+		enableTalent(IMPROVED_IMMOLATE, rank);
 
 		player.cast(IMMOLATE);
 
 		updateUntil(30);
 
-		assertEvents(
-				at(0)
-						.beginCast(player, IMMOLATE, 2)
-						.beginGcd(player),
-				at(1.5)
-						.endGcd(player),
-				at(2)
-						.endCast(player, IMMOLATE)
-						.decreasedResource(445, MANA, player, IMMOLATE)
-						.decreasedResource(415, HEALTH, target, IMMOLATE)
-						.effectApplied(IMMOLATE, target, 15),
-				at(5)
-						.decreasedResource(123, HEALTH, target, IMMOLATE),
-				at(8)
-						.decreasedResource(123, HEALTH, target, IMMOLATE),
-				at(11)
-						.decreasedResource(123, HEALTH, target, IMMOLATE),
-				at(14)
-						.decreasedResource(123, HEALTH, target, IMMOLATE),
-				at(17)
-						.decreasedResource(123, HEALTH, target, IMMOLATE)
-						.effectExpired(IMMOLATE, target)
-		);
+		assertDamageDone(IMMOLATE, increaseByPct(332, 5 * rank) + 615);
 	}
 }

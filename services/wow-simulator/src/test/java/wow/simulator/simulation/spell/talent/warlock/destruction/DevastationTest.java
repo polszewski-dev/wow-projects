@@ -5,26 +5,28 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
-import static wow.commons.model.talent.TalentId.CATACLYSM;
+import static wow.commons.model.talent.TalentId.DEVASTATION;
 
 /**
  * User: POlszewski
- * Date: 2024-12-01
+ * Date: 2025-01-14
  */
-class CataclysmTest extends WarlockSpellSimulationTest {
+class DevastationTest extends WarlockSpellSimulationTest {
 	/*
-	Reduces the Mana cost of your Destruction spells by 5%.
+	Increases the critical strike chance of your Destruction spells by 5%.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
-	void cataclysm(int rank) {
-		enableTalent(CATACLYSM, rank);
+	void spellCritBonus(int rank) {
+		var spellCritPctBefore = player.getStats().getSpellCritPct();
+
+		enableTalent(DEVASTATION, rank);
 
 		player.cast(SHADOW_BOLT);
 
 		updateUntil(30);
 
-		assertManaPaid(SHADOW_BOLT, player, 420, -rank);
+		assertLastCritChance(spellCritPctBefore + rank);
 	}
 }

@@ -5,26 +5,26 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.CORRUPTION;
-import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
+import static wow.commons.model.talent.TalentId.SUPPRESSION;
 
 /**
  * User: POlszewski
- * Date: 2024-12-01
+ * Date: 2025-01-14
  */
-class ImprovedCorruptionTest extends WarlockSpellSimulationTest {
+class SuppressionTest extends WarlockSpellSimulationTest {
 	/*
-	Reduces the casting time of your Corruption spell by 2 sec.
+	Reduces the chance for enemies to resist your Affliction spells by 10%.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
-	void improvedCorruption(int rank) {
-		enableTalent(IMPROVED_CORRUPTION, rank);
+	void hitChanceIsIncreasedByTwoPointsPerRank(int rank) {
+		enableTalent(SUPPRESSION, rank);
 
 		player.cast(CORRUPTION);
 
 		updateUntil(30);
 
-		assertCastTime(CORRUPTION, 2 - 0.4 * rank);
+		assertLastHitChance(83 + 2 * rank);
 	}
 }

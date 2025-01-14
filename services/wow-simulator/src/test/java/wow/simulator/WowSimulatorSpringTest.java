@@ -161,6 +161,18 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				return this instanceof DecreasedResource dr && dr.type == ResourceType.HEALTH;
 			}
 
+			default boolean isHealing() {
+				return this instanceof IncreasedResource ir && ir.type == ResourceType.HEALTH;
+			}
+
+			default boolean isManaPaid() {
+				return this instanceof DecreasedResource dr && dr.type == ResourceType.MANA;
+			}
+
+			default boolean isManaGained() {
+				return this instanceof IncreasedResource ir && ir.type == ResourceType.MANA;
+			}
+
 			default boolean isTalentEffect() {
 				return nameContains("TalentEffect");
 			}
@@ -179,6 +191,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 			default boolean isEffectApplied() {
 				return this instanceof EffectApplied;
+			}
+
+			default boolean isBeginCast() {
+				return this instanceof BeginCast;
 			}
 		}
 
@@ -217,7 +233,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record ItemEffectRemoved(Time time, String itemName, Unit target) implements Event {}
 		public record CooldownStarted(Time time, Unit caster, CooldownId cooldownId, Duration duration) implements Event {}
 		public record CooldownExpired(Time time, Unit caster, CooldownId cooldownId) implements Event {}
-		public record SimulationEnded(Time time) implements Event {}
 
 		@Override
 		public void beginGcd(UnitAction sourceAction) {
@@ -585,10 +600,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new CooldownExpired(time, caster, cooldownId));
 		}
 
-		public EventListBuilder simulationEnded() {
-			return addEvent(new SimulationEnded(time));
-		}
-
 		private EventListBuilder addEvent(Event event) {
 			events.add(event);
 			return this;
@@ -615,6 +626,94 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				.toList();
 
 		assertThat(filtered).isEqualTo(eventList(expected));
+	}
+
+	protected void assertDamageDone(AbilityId abilityId, Unit target, int expectedAmount) {
+		var totalDamage = handler.getEvents().stream()
+				.filter(Event::isDamage)
+				.map(x -> (DecreasedResource) x)
+				.filter(x -> x.target == target)
+				.filter(x -> x.spell.equals(abilityId.getName()))
+				.mapToInt(x -> x.amount)
+				.sum();
+
+		assertThat(totalDamage).isEqualTo(expectedAmount);
+	}
+
+	protected void assertDamageDone(AbilityId abilityId, int expectedAmount) {
+		assertDamageDone(abilityId, target, expectedAmount);
+	}
+
+	protected void assertDamageDone(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+		assertDamageDone(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	}
+	
+	protected void assertDamageDone(AbilityId abilityId, int expectedBaseAmount, int pctIncrease) {
+		assertDamageDone(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	}
+
+	protected void assertHealthGained(AbilityId abilityId, Unit target, int expectedAmount) {
+		var totalHealthGained = handler.getEvents().stream()
+				.filter(Event::isHealing)
+				.map(x -> (IncreasedResource) x)
+				.filter(x -> x.target == target)
+				.filter(x -> x.spell.equals(abilityId.getName()))
+				.mapToInt(x -> x.amount)
+				.sum();
+
+		assertThat(totalHealthGained).isEqualTo(expectedAmount);
+	}
+
+	protected void assertHealthGained(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+		assertHealthGained(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	}
+
+	protected void assertManaPaid(AbilityId abilityId, Unit target, int expectedAmount) {
+		var totalManaPaid = handler.getEvents().stream()
+				.filter(Event::isManaPaid)
+				.map(x -> (DecreasedResource) x)
+				.filter(x -> x.target == target)
+				.filter(x -> x.spell.equals(abilityId.getName()))
+				.mapToInt(x -> x.amount)
+				.sum();
+
+		assertThat(totalManaPaid).isEqualTo(expectedAmount);
+	}
+
+	protected void assertManaPaid(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+		assertManaPaid(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	}
+
+	protected void assertManaGained(AbilityId abilityId, Unit target, int expectedAmount) {
+		var totalMana = handler.getEvents().stream()
+				.filter(Event::isManaGained)
+				.map(x -> (IncreasedResource) x)
+				.filter(x -> x.target == target)
+				.filter(x -> x.spell.equals(abilityId.getName()))
+				.mapToInt(x -> x.amount)
+				.sum();
+
+		assertThat(totalMana).isEqualTo(expectedAmount);
+	}
+
+	protected void assertManaGained(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+		assertManaGained(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	}
+
+	protected void assertCastTime(AbilityId abilityId, double expectedCastTime) {
+		var actualCastTime = handler.getEvents().stream()
+				.filter(Event::isBeginCast)
+				.map(x -> (BeginCast)x)
+				.filter(x -> x.spell == abilityId)
+				.findFirst()
+				.orElseThrow()
+				.castTime;
+
+		assertThat(actualCastTime).isEqualTo(Duration.seconds(expectedCastTime));
+	}
+
+	protected void assertCastTime(AbilityId abilityId, double expectedBaseCastTime, int pctIncrease) {
+		assertCastTime(abilityId, increaseByPct(expectedBaseCastTime, pctIncrease));
 	}
 
 	protected Action newAction(int delay, Runnable runnable) {
@@ -673,6 +772,24 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		if (handler != null) {
 			handler.getEvents().clear();
 		}
+	}
+
+	protected void assertEnablingTalentTeachesAbility(TalentId talentId, AbilityId abilityId) {
+		assertThat(player.getAbility(abilityId)).isEmpty();
+		enableTalent(talentId, 1);
+		assertThat(player.getAbility(abilityId)).isPresent();
+	}
+
+	protected void assertIsIncreasedByPct(int newValue, int originalValue, int pct) {
+		assertThat(newValue).isEqualTo(increaseByPct(originalValue, pct));
+	}
+
+	protected int increaseByPct(int originalValue, int pct) {
+		return (int) (originalValue * (100 + pct) / 100.0);
+	}
+
+	private double increaseByPct(double originalValue, int pct) {
+		return originalValue * (100 + pct) / 100.0;
 	}
 
 	protected SimulationContext simulationContext;

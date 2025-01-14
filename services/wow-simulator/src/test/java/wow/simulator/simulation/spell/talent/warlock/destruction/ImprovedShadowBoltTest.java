@@ -15,6 +15,10 @@ import static wow.commons.model.talent.TalentId.IMPROVED_SHADOW_BOLT;
  * Date: 2024-11-14
  */
 class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
+	/*
+	Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 20% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.
+	 */
+
 	@Test
 	void isbIsAppliedAfterCrit() {
 		critsOnlyOnFollowingRolls(0);
@@ -52,8 +56,6 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);
-
-		updateUntil(3);
 
 		updateUntil(30);
 
