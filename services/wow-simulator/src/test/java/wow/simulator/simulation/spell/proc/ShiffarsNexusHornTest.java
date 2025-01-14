@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -15,7 +15,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class ShiffarsNexusHornTest extends SpellSimulationTest {
+class ShiffarsNexusHornTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Chance on spell critical hit to increase your spell damage and healing by 225 for 10 secs. (Proc chance: 20%, 45s cooldown)
 	 */

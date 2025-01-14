@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -15,7 +15,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class QuagmirransEyeTest extends SpellSimulationTest {
+class QuagmirransEyeTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Your harmful spells have a chance to increase your spell haste rating by 320 for 6 secs. (Proc chance: 10%, 45s cooldown)
 	 */

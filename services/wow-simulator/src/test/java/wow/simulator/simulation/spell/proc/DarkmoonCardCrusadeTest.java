@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -17,7 +17,7 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class DarkmoonCardCrusadeTest extends SpellSimulationTest {
+class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.
   	Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times.

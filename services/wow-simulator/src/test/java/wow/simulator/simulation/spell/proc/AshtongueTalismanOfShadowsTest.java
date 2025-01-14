@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -15,7 +15,7 @@ import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
  * User: POlszewski
  * Date: 2024-12-01
  */
-class AshtongueTalismanOfShadowsTest extends SpellSimulationTest {
+class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Each time your Corruption deals damage, it has a 20% chance to grant you 220 spell damage for 5 sec. (Proc chance: 20%)
 	 */

@@ -1,9 +1,8 @@
 package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.character.CharacterClassId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -15,7 +14,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-12-01
  */
-class AshtongueTalismanOfAcumenTest extends SpellSimulationTest {
+class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 	/*
 	Equip: Each time your Shadow Word: Pain deals damage, it has a 10% chance to grant you 220 spell damage for 10 sec 
 	and each time your Renew heals, it has a 10% chance to grant you 220 healing for 5 sec. (Proc chance: 10%)
@@ -77,11 +76,6 @@ class AshtongueTalismanOfAcumenTest extends SpellSimulationTest {
 		var dmgAfter = player.getStats().getSpellDamage();
 
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 220);
-	}
-
-	@Override
-	protected void beforeSetUp() {
-		characterClassId = CharacterClassId.PRIEST;
 	}
 
 	@Override

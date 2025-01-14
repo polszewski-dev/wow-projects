@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -15,7 +15,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class SextantOfUnstableCurrentsTest extends SpellSimulationTest {
+class SextantOfUnstableCurrentsTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec. (Proc chance: 20%, 45s cooldown)
 	 */

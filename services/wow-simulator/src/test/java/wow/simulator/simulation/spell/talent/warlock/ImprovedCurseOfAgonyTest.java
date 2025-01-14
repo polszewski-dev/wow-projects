@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.talent.warlock;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.CURSE_OF_AGONY;
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -13,7 +13,7 @@ import static wow.commons.model.talent.TalentId.IMPROVED_CURSE_OF_AGONY;
  * User: POlszewski
  * Date: 2024-12-01
  */
-class ImprovedCurseOfAgonyTest extends SpellSimulationTest {
+class ImprovedCurseOfAgonyTest extends WarlockSpellSimulationTest {
 	@Test
 	void improvedCurseOfAgony() {
 		enableTalent(IMPROVED_CURSE_OF_AGONY, 2);

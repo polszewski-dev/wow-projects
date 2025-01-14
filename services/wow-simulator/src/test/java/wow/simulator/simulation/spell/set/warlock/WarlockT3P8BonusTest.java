@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.set.warlock;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.AbilityId.LIFE_TAP;
@@ -14,7 +14,7 @@ import static wow.commons.model.talent.TalentId.IMPROVED_LIFE_TAP;
  * User: POlszewski
  * Date: 2024-12-01
  */
-class WarlockT3P8BonusTest extends SpellSimulationTest {
+class WarlockT3P8BonusTest extends WarlockSpellSimulationTest {
 	@Test
 	void t3Bonus() {
 		enableTalent(IMPROVED_LIFE_TAP, 2);

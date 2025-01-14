@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
@@ -13,7 +13,7 @@ import static wow.commons.model.spell.GroupCooldownId.TRINKET;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class TalismanOfAscendanceTest extends SpellSimulationTest {
+class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 	/*
 	Use: Your next 5 damage or healing spells cast within 20 seconds will grant a bonus of up to 40 damage and up to 75 healing,
 	stacking up to 5 times. Expires after 6 damage or healing spells or 20 seconds, whichever occurs first. (1 Min Cooldown)

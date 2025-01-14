@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.CORRUPTION;
@@ -15,7 +15,7 @@ import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class TimbalsFocusingCrystalTest extends SpellSimulationTest {
+class TimbalsFocusingCrystalTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Each time one of your spells deals periodic damage, there is a chance 285 to 475 additional damage will be dealt.
 	(Proc chance: 10%, 15s cooldown)

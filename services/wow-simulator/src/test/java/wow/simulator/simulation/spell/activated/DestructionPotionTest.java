@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.activated;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.GroupCooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.AbilityId.DESTRUCTION_POTION;
@@ -12,7 +12,7 @@ import static wow.commons.model.spell.AbilityId.DESTRUCTION_POTION;
  * User: POlszewski
  * Date: 2024-11-22
  */
-class DestructionPotionTest extends SpellSimulationTest {
+class DestructionPotionTest extends WarlockSpellSimulationTest {
 	@Test
 	void effectActivatesAndCooldownTriggers() {
 		player.getConsumables().enable(DESTRUCTION_POTION.getName());

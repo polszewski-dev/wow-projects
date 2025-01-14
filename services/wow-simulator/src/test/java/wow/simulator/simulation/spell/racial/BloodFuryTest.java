@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.racial;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.AbilityId.BLOOD_FURY;
@@ -11,7 +11,7 @@ import static wow.commons.model.spell.AbilityId.BLOOD_FURY;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class BloodFuryTest extends SpellSimulationTest {
+class BloodFuryTest extends WarlockSpellSimulationTest {
 	@Test
 	void success() {
 		player.cast(BLOOD_FURY);

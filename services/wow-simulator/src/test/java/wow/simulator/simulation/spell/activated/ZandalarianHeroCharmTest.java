@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
@@ -15,7 +15,7 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class ZandalarianHeroCharmTest extends SpellSimulationTest {
+class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 	/*
 	Use: Increases your spell damage by up to 204 and your healing by up to 408 for 20 sec.
 	Every time you cast a spell, the bonus is reduced by 17 spell damage and 34 healing. (2 Min Cooldown)

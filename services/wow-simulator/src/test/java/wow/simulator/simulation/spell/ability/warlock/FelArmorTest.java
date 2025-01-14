@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.ability.warlock;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.AbilityId.FEL_ARMOR;
@@ -12,7 +12,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class FelArmorTest extends SpellSimulationTest {
+class FelArmorTest extends WarlockSpellSimulationTest {
 	@Test
 	void success() {
 		player.cast(FEL_ARMOR);

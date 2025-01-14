@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -13,7 +13,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class EyeOfMagtheridonTest extends SpellSimulationTest {
+class EyeOfMagtheridonTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Grants 170 increased spell damage for 10 sec when one of your spells is resisted.
 	 */

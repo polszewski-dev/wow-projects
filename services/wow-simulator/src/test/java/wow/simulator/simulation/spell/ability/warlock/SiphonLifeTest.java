@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.ability.warlock;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.SIPHON_LIFE;
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -13,7 +13,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class SiphonLifeTest extends SpellSimulationTest {
+class SiphonLifeTest extends WarlockSpellSimulationTest {
 	@Test
 	void success() {
 		enableTalent(TalentId.SIPHON_LIFE, 1);

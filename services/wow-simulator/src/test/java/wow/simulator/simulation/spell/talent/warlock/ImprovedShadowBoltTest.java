@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.talent.warlock;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.CORRUPTION;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
@@ -15,7 +15,7 @@ import static wow.commons.model.talent.TalentId.IMPROVED_SHADOW_BOLT;
  * User: POlszewski
  * Date: 2024-11-14
  */
-class ImprovedShadowBoltTest extends SpellSimulationTest {
+class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 	@Test
 	void isbIsAppliedAfterCrit() {
 		rng.critRoll = true;

@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.activated;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.GroupCooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -15,7 +15,7 @@ import static wow.commons.model.spell.AbilityId.SHIFTING_NAARU_SLIVER;
  * User: POlszewski
  * Date: 2024-11-17
  */
-class HexShrunkenHeadTest extends SpellSimulationTest {
+class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 	@Test
 	void effectActivatesAndCooldownTriggers() {
 		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);

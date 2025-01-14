@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
@@ -15,7 +15,7 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
  * User: POlszewski
  * Date: 2024-11-16
  */
-class MarkOfDefianceTest extends SpellSimulationTest {
+class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 	@Test
 	void eventAndItsCooldownAreTriggered() {
 		rng.eventRoll = true;

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -16,7 +16,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class DarkmoonCardWrathTest extends SpellSimulationTest {
+class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: Each time one of your direct damage attacks does not critically strike, you gain 17 critical strike rating
 	and 17 spell critical strike rating for the next 10 sec.  This effect is consumed when you deal a critical strike.

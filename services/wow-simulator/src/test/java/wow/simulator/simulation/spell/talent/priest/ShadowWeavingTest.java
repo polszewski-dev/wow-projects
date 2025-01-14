@@ -1,10 +1,9 @@
 package wow.simulator.simulation.spell.talent.priest;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.MIND_BLAST;
 import static wow.commons.model.spell.AbilityId.SHADOW_WORD_PAIN;
@@ -16,7 +15,7 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
  * User: POlszewski
  * Date: 2024-11-16
  */
-class ShadowWeavingTest extends SpellSimulationTest {
+class ShadowWeavingTest extends PriestSpellSimulationTest {
 	@Test
 	void effectIsStackedTo5() {
 		rng.eventRoll = true;
@@ -95,10 +94,5 @@ class ShadowWeavingTest extends SpellSimulationTest {
 				at(66.5)
 						.effectExpired(SHADOW_WEAVING, target)
 		);
-	}
-
-	@Override
-	protected void beforeSetUp() {
-		characterClassId = CharacterClassId.PRIEST;
 	}
 }

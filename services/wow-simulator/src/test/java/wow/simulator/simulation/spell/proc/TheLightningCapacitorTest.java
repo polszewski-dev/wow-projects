@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.SpellSimulationTest;
+import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
@@ -15,7 +15,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2024-12-02
  */
-class TheLightningCapacitorTest extends SpellSimulationTest {
+class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 	/*
 	Equip: You gain an Electrical Charge each time you cause a damaging spell critical strike.
 	When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.
