@@ -1,4 +1,4 @@
-package wow.simulator.simulation.spell.talent.warlock;
+package wow.simulator.simulation.spell.talent.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;

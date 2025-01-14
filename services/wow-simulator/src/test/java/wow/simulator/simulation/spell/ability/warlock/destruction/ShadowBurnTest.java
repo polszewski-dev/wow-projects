@@ -1,4 +1,4 @@
-package wow.simulator.simulation.spell.ability.warlock;
+package wow.simulator.simulation.spell.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;

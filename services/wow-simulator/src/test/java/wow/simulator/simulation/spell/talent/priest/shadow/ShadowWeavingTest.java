@@ -1,4 +1,4 @@
-package wow.simulator.simulation.spell.talent.priest;
+package wow.simulator.simulation.spell.talent.priest.shadow;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;
