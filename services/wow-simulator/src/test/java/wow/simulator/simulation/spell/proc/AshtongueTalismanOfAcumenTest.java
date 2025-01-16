@@ -20,7 +20,7 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0, 1, 2, 3, 4, 5);
 
 		player.cast(SHADOW_WORD_PAIN);
 
@@ -68,7 +68,7 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 	void modifierIsTakenIntoAccount() {
 		var dmgBefore = player.getStats().getSpellDamage();
 
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0);
 		player.cast(SHADOW_WORD_PAIN);
 		updateUntil(10);
 

@@ -23,8 +23,6 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.eventRoll = true;
-
 		player.cast(SHADOW_BOLT);
 
 		updateUntil(30);
@@ -47,8 +45,6 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void effectIsStacked() {
-		rng.eventRoll = true;
-
 		for (int i = 0; i < 11; ++i) {
 			player.cast(SHADOW_BOLT);
 		}
@@ -90,8 +86,6 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 	})
 	void modifierIsTakenIntoAccount(int numCasts) {
 		var critRatingBefore = player.getStats().getSpellCritRating();
-
-		rng.eventRoll = true;
 
 		for (int i = 0; i < numCasts; ++i) {
 			player.cast(SHADOW_BOLT);

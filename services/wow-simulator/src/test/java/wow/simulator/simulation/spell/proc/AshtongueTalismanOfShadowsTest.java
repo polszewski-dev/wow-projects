@@ -20,7 +20,7 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0, 1, 2, 3, 4, 5);
 
 		enableTalent(IMPROVED_CORRUPTION, 5);
 
@@ -70,7 +70,7 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 	void modifierIsTakenIntoAccount() {
 		var dmgBefore = player.getStats().getSpellDamage();
 
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0, 1, 2);
 		enableTalent(IMPROVED_CORRUPTION, 5);
 		player.cast(CORRUPTION);
 		updateUntil(10);

@@ -21,7 +21,7 @@ class TimbalsFocusingCrystalTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0, 1, 2, 3, 4, 5);
 
 		enableTalent(IMPROVED_CORRUPTION, 5);
 

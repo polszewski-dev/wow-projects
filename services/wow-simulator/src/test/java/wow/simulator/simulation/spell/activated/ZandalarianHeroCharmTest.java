@@ -42,8 +42,6 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void stacksDecrease() {
-		rng.eventRoll = true;
-
 		player.cast(ZANDALARIAN_HERO_CHARM);
 
 		for (int i = 0; i < 10; ++i) {
@@ -75,8 +73,6 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void damageDecreases() {
-		rng.eventRoll = true;
-
 		player.cast(ZANDALARIAN_HERO_CHARM);
 
 		for (int i = 0; i < 10; ++i) {

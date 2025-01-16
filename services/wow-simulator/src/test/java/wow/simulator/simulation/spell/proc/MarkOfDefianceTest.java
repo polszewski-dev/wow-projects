@@ -17,7 +17,7 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 	@Test
 	void eventAndItsCooldownAreTriggered() {
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0);
 
 		player.cast(SHADOW_BOLT);
 
@@ -42,7 +42,7 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void cooldownIsTriggeredAfterItExpires() {
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0, 1, 2, 3, 4, 5, 6);
 
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);

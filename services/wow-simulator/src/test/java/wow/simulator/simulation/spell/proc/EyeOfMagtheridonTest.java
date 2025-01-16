@@ -18,8 +18,7 @@ class EyeOfMagtheridonTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.hitRoll = false;
-		rng.eventRoll = true;
+		missesOnlyOnFollowingRolls(0);
 
 		player.cast(SHADOW_BOLT);
 
@@ -45,9 +44,10 @@ class EyeOfMagtheridonTest extends WarlockSpellSimulationTest {
 	void modifierIsTakenIntoAccount() {
 		var dmgBefore = player.getStats().getSpellDamage();
 
-		rng.hitRoll = false;
-		rng.eventRoll = true;
+		missesOnlyOnFollowingRolls(0);
+
 		player.cast(SHADOW_BOLT);
+
 		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellDamage();

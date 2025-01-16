@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
@@ -23,10 +22,9 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0);
 
-		player.cast(AbilityId.SHADOW_BOLT);
+		player.cast(SHADOW_BOLT);
 
 		updateUntil(30);
 
@@ -49,12 +47,11 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void thirdProcTriggersDamageSpell() {
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0, 1, 2);
 
-		player.cast(AbilityId.SHADOW_BOLT);
-		player.cast(AbilityId.SHADOW_BOLT);
-		player.cast(AbilityId.SHADOW_BOLT);
+		player.cast(SHADOW_BOLT);
+		player.cast(SHADOW_BOLT);
+		player.cast(SHADOW_BOLT);
 
 		updateUntil(30);
 
@@ -70,7 +67,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.effectStacked("The Lightning Capacitor", player, 3)
 						.effectRemoved("The Lightning Capacitor", player)
-						.decreasedResource(1125, HEALTH, true, player, "The Lightning Capacitor - proc #1 - triggered - triggered")//todo wrong target
+						.decreasedResource(750, HEALTH, player, "The Lightning Capacitor - proc #1 - triggered - triggered")//todo wrong target
 		);
 	}
 

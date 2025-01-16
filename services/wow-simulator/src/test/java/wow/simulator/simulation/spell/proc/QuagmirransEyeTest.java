@@ -20,7 +20,7 @@ class QuagmirransEyeTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0);
 
 		player.cast(SHADOW_BOLT);
 
@@ -49,8 +49,10 @@ class QuagmirransEyeTest extends WarlockSpellSimulationTest {
 	void modifierIsTakenIntoAccount() {
 		var hasteBefore = player.getStats().getSpellHasteRating();
 
-		rng.eventRoll = true;
+		eventsOnlyOnFollowingRolls(0);
+
 		player.cast(SHADOW_BOLT);
+
 		updateUntil(5);
 
 		var hasteAfter = player.getStats().getSpellHasteRating();

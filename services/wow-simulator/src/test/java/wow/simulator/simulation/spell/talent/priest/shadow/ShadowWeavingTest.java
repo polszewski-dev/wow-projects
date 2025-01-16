@@ -18,8 +18,6 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 class ShadowWeavingTest extends PriestSpellSimulationTest {
 	@Test
 	void effectIsStackedTo5() {
-		rng.eventRoll = true;
-
 		enableTalent(SHADOW_WEAVING, 5);
 
 		player.cast(SHADOW_WORD_PAIN);
@@ -52,8 +50,6 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 
 	@Test
 	void damageBonusIsTakenIntoAccount() {
-		rng.eventRoll = true;
-
 		enableTalent(SHADOW_WEAVING, 5);
 		enableTalent(TalentId.MIND_FLAY, 1);
 

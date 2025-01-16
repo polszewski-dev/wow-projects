@@ -20,8 +20,8 @@ class ShiffarsNexusHornTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void procIsTriggered() {
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0);
+		eventsOnlyOnFollowingRolls(0);
 
 		player.cast(SHADOW_BOLT);
 
@@ -50,8 +50,9 @@ class ShiffarsNexusHornTest extends WarlockSpellSimulationTest {
 	void modifierIsTakenIntoAccount() {
 		var spBefore = player.getStats().getSpellPower();
 
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0);
+		eventsOnlyOnFollowingRolls(0);
+
 		player.cast(SHADOW_BOLT);
 		updateUntil(10);
 

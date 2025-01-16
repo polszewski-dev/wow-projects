@@ -51,7 +51,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void resisted() {
-		rng.hitRoll = false;
+		missesOnlyOnFollowingRolls(0);
 
 		player.cast(DRAIN_LIFE);
 

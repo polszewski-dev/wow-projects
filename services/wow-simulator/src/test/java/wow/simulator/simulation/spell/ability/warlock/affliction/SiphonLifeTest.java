@@ -66,7 +66,7 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void resisted() {
-		rng.hitRoll = false;
+		missesOnlyOnFollowingRolls(0);
 
 		enableTalent(TalentId.SIPHON_LIFE, 1);
 

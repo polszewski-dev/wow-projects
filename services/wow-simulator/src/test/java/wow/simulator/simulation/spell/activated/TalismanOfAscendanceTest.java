@@ -19,8 +19,6 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 	 */
 	@Test
 	void effectIsApplied() {
-		rng.eventRoll = true;
-
 		player.cast(TALISMAN_OF_ASCENDANCE);
 
 		updateUntil(150);
@@ -42,8 +40,6 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 	
 	@Test
 	void stacksIncrease() {
-		rng.eventRoll = true;
-
 		player.cast(TALISMAN_OF_ASCENDANCE);
 
 		for (int i = 0; i < 10; ++i) {

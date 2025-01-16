@@ -48,7 +48,7 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void resisted() {
-		rng.hitRoll = false;
+		missesOnlyOnFollowingRolls(0);
 
 		enableTalent(TalentId.UNSTABLE_AFFLICTION, 1);
 

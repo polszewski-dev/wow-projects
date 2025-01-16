@@ -38,7 +38,7 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void resisted() {
-		rng.hitRoll = false;
+		missesOnlyOnFollowingRolls(0);
 
 		enableTalent(TalentId.SHADOWBURN, 1);
 

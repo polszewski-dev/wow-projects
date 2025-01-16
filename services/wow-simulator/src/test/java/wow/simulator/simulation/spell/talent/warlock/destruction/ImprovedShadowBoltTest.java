@@ -17,8 +17,7 @@ import static wow.commons.model.talent.TalentId.IMPROVED_SHADOW_BOLT;
 class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 	@Test
 	void isbIsAppliedAfterCrit() {
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0);
 
 		enableTalent(IMPROVED_SHADOW_BOLT, 5);
 
@@ -44,8 +43,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void sbDecreasesIsbChargesToZero() {
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0);
 
 		enableTalent(IMPROVED_SHADOW_BOLT, 5);
 
@@ -56,8 +54,6 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 		player.cast(SHADOW_BOLT);
 
 		updateUntil(3);
-
-		rng.critRoll = false;
 
 		updateUntil(30);
 
@@ -114,8 +110,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void overwritingIsb() {
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0, 1);
 
 		enableTalent(IMPROVED_SHADOW_BOLT, 5);
 
@@ -153,8 +148,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void isbIncreasesCorruptionDamage() {
-		rng.critRoll = true;
-		rng.eventRoll = true;
+		critsOnlyOnFollowingRolls(0);
 
 		enableTalent(IMPROVED_CORRUPTION, 5);
 		enableTalent(IMPROVED_SHADOW_BOLT, 5);
