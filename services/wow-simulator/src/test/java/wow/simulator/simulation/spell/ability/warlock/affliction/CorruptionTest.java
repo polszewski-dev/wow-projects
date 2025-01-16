@@ -22,7 +22,7 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, CORRUPTION)
+						.beginCast(player, CORRUPTION, 2)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -56,7 +56,7 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, CORRUPTION)
+						.beginCast(player, CORRUPTION, 2)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -81,7 +81,7 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, CORRUPTION)
+						.beginCast(player, CORRUPTION, 1.2)
 						.beginGcd(player),
 				at(1)
 						.castInterrupted(player, CORRUPTION)

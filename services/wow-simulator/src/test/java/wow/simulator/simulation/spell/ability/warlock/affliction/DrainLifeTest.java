@@ -21,7 +21,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, DRAIN_LIFE)
+						.beginCast(player, DRAIN_LIFE, 5)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
 						.beginChannel(player, DRAIN_LIFE)
@@ -59,7 +59,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, DRAIN_LIFE)
+						.beginCast(player, DRAIN_LIFE, 5)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
 						.spellResisted(player, DRAIN_LIFE, target)
@@ -81,7 +81,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, DRAIN_LIFE)
+						.beginCast(player, DRAIN_LIFE, 5)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
 						.beginChannel(player, DRAIN_LIFE)

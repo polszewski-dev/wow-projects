@@ -29,7 +29,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -64,7 +64,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -73,7 +73,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.effectApplied(IMPROVED_SHADOW_BOLT, target)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(4.5)
 						.endGcd(player),
@@ -82,7 +82,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
 						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, target, 3)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(7.5)
 						.endGcd(player),
@@ -91,7 +91,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
 						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, target, 2)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(10.5)
 						.endGcd(player),
@@ -100,7 +100,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
 						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, target, 1)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(13.5)
 						.endGcd(player),
@@ -127,7 +127,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -136,7 +136,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.effectApplied(IMPROVED_SHADOW_BOLT, target)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(4.5)
 						.endGcd(player),
@@ -174,7 +174,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(3)
 						.endGcd(player)

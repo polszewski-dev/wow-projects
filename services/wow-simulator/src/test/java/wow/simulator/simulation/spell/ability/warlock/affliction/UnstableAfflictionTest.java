@@ -24,7 +24,7 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, UNSTABLE_AFFLICTION)
+						.beginCast(player, UNSTABLE_AFFLICTION, 1.5)
 						.beginGcd(player),
 				at(1.5)
 						.endCast(player, UNSTABLE_AFFLICTION)
@@ -59,7 +59,7 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, UNSTABLE_AFFLICTION)
+						.beginCast(player, UNSTABLE_AFFLICTION, 1.5)
 						.beginGcd(player),
 				at(1.5)
 						.endCast(player, UNSTABLE_AFFLICTION)
@@ -83,7 +83,7 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, UNSTABLE_AFFLICTION)
+						.beginCast(player, UNSTABLE_AFFLICTION, 1.5)
 						.beginGcd(player),
 				at(1)
 						.castInterrupted(player, UNSTABLE_AFFLICTION)

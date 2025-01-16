@@ -25,7 +25,7 @@ class BaneTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 2.5)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -46,7 +46,7 @@ class BaneTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, IMMOLATE)
+						.beginCast(player, IMMOLATE, 1.5)
 						.beginGcd(player),
 				at(1.5)
 						.endCast(player, IMMOLATE)

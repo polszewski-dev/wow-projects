@@ -31,7 +31,7 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),

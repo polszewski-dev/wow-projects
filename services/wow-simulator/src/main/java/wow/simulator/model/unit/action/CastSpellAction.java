@@ -174,4 +174,8 @@ public class CastSpellAction extends UnitAction {
 	public AbilityId getAbilityId() {
 		return ability.getAbilityId();
 	}
+
+	public Duration getCastTime() {
+		return castContext.getCastTime();
+	}
 }

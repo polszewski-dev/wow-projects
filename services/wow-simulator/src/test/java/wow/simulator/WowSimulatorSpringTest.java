@@ -180,7 +180,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		public record BeginGcd(Time time, Unit caster) implements Event {}
 		public record EndGcd(Time time, Unit caster) implements Event {}
-		public record BeginCast(Time time, Unit caster, AbilityId spell) implements Event {}
+		public record BeginCast(Time time, Unit caster, AbilityId spell, Duration castTime) implements Event {}
 		public record EndCast(Time time, Unit caster, AbilityId spell) implements Event {}
 		public record BeginChannel(Time time, Unit caster, AbilityId spell) implements Event {}
 		public record EndChannel(Time time, Unit caster, AbilityId spell) implements Event {}
@@ -227,7 +227,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		@Override
 		public void beginCast(CastSpellAction action) {
-			addEvent(new BeginCast(now(), action.getOwner(), action.getAbilityId()));
+			addEvent(new BeginCast(now(), action.getOwner(), action.getAbilityId(), action.getCastTime()));
 		}
 
 		@Override
@@ -418,7 +418,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 
 		public EventListBuilder beginCast(Unit caster, AbilityId abilityId) {
-			return addEvent(new BeginCast(time, caster, abilityId));
+			return beginCast(caster, abilityId, 0);
+		}
+
+		public EventListBuilder beginCast(Unit caster, AbilityId abilityId, double castTime) {
+			return addEvent(new BeginCast(time, caster, abilityId, Duration.seconds(castTime)));
 		}
 
 		public EventListBuilder endCast(Unit caster, AbilityId abilityId) {

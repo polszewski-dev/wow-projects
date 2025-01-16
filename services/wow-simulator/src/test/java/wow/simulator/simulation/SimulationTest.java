@@ -80,7 +80,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -100,7 +100,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -108,7 +108,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
-						.beginCast(player, SHADOW_BOLT)
+						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(4.5)
 						.endGcd(player),
