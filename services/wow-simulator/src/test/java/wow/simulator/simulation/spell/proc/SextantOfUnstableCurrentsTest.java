@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +25,7 @@ class SextantOfUnstableCurrentsTest extends WarlockSpellSimulationTest {
 
 		player.cast(SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(60));
+		updateUntil(60);
 
 		assertEvents(
 				at(0)
@@ -54,7 +53,7 @@ class SextantOfUnstableCurrentsTest extends WarlockSpellSimulationTest {
 		rng.critRoll = true;
 		rng.eventRoll = true;
 		player.cast(SHADOW_BOLT);
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		var spAfter = player.getStats().getSpellPower();
 

@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.CURSE_OF_AGONY;
@@ -17,7 +16,7 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 	void success() {
 		player.cast(CURSE_OF_AGONY);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -62,7 +61,7 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 
 		player.cast(CURSE_OF_AGONY);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -80,15 +79,15 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 	void interrupted() {
 		player.cast(CURSE_OF_AGONY);
 
-		simulation.updateUntil(Time.at(1));
+		updateUntil(1);
 
 		player.interruptCurrentAction();
 
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		player.interruptCurrentAction();
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)

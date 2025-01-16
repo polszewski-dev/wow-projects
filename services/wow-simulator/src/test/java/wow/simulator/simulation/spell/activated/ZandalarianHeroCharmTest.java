@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -24,7 +23,7 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 	void effectIsApplied() {
 		player.cast(ZANDALARIAN_HERO_CHARM);
 
-		simulation.updateUntil(Time.at(150));
+		updateUntil(150);
 
 		assertEvents(
 				at(0)
@@ -51,7 +50,7 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 			player.cast(SHADOW_BOLT);
 		}
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				Event::isEffect,
@@ -84,7 +83,7 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 			player.cast(SHADOW_BOLT);
 		}
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				Event::isDamage,

@@ -719,4 +719,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		player.setTarget(target);
 	}
+
+	protected void updateUntil(double time) {
+		simulation.updateUntil(Time.at(time));
+	}
 }

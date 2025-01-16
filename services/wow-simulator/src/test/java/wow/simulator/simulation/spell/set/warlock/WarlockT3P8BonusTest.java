@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.set.warlock;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +30,7 @@ class WarlockT3P8BonusTest extends WarlockSpellSimulationTest {
 
 		player.cast(LIFE_TAP);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertThat(player.getCurrentMana()).isEqualTo(959);// (582 + 0.8*272) * 1.2
 

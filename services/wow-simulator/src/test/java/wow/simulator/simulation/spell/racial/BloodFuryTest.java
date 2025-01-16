@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.racial;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +15,7 @@ class BloodFuryTest extends WarlockSpellSimulationTest {
 	void success() {
 		player.cast(BLOOD_FURY);
 
-		simulation.updateUntil(Time.at(180));
+		updateUntil(180);
 
 		assertEvents(
 				at(0)
@@ -36,7 +35,7 @@ class BloodFuryTest extends WarlockSpellSimulationTest {
 		var dmgBefore = player.getStats().getSpellPower();
 
 		player.cast(BLOOD_FURY);
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellPower();
 

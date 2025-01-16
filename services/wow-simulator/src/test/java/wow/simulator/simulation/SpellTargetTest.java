@@ -5,7 +5,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.WowSimulatorSpringTest;
-import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
@@ -96,7 +95,7 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 
 		cast(abilityId, specifiedTarget);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		if (expectedTarget != ExpectedTarget.INVALID) {
 			assertThat(expectedTarget).isNotEqualTo(ExpectedTarget.INVALID);

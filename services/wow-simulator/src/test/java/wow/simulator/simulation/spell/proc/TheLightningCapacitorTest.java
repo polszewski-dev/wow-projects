@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -29,7 +28,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 
 		player.cast(AbilityId.SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -57,7 +56,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 		player.cast(AbilityId.SHADOW_BOLT);
 		player.cast(AbilityId.SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				event -> event.isDamage() || event.isEffect(),

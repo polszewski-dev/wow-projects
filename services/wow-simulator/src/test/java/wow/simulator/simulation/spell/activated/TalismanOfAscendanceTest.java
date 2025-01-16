@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -24,7 +23,7 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 
 		player.cast(TALISMAN_OF_ASCENDANCE);
 
-		simulation.updateUntil(Time.at(150));
+		updateUntil(150);
 
 		assertEvents(
 				at(0)
@@ -51,7 +50,7 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 			player.cast(SHADOW_BOLT);
 		}
 
-		simulation.updateUntil(Time.at(60));
+		updateUntil(60);
 
 		assertEvents(
 				EventCollectingHandler.Event::isEffect,

@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.CORRUPTION;
@@ -18,7 +17,7 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 	void success() {
 		player.cast(CORRUPTION);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -52,7 +51,7 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 
 		player.cast(CORRUPTION);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -73,11 +72,11 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 
 		player.cast(CORRUPTION);
 
-		simulation.updateUntil(Time.at(1));
+		updateUntil(1);
 
 		player.interruptCurrentAction();
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)

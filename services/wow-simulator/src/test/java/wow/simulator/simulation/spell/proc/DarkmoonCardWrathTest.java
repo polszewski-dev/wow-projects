@@ -27,7 +27,7 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 
 		player.cast(SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -53,7 +53,7 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 			player.cast(SHADOW_BOLT);
 		}
 
-		simulation.updateUntil(Time.at(60));
+		updateUntil(60);
 
 		assertEvents(
 				EventCollectingHandler.Event::isEffect,

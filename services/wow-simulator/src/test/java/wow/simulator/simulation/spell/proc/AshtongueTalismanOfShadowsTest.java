@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +26,7 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 
 		player.cast(CORRUPTION);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -74,7 +73,7 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 		rng.eventRoll = true;
 		enableTalent(IMPROVED_CORRUPTION, 5);
 		player.cast(CORRUPTION);
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellDamage();
 

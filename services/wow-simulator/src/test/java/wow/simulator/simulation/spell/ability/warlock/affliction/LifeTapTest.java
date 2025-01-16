@@ -20,7 +20,7 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 
 		player.cast(LIFE_TAP);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertThat(player.getCurrentMana()).isEqualTo(582);
 
@@ -44,7 +44,7 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 
 		player.cast(LIFE_TAP);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertThat(player.getCurrentMana()).isEqualTo(582);
 
@@ -72,7 +72,7 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 
 		player.interruptCurrentAction();
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertThat(player.getCurrentMana()).isEqualTo(582);
 

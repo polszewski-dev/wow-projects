@@ -38,7 +38,7 @@ class FelArmorTest extends WarlockSpellSimulationTest {
 		var dmgBefore = player.getStats().getSpellDamage();
 
 		player.cast(FEL_ARMOR);
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		var dmgAfter = player.getStats().getSpellDamage();
 

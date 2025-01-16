@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.talent.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +21,7 @@ class ImprovedLifeTapTest extends WarlockSpellSimulationTest {
 
 		player.cast(LIFE_TAP);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertThat(player.getCurrentMana()).isEqualTo(698);
 
@@ -47,7 +46,7 @@ class ImprovedLifeTapTest extends WarlockSpellSimulationTest {
 
 		player.cast(LIFE_TAP);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertThat(player.getCurrentMana()).isEqualTo(947);// (582 + 0.8 * 259) * 1.2
 

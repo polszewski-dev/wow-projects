@@ -29,7 +29,7 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 		player.cast(SHADOW_WORD_PAIN);
 		player.cast(SHADOW_WORD_PAIN);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				Event::isTalentEffect,
@@ -69,7 +69,7 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 		player.idleUntil(Time.at(50));
 		player.cast(MIND_BLAST);
 
-		simulation.updateUntil(Time.at(90));
+		updateUntil(90);
 
 		assertEvents(
 				event -> event.isDamage() || event.isTalentEffect(),

@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.GroupCooldownId;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +21,7 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 
 		player.cast(HEX_SHRUNKEN_HEAD);
 
-		simulation.updateUntil(Time.at(150));
+		updateUntil(150);
 
 		assertEvents(
 				at(0)
@@ -47,7 +46,7 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 
 		player.cast(HEX_SHRUNKEN_HEAD);
 
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellPower();
 
@@ -62,7 +61,7 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 
 		player.cast(HEX_SHRUNKEN_HEAD);
 
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		assertThat(player.canCast(HEX_SHRUNKEN_HEAD)).isFalse();
 		assertThat(player.canCast(SHIFTING_NAARU_SLIVER)).isFalse();
@@ -75,7 +74,7 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 
 		player.cast(HEX_SHRUNKEN_HEAD);
 
-		simulation.updateUntil(Time.at(20));
+		updateUntil(20);
 
 		assertThat(player.canCast(HEX_SHRUNKEN_HEAD)).isFalse();
 		assertThat(player.canCast(SHIFTING_NAARU_SLIVER)).isTrue();

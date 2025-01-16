@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.talent.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.IMMOLATE;
@@ -20,7 +19,7 @@ class ImprovedImmolateTest extends WarlockSpellSimulationTest {
 
 		player.cast(IMMOLATE);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)

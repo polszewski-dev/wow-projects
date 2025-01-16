@@ -17,7 +17,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 	void success() {
 		player.cast(DRAIN_LIFE);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -55,7 +55,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		player.cast(DRAIN_LIFE);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -77,7 +77,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		player.interruptCurrentAction();
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)

@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +24,7 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 
 		player.cast(SHADOW_WORD_PAIN);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -71,7 +70,7 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 
 		rng.eventRoll = true;
 		player.cast(SHADOW_WORD_PAIN);
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellDamage();
 

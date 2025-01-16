@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.GroupCooldownId;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +18,7 @@ class DestructionPotionTest extends WarlockSpellSimulationTest {
 
 		player.cast(DESTRUCTION_POTION);
 
-		simulation.updateUntil(Time.at(150));
+		updateUntil(150);
 
 		assertEvents(
 				at(0)
@@ -45,7 +44,7 @@ class DestructionPotionTest extends WarlockSpellSimulationTest {
 
 		player.cast(DESTRUCTION_POTION);
 
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellDamage();
 		var critPctAfter = player.getStats().getSpellCritPct();

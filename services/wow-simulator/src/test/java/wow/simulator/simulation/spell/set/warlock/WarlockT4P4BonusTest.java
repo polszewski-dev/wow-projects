@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.set.warlock;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.CORRUPTION;
@@ -25,7 +24,7 @@ class WarlockT4P4BonusTest extends WarlockSpellSimulationTest {
 
 		player.cast(CORRUPTION);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)

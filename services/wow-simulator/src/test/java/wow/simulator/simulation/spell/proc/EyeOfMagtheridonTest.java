@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +23,7 @@ class EyeOfMagtheridonTest extends WarlockSpellSimulationTest {
 
 		player.cast(SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(60));
+		updateUntil(60);
 
 		assertEvents(
 				at(0)
@@ -49,7 +48,7 @@ class EyeOfMagtheridonTest extends WarlockSpellSimulationTest {
 		rng.hitRoll = false;
 		rng.eventRoll = true;
 		player.cast(SHADOW_BOLT);
-		simulation.updateUntil(Time.at(10));
+		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellDamage();
 

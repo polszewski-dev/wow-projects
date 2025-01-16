@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.SHADOWBURN;
@@ -20,7 +19,7 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 
 		player.cast(SHADOWBURN);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -45,7 +44,7 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 
 		player.cast(SHADOWBURN);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -68,11 +67,11 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 
 		player.cast(SHADOWBURN);
 
-		simulation.updateUntil(Time.at(1));
+		updateUntil(1);
 
 		player.interruptCurrentAction();
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)

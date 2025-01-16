@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -22,7 +21,7 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 
 		player.cast(SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				at(0)
@@ -53,7 +52,7 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);
 
-		simulation.updateUntil(Time.at(30));
+		updateUntil(30);
 
 		assertEvents(
 				Event::isCooldown,
