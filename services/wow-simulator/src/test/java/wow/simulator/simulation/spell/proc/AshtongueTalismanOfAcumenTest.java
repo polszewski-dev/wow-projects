@@ -32,33 +32,33 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 						.beginCast(player, SHADOW_WORD_PAIN)
 						.endCast(player, SHADOW_WORD_PAIN)
 						.decreasedResource(575, MANA, player, SHADOW_WORD_PAIN)
-						.effectApplied(SHADOW_WORD_PAIN, target)
+						.effectApplied(SHADOW_WORD_PAIN, target, 18)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
 				at(3)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.effectApplied("Ashtongue Talisman of Acumen", player),
+						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(6)
 						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
-						.effectApplied("Ashtongue Talisman of Acumen", player),
+						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(9)
 						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
-						.effectApplied("Ashtongue Talisman of Acumen", player),
+						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(12)
 						.decreasedResource(247, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
-						.effectApplied("Ashtongue Talisman of Acumen", player),
+						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(15)
 						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
-						.effectApplied("Ashtongue Talisman of Acumen", player),
+						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(18)
 						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
-						.effectApplied("Ashtongue Talisman of Acumen", player)
+						.effectApplied("Ashtongue Talisman of Acumen", player, 10)
 						.effectExpired(SHADOW_WORD_PAIN, target),
 				at(28)
 						.effectExpired("Ashtongue Talisman of Acumen", player)

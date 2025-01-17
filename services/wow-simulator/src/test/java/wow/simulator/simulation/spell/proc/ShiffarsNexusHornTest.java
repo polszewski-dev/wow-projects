@@ -39,7 +39,7 @@ class ShiffarsNexusHornTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 45)
-						.effectApplied("Shiffar's Nexus-Horn", player),
+						.effectApplied("Shiffar's Nexus-Horn", player, 10),
 				at(13)
 						.effectExpired("Shiffar's Nexus-Horn", player),
 				at(48)

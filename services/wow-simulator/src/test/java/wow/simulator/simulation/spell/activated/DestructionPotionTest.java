@@ -27,7 +27,7 @@ class DestructionPotionTest extends WarlockSpellSimulationTest {
 						.endCast(player, DESTRUCTION_POTION)
 						.cooldownStarted(player, DESTRUCTION_POTION, 120)
 						.cooldownStarted(player, GroupCooldownId.POTION, 120)
-						.effectApplied(DESTRUCTION_POTION, player),
+						.effectApplied(DESTRUCTION_POTION, player, 15),
 				at(15)
 						.effectExpired(DESTRUCTION_POTION, player),
 				at(120)

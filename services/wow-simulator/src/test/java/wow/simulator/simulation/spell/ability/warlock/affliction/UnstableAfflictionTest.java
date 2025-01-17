@@ -29,7 +29,7 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 				at(1.5)
 						.endCast(player, UNSTABLE_AFFLICTION)
 						.decreasedResource(400, MANA, player, UNSTABLE_AFFLICTION)
-						.effectApplied(UNSTABLE_AFFLICTION, target)
+						.effectApplied(UNSTABLE_AFFLICTION, target, 18)
 						.endGcd(player),
 				at(4.5)
 						.decreasedResource(175, HEALTH, target, UNSTABLE_AFFLICTION),

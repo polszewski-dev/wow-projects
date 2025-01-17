@@ -32,7 +32,7 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 						.endCast(player, ZANDALARIAN_HERO_CHARM)
 						.cooldownStarted(player, ZANDALARIAN_HERO_CHARM, 120)
 						.cooldownStarted(player, TRINKET, 20)
-						.effectApplied(ZANDALARIAN_HERO_CHARM, player),
+						.effectApplied(ZANDALARIAN_HERO_CHARM, player, 20),
 				at(20)
 						.cooldownExpired(player, TRINKET)
 						.effectExpired(ZANDALARIAN_HERO_CHARM, player),
@@ -56,7 +56,7 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				Event::isEffect,
 				at(0)
-						.effectApplied(ZANDALARIAN_HERO_CHARM, player),
+						.effectApplied(ZANDALARIAN_HERO_CHARM, player, 20),
 				at(3)
 						.effectStacksDecreased(ZANDALARIAN_HERO_CHARM, player, 11),
 				at(6)

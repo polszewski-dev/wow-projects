@@ -34,7 +34,7 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 		assertEvents(
 				Event::isTalentEffect,
 				at(0)
-						.effectApplied(SHADOW_WEAVING, target),
+						.effectApplied(SHADOW_WEAVING, target, 15),
 				at(1.5)
 						.effectStacked(SHADOW_WEAVING, target, 2),
 				at(3)
@@ -75,7 +75,7 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 				event -> event.isDamage() || event.isTalentEffect(),
 				at(1.5)
 						.decreasedResource(731, HEALTH, target, MIND_BLAST)
-						.effectApplied(SHADOW_WEAVING, target),
+						.effectApplied(SHADOW_WEAVING, target, 15),
 				at(11.5)
 						.decreasedResource(753, HEALTH, target, MIND_BLAST)
 						.effectStacked(SHADOW_WEAVING, target, 2),

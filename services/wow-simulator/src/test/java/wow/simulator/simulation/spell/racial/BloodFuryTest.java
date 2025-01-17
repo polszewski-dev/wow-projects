@@ -23,7 +23,7 @@ class BloodFuryTest extends WarlockSpellSimulationTest {
 						.beginCast(player, BLOOD_FURY)
 						.endCast(player, BLOOD_FURY)
 						.cooldownStarted(player, BLOOD_FURY, 120)
-						.effectApplied(BLOOD_FURY, player),
+						.effectApplied(BLOOD_FURY, player, 15),
 				at(15)
 						.effectExpired(BLOOD_FURY, player),
 				at(120)

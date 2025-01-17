@@ -32,7 +32,7 @@ class ImprovedImmolateTest extends WarlockSpellSimulationTest {
 						.endCast(player, IMMOLATE)
 						.decreasedResource(445, MANA, player, IMMOLATE)
 						.decreasedResource(415, HEALTH, target, IMMOLATE)
-						.effectApplied(IMMOLATE, target),
+						.effectApplied(IMMOLATE, target, 15),
 				at(5)
 						.decreasedResource(123, HEALTH, target, IMMOLATE),
 				at(8)

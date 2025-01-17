@@ -39,7 +39,7 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, false, target, SHADOW_BOLT)
-						.effectApplied("Darkmoon Card: Wrath", player),
+						.effectApplied("Darkmoon Card: Wrath", player, 10),
 				at(13)
 						.effectExpired("Darkmoon Card: Wrath", player)
 		);
@@ -58,7 +58,7 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				EventCollectingHandler.Event::isEffect,
 				at(3)
-						.effectApplied("Darkmoon Card: Wrath", player),
+						.effectApplied("Darkmoon Card: Wrath", player, 10),
 				at(6)
 						.effectStacked("Darkmoon Card: Wrath", player, 2),
 				at(9)

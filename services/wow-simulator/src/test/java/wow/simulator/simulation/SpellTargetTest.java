@@ -56,7 +56,7 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 			"FRIEND_1, FRIEND_2, INVALID",
 	})
 	void selfBuff(DefaultTarget defaultTarget, SpecifiedTarget specifiedTarget, ExpectedTarget expectedTarget) {
-		assertAppliedEffectOnTarget(INNER_FIRE, defaultTarget, specifiedTarget, expectedTarget);
+		assertAppliedEffectOnTarget(INNER_FIRE, defaultTarget, specifiedTarget, expectedTarget, 10 * 60);
 	}
 
 	@ParameterizedTest
@@ -72,7 +72,7 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 			"FRIEND_1, FRIEND_2, FRIEND_2",
 	})
 	void buffOnTarget(DefaultTarget defaultTarget, SpecifiedTarget specifiedTarget, ExpectedTarget expectedTarget) {
-		assertAppliedEffectOnTarget(POWER_WORD_FORTITUDE, defaultTarget, specifiedTarget, expectedTarget);
+		assertAppliedEffectOnTarget(POWER_WORD_FORTITUDE, defaultTarget, specifiedTarget, expectedTarget, 30 * 60);
 	}
 
 	@ParameterizedTest
@@ -88,10 +88,10 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 			"FRIEND_1, FRIEND_2, INVALID",
 	})
 	void debuffOnTarget(DefaultTarget defaultTarget, SpecifiedTarget specifiedTarget, ExpectedTarget expectedTarget) {
-		assertAppliedEffectOnTarget(SHADOW_WORD_PAIN, defaultTarget, specifiedTarget, expectedTarget);
+		assertAppliedEffectOnTarget(SHADOW_WORD_PAIN, defaultTarget, specifiedTarget, expectedTarget, 18);
 	}
 
-	private void assertAppliedEffectOnTarget(AbilityId abilityId, DefaultTarget defaultTarget, SpecifiedTarget specifiedTarget, ExpectedTarget expectedTarget) {
+	private void assertAppliedEffectOnTarget(AbilityId abilityId, DefaultTarget defaultTarget, SpecifiedTarget specifiedTarget, ExpectedTarget expectedTarget, double duration) {
 		setDefaultTarget(defaultTarget);
 
 		cast(abilityId, specifiedTarget);
@@ -103,7 +103,7 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					Event::isEffectApplied,
-					at(0).effectApplied(abilityId, getExpectedTarget(expectedTarget))
+					at(0).effectApplied(abilityId, getExpectedTarget(expectedTarget), duration)
 			);
 		} else {
 			assertThat(expectedTarget).isEqualTo(ExpectedTarget.INVALID);

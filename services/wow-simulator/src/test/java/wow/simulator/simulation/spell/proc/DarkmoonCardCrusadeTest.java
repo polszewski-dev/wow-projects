@@ -40,7 +40,7 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, false, target, SHADOW_BOLT)
-						.effectApplied("Darkmoon Card: Crusade", player),
+						.effectApplied("Darkmoon Card: Crusade", player, 10),
 				at(13)
 						.effectExpired("Darkmoon Card: Crusade", player)
 		);
@@ -59,7 +59,7 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				Event::isEffect,
 				at(3)
-						.effectApplied("Darkmoon Card: Crusade", player),
+						.effectApplied("Darkmoon Card: Crusade", player, 10),
 				at(6)
 						.effectStacked("Darkmoon Card: Crusade", player, 2),
 				at(9)

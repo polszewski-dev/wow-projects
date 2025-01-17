@@ -32,7 +32,7 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 						.endCast(player, TALISMAN_OF_ASCENDANCE)
 						.cooldownStarted(player, TALISMAN_OF_ASCENDANCE, 60)
 						.cooldownStarted(player, TRINKET, 20)
-						.effectApplied(TALISMAN_OF_ASCENDANCE, player),
+						.effectApplied(TALISMAN_OF_ASCENDANCE, player, 20),
 				at(20)
 						.cooldownExpired(player, TRINKET)
 						.effectExpired(TALISMAN_OF_ASCENDANCE, player),
@@ -56,7 +56,7 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				EventCollectingHandler.Event::isEffect,
 				at(0)
-						.effectApplied(TALISMAN_OF_ASCENDANCE, player),
+						.effectApplied(TALISMAN_OF_ASCENDANCE, player, 20),
 				at(3)
 						.effectChargesDecreased(TALISMAN_OF_ASCENDANCE, player, 5)
 						.effectStacksIncreased(TALISMAN_OF_ASCENDANCE, player, 1),

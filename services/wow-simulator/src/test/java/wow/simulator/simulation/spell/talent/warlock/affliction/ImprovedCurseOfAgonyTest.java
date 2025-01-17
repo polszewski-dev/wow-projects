@@ -27,7 +27,7 @@ class ImprovedCurseOfAgonyTest extends WarlockSpellSimulationTest {
 						.beginCast(player, CURSE_OF_AGONY)
 						.endCast(player, CURSE_OF_AGONY)
 						.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
-						.effectApplied(CURSE_OF_AGONY, target)
+						.effectApplied(CURSE_OF_AGONY, target, 24)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),

@@ -39,7 +39,7 @@ class SextantOfUnstableCurrentsTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 45)
-						.effectApplied("Sextant of Unstable Currents", player),
+						.effectApplied("Sextant of Unstable Currents", player, 15),
 				at(18)
 						.effectExpired("Sextant of Unstable Currents", player),
 				at(48)

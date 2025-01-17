@@ -27,7 +27,7 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 						.beginCast(player, SIPHON_LIFE)
 						.endCast(player, SIPHON_LIFE)
 						.decreasedResource(410, MANA, player, SIPHON_LIFE)
-						.effectApplied(SIPHON_LIFE, target)
+						.effectApplied(SIPHON_LIFE, target, 30)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -104,7 +104,7 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 						.beginCast(player, SIPHON_LIFE)
 						.endCast(player, SIPHON_LIFE)
 						.decreasedResource(410, MANA, player, SIPHON_LIFE)
-						.effectApplied(SIPHON_LIFE, target)
+						.effectApplied(SIPHON_LIFE, target, 30)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),

@@ -190,9 +190,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record SpellResisted(Time time, Unit caster, AbilityId spell, Unit target) implements Event {}
 		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements Event {}
 		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements Event {}
-		public record EffectApplied(Time time, AbilityId spell, Unit target) implements Event {}
-		public record TalentEffectApplied(Time time, TalentId talentId, Unit target) implements Event {}
-		public record ItemEffectApplied(Time time, String itemName, Unit target) implements Event {}
+		public record EffectApplied(Time time, AbilityId spell, Unit target, Duration duration) implements Event {}
+		public record TalentEffectApplied(Time time, TalentId talentId, Unit target, Duration duration) implements Event {}
+		public record ItemEffectApplied(Time time, String itemName, Unit target, Duration duration) implements Event {}
 		public record EffectStacked(Time time, AbilityId spell, Unit target, int numStacks) implements Event {}
 		public record TalentEffectStacked(Time time, TalentId talentId, Unit target, int numStacks) implements Event {}
 		public record ItemEffectStacked(Time time, String itemName, Unit target, int numStacks) implements Event {}
@@ -288,11 +288,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public void effectApplied(EffectInstance effect) {
 			switch (effect.getSource()) {
 				case AbilitySource s ->
-						addEvent(new EffectApplied(now(), s.getAbilityId(), effect.getTarget()));
+						addEvent(new EffectApplied(now(), s.getAbilityId(), effect.getTarget(), effect.getDuration()));
 				case TalentSource s ->
-						addEvent(new TalentEffectApplied(now(), s.getTalentId(), effect.getTarget()));
+						addEvent(new TalentEffectApplied(now(), s.getTalentId(), effect.getTarget(), effect.getDuration()));
 				case ItemSource s ->
-						addEvent(new ItemEffectApplied(now(), s.getName(), effect.getTarget()));
+						addEvent(new ItemEffectApplied(now(), s.getName(), effect.getTarget(), effect.getDuration()));
 				default -> throw new IllegalArgumentException();
 			}
 		}
@@ -485,16 +485,20 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new DecreasedResource(time, amount, type, crit, target, itemName));
 		}
 
-		public EventListBuilder effectApplied(AbilityId abilityId, Unit target) {
-			return addEvent(new EffectApplied(time, abilityId, target));
+		public EventListBuilder effectApplied(AbilityId abilityId, Unit target, double duration) {
+			return addEvent(new EffectApplied(time, abilityId, target, Duration.seconds(duration)));
 		}
 
-		public EventListBuilder effectApplied(TalentId talentId, Unit target) {
-			return addEvent(new TalentEffectApplied(time, talentId, target));
+		public EventListBuilder effectApplied(TalentId talentId, Unit target, double duration) {
+			return addEvent(new TalentEffectApplied(time, talentId, target, Duration.seconds(duration)));
 		}
 
-		public EventListBuilder effectApplied(String itemName, Unit target) {
-			return addEvent(new ItemEffectApplied(time, itemName, target));
+		public EventListBuilder effectApplied(String itemName, Unit target, double duration) {
+			return addEvent(new ItemEffectApplied(time, itemName, target, Duration.seconds(duration)));
+		}
+
+		public EventListBuilder effectApplied(String itemName, Unit target, Duration duration) {
+			return addEvent(new ItemEffectApplied(time, itemName, target, duration));
 		}
 
 		public EventListBuilder effectStacked(AbilityId abilityId, Unit target, int numStacks) {

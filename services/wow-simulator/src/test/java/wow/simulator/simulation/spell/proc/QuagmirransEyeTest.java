@@ -38,7 +38,7 @@ class QuagmirransEyeTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(607, HEALTH, false, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 45)
-						.effectApplied("Quagmirran's Eye", player),
+						.effectApplied("Quagmirran's Eye", player, 6),
 				at(9)
 						.effectExpired("Quagmirran's Eye", player),
 				at(48)

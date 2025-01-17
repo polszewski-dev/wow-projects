@@ -36,7 +36,7 @@ class EyeOfMagtheridonTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.spellResisted(player, SHADOW_BOLT, target)
-						.effectApplied("Eye of Magtheridon", player),
+						.effectApplied("Eye of Magtheridon", player, 10),
 				at(13)
 						.effectExpired("Eye of Magtheridon", player)
 		);

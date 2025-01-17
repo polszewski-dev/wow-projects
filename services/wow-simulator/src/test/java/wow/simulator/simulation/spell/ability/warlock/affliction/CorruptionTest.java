@@ -29,7 +29,7 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 				at(2)
 						.endCast(player, CORRUPTION)
 						.decreasedResource(370, MANA, player, CORRUPTION)
-						.effectApplied(CORRUPTION, target),
+						.effectApplied(CORRUPTION, target, 18),
 				at(5)
 						.decreasedResource(150, HEALTH, target, CORRUPTION),
 				at(8)

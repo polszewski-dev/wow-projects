@@ -1,6 +1,7 @@
 package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
+import wow.commons.model.Duration;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
@@ -41,7 +42,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 2.5)
-						.effectApplied("The Lightning Capacitor", player),
+						.effectApplied("The Lightning Capacitor", player, Duration.INFINITE),
 				at(5.5)
 						.cooldownExpired(player, cooldownId)
 		);
@@ -62,7 +63,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 				event -> event.isDamage() || event.isEffect(),
 				at(3)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied("The Lightning Capacitor", player),
+						.effectApplied("The Lightning Capacitor", player, Duration.INFINITE),
 				at(6)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.effectStacked("The Lightning Capacitor", player, 2),

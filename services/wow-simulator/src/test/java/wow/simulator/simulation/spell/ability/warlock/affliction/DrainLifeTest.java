@@ -25,7 +25,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
 						.beginChannel(player, DRAIN_LIFE)
-						.effectApplied(DRAIN_LIFE, target)
+						.effectApplied(DRAIN_LIFE, target, 5)
 						.beginGcd(player),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
@@ -85,7 +85,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
 						.beginChannel(player, DRAIN_LIFE)
-						.effectApplied(DRAIN_LIFE, target)
+						.effectApplied(DRAIN_LIFE, target, 5)
 						.beginGcd(player),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)

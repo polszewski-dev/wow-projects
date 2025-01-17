@@ -34,33 +34,33 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 						.beginCast(player, CORRUPTION)
 						.endCast(player, CORRUPTION)
 						.decreasedResource(370, MANA, player, CORRUPTION)
-						.effectApplied(CORRUPTION, target)
+						.effectApplied(CORRUPTION, target, 18)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
 				at(3)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectApplied("Ashtongue Talisman of Shadows", player),
+						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(6)
 						.decreasedResource(184, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player),
+						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(9)
 						.decreasedResource(184, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player),
+						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(12)
 						.decreasedResource(184, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player),
+						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(15)
 						.decreasedResource(185, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player),
+						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(18)
 						.decreasedResource(184, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player)
+						.effectApplied("Ashtongue Talisman of Shadows", player, 5)
 						.effectExpired(CORRUPTION, target),
 				at(23)
 						.effectExpired("Ashtongue Talisman of Shadows", player)
