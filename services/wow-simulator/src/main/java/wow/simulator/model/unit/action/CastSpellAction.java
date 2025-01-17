@@ -95,7 +95,6 @@ public class CastSpellAction extends UnitAction {
 
 	private void onEndCast() {
 		getGameLog().endCast(this);
-		EventContext.fireSpellCastEvent(owner, primaryTarget.getSingleTarget(), ability);
 	}
 
 	private void onBeginChannel() {
@@ -108,6 +107,7 @@ public class CastSpellAction extends UnitAction {
 
 	private void paySpellCost() {
 		castContext.paySpellCost();
+		EventContext.fireSpellCastEvent(owner, primaryTarget.getSingleTarget(), ability);
 	}
 
 	private void resolveSpell() {

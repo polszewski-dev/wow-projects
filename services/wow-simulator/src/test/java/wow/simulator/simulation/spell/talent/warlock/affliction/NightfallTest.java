@@ -148,8 +148,8 @@ class NightfallTest extends WarlockSpellSimulationTest {
 				at(4)
 						.beginCast(player, SHADOW_BOLT, 0)
 						.endCast(player, SHADOW_BOLT)
-						.effectRemoved(NIGHTFALL, player)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
+						.effectRemoved(NIGHTFALL, player)
 						.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
 						.beginGcd(player),
 				at(5.5)

@@ -648,8 +648,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertDamageDone(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 	
-	protected void assertDamageDone(AbilityId abilityId, int expectedBaseAmount, int pctIncrease) {
-		assertDamageDone(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	protected void assertDamageDone(AbilityId abilityId, double expectedBaseAmount, int pctIncrease) {
+		assertDamageDone(abilityId, target, (int) increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
 	protected void assertHealthGained(AbilityId abilityId, Unit target, int expectedAmount) {
@@ -714,6 +714,31 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void assertCastTime(AbilityId abilityId, double expectedBaseCastTime, int pctIncrease) {
 		assertCastTime(abilityId, increaseByPct(expectedBaseCastTime, pctIncrease));
+	}
+
+	protected void assertCooldown(AbilityId abilityId, double duration) {
+		var actualCooldown = handler.events.stream()
+				.filter(x -> x instanceof CooldownStarted)
+				.map(x -> (CooldownStarted)x)
+				.filter(x -> x.cooldownId.equals(CooldownId.of(abilityId)))
+				.findFirst()
+				.orElseThrow()
+				.duration;
+
+		assertThat(actualCooldown).isEqualTo(Duration.seconds(duration));
+	}
+
+	protected void assertEffectDuration(AbilityId abilityId, Unit target, double duration) {
+		var actualEffectDuration = handler.events.stream()
+				.filter(x -> x instanceof EffectApplied)
+				.map(x -> (EffectApplied)x)
+				.filter(x -> x.spell == abilityId)
+				.filter(x -> x.target == target)
+				.findFirst()
+				.orElseThrow()
+				.duration;
+
+		assertThat(actualEffectDuration).isEqualTo(Duration.seconds(duration));
 	}
 
 	protected Action newAction(int delay, Runnable runnable) {
@@ -788,7 +813,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return (int) (originalValue * (100 + pct) / 100.0);
 	}
 
-	private double increaseByPct(double originalValue, int pct) {
+	protected double increaseByPct(double originalValue, int pct) {
 		return originalValue * (100 + pct) / 100.0;
 	}
 

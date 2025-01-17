@@ -16,6 +16,11 @@ import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
  * Date: 2024-11-16
  */
 class ShadowWeavingTest extends PriestSpellSimulationTest {
+	/*
+	Your Shadow damage spells have a 100% chance to cause your target to be vulnerable to Shadow damage.
+	This vulnerability increases the Shadow damage dealt to your target by 2% and lasts 15 sec. Stacks up to 5 times.
+	 */
+
 	@Test
 	void effectIsStackedTo5() {
 		enableTalent(SHADOW_WEAVING, 5);
