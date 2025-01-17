@@ -34,7 +34,7 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(602, HEALTH, false, target, SHADOW_BOLT)
-						.cooldownStarted(player, cooldownId)
+						.cooldownStarted(player, cooldownId, 17)
 						.increasedResource(150, MANA, player, "Mark of Defiance - proc #1 - triggered"),
 				at(20)
 						.cooldownExpired(player, cooldownId)
@@ -58,11 +58,11 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				Event::isCooldown,
 				at(3)
-						.cooldownStarted(player, cooldownId),
+						.cooldownStarted(player, cooldownId, 17),
 				at(20)
 						.cooldownExpired(player, cooldownId),
 				at(21)
-						.cooldownStarted(player, cooldownId)
+						.cooldownStarted(player, cooldownId, 17)
 		);
 	}
 

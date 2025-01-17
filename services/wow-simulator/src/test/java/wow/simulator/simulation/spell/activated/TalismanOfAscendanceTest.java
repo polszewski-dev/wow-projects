@@ -30,8 +30,8 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 				at(0)
 						.beginCast(player, TALISMAN_OF_ASCENDANCE)
 						.endCast(player, TALISMAN_OF_ASCENDANCE)
-						.cooldownStarted(player, TALISMAN_OF_ASCENDANCE)
-						.cooldownStarted(player, TRINKET)
+						.cooldownStarted(player, TALISMAN_OF_ASCENDANCE, 60)
+						.cooldownStarted(player, TRINKET, 20)
 						.effectApplied(TALISMAN_OF_ASCENDANCE, player),
 				at(20)
 						.cooldownExpired(player, TRINKET)

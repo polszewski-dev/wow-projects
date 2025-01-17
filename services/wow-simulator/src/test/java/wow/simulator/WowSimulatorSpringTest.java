@@ -211,7 +211,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record EffectRemoved(Time time, AbilityId spell, Unit target) implements Event {}
 		public record TalentEffectRemoved(Time time, TalentId talentId, Unit target) implements Event {}
 		public record ItemEffectRemoved(Time time, String itemName, Unit target) implements Event {}
-		public record CooldownStarted(Time time, Unit caster, CooldownId cooldownId) implements Event {}
+		public record CooldownStarted(Time time, Unit caster, CooldownId cooldownId, Duration duration) implements Event {}
 		public record CooldownExpired(Time time, Unit caster, CooldownId cooldownId) implements Event {}
 		public record SimulationEnded(Time time) implements Event {}
 
@@ -377,7 +377,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		@Override
 		public void cooldownStarted(CooldownInstance cooldown) {
-			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getCooldownId()));
+			addEvent(new CooldownStarted(now(), cooldown.getOwner(), cooldown.getCooldownId(), cooldown.getDuration()));
 		}
 
 		@Override
@@ -561,12 +561,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new ItemEffectRemoved(time, itemName, target));
 		}
 
-		public EventListBuilder cooldownStarted(Unit caster, AbilityId abilityId) {
-			return cooldownStarted(caster, CooldownId.of(abilityId));
+		public EventListBuilder cooldownStarted(Unit caster, AbilityId abilityId, double duration) {
+			return cooldownStarted(caster, CooldownId.of(abilityId), duration);
 		}
 
-		public EventListBuilder cooldownStarted(Unit caster, CooldownId cooldownId) {
-			return addEvent(new CooldownStarted(time, caster, cooldownId));
+		public EventListBuilder cooldownStarted(Unit caster, CooldownId cooldownId, double duration) {
+			return addEvent(new CooldownStarted(time, caster, cooldownId, Duration.seconds(duration)));
 		}
 
 		public EventListBuilder cooldownExpired(Unit caster, AbilityId abilityId) {

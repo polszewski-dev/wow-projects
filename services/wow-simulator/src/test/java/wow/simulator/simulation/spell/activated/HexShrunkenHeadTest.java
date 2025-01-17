@@ -28,8 +28,8 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 				at(0)
 						.beginCast(player, HEX_SHRUNKEN_HEAD)
 						.endCast(player, HEX_SHRUNKEN_HEAD)
-						.cooldownStarted(player, HEX_SHRUNKEN_HEAD)
-						.cooldownStarted(player, GroupCooldownId.TRINKET)
+						.cooldownStarted(player, HEX_SHRUNKEN_HEAD, 120)
+						.cooldownStarted(player, GroupCooldownId.TRINKET, 20)
 						.effectApplied(HEX_SHRUNKEN_HEAD, player),
 				at(20)
 						.cooldownExpired(player, GroupCooldownId.TRINKET)

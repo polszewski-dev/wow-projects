@@ -30,8 +30,8 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 				at(0)
 						.beginCast(player, ZANDALARIAN_HERO_CHARM)
 						.endCast(player, ZANDALARIAN_HERO_CHARM)
-						.cooldownStarted(player, ZANDALARIAN_HERO_CHARM)
-						.cooldownStarted(player, TRINKET)
+						.cooldownStarted(player, ZANDALARIAN_HERO_CHARM, 120)
+						.cooldownStarted(player, TRINKET, 20)
 						.effectApplied(ZANDALARIAN_HERO_CHARM, player),
 				at(20)
 						.cooldownExpired(player, TRINKET)

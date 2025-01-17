@@ -40,7 +40,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.cooldownStarted(player, cooldownId)
+						.cooldownStarted(player, cooldownId, 2.5)
 						.effectApplied("The Lightning Capacitor", player),
 				at(5.5)
 						.cooldownExpired(player, cooldownId)

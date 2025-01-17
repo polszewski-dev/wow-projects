@@ -27,12 +27,15 @@ public class CooldownInstance implements Updateable, SimulationContextSource {
 	private final CooldownId cooldownId;
 	@Getter
 	private final Unit owner;
+	@Getter
+	private final Duration duration;
 	private final Time endTime;
 	private final CooldownAction cooldownAction;
 
 	public CooldownInstance(CooldownId cooldownId, Unit owner, Duration duration) {
 		this.cooldownId = cooldownId;
 		this.owner = owner;
+		this.duration = duration;
 		this.endTime = now().add(duration);
 		this.cooldownAction = new CooldownAction(owner.getClock());
 	}

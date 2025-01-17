@@ -41,7 +41,7 @@ class TimbalsFocusingCrystalTest extends WarlockSpellSimulationTest {
 						.endGcd(player),
 				at(3)
 						.decreasedResource(156, HEALTH, target, CORRUPTION)
-						.cooldownStarted(player, cooldownId)
+						.cooldownStarted(player, cooldownId, 15)
 						.decreasedResource(380, HEALTH, target, "Timbal's Focusing Crystal - proc #1 - triggered"),
 				at(6)
 						.decreasedResource(157, HEALTH, target, CORRUPTION),
@@ -54,7 +54,7 @@ class TimbalsFocusingCrystalTest extends WarlockSpellSimulationTest {
 				at(18)
 						.cooldownExpired(player, cooldownId)
 						.decreasedResource(157, HEALTH, target, CORRUPTION)
-						.cooldownStarted(player, cooldownId)
+						.cooldownStarted(player, cooldownId, 15)
 						.decreasedResource(380, HEALTH, target, "Timbal's Focusing Crystal - proc #1 - triggered")
 						.effectExpired(CORRUPTION, target)
 		);
