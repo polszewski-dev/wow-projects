@@ -36,7 +36,7 @@ public class CastSpellAction extends UnitAction {
 	protected void setUp() {
 		this.targetResolver = primaryTarget.getTargetResolver(owner);
 
-		if (!owner.canCast(ability, targetResolver)) {
+		if (!owner.canCast(ability, primaryTarget)) {
 			getGameLog().canNotBeCasted(this);
 			finish();
 			return;
@@ -107,7 +107,17 @@ public class CastSpellAction extends UnitAction {
 
 	private void paySpellCost() {
 		castContext.paySpellCost();
+		removeEffectRemovedOnHit();
 		EventContext.fireSpellCastEvent(owner, primaryTarget.getSingleTarget(), ability);
+	}
+
+	private void removeEffectRemovedOnHit() {
+		var effectRemovedOnHit = ability.getEffectRemovedOnHit();
+
+		if (effectRemovedOnHit != null) {
+			primaryTarget.requireSingleTarget()
+					.removeEffect(effectRemovedOnHit, owner);
+		}
 	}
 
 	private void resolveSpell() {

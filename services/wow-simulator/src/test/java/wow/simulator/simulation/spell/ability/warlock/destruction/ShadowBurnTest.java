@@ -13,10 +13,13 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class ShadowBurnTest extends WarlockSpellSimulationTest {
+	/*
+	Instantly blasts the target for 597 to 665 Shadow damage.
+	 If the target dies within 5 sec of Shadowburn, and yields experience or honor, the caster gains a Soul Shard.
+	 */
+
 	@Test
 	void success() {
-		enableTalent(TalentId.SHADOWBURN, 1);
-
 		player.cast(SHADOWBURN);
 
 		updateUntil(30);
@@ -40,8 +43,6 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 	void resisted() {
 		missesOnlyOnFollowingRolls(0);
 
-		enableTalent(TalentId.SHADOWBURN, 1);
-
 		player.cast(SHADOWBURN);
 
 		updateUntil(30);
@@ -63,8 +64,6 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void interrupted() {
-		enableTalent(TalentId.SHADOWBURN, 1);
-
 		player.cast(SHADOWBURN);
 
 		updateUntil(1);
@@ -86,5 +85,19 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 				at(15)
 						.cooldownExpired(player, SHADOWBURN)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(SHADOWBURN);
+
+		updateUntil(30);
+
+		assertDamageDone(SHADOWBURN, (597 + 665) / 2);
+	}
+
+	@Override
+	protected void afterSetUp() {
+		enableTalent(TalentId.SHADOWBURN, 1);
 	}
 }

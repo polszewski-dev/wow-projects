@@ -54,7 +54,7 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	boolean canCast(Ability ability, Unit target);
 
-	boolean canCast(Ability ability, TargetResolver targetResolver);
+	boolean canCast(Ability ability, PrimaryTarget primaryTarget);
 
 	SpellCostSnapshot paySpellCost(Ability ability);
 
@@ -95,6 +95,8 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 	void addEffect(EffectInstance effect);
 
 	void removeEffect(EffectInstance effect);
+
+	void removeEffect(AbilityId abilityId, Unit owner);
 
 	boolean isUnderEffect(AbilityId abilityId, Unit owner);
 

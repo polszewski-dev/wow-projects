@@ -13,10 +13,13 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class UnstableAfflictionTest extends WarlockSpellSimulationTest {
+	/*
+	Shadow energy slowly destroys the target, causing 1050 damage over 18 sec.
+	In addition, if the Unstable Affliction is dispelled it will cause 1575 damage to the dispeller and silence them for 5 sec.
+	 */
+
 	@Test
 	void success() {
-		enableTalent(TalentId.UNSTABLE_AFFLICTION, 1);
-
 		player.cast(UNSTABLE_AFFLICTION);
 
 		updateUntil(30);
@@ -50,8 +53,6 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 	void resisted() {
 		missesOnlyOnFollowingRolls(0);
 
-		enableTalent(TalentId.UNSTABLE_AFFLICTION, 1);
-
 		player.cast(UNSTABLE_AFFLICTION);
 
 		updateUntil(30);
@@ -70,8 +71,6 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void interrupted() {
-		enableTalent(TalentId.UNSTABLE_AFFLICTION, 1);
-
 		player.cast(UNSTABLE_AFFLICTION);
 
 		updateUntil(1);
@@ -88,5 +87,19 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 						.castInterrupted(player, UNSTABLE_AFFLICTION)
 						.endGcd(player)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(UNSTABLE_AFFLICTION);
+
+		updateUntil(30);
+
+		assertDamageDone(UNSTABLE_AFFLICTION, 1050);
+	}
+
+	@Override
+	protected void afterSetUp() {
+		enableTalent(TalentId.UNSTABLE_AFFLICTION, 1);
 	}
 }

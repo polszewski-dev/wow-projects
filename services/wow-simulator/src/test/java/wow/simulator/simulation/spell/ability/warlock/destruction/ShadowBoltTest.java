@@ -12,6 +12,10 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class ShadowBoltTest extends WarlockSpellSimulationTest {
+	/*
+	Sends a shadowy bolt at the enemy, causing 544 to 607 Shadow damage.
+	 */
+
 	@Test
 	void success() {
 		player.cast(SHADOW_BOLT);
@@ -70,5 +74,14 @@ class ShadowBoltTest extends WarlockSpellSimulationTest {
 						.castInterrupted(player, SHADOW_BOLT)
 						.endGcd(player)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(SHADOW_BOLT);
+
+		updateUntil(30);
+
+		assertDamageDone(SHADOW_BOLT, (544 + 607) / 2);
 	}
 }

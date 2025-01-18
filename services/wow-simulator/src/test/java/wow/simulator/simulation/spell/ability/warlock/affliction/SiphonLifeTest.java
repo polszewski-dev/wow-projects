@@ -13,10 +13,12 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class SiphonLifeTest extends WarlockSpellSimulationTest {
+	/*
+	Transfers 63 health from the target to the caster every 3 sec.  Lasts 30 sec.
+	 */
+
 	@Test
 	void success() {
-		enableTalent(TalentId.SIPHON_LIFE, 1);
-
 		player.cast(SIPHON_LIFE);
 
 		updateUntil(30);
@@ -68,8 +70,6 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 	void resisted() {
 		missesOnlyOnFollowingRolls(0);
 
-		enableTalent(TalentId.SIPHON_LIFE, 1);
-
 		player.cast(SIPHON_LIFE);
 
 		updateUntil(30);
@@ -88,8 +88,6 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void interrupted() {
-		enableTalent(TalentId.SIPHON_LIFE, 1);
-
 		player.cast(SIPHON_LIFE);
 
 		updateUntil(1);
@@ -139,5 +137,28 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 						.increasedResource(63, HEALTH, player, SIPHON_LIFE)
 						.effectExpired(SIPHON_LIFE, target)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(SIPHON_LIFE);
+
+		updateUntil(30);
+
+		assertDamageDone(SIPHON_LIFE, 630);
+	}
+
+	@Test
+	void healthGained() {
+		player.cast(SIPHON_LIFE);
+
+		updateUntil(30);
+
+		assertHealthGained(SIPHON_LIFE, player, 630);
+	}
+
+	@Override
+	protected void afterSetUp() {
+		enableTalent(TalentId.SIPHON_LIFE, 1);
 	}
 }

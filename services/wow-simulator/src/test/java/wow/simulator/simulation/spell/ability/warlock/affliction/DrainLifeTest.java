@@ -13,6 +13,10 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class DrainLifeTest extends WarlockSpellSimulationTest {
+	/*
+	Transfers 108 health every 1 sec from the target to the caster.  Lasts 5 sec.
+	 */
+
 	@Test
 	void success() {
 		player.cast(DRAIN_LIFE);
@@ -95,5 +99,23 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 						.effectRemoved(DRAIN_LIFE, target)
 						.endGcd(player)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(DRAIN_LIFE);
+
+		updateUntil(30);
+
+		assertDamageDone(DRAIN_LIFE, 540);
+	}
+
+	@Test
+	void healthGained() {
+		player.cast(DRAIN_LIFE);
+
+		updateUntil(30);
+
+		assertHealthGained(DRAIN_LIFE, player, 540);
 	}
 }

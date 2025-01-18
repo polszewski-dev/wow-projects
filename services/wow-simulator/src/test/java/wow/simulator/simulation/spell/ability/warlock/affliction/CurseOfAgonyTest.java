@@ -12,6 +12,12 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class CurseOfAgonyTest extends WarlockSpellSimulationTest {
+	/*
+	Curses the target with agony, causing 1356 Shadow damage over 24 sec.
+	This damage is dealt slowly at first, and builds up as the Curse reaches its full duration.
+	 Only one Curse per Warlock can be active on any one target.
+	 */
+
 	@Test
 	void success() {
 		player.cast(CURSE_OF_AGONY);
@@ -124,5 +130,14 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 						.decreasedResource(170, HEALTH, target, CURSE_OF_AGONY)
 						.effectExpired(CURSE_OF_AGONY, target)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(CURSE_OF_AGONY);
+
+		updateUntil(30);
+
+		assertDamageDone(CURSE_OF_AGONY, 1356);
 	}
 }

@@ -13,6 +13,11 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class FelArmorTest extends WarlockSpellSimulationTest {
+	/*
+	Surrounds the caster with fel energy, increasing the amount of health generated through spells and effects by 20%
+	and increasing spell damage by up to 100.  Only one type of Armor spell can be active on the Warlock at any time. Lasts 30 min.
+	 */
+
 	@Test
 	void success() {
 		player.cast(FEL_ARMOR);

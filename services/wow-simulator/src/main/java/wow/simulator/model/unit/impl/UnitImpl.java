@@ -244,13 +244,12 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 		return canCast(ability, getPrimaryTarget(ability, target));
 	}
 
-	private boolean canCast(Ability ability, PrimaryTarget primaryTarget) {
-		return canCast(ability, primaryTarget.getTargetResolver(this));
-	}
-
 	@Override
-	public boolean canCast(Ability ability, TargetResolver targetResolver) {
-		return hasAllValidTargets(ability, targetResolver) && !isOnCooldown(ability) && canPaySpellCost(ability);
+	public boolean canCast(Ability ability, PrimaryTarget primaryTarget) {
+		return hasAllValidTargets(ability, primaryTarget.getTargetResolver(this)) &&
+				!isOnCooldown(ability) &&
+				canPaySpellCost(ability) &&
+				hasRequiredEffect(ability, primaryTarget);
 	}
 
 	private boolean hasAllValidTargets(Ability ability, TargetResolver targetResolver) {
@@ -267,6 +266,14 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 		}
 		var costSnapshot = getSpellCostSnapshot(ability);
 		return resources.canPay(costSnapshot.getCostToPay());
+	}
+
+	private boolean hasRequiredEffect(Ability ability, PrimaryTarget primaryTarget) {
+		if (ability.getRequiredEffect() == null) {
+			return true;
+		}
+		var target = primaryTarget.requireSingleTarget();
+		return target.isUnderEffect(ability.getRequiredEffect(), this);
 	}
 
 	@Override
@@ -381,6 +388,11 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	@Override
 	public void removeEffect(EffectInstance effect) {
 		effects.removeEffect(effect);
+	}
+
+	@Override
+	public void removeEffect(AbilityId abilityId, Unit owner) {
+		effects.removeEffect(abilityId, owner);
 	}
 
 	@Override

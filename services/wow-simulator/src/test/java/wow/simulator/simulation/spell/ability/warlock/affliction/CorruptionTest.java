@@ -13,6 +13,10 @@ import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
  * Date: 2024-11-13
  */
 class CorruptionTest extends WarlockSpellSimulationTest {
+	/*
+	Corrupts the target, causing 900 Shadow damage over 18 sec.
+	 */
+
 	@Test
 	void success() {
 		player.cast(CORRUPTION);
@@ -86,5 +90,14 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 						.castInterrupted(player, CORRUPTION)
 						.endGcd(player)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(CORRUPTION);
+
+		updateUntil(30);
+
+		assertDamageDone(CORRUPTION, 900);
 	}
 }

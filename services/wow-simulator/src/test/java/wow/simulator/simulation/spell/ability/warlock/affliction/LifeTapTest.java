@@ -14,6 +14,10 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class LifeTapTest extends WarlockSpellSimulationTest {
+	/*
+	Converts 582 health into 582 mana.
+	 */
+
 	@Test
 	void success() {
 		setMana(player, 0);

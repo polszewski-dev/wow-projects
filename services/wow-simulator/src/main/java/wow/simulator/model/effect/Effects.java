@@ -55,6 +55,10 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 		updateQueue.remove(((EffectInstanceImpl) effect).getHandle());
 	}
 
+	public void removeEffect(AbilityId abilityId, Unit owner) {
+		getEffect(abilityId, owner).ifPresent(EffectInstance::removeSelf);
+	}
+
 	public void updateAllPresentActions() {
 		updateQueue.updateAllPresentActions();
 	}

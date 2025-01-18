@@ -12,6 +12,10 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2024-11-13
  */
 class ImmolateTest extends WarlockSpellSimulationTest {
+	/*
+	Burns the enemy for 332 Fire damage and then an additional 615 Fire damage over 15 sec.
+	 */
+
 	@Test
 	void success() {
 		player.cast(IMMOLATE);
@@ -82,5 +86,14 @@ class ImmolateTest extends WarlockSpellSimulationTest {
 						.castInterrupted(player, IMMOLATE)
 						.endGcd(player)
 		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(IMMOLATE);
+
+		updateUntil(30);
+
+		assertDamageDone(IMMOLATE, 332 + 615);
 	}
 }
