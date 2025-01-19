@@ -508,6 +508,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return addEvent(new EffectApplied(time, abilityId, target, Duration.seconds(duration)));
 		}
 
+		public EventListBuilder effectApplied(AbilityId abilityId, Unit target, Duration duration) {
+			return addEvent(new EffectApplied(time, abilityId, target, duration));
+		}
+
 		public EventListBuilder effectApplied(TalentId talentId, Unit target, double duration) {
 			return addEvent(new TalentEffectApplied(time, talentId, target, Duration.seconds(duration)));
 		}

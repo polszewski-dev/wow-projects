@@ -6,6 +6,7 @@ import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static wow.commons.model.spell.Conversion.From.DAMAGE_DONE;
 
@@ -55,9 +56,16 @@ public abstract class Conversions {
 		int convertedAmount = (int)(conversion.ratioPct().getCoefficient() * amount);
 
 		switch (conversion.to()) {
-			case HEALTH -> caster.increaseHealth(convertedAmount, false, spell);
-			case MANA -> caster.increaseMana(convertedAmount, false, spell);
-			default -> throw new IllegalArgumentException();
+			case HEALTH ->
+					caster.increaseHealth(convertedAmount, false, spell);
+			case MANA ->
+					caster.increaseMana(convertedAmount, false, spell);
+			case PARTY_HEALTH ->
+					forEachPartyMember(partyMember -> partyMember.increaseHealth(convertedAmount, false, spell));
+			case PARTY_MANA ->
+					forEachPartyMember(partyMember -> partyMember.increaseMana(convertedAmount, false, spell));
+			default ->
+					throw new IllegalArgumentException();
 		}
 	}
 
@@ -65,5 +73,9 @@ public abstract class Conversions {
 		return list.stream()
 				.filter(x -> x.from() == from)
 				.toList();
+	}
+
+	private void forEachPartyMember(Consumer<Unit> consumer) {
+		consumer.accept(caster);
 	}
 }
