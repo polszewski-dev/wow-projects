@@ -34,9 +34,4 @@ public class EffectUpdateContext extends Context {
 		var amount = numStacks * effect.getPeriodicComponent().amount();
 		increaseMana(target, amount);
 	}
-
-	@Override
-	protected Conversions getConversions() {
-		return new EffectUpdateConversions(caster, effect);
-	}
 }

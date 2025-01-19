@@ -5,7 +5,10 @@ import wow.commons.model.Percent;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EffectImpl;
-import wow.commons.model.spell.*;
+import wow.commons.model.spell.CastInfo;
+import wow.commons.model.spell.EffectApplication;
+import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.TickScheme;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.spell.component.DirectComponentBonus;
 import wow.commons.model.spell.impl.AbilityImpl;
@@ -53,7 +56,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 			ability.setEffectRemovedOnHit(params.effectRemovedOnHit());
 		}
 		spell.setDirectComponents(getDirectComponents(params));
-		spell.setConversion(getConversion(params));
 		spell.setEffectApplication(getEffectApplication(params));
 	}
 
@@ -116,7 +118,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var tickInterval = getTickInterval(params);
 		var modifierComponent = getModifierComponent(params);
 		var absorptionComponent = getAbsorptionComponent(params);
-		var conversion = getConversion(params);
 		var statConversions = getStatConversions(params);
 		var events = getEvents(params, eventMapper);
 
@@ -127,7 +128,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		effect.setTickInterval(tickInterval);
 		effect.setModifierComponent(modifierComponent);
 		effect.setAbsorptionComponent(absorptionComponent);
-		effect.setConversion(conversion);
 		effect.setStatConversions(statConversions);
 		effect.setEvents(events);
 
@@ -220,27 +220,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		return getOptionalDuration(tickInterval).orElseThrow();
 	}
 
-	private Conversion getConversion(SpellPatternParams params) {
-		return getConversion(params.conversion());
-	}
-
-	private Conversion getConversion(EffectPatternParams params) {
-		return getConversion(params.conversion());
-	}
-
-	private Conversion getConversion(ConversionParams conversionParams) {
-		if (conversionParams == null) {
-			return null;
-		}
-
-		var condition = conversionParams.condition();
-		var from = conversionParams.from();
-		var to = conversionParams.to();
-		var ratio = getOptionalPercent(conversionParams.ratio()).orElse(Percent._100);
-
-		return new Conversion(condition, from, to, ratio);
-	}
-
 	private List<StatConversion> getStatConversions(EffectPatternParams params) {
 		return params.statConversions().stream()
 				.map(this::getStatConversion)
@@ -314,9 +293,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		}
 		if (effect.absorptionComponent() != null) {
 			result.add(effect.absorptionComponent().target());
-		}
-		if (effect.conversion() != null) {
-			result.add(effect.conversion().target());
 		}
 		effect.statConversions().forEach(statConversion -> result.add(statConversion.target()));
 		effect.getEvents().forEach(event -> result.add(event.target()));

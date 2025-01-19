@@ -18,7 +18,6 @@ public record SpellPatternParams(
 		AbilityId requiredEffect,
 		AbilityId effectRemovedOnHit,
 		List<DirectComponentParams> directComponents,
-		ConversionParams conversion,
 		EffectApplicationParams effectApplication
 ) implements ScraperPatternParams {
 	public SpellPatternParams {

@@ -13,7 +13,6 @@ import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.Conversion;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.context.Context;
@@ -312,11 +311,6 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public AbsorptionComponent getAbsorptionComponent() {
 		return effect.getAbsorptionComponent();
-	}
-
-	@Override
-	public Conversion getConversion() {
-		return effect.getConversion();
 	}
 
 	@Override

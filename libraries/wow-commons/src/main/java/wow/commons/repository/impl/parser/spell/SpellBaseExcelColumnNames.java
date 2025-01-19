@@ -42,10 +42,6 @@ public final class SpellBaseExcelColumnNames {
 	public static final String ABSORB_CONDITION = "condition";
 	public static final String ABSORB_MIN = "min";
 	public static final String ABSORB_MAX = "max";
-	public static final String CONVERSION_CONDITION = "condition";
-	public static final String CONVERSION_FROM = "from";
-	public static final String CONVERSION_TO = "to";
-	public static final String CONVERSION_RATIO = "%";
 	public static final String STAT_CONVERSION_FROM = "from";
 	public static final String STAT_CONVERSION_TO = "to";
 	public static final String STAT_CONVERSION_TO_CONDITION = "to condition";
@@ -69,7 +65,6 @@ public final class SpellBaseExcelColumnNames {
 	public static final String PERIODIC_PREFIX = "periodic: ";
 	public static final String MOD_PREFIX = "mod: ";
 	public static final String ABSORB_PREFIX = "absorb: ";
-	public static final String CONVERSION_PREFIX = "conversion: ";
 	public static final String APPLY_PREFIX = "apply: ";
 
 	public static final String COEFF_VALUE = "coeff";

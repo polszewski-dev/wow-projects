@@ -95,6 +95,11 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
+		if (updateQueue.getCurrentlyUpdatedElement() != null) {
+			var effect = updateQueue.getCurrentlyUpdatedElement();
+			collector.addEffect(effect, effect.getNumStacks());
+		}
+
 		for (var elementHandle : updateQueue.getElements()) {
 			var effect = elementHandle.get();
 			collector.addEffect(effect, effect.getNumStacks());

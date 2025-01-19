@@ -657,11 +657,19 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertHealthGained(AbilityId abilityId, Unit target, int expectedAmount) {
+		assertHealthGained(abilityId.getName(), target, expectedAmount);
+	}
+
+	protected void assertHealthGained(TalentId talentId, Unit target, int expectedAmount) {
+		assertHealthGained(talentId.getName(), target, expectedAmount);
+	}
+
+	private void assertHealthGained(String spellName, Unit target, int expectedAmount) {
 		var totalHealthGained = handler.getEvents().stream()
 				.filter(Event::isHealing)
 				.map(x -> (IncreasedResource) x)
 				.filter(x -> x.target == target)
-				.filter(x -> x.spell.equals(abilityId.getName()))
+				.filter(x -> x.spell.equals(spellName))
 				.mapToInt(x -> x.amount)
 				.sum();
 
@@ -941,5 +949,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void assertLastEventChance(double value) {
 		assertThat(rng.eventRollData.rollChances.getLast()).isEqualTo(value);
+	}
+
+	protected void assertEventChanceNo(int rollChanceIdx, double value) {
+		assertThat(rng.eventRollData.rollChances.get(rollChanceIdx)).isEqualTo(value);
 	}
 }

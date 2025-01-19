@@ -75,9 +75,6 @@ public class MiscEffectsSheetParser extends AbstractSpellPatternSheetParser {
 		if (params.modifierComponent() != null && params.modifierComponent().target() != SpellTarget.SELF) {
 			throw new IllegalArgumentException("Modifier target can only be SELF");
 		}
-		if (params.conversion() != null && params.conversion().target() != SpellTarget.SELF) {
-			throw new IllegalArgumentException("Conversion target can only be SELF");
-		}
 		if (params.getEvents().stream().anyMatch(x -> x.target() != SpellTarget.SELF)) {
 			throw new IllegalArgumentException("Event target can only be SELF");
 		}

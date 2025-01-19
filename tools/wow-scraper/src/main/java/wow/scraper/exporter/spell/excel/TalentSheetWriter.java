@@ -29,7 +29,6 @@ public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser,
 		setHeader(TALENT_TREE);
 		setHeader(AUGMENTED_ABILITY);
 		writeModifierComponentHeader(MAX_TALENT_MODIFIER_ATTRIBUTES);
-		writeConversionHeader();
 		writeStatConversionHeader();
 		writeEffectIncreasePerEffectOnTargetHeader();
 		writeEventHeader(MAX_TALENT_EVENTS);
@@ -52,7 +51,6 @@ public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser,
 		setValue(parser.getTalentTree());
 		setValue(effect.getAugmentedAbility());
 		writeModifierComponent(effect, MAX_TALENT_MODIFIER_ATTRIBUTES);
-		writeConversion(effect.getConversion());
 		writeStatConversions(effect);
 		writeEffectIncreasePerEffectOnTarget(effect);
 		writeEvents(effect, MAX_TALENT_EVENTS);

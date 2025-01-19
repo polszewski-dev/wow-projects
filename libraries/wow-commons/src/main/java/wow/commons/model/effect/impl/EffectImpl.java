@@ -12,7 +12,6 @@ import wow.commons.model.effect.EffectCategory;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.Conversion;
 
 import java.util.List;
 
@@ -35,7 +34,6 @@ public class EffectImpl implements Effect {
 	private ModifierComponent modifierComponent;
 	private List<Attribute> modifierAttributeList;
 	private AbsorptionComponent absorptionComponent;
-	private Conversion conversion;
 	private List<StatConversion> statConversions;
 	private EffectIncreasePerEffectOnTarget effectIncreasePerEffectOnTarget;
 	private List<Event> events;

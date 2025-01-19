@@ -39,11 +39,6 @@ public class SpellCastContext extends Context {
 		return snapshot.isInstantCast();
 	}
 
-	@Override
-	public SpellCastConversions getConversions() {
-		return new SpellCastConversions(caster, ability);
-	}
-
 	public void paySpellCost() {
 		if (ability instanceof ActivatedAbility activatedAbility) {
 			caster.triggerCooldown(ability, ability.getCooldown());
@@ -54,7 +49,6 @@ public class SpellCastContext extends Context {
 
 			caster.triggerCooldown(ability, cooldown);
 			setPaidCost(costSnapshot);
-			getConversions().performPaidCostConversion(costSnapshot.getCostToPayUnreduced());
 		}
 	}
 

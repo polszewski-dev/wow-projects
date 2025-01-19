@@ -7,7 +7,6 @@ import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EmptyEffect;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.Conversion;
 
 import java.util.List;
 
@@ -38,8 +37,6 @@ public interface Effect extends Described, TimeRestricted {
 
 	AbsorptionComponent getAbsorptionComponent();
 
-	Conversion getConversion();
-
 	List<StatConversion> getStatConversions();
 
 	EffectIncreasePerEffectOnTarget getEffectIncreasePerEffectOnTarget();
@@ -55,7 +52,6 @@ public interface Effect extends Described, TimeRestricted {
 				getPeriodicComponent() != null ||
 				getAbsorptionComponent() != null ||
 				getTickInterval() != null ||
-				getConversion() != null ||
 				!getStatConversions().isEmpty() ||
 				getEffectIncreasePerEffectOnTarget() != null ||
 				!getEvents().isEmpty();

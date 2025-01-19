@@ -5,7 +5,6 @@ import lombok.Setter;
 import wow.commons.model.Duration;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.spell.Conversion;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
@@ -26,7 +25,6 @@ public abstract class SpellImpl implements Spell {
 	private SpellSchool school;
 	private Duration cooldown;
 	private List<DirectComponent> directComponents;
-	private Conversion conversion;
 	private EffectApplication effectApplication;
 	private boolean hasDamagingComponent;
 	private boolean hasHealingComponent;

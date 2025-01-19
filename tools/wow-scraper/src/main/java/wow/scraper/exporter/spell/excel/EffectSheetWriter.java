@@ -34,7 +34,6 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setHeader(AUGMENTED_ABILITY);
 		writeModifierComponentHeader(maxModAttributes);
 		writeAbsorptionComponentHeader();
-		writeConversionHeader();
 		writeStatConversionHeader();
 		writeEffectIncreasePerEffectOnTargetHeader();
 		writeEventHeader(maxEvents);
@@ -52,7 +51,6 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setValue(effect.getAugmentedAbility());
 		writeModifierComponent(effect, maxModAttributes);
 		writeAbsorptionComponent(effect);
-		writeConversion(effect.getConversion());
 		writeStatConversions(effect);
 		writeEffectIncreasePerEffectOnTarget(effect);
 		writeEvents(effect, maxEvents);

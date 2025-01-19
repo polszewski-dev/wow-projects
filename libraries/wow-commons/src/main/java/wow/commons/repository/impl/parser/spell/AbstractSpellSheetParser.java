@@ -92,7 +92,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var timeRestriction = getTimeRestriction();
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
 		var directComponents = getDirectComponents();
-		var conversion = getConversion();
 		var effectApplication = getEffectApplication();
 
 		spell.setId(spellId);
@@ -101,7 +100,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 
 		spell.setCooldown(cooldown);
 		spell.setDirectComponents(directComponents);
-		spell.setConversion(conversion);
 		spell.setEffectApplication(effectApplication);
 	}
 
@@ -198,24 +196,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var requiredEffect = colDirectBonusRequiredEffect.prefixed(prefix).getEnum(AbilityId::parse, null);
 
 		return new DirectComponentBonus(min, max, requiredEffect);
-	}
-
-	private final ExcelColumn colCondition = column(CONVERSION_CONDITION).prefixed(CONVERSION_PREFIX);
-	private final ExcelColumn colConversionFrom = column(CONVERSION_FROM).prefixed(CONVERSION_PREFIX);
-	private final ExcelColumn colConversionTo = column(CONVERSION_TO).prefixed(CONVERSION_PREFIX);
-	private final ExcelColumn colConversionRatio = column(CONVERSION_RATIO).prefixed(CONVERSION_PREFIX);
-
-	protected Conversion getConversion() {
-		if (colConversionFrom.isEmpty()) {
-			return null;
-		}
-
-		var condition = colCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
-		var from = colConversionFrom.getEnum(Conversion.From::parse);
-		var to = colConversionTo.getEnum(Conversion.To::parse);
-		var ratio = colConversionRatio.getPercent();
-
-		return new Conversion(condition, from, to, ratio);
 	}
 
 	protected List<StatConversion> getStatConversions() {

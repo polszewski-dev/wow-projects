@@ -38,7 +38,6 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 		setHeader(REQUIRED_EFFECT);
 		setHeader(EFFECT_REMOVED_ON_HIT);
 		writeDirectComponentHeader();
-		writeConversionHeader();
 		writeEffectApplicationHeader();
 		writeIconAndTooltipHeader();
 	}
@@ -58,7 +57,6 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			setValue((String) null);
 		}
 		writeDirectComponents(spell);
-		writeConversion(spell.getConversion());
 		writeEffectApplication(spell);
 		writeIconAndTooltip(spell);
 	}

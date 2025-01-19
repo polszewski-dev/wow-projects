@@ -25,8 +25,6 @@ public interface Spell extends Described, TimeRestricted {
 
 	List<DirectComponent> getDirectComponents();
 
-	Conversion getConversion();
-
 	EffectApplication getEffectApplication();
 
 	default Effect getAppliedEffect() {
@@ -44,10 +42,6 @@ public interface Spell extends Described, TimeRestricted {
 
 		if (effectApplication != null) {
 			result.add(effectApplication.target());
-		}
-
-		if (getConversion() != null) {
-			result.add(SpellTarget.SELF);
 		}
 
 		return  result;

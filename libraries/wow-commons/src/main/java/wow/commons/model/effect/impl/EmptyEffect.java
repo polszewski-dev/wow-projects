@@ -9,7 +9,6 @@ import wow.commons.model.effect.EffectCategory;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.Conversion;
 
 import java.util.List;
 
@@ -75,11 +74,6 @@ public class EmptyEffect implements Effect {
 
 	@Override
 	public AbsorptionComponent getAbsorptionComponent() {
-		return null;
-	}
-
-	@Override
-	public Conversion getConversion() {
 		return null;
 	}
 

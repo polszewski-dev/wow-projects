@@ -46,7 +46,6 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var tickInterval = colTickInterval.getDuration(null);
 		var modifierComponent = getModifierComponent(maxModAttributes);
 		var absorptionComponent = getAbsorptionComponent();
-		var conversion = getConversion();
 		var statConversions = getStatConversions();
 		var effectIncreasePerEffectOnTarget = getEffectIncreasePerEffectOnTarget();
 		var events = getEvents(maxEvents);
@@ -59,7 +58,6 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		effect.setTickInterval(tickInterval);
 		effect.setModifierComponent(modifierComponent);
 		effect.setAbsorptionComponent(absorptionComponent);
-		effect.setConversion(conversion);
 		effect.setStatConversions(statConversions);
 		effect.setEffectIncreasePerEffectOnTarget(effectIncreasePerEffectOnTarget);
 		effect.setEvents(events);

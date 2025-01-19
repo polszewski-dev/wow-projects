@@ -36,8 +36,6 @@ import static wow.commons.model.effect.component.EventType.SPELL_CAST;
 import static wow.commons.model.effect.component.EventType.SPELL_HIT;
 import static wow.commons.model.pve.PhaseId.*;
 import static wow.commons.model.spell.AbilityId.*;
-import static wow.commons.model.spell.Conversion.From.*;
-import static wow.commons.model.spell.Conversion.To.*;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
@@ -175,18 +173,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	}
 
 	@Test
-	void abilityConversion() {
-		var ability = getClassAbility(LIFE_TAP, 7, TBC_P5);
-		var conversion = ability.getConversion();
-
-		assertThat(conversion.condition().isEmpty()).isTrue();
-		assertThat(conversion.from()).isEqualTo(HEALTH_PAID);
-		assertThat(conversion.to()).isEqualTo(MANA);
-		assertThat(conversion.ratioPct()).isEqualTo(Percent._100);
-		assertThat(conversion.isLocal()).isTrue();
-	}
-
-	@Test
 	void abilityEffectApplication() {
 		var ability = getClassAbility(CORRUPTION, 8, TBC_P5);
 		var effectApplication = ability.getEffectApplication();
@@ -203,7 +189,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getId()).isEqualTo(110025441);
 		assertThat(spell.getName()).isEqualTo("Feedback - triggered");
 
-		var directComponent = spell.getDirectComponents().get(0);
+		var directComponent = spell.getDirectComponents().getFirst();
 
 		assertThat(directComponent.target()).isEqualTo(SpellTarget.ATTACKER);
 		assertThat(directComponent.type()).isEqualTo(ComponentType.MANA_DRAIN);
@@ -211,14 +197,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(directComponent.min()).isEqualTo(165);
 		assertThat(directComponent.max()).isEqualTo(165);
 		assertThat(directComponent.bolt()).isFalse();
-
-		var conversion = spell.getConversion();
-
-		assertThat(conversion.condition().isEmpty()).isTrue();
-		assertThat(conversion.from()).isEqualTo(MANA_DRAINED);
-		assertThat(conversion.to()).isEqualTo(DAMAGE_ON_TARGET);
-		assertThat(conversion.ratioPct()).isEqualTo(Percent._100);
-		assertThat(conversion.isLocal()).isTrue();
 	}
 
 	@Test
@@ -282,20 +260,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(absorptionComponent.condition()).isEqualTo(AttributeCondition.of(SHADOW));
 		assertThat(absorptionComponent.min()).isEqualTo(875);
 		assertThat(absorptionComponent.max()).isEqualTo(875);
-	}
-
-	@Test
-	void abilityEffectConversion() {
-		var effect = getEffect(15286, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Vampiric Embrace");
-
-		var conversion = effect.getConversion();
-
-		assertThat(conversion.condition()).isEqualTo(AttributeCondition.of(SHADOW));
-		assertThat(conversion.from()).isEqualTo(DAMAGE_DONE);
-		assertThat(conversion.to()).isEqualTo(PARTY_HEALTH);
-		assertThat(conversion.ratioPct()).isEqualTo(Percent.of(15));
 	}
 
 	@Test

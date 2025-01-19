@@ -4,7 +4,6 @@ import wow.commons.model.Percent;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.StatConversion;
-import wow.commons.model.spell.Conversion;
 import wow.scraper.exporter.excel.ExcelSheetWriter;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 
@@ -29,26 +28,6 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		var attributes = modifierComponent != null ? modifierComponent.attributes() : null;
 
 		writeAttributes(attributes, maxAttributes);
-	}
-
-	protected void writeConversionHeader() {
-		var prefix = CONVERSION_PREFIX;
-		setHeader(CONVERSION_CONDITION, prefix);
-		setHeader(CONVERSION_FROM, prefix);
-		setHeader(CONVERSION_TO, prefix);
-		setHeader(CONVERSION_RATIO, prefix);
-	}
-
-	protected void writeConversion(Conversion conversion) {
-		if (conversion == null) {
-			fillRemainingEmptyCols(4);
-			return;
-		}
-
-		setValue(conversion.condition());
-		setValue(conversion.from());
-		setValue(conversion.to());
-		setValue(conversion.ratioPct());
 	}
 
 	protected void writeStatConversionHeader() {

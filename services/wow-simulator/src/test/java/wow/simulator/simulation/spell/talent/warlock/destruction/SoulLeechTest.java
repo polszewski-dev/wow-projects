@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.talent.warlock.destruction;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
@@ -29,16 +28,17 @@ class SoulLeechTest extends WarlockSpellSimulationTest {
 		assertLastEventChance(10 * rank);
 	}
 
-	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
-	void procDamageIsCorrect(int rank) {
+	void procHealIsCorrect(int rank) {
+		eventsOnlyOnFollowingRolls(0);
+
 		enableTalent(SOUL_LEECH, rank);
 
 		player.cast(SHADOW_BOLT);
 
 		updateUntil(30);
 
-		assertHealthGained(SHADOW_BOLT, player, (int) (575 * 0.2));
+		assertHealthGained(SOUL_LEECH, player, (int) (575 * 0.2));
 	}
 }

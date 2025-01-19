@@ -34,12 +34,8 @@ public abstract class Context {
 		this.parentContext = parentContext;
 	}
 
-	protected abstract Conversions getConversions();
-
 	protected void decreaseHealth(Unit target, int amount, boolean directDamage, boolean critRoll) {
 		this.lastDamageDone = target.decreaseHealth(amount, critRoll, getSourceSpell());
-
-		getConversions().performDamageDoneConversion(lastDamageDone);
 
 		EventContext.fireSpellDamageEvent(caster, target, spell, directDamage, critRoll, this);
 	}

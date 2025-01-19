@@ -60,29 +60,21 @@ public class SpellResolutionContext extends Context {
 		return caster.getRng().critRoll(critChancePct, spell);
 	}
 
-	@Override
-	protected SpellResolutionConversions getConversions() {
-		return new SpellResolutionConversions(caster, spell);
-	}
-
 	public void directComponentAction(DirectComponent directComponent, CastSpellAction action) {
 		switch (directComponent.type()) {
 			case DAMAGE ->
 					dealDirectDamage(directComponent, action);
 			case MANA_GAIN ->
 					increaseMana(directComponent);
-			case COPY_DAMAGE_AS_HEAL_PCT -> {
-					// void
-			}
+			case COPY_DAMAGE_AS_HEAL_PCT ->
+					copyDamageAsHeal(directComponent);
+			case COPY_DAMAGE_AS_MANA_GAIN_PCT ->
+					copyDamageAsManaGain(directComponent);
+			case COPY_HEALTH_PAID_AS_MANA_GAIN_PCT ->
+					copyHealthPaidAsManaGain(directComponent);
 			default ->
 					throw new UnsupportedOperationException();
 		}
-	}
-
-	private void increaseMana(DirectComponent directComponent) {
-		var componentTarget = targetResolver.getTarget(directComponent.target());
-
-		increaseMana(componentTarget, (directComponent.min() + directComponent.max()) / 2);
 	}
 
 	private void dealDirectDamage(DirectComponent directComponent, CastSpellAction action) {
@@ -92,10 +84,6 @@ public class SpellResolutionContext extends Context {
 			return;
 		}
 
-		dealDirectDamage(directComponent, target);
-	}
-
-	private void dealDirectDamage(DirectComponent directComponent, Unit target) {
 		var snapshot = caster.getDirectSpellDamageSnapshot(spell, target, directComponent);
 		var critRoll = critRoll(snapshot.getCritPct());
 		var addBonus = shouldAddBonus(directComponent, target);
@@ -103,6 +91,33 @@ public class SpellResolutionContext extends Context {
 
 		decreaseHealth(target, directDamage, true, critRoll);
 		fireSpellHitEvent(target);
+	}
+
+	private void copyDamageAsHeal(DirectComponent directComponent) {
+		var componentTarget = targetResolver.getTarget(directComponent);
+		var heal = getScaledValue(getSourceContext().getLastDamageDone(), directComponent);
+
+		increaseHealth(componentTarget, heal, true, false);
+	}
+
+	private void copyDamageAsManaGain(DirectComponent directComponent) {
+		var componentTarget = targetResolver.getTarget(directComponent);
+		var manaGain = getScaledValue(getSourceContext().getLastDamageDone(), directComponent);
+
+		increaseMana(componentTarget, manaGain);
+	}
+
+	private void copyHealthPaidAsManaGain(DirectComponent directComponent) {
+		var componentTarget = targetResolver.getTarget(directComponent);
+		var mana = getScaledValue(parentContext.getLastHealthPaid(), directComponent);
+
+		increaseMana(componentTarget, mana);
+	}
+
+	private void increaseMana(DirectComponent directComponent) {
+		var componentTarget = targetResolver.getTarget(directComponent);
+
+		increaseMana(componentTarget, (directComponent.min() + directComponent.max()) / 2);
 	}
 
 	public EffectInstance applyEffect(CastSpellAction action, Unit target) {
@@ -172,5 +187,10 @@ public class SpellResolutionContext extends Context {
 
 		EventContext.fireSpellHitEvent(caster, target, spell, this);
 		spellHitFiredByUnit.add(target);
+	}
+
+	private int getScaledValue(int value, DirectComponent directComponent) {
+		var ratioPct = directComponent.min();
+		return (int) (value * ratioPct / 100.0);
 	}
 }

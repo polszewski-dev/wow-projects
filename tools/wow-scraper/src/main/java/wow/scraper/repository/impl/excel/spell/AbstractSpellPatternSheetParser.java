@@ -199,36 +199,6 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		return new AbsorptionComponentParams(target, coeff, condition, min, max);
 	}
 
-	private final ExcelColumn colConversionType = column("type").prefixed(CONVERSION_PREFIX);
-	private final ExcelColumn colConversionCondition = column(CONVERSION_CONDITION).prefixed(CONVERSION_PREFIX);
-	private final ExcelColumn colConversionFrom = column(CONVERSION_FROM).prefixed(CONVERSION_PREFIX);
-	private final ExcelColumn colConversionTo = column(CONVERSION_TO).prefixed(CONVERSION_PREFIX);
-	private final ExcelColumn colConversionRatio = column(CONVERSION_RATIO).prefixed(CONVERSION_PREFIX);
-
-	private ConversionParams getConversionParams(ConversionType expectedType) {
-		var prefix = CONVERSION_PREFIX;
-
-		if (colConversionType.isEmpty()) {
-			assertTargetIsEmpty(prefix);
-			assertAllColumnsAreEmpty(colConversionCondition, colConversionFrom, colConversionTo, colConversionRatio);
-			return null;
-		}
-
-		var type = colConversionType.getEnum(ConversionType::parse);
-
-		if (type != expectedType) {
-			return null;
-		}
-
-		var target = getTarget(prefix);
-		var condition = colConversionCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
-		var from = colConversionFrom.getEnum(Conversion.From::parse);
-		var to = colConversionTo.getEnum(Conversion.To::parse);
-		var ratio = colConversionRatio.getString(null);
-
-		return new ConversionParams(type, target, condition, from, to, ratio);
-	}
-
 	private List<StatConversionParams> getStatConversionParams() {
 		return IntStream.rangeClosed(1, MAX_STAT_CONVERSIONS)
 				.mapToObj(this::getStatConversionParams)
@@ -300,7 +270,6 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var requiredEffect = colRequiredEffect.getEnum(AbilityId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(AbilityId::parse, null);
 		var directComponents = getDirectComponents();
-		var conversion = getConversionParams(ConversionType.SPELL);
 		var effectApplication = getEffectApplicationParams();
 
 		return new SpellPatternParams(
@@ -310,7 +279,6 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 				requiredEffect,
 				effectRemovedOnHit,
 				directComponents,
-				conversion,
 				effectApplication
 		);
 	}
@@ -335,7 +303,6 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var tickInterval = colTickInterval.getString(null);
 		var modifierComponent = getModifierComponentParams();
 		var absorptionComponent = getAbsorptionComponentParams();
-		var conversion = getConversionParams(ConversionType.EFFECT);
 		var statConversions = getStatConversionParams();
 		var events = getEventParamList();
 		var stacksMax = colEffectStacksMax.getString(null);
@@ -347,7 +314,6 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 				tickInterval,
 				modifierComponent,
 				absorptionComponent,
-				conversion,
 				statConversions,
 				new TreeMap<>(),
 				stacksMax,

@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.ability.priest.shadow;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
@@ -41,7 +40,6 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 		);
 	}
 
-	@Disabled
 	@Test
 	void mindBlastDamageIsConvertedToHealing() {
 		player.cast(VAMPIRIC_EMBRACE);
@@ -53,11 +51,10 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 				event -> event.isDamage() || event.isHealing(),
 				at(3)
 						.decreasedResource(731, HEALTH, target, MIND_BLAST)
-						.increasedResource(109, HEALTH, player, MIND_BLAST)
+						.increasedResource(109, HEALTH, player, VAMPIRIC_EMBRACE)
 		);
 	}
 
-	@Disabled
 	@Test
 	void shadowWordPainDamageIsConvertedToHealing() {
 		player.cast(VAMPIRIC_EMBRACE);
@@ -69,22 +66,22 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 				event -> event.isDamage() || event.isHealing(),
 				at(4.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, SHADOW_WORD_PAIN),
+						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(7.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, SHADOW_WORD_PAIN),
+						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(10.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, SHADOW_WORD_PAIN),
+						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(13.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, SHADOW_WORD_PAIN),
+						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(16.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, SHADOW_WORD_PAIN),
+						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(19.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, SHADOW_WORD_PAIN)
+						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE)
 		);
 	}
 

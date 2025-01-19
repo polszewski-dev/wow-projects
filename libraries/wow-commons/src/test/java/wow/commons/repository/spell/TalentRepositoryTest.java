@@ -30,8 +30,6 @@ import static wow.commons.model.effect.component.EventType.SPELL_CRIT;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.spell.AbilityId.*;
-import static wow.commons.model.spell.Conversion.From.DAMAGE_DONE;
-import static wow.commons.model.spell.Conversion.To.PARTY_HEALTH;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentId.*;
 import static wow.commons.model.talent.TalentTree.AFFLICTION;
@@ -142,15 +140,6 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 				)),
 				Attribute.of(CAST_TIME, -2, AttributeCondition.of(SOUL_FIRE))
 		));
-	}
-
-	@Test
-	void talentWithConversion() {
-		var talent = getTalent(PRIEST, IMPROVED_VAMPIRIC_EMBRACE, 2, TBC_P5);
-		var effect = talent.getEffect();
-
-		assertThat(effect.getAugmentedAbility()).isEqualTo(AbilityId.VAMPIRIC_EMBRACE);
-		assertConversion(effect.getConversion(), AttributeCondition.of(SHADOW), DAMAGE_DONE, PARTY_HEALTH, 10);
 	}
 
 	@Test

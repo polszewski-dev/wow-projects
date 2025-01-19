@@ -18,7 +18,6 @@ public record EffectPatternParams(
 		String tickInterval,
 		ModifierComponentParams modifierComponent,
 		AbsorptionComponentParams absorptionComponent,
-		ConversionParams conversion,
 		List<StatConversionParams> statConversions,
 		Map<Integer, EventParams> events,
 		String maxStacks,
@@ -60,7 +59,6 @@ public record EffectPatternParams(
 				modifierComponent != null ||
 				absorptionComponent != null ||
 				tickInterval != null ||
-				conversion != null ||
 				!statConversions.isEmpty() ||
 				!events.isEmpty();
 	}

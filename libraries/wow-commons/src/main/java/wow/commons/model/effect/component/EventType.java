@@ -16,6 +16,7 @@ public enum EventType {
 	PHYSICAL_HIT,
 	PHYSICAL_CRIT,
 	PHYSICAL_MISS,
+	PHYSICAL_DAMAGE,
 	DODGE,
 	PARRY,
 	BLOCK,
@@ -30,7 +31,10 @@ public enum EventType {
 	STACK_OVERFLOW,
 	KILLED_TARGET,
 	TARGET_DIED,
-	OWNER_DIED
+	OWNER_DIED,
+	MANA_GAINED,
+	MANA_DRAINED,
+	DAMAGE_ABSORBED
 	;
 
 	public static EventType parse(String value) {

@@ -82,8 +82,8 @@ class NightfallTest extends WarlockSpellSimulationTest {
 						.beginGcd(player),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
-						.increasedResource(108, HEALTH, player, DRAIN_LIFE)
-						.effectApplied(NIGHTFALL, player, 10),
+						.effectApplied(NIGHTFALL, player, 10)
+						.increasedResource(108, HEALTH, player, DRAIN_LIFE),
 				at(1.5)
 						.endGcd(player),
 				at(2)
@@ -116,7 +116,7 @@ class NightfallTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertLastEventChance(2 * rank);
+		assertEventChanceNo(0, 2 * rank);
 	}
 
 	@ParameterizedTest

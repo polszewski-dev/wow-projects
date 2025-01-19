@@ -12,14 +12,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.effect.component.ComponentType.COPY_HEALTH_PAID_AS_MANA_GAIN_PCT;
 import static wow.commons.model.effect.component.ComponentType.DAMAGE;
 import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.OWNER_ATTACKED;
+import static wow.commons.model.effect.component.EventType.SPELL_DAMAGE;
 import static wow.commons.model.spell.AbilityId.*;
-import static wow.commons.model.spell.Conversion.From.DAMAGE_DONE;
-import static wow.commons.model.spell.Conversion.From.HEALTH_PAID;
-import static wow.commons.model.spell.Conversion.To.*;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 
@@ -76,15 +75,15 @@ class AbilityParserTest extends SpellParserTest {
 
 		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 71.43, SHADOW, 540, 5, TickScheme.DEFAULT);
 		assertThat(effect.getTickInterval()).isEqualTo(Duration.seconds(1));
-		assertConversion(effect.getConversion(), AttributeCondition.EMPTY, DAMAGE_DONE, HEALTH, 100);
 	}
 
 	@Test
 	void lifeTap() {
 		var ability = parse(LIFE_TAP, "Converts 582 health into 582 mana.");
+		var directComponent = ability.getDirectComponents().getFirst();
 
 		assertCost(ability.getCost(), 582, ResourceType.HEALTH, 0, 80, null);
-		assertConversion(ability.getConversion(), AttributeCondition.EMPTY, HEALTH_PAID, MANA, 100);
+		assertDirectComponent(directComponent, COPY_HEALTH_PAID_AS_MANA_GAIN_PCT, 0, null, 100, 100);
 	}
 
 	@Test
@@ -106,9 +105,18 @@ class AbilityParserTest extends SpellParserTest {
 	void vampiricEmbrace() {
 		var ability = parse(VAMPIRIC_EMBRACE, "Afflicts your target with Shadow energy that causes all party members to be healed for 15% of any Shadow spell damage you deal for 1 min.");
 		var effectApplication = ability.getEffectApplication();
+		var event = effectApplication.effect().getEvents().getFirst();
 
-		assertConversion(effectApplication.effect().getConversion(), AttributeCondition.of(SHADOW), DAMAGE_DONE, PARTY_HEALTH, 15);
 		assertDuration(effectApplication.duration(), Duration.minutes(1));
+
+		assertEvent(
+				event,
+				List.of(SPELL_DAMAGE),
+				AttributeCondition.of(SHADOW),
+				100,
+				List.of(TRIGGER_SPELL),
+				Duration.ZERO
+		);
 	}
 
 	@Test
@@ -118,7 +126,7 @@ class AbilityParserTest extends SpellParserTest {
 
 		assertEffectApplication(ability, SpellTarget.SELF, 10 * 60, 3, 1, 1);
 
-		var event = effectApplication.effect().getEvents().get(0);
+		var event = effectApplication.effect().getEvents().getFirst();
 
 		assertEvent(
 				event,
@@ -129,7 +137,7 @@ class AbilityParserTest extends SpellParserTest {
 				Duration.seconds(1)
 		);
 
-		var directComponent = event.triggeredSpell().getDirectComponents().get(0);
+		var directComponent = event.triggeredSpell().getDirectComponents().getFirst();
 
 		assertDirectComponent(directComponent, DAMAGE, 33.33, SHADOW, 130, 130);
 	}
