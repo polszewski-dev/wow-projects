@@ -97,6 +97,12 @@ public class EventContext {
 		}
 	}
 
+	public static void fireEffectEnded(EffectInstance effect, Context parentContext) {
+		var context = new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell(), parentContext);
+
+		context.fireEvent(EFFECT_ENDED);
+	}
+
 	private void fireEvent(EventType eventType) {
 		var eventEntries = collectEvents(eventType);
 

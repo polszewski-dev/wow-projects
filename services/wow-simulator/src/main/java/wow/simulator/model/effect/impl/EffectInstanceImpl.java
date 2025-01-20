@@ -119,6 +119,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		if (onEffectFinished != null) {
 			onEffectFinished.run();
 		}
+
+		fireEffectEnded();
 	}
 
 	@Override
@@ -129,7 +131,12 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 		if (!silentRemoval) {
 			getGameLog().effectRemoved(this);
+			fireEffectEnded();
 		}
+	}
+
+	private void fireEffectEnded() {
+		EventContext.fireEffectEnded(this, effectUpdateContext);
 	}
 
 	@Override
