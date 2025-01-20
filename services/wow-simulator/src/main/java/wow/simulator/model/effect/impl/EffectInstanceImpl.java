@@ -16,6 +16,7 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Conversion;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.context.Context;
 import wow.simulator.model.context.EffectUpdateContext;
 import wow.simulator.model.context.EventContext;
 import wow.simulator.model.effect.EffectInstance;
@@ -49,7 +50,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	private final EffectSource effectSource;
 
-	protected final EffectUpdateContext resolutionContext;
+	protected final EffectUpdateContext effectUpdateContext;
 
 	protected Time endTime;
 
@@ -71,7 +72,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			Duration duration,
 			int numStacks,
 			int numCharges,
-			EffectSource effectSource
+			EffectSource effectSource,
+			Context parentContext
 	) {
 		super(owner.getClock());
 		this.owner = owner;
@@ -81,7 +83,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.numStacks = numStacks;
 		this.numCharges = numCharges;
 		this.effectSource = effectSource;
-		this.resolutionContext = new EffectUpdateContext(owner, this);
+		this.effectUpdateContext = new EffectUpdateContext(owner, this, parentContext);
 
 		if (numStacks > effect.getMaxStacks()) {
 			throw new IllegalArgumentException();
@@ -192,7 +194,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void fireStacksMaxed() {
-		Runnable event = () -> EventContext.fireStacksMaxed(this);
+		Runnable event = () -> EventContext.fireStacksMaxed(this, effectUpdateContext);
 
 		if (handle != null) {
 			event.run();

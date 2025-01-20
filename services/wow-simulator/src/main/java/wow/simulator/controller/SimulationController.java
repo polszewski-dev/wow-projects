@@ -72,6 +72,7 @@ public class SimulationController {
 				Duration.INFINITE,
 				activeEffect.numStacks(),
 				1,
+				null,
 				null
 		);
 

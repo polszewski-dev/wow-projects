@@ -27,8 +27,8 @@ public class SpellResolutionContext extends Context {
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
 	private final Set<Unit> spellHitFiredByUnit = new HashSet<>();
 
-	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver) {
-		super(caster, spell);
+	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext) {
+		super(caster, spell, parentContext);
 		this.targetResolver = targetResolver;
 	}
 
@@ -49,7 +49,7 @@ public class SpellResolutionContext extends Context {
 				caster.getGameLog().spellHit(action, target);
 			} else {
 				caster.getGameLog().spellResisted(action, target);
-				EventContext.fireSpellResistedEvent(caster, target, spell);
+				EventContext.fireSpellResistedEvent(caster, target, spell, this);
 			}
 		}
 
@@ -86,7 +86,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void dealDirectDamage(DirectComponent directComponent, CastSpellAction action) {
-		var target = targetResolver.getTarget(directComponent.target());
+		var target = targetResolver.getTarget(directComponent);
 
 		if (!hitRoll(action, target)) {
 			return;
@@ -115,7 +115,7 @@ public class SpellResolutionContext extends Context {
 
 	public EffectInstance applyEffect(EffectSource effectSource) {
 		var effectApplication = spell.getEffectApplication();
-		var target = targetResolver.getTarget(effectApplication.target());
+		var target = targetResolver.getTarget(effectApplication);
 		var appliedEffect = createEffect(target, effectSource);
 
 		target.addEffect(appliedEffect);
@@ -138,7 +138,8 @@ public class SpellResolutionContext extends Context {
 					tickInterval,
 					effectApplication.numStacks(),
 					effectApplication.numCharges(),
-					effectSource
+					effectSource,
+					this
 			);
 		} else {
 			return new NonPeriodicEffectInstance(
@@ -148,7 +149,8 @@ public class SpellResolutionContext extends Context {
 					duration,
 					effectApplication.numStacks(),
 					effectApplication.numCharges(),
-					effectSource
+					effectSource,
+					this
 			);
 		}
 	}
@@ -168,7 +170,7 @@ public class SpellResolutionContext extends Context {
 			return;
 		}
 
-		EventContext.fireSpellHitEvent(caster, target, spell);
+		EventContext.fireSpellHitEvent(caster, target, spell, this);
 		spellHitFiredByUnit.add(target);
 	}
 }

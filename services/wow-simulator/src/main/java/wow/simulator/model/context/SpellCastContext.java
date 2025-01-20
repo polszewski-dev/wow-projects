@@ -21,7 +21,7 @@ public class SpellCastContext extends Context {
 	private SpellResolutionContext spellResolutionContext;
 
 	public SpellCastContext(Unit caster, Ability ability, TargetResolver targetResolver, SpellCastSnapshot snapshot) {
-		super(caster, ability);
+		super(caster, ability, null);
 		this.snapshot = snapshot;
 		this.ability = ability;
 		this.targetResolver = targetResolver;
@@ -51,10 +51,10 @@ public class SpellCastContext extends Context {
 		} else {
 			var costSnapshot = caster.paySpellCost(ability);
 			var cooldown = Duration.seconds(costSnapshot.getCooldown());
-			var cost = costSnapshot.getCostToPayUnreduced();
 
 			caster.triggerCooldown(ability, cooldown);
-			getConversions().performPaidCostConversion(cost);
+			setPaidCost(costSnapshot);
+			getConversions().performPaidCostConversion(costSnapshot.getCostToPayUnreduced());
 		}
 	}
 
@@ -77,6 +77,6 @@ public class SpellCastContext extends Context {
 	}
 
 	public void createSpellResolutionContext() {
-		this.spellResolutionContext = new SpellResolutionContext(caster, spell, targetResolver);
+		this.spellResolutionContext = new SpellResolutionContext(caster, spell, targetResolver, this);
 	}
 }

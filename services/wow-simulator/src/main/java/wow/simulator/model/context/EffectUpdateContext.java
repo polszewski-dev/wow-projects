@@ -13,8 +13,8 @@ public class EffectUpdateContext extends Context {
 
 	private double roundingReminder;
 
-	public EffectUpdateContext(Unit caster, EffectInstance effect) {
-		super(caster, effect.getSourceSpell());
+	public EffectUpdateContext(Unit caster, EffectInstance effect, Context parentContext) {
+		super(caster, effect.getSourceSpell(), parentContext);
 		this.effect = effect;
 		this.target = effect.getTarget();
 	}

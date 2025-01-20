@@ -90,7 +90,7 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	int increaseMana(int amount, boolean crit, Spell spell);
 
-	int decreaseMana(int amount, boolean crit, Ability ability);
+	int decreaseMana(int amount, boolean crit, Spell spell);
 
 	void addEffect(EffectInstance effect);
 

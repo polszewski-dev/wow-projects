@@ -376,8 +376,8 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public int decreaseMana(int amount, boolean crit, Ability ability) {
-		return resources.decreaseMana(amount, crit, ability);
+	public int decreaseMana(int amount, boolean crit, Spell spell) {
+		return resources.decreaseMana(amount, crit, spell);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.PeriodicComponent;
+import wow.simulator.model.context.Context;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -22,9 +23,10 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 			Duration tickInterval,
 			int numStacks,
 			int numCharges,
-			EffectSource effectSource
+			EffectSource effectSource,
+			Context parentContext
 	) {
-		super(owner, target, effect, duration, numStacks, numCharges, effectSource);
+		super(owner, target, effect, duration, numStacks, numCharges, effectSource, parentContext);
 		this.tickInterval = tickInterval;
 	}
 
@@ -48,9 +50,9 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 	private void execPeriodicComponent(PeriodicComponent periodicComponent) {
 		switch (periodicComponent.type()) {
 			case DAMAGE ->
-					resolutionContext.dealPeriodicDamage(tickNo, numStacks);
+					effectUpdateContext.dealPeriodicDamage(tickNo, numStacks);
 			case MANA_GAIN ->
-					resolutionContext.periodicManaGain(numStacks);
+					effectUpdateContext.periodicManaGain(numStacks);
 			default ->
 					throw new UnsupportedOperationException();
 		}

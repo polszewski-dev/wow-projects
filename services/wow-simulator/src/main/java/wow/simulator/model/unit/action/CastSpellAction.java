@@ -108,7 +108,7 @@ public class CastSpellAction extends UnitAction {
 	private void paySpellCost() {
 		castContext.paySpellCost();
 		removeEffectRemovedOnHit();
-		EventContext.fireSpellCastEvent(owner, primaryTarget.getSingleTarget(), ability);
+		EventContext.fireSpellCastEvent(owner, primaryTarget.getSingleTarget(), ability, castContext);
 	}
 
 	private void removeEffectRemovedOnHit() {

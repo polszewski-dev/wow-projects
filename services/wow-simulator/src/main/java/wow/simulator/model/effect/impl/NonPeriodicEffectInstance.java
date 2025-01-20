@@ -3,6 +3,7 @@ package wow.simulator.model.effect.impl;
 import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
+import wow.simulator.model.context.Context;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -17,9 +18,10 @@ public class NonPeriodicEffectInstance extends EffectInstanceImpl {
 			Duration duration,
 			int numStacks,
 			int numCharges,
-			EffectSource effectSource
+			EffectSource effectSource,
+			Context parentContext
 	) {
-		super(owner, target, effect, duration, numStacks, numCharges, effectSource);
+		super(owner, target, effect, duration, numStacks, numCharges, effectSource, parentContext);
 	}
 
 	@Override

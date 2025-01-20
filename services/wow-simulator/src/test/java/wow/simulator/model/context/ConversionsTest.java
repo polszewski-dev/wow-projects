@@ -67,7 +67,8 @@ class ConversionsTest extends WowSimulatorSpringTest {
 				Duration.seconds(1),
 				1,
 				1,
-				new AbilitySource(ability)
+				new AbilitySource(ability),
+				null
 		);
 		return new EffectUpdateConversions(player, effect);
 	}

@@ -1,6 +1,8 @@
 package wow.simulator.model.unit;
 
+import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.component.DirectComponent;
 
 import java.util.Collection;
 import java.util.Map;
@@ -53,6 +55,8 @@ public class TargetResolver {
 					self;
 			case PET ->
 					throw new UnsupportedOperationException("No pets atm");
+			case PARTY ->
+					self;//todo
 			default ->
 					targets.get(targetType);
 		};
@@ -67,5 +71,13 @@ public class TargetResolver {
 
 	public boolean hasAllValidTargets(Collection<SpellTarget> targetTypes) {
 		return targetTypes.stream().allMatch(this::hasValidTarget);
+	}
+
+	public Unit getTarget(DirectComponent directComponent) {
+		return getTarget(directComponent.target());
+	}
+
+	public Unit getTarget(EffectApplication effectApplication) {
+		return getTarget(effectApplication.target());
 	}
 }

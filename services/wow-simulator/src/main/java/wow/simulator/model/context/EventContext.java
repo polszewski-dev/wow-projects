@@ -5,13 +5,16 @@ import lombok.RequiredArgsConstructor;
 import wow.character.util.AbstractEffectCollector;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.PowerType;
+import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
+import wow.commons.model.item.ItemSource;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.talent.TalentSource;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
@@ -31,30 +34,33 @@ public class EventContext {
 	private final Unit caster;
 	private final Unit target;
 	private final Spell spell;
+	private final Context parentContext;
 	private boolean damage;
 	private boolean directDamage;
+	private boolean heal;
+	private boolean directHeal;
 	private boolean critRoll;
 
-	public static void fireSpellHitEvent(Unit caster, Unit target, Spell spell) {
-		var context = new EventContext(caster, target, spell);
+	public static void fireSpellHitEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
 
 		context.fireEvent(SPELL_HIT);
 	}
 
-	public static void fireSpellResistedEvent(Unit caster, Unit target, Spell spell) {
-		var context = new EventContext(caster, target, spell);
+	public static void fireSpellResistedEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
 
 		context.fireEvent(SPELL_RESISTED);
 	}
 
-	public static void fireSpellCastEvent(Unit caster, Unit target, Spell spell) {
-		var context = new EventContext(caster, target, spell);
+	public static void fireSpellCastEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
 
 		context.fireEvent(SPELL_CAST);
 	}
 
-	public static void fireSpellDamageEvent(Unit caster, Unit target, Spell spell, boolean directDamage, boolean critRoll) {
-		var context = new EventContext(caster, target, spell);
+	public static void fireSpellDamageEvent(Unit caster, Unit target, Spell spell, boolean directDamage, boolean critRoll, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
 
 		context.damage = true;
 		context.directDamage = directDamage;
@@ -67,8 +73,22 @@ public class EventContext {
 		}
 	}
 
-	public static void fireStacksMaxed(EffectInstance effect) {
-		var context = new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell());
+	public static void fireSpellHealEvent(Unit caster, Unit target, Spell spell, boolean directHeal, boolean critRoll, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
+
+		context.heal = true;
+		context.directHeal = directHeal;
+		context.critRoll = critRoll;
+
+		context.fireEvent(SPELL_HEAL);
+
+		if (critRoll) {
+			context.fireEvent(SPELL_CRIT);
+		}
+	}
+
+	public static void fireStacksMaxed(EffectInstance effect, Context parentContext) {
+		var context = new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell(), parentContext);
 
 		for (var event : effect.getEvents()) {
 			if (event.types().contains(STACKS_MAXED)) {
@@ -101,7 +121,7 @@ public class EventContext {
 		var event = entry.event();
 		var effect = entry.effect();
 
-		if (meetsAllConditions(entry) && eventRoll(event)) {
+		if (meetsAllConditions(entry) && !isOnCooldown(event) && eventRoll(event)) {
 			performEventActions(event, effect);
 		}
 	}
@@ -117,6 +137,18 @@ public class EventContext {
 		var args = getConditionArgs(entry.effectTarget());
 
 		return check(event.condition(), args);
+	}
+
+	private boolean isOnCooldown(Event event) {
+		var spell = event.triggeredSpell();
+
+		if (spell == null || !spell.hasCooldown()) {
+			return false;
+		}
+
+		var cooldownId = CooldownId.of(spell);
+
+		return caster.isOnCooldown(cooldownId);
 	}
 
 	private boolean eventRoll(Event event) {
@@ -139,6 +171,14 @@ public class EventContext {
 			args.setDirect(directDamage);
 			args.setPeriodic(!directDamage);
 			args.setCanCrit(directDamage);
+			args.setHadCrit(critRoll);
+		}
+
+		if (heal) {
+			args.setPowerType(PowerType.HEALING);
+			args.setDirect(directHeal);
+			args.setPeriodic(!directHeal);
+			args.setCanCrit(directHeal);
 			args.setHadCrit(critRoll);
 		}
 
@@ -166,10 +206,6 @@ public class EventContext {
 		if (spell.hasCooldown()) {
 			var cooldownId = CooldownId.of(spell);
 
-			if (caster.isOnCooldown(cooldownId)) {
-				return;
-			}
-
 			caster.triggerCooldown(cooldownId, spell.getCooldown());
 		}
 
@@ -178,7 +214,9 @@ public class EventContext {
 		}
 
 		var targetResolver = TargetResolver.ofTarget(caster, target);
-		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver);
+		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver, parentContext);
+
+		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, spell));
 
 		for (var directComponent : spell.getDirectComponents()) {
 			resolutionContext.directComponentAction(directComponent, null);
@@ -187,6 +225,15 @@ public class EventContext {
 		if (spell.getEffectApplication() != null) {
 			resolutionContext.applyEffect(effect.getSource());
 		}
+	}
+
+	private Spell getSourceSpellOverride(Effect effect, Spell triggeredSpell) {
+		return switch (effect.getSource()) {
+			case AbilitySource s -> s.ability();
+			case TalentSource s -> triggeredSpell;
+			case ItemSource s -> triggeredSpell;
+			default -> null;
+		};
 	}
 
 	private record EventAndEffect(Event event, Effect effect, Unit effectTarget) {}
