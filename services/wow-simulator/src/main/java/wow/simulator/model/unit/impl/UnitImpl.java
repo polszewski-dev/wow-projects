@@ -381,8 +381,8 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public void addEffect(EffectInstance effect) {
-		effects.addEffect(effect);
+	public void addEffect(EffectInstance effect, EffectReplacementMode replacementMode) {
+		effects.addEffect(effect, replacementMode);
 	}
 
 	@Override

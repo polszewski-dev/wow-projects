@@ -131,9 +131,10 @@ public class SpellResolutionContext extends Context {
 	public EffectInstance applyEffect(EffectSource effectSource) {
 		var effectApplication = spell.getEffectApplication();
 		var target = targetResolver.getTarget(effectApplication);
+		var replacementMode = effectApplication.replacementMode();
 		var appliedEffect = createEffect(target, effectSource);
 
-		target.addEffect(appliedEffect);
+		target.addEffect(appliedEffect, replacementMode);
 		fireSpellHitEvent(target);
 		return appliedEffect;
 	}

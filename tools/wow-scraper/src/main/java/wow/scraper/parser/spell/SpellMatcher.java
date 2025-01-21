@@ -5,10 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EffectImpl;
-import wow.commons.model.spell.CastInfo;
-import wow.commons.model.spell.EffectApplication;
-import wow.commons.model.spell.SpellTarget;
-import wow.commons.model.spell.TickScheme;
+import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.spell.component.DirectComponentBonus;
 import wow.commons.model.spell.impl.AbilityImpl;
@@ -272,13 +269,15 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var duration = getOptionalDuration(effectApplication.duration()).orElseThrow();
 		var numStacks = getOptionalInteger(effectApplication.numStacks()).orElse(1);
 		var numCharges = getOptionalInteger(effectApplication.numCharges()).orElse(1);
+		var replacementMode = EffectReplacementMode.DEFAULT;
 
 		return new EffectApplication(
 				target,
 				effect,
 				duration,
 				numStacks,
-				numCharges
+				numCharges,
+				replacementMode
 		);
 	}
 

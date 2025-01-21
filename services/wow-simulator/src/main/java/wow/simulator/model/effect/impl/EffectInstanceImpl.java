@@ -220,6 +220,12 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
+	public void addCharge() {
+		++numCharges;
+		getGameLog().effectChargesIncreased(this);
+	}
+
+	@Override
 	public void removeCharge() {
 		if (--numCharges <= 0) {
 			removeSelf();

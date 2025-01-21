@@ -159,6 +159,11 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
+	public void effectChargesIncreased(EffectInstance effect) {
+		// ignored
+	}
+
+	@Override
 	public void effectChargesDecreased(EffectInstance effect) {
 		// ignored
 	}

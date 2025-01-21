@@ -3,6 +3,7 @@ package wow.simulator.model.effect;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.EffectReplacementMode;
 import wow.simulator.model.effect.impl.EffectInstanceImpl;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -28,19 +29,34 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 		this.owner = owner;
 	}
 
-	public void addEffect(EffectInstance effect) {
+	public void addEffect(EffectInstance effect, EffectReplacementMode replacementMode) {
 		var effectImpl = (EffectInstanceImpl) effect;
 		var matchingEffect = getMatchingEffect(effect);
 
-		if (matchingEffect != null) {
-			effectImpl.stack(matchingEffect);
-			removeEffect(matchingEffect);
+		if (matchingEffect == null) {
+			addNewEffect(effectImpl);
+		} else {
+			replaceExistingEffect(effectImpl, matchingEffect, replacementMode);
 		}
+	}
 
+	private void addNewEffect(EffectInstanceImpl effect) {
 		var handle = updateQueue.add(effect);
 
-		effectImpl.setHandle(handle);
-		effectImpl.fireDeferredEvents();
+		effect.setHandle(handle);
+		effect.fireDeferredEvents();
+	}
+
+	private void replaceExistingEffect(EffectInstanceImpl effect, EffectInstance matchingEffect, EffectReplacementMode replacementMode) {
+		switch (replacementMode) {
+			case DEFAULT -> {
+				effect.stack(matchingEffect);
+				removeEffect(matchingEffect);
+				addNewEffect(effect);
+			}
+			case ADD_CHARGE ->
+				matchingEffect.addCharge();
+		}
 	}
 
 	private EffectInstance getMatchingEffect(EffectInstance effect) {

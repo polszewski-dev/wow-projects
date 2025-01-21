@@ -222,6 +222,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record EffectStacksDecreased(Time time, AbilityId spell, Unit target, int numStacks) implements Event {}
 		public record TalentEffectStacksDecreased(Time time, TalentId talentId, Unit target, int numStacks) implements Event {}
 		public record ItemEffectStacksDecreased(Time time, String itemName, Unit target, int numStacks) implements Event {}
+		public record EffectChargesIncreased(Time time, AbilityId spell, Unit target, int numCharges) implements Event {}
+		public record TalentEffectChargesIncreased(Time time, TalentId talentId, Unit target, int numCharges) implements Event {}
+		public record ItemEffectChargesIncreased(Time time, String itemName, Unit target, int numCharges) implements Event {}
 		public record EffectChargesDecreased(Time time, AbilityId spell, Unit target, int numCharges) implements Event {}
 		public record TalentEffectChargesDecreased(Time time, TalentId talentId, Unit target, int numCharges) implements Event {}
 		public record ItemEffectChargesDecreased(Time time, String itemName, Unit target, int numCharges) implements Event {}
@@ -351,6 +354,19 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 						addEvent(new TalentEffectStacksDecreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumStacks()));
 				case ItemSource s ->
 						addEvent(new ItemEffectStacksDecreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
+				default -> throw new IllegalArgumentException();
+			}
+		}
+
+		@Override
+		public void effectChargesIncreased(EffectInstance effect) {
+			switch (effect.getSource()) {
+				case AbilitySource s ->
+						addEvent(new EffectChargesIncreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumCharges()));
+				case TalentSource s ->
+						addEvent(new TalentEffectChargesIncreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumCharges()));
+				case ItemSource s ->
+						addEvent(new ItemEffectChargesIncreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
 				default -> throw new IllegalArgumentException();
 			}
 		}
@@ -554,6 +570,14 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		public EventListBuilder effectStacksDecreased(TalentId talentId, Unit target, int numStacks) {
 			return addEvent(new TalentEffectStacksDecreased(time, talentId, target, numStacks));
+		}
+
+		public EventListBuilder effectChargesIncreased(AbilityId abilityId, Unit target, int numCharges) {
+			return addEvent(new EffectChargesIncreased(time, abilityId, target, numCharges));
+		}
+
+		public EventListBuilder effectChargesIncreased(TalentId talentId, Unit target, int numCharges) {
+			return addEvent(new TalentEffectChargesIncreased(time, talentId, target, numCharges));
 		}
 
 		public EventListBuilder effectChargesDecreased(AbilityId abilityId, Unit target, int numCharges) {

@@ -14,15 +14,17 @@ public record EffectApplication(
 		Effect effect,
 		Duration duration,
 		int numStacks,
-		int numCharges
+		int numCharges,
+		EffectReplacementMode replacementMode
 ) {
 	public EffectApplication {
 		Objects.requireNonNull(target);
 		Objects.requireNonNull(effect);
 		Objects.requireNonNull(duration);
+		Objects.requireNonNull(replacementMode);
 	}
 
 	public EffectApplication setEffect(Effect effect) {
-		return new EffectApplication(target, effect, duration, numStacks, numCharges);
+		return new EffectApplication(target, effect, duration, numStacks, numCharges, replacementMode);
 	}
 }

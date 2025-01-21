@@ -3,10 +3,7 @@ package wow.simulator.model.unit;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.CooldownId;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
@@ -92,7 +89,7 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	int decreaseMana(int amount, boolean crit, Spell spell);
 
-	void addEffect(EffectInstance effect);
+	void addEffect(EffectInstance effect, EffectReplacementMode replacementMode);
 
 	void removeEffect(EffectInstance effect);
 

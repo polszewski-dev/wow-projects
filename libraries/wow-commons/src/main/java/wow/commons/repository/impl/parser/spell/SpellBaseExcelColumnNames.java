@@ -60,6 +60,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String APPLIED_EFFECT_DURATION = "duration";
 	public static final String APPLIED_EFFECT_STACKS = "stacks";
 	public static final String APPLIED_EFFECT_CHARGES = "charges";
+	public static final String APPLIED_EFFECT_REPLACEMENT_MODE = "replacement mode";
 
 	public static final String COST_PREFIX = "cost: ";
 	public static final String PERIODIC_PREFIX = "periodic: ";

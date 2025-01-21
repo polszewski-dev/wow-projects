@@ -109,6 +109,11 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
+	public void effectChargesIncreased(EffectInstance effect) {
+		handlers.forEach(handler -> handler.effectChargesIncreased(effect));
+	}
+
+	@Override
 	public void effectChargesDecreased(EffectInstance effect) {
 		handlers.forEach(handler -> handler.effectChargesDecreased(effect));
 	}

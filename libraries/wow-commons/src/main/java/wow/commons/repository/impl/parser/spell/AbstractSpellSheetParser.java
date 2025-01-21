@@ -245,6 +245,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colAppliedEffectDuration = column(APPLIED_EFFECT_DURATION);
 	private final ExcelColumn colAppliedEffectStacks = column(APPLIED_EFFECT_STACKS);
 	private final ExcelColumn colAppliedEffectCharges = column(APPLIED_EFFECT_CHARGES);
+	private final ExcelColumn colReplacementMode = column(APPLIED_EFFECT_REPLACEMENT_MODE, true);
 
 	private EffectApplication getEffectApplication() {
 		var prefix = APPLY_PREFIX;
@@ -258,10 +259,11 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var duration = colAppliedEffectDuration.prefixed(prefix).getDuration();
 		var numStacks = colAppliedEffectStacks.prefixed(prefix).getInteger();
 		var numCharges = colAppliedEffectCharges.prefixed(prefix).getInteger();
+		var replacementMode = colReplacementMode.prefixed(prefix).getEnum(EffectReplacementMode::parse, EffectReplacementMode.DEFAULT);
 
 		var dummy = getDummyEffect(effectId);
 
-		return new EffectApplication(target, dummy, duration, numStacks, numCharges);
+		return new EffectApplication(target, dummy, duration, numStacks, numCharges, replacementMode);
 	}
 
 	protected EffectImpl getDummyEffect(int effectId) {

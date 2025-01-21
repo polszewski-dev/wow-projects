@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.Duration;
+import wow.commons.model.spell.EffectReplacementMode;
 import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.client.dto.ActiveEffectDTO;
 import wow.simulator.client.dto.SimulationRequestDTO;
@@ -76,6 +77,6 @@ public class SimulationController {
 				null
 		);
 
-		target.addEffect(effectInstance);
+		target.addEffect(effectInstance, EffectReplacementMode.DEFAULT);
 	}
 }
