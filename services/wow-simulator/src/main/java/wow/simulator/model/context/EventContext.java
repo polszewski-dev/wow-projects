@@ -230,8 +230,8 @@ public class EventContext {
 	private Spell getSourceSpellOverride(Effect effect, Spell triggeredSpell) {
 		return switch (effect.getSource()) {
 			case AbilitySource s -> s.ability();
-			case TalentSource s -> triggeredSpell;
-			case ItemSource s -> triggeredSpell;
+			case TalentSource ignored -> triggeredSpell;
+			case ItemSource ignored -> triggeredSpell;
 			default -> null;
 		};
 	}
