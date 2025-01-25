@@ -52,9 +52,24 @@ public class CastSpellAction extends UnitAction {
 			castSpell();
 		}
 
-		if (!ability.getCastInfo().ignoresGcd()) {
-			owner.triggerGcd(castContext.getGcd(), this);
+		if (triggersGcd()) {
+			owner.triggerGcd(castContext.getGcd());
 		}
+	}
+
+	@Override
+	protected void onInterrupted() {
+		if (ability.isChanneled()) {
+			getGameLog().channelInterrupted(this);
+		} else {
+			getGameLog().castInterrupted(this);
+		}
+
+		if (ability.isChanneled()) {
+			channeledEffect.removeSelf();
+		}
+
+		super.onInterrupted();
 	}
 
 	private void createSpellCastContext() {
@@ -168,24 +183,16 @@ public class CastSpellAction extends UnitAction {
 		}
 	}
 
-	@Override
-	public void onRemovedFromQueue() {
-		if (ability.isChanneled()) {
-			getGameLog().channelInterrupted(this);
-		} else {
-			getGameLog().castInterrupted(this);
-		}
-		super.onRemovedFromQueue();
-		if (ability.isChanneled()) {
-			channeledEffect.removeSelf();
-		}
-	}
-
 	public AbilityId getAbilityId() {
 		return ability.getAbilityId();
 	}
 
 	public Duration getCastTime() {
 		return castContext.getCastTime();
+	}
+
+	@Override
+	public boolean triggersGcd() {
+		return !ability.getCastInfo().ignoresGcd();
 	}
 }

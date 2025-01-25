@@ -41,6 +41,7 @@ import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
+import wow.simulator.model.update.Scheduler;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.TimeAware;
@@ -84,9 +85,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	private PhaseRepository phaseRepository;
 
 	protected SimulationContext getSimulationContext() {
-		Clock clock = new Clock();
-		GameLog gameLog = new GameLog();
-		return new SimulationContext(clock, gameLog, () -> rng, getCharacterCalculationService());
+		var clock = new Clock();
+		var gameLog = new GameLog();
+		var scheduler = new Scheduler(clock);
+		return new SimulationContext(clock, gameLog, () -> rng, scheduler, getCharacterCalculationService());
 	}
 
 	protected Player getNakedPlayer() {

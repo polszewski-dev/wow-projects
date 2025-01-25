@@ -1,11 +1,10 @@
 package wow.simulator.model.action;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Duration;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
-import wow.simulator.model.update.StageUpdateable;
-import wow.simulator.model.update.UpdateStage;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.util.IdGenerator;
 
@@ -21,9 +20,10 @@ import static wow.simulator.model.action.ActionStatus.*;
  * Date: 2023-08-10
  */
 @RequiredArgsConstructor
-public abstract class Action implements Updateable, StageUpdateable {
+public abstract class Action implements Updateable {
 	private static final IdGenerator<ActionId> ID_GENERATOR = new IdGenerator<>(ActionId::new);
 
+	@Getter
 	protected final ActionId actionId = ID_GENERATOR.newId();
 
 	private record Step(Time time, Runnable action, int order) {}
@@ -33,6 +33,8 @@ public abstract class Action implements Updateable, StageUpdateable {
 			.thenComparingInt(Step::order);
 
 	private final PriorityQueue<Step> steps = new PriorityQueue<>(STEP_COMPARATOR);
+
+	@Getter
 	private ActionStatus status = CREATED;
 
 	private int orderGenerator;
@@ -46,7 +48,7 @@ public abstract class Action implements Updateable, StageUpdateable {
 		for (Step step; (step = steps.peek()) != null && clock.timeInThePresent(step.time()); ) {
 			steps.poll();
 			step.action().run();
-			if (status.isTerminal()) {
+			if (isTerminated()) {
 				return;
 			}
 		}
@@ -57,21 +59,11 @@ public abstract class Action implements Updateable, StageUpdateable {
 	}
 
 	@Override
-	public void update(UpdateStage stage) {
-		if (stage == UpdateStage.UNIT) {
-			update();
-		}
-	}
-
-	@Override
 	public final Optional<Time> getNextUpdateTime() {
-		if (status.isTerminal()) {
+		if (isTerminated() || steps.isEmpty()) {
 			return Optional.empty();
 		}
-		if (!steps.isEmpty()) {
-			return Optional.of(steps.peek().time());
-		}
-		return Optional.empty();
+		return Optional.of(steps.peek().time());
 	}
 
 	@Override
@@ -89,6 +81,7 @@ public abstract class Action implements Updateable, StageUpdateable {
 
 	public final void start() {
 		setStatus(IN_PROGRESS);
+		onStarted();
 	}
 
 	protected final void finish() {
@@ -102,6 +95,10 @@ public abstract class Action implements Updateable, StageUpdateable {
 		}
 		setStatus(INTERRUPTED);
 		onInterrupted();
+	}
+
+	protected void onStarted() {
+		// void
 	}
 
 	protected void onFinished() {
@@ -158,8 +155,8 @@ public abstract class Action implements Updateable, StageUpdateable {
 		}
 	}
 
-	public ActionStatus getStatus() {
-		return status;
+	public boolean isInProgress() {
+		return status == IN_PROGRESS;
 	}
 
 	public boolean isTerminated() {
@@ -170,10 +167,6 @@ public abstract class Action implements Updateable, StageUpdateable {
 		if (status != expectedStatus) {
 			throw new IllegalStateException("" + status);
 		}
-	}
-
-	public ActionId getActionId() {
-		return actionId;
 	}
 
 	@Override

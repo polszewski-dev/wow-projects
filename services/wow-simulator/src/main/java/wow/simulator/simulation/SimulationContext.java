@@ -6,6 +6,7 @@ import wow.character.service.CharacterCalculationService;
 import wow.simulator.log.GameLog;
 import wow.simulator.model.rng.RngFactory;
 import wow.simulator.model.time.Clock;
+import wow.simulator.model.update.Scheduler;
 
 /**
  * User: POlszewski
@@ -17,6 +18,7 @@ public class SimulationContext implements SimulationContextSource {
 	private final Clock clock;
 	private final GameLog gameLog;
 	private final RngFactory rngFactory;
+	private final Scheduler scheduler;
 	private final CharacterCalculationService characterCalculationService;
 	private Simulation simulation;
 

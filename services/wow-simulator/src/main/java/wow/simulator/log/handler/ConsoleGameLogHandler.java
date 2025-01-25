@@ -140,6 +140,7 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 			case AbilityCooldownId c -> c.abilityId().toString();
 			case GroupCooldownId c -> c.group().toString();
 			case SpellCooldownId c -> c.spellId() + "";
+			case GcdCooldownId ignored -> "GCD";
 		};
 	}
 

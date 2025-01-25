@@ -8,8 +8,6 @@ import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
-import wow.simulator.model.unit.action.UnitAction;
-import wow.simulator.model.update.StageUpdateable;
 import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.Optional;
@@ -19,7 +17,7 @@ import java.util.function.Consumer;
  * User: POlszewski
  * Date: 2023-08-07
  */
-public interface Unit extends Character, StageUpdateable, SimulationContextSource {
+public interface Unit extends Character, SimulationContextSource {
 	UnitId getId();
 
 	String getName();
@@ -33,6 +31,8 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty);
 
+	void ensureAction();
+
 	void cast(AbilityId abilityId);
 
 	void cast(AbilityId abilityId, Unit target);
@@ -41,7 +41,7 @@ public interface Unit extends Character, StageUpdateable, SimulationContextSourc
 
 	void idleFor(Duration duration);
 
-	void triggerGcd(Duration gcd, UnitAction sourceAction);
+	void triggerGcd(Duration duration);
 
 	void interruptCurrentAction();
 

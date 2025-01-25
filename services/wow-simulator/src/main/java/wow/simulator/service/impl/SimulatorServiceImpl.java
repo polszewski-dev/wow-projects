@@ -15,6 +15,7 @@ import wow.simulator.model.stats.Stats;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
+import wow.simulator.model.update.Scheduler;
 import wow.simulator.script.warlock.RotationScript;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
@@ -62,8 +63,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var clock = new Clock();
 		var gameLog = new GameLog();
 		var rngFactory = createRngFactory(rngType);
+		var scheduler = new Scheduler(clock);
 		var simulationContext = new SimulationContext(
-				clock, gameLog, rngFactory, characterCalculationService
+				clock, gameLog, rngFactory, scheduler, characterCalculationService
 		);
 
 		return new Simulation(simulationContext);

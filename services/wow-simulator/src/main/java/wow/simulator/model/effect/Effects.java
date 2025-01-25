@@ -5,15 +5,12 @@ import wow.character.model.effect.EffectCollector;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.EffectReplacementMode;
 import wow.simulator.model.effect.impl.EffectInstanceImpl;
-import wow.simulator.model.time.Clock;
-import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.update.Handle;
-import wow.simulator.model.update.UpdateQueue;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
-import wow.simulator.simulation.TimeAware;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -21,9 +18,10 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2023-08-16
  */
-public class Effects implements SimulationContextSource, TimeAware, EffectCollection {
+public class Effects implements SimulationContextSource, EffectCollection {
 	private final Unit owner;
-	private final UpdateQueue<EffectInstance> updateQueue = new UpdateQueue<>();
+
+	private final Map<EffectInstanceId, EffectInstance> effectsById = new HashMap<>();
 
 	public Effects(Unit owner) {
 		this.owner = owner;
@@ -41,9 +39,10 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 	}
 
 	private void addNewEffect(EffectInstanceImpl effect) {
-		var handle = updateQueue.add(effect);
+		attach(effect);
 
-		effect.setHandle(handle);
+		getScheduler().add(effect);
+
 		effect.fireDeferredEvents();
 	}
 
@@ -68,19 +67,12 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 	}
 
 	public void removeEffect(EffectInstance effect) {
-		updateQueue.remove(((EffectInstanceImpl) effect).getHandle());
+		detach(effect);
+		((EffectInstanceImpl) effect).interrupt();
 	}
 
 	public void removeEffect(AbilityId abilityId, Unit owner) {
-		getEffect(abilityId, owner).ifPresent(EffectInstance::removeSelf);
-	}
-
-	public void updateAllPresentActions() {
-		updateQueue.updateAllPresentActions();
-	}
-
-	public Optional<Time> getNextUpdateTime() {
-		return updateQueue.getNextUpdateTime();
+		getEffect(abilityId, owner).ifPresent(this::removeEffect);
 	}
 
 	public boolean isUnderEffect(AbilityId abilityId, Unit owner) {
@@ -105,25 +97,21 @@ public class Effects implements SimulationContextSource, TimeAware, EffectCollec
 	}
 
 	@Override
-	public void setClock(Clock clock) {
-		updateQueue.setClock(clock);
-	}
-
-	@Override
 	public void collectEffects(EffectCollector collector) {
-		if (updateQueue.getCurrentlyUpdatedElement() != null) {
-			var effect = updateQueue.getCurrentlyUpdatedElement();
-			collector.addEffect(effect, effect.getNumStacks());
-		}
-
-		for (var elementHandle : updateQueue.getElements()) {
-			var effect = elementHandle.get();
+		for (var effect : effectsById.values()) {
 			collector.addEffect(effect, effect.getNumStacks());
 		}
 	}
 
 	private Stream<EffectInstance> getEffectInstanceStream() {
-		return updateQueue.getElements().stream()
-				.map(Handle::get);
+		return effectsById.values().stream();
+	}
+
+	private void attach(EffectInstanceImpl effect) {
+		effectsById.put(effect.getId(), effect);
+	}
+
+	public void detach(EffectInstance effect) {
+		this.effectsById.remove(effect.getId());
 	}
 }

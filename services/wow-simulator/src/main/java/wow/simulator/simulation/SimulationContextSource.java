@@ -4,6 +4,7 @@ import wow.character.service.CharacterCalculationService;
 import wow.simulator.log.GameLog;
 import wow.simulator.model.rng.RngFactory;
 import wow.simulator.model.time.Clock;
+import wow.simulator.model.update.Scheduler;
 
 /**
  * User: POlszewski
@@ -30,6 +31,8 @@ public interface SimulationContextSource extends TimeSource {
 	}
 
 	default Simulation getSimulation() { return getSimulationContext().getSimulation(); }
+
+	default Scheduler getScheduler() { return getSimulationContext().getScheduler(); }
 
 	default void shareSimulationContext(SimulationContextAware simulationContextAware) {
 		simulationContextAware.setSimulationContext(getSimulationContext());

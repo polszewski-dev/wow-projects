@@ -1,7 +1,5 @@
 package wow.simulator.model.effect.impl;
 
-import lombok.Getter;
-import lombok.Setter;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
@@ -22,11 +20,10 @@ import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.update.Handle;
+import wow.simulator.model.unit.impl.UnitImpl;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.util.IdGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,12 +53,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	private boolean silentRemoval = false;
 	private boolean stacked = false;
 	private boolean removed;
+	private boolean fireStacksMaxed;
 
-	private final List<Runnable> deferredEvents = new ArrayList<>();
-
-	@Getter
-	@Setter
-	private Handle<EffectInstance> handle;
 	private Runnable onEffectFinished;
 
 	protected EffectInstanceImpl(
@@ -99,8 +92,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected abstract void doSetUp();
 
 	@Override
-	public void onAddedToQueue() {
-		super.onAddedToQueue();
+	protected void onStarted() {
 		if (stacked) {
 			getGameLog().effectStacked(this);
 		} else {
@@ -110,8 +102,6 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	protected void onFinished() {
-		super.onFinished();
-
 		this.removed = true;
 
 		getGameLog().effectExpired(this);
@@ -125,14 +115,18 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	protected void onInterrupted() {
-		super.onInterrupted();
-
 		this.removed = true;
 
 		if (!silentRemoval) {
 			getGameLog().effectRemoved(this);
 			fireEffectEnded();
 		}
+	}
+
+	@Override
+	public void onRemovedFromQueue() {
+		super.onRemovedFromQueue();
+		((UnitImpl) target).detach(this);
 	}
 
 	private void fireEffectEnded() {
@@ -200,20 +194,17 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void fireStacksMaxed() {
-		Runnable event = () -> EventContext.fireStacksMaxed(this, effectUpdateContext);
-
-		if (handle != null) {
-			event.run();
-		} else {
-			deferredEvents.add(event);
+		switch (getStatus()) {
+			case CREATED ->
+					this.fireStacksMaxed = true;
+			case IN_PROGRESS ->
+					EventContext.fireStacksMaxed(this, effectUpdateContext);
 		}
 	}
 
 	public void fireDeferredEvents() {
-		var copy = List.copyOf(deferredEvents);
-		deferredEvents.clear();
-		for (var event : copy) {
-			event.run();
+		if (fireStacksMaxed) {
+			EventContext.fireStacksMaxed(this, effectUpdateContext);
 		}
 	}
 

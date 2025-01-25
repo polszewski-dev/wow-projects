@@ -80,6 +80,14 @@ public record Time(long timestamp) implements Comparable<Time> {
 		return this.timestamp > time.timestamp ? this : time;
 	}
 
+	public boolean after(Time time) {
+		return this.compareTo(time) > 0;
+	}
+
+	public boolean before(Time time) {
+		return this.compareTo(time) < 0;
+	}
+
 	@Override
 	public int compareTo(Time time) {
 		return Long.compare(this.timestamp, time.timestamp);

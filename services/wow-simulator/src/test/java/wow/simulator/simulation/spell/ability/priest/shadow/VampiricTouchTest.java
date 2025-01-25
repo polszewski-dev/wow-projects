@@ -113,7 +113,8 @@ class VampiricTouchTest extends PriestSpellSimulationTest {
 				at(16.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
-						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN),
+						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
+						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH),
 				at(19.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 		);

@@ -4,21 +4,21 @@ import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.action.Action;
-import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.update.Updateable;
+import wow.simulator.model.unit.action.UnitAction;
+import wow.simulator.model.unit.impl.UnitImpl;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 import wow.simulator.util.IdGenerator;
 
-import java.util.Optional;
+import static wow.commons.model.spell.GcdCooldownId.GCD;
 
 /**
  * User: POlszewski
  * Date: 2023-08-19
  */
-public class CooldownInstance implements Updateable, SimulationContextSource {
+public class CooldownInstance extends Action implements SimulationContextSource {
 	private static final IdGenerator<CooldownInstanceId> ID_GENERATOR = new IdGenerator<>(CooldownInstanceId::new);
 
 	@Getter
@@ -30,35 +30,46 @@ public class CooldownInstance implements Updateable, SimulationContextSource {
 	@Getter
 	private final Duration duration;
 	private final Time endTime;
-	private final CooldownAction cooldownAction;
 
-	public CooldownInstance(CooldownId cooldownId, Unit owner, Duration duration) {
+	private final UnitAction sourceAction;
+
+	public CooldownInstance(CooldownId cooldownId, Unit owner, Duration duration, UnitAction sourceAction) {
+		super(owner.getClock());
 		this.cooldownId = cooldownId;
 		this.owner = owner;
 		this.duration = duration;
 		this.endTime = now().add(duration);
-		this.cooldownAction = new CooldownAction(owner.getClock());
+		this.sourceAction = sourceAction;
 	}
 
 	@Override
-	public void update() {
-		cooldownAction.update();
+	protected void setUp() {
+		on(endTime, () -> {});
 	}
 
 	@Override
-	public Optional<Time> getNextUpdateTime() {
-		return cooldownAction.getNextUpdateTime();
+	protected void onStarted() {
+		if (cooldownId == GCD) {
+			getGameLog().beginGcd(sourceAction);
+		} else {
+			getGameLog().cooldownStarted(this);
+		}
 	}
 
 	@Override
-	public void onAddedToQueue() {
-		cooldownAction.start();
-		getGameLog().cooldownStarted(this);
+	protected void onFinished() {
+		((UnitImpl) owner).detach(this);
+
+		if (cooldownId == GCD) {
+			getGameLog().endGcd(sourceAction);
+		} else {
+			getGameLog().cooldownExpired(this);
+		}
 	}
 
 	@Override
-	public void onRemovedFromQueue() {
-		cooldownAction.interrupt();
+	protected void onInterrupted() {
+		onFinished();
 	}
 
 	public boolean isActive() {
@@ -67,27 +78,6 @@ public class CooldownInstance implements Updateable, SimulationContextSource {
 
 	public Duration getRemainingDuration() {
 		return endTime.subtract(now()).min(Duration.ZERO);
-	}
-
-	private class CooldownAction extends Action {
-		public CooldownAction(Clock clock) {
-			super(clock);
-		}
-
-		@Override
-		protected void setUp() {
-			on(endTime, () -> {});
-		}
-
-		@Override
-		protected void onFinished() {
-			getGameLog().cooldownExpired(CooldownInstance.this);
-		}
-
-		@Override
-		protected void onInterrupted() {
-			getGameLog().cooldownExpired(CooldownInstance.this);
-		}
 	}
 
 	@Override

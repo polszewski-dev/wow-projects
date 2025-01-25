@@ -4,44 +4,38 @@ import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
-import wow.simulator.model.time.Clock;
-import wow.simulator.model.time.Time;
+import wow.simulator.model.action.Action;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.update.Handle;
-import wow.simulator.model.update.UpdateQueue;
+import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
-import wow.simulator.simulation.TimeAware;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import static wow.commons.model.spell.GcdCooldownId.GCD;
 
 /**
  * User: POlszewski
  * Date: 2023-08-19
  */
-public class Cooldowns implements SimulationContextSource, TimeAware {
+public class Cooldowns implements SimulationContextSource {
 	private final Unit owner;
-	private final UpdateQueue<CooldownInstance> updateQueue = new UpdateQueue<>();
+
+	private final Map<CooldownId, CooldownInstance> cooldownsById = new HashMap<>();
 
 	public Cooldowns(Unit owner) {
 		this.owner = owner;
 	}
 
-	public void updateAllPresentCooldowns() {
-		updateQueue.updateAllPresentActions();
-	}
-
-	public Optional<Time> getNextUpdateTime() {
-		return updateQueue.getNextUpdateTime();
-	}
-
-	public void triggerCooldown(Ability ability, Duration actualDuration) {
+	public void triggerCooldown(Ability ability, Duration actualDuration, UnitAction currentAction) {
 		var cooldownId = CooldownId.of(ability.getAbilityId());
 
-		triggerCooldown(cooldownId, actualDuration);
+		triggerCooldown(cooldownId, actualDuration, currentAction);
 	}
 
-	public void triggerCooldown(CooldownId cooldownId, Duration actualDuration) {
+	public void triggerCooldown(CooldownId cooldownId, Duration actualDuration, UnitAction currentAction) {
 		if (actualDuration.isZero()) {
 			return;
 		}
@@ -50,9 +44,16 @@ public class Cooldowns implements SimulationContextSource, TimeAware {
 			throw new IllegalStateException();
 		}
 
-		var cooldown = new CooldownInstance(cooldownId, owner, actualDuration);
+		var cooldown = new CooldownInstance(cooldownId, owner, actualDuration, currentAction);
 
-		updateQueue.add(cooldown);
+		attach(cooldown);
+		getScheduler().add(cooldown);
+	}
+
+	public void interruptGcd() {
+		var gcd = getCooldown(GCD);
+
+		gcd.ifPresent(Action::interrupt);
 	}
 
 	public boolean isOnCooldown(AbilityId abilityId) {
@@ -68,19 +69,23 @@ public class Cooldowns implements SimulationContextSource, TimeAware {
 	}
 
 	private Optional<CooldownInstance> getCooldown(CooldownId cooldownId) {
-		return updateQueue.getElements().stream()
-				.map(Handle::get)
-				.filter(x -> x.getCooldownId().equals(cooldownId))
-				.findAny();
+		return Optional.ofNullable(cooldownsById.get(cooldownId));
+	}
+
+	private void attach(CooldownInstance cooldown) {
+		cooldownsById.put(cooldown.getCooldownId(), cooldown);
+	}
+
+	public void detach(CooldownInstance cooldown) {
+		var existingCooldown = cooldownsById.get(cooldown.getCooldownId());
+
+		if (existingCooldown == cooldown) {
+			cooldownsById.remove(cooldown.getCooldownId());
+		}
 	}
 
 	@Override
 	public SimulationContext getSimulationContext() {
 		return owner.getSimulationContext();
-	}
-
-	@Override
-	public void setClock(Clock clock) {
-		updateQueue.setClock(clock);
 	}
 }

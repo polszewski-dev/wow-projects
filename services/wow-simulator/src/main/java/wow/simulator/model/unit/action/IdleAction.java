@@ -19,4 +19,9 @@ public class IdleAction extends UnitAction {
 	protected void setUp() {
 		on(end, () -> {});
 	}
+
+	@Override
+	public boolean triggersGcd() {
+		return false;
+	}
 }

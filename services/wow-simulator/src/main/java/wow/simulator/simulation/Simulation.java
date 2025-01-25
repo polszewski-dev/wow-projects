@@ -5,8 +5,10 @@ import wow.commons.model.Duration;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Time;
-import wow.simulator.model.update.StageUpdateable;
-import wow.simulator.model.update.StagedUpdateQueue;
+import wow.simulator.model.unit.Unit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -14,19 +16,24 @@ import wow.simulator.model.update.StagedUpdateQueue;
  */
 @Getter
 public class Simulation implements SimulationContextSource {
-	private final StagedUpdateQueue<StageUpdateable> updateQueue = new StagedUpdateQueue<>();
+	private final List<Unit> units = new ArrayList<>();
 	private final SimulationContext simulationContext;
+
 	private Time timeUntilSimulationEnd;
 
 	public Simulation(SimulationContext simulationContext) {
 		this.simulationContext = simulationContext;
 		simulationContext.setSimulation(this);
-		shareClock(updateQueue);
 	}
 
-	public void add(StageUpdateable updateable) {
-		shareSimulationContext(updateable);
-		updateQueue.add(updateable);
+	public void add(Unit unit) {
+		shareSimulationContext(unit);
+		this.units.add(unit);
+	}
+
+	public void add(Action action) {
+		shareSimulationContext(action);
+		getScheduler().add(action);
 	}
 
 	public void updateUntil(Time timeUntil) {
@@ -34,16 +41,19 @@ public class Simulation implements SimulationContextSource {
 
 		getGameLog().simulationStarted();
 
-		while (!updateQueue.isEmpty()) {
-			Time nextUpdateTime = updateQueue.getNextUpdateTime().orElseThrow();
+		for (var unit : units) {
+			unit.ensureAction();
+		}
 
-			if (nextUpdateTime.compareTo(timeUntil) > 0) {
+		while (!getScheduler().isEmpty()) {
+			var nextUpdateTime = getScheduler().getNextUpdateTime().orElseThrow();
+
+			if (nextUpdateTime.after(timeUntil)) {
 				break;
 			}
 
 			getClock().advanceTo(nextUpdateTime);
-
-			updateQueue.updateAllPresentActions();
+			getScheduler().updateAllPresentActions();
 		}
 
 		getClock().advanceTo(timeUntil);
@@ -55,18 +65,12 @@ public class Simulation implements SimulationContextSource {
 		getGameLog().addHandler(handler);
 	}
 
-	public void delayedAction(Duration delay, Runnable handler) {
+	public void delayedAction(Duration delay, Runnable runnable) {
 		if (delay.isZero()) {
-			handler.run();
-			return;
+			runnable.run();
+		} else {
+			getScheduler().add(delay, runnable);
 		}
-		Action action = new Action(getClock()) {
-			@Override
-			protected void setUp() {
-				fromNowAfter(delay, handler);
-			}
-		};
-		updateQueue.add(action);
 	}
 
 	public Duration getRemainingTime() {

@@ -15,6 +15,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentId;
+import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.Effects;
@@ -22,20 +23,16 @@ import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.*;
 import wow.simulator.model.unit.action.CastSpellAction;
-import wow.simulator.model.unit.action.GcdAction;
 import wow.simulator.model.unit.action.IdleAction;
 import wow.simulator.model.unit.action.UnitAction;
-import wow.simulator.model.update.UpdateQueue;
-import wow.simulator.model.update.UpdateStage;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextAware;
 import wow.simulator.util.IdGenerator;
 
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+
+import static wow.commons.model.spell.GcdCooldownId.GCD;
 
 /**
  * User: POlszewski
@@ -53,7 +50,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	private final Cooldowns cooldowns = new Cooldowns(this);
 
 	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
-	private final UpdateQueue<UnitAction> updateQueue = new UpdateQueue<>();
+	private UnitAction currentAction;
 
 	private Consumer<Unit> onPendingActionQueueEmpty;
 
@@ -78,26 +75,11 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 		this.simulationContext = simulationContext;
 		shareClock(effects);
 		shareClock(cooldowns);
-		shareClock(updateQueue);
 	}
 
 	@Override
-	public void update(UpdateStage updateStage) {
-		switch (updateStage) {
-			case COOLDOWN -> cooldowns.updateAllPresentCooldowns();
-			case UNIT -> {
-				ensureAction();
-				updateQueue.updateAllPresentActions();
-			}
-			case EFFECT -> effects.updateAllPresentActions();
-			case ACTION -> {
-				// ignore
-			}
-		}
-	}
-
-	private void ensureAction() {
-		if (!updateQueue.isEmpty()) {
+	public void ensureAction() {
+		if (hasActionInProgress() || isOnCooldown(GCD)) {
 			return;
 		}
 
@@ -109,22 +91,10 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 			throw new IllegalStateException();
 		}
 
-		UnitAction newAction = pendingActionQueue.removeEarliestAction();
+		var newAction = pendingActionQueue.removeEarliestAction();
 
-		updateQueue.add(newAction);
-	}
-
-	@Override
-	public Optional<Time> getNextUpdateTime() {
-		Optional<Time> nextActionUpdateTime = updateQueue.getNextUpdateTime();
-
-		if (nextActionUpdateTime.isEmpty()) {
-			nextActionUpdateTime = Optional.of(getClock().now());
-		}
-
-		return Stream.of(nextActionUpdateTime, effects.getNextUpdateTime(), cooldowns.getNextUpdateTime())
-				.flatMap(Optional::stream)
-				.min(Comparator.naturalOrder());
+		this.currentAction = newAction;
+		getScheduler().add(newAction);
 	}
 
 	@Override
@@ -195,36 +165,34 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	}
 
 	@Override
-	public void triggerGcd(Duration gcd, UnitAction sourceAction) {
-		GcdAction gcdAction = new GcdAction(gcd, sourceAction);
-		updateQueue.add(gcdAction);
+	public void triggerGcd(Duration duration) {
+		triggerCooldown(GCD, duration);
 	}
 
 	@Override
 	public void interruptCurrentAction() {
-		if (updateQueue.isEmpty() || !isCurrentActionInterruptible()) {
+		if (currentAction == null || !isCurrentActionInterruptible()) {
 			return;
 		}
 
-		Predicate<UnitAction> isGcd = GcdAction.class::isInstance;
+		var triggersGcd = currentAction.triggersGcd();
 
-		updateQueue.removeIf(isGcd.negate());
-		updateQueue.removeIf(isGcd);
+		currentAction.interrupt();
+
+		if (triggersGcd) {
+			cooldowns.interruptGcd();
+		}
 	}
 
-	// possible cases: (gdc, something), (something), (gcd)
-	// (gcd) can't be interrupted
-
 	private boolean isCurrentActionInterruptible() {
-		var elements = updateQueue.getElements();
-
-		if (elements.size() != 1) {
+		if (hasActionInProgress()) {
 			return true;
 		}
+		return !cooldowns.isOnCooldown(GCD);
+	}
 
-		UnitAction action = elements.iterator().next().get();
-
-		return !(action instanceof GcdAction);
+	private boolean hasActionInProgress() {
+		return currentAction != null && currentAction.isInProgress();
 	}
 
 	@Override
@@ -441,12 +409,12 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public void triggerCooldown(Ability ability, Duration actualDuration) {
-		cooldowns.triggerCooldown(ability, actualDuration);
+		cooldowns.triggerCooldown(ability, actualDuration, currentAction);
 	}
 
 	@Override
 	public void triggerCooldown(CooldownId cooldownId, Duration actualDuration) {
-		cooldowns.triggerCooldown(cooldownId, actualDuration);
+		cooldowns.triggerCooldown(cooldownId, actualDuration, currentAction);
 	}
 
 	// character interface
@@ -563,5 +531,22 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	@Override
 	public void setHealthPct(Percent healthPct) {
 		throw new UnsupportedOperationException();
+	}
+
+	public void detach(CooldownInstance cooldown) {
+		cooldowns.detach(cooldown);
+
+		if (cooldown.getCooldownId() == GCD) {
+			ensureAction();
+		}
+	}
+
+	public void detach(EffectInstance effect) {
+		effects.detach(effect);
+	}
+
+	public void actionTerminated() {
+		this.currentAction = null;
+		ensureAction();
 	}
 }
