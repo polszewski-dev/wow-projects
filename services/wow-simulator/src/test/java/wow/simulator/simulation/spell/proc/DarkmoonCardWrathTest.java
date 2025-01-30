@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.util.TestEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -52,7 +53,7 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 		updateUntil(60);
 
 		assertEvents(
-				EventCollectingHandler.Event::isEffect,
+				TestEvent::isEffect,
 				at(3)
 						.effectApplied("Darkmoon Card: Wrath", player, 10),
 				at(6)

@@ -5,13 +5,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.util.TestEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
@@ -53,7 +53,7 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 		updateUntil(60);
 
 		assertEvents(
-				Event::isEffect,
+				TestEvent::isEffect,
 				at(3)
 						.effectApplied("Darkmoon Card: Crusade", player, 10),
 				at(6)

@@ -6,6 +6,7 @@ import wow.commons.model.Duration;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Time;
+import wow.simulator.util.TestEventCollectingHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +124,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 	void setUp() {
 		setupTestObjects();
 
-		handler = new EventCollectingHandler();
+		handler = new TestEventCollectingHandler();
 
 		simulation.addHandler(handler);
 

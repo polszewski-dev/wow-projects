@@ -2,6 +2,7 @@ package wow.simulator.simulation.spell;
 
 import org.junit.jupiter.api.BeforeEach;
 import wow.simulator.WowSimulatorSpringTest;
+import wow.simulator.util.TestEventCollectingHandler;
 
 /**
  * User: POlszewski
@@ -14,7 +15,7 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest {
 
 		setupTestObjects();
 
-		handler = new EventCollectingHandler();
+		handler = new TestEventCollectingHandler();
 
 		simulation.addHandler(handler);
 

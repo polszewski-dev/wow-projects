@@ -2,13 +2,13 @@ package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.AbilityId.ZANDALARIAN_HERO_CHARM;
 import static wow.commons.model.spell.GroupCooldownId.TRINKET;
 import static wow.commons.model.spell.ResourceType.HEALTH;
-import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
@@ -51,7 +51,7 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 		updateUntil(30);
 
 		assertEvents(
-				Event::isEffect,
+				TestEvent::isEffect,
 				at(0)
 						.effectApplied(ZANDALARIAN_HERO_CHARM, player, 20),
 				at(3)
@@ -82,7 +82,7 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 		updateUntil(30);
 
 		assertEvents(
-				Event::isDamage,
+				TestEvent::isDamage,
 				at(3)
 						.decreasedResource(735, HEALTH, target, SHADOW_BOLT),
 				at(6)

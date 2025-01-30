@@ -2,6 +2,7 @@ package wow.simulator.simulation.spell.activated;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
@@ -49,7 +50,7 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 		updateUntil(60);
 
 		assertEvents(
-				EventCollectingHandler.Event::isEffect,
+				TestEvent::isEffect,
 				at(0)
 						.effectApplied(TALISMAN_OF_ASCENDANCE, player, 20),
 				at(3)

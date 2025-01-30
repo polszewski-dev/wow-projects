@@ -8,12 +8,13 @@ import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.util.TestEvent;
+import wow.simulator.util.TestEventCollectingHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.spell.AbilityId.*;
-import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
@@ -101,7 +102,7 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 			assertThat(expectedTarget).isNotEqualTo(ExpectedTarget.INVALID);
 
 			assertEvents(
-					Event::isEffectApplied,
+					TestEvent::isEffectApplied,
 					at(0).effectApplied(abilityId, getExpectedTarget(expectedTarget), duration)
 			);
 		} else {
@@ -151,7 +152,7 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 
 		setupTestObjects();
 
-		handler = new EventCollectingHandler();
+		handler = new TestEventCollectingHandler();
 		simulation.addHandler(handler);
 
 		friend = getNakedPlayer(WARLOCK, "Friend");

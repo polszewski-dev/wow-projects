@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
@@ -27,7 +28,7 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		updateUntil(30);
 
 		assertEvents(
-				EventCollectingHandler.Event::isEffect,
+				TestEvent::isEffect,
 				at(0)
 						.effectApplied(CURSE_OF_AGONY, target, 24)
 						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),
@@ -47,7 +48,7 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		updateUntil(30);
 
 		assertEvents(
-				EventCollectingHandler.Event::isEffect,
+				TestEvent::isEffect,
 				at(0)
 						.effectApplied(CORRUPTION, target, 18)
 						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),
@@ -67,7 +68,7 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		updateUntil(30);
 
 		assertEvents(
-				EventCollectingHandler.Event::isEffect,
+				TestEvent::isEffect,
 				at(0)
 						.effectApplied(SIPHON_LIFE, target, 30)
 						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),
@@ -90,7 +91,7 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		updateUntil(60);
 
 		assertEvents(
-				EventCollectingHandler.Event::isEffect,
+				TestEvent::isEffect,
 				at(0)
 						.effectApplied(CURSE_OF_AGONY, target, 24)
 						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),

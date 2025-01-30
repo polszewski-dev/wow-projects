@@ -3,12 +3,12 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
@@ -55,7 +55,7 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 		updateUntil(30);
 
 		assertEvents(
-				Event::isCooldown,
+				TestEvent::isCooldown,
 				at(3)
 						.cooldownStarted(player, cooldownId, 17),
 				at(20)

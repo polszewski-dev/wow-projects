@@ -6,12 +6,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.commons.model.Duration;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.talent.TalentId.MISERY;
-import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.Event;
 
 /**
  * User: POlszewski
@@ -138,7 +138,7 @@ class MiseryTest extends PriestSpellSimulationTest {
 		updateUntil(30);
 
 		assertEvents(
-				Event::isEffect,
+				TestEvent::isEffect,
 				at(0)
 						.effectApplied(SHADOW_WORD_PAIN, target, 18)
 						.effectApplied(MISERY, target, Duration.INFINITE),
