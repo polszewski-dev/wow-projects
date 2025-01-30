@@ -7,6 +7,7 @@ import wow.commons.model.spell.component.DirectComponent;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static wow.commons.model.spell.SpellTarget.*;
 
@@ -54,7 +55,7 @@ public class TargetResolver {
 			case SELF ->
 					self;
 			case PET ->
-					throw new UnsupportedOperationException("No pets atm");
+					null;//todo
 			case PARTY ->
 					self;//todo
 			default ->
@@ -73,11 +74,15 @@ public class TargetResolver {
 		return targetTypes.stream().allMatch(this::hasValidTarget);
 	}
 
-	public Unit getTarget(DirectComponent directComponent) {
-		return getTarget(directComponent.target());
-	}
-
 	public Unit getTarget(EffectApplication effectApplication) {
 		return getTarget(effectApplication.target());
+	}
+
+	public void forEachTarget(DirectComponent directComponent, Consumer<Unit> consumer) {
+		var target = getTarget(directComponent.target());
+
+		if (target != null) {
+			consumer.accept(target);
+		}
 	}
 }

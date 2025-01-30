@@ -114,10 +114,10 @@ public class EventContext {
 	private List<EventAndEffect> collectEvents(EventType eventType) {
 		var list = new ArrayList<EventAndEffect>();
 
-		new EventCollector(eventType, caster, list).collectEffects();
+		new EventCollector(eventType, caster, list).solveAll();
 
 		if (target != null && target != caster) {
-			new EventCollector(eventType, target, list).collectEffects();
+			new EventCollector(eventType, target, list).solveAll();
 		}
 
 		return list;

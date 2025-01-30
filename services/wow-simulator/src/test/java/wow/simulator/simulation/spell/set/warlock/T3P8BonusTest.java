@@ -13,20 +13,15 @@ import static wow.commons.model.talent.TalentId.IMPROVED_LIFE_TAP;
  * User: POlszewski
  * Date: 2024-12-01
  */
-class WarlockT3P8BonusTest extends WarlockSpellSimulationTest {
+class T3P8BonusTest extends WarlockSpellSimulationTest {
+	/*
+	Reduces health cost of your Life Tap by 12%.
+	 */
+
 	@Test
-	void t3Bonus() {
+	void healthCostIsIncreased() {
 		enableTalent(IMPROVED_LIFE_TAP, 2);
 		setMana(player, 0);
-
-		equip("Plagueheart Belt");
-		equip("Plagueheart Bindings");
-		equip("Plagueheart Circlet");
-		equip("Plagueheart Gloves");
-		equip("Plagueheart Leggings");
-		equip("Plagueheart Robe");
-		equip("Plagueheart Sandals");
-		equip("Plagueheart Shoulderpads");
 
 		player.cast(LIFE_TAP);
 
@@ -44,5 +39,17 @@ class WarlockT3P8BonusTest extends WarlockSpellSimulationTest {
 				at(1.5)
 						.endGcd(player)
 		);
+	}
+
+	@Override
+	protected void afterSetUp() {
+		equip("Plagueheart Belt");
+		equip("Plagueheart Bindings");
+		equip("Plagueheart Circlet");
+		equip("Plagueheart Gloves");
+		equip("Plagueheart Leggings");
+		equip("Plagueheart Robe");
+		equip("Plagueheart Sandals");
+		equip("Plagueheart Shoulderpads");
 	}
 }
