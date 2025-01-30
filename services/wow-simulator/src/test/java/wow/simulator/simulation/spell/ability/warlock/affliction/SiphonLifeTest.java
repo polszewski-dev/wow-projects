@@ -145,7 +145,7 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SIPHON_LIFE, 630);
+		assertDamageDone(SIPHON_LIFE, SIPHON_LIFE_INFO.damage());
 	}
 
 	@Test
@@ -154,7 +154,7 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertHealthGained(SIPHON_LIFE, player, 630);
+		assertHealthGained(SIPHON_LIFE, player, SIPHON_LIFE_INFO.damage());
 	}
 
 	@Override

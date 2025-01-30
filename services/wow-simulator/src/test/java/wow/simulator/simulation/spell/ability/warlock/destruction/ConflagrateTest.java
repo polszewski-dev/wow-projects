@@ -72,7 +72,7 @@ class ConflagrateTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CONFLAGRATE, (579 + 721) / 2);
+		assertDamageDone(CONFLAGRATE, CONFLAGRATE_INFO.damage());
 	}
 
 	@Override

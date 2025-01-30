@@ -26,7 +26,7 @@ class BaneTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertCastTime(SHADOW_BOLT, 3 - 0.1 * rank);
+		assertCastTime(SHADOW_BOLT, SHADOW_BOLT_INFO.baseCastTime() - 0.1 * rank);
 	}
 
 	@ParameterizedTest
@@ -38,6 +38,6 @@ class BaneTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertCastTime(IMMOLATE, 2 - 0.1 * rank);
+		assertCastTime(IMMOLATE, IMMOLATE_INFO.baseCastTime() - 0.1 * rank);
 	}
 }

@@ -76,7 +76,7 @@ class PowerInfusionTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertCastTime(MIND_BLAST, 1.5 / (1 + 0.2));
+		assertCastTime(MIND_BLAST, MIND_BLAST_INFO.baseCastTime() / (1 + 0.2));
 	}
 
 	@Test
@@ -86,7 +86,7 @@ class PowerInfusionTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(MIND_BLAST, player, 450, -20);
+		assertManaPaid(MIND_BLAST, player, MIND_BLAST_INFO.manaCost(), -20);
 	}
 
 	@Override

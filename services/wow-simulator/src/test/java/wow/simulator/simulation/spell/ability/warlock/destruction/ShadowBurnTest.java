@@ -93,7 +93,7 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SHADOWBURN, (597 + 665) / 2);
+		assertDamageDone(SHADOWBURN, SHADOWBURN_INFO.damage());
 	}
 
 	@Override

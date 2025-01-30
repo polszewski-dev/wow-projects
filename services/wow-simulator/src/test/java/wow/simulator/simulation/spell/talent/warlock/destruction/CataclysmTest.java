@@ -25,6 +25,6 @@ class CataclysmTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(SHADOW_BOLT, player, 420, -rank);
+		assertManaPaid(SHADOW_BOLT, player, SHADOW_BOLT_INFO.manaCost(), -rank);
 	}
 }

@@ -26,7 +26,7 @@ class DivineFuryTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertCastTime(SMITE, 2.5 - 0.1 * rank);
+		assertCastTime(SMITE, SMITE_INFO.baseCastTime() - 0.1 * rank);
 	}
 
 	@ParameterizedTest
@@ -38,6 +38,6 @@ class DivineFuryTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertCastTime(HOLY_FIRE, 3.5 - 0.1 * rank);
+		assertCastTime(HOLY_FIRE, HOLY_FIRE_INFO.baseCastTime() - 0.1 * rank);
 	}
 }

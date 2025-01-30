@@ -82,7 +82,7 @@ class SurgeOfLightTest extends PriestSpellSimulationTest {
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void correctEventChance(int rank) {
+	void correctEventChance(int rank) {//todo crit ma byc 0
 		enableTalent(SURGE_OF_LIGHT, rank);
 
 		critsOnlyOnFollowingRolls(0);

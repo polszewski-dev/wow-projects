@@ -17,12 +17,10 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemSetSource;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.CooldownId;
-import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentSource;
 import wow.commons.repository.pve.PhaseRepository;
@@ -62,6 +60,8 @@ import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.WowSimulatorSpringTest.EventCollectingHandler.*;
 
 /**
@@ -160,19 +160,19 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			}
 
 			default boolean isDamage() {
-				return this instanceof DecreasedResource dr && dr.type == ResourceType.HEALTH;
+				return this instanceof DecreasedResource dr && dr.type == HEALTH;
 			}
 
 			default boolean isHealing() {
-				return this instanceof IncreasedResource ir && ir.type == ResourceType.HEALTH;
+				return this instanceof IncreasedResource ir && ir.type == HEALTH;
 			}
 
 			default boolean isManaPaid() {
-				return this instanceof DecreasedResource dr && dr.type == ResourceType.MANA;
+				return this instanceof DecreasedResource dr && dr.type == MANA;
 			}
 
 			default boolean isManaGained() {
-				return this instanceof IncreasedResource ir && ir.type == ResourceType.MANA;
+				return this instanceof IncreasedResource ir && ir.type == MANA;
 			}
 
 			default boolean isTalentEffect() {
@@ -210,8 +210,24 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public record CastInterrupted(Time time, Unit caster, AbilityId spell) implements Event {}
 		public record ChannelInterrupted(Time time, Unit caster, AbilityId spell) implements Event {}
 		public record SpellResisted(Time time, Unit caster, AbilityId spell, Unit target) implements Event {}
-		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements Event {}
-		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements Event {}
+		public record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements Event {
+			public boolean isHealing(String spell, Unit target) {
+				return type == HEALTH && this.spell.equals(spell) && this.target == target;
+			}
+
+			public boolean isManaGain(String spell, Unit target) {
+				return type == MANA && this.spell.equals(spell) && this.target == target;
+			}
+		}
+		public record DecreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements Event {
+			public boolean isDamage(String spell, Unit target) {
+				return type == HEALTH && this.spell.equals(spell) && this.target == target;
+			}
+
+			public boolean isManaPaid(String spell, Unit target) {
+				return type == MANA && this.spell.equals(spell) && this.target == target;
+			}
+		}
 		public record EffectApplied(Time time, AbilityId spell, Unit target, Duration duration) implements Event {}
 		public record TalentEffectApplied(Time time, TalentId talentId, Unit target, Duration duration) implements Event {}
 		public record ItemEffectApplied(Time time, String itemName, Unit target, Duration duration) implements Event {}
@@ -317,6 +333,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 						addEvent(new TalentEffectApplied(now(), s.getTalentId(), effect.getTarget(), effect.getDuration()));
 				case ItemSource s ->
 						addEvent(new ItemEffectApplied(now(), s.getName(), effect.getTarget(), effect.getDuration()));
+				case ItemSetSource s ->
+						addEvent(new ItemEffectApplied(now(), s.getName(), effect.getTarget(), effect.getDuration()));
 				default -> throw new IllegalArgumentException();
 			}
 		}
@@ -395,6 +413,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 						addEvent(new TalentEffectExpired(now(), ts.getTalentId(), effect.getTarget()));
 				case ItemSource s ->
 						addEvent(new ItemEffectExpired(now(), s.getName(), effect.getTarget()));
+				case ItemSetSource s ->
+						addEvent(new ItemEffectExpired(now(), s.getName(), effect.getTarget()));
 				default -> throw new IllegalArgumentException();
 			}
 		}
@@ -407,6 +427,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				case TalentSource s ->
 						addEvent(new TalentEffectRemoved(now(), s.getTalentId(), effect.getTarget()));
 				case ItemSource s ->
+						addEvent(new ItemEffectRemoved(now(), s.getName(), effect.getTarget()));
+				case ItemSetSource s ->
 						addEvent(new ItemEffectRemoved(now(), s.getName(), effect.getTarget()));
 				default -> throw new IllegalArgumentException();
 			}
@@ -662,90 +684,140 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(filtered).isEqualTo(eventList(expected));
 	}
 
-	protected void assertDamageDone(AbilityId abilityId, Unit target, int expectedAmount) {
-		var totalDamage = handler.getEvents().stream()
-				.filter(Event::isDamage)
-				.map(x -> (DecreasedResource) x)
-				.filter(x -> x.target == target)
-				.filter(x -> x.spell.equals(abilityId.getName()))
+	private Stream<DecreasedResource> getDecreasedResourceEvents() {
+		return handler.getEvents().stream()
+				.filter(x -> x instanceof DecreasedResource)
+				.map(x -> (DecreasedResource) x);
+	}
+
+	private Stream<IncreasedResource> getIncreasedResourceEvents() {
+		return handler.getEvents().stream()
+				.filter(x -> x instanceof IncreasedResource)
+				.map(x -> (IncreasedResource) x);
+	}
+
+	private Stream<BeginCast> getBeginCastEvents() {
+		return handler.getEvents().stream()
+				.filter(x -> x instanceof BeginCast)
+				.map(x -> (BeginCast) x);
+	}
+
+	private Stream<CooldownStarted> getCooldownStartedEvents() {
+		return handler.getEvents().stream()
+				.filter(x -> x instanceof CooldownStarted)
+				.map(x -> (CooldownStarted) x);
+	}
+
+	private Stream<EffectApplied> getEffectAppliedEvents() {
+		return handler.getEvents().stream()
+				.filter(x -> x instanceof EffectApplied)
+				.map(x -> (EffectApplied) x);
+	}
+
+	protected void assertDamageDone(AbilityId abilityId, Unit target, double expectedAmount) {
+		var totalDamage = getDecreasedResourceEvents()
+				.filter(x -> x.isDamage(abilityId.getName(), target))
 				.mapToInt(x -> x.amount)
 				.sum();
 
-		assertThat(totalDamage).isEqualTo(expectedAmount);
+		assertThat(Math.abs(totalDamage - (int) expectedAmount)).isLessThanOrEqualTo(1);
 	}
 
-	protected void assertDamageDone(AbilityId abilityId, int expectedAmount) {
+	protected void assertDamageDone(AbilityId abilityId, double expectedAmount) {
 		assertDamageDone(abilityId, target, expectedAmount);
 	}
 
-	protected void assertDamageDone(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+	protected void assertDamageDone(AbilityId abilityId, Unit target, double expectedBaseAmount, int pctIncrease) {
 		assertDamageDone(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
-	
+
 	protected void assertDamageDone(AbilityId abilityId, double expectedBaseAmount, int pctIncrease) {
-		assertDamageDone(abilityId, target, (int) increaseByPct(expectedBaseAmount, pctIncrease));
+		assertDamageDone(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
-	protected void assertHealthGained(AbilityId abilityId, Unit target, int expectedAmount) {
+	protected void assertDamageDone(int eventIdx, AbilityId abilityId, Unit target, double expectedAmount) {
+		var totalDamage = getDecreasedResourceEvents()
+				.filter(x -> x.isDamage(abilityId.getName(), target))
+				.skip(eventIdx)
+				.findFirst()
+				.orElseThrow()
+				.amount();
+
+		assertThat(Math.abs(totalDamage - (int) expectedAmount)).isLessThanOrEqualTo(1);
+	}
+
+	protected void assertDamageDone(int eventIdx, AbilityId abilityId, double expectedAmount) {
+		assertDamageDone(eventIdx, abilityId, target, expectedAmount);
+	}
+
+	protected void assertDamageDone(int eventIdx, AbilityId abilityId, double expectedBaseAmount, int pctIncrease) {
+		assertDamageDone(eventIdx, abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	}
+
+	private void assertHealthGained(String spellName, Unit target, double expectedAmount) {
+		var totalHealthGained = getIncreasedResourceEvents()
+				.filter(x -> x.isHealing(spellName, target))
+				.mapToInt(x -> x.amount)
+				.sum();
+
+		assertThat(totalHealthGained).isEqualTo((int) expectedAmount);
+	}
+
+	protected void assertHealthGained(AbilityId abilityId, Unit target, double expectedAmount) {
 		assertHealthGained(abilityId.getName(), target, expectedAmount);
 	}
 
-	protected void assertHealthGained(TalentId talentId, Unit target, int expectedAmount) {
+	protected void assertHealthGained(TalentId talentId, Unit target, double expectedAmount) {
 		assertHealthGained(talentId.getName(), target, expectedAmount);
 	}
 
-	private void assertHealthGained(String spellName, Unit target, int expectedAmount) {
-		var totalHealthGained = handler.getEvents().stream()
-				.filter(Event::isHealing)
-				.map(x -> (IncreasedResource) x)
-				.filter(x -> x.target == target)
-				.filter(x -> x.spell.equals(spellName))
-				.mapToInt(x -> x.amount)
-				.sum();
-
-		assertThat(totalHealthGained).isEqualTo(expectedAmount);
-	}
-
-	protected void assertHealthGained(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+	protected void assertHealthGained(AbilityId abilityId, Unit target, double expectedBaseAmount, int pctIncrease) {
 		assertHealthGained(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
-	protected void assertManaPaid(AbilityId abilityId, Unit target, int expectedAmount) {
-		var totalManaPaid = handler.getEvents().stream()
-				.filter(Event::isManaPaid)
-				.map(x -> (DecreasedResource) x)
-				.filter(x -> x.target == target)
-				.filter(x -> x.spell.equals(abilityId.getName()))
+	protected void assertHealthGained(int eventIdx, String spellName, Unit target, double expectedAmount) {
+		var totalHealthGained = getIncreasedResourceEvents()
+				.filter(x -> x.isHealing(spellName, target))
+				.skip(eventIdx)
+				.findFirst()
+				.orElseThrow()
+				.amount;
+
+		assertThat(totalHealthGained).isEqualTo((int) expectedAmount);
+	}
+
+	protected void assertHealthGained(int eventIdx, AbilityId abilityId, Unit target, double expectedAmount) {
+		assertHealthGained(eventIdx, abilityId.getName(), target, expectedAmount);
+	}
+
+	protected void assertManaPaid(AbilityId abilityId, Unit target, double expectedAmount) {
+		var totalManaPaid = getDecreasedResourceEvents()
+				.filter(x -> x.isManaPaid(abilityId.getName(), target))
 				.mapToInt(x -> x.amount)
 				.sum();
 
-		assertThat(totalManaPaid).isEqualTo(expectedAmount);
+		assertThat(totalManaPaid).isEqualTo((int) expectedAmount);
 	}
 
-	protected void assertManaPaid(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+	protected void assertManaPaid(AbilityId abilityId, Unit target, double expectedBaseAmount, int pctIncrease) {
 		assertManaPaid(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
-	protected void assertManaGained(AbilityId abilityId, Unit target, int expectedAmount) {
-		var totalMana = handler.getEvents().stream()
-				.filter(Event::isManaGained)
-				.map(x -> (IncreasedResource) x)
-				.filter(x -> x.target == target)
-				.filter(x -> x.spell.equals(abilityId.getName()))
+	protected void assertManaGained(AbilityId abilityId, Unit target, double expectedAmount) {
+		var totalMana = getIncreasedResourceEvents()
+				.filter(x -> x.isManaGain(abilityId.getName(), target))
 				.mapToInt(x -> x.amount)
 				.sum();
 
-		assertThat(totalMana).isEqualTo(expectedAmount);
+		assertThat(totalMana).isEqualTo((int) expectedAmount);
 	}
 
-	protected void assertManaGained(AbilityId abilityId, Unit target, int expectedBaseAmount, int pctIncrease) {
+	protected void assertManaGained(AbilityId abilityId, Unit target, double expectedBaseAmount, int pctIncrease) {
 		assertManaGained(abilityId, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
 	protected void assertCastTime(AbilityId abilityId, double expectedCastTime) {
-		var actualCastTime = handler.getEvents().stream()
-				.filter(Event::isBeginCast)
-				.map(x -> (BeginCast)x)
+		var actualCastTime = getBeginCastEvents()
 				.filter(x -> x.spell == abilityId)
 				.findFirst()
 				.orElseThrow()
@@ -759,9 +831,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertCooldown(AbilityId abilityId, double duration) {
-		var actualCooldown = handler.events.stream()
-				.filter(x -> x instanceof CooldownStarted)
-				.map(x -> (CooldownStarted)x)
+		var actualCooldown = getCooldownStartedEvents()
 				.filter(x -> x.cooldownId.equals(CooldownId.of(abilityId)))
 				.findFirst()
 				.orElseThrow()
@@ -771,9 +841,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertEffectDuration(AbilityId abilityId, Unit target, double duration) {
-		var actualEffectDuration = handler.events.stream()
-				.filter(x -> x instanceof EffectApplied)
-				.map(x -> (EffectApplied)x)
+		var actualEffectDuration = getEffectAppliedEvents()
 				.filter(x -> x.spell == abilityId)
 				.filter(x -> x.target == target)
 				.findFirst()
@@ -851,12 +919,82 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(newValue).isEqualTo(increaseByPct(originalValue, pct));
 	}
 
-	protected int increaseByPct(int originalValue, int pct) {
+	protected static int increaseByPct(int originalValue, int pct) {
 		return (int) (originalValue * (100 + pct) / 100.0);
 	}
 
-	protected double increaseByPct(double originalValue, int pct) {
+	protected static double increaseByPct(double originalValue, int pct) {
 		return originalValue * (100 + pct) / 100.0;
+	}
+
+	protected static int getPercentOf(int pct, int value) {
+		return (value * pct) / 100;
+	}
+
+	protected static double getPercentOf(double pct, double value) {
+		return (value * pct) / 100;
+	}
+
+	public record SpellInfo(Direct direct, Periodic periodic, int manaCost, double baseCastTime) {
+		public record Direct(int min, int max, double coeff) {
+			public double damage(double coeffBonus, int sp) {
+				return getSpellDmg(min, max, coeff + coeffBonus, sp);
+			}
+		}
+
+		public record Periodic(int value, double coeff, double duration, int numTicks) {
+			public double damage(double coeffBonus, int sp) {
+				return getSpellDmg(value, value, coeff + coeffBonus, sp);
+			}
+
+			public double tickDamage() {
+				return value / (double) numTicks;
+			}
+		}
+
+		public SpellInfo(int manaCost, double baseCastTime) {
+			this(null, null, manaCost, baseCastTime);
+		}
+
+		public SpellInfo withDirect(int min, int max, double coeff) {
+			return new SpellInfo(new Direct(min, max, coeff), periodic, manaCost, baseCastTime);
+		}
+
+		public SpellInfo withPeriodic(int value, double coeff, double duration, int numTicks) {
+			return new SpellInfo(direct, new Periodic(value, coeff, duration, numTicks), manaCost, baseCastTime);
+		}
+
+		public double damage() {
+			return damage(0, 0);
+		}
+
+		public double damage(int sp) {
+			return damage(0, sp);
+		}
+
+		public double damage(double coeffBonus, int sp) {
+			return (direct != null ? direct.damage(coeffBonus, sp) : 0) + (periodic != null ? periodic.damage(coeffBonus, sp) : 0);
+		}
+
+		public double directDamage() {
+			return direct.damage(0, 0);
+		}
+
+		public double tickDamage() {
+			return periodic.tickDamage();
+		}
+
+		public int numTicks() {
+			return periodic().numTicks();
+		}
+
+		public double duration() {
+			return periodic.duration();
+		}
+
+		private static double getSpellDmg(int min, int max, double coeff, int sd) {
+			return (min + max) / 2.0 + getPercentOf(coeff, sd);
+		}
 	}
 
 	protected SimulationContext simulationContext;
@@ -872,6 +1010,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected PhaseId phaseId = TBC_P5;
 	protected CreatureType enemyType = BEAST;
 	protected int enemyLevelDiff = 3;
+
+	protected int totalSpellDamage;
+	protected int totalShadowSpellDamage;
+	protected int totalFireSpellDamage;
 
 	protected static class TestRng implements Rng {
 		static class RollData {
@@ -954,6 +1096,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void updateUntil(double time) {
+		this.totalSpellDamage = player.getStats().getSpellDamage();
+		this.totalShadowSpellDamage = player.getStats().getSpellDamage(SpellSchool.SHADOW);
+		this.totalFireSpellDamage = player.getStats().getSpellDamage(SpellSchool.FIRE);
+
 		simulation.updateUntil(Time.at(time));
 	}
 

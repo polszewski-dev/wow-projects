@@ -164,6 +164,6 @@ class MiseryTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(MIND_FLAY, 528, rank);
+		assertDamageDone(MIND_FLAY, MIND_FLAY_INFO.damage(), rank);
 	}
 }

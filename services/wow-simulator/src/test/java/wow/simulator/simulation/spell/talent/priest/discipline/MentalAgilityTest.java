@@ -25,6 +25,6 @@ class MentalAgilityTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(SHADOW_WORD_PAIN, player, 575, -2 * rank);
+		assertManaPaid(SHADOW_WORD_PAIN, player, SHADOW_WORD_PAIN_INFO.manaCost(), -2 * rank);
 	}
 }

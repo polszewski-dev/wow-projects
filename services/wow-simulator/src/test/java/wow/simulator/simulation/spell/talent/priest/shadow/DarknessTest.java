@@ -25,6 +25,6 @@ class DarknessTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(MIND_BLAST, 731.5, 2 * rank);
+		assertDamageDone(MIND_BLAST, MIND_BLAST_INFO.damage(), 2 * rank);
 	}
 }

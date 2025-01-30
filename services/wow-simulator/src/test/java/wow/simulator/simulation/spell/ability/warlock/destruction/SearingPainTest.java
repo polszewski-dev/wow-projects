@@ -40,6 +40,6 @@ class SearingPainTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SEARING_PAIN, (270 + 320) / 2);
+		assertDamageDone(SEARING_PAIN, SEARING_PAIN_INFO.damage());
 	}
 }

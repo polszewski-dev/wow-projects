@@ -43,7 +43,7 @@ class DeathCoilTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(DEATH_COIL, 526);
+		assertDamageDone(DEATH_COIL, DEATH_COIL_INFO.damage());
 	}
 
 	@Test
@@ -52,6 +52,6 @@ class DeathCoilTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertHealthGained(DEATH_COIL, player, 526);
+		assertHealthGained(DEATH_COIL, player, DEATH_COIL_INFO.damage());
 	}
 }

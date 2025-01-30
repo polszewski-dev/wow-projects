@@ -26,7 +26,8 @@ class SpiritualGuidanceTest extends PriestSpellSimulationTest {
 		updateUntil(30);
 
 		var totalSpirit = player.getStats().getSpirit();
+		var totalSp = getPercentOf(5 * rank, totalSpirit);
 
-		assertDamageDone(SHADOW_WORD_PAIN, (int) (1236 + 1.1 * (int) (0.05 * rank * totalSpirit)));
+		assertDamageDone(SHADOW_WORD_PAIN, SHADOW_WORD_PAIN_INFO.damage(totalSp));
 	}
 }

@@ -138,6 +138,6 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CURSE_OF_AGONY, 1356);
+		assertDamageDone(CURSE_OF_AGONY, CURSE_OF_AGONY_INFO.damage());
 	}
 }

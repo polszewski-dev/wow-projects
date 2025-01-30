@@ -98,6 +98,6 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, 900);
+		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage());
 	}
 }

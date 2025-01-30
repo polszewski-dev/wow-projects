@@ -85,6 +85,28 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 		);
 	}
 
+	@Test
+	void healthGainedFromMindBlast() {
+		player.cast(VAMPIRIC_EMBRACE);
+		player.cast(MIND_BLAST);
+
+		updateUntil(60);
+
+		assertHealthGained(VAMPIRIC_EMBRACE, player, getPercentOf(15, MIND_BLAST_INFO.damage()));
+	}
+
+	@Test
+	void healthGainedFromShadowWordPain() {
+		player.cast(VAMPIRIC_EMBRACE);
+		player.cast(SHADOW_WORD_PAIN);
+
+		updateUntil(60);
+
+		for (int tickNo = 0; tickNo < SHADOW_WORD_PAIN_INFO.numTicks(); ++tickNo) {
+			assertHealthGained(tickNo, VAMPIRIC_EMBRACE, player, getPercentOf(15, SHADOW_WORD_PAIN_INFO.tickDamage()));
+		}
+	}
+
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentId.VAMPIRIC_EMBRACE, 1);

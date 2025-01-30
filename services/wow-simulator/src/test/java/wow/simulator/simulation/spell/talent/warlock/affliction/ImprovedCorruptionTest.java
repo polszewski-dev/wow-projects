@@ -25,6 +25,6 @@ class ImprovedCorruptionTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertCastTime(CORRUPTION, 2 - 0.4 * rank);
+		assertCastTime(CORRUPTION, CORRUPTION_INFO.baseCastTime() - 0.4 * rank);
 	}
 }

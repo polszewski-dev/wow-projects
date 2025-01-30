@@ -27,7 +27,7 @@ class SoulSiphonTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(DRAIN_LIFE, 540, 2 * rank);
+		assertDamageDone(DRAIN_LIFE, DRAIN_LIFE_INFO.damage(), 2 * rank);
 	}
 
 	@ParameterizedTest
@@ -39,6 +39,6 @@ class SoulSiphonTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertHealthGained(DRAIN_LIFE, player, 540, 2 * rank);
+		assertHealthGained(DRAIN_LIFE, player, DRAIN_LIFE_INFO.damage(), 2 * rank);
 	}
 }

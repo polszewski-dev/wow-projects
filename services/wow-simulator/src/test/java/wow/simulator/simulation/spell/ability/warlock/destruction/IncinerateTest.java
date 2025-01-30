@@ -42,7 +42,7 @@ class IncinerateTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(INCINERATE, (444 + 514) / 2);
+		assertDamageDone(INCINERATE, INCINERATE_INFO.damage());
 	}
 
 	@Test
@@ -52,6 +52,6 @@ class IncinerateTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(INCINERATE, (444 + 514) / 2 + (111 + 128) / 2);
+		assertDamageDone(INCINERATE, INCINERATE_WITH_BONUS_INFO.damage());
 	}
 }

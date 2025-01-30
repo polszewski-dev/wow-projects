@@ -28,6 +28,6 @@ class WandSpecializationTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SHOOT, (208 + 387) / 2.0, 5 * rank);
+		assertDamageDone(SHOOT, SHOOT_INFO.withDirect(208, 387, 0).damage(), 5 * rank);
 	}
 }

@@ -25,6 +25,6 @@ class ImprovedShadowWordPainTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertEffectDuration(SHADOW_WORD_PAIN, target, 18 + 3 * rank);
+		assertEffectDuration(SHADOW_WORD_PAIN, target, SHADOW_WORD_PAIN_INFO.duration() + 3 * rank);
 	}
 }

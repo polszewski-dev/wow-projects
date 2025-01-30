@@ -43,6 +43,6 @@ class MindBlastTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(MIND_BLAST, (711 + 752) / 2);
+		assertDamageDone(MIND_BLAST, MIND_BLAST_INFO.damage());
 	}
 }

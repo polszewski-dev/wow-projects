@@ -25,6 +25,10 @@ class ImprovedImmolateTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(IMMOLATE, increaseByPct(332, 5 * rank) + 615);
+		assertDamageDone(0, IMMOLATE, IMMOLATE_INFO.direct().damage(0, 0), 5 * rank);
+
+		for (int tickNo = 0; tickNo < IMMOLATE_INFO.numTicks(); ++tickNo) {
+			assertDamageDone(tickNo + 1, IMMOLATE, IMMOLATE_INFO.tickDamage());
+		}
 	}
 }

@@ -77,7 +77,7 @@ class AmplifyCurseTest extends WarlockSpellSimulationTest {
 
 		updateUntil(180);
 
-		assertDamageDone(CURSE_OF_DOOM, 4200, 50);
+		assertDamageDone(CURSE_OF_DOOM, CURSE_OF_DOOM_INFO.damage(), 50);
 	}
 
 	@Disabled
@@ -88,7 +88,7 @@ class AmplifyCurseTest extends WarlockSpellSimulationTest {
 
 		updateUntil(180);
 
-		assertDamageDone(CURSE_OF_AGONY, 1356, 50);
+		assertDamageDone(CURSE_OF_AGONY, CURSE_OF_AGONY_INFO.damage(), 50);
 	}
 
 	@Override

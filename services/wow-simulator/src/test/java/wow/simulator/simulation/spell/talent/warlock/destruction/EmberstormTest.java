@@ -25,7 +25,7 @@ class EmberstormTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(INCINERATE, 479, 2 * rank);
+		assertDamageDone(INCINERATE, INCINERATE_INFO.damage(), 2 * rank);
 	}
 
 	@ParameterizedTest
@@ -37,6 +37,6 @@ class EmberstormTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertCastTime(INCINERATE, 2.5, -2 * rank);
+		assertCastTime(INCINERATE, INCINERATE_INFO.baseCastTime(), -2 * rank);
 	}
 }

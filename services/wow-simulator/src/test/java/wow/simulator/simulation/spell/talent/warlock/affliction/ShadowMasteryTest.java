@@ -25,6 +25,6 @@ class ShadowMasteryTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, 900, 2 * rank);
+		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(), 2 * rank);
 	}
 }

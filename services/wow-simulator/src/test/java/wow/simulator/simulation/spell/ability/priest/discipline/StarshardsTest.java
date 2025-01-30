@@ -53,7 +53,7 @@ class StarshardsTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(STARSHARDS, 785);
+		assertDamageDone(STARSHARDS, STARSHARDS_INFO.damage());
 	}
 
 	@Override

@@ -13,12 +13,12 @@ import static wow.commons.model.talent.TalentId.IMPROVED_POWER_WORD_FORTITUDE;
  * User: POlszewski
  * Date: 2025-01-14
  */
-@Disabled
 class ImprovedPowerWordFortitudeTest extends PriestSpellSimulationTest {
 	/*
 	Increases the effect of your Power Word: Fortitude and Prayer of Fortitude spells by 30%.
 	 */
 
+	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void effectIsIncreased(int rank) {

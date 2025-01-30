@@ -42,6 +42,6 @@ class SoulFireTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SOUL_FIRE, (1003 + 1257) / 2);
+		assertDamageDone(SOUL_FIRE, SOUL_FIRE_INFO.damage());
 	}
 }

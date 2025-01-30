@@ -53,6 +53,6 @@ class ShadowWordPainTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SHADOW_WORD_PAIN, 1236);
+		assertDamageDone(SHADOW_WORD_PAIN, SHADOW_WORD_PAIN_INFO.damage());
 	}
 }

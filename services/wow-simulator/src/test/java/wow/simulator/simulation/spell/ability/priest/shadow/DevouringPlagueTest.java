@@ -68,6 +68,6 @@ class DevouringPlagueTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(DEVOURING_PLAGUE, 1216);
+		assertDamageDone(DEVOURING_PLAGUE, DEVOURING_PLAGUE_INFO.damage());
 	}
 }

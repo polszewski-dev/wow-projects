@@ -13,12 +13,12 @@ import static wow.commons.model.talent.TalentId.DEMONIC_AEGIS;
  * User: POlszewski
  * Date: 2025-01-14
  */
-@Disabled
 class DemonicAegisTest extends WarlockSpellSimulationTest {
 	/*
 	Increases the effectiveness of your Demon Armor and Fel Armor spells by 30%.
 	 */
 
+	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void spellDamageIsIncreased(int rank) {
@@ -29,6 +29,6 @@ class DemonicAegisTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, 900 + (int) (93.6 * (100 + 10 * rank) / 100.0));
+		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(100 + 10 * rank));
 	}
 }

@@ -41,6 +41,6 @@ class SmiteTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SMITE, (549 + 616) / 2);
+		assertDamageDone(SMITE, SMITE_INFO.damage());
 	}
 }

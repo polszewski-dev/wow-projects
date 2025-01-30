@@ -39,6 +39,6 @@ class SoulLeechTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertHealthGained(SOUL_LEECH, player, (int) (575 * 0.2));
+		assertHealthGained(SOUL_LEECH, player, getPercentOf(20, SHADOW_BOLT_INFO.damage()));
 	}
 }

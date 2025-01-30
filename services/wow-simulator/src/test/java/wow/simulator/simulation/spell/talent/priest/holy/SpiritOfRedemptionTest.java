@@ -3,7 +3,6 @@ package wow.simulator.simulation.spell.talent.priest.holy;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.talent.TalentId.SPIRIT_OF_REDEMPTION;
 
 /**
@@ -27,6 +26,6 @@ class SpiritOfRedemptionTest extends PriestSpellSimulationTest {
 
 		var spiritAfter = player.getStats().getSpirit();
 
-		assertThat(spiritAfter).isEqualTo((int) (spiritBefore * 1.05));
+		assertIsIncreasedByPct(spiritAfter, spiritBefore, 5);
 	}
 }

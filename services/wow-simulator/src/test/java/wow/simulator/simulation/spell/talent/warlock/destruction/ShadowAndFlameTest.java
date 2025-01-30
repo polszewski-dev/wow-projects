@@ -28,6 +28,6 @@ class ShadowAndFlameTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SHADOW_BOLT, (int) (575.5 + 85.71 + 4 * rank));
+		assertDamageDone(SHADOW_BOLT, SHADOW_BOLT_INFO.damage(4 * rank, 100));
 	}
 }

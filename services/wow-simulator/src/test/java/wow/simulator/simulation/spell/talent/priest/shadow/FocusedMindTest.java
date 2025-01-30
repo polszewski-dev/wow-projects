@@ -27,7 +27,7 @@ class FocusedMindTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(MIND_BLAST, player, 450, -5 * rank);
+		assertManaPaid(MIND_BLAST, player, MIND_BLAST_INFO.manaCost(), -5 * rank);
 	}
 
 	@ParameterizedTest
@@ -40,6 +40,6 @@ class FocusedMindTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(MIND_FLAY, player, 230, -5 * rank);
+		assertManaPaid(MIND_FLAY, player, MIND_FLAY_INFO.manaCost(), -5 * rank);
 	}
 }

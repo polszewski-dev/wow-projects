@@ -26,7 +26,7 @@ class SearingLightTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SMITE, 582.5, 5 * rank);
+		assertDamageDone(SMITE, SMITE_INFO.damage(), 5 * rank);
 	}
 
 	@ParameterizedTest
@@ -38,6 +38,6 @@ class SearingLightTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(HOLY_FIRE, (int) increaseByPct(481.5, 5 * rank) + increaseByPct(165, 5 * rank));
+		assertDamageDone(HOLY_FIRE, HOLY_FIRE_INFO.damage(), 5 * rank);
 	}
 }

@@ -46,6 +46,6 @@ class CurseOfDoomTest extends WarlockSpellSimulationTest {
 
 		updateUntil(60);
 
-		assertDamageDone(CURSE_OF_DOOM, 4200);
+		assertDamageDone(CURSE_OF_DOOM, CURSE_OF_DOOM_INFO.damage());
 	}
 }

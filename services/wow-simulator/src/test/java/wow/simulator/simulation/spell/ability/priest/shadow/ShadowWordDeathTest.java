@@ -44,6 +44,6 @@ class ShadowWordDeathTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SHADOW_WORD_DEATH, (572 + 664) / 2);
+		assertDamageDone(SHADOW_WORD_DEATH, SHADOW_WORD_DEATH_INFO.damage());
 	}
 }

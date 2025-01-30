@@ -53,6 +53,6 @@ class HolyFireTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(HOLY_FIRE, (426 + 537) / 2 + 165);
+		assertDamageDone(HOLY_FIRE, HOLY_FIRE_INFO.damage());
 	}
 }

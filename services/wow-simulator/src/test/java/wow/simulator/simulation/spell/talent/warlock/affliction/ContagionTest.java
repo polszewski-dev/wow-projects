@@ -25,7 +25,7 @@ class ContagionTest extends WarlockSpellSimulationTest {
 		player.cast(CURSE_OF_AGONY);
 		updateUntil(30);
 
-		assertDamageDone(CURSE_OF_AGONY, 1356, rank);
+		assertDamageDone(CURSE_OF_AGONY, CURSE_OF_AGONY_INFO.damage(), rank);
 	}
 
 	@ParameterizedTest
@@ -36,6 +36,6 @@ class ContagionTest extends WarlockSpellSimulationTest {
 		player.cast(CORRUPTION);
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, 900, rank);
+		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(), rank);
 	}
 }

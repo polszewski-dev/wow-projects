@@ -50,7 +50,7 @@ class MindFlayTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(MIND_FLAY, 528);
+		assertDamageDone(MIND_FLAY, MIND_FLAY_INFO.damage());
 	}
 
 	@Override

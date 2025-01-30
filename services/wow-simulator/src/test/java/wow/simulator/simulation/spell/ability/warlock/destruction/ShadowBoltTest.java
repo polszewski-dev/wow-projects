@@ -82,6 +82,6 @@ class ShadowBoltTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SHADOW_BOLT, (544 + 607) / 2);
+		assertDamageDone(SHADOW_BOLT, SHADOW_BOLT_INFO.damage());
 	}
 }

@@ -13,12 +13,12 @@ import static wow.commons.model.talent.TalentId.MALEDICTION;
  * User: POlszewski
  * Date: 2025-01-14
  */
-@Disabled
 class MaledictionTest extends WarlockSpellSimulationTest {
 	/*
 	Increases the damage bonus effect of your Curse of the Elements spell by an additional 3%.
 	 */
 
+	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void damageIsIncreasedCorrectly(int rank) {
@@ -29,6 +29,6 @@ class MaledictionTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, 900, 10 + rank);
+		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(), 10 + rank);
 	}
 }

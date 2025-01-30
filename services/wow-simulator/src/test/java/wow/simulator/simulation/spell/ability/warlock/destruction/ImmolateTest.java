@@ -94,6 +94,6 @@ class ImmolateTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(IMMOLATE, 332 + 615);
+		assertDamageDone(IMMOLATE, IMMOLATE_INFO.damage());
 	}
 }

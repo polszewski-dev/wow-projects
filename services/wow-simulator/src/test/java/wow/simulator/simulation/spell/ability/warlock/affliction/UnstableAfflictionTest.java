@@ -95,7 +95,7 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(UNSTABLE_AFFLICTION, 1050);
+		assertDamageDone(UNSTABLE_AFFLICTION, UNSTABLE_AFFLICTION_INFO.damage());
 	}
 
 	@Override

@@ -25,7 +25,7 @@ class ForceOfWillTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(MIND_BLAST, 731.5, rank);
+		assertDamageDone(MIND_BLAST, MIND_BLAST_INFO.damage(), rank);
 	}
 
 	@ParameterizedTest

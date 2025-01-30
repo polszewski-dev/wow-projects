@@ -28,6 +28,6 @@ class EmpoweredCorruptionTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, (int) (900 + (93.6 + 12 * rank)));
+		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(12 * rank, 100));
 	}
 }

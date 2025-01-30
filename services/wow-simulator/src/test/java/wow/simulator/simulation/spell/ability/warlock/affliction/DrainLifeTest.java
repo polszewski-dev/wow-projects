@@ -107,7 +107,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(DRAIN_LIFE, 540);
+		assertDamageDone(DRAIN_LIFE, DRAIN_LIFE_INFO.damage());
 	}
 
 	@Test
@@ -116,6 +116,6 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertHealthGained(DRAIN_LIFE, player, 540);
+		assertHealthGained(DRAIN_LIFE, player, DRAIN_LIFE_INFO.damage());
 	}
 }

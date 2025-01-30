@@ -44,6 +44,6 @@ class CurseOfTheElementsTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, 900, 10);
+		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(), 10);
 	}
 }

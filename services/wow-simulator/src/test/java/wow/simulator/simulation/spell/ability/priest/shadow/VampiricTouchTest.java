@@ -126,7 +126,7 @@ class VampiricTouchTest extends PriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(VAMPIRIC_TOUCH, 650);
+		assertDamageDone(VAMPIRIC_TOUCH, VAMPIRIC_TOUCH_INFO.damage());
 	}
 
 	@Override
