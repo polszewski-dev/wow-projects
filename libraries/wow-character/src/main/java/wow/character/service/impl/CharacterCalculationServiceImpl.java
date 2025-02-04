@@ -16,7 +16,6 @@ import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
-import wow.commons.repository.spell.SpellRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.Math.clamp;
 import static java.lang.Math.max;
-import static java.lang.Math.min;
 import static wow.character.util.AttributeConditionArgsUtil.*;
 import static wow.commons.constant.SpellConstants.*;
 
@@ -37,8 +36,6 @@ import static wow.commons.constant.SpellConstants.*;
 @Service
 @AllArgsConstructor
 public class CharacterCalculationServiceImpl implements CharacterCalculationService {
-	private final SpellRepository spellRepository;
-
 	@Override
 	public AccumulatedBaseStats newAccumulatedBaseStats(Character character) {
 		var conditionArgs = AttributeConditionArgs.forBaseStats(character);
@@ -329,7 +326,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var baseSpellHitChancePct = gameVersion.getBaseSpellHitChancePct(levelDifference);
 		var maxSpellHitChancePct = gameVersion.getMaxPveSpellHitChancePct();
 
-		return min(baseSpellHitChancePct + totalHit, maxSpellHitChancePct);
+		return clamp(baseSpellHitChancePct + totalHit, 0, maxSpellHitChancePct);
 	}
 
 	private double getSpellHitPctBonus(Character character, AccumulatedHitStats hitStats) {
@@ -557,7 +554,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		var totalCrit = intCrit + ratingCrit + pctCrit + targetCrit;
 
-		return min(totalCrit, 100);
+		return clamp(totalCrit, 0, 100);
 	}
 
 	private double getSpellCritCoeff(AccumulatedSpellStats spellStats) {

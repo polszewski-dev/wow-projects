@@ -41,23 +41,23 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
 						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(6)
-						.decreasedResource(184, HEALTH, target, CORRUPTION)
+						.decreasedResource(150, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
 						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(9)
-						.decreasedResource(184, HEALTH, target, CORRUPTION)
+						.decreasedResource(150, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
 						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(12)
-						.decreasedResource(184, HEALTH, target, CORRUPTION)
+						.decreasedResource(150, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
 						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(15)
-						.decreasedResource(185, HEALTH, target, CORRUPTION)
+						.decreasedResource(150, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
 						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
 				at(18)
-						.decreasedResource(184, HEALTH, target, CORRUPTION)
+						.decreasedResource(150, HEALTH, target, CORRUPTION)
 						.effectRemoved("Ashtongue Talisman of Shadows", player)
 						.effectApplied("Ashtongue Talisman of Shadows", player, 5)
 						.effectExpired(CORRUPTION, target),
@@ -72,7 +72,9 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 
 		eventsOnlyOnFollowingRolls(0, 1, 2);
 		enableTalent(IMPROVED_CORRUPTION, 5);
+
 		player.cast(CORRUPTION);
+
 		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellDamage();

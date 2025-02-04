@@ -155,30 +155,29 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 		enableTalent(IMPROVED_CORRUPTION, 5);
 		enableTalent(IMPROVED_SHADOW_BOLT, 5);
 
-		player.cast(CORRUPTION);
 		player.cast(SHADOW_BOLT);
+		player.cast(CORRUPTION);
 
 		updateUntil(30);
 
 		assertEvents(
 				at(0)
+						.beginCast(player, SHADOW_BOLT, 3)
+						.beginGcd(player),
+				at(1.5)
+						.endGcd(player),
+				at(3)
+						.endCast(player, SHADOW_BOLT)
+						.decreasedResource(420, MANA, player, SHADOW_BOLT)
+						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
+						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12)
 						.beginCast(player, CORRUPTION)
 						.endCast(player, CORRUPTION)
 						.decreasedResource(370, MANA, player, CORRUPTION)
 						.effectApplied(CORRUPTION, target, 18)
 						.beginGcd(player),
-				at(1.5)
-						.endGcd(player)
-						.beginCast(player, SHADOW_BOLT, 3)
-						.beginGcd(player),
-				at(3)
-						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.endGcd(player),
 				at(4.5)
-						.endCast(player, SHADOW_BOLT)
-						.decreasedResource(420, MANA, player, SHADOW_BOLT)
-						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12),
+						.endGcd(player),
 				at(6)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),
 				at(9)
@@ -186,11 +185,12 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 				at(12)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),
 				at(15)
+						.effectExpired(IMPROVED_SHADOW_BOLT, target)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),
-				at(16.5)
-						.effectExpired(IMPROVED_SHADOW_BOLT, target),
 				at(18)
-						.decreasedResource(150, HEALTH, target, CORRUPTION)
+						.decreasedResource(180, HEALTH, target, CORRUPTION),
+				at(21)
+						.decreasedResource(180, HEALTH, target, CORRUPTION)
 						.effectExpired(CORRUPTION, target)
 		);
 	}

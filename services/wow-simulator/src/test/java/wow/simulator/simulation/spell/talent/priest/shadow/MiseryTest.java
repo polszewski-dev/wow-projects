@@ -160,6 +160,7 @@ class MiseryTest extends PriestSpellSimulationTest {
 		enableTalent(MISERY, rank);
 		enableTalent(TalentId.MIND_FLAY, 1);
 
+		player.cast(SHADOW_WORD_PAIN);
 		player.cast(MIND_FLAY);
 
 		updateUntil(30);

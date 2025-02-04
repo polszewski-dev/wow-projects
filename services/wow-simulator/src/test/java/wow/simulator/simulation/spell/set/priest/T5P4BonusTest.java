@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.set.priest;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
@@ -61,7 +60,6 @@ class T5P4BonusTest extends PriestSpellSimulationTest {
 		);
 	}
 
-	@Disabled
 	@Test
 	void secondSpellReceivesDamageBonus() {
 		eventsOnlyOnFollowingRolls(1);

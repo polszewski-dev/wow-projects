@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.ability.warlock.affliction;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
@@ -37,7 +36,6 @@ class AmplifyCurseTest extends WarlockSpellSimulationTest {
 		);
 	}
 
-	@Disabled
 	@Test
 	void effectIsRemovedAfterCastingCurse() {
 		player.cast(AMPLIFY_CURSE);
@@ -69,7 +67,6 @@ class AmplifyCurseTest extends WarlockSpellSimulationTest {
 		);
 	}
 
-	@Disabled
 	@Test
 	void curseOfDoomDamageIsIncreased() {
 		player.cast(AMPLIFY_CURSE);
@@ -80,7 +77,6 @@ class AmplifyCurseTest extends WarlockSpellSimulationTest {
 		assertDamageDone(CURSE_OF_DOOM, CURSE_OF_DOOM_INFO.damage(), 50);
 	}
 
-	@Disabled
 	@Test
 	void curseOfAgonyDamageIsIncreased() {
 		player.cast(AMPLIFY_CURSE);

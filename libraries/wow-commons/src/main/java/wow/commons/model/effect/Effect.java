@@ -56,4 +56,8 @@ public interface Effect extends Described, TimeRestricted {
 				getEffectIncreasePerEffectOnTarget() != null ||
 				!getEvents().isEmpty();
 	}
+
+	default boolean hasPeriodicComponent(ComponentType componentType) {
+		return getPeriodicComponent() != null && getPeriodicComponent().type() == componentType;
+	}
 }

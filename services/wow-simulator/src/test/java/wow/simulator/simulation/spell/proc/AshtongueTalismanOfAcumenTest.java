@@ -39,23 +39,23 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(6)
-						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
+						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
 						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(9)
-						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
+						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
 						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(12)
-						.decreasedResource(247, HEALTH, target, SHADOW_WORD_PAIN)
+						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
 						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(15)
-						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
+						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
 						.effectApplied("Ashtongue Talisman of Acumen", player, 10),
 				at(18)
-						.decreasedResource(246, HEALTH, target, SHADOW_WORD_PAIN)
+						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectRemoved("Ashtongue Talisman of Acumen", player)
 						.effectApplied("Ashtongue Talisman of Acumen", player, 10)
 						.effectExpired(SHADOW_WORD_PAIN, target),
@@ -69,7 +69,9 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 		var dmgBefore = player.getStats().getSpellDamage();
 
 		eventsOnlyOnFollowingRolls(0);
+
 		player.cast(SHADOW_WORD_PAIN);
+
 		updateUntil(10);
 
 		var dmgAfter = player.getStats().getSpellDamage();

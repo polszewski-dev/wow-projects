@@ -82,7 +82,7 @@ class SurgeOfLightTest extends PriestSpellSimulationTest {
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void correctEventChance(int rank) {//todo crit ma byc 0
+	void correctEventChance(int rank) {
 		enableTalent(SURGE_OF_LIGHT, rank);
 
 		critsOnlyOnFollowingRolls(0);
@@ -93,5 +93,21 @@ class SurgeOfLightTest extends PriestSpellSimulationTest {
 		updateUntil(30);
 
 		assertLastEventChance(25 * rank);
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 1, 2 })
+	void secondSmiteHasZeroCritChance(int rank) {
+		enableTalent(SURGE_OF_LIGHT, rank);
+
+		critsOnlyOnFollowingRolls(0);
+		eventsOnlyOnFollowingRolls(0);
+
+		player.cast(SMITE);
+		player.cast(SMITE);
+
+		updateUntil(30);
+
+		assertLastCritChance(0);
 	}
 }

@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.ability.priest.discipline;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
@@ -66,7 +65,6 @@ class InnerFocusTest extends PriestSpellSimulationTest {
 		);
 	}
 
-	@Disabled
 	@Test
 	void critChanceIncreased() {
 		var critChanceBefore = player.getStats().getSpellCritPct();
