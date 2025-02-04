@@ -50,7 +50,7 @@ public class Effects implements SimulationContextSource, EffectCollection {
 		switch (replacementMode) {
 			case DEFAULT -> {
 				effect.stack(matchingEffect);
-				removeEffect(matchingEffect);
+				hardRemoveEffect(matchingEffect);
 				addNewEffect(effect);
 			}
 			case ADD_CHARGE ->
@@ -67,6 +67,10 @@ public class Effects implements SimulationContextSource, EffectCollection {
 	}
 
 	public void removeEffect(EffectInstance effect) {
+		((EffectInstanceImpl) effect).interrupt();
+	}
+
+	private void hardRemoveEffect(EffectInstance effect) {
 		detach(effect);
 		((EffectInstanceImpl) effect).interrupt();
 	}

@@ -63,15 +63,16 @@ public class Scheduler {
 				action.update();
 			}
 
-			if (action.isInProgress()) {
-				actions.set(i, null);
-				schedule(action);
+			if (action.isInProgress() && action.nextUpdateIsInThePresent()) {
+				actions.add(action);
 			}
 		}
 
 		for (var action : actions) {
-			if (action != null) {
+			if (action.isTerminated()) {
 				action.onRemovedFromQueue();
+			} else {
+				schedule(action);
 			}
 		}
 

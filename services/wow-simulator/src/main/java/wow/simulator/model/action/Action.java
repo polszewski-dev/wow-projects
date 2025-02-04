@@ -60,10 +60,20 @@ public abstract class Action implements Updateable {
 
 	@Override
 	public final Optional<Time> getNextUpdateTime() {
+		return Optional.ofNullable(getNullableNextUpdateTime());
+	}
+
+	private Time getNullableNextUpdateTime() {
 		if (isTerminated() || steps.isEmpty()) {
-			return Optional.empty();
+			return null;
 		}
-		return Optional.of(steps.peek().time());
+		return steps.peek().time();
+	}
+
+	public boolean nextUpdateIsInThePresent() {
+		var nextUpdateTime = getNullableNextUpdateTime();
+
+		return nextUpdateTime != null && clock.timeInThePresent(nextUpdateTime);
 	}
 
 	@Override
