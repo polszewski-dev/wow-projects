@@ -4,7 +4,6 @@ import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectCategory;
 import wow.commons.model.effect.EffectSource;
@@ -45,6 +44,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected int numCharges;
 
 	private final EffectSource effectSource;
+	private final Spell sourceSpell;
 
 	protected final EffectUpdateContext effectUpdateContext;
 
@@ -65,6 +65,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			int numStacks,
 			int numCharges,
 			EffectSource effectSource,
+			Spell sourceSpell,
 			Context parentContext
 	) {
 		super(owner.getClock());
@@ -75,6 +76,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.numStacks = numStacks;
 		this.numCharges = numCharges;
 		this.effectSource = effectSource;
+		this.sourceSpell = sourceSpell;
 		this.effectUpdateContext = new EffectUpdateContext(owner, this, parentContext);
 
 		if (numStacks > effect.getMaxStacks()) {
@@ -239,10 +241,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public Spell getSourceSpell() {
-		if (effectSource instanceof AbilitySource(var ability)) {
-			return ability;
-		}
-		return null;
+		return sourceSpell;
 	}
 
 	@Override

@@ -180,6 +180,7 @@ public class SpellResolutionContext extends Context {
 					effectApplication.numStacks(),
 					effectApplication.numCharges(),
 					effectSource,
+					getSourceSpell(),
 					this
 			);
 		} else {
@@ -191,6 +192,7 @@ public class SpellResolutionContext extends Context {
 					effectApplication.numStacks(),
 					effectApplication.numCharges(),
 					effectSource,
+					getSourceSpell(),
 					this
 			);
 		}
