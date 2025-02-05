@@ -220,12 +220,12 @@ public class EventContext {
 		}
 
 		var targetResolver = TargetResolver.ofTarget(caster, target);
-		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver, parentContext);
+		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver, parentContext, null);
 
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, spell));
 
 		for (var directComponent : spell.getDirectComponents()) {
-			resolutionContext.directComponentAction(directComponent, null);
+			resolutionContext.directComponentAction(directComponent);
 		}
 
 		if (spell.getEffectApplication() != null) {

@@ -8,6 +8,7 @@ import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.GroupCooldownId;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.action.CastSpellAction;
 
 /**
  * User: POlszewski
@@ -70,7 +71,7 @@ public class SpellCastContext extends Context {
 		};
 	}
 
-	public void createSpellResolutionContext() {
-		this.spellResolutionContext = new SpellResolutionContext(caster, spell, targetResolver, this);
+	public void createSpellResolutionContext(CastSpellAction action) {
+		this.spellResolutionContext = new SpellResolutionContext(caster, spell, targetResolver, this, action);
 	}
 }

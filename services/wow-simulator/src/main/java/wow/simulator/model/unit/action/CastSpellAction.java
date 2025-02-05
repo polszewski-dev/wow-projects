@@ -136,7 +136,7 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void resolveSpell() {
-		castContext.createSpellResolutionContext();
+		castContext.createSpellResolutionContext(this);
 
 		for (var directComponent : ability.getDirectComponents()) {
 			getSimulation().delayedAction(
@@ -155,7 +155,7 @@ public class CastSpellAction extends UnitAction {
 	private void directComponentAction(DirectComponent directComponent) {
 		var resolutionContext = castContext.getSpellResolutionContext();
 
-		resolutionContext.directComponentAction(directComponent, this);
+		resolutionContext.directComponentAction(directComponent);
 	}
 
 	private void applyEffect() {
@@ -168,13 +168,13 @@ public class CastSpellAction extends UnitAction {
 		var resolutionContext = castContext.getSpellResolutionContext();
 
 		if (ability.isChanneled()) {
-			if (!resolutionContext.hitRoll(this, primaryTarget.requireSingleTarget())) {
+			if (!resolutionContext.hitRoll(primaryTarget.requireSingleTarget())) {
 				return;
 			}
 			onBeginChannel();
 		}
 
-		var appliedEffect = resolutionContext.applyEffect(this, primaryTarget.requireSingleTarget());
+		var appliedEffect = resolutionContext.applyEffect(primaryTarget.requireSingleTarget());
 
 		if (ability.isChanneled()) {
 			this.channeledEffect = appliedEffect;

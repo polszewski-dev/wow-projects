@@ -21,23 +21,24 @@ import java.util.Map;
  */
 public class SpellResolutionContext extends Context {
 	private final TargetResolver targetResolver;
-
+	private final CastSpellAction action;
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
 
-	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext) {
+	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext, CastSpellAction action) {
 		super(caster, spell, parentContext);
 		this.targetResolver = targetResolver;
+		this.action = action;
 	}
 
-	public boolean hitRoll(CastSpellAction action, Unit target) {
+	public boolean hitRoll(Unit target) {
 		if (action == null || Unit.areFriendly(caster, target)) {
 			return true;
 		}
 
-		return hitRollByUnit.computeIfAbsent(target, key -> hitRollOnce(action, target));
+		return hitRollByUnit.computeIfAbsent(target, this::hitRollOnce);
 	}
 
-	private boolean hitRollOnce(CastSpellAction action, Unit target) {
+	private boolean hitRollOnce(Unit target) {
 		var hitChancePct = caster.getSpellHitPct(spell, target);
 		var hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
 
@@ -56,10 +57,10 @@ public class SpellResolutionContext extends Context {
 		return caster.getRng().critRoll(critChancePct, spell);
 	}
 
-	public void directComponentAction(DirectComponent directComponent, CastSpellAction action) {
+	public void directComponentAction(DirectComponent directComponent) {
 		switch (directComponent.type()) {
 			case DAMAGE ->
-					dealDirectDamage(directComponent, action);
+					dealDirectDamage(directComponent);
 			case HEAL ->
 					directHeal(directComponent);
 			case MANA_GAIN ->
@@ -75,15 +76,15 @@ public class SpellResolutionContext extends Context {
 		}
 	}
 
-	private void dealDirectDamage(DirectComponent directComponent, CastSpellAction action) {
+	private void dealDirectDamage(DirectComponent directComponent) {
 		targetResolver.forEachTarget(
 				directComponent,
-				componentTarget -> dealDirectDamage(directComponent, action, componentTarget)
+				componentTarget -> dealDirectDamage(directComponent, componentTarget)
 		);
 	}
 
-	private void dealDirectDamage(DirectComponent directComponent, CastSpellAction action, Unit target) {
-		if (!hitRoll(action, target)) {
+	private void dealDirectDamage(DirectComponent directComponent, Unit target) {
+		if (!hitRoll(target)) {
 			return;
 		}
 
@@ -140,8 +141,8 @@ public class SpellResolutionContext extends Context {
 		);
 	}
 
-	public EffectInstance applyEffect(CastSpellAction action, Unit target) {
-		if (!hitRoll(action, target)) {
+	public EffectInstance applyEffect(Unit target) {
+		if (!hitRoll(target)) {
 			return null;
 		}
 
