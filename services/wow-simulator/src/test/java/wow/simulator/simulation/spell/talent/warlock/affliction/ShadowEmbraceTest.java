@@ -30,8 +30,8 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(CURSE_OF_AGONY, target, 24)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),
+						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(CURSE_OF_AGONY, target, 24),
 				at(24)
 						.effectExpired(CURSE_OF_AGONY, target)
 						.effectRemoved(SHADOW_EMBRACE, target)
@@ -50,8 +50,8 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(CORRUPTION, target, 18)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),
+						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(CORRUPTION, target, 18),
 				at(18)
 						.effectExpired(CORRUPTION, target)
 						.effectRemoved(SHADOW_EMBRACE, target)
@@ -70,8 +70,8 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(SIPHON_LIFE, target, 30)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),
+						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(SIPHON_LIFE, target, 30),
 				at(30)
 						.effectExpired(SIPHON_LIFE, target)
 						.effectRemoved(SHADOW_EMBRACE, target)
@@ -93,14 +93,14 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(CURSE_OF_AGONY, target, 24)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE),
+						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(CURSE_OF_AGONY, target, 24),
 				at(1.5)
-						.effectApplied(CORRUPTION, target, 18)
-						.effectChargesIncreased(SHADOW_EMBRACE, target, 2),
+						.effectChargesIncreased(SHADOW_EMBRACE, target, 2)
+						.effectApplied(CORRUPTION, target, 18),
 				at(3)
-						.effectApplied(SIPHON_LIFE, target, 30)
-						.effectChargesIncreased(SHADOW_EMBRACE, target, 3),
+						.effectChargesIncreased(SHADOW_EMBRACE, target, 3)
+						.effectApplied(SIPHON_LIFE, target, 30),
 				at(19.5)
 						.effectExpired(CORRUPTION, target)
 						.effectChargesDecreased(SHADOW_EMBRACE, target, 2),

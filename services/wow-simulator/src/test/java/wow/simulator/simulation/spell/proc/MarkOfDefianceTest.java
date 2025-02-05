@@ -32,9 +32,9 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 				at(3)
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
-						.decreasedResource(602, HEALTH, false, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 17)
-						.increasedResource(150, MANA, player, "Mark of Defiance - proc #1 - triggered"),
+						.increasedResource(150, MANA, player, "Mark of Defiance - proc #1 - triggered")
+						.decreasedResource(602, HEALTH, false, target, SHADOW_BOLT),
 				at(20)
 						.cooldownExpired(player, cooldownId)
 		);

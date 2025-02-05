@@ -75,23 +75,23 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 		assertEvents(
 				event -> event.isDamage() || event.isTalentEffect(),
 				at(1.5)
-						.decreasedResource(731, HEALTH, target, MIND_BLAST)
-						.effectApplied(SHADOW_WEAVING, target, 15),
+						.effectApplied(SHADOW_WEAVING, target, 15)
+						.decreasedResource(753, HEALTH, target, MIND_BLAST),
 				at(11.5)
-						.decreasedResource(753, HEALTH, target, MIND_BLAST)
-						.effectStacked(SHADOW_WEAVING, target, 2),
+						.effectStacked(SHADOW_WEAVING, target, 2)
+						.decreasedResource(775, HEALTH, target, MIND_BLAST),
 				at(21.5)
-						.decreasedResource(775, HEALTH, target, MIND_BLAST)
-						.effectStacked(SHADOW_WEAVING, target, 3),
+						.effectStacked(SHADOW_WEAVING, target, 3)
+						.decreasedResource(797, HEALTH, target, MIND_BLAST),
 				at(31.5)
-						.decreasedResource(797, HEALTH, target, MIND_BLAST)
-						.effectStacked(SHADOW_WEAVING, target, 4),
+						.effectStacked(SHADOW_WEAVING, target, 4)
+						.decreasedResource(819, HEALTH, target, MIND_BLAST),
 				at(41.5)
-						.decreasedResource(819, HEALTH, target, MIND_BLAST)
-						.effectStacked(SHADOW_WEAVING, target, 5),
+						.effectStacked(SHADOW_WEAVING, target, 5)
+						.decreasedResource(841, HEALTH, target, MIND_BLAST),
 				at(51.5)
-						.decreasedResource(841, HEALTH, target, MIND_BLAST)
-						.effectStacked(SHADOW_WEAVING, target, 5),
+						.effectStacked(SHADOW_WEAVING, target, 5)
+						.decreasedResource(841, HEALTH, target, MIND_BLAST),
 				at(66.5)
 						.effectExpired(SHADOW_WEAVING, target)
 		);

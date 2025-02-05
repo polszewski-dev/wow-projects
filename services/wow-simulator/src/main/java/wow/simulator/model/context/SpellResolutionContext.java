@@ -13,9 +13,7 @@ import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * User: POlszewski
@@ -25,7 +23,6 @@ public class SpellResolutionContext extends Context {
 	private final TargetResolver targetResolver;
 
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
-	private final Set<Unit> spellHitFiredByUnit = new HashSet<>();
 
 	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext) {
 		super(caster, spell, parentContext);
@@ -37,20 +34,19 @@ public class SpellResolutionContext extends Context {
 			return true;
 		}
 
-		var fireEvents = !hitRollByUnit.containsKey(target);
+		return hitRollByUnit.computeIfAbsent(target, key -> hitRollOnce(action, target));
+	}
 
-		var hitRoll = hitRollByUnit.computeIfAbsent(target, key -> {
-			double hitChancePct = caster.getSpellHitPct(spell, target);
-			return caster.getRng().hitRoll(hitChancePct, spell);
-		});
+	private boolean hitRollOnce(CastSpellAction action, Unit target) {
+		var hitChancePct = caster.getSpellHitPct(spell, target);
+		var hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
 
-		if (fireEvents) {
-			if (hitRoll) {
-				caster.getGameLog().spellHit(action, target);
-			} else {
-				caster.getGameLog().spellResisted(action, target);
-				EventContext.fireSpellResistedEvent(caster, target, spell, this);
-			}
+		if (hitRoll) {
+			caster.getGameLog().spellHit(action, target);
+			EventContext.fireSpellHitEvent(caster, target, spell, this);
+		} else {
+			caster.getGameLog().spellResisted(action, target);
+			EventContext.fireSpellResistedEvent(caster, target, spell, this);
 		}
 
 		return hitRoll;
@@ -97,7 +93,6 @@ public class SpellResolutionContext extends Context {
 		var directDamage = snapshot.getDirectDamage(RngStrategy.AVERAGED, addBonus, critRoll);
 
 		decreaseHealth(target, directDamage, true, critRoll);
-		fireSpellHitEvent(target);
 	}
 
 	private void directHeal(DirectComponent directComponent) {
@@ -160,7 +155,6 @@ public class SpellResolutionContext extends Context {
 		var appliedEffect = createEffect(target, effectSource);
 
 		target.addEffect(appliedEffect, replacementMode);
-		fireSpellHitEvent(target);
 		return appliedEffect;
 	}
 
@@ -206,15 +200,6 @@ public class SpellResolutionContext extends Context {
 		}
 
 		return bonus.requiredEffect() == null || target.hasEffect(bonus.requiredEffect(), caster);
-	}
-
-	private void fireSpellHitEvent(Unit target) {
-		if (spellHitFiredByUnit.contains(target) || Unit.areFriendly(caster, target)) {
-			return;
-		}
-
-		EventContext.fireSpellHitEvent(caster, target, spell, this);
-		spellHitFiredByUnit.add(target);
 	}
 
 	private int getScaledValue(int value, DirectComponent directComponent) {

@@ -35,8 +35,8 @@ class T4P2BonusTest extends WarlockSpellSimulationTest {
 			at(3)
 					.endCast(player, SHADOW_BOLT)
 					.decreasedResource(420, MANA, player, SHADOW_BOLT)
-					.decreasedResource(639, HEALTH, target, SHADOW_BOLT)
-					.effectApplied("Voidheart Raiment (2)", player, 15),
+					.effectApplied("Voidheart Raiment (2)", player, 15)
+					.decreasedResource(755, HEALTH, target, SHADOW_BOLT),
 			at(18)
 					.effectExpired("Voidheart Raiment (2)", player)
 		);
@@ -59,8 +59,8 @@ class T4P2BonusTest extends WarlockSpellSimulationTest {
 				at(2.5)
 						.endCast(player, INCINERATE)
 						.decreasedResource(355, MANA, player, INCINERATE)
-						.decreasedResource(532, HEALTH, target, INCINERATE)
-						.effectApplied("Voidheart Raiment (2)", player, 15),
+						.effectApplied("Voidheart Raiment (2)", player, 15)
+						.decreasedResource(629, HEALTH, target, INCINERATE),
 				at(17.5)
 						.effectExpired("Voidheart Raiment (2)", player)
 		);
@@ -77,7 +77,7 @@ class T4P2BonusTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(0, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage));
+		assertDamageDone(0, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage + 135));
 		assertDamageDone(0, INCINERATE, INCINERATE_INFO.damage(totalFireSpellDamage));
 		assertDamageDone(1, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage + 135));
 		assertDamageDone(1, INCINERATE, INCINERATE_INFO.damage(totalFireSpellDamage));
@@ -95,7 +95,7 @@ class T4P2BonusTest extends WarlockSpellSimulationTest {
 		updateUntil(30);
 
 		assertDamageDone(0, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage));
-		assertDamageDone(0, INCINERATE, INCINERATE_INFO.damage(totalFireSpellDamage));
+		assertDamageDone(0, INCINERATE, INCINERATE_INFO.damage(totalFireSpellDamage + 135));
 		assertDamageDone(1, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage));
 		assertDamageDone(1, INCINERATE, INCINERATE_INFO.damage(totalFireSpellDamage + 135));
 	}

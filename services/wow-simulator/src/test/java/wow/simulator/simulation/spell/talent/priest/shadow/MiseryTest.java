@@ -34,8 +34,8 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.beginCast(player, SHADOW_WORD_PAIN)
 						.endCast(player, SHADOW_WORD_PAIN)
 						.decreasedResource(575, MANA, player, SHADOW_WORD_PAIN)
-						.effectApplied(SHADOW_WORD_PAIN, target, 18)
 						.effectApplied(MISERY, target, Duration.INFINITE)
+						.effectApplied(SHADOW_WORD_PAIN, target, 18)
 						.beginGcd(player),
 				at(1.5)
 						.endGcd(player),
@@ -70,9 +70,9 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.beginCast(player, MIND_FLAY, 3)
 						.endCast(player, MIND_FLAY)
 						.decreasedResource(230, MANA, player, MIND_FLAY)
+						.effectApplied(MISERY, target, Duration.INFINITE)
 						.beginChannel(player, MIND_FLAY)
 						.effectApplied(MIND_FLAY, target, 3)
-						.effectApplied(MISERY, target, Duration.INFINITE)
 						.beginGcd(player),
 				at(1)
 						.decreasedResource(184, HEALTH, target, MIND_FLAY),
@@ -104,8 +104,8 @@ class MiseryTest extends PriestSpellSimulationTest {
 				at(1.5)
 						.endCast(player, VAMPIRIC_TOUCH)
 						.decreasedResource(425, MANA, player, VAMPIRIC_TOUCH)
-						.effectApplied(VAMPIRIC_TOUCH, target, 15)
 						.effectApplied(MISERY, target, Duration.INFINITE)
+						.effectApplied(VAMPIRIC_TOUCH, target, 15)
 						.endGcd(player),
 				at(4.5)
 						.decreasedResource(136, HEALTH, target, VAMPIRIC_TOUCH)
@@ -140,11 +140,11 @@ class MiseryTest extends PriestSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(SHADOW_WORD_PAIN, target, 18)
-						.effectApplied(MISERY, target, Duration.INFINITE),
+						.effectApplied(MISERY, target, Duration.INFINITE)
+						.effectApplied(SHADOW_WORD_PAIN, target, 18),
 				at(1.5)
-						.effectApplied(MIND_FLAY, target, 3)
-						.effectChargesIncreased(MISERY, target, 2),
+						.effectChargesIncreased(MISERY, target, 2)
+						.effectApplied(MIND_FLAY, target, 3),
 				at(4.5)
 						.effectExpired(MIND_FLAY, target)
 						.effectChargesDecreased(MISERY, target, 1),
