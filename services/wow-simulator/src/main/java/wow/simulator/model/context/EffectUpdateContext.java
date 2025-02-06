@@ -4,6 +4,7 @@ import wow.character.model.snapshot.PeriodicSpellDamageSnapshot;
 import wow.commons.model.effect.component.ComponentType;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.util.RoundingReminder;
 
 /**
  * User: POlszewski
@@ -14,7 +15,7 @@ public class EffectUpdateContext extends Context {
 	private final Unit target;
 	private final PeriodicSpellDamageSnapshot spellDamageSnapshot;
 
-	private double roundingReminder;
+	private final RoundingReminder roundingReminder = new RoundingReminder();
 
 	public EffectUpdateContext(Unit caster, EffectInstance effect, Context parentContext) {
 		super(caster, effect.getSourceSpell(), parentContext);
@@ -24,10 +25,8 @@ public class EffectUpdateContext extends Context {
 	}
 
 	public void dealPeriodicDamage(int tickNo, int numStacks) {
-		var tickDamage = numStacks * spellDamageSnapshot.getTickDamage(tickNo) + roundingReminder;
-		var roundedTickDamage = (int) tickDamage;
-
-		roundingReminder = tickDamage - roundedTickDamage;
+		var tickDamage = numStacks * spellDamageSnapshot.getTickDamage(tickNo);
+		var roundedTickDamage = roundingReminder.roundValue(tickDamage);
 
 		decreaseHealth(target, roundedTickDamage, false, false);
 	}
