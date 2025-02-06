@@ -14,7 +14,10 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
-import wow.commons.model.spell.*;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.Coefficient;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.component.DirectComponent;
 
 import java.util.ArrayList;
@@ -597,7 +600,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		}
 	}
 
-	private static class DefaultEffectCollector extends AbstractEffectCollector {
+	private static class DefaultEffectCollector extends AbstractEffectCollector.OnlyEffects {
 		final AccumulatedStats stats;
 		List<StatConversion> statConversions;
 
@@ -621,11 +624,6 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			if (!effect.getStatConversions().isEmpty()) {
 				addStatConversions(effect);
 			}
-		}
-
-		@Override
-		public void addActivatedAbility(ActivatedAbility activatedAbility) {
-			// ignored
 		}
 
 		private void addStatConversions(Effect effect) {

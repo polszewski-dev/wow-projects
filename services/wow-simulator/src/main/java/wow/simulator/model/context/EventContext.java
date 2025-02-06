@@ -11,7 +11,6 @@ import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.item.ItemSource;
-import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentSource;
@@ -244,7 +243,7 @@ public class EventContext {
 
 	private record EventAndEffect(Event event, Effect effect, Unit effectTarget) {}
 
-	private static class EventCollector extends AbstractEffectCollector {
+	private static class EventCollector extends AbstractEffectCollector.OnlyEffects {
 		final EventType eventType;
 		final Unit unit;
 		final List<EventAndEffect> list;
@@ -264,11 +263,6 @@ public class EventContext {
 					list.add(new EventAndEffect(event, effect, unit));
 				}
 			}
-		}
-
-		@Override
-		public void addActivatedAbility(ActivatedAbility activatedAbility) {
-			// void
 		}
 	}
 }

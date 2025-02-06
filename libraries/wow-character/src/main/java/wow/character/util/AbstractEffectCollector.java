@@ -8,6 +8,7 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.SocketType;
+import wow.commons.model.spell.ActivatedAbility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,5 +119,16 @@ public abstract class AbstractEffectCollector implements EffectCollector {
 		this.numRed = collector.numRed;
 		this.numYellow = collector.numYellow;
 		this.numBlue = collector.numBlue;
+	}
+
+	public abstract static class OnlyEffects extends AbstractEffectCollector {
+		protected OnlyEffects(Character character) {
+			super(character);
+		}
+
+		@Override
+		public void addActivatedAbility(ActivatedAbility activatedAbility) {
+			// ignored
+		}
 	}
 }
