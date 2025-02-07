@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.set.warlock;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
@@ -14,7 +13,6 @@ import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
  * User: POlszewski
  * Date: 2025-01-24
  */
-@Disabled
 class T5P4BonusTest extends WarlockSpellSimulationTest {
 	/*
 	Your Shadowbolt spell hits increase the damage of Corruption by 10% and your Incinerate spell hits increase the damage of Immolate by 10%.

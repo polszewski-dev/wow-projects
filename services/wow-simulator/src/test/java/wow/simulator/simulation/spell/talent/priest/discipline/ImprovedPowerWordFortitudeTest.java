@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.talent.priest.discipline;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
@@ -18,7 +17,6 @@ class ImprovedPowerWordFortitudeTest extends PriestSpellSimulationTest {
 	Increases the effect of your Power Word: Fortitude and Prayer of Fortitude spells by 30%.
 	 */
 
-	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void effectIsIncreased(int rank) {

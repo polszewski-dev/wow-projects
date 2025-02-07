@@ -13,6 +13,7 @@ public enum EventAction {
 	REMOVE_STACK,
 	REMOVE_CHARGE,
 	REMOVE_CHARGE_AND_TRIGGER_SPELL,
+	INCREASE_THIS_EFFECT_BY_PCT
 	;
 
 	public static EventAction parse(String value) {

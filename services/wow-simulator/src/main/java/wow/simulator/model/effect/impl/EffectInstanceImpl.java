@@ -5,6 +5,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.EffectCategory;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
@@ -24,6 +25,8 @@ import wow.simulator.simulation.SimulationContext;
 import wow.simulator.util.IdGenerator;
 
 import java.util.List;
+
+import static wow.commons.util.CollectionUtil.join;
 
 /**
  * User: POlszewski
@@ -57,6 +60,10 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	private Runnable onEffectFinished;
 
+	private List<Attribute> modifierAttributeList;
+	private List<StatConversion> statConversions;
+	private List<Event> events;
+
 	protected EffectInstanceImpl(
 			Unit owner,
 			Unit target,
@@ -78,6 +85,10 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.effectSource = effectSource;
 		this.sourceSpell = sourceSpell;
 		this.effectUpdateContext = new EffectUpdateContext(owner, this, parentContext);
+
+		this.modifierAttributeList = effect.getModifierAttributeList();
+		this.statConversions = effect.getStatConversions();
+		this.events = effect.getEvents();
 
 		if (numStacks > effect.getMaxStacks()) {
 			throw new IllegalArgumentException();
@@ -308,7 +319,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public List<Attribute> getModifierAttributeList() {
-		return effect.getModifierAttributeList();
+		return modifierAttributeList;
 	}
 
 	@Override
@@ -318,7 +329,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public List<StatConversion> getStatConversions() {
-		return effect.getStatConversions();
+		return statConversions;
 	}
 
 	@Override
@@ -328,7 +339,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public List<Event> getEvents() {
-		return effect.getEvents();
+		return events;
 	}
 
 	@Override
@@ -344,5 +355,46 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public String toString() {
 		return effect.toString();
+	}
+
+	@Override
+	public void augment(EffectAugmentations augmentations) {
+		addModifiers(augmentations.modifiers());
+		addStatConversions(augmentations.statConversions());
+		addEvents(augmentations.events());
+		addEffectIncrease(augmentations.effectIncreasePct());
+	}
+
+	private void addEffectIncrease(double effectIncreasePct) {
+		this.modifierAttributeList = getScaledAttributes(effectIncreasePct);
+	}
+
+	private List<Attribute> getScaledAttributes(double effectIncreasePct) {
+		if (effectIncreasePct == 0 || modifierAttributeList == null) {
+			return modifierAttributeList;
+		}
+
+		var factor = 1 + effectIncreasePct / 100.0;
+
+		return modifierAttributeList.stream()
+				.map(x -> x.intScale(factor))
+				.toList();
+	}
+
+	private void addModifiers(List<Attribute> extraModifiers) {
+		this.modifierAttributeList = join(modifierAttributeList, extraModifiers);
+	}
+
+	private void addStatConversions(List<StatConversion> extraStatConversions) {
+		this.statConversions = join(statConversions, extraStatConversions);
+	}
+
+	private void addEvents(List<Event> extraEvents) {
+		this.events = join(events, extraEvents);
+	}
+
+	@Override
+	public void increaseEffect(double effectIncreasePct) {
+		effectUpdateContext.increaseEffect(effectIncreasePct);
 	}
 }

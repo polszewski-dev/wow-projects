@@ -42,4 +42,10 @@ public class EffectUpdateContext extends Context {
 		}
 		return null;
 	}
+
+	public void increaseEffect(double effectIncreasePct) {
+		if (spellDamageSnapshot != null) {
+			spellDamageSnapshot.setDamagePct(spellDamageSnapshot.getDamagePct() + effectIncreasePct);
+		}
+	}
 }

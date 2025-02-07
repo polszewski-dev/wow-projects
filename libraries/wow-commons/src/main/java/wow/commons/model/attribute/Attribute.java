@@ -43,6 +43,10 @@ public record Attribute(
 		return new Attribute(id, value * factor, condition, levelScaled);
 	}
 
+	public Attribute intScale(double factor) {
+		return new Attribute(id, (int) (value * factor), condition, levelScaled);
+	}
+
 	public boolean hasCondition() {
 		return !condition().isEmpty();
 	}

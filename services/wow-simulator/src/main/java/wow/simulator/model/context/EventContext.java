@@ -20,6 +20,7 @@ import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static wow.character.util.AttributeConditionChecker.check;
 import static wow.commons.model.effect.component.EventType.*;
@@ -204,6 +205,8 @@ public class EventContext {
 					((EffectInstance) effect).removeCharge();
 			case REMOVE_CHARGE_AND_TRIGGER_SPELL ->
 					triggerSpell(event, effect, true);
+			case INCREASE_THIS_EFFECT_BY_PCT ->
+					increaseThisEffect(event, (EffectInstance) effect);
 		}
 	}
 
@@ -233,6 +236,17 @@ public class EventContext {
 		if (spell.getEffectApplication() != null) {
 			resolutionContext.applyEffect(effect.getSource());
 		}
+	}
+
+	private void increaseThisEffect(Event event, EffectInstance effect) {
+		var effectIncreasePct = Objects.requireNonNull(event.actionParameters().value());
+		var abilityId = event.actionParameters().abilityId();
+
+		if (abilityId != null && !effect.matches(abilityId)) {
+			return;
+		}
+
+		effect.increaseEffect(effectIncreasePct);
 	}
 
 	private Spell getSourceSpellOverride(Effect effect, Spell triggeredSpell) {

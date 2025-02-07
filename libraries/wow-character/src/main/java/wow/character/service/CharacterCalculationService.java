@@ -3,6 +3,7 @@ package wow.character.service;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.commons.model.attribute.PowerType;
+import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
@@ -59,6 +60,8 @@ public interface CharacterCalculationService {
 	PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
 	StatSummary getStatSummary(Character character);
+
+	EffectAugmentations getEffectAugmentations(Character character, Spell spell, Character target);
 
 	double getCopiedValueIncreasePct(Character character, Spell spell);
 }

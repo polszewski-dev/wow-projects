@@ -2,6 +2,7 @@ package wow.simulator.model.effect;
 
 import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Unit;
@@ -44,4 +45,8 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	void setOnEffectFinished(Runnable onEffectFinished);
 
 	Spell getSourceSpell();
+
+	void augment(EffectAugmentations augmentations);
+
+	void increaseEffect(double effectIncreasePct);
 }

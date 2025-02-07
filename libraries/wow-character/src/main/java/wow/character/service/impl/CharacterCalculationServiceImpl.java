@@ -9,10 +9,13 @@ import wow.character.service.CharacterCalculationService;
 import wow.character.util.AbstractEffectCollector;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.Duration;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.component.ComponentType;
+import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.Ability;
@@ -33,6 +36,7 @@ import static java.lang.Math.max;
 import static wow.character.util.AttributeConditionArgsUtil.*;
 import static wow.commons.constant.SpellConstants.*;
 import static wow.commons.model.attribute.AttributeId.COPY_PCT;
+import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
 
 /**
  * User: POlszewski
@@ -527,6 +531,24 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
+	public EffectAugmentations getEffectAugmentations(Character character, Spell spell, Character target) {
+		if (!(spell instanceof Ability ability)) {
+			return EffectAugmentations.EMPTY;
+		}
+
+		var collector = new EffectAugmentationCollector(character, ability, target);
+
+		collector.solveAll();
+
+		return new EffectAugmentations(
+			collector.accumulatedEffectIncreasePct.totalValue,
+			collector.extraModifiers,
+			collector.extraStatConversions,
+			collector.extraEvents
+		);
+	}
+
+	@Override
 	public double getCopiedValueIncreasePct(Character character, Spell spell) {
 		if (!(spell instanceof Ability ability)) {
 			return 0;
@@ -672,6 +694,52 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		public void accumulateAttribute(AttributeId id, double value) {
 			if (id == attributeId) {
 				this.totalValue += value;
+			}
+		}
+	}
+
+	private static class EffectAugmentationCollector extends AbstractEffectCollector.OnlyEffects {
+		final Ability ability;
+		final Character target;
+		final AccumulatedSingleStat accumulatedEffectIncreasePct;
+
+		List<Attribute> extraModifiers = new ArrayList<>();
+		List<StatConversion> extraStatConversions = new ArrayList<>();
+		List<Event> extraEvents = new ArrayList<>();
+
+		EffectAugmentationCollector(Character character, Ability ability, Character target) {
+			super(character);
+			this.ability = ability;
+			this.target = target;
+			var args = AttributeConditionArgs.forSpell(character, ability, null);
+			this.accumulatedEffectIncreasePct = new AccumulatedSingleStat(EFFECT_PCT, args);
+		}
+
+		@Override
+		public void addEffect(Effect effect, int stackCount) {
+			if (!effect.hasAugmentedAbilities()) {
+				checkForMatchingEffectIncreases(effect, stackCount);
+			} else if (effect.augments(ability.getAbilityId())) {
+				extractAugmentations(effect);
+			}
+		}
+
+		private void extractAugmentations(Effect effect) {
+			var modifierAttributeList = effect.getModifierAttributeList();
+
+			if (modifierAttributeList != null) {
+				extraModifiers.addAll(modifierAttributeList);
+			}
+
+			extraStatConversions.addAll(effect.getStatConversions());
+			extraEvents.addAll(effect.getEvents());
+		}
+
+		private void checkForMatchingEffectIncreases(Effect effect, int stackCount) {
+			var modifierAttributeList = effect.getModifierAttributeList();
+
+			if (modifierAttributeList != null) {
+				accumulatedEffectIncreasePct.accumulateAttributes(modifierAttributeList, stackCount);
 			}
 		}
 	}

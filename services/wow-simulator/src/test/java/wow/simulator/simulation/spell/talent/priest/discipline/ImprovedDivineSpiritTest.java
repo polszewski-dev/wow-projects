@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.talent.priest.discipline;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.commons.model.talent.TalentId;
@@ -19,7 +18,6 @@ class ImprovedDivineSpiritTest extends PriestSpellSimulationTest {
 	Your Divine Spirit and Prayer of Spirit spells also increase the target's spell damage and healing by an amount equal to 10% of their total Spirit.
 	 */
 
-	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void damageIsIncreased(int rank) {

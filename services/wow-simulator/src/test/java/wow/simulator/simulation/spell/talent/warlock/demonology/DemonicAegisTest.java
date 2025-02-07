@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.talent.warlock.demonology;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
@@ -18,7 +17,6 @@ class DemonicAegisTest extends WarlockSpellSimulationTest {
 	Increases the effectiveness of your Demon Armor and Fel Armor spells by 30%.
 	 */
 
-	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void spellDamageIsIncreased(int rank) {

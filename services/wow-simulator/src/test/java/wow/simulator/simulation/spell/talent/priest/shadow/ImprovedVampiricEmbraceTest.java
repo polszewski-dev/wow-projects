@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.talent.priest.shadow;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.commons.model.talent.TalentId;
@@ -18,7 +17,6 @@ class ImprovedVampiricEmbraceTest extends PriestSpellSimulationTest {
 	Increases the percentage healed by Vampiric Embrace by an additional 10%.
 	 */
 
-	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void healthGainedFromMindBlast(int rank) {
@@ -32,7 +30,6 @@ class ImprovedVampiricEmbraceTest extends PriestSpellSimulationTest {
 		assertHealthGained(VAMPIRIC_EMBRACE, player, getPercentOf(15 + 5 * rank, MIND_BLAST_INFO.damage()));
 	}
 
-	@Disabled
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void healthGainedFromShadowWordPain(int rank) {

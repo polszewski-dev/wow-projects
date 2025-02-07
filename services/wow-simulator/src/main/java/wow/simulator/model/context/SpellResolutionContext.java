@@ -3,6 +3,7 @@ package wow.simulator.model.context;
 import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.effect.AbilitySource;
+import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.component.DirectComponent;
@@ -157,7 +158,9 @@ public class SpellResolutionContext extends Context {
 		var target = targetResolver.getTarget(effectApplication);
 		var replacementMode = effectApplication.replacementMode();
 		var appliedEffect = createEffect(target, effectSource);
+		var augmentations = getEffectAugmentations(appliedEffect);
 
+		appliedEffect.augment(augmentations);
 		target.addEffect(appliedEffect, replacementMode);
 		return appliedEffect;
 	}
@@ -194,6 +197,12 @@ public class SpellResolutionContext extends Context {
 					this
 			);
 		}
+	}
+
+	private EffectAugmentations getEffectAugmentations(EffectInstance effect) {
+		var target = effect.getTarget();
+
+		return getCharacterCalculationService().getEffectAugmentations(caster, spell, target);
 	}
 
 	private boolean shouldAddBonus(DirectComponent directComponent, Unit target) {
