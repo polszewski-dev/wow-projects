@@ -109,7 +109,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 			return null;
 		}
 
-		var augmentedAbility = params.augmentedAbility();
+		var augmentedAbilities = params.augmentedAbilities();
 		var maxStacks = getOptionalInteger(params.maxStacks()).orElse(1);
 		var periodicComponent = getPeriodicComponent(params);
 		var tickInterval = getTickInterval(params);
@@ -118,7 +118,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var statConversions = getStatConversions(params);
 		var events = getEvents(params, eventMapper);
 
-		var effect = new EffectImpl(augmentedAbility);
+		var effect = new EffectImpl(augmentedAbilities);
 
 		effect.setMaxStacks(maxStacks);
 		effect.setPeriodicComponent(periodicComponent);

@@ -37,7 +37,7 @@ public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser,
 
 	@Override
 	public void writeRow(TalentTooltipParser parser) {
-		var effect = new EffectImpl(null);
+		var effect = new EffectImpl(List.of());
 		effect.setStatConversions(List.of());
 		effect.setEvents(List.of());
 
@@ -49,7 +49,7 @@ public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser,
 		setValue(parser.getGameVersion());
 		setValue(parser.getCharacterClass());
 		setValue(parser.getTalentTree());
-		setValue(effect.getAugmentedAbility());
+		setValue(effect.getAugmentedAbilities());
 		writeModifierComponent(effect, MAX_TALENT_MODIFIER_ATTRIBUTES);
 		writeStatConversions(effect);
 		writeEffectIncreasePerEffectOnTarget(effect);

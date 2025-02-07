@@ -13,7 +13,7 @@ import java.util.Objects;
  * Date: 2023-09-27
  */
 public record EffectPatternParams(
-		AbilityId augmentedAbility,
+		List<AbilityId> augmentedAbilities,
 		PeriodicComponentParams periodicComponent,
 		String tickInterval,
 		ModifierComponentParams modifierComponent,
@@ -24,6 +24,7 @@ public record EffectPatternParams(
 		String duration
 ) implements ScraperPatternParams {
 	public EffectPatternParams {
+		Objects.requireNonNull(augmentedAbilities);
 		Objects.requireNonNull(statConversions);
 		Objects.requireNonNull(events);
 	}

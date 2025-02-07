@@ -28,8 +28,8 @@ public class RacialEffectSheetParser extends SpellEffectSheetParser {
 
 	@Override
 	protected EffectImpl newEffect() {
-		var augmentedAbility = colAugmentedAbility.getEnum(AbilityId::parse, null);
+		var augmentedAbilities = colAugmentedAbility.getList(AbilityId::parse);
 
-		return new RacialEffectImpl(augmentedAbility);
+		return new RacialEffectImpl(augmentedAbilities);
 	}
 }

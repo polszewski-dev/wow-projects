@@ -287,8 +287,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
-	public AbilityId getAugmentedAbility() {
-		return effect.getAugmentedAbility();
+	public List<AbilityId> getAugmentedAbilities() {
+		return effect.getAugmentedAbilities();
 	}
 
 	@Override

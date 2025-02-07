@@ -298,7 +298,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	private final ExcelColumn colTickInterval = column(TICK_INTERVAL);
 
 	private EffectPatternParams readEffectPatternParams() {
-		var augmentedAbility = colAugmentedAbility.getEnum(AbilityId::parse, null);
+		var augmentedAbilities = colAugmentedAbility.getList(AbilityId::parse);
 		var periodicComponent = getPeriodicComponentParams();
 		var tickInterval = colTickInterval.getString(null);
 		var modifierComponent = getModifierComponentParams();
@@ -309,7 +309,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var duration = colEffectDuration.getString(null);
 
 		var params = new EffectPatternParams(
-				augmentedAbility,
+				augmentedAbilities,
 				periodicComponent,
 				tickInterval,
 				modifierComponent,

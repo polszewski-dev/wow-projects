@@ -6,6 +6,8 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.spell.AbilityId;
 
+import java.util.List;
+
 /**
  * User: POlszewski
  * Date: 2024-11-18
@@ -15,7 +17,7 @@ import wow.commons.model.spell.AbilityId;
 public class RacialEffectImpl extends EffectImpl implements RacialEffect {
 	private CharacterRestriction characterRestriction;
 
-	public RacialEffectImpl(AbilityId augmentedAbility) {
-		super(augmentedAbility);
+	public RacialEffectImpl(List<AbilityId> augmentedAbilities) {
+		super(augmentedAbilities);
 	}
 }

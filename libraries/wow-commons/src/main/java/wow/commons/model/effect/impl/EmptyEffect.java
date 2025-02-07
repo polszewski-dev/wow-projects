@@ -43,8 +43,8 @@ public class EmptyEffect implements Effect {
 	}
 
 	@Override
-	public AbilityId getAugmentedAbility() {
-		return null;
+	public List<AbilityId> getAugmentedAbilities() {
+		return List.of();
 	}
 
 	@Override

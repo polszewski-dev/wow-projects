@@ -14,6 +14,7 @@ import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.AbilityId;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * User: POlszewski
@@ -25,7 +26,7 @@ public class EffectImpl implements Effect {
 	private int effectId;
 	private EffectCategory category;
 	private EffectSource source;
-	private final AbilityId augmentedAbility;
+	private final List<AbilityId> augmentedAbilities;
 	private Description description;
 	private TimeRestriction timeRestriction;
 	private int maxStacks;
@@ -38,20 +39,21 @@ public class EffectImpl implements Effect {
 	private EffectIncreasePerEffectOnTarget effectIncreasePerEffectOnTarget;
 	private List<Event> events;
 
-	public EffectImpl(AbilityId augmentedAbility) {
-		this.augmentedAbility = augmentedAbility;
+	public EffectImpl(List<AbilityId> augmentedAbilities) {
+		Objects.requireNonNull(augmentedAbilities);
+		this.augmentedAbilities = augmentedAbilities;
 	}
 
 	public static EffectImpl newAttributeEffect(Attributes attributes) {
-		return newAttributeEffect(null, attributes, null);
+		return newAttributeEffect(List.of(), attributes, null);
 	}
 
 	public static EffectImpl newAttributeEffect(Attributes attributes, String tooltip) {
-		return newAttributeEffect(null, attributes, tooltip);
+		return newAttributeEffect(List.of(), attributes, tooltip);
 	}
 
-	public static EffectImpl newAttributeEffect(AbilityId augmentedAbility, Attributes attributes, String tooltip) {
-		var effect = new EffectImpl(augmentedAbility);
+	public static EffectImpl newAttributeEffect(List<AbilityId> augmentedAbilities, Attributes attributes, String tooltip) {
+		var effect = new EffectImpl(augmentedAbilities);
 		effect.setModifierComponent(new ModifierComponent(attributes));
 		if (tooltip != null) {
 			effect.setDescription(new Description("", null, tooltip));

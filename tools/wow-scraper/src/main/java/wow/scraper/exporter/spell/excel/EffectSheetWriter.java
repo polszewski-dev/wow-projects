@@ -48,7 +48,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setValue(effect.getMaxStacks());
 		writePeriodicComponent(effect);
 		setValue(effect.getTickInterval());
-		setValue(effect.getAugmentedAbility());
+		setValue(effect.getAugmentedAbilities());
 		writeModifierComponent(effect, maxModAttributes);
 		writeAbsorptionComponent(effect);
 		writeStatConversions(effect);

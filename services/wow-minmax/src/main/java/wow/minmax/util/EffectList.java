@@ -28,7 +28,7 @@ public class EffectList extends AbstractEffectCollector {
 
 	@Override
 	public void addEffect(Effect effect, int stackCount) {
-		if (effect.getAugmentedAbility() != null) {
+		if (effect.hasAugmentedAbilities()) {
 			return;
 		}
 		effects.add(effect);
@@ -97,7 +97,7 @@ public class EffectList extends AbstractEffectCollector {
 		}
 
 		return EffectImpl.newAttributeEffect(
-				effect.getAugmentedAbility(),
+				effect.getAugmentedAbilities(),
 				modifierComponent.attributes().scale(-1),
 				null
 		);

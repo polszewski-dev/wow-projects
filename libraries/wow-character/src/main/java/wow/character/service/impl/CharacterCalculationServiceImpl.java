@@ -611,7 +611,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		@Override
 		public void addEffect(Effect effect, int numStacks) {
-			if (effect.getAugmentedAbility() != null) {
+			if (effect.hasAugmentedAbilities()) {
 				return;
 			}
 

@@ -56,7 +56,7 @@ public class ProcSheetParser extends AbstractSpellPatternSheetParser {
 		var procPattern = spellPatternRepository.getProcPattern(pattern, reqVersion).orElse(null);
 
 		if (procPattern == null) {
-			var params = new EffectPatternParams(null, null, null, null, null, List.of(), new TreeMap<>(), null, null);
+			var params = new EffectPatternParams(List.of(), null, null, null, null, List.of(), new TreeMap<>(), null, null);
 			procPattern = new ProcPattern(pattern, params, reqVersion);
 			spellPatternRepository.add(procPattern);
 		}

@@ -147,7 +147,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var talent = getTalent(PRIEST, IMPROVED_DIVINE_SPIRIT, 2, TBC_P5);
 		var effect = talent.getEffect();
 
-		assertThat(effect.getAugmentedAbility()).isEqualTo(AbilityId.DIVINE_SPIRIT);
+		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(AbilityId.DIVINE_SPIRIT));
 		assertStatConversion(effect, 0, SPIRIT, POWER, 10, MiscCondition.SPELL);
 	}
 

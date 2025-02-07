@@ -267,7 +267,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	}
 
 	protected EffectImpl getDummyEffect(int effectId) {
-		var dummy = new EffectImpl(null);
+		var dummy = new EffectImpl(List.of());
 		dummy.setEffectId(effectId);
 		return dummy;
 	}
@@ -275,9 +275,9 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	protected final ExcelColumn colAugmentedAbility = column(AUGMENTED_ABILITY, true);
 
 	protected EffectImpl newEffect() {
-		var augmentedAbility = colAugmentedAbility.getEnum(AbilityId::parse, null);
+		var augmentedAbilities = colAugmentedAbility.getList(AbilityId::parse);
 
-		return new EffectImpl(augmentedAbility);
+		return new EffectImpl(augmentedAbilities);
 	}
 
 	protected ModifierComponent getModifierComponent(int maxAttributes) {

@@ -188,7 +188,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 	}
 
 	private void validateEffect(Effect effect) {
-		if (effect.getAugmentedAbility() != null &&
+		if (effect.hasAugmentedAbilities() &&
 			(effect.getPeriodicComponent() != null || effect.getAbsorptionComponent() != null || effect.getTickInterval() != null)) {
 			throw new IllegalArgumentException();
 		}

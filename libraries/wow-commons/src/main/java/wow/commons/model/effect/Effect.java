@@ -23,7 +23,7 @@ public interface Effect extends Described, TimeRestricted {
 
 	EffectSource getSource();
 
-	AbilityId getAugmentedAbility();
+	List<AbilityId> getAugmentedAbilities();
 
 	int getMaxStacks();
 
@@ -48,7 +48,7 @@ public interface Effect extends Described, TimeRestricted {
 	}
 
 	default boolean hasAnyNonModifierComponents() {
-		return getAugmentedAbility() != null ||
+		return !getAugmentedAbilities().isEmpty() ||
 				getPeriodicComponent() != null ||
 				getAbsorptionComponent() != null ||
 				getTickInterval() != null ||
@@ -59,5 +59,13 @@ public interface Effect extends Described, TimeRestricted {
 
 	default boolean hasPeriodicComponent(ComponentType componentType) {
 		return getPeriodicComponent() != null && getPeriodicComponent().type() == componentType;
+	}
+
+	default boolean hasAugmentedAbilities() {
+		return !getAugmentedAbilities().isEmpty();
+	}
+
+	default boolean augments(AbilityId abilityId) {
+		return getAugmentedAbilities().contains(abilityId);
 	}
 }

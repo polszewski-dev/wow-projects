@@ -22,7 +22,7 @@ class MiscEffectParserTest extends SpellParserTest {
 	void augment1() {
 		var effect = parse("Your Lightning Shield spell also grants you 15 mana per 5 sec. while active.");
 
-		assertThat(effect.getAugmentedAbility()).isEqualTo(LIGHTNING_SHIELD);
+		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(LIGHTNING_SHIELD));
 
 		assertModifier(effect, List.of(
 				Attribute.of(MP5, 15)
@@ -33,7 +33,7 @@ class MiscEffectParserTest extends SpellParserTest {
 	void augment2() {
 		var effect = parse("Your Battle Shout ability grants an additional 70 attack power.");
 
-		assertThat(effect.getAugmentedAbility()).isEqualTo(BATTLE_SHOUT);
+		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of((BATTLE_SHOUT)));
 
 		assertModifier(effect, List.of(
 				Attribute.of(POWER, 70, MiscCondition.PHYSICAL)
