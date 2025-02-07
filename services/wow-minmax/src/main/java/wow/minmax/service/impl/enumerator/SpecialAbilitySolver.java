@@ -74,12 +74,12 @@ public class SpecialAbilitySolver {
 		}
 
 		var appliedEffect = effectApplication.effect();
-		var modifierAttributeList = appliedEffect.getModifierAttributeList();
 
-		if (modifierAttributeList == null) {
+		if (!appliedEffect.hasModifierComponent()) {
 			return false;
 		}
 
+		var modifierAttributeList = appliedEffect.getModifierAttributeList();
 		var procChance = getProcChance(procEvent, snapshot);
 
 		if (procChance == 0) {

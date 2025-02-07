@@ -135,7 +135,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 		var appliedEffect = spell.getAppliedEffect();
 
-		if (appliedEffect != null && appliedEffect.getPeriodicComponent() != null) {
+		if (appliedEffect != null && appliedEffect.hasPeriodicComponent()) {
 			result.add(appliedEffect.getPeriodicComponent().type());
 		}
 
@@ -152,7 +152,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 		var appliedEffect = spell.getAppliedEffect();
 
-		if (appliedEffect != null && appliedEffect.getPeriodicComponent() != null) {
+		if (appliedEffect != null && appliedEffect.hasPeriodicComponent()) {
 			var school = appliedEffect.getPeriodicComponent().school();
 			result.add(school);
 		}
@@ -189,10 +189,10 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 	private void validateEffect(Effect effect) {
 		if (effect.hasAugmentedAbilities() &&
-			(effect.getPeriodicComponent() != null || effect.getAbsorptionComponent() != null || effect.getTickInterval() != null)) {
+			(effect.hasPeriodicComponent() || effect.hasAbsorptionComponent() || effect.getTickInterval() != null)) {
 			throw new IllegalArgumentException();
 		}
-		if (effect.getPeriodicComponent() != null) {
+		if (effect.hasPeriodicComponent()) {
 			Objects.requireNonNull(effect.getTickInterval());
 		}
 	}

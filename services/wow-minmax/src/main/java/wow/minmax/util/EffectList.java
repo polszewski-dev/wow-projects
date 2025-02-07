@@ -124,9 +124,8 @@ public class EffectList extends AbstractEffectCollector {
 			var effect = getEffect(i);
 			var stackCount = getStackCount(i);
 
-			var modifierAttributeList = effect.getModifierAttributeList();
-
-			if (modifierAttributeList != null) {
+			if (effect.hasModifierComponent()) {
+				var modifierAttributeList = effect.getModifierAttributeList();
 				result.accumulateAttributes(modifierAttributeList, stackCount);
 			} else if (nonModifierHandler != null) {
 				nonModifierHandler.handleNonModifier(effect, stackCount);

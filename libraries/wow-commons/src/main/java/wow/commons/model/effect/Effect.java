@@ -43,22 +43,22 @@ public interface Effect extends Described, TimeRestricted {
 
 	List<Event> getEvents();
 
+	default boolean hasModifierComponent() {
+		return getModifierComponent() != null;
+	}
+
 	default boolean hasModifierComponentOnly() {
-		return getModifierComponent() != null && !hasAnyNonModifierComponents();
+		return hasModifierComponent() && !hasAnyNonModifierComponents();
 	}
 
 	default boolean hasAnyNonModifierComponents() {
-		return !getAugmentedAbilities().isEmpty() ||
-				getPeriodicComponent() != null ||
-				getAbsorptionComponent() != null ||
+		return hasAugmentedAbilities() ||
+				hasPeriodicComponent() ||
+				hasAbsorptionComponent() ||
 				getTickInterval() != null ||
-				!getStatConversions().isEmpty() ||
+				hasStatConversions() ||
 				getEffectIncreasePerEffectOnTarget() != null ||
-				!getEvents().isEmpty();
-	}
-
-	default boolean hasPeriodicComponent(ComponentType componentType) {
-		return getPeriodicComponent() != null && getPeriodicComponent().type() == componentType;
+				hasEvents();
 	}
 
 	default boolean hasAugmentedAbilities() {
@@ -67,5 +67,25 @@ public interface Effect extends Described, TimeRestricted {
 
 	default boolean augments(AbilityId abilityId) {
 		return getAugmentedAbilities().contains(abilityId);
+	}
+
+	default boolean hasPeriodicComponent() {
+		return getPeriodicComponent() != null;
+	}
+
+	default boolean hasPeriodicComponent(ComponentType componentType) {
+		return hasPeriodicComponent() && getPeriodicComponent().type() == componentType;
+	}
+
+	default boolean hasAbsorptionComponent() {
+		return getAbsorptionComponent() != null;
+	}
+
+	default boolean hasStatConversions() {
+		return !getStatConversions().isEmpty();
+	}
+
+	default boolean hasEvents() {
+		return !getEvents().isEmpty();
 	}
 }

@@ -65,7 +65,7 @@ public class AccumulatedRotationStats implements NonModifierHandler {
 
 	@Override
 	public void handleNonModifier(Effect effect, int stackCount) {
-		if (!effect.getStatConversions().isEmpty()) {
+		if (effect.hasStatConversions()) {
 			this.statConversions.addAll(effect.getStatConversions());
 		} else {
 			this.nonModifierEffects.add(effect);

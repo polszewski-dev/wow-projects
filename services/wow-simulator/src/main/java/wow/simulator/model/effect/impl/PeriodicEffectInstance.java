@@ -40,10 +40,8 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 	private void tick() {
 		++tickNo;
 
-		var periodicComponent = effect.getPeriodicComponent();
-
-		if (periodicComponent != null) {
-			execPeriodicComponent(periodicComponent);
+		if (effect.hasPeriodicComponent()) {
+			execPeriodicComponent(effect.getPeriodicComponent());
 		}
 
 		scheduleNextTick();

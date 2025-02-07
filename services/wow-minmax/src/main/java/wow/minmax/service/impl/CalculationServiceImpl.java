@@ -175,13 +175,13 @@ public class CalculationServiceImpl implements CalculationService {
 			return null;
 		}
 
-		var periodicComponent = effectApplication.effect().getPeriodicComponent();
+		var effect = effectApplication.effect();
 
-		if (periodicComponent == null) {
-			return null;
+		if (effect.hasPeriodicComponent(ComponentType.DAMAGE)) {
+			return effect.getPeriodicComponent();
 		}
 
-		return periodicComponent.type() == ComponentType.DAMAGE ? periodicComponent : null;
+		return null;
 	}
 
 	@Override

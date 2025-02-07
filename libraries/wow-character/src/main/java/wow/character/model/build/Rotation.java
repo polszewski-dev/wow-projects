@@ -89,8 +89,7 @@ public class Rotation implements Copyable<Rotation> {
 		if (effect == null) {
 			return false;
 		}
-		var periodicComponent = effect.getPeriodicComponent();
-		return periodicComponent != null && periodicComponent.type() == ComponentType.DAMAGE;
+		return effect.hasPeriodicComponent(ComponentType.DAMAGE);
 	}
 
 	public List<Ability> getAbilities() {

@@ -615,13 +615,12 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 				return;
 			}
 
-			var modifierAttributeList = effect.getModifierAttributeList();
-
-			if (modifierAttributeList != null) {
+			if (effect.hasModifierComponent()) {
+				var modifierAttributeList = effect.getModifierAttributeList();
 				stats.accumulateAttributes(modifierAttributeList, numStacks);
 			}
 
-			if (!effect.getStatConversions().isEmpty()) {
+			if (effect.hasStatConversions()) {
 				addStatConversions(effect);
 			}
 		}
