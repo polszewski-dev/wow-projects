@@ -6,13 +6,15 @@ import wow.character.model.snapshot.SpellCostSnapshot;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.TriggeredSpell;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.simulation.SimulationContext;
+import wow.simulator.simulation.SimulationContextSource;
 
 /**
  * User: POlszewski
  * Date: 2023-11-04
  */
 @Getter
-public abstract class Context {
+public abstract class Context implements SimulationContextSource {
 	protected final Unit caster;
 	protected final Spell spell;
 
@@ -75,5 +77,10 @@ public abstract class Context {
 			return sourceSpellOverride;
 		}
 		return getSourceContext().getSpell();
+	}
+
+	@Override
+	public SimulationContext getSimulationContext() {
+		return caster.getSimulationContext();
 	}
 }

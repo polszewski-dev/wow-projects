@@ -5,6 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
+import wow.commons.model.effect.component.EventActionParameters;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.scraper.parser.spell.SpellMatcher;
 import wow.scraper.parser.spell.params.EffectPatternParams;
@@ -41,7 +42,8 @@ public class ProcMatcher extends SpellMatcher<ProcPattern, EffectPatternParams, 
 				event.condition(),
 				getProcChance(eventParams).orElseThrow(),
 				List.of(EventAction.TRIGGER_SPELL),
-				triggeredSpell
+				triggeredSpell,
+				EventActionParameters.EMPTY
 		);
 	}
 

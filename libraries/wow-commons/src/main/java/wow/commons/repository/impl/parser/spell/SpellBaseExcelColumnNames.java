@@ -55,6 +55,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String EVENT_ACTION = "action";
 	public static final String EVENT_COOLDOWN = "cd";
 	public static final String EVENT_TRIGGERED_SPELL = "triggered spell";
+	public static final String EVENT_ACTION_PARAMS = "action params";
 
 	public static final String APPLIED_EFFECT_ID = "id";
 	public static final String APPLIED_EFFECT_DURATION = "duration";

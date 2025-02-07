@@ -16,7 +16,8 @@ public record Event(
 		AttributeCondition condition,
 		Percent chance,
 		List<EventAction> actions,
-		Spell triggeredSpell
+		Spell triggeredSpell,
+		EventActionParameters actionParameters
 ) implements EffectComponent {
 	public Event {
 		Objects.requireNonNull(types);
@@ -26,6 +27,6 @@ public record Event(
 	}
 
 	public Event setTriggeredSpell(Spell triggeredSpell) {
-		return new Event(types, condition, chance, actions, triggeredSpell);
+		return new Event(types, condition, chance, actions, triggeredSpell, actionParameters);
 	}
 }

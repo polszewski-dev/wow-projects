@@ -193,7 +193,7 @@ public class EventContext {
 	private void performEventAction(EventAction action, Event event, Effect effect) {
 		switch (action) {
 			case TRIGGER_SPELL ->
-					triggerSpell(event.triggeredSpell(), effect, false);
+					triggerSpell(event, effect, false);
 			case REMOVE ->
 					((EffectInstance) effect).removeSelf();
 			case ADD_STACK ->
@@ -203,11 +203,13 @@ public class EventContext {
 			case REMOVE_CHARGE ->
 					((EffectInstance) effect).removeCharge();
 			case REMOVE_CHARGE_AND_TRIGGER_SPELL ->
-					triggerSpell(event.triggeredSpell(), effect, true);
+					triggerSpell(event, effect, true);
 		}
 	}
 
-	private void triggerSpell(Spell spell, Effect effect, boolean removeCharge) {
+	private void triggerSpell(Event event, Effect effect, boolean removeCharge) {
+		var spell = event.triggeredSpell();
+
 		if (spell.hasCooldown()) {
 			var cooldownId = CooldownId.of(spell);
 
@@ -222,6 +224,7 @@ public class EventContext {
 		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver, parentContext, null);
 
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, spell));
+		resolutionContext.setValueParam(event.actionParameters().value());
 
 		for (var directComponent : spell.getDirectComponents()) {
 			resolutionContext.directComponentAction(directComponent);
@@ -257,7 +260,12 @@ public class EventContext {
 
 		@Override
 		public void addEffect(Effect effect, int stackCount) {
+			if (effect.hasAugmentedAbilities()) {
+				return;
+			}
+
 			var events = effect.getEvents();
+
 			for (var event : events) {
 				if (event.types().contains(eventType)) {
 					list.add(new EventAndEffect(event, effect, unit));

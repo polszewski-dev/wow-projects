@@ -302,6 +302,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colEventChance = column(EVENT_CHANCE_PCT);
 	private final ExcelColumn colEventAction = column(EVENT_ACTION);
 	private final ExcelColumn colEventTriggeredSpell = column(EVENT_TRIGGERED_SPELL);
+	private final ExcelColumn colEventActionParams = column(EVENT_ACTION_PARAMS, true);
 
 	private Event getEvent(int idx) {
 		var prefix = getEventPrefix(idx);
@@ -315,10 +316,11 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var chance = colEventChance.prefixed(prefix).getPercent(Percent._100);
 		var actions = colEventAction.prefixed(prefix).getList(EventAction::parse);
 		var triggeredSpellId = colEventTriggeredSpell.prefixed(prefix).getNullableInteger();
+		var actionParams = colEventActionParams.prefixed(prefix).getEnum(EventActionParameters::parse, EventActionParameters.EMPTY);
 
 		var dummy = getDummySpell(triggeredSpellId);
 
-		return new Event(types, condition, chance, actions, dummy);
+		return new Event(types, condition, chance, actions, dummy, actionParams);
 	}
 
 	protected SpellImpl getDummySpell(Integer spellId) {

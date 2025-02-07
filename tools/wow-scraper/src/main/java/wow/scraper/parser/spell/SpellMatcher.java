@@ -249,12 +249,13 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var actions = params.actions();
 		var cooldown = getOptionalDuration(params.cooldown()).orElse(Duration.ZERO);
 		var triggeredSpell = getSpell(params.triggeredSpell(), TriggeredSpellImpl::new);
+		var actionParams = EventActionParameters.EMPTY;
 
 		if (triggeredSpell != null) {
 			triggeredSpell.setCooldown(cooldown);
 		}
 
-		return new Event(types, condition, chance, actions, triggeredSpell);
+		return new Event(types, condition, chance, actions, triggeredSpell, actionParams);
 	}
 
 	private EffectApplication getEffectApplication(SpellPatternParams params) {

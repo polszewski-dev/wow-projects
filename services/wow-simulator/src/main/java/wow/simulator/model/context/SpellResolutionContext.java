@@ -1,5 +1,6 @@
 package wow.simulator.model.context;
 
+import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.EffectSource;
@@ -23,6 +24,8 @@ public class SpellResolutionContext extends Context {
 	private final TargetResolver targetResolver;
 	private final CastSpellAction action;
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
+	@Setter
+	private Double valueParam;
 
 	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext, CastSpellAction action) {
 		super(caster, spell, parentContext);
@@ -106,7 +109,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void copyDamageAsHeal(DirectComponent directComponent) {
-		var heal = getScaledValue(getSourceContext().getLastDamageDone(), directComponent);
+		var heal = getCopiedValue(getSourceContext().getLastDamageDone(), directComponent);
 
 		targetResolver.forEachTarget(
 				directComponent,
@@ -115,7 +118,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void copyDamageAsManaGain(DirectComponent directComponent) {
-		var manaGain = getScaledValue(getSourceContext().getLastDamageDone(), directComponent);
+		var manaGain = getCopiedValue(getSourceContext().getLastDamageDone(), directComponent);
 
 		targetResolver.forEachTarget(
 				directComponent,
@@ -124,7 +127,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void copyHealthPaidAsManaGain(DirectComponent directComponent) {
-		var mana = getScaledValue(parentContext.getLastHealthPaid(), directComponent);
+		var mana = getCopiedValue(parentContext.getLastHealthPaid(), directComponent);
 
 		targetResolver.forEachTarget(
 				directComponent,
@@ -203,8 +206,12 @@ public class SpellResolutionContext extends Context {
 		return bonus.requiredEffect() == null || target.hasEffect(bonus.requiredEffect(), caster);
 	}
 
-	private int getScaledValue(int value, DirectComponent directComponent) {
-		var ratioPct = directComponent.min();
+	private int getCopiedValue(int value, DirectComponent directComponent) {
+		var ratioPct = valueParam != null ? valueParam : directComponent.min();
+		var copyIncreasePct = 0;
+
+		ratioPct += copyIncreasePct;
+
 		return (int) (value * ratioPct / 100.0);
 	}
 }
