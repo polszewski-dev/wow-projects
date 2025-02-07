@@ -95,6 +95,8 @@ public enum AttributeType {
 	SPELL_REFLECT_PCT("SpellReflect", percents()),
 	CHAIN_MULTIPLIER("ChainMultiplier", percents()),
 
+	COPY("Copy", percents())
+
 	;
 
 	private final String key;

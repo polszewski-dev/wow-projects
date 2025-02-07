@@ -9,6 +9,7 @@ import wow.character.service.CharacterCalculationService;
 import wow.character.util.AbstractEffectCollector;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.Duration;
+import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
@@ -31,6 +32,7 @@ import static java.lang.Math.clamp;
 import static java.lang.Math.max;
 import static wow.character.util.AttributeConditionArgsUtil.*;
 import static wow.commons.constant.SpellConstants.*;
+import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 
 /**
  * User: POlszewski
@@ -524,6 +526,20 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return snapshot;
 	}
 
+	@Override
+	public double getCopiedValueIncreasePct(Character character, Spell spell) {
+		if (!(spell instanceof Ability ability)) {
+			return 0;
+		}
+
+		var args = AttributeConditionArgs.forSpell(character, ability, null);
+		var accumulatedCopyPct = new AccumulatedSingleStat(COPY_PCT, args);
+
+		accumulateEffects(character, accumulatedCopyPct);
+
+		return accumulatedCopyPct.totalValue;
+	}
+
 	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character) {
 		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
 				Function.identity(),
@@ -641,5 +657,22 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	private static double addAndMultiplyByPct(double value, double modifier, double modifierPct) {
 		return max(value + modifier, 0) * max(1 + modifierPct / 100, 0);
+	}
+
+	private static class AccumulatedSingleStat extends AccumulatedPartialStats {
+		private final AttributeId attributeId;
+		private double totalValue;
+
+		AccumulatedSingleStat(AttributeId attributeId, AttributeConditionArgs conditionArgs) {
+			super(conditionArgs);
+			this.attributeId = attributeId;
+		}
+
+		@Override
+		public void accumulateAttribute(AttributeId id, double value) {
+			if (id == attributeId) {
+				this.totalValue += value;
+			}
+		}
 	}
 }

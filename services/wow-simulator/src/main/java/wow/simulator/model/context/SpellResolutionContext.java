@@ -208,7 +208,7 @@ public class SpellResolutionContext extends Context {
 
 	private int getCopiedValue(int value, DirectComponent directComponent) {
 		var ratioPct = valueParam != null ? valueParam : directComponent.min();
-		var copyIncreasePct = 0;
+		var copyIncreasePct = getCharacterCalculationService().getCopiedValueIncreasePct(caster, getSourceSpell());
 
 		ratioPct += copyIncreasePct;
 

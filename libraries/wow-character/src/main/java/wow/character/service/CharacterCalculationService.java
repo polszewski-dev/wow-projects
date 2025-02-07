@@ -59,4 +59,6 @@ public interface CharacterCalculationService {
 	PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
 	StatSummary getStatSummary(Character character);
+
+	double getCopiedValueIncreasePct(Character character, Spell spell);
 }

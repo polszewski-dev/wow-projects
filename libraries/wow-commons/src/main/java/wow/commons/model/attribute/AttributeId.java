@@ -147,6 +147,7 @@ public enum AttributeId {
 	PARTY_CRIT_PCT("Party.Crit%"),
 	PARTY_MP5("Party.Mp5"),
 
+	COPY_PCT("Copy%")
 	;
 
 	private final String key;
