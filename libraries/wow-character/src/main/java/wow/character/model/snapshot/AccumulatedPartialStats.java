@@ -16,7 +16,7 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	protected final AttributeConditionArgs conditionArgs;
 
 	protected AccumulatedPartialStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs.getCaster().getLevel());
+		super(conditionArgs);
 		this.conditionArgs = conditionArgs;
 	}
 
@@ -31,7 +31,7 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 		}
 
 		var id = attribute.id();
-		var value = scaleFactor * attribute.getLevelScaledValue(characterLevel);
+		var value = scaleFactor * attribute.getScaledValue(scalingParams);
 
 		accumulateAttribute(id, value);
 	}

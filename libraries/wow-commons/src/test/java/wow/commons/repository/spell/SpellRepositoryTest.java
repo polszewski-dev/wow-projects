@@ -8,6 +8,7 @@ import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.attribute.condition.MiscCondition;
@@ -524,9 +525,9 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertModifier(effect, List.of(
 				Attribute.of(POWER, 3, MiscCondition.SPELL),
-				Attribute.of(POWER, 2, MiscCondition.SPELL, true),
+				Attribute.of(POWER, 2, MiscCondition.SPELL, AttributeScaling.LEVEL),
 				Attribute.of(POWER, 2, MiscCondition.PHYSICAL),
-				Attribute.of(POWER, 4, MiscCondition.PHYSICAL, true),
+				Attribute.of(POWER, 4, MiscCondition.PHYSICAL, AttributeScaling.LEVEL),
 				Attribute.of(HEALING_TAKEN_PCT, -50)
 		));
 	}

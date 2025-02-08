@@ -2,6 +2,7 @@ package wow.commons.repository.impl.parser.excel.mapper;
 
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.repository.spell.SpellRepository;
@@ -39,7 +40,7 @@ abstract class AbstractMapper implements Mapper {
 		map.put(getAttrId(idx), attribute.id());
 		map.put(getAttrValue(idx), attribute.value());
 		map.put(getAttrCondition(idx), attribute.condition());
-		if (attribute.levelScaled()) {
+		if (attribute.scaling() != AttributeScaling.NONE) {
 			throw new IllegalArgumentException();
 		}
 	}

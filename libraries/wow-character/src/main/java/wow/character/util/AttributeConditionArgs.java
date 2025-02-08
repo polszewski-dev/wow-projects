@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import wow.character.model.character.Character;
+import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.categorization.WeaponSubType;
 import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
+import wow.commons.model.talent.TalentTree;
 
 import java.util.Objects;
 
@@ -20,7 +22,7 @@ import java.util.Objects;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
-public class AttributeConditionArgs {
+public class AttributeConditionArgs implements AttributeScalingParams {
 	private final Character caster;
 	private final Spell spell;
 	private final Character target;
@@ -71,5 +73,18 @@ public class AttributeConditionArgs {
 			return spell.getSchool();
 		}
 		return null;
+	}
+
+	@Override
+	public int getLevel() {
+		return caster.getLevel();
+	}
+
+	@Override
+	public int getNumberOfEffectsOnTarget(TalentTree tree) {
+		if (target == null) {
+			return 0;
+		}
+		return target.getNumberOfEffects(tree);
 	}
 }

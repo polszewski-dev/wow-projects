@@ -5,6 +5,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.categorization.PveRole;
@@ -205,14 +206,14 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 
 		var colAttrValue = column(getAttrValue(statNo)).prefixed(prefix);
 		var colAttrCondition = column(getAttrCondition(statNo), true).prefixed(prefix);
-		var colAttrLevelScaled = column(getAttrLevelScaled(statNo), true).prefixed(prefix);
+		var colAttrScaling = column(getAttrScaling(statNo), true).prefixed(prefix);
 
 		var id = colAttrId.getEnum(AttributeId::parse);
 		var value = colAttrValue.getDouble();
 		var condition = colAttrCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
-		var levelScaled = colAttrLevelScaled.getBoolean();
+		var scaling = colAttrScaling.getEnum(AttributeScaling::parse, AttributeScaling.NONE);
 
-		return Attribute.of(id, value, condition, levelScaled);
+		return Attribute.of(id, value, condition, scaling);
 	}
 
 	private final ExcelColumn coPveRoles = column("pve_roles");

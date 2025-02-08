@@ -36,7 +36,6 @@ public class EffectImpl implements Effect {
 	private List<Attribute> modifierAttributeList;
 	private AbsorptionComponent absorptionComponent;
 	private List<StatConversion> statConversions;
-	private EffectIncreasePerEffectOnTarget effectIncreasePerEffectOnTarget;
 	private List<Event> events;
 
 	public EffectImpl(List<AbilityId> augmentedAbilities) {

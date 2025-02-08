@@ -5,6 +5,7 @@ import lombok.Setter;
 import wow.character.model.snapshot.*;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
@@ -30,12 +31,12 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private AccumulatedSpellStats periodic;
 	private AccumulatedDurationStats effectDuration;
 
-	public AccumulatedDamagingAbilityStats(int characterLevel) {
-		super(characterLevel);
+	public AccumulatedDamagingAbilityStats(AttributeScalingParams scalingParams) {
+		super(scalingParams);
 	}
 
 	private AccumulatedDamagingAbilityStats(AccumulatedDamagingAbilityStats stats) {
-		this(stats.characterLevel);
+		this(stats.scalingParams);
 		this.ability = stats.ability;
 		this.directComponent = stats.directComponent;
 		this.periodicComponent = stats.periodicComponent;
@@ -55,7 +56,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	@Override
 	protected void accumulateAttribute(Attribute attribute, double scaleFactor) {
 		var id = attribute.id();
-		var value = scaleFactor * attribute.getLevelScaledValue(characterLevel);
+		var value = scaleFactor * attribute.getScaledValue(scalingParams);
 		var condition = attribute.condition();
 
 		accumulateAttribute(id, value, condition);

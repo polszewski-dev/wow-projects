@@ -15,6 +15,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentId;
+import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
@@ -381,6 +382,11 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	@Override
 	public boolean hasEffect(AbilityId abilityId) {
 		return effects.isUnderEffect(abilityId);
+	}
+
+	@Override
+	public int getNumberOfEffects(TalentTree tree) {
+		return effects.getNumberOfEffects(tree);
 	}
 
 	@Override

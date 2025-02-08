@@ -66,25 +66,6 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		setValue(statConversion.ratioPct());
 	}
 
-	protected void writeEffectIncreasePerEffectOnTargetHeader() {
-		setHeader(EFFECT_INCREASE_CONDITION);
-		setHeader(EFFECT_INCREASE_RATIO);
-		setHeader(EFFECT_INCREASE_MAX);
-	}
-
-	protected void writeEffectIncreasePerEffectOnTarget(Effect effect) {
-		var effectIncreasePerEffectOnTarget = effect.getEffectIncreasePerEffectOnTarget();
-
-		if (effectIncreasePerEffectOnTarget == null) {
-			fillRemainingEmptyCols(3);
-			return;
-		}
-
-		setValue(effectIncreasePerEffectOnTarget.condition());
-		setValue(effectIncreasePerEffectOnTarget.value());
-		setValue(effectIncreasePerEffectOnTarget.max());
-	}
-
 	protected void writeEventHeader(int maxEvents) {
 		for (int i = 1; i <= maxEvents; ++i) {
 			writeSingleEventHeader(i);

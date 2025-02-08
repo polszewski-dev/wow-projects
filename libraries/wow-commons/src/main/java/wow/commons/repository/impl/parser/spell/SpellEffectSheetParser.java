@@ -47,7 +47,6 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var modifierComponent = getModifierComponent(maxModAttributes);
 		var absorptionComponent = getAbsorptionComponent();
 		var statConversions = getStatConversions();
-		var effectIncreasePerEffectOnTarget = getEffectIncreasePerEffectOnTarget();
 		var events = getEvents(maxEvents);
 
 		effect.setEffectId(effectId);
@@ -59,7 +58,6 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		effect.setModifierComponent(modifierComponent);
 		effect.setAbsorptionComponent(absorptionComponent);
 		effect.setStatConversions(statConversions);
-		effect.setEffectIncreasePerEffectOnTarget(effectIncreasePerEffectOnTarget);
 		effect.setEvents(events);
 		return effect;
 	}

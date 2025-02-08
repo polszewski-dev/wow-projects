@@ -8,6 +8,7 @@ import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.attribute.condition.MiscCondition;
@@ -164,12 +165,14 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 	void talentWithEffectIncrease() {
 		var talent = getTalent(WARLOCK, SOUL_SIPHON, 2, TBC_P5);
 		var effect = talent.getEffect();
-		var effectIncrease = effect.getEffectIncreasePerEffectOnTarget();
+		var effectIncrease = effect.getModifierAttributeList().getFirst();
 
-		assertThat(effectIncrease).isNotNull();
-		assertThat(effectIncrease.condition()).isEqualTo(AttributeCondition.of(AFFLICTION));
-		assertThat(effectIncrease.value()).isEqualTo(Percent.of(4));
-		assertThat(effectIncrease.max()).isEqualTo(Percent.of(60));
+		assertThat(effectIncrease.id()).isEqualTo(DAMAGE_PCT);
+		assertThat(effectIncrease.condition()).isEqualTo(AttributeCondition.of(DRAIN_LIFE));
+		assertThat(effectIncrease.value()).isEqualTo(4);
+		assertThat(effectIncrease.scaling()).isEqualTo(new AttributeScaling.NumberOfEffectsOnTarget(
+				AFFLICTION, Percent.of(60)
+		));
 	}
 
 	private Talent getTalent(CharacterClassId classId, TalentId talentId, int rank, PhaseId phaseId) {

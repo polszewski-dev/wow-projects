@@ -5,6 +5,7 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.simulation.SimulationContextSource;
@@ -23,6 +24,8 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	boolean matches(AbilityId abilityId, Unit owner);
 
 	boolean matches(AbilityId abilityId);
+
+	boolean matches(TalentTree tree);
 
 	Duration getRemainingDuration();
 

@@ -46,9 +46,6 @@ public final class SpellBaseExcelColumnNames {
 	public static final String STAT_CONVERSION_TO = "to";
 	public static final String STAT_CONVERSION_TO_CONDITION = "to condition";
 	public static final String STAT_CONVERSION_RATIO = "%";
-	public static final String EFFECT_INCREASE_CONDITION = "effect increase per effect on target: condition";
-	public static final String EFFECT_INCREASE_RATIO = "effect increase per effect on target: ratio";
-	public static final String EFFECT_INCREASE_MAX = "effect increase per effect on target: max";
 	public static final String EVENT_ON = "on";
 	public static final String EVENT_CONDITION = "condition";
 	public static final String EVENT_CHANCE_PCT = "chance%";

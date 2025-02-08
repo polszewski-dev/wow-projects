@@ -62,7 +62,7 @@ public abstract class AbstractPatternSheetParser extends WowExcelSheetParser {
 
 		validateCondition(condition);
 
-		return new AttributePattern(id, value, condition, false);
+		return new AttributePattern(id, value, condition, "none");
 	}
 
 	protected void assertAllColumnsAreEmpty(ExcelColumn... columns) {

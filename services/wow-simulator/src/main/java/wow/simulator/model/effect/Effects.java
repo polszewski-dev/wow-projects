@@ -4,6 +4,7 @@ import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.EffectReplacementMode;
+import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.effect.impl.EffectInstanceImpl;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.SimulationContext;
@@ -93,6 +94,12 @@ public class Effects implements SimulationContextSource, EffectCollection {
 		return getEffectInstanceStream()
 				.filter(x -> x.matches(abilityId, owner))
 				.findAny();
+	}
+
+	public int getNumberOfEffects(TalentTree tree) {
+		return (int) getEffectInstanceStream()
+				.filter(x -> x.matches(tree))
+				.count();
 	}
 
 	@Override

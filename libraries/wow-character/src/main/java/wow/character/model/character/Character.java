@@ -12,6 +12,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.talent.TalentTree;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -112,5 +113,9 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	default boolean hasEffect(AbilityId abilityId) {
 		return false;
+	}
+
+	default int getNumberOfEffects(TalentTree tree) {
+		return 0;
 	}
 }

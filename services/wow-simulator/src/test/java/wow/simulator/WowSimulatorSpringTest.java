@@ -190,7 +190,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				.mapToInt(DecreasedResource::amount)
 				.sum();
 
-		assertThat(Math.abs(totalDamage - (int) expectedAmount)).isLessThanOrEqualTo(1);
+		if (Math.abs(totalDamage - (int) expectedAmount) > 1) {
+			assertThat(totalDamage).isEqualTo((int) expectedAmount);
+		}
 	}
 
 	protected void assertDamageDone(AbilityId abilityId, double expectedAmount) {

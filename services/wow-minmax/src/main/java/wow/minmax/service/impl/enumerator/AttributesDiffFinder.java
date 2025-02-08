@@ -1,6 +1,5 @@
 package wow.minmax.service.impl.enumerator;
 
-import wow.character.model.character.Character;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -22,7 +21,7 @@ import java.util.*;
  * Date: 2022-11-09
  */
 public class AttributesDiffFinder {
-	private final Character character;
+	private final PlayerCharacter character;
 	private final EffectList reference;
 	private final EffectList equipped;
 
@@ -66,11 +65,11 @@ public class AttributesDiffFinder {
 		var referenceAttributes = getModifierAttributes(reference);
 
 		for (var attribute : equippedAttributes) {
-			getAccumulator(attribute).add(attribute, character.getLevel());
+			getAccumulator(attribute).add(attribute, character);
 		}
 
 		for (var attribute : referenceAttributes) {
-			getAccumulator(attribute).subtract(attribute, character.getLevel());
+			getAccumulator(attribute).subtract(attribute, character);
 		}
 
 		for (var accumulator : accumulators.values()) {
@@ -146,12 +145,12 @@ public class AttributesDiffFinder {
 			this.condition = prototype.condition();
 		}
 
-		void add(Attribute attribute, int characterLevel) {
-			this.value += attribute.getLevelScaledValue(characterLevel);
+		void add(Attribute attribute, PlayerCharacter character) {
+			this.value += attribute.getScaledValue(character);
 		}
 
-		void subtract(Attribute attribute, int characterLevel) {
-			this.value -= attribute.getLevelScaledValue(characterLevel);
+		void subtract(Attribute attribute, PlayerCharacter character) {
+			this.value -= attribute.getScaledValue(character);
 		}
 
 		Attribute getResult() {

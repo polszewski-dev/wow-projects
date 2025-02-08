@@ -12,7 +12,7 @@ public record AttributePattern(
 		AttributeId id,
 		String value,
 		String condition,
-		boolean levelScaled
+		String scaling
 ) {
 	public AttributePattern {
 		Objects.requireNonNull(id);

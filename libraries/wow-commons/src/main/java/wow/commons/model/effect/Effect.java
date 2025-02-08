@@ -39,8 +39,6 @@ public interface Effect extends Described, TimeRestricted {
 
 	List<StatConversion> getStatConversions();
 
-	EffectIncreasePerEffectOnTarget getEffectIncreasePerEffectOnTarget();
-
 	List<Event> getEvents();
 
 	default boolean hasModifierComponent() {
@@ -57,7 +55,6 @@ public interface Effect extends Described, TimeRestricted {
 				hasAbsorptionComponent() ||
 				getTickInterval() != null ||
 				hasStatConversions() ||
-				getEffectIncreasePerEffectOnTarget() != null ||
 				hasEvents();
 	}
 

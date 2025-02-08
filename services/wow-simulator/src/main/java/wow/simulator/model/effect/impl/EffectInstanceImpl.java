@@ -11,7 +11,9 @@ import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.ClassAbility;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.context.EffectUpdateContext;
@@ -154,6 +156,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public boolean matches(AbilityId abilityId) {
 		return getSourceSpell() instanceof Ability a && a.getAbilityId() == abilityId;
+	}
+
+	@Override
+	public boolean matches(TalentTree tree) {
+		return getSourceSpell() instanceof ClassAbility a && a.getTalentTree() == tree;
 	}
 
 	@Override
@@ -330,11 +337,6 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public List<StatConversion> getStatConversions() {
 		return statConversions;
-	}
-
-	@Override
-	public EffectIncreasePerEffectOnTarget getEffectIncreasePerEffectOnTarget() {
-		return effect.getEffectIncreasePerEffectOnTarget();
 	}
 
 	@Override

@@ -73,13 +73,11 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 		EffectImpl effect = newEffect();
 		var modifierComponent = getModifierComponent(MAX_TALENT_MODIFIER_ATTRIBUTES);
 		var statConversions = getStatConversions();
-		var effectIncreasePerEffectOnTarget = getEffectIncreasePerEffectOnTarget();
 		var events = getEvents(MAX_TALENT_EVENTS);
 
 		effect.setMaxStacks(1);
 		effect.setModifierComponent(modifierComponent);
 		effect.setStatConversions(statConversions);
-		effect.setEffectIncreasePerEffectOnTarget(effectIncreasePerEffectOnTarget);
 		effect.setEvents(events);
 		return effect;
 	}

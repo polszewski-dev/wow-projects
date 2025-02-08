@@ -83,11 +83,6 @@ public class EmptyEffect implements Effect {
 	}
 
 	@Override
-	public EffectIncreasePerEffectOnTarget getEffectIncreasePerEffectOnTarget() {
-		return null;
-	}
-
-	@Override
 	public List<Event> getEvents() {
 		return List.of();
 	}

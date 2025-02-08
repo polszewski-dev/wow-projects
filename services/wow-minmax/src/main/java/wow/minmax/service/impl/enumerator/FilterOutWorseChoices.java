@@ -2,6 +2,7 @@ package wow.minmax.service.impl.enumerator;
 
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 
@@ -72,14 +73,14 @@ public abstract class FilterOutWorseChoices<T> {
 	private record AttributeKey(
 			AttributeId id,
 			AttributeCondition condition,
-			boolean levelScaled
+			AttributeScaling scaling
 	) {
 		AttributeKey(Attribute x) {
-			this(x.id(), x.condition(), x.levelScaled());
+			this(x.id(), x.condition(), x.scaling());
 		}
 
 		boolean matches(Attribute x) {
-			return x.id() == id() && x.condition().equals(condition()) && x.levelScaled() == levelScaled();
+			return x.id() == id() && x.condition().equals(condition()) && x.scaling().equals(scaling());
 		}
 	}
 

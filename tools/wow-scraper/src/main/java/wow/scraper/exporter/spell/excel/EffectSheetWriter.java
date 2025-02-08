@@ -35,7 +35,6 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		writeModifierComponentHeader(maxModAttributes);
 		writeAbsorptionComponentHeader();
 		writeStatConversionHeader();
-		writeEffectIncreasePerEffectOnTargetHeader();
 		writeEventHeader(maxEvents);
 		writeIconAndTooltipHeader();
 	}
@@ -52,7 +51,6 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		writeModifierComponent(effect, maxModAttributes);
 		writeAbsorptionComponent(effect);
 		writeStatConversions(effect);
-		writeEffectIncreasePerEffectOnTarget(effect);
 		writeEvents(effect, maxEvents);
 		writeIconAndTooltip(effect);
 	}

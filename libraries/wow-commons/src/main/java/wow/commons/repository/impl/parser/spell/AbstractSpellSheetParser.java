@@ -225,22 +225,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return new StatConversion(from, to, toCondition, ratio);
 	}
 
-	private final ExcelColumn colEffectIncreaseCondition = column(EFFECT_INCREASE_CONDITION);
-	private final ExcelColumn colEffectIncreaseRatioPct = column(EFFECT_INCREASE_RATIO);
-	private final ExcelColumn colEffectIncreaseMax = column(EFFECT_INCREASE_MAX);
-
-	protected EffectIncreasePerEffectOnTarget getEffectIncreasePerEffectOnTarget() {
-		if (colEffectIncreaseCondition.isEmpty()) {
-			return null;
-		}
-
-		var condition = colEffectIncreaseCondition.getEnum(AttributeCondition::parse);
-		var ratioPct = colEffectIncreaseRatioPct.getPercent();
-		var max = colEffectIncreaseMax.getPercent();
-
-		return new EffectIncreasePerEffectOnTarget(condition, ratioPct, max);
-	}
-
 	private final ExcelColumn colAppliedEffectId = column(APPLIED_EFFECT_ID);
 	private final ExcelColumn colAppliedEffectDuration = column(APPLIED_EFFECT_DURATION);
 	private final ExcelColumn colAppliedEffectStacks = column(APPLIED_EFFECT_STACKS);

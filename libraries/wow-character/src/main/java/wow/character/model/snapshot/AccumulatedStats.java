@@ -2,6 +2,7 @@ package wow.character.model.snapshot;
 
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.effect.component.StatConversion;
 
@@ -12,10 +13,10 @@ import java.util.List;
  * Date: 2023-10-16
  */
 public abstract class AccumulatedStats {
-	protected final int characterLevel;
+	protected final AttributeScalingParams scalingParams;
 
-	protected AccumulatedStats(int characterLevel) {
-		this.characterLevel = characterLevel;
+	protected AccumulatedStats(AttributeScalingParams scalingParams) {
+		this.scalingParams = scalingParams;
 	}
 
 	public void accumulateAttributes(List<Attribute> attributes, double scaleFactor) {

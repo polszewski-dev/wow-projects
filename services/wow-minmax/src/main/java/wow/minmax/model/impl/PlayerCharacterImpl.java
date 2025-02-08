@@ -7,6 +7,7 @@ import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.talent.TalentTree;
 import wow.minmax.model.Character;
 import wow.minmax.model.PlayerCharacter;
 
@@ -77,5 +78,10 @@ public class PlayerCharacterImpl extends wow.character.model.character.impl.Play
 		);
 		copy.setTarget(getTarget());
 		return copy;
+	}
+
+	@Override
+	public int getNumberOfEffectsOnTarget(TalentTree tree) {
+		return 0;
 	}
 }

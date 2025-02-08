@@ -124,7 +124,7 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private AccumulatedDamagingAbilityStats newAccumulatedDamagingAbilityStats(PlayerCharacter character, Ability ability) {
-		var stats = new AccumulatedDamagingAbilityStats(character.getLevel());
+		var stats = new AccumulatedDamagingAbilityStats(character);
 
 		var target = character.getTarget();
 		var directComponent = getDamagingDirectComponent(ability);
