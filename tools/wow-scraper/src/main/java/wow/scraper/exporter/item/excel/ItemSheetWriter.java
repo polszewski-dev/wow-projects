@@ -1,6 +1,7 @@
 package wow.scraper.exporter.item.excel;
 
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.item.WeaponStats;
 import wow.commons.model.spell.Spell;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
 
@@ -38,6 +39,7 @@ public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 		setHeader(ITEM_ITEM_SET, 30);
 		writeEffectHeader(ITEM_EFFECT_PREFIX, ITEM_MAX_EFFECTS);
 		setHeader(ITEM_ACTIVATED_ABILITY);
+		writeWeaponStatsHeader();
 		writeIconAndTooltipHeader();
 	}
 
@@ -58,6 +60,7 @@ public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 		setValue(parser.getItemSetName());
 		writeEffects(parser.getEffects(), ITEM_MAX_EFFECTS);
 		setValue(parser.getActivatedAbility().map(Spell::getId).orElse(null));
+		writeWeaponStats(parser.getWeaponStats());
 		writeIconAndTooltip(parser);
 	}
 
@@ -66,5 +69,26 @@ public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 			return builder.getSavedSets().get(parser).getItemSetRequiredClass();
 		}
 		return parser.getRequiredClass();
+	}
+
+	private void writeWeaponStatsHeader() {
+		setHeader(ITEM_WEAPON_DAMAGE_MIN);
+		setHeader(ITEM_WEAPON_DAMAGE_MAX);
+		setHeader(ITEM_WEAPON_DAMAGE_TYPE);
+		setHeader(ITEM_WEAPON_DPS);
+		setHeader(ITEM_WEAPON_SPEED);
+	}
+
+	private void writeWeaponStats(WeaponStats weaponStats) {
+		if (weaponStats == null) {
+			fillRemainingEmptyCols(5);
+			return;
+		}
+
+		setValue(weaponStats.damageMin());
+		setValue(weaponStats.damageMax());
+		setValue(weaponStats.damageType());
+		setValue(weaponStats.dps());
+		setValue(weaponStats.speed());
 	}
 }

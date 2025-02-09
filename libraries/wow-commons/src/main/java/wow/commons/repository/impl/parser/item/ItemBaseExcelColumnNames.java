@@ -20,6 +20,12 @@ public final class ItemBaseExcelColumnNames {
 	public static final String ITEM_ACTIVATED_ABILITY = "activated_ability";
 	public static final int ITEM_MAX_EFFECTS = 10;
 
+	public static final String ITEM_WEAPON_DAMAGE_MIN = "weapon: damage min";
+	public static final String ITEM_WEAPON_DAMAGE_MAX = "weapon: damage max";
+	public static final String ITEM_WEAPON_DAMAGE_TYPE = "weapon: damage type";
+	public static final String ITEM_WEAPON_DPS = "weapon: dps";
+	public static final String ITEM_WEAPON_SPEED = "weapon: speed";
+
 	public static final String ENCHANT_ITEM_TYPES = "item_types";
 	public static final String ENCHANT_ITEM_SUBTYPES = "item_subtypes";
 	public static final String ENCHANT_REQ_ILVL = "req_ilvl";

@@ -4,11 +4,9 @@ import wow.commons.model.categorization.ItemCategory;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.item.Item;
-import wow.commons.model.item.ItemSocketSpecification;
-import wow.commons.model.item.ItemSource;
-import wow.commons.model.item.SocketType;
+import wow.commons.model.item.*;
 import wow.commons.model.item.impl.ItemImpl;
+import wow.commons.model.spell.SpellSchool;
 import wow.commons.repository.impl.item.ItemRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
@@ -45,8 +43,9 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var basicItemInfo = getBasicItemInfo();
 		var pveRoles = getPveRoles();
 		var itemSetName = colItemSet.getString(null);
+		var weaponStats = getWeaponStats();
 
-		var item = new ItemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, null, pveRoles);
+		var item = new ItemImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, weaponStats, pveRoles);
 
 		var source = new ItemSource(item);
 		var effects = readItemEffects(ITEM_EFFECT_PREFIX, ITEM_MAX_EFFECTS, timeRestriction, source);
@@ -76,6 +75,26 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var socketBonus = readItemEffect(SOCKET_BONUS_PREFIX, 1, timeRestriction, source);
 
 		return new ItemSocketSpecification(socketTypes, socketBonus);
+	}
+
+	private final ExcelColumn colWeaponDamageMin = column(ITEM_WEAPON_DAMAGE_MIN);
+	private final ExcelColumn colWeaponDamageMax = column(ITEM_WEAPON_DAMAGE_MAX);
+	private final ExcelColumn colWeaponDamageType = column(ITEM_WEAPON_DAMAGE_TYPE);
+	private final ExcelColumn colWeaponDps = column(ITEM_WEAPON_DPS);
+	private final ExcelColumn colWeaponSpeed = column(ITEM_WEAPON_SPEED);
+
+	private WeaponStats getWeaponStats() {
+		if (colWeaponDamageMin.isEmpty()) {
+			return null;
+		}
+
+		var damageMin = colWeaponDamageMin.getInteger();
+		var damageMax = colWeaponDamageMax.getInteger();
+		var damageType = colWeaponDamageType.getEnum(SpellSchool::parse, null);
+		var dps = colWeaponDps.getDouble();
+		var speed = colWeaponSpeed.getDuration();
+
+		return new WeaponStats(damageMin, damageMax, damageType, dps, speed);
 	}
 
 	private void validateItem(Item item) {

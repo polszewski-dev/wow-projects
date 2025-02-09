@@ -1,6 +1,7 @@
 package wow.scraper.parser.tooltip;
 
 import lombok.Getter;
+import wow.commons.model.Duration;
 import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
@@ -215,32 +216,33 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 		ensureWeaponStats();
 		String damageType;
 		if (weaponDamageParams.size() == 3) {
-			weaponStats = weaponStats.weaponDamageMin(weaponDamageParams.getInteger(0));
-			weaponStats = weaponStats.weaponDamageMax(weaponDamageParams.getInteger(1));
+			weaponStats = weaponStats.withDamageMin(weaponDamageParams.getInteger(0));
+			weaponStats = weaponStats.withDamageMax(weaponDamageParams.getInteger(1));
 			damageType = weaponDamageParams.get(2);
 		} else {
-			weaponStats = weaponStats.weaponDamageMin(weaponDamageParams.getInteger(0));
-			weaponStats = weaponStats.weaponDamageMax(weaponDamageParams.getInteger(0));
+			weaponStats = weaponStats.withDamageMin(weaponDamageParams.getInteger(0));
+			weaponStats = weaponStats.withDamageMax(weaponDamageParams.getInteger(0));
 			damageType = weaponDamageParams.get(1);
 		}
 		if (damageType != null) {
-			weaponStats = weaponStats.damageType(SpellSchool.parse(damageType));
+			weaponStats = weaponStats.withDamageType(SpellSchool.parse(damageType));
 		}
 	}
 
 	private void parseWeaponDps(ParsedMultipleValues weaponDpsParams) {
 		ensureWeaponStats();
-		weaponStats = weaponStats.weaponDps(Double.parseDouble(weaponDpsParams.get(0)));
+		weaponStats = weaponStats.withWeaponDps(Double.parseDouble(weaponDpsParams.get(0)));
 	}
 
 	private void parseWeaponSpeedParams(ParsedMultipleValues weaponSpeedParams) {
 		ensureWeaponStats();
-		weaponStats = weaponStats.weaponSpeed(Double.parseDouble(weaponSpeedParams.get(0)));
+		double speed = Double.parseDouble(weaponSpeedParams.get(0));
+		weaponStats = weaponStats.withWeaponSpeed(Duration.seconds(speed));
 	}
 
 	private void ensureWeaponStats() {
 		if (weaponStats == null) {
-			this.weaponStats = new WeaponStats(0, 0, null, 0, 0);
+			this.weaponStats = new WeaponStats(0, 0, null, 0, Duration.ZERO);
 		}
 	}
 

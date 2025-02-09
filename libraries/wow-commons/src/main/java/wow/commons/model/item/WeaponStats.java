@@ -1,5 +1,6 @@
 package wow.commons.model.item;
 
+import wow.commons.model.Duration;
 import wow.commons.model.spell.SpellSchool;
 
 /**
@@ -7,39 +8,39 @@ import wow.commons.model.spell.SpellSchool;
  * Date: 2021-03-06
  */
 public record WeaponStats(
-		int weaponDamageMin,
-		int weaponDamageMax,
+		int damageMin,
+		int damageMax,
 		SpellSchool damageType,
-		double weaponDps,
-		double weaponSpeed
+		double dps,
+		Duration speed
 ) {
-	public WeaponStats weaponDamageMin(int weaponDamageMin) {
-		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	public WeaponStats withDamageMin(int weaponDamageMin) {
+		return new WeaponStats(weaponDamageMin, damageMax, damageType, dps, speed);
 	}
 
-	public WeaponStats weaponDamageMax(int weaponDamageMax) {
-		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	public WeaponStats withDamageMax(int weaponDamageMax) {
+		return new WeaponStats(damageMin, weaponDamageMax, damageType, dps, speed);
 	}
 
-	public WeaponStats damageType(SpellSchool damageType) {
-		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	public WeaponStats withDamageType(SpellSchool damageType) {
+		return new WeaponStats(damageMin, damageMax, damageType, dps, speed);
 	}
 
-	public WeaponStats weaponDps(double weaponDps) {
-		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	public WeaponStats withWeaponDps(double dps) {
+		return new WeaponStats(damageMin, damageMax, damageType, dps, speed);
 	}
 
-	public WeaponStats weaponSpeed(double weaponSpeed) {
-		return new WeaponStats(weaponDamageMin, weaponDamageMax, damageType, weaponDps, weaponSpeed);
+	public WeaponStats withWeaponSpeed(Duration speed) {
+		return new WeaponStats(damageMin, damageMax, damageType, dps, speed);
 	}
 
 	@Override
 	public String toString() {
 		return String.format(
 				"%s - %s%s, dps: %s, speed: %s",
-				weaponDamageMin, weaponDamageMax, (damageType != null ? " " + damageType : ""),
-				weaponDps,
-				weaponSpeed
+				damageMin, damageMax, (damageType != null ? " " + damageType : ""),
+				dps,
+				speed
 		);
 	}
 }

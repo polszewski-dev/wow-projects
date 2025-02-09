@@ -3,6 +3,7 @@ package wow.scraper.parser.tooltip;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import wow.commons.model.Duration;
 import wow.commons.model.Money;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
@@ -95,15 +96,19 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	}
 
 	@Test
-	@DisplayName("Weapon stats are parsed correctly")
-	void weaponStats() {
+	void noWeaponStatsOnNonWeapon() {
 		assertThat(sunfireRobe.getWeaponStats()).isNull();
-		assertThat(magistersStaff.getWeaponStats()).isNotNull();
-		assertThat(magistersStaff.getWeaponStats().weaponDamageMin()).isEqualTo(146);
-		assertThat(magistersStaff.getWeaponStats().weaponDamageMax()).isEqualTo(326);
-		assertThat(magistersStaff.getWeaponStats().damageType()).isNull();
-		assertThat(magistersStaff.getWeaponStats().weaponDps()).isEqualTo(73.75);
-		assertThat(magistersStaff.getWeaponStats().weaponSpeed()).isEqualTo(3.20);
+	}
+
+	@Test
+	void weaponStatsOnNWeapon() {
+		var weaponStats = magistersStaff.getWeaponStats();
+
+		assertThat(weaponStats.damageMin()).isEqualTo(146);
+		assertThat(weaponStats.damageMax()).isEqualTo(326);
+		assertThat(weaponStats.damageType()).isNull();
+		assertThat(weaponStats.dps()).isEqualTo(73.75);
+		assertThat(weaponStats.speed()).isEqualTo(Duration.seconds(3.20));
 	}
 
 	@Test
