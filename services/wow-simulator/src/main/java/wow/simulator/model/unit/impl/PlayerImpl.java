@@ -8,7 +8,15 @@ import wow.character.model.character.ExclusiveFactions;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.Race;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Player;
+import wow.simulator.model.unit.ability.ShootAbility;
+
+import java.util.Optional;
+
+import static wow.commons.model.categorization.ItemSlot.RANGED;
+import static wow.commons.model.spell.AbilityId.SHOOT;
 
 /**
  * User: POlszewski
@@ -53,5 +61,25 @@ public class PlayerImpl extends UnitImpl implements Player {
 	@Override
 	public Consumables getConsumables() {
 		return getCharacter().getConsumables();
+	}
+
+	@Override
+	public Optional<Ability> getAbility(AbilityId abilityId) {
+		return Player.super.getAbility(abilityId)
+				.map(this::replaceShoot);
+	}
+
+	private Ability replaceShoot(Ability ability) {
+		if (ability.getAbilityId() != SHOOT) {
+			return ability;
+		}
+
+		var rangedWeapon = getEquippedItem(RANGED);
+
+		if (rangedWeapon == null || rangedWeapon.getWeaponStats() == null) {
+			return ability;
+		}
+
+		return new ShootAbility(ability, rangedWeapon);
 	}
 }

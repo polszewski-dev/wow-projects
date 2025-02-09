@@ -1,6 +1,5 @@
 package wow.simulator.simulation.spell.talent.priest.discipline;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
@@ -12,7 +11,6 @@ import static wow.commons.model.talent.TalentId.WAND_SPECIALIZATION;
  * User: POlszewski
  * Date: 2025-01-14
  */
-@Disabled
 class WandSpecializationTest extends PriestSpellSimulationTest {
 	/*
 	Increases your damage with Wands by 25%.

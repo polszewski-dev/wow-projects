@@ -181,6 +181,10 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		return item.getActivatedAbility();
 	}
 
+	public WeaponStats getWeaponStats() {
+		return item.getWeaponStats();
+	}
+
 	@Override
 	public String toString() {
 		return item.toString();
