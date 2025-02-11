@@ -15,6 +15,7 @@ import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.ChannelSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 
@@ -54,12 +55,12 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void beginChannel(CastSpellAction action) {
+	public void beginChannel(ChannelSpellAction action) {
 		addEvent(new BeginChannel(now(), action.getOwner(), action.getAbilityId()));
 	}
 
 	@Override
-	public void endChannel(CastSpellAction action) {
+	public void endChannel(ChannelSpellAction action) {
 		addEvent(new EndChannel(now(), action.getOwner(), action.getAbilityId()));
 	}
 
@@ -74,7 +75,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void channelInterrupted(CastSpellAction action) {
+	public void channelInterrupted(ChannelSpellAction action) {
 		addEvent(new ChannelInterrupted(now(), action.getOwner(), action.getAbilityId()));
 	}
 

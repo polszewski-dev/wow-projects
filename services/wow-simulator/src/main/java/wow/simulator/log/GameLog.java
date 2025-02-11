@@ -7,6 +7,7 @@ import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.ChannelSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
 
 import java.util.ArrayList;
@@ -44,12 +45,12 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void beginChannel(CastSpellAction action) {
+	public void beginChannel(ChannelSpellAction action) {
 		handlers.forEach(handler -> handler.beginChannel(action));
 	}
 
 	@Override
-	public void endChannel(CastSpellAction action) {
+	public void endChannel(ChannelSpellAction action) {
 		handlers.forEach(handler -> handler.endChannel(action));
 	}
 
@@ -64,7 +65,7 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void channelInterrupted(CastSpellAction action) {
+	public void channelInterrupted(ChannelSpellAction action) {
 		handlers.forEach(handler -> handler.channelInterrupted(action));
 	}
 

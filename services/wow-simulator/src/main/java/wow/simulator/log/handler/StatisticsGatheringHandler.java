@@ -17,6 +17,7 @@ import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.ChannelSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 import wow.simulator.simulation.TimeSource;
@@ -60,32 +61,41 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void beginCast(CastSpellAction action) {
-		if (action.getOwner() != player) {
-			return;
-		}
-
-		casts.put(action.getActionId(), new AbilityTimeEntry(action.getAbility(), now()));
+		beginCast(action, action.getAbility());
 	}
 
 	@Override
 	public void endCast(CastSpellAction action) {
+		var ability = action.getAbility();
+		endCast(action, ability);
+	}
+
+	@Override
+	public void beginChannel(ChannelSpellAction action) {
+		beginCast(action, action.getAbility());
+	}
+
+	@Override
+	public void endChannel(ChannelSpellAction action) {
+		endCast(action, action.getAbility());
+	}
+
+	private void beginCast(UnitAction action, Ability ability) {
+		if (action.getOwner() != player) {
+			return;
+		}
+
+		casts.put(action.getActionId(), new AbilityTimeEntry(ability, now()));
+	}
+
+	private void endCast(UnitAction action, Ability ability) {
 		endCast(action, timeEntry -> {
-			if (action.getAbility().getCastInfo().ignoresGcd()) {
+			if (ability.getCastInfo().ignoresGcd()) {
 				timeEntry.complete(now());
 			} else {
 				timeEntry.setEnd(now());
 			}
 		});
-	}
-
-	@Override
-	public void beginChannel(CastSpellAction action) {
-		beginCast(action);
-	}
-
-	@Override
-	public void endChannel(CastSpellAction action) {
-		endCast(action);
 	}
 
 	private void endCast(UnitAction action, Consumer<TimeEntry> consumer) {

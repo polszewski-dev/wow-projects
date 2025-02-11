@@ -29,8 +29,8 @@ class MindFlayTest extends PriestSpellSimulationTest {
 						.beginGcd(player)
 						.endCast(player, MIND_FLAY)
 						.decreasedResource(230, MANA, player, MIND_FLAY)
-						.beginChannel(player, MIND_FLAY)
-						.effectApplied(MIND_FLAY, target, 3),
+						.effectApplied(MIND_FLAY, target, 3)
+						.beginChannel(player, MIND_FLAY),
 				at(1)
 						.decreasedResource(176, HEALTH, target, MIND_FLAY),
 				at(1.5)

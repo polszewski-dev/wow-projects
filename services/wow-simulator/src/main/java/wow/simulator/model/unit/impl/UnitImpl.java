@@ -94,6 +94,10 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 		var newAction = pendingActionQueue.removeEarliestAction();
 
+		startAction(newAction);
+	}
+
+	private void startAction(UnitAction newAction) {
 		this.currentAction = newAction;
 		getScheduler().add(newAction);
 	}
@@ -551,8 +555,16 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 		effects.detach(effect);
 	}
 
-	public void actionTerminated() {
+	public void actionTerminated(UnitAction expectedCurrentAction) {
+		if (currentAction != expectedCurrentAction) {
+			return;
+		}
+
 		this.currentAction = null;
 		ensureAction();
+	}
+
+	public void replaceCurrentAction(UnitAction newAction) {
+		startAction(newAction);
 	}
 }

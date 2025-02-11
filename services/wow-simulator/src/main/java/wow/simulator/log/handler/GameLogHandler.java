@@ -6,6 +6,7 @@ import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.ChannelSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
 
 /**
@@ -21,9 +22,9 @@ public interface GameLogHandler {
 
 	void endCast(CastSpellAction action);
 
-	void beginChannel(CastSpellAction action);
+	void beginChannel(ChannelSpellAction action);
 
-	void endChannel(CastSpellAction action);
+	void endChannel(ChannelSpellAction action);
 
 	void canNotBeCasted(CastSpellAction action);
 
@@ -31,7 +32,7 @@ public interface GameLogHandler {
 		endCast(action);
 	}
 
-	default void channelInterrupted(CastSpellAction action) {
+	default void channelInterrupted(ChannelSpellAction action) {
 		endChannel(action);
 	}
 

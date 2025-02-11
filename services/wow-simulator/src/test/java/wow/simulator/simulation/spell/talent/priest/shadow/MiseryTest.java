@@ -72,8 +72,8 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.endCast(player, MIND_FLAY)
 						.decreasedResource(230, MANA, player, MIND_FLAY)
 						.effectApplied(MISERY, target, Duration.INFINITE)
-						.beginChannel(player, MIND_FLAY)
-						.effectApplied(MIND_FLAY, target, 3),
+						.effectApplied(MIND_FLAY, target, 3)
+						.beginChannel(player, MIND_FLAY),
 				at(1)
 						.decreasedResource(184, HEALTH, target, MIND_FLAY),
 				at(1.5)

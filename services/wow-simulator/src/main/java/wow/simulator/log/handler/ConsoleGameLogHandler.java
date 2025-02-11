@@ -8,6 +8,7 @@ import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.action.ChannelSpellAction;
 import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 
@@ -41,12 +42,12 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void beginChannel(CastSpellAction action) {
+	public void beginChannel(ChannelSpellAction action) {
 		print("%s begin channel %s", action.getOwner(), action.getAbility());
 	}
 
 	@Override
-	public void endChannel(CastSpellAction action) {
+	public void endChannel(ChannelSpellAction action) {
 		print("%s end channel %s", action.getOwner(), action.getAbility());
 	}
 
@@ -61,7 +62,7 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void channelInterrupted(CastSpellAction action) {
+	public void channelInterrupted(ChannelSpellAction action) {
 		print("%s's s% channel interrupted", action.getOwner(), action.getAbility());
 	}
 

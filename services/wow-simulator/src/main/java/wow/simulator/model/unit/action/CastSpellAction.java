@@ -11,6 +11,7 @@ import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.PrimaryTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.impl.UnitImpl;
 
 /**
  * User: POlszewski
@@ -23,8 +24,7 @@ public class CastSpellAction extends UnitAction {
 
 	private TargetResolver targetResolver;
 	private SpellCastContext castContext;
-
-	private EffectInstance channeledEffect;
+	private EffectInstance appliedEffect;
 
 	public CastSpellAction(Unit owner, Ability ability, PrimaryTarget primaryTarget) {
 		super(owner);
@@ -34,38 +34,36 @@ public class CastSpellAction extends UnitAction {
 
 	@Override
 	protected void setUp() {
-		this.targetResolver = primaryTarget.getTargetResolver(owner);
-
 		if (!owner.canCast(ability, primaryTarget)) {
 			getGameLog().canNotBeCasted(this);
 			finish();
 			return;
 		}
 
+		createTargetResolver();
 		createSpellCastContext();
+		performCast();
+	}
 
-		if (ability.isChanneled()) {
-			channelSpell();
-		} else if (castContext.isInstantCast()) {
-			instaCastSpell();
+	@Override
+	protected void onFinished() {
+		if (ability.isChanneled() && appliedEffect != null) {
+			var channelAction = new ChannelSpellAction(owner, ability, appliedEffect);
+
+			((UnitImpl) owner).replaceCurrentAction(channelAction);
 		} else {
-			castSpell();
+			((UnitImpl) owner).actionTerminated(this);
 		}
 	}
 
 	@Override
 	protected void onInterrupted() {
-		if (ability.isChanneled()) {
-			getGameLog().channelInterrupted(this);
-		} else {
-			getGameLog().castInterrupted(this);
-		}
+		getGameLog().castInterrupted(this);
+		((UnitImpl) owner).actionTerminated(this);
+	}
 
-		if (ability.isChanneled()) {
-			channeledEffect.removeSelf();
-		}
-
-		super.onInterrupted();
+	private void createTargetResolver() {
+		this.targetResolver = primaryTarget.getTargetResolver(owner);
 	}
 
 	private void createSpellCastContext() {
@@ -74,38 +72,21 @@ public class CastSpellAction extends UnitAction {
 		this.castContext = new SpellCastContext(owner, ability, targetResolver, castSnapshot);
 	}
 
-	private void instaCastSpell() {
-		beginCast();
-		triggerGcd();
-		endCast();
-	}
-
-	private void castSpell() {
-		beginCast();
-		triggerGcd();
-		fromNowAfter(castContext.getCastTime(), this::endCast);
-	}
-
-	private void beginCast() {
+	private void performCast() {
 		onBeginCast();
-	}
 
-	private void endCast() {
-		onEndCast();
-		paySpellCost();
-		resolveSpell();
-	}
-
-	private void channelSpell() {
-		beginCast();
-		triggerGcd();
-		endCast();
-	}
-
-	private void triggerGcd() {
 		if (triggersGcd()) {
 			owner.triggerGcd(castContext.getGcd());
 		}
+
+		fromNowAfter(
+				ability.isChanneled() ? Duration.ZERO : castContext.getCastTime(),
+				() -> {
+					onEndCast();
+					paySpellCost();
+					resolveSpell();
+				}
+		);
 	}
 
 	private void onBeginCast() {
@@ -114,14 +95,6 @@ public class CastSpellAction extends UnitAction {
 
 	private void onEndCast() {
 		getGameLog().endCast(this);
-	}
-
-	private void onBeginChannel() {
-		getGameLog().beginChannel(this);
-	}
-
-	private void onEndChannel() {
-		getGameLog().endChannel(this);
 	}
 
 	private void paySpellCost() {
@@ -143,9 +116,8 @@ public class CastSpellAction extends UnitAction {
 		castContext.createSpellResolutionContext(this);
 
 		for (var directComponent : ability.getDirectComponents()) {
-			getSimulation().delayedAction(
-					getDelay(directComponent), () -> directComponentAction(directComponent)
-			);
+			var delay = getDelay(directComponent);
+			getSimulation().delayedAction(delay, () -> directComponentAction(directComponent));
 		}
 
 		applyEffect();
@@ -171,20 +143,10 @@ public class CastSpellAction extends UnitAction {
 
 		var resolutionContext = castContext.getSpellResolutionContext();
 
-		if (ability.isChanneled()) {
-			if (!resolutionContext.hitRoll(primaryTarget.requireSingleTarget())) {
-				return;
-			}
-			onBeginChannel();
-		}
-
-		var appliedEffect = resolutionContext.applyEffect(primaryTarget.requireSingleTarget());
-
-		if (ability.isChanneled()) {
-			this.channeledEffect = appliedEffect;
-			this.channeledEffect.setOnEffectFinished(this::onEndChannel);
-			fromNowAfter(channeledEffect.getDuration(), () -> {});
-		}
+		targetResolver.forEachTarget(
+				effectApplication,
+				effectTarget -> appliedEffect = resolutionContext.applyEffect(effectTarget)
+		);
 	}
 
 	public AbilityId getAbilityId() {

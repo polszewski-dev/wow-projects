@@ -78,8 +78,8 @@ class NightfallTest extends WarlockSpellSimulationTest {
 						.beginGcd(player)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, false, player, DRAIN_LIFE)
-						.beginChannel(player, DRAIN_LIFE)
-						.effectApplied(DRAIN_LIFE, target, 5),
+						.effectApplied(DRAIN_LIFE, target, 5)
+						.beginChannel(player, DRAIN_LIFE),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
 						.effectApplied(NIGHTFALL, player, 10)

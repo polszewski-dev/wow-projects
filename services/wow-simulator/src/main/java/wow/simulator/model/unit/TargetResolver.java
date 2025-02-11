@@ -79,7 +79,15 @@ public class TargetResolver {
 	}
 
 	public void forEachTarget(DirectComponent directComponent, Consumer<Unit> consumer) {
-		var target = getTarget(directComponent.target());
+		forEachTarget(directComponent.target(), consumer);
+	}
+
+	public void forEachTarget(EffectApplication effectApplication, Consumer<Unit> consumer) {
+		forEachTarget(effectApplication.target(), consumer);
+	}
+
+	private void forEachTarget(SpellTarget spellTarget, Consumer<Unit> consumer) {
+		var target = getTarget(spellTarget);
 
 		if (target != null) {
 			consumer.accept(target);

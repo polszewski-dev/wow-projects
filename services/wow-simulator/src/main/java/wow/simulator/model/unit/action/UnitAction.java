@@ -23,13 +23,13 @@ public abstract class UnitAction extends Action implements SimulationContextSour
 	@Override
 	protected void onFinished() {
 		super.onFinished();
-		((UnitImpl) owner).actionTerminated();
+		((UnitImpl) owner).actionTerminated(this);
 	}
 
 	@Override
 	protected void onInterrupted() {
 		super.onInterrupted();
-		((UnitImpl) owner).actionTerminated();
+		((UnitImpl) owner).actionTerminated(this);
 	}
 
 	public abstract boolean triggersGcd();
