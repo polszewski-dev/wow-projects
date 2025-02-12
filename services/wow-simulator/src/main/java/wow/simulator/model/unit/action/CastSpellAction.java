@@ -80,7 +80,7 @@ public class CastSpellAction extends UnitAction {
 		}
 
 		fromNowAfter(
-				ability.isChanneled() ? Duration.ZERO : castContext.getCastTime(),
+				castContext.getCastTime(),
 				() -> {
 					onEndCast();
 					paySpellCost();

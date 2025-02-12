@@ -163,6 +163,8 @@ public class SpellRepositoryImpl implements SpellRepository {
 	}
 
 	public void addSpell(Spell spell) {
+		validateSpell(spell);
+
 		if (spell instanceof Ability ability) {
 			for (var characterClassId : ability.getCharacterRestriction().characterClassIds()) {
 				addEntryForEveryPhase(abilitiesByClass, characterClassId, ability);
@@ -170,11 +172,13 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 			putForEveryPhase(abilitiesByRankedId, ability.getRankedAbilityId(), ability);
 		}
+
 		putForEveryPhase(spellsById, spell.getId(), spell);
 	}
 
 	public void addEffect(Effect effect) {
 		validateEffect(effect);
+
 		putForEveryPhase(effectById, effect.getEffectId(), effect);
 
 		var gameVersionId = effect.getTimeRestriction().getGameVersionId();
@@ -187,11 +191,26 @@ public class SpellRepositoryImpl implements SpellRepository {
 		}
 	}
 
+	private void validateSpell(Spell spell) {
+		if (!(spell instanceof Ability ability)) {
+			return;
+		}
+
+		if (ability.isChanneled() && !ability.getCastTime().isZero()) {
+			throw new IllegalArgumentException("Channeled ability with non-zero cast time: " + ability);
+		}
+
+		if (ability.isChanneled() && ability.getEffectApplication() != null && ability.getEffectApplication().target().isAoE()) {
+			throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
+		}
+	}
+
 	private void validateEffect(Effect effect) {
 		if (effect.hasAugmentedAbilities() &&
 			(effect.hasPeriodicComponent() || effect.hasAbsorptionComponent() || effect.getTickInterval() != null)) {
 			throw new IllegalArgumentException();
 		}
+
 		if (effect.hasPeriodicComponent()) {
 			Objects.requireNonNull(effect.getTickInterval());
 		}

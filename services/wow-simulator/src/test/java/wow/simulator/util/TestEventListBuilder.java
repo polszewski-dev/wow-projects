@@ -45,8 +45,8 @@ public class TestEventListBuilder {
 		return addEvent(new EndCast(time, caster, abilityId));
 	}
 
-	public TestEventListBuilder beginChannel(Unit caster, AbilityId abilityId) {
-		return addEvent(new BeginChannel(time, caster, abilityId));
+	public TestEventListBuilder beginChannel(Unit caster, AbilityId abilityId, double channelTime) {
+		return addEvent(new BeginChannel(time, caster, abilityId, Duration.seconds(channelTime)));
 	}
 
 	public TestEventListBuilder endChannel(Unit caster, AbilityId abilityId) {

@@ -67,13 +67,13 @@ class MiseryTest extends PriestSpellSimulationTest {
 
 		assertEvents(
 				at(0)
-						.beginCast(player, MIND_FLAY, 3)
+						.beginCast(player, MIND_FLAY)
 						.beginGcd(player)
 						.endCast(player, MIND_FLAY)
 						.decreasedResource(230, MANA, player, MIND_FLAY)
 						.effectApplied(MISERY, target, Duration.INFINITE)
 						.effectApplied(MIND_FLAY, target, 3)
-						.beginChannel(player, MIND_FLAY),
+						.beginChannel(player, MIND_FLAY, 3),
 				at(1)
 						.decreasedResource(184, HEALTH, target, MIND_FLAY),
 				at(1.5)

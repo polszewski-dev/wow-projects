@@ -66,7 +66,7 @@ public interface TestEvent {
 	record EndGcd(Time time, Unit caster) implements TestEvent {}
 	record BeginCast(Time time, Unit caster, AbilityId spell, Duration castTime) implements TestEvent {}
 	record EndCast(Time time, Unit caster, AbilityId spell) implements TestEvent {}
-	record BeginChannel(Time time, Unit caster, AbilityId spell) implements TestEvent {}
+	record BeginChannel(Time time, Unit caster, AbilityId spell, Duration channelTime) implements TestEvent {}
 	record EndChannel(Time time, Unit caster, AbilityId spell) implements TestEvent {}
 	record CanNotBeCasted(Time time, Unit caster, AbilityId spell) implements TestEvent {}
 	record CastInterrupted(Time time, Unit caster, AbilityId spell) implements TestEvent {}

@@ -119,7 +119,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	@ParameterizedTest
 	@CsvSource({
 			"SHADOW_BOLT, 11, 3, false, false",
-			"DRAIN_LIFE, 8, 5, true, false",
+			"DRAIN_LIFE, 8, 0, true, false",
 			"AMPLIFY_CURSE, 0, 0, false, true",
 	})
 	void abilityCastInfo(AbilityId id, int rank, double castTime, boolean channeled, boolean ignoresGcd) {

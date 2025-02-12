@@ -56,7 +56,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void beginChannel(ChannelSpellAction action) {
-		addEvent(new BeginChannel(now(), action.getOwner(), action.getAbilityId()));
+		addEvent(new BeginChannel(now(), action.getOwner(), action.getAbilityId(), action.getChannelTime()));
 	}
 
 	@Override
