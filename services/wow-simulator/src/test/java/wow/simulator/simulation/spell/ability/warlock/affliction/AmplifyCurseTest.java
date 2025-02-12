@@ -50,12 +50,12 @@ class AmplifyCurseTest extends WarlockSpellSimulationTest {
 						.cooldownStarted(player, AMPLIFY_CURSE, 180)
 						.effectApplied(AMPLIFY_CURSE, player, 30)
 						.beginCast(player, CURSE_OF_DOOM)
+						.beginGcd(player)
 						.endCast(player, CURSE_OF_DOOM)
 						.decreasedResource(380, MANA, player, CURSE_OF_DOOM)
 						.cooldownStarted(player, CURSE_OF_DOOM, 60)
 						.effectRemoved(AMPLIFY_CURSE, player)
-						.effectApplied(CURSE_OF_DOOM, target, 60)
-						.beginGcd(player),
+						.effectApplied(CURSE_OF_DOOM, target, 60),
 				at(1.5)
 						.endGcd(player),
 				at(60)

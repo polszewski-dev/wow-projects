@@ -26,11 +26,11 @@ class ShadowWordDeathTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SHADOW_WORD_DEATH)
+						.beginGcd(player)
 						.endCast(player, SHADOW_WORD_DEATH)
 						.decreasedResource(309, MANA, player, SHADOW_WORD_DEATH)
 						.cooldownStarted(player, SHADOW_WORD_DEATH, 12)
-						.decreasedResource(618, HEALTH, target, SHADOW_WORD_DEATH)
-						.beginGcd(player),
+						.decreasedResource(618, HEALTH, target, SHADOW_WORD_DEATH),
 				at(1.5)
 						.endGcd(player),
 				at(12)

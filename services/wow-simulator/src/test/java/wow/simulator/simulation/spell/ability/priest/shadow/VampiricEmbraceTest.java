@@ -26,11 +26,11 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, VAMPIRIC_EMBRACE)
+						.beginGcd(player)
 						.endCast(player, VAMPIRIC_EMBRACE)
 						.decreasedResource(89, MANA, player, VAMPIRIC_EMBRACE)
 						.cooldownStarted(player, VAMPIRIC_EMBRACE, 10)
-						.effectApplied(VAMPIRIC_EMBRACE, target, 60)
-						.beginGcd(player),
+						.effectApplied(VAMPIRIC_EMBRACE, target, 60),
 				at(1.5)
 						.endGcd(player),
 				at(10)

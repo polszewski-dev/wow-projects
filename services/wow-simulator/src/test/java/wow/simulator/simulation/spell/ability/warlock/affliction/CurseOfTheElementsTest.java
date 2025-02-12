@@ -26,10 +26,10 @@ class CurseOfTheElementsTest extends WarlockSpellSimulationTest {
 		assertEvents(
 			at(0)
 					.beginCast(player, CURSE_OF_THE_ELEMENTS)
+					.beginGcd(player)
 					.endCast(player, CURSE_OF_THE_ELEMENTS)
 					.decreasedResource(260, MANA, player, CURSE_OF_THE_ELEMENTS)
-					.effectApplied(CURSE_OF_THE_ELEMENTS, target, 300)
-					.beginGcd(player),
+					.effectApplied(CURSE_OF_THE_ELEMENTS, target, 300),
 			at(1.5)
 					.endGcd(player),
 			at(300)

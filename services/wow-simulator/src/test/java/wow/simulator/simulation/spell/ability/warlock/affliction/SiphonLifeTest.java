@@ -26,10 +26,10 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SIPHON_LIFE)
+						.beginGcd(player)
 						.endCast(player, SIPHON_LIFE)
 						.decreasedResource(410, MANA, player, SIPHON_LIFE)
-						.effectApplied(SIPHON_LIFE, target, 30)
-						.beginGcd(player),
+						.effectApplied(SIPHON_LIFE, target, 30),
 				at(1.5)
 						.endGcd(player),
 				at(3)
@@ -77,10 +77,10 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SIPHON_LIFE)
+						.beginGcd(player)
 						.endCast(player, SIPHON_LIFE)
 						.decreasedResource(410, MANA, player, SIPHON_LIFE)
-						.spellResisted(player, SIPHON_LIFE, target)
-						.beginGcd(player),
+						.spellResisted(player, SIPHON_LIFE, target),
 				at(1.5)
 						.endGcd(player)
 		);
@@ -99,10 +99,10 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SIPHON_LIFE)
+						.beginGcd(player)
 						.endCast(player, SIPHON_LIFE)
 						.decreasedResource(410, MANA, player, SIPHON_LIFE)
-						.effectApplied(SIPHON_LIFE, target, 30)
-						.beginGcd(player),
+						.effectApplied(SIPHON_LIFE, target, 30),
 				at(1.5)
 						.endGcd(player),
 				at(3)

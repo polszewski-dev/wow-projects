@@ -27,10 +27,10 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, CURSE_OF_AGONY)
+						.beginGcd(player)
 						.endCast(player, CURSE_OF_AGONY)
 						.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
-						.effectApplied(CURSE_OF_AGONY, target, 24)
-						.beginGcd(player),
+						.effectApplied(CURSE_OF_AGONY, target, 24),
 				at(1.5)
 						.endGcd(player),
 				at(2)
@@ -72,10 +72,10 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, CURSE_OF_AGONY)
+						.beginGcd(player)
 						.endCast(player, CURSE_OF_AGONY)
 						.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
-						.spellResisted(player, CURSE_OF_AGONY, target)
-						.beginGcd(player),
+						.spellResisted(player, CURSE_OF_AGONY, target),
 				at(1.5)
 						.endGcd(player)
 		);
@@ -98,10 +98,10 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, CURSE_OF_AGONY)
+						.beginGcd(player)
 						.endCast(player, CURSE_OF_AGONY)
 						.decreasedResource(265, MANA, player, CURSE_OF_AGONY)
-						.effectApplied(CURSE_OF_AGONY, target, 24)
-						.beginGcd(player),
+						.effectApplied(CURSE_OF_AGONY, target, 24),
 				at(1.5)
 						.endGcd(player),
 				at(2)

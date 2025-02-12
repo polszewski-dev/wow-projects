@@ -25,10 +25,10 @@ class StarshardsTest extends PriestSpellSimulationTest {
 		assertEvents(
 					 at(0)
 							 .beginCast(player, STARSHARDS)
+							 .beginGcd(player)
 							 .endCast(player, STARSHARDS)
 							 .cooldownStarted(player, STARSHARDS, 30)
-							 .effectApplied(STARSHARDS, target, 15)
-							 .beginGcd(player),
+							 .effectApplied(STARSHARDS, target, 15),
 					 at(1.5)
 							 .endGcd(player),
 					 at(3)

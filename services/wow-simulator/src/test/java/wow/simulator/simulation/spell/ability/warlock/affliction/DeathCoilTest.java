@@ -26,12 +26,12 @@ class DeathCoilTest extends WarlockSpellSimulationTest {
 		assertEvents(
 			at(0)
 					.beginCast(player, DEATH_COIL)
+					.beginGcd(player)
 					.endCast(player, DEATH_COIL)
 					.decreasedResource(600, MANA, player, DEATH_COIL)
 					.cooldownStarted(player, DEATH_COIL, 120)
 					.decreasedResource(526, HEALTH, target, DEATH_COIL)
-					.increasedResource(526, HEALTH, player, DEATH_COIL)
-					.beginGcd(player),
+					.increasedResource(526, HEALTH, player, DEATH_COIL),
 			at(1.5)
 					.endGcd(player)
 		);

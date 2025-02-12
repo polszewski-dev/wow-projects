@@ -25,10 +25,10 @@ class ShadowWordPainTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SHADOW_WORD_PAIN)
+						.beginGcd(player)
 						.endCast(player, SHADOW_WORD_PAIN)
 						.decreasedResource(575, MANA, player, SHADOW_WORD_PAIN)
-						.effectApplied(SHADOW_WORD_PAIN, target, 18)
-						.beginGcd(player),
+						.effectApplied(SHADOW_WORD_PAIN, target, 18),
 				at(1.5)
 						.endGcd(player),
 				at(3)

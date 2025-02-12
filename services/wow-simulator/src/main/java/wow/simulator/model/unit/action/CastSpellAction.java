@@ -51,10 +51,6 @@ public class CastSpellAction extends UnitAction {
 		} else {
 			castSpell();
 		}
-
-		if (triggersGcd()) {
-			owner.triggerGcd(castContext.getGcd());
-		}
 	}
 
 	@Override
@@ -80,12 +76,13 @@ public class CastSpellAction extends UnitAction {
 
 	private void instaCastSpell() {
 		beginCast();
+		triggerGcd();
 		endCast();
 	}
 
 	private void castSpell() {
 		beginCast();
-
+		triggerGcd();
 		fromNowAfter(castContext.getCastTime(), this::endCast);
 	}
 
@@ -101,7 +98,14 @@ public class CastSpellAction extends UnitAction {
 
 	private void channelSpell() {
 		beginCast();
+		triggerGcd();
 		endCast();
+	}
+
+	private void triggerGcd() {
+		if (triggersGcd()) {
+			owner.triggerGcd(castContext.getGcd());
+		}
 	}
 
 	private void onBeginCast() {

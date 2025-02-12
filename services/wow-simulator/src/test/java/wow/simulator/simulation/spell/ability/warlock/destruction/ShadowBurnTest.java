@@ -27,11 +27,11 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SHADOWBURN)
+						.beginGcd(player)
 						.endCast(player, SHADOWBURN)
 						.decreasedResource(515, MANA, player, SHADOWBURN)
 						.cooldownStarted(player, SHADOWBURN, 15)
-						.decreasedResource(631, HEALTH, target, SHADOWBURN)
-						.beginGcd(player),
+						.decreasedResource(631, HEALTH, target, SHADOWBURN),
 				at(1.5)
 						.endGcd(player),
 				at(15)
@@ -50,11 +50,11 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SHADOWBURN)
+						.beginGcd(player)
 						.endCast(player, SHADOWBURN)
 						.decreasedResource(515, MANA, player, SHADOWBURN)
 						.cooldownStarted(player, SHADOWBURN, 15)
-						.spellResisted(player, SHADOWBURN, target)
-						.beginGcd(player),
+						.spellResisted(player, SHADOWBURN, target),
 				at(1.5)
 						.endGcd(player),
 				at(15)
@@ -75,11 +75,11 @@ class ShadowBurnTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SHADOWBURN)
+						.beginGcd(player)
 						.endCast(player, SHADOWBURN)
 						.decreasedResource(515, MANA, player, SHADOWBURN)
 						.cooldownStarted(player, SHADOWBURN, 15)
-						.decreasedResource(631, HEALTH, target, SHADOWBURN)
-						.beginGcd(player),
+						.decreasedResource(631, HEALTH, target, SHADOWBURN),
 				at(1.5)
 						.endGcd(player),
 				at(15)

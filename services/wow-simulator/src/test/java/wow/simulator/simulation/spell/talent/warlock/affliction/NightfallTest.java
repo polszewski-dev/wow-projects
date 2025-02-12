@@ -36,10 +36,10 @@ class NightfallTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, CORRUPTION)
+						.beginGcd(player)
 						.endCast(player, CORRUPTION)
 						.decreasedResource(370, MANA, false, player, CORRUPTION)
-						.effectApplied(CORRUPTION, target, 18)
-						.beginGcd(player),
+						.effectApplied(CORRUPTION, target, 18),
 				at(1.5)
 						.endGcd(player),
 				at(3)
@@ -75,11 +75,11 @@ class NightfallTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, DRAIN_LIFE, 5)
+						.beginGcd(player)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, false, player, DRAIN_LIFE)
 						.beginChannel(player, DRAIN_LIFE)
-						.effectApplied(DRAIN_LIFE, target, 5)
-						.beginGcd(player),
+						.effectApplied(DRAIN_LIFE, target, 5),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
 						.effectApplied(NIGHTFALL, player, 10)
@@ -136,10 +136,10 @@ class NightfallTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, CORRUPTION)
+						.beginGcd(player)
 						.endCast(player, CORRUPTION)
 						.decreasedResource(370, MANA, false, player, CORRUPTION)
-						.effectApplied(CORRUPTION, target, 18)
-						.beginGcd(player),
+						.effectApplied(CORRUPTION, target, 18),
 				at(1.5)
 						.endGcd(player),
 				at(3)
@@ -147,11 +147,11 @@ class NightfallTest extends WarlockSpellSimulationTest {
 						.effectApplied(NIGHTFALL, player, 10),
 				at(4)
 						.beginCast(player, SHADOW_BOLT, 0)
+						.beginGcd(player)
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.effectRemoved(NIGHTFALL, player)
-						.decreasedResource(575, HEALTH, target, SHADOW_BOLT)
-						.beginGcd(player),
+						.decreasedResource(575, HEALTH, target, SHADOW_BOLT),
 				at(5.5)
 						.endGcd(player),
 				at(6)

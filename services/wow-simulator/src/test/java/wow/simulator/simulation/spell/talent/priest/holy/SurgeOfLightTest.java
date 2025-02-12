@@ -71,10 +71,10 @@ class SurgeOfLightTest extends PriestSpellSimulationTest {
 						.decreasedResource(873, HEALTH, true, target, SMITE)
 						.effectApplied(SURGE_OF_LIGHT, player, 10)
 						.beginCast(player, SMITE)
+						.beginGcd(player)
 						.endCast(player, SMITE)
 						.effectRemoved(SURGE_OF_LIGHT, player)
-						.decreasedResource(582, HEALTH, target, SMITE)
-						.beginGcd(player),
+						.decreasedResource(582, HEALTH, target, SMITE),
 				at(4)
 						.endGcd(player)
 		);

@@ -31,10 +31,10 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, LIFE_TAP)
+						.beginGcd(player)
 						.endCast(player, LIFE_TAP)
 						.decreasedResource(582, HEALTH, player, LIFE_TAP)
-						.increasedResource(582, MANA, player, LIFE_TAP)
-						.beginGcd(player),
+						.increasedResource(582, MANA, player, LIFE_TAP),
 				at(1.5)
 						.endGcd(player)
 		);
@@ -57,10 +57,10 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, LIFE_TAP)
+						.beginGcd(player)
 						.endCast(player, LIFE_TAP)
 						.decreasedResource(582, HEALTH, player, LIFE_TAP)
-						.increasedResource(582, MANA, player, LIFE_TAP)
-						.beginGcd(player),
+						.increasedResource(582, MANA, player, LIFE_TAP),
 				at(1.5)
 						.endGcd(player)
 		);
@@ -83,10 +83,10 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, LIFE_TAP)
+						.beginGcd(player)
 						.endCast(player, LIFE_TAP)
 						.decreasedResource(582, HEALTH, player, LIFE_TAP)
-						.increasedResource(582, MANA, player, LIFE_TAP)
-						.beginGcd(player),
+						.increasedResource(582, MANA, player, LIFE_TAP),
 				at(1.5)
 						.endGcd(player)
 		);

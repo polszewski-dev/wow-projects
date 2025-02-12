@@ -28,14 +28,14 @@ class ShadowformTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SHADOWFORM)
+						.beginGcd(player)
 						.endCast(player, SHADOWFORM)
 						.decreasedResource(1435, MANA, player, SHADOWFORM)
 						.cooldownStarted(player, SHADOWFORM, 1.5)
-						.effectApplied(SHADOWFORM, player, Duration.INFINITE)
-						.beginGcd(player),
+						.effectApplied(SHADOWFORM, player, Duration.INFINITE),
 				at(1.5)
-						.cooldownExpired(player, SHADOWFORM)
 						.endGcd(player)
+						.cooldownExpired(player, SHADOWFORM)
 		);
 	}
 

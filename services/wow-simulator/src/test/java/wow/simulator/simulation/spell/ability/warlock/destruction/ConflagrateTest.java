@@ -38,12 +38,12 @@ class ConflagrateTest extends WarlockSpellSimulationTest {
 						.decreasedResource(332, HEALTH, target, IMMOLATE)
 						.effectApplied(IMMOLATE, target, 15)
 						.beginCast(player, CONFLAGRATE)
+						.beginGcd(player)
 						.endCast(player, CONFLAGRATE)
 						.decreasedResource(305, MANA, player, CONFLAGRATE)
 						.cooldownStarted(player, CONFLAGRATE, 10)
 						.effectRemoved(IMMOLATE, target)
-						.decreasedResource(650, HEALTH, target, CONFLAGRATE)
-						.beginGcd(player),
+						.decreasedResource(650, HEALTH, target, CONFLAGRATE),
 				at(3.5)
 						.endGcd(player),
 				at(12)

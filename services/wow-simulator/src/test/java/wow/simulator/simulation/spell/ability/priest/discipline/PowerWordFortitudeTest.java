@@ -25,10 +25,10 @@ class PowerWordFortitudeTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, POWER_WORD_FORTITUDE)
+						.beginGcd(player)
 						.endCast(player, POWER_WORD_FORTITUDE)
 						.decreasedResource(700, MANA, player, POWER_WORD_FORTITUDE)
-						.effectApplied(POWER_WORD_FORTITUDE, player, 30 * 60)
-						.beginGcd(player),
+						.effectApplied(POWER_WORD_FORTITUDE, player, 30 * 60),
 				at(1.5)
 						.endGcd(player),
 				at(30 * 60)

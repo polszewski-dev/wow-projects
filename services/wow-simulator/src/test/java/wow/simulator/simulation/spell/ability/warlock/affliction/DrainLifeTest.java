@@ -26,11 +26,11 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, DRAIN_LIFE, 5)
+						.beginGcd(player)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
 						.beginChannel(player, DRAIN_LIFE)
-						.effectApplied(DRAIN_LIFE, target, 5)
-						.beginGcd(player),
+						.effectApplied(DRAIN_LIFE, target, 5),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
 						.increasedResource(108, HEALTH, player, DRAIN_LIFE),
@@ -64,10 +64,10 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, DRAIN_LIFE, 5)
+						.beginGcd(player)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
-						.spellResisted(player, DRAIN_LIFE, target)
-						.beginGcd(player),
+						.spellResisted(player, DRAIN_LIFE, target),
 				at(1.5)
 						.endGcd(player)
 		);
@@ -86,11 +86,11 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, DRAIN_LIFE, 5)
+						.beginGcd(player)
 						.endCast(player, DRAIN_LIFE)
 						.decreasedResource(425, MANA, player, DRAIN_LIFE)
 						.beginChannel(player, DRAIN_LIFE)
-						.effectApplied(DRAIN_LIFE, target, 5)
-						.beginGcd(player),
+						.effectApplied(DRAIN_LIFE, target, 5),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
 						.increasedResource(108, HEALTH, player, DRAIN_LIFE),

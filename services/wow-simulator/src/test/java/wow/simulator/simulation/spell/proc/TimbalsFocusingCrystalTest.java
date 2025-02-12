@@ -32,10 +32,10 @@ class TimbalsFocusingCrystalTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, CORRUPTION)
+						.beginGcd(player)
 						.endCast(player, CORRUPTION)
 						.decreasedResource(370, MANA, player, CORRUPTION)
-						.effectApplied(CORRUPTION, target, 18)
-						.beginGcd(player),
+						.effectApplied(CORRUPTION, target, 18),
 				at(1.5)
 						.endGcd(player),
 				at(3)

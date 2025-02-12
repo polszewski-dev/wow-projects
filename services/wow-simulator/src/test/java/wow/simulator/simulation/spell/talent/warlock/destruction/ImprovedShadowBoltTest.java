@@ -172,10 +172,10 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12)
 						.beginCast(player, CORRUPTION)
+						.beginGcd(player)
 						.endCast(player, CORRUPTION)
 						.decreasedResource(370, MANA, player, CORRUPTION)
-						.effectApplied(CORRUPTION, target, 18)
-						.beginGcd(player),
+						.effectApplied(CORRUPTION, target, 18),
 				at(4.5)
 						.endGcd(player),
 				at(6)

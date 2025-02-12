@@ -25,11 +25,11 @@ class DevouringPlagueTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, DEVOURING_PLAGUE)
+						.beginGcd(player)
 						.endCast(player, DEVOURING_PLAGUE)
 						.decreasedResource(1145, MANA, player, DEVOURING_PLAGUE)
 						.cooldownStarted(player, DEVOURING_PLAGUE, 180)
-						.effectApplied(DEVOURING_PLAGUE, target, 24)
-						.beginGcd(player),
+						.effectApplied(DEVOURING_PLAGUE, target, 24),
 				at(1.5)
 						.endGcd(player),
 				at(3)

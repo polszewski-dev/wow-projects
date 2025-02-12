@@ -26,10 +26,10 @@ class DivineSpiritTest extends PriestSpellSimulationTest {
 		assertEvents(
 			at(0)
 					.beginCast(player, DIVINE_SPIRIT)
+					.beginGcd(player)
 					.endCast(player, DIVINE_SPIRIT)
 					.decreasedResource(680, MANA, player, DIVINE_SPIRIT)
-					.effectApplied(DIVINE_SPIRIT, player, 30 * 60)
-					.beginGcd(player),
+					.effectApplied(DIVINE_SPIRIT, player, 30 * 60),
 			at(1.5)
 					.endGcd(player),
 			at(30 * 60)

@@ -27,10 +27,10 @@ class FelArmorTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, FEL_ARMOR)
+						.beginGcd(player)
 						.endCast(player, FEL_ARMOR)
 						.decreasedResource(725, MANA, player, FEL_ARMOR)
-						.effectApplied(FEL_ARMOR, player, 30 * 60)
-						.beginGcd(player),
+						.effectApplied(FEL_ARMOR, player, 30 * 60),
 				at(1.5)
 						.endGcd(player),
 				at(30 * 60)

@@ -32,11 +32,11 @@ class MiseryTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, SHADOW_WORD_PAIN)
+						.beginGcd(player)
 						.endCast(player, SHADOW_WORD_PAIN)
 						.decreasedResource(575, MANA, player, SHADOW_WORD_PAIN)
 						.effectApplied(MISERY, target, Duration.INFINITE)
-						.effectApplied(SHADOW_WORD_PAIN, target, 18)
-						.beginGcd(player),
+						.effectApplied(SHADOW_WORD_PAIN, target, 18),
 				at(1.5)
 						.endGcd(player),
 				at(3)
@@ -68,12 +68,12 @@ class MiseryTest extends PriestSpellSimulationTest {
 		assertEvents(
 				at(0)
 						.beginCast(player, MIND_FLAY, 3)
+						.beginGcd(player)
 						.endCast(player, MIND_FLAY)
 						.decreasedResource(230, MANA, player, MIND_FLAY)
 						.effectApplied(MISERY, target, Duration.INFINITE)
 						.beginChannel(player, MIND_FLAY)
-						.effectApplied(MIND_FLAY, target, 3)
-						.beginGcd(player),
+						.effectApplied(MIND_FLAY, target, 3),
 				at(1)
 						.decreasedResource(184, HEALTH, target, MIND_FLAY),
 				at(1.5)
