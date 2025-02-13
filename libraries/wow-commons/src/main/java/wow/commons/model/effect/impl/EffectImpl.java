@@ -7,9 +7,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.EffectCategory;
-import wow.commons.model.effect.EffectSource;
+import wow.commons.model.effect.*;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.AbilityId;
 
@@ -30,6 +28,8 @@ public class EffectImpl implements Effect {
 	private Description description;
 	private TimeRestriction timeRestriction;
 	private int maxStacks;
+	private EffectScope scope;
+	private EffectExclusionGroup exclusionGroup;
 	private PeriodicComponent periodicComponent;
 	private Duration tickInterval;
 	private ModifierComponent modifierComponent;

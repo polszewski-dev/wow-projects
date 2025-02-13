@@ -4,9 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.EffectCategory;
-import wow.commons.model.effect.EffectSource;
+import wow.commons.model.effect.*;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.AbilityId;
 
@@ -50,6 +48,16 @@ public class EmptyEffect implements Effect {
 	@Override
 	public int getMaxStacks() {
 		return 0;
+	}
+
+	@Override
+	public EffectScope getScope() {
+		return EffectScope.PERSONAL;
+	}
+
+	@Override
+	public EffectExclusionGroup getExclusionGroup() {
+		return null;
 	}
 
 	@Override

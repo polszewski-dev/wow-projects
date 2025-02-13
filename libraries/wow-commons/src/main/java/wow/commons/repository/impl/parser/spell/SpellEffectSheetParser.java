@@ -2,6 +2,8 @@ package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectExclusionGroup;
+import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.component.AbsorptionComponent;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
@@ -34,6 +36,8 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	}
 
 	private final ExcelColumn colMaxStacks = column(STACKS_MAX);
+	private final ExcelColumn colScope = column(SCOPE);
+	private final ExcelColumn colExclusionGroup = column(EXCLUSION_GROUP);
 	private final ExcelColumn colTickInterval = column(TICK_INTERVAL);
 
 	protected Effect getEffect() {
@@ -42,6 +46,8 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var maxStacks = colMaxStacks.getInteger();
+		var scope = colScope.getEnum(EffectScope::parse);
+		var exclusionGroup = colExclusionGroup.getEnum(EffectExclusionGroup::parse, null);
 		var periodicComponent = getPeriodicComponent();
 		var tickInterval = colTickInterval.getDuration(null);
 		var modifierComponent = getModifierComponent(maxModAttributes);
@@ -53,6 +59,8 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		effect.setDescription(description);
 		effect.setTimeRestriction(timeRestriction);
 		effect.setMaxStacks(maxStacks);
+		effect.setScope(scope);
+		effect.setExclusionGroup(exclusionGroup);
 		effect.setPeriodicComponent(periodicComponent);
 		effect.setTickInterval(tickInterval);
 		effect.setModifierComponent(modifierComponent);

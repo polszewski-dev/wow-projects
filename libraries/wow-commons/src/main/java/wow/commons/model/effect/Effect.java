@@ -27,6 +27,10 @@ public interface Effect extends Described, TimeRestricted {
 
 	int getMaxStacks();
 
+	EffectScope getScope();
+
+	EffectExclusionGroup getExclusionGroup();
+
 	PeriodicComponent getPeriodicComponent();
 
 	Duration getTickInterval();

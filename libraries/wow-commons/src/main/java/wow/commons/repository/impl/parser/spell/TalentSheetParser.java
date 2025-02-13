@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parser.spell;
 
+import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.model.talent.Talent;
@@ -76,6 +77,8 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 		var events = getEvents(MAX_TALENT_EVENTS);
 
 		effect.setMaxStacks(1);
+		effect.setScope(EffectScope.GLOBAL);
+		effect.setExclusionGroup(null);
 		effect.setModifierComponent(modifierComponent);
 		effect.setStatConversions(statConversions);
 		effect.setEvents(events);

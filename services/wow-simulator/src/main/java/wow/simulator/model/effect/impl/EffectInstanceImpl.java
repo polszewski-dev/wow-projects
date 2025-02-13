@@ -4,10 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.EffectAugmentations;
-import wow.commons.model.effect.EffectCategory;
-import wow.commons.model.effect.EffectSource;
+import wow.commons.model.effect.*;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
@@ -312,6 +309,16 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public int getMaxStacks() {
 		return effect.getMaxStacks();
+	}
+
+	@Override
+	public EffectScope getScope() {
+		return effect.getScope();
+	}
+
+	@Override
+	public EffectExclusionGroup getExclusionGroup() {
+		return effect.getExclusionGroup();
 	}
 
 	@Override

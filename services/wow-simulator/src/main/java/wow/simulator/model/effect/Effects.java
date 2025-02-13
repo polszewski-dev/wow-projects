@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static wow.commons.model.effect.EffectScope.GLOBAL;
+
 /**
  * User: POlszewski
  * Date: 2023-08-16
@@ -59,12 +61,31 @@ public class Effects implements SimulationContextSource, EffectCollection {
 		}
 	}
 
-	private EffectInstance getMatchingEffect(EffectInstance effect) {
+	private EffectInstance getMatchingEffect(EffectInstance newEffect) {
 		return getEffectInstanceStream()
-				.filter(x -> x.getEffectId() == effect.getEffectId())//todo scope
-				.filter(x -> x.getOwner() == effect.getOwner())
+				.filter(existingEffect -> isMatching(existingEffect, newEffect))
 				.findAny()
 				.orElse(null);
+	}
+
+	private boolean isMatching(EffectInstance existingEffect, EffectInstance newEffect) {
+		if (haveTheSameOwner(existingEffect, newEffect)) {
+			return haveTheSameName(existingEffect, newEffect) || haveTheSameExclusionGroup(existingEffect, newEffect);
+		}
+
+		return newEffect.getScope() == GLOBAL && haveTheSameName(existingEffect, newEffect);
+	}
+
+	private static boolean haveTheSameOwner(EffectInstance existing, EffectInstance applied) {
+		return existing.getOwner() == applied.getOwner();
+	}
+
+	private static boolean haveTheSameName(EffectInstance first, EffectInstance second) {
+		return first.getName().equals(second.getName());
+	}
+
+	private boolean haveTheSameExclusionGroup(EffectInstance first, EffectInstance second) {
+		return first.getExclusionGroup() != null && first.getExclusionGroup() == second.getExclusionGroup();
 	}
 
 	public void removeEffect(EffectInstance effect) {
