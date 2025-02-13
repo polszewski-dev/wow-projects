@@ -8,7 +8,7 @@ import wow.commons.model.item.ItemSource;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentSource;
-import wow.simulator.log.handler.GameLogHandler;
+import wow.simulator.log.handler.DefaultGameLogHandler;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
@@ -30,7 +30,7 @@ import static wow.simulator.util.TestEvent.*;
  */
 @Getter
 @Setter
-public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
+public class TestEventCollectingHandler extends DefaultGameLogHandler implements TimeAware {
 	List<TestEvent> events = new ArrayList<>();
 	Clock clock;
 
@@ -77,11 +77,6 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void channelInterrupted(ChannelSpellAction action) {
 		addEvent(new ChannelInterrupted(now(), action.getOwner(), action.getAbilityId()));
-	}
-
-	@Override
-	public void spellHit(CastSpellAction action, Unit target) {
-		// ignore
 	}
 
 	@Override
@@ -213,16 +208,6 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void cooldownExpired(CooldownInstance cooldown) {
 		addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getCooldownId()));
-	}
-
-	@Override
-	public void simulationStarted() {
-		// ignored
-	}
-
-	@Override
-	public void simulationEnded() {
-		// ignored
 	}
 
 	private void addEvent(TestEvent event) {

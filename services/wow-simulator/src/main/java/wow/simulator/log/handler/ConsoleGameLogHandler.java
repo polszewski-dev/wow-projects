@@ -9,7 +9,6 @@ import wow.simulator.model.time.Clock;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.ChannelSpellAction;
-import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 
 /**
@@ -18,18 +17,8 @@ import wow.simulator.simulation.TimeAware;
  */
 @Setter
 @Slf4j
-public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
+public class ConsoleGameLogHandler extends DefaultGameLogHandler implements TimeAware {
 	private Clock clock;
-
-	@Override
-	public void beginGcd(UnitAction sourceAction) {
-		// ignored
-	}
-
-	@Override
-	public void endGcd(UnitAction sourceAction) {
-		// ignored
-	}
 
 	@Override
 	public void beginCast(CastSpellAction action) {
@@ -64,11 +53,6 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void channelInterrupted(ChannelSpellAction action) {
 		print("%s's s% channel interrupted", action.getOwner(), action.getAbility());
-	}
-
-	@Override
-	public void spellHit(CastSpellAction action, Unit target) {
-		// ignore
 	}
 
 	@Override

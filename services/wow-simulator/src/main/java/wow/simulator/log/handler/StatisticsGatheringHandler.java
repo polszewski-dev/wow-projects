@@ -34,7 +34,7 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
  */
 @Getter
 @Setter
-public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, TimeSource {
+public class StatisticsGatheringHandler extends DefaultGameLogHandler implements TimeAware, TimeSource {
 	private final Player player;
 	private final Stats stats;
 	private Clock clock;
@@ -47,11 +47,6 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	public StatisticsGatheringHandler(Player player, Stats stats) {
 		this.player = player;
 		this.stats = stats;
-	}
-
-	@Override
-	public void beginGcd(UnitAction sourceAction) {
-		// ignored
 	}
 
 	@Override
@@ -114,23 +109,8 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void canNotBeCasted(CastSpellAction action) {
-		// ignored
-	}
-
-	@Override
 	public void spellHit(CastSpellAction action, Unit target) {
 		stats.increaseNumHit(action.getAbility());
-	}
-
-	@Override
-	public void spellResisted(CastSpellAction action, Unit target) {
-		// ignored
-	}
-
-	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-		// ignored
 	}
 
 	@Override
@@ -151,31 +131,6 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	@Override
 	public void effectApplied(EffectInstance effect) {
 		effects.put(effect.getId(), new EffectTimeEntry(effect.getEffectId(), now()));
-	}
-
-	@Override
-	public void effectStacked(EffectInstance effect) {
-		// ignored
-	}
-
-	@Override
-	public void effectStacksIncreased(EffectInstance effect) {
-		// ignored
-	}
-
-	@Override
-	public void effectStacksDecreased(EffectInstance effect) {
-		// ignored
-	}
-
-	@Override
-	public void effectChargesIncreased(EffectInstance effect) {
-		// ignored
-	}
-
-	@Override
-	public void effectChargesDecreased(EffectInstance effect) {
-		// ignored
 	}
 
 	@Override
