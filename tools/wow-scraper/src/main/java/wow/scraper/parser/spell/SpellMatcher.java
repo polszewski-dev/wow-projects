@@ -138,6 +138,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 			return null;
 		}
 
+		var target = SpellTarget.TARGET;
 		var type = periodicComponentParams.type();
 		var tickInterval = getTickInterval(params);
 		var duration = getOptionalDuration(params.duration()).orElseThrow();
@@ -146,7 +147,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var amount = getTotalAmount(periodicComponentParams, numTicks);
 		var tickScheme = getTickScheme(periodicComponentParams.tickWeights());
 
-		return new PeriodicComponent(type, coefficient, amount, numTicks, tickScheme);
+		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickScheme);
 	}
 
 	private int getNumTicks(Duration duration, Duration tickInterval) {

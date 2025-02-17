@@ -7,6 +7,7 @@ import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.component.AbsorptionComponent;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
+import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.spell.TickScheme;
 import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
@@ -79,13 +80,14 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 			return null;
 		}
 
+		var target = getTarget(PERIODIC_PREFIX, SpellTarget.TARGET);
 		var type = colPeriodicType.getEnum(ComponentType::parse);
 		var coefficient = getCoefficient(PERIODIC_PREFIX);
 		var amount = colPeriodicAmount.getInteger();
 		var numTicks = colPeriodicNumTicks.getInteger();
 		var tickScheme = getTickScheme();
 
-		return new PeriodicComponent(type, coefficient, amount, numTicks, tickScheme);
+		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickScheme);
 	}
 
 	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS).prefixed(PERIODIC_PREFIX);

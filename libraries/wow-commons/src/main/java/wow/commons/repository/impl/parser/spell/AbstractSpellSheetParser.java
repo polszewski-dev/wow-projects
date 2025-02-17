@@ -325,9 +325,13 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return new Coefficient(value, school);
 	}
 
-	private final ExcelColumn colTarget = column(TARGET);
+	private final ExcelColumn colTarget = column(TARGET, true);
 
 	private SpellTarget getTarget(String prefix) {
 		return colTarget.prefixed(prefix).getEnum(SpellTarget::parse);
+	}
+
+	protected SpellTarget getTarget(String prefix, SpellTarget defaultTarget) {
+		return colTarget.prefixed(prefix).getEnum(SpellTarget::parse, defaultTarget);
 	}
 }
