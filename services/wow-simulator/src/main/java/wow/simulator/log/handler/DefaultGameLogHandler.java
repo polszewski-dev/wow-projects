@@ -50,12 +50,12 @@ public class DefaultGameLogHandler implements GameLogHandler {
 	}
 
 	@Override
-	public void spellHit(CastSpellAction action, Unit target) {
+	public void spellHit(Unit caster, Unit target, Spell spell) {
 		// void
 	}
 
 	@Override
-	public void spellResisted(CastSpellAction action, Unit target) {
+	public void spellResisted(Unit caster, Unit target, Spell spell) {
 		// void
 	}
 

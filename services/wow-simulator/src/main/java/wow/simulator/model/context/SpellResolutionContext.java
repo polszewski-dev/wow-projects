@@ -47,10 +47,10 @@ public class SpellResolutionContext extends Context {
 		var hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
 
 		if (hitRoll) {
-			caster.getGameLog().spellHit(action, target);
+			caster.getGameLog().spellHit(caster, target, spell);
 			EventContext.fireSpellHitEvent(caster, target, spell, this);
 		} else {
-			caster.getGameLog().spellResisted(action, target);
+			caster.getGameLog().spellResisted(caster, target, spell);
 			EventContext.fireSpellResistedEvent(caster, target, spell, this);
 		}
 

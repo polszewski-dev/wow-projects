@@ -70,13 +70,13 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
-	public void spellHit(CastSpellAction action, Unit target) {
-		handlers.forEach(handler -> handler.spellHit(action, target));
+	public void spellHit(Unit caster, Unit target, Spell spell) {
+		handlers.forEach(handler -> handler.spellHit(caster, target, spell));
 	}
 
 	@Override
-	public void spellResisted(CastSpellAction action, Unit target) {
-		handlers.forEach(handler -> handler.spellResisted(action, target));
+	public void spellResisted(Unit caster, Unit target, Spell spell) {
+		handlers.forEach(handler -> handler.spellResisted(caster, target, spell));
 	}
 
 	@Override

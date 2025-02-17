@@ -56,8 +56,8 @@ public class ConsoleGameLogHandler extends DefaultGameLogHandler implements Time
 	}
 
 	@Override
-	public void spellResisted(CastSpellAction action, Unit target) {
-		print("%s's %s resisted by %s", action.getOwner(), action.getAbility(), target);
+	public void spellResisted(Unit caster, Unit target, Spell spell) {
+		print("%s's %s resisted by %s", caster, spell, target);
 	}
 
 	@Override

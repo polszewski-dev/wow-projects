@@ -109,8 +109,8 @@ public class StatisticsGatheringHandler extends DefaultGameLogHandler implements
 	}
 
 	@Override
-	public void spellHit(CastSpellAction action, Unit target) {
-		stats.increaseNumHit(action.getAbility());
+	public void spellHit(Unit caster, Unit target, Spell spell) {
+		stats.increaseNumHit((Ability) spell);
 	}
 
 	@Override

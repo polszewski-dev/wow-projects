@@ -5,6 +5,7 @@ import lombok.Setter;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.ItemSetSource;
 import wow.commons.model.item.ItemSource;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentSource;
@@ -80,8 +81,8 @@ public class TestEventCollectingHandler extends DefaultGameLogHandler implements
 	}
 
 	@Override
-	public void spellResisted(CastSpellAction action, Unit target) {
-		addEvent(new SpellResisted(now(), action.getOwner(), action.getAbilityId(), target));
+	public void spellResisted(Unit caster, Unit target, Spell spell) {
+		addEvent(new SpellResisted(now(), caster, ((Ability) spell).getAbilityId(), target));
 	}
 
 	@Override
