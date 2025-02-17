@@ -16,7 +16,7 @@ public enum SpellTarget {
 
 	FRIEND(true, true),
 	FRIEND_AOE(true, false),
-	FRIENDS_PARTY(true, false),
+	FRIENDS_PARTY(true, true),
 
 	PARTY(true, false),
 	PARTY_AOE(true, false),

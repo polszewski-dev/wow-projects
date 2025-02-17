@@ -49,7 +49,7 @@ public class PrimaryTargetResolver {
 					getSelf();
 			case PET ->
 					throw new UnsupportedOperationException("No pets atm");
-			case FRIEND ->
+			case FRIEND, FRIENDS_PARTY ->
 					getFriendlyTarget();
 			case ENEMY ->
 					getHostileTarget();

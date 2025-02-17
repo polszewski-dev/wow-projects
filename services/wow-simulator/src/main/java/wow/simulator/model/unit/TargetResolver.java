@@ -58,6 +58,9 @@ public class TargetResolver implements SimulationContextSource {
 		if (targetType.isAoE()) {
 			return true;
 		}
+		if (targetType == FRIENDS_PARTY) {
+			return hasValidTarget(FRIEND);
+		}
 		return getTargets(targetType).size() == 1;
 	}
 
@@ -84,7 +87,9 @@ public class TargetResolver implements SimulationContextSource {
 			case PET ->
 					List.of();//todo
 			case PARTY ->
-					List.of(self);
+					self.getParty().getPlayers();
+			case FRIENDS_PARTY ->
+					targets.get(FRIEND).getParty().getPlayers();
 			case ENEMY_AOE ->
 					getSimulation().getEnemiesOf(self);
 			case FRIEND_AOE ->

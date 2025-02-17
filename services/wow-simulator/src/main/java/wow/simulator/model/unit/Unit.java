@@ -111,6 +111,14 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void triggerCooldown(CooldownId cooldownId, Duration actualDuration);
 
+	Party getParty();
+
+	default Raid getRaid() {
+		return getParty().getRaid();
+	}
+
+	void setParty(Party party);
+
 	static boolean areFriendly(Unit first, Unit second) {
 		return first.getClass() == second.getClass();
 	}

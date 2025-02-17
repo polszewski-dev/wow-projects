@@ -1,5 +1,7 @@
 package wow.simulator.model.unit.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
@@ -57,6 +59,10 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	private Rng rng;
 
+	@Getter
+	@Setter
+	private Party party;
+
 	private SimulationContext simulationContext;
 
 	protected UnitImpl(String name, Character character) {
@@ -64,6 +70,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 		this.character = character;
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
+		new Raid().getFirstParty().add(this);
 	}
 
 	@Override
