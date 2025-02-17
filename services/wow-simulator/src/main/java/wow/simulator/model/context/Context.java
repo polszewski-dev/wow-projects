@@ -36,6 +36,21 @@ public abstract class Context implements SimulationContextSource {
 		this.parentContext = parentContext;
 	}
 
+	public boolean hitRoll(Unit target) {
+		var hitChancePct = caster.getSpellHitPct(spell, target);
+		var hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
+
+		if (hitRoll) {
+			getGameLog().spellHit(caster, target, spell);
+			EventContext.fireSpellHitEvent(caster, target, spell, this);
+		} else {
+			getGameLog().spellResisted(caster, target, spell);
+			EventContext.fireSpellResistedEvent(caster, target, spell, this);
+		}
+
+		return hitRoll;
+	}
+
 	protected void decreaseHealth(Unit target, int amount, boolean directDamage, boolean critRoll) {
 		this.lastDamageDone = target.decreaseHealth(amount, critRoll, getSourceSpell());
 

@@ -76,4 +76,16 @@ public class Simulation implements SimulationContextSource {
 	public Duration getRemainingTime() {
 		return timeUntilSimulationEnd.subtract(now());
 	}
+
+	public List<Unit> getEnemiesOf(Unit unit) {
+		return units.stream()
+				.filter(x -> Unit.areHostile(x, unit))
+				.toList();
+	}
+
+	public List<Unit> getFriendsOf(Unit unit) {
+		return units.stream()
+				.filter(x -> Unit.areFriendly(x, unit))
+				.toList();
+	}
 }

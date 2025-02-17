@@ -50,7 +50,7 @@ public sealed interface PrimaryTarget {
 			case PrimaryTarget.Invalid() ->
 					null;
 			case PrimaryTarget.Empty() ->
-					null;
+					TargetResolver.ofSelf(caster);
 			case PrimaryTarget.Self(var ignored) ->
 					TargetResolver.ofSelf(caster);
 			case PrimaryTarget.Friend(var unit) ->

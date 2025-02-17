@@ -25,7 +25,9 @@ public enum SpellTarget {
 	ENEMY_AOE(false, false),
 
 	TARGET(false, true),
-	ATTACKER(false, true)
+	ATTACKER(false, true),
+
+	GROUND_HOSTILE(false, false)
 	;
 
 	private final boolean friendly;

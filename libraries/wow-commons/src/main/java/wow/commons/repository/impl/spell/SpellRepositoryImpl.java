@@ -25,6 +25,8 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 
+import static wow.commons.model.spell.SpellTarget.GROUND_HOSTILE;
+import static wow.commons.model.spell.SpellTarget.TARGET;
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
 
@@ -200,8 +202,22 @@ public class SpellRepositoryImpl implements SpellRepository {
 			throw new IllegalArgumentException("Channeled ability with non-zero cast time: " + ability);
 		}
 
-		if (ability.isChanneled() && ability.getEffectApplication() != null && ability.getEffectApplication().target().isAoE()) {
-			throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
+		var effectApplication = ability.getEffectApplication();
+
+		if (effectApplication != null) {
+			var effectTarget = effectApplication.target();
+			var effect = effectApplication.effect();
+
+			if (ability.isChanneled() && effectTarget.isAoE() && effectTarget != GROUND_HOSTILE) {
+				throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
+			}
+
+			if (effect.hasPeriodicComponent()) {
+				var periodicComponentTarget = effect.getPeriodicComponent().target();
+				if (effectTarget == GROUND_HOSTILE && periodicComponentTarget == TARGET) {
+					throw new IllegalArgumentException("Ground effect has no target specified");
+				}
+			}
 		}
 	}
 

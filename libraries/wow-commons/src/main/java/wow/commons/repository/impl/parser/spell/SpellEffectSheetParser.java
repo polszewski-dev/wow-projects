@@ -7,7 +7,6 @@ import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.component.AbsorptionComponent;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
-import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.spell.TickScheme;
 import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
@@ -39,7 +38,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colMaxStacks = column(STACKS_MAX);
 	private final ExcelColumn colScope = column(SCOPE);
 	private final ExcelColumn colExclusionGroup = column(EXCLUSION_GROUP);
-	private final ExcelColumn colTickInterval = column(TICK_INTERVAL);
+	private final ExcelColumn colTickInterval = column(TICK_INTERVAL, true);
 
 	protected Effect getEffect() {
 		var effect = newEffect();
@@ -71,7 +70,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		return effect;
 	}
 
-	private final ExcelColumn colPeriodicType = column(PERIODIC_TYPE).prefixed(PERIODIC_PREFIX);
+	private final ExcelColumn colPeriodicType = column(PERIODIC_TYPE, true).prefixed(PERIODIC_PREFIX);
 	private final ExcelColumn colPeriodicAmount = column(PERIODIC_AMOUNT).prefixed(PERIODIC_PREFIX);
 	private final ExcelColumn colPeriodicNumTicks = column(PERIODIC_NUM_TICKS).prefixed(PERIODIC_PREFIX);
 
@@ -80,7 +79,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 			return null;
 		}
 
-		var target = getTarget(PERIODIC_PREFIX, SpellTarget.TARGET);
+		var target = getTarget(PERIODIC_PREFIX);
 		var type = colPeriodicType.getEnum(ComponentType::parse);
 		var coefficient = getCoefficient(PERIODIC_PREFIX);
 		var amount = colPeriodicAmount.getInteger();

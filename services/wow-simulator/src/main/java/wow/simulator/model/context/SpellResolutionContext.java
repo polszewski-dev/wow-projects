@@ -34,27 +34,12 @@ public class SpellResolutionContext extends Context {
 		this.action = action;
 	}
 
-	public boolean hitRoll(Unit target) {
+	public boolean hitRollOnlyOnce(Unit target) {
 		if (action == null || Unit.areFriendly(caster, target)) {
 			return true;
 		}
 
-		return hitRollByUnit.computeIfAbsent(target, this::hitRollOnce);
-	}
-
-	private boolean hitRollOnce(Unit target) {
-		var hitChancePct = caster.getSpellHitPct(spell, target);
-		var hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
-
-		if (hitRoll) {
-			caster.getGameLog().spellHit(caster, target, spell);
-			EventContext.fireSpellHitEvent(caster, target, spell, this);
-		} else {
-			caster.getGameLog().spellResisted(caster, target, spell);
-			EventContext.fireSpellResistedEvent(caster, target, spell, this);
-		}
-
-		return hitRoll;
+		return hitRollByUnit.computeIfAbsent(target, this::hitRoll);
 	}
 
 	private boolean critRoll(double critChancePct) {
@@ -88,7 +73,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void dealDirectDamage(DirectComponent directComponent, Unit target) {
-		if (!hitRoll(target)) {
+		if (!hitRollOnlyOnce(target)) {
 			return;
 		}
 
@@ -145,17 +130,25 @@ public class SpellResolutionContext extends Context {
 		);
 	}
 
+	public void applyEffect(EffectSource effectSource) {
+		var effectApplication = spell.getEffectApplication();
+
+		targetResolver.forEachTarget(
+				effectApplication,
+				effectTarget -> applyEffect(effectTarget, effectSource)
+		);
+	}
+
 	public EffectInstance applyEffect(Unit target) {
-		if (!hitRoll(target)) {
+		if (!hitRollOnlyOnce(target)) {
 			return null;
 		}
 
-		return applyEffect(new AbilitySource(action.getAbility()));
+		return applyEffect(target, new AbilitySource(action.getAbility()));
 	}
 
-	public EffectInstance applyEffect(EffectSource effectSource) {
+	public EffectInstance applyEffect(Unit target, EffectSource effectSource) {
 		var effectApplication = spell.getEffectApplication();
-		var target = targetResolver.getTarget(effectApplication);
 		var replacementMode = effectApplication.replacementMode();
 		var appliedEffect = createEffect(target, effectSource);
 		var augmentations = getEffectAugmentations(appliedEffect);
@@ -197,6 +190,33 @@ public class SpellResolutionContext extends Context {
 					this
 			);
 		}
+	}
+
+	public PeriodicEffectInstance putPeriodicEffectOnTheGround() {
+		var effect = createGroundPeriodicEffect();
+
+		getScheduler().add(effect);
+		return effect;
+	}
+
+	private PeriodicEffectInstance createGroundPeriodicEffect() {
+		var effectApplication = spell.getEffectApplication();
+		var durationSnapshot = caster.getEffectDurationSnapshot(spell, null);
+		var duration = durationSnapshot.getDuration();
+		var tickInterval = durationSnapshot.getTickInterval();
+
+		return new PeriodicEffectInstance(
+				caster,
+				null,
+				effectApplication.effect(),
+				duration,
+				tickInterval,
+				effectApplication.numStacks(),
+				effectApplication.numCharges(),
+				new AbilitySource(action.getAbility()),
+				getSourceSpell(),
+				this
+		);
 	}
 
 	private EffectAugmentations getEffectAugmentations(EffectInstance effect) {

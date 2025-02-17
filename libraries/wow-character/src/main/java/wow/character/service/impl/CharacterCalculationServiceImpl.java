@@ -349,7 +349,13 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target) {
 		var durationStats = getAccumulatedDurationStats(character, spell, target);
-		var targetStats = getAccumulatedTargetStats(spell, target, null, null, null);
+		AccumulatedTargetStats targetStats;
+
+		if (spell instanceof Ability ability && ability.isChanneled()) {
+			targetStats = null;
+		} else {
+			targetStats = getAccumulatedTargetStats(spell, target, null, null, null);
+		}
 
 		return getEffectDurationSnapshot(character, spell, target, durationStats, targetStats);
 	}

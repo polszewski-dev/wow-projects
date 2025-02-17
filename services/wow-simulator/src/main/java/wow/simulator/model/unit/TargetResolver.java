@@ -1,10 +1,14 @@
 package wow.simulator.model.unit;
 
+import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.spell.component.DirectComponent;
+import wow.simulator.simulation.SimulationContext;
+import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -15,7 +19,7 @@ import static wow.commons.model.spell.SpellTarget.*;
  * User: POlszewski
  * Date: 2023-11-02
  */
-public class TargetResolver {
+public class TargetResolver implements SimulationContextSource {
 	private final Unit self;
 	private final Map<SpellTarget, Unit> targets;
 
@@ -50,47 +54,50 @@ public class TargetResolver {
 		return new TargetResolver(self, Map.of(TARGET, target));
 	}
 
-	public Unit getTarget(SpellTarget targetType) {
-		return switch (targetType) {
-			case SELF ->
-					self;
-			case PET ->
-					null;//todo
-			case PARTY ->
-					self;//todo
-			default ->
-					targets.get(targetType);
-		};
-	}
-
 	public boolean hasValidTarget(SpellTarget targetType) {
 		if (targetType.isAoE()) {
 			return true;
 		}
-		return getTarget(targetType) != null;
+		return getTargets(targetType).size() == 1;
 	}
 
 	public boolean hasAllValidTargets(Collection<SpellTarget> targetTypes) {
 		return targetTypes.stream().allMatch(this::hasValidTarget);
 	}
 
-	public Unit getTarget(EffectApplication effectApplication) {
-		return getTarget(effectApplication.target());
+	public void forEachTarget(DirectComponent directComponent, Consumer<Unit> consumer) {
+		getTargets(directComponent.target()).forEach(consumer);
 	}
 
-	public void forEachTarget(DirectComponent directComponent, Consumer<Unit> consumer) {
-		forEachTarget(directComponent.target(), consumer);
+	public void forEachTarget(PeriodicComponent periodicComponent, Consumer<Unit> consumer) {
+		getTargets(periodicComponent.target()).forEach(consumer);
 	}
 
 	public void forEachTarget(EffectApplication effectApplication, Consumer<Unit> consumer) {
-		forEachTarget(effectApplication.target(), consumer);
+		getTargets(effectApplication.target()).forEach(consumer);
 	}
 
-	private void forEachTarget(SpellTarget spellTarget, Consumer<Unit> consumer) {
-		var target = getTarget(spellTarget);
+	private List<Unit> getTargets(SpellTarget targetType) {
+		return switch (targetType) {
+			case SELF ->
+					List.of(self);
+			case PET ->
+					List.of();//todo
+			case PARTY ->
+					List.of(self);
+			case ENEMY_AOE ->
+					getSimulation().getEnemiesOf(self);
+			case FRIEND_AOE ->
+					getSimulation().getFriendsOf(self);
+			default -> {
+				var unit = targets.get(targetType);
+				yield unit != null ? List.of(unit) : List.of();
+			}
+		};
+	}
 
-		if (target != null) {
-			consumer.accept(target);
-		}
+	@Override
+	public SimulationContext getSimulationContext() {
+		return self.getSimulationContext();
 	}
 }

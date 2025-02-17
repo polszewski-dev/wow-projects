@@ -13,6 +13,8 @@ import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.UnitImpl;
 
+import static wow.commons.model.spell.SpellTarget.GROUND_HOSTILE;
+
 /**
  * User: POlszewski
  * Date: 2023-08-10
@@ -143,10 +145,14 @@ public class CastSpellAction extends UnitAction {
 
 		var resolutionContext = castContext.getSpellResolutionContext();
 
-		targetResolver.forEachTarget(
-				effectApplication,
-				effectTarget -> appliedEffect = resolutionContext.applyEffect(effectTarget)
-		);
+		if (effectApplication.target() == GROUND_HOSTILE) {
+			appliedEffect = resolutionContext.putPeriodicEffectOnTheGround();
+		} else {
+			targetResolver.forEachTarget(
+					effectApplication,
+					effectTarget -> appliedEffect = resolutionContext.applyEffect(effectTarget)
+			);
+		}
 	}
 
 	public AbilityId getAbilityId() {

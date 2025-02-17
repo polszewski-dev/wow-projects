@@ -84,7 +84,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.numCharges = numCharges;
 		this.effectSource = effectSource;
 		this.sourceSpell = sourceSpell;
-		this.effectUpdateContext = new EffectUpdateContext(owner, this, parentContext);
+		this.effectUpdateContext = new EffectUpdateContext(this, parentContext);
 
 		this.modifierAttributeList = effect.getModifierAttributeList();
 		this.statConversions = effect.getStatConversions();
@@ -139,7 +139,9 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public void onRemovedFromQueue() {
 		super.onRemovedFromQueue();
-		((UnitImpl) target).detach(this);
+		if (target != null) {
+			((UnitImpl) target).detach(this);
+		}
 	}
 
 	private void fireEffectEnded() {
