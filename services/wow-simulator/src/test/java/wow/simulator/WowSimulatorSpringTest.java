@@ -48,6 +48,7 @@ import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.simulator.util.CalcUtils.increaseByPct;
 import static wow.simulator.util.TestEvent.*;
 
 /**
@@ -389,84 +390,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void assertIsIncreasedByPct(int newValue, int originalValue, int pct) {
 		assertThat(newValue).isEqualTo(increaseByPct(originalValue, pct));
-	}
-
-	protected static int increaseByPct(int originalValue, int pct) {
-		return (int) (originalValue * (100 + pct) / 100.0);
-	}
-
-	protected static double increaseByPct(double originalValue, int pct) {
-		return originalValue * (100 + pct) / 100.0;
-	}
-
-	protected static int getPercentOf(int pct, int value) {
-		return (value * pct) / 100;
-	}
-
-	protected static double getPercentOf(double pct, double value) {
-		return (value * pct) / 100;
-	}
-
-	public record SpellInfo(Direct direct, Periodic periodic, int manaCost, double baseCastTime) {
-		public record Direct(int min, int max, double coeff) {
-			public double damage(double coeffBonus, int sp) {
-				return getSpellDmg(min, max, coeff + coeffBonus, sp);
-			}
-		}
-
-		public record Periodic(int value, double coeff, double duration, int numTicks) {
-			public double damage(double coeffBonus, int sp) {
-				return getSpellDmg(value, value, coeff + coeffBonus, sp);
-			}
-
-			public double tickDamage() {
-				return value / (double) numTicks;
-			}
-		}
-
-		public SpellInfo(int manaCost, double baseCastTime) {
-			this(null, null, manaCost, baseCastTime);
-		}
-
-		public SpellInfo withDirect(int min, int max, double coeff) {
-			return new SpellInfo(new Direct(min, max, coeff), periodic, manaCost, baseCastTime);
-		}
-
-		public SpellInfo withPeriodic(int value, double coeff, double duration, int numTicks) {
-			return new SpellInfo(direct, new Periodic(value, coeff, duration, numTicks), manaCost, baseCastTime);
-		}
-
-		public double damage() {
-			return damage(0, 0);
-		}
-
-		public double damage(int sp) {
-			return damage(0, sp);
-		}
-
-		public double damage(double coeffBonus, int sp) {
-			return (direct != null ? direct.damage(coeffBonus, sp) : 0) + (periodic != null ? periodic.damage(coeffBonus, sp) : 0);
-		}
-
-		public double directDamage() {
-			return direct.damage(0, 0);
-		}
-
-		public double tickDamage() {
-			return periodic.tickDamage();
-		}
-
-		public int numTicks() {
-			return periodic().numTicks();
-		}
-
-		public double duration() {
-			return periodic.duration();
-		}
-
-		private static double getSpellDmg(int min, int max, double coeff, int sd) {
-			return (min + max) / 2.0 + getPercentOf(coeff, sd);
-		}
 	}
 
 	protected SimulationContext simulationContext;

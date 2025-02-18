@@ -6,6 +6,7 @@ import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.SHADOW_WORD_PAIN;
 import static wow.commons.model.talent.TalentId.SPIRITUAL_GUIDANCE;
+import static wow.simulator.util.CalcUtils.getPercentOf;
 
 /**
  * User: POlszewski

@@ -7,6 +7,7 @@ import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.talent.TalentId.IMPROVED_VAMPIRIC_EMBRACE;
+import static wow.simulator.util.CalcUtils.getPercentOf;
 
 /**
  * User: POlszewski

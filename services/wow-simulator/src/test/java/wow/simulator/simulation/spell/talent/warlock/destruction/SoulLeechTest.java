@@ -6,6 +6,7 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.talent.TalentId.SOUL_LEECH;
+import static wow.simulator.util.CalcUtils.getPercentOf;
 
 /**
  * User: POlszewski

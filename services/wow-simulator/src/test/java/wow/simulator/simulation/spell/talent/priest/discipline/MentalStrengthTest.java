@@ -6,6 +6,7 @@ import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.talent.TalentId.MENTAL_STRENGTH;
+import static wow.simulator.util.CalcUtils.increaseByPct;
 
 /**
  * User: POlszewski

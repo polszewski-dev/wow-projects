@@ -7,6 +7,7 @@ import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.util.CalcUtils.getPercentOf;
 
 /**
  * User: POlszewski
