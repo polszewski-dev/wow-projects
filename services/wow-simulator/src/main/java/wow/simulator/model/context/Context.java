@@ -62,6 +62,9 @@ public abstract class Context implements SimulationContextSource {
 		switch (cost.resourceType()) {
 			case MANA -> this.lastManaPaid = cost.amount();
 			case HEALTH -> this.lastHealthPaid = cost.amount();
+			default -> {
+				// ignored
+			}
 		}
 	}
 

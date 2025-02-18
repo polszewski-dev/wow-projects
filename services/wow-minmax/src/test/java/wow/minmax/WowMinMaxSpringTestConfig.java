@@ -1,6 +1,5 @@
 package wow.minmax;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,6 +23,5 @@ public class WowMinMaxSpringTestConfig {
 	PlayerCharacterRepository playerCharacterRepository;
 
 	@MockBean
-	@Qualifier("simulator")
 	WebClient simulatorWebClient;
 }

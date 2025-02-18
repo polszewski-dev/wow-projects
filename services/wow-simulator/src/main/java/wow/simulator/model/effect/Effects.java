@@ -58,6 +58,7 @@ public class Effects implements SimulationContextSource, EffectCollection {
 			}
 			case ADD_CHARGE ->
 				matchingEffect.addCharge();
+			default -> throw new IllegalArgumentException();
 		}
 	}
 

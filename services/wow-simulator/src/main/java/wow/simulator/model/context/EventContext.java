@@ -146,13 +146,13 @@ public class EventContext {
 	}
 
 	private boolean isOnCooldown(Event event) {
-		var spell = event.triggeredSpell();
+		var triggeredSpell = event.triggeredSpell();
 
-		if (spell == null || !spell.hasCooldown()) {
+		if (triggeredSpell == null || !triggeredSpell.hasCooldown()) {
 			return false;
 		}
 
-		var cooldownId = CooldownId.of(spell);
+		var cooldownId = CooldownId.of(triggeredSpell);
 
 		return caster.isOnCooldown(cooldownId);
 	}
@@ -211,12 +211,12 @@ public class EventContext {
 	}
 
 	private void triggerSpell(Event event, Effect effect, boolean removeCharge) {
-		var spell = event.triggeredSpell();
+		var triggeredSpell = event.triggeredSpell();
 
-		if (spell.hasCooldown()) {
-			var cooldownId = CooldownId.of(spell);
+		if (triggeredSpell.hasCooldown()) {
+			var cooldownId = CooldownId.of(triggeredSpell);
 
-			caster.triggerCooldown(cooldownId, spell.getCooldown());
+			caster.triggerCooldown(cooldownId, triggeredSpell.getCooldown());
 		}
 
 		if (removeCharge) {
@@ -224,16 +224,16 @@ public class EventContext {
 		}
 
 		var targetResolver = TargetResolver.ofTarget(caster, target);
-		var resolutionContext = new SpellResolutionContext(caster, spell, targetResolver, parentContext, null);
+		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, targetResolver, parentContext, null);
 
-		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, spell));
+		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
 
-		for (var directComponent : spell.getDirectComponents()) {
+		for (var directComponent : triggeredSpell.getDirectComponents()) {
 			resolutionContext.directComponentAction(directComponent);
 		}
 
-		if (spell.getEffectApplication() != null) {
+		if (triggeredSpell.getEffectApplication() != null) {
 			resolutionContext.applyEffect(effect.getSource());
 		}
 	}
@@ -251,7 +251,7 @@ public class EventContext {
 
 	private Spell getSourceSpellOverride(Effect effect, Spell triggeredSpell) {
 		return switch (effect.getSource()) {
-			case AbilitySource s -> s.ability();
+			case AbilitySource(var ability) -> ability;
 			case TalentSource ignored -> triggeredSpell;
 			case ItemSource ignored -> triggeredSpell;
 			default -> null;

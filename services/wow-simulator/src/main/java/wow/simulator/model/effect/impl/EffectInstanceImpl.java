@@ -12,6 +12,7 @@ import wow.commons.model.spell.ClassAbility;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.context.EffectUpdateContext;
 import wow.simulator.model.context.EventContext;
@@ -211,11 +212,10 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void fireStacksMaxed() {
-		switch (getStatus()) {
-			case CREATED ->
-					this.fireStacksMaxed = true;
-			case IN_PROGRESS ->
-					EventContext.fireStacksMaxed(this, effectUpdateContext);
+		if (getStatus() == ActionStatus.CREATED) {
+			this.fireStacksMaxed = true;
+		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
+			EventContext.fireStacksMaxed(this, effectUpdateContext);
 		}
 	}
 

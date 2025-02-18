@@ -10,6 +10,7 @@ import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.ExcelExporter;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 
+import java.io.File;
 import java.util.function.BiFunction;
 
 /**
@@ -44,7 +45,7 @@ public abstract class ScraperTool implements ScraperContextSource {
 
 		exportAll(builder, exporters);
 
-		String xlsFilePath = config.getDirectoryPath() + "/" + fileName;
+		String xlsFilePath = config.getDirectoryPath() + File.pathSeparator + fileName;
 		builder.finish(xlsFilePath);
 
 		log.info("Saved to {}", xlsFilePath);
