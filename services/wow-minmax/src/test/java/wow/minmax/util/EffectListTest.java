@@ -8,7 +8,7 @@ import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.SpecialAbility;
 
@@ -135,7 +135,7 @@ class EffectListTest extends WowMinMaxSpringTest {
 	}
 
 	PlayerProfile profile;
-	PlayerCharacter character;
+	Player character;
 
 	@BeforeEach
 	void setup() {

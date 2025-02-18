@@ -7,7 +7,7 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Item;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.Upgrade;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
@@ -23,7 +23,7 @@ import static wow.commons.model.categorization.ItemSlot.*;
  * Date: 2022-01-08
  */
 public abstract class ItemVariantEnumerator {
-	protected final PlayerCharacter referenceCharacter;
+	protected final Player referenceCharacter;
 	private final ItemSlotGroup slotGroup;
 	private final GemFilter gemFilter;
 	private final CharacterUpgradeContext characterUpgradeContext;
@@ -33,7 +33,7 @@ public abstract class ItemVariantEnumerator {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	protected ItemVariantEnumerator(
-			PlayerCharacter referenceCharacter,
+			Player referenceCharacter,
 			ItemSlotGroup slotGroup,
 			GemFilter gemFilter,
 			ItemService itemService,

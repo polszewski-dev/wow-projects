@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.build.Rotation;
 import wow.minmax.model.AccumulatedRotationStats;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.SpecialAbility;
 import wow.minmax.service.CalculationService;
 import wow.minmax.util.EffectList;
@@ -18,7 +18,7 @@ import java.util.function.DoubleUnaryOperator;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class StatEquivalentFinder {
 	private final double targetDps;
-	private final PlayerCharacter character;
+	private final Player player;
 	private final Rotation rotation;
 
 	private final AccumulatedRotationStats rotationStats;
@@ -27,34 +27,34 @@ public class StatEquivalentFinder {
 
 	public static StatEquivalentFinder forAdditionalSpecialAbility(
 			SpecialAbility specialAbility,
-			PlayerCharacter character,
+			Player player,
 			Rotation rotation,
 			CalculationService calculationService
 	) {
-		var totalStats = EffectList.createSolved(character);
+		var totalStats = EffectList.createSolved(player);
 		var baseEffectList = totalStats.copy();
-		var targetEffectList = EffectList.createSolvedForTarget(character);
+		var targetEffectList = EffectList.createSolvedForTarget(player);
 		var targetStats = withAbility(specialAbility, totalStats);
-		var targetDps = calculationService.getRotationDps(character, rotation, targetStats, EffectList.createSolvedForTarget(character));
-		var rotationStats = calculationService.getAccumulatedRotationStats(character, rotation, baseEffectList, targetEffectList);
+		var targetDps = calculationService.getRotationDps(player, rotation, targetStats, EffectList.createSolvedForTarget(player));
+		var rotationStats = calculationService.getAccumulatedRotationStats(player, rotation, baseEffectList, targetEffectList);
 
-		return new StatEquivalentFinder(targetDps, character, rotation, rotationStats, calculationService);
+		return new StatEquivalentFinder(targetDps, player, rotation, rotationStats, calculationService);
 	}
 
 	public static StatEquivalentFinder forReplacedSpecialAbility(
 			SpecialAbility specialAbility,
-			PlayerCharacter character,
+			Player player,
 			Rotation rotation,
 			CalculationService calculationService
 	) {
-		var totalStats = EffectList.createSolved(character);
+		var totalStats = EffectList.createSolved(player);
 		var baseEffectList = withoutAbility(specialAbility, totalStats);
-		var targetEffectList = EffectList.createSolvedForTarget(character);
+		var targetEffectList = EffectList.createSolvedForTarget(player);
 		var targetStats =  totalStats.copy();
-		var targetDps = calculationService.getRotationDps(character, rotation, targetStats, EffectList.createSolvedForTarget(character));
-		var rotationStats = calculationService.getAccumulatedRotationStats(character, rotation, baseEffectList, targetEffectList);
+		var targetDps = calculationService.getRotationDps(player, rotation, targetStats, EffectList.createSolvedForTarget(player));
+		var rotationStats = calculationService.getAccumulatedRotationStats(player, rotation, baseEffectList, targetEffectList);
 
-		return new StatEquivalentFinder(targetDps, character, rotation, rotationStats, calculationService);
+		return new StatEquivalentFinder(targetDps, player, rotation, rotationStats, calculationService);
 	}
 
 	private static EffectList withAbility(SpecialAbility specialAbility, EffectList totalStats) {
@@ -72,14 +72,14 @@ public class StatEquivalentFinder {
 	public static StatEquivalentFinder forTargetDps(
 			EffectList baseEffectList,
 			double targetDps,
-			PlayerCharacter character,
+			Player player,
 			Rotation rotation,
 			CalculationService calculationService
 	) {
-		var targetEffectList = EffectList.createSolvedForTarget(character);
-		var rotationStats = calculationService.getAccumulatedRotationStats(character, rotation, baseEffectList, targetEffectList);
+		var targetEffectList = EffectList.createSolvedForTarget(player);
+		var rotationStats = calculationService.getAccumulatedRotationStats(player, rotation, baseEffectList, targetEffectList);
 
-		return new StatEquivalentFinder(targetDps, character, rotation, rotationStats, calculationService);
+		return new StatEquivalentFinder(targetDps, player, rotation, rotationStats, calculationService);
 	}
 
 	public double getDpsStatEquivalent() {
@@ -107,6 +107,6 @@ public class StatEquivalentFinder {
 		var copy = rotationStats.copy();
 
 		copy.increasePower(increase);
-		return calculationService.getRotationDps(character, rotation, copy);
+		return calculationService.getRotationDps(player, rotation, copy);
 	}
 }

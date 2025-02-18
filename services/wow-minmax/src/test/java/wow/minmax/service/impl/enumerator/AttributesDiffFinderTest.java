@@ -8,7 +8,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Gem;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.SpecialAbility;
 
@@ -123,7 +123,7 @@ class AttributesDiffFinderTest extends WowMinMaxSpringTest {
 	}
 
 	PlayerProfile profile;
-	PlayerCharacter character;
+	Player character;
 
 	Gem metaGem;
 	Gem redGem;

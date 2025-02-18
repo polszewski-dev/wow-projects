@@ -26,14 +26,14 @@ import static wow.commons.model.effect.component.EventType.*;
 public class SpecialAbilitySolver {
 	private final ProcInfoRepository procInfoRepository;
 
-	public boolean solveAbilities(Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, AccumulatedRotationStats rotationStats, PlayerCharacter character) {
+	public boolean solveAbilities(Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, AccumulatedRotationStats rotationStats, Player player) {
 		boolean recalculate = false;
 
 		for (int i = 0; i < rotationStats.getNonModifierEffectCount(); ++i) {
 			var effect = rotationStats.getNonModifierEffect(i);
 			var stackCount = rotationStats.getNonModifierStackCount(i);
 
-			recalculate |= solveNonModifierEffect(effect, stackCount, snapshot, abilityStats, character);
+			recalculate |= solveNonModifierEffect(effect, stackCount, snapshot, abilityStats, player);
 		}
 
 		for (var activatedAbility : rotationStats.getActivatedAbilities()) {
@@ -43,19 +43,19 @@ public class SpecialAbilitySolver {
 		return recalculate;
 	}
 
-	private boolean solveNonModifierEffect(Effect effect, int stackCount, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, PlayerCharacter character) {
+	private boolean solveNonModifierEffect(Effect effect, int stackCount, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, Player player) {
 		return switch (effect.getEffectId()) {
 			case -17793 -> solveImprovedShadowBoltProc(1, snapshot, abilityStats);
 			case -17796 -> solveImprovedShadowBoltProc(2, snapshot, abilityStats);
 			case -17801 -> solveImprovedShadowBoltProc(3, snapshot, abilityStats);
 			case -17802 -> solveImprovedShadowBoltProc(4, snapshot, abilityStats);
 			case -17803 -> solveImprovedShadowBoltProc(5, snapshot, abilityStats);
-			default -> solveProc(effect, snapshot, abilityStats, character);
+			default -> solveProc(effect, snapshot, abilityStats, player);
 		};
 	}
 
-	private boolean solveProc(Effect effect, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, PlayerCharacter character) {
-		var procEvent = getProcEvent(effect, snapshot.getAbility(), character);
+	private boolean solveProc(Effect effect, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, Player player) {
+		var procEvent = getProcEvent(effect, snapshot.getAbility(), player);
 
 		if (procEvent == null) {
 			return false;
@@ -93,8 +93,8 @@ public class SpecialAbilitySolver {
 		return true;
 	}
 
-	private Event getProcEvent(Effect effect, Ability ability, PlayerCharacter character) {
-		var events = effect.getEvents().stream().filter(x -> hasDamagingSpellEvent(x) && isConditionMet(x, ability, character)).toList();
+	private Event getProcEvent(Effect effect, Ability ability, Player player) {
+		var events = effect.getEvents().stream().filter(x -> hasDamagingSpellEvent(x) && isConditionMet(x, ability, player)).toList();
 
 		return switch (events.size()) {
 			case 0 -> null;
@@ -103,11 +103,11 @@ public class SpecialAbilitySolver {
 		};
 	}
 
-	private boolean isConditionMet(Event event, Ability ability, PlayerCharacter character) {
+	private boolean isConditionMet(Event event, Ability ability, Player player) {
 		if (event.condition().isEmpty()) {
 			return true;
 		}
-		var args = AttributeConditionArgs.forSpell(character, ability, null);
+		var args = AttributeConditionArgs.forSpell(player, ability, null);
 		return check(event.condition(), args);
 	}
 

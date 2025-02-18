@@ -6,7 +6,7 @@ import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.Upgrade;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 2021-12-15
  */
 public interface UpgradeService {
-	List<Upgrade> findUpgrades(PlayerCharacter character, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter);
+	List<Upgrade> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter);
 
-	EquippableItem getBestItemVariant(PlayerCharacter character, Item item, ItemSlot itemSlot, GemFilter gemFilter);
+	EquippableItem getBestItemVariant(Player player, Item item, ItemSlot itemSlot, GemFilter gemFilter);
 }

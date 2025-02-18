@@ -5,7 +5,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestriction;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.config.ViewConfig;
@@ -29,7 +29,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	PlayerCharacterService playerCharacterService;
 
 	PlayerProfile profile;
-	PlayerCharacter character;
+	Player character;
 	PlayerProfileInfo profileInfo;
 
 	@BeforeEach
@@ -44,7 +44,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.getPlayerProfileInfos()).thenReturn(List.of(profileInfo));
 		when(playerProfileService.getPlayerProfile(profile.getProfileId())).thenReturn(profile);
 		when(playerProfileService.createPlayerProfile(any())).thenReturn(profile);
-		when(playerCharacterService.getCharacter(CHARACTER_KEY)).thenReturn(character);
+		when(playerCharacterService.getPlayer(CHARACTER_KEY)).thenReturn(character);
 		when(playerCharacterService.resetEquipment(any())).thenReturn(character);
 		when(playerCharacterService.equipItem(any(), any(), any())).thenReturn(character);
 		when(playerCharacterService.equipItem(any(), any(), any(), anyBoolean(), any())).thenReturn(character);

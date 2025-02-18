@@ -13,7 +13,7 @@ import wow.commons.client.converter.TalentConverter;
 import wow.minmax.config.SimulationConfig;
 import wow.minmax.converter.dto.ActiveEffectConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.CharacterDTO;
@@ -54,32 +54,32 @@ public class SimulatorServiceImpl implements SimulatorService {
 	}
 
 	private SimulationRequestDTO getSimulationRequestDTO(CharacterId characterId) {
-		var character = playerCharacterService.getCharacter(characterId);
+		var player = playerCharacterService.getPlayer(characterId);
 
 		return new SimulationRequestDTO(
-				getCharacterDTO(character),
+				getCharacterDTO(player),
 				simulationConfig.getDuration(),
 				simulationConfig.getRngType()
 		);
 	}
 
-	private CharacterDTO getCharacterDTO(PlayerCharacter character) {
+	private CharacterDTO getCharacterDTO(Player player) {
 		return new CharacterDTO(
 				"Player",
-				character.getCharacterClassId(),
-				character.getRaceId(),
-				character.getLevel(),
-				character.getPhaseId(),
-				characterProfessionConverter.convertList(character.getProfessions().getList()),
-				character.getExclusiveFactions().getList(),
-				equipmentConverter.convert(character.getEquipment()),
-				talentConverter.convertList(character.getTalents().getList()),
-				character.getRole(),
-				character.getActivePetType(),
-				character.getRotation().getTemplate().toString(),
-				activeEffectConverter.convertList(character.getBuffs().getList()),
-				consumableConverter.convertList(character.getConsumables().getList()),
-				getEnemyDTO(character.getTarget())
+				player.getCharacterClassId(),
+				player.getRaceId(),
+				player.getLevel(),
+				player.getPhaseId(),
+				characterProfessionConverter.convertList(player.getProfessions().getList()),
+				player.getExclusiveFactions().getList(),
+				equipmentConverter.convert(player.getEquipment()),
+				talentConverter.convertList(player.getTalents().getList()),
+				player.getRole(),
+				player.getActivePetType(),
+				player.getRotation().getTemplate().toString(),
+				activeEffectConverter.convertList(player.getBuffs().getList()),
+				consumableConverter.convertList(player.getConsumables().getList()),
+				getEnemyDTO(player.getTarget())
 		);
 	}
 

@@ -3,7 +3,7 @@ package wow.minmax.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
 
@@ -46,7 +46,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void hasFeature() {
-		PlayerCharacter character = getCharacter();
+		Player character = getCharacter();
 
 		assertThat(underTest.hasFeature(character, COMBAT_RATINGS)).isTrue();
 		assertThat(underTest.hasFeature(character, GEMS)).isTrue();

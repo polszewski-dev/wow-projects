@@ -36,12 +36,12 @@ public class UpgradeController {
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestParam Map<String, String> requestParams
 	) {
-		var character = playerCharacterService.getCharacter(characterId).copy();
+		var player = playerCharacterService.getPlayer(characterId).copy();
 		var itemFilter = paramToItemFilterConverter.convert(requestParams);
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
 
 		var upgrades = upgradeService.findUpgrades(
-				character, slotGroup, itemFilter, gemFilter
+				player, slotGroup, itemFilter, gemFilter
 		);
 
 		return upgradeConverter.convertList(upgrades);

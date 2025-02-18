@@ -10,7 +10,7 @@ import wow.commons.model.config.Described;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.minmax.model.AttributesDiff;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.SpecialAbility;
 import wow.minmax.util.EffectList;
 
@@ -21,7 +21,7 @@ import java.util.*;
  * Date: 2022-11-09
  */
 public class AttributesDiffFinder {
-	private final PlayerCharacter character;
+	private final Player player;
 	private final EffectList reference;
 	private final EffectList equipped;
 
@@ -31,16 +31,16 @@ public class AttributesDiffFinder {
 	private final List<SpecialAbility> addedAbilities = new ArrayList<>();
 	private final List<SpecialAbility> removedAbilities = new ArrayList<>();
 
-	public AttributesDiffFinder(PlayerCharacter referenceCharacter, ItemSlotGroup slotGroup, List<EquippableItem> itemOption) {
-		this.character = referenceCharacter;
+	public AttributesDiffFinder(Player referencePlayer, ItemSlotGroup slotGroup, List<EquippableItem> itemOption) {
+		this.player = referencePlayer;
 
-		var equippedCharacter = referenceCharacter.copy();
+		var equippedCharacter = referencePlayer.copy();
 		equippedCharacter.getEquipment().equip(slotGroup, itemOption.toArray(EquippableItem[]::new));
 
-		this.reference = new EffectList(referenceCharacter);
+		this.reference = new EffectList(referencePlayer);
 		this.equipped = new EffectList(equippedCharacter);
 
-		referenceCharacter.getEquipment().collectEffects(reference);
+		referencePlayer.getEquipment().collectEffects(reference);
 		equippedCharacter.getEquipment().collectEffects(equipped);
 
 		reference.collectRest();
@@ -65,11 +65,11 @@ public class AttributesDiffFinder {
 		var referenceAttributes = getModifierAttributes(reference);
 
 		for (var attribute : equippedAttributes) {
-			getAccumulator(attribute).add(attribute, character);
+			getAccumulator(attribute).add(attribute, player);
 		}
 
 		for (var attribute : referenceAttributes) {
-			getAccumulator(attribute).subtract(attribute, character);
+			getAccumulator(attribute).subtract(attribute, player);
 		}
 
 		for (var accumulator : accumulators.values()) {
@@ -145,12 +145,12 @@ public class AttributesDiffFinder {
 			this.condition = prototype.condition();
 		}
 
-		void add(Attribute attribute, PlayerCharacter character) {
-			this.value += attribute.getScaledValue(character);
+		void add(Attribute attribute, Player player) {
+			this.value += attribute.getScaledValue(player);
 		}
 
-		void subtract(Attribute attribute, PlayerCharacter character) {
-			this.value -= attribute.getScaledValue(character);
+		void subtract(Attribute attribute, Player player) {
+			this.value -= attribute.getScaledValue(player);
 		}
 
 		Attribute getResult() {

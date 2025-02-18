@@ -6,7 +6,7 @@ import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.ActivatedAbility;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.SpecialAbility;
 
 import java.util.ArrayList;
@@ -115,8 +115,8 @@ public class EffectList extends AbstractEffectCollector {
 		return effectList;
 	}
 
-	public static EffectList createSolvedForTarget(PlayerCharacter character) {
-		return createSolved(character.getTarget());
+	public static EffectList createSolvedForTarget(Player player) {
+		return createSolved(player.getTarget());
 	}
 
 	public void accumulateAttributes(AccumulatedStats result, NonModifierHandler nonModifierHandler) {

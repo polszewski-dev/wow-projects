@@ -21,10 +21,10 @@ import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.impl.NonPlayerCharacterImpl;
-import wow.minmax.model.impl.PlayerCharacterImpl;
+import wow.minmax.model.impl.NonPlayerImpl;
+import wow.minmax.model.impl.PlayerImpl;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -107,28 +107,28 @@ public abstract class WowMinMaxSpringTest {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected PlayerCharacter getCharacter() {
+	protected Player getCharacter() {
 		return getCharacter(CHARACTER_CLASS, RACE);
 	}
 
-	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race) {
+	protected Player getCharacter(CharacterClassId characterClass, RaceId race) {
 		return getCharacter(characterClass, race, LEVEL, PHASE);
 	}
 
-	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+	protected Player getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
 				characterClass,
 				race,
 				level,
 				phase,
-				PlayerCharacterImpl::new
+				PlayerImpl::new
 		);
 
 		var target = characterService.createNonPlayerCharacter(
 				ENEMY_TYPE,
 				level + LVL_DIFF,
 				phase,
-				NonPlayerCharacterImpl::new
+				NonPlayerImpl::new
 		);
 
 		character.setTarget(target);
@@ -138,7 +138,7 @@ public abstract class WowMinMaxSpringTest {
 	}
 
 	protected PlayerProfile getPlayerProfile() {
-		PlayerCharacter character = getCharacter();
+		Player character = getCharacter();
 
 		return new PlayerProfile(
 				PROFILE_ID, PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), LocalDateTime.now(), CHARACTER_KEY

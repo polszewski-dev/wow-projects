@@ -7,8 +7,8 @@ import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
-import wow.minmax.model.NonPlayerCharacter;
-import wow.minmax.model.impl.NonPlayerCharacterImpl;
+import wow.minmax.model.NonPlayer;
+import wow.minmax.model.impl.NonPlayerImpl;
 import wow.minmax.model.persistent.NonPlayerCharacterPO;
 
 /**
@@ -17,14 +17,14 @@ import wow.minmax.model.persistent.NonPlayerCharacterPO;
  */
 @Component
 @AllArgsConstructor
-public class NonPlayerCharacterPOConverter implements Converter<NonPlayerCharacter, NonPlayerCharacterPO>, BackConverter<NonPlayerCharacter, NonPlayerCharacterPO> {
+public class NonPlayerCharacterPOConverter implements Converter<NonPlayer, NonPlayerCharacterPO>, BackConverter<NonPlayer, NonPlayerCharacterPO> {
 	private final PhaseRepository phaseRepository;
 	private final CharacterClassRepository characterClassRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 	private final BuffPOConverter buffPOConverter;
 
 	@Override
-	public NonPlayerCharacterPO doConvert(NonPlayerCharacter source) {
+	public NonPlayerCharacterPO doConvert(NonPlayer source) {
 		return new NonPlayerCharacterPO(
 				source.getPhaseId(),
 				source.getCharacterClassId(),
@@ -35,12 +35,12 @@ public class NonPlayerCharacterPOConverter implements Converter<NonPlayerCharact
 	}
 
 	@Override
-	public NonPlayerCharacter doConvertBack(NonPlayerCharacterPO source) {
+	public NonPlayer doConvertBack(NonPlayerCharacterPO source) {
 		var phase = phaseRepository.getPhase(source.getPhaseId()).orElseThrow();
 		var characterClass = characterClassRepository.getCharacterClass(source.getCharacterClassId(), phase.getGameVersionId()).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(phase.getGameVersionId(), source.getLevel()).orElseThrow();
 
-		return new NonPlayerCharacterImpl(
+		return new NonPlayerImpl(
 				phase,
 				characterClass,
 				source.getCreatureType(),

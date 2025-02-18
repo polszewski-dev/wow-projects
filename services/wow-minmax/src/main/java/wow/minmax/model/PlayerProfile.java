@@ -3,7 +3,6 @@ package wow.minmax.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import wow.character.model.character.Character;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 
@@ -33,16 +32,6 @@ public class PlayerProfile {
 				raceId,
 				lastModified,
 				lastModifiedCharacterId
-		);
-	}
-
-	public CharacterId getCharacterId(PlayerCharacter character) {
-		return new CharacterId(
-				getProfileId(),
-				character.getPhaseId(),
-				character.getLevel(),
-				character.getTarget().getCreatureType(),
-				Character.getLevelDifference(character, character.getTarget())
 		);
 	}
 

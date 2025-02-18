@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.client.converter.TalentConverter;
-import wow.minmax.model.CharacterId;
 import wow.commons.client.dto.TalentDTO;
+import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 
 import java.util.List;
@@ -29,9 +29,9 @@ public class TalentController {
 	public List<TalentDTO> getTalents(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerCharacterService.getCharacter(characterId);
+		var player = playerCharacterService.getPlayer(characterId);
 
-		return character.getTalents().getList().stream()
+		return player.getTalents().getList().stream()
 				.map(talentConverter::convert)
 				.toList();
 	}

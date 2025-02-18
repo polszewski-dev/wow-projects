@@ -15,7 +15,7 @@ import wow.commons.model.item.SocketType;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.service.ItemService;
 import wow.minmax.service.impl.enumerator.FilterOutWorseEnchantChoices;
 import wow.minmax.service.impl.enumerator.FilterOutWorseGemChoices;
@@ -35,49 +35,49 @@ public class ItemServiceImpl implements ItemService {
 	private final GemRepository gemRepository;
 
 	@Override
-	public List<Item> getItemsBySlot(PlayerCharacter character, ItemSlot itemSlot, ItemFilter itemFilter) {
-		return itemRepository.getItemsBySlot(itemSlot, character.getPhaseId()).stream()
-				.filter(item -> character.canEquip(itemSlot, item))
+	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter) {
+		return itemRepository.getItemsBySlot(itemSlot, player.getPhaseId()).stream()
+				.filter(item -> player.canEquip(itemSlot, item))
 				.filter(itemFilter::matchesFilter)
-				.filter(item -> item.isAvailableTo(character))
-				.filter(item -> item.isSuitableFor(character))
+				.filter(item -> item.isAvailableTo(player))
+				.filter(item -> item.isSuitableFor(player))
 				.toList();
 	}
 
 	@Override
-	public List<Enchant> getEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType) {
-		return enchantRepository.getEnchants(itemType, itemSubType, character.getPhaseId()).stream()
-				.filter(enchant -> enchant.isAvailableTo(character))
-				.filter(enchant -> enchant.isSuitableFor(character))
+	public List<Enchant> getEnchants(Player player, ItemType itemType, ItemSubType itemSubType) {
+		return enchantRepository.getEnchants(itemType, itemSubType, player.getPhaseId()).stream()
+				.filter(enchant -> enchant.isAvailableTo(player))
+				.filter(enchant -> enchant.isSuitableFor(player))
 				.toList();
 	}
 
 	@Override
-	public List<Enchant> getBestEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType) {
-		List<Enchant> enchants = getEnchants(character, itemType, itemSubType);
+	public List<Enchant> getBestEnchants(Player player, ItemType itemType, ItemSubType itemSubType) {
+		List<Enchant> enchants = getEnchants(player, itemType, itemSubType);
 		return new FilterOutWorseEnchantChoices(enchants).getResult();
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerCharacter character, SocketType socketType) {
-		return gemRepository.getGems(socketType, character.getPhaseId()).stream()
-				.filter(gem -> gem.isAvailableTo(character))
-				.filter(gem -> gem.isSuitableFor(character))
+	public List<Gem> getGems(Player player, SocketType socketType) {
+		return gemRepository.getGems(socketType, player.getPhaseId()).stream()
+				.filter(gem -> gem.isAvailableTo(player))
+				.filter(gem -> gem.isSuitableFor(player))
 				.toList();
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean uniqueness) {
-		return gemRepository.getGems(socketType, character.getPhaseId()).stream()
+	public List<Gem> getGems(Player player, SocketType socketType, boolean uniqueness) {
+		return gemRepository.getGems(socketType, player.getPhaseId()).stream()
 				.filter(gem -> gem.isEffectivelyUnique() == uniqueness)
-				.filter(gem -> gem.isAvailableTo(character))
-				.filter(gem -> gem.isSuitableFor(character))
+				.filter(gem -> gem.isAvailableTo(player))
+				.filter(gem -> gem.isSuitableFor(player))
 				.toList();
 	}
 
 	@Override
-	public List<Gem> getBestNonUniqueGems(PlayerCharacter character, SocketType socketType) {
-		List<Gem> gems = getGems(character, socketType, false);
+	public List<Gem> getBestNonUniqueGems(Player player, SocketType socketType) {
+		List<Gem> gems = getGems(player, socketType, false);
 		if (socketType == SocketType.META) {
 			return gems;
 		}
@@ -85,8 +85,8 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter) {
-		var finder = new GemComboFinder(character, item.getSocketSpecification(), slotGroup, gemFilter.isUnique(), this);
+	public List<Gem[]> getBestGemCombos(Player player, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter) {
+		var finder = new GemComboFinder(player, item.getSocketSpecification(), slotGroup, gemFilter.isUnique(), this);
 		return finder.getGemCombos();
 	}
 }

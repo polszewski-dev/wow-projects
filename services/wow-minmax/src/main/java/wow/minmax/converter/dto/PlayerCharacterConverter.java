@@ -8,7 +8,7 @@ import wow.commons.client.converter.RaceConverter;
 import wow.commons.client.converter.RacialConverter;
 import wow.commons.client.dto.RaceDTO;
 import wow.minmax.client.dto.PlayerCharacterDTO;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 
 /**
  * User: POlszewski
@@ -16,13 +16,13 @@ import wow.minmax.model.PlayerCharacter;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterConverter implements Converter<PlayerCharacter, PlayerCharacterDTO> {
+public class PlayerCharacterConverter implements Converter<Player, PlayerCharacterDTO> {
 	private final CharacterClassConverter characterClassConverter;
 	private final RaceConverter raceConverter;
 	private final RacialConverter racialConverter;
 
 	@Override
-	public PlayerCharacterDTO doConvert(PlayerCharacter source) {
+	public PlayerCharacterDTO doConvert(Player source) {
 		return new PlayerCharacterDTO(
 				null,
 				characterClassConverter.convert(source.getCharacterClass()),
@@ -30,7 +30,7 @@ public class PlayerCharacterConverter implements Converter<PlayerCharacter, Play
 		);
 	}
 
-	private RaceDTO getRace(PlayerCharacter source) {
+	private RaceDTO getRace(Player source) {
 		var racials = racialConverter.convertList(source.getRacials());
 
 		return raceConverter

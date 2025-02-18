@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.Rotation;
 import wow.character.model.character.Buffs;
+import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedBaseStats;
 import wow.character.model.snapshot.BaseStatsSnapshot;
 import wow.character.model.snapshot.StatSummary;
@@ -51,15 +52,15 @@ public class CalculationServiceImpl implements CalculationService {
 	private final SpecialAbilitySolver specialAbilitySolver;
 
 	@Override
-	public double getSpEquivalent(TalentId talentId, PlayerCharacter character) {
-		var copy = character.copy();
+	public double getSpEquivalent(TalentId talentId, Player player) {
+		var copy = player.copy();
 
 		copy.getTalents().removeTalent(talentId);
 		characterService.updateAfterRestrictionChange(copy);
 
 		var baseEffectList = EffectList.createSolved(copy);
-		var rotationStats = getAccumulatedRotationStats(character, character.getRotation());
-		var targetDps = getRotationDps(character, character.getRotation(), rotationStats);
+		var rotationStats = getAccumulatedRotationStats(player, player.getRotation());
+		var targetDps = getRotationDps(player, player.getRotation(), rotationStats);
 
 		var finder = StatEquivalentFinder.forTargetDps(
 				baseEffectList, targetDps, copy, copy.getRotation(), this
@@ -69,17 +70,17 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public double getRotationDps(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList) {
-		var rotationStats = getAccumulatedRotationStats(character, rotation, effectList, targetEffectList);
+	public double getRotationDps(Player player, Rotation rotation, EffectList effectList, EffectList targetEffectList) {
+		var rotationStats = getAccumulatedRotationStats(player, rotation, effectList, targetEffectList);
 
-		return getRotationDps(character, rotation, rotationStats);
+		return getRotationDps(player, rotation, rotationStats);
 	}
 
 	@Override
-	public double getRotationDps(PlayerCharacter character, Rotation rotation, AccumulatedRotationStats rotationStats) {
+	public double getRotationDps(Player player, Rotation rotation, AccumulatedRotationStats rotationStats) {
 		var calculator = new RotationDpsCalculator(
 				rotation,
-				ability -> getSnapshot(character, ability, rotationStats)
+				ability -> getSnapshot(player, ability, rotationStats)
 		);
 
 		calculator.calculate();
@@ -87,22 +88,22 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation) {
-		var effectList = EffectList.createSolved(character);
-		var targetEffectList = EffectList.createSolvedForTarget(character);
+	public AccumulatedRotationStats getAccumulatedRotationStats(Player player, Rotation rotation) {
+		var effectList = EffectList.createSolved(player);
+		var targetEffectList = EffectList.createSolvedForTarget(player);
 
-		return getAccumulatedRotationStats(character, rotation, effectList, targetEffectList);
+		return getAccumulatedRotationStats(player, rotation, effectList, targetEffectList);
 	}
 
 	@Override
-	public AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList) {
+	public AccumulatedRotationStats getAccumulatedRotationStats(Player player, Rotation rotation, EffectList effectList, EffectList targetEffectList) {
 		var result = new AccumulatedRotationStats();
-		var baseStats = getAccumulatedBaseStats(character, effectList, result);
+		var baseStats = getAccumulatedBaseStats(player, effectList, result);
 
 		result.setBaseStats(baseStats);
 
 		for (var ability : rotation.getAbilities()) {
-			var abilityStats = getAccumulatedDamagingAbilityStats(character, ability, effectList, targetEffectList);
+			var abilityStats = getAccumulatedDamagingAbilityStats(player, ability, effectList, targetEffectList);
 
 			result.addStats(ability, abilityStats);
 		}
@@ -110,23 +111,23 @@ public class CalculationServiceImpl implements CalculationService {
 		return result;
 	}
 
-	private AccumulatedBaseStats getAccumulatedBaseStats(PlayerCharacter character, EffectList effectList, NonModifierHandler nonModifierHandler) {
-		var stats = characterCalculationService.newAccumulatedBaseStats(character);
+	private AccumulatedBaseStats getAccumulatedBaseStats(Player player, EffectList effectList, NonModifierHandler nonModifierHandler) {
+		var stats = characterCalculationService.newAccumulatedBaseStats(player);
 		effectList.accumulateAttributes(stats, nonModifierHandler);
 		return stats;
 	}
 
-	private AccumulatedDamagingAbilityStats getAccumulatedDamagingAbilityStats(PlayerCharacter character, Ability ability, EffectList effectList, EffectList targetEffectList) {
-		var stats = newAccumulatedDamagingAbilityStats(character, ability);
+	private AccumulatedDamagingAbilityStats getAccumulatedDamagingAbilityStats(Player player, Ability ability, EffectList effectList, EffectList targetEffectList) {
+		var stats = newAccumulatedDamagingAbilityStats(player, ability);
 		effectList.accumulateAttributes(stats, null);
 		targetEffectList.accumulateAttributes(stats.getTarget(), null);
 		return stats;
 	}
 
-	private AccumulatedDamagingAbilityStats newAccumulatedDamagingAbilityStats(PlayerCharacter character, Ability ability) {
-		var stats = new AccumulatedDamagingAbilityStats(character);
+	private AccumulatedDamagingAbilityStats newAccumulatedDamagingAbilityStats(Player player, Ability ability) {
+		var stats = new AccumulatedDamagingAbilityStats(player);
 
-		var target = character.getTarget();
+		var target = player.getTarget();
 		var directComponent = getDamagingDirectComponent(ability);
 		var periodicComponent = getDamagingPeriodicComponent(ability);
 
@@ -134,10 +135,10 @@ public class CalculationServiceImpl implements CalculationService {
 		stats.setDirectComponent(directComponent);
 		stats.setPeriodicComponent(periodicComponent);
 
-		var castStats = characterCalculationService.newAccumulatedCastStats(character, ability, target);
-		var costStats = characterCalculationService.newAccumulatedCostStats(character, ability, target);
-		var targetStats = characterCalculationService.newAccumulatedTargetStats(character, ability, PowerType.SPELL_DAMAGE, ability.getSchool());
-		var hitStats = characterCalculationService.newAccumulatedHitStats(character, ability, target);
+		var castStats = characterCalculationService.newAccumulatedCastStats(player, ability, target);
+		var costStats = characterCalculationService.newAccumulatedCostStats(player, ability, target);
+		var targetStats = characterCalculationService.newAccumulatedTargetStats(player, ability, PowerType.SPELL_DAMAGE, ability.getSchool());
+		var hitStats = characterCalculationService.newAccumulatedHitStats(player, ability, target);
 
 		stats.setCast(castStats);
 		stats.setCost(costStats);
@@ -145,14 +146,14 @@ public class CalculationServiceImpl implements CalculationService {
 		stats.setHit(hitStats);
 
 		if (directComponent != null) {
-			var directComponentStats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, directComponent);
+			var directComponentStats = characterCalculationService.newAccumulatedDirectComponentStats(player, ability, target, directComponent);
 
 			stats.setDirect(directComponentStats);
 		}
 
 		if (ability.getAppliedEffect() != null) {
-			var periodicStats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, periodicComponent);
-			var effectDurationStats = characterCalculationService.newAccumulatedDurationStats(character, ability, target);
+			var periodicStats = characterCalculationService.newAccumulatedPeriodicComponentStats(player, ability, target, periodicComponent);
+			var effectDurationStats = characterCalculationService.newAccumulatedDurationStats(player, ability, target);
 
 			stats.setPeriodic(periodicStats);
 			stats.setEffectDuration(effectDurationStats);
@@ -185,51 +186,51 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public RotationStats getRotationStats(PlayerCharacter character, Rotation rotation) {
-		var rotationStats = getAccumulatedRotationStats(character, rotation);
+	public RotationStats getRotationStats(Player player, Rotation rotation) {
+		var rotationStats = getAccumulatedRotationStats(player, rotation);
 
 		var calculator = new RotationStatsCalculator(
 				rotation,
-				ability -> getSnapshot(character, ability, rotationStats.copy())
+				ability -> getSnapshot(player, ability, rotationStats.copy())
 		);
 
 		calculator.calculate();
 		return calculator.getStats();
 	}
 
-	private Snapshot getSnapshot(PlayerCharacter character, Ability ability) {
-		var rotationStats = getAccumulatedRotationStats(character, Rotation.onlyFiller(ability));
+	private Snapshot getSnapshot(Player player, Ability ability) {
+		var rotationStats = getAccumulatedRotationStats(player, Rotation.onlyFiller(ability));
 
-		return getSnapshot(character, ability, rotationStats);
+		return getSnapshot(player, ability, rotationStats);
 	}
 
-	private Snapshot getSnapshot(PlayerCharacter character, Ability ability, AccumulatedRotationStats rotationStats) {
+	private Snapshot getSnapshot(Player player, Ability ability, AccumulatedRotationStats rotationStats) {
 		var abilityStats = rotationStats.get(ability.getAbilityId());
 		var baseStats = rotationStats.getBaseStats();
-		var target = character.getTarget();
+		var target = player.getTarget();
 		var snapshot = new Snapshot();
 
 		snapshot.setAbility(ability);
 
-		var base = characterCalculationService.getBaseStatsSnapshot(character, baseStats);
+		var base = characterCalculationService.getBaseStatsSnapshot(player, baseStats);
 
 		snapshot.setBase(base);
 		abilityStats.solveStatConversions(rotationStats.getStatConversions(), base);
-		calculateDamagingSpellStats(character, ability, abilityStats, target, snapshot, base);
+		calculateDamagingSpellStats(player, ability, abilityStats, target, snapshot, base);
 
-		var recalculate = specialAbilitySolver.solveAbilities(snapshot, abilityStats, rotationStats, character);
+		var recalculate = specialAbilitySolver.solveAbilities(snapshot, abilityStats, rotationStats, player);
 
 		if (recalculate) {
-			calculateDamagingSpellStats(character, ability, abilityStats, target, snapshot, base);
+			calculateDamagingSpellStats(player, ability, abilityStats, target, snapshot, base);
 		}
 
 		return snapshot;
 	}
 
-	private void calculateDamagingSpellStats(PlayerCharacter character, Ability ability, AccumulatedDamagingAbilityStats abilityStats, wow.character.model.character.Character target, Snapshot snapshot, BaseStatsSnapshot base) {
-		var cast = characterCalculationService.getSpellCastSnapshot(character, ability, abilityStats.getCast());
-		var cost = characterCalculationService.getSpellCostSnapshot(character, ability, abilityStats.getCost());
-		var hitPct = characterCalculationService.getSpellHitPct(character, ability, target, abilityStats.getHit());
+	private void calculateDamagingSpellStats(Player player, Ability ability, AccumulatedDamagingAbilityStats abilityStats, Character target, Snapshot snapshot, BaseStatsSnapshot base) {
+		var cast = characterCalculationService.getSpellCastSnapshot(player, ability, abilityStats.getCast());
+		var cost = characterCalculationService.getSpellCostSnapshot(player, ability, abilityStats.getCost());
+		var hitPct = characterCalculationService.getSpellHitPct(player, ability, target, abilityStats.getHit());
 
 		snapshot.setCast(cast);
 		snapshot.setCost(cost);
@@ -238,14 +239,14 @@ public class CalculationServiceImpl implements CalculationService {
 		var targetStats = abilityStats.getTarget();
 
 		if (abilityStats.getDirectComponent() != null) {
-			var direct = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, abilityStats.getDirectComponent(), base, abilityStats.getDirect(), targetStats);
+			var direct = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, abilityStats.getDirectComponent(), base, abilityStats.getDirect(), targetStats);
 
 			snapshot.setDirect(direct);
 		}
 
 		if (ability.getAppliedEffect() != null) {
-			var periodic = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, abilityStats.getPeriodic(), targetStats);
-			var effectDuration = characterCalculationService.getEffectDurationSnapshot(character, ability, target, abilityStats.getEffectDuration(), targetStats);
+			var periodic = characterCalculationService.getPeriodicSpellDamageSnapshot(player, ability, target, abilityStats.getPeriodic(), targetStats);
+			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, target, abilityStats.getEffectDuration(), targetStats);
 
 			snapshot.setPeriodic(periodic);
 			snapshot.setEffectDuration(effectDuration);
@@ -253,14 +254,14 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public SpellStats getSpellStats(PlayerCharacter character, Ability ability) {
-		var snapshot = getSnapshot(character, ability);
+	public SpellStats getSpellStats(Player player, Ability ability) {
+		var snapshot = getSnapshot(player, ability);
 		var totalDamage = snapshot.getTotalDamage();
 		var effectiveCastTime = snapshot.getEffectiveCastTime();
 		var manaCost = snapshot.getManaCost();
 
 		return new SpellStats(
-				character,
+				player,
 				ability,
 				totalDamage,
 				totalDamage / effectiveCastTime,
@@ -275,9 +276,9 @@ public class CalculationServiceImpl implements CalculationService {
 				snapshot.getCoeffDirect(),
 				snapshot.getCoeffDoT(),
 				snapshot.getCritCoeff(),
-				getStatEquivalent(character, ability, HIT_RATING, HIT_PCT),
-				getStatEquivalent(character, ability, CRIT_RATING, CRIT_PCT),
-				getStatEquivalent(character, ability, HASTE_RATING, HASTE_PCT),
+				getStatEquivalent(player, ability, HIT_RATING, HIT_PCT),
+				getStatEquivalent(player, ability, CRIT_RATING, CRIT_PCT),
+				getStatEquivalent(player, ability, HASTE_RATING, HASTE_PCT),
 				snapshot.getDuration(),
 				snapshot.getCooldown(),
 				0,
@@ -285,10 +286,10 @@ public class CalculationServiceImpl implements CalculationService {
 		);
 	}
 
-	private double getStatEquivalent(PlayerCharacter character, Ability ability, AttributeId ratingStat, AttributeId pctStat) {
-		var usesCombatRatings = minmaxConfigRepository.hasFeature(character, COMBAT_RATINGS);
+	private double getStatEquivalent(Player player, Ability ability, AttributeId ratingStat, AttributeId pctStat) {
+		var usesCombatRatings = minmaxConfigRepository.hasFeature(player, COMBAT_RATINGS);
 		var stat = usesCombatRatings ? ratingStat : pctStat;
-		var amount = minmaxConfigRepository.getViewConfig(character).orElseThrow().equivalentAmount();
+		var amount = minmaxConfigRepository.getViewConfig(player).orElseThrow().equivalentAmount();
 
 		var specialAbility = SpecialAbility.of(
 				EffectImpl.newAttributeEffect(
@@ -298,7 +299,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 		var finder = StatEquivalentFinder.forAdditionalSpecialAbility(
 				specialAbility,
-				character,
+				player,
 				Rotation.onlyFiller(ability),
 				this
 		);
@@ -307,14 +308,14 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public StatSummary getCurrentStats(PlayerCharacter character) {
-		return getStats(character);
+	public StatSummary getCurrentStats(Player player) {
+		return getStats(player);
 	}
 
 	@Override
-	public StatSummary getStats(PlayerCharacter character, BuffCategory... buffCategories) {
-		var copy = character.copy();
-		copy.setBuffs(getFilteredBuffs(character.getBuffs(), buffCategories));
+	public StatSummary getStats(Player player, BuffCategory... buffCategories) {
+		var copy = player.copy();
+		copy.setBuffs(getFilteredBuffs(player.getBuffs(), buffCategories));
 		return getStats(copy);
 	}
 
@@ -326,8 +327,8 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public StatSummary getEquipmentStats(PlayerCharacter character) {
-		var copy = character.copy();
+	public StatSummary getEquipmentStats(Player player) {
+		var copy = player.copy();
 
 		copy.resetBuild();
 		copy.resetBuffs();
@@ -342,13 +343,13 @@ public class CalculationServiceImpl implements CalculationService {
 		return withEquipment.difference(withoutEquipment);
 	}
 
-	private StatSummary getStats(PlayerCharacter character) {
-		return characterCalculationService.getStatSummary(character);
+	private StatSummary getStats(Player player) {
+		return characterCalculationService.getStatSummary(player);
 	}
 
 	@Override
-	public SpecialAbilityStats getSpecialAbilityStats(SpecialAbility specialAbility, PlayerCharacter character) {
-		var spEquivalent = getSpEquivalent(specialAbility, character);
+	public SpecialAbilityStats getSpecialAbilityStats(SpecialAbility specialAbility, Player player) {
+		var spEquivalent = getSpEquivalent(specialAbility, player);
 
 		return new SpecialAbilityStats(
 				specialAbility,
@@ -356,11 +357,11 @@ public class CalculationServiceImpl implements CalculationService {
 		);
 	}
 
-	private double getSpEquivalent(SpecialAbility specialAbility, PlayerCharacter character) {
+	private double getSpEquivalent(SpecialAbility specialAbility, Player player) {
 		var finder = StatEquivalentFinder.forReplacedSpecialAbility(
 				specialAbility,
-				character,
-				character.getRotation(),
+				player,
+				player.getRotation(),
 				this
 		);
 

@@ -30,8 +30,8 @@ public class BuffController {
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("buffListType") BuffListType buffListType
 	) {
-		var character = playerCharacterService.getCharacter(characterId);
-		return getBuffs(character, buffListType);
+		var player = playerCharacterService.getPlayer(characterId);
+		return getBuffs(player, buffListType);
 	}
 
 	@PutMapping("{characterId}/{buffListType}")

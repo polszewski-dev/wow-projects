@@ -14,7 +14,7 @@ public record Upgrade(
 		ItemSlotGroup slotGroup,
 		List<EquippableItem> itemOption,
 		double changePct,
-		PlayerCharacter referenceCharacter
+		Player referenceCharacter
 ) {
 	public List<EquippableItem> getItemDifference() {
 		return itemOption;

@@ -10,7 +10,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 
 import java.util.List;
 
@@ -19,17 +19,17 @@ import java.util.List;
  * Date: 2021-12-13
  */
 public interface ItemService {
-	List<Item> getItemsBySlot(PlayerCharacter character, ItemSlot itemSlot, ItemFilter itemFilter);
+	List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter);
 
-	List<Enchant> getEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType);
+	List<Enchant> getEnchants(Player player, ItemType itemType, ItemSubType itemSubType);
 
-	List<Enchant> getBestEnchants(PlayerCharacter character, ItemType itemType, ItemSubType itemSubType);
+	List<Enchant> getBestEnchants(Player player, ItemType itemType, ItemSubType itemSubType);
 
-	List<Gem> getGems(PlayerCharacter character, SocketType socketType);
+	List<Gem> getGems(Player player, SocketType socketType);
 
-	List<Gem> getGems(PlayerCharacter character, SocketType socketType, boolean uniqueness);
+	List<Gem> getGems(Player player, SocketType socketType, boolean uniqueness);
 
-	List<Gem> getBestNonUniqueGems(PlayerCharacter character, SocketType socketType);
+	List<Gem> getBestNonUniqueGems(Player player, SocketType socketType);
 
-	List<Gem[]> getBestGemCombos(PlayerCharacter character, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter);
+	List<Gem[]> getBestGemCombos(Player player, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter);
 }

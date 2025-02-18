@@ -5,7 +5,7 @@ import wow.character.model.equipment.ItemSockets;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.service.ItemService;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public class GemComboFinder {
-	private final PlayerCharacter character;
+	private final Player player;
 	private final ItemSocketSpecification socketSpecification;
 	private final ItemSockets itemSockets;
 	private final ItemSlotGroup slotGroup;
@@ -29,13 +29,13 @@ public class GemComboFinder {
 	private final ItemService itemService;
 
 	public GemComboFinder(
-			PlayerCharacter character,
+			Player player,
 			ItemSocketSpecification socketSpecification,
 			ItemSlotGroup slotGroup,
 			boolean includeUniqueGems,
 			ItemService itemService
 	) {
-		this.character = character;
+		this.player = player;
 		this.socketSpecification = socketSpecification;
 		this.itemSockets = ItemSockets.create(socketSpecification);
 		this.slotGroup = slotGroup;
@@ -96,13 +96,13 @@ public class GemComboFinder {
 
 	private List<Gem> getBestGems(int socketNo) {
 		var socketType = socketSpecification.getSocketType(socketNo);
-		var nonUniqueGems = itemService.getBestNonUniqueGems(character, socketType);
+		var nonUniqueGems = itemService.getBestNonUniqueGems(player, socketType);
 
 		if (!includeUniqueGems) {
 			return nonUniqueGems;
 		}
 
-		var uniqueGems = itemService.getGems(character, socketType, true);
+		var uniqueGems = itemService.getGems(player, socketType, true);
 		
 		uniqueGems = filterOutAlreadyEquipped(uniqueGems);
 
@@ -130,7 +130,7 @@ public class GemComboFinder {
 	private List<Gem> getEquippedUniqueGems() {
 		var result = new ArrayList<Gem>();
 
-		for (var entry : character.getEquipment().toMap().entrySet()) {
+		for (var entry : player.getEquipment().toMap().entrySet()) {
 			var slot = entry.getKey();
 
 			if (slotGroup.getSlots().contains(slot)) {

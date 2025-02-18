@@ -11,10 +11,10 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.converter.persistent.PlayerCharacterPOConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.ViewConfig;
-import wow.minmax.model.impl.NonPlayerCharacterImpl;
-import wow.minmax.model.impl.PlayerCharacterImpl;
+import wow.minmax.model.impl.NonPlayerImpl;
+import wow.minmax.model.impl.PlayerImpl;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.PlayerCharacterRepository;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -42,17 +42,17 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	private final PlayerProfileRepository playerProfileRepository;
 
 	@Override
-	public PlayerCharacter getCharacter(CharacterId characterId) {
+	public Player getPlayer(CharacterId characterId) {
 		return getExistingOrNewCharacter(characterId);
 	}
 
-	private PlayerCharacter getExistingOrNewCharacter(CharacterId characterId) {
+	private Player getExistingOrNewCharacter(CharacterId characterId) {
 		return playerCharacterRepository.findById(characterId.toString())
 				.map(playerCharacterPOConverter::convertBack)
 				.orElseGet(() -> createCharacter(characterId));
 	}
 
-	private PlayerCharacter createCharacter(CharacterId characterId) {
+	private Player createCharacter(CharacterId characterId) {
 		var profileId = characterId.getProfileId().toString();
 		var playerProfile = playerProfileRepository.findById(profileId).orElseThrow();
 
@@ -61,14 +61,14 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 				playerProfile.getRaceId(),
 				characterId.getLevel(),
 				characterId.getPhaseId(),
-				PlayerCharacterImpl::new
+				PlayerImpl::new
 		);
 
 		var targetEnemy = characterService.createNonPlayerCharacter(
 				characterId.getEnemyType(),
 				newCharacter.getLevel() + characterId.getEnemyLevelDiff(),
 				characterId.getPhaseId(),
-				NonPlayerCharacterImpl::new
+				NonPlayerImpl::new
 		);
 
 		newCharacter.setTarget(targetEnemy);
@@ -79,22 +79,22 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
+	public Player equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
 		return equipItem(characterId, slot, item, false, GemFilter.empty());
 	}
 
 	@Override
-	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
-		var character = getCharacter(characterId);
-		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, character);
+	public Player equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
+		var player = getPlayer(characterId);
+		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, player);
 
-		character.equip(itemToEquip, slot);
-		saveCharacter(characterId, character);
-		return character;
+		player.equip(itemToEquip, slot);
+		saveCharacter(characterId, player);
+		return player;
 	}
 
-	private void saveCharacter(CharacterId characterId, PlayerCharacter character) {
-		var characterEntity = playerCharacterPOConverter.convert(character, characterId);
+	private void saveCharacter(CharacterId characterId, Player player) {
+		var characterEntity = playerCharacterPOConverter.convert(player, characterId);
 
 		playerCharacterRepository.save(characterEntity);
 
@@ -106,21 +106,21 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		playerProfileRepository.save(profile);
 	}
 
-	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, PlayerCharacter character) {
+	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, Player player) {
 		if (bestVariant) {
-			return upgradeService.getBestItemVariant(character, item.getItem(), slot, gemFilter);
+			return upgradeService.getBestItemVariant(player, item.getItem(), slot, gemFilter);
 		} else {
 			return item;
 		}
 	}
 
 	@Override
-	public PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
-		var character = getCharacter(characterId);
+	public Player equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+		var player = getPlayer(characterId);
 		var slots = slotGroup.getSlots();
 
 		for (var slot : slots) {
-			character.equip(null, slot);
+			player.equip(null, slot);
 		}
 
 		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
@@ -130,43 +130,43 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		for (int slotIdx = 0; slotIdx < slots.size(); slotIdx++) {
 			var slot = slots.get(slotIdx);
 			var item = items.get(slotIdx);
-			character.equip(item, slot);
+			player.equip(item, slot);
 		}
 
-		saveCharacter(characterId, character);
+		saveCharacter(characterId, player);
 
-		return character;
+		return player;
 	}
 
 	@Override
-	public PlayerCharacter resetEquipment(CharacterId characterId) {
-		var character = getCharacter(characterId);
+	public Player resetEquipment(CharacterId characterId) {
+		var player = getPlayer(characterId);
 
-		character.resetEquipment();
-		saveCharacter(characterId, character);
-		return character;
+		player.resetEquipment();
+		saveCharacter(characterId, player);
+		return player;
 	}
 
 	@Override
-	public PlayerCharacter enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
-		var character = getCharacter(characterId);
+	public Player enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
+		var player = getPlayer(characterId);
 
-		character.getBuffList(buffListType).enable(buffId, rank, enabled);
-		saveCharacter(characterId, character);
-		return character;
+		player.getBuffList(buffListType).enable(buffId, rank, enabled);
+		saveCharacter(characterId, player);
+		return player;
 	}
 
 	@Override
-	public PlayerCharacter enableConsumable(CharacterId characterId, String consumableName, boolean enabled) {
-		var character = getCharacter(characterId);
+	public Player enableConsumable(CharacterId characterId, String consumableName, boolean enabled) {
+		var player = getPlayer(characterId);
 
-		character.getConsumables().enable(consumableName, enabled);
-		saveCharacter(characterId, character);
-		return character;
+		player.getConsumables().enable(consumableName, enabled);
+		saveCharacter(characterId, player);
+		return player;
 	}
 
 	@Override
-	public ViewConfig getViewConfig(PlayerCharacter character) {
-		return minmaxConfigRepository.getViewConfig(character).orElseThrow();
+	public ViewConfig getViewConfig(Player player) {
+		return minmaxConfigRepository.getViewConfig(player).orElseThrow();
 	}
 }

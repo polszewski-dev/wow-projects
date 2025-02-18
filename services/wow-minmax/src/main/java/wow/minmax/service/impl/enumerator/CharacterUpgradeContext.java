@@ -4,7 +4,7 @@ import wow.character.model.build.Rotation;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.AccumulatedRotationStats;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.Upgrade;
 import wow.minmax.service.CalculationService;
 import wow.minmax.util.EffectList;
@@ -16,18 +16,18 @@ import java.util.List;
  * Date: 2023-11-16
  */
 public class CharacterUpgradeContext {
-	private final PlayerCharacter referenceCharacter;
+	private final Player referenceCharacter;
 	private final Rotation rotation;
 	private final ItemSlotGroup slotGroup;
 	private final double referenceDps;
-	private final PlayerCharacter workingCharacter;
+	private final Player workingCharacter;
 	private final EffectList workingEffectList;
 	private final AccumulatedRotationStats rotationStats;
 	private final EffectList targetEffectList;
 
 	private final CalculationService calculationService;
 
-	public CharacterUpgradeContext(PlayerCharacter referenceCharacter, ItemSlotGroup slotGroup, CalculationService calculationService) {
+	public CharacterUpgradeContext(Player referenceCharacter, ItemSlotGroup slotGroup, CalculationService calculationService) {
 		this.referenceCharacter = referenceCharacter;
 		this.rotation = referenceCharacter.getRotation();
 		this.slotGroup = slotGroup;

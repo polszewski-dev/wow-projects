@@ -9,7 +9,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
 import wow.minmax.config.UpgradeConfig;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.Upgrade;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
@@ -35,9 +35,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
-	public List<Upgrade> findUpgrades(PlayerCharacter character, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
+	public List<Upgrade> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
 		var enumerator = new FindUpgradesEnumerator(
-				character, slotGroup, itemFilter, gemFilter, itemService, calculationService, minmaxConfigRepository
+				player, slotGroup, itemFilter, gemFilter, itemService, calculationService, minmaxConfigRepository
 		);
 
 		return enumerator.run().getResult().stream()
@@ -46,8 +46,8 @@ public class UpgradeServiceImpl implements UpgradeService {
 	}
 
 	@Override
-	public EquippableItem getBestItemVariant(PlayerCharacter character, Item item, ItemSlot slot, GemFilter gemFilter) {
-		var referenceCharacter = character.copy();
+	public EquippableItem getBestItemVariant(Player player, Item item, ItemSlot slot, GemFilter gemFilter) {
+		var referenceCharacter = player.copy();
 
 		referenceCharacter.equip(new EquippableItem(item), slot);
 

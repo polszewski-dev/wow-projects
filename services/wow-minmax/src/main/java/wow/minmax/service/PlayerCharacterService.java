@@ -7,7 +7,7 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.ViewConfig;
 
 import java.util.List;
@@ -17,19 +17,19 @@ import java.util.List;
  * Date: 2024-10-22
  */
 public interface PlayerCharacterService {
-	PlayerCharacter getCharacter(CharacterId characterId);
+	Player getPlayer(CharacterId characterId);
 
-	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
+	Player equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
 
-	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter);
+	Player equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter);
 
-	PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
+	Player equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
-	PlayerCharacter resetEquipment(CharacterId characterId);
+	Player resetEquipment(CharacterId characterId);
 
-	PlayerCharacter enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled);
+	Player enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled);
 
-	PlayerCharacter enableConsumable(CharacterId characterId, String consumableName, boolean enabled);
+	Player enableConsumable(CharacterId characterId, String consumableName, boolean enabled);
 
-	ViewConfig getViewConfig(PlayerCharacter character);
+	ViewConfig getViewConfig(Player player);
 }

@@ -4,7 +4,7 @@ import wow.character.model.equipment.GemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.CalculationService;
 import wow.minmax.service.ItemService;
@@ -19,7 +19,7 @@ public class BestItemVariantEnumerator extends ItemVariantEnumerator {
 	private final Item item;
 
 	public BestItemVariantEnumerator(
-			PlayerCharacter referenceCharacter,
+			Player referenceCharacter,
 			ItemSlot slot,
 			GemFilter gemFilter,
 			ItemService itemService,

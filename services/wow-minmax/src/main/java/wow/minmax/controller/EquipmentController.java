@@ -17,7 +17,7 @@ import wow.minmax.client.dto.SocketBonusStatusDTO;
 import wow.minmax.client.dto.SocketStatusDTO;
 import wow.minmax.converter.dto.ParamToGemFilterConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.util.AttributeFormatter;
 
@@ -44,8 +44,8 @@ public class EquipmentController {
 	public EquipmentDTO getEquipment(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerCharacterService.getCharacter(characterId);
-		return equipmentConverter.convert(character.getEquipment());
+		var player = playerCharacterService.getPlayer(characterId);
+		return equipmentConverter.convert(player.getEquipment());
 	}
 
 	@PutMapping("{characterId}/slot/{slot}")
@@ -98,20 +98,20 @@ public class EquipmentController {
 	public EquipmentSocketStatusDTO getEquipmentSocketStatus(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerCharacterService.getCharacter(characterId);
+		var player = playerCharacterService.getPlayer(characterId);
 		return new EquipmentSocketStatusDTO(ItemSlot.getDpsSlots().stream()
-				.collect(Collectors.toMap(x -> x, x -> getItemSocketStatus(character, x)))
+				.collect(Collectors.toMap(x -> x, x -> getItemSocketStatus(player, x)))
 		);
 	}
 
-	private ItemSocketStatusDTO getItemSocketStatus(PlayerCharacter character, ItemSlot itemSlot) {
-		var item = character.getEquippedItem(itemSlot);
+	private ItemSocketStatusDTO getItemSocketStatus(Player player, ItemSlot itemSlot) {
+		var item = player.getEquippedItem(itemSlot);
 
 		if (item == null) {
 			return new ItemSocketStatusDTO(List.of(), new SocketBonusStatusDTO("", false));
 		}
 
-		var equipment = character.getEquipment();
+		var equipment = player.getEquipment();
 		var socketStatuses = getSocketStatuses(item, equipment);
 		var socketBonusStatus = getSocketBonusStatus(item, equipment);
 

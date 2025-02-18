@@ -7,7 +7,7 @@ import wow.commons.client.converter.ConsumableConverter;
 import wow.commons.client.dto.ConsumableDTO;
 import wow.commons.model.item.Consumable;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
 
 import java.util.List;
@@ -28,8 +28,8 @@ public class ConsumableController {
 	public List<ConsumableDTO> getConsumables(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerCharacterService.getCharacter(characterId);
-		return getConsumableDTOs(character);
+		var player = playerCharacterService.getPlayer(characterId);
+		return getConsumableDTOs(player);
 	}
 
 	@PutMapping("{characterId}")
@@ -45,8 +45,8 @@ public class ConsumableController {
 		return getConsumableDTOs(character);
 	}
 
-	private List<ConsumableDTO> getConsumableDTOs(PlayerCharacter character) {
-		var consumables = character.getConsumables();
+	private List<ConsumableDTO> getConsumableDTOs(Player player) {
+		var consumables = player.getConsumables();
 		var availableConsumables = consumables.getAvailable();
 
 		return availableConsumables.stream()

@@ -2,21 +2,23 @@ package wow.minmax.model.impl;
 
 import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
+import wow.character.model.character.Character;
 import wow.character.model.character.*;
+import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.talent.TalentTree;
-import wow.minmax.model.Character;
-import wow.minmax.model.PlayerCharacter;
+import wow.minmax.model.Player;
+import wow.minmax.model.Unit;
 
 /**
  * User: POlszewski
  * Date: 2024-11-20
  */
-public class PlayerCharacterImpl extends wow.character.model.character.impl.PlayerCharacterImpl implements PlayerCharacter {
-	public PlayerCharacterImpl(
+public class PlayerImpl extends PlayerCharacterImpl implements Player {
+	public PlayerImpl(
 			Phase phase,
 			CharacterClass characterClass,
 			Race race,
@@ -28,7 +30,7 @@ public class PlayerCharacterImpl extends wow.character.model.character.impl.Play
 		super(phase, characterClass, race, level, baseStatInfo, combatRatingInfo, talents);
 	}
 
-	protected PlayerCharacterImpl(
+	protected PlayerImpl(
 			Phase phase,
 			CharacterClass characterClass,
 			int level,
@@ -47,21 +49,21 @@ public class PlayerCharacterImpl extends wow.character.model.character.impl.Play
 	}
 
 	@Override
-	public Character getTarget() {
-		return (Character) super.getTarget();
+	public Unit getTarget() {
+		return (Unit) super.getTarget();
 	}
 
 	@Override
-	public void setTarget(wow.character.model.character.Character target) {
-		if (target != null && !(target instanceof Character)) {
+	public void setTarget(Character target) {
+		if (target != null && !(target instanceof Unit)) {
 			throw new IllegalArgumentException();
 		}
 		super.setTarget(target);
 	}
 
 	@Override
-	public PlayerCharacterImpl copy() {
-		var copy = new PlayerCharacterImpl(
+	public PlayerImpl copy() {
+		var copy = new PlayerImpl(
 				getPhase(),
 				getCharacterClass(),
 				getLevel(),

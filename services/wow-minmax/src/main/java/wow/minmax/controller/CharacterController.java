@@ -27,10 +27,10 @@ public class CharacterController {
 	public PlayerCharacterDTO getCharacter(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerCharacterService.getCharacter(characterId);
+		var player = playerCharacterService.getPlayer(characterId);
 
 		return playerCharacterConverter
-				.convert(character)
+				.convert(player)
 				.withCharacterId(characterId.toString());
 	}
 }

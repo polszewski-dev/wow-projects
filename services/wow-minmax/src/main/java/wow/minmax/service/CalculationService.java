@@ -13,25 +13,25 @@ import wow.minmax.util.EffectList;
  * Date: 2021-12-15
  */
 public interface CalculationService {
-	double getSpEquivalent(TalentId talentId, PlayerCharacter character);
+	double getSpEquivalent(TalentId talentId, Player player);
 
-	double getRotationDps(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList);
+	double getRotationDps(Player player, Rotation rotation, EffectList effectList, EffectList targetEffectList);
 
-	double getRotationDps(PlayerCharacter character, Rotation rotation, AccumulatedRotationStats rotationStats);
+	double getRotationDps(Player player, Rotation rotation, AccumulatedRotationStats rotationStats);
 
-	AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation);
+	AccumulatedRotationStats getAccumulatedRotationStats(Player player, Rotation rotation);
 
-	AccumulatedRotationStats getAccumulatedRotationStats(PlayerCharacter character, Rotation rotation, EffectList effectList, EffectList targetEffectList);
+	AccumulatedRotationStats getAccumulatedRotationStats(Player player, Rotation rotation, EffectList effectList, EffectList targetEffectList);
 
-	RotationStats getRotationStats(PlayerCharacter character, Rotation rotation);
+	RotationStats getRotationStats(Player player, Rotation rotation);
 
-	SpellStats getSpellStats(PlayerCharacter character, Ability ability);
+	SpellStats getSpellStats(Player player, Ability ability);
 
-	StatSummary getCurrentStats(PlayerCharacter character);
+	StatSummary getCurrentStats(Player player);
 
-	StatSummary getStats(PlayerCharacter character, BuffCategory... buffCategories);
+	StatSummary getStats(Player player, BuffCategory... buffCategories);
 
-	StatSummary getEquipmentStats(PlayerCharacter character);
+	StatSummary getEquipmentStats(Player player);
 
-	SpecialAbilityStats getSpecialAbilityStats(SpecialAbility specialAbility, PlayerCharacter character);
+	SpecialAbilityStats getSpecialAbilityStats(SpecialAbility specialAbility, Player player);
 }
