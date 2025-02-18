@@ -12,7 +12,6 @@ import wow.simulator.script.ConditionalSpellCast;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.spell.AbilityId.*;
 
 /**
@@ -82,10 +81,14 @@ public class RotationScript implements AIScript {
 	}
 
 	private ConditionalSpellCast getConditionalCast(AbilityId abilityId) {
-		if (player.getCharacterClassId() == WARLOCK) {
-			return WarlockActionConditions.forAbility(abilityId).orElseThrow();
-		}
-		throw new IllegalArgumentException();
+		return switch (player.getCharacterClassId()) {
+			case WARLOCK ->
+					WarlockActionConditions.forAbility(abilityId).orElseThrow();
+			case PRIEST ->
+					PriestActionConditions.forAbility(abilityId).orElseThrow();
+			default ->
+					throw new UnsupportedOperationException();
+		};
 	}
 
 	private AbilityId getFiller() {

@@ -194,11 +194,16 @@ public class SpecialAbilitySolver {
 	}
 
 	private double getProcUptime(Event procEvent, Snapshot snapshot, double procChance) {
-		var duration = procEvent.triggeredSpell().getEffectApplication().duration().getSeconds();
+		var duration = procEvent.triggeredSpell().getEffectApplication().duration();
 		var cooldown = procEvent.triggeredSpell().getCooldown().getSeconds();
+
+		if (duration.isInfinite() && cooldown == 0) {
+			return 1;
+		}
+
 		var castTime = snapshot.getEffectiveCastTime();
 
-		return getProcUptime(procChance, duration, cooldown, castTime);
+		return getProcUptime(procChance, duration.getSeconds(), cooldown, castTime);
 	}
 
 	private double getProcUptime(double procChance, double duration, double internalCooldown, double castTime) {
