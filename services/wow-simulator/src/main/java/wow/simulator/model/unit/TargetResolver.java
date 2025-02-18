@@ -9,11 +9,11 @@ import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static wow.commons.model.spell.SpellTarget.*;
+import static wow.commons.model.spell.SpellTarget.FRIEND;
+import static wow.commons.model.spell.SpellTarget.FRIENDS_PARTY;
 
 /**
  * User: POlszewski
@@ -21,16 +21,17 @@ import static wow.commons.model.spell.SpellTarget.*;
  */
 public class TargetResolver implements SimulationContextSource {
 	private final Unit self;
-	private final Map<SpellTarget, Unit> targets;
+	private Unit friend;
+	private Unit enemy;
+	private Unit target;
 
-	private TargetResolver(Unit self, Map<SpellTarget, Unit> targets) {
+	private TargetResolver(Unit self) {
 		Objects.requireNonNull(self);
 		this.self = self;
-		this.targets = targets;
 	}
 
 	public static TargetResolver ofSelf(Unit self) {
-		return new TargetResolver(self, Map.of());
+		return new TargetResolver(self);
 	}
 
 	public static TargetResolver ofFriend(Unit self, Unit friend) {
@@ -38,7 +39,9 @@ public class TargetResolver implements SimulationContextSource {
 		if (!Unit.areFriendly(self, friend)) {
 			throw new IllegalArgumentException();
 		}
-		return new TargetResolver(self, Map.of(FRIEND, friend));
+		var targetResolver = new TargetResolver(self);
+		targetResolver.friend = friend;
+		return targetResolver;
 	}
 
 	public static TargetResolver ofEnemy(Unit self, Unit enemy) {
@@ -46,12 +49,16 @@ public class TargetResolver implements SimulationContextSource {
 		if (!Unit.areHostile(self, enemy)) {
 			throw new IllegalArgumentException();
 		}
-		return new TargetResolver(self, Map.of(ENEMY, enemy));
+		var targetResolver = new TargetResolver(self);
+		targetResolver.enemy = enemy;
+		return targetResolver;
 	}
 
 	public static TargetResolver ofTarget(Unit self, Unit target) {
 		Objects.requireNonNull(target);
-		return new TargetResolver(self, Map.of(TARGET, target));
+		var targetResolver = new TargetResolver(self);
+		targetResolver.target = target;
+		return targetResolver;
 	}
 
 	public boolean hasValidTarget(SpellTarget targetType) {
@@ -86,18 +93,22 @@ public class TargetResolver implements SimulationContextSource {
 					List.of(self);
 			case PET ->
 					List.of();//todo
+			case FRIEND ->
+					List.of(friend);
+			case ENEMY ->
+					List.of(enemy);
+			case TARGET ->
+					List.of(target);
 			case PARTY ->
 					self.getParty().getPlayers();
 			case FRIENDS_PARTY ->
-					targets.get(FRIEND).getParty().getPlayers();
+					friend.getParty().getPlayers();
 			case ENEMY_AOE ->
 					getSimulation().getEnemiesOf(self);
 			case FRIEND_AOE ->
 					getSimulation().getFriendsOf(self);
-			default -> {
-				var unit = targets.get(targetType);
-				yield unit != null ? List.of(unit) : List.of();
-			}
+			default ->
+					throw new IllegalArgumentException(targetType + "");
 		};
 	}
 
