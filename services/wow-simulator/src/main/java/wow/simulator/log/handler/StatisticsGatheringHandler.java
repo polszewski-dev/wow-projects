@@ -6,12 +6,14 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
-import wow.simulator.model.action.ActionId;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.CooldownInstanceId;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
-import wow.simulator.model.stats.*;
+import wow.simulator.model.stats.AbilityTimeEntry;
+import wow.simulator.model.stats.CooldownTimeEntry;
+import wow.simulator.model.stats.EffectTimeEntry;
+import wow.simulator.model.stats.Stats;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
@@ -24,7 +26,6 @@ import wow.simulator.simulation.TimeSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 
@@ -40,7 +41,8 @@ public class StatisticsGatheringHandler extends DefaultGameLogHandler implements
 	private Clock clock;
 	private Time simulationStart;
 
-	private final Map<ActionId, AbilityTimeEntry> casts = new LinkedHashMap<>();
+	private AbilityTimeEntry currentCast;
+
 	private final Map<EffectInstanceId, EffectTimeEntry> effects = new LinkedHashMap<>();
 	private final Map<CooldownInstanceId, CooldownTimeEntry> cooldowns = new LinkedHashMap<>();
 
@@ -51,61 +53,52 @@ public class StatisticsGatheringHandler extends DefaultGameLogHandler implements
 
 	@Override
 	public void endGcd(UnitAction sourceAction) {
-		endCast(sourceAction, timeEntry -> timeEntry.setGcdEnd(now()));
+		if (sourceAction.getOwner() != player) {
+			return;
+		}
+		currentCast.setGcdEnd(now());
 	}
 
 	@Override
 	public void beginCast(CastSpellAction action) {
-		beginCast(action, action.getAbility());
+		if (action.getOwner() != player) {
+			return;
+		}
+		finishCurrentCast();
+		currentCast = new AbilityTimeEntry(action.getAbility(), now());
+	}
+
+	private void finishCurrentCast() {
+		if (currentCast != null) {
+			currentCast.complete(now());
+			stats.addCastTime(
+					currentCast.getAbility(), currentCast.getElapsedTime(), currentCast.isFinished()
+			);
+		}
 	}
 
 	@Override
 	public void endCast(CastSpellAction action) {
-		var ability = action.getAbility();
-		endCast(action, ability);
+		if (action.getOwner() != player) {
+			return;
+		}
+		currentCast.setEnd(now());
 	}
 
 	@Override
 	public void beginChannel(ChannelSpellAction action) {
-		beginCast(action, action.getAbility());
+		if (action.getOwner() != player) {
+			return;
+		}
+		currentCast.setChannelBegin(now());
 	}
 
 	@Override
 	public void endChannel(ChannelSpellAction action) {
-		endCast(action, action.getAbility());
-	}
-
-	private void beginCast(UnitAction action, Ability ability) {
 		if (action.getOwner() != player) {
 			return;
 		}
-
-		casts.put(action.getActionId(), new AbilityTimeEntry(ability, now()));
-	}
-
-	private void endCast(UnitAction action, Ability ability) {
-		endCast(action, timeEntry -> {
-			if (ability.getCastInfo().ignoresGcd()) {
-				timeEntry.complete(now());
-			} else {
-				timeEntry.setEnd(now());
-			}
-		});
-	}
-
-	private void endCast(UnitAction action, Consumer<TimeEntry> consumer) {
-		if (action.getOwner() != player) {
-			return;
-		}
-
-		var timeEntry = casts.get(action.getActionId());
-
-		consumer.accept(timeEntry);
-
-		if (timeEntry.isComplete()) {
-			casts.remove(action.getActionId());
-			stats.addCastTime(timeEntry.getAbility(), timeEntry.getElapsedTime(), true);
-		}
+		currentCast.setChannelEnd(now());
 	}
 
 	@Override
@@ -165,14 +158,14 @@ public class StatisticsGatheringHandler extends DefaultGameLogHandler implements
 	@Override
 	public void simulationEnded() {
 		stats.setSimulationEnd(now());
-		for (var timeEntry : casts.values()) {
-			timeEntry.complete(now());
-			stats.addCastTime(timeEntry.getAbility(), timeEntry.getElapsedTime(), false);
-		}
+
+		finishCurrentCast();
+
 		for (var timeEntry : effects.values()) {
 			timeEntry.complete(now());
 			stats.addEffectUptime(timeEntry.getEffectId(), timeEntry.getElapsedTime());
 		}
+
 		for (var timeEntry : cooldowns.values()) {
 			timeEntry.complete(now());
 			stats.addCooldownUptime(timeEntry.getCooldownId(), timeEntry.getElapsedTime());

@@ -12,28 +12,20 @@ import wow.simulator.model.time.Time;
 @Getter
 @Setter
 public abstract sealed class TimeEntry permits AbilityTimeEntry, EffectTimeEntry, CooldownTimeEntry {
-	private final Time begin;
-	private Time end;
-	private Time gcdEnd;
+	protected final Time begin;
+	protected Time end;
 
 	protected TimeEntry(Time begin) {
 		this.begin = begin;
 	}
 
 	public Duration getElapsedTime() {
-		return end.max(gcdEnd).subtract(begin);
+		return end.subtract(begin);
 	}
 
 	public void complete(Time time) {
 		if (end == null) {
 			this.end = time;
 		}
-		if (gcdEnd == null) {
-			this.gcdEnd = time;
-		}
-	}
-
-	public boolean isComplete() {
-		return end != null && gcdEnd != null;
 	}
 }
