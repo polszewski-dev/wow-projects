@@ -112,7 +112,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var augmentedAbilities = params.augmentedAbilities();
 		var maxStacks = getOptionalInteger(params.maxStacks()).orElse(1);
 		var periodicComponent = getPeriodicComponent(params);
-		var tickInterval = getTickInterval(params);
 		var modifierComponent = getModifierComponent(params);
 		var absorptionComponent = getAbsorptionComponent(params);
 		var statConversions = getStatConversions(params);
@@ -122,7 +121,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 
 		effect.setMaxStacks(maxStacks);
 		effect.setPeriodicComponent(periodicComponent);
-		effect.setTickInterval(tickInterval);
 		effect.setModifierComponent(modifierComponent);
 		effect.setAbsorptionComponent(absorptionComponent);
 		effect.setStatConversions(statConversions);
@@ -140,14 +138,14 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 
 		var target = SpellTarget.TARGET;
 		var type = periodicComponentParams.type();
-		var tickInterval = getTickInterval(params);
+		var tickInterval = getTickInterval(periodicComponentParams);
 		var duration = getOptionalDuration(params.duration()).orElseThrow();
 		var numTicks = getNumTicks(duration, tickInterval);
 		var coefficient = periodicComponentParams.coefficient();
 		var amount = getTotalAmount(periodicComponentParams, numTicks);
 		var tickScheme = getTickScheme(periodicComponentParams.tickWeights());
 
-		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickScheme);
+		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickInterval, tickScheme);
 	}
 
 	private int getNumTicks(Duration duration, Duration tickInterval) {
@@ -208,7 +206,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		return new AbsorptionComponent(coefficient, condition, min, max);
 	}
 
-	private Duration getTickInterval(EffectPatternParams params) {
+	private Duration getTickInterval(PeriodicComponentParams params) {
 		var tickInterval = params.tickInterval();
 
 		if (tickInterval == null) {

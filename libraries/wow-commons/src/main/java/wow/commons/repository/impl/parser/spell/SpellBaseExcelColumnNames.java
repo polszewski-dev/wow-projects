@@ -35,8 +35,8 @@ public final class SpellBaseExcelColumnNames {
 	public static final String PERIODIC_TYPE = "type";
 	public static final String PERIODIC_AMOUNT = "amount";
 	public static final String PERIODIC_NUM_TICKS = "num ticks";
+	public static final String PERIODIC_TICK_INTERVAL = "tick interval";
 	public static final String PERIODIC_TICK_WEIGHTS = "tick weights";
-	public static final String TICK_INTERVAL = "tick interval";
 	public static final String AUGMENTED_ABILITY = "augmented ability";
 	public static final String STACKS_MAX = "stacks: max";
 	public static final String SCOPE = "scope";

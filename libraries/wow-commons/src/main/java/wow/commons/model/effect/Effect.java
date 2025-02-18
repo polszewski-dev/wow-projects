@@ -33,7 +33,9 @@ public interface Effect extends Described, TimeRestricted {
 
 	PeriodicComponent getPeriodicComponent();
 
-	Duration getTickInterval();
+	default Duration getTickInterval() {
+		return getPeriodicComponent() != null ? getPeriodicComponent().tickInterval() : null;
+	}
 
 	ModifierComponent getModifierComponent();
 
@@ -57,7 +59,6 @@ public interface Effect extends Described, TimeRestricted {
 		return hasAugmentedAbilities() ||
 				hasPeriodicComponent() ||
 				hasAbsorptionComponent() ||
-				getTickInterval() != null ||
 				hasStatConversions() ||
 				hasEvents();
 	}

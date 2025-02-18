@@ -1,5 +1,6 @@
 package wow.commons.model.effect.component;
 
+import wow.commons.model.Duration;
 import wow.commons.model.spell.Coefficient;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.SpellTarget;
@@ -17,12 +18,14 @@ public record PeriodicComponent(
 		Coefficient coefficient,
 		int amount,
 		int numTicks,
+		Duration tickInterval,
 		TickScheme tickScheme
 ) implements EffectComponent {
 	public PeriodicComponent {
 		Objects.requireNonNull(target);
 		Objects.requireNonNull(type);
 		Objects.requireNonNull(coefficient);
+		Objects.requireNonNull(tickInterval);
 		Objects.requireNonNull(tickScheme);
 	}
 

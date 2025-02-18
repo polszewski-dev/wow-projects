@@ -15,7 +15,6 @@ import java.util.Objects;
 public record EffectPatternParams(
 		List<AbilityId> augmentedAbilities,
 		PeriodicComponentParams periodicComponent,
-		String tickInterval,
 		ModifierComponentParams modifierComponent,
 		AbsorptionComponentParams absorptionComponent,
 		List<StatConversionParams> statConversions,
@@ -59,7 +58,6 @@ public record EffectPatternParams(
 		return periodicComponent != null ||
 				modifierComponent != null ||
 				absorptionComponent != null ||
-				tickInterval != null ||
 				!statConversions.isEmpty() ||
 				!events.isEmpty();
 	}

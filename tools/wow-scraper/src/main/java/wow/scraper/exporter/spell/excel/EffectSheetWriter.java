@@ -30,7 +30,6 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		writeTimeRestrictionHeader();
 		setHeader(STACKS_MAX);
 		writePeriodicComponentHeader();
-		setHeader(TICK_INTERVAL);
 		setHeader(AUGMENTED_ABILITY);
 		writeModifierComponentHeader(maxModAttributes);
 		writeAbsorptionComponentHeader();
@@ -46,7 +45,6 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		writeTimeRestriction(effect.getTimeRestriction());
 		setValue(effect.getMaxStacks());
 		writePeriodicComponent(effect);
-		setValue(effect.getTickInterval());
 		setValue(effect.getAugmentedAbilities());
 		writeModifierComponent(effect, maxModAttributes);
 		writeAbsorptionComponent(effect);
@@ -62,6 +60,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setHeader(COEFF_SCHOOL, prefix);
 		setHeader(PERIODIC_AMOUNT, prefix);
 		setHeader(PERIODIC_NUM_TICKS, prefix);
+		setHeader(PERIODIC_TICK_INTERVAL, prefix);
 		setHeader(PERIODIC_TICK_WEIGHTS, prefix);
 	}
 
@@ -69,7 +68,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		var periodicComponent = effect.getPeriodicComponent();
 
 		if (periodicComponent == null) {
-			fillRemainingEmptyCols(6);
+			fillRemainingEmptyCols(7);
 			return;
 		}
 
@@ -78,6 +77,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setValue(periodicComponent.school());
 		setValue(periodicComponent.amount());
 		setValue(periodicComponent.numTicks());
+		setValue(periodicComponent.tickInterval());
 		setValue(getTickWeights(periodicComponent), Object::toString);
 	}
 

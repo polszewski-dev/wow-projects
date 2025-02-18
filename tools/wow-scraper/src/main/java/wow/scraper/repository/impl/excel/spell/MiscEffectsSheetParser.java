@@ -66,9 +66,6 @@ public class MiscEffectsSheetParser extends AbstractSpellPatternSheetParser {
 		if (params.absorptionComponent() != null) {
 			throw new IllegalArgumentException("No absorption component allowed");
 		}
-		if (params.tickInterval() != null) {
-			throw new IllegalArgumentException("No timer component allowed");
-		}
 		if (!"INF".equalsIgnoreCase(params.duration())) {
 			throw new IllegalArgumentException("Duration can only be INF");
 		}

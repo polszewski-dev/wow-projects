@@ -26,6 +26,7 @@ public enum ComponentType {
 	HEAL_DAMAGE_TAKEN_PCT,
 	REFUND_COST_PCT,
 	EXTRA_ATTACKS,
+	ADD_STACK,
 	THREAT_REDUCTION;
 
 	public static ComponentType parse(String value) {

@@ -223,7 +223,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 	private void validateEffect(Effect effect) {
 		if (effect.hasAugmentedAbilities() &&
-			(effect.hasPeriodicComponent() || effect.hasAbsorptionComponent() || effect.getTickInterval() != null)) {
+			(effect.hasPeriodicComponent() || effect.hasAbsorptionComponent())) {
 			throw new IllegalArgumentException();
 		}
 

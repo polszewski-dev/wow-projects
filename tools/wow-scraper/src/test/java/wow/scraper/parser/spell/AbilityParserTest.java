@@ -44,9 +44,7 @@ class AbilityParserTest extends SpellParserTest {
 		var periodicComponent = effect.getPeriodicComponent();
 		var tickScheme = new TickScheme(List.of(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5));
 
-		assertPeriodicComponent(periodicComponent, DAMAGE, 120, SHADOW, 1356, 12, tickScheme);
-		assertThat(effect.getTickInterval()).isEqualTo(Duration.seconds(2));
-
+		assertPeriodicComponent(periodicComponent, DAMAGE, 120, SHADOW, 1356, 12, 2, tickScheme);
 		assertThat(matcher.getAbilityCategory()).isEqualTo(AbilityCategory.CURSES);
 	}
 	
@@ -61,8 +59,7 @@ class AbilityParserTest extends SpellParserTest {
 
 		var effect = ability.getEffectApplication().effect();
 
-		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 63.63, FIRE, 615, 5, TickScheme.DEFAULT);
-		assertThat(effect.getTickInterval()).isEqualTo(Duration.seconds(3));
+		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 63.63, FIRE, 615, 5, 3, TickScheme.DEFAULT);
 	}
 
 	@Test
@@ -73,8 +70,7 @@ class AbilityParserTest extends SpellParserTest {
 
 		var effect = ability.getEffectApplication().effect();
 
-		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 71.43, SHADOW, 540, 5, TickScheme.DEFAULT);
-		assertThat(effect.getTickInterval()).isEqualTo(Duration.seconds(1));
+		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 71.43, SHADOW, 540, 5, 1, TickScheme.DEFAULT);
 	}
 
 	@Test

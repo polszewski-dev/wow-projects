@@ -42,11 +42,12 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertThat(direct.bonus().requiredEffect()).isEqualTo(bonusRequiredEffect);
 	}
 
-	static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double tickCoeff, SpellSchool school, int amount, int numTicks, TickScheme tickScheme) {
+	static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double tickCoeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
 		assertThat(periodic.type()).isEqualTo(type);
 		assertCoefficient(tickCoeff, school, periodic.coefficient());
 		assertThat(periodic.amount()).isEqualTo(amount);
 		assertThat(periodic.numTicks()).isEqualTo(numTicks);
+		assertThat(periodic.tickInterval().getSeconds()).isEqualTo(tickInterval);
 		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
 	}
 

@@ -2,7 +2,6 @@ package wow.commons.model.effect.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.config.Description;
@@ -31,7 +30,6 @@ public class EffectImpl implements Effect {
 	private EffectScope scope;
 	private EffectExclusionGroup exclusionGroup;
 	private PeriodicComponent periodicComponent;
-	private Duration tickInterval;
 	private ModifierComponent modifierComponent;
 	private List<Attribute> modifierAttributeList;
 	private AbsorptionComponent absorptionComponent;

@@ -1,6 +1,5 @@
 package wow.commons.model.effect.impl;
 
-import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -62,11 +61,6 @@ public class EmptyEffect implements Effect {
 
 	@Override
 	public PeriodicComponent getPeriodicComponent() {
-		return null;
-	}
-
-	@Override
-	public Duration getTickInterval() {
 		return null;
 	}
 

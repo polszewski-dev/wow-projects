@@ -220,8 +220,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var periodicComponent = effect.getPeriodicComponent();
 
-		assertPeriodicComponent(periodicComponent, ComponentType.DAMAGE, 100, SHADOW, 822, 6, TickScheme.DEFAULT);
-		assertThat(effect.getTickInterval()).isEqualTo(Duration.seconds(3));
+		assertPeriodicComponent(periodicComponent, ComponentType.DAMAGE, 100, SHADOW, 822, 6, 3, TickScheme.DEFAULT);
 	}
 
 	@Test
@@ -474,8 +473,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var triggeredEffect = spell.getEffectApplication().effect();
 
-		assertPeriodicComponent(triggeredEffect.getPeriodicComponent(), ComponentType.MANA_GAIN, 0, null, 100, 5, TickScheme.DEFAULT);
-		assertThat(triggeredEffect.getTickInterval()).isEqualTo(Duration.seconds(2));
+		assertPeriodicComponent(triggeredEffect.getPeriodicComponent(), ComponentType.MANA_GAIN, 0, null, 100, 5, 2, TickScheme.DEFAULT);
 	}
 
 	@Test

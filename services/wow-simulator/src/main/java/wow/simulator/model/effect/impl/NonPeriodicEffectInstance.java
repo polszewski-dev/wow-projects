@@ -30,9 +30,4 @@ public class NonPeriodicEffectInstance extends EffectInstanceImpl {
 	protected void doSetUp() {
 		fromNowAfter(duration, () -> {});
 	}
-
-	@Override
-	public Duration getTickInterval() {
-		return null;
-	}
 }

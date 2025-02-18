@@ -125,10 +125,11 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var colType = column(PERIODIC_TYPE).prefixed(prefix);
 		var colTotalAmount = column("total amount").prefixed(prefix);
 		var colTickAmount = column("tick amount").prefixed(prefix);
+		var colTickInterval = column(PERIODIC_TICK_INTERVAL).prefixed(prefix);
 		var colTickWeights = column(PERIODIC_TICK_WEIGHTS, true).prefixed(prefix);
 
 		if (hasEmptyTarget(prefix)) {
-			assertAllColumnsAreEmpty(colType, colTotalAmount, colTickAmount, colTickWeights);
+			assertAllColumnsAreEmpty(colType, colTotalAmount, colTickAmount, colTickInterval, colTickWeights);
 			assertCoefficientEmpty(prefix);
 			return null;
 		}
@@ -138,9 +139,10 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var coeff = getCoefficient(prefix);
 		var totalAmount = colTotalAmount.getString(null);
 		var tickAmount = colTickAmount.getString(null);
+		var tickInterval = colTickInterval.getString(null);
 		var tickWeights = colTickWeights.getString(null);
 
-		return new PeriodicComponentParams(target, type, coeff, totalAmount, tickAmount, tickWeights);
+		return new PeriodicComponentParams(target, type, coeff, totalAmount, tickAmount, tickInterval, tickWeights);
 	}
 
 	private ModifierComponentParams getModifierComponentParams() {
@@ -295,12 +297,10 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	}
 
 	private final ExcelColumn colAugmentedAbility = column(AUGMENTED_ABILITY);
-	private final ExcelColumn colTickInterval = column(TICK_INTERVAL);
 
 	private EffectPatternParams readEffectPatternParams() {
 		var augmentedAbilities = colAugmentedAbility.getList(AbilityId::parse);
 		var periodicComponent = getPeriodicComponentParams();
-		var tickInterval = colTickInterval.getString(null);
 		var modifierComponent = getModifierComponentParams();
 		var absorptionComponent = getAbsorptionComponentParams();
 		var statConversions = getStatConversionParams();
@@ -311,7 +311,6 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var params = new EffectPatternParams(
 				augmentedAbilities,
 				periodicComponent,
-				tickInterval,
 				modifierComponent,
 				absorptionComponent,
 				statConversions,

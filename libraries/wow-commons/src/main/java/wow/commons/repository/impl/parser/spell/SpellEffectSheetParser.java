@@ -38,7 +38,6 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colMaxStacks = column(STACKS_MAX);
 	private final ExcelColumn colScope = column(SCOPE);
 	private final ExcelColumn colExclusionGroup = column(EXCLUSION_GROUP);
-	private final ExcelColumn colTickInterval = column(TICK_INTERVAL, true);
 
 	protected Effect getEffect() {
 		var effect = newEffect();
@@ -49,7 +48,6 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var scope = colScope.getEnum(EffectScope::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(EffectExclusionGroup::parse, null);
 		var periodicComponent = getPeriodicComponent();
-		var tickInterval = colTickInterval.getDuration(null);
 		var modifierComponent = getModifierComponent(maxModAttributes);
 		var absorptionComponent = getAbsorptionComponent();
 		var statConversions = getStatConversions();
@@ -62,7 +60,6 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		effect.setScope(scope);
 		effect.setExclusionGroup(exclusionGroup);
 		effect.setPeriodicComponent(periodicComponent);
-		effect.setTickInterval(tickInterval);
 		effect.setModifierComponent(modifierComponent);
 		effect.setAbsorptionComponent(absorptionComponent);
 		effect.setStatConversions(statConversions);
@@ -73,6 +70,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colPeriodicType = column(PERIODIC_TYPE, true).prefixed(PERIODIC_PREFIX);
 	private final ExcelColumn colPeriodicAmount = column(PERIODIC_AMOUNT).prefixed(PERIODIC_PREFIX);
 	private final ExcelColumn colPeriodicNumTicks = column(PERIODIC_NUM_TICKS).prefixed(PERIODIC_PREFIX);
+	private final ExcelColumn colTickInterval = column(PERIODIC_TICK_INTERVAL).prefixed(PERIODIC_PREFIX);
 
 	private PeriodicComponent getPeriodicComponent() {
 		if (colPeriodicType.isEmpty()) {
@@ -84,9 +82,10 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var coefficient = getCoefficient(PERIODIC_PREFIX);
 		var amount = colPeriodicAmount.getInteger();
 		var numTicks = colPeriodicNumTicks.getInteger();
+		var tickInterval = colTickInterval.getDuration(null);
 		var tickScheme = getTickScheme();
 
-		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickScheme);
+		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickInterval, tickScheme);
 	}
 
 	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS).prefixed(PERIODIC_PREFIX);

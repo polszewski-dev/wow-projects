@@ -39,11 +39,12 @@ public abstract class WowCommonsSpringTest {
 		assertThat(effectApplication.effect().getMaxStacks()).isEqualTo(maxStacks);
 	}
 
-	protected static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double coeff, SpellSchool school, int amount, int numTicks, TickScheme tickScheme) {
+	protected static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double coeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
 		assertThat(periodic.type()).isEqualTo(type);
 		assertCoefficient(coeff, school, periodic.coefficient());
 		assertThat(periodic.amount()).isEqualTo(amount);
 		assertThat(periodic.numTicks()).isEqualTo(numTicks);
+		assertThat(periodic.tickInterval().getSeconds()).isEqualTo(tickInterval);
 		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
 	}
 

@@ -16,6 +16,7 @@ public record PeriodicComponentParams(
 		Coefficient coefficient,
 		String totalAmount,
 		String tickAmount,
+		String tickInterval,
 		String tickWeights
 ) {
 	public PeriodicComponentParams {
