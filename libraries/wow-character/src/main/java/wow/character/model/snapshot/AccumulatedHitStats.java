@@ -30,6 +30,7 @@ public class AccumulatedHitStats extends AccumulatedPartialStats {
 				this.hitRating += value;
 				break;
 			case HIT_PCT:
+			case PARTY_HIT_PCT:
 				this.hitPct += value;
 				break;
 			default:

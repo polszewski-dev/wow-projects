@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * User: POlszewski
@@ -25,5 +26,9 @@ public class Party {
 
 		players.add(player);
 		player.setParty(this);
+	}
+
+	public void forEachPartyMember(Consumer<Unit> consumer) {
+		players.forEach(consumer);
 	}
 }

@@ -6,10 +6,12 @@ import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.snapshot.*;
+import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Phase;
@@ -488,6 +490,17 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	public void collectEffects(EffectCollector collector) {
 		character.collectEffects(collector);
 		effects.collectEffects(collector);
+		collectAurasFromOtherPartyMembers(collector);
+	}
+
+	private void collectAurasFromOtherPartyMembers(EffectCollector collector) {
+		var auraCollector = new AuraCollector(this, collector);
+
+		party.forEachPartyMember(player -> {
+			if (player != this) {
+				player.collectAuras(auraCollector);
+			}
+		});
 	}
 
 	@Override
@@ -573,5 +586,23 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	public void replaceCurrentAction(UnitAction newAction) {
 		startAction(newAction);
+	}
+
+	private static class AuraCollector extends AbstractEffectCollector.OnlyEffects {
+		private final EffectCollector collector;
+
+		public AuraCollector(Unit unit, EffectCollector collector) {
+			super(unit);
+			this.collector = collector;
+		}
+
+		@Override
+		public void addEffect(Effect effect, int stackCount) {
+			if (effect.hasAugmentedAbilities() || !effect.isAura()) {
+				return;
+			}
+
+			collector.addEffect(effect, stackCount);
+		}
 	}
 }

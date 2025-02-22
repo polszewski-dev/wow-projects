@@ -1,6 +1,7 @@
 package wow.simulator.model.unit;
 
 import wow.character.model.character.Character;
+import wow.character.model.effect.EffectCollector;
 import wow.character.model.snapshot.*;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.*;
@@ -118,6 +119,8 @@ public interface Unit extends Character, SimulationContextSource {
 	}
 
 	void setParty(Party party);
+
+	void collectAuras(EffectCollector collector);
 
 	static boolean areFriendly(Unit first, Unit second) {
 		return first.getClass() == second.getClass();

@@ -2,6 +2,7 @@ package wow.simulator.model.unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * User: POlszewski
@@ -26,5 +27,15 @@ public class Raid {
 
 	public Party getFirstParty() {
 		return parties.getFirst();
+	}
+
+	public Party getParty(int idx) {
+		return parties.get(idx);
+	}
+
+	public void forEachRaidMember(Consumer<Unit> consumer) {
+		for (var party : parties) {
+			party.forEachPartyMember(consumer);
+		}
 	}
 }

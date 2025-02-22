@@ -6,6 +6,7 @@ import wow.character.model.character.CharacterProfessions;
 import wow.character.model.character.Consumables;
 import wow.character.model.character.ExclusiveFactions;
 import wow.character.model.character.PlayerCharacter;
+import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.Race;
 import wow.commons.model.spell.Ability;
@@ -81,5 +82,14 @@ public class PlayerImpl extends UnitImpl implements Player {
 		}
 
 		return new ShootAbility(ability, rangedWeapon);
+	}
+
+	@Override
+	public void collectAuras(EffectCollector collector) {
+		getEquipment().collectEffects(collector);
+
+		for (var racial : getRace().getRacials(this)) {
+			collector.addEffect(racial);
+		}
 	}
 }
