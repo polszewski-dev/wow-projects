@@ -45,7 +45,7 @@ public abstract class ScraperTool implements ScraperContextSource {
 
 		exportAll(builder, exporters);
 
-		String xlsFilePath = config.getDirectoryPath() + File.pathSeparator + fileName;
+		String xlsFilePath = config.getDirectoryPath() + File.separator + fileName;
 		builder.finish(xlsFilePath);
 
 		log.info("Saved to {}", xlsFilePath);
