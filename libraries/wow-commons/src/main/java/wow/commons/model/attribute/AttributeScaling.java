@@ -19,12 +19,22 @@ public sealed interface AttributeScaling {
 		public double getScaledValue(double value, AttributeScalingParams params) {
 			return value;
 		}
+
+		@Override
+		public String toString() {
+			return "none";
+		}
 	}
 
 	record LevelScaling() implements AttributeScaling {
 		@Override
 		public double getScaledValue(double value, AttributeScalingParams params) {
 			return value * params.getLevel();
+		}
+
+		@Override
+		public String toString() {
+			return "level";
 		}
 	}
 
@@ -60,10 +70,14 @@ public sealed interface AttributeScaling {
 			return null;
 		}
 
-		return switch (value) {
-			case "none" -> NONE;
-			case "level" -> LEVEL;
-			default -> NumberOfEffectsOnTarget.parse(value);
-		};
+		if (value.equals(NONE.toString())) {
+			return NONE;
+		}
+
+		if (value.equals(LEVEL.toString())) {
+			return LEVEL;
+		}
+
+		return NumberOfEffectsOnTarget.parse(value);
 	}
 }

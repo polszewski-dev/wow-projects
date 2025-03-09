@@ -2,9 +2,11 @@ package wow.commons.repository.impl.parser.excel.mapper;
 
 import org.springframework.stereotype.Component;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.spell.SpellRepository;
-import wow.commons.util.parser.simple.SimpleRecordMapper;
+import wow.commons.util.AttributesFormater;
+import wow.commons.util.AttributesParser;
 
 /**
  * User: POlszewski
@@ -13,11 +15,9 @@ import wow.commons.util.parser.simple.SimpleRecordMapper;
 @Component
 public final class ItemEffectMapper {
 	private final SpellRepository spellRepository;
-	private final ItemAttributeEffectMapper attributeMapper;
 
 	public ItemEffectMapper(SpellRepository spellRepository) {
 		this.spellRepository = spellRepository;
-		this.attributeMapper = new ItemAttributeEffectMapper(spellRepository);
 	}
 
 	public String toString(Effect effect) {
@@ -33,7 +33,7 @@ public final class ItemEffectMapper {
 			throw new IllegalArgumentException();
 		}
 
-		return attributeMapper.toString(effect);
+		return AttributesFormater.format(effect.getModifierComponent().attributes());
 	}
 
 	public Effect fromString(String value, PhaseId phaseId) {
@@ -46,8 +46,8 @@ public final class ItemEffectMapper {
 			return spellRepository.getEffect(effectId, phaseId).orElseThrow();
 		}
 
-		var parseResult = SimpleRecordMapper.fromString(value);
+		var attributes = AttributesParser.parse(value);
 
-		return attributeMapper.fromString(parseResult, phaseId);
+		return EffectImpl.newAttributeEffect(attributes);
 	}
 }

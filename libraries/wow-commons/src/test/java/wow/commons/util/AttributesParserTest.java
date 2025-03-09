@@ -1,0 +1,57 @@
+package wow.commons.util;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeScaling;
+import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.condition.ConditionOperator;
+
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.condition.MiscCondition.PHYSICAL;
+import static wow.commons.model.attribute.condition.MiscCondition.SPELL;
+
+/**
+ * User: POlszewski
+ * Date: 2025-03-05
+ */
+class AttributesParserTest {
+	@ParameterizedTest
+	@MethodSource
+	void test(TestData testData) {
+		var result = AttributesParser.parse(testData.string);
+
+		assertThat(result).isEqualTo(testData.attributes);
+	}
+
+	static Stream<TestData> test() {
+		return TEST_DATA.stream();
+	}
+
+	record TestData(String string, Attributes attributes) {
+		TestData(String string, Attribute... attributes) {
+			this(string, Attributes.of(attributes));
+		}
+	}
+
+	static final List<TestData> TEST_DATA = List.of(
+			new TestData("10 Power", Attribute.of(POWER, 10)),
+			new TestData("-10 Power", Attribute.of(POWER, -10)),
+			new TestData("0.5 Power", Attribute.of(POWER, 0.5)),
+			new TestData("-0.5 Power", Attribute.of(POWER, -0.5)),
+			new TestData("10 Power%", Attribute.of(POWER_PCT, 10)),
+			new TestData("10 Party.Power", Attribute.of(PARTY_POWER, 10)),
+			new TestData("10 Power [Spell]", Attribute.of(POWER, 10, SPELL)),
+			new TestData("10 Power [Spell | Physical]", Attribute.of(POWER, 10, ConditionOperator.or(SPELL, PHYSICAL))),
+			new TestData("10 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, AttributeScaling.LEVEL)),
+			new TestData(
+					"10 * level Power [Spell] + 10 Power [Spell]",
+					Attribute.of(POWER, 10, SPELL, AttributeScaling.LEVEL),
+					Attribute.of(POWER, 10, SPELL)
+			)
+	);
+}

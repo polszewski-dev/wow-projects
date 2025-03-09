@@ -81,7 +81,7 @@ public record Percent(double value) implements Comparable<Percent> {
 
 	@Override
 	public String toString() {
-		return FormatUtil.decimalPointOnlyIfNecessary(value, "%s%%");
+		return FormatUtil.decimalPointOnlyIfNecessary(value) + "%";
 	}
 
 	@Override

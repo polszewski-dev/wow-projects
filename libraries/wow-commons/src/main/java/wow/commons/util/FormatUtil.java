@@ -9,15 +9,15 @@ import java.text.DecimalFormatSymbols;
  */
 public final class FormatUtil {
 	public static String decimalPointOnlyIfNecessary(double value) {
-		if (Math.abs(value % 1) <= PRECISION) {
-			return Integer.toString((int)value);
-		} else {
-			return new DecimalFormat("0.00", DECIMAL_FORMAT_SYMBOLS).format(value);
-		}
+		return decimalPointOnlyIfNecessary(value, "0.00");
 	}
 
 	public static String decimalPointOnlyIfNecessary(double value, String format) {
-		return String.format(format, decimalPointOnlyIfNecessary(value));
+		if (Math.abs(value % 1) <= PRECISION) {
+			return Integer.toString((int)value);
+		} else {
+			return new DecimalFormat(format, DECIMAL_FORMAT_SYMBOLS).format(value);
+		}
 	}
 
 	public static final DecimalFormatSymbols DECIMAL_FORMAT_SYMBOLS = DecimalFormatSymbols.getInstance();
