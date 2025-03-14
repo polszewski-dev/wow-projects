@@ -30,8 +30,6 @@ public final class CommonColumnNames {
 
 	private static final String ATTR_ID = "id";
 	private static final String ATTR_VALUE = "value";
-	private static final String ATTR_CONDITION = "condition";
-	private static final String ATTR_SCALING = "scaling";
 
 	public static String getAttrId(int idx) {
 		return ATTR_ID + idx;
@@ -39,14 +37,6 @@ public final class CommonColumnNames {
 
 	public static String getAttrValue(int idx) {
 		return ATTR_VALUE + idx;
-	}
-
-	public static String getAttrCondition(int idx) {
-		return ATTR_CONDITION + idx;
-	}
-
-	public static String getAttrScaling(int idx) {
-		return ATTR_SCALING + idx;
 	}
 
 	public static String colEffectStats(String prefix, int statIdx) {

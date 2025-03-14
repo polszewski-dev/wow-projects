@@ -1,7 +1,5 @@
 package wow.scraper.repository.impl.excel;
 
-import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.scraper.parser.spell.params.AttributePattern;
@@ -11,7 +9,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.getAttrId;
+import static wow.commons.repository.impl.parser.excel.CommonColumnNames.getAttrValue;
 
 /**
  * User: POlszewski
@@ -49,20 +48,16 @@ public abstract class AbstractPatternSheetParser extends WowExcelSheetParser {
 	private AttributePattern getAttributePattern(String prefix, int idx) {
 		var colId = column(getAttrId(idx), true).prefixed(prefix);
 		var colValue = column(getAttrValue(idx), true).prefixed(prefix);
-		var colCondition = column(getAttrCondition(idx), true).prefixed(prefix);
 
 		if (colId.isEmpty()) {
-			assertAllColumnsAreEmpty(colId, colCondition, colValue);
+			assertAllColumnsAreEmpty(colId, colValue);
 			return null;
 		}
 
-		var id = colId.getEnum(AttributeId::parse);
+		var id = colId.getString();
 		var value = colValue.getString();
-		var condition = colCondition.getString(null);
 
-		validateCondition(condition);
-
-		return new AttributePattern(id, value, condition, "none");
+		return new AttributePattern(id, value);
 	}
 
 	protected void assertAllColumnsAreEmpty(ExcelColumn... columns) {
@@ -70,12 +65,6 @@ public abstract class AbstractPatternSheetParser extends WowExcelSheetParser {
 			if (!column.isEmpty()) {
 				throw new IllegalArgumentException("Column '%s' is not empty".formatted(column.getName()));
 			}
-		}
-	}
-
-	private static void validateCondition(String condition) {
-		if (condition != null && !condition.contains("$")) {
-			AttributeCondition.parse(condition);
 		}
 	}
 }

@@ -6,6 +6,7 @@ import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
+import wow.commons.util.AttributesFormater;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.config.ScraperDatafixes;
 
@@ -54,12 +55,11 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 		for (int i = 1; i <= maxAttributes; ++i) {
 			setHeader(getAttrValue(i), prefix);
 			setHeader(getAttrId(i), prefix);
-			setHeader(getAttrCondition(i), prefix);
 		}
 	}
 
 	protected void writeAttributes(Attributes attributes, int maxAttributes) {
-		final int colsPerAttribute = 3;
+		final int colsPerAttribute = 2;
 
 		if (attributes == null) {
 			fillRemainingEmptyCols(colsPerAttribute * maxAttributes);
@@ -70,8 +70,7 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 
 		for (var attribute : attributes.list()) {
 			setValue(attribute.value());
-			setValue(attribute.id());
-			setValue(attribute.condition());
+			setValue(AttributesFormater.formatWithoutValue(attribute));
 			++attrNo;
 		}
 

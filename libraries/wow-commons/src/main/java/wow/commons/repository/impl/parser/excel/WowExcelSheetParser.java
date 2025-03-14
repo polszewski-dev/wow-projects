@@ -4,10 +4,7 @@ import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
@@ -24,6 +21,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.talent.TalentId;
+import wow.commons.util.AttributesParser;
 
 import java.util.Map;
 import java.util.Objects;
@@ -205,15 +203,11 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		}
 
 		var colAttrValue = column(getAttrValue(statNo)).prefixed(prefix);
-		var colAttrCondition = column(getAttrCondition(statNo), true).prefixed(prefix);
-		var colAttrScaling = column(getAttrScaling(statNo), true).prefixed(prefix);
 
-		var id = colAttrId.getEnum(AttributeId::parse);
+		var id = colAttrId.getString();
 		var value = colAttrValue.getDouble();
-		var condition = colAttrCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
-		var scaling = colAttrScaling.getEnum(AttributeScaling::parse, AttributeScaling.NONE);
 
-		return Attribute.of(id, value, condition, scaling);
+		return AttributesParser.parse(id, value);
 	}
 
 	private final ExcelColumn coPveRoles = column("pve_roles");

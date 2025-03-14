@@ -6,6 +6,7 @@ import wow.commons.model.attribute.Attributes;
 
 import java.util.stream.Collectors;
 
+import static wow.commons.model.attribute.AttributeScaling.*;
 import static wow.commons.util.FormatUtil.decimalPointOnlyIfNecessary;
 
 /**
@@ -20,6 +21,13 @@ public class AttributesFormater {
 	}
 
 	private static String format(Attribute attribute) {
+		var valueStr = decimalPointOnlyIfNecessary(attribute.value(), "0.##");
+		var idStr = formatWithoutValue(attribute);
+
+		return valueStr + " " + idStr;
+	}
+
+	public static String formatWithoutValue(Attribute attribute) {
 		var withoutCondition = formatWithoutCondition(attribute);
 
 		if (!attribute.hasCondition()) {
@@ -30,13 +38,20 @@ public class AttributesFormater {
 	}
 
 	private static String formatWithoutCondition(Attribute attribute) {
-		var valueStr = decimalPointOnlyIfNecessary(attribute.value(), "0.##");
-
-		if (attribute.scaling() != AttributeScaling.NONE) {
-			return "%s * %s %s".formatted(valueStr, attribute.scaling(), attribute.id());
+		if (attribute.scaling() != NONE) {
+			return "* %s %s".formatted(formatAttributeScaling(attribute.scaling()), attribute.id());
 		} else {
-			return "%s %s".formatted(valueStr, attribute.id());
+			return attribute.id().toString();
 		}
+	}
+
+	private static String formatAttributeScaling(AttributeScaling scaling) {
+		return switch (scaling) {
+			case NoScaling() -> "none";
+			case LevelScaling() -> "level";
+			case NumberOfEffectsOnTarget(var tree, var max) ->
+					"numEffectsOnTarget(%s, %s)".formatted(tree, decimalPointOnlyIfNecessary(max.value()));
+		};
 	}
 
 	private AttributesFormater() {}

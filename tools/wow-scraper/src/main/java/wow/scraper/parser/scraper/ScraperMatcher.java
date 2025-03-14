@@ -3,9 +3,8 @@ package wow.scraper.parser.scraper;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.util.AttributesParser;
 import wow.commons.util.parser.ParserUtil;
 import wow.scraper.parser.spell.params.AttributePattern;
 
@@ -102,12 +101,10 @@ public abstract class ScraperMatcher<P extends ScraperPattern<Q>, Q extends Scra
 	}
 
 	private Attribute getAttribute(AttributePattern attributePattern) {
-		var id = attributePattern.id();
+		var id = evalParams(attributePattern.id());
 		var value = getOptionalDouble(attributePattern.value()).orElseThrow();
-		var condition = AttributeCondition.parse(evalParams(attributePattern.condition()));
-		var scaling = AttributeScaling.parse(attributePattern.scaling());
 
-		return Attribute.of(id, value, condition, scaling);
+		return AttributesParser.parse(id, value);
 	}
 
 	@Override
