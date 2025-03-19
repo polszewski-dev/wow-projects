@@ -17,7 +17,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2024-11-10
  */
-public record CharacterDTO(
+public record PlayerDTO(
 		String name,
 		CharacterClassId characterClassId,
 		RaceId raceId,
@@ -32,6 +32,6 @@ public record CharacterDTO(
 		String rotation,
 		List<ActiveEffectDTO> activeEffects,
 		List<ConsumableDTO> consumables,
-		EnemyDTO target
+		NonPlayerDTO target
 ) {
 }

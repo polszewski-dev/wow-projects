@@ -15,8 +15,8 @@ import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
-import wow.simulator.client.dto.CharacterDTO;
-import wow.simulator.client.dto.EnemyDTO;
+import wow.simulator.client.dto.NonPlayerDTO;
+import wow.simulator.client.dto.PlayerDTO;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
 
@@ -61,8 +61,8 @@ public class SimulatorServiceImpl implements SimulatorService {
 		);
 	}
 
-	private CharacterDTO getCharacterDTO(Player player) {
-		return new CharacterDTO(
+	private PlayerDTO getCharacterDTO(Player player) {
+		return new PlayerDTO(
 				"Player",
 				player.getCharacterClassId(),
 				player.getRaceId(),
@@ -81,8 +81,8 @@ public class SimulatorServiceImpl implements SimulatorService {
 		);
 	}
 
-	private EnemyDTO getEnemyDTO(Character target) {
-		return new EnemyDTO(
+	private NonPlayerDTO getEnemyDTO(Character target) {
+		return new NonPlayerDTO(
 				"Target",
 				target.getCreatureType(),
 				target.getLevel(),

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.pve.PhaseId;
-import wow.simulator.client.dto.EnemyDTO;
+import wow.simulator.client.dto.NonPlayerDTO;
 import wow.simulator.model.unit.NonPlayer;
 
 /**
@@ -14,11 +14,11 @@ import wow.simulator.model.unit.NonPlayer;
  */
 @Component
 @AllArgsConstructor
-public class NonPlayerConverter implements ParametrizedConverter<EnemyDTO, NonPlayer, PhaseId> {
+public class NonPlayerConverter implements ParametrizedConverter<NonPlayerDTO, NonPlayer, PhaseId> {
 	private final CharacterService characterService;
 
 	@Override
-	public NonPlayer doConvert(EnemyDTO source, PhaseId phaseId) {
+	public NonPlayer doConvert(NonPlayerDTO source, PhaseId phaseId) {
 		return characterService.createNonPlayerCharacter(
 				source.enemyType(),
 				source.enemyLevel(),

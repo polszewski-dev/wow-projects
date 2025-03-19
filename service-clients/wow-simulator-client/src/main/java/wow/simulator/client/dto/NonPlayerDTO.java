@@ -8,7 +8,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2024-11-10
  */
-public record EnemyDTO(
+public record NonPlayerDTO(
 		String name,
 		CreatureType enemyType,
 		int enemyLevel,

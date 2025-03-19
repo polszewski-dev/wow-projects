@@ -9,7 +9,7 @@ import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.dto.ConsumableDTO;
-import wow.simulator.client.dto.CharacterDTO;
+import wow.simulator.client.dto.PlayerDTO;
 import wow.simulator.model.unit.Player;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Component
 @AllArgsConstructor
-public class PlayerConverter implements Converter<CharacterDTO, Player> {
+public class PlayerConverter implements Converter<PlayerDTO, Player> {
 	private final CharacterService characterService;
 
 	private final CharacterProfessionConverter characterProfessionConverter;
@@ -29,7 +29,7 @@ public class PlayerConverter implements Converter<CharacterDTO, Player> {
 	private final NonPlayerConverter nonPlayerConverter;
 
 	@Override
-	public Player doConvert(CharacterDTO source) {
+	public Player doConvert(PlayerDTO source) {
 		var player = characterService.createPlayerCharacter(
 				source.characterClassId(),
 				source.raceId(),
@@ -55,7 +55,7 @@ public class PlayerConverter implements Converter<CharacterDTO, Player> {
 		return player;
 	}
 
-	private void changeBuild(PlayerCharacter character, CharacterDTO source) {
+	private void changeBuild(PlayerCharacter character, PlayerDTO source) {
 		var build = character.getBuild();
 
 		for (var sourceTalent : source.talents()) {
@@ -67,7 +67,7 @@ public class PlayerConverter implements Converter<CharacterDTO, Player> {
 		build.setRotation(RotationTemplate.parse(source.rotation()).createRotation());
 	}
 
-	private List<String> getConsumableNames(CharacterDTO source) {
+	private List<String> getConsumableNames(PlayerDTO source) {
 		return source.consumables().stream()
 				.map(ConsumableDTO::name)
 				.toList();

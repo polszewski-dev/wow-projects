@@ -5,7 +5,7 @@ package wow.simulator.client.dto;
  * Date: 2024-11-10
  */
 public record SimulationRequestDTO(
-		CharacterDTO player,
+		PlayerDTO player,
 		double duration,
 		RngType rngType
 ) {
