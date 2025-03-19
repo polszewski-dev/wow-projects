@@ -9,14 +9,14 @@ import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.ConsumableConverter;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.converter.TalentConverter;
+import wow.commons.client.dto.NonPlayerDTO;
+import wow.commons.client.dto.PlayerDTO;
 import wow.minmax.config.SimulationConfig;
 import wow.minmax.converter.dto.ActiveEffectConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
-import wow.simulator.client.dto.NonPlayerDTO;
-import wow.simulator.client.dto.PlayerDTO;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
 

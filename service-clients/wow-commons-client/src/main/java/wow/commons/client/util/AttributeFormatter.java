@@ -1,4 +1,4 @@
-package wow.minmax.util;
+package wow.commons.client.util;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;

@@ -1,4 +1,4 @@
-package wow.simulator.client.dto;
+package wow.commons.client.dto;
 
 /**
  * User: POlszewski

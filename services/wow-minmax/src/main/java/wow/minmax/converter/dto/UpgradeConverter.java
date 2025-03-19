@@ -2,14 +2,14 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.client.converter.EquippableItemConverter;
-import wow.commons.model.config.Described;
 import wow.commons.client.converter.Converter;
+import wow.commons.client.converter.EquippableItemConverter;
+import wow.commons.client.util.AttributeFormatter;
+import wow.commons.model.config.Described;
+import wow.minmax.client.dto.UpgradeDTO;
 import wow.minmax.model.AttributesDiff;
 import wow.minmax.model.SpecialAbility;
 import wow.minmax.model.Upgrade;
-import wow.minmax.client.dto.UpgradeDTO;
-import wow.minmax.util.AttributeFormatter;
 
 import java.util.List;
 

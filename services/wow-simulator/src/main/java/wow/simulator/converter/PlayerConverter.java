@@ -9,7 +9,7 @@ import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.dto.ConsumableDTO;
-import wow.simulator.client.dto.PlayerDTO;
+import wow.commons.client.dto.PlayerDTO;
 import wow.simulator.model.unit.Player;
 
 import java.util.List;

@@ -3,8 +3,8 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
+import wow.commons.client.dto.ActiveEffectDTO;
 import wow.commons.model.buff.Buff;
-import wow.simulator.client.dto.ActiveEffectDTO;
 
 /**
  * User: POlszewski

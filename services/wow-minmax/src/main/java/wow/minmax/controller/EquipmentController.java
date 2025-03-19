@@ -9,6 +9,7 @@ import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.converter.EquippableItemConverter;
 import wow.commons.client.dto.EquipmentDTO;
 import wow.commons.client.dto.EquippableItemDTO;
+import wow.commons.client.util.AttributeFormatter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.client.dto.EquipmentSocketStatusDTO;
@@ -19,7 +20,6 @@ import wow.minmax.converter.dto.ParamToGemFilterConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
-import wow.minmax.util.AttributeFormatter;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package wow.simulator.client.dto;
+package wow.commons.client.dto;
 
 import wow.commons.model.character.CreatureType;
 
@@ -12,6 +12,7 @@ public record NonPlayerDTO(
 		String name,
 		CreatureType enemyType,
 		int enemyLevel,
+		List<BuffDTO> buffs,
 		List<ActiveEffectDTO> activeEffects
 ) {
 }

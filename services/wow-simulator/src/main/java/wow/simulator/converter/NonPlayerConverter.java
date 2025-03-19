@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.ParametrizedConverter;
+import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.model.pve.PhaseId;
-import wow.simulator.client.dto.NonPlayerDTO;
 import wow.simulator.model.unit.NonPlayer;
 
 /**

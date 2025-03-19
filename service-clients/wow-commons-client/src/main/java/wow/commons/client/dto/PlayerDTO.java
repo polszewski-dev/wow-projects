@@ -1,9 +1,5 @@
-package wow.simulator.client.dto;
+package wow.commons.client.dto;
 
-import wow.commons.client.dto.CharacterProfessionDTO;
-import wow.commons.client.dto.ConsumableDTO;
-import wow.commons.client.dto.EquipmentDTO;
-import wow.commons.client.dto.TalentDTO;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
@@ -30,6 +26,7 @@ public record PlayerDTO(
 		PveRole role,
 		PetType activePet,
 		String rotation,
+		List<BuffDTO> buffs,
 		List<ActiveEffectDTO> activeEffects,
 		List<ConsumableDTO> consumables,
 		NonPlayerDTO target
