@@ -21,17 +21,19 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	private final CreatureType creatureType;
 
 	public NonPlayerImpl(
+			String name,
 			Phase phase,
 			CharacterClass characterClass,
 			CreatureType creatureType,
 			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
-		super(phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
 	}
 
 	private NonPlayerImpl(
+			String name,
 			Phase phase,
 			CharacterClass characterClass,
 			int level,
@@ -41,7 +43,7 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			Buffs buffs,
 			CreatureType creatureType
 	) {
-		super(phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
 		this.creatureType = creatureType;
 	}
 
@@ -61,6 +63,7 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	@Override
 	public NonPlayer copy() {
 		var copy = new NonPlayerImpl(
+				getName(),
 				getPhase(),
 				getCharacterClass(),
 				getLevel(),

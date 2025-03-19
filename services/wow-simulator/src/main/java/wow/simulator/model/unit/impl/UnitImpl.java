@@ -41,7 +41,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private static final IdGenerator<UnitId> ID_GENERATOR = new IdGenerator<>(UnitId::new);
 
 	protected final UnitId id = ID_GENERATOR.newId();
-	protected final String name;
 
 	protected final UnitResources resources = new UnitResources(this);
 	protected final Effects effects = new Effects(this);
@@ -61,8 +60,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private SimulationContext simulationContext;
 
 	protected UnitImpl(String name, Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
-		super(phase, characterClass, level, baseStatInfo, combatRatingInfo);
-		this.name = name;
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
 		new Raid().getFirstParty().add(this);
@@ -110,11 +108,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
 	public StatSummary getStats() {
 		return getCharacterCalculationService().getStatSummary(this);
 	}
@@ -127,11 +120,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void setTarget(Unit target) {
 		setTarget((Character) target);
-	}
-
-	@Override
-	public String toString() {
-		return name;
 	}
 
 	@Override

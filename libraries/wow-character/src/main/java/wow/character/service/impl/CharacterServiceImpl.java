@@ -57,14 +57,13 @@ public class CharacterServiceImpl implements CharacterService {
 	private final CharacterTemplateRepository characterTemplateRepository;
 
 	@Override
-	public PlayerCharacter createPlayerCharacter(CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
-		return createPlayerCharacter(characterClassId, raceId, level, phaseId, PlayerCharacterImpl::new);
+	public PlayerCharacter createPlayerCharacter(String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
+		return createPlayerCharacter(name, characterClassId, raceId, level, phaseId, PlayerCharacterImpl::new);
 	}
 
 	@Override
 	public <T extends PlayerCharacter> T createPlayerCharacter(
-			CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory
-	) {
+			String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory) {
 		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 		var gameVersion = phase.getGameVersion();
 		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
@@ -74,6 +73,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var talents = new Talents(getAvailableTalents(characterClassId, phaseId));
 
 		return factory.newPlayerCharacter(
+				name,
 				phase,
 				characterClass,
 				race,
@@ -85,13 +85,13 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public NonPlayerCharacter createNonPlayerCharacter(CreatureType creatureType, int level, PhaseId phaseId) {
-		return createNonPlayerCharacter(creatureType, level, phaseId, NonPlayerCharacterImpl::new);
+	public NonPlayerCharacter createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId) {
+		return createNonPlayerCharacter(name, creatureType, level, phaseId, NonPlayerCharacterImpl::new);
 	}
 
 	@Override
 	public <T extends NonPlayerCharacter> T createNonPlayerCharacter(
-			CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory
+			String name, CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory
 	) {
 		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 		var gameVersion = phase.getGameVersion();
@@ -100,6 +100,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 
 		return factory.newPlayerCharacter(
+				name,
 				phase,
 				characterClass,
 				creatureType,

@@ -22,7 +22,7 @@ public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> i
 	@Override
 	public NonPlayerDTO doConvert(N source) {
 		return new NonPlayerDTO(
-				"Target",
+				source.getName(),
 				source.getCreatureType(),
 				source.getLevel(),
 				buffConverter.convertList(source.getBuffs().getList()),
@@ -33,6 +33,7 @@ public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> i
 	@Override
 	public N doConvertBack(NonPlayerDTO source, PhaseId phaseId) {
 		return characterService.createNonPlayerCharacter(
+				source.name(),
 				source.enemyType(),
 				source.enemyLevel(),
 				phaseId,

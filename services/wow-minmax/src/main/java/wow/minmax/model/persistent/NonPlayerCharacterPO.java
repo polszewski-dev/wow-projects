@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 public class NonPlayerCharacterPO {
+	private String name;
 	private PhaseId phaseId;
 	private CharacterClassId characterClassId;
 	private CreatureType creatureType;

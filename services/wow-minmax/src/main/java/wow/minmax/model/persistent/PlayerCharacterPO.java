@@ -23,6 +23,7 @@ import java.util.List;
 public class PlayerCharacterPO {
 	@Id
 	private String characterId;
+	private String name;
 	private CharacterClassId characterClassId;
 	private RaceId race;
 	private int level;

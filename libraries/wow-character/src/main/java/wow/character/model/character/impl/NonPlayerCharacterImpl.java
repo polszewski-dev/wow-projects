@@ -17,8 +17,8 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCharacter {
 	private final CreatureType creatureType;
 
-	public NonPlayerCharacterImpl(Phase phase, CharacterClass characterClass, CreatureType creatureType, int level, CombatRatingInfo combatRatingInfo) {
-		super(phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+	public NonPlayerCharacterImpl(String name, Phase phase, CharacterClass characterClass, CreatureType creatureType, int level, CombatRatingInfo combatRatingInfo) {
+		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
 	}
 }

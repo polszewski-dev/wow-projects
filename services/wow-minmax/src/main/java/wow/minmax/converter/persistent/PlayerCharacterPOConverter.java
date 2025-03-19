@@ -38,6 +38,7 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<Player,
 	public PlayerCharacterPO doConvert(Player source, CharacterId characterId) {
 		return new PlayerCharacterPO(
 				characterId.toString(),
+				source.getName(),
 				source.getCharacterClassId(),
 				source.getRaceId(),
 				source.getLevel(),
@@ -55,6 +56,7 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<Player,
 	@Override
 	public Player doConvertBack(PlayerCharacterPO source) {
 		var character = characterService.createPlayerCharacter(
+				source.getName(),
 				source.getCharacterClassId(),
 				source.getRace(),
 				source.getLevel(),

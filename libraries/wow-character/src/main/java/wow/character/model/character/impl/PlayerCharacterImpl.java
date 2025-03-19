@@ -22,8 +22,8 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 	private final ExclusiveFactions exclusiveFactions;
 	private final Consumables consumables;
 
-	public PlayerCharacterImpl(Phase phase, CharacterClass characterClass, Race race, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo, Talents talents) {
-		super(phase, characterClass, level, baseStatInfo, combatRatingInfo);
+	public PlayerCharacterImpl(String name, Phase phase, CharacterClass characterClass, Race race, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo, Talents talents) {
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
 		this.equipment = new Equipment();

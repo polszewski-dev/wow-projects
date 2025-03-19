@@ -30,7 +30,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 	@Override
 	public PlayerDTO doConvert(P source) {
 		return new PlayerDTO(
-				"Player",
+				source.getName(),
 				source.getCharacterClassId(),
 				source.getRaceId(),
 				source.getLevel(),
@@ -52,6 +52,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 	@Override
 	public P doConvertBack(PlayerDTO source) {
 		var player = characterService.createPlayerCharacter(
+				source.name(),
 				source.characterClassId(),
 				source.raceId(),
 				source.level(),

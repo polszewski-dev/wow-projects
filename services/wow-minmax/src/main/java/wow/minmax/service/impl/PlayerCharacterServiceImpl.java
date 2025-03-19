@@ -57,6 +57,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		var playerProfile = playerProfileRepository.findById(profileId).orElseThrow();
 
 		var newCharacter = characterService.createPlayerCharacter(
+				playerProfile.getProfileName(),
 				playerProfile.getCharacterClassId(),
 				playerProfile.getRaceId(),
 				characterId.getLevel(),
@@ -65,6 +66,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		);
 
 		var targetEnemy = characterService.createNonPlayerCharacter(
+				"Target",
 				characterId.getEnemyType(),
 				newCharacter.getLevel() + characterId.getEnemyLevelDiff(),
 				characterId.getPhaseId(),

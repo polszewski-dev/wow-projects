@@ -13,6 +13,7 @@ import wow.commons.model.pve.Phase;
 @FunctionalInterface
 public interface NonPlayerCharacterFactory<T extends NonPlayerCharacter> {
 	T newPlayerCharacter(
+			String name,
 			Phase phase,
 			CharacterClass characterClass,
 			CreatureType creatureType,

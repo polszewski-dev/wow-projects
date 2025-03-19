@@ -21,13 +21,14 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	private final CreatureType creatureType;
 
 	public NonPlayerImpl(
+			String name,
 			Phase phase,
 			CharacterClass characterClass,
 			CreatureType creatureType,
 			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
-		super(phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
 	}
 

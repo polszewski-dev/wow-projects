@@ -22,6 +22,8 @@ import java.util.Optional;
  * Date: 2022-10-31
  */
 public interface Character extends CharacterInfo, EffectCollection {
+	String getName();
+
 	Phase getPhase();
 
 	default PhaseId getPhaseId() {

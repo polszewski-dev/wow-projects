@@ -28,6 +28,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final Consumables consumables;
 
 	public PlayerImpl(
+			String name,
 			Phase phase,
 			CharacterClass characterClass,
 			Race race,
@@ -36,7 +37,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CombatRatingInfo combatRatingInfo,
 			Talents talents
 	) {
-		super(phase, characterClass, level, baseStatInfo, combatRatingInfo);
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
 		this.equipment = new Equipment();

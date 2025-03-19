@@ -15,6 +15,7 @@ import wow.commons.model.pve.Phase;
 @FunctionalInterface
 public interface PlayerCharacterFactory<T extends PlayerCharacter> {
 	T newPlayerCharacter(
+			String name,
 			Phase phase,
 			CharacterClass characterClass,
 			Race race,

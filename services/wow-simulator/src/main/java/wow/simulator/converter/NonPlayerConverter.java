@@ -6,6 +6,7 @@ import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.converter.AbstractNonPlayerConverter;
 import wow.commons.client.converter.BuffConverter;
 import wow.simulator.model.unit.NonPlayer;
+import wow.simulator.model.unit.impl.NonPlayerImpl;
 
 /**
  * User: POlszewski
@@ -19,6 +20,6 @@ public class NonPlayerConverter extends AbstractNonPlayerConverter<NonPlayer> {
 
 	@Override
 	protected NonPlayerCharacterFactory<NonPlayer> getFactory(String name) {
-		return NonPlayer.getFactory("todo");
+		return NonPlayerImpl::new;
 	}
 }

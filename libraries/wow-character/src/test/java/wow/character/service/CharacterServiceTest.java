@@ -30,7 +30,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void createPlayerCharacter() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
 		assertThat(player.getCharacterClassId()).isEqualTo(WARLOCK);
@@ -49,7 +49,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void createNonPlayerCharacter() {
-		var nonPlayer = underTest.createNonPlayerCharacter(UNDEAD, 73, TBC_P5);
+		var nonPlayer = underTest.createNonPlayerCharacter("Target", UNDEAD, 73, TBC_P5);
 
 		assertThat(nonPlayer.getCreatureType()).isEqualTo(UNDEAD);
 		assertThat(nonPlayer.getLevel()).isEqualTo(73);
@@ -63,7 +63,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void applyDefaultCharacterTemplate() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
 		underTest.applyDefaultCharacterTemplate(player);
@@ -92,9 +92,9 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void applyDefaultCharacterTemplateOnTarget() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
-		var nonPlayer = underTest.createNonPlayerCharacter(UNDEAD, 73, TBC_P5);
+		var nonPlayer = underTest.createNonPlayerCharacter("Target", UNDEAD, 73, TBC_P5);
 
 		underTest.applyDefaultCharacterTemplate(player);
 
@@ -109,7 +109,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void applyCharacterTemplate() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
 		underTest.applyCharacterTemplate(player, DESTRO_SHADOW);
@@ -138,7 +138,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void updateAfterRestrictionChange() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
 		underTest.applyDefaultCharacterTemplate(player);
@@ -161,7 +161,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void updateAfterRestrictionChange_Item() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
 		underTest.applyDefaultCharacterTemplate(player);
@@ -183,7 +183,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void updateAfterRestrictionChange_Enchant() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
 		underTest.applyDefaultCharacterTemplate(player);
@@ -212,7 +212,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	@Test
 	void updateAfterRestrictionChange_Gems() {
 		var player = underTest.createPlayerCharacter(
-				WARLOCK, ORC, 70, TBC_P5
+				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
 		underTest.applyDefaultCharacterTemplate(player);

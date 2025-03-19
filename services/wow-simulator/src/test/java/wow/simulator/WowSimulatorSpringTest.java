@@ -29,6 +29,8 @@ import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.impl.NonPlayerImpl;
+import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.model.update.Scheduler;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
@@ -87,7 +89,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		int level = getLevel();
 
 		var player = getCharacterService().createPlayerCharacter(
-				characterClassId, raceId, level, phaseId, Player.getFactory(name)
+				name, characterClassId, raceId, level, phaseId, PlayerImpl::new
 		);
 
 		getCharacterService().updateAfterRestrictionChange(player);
@@ -124,7 +126,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		int level = getLevel();
 
 		var enemy = getCharacterService().createNonPlayerCharacter(
-				enemyType, level + enemyLevelDiff, phaseId, NonPlayer.getFactory(name)
+				name, enemyType, level + enemyLevelDiff, phaseId, NonPlayerImpl::new
 		);
 
 		enemy.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));

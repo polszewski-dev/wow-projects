@@ -113,6 +113,7 @@ public abstract class WowEvaluatorSpringTest {
 
 	protected Player getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
+				"Player",
 				characterClass,
 				race,
 				level,
@@ -121,6 +122,7 @@ public abstract class WowEvaluatorSpringTest {
 		);
 
 		var target = characterService.createNonPlayerCharacter(
+				"Target",
 				ENEMY_TYPE,
 				level + LVL_DIFF,
 				phase,

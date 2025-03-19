@@ -6,6 +6,7 @@ import wow.character.service.PlayerCharacterFactory;
 import wow.commons.client.converter.*;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
+import wow.simulator.model.unit.impl.PlayerImpl;
 
 /**
  * User: POlszewski
@@ -19,6 +20,6 @@ public class PlayerConverter extends AbstractPlayerConverter<Player, NonPlayer> 
 
 	@Override
 	protected PlayerCharacterFactory<Player> getFactory(String name) {
-		return Player.getFactory(name);
+		return PlayerImpl::new;
 	}
 }

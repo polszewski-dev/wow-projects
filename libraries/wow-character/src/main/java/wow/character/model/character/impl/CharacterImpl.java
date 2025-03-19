@@ -17,6 +17,7 @@ import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 @RequiredArgsConstructor
 @Getter
 public abstract class CharacterImpl implements Character {
+	private final String name;
 	private final Phase phase;
 	private final CharacterClass characterClass;
 	private final int level;
@@ -27,7 +28,8 @@ public abstract class CharacterImpl implements Character {
 	private Character target;
 	private Percent healthPct = Percent._100;
 
-	protected CharacterImpl(Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+	protected CharacterImpl(String name, Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+		this.name = name;
 		this.phase = phase;
 		this.characterClass = characterClass;
 		this.level = level;
@@ -45,5 +47,10 @@ public abstract class CharacterImpl implements Character {
 	@Override
 	public void setHealthPct(Percent healthPct) {
 		this.healthPct = healthPct;
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }
