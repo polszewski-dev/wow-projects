@@ -10,6 +10,7 @@ RUN mvn install:install-file -Dfile=dummy.jar -DgroupId=polszewski -DartifactId=
 RUN mvn install:install-file -Dfile=dummy.jar -DgroupId=polszewski -DartifactId=wow-character -Dversion=1.0 -Dpackaging=jar
 RUN mvn install:install-file -Dfile=dummy.jar -DgroupId=polszewski -DartifactId=wow-commons-client -Dversion=1.0 -Dpackaging=jar
 RUN mvn install:install-file -Dfile=dummy.jar -DgroupId=polszewski -DartifactId=wow-minmax-client -Dversion=1.0 -Dpackaging=jar
+RUN mvn install:install-file -Dfile=dummy.jar -DgroupId=polszewski -DartifactId=wow-evaluator-client -Dversion=1.0 -Dpackaging=jar
 RUN mvn install:install-file -Dfile=dummy.jar -DgroupId=polszewski -DartifactId=wow-simulator-client -Dversion=1.0 -Dpackaging=jar
 
 COPY libraries/excel-utils/pom.xml excel-utils/pom.xml
@@ -24,6 +25,7 @@ WORKDIR /service-clients
 
 COPY service-clients/wow-commons-client/pom.xml wow-commons-client/pom.xml
 COPY service-clients/wow-minmax-client/pom.xml wow-minmax-client/pom.xml
+COPY service-clients/wow-evaluator-client/pom.xml wow-evaluator-client/pom.xml
 COPY service-clients/wow-simulator-client/pom.xml wow-simulator-client/pom.xml
 COPY service-clients/pom.xml pom.xml
 

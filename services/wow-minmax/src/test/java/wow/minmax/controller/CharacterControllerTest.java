@@ -20,7 +20,7 @@ class CharacterControllerTest extends ControllerTest {
 	MockMvc mockMvc;
 
 	@Test
-	void getRacials() throws Exception {
+	void testGetCharacter() throws Exception {
 		mockMvc.perform(get("/api/v1/characters/{characterId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))

@@ -24,6 +24,7 @@
 	<modules>
 		<module>wow-commons-client</module>
 		<module>wow-minmax-client</module>
+		<module>wow-evaluator-client</module>
 		<module>wow-simulator-client</module>
 	</modules>
 

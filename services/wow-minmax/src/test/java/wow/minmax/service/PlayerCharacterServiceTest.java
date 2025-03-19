@@ -5,15 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.Item;
 import wow.minmax.converter.persistent.PlayerCharacterPOConverter;
 import wow.minmax.converter.persistent.PlayerProfilePOConverter;
-import wow.minmax.model.persistent.EquippableItemPO;
 import wow.minmax.model.persistent.PlayerCharacterPO;
 import wow.minmax.repository.PlayerCharacterRepository;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
@@ -42,6 +44,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 	@Autowired
 	PlayerCharacterRepository playerCharacterRepository;
+
+	@MockBean
+	UpgradeService upgradeService;
 
 	@Autowired
 	PlayerProfilePOConverter playerProfilePOConverter;
@@ -82,14 +87,6 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND).getItem().getName()).isEqualTo("Grand Magister's Staff of Torrents");
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND)).isNull();
-
-		EquippableItemPO mainHand = savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND);
-
-		assertThat(mainHand.getEnchant()).isNotNull();
-
-		for (var gem : mainHand.getGems()) {
-			assertThat(gem).isNotNull();
-		}
 	}
 
 	@Test
@@ -194,5 +191,7 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		when(playerCharacterRepository.findAll()).thenReturn(List.of(characterPO));
 		when(playerCharacterRepository.findById(profile.getProfileId().toString())).thenReturn(Optional.of(characterPO));
+
+		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(1, Item.class)));
 	}
 }

@@ -1,20 +1,13 @@
 package wow.minmax.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import wow.character.model.character.Character;
-import wow.commons.client.converter.CharacterProfessionConverter;
-import wow.commons.client.converter.ConsumableConverter;
-import wow.commons.client.converter.EquipmentConverter;
-import wow.commons.client.converter.TalentConverter;
-import wow.commons.client.dto.NonPlayerDTO;
-import wow.commons.client.dto.PlayerDTO;
 import wow.minmax.config.SimulationConfig;
-import wow.minmax.converter.dto.ActiveEffectConverter;
+import wow.minmax.converter.dto.PlayerConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.SimulationRequestDTO;
@@ -29,14 +22,11 @@ import wow.simulator.client.dto.SimulationResponseDTO;
 public class SimulatorServiceImpl implements SimulatorService {
 	private final PlayerCharacterService playerCharacterService;
 
-	private final CharacterProfessionConverter characterProfessionConverter;
-	private final EquipmentConverter equipmentConverter;
-	private final TalentConverter talentConverter;
-	private final ActiveEffectConverter activeEffectConverter;
-	private final ConsumableConverter consumableConverter;
+	private final PlayerConverter playerConverter;
 
 	private final SimulationConfig simulationConfig;
 
+	@Qualifier("simulatorWebClient")
 	private final WebClient webClient;
 
 	@Override
@@ -44,10 +34,10 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var request = getSimulationRequestDTO(characterId);
 
 		return webClient.post()
-				.contentType(MediaType. APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(request)
 				.retrieve()
-				.bodyToMono(SimulationResponseDTO. class)
+				.bodyToMono(SimulationResponseDTO.class)
 				.block();
 	}
 
@@ -55,38 +45,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var player = playerCharacterService.getPlayer(characterId);
 
 		return new SimulationRequestDTO(
-				getCharacterDTO(player),
+				playerConverter.convert(player),
 				simulationConfig.getDuration(),
 				simulationConfig.getRngType()
-		);
-	}
-
-	private PlayerDTO getCharacterDTO(Player player) {
-		return new PlayerDTO(
-				"Player",
-				player.getCharacterClassId(),
-				player.getRaceId(),
-				player.getLevel(),
-				player.getPhaseId(),
-				characterProfessionConverter.convertList(player.getProfessions().getList()),
-				player.getExclusiveFactions().getList(),
-				equipmentConverter.convert(player.getEquipment()),
-				talentConverter.convertList(player.getTalents().getList()),
-				player.getRole(),
-				player.getActivePetType(),
-				player.getRotation().getTemplate().toString(),
-				activeEffectConverter.convertList(player.getBuffs().getList()),
-				consumableConverter.convertList(player.getConsumables().getList()),
-				getEnemyDTO(player.getTarget())
-		);
-	}
-
-	private NonPlayerDTO getEnemyDTO(Character target) {
-		return new NonPlayerDTO(
-				"Target",
-				target.getCreatureType(),
-				target.getLevel(),
-				activeEffectConverter.convertList(target.getBuffs().getList())
 		);
 	}
 }

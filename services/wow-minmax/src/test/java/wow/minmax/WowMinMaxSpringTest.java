@@ -25,6 +25,8 @@ import wow.minmax.model.Player;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.impl.NonPlayerImpl;
 import wow.minmax.model.impl.PlayerImpl;
+import wow.minmax.service.StatsService;
+import wow.minmax.service.UpgradeService;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -61,6 +63,12 @@ public abstract class WowMinMaxSpringTest {
 
 	@Autowired
 	protected CharacterService characterService;
+
+	@Autowired
+	protected UpgradeService upgradeService;
+
+	@Autowired
+	protected StatsService statsService;
 
 	protected Equipment getEquipment() {
 		Equipment equipment = new Equipment();

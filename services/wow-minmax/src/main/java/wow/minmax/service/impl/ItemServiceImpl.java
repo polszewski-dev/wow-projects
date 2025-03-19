@@ -2,10 +2,8 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
@@ -17,9 +15,6 @@ import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
 import wow.minmax.model.Player;
 import wow.minmax.service.ItemService;
-import wow.minmax.service.impl.enumerator.FilterOutWorseEnchantChoices;
-import wow.minmax.service.impl.enumerator.FilterOutWorseGemChoices;
-import wow.minmax.service.impl.enumerator.GemComboFinder;
 
 import java.util.List;
 
@@ -53,12 +48,6 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getBestEnchants(Player player, ItemType itemType, ItemSubType itemSubType) {
-		List<Enchant> enchants = getEnchants(player, itemType, itemSubType);
-		return new FilterOutWorseEnchantChoices(enchants).getResult();
-	}
-
-	@Override
 	public List<Gem> getGems(Player player, SocketType socketType) {
 		return gemRepository.getGems(socketType, player.getPhaseId()).stream()
 				.filter(gem -> gem.isAvailableTo(player))
@@ -73,20 +62,5 @@ public class ItemServiceImpl implements ItemService {
 				.filter(gem -> gem.isAvailableTo(player))
 				.filter(gem -> gem.isSuitableFor(player))
 				.toList();
-	}
-
-	@Override
-	public List<Gem> getBestNonUniqueGems(Player player, SocketType socketType) {
-		List<Gem> gems = getGems(player, socketType, false);
-		if (socketType == SocketType.META) {
-			return gems;
-		}
-		return new FilterOutWorseGemChoices(gems).getResult();
-	}
-
-	@Override
-	public List<Gem[]> getBestGemCombos(Player player, Item item, ItemSlotGroup slotGroup, GemFilter gemFilter) {
-		var finder = new GemComboFinder(player, item.getSocketSpecification(), slotGroup, gemFilter.isUnique(), this);
-		return finder.getGemCombos();
 	}
 }

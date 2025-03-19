@@ -1,24 +1,29 @@
 package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
+import wow.commons.client.converter.EquippableItemConverter;
+import wow.commons.client.converter.ItemConverter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
+import wow.evaluator.client.converter.upgrade.GemFilterConverter;
+import wow.evaluator.client.converter.upgrade.ItemFilterConverter;
+import wow.evaluator.client.dto.upgrade.FindUpgradesRequestDTO;
+import wow.evaluator.client.dto.upgrade.FindUpgradesResponseDTO;
+import wow.evaluator.client.dto.upgrade.GetBestItemVariantRequestDTO;
+import wow.evaluator.client.dto.upgrade.GetBestItemVariantResponseDTO;
 import wow.minmax.config.UpgradeConfig;
+import wow.minmax.converter.dto.PlayerConverter;
 import wow.minmax.model.Player;
-import wow.minmax.model.Upgrade;
 import wow.minmax.repository.MinmaxConfigRepository;
-import wow.minmax.service.CalculationService;
-import wow.minmax.service.ItemService;
 import wow.minmax.service.UpgradeService;
-import wow.minmax.service.impl.enumerator.BestItemVariantEnumerator;
-import wow.minmax.service.impl.enumerator.FindUpgradesEnumerator;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -27,36 +32,62 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UpgradeServiceImpl implements UpgradeService {
-	private final UpgradeConfig upgradeConfig;
-
-	private final ItemService itemService;
-	private final CalculationService calculationService;
-
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
+	private final PlayerConverter playerConverter;
+	private final ItemFilterConverter itemFilterConverter;
+	private final GemFilterConverter gemFilterConverter;
+	private final ItemConverter itemConverter;
+	private final EquippableItemConverter equippableItemConverter;
+
+	private final UpgradeConfig upgradeConfig;
+
+	@Qualifier("upgradesWebClient")
+	private final WebClient webClient;
+
 	@Override
-	public List<Upgrade> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
-		var enumerator = new FindUpgradesEnumerator(
-				player, slotGroup, itemFilter, gemFilter, itemService, calculationService, minmaxConfigRepository
+	public FindUpgradesResponseDTO findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
+		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
+
+		var request = new FindUpgradesRequestDTO(
+				playerConverter.convert(player),
+				slotGroup,
+				itemFilterConverter.convert(itemFilter),
+				gemFilterConverter.convert(gemFilter),
+				findUpgradesConfig.enchantNames(),
+				upgradeConfig.getMaxUpgrades()
 		);
 
-		return enumerator.run().getResult().stream()
-				.limit(upgradeConfig.getMaxUpgrades())
-				.toList();
+		return webClient
+				.post()
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(request)
+				.retrieve()
+				.bodyToMono(FindUpgradesResponseDTO.class)
+				.block();
 	}
 
 	@Override
 	public EquippableItem getBestItemVariant(Player player, Item item, ItemSlot slot, GemFilter gemFilter) {
-		var referenceCharacter = player.copy();
+		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 
-		referenceCharacter.equip(new EquippableItem(item), slot);
-
-		var enumerator = new BestItemVariantEnumerator(
-				referenceCharacter, slot, gemFilter, itemService, calculationService, minmaxConfigRepository
+		var request = new GetBestItemVariantRequestDTO(
+				playerConverter.convert(player),
+				itemConverter.convert(item),
+				slot,
+				gemFilterConverter.convert(gemFilter),
+				findUpgradesConfig.enchantNames()
 		);
 
-		return enumerator.run()
-				.getResult().getFirst()
-				.itemOption().getFirst();
+		var response = webClient
+				.post()
+				.uri("/best-variant")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(request)
+				.retrieve()
+				.bodyToMono(GetBestItemVariantResponseDTO.class)
+				.block();
+
+		return equippableItemConverter.convertBack(response.bestVariant(), player.getPhaseId());
 	}
 }

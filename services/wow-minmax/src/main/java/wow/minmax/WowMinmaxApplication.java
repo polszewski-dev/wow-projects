@@ -15,6 +15,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @ComponentScan(basePackages = {
 		"wow.commons",
 		"wow.character",
+		"wow.evaluator",
+		"wow.simulator",
 		"wow.minmax"
 })
 @PropertySource({
@@ -45,10 +47,26 @@ public class WowMinmaxApplication {
 	}
 
 	@Bean
+	public WebClient upgradesWebClient(
+			WebClient.Builder webClientBuilder,
+			@Value("${upgrades.api.url}") String apiUrl
+	) {
+		return webClientBuilder.baseUrl(apiUrl).build();
+	}
+
+	@Bean
+	public WebClient statsWebClient(
+			WebClient.Builder webClientBuilder,
+			@Value("${stats.api.url}") String apiUrl
+	) {
+		return webClientBuilder.baseUrl(apiUrl).build();
+	}
+
+	@Bean
 	public WebClient simulatorWebClient(
 			WebClient.Builder webClientBuilder,
-			@Value("${simulator.api.url}") String simulatorApiUrl
+			@Value("${simulator.api.url}") String apiUrl
 	) {
-		return webClientBuilder.baseUrl(simulatorApiUrl).build();
+		return webClientBuilder.baseUrl(apiUrl).build();
 	}
 }

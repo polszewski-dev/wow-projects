@@ -22,6 +22,12 @@ public class WowMinMaxSpringTestConfig {
 	@MockBean
 	PlayerCharacterRepository playerCharacterRepository;
 
-	@MockBean
+	@MockBean(name = "upgradesWebClient")
+	WebClient upgradesWebClient;
+
+	@MockBean(name = "statsWebClient")
+	WebClient statsWebClient;
+
+	@MockBean(name = "simulatorWebClient")
 	WebClient simulatorWebClient;
 }

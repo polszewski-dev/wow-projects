@@ -26,7 +26,21 @@ services:
         restart: unless-stopped
         depends_on:
             - mongodb
+            - backend-evaluator
             - backend-simulator
+    backend-evaluator:
+        container_name: wow-evaluator-container
+        build:
+            context: .
+            dockerfile: services/wow-evaluator/Dockerfile
+        image: wow-evaluator
+        ports:
+            - 8085:8085
+        expose:
+            - 8085
+        networks:
+            - internalnet
+        restart: unless-stopped
     backend-simulator:
         container_name: wow-simulator-container
         build:
