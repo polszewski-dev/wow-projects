@@ -1,11 +1,10 @@
 package wow.simulator.converter;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
-import wow.commons.client.converter.ParametrizedConverter;
-import wow.commons.client.dto.NonPlayerDTO;
-import wow.commons.model.pve.PhaseId;
+import wow.character.service.NonPlayerCharacterFactory;
+import wow.commons.client.converter.AbstractNonPlayerConverter;
+import wow.commons.client.converter.BuffConverter;
 import wow.simulator.model.unit.NonPlayer;
 
 /**
@@ -13,17 +12,13 @@ import wow.simulator.model.unit.NonPlayer;
  * Date: 2024-11-10
  */
 @Component
-@AllArgsConstructor
-public class NonPlayerConverter implements ParametrizedConverter<NonPlayerDTO, NonPlayer, PhaseId> {
-	private final CharacterService characterService;
+public class NonPlayerConverter extends AbstractNonPlayerConverter<NonPlayer> {
+	public NonPlayerConverter(CharacterService characterService, BuffConverter buffConverter) {
+		super(characterService, buffConverter);
+	}
 
 	@Override
-	public NonPlayer doConvert(NonPlayerDTO source, PhaseId phaseId) {
-		return characterService.createNonPlayerCharacter(
-				source.enemyType(),
-				source.enemyLevel(),
-				phaseId,
-				NonPlayer.getFactory(source.name())
-		);
+	protected NonPlayerCharacterFactory<NonPlayer> getFactory(String name) {
+		return NonPlayer.getFactory("todo");
 	}
 }

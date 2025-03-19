@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wow.commons.client.dto.ActiveEffectDTO;
+import wow.commons.client.dto.BuffDTO;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.EffectReplacementMode;
-import wow.commons.repository.spell.SpellRepository;
+import wow.commons.repository.spell.BuffRepository;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
 import wow.simulator.converter.PlayerConverter;
@@ -30,20 +30,20 @@ import wow.simulator.service.SimulatorService;
 public class SimulationController {
 	private final SimulatorService simulatorService;
 
-	private final SpellRepository spellRepository;
+	private final BuffRepository buffRepository;
 
 	private final PlayerConverter playerConverter;
 	private final StatsConverter statsConverter;
 
 	@PostMapping
 	public SimulationResponseDTO simulate(@RequestBody SimulationRequestDTO request) {
-		var player = playerConverter.convert(request.player());
+		var player = playerConverter.convertBack(request.player());
 		var duration = Duration.seconds(request.duration());
 		var rngType = request.rngType();
 
 		long start = System.currentTimeMillis();
 
-		var stats = simulatorService.simulate(player, duration, rngType, () -> applyActiveEffects(player, request));
+		var stats = simulatorService.simulate(player, duration, rngType, () -> applyTargetDebuffs(player, request));
 
 		long end = System.currentTimeMillis();
 
@@ -54,24 +54,23 @@ public class SimulationController {
 		);
 	}
 
-	private void applyActiveEffects(Player player, SimulationRequestDTO request) {
-		for (var activeEffect : request.player().activeEffects()) {
-			applyEffect(player, activeEffect, player);
-		}
+	private void applyTargetDebuffs(Player player, SimulationRequestDTO request) {
+		player.getTarget().resetBuffs();
 
-		for (var activeEffect : request.player().target().activeEffects()) {
+		for (var activeEffect : request.player().target().buffs()) {
 			applyEffect(player.getTarget(), activeEffect, player);
 		}
 	}
 
-	private void applyEffect(Unit target, ActiveEffectDTO activeEffect, Unit owner) {
-		var effect = spellRepository.getEffect(activeEffect.effectId(), owner.getPhaseId()).orElseThrow();
+	private void applyEffect(Unit target, BuffDTO buffDTO, Unit owner) {
+		var buff = buffRepository.getBuff(buffDTO.buffId(), buffDTO.rank(), target.getPhaseId()).orElseThrow();
+		var effect = buff.getEffect();
 		var effectInstance = new NonPeriodicEffectInstance(
 				owner,
 				target,
 				effect,
 				Duration.INFINITE,
-				activeEffect.numStacks(),
+				buff.getStacks(),
 				1,
 				null,
 				null,
