@@ -1,10 +1,12 @@
 package wow.minmax.model.impl;
 
+import lombok.Getter;
+import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
-import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
-import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.impl.PlayerCharacterImpl;
+import wow.character.model.character.*;
+import wow.character.model.character.impl.CharacterImpl;
+import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
@@ -16,7 +18,15 @@ import wow.minmax.model.Unit;
  * User: POlszewski
  * Date: 2024-11-20
  */
-public class PlayerImpl extends PlayerCharacterImpl implements Player {
+@Getter
+public class PlayerImpl extends CharacterImpl implements Player {
+	private final Race race;
+	private final Build build;
+	private final Equipment equipment;
+	private final CharacterProfessions professions;
+	private final ExclusiveFactions exclusiveFactions;
+	private final Consumables consumables;
+
 	public PlayerImpl(
 			Phase phase,
 			CharacterClass characterClass,
@@ -26,7 +36,13 @@ public class PlayerImpl extends PlayerCharacterImpl implements Player {
 			CombatRatingInfo combatRatingInfo,
 			Talents talents
 	) {
-		super(phase, characterClass, race, level, baseStatInfo, combatRatingInfo, talents);
+		super(phase, characterClass, level, baseStatInfo, combatRatingInfo);
+		this.race = race;
+		this.build = new Build(phase.getGameVersion(), talents);
+		this.equipment = new Equipment();
+		this.professions = new CharacterProfessions();
+		this.exclusiveFactions = new ExclusiveFactions();
+		this.consumables = new Consumables();
 	}
 
 	@Override

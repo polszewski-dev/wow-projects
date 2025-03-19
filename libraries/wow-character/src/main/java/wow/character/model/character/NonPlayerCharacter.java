@@ -1,5 +1,6 @@
 package wow.character.model.character;
 
+import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
@@ -62,5 +63,10 @@ public interface NonPlayerCharacter extends Character {
 	@Override
 	default boolean hasTalent(TalentId talentId) {
 		return false;
+	}
+
+	@Override
+	default void collectEffects(EffectCollector collector) {
+		getBuffs().collectEffects(collector);
 	}
 }

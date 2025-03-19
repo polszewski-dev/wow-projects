@@ -10,6 +10,7 @@ import wow.commons.model.character.Race;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.pve.Phase;
 
 /**
  * User: POlszewski
@@ -51,5 +52,9 @@ public class BaseStatInfo {
 	@Override
 	public String toString() {
 		return String.format("%s,%s,%s", getCharacterClassId(), getRaceId(), level);
+	}
+
+	public static BaseStatInfo getDummyBaseStatInfo(CharacterClass characterClass, int level, Phase phase) {
+		return new BaseStatInfo(level, characterClass, null, 0, 0, 0, 0, 0, 1, 0, Percent.ZERO, 1, phase.getGameVersion());
 	}
 }

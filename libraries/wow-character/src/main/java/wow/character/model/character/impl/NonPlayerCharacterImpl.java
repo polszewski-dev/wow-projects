@@ -1,12 +1,13 @@
 package wow.character.model.character.impl;
 
 import lombok.Getter;
-import wow.character.model.character.*;
-import wow.character.model.effect.EffectCollector;
-import wow.commons.model.Percent;
+import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.NonPlayerCharacter;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
+
+import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 
 /**
  * User: POlszewski
@@ -19,28 +20,5 @@ public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCh
 	public NonPlayerCharacterImpl(Phase phase, CharacterClass characterClass, CreatureType creatureType, int level, CombatRatingInfo combatRatingInfo) {
 		super(phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
-	}
-
-	protected NonPlayerCharacterImpl(
-			Phase phase,
-			CharacterClass characterClass,
-			int level,
-			BaseStatInfo baseStatInfo,
-			CombatRatingInfo combatRatingInfo,
-			Spellbook spellbook,
-			Buffs buffs,
-			CreatureType creatureType
-	) {
-		super(phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
-		this.creatureType = creatureType;
-	}
-
-	@Override
-	public void collectEffects(EffectCollector collector) {
-		getBuffs().collectEffects(collector);
-	}
-
-	private static BaseStatInfo getDummyBaseStatInfo(CharacterClass characterClass, int level, Phase phase) {
-		return new BaseStatInfo(level, characterClass, null, 0, 0, 0, 0, 0, 1, 0, Percent.ZERO, 1, phase.getGameVersion());
 	}
 }

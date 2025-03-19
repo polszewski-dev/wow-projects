@@ -2,23 +2,17 @@ package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
-import wow.character.model.character.*;
-import wow.character.model.effect.EffectCollector;
+import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.snapshot.*;
-import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.*;
-import wow.commons.model.effect.Effect;
-import wow.commons.model.profession.ProfessionId;
-import wow.commons.model.profession.ProfessionSpecializationId;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.pve.Phase;
-import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
-import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
@@ -43,15 +37,14 @@ import static wow.commons.model.spell.GcdCooldownId.GCD;
  * User: POlszewski
  * Date: 2023-08-07
  */
-public abstract class UnitImpl implements Unit, SimulationContextAware {
+public abstract class UnitImpl extends CharacterImpl implements Unit, SimulationContextAware {
 	private static final IdGenerator<UnitId> ID_GENERATOR = new IdGenerator<>(UnitId::new);
 
 	protected final UnitId id = ID_GENERATOR.newId();
 	protected final String name;
-	protected final Character character;
 
 	protected final UnitResources resources = new UnitResources(this);
-	private final Effects effects = new Effects(this);
+	protected final Effects effects = new Effects(this);
 	private final Cooldowns cooldowns = new Cooldowns(this);
 
 	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
@@ -67,9 +60,9 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	private SimulationContext simulationContext;
 
-	protected UnitImpl(String name, Character character) {
+	protected UnitImpl(String name, Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+		super(phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.name = name;
-		this.character = character;
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
 		new Raid().getFirstParty().add(this);
@@ -128,7 +121,7 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	@Override
 	public Unit getTarget() {
-		return (Unit) character.getTarget();
+		return (Unit) super.getTarget();
 	}
 
 	@Override
@@ -439,118 +432,11 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 	// character interface
 
 	@Override
-	public Phase getPhase() {
-		return character.getPhase();
-	}
-
-	@Override
-	public CharacterClass getCharacterClass() {
-		return character.getCharacterClass();
-	}
-
-	@Override
-	public CreatureType getCreatureType() {
-		return character.getCreatureType();
-	}
-
-	@Override
-	public PetType getActivePetType() {
-		return character.getActivePetType();
-	}
-
-	@Override
 	public void setTarget(Character target) {
 		if (target != null && !(target instanceof Unit)) {
 			throw new IllegalArgumentException();
 		}
-		character.setTarget(target);
-	}
-
-	@Override
-	public BaseStatInfo getBaseStatInfo() {
-		return character.getBaseStatInfo();
-	}
-
-	@Override
-	public CombatRatingInfo getCombatRatingInfo() {
-		return character.getCombatRatingInfo();
-	}
-
-	@Override
-	public Spellbook getSpellbook() {
-		return character.getSpellbook();
-	}
-
-	@Override
-	public Buffs getBuffs() {
-		return character.getBuffs();
-	}
-
-	@Override
-	public void collectEffects(EffectCollector collector) {
-		character.collectEffects(collector);
-		effects.collectEffects(collector);
-		collectAurasFromOtherPartyMembers(collector);
-	}
-
-	private void collectAurasFromOtherPartyMembers(EffectCollector collector) {
-		var auraCollector = new AuraCollector(this, collector);
-
-		party.forEachPartyMember(player -> {
-			if (player != this) {
-				player.collectAuras(auraCollector);
-			}
-		});
-	}
-
-	@Override
-	public int getLevel() {
-		return character.getLevel();
-	}
-
-	@Override
-	public RaceId getRaceId() {
-		return character.getRaceId();
-	}
-
-	@Override
-	public Side getSide() {
-		return character.getSide();
-	}
-
-	@Override
-	public PveRole getRole() {
-		return character.getRole();
-	}
-
-	@Override
-	public boolean hasProfession(ProfessionId professionId) {
-		return character.hasProfession(professionId);
-	}
-
-	@Override
-	public boolean hasProfession(ProfessionId professionId, int level) {
-		return character.hasProfession(professionId, level);
-	}
-
-	@Override
-	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
-		return character.hasProfessionSpecialization(specializationId);
-	}
-
-	@Override
-	public boolean hasActivePet(PetType petType) {
-		return character.hasActivePet(petType);
-	}
-
-	@Override
-	public boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction) {
-		return character.hasExclusiveFaction(exclusiveFaction);
-	}
-
-	@Override
-	public boolean hasTalent(TalentId talentId) {
-		return character.hasTalent(talentId);
+		super.setTarget(target);
 	}
 
 	@Override
@@ -586,23 +472,5 @@ public abstract class UnitImpl implements Unit, SimulationContextAware {
 
 	public void replaceCurrentAction(UnitAction newAction) {
 		startAction(newAction);
-	}
-
-	private static class AuraCollector extends AbstractEffectCollector.OnlyEffects {
-		private final EffectCollector collector;
-
-		public AuraCollector(Unit unit, EffectCollector collector) {
-			super(unit);
-			this.collector = collector;
-		}
-
-		@Override
-		public void addEffect(Effect effect, int stackCount) {
-			if (effect.hasAugmentedAbilities() || !effect.isAura()) {
-				return;
-			}
-
-			collector.addEffect(effect, stackCount);
-		}
 	}
 }

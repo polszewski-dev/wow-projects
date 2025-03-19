@@ -3,6 +3,7 @@ package wow.character.model.character;
 import wow.character.model.build.Build;
 import wow.character.model.build.Rotation;
 import wow.character.model.build.Talents;
+import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
@@ -178,5 +179,16 @@ public interface PlayerCharacter extends Character {
 		}
 
 		return getConsumables().getAbility(abilityId).map(identity());
+	}
+
+	@Override
+	default void collectEffects(EffectCollector collector) {
+		getBuild().collectEffects(collector);
+		getEquipment().collectEffects(collector);
+		getBuffs().collectEffects(collector);
+		getConsumables().collectEffects(collector);
+		for (var racial : getRace().getRacials(this)) {
+			collector.addEffect(racial);
+		}
 	}
 }

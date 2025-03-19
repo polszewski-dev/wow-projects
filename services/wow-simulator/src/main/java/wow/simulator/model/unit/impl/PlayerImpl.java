@@ -2,16 +2,19 @@ package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
 import wow.character.model.build.Build;
-import wow.character.model.character.CharacterProfessions;
-import wow.character.model.character.Consumables;
-import wow.character.model.character.ExclusiveFactions;
-import wow.character.model.character.PlayerCharacter;
+import wow.character.model.build.Talents;
+import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.character.util.AbstractEffectCollector;
+import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Player;
+import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.ability.ShootAbility;
 
 import java.util.Optional;
@@ -25,43 +28,31 @@ import static wow.commons.model.spell.AbilityId.SHOOT;
  */
 @Getter
 public class PlayerImpl extends UnitImpl implements Player {
-	public PlayerImpl(String name, PlayerCharacter character) {
-		super(name, character);
+	private final Race race;
+	private final Build build;
+	private final Equipment equipment;
+	private final CharacterProfessions professions;
+	private final ExclusiveFactions exclusiveFactions;
+	private final Consumables consumables;
+
+	public PlayerImpl(
+			String name,
+			Phase phase,
+			CharacterClass characterClass,
+			Race race,
+			int level,
+			BaseStatInfo baseStatInfo,
+			CombatRatingInfo combatRatingInfo,
+			Talents talents
+	) {
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
+		this.race = race;
+		this.build = new Build(phase.getGameVersion(), talents);
+		this.equipment = new Equipment();
+		this.professions = new CharacterProfessions();
+		this.exclusiveFactions = new ExclusiveFactions();
+		this.consumables = new Consumables();
 		this.resources.setHealth(1_000_000_000, 1_000_000_000);
-	}
-
-	private PlayerCharacter getCharacter() {
-		return (PlayerCharacter) character;
-	}
-
-	@Override
-	public Equipment getEquipment() {
-		return getCharacter().getEquipment();
-	}
-
-	@Override
-	public Race getRace() {
-		return getCharacter().getRace();
-	}
-
-	@Override
-	public CharacterProfessions getProfessions() {
-		return getCharacter().getProfessions();
-	}
-
-	@Override
-	public Build getBuild() {
-		return getCharacter().getBuild();
-	}
-
-	@Override
-	public ExclusiveFactions getExclusiveFactions() {
-		return getCharacter().getExclusiveFactions();
-	}
-
-	@Override
-	public Consumables getConsumables() {
-		return getCharacter().getConsumables();
 	}
 
 	@Override
@@ -85,11 +76,46 @@ public class PlayerImpl extends UnitImpl implements Player {
 	}
 
 	@Override
+	public void collectEffects(EffectCollector collector) {
+		Player.super.collectEffects(collector);
+		effects.collectEffects(collector);
+		collectAurasFromOtherPartyMembers(collector);
+	}
+
+	private void collectAurasFromOtherPartyMembers(EffectCollector collector) {
+		var auraCollector = new AuraCollector(this, collector);
+
+		getParty().forEachPartyMember(player -> {
+			if (player != this) {
+				player.collectAuras(auraCollector);
+			}
+		});
+	}
+
+	@Override
 	public void collectAuras(EffectCollector collector) {
 		getEquipment().collectEffects(collector);
 
 		for (var racial : getRace().getRacials(this)) {
 			collector.addEffect(racial);
+		}
+	}
+
+	private static class AuraCollector extends AbstractEffectCollector.OnlyEffects {
+		private final EffectCollector collector;
+
+		public AuraCollector(Unit unit, EffectCollector collector) {
+			super(unit);
+			this.collector = collector;
+		}
+
+		@Override
+		public void addEffect(Effect effect, int stackCount) {
+			if (effect.hasAugmentedAbilities() || !effect.isAura()) {
+				return;
+			}
+
+			collector.addEffect(effect, stackCount);
 		}
 	}
 }
