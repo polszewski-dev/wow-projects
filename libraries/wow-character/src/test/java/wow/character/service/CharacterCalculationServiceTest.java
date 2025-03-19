@@ -470,7 +470,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var directComponent = ability.getDirectComponents().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directComponent, baseStats);
 
-		assertThat(snapshot.getCritPct()).isEqualTo(19.56, PRECISION);
+		assertThat(snapshot.getCritPct()).isEqualTo(19.58, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
 		assertThat(snapshot.getDamage()).isZero();
 		assertThat(snapshot.getDamagePct()).isEqualTo(25);
@@ -520,8 +520,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		));
 		assertThat(snapshot.getSpellHitPctBonus()).isEqualTo(15.99, PRECISION);
 		assertThat(snapshot.getSpellHitPct()).isEqualTo(98.99, PRECISION);
-		assertThat(snapshot.getSpellCritPct()).isEqualTo(30.30, PRECISION);
-		assertThat(snapshot.getSpellHastePct()).isEqualTo(27.03, PRECISION);
+		assertThat(snapshot.getSpellCritPct()).isEqualTo(30.40, PRECISION);
+		assertThat(snapshot.getSpellHastePct()).isEqualTo(27.01, PRECISION);
 		assertThat(snapshot.getSpellHitRating()).isEqualTo(164);
 		assertThat(snapshot.getSpellCritRating()).isEqualTo(331);
 		assertThat(snapshot.getSpellHasteRating()).isEqualTo(426);

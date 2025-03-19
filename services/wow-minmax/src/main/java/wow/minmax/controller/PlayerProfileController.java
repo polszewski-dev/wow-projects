@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import wow.commons.client.converter.CharacterClassConverter;
+import wow.commons.client.converter.PhaseConverter;
 import wow.commons.client.dto.EnemyTypeDTO;
 import wow.commons.client.dto.LevelDifferenceDTO;
 import wow.commons.client.dto.PhaseDTO;
@@ -14,8 +16,6 @@ import wow.minmax.client.dto.CharacterSelectionOptionsDTO;
 import wow.minmax.client.dto.NewProfileOptionsDTO;
 import wow.minmax.client.dto.PlayerProfileInfoDTO;
 import wow.minmax.config.ProfileConfig;
-import wow.commons.client.converter.CharacterClassConverter;
-import wow.commons.client.converter.PhaseConverter;
 import wow.minmax.converter.dto.PlayerProfileInfoConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.service.PlayerProfileService;
@@ -88,6 +88,7 @@ public class PlayerProfileController {
 
 	private List<PhaseDTO> getPhases(PlayerProfile playerProfile) {
 		return Stream.of(GameVersionId.values())
+				.filter(x -> x != GameVersionId.WOTLK)//not supported atm
 				.map(x -> gameVersionRepository.getGameVersion(x).orElseThrow())
 				.filter(x -> x.supports(playerProfile.getCharacterClassId(), playerProfile.getRaceId()))
 				.flatMap(x -> x.getPhases().stream())

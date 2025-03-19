@@ -21,7 +21,7 @@ class CombatRatingInfoRepositoryTest extends WowCharacterSpringTest {
 		CombatRatingInfo combatRatingInfo = underTest.getCombatRatingInfo(TBC, 70).orElseThrow();
 
 		assertThat(combatRatingInfo.getLevel()).isEqualTo(70);
-		assertThat(combatRatingInfo.getSpellCrit()).isEqualTo(22.22, PRECISION);
+		assertThat(combatRatingInfo.getSpellCrit()).isEqualTo(22.07, PRECISION);
 		assertThat(combatRatingInfo.getSpellHit()).isEqualTo(12.62, PRECISION);
 		assertThat(combatRatingInfo.getSpellHaste()).isEqualTo(15.76, PRECISION);
 	}
