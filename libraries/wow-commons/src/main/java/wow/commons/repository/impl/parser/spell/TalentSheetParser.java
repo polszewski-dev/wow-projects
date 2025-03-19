@@ -10,6 +10,8 @@ import wow.commons.model.talent.impl.TalentImpl;
 import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 import wow.commons.repository.impl.spell.TalentRepositoryImpl;
 
+import java.util.List;
+
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
@@ -80,6 +82,7 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 		effect.setScope(EffectScope.GLOBAL);
 		effect.setExclusionGroup(null);
 		effect.setModifierComponent(modifierComponent);
+		effect.setPreventedSchools(List.of());
 		effect.setStatConversions(statConversions);
 		effect.setEvents(events);
 		return effect;

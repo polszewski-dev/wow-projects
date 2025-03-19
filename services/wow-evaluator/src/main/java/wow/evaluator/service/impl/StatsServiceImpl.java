@@ -30,6 +30,7 @@ public class StatsServiceImpl implements StatsService {
 		return spells.stream()
 				.map(player::getAbility)
 				.flatMap(Optional::stream)
+				.filter(player::canCast)
 				.map(ability -> calculationService.getSpellStats(player, ability, usesCombatRatings, equivalentAmount))
 				.toList();
 	}

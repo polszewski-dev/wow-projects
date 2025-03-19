@@ -7,6 +7,7 @@ import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.component.AbsorptionComponent;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
+import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.TickScheme;
 import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
@@ -38,6 +39,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colMaxStacks = column(STACKS_MAX);
 	private final ExcelColumn colScope = column(SCOPE);
 	private final ExcelColumn colExclusionGroup = column(EXCLUSION_GROUP);
+	private final ExcelColumn colPreventedSchools = column(PREVENTED_SCHOOLS, true);
 
 	protected Effect getEffect() {
 		var effect = newEffect();
@@ -50,6 +52,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var periodicComponent = getPeriodicComponent();
 		var modifierComponent = getModifierComponent(maxModAttributes);
 		var absorptionComponent = getAbsorptionComponent();
+		var preventedSchools = colPreventedSchools.getList(SpellSchool::parse);
 		var statConversions = getStatConversions();
 		var events = getEvents(maxEvents);
 
@@ -61,6 +64,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		effect.setExclusionGroup(exclusionGroup);
 		effect.setPeriodicComponent(periodicComponent);
 		effect.setModifierComponent(modifierComponent);
+		effect.setPreventedSchools(preventedSchools);
 		effect.setAbsorptionComponent(absorptionComponent);
 		effect.setStatConversions(statConversions);
 		effect.setEvents(events);

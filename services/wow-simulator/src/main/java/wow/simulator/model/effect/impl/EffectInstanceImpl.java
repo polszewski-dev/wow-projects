@@ -6,10 +6,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.*;
 import wow.commons.model.effect.component.*;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.ClassAbility;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.action.ActionStatus;
@@ -341,6 +338,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public AbsorptionComponent getAbsorptionComponent() {
 		return effect.getAbsorptionComponent();
+	}
+
+	@Override
+	public List<SpellSchool> getPreventedSchools() {
+		return effect.getPreventedSchools();
 	}
 
 	@Override

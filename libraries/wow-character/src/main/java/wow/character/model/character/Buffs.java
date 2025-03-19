@@ -9,6 +9,7 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffIdAndRank;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -39,6 +40,10 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 
 	public List<Buff> getList() {
 		return List.copyOf(enabledBuffsById.values());
+	}
+
+	public Stream<Buff> getStream() {
+		return enabledBuffsById.values().stream();
 	}
 
 	public List<Buff> getAvailableHighestRanks() {

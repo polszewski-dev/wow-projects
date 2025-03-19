@@ -310,7 +310,7 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private List<BuffIdAndRank> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
-		return buffs.getList().stream()
+		return buffs.getStream()
 				.filter(x -> Stream.of(buffCategories).anyMatch(y -> x.getCategories().contains(y)))
 				.map(Buff::getId)
 				.toList();

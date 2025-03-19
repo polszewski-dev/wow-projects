@@ -6,6 +6,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.*;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.List;
 
@@ -77,6 +78,11 @@ public class EmptyEffect implements Effect {
 	@Override
 	public AbsorptionComponent getAbsorptionComponent() {
 		return null;
+	}
+
+	@Override
+	public List<SpellSchool> getPreventedSchools() {
+		return List.of();
 	}
 
 	@Override

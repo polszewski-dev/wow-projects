@@ -5,8 +5,8 @@ import wow.commons.model.Duration;
 import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.spell.AbilityId.SHADOWFORM;
+import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.MANA;
 
 /**
@@ -47,6 +47,16 @@ class ShadowformTest extends PriestSpellSimulationTest {
 		updateUntil(30);
 
 		assertDamageDone(MIND_BLAST, MIND_BLAST_INFO.damage(), 15);
+	}
+
+	@Test
+	void canNotCastHolySpells() {
+		player.cast(SHADOWFORM);
+
+		updateUntil(30);
+
+		assertThat(player.canCast(SMITE)).isFalse();
+		assertThat(player.canCast(HOLY_FIRE)).isFalse();
 	}
 
 	@Override

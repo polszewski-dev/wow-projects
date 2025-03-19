@@ -10,6 +10,7 @@ import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.TalentTree;
 import wow.evaluator.model.Player;
 import wow.evaluator.model.Unit;
@@ -109,5 +110,14 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	@Override
 	public int getNumberOfEffectsOnTarget(TalentTree tree) {
 		return 0;
+	}
+
+	@Override
+	public boolean canCast(Ability ability) {
+		return !isSchoolPrevented(ability);
+	}
+
+	private boolean isSchoolPrevented(Ability ability) {
+		return getBuffs().getStream().anyMatch(x -> x.isSchoolPrevented(ability.getSchool()));
 	}
 }

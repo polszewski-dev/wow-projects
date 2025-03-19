@@ -63,7 +63,7 @@ public class Effects implements SimulationContextSource, EffectCollection {
 	}
 
 	private EffectInstance getMatchingEffect(EffectInstance newEffect) {
-		return getEffectInstanceStream()
+		return getStream()
 				.filter(existingEffect -> isMatching(existingEffect, newEffect))
 				.findAny()
 				.orElse(null);
@@ -103,23 +103,23 @@ public class Effects implements SimulationContextSource, EffectCollection {
 	}
 
 	public boolean isUnderEffect(AbilityId abilityId, Unit owner) {
-		return getEffectInstanceStream()
+		return getStream()
 				.anyMatch(x -> x.matches(abilityId, owner));
 	}
 
 	public boolean isUnderEffect(AbilityId abilityId) {
-		return getEffectInstanceStream()
+		return getStream()
 				.anyMatch(x -> x.matches(abilityId));
 	}
 
 	public Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner) {
-		return getEffectInstanceStream()
+		return getStream()
 				.filter(x -> x.matches(abilityId, owner))
 				.findAny();
 	}
 
 	public int getNumberOfEffects(TalentTree tree) {
-		return (int) getEffectInstanceStream()
+		return (int) getStream()
 				.filter(x -> x.matches(tree))
 				.count();
 	}
@@ -136,7 +136,7 @@ public class Effects implements SimulationContextSource, EffectCollection {
 		}
 	}
 
-	private Stream<EffectInstance> getEffectInstanceStream() {
+	public Stream<EffectInstance> getStream() {
 		return effectsById.values().stream();
 	}
 

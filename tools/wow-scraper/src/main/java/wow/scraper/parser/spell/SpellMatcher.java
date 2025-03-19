@@ -123,6 +123,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		effect.setPeriodicComponent(periodicComponent);
 		effect.setModifierComponent(modifierComponent);
 		effect.setAbsorptionComponent(absorptionComponent);
+		effect.setPreventedSchools(List.of());
 		effect.setStatConversions(statConversions);
 		effect.setEvents(events);
 

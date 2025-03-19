@@ -9,6 +9,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.*;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +34,7 @@ public class EffectImpl implements Effect {
 	private ModifierComponent modifierComponent;
 	private List<Attribute> modifierAttributeList;
 	private AbsorptionComponent absorptionComponent;
+	private List<SpellSchool> preventedSchools;
 	private List<StatConversion> statConversions;
 	private List<Event> events;
 
@@ -55,6 +57,7 @@ public class EffectImpl implements Effect {
 		if (tooltip != null) {
 			effect.setDescription(new Description("", null, tooltip));
 		}
+		effect.setPreventedSchools(List.of());
 		effect.setStatConversions(List.of());
 		effect.setEvents(List.of());
 		return effect;

@@ -8,6 +8,7 @@ import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EmptyEffect;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.List;
 
@@ -43,6 +44,8 @@ public interface Effect extends Described, TimeRestricted {
 	List<Attribute> getModifierAttributeList();
 
 	AbsorptionComponent getAbsorptionComponent();
+
+	List<SpellSchool> getPreventedSchools();
 
 	List<StatConversion> getStatConversions();
 
@@ -82,6 +85,10 @@ public interface Effect extends Described, TimeRestricted {
 
 	default boolean hasAbsorptionComponent() {
 		return getAbsorptionComponent() != null;
+	}
+
+	default boolean isSchoolPrevented(SpellSchool school) {
+		return school != null && getPreventedSchools().contains(school);
 	}
 
 	default boolean hasStatConversions() {

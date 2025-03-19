@@ -6,6 +6,7 @@ import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Set;
 
@@ -39,4 +40,8 @@ public interface Buff extends Described, TimeRestricted, CharacterRestricted, Pv
 	Effect getEffect();
 
 	int getStacks();
+
+	default boolean isSchoolPrevented(SpellSchool school) {
+		return getEffect().isSchoolPrevented(school);
+	}
 }

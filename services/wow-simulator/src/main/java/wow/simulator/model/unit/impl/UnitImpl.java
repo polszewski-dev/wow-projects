@@ -212,7 +212,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return hasAllValidTargets(ability, primaryTarget.getTargetResolver(this)) &&
 				!isOnCooldown(ability) &&
 				canPaySpellCost(ability) &&
-				hasRequiredEffect(ability, primaryTarget);
+				hasRequiredEffect(ability, primaryTarget) &&
+				!isSchoolPrevented(ability.getSchool());
 	}
 
 	private boolean hasAllValidTargets(Ability ability, TargetResolver targetResolver) {
@@ -237,6 +238,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 		var target = primaryTarget.requireSingleTarget();
 		return target.isUnderEffect(ability.getRequiredEffect(), this);
+	}
+
+	private boolean isSchoolPrevented(SpellSchool school) {
+		return getBuffs().getStream().anyMatch(x -> x.isSchoolPrevented(school)) ||
+				effects.getStream().anyMatch(x -> x.isSchoolPrevented(school));
 	}
 
 	@Override
