@@ -12,5 +12,6 @@ import wow.commons.model.Duration;
 @Setter
 public class EffectDurationSnapshot {
 	private Duration duration;
+	private int numTicks;
 	private Duration tickInterval;
 }

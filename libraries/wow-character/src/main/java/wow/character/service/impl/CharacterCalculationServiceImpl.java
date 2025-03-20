@@ -375,22 +375,33 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var durationSnapshot = new EffectDurationSnapshot();
 
 		if (spell instanceof Ability ability && ability.isChanneled()) {
-			var hastePct = getHastePct(character, durationStats);
-			var baseDuration = effectApplication.duration().getSeconds();
-			var actualChannelTime = getActualCastTime(baseDuration, hastePct);
-			var baseTickInterval = effect.getTickInterval().getSeconds();
-			var numTicks = (int) (baseDuration / baseTickInterval);
-			var tickInterval = actualChannelTime / numTicks;
+			var baseDurationMillis = effectApplication.duration().millis();
+			var baseTickIntervalMillis = effect.getTickInterval().millis();
+			var numTicks = baseDurationMillis / baseTickIntervalMillis;
 
-			durationSnapshot.setDuration(Duration.seconds(actualChannelTime));
-			durationSnapshot.setTickInterval(Duration.seconds(tickInterval));
+			var hastePct = getHastePct(character, durationStats);
+			var channelTimeMillis = getActualCastTime(baseDurationMillis, hastePct);
+			var tickIntervalMillis = (long) (channelTimeMillis / numTicks);
+
+			durationSnapshot.setDuration(Duration.millis(tickIntervalMillis * numTicks));
+			durationSnapshot.setNumTicks((int) numTicks);
+			durationSnapshot.setTickInterval(Duration.millis(tickIntervalMillis));
 		} else {
 			var baseDuration = effectApplication.duration();
 			var duration = getEffectDuration(baseDuration, durationStats, targetStats);
-			var tickInterval = effect.getTickInterval() != null ? effect.getTickInterval().getSeconds() : 0;
+			var tickInterval = effect.getTickInterval();
 
 			durationSnapshot.setDuration(duration);
-			durationSnapshot.setTickInterval(Duration.seconds(tickInterval));
+
+			if (tickInterval != null) {
+				var numTicks = duration.millis() / tickInterval.millis();
+
+				durationSnapshot.setNumTicks((int) numTicks);
+				durationSnapshot.setTickInterval(tickInterval);
+			} else {
+				durationSnapshot.setNumTicks(0);
+				durationSnapshot.setTickInterval(Duration.ZERO);
+			}
 		}
 
 		return durationSnapshot;

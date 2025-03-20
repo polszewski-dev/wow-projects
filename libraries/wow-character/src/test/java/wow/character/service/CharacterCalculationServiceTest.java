@@ -377,7 +377,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	void getEffectDurationSnapshotEffect() {
+	void getEffectDurationSnapshotEffectZero() {
 		var priest = getCharacter(PRIEST, UNDEAD);
 
 		priest.resetEquipment();
@@ -386,6 +386,21 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget());
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(24));
+		assertThat(durationSnapshot.getNumTicks()).isEqualTo(8);
+		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.seconds(3));
+	}
+
+	@Test
+	void getEffectDurationSnapshotEffectSomeHaste() {
+		var priest = getCharacter(PRIEST, UNDEAD);
+
+		character.setEquipment(getEquipment());
+
+		var ability = priest.getAbility(SHADOW_WORD_PAIN).orElseThrow();
+		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget());
+
+		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(24));
+		assertThat(durationSnapshot.getNumTicks()).isEqualTo(8);
 		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.seconds(3));
 	}
 
@@ -397,6 +412,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target);
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(5));
+		assertThat(durationSnapshot.getNumTicks()).isEqualTo(5);
 		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.seconds(1));
 	}
 
@@ -407,7 +423,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target);
 
-		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.millis(3936));
+		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.millis(3935));
+		assertThat(durationSnapshot.getNumTicks()).isEqualTo(5);
 		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.millis(787));
 	}
 

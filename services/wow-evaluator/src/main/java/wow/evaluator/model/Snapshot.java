@@ -80,17 +80,13 @@ public class Snapshot {
 
 	private double getPeriodicDamage() {
 		double result = 0;
-		int tickCount = getTickCount();
+		int tickCount = effectDuration.getNumTicks();
 
 		for (int tickNo = 1; tickNo <= tickCount; ++tickNo) {
 			result += periodic.getTickDamage(tickNo);
 		}
 
 		return result;
-	}
-
-	private int getTickCount() {
-		return (int) (effectDuration.getDuration().getSeconds() / effectDuration.getTickInterval().getSeconds());
 	}
 
 	public int getManaCost() {
