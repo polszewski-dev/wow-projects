@@ -605,7 +605,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var cr = character.getCombatRatingInfo();
 
 		var intellect = baseStats.getIntellect();
-		var intCrit = (intellect - baseStatInfo.getBaseIntellect()) / baseStatInfo.getIntellectPerCritPct();
+		var intCrit = intellect / baseStatInfo.getIntellectPerCritPct();
 		var ratingCrit = spellStats.getCritRating() / cr.getSpellCrit();
 		var pctCrit = spellStats.getCritPct();
 		var targetCrit = targetStats.getCritTakenPct();

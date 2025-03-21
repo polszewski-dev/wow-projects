@@ -1,12 +1,13 @@
 package wow.character.repository.impl.parser.character;
 
 import wow.character.model.character.BaseStatInfo;
-import wow.character.repository.impl.BaseStatInfoRepositoryImpl;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.repository.impl.parser.excel.GameVersionedExcelSheetParser;
 import wow.commons.repository.pve.GameVersionRepository;
+
+import java.util.function.Consumer;
 
 /**
  * User: POlszewski
@@ -26,11 +27,11 @@ public class BaseStatInfoSheetParser extends GameVersionedExcelSheetParser {
 	private final ExcelColumn colBaseSpellCrit = column("base_spell_crit");
 	private final ExcelColumn colIntPerCrit = column("int_per_crit");
 
-	private final BaseStatInfoRepositoryImpl baseStatInfoRepository;
+	private final Consumer<BaseStatInfo> consumer;
 
-	public BaseStatInfoSheetParser(String sheetName, GameVersionRepository gameVersionRepository, BaseStatInfoRepositoryImpl baseStatInfoRepository) {
+	public BaseStatInfoSheetParser(String sheetName, GameVersionRepository gameVersionRepository, Consumer<BaseStatInfo> consumer) {
 		super(sheetName, gameVersionRepository);
-		this.baseStatInfoRepository = baseStatInfoRepository;
+		this.consumer = consumer;
 	}
 
 	@Override
@@ -67,6 +68,6 @@ public class BaseStatInfoSheetParser extends GameVersionedExcelSheetParser {
 	}
 
 	private void addBaseStatInfo(BaseStatInfo baseStatInfo) {
-		baseStatInfoRepository.addBaseStatInfo(baseStatInfo);
+		consumer.accept(baseStatInfo);
 	}
 }

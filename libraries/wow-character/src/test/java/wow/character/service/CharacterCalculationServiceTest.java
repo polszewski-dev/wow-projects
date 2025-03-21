@@ -300,7 +300,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(snapshot.getIntellect()).isEqualTo(131);
 		assertThat(snapshot.getSpirit()).isEqualTo(136);
 		assertThat(snapshot.getMaxHealth()).isEqualTo(4315);
-		assertThat(snapshot.getMaxMana()).isEqualTo(4429);
+		assertThat(snapshot.getMaxMana()).isEqualTo(4414);
 	}
 
 	@Test
@@ -440,7 +440,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var directComponent = ability.getDirectComponents().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directComponent, baseStats);
 
-		assertThat(snapshot.getCritPct()).isEqualTo(15.83, PRECISION);
+		assertThat(snapshot.getCritPct()).isEqualTo(15.87, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
 		assertThat(snapshot.getDamage()).isZero();
 		assertThat(snapshot.getDamagePct()).isEqualTo(25);
@@ -470,7 +470,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var directComponent = ability.getDirectComponents().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directComponent, baseStats);
 
-		assertThat(snapshot.getCritPct()).isEqualTo(19.58, PRECISION);
+		assertThat(snapshot.getCritPct()).isEqualTo(19.62, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
 		assertThat(snapshot.getDamage()).isZero();
 		assertThat(snapshot.getDamagePct()).isEqualTo(25);
@@ -507,7 +507,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(snapshot.getIntellect()).isEqualTo(620);
 		assertThat(snapshot.getSpirit()).isEqualTo(245);
 		assertThat(snapshot.getMaxHealth()).isEqualTo(11618);
-		assertThat(snapshot.getMaxMana()).isEqualTo(11984);
+		assertThat(snapshot.getMaxMana()).isEqualTo(11969);
 		assertThat(snapshot.getSpellPower()).isEqualTo(1170);
 		assertThat(snapshot.getSpellDamage()).isEqualTo(1616);
 		assertThat(snapshot.getSpellDamageBySchool()).isEqualTo(Map.ofEntries(
@@ -520,7 +520,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		));
 		assertThat(snapshot.getSpellHitPctBonus()).isEqualTo(15.99, PRECISION);
 		assertThat(snapshot.getSpellHitPct()).isEqualTo(98.99, PRECISION);
-		assertThat(snapshot.getSpellCritPct()).isEqualTo(30.40, PRECISION);
+		assertThat(snapshot.getSpellCritPct()).isEqualTo(30.44, PRECISION);
 		assertThat(snapshot.getSpellHastePct()).isEqualTo(27.01, PRECISION);
 		assertThat(snapshot.getSpellHitRating()).isEqualTo(164);
 		assertThat(snapshot.getSpellCritRating()).isEqualTo(331);

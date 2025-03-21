@@ -23,13 +23,15 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class BaseStatInfoRepositoryImpl implements BaseStatInfoRepository {
-	private final GameVersionMap<String, BaseStatInfo> baseStatInfoByKey = new GameVersionMap<>();
+	private record Key(CharacterClassId characterClassId, RaceId raceId, int level) {}
+
+	private final GameVersionMap<Key, BaseStatInfo> baseStatInfoByKey = new GameVersionMap<>();
 
 	private final GameVersionRepository gameVersionRepository;
 
 	@Override
 	public Optional<BaseStatInfo> getBaseStatInfo(GameVersionId gameVersionId, CharacterClassId characterClassId, RaceId raceId, int level) {
-		var key = getBaseStatInfoKey(characterClassId, raceId, level);
+		var key = new Key(characterClassId, raceId, level);
 		return baseStatInfoByKey.getOptional(gameVersionId, key);
 	}
 
@@ -38,20 +40,17 @@ public class BaseStatInfoRepositoryImpl implements BaseStatInfoRepository {
 
 	@PostConstruct
 	public void init() throws IOException {
-		var excelParser = new BaseStatInfoExcelParser(xlsFilePath, gameVersionRepository, this);
+		var excelParser = new BaseStatInfoExcelParser(xlsFilePath, gameVersionRepository);
 		excelParser.readFromXls();
+		excelParser.getBaseStatInfos().forEach(this::addBaseStatInfo);
 	}
 
-	public void addBaseStatInfo(BaseStatInfo baseStatInfo) {
-		var key = getBaseStatInfoKey(baseStatInfo);
+	private void addBaseStatInfo(BaseStatInfo baseStatInfo) {
+		var key = new Key(
+				baseStatInfo.getCharacterClassId(),
+				baseStatInfo.getRaceId(),
+				baseStatInfo.getLevel()
+		);
 		baseStatInfoByKey.put(baseStatInfo.getGameVersionId(), key, baseStatInfo);
-	}
-
-	private static String getBaseStatInfoKey(BaseStatInfo baseStatInfo) {
-		return getBaseStatInfoKey(baseStatInfo.getCharacterClassId(), baseStatInfo.getRaceId(), baseStatInfo.getLevel());
-	}
-
-	private static String getBaseStatInfoKey(CharacterClassId characterClassId, RaceId raceId, int level) {
-		return characterClassId + "#" + level + "#" + raceId;
 	}
 }
