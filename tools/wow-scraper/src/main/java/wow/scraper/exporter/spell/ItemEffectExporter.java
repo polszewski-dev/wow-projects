@@ -53,12 +53,12 @@ public class ItemEffectExporter extends MultiPageSpellBaseExporter {
 	private static Comparator<Effect> getEffectComparator() {
 		return Comparator
 				.comparing(Effect::getName)
-				.thenComparing(x -> x.getTimeRestriction().getGameVersionId());
+				.thenComparing(Effect::getGameVersionId);
 	}
 
 	private static Comparator<Spell> getSpellComparator() {
 		return Comparator
 				.comparing(Spell::getName)
-				.thenComparing(x -> x.getTimeRestriction().getGameVersionId());
+				.thenComparing(Spell::getGameVersionId);
 	}
 }

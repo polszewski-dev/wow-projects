@@ -37,6 +37,6 @@ public class FactionRepositoryImpl implements FactionRepository {
 	}
 
 	public void addFactionByName(Faction faction) {
-		factionByName.put(faction.getTimeRestriction().getGameVersionId(), faction.getName(), faction);
+		factionByName.put(faction.getGameVersionId(), faction.getName(), faction);
 	}
 }

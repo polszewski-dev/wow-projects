@@ -83,8 +83,8 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	}
 
 	private void validateIds() {
-		assertNoDuplicates(spellsByTooltip.allValues(), x -> x.getId() + "#" + x.getTimeRestriction().getGameVersionId());
-		assertNoDuplicates(effectsByTooltip.allValues(), x -> x.getEffectId() + "#" + x.getTimeRestriction().getGameVersionId());
+		assertNoDuplicates(spellsByTooltip.allValues(), x -> x.getId() + "#" + x.getGameVersionId());
+		assertNoDuplicates(effectsByTooltip.allValues(), x -> x.getEffectId() + "#" + x.getGameVersionId());
 	}
 
 	private void createItemSpellsAndEffects(ItemEffectParser parser) {
@@ -166,7 +166,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 			return false;
 		}
 
-		var version = spell.getTimeRestriction().getGameVersionId();
+		var version = spell.getGameVersionId();
 		var tooltip = spell.getTooltip();
 
 		spellsByTooltip.put(version, tooltip, spell);
@@ -178,7 +178,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 			return false;
 		}
 
-		var version = effect.getTimeRestriction().getGameVersionId();
+		var version = effect.getGameVersionId();
 		var tooltip = effect.getTooltip();
 
 		effectsByTooltip.put(version, tooltip, effect);
@@ -186,7 +186,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	}
 
 	private boolean isToBeUpdated(ActivatedAbility spell) {
-		var version = spell.getTimeRestriction().getGameVersionId();
+		var version = spell.getGameVersionId();
 		var tooltip = spell.getTooltip();
 
 		var existingOptional = spellsByTooltip.getOptional(version, tooltip);
@@ -195,7 +195,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	}
 
 	private boolean isToBeUpdated(Effect effect) {
-		var version = effect.getTimeRestriction().getGameVersionId();
+		var version = effect.getGameVersionId();
 		var tooltip = effect.getTooltip();
 
 		var existingOptional = effectsByTooltip.getOptional(version, tooltip);

@@ -66,7 +66,7 @@ public class SourceConverter {
 	}
 
 	private Profession getProfession(Source source, AbstractItem item) {
-		var gameVersionId = item.getTimeRestriction().getGameVersionId();
+		var gameVersionId = item.getGameVersionId();
 
 		return professionRepository.getProfession(source.professionId(), gameVersionId).orElseThrow();
 	}

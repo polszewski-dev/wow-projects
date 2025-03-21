@@ -47,6 +47,6 @@ public class NpcRepositoryImpl implements NpcRepository {
 
 	public void addNpc(Npc npc) {
 		addNpcToZones(npc);
-		npcById.put(npc.getTimeRestriction().getGameVersionId(), npc.getId(), npc);
+		npcById.put(npc.getGameVersionId(), npc.getId(), npc);
 	}
 }

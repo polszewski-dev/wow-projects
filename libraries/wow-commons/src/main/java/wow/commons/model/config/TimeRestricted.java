@@ -1,5 +1,6 @@
 package wow.commons.model.config;
 
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
 /**
@@ -11,6 +12,10 @@ public interface TimeRestricted {
 
 	default PhaseId getEarliestPhaseId() {
 		return getTimeRestriction().earliestPhaseId();
+	}
+
+	default GameVersionId getGameVersionId() {
+		return getTimeRestriction().getGameVersionId();
 	}
 
 	default boolean isAvailableDuring(PhaseId phaseId) {

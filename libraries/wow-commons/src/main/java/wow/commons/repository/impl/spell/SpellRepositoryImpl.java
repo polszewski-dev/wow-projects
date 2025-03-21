@@ -183,7 +183,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 		putForEveryPhase(effectById, effect.getEffectId(), effect);
 
-		var gameVersionId = effect.getTimeRestriction().getGameVersionId();
+		var gameVersionId = effect.getGameVersionId();
 
 		if (effect instanceof RacialEffect racial) {
 			for (var raceId : racial.getCharacterRestriction().raceIds()) {

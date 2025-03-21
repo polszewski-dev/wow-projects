@@ -62,7 +62,7 @@ public class ZoneRepositoryImpl implements ZoneRepository {
 
 	public void addZone(Zone zone) {
 		zone.setNpcs(new ArrayList<>());
-		zoneById.put(zone.getTimeRestriction().getGameVersionId(), zone.getId(), zone);
-		zoneByName.computeIfAbsent(zone.getTimeRestriction().getGameVersionId(), zone.getName(), x -> new ArrayList<>()).add(zone);
+		zoneById.put(zone.getGameVersionId(), zone.getId(), zone);
+		zoneByName.computeIfAbsent(zone.getGameVersionId(), zone.getName(), x -> new ArrayList<>()).add(zone);
 	}
 }
