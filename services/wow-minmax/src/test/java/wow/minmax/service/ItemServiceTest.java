@@ -100,7 +100,8 @@ class ItemServiceTest extends ServiceTest {
 				"Destructive Skyfire Diamond",
 				"Mystical Skyfire Diamond",
 				"Chaotic Skyfire Diamond",
-				"Ember Skyfire Diamond"
+				"Ember Skyfire Diamond",
+				"Imbued Unstable Diamond"
 		));
 
 		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();

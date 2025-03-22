@@ -86,7 +86,7 @@ public abstract class ItemVariantEnumerator {
 			var ring1 = rings.get(i);
 			for (int j = i; j < rings.size(); j++) {
 				var ring2 = rings.get(j);
-				if (i != j || !ring1.isUnique()) {
+				if (i != j || !ring1.isEffectivelyUnique()) {
 					handleItemOption(ring1, ring2);
 				}
 			}
@@ -100,7 +100,7 @@ public abstract class ItemVariantEnumerator {
 			var trinket1 = trinkets.get(i);
 			for (int j = i; j < trinkets.size(); j++) {
 				var trinket2 = trinkets.get(j);
-				if (i != j || !trinket1.isUnique()) {
+				if (i != j || !trinket1.isEffectivelyUnique()) {
 					handleItemOption(trinket1, trinket2);
 				}
 			}

@@ -49,6 +49,10 @@ public interface AbstractItem extends Described, TimeRestricted, CharacterRestri
 		return getBasicItemInfo().unique();
 	}
 
+	default boolean isEffectivelyUnique() {
+		return isUnique() || isAvailableOnlyByQuests();
+	}
+
 	default int getItemLevel() {
 		return getBasicItemInfo().itemLevel();
 	}

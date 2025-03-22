@@ -28,7 +28,7 @@ class GemComboFinderTest extends WowEvaluatorSpringTest {
 			"RED,                  10, 5",
 			"YELLOW,               10, 8",
 			"BLUE,                 10, 3",
-			"META,                 4,  4",
+			"META,                 5,  5",
 
 			"RED;RED,              55, 15",
 			"RED;YELLOW,           55, 37",
@@ -37,9 +37,9 @@ class GemComboFinderTest extends WowEvaluatorSpringTest {
 			"YELLOW;BLUE,          55, 23",
 			"BLUE;BLUE,            55, 6",
 
-			"META;RED,             40, 20",
-			"META;YELLOW,          40, 32",
-			"META;BLUE,            40, 12",
+			"META;RED,             50, 25",
+			"META;YELLOW,          50, 40",
+			"META;BLUE,            50, 15",
 
 			"RED;RED;RED,          220, 35",
 			"RED;RED;YELLOW,       220, 106",

@@ -83,6 +83,10 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		return item.isUnique();
 	}
 
+	public boolean isEffectivelyUnique() {
+		return item.isEffectivelyUnique();
+	}
+
 	public int getSocketCount() {
 		return item.getSocketCount();
 	}
