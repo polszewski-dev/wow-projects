@@ -11,7 +11,8 @@ import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentIdAndRank;
 import wow.commons.model.talent.TalentTree;
-import wow.commons.util.CollectionUtil;
+
+import static wow.commons.util.CollectionUtil.getUniqueResult;
 
 /**
  * User: POlszewski
@@ -54,7 +55,7 @@ public class TalentImpl implements Talent {
 
 	@Override
 	public CharacterClassId getCharacterClass() {
-		return CollectionUtil.getUniqueResult(getCharacterRestriction().characterClassIds()).orElseThrow();
+		return getUniqueResult(getRequiredCharacterClassIds()).orElseThrow();
 	}
 
 	@Override

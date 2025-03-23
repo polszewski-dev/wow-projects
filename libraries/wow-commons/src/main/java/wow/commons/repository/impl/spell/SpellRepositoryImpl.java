@@ -168,7 +168,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 		validateSpell(spell);
 
 		if (spell instanceof Ability ability) {
-			for (var characterClassId : ability.getCharacterRestriction().characterClassIds()) {
+			for (var characterClassId : ability.getRequiredCharacterClassIds()) {
 				addEntryForEveryPhase(abilitiesByClass, characterClassId, ability);
 			}
 

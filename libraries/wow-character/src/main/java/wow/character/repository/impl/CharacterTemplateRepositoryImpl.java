@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterTemplate;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.repository.CharacterTemplateRepository;
 import wow.character.repository.impl.parser.character.CharacterTemplateExcelParser;
 import wow.commons.model.character.CharacterClassId;
@@ -14,9 +15,12 @@ import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
 
 /**
  * User: POlszewski
@@ -25,7 +29,9 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
 @Component
 @RequiredArgsConstructor
 public class CharacterTemplateRepositoryImpl implements CharacterTemplateRepository {
-	private final PhaseMap<String, CharacterTemplate> characterTemplateByKey = new PhaseMap<>();
+	private record Key(CharacterClassId characterClassId, int level) {}
+
+	private final PhaseMap<Key, List<CharacterTemplate>> characterTemplateByKey = new PhaseMap<>();
 
 	private final TalentRepository talentRepository;
 	private final PhaseRepository phaseRepository;
@@ -34,18 +40,25 @@ public class CharacterTemplateRepositoryImpl implements CharacterTemplateReposit
 	private String xlsFilePath;
 
 	@Override
-	public Optional<CharacterTemplate> getCharacterTemplate(String name, CharacterClassId characterClassId, int level, PhaseId phaseId) {
-		String key = getCharacterTemplateKey(name, characterClassId, level);
-		return characterTemplateByKey.getOptional(phaseId, key);
+	public Optional<CharacterTemplate> getCharacterTemplate(String name, PlayerCharacter character, PhaseId phaseId) {
+		return getCharacterTemplateStream(character, phaseId)
+				.filter(x -> x.getName().equals(name))
+				.findAny();
 	}
 
 	@Override
-	public Optional<CharacterTemplate> getDefaultCharacterTemplate(CharacterClassId characterClassId, int level, PhaseId phaseId) {
-		return characterTemplateByKey.values(phaseId).stream()
-				.filter(x -> x.getCharacterClassId() == characterClassId)
-				.filter(x -> x.getLevel() == level)
+	public Optional<CharacterTemplate> getDefaultCharacterTemplate(PlayerCharacter character, PhaseId phaseId) {
+		return getCharacterTemplateStream(character, phaseId)
 				.filter(CharacterTemplate::isDefault)
-				.findFirst();
+				.findAny();
+	}
+
+	private Stream<CharacterTemplate> getCharacterTemplateStream(PlayerCharacter character, PhaseId phaseId) {
+		var key = new Key(character.getCharacterClassId(), character.getLevel());
+
+		return characterTemplateByKey.getOptional(phaseId, key).stream()
+				.flatMap(Collection::stream)
+				.filter(x -> x.isAvailableTo(character));
 	}
 
 	@PostConstruct
@@ -55,11 +68,13 @@ public class CharacterTemplateRepositoryImpl implements CharacterTemplateReposit
 	}
 
 	public void addCharacterTemplate(CharacterTemplate characterTemplate) {
-		String key = getCharacterTemplateKey(characterTemplate.getName(), characterTemplate.getCharacterClassId(), characterTemplate.getLevel());
-		putForEveryPhase(characterTemplateByKey, key, characterTemplate);
-	}
+		var characterClassId = characterTemplate.getRequiredCharacterClassId();
+		int maxLevel = characterTemplate.getRequiredMaxLevel();
 
-	private static String getCharacterTemplateKey(String name, CharacterClassId characterClassId, int level) {
-		return name + "#" + characterClassId + "#" + level;
+		for (int level = characterTemplate.getRequiredLevel(); level <= maxLevel; ++level) {
+			var key = new Key(characterClassId, level);
+
+			addEntryForEveryPhase(characterTemplateByKey, key, characterTemplate);
+		}
 	}
 }

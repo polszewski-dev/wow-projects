@@ -6,8 +6,6 @@ import wow.character.model.character.CharacterTemplate;
 import wow.character.repository.impl.CharacterTemplateRepositoryImpl;
 import wow.character.util.TalentLinkParser;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
@@ -27,10 +25,7 @@ import java.util.stream.Stream;
  * Date: 2022-11-30
  */
 public class CharacterTemplateSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colReqLevel = column("req_level");
-	private final ExcelColumn colReqClass = column("req_class");
 	private final ExcelColumn colTalentLink = column("talent_link");
-	private final ExcelColumn colRole = column("role");
 	private final ExcelColumn colDefaultRotation = column("default_rotation");
 	private final ExcelColumn colActivePet = column("active_pet");
 	private final ExcelColumn colDefaultBuffs = column("default_buffs");
@@ -62,11 +57,9 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 
 	private CharacterTemplate getCharacterTemplate() {
 		var name = colName.getString();
-		var characterClass = colReqClass.getEnum(CharacterClassId::parse);
-		var level = colReqLevel.getInteger();
 		var timeRestriction = getTimeRestriction();
+		var characterRestriction = getRestriction();
 		var talentLink = colTalentLink.getEnum(x -> TalentLinkParser.parse(x, talentRepository));
-		var pveRole = colRole.getEnum(PveRole::parse);
 		var defaultRotation = RotationTemplate.parse(colDefaultRotation.getString());
 		var activePet = colActivePet.getEnum(PetType::parse, null);
 		var defaultBuffs = colDefaultBuffs.getList(BuffId::parse);
@@ -78,11 +71,9 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 
 		return new CharacterTemplate(
 				name,
-				characterClass,
-				level,
+				characterRestriction,
 				timeRestriction,
 				talentLink,
-				pveRole,
 				defaultRotation,
 				activePet,
 				defaultBuffs,

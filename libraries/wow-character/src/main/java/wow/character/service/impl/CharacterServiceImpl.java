@@ -112,8 +112,7 @@ public class CharacterServiceImpl implements CharacterService {
 	@Override
 	public void applyDefaultCharacterTemplate(PlayerCharacter character) {
 		var characterTemplate = characterTemplateRepository.getDefaultCharacterTemplate(
-				character.getCharacterClassId(),
-				character.getLevel(),
+				character,
 				character.getPhaseId()
 		).orElseThrow();
 
@@ -124,8 +123,7 @@ public class CharacterServiceImpl implements CharacterService {
 	public void applyCharacterTemplate(PlayerCharacter character, String templateName) {
 		var characterTemplate = characterTemplateRepository.getCharacterTemplate(
 				templateName,
-				character.getCharacterClassId(),
-				character.getLevel(),
+				character,
 				character.getPhaseId()
 		).orElseThrow();
 
@@ -168,7 +166,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 		build.reset();
 		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
-		build.setRole(characterTemplate.getRole());
+		build.setRole(characterTemplate.getRequiredRole());
 		build.setActivePet(characterTemplate.getActivePet());
 		build.setRotation(characterTemplate.getDefaultRotationTemplate().createRotation());
 
