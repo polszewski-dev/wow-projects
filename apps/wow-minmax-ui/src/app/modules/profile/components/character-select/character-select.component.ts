@@ -111,7 +111,14 @@ export class CharacterSelectComponent implements OnInit {
 
 	get levels() {
 		const phase = this.form.value.phase;
-		return phase ? [ phase!.maxLevel ] : [];
+		if (!phase) {
+			return [];
+		}
+		const result = [];
+		for (let level = phase!.maxLevel; level >= 10; level -= 2) {
+			result.push(level);
+		}
+		return result;
 	}
 
 	readonly enemyTypeComparator: ElementComparatorFn<EnemyType> = (a, b) => a.name.localeCompare(b.name);

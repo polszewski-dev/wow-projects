@@ -12,10 +12,12 @@ import wow.commons.util.EnumUtil;
 @Getter
 public enum BuffId {
 	ARCANE_BRILLIANCE("Arcane Brilliance"),
+	POWER_WORD_FORTITUDE("Power Word: Fortitude"),
 	PRAYER_OF_FORTITUDE("Prayer of Fortitude"),
 	PRAYER_OF_SPIRIT("Prayer of Spirit"),
 	GREATER_BLESSING_OF_KINGS("Greater Blessing of Kings"),
 	GIFT_OF_THE_WILD("Gift of the Wild"),
+	DEMON_SKIN("Demon Skin"),
 	DEMON_ARMOR("Demon Armor"),
 	TOUCH_OF_SHADOW("Touch of Shadow"),
 	BURNING_WISH("Burning Wish"),

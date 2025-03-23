@@ -24,6 +24,8 @@ public enum PriestActionConditions {
 	MIND_BLAST_COND(of(MIND_BLAST).notOnCooldown()),
 	SHADOW_WORD_DEATH_COND(of(SHADOW_WORD_DEATH).notOnCooldown()),
 	MIND_FLAY_COND(of(MIND_FLAY)),
+	HOLY_FIRE_COND(of(HOLY_FIRE).dotCondition()),
+	SMITE_COND(of(SMITE)),
 	SHOOT_COND(of(SHOOT));
 
 	private final ConditionalSpellCast cast;
