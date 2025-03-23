@@ -155,6 +155,8 @@ public abstract class WowCharacterSpringTest {
 	protected static final CreatureType ENEMY_TYPE = UNDEAD;
 	protected static final int LVL_DIFF = 3;
 
+	protected static final String WARLOCK_TEMPLATE_NAME = "Shadow Destro";
+
 	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 	protected static final Offset<Double> PRECISION = Offset.offset(0.01);
 }

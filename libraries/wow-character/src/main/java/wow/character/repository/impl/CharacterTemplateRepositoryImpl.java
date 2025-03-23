@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterTemplate;
-import wow.character.model.character.CharacterTemplateId;
 import wow.character.repository.CharacterTemplateRepository;
 import wow.character.repository.impl.parser.character.CharacterTemplateExcelParser;
 import wow.commons.model.character.CharacterClassId;
@@ -35,8 +34,8 @@ public class CharacterTemplateRepositoryImpl implements CharacterTemplateReposit
 	private String xlsFilePath;
 
 	@Override
-	public Optional<CharacterTemplate> getCharacterTemplate(CharacterTemplateId characterTemplateId, CharacterClassId characterClassId, int level, PhaseId phaseId) {
-		String key = getCharacterTemplateKey(characterTemplateId, characterClassId, level);
+	public Optional<CharacterTemplate> getCharacterTemplate(String name, CharacterClassId characterClassId, int level, PhaseId phaseId) {
+		String key = getCharacterTemplateKey(name, characterClassId, level);
 		return characterTemplateByKey.getOptional(phaseId, key);
 	}
 
@@ -56,11 +55,11 @@ public class CharacterTemplateRepositoryImpl implements CharacterTemplateReposit
 	}
 
 	public void addCharacterTemplate(CharacterTemplate characterTemplate) {
-		String key = getCharacterTemplateKey(characterTemplate.getCharacterTemplateId(), characterTemplate.getCharacterClassId(), characterTemplate.getLevel());
+		String key = getCharacterTemplateKey(characterTemplate.getName(), characterTemplate.getCharacterClassId(), characterTemplate.getLevel());
 		putForEveryPhase(characterTemplateByKey, key, characterTemplate);
 	}
 
-	private static String getCharacterTemplateKey(CharacterTemplateId characterTemplateId, CharacterClassId characterClassId, int level) {
-		return characterTemplateId + "#" + characterClassId + "#" + level;
+	private static String getCharacterTemplateKey(String name, CharacterClassId characterClassId, int level) {
+		return name + "#" + characterClassId + "#" + level;
 	}
 }

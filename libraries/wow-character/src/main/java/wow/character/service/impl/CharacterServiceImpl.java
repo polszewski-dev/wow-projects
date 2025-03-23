@@ -121,9 +121,9 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public void applyCharacterTemplate(PlayerCharacter character, CharacterTemplateId characterTemplateId) {
+	public void applyCharacterTemplate(PlayerCharacter character, String templateName) {
 		var characterTemplate = characterTemplateRepository.getCharacterTemplate(
-				characterTemplateId,
+				templateName,
 				character.getCharacterClassId(),
 				character.getLevel(),
 				character.getPhaseId()

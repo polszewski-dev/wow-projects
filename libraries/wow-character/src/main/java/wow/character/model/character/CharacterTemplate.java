@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class CharacterTemplate implements TimeRestricted {
-	private final CharacterTemplateId characterTemplateId;
+	private final String name;
 	private final CharacterClassId characterClassId;
 	private final int level;
 	private final TimeRestriction timeRestriction;

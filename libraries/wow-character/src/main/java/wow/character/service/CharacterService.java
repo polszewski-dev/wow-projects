@@ -1,6 +1,5 @@
 package wow.character.service;
 
-import wow.character.model.character.CharacterTemplateId;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.character.CharacterClassId;
@@ -23,7 +22,7 @@ public interface CharacterService {
 
 	void applyDefaultCharacterTemplate(PlayerCharacter character);
 
-	void applyCharacterTemplate(PlayerCharacter character, CharacterTemplateId characterTemplateId);
+	void applyCharacterTemplate(PlayerCharacter character, String templateName);
 
 	void updateAfterRestrictionChange(PlayerCharacter character);
 }

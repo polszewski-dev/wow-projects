@@ -3,7 +3,6 @@ package wow.character.repository.impl.parser.character;
 import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
-import wow.character.model.character.CharacterTemplateId;
 import wow.character.repository.impl.CharacterTemplateRepositoryImpl;
 import wow.character.util.TalentLinkParser;
 import wow.commons.model.buff.BuffId;
@@ -28,7 +27,6 @@ import java.util.stream.Stream;
  * Date: 2022-11-30
  */
 public class CharacterTemplateSheetParser extends WowExcelSheetParser {
-	private final ExcelColumn colTemplate = column("template");
 	private final ExcelColumn colReqLevel = column("req_level");
 	private final ExcelColumn colReqClass = column("req_class");
 	private final ExcelColumn colTalentLink = column("talent_link");
@@ -57,18 +55,13 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 	}
 
 	@Override
-	protected ExcelColumn getColumnIndicatingOptionalRow() {
-		return colTemplate;
-	}
-
-	@Override
 	protected void readSingleRow() {
 		CharacterTemplate characterTemplate = getCharacterTemplate();
 		characterTemplateRepository.addCharacterTemplate(characterTemplate);
 	}
 
 	private CharacterTemplate getCharacterTemplate() {
-		var templateId = colTemplate.getEnum(CharacterTemplateId::parse);
+		var name = colName.getString();
 		var characterClass = colReqClass.getEnum(CharacterClassId::parse);
 		var level = colReqLevel.getInteger();
 		var timeRestriction = getTimeRestriction();
@@ -84,7 +77,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var isDefault = colDefault.getBoolean();
 
 		return new CharacterTemplate(
-				templateId,
+				name,
 				characterClass,
 				level,
 				timeRestriction,

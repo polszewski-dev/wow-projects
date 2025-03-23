@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
 import static wow.commons.model.categorization.ItemSlot.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
@@ -112,7 +111,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 				"Player", WARLOCK, ORC, 70, TBC_P5
 		);
 
-		underTest.applyCharacterTemplate(player, DESTRO_SHADOW);
+		underTest.applyCharacterTemplate(player, WARLOCK_TEMPLATE_NAME);
 
 		var abilities = player.getSpellbook().getAbilityById().values().stream()
 				.flatMap(Collection::stream)

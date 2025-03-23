@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.character.CharacterTemplateId.DESTRO_SHADOW;
 import static wow.commons.model.buff.BuffId.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
@@ -32,13 +31,13 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 
 	@Test
 	void getCharacterTemplate() {
-		Optional<CharacterTemplate> optionalCharacterTemplate = underTest.getCharacterTemplate(DESTRO_SHADOW, WARLOCK, 70, PhaseId.TBC_P5);
+		Optional<CharacterTemplate> optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, WARLOCK, 70, PhaseId.TBC_P5);
 
 		assertThat(optionalCharacterTemplate).isPresent();
 
 		CharacterTemplate characterTemplate = optionalCharacterTemplate.orElseThrow();
 
-		assertThat(characterTemplate.getCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
+		assertThat(characterTemplate.getName()).isEqualTo(WARLOCK_TEMPLATE_NAME);
 		assertThat(characterTemplate.getLevel()).isEqualTo(70);
 		assertThat(characterTemplate.getCharacterClassId()).isEqualTo(WARLOCK);
 		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025", talentRepository);
@@ -65,7 +64,7 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 	void getDefaultCharacterTemplate() {
 		var characterTemplate = underTest.getDefaultCharacterTemplate(WARLOCK, 70, PhaseId.TBC_P5).orElseThrow();
 
-		assertThat(characterTemplate.getCharacterTemplateId()).isEqualTo(DESTRO_SHADOW);
+		assertThat(characterTemplate.getName()).isEqualTo(WARLOCK_TEMPLATE_NAME);
 		assertThat(characterTemplate.isDefault()).isTrue();
 	}
 }
