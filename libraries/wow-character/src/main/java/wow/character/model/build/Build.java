@@ -70,4 +70,8 @@ public class Build implements EffectCollection, Copyable<Build> {
 	public boolean hasTalent(TalentId talentId) {
 		return talents.hasTalent(talentId);
 	}
+
+	public boolean hasTalent(TalentId talentId, int rank) {
+		return talents.hasTalent(talentId, rank);
+	}
 }

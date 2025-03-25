@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.util.TalentLinkParser;
-import wow.commons.model.talent.TalentId;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.talent.TalentId.*;
 
 /**
  * User: POlszewski
@@ -65,8 +65,13 @@ class TalentsTest extends WowCharacterSpringTest {
 
 	@Test
 	void hasTalent() {
-		assertThat(talents.hasTalent(TalentId.DEMONIC_SACRIFICE)).isTrue();
-		assertThat(talents.hasTalent(TalentId.SHADOW_MASTERY)).isFalse();
+		assertThat(talents.hasTalent(DEMONIC_SACRIFICE)).isTrue();
+		assertThat(talents.hasTalent(DEMONIC_SACRIFICE, 1)).isTrue();
+		assertThat(talents.hasTalent(IMPROVED_VOIDWALKER)).isTrue();
+		assertThat(talents.hasTalent(IMPROVED_VOIDWALKER, 1)).isTrue();
+		assertThat(talents.hasTalent(IMPROVED_VOIDWALKER, 2)).isFalse();
+		assertThat(talents.hasTalent(SHADOW_MASTERY)).isFalse();
+		assertThat(talents.hasTalent(SHADOW_MASTERY, 1)).isFalse();
 	}
 
 	PlayerCharacter character;

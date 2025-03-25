@@ -68,6 +68,15 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		return talentById.containsKey(talentId);
 	}
 
+	public boolean hasTalent(TalentId talentId, int rank) {
+		var talent = talentById.get(talentId);
+		if (rank != 0) {
+			return talent != null && talent.getRank() == rank;
+		} else {
+			return talent == null;
+		}
+	}
+
 	public Optional<Talent> getTalent(TalentId talentId) {
 		return Optional.ofNullable(talentById.get(talentId));
 	}

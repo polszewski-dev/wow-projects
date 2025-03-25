@@ -9,8 +9,6 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
-import wow.commons.model.buff.Buff;
-import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
@@ -18,8 +16,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.talent.Talent;
-import wow.commons.model.talent.TalentId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
@@ -108,14 +104,6 @@ public abstract class WowCharacterSpringTest {
 
 	protected Enchant getEnchant(String name) {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
-	}
-
-	protected Buff getBuff(BuffId buffId, int rank) {
-		return buffRepository.getBuff(buffId, rank, PHASE).orElseThrow();
-	}
-
-	protected Talent getTalent(TalentId talentId, int rank) {
-		return talentRepository.getTalent(CHARACTER_CLASS, talentId, rank, PHASE).orElseThrow();
 	}
 
 	protected PlayerCharacter getCharacter() {

@@ -66,6 +66,11 @@ public interface NonPlayerCharacter extends Character {
 	}
 
 	@Override
+	default boolean hasTalent(TalentId talentId, int rank) {
+		return false;
+	}
+
+	@Override
 	default void collectEffects(EffectCollector collector) {
 		getBuffs().collectEffects(collector);
 	}

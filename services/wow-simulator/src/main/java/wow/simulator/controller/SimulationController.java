@@ -19,6 +19,8 @@ import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.service.SimulatorService;
 
+import static wow.commons.util.CollectionUtil.getUniqueResult;
+
 /**
  * User: POlszewski
  * Date: 2024-11-09
@@ -63,7 +65,8 @@ public class SimulationController {
 	}
 
 	private void applyEffect(Unit target, BuffDTO buffDTO, Unit owner) {
-		var buff = buffRepository.getBuff(buffDTO.buffId(), buffDTO.rank(), target.getPhaseId()).orElseThrow();
+		var matchingBuffs = buffRepository.getBuff(buffDTO.buffId(), buffDTO.rank(), target.getPhaseId());
+		var buff = getUniqueResult(matchingBuffs).orElseThrow();
 		var effect = buff.getEffect();
 		var effectInstance = new NonPeriodicEffectInstance(
 				owner,

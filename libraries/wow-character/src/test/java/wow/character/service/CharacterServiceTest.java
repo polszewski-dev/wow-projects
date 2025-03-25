@@ -460,7 +460,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	);
 
 	static final List<String> BUFFS = List.of(
-			"Fel Armor (improved)",
+			"Fel Armor",
 			"Touch of Shadow",
 			"Arcane Brilliance",
 			"Prayer of Fortitude",
@@ -662,6 +662,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	);
 
 	static final List<String> BUFFS_AFTER_TALENT_RESET = List.of(
+			"Fel Armor",
 			"Arcane Brilliance",
 			"Prayer of Fortitude",
 			"Prayer of Spirit",

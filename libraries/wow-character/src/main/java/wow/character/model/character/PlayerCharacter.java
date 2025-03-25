@@ -133,6 +133,11 @@ public interface PlayerCharacter extends Character {
 		return getBuild().hasTalent(talentId);
 	}
 
+	@Override
+	default boolean hasTalent(TalentId talentId, int rank) {
+		return getBuild().hasTalent(talentId, rank);
+	}
+
 	default Talents getTalents() {
 		return getBuild().getTalents();
 	}

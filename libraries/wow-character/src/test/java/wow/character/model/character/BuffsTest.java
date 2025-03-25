@@ -2,7 +2,10 @@ package wow.character.model.character;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import wow.character.WowCharacterSpringTest;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.model.pve.PhaseId;
@@ -11,7 +14,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
+import static wow.commons.model.attribute.AttributeId.HEALTH_GENERATED_PCT;
+import static wow.commons.model.attribute.AttributeId.POWER;
+import static wow.commons.model.attribute.condition.MiscCondition.SPELL_DAMAGE;
 import static wow.commons.model.buff.BuffId.*;
+import static wow.commons.model.talent.TalentId.DEMONIC_AEGIS;
 
 /**
  * User: POlszewski
@@ -62,7 +69,6 @@ class BuffsTest extends WowCharacterSpringTest {
 				"Greater Blessing of Kings#0",
 				"Demon Armor#6",
 				"Fel Armor#2",
-				"Fel Armor (improved)#2",
 				"Touch of Shadow#0",
 				"Burning Wish#0",
 				"Brilliant Wizard Oil#0",
@@ -178,6 +184,39 @@ class BuffsTest extends WowCharacterSpringTest {
 		buffs.disable(ARCANE_BRILLIANCE);
 
 		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"0, 20, 100",
+			"1, 22, 110",
+			"2, 24, 120",
+			"3, 26, 130",
+	})
+	void demonicAegisCorrectlyAffectsFelArmor(int rank, int healthGeneratedPct, int spellDamage) {
+		var player = getCharacter();
+
+		player.resetEquipment();
+		player.resetBuffs();
+		player.resetBuild();
+
+		if (rank > 0) {
+			player.getTalents().enableTalent(DEMONIC_AEGIS, rank);
+		}
+
+		characterService.updateAfterRestrictionChange(player);
+
+		player.getBuffs().enable(FEL_ARMOR, 2, true);
+
+		var buff = player.getBuffs().getList().stream()
+				.filter(x -> x.getBuffId() == FEL_ARMOR)
+				.findFirst()
+				.orElseThrow();
+
+		assertThat(buff.getEffect().getModifierAttributeList()).isEqualTo(List.of(
+				Attribute.of(HEALTH_GENERATED_PCT, healthGeneratedPct),
+				Attribute.of(POWER, spellDamage, SPELL_DAMAGE)
+		));
 	}
 
 	Buffs buffs;

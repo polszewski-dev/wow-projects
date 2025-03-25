@@ -27,6 +27,12 @@ public abstract class TimeMap<K, V, T extends Enum<T>> {
 		return Optional.ofNullable(value);
 	}
 
+	public V getOrDefault(T timeKey, K key, V defaultValue) {
+		var submap = map.getOrDefault(timeKey, Map.of());
+		V value = submap.get(key);
+		return (value != null || submap.containsKey(key)) ? value : defaultValue;
+	}
+
 	public V computeIfAbsent(T timeKey, K key, Function<K, V> mappingFunction) {
 		return getMap(timeKey).computeIfAbsent(key, mappingFunction);
 	}

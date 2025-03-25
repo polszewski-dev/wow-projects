@@ -33,7 +33,7 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void buffIsCorrect() {
-		var buff = buffRepository.getBuff(BuffId.CURSE_OF_THE_ELEMENTS, 4, PhaseId.TBC_P5).orElseThrow();
+		var buff = buffRepository.getBuff(BuffId.CURSE_OF_THE_ELEMENTS, 4, PhaseId.TBC_P5).getFirst();
 
 		assertThat(buff.getBuffId()).isEqualTo(BuffId.CURSE_OF_THE_ELEMENTS);
 		assertThat(buff.getRank()).isEqualTo(4);
@@ -90,9 +90,11 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 				"Demon Armor#5",
 				"Demon Armor#6",
 				"Fel Armor#1",
+				"Fel Armor#1",
+				"Fel Armor#1",
 				"Fel Armor#2",
-				"Fel Armor (improved)#1",
-				"Fel Armor (improved)#2",
+				"Fel Armor#2",
+				"Fel Armor#2",
 				"Touch of Shadow#0",
 				"Burning Wish#0",
 				"Shadowform#0",
@@ -134,7 +136,7 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 				"TBC_P1, 2, 40",
 		})
 		void talent(PhaseId phaseId, int rank, int statValue) {
-			var buff = buffRepository.getBuff(BuffId.ARCANE_BRILLIANCE, rank, phaseId).orElseThrow();
+			var buff = buffRepository.getBuff(BuffId.ARCANE_BRILLIANCE, rank, phaseId).getFirst();
 
 			assertModifier(buff.getEffect(), List.of(
 					Attribute.of(INTELLECT, statValue)

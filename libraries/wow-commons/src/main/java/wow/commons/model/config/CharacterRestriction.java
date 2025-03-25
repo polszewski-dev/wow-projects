@@ -8,7 +8,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public record CharacterRestriction(
 		ExclusiveFaction exclusiveFaction,
 		List<PetType> activePet,
 		AbilityId abilityId,
-		TalentId talentId,
+		TalentRestriction talentRestriction,
 		PveRole role,
 		Integer maxLevel
 ) {
@@ -69,7 +68,7 @@ public record CharacterRestriction(
 		if (abilityId != null && !characterInfo.hasAbility(abilityId)) {
 			return false;
 		}
-		if (talentId != null && !characterInfo.hasTalent(talentId)) {
+		if (talentRestriction != null && !talentRestriction.isMetBy(characterInfo)) {
 			return false;
 		}
 		return maxLevel == null || characterInfo.getLevel() <= maxLevel;
@@ -105,8 +104,8 @@ public record CharacterRestriction(
 		if (abilityId != null) {
 			parts.add("spell: " + abilityId);
 		}
-		if (talentId != null) {
-			parts.add("talentId: " + talentId);
+		if (talentRestriction != null) {
+			parts.add("talentRestriction: " + talentRestriction);
 		}
 		if (role != null) {
 			parts.add("role: " + role);

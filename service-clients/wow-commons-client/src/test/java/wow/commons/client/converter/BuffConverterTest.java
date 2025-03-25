@@ -23,7 +23,7 @@ class BuffConverterTest extends WowCommonsClientSpringTest {
 
 	@Test
 	void convert() {
-		var buff = buffRepository.getBuff(BuffId.FEL_ARMOR, 2, PhaseId.TBC_P5).orElseThrow();
+		var buff = buffRepository.getBuff(BuffId.FEL_ARMOR, 2, PhaseId.TBC_P5).getFirst();
 
 		var converted = buffConverter.convert(buff);
 

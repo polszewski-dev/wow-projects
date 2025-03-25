@@ -23,6 +23,7 @@ public final class CommonColumnNames {
 	public static final String REQ_PET = "req_pet";
 	public static final String REQ_SPELL = "req_spell";
 	public static final String REQ_TALENT = "req_talent";
+	public static final String REQ_TALENT_RANK = "req_talent_rank";
 	public static final String REQ_ROLE = "req_role";
 	public static final String REQ_MAX_LEVEL = "req_level_max";
 

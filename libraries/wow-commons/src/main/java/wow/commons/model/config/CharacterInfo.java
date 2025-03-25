@@ -39,4 +39,6 @@ public interface CharacterInfo {
 	boolean hasAbility(AbilityId abilityId);
 
 	boolean hasTalent(TalentId talentId);
+
+	boolean hasTalent(TalentId talentId, int rank);
 }

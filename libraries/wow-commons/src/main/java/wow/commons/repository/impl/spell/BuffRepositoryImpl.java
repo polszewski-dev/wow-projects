@@ -15,10 +15,10 @@ import wow.commons.util.PhaseMap;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
 
 /**
  * User: POlszewski
@@ -27,7 +27,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
 @Component
 @RequiredArgsConstructor
 public class BuffRepositoryImpl implements BuffRepository {
-	private final PhaseMap<BuffIdAndRank, Buff> buffsById = new PhaseMap<>();
+	private final PhaseMap<BuffIdAndRank, List<Buff>> buffsById = new PhaseMap<>();
 
 	@Value("${buffs.xls.file.path}")
 	private String xlsFilePath;
@@ -36,12 +36,14 @@ public class BuffRepositoryImpl implements BuffRepository {
 
 	@Override
 	public List<Buff> getAvailableBuffs(PhaseId phaseId) {
-		return buffsById.values(phaseId).stream().toList();
+		return buffsById.values(phaseId).stream()
+				.flatMap(Collection::stream)
+				.toList();
 	}
 
 	@Override
-	public Optional<Buff> getBuff(BuffId buffId, int rank, PhaseId phaseId) {
-		return buffsById.getOptional(phaseId, new BuffIdAndRank(buffId, rank));
+	public List<Buff> getBuff(BuffId buffId, int rank, PhaseId phaseId) {
+		return buffsById.getOrDefault(phaseId, new BuffIdAndRank(buffId, rank), List.of());
 	}
 
 	@PostConstruct
@@ -51,6 +53,6 @@ public class BuffRepositoryImpl implements BuffRepository {
 	}
 
 	public void addBuff(Buff buff) {
-		putForEveryPhase(buffsById, buff.getId(), buff);
+		addEntryForEveryPhase(buffsById, buff.getId(), buff);
 	}
 }

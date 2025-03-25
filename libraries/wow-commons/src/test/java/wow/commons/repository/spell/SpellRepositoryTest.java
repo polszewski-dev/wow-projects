@@ -16,6 +16,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
+import wow.commons.model.config.TalentRestriction;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
@@ -73,7 +74,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(characterRestriction.characterClassIds()).isEqualTo(List.of(characterClassId));
 		assertThat(characterRestriction.level()).isEqualTo(level);
 		assertThat(characterRestriction.raceIds()).isEqualTo(raceId != null ? List.of(raceId) : List.of());
-		assertThat(characterRestriction.talentId()).isEqualTo(talentId);
+		assertThat(characterRestriction.talentRestriction()).isEqualTo(TalentRestriction.of(talentId));
 
 		var activePets = petTypes != null ? Stream.of(petTypes.split("\\+")).map(PetType::parse).toList() : List.of();
 
