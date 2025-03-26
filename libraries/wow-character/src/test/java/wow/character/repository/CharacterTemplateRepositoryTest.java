@@ -32,7 +32,7 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 	@Test
 	void getCharacterTemplate() {
 		var character = getCharacter();
-		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, character, TBC_P5);
+		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, character);
 
 		assertThat(optionalCharacterTemplate).isPresent();
 
@@ -64,7 +64,7 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 	@Test
 	void getDefaultCharacterTemplate() {
 		var character = getCharacter();
-		var characterTemplate = underTest.getDefaultCharacterTemplate(character, TBC_P5).orElseThrow();
+		var characterTemplate = underTest.getDefaultCharacterTemplate(character).orElseThrow();
 
 		assertThat(characterTemplate.getName()).isEqualTo(WARLOCK_TEMPLATE_NAME);
 		assertThat(characterTemplate.isDefault()).isTrue();
@@ -74,7 +74,7 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 	@ValueSource(ints = { 10, 20, 30, 40, 50, 60, 70 })
 	void namedTemplatePresentForEachLevel(int level) {
 		var character = getCharacter(WARLOCK, RACE, level, TBC_P5);
-		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, character, TBC_P5);
+		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, character);
 
 		assertThat(optionalCharacterTemplate).isPresent();
 
@@ -87,7 +87,7 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 	@ValueSource(ints = { 10, 20, 30, 40, 50, 60, 70 })
 	void defaultTemplatePresentForEachLevel(int level) {
 		var character = getCharacter(WARLOCK, RACE, level, TBC_P5);
-		var optionalCharacterTemplate = underTest.getDefaultCharacterTemplate(character, TBC_P5);
+		var optionalCharacterTemplate = underTest.getDefaultCharacterTemplate(character);
 
 		assertThat(optionalCharacterTemplate).isPresent();
 

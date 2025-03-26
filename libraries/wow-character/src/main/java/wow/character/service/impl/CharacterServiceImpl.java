@@ -111,21 +111,14 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public void applyDefaultCharacterTemplate(PlayerCharacter character) {
-		var characterTemplate = characterTemplateRepository.getDefaultCharacterTemplate(
-				character,
-				character.getPhaseId()
-		).orElseThrow();
+		var characterTemplate = characterTemplateRepository.getDefaultCharacterTemplate(character).orElseThrow();
 
 		applyCharacterTemplate(character, characterTemplate);
 	}
 
 	@Override
 	public void applyCharacterTemplate(PlayerCharacter character, String templateName) {
-		var characterTemplate = characterTemplateRepository.getCharacterTemplate(
-				templateName,
-				character,
-				character.getPhaseId()
-		).orElseThrow();
+		var characterTemplate = characterTemplateRepository.getCharacterTemplate(templateName, character).orElseThrow();
 
 		applyCharacterTemplate(character, characterTemplate);
 	}

@@ -8,7 +8,6 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.repository.CharacterTemplateRepository;
 import wow.character.repository.impl.parser.character.CharacterTemplateExcelParser;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.TalentRepository;
 import wow.commons.util.PhaseMap;
@@ -40,23 +39,23 @@ public class CharacterTemplateRepositoryImpl implements CharacterTemplateReposit
 	private String xlsFilePath;
 
 	@Override
-	public Optional<CharacterTemplate> getCharacterTemplate(String name, PlayerCharacter character, PhaseId phaseId) {
-		return getCharacterTemplateStream(character, phaseId)
+	public Optional<CharacterTemplate> getCharacterTemplate(String name, PlayerCharacter character) {
+		return getCharacterTemplateStream(character)
 				.filter(x -> x.getName().equals(name))
 				.findAny();
 	}
 
 	@Override
-	public Optional<CharacterTemplate> getDefaultCharacterTemplate(PlayerCharacter character, PhaseId phaseId) {
-		return getCharacterTemplateStream(character, phaseId)
+	public Optional<CharacterTemplate> getDefaultCharacterTemplate(PlayerCharacter character) {
+		return getCharacterTemplateStream(character)
 				.filter(CharacterTemplate::isDefault)
 				.findAny();
 	}
 
-	private Stream<CharacterTemplate> getCharacterTemplateStream(PlayerCharacter character, PhaseId phaseId) {
+	private Stream<CharacterTemplate> getCharacterTemplateStream(PlayerCharacter character) {
 		var key = new Key(character.getCharacterClassId(), character.getLevel());
 
-		return characterTemplateByKey.getOptional(phaseId, key).stream()
+		return characterTemplateByKey.getOptional(character.getPhaseId(), key).stream()
 				.flatMap(Collection::stream)
 				.filter(x -> x.isAvailableTo(character));
 	}
