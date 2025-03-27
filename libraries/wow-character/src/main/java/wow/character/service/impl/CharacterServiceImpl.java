@@ -14,6 +14,7 @@ import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.BaseStatInfoRepository;
 import wow.character.repository.CharacterTemplateRepository;
 import wow.character.repository.CombatRatingInfoRepository;
+import wow.character.repository.GearSetRepository;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.character.service.PlayerCharacterFactory;
@@ -55,6 +56,7 @@ public class CharacterServiceImpl implements CharacterService {
 	private final BaseStatInfoRepository baseStatInfoRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 	private final CharacterTemplateRepository characterTemplateRepository;
+	private final GearSetRepository gearSetRepository;
 
 	@Override
 	public PlayerCharacter createPlayerCharacter(String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
@@ -277,5 +279,14 @@ public class CharacterServiceImpl implements CharacterService {
 		return consumableRepository.getAvailableConsumables(character.getPhaseId()).stream()
 				.filter(consumable -> consumable.isAvailableTo(character))
 				.toList();
+	}
+
+	@Override
+	public void equipGearSet(PlayerCharacter character, String gearSetName) {
+		var gearSet = gearSetRepository.getGearSet(gearSetName, character).orElseThrow();
+
+		gearSet.getItemsBySlot().forEach(
+				(itemSlot, equippableItem) -> character.equip(equippableItem.copy(), itemSlot)
+		);
 	}
 }

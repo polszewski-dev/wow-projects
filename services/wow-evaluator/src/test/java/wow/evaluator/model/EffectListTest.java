@@ -136,6 +136,6 @@ class EffectListTest extends WowEvaluatorSpringTest {
 	@BeforeEach
 	void setup() {
 		character = getCharacter();
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 	}
 }

@@ -25,4 +25,6 @@ public interface CharacterService {
 	void applyCharacterTemplate(PlayerCharacter character, String templateName);
 
 	void updateAfterRestrictionChange(PlayerCharacter character);
+
+	void equipGearSet(PlayerCharacter character, String gearSetName);
 }

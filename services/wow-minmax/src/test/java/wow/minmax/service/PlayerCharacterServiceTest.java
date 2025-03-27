@@ -59,9 +59,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 	@Test
 	void changeItem() {
-		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
+		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Heart of the Pit");
 
-		var item = getItem("Heart of the Pit");
+		var item = getItem("Chronicle of Dark Secrets");
 
 		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true, GemFilter.empty());
 
@@ -69,13 +69,13 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		var savedCharacter = characterPOCaptor.getValue();
 
-		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND).getItem().getName()).isEqualTo("Heart of the Pit");
+		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND).getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 	}
 
 	@Test
 	void changeTwoHander() {
 		assertThat(character.getEquipment().getMainHand().getItem().getName()).isEqualTo("Sunflare");
-		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
+		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Heart of the Pit");
 
 		var item = getItem("Grand Magister's Staff of Torrents");
 
@@ -175,7 +175,7 @@ class PlayerCharacterServiceTest extends ServiceTest {
 	void setup() {
 		super.setup();
 
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 
 		var consumes = character.getBuffs().getList().stream()
 				.filter(x -> x.getCategories().contains(BuffCategory.CONSUME))

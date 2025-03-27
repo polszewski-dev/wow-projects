@@ -67,7 +67,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 	void setup() {
 		super.setup();
 
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 
 		var consumes = character.getBuffs().getList().stream()
 				.filter(x -> x.getCategories().contains(BuffCategory.CONSUME))

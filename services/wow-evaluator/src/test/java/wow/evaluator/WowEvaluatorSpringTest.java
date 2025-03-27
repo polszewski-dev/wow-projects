@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
-import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
@@ -58,33 +56,8 @@ public abstract class WowEvaluatorSpringTest {
 	@Autowired
 	protected CharacterService characterService;
 
-	protected Equipment getEquipment() {
-		Equipment equipment = new Equipment();
-
-		Gem metaGem = getGem("Chaotic Skyfire Diamond");
-		Gem redGem = getGem(32196);
-		Gem orangeGem = getGem("Reckless Pyrestone");
-		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
-
-		equipment.equip(getItem("Dark Conjuror's Collar").enchant(getEnchant("Glyph of Power")).gem(metaGem, violetGem));
-		equipment.equip(getItem("Amulet of Unfettered Magics"));
-		equipment.equip(getItem("Mantle of the Malefic").enchant(getEnchant("Greater Inscription of the Orb")).gem(violetGem, orangeGem));
-		equipment.equip(getItem("Tattered Cape of Antonidas").enchant(getEnchant("Enchant Cloak - Subtlety")).gem(redGem));
-		equipment.equip(getItem("Sunfire Robe").enchant(getEnchant("Enchant Chest - Exceptional Stats")).gem(redGem, redGem, redGem));
-		equipment.equip(getItem("Bracers of the Malefic").enchant(getEnchant("Enchant Bracer - Spellpower")).gem(orangeGem));
-		equipment.equip(getItem("Sunfire Handwraps").enchant(getEnchant("Enchant Gloves - Major Spellpower")).gem(redGem, redGem));
-		equipment.equip(getItem("Belt of the Malefic").gem(orangeGem));
-		equipment.equip(getItem("Leggings of Calamity").enchant(getEnchant("Runic Spellthread")).gem(redGem, redGem, orangeGem));
-		equipment.equip(getItem("Boots of the Malefic").enchant(getEnchant("Enchant Boots - Boar's Speed")).gem(orangeGem));
-		equipment.equip(getItem("Ring of Omnipotence").enchant(getEnchant("Enchant Ring - Spellpower")), ItemSlot.FINGER_1);
-		equipment.equip(getItem("Loop of Forged Power").enchant(getEnchant("Enchant Ring - Spellpower")), ItemSlot.FINGER_2);
-		equipment.equip(getItem("The Skull of Gul'dan"), ItemSlot.TRINKET_1);
-		equipment.equip(getItem("Shifting Naaru Sliver"), ItemSlot.TRINKET_2);
-		equipment.equip(getItem("Sunflare").enchant(getEnchant("Enchant Weapon - Soulfrost")));
-		equipment.equip(getItem("Chronicle of Dark Secrets"));
-		equipment.equip(getItem("Wand of the Demonsoul").gem(getGem("Veiled Pyrestone")));
-
-		return equipment;
+	protected void equipGearSet(Player character) {
+		characterService.equipGearSet(character, "Wowhead TBC P5 BiS");
 	}
 
 	protected EquippableItem getItem(String name) {

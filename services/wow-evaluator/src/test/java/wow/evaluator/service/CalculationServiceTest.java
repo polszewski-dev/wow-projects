@@ -30,7 +30,7 @@ class CalculationServiceTest extends ServiceTest {
 	void getSpEquivalent() {
 		double spEquivalent = calculationService.getSpEquivalent(TalentId.RUIN, character);
 
-		assertThat(spEquivalent).isEqualTo(306.89, PRECISION);
+		assertThat(spEquivalent).isEqualTo(288.45, PRECISION);
 	}
 
 	@Test
@@ -39,7 +39,7 @@ class CalculationServiceTest extends ServiceTest {
 		var targetEffectList = EffectList.createSolvedForTarget(character);
 		var dps = calculationService.getRotationDps(character, character.getRotation(), effectList, targetEffectList);
 
-		assertThat(dps).isEqualTo(2779.80, PRECISION);
+		assertThat(dps).isEqualTo(2799.67, PRECISION);
 	}
 
 	@Test
@@ -48,7 +48,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		var baseStats = stats.getBaseStats();
 
-		assertThat(baseStats.getIntellect()).isEqualTo(544);
+		assertThat(baseStats.getIntellect()).isEqualTo(555);
 		assertThat(baseStats.getIntellectPct()).isZero();
 		assertThat(baseStats.getBaseStats()).isEqualTo(20);
 		assertThat(baseStats.getBaseStatsPct()).isEqualTo(10);
@@ -57,7 +57,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		assertThat(abilityStats.getCast().getCastTime()).isEqualTo(-0.5);
 		assertThat(abilityStats.getCast().getCastTimePct()).isZero();
-		assertThat(abilityStats.getCast().getHasteRating()).isEqualTo(426);
+		assertThat(abilityStats.getCast().getHasteRating()).isEqualTo(504);
 		assertThat(abilityStats.getCast().getHastePct()).isZero();
 
 		var costStats = abilityStats.getCost();
@@ -70,7 +70,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		var hitStats = abilityStats.getHit();
 
-		assertThat(hitStats.getHitRating()).isEqualTo(164);
+		assertThat(hitStats.getHitRating()).isEqualTo(169);
 		assertThat(hitStats.getHitPct()).isEqualTo(3);
 
 		assertThat(stats.getStatConversions()).isEmpty();
@@ -85,8 +85,8 @@ class CalculationServiceTest extends ServiceTest {
 				"Malefic Raiment - P2 bonus"
 		));
 		assertThat(stats.getActivatedAbilities().stream().map(Described::getName).toList()).isEqualTo(List.of(
-				"The Skull of Gul'dan",
-				"Shifting Naaru Sliver"
+				"Shifting Naaru Sliver",
+				"The Skull of Gul'dan"
 		));
 	}
 
@@ -100,10 +100,10 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(direct.getDamage()).isZero();
 		assertThat(direct.getDamagePct()).isEqualTo(21);
 		assertThat(direct.getEffectPct()).isZero();
-		assertThat(direct.getPower()).isEqualTo(1750);
+		assertThat(direct.getPower()).isEqualTo(1738);
 		assertThat(direct.getPowerPct()).isZero();
 		assertThat(direct.getPowerCoeffPct()).isEqualTo(20);
-		assertThat(direct.getCritRating()).isEqualTo(331);
+		assertThat(direct.getCritRating()).isEqualTo(270);
 		assertThat(direct.getCritPct()).isEqualTo(12.7, PRECISION);
 		assertThat(direct.getCritDamagePct()).isEqualTo(3);
 		assertThat(direct.getCritDamageMultiplierPct()).isEqualTo(100);
@@ -117,20 +117,20 @@ class CalculationServiceTest extends ServiceTest {
 	void getRotationStats() {
 		var stats = calculationService.getRotationStats(character, character.getRotation());
 
-		assertThat(stats.getDps()).isEqualTo(2779.80, PRECISION);
-		assertThat(stats.getTotalDamage()).isEqualTo(833940.11, PRECISION);
+		assertThat(stats.getDps()).isEqualTo(2799.67, PRECISION);
+		assertThat(stats.getTotalDamage()).isEqualTo(839903.18, PRECISION);
 		assertThat(stats.getStatList()).hasSize(2);
 
 		var codStats = stats.getStatList().get(0);
 		var sbStats = stats.getStatList().get(1);
 
 		assertThat(codStats.getSpell().getAbilityId()).isEqualTo(CURSE_OF_DOOM);
-		assertThat(codStats.getDamage()).isEqualTo(9659.92, PRECISION);
+		assertThat(codStats.getDamage()).isEqualTo(9630.22, PRECISION);
 		assertThat(codStats.getNumCasts()).isEqualTo(5);
 
 		assertThat(sbStats.getSpell().getAbilityId()).isEqualTo(SHADOW_BOLT);
-		assertThat(sbStats.getDamage()).isEqualTo(5181.05, PRECISION);
-		assertThat(sbStats.getNumCasts()).isEqualTo(151.63, PRECISION);
+		assertThat(sbStats.getDamage()).isEqualTo(5024.67, PRECISION);
+		assertThat(sbStats.getNumCasts()).isEqualTo(157.57, PRECISION);
 	}
 
 	@Test
@@ -138,13 +138,13 @@ class CalculationServiceTest extends ServiceTest {
 		var ability = getAbility(SHADOW_BOLT);
 		var stats = calculationService.getSpellStats(character, ability, true, 10);
 
-		assertThat(stats.getTotalDamage()).isEqualTo(5181.05, PRECISION);
-		assertThat(stats.getDps()).isEqualTo(2670.61, PRECISION);
-		assertThat(stats.getCastTime().getSeconds()).isEqualTo(1.94, PRECISION);
+		assertThat(stats.getTotalDamage()).isEqualTo(5024.67, PRECISION);
+		assertThat(stats.getDps()).isEqualTo(2689.42, PRECISION);
+		assertThat(stats.getCastTime().getSeconds()).isEqualTo(1.86, PRECISION);
 		assertThat(stats.getManaCost()).isEqualTo(399);
-		assertThat(stats.getDpm()).isEqualTo(12.98, PRECISION);
+		assertThat(stats.getDpm()).isEqualTo(12.59, PRECISION);
 		assertThat(stats.getHitSpEqv()).isEqualTo(0, PRECISION);
-		assertThat(stats.getCritSpEqv()).isEqualTo(10.30, PRECISION);
+		assertThat(stats.getCritSpEqv()).isEqualTo(10.88, PRECISION);
 		assertThat(stats.getHasteSpEqv()).isEqualTo(11.44, PRECISION);
 	}
 
@@ -152,63 +152,63 @@ class CalculationServiceTest extends ServiceTest {
 	void getCurrentStats() {
 		var stats = calculationService.getCurrentStats(character);
 
-		assertThat(stats.getSpellDamage()).isEqualTo(1616);
-		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1750);
-		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1696);
-		assertThat(stats.getSpellHitPctBonus()).isEqualTo(16.00, PRECISION);
+		assertThat(stats.getSpellDamage()).isEqualTo(1604);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1738);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1684);
+		assertThat(stats.getSpellHitPctBonus()).isEqualTo(16.39, PRECISION);
 		assertThat(stats.getSpellHitPct()).isEqualTo(99.00, PRECISION);
-		assertThat(stats.getSpellCritPct()).isEqualTo(30.44, PRECISION);
-		assertThat(stats.getSpellHastePct()).isEqualTo(27.01, PRECISION);
-		assertThat(stats.getSpellHitRating()).isEqualTo(164);
-		assertThat(stats.getSpellCritRating()).isEqualTo(331);
-		assertThat(stats.getSpellHasteRating()).isEqualTo(426);
-		assertThat(stats.getStamina()).isEqualTo(797);
-		assertThat(stats.getIntellect()).isEqualTo(620);
+		assertThat(stats.getSpellCritPct()).isEqualTo(27.82, PRECISION);
+		assertThat(stats.getSpellHastePct()).isEqualTo(31.96, PRECISION);
+		assertThat(stats.getSpellHitRating()).isEqualTo(169);
+		assertThat(stats.getSpellCritRating()).isEqualTo(270);
+		assertThat(stats.getSpellHasteRating()).isEqualTo(504);
+		assertThat(stats.getStamina()).isEqualTo(818);
+		assertThat(stats.getIntellect()).isEqualTo(632);
 		assertThat(stats.getSpirit()).isEqualTo(245);
-		assertThat(stats.getMaxHealth()).isEqualTo(11618);
-		assertThat(stats.getMaxMana()).isEqualTo(11969);
+		assertThat(stats.getMaxHealth()).isEqualTo(11834);
+		assertThat(stats.getMaxMana()).isEqualTo(12155);
 	}
 
 	@Test
 	void getStats() {
 		var stats = calculationService.getStats(character, SELF_BUFF);
 
-		assertThat(stats.getSpellDamage()).isEqualTo(1456);
-		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1510);
-		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1456);
-		assertThat(stats.getSpellHitPctBonus()).isEqualTo(12.99, PRECISION);
-		assertThat(stats.getSpellHitPct()).isEqualTo(95.99, PRECISION);
-		assertThat(stats.getSpellCritPct()).isEqualTo(25.43, PRECISION);
-		assertThat(stats.getSpellHastePct()).isEqualTo(27.01, PRECISION);
-		assertThat(stats.getSpellHitRating()).isEqualTo(164);
-		assertThat(stats.getSpellCritRating()).isEqualTo(317);
-		assertThat(stats.getSpellHasteRating()).isEqualTo(426);
-		assertThat(stats.getStamina()).isEqualTo(626);
-		assertThat(stats.getIntellect()).isEqualTo(510);
+		assertThat(stats.getSpellDamage()).isEqualTo(1444);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1498);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1444);
+		assertThat(stats.getSpellHitPctBonus()).isEqualTo(13.39, PRECISION);
+		assertThat(stats.getSpellHitPct()).isEqualTo(96.39, PRECISION);
+		assertThat(stats.getSpellCritPct()).isEqualTo(22.80, PRECISION);
+		assertThat(stats.getSpellHastePct()).isEqualTo(31.96, PRECISION);
+		assertThat(stats.getSpellHitRating()).isEqualTo(169);
+		assertThat(stats.getSpellCritRating()).isEqualTo(256);
+		assertThat(stats.getSpellHasteRating()).isEqualTo(504);
+		assertThat(stats.getStamina()).isEqualTo(646);
+		assertThat(stats.getIntellect()).isEqualTo(521);
 		assertThat(stats.getSpirit()).isEqualTo(142);
-		assertThat(stats.getMaxHealth()).isEqualTo(9857);
-		assertThat(stats.getMaxMana()).isEqualTo(10270);
+		assertThat(stats.getMaxHealth()).isEqualTo(10063);
+		assertThat(stats.getMaxMana()).isEqualTo(10440);
 	}
 
 	@Test
 	void getEquipmentStats() {
 		var stats = calculationService.getEquipmentStats(character);
 
-		assertThat(stats.getSpellDamage()).isEqualTo(1326);
-		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1380);
-		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1326);
-		assertThat(stats.getSpellHitPctBonus()).isEqualTo(13.00, PRECISION);
-		assertThat(stats.getSpellHitPct()).isEqualTo(13.00, PRECISION);
-		assertThat(stats.getSpellCritPct()).isEqualTo(19.09, PRECISION);
-		assertThat(stats.getSpellHastePct()).isEqualTo(27.01, PRECISION);
-		assertThat(stats.getSpellHitRating()).isEqualTo(164);
-		assertThat(stats.getSpellCritRating()).isEqualTo(317);
-		assertThat(stats.getSpellHasteRating()).isEqualTo(426);
-		assertThat(stats.getStamina()).isEqualTo(468);
-		assertThat(stats.getIntellect()).isEqualTo(379);
+		assertThat(stats.getSpellDamage()).isEqualTo(1314);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1368);
+		assertThat(stats.getSpellDamageBySchool()).containsEntry(FIRE, 1314);
+		assertThat(stats.getSpellHitPctBonus()).isEqualTo(13.39, PRECISION);
+		assertThat(stats.getSpellHitPct()).isEqualTo(13.39, PRECISION);
+		assertThat(stats.getSpellCritPct()).isEqualTo(16.47, PRECISION);
+		assertThat(stats.getSpellHastePct()).isEqualTo(31.96, PRECISION);
+		assertThat(stats.getSpellHitRating()).isEqualTo(169);
+		assertThat(stats.getSpellCritRating()).isEqualTo(256);
+		assertThat(stats.getSpellHasteRating()).isEqualTo(504);
+		assertThat(stats.getStamina()).isEqualTo(485);
+		assertThat(stats.getIntellect()).isEqualTo(390);
 		assertThat(stats.getSpirit()).isEqualTo(6);
-		assertThat(stats.getMaxHealth()).isEqualTo(4680);
-		assertThat(stats.getMaxMana()).isEqualTo(5685);
+		assertThat(stats.getMaxHealth()).isEqualTo(4850);
+		assertThat(stats.getMaxMana()).isEqualTo(5850);
 	}
 
 	@Test
@@ -216,7 +216,7 @@ class CalculationServiceTest extends ServiceTest {
 		var activatedAbility = (ActivatedAbility) spellRepository.getSpell(132483, PHASE).orElseThrow();//The Skull of Gul'dan
 		var stats = calculationService.getSpecialAbilityStats(SpecialAbility.of(activatedAbility), character);
 
-		assertThat(stats.getSpEquivalent()).isEqualTo(33.30, PRECISION);
+		assertThat(stats.getSpEquivalent()).isEqualTo(32.31, PRECISION);
 	}
 
 	@BeforeEach
@@ -224,6 +224,6 @@ class CalculationServiceTest extends ServiceTest {
 	void setup() {
 		super.setup();
 
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 	}
 }

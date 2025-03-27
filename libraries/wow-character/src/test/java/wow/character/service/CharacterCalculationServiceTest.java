@@ -394,7 +394,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getEffectDurationSnapshotEffectSomeHaste() {
 		var priest = getCharacter(PRIEST, UNDEAD);
 
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 
 		var ability = priest.getAbility(SHADOW_WORD_PAIN).orElseThrow();
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget());
@@ -418,14 +418,14 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getEffectDurationSnapshotChannelSomeHaste() {
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 
 		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
 		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target);
 
-		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.millis(3935));
+		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.millis(3785));
 		assertThat(durationSnapshot.getNumTicks()).isEqualTo(5);
-		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.millis(787));
+		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.millis(757));
 	}
 
 	@Test
@@ -497,34 +497,34 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getStatSummary() {
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 
 		var snapshot = characterCalculationService.getStatSummary(character);
 
 		assertThat(snapshot.getStrength()).isEqualTo(77);
 		assertThat(snapshot.getAgility()).isEqualTo(83);
-		assertThat(snapshot.getStamina()).isEqualTo(797);
-		assertThat(snapshot.getIntellect()).isEqualTo(620);
+		assertThat(snapshot.getStamina()).isEqualTo(818);
+		assertThat(snapshot.getIntellect()).isEqualTo(632);
 		assertThat(snapshot.getSpirit()).isEqualTo(245);
-		assertThat(snapshot.getMaxHealth()).isEqualTo(11618);
-		assertThat(snapshot.getMaxMana()).isEqualTo(11969);
-		assertThat(snapshot.getSpellPower()).isEqualTo(1170);
-		assertThat(snapshot.getSpellDamage()).isEqualTo(1616);
+		assertThat(snapshot.getMaxHealth()).isEqualTo(11834);
+		assertThat(snapshot.getMaxMana()).isEqualTo(12155);
+		assertThat(snapshot.getSpellPower()).isEqualTo(1176);
+		assertThat(snapshot.getSpellDamage()).isEqualTo(1604);
 		assertThat(snapshot.getSpellDamageBySchool()).isEqualTo(Map.ofEntries(
-				Map.entry(SpellSchool.FROST, 1750),
-				Map.entry(SpellSchool.FIRE, 1696),
-				Map.entry(SpellSchool.ARCANE, 1616),
-				Map.entry(SpellSchool.SHADOW, 1750),
-				Map.entry(SpellSchool.HOLY, 1616),
-				Map.entry(SpellSchool.NATURE, 1616)
+				Map.entry(SpellSchool.FROST, 1738),
+				Map.entry(SpellSchool.FIRE, 1684),
+				Map.entry(SpellSchool.ARCANE, 1604),
+				Map.entry(SpellSchool.SHADOW, 1738),
+				Map.entry(SpellSchool.HOLY, 1604),
+				Map.entry(SpellSchool.NATURE, 1604)
 		));
-		assertThat(snapshot.getSpellHitPctBonus()).isEqualTo(15.99, PRECISION);
+		assertThat(snapshot.getSpellHitPctBonus()).isEqualTo(16.39, PRECISION);
 		assertThat(snapshot.getSpellHitPct()).isEqualTo(98.99, PRECISION);
-		assertThat(snapshot.getSpellCritPct()).isEqualTo(30.44, PRECISION);
-		assertThat(snapshot.getSpellHastePct()).isEqualTo(27.01, PRECISION);
-		assertThat(snapshot.getSpellHitRating()).isEqualTo(164);
-		assertThat(snapshot.getSpellCritRating()).isEqualTo(331);
-		assertThat(snapshot.getSpellHasteRating()).isEqualTo(426);
+		assertThat(snapshot.getSpellCritPct()).isEqualTo(27.83, PRECISION);
+		assertThat(snapshot.getSpellHastePct()).isEqualTo(31.96, PRECISION);
+		assertThat(snapshot.getSpellHitRating()).isEqualTo(169);
+		assertThat(snapshot.getSpellCritRating()).isEqualTo(270);
+		assertThat(snapshot.getSpellHasteRating()).isEqualTo(504);
 	}
 
 	private double getValue(AccumulatedBaseStats stats, AttributeId id) {

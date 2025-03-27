@@ -20,6 +20,6 @@ abstract class ControllerTest extends WowEvaluatorSpringTest {
 	void setup() {
 		character = getCharacter();
 
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 	}
 }

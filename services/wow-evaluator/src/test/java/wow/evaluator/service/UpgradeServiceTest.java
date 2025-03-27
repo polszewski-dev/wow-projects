@@ -116,7 +116,7 @@ class UpgradeServiceTest extends ServiceTest {
 	void setup() {
 		super.setup();
 
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 	}
 
 	private static final Set<String> ENCHANT_NAMES = Set.of(

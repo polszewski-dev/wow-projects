@@ -51,7 +51,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		profile = getPlayerProfile();
 		character = getCharacter();
 
-		character.setEquipment(getEquipment());
+		equipGearSet(character);
 
 		profileInfo = profile.getProfileInfo();
 
