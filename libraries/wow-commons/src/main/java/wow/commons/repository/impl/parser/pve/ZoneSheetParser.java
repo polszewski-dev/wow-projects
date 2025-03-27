@@ -4,7 +4,8 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.Zone;
 import wow.commons.model.pve.ZoneType;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
-import wow.commons.repository.impl.pve.ZoneRepositoryImpl;
+
+import java.util.ArrayList;
 
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
 
@@ -18,17 +19,17 @@ public class ZoneSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colVersion = column(ZONE_VERSION);
 	private final ExcelColumn colPartySize = column(ZONE_MAX_PLAYERS);
 
-	private final ZoneRepositoryImpl zoneRepository;
+	private final ZoneExcelParser parser;
 
-	public ZoneSheetParser(String sheetName, ZoneRepositoryImpl zoneRepository) {
+	public ZoneSheetParser(String sheetName, ZoneExcelParser parser) {
 		super(sheetName);
-		this.zoneRepository = zoneRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Zone zone = getZone();
-		zoneRepository.addZone(zone);
+		var zone = getZone();
+		parser.addZone(zone);
 	}
 
 	private Zone getZone() {
@@ -40,6 +41,6 @@ public class ZoneSheetParser extends WowExcelSheetParser {
 		var partySize = colPartySize.getInteger();
 		var timeRestriction = getTimeRestriction();
 
-		return new Zone(id, name, shortName, version, type, partySize, null, timeRestriction);
+		return new Zone(id, name, shortName, version, type, partySize, new ArrayList<>(), timeRestriction);
 	}
 }

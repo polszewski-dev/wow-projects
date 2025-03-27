@@ -1,23 +1,22 @@
 package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.spell.Ability;
-import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
 public class AbilitySheetParser extends AbstractSpellSheetParser {
-	private final SpellRepositoryImpl spellRepository;
+	private final SpellExcelParser parser;
 
-	public AbilitySheetParser(String sheetName, SpellRepositoryImpl spellRepository) {
+	public AbilitySheetParser(String sheetName, SpellExcelParser parser) {
 		super(sheetName);
-		this.spellRepository = spellRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Ability ability = (Ability) getSpell();
-		spellRepository.addSpell(ability);
+		var ability = (Ability) getSpell();
+		parser.addSpell(ability);
 	}
 }

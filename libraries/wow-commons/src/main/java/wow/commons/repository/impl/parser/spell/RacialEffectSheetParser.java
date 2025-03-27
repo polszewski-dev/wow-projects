@@ -5,15 +5,14 @@ import wow.commons.model.effect.RacialSource;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.effect.impl.RacialEffectImpl;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
 /**
  * User: POlszewski
  * Date: 2024-11-18
  */
 public class RacialEffectSheetParser extends SpellEffectSheetParser {
-	public RacialEffectSheetParser(String sheetName, SpellRepositoryImpl spellRepository, int maxModAttributes, int maxEvents) {
-		super(sheetName, spellRepository, maxModAttributes, maxEvents);
+	public RacialEffectSheetParser(String sheetName, SpellExcelParser parser, int maxModAttributes, int maxEvents) {
+		super(sheetName, parser, maxModAttributes, maxEvents);
 	}
 
 	@Override

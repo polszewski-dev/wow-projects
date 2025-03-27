@@ -3,7 +3,6 @@ package wow.commons.repository.impl.parser.pve;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
-import wow.commons.repository.impl.pve.GameVersionRepositoryImpl;
 
 /**
  * User: POlszewski
@@ -13,11 +12,11 @@ public class GameVersionSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colBasePveSpellHitChance = column("base_pve_spell_hit_chances");
 	private final ExcelColumn colMaxPveSpellHitChance = column("max_pve_spell_hit_chance");
 
-	private final GameVersionRepositoryImpl gameVersionRepository;
+	private final GameVersionExcelParser parser;
 
-	public GameVersionSheetParser(String sheetName, GameVersionRepositoryImpl gameVersionRepository) {
+	public GameVersionSheetParser(String sheetName, GameVersionExcelParser parser) {
 		super(sheetName);
-		this.gameVersionRepository = gameVersionRepository;
+		this.parser = parser;
 	}
 
 	@Override
@@ -27,8 +26,8 @@ public class GameVersionSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		GameVersion gameVersion = getGameVersion();
-		gameVersionRepository.addGameVersion(gameVersion);
+		var gameVersion = getGameVersion();
+		parser.addGameVersion(gameVersion);
 	}
 
 	private GameVersion getGameVersion() {

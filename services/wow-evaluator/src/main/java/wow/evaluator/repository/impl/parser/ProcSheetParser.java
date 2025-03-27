@@ -2,7 +2,6 @@ package wow.evaluator.repository.impl.parser;
 
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.evaluator.model.ProcInfo;
-import wow.evaluator.repository.impl.ProcInfoRepositoryImpl;
 
 import java.util.regex.Pattern;
 
@@ -11,17 +10,17 @@ import java.util.regex.Pattern;
  * Date: 2023-05-03
  */
 public class ProcSheetParser extends WowExcelSheetParser {
-	private final ProcInfoRepositoryImpl procInfoRepository;
-
 	private final ExcelColumn colChance = column("chance");
 	private final ExcelColumn colCastTime = column("cast_time");
 	private final ExcelColumn colDuration = column("duration");
 	private final ExcelColumn colInternalCd = column("internal_cd");
 	private final ExcelColumn colAvgUptime = column("avg_uptime");
 
-	protected ProcSheetParser(Pattern sheetNamePattern, ProcInfoRepositoryImpl procInfoRepository) {
+	private final ProcExcelParser parser;
+
+	protected ProcSheetParser(Pattern sheetNamePattern, ProcExcelParser parser) {
 		super(sheetNamePattern);
-		this.procInfoRepository = procInfoRepository;
+		this.parser = parser;
 	}
 
 	@Override
@@ -31,8 +30,8 @@ public class ProcSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		ProcInfo procInfo = getProcInfo();
-		procInfoRepository.addProcInfo(procInfo);
+		var procInfo = getProcInfo();
+		parser.addProcInfo(procInfo);
 	}
 
 	private ProcInfo getProcInfo() {

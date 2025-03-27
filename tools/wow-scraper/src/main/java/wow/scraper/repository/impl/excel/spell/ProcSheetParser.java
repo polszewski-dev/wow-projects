@@ -3,7 +3,6 @@ package wow.scraper.repository.impl.excel.spell;
 import wow.scraper.parser.spell.SpellPatternType;
 import wow.scraper.parser.spell.params.EffectPatternParams;
 import wow.scraper.parser.spell.proc.ProcPattern;
-import wow.scraper.repository.impl.SpellPatternRepositoryImpl;
 
 import java.util.List;
 import java.util.TreeMap;
@@ -15,8 +14,8 @@ import static wow.scraper.parser.spell.SpellPatternType.TRIGGER_1;
  * Date: 2023-09-08
  */
 public class ProcSheetParser extends AbstractSpellPatternSheetParser {
-	public ProcSheetParser(String sheetName, SpellPatternRepositoryImpl spellPatternRepository) {
-		super(sheetName, spellPatternRepository);
+	public ProcSheetParser(String sheetName, SpellPatternExcelParser parser) {
+		super(sheetName, parser);
 	}
 
 	@Override
@@ -53,12 +52,12 @@ public class ProcSheetParser extends AbstractSpellPatternSheetParser {
 	private EffectPatternParams getTriggerEffect() {
 		var pattern = getPattern();
 		var reqVersion = getReqVersion();
-		var procPattern = spellPatternRepository.getProcPattern(pattern, reqVersion).orElse(null);
+		var procPattern = parser.getProcPattern(pattern, reqVersion).orElse(null);
 
 		if (procPattern == null) {
 			var params = new EffectPatternParams(List.of(), null, null, null, List.of(), new TreeMap<>(), null, null);
 			procPattern = new ProcPattern(pattern, params, reqVersion);
-			spellPatternRepository.add(procPattern);
+			parser.add(procPattern);
 		}
 
 		return procPattern.getParams();

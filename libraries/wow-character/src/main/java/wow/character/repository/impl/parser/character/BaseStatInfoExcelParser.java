@@ -1,6 +1,9 @@
 package wow.character.repository.impl.parser.character;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.character.model.character.BaseStatInfo;
@@ -20,13 +23,16 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-11-30
  */
-@AllArgsConstructor
+@Component
+@Scope("prototype")
+@RequiredArgsConstructor
 public class BaseStatInfoExcelParser extends ExcelParser {
+	@Value("${base.stat.infos.xls.file.path}")
 	private final String xlsFilePath;
+
 	private final GameVersionRepository gameVersionRepository;
 
 	private record BaseKey(CharacterClassId characterClassId, RaceId raceId, int level, GameVersionId gameVersionId) {}
-	
 	private record IncrementKey(CharacterClassId characterClassId, int level, GameVersionId gameVersionId) {}
 	
 	private final Map<BaseKey, BaseStatInfo> bases = new HashMap<>();

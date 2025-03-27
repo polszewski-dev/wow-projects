@@ -3,7 +3,6 @@ package wow.commons.repository.impl.parser.pve;
 import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.NpcType;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
-import wow.commons.repository.impl.pve.NpcRepositoryImpl;
 import wow.commons.repository.pve.ZoneRepository;
 
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.*;
@@ -17,19 +16,19 @@ public class NpcSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colBoss = column(NPC_BOSS);
 	private final ExcelColumn colZone = column(NPC_ZONE);
 
-	private final NpcRepositoryImpl npcRepository;
 	private final ZoneRepository zoneRepository;
+	private final NpcExcelParser parser;
 
-	public NpcSheetParser(String sheetName, NpcRepositoryImpl npcRepository, ZoneRepository zoneRepository) {
+	public NpcSheetParser(String sheetName, ZoneRepository zoneRepository, NpcExcelParser parser) {
 		super(sheetName);
-		this.npcRepository = npcRepository;
 		this.zoneRepository = zoneRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Npc npc = getNpc();
-		npcRepository.addNpc(npc);
+		var npc = getNpc();
+		parser.addNpc(npc);
 	}
 
 	private Npc getNpc() {

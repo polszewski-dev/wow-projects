@@ -1,7 +1,5 @@
 package wow.commons.repository.impl.pve;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
@@ -10,7 +8,6 @@ import wow.commons.repository.pve.ZoneRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.GameVersionMap;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +18,14 @@ import java.util.Optional;
  * Date: 2021-03-14
  */
 @Component
-@RequiredArgsConstructor
 public class ZoneRepositoryImpl implements ZoneRepository {
 	private final GameVersionMap<Integer, Zone> zoneById = new GameVersionMap<>();
 	private final GameVersionMap<String, List<Zone>> zoneByName = new GameVersionMap<>();
 
-	@Value("${zones.xls.file.path}")
-	private String xlsFilePath;
+	public ZoneRepositoryImpl(ZoneExcelParser parser) throws IOException {
+		parser.readFromXls();
+		parser.getZones().forEach(this::addZone);
+	}
 
 	@Override
 	public Optional<Zone> getZone(int zoneId, PhaseId phaseId) {
@@ -54,14 +52,7 @@ public class ZoneRepositoryImpl implements ZoneRepository {
 				.toList();
 	}
 
-	@PostConstruct
-	public void init() throws IOException {
-		var pveExcelParser = new ZoneExcelParser(xlsFilePath, this);
-		pveExcelParser.readFromXls();
-	}
-
-	public void addZone(Zone zone) {
-		zone.setNpcs(new ArrayList<>());
+	private void addZone(Zone zone) {
 		zoneById.put(zone.getGameVersionId(), zone.getId(), zone);
 		zoneByName.computeIfAbsent(zone.getGameVersionId(), zone.getName(), x -> new ArrayList<>()).add(zone);
 	}

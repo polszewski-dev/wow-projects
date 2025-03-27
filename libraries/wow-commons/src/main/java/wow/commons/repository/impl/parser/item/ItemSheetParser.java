@@ -7,7 +7,6 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.*;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.spell.SpellSchool;
-import wow.commons.repository.impl.item.ItemRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
@@ -21,18 +20,16 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colItemSet = column(ITEM_ITEM_SET);
 
 	private final ItemExcelParser parser;
-	private final ItemRepositoryImpl itemRepository;
-	
-	public ItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemRepositoryImpl itemRepository, ItemExcelParser parser) {
+
+	public ItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemExcelParser parser) {
 		super(sheetName, sourceParserFactory, spellRepository);
 		this.parser = parser;
-		this.itemRepository = itemRepository;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Item item = getItem();
-		itemRepository.addItem(item);
+		var item = getItem();
+		parser.addItem(item);
 	}
 
 	private Item getItem() {

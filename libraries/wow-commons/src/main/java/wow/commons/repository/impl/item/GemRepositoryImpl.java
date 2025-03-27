@@ -1,19 +1,14 @@
 package wow.commons.repository.impl.item;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.GemExcelParser;
-import wow.commons.repository.impl.parser.item.SourceParserFactory;
 import wow.commons.repository.item.GemRepository;
-import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -26,17 +21,15 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  * Date: 2021-03-02
  */
 @Component
-@RequiredArgsConstructor
 public class GemRepositoryImpl implements GemRepository {
-	private final SourceParserFactory sourceParserFactory;
-	private final SpellRepository spellRepository;
-
 	private final PhaseMap<Integer, Gem> gemById = new PhaseMap<>();
 	private final PhaseMap<String, List<Gem>> gemByName = new PhaseMap<>();
 	private final PhaseMap<SocketType, List<Gem>> gemBySocketType = new PhaseMap<>();
 
-	@Value("${gems.xls.file.path}")
-	private String xlsFilePath;
+	public GemRepositoryImpl(GemExcelParser parser) throws IOException {
+		parser.readFromXls();
+		parser.getGems().forEach(this::addGem);
+	}
 
 	@Override
 	public Optional<Gem> getGem(int gemId, PhaseId phaseId) {
@@ -55,13 +48,7 @@ public class GemRepositoryImpl implements GemRepository {
 				.orElse(List.of());
 	}
 
-	@PostConstruct
-	public void init() throws IOException {
-		var parser = new GemExcelParser(xlsFilePath, sourceParserFactory, this, spellRepository);
-		parser.readFromXls();
-	}
-
-	public void addGem(Gem gem) {
+	private void addGem(Gem gem) {
 		putForEveryPhase(gemById, gem.getId(), gem);
 		addEntryForEveryPhase(gemByName, gem.getName(), gem);
 		for (var socketType : SocketType.values()) {

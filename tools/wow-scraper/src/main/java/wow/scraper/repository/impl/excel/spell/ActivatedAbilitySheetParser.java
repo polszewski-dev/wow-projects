@@ -2,7 +2,6 @@ package wow.scraper.repository.impl.excel.spell;
 
 import wow.scraper.parser.spell.activated.ActivatedAbilityPattern;
 import wow.scraper.parser.spell.params.SpellPatternParams;
-import wow.scraper.repository.impl.SpellPatternRepositoryImpl;
 
 import static wow.scraper.parser.spell.SpellPatternType.SPELL;
 
@@ -11,8 +10,8 @@ import static wow.scraper.parser.spell.SpellPatternType.SPELL;
  * Date: 2023-09-03
  */
 public class ActivatedAbilitySheetParser extends AbstractSpellPatternSheetParser {
-	public ActivatedAbilitySheetParser(String sheetName, SpellPatternRepositoryImpl spellPatternRepository) {
-		super(sheetName, spellPatternRepository);
+	public ActivatedAbilitySheetParser(String sheetName, SpellPatternExcelParser parser) {
+		super(sheetName, parser);
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class ActivatedAbilitySheetParser extends AbstractSpellPatternSheetParser
 		var reqVersion = getReqVersion();
 		var primarySpell = new ActivatedAbilityPattern(pattern, params, reqVersion);
 
-		spellPatternRepository.add(primarySpell);
+		parser.add(primarySpell);
 	}
 
 	private void readTriggeredSpell() {
@@ -48,7 +47,7 @@ public class ActivatedAbilitySheetParser extends AbstractSpellPatternSheetParser
 		var pattern = getPattern();
 		var reqVersion = getReqVersion();
 
-		return spellPatternRepository.getActivatedAbilityPattern(pattern, reqVersion)
+		return parser.getActivatedAbilityPattern(pattern, reqVersion)
 				.orElseThrow()
 				.getParams();
 	}

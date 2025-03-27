@@ -3,7 +3,6 @@ package wow.commons.repository.impl.parser.item;
 import wow.commons.model.item.Consumable;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.impl.ConsumableImpl;
-import wow.commons.repository.impl.item.ConsumableRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
 /**
@@ -11,17 +10,17 @@ import wow.commons.repository.spell.SpellRepository;
  * Date: 2022-11-22
  */
 public class ConsumableSheetParser extends AbstractItemSheetParser {
-	private final ConsumableRepositoryImpl consumableRepository;
+	private final ConsumableExcelParser parser;
 
-	public ConsumableSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ConsumableRepositoryImpl consumableRepository) {
+	public ConsumableSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ConsumableExcelParser parser) {
 		super(sheetName, sourceParserFactory, spellRepository);
-		this.consumableRepository = consumableRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
 		var consumable = getConsumable();
-		consumableRepository.addConsumable(consumable);
+		parser.addConsumable(consumable);
 	}
 
 	private Consumable getConsumable() {

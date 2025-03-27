@@ -9,7 +9,6 @@ import wow.commons.model.spell.*;
 import wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames;
 import wow.scraper.parser.spell.SpellPatternType;
 import wow.scraper.parser.spell.params.*;
-import wow.scraper.repository.impl.SpellPatternRepositoryImpl;
 import wow.scraper.repository.impl.excel.AbstractPatternSheetParser;
 
 import java.util.List;
@@ -29,11 +28,11 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	private static final int MAX_EVENT_PATTERNS = 2;
 	public static final String TRIGGER_PREFIX = "trigger: ";
 
-	protected final SpellPatternRepositoryImpl spellPatternRepository;
+	protected final SpellPatternExcelParser parser;
 
-	protected AbstractSpellPatternSheetParser(String sheetName, SpellPatternRepositoryImpl spellPatternRepository) {
+	protected AbstractSpellPatternSheetParser(String sheetName, SpellPatternExcelParser parser) {
 		super(sheetName);
-		this.spellPatternRepository = spellPatternRepository;
+		this.parser = parser;
 	}
 
 	private final ExcelColumn colPatternType = column("type");

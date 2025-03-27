@@ -4,7 +4,6 @@ import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.Side;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
-import wow.commons.repository.impl.pve.FactionRepositoryImpl;
 
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.FACTION_SIDE;
 import static wow.commons.repository.impl.parser.pve.PveBaseExcelColumnNames.FACTION_VERSION;
@@ -17,17 +16,17 @@ public class FactionSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colVersion = column(FACTION_VERSION);
 	private final ExcelColumn colSide = column(FACTION_SIDE);
 
-	private final FactionRepositoryImpl factionRepository;
+	private final FactionExcelParser parser;
 
-	public FactionSheetParser(String sheetName, FactionRepositoryImpl factionRepository) {
+	public FactionSheetParser(String sheetName, FactionExcelParser parser) {
 		super(sheetName);
-		this.factionRepository = factionRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Faction faction = getFaction();
-		factionRepository.addFactionByName(faction);
+		var faction = getFaction();
+		parser.addFaction(faction);
 	}
 
 	private Faction getFaction() {

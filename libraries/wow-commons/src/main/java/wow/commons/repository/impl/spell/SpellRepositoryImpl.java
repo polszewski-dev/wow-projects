@@ -1,32 +1,26 @@
 package wow.commons.repository.impl.spell;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.RacialEffect;
-import wow.commons.model.effect.component.ComponentType;
-import wow.commons.model.effect.component.Event;
-import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.*;
-import wow.commons.model.spell.impl.SpellImpl;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.AbilityIdAndRank;
+import wow.commons.model.spell.Spell;
 import wow.commons.repository.impl.parser.spell.SpellExcelParser;
 import wow.commons.repository.spell.SpellRepository;
-import wow.commons.util.CollectionUtil;
 import wow.commons.util.GameVersionMap;
 import wow.commons.util.PhaseMap;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import static wow.commons.model.spell.SpellTarget.GROUND_HOSTILE;
-import static wow.commons.model.spell.SpellTarget.TARGET;
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
 
@@ -35,7 +29,6 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  * Date: 2020-09-28
  */
 @Component
-@RequiredArgsConstructor
 public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();
 	private final PhaseMap<AbilityIdAndRank, Ability> abilitiesByRankedId = new PhaseMap<>();
@@ -43,8 +36,11 @@ public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<Integer, Effect> effectById = new PhaseMap<>();
 	private final GameVersionMap<RaceId, List<RacialEffect>> racialEffects = new GameVersionMap<>();
 
-	@Value("${spells.xls.file.path}")
-	private String xlsFilePath;
+	public SpellRepositoryImpl(SpellExcelParser parser) throws IOException {
+		parser.readFromXls();
+		parser.getSpells().forEach(this::addSpell);
+		parser.getEffects().forEach(this::addEffect);
+	}
 
 	@Override
 	public List<Ability> getAvailableAbilities(CharacterClassId characterClassId, int level, PhaseId phaseId) {
@@ -73,100 +69,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 		return racialEffects.getOptional(gameVersionId, raceId).orElse(List.of());
 	}
 
-	@PostConstruct
-	public void init() throws IOException {
-		var spellExcelParser = new SpellExcelParser(xlsFilePath, this);
-		spellExcelParser.readFromXls();
-
-		spellsById.allValues().forEach(this::replaceDummyEffects);
-		effectById.allValues().forEach(this::replaceDummySpells);
-		spellsById.allValues().forEach(this::setMissingSpellFields);
-	}
-
-	private void replaceDummyEffects(Spell spell) {
-		var effectApplication = spell.getEffectApplication();
-
-		if (effectApplication == null) {
-			return;
-		}
-
-		var effectId = effectApplication.effect().getEffectId();
-		var phaseId = spell.getEarliestPhaseId();
-		var effect = getEffect(effectId, phaseId).orElseThrow();
-		var newEffectApplication = effectApplication.setEffect(effect);
-
-		((SpellImpl) spell).setEffectApplication(newEffectApplication);
-	}
-
-	private void replaceDummySpells(Effect effect) {
-		var newEvents = effect.getEvents().stream()
-				.map(event -> replaceDummySpell(event, effect.getTimeRestriction()))
-				.toList();
-
-		((EffectImpl) effect).setEvents(newEvents);
-	}
-
-	private Event replaceDummySpell(Event event, TimeRestriction timeRestriction) {
-		if (event.triggeredSpell() == null) {
-			return event;
-		}
-
-		var spellId = event.triggeredSpell().getId();
-		var phaseId = timeRestriction.earliestPhaseId();
-		var spell = getSpell(spellId, phaseId).orElseThrow();
-
-		return event.setTriggeredSpell(spell);
-	}
-
-	private void setMissingSpellFields(Spell spell) {
-		var school = getSpellSchool(spell).orElse(null);
-		var componentTypes = getComponentTypes(spell);
-		var spellImpl = (SpellImpl) spell;
-
-		spellImpl.setSchool(school);
-		spellImpl.setHasDamagingComponent(componentTypes.contains(ComponentType.DAMAGE));
-		spellImpl.setHasHealingComponent(componentTypes.contains(ComponentType.HEAL));
-	}
-
-	private Set<ComponentType> getComponentTypes(Spell spell) {
-		var result = new HashSet<ComponentType>();
-
-		for (var directComponent : spell.getDirectComponents()) {
-			result.add(directComponent.type());
-		}
-
-		var appliedEffect = spell.getAppliedEffect();
-
-		if (appliedEffect != null && appliedEffect.hasPeriodicComponent()) {
-			result.add(appliedEffect.getPeriodicComponent().type());
-		}
-
-		return result;
-	}
-
-	private Optional<SpellSchool> getSpellSchool(Spell spell) {
-		var result = new HashSet<SpellSchool>();
-
-		for (var directComponent : spell.getDirectComponents()) {
-			var school = directComponent.school();
-			result.add(school);
-		}
-
-		var appliedEffect = spell.getAppliedEffect();
-
-		if (appliedEffect != null && appliedEffect.hasPeriodicComponent()) {
-			var school = appliedEffect.getPeriodicComponent().school();
-			result.add(school);
-		}
-
-		result.remove(null);
-
-		return CollectionUtil.getUniqueResult(List.copyOf(result));
-	}
-
-	public void addSpell(Spell spell) {
-		validateSpell(spell);
-
+	private void addSpell(Spell spell) {
 		if (spell instanceof Ability ability) {
 			for (var characterClassId : ability.getRequiredCharacterClassIds()) {
 				addEntryForEveryPhase(abilitiesByClass, characterClassId, ability);
@@ -178,9 +81,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 		putForEveryPhase(spellsById, spell.getId(), spell);
 	}
 
-	public void addEffect(Effect effect) {
-		validateEffect(effect);
-
+	private void addEffect(Effect effect) {
 		putForEveryPhase(effectById, effect.getEffectId(), effect);
 
 		var gameVersionId = effect.getGameVersionId();
@@ -190,45 +91,6 @@ public class SpellRepositoryImpl implements SpellRepository {
 				racialEffects.computeIfAbsent(gameVersionId, raceId, x -> new ArrayList<>())
 						.add(racial);
 			}
-		}
-	}
-
-	private void validateSpell(Spell spell) {
-		if (!(spell instanceof Ability ability)) {
-			return;
-		}
-
-		if (ability.isChanneled() && !ability.getCastTime().isZero()) {
-			throw new IllegalArgumentException("Channeled ability with non-zero cast time: " + ability);
-		}
-
-		var effectApplication = ability.getEffectApplication();
-
-		if (effectApplication != null) {
-			var effectTarget = effectApplication.target();
-			var effect = effectApplication.effect();
-
-			if (ability.isChanneled() && effectTarget.isAoE() && effectTarget != GROUND_HOSTILE) {
-				throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
-			}
-
-			if (effect.hasPeriodicComponent()) {
-				var periodicComponentTarget = effect.getPeriodicComponent().target();
-				if (effectTarget == GROUND_HOSTILE && periodicComponentTarget == TARGET) {
-					throw new IllegalArgumentException("Ground effect has no target specified");
-				}
-			}
-		}
-	}
-
-	private void validateEffect(Effect effect) {
-		if (effect.hasAugmentedAbilities() &&
-			(effect.hasPeriodicComponent() || effect.hasAbsorptionComponent())) {
-			throw new IllegalArgumentException();
-		}
-
-		if (effect.hasPeriodicComponent()) {
-			Objects.requireNonNull(effect.getTickInterval());
 		}
 	}
 }

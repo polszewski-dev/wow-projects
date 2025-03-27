@@ -5,7 +5,6 @@ import wow.commons.model.spell.SpellTarget;
 import wow.scraper.parser.spell.misc.MiscEffectPattern;
 import wow.scraper.parser.spell.params.EffectPatternParams;
 import wow.scraper.parser.spell.params.EventParams;
-import wow.scraper.repository.impl.SpellPatternRepositoryImpl;
 
 import java.util.Collection;
 
@@ -16,8 +15,8 @@ import static wow.scraper.parser.spell.SpellPatternType.EFFECT;
  * Date: 2023-09-17
  */
 public class MiscEffectsSheetParser extends AbstractSpellPatternSheetParser {
-	protected MiscEffectsSheetParser(String sheetName, SpellPatternRepositoryImpl spellPatternRepository) {
-		super(sheetName, spellPatternRepository);
+	protected MiscEffectsSheetParser(String sheetName, SpellPatternExcelParser parser) {
+		super(sheetName, parser);
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class MiscEffectsSheetParser extends AbstractSpellPatternSheetParser {
 
 		validate(effect);
 
-		spellPatternRepository.add(effect);
+		parser.add(effect);
 	}
 
 	private void readTriggeredSpell() {
@@ -52,7 +51,7 @@ public class MiscEffectsSheetParser extends AbstractSpellPatternSheetParser {
 		var pattern = getPattern();
 		var reqVersion = getReqVersion();
 
-		return spellPatternRepository.getMiscEffectPattern(pattern, reqVersion)
+		return parser.getMiscEffectPattern(pattern, reqVersion)
 				.orElseThrow()
 				.getParams();
 	}

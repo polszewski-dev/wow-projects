@@ -41,8 +41,8 @@ public class BaseStatInfoSheetParser extends GameVersionedExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		for (GameVersion version : getVersions()) {
-			BaseStatInfo baseStatInfo = getBaseStatInfo(version);
+		for (var version : getVersions()) {
+			var baseStatInfo = getBaseStatInfo(version);
 			addBaseStatInfo(baseStatInfo);
 		}
 	}

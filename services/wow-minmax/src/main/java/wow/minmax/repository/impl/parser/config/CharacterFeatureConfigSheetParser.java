@@ -3,20 +3,19 @@ package wow.minmax.repository.impl.parser.config;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.config.CharacterFeatureConfig;
-import wow.minmax.repository.impl.MinmaxConfigRepositoryImpl;
 
 /**
  * User: POlszewski
  * Date: 2023-05-11
  */
 public class CharacterFeatureConfigSheetParser extends WowExcelSheetParser {
-	private final MinmaxConfigRepositoryImpl configRepository;
-
 	private final ExcelColumn colFeature = column("feature");
 
-	protected CharacterFeatureConfigSheetParser(String sheetName, MinmaxConfigRepositoryImpl configRepository) {
+	private final MinMaxConfigExcelParser parser;
+
+	protected CharacterFeatureConfigSheetParser(String sheetName, MinMaxConfigExcelParser parser) {
 		super(sheetName);
-		this.configRepository = configRepository;
+		this.parser = parser;
 	}
 
 	@Override
@@ -26,8 +25,8 @@ public class CharacterFeatureConfigSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		CharacterFeatureConfig characterFeatureConfig = getCharacterFeatureConfig();
-		configRepository.add(characterFeatureConfig);
+		var characterFeatureConfig = getCharacterFeatureConfig();
+		parser.add(characterFeatureConfig);
 	}
 
 	private CharacterFeatureConfig getCharacterFeatureConfig() {

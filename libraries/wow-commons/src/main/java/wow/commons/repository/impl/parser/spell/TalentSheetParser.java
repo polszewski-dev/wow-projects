@@ -8,7 +8,6 @@ import wow.commons.model.talent.TalentSource;
 import wow.commons.model.talent.TalentTree;
 import wow.commons.model.talent.impl.TalentImpl;
 import wow.commons.repository.impl.spell.SpellRepositoryImpl;
-import wow.commons.repository.impl.spell.TalentRepositoryImpl;
 
 import java.util.List;
 
@@ -19,20 +18,19 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2022-11-22
  */
 public class TalentSheetParser extends AbstractSpellSheetParser {
-	private final TalentRepositoryImpl talentRepository;
 	private final SpellRepositoryImpl spellRepository;
+	private final TalentExcelParser parser;
 
-	public TalentSheetParser(String sheetName, TalentRepositoryImpl talentRepository, SpellRepositoryImpl spellRepository) {
+	public TalentSheetParser(String sheetName, SpellRepositoryImpl spellRepository, TalentExcelParser parser) {
 		super(sheetName);
-		this.talentRepository = talentRepository;
 		this.spellRepository = spellRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Talent talent = getTalent();
-		talentRepository.addTalent(talent);
-		spellRepository.addEffect(talent.getEffect());
+		var talent = getTalent();
+		parser.addTalent(talent);
 	}
 
 	private final ExcelColumn colRank = column(TALENT_RANK);

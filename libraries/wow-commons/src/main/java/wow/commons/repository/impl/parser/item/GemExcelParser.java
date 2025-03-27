@@ -1,12 +1,18 @@
 package wow.commons.repository.impl.parser.item;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.commons.repository.impl.item.GemRepositoryImpl;
+import wow.commons.model.item.Gem;
 import wow.commons.repository.spell.SpellRepository;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.GEM;
@@ -15,12 +21,18 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.GE
  * User: POlszewski
  * Date: 2022-10-30
  */
-@AllArgsConstructor
+@Component
+@Scope("prototype")
+@RequiredArgsConstructor
 public class GemExcelParser extends ExcelParser {
+	@Value("${gems.xls.file.path}")
 	private final String xlsFilePath;
+
 	private final SourceParserFactory sourceParserFactory;
-	private final GemRepositoryImpl gemRepository;
 	private final SpellRepository spellRepository;
+
+	@Getter
+	private final List<Gem> gems = new ArrayList<>();
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -30,7 +42,11 @@ public class GemExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new GemSheetParser(GEM, sourceParserFactory, spellRepository, gemRepository)
+				new GemSheetParser(GEM, sourceParserFactory, spellRepository, this)
 		);
+	}
+
+	void addGem(Gem gem) {
+		gems.add(gem);
 	}
 }

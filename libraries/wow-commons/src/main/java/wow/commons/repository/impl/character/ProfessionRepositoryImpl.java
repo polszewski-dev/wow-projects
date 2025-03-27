@@ -1,7 +1,5 @@
 package wow.commons.repository.impl.character;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.commons.model.profession.Profession;
 import wow.commons.model.profession.ProfessionId;
@@ -12,7 +10,6 @@ import wow.commons.repository.character.ProfessionRepository;
 import wow.commons.repository.impl.parser.character.ProfessionExcelParser;
 import wow.commons.repository.pve.GameVersionRepository;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -21,9 +18,13 @@ import java.util.Optional;
  * Date: 27.09.2024
  */
 @Component
-@RequiredArgsConstructor
 public class ProfessionRepositoryImpl implements ProfessionRepository {
 	private final GameVersionRepository gameVersionRepository;
+
+	public ProfessionRepositoryImpl(GameVersionRepository gameVersionRepository, ProfessionExcelParser parser) throws IOException {
+		this.gameVersionRepository = gameVersionRepository;
+		parser.readFromXls();
+	}
 
 	@Override
 	public Optional<Profession> getProfession(ProfessionId professionId, GameVersionId gameVersionId) {
@@ -37,14 +38,5 @@ public class ProfessionRepositoryImpl implements ProfessionRepository {
 		var gameVersion = gameVersionRepository.getGameVersion(gameVersionId).orElseThrow();
 
 		return gameVersion.getProficiency(professionProficiencyId);
-	}
-
-	@Value("${professions.xls.file.path}")
-	private String xlsFilePath;
-
-	@PostConstruct
-	public void init() throws IOException {
-		var parser = new ProfessionExcelParser(xlsFilePath, gameVersionRepository);
-		parser.readFromXls();
 	}
 }

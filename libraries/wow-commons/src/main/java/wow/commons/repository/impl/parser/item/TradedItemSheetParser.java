@@ -2,7 +2,6 @@ package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.item.impl.TradedItemImpl;
-import wow.commons.repository.impl.item.TradedItemRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
 /**
@@ -10,17 +9,17 @@ import wow.commons.repository.spell.SpellRepository;
  * Date: 2022-11-22
  */
 public class TradedItemSheetParser extends AbstractItemSheetParser {
-	private final TradedItemRepositoryImpl tradedItemRepository;
+	private final TradedItemExcelParser parser;
 
-	public TradedItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, TradedItemRepositoryImpl tradedItemRepository) {
+	public TradedItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, TradedItemExcelParser parser) {
 		super(sheetName, sourceParserFactory, spellRepository);
-		this.tradedItemRepository = tradedItemRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		TradedItem tradedItem = getTradedItem();
-		tradedItemRepository.addTradedItem(tradedItem);
+		var tradedItem = getTradedItem();
+		parser.addTradedItem(tradedItem);
 	}
 
 	private TradedItem getTradedItem() {

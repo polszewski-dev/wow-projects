@@ -3,7 +3,6 @@ package wow.scraper.repository.impl.excel.spell;
 import wow.commons.model.spell.AbilityId;
 import wow.scraper.parser.spell.ability.AbilityPattern;
 import wow.scraper.parser.spell.params.SpellPatternParams;
-import wow.scraper.repository.impl.SpellPatternRepositoryImpl;
 
 import static wow.scraper.parser.spell.SpellPatternType.SPELL;
 
@@ -14,8 +13,8 @@ import static wow.scraper.parser.spell.SpellPatternType.SPELL;
 public class AbilityPatternSheetParser extends AbstractSpellPatternSheetParser {
 	private final ExcelColumn colAbility = column("ability");
 
-	public AbilityPatternSheetParser(String sheetName, SpellPatternRepositoryImpl spellPatternRepository) {
-		super(sheetName, spellPatternRepository);
+	public AbilityPatternSheetParser(String sheetName, SpellPatternExcelParser parser) {
+		super(sheetName, parser);
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class AbilityPatternSheetParser extends AbstractSpellPatternSheetParser {
 		var reqVersion = getReqVersion();
 		var primarySpell = new AbilityPattern(pattern, params, reqVersion);
 
-		spellPatternRepository.add(ability, primarySpell);
+		parser.add(ability, primarySpell);
 	}
 
 	private void readTriggeredSpell() {
@@ -53,7 +52,7 @@ public class AbilityPatternSheetParser extends AbstractSpellPatternSheetParser {
 		var pattern = getPattern();
 		var reqVersion = getReqVersion();
 
-		return spellPatternRepository.getAbilityPattern(ability, pattern, reqVersion)
+		return parser.getAbilityPattern(ability, pattern, reqVersion)
 				.orElseThrow()
 				.getParams();
 	}

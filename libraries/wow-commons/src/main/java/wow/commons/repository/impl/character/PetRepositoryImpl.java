@@ -1,13 +1,10 @@
 package wow.commons.repository.impl.character;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.commons.repository.character.PetRepository;
 import wow.commons.repository.impl.parser.character.PetExcelParser;
 import wow.commons.repository.pve.GameVersionRepository;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 /**
@@ -15,16 +12,11 @@ import java.io.IOException;
  * Date: 27.09.2024
  */
 @Component
-@RequiredArgsConstructor
 public class PetRepositoryImpl implements PetRepository {
 	private final GameVersionRepository gameVersionRepository;
 
-	@Value("${pets.xls.file.path}")
-	private String xlsFilePath;
-
-	@PostConstruct
-	public void init() throws IOException {
-		var parser = new PetExcelParser(xlsFilePath, gameVersionRepository);
+	public PetRepositoryImpl(GameVersionRepository gameVersionRepository, PetExcelParser parser) throws IOException {
+		this.gameVersionRepository = gameVersionRepository;
 		parser.readFromXls();
 	}
 }

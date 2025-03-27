@@ -29,10 +29,6 @@ public class Zone implements TimeRestricted {
 		return shortName != null ? shortName : name;
 	}
 
-	public void setNpcs(List<Npc> npcs) {
-		this.npcs = npcs;
-	}
-
 	public boolean isRaid() {
 		return zoneType == ZoneType.RAID;
 	}

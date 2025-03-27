@@ -3,7 +3,6 @@ package wow.character.repository.impl.parser.character;
 import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
-import wow.character.repository.impl.CharacterTemplateRepositoryImpl;
 import wow.character.util.TalentLinkParser;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.character.ExclusiveFaction;
@@ -38,21 +37,22 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colXFactions = column("xfactions");
 	private final ExcelColumn colDefault = column("default");
 
-	private final CharacterTemplateRepositoryImpl characterTemplateRepository;
 	private final TalentRepository talentRepository;
 	private final PhaseRepository phaseRepository;
 
-	public CharacterTemplateSheetParser(String sheetName, CharacterTemplateRepositoryImpl characterTemplateRepository, TalentRepository talentRepository, PhaseRepository phaseRepository) {
+	private final CharacterTemplateExcelParser parser;
+
+	public CharacterTemplateSheetParser(String sheetName, TalentRepository talentRepository, PhaseRepository phaseRepository, CharacterTemplateExcelParser parser) {
 		super(sheetName);
-		this.characterTemplateRepository = characterTemplateRepository;
 		this.talentRepository = talentRepository;
 		this.phaseRepository = phaseRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		CharacterTemplate characterTemplate = getCharacterTemplate();
-		characterTemplateRepository.addCharacterTemplate(characterTemplate);
+		var characterTemplate = getCharacterTemplate();
+		parser.addCharacterTemplate(characterTemplate);
 	}
 
 	private CharacterTemplate getCharacterTemplate() {

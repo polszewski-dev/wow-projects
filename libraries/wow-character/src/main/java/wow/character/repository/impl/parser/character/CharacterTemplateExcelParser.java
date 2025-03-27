@@ -1,25 +1,37 @@
 package wow.character.repository.impl.parser.character;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.character.repository.impl.CharacterTemplateRepositoryImpl;
+import wow.character.model.character.CharacterTemplate;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.TalentRepository;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2022-11-30
  */
-@AllArgsConstructor
+@Component
+@Scope("prototype")
+@RequiredArgsConstructor
 public class CharacterTemplateExcelParser extends ExcelParser {
+	@Value("${character.templates.xls.file.path}")
 	private final String xlsFilePath;
-	private final CharacterTemplateRepositoryImpl characterTemplateRepository;
+
 	private final TalentRepository talentRepository;
 	private final PhaseRepository phaseRepository;
+
+	@Getter
+	private final List<CharacterTemplate> characterTemplates = new ArrayList<>();
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -29,7 +41,11 @@ public class CharacterTemplateExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new CharacterTemplateSheetParser("templates", characterTemplateRepository, talentRepository, phaseRepository)
+				new CharacterTemplateSheetParser("templates", talentRepository, phaseRepository, this)
 		);
+	}
+
+	void addCharacterTemplate(CharacterTemplate characterTemplate) {
+		characterTemplates.add(characterTemplate);
 	}
 }

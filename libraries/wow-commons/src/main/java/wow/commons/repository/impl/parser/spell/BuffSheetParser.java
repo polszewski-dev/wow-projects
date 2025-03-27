@@ -3,7 +3,6 @@ package wow.commons.repository.impl.parser.spell;
 import wow.commons.model.buff.*;
 import wow.commons.model.buff.impl.BuffImpl;
 import wow.commons.model.effect.impl.EffectImpl;
-import wow.commons.repository.impl.spell.BuffRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
 /**
@@ -17,19 +16,20 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colCategories = column("categories");
 	private final ExcelColumn colStacks = column("stacks");
 
-	private final BuffRepositoryImpl buffRepository;
 	private final SpellRepository spellRepository;
 
-	public BuffSheetParser(String sheetName, BuffRepositoryImpl buffRepository, SpellRepository spellRepository) {
+	private final BuffExcelParser parser;
+
+	public BuffSheetParser(String sheetName, SpellRepository spellRepository, BuffExcelParser parser) {
 		super(sheetName);
-		this.buffRepository = buffRepository;
 		this.spellRepository = spellRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Buff buff = getBuff();
-		buffRepository.addBuff(buff);
+		var buff = getBuff();
+		parser.addBuff(buff);
 	}
 
 	private Buff getBuff() {

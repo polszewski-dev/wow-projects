@@ -5,7 +5,6 @@ import wow.commons.model.item.GemColor;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.item.impl.GemImpl;
-import wow.commons.repository.impl.item.GemRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
@@ -18,17 +17,17 @@ public class GemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colColor = column(GEM_COLOR);
 	private final ExcelColumn colMetaEnablers = column(GEM_META_ENABLERS);
 
-	private final GemRepositoryImpl gemRepository;
+	private final GemExcelParser parser;
 
-	public GemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, GemRepositoryImpl gemRepository) {
+	public GemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, GemExcelParser parser) {
 		super(sheetName, sourceParserFactory, spellRepository);
-		this.gemRepository = gemRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Gem gem = getGem();
-		gemRepository.addGem(gem);
+		var gem = getGem();
+		parser.addGem(gem);
 	}
 
 	private Gem getGem() {

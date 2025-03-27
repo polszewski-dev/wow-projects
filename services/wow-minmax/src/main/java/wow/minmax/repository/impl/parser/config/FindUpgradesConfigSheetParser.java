@@ -2,20 +2,19 @@ package wow.minmax.repository.impl.parser.config;
 
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.minmax.model.config.FindUpgradesConfig;
-import wow.minmax.repository.impl.MinmaxConfigRepositoryImpl;
 
 /**
  * User: POlszewski
  * Date: 2023-05-11
  */
 public class FindUpgradesConfigSheetParser extends WowExcelSheetParser {
-	private final MinmaxConfigRepositoryImpl configRepository;
-
 	private final ExcelColumn colEnchants = column("enchants");
 
-	protected FindUpgradesConfigSheetParser(String sheetName, MinmaxConfigRepositoryImpl configRepository) {
+	private final MinMaxConfigExcelParser parser;
+
+	protected FindUpgradesConfigSheetParser(String sheetName, MinMaxConfigExcelParser parser) {
 		super(sheetName);
-		this.configRepository = configRepository;
+		this.parser = parser;
 	}
 
 	@Override
@@ -25,8 +24,8 @@ public class FindUpgradesConfigSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		FindUpgradesConfig config = getConfig();
-		configRepository.add(config);
+		var config = getConfig();
+		parser.add(config);
 	}
 
 	private FindUpgradesConfig getConfig() {

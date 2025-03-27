@@ -4,7 +4,6 @@ import wow.commons.model.profession.ProfessionProficiencyId;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
-import wow.commons.repository.impl.pve.PhaseRepositoryImpl;
 import wow.commons.repository.pve.GameVersionRepository;
 
 /**
@@ -16,12 +15,12 @@ public class PhaseSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colMaxProficiency = column("max_proficiency");
 
 	private final GameVersionRepository gameVersionRepository;
-	private final PhaseRepositoryImpl phaseRepository;
+	private final PhaseExcelParser parser;
 
-	public PhaseSheetParser(String sheetName, GameVersionRepository gameVersionRepository, PhaseRepositoryImpl phaseRepository) {
+	public PhaseSheetParser(String sheetName, GameVersionRepository gameVersionRepository, PhaseExcelParser parser) {
 		super(sheetName);
 		this.gameVersionRepository = gameVersionRepository;
-		this.phaseRepository = phaseRepository;
+		this.parser = parser;
 	}
 
 	@Override
@@ -31,8 +30,8 @@ public class PhaseSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		Phase phase = getPhase();
-		phaseRepository.addPhase(phase);
+		var phase = getPhase();
+		parser.addPhase(phase);
 	}
 
 	private Phase getPhase() {

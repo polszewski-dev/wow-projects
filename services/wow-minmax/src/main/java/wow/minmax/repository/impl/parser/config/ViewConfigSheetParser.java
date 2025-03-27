@@ -3,21 +3,20 @@ package wow.minmax.repository.impl.parser.config;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.minmax.model.config.ViewConfig;
-import wow.minmax.repository.impl.MinmaxConfigRepositoryImpl;
 
 /**
  * User: POlszewski
  * Date: 2023-05-11
  */
 public class ViewConfigSheetParser extends WowExcelSheetParser {
-	private final MinmaxConfigRepositoryImpl configRepository;
-
 	private final ExcelColumn colEqvAmount = column("eqv_amount");
 	private final ExcelColumn colRelevantSpells = column("relevant_spells");
 
-	protected ViewConfigSheetParser(String sheetName, MinmaxConfigRepositoryImpl configRepository) {
+	private final MinMaxConfigExcelParser parser;
+
+	protected ViewConfigSheetParser(String sheetName, MinMaxConfigExcelParser parser) {
 		super(sheetName);
-		this.configRepository = configRepository;
+		this.parser = parser;
 	}
 
 	@Override
@@ -27,8 +26,8 @@ public class ViewConfigSheetParser extends WowExcelSheetParser {
 
 	@Override
 	protected void readSingleRow() {
-		ViewConfig viewConfig = getViewConfig();
-		configRepository.add(viewConfig);
+		var viewConfig = getViewConfig();
+		parser.add(viewConfig);
 	}
 
 	private ViewConfig getViewConfig() {

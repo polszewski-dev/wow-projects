@@ -6,7 +6,6 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.EnchantSource;
 import wow.commons.model.item.impl.EnchantImpl;
-import wow.commons.repository.impl.item.EnchantRepositoryImpl;
 import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
@@ -22,17 +21,17 @@ public class EnchantSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colRarity = column(RARITY);
 	private final ExcelColumn colEnchantId = column(ENCHANT_ENCHANT_ID);
 
-	private final EnchantRepositoryImpl enchantRepository;
+	private final EnchantExcelParser parser;
 
-	public EnchantSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, EnchantRepositoryImpl enchantRepository) {
+	public EnchantSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, EnchantExcelParser parser) {
 		super(sheetName, sourceParserFactory, spellRepository);
-		this.enchantRepository = enchantRepository;
+		this.parser = parser;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Enchant enchant = getEnchant();
-		enchantRepository.addEnchant(enchant);
+		var enchant = getEnchant();
+		parser.addEnchant(enchant);
 	}
 
 	private Enchant getEnchant() {

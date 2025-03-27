@@ -1,6 +1,5 @@
 package wow.minmax.repository.impl;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.Character;
 import wow.commons.model.config.CharacterRestricted;
@@ -12,7 +11,6 @@ import wow.minmax.model.config.ViewConfig;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.impl.parser.config.MinMaxConfigExcelParser;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +28,12 @@ public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 	private final List<CharacterFeatureConfig> featureConfigs = new ArrayList<>();
 	private final List<FindUpgradesConfig> findUpgradesConfigs = new ArrayList<>();
 
-	@Value("${config.xls.file.path}")
-	private String xlsFilePath;
+	public MinmaxConfigRepositoryImpl(MinMaxConfigExcelParser parser) throws IOException {
+		parser.readFromXls();
+		viewConfigs.addAll(parser.getViewConfigs());
+		featureConfigs.addAll(parser.getCharacterFeatureConfigs());
+		findUpgradesConfigs.addAll(parser.getFindUpgradesConfigs());
+	}
 
 	@Override
 	public Optional<ViewConfig> getViewConfig(Character character) {
@@ -63,23 +65,5 @@ public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 				.filter(x -> x.isAvailableTo(character))
 				.filter(x -> x.isAvailableDuring(character.getPhaseId()))
 				.findFirst();
-	}
-
-	@PostConstruct
-	public void init() throws IOException {
-		var excelParser = new MinMaxConfigExcelParser(xlsFilePath, this);
-		excelParser.readFromXls();
-	}
-
-	public void add(ViewConfig config) {
-		viewConfigs.add(config);
-	}
-
-	public void add(CharacterFeatureConfig featureConfig) {
-		featureConfigs.add(featureConfig);
-	}
-
-	public void add(FindUpgradesConfig config) {
-		findUpgradesConfigs.add(config);
 	}
 }

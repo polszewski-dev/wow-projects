@@ -9,7 +9,6 @@ import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.TickScheme;
-import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
@@ -18,22 +17,22 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2023-08-31
  */
 public class SpellEffectSheetParser extends AbstractSpellSheetParser {
-	private final SpellRepositoryImpl spellRepository;
+	private final SpellExcelParser parser;
 
 	private final int maxModAttributes;
 	private final int maxEvents;
 
-	public SpellEffectSheetParser(String sheetName, SpellRepositoryImpl spellRepository, int maxModAttributes, int maxEvents) {
+	public SpellEffectSheetParser(String sheetName, SpellExcelParser parser, int maxModAttributes, int maxEvents) {
 		super(sheetName);
-		this.spellRepository = spellRepository;
+		this.parser = parser;
 		this.maxModAttributes = maxModAttributes;
 		this.maxEvents = maxEvents;
 	}
 
 	@Override
 	protected void readSingleRow() {
-		Effect effect = getEffect();
-		spellRepository.addEffect(effect);
+		var effect = getEffect();
+		parser.addEffect(effect);
 	}
 
 	private final ExcelColumn colMaxStacks = column(STACKS_MAX);

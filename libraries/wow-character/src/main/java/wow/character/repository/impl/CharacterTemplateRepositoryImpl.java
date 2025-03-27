@@ -1,18 +1,13 @@
 package wow.character.repository.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.repository.CharacterTemplateRepository;
 import wow.character.repository.impl.parser.character.CharacterTemplateExcelParser;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.repository.pve.PhaseRepository;
-import wow.commons.repository.spell.TalentRepository;
 import wow.commons.util.PhaseMap;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -26,17 +21,15 @@ import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
  * Date: 2022-11-30
  */
 @Component
-@RequiredArgsConstructor
 public class CharacterTemplateRepositoryImpl implements CharacterTemplateRepository {
 	private record Key(CharacterClassId characterClassId, int level) {}
 
 	private final PhaseMap<Key, List<CharacterTemplate>> characterTemplateByKey = new PhaseMap<>();
 
-	private final TalentRepository talentRepository;
-	private final PhaseRepository phaseRepository;
-
-	@Value("${character.templates.xls.file.path}")
-	private String xlsFilePath;
+	public CharacterTemplateRepositoryImpl(CharacterTemplateExcelParser parser) throws IOException {
+		parser.readFromXls();
+		parser.getCharacterTemplates().forEach(this::addCharacterTemplate);
+	}
 
 	@Override
 	public Optional<CharacterTemplate> getCharacterTemplate(String name, PlayerCharacter character) {
@@ -60,13 +53,7 @@ public class CharacterTemplateRepositoryImpl implements CharacterTemplateReposit
 				.filter(x -> x.isAvailableTo(character));
 	}
 
-	@PostConstruct
-	public void init() throws IOException {
-		var excelParser = new CharacterTemplateExcelParser(xlsFilePath, this, talentRepository, phaseRepository);
-		excelParser.readFromXls();
-	}
-
-	public void addCharacterTemplate(CharacterTemplate characterTemplate) {
+	private void addCharacterTemplate(CharacterTemplate characterTemplate) {
 		var characterClassId = characterTemplate.getRequiredCharacterClassId();
 		int maxLevel = characterTemplate.getRequiredMaxLevel();
 

@@ -1,7 +1,5 @@
 package wow.scraper.repository.impl;
 
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.pve.GameVersionId;
 import wow.scraper.parser.stat.StatParser;
@@ -9,11 +7,9 @@ import wow.scraper.parser.stat.StatPattern;
 import wow.scraper.repository.StatPatternRepository;
 import wow.scraper.repository.impl.excel.stat.StatPatternExcelParser;
 
-import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static wow.scraper.parser.scraper.ScraperPattern.assertNoDuplicates;
 
 /**
  * User: POlszewski
@@ -26,21 +22,12 @@ public class StatPatternRepositoryImpl implements StatPatternRepository {
 	private final List<StatPattern> gemStatPatterns = new ArrayList<>();
 	private final List<StatPattern> socketBonusStatPatterns = new ArrayList<>();
 
-	@Value("${stat.parsers.xls.file.path}")
-	private String xlsFilePath;
-
-	@SneakyThrows
-	@PostConstruct
-	public void init() {
-		var statParserExcelParser = new StatPatternExcelParser(
-				xlsFilePath,
-				this.itemStatPatterns,
-				this.enchantStatPatterns,
-				this.gemStatPatterns,
-				this.socketBonusStatPatterns
-		);
-		statParserExcelParser.readFromXls();
-		validateAll();
+	public StatPatternRepositoryImpl(StatPatternExcelParser parser) throws IOException {
+		parser.readFromXls();
+		itemStatPatterns.addAll(parser.getItemStatPatterns());
+		enchantStatPatterns.addAll(parser.getEnchantStatPatterns());
+		gemStatPatterns.addAll(parser.getGemStatPatterns());
+		socketBonusStatPatterns.addAll(parser.getSocketBonusStatPatterns());
 	}
 
 	@Override
@@ -69,12 +56,5 @@ public class StatPatternRepositoryImpl implements StatPatternRepository {
 						.filter(x -> x.supports(gameVersion))
 						.toList()
 		);
-	}
-
-	private void validateAll() {
-		assertNoDuplicates(itemStatPatterns);
-		assertNoDuplicates(enchantStatPatterns);
-		assertNoDuplicates(gemStatPatterns);
-		assertNoDuplicates(socketBonusStatPatterns);
 	}
 }
