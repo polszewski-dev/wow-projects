@@ -65,9 +65,8 @@ public class EquipmentOptionsController {
 			@PathVariable("slot") ItemSlot slot
 	) {
 		var player = playerCharacterService.getPlayer(characterId);
-		var itemFilter = ItemFilter.everything();
 
-		return getItemOptions(player, slot, itemFilter);
+		return getItemOptions(player, slot);
 	}
 
 	@GetMapping("{characterId}/enchant")
@@ -75,9 +74,7 @@ public class EquipmentOptionsController {
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		var player = playerCharacterService.getPlayer(characterId);
-		var itemFilter = ItemFilter.everything();
-
-		var itemOptions = getItemOptions(player, itemFilter);
+		var itemOptions = getItemOptions(player);
 
 		return getEnchantOptions(player, itemOptions);
 	}
@@ -91,19 +88,19 @@ public class EquipmentOptionsController {
 		return getGemOptions(player);
 	}
 
-	private List<ItemOptionsDTO> getItemOptions(Player player, ItemFilter itemFilter) {
+	private List<ItemOptionsDTO> getItemOptions(Player player) {
 		return ItemSlot.getDpsSlots().stream()
-				.map(itemSlot -> getItemOptions(player, itemSlot, itemFilter))
+				.map(itemSlot -> getItemOptions(player, itemSlot))
 				.toList();
 	}
 
-	private ItemOptionsDTO getItemOptions(Player player, ItemSlot itemSlot, ItemFilter itemFilter) {
+	private ItemOptionsDTO getItemOptions(Player player, ItemSlot itemSlot) {
+		var itemFilter = ItemFilter.everything();
 		var items = itemService.getItemsBySlot(player, itemSlot, itemFilter);
 		var itemDTOs = itemConverter.convertList(items);
 
 		return new ItemOptionsDTO(itemSlot, itemDTOs);
 	}
-
 
 	private List<EnchantOptionsDTO> getEnchantOptions(Player player, List<ItemOptionsDTO> itemOptions) {
 		return createTypeAndSubtypeGroups(itemOptions).stream()

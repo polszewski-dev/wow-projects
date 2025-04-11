@@ -13,6 +13,7 @@ public record FindUpgradesRequestDTO(
 		PlayerDTO player,
 		ItemSlotGroup slotGroup,
 		ItemFilterDTO itemFilter,
+		ItemLevelFilterDTO itemLevelFilter,
 		GemFilterDTO gemFilter,
 		Set<String> enchantNames,
 		int maxUpgrades

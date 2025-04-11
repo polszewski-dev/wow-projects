@@ -9,6 +9,7 @@ import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.minmax.model.config.CharacterFeatureConfig;
 import wow.minmax.model.config.FindUpgradesConfig;
+import wow.minmax.model.config.ItemLevelConfig;
 import wow.minmax.model.config.ViewConfig;
 
 import java.io.InputStream;
@@ -33,6 +34,8 @@ public class MinMaxConfigExcelParser extends ExcelParser {
 	private final List<FindUpgradesConfig> findUpgradesConfigs = new ArrayList<>();
 	@Getter
 	private final List<ViewConfig> viewConfigs = new ArrayList<>();
+	@Getter
+	private final List<ItemLevelConfig> itemLevelConfigs = new ArrayList<>();
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -44,7 +47,8 @@ public class MinMaxConfigExcelParser extends ExcelParser {
 		return Stream.of(
 				new ViewConfigSheetParser("view", this),
 				new CharacterFeatureConfigSheetParser("features", this),
-				new FindUpgradesConfigSheetParser("find_upgrades", this)
+				new FindUpgradesConfigSheetParser("find_upgrades", this),
+				new ItemLevelFilterSheetParser("item_level_filters", this)
 		);
 	}
 
@@ -58,5 +62,9 @@ public class MinMaxConfigExcelParser extends ExcelParser {
 
 	void add(ViewConfig viewConfig) {
 		viewConfigs.add(viewConfig);
+	}
+
+	public void add(ItemLevelConfig itemLevelConfig) {
+		itemLevelConfigs.add(itemLevelConfig);
 	}
 }

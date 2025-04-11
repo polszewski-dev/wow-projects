@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
+import wow.character.model.equipment.ItemLevelFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemSubType;
@@ -43,15 +44,19 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter) {
+	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter, ItemLevelFilter itemLevelFilter) {
 		return getUnfilteredItems(player, itemSlot).stream()
 				.filter(itemFilter::matchesFilter)
+				.filter(itemLevelFilter::matchesFilter)
 				.toList();
 	}
 
 	private List<Item> getUnfilteredItems(Player player, ItemSlot itemSlot) {
 		String key = getProfileKey(player) + "#" + itemSlot;
-		return getItemsBySlotCache.computeIfAbsent(key, x -> itemService.getItemsBySlot(player, itemSlot, ItemFilter.everything()));
+		return getItemsBySlotCache.computeIfAbsent(
+				key,
+				x -> itemService.getItemsBySlot(player, itemSlot, ItemFilter.everything(), ItemLevelFilter.everything())
+		);
 	}
 
 	@Override

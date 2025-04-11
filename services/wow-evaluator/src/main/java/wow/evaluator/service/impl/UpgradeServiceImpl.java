@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
+import wow.character.model.equipment.ItemLevelFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
@@ -30,9 +31,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final CalculationService calculationService;
 
 	@Override
-	public List<Upgrade> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter, Set<String> enchantNames, int maxUpgrades) {
+	public List<Upgrade> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, ItemLevelFilter itemLevelFilter, GemFilter gemFilter, Set<String> enchantNames, int maxUpgrades) {
 		var enumerator = new FindUpgradesEnumerator(
-				player, slotGroup, itemFilter, gemFilter, enchantNames, itemService, calculationService
+				player, slotGroup, itemFilter, itemLevelFilter, gemFilter, enchantNames, itemService, calculationService
 		);
 
 		return enumerator.run().getResult().stream()

@@ -2,6 +2,7 @@ package wow.evaluator.service;
 
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
+import wow.character.model.equipment.ItemLevelFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemSubType;
@@ -19,7 +20,7 @@ import java.util.List;
  * Date: 2021-12-13
  */
 public interface ItemService {
-	List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter);
+	List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter, ItemLevelFilter itemLevelFilter);
 
 	List<Enchant> getBestEnchants(Player player, ItemType itemType, ItemSubType itemSubType);
 

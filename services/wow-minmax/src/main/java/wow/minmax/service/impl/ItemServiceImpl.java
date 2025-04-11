@@ -14,6 +14,7 @@ import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
 import wow.minmax.model.Player;
+import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.ItemService;
 
 import java.util.List;
@@ -28,14 +29,18 @@ public class ItemServiceImpl implements ItemService {
 	private final ItemRepository itemRepository;
 	private final EnchantRepository enchantRepository;
 	private final GemRepository gemRepository;
+	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
 	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter) {
+		var itemLevelFilter = minmaxConfigRepository.getItemLevelFilter(player).orElseThrow();
+
 		return itemRepository.getItemsBySlot(itemSlot, player.getPhaseId()).stream()
 				.filter(item -> player.canEquip(itemSlot, item))
 				.filter(itemFilter::matchesFilter)
 				.filter(item -> item.isAvailableTo(player))
 				.filter(item -> item.isSuitableFor(player))
+				.filter(itemLevelFilter::matchesFilter)
 				.toList();
 	}
 

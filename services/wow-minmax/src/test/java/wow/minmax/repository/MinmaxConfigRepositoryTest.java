@@ -8,9 +8,11 @@ import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.categorization.ItemRarity.*;
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.minmax.model.config.CharacterFeature.*;
 
@@ -75,6 +77,17 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 				"Enchant Weapon - Soulfrost",
 				"Enchant Weapon - Sunfire",
 				"Enchant Ring - Spellpower"
+		));
+	}
+
+	@Test
+	void getItemLevelFilter() {
+		var itemLevelFilter = underTest.getItemLevelFilter(getCharacter()).orElseThrow();
+
+		assertThat(itemLevelFilter.getMinItemLevelByRarity()).isEqualTo(Map.of(
+				UNCOMMON, 90,
+				RARE, 70,
+				EPIC, 60
 		));
 	}
 }

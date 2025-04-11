@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
+import wow.character.model.equipment.ItemLevelFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemSubType;
@@ -35,10 +36,11 @@ public class ItemServiceImpl implements ItemService {
 	private final GemRepository gemRepository;
 
 	@Override
-	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter) {
+	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter, ItemLevelFilter itemLevelFilter) {
 		return itemRepository.getItemsBySlot(itemSlot, player.getPhaseId()).stream()
 				.filter(item -> player.canEquip(itemSlot, item))
 				.filter(itemFilter::matchesFilter)
+				.filter(itemLevelFilter::matchesFilter)
 				.filter(item -> item.isAvailableTo(player))
 				.filter(item -> item.isSuitableFor(player))
 				.toList();

@@ -15,6 +15,7 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
 import wow.evaluator.client.converter.upgrade.GemFilterConverter;
 import wow.evaluator.client.converter.upgrade.ItemFilterConverter;
+import wow.evaluator.client.converter.upgrade.ItemLevelFilterConverter;
 import wow.evaluator.client.dto.upgrade.FindUpgradesRequestDTO;
 import wow.evaluator.client.dto.upgrade.FindUpgradesResponseDTO;
 import wow.evaluator.client.dto.upgrade.GetBestItemVariantRequestDTO;
@@ -36,6 +37,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 	private final PlayerConverter playerConverter;
 	private final ItemFilterConverter itemFilterConverter;
+	private final ItemLevelFilterConverter itemLevelFilterConverter;
 	private final GemFilterConverter gemFilterConverter;
 	private final ItemConverter itemConverter;
 	private final EquippableItemConverter equippableItemConverter;
@@ -48,11 +50,13 @@ public class UpgradeServiceImpl implements UpgradeService {
 	@Override
 	public FindUpgradesResponseDTO findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
+		var itemLevelFilter = minmaxConfigRepository.getItemLevelFilter(player).orElseThrow();
 
 		var request = new FindUpgradesRequestDTO(
 				playerConverter.convert(player),
 				slotGroup,
 				itemFilterConverter.convert(itemFilter),
+				itemLevelFilterConverter.convert(itemLevelFilter),
 				gemFilterConverter.convert(gemFilter),
 				findUpgradesConfig.enchantNames(),
 				upgradeConfig.getMaxUpgrades()

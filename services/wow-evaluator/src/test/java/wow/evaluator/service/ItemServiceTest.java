@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
+import wow.character.model.equipment.ItemLevelFilter;
 import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
@@ -50,7 +51,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getItemsBySlot() {
-		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1, ItemFilter.everything()).stream()
+		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1, ItemFilter.everything(), ItemLevelFilter.everything()).stream()
 				.sorted(Comparator.comparing(Item::getName))
 				.toList();
 

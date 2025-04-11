@@ -1,6 +1,8 @@
 package wow.minmax.repository;
 
 import wow.character.model.character.Character;
+import wow.character.model.equipment.ItemLevelFilter;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
@@ -20,4 +22,6 @@ public interface MinmaxConfigRepository {
 	boolean hasFeature(Character character, CharacterFeature feature);
 
 	Optional<FindUpgradesConfig> getFindUpgradesConfig(Character character);
+
+	Optional<ItemLevelFilter> getItemLevelFilter(Player player);
 }

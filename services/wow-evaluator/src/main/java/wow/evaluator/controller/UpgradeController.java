@@ -10,6 +10,7 @@ import wow.commons.client.converter.EquippableItemConverter;
 import wow.commons.client.converter.ItemConverter;
 import wow.evaluator.client.converter.upgrade.GemFilterConverter;
 import wow.evaluator.client.converter.upgrade.ItemFilterConverter;
+import wow.evaluator.client.converter.upgrade.ItemLevelFilterConverter;
 import wow.evaluator.client.dto.upgrade.FindUpgradesRequestDTO;
 import wow.evaluator.client.dto.upgrade.FindUpgradesResponseDTO;
 import wow.evaluator.client.dto.upgrade.GetBestItemVariantRequestDTO;
@@ -33,6 +34,7 @@ public class UpgradeController {
 	private final ItemConverter itemConverter;
 	private final EquippableItemConverter equippableItemConverter;
 	private final ItemFilterConverter itemFilterConverter;
+	private final ItemLevelFilterConverter itemLevelFilterConverter;
 	private final GemFilterConverter gemFilterConverter;
 
 	@PostMapping
@@ -40,12 +42,13 @@ public class UpgradeController {
 		var player = playerConverter.convertBack(request.player());
 		var slotGroup = request.slotGroup();
 		var itemFilter = itemFilterConverter.convertBack(request.itemFilter());
+		var itemLevelFilter = itemLevelFilterConverter.convertBack(request.itemLevelFilter());
 		var gemFilter = gemFilterConverter.convertBack(request.gemFilter());
 		var enchantNames = request.enchantNames();
 		var maxUpgrades = request.maxUpgrades();
 
 		var upgrades = upgradeService.findUpgrades(
-				player, slotGroup, itemFilter, gemFilter, enchantNames, maxUpgrades
+				player, slotGroup, itemFilter, itemLevelFilter, gemFilter, enchantNames, maxUpgrades
 		);
 
 		return new FindUpgradesResponseDTO(upgradeConverter.convertList(upgrades));
