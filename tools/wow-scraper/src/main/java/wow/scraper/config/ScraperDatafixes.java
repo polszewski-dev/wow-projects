@@ -92,6 +92,9 @@ public class ScraperDatafixes {
 	@Value("#{${pve.role.overrides}}")
 	private Map<Integer, PveRole> pveRoleOverrides;
 
+	@Value("#{${required.level.overrides}}")
+	private Map<String, Integer> requiredLevelOverrides;
+
 	@Value("#{${spell.phase.overrides}}")
 	private Map<Integer, PhaseId> spellPhaseOverrides;
 

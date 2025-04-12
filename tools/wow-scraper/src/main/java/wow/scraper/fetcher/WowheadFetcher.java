@@ -27,6 +27,8 @@ public interface WowheadFetcher {
 
 	List<JsonFactionDetails> fetchFactionDetails(GameVersionId gameVersion, String urlPart);
 
+	List<JsonQuestRewardInfo> fetchQuestRewardInfo(GameVersionId gameVersion, String urlPart);
+
 	String fetchRaw(GameVersionId gameVersion, String urlPart);
 
 	WowheadItemInfo fetchItemTooltip(GameVersionId gameVersion, int id);

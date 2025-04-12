@@ -33,6 +33,6 @@ public class FactionSheetWriter extends ExcelSheetWriter<JsonFactionDetails, Fac
 		setValue(faction.getName());
 		setValue(faction.getReqVersion());
 		setValue(WowheadGameVersion.fromCode(faction.getExpansion()));
-		setValue(WowheadSide.fromCode(faction.getSide()).getSide());
+		setValue(WowheadSide.fromCode(faction.getSide()).getSides());
 	}
 }

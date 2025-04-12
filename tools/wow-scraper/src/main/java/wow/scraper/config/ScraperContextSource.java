@@ -26,11 +26,6 @@ public interface ScraperContextSource extends ScraperContext {
 	}
 
 	@Override
-	default QuestInfoRepository getQuestInfoRepository() {
-		return getScraperContext().getQuestInfoRepository();
-	}
-
-	@Override
 	default ZoneDetailRepository getZoneDetailRepository() {
 		return getScraperContext().getZoneDetailRepository();
 	}

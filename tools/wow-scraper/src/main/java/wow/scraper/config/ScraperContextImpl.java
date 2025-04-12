@@ -17,7 +17,6 @@ public class ScraperContextImpl implements ScraperContext {
 	private final WowheadFetcher wowheadFetcher;
 	private final ItemDetailRepository itemDetailRepository;
 	private final SpellDetailRepository spellDetailRepository;
-	private final QuestInfoRepository questInfoRepository;
 	private final StatPatternRepository statPatternRepository;
 	private final SpellPatternRepository spellPatternRepository;
 	private final ZoneDetailRepository zoneDetailRepository;

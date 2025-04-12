@@ -34,6 +34,21 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 	private static final Pattern NPC_LIST_PATTERN = Pattern.compile("\"id\":\"npcs\".*?\"data\":(\\[.*]),\"extraCols\":\\[Listview\\.extraCols\\.popularity]");
 	private static final Pattern FACTION_LIST_PATTERN = Pattern.compile("id: 'factions'.*?data:\\s*(\\[.*])");
 
+	private static final Pattern QUEST_REWARD_INFO_PATTERN = Pattern.compile(
+			"""
+			new Listview\\(\\{\
+			\\s*template: 'quest',\
+			\\s*id: 'reward-from-q',\
+			\\s*name: WH\\.TERMS\\.rewardfrom,\
+			\\s*tabs: 'tabsRelated',\
+			\\s*parent: '.+?',\
+			\\s*extraCols: \\['popularity'],\
+			\\s*sort: \\['popularity'],\
+			\\s*data: (\\[.+]),\
+			\\s*}\\)\
+			"""
+	);
+
 	private PageFetcher pageFetcher;
 
 	@SneakyThrows
@@ -93,21 +108,41 @@ public class WowheadFetcherImpl implements WowheadFetcher {
 
 	@SneakyThrows
 	@Override
+	public List<JsonQuestRewardInfo> fetchQuestRewardInfo(GameVersionId gameVersion, String urlPart) {
+		String json = fetchAndParse(gameVersion, urlPart, QUEST_REWARD_INFO_PATTERN, true);
+
+		if (json == null) {
+			return List.of();
+		}
+
+		return MAPPER.readValue(json, new TypeReference<>() {});
+	}
+
+	@SneakyThrows
+	@Override
 	public String fetchRaw(GameVersionId gameVersion, String urlPart) {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 
 		return pageFetcher.fetchPage(urlStr);
 	}
 
-	@SneakyThrows
 	private String fetchAndParse(GameVersionId gameVersion, String urlPart, Pattern itemListPattern) {
+		return fetchAndParse(gameVersion, urlPart, itemListPattern, false);
+	}
+
+	@SneakyThrows
+	private String fetchAndParse(GameVersionId gameVersion, String urlPart, Pattern itemListPattern, boolean optional) {
 		String urlStr = getRootUrlStr(gameVersion) + urlPart;
 		String html = pageFetcher.fetchPage(urlStr);
 
 		Matcher matcher = itemListPattern.matcher(html);
 
 		if (!matcher.find()) {
-			throw new IllegalArgumentException("Can't parse data from: " + urlStr);
+			if (optional) {
+				return null;
+			} else {
+				throw new IllegalArgumentException("Can't parse data from: " + urlStr);
+			}
 		}
 
 		String itemJson = matcher.group(1);

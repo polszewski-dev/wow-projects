@@ -252,7 +252,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 
 	private ScraperContext getScraperContext() {
 		return new ScraperContextImpl(
-				null, itemDetailRepository, spellDetailRepository, null, null, spellPatternRepository, null, null, null, null, scraperConfig, scraperDatafixes
+				null, itemDetailRepository, spellDetailRepository, null, spellPatternRepository, null, null, null, null, scraperConfig, scraperDatafixes
 		);
 	}
 

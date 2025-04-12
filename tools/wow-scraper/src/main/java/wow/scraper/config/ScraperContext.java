@@ -14,8 +14,6 @@ public interface ScraperContext {
 
 	SpellDetailRepository getSpellDetailRepository();
 
-	QuestInfoRepository getQuestInfoRepository();
-
 	ZoneDetailRepository getZoneDetailRepository();
 
 	NpcDetailRepository getNpcDetailRepository();
