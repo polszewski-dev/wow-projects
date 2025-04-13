@@ -138,7 +138,7 @@ public class SpecialAbilitySolver {
 
 		var duration = effectApplication.duration().getSeconds();
 		var cooldown = activatedAbility.getCooldown().getSeconds();
-		var uptime = duration / cooldown;
+		var uptime = cooldown != 0 ? duration / cooldown : 1;
 
 		abilityStats.accumulateAttributes(modifierAttributeList, effectApplication.numStacks() * uptime);
 
