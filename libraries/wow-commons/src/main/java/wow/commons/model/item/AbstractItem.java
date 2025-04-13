@@ -102,6 +102,6 @@ public interface AbstractItem extends Described, TimeRestricted, CharacterRestri
 	}
 
 	default boolean allSources(Predicate<Source> predicate) {
-		return getSources().stream().allMatch(predicate);
+		return !getSources().isEmpty() && getSources().stream().allMatch(predicate);
 	}
 }
