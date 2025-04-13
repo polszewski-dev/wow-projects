@@ -25,6 +25,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Math.min;
+
 /**
  * User: POlszewski
  * Date: 2024-10-22
@@ -129,7 +131,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 			items = Arrays.asList(items.getFirst(), null);
 		}
 
-		for (int slotIdx = 0; slotIdx < slots.size(); slotIdx++) {
+		for (int slotIdx = 0; slotIdx < min(slots.size(), items.size()); slotIdx++) {
 			var slot = slots.get(slotIdx);
 			var item = items.get(slotIdx);
 			player.equip(item, slot);

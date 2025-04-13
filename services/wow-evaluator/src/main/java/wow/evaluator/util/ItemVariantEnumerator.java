@@ -82,6 +82,11 @@ public abstract class ItemVariantEnumerator {
 	private void enumerateFingers() {
 		var rings = getItemVariants(FINGER_1);
 
+		if (rings.size() == 1) {
+			handleItemOption(rings.getFirst());
+			return;
+		}
+
 		for (int i = 0; i < rings.size(); i++) {
 			var ring1 = rings.get(i);
 			for (int j = i; j < rings.size(); j++) {
@@ -95,6 +100,11 @@ public abstract class ItemVariantEnumerator {
 
 	private void enumerateTrinkets() {
 		var trinkets = getItemVariants(TRINKET_1);
+
+		if (trinkets.size() == 1) {
+			handleItemOption(trinkets.getFirst());
+			return;
+		}
 
 		for (int i = 0; i < trinkets.size(); i++) {
 			var trinket1 = trinkets.get(i);
