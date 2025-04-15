@@ -14,6 +14,7 @@ import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.WowheadItemCategory;
 import wow.scraper.parser.scraper.ScraperMatcher;
 import wow.scraper.parser.scraper.ScraperParser;
 
@@ -38,12 +39,16 @@ public class ItemEffectParser extends AbstractTooltipParser<JsonCommonDetails> {
 
 	private String itemSetName;
 
+	private final WowheadItemCategory category;
+
 	public ItemEffectParser(
 			JsonCommonDetails details,
 			GameVersionId gameVersion,
-			ScraperContext scraperContext
+			ScraperContext scraperContext,
+			WowheadItemCategory category
 	) {
 		super(details, gameVersion, scraperContext);
+		this.category = category;
 	}
 
 	@Override

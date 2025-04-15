@@ -29,6 +29,8 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setHeader(NAME, 40);
 		writeTimeRestrictionHeader();
 		setHeader(STACKS_MAX);
+		setHeader(SCOPE);
+		setHeader(EXCLUSION_GROUP);
 		writePeriodicComponentHeader();
 		setHeader(AUGMENTED_ABILITY);
 		writeModifierComponentHeader(maxModAttributes);
@@ -44,6 +46,8 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setValue(effect.getName());
 		writeTimeRestriction(effect.getTimeRestriction());
 		setValue(effect.getMaxStacks());
+		setValue(effect.getScope());
+		setValue(effect.getExclusionGroup());
 		writePeriodicComponent(effect);
 		setValue(effect.getAugmentedAbilities());
 		writeModifierComponent(effect, maxModAttributes);
@@ -55,6 +59,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 
 	private void writePeriodicComponentHeader() {
 		String prefix = PERIODIC_PREFIX;
+		setHeader(TARGET, prefix);
 		setHeader(PERIODIC_TYPE, prefix);
 		setHeader(COEFF_VALUE, prefix);
 		setHeader(COEFF_SCHOOL, prefix);
@@ -68,10 +73,11 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		var periodicComponent = effect.getPeriodicComponent();
 
 		if (periodicComponent == null) {
-			fillRemainingEmptyCols(7);
+			fillRemainingEmptyCols(8);
 			return;
 		}
 
+		setValue(periodicComponent.target());
 		setValue(periodicComponent.type());
 		setValue(periodicComponent.coefficient().value());
 		setValue(periodicComponent.school());

@@ -234,7 +234,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 		for (var gameVersion : scraperConfig.getGameVersions()) {
 			for (var detailId : itemDetailRepository.getDetailIds(gameVersion, category)) {
 				var details = itemDetailRepository.getDetail(gameVersion, category, detailId).orElseThrow();
-				var parser = new ItemEffectParser(details, gameVersion, getScraperContext());
+				var parser = new ItemEffectParser(details, gameVersion, getScraperContext(), category);
 				parsers.add(parser);
 			}
 		}
@@ -244,7 +244,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 		for (var gameVersion : scraperConfig.getGameVersions()) {
 			for (var enchantId : spellDetailRepository.getEnchantDetailIds(gameVersion)) {
 				var enchant = spellDetailRepository.getEnchantDetail(gameVersion, enchantId).orElseThrow();
-				var parser = new ItemEffectParser(enchant, gameVersion, getScraperContext());
+				var parser = new ItemEffectParser(enchant, gameVersion, getScraperContext(), WowheadItemCategory.ENCHANTS_PERMANENT);
 				parsers.add(parser);
 			}
 		}
@@ -258,7 +258,9 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 
 	private static Comparator<ItemEffectParser> getComparator() {
 		return Comparator
-				.comparing((ItemEffectParser parser) -> parser.getDetails().getName())
+				.comparing(ItemEffectParser::getCategory)
+				.thenComparing((ItemEffectParser parser) -> parser.getDetails().getName())
+				.thenComparing((ItemEffectParser parser) -> parser.getDetails().getId())
 				.thenComparing(AbstractTooltipParser::getGameVersion);
 	}
 }

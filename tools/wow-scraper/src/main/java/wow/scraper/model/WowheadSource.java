@@ -17,11 +17,12 @@ public enum WowheadSource {
 	PVP_ARENA(3),
 	QUEST(4),
 	BADGES(5),
-	FISHING(16);
+	FISHING(16),
+	UNKNOWN(-1);
 
 	private final int code;
 
 	public static WowheadSource fromCode(int code) {
-		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElseThrow();
+		return Stream.of(values()).filter(x -> x.code == code).findFirst().orElse(UNKNOWN);
 	}
 }

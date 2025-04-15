@@ -47,12 +47,13 @@ public class SourceParser {
 			Rule.exact("Badges", this::parseBadges),
 			Rule.exact("PvP", this::parsePvP),
 			Rule.exact("WorldDrop", this::parseWorldDrop),
+			Rule.regex("ContainerObject:(.*):(\\d+)", this::parseContainerObjectUnknownZone),
 			Rule.regex("ContainerObject:(.*):(\\d+):(\\d+)", this::parseContainerObject),
 			Rule.regex("ContainerItem:(.*):(\\d+)", this::parseContainerItem),
 	};
 
 	public Set<Source> parse(String line) {
-		if (line == null) {
+		if (line == null || line.equals("NONE")) {
 			return Set.of();
 		}
 
@@ -135,6 +136,12 @@ public class SourceParser {
 
 	private void parseWorldDrop() {
 		result.add(new WorldDrop());
+	}
+
+	private void parseContainerObjectUnknownZone(ParsedMultipleValues params) {
+		String containerName = params.get(0);
+		int containerId = params.getInteger(1);
+		result.add(new ContainedInObject(containerId, containerName, List.of()));
 	}
 
 	private void parseContainerObject(ParsedMultipleValues params) {

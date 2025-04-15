@@ -87,10 +87,10 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 				Rule.regex("(.*) \\(\\d/(\\d)\\)", this::parseItemSet),
 				Rule.regex("\\((\\d+)\\) Set ?: (.*)", this::parseItemSetBonus),
 				Rule.exact("<Random enchantment>", () -> this.randomEnchantment = true),
-				Rule.regex("(\\d+) - (\\d+) (\\S+)? ?Damage", this::parseWeaponDamage),
+				Rule.regex("\\+?\\ ?(\\d+) - (\\d+) (\\S+)? ?Damage", this::parseWeaponDamage),
 				Rule.regex("\\((\\d+\\.\\d+) damage per second\\)", this::parseWeaponDps),
 				Rule.regex("Speed (\\d+.\\d+)", this::parseWeaponSpeedParams),
-				Rule.regex("(\\d+) Charges", x -> {}),
+				Rule.regex("(\\d+) Charges?", x -> {}),
 				Rule.test(itemStatParser::tryParseItemEffect, x -> {}),
 				Rule.test(this::parseActivatedAbility, x -> {})
 		};

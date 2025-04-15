@@ -3,6 +3,7 @@ package wow.scraper.parser.spell;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.*;
@@ -120,6 +121,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var effect = new EffectImpl(augmentedAbilities);
 
 		effect.setMaxStacks(maxStacks);
+		effect.setScope(EffectScope.GLOBAL);
 		effect.setPeriodicComponent(periodicComponent);
 		effect.setModifierComponent(modifierComponent);
 		effect.setAbsorptionComponent(absorptionComponent);

@@ -54,6 +54,12 @@ public class ItemStatParser {
 		return false;
 	}
 
+	public void parseItemEffect(String line) {
+		if (!tryParseItemEffect(line)) {
+			throw new IllegalArgumentException("Could not parse: " + line);
+		}
+	}
+
 	private Effect parsePermanentEffect(String line) {
 		var effect = itemSpellRepository.getItemEffect(gameVersion, line);
 

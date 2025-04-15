@@ -70,7 +70,7 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	private static final Set<String> UNMATCHED_LINES = new TreeSet<>();
 
 	protected final Rule rulePhase = Rule.
-			regex("(SoM )?Phase (.*)", x -> this.phase = parsePhase(x.get(1)));
+			regex("(SoM |SoD )?Phase (.*)", x -> this.phase = parsePhase(x.get(1)));
 	protected final Rule ruleRequiresLevel = Rule.
 			prefix("Requires Level ", x -> this.requiredLevel = parseRequiredLevel(x));
 	protected final Rule ruleItemLevel = Rule.

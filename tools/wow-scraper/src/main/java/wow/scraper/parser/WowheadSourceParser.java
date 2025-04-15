@@ -79,6 +79,7 @@ public class WowheadSourceParser {
 			case QUEST -> List.of(parseSingleQuest());
 			case DROP -> List.of(parseSingleSourceDrop());
 			case FISHING -> List.of(parseFishing());
+			case UNKNOWN -> List.of();
 		};
 	}
 
@@ -168,6 +169,10 @@ public class WowheadSourceParser {
 
 		if (newNpcId != null) {
 			return sourceNpcDrop(null, newNpcId, gameVersion);
+		}
+
+		if (zoneId == null) {
+			return "ContainerObject:%s:%s".formatted(containerName, containerId);
 		}
 
 		return "ContainerObject:%s:%s:%s".formatted(containerName, containerId, zoneId);

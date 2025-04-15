@@ -50,11 +50,7 @@ public class ItemImporter extends WowheadImporter<WowheadItemCategory, JsonItemD
 			return;
 		}
 
-		if (tryReplaceSourcesWithCrafted(itemDetails, sources)) {
-			return;
-		}
-
-		throw new IllegalArgumentException("Unfixable double source: " + itemDetails.getName());
+		tryReplaceSourcesWithCrafted(itemDetails, sources);
 	}
 
 	private boolean tryReplaceSourcesWithCrafted(JsonItemDetails itemDetails, List<Integer> sources) {

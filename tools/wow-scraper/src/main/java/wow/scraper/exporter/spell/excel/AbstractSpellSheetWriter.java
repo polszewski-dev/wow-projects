@@ -51,7 +51,7 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			setValue(ability.getEffectRemovedOnHit());
 		} else {
 			writeCastInfo(null);
-			setValue((String) null);
+			setValue(spell.getCooldown(), Duration.ZERO);
 			setValue((String) null);
 			setValue((String) null);
 			setValue((String) null);
@@ -73,7 +73,12 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			return;
 		}
 
-		setValue(castInfo.castTime());
+		if (!castInfo.channeled()) {
+			setValue(castInfo.castTime());
+		} else {
+			setValue((Duration) null);
+		}
+
 		setValue(castInfo.channeled());
 		setValue(castInfo.ignoresGcd());
 	}

@@ -79,6 +79,7 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		setHeader(EVENT_CHANCE_PCT, prefix);
 		setHeader(EVENT_ACTION, prefix);
 		setHeader(EVENT_TRIGGERED_SPELL, prefix);
+		setHeader(EVENT_ACTION_PARAMS, prefix);
 	}
 
 	protected void writeEvents(Effect effect, int maxEvents) {
@@ -104,6 +105,7 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		setValue(event.chance(), Percent._100);
 		setValue(event.actions());
 		setValue(event.triggeredSpell() != null ? event.triggeredSpell().getId() : null);
+		setValue(event.actionParameters() != null ? event.actionParameters().value() : null);
 	}
 
 	@Override
