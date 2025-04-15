@@ -4,8 +4,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.Attributes;
 
-import java.util.stream.Collectors;
-
+import static java.util.stream.Collectors.joining;
 import static wow.commons.model.attribute.AttributeScaling.*;
 import static wow.commons.util.FormatUtil.decimalPointOnlyIfNecessary;
 
@@ -14,44 +13,56 @@ import static wow.commons.util.FormatUtil.decimalPointOnlyIfNecessary;
  * Date: 2025-03-05
  */
 public class AttributesFormater {
+	static final String ATTRIBUTE_SEPARATOR = "+";
+	private static final String VALUE_PLACEHOLDER = "{value}";
+
 	public static String format(Attributes attributes) {
 		return attributes.list().stream()
 				.map(AttributesFormater::format)
-				.collect(Collectors.joining(" + "));
+				.collect(joining(" " + ATTRIBUTE_SEPARATOR + " "));
 	}
 
 	private static String format(Attribute attribute) {
-		var valueStr = decimalPointOnlyIfNecessary(attribute.value(), "0.##");
-		var idStr = formatWithoutValue(attribute);
+		var valueStr = valToStr(attribute.value());
+		var withoutValue = formatWithPlaceholder(attribute);
 
-		return valueStr + " " + idStr;
+		return withoutValue.replace(VALUE_PLACEHOLDER, valueStr);
 	}
 
 	public static String formatWithoutValue(Attribute attribute) {
-		var withoutCondition = formatWithoutCondition(attribute);
+		var withPlaceholder = formatWithPlaceholder(attribute);
 
-		if (!attribute.hasCondition()) {
-			return withoutCondition;
+		if (withPlaceholder.startsWith(VALUE_PLACEHOLDER)) {
+			return withPlaceholder.substring(VALUE_PLACEHOLDER.length() + 1); // +1 for space
 		}
 
-		return "%s [%s]".formatted(withoutCondition, attribute.condition());
+		return withPlaceholder;
 	}
 
-	private static String formatWithoutCondition(Attribute attribute) {
-		if (attribute.scaling() != NONE) {
-			return "* %s %s".formatted(formatAttributeScaling(attribute.scaling()), attribute.id());
+	private static String formatWithPlaceholder(Attribute attribute) {
+		var id = attribute.id();
+		var scaledValue = getScaledValue(attribute.scaling());
+
+		if (attribute.hasCondition()) {
+			return "%s %s [%s]".formatted(scaledValue, id, attribute.condition());
 		} else {
-			return attribute.id().toString();
+			return "%s %s".formatted(scaledValue, id);
 		}
 	}
 
-	private static String formatAttributeScaling(AttributeScaling scaling) {
+	private static String getScaledValue(AttributeScaling scaling) {
 		return switch (scaling) {
-			case NoScaling() -> "none";
-			case LevelScaling() -> "level";
+			case NoScaling() ->
+					"%s".formatted(VALUE_PLACEHOLDER);
+			case LevelScaling() ->
+					"%s * level".formatted(VALUE_PLACEHOLDER);
 			case NumberOfEffectsOnTarget(var tree, var max) ->
-					"numEffectsOnTarget(%s, %s)".formatted(tree, decimalPointOnlyIfNecessary(max.value()));
+					"%s * numEffectsOnTarget(%s, %s)".formatted(VALUE_PLACEHOLDER, tree, valToStr(max.value()));
 		};
+	}
+
+	private static String valToStr(double value) {
+		return decimalPointOnlyIfNecessary(value, "0.##");
 	}
 
 	private AttributesFormater() {}

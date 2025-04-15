@@ -12,7 +12,9 @@ import wow.commons.model.talent.TalentTree;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static java.lang.Double.parseDouble;
 import static wow.commons.model.attribute.AttributeScaling.*;
+import static wow.commons.util.AttributesFormater.ATTRIBUTE_SEPARATOR;
 
 /**
  * User: POlszewski
@@ -22,10 +24,11 @@ import static wow.commons.model.attribute.AttributeScaling.*;
 public class AttributesParser {
 	private final String value;
 
-	private String attrValueStr;
+	private String scaledValueStr;
 	private String conditionStr;
 	private String idStr;
-	private String scalingStr;
+	private double attributeValue;
+	private AttributeScaling attributeScaling;
 
 	/*
 		Supported syntax:
@@ -33,6 +36,7 @@ public class AttributesParser {
 		10 Power
 		10 Power [Spell]
 		10 * level Power [Spell]
+		10 * numEffectsOnTarget(Affliction, 60) Power [Spell]
 		10 * level Power [Spell] + 10 Power [Spell]
 
 	 */
@@ -42,7 +46,7 @@ public class AttributesParser {
 			return Attributes.EMPTY;
 		}
 
-		var list = Stream.of(value.split("\\+"))
+		var list = Stream.of(value.split(Pattern.quote(ATTRIBUTE_SEPARATOR)))
 				.map(AttributesParser::new)
 				.map(AttributesParser::parse)
 				.toList();
@@ -56,13 +60,12 @@ public class AttributesParser {
 
 	private Attribute parse() {
 		splitIntoParts();
+		parseScaledValue();
 
 		var id = AttributeId.parse(idStr);
-		var attrValue = Double.parseDouble(attrValueStr);
 		var condition = AttributeCondition.parse(conditionStr);
-		var scaling = parseAttributeScaling(scalingStr);
 
-		return Attribute.of(id, attrValue, condition, scaling);
+		return Attribute.of(id, attributeValue, condition, attributeScaling);
 	}
 
 	private void splitIntoParts() {
@@ -72,35 +75,51 @@ public class AttributesParser {
 			throw new IllegalArgumentException("Incorrect attribute format: " + value);
 		}
 
-		this.attrValueStr = matcher.group(1);
-		this.idStr = matcher.group(4);
-		this.scalingStr = matcher.group(3);
-		this.conditionStr = matcher.group(6);
+		this.scaledValueStr = matcher.group(1);
+		this.idStr = matcher.group(2);
+		this.conditionStr = matcher.group(4);
 	}
 
-	private static final Pattern PATTERN = Pattern.compile("^(-?\\d*\\.?\\d+)\\s*(\\*\\s*(.+)\\s+)?([\\w.%]+)\\s*(\\[(.+)])?$");
+	private static final String SCALED_VALUE_REGEX =
+			"{value}|" +
+			"{value}\\s*\\*\\s*level|" +
+			"{value}\\s*\\*\\s*numEffectsOnTarget\\({tree},\\s*{value}\\)";
+	private static final String VALUE_REGEX = "-?\\d*\\.?\\d+";
+	private static final String TREE_REGEX = "\\w+";
 
-	private static AttributeScaling parseAttributeScaling(String value) {
-		return switch (value) {
-			case null -> NONE;
-			case "", "none" -> NONE;
-			case "level" -> LEVEL;
-			default -> parseNumberOfEffectsOnTarget(value);
-		};
-	}
+	private static final Pattern PATTERN = Pattern.compile(
+			"^({scaledValue})\\s+({id})\\s*(\\[({condition})])?$"
+					.replace("{scaledValue}", SCALED_VALUE_REGEX)
+					.replace("{id}", "[\\w.%]+")
+					.replace("{condition}", ".+")
+					.replace("{tree}", TREE_REGEX)
+					.replace("{value}", VALUE_REGEX)
+	);
 
-	private static NumberOfEffectsOnTarget parseNumberOfEffectsOnTarget(String value) {
-		var matcher = NUM_EFFECTS_ON_TARGET_PATTERN.matcher(value.trim());
+	private static final Pattern SCALED_VALUE_PATTERN = Pattern.compile(
+			("^(" + SCALED_VALUE_REGEX + ")$")
+					.replace("{value}", "(" + VALUE_REGEX + ")")
+					.replace("{tree}", "(" + TREE_REGEX + ")")
+	);
+
+	private void parseScaledValue() {
+		var matcher = SCALED_VALUE_PATTERN.matcher(scaledValueStr);
 
 		if (!matcher.find()) {
-			throw new IllegalArgumentException("Incorrect numEffectsOnTarget format: " + value);
+			throw new IllegalArgumentException("Incorrect scaled value format: " + scaledValueStr);
 		}
 
-		var treeStr = matcher.group(1).trim();
-		var maxStr = matcher.group(2).trim();
-
-		return new NumberOfEffectsOnTarget(TalentTree.parse(treeStr), Percent.parse(maxStr));
+		if (matcher.group(2) != null) {
+			attributeValue = parseDouble(matcher.group(2));
+			attributeScaling = NONE;
+		} else if (matcher.group(3) != null) {
+			attributeValue = parseDouble(matcher.group(3));
+			attributeScaling = LEVEL;
+		} else if (matcher.group(4) != null) {
+			attributeValue = parseDouble(matcher.group(4));
+			var treeStr = matcher.group(5).trim();
+			var maxStr = matcher.group(6).trim();
+			attributeScaling = new NumberOfEffectsOnTarget(TalentTree.parse(treeStr), Percent.parse(maxStr));
+		}
 	}
-
-	private static final Pattern NUM_EFFECTS_ON_TARGET_PATTERN = Pattern.compile("^numEffectsOnTarget\\((.+),\\s*(\\d+)\\)$");
 }

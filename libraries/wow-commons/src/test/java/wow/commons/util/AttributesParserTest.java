@@ -68,9 +68,9 @@ class AttributesParserTest {
 			new TestData("10 Power [Spell | Physical]", Attribute.of(POWER, 10, ConditionOperator.or(SPELL, PHYSICAL))),
 			new TestData("10 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, AttributeScaling.LEVEL)),
 			new TestData(
-					"10 * level Power [Spell] + 10 Power [Spell]",
+					"10 * level Power [Spell] + 20 Power [Spell]",
 					Attribute.of(POWER, 10, SPELL, AttributeScaling.LEVEL),
-					Attribute.of(POWER, 10, SPELL)
+					Attribute.of(POWER, 20, SPELL)
 			),
 			new TestData(
 					"10 * numEffectsOnTarget(Affliction, 60) Power [Spell]",
