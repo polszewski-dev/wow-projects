@@ -19,6 +19,7 @@ import wow.commons.util.parser.ParserUtil;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonItemDetails;
+import wow.scraper.model.RandomEnchant;
 import wow.scraper.parser.effect.ItemStatParser;
 import wow.scraper.parser.stat.StatParser;
 
@@ -46,7 +47,8 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 	private ProfessionId itemSetRequiredProfession;
 	private Integer itemSetRequiredProfessionLevel;
 
-	private boolean randomEnchantment;
+	private List<RandomEnchant> randomEnchants;
+	private Integer selectedRandomEnchantIdx;
 
 	public ItemTooltipParser(JsonItemDetails itemDetails, GameVersionId gameVersion, ScraperContext scraperContext) {
 		super(itemDetails, gameVersion, scraperContext);
@@ -86,7 +88,7 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 				Rule.exact("Quest Item", () -> {}),
 				Rule.regex("(.*) \\(\\d/(\\d)\\)", this::parseItemSet),
 				Rule.regex("\\((\\d+)\\) Set ?: (.*)", this::parseItemSetBonus),
-				Rule.exact("<Random enchantment>", () -> this.randomEnchantment = true),
+				Rule.exact("<Random enchantment>", this::fetchRandomEnchants),
 				Rule.regex("\\+?\\ ?(\\d+) - (\\d+) (\\S+)? ?Damage", this::parseWeaponDamage),
 				Rule.regex("\\((\\d+\\.\\d+) damage per second\\)", this::parseWeaponDps),
 				Rule.regex("Speed (\\d+.\\d+)", this::parseWeaponSpeedParams),
@@ -246,7 +248,42 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 		}
 	}
 
+	private void fetchRandomEnchants() {
+		var html = getWowheadFetcher().fetchRaw(gameVersion, "item=" + getItemId());
+		var parser = new RandomEnchantParser(
+				html,
+				() -> newItemStatParser(getStatPatternRepository()::getItemStatParser)
+		);
+
+		parser.parse();
+		this.randomEnchants = parser.getRandomEnchants();
+	}
+
+	@Override
+	public int getItemId() {
+		if (selectedRandomEnchantIdx != null) {
+			return super.getItemId() + 1_000_000 * (selectedRandomEnchantIdx + 1);
+		}
+
+		return super.getItemId();
+	}
+
+	@Override
+	public String getName() {
+		if (selectedRandomEnchantIdx != null) {
+			return super.getName() + " " + getSelectedRandomEnchant().suffix();
+		}
+
+		return super.getName();
+	}
+
 	public List<Effect> getEffects() {
+		if (selectedRandomEnchantIdx != null) {
+			var copy = new ArrayList<>(itemStatParser.getItemEffects());
+			copy.addAll(getSelectedRandomEnchant().effects());
+			return copy;
+		}
+
 		return itemStatParser.getItemEffects();
 	}
 
@@ -256,5 +293,21 @@ public class ItemTooltipParser extends AbstractItemTooltipParser {
 
 	public Optional<ActivatedAbility> getActivatedAbility() {
 		return Optional.ofNullable(activatedAbility);
+	}
+
+	public boolean hasRandomEnchant() {
+		return randomEnchants != null;
+	}
+
+	public int getRandomEnchantCount() {
+		return randomEnchants.size();
+	}
+
+	public void setRandomEnchantIdx(int index) {
+		this.selectedRandomEnchantIdx = index;
+	}
+
+	private RandomEnchant getSelectedRandomEnchant() {
+		return randomEnchants.get(selectedRandomEnchantIdx);
 	}
 }

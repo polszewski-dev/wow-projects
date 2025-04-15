@@ -3,7 +3,8 @@ package wow.commons.repository.item;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
-import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.attribute.condition.ConditionOperator;
+import wow.commons.model.attribute.condition.SpellSchoolCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSource;
@@ -13,12 +14,16 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.condition.MiscCondition.SPELL;
+import static wow.commons.model.attribute.condition.MiscCondition.SPELL_DAMAGE;
 import static wow.commons.model.categorization.ArmorSubType.CLOTH;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.categorization.ItemRarity.EPIC;
 import static wow.commons.model.categorization.ItemType.CHEST;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.commons.model.pve.PhaseId.VANILLA_P6;
+import static wow.commons.model.spell.SpellSchool.SHADOW;
 
 /**
  * User: POlszewski
@@ -84,7 +89,7 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(socketSpecification.getSocketType(1)).isEqualTo(SocketType.RED);
 		assertThat(socketSpecification.getSocketType(2)).isEqualTo(SocketType.RED);
 
-		assertEffect(socketSpecification.socketBonus(), POWER, 5, MiscCondition.SPELL, "+5 Spell Damage and Healing", new ItemSource(item));
+		assertEffect(socketSpecification.socketBonus(), POWER, 5, SPELL, "+5 Spell Damage and Healing", new ItemSource(item));
 	}
 
 	@Test
@@ -96,9 +101,19 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 		assertEffect(item.getEffects().get(0), ARMOR, 266, "266 Armor", source);
 		assertEffect(item.getEffects().get(1), STAMINA, 36, "+36 Stamina", source);
 		assertEffect(item.getEffects().get(2), INTELLECT, 34, "+34 Intellect", source);
-		assertEffect(item.getEffects().get(3), CRIT_RATING, 40, MiscCondition.SPELL, "Equip: Improves spell critical strike rating by 40.", source);
-		assertEffect(item.getEffects().get(4), HASTE_RATING, 40, MiscCondition.SPELL, "Equip: Improves spell haste rating by 40.", source);
-		assertEffect(item.getEffects().get(5), POWER, 71, MiscCondition.SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 71.", source);
+		assertEffect(item.getEffects().get(3), CRIT_RATING, 40, SPELL, "Equip: Improves spell critical strike rating by 40.", source);
+		assertEffect(item.getEffects().get(4), HASTE_RATING, 40, SPELL, "Equip: Improves spell haste rating by 40.", source);
+		assertEffect(item.getEffects().get(5), POWER, 71, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 71.", source);
+	}
+
+	@Test
+	void itemWithRandomEnchantStats() {
+		var item = itemRepository.getItem("Drakestone of Shadow Wrath", VANILLA_P6).orElseThrow();
+		var source = new ItemSource(item);
+
+		assertThat(item.getEffects()).hasSize(2);
+		assertEffect(item.getEffects().get(0), POWER, 7, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 7.", source);
+		assertEffect(item.getEffects().get(1), POWER, 21, ConditionOperator.and(SPELL_DAMAGE, SpellSchoolCondition.of(SHADOW)), "+21 Shadow Spell Damage", source);
 	}
 
 	@Test

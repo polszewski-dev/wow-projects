@@ -171,7 +171,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 	@Test
 	@DisplayName("Misc info is parsed correctly")
 	void misc() {
-		assertThat(sunfireRobe.isRandomEnchantment()).isFalse();
+		assertThat(sunfireRobe.hasRandomEnchant()).isFalse();
 		assertThat(sunfireRobe.getDroppedBy()).isNull();
 		assertThat(sunfireRobe.getDropChance()).isNull();
 		assertThat(sunfireRobe.getSellPrice()).isEqualTo(Money.parse("6g8s49c"));

@@ -38,13 +38,12 @@ public class ItemExcelBuilder extends WowExcelBuilder {
 	@Override
 	public void finish(String fileName) {
 		flushItems();
-		writeHeader(SET, itemSetSheetWriter, 1, 1);
-		savedSets.forEach(setInfo -> writeRow(setInfo, itemSetSheetWriter));
+		saveSets();
 		super.finish(fileName);
 	}
 
 	public void add(ItemTooltipParser parser) {
-		if (isToBeIgnored(parser.getItemId()) || parser.isRandomEnchantment()) {
+		if (isToBeIgnored(parser.getItemId())) {
 			return;
 		}
 		itemParserQueue.add(parser);
@@ -58,9 +57,25 @@ public class ItemExcelBuilder extends WowExcelBuilder {
 	private final List<ItemTooltipParser> itemParserQueue = new ArrayList<>();
 
 	private void flushItems() {
-		for (ItemTooltipParser parser : itemParserQueue) {
-			writeRow(parser, itemSheetWriter);
+		for (var parser : itemParserQueue) {
+			writeItem(parser);
 		}
 		itemParserQueue.clear();
+	}
+
+	private void writeItem(ItemTooltipParser parser) {
+		if (parser.hasRandomEnchant()) {
+			for (int i = 0; i < parser.getRandomEnchantCount(); ++i) {
+				parser.setRandomEnchantIdx(i);
+				writeRow(parser, itemSheetWriter);
+			}
+		} else {
+			writeRow(parser, itemSheetWriter);
+		}
+	}
+
+	private void saveSets() {
+		writeHeader(SET, itemSetSheetWriter, 1, 1);
+		savedSets.forEach(setInfo -> writeRow(setInfo, itemSetSheetWriter));
 	}
 }
