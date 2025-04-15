@@ -13,7 +13,7 @@ import static wow.commons.util.FormatUtil.decimalPointOnlyIfNecessary;
  * Date: 2025-03-05
  */
 public class AttributesFormater {
-	static final String ATTRIBUTE_SEPARATOR = "+";
+	static final String ATTRIBUTE_SEPARATOR = ";";
 	private static final String VALUE_PLACEHOLDER = "{value}";
 
 	public static String format(Attributes attributes) {
@@ -56,6 +56,8 @@ public class AttributesFormater {
 					"%s".formatted(VALUE_PLACEHOLDER);
 			case LevelScaling() ->
 					"%s * level".formatted(VALUE_PLACEHOLDER);
+			case LevelScalingByFactor(var factor) ->
+					"%s + %s * level".formatted(VALUE_PLACEHOLDER, valToStr(factor));
 			case NumberOfEffectsOnTarget(var tree, var max) ->
 					"%s * numEffectsOnTarget(%s, %s)".formatted(VALUE_PLACEHOLDER, tree, valToStr(max.value()));
 		};

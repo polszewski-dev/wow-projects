@@ -4,7 +4,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.talent.TalentTree;
@@ -14,6 +13,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.AttributeScaling.*;
 import static wow.commons.model.attribute.condition.MiscCondition.PHYSICAL;
 import static wow.commons.model.attribute.condition.MiscCondition.SPELL;
 
@@ -66,15 +66,16 @@ class AttributesParserTest {
 			new TestData("10 Party.Power", Attribute.of(PARTY_POWER, 10)),
 			new TestData("10 Power [Spell]", Attribute.of(POWER, 10, SPELL)),
 			new TestData("10 Power [Spell | Physical]", Attribute.of(POWER, 10, ConditionOperator.or(SPELL, PHYSICAL))),
-			new TestData("10 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, AttributeScaling.LEVEL)),
-			new TestData(
-					"10 * level Power [Spell] + 20 Power [Spell]",
-					Attribute.of(POWER, 10, SPELL, AttributeScaling.LEVEL),
-					Attribute.of(POWER, 20, SPELL)
-			),
+			new TestData("10 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, LEVEL)),
+			new TestData("10 + 0.5 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, new LevelScalingByFactor(0.5))),
 			new TestData(
 					"10 * numEffectsOnTarget(Affliction, 60) Power [Spell]",
-					 Attribute.of(POWER, 10, SPELL, new AttributeScaling.NumberOfEffectsOnTarget(TalentTree.AFFLICTION, Percent.of(60)))
+					Attribute.of(POWER, 10, SPELL, new NumberOfEffectsOnTarget(TalentTree.AFFLICTION, Percent.of(60)))
+			),
+			new TestData(
+					"10 * level Power [Spell] ; 20 Power [Spell]",
+					Attribute.of(POWER, 10, SPELL, LEVEL),
+					Attribute.of(POWER, 20, SPELL)
 			)
 	);
 }

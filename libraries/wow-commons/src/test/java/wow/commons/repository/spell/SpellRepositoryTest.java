@@ -8,7 +8,6 @@ import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.attribute.condition.MiscCondition;
@@ -30,6 +29,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.AttributeScaling.LevelScalingByFactor;
 import static wow.commons.model.character.CharacterClassId.SHAMAN;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
@@ -523,10 +523,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var effect = ability.getEffectApplication().effect();
 
 		assertModifier(effect, List.of(
-				Attribute.of(POWER, 3, MiscCondition.SPELL),
-				Attribute.of(POWER, 2, MiscCondition.SPELL, AttributeScaling.LEVEL),
-				Attribute.of(POWER, 2, MiscCondition.PHYSICAL),
-				Attribute.of(POWER, 4, MiscCondition.PHYSICAL, AttributeScaling.LEVEL),
+				Attribute.of(POWER, 3, MiscCondition.SPELL, new LevelScalingByFactor(2)),
+				Attribute.of(POWER, 2, MiscCondition.PHYSICAL, new LevelScalingByFactor(4)),
 				Attribute.of(HEALING_TAKEN_PCT, -50)
 		));
 	}

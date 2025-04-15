@@ -36,8 +36,9 @@ public class AttributesParser {
 		10 Power
 		10 Power [Spell]
 		10 * level Power [Spell]
+		10 + 20 * level Power [Spell]
 		10 * numEffectsOnTarget(Affliction, 60) Power [Spell]
-		10 * level Power [Spell] + 10 Power [Spell]
+		10 * level Power [Spell] ; 10 Power [Spell]
 
 	 */
 
@@ -83,6 +84,7 @@ public class AttributesParser {
 	private static final String SCALED_VALUE_REGEX =
 			"{value}|" +
 			"{value}\\s*\\*\\s*level|" +
+			"{value}\\s*\\+\\s*{value}\\s*\\*\\s*level|" +
 			"{value}\\s*\\*\\s*numEffectsOnTarget\\({tree},\\s*{value}\\)";
 	private static final String VALUE_REGEX = "-?\\d*\\.?\\d+";
 	private static final String TREE_REGEX = "\\w+";
@@ -117,8 +119,12 @@ public class AttributesParser {
 			attributeScaling = LEVEL;
 		} else if (matcher.group(4) != null) {
 			attributeValue = parseDouble(matcher.group(4));
-			var treeStr = matcher.group(5).trim();
-			var maxStr = matcher.group(6).trim();
+			var factor = parseDouble(matcher.group(5));
+			attributeScaling = new LevelScalingByFactor(factor);
+		} else if (matcher.group(6) != null) {
+			attributeValue = parseDouble(matcher.group(6));
+			var treeStr = matcher.group(7).trim();
+			var maxStr = matcher.group(8).trim();
 			attributeScaling = new NumberOfEffectsOnTarget(TalentTree.parse(treeStr), Percent.parse(maxStr));
 		}
 	}

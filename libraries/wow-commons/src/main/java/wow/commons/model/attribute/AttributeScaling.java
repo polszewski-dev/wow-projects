@@ -28,6 +28,13 @@ public sealed interface AttributeScaling {
 		}
 	}
 
+	record LevelScalingByFactor(double factor) implements AttributeScaling {
+		@Override
+		public double getScaledValue(double value, AttributeScalingParams params) {
+			return value + factor * params.getLevel();
+		}
+	}
+
 	record NumberOfEffectsOnTarget(TalentTree tree, Percent max) implements AttributeScaling {
 		public NumberOfEffectsOnTarget {
 			Objects.requireNonNull(tree);
