@@ -5,6 +5,8 @@ import wow.commons.model.talent.TalentTree;
 
 import java.util.Objects;
 
+import static java.lang.Math.max;
+
 /**
  * User: POlszewski
  * Date: 2025-02-08
@@ -32,6 +34,13 @@ public sealed interface AttributeScaling {
 		@Override
 		public double getScaledValue(double value, AttributeScalingParams params) {
 			return value + factor * params.getLevel();
+		}
+	}
+
+	record LevelBasedDepreciation(double factor, double maxLevel) implements AttributeScaling {
+		@Override
+		public double getScaledValue(double value, AttributeScalingParams params) {
+			return value - factor * max(params.getLevel() - maxLevel, 0);
 		}
 	}
 

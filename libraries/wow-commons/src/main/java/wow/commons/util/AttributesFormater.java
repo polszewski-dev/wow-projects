@@ -58,6 +58,10 @@ public class AttributesFormater {
 					"%s * level".formatted(VALUE_PLACEHOLDER);
 			case LevelScalingByFactor(var factor) ->
 					"%s + %s * level".formatted(VALUE_PLACEHOLDER, valToStr(factor));
+			case LevelBasedDepreciation(var factor, var maxLevel) ->
+					factor != 1
+					? "%s - %s * max(level - %s, 0)".formatted(VALUE_PLACEHOLDER, valToStr(factor), valToStr(maxLevel))
+					: "%s - max(level - %s, 0)".formatted(VALUE_PLACEHOLDER, valToStr(maxLevel));
 			case NumberOfEffectsOnTarget(var tree, var max) ->
 					"%s * numEffectsOnTarget(%s, %s)".formatted(VALUE_PLACEHOLDER, tree, valToStr(max.value()));
 		};

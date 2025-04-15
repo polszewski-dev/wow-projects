@@ -73,6 +73,14 @@ class AttributesParserTest {
 					Attribute.of(POWER, 10, SPELL, new NumberOfEffectsOnTarget(TalentTree.AFFLICTION, Percent.of(60)))
 			),
 			new TestData(
+					"15 - max(level - 70, 0) Power [Spell]",
+					Attribute.of(POWER, 15, SPELL, new LevelBasedDepreciation(1, 70))
+			),
+			new TestData(
+					"15 - 0.5 * max(level - 70, 0) Power [Spell]",
+					Attribute.of(POWER, 15, SPELL, new LevelBasedDepreciation(0.5, 70))
+			),
+			new TestData(
 					"10 * level Power [Spell] ; 20 Power [Spell]",
 					Attribute.of(POWER, 10, SPELL, LEVEL),
 					Attribute.of(POWER, 20, SPELL)

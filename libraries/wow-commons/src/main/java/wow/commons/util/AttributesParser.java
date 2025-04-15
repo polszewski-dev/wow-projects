@@ -85,6 +85,8 @@ public class AttributesParser {
 			"{value}|" +
 			"{value}\\s*\\*\\s*level|" +
 			"{value}\\s*\\+\\s*{value}\\s*\\*\\s*level|" +
+			"{value}\\s*\\-\\s*max\\(level\\s*\\-\\s*{value},\\s*0\\)|" +
+			"{value}\\s*\\-\\s*{value}\\s*\\*\\s*max\\(level\\s*\\-\\s*{value},\\s*0\\)|" +
 			"{value}\\s*\\*\\s*numEffectsOnTarget\\({tree},\\s*{value}\\)";
 	private static final String VALUE_REGEX = "-?\\d*\\.?\\d+";
 	private static final String TREE_REGEX = "\\w+";
@@ -123,8 +125,17 @@ public class AttributesParser {
 			attributeScaling = new LevelScalingByFactor(factor);
 		} else if (matcher.group(6) != null) {
 			attributeValue = parseDouble(matcher.group(6));
-			var treeStr = matcher.group(7).trim();
-			var maxStr = matcher.group(8).trim();
+			var maxLevel = parseDouble(matcher.group(7));
+			attributeScaling = new LevelBasedDepreciation(1, maxLevel);
+		} else if (matcher.group(8) != null) {
+			attributeValue = parseDouble(matcher.group(8));
+			var factor = parseDouble(matcher.group(9));
+			var maxLevel = parseDouble(matcher.group(10));
+			attributeScaling = new LevelBasedDepreciation(factor, maxLevel);
+		} else if (matcher.group(11) != null) {
+			attributeValue = parseDouble(matcher.group(11));
+			var treeStr = matcher.group(12).trim();
+			var maxStr = matcher.group(13).trim();
 			attributeScaling = new NumberOfEffectsOnTarget(TalentTree.parse(treeStr), Percent.parse(maxStr));
 		}
 	}
