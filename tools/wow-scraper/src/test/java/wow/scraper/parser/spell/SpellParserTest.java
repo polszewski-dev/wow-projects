@@ -1,5 +1,6 @@
 package wow.scraper.parser.spell;
 
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -51,11 +52,11 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
 	}
 
-	static void assertDuration(Duration duration, double seconds) {
+	static void assertDuration(AnyDuration duration, double seconds) {
 		assertDuration(duration, Duration.seconds(seconds));
 	}
 
-	static void assertDuration(Duration duration, Duration expectedDuration) {
+	static void assertDuration(AnyDuration duration, Duration expectedDuration) {
 		assertThat(duration).isEqualTo(expectedDuration);
 	}
 

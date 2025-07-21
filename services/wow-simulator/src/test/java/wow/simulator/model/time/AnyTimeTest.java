@@ -1,29 +1,29 @@
 package wow.simulator.model.time;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wow.simulator.model.time.Time.TIME_IN_INFINITY;
 
 /**
  * User: POlszewski
  * Date: 2023-08-09
  */
-class TimeTest {
+class AnyTimeTest {
 	@ParameterizedTest
 	@CsvSource({
 			"10,  20,  30",
 			"10,  INF, INF",
+			"INF, 20,  INF",
+			"INF, INF, INF",
 	})
 	void addAnyDuration(String firstStr, String secondStr, String expectedStr) {
 		var first = parse(firstStr);
 		var second = AnyDuration.parse(secondStr);
-		var expected = AnyTimeTest.parse(expectedStr);
+		var expected = parse(expectedStr);
 
 		var result = first.add(second);
 
@@ -33,6 +33,7 @@ class TimeTest {
 	@ParameterizedTest
 	@CsvSource({
 			"10,  20,  30",
+			"INF, 20,  INF",
 	})
 	void addDuration(String firstStr, String secondStr, String expectedStr) {
 		var first = parse(firstStr);
@@ -46,23 +47,10 @@ class TimeTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"30, 20, 10",
-	})
-	void subtract(String firstStr, String secondStr, String expectedStr) {
-		var first = parse(firstStr);
-		var second = parse(secondStr);
-		var expected = Duration.parse(expectedStr);
-
-		var result = first.subtract(second);
-
-		assertThat(result).isEqualTo(expected);
-	}
-
-	@ParameterizedTest
-	@CsvSource({
 			"10,  20,  false",
 			"20,  10,  true",
 			"10,  10,  false",
+			"INF, 20,  true",
 	})
 	void after(String firstStr, String secondStr, boolean expected) {
 		var first = parse(firstStr);
@@ -78,6 +66,7 @@ class TimeTest {
 			"10,  20,  true",
 			"20,  10,  false",
 			"10,  10,  false",
+			"INF, 20,  false",
 	})
 	void before(String firstStr, String secondStr, boolean expected) {
 		var first = parse(firstStr);
@@ -93,6 +82,9 @@ class TimeTest {
 			"10,  20,  -1",
 			"20,  10,  1",
 			"10,  10,  0",
+			"10,  INF, -1",
+			"INF, 10,  1",
+			"INF, INF, 0",
 	})
 	void compareTo(String firstStr, String secondStr, int expected) {
 		var first = parse(firstStr);
@@ -107,6 +99,7 @@ class TimeTest {
 	@CsvSource({
 			"1.25, 1.250",
 			"10,   10.000",
+			"INF,  INF",
 	})
 	void toString(String firstStr, String expected) {
 		var first = parse(firstStr);
@@ -116,30 +109,10 @@ class TimeTest {
 		assertThat(result).isEqualTo(expected);
 	}
 
-	static Time parse(String value) {
+	static AnyTime parse(String value) {
+		if (value.equals("INF")) {
+			return TIME_IN_INFINITY;
+		}
 		return Time.at(Double.parseDouble(value));
-	}
-
-
-	@Test
-	void at() {
-		Time time = Time.at(10);
-
-		assertThat(time.timestamp()).isEqualTo(10_000);
-
-		assertThatThrownBy(() -> Time.at(-10)).isInstanceOf(IllegalArgumentException.class);
-	}
-
-	@Test
-	void secondsSinceZero() {
-		Time time = Time.at(1.25);
-
-		assertThat(time.secondsSinceZero()).isEqualTo(1.25);
-	}
-
-	@Test
-	void isInInfinity() {
-		assertThat(Time.at(0).isInInfinity()).isFalse();
-		assertThat(TIME_IN_INFINITY.isInInfinity()).isTrue();
 	}
 }

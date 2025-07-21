@@ -1,6 +1,6 @@
 package wow.commons.model.spell;
 
-import wow.commons.model.Duration;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.effect.Effect;
 
 import java.util.Objects;
@@ -12,7 +12,7 @@ import java.util.Objects;
 public record EffectApplication(
 		SpellTarget target,
 		Effect effect,
-		Duration duration,
+		AnyDuration duration,
 		int numStacks,
 		int numCharges,
 		EffectReplacementMode replacementMode

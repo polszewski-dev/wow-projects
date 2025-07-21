@@ -52,7 +52,7 @@ public class Simulation implements SimulationContextSource {
 				break;
 			}
 
-			getClock().advanceTo(nextUpdateTime);
+			getClock().advanceTo((Time) nextUpdateTime);
 			getScheduler().updateAllPresentActions();
 		}
 

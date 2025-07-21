@@ -375,7 +375,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var durationSnapshot = new EffectDurationSnapshot();
 
 		if (spell instanceof Ability ability && ability.isChanneled()) {
-			var baseDurationMillis = effectApplication.duration().millis();
+			var baseDuration = (Duration) effectApplication.duration();
+			var baseDurationMillis = baseDuration.millis();
 			var baseTickIntervalMillis = effect.getTickInterval().millis();
 			var numTicks = baseDurationMillis / baseTickIntervalMillis;
 
@@ -388,19 +389,23 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			durationSnapshot.setTickInterval(Duration.millis(tickIntervalMillis));
 		} else {
 			var baseDuration = effectApplication.duration();
-			var duration = getEffectDuration(baseDuration, durationStats, targetStats);
 			var tickInterval = effect.getTickInterval();
 
-			durationSnapshot.setDuration(duration);
-
 			if (tickInterval != null) {
+				var duration = getEffectDuration((Duration) baseDuration, durationStats, targetStats);
 				var numTicks = duration.millis() / tickInterval.millis();
 
 				durationSnapshot.setNumTicks((int) numTicks);
 				durationSnapshot.setTickInterval(tickInterval);
+				durationSnapshot.setDuration(duration);
 			} else {
+				var duration = baseDuration.isInfinite()
+						? baseDuration
+						: getEffectDuration((Duration) baseDuration, durationStats, targetStats);
+
 				durationSnapshot.setNumTicks(0);
 				durationSnapshot.setTickInterval(Duration.ZERO);
+				durationSnapshot.setDuration(duration);
 			}
 		}
 
@@ -408,13 +413,10 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private Duration getEffectDuration(Duration baseDuration, AccumulatedDurationStats durationStats, AccumulatedTargetStats targetStats) {
-		if (baseDuration.isInfinite()) {
-			return baseDuration;
-		}
-
+		var baseDurationSeconds = baseDuration.getSeconds();
 		var duration = durationStats.getDuration() + targetStats.getReceivedEffectDuration();
 		var durationPct = durationStats.getDurationPct() + targetStats.getReceivedEffectDurationPct();
-		var result = addAndMultiplyByPct(baseDuration.getSeconds(), duration, durationPct);
+		var result = addAndMultiplyByPct(baseDurationSeconds, duration, durationPct);
 
 		return Duration.seconds(result);
 	}

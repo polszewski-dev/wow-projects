@@ -31,8 +31,9 @@ public class Snapshot {
 
 	public double getEffectiveCastTime() {
 		if (ability.isChanneled()) {
-			return max(effectDuration.getDuration().getSeconds(), cast.getGcd());
+			return max(effectDuration.getDurationSeconds(), cast.getGcd());
 		}
+
 		return max(cast.getCastTime(), cast.getGcd());
 	}
 
@@ -44,7 +45,11 @@ public class Snapshot {
 	}
 
 	public double getDuration() {
-		return effectDuration != null ? effectDuration.getDuration().getSeconds() : 0;
+		if (effectDuration == null) {
+			return 0;
+		}
+
+		return effectDuration.getDurationSeconds();
 	}
 
 	public double getCooldown() {

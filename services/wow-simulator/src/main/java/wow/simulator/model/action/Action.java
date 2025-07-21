@@ -2,7 +2,9 @@ package wow.simulator.model.action;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
+import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.update.Updateable;
@@ -26,7 +28,7 @@ public abstract class Action implements Updateable {
 	@Getter
 	protected final ActionId actionId = ID_GENERATOR.newId();
 
-	private record Step(Time time, Runnable action, int order) {}
+	private record Step(AnyTime time, Runnable action, int order) {}
 
 	private static final Comparator<Step> STEP_COMPARATOR = Comparator
 			.comparing(Step::time)
@@ -59,11 +61,11 @@ public abstract class Action implements Updateable {
 	}
 
 	@Override
-	public final Optional<Time> getNextUpdateTime() {
+	public final Optional<AnyTime> getNextUpdateTime() {
 		return Optional.ofNullable(getNullableNextUpdateTime());
 	}
 
-	private Time getNullableNextUpdateTime() {
+	private AnyTime getNullableNextUpdateTime() {
 		if (isTerminated() || steps.isEmpty()) {
 			return null;
 		}
@@ -121,16 +123,16 @@ public abstract class Action implements Updateable {
 
 	protected abstract void setUp();
 
-	protected void on(Time time, Runnable action) {
+	protected void on(AnyTime time, Runnable action) {
 		this.steps.add(new Step(time, action, orderGenerator++));
 	}
 
-	protected void fromNowAfter(Duration duration, Runnable action) {
+	protected void fromNowAfter(AnyDuration duration, Runnable action) {
 		on(clock.after(duration), action);
 	}
 
 	protected Time onEachTick(Time start, int numTicks, Duration tickInterval, IntConsumer action) {
-		Time time = start;
+		var time = start;
 		for (int tickNo = 1; tickNo <= numTicks; ++tickNo) {
 			time = time.add(tickInterval);
 			int finalTickNo = tickNo;

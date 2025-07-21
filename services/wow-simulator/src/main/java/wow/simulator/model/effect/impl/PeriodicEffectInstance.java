@@ -1,5 +1,6 @@
 package wow.simulator.model.effect.impl;
 
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
@@ -21,7 +22,7 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 			Unit owner,
 			Unit target,
 			Effect effect,
-			Duration duration,
+			AnyDuration duration,
 			Duration tickInterval,
 			int numStacks,
 			int numCharges,

@@ -1,6 +1,6 @@
 package wow.simulator.model.unit.action;
 
-import wow.simulator.model.time.Time;
+import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -8,9 +8,9 @@ import wow.simulator.model.unit.Unit;
  * Date: 2023-08-10
  */
 public class IdleAction extends UnitAction {
-	private final Time end;
+	private final AnyTime end;
 
-	public IdleAction(Unit owner, Time end) {
+	public IdleAction(Unit owner, AnyTime end) {
 		super(owner);
 		this.end = end;
 	}

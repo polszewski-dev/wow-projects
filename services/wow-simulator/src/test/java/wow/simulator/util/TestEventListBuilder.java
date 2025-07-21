@@ -2,6 +2,7 @@ package wow.simulator.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
@@ -105,7 +106,7 @@ public class TestEventListBuilder {
 		return addEvent(new EffectApplied(time, abilityId, target, Duration.seconds(duration)));
 	}
 
-	public TestEventListBuilder effectApplied(AbilityId abilityId, Unit target, Duration duration) {
+	public TestEventListBuilder effectApplied(AbilityId abilityId, Unit target, AnyDuration duration) {
 		return addEvent(new EffectApplied(time, abilityId, target, duration));
 	}
 
@@ -113,7 +114,7 @@ public class TestEventListBuilder {
 		return addEvent(new TalentEffectApplied(time, talentId, target, Duration.seconds(duration)));
 	}
 
-	public TestEventListBuilder effectApplied(TalentId talentId, Unit target, Duration duration) {
+	public TestEventListBuilder effectApplied(TalentId talentId, Unit target, AnyDuration duration) {
 		return addEvent(new TalentEffectApplied(time, talentId, target, duration));
 	}
 
@@ -121,7 +122,7 @@ public class TestEventListBuilder {
 		return addEvent(new ItemEffectApplied(time, itemName, target, Duration.seconds(duration)));
 	}
 
-	public TestEventListBuilder effectApplied(String itemName, Unit target, Duration duration) {
+	public TestEventListBuilder effectApplied(String itemName, Unit target, AnyDuration duration) {
 		return addEvent(new ItemEffectApplied(time, itemName, target, duration));
 	}
 

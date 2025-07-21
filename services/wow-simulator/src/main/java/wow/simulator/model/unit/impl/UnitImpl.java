@@ -19,7 +19,7 @@ import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.Effects;
 import wow.simulator.model.rng.Rng;
-import wow.simulator.model.time.Time;
+import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.unit.*;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.IdleAction;
@@ -150,7 +150,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void idleUntil(Time time) {
+	public void idleUntil(AnyTime time) {
 		pendingActionQueue.add(new IdleAction(this, time));
 	}
 

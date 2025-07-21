@@ -8,7 +8,7 @@ import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
-import wow.simulator.model.time.Time;
+import wow.simulator.model.time.AnyTime;
 import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.Optional;
@@ -38,7 +38,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void cast(AbilityId abilityId, Unit target);
 
-	void idleUntil(Time time);
+	void idleUntil(AnyTime time);
 
 	void idleFor(Duration duration);
 

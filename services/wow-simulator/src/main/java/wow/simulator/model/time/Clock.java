@@ -1,5 +1,6 @@
 package wow.simulator.model.time;
 
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 
 /**
@@ -20,27 +21,31 @@ public final class Clock {
 		now = time;
 	}
 
-	public boolean timeInTheFuture(Time time) {
+	public boolean timeInTheFuture(AnyTime time) {
 		return time.compareTo(now) > 0;
 	}
 
-	public boolean timeInTheFutureOrPresent(Time time) {
+	public boolean timeInTheFutureOrPresent(AnyTime time) {
 		return time.compareTo(now) >= 0;
 	}
 
-	public boolean timeInThePast(Time time) {
+	public boolean timeInThePast(AnyTime time) {
 		return time.compareTo(now) < 0;
 	}
 
-	public boolean timeInThePastOrPresent(Time time) {
+	public boolean timeInThePastOrPresent(AnyTime time) {
 		return time.compareTo(now) <= 0;
 	}
 
-	public boolean timeInThePresent(Time time) {
+	public boolean timeInThePresent(AnyTime time) {
 		return time.compareTo(now) == 0;
 	}
 
 	public Time after(Duration duration) {
+		return now.add(duration);
+	}
+
+	public AnyTime after(AnyDuration duration) {
 		return now.add(duration);
 	}
 

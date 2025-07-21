@@ -3,8 +3,8 @@ package wow.simulator.model.update;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Duration;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.time.Clock;
-import wow.simulator.model.time.Time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.TreeMap;
 public class Scheduler {
 	private final Clock clock;
 
-	private final TreeMap<Time, List<Action>> actionsByTime = new TreeMap<>();
+	private final TreeMap<AnyTime, List<Action>> actionsByTime = new TreeMap<>();
 
 	public void add(Action action) {
 		action.onAddedToQueue();
@@ -79,7 +79,7 @@ public class Scheduler {
 		actionsByTime.remove(clock.now());
 	}
 
-	public Optional<Time> getNextUpdateTime() {
+	public Optional<AnyTime> getNextUpdateTime() {
 		if (actionsByTime.isEmpty()) {
 			return Optional.empty();
 		}

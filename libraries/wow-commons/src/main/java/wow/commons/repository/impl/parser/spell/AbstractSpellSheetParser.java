@@ -240,7 +240,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 
 		var target = getTarget(prefix);
 		var effectId = colAppliedEffectId.prefixed(prefix).getInteger();
-		var duration = colAppliedEffectDuration.prefixed(prefix).getDuration();
+		var duration = colAppliedEffectDuration.prefixed(prefix).getAnyDuration();
 		var numStacks = colAppliedEffectStacks.prefixed(prefix).getInteger();
 		var numCharges = colAppliedEffectCharges.prefixed(prefix).getInteger();
 		var replacementMode = colReplacementMode.prefixed(prefix).getEnum(EffectReplacementMode::parse, EffectReplacementMode.DEFAULT);

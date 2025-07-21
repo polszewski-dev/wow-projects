@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parser.excel;
 
 import polszewski.excel.reader.templates.ExcelSheetParser;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -66,12 +67,24 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 			return getOptionalDuration().orElseThrow(this::columnIsEmpty);
 		}
 
+		public AnyDuration getAnyDuration(AnyDuration defaultValue) {
+			return getOptionalAnyDuration().orElse(defaultValue);
+		}
+
+		public AnyDuration getAnyDuration() {
+			return getOptionalAnyDuration().orElseThrow(this::columnIsEmpty);
+		}
+
 		private Optional<Percent> getOptionalPercent() {
 			return getOptionalString().map(Percent::parse);
 		}
 
 		private Optional<Duration> getOptionalDuration() {
 			return getOptionalString().map(Duration::parse);
+		}
+
+		private Optional<AnyDuration> getOptionalAnyDuration() {
+			return getOptionalString().map(AnyDuration::parse);
 		}
 
 		public <K, V> Map<K, V> getMap(K[] keys, Function<ExcelColumn, V> mapper) {

@@ -77,7 +77,7 @@ public class CooldownInstance extends Action implements SimulationContextSource 
 	}
 
 	public Duration getRemainingDuration() {
-		return endTime.subtract(now()).min(Duration.ZERO);
+		return getRemainingDurationUntil(endTime);
 	}
 
 	@Override

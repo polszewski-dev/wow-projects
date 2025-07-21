@@ -1,6 +1,6 @@
 package wow.simulator.model.effect.impl;
 
-import wow.commons.model.Duration;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
@@ -15,7 +15,7 @@ import wow.simulator.model.context.EffectUpdateContext;
 import wow.simulator.model.context.EventContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
-import wow.simulator.model.time.Time;
+import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.UnitImpl;
 import wow.simulator.simulation.SimulationContext;
@@ -38,7 +38,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected final Unit target;
 
 	protected final Effect effect;
-	protected final Duration duration;
+	protected final AnyDuration duration;
 
 	protected int numStacks;
 	protected int numCharges;
@@ -48,7 +48,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	protected final EffectUpdateContext effectUpdateContext;
 
-	protected Time endTime;
+	protected AnyTime endTime;
 
 	private boolean silentRemoval = false;
 	private boolean stacked = false;
@@ -65,7 +65,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			Unit owner,
 			Unit target,
 			Effect effect,
-			Duration duration,
+			AnyDuration duration,
 			int numStacks,
 			int numCharges,
 			EffectSource effectSource,
@@ -264,12 +264,12 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
-	public Duration getRemainingDuration() {
-		return endTime.subtract(now()).max(Duration.ZERO);
+	public AnyDuration getRemainingDuration() {
+		return getRemainingDurationUntil(endTime);
 	}
 
 	@Override
-	public Duration getDuration() {
+	public AnyDuration getDuration() {
 		return duration;
 	}
 

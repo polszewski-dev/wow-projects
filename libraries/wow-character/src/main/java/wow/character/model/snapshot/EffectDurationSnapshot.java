@@ -2,6 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 
 /**
@@ -11,7 +12,11 @@ import wow.commons.model.Duration;
 @Getter
 @Setter
 public class EffectDurationSnapshot {
-	private Duration duration;
+	private AnyDuration duration;
 	private int numTicks;
 	private Duration tickInterval;
+
+	public double getDurationSeconds() {
+		return ((Duration) duration).getSeconds();
+	}
 }

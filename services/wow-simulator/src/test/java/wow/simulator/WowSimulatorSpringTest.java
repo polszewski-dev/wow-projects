@@ -50,6 +50,7 @@ import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.simulator.model.time.Time.TIME_IN_INFINITY;
 import static wow.simulator.util.CalcUtils.increaseByPct;
 import static wow.simulator.util.TestEvent.*;
 
@@ -94,7 +95,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		getCharacterService().updateAfterRestrictionChange(player);
 
-		player.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
+		player.setOnPendingActionQueueEmpty(x -> x.idleUntil(TIME_IN_INFINITY));
 		simulationContext.shareSimulationContext(player);
 
 		return player;
@@ -129,7 +130,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				name, enemyType, level + enemyLevelDiff, phaseId, NonPlayerImpl::new
 		);
 
-		enemy.setOnPendingActionQueueEmpty(x -> x.idleUntil(Time.INFINITY));
+		enemy.setOnPendingActionQueueEmpty(x -> x.idleUntil(TIME_IN_INFINITY));
 		simulationContext.shareSimulationContext(enemy);
 
 		return enemy;

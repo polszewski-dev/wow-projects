@@ -1,5 +1,6 @@
 package wow.simulator.model.effect;
 
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
@@ -27,7 +28,11 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	boolean matches(TalentTree tree);
 
-	Duration getRemainingDuration();
+	AnyDuration getRemainingDuration();
+
+	default double getRemainingDurationSeconds() {
+		return ((Duration) getRemainingDuration()).getSeconds();
+	}
 
 	void removeSelf();
 
@@ -39,7 +44,7 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	void removeCharge();
 
-	Duration getDuration();
+	AnyDuration getDuration();
 
 	int getNumStacks();
 

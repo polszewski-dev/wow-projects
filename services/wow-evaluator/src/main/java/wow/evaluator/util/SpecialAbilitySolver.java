@@ -3,6 +3,7 @@ package wow.evaluator.util;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.util.AttributeConditionArgs;
+import wow.commons.model.Duration;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
@@ -136,7 +137,7 @@ public class SpecialAbilitySolver {
 			return false;
 		}
 
-		var duration = effectApplication.duration().getSeconds();
+		var duration = ((Duration) effectApplication.duration()).getSeconds();
 		var cooldown = activatedAbility.getCooldown().getSeconds();
 		var uptime = cooldown != 0 ? duration / cooldown : 1;
 
@@ -203,7 +204,7 @@ public class SpecialAbilitySolver {
 
 		var castTime = snapshot.getEffectiveCastTime();
 
-		return getProcUptime(procChance, duration.getSeconds(), cooldown, castTime);
+		return getProcUptime(procChance, ((Duration) duration).getSeconds(), cooldown, castTime);
 	}
 
 	private double getProcUptime(double procChance, double duration, double internalCooldown, double castTime) {

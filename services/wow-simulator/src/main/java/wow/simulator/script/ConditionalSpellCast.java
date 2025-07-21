@@ -53,14 +53,14 @@ public record ConditionalSpellCast(
 			return true;
 		}
 		var effect = optionalEffect.get();
-		var remainingDuration = effect.getRemainingDuration().getSeconds();
+		var remainingDuration = effect.getRemainingDurationSeconds();
 		var castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
 		return remainingDuration <= castTime;
 	}
 
 	private boolean remainingSimulationDurationBelowSpellDuration(Player player, Unit target) {
 		var castTime = player.getSpellCastSnapshot(abilityId).getCastTime();
-		var duration = player.getEffectDurationSnapshot(abilityId, target).getDuration().getSeconds();
+		var duration = player.getEffectDurationSnapshot(abilityId, target).getDurationSeconds();
 		var remainingTime = player.getSimulation().getRemainingTime().getSeconds();
 		return castTime + duration <= remainingTime;
 	}

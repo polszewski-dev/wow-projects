@@ -1,5 +1,6 @@
 package wow.simulator.util;
 
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
@@ -90,9 +91,9 @@ public interface TestEvent {
 			return type == MANA && this.spell.equals(spell) && this.target == target;
 		}
 	}
-	record EffectApplied(Time time, AbilityId spell, Unit target, Duration duration) implements TestEvent {}
-	record TalentEffectApplied(Time time, TalentId talentId, Unit target, Duration duration) implements TestEvent {}
-	record ItemEffectApplied(Time time, String itemName, Unit target, Duration duration) implements TestEvent {}
+	record EffectApplied(Time time, AbilityId spell, Unit target, AnyDuration duration) implements TestEvent {}
+	record TalentEffectApplied(Time time, TalentId talentId, Unit target, AnyDuration duration) implements TestEvent {}
+	record ItemEffectApplied(Time time, String itemName, Unit target, AnyDuration duration) implements TestEvent {}
 	record EffectStacked(Time time, AbilityId spell, Unit target, int numStacks) implements TestEvent {}
 	record TalentEffectStacked(Time time, TalentId talentId, Unit target, int numStacks) implements TestEvent {}
 	record ItemEffectStacked(Time time, String itemName, Unit target, int numStacks) implements TestEvent {}

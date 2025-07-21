@@ -1,60 +1,16 @@
 package wow.commons.model;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * User: POlszewski
  * Date: 2019-08-14
  */
-public record Duration(long millis) implements Comparable<Duration> {
-	private static final Pattern PATTERN = Pattern.compile("^-?((\\d+)h)?((\\d+)m)?((\\d+)s)?((\\d+)ms)?$");
-	private static final int INF_MILLIS = Integer.MAX_VALUE;
-	private static final int NEG_INF_MILLIS = Integer.MIN_VALUE;
-
-	public static final Duration ZERO = new Duration(0);
-	public static final Duration INFINITE = new Duration(INF_MILLIS);
-	public static final Duration NEG_INFINITE = new Duration(NEG_INF_MILLIS);
-
+public record Duration(long millis) implements AnyDuration {
 	public Duration {
-		millis = Math.clamp(millis, NEG_INF_MILLIS, INF_MILLIS);
-	}
-
-	public static Duration seconds(long seconds) {
-		return millis(seconds * 1000);
-	}
-
-	public static Duration seconds(double seconds) {
-		return millis(Math.round(seconds * 1000));
-	}
-
-	public static Duration seconds(Double seconds) {
-		return seconds != null ? seconds((double)seconds) : null;
-	}
-
-	public static Duration seconds(Integer seconds) {
-		return seconds != null ? seconds((double)seconds) : null;
-	}
-
-	public static Duration minutes(long minutes) {
-		return seconds(minutes * 60);
-	}
-
-	public static Duration hours(long hours) {
-		return seconds(hours * 60 * 60);
-	}
-
-	public static Duration millis(long millis) {
-		if (millis == 0) {
-			return ZERO;
+		if (millis < 0) {
+			throw new IllegalArgumentException();
 		}
-		if (millis == INF_MILLIS) {
-			return INFINITE;
-		}
-		if (millis == NEG_INF_MILLIS) {
-			return NEG_INFINITE;
-		}
-		return new Duration(millis);
 	}
 
 	public static Duration parse(String value) {
@@ -62,24 +18,20 @@ public record Duration(long millis) implements Comparable<Duration> {
 			return null;
 		}
 
-		if (value.matches("-?\\d+\\.?\\d*")) {
-			return Duration.seconds(Double.parseDouble(value));
+		if (value.matches("\\d+\\.?\\d*")) {
+			return seconds(Double.parseDouble(value));
 		}
 
-		if (value.equalsIgnoreCase("INF")) {
-			return INFINITE;
-		}
-
-		Matcher matcher = PATTERN.matcher(value);
+		var matcher = PATTERN.matcher(value);
 
 		if (!matcher.find()) {
 			throw new IllegalArgumentException(value);
 		}
 
-		String hourStr = matcher.group(2);
-		String minStr = matcher.group(4);
-		String secStr = matcher.group(6);
-		String millisStr = matcher.group(8);
+		var hourStr = matcher.group(2);
+		var minStr = matcher.group(4);
+		var secStr = matcher.group(6);
+		var millisStr = matcher.group(8);
 
 		long millis = 0;
 
@@ -106,109 +58,59 @@ public record Duration(long millis) implements Comparable<Duration> {
 		return millis(millis);
 	}
 
-	public double getSeconds() {
-		if (this.isInfinite() || this.isNegInfinite()) {
-			throw new IllegalArgumentException("Too many seconds in INF");
+	private static final Pattern PATTERN = Pattern.compile("^-?((\\d+)h)?((\\d+)m)?((\\d+)s)?((\\d+)ms)?$");
+
+	public static Duration seconds(long seconds) {
+		return millis(seconds * 1000);
+	}
+
+	public static Duration seconds(double seconds) {
+		return millis(Math.round(seconds * 1000));
+	}
+
+	public static Duration minutes(long minutes) {
+		return seconds(minutes * 60);
+	}
+
+	public static Duration hours(long hours) {
+		return seconds(hours * 60 * 60);
+	}
+
+	public static Duration millis(long millis) {
+		if (millis == 0) {
+			return ZERO;
 		}
+		return new Duration(millis);
+	}
+
+	public double getSeconds() {
 		return millis / 1000.0;
 	}
 
+	@Override
 	public boolean isZero() {
 		return millis == 0;
 	}
 
+	@Override
 	public boolean isPositive() {
 		return millis > 0;
 	}
 
-	public boolean isNegative() {
-		return millis < 0;
-	}
-
+	@Override
 	public boolean isInfinite() {
-		return millis == INF_MILLIS;
-	}
-
-	public boolean isNegInfinite() {
-		return millis == NEG_INF_MILLIS;
-	}
-
-	public Duration negate() {
-		if (this.isInfinite()) {
-			return NEG_INFINITE;
-		}
-		if (this.isNegInfinite()) {
-			return INFINITE;
-		}
-		return millis(-millis);
+		return false;
 	}
 
 	public Duration add(Duration duration) {
-		if (this.isInfinite() && duration.isNegInfinite()) {
-			throw new IllegalArgumentException("INF + -INF");
-		}
-		if (this.isNegInfinite() && duration.isInfinite()) {
-			throw new IllegalArgumentException("-INF + INF");
-		}
-		if (this.isInfinite() || this.isNegInfinite()) {
-			return this;
-		}
-		if (duration.isInfinite() || duration.isNegInfinite()) {
-			return duration;
-		}
 		return millis(this.millis + duration.millis);
 	}
 
-	public Duration subtract(Duration duration) {
-		if (this.isInfinite() && duration.isInfinite()) {
-			throw new IllegalArgumentException("INF - INF");
-		}
-		if (this.isNegInfinite() && duration.isNegInfinite()) {
-			throw new IllegalArgumentException("-INF - (-INF)");
-		}
-		if (this.isInfinite() || this.isNegInfinite()) {
-			return this;
-		}
-		if (duration.isInfinite() || duration.isNegInfinite()) {
-			return duration.negate();
-		}
-		return millis(this.millis - duration.millis);
-	}
-
-	public Duration multiplyBy(double factor) {
-		if (factor == 0) {
-			return ZERO;
-		}
-		if (this.isInfinite() || this.isNegInfinite()) {
-			return factor > 0 ? this : this.negate();
-		}
-		return millis((long)(factor * millis));
-	}
-
-	public Duration divideBy(double factor) {
-		if (factor == 0) {
-			if (this.isZero()) {
-				throw new IllegalArgumentException("0 / 0");
-			}
-			return this.isPositive() ? INFINITE : NEG_INFINITE;
-		}
-		if (this.isInfinite() || this.isNegInfinite()) {
-			return factor > 0 ? this : this.negate();
-		}
-		return millis((int)(millis / factor));
-	}
-
 	public double divideBy(Duration duration) {
-		if (this.isInfinite() || this.isNegInfinite()) {
-			throw new IllegalArgumentException("Can't divide INF");
-		}
-		if (duration.isInfinite() || duration.isNegInfinite()) {
-			return 0;
-		}
 		if (duration.isZero()) {
 			throw new IllegalArgumentException("X / 0");
 		}
-		return (double)this.millis / duration.millis;
+		return (double) this.millis / duration.millis;
 	}
 
 	public Duration min(Duration duration) {
@@ -220,22 +122,17 @@ public record Duration(long millis) implements Comparable<Duration> {
 	}
 
 	@Override
-	public int compareTo(Duration duration) {
-		return Long.compare(this.millis, duration.millis);
+	public int compareTo(AnyDuration anyDuration) {
+		if (anyDuration instanceof Duration duration) {
+			return Long.compare(this.millis, duration.millis);
+		}
+		return -1;
 	}
 
 	@Override
 	public String toString() {
-		if (this.isZero()) {
+		if (millis == 0) {
 			return "0";
-		}
-
-		if (this.isInfinite()) {
-			return "INF";
-		}
-
-		if (this.isNegInfinite()) {
-			return "-INF";
 		}
 
 		long x = Math.abs(millis);
@@ -247,9 +144,7 @@ public record Duration(long millis) implements Comparable<Duration> {
 		x /= 60;
 		long hours = x;
 
-		return
-				(millis < 0 ? "-" : "") +
-				(hours != 0 ? hours + "h" : "") +
+		return (hours != 0 ? hours + "h" : "") +
 				(minutes != 0 ? minutes + "m" : "") +
 				(seconds != 0 ? seconds + "s" : "") +
 				(milliseconds != 0 ? milliseconds + "ms" : "");

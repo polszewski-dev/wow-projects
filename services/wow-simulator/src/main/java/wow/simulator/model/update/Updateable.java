@@ -1,6 +1,6 @@
 package wow.simulator.model.update;
 
-import wow.simulator.model.time.Time;
+import wow.simulator.model.time.AnyTime;
 
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface Updateable {
 	void update();
 
-	Optional<Time> getNextUpdateTime();
+	Optional<AnyTime> getNextUpdateTime();
 
 	default void onAddedToQueue() {}
 
