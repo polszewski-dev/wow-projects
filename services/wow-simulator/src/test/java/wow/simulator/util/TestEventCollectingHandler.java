@@ -9,7 +9,7 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentSource;
-import wow.simulator.log.handler.DefaultGameLogHandler;
+import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
@@ -31,7 +31,7 @@ import static wow.simulator.util.TestEvent.*;
  */
 @Getter
 @Setter
-public class TestEventCollectingHandler extends DefaultGameLogHandler implements TimeAware {
+public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	List<TestEvent> events = new ArrayList<>();
 	Clock clock;
 

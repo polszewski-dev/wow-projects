@@ -17,7 +17,7 @@ import wow.simulator.simulation.TimeAware;
  */
 @Setter
 @Slf4j
-public class ConsoleGameLogHandler extends DefaultGameLogHandler implements TimeAware {
+public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	private Clock clock;
 
 	@Override

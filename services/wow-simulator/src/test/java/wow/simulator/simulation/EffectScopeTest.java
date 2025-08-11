@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.WowSimulatorSpringTest;
-import wow.simulator.log.handler.DefaultGameLogHandler;
+import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Player;
 import wow.simulator.util.TestEventCollectingHandler;
@@ -104,7 +104,7 @@ class EffectScopeTest extends WowSimulatorSpringTest {
 
 	List<EffectEvent> effectEvents = new ArrayList<>();
 
-	class EffectHandler extends DefaultGameLogHandler {
+	class EffectHandler implements GameLogHandler {
 		@Override
 		public void effectExpired(EffectInstance effect) {
 			effectEvents.add(new Expired(getName(effect), getAbilityId(effect)));

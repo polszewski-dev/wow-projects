@@ -35,7 +35,7 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
  */
 @Getter
 @Setter
-public class StatisticsGatheringHandler extends DefaultGameLogHandler implements TimeAware, TimeSource {
+public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, TimeSource {
 	private final Player player;
 	private final Stats stats;
 	private Clock clock;
