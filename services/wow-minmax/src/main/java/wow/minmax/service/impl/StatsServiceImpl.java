@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import wow.evaluator.client.dto.stats.*;
+import wow.estimator.client.dto.stats.*;
 import wow.minmax.converter.dto.PlayerConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.repository.MinmaxConfigRepository;

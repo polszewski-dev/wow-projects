@@ -29,11 +29,11 @@ services:
             - backend-evaluator
             - backend-simulator
     backend-evaluator:
-        container_name: wow-evaluator-container
+        container_name: wow-estimator-container
         build:
             context: .
-            dockerfile: services/wow-evaluator/Dockerfile
-        image: wow-evaluator
+            dockerfile: services/wow-estimator/Dockerfile
+        image: wow-estimator
         ports:
             - 8085:8085
         expose:

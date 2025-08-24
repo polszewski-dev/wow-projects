@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @ComponentScan(basePackages = {
 		"wow.commons",
 		"wow.character",
-		"wow.evaluator",
+		"wow.estimator",
 		"wow.simulator",
 		"wow.minmax"
 })

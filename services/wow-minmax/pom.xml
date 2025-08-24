@@ -72,7 +72,7 @@
 
 		<dependency>
 			<groupId>polszewski</groupId>
-			<artifactId>wow-evaluator-client</artifactId>
+			<artifactId>wow-estimator-client</artifactId>
 			<version>1.0</version>
 		</dependency>
 

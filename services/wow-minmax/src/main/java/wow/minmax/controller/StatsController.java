@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import wow.evaluator.client.dto.stats.*;
+import wow.estimator.client.dto.stats.*;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.StatsService;
 

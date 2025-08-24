@@ -13,7 +13,7 @@
 
 	<modules>
 		<module>wow-minmax</module>
-		<module>wow-evaluator</module>
+		<module>wow-estimator</module>
 		<module>wow-simulator</module>
 	</modules>
 </project>

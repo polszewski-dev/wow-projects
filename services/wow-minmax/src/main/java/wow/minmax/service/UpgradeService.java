@@ -6,7 +6,7 @@ import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
-import wow.evaluator.client.dto.upgrade.FindUpgradesResponseDTO;
+import wow.estimator.client.dto.upgrade.FindUpgradesResponseDTO;
 import wow.minmax.model.Player;
 
 /**

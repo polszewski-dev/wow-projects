@@ -1,6 +1,6 @@
 package wow.minmax.service;
 
-import wow.evaluator.client.dto.stats.*;
+import wow.estimator.client.dto.stats.*;
 import wow.minmax.model.CharacterId;
 
 /**

@@ -9,8 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.evaluator.client.converter.upgrade.ItemFilterConverter;
-import wow.evaluator.client.dto.upgrade.ItemFilterDTO;
+import wow.estimator.client.converter.upgrade.ItemFilterConverter;
+import wow.estimator.client.dto.upgrade.ItemFilterDTO;
 
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
