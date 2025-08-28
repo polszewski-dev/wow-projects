@@ -2,13 +2,13 @@ package wow.minmax.converter.persistent;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.character.NonPlayerCharacter;
+import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
-import wow.minmax.model.NonPlayer;
-import wow.minmax.model.impl.NonPlayerImpl;
 import wow.minmax.model.persistent.NonPlayerCharacterPO;
 
 /**
@@ -17,14 +17,14 @@ import wow.minmax.model.persistent.NonPlayerCharacterPO;
  */
 @Component
 @AllArgsConstructor
-public class NonPlayerCharacterPOConverter implements Converter<NonPlayer, NonPlayerCharacterPO>, BackConverter<NonPlayer, NonPlayerCharacterPO> {
+public class NonPlayerCharacterPOConverter implements Converter<NonPlayerCharacter, NonPlayerCharacterPO>, BackConverter<NonPlayerCharacter, NonPlayerCharacterPO> {
 	private final PhaseRepository phaseRepository;
 	private final CharacterClassRepository characterClassRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 	private final BuffPOConverter buffPOConverter;
 
 	@Override
-	public NonPlayerCharacterPO doConvert(NonPlayer source) {
+	public NonPlayerCharacterPO doConvert(NonPlayerCharacter source) {
 		return new NonPlayerCharacterPO(
 				source.getName(),
 				source.getPhaseId(),
@@ -36,12 +36,12 @@ public class NonPlayerCharacterPOConverter implements Converter<NonPlayer, NonPl
 	}
 
 	@Override
-	public NonPlayer doConvertBack(NonPlayerCharacterPO source) {
+	public NonPlayerCharacter doConvertBack(NonPlayerCharacterPO source) {
 		var phase = phaseRepository.getPhase(source.getPhaseId()).orElseThrow();
 		var characterClass = characterClassRepository.getCharacterClass(source.getCharacterClassId(), phase.getGameVersionId()).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(phase.getGameVersionId(), source.getLevel()).orElseThrow();
 
-		return new NonPlayerImpl(
+		return new NonPlayerCharacterImpl(
 				source.getName(),
 				phase,
 				characterClass,

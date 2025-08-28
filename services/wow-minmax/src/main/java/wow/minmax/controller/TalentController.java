@@ -30,9 +30,8 @@ public class TalentController {
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		var player = playerCharacterService.getPlayer(characterId);
+		var talents = player.getTalents().getList();
 
-		return player.getTalents().getList().stream()
-				.map(talentConverter::convert)
-				.toList();
+		return talentConverter.convertList(talents);
 	}
 }

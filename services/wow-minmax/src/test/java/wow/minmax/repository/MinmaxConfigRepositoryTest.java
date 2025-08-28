@@ -3,9 +3,6 @@ package wow.minmax.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.Player;
-import wow.minmax.model.config.FindUpgradesConfig;
-import wow.minmax.model.config.ViewConfig;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +23,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void getViewConfig() {
-		ViewConfig config = underTest.getViewConfig(getCharacter()).orElseThrow();
+		var config = underTest.getViewConfig(getCharacter()).orElseThrow();
 
 		assertThat(config.relevantSpells()).hasSameElementsAs(List.of(
 				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE, SHADOWBURN,
@@ -48,7 +45,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void hasFeature() {
-		Player character = getCharacter();
+		var character = getCharacter();
 
 		assertThat(underTest.hasFeature(character, COMBAT_RATINGS)).isTrue();
 		assertThat(underTest.hasFeature(character, GEMS)).isTrue();
@@ -60,7 +57,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void getFindUpgradesConfig() {
-		FindUpgradesConfig config = underTest.getFindUpgradesConfig(getCharacter()).orElseThrow();
+		var config = underTest.getFindUpgradesConfig(getCharacter()).orElseThrow();
 
 		assertThat(config.enchantNames()).hasSameElementsAs(List.of(
 				"Glyph of Power",

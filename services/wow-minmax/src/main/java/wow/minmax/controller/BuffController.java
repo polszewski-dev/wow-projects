@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.BuffListType;
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.commons.client.converter.BuffConverter;
 import wow.commons.client.dto.BuffDTO;
 import wow.commons.model.buff.Buff;
@@ -31,6 +31,7 @@ public class BuffController {
 			@PathVariable("buffListType") BuffListType buffListType
 	) {
 		var player = playerCharacterService.getPlayer(characterId);
+
 		return getBuffs(player, buffListType);
 	}
 
@@ -49,8 +50,8 @@ public class BuffController {
 		return getBuffs(character, buffListType);
 	}
 
-	private List<BuffDTO> getBuffs(Character character, BuffListType buffListType) {
-		var buffs = character.getBuffList(buffListType);
+	private List<BuffDTO> getBuffs(PlayerCharacter player, BuffListType buffListType) {
+		var buffs = player.getBuffList(buffListType);
 
 		return buffs.getAvailableHighestRanks().stream()
 				.map(buff -> getBuffDTO(buff, buffs.has(buff.getBuffId())))

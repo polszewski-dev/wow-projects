@@ -3,6 +3,7 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.converter.EquipmentConverter;
@@ -18,7 +19,6 @@ import wow.minmax.client.dto.SocketBonusStatusDTO;
 import wow.minmax.client.dto.SocketStatusDTO;
 import wow.minmax.converter.dto.ParamToGemFilterConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.Player;
 import wow.minmax.service.PlayerCharacterService;
 
 import java.util.List;
@@ -58,9 +58,9 @@ public class EquipmentController {
 	) {
 		var item = getEquippableItem(itemDTO, characterId);
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
-		var character = playerCharacterService.equipItem(characterId, slot, item, bestVariant, gemFilter);
+		var player = playerCharacterService.equipItem(characterId, slot, item, bestVariant, gemFilter);
 
-		var equippedItem = character.getEquippedItem(slot);
+		var equippedItem = player.getEquippedItem(slot);
 
 		log.info("Equipped item charId: {}, slot: {}, item: {}", characterId, slot, equippedItem);
 		return equippableItemConverter.convert(equippedItem);
@@ -89,9 +89,10 @@ public class EquipmentController {
 	public EquipmentDTO resetEquipment(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var character = playerCharacterService.resetEquipment(characterId);
+		var player = playerCharacterService.resetEquipment(characterId);
+
 		log.info("Reset charId: {}", characterId);
-		return equipmentConverter.convert(character.getEquipment());
+		return equipmentConverter.convert(player.getEquipment());
 	}
 
 	@GetMapping("{characterId}/socket-status")
@@ -104,7 +105,7 @@ public class EquipmentController {
 		);
 	}
 
-	private ItemSocketStatusDTO getItemSocketStatus(Player player, ItemSlot itemSlot) {
+	private ItemSocketStatusDTO getItemSocketStatus(PlayerCharacter player, ItemSlot itemSlot) {
 		var item = player.getEquippedItem(itemSlot);
 
 		if (item == null) {

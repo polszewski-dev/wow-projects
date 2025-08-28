@@ -1,8 +1,7 @@
 package wow.minmax.repository;
 
-import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemLevelFilter;
-import wow.minmax.model.Player;
 import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.config.FindUpgradesConfig;
 import wow.minmax.model.config.ViewConfig;
@@ -15,13 +14,13 @@ import java.util.Set;
  * Date: 2023-05-11
  */
 public interface MinmaxConfigRepository {
-	Optional<ViewConfig> getViewConfig(Character character);
+	Optional<ViewConfig> getViewConfig(PlayerCharacter player);
 
-	Set<CharacterFeature> getFeatures(Character character);
+	Set<CharacterFeature> getFeatures(PlayerCharacter player);
 
-	boolean hasFeature(Character character, CharacterFeature feature);
+	boolean hasFeature(PlayerCharacter player, CharacterFeature feature);
 
-	Optional<FindUpgradesConfig> getFindUpgradesConfig(Character character);
+	Optional<FindUpgradesConfig> getFindUpgradesConfig(PlayerCharacter player);
 
-	Optional<ItemLevelFilter> getItemLevelFilter(Player player);
+	Optional<ItemLevelFilter> getItemLevelFilter(PlayerCharacter player);
 }

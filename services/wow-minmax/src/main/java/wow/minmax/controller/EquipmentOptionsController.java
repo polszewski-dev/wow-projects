@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.client.converter.EnchantConverter;
 import wow.commons.client.converter.GemConverter;
@@ -19,7 +20,6 @@ import wow.minmax.client.dto.EquipmentOptionsDTO;
 import wow.minmax.client.dto.GemOptionsDTO;
 import wow.minmax.client.dto.ItemOptionsDTO;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.Player;
 import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.ItemService;
@@ -88,13 +88,13 @@ public class EquipmentOptionsController {
 		return getGemOptions(player);
 	}
 
-	private List<ItemOptionsDTO> getItemOptions(Player player) {
+	private List<ItemOptionsDTO> getItemOptions(PlayerCharacter player) {
 		return ItemSlot.getDpsSlots().stream()
 				.map(itemSlot -> getItemOptions(player, itemSlot))
 				.toList();
 	}
 
-	private ItemOptionsDTO getItemOptions(Player player, ItemSlot itemSlot) {
+	private ItemOptionsDTO getItemOptions(PlayerCharacter player, ItemSlot itemSlot) {
 		var itemFilter = ItemFilter.everything();
 		var items = itemService.getItemsBySlot(player, itemSlot, itemFilter);
 		var itemDTOs = itemConverter.convertList(items);
@@ -102,7 +102,7 @@ public class EquipmentOptionsController {
 		return new ItemOptionsDTO(itemSlot, itemDTOs);
 	}
 
-	private List<EnchantOptionsDTO> getEnchantOptions(Player player, List<ItemOptionsDTO> itemOptions) {
+	private List<EnchantOptionsDTO> getEnchantOptions(PlayerCharacter player, List<ItemOptionsDTO> itemOptions) {
 		return createTypeAndSubtypeGroups(itemOptions).stream()
 				.map(x -> attachEnchants(player, x))
 				.toList();
@@ -120,19 +120,19 @@ public class EquipmentOptionsController {
 		return map.values().stream().flatMap(x -> x.values().stream()).toList();
 	}
 
-	private EnchantOptionsDTO attachEnchants(Player player, EnchantOptionsDTO dto) {
+	private EnchantOptionsDTO attachEnchants(PlayerCharacter player, EnchantOptionsDTO dto) {
 		var enchants = itemService.getEnchants(player, dto.itemType(), dto.itemSubType());
 
 		return dto.withEnchants(enchantConverter.convertList(enchants));
 	}
 
-	private List<GemOptionsDTO> getGemOptions(Player player) {
+	private List<GemOptionsDTO> getGemOptions(PlayerCharacter player) {
 		return Stream.of(SocketType.values())
 				.map(socketType -> getGemOptions(player, socketType))
 				.toList();
 	}
 
-	private GemOptionsDTO getGemOptions(Player player, SocketType socketType) {
+	private GemOptionsDTO getGemOptions(PlayerCharacter player, SocketType socketType) {
 		var gems = itemService.getGems(player, socketType);
 		var gemDTOs = gemConverter.convertList(gems);
 

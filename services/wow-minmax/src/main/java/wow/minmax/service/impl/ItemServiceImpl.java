@@ -2,6 +2,7 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
@@ -13,7 +14,6 @@ import wow.commons.model.item.SocketType;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
-import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.ItemService;
 
@@ -32,7 +32,7 @@ public class ItemServiceImpl implements ItemService {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
-	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter) {
+	public List<Item> getItemsBySlot(PlayerCharacter player, ItemSlot itemSlot, ItemFilter itemFilter) {
 		var itemLevelFilter = minmaxConfigRepository.getItemLevelFilter(player).orElseThrow();
 
 		return itemRepository.getItemsBySlot(itemSlot, player.getPhaseId()).stream()
@@ -45,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Enchant> getEnchants(Player player, ItemType itemType, ItemSubType itemSubType) {
+	public List<Enchant> getEnchants(PlayerCharacter player, ItemType itemType, ItemSubType itemSubType) {
 		return enchantRepository.getEnchants(itemType, itemSubType, player.getPhaseId()).stream()
 				.filter(enchant -> enchant.isAvailableTo(player))
 				.filter(enchant -> enchant.isSuitableFor(player))
@@ -53,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getGems(Player player, SocketType socketType) {
+	public List<Gem> getGems(PlayerCharacter player, SocketType socketType) {
 		return gemRepository.getGems(socketType, player.getPhaseId()).stream()
 				.filter(gem -> gem.isAvailableTo(player))
 				.filter(gem -> gem.isSuitableFor(player))
@@ -61,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Gem> getGems(Player player, SocketType socketType, boolean uniqueness) {
+	public List<Gem> getGems(PlayerCharacter player, SocketType socketType, boolean uniqueness) {
 		return gemRepository.getGems(socketType, player.getPhaseId()).stream()
 				.filter(gem -> gem.isEffectivelyUnique() == uniqueness)
 				.filter(gem -> gem.isAvailableTo(player))

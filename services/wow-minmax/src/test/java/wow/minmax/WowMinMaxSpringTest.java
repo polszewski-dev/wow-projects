@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.impl.NonPlayerCharacterImpl;
+import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
 import wow.commons.model.character.CharacterClassId;
@@ -19,10 +22,7 @@ import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.Player;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.impl.NonPlayerImpl;
-import wow.minmax.model.impl.PlayerImpl;
 import wow.minmax.service.StatsService;
 import wow.minmax.service.UpgradeService;
 
@@ -68,7 +68,7 @@ public abstract class WowMinMaxSpringTest {
 	@Autowired
 	protected StatsService statsService;
 
-	protected void equipGearSet(Player character) {
+	protected void equipGearSet(PlayerCharacter character) {
 		characterService.equipGearSet(character, "Wowhead TBC P5 BiS");
 	}
 
@@ -88,22 +88,22 @@ public abstract class WowMinMaxSpringTest {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected Player getCharacter() {
+	protected PlayerCharacter getCharacter() {
 		return getCharacter(CHARACTER_CLASS, RACE);
 	}
 
-	protected Player getCharacter(CharacterClassId characterClass, RaceId race) {
+	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race) {
 		return getCharacter(characterClass, race, LEVEL, PHASE);
 	}
 
-	protected Player getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
 				"Player",
 				characterClass,
 				race,
 				level,
 				phase,
-				PlayerImpl::new
+				PlayerCharacterImpl::new
 		);
 
 		var target = characterService.createNonPlayerCharacter(
@@ -111,7 +111,7 @@ public abstract class WowMinMaxSpringTest {
 				ENEMY_TYPE,
 				level + LVL_DIFF,
 				phase,
-				NonPlayerImpl::new
+				NonPlayerCharacterImpl::new
 		);
 
 		character.setTarget(target);
@@ -121,7 +121,7 @@ public abstract class WowMinMaxSpringTest {
 	}
 
 	protected PlayerProfile getPlayerProfile() {
-		Player character = getCharacter();
+		var character = getCharacter();
 
 		return new PlayerProfile(
 				PROFILE_ID, PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), LocalDateTime.now(), CHARACTER_KEY

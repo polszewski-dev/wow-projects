@@ -3,6 +3,9 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.BuffListType;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.impl.NonPlayerCharacterImpl;
+import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.character.service.CharacterService;
@@ -11,10 +14,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.converter.persistent.PlayerCharacterPOConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.Player;
 import wow.minmax.model.config.ViewConfig;
-import wow.minmax.model.impl.NonPlayerImpl;
-import wow.minmax.model.impl.PlayerImpl;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.PlayerCharacterRepository;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -44,17 +44,17 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	private final PlayerProfileRepository playerProfileRepository;
 
 	@Override
-	public Player getPlayer(CharacterId characterId) {
+	public PlayerCharacter getPlayer(CharacterId characterId) {
 		return getExistingOrNewCharacter(characterId);
 	}
 
-	private Player getExistingOrNewCharacter(CharacterId characterId) {
+	private PlayerCharacter getExistingOrNewCharacter(CharacterId characterId) {
 		return playerCharacterRepository.findById(characterId.toString())
 				.map(playerCharacterPOConverter::convertBack)
 				.orElseGet(() -> createCharacter(characterId));
 	}
 
-	private Player createCharacter(CharacterId characterId) {
+	private PlayerCharacter createCharacter(CharacterId characterId) {
 		var profileId = characterId.getProfileId().toString();
 		var playerProfile = playerProfileRepository.findById(profileId).orElseThrow();
 
@@ -64,7 +64,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 				playerProfile.getRaceId(),
 				characterId.getLevel(),
 				characterId.getPhaseId(),
-				PlayerImpl::new
+				PlayerCharacterImpl::new
 		);
 
 		var targetEnemy = characterService.createNonPlayerCharacter(
@@ -72,7 +72,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 				characterId.getEnemyType(),
 				newCharacter.getLevel() + characterId.getEnemyLevelDiff(),
 				characterId.getPhaseId(),
-				NonPlayerImpl::new
+				NonPlayerCharacterImpl::new
 		);
 
 		newCharacter.setTarget(targetEnemy);
@@ -83,12 +83,12 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public Player equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
+	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
 		return equipItem(characterId, slot, item, false, GemFilter.empty());
 	}
 
 	@Override
-	public Player equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
+	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
 		var player = getPlayer(characterId);
 		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, player);
 
@@ -97,7 +97,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		return player;
 	}
 
-	private void saveCharacter(CharacterId characterId, Player player) {
+	private void saveCharacter(CharacterId characterId, PlayerCharacter player) {
 		var characterEntity = playerCharacterPOConverter.convert(player, characterId);
 
 		playerCharacterRepository.save(characterEntity);
@@ -110,7 +110,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		playerProfileRepository.save(profile);
 	}
 
-	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, Player player) {
+	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, PlayerCharacter player) {
 		if (bestVariant) {
 			return upgradeService.getBestItemVariant(player, item.getItem(), slot, gemFilter);
 		} else {
@@ -119,7 +119,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public Player equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+	public PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
 		var player = getPlayer(characterId);
 		var slots = slotGroup.getSlots();
 
@@ -143,7 +143,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public Player resetEquipment(CharacterId characterId) {
+	public PlayerCharacter resetEquipment(CharacterId characterId) {
 		var player = getPlayer(characterId);
 
 		player.resetEquipment();
@@ -152,7 +152,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public Player enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
+	public PlayerCharacter enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
 		var player = getPlayer(characterId);
 
 		player.getBuffList(buffListType).enable(buffId, rank, enabled);
@@ -161,7 +161,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public Player enableConsumable(CharacterId characterId, String consumableName, boolean enabled) {
+	public PlayerCharacter enableConsumable(CharacterId characterId, String consumableName, boolean enabled) {
 		var player = getPlayer(characterId);
 
 		player.getConsumables().enable(consumableName, enabled);
@@ -170,7 +170,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public ViewConfig getViewConfig(Player player) {
+	public ViewConfig getViewConfig(PlayerCharacter player) {
 		return minmaxConfigRepository.getViewConfig(player).orElseThrow();
 	}
 }

@@ -3,14 +3,14 @@ package wow.minmax.converter.persistent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.build.RotationTemplate;
+import wow.character.model.character.NonPlayerCharacter;
+import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.buff.BuffIdAndRank;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.NonPlayer;
-import wow.minmax.model.Player;
-import wow.minmax.model.impl.PlayerImpl;
 import wow.minmax.model.persistent.BuffPO;
 import wow.minmax.model.persistent.ConsumablePO;
 import wow.minmax.model.persistent.PlayerCharacterPO;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterPOConverter implements ParametrizedConverter<Player, PlayerCharacterPO, CharacterId>, BackConverter<Player, PlayerCharacterPO> {
+public class PlayerCharacterPOConverter implements ParametrizedConverter<PlayerCharacter, PlayerCharacterPO, CharacterId>, BackConverter<PlayerCharacter, PlayerCharacterPO> {
 	private final BuildPOConverter buildPOConverter;
 	private final EquipmentPOConverter equipmentPOConverter;
 	private final CharacterProfessionPOConverter characterProfessionPOConverter;
@@ -35,7 +35,7 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<Player,
 	private final CharacterService characterService;
 
 	@Override
-	public PlayerCharacterPO doConvert(Player source, CharacterId characterId) {
+	public PlayerCharacterPO doConvert(PlayerCharacter source, CharacterId characterId) {
 		return new PlayerCharacterPO(
 				characterId.toString(),
 				source.getName(),
@@ -49,19 +49,19 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<Player,
 				source.getExclusiveFactions().getList(),
 				buffPOConverter.convertList(source.getBuffs().getList()),
 				consumablePOConverter.convertList(source.getConsumables().getList()),
-				nonPlayerCharacterPOConverter.convert((NonPlayer) source.getTarget())
+				nonPlayerCharacterPOConverter.convert((NonPlayerCharacter) source.getTarget())
 		);
 	}
 
 	@Override
-	public Player doConvertBack(PlayerCharacterPO source) {
+	public PlayerCharacter doConvertBack(PlayerCharacterPO source) {
 		var character = characterService.createPlayerCharacter(
 				source.getName(),
 				source.getCharacterClassId(),
 				source.getRace(),
 				source.getLevel(),
 				source.getPhaseId(),
-				PlayerImpl::new
+				PlayerCharacterImpl::new
 		);
 
 		changeBuild(character, source);
@@ -83,7 +83,7 @@ public class PlayerCharacterPOConverter implements ParametrizedConverter<Player,
 		return character;
 	}
 
-	private void changeBuild(Player player, PlayerCharacterPO source) {
+	private void changeBuild(PlayerCharacter player, PlayerCharacterPO source) {
 		var build = player.getBuild();
 		var sourceBuild = source.getBuild();
 
