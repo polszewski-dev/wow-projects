@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import wow.commons.model.talent.TalentId;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TalentPO {
+public class TalentConfig {
 	private TalentId talentId;
 	private int rank;
 	private String name;

@@ -124,7 +124,7 @@ public abstract class WowMinMaxSpringTest {
 		var character = getCharacter();
 
 		return new PlayerProfile(
-				PROFILE_ID, PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), LocalDateTime.now(), CHARACTER_KEY
+				PROFILE_ID.toString(), PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), LocalDateTime.now(), CHARACTER_KEY.toString()
 		);
 	}
 

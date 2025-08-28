@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EquippableItemPO {
-	private ItemPO item;
-	private EnchantPO enchant;
-	private List<GemPO> gems;
+public class EquippableItemConfig {
+	private ItemConfig item;
+	private EnchantConfig enchant;
+	private List<GemConfig> gems;
 }

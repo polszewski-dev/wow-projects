@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import wow.commons.model.profession.ProfessionSpecializationId;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CharacterProfessionPO {
+public class CharacterProfessionConfig {
 	private ProfessionId professionId;
 	private ProfessionSpecializationId specializationId;
 	private int level;

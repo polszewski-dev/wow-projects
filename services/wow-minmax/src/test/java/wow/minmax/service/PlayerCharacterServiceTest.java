@@ -13,10 +13,9 @@ import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
-import wow.minmax.converter.persistent.PlayerCharacterPOConverter;
-import wow.minmax.converter.persistent.PlayerProfilePOConverter;
-import wow.minmax.model.persistent.PlayerCharacterPO;
-import wow.minmax.repository.PlayerCharacterRepository;
+import wow.minmax.converter.model.PlayerCharacterConfigConverter;
+import wow.minmax.model.PlayerCharacterConfig;
+import wow.minmax.repository.PlayerCharacterConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
@@ -43,19 +42,16 @@ class PlayerCharacterServiceTest extends ServiceTest {
 	PlayerProfileRepository playerProfileRepository;
 
 	@Autowired
-	PlayerCharacterRepository playerCharacterRepository;
+	PlayerCharacterConfigRepository playerCharacterConfigRepository;
 
 	@MockBean
 	UpgradeService upgradeService;
 
 	@Autowired
-	PlayerProfilePOConverter playerProfilePOConverter;
-
-	@Autowired
-	PlayerCharacterPOConverter playerCharacterPOConverter;
+	PlayerCharacterConfigConverter playerCharacterConfigConverter;
 
 	@Captor
-	ArgumentCaptor<PlayerCharacterPO> characterPOCaptor;
+	ArgumentCaptor<PlayerCharacterConfig> characterConfigCaptor;
 
 	@Test
 	void changeItem() {
@@ -65,9 +61,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true, GemFilter.empty());
 
-		verify(playerCharacterRepository).save(characterPOCaptor.capture());
+		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
 
-		var savedCharacter = characterPOCaptor.getValue();
+		var savedCharacter = characterConfigCaptor.getValue();
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND).getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
 	}
@@ -81,9 +77,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, item, true, GemFilter.empty());
 
-		verify(playerCharacterRepository).save(characterPOCaptor.capture());
+		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
 
-		var savedCharacter = characterPOCaptor.getValue();
+		var savedCharacter = characterConfigCaptor.getValue();
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND).getItem().getName()).isEqualTo("Grand Magister's Staff of Torrents");
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND)).isNull();
@@ -102,9 +98,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, mainHand);
 
-		verify(playerCharacterRepository).save(characterPOCaptor.capture());
+		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
 
-		var savedCharacter = characterPOCaptor.getValue();
+		var savedCharacter = characterConfigCaptor.getValue();
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND).getEnchant().getName()).isEqualTo("Enchant Weapon - Major Spellpower");
 	}
@@ -124,9 +120,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
 
-		verify(playerCharacterRepository).save(characterPOCaptor.capture());
+		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
 
-		var savedCharacter = characterPOCaptor.getValue();
+		var savedCharacter = characterConfigCaptor.getValue();
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(CHEST).getGems().get(1).getId()).isEqualTo(35761);
 	}
@@ -135,9 +131,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 	void resetEquipment() {
 		underTest.resetEquipment(CHARACTER_KEY);
 
-		verify(playerCharacterRepository).save(characterPOCaptor.capture());
+		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
 
-		var savedCharacter = characterPOCaptor.getValue();
+		var savedCharacter = characterConfigCaptor.getValue();
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot()).isEmpty();
 	}
@@ -149,9 +145,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_SUPREME_POWER, 0, true);
 
-		verify(playerCharacterRepository).save(characterPOCaptor.capture());
+		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
 
-		var savedCharacter = characterPOCaptor.getValue();
+		var savedCharacter = characterConfigCaptor.getValue();
 
 		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_SUPREME_POWER)).isTrue();
 		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
@@ -163,9 +159,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_PURE_DEATH, 0, false);
 
-		verify(playerCharacterRepository).save(characterPOCaptor.capture());
+		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
 
-		var savedCharacter = characterPOCaptor.getValue();
+		var savedCharacter = characterConfigCaptor.getValue();
 
 		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
 	}
@@ -183,14 +179,13 @@ class PlayerCharacterServiceTest extends ServiceTest {
 				.toList();
 		character.setBuffs(consumes);
 
-		var characterPO = playerCharacterPOConverter.convert(character, CHARACTER_KEY);
-		var profilePO = playerProfilePOConverter.convert(profile);
+		var characterConfig = playerCharacterConfigConverter.convert(character, CHARACTER_KEY);
 
-		when(playerProfileRepository.findAll()).thenReturn(List.of(profilePO));
-		when(playerProfileRepository.findById(profile.getProfileId().toString())).thenReturn(Optional.of(profilePO));
+		when(playerProfileRepository.findAll()).thenReturn(List.of(profile));
+		when(playerProfileRepository.findById(profile.getProfileId())).thenReturn(Optional.of(profile));
 
-		when(playerCharacterRepository.findAll()).thenReturn(List.of(characterPO));
-		when(playerCharacterRepository.findById(profile.getProfileId().toString())).thenReturn(Optional.of(characterPO));
+		when(playerCharacterConfigRepository.findAll()).thenReturn(List.of(characterConfig));
+		when(playerCharacterConfigRepository.findById(characterConfig.getCharacterId())).thenReturn(Optional.of(characterConfig));
 
 		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(1, Item.class)));
 	}

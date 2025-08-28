@@ -1,10 +1,10 @@
-package wow.minmax.converter.persistent;
+package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
 import wow.commons.model.item.Consumable;
-import wow.minmax.model.persistent.ConsumablePO;
+import wow.minmax.model.ConsumableConfig;
 
 /**
  * User: POlszewski
@@ -12,10 +12,10 @@ import wow.minmax.model.persistent.ConsumablePO;
  */
 @Component
 @AllArgsConstructor
-public class ConsumablePOConverter implements Converter<Consumable, ConsumablePO> {
+public class ConsumableConfigConverter implements Converter<Consumable, ConsumableConfig> {
 	@Override
-	public ConsumablePO doConvert(Consumable source) {
-		return new ConsumablePO(
+	public ConsumableConfig doConvert(Consumable source) {
+		return new ConsumableConfig(
 				source.getId(),
 				source.getName()
 		);

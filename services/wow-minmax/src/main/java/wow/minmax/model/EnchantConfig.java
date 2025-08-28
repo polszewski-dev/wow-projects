@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,12 +6,12 @@ import lombok.Setter;
 
 /**
  * User: POlszewski
- * Date: 2024-11-22
+ * Date: 2021-12-13
  */
 @AllArgsConstructor
 @Getter
 @Setter
-public class ConsumablePO {
+public class EnchantConfig {
 	private int id;
 	private String name;
 }

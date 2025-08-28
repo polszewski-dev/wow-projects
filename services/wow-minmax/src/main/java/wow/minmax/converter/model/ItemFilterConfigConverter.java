@@ -1,11 +1,11 @@
-package wow.minmax.converter.persistent;
+package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
-import wow.minmax.model.persistent.ItemFilterPO;
+import wow.minmax.model.ItemFilterConfig;
 
 /**
  * User: POlszewski
@@ -13,10 +13,10 @@ import wow.minmax.model.persistent.ItemFilterPO;
  */
 @Component
 @AllArgsConstructor
-public class ItemFilterPOConverter implements Converter<ItemFilter, ItemFilterPO>, BackConverter<ItemFilter, ItemFilterPO> {
+public class ItemFilterConfigConverter implements Converter<ItemFilter, ItemFilterConfig>, BackConverter<ItemFilter, ItemFilterConfig> {
 	@Override
-	public ItemFilterPO doConvert(ItemFilter source) {
-		return new ItemFilterPO(
+	public ItemFilterConfig doConvert(ItemFilter source) {
+		return new ItemFilterConfig(
 				source.isHeroics(),
 				source.isRaids(),
 				source.isWorldBosses(),
@@ -27,7 +27,7 @@ public class ItemFilterPOConverter implements Converter<ItemFilter, ItemFilterPO
 	}
 
 	@Override
-	public ItemFilter doConvertBack(ItemFilterPO source) {
+	public ItemFilter doConvertBack(ItemFilterConfig source) {
 		return new ItemFilter(
 				source.isHeroics(),
 				source.isRaids(),

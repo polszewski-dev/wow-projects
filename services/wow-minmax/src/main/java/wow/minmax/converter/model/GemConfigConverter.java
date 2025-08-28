@@ -1,4 +1,4 @@
-package wow.minmax.converter.persistent;
+package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.GemRepository;
-import wow.minmax.model.persistent.GemPO;
+import wow.minmax.model.GemConfig;
 
 /**
  * User: POlszewski
@@ -15,16 +15,16 @@ import wow.minmax.model.persistent.GemPO;
  */
 @Component
 @AllArgsConstructor
-public class GemPOConverter implements Converter<Gem, GemPO>, ParametrizedBackConverter<Gem, GemPO, PhaseId> {
+public class GemConfigConverter implements Converter<Gem, GemConfig>, ParametrizedBackConverter<Gem, GemConfig, PhaseId> {
 	private final GemRepository gemRepository;
 
 	@Override
-	public GemPO doConvert(Gem source) {
-		return new GemPO(source.getId(), source.getName());
+	public GemConfig doConvert(Gem source) {
+		return new GemConfig(source.getId(), source.getName());
 	}
 
 	@Override
-	public Gem doConvertBack(GemPO source, PhaseId phaseId) {
+	public Gem doConvertBack(GemConfig source, PhaseId phaseId) {
 		return gemRepository.getGem(source.getId(), phaseId).orElseThrow();
 	}
 }

@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import wow.commons.model.buff.BuffIdAndRank;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BuffPO {
+public class BuffConfig {
 	private BuffId buffId;
 	private int rank;
 	private String name;

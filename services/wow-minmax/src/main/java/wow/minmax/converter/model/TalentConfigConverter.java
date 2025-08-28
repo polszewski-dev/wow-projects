@@ -1,10 +1,10 @@
-package wow.minmax.converter.persistent;
+package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.talent.Talent;
 import wow.commons.client.converter.Converter;
-import wow.minmax.model.persistent.TalentPO;
+import wow.commons.model.talent.Talent;
+import wow.minmax.model.TalentConfig;
 
 /**
  * User: POlszewski
@@ -12,10 +12,10 @@ import wow.minmax.model.persistent.TalentPO;
  */
 @Component
 @AllArgsConstructor
-public class TalentPOConverter implements Converter<Talent, TalentPO> {
+public class TalentConfigConverter implements Converter<Talent, TalentConfig> {
 	@Override
-	public TalentPO doConvert(Talent source) {
-		return new TalentPO(
+	public TalentConfig doConvert(Talent source) {
+		return new TalentConfig(
 				source.getTalentId(),
 				source.getRank(),
 				source.getName()

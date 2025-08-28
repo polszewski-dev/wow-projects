@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PlayerCharacterPO {
+public class PlayerCharacterConfig {
 	@Id
 	private String characterId;
 	private String name;
@@ -28,11 +28,15 @@ public class PlayerCharacterPO {
 	private RaceId race;
 	private int level;
 	private PhaseId phaseId;
-	private BuildPO build;
-	private EquipmentPO equipment;
-	private List<CharacterProfessionPO> professions;
+	private BuildConfig build;
+	private EquipmentConfig equipment;
+	private List<CharacterProfessionConfig> professions;
 	private List<ExclusiveFaction> exclusiveFactions;
-	private List<BuffPO> buffs;
-	private List<ConsumablePO> consumables;
-	private NonPlayerCharacterPO target;
+	private List<BuffConfig> buffs;
+	private List<ConsumableConfig> consumables;
+	private NonPlayerCharacterConfig target;
+
+	public CharacterId getCharacterIdAsRecord() {
+		return CharacterId.parse(characterId);
+	}
 }

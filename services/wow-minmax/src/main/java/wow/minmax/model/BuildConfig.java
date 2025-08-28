@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BuildPO {
-	private List<TalentPO> talents;
+public class BuildConfig {
+	private List<TalentConfig> talents;
 	private PveRole role;
 	private String rotation;
 	private PetType activePet;

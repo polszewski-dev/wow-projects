@@ -1,10 +1,10 @@
-package wow.minmax.converter.persistent;
+package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.build.Build;
 import wow.commons.client.converter.Converter;
-import wow.minmax.model.persistent.BuildPO;
+import wow.minmax.model.BuildConfig;
 
 /**
  * User: POlszewski
@@ -12,13 +12,13 @@ import wow.minmax.model.persistent.BuildPO;
  */
 @Component
 @AllArgsConstructor
-public class BuildPOConverter implements Converter<Build, BuildPO> {
-	private final TalentPOConverter talentPOConverter;
+public class BuildConfigConverter implements Converter<Build, BuildConfig> {
+	private final TalentConfigConverter talentConfigConverter;
 
 	@Override
-	public BuildPO doConvert(Build source) {
-		return new BuildPO(
-				talentPOConverter.convertList(source.getTalents().getList()),
+	public BuildConfig doConvert(Build source) {
+		return new BuildConfig(
+				talentConfigConverter.convertList(source.getTalents().getList()),
 				source.getRole(),
 				source.getRotation().getTemplate().toString(),
 				source.getActivePetType()

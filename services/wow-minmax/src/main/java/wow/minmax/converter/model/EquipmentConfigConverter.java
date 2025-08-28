@@ -1,4 +1,4 @@
-package wow.minmax.converter.persistent;
+package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import wow.character.model.equipment.Equipment;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.pve.PhaseId;
-import wow.minmax.model.persistent.EquipmentPO;
+import wow.minmax.model.EquipmentConfig;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,24 +17,24 @@ import java.util.stream.Collectors;
  */
 @Component
 @AllArgsConstructor
-public class EquipmentPOConverter implements Converter<Equipment, EquipmentPO>, ParametrizedBackConverter<Equipment, EquipmentPO, PhaseId> {
-	private final EquippableItemPOConverter equippableItemPOConverter;
+public class EquipmentConfigConverter implements Converter<Equipment, EquipmentConfig>, ParametrizedBackConverter<Equipment, EquipmentConfig, PhaseId> {
+	private final EquippableItemConfigConverter equippableItemConfigConverter;
 
 	@Override
-	public EquipmentPO doConvert(Equipment source) {
+	public EquipmentConfig doConvert(Equipment source) {
 		var itemsBySlot = source.toMap().entrySet().stream()
 				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemPOConverter.convert(e.getValue()))
+						Map.Entry::getKey, e -> equippableItemConfigConverter.convert(e.getValue()))
 				);
 
-		return new EquipmentPO(itemsBySlot);
+		return new EquipmentConfig(itemsBySlot);
 	}
 
 	@Override
-	public Equipment doConvertBack(EquipmentPO source, PhaseId phaseId) {
+	public Equipment doConvertBack(EquipmentConfig source, PhaseId phaseId) {
 		var itemsBySlot = source.getItemsBySlot().entrySet().stream()
 				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemPOConverter.convertBack(e.getValue(), phaseId))
+						Map.Entry::getKey, e -> equippableItemConfigConverter.convertBack(e.getValue(), phaseId))
 				);
 
 		Equipment equipment = new Equipment();

@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,11 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class NonPlayerCharacterPO {
+public class NonPlayerCharacterConfig {
 	private String name;
 	private PhaseId phaseId;
 	private CharacterClassId characterClassId;
 	private CreatureType creatureType;
 	private int level;
-	private List<BuffPO> debuffs;
+	private List<BuffConfig> debuffs;
 }

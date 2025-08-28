@@ -1,4 +1,4 @@
-package wow.minmax.model.persistent;
+package wow.minmax.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +14,6 @@ import java.util.Map;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EquipmentPO {
-	private Map<ItemSlot, EquippableItemPO> itemsBySlot;
+public class EquipmentConfig {
+	private Map<ItemSlot, EquippableItemConfig> itemsBySlot;
 }

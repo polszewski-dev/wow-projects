@@ -12,11 +12,11 @@ import wow.character.service.CharacterService;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.minmax.converter.persistent.PlayerCharacterPOConverter;
+import wow.minmax.converter.model.PlayerCharacterConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.repository.MinmaxConfigRepository;
-import wow.minmax.repository.PlayerCharacterRepository;
+import wow.minmax.repository.PlayerCharacterConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.UpgradeService;
@@ -38,8 +38,8 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	private final CharacterService characterService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
-	private final PlayerCharacterRepository playerCharacterRepository;
-	private final PlayerCharacterPOConverter playerCharacterPOConverter;
+	private final PlayerCharacterConfigRepository playerCharacterConfigRepository;
+	private final PlayerCharacterConfigConverter playerCharacterConfigConverter;
 
 	private final PlayerProfileRepository playerProfileRepository;
 
@@ -49,14 +49,14 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	private PlayerCharacter getExistingOrNewCharacter(CharacterId characterId) {
-		return playerCharacterRepository.findById(characterId.toString())
-				.map(playerCharacterPOConverter::convertBack)
+		return playerCharacterConfigRepository.findById(characterId.toString())
+				.map(playerCharacterConfigConverter::convertBack)
 				.orElseGet(() -> createCharacter(characterId));
 	}
 
 	private PlayerCharacter createCharacter(CharacterId characterId) {
-		var profileId = characterId.profileId().toString();
-		var playerProfile = playerProfileRepository.findById(profileId).orElseThrow();
+		var profileId = characterId.profileId();
+		var playerProfile = playerProfileRepository.findById(profileId.toString()).orElseThrow();
 
 		var newCharacter = characterService.createPlayerCharacter(
 				playerProfile.getProfileName(),
@@ -98,11 +98,12 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	private void saveCharacter(CharacterId characterId, PlayerCharacter player) {
-		var characterEntity = playerCharacterPOConverter.convert(player, characterId);
+		var playerConfig = playerCharacterConfigConverter.convert(player, characterId);
 
-		playerCharacterRepository.save(characterEntity);
+		playerCharacterConfigRepository.save(playerConfig);
 
-		var profile = playerProfileRepository.findById(characterId.profileId().toString()).orElseThrow();
+		var profileId = characterId.profileId();
+		var profile = playerProfileRepository.findById(profileId.toString()).orElseThrow();
 
 		profile.setLastModifiedCharacterId(characterId.toString());
 		profile.setLastModified(LocalDateTime.now());

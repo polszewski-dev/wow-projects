@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
-import wow.minmax.converter.persistent.PlayerProfilePOConverter;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -29,15 +28,12 @@ class PlayerProfileServiceTest extends ServiceTest {
 	@Autowired
 	PlayerProfileRepository playerProfileRepository;
 
-	@Autowired
-	PlayerProfilePOConverter playerProfilePOConverter;
-
 	@Test
 	void getPlayerProfileList() {
 		List<PlayerProfileInfo> profiles = underTest.getPlayerProfileInfos();
 
 		assertThat(profiles).hasSize(1);
-		assertThat(profiles.get(0).getProfileId()).isEqualTo(profile.getProfileId());
+		assertThat(profiles.getFirst().getProfileId().toString()).isEqualTo(profile.getProfileId());
 
 		verify(playerProfileRepository).findAll();
 	}
@@ -57,7 +53,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void getPlayerProfileById() {
-		PlayerProfile returnedProfile = underTest.getPlayerProfile(profile.getProfileId());
+		PlayerProfile returnedProfile = underTest.getPlayerProfile(profile.getProfileIdAsUUID());
 
 		assertThat(returnedProfile.getProfileId()).isEqualTo(profile.getProfileId());
 	}
@@ -75,9 +71,7 @@ class PlayerProfileServiceTest extends ServiceTest {
 				.toList();
 		character.setBuffs(consumes);
 
-		var profilePO = playerProfilePOConverter.convert(profile);
-
-		when(playerProfileRepository.findAll()).thenReturn(List.of(profilePO));
-		when(playerProfileRepository.findById(profile.getProfileId().toString())).thenReturn(Optional.of(profilePO));
+		when(playerProfileRepository.findAll()).thenReturn(List.of(profile));
+		when(playerProfileRepository.findById(profile.getProfileId())).thenReturn(Optional.of(profile));
 	}
 }
