@@ -55,23 +55,23 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	private PlayerCharacter createCharacter(CharacterId characterId) {
-		var profileId = characterId.getProfileId().toString();
+		var profileId = characterId.profileId().toString();
 		var playerProfile = playerProfileRepository.findById(profileId).orElseThrow();
 
 		var newCharacter = characterService.createPlayerCharacter(
 				playerProfile.getProfileName(),
 				playerProfile.getCharacterClassId(),
 				playerProfile.getRaceId(),
-				characterId.getLevel(),
-				characterId.getPhaseId(),
+				characterId.level(),
+				characterId.phaseId(),
 				PlayerCharacterImpl::new
 		);
 
 		var targetEnemy = characterService.createNonPlayerCharacter(
 				"Target",
-				characterId.getEnemyType(),
-				newCharacter.getLevel() + characterId.getEnemyLevelDiff(),
-				characterId.getPhaseId(),
+				characterId.enemyType(),
+				newCharacter.getLevel() + characterId.enemyLevelDiff(),
+				characterId.phaseId(),
 				NonPlayerCharacterImpl::new
 		);
 
@@ -102,7 +102,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 
 		playerCharacterRepository.save(characterEntity);
 
-		var profile = playerProfileRepository.findById(characterId.getProfileId().toString()).orElseThrow();
+		var profile = playerProfileRepository.findById(characterId.profileId().toString()).orElseThrow();
 
 		profile.setLastModifiedCharacterId(characterId.toString());
 		profile.setLastModified(LocalDateTime.now());

@@ -78,11 +78,11 @@ public class EquipmentController {
 	}
 
 	private EquippableItem getEquippableItem(EquippableItemDTO itemDTO, CharacterId characterId) {
-		return equippableItemConverter.convertBack(itemDTO, characterId.getPhaseId());
+		return equippableItemConverter.convertBack(itemDTO, characterId.phaseId());
 	}
 
 	private List<EquippableItem> getEquippableItems(List<EquippableItemDTO> itemDTOs, CharacterId characterId) {
-		return equippableItemConverter.convertBackList(itemDTOs, characterId.getPhaseId());
+		return equippableItemConverter.convertBackList(itemDTOs, characterId.phaseId());
 	}
 
 	@DeleteMapping("{characterId}")

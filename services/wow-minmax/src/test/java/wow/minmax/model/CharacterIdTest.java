@@ -25,10 +25,10 @@ class CharacterIdTest {
 
 		assertThat(parsedCharacterId).isEqualTo(characterId);
 
-		assertThat(parsedCharacterId.getProfileId()).isEqualTo(characterId.getProfileId());
-		assertThat(parsedCharacterId.getPhaseId()).isEqualTo(characterId.getPhaseId());
-		assertThat(parsedCharacterId.getLevel()).isEqualTo(characterId.getLevel());
-		assertThat(parsedCharacterId.getEnemyType()).isEqualTo(characterId.getEnemyType());
-		assertThat(parsedCharacterId.getEnemyLevelDiff()).isEqualTo(characterId.getEnemyLevelDiff());
+		assertThat(parsedCharacterId.profileId()).isEqualTo(characterId.profileId());
+		assertThat(parsedCharacterId.phaseId()).isEqualTo(characterId.phaseId());
+		assertThat(parsedCharacterId.level()).isEqualTo(characterId.level());
+		assertThat(parsedCharacterId.enemyType()).isEqualTo(characterId.enemyType());
+		assertThat(parsedCharacterId.enemyLevelDiff()).isEqualTo(characterId.enemyLevelDiff());
 	}
 }
