@@ -2,8 +2,8 @@ package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.buff.Buff;
 import wow.commons.client.dto.BuffDTO;
+import wow.commons.model.buff.Buff;
 
 /**
  * User: POlszewski
@@ -20,8 +20,7 @@ public class BuffConverter implements Converter<Buff, BuffDTO> {
 				source.getName(),
 				source.getEffect().getTooltip(),
 				source.getIcon(),
-				source.getTooltip(),
-				false
+				source.getTooltip()
 		);
 	}
 }

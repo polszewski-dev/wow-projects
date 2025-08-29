@@ -1,16 +1,17 @@
 import { createAction, props } from "@ngrx/store";
 import { Buff } from '../../model/buff/Buff';
 import { BuffListType } from '../../model/buff/BuffListType';
+import { BuffStatus } from "../../model/buff/BuffStatus";
 import { Character } from '../../model/Character';
+import { Consumable } from "../../model/consumable/Consumable";
 import { Enchant } from "../../model/equipment/Enchant";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
+import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { Gem } from "../../model/equipment/Gem";
 import { Item } from "../../model/equipment/Item";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
-import { EquippableItem } from '../../model/equipment/EquippableItem';
-import { Consumable } from "../../model/consumable/Consumable";
 
 export const selectCharacter = createAction(
 	"[Character] Select Character",
@@ -68,8 +69,8 @@ export const loadBuffs = createAction(
 );
 
 export const loadBuffListSuccess = createAction(
-	"[Character] Load Buff List Success",
-	props<{ buffListType: BuffListType, buffList: Buff[] }>()
+	"[Character] Load Buff Status List Success",
+	props<{ buffListType: BuffListType, buffStatusList: BuffStatus[] }>()
 );
 
 export const loadBuffListFailure = createAction(
@@ -167,18 +168,18 @@ export const resetEquipmentFailure = createAction(
 	props<{ error: string }>()
 );
 
-export const enableBuff = createAction(
-	"[Character] EnableBuff",
-	props<{ characterId: string, buffListType: BuffListType, buff: Buff }>()
+export const changeBuffStatus = createAction(
+	"[Character] Change Buff Status",
+	props<{ characterId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()
 );
 
-export const enableBuffSuccess = createAction(
-	"[Character] EnableBuff Success",
-	props<{ characterId: string, buffListType: BuffListType, buffList: Buff[] }>()
+export const changeBuffStatusSuccess = createAction(
+	"[Character] Change Buff Status Success",
+	props<{ characterId: string, buffListType: BuffListType, buffStatusList: BuffStatus[] }>()
 );
 
-export const enableBuffFailure = createAction(
-	"[Character] EnableBuff Failure",
+export const changeBuffStatusFailure = createAction(
+	"[Character] Change Buff Status Failure",
 	props<{ buffListType: BuffListType, error: string }>()
 );
 

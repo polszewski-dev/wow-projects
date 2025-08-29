@@ -2,12 +2,10 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.BuffListType;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
-import wow.commons.model.buff.BuffId;
 import wow.minmax.converter.model.PlayerCharacterConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.config.ViewConfig;
@@ -85,15 +83,6 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		profile.setLastModified(LocalDateTime.now());
 
 		playerProfileRepository.save(profile);
-	}
-
-	@Override
-	public PlayerCharacter enableBuff(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
-		var player = getPlayer(characterId);
-
-		player.getBuffList(buffListType).enable(buffId, rank, enabled);
-		saveCharacter(characterId, player);
-		return player;
 	}
 
 	@Override

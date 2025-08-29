@@ -50,7 +50,7 @@ export function selectSocketStatus(itemSlot: ItemSlot) {
 export function selectBuffList(buffListType: BuffListType) {
 	return createSelector(
 		selectCharacterState,
-		state => state.buffs[buffListType].value
+		state => state.buffStatuses[buffListType].value
 	);
 }
 

@@ -5,5 +5,4 @@ export interface Buff {
 	attributes: string;
 	icon: string;
 	tooltip: string;
-	enabled: boolean;
 }

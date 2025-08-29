@@ -13,15 +13,8 @@ public record BuffDTO(
 		String name,
 		String attributes,
 		String icon,
-		String tooltip,
-		boolean enabled
+		String tooltip
 ) {
-	public BuffDTO withEnabled(boolean enabled) {
-		return new BuffDTO(
-			buffId, rank, name, attributes, icon, tooltip, enabled
-		);
-	}
-
 	public BuffIdAndRank getId() {
 		return new BuffIdAndRank(buffId, rank);
 	}

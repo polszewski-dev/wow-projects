@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Buff } from '../../model/buff/Buff';
 import { BuffListType } from '../../model/buff/BuffListType';
+import { BuffStatus } from '../../model/buff/BuffStatus';
 import { CharacterModuleState } from '../../state/character-module.state';
-import { enableBuff } from '../../state/character/character.actions';
+import { changeBuffStatus } from '../../state/character/character.actions';
 import { selectBuffList, selectCharacterId } from '../../state/character/character.selectors';
 
 @Component({
@@ -23,28 +23,28 @@ export class BuffEditorComponent implements OnInit {
 		this.data$ = this.store.select(createDataSelector(this.buffListType));
 	}
 
-	onChange(characterId: string, buff: Buff) {
-		this.store.dispatch(enableBuff({ characterId, buffListType: this.buffListType, buff }));
+	onChange(characterId: string, buffStatus: BuffStatus) {
+		this.store.dispatch(changeBuffStatus({ characterId, buffListType: this.buffListType, buffStatus }));
 	}
 }
 
 type DataView = {
 	characterId: string;
-	buffList: Buff[]
+	buffStatusList: BuffStatus[]
 } | null;
 
 function createDataSelector(buffListType: BuffListType) {
 	return createSelector(
 		selectCharacterId,
 		selectBuffList(buffListType),
-		(characterId, buffList): DataView => {
+		(characterId, buffStatusList): DataView => {
 			if (!characterId) {
 				return null;
 			}
 
 			return {
 				characterId,
-				buffList: buffList.map(x => ({ ...x }))
+				buffStatusList: buffStatusList.map(x => ({ ...x }))
 			};
 		}
 	);

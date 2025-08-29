@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.commons.model.buff.BuffId;
 import wow.commons.client.dto.BuffDTO;
+import wow.commons.model.buff.BuffId;
+import wow.minmax.client.dto.BuffStatusDTO;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -34,12 +35,16 @@ class BuffControllerTest extends ControllerTest {
 
 	@Test
 	void enableBuff() throws Exception {
-		BuffDTO buffDTO = new BuffDTO(
-				BuffId.FEL_ARMOR, 2, null, null, null, null, true
+		var buffDTO = new BuffDTO(
+				BuffId.FEL_ARMOR, 2, null, null, null, null
+		);
+		var buffStatusDTO = new BuffStatusDTO(
+				buffDTO,
+				true
 		);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String requestBody = objectMapper.writeValueAsString(buffDTO);
+		var objectMapper = new ObjectMapper();
+		var requestBody = objectMapper.writeValueAsString(buffStatusDTO);
 
 		mockMvc.perform(put("/api/v1/buffs/{characterId}/{buffListType}", CHARACTER_KEY, CHARACTER_BUFF)
 								.contentType(MediaType.APPLICATION_JSON)

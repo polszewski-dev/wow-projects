@@ -1,7 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { failure, Loadable, loading, pending, success } from '../../../shared/state/Loadable';
-import { Buff } from "../../model/buff/Buff";
 import { BuffListType } from '../../model/buff/BuffListType';
+import { BuffStatus } from "../../model/buff/BuffStatus";
 import { Character } from "../../model/Character";
 import { Consumable } from "../../model/consumable/Consumable";
 import { Equipment } from '../../model/equipment/Equipment';
@@ -9,14 +9,14 @@ import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStat
 import { EquippableItem } from "../../model/equipment/EquippableItem";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { getSlots, ItemSlotGroup } from "../../model/upgrade/ItemSlotGroup";
-import { dpsChanged, enableBuffSuccess, enableConsumableSuccess, equipEnchantSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumables, loadConsumablesFailure, loadConsumablesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from "./character.actions";
+import { changeBuffStatusSuccess, dpsChanged, enableConsumableSuccess, equipEnchantSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumables, loadConsumablesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from "./character.actions";
 
 export interface CharacterState {
 	characterId: string | null;
 	character: Loadable<Character | null>;
 	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>;
 	socketStatus: Loadable<EquipmentSocketStatus | null>;
-	buffs: Record<BuffListType, Loadable<Buff[]>>;
+	buffStatuses: Record<BuffListType, Loadable<BuffStatus[]>>;
 	consumables: Loadable<Consumable[]>;
 	dpsChangeIdx: number;
 }
@@ -26,7 +26,7 @@ const initialState: CharacterState = {
 	character: pending(null),
 	equipment: withAllSlotsSetTo(pending(null)),
 	socketStatus: pending(null),
-	buffs: withAllBuffListsSetTo(pending([])),
+	buffStatuses: withAllBuffListsSetTo(pending([])),
 	consumables: pending([]),
 	dpsChangeIdx: 0
 };
@@ -75,15 +75,15 @@ export const characterReducer = createReducer(
 
 	on(loadBuffs, (state) => ({
 		...state,
-		buffs: withAllBuffListsSetTo(loading([]))
+		buffStatuses: withAllBuffListsSetTo(loading([]))
 	})),
-	on(loadBuffListSuccess, (state, { buffListType, buffList }) => ({
+	on(loadBuffListSuccess, (state, { buffListType, buffStatusList }) => ({
 		...state,
-		buffs: withBuffListSetTo(state.buffs, buffListType, success(buffList))
+		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, success(buffStatusList))
 	})),
 	on(loadBuffListFailure, (state, { buffListType, error }) => ({
 		...state,
-		buffs: withBuffListSetTo(state.buffs, buffListType, failure([], error))
+		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, failure([], error))
 	})),
 
 	on(loadConsumables, (state) => ({
@@ -116,9 +116,9 @@ export const characterReducer = createReducer(
 		equipment: withAllSlotsSetTo(success(null))
 	})),
 
-	on(enableBuffSuccess, (state, { buffListType, buffList }) => ({
+	on(changeBuffStatusSuccess, (state, { buffListType, buffStatusList }) => ({
 		...state,
-		buffs: withBuffListSetTo(state.buffs, buffListType, success(buffList))
+		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, success(buffStatusList))
 	})),
 
 	on(enableConsumableSuccess, (state, { consumables }) => ({
@@ -202,15 +202,15 @@ function withSlotGroupSetTo(
 	return result;
 }
 
-function withAllBuffListsSetTo(value: Loadable<Buff[]>) {
+function withAllBuffListsSetTo(value: Loadable<BuffStatus[]>) {
 	return {
 		CHARACTER_BUFF: value,
 		TARGET_DEBUFF: value
 	}
 }
 
-function withBuffListSetTo(buffs: Record<BuffListType, Loadable<Buff[]>>, key: BuffListType, value: Loadable<Buff[]>) {
-	const result = { ...buffs };
+function withBuffListSetTo(buffStatuses: Record<BuffListType, Loadable<BuffStatus[]>>, key: BuffListType, value: Loadable<BuffStatus[]>) {
+	const result = { ...buffStatuses };
 	result[key] = value;
 	return result;
 }

@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { catchError, filter, from, map, mergeMap, of, switchMap, tap } from "rxjs";
+import { catchError, filter, from, map, mergeMap, of, switchMap } from "rxjs";
 import { BuffListType } from "../../model/buff/BuffListType";
 import { BuffService } from '../../services/buff.service';
 import { CharacterService } from '../../services/character.service';
+import { ConsumableService } from "../../services/consumable.service";
 import { EquipmentService } from '../../services/equipment.service';
 import { loadEnchantOptions, loadEquipmentOptions, loadGemOptions, loadItemOptions } from "../equipment-options/equipment-options.actions";
 import { CharacterModuleState } from './../character-module.state';
-import { dpsChanged, enableBuff, enableBuffFailure, enableBuffSuccess, enableConsumable, enableConsumableFailure, enableConsumableSuccess, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumables, loadConsumablesFailure, loadConsumablesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
-import { ConsumableService } from "../../services/consumable.service";
+import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, dpsChanged, enableConsumable, enableConsumableFailure, enableConsumableSuccess, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumables, loadConsumablesFailure, loadConsumablesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 @Injectable()
 export class CharacterEffects {
@@ -65,8 +65,8 @@ export class CharacterEffects {
 	loadBuffs$ = createEffect(() => this.actions$.pipe(
 		ofType(loadBuffs),
 		switchMap(({ characterId }) => from(Object.values(BuffListType)).pipe(
-			mergeMap(buffListType => this.buffService.getBuffs(characterId, buffListType).pipe(
-				map(buffList => loadBuffListSuccess({ buffListType, buffList })),
+			mergeMap(buffListType => this.buffService.getBuffStatuses(characterId, buffListType).pipe(
+				map(buffStatusList => loadBuffListSuccess({ buffListType, buffStatusList })),
 				catchError(error => of(loadBuffListFailure({ buffListType, error })))
 			))
 		))
@@ -120,11 +120,11 @@ export class CharacterEffects {
 		))
 	));
 
-	enableBuff$ = createEffect(() => this.actions$.pipe(
-		ofType(enableBuff),
-		switchMap(({ characterId, buffListType, buff }) => this.buffService.enableBuff(characterId, buffListType, buff).pipe(
-			map(buffList => enableBuffSuccess({ characterId, buffListType, buffList })),
-			catchError(error => of(enableBuffFailure({ buffListType, error })))
+	changeBuffStatus$ = createEffect(() => this.actions$.pipe(
+		ofType(changeBuffStatus),
+		switchMap(({ characterId, buffListType, buffStatus }) => this.buffService.changeBuffStatus(characterId, buffListType, buffStatus).pipe(
+			map(buffStatusList => changeBuffStatusSuccess({ characterId, buffListType, buffStatusList })),
+			catchError(error => of(changeBuffStatusFailure({ buffListType, error })))
 		))
 	));
 
@@ -143,7 +143,7 @@ export class CharacterEffects {
 			equipEnchantSuccess,
 			equipGemSuccess,
 			resetEquipmentSuccess,
-			enableBuffSuccess
+			changeBuffStatusSuccess
 		),
 		map(({ characterId }) => dpsChanged({ characterId: characterId! })
 	)));

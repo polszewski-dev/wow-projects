@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Buff } from '../model/buff/Buff';
-import { BuffListType } from '../model/buff/BuffListType';
 import { environment } from 'src/environments/environment';
+import { BuffListType } from '../model/buff/BuffListType';
+import { BuffStatus } from '../model/buff/BuffStatus';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,11 +12,11 @@ export class BuffService {
 
 	constructor(private http: HttpClient) { }
 
-	getBuffs(characterId: string, buffListType: BuffListType) {
-		return this.http.get<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}`);
+	getBuffStatuses(characterId: string, buffListType: BuffListType) {
+		return this.http.get<BuffStatus[]>(`${this.apiUrl}/${characterId}/${buffListType}`);
 	}
 
-	enableBuff(characterId: string, buffListType: BuffListType, buff: Buff) {
-		return this.http.put<Buff[]>(`${this.apiUrl}/${characterId}/${buffListType}`, buff);
+	changeBuffStatus(characterId: string, buffListType: BuffListType, buffStatus: BuffStatus) {
+		return this.http.put<BuffStatus[]>(`${this.apiUrl}/${characterId}/${buffListType}`, buffStatus);
 	}
 }
