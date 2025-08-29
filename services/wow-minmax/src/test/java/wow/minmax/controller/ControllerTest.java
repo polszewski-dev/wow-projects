@@ -34,6 +34,9 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	PlayerCharacterService playerCharacterService;
 
 	@MockBean
+	EquipmentService equipmentService;
+
+	@MockBean
 	UpgradeService upgradeService;
 
 	@MockBean
@@ -60,13 +63,15 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.createPlayerProfile(any())).thenReturn(profile);
 
 		when(playerCharacterService.getPlayer(CHARACTER_KEY)).thenReturn(character);
-		when(playerCharacterService.resetEquipment(any())).thenReturn(character);
-		when(playerCharacterService.equipItem(any(), any(), any())).thenReturn(character);
-		when(playerCharacterService.equipItem(any(), any(), any(), anyBoolean(), any())).thenReturn(character);
-		when(playerCharacterService.equipItemGroup(any(), any(), any())).thenReturn(character);
 		when(playerCharacterService.enableBuff(any(), any(), any(), anyInt(), anyBoolean())).thenReturn(character);
 		when(playerCharacterService.enableConsumable(any(), any(), anyBoolean())).thenReturn(character);
 		when(playerCharacterService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
+
+		when(equipmentService.getEquipment(any())).thenReturn(character.getEquipment());
+		when(equipmentService.resetEquipment(any())).thenReturn(character);
+		when(equipmentService.equipItem(any(), any(), any())).thenReturn(character);
+		when(equipmentService.equipItem(any(), any(), any(), anyBoolean(), any())).thenReturn(character);
+		when(equipmentService.equipItemGroup(any(), any(), any())).thenReturn(character);
 
 		when(upgradeService.findUpgrades(any(), any(), any(), any())).thenReturn(new FindUpgradesResponseDTO(List.of()));
 		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(0, Item.class)));

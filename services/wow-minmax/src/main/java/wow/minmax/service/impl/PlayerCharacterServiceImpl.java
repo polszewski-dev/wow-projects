@@ -6,12 +6,8 @@ import wow.character.model.character.BuffListType;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
-import wow.character.model.equipment.EquippableItem;
-import wow.character.model.equipment.GemFilter;
 import wow.character.service.CharacterService;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.converter.model.PlayerCharacterConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.config.ViewConfig;
@@ -19,13 +15,8 @@ import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.PlayerCharacterConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.PlayerCharacterService;
-import wow.minmax.service.UpgradeService;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
-import static java.lang.Math.min;
 
 /**
  * User: POlszewski
@@ -34,7 +25,6 @@ import static java.lang.Math.min;
 @Service
 @AllArgsConstructor
 public class PlayerCharacterServiceImpl implements PlayerCharacterService {
-	private final UpgradeService upgradeService;
 	private final CharacterService characterService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
@@ -83,21 +73,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
-		return equipItem(characterId, slot, item, false, GemFilter.empty());
-	}
-
-	@Override
-	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
-		var player = getPlayer(characterId);
-		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, player);
-
-		player.equip(itemToEquip, slot);
-		saveCharacter(characterId, player);
-		return player;
-	}
-
-	private void saveCharacter(CharacterId characterId, PlayerCharacter player) {
+	public void saveCharacter(CharacterId characterId, PlayerCharacter player) {
 		var playerConfig = playerCharacterConfigConverter.convert(player, characterId);
 
 		playerCharacterConfigRepository.save(playerConfig);
@@ -109,47 +85,6 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		profile.setLastModified(LocalDateTime.now());
 
 		playerProfileRepository.save(profile);
-	}
-
-	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, PlayerCharacter player) {
-		if (bestVariant) {
-			return upgradeService.getBestItemVariant(player, item.getItem(), slot, gemFilter);
-		} else {
-			return item;
-		}
-	}
-
-	@Override
-	public PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
-		var player = getPlayer(characterId);
-		var slots = slotGroup.getSlots();
-
-		for (var slot : slots) {
-			player.equip(null, slot);
-		}
-
-		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
-			items = Arrays.asList(items.getFirst(), null);
-		}
-
-		for (int slotIdx = 0; slotIdx < min(slots.size(), items.size()); slotIdx++) {
-			var slot = slots.get(slotIdx);
-			var item = items.get(slotIdx);
-			player.equip(item, slot);
-		}
-
-		saveCharacter(characterId, player);
-
-		return player;
-	}
-
-	@Override
-	public PlayerCharacter resetEquipment(CharacterId characterId) {
-		var player = getPlayer(characterId);
-
-		player.resetEquipment();
-		saveCharacter(characterId, player);
-		return player;
 	}
 
 	@Override
