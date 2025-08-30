@@ -12,7 +12,4 @@ public record PlayerCharacterDTO(
 		CharacterClassDTO characterClass,
 		RaceDTO race
 ) {
-	public PlayerCharacterDTO withCharacterId(String characterId) {
-		return new PlayerCharacterDTO(characterId, characterClass, race);
-	}
 }

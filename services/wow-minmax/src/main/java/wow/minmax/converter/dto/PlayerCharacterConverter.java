@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.PlayerCharacter;
 import wow.commons.client.converter.CharacterClassConverter;
-import wow.commons.client.converter.Converter;
+import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.client.converter.RaceConverter;
 import wow.commons.client.converter.RacialConverter;
 import wow.commons.client.dto.RaceDTO;
 import wow.minmax.client.dto.PlayerCharacterDTO;
+import wow.minmax.model.CharacterId;
 
 /**
  * User: POlszewski
@@ -16,15 +17,15 @@ import wow.minmax.client.dto.PlayerCharacterDTO;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterConverter implements Converter<PlayerCharacter, PlayerCharacterDTO> {
+public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCharacter, PlayerCharacterDTO, CharacterId> {
 	private final CharacterClassConverter characterClassConverter;
 	private final RaceConverter raceConverter;
 	private final RacialConverter racialConverter;
 
 	@Override
-	public PlayerCharacterDTO doConvert(PlayerCharacter source) {
+	public PlayerCharacterDTO doConvert(PlayerCharacter source, CharacterId characterId) {
 		return new PlayerCharacterDTO(
-				null,
+				characterId.toString(),
 				characterClassConverter.convert(source.getCharacterClass()),
 				getRace(source)
 		);

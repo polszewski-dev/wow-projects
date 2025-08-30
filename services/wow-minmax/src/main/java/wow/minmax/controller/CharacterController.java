@@ -29,8 +29,6 @@ public class CharacterController {
 	) {
 		var player = playerCharacterService.getPlayer(characterId);
 
-		return playerCharacterConverter
-				.convert(player)
-				.withCharacterId(characterId.toString());
+		return playerCharacterConverter.convert(player, characterId);
 	}
 }
