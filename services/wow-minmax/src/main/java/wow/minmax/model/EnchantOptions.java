@@ -1,18 +1,18 @@
-package wow.minmax.client.dto;
+package wow.minmax.model;
 
-import wow.commons.client.dto.EnchantDTO;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.item.Enchant;
 
 import java.util.List;
 
 /**
  * User: POlszewski
- * Date: 2023-05-23
+ * Date: 2025-08-30
  */
-public record EnchantOptionsDTO(
+public record EnchantOptions(
 		ItemType itemType,
 		ItemSubType itemSubType,
-		List<EnchantDTO> enchants
+		List<Enchant> enchants
 ) {
 }
