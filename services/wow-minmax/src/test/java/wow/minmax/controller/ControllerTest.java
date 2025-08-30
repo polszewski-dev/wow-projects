@@ -10,6 +10,7 @@ import wow.commons.model.item.Item;
 import wow.estimator.client.dto.stats.*;
 import wow.estimator.client.dto.upgrade.FindUpgradesResponseDTO;
 import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.model.EquipmentSocketStatus;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.config.ViewConfig;
@@ -18,6 +19,7 @@ import wow.simulator.client.dto.SimulationResponseDTO;
 import wow.simulator.client.dto.StatsDTO;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -76,6 +78,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(equipmentService.equipItem(any(), any(), any())).thenReturn(character);
 		when(equipmentService.equipItem(any(), any(), any(), anyBoolean(), any())).thenReturn(character);
 		when(equipmentService.equipItemGroup(any(), any(), any())).thenReturn(character);
+		when(equipmentService.getEquipmentSocketStatus(any())).thenReturn(new EquipmentSocketStatus(Map.of()));
 
 		when(buffService.changeBuffStatus(any(), any(), any(), anyInt(), anyBoolean())).thenReturn(character);
 

@@ -3,29 +3,20 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import wow.character.model.character.PlayerCharacter;
-import wow.character.model.equipment.Equipment;
-import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.converter.EquipmentConverter;
 import wow.commons.client.converter.EquippableItemConverter;
 import wow.commons.client.dto.EquipmentDTO;
 import wow.commons.client.dto.EquippableItemDTO;
-import wow.commons.client.util.AttributeFormatter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.client.dto.EquipmentSocketStatusDTO;
-import wow.minmax.client.dto.ItemSocketStatusDTO;
-import wow.minmax.client.dto.SocketBonusStatusDTO;
-import wow.minmax.client.dto.SocketStatusDTO;
+import wow.minmax.converter.dto.EquipmentSocketStatusConverter;
 import wow.minmax.converter.dto.ParamToGemFilterConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.EquipmentService;
-import wow.minmax.service.PlayerCharacterService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -36,10 +27,10 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Slf4j
 public class EquipmentController {
-	private final PlayerCharacterService playerCharacterService;
 	private final EquipmentService equipmentService;
 	private final EquipmentConverter equipmentConverter;
 	private final EquippableItemConverter equippableItemConverter;
+	private final EquipmentSocketStatusConverter equipmentSocketStatusConverter;
 	private final ParamToGemFilterConverter paramToGemFilterConverter;
 
 	@GetMapping("{characterId}")
@@ -59,7 +50,7 @@ public class EquipmentController {
 			@RequestParam(name="best-variant", required=false, defaultValue="false") boolean bestVariant,
 			@RequestParam Map<String, String> requestParams
 	) {
-		var item = getEquippableItem(itemDTO, characterId);
+		var item = equippableItemConverter.convertBack(itemDTO, characterId.phaseId());
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
 
 		var player = equipmentService.equipItem(characterId, slot, item, bestVariant, gemFilter);
@@ -75,19 +66,11 @@ public class EquipmentController {
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestBody List<EquippableItemDTO> itemDTOs
 	) {
-		var items = getEquippableItems(itemDTOs, characterId);
+		var items = equippableItemConverter.convertBackList(itemDTOs, characterId.phaseId());
 
 		equipmentService.equipItemGroup(characterId, slotGroup, items);
 
 		log.info("Equipped items charId: {}, slotGroup: {}, items: {}", characterId, slotGroup, items);
-	}
-
-	private EquippableItem getEquippableItem(EquippableItemDTO itemDTO, CharacterId characterId) {
-		return equippableItemConverter.convertBack(itemDTO, characterId.phaseId());
-	}
-
-	private List<EquippableItem> getEquippableItems(List<EquippableItemDTO> itemDTOs, CharacterId characterId) {
-		return equippableItemConverter.convertBackList(itemDTOs, characterId.phaseId());
 	}
 
 	@DeleteMapping("{characterId}")
@@ -105,50 +88,8 @@ public class EquipmentController {
 	public EquipmentSocketStatusDTO getEquipmentSocketStatus(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
-		return new EquipmentSocketStatusDTO(ItemSlot.getDpsSlots().stream()
-				.collect(Collectors.toMap(x -> x, x -> getItemSocketStatus(player, x)))
-		);
-	}
+		var equipmentSocketStatus = equipmentService.getEquipmentSocketStatus(characterId);
 
-	private ItemSocketStatusDTO getItemSocketStatus(PlayerCharacter player, ItemSlot itemSlot) {
-		var item = player.getEquippedItem(itemSlot);
-
-		if (item == null) {
-			return new ItemSocketStatusDTO(List.of(), new SocketBonusStatusDTO("", false));
-		}
-
-		var equipment = player.getEquipment();
-		var socketStatuses = getSocketStatuses(item, equipment);
-		var socketBonusStatus = getSocketBonusStatus(item, equipment);
-
-		return new ItemSocketStatusDTO(socketStatuses, socketBonusStatus);
-	}
-
-	private SocketBonusStatusDTO getSocketBonusStatus(EquippableItem item, Equipment equipment) {
-		return new SocketBonusStatusDTO(
-				getSocketBonusString(item),
-				equipment.allSocketsHaveMatchingGems(item)
-		);
-	}
-
-	private List<SocketStatusDTO> getSocketStatuses(EquippableItem item, Equipment equipment) {
-		return Stream.iterate(0, i -> i < item.getSocketCount(), i -> i + 1)
-				.map(socketNo -> getSocketStatusDTO(item, equipment, socketNo))
-				.toList();
-	}
-
-	private SocketStatusDTO getSocketStatusDTO(EquippableItem item, Equipment equipment, Integer socketNo) {
-		return new SocketStatusDTO(
-				socketNo,
-				item.getSocketType(socketNo),
-				equipment.hasMatchingGem(item, socketNo)
-		);
-	}
-
-	private String getSocketBonusString(EquippableItem item) {
-		return item.getSocketBonus().getModifierAttributeList().stream()
-				.map(AttributeFormatter::format)
-				.collect(Collectors.joining(", "));
+		return equipmentSocketStatusConverter.convert(equipmentSocketStatus);
 	}
 }

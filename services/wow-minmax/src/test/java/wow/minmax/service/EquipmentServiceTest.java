@@ -6,12 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
+import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.SocketType;
+import wow.minmax.model.SocketStatus;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static wow.commons.model.attribute.AttributeId.POWER;
+import static wow.commons.model.attribute.condition.MiscCondition.SPELL;
 import static wow.commons.model.categorization.ItemSlot.*;
 
 /**
@@ -79,6 +86,46 @@ class EquipmentServiceTest extends ServiceTest {
 		underTest.resetEquipment(CHARACTER_KEY);
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot()).isEmpty();
+	}
+
+	@Test
+	void getEquipmentSocketStatusMatching() {
+		var statuses = underTest.getEquipmentSocketStatus(CHARACTER_KEY);
+		var status = statuses.socketStatusesByItemSlot().get(SHOULDER);
+		var socketBonusStatus = status.socketBonusStatus();
+
+		var expectedSocketStatuses = List.of(
+				new SocketStatus(0, SocketType.BLUE, true),
+				new SocketStatus(1, SocketType.YELLOW, true)
+		);
+		var expectedSocketBonus = Attributes.of(POWER, 4, SPELL);
+
+		assertThat(status.socketStatuses()).isEqualTo(expectedSocketStatuses);
+		assertThat(socketBonusStatus.bonus().getModifierComponent().attributes()).isEqualTo(expectedSocketBonus);
+		assertThat(socketBonusStatus.enabled()).isTrue();
+	}
+
+	@Test
+	void getEquipmentSocketStatusNonMatching() {
+		var shoulder = character.getEquippedItem(SHOULDER).copy();
+		var gem = shoulder.getSockets().getGem(1);// inserting orange gem into blue socket
+
+		shoulder.getSockets().insertGem(0, gem);
+		underTest.equipItem(CHARACTER_KEY, SHOULDER, shoulder);
+
+		var statuses = underTest.getEquipmentSocketStatus(CHARACTER_KEY);
+		var status = statuses.socketStatusesByItemSlot().get(SHOULDER);
+		var socketBonusStatus = status.socketBonusStatus();
+
+		var expectedSocketStatuses = List.of(
+				new SocketStatus(0, SocketType.BLUE, false),
+				new SocketStatus(1, SocketType.YELLOW, true)
+		);
+		var expectedSocketBonus = Attributes.of(POWER, 4, SPELL);
+
+		assertThat(status.socketStatuses()).isEqualTo(expectedSocketStatuses);
+		assertThat(socketBonusStatus.bonus().getModifierComponent().attributes()).isEqualTo(expectedSocketBonus);
+		assertThat(socketBonusStatus.enabled()).isFalse();
 	}
 
 	@Autowired

@@ -7,6 +7,7 @@ import wow.character.model.equipment.GemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.EquipmentSocketStatus;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface EquipmentService {
 	PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
 	PlayerCharacter resetEquipment(CharacterId characterId);
+
+	EquipmentSocketStatus getEquipmentSocketStatus(CharacterId characterId);
 }

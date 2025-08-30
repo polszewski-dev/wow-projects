@@ -8,15 +8,19 @@ import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.minmax.model.CharacterId;
+import wow.commons.model.effect.Effect;
+import wow.minmax.model.*;
 import wow.minmax.service.EquipmentService;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.UpgradeService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import static java.lang.Math.min;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * User: POlszewski
@@ -93,5 +97,61 @@ public class EquipmentServiceImpl implements EquipmentService {
 		} else {
 			return item;
 		}
+	}
+
+	@Override
+	public EquipmentSocketStatus getEquipmentSocketStatus(CharacterId characterId) {
+		var player = playerCharacterService.getPlayer(characterId);
+		var socketStatusesByItemSlot = ItemSlot.getDpsSlots().stream()
+				.collect(
+						toMap(
+								Function.identity(),
+								itemSlot -> getItemSocketStatus(player, itemSlot)
+						)
+				);
+
+		return new EquipmentSocketStatus(
+				socketStatusesByItemSlot
+		);
+	}
+
+	private ItemSocketStatus getItemSocketStatus(PlayerCharacter player, ItemSlot itemSlot) {
+		var item = player.getEquippedItem(itemSlot);
+
+		if (item == null) {
+			return NO_ITEM_SOCKET_STATUS;
+		}
+
+		var equipment = player.getEquipment();
+		var socketStatuses = getSocketStatuses(item, equipment);
+		var socketBonusStatus = getSocketBonusStatus(item, equipment);
+
+		return new ItemSocketStatus(socketStatuses, socketBonusStatus);
+	}
+
+	private static final ItemSocketStatus NO_ITEM_SOCKET_STATUS = new ItemSocketStatus(
+			List.of(),
+			new SocketBonusStatus(Effect.EMPTY, false)
+	);
+
+	private SocketBonusStatus getSocketBonusStatus(EquippableItem item, Equipment equipment) {
+		return new SocketBonusStatus(
+				item.getSocketBonus(),
+				equipment.allSocketsHaveMatchingGems(item)
+		);
+	}
+
+	private List<SocketStatus> getSocketStatuses(EquippableItem item, Equipment equipment) {
+		return IntStream.range(0, item.getSocketCount())
+				.mapToObj(socketNo -> getSocketStatus(item, equipment, socketNo))
+				.toList();
+	}
+
+	private SocketStatus getSocketStatus(EquippableItem item, Equipment equipment, int socketNo) {
+		return new SocketStatus(
+				socketNo,
+				item.getSocketType(socketNo),
+				equipment.hasMatchingGem(item, socketNo)
+		);
 	}
 }
