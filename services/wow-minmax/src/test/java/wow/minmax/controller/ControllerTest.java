@@ -40,6 +40,9 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	BuffService buffService;
 
 	@MockBean
+	ConsumableService consumableService;
+
+	@MockBean
 	UpgradeService upgradeService;
 
 	@MockBean
@@ -66,7 +69,6 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.createPlayerProfile(any())).thenReturn(profile);
 
 		when(playerCharacterService.getPlayer(CHARACTER_KEY)).thenReturn(character);
-		when(playerCharacterService.enableConsumable(any(), any(), anyBoolean())).thenReturn(character);
 		when(playerCharacterService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
 
 		when(equipmentService.getEquipment(any())).thenReturn(character.getEquipment());
@@ -76,6 +78,8 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(equipmentService.equipItemGroup(any(), any(), any())).thenReturn(character);
 
 		when(buffService.changeBuffStatus(any(), any(), any(), anyInt(), anyBoolean())).thenReturn(character);
+
+		when(consumableService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(character);
 
 		when(upgradeService.findUpgrades(any(), any(), any(), any())).thenReturn(new FindUpgradesResponseDTO(List.of()));
 		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(0, Item.class)));

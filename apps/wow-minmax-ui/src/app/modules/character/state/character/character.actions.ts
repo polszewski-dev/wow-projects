@@ -1,9 +1,8 @@
 import { createAction, props } from "@ngrx/store";
-import { Buff } from '../../model/buff/Buff';
 import { BuffListType } from '../../model/buff/BuffListType';
 import { BuffStatus } from "../../model/buff/BuffStatus";
 import { Character } from '../../model/Character';
-import { Consumable } from "../../model/consumable/Consumable";
+import { ConsumableStatus } from "../../model/consumable/ConsumableStatus";
 import { Enchant } from "../../model/equipment/Enchant";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
@@ -78,18 +77,18 @@ export const loadBuffListFailure = createAction(
 	props<{ buffListType: BuffListType, error: string }>()
 );
 
-export const loadConsumables = createAction(
-	"[Character] Load Consumables",
+export const loadConsumableStatuses = createAction(
+	"[Character] Load Consumable Statuses",
 	props<{ characterId: string }>()
 );
 
-export const loadConsumablesSuccess = createAction(
-	"[Character] Load Consumables Success",
-	props<{ consumables: Consumable[] }>()
+export const loadConsumableStatusesSuccess = createAction(
+	"[Character] Load Consumable Statuses Success",
+	props<{ consumableStatuses: ConsumableStatus[] }>()
 );
 
-export const loadConsumablesFailure = createAction(
-	"[Character] Load Consumables Failure",
+export const loadConsumableStatusesFailure = createAction(
+	"[Character] Load Consumable Statuses Failure",
 	props<{ error: string }>()
 );
 
@@ -183,18 +182,18 @@ export const changeBuffStatusFailure = createAction(
 	props<{ buffListType: BuffListType, error: string }>()
 );
 
-export const enableConsumable = createAction(
-	"[Character] Enable Consumable",
-	props<{ characterId: string, consumable: Consumable }>()
+export const changeConsumableStatus = createAction(
+	"[Character] Change Consumable Status",
+	props<{ characterId: string, consumableStatus: ConsumableStatus }>()
 );
 
-export const enableConsumableSuccess = createAction(
-	"[Character] Enable Consumable Success",
-	props<{ characterId: string, consumables: Consumable[] }>()
+export const changeConsumableStatusSuccess = createAction(
+	"[Character] Change Consumable Status Success",
+	props<{ characterId: string, consumableStatuses: ConsumableStatus[] }>()
 );
 
-export const enableConsumableFailure = createAction(
-	"[Character] Enable Consumable Failure",
+export const changeConsumableStatusFailure = createAction(
+	"[Character] Change Consumable Status Failure",
 	props<{ error: string }>()
 );
 

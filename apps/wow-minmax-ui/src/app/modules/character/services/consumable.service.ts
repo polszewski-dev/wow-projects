@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Consumable } from '../model/consumable/Consumable';
+import { ConsumableStatus } from '../model/consumable/ConsumableStatus';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,11 +11,11 @@ export class ConsumableService {
 
 	constructor(private http: HttpClient) { }
 
-	getConsumables(characterId: string) {
-		return this.http.get<Consumable[]>(`${this.apiUrl}/${characterId}`);
+	getConsumableStatuses(characterId: string) {
+		return this.http.get<ConsumableStatus[]>(`${this.apiUrl}/${characterId}`);
 	}
 
-	enableConsumable(characterId: string, consumable: Consumable) {
-		return this.http.put<Consumable[]>(`${this.apiUrl}/${characterId}`, consumable);
+	changeConsumableStatus(characterId: string, consumable: ConsumableStatus) {
+		return this.http.put<ConsumableStatus[]>(`${this.apiUrl}/${characterId}`, consumable);
 	}
 }

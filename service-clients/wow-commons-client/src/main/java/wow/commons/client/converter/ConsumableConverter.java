@@ -19,8 +19,7 @@ public class ConsumableConverter implements Converter<Consumable, ConsumableDTO>
 				source.getName(),
 				source.getTooltip(),
 				source.getIcon(),
-				source.getTooltip(),
-				false
+				source.getTooltip()
 		);
 	}
 }

@@ -3,12 +3,10 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import wow.character.model.character.PlayerCharacter;
-import wow.commons.client.converter.ConsumableConverter;
-import wow.commons.client.dto.ConsumableDTO;
-import wow.commons.model.item.Consumable;
+import wow.minmax.client.dto.ConsumableStatusDTO;
+import wow.minmax.converter.dto.ConsumableStatusConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.service.PlayerCharacterService;
+import wow.minmax.service.ConsumableService;
 
 import java.util.List;
 
@@ -21,43 +19,33 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class ConsumableController {
-	private final PlayerCharacterService playerCharacterService;
-	private final ConsumableConverter consumableConverter;
+	private final ConsumableService consumableService;
+	private final ConsumableStatusConverter consumableStatusConverter;
 
 	@GetMapping("{characterId}")
-	public List<ConsumableDTO> getConsumables(
+	public List<ConsumableStatusDTO> getConsumables(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var consumableStatuses = consumableService.getConsumableStatuses(characterId);
 
-		return getConsumableDTOs(player);
+		return consumableStatusConverter.convertList(consumableStatuses);
 	}
 
 	@PutMapping("{characterId}")
-	public List<ConsumableDTO> enableConsumable(
+	public List<ConsumableStatusDTO> enableConsumable(
 			@PathVariable("characterId") CharacterId characterId,
-			@RequestBody ConsumableDTO consumable
+			@RequestBody ConsumableStatusDTO consumableStatus
 	) {
+		var consumable = consumableStatus.consumable();
 		var consumableName = consumable.name();
-		var enabled = consumable.enabled();
-		var player = playerCharacterService.enableConsumable(characterId, consumableName, enabled);
+		var enabled = consumableStatus.enabled();
+
+		var player = consumableService.changeConsumableStatus(characterId, consumableName, enabled);
 
 		log.info("Changed consumable charId: {}, name: {}, enabled: {}", characterId, consumableName, enabled);
-		return getConsumableDTOs(player);
-	}
 
-	private List<ConsumableDTO> getConsumableDTOs(PlayerCharacter player) {
-		var consumables = player.getConsumables();
-		var availableConsumables = consumables.getAvailable();
+		var consumableStatuses = consumableService.getConsumableStatuses(player);
 
-		return availableConsumables.stream()
-				.map(consumable -> getConsumableDTO(consumable, consumables.has(consumable.getName())))
-				.toList();
-	}
-
-	private ConsumableDTO getConsumableDTO(Consumable consumable, boolean enabled) {
-		return consumableConverter
-				.convert(consumable)
-				.withEnabled(enabled);
+		return consumableStatusConverter.convertList(consumableStatuses);
 	}
 }

@@ -54,9 +54,9 @@ export function selectBuffList(buffListType: BuffListType) {
 	);
 }
 
-export const selectConsumables = createSelector(
+export const selectConsumableStatuses = createSelector(
 	selectCharacterState,
-	state => state.consumables.value
+	state => state.consumableStatuses.value
 );
 
 

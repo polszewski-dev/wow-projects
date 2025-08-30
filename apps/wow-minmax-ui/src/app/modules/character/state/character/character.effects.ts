@@ -9,7 +9,7 @@ import { ConsumableService } from "../../services/consumable.service";
 import { EquipmentService } from '../../services/equipment.service';
 import { loadEnchantOptions, loadEquipmentOptions, loadGemOptions, loadItemOptions } from "../equipment-options/equipment-options.actions";
 import { CharacterModuleState } from './../character-module.state';
-import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, dpsChanged, enableConsumable, enableConsumableFailure, enableConsumableSuccess, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumables, loadConsumablesFailure, loadConsumablesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 @Injectable()
 export class CharacterEffects {
@@ -30,7 +30,7 @@ export class CharacterEffects {
 			loadEquipment({ characterId: characterId! }),
 			loadSocketStatus({ characterId: characterId! }),
 			loadBuffs({ characterId: characterId! }),
-			loadConsumables({ characterId: characterId! }),
+			loadConsumableStatuses({ characterId: characterId! }),
 			loadEquipmentOptions({ characterId: characterId! }),
 			loadItemOptions({ characterId: characterId! }),
 			loadEnchantOptions({ characterId: characterId! }),
@@ -73,10 +73,10 @@ export class CharacterEffects {
 	));
 
 	loadConsumables$ = createEffect(() => this.actions$.pipe(
-		ofType(loadConsumables),
-		switchMap(({ characterId }) => this.consumableService.getConsumables(characterId).pipe(
-			map(consumables => loadConsumablesSuccess({ consumables })),
-			catchError(error => of(loadConsumablesFailure({ error })))
+		ofType(loadConsumableStatuses),
+		switchMap(({ characterId }) => this.consumableService.getConsumableStatuses(characterId).pipe(
+			map(consumableStatuses => loadConsumableStatusesSuccess({ consumableStatuses })),
+			catchError(error => of(loadConsumableStatusesFailure({ error })))
 		))
 	));
 
@@ -128,11 +128,11 @@ export class CharacterEffects {
 		))
 	));
 
-	enableConsumable$ = createEffect(() => this.actions$.pipe(
-		ofType(enableConsumable),
-		switchMap(({ characterId, consumable }) => this.consumableService.enableConsumable(characterId, consumable).pipe(
-			map(consumables => enableConsumableSuccess({ characterId, consumables })),
-			catchError(error => of(enableConsumableFailure({ error })))
+	changeConsumableStatus$ = createEffect(() => this.actions$.pipe(
+		ofType(changeConsumableStatus),
+		switchMap(({ characterId, consumableStatus }) => this.consumableService.changeConsumableStatus(characterId, consumableStatus).pipe(
+			map(consumableStatuses => changeConsumableStatusSuccess({ characterId, consumableStatuses })),
+			catchError(error => of(changeConsumableStatusFailure({ error })))
 		))
 	));
 

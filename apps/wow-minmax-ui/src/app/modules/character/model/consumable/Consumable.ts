@@ -4,5 +4,4 @@ export interface Consumable {
 	attributes: string;
 	icon: string;
 	tooltip: string;
-	enabled: boolean;
 }

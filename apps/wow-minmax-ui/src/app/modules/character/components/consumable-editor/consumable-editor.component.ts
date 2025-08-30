@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
-import { Consumable } from '../../model/consumable/Consumable';
+import { ConsumableStatus } from '../../model/consumable/ConsumableStatus';
 import { CharacterModuleState } from '../../state/character-module.state';
-import { enableConsumable } from '../../state/character/character.actions';
-import { selectCharacterId, selectConsumables } from '../../state/character/character.selectors';
+import { changeConsumableStatus } from '../../state/character/character.actions';
+import { selectCharacterId, selectConsumableStatuses } from '../../state/character/character.selectors';
 
 @Component({
 	selector: 'app-consumable-editor',
@@ -15,27 +15,27 @@ export class ConsumableEditorComponent {
 
 	constructor(private store: Store<CharacterModuleState>) {}
 
-	onChange(characterId: string, consumable: Consumable) {
-		this.store.dispatch(enableConsumable({ characterId, consumable }));
+	onChange(characterId: string, consumableStatus: ConsumableStatus) {
+		this.store.dispatch(changeConsumableStatus({ characterId, consumableStatus }));
 	}
 }
 
 type DataView = {
 	characterId: string;
-	consumables: Consumable[]
+	consumableStatuses: ConsumableStatus[]
 } | null;
 
 const dataSelector = createSelector(
 	selectCharacterId,
-	selectConsumables,
-	(characterId, consumables): DataView => {
+	selectConsumableStatuses,
+	(characterId, consumableStatuses): DataView => {
 		if (!characterId) {
 			return null;
 		}
 
 		return {
 			characterId,
-			consumables: consumables.map(x => ({ ...x }))
+			consumableStatuses: consumableStatuses.map(x => ({ ...x }))
 		};
 	}
 );

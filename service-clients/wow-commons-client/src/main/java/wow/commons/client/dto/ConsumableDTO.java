@@ -9,10 +9,6 @@ public record ConsumableDTO(
 		String name,
 		String attributes,
 		String icon,
-		String tooltip,
-		boolean enabled
+		String tooltip
 ) {
-	public ConsumableDTO withEnabled(boolean enabled) {
-		return new ConsumableDTO(id, name, attributes, icon, tooltip, enabled);
-	}
 }

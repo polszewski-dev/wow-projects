@@ -1,12 +1,13 @@
 @if (data$ | async; as data) {
-	@for (consumable of data.consumables; track consumable.id) {
+	@for (consumableStatus of data.consumableStatuses; track consumableStatus.consumable.id) {
+		@let consumable = consumableStatus.consumable;
 		<div class="form-check">
 			<input
 				class="form-check-input"
 				type="checkbox"
 				id="consumable-select-{{consumable.id}}"
-				[(ngModel)]="consumable.enabled"
-				(change)="onChange(data.characterId, consumable)"
+				[(ngModel)]="consumableStatus.enabled"
+				(change)="onChange(data.characterId, consumableStatus)"
 			>
 			<label class="form-check-label" for="consumable-select-{{consumable.id}}" title="{{consumable.tooltip || consumable.attributes}}">
 				<img [src]="consumable.icon | icon"/>

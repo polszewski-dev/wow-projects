@@ -13,7 +13,5 @@ public interface PlayerCharacterService {
 
 	void saveCharacter(CharacterId characterId, PlayerCharacter player);
 
-	PlayerCharacter enableConsumable(CharacterId characterId, String consumableName, boolean enabled);
-
 	ViewConfig getViewConfig(PlayerCharacter player);
 }

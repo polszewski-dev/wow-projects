@@ -86,15 +86,6 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public PlayerCharacter enableConsumable(CharacterId characterId, String consumableName, boolean enabled) {
-		var player = getPlayer(characterId);
-
-		player.getConsumables().enable(consumableName, enabled);
-		saveCharacter(characterId, player);
-		return player;
-	}
-
-	@Override
 	public ViewConfig getViewConfig(PlayerCharacter player) {
 		return minmaxConfigRepository.getViewConfig(player).orElseThrow();
 	}

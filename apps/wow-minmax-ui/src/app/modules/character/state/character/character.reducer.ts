@@ -3,13 +3,13 @@ import { failure, Loadable, loading, pending, success } from '../../../shared/st
 import { BuffListType } from '../../model/buff/BuffListType';
 import { BuffStatus } from "../../model/buff/BuffStatus";
 import { Character } from "../../model/Character";
-import { Consumable } from "../../model/consumable/Consumable";
+import { ConsumableStatus } from "../../model/consumable/ConsumableStatus";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from "../../model/equipment/EquippableItem";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { getSlots, ItemSlotGroup } from "../../model/upgrade/ItemSlotGroup";
-import { changeBuffStatusSuccess, dpsChanged, enableConsumableSuccess, equipEnchantSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumables, loadConsumablesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from "./character.actions";
+import { changeBuffStatusSuccess, changeConsumableStatusSuccess, dpsChanged, equipEnchantSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from "./character.actions";
 
 export interface CharacterState {
 	characterId: string | null;
@@ -17,7 +17,7 @@ export interface CharacterState {
 	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>;
 	socketStatus: Loadable<EquipmentSocketStatus | null>;
 	buffStatuses: Record<BuffListType, Loadable<BuffStatus[]>>;
-	consumables: Loadable<Consumable[]>;
+	consumableStatuses: Loadable<ConsumableStatus[]>;
 	dpsChangeIdx: number;
 }
 
@@ -27,7 +27,7 @@ const initialState: CharacterState = {
 	equipment: withAllSlotsSetTo(pending(null)),
 	socketStatus: pending(null),
 	buffStatuses: withAllBuffListsSetTo(pending([])),
-	consumables: pending([]),
+	consumableStatuses: pending([]),
 	dpsChangeIdx: 0
 };
 
@@ -86,13 +86,13 @@ export const characterReducer = createReducer(
 		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, failure([], error))
 	})),
 
-	on(loadConsumables, (state) => ({
+	on(loadConsumableStatuses, (state) => ({
 		...state,
-		consumables: loading([])
+		consumableStatuses: loading([])
 	})),
-	on(loadConsumablesSuccess, (state, { consumables }) => ({
+	on(loadConsumableStatusesSuccess, (state, { consumableStatuses }) => ({
 		...state,
-		consumables: success(consumables)
+		consumableStatuses: success(consumableStatuses)
 	})),
 
 	on(equipItemBestVariantSuccess, (state, { itemSlot, equippableItem }) => ({
@@ -121,9 +121,9 @@ export const characterReducer = createReducer(
 		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, success(buffStatusList))
 	})),
 
-	on(enableConsumableSuccess, (state, { consumables }) => ({
+	on(changeConsumableStatusSuccess, (state, { consumableStatuses }) => ({
 		...state,
-		consumables: success(consumables)
+		consumableStatuses: success(consumableStatuses)
 	})),
 
 	on(dpsChanged, (state) => ({
