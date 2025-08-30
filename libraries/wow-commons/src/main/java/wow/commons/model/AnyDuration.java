@@ -1,13 +1,12 @@
 package wow.commons.model;
 
+import static wow.commons.model.Duration.INFINITE;
+
 /**
  * User: POlszewski
  * Date: 2025-07-23
  */
 public sealed interface AnyDuration extends Comparable<AnyDuration> permits Duration, InfiniteDuration {
-	Duration ZERO = new Duration(0);
-	InfiniteDuration INFINITE = new InfiniteDuration();
-
 	static AnyDuration parse(String value) {
 		if (value == null || value.isEmpty()) {
 			return null;

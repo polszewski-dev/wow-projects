@@ -7,6 +7,9 @@ import java.util.regex.Pattern;
  * Date: 2019-08-14
  */
 public record Duration(long millis) implements AnyDuration {
+	public static final Duration ZERO = new Duration(0);
+	public static final InfiniteDuration INFINITE = new InfiniteDuration();
+
 	public Duration {
 		if (millis < 0) {
 			throw new IllegalArgumentException();
