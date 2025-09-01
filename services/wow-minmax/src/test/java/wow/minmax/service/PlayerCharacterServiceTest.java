@@ -2,28 +2,18 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
+import wow.commons.model.buff.BuffId;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
-import wow.minmax.converter.model.PlayerCharacterConfigConverter;
-import wow.minmax.model.PlayerCharacterConfig;
-import wow.minmax.repository.PlayerCharacterConfigRepository;
-import wow.minmax.repository.PlayerProfileRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.commons.model.buff.BuffId.FLASK_OF_PURE_DEATH;
@@ -32,161 +22,176 @@ import static wow.commons.model.categorization.ItemSlot.*;
 
 /**
  * User: POlszewski
- * Date: 2022-11-19
+ * Date: 2025-08-29
  */
 class PlayerCharacterServiceTest extends ServiceTest {
-	@Autowired
-	PlayerCharacterService underTest;
-
-	@Autowired
-	PlayerProfileRepository playerProfileRepository;
-
-	@Autowired
-	PlayerCharacterConfigRepository playerCharacterConfigRepository;
-
-	@MockBean
-	UpgradeService upgradeService;
-
-	@Autowired
-	PlayerCharacterConfigConverter playerCharacterConfigConverter;
-
-	@Captor
-	ArgumentCaptor<PlayerCharacterConfig> characterConfigCaptor;
-
 	@Test
 	void changeItem() {
-		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Heart of the Pit");
+		assertItem(OFF_HAND, "Heart of the Pit");
 
 		var item = getItem("Chronicle of Dark Secrets");
 
 		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true, GemFilter.empty());
 
-		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
-
-		var savedCharacter = characterConfigCaptor.getValue();
-
-		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND).getItem().getName()).isEqualTo("Chronicle of Dark Secrets");
+		assertItem(OFF_HAND, "Chronicle of Dark Secrets");
 	}
 
 	@Test
 	void changeTwoHander() {
-		assertThat(character.getEquipment().getMainHand().getItem().getName()).isEqualTo("Sunflare");
-		assertThat(character.getEquipment().getOffHand().getItem().getName()).isEqualTo("Heart of the Pit");
+		assertItem(MAIN_HAND, "Sunflare");
+		assertItem(OFF_HAND, "Heart of the Pit");
 
 		var item = getItem("Grand Magister's Staff of Torrents");
 
 		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, item, true, GemFilter.empty());
 
-		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
-
-		var savedCharacter = characterConfigCaptor.getValue();
-
-		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND).getItem().getName()).isEqualTo("Grand Magister's Staff of Torrents");
-		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(OFF_HAND)).isNull();
+		assertItem(MAIN_HAND, "Grand Magister's Staff of Torrents");
+		assertItem(OFF_HAND, null);
 	}
 
 	@Test
 	void changeEnchant() {
-		EquippableItem mainHand = character.getEquipment().getMainHand();
+		assertEnchant(MAIN_HAND, "Enchant Weapon - Soulfrost");
 
-		assertThat(mainHand.getEnchant().getName()).isEqualTo("Enchant Weapon - Soulfrost");
+		var enchant = enchantRepository.getEnchant("Enchant Weapon - Major Spellpower", character.getPhaseId()).orElseThrow();
 
-		Enchant enchant = enchantRepository.getEnchant("Enchant Weapon - Major Spellpower", character.getPhaseId()).orElseThrow();
-
-		mainHand = mainHand.copy();
-		mainHand.enchant(enchant);
+		var mainHand = character.getEquippedItem(MAIN_HAND)
+				.copy()
+				.enchant(enchant);
 
 		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, mainHand);
 
-		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
-
-		var savedCharacter = characterConfigCaptor.getValue();
-
-		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(MAIN_HAND).getEnchant().getName()).isEqualTo("Enchant Weapon - Major Spellpower");
+		assertEnchant(MAIN_HAND, "Enchant Weapon - Major Spellpower");
 	}
 
 	@Test
 	void changeGem() {
-		EquippableItem chest = character.getEquipment().getChest();
+		assertItem(CHEST, "Sunfire Robe");
+		assertGem(CHEST, 1, "Runed Crimson Spinel");
 
-		assertThat(chest.getItem().getName()).isEqualTo("Sunfire Robe");
-		assertThat(chest.getSocketCount()).isEqualTo(3);
-		assertThat(chest.getGems().get(1).getId()).isNotEqualTo(35761);
+		var gem = gemRepository.getGem("Forceful Seaspray Emerald", character.getPhaseId()).orElseThrow();
 
-		Gem gem = gemRepository.getGem(35761, character.getPhaseId()).orElseThrow();
+		var chest = character.getEquippedItem(CHEST).copy();
 
-		chest = chest.copy();
 		chest.getSockets().insertGem(1, gem);
 
 		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
 
-		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
-
-		var savedCharacter = characterConfigCaptor.getValue();
-
-		assertThat(savedCharacter.getEquipment().getItemsBySlot().get(CHEST).getGems().get(1).getId()).isEqualTo(35761);
+		assertGem(CHEST, 1, "Forceful Seaspray Emerald");
 	}
 
 	@Test
 	void resetEquipment() {
 		underTest.resetEquipment(CHARACTER_KEY);
 
-		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
-
-		var savedCharacter = characterConfigCaptor.getValue();
-
 		assertThat(savedCharacter.getEquipment().getItemsBySlot()).isEmpty();
 	}
 
 	@Test
 	void enableBuff() {
-		assertThat(character.getBuffs().has(FLASK_OF_SUPREME_POWER)).isFalse();
-		assertThat(character.getBuffs().has(FLASK_OF_PURE_DEATH)).isTrue();
+		assertBuffStatus(FLASK_OF_SUPREME_POWER, false);
+		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
 		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_SUPREME_POWER, 0, true);
 
-		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
-
-		var savedCharacter = characterConfigCaptor.getValue();
-
-		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_SUPREME_POWER)).isTrue();
-		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
+		assertBuffStatus(FLASK_OF_SUPREME_POWER, true);
+		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
 	}
 
 	@Test
 	void disableBuff() {
-		assertThat(character.getBuffs().has(FLASK_OF_PURE_DEATH)).isTrue();
+		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
 		underTest.enableBuff(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_PURE_DEATH, 0, false);
 
-		verify(playerCharacterConfigRepository).save(characterConfigCaptor.capture());
-
-		var savedCharacter = characterConfigCaptor.getValue();
-
-		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == FLASK_OF_PURE_DEATH)).isFalse();
+		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
 	}
+
+	@Autowired
+	PlayerCharacterService underTest;
+
+	@MockBean
+	UpgradeService upgradeService;
 
 	@BeforeEach
 	@Override
 	void setup() {
 		super.setup();
 
-		equipGearSet(character);
+		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(1, Item.class)));
+	}
 
+	@Override
+	void prepareCharacter() {
 		var consumes = character.getBuffs().getList().stream()
 				.filter(x -> x.getCategories().contains(BuffCategory.CONSUME))
 				.map(Buff::getId)
 				.toList();
+
 		character.setBuffs(consumes);
+	}
 
-		var characterConfig = playerCharacterConfigConverter.convert(character, CHARACTER_KEY);
+	private void assertItem(ItemSlot itemSlot, String expectedName) {
+		var itemName = getItemName(itemSlot);
 
-		when(playerProfileRepository.findAll()).thenReturn(List.of(profile));
-		when(playerProfileRepository.findById(profile.getProfileId())).thenReturn(Optional.of(profile));
+		assertThat(itemName).isEqualTo(expectedName);
+	}
 
-		when(playerCharacterConfigRepository.findAll()).thenReturn(List.of(characterConfig));
-		when(playerCharacterConfigRepository.findById(characterConfig.getCharacterId())).thenReturn(Optional.of(characterConfig));
+	private void assertEnchant(ItemSlot itemSlot, String expectedName) {
+		var enchantName = getEnchantName(itemSlot);
 
-		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(1, Item.class)));
+		assertThat(enchantName).isEqualTo(expectedName);
+	}
+
+	private void assertGem(ItemSlot itemSlot, int socketNo, String expectedName) {
+		var gemName = getGemName(itemSlot, socketNo);
+
+		assertThat(gemName).isEqualTo(expectedName);
+	}
+
+	private String getItemName(ItemSlot itemSlot) {
+		var equippableItemConfig = savedCharacter.getEquipment().getItemsBySlot().get(itemSlot);
+
+		if (equippableItemConfig == null) {
+			return null;
+		}
+
+		return equippableItemConfig.getItem().getName();
+	}
+
+	private String getEnchantName(ItemSlot itemSlot) {
+		var equippableItemConfig = savedCharacter.getEquipment().getItemsBySlot().get(itemSlot);
+
+		if (equippableItemConfig == null) {
+			return null;
+		}
+
+		var enchant = equippableItemConfig.getEnchant();
+
+		if (enchant == null) {
+			return null;
+		}
+
+		return enchant.getName();
+	}
+
+	private String getGemName(ItemSlot itemSlot, int socketNo) {
+		var equippableItemConfig = savedCharacter.getEquipment().getItemsBySlot().get(itemSlot);
+
+		if (equippableItemConfig == null) {
+			return null;
+		}
+
+		var gem = equippableItemConfig.getGems().get(socketNo);
+
+		if (gem == null) {
+			return null;
+		}
+
+		return gem.getName();
+	}
+
+	private void assertBuffStatus(BuffId buffId, boolean enabled) {
+		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == buffId)).isEqualTo(enabled);
 	}
 }

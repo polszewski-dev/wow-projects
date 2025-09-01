@@ -1,21 +1,12 @@
 package wow.minmax.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.model.buff.Buff;
-import wow.commons.model.buff.BuffCategory;
-import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.repository.PlayerProfileRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * User: POlszewski
@@ -30,17 +21,17 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void getPlayerProfileList() {
-		List<PlayerProfileInfo> profiles = underTest.getPlayerProfileInfos();
+		var profiles = underTest.getPlayerProfileInfos();
 
 		assertThat(profiles).hasSize(1);
-		assertThat(profiles.getFirst().getProfileId().toString()).isEqualTo(profile.getProfileId());
+		assertThat(profiles.getFirst().getProfileId()).isEqualTo(profile.getProfileIdAsUUID());
 
 		verify(playerProfileRepository).findAll();
 	}
 
 	@Test
 	void createPlayerProfile() {
-		PlayerProfile newProfile = underTest.createPlayerProfile(profile.getProfileInfo());
+		var newProfile = underTest.createPlayerProfile(profile.getProfileInfo());
 
 		assertThat(newProfile.getProfileName()).isEqualTo(profile.getProfileName());
 		assertThat(newProfile.getCharacterClassId()).isEqualTo(profile.getCharacterClassId());
@@ -53,25 +44,8 @@ class PlayerProfileServiceTest extends ServiceTest {
 
 	@Test
 	void getPlayerProfileById() {
-		PlayerProfile returnedProfile = underTest.getPlayerProfile(profile.getProfileIdAsUUID());
+		var returnedProfile = underTest.getPlayerProfile(profile.getProfileIdAsUUID());
 
 		assertThat(returnedProfile.getProfileId()).isEqualTo(profile.getProfileId());
-	}
-
-	@BeforeEach
-	@Override
-	void setup() {
-		super.setup();
-
-		equipGearSet(character);
-
-		var consumes = character.getBuffs().getList().stream()
-				.filter(x -> x.getCategories().contains(BuffCategory.CONSUME))
-				.map(Buff::getId)
-				.toList();
-		character.setBuffs(consumes);
-
-		when(playerProfileRepository.findAll()).thenReturn(List.of(profile));
-		when(playerProfileRepository.findById(profile.getProfileId())).thenReturn(Optional.of(profile));
 	}
 }
