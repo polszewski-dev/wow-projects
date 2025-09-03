@@ -84,7 +84,7 @@ public class GearSetSheetParser extends WowExcelSheetParser {
 		var gems = Stream.of(gemNo1, gemNo2, gemNo3)
 				.map(x -> x.orElse(null))
 				.limit(item.getSocketCount())
-				.toArray(Gem[]::new);
+				.toList();
 
 		return new EquippableItem(item).enchant(enchant).gem(gems);
 	}

@@ -120,14 +120,31 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 	}
 
 	public EquippableItem gem(Gem... gems) {
-		if (gems.length != getSocketCount()) {
-			throw new IllegalArgumentException("Wrong #sockets");
-		}
+		requireTheSameSize(gems.length);
+
 		for (int i = 0; i < gems.length; i++) {
-			Gem gem = gems[i];
+			var gem = gems[i];
 			insertGem(i, gem);
 		}
+
 		return this;
+	}
+
+	public EquippableItem gem(List<Gem> gems) {
+		requireTheSameSize(gems.size());
+
+		for (int i = 0; i < gems.size(); i++) {
+			var gem = gems.get(i);
+			insertGem(i, gem);
+		}
+
+		return this;
+	}
+
+	private void requireTheSameSize(int size) {
+		if (size != getSocketCount()) {
+			throw new IllegalArgumentException("Wrong #sockets");
+		}
 	}
 
 	public void insertGem(int socketNo, Gem gem) {
