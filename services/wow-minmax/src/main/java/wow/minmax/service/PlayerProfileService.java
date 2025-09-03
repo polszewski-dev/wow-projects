@@ -1,5 +1,7 @@
 package wow.minmax.service;
 
+import wow.minmax.model.CharacterSelectionOptions;
+import wow.minmax.model.NewProfileOptions;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.PlayerProfileInfo;
 
@@ -16,4 +18,8 @@ public interface PlayerProfileService {
 	PlayerProfile createPlayerProfile(PlayerProfileInfo playerProfileInfo);
 
 	PlayerProfile getPlayerProfile(UUID profileId);
+
+	NewProfileOptions getNewProfileOptions();
+
+	CharacterSelectionOptions getCharacterSelectionOptions(UUID profileId);
 }

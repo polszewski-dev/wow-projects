@@ -36,7 +36,7 @@ class PlayerProfileControllerTest extends ControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$", hasSize(1)))
-				.andExpect(jsonPath("$[0].profileId", is(profile.getProfileId().toString())))
+				.andExpect(jsonPath("$[0].profileId", is(profile.getProfileId())))
 				.andExpect(jsonPath("$[0].profileName", is(profile.getProfileName())))
 		;
 

@@ -10,9 +10,7 @@ import wow.commons.model.item.Item;
 import wow.estimator.client.dto.stats.*;
 import wow.estimator.client.dto.upgrade.FindUpgradesResponseDTO;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.EquipmentSocketStatus;
-import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.PlayerProfileInfo;
+import wow.minmax.model.*;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.service.*;
 import wow.simulator.client.dto.SimulationResponseDTO;
@@ -69,6 +67,8 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.getPlayerProfileInfos()).thenReturn(List.of(profileInfo));
 		when(playerProfileService.getPlayerProfile(profile.getProfileIdAsUUID())).thenReturn(profile);
 		when(playerProfileService.createPlayerProfile(any())).thenReturn(profile);
+		when(playerProfileService.getNewProfileOptions()).thenReturn(new NewProfileOptions(List.of()));
+		when(playerProfileService.getCharacterSelectionOptions(any())).thenReturn(new CharacterSelectionOptions(List.of(), List.of(), List.of()));
 
 		when(playerCharacterService.getPlayer(CHARACTER_KEY)).thenReturn(character);
 		when(playerCharacterService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
