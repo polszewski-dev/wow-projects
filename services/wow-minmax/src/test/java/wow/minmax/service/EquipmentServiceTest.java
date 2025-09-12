@@ -10,7 +10,7 @@ import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.minmax.model.SocketStatus;
+import wow.minmax.model.equipment.SocketStatus;
 
 import java.util.List;
 

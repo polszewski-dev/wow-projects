@@ -1,7 +1,11 @@
 package wow.minmax.service;
 
 import wow.commons.model.categorization.ItemSlot;
-import wow.minmax.model.*;
+import wow.minmax.model.CharacterId;
+import wow.minmax.model.options.EnchantOptions;
+import wow.minmax.model.options.EquipmentOptions;
+import wow.minmax.model.options.GemOptions;
+import wow.minmax.model.options.ItemOptions;
 
 import java.util.List;
 

@@ -7,8 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.character.model.equipment.EquippableItem;
-import wow.commons.client.converter.EquippableItemConverter;
-import wow.commons.client.dto.EquippableItemDTO;
+import wow.commons.client.converter.equipment.EquippableItemConverter;
+import wow.commons.client.dto.equipment.EquippableItemDTO;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 

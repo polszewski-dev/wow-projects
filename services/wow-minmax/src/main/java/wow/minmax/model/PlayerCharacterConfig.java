@@ -9,6 +9,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
+import wow.minmax.model.equipment.EquipmentConfig;
 
 import java.util.List;
 

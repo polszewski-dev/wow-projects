@@ -1,6 +1,6 @@
 package wow.estimator.client.dto.upgrade;
 
-import wow.commons.client.dto.EquippableItemDTO;
+import wow.commons.client.dto.equipment.EquippableItemDTO;
 
 /**
  * User: POlszewski

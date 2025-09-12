@@ -3,7 +3,8 @@ package wow.commons.client.converter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.dto.EnchantDTO;
+import wow.commons.client.converter.equipment.EnchantConverter;
+import wow.commons.client.dto.equipment.EnchantDTO;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.repository.item.EnchantRepository;
 

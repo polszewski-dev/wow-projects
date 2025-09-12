@@ -9,8 +9,12 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.estimator.client.dto.stats.*;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.*;
+import wow.minmax.model.CharacterSelectionOptions;
+import wow.minmax.model.NewProfileOptions;
+import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.PlayerProfileInfo;
 import wow.minmax.model.config.ViewConfig;
+import wow.minmax.model.equipment.EquipmentSocketStatus;
 import wow.minmax.service.*;
 import wow.simulator.client.dto.StatsDTO;
 

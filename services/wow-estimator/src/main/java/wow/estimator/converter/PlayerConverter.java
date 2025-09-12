@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.client.converter.*;
+import wow.commons.client.converter.equipment.EquipmentConverter;
 import wow.estimator.model.NonPlayer;
 import wow.estimator.model.Player;
 import wow.estimator.model.impl.PlayerImpl;

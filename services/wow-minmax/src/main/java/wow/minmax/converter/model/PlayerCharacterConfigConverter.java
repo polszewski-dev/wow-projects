@@ -10,6 +10,7 @@ import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.buff.BuffIdAndRank;
+import wow.minmax.converter.model.equipment.EquipmentConfigConverter;
 import wow.minmax.model.*;
 
 import java.util.List;

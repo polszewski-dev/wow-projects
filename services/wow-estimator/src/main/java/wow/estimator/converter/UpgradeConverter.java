@@ -3,7 +3,7 @@ package wow.estimator.converter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
-import wow.commons.client.converter.EquippableItemConverter;
+import wow.commons.client.converter.equipment.EquippableItemConverter;
 import wow.commons.client.util.AttributeFormatter;
 import wow.commons.model.config.Described;
 import wow.estimator.client.dto.upgrade.UpgradeDTO;

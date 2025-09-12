@@ -6,6 +6,7 @@ import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
+import wow.commons.client.converter.equipment.EquipmentConverter;
 import wow.commons.client.dto.ConsumableDTO;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.client.dto.PlayerDTO;

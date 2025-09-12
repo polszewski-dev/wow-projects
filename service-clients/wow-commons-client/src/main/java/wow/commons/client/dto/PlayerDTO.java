@@ -1,5 +1,6 @@
 package wow.commons.client.dto;
 
+import wow.commons.client.dto.equipment.EquipmentDTO;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
