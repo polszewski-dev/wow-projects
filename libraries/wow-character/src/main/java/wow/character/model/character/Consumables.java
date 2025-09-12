@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class Consumables implements EffectCollection, Copyable<Consumables> {
 	private final Map<ConsumableId, Consumable> availableConsumablesById = new HashMap<>();
 	private final Map<String, Consumable> availableConsumablesByName = new HashMap<>();
-	private final Map<String, Consumable> enabledConsumables = new HashMap<>();
+	private final Map<ConsumableId, Consumable> enabledConsumables = new HashMap<>();
 
 	public Optional<ActivatedAbility> getAbility(AbilityId abilityId) {
 		return enabledConsumables.values().stream()
@@ -29,24 +30,42 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 				.findAny();
 	}
 
+	public List<Consumable> getList() {
+		return List.copyOf(enabledConsumables.values());
+	}
+
+	public Stream<Consumable> getStream() {
+		return enabledConsumables.values().stream();
+	}
+
+	public List<Consumable> getAvailable() {
+		return List.copyOf(availableConsumablesById.values());
+	}
+
+	public boolean has(ConsumableId consumableId) {
+		return getConsumable(consumableId)
+				.map(consumable -> enabledConsumables.containsKey(consumable.getId()))
+				.orElse(false);
+	}
+
 	public void reset() {
 		enabledConsumables.clear();
 	}
 
-	public void setConsumables(List<String> names) {
+	public void setConsumableIds(List<ConsumableId> consumableIds) {
+		reset();
+
+		for (var consumableId : consumableIds) {
+			enable(consumableId);
+		}
+	}
+
+	public void setConsumableNames(List<String> names) {
 		reset();
 
 		for (var name : names) {
 			enable(name);
 		}
-	}
-
-	public List<Consumable> getList() {
-		return List.copyOf(enabledConsumables.values());
-	}
-
-	public List<Consumable> getAvailable() {
-		return List.copyOf(availableConsumablesByName.values());
 	}
 
 	public void setAvailable(List<Consumable> consumables) {
@@ -56,34 +75,32 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		}
 	}
 
-	public void enable(String name, boolean enabled) {
-		if (enabled) {
-			enable(name);
-		} else {
-			disable(name);
-		}
-	}
+	public void enable(ConsumableId consumableId, boolean enabled) {
+		var consumable = getConsumable(consumableId).orElseThrow();
 
-	public void enable(String name) {
-		var consumable = getConsumable(name).orElseThrow();
-
-		enabledConsumables.put(name, consumable);
-	}
-
-	public void disable(String name) {
-		enabledConsumables.remove(name);
+		enable(consumable, enabled);
 	}
 
 	public void enable(ConsumableId consumableId) {
-		var consumable = getConsumable(consumableId).orElseThrow();
-
-		enabledConsumables.put(consumable.getName(), consumable);
+		enable(consumableId, true);
 	}
 
-	private Optional<Consumable> getConsumable(String name) {
-		var consumable = availableConsumablesByName.get(name);
+	public void enable(String name, boolean enabled) {
+		var consumable = getConsumable(name).orElseThrow();
 
-		return Optional.ofNullable(consumable);
+		enable(consumable, enabled);
+	}
+
+	public void enable(String name) {
+		enable(name, true);
+	}
+
+	private void enable(Consumable consumable, boolean enabled) {
+		if (enabled) {
+			enabledConsumables.put(consumable.getId(), consumable);
+		} else {
+			enabledConsumables.remove(consumable.getId());
+		}
 	}
 
 	private Optional<Consumable> getConsumable(ConsumableId consumableId) {
@@ -92,8 +109,10 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		return Optional.ofNullable(consumable);
 	}
 
-	public boolean has(String name) {
-		return enabledConsumables.containsKey(name);
+	private Optional<Consumable> getConsumable(String name) {
+		var consumable = availableConsumablesByName.get(name);
+
+		return Optional.ofNullable(consumable);
 	}
 
 	@Override

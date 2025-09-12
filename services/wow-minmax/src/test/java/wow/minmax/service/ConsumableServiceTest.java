@@ -2,10 +2,12 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.commons.repository.item.ConsumableRepository;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
  * User: POlszewski
@@ -42,7 +44,15 @@ class ConsumableServiceTest extends ServiceTest {
 	@Autowired
 	ConsumableService underTest;
 
+	@Autowired
+	ConsumableRepository consumableRepository;
+
 	private void assertConsumableStatus(String consumableName, boolean enabled) {
-		assertThat(savedCharacter.getConsumables().stream().anyMatch(consumable -> consumable.getName().equals(consumableName))).isEqualTo(enabled);
+		var consumable = consumableRepository.getConsumable(consumableName, TBC_P5).orElseThrow();
+
+		var actual = savedCharacter.getConsumableIds().stream()
+				.anyMatch(consumableId -> consumableId == consumable.getId().value());
+
+		assertThat(actual).isEqualTo(enabled);
 	}
 }

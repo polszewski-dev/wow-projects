@@ -10,8 +10,13 @@ import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.buff.BuffIdAndRank;
+import wow.commons.model.item.Consumable;
+import wow.commons.model.item.ConsumableId;
 import wow.minmax.converter.model.equipment.EquipmentConfigConverter;
-import wow.minmax.model.*;
+import wow.minmax.model.BuffConfig;
+import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerCharacterConfig;
+import wow.minmax.model.TalentConfig;
 
 import java.util.List;
 
@@ -26,13 +31,17 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 	private final EquipmentConfigConverter equipmentConfigConverter;
 	private final CharacterProfessionConfigConverter characterProfessionConfigConverter;
 	private final BuffConfigConverter buffConfigConverter;
-	private final ConsumableConfigConverter consumableConfigConverter;
 	private final NonPlayerCharacterConfigConverter nonPlayerCharacterConfigConverter;
 
 	private final CharacterService characterService;
 
 	@Override
 	public PlayerCharacterConfig doConvert(PlayerCharacter source, CharacterId characterId) {
+		var consumableIds = source.getConsumables().getStream()
+				.map(Consumable::getId)
+				.map(ConsumableId::value)
+				.toList();
+
 		return new PlayerCharacterConfig(
 				characterId.toString(),
 				source.getName(),
@@ -45,7 +54,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				characterProfessionConfigConverter.convertList(source.getProfessions().getList()),
 				source.getExclusiveFactions().getList(),
 				buffConfigConverter.convertList(source.getBuffs().getList()),
-				consumableConfigConverter.convertList(source.getConsumables().getList()),
+				consumableIds,
 				nonPlayerCharacterConfigConverter.convert((NonPlayerCharacter) source.getTarget())
 		);
 	}
@@ -75,7 +84,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 		character.setBuffs(getBuffIds(source.getBuffs()));
 		character.getTarget().setBuffs(getBuffIds(source.getTarget().getDebuffs()));
 
-		character.getConsumables().setConsumables(getConsumableNames(source.getConsumables()));
+		character.getConsumables().setConsumableIds(getConsumableIds(source));
 
 		return character;
 	}
@@ -99,9 +108,9 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				.toList();
 	}
 
-	private List<String> getConsumableNames(List<ConsumableConfig> consumables) {
-		return consumables.stream()
-				.map(ConsumableConfig::getName)
+	private List<ConsumableId> getConsumableIds(PlayerCharacterConfig source) {
+		return source.getConsumableIds().stream()
+				.map(ConsumableId::of)
 				.toList();
 	}
 }

@@ -38,7 +38,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				.map(Buff::getDbId)
 				.toList();
 
-		var consumableIds = source.getConsumables().getList().stream()
+		var consumableIds = source.getConsumables().getStream()
 				.map(AbstractItem::getId)
 				.map(ConsumableId::value)
 				.toList();

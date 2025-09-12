@@ -2,7 +2,9 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.character.Consumables;
 import wow.character.model.character.PlayerCharacter;
+import wow.commons.model.item.Consumable;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.ConsumableStatus;
 import wow.minmax.service.ConsumableService;
@@ -32,8 +34,15 @@ public class ConsumableServiceImpl implements ConsumableService {
 		var availableConsumables = consumables.getAvailable();
 
 		return availableConsumables.stream()
-				.map(consumable -> new ConsumableStatus(consumable, consumables.has(consumable.getName())))
+				.map(consumable -> getConsumableStatus(consumable, consumables))
 				.toList();
+	}
+
+	private ConsumableStatus getConsumableStatus(Consumable consumable, Consumables consumables) {
+		return new ConsumableStatus(
+				consumable,
+				consumables.has(consumable.getId())
+		);
 	}
 
 	@Override

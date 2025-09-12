@@ -136,7 +136,7 @@ public class CharacterServiceImpl implements CharacterService {
 			character.getTarget().getBuffs().setHighestRanks(characterTemplate.getDefaultDebuffs());
 		}
 
-		character.getConsumables().setConsumables(characterTemplate.getConsumables());
+		character.getConsumables().setConsumableNames(characterTemplate.getConsumables());
 
 		updateAfterRestrictionChange(character);
 	}

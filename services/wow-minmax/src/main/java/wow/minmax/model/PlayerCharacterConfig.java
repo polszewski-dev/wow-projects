@@ -34,7 +34,7 @@ public class PlayerCharacterConfig {
 	private List<CharacterProfessionConfig> professions;
 	private List<ExclusiveFaction> exclusiveFactions;
 	private List<BuffConfig> buffs;
-	private List<ConsumableConfig> consumables;
+	private List<Integer> consumableIds;
 	private NonPlayerCharacterConfig target;
 
 	public CharacterId getCharacterIdAsRecord() {
