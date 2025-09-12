@@ -17,6 +17,7 @@ import java.util.Optional;
  * Date: 2024-11-21
  */
 public class Consumables implements EffectCollection, Copyable<Consumables> {
+	private final Map<Integer, Consumable> availableConsumablesById = new HashMap<>();
 	private final Map<String, Consumable> availableConsumablesByName = new HashMap<>();
 	private final Map<String, Consumable> enabledConsumables = new HashMap<>();
 
@@ -48,7 +49,8 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 	}
 
 	public void setAvailable(List<Consumable> consumables) {
-		for (Consumable consumable : consumables) {
+		for (var consumable : consumables) {
+			availableConsumablesById.put(consumable.getId(), consumable);
 			availableConsumablesByName.put(consumable.getName(), consumable);
 		}
 	}
@@ -62,17 +64,31 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 	}
 
 	public void enable(String name) {
-		var consumable = availableConsumablesByName.get(name);
-
-		if (consumable == null) {
-			throw new IllegalArgumentException("No consumable: " + name);
-		}
+		var consumable = getConsumable(name).orElseThrow();
 
 		enabledConsumables.put(name, consumable);
 	}
 
 	public void disable(String name) {
 		enabledConsumables.remove(name);
+	}
+
+	public void enable(int consumableId) {
+		var consumable = getConsumable(consumableId).orElseThrow();
+
+		enabledConsumables.put(consumable.getName(), consumable);
+	}
+
+	private Optional<Consumable> getConsumable(String name) {
+		var consumable = availableConsumablesByName.get(name);
+
+		return Optional.ofNullable(consumable);
+	}
+
+	private Optional<Consumable> getConsumable(int consumableId) {
+		var consumable = availableConsumablesById.get(consumableId);
+
+		return Optional.ofNullable(consumable);
 	}
 
 	public boolean has(String name) {
@@ -89,6 +105,7 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 	@Override
 	public Consumables copy() {
 		var copy = new Consumables();
+		copy.availableConsumablesById.putAll(this.availableConsumablesById);
 		copy.availableConsumablesByName.putAll(this.availableConsumablesByName);
 		copy.enabledConsumables.putAll(this.enabledConsumables);
 		return copy;

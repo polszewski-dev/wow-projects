@@ -2,7 +2,6 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.client.converter.ConsumableConverter;
 import wow.commons.client.converter.Converter;
 import wow.minmax.client.dto.ConsumableStatusDTO;
 import wow.minmax.model.ConsumableStatus;

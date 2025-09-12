@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.commons.client.dto.ConsumableDTO;
+import wow.minmax.client.dto.ConsumableDTO;
 import wow.minmax.client.dto.ConsumableStatusDTO;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

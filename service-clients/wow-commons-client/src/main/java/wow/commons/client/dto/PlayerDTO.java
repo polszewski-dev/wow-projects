@@ -29,7 +29,7 @@ public record PlayerDTO(
 		String rotation,
 		List<BuffDTO> buffs,
 		List<ActiveEffectDTO> activeEffects,
-		List<ConsumableDTO> consumables,
+		List<Integer> consumableIds,
 		NonPlayerDTO target
 ) {
 }

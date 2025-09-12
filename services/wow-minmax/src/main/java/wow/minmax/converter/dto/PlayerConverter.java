@@ -6,8 +6,10 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
+import wow.commons.client.converter.AbstractNonPlayerConverter;
+import wow.commons.client.converter.AbstractPlayerConverter;
+import wow.commons.client.converter.BuffConverter;
 import wow.commons.client.converter.CharacterProfessionConverter;
-import wow.commons.client.converter.*;
 import wow.commons.client.converter.equipment.EquipmentConverter;
 
 /**
@@ -16,8 +18,8 @@ import wow.commons.client.converter.equipment.EquipmentConverter;
  */
 @Component
 public class PlayerConverter extends AbstractPlayerConverter<PlayerCharacter, NonPlayerCharacter> {
-	public PlayerConverter(CharacterService characterService, CharacterProfessionConverter characterProfessionConverter, EquipmentConverter equipmentConverter, ConsumableConverter consumableConverter, BuffConverter buffConverter, AbstractNonPlayerConverter<NonPlayerCharacter> nonPlayerConverter) {
-		super(characterService, characterProfessionConverter, equipmentConverter, consumableConverter, buffConverter, nonPlayerConverter);
+	public PlayerConverter(CharacterService characterService, CharacterProfessionConverter characterProfessionConverter, EquipmentConverter equipmentConverter, BuffConverter buffConverter, AbstractNonPlayerConverter<NonPlayerCharacter> nonPlayerConverter) {
+		super(characterService, characterProfessionConverter, equipmentConverter, buffConverter, nonPlayerConverter);
 	}
 
 	@Override

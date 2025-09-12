@@ -1,9 +1,10 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.client.dto.ConsumableDTO;
+import wow.commons.client.converter.Converter;
 import wow.commons.model.item.Consumable;
+import wow.minmax.client.dto.ConsumableDTO;
 
 /**
  * User: POlszewski

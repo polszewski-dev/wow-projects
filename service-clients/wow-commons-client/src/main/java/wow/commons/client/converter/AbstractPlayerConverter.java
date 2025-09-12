@@ -7,9 +7,9 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.client.converter.equipment.EquipmentConverter;
-import wow.commons.client.dto.ConsumableDTO;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.client.dto.PlayerDTO;
+import wow.commons.model.item.AbstractItem;
 import wow.commons.model.talent.Talent;
 
 import java.util.List;
@@ -24,7 +24,6 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	private final CharacterProfessionConverter characterProfessionConverter;
 	private final EquipmentConverter equipmentConverter;
-	private final ConsumableConverter consumableConverter;
 	private final BuffConverter buffConverter;
 	private final AbstractNonPlayerConverter<N> nonPlayerConverter;
 
@@ -32,6 +31,10 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 	public PlayerDTO doConvert(P source) {
 		var talentIds = source.getTalents().getList().stream()
 				.map(Talent::getId)
+				.toList();
+
+		var consumableIds = source.getConsumables().getList().stream()
+				.map(AbstractItem::getId)
 				.toList();
 
 		return new PlayerDTO(
@@ -49,7 +52,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				source.getRotation().getTemplate().toString(),
 				buffConverter.convertList(source.getBuffs().getList()),
 				List.of(),
-				consumableConverter.convertList(source.getConsumables().getList()),
+				consumableIds,
 				nonPlayerConverter.convert((N) source.getTarget())
 		);
 	}
@@ -80,7 +83,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 		enableBuffs(source, player);
 		enableTargetBuffs(source.target(), (N) player.getTarget());
 
-		player.getConsumables().setConsumables(getConsumableNames(source));
+		enableConsumables(source, player);
 
 		return player;
 	}
@@ -109,10 +112,10 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 		}
 	}
 
-	private List<String> getConsumableNames(PlayerDTO source) {
-		return source.consumables().stream()
-				.map(ConsumableDTO::name)
-				.toList();
+	private void enableConsumables(PlayerDTO source, P player) {
+		for (var consumableId : source.consumableIds()) {
+			player.getConsumables().enable(consumableId);
+		}
 	}
 
 	protected abstract PlayerCharacterFactory<P> getFactory(String name);
