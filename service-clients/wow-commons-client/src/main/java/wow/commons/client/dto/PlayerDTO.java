@@ -27,7 +27,7 @@ public record PlayerDTO(
 		PveRole role,
 		PetType activePet,
 		String rotation,
-		List<BuffDTO> buffs,
+		List<Integer> buffIds,
 		List<ActiveEffectDTO> activeEffects,
 		List<Integer> consumableIds,
 		NonPlayerDTO target

@@ -5,6 +5,7 @@ import wow.character.model.character.NonPlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.dto.NonPlayerDTO;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
@@ -17,15 +18,17 @@ import java.util.List;
 public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> implements Converter<N, NonPlayerDTO>, ParametrizedBackConverter<N, NonPlayerDTO, PhaseId> {
 	private final CharacterService characterService;
 
-	private final BuffConverter buffConverter;
-
 	@Override
 	public NonPlayerDTO doConvert(N source) {
+		var buffIds = source.getBuffs().getList().stream()
+				.map(Buff::getDbId)
+				.toList();
+
 		return new NonPlayerDTO(
 				source.getName(),
 				source.getCreatureType(),
 				source.getLevel(),
-				buffConverter.convertList(source.getBuffs().getList()),
+				buffIds,
 				List.of()
 		);
 	}

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.converter.AbstractNonPlayerConverter;
-import wow.commons.client.converter.BuffConverter;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.impl.NonPlayerImpl;
 
@@ -14,8 +13,8 @@ import wow.simulator.model.unit.impl.NonPlayerImpl;
  */
 @Component
 public class NonPlayerConverter extends AbstractNonPlayerConverter<NonPlayer> {
-	public NonPlayerConverter(CharacterService characterService, BuffConverter buffConverter) {
-		super(characterService, buffConverter);
+	public NonPlayerConverter(CharacterService characterService) {
+		super(characterService);
 	}
 
 	@Override

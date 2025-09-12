@@ -6,7 +6,6 @@ import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.converter.AbstractNonPlayerConverter;
-import wow.commons.client.converter.BuffConverter;
 
 /**
  * User: POlszewski
@@ -14,11 +13,8 @@ import wow.commons.client.converter.BuffConverter;
  */
 @Component
 public class NonPlayerConverter extends AbstractNonPlayerConverter<NonPlayerCharacter> {
-	public NonPlayerConverter(
-			CharacterService characterService,
-			BuffConverter buffConverter
-	) {
-		super(characterService, buffConverter);
+	public NonPlayerConverter(CharacterService characterService) {
+		super(characterService);
 	}
 
 	@Override

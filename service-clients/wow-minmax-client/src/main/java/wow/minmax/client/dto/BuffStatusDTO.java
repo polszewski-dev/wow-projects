@@ -1,7 +1,5 @@
 package wow.minmax.client.dto;
 
-import wow.commons.client.dto.BuffDTO;
-
 /**
  * User: POlszewski
  * Date: 2025-08-29

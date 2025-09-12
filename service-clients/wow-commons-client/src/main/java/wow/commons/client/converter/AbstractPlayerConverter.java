@@ -9,6 +9,7 @@ import wow.character.service.PlayerCharacterFactory;
 import wow.commons.client.converter.equipment.EquipmentConverter;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.client.dto.PlayerDTO;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.talent.Talent;
 
@@ -24,13 +25,16 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	private final CharacterProfessionConverter characterProfessionConverter;
 	private final EquipmentConverter equipmentConverter;
-	private final BuffConverter buffConverter;
 	private final AbstractNonPlayerConverter<N> nonPlayerConverter;
 
 	@Override
 	public PlayerDTO doConvert(P source) {
 		var talentIds = source.getTalents().getList().stream()
 				.map(Talent::getId)
+				.toList();
+
+		var buffIds = source.getBuffs().getList().stream()
+				.map(Buff::getDbId)
 				.toList();
 
 		var consumableIds = source.getConsumables().getList().stream()
@@ -50,7 +54,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				source.getRole(),
 				source.getActivePetType(),
 				source.getRotation().getTemplate().toString(),
-				buffConverter.convertList(source.getBuffs().getList()),
+				buffIds,
 				List.of(),
 				consumableIds,
 				nonPlayerConverter.convert((N) source.getTarget())
@@ -101,14 +105,14 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 	}
 
 	private void enableBuffs(PlayerDTO source, P player) {
-		for (var buff : source.buffs()) {
-			player.getBuffs().enable(buff.buffId(), buff.rank(), true);
+		for (var buffId : source.buffIds()) {
+			player.getBuffs().enable(buffId, true);
 		}
 	}
 
 	private void enableTargetBuffs(NonPlayerDTO source, N nonPlayer) {
-		for (var buff : source.buffs()) {
-			nonPlayer.getBuffs().enable(buff.buffId(), buff.rank(), true);
+		for (var buffId : source.buffIds()) {
+			nonPlayer.getBuffs().enable(buffId, true);
 		}
 	}
 

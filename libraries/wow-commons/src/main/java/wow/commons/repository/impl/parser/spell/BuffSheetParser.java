@@ -52,7 +52,7 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 		}
 
 		return new BuffImpl(
-				new BuffIdAndRank(buffId, rank), timeRestriction, characterRestriction, type, exclusionGroup, pveRoles, categories, effect, stacks
+				effectId, new BuffIdAndRank(buffId, rank), timeRestriction, characterRestriction, type, exclusionGroup, pveRoles, categories, effect, stacks
 		);
 	}
 }

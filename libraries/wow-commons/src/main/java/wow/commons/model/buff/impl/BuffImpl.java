@@ -17,6 +17,7 @@ import java.util.Set;
  */
 @Getter
 public class BuffImpl implements Buff {
+	private final int dbId;
 	private final BuffIdAndRank id;
 	private final Description description;
 	private final TimeRestriction timeRestriction;
@@ -29,6 +30,7 @@ public class BuffImpl implements Buff {
 	private final int stacks;
 
 	public BuffImpl(
+			int dbId,
 			BuffIdAndRank id,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
@@ -39,6 +41,7 @@ public class BuffImpl implements Buff {
 			Effect effect,
 			int stacks
 	) {
+		this.dbId = dbId;
 		this.id = id;
 		this.description = effect.getDescription();
 		this.timeRestriction = timeRestriction;

@@ -15,6 +15,8 @@ import java.util.Set;
  * Date: 2021-03-26
  */
 public interface Buff extends Described, TimeRestricted, CharacterRestricted, PveRoleClassified {
+	int getDbId();
+
 	BuffIdAndRank getId();
 
 	default BuffId getBuffId() {

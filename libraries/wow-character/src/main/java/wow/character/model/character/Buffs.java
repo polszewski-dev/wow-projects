@@ -17,6 +17,7 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public class Buffs implements EffectCollection, Copyable<Buffs> {
+	private final Map<Integer, Buff> availableBuffsByDbId = new LinkedHashMap<>();
 	private final Map<BuffIdAndRank, Buff> availableBuffsById = new LinkedHashMap<>();
 	private final Map<BuffId, List<Buff>> availableBuffsByBuffId = new LinkedHashMap<>();
 	private final Map<BuffId, Buff> enabledBuffsById = new LinkedHashMap<>();
@@ -24,7 +25,8 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 
 	@Override
 	public Buffs copy() {
-		Buffs copy = new Buffs(type);
+		var copy = new Buffs(type);
+		copy.availableBuffsByDbId.putAll(this.availableBuffsByDbId);
 		copy.availableBuffsById.putAll(this.availableBuffsById);
 		copy.availableBuffsByBuffId.putAll(this.availableBuffsByBuffId);
 		copy.enabledBuffsById.putAll(this.enabledBuffsById);
@@ -53,11 +55,12 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 	}
 
 	public void setAvailable(List<Buff> availableBuffs) {
+		availableBuffsByDbId.clear();
 		availableBuffsById.clear();
 		availableBuffsByBuffId.clear();
 
-		for (Buff buff : availableBuffs) {
-			assertMeetsFilter(buff);
+		for (var buff : availableBuffs) {
+			availableBuffsByDbId.put(buff.getDbId(), buff);
 			availableBuffsById.put(buff.getId(), buff);
 			availableBuffsByBuffId.computeIfAbsent(buff.getBuffId(), x -> new ArrayList<>()).add(buff);
 		}
@@ -70,7 +73,7 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 	}
 
 	public void setHighestRanks(Collection<BuffId> buffIds) {
-		List<BuffIdAndRank> buffIdAndRanks = getHighestRanks(buffIds);
+		var buffIdAndRanks = getHighestRanks(buffIds);
 
 		set(buffIdAndRanks);
 	}
@@ -91,7 +94,7 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 	public void set(Collection<BuffIdAndRank> buffIdAndRanks) {
 		reset();
 
-		for (BuffIdAndRank buffIdAndRank : buffIdAndRanks) {
+		for (var buffIdAndRank : buffIdAndRanks) {
 			enable(buffIdAndRank.buffId(), buffIdAndRank.rank());
 		}
 	}
@@ -105,12 +108,8 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 	}
 
 	public void enable(BuffId buffId, int rank) {
-		BuffIdAndRank id = new BuffIdAndRank(buffId, rank);
-		Buff buff = availableBuffsById.get(id);
-
-		if (buff == null) {
-			throw new IllegalArgumentException("No buff: " + id);
-		}
+		var id = new BuffIdAndRank(buffId, rank);
+		var buff = getBuff(id).orElseThrow();
 
 		if (buff.getExclusionGroup() != null) {
 			enabledBuffsById.entrySet().removeIf(e -> e.getValue().getExclusionGroup() == buff.getExclusionGroup());
@@ -123,17 +122,29 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 		enabledBuffsById.remove(buffId);
 	}
 
+	public void enable(int buffId, boolean enabled) {
+		var buff = getBuff(buffId).orElseThrow();
+
+		enable(buff.getBuffId(), buff.getRank(), enabled);
+	}
+
+	private Optional<Buff> getBuff(BuffIdAndRank id) {
+		var buff = availableBuffsById.get(id);
+
+		return Optional.ofNullable(buff);
+	}
+
+	private Optional<Buff> getBuff(int buffId) {
+		var buff = availableBuffsByDbId.get(buffId);
+
+		return Optional.ofNullable(buff);
+	}
+
 	public boolean has(BuffId buffId) {
 		return enabledBuffsById.containsKey(buffId);
 	}
 
 	private boolean isAvailable(Buff buff) {
 		return availableBuffsById.containsKey(buff.getId());
-	}
-
-	private void assertMeetsFilter(Buff buff) {
-		if (!type.getFilter().test(buff)) {
-			//throw new IllegalArgumentException("Buff on wrong list: " + buff.getId());
-		}
 	}
 }

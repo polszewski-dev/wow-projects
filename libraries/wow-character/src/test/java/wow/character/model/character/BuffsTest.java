@@ -11,6 +11,7 @@ import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
@@ -133,7 +134,7 @@ class BuffsTest extends WowCharacterSpringTest {
 
 		var invalidIds = List.of(new BuffIdAndRank(ARCANE_BRILLIANCE, 10));
 
-		assertThatThrownBy(() -> buffs.set(invalidIds)).isInstanceOf(IllegalArgumentException.class);
+		assertThatThrownBy(() -> buffs.set(invalidIds)).isInstanceOf(NoSuchElementException.class);
 		assertThat(buffs.getList()).isEmpty();
 	}
 
@@ -151,7 +152,7 @@ class BuffsTest extends WowCharacterSpringTest {
 		assertThat(buffs.getList()).hasSize(1);
 		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 1));
 
-		assertThatThrownBy(() -> buffs.enable(ARCANE_BRILLIANCE, 10)).isInstanceOf(IllegalArgumentException.class);
+		assertThatThrownBy(() -> buffs.enable(ARCANE_BRILLIANCE, 10)).isInstanceOf(NoSuchElementException.class);
 
 		assertThat(buffs.getList()).hasSize(1);
 		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 1));

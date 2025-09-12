@@ -12,7 +12,7 @@ public record NonPlayerDTO(
 		String name,
 		CreatureType enemyType,
 		int enemyLevel,
-		List<BuffDTO> buffs,
+		List<Integer> buffIds,
 		List<ActiveEffectDTO> activeEffects
 ) {
 }

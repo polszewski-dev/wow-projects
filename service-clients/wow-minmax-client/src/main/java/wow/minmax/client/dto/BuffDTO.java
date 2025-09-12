@@ -1,4 +1,4 @@
-package wow.commons.client.dto;
+package wow.minmax.client.dto;
 
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffIdAndRank;
