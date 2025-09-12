@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 2021-03-05
  */
 public interface Enchant extends Described, TimeRestricted, CharacterRestricted, PveRoleClassified {
-	int getId();
+	EnchantId getId();
 
 	List<ItemType> getItemTypes();
 

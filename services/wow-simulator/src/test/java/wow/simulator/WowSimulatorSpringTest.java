@@ -14,6 +14,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
@@ -356,7 +357,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void equip(int itemId, ItemSlot itemSlot) {
-		Item item = getItemRepository().getItem(itemId, player.getPhaseId()).orElseThrow();
+		Item item = getItemRepository().getItem(ItemId.of(itemId), player.getPhaseId()).orElseThrow();
 		player.equip(new EquippableItem(item), itemSlot);
 	}
 

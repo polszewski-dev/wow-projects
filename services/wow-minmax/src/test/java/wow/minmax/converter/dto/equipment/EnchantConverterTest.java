@@ -3,6 +3,7 @@ package wow.minmax.converter.dto.equipment;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.categorization.ItemRarity;
+import wow.commons.model.item.EnchantId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.client.dto.equipment.EnchantDTO;
@@ -23,7 +24,7 @@ class EnchantConverterTest extends WowMinMaxSpringTest {
 
 	@Test
 	void convert() {
-		var enchant = enchantRepository.getEnchant(27982, TBC_P5).orElseThrow();
+		var enchant = enchantRepository.getEnchant(EnchantId.of(27982), TBC_P5).orElseThrow();
 
 		var converted = enchantConverter.convert(enchant);
 
@@ -44,6 +45,6 @@ class EnchantConverterTest extends WowMinMaxSpringTest {
 
 		var converted = enchantConverter.convertBack(enchant, TBC_P5);
 
-		assertThat(converted.getId()).isEqualTo(27982);
+		assertId(converted, 27982);
 	}
 }

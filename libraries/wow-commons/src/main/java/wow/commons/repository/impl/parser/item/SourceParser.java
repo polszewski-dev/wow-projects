@@ -3,6 +3,7 @@ package wow.commons.repository.impl.parser.item;
 import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.TradedItem;
+import wow.commons.model.item.TradedItemId;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Npc;
@@ -104,7 +105,9 @@ public class SourceParser {
 	}
 
 	private TradedItem getTradedItem(int tokenId) {
-		return tradedItemRepository.getTradedItem(tokenId, phaseId).orElseThrow();
+		var tradedItemId = TradedItemId.of(tokenId);
+
+		return tradedItemRepository.getTradedItem(tradedItemId, phaseId).orElseThrow();
 	}
 
 	private void parseReputationReward(String factionName) {

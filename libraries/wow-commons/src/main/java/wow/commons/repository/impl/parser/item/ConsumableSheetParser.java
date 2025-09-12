@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.item.Consumable;
+import wow.commons.model.item.ConsumableId;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.impl.ConsumableImpl;
 import wow.commons.repository.spell.SpellRepository;
@@ -24,7 +25,7 @@ public class ConsumableSheetParser extends AbstractItemSheetParser {
 	}
 
 	private Consumable getConsumable() {
-		var id = getId();
+		var id = ConsumableId.of(getId());
 
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();

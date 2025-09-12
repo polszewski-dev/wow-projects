@@ -8,6 +8,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.item.ConsumableId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.GroupCooldownId;
 import wow.commons.model.spell.SpellTarget;
@@ -25,9 +26,11 @@ class ConsumableRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void getConsumableById() {
-		var consumable = consumableRepository.getConsumable(22839, PhaseId.TBC_P5).orElseThrow();
+		var consumableId = ConsumableId.of(22839);
 
-		assertThat(consumable.getId()).isEqualTo(22839);
+		var consumable = consumableRepository.getConsumable(consumableId, PhaseId.TBC_P5).orElseThrow();
+
+		assertThat(consumable.getId()).isEqualTo(consumableId);
 		assertThat(consumable.getName()).isEqualTo("Destruction Potion");
 		assertThat(consumable.getRequiredLevel()).isEqualTo(60);
 		assertThat(consumable.getTooltip()).isEqualTo("Use: Increases spell critical chance by 2% and spell damage by 120 for 15 sec. (2 Min Cooldown)");
@@ -52,7 +55,7 @@ class ConsumableRepositoryTest extends WowCommonsSpringTest {
 	void getConsumableByName() {
 		var consumable = consumableRepository.getConsumable("Destruction Potion", PhaseId.TBC_P5).orElseThrow();
 
-		assertThat(consumable.getId()).isEqualTo(22839);
+		assertId(consumable, 22839);
 		assertThat(consumable.getName()).isEqualTo("Destruction Potion");
 	}
 }

@@ -16,7 +16,7 @@ public class ConsumableConfigConverter implements Converter<Consumable, Consumab
 	@Override
 	public ConsumableConfig doConvert(Consumable source) {
 		return new ConsumableConfig(
-				source.getId(),
+				source.getId().value(),
 				source.getName()
 		);
 	}

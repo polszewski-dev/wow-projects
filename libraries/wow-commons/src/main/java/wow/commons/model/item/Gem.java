@@ -9,7 +9,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-06
  */
-public interface Gem extends AbstractItem, PveRoleClassified {
+public interface Gem extends AbstractItem<GemId>, PveRoleClassified {
 	GemColor getColor();
 
 	List<MetaEnabler> getMetaEnablers();

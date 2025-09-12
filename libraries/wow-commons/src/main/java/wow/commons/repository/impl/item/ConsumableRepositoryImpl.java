@@ -2,6 +2,7 @@ package wow.commons.repository.impl.item;
 
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Consumable;
+import wow.commons.model.item.ConsumableId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.ConsumableExcelParser;
 import wow.commons.repository.item.ConsumableRepository;
@@ -20,7 +21,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  */
 @Component
 public class ConsumableRepositoryImpl implements ConsumableRepository {
-	private final PhaseMap<Integer, Consumable> consumableById = new PhaseMap<>();
+	private final PhaseMap<ConsumableId, Consumable> consumableById = new PhaseMap<>();
 	private final PhaseMap<String, Consumable> consumableByName = new PhaseMap<>();
 
 	public ConsumableRepositoryImpl(ConsumableExcelParser parser) throws IOException {
@@ -28,7 +29,7 @@ public class ConsumableRepositoryImpl implements ConsumableRepository {
 		parser.getConsumables().forEach(this::addConsumable);
 	}
 
-	public Optional<Consumable> getConsumable(int consumableId, PhaseId phaseId) {
+	public Optional<Consumable> getConsumable(ConsumableId consumableId, PhaseId phaseId) {
 		return consumableById.getOptional(phaseId, consumableId);
 	}
 

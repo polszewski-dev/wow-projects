@@ -6,6 +6,7 @@ import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.GemColor;
+import wow.commons.model.item.GemId;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.MetaEnabler;
 
@@ -36,9 +37,11 @@ class GemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void basicGemInfo() {
-		var gem = gemRepository.getGem(35760, TBC_P5).orElseThrow();
+		var gemId = GemId.of(35760);
 
-		assertThat(gem.getId()).isEqualTo(35760);
+		var gem = gemRepository.getGem(gemId, TBC_P5).orElseThrow();
+
+		assertThat(gem.getId()).isEqualTo(gemId);
 		assertThat(gem.getName()).isEqualTo("Reckless Pyrestone");
 		assertThat(gem.getRarity()).isEqualTo(EPIC);
 		assertThat(gem.getBinding()).isEqualTo(NO_BINDING);
@@ -51,7 +54,9 @@ class GemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void normalGemStats() {
-		var gem = gemRepository.getGem(35760, TBC_P5).orElseThrow();
+		var gemId = GemId.of(35760);
+
+		var gem = gemRepository.getGem(gemId, TBC_P5).orElseThrow();
 		var source = new ItemSource(gem);
 
 		assertThat(gem.getColor()).isEqualTo(GemColor.ORANGE);
@@ -74,7 +79,9 @@ class GemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void metaGemStats() {
-		var gem = gemRepository.getGem(34220, TBC_P5).orElseThrow();
+		var gemId = GemId.of(34220);
+
+		var gem = gemRepository.getGem(gemId, TBC_P5).orElseThrow();
 		var source = new ItemSource(gem);
 
 		assertThat(gem.getColor()).isEqualTo(GemColor.META);

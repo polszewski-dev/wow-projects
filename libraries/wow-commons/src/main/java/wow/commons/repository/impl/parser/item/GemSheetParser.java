@@ -1,9 +1,6 @@
 package wow.commons.repository.impl.parser.item;
 
-import wow.commons.model.item.Gem;
-import wow.commons.model.item.GemColor;
-import wow.commons.model.item.ItemSource;
-import wow.commons.model.item.MetaEnabler;
+import wow.commons.model.item.*;
 import wow.commons.model.item.impl.GemImpl;
 import wow.commons.repository.spell.SpellRepository;
 
@@ -31,7 +28,7 @@ public class GemSheetParser extends AbstractItemSheetParser {
 	}
 
 	private Gem getGem() {
-		var id = getId();
+		var id = GemId.of(getId());
 		var color = colColor.getEnum(GemColor::valueOf);
 		var metaEnablers = colMetaEnablers.getList(MetaEnabler::parse);
 

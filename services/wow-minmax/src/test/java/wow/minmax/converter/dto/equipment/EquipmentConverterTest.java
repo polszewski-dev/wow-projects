@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
+import wow.commons.model.item.ItemId;
 import wow.commons.repository.item.ItemRepository;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.client.dto.equipment.EquipmentDTO;
@@ -36,8 +37,8 @@ class EquipmentConverterTest extends WowMinMaxSpringTest {
 	void convert() {
 		var equipment = new Equipment();
 
-		var trinket1 = new EquippableItem(itemRepository.getItem(32483, TBC_P5).orElseThrow());
-		var trinket2 = new EquippableItem(itemRepository.getItem(33829, TBC_P5).orElseThrow());
+		var trinket1 = new EquippableItem(itemRepository.getItem(ItemId.of(32483), TBC_P5).orElseThrow());
+		var trinket2 = new EquippableItem(itemRepository.getItem(ItemId.of(33829), TBC_P5).orElseThrow());
 
 		equipment.equip(trinket1, TRINKET_1);
 		equipment.equip(trinket2, TRINKET_2);
@@ -67,7 +68,7 @@ class EquipmentConverterTest extends WowMinMaxSpringTest {
 
 		var converted = equipmentConverter.convertBack(equipment, TBC_P5);
 
-		assertThat(converted.getTrinket1().getId()).isEqualTo(32483);
-		assertThat(converted.getTrinket2().getId()).isEqualTo(33829);
+		assertThat(converted.getTrinket1().getId()).isEqualTo(ItemId.of(32483));
+		assertThat(converted.getTrinket2().getId()).isEqualTo(ItemId.of(33829));
 	}
 }

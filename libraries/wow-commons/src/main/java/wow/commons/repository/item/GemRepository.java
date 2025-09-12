@@ -1,6 +1,7 @@
 package wow.commons.repository.item;
 
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemId;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.PhaseId;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  * Date: 2021-03-02
  */
 public interface GemRepository {
-	Optional<Gem> getGem(int gemId, PhaseId phaseId);
+	Optional<Gem> getGem(GemId gemId, PhaseId phaseId);
 
 	Optional<Gem> getGem(String name, PhaseId phaseId);
 

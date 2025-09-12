@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.item.EnchantId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.minmax.model.equipment.EnchantConfig;
@@ -20,11 +21,13 @@ public class EnchantConfigConverter implements Converter<Enchant, EnchantConfig>
 
 	@Override
 	public EnchantConfig doConvert(Enchant source) {
-		return new EnchantConfig(source.getId(), source.getName());
+		return new EnchantConfig(source.getId().value(), source.getName());
 	}
 
 	@Override
 	public Enchant doConvertBack(EnchantConfig source, PhaseId phaseId) {
-		return enchantRepository.getEnchant(source.getId(), phaseId).orElseThrow();
+		var enchantId = EnchantId.of(source.getId());
+
+		return enchantRepository.getEnchant(enchantId, phaseId).orElseThrow();
 	}
 }

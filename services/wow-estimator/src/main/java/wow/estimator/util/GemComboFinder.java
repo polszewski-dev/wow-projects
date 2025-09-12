@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import wow.character.model.equipment.ItemSockets;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemId;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.estimator.model.Player;
 import wow.estimator.service.ItemService;
@@ -201,7 +202,8 @@ public class GemComboFinder {
 
 	private String getKey(Gem[] gemCombo) {
 		return Stream.of(gemCombo)
-				.mapToInt(Gem::getId)
+				.map(Gem::getId)
+				.mapToInt(GemId::value)
 				.sorted()
 				.mapToObj(String::valueOf)
 				.collect(Collectors.joining(","));

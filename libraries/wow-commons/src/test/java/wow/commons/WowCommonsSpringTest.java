@@ -12,6 +12,8 @@ import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
+import wow.commons.model.item.AbstractItem;
+import wow.commons.model.item.Enchant;
 import wow.commons.model.spell.*;
 
 import java.util.List;
@@ -96,5 +98,13 @@ public abstract class WowCommonsSpringTest {
 	protected static void assertEffect(Effect effect, int effectId, String tooltip) {
 		assertThat(effect.getEffectId()).isEqualTo(effectId);
 		assertThat(effect.getTooltip()).isEqualTo(tooltip);
+	}
+
+	protected static void assertId(AbstractItem<?> item, int id) {
+		assertThat(item.getId().value()).isEqualTo(id);
+	}
+
+	protected static void assertId(Enchant enchant, int id) {
+		assertThat(enchant.getId().value()).isEqualTo(id);
 	}
 }

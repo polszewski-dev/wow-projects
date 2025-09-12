@@ -18,15 +18,15 @@ import java.util.function.Predicate;
  * User: POlszewski
  * Date: 2022-10-31
  */
-public interface AbstractItem extends Described, TimeRestricted, CharacterRestricted {
-	int getId();
+public interface AbstractItem<T extends AbstractItemId> extends Described, TimeRestricted, CharacterRestricted {
+	T getId();
 
 	BasicItemInfo getBasicItemInfo();
 
 	PhaseId getFirstAppearedInPhase();
 
 	default ItemLink getItemLink() {
-		return new ItemLink(getId(), getName(), getRarity(), null, null, null, null);
+		return new ItemLink(getId().value(), getName(), getRarity(), null, null, null, null);
 	}
 
 	default ItemType getItemType() {

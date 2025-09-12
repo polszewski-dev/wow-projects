@@ -2,6 +2,7 @@ package wow.commons.repository.impl.item;
 
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.TradedItem;
+import wow.commons.model.item.TradedItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.TradedItemExcelParser;
 import wow.commons.repository.item.TradedItemRepository;
@@ -18,7 +19,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  */
 @Component
 public class TradedItemRepositoryImpl implements TradedItemRepository {
-	private final PhaseMap<Integer, TradedItem> tradedItemById = new PhaseMap<>();
+	private final PhaseMap<TradedItemId, TradedItem> tradedItemById = new PhaseMap<>();
 
 	public TradedItemRepositoryImpl(TradedItemExcelParser parser) throws IOException {
 		parser.readFromXls();
@@ -26,7 +27,7 @@ public class TradedItemRepositoryImpl implements TradedItemRepository {
 	}
 
 	@Override
-	public Optional<TradedItem> getTradedItem(int tradedItemId, PhaseId phaseId) {
+	public Optional<TradedItem> getTradedItem(TradedItemId tradedItemId, PhaseId phaseId) {
 		return tradedItemById.getOptional(phaseId, tradedItemId);
 	}
 

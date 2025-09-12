@@ -6,6 +6,7 @@ import wow.commons.model.categorization.ArmorSubType;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.categorization.WeaponSubType;
+import wow.commons.model.item.ItemId;
 import wow.commons.repository.item.ItemRepository;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.client.dto.PhaseDTO;
@@ -98,6 +99,6 @@ class ItemConverterTest extends WowMinMaxSpringTest {
 		var item = new ItemDTO(34347, null, null, null, null, 0, null, null, null, null, null, null, null, null);
 		var converted = itemConverter.convertBack(item, TBC_P5);
 
-		assertThat(converted.getId()).isEqualTo(34347);
+		assertThat(converted.getId()).isEqualTo(ItemId.of(34347));
 	}
 }

@@ -7,15 +7,16 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.TradedItem;
+import wow.commons.model.item.TradedItemId;
 
 /**
  * User: POlszewski
  * Date: 2023-03-27
  */
 @Getter
-public class TradedItemImpl extends AbstractItemImpl implements TradedItem {
+public class TradedItemImpl extends AbstractItemImpl<TradedItemId> implements TradedItem {
 	public TradedItemImpl(
-			int id,
+			TradedItemId id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,

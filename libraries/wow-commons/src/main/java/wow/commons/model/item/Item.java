@@ -11,7 +11,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2021-03-02
  */
-public interface Item extends AbstractItem, PveRoleClassified {
+public interface Item extends AbstractItem<ItemId>, PveRoleClassified {
 	ItemSet getItemSet();
 
 	ItemSocketSpecification getSocketSpecification();

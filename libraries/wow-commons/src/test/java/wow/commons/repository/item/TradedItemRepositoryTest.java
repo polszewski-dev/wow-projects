@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.model.config.TimeRestriction;
+import wow.commons.model.item.TradedItemId;
 
 import java.util.List;
 
@@ -25,9 +26,11 @@ class TradedItemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void token() {
-		var tradedItem = tradedItemRepository.getTradedItem(31101, TBC_P5).orElseThrow();
+		var tradedItemId = TradedItemId.of(31101);
 
-		assertThat(tradedItem.getId()).isEqualTo(31101);
+		var tradedItem = tradedItemRepository.getTradedItem(tradedItemId, TBC_P5).orElseThrow();
+
+		assertThat(tradedItem.getId()).isEqualTo(tradedItemId);
 		assertThat(tradedItem.getName()).isEqualTo("Pauldrons of the Forgotten Conqueror");
 		assertThat(tradedItem.getItemType()).isEqualTo(TOKEN);
 		assertThat(tradedItem.getRarity()).isEqualTo(EPIC);

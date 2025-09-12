@@ -7,6 +7,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.item.EnchantId;
 import wow.commons.model.item.EnchantSource;
 
 import java.util.List;
@@ -27,9 +28,11 @@ class EnchantRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void basicEnchantInfo() {
-		var enchant = enchantRepository.getEnchant(31372, TBC_P5).orElseThrow();
+		var enchantId = EnchantId.of(31372);
 
-		assertThat(enchant.getId()).isEqualTo(31372);
+		var enchant = enchantRepository.getEnchant(enchantId, TBC_P5).orElseThrow();
+
+		assertThat(enchant.getId()).isEqualTo(enchantId);
 		assertThat(enchant.getName()).isEqualTo("Runic Spellthread");
 		assertThat(enchant.getItemTypes()).hasSameElementsAs(List.of(ItemType.LEGS));
 		assertThat(enchant.getItemSubTypes()).isEmpty();
@@ -38,7 +41,9 @@ class EnchantRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void enchantStats() {
-		var enchant = enchantRepository.getEnchant(31372, TBC_P5).orElseThrow();
+		var enchantId = EnchantId.of(31372);
+
+		var enchant = enchantRepository.getEnchant(enchantId, TBC_P5).orElseThrow();
 
 		assertEffect(
 				enchant.getEffect(),

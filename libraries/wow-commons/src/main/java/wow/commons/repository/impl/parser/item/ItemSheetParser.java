@@ -33,7 +33,7 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 	}
 
 	private Item getItem() {
-		var id = getId();
+		var id = ItemId.of(getId());
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();

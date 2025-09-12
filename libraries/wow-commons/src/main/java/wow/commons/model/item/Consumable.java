@@ -6,6 +6,6 @@ import wow.commons.model.spell.ActivatedAbility;
  * User: POlszewski
  * Date: 2024-11-22
  */
-public interface Consumable extends AbstractItem {
+public interface Consumable extends AbstractItem<ConsumableId> {
 	ActivatedAbility getActivatedAbility();
 }

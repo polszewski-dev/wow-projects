@@ -20,6 +20,6 @@ public record EnchantSource(Enchant enchant) implements EffectSource, Comparable
 
 	@Override
 	public int compareTo(EnchantSource o) {
-		return Integer.compare(this.enchant.getId(), o.enchant.getId());
+		return Integer.compare(this.enchant.getId().value(), o.enchant.getId().value());
 	}
 }

@@ -75,6 +75,6 @@ class GemConverterTest extends WowMinMaxSpringTest {
 
 		var converted = gemConverter.convertBack(gem, TBC_P5);
 
-		assertThat(converted.getId()).isEqualTo(35760);
+		assertId(converted, 35760);
 	}
 }

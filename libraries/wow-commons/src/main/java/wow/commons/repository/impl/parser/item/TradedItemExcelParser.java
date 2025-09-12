@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.TradedItem;
+import wow.commons.model.item.TradedItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.pve.FactionRepository;
 import wow.commons.repository.pve.NpcRepository;
@@ -58,7 +59,7 @@ public class TradedItemExcelParser extends ExcelParser {
 		tradedItems.add(tradedItem);
 	}
 
-	private Optional<TradedItem> getTradedItem(int tradedItemId, PhaseId phaseId) {
+	private Optional<TradedItem> getTradedItem(TradedItemId tradedItemId, PhaseId phaseId) {
 		return Optional.empty();
 	}
 }

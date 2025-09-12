@@ -7,6 +7,7 @@ import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.attribute.condition.SpellSchoolCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemId;
 import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.SocketType;
 
@@ -59,9 +60,11 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void basicItemInfo() {
-		var item = itemRepository.getItem(34364, TBC_P5).orElseThrow();
+		var itemId = ItemId.of(34364);
 
-		assertThat(item.getId()).isEqualTo(34364);
+		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
+
+		assertThat(item.getId()).isEqualTo(itemId);
 		assertThat(item.getName()).isEqualTo("Sunfire Robe");
 		assertThat(item.getRarity()).isEqualTo(EPIC);
 		assertThat(item.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
@@ -80,7 +83,9 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void socketInfo() {
-		var item = itemRepository.getItem(34364, TBC_P5).orElseThrow();
+		var itemId = ItemId.of(34364);
+
+		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
 
 		var socketSpecification = item.getSocketSpecification();
 
@@ -94,7 +99,9 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void itemStats() {
-		var item = itemRepository.getItem(34364, TBC_P5).orElseThrow();
+		var itemId = ItemId.of(34364);
+
+		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
 		var source = new ItemSource(item);
 
 		assertThat(item.getEffects()).hasSize(6);
@@ -118,7 +125,9 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void itemSet() {
-		var item = itemRepository.getItem(24262, TBC_P5).orElseThrow();
+		var itemId = ItemId.of(24262);
+
+		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
 		var itemSet = item.getItemSet();
 
 		assertThat(itemSet.getName()).isEqualTo("Spellstrike Infusion");

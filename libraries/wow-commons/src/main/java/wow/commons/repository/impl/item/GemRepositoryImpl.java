@@ -2,6 +2,7 @@ package wow.commons.repository.impl.item;
 
 import org.springframework.stereotype.Component;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemId;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.GemExcelParser;
@@ -22,7 +23,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  */
 @Component
 public class GemRepositoryImpl implements GemRepository {
-	private final PhaseMap<Integer, Gem> gemById = new PhaseMap<>();
+	private final PhaseMap<GemId, Gem> gemById = new PhaseMap<>();
 	private final PhaseMap<String, List<Gem>> gemByName = new PhaseMap<>();
 	private final PhaseMap<SocketType, List<Gem>> gemBySocketType = new PhaseMap<>();
 
@@ -32,7 +33,7 @@ public class GemRepositoryImpl implements GemRepository {
 	}
 
 	@Override
-	public Optional<Gem> getGem(int gemId, PhaseId phaseId) {
+	public Optional<Gem> getGem(GemId gemId, PhaseId phaseId) {
 		return gemById.getOptional(phaseId, gemId);
 	}
 

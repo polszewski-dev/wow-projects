@@ -7,6 +7,7 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.AbstractItem;
+import wow.commons.model.item.AbstractItemId;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.pve.PhaseId;
 
@@ -17,8 +18,8 @@ import java.util.Set;
  * Date: 2023-03-27
  */
 @Getter
-public abstract class AbstractItemImpl implements AbstractItem {
-	private final int id;
+public abstract class AbstractItemImpl<T extends AbstractItemId> implements AbstractItem<T> {
+	private final T id;
 	private final Description description;
 	private final TimeRestriction timeRestriction;
 	private final CharacterRestriction characterRestriction;
@@ -27,7 +28,7 @@ public abstract class AbstractItemImpl implements AbstractItem {
 	private PhaseId firstAppearedInPhase;
 
 	protected AbstractItemImpl(
-			int id,
+			T id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,

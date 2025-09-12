@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.item.EnchantId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.EnchantExcelParser;
 import wow.commons.repository.item.EnchantRepository;
@@ -24,7 +25,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  */
 @Component
 public class EnchantRepositoryImpl implements EnchantRepository {
-	private final PhaseMap<Integer, Enchant> enchantById = new PhaseMap<>();
+	private final PhaseMap<EnchantId, Enchant> enchantById = new PhaseMap<>();
 	private final PhaseMap<String, List<Enchant>> enchantByName = new PhaseMap<>();
 
 	public EnchantRepositoryImpl(EnchantExcelParser parser) throws IOException {
@@ -33,7 +34,7 @@ public class EnchantRepositoryImpl implements EnchantRepository {
 	}
 
 	@Override
-	public Optional<Enchant> getEnchant(int enchantId, PhaseId phaseId) {
+	public Optional<Enchant> getEnchant(EnchantId enchantId, PhaseId phaseId) {
 		return enchantById.getOptional(phaseId, enchantId);
 	}
 

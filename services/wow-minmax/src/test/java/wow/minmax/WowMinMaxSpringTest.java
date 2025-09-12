@@ -13,8 +13,10 @@ import wow.character.service.CharacterService;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
@@ -28,6 +30,7 @@ import wow.minmax.service.UpgradeService;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
@@ -79,7 +82,7 @@ public abstract class WowMinMaxSpringTest {
 	}
 
 	protected Gem getGem(int gemId) {
-		return gemRepository.getGem(gemId, PHASE).orElseThrow();
+		return gemRepository.getGem(GemId.of(gemId), PHASE).orElseThrow();
 	}
 
 	protected Enchant getEnchant(String name) {
@@ -136,4 +139,12 @@ public abstract class WowMinMaxSpringTest {
 	protected static final CreatureType ENEMY_TYPE = UNDEAD;
 	protected static final int LVL_DIFF = 3;
 	protected static final CharacterId CHARACTER_KEY = new CharacterId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);
+
+	protected static void assertId(AbstractItem<?> item, int id) {
+		assertThat(item.getId().value()).isEqualTo(id);
+	}
+
+	protected static void assertId(Enchant enchant, int id) {
+		assertThat(enchant.getId().value()).isEqualTo(id);
+	}
 }

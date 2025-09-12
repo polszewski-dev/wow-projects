@@ -4,7 +4,9 @@ import wow.character.model.character.GearSet;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemId;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.commons.repository.item.EnchantRepository;
@@ -97,7 +99,7 @@ public class GearSetSheetParser extends WowExcelSheetParser {
 		}
 
 		if (itemName.contains(ID_PREFIX)) {
-			var itemId = getId(itemName);
+			var itemId = ItemId.of(getId(itemName));
 			return itemRepository.getItem(itemId, phaseId);
 		}
 
@@ -110,7 +112,7 @@ public class GearSetSheetParser extends WowExcelSheetParser {
 		}
 
 		if (gemName.contains(ID_PREFIX)) {
-			var gemId = getId(gemName);
+			var gemId = GemId.of(getId(gemName));
 			return gemRepository.getGem(gemId, phaseId);
 		}
 

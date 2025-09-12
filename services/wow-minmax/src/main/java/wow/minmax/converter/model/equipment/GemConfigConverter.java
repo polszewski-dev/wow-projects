@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.GemRepository;
 import wow.minmax.model.equipment.GemConfig;
@@ -20,11 +21,13 @@ public class GemConfigConverter implements Converter<Gem, GemConfig>, Parametriz
 
 	@Override
 	public GemConfig doConvert(Gem source) {
-		return new GemConfig(source.getId(), source.getName());
+		return new GemConfig(source.getId().value(), source.getName());
 	}
 
 	@Override
 	public Gem doConvertBack(GemConfig source, PhaseId phaseId) {
-		return gemRepository.getGem(source.getId(), phaseId).orElseThrow();
+		var gemId = GemId.of(source.getId());
+
+		return gemRepository.getGem(gemId, phaseId).orElseThrow();
 	}
 }

@@ -1,6 +1,7 @@
 package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.item.TradedItem;
+import wow.commons.model.item.TradedItemId;
 import wow.commons.model.item.impl.TradedItemImpl;
 import wow.commons.repository.spell.SpellRepository;
 
@@ -23,7 +24,7 @@ public class TradedItemSheetParser extends AbstractItemSheetParser {
 	}
 
 	private TradedItem getTradedItem() {
-		var id = getId();
+		var id = TradedItemId.of(getId());
 
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();

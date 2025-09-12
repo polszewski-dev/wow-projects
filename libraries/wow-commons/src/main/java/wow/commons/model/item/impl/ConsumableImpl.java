@@ -8,6 +8,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Consumable;
+import wow.commons.model.item.ConsumableId;
 import wow.commons.model.spell.ActivatedAbility;
 
 /**
@@ -16,11 +17,11 @@ import wow.commons.model.spell.ActivatedAbility;
  */
 @Getter
 @Setter
-public class ConsumableImpl extends AbstractItemImpl implements Consumable {
+public class ConsumableImpl extends AbstractItemImpl<ConsumableId> implements Consumable {
 	private ActivatedAbility activatedAbility;
 
 	public ConsumableImpl(
-			int id,
+			ConsumableId id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,

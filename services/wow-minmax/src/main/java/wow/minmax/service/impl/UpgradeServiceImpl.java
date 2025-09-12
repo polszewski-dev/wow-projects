@@ -76,7 +76,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 		var request = new GetBestItemVariantRequestDTO(
 				playerConverter.convert(player),
-				item.getId(),
+				item.getId().value(),
 				slot,
 				gemFilterConverter.convert(gemFilter),
 				findUpgradesConfig.enchantNames()

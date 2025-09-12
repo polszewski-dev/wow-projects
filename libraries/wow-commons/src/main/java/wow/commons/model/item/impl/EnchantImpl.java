@@ -11,6 +11,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.item.EnchantId;
 
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class EnchantImpl implements Enchant {
-	private final int id;
+	private final EnchantId id;
 	private final Description description;
 	private final TimeRestriction timeRestriction;
 	private final CharacterRestriction characterRestriction;
@@ -35,7 +36,7 @@ public class EnchantImpl implements Enchant {
 	private Effect effect;
 
 	public EnchantImpl(
-			int id,
+			EnchantId id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,

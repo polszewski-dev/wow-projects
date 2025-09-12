@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.ItemRepository;
 import wow.minmax.model.equipment.ItemConfig;
@@ -20,11 +21,13 @@ public class ItemConfigConverter implements Converter<Item, ItemConfig>, Paramet
 
 	@Override
 	public ItemConfig doConvert(Item source) {
-		return new ItemConfig(source.getId(), source.getName());
+		return new ItemConfig(source.getId().value(), source.getName());
 	}
 
 	@Override
 	public Item doConvertBack(ItemConfig source, PhaseId phaseId) {
-		return itemRepository.getItem(source.getId(), phaseId).orElseThrow();
+		var itemId = ItemId.of(source.getId());
+
+		return itemRepository.getItem(itemId, phaseId).orElseThrow();
 	}
 }

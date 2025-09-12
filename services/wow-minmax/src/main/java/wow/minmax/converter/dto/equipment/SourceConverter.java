@@ -18,21 +18,21 @@ import java.util.stream.Collectors;
 public class SourceConverter {
 	private final ProfessionRepository professionRepository;
 
-	public String getSources(AbstractItem item) {
+	public String getSources(AbstractItem<?> item) {
 		return item.getSources().stream()
 				.map(source -> getSourceString(source, item))
 				.distinct()
 				.collect(Collectors.joining(", "));
 	}
 
-	public String getDetailedSources(AbstractItem item) {
+	public String getDetailedSources(AbstractItem<?> item) {
 		return item.getSources().stream()
 				.map(source -> getDetailedSourceString(source, item))
 				.distinct()
 				.collect(Collectors.joining(", "));
 	}
 
-	private String getDetailedSourceString(Source source, AbstractItem item) {
+	private String getDetailedSourceString(Source source, AbstractItem<?> item) {
 		if (source.isNpcDrop()) {
 			return String.format("%s - %s", source.zoneShortNames(), source.npc().getName());
 		}
@@ -42,7 +42,7 @@ public class SourceConverter {
 		return getSourceString(source, item);
 	}
 
-	private String getSourceString(Source source, AbstractItem item) {
+	private String getSourceString(Source source, AbstractItem<?> item) {
 		if (!source.zones().isEmpty()) {
 			return source.zoneShortNames();
 		}
@@ -65,7 +65,7 @@ public class SourceConverter {
 		return source.toString();
 	}
 
-	private Profession getProfession(Source source, AbstractItem item) {
+	private Profession getProfession(Source source, AbstractItem<?> item) {
 		var gameVersionId = item.getGameVersionId();
 
 		return professionRepository.getProfession(source.professionId(), gameVersionId).orElseThrow();

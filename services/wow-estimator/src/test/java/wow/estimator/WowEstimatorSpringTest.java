@@ -12,6 +12,7 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
@@ -66,7 +67,7 @@ public abstract class WowEstimatorSpringTest {
 	}
 
 	protected Gem getGem(int gemId) {
-		return gemRepository.getGem(gemId, PHASE).orElseThrow();
+		return gemRepository.getGem(GemId.of(gemId), PHASE).orElseThrow();
 	}
 
 	protected Enchant getEnchant(String name) {

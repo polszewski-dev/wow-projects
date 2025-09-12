@@ -24,7 +24,7 @@ import static wow.commons.model.categorization.WeaponSubType.WAND;
  */
 @Getter
 @Setter
-public class ItemImpl extends AbstractItemImpl implements Item {
+public class ItemImpl extends AbstractItemImpl<ItemId> implements Item {
 	private List<Effect> effects;
 	private ActivatedAbility activatedAbility;
 	private ItemSet itemSet;
@@ -33,7 +33,7 @@ public class ItemImpl extends AbstractItemImpl implements Item {
 	private final Set<PveRole> pveRoles;
 
 	public ItemImpl(
-			int id,
+			ItemId id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,

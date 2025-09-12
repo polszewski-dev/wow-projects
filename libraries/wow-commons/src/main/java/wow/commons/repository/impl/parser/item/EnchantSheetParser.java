@@ -4,6 +4,7 @@ import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
+import wow.commons.model.item.EnchantId;
 import wow.commons.model.item.EnchantSource;
 import wow.commons.model.item.impl.EnchantImpl;
 import wow.commons.repository.spell.SpellRepository;
@@ -35,7 +36,7 @@ public class EnchantSheetParser extends AbstractItemSheetParser {
 	}
 
 	private Enchant getEnchant() {
-		var id = colId.getInteger();
+		var id = EnchantId.of(getId());
 		var itemTypes = colItemTypes.getList(ItemType::parse);
 		var itemSubTypes = colItemSubTypes.getList(ItemSubType::parse);
 		var requiredItemLevel = colReqILvl.getInteger(1);

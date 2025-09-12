@@ -3,6 +3,7 @@ package wow.commons.repository.impl.item;
 import org.springframework.stereotype.Component;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemId;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.ItemExcelParser;
@@ -23,7 +24,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  */
 @Component
 public class ItemRepositoryImpl implements ItemRepository {
-	private final PhaseMap<Integer, Item> itemById = new PhaseMap<>();
+	private final PhaseMap<ItemId, Item> itemById = new PhaseMap<>();
 	private final PhaseMap<String, List<Item>> itemByName = new PhaseMap<>();
 	private final PhaseMap<ItemSlot, List<Item>> itemBySlot = new PhaseMap<>();
 
@@ -36,7 +37,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 	}
 
 	@Override
-	public Optional<Item> getItem(int itemId, PhaseId phaseId) {
+	public Optional<Item> getItem(ItemId itemId, PhaseId phaseId) {
 		return itemById.getOptional(phaseId, itemId);
 	}
 

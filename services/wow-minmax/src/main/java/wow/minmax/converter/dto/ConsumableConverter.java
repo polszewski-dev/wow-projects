@@ -16,7 +16,7 @@ public class ConsumableConverter implements Converter<Consumable, ConsumableDTO>
 	@Override
 	public ConsumableDTO doConvert(Consumable source) {
 		return new ConsumableDTO(
-				source.getId(),
+				source.getId().value(),
 				source.getName(),
 				source.getTooltip(),
 				source.getIcon(),

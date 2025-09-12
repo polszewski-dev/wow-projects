@@ -11,6 +11,7 @@ import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.client.dto.PlayerDTO;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.item.AbstractItem;
+import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.Talent;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 		var consumableIds = source.getConsumables().getList().stream()
 				.map(AbstractItem::getId)
+				.map(ConsumableId::value)
 				.toList();
 
 		return new PlayerDTO(
@@ -118,7 +120,9 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	private void enableConsumables(PlayerDTO source, P player) {
 		for (var consumableId : source.consumableIds()) {
-			player.getConsumables().enable(consumableId);
+			var wrappedConsumableId = ConsumableId.of(consumableId);
+
+			player.getConsumables().enable(wrappedConsumableId);
 		}
 	}
 

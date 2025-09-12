@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemId;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.impl.AbstractItemImpl;
 import wow.commons.model.pve.GameVersionId;
@@ -38,7 +39,7 @@ public class ItemExcelParser extends ExcelParser {
 	private final SourceParserFactory sourceParserFactory;
 	private final SpellRepository spellRepository;
 
-	private final PhaseMap<Integer, Item> itemsById = new PhaseMap<>();
+	private final PhaseMap<ItemId, Item> itemsById = new PhaseMap<>();
 	private final PhaseMap<String, ItemSet> itemSetsByName = new PhaseMap<>();
 
 	private record ItemSetPieceKey(String name, GameVersionId version) {}
@@ -78,7 +79,7 @@ public class ItemExcelParser extends ExcelParser {
 
 	public List<Item> getItems() {
 		for (var item : itemsById.allValues()) {
-			((AbstractItemImpl) item).setFirstAppearedInPhase(getFirstAppearedInPhase(item));
+			((AbstractItemImpl<?>) item).setFirstAppearedInPhase(getFirstAppearedInPhase(item));
 		}
 
 		return itemsById.allValues();

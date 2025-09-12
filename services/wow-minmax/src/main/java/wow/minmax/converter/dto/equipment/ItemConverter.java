@@ -6,6 +6,7 @@ import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.pve.PhaseRepository;
@@ -31,7 +32,7 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 	@Override
 	public ItemDTO doConvert(Item source) {
 		return new ItemDTO(
-				source.getId(),
+				source.getId().value(),
 				source.getName(),
 				source.getRarity(),
 				source.getItemType(),
@@ -50,7 +51,9 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 
 	@Override
 	public Item doConvertBack(ItemDTO source, PhaseId phaseId) {
-		return itemRepository.getItem(source.id(), phaseId).orElseThrow();
+		var itemId = ItemId.of(source.id());
+
+		return itemRepository.getItem(itemId, phaseId).orElseThrow();
 	}
 
 	private String getTooltip(Item source) {

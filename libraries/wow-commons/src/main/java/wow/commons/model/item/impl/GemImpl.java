@@ -8,10 +8,7 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.item.BasicItemInfo;
-import wow.commons.model.item.Gem;
-import wow.commons.model.item.GemColor;
-import wow.commons.model.item.MetaEnabler;
+import wow.commons.model.item.*;
 
 import java.util.List;
 import java.util.Set;
@@ -22,14 +19,14 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class GemImpl extends AbstractItemImpl implements Gem {
+public class GemImpl extends AbstractItemImpl<GemId> implements Gem {
 	private List<Effect> effects;
 	private final GemColor color;
 	private final List<MetaEnabler> metaEnablers;
 	private final Set<PveRole> pveRoles;
 
 	public GemImpl(
-			int id,
+			GemId id,
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,

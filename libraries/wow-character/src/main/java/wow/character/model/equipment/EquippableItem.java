@@ -39,11 +39,12 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 	}
 
 	public ItemLink getItemLink() {
-		Integer enchantId = enchant != null ? enchant.getId() : null;
-		Integer gem1Id = getSocketCount() >= 1 && getGem(0) != null ? getGem(0).getId() : null;
-		Integer gem2Id = getSocketCount() >= 2 && getGem(1) != null ? getGem(1).getId() : null;
-		Integer gem3Id = getSocketCount() >= 3 && getGem(2) != null ? getGem(2).getId() : null;
-		Integer gem4Id = getSocketCount() >= 4 && getGem(3) != null ? getGem(3).getId() : null;
+		var enchantId = enchant != null ? enchant.getId().value() : null;
+		var gem1Id = getSocketCount() >= 1 && getGem(0) != null ? getGem(0).getId().value() : null;
+		var gem2Id = getSocketCount() >= 2 && getGem(1) != null ? getGem(1).getId().value() : null;
+		var gem3Id = getSocketCount() >= 3 && getGem(2) != null ? getGem(2).getId().value() : null;
+		var gem4Id = getSocketCount() >= 4 && getGem(3) != null ? getGem(3).getId().value() : null;
+
 		return item.getItemLink().setEnchantAndGems(enchantId, gem1Id, gem2Id, gem3Id, gem4Id);
 	}
 
@@ -59,7 +60,7 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		return enchant;
 	}
 
-	public int getId() {
+	public ItemId getId() {
 		return item.getId();
 	}
 

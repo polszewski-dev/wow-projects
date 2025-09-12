@@ -54,9 +54,10 @@ class UpgradeControllerTest extends ControllerTest {
 		var playerDTO = playerConverter.convert(character);
 		var itemSlot = ItemSlot.HEAD;
 		var item = character.getEquippedItem(itemSlot).getItem();
+		int itemId = item.getId().value();
 		var gemFilterDTO = new GemFilterDTO(true);
 		var enchantNames = Set.<String>of();
-		var request = new GetBestItemVariantRequestDTO(playerDTO, item.getId(), itemSlot, gemFilterDTO, enchantNames);
+		var request = new GetBestItemVariantRequestDTO(playerDTO, itemId, itemSlot, gemFilterDTO, enchantNames);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);

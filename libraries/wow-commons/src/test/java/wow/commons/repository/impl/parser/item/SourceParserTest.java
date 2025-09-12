@@ -44,7 +44,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		assertThat(source.isNpcDrop()).isTrue();
 		assertThat(source.npc().getId()).isEqualTo(25315);
 		assertThat(source.npc().getName()).isEqualTo("Kil'jaeden");
-		assertThat(source.zones().get(0).getId()).isEqualTo(4075);
+		assertThat(source.zones().getFirst().getId()).isEqualTo(4075);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isZoneDrop()).isTrue();
-		assertThat(source.zones().get(0).getId()).isEqualTo(4075);
+		assertThat(source.zones().getFirst().getId()).isEqualTo(4075);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isTraded()).isTrue();
-		assertThat(source.sourceItem().getId()).isEqualTo(34856);
+		assertId(source.sourceItem(), 34856);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class SourceParserTest extends WowCommonsSpringTest {
 		Source source = sources.iterator().next();
 
 		assertThat(source.isTraded()).isTrue();
-		assertThat(source.sourceItem().getId()).isEqualTo(32405);
+		assertId(source.sourceItem(), 32405);
 	}
 
 	@Test

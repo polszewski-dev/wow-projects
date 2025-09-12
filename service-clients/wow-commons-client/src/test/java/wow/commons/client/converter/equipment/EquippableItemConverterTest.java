@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.WowCommonsClientSpringTest;
 import wow.commons.client.dto.equipment.EquippableItemDTO;
+import wow.commons.model.item.EnchantId;
+import wow.commons.model.item.GemId;
+import wow.commons.model.item.ItemId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
@@ -33,11 +36,11 @@ class EquippableItemConverterTest extends WowCommonsClientSpringTest {
 
 	@Test
 	void convert() {
-		var item = itemRepository.getItem(34182, TBC_P5).orElseThrow();
-		var enchant = enchantRepository.getEnchant(27982, TBC_P5).orElseThrow();
-		var gem1 = gemRepository.getGem(32196, TBC_P5).orElseThrow();
-		var gem2 = gemRepository.getGem(35760, TBC_P5).orElseThrow();
-		var gem3 = gemRepository.getGem(32215, TBC_P5).orElseThrow();
+		var item = itemRepository.getItem(ItemId.of(34182), TBC_P5).orElseThrow();
+		var enchant = enchantRepository.getEnchant(EnchantId.of(27982), TBC_P5).orElseThrow();
+		var gem1 = gemRepository.getGem(GemId.of(32196), TBC_P5).orElseThrow();
+		var gem2 = gemRepository.getGem(GemId.of(35760), TBC_P5).orElseThrow();
+		var gem3 = gemRepository.getGem(GemId.of(32215), TBC_P5).orElseThrow();
 
 		var equippableItem = new EquippableItem(item)
 				.enchant(enchant)
@@ -64,10 +67,10 @@ class EquippableItemConverterTest extends WowCommonsClientSpringTest {
 
 		var converted = equippableItemConverter.convertBack(equippableItem, TBC_P5);
 
-		assertThat(converted.getItem().getId()).isEqualTo(34182);
-		assertThat(converted.getEnchant().getId()).isEqualTo(27982);
-		assertThat(converted.getGem(0).getId()).isEqualTo(32196);
-		assertThat(converted.getGem(1).getId()).isEqualTo(35760);
-		assertThat(converted.getGem(2).getId()).isEqualTo(32215);
+		assertId(converted.getItem(), 34182);
+		assertId(converted.getEnchant(), 27982);
+		assertId(converted.getGem(0), 32196);
+		assertId(converted.getGem(1), 35760);
+		assertId(converted.getGem(2), 32215);
 	}
 }

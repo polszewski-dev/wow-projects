@@ -4,6 +4,7 @@ import wow.character.model.Copyable;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.item.Consumable;
+import wow.commons.model.item.ConsumableId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActivatedAbility;
 
@@ -17,7 +18,7 @@ import java.util.Optional;
  * Date: 2024-11-21
  */
 public class Consumables implements EffectCollection, Copyable<Consumables> {
-	private final Map<Integer, Consumable> availableConsumablesById = new HashMap<>();
+	private final Map<ConsumableId, Consumable> availableConsumablesById = new HashMap<>();
 	private final Map<String, Consumable> availableConsumablesByName = new HashMap<>();
 	private final Map<String, Consumable> enabledConsumables = new HashMap<>();
 
@@ -73,7 +74,7 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		enabledConsumables.remove(name);
 	}
 
-	public void enable(int consumableId) {
+	public void enable(ConsumableId consumableId) {
 		var consumable = getConsumable(consumableId).orElseThrow();
 
 		enabledConsumables.put(consumable.getName(), consumable);
@@ -85,7 +86,7 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		return Optional.ofNullable(consumable);
 	}
 
-	private Optional<Consumable> getConsumable(int consumableId) {
+	private Optional<Consumable> getConsumable(ConsumableId consumableId) {
 		var consumable = availableConsumablesById.get(consumableId);
 
 		return Optional.ofNullable(consumable);
