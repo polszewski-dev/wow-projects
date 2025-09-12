@@ -23,7 +23,7 @@ public record PlayerDTO(
 		List<CharacterProfessionDTO> professions,
 		List<ExclusiveFaction> exclusiveFactions,
 		EquipmentDTO equipment,
-		List<TalentDTO> talents,
+		List<Integer> talentIds,
 		PveRole role,
 		PetType activePet,
 		String rotation,

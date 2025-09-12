@@ -1,9 +1,10 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.client.dto.TalentDTO;
+import wow.commons.client.converter.Converter;
 import wow.commons.model.talent.Talent;
+import wow.minmax.client.dto.TalentDTO;
 
 /**
  * User: POlszewski

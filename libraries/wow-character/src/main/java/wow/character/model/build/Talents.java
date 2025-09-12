@@ -16,20 +16,23 @@ import java.util.*;
 @AllArgsConstructor
 public class Talents implements EffectCollection, Copyable<Talents> {
 	private final Map<TalentId, Map<Integer, Talent>> availableTalentsByIdByRank;
+	private final Map<Integer, Talent> availableTalentsById;
 	private final Map<TalentId, Talent> talentById = new EnumMap<>(TalentId.class);
 
 	public Talents(List<Talent> availableTalents) {
 		this.availableTalentsByIdByRank = new EnumMap<>(TalentId.class);
+		this.availableTalentsById = new HashMap<>();
 
-		for (Talent talent : availableTalents) {
+		for (var talent : availableTalents) {
 			availableTalentsByIdByRank.computeIfAbsent(talent.getTalentId(), x -> new HashMap<>())
 					.put(talent.getRank(), talent);
+			availableTalentsById.put(talent.getId(), talent);
 		}
 	}
 
 	@Override
 	public Talents copy() {
-		Talents copy = new Talents(availableTalentsByIdByRank);
+		var copy = new Talents(availableTalentsByIdByRank, availableTalentsById);
 
 		copy.talentById.putAll(talentById);
 		return copy;
@@ -47,17 +50,26 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		}
 	}
 
-	private Optional<Talent> getTalent(TalentId talentId, int talentRank) {
-		return Optional.ofNullable(availableTalentsByIdByRank.getOrDefault(talentId, Map.of()).get(talentRank));
+	public void enableTalent(TalentId talentId, int talentRank) {
+		var talent = getTalent(talentId, talentRank).orElseThrow();
+		enableTalent(talent);
 	}
 
-	public void enableTalent(TalentId talentId, int talentRank) {
-		Talent talent = getTalent(talentId, talentRank).orElseThrow();
+	public void enableTalent(int talentId) {
+		var talent = getTalent(talentId).orElseThrow();
 		enableTalent(talent);
 	}
 
 	private void enableTalent(Talent talent) {
 		talentById.put(talent.getTalentId(), talent);
+	}
+
+	private Optional<Talent> getTalent(TalentId talentId, int talentRank) {
+		return Optional.ofNullable(availableTalentsByIdByRank.getOrDefault(talentId, Map.of()).get(talentRank));
+	}
+
+	private Optional<Talent> getTalent(int talentId) {
+		return Optional.ofNullable(availableTalentsById.get(talentId));
 	}
 
 	public Collection<Talent> getList() {
@@ -77,13 +89,9 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		}
 	}
 
-	public Optional<Talent> getTalent(TalentId talentId) {
-		return Optional.ofNullable(talentById.get(talentId));
-	}
-
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		for (Talent talent : talentById.values()) {
+		for (var talent : talentById.values()) {
 			collector.addEffect(talent.getEffect());
 		}
 	}

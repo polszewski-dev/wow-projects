@@ -15,8 +15,8 @@ import wow.estimator.model.impl.PlayerImpl;
  */
 @Component
 public class PlayerConverter extends AbstractPlayerConverter<Player, NonPlayer> {
-	public PlayerConverter(CharacterService characterService, CharacterProfessionConverter characterProfessionConverter, EquipmentConverter equipmentConverter, TalentConverter talentConverter, ConsumableConverter consumableConverter, BuffConverter buffConverter, AbstractNonPlayerConverter<NonPlayer> nonPlayerConverter) {
-		super(characterService, characterProfessionConverter, equipmentConverter, talentConverter, consumableConverter, buffConverter, nonPlayerConverter);
+	public PlayerConverter(CharacterService characterService, CharacterProfessionConverter characterProfessionConverter, EquipmentConverter equipmentConverter, ConsumableConverter consumableConverter, BuffConverter buffConverter, AbstractNonPlayerConverter<NonPlayer> nonPlayerConverter) {
+		super(characterService, characterProfessionConverter, equipmentConverter, consumableConverter, buffConverter, nonPlayerConverter);
 	}
 
 	@Override

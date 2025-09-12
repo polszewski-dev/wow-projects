@@ -1,10 +1,10 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.dto.TalentDTO;
 import wow.commons.repository.spell.TalentRepository;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.client.dto.TalentDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
@@ -15,7 +15,7 @@ import static wow.commons.model.talent.TalentId.IMPROVED_SHADOW_BOLT;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class TalentConverterTest extends WowCommonsClientSpringTest {
+class TalentConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	TalentConverter talentConverter;
 

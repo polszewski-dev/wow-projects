@@ -25,6 +25,7 @@ public class TalentRepositoryImpl implements TalentRepository {
 	private record TalentIdAndRankKey(CharacterClassId characterClassId, TalentId talentId, int rank) {}
 	private record CalcPositionKey(CharacterClassId characterClassId, int talentCalculatorPosition, int rank) {}
 
+	private final PhaseMap<Integer, Talent> talentById = new PhaseMap<>();
 	private final PhaseMap<CharacterClassId, List<Talent>> talentsByClass = new PhaseMap<>();
 	private final PhaseMap<TalentIdAndRankKey, Talent> talentByClassByIdByRank = new PhaseMap<>();
 	private final PhaseMap<CalcPositionKey, Talent> talentByClassByCalcPosByRank = new PhaseMap<>();
@@ -38,6 +39,11 @@ public class TalentRepositoryImpl implements TalentRepository {
 	public List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId) {
 		return talentsByClass.getOptional(phaseId, characterClassId).orElse(List.of()).stream()
 				.toList();
+	}
+
+	@Override
+	public Optional<Talent> getTalent(int talentId, PhaseId phaseId) {
+		return talentById.getOptional(phaseId, talentId);
 	}
 
 	@Override
@@ -57,6 +63,7 @@ public class TalentRepositoryImpl implements TalentRepository {
 		var key2 = new CalcPositionKey(talent.getCharacterClass(), talent.getTalentCalculatorPosition(), talent.getRank());
 
 		addEntryForEveryPhase(talentsByClass, talent.getCharacterClass(), talent);
+		putForEveryPhase(talentById, talent.getId(), talent);
 		putForEveryPhase(talentByClassByIdByRank, key1, talent);
 		putForEveryPhase(talentByClassByCalcPosByRank, key2, talent);
 	}

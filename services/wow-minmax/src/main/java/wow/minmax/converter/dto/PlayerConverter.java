@@ -16,8 +16,8 @@ import wow.commons.client.converter.equipment.EquipmentConverter;
  */
 @Component
 public class PlayerConverter extends AbstractPlayerConverter<PlayerCharacter, NonPlayerCharacter> {
-	public PlayerConverter(CharacterService characterService, CharacterProfessionConverter characterProfessionConverter, EquipmentConverter equipmentConverter, TalentConverter talentConverter, ConsumableConverter consumableConverter, BuffConverter buffConverter, AbstractNonPlayerConverter<NonPlayerCharacter> nonPlayerConverter) {
-		super(characterService, characterProfessionConverter, equipmentConverter, talentConverter, consumableConverter, buffConverter, nonPlayerConverter);
+	public PlayerConverter(CharacterService characterService, CharacterProfessionConverter characterProfessionConverter, EquipmentConverter equipmentConverter, ConsumableConverter consumableConverter, BuffConverter buffConverter, AbstractNonPlayerConverter<NonPlayerCharacter> nonPlayerConverter) {
+		super(characterService, characterProfessionConverter, equipmentConverter, consumableConverter, buffConverter, nonPlayerConverter);
 	}
 
 	@Override

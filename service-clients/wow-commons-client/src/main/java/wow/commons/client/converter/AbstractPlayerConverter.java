@@ -10,6 +10,7 @@ import wow.commons.client.converter.equipment.EquipmentConverter;
 import wow.commons.client.dto.ConsumableDTO;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.client.dto.PlayerDTO;
+import wow.commons.model.talent.Talent;
 
 import java.util.List;
 
@@ -23,13 +24,16 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	private final CharacterProfessionConverter characterProfessionConverter;
 	private final EquipmentConverter equipmentConverter;
-	private final TalentConverter talentConverter;
 	private final ConsumableConverter consumableConverter;
 	private final BuffConverter buffConverter;
 	private final AbstractNonPlayerConverter<N> nonPlayerConverter;
 
 	@Override
 	public PlayerDTO doConvert(P source) {
+		var talentIds = source.getTalents().getList().stream()
+				.map(Talent::getId)
+				.toList();
+
 		return new PlayerDTO(
 				source.getName(),
 				source.getCharacterClassId(),
@@ -39,7 +43,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				characterProfessionConverter.convertList(source.getProfessions().getList()),
 				source.getExclusiveFactions().getList(),
 				equipmentConverter.convert(source.getEquipment()),
-				talentConverter.convertList(source.getTalents().getList()),
+				talentIds,
 				source.getRole(),
 				source.getActivePetType(),
 				source.getRotation().getTemplate().toString(),
@@ -84,8 +88,8 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 	private void changeBuild(PlayerCharacter character, PlayerDTO source) {
 		var build = character.getBuild();
 
-		for (var sourceTalent : source.talents()) {
-			build.getTalents().enableTalent(sourceTalent.talentId(), sourceTalent.rank());
+		for (var talentId : source.talentIds()) {
+			build.getTalents().enableTalent(talentId);
 		}
 
 		build.setRole(source.role());

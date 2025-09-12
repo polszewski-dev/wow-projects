@@ -1,6 +1,6 @@
 package wow.minmax.client.dto.stats;
 
-import wow.commons.client.dto.TalentDTO;
+import wow.minmax.client.dto.TalentDTO;
 
 /**
  * User: POlszewski
