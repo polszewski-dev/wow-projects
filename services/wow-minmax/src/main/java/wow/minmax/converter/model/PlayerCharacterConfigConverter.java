@@ -9,11 +9,11 @@ import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
-import wow.commons.model.buff.BuffIdAndRank;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.Consumable;
 import wow.commons.model.item.ConsumableId;
 import wow.minmax.converter.model.equipment.EquipmentConfigConverter;
-import wow.minmax.model.BuffConfig;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerCharacterConfig;
 import wow.minmax.model.TalentConfig;
@@ -30,13 +30,17 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 	private final BuildConfigConverter buildConfigConverter;
 	private final EquipmentConfigConverter equipmentConfigConverter;
 	private final CharacterProfessionConfigConverter characterProfessionConfigConverter;
-	private final BuffConfigConverter buffConfigConverter;
 	private final NonPlayerCharacterConfigConverter nonPlayerCharacterConfigConverter;
 
 	private final CharacterService characterService;
 
 	@Override
 	public PlayerCharacterConfig doConvert(PlayerCharacter source, CharacterId characterId) {
+		var buffIds = source.getBuffs().getStream()
+				.map(Buff::getId)
+				.map(BuffId::value)
+				.toList();
+
 		var consumableIds = source.getConsumables().getStream()
 				.map(Consumable::getId)
 				.map(ConsumableId::value)
@@ -53,7 +57,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				equipmentConfigConverter.convert(source.getEquipment()),
 				characterProfessionConfigConverter.convertList(source.getProfessions().getList()),
 				source.getExclusiveFactions().getList(),
-				buffConfigConverter.convertList(source.getBuffs().getList()),
+				buffIds,
 				consumableIds,
 				nonPlayerCharacterConfigConverter.convert((NonPlayerCharacter) source.getTarget())
 		);
@@ -81,8 +85,8 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 
 		characterService.updateAfterRestrictionChange(character);
 
-		character.setBuffs(getBuffIds(source.getBuffs()));
-		character.getTarget().setBuffs(getBuffIds(source.getTarget().getDebuffs()));
+		character.getBuffs().setBuffIds(getBuffIds(source.getBuffIds()));
+		character.getTarget().getBuffs().setBuffIds(getBuffIds(source.getTarget().getDebuffIds()));
 
 		character.getConsumables().setConsumableIds(getConsumableIds(source));
 
@@ -102,9 +106,9 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 		build.setRotation(RotationTemplate.parse(sourceBuild.getRotation()).createRotation());
 	}
 
-	private List<BuffIdAndRank> getBuffIds(List<BuffConfig> buffs) {
+	private List<BuffId> getBuffIds(List<Integer> buffs) {
 		return buffs.stream()
-				.map(BuffConfig::getId)
+				.map(BuffId::of)
 				.toList();
 	}
 

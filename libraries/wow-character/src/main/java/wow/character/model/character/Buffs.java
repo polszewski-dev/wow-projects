@@ -6,7 +6,7 @@ import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.buff.BuffIdAndRank;
+import wow.commons.model.buff.BuffNameRank;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -17,134 +17,147 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public class Buffs implements EffectCollection, Copyable<Buffs> {
-	private final Map<Integer, Buff> availableBuffsByDbId = new LinkedHashMap<>();
-	private final Map<BuffIdAndRank, Buff> availableBuffsById = new LinkedHashMap<>();
-	private final Map<BuffId, List<Buff>> availableBuffsByBuffId = new LinkedHashMap<>();
-	private final Map<BuffId, Buff> enabledBuffsById = new LinkedHashMap<>();
+	private final Map<BuffId, Buff> availableBuffsById = new LinkedHashMap<>();
+	private final Map<String, List<Buff>> availableBuffsByName = new LinkedHashMap<>();
+	private final Map<BuffNameRank, Buff> availableBuffsByNameRank = new LinkedHashMap<>();
+	private final Map<String, Buff> enabledBuffsByName = new LinkedHashMap<>();
 	private final BuffListType type;
 
-	@Override
-	public Buffs copy() {
-		var copy = new Buffs(type);
-		copy.availableBuffsByDbId.putAll(this.availableBuffsByDbId);
-		copy.availableBuffsById.putAll(this.availableBuffsById);
-		copy.availableBuffsByBuffId.putAll(this.availableBuffsByBuffId);
-		copy.enabledBuffsById.putAll(this.enabledBuffsById);
-		return copy;
-	}
-
-	@Override
-	public void collectEffects(EffectCollector collector) {
-		for (Buff buff : enabledBuffsById.values()) {
-			collector.addEffect(buff.getEffect(), buff.getStacks());
-		}
-	}
-
 	public List<Buff> getList() {
-		return List.copyOf(enabledBuffsById.values());
+		return List.copyOf(enabledBuffsByName.values());
 	}
 
 	public Stream<Buff> getStream() {
-		return enabledBuffsById.values().stream();
+		return enabledBuffsByName.values().stream();
 	}
 
 	public List<Buff> getAvailableHighestRanks() {
-		return getHighestRanks(availableBuffsByBuffId.keySet()).stream()
-				.map(availableBuffsById::get)
+		return getHighestRanks(availableBuffsByName.keySet()).stream()
+				.map(availableBuffsByNameRank::get)
 				.toList();
 	}
 
+	public boolean has(String name) {
+		return enabledBuffsByName.containsKey(name);
+	}
+
 	public void setAvailable(List<Buff> availableBuffs) {
-		availableBuffsByDbId.clear();
 		availableBuffsById.clear();
-		availableBuffsByBuffId.clear();
+		availableBuffsByName.clear();
+		availableBuffsByNameRank.clear();
 
 		for (var buff : availableBuffs) {
-			availableBuffsByDbId.put(buff.getDbId(), buff);
 			availableBuffsById.put(buff.getId(), buff);
-			availableBuffsByBuffId.computeIfAbsent(buff.getBuffId(), x -> new ArrayList<>()).add(buff);
+			availableBuffsByName.computeIfAbsent(buff.getName(), x -> new ArrayList<>()).add(buff);
+			availableBuffsByNameRank.put(buff.getNameRank(), buff);
 		}
 
-		enabledBuffsById.entrySet().removeIf(entry -> !isAvailable(entry.getValue()));
+		enabledBuffsByName.entrySet().removeIf(entry -> !isAvailable(entry.getValue()));
 	}
 
 	public void reset() {
-		enabledBuffsById.clear();
+		enabledBuffsByName.clear();
 	}
 
-	public void setHighestRanks(Collection<BuffId> buffIds) {
-		var buffIdAndRanks = getHighestRanks(buffIds);
+	public void setHighestRanks(Collection<String> buffNames) {
+		var nameRanks = getHighestRanks(buffNames);
 
-		set(buffIdAndRanks);
+		set(nameRanks);
 	}
 
-	private List<BuffIdAndRank> getHighestRanks(Collection<BuffId> buffIds) {
-		return buffIds.stream()
+	private List<BuffNameRank> getHighestRanks(Collection<String> names) {
+		return names.stream()
 				.map(this::getHighestRank)
 				.flatMap(Optional::stream)
 				.toList();
 	}
 
-	private Optional<BuffIdAndRank> getHighestRank(BuffId buffId) {
-		return availableBuffsByBuffId.getOrDefault(buffId, List.of()).stream()
-				.map(Buff::getId)
-				.max(Comparator.comparingInt(BuffIdAndRank::rank));
+	private Optional<BuffNameRank> getHighestRank(String name) {
+		return availableBuffsByName.getOrDefault(name, List.of()).stream()
+				.map(Buff::getNameRank)
+				.max(Comparator.comparingInt(BuffNameRank::rank));
 	}
 
-	public void set(Collection<BuffIdAndRank> buffIdAndRanks) {
+	public void set(Collection<BuffNameRank> buffNameRanks) {
 		reset();
 
-		for (var buffIdAndRank : buffIdAndRanks) {
-			enable(buffIdAndRank.buffId(), buffIdAndRank.rank());
+		for (var nameRank : buffNameRanks) {
+			enable(nameRank.name(), nameRank.rank());
 		}
 	}
 
-	public void enable(BuffId buffId, int rank, boolean enabled) {
-		if (enabled) {
-			enable(buffId, rank);
-		} else {
-			disable(buffId);
+	public void setBuffIds(Collection<BuffId> buffIds) {
+		reset();
+
+		for (var buffId : buffIds) {
+			enable(buffId, true);
 		}
 	}
 
-	public void enable(BuffId buffId, int rank) {
-		var id = new BuffIdAndRank(buffId, rank);
-		var buff = getBuff(id).orElseThrow();
-
-		if (buff.getExclusionGroup() != null) {
-			enabledBuffsById.entrySet().removeIf(e -> e.getValue().getExclusionGroup() == buff.getExclusionGroup());
-		}
-
-		enabledBuffsById.put(buff.getBuffId(), buff);
-	}
-
-	public void disable(BuffId buffId) {
-		enabledBuffsById.remove(buffId);
-	}
-
-	public void enable(int buffId, boolean enabled) {
+	public void enable(BuffId buffId, boolean enabled) {
 		var buff = getBuff(buffId).orElseThrow();
 
-		enable(buff.getBuffId(), buff.getRank(), enabled);
+		enable(buff, enabled);
 	}
 
-	private Optional<Buff> getBuff(BuffIdAndRank id) {
-		var buff = availableBuffsById.get(id);
+	public void enable(String name, int rank, boolean enabled) {
+		var buff = getBuff(new BuffNameRank(name, rank)).orElseThrow();
+
+		enable(buff, enabled);
+	}
+
+	public void enable(String name, int rank) {
+		enable(name, rank, true);
+	}
+
+	private void enable(Buff buff, boolean enabled) {
+		var buffName = buff.getName();
+
+		if (enabled) {
+			if (buff.getExclusionGroup() != null) {
+				enabledBuffsByName.entrySet().removeIf(e -> e.getValue().getExclusionGroup() == buff.getExclusionGroup());
+			}
+
+			enabledBuffsByName.put(buffName, buff);
+		} else {
+			enabledBuffsByName.remove(buffName);
+		}
+	}
+
+	public void disable(String name) {
+		enabledBuffsByName.remove(name);
+	}
+
+	private Optional<Buff> getBuff(BuffId buffId) {
+		var buff = availableBuffsById.get(buffId);
 
 		return Optional.ofNullable(buff);
 	}
 
-	private Optional<Buff> getBuff(int buffId) {
-		var buff = availableBuffsByDbId.get(buffId);
+	private Optional<Buff> getBuff(BuffNameRank nameRank) {
+		var buff = availableBuffsByNameRank.get(nameRank);
 
 		return Optional.ofNullable(buff);
-	}
-
-	public boolean has(BuffId buffId) {
-		return enabledBuffsById.containsKey(buffId);
 	}
 
 	private boolean isAvailable(Buff buff) {
-		return availableBuffsById.containsKey(buff.getId());
+		return availableBuffsByNameRank.containsKey(buff.getNameRank());
+	}
+
+	@Override
+	public Buffs copy() {
+		var copy = new Buffs(type);
+		copy.availableBuffsById.putAll(this.availableBuffsById);
+		copy.availableBuffsByNameRank.putAll(this.availableBuffsByNameRank);
+		copy.availableBuffsByName.putAll(this.availableBuffsByName);
+		copy.enabledBuffsByName.putAll(this.enabledBuffsByName);
+		return copy;
+	}
+
+	@Override
+	public void collectEffects(EffectCollector collector) {
+		for (var buff : enabledBuffsByName.values()) {
+			collector.addEffect(buff.getEffect(), buff.getStacks());
+		}
 	}
 }

@@ -2,7 +2,6 @@ package wow.character.model.character;
 
 import wow.character.model.effect.EffectCollection;
 import wow.commons.model.Percent;
-import wow.commons.model.buff.BuffIdAndRank;
 import wow.commons.model.character.*;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.pve.GameVersion;
@@ -14,7 +13,6 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.talent.TalentTree;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -81,10 +79,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 	}
 
 	Buffs getBuffs();
-
-	default void setBuffs(Collection<BuffIdAndRank> buffIds) {
-		getBuffs().set(buffIds);
-	}
 
 	default void resetBuffs() {
 		getBuffs().reset();

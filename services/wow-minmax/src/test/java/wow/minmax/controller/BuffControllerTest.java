@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.commons.model.buff.BuffId;
 import wow.minmax.client.dto.BuffDTO;
 import wow.minmax.client.dto.BuffStatusDTO;
 
@@ -15,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
+import static wow.test.commons.BuffNames.FEL_ARMOR;
 
 /**
  * User: POlszewski
@@ -36,7 +36,7 @@ class BuffControllerTest extends ControllerTest {
 	@Test
 	void enableBuff() throws Exception {
 		var buffDTO = new BuffDTO(
-				BuffId.FEL_ARMOR, 2, null, null, null, null
+				28189, FEL_ARMOR, 2, null, null, null
 		);
 		var buffStatusDTO = new BuffStatusDTO(
 				buffDTO,

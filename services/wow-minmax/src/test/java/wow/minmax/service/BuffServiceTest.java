@@ -3,13 +3,16 @@ package wow.minmax.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.buff.BuffId;
+import wow.commons.repository.spell.BuffRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
-import static wow.commons.model.buff.BuffId.FLASK_OF_PURE_DEATH;
-import static wow.commons.model.buff.BuffId.FLASK_OF_SUPREME_POWER;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.test.commons.BuffNames.FLASK_OF_PURE_DEATH;
+import static wow.test.commons.BuffNames.FLASK_OF_SUPREME_POWER;
 
 /**
  * User: POlszewski
@@ -21,7 +24,7 @@ class BuffServiceTest extends ServiceTest {
 		var buffStatuses = underTest.getBuffStatuses(CHARACTER_KEY, CHARACTER_BUFF);
 
 		var statusStrings = buffStatuses.stream()
-				.map(x -> x.buff().getBuffId() + "#" + x.enabled())
+				.map(x -> x.buff().getName() + "#" + x.enabled())
 				.sorted()
 				.toList();
 
@@ -52,7 +55,7 @@ class BuffServiceTest extends ServiceTest {
 		assertBuffStatus(FLASK_OF_SUPREME_POWER, false);
 		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
-		underTest.changeBuffStatus(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_SUPREME_POWER, 0, true);
+		underTest.changeBuffStatus(CHARACTER_KEY, CHARACTER_BUFF, BuffId.of(17628), true);// FLASK_OF_SUPREME_POWER
 
 		assertBuffStatus(FLASK_OF_SUPREME_POWER, true);
 		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
@@ -62,7 +65,7 @@ class BuffServiceTest extends ServiceTest {
 	void disableBuff() {
 		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
-		underTest.changeBuffStatus(CHARACTER_KEY, CHARACTER_BUFF, FLASK_OF_PURE_DEATH, 0, false);
+		underTest.changeBuffStatus(CHARACTER_KEY, CHARACTER_BUFF, BuffId.of(28540), false);// FLASK_OF_PURE_DEATH
 
 		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
 	}
@@ -70,7 +73,15 @@ class BuffServiceTest extends ServiceTest {
 	@Autowired
 	BuffService underTest;
 
-	private void assertBuffStatus(BuffId buffId, boolean enabled) {
-		assertThat(savedCharacter.getBuffs().stream().anyMatch(buff -> buff.getBuffId() == buffId)).isEqualTo(enabled);
+	@Autowired
+	BuffRepository buffRepository;
+
+	private void assertBuffStatus(String name, boolean enabled) {
+		assertThat(savedCharacter.getBuffIds().stream()
+						   .map(BuffId::of)
+						   .map(buffId -> buffRepository.getBuff(buffId, TBC_P5))
+						   .map(Optional::orElseThrow)
+						   .anyMatch(buff -> buff.getName().equals(name))
+		).isEqualTo(enabled);
 	}
 }

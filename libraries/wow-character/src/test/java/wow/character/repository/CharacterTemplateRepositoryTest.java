@@ -6,13 +6,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.util.TalentLinkParser;
-import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.PveRole;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.buff.BuffId.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.profession.ProfessionId.ENCHANTING;
@@ -20,6 +18,12 @@ import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.spell.AbilityId.*;
+import static wow.test.commons.BuffNames.ARCANE_BRILLIANCE;
+import static wow.test.commons.BuffNames.CURSE_OF_THE_ELEMENTS;
+import static wow.test.commons.BuffNames.FEL_ARMOR;
+import static wow.test.commons.BuffNames.PRAYER_OF_FORTITUDE;
+import static wow.test.commons.BuffNames.PRAYER_OF_SPIRIT;
+import static wow.test.commons.BuffNames.*;
 
 /**
  * User: POlszewski
@@ -41,18 +45,29 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getName()).isEqualTo(WARLOCK_TEMPLATE_NAME);
 		assertThat(characterTemplate.getRequiredLevel()).isEqualTo(70);
 		assertThat(characterTemplate.getRequiredCharacterClassIds()).isEqualTo(List.of(WARLOCK));
+
 		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025", talentRepository);
+
 		assertThat(characterTemplate.getTalentLink()).isEqualTo(link);
 		assertThat(characterTemplate.getRequiredRole()).isEqualTo(PveRole.CASTER_DPS);
 		assertThat(characterTemplate.getDefaultRotationTemplate().getAbilityIds()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
 		assertThat(characterTemplate.getActivePet()).isNull();
 		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
-				BuffId.FEL_ARMOR, TOUCH_OF_SHADOW, BuffId.ARCANE_BRILLIANCE, BuffId.PRAYER_OF_FORTITUDE, BuffId.PRAYER_OF_SPIRIT,
-				GIFT_OF_THE_WILD, GREATER_BLESSING_OF_KINGS, WRATH_OF_AIR_TOTEM,
-				TOTEM_OF_WRATH, WELL_FED_SP, BRILLIANT_WIZARD_OIL, FLASK_OF_PURE_DEATH
+				FEL_ARMOR,
+				TOUCH_OF_SHADOW,
+				ARCANE_BRILLIANCE,
+				PRAYER_OF_FORTITUDE,
+				PRAYER_OF_SPIRIT,
+				GIFT_OF_THE_WILD,
+				GREATER_BLESSING_OF_KINGS,
+				WRATH_OF_AIR_TOTEM,
+				TOTEM_OF_WRATH,
+				WELL_FED_SP,
+				BRILLIANT_WIZARD_OIL,
+				FLASK_OF_PURE_DEATH
 		));
 		assertThat(characterTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
-				BuffId.CURSE_OF_THE_ELEMENTS
+				CURSE_OF_THE_ELEMENTS
 		));
 		assertThat(characterTemplate.getProfessions().get(0).getProfessionId()).isEqualTo(ENCHANTING);
 		assertThat(characterTemplate.getProfessions().get(0).getSpecializationId()).isNull();

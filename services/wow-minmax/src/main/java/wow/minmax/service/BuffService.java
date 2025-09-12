@@ -17,5 +17,5 @@ public interface BuffService {
 
 	List<BuffStatus> getBuffStatuses(PlayerCharacter player, BuffListType buffListType);
 
-	PlayerCharacter changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled);
+	PlayerCharacter changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, boolean enabled);
 }

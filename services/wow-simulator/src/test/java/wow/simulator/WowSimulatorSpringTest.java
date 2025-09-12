@@ -8,7 +8,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
-import wow.commons.model.buff.BuffId;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
@@ -366,8 +365,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		getCharacterService().updateAfterRestrictionChange(player);
 	}
 
-	protected void enableBuff(BuffId buffId, int rank) {
-		player.getBuffs().enable(buffId, rank);
+	protected void enableBuff(String name, int rank) {
+		player.getBuffs().enable(name, rank);
 	}
 
 	protected void setHealth(Unit unit, int amount) {

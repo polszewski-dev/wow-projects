@@ -21,7 +21,8 @@ import wow.simulator.client.dto.StatsDTO;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
 
 /**
@@ -82,7 +83,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(equipmentService.equipItemGroup(any(), any(), any())).thenReturn(character);
 		when(equipmentService.getEquipmentSocketStatus(any())).thenReturn(new EquipmentSocketStatus(Map.of()));
 
-		when(buffService.changeBuffStatus(any(), any(), any(), anyInt(), anyBoolean())).thenReturn(character);
+		when(buffService.changeBuffStatus(any(), any(), any(), anyBoolean())).thenReturn(character);
 
 		when(consumableService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(character);
 

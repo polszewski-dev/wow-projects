@@ -1,15 +1,15 @@
 @if (data$ | async; as data) {
-	@for (buffStatus of data.buffStatusList; track buffStatus.buff.buffId) {
+	@for (buffStatus of data.buffStatusList; track buffStatus.buff.id) {
 		@let buff = buffStatus.buff;
 		<div class="form-check">
 			<input
 				class="form-check-input"
 				type="checkbox"
-				id="buff-select-{{buff.buffId}}-{{buff.rank}}"
+				id="buff-select-{{buff.id}}"
 				[(ngModel)]="buffStatus.enabled"
 				(change)="onChange(data.characterId, buffStatus)"
 			>
-			<label class="form-check-label" for="buff-select-{{buff.buffId}}-{{buff.rank}}" title="{{buff.tooltip || buff.attributes}}">
+			<label class="form-check-label" for="buff-select-{{buff.id}}" title="{{buff.tooltip || buff.attributes}}">
 				<img [src]="buff.icon | icon"/>
 				<span class="buff-name px-1">{{buff.name}}</span>
 				<span class="buff-stats">= {{buff.attributes}}</span>

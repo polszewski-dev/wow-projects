@@ -5,6 +5,7 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
@@ -13,5 +14,7 @@ import java.util.List;
 public interface BuffRepository {
 	List<Buff> getAvailableBuffs(PhaseId phaseId);
 
-	List<Buff> getBuff(BuffId buffId, int rank, PhaseId phaseId);
+	Optional<Buff> getBuff(BuffId buffId, PhaseId phaseId);
+
+	List<Buff> getBuff(String name, int rank, PhaseId phaseId);
 }

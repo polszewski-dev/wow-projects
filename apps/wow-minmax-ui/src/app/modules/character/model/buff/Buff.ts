@@ -1,7 +1,7 @@
 export interface Buff {
-	buffId: string;
-	rank: number;
+	id: number;
 	name: string;
+	rank: number;
 	attributes: string;
 	icon: string;
 	tooltip: string;

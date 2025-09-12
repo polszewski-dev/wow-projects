@@ -6,6 +6,7 @@ import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
@@ -20,8 +21,9 @@ public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> i
 
 	@Override
 	public NonPlayerDTO doConvert(N source) {
-		var buffIds = source.getBuffs().getList().stream()
-				.map(Buff::getDbId)
+		var buffIds = source.getBuffs().getStream()
+				.map(Buff::getId)
+				.map(BuffId::value)
 				.toList();
 
 		return new NonPlayerDTO(

@@ -22,5 +22,5 @@ public class NonPlayerCharacterConfig {
 	private CharacterClassId characterClassId;
 	private CreatureType creatureType;
 	private int level;
-	private List<BuffConfig> debuffs;
+	private List<Integer> debuffIds;
 }

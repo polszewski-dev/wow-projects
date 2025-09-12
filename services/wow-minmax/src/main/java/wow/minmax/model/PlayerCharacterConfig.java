@@ -33,7 +33,7 @@ public class PlayerCharacterConfig {
 	private EquipmentConfig equipment;
 	private List<CharacterProfessionConfig> professions;
 	private List<ExclusiveFaction> exclusiveFactions;
-	private List<BuffConfig> buffs;
+	private List<Integer> buffIds;
 	private List<Integer> consumableIds;
 	private NonPlayerCharacterConfig target;
 

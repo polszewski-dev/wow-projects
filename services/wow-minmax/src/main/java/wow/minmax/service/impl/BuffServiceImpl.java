@@ -33,15 +33,15 @@ public class BuffServiceImpl implements BuffService {
 		var buffs = player.getBuffList(buffListType);
 
 		return buffs.getAvailableHighestRanks().stream()
-				.map(buff -> new BuffStatus(buff, buffs.has(buff.getBuffId())))
+				.map(buff -> new BuffStatus(buff, buffs.has(buff.getName())))
 				.toList();
 	}
 
 	@Override
-	public PlayerCharacter changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, int rank, boolean enabled) {
+	public PlayerCharacter changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, boolean enabled) {
 		var player = playerCharacterService.getPlayer(characterId);
 
-		player.getBuffList(buffListType).enable(buffId, rank, enabled);
+		player.getBuffList(buffListType).enable(buffId, enabled);
 
 		playerCharacterService.saveCharacter(characterId, player);
 

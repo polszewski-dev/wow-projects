@@ -7,6 +7,8 @@ import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffId;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.minmax.model.NonPlayerCharacterConfig;
@@ -21,17 +23,21 @@ public class NonPlayerCharacterConfigConverter implements Converter<NonPlayerCha
 	private final PhaseRepository phaseRepository;
 	private final CharacterClassRepository characterClassRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
-	private final BuffConfigConverter buffConfigConverter;
 
 	@Override
 	public NonPlayerCharacterConfig doConvert(NonPlayerCharacter source) {
+		var buffIds = source.getBuffs().getStream()
+				.map(Buff::getId)
+				.map(BuffId::value)
+				.toList();
+
 		return new NonPlayerCharacterConfig(
 				source.getName(),
 				source.getPhaseId(),
 				source.getCharacterClassId(),
 				source.getCreatureType(),
 				source.getLevel(),
-				buffConfigConverter.convertList(source.getBuffs().getList())
+				buffIds
 		);
 	}
 

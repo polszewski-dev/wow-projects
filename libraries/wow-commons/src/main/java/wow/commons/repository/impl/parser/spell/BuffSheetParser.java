@@ -34,7 +34,6 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 
 	private Buff getBuff() {
 		var effectId = colId.getInteger();
-		var buffId = colName.getEnum(BuffId::parse);
 		var rank = colRank.getInteger(0);
 		var type = colType.getEnum(BuffType::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(BuffExclusionGroup::parse, null);
@@ -52,7 +51,7 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 		}
 
 		return new BuffImpl(
-				effectId, new BuffIdAndRank(buffId, rank), timeRestriction, characterRestriction, type, exclusionGroup, pveRoles, categories, effect, stacks
+				rank, timeRestriction, characterRestriction, type, exclusionGroup, pveRoles, categories, effect, stacks
 		);
 	}
 }

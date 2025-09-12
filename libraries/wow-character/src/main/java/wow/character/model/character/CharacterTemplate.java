@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.build.RotationTemplate;
 import wow.character.model.build.TalentLink;
-import wow.commons.model.buff.BuffId;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
@@ -30,8 +29,8 @@ public class CharacterTemplate implements TimeRestricted, CharacterRestricted {
 	private final TalentLink talentLink;
 	private final RotationTemplate defaultRotationTemplate;
 	private final PetType activePet;
-	private final List<BuffId> defaultBuffs;
-	private final List<BuffId> defaultDebuffs;
+	private final List<String> defaultBuffs;
+	private final List<String> defaultDebuffs;
 	private final List<String> consumables;
 	private final List<CharacterProfession> professions;
 	private final List<ExclusiveFaction> exclusiveFactions;

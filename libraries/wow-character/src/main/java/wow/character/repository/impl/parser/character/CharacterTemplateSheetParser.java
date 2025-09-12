@@ -4,7 +4,6 @@ import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.util.TalentLinkParser;
-import wow.commons.model.buff.BuffId;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.TimeRestriction;
@@ -62,8 +61,8 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var talentLink = colTalentLink.getEnum(x -> TalentLinkParser.parse(x, talentRepository));
 		var defaultRotation = RotationTemplate.parse(colDefaultRotation.getString());
 		var activePet = colActivePet.getEnum(PetType::parse, null);
-		var defaultBuffs = colDefaultBuffs.getList(BuffId::parse);
-		var defaultDebuffs = colDefaultDebuffs.getList(BuffId::parse);
+		var defaultBuffs = colDefaultBuffs.getList(x -> x);
+		var defaultDebuffs = colDefaultDebuffs.getList(x -> x);
 		var consumables = colDefaultConsumables.getList(x -> x);
 		var professions = getProfessions(timeRestriction);
 		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);

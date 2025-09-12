@@ -1,21 +1,15 @@
 package wow.minmax.client.dto;
 
-import wow.commons.model.buff.BuffId;
-import wow.commons.model.buff.BuffIdAndRank;
-
 /**
  * User: POlszewski
  * Date: 2021-12-14
  */
 public record BuffDTO(
-		BuffId buffId,
-		int rank,
+		int id,
 		String name,
+		int rank,
 		String attributes,
 		String icon,
 		String tooltip
 ) {
-	public BuffIdAndRank getId() {
-		return new BuffIdAndRank(buffId, rank);
-	}
 }

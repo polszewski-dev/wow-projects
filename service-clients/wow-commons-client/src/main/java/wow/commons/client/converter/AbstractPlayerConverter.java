@@ -10,6 +10,7 @@ import wow.commons.client.converter.equipment.EquipmentConverter;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.client.dto.PlayerDTO;
 import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.Talent;
@@ -34,8 +35,9 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				.map(Talent::getId)
 				.toList();
 
-		var buffIds = source.getBuffs().getList().stream()
-				.map(Buff::getDbId)
+		var buffIds = source.getBuffs().getStream()
+				.map(Buff::getId)
+				.map(BuffId::value)
 				.toList();
 
 		var consumableIds = source.getConsumables().getStream()
@@ -108,13 +110,13 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	private void enableBuffs(PlayerDTO source, P player) {
 		for (var buffId : source.buffIds()) {
-			player.getBuffs().enable(buffId, true);
+			player.getBuffs().enable(BuffId.of(buffId), true);
 		}
 	}
 
 	private void enableTargetBuffs(NonPlayerDTO source, N nonPlayer) {
 		for (var buffId : source.buffIds()) {
-			nonPlayer.getBuffs().enable(buffId, true);
+			nonPlayer.getBuffs().enable(BuffId.of(buffId), true);
 		}
 	}
 

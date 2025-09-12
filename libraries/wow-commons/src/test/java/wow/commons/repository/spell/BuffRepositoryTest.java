@@ -10,7 +10,6 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.buff.BuffExclusionGroup;
-import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffType;
 import wow.commons.model.pve.PhaseId;
 
@@ -21,7 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.buff.BuffCategory.RAID_BUFF;
 import static wow.commons.model.categorization.PveRole.CASTER_DPS;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.spell.SpellSchool.*;
+import static wow.test.commons.BuffNames.ARCANE_BRILLIANCE;
+import static wow.test.commons.BuffNames.CURSE_OF_THE_ELEMENTS;
 
 /**
  * User: POlszewski
@@ -33,9 +35,9 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void buffIsCorrect() {
-		var buff = buffRepository.getBuff(BuffId.CURSE_OF_THE_ELEMENTS, 4, PhaseId.TBC_P5).getFirst();
+		var buff = buffRepository.getBuff(CURSE_OF_THE_ELEMENTS, 4, TBC_P5).getFirst();
 
-		assertThat(buff.getBuffId()).isEqualTo(BuffId.CURSE_OF_THE_ELEMENTS);
+		assertThat(buff.getName()).isEqualTo(CURSE_OF_THE_ELEMENTS);
 		assertThat(buff.getRank()).isEqualTo(4);
 		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
 		assertThat(buff.getRequiredLevel()).isNull();
@@ -63,7 +65,7 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void bufByNamefIsCorrect() {
-		var buffNames = buffRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
+		var buffNames = buffRepository.getAvailableBuffs(TBC_P5).stream()
 				.map(buff -> buff.getName() + "#" + buff.getRank())
 				.toList();
 
@@ -136,7 +138,7 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 				"TBC_P1, 2, 40",
 		})
 		void talent(PhaseId phaseId, int rank, int statValue) {
-			var buff = buffRepository.getBuff(BuffId.ARCANE_BRILLIANCE, rank, phaseId).getFirst();
+			var buff = buffRepository.getBuff(ARCANE_BRILLIANCE, rank, phaseId).getFirst();
 
 			assertModifier(buff.getEffect(), List.of(
 					Attribute.of(INTELLECT, statValue)

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.BuffListType;
+import wow.commons.model.buff.BuffId;
 import wow.minmax.client.dto.BuffStatusDTO;
 import wow.minmax.converter.dto.BuffStatusConverter;
 import wow.minmax.model.CharacterId;
@@ -39,13 +40,12 @@ public class BuffController {
 			@PathVariable("buffListType") BuffListType buffListType,
 			@RequestBody BuffStatusDTO buffStatus
 	) {
-		var buffId = buffStatus.buff().buffId();
-		var rank = buffStatus.buff().rank();
+		var buffId = BuffId.of(buffStatus.buff().id());
 		var enabled = buffStatus.enabled();
 
-		var player = buffService.changeBuffStatus(characterId, buffListType, buffId, rank, enabled);
+		var player = buffService.changeBuffStatus(characterId, buffListType, buffId, enabled);
 
-		log.info("Changed buff charId: {}, list: {}, buffId: {}, rank: {}, enabled: {}", characterId, buffListType, buffId, rank, enabled);
+		log.info("Changed buff charId: {}, list: {}, buffId: {}, enabled: {}", characterId, buffListType, buffId, enabled);
 
 		var buffStatuses = buffService.getBuffStatuses(player, buffListType);
 

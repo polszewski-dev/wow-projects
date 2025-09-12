@@ -16,7 +16,7 @@ import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
-import wow.commons.model.buff.BuffIdAndRank;
+import wow.commons.model.buff.BuffNameRank;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.impl.EffectImpl;
@@ -305,14 +305,14 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public StatSummary getStats(Player player, BuffCategory... buffCategories) {
 		var copy = player.copy();
-		copy.setBuffs(getFilteredBuffs(player.getBuffs(), buffCategories));
+		copy.getBuffs().set(getFilteredBuffs(player.getBuffs(), buffCategories));
 		return getStats(copy);
 	}
 
-	private List<BuffIdAndRank> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
+	private List<BuffNameRank> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
 		return buffs.getStream()
 				.filter(x -> Stream.of(buffCategories).anyMatch(y -> x.getCategories().contains(y)))
-				.map(Buff::getId)
+				.map(Buff::getNameRank)
 				.toList();
 	}
 

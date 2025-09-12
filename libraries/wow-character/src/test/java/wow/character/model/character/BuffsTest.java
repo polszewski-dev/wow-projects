@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import wow.character.WowCharacterSpringTest;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.buff.Buff;
-import wow.commons.model.buff.BuffIdAndRank;
+import wow.commons.model.buff.BuffNameRank;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
@@ -18,8 +18,8 @@ import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.commons.model.attribute.AttributeId.HEALTH_GENERATED_PCT;
 import static wow.commons.model.attribute.AttributeId.POWER;
 import static wow.commons.model.attribute.condition.MiscCondition.SPELL_DAMAGE;
-import static wow.commons.model.buff.BuffId.*;
 import static wow.commons.model.talent.TalentId.DEMONIC_AEGIS;
+import static wow.test.commons.BuffNames.*;
 
 /**
  * User: POlszewski
@@ -31,15 +31,15 @@ class BuffsTest extends WowCharacterSpringTest {
 		buffs.enable(ARCANE_BRILLIANCE, 2);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 2));
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 
-		Buffs copy = buffs.copy();
+		var copy = buffs.copy();
 		buffs.reset();
 
 		assertThat(buffs.getList()).isEmpty();
 
 		assertThat(copy.getList()).hasSize(1);
-		assertThat(copy.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 2));
+		assertBuff(copy.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 	}
 
 	@Test
@@ -49,7 +49,7 @@ class BuffsTest extends WowCharacterSpringTest {
 		buffs.enable(ARCANE_BRILLIANCE, 2);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 2));
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 
 		buffs.disable(ARCANE_BRILLIANCE);
 
@@ -86,53 +86,53 @@ class BuffsTest extends WowCharacterSpringTest {
 
 	@Test
 	void reset() {
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
+		assertBuff(ARCANE_BRILLIANCE, false);
 
 		buffs.enable(ARCANE_BRILLIANCE, 2);
 
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isTrue();
+		assertBuff(ARCANE_BRILLIANCE, true);
 
 		buffs.reset();
 
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
+		assertBuff(ARCANE_BRILLIANCE, false);
 
 		buffs.enable(ARCANE_BRILLIANCE, 2);
 
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isTrue();
+		assertBuff(ARCANE_BRILLIANCE, true);
 	}
 
 	@Test
 	void setHighestRanks() {
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
-		assertThat(buffs.has(FLASK_OF_SUPREME_POWER)).isFalse();
+		assertBuff(ARCANE_BRILLIANCE, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
 		buffs.setHighestRanks(List.of(ARCANE_BRILLIANCE, FLASK_OF_SUPREME_POWER));
 
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isTrue();
-		assertThat(buffs.has(FLASK_OF_SUPREME_POWER)).isTrue();
+		assertBuff(ARCANE_BRILLIANCE, true);
+		assertBuff(FLASK_OF_SUPREME_POWER, true);
 
 		assertThat(buffs.getList()).hasSize(2);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 2));
-		assertThat(buffs.getList().get(1).getId()).isEqualTo(new BuffIdAndRank(FLASK_OF_SUPREME_POWER, 0));
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
+		assertBuff(buffs.getList().get(1), FLASK_OF_SUPREME_POWER, 0);
 
 		assertThatNoException().isThrownBy(() -> buffs.setHighestRanks(List.of(WARCHIEFS_BLESSING, FLASK_OF_PURE_DEATH)));
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(FLASK_OF_PURE_DEATH, 0));
+		assertBuff(buffs.getList().getFirst(), FLASK_OF_PURE_DEATH, 0);
 	}
 
 	@Test
 	void set() {
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
+		assertBuff(ARCANE_BRILLIANCE, false);
 
-		buffs.set(List.of(new BuffIdAndRank(ARCANE_BRILLIANCE, 2)));
+		buffs.set(List.of(new BuffNameRank(ARCANE_BRILLIANCE, 2)));
 
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isTrue();
+		assertBuff(ARCANE_BRILLIANCE, true);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 2));
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 
-		var invalidIds = List.of(new BuffIdAndRank(ARCANE_BRILLIANCE, 10));
+		var invalidIds = List.of(new BuffNameRank(ARCANE_BRILLIANCE, 10));
 
 		assertThatThrownBy(() -> buffs.set(invalidIds)).isInstanceOf(NoSuchElementException.class);
 		assertThat(buffs.getList()).isEmpty();
@@ -140,51 +140,51 @@ class BuffsTest extends WowCharacterSpringTest {
 
 	@Test
 	void enable() {
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
+		assertBuff(ARCANE_BRILLIANCE, false);
 
 		buffs.enable(ARCANE_BRILLIANCE, 2);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 2));
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 
 		buffs.enable(ARCANE_BRILLIANCE, 1);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 1));
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 1);
 
 		assertThatThrownBy(() -> buffs.enable(ARCANE_BRILLIANCE, 10)).isInstanceOf(NoSuchElementException.class);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertThat(buffs.getList().get(0).getId()).isEqualTo(new BuffIdAndRank(ARCANE_BRILLIANCE, 1));
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 1);
 	}
 
 	@Test
 	void exclusionGroups() {
-		assertThat(buffs.has(DEMON_ARMOR)).isFalse();
-		assertThat(buffs.has(FEL_ARMOR)).isFalse();
+		assertBuff(DEMON_ARMOR, false);
+		assertBuff(FEL_ARMOR, false);
 
 		buffs.enable(DEMON_ARMOR, 6);
 
-		assertThat(buffs.has(DEMON_ARMOR)).isTrue();
-		assertThat(buffs.has(FEL_ARMOR)).isFalse();
+		assertBuff(DEMON_ARMOR, true);
+		assertBuff(FEL_ARMOR, false);
 
 		buffs.enable(FEL_ARMOR, 2);
 
-		assertThat(buffs.has(DEMON_ARMOR)).isFalse();
-		assertThat(buffs.has(FEL_ARMOR)).isTrue();
+		assertBuff(DEMON_ARMOR, false);
+		assertBuff(FEL_ARMOR, true);
 	}
 
 	@Test
 	void has() {
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
+		assertBuff(ARCANE_BRILLIANCE, false);
 
 		buffs.enable(ARCANE_BRILLIANCE, 2);
 
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isTrue();
+		assertBuff(ARCANE_BRILLIANCE, true);
 
 		buffs.disable(ARCANE_BRILLIANCE);
 
-		assertThat(buffs.has(ARCANE_BRILLIANCE)).isFalse();
+		assertBuff(ARCANE_BRILLIANCE, false);
 	}
 
 	@ParameterizedTest
@@ -210,7 +210,7 @@ class BuffsTest extends WowCharacterSpringTest {
 		player.getBuffs().enable(FEL_ARMOR, 2, true);
 
 		var buff = player.getBuffs().getList().stream()
-				.filter(x -> x.getBuffId() == FEL_ARMOR)
+				.filter(x -> x.getName().equals(FEL_ARMOR))
 				.findFirst()
 				.orElseThrow();
 
@@ -224,12 +224,20 @@ class BuffsTest extends WowCharacterSpringTest {
 
 	@BeforeEach
 	void setup() {
-		List<Buff> availableBuffs = buffRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
+		var availableBuffs = buffRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
 				.filter(x -> x.isAvailableTo(getCharacter()))
 				.filter(CHARACTER_BUFF.getFilter())
 				.toList();
 
 		buffs = new Buffs(CHARACTER_BUFF);
 		buffs.setAvailable(availableBuffs);
+	}
+
+	void assertBuff(Buff buff, String name, int rank) {
+		assertThat(buff.getNameRank()).isEqualTo(new BuffNameRank(name, rank));
+	}
+
+	void assertBuff(String name, boolean enabled) {
+		assertThat(buffs.has(name)).isEqualTo(enabled);
 	}
 }
