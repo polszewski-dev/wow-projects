@@ -1,8 +1,5 @@
 package wow.minmax.client.dto;
 
-import wow.commons.client.dto.CharacterClassDTO;
-import wow.commons.client.dto.RaceDTO;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 

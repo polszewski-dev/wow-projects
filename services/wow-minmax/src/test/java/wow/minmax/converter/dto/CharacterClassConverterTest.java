@@ -1,13 +1,13 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.dto.CharacterClassDTO;
-import wow.commons.client.dto.RaceDTO;
 import wow.commons.model.character.RaceId;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.character.RaceRepository;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.client.dto.CharacterClassDTO;
+import wow.minmax.client.dto.RaceDTO;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import static wow.commons.model.spell.SpellSchool.SHADOW;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class CharacterClassConverterTest extends WowCommonsClientSpringTest {
+class CharacterClassConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	CharacterClassConverter characterClassConverter;
 

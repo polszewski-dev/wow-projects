@@ -1,11 +1,11 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.dto.RaceDTO;
-import wow.commons.client.dto.RacialDTO;
 import wow.commons.repository.character.RaceRepository;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.client.dto.RaceDTO;
+import wow.minmax.client.dto.RacialDTO;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import static wow.commons.model.pve.GameVersionId.TBC;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class RaceConverterTest extends WowCommonsClientSpringTest {
+class RaceConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	RaceConverter raceConverter;
 

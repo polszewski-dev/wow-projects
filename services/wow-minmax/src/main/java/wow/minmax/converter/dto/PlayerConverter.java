@@ -6,6 +6,7 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
+import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.*;
 import wow.commons.client.converter.equipment.EquipmentConverter;
 

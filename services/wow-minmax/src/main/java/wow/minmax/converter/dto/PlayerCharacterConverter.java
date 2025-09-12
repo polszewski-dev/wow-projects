@@ -3,12 +3,9 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.PlayerCharacter;
-import wow.commons.client.converter.CharacterClassConverter;
 import wow.commons.client.converter.ParametrizedConverter;
-import wow.commons.client.converter.RaceConverter;
-import wow.commons.client.converter.RacialConverter;
-import wow.commons.client.dto.RaceDTO;
 import wow.minmax.client.dto.PlayerCharacterDTO;
+import wow.minmax.client.dto.RaceDTO;
 import wow.minmax.model.CharacterId;
 
 /**

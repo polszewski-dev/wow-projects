@@ -19,7 +19,6 @@ import wow.estimator.client.converter.upgrade.ItemLevelFilterConverter;
 import wow.estimator.client.dto.upgrade.*;
 import wow.minmax.config.UpgradeConfig;
 import wow.minmax.converter.dto.PlayerConverter;
-import wow.minmax.converter.dto.equipment.ItemConverter;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.UpgradeService;
 
@@ -38,7 +37,6 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final ItemFilterConverter itemFilterConverter;
 	private final ItemLevelFilterConverter itemLevelFilterConverter;
 	private final GemFilterConverter gemFilterConverter;
-	private final ItemConverter itemConverter;
 	private final EquippableItemConverter equippableItemConverter;
 
 	private final UpgradeConfig upgradeConfig;

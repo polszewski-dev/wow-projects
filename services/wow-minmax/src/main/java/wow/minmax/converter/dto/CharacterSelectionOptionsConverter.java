@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import wow.commons.client.converter.Converter;
-import wow.commons.client.dto.EnemyTypeDTO;
-import wow.commons.client.dto.LevelDifferenceDTO;
 import wow.commons.model.character.CreatureType;
 import wow.minmax.client.dto.CharacterSelectionOptionsDTO;
+import wow.minmax.client.dto.EnemyTypeDTO;
+import wow.minmax.client.dto.LevelDifferenceDTO;
 import wow.minmax.model.CharacterSelectionOptions;
 
 import java.util.List;

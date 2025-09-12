@@ -1,7 +1,5 @@
 package wow.minmax.client.dto;
 
-import wow.commons.client.dto.CharacterClassDTO;
-
 import java.util.List;
 
 /**

@@ -30,14 +30,14 @@ class GemConverterTest extends WowMinMaxSpringTest {
 
 		assertThat(converted).isEqualTo(
 				new GemDTO(
-						   35760,
-						   "Reckless Pyrestone",
-						   GemColor.ORANGE,
-						   ItemRarity.EPIC,
-						   "Jewelcrafting",
-						   "Reckless Pyrestone",
-						   "inv_jewelcrafting_pyrestone_02",
-						   """
+						35760,
+						"Reckless Pyrestone",
+						GemColor.ORANGE,
+						ItemRarity.EPIC,
+						"Jewelcrafting",
+						"Reckless Pyrestone",
+						"inv_jewelcrafting_pyrestone_02",
+						"""
 						+5 Spell Haste Rating
 						+6 Spell Damage"""
 				)

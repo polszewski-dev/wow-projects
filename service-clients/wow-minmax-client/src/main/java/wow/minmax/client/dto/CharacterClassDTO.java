@@ -1,4 +1,4 @@
-package wow.commons.client.dto;
+package wow.minmax.client.dto;
 
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.spell.SpellSchool;

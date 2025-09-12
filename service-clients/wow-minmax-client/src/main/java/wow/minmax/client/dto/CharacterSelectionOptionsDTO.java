@@ -1,8 +1,5 @@
 package wow.minmax.client.dto;
 
-import wow.commons.client.dto.EnemyTypeDTO;
-import wow.commons.client.dto.LevelDifferenceDTO;
-
 import java.util.List;
 
 /**

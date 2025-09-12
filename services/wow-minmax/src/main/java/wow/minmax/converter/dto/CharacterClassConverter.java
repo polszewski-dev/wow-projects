@@ -1,9 +1,10 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.client.converter.Converter;
 import wow.commons.model.character.CharacterClass;
-import wow.commons.client.dto.CharacterClassDTO;
+import wow.minmax.client.dto.CharacterClassDTO;
 
 /**
  * User: POlszewski
