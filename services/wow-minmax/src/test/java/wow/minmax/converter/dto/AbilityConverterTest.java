@@ -1,12 +1,12 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.dto.AbilityDTO;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.spell.SpellRepository;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.client.dto.AbilityDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class AbilityConverterTest extends WowCommonsClientSpringTest {
+class AbilityConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	AbilityConverter abilityConverter;
 

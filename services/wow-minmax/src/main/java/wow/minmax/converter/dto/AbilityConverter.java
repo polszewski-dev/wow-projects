@@ -1,9 +1,10 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.client.converter.Converter;
 import wow.commons.model.spell.Ability;
-import wow.commons.client.dto.AbilityDTO;
+import wow.minmax.client.dto.AbilityDTO;
 
 /**
  * User: POlszewski
@@ -14,6 +15,11 @@ import wow.commons.client.dto.AbilityDTO;
 public class AbilityConverter implements Converter<Ability, AbilityDTO> {
 	@Override
 	public AbilityDTO doConvert(Ability source) {
-		return new AbilityDTO(source.getName(), source.getRank(), source.getIcon(), source.getTooltip());
+		return new AbilityDTO(
+				source.getName(),
+				source.getRank(),
+				source.getIcon(),
+				source.getTooltip()
+		);
 	}
 }

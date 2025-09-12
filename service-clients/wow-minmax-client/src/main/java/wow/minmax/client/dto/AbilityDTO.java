@@ -1,4 +1,4 @@
-package wow.commons.client.dto;
+package wow.minmax.client.dto;
 
 /**
  * User: POlszewski
