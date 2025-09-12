@@ -8,12 +8,10 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.estimator.client.dto.stats.*;
-import wow.estimator.client.dto.upgrade.FindUpgradesResponseDTO;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.model.*;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.service.*;
-import wow.simulator.client.dto.SimulationResponseDTO;
 import wow.simulator.client.dto.StatsDTO;
 
 import java.util.List;
@@ -84,7 +82,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 
 		when(consumableService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(character);
 
-		when(upgradeService.findUpgrades(any(), any(), any(), any())).thenReturn(new FindUpgradesResponseDTO(List.of()));
+		when(upgradeService.findUpgrades(any(), any(), any(), any())).thenReturn(List.of());
 		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(0, Item.class)));
 
 		when(statsService.getSpellStats(any())).thenReturn(new GetSpellStatsResponseDTO(List.of()));
@@ -93,6 +91,6 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(statsService.getRotationStats(any())).thenReturn(new GetRotationStatsResponseDTO(new RotationStatsDTO(List.of(), 0, 0)));
 		when(statsService.getTalentStats(any())).thenReturn(new GetTalentStatsResponseDTO(List.of()));
 
-		when(simulatorService.simulate(any())).thenReturn(new SimulationResponseDTO(new StatsDTO(List.of(), 0, 0, 0, 0)));
+		when(simulatorService.simulate(any())).thenReturn(new StatsDTO(List.of(), 0, 0, 0, 0));
 	}
 }

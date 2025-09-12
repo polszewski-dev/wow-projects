@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import wow.character.model.character.PlayerCharacter;
 import wow.estimator.client.dto.stats.*;
 import wow.minmax.converter.dto.PlayerConverter;
-import wow.minmax.model.CharacterId;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.StatsService;
@@ -30,9 +30,7 @@ public class StatsServiceImpl implements StatsService {
 	private final WebClient webClient;
 
 	@Override
-	public GetSpellStatsResponseDTO getSpellStats(CharacterId characterId) {
-		var player = playerCharacterService.getPlayer(characterId);
-
+	public GetSpellStatsResponseDTO getSpellStats(PlayerCharacter player) {
 		var viewConfig = playerCharacterService.getViewConfig(player);
 		var usesCombatRatings = minmaxConfigRepository.hasFeature(player, COMBAT_RATINGS);
 
@@ -54,9 +52,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetCharacterStatsResponseDTO getCharacterStats(CharacterId characterId) {
-		var player = playerCharacterService.getPlayer(characterId);
-
+	public GetCharacterStatsResponseDTO getCharacterStats(PlayerCharacter player) {
 		var worldBuffsAllowed = minmaxConfigRepository.hasFeature(player, WORLD_BUFFS);
 
 		var request = new GetCharacterStatsRequestDTO(
@@ -75,9 +71,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(CharacterId characterId) {
-		var player = playerCharacterService.getPlayer(characterId);
-
+	public GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(PlayerCharacter player) {
 		var request = new GetSpecialAbilityStatsRequestDTO(
 				playerConverter.convert(player)
 		);
@@ -93,9 +87,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetRotationStatsResponseDTO getRotationStats(CharacterId characterId) {
-		var player = playerCharacterService.getPlayer(characterId);
-
+	public GetRotationStatsResponseDTO getRotationStats(PlayerCharacter player) {
 		var request = new GetRotationStatsRequestDTO(
 				playerConverter.convert(player)
 		);
@@ -111,9 +103,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetTalentStatsResponseDTO getTalentStats(CharacterId characterId) {
-		var player = playerCharacterService.getPlayer(characterId);
-
+	public GetTalentStatsResponseDTO getTalentStats(PlayerCharacter player) {
 		var request = new GetTalentStatsRequestDTO(
 				playerConverter.convert(player)
 		);

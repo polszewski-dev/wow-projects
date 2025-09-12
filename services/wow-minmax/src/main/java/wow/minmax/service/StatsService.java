@@ -1,20 +1,20 @@
 package wow.minmax.service;
 
+import wow.character.model.character.PlayerCharacter;
 import wow.estimator.client.dto.stats.*;
-import wow.minmax.model.CharacterId;
 
 /**
  * User: POlszewski
  * Date: 2025-03-17
  */
 public interface StatsService {
-	GetSpellStatsResponseDTO getSpellStats(CharacterId characterId);
+	GetSpellStatsResponseDTO getSpellStats(PlayerCharacter player);
 
-	GetCharacterStatsResponseDTO getCharacterStats(CharacterId characterId);
+	GetCharacterStatsResponseDTO getCharacterStats(PlayerCharacter player);
 
-	GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(CharacterId characterId);
+	GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(PlayerCharacter player);
 
-	GetRotationStatsResponseDTO getRotationStats(CharacterId characterId);
+	GetRotationStatsResponseDTO getRotationStats(PlayerCharacter player);
 
-	GetTalentStatsResponseDTO getTalentStats(CharacterId characterId);
+	GetTalentStatsResponseDTO getTalentStats(PlayerCharacter player);
 }

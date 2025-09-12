@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.estimator.client.dto.upgrade.UpgradeDTO;
+import wow.minmax.client.dto.upgrade.UpgradeDTO;
 import wow.minmax.converter.dto.ParamToGemFilterConverter;
 import wow.minmax.converter.dto.ParamToItemFilterConverter;
+import wow.minmax.converter.dto.upgrade.UpgradeConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.UpgradeService;
@@ -25,6 +26,8 @@ import java.util.Map;
 public class UpgradeController {
 	private final UpgradeService upgradeService;
 	private final PlayerCharacterService playerCharacterService;
+
+	private final UpgradeConverter upgradeConverter;
 	private final ParamToItemFilterConverter paramToItemFilterConverter;
 	private final ParamToGemFilterConverter paramToGemFilterConverter;
 
@@ -38,6 +41,8 @@ public class UpgradeController {
 		var itemFilter = paramToItemFilterConverter.convert(requestParams);
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
 
-		return upgradeService.findUpgrades(player, slotGroup, itemFilter, gemFilter).upgrades();
+		var upgrades = upgradeService.findUpgrades(player, slotGroup, itemFilter, gemFilter);
+
+		return upgradeConverter.convertList(upgrades, player.getPhaseId());
 	}
 }

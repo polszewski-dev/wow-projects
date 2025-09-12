@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import wow.minmax.client.dto.simulation.SimulationStatsDTO;
+import wow.minmax.converter.dto.simulation.SimulationStatsConverter;
 import wow.minmax.model.CharacterId;
+import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
-import wow.simulator.client.dto.SimulationResponseDTO;
 
 /**
  * User: POlszewski
@@ -17,12 +19,17 @@ import wow.simulator.client.dto.SimulationResponseDTO;
 @RequestMapping("api/v1/simulations")
 @AllArgsConstructor
 public class SimulationController {
+	private final PlayerCharacterService playerCharacterService;
 	private final SimulatorService simulatorService;
+	private final SimulationStatsConverter simulationStatsConverter;
 
 	@GetMapping("{characterId}")
-	public SimulationResponseDTO simulate(
+	public SimulationStatsDTO simulate(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		return simulatorService.simulate(characterId);
+		var player = playerCharacterService.getPlayer(characterId);
+		var stats = simulatorService.simulate(player);
+
+		return simulationStatsConverter.convert(stats, player.getPhaseId());
 	}
 }

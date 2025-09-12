@@ -17,14 +17,13 @@ import wow.commons.model.item.Item;
 import wow.estimator.client.converter.upgrade.GemFilterConverter;
 import wow.estimator.client.converter.upgrade.ItemFilterConverter;
 import wow.estimator.client.converter.upgrade.ItemLevelFilterConverter;
-import wow.estimator.client.dto.upgrade.FindUpgradesRequestDTO;
-import wow.estimator.client.dto.upgrade.FindUpgradesResponseDTO;
-import wow.estimator.client.dto.upgrade.GetBestItemVariantRequestDTO;
-import wow.estimator.client.dto.upgrade.GetBestItemVariantResponseDTO;
+import wow.estimator.client.dto.upgrade.*;
 import wow.minmax.config.UpgradeConfig;
 import wow.minmax.converter.dto.PlayerConverter;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.UpgradeService;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -48,7 +47,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final WebClient webClient;
 
 	@Override
-	public FindUpgradesResponseDTO findUpgrades(PlayerCharacter player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
+	public List<UpgradeDTO> findUpgrades(PlayerCharacter player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 		var itemLevelFilter = minmaxConfigRepository.getItemLevelFilter(player).orElseThrow();
 
@@ -62,13 +61,15 @@ public class UpgradeServiceImpl implements UpgradeService {
 				upgradeConfig.getMaxUpgrades()
 		);
 
-		return webClient
+		var response = webClient
 				.post()
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(request)
 				.retrieve()
 				.bodyToMono(FindUpgradesResponseDTO.class)
 				.block();
+
+		return response.upgrades();
 	}
 
 	@Override

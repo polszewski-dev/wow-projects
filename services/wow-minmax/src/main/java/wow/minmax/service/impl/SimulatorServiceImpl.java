@@ -5,13 +5,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import wow.character.model.character.PlayerCharacter;
 import wow.minmax.config.SimulationConfig;
 import wow.minmax.converter.dto.PlayerConverter;
-import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
+import wow.simulator.client.dto.StatsDTO;
 
 /**
  * User: POlszewski
@@ -30,20 +31,20 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final WebClient webClient;
 
 	@Override
-	public SimulationResponseDTO simulate(CharacterId characterId) {
-		var request = getSimulationRequestDTO(characterId);
+	public StatsDTO simulate(PlayerCharacter player) {
+		var request = getSimulationRequestDTO(player);
 
-		return webClient.post()
+		var response = webClient.post()
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(request)
 				.retrieve()
 				.bodyToMono(SimulationResponseDTO.class)
 				.block();
+
+		return response.stats();
 	}
 
-	private SimulationRequestDTO getSimulationRequestDTO(CharacterId characterId) {
-		var player = playerCharacterService.getPlayer(characterId);
-
+	private SimulationRequestDTO getSimulationRequestDTO(PlayerCharacter player) {
 		return new SimulationRequestDTO(
 				playerConverter.convert(player),
 				simulationConfig.getDuration(),
