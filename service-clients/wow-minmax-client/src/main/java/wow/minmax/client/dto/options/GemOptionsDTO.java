@@ -1,7 +1,7 @@
 package wow.minmax.client.dto.options;
 
-import wow.commons.client.dto.equipment.GemDTO;
 import wow.commons.model.item.SocketType;
+import wow.minmax.client.dto.equipment.GemDTO;
 
 import java.util.List;
 

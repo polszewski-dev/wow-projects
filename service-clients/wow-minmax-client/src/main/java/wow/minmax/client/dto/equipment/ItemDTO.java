@@ -1,10 +1,10 @@
-package wow.commons.client.dto.equipment;
+package wow.minmax.client.dto.equipment;
 
-import wow.commons.client.dto.PhaseDTO;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.SocketType;
+import wow.minmax.client.dto.PhaseDTO;
 
 import java.util.List;
 

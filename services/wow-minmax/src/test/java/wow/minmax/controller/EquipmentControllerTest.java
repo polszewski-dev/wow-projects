@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.character.model.equipment.EquippableItem;
-import wow.commons.client.converter.equipment.EquippableItemConverter;
-import wow.commons.client.dto.equipment.EquippableItemDTO;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
+import wow.minmax.converter.dto.equipment.EquippableItemConverter;
 
 import java.util.List;
 
@@ -43,11 +41,11 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void equipItemBestVariant() throws Exception {
-		EquippableItem chest = getItem("Sunfire Robe");
-		EquippableItemDTO chestDTO = equippableItemConverter.convert(chest);
+		var chest = getItem("Sunfire Robe");
+		var chestDTO = equippableItemConverter.convert(chest);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String requestBody = objectMapper.writeValueAsString(chestDTO);
+		var objectMapper = new ObjectMapper();
+		var requestBody = objectMapper.writeValueAsString(chestDTO);
 
 		mockMvc.perform(
 				put("/api/v1/equipments/{characterId}/slot/{slot}?best-variant=true", CHARACTER_KEY, ItemSlot.CHEST)
@@ -63,11 +61,11 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void equipItem() throws Exception {
-		EquippableItem chest = character.getEquipment().getChest();
-		EquippableItemDTO chestDTO = equippableItemConverter.convert(chest);
+		var chest = character.getEquipment().getChest();
+		var chestDTO = equippableItemConverter.convert(chest);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String requestBody = objectMapper.writeValueAsString(chestDTO);
+		var objectMapper = new ObjectMapper();
+		var requestBody = objectMapper.writeValueAsString(chestDTO);
 
 		mockMvc.perform(
 				put("/api/v1/equipments/{characterId}/slot/{slot}", CHARACTER_KEY, ItemSlot.CHEST)
@@ -83,11 +81,11 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void equipItemGroup() throws Exception {
-		EquippableItem chest = character.getEquipment().getChest();
-		EquippableItemDTO chestDTO = equippableItemConverter.convert(chest);
+		var chest = character.getEquipment().getChest();
+		var chestDTO = equippableItemConverter.convert(chest);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String requestBody = objectMapper.writeValueAsString(List.of(chestDTO));
+		var objectMapper = new ObjectMapper();
+		var requestBody = objectMapper.writeValueAsString(List.of(chestDTO));
 
 		mockMvc.perform(
 				put("/api/v1/equipments/{characterId}/slot-group/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)

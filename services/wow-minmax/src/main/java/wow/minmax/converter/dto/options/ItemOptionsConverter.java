@@ -3,8 +3,8 @@ package wow.minmax.converter.dto.options;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
-import wow.commons.client.converter.equipment.ItemConverter;
 import wow.minmax.client.dto.options.ItemOptionsDTO;
+import wow.minmax.converter.dto.equipment.ItemConverter;
 import wow.minmax.model.options.ItemOptions;
 
 /**

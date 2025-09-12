@@ -1,7 +1,6 @@
 package wow.estimator.client.dto.upgrade;
 
 import wow.commons.client.dto.PlayerDTO;
-import wow.commons.client.dto.equipment.ItemDTO;
 import wow.commons.model.categorization.ItemSlot;
 
 import java.util.Set;
@@ -12,7 +11,7 @@ import java.util.Set;
  */
 public record GetBestItemVariantRequestDTO(
 		PlayerDTO player,
-		ItemDTO item,
+		int itemId,
 		ItemSlot itemSlot,
 		GemFilterDTO gemFilter,
 		Set<String> enchantNames

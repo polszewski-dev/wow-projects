@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.client.converter.equipment.EquippableItemConverter;
-import wow.commons.client.converter.equipment.ItemConverter;
+import wow.commons.repository.item.ItemRepository;
 import wow.estimator.client.converter.upgrade.GemFilterConverter;
 import wow.estimator.client.converter.upgrade.ItemFilterConverter;
 import wow.estimator.client.converter.upgrade.ItemLevelFilterConverter;
@@ -29,9 +29,9 @@ import wow.estimator.service.UpgradeService;
 @Slf4j
 public class UpgradeController {
 	private final UpgradeService upgradeService;
+	private final ItemRepository itemRepository;
 	private final PlayerConverter playerConverter;
 	private final UpgradeConverter upgradeConverter;
-	private final ItemConverter itemConverter;
 	private final EquippableItemConverter equippableItemConverter;
 	private final ItemFilterConverter itemFilterConverter;
 	private final ItemLevelFilterConverter itemLevelFilterConverter;
@@ -57,7 +57,7 @@ public class UpgradeController {
 	@PostMapping("best-variant")
 	public GetBestItemVariantResponseDTO getBestItemVariant(@RequestBody GetBestItemVariantRequestDTO request) {
 		var player = playerConverter.convertBack(request.player());
-		var item = itemConverter.convertBack(request.item(), player.getPhaseId());
+		var item = itemRepository.getItem(request.itemId(), player.getPhaseId()).orElseThrow();
 		var itemSlot = request.itemSlot();
 		var gemFilter = gemFilterConverter.convertBack(request.gemFilter());
 		var enchantNames = request.enchantNames();

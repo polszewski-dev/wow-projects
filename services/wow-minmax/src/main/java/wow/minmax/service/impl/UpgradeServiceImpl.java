@@ -10,7 +10,6 @@ import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.client.converter.equipment.EquippableItemConverter;
-import wow.commons.client.converter.equipment.ItemConverter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Item;
@@ -20,6 +19,7 @@ import wow.estimator.client.converter.upgrade.ItemLevelFilterConverter;
 import wow.estimator.client.dto.upgrade.*;
 import wow.minmax.config.UpgradeConfig;
 import wow.minmax.converter.dto.PlayerConverter;
+import wow.minmax.converter.dto.equipment.ItemConverter;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.UpgradeService;
 
@@ -78,7 +78,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 		var request = new GetBestItemVariantRequestDTO(
 				playerConverter.convert(player),
-				itemConverter.convert(item),
+				item.getId(),
 				slot,
 				gemFilterConverter.convert(gemFilter),
 				findUpgradesConfig.enchantNames()

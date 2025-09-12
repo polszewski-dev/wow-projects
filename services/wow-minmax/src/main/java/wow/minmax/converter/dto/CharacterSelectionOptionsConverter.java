@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import wow.commons.client.converter.Converter;
-import wow.commons.client.converter.PhaseConverter;
 import wow.commons.client.dto.EnemyTypeDTO;
 import wow.commons.client.dto.LevelDifferenceDTO;
 import wow.commons.model.character.CreatureType;

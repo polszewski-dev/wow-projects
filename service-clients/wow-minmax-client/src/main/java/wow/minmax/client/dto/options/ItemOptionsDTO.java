@@ -1,7 +1,7 @@
 package wow.minmax.client.dto.options;
 
-import wow.commons.client.dto.equipment.ItemDTO;
 import wow.commons.model.categorization.ItemSlot;
+import wow.minmax.client.dto.equipment.ItemDTO;
 
 import java.util.List;
 

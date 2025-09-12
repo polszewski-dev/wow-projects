@@ -1,16 +1,14 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto.equipment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
-import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.converter.equipment.EquipmentConverter;
-import wow.commons.client.converter.equipment.EquippableItemConverter;
-import wow.commons.client.dto.equipment.EquipmentDTO;
-import wow.commons.client.dto.equipment.EquippableItemDTO;
-import wow.commons.client.dto.equipment.ItemDTO;
 import wow.commons.repository.item.ItemRepository;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.client.dto.equipment.EquipmentDTO;
+import wow.minmax.client.dto.equipment.EquippableItemDTO;
+import wow.minmax.client.dto.equipment.ItemDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class EquipmentConverterTest extends WowCommonsClientSpringTest {
+class EquipmentConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	EquipmentConverter equipmentConverter;
 

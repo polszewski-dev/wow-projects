@@ -1,9 +1,10 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.commons.client.converter.Converter;
 import wow.commons.model.pve.Phase;
-import wow.commons.client.dto.PhaseDTO;
+import wow.minmax.client.dto.PhaseDTO;
 
 /**
  * User: POlszewski

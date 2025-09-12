@@ -1,17 +1,10 @@
-package wow.commons.client.converter;
+package wow.commons.client.converter.equipment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.converter.equipment.EnchantConverter;
-import wow.commons.client.converter.equipment.EquippableItemConverter;
-import wow.commons.client.converter.equipment.GemConverter;
-import wow.commons.client.converter.equipment.ItemConverter;
-import wow.commons.client.dto.equipment.EnchantDTO;
 import wow.commons.client.dto.equipment.EquippableItemDTO;
-import wow.commons.client.dto.equipment.GemDTO;
-import wow.commons.client.dto.equipment.ItemDTO;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
@@ -38,15 +31,6 @@ class EquippableItemConverterTest extends WowCommonsClientSpringTest {
 	@Autowired
 	GemRepository gemRepository;
 
-	@Autowired
-	ItemConverter itemConverter;
-
-	@Autowired
-	EnchantConverter enchantConverter;
-
-	@Autowired
-	GemConverter gemConverter;
-
 	@Test
 	void convert() {
 		var item = itemRepository.getItem(34182, TBC_P5).orElseThrow();
@@ -63,9 +47,9 @@ class EquippableItemConverterTest extends WowCommonsClientSpringTest {
 
 		assertThat(converted).isEqualTo(
 				new EquippableItemDTO(
-						itemConverter.convert(item),
-						enchantConverter.convert(enchant),
-						gemConverter.convertList(List.of(gem1, gem2, gem3))
+						34182,
+						27982,
+						List.of(32196, 35760, 32215)
 				)
 		);
 	}
@@ -73,13 +57,9 @@ class EquippableItemConverterTest extends WowCommonsClientSpringTest {
 	@Test
 	void convertBack() {
 		var equippableItem = new EquippableItemDTO(
-				new ItemDTO(34182, null, null, null, null, 0, null, null, null, null, null, null, null, null),
-				new EnchantDTO(27982, null, null, null, null),
-				List.of(
-						new GemDTO(32196, null, null, null, null, null, null, null),
-						new GemDTO(35760, null, null, null, null, null, null, null),
-						new GemDTO(32215, null, null, null, null, null, null, null)
-				)
+				34182,
+				27982,
+				List.of(32196, 35760, 32215)
 		);
 
 		var converted = equippableItemConverter.convertBack(equippableItem, TBC_P5);

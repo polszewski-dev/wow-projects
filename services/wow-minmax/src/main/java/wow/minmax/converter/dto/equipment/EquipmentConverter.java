@@ -1,12 +1,12 @@
-package wow.commons.client.converter.equipment;
+package wow.minmax.converter.dto.equipment;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.Equipment;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
-import wow.commons.client.dto.equipment.EquipmentDTO;
 import wow.commons.model.pve.PhaseId;
+import wow.minmax.client.dto.equipment.EquipmentDTO;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2021-12-14
  */
-@Component("commonsEquipmentConverter")
+@Component
 @AllArgsConstructor
 public class EquipmentConverter implements Converter<Equipment, EquipmentDTO>, ParametrizedBackConverter<Equipment, EquipmentDTO, PhaseId> {
 	private final EquippableItemConverter equippableItemConverter;

@@ -1,18 +1,17 @@
-package wow.commons.client.converter.equipment;
+package wow.minmax.converter.dto.equipment;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
-import wow.commons.client.converter.PhaseConverter;
-import wow.commons.client.converter.SourceConverter;
-import wow.commons.client.dto.PhaseDTO;
-import wow.commons.client.dto.equipment.ItemDTO;
 import wow.commons.model.config.Described;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.pve.PhaseRepository;
+import wow.minmax.client.dto.PhaseDTO;
+import wow.minmax.client.dto.equipment.ItemDTO;
+import wow.minmax.converter.dto.PhaseConverter;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

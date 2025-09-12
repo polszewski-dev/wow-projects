@@ -1,8 +1,8 @@
 package wow.minmax.client.dto.options;
 
-import wow.commons.client.dto.equipment.EnchantDTO;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
+import wow.minmax.client.dto.equipment.EnchantDTO;
 
 import java.util.List;
 

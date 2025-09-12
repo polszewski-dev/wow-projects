@@ -1,12 +1,11 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto.equipment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.converter.equipment.EnchantConverter;
-import wow.commons.client.dto.equipment.EnchantDTO;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.repository.item.EnchantRepository;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.client.dto.equipment.EnchantDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
@@ -15,7 +14,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class EnchantConverterTest extends WowCommonsClientSpringTest {
+class EnchantConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	EnchantConverter enchantConverter;
 

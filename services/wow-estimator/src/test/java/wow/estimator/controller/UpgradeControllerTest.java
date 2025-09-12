@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.commons.client.converter.equipment.ItemConverter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.estimator.client.dto.upgrade.*;
@@ -26,9 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UpgradeControllerTest extends ControllerTest {
 	@Autowired
 	MockMvc mockMvc;
-
-	@Autowired
-	ItemConverter itemConverter;
 
 	@Test
 	void findUpgrades() throws Exception {
@@ -57,10 +53,10 @@ class UpgradeControllerTest extends ControllerTest {
 	void getBestItemVariant() throws Exception {
 		var playerDTO = playerConverter.convert(character);
 		var itemSlot = ItemSlot.HEAD;
-		var itemDTO = itemConverter.convert(character.getEquippedItem(itemSlot).getItem());
+		var item = character.getEquippedItem(itemSlot).getItem();
 		var gemFilterDTO = new GemFilterDTO(true);
 		var enchantNames = Set.<String>of();
-		var request = new GetBestItemVariantRequestDTO(playerDTO, itemDTO, itemSlot, gemFilterDTO, enchantNames);
+		var request = new GetBestItemVariantRequestDTO(playerDTO, item.getId(), itemSlot, gemFilterDTO, enchantNames);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);

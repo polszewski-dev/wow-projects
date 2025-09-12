@@ -1,4 +1,4 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto.equipment;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

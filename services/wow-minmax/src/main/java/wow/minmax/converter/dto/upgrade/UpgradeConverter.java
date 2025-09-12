@@ -3,9 +3,9 @@ package wow.minmax.converter.dto.upgrade;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.ParametrizedConverter;
-import wow.commons.client.converter.equipment.EquippableItemConverter;
 import wow.commons.model.pve.PhaseId;
 import wow.minmax.client.dto.upgrade.UpgradeDTO;
+import wow.minmax.converter.dto.equipment.EquippableItemConverter;
 
 /**
  * User: POlszewski
@@ -14,7 +14,7 @@ import wow.minmax.client.dto.upgrade.UpgradeDTO;
 @Component
 @AllArgsConstructor
 public class UpgradeConverter implements ParametrizedConverter<wow.estimator.client.dto.upgrade.UpgradeDTO, UpgradeDTO, PhaseId> {
-	private final EquippableItemConverter leanEquippableItemConverter;
+	private final wow.commons.client.converter.equipment.EquippableItemConverter leanEquippableItemConverter;
 	private final EquippableItemConverter equippableItemConverter;
 
 	@Override

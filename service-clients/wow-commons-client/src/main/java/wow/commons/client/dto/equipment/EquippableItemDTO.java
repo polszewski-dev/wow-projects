@@ -4,11 +4,11 @@ import java.util.List;
 
 /**
  * User: POlszewski
- * Date: 2021-12-13
+ * Date: 2025-09-02
  */
 public record EquippableItemDTO(
-		ItemDTO item,
-		EnchantDTO enchant,
-		List<GemDTO> gems
+		int itemId,
+		Integer enchantId,
+		List<Integer> gemIds
 ) {
 }

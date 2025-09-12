@@ -1,13 +1,12 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto.equipment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.client.WowCommonsClientSpringTest;
-import wow.commons.client.converter.equipment.GemConverter;
-import wow.commons.client.dto.equipment.GemDTO;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.item.GemColor;
 import wow.commons.repository.item.GemRepository;
+import wow.minmax.WowMinMaxSpringTest;
+import wow.minmax.client.dto.equipment.GemDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
@@ -16,7 +15,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class GemConverterTest extends WowCommonsClientSpringTest {
+class GemConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	GemConverter gemConverter;
 
@@ -31,14 +30,14 @@ class GemConverterTest extends WowCommonsClientSpringTest {
 
 		assertThat(converted).isEqualTo(
 				new GemDTO(
-						35760,
-						"Reckless Pyrestone",
-						GemColor.ORANGE,
-						ItemRarity.EPIC,
-						"Jewelcrafting",
-						"Reckless Pyrestone",
-						"inv_jewelcrafting_pyrestone_02",
-						"""
+						   35760,
+						   "Reckless Pyrestone",
+						   GemColor.ORANGE,
+						   ItemRarity.EPIC,
+						   "Jewelcrafting",
+						   "Reckless Pyrestone",
+						   "inv_jewelcrafting_pyrestone_02",
+						   """
 						+5 Spell Haste Rating
 						+6 Spell Damage"""
 				)

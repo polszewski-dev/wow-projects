@@ -7,32 +7,41 @@ import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.client.dto.equipment.EquippableItemDTO;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.item.GemRepository;
+import wow.commons.repository.item.ItemRepository;
 
 /**
  * User: POlszewski
- * Date: 2021-12-13
+ * Date: 2025-09-02
  */
-@Component
+@Component("commonsEquippableItemConverter")
 @AllArgsConstructor
 public class EquippableItemConverter implements Converter<EquippableItem, EquippableItemDTO>, ParametrizedBackConverter<EquippableItem, EquippableItemDTO, PhaseId> {
-	private final ItemConverter itemConverter;
-	private final EnchantConverter enchantConverter;
-	private final GemConverter gemConverter;
+	private final ItemRepository itemRepository;
+	private final EnchantRepository enchantRepository;
+	private final GemRepository gemRepository;
 
 	@Override
 	public EquippableItemDTO doConvert(EquippableItem source) {
+		var item = source.getItem();
+		var enchant = source.getEnchant();
+		var gems = source.getGems();
+
 		return new EquippableItemDTO(
-				itemConverter.convert(source.getItem()),
-				enchantConverter.convert(source.getEnchant()),
-				gemConverter.convertList(source.getGems())
+				item.getId(),
+				enchant != null ? enchant.getId() : null,
+				gems.stream().map(gem -> gem != null ? gem.getId() : null).toList()
 		);
 	}
 
 	@Override
 	public EquippableItem doConvertBack(EquippableItemDTO source, PhaseId phaseId) {
-		var item = itemConverter.convertBack(source.item(), phaseId);
-		var enchant = enchantConverter.convertBack(source.enchant(), phaseId);
-		var gems = gemConverter.convertBackList(source.gems(), phaseId);
+		var item = itemRepository.getItem(source.itemId(), phaseId).orElseThrow();
+		var enchant = source.enchantId() != null ? enchantRepository.getEnchant(source.enchantId(), phaseId).orElseThrow() : null;
+		var gems = source.gemIds().stream()
+				.map(gemId -> gemId != null ? gemRepository.getGem(gemId, phaseId).orElseThrow() : null)
+				.toList();
 
 		return new EquippableItem(item)
 				.enchant(enchant)

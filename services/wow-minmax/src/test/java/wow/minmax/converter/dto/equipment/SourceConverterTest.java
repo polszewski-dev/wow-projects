@@ -1,10 +1,10 @@
-package wow.commons.client.converter;
+package wow.minmax.converter.dto.equipment;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.client.WowCommonsClientSpringTest;
 import wow.commons.repository.item.ItemRepository;
+import wow.minmax.WowMinMaxSpringTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
@@ -13,7 +13,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class SourceConverterTest extends WowCommonsClientSpringTest {
+class SourceConverterTest extends WowMinMaxSpringTest {
 	@Autowired
 	SourceConverter sourceConverter;
 
