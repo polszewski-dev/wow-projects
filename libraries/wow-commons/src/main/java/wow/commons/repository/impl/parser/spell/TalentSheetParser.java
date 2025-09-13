@@ -4,6 +4,7 @@ import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.model.talent.Talent;
+import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentSource;
 import wow.commons.model.talent.TalentTree;
 import wow.commons.model.talent.impl.TalentImpl;
@@ -39,7 +40,7 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colTree = column(TALENT_TREE);
 
 	private Talent getTalent() {
-		var talentId = colId.getInteger();
+		var talentId = colId.getInteger(TalentId::of);
 		var rank = colRank.getInteger();
 		var maxRank = colMaxRank.getInteger();
 		var talentCalculatorPosition = colCalculatorPosition.getInteger();
@@ -62,7 +63,7 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 
 		var effect = getEffect();
 
-		effect.setEffectId(-talentId);
+		effect.setEffectId(-talentId.value());
 		effect.setDescription(description);
 		effect.setTimeRestriction(timeRestriction);
 		effect.attachSource(new TalentSource(talent));

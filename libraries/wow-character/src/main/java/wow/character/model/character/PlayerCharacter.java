@@ -16,7 +16,6 @@ import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 
 import java.util.List;
 import java.util.Optional;
@@ -129,13 +128,13 @@ public interface PlayerCharacter extends Character {
 	Build getBuild();
 
 	@Override
-	default boolean hasTalent(TalentId talentId) {
-		return getBuild().hasTalent(talentId);
+	default boolean hasTalent(String name) {
+		return getBuild().hasTalent(name);
 	}
 
 	@Override
-	default boolean hasTalent(TalentId talentId, int rank) {
-		return getBuild().hasTalent(talentId, rank);
+	default boolean hasTalent(String name, int rank) {
+		return getBuild().hasTalent(name, rank);
 	}
 
 	default Talents getTalents() {

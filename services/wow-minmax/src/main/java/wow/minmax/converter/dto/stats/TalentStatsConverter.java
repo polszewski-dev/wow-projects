@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.talent.TalentId;
 import wow.commons.repository.spell.TalentRepository;
 import wow.minmax.client.dto.stats.TalentStatsDTO;
 import wow.minmax.converter.dto.TalentConverter;
@@ -20,7 +21,8 @@ public class TalentStatsConverter implements ParametrizedConverter<wow.estimator
 
 	@Override
 	public TalentStatsDTO doConvert(wow.estimator.client.dto.stats.TalentStatsDTO source, PhaseId phaseId) {
-		var talent = talentRepository.getTalent(source.talentId(), phaseId).orElseThrow();
+		var talentId = TalentId.of(source.talentId());
+		var talent = talentRepository.getTalent(talentId, phaseId).orElseThrow();
 
 		return new TalentStatsDTO(
 				talentConverter.convert(talent),

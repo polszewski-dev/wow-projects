@@ -89,13 +89,13 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public List<TalentStats> getTalentStats(Player player) {
-		return player.getTalents().getList().stream()
+		return player.getTalents().getStream()
 				.map(x -> getTalentStats(x, player))
 				.toList();
 	}
 
 	private TalentStats getTalentStats(Talent talent, Player player) {
-		var spEquivalent = calculationService.getSpEquivalent(talent.getTalentId(), player);
+		var spEquivalent = calculationService.getTalentSpEquivalent(talent.getName(), player);
 
 		return new TalentStats(
 				talent,

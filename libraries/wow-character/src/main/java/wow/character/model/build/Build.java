@@ -10,7 +10,6 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
 import wow.commons.model.pve.GameVersion;
-import wow.commons.model.talent.TalentId;
 
 /**
  * User: POlszewski
@@ -67,11 +66,11 @@ public class Build implements EffectCollection, Copyable<Build> {
 		talents.collectEffects(collector);
 	}
 
-	public boolean hasTalent(TalentId talentId) {
-		return talents.hasTalent(talentId);
+	public boolean hasTalent(String name) {
+		return talents.has(name);
 	}
 
-	public boolean hasTalent(TalentId talentId, int rank) {
-		return talents.hasTalent(talentId, rank);
+	public boolean hasTalent(String name, int rank) {
+		return talents.has(name, rank);
 	}
 }

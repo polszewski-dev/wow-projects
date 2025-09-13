@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.config.Described;
 import wow.commons.model.spell.ActivatedAbility;
-import wow.commons.model.talent.TalentId;
 import wow.estimator.model.EffectList;
 import wow.estimator.model.SpecialAbility;
+import wow.test.commons.TalentNames;
 
 import java.util.List;
 
@@ -28,8 +28,8 @@ class CalculationServiceTest extends ServiceTest {
 	CalculationService calculationService;
 
 	@Test
-	void getSpEquivalent() {
-		double spEquivalent = calculationService.getSpEquivalent(TalentId.RUIN, character);
+	void getTalentSpEquivalent() {
+		double spEquivalent = calculationService.getTalentSpEquivalent(TalentNames.RUIN, character);
 
 		assertThat(spEquivalent).isEqualTo(288.45, PRECISION);
 	}

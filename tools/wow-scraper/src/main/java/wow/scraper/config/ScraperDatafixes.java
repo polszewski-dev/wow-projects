@@ -12,7 +12,6 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
-import wow.commons.model.talent.TalentId;
 import wow.commons.util.CollectionUtil;
 import wow.scraper.fetcher.PageCache;
 import wow.scraper.fetcher.PageFetcher;
@@ -160,8 +159,8 @@ public class ScraperDatafixes {
 		return talentSpells.get(abilityCategory).get(gameVersion).contains(name);
 	}
 
-	public Integer getTalentCalculatorPosition(GameVersionId gameVersion, TalentId talentId) {
-		return talentCalculatorPositions.get(gameVersion).get(talentId.getName());
+	public Integer getTalentCalculatorPosition(GameVersionId gameVersion, String talentName) {
+		return talentCalculatorPositions.get(gameVersion).get(talentName);
 	}
 
 	public List<Integer> getMissingSpellIds(WowheadSpellCategory category, GameVersionId gameVersion) {

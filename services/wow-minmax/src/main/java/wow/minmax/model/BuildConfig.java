@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 public class BuildConfig {
-	private List<TalentConfig> talents;
+	private List<Integer> talentIds;
 	private PveRole role;
 	private String rotation;
 	private PetType activePet;

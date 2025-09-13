@@ -9,7 +9,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
-import wow.commons.model.talent.TalentIdAndRank;
+import wow.commons.model.talent.TalentNameRank;
 import wow.commons.model.talent.TalentTree;
 
 import static wow.commons.util.CollectionUtil.getUniqueResult;
@@ -21,19 +21,19 @@ import static wow.commons.util.CollectionUtil.getUniqueResult;
 @Getter
 @Setter
 public class TalentImpl implements Talent {
-	private final int id;
+	private final TalentId id;
 	private final int rank;
 	private final int maxRank;
 	private final int talentCalculatorPosition;
 	private final TalentTree talentTree;
-	private final TalentIdAndRank rankedTalentId;
+	private final TalentNameRank nameRank;
 	private final Description description;
 	private final TimeRestriction timeRestriction;
 	private final CharacterRestriction characterRestriction;
 	private Effect effect;
 
 	public TalentImpl(
-			int id,
+			TalentId id,
 			int rank,
 			int maxRank,
 			int talentCalculatorPosition,
@@ -47,7 +47,7 @@ public class TalentImpl implements Talent {
 		this.maxRank = maxRank;
 		this.talentCalculatorPosition = talentCalculatorPosition;
 		this.talentTree = talentTree;
-		this.rankedTalentId = new TalentIdAndRank(TalentId.parse(description.name()), rank);
+		this.nameRank = new TalentNameRank(description.name(), rank);
 		this.description = description;
 		this.timeRestriction = timeRestriction;
 		this.characterRestriction = characterRestriction;
@@ -63,7 +63,7 @@ public class TalentImpl implements Talent {
 		if (getMaxRank() == 1) {
 			return getName();
 		} else {
-			return rankedTalentId.toString();
+			return nameRank.toString();
 		}
 	}
 }

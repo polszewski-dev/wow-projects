@@ -4,7 +4,6 @@ import wow.character.model.build.Rotation;
 import wow.character.model.snapshot.StatSummary;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.talent.TalentId;
 import wow.estimator.model.*;
 
 /**
@@ -12,7 +11,7 @@ import wow.estimator.model.*;
  * Date: 2021-12-15
  */
 public interface CalculationService {
-	double getSpEquivalent(TalentId talentId, Player player);
+	double getTalentSpEquivalent(String talentName, Player player);
 
 	double getRotationDps(Player player, Rotation rotation, EffectList effectList, EffectList targetEffectList);
 

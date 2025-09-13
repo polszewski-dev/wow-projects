@@ -9,7 +9,7 @@ import wow.character.model.build.TalentLink;
 import wow.character.model.build.TalentLinkType;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.talent.TalentIdAndRank;
+import wow.commons.model.talent.TalentNameRank;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -137,7 +137,7 @@ class TalentLinkParserTest extends WowCharacterSpringTest {
 
 	private static void assertTalents(TalentLink link, List<String> expected) {
 		var actual = link.talents().stream()
-				.map(TalentIdAndRank::toString)
+				.map(TalentNameRank::toString)
 				.toList();
 		assertThat(actual).isEqualTo(expected);
 	}

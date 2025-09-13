@@ -16,7 +16,7 @@ public class TalentStatsConverter implements Converter<TalentStats, TalentStatsD
 	@Override
 	public TalentStatsDTO doConvert(TalentStats source) {
 		return new TalentStatsDTO(
-				source.talent().getId(),
+				source.talent().getId().value(),
 				source.statEquivalent(),
 				source.spEquivalent()
 		);

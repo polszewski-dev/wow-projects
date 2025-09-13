@@ -145,6 +145,13 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 	}
 
 	@Override
+	public void collectEffects(EffectCollector collector) {
+		for (var buff : enabledBuffsByName.values()) {
+			collector.addEffect(buff.getEffect(), buff.getStacks());
+		}
+	}
+
+	@Override
 	public Buffs copy() {
 		var copy = new Buffs(type);
 		copy.availableBuffsById.putAll(this.availableBuffsById);
@@ -152,12 +159,5 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 		copy.availableBuffsByName.putAll(this.availableBuffsByName);
 		copy.enabledBuffsByName.putAll(this.enabledBuffsByName);
 		return copy;
-	}
-
-	@Override
-	public void collectEffects(EffectCollector collector) {
-		for (var buff : enabledBuffsByName.values()) {
-			collector.addEffect(buff.getEffect(), buff.getStacks());
-		}
 	}
 }

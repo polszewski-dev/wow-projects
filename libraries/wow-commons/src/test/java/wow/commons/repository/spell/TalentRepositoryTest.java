@@ -18,7 +18,6 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.talent.Talent;
-import wow.commons.model.talent.TalentId;
 
 import java.util.List;
 
@@ -32,8 +31,8 @@ import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
-import static wow.commons.model.talent.TalentId.*;
 import static wow.commons.model.talent.TalentTree.AFFLICTION;
+import static wow.test.commons.TalentNames.*;
 
 /**
  * User: POlszewski
@@ -47,7 +46,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 	void talentInfo() {
 		var talent = getTalent(WARLOCK, IMPROVED_CORRUPTION, 1, TBC_P5);
 
-		assertThat(talent.getId()).isEqualTo(17810);
+		assertId(talent, 17810);
 		assertThat(talent.getName()).isEqualTo("Improved Corruption");
 		assertThat(talent.getRank()).isEqualTo(1);
 		assertThat(talent.getMaxRank()).isEqualTo(5);
@@ -108,7 +107,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var event = effect.getEvents().get(0);
+		var event = effect.getEvents().getFirst();
 
 		assertEvent(
 				event,
@@ -175,7 +174,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		));
 	}
 
-	private Talent getTalent(CharacterClassId classId, TalentId talentId, int rank, PhaseId phaseId) {
-		return talentRepository.getTalent(classId, talentId, rank, phaseId).orElseThrow();
+	private Talent getTalent(CharacterClassId classId, String name, int rank, PhaseId phaseId) {
+		return talentRepository.getTalent(classId, name, rank, phaseId).orElseThrow();
 	}
 }

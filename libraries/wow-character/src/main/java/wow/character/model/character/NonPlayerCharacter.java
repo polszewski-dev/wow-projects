@@ -8,7 +8,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
-import wow.commons.model.talent.TalentId;
 
 /**
  * User: POlszewski
@@ -61,12 +60,12 @@ public interface NonPlayerCharacter extends Character {
 	}
 
 	@Override
-	default boolean hasTalent(TalentId talentId) {
+	default boolean hasTalent(String name) {
 		return false;
 	}
 
 	@Override
-	default boolean hasTalent(TalentId talentId, int rank) {
+	default boolean hasTalent(String name, int rank) {
 		return false;
 	}
 

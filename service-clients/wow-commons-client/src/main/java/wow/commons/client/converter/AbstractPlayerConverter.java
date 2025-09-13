@@ -14,6 +14,7 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.Talent;
+import wow.commons.model.talent.TalentId;
 
 import java.util.List;
 
@@ -31,8 +32,9 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	@Override
 	public PlayerDTO doConvert(P source) {
-		var talentIds = source.getTalents().getList().stream()
+		var talentIds = source.getTalents().getStream()
 				.map(Talent::getId)
+				.map(TalentId::value)
 				.toList();
 
 		var buffIds = source.getBuffs().getStream()
@@ -100,7 +102,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 		var build = character.getBuild();
 
 		for (var talentId : source.talentIds()) {
-			build.getTalents().enableTalent(talentId);
+			build.getTalents().enable(TalentId.of(talentId));
 		}
 
 		build.setRole(source.role());

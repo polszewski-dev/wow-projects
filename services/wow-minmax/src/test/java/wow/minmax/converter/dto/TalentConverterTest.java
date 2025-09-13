@@ -9,7 +9,7 @@ import wow.minmax.client.dto.TalentDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.talent.TalentId.IMPROVED_SHADOW_BOLT;
+import static wow.test.commons.TalentNames.IMPROVED_SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -29,8 +29,8 @@ class TalentConverterTest extends WowMinMaxSpringTest {
 
 		assertThat(converted).isEqualTo(
 				new TalentDTO(
+						17793,
 						IMPROVED_SHADOW_BOLT,
-						"Improved Shadow Bolt",
 						1,
 						5,
 						"spell_shadow_shadowbolt",

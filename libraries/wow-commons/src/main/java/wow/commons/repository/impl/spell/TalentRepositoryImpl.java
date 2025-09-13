@@ -22,12 +22,12 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
  */
 @Component
 public class TalentRepositoryImpl implements TalentRepository {
-	private record TalentIdAndRankKey(CharacterClassId characterClassId, TalentId talentId, int rank) {}
+	private record NameRankKey(CharacterClassId characterClassId, String name, int rank) {}
 	private record CalcPositionKey(CharacterClassId characterClassId, int talentCalculatorPosition, int rank) {}
 
-	private final PhaseMap<Integer, Talent> talentById = new PhaseMap<>();
+	private final PhaseMap<TalentId, Talent> talentById = new PhaseMap<>();
 	private final PhaseMap<CharacterClassId, List<Talent>> talentsByClass = new PhaseMap<>();
-	private final PhaseMap<TalentIdAndRankKey, Talent> talentByClassByIdByRank = new PhaseMap<>();
+	private final PhaseMap<NameRankKey, Talent> talentByClassByIdByRank = new PhaseMap<>();
 	private final PhaseMap<CalcPositionKey, Talent> talentByClassByCalcPosByRank = new PhaseMap<>();
 
 	public TalentRepositoryImpl(TalentExcelParser parser) throws IOException {
@@ -42,13 +42,13 @@ public class TalentRepositoryImpl implements TalentRepository {
 	}
 
 	@Override
-	public Optional<Talent> getTalent(int talentId, PhaseId phaseId) {
+	public Optional<Talent> getTalent(TalentId talentId, PhaseId phaseId) {
 		return talentById.getOptional(phaseId, talentId);
 	}
 
 	@Override
-	public Optional<Talent> getTalent(CharacterClassId characterClassId, TalentId talentId, int rank, PhaseId phaseId) {
-		var key = new TalentIdAndRankKey(characterClassId, talentId, rank);
+	public Optional<Talent> getTalent(CharacterClassId characterClassId, String name, int rank, PhaseId phaseId) {
+		var key = new NameRankKey(characterClassId, name, rank);
 		return talentByClassByIdByRank.getOptional(phaseId, key);
 	}
 
@@ -59,7 +59,7 @@ public class TalentRepositoryImpl implements TalentRepository {
 	}
 
 	private void addTalent(Talent talent) {
-		var key1 = new TalentIdAndRankKey(talent.getCharacterClass(), talent.getTalentId(), talent.getRank());
+		var key1 = new NameRankKey(talent.getCharacterClass(), talent.getName(), talent.getRank());
 		var key2 = new CalcPositionKey(talent.getCharacterClass(), talent.getTalentCalculatorPosition(), talent.getRank());
 
 		addEntryForEveryPhase(talentsByClass, talent.getCharacterClass(), talent);

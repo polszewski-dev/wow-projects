@@ -13,10 +13,10 @@ import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.Consumable;
 import wow.commons.model.item.ConsumableId;
+import wow.commons.model.talent.TalentId;
 import wow.minmax.converter.model.equipment.EquipmentConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.PlayerCharacterConfig;
-import wow.minmax.model.TalentConfig;
 
 import java.util.List;
 
@@ -97,8 +97,8 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 		var build = player.getBuild();
 		var sourceBuild = source.getBuild();
 
-		for (TalentConfig sourceTalent : sourceBuild.getTalents()) {
-			build.getTalents().enableTalent(sourceTalent.getTalentId(), sourceTalent.getRank());
+		for (var talentId : sourceBuild.getTalentIds()) {
+			build.getTalents().enable(TalentId.of(talentId));
 		}
 
 		build.setRole(sourceBuild.getRole());

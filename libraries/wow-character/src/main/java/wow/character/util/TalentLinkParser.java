@@ -5,7 +5,7 @@ import wow.character.model.build.TalentLinkType;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.talent.Talent;
-import wow.commons.model.talent.TalentIdAndRank;
+import wow.commons.model.talent.TalentNameRank;
 import wow.commons.repository.spell.TalentRepository;
 import wow.commons.util.parser.ParsedMultipleValues;
 import wow.commons.util.parser.ParserUtil;
@@ -23,7 +23,7 @@ public abstract class TalentLinkParser {
 	private final TalentLinkType type;
 	protected final GameVersionId gameVersionId;
 	protected final CharacterClassId characterClassId;
-	private final List<TalentIdAndRank> talents = new ArrayList<>();
+	private final List<TalentNameRank> talents = new ArrayList<>();
 	protected final TalentRepository talentRepository;
 
 	protected final ParsedMultipleValues parseResult;
@@ -92,7 +92,7 @@ public abstract class TalentLinkParser {
 		var phaseId = gameVersionId.getEarliestPhase();
 		var talent = talentRepository.getTalent(characterClassId, position, talentRank, phaseId).orElseThrow();
 
-		talents.add(new TalentIdAndRank(talent.getTalentId(), talentRank));
+		talents.add(new TalentNameRank(talent.getName(), talentRank));
 	}
 }
 

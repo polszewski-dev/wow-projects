@@ -1,7 +1,6 @@
 package wow.commons.model.config;
 
-import wow.commons.model.talent.TalentId;
-import wow.commons.model.talent.TalentIdAndRank;
+import wow.commons.model.talent.TalentNameRank;
 
 import java.util.Objects;
 
@@ -10,52 +9,52 @@ import java.util.Objects;
  * Date: 2025-03-25
  */
 public sealed interface TalentRestriction {
-	TalentId talentId();
+	String talentName();
 
 	boolean isMetBy(CharacterInfo characterInfo);
 
-	record TalentIdRestriction(TalentId talentId) implements TalentRestriction {
+	record TalentIdRestriction(String talentName) implements TalentRestriction {
 		public TalentIdRestriction {
-			Objects.requireNonNull(talentId);
+			Objects.requireNonNull(talentName);
 		}
 
 		@Override
 		public boolean isMetBy(CharacterInfo characterInfo) {
-			return characterInfo.hasTalent(talentId);
+			return characterInfo.hasTalent(talentName);
 		}
 	}
 
-	record TalentIdAndRankRestriction(TalentIdAndRank talentIdAndRank) implements TalentRestriction {
+	record TalentIdAndRankRestriction(TalentNameRank talentNameRank) implements TalentRestriction {
 		public TalentIdAndRankRestriction {
-			Objects.requireNonNull(talentIdAndRank);
+			Objects.requireNonNull(talentNameRank);
 		}
 
 		@Override
-		public TalentId talentId() {
-			return talentIdAndRank.talentId();
+		public String talentName() {
+			return talentNameRank.name();
 		}
 
 		@Override
 		public boolean isMetBy(CharacterInfo characterInfo) {
-			return characterInfo.hasTalent(talentIdAndRank.talentId(), talentIdAndRank.rank());
+			return characterInfo.hasTalent(talentNameRank.name(), talentNameRank.rank());
 		}
 	}
 
-	static TalentRestriction of(TalentId talentId) {
-		if (talentId == null) {
+	static TalentRestriction of(String talentName) {
+		if (talentName == null) {
 			return null;
 		}
-		return new TalentIdRestriction(talentId);
+		return new TalentIdRestriction(talentName);
 	}
 
-	static TalentRestriction of(TalentId talentId, Integer rank) {
-		if (talentId == null && rank == null) {
+	static TalentRestriction of(String talentName, Integer rank) {
+		if (talentName == null && rank == null) {
 			return null;
 		}
 		if (rank != null) {
-			return new TalentIdAndRankRestriction(new TalentIdAndRank(talentId, rank));
+			return new TalentIdAndRankRestriction(new TalentNameRank(talentName, rank));
 		} else {
-			return new TalentIdRestriction(talentId);
+			return new TalentIdRestriction(talentName);
 		}
 	}
 }

@@ -22,7 +22,6 @@ import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.component.DirectComponent;
-import wow.commons.model.talent.TalentId;
 import wow.estimator.model.*;
 import wow.estimator.service.CalculationService;
 import wow.estimator.util.*;
@@ -44,10 +43,10 @@ public class CalculationServiceImpl implements CalculationService {
 	private final SpecialAbilitySolver specialAbilitySolver;
 
 	@Override
-	public double getSpEquivalent(TalentId talentId, Player player) {
+	public double getTalentSpEquivalent(String talentName, Player player) {
 		var copy = player.copy();
 
-		copy.getTalents().removeTalent(talentId);
+		copy.getTalents().removeTalent(talentName);
 		characterService.updateAfterRestrictionChange(copy);
 
 		var baseEffectList = EffectList.createSolved(copy);

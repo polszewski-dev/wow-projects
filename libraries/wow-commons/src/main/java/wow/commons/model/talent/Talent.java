@@ -11,7 +11,7 @@ import wow.commons.model.effect.Effect;
  * Date: 2020-09-30
  */
 public interface Talent extends Described, TimeRestricted, CharacterRestricted {
-	int getId();
+	TalentId getId();
 
 	int getRank();
 
@@ -19,11 +19,7 @@ public interface Talent extends Described, TimeRestricted, CharacterRestricted {
 
 	int getTalentCalculatorPosition();
 
-	TalentIdAndRank getRankedTalentId();
-
-	default TalentId getTalentId() {
-		return getRankedTalentId().talentId();
-	}
+	TalentNameRank getNameRank();
 
 	CharacterClassId getCharacterClass();
 

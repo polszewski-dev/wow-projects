@@ -9,7 +9,6 @@ import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 
 /**
  * User: POlszewski
@@ -38,7 +37,7 @@ public interface CharacterInfo {
 
 	boolean hasAbility(AbilityId abilityId);
 
-	boolean hasTalent(TalentId talentId);
+	boolean hasTalent(String name);
 
-	boolean hasTalent(TalentId talentId, int rank);
+	boolean hasTalent(String name, int rank);
 }

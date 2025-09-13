@@ -2,7 +2,7 @@ package wow.character.model.build;
 
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.talent.TalentIdAndRank;
+import wow.commons.model.talent.TalentNameRank;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +16,7 @@ public record TalentLink(
 		TalentLinkType type,
 		GameVersionId gameVersionId,
 		CharacterClassId characterClassId,
-		List<TalentIdAndRank> talents
+		List<TalentNameRank> talents
 ) {
 	public TalentLink {
 		Objects.requireNonNull(link);

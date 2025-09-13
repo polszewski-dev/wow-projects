@@ -16,7 +16,7 @@ public class TalentConverter implements Converter<Talent, TalentDTO> {
 	@Override
 	public TalentDTO doConvert(Talent source) {
 		return new TalentDTO(
-				source.getTalentId(),
+				source.getId().value(),
 				source.getName(),
 				source.getRank(),
 				source.getMaxRank(),

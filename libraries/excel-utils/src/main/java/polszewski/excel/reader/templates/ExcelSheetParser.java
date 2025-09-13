@@ -4,6 +4,7 @@ import polszewski.excel.reader.ExcelReader;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -119,10 +120,19 @@ public abstract class ExcelSheetParser {
 			return getOptionalInteger().orElseThrow(this::columnIsEmpty);
 		}
 
+		public <T> T getInteger(IntFunction<T> mapper) {
+			return mapper.apply(getInteger());
+		}
+
 		public Integer getNullableInteger() {
 			return getOptionalString()
 					.map(Integer::valueOf)
 					.orElse(null);
+		}
+
+		public <T> T getNullableInteger(IntFunction<T> mapper) {
+			var value = getNullableInteger();
+			return value != null ? mapper.apply(value) : null;
 		}
 
 		public double getDouble(double defaultValue) {

@@ -9,7 +9,7 @@ import wow.character.util.TalentLinkParser;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.talent.TalentId.*;
+import static wow.test.commons.TalentNames.*;
 
 /**
  * User: POlszewski
@@ -64,14 +64,14 @@ class TalentsTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	void hasTalent() {
-		assertThat(talents.hasTalent(DEMONIC_SACRIFICE)).isTrue();
-		assertThat(talents.hasTalent(DEMONIC_SACRIFICE, 1)).isTrue();
-		assertThat(talents.hasTalent(IMPROVED_VOIDWALKER)).isTrue();
-		assertThat(talents.hasTalent(IMPROVED_VOIDWALKER, 1)).isTrue();
-		assertThat(talents.hasTalent(IMPROVED_VOIDWALKER, 2)).isFalse();
-		assertThat(talents.hasTalent(SHADOW_MASTERY)).isFalse();
-		assertThat(talents.hasTalent(SHADOW_MASTERY, 1)).isFalse();
+	void has() {
+		assertThat(talents.has(DEMONIC_SACRIFICE)).isTrue();
+		assertThat(talents.has(DEMONIC_SACRIFICE, 1)).isTrue();
+		assertThat(talents.has(IMPROVED_VOIDWALKER)).isTrue();
+		assertThat(talents.has(IMPROVED_VOIDWALKER, 1)).isTrue();
+		assertThat(talents.has(IMPROVED_VOIDWALKER, 2)).isFalse();
+		assertThat(talents.has(SHADOW_MASTERY)).isFalse();
+		assertThat(talents.has(SHADOW_MASTERY, 1)).isFalse();
 	}
 
 	PlayerCharacter character;

@@ -22,7 +22,6 @@ import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
-import wow.commons.model.talent.TalentId;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -64,18 +63,18 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	@ParameterizedTest
 	@CsvSource({
 			"SHADOW_BOLT,      11, WARLOCK, 69,       ,           , ",
-			"SHADOWBURN,        8, WARLOCK, 70,       , SHADOWBURN, ",
-			"SOUL_LINK,         0, WARLOCK,  1,       ,  SOUL_LINK,  Imp+Voidwalker+Succubus+Incubus+Felhunter+Felguard+Enslaved",
+			"SHADOWBURN,        8, WARLOCK, 70,       , Shadowburn, ",
+			"SOUL_LINK,         0, WARLOCK,  1,       , Soul Link,  Imp+Voidwalker+Succubus+Incubus+Felhunter+Felguard+Enslaved",
 			"DEVOURING_PLAGUE,  7, PRIEST,  68, UNDEAD,           , ",
 	})
-	void abilityCharacterRestriction(AbilityId id, int rank, CharacterClassId characterClassId, int level, RaceId raceId, TalentId talentId, String petTypes) {
+	void abilityCharacterRestriction(AbilityId id, int rank, CharacterClassId characterClassId, int level, RaceId raceId, String talentName, String petTypes) {
 		var ability = getClassAbility(id, rank, TBC_P5);
 		var characterRestriction = ability.getCharacterRestriction();
 
 		assertThat(characterRestriction.characterClassIds()).isEqualTo(List.of(characterClassId));
 		assertThat(characterRestriction.level()).isEqualTo(level);
 		assertThat(characterRestriction.raceIds()).isEqualTo(raceId != null ? List.of(raceId) : List.of());
-		assertThat(characterRestriction.talentRestriction()).isEqualTo(TalentRestriction.of(talentId));
+		assertThat(characterRestriction.talentRestriction()).isEqualTo(TalentRestriction.of(talentName));
 
 		var activePets = petTypes != null ? Stream.of(petTypes.split("\\+")).map(PetType::parse).toList() : List.of();
 

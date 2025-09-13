@@ -18,7 +18,6 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.SpellSchool;
-import wow.commons.model.talent.TalentId;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
@@ -350,7 +349,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void enableTalent(String name, int rank) {
-		player.getTalents().enableTalent(TalentId.parse(name), rank);
+		player.getTalents().enable(name, rank);
 		getCharacterService().updateAfterRestrictionChange(player);
 	}
 

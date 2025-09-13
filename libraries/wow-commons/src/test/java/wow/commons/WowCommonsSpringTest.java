@@ -15,6 +15,7 @@ import wow.commons.model.effect.component.*;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.spell.*;
+import wow.commons.model.talent.Talent;
 
 import java.util.List;
 
@@ -106,5 +107,9 @@ public abstract class WowCommonsSpringTest {
 
 	protected static void assertId(Enchant enchant, int id) {
 		assertThat(enchant.getId().value()).isEqualTo(id);
+	}
+
+	protected static void assertId(Talent talent, int id) {
+		assertThat(talent.getId().value()).isEqualTo(id);
 	}
 }

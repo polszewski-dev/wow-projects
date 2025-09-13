@@ -18,7 +18,6 @@ import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 import wow.commons.util.AttributesParser;
 
 import java.util.Map;
@@ -177,7 +176,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var exclusiveFaction = colExclusiveFaction.getEnum(ExclusiveFaction::parse, null);
 		var activePet = colReqPet.getList(PetType::parse);
 		var spellId = colReqSpell.getEnum(AbilityId::parse, null);
-		var talentId = colReqTalent.getEnum(TalentId::parse, null);
+		var talentName = colReqTalent.getString(null);
 		var talentRank = colReqTalentRank.getNullableInteger();
 		var role = colReqRole.getEnum(PveRole::parse, null);
 		var maxLevel = colReqMaxLevel.getNullableInteger();
@@ -192,7 +191,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				exclusiveFaction,
 				activePet,
 				spellId,
-				TalentRestriction.of(talentId, talentRank),
+				TalentRestriction.of(talentName, talentRank),
 				role,
 				maxLevel
 		);

@@ -7,7 +7,6 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TalentRestriction;
 import wow.commons.model.spell.*;
-import wow.commons.model.talent.TalentId;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
@@ -212,7 +211,7 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 				null,
 				List.of(),
 				null,
-				talent ? TalentRestriction.of(TalentId.parse(getName())) : null,
+				talent ? TalentRestriction.of(getName()) : null,
 				null,
 				null
 		);

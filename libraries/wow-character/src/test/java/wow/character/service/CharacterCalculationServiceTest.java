@@ -20,7 +20,6 @@ import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.SpellSchool;
-import wow.commons.model.talent.TalentId;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +31,7 @@ import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.profession.ProfessionSpecializationId.SPELLFIRE_TAILORING;
 import static wow.commons.model.spell.AbilityId.*;
+import static wow.test.commons.TalentNames.IMPROVED_LIFE_TAP;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -338,7 +338,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025", talentRepository);
 		character.getTalents().loadFromTalentLink(link);
 
-		assertThat(character.hasTalent(TalentId.IMPROVED_LIFE_TAP)).isTrue();
+		assertThat(character.hasTalent(IMPROVED_LIFE_TAP)).isTrue();
 
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
 		var ability = character.getAbility(LIFE_TAP).orElseThrow();

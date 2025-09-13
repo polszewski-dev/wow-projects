@@ -1,7 +1,6 @@
 package wow.scraper.parser.tooltip;
 
 import lombok.extern.slf4j.Slf4j;
-import wow.commons.model.talent.TalentId;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
 import wow.scraper.model.JsonSpellDetails;
@@ -76,7 +75,7 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 	}
 
 	public Integer getTalentCalculatorPosition() {
-		return getScraperDatafixes().getTalentCalculatorPosition(getGameVersion(), TalentId.parse(getName()));
+		return getScraperDatafixes().getTalentCalculatorPosition(getGameVersion(), getName());
 	}
 
 	public boolean isTalentSpell() {
