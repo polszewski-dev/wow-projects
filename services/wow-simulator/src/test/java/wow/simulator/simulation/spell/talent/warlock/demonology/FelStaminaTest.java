@@ -4,7 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.talent.TalentId.FEL_STAMINA;
+import static wow.test.commons.TalentNames.FEL_STAMINA;
 
 /**
  * User: POlszewski

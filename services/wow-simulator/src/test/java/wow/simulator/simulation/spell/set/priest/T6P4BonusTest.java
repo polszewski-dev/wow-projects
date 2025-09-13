@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.set.priest;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
 
 /**
  * User: POlszewski

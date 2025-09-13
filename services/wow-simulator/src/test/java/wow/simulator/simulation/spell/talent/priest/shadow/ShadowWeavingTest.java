@@ -1,15 +1,16 @@
 package wow.simulator.simulation.spell.talent.priest.shadow;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 import wow.simulator.util.TestEvent;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.spell.AbilityId.SHADOW_WORD_PAIN;
 import static wow.commons.model.spell.ResourceType.HEALTH;
-import static wow.commons.model.talent.TalentId.SHADOW_WEAVING;
+import static wow.simulator.util.EffectType.TALENT;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.AbilityNames.SHADOW_WORD_PAIN;
+import static wow.test.commons.TalentNames.SHADOW_WEAVING;
 
 /**
  * User: POlszewski
@@ -37,26 +38,26 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 		assertEvents(
 				TestEvent::isTalentEffect,
 				at(0)
-						.effectApplied(SHADOW_WEAVING, target, 15),
+						.effectApplied(SHADOW_WEAVING, TALENT, target, 15),
 				at(1.5)
-						.effectStacked(SHADOW_WEAVING, target, 2),
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 2),
 				at(3)
-						.effectStacked(SHADOW_WEAVING, target, 3),
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 3),
 				at(4.5)
-						.effectStacked(SHADOW_WEAVING, target, 4),
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 4),
 				at(6)
-						.effectStacked(SHADOW_WEAVING, target, 5),
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 5),
 				at(7.5)
-						.effectStacked(SHADOW_WEAVING, target, 5),
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 5),
 				at(22.5)
-						.effectExpired(SHADOW_WEAVING, target)
+						.effectExpired(SHADOW_WEAVING, TALENT, target)
 		);
 	}
 
 	@Test
 	void damageBonusIsTakenIntoAccount() {
 		enableTalent(SHADOW_WEAVING, 5);
-		enableTalent(TalentId.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY, 1);
 
 		player.cast(MIND_BLAST);
 		player.idleUntil(Time.at(10));
@@ -75,25 +76,25 @@ class ShadowWeavingTest extends PriestSpellSimulationTest {
 		assertEvents(
 				event -> event.isDamage() || event.isTalentEffect(),
 				at(1.5)
-						.effectApplied(SHADOW_WEAVING, target, 15)
+						.effectApplied(SHADOW_WEAVING, TALENT, target, 15)
 						.decreasedResource(753, HEALTH, target, MIND_BLAST),
 				at(11.5)
-						.effectStacked(SHADOW_WEAVING, target, 2)
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 2)
 						.decreasedResource(775, HEALTH, target, MIND_BLAST),
 				at(21.5)
-						.effectStacked(SHADOW_WEAVING, target, 3)
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 3)
 						.decreasedResource(797, HEALTH, target, MIND_BLAST),
 				at(31.5)
-						.effectStacked(SHADOW_WEAVING, target, 4)
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 4)
 						.decreasedResource(819, HEALTH, target, MIND_BLAST),
 				at(41.5)
-						.effectStacked(SHADOW_WEAVING, target, 5)
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 5)
 						.decreasedResource(841, HEALTH, target, MIND_BLAST),
 				at(51.5)
-						.effectStacked(SHADOW_WEAVING, target, 5)
+						.effectStacked(SHADOW_WEAVING, TALENT, target, 5)
 						.decreasedResource(841, HEALTH, target, MIND_BLAST),
 				at(66.5)
-						.effectExpired(SHADOW_WEAVING, target)
+						.effectExpired(SHADOW_WEAVING, TALENT, target)
 		);
 	}
 }

@@ -5,9 +5,9 @@ import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
-import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.HEALTH;
-import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
+import static wow.test.commons.AbilityNames.*;
+import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 
 /**
  * User: POlszewski

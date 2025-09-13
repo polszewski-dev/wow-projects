@@ -6,9 +6,10 @@ import wow.commons.model.spell.CooldownId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.util.EffectType.ITEM;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -39,7 +40,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 2.5)
-						.effectApplied("The Lightning Capacitor", player, Duration.INFINITE),
+						.effectApplied("The Lightning Capacitor", ITEM, player, Duration.INFINITE),
 				at(5.5)
 						.cooldownExpired(player, cooldownId)
 		);
@@ -59,14 +60,14 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 				event -> event.isDamage() || event.isEffect(),
 				at(3)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied("The Lightning Capacitor", player, Duration.INFINITE),
+						.effectApplied("The Lightning Capacitor", ITEM, player, Duration.INFINITE),
 				at(6)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectStacked("The Lightning Capacitor", player, 2),
+						.effectStacked("The Lightning Capacitor", ITEM, player, 2),
 				at(9)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectStacked("The Lightning Capacitor", player, 3)
-						.effectRemoved("The Lightning Capacitor", player)
+						.effectStacked("The Lightning Capacitor", ITEM, player, 3)
+						.effectRemoved("The Lightning Capacitor", ITEM, player)
 						.decreasedResource(750, HEALTH, player, "The Lightning Capacitor - proc #1 - triggered - triggered")//todo wrong target
 		);
 	}

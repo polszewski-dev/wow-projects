@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.IMMOLATE;
-import static wow.commons.model.talent.TalentId.IMPROVED_IMMOLATE;
+import static wow.test.commons.AbilityNames.IMMOLATE;
+import static wow.test.commons.TalentNames.IMPROVED_IMMOLATE;
 
 /**
  * User: POlszewski

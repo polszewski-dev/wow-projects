@@ -1,9 +1,9 @@
 package wow.simulator.simulation.spell.talent.priest.discipline;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.AbilityNames;
+import wow.test.commons.TalentNames;
 
 /**
  * User: POlszewski
@@ -12,6 +12,6 @@ import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 class PainSuppressionTest extends PriestSpellSimulationTest {
 	@Test
 	void talentAddsSpell() {
-		assertEnablingTalentTeachesAbility(TalentId.PAIN_SUPPRESSION, AbilityId.PAIN_SUPPRESSION);
+		assertEnablingTalentTeachesAbility(TalentNames.PAIN_SUPPRESSION, AbilityNames.PAIN_SUPPRESSION);
 	}
 }

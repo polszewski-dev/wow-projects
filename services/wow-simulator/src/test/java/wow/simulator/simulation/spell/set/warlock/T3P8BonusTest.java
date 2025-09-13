@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.LIFE_TAP;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.talent.TalentId.IMPROVED_LIFE_TAP;
+import static wow.test.commons.AbilityNames.LIFE_TAP;
+import static wow.test.commons.TalentNames.IMPROVED_LIFE_TAP;
 
 /**
  * User: POlszewski

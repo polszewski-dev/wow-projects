@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.ability;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SHOOT;
+import static wow.test.commons.AbilityNames.SHOOT;
 
 /**
  * User: POlszewski

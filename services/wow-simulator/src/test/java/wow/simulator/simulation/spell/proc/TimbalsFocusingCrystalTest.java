@@ -5,10 +5,10 @@ import wow.commons.model.spell.CooldownId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 
 /**
  * User: POlszewski

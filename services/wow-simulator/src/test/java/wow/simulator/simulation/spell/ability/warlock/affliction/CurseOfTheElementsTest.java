@@ -3,9 +3,9 @@ package wow.simulator.simulation.spell.ability.warlock.affliction;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
-import static wow.commons.model.spell.AbilityId.CURSE_OF_THE_ELEMENTS;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.AbilityNames.CURSE_OF_THE_ELEMENTS;
 
 /**
  * User: POlszewski

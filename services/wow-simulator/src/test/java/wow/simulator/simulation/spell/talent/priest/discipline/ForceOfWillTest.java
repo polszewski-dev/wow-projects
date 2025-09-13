@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.talent.TalentId.FORCE_OF_WILL;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.TalentNames.FORCE_OF_WILL;
 
 /**
  * User: POlszewski

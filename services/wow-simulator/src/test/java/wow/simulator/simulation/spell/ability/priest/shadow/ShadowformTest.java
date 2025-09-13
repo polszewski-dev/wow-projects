@@ -2,12 +2,12 @@ package wow.simulator.simulation.spell.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.*;
 
 /**
  * User: POlszewski
@@ -61,6 +61,6 @@ class ShadowformTest extends PriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.SHADOWFORM, 1);
+		enableTalent(TalentNames.SHADOWFORM, 1);
 	}
 }

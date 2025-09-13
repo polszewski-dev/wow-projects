@@ -5,8 +5,9 @@ import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.spell.AbilityId.SHADOW_WORD_PAIN;
+import static wow.simulator.util.EffectType.ITEM_SET;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.AbilityNames.SHADOW_WORD_PAIN;
 
 /**
  * User: POlszewski
@@ -30,9 +31,9 @@ class T5P4BonusTest extends PriestSpellSimulationTest {
 				at(0)
 						.effectApplied(SHADOW_WORD_PAIN, target, 18),
 				at(3)
-						.effectApplied("Avatar Regalia (4)", player, 15),
+						.effectApplied("Avatar Regalia (4)", ITEM_SET, player, 15),
 				at(18)
-						.effectExpired("Avatar Regalia (4)", player)
+						.effectExpired("Avatar Regalia (4)", ITEM_SET, player)
 						.effectExpired(SHADOW_WORD_PAIN, target)
 		);
 	}
@@ -52,9 +53,9 @@ class T5P4BonusTest extends PriestSpellSimulationTest {
 				at(0)
 						.effectApplied(SHADOW_WORD_PAIN, target, 18),
 				at(3)
-						.effectApplied("Avatar Regalia (4)", player, 15),
+						.effectApplied("Avatar Regalia (4)", ITEM_SET, player, 15),
 				at(4.5)
-						.effectRemoved("Avatar Regalia (4)", player),
+						.effectRemoved("Avatar Regalia (4)", ITEM_SET, player),
 				at(18)
 						.effectExpired(SHADOW_WORD_PAIN, target)
 		);

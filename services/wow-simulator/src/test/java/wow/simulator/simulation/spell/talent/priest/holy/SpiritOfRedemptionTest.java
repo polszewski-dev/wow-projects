@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.talent.priest.holy;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.talent.TalentId.SPIRIT_OF_REDEMPTION;
+import static wow.test.commons.TalentNames.SPIRIT_OF_REDEMPTION;
 
 /**
  * User: POlszewski

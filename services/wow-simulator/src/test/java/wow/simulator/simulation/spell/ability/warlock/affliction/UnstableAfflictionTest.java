@@ -1,12 +1,12 @@
 package wow.simulator.simulation.spell.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.UNSTABLE_AFFLICTION;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.UNSTABLE_AFFLICTION;
 
 /**
  * User: POlszewski
@@ -100,6 +100,6 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.UNSTABLE_AFFLICTION, 1);
+		enableTalent(TalentNames.UNSTABLE_AFFLICTION, 1);
 	}
 }

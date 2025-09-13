@@ -4,9 +4,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.spell.AbilityId.SMITE;
-import static wow.commons.model.talent.TalentId.FOCUSED_POWER;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.AbilityNames.SMITE;
+import static wow.test.commons.TalentNames.FOCUSED_POWER;
 
 /**
  * User: POlszewski

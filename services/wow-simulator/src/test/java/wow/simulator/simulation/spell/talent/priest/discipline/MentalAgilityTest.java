@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SHADOW_WORD_PAIN;
-import static wow.commons.model.talent.TalentId.MENTAL_AGILITY;
+import static wow.test.commons.AbilityNames.SHADOW_WORD_PAIN;
+import static wow.test.commons.TalentNames.MENTAL_AGILITY;
 
 /**
  * User: POlszewski

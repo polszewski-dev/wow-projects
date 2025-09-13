@@ -4,9 +4,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
-import static wow.commons.model.spell.AbilityId.FEL_ARMOR;
-import static wow.commons.model.talent.TalentId.DEMONIC_AEGIS;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.AbilityNames.FEL_ARMOR;
+import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
 
 /**
  * User: POlszewski

@@ -1,12 +1,12 @@
 package wow.simulator.simulation.spell.ability.priest.discipline;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.INNER_FOCUS;
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
 import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.test.commons.AbilityNames.INNER_FOCUS;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
 
 /**
  * User: POlszewski
@@ -90,6 +90,6 @@ class InnerFocusTest extends PriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.INNER_FOCUS, 1);
+		enableTalent(TalentNames.INNER_FOCUS, 1);
 	}
 }

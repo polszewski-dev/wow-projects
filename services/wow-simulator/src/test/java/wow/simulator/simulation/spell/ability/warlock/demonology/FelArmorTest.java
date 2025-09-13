@@ -5,8 +5,8 @@ import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.FEL_ARMOR;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.FEL_ARMOR;
 
 /**
  * User: POlszewski

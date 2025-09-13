@@ -4,14 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.commons.model.Duration;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 import wow.simulator.util.TestEvent;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.talent.TalentId.MISERY;
+import static wow.simulator.util.EffectType.TALENT;
+import static wow.test.commons.AbilityNames.*;
+import static wow.test.commons.TalentNames.MISERY;
 
 /**
  * User: POlszewski
@@ -35,7 +36,7 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.beginGcd(player)
 						.endCast(player, SHADOW_WORD_PAIN)
 						.decreasedResource(575, MANA, player, SHADOW_WORD_PAIN)
-						.effectApplied(MISERY, target, Duration.INFINITE)
+						.effectApplied(MISERY, TALENT, target, Duration.INFINITE)
 						.effectApplied(SHADOW_WORD_PAIN, target, 18),
 				at(1.5)
 						.endGcd(player),
@@ -52,14 +53,14 @@ class MiseryTest extends PriestSpellSimulationTest {
 				at(18)
 						.decreasedResource(216, HEALTH, target, SHADOW_WORD_PAIN)
 						.effectExpired(SHADOW_WORD_PAIN, target)
-						.effectRemoved(MISERY, target)
+						.effectRemoved(MISERY, TALENT, target)
 		);
 	}
 
 	@Test
 	void effectIsTriggeredByMindFlay() {
-		enableTalent(MISERY, 5);
-		enableTalent(TalentId.MIND_FLAY, 1);
+		enableTalent(TalentNames.MISERY, 5);
+		enableTalent(TalentNames.MIND_FLAY, 1);
 
 		player.cast(MIND_FLAY);
 
@@ -71,7 +72,7 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.beginGcd(player)
 						.endCast(player, MIND_FLAY)
 						.decreasedResource(230, MANA, player, MIND_FLAY)
-						.effectApplied(MISERY, target, Duration.INFINITE)
+						.effectApplied(MISERY, TALENT, target, Duration.INFINITE)
 						.effectApplied(MIND_FLAY, target, 3)
 						.beginChannel(player, MIND_FLAY, 3),
 				at(1)
@@ -84,14 +85,14 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.decreasedResource(185, HEALTH, target, MIND_FLAY)
 						.effectExpired(MIND_FLAY, target)
 						.endChannel(player, MIND_FLAY)
-						.effectRemoved(MISERY, target)
+						.effectRemoved(MISERY, TALENT, target)
 		);
 	}
 
 	@Test
 	void effectIsTriggeredByVampiricTouch() {
 		enableTalent(MISERY, 5);
-		enableTalent(TalentId.VAMPIRIC_TOUCH, 1);
+		enableTalent(TalentNames.VAMPIRIC_TOUCH, 1);
 
 		player.cast(VAMPIRIC_TOUCH);
 
@@ -104,7 +105,7 @@ class MiseryTest extends PriestSpellSimulationTest {
 				at(1.5)
 						.endCast(player, VAMPIRIC_TOUCH)
 						.decreasedResource(425, MANA, player, VAMPIRIC_TOUCH)
-						.effectApplied(MISERY, target, Duration.INFINITE)
+						.effectApplied(MISERY, TALENT, target, Duration.INFINITE)
 						.effectApplied(VAMPIRIC_TOUCH, target, 15)
 						.endGcd(player),
 				at(4.5)
@@ -123,14 +124,14 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.decreasedResource(136, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
 						.effectExpired(VAMPIRIC_TOUCH, target)
-						.effectRemoved(MISERY, target)
+						.effectRemoved(MISERY, TALENT, target)
 		);
 	}
 
 	@Test
 	void miseryIsEndedAfterLastSpellExpires() {
 		enableTalent(MISERY, 5);
-		enableTalent(TalentId.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY, 1);
 
 		player.cast(SHADOW_WORD_PAIN);
 		player.cast(MIND_FLAY);
@@ -140,17 +141,17 @@ class MiseryTest extends PriestSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(MISERY, target, Duration.INFINITE)
+						.effectApplied(MISERY, TALENT, target, Duration.INFINITE)
 						.effectApplied(SHADOW_WORD_PAIN, target, 18),
 				at(1.5)
-						.effectChargesIncreased(MISERY, target, 2)
+						.effectChargesIncreased(MISERY, TALENT, target, 2)
 						.effectApplied(MIND_FLAY, target, 3),
 				at(4.5)
 						.effectExpired(MIND_FLAY, target)
-						.effectChargesDecreased(MISERY, target, 1),
+						.effectChargesDecreased(MISERY, TALENT, target, 1),
 				at(18)
 						.effectExpired(SHADOW_WORD_PAIN, target)
-						.effectRemoved(MISERY, target)
+						.effectRemoved(MISERY, TALENT, target)
 		);
 	}
 
@@ -158,7 +159,7 @@ class MiseryTest extends PriestSpellSimulationTest {
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void spellDamageIsIncreased(int rank) {
 		enableTalent(MISERY, rank);
-		enableTalent(TalentId.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY, 1);
 
 		player.cast(SHADOW_WORD_PAIN);
 		player.cast(MIND_FLAY);

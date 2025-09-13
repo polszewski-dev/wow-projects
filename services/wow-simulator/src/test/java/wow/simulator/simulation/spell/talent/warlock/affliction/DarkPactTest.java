@@ -1,9 +1,9 @@
 package wow.simulator.simulation.spell.talent.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.test.commons.AbilityNames;
+import wow.test.commons.TalentNames;
 
 /**
  * User: POlszewski
@@ -12,6 +12,6 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 class DarkPactTest extends WarlockSpellSimulationTest {
 	@Test
 	void talentAddsSpell() {
-		assertEnablingTalentTeachesAbility(TalentId.DARK_PACT, AbilityId.DARK_PACT);
+		assertEnablingTalentTeachesAbility(TalentNames.DARK_PACT, AbilityNames.DARK_PACT);
 	}
 }

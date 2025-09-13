@@ -3,13 +3,14 @@ package wow.simulator.model.unit.action;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.PrimaryTarget;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.test.commons.TalentNames.AMPLIFY_CURSE;
+import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 
 /**
  * User: POlszewski
@@ -38,7 +39,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void castShorterThanGcd() {
-		enableTalent(TalentId.IMPROVED_CORRUPTION, 4);
+		enableTalent(IMPROVED_CORRUPTION, 4);
 
 		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
 
@@ -60,7 +61,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void instant() {
-		enableTalent(TalentId.IMPROVED_CORRUPTION, 5);
+		enableTalent(IMPROVED_CORRUPTION, 5);
 
 		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
 
@@ -75,7 +76,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void instantIgnoringGcd() {
-		enableTalent(TalentId.AMPLIFY_CURSE, 1);
+		enableTalent(AMPLIFY_CURSE, 1);
 
 		CastSpellAction action = getCastSpellOnSelfAction(AbilityId.AMPLIFY_CURSE);
 

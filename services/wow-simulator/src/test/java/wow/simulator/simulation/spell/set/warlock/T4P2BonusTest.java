@@ -3,10 +3,11 @@ package wow.simulator.simulation.spell.set.warlock;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.INCINERATE;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.util.EffectType.ITEM_SET;
+import static wow.test.commons.AbilityNames.INCINERATE;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -35,10 +36,10 @@ class T4P2BonusTest extends WarlockSpellSimulationTest {
 			at(3)
 					.endCast(player, SHADOW_BOLT)
 					.decreasedResource(420, MANA, player, SHADOW_BOLT)
-					.effectApplied("Voidheart Raiment (2)", player, 15)
+					.effectApplied("Voidheart Raiment (2)", ITEM_SET, player, 15)
 					.decreasedResource(755, HEALTH, target, SHADOW_BOLT),
 			at(18)
-					.effectExpired("Voidheart Raiment (2)", player)
+					.effectExpired("Voidheart Raiment (2)", ITEM_SET, player)
 		);
 	}
 
@@ -59,10 +60,10 @@ class T4P2BonusTest extends WarlockSpellSimulationTest {
 				at(2.5)
 						.endCast(player, INCINERATE)
 						.decreasedResource(355, MANA, player, INCINERATE)
-						.effectApplied("Voidheart Raiment (2)", player, 15)
+						.effectApplied("Voidheart Raiment (2)", ITEM_SET, player, 15)
 						.decreasedResource(629, HEALTH, target, INCINERATE),
 				at(17.5)
-						.effectExpired("Voidheart Raiment (2)", player)
+						.effectExpired("Voidheart Raiment (2)", ITEM_SET, player)
 		);
 	}
 

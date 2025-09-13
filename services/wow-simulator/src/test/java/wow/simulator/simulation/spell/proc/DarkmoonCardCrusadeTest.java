@@ -9,9 +9,10 @@ import wow.simulator.util.TestEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.util.EffectType.ITEM;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -37,10 +38,10 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 				at(3)
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
-						.effectApplied("Darkmoon Card: Crusade", player, 10)
+						.effectApplied("Darkmoon Card: Crusade", ITEM, player, 10)
 						.decreasedResource(582, HEALTH, false, target, SHADOW_BOLT),
 				at(13)
-						.effectExpired("Darkmoon Card: Crusade", player)
+						.effectExpired("Darkmoon Card: Crusade", ITEM, player)
 		);
 	}
 
@@ -55,29 +56,29 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(3)
-						.effectApplied("Darkmoon Card: Crusade", player, 10),
+						.effectApplied("Darkmoon Card: Crusade", ITEM, player, 10),
 				at(6)
-						.effectStacked("Darkmoon Card: Crusade", player, 2),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 2),
 				at(9)
-						.effectStacked("Darkmoon Card: Crusade", player, 3),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 3),
 				at(12)
-						.effectStacked("Darkmoon Card: Crusade", player, 4),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 4),
 				at(15)
-						.effectStacked("Darkmoon Card: Crusade", player, 5),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 5),
 				at(18)
-						.effectStacked("Darkmoon Card: Crusade", player, 6),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 6),
 				at(21)
-						.effectStacked("Darkmoon Card: Crusade", player, 7),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 7),
 				at(24)
-						.effectStacked("Darkmoon Card: Crusade", player, 8),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 8),
 				at(27)
-						.effectStacked("Darkmoon Card: Crusade", player, 9),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 9),
 				at(30)
-						.effectStacked("Darkmoon Card: Crusade", player, 10),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 10),
 				at(33)
-						.effectStacked("Darkmoon Card: Crusade", player, 10),
+						.effectStacked("Darkmoon Card: Crusade", ITEM, player, 10),
 				at(43)
-						.effectExpired("Darkmoon Card: Crusade", player)
+						.effectExpired("Darkmoon Card: Crusade", ITEM, player)
 		);
 	}
 

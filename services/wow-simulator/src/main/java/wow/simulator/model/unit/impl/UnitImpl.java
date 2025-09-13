@@ -128,9 +128,19 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public void cast(String abilityName) {
+		cast(AbilityId.parse(abilityName));
+	}
+
+	@Override
 	public void cast(AbilityId abilityId) {
 		var ability = getAbility(abilityId).orElseThrow();
 		cast(ability, getPrimaryTarget(ability, null));
+	}
+
+	@Override
+	public void cast(String abilityName, Unit target) {
+		cast(AbilityId.parse(abilityName), target);
 	}
 
 	@Override
@@ -177,6 +187,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		if (triggersGcd) {
 			cooldowns.interruptGcd();
 		}
+	}
+
+	@Override
+	public boolean canCast(String abilityName) {
+		return canCast(AbilityId.parse(abilityName));
 	}
 
 	private boolean isCurrentActionInterruptible() {

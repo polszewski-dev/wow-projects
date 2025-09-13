@@ -5,9 +5,9 @@ import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.LIFE_TAP;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.LIFE_TAP;
 
 /**
  * User: POlszewski

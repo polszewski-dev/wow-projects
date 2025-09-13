@@ -7,8 +7,8 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_2;
-import static wow.commons.model.spell.AbilityId.HEX_SHRUNKEN_HEAD;
-import static wow.commons.model.spell.AbilityId.SHIFTING_NAARU_SLIVER;
+import static wow.test.commons.AbilityNames.HEX_SHRUNKEN_HEAD;
+import static wow.test.commons.AbilityNames.SHIFTING_NAARU_SLIVER;
 
 /**
  * User: POlszewski
@@ -17,7 +17,7 @@ import static wow.commons.model.spell.AbilityId.SHIFTING_NAARU_SLIVER;
 class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 	@Test
 	void effectActivatesAndCooldownTriggers() {
-		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
+		equip(HEX_SHRUNKEN_HEAD, TRINKET_1);
 
 		player.cast(HEX_SHRUNKEN_HEAD);
 
@@ -40,7 +40,7 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
+		equip(HEX_SHRUNKEN_HEAD, TRINKET_1);
 
 		var dmgBefore = player.getStats().getSpellPower();
 
@@ -56,8 +56,8 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void canNotUseSecondTrinketWhileFirstIsActive() {
-		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
-		equip(SHIFTING_NAARU_SLIVER.getName(), TRINKET_2);
+		equip(HEX_SHRUNKEN_HEAD, TRINKET_1);
+		equip(SHIFTING_NAARU_SLIVER, TRINKET_2);
 
 		player.cast(HEX_SHRUNKEN_HEAD);
 
@@ -69,8 +69,8 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void canUseSecondTrinketWhileFirstIsNotActive() {
-		equip(HEX_SHRUNKEN_HEAD.getName(), TRINKET_1);
-		equip(SHIFTING_NAARU_SLIVER.getName(), TRINKET_2);
+		equip(HEX_SHRUNKEN_HEAD, TRINKET_1);
+		equip(SHIFTING_NAARU_SLIVER, TRINKET_2);
 
 		player.cast(HEX_SHRUNKEN_HEAD);
 

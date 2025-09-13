@@ -6,9 +6,9 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski

@@ -3,7 +3,6 @@ package wow.simulator.model.unit.action;
 import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
 
@@ -45,8 +44,8 @@ public class ChannelSpellAction extends UnitAction {
 		getGameLog().endChannel(this);
 	}
 
-	public AbilityId getAbilityId() {
-		return getAbility().getAbilityId();
+	public String getAbilityName() {
+		return getAbility().getName();
 	}
 
 	public Duration getChannelTime() {

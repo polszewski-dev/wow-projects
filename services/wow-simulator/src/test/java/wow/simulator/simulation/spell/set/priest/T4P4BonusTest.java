@@ -1,11 +1,11 @@
 package wow.simulator.simulation.spell.set.priest;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.MIND_FLAY;
-import static wow.commons.model.spell.AbilityId.SMITE;
+import static wow.test.commons.AbilityNames.MIND_FLAY;
+import static wow.test.commons.AbilityNames.SMITE;
 
 /**
  * User: POlszewski
@@ -18,7 +18,7 @@ class T4P4BonusTest extends PriestSpellSimulationTest {
 
 	@Test
 	void mindFLayDamageIsIncreased() {
-		enableTalent(TalentId.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY, 1);
 
 		player.cast(MIND_FLAY);
 

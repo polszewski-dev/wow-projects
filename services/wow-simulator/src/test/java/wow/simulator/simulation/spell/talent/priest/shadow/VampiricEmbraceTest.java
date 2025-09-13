@@ -1,9 +1,9 @@
 package wow.simulator.simulation.spell.talent.priest.shadow;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.AbilityNames;
+import wow.test.commons.TalentNames;
 
 /**
  * User: POlszewski
@@ -12,6 +12,6 @@ import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 class VampiricEmbraceTest extends PriestSpellSimulationTest {
 	@Test
 	void talentAddsSpell() {
-		assertEnablingTalentTeachesAbility(TalentId.VAMPIRIC_EMBRACE, AbilityId.VAMPIRIC_EMBRACE);
+		assertEnablingTalentTeachesAbility(TalentNames.VAMPIRIC_EMBRACE, AbilityNames.VAMPIRIC_EMBRACE);
 	}
 }

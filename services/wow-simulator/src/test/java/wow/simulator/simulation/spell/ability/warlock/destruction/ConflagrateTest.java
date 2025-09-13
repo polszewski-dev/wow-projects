@@ -1,14 +1,14 @@
 package wow.simulator.simulation.spell.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.CONFLAGRATE;
-import static wow.commons.model.spell.AbilityId.IMMOLATE;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.CONFLAGRATE;
+import static wow.test.commons.AbilityNames.IMMOLATE;
 
 /**
  * User: POlszewski
@@ -77,6 +77,6 @@ class ConflagrateTest extends WarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.CONFLAGRATE, 1);
+		enableTalent(TalentNames.CONFLAGRATE, 1);
 	}
 }

@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.talent.TalentId.SHADOW_FOCUS;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.TalentNames.SHADOW_FOCUS;
 
 /**
  * User: POlszewski

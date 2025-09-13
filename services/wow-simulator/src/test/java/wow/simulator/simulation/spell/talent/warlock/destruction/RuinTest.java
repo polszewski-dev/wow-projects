@@ -3,8 +3,8 @@ package wow.simulator.simulation.spell.talent.warlock.destruction;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
-import static wow.commons.model.talent.TalentId.RUIN;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.TalentNames.RUIN;
 
 /**
  * User: POlszewski

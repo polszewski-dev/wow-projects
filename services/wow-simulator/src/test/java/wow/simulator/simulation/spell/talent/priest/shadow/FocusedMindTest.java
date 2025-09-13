@@ -2,12 +2,12 @@ package wow.simulator.simulation.spell.talent.priest.shadow;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.spell.AbilityId.MIND_FLAY;
-import static wow.commons.model.talent.TalentId.FOCUSED_MIND;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.AbilityNames.MIND_FLAY;
+import static wow.test.commons.TalentNames.FOCUSED_MIND;
 
 /**
  * User: POlszewski
@@ -34,7 +34,7 @@ class FocusedMindTest extends PriestSpellSimulationTest {
 	@ValueSource(ints = { 1, 2, 3 })
 	void mindFlayCostReduced(int rank) {
 		enableTalent(FOCUSED_MIND, rank);
-		enableTalent(TalentId.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY, 1);
 
 		player.cast(MIND_FLAY);
 

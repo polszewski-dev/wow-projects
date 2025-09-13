@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SEARING_PAIN;
-import static wow.commons.model.talent.TalentId.IMPROVED_SEARING_PAIN;
+import static wow.test.commons.AbilityNames.SEARING_PAIN;
+import static wow.test.commons.TalentNames.IMPROVED_SEARING_PAIN;
 
 /**
  * User: POlszewski

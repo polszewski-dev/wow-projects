@@ -5,9 +5,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.POWER_WORD_FORTITUDE;
-import static wow.commons.model.talent.TalentId.IMPROVED_POWER_WORD_FORTITUDE;
 import static wow.simulator.util.CalcUtils.increaseByPct;
+import static wow.test.commons.AbilityNames.POWER_WORD_FORTITUDE;
+import static wow.test.commons.TalentNames.IMPROVED_POWER_WORD_FORTITUDE;
 
 /**
  * User: POlszewski

@@ -3,12 +3,13 @@ package wow.simulator.simulation.spell.talent.warlock.destruction;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
-import static wow.commons.model.talent.TalentId.IMPROVED_SHADOW_BOLT;
+import static wow.simulator.util.EffectType.TALENT;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
+import static wow.test.commons.TalentNames.IMPROVED_SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -39,9 +40,9 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12),
+						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12),
 				at(15)
-						.effectExpired(IMPROVED_SHADOW_BOLT, target)
+						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
 		);
 	}
 
@@ -69,7 +70,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12)
+						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(4.5)
@@ -78,7 +79,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, target, 3)
+						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 3)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(7.5)
@@ -87,7 +88,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, target, 2)
+						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 2)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(10.5)
@@ -96,13 +97,13 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, target, 1)
+						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 1)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(13.5)
 						.endGcd(player),
 				at(15)
-						.effectExpired(IMPROVED_SHADOW_BOLT, target)
+						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
@@ -131,7 +132,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12)
+						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(4.5)
@@ -140,11 +141,11 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(1035, HEALTH, true, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, target, 3)
-						.effectRemoved(IMPROVED_SHADOW_BOLT, target)
-						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12),
+						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 3)
+						.effectRemoved(IMPROVED_SHADOW_BOLT, TALENT, target)
+						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12),
 				at(18)
-						.effectExpired(IMPROVED_SHADOW_BOLT, target)
+						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
 		);
 	}
 
@@ -170,7 +171,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, target, 12)
+						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12)
 						.beginCast(player, CORRUPTION)
 						.beginGcd(player)
 						.endCast(player, CORRUPTION)
@@ -185,7 +186,7 @@ class ImprovedShadowBoltTest extends WarlockSpellSimulationTest {
 				at(12)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),
 				at(15)
-						.effectExpired(IMPROVED_SHADOW_BOLT, target)
+						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),
 				at(18)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),

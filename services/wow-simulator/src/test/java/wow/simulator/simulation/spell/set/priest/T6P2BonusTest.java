@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.set.priest;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SHADOW_WORD_PAIN;
+import static wow.test.commons.AbilityNames.SHADOW_WORD_PAIN;
 
 /**
  * User: POlszewski

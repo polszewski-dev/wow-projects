@@ -5,10 +5,11 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
+import static wow.simulator.util.EffectType.ITEM;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 
 /**
  * User: POlszewski
@@ -39,30 +40,30 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 						.endGcd(player),
 				at(3)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
+						.effectApplied("Ashtongue Talisman of Shadows", ITEM, player, 5),
 				at(6)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
+						.effectRemoved("Ashtongue Talisman of Shadows", ITEM, player)
+						.effectApplied("Ashtongue Talisman of Shadows", ITEM, player, 5),
 				at(9)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
+						.effectRemoved("Ashtongue Talisman of Shadows", ITEM, player)
+						.effectApplied("Ashtongue Talisman of Shadows", ITEM, player, 5),
 				at(12)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
+						.effectRemoved("Ashtongue Talisman of Shadows", ITEM, player)
+						.effectApplied("Ashtongue Talisman of Shadows", ITEM, player, 5),
 				at(15)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player, 5),
+						.effectRemoved("Ashtongue Talisman of Shadows", ITEM, player)
+						.effectApplied("Ashtongue Talisman of Shadows", ITEM, player, 5),
 				at(18)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectRemoved("Ashtongue Talisman of Shadows", player)
-						.effectApplied("Ashtongue Talisman of Shadows", player, 5)
+						.effectRemoved("Ashtongue Talisman of Shadows", ITEM, player)
+						.effectApplied("Ashtongue Talisman of Shadows", ITEM, player, 5)
 						.effectExpired(CORRUPTION, target),
 				at(23)
-						.effectExpired("Ashtongue Talisman of Shadows", player)
+						.effectExpired("Ashtongue Talisman of Shadows", ITEM, player)
 		);
 	}
 

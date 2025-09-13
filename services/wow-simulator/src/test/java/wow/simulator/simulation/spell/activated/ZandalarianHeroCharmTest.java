@@ -5,10 +5,10 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
-import static wow.commons.model.spell.AbilityId.ZANDALARIAN_HERO_CHARM;
 import static wow.commons.model.spell.GroupCooldownId.TRINKET;
 import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.ZANDALARIAN_HERO_CHARM;
 
 /**
  * User: POlszewski
@@ -108,6 +108,6 @@ class ZandalarianHeroCharmTest extends WarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		equip(ZANDALARIAN_HERO_CHARM.getName(), TRINKET_1);
+		equip(ZANDALARIAN_HERO_CHARM, TRINKET_1);
 	}
 }

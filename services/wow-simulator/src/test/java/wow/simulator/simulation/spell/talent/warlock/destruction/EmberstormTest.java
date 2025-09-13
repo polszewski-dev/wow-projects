@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.INCINERATE;
-import static wow.commons.model.talent.TalentId.EMBERSTORM;
+import static wow.test.commons.AbilityNames.INCINERATE;
+import static wow.test.commons.TalentNames.EMBERSTORM;
 
 /**
  * User: POlszewski

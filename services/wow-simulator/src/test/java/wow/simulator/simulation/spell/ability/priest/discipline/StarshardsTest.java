@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static wow.commons.model.character.RaceId.NIGHT_ELF;
-import static wow.commons.model.spell.AbilityId.STARSHARDS;
 import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.test.commons.AbilityNames.STARSHARDS;
 
 /**
  * User: POlszewski

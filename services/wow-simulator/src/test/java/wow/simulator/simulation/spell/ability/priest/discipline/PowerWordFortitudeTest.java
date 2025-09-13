@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.POWER_WORD_FORTITUDE;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.POWER_WORD_FORTITUDE;
 
 /**
  * User: POlszewski

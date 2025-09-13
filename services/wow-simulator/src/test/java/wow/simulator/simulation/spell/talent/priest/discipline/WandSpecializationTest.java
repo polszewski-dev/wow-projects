@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SHOOT;
-import static wow.commons.model.talent.TalentId.WAND_SPECIALIZATION;
+import static wow.test.commons.AbilityNames.SHOOT;
+import static wow.test.commons.TalentNames.WAND_SPECIALIZATION;
 
 /**
  * User: POlszewski

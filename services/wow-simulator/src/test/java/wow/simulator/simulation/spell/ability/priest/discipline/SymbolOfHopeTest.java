@@ -9,8 +9,8 @@ import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.RaceId.DRANEI;
 import static wow.commons.model.character.RaceId.HUMAN;
-import static wow.commons.model.spell.AbilityId.SYMBOL_OF_HOPE;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.SYMBOL_OF_HOPE;
 
 /**
  * User: POlszewski

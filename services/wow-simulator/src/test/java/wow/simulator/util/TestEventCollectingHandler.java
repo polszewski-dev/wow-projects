@@ -5,7 +5,6 @@ import lombok.Setter;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.item.ItemSetSource;
 import wow.commons.model.item.ItemSource;
-import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentSource;
@@ -47,42 +46,42 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void beginCast(CastSpellAction action) {
-		addEvent(new BeginCast(now(), action.getOwner(), action.getAbilityId(), action.getCastTime()));
+		addEvent(new BeginCast(now(), action.getOwner(), action.getAbilityName(), action.getCastTime()));
 	}
 
 	@Override
 	public void endCast(CastSpellAction action) {
-		addEvent(new EndCast(now(), action.getOwner(), action.getAbilityId()));
+		addEvent(new EndCast(now(), action.getOwner(), action.getAbilityName()));
 	}
 
 	@Override
 	public void beginChannel(ChannelSpellAction action) {
-		addEvent(new BeginChannel(now(), action.getOwner(), action.getAbilityId(), action.getChannelTime()));
+		addEvent(new BeginChannel(now(), action.getOwner(), action.getAbilityName(), action.getChannelTime()));
 	}
 
 	@Override
 	public void endChannel(ChannelSpellAction action) {
-		addEvent(new EndChannel(now(), action.getOwner(), action.getAbilityId()));
+		addEvent(new EndChannel(now(), action.getOwner(), action.getAbilityName()));
 	}
 
 	@Override
 	public void canNotBeCasted(CastSpellAction action) {
-		addEvent(new CanNotBeCasted(now(), action.getOwner(), action.getAbilityId()));
+		addEvent(new CanNotBeCasted(now(), action.getOwner(), action.getAbilityName()));
 	}
 
 	@Override
 	public void castInterrupted(CastSpellAction action) {
-		addEvent(new CastInterrupted(now(), action.getOwner(), action.getAbilityId()));
+		addEvent(new CastInterrupted(now(), action.getOwner(), action.getAbilityName()));
 	}
 
 	@Override
 	public void channelInterrupted(ChannelSpellAction action) {
-		addEvent(new ChannelInterrupted(now(), action.getOwner(), action.getAbilityId()));
+		addEvent(new ChannelInterrupted(now(), action.getOwner(), action.getAbilityName()));
 	}
 
 	@Override
 	public void spellResisted(Unit caster, Unit target, Spell spell) {
-		addEvent(new SpellResisted(now(), caster, ((Ability) spell).getAbilityId(), target));
+		addEvent(new SpellResisted(now(), caster, spell.getName(), target));
 	}
 
 	@Override
@@ -101,104 +100,98 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void effectApplied(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource s ->
-					addEvent(new EffectApplied(now(), s.getAbilityId(), effect.getTarget(), effect.getDuration()));
-			case TalentSource s ->
-					addEvent(new TalentEffectApplied(now(), s.getTalentId(), effect.getTarget(), effect.getDuration()));
-			case ItemSource s ->
-					addEvent(new ItemEffectApplied(now(), s.getName(), effect.getTarget(), effect.getDuration()));
-			case ItemSetSource s ->
-					addEvent(new ItemEffectApplied(now(), s.getName(), effect.getTarget(), effect.getDuration()));
-			default -> throw new IllegalArgumentException();
-		}
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+		var duration = effect.getDuration();
+
+		addEvent(new EffectApplied(time, sourceName, type, target, duration));
 	}
 
 	@Override
 	public void effectStacked(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource s ->
-					addEvent(new EffectStacked(now(), s.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
-			case TalentSource s ->
-					addEvent(new TalentEffectStacked(now(), s.getTalentId(), effect.getTarget(), effect.getNumStacks()));
-			case ItemSource s ->
-					addEvent(new ItemEffectStacked(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
-			default -> throw new IllegalArgumentException();
-		}
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+		var numStacks = effect.getNumStacks();
+
+		addEvent(new EffectStacked(time, sourceName, type, target, numStacks));
 	}
 
 	@Override
 	public void effectStacksIncreased(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource s ->
-					addEvent(new EffectStacksIncreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
-			case TalentSource s ->
-					addEvent(new TalentEffectStacksIncreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumStacks()));
-			case ItemSource s ->
-					addEvent(new ItemEffectStacksIncreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
-			default -> throw new IllegalArgumentException();
-		}
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+		var numStacks = effect.getNumStacks();
+
+		addEvent(new EffectStacksIncreased(time, sourceName, type, target, numStacks));
 	}
 
 	@Override
 	public void effectStacksDecreased(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource s ->
-					addEvent(new EffectStacksDecreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumStacks()));
-			case TalentSource s ->
-					addEvent(new TalentEffectStacksDecreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumStacks()));
-			case ItemSource s ->
-					addEvent(new ItemEffectStacksDecreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
-			default -> throw new IllegalArgumentException();
-		}
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+		var numStacks = effect.getNumStacks();
+
+		addEvent(new EffectStacksDecreased(time, sourceName, type, target, numStacks));
 	}
 
 	@Override
 	public void effectChargesIncreased(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource s ->
-					addEvent(new EffectChargesIncreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumCharges()));
-			case TalentSource s ->
-					addEvent(new TalentEffectChargesIncreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumCharges()));
-			case ItemSource s ->
-					addEvent(new ItemEffectChargesIncreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
-			default -> throw new IllegalArgumentException();
-		}
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+		var numCharges = effect.getNumCharges();
+
+		addEvent(new EffectChargesIncreased(time, sourceName, type, target, numCharges));
 	}
 
 	@Override
 	public void effectChargesDecreased(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource s ->
-					addEvent(new EffectChargesDecreased(now(), s.getAbilityId(), effect.getTarget(), effect.getNumCharges()));
-			case TalentSource s ->
-					addEvent(new TalentEffectChargesDecreased(now(), s.getTalentId(), effect.getTarget(), effect.getNumCharges()));
-			case ItemSource s ->
-					addEvent(new ItemEffectChargesDecreased(now(), s.getName(), effect.getTarget(), effect.getNumStacks()));
-			default -> throw new IllegalArgumentException();
-		}
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+		var numCharges = effect.getNumCharges();
+
+		addEvent(new EffectChargesDecreased(time, sourceName, type, target, numCharges));
 	}
 
 	@Override
 	public void effectExpired(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource as -> addEvent(new EffectExpired(now(), as.getAbilityId(), effect.getTarget()));
-			case TalentSource ts -> addEvent(new TalentEffectExpired(now(), ts.getTalentId(), effect.getTarget()));
-			case ItemSource s -> addEvent(new ItemEffectExpired(now(), s.getName(), effect.getTarget()));
-			case ItemSetSource s -> addEvent(new ItemEffectExpired(now(), s.getName(), effect.getTarget()));
-			default -> throw new IllegalArgumentException();
-		}
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+
+		addEvent(new EffectExpired(time, sourceName, type, target));
 	}
 
 	@Override
 	public void effectRemoved(EffectInstance effect) {
-		switch (effect.getSource()) {
-			case AbilitySource s -> addEvent(new EffectRemoved(now(), s.getAbilityId(), effect.getTarget()));
-			case TalentSource s -> addEvent(new TalentEffectRemoved(now(), s.getTalentId(), effect.getTarget()));
-			case ItemSource s -> addEvent(new ItemEffectRemoved(now(), s.getName(), effect.getTarget()));
-			case ItemSetSource s -> addEvent(new ItemEffectRemoved(now(), s.getName(), effect.getTarget()));
+		var time = now();
+		var sourceName = effect.getSource().getName();
+		var type = getEffectType(effect);
+		var target = effect.getTarget();
+
+		addEvent(new EffectRemoved(time, sourceName, type, target));
+	}
+
+	private EffectType getEffectType(EffectInstance effect) {
+		return switch (effect.getSource()) {
+			case AbilitySource ignored -> EffectType.ABILITY;
+			case TalentSource ignored -> EffectType.TALENT;
+			case ItemSource ignored -> EffectType.ITEM;
+			case ItemSetSource ignored -> EffectType.ITEM_SET;
 			default -> throw new IllegalArgumentException();
-		}
+		};
 	}
 
 	@Override

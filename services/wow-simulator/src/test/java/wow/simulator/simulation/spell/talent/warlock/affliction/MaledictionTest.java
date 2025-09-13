@@ -4,9 +4,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
-import static wow.commons.model.spell.AbilityId.CURSE_OF_THE_ELEMENTS;
-import static wow.commons.model.talent.TalentId.MALEDICTION;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.AbilityNames.CURSE_OF_THE_ELEMENTS;
+import static wow.test.commons.TalentNames.MALEDICTION;
 
 /**
  * User: POlszewski

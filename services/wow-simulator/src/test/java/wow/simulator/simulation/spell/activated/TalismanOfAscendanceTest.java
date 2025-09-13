@@ -5,9 +5,9 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
-import static wow.commons.model.spell.AbilityId.TALISMAN_OF_ASCENDANCE;
 import static wow.commons.model.spell.GroupCooldownId.TRINKET;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.TALISMAN_OF_ASCENDANCE;
 
 /**
  * User: POlszewski
@@ -75,6 +75,6 @@ class TalismanOfAscendanceTest extends WarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		equip(TALISMAN_OF_ASCENDANCE.getName(), TRINKET_1);
+		equip(TALISMAN_OF_ASCENDANCE, TRINKET_1);
 	}
 }

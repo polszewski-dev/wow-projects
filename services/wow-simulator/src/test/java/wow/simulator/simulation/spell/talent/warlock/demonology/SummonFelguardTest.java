@@ -1,9 +1,9 @@
 package wow.simulator.simulation.spell.talent.warlock.demonology;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.test.commons.AbilityNames;
+import wow.test.commons.TalentNames;
 
 /**
  * User: POlszewski
@@ -12,6 +12,6 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 class SummonFelguardTest extends WarlockSpellSimulationTest {
 	@Test
 	void talentAddsSpell() {
-		assertEnablingTalentTeachesAbility(TalentId.SUMMON_FELGUARD, AbilityId.SUMMON_FELGUARD);
+		assertEnablingTalentTeachesAbility(TalentNames.SUMMON_FELGUARD, AbilityNames.SUMMON_FELGUARD);
 	}
 }

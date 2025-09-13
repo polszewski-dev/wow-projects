@@ -3,7 +3,6 @@ package wow.simulator.model.unit.action;
 import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.context.EventContext;
 import wow.simulator.model.context.SpellCastContext;
@@ -155,8 +154,8 @@ public class CastSpellAction extends UnitAction {
 		}
 	}
 
-	public AbilityId getAbilityId() {
-		return ability.getAbilityId();
+	public String getAbilityName() {
+		return ability.getName();
 	}
 
 	public Duration getCastTime() {

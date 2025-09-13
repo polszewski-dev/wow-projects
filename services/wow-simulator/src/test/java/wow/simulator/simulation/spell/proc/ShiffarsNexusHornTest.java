@@ -6,9 +6,10 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.util.EffectType.ITEM;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -38,9 +39,9 @@ class ShiffarsNexusHornTest extends WarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 45)
-						.effectApplied("Shiffar's Nexus-Horn", player, 10),
+						.effectApplied("Shiffar's Nexus-Horn", ITEM, player, 10),
 				at(13)
-						.effectExpired("Shiffar's Nexus-Horn", player),
+						.effectExpired("Shiffar's Nexus-Horn", ITEM, player),
 				at(48)
 						.cooldownExpired(player, cooldownId)
 		);

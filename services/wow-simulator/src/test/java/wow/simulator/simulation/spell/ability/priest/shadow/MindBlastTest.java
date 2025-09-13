@@ -3,9 +3,9 @@ package wow.simulator.simulation.spell.ability.priest.shadow;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
 
 /**
  * User: POlszewski

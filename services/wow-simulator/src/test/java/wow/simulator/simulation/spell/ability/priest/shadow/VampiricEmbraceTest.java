@@ -1,13 +1,13 @@
 package wow.simulator.simulation.spell.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.CalcUtils.getPercentOf;
+import static wow.test.commons.AbilityNames.*;
 
 /**
  * User: POlszewski
@@ -110,6 +110,6 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.VAMPIRIC_EMBRACE, 1);
+		enableTalent(TalentNames.VAMPIRIC_EMBRACE, 1);
 	}
 }

@@ -9,9 +9,10 @@ import wow.simulator.util.TestEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.util.EffectType.ITEM;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -38,9 +39,9 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(575, HEALTH, false, target, SHADOW_BOLT)
-						.effectApplied("Darkmoon Card: Wrath", player, 10),
+						.effectApplied("Darkmoon Card: Wrath", ITEM, player, 10),
 				at(13)
-						.effectExpired("Darkmoon Card: Wrath", player)
+						.effectExpired("Darkmoon Card: Wrath", ITEM, player)
 		);
 	}
 
@@ -55,29 +56,29 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(3)
-						.effectApplied("Darkmoon Card: Wrath", player, 10),
+						.effectApplied("Darkmoon Card: Wrath", ITEM, player, 10),
 				at(6)
-						.effectStacked("Darkmoon Card: Wrath", player, 2),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 2),
 				at(9)
-						.effectStacked("Darkmoon Card: Wrath", player, 3),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 3),
 				at(12)
-						.effectStacked("Darkmoon Card: Wrath", player, 4),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 4),
 				at(15)
-						.effectStacked("Darkmoon Card: Wrath", player, 5),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 5),
 				at(18)
-						.effectStacked("Darkmoon Card: Wrath", player, 6),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 6),
 				at(21)
-						.effectStacked("Darkmoon Card: Wrath", player, 7),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 7),
 				at(24)
-						.effectStacked("Darkmoon Card: Wrath", player, 8),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 8),
 				at(27)
-						.effectStacked("Darkmoon Card: Wrath", player, 9),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 9),
 				at(30)
-						.effectStacked("Darkmoon Card: Wrath", player, 10),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 10),
 				at(33)
-						.effectStacked("Darkmoon Card: Wrath", player, 11),
+						.effectStacked("Darkmoon Card: Wrath", ITEM, player, 11),
 				at(43)
-						.effectExpired("Darkmoon Card: Wrath", player)
+						.effectExpired("Darkmoon Card: Wrath", ITEM, player)
 		);
 	}
 

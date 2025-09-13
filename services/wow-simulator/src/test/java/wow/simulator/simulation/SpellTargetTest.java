@@ -3,7 +3,6 @@ package wow.simulator.simulation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import wow.commons.model.spell.AbilityId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
@@ -14,7 +13,7 @@ import wow.simulator.util.TestEventCollectingHandler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.spell.AbilityId.*;
+import static wow.test.commons.AbilityNames.*;
 
 /**
  * User: POlszewski
@@ -91,10 +90,10 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 		assertAppliedEffectOnTarget(SHADOW_WORD_PAIN, defaultTarget, specifiedTarget, expectedTarget, 18);
 	}
 
-	private void assertAppliedEffectOnTarget(AbilityId abilityId, DefaultTarget defaultTarget, SpecifiedTarget specifiedTarget, ExpectedTarget expectedTarget, double duration) {
+	private void assertAppliedEffectOnTarget(String abilityName, DefaultTarget defaultTarget, SpecifiedTarget specifiedTarget, ExpectedTarget expectedTarget, double duration) {
 		setDefaultTarget(defaultTarget);
 
-		cast(abilityId, specifiedTarget);
+		cast(abilityName, specifiedTarget);
 
 		updateUntil(30);
 
@@ -103,13 +102,13 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 
 			assertEvents(
 					TestEvent::isEffectApplied,
-					at(0).effectApplied(abilityId, getExpectedTarget(expectedTarget), duration)
+					at(0).effectApplied(abilityName, getExpectedTarget(expectedTarget), duration)
 			);
 		} else {
 			assertThat(expectedTarget).isEqualTo(ExpectedTarget.INVALID);
 
 			assertEvents(
-					at(0).canNotBeCasted(player, abilityId)
+					at(0).canNotBeCasted(player, abilityName)
 			);
 		}
 	}
@@ -122,11 +121,11 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 		}
 	}
 
-	private void cast(AbilityId abilityId, SpecifiedTarget specifiedTarget) {
+	private void cast(String abilityName, SpecifiedTarget specifiedTarget) {
 		switch (specifiedTarget) {
-			case NONE -> player.cast(abilityId);
-			case ENEMY_2 -> player.cast(abilityId, otherEnemy);
-			case FRIEND_2 -> player.cast(abilityId, otherFriend);
+			case NONE -> player.cast(abilityName);
+			case ENEMY_2 -> player.cast(abilityName, otherEnemy);
+			case FRIEND_2 -> player.cast(abilityName, otherFriend);
 		}
 	}
 

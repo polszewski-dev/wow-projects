@@ -1,13 +1,13 @@
 package wow.simulator.simulation.spell.ability.priest.discipline;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.spell.AbilityId.POWER_INFUSION;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.AbilityNames.POWER_INFUSION;
 
 /**
  * User: POlszewski
@@ -91,6 +91,6 @@ class PowerInfusionTest extends PriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.POWER_INFUSION, 1);
+		enableTalent(TalentNames.POWER_INFUSION, 1);
 	}
 }

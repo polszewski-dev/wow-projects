@@ -6,8 +6,8 @@ import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.spell.AbilityId.PRAYER_OF_FORTITUDE;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.PRAYER_OF_FORTITUDE;
 
 /**
  * User: POlszewski

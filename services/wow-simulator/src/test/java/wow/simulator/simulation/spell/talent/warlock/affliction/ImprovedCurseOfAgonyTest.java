@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.CURSE_OF_AGONY;
-import static wow.commons.model.talent.TalentId.IMPROVED_CURSE_OF_AGONY;
+import static wow.test.commons.AbilityNames.CURSE_OF_AGONY;
+import static wow.test.commons.TalentNames.IMPROVED_CURSE_OF_AGONY;
 
 /**
  * User: POlszewski

@@ -1,12 +1,12 @@
 package wow.simulator.simulation.spell.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.SIPHON_LIFE;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.SIPHON_LIFE;
 
 /**
  * User: POlszewski
@@ -159,6 +159,6 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.SIPHON_LIFE, 1);
+		enableTalent(TalentNames.SIPHON_LIFE, 1);
 	}
 }

@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
-import static wow.commons.model.talent.TalentId.SHADOW_MASTERY;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.TalentNames.SHADOW_MASTERY;
 
 /**
  * User: POlszewski

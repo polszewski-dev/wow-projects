@@ -4,10 +4,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SMITE;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.commons.model.talent.TalentId.SURGE_OF_LIGHT;
+import static wow.simulator.util.EffectType.TALENT;
+import static wow.test.commons.AbilityNames.SMITE;
+import static wow.test.commons.TalentNames.SURGE_OF_LIGHT;
 
 /**
  * User: POlszewski
@@ -40,9 +41,9 @@ class SurgeOfLightTest extends PriestSpellSimulationTest {
 						.endCast(player, SMITE)
 						.decreasedResource(385, MANA, player, SMITE)
 						.decreasedResource(873, HEALTH, true, target, SMITE)
-						.effectApplied(SURGE_OF_LIGHT, player, 10),
+						.effectApplied(SURGE_OF_LIGHT, TALENT, player, 10),
 				at(12.5)
-						.effectExpired(SURGE_OF_LIGHT, player)
+						.effectExpired(SURGE_OF_LIGHT, TALENT, player)
 		);
 	}
 
@@ -69,11 +70,11 @@ class SurgeOfLightTest extends PriestSpellSimulationTest {
 						.endCast(player, SMITE)
 						.decreasedResource(385, MANA, player, SMITE)
 						.decreasedResource(873, HEALTH, true, target, SMITE)
-						.effectApplied(SURGE_OF_LIGHT, player, 10)
+						.effectApplied(SURGE_OF_LIGHT, TALENT, player, 10)
 						.beginCast(player, SMITE)
 						.beginGcd(player)
 						.endCast(player, SMITE)
-						.effectRemoved(SURGE_OF_LIGHT, player)
+						.effectRemoved(SURGE_OF_LIGHT, TALENT, player)
 						.decreasedResource(582, HEALTH, target, SMITE),
 				at(4)
 						.endGcd(player)

@@ -3,9 +3,9 @@ package wow.simulator.simulation.spell.ability.warlock.affliction;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.DEATH_COIL;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.DEATH_COIL;
 
 /**
  * User: POlszewski

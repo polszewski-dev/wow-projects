@@ -5,7 +5,7 @@ import wow.commons.model.spell.GroupCooldownId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.DESTRUCTION_POTION;
+import static wow.test.commons.AbilityNames.DESTRUCTION_POTION;
 
 /**
  * User: POlszewski
@@ -14,7 +14,7 @@ import static wow.commons.model.spell.AbilityId.DESTRUCTION_POTION;
 class DestructionPotionTest extends WarlockSpellSimulationTest {
 	@Test
 	void effectActivatesAndCooldownTriggers() {
-		player.getConsumables().enable(DESTRUCTION_POTION.getName());
+		player.getConsumables().enable(DESTRUCTION_POTION);
 
 		player.cast(DESTRUCTION_POTION);
 
@@ -37,7 +37,7 @@ class DestructionPotionTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		player.getConsumables().enable(DESTRUCTION_POTION.getName());
+		player.getConsumables().enable(DESTRUCTION_POTION);
 		
 		var dmgBefore = player.getStats().getSpellDamage();
 		var critPctBefore = player.getStats().getSpellCritPct();

@@ -4,9 +4,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.MIND_BLAST;
-import static wow.commons.model.spell.AbilityId.SHADOW_WORD_DEATH;
-import static wow.commons.model.talent.TalentId.SHADOW_POWER;
+import static wow.test.commons.AbilityNames.MIND_BLAST;
+import static wow.test.commons.AbilityNames.SHADOW_WORD_DEATH;
+import static wow.test.commons.TalentNames.SHADOW_POWER;
 
 /**
  * User: POlszewski

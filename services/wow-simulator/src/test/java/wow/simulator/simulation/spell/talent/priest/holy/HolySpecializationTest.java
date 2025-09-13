@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.SMITE;
-import static wow.commons.model.talent.TalentId.HOLY_SPECIALIZATION;
+import static wow.test.commons.AbilityNames.SMITE;
+import static wow.test.commons.TalentNames.HOLY_SPECIALIZATION;
 
 /**
  * User: POlszewski

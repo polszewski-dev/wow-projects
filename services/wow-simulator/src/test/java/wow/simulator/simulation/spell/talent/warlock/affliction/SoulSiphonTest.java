@@ -2,10 +2,10 @@ package wow.simulator.simulation.spell.talent.warlock.affliction;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.*;
+import static wow.test.commons.AbilityNames.*;
 
 /**
  * User: POlszewski
@@ -19,7 +19,7 @@ class SoulSiphonTest extends WarlockSpellSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void damageIsIncreased(int rank) {
-		enableTalent(TalentId.SOUL_SIPHON, rank);
+		enableTalent(TalentNames.SOUL_SIPHON, rank);
 
 		player.cast(CURSE_OF_AGONY);
 		player.cast(CORRUPTION);
@@ -35,7 +35,7 @@ class SoulSiphonTest extends WarlockSpellSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void healthGainedIsIncreased(int rank) {
-		enableTalent(TalentId.SOUL_SIPHON, rank);
+		enableTalent(TalentNames.SOUL_SIPHON, rank);
 
 		player.cast(CURSE_OF_AGONY);
 		player.cast(CORRUPTION);

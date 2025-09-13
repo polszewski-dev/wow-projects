@@ -2,13 +2,14 @@ package wow.simulator.simulation.spell.talent.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
+import wow.test.commons.TalentNames;
 
-import static wow.commons.model.spell.AbilityId.*;
-import static wow.commons.model.talent.TalentId.IMPROVED_CORRUPTION;
-import static wow.commons.model.talent.TalentId.SHADOW_EMBRACE;
+import static wow.simulator.util.EffectType.TALENT;
+import static wow.test.commons.AbilityNames.*;
+import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
+import static wow.test.commons.TalentNames.SHADOW_EMBRACE;
 
 /**
  * User: POlszewski
@@ -30,11 +31,11 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(SHADOW_EMBRACE, TALENT, target, Duration.INFINITE)
 						.effectApplied(CURSE_OF_AGONY, target, 24),
 				at(24)
 						.effectExpired(CURSE_OF_AGONY, target)
-						.effectRemoved(SHADOW_EMBRACE, target)
+						.effectRemoved(SHADOW_EMBRACE, TALENT, target)
 		);
 	}
 
@@ -50,18 +51,18 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(SHADOW_EMBRACE, TALENT, target, Duration.INFINITE)
 						.effectApplied(CORRUPTION, target, 18),
 				at(18)
 						.effectExpired(CORRUPTION, target)
-						.effectRemoved(SHADOW_EMBRACE, target)
+						.effectRemoved(SHADOW_EMBRACE, TALENT, target)
 		);
 	}
 
 	@Test
 	void effectIsTriggeredBySiphonLife() {
 		enableTalent(SHADOW_EMBRACE, 5);
-		enableTalent(TalentId.SIPHON_LIFE, 1);
+		enableTalent(TalentNames.SIPHON_LIFE, 1);
 
 		player.cast(SIPHON_LIFE);
 
@@ -70,11 +71,11 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(SHADOW_EMBRACE, TALENT, target, Duration.INFINITE)
 						.effectApplied(SIPHON_LIFE, target, 30),
 				at(30)
 						.effectExpired(SIPHON_LIFE, target)
-						.effectRemoved(SHADOW_EMBRACE, target)
+						.effectRemoved(SHADOW_EMBRACE, TALENT, target)
 		);
 	}
 
@@ -82,7 +83,7 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 	void shadowEmbraceIsEndedAfterLastSpellExpires() {
 		enableTalent(SHADOW_EMBRACE, 5);
 		enableTalent(IMPROVED_CORRUPTION, 5);
-		enableTalent(TalentId.SIPHON_LIFE, 1);
+		enableTalent(TalentNames.SIPHON_LIFE, 1);
 
 		player.cast(CURSE_OF_AGONY);
 		player.cast(CORRUPTION);
@@ -93,23 +94,23 @@ class ShadowEmbraceTest extends WarlockSpellSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(0)
-						.effectApplied(SHADOW_EMBRACE, target, Duration.INFINITE)
+						.effectApplied(SHADOW_EMBRACE, TALENT, target, Duration.INFINITE)
 						.effectApplied(CURSE_OF_AGONY, target, 24),
 				at(1.5)
-						.effectChargesIncreased(SHADOW_EMBRACE, target, 2)
+						.effectChargesIncreased(SHADOW_EMBRACE, TALENT, target, 2)
 						.effectApplied(CORRUPTION, target, 18),
 				at(3)
-						.effectChargesIncreased(SHADOW_EMBRACE, target, 3)
+						.effectChargesIncreased(SHADOW_EMBRACE, TALENT, target, 3)
 						.effectApplied(SIPHON_LIFE, target, 30),
 				at(19.5)
 						.effectExpired(CORRUPTION, target)
-						.effectChargesDecreased(SHADOW_EMBRACE, target, 2),
+						.effectChargesDecreased(SHADOW_EMBRACE, TALENT, target, 2),
 				at(24)
 						.effectExpired(CURSE_OF_AGONY, target)
-						.effectChargesDecreased(SHADOW_EMBRACE, target, 1),
+						.effectChargesDecreased(SHADOW_EMBRACE, TALENT, target, 1),
 				at(33)
 						.effectExpired(SIPHON_LIFE, target)
-						.effectRemoved(SHADOW_EMBRACE, target)
+						.effectRemoved(SHADOW_EMBRACE, TALENT, target)
 		);
 	}
 }

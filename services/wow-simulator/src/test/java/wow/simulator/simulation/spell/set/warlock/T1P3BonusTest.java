@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.set.warlock;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.DRAIN_LIFE;
+import static wow.test.commons.AbilityNames.DRAIN_LIFE;
 
 /**
  * User: POlszewski

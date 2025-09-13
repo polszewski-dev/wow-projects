@@ -2,15 +2,14 @@ package wow.simulator.util;
 
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.util.EffectType.TALENT;
 
 /**
  * User: POlszewski
@@ -40,11 +39,11 @@ public sealed interface TestEvent {
 	}
 
 	default boolean isTalentEffect() {
-		return nameContains("TalentEffect");
+		return this instanceof HasEffectType e && e.type() == TALENT;
 	}
 
 	default boolean isEffect() {
-		return nameContains("Effect");
+		return this instanceof HasEffectType;
 	}
 
 	default boolean isCooldown() {
@@ -67,21 +66,21 @@ public sealed interface TestEvent {
 
 	record EndGcd(Time time, Unit caster) implements TestEvent {}
 
-	record BeginCast(Time time, Unit caster, AbilityId spell, Duration castTime) implements TestEvent {}
+	record BeginCast(Time time, Unit caster, String spell, Duration castTime) implements TestEvent {}
 
-	record EndCast(Time time, Unit caster, AbilityId spell) implements TestEvent {}
+	record EndCast(Time time, Unit caster, String spell) implements TestEvent {}
 
-	record BeginChannel(Time time, Unit caster, AbilityId spell, Duration channelTime) implements TestEvent {}
+	record BeginChannel(Time time, Unit caster, String spell, Duration channelTime) implements TestEvent {}
 
-	record EndChannel(Time time, Unit caster, AbilityId spell) implements TestEvent {}
+	record EndChannel(Time time, Unit caster, String spell) implements TestEvent {}
 
-	record CanNotBeCasted(Time time, Unit caster, AbilityId spell) implements TestEvent {}
+	record CanNotBeCasted(Time time, Unit caster, String spell) implements TestEvent {}
 
-	record CastInterrupted(Time time, Unit caster, AbilityId spell) implements TestEvent {}
+	record CastInterrupted(Time time, Unit caster, String spell) implements TestEvent {}
 
-	record ChannelInterrupted(Time time, Unit caster, AbilityId spell) implements TestEvent {}
+	record ChannelInterrupted(Time time, Unit caster, String spell) implements TestEvent {}
 
-	record SpellResisted(Time time, Unit caster, AbilityId spell, Unit target) implements TestEvent {}
+	record SpellResisted(Time time, Unit caster, String spell, Unit target) implements TestEvent {}
 
 	record IncreasedResource(Time time, int amount, ResourceType type, boolean crit, Unit target, String spell) implements TestEvent {
 		public boolean isHealing(String spell, Unit target) {
@@ -103,53 +102,25 @@ public sealed interface TestEvent {
 		}
 	}
 
-	record EffectApplied(Time time, AbilityId spell, Unit target, AnyDuration duration) implements TestEvent {}
+	interface HasEffectType {
+		EffectType type();
+	}
 
-	record TalentEffectApplied(Time time, TalentId talentId, Unit target, AnyDuration duration) implements TestEvent {}
+	record EffectApplied(Time time, String name, EffectType type, Unit target, AnyDuration duration) implements TestEvent, HasEffectType {}
 
-	record ItemEffectApplied(Time time, String itemName, Unit target, AnyDuration duration) implements TestEvent {}
+	record EffectStacked(Time time, String name, EffectType type, Unit target, int numStacks) implements TestEvent, HasEffectType {}
 
-	record EffectStacked(Time time, AbilityId spell, Unit target, int numStacks) implements TestEvent {}
+	record EffectStacksIncreased(Time time, String name, EffectType type, Unit target, int numStacks) implements TestEvent, HasEffectType {}
 
-	record TalentEffectStacked(Time time, TalentId talentId, Unit target, int numStacks) implements TestEvent {}
+	record EffectStacksDecreased(Time time, String name, EffectType type, Unit target, int numStacks) implements TestEvent, HasEffectType {}
 
-	record ItemEffectStacked(Time time, String itemName, Unit target, int numStacks) implements TestEvent {}
+	record EffectChargesIncreased(Time time, String name, EffectType type, Unit target, int numCharges) implements TestEvent, HasEffectType {}
 
-	record EffectStacksIncreased(Time time, AbilityId spell, Unit target, int numStacks) implements TestEvent {}
+	record EffectChargesDecreased(Time time, String name, EffectType type, Unit target, int numCharges) implements TestEvent, HasEffectType {}
 
-	record TalentEffectStacksIncreased(Time time, TalentId talentId, Unit target, int numStacks) implements TestEvent {}
+	record EffectExpired(Time time, String name, EffectType type, Unit target) implements TestEvent, HasEffectType {}
 
-	record ItemEffectStacksIncreased(Time time, String itemName, Unit target, int numStacks) implements TestEvent {}
-
-	record EffectStacksDecreased(Time time, AbilityId spell, Unit target, int numStacks) implements TestEvent {}
-
-	record TalentEffectStacksDecreased(Time time, TalentId talentId, Unit target, int numStacks) implements TestEvent {}
-
-	record ItemEffectStacksDecreased(Time time, String itemName, Unit target, int numStacks) implements TestEvent {}
-
-	record EffectChargesIncreased(Time time, AbilityId spell, Unit target, int numCharges) implements TestEvent {}
-
-	record TalentEffectChargesIncreased(Time time, TalentId talentId, Unit target, int numCharges) implements TestEvent {}
-
-	record ItemEffectChargesIncreased(Time time, String itemName, Unit target, int numCharges) implements TestEvent {}
-
-	record EffectChargesDecreased(Time time, AbilityId spell, Unit target, int numCharges) implements TestEvent {}
-
-	record TalentEffectChargesDecreased(Time time, TalentId talentId, Unit target, int numCharges) implements TestEvent {}
-
-	record ItemEffectChargesDecreased(Time time, String itemName, Unit target, int numCharges) implements TestEvent {}
-
-	record EffectExpired(Time time, AbilityId spell, Unit target) implements TestEvent {}
-
-	record TalentEffectExpired(Time time, TalentId talentId, Unit target) implements TestEvent {}
-
-	record ItemEffectExpired(Time time, String itemName, Unit target) implements TestEvent {}
-
-	record EffectRemoved(Time time, AbilityId spell, Unit target) implements TestEvent {}
-
-	record TalentEffectRemoved(Time time, TalentId talentId, Unit target) implements TestEvent {}
-
-	record ItemEffectRemoved(Time time, String itemName, Unit target) implements TestEvent {}
+	record EffectRemoved(Time time, String name, EffectType type, Unit target) implements TestEvent, HasEffectType {}
 
 	record CooldownStarted(Time time, Unit caster, CooldownId cooldownId, Duration duration) implements TestEvent {}
 

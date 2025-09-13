@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.DRAIN_LIFE;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.DRAIN_LIFE;
 
 /**
  * User: POlszewski

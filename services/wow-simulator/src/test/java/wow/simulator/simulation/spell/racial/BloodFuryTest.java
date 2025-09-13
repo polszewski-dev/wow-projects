@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.BLOOD_FURY;
+import static wow.test.commons.AbilityNames.BLOOD_FURY;
 
 /**
  * User: POlszewski

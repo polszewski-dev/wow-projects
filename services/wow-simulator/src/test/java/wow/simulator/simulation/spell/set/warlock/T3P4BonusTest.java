@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.set.warlock;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.CORRUPTION;
+import static wow.test.commons.AbilityNames.CORRUPTION;
 
 /**
  * User: POlszewski

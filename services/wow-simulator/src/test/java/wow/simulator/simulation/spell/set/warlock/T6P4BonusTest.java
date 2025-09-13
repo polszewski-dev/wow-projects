@@ -3,8 +3,8 @@ package wow.simulator.simulation.spell.set.warlock;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.commons.model.spell.AbilityId.INCINERATE;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.INCINERATE;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski

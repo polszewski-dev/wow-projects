@@ -1,14 +1,14 @@
 package wow.simulator.simulation.spell.ability.priest.discipline;
 
 import org.junit.jupiter.api.Test;
-import wow.commons.model.talent.TalentId;
 import wow.simulator.model.unit.Player;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.test.commons.TalentNames;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.spell.AbilityId.PRAYER_OF_SPIRIT;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.PRAYER_OF_SPIRIT;
 
 /**
  * User: POlszewski
@@ -62,7 +62,7 @@ class PrayerOfSpiritTest extends PriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentId.DIVINE_SPIRIT, 1);
+		enableTalent(TalentNames.DIVINE_SPIRIT, 1);
 
 		player1 = getNakedPlayer(WARLOCK, "Player1");
 		player2 = getNakedPlayer(WARLOCK, "Player2");
