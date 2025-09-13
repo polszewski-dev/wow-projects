@@ -8,7 +8,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import wow.character.model.character.PlayerCharacter;
 import wow.minmax.config.SimulationConfig;
 import wow.minmax.converter.dto.PlayerConverter;
-import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
@@ -21,8 +20,6 @@ import wow.simulator.client.dto.StatsDTO;
 @Service
 @RequiredArgsConstructor
 public class SimulatorServiceImpl implements SimulatorService {
-	private final PlayerCharacterService playerCharacterService;
-
 	private final PlayerConverter playerConverter;
 
 	private final SimulationConfig simulationConfig;

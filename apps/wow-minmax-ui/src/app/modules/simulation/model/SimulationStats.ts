@@ -1,6 +1,6 @@
 import { AbilityStats } from "./AbilityStats";
 
-export interface Stats {
+export interface SimulationStats {
 	abilityStats: AbilityStats[];
 	simulationDuration: number;
 	totalDamage: number;

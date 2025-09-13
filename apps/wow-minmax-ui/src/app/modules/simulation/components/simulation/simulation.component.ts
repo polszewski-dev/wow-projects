@@ -11,7 +11,7 @@ import { filter, switchMap } from 'rxjs/operators';
 	styleUrl: './simulation.component.css'
 })
 export class SimulationComponent {
-	simulation$ = this.store.select(selectDpsChanges).pipe(
+	simulationStats$ = this.store.select(selectDpsChanges).pipe(
 		filter(change => !!change.characterId),
 		switchMap(change => this.simulationService.simulate(change.characterId!))
 	)
