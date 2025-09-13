@@ -1,6 +1,5 @@
 package wow.commons;
 
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -15,10 +14,10 @@ import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski
@@ -98,7 +97,4 @@ public abstract class WowCommonsSpringTest {
 		assertThat(effect.getEffectId()).isEqualTo(effectId);
 		assertThat(effect.getTooltip()).isEqualTo(tooltip);
 	}
-
-	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
-	protected static final Offset<Double> PRECISION = Offset.offset(0.01);
 }

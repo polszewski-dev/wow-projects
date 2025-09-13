@@ -15,6 +15,7 @@ import wow.scraper.ScraperSpringTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski

@@ -9,6 +9,7 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.GameVersionId;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski

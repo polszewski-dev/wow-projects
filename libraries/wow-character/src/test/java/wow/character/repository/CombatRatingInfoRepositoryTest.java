@@ -7,6 +7,7 @@ import wow.character.model.character.CombatRatingInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski

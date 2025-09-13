@@ -1,6 +1,5 @@
 package wow.minmax;
 
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,7 +26,6 @@ import wow.minmax.service.StatsService;
 import wow.minmax.service.UpgradeService;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.UUID;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
@@ -138,7 +136,4 @@ public abstract class WowMinMaxSpringTest {
 	protected static final CreatureType ENEMY_TYPE = UNDEAD;
 	protected static final int LVL_DIFF = 3;
 	protected static final CharacterId CHARACTER_KEY = new CharacterId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);
-
-	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
-	protected static final Offset<Double> PRECISION = Offset.offset(0.01);
 }

@@ -41,6 +41,7 @@ import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
+import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski

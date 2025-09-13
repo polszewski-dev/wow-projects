@@ -59,6 +59,13 @@
 			<artifactId>wow-simulator-client</artifactId>
 			<version>1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>polszewski</groupId>
+			<artifactId>wow-test-commons</artifactId>
+			<version>1.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,6 +1,5 @@
 package wow.scraper;
 
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +23,4 @@ public abstract class ScraperSpringTest {
 
 	@Autowired
 	protected SpellPatternRepository spellPatternRepository;
-
-	protected static final Offset<Double> PRECISION = Offset.offset(0.01);
 }

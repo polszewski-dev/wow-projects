@@ -25,6 +25,7 @@
 		<module>excel-utils</module>
 		<module>wow-commons</module>
 		<module>wow-character</module>
+		<module>wow-test-commons</module>
 	</modules>
 
 	<dependencyManagement>

@@ -17,6 +17,7 @@ import static wow.commons.model.spell.AbilityId.CURSE_OF_DOOM;
 import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
+import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski

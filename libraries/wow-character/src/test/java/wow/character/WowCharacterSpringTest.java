@@ -1,6 +1,5 @@
 package wow.character;
 
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,8 +20,6 @@ import wow.commons.repository.pve.GameVersionRepository;
 import wow.commons.repository.spell.BuffRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.commons.repository.spell.TalentRepository;
-
-import java.util.Comparator;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
@@ -117,7 +114,4 @@ public abstract class WowCharacterSpringTest {
 	protected static final int LVL_DIFF = 3;
 
 	protected static final String WARLOCK_TEMPLATE_NAME = "Shadow Destro";
-
-	protected static final Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
-	protected static final Offset<Double> PRECISION = Offset.offset(0.01);
 }
