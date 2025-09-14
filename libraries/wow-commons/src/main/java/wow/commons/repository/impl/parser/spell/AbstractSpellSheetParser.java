@@ -4,6 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.*;
@@ -239,7 +240,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		}
 
 		var target = getTarget(prefix);
-		var effectId = colAppliedEffectId.prefixed(prefix).getInteger();
+		var effectId = colAppliedEffectId.prefixed(prefix).getInteger(EffectId::of);
 		var duration = colAppliedEffectDuration.prefixed(prefix).getAnyDuration();
 		var numStacks = colAppliedEffectStacks.prefixed(prefix).getInteger();
 		var numCharges = colAppliedEffectCharges.prefixed(prefix).getInteger();
@@ -250,9 +251,9 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return new EffectApplication(target, dummy, duration, numStacks, numCharges, replacementMode);
 	}
 
-	protected EffectImpl getDummyEffect(int effectId) {
+	protected EffectImpl getDummyEffect(EffectId effectId) {
 		var dummy = new EffectImpl(List.of());
-		dummy.setEffectId(effectId);
+		dummy.setId(effectId);
 		return dummy;
 	}
 

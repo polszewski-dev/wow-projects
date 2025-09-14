@@ -141,10 +141,10 @@ public class Effects implements SimulationContextSource, EffectCollection {
 	}
 
 	private void attach(EffectInstanceImpl effect) {
-		effectsById.put(effect.getId(), effect);
+		effectsById.put(effect.getInstanceId(), effect);
 	}
 
 	public void detach(EffectInstance effect) {
-		this.effectsById.remove(effect.getId());
+		this.effectsById.remove(effect.getInstanceId());
 	}
 }

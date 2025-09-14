@@ -45,7 +45,7 @@ public class SpecialAbilitySolver {
 	}
 
 	private boolean solveNonModifierEffect(Effect effect, int stackCount, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats, Player player) {
-		return switch (effect.getEffectId()) {
+		return switch (effect.getId().value()) {
 			case -17793 -> solveImprovedShadowBoltProc(1, snapshot, abilityStats);
 			case -17796 -> solveImprovedShadowBoltProc(2, snapshot, abilityStats);
 			case -17801 -> solveImprovedShadowBoltProc(3, snapshot, abilityStats);

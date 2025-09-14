@@ -3,6 +3,7 @@ package wow.simulator.model.stats;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.Duration;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityIdAndRank;
 import wow.commons.model.spell.CooldownId;
@@ -18,7 +19,7 @@ import java.util.Map;
  */
 public class Stats {
 	private final Map<AbilityIdAndRank, AbilityStats> abilityStatsById = new LinkedHashMap<>();
-	private final Map<Integer, EffectStats> effectStatsById = new LinkedHashMap<>();
+	private final Map<EffectId, EffectStats> effectStatsById = new LinkedHashMap<>();
 	private final Map<CooldownId, CooldownStats> cooldownStatsById = new LinkedHashMap<>();
 
 	@Getter
@@ -52,7 +53,7 @@ public class Stats {
 		getCooldownStats(cooldownId).addUptime(duration);
 	}
 
-	public void addEffectUptime(int effectId, Duration duration) {
+	public void addEffectUptime(EffectId effectId, Duration duration) {
 		getEffectStats(effectId).addUptime(duration);
 	}
 
@@ -65,7 +66,7 @@ public class Stats {
 		return abilityStatsById.computeIfAbsent(ability.getRankedAbilityId(), x -> new AbilityStats(ability));
 	}
 
-	private EffectStats getEffectStats(int effectId) {
+	private EffectStats getEffectStats(EffectId effectId) {
 		return effectStatsById.computeIfAbsent(effectId, EffectStats::new);
 	}
 

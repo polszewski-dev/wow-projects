@@ -37,7 +37,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 
 	@Override
 	public boolean hasStatsSuitableForRole(List<Effect> effects, ActivatedAbility activatedAbility) {
-		var isAttributeEffect = effects.stream().collect(Collectors.partitioningBy(x -> x.getEffectId() == 0));
+		var isAttributeEffect = effects.stream().collect(Collectors.partitioningBy(x -> x.getId() == null));
 		var attributeEffects = isAttributeEffect.get(true);
 		var permanentEffects = isAttributeEffect.get(false);
 

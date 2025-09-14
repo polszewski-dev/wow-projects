@@ -3,6 +3,7 @@ package wow.simulator.model.rng;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
@@ -62,6 +63,6 @@ class PredeterminedRngTest extends WowSimulatorSpringTest {
 	@BeforeEach
 	void setUp() {
 		ability = spellRepository.getAbility(SHADOW_BOLT, 1, PhaseId.TBC_P5).orElseThrow();
-		event = spellRepository.getEffect(-154, PhaseId.TBC_P5).orElseThrow().getEvents().getFirst();
+		event = spellRepository.getEffect(EffectId.of(-154), PhaseId.TBC_P5).orElseThrow().getEvents().getFirst();
 	}
 }

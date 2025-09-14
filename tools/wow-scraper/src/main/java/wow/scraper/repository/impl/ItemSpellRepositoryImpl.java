@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spell.ActivatedAbility;
@@ -84,7 +85,7 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 
 	private void validateIds() {
 		assertNoDuplicates(spellsByTooltip.allValues(), x -> x.getId() + "#" + x.getGameVersionId());
-		assertNoDuplicates(effectsByTooltip.allValues(), x -> x.getEffectId() + "#" + x.getGameVersionId());
+		assertNoDuplicates(effectsByTooltip.allValues(), x -> x.getId() + "#" + x.getGameVersionId());
 	}
 
 	private void createItemSpellsAndEffects(ItemEffectParser parser) {
@@ -142,20 +143,22 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 	}
 
 	private void onSpellEffect(EffectImpl effect, int level, int index, Spell rootSpell) {
-		effect.setEffectId(getId(rootSpell.getId(), null, 0, level, index));
+		int effectId = getId(rootSpell.getId(), null, 0, level, index);
+		effect.setId(EffectId.of(effectId));
 		effect.setDescription(getDescription(rootSpell, level));
 		effect.setTimeRestriction(rootSpell.getTimeRestriction());
 	}
 
 	private void onEffectSpell(SpellImpl spell, int level, int index, Effect rootEffect) {
-		spell.setId(getId(rootEffect.getEffectId(), null, 0, level, index));
+		spell.setId(getId(rootEffect.getId().value(), null, 0, level, index));
 		spell.setDescription(getDescription(rootEffect, level));
 		spell.setTimeRestriction(rootEffect.getTimeRestriction());
 	}
 
 	private void onEffectEffect(EffectImpl effect, int level, int index, Effect rootEffect) {
 		if (effect != rootEffect) {
-			effect.setEffectId(getId(rootEffect.getEffectId(), null, 0, level, index));
+			int effectId = getId(rootEffect.getId().value(), null, 0, level, index);
+			effect.setId(EffectId.of(effectId));
 			effect.setDescription(getDescription(rootEffect, level));
 			effect.setTimeRestriction(rootEffect.getTimeRestriction());
 		}

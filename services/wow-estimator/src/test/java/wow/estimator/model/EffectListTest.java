@@ -4,8 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
-import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.estimator.WowEstimatorSpringTest;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.POWER_PCT;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
  * User: POlszewski
@@ -22,7 +24,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void addEffectSingleStack() {
 		var effectList = new EffectList(character);
-		var effect = spellRepository.getEffect(28189, PhaseId.TBC_P5).orElseThrow(); // Fel Armor
+		var effect = getEffect(28189); // Fel Armor
 
 		effectList.addEffect(effect);
 
@@ -36,7 +38,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void addEffectMultipleStacks() {
 		var effectList = new EffectList(character);
-		var effect = spellRepository.getEffect(120131856, PhaseId.TBC_P5).orElseThrow(); // Darkmoon Card: Crusade
+		var effect = getEffect(120131856); // Darkmoon Card: Crusade
 
 		effectList.addEffect(effect, 10);
 
@@ -50,7 +52,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void addEffectActivatedAbility() {
 		var effectList = new EffectList(character);
-		var activatedAbility = (ActivatedAbility) spellRepository.getSpell(132483, PhaseId.TBC_P5).orElseThrow(); // The Skull of Gul'dan
+		var activatedAbility = getActivatedAbility(132483); // The Skull of Gul'dan
 
 		effectList.addActivatedAbility(activatedAbility);
 
@@ -62,7 +64,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void removeEffectSingleStack() {
 		var effectList = new EffectList(character);
-		var effect = spellRepository.getEffect(28189, PhaseId.TBC_P5).orElseThrow(); // Fel Armor
+		var effect = getEffect(28189); // Fel Armor
 
 		effectList.addEffect(effect);
 		effectList.removeEffect(SpecialAbility.of(effect));
@@ -74,7 +76,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void removeEffectMultipleStacks() {
 		var effectList = new EffectList(character);
-		var effect = spellRepository.getEffect(120131856, PhaseId.TBC_P5).orElseThrow(); // Darkmoon Card: Crusade
+		var effect = getEffect(120131856); // Darkmoon Card: Crusade
 
 		effectList.addEffect(effect, 10);
 
@@ -107,7 +109,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void removeEffectActivatedAbility() {
 		var effectList = new EffectList(character);
-		var activatedAbility = (ActivatedAbility) spellRepository.getSpell(132483, PhaseId.TBC_P5).orElseThrow(); // The Skull of Gul'dan
+		var activatedAbility = getActivatedAbility(132483); // The Skull of Gul'dan
 
 		effectList.addActivatedAbility(activatedAbility);
 
@@ -119,8 +121,8 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void removeAll() {
 		var effectList = new EffectList(character);
-		var effect = spellRepository.getEffect(28189, PhaseId.TBC_P5).orElseThrow(); // Fel Armor
-		var activatedAbility = (ActivatedAbility) spellRepository.getSpell(132483, PhaseId.TBC_P5).orElseThrow(); // The Skull of Gul'dan
+		var effect = getEffect(28189); // Fel Armor
+		var activatedAbility = getActivatedAbility(132483); // The Skull of Gul'dan
 
 		effectList.addEffect(effect);
 		effectList.addActivatedAbility(activatedAbility);
@@ -137,5 +139,13 @@ class EffectListTest extends WowEstimatorSpringTest {
 	void setup() {
 		character = getCharacter();
 		equipGearSet(character);
+	}
+
+	private Effect getEffect(int effectId) {
+		return spellRepository.getEffect(EffectId.of(effectId), TBC_P5).orElseThrow();
+	}
+
+	private ActivatedAbility getActivatedAbility(int spellId) {
+		return (ActivatedAbility) spellRepository.getSpell(spellId, TBC_P5).orElseThrow();
 	}
 }

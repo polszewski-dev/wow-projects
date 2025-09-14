@@ -171,7 +171,7 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 		}
 
 		setValue(effectApplication.target());
-		setValue(effectApplication.effect().getEffectId());
+		setValue(effectApplication.effect().getId().value());
 		setValue(effectApplication.duration());
 		setValue(effectApplication.numStacks());
 		setValue(effectApplication.numCharges());

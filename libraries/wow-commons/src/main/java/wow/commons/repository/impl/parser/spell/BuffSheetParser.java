@@ -2,6 +2,7 @@ package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.buff.*;
 import wow.commons.model.buff.impl.BuffImpl;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.repository.spell.SpellRepository;
 
@@ -33,7 +34,7 @@ public class BuffSheetParser extends AbstractSpellSheetParser {
 	}
 
 	private Buff getBuff() {
-		var effectId = colId.getInteger();
+		var effectId = colId.getInteger(EffectId::of);
 		var rank = colRank.getInteger(0);
 		var type = colType.getEnum(BuffType::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(BuffExclusionGroup::parse, null);

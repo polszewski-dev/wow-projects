@@ -26,8 +26,8 @@ public class EmptyEffect implements Effect {
 	}
 
 	@Override
-	public int getEffectId() {
-		return 0;
+	public EffectId getId() {
+		return null;
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class BuffImpl implements Buff {
 			Effect effect,
 			int stacks
 	) {
-		this.id = BuffId.of(effect.getEffectId());
+		this.id = BuffId.of(effect.getId().value());
 		this.nameRank = new BuffNameRank(effect.getName(), rank);
 		this.description = effect.getDescription();
 		this.timeRestriction = timeRestriction;

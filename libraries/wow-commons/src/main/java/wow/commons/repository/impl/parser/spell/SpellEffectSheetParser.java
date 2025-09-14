@@ -3,6 +3,7 @@ package wow.commons.repository.impl.parser.spell;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectExclusionGroup;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.component.AbsorptionComponent;
 import wow.commons.model.effect.component.ComponentType;
@@ -42,7 +43,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 
 	protected Effect getEffect() {
 		var effect = newEffect();
-		var effectId = colId.getInteger();
+		var effectId = colId.getInteger(EffectId::of);
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var maxStacks = colMaxStacks.getInteger();
@@ -55,7 +56,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var statConversions = getStatConversions();
 		var events = getEvents(maxEvents);
 
-		effect.setEffectId(effectId);
+		effect.setId(effectId);
 		effect.setDescription(description);
 		effect.setTimeRestriction(timeRestriction);
 		effect.setMaxStacks(maxStacks);

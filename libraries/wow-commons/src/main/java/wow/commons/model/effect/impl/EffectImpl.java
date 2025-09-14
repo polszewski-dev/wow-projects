@@ -21,7 +21,7 @@ import java.util.Objects;
 @Getter
 @Setter
 public class EffectImpl implements Effect {
-	private int effectId;
+	private EffectId id;
 	private EffectCategory category;
 	private EffectSource source;
 	private final List<AbilityId> augmentedAbilities;

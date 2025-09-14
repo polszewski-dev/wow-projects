@@ -8,6 +8,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
@@ -40,7 +41,7 @@ class ItemEffectMapperTest extends WowCommonsSpringTest {
 
 	@Test
 	void permanentEffect() {
-		var original = spellRepository.getEffect(172, phaseId).orElseThrow();
+		var original = spellRepository.getEffect(EffectId.of(172), phaseId).orElseThrow();
 		var serialized = itemEffectMapper.toString(original);
 		var deserialized = itemEffectMapper.fromString(serialized, phaseId);
 

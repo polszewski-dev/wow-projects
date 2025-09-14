@@ -2,6 +2,7 @@ package wow.commons.repository.impl.parser.excel.mapper;
 
 import org.springframework.stereotype.Component;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.spell.SpellRepository;
@@ -25,8 +26,8 @@ public final class ItemEffectMapper {
 			return null;
 		}
 
-		if (effect.getEffectId() != 0) {
-			return effect.getEffectId() + "";
+		if (effect.getId() != null) {
+			return effect.getId().value() + "";
 		}
 
 		if (effect.hasAnyNonModifierComponents()) {
@@ -42,7 +43,8 @@ public final class ItemEffectMapper {
 		}
 
 		if (value.matches("^\\d+$")) {
-			var effectId = Integer.parseInt(value);
+			var effectId = EffectId.of(Integer.parseInt(value));
+
 			return spellRepository.getEffect(effectId, phaseId).orElseThrow();
 		}
 

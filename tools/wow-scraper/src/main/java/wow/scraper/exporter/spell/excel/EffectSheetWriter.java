@@ -42,7 +42,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 
 	@Override
 	public void writeRow(Effect effect) {
-		setValue(effect.getEffectId());
+		setValue(effect.getId().value());
 		setValue(effect.getName());
 		writeTimeRestriction(effect.getTimeRestriction());
 		setValue(effect.getMaxStacks());

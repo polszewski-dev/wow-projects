@@ -97,7 +97,7 @@ public abstract class WowCommonsSpringTest {
 	}
 
 	protected static void assertEffect(Effect effect, int effectId, String tooltip) {
-		assertThat(effect.getEffectId()).isEqualTo(effectId);
+		assertId(effect, effectId);
 		assertThat(effect.getTooltip()).isEqualTo(tooltip);
 	}
 
@@ -111,5 +111,9 @@ public abstract class WowCommonsSpringTest {
 
 	protected static void assertId(Talent talent, int id) {
 		assertThat(talent.getId().value()).isEqualTo(id);
+	}
+
+	protected static void assertId(Effect effect, int id) {
+		assertThat(effect.getId().value()).isEqualTo(id);
 	}
 }

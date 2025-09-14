@@ -16,7 +16,7 @@ import wow.simulator.simulation.SimulationContextSource;
  * Date: 2023-08-17
  */
 public interface EffectInstance extends Effect, Updateable, SimulationContextSource {
-	EffectInstanceId getId();
+	EffectInstanceId getInstanceId();
 
 	Unit getOwner();
 

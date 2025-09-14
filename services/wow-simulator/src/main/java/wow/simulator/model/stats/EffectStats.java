@@ -3,6 +3,7 @@ package wow.simulator.model.stats;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Duration;
+import wow.commons.model.effect.EffectId;
 
 /**
  * User: POlszewski
@@ -11,7 +12,7 @@ import wow.commons.model.Duration;
 @RequiredArgsConstructor
 @Getter
 public class EffectStats {
-	private final int effectId;
+	private final EffectId effectId;
 	private Duration uptime = Duration.ZERO;
 
 	public void addUptime(Duration duration) {

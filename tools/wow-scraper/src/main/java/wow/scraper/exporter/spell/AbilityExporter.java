@@ -1,6 +1,7 @@
 package wow.scraper.exporter.spell;
 
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.impl.ClassAbilityImpl;
@@ -123,7 +124,8 @@ public class AbilityExporter extends MultiPageSpellBaseExporter {
 	}
 
 	private void fillEffectInfo(EffectImpl effect, int level, int index, Ability ability) {
-		effect.setEffectId(getId(ability.getId(), null, 0, level, index));
+		int effectId = getId(ability.getId(), null, 0, level, index);
+		effect.setId(EffectId.of(effectId));
 		effect.setDescription(getDescription(ability, level));
 		effect.setTimeRestriction(ability.getTimeRestriction());
 	}

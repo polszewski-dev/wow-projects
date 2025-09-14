@@ -5,6 +5,7 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.scraper.ScraperSpringTest;
 import wow.scraper.model.JsonCommonDetails;
 import wow.scraper.repository.ItemDetailRepository;
@@ -55,7 +56,7 @@ public abstract class TooltipParserTest<D extends JsonCommonDetails, P extends A
 	}
 
 	static void assertEffect(Effect effect, int effectId, String tooltip) {
-		assertThat(effect.getEffectId()).isEqualTo(effectId);
+		assertThat(effect.getId()).isEqualTo(EffectId.of(effectId));
 		assertThat(effect.getTooltip()).isEqualTo(tooltip);
 	}
 }

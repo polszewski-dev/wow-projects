@@ -18,6 +18,7 @@ import wow.commons.model.config.Described;
 import wow.commons.model.config.TalentRestriction;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
@@ -181,7 +182,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(ability, SpellTarget.ENEMY, 18, 1, 1, 1);
 
-		assertThat(effectApplication.effect().getEffectId()).isEqualTo(ability.getId()).isEqualTo(27216);
+		assertId(effectApplication.effect(), ability.getId());
+		assertId(effectApplication.effect(), 27216);
 	}
 
 	@Test
@@ -205,7 +207,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void abilityEffect() {
 		var effect = getEffect(25311, VANILLA_P6);
 
-		assertThat(effect.getEffectId()).isEqualTo(25311);
+		assertId(effect, 25311);
 		assertThat(effect.getName()).isEqualTo("Corruption");
 		assertThat(effect.getTimeRestriction()).isEqualTo(TimeRestriction.of(VANILLA_P5));
 		assertThat(effect.getMaxStacks()).isEqualTo(1);
@@ -293,12 +295,12 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var effect = ability.getEffectApplication().effect();
 
-		assertThat(effect.getEffectId()).isEqualTo(25461);
+		assertId(effect, 25461);
 		assertThat(effect.getName()).isEqualTo("Touch of Weakness");
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var triggeredSpell = effect.getEvents().get(0).triggeredSpell();
+		var triggeredSpell = effect.getEvents().getFirst().triggeredSpell();
 
 		assertThat(triggeredSpell).isNotNull();
 		assertThat(triggeredSpell.getId()).isEqualTo(110025461);
@@ -308,7 +310,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var triggeredEffect = triggeredSpell.getEffectApplication().effect();
 
-		assertThat(triggeredEffect.getEffectId()).isEqualTo(110025461);
+		assertId(triggeredEffect, 110025461);
 		assertThat(triggeredEffect.getName()).isEqualTo("Touch of Weakness - triggered");
 	}
 
@@ -328,7 +330,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var effect = spell.getEffectApplication().effect();
 
-		assertThat(effect.getEffectId()).isEqualTo(132483);
+		assertId(effect, 132483);
 		assertModifier(effect, List.of(
 			Attribute.of(HASTE_RATING, 175, MiscCondition.SPELL)
 		));
@@ -343,7 +345,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var event = effect.getEvents().get(0);
+		var event = effect.getEvents().getFirst();
 
 		assertEvent(
 				event,
@@ -377,7 +379,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var event = effect.getEvents().get(0);
+		var event = effect.getEvents().getFirst();
 
 		assertEvent(
 				event,
@@ -414,7 +416,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var event = effect.getEvents().get(0);
+		var event = effect.getEvents().getFirst();
 
 		assertEvent(
 				event,
@@ -451,7 +453,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var event = effect.getEvents().get(0);
+		var event = effect.getEvents().getFirst();
 
 		assertEvent(
 				event,
@@ -486,7 +488,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var event = effect.getEvents().get(0);
+		var event = effect.getEvents().getFirst();
 
 		assertEvent(event, List.of(SPELL_CAST), AttributeCondition.EMPTY, 15, List.of(TRIGGER_SPELL), Duration.seconds(35));
 
@@ -560,6 +562,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	}
 
 	private Effect getEffect(int effectId, PhaseId phaseId) {
-		return spellRepository.getEffect(effectId, phaseId).orElseThrow();
+		return spellRepository.getEffect(EffectId.of(effectId), phaseId).orElseThrow();
 	}
 }

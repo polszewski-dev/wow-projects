@@ -19,7 +19,7 @@ import java.util.List;
 public interface Effect extends Described, TimeRestricted {
 	Effect EMPTY = new EmptyEffect();
 
-	int getEffectId();
+	EffectId getId();
 
 	EffectCategory getCategory();
 

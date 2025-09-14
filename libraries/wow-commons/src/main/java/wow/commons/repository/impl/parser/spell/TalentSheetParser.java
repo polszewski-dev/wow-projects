@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parser.spell;
 
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.impl.SpellImpl;
@@ -63,7 +64,7 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 
 		var effect = getEffect();
 
-		effect.setEffectId(-talentId.value());
+		effect.setId(EffectId.of(-talentId.value()));
 		effect.setDescription(description);
 		effect.setTimeRestriction(timeRestriction);
 		effect.attachSource(new TalentSource(talent));
@@ -88,7 +89,7 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 	}
 
 	@Override
-	protected EffectImpl getDummyEffect(int effectId) {
+	protected EffectImpl getDummyEffect(EffectId effectId) {
 		return (EffectImpl) spellRepository.getEffect(effectId, getTimeRestriction().earliestPhaseId()).orElseThrow();
 	}
 

@@ -3,6 +3,7 @@ package wow.scraper.parser.tooltip;
 import lombok.Getter;
 import wow.commons.model.config.Description;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
@@ -166,7 +167,7 @@ public class ItemEffectParser extends AbstractTooltipParser<JsonCommonDetails> {
 	}
 
 	private void initEffect(EffectImpl effect, int effectId, String effectName, String line) {
-		effect.setEffectId(effectId);
+		effect.setId(EffectId.of(effectId));
 		effect.setDescription(getDescription(effectName, line));
 		effect.setTimeRestriction(getTimeRestriction());
 	}

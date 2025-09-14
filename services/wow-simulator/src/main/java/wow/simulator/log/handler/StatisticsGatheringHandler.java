@@ -123,12 +123,12 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void effectApplied(EffectInstance effect) {
-		effects.put(effect.getId(), new EffectTimeEntry(effect.getEffectId(), now()));
+		effects.put(effect.getInstanceId(), new EffectTimeEntry(effect.getId(), now()));
 	}
 
 	@Override
 	public void effectExpired(EffectInstance effect) {
-		var timeEntry = effects.remove(effect.getId());
+		var timeEntry = effects.remove(effect.getInstanceId());
 		timeEntry.complete(now());
 		stats.addEffectUptime(timeEntry.getEffectId(), timeEntry.getElapsedTime());
 	}

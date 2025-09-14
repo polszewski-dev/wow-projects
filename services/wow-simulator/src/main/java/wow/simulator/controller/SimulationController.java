@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.Duration;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.spell.EffectReplacementMode;
 import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.client.dto.SimulationRequestDTO;
@@ -56,12 +57,14 @@ public class SimulationController {
 	private void applyTargetDebuffs(Player player, SimulationRequestDTO request) {
 		player.getTarget().resetBuffs();
 
-		for (var activeEffectId : request.player().target().buffIds()) {
+		for (var buffId : request.player().target().buffIds()) {
+			var activeEffectId = EffectId.of(buffId);
+
 			applyEffect(player.getTarget(), activeEffectId, player);
 		}
 	}
 
-	private void applyEffect(Unit target, int activeEffectId, Unit owner) {
+	private void applyEffect(Unit target, EffectId activeEffectId, Unit owner) {
 		var effect = spellRepository.getEffect(activeEffectId, target.getPhaseId()).orElseThrow();
 		var effectInstance = new NonPeriodicEffectInstance(
 				owner,

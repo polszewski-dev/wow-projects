@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
@@ -33,7 +34,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();
 	private final PhaseMap<AbilityIdAndRank, Ability> abilitiesByRankedId = new PhaseMap<>();
 	private final PhaseMap<Integer, Spell> spellsById = new PhaseMap<>();
-	private final PhaseMap<Integer, Effect> effectById = new PhaseMap<>();
+	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
 	private final GameVersionMap<RaceId, List<RacialEffect>> racialEffects = new GameVersionMap<>();
 
 	public SpellRepositoryImpl(SpellExcelParser parser) throws IOException {
@@ -60,7 +61,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 	}
 
 	@Override
-	public Optional<Effect> getEffect(int effectId, PhaseId phaseId) {
+	public Optional<Effect> getEffect(EffectId effectId, PhaseId phaseId) {
 		return effectById.getOptional(phaseId, effectId);
 	}
 
@@ -82,7 +83,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 	}
 
 	private void addEffect(Effect effect) {
-		putForEveryPhase(effectById, effect.getEffectId(), effect);
+		putForEveryPhase(effectById, effect.getId(), effect);
 
 		var gameVersionId = effect.getGameVersionId();
 

@@ -8,6 +8,7 @@ import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.impl.EffectImpl;
@@ -40,7 +41,7 @@ public class SpellExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 
 	private final PhaseMap<Integer, Spell> spellsById = new PhaseMap<>();
-	private final PhaseMap<Integer, Effect> effectById = new PhaseMap<>();
+	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -71,7 +72,7 @@ public class SpellExcelParser extends ExcelParser {
 
 	void addEffect(Effect effect) {
 		validateEffect(effect);
-		putForEveryPhase(effectById, effect.getEffectId(), effect);
+		putForEveryPhase(effectById, effect.getId(), effect);
 	}
 
 	private void validateSpell(Spell spell) {
@@ -131,7 +132,7 @@ public class SpellExcelParser extends ExcelParser {
 			return;
 		}
 
-		var effectId = effectApplication.effect().getEffectId();
+		var effectId = effectApplication.effect().getId();
 		var phaseId = spell.getEarliestPhaseId();
 		var effect = effectById.getOptional(phaseId, effectId).orElseThrow();
 		var newEffectApplication = effectApplication.setEffect(effect);

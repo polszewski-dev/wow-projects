@@ -32,7 +32,7 @@ import static wow.commons.util.CollectionUtil.join;
 public abstract class EffectInstanceImpl extends Action implements EffectInstance {
 	private static final IdGenerator<EffectInstanceId> ID_GENERATOR = new IdGenerator<>(EffectInstanceId::new);
 
-	protected final EffectInstanceId id = ID_GENERATOR.newId();
+	protected final EffectInstanceId instanceId = ID_GENERATOR.newId();
 
 	protected final Unit owner;
 	protected final Unit target;
@@ -161,8 +161,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
-	public EffectInstanceId getId() {
-		return id;
+	public EffectInstanceId getInstanceId() {
+		return instanceId;
 	}
 
 	@Override
@@ -286,8 +286,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	// effect interface
 
 	@Override
-	public int getEffectId() {
-		return effect.getEffectId();
+	public EffectId getId() {
+		return effect.getId();
 	}
 
 	@Override
