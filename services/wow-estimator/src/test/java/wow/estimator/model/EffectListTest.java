@@ -8,6 +8,7 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.ActivatedAbility;
+import wow.commons.model.spell.SpellId;
 import wow.estimator.WowEstimatorSpringTest;
 
 import java.util.List;
@@ -146,6 +147,6 @@ class EffectListTest extends WowEstimatorSpringTest {
 	}
 
 	private ActivatedAbility getActivatedAbility(int spellId) {
-		return (ActivatedAbility) spellRepository.getSpell(spellId, TBC_P5).orElseThrow();
+		return (ActivatedAbility) spellRepository.getSpell(SpellId.of(spellId), TBC_P5).orElseThrow();
 	}
 }

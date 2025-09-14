@@ -15,7 +15,7 @@ import java.util.Set;
  * Date: 2021-09-19
  */
 public interface Spell extends Described, TimeRestricted {
-	int getId();
+	SpellId getId();
 
 	SpellType getType();
 

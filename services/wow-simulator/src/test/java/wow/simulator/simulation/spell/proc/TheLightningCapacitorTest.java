@@ -3,6 +3,7 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.CooldownId;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
@@ -72,7 +73,7 @@ class TheLightningCapacitorTest extends WarlockSpellSimulationTest {
 		);
 	}
 
-	CooldownId cooldownId = CooldownId.of(100128785);
+	CooldownId cooldownId = CooldownId.of(SpellId.of(100128785));
 
 	@Override
 	protected void afterSetUp() {

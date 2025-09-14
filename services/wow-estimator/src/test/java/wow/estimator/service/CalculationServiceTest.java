@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.config.Described;
 import wow.commons.model.spell.ActivatedAbility;
+import wow.commons.model.spell.SpellId;
 import wow.estimator.model.EffectList;
 import wow.estimator.model.SpecialAbility;
 import wow.test.commons.TalentNames;
@@ -214,7 +215,7 @@ class CalculationServiceTest extends ServiceTest {
 
 	@Test
 	void getSpecialAbilityStats() {
-		var activatedAbility = (ActivatedAbility) spellRepository.getSpell(132483, PHASE).orElseThrow();//The Skull of Gul'dan
+		var activatedAbility = (ActivatedAbility) spellRepository.getSpell(SpellId.of(132483), PHASE).orElseThrow();//The Skull of Gul'dan
 		var stats = calculationService.getSpecialAbilityStats(SpecialAbility.of(activatedAbility), character);
 
 		assertThat(stats.getSpEquivalent()).isEqualTo(32.31, PRECISION);

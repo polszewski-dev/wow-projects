@@ -11,6 +11,7 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.SpellId;
 
 import java.util.List;
 
@@ -106,7 +107,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 
 	@Test
 	void levelScaledAttribute() {
-		var spell = spellRepository.getSpell(33702, PhaseId.TBC_P5).orElseThrow();
+		var spell = spellRepository.getSpell(SpellId.of(33702), PhaseId.TBC_P5).orElseThrow();
 		var effect = spell.getAppliedEffect();
 
 		spellStats.accumulateAttributes(effect.getModifierAttributeList(), 1);

@@ -10,6 +10,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public interface SpellRepository {
 
 	Optional<Ability> getAbility(AbilityId abilityId, int rank, PhaseId phaseId);
 
-	Optional<Spell> getSpell(int spellId, PhaseId phaseId);
+	Optional<Spell> getSpell(SpellId spellId, PhaseId phaseId);
 
 	Optional<Effect> getEffect(EffectId effectId, PhaseId phaseId);
 

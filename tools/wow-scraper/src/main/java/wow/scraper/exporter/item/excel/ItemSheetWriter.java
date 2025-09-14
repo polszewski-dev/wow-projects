@@ -3,6 +3,7 @@ package wow.scraper.exporter.item.excel;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.item.WeaponStats;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 		writeEffect(parser.getSocketBonus().orElse(null));
 		setValue(parser.getItemSetName());
 		writeEffects(parser.getEffects(), ITEM_MAX_EFFECTS);
-		setValue(parser.getActivatedAbility().map(Spell::getId).orElse(null));
+		setValue(parser.getActivatedAbility().map(Spell::getId).map(SpellId::value).orElse(null));
 		writeWeaponStats(parser.getWeaponStats());
 		writeIconAndTooltip(parser);
 	}

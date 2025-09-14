@@ -16,7 +16,7 @@ public class RotationSpellStatsConverter implements Converter<RotationSpellStats
 	@Override
 	public RotationSpellStatsDTO doConvert(RotationSpellStats source) {
 		return new RotationSpellStatsDTO(
-				source.getSpell().getId(),
+				source.getSpell().getId().value(),
 				source.getNumCasts(),
 				source.getDamage()
 		);

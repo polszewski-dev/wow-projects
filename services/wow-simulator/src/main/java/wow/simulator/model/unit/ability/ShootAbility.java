@@ -86,7 +86,7 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
-	public int getId() {
+	public SpellId getId() {
 		return ability.getId();
 	}
 

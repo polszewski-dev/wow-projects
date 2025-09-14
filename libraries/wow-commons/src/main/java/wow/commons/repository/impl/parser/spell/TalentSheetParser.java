@@ -3,6 +3,7 @@ package wow.commons.repository.impl.parser.spell;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.spell.SpellId;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
@@ -94,7 +95,7 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 	}
 
 	@Override
-	protected SpellImpl getDummySpell(Integer spellId) {
+	protected SpellImpl getDummySpell(SpellId spellId) {
 		if (spellId == null) {
 			return null;
 		}

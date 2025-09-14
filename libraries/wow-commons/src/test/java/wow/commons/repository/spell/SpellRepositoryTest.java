@@ -111,7 +111,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void abilitySpellInfo() {
 		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
 
-		assertThat(ability.getId()).isEqualTo(27209);
+		assertId(ability, 27209);
 		assertThat(ability.getCooldown()).isEqualTo(Duration.ZERO);
 		assertThat(ability.getRange()).isEqualTo(30);
 		assertThat(ability.getRequiredEffect()).isNull();
@@ -182,7 +182,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(ability, SpellTarget.ENEMY, 18, 1, 1, 1);
 
-		assertId(effectApplication.effect(), ability.getId());
+		assertId(effectApplication.effect(), ability.getId().value());
 		assertId(effectApplication.effect(), 27216);
 	}
 
@@ -190,7 +190,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void abilitySpell() {
 		var spell = getSpell(110025441, TBC_P5);
 
-		assertThat(spell.getId()).isEqualTo(110025441);
+		assertId(spell, 110025441);
 		assertThat(spell.getName()).isEqualTo("Feedback - triggered");
 
 		var directComponent = spell.getDirectComponents().getFirst();
@@ -288,7 +288,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void abilityMultipleLevels() {
 		var ability = getClassAbility(TOUCH_OF_WEAKNESS, 7, TBC_P5);
 
-		assertThat(ability.getId()).isEqualTo(25461);
+		assertId(ability, 25461);
 		assertThat(ability.getName()).isEqualTo("Touch of Weakness");
 
 		assertThat(ability.getEffectApplication()).isNotNull();
@@ -303,7 +303,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var triggeredSpell = effect.getEvents().getFirst().triggeredSpell();
 
 		assertThat(triggeredSpell).isNotNull();
-		assertThat(triggeredSpell.getId()).isEqualTo(110025461);
+		assertId(triggeredSpell, 110025461);
 		assertThat(triggeredSpell.getName()).isEqualTo("Touch of Weakness - triggered");
 
 		assertThat(triggeredSpell.getEffectApplication()).isNotNull();
@@ -360,7 +360,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertThat(spell.getId()).isEqualTo(100127683);
+		assertId(spell, 100127683);
 		assertThat(spell.getName()).isEqualTo("Quagmirran's Eye - proc #1 - triggered");
 		assertThat(spell.getTooltip()).isNull();
 
@@ -394,7 +394,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertThat(spell.getId()).isEqualTo(100228963);
+		assertId(spell, 100228963);
 		assertThat(spell.getName()).isEqualTo("Voidheart Raiment - P2 bonus - triggered");
 		assertThat(spell.getTooltip()).isNull();
 
@@ -431,7 +431,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertThat(spell.getId()).isEqualTo(101228963);
+		assertId(spell, 101228963);
 		assertThat(spell.getName()).isEqualTo("Voidheart Raiment - P2 bonus - triggered");
 		assertThat(spell.getTooltip()).isNull();
 
@@ -468,7 +468,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertThat(spell.getId()).isEqualTo(100128003);
+		assertId(spell, 100128003);
 		assertThat(spell.getName()).isEqualTo("Enchant Weapon - Spellsurge - proc #1 - triggered");
 		assertThat(spell.getTooltip()).isNull();
 
@@ -496,7 +496,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertThat(spell.getId()).isEqualTo(100125893);
+		assertId(spell, 100125893);
 		assertThat(spell.getName()).isEqualTo("Mystical Skyfire Diamond - proc #1 - triggered");
 		assertThat(spell.getTooltip()).isNull();
 
@@ -558,7 +558,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	}
 
 	private Spell getSpell(int spellId, PhaseId phaseId) {
-		return spellRepository.getSpell(spellId, phaseId).orElseThrow();
+		return spellRepository.getSpell(SpellId.of(spellId), phaseId).orElseThrow();
 	}
 
 	private Effect getEffect(int effectId, PhaseId phaseId) {

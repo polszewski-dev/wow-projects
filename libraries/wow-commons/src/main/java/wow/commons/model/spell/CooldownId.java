@@ -9,7 +9,7 @@ public sealed interface CooldownId permits GcdCooldownId, AbilityCooldownId, Spe
 		return AbilityCooldownId.of(abilityId);
 	}
 
-	static SpellCooldownId of(int spellId) {
+	static SpellCooldownId of(SpellId spellId) {
 		return SpellCooldownId.of(spellId);
 	}
 

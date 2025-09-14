@@ -104,7 +104,7 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		setValue(event.condition());
 		setValue(event.chance(), Percent._100);
 		setValue(event.actions());
-		setValue(event.triggeredSpell() != null ? event.triggeredSpell().getId() : null);
+		setValue(event.triggeredSpell() != null ? event.triggeredSpell().getId().value() : null);
 		setValue(event.actionParameters() != null ? event.actionParameters().value() : null);
 	}
 

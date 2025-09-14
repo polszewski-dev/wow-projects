@@ -27,7 +27,7 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 	}
 
 	protected void writeIdName(Spell spell) {
-		setValue(spell.getId());
+		setValue(spell.getId().value());
 		setValue(spell.getName());
 	}
 

@@ -9,6 +9,7 @@ import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.GameVersionMap;
@@ -136,29 +137,35 @@ public class ItemSpellRepositoryImpl implements ItemSpellRepository {
 
 	private void onSpellSpell(SpellImpl spell, int level, int index, Spell rootSpell) {
 		if (spell != rootSpell) {
-			spell.setId(getId(rootSpell.getId(), null, 0, level, index));
+			var spellId = getId(rootSpell.getId().value(), null, 0, level, index, SpellId::of);
+
+			spell.setId(spellId);
 			spell.setDescription(getDescription(rootSpell, level));
 			spell.setTimeRestriction(rootSpell.getTimeRestriction());
 		}
 	}
 
 	private void onSpellEffect(EffectImpl effect, int level, int index, Spell rootSpell) {
-		int effectId = getId(rootSpell.getId(), null, 0, level, index);
-		effect.setId(EffectId.of(effectId));
+		var effectId = getId(rootSpell.getId().value(), null, 0, level, index, EffectId::of);
+
+		effect.setId(effectId);
 		effect.setDescription(getDescription(rootSpell, level));
 		effect.setTimeRestriction(rootSpell.getTimeRestriction());
 	}
 
 	private void onEffectSpell(SpellImpl spell, int level, int index, Effect rootEffect) {
-		spell.setId(getId(rootEffect.getId().value(), null, 0, level, index));
+		var spellId = getId(rootEffect.getId().value(), null, 0, level, index, SpellId::of);
+
+		spell.setId(spellId);
 		spell.setDescription(getDescription(rootEffect, level));
 		spell.setTimeRestriction(rootEffect.getTimeRestriction());
 	}
 
 	private void onEffectEffect(EffectImpl effect, int level, int index, Effect rootEffect) {
 		if (effect != rootEffect) {
-			int effectId = getId(rootEffect.getId().value(), null, 0, level, index);
-			effect.setId(EffectId.of(effectId));
+			var effectId = getId(rootEffect.getId().value(), null, 0, level, index, EffectId::of);
+
+			effect.setId(effectId);
 			effect.setDescription(getDescription(rootEffect, level));
 			effect.setTimeRestriction(rootEffect.getTimeRestriction());
 		}

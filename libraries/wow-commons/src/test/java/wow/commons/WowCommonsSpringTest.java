@@ -116,4 +116,8 @@ public abstract class WowCommonsSpringTest {
 	protected static void assertId(Effect effect, int id) {
 		assertThat(effect.getId().value()).isEqualTo(id);
 	}
+
+	protected static void assertId(Spell spell, int id) {
+		assertThat(spell.getId().value()).isEqualTo(id);
+	}
 }

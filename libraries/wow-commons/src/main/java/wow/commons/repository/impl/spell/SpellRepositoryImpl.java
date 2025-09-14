@@ -8,10 +8,7 @@ import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.AbilityIdAndRank;
-import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.*;
 import wow.commons.repository.impl.parser.spell.SpellExcelParser;
 import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.GameVersionMap;
@@ -33,7 +30,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
 public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();
 	private final PhaseMap<AbilityIdAndRank, Ability> abilitiesByRankedId = new PhaseMap<>();
-	private final PhaseMap<Integer, Spell> spellsById = new PhaseMap<>();
+	private final PhaseMap<SpellId, Spell> spellsById = new PhaseMap<>();
 	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
 	private final GameVersionMap<RaceId, List<RacialEffect>> racialEffects = new GameVersionMap<>();
 
@@ -56,7 +53,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 	}
 
 	@Override
-	public Optional<Spell> getSpell(int spellId, PhaseId phaseId) {
+	public Optional<Spell> getSpell(SpellId spellId, PhaseId phaseId) {
 		return spellsById.getOptional(phaseId, spellId);
 	}
 

@@ -88,7 +88,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	}
 
 	protected void initSpell(SpellImpl spell) {
-		var spellId = colId.getInteger();
+		var spellId = colId.getInteger(SpellId::of);
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
@@ -300,7 +300,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var condition = colEventCondition.prefixed(prefix).getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
 		var chance = colEventChance.prefixed(prefix).getPercent(Percent._100);
 		var actions = colEventAction.prefixed(prefix).getList(EventAction::parse);
-		var triggeredSpellId = colEventTriggeredSpell.prefixed(prefix).getNullableInteger();
+		var triggeredSpellId = colEventTriggeredSpell.prefixed(prefix).getNullableInteger(SpellId::ofNullable);
 		var actionParams = colEventActionParams.prefixed(prefix).getEnum(EventActionParameters::parse, EventActionParameters.EMPTY);
 
 		var dummy = getDummySpell(triggeredSpellId);
@@ -308,7 +308,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return new Event(types, condition, chance, actions, dummy, actionParams);
 	}
 
-	protected SpellImpl getDummySpell(Integer spellId) {
+	protected SpellImpl getDummySpell(SpellId spellId) {
 		if (spellId == null) {
 			return null;
 		}

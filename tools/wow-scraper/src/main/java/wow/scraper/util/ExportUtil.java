@@ -3,6 +3,8 @@ package wow.scraper.util;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
 
+import java.util.function.IntFunction;
+
 /**
  * User: POlszewski
  * Date: 2023-10-07
@@ -26,12 +28,14 @@ public final class ExportUtil {
 		ITEM_SET
 	}
 
-	public static int getId(int baseId, SourceType sourceType, int effectIdx, int level, int index) {
+	public static <T> T getId(int baseId, SourceType sourceType, int effectIdx, int level, int index, IntFunction<T> mapper) {
 		int typeOffset = getTypeOffset(sourceType);
 		int effectIdxOffset = effectIdx * 1_000_000;
 		int indexOffset = index * 10_000_000;
 		int levelOffset = level * 100_000_000;
-		return baseId + typeOffset + effectIdxOffset + indexOffset + levelOffset;
+		int id = baseId + typeOffset + effectIdxOffset + indexOffset + levelOffset;
+
+		return mapper.apply(id);
 	}
 
 	private static int getTypeOffset(SourceType sourceType) {

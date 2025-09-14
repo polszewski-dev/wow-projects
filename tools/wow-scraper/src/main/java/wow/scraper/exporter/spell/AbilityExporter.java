@@ -104,7 +104,7 @@ public class AbilityExporter extends MultiPageSpellBaseExporter {
 	}
 
 	private void fillAbility(ClassAbilityImpl ability, AbilityTooltipParser parser) {
-		ability.setId(parser.getSpellId());
+		ability.setId(SpellId.of(parser.getSpellId()));
 		ability.setDescription(parser.getSpellDescription());
 		ability.setTimeRestriction(parser.getTimeRestriction());
 		ability.setCastInfo(getCastInfo(parser.getCastInfo(), ability.getCastInfo()));
@@ -118,14 +118,17 @@ public class AbilityExporter extends MultiPageSpellBaseExporter {
 	}
 
 	private void fillTriggeredSpell(SpellImpl spell, int level, int index, Ability ability) {
-		spell.setId(getId(ability.getId(), null, 0, level, index));
+		var spellId = getId(ability.getId().value(), null, 0, level, index, SpellId::of);
+
+		spell.setId(spellId);
 		spell.setDescription(getDescription(ability, level));
 		spell.setTimeRestriction(ability.getTimeRestriction());
 	}
 
 	private void fillEffectInfo(EffectImpl effect, int level, int index, Ability ability) {
-		int effectId = getId(ability.getId(), null, 0, level, index);
-		effect.setId(EffectId.of(effectId));
+		var effectId = getId(ability.getId().value(), null, 0, level, index, EffectId::of);
+
+		effect.setId(effectId);
 		effect.setDescription(getDescription(ability, level));
 		effect.setTimeRestriction(ability.getTimeRestriction());
 	}

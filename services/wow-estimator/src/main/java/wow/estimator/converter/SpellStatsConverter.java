@@ -16,7 +16,7 @@ public class SpellStatsConverter implements Converter<SpellStats, SpellStatsDTO>
 	@Override
 	public SpellStatsDTO doConvert(SpellStats source) {
 		return new SpellStatsDTO(
-				source.getAbility().getId(),
+				source.getAbility().getId().value(),
 				source.getTotalDamage(),
 				source.getDps(),
 				source.getCastTime().getSeconds(),

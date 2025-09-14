@@ -2,6 +2,7 @@ package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +62,7 @@ class QuagmirransEyeTest extends WarlockSpellSimulationTest {
 		assertThat(hasteAfter).isEqualTo(hasteBefore + 320);
 	}
 
-	CooldownId cooldownId = CooldownId.of(100127683);
+	CooldownId cooldownId = CooldownId.of(SpellId.of(100127683));
 
 	@Override
 	protected void afterSetUp() {

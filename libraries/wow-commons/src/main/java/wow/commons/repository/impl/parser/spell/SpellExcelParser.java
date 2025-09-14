@@ -14,6 +14,7 @@ import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.CollectionUtil;
@@ -40,7 +41,7 @@ public class SpellExcelParser extends ExcelParser {
 	@Value("${spells.xls.file.path}")
 	private final String xlsFilePath;
 
-	private final PhaseMap<Integer, Spell> spellsById = new PhaseMap<>();
+	private final PhaseMap<SpellId, Spell> spellsById = new PhaseMap<>();
 	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
 
 	@Override

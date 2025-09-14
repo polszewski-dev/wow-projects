@@ -8,6 +8,7 @@ import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.ActivatedAbility;
+import wow.commons.model.spell.SpellId;
 import wow.commons.model.spell.impl.ActivatedAbilityImpl;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.parser.ParsedMultipleValues;
@@ -113,16 +114,18 @@ public class ItemEffectParser extends AbstractTooltipParser<JsonCommonDetails> {
 			throw new IllegalStateException();
 		}
 		var effectIdx = getEffectIdx();
-		var spellId = getId(details.getId(), SourceType.ITEM, effectIdx, 0, 0);
+		var spellId = getId(details.getId(), SourceType.ITEM, effectIdx, 0, 0, SpellId::of);
 		var spellName = details.getName();
+
 		initSpell(activatedAbility, spellId, spellName, line);
 		this.activatedAbility = activatedAbility;
 	}
 
 	private void addEffect(EffectImpl effect, String line) {
 		var effectIdx = getEffectIdx();
-		var effectId = getId(details.getId(), SourceType.ITEM, effectIdx, 0, 0);
+		var effectId = getId(details.getId(), SourceType.ITEM, effectIdx, 0, 0, EffectId::of);
 		var effectName = "%s - proc #%s".formatted(details.getName(), effects.size() + 1);
+
 		initEffect(effect, effectId, effectName, line);
 		this.effects.add(effect);
 	}
@@ -154,20 +157,21 @@ public class ItemEffectParser extends AbstractTooltipParser<JsonCommonDetails> {
 
 	private void addSetBonusEffect(EffectImpl effect, int numPieces, String line) {
 		var effectIdx = itemSetBonusEffects.size();
-		var effectId = getId(details.getId(), SourceType.ITEM_SET, effectIdx, 0, 0);
+		var effectId = getId(details.getId(), SourceType.ITEM_SET, effectIdx, 0, 0, EffectId::of);
 		var effectName = "%s - P%s bonus".formatted(itemSetName, numPieces);
+
 		initEffect(effect, effectId, effectName, line);
 		this.itemSetBonusEffects.add(effect);
 	}
 
-	private void initSpell(SpellImpl spell, int spellId, String spellName, String line) {
+	private void initSpell(SpellImpl spell, SpellId spellId, String spellName, String line) {
 		spell.setId(spellId);
 		spell.setDescription(getDescription(spellName, line));
 		spell.setTimeRestriction(getTimeRestriction());
 	}
 
-	private void initEffect(EffectImpl effect, int effectId, String effectName, String line) {
-		effect.setId(EffectId.of(effectId));
+	private void initEffect(EffectImpl effect, EffectId effectId, String effectName, String line) {
+		effect.setId(effectId);
 		effect.setDescription(getDescription(effectName, line));
 		effect.setTimeRestriction(getTimeRestriction());
 	}

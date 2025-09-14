@@ -16,7 +16,7 @@ public class AbilityStatsConverter implements Converter<AbilityStats, AbilitySta
 	@Override
 	public AbilityStatsDTO doConvert(AbilityStats source) {
 		return new AbilityStatsDTO(
-				source.getAbility().getId(),
+				source.getAbility().getId().value(),
 				source.getTotalCastTime().getSeconds(),
 				source.getNumCasts(),
 				source.getNumHit(),

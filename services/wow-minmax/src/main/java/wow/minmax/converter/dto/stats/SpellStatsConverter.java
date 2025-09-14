@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.SpellId;
 import wow.commons.repository.spell.SpellRepository;
 import wow.minmax.client.dto.stats.SpellStatsDTO;
 import wow.minmax.converter.dto.AbilityConverter;
@@ -21,7 +22,8 @@ public class SpellStatsConverter implements ParametrizedConverter<wow.estimator.
 
 	@Override
 	public SpellStatsDTO doConvert(wow.estimator.client.dto.stats.SpellStatsDTO source, PhaseId phaseId) {
-		var ability = (Ability) spellRepository.getSpell(source.spellId(), phaseId).orElseThrow();
+		var spellId = SpellId.of(source.spellId());
+		var ability = (Ability) spellRepository.getSpell(spellId, phaseId).orElseThrow();
 
 		return new SpellStatsDTO(
 				abilityConverter.convert(ability),

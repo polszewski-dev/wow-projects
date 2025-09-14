@@ -2,6 +2,7 @@ package wow.simulator.simulation.spell.proc;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.CooldownId;
+import wow.commons.model.spell.SpellId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
@@ -65,7 +66,7 @@ class MarkOfDefianceTest extends WarlockSpellSimulationTest {
 		);
 	}
 
-	CooldownId cooldownId = CooldownId.of(100127922);
+	CooldownId cooldownId = CooldownId.of(SpellId.of(100127922));
 
 	@Override
 	protected void afterSetUp() {
