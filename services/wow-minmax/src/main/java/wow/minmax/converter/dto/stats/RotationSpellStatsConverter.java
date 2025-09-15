@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.SpellId;
 import wow.commons.repository.spell.SpellRepository;
 import wow.minmax.client.dto.stats.RotationSpellStatsDTO;
@@ -23,7 +22,7 @@ public class RotationSpellStatsConverter implements ParametrizedConverter<wow.es
 	@Override
 	public RotationSpellStatsDTO doConvert(wow.estimator.client.dto.stats.RotationSpellStatsDTO source, PhaseId phaseId) {
 		var spellId = SpellId.of(source.spellId());
-		var ability = (Ability) spellRepository.getSpell(spellId, phaseId).orElseThrow();
+		var ability = spellRepository.getAbility(spellId, phaseId).orElseThrow();
 
 		return new RotationSpellStatsDTO(
 				abilityConverter.convert(ability),

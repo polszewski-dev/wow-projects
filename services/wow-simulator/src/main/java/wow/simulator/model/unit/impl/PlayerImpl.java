@@ -62,7 +62,7 @@ public class PlayerImpl extends UnitImpl implements Player {
 	}
 
 	private Ability replaceShoot(Ability ability) {
-		if (ability.getAbilityId() != SHOOT) {
+		if (!ability.getAbilityId().equals(SHOOT)) {
 			return ability;
 		}
 

@@ -10,7 +10,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemRarity.*;
-import static wow.commons.model.spell.AbilityId.*;
+import static wow.minmax.constant.AbilityIds.*;
 import static wow.minmax.model.config.CharacterFeature.*;
 
 /**

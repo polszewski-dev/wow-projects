@@ -32,7 +32,7 @@ public class SpellPatternExcelParser extends ExcelParser {
 	@Value("${spell.parsers.xls.file.path}")
 	private final String xlsFilePath;
 
-	private final Map<AbilityId, List<AbilityPattern>> spellPatterns = new EnumMap<>(AbilityId.class);
+	private final Map<AbilityId, List<AbilityPattern>> spellPatterns = new HashMap<>();
 	private final List<ActivatedAbilityPattern> activatedAbilityPatterns = new ArrayList<>();
 	private final List<ProcPattern> procPatterns = new ArrayList<>();
 	private final List<MiscEffectPattern> miscEffectPatterns = new ArrayList<>();

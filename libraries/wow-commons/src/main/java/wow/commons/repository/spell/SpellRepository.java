@@ -24,6 +24,10 @@ public interface SpellRepository {
 
 	Optional<Ability> getAbility(AbilityId abilityId, int rank, PhaseId phaseId);
 
+	Optional<Ability> getAbility(String name, int rank, PhaseId phaseId);
+
+	Optional<Ability> getAbility(SpellId spellId, PhaseId phaseId);
+
 	Optional<Spell> getSpell(SpellId spellId, PhaseId phaseId);
 
 	Optional<Effect> getEffect(EffectId effectId, PhaseId phaseId);

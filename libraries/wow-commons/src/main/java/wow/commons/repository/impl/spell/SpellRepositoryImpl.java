@@ -53,6 +53,18 @@ public class SpellRepositoryImpl implements SpellRepository {
 	}
 
 	@Override
+	public Optional<Ability> getAbility(String name, int rank, PhaseId phaseId) {
+		var nameRank = new AbilityIdAndRank(AbilityId.of(name), rank);
+
+		return abilitiesByRankedId.getOptional(phaseId, nameRank);
+	}
+
+	@Override
+	public Optional<Ability> getAbility(SpellId spellId, PhaseId phaseId) {
+		return getSpell(spellId, phaseId).map(spell -> (Ability) spell);
+	}
+
+	@Override
 	public Optional<Spell> getSpell(SpellId spellId, PhaseId phaseId) {
 		return spellsById.getOptional(phaseId, spellId);
 	}

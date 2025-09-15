@@ -1,4 +1,4 @@
-package wow.simulator.script.warlock;
+package wow.simulator.script;
 
 import lombok.RequiredArgsConstructor;
 import wow.character.model.equipment.EquippableItem;
@@ -6,13 +6,14 @@ import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Player;
-import wow.simulator.script.AIScript;
-import wow.simulator.script.ConditionalSpellCast;
+import wow.simulator.script.priest.PriestActionConditions;
+import wow.simulator.script.warlock.WarlockActionConditions;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-import static wow.commons.model.spell.AbilityId.*;
+import static wow.simulator.script.CommonAbilityIds.*;
+import static wow.simulator.script.warlock.WarlockAbilityIds.LIFE_TAP;
 
 /**
  * User: POlszewski

@@ -208,7 +208,7 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 		for (var item : itemsBySlot.values()) {
 			var ability = item.getItem().getActivatedAbility();
 
-			if (ability != null && ability.getAbilityId() == abilityId) {
+			if (ability != null && ability.getAbilityId().equals(abilityId)) {
 				return Optional.of(ability);
 			}
 		}

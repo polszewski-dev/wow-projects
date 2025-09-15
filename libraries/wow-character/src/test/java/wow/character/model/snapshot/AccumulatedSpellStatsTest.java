@@ -10,7 +10,6 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellId;
 
 import java.util.List;
@@ -20,6 +19,7 @@ import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -160,7 +160,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@BeforeEach
 	void setUp() {
 		var caster = getCharacter();
-		var spell = caster.getAbility(AbilityId.SHADOW_BOLT).orElseThrow();
+		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
 		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
 
 		this.spellStats = new AccumulatedSpellStats(conditionArgs);

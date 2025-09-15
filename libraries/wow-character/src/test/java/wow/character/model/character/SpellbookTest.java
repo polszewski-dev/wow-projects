@@ -7,7 +7,7 @@ import wow.character.WowCharacterSpringTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -56,7 +56,7 @@ class SpellbookTest extends WowCharacterSpringTest {
 	void getAbility() {
 		var spell = spellbook.getAbility(SHADOW_BOLT).orElseThrow();
 
-		assertThat(spell.getAbilityId()).isEqualTo(SHADOW_BOLT);
+		assertThat(spell.getName()).isEqualTo(SHADOW_BOLT);
 		assertThat(spell.getRank()).isEqualTo(11);
 	}
 
@@ -64,7 +64,7 @@ class SpellbookTest extends WowCharacterSpringTest {
 	void getAbilityByRank() {
 		var spell = spellbook.getAbility(SHADOW_BOLT, 1).orElseThrow();
 
-		assertThat(spell.getAbilityId()).isEqualTo(SHADOW_BOLT);
+		assertThat(spell.getName()).isEqualTo(SHADOW_BOLT);
 		assertThat(spell.getRank()).isEqualTo(1);
 	}
 

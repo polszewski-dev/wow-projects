@@ -120,7 +120,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		}
 
 		var phaseId = getTimeRestriction().earliestPhaseId();
-		var activatedAbility = (ActivatedAbilityImpl) spellRepository.getSpell(spellId, phaseId).orElseThrow();
+		var activatedAbility = (ActivatedAbilityImpl) spellRepository.getAbility(spellId, phaseId).orElseThrow();
 
 		activatedAbility.attachSource(source);
 

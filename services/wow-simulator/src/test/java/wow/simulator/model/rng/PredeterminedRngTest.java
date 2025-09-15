@@ -11,7 +11,7 @@ import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.WowSimulatorSpringTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski

@@ -10,8 +10,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.spell.AbilityId.BATTLE_SHOUT;
-import static wow.commons.model.spell.AbilityId.LIGHTNING_SHIELD;
+import static wow.scraper.constant.AbilityIds.BATTLE_SHOUT;
+import static wow.scraper.constant.AbilityIds.LIGHTNING_SHIELD;
 
 /**
  * User: POlszewski

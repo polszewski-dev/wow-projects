@@ -374,10 +374,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertEnablingTalentTeachesAbility(String talentName, String abilityName) {
-		var abilityId = AbilityId.parse(abilityName);
-		assertThat(player.getAbility(abilityId)).isEmpty();
+		assertThat(player.getAbility(abilityName)).isEmpty();
 		enableTalent(talentName, 1);
-		assertThat(player.getAbility(abilityId)).isPresent();
+		assertThat(player.getAbility(abilityName)).isPresent();
 	}
 
 	protected void assertIsIncreasedByPct(int newValue, int originalValue, int pct) {

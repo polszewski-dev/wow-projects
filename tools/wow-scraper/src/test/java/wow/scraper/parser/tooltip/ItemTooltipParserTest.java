@@ -11,7 +11,6 @@ import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.spell.AbilityId;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
 
@@ -28,6 +27,8 @@ import static wow.commons.model.item.SocketType.*;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.scraper.constant.AbilityIds.INCINERATE;
+import static wow.scraper.constant.AbilityIds.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -134,8 +135,8 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 				itemSetBonuses.get(1).bonusEffect(),
 				Attributes.of(
 						 Attribute.of(DAMAGE_PCT, 6, ConditionOperator.comma(
-								 AttributeCondition.of(AbilityId.SHADOW_BOLT),
-								 AttributeCondition.of(AbilityId.INCINERATE)
+								 AttributeCondition.of(SHADOW_BOLT),
+								 AttributeCondition.of(INCINERATE)
 						 ))
 				 ),
 				"Increases the damage dealt by your Shadow Bolt and Incinerate abilities by 6%."

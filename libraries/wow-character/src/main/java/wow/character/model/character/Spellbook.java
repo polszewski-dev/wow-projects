@@ -15,7 +15,7 @@ import java.util.*;
 @AllArgsConstructor
 @Getter
 public class Spellbook implements Copyable<Spellbook> {
-	private final Map<AbilityId, List<Ability>> abilityById = new EnumMap<>(AbilityId.class);
+	private final Map<AbilityId, List<Ability>> abilityById = new HashMap<>();
 
 	@Override
 	public Spellbook copy() {
@@ -52,5 +52,13 @@ public class Spellbook implements Copyable<Spellbook> {
 		return abilityById.getOrDefault(abilityId, List.of()).stream()
 				.filter(x -> x.getRank() == rank)
 				.findAny();
+	}
+
+	public Optional<Ability> getAbility(String abilityName) {
+		return getAbility(AbilityId.of(abilityName));
+	}
+
+	public Optional<Ability> getAbility(String abilityName, int rank) {
+		return getAbility(AbilityId.of(abilityName), rank);
 	}
 }

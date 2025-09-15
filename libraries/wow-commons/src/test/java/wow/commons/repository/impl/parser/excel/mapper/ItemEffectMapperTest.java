@@ -11,10 +11,10 @@ import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.spell.SpellRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.constant.AbilityIds.FLAMESTRIKE;
 import static wow.commons.model.attribute.AttributeId.*;
 
 /**
@@ -30,7 +30,7 @@ class ItemEffectMapperTest extends WowCommonsSpringTest {
 		var attributes = Attributes.of(
 				Attribute.of(POWER, 10, MiscCondition.SPELL),
 				Attribute.of(CRIT_RATING, 20, MiscCondition.SPELL),
-				Attribute.of(CAST_TIME, -0.25, AttributeCondition.of(AbilityId.FLAMESTRIKE))
+				Attribute.of(CAST_TIME, -0.25, AttributeCondition.of(FLAMESTRIKE))
 		);
 		var original = EffectImpl.newAttributeEffect(attributes);
 		var serialized = itemEffectMapper.toString(original);

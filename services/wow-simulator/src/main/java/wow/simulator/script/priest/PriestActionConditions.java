@@ -1,4 +1,4 @@
-package wow.simulator.script.warlock;
+package wow.simulator.script.priest;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +8,9 @@ import wow.simulator.script.ConditionalSpellCast;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static wow.commons.model.spell.AbilityId.*;
+import static wow.commons.model.spell.AbilityId.SHOOT;
 import static wow.simulator.script.ConditionalSpellCast.of;
+import static wow.simulator.script.priest.PriestAbilityIds.*;
 
 /**
  * User: POlszewski
@@ -33,7 +34,7 @@ public enum PriestActionConditions {
 	public static Optional<ConditionalSpellCast> forAbility(AbilityId abilityId) {
 		return Stream.of(values())
 				.map(x -> x.cast)
-				.filter(x -> x.abilityId() == abilityId)
+				.filter(x -> x.abilityId().equals(abilityId))
 				.findAny();
 	}
 }

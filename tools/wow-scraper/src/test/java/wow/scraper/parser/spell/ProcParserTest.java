@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.POWER;
 import static wow.commons.model.effect.component.ComponentType.MANA_GAIN;
 import static wow.commons.model.effect.component.EventType.*;
-import static wow.commons.model.spell.AbilityId.*;
+import static wow.scraper.constant.AbilityIds.*;
 
 /**
  * User: POlszewski
@@ -31,7 +31,7 @@ class ProcParserTest extends SpellParserTest {
 
 		assertThat(effect.getEvents()).hasSize(1);
 
-		var procTrigger = effect.getEvents().get(0);
+		var procTrigger = effect.getEvents().getFirst();
 
 		assertEvent(
 				procTrigger,
@@ -131,8 +131,8 @@ class ProcParserTest extends SpellParserTest {
 				Duration.ZERO
 		);
 
-		var direct1 = procTrigger1.triggeredSpell().getDirectComponents().get(0);
-		var direct2 = procTrigger2.triggeredSpell().getDirectComponents().get(0);
+		var direct1 = procTrigger1.triggeredSpell().getDirectComponents().getFirst();
+		var direct2 = procTrigger2.triggeredSpell().getDirectComponents().getFirst();
 
 		assertDirectComponent(direct1, MANA_GAIN, 0, null, 170, 170);
 		assertDirectComponent(direct2, MANA_GAIN, 0, null, 170, 170);

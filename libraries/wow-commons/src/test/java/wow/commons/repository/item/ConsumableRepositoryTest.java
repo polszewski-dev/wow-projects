@@ -14,7 +14,7 @@ import wow.commons.model.spell.GroupCooldownId;
 import wow.commons.model.spell.SpellTarget;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.AbilityId.DESTRUCTION_POTION;
+import static wow.commons.constant.AbilityIds.DESTRUCTION_POTION;
 
 /**
  * User: POlszewski

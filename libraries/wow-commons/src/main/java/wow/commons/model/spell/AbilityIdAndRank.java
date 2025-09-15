@@ -14,8 +14,8 @@ public record AbilityIdAndRank(AbilityId abilityId, int rank) {
 	@Override
 	public String toString() {
 		if (rank == 0) {
-			return abilityId.getName();
+			return abilityId.name();
 		}
-		return String.format("%s (Rank %s)", abilityId.getName(), rank);
+		return String.format("%s (Rank %s)", abilityId.name(), rank);
 	}
 }

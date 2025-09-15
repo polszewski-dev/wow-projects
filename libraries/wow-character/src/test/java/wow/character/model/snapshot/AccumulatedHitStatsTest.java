@@ -7,13 +7,13 @@ import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.condition.MiscCondition;
-import wow.commons.model.spell.AbilityId;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.HIT_PCT;
 import static wow.commons.model.attribute.AttributeId.HIT_RATING;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -59,7 +59,7 @@ class AccumulatedHitStatsTest extends WowCharacterSpringTest {
 	@BeforeEach
 	void setUp() {
 		var caster = getCharacter();
-		var spell = caster.getAbility(AbilityId.SHADOW_BOLT).orElseThrow();
+		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
 		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
 
 		this.hitStats = new AccumulatedHitStats(conditionArgs);

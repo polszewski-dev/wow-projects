@@ -15,13 +15,14 @@ import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.talent.Talent;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.constant.AbilityIds.DIVINE_SPIRIT;
+import static wow.commons.constant.AbilityIds.*;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
@@ -29,7 +30,6 @@ import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.SPELL_CRIT;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentTree.AFFLICTION;
 import static wow.test.commons.TalentNames.*;
@@ -147,7 +147,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var talent = getTalent(PRIEST, IMPROVED_DIVINE_SPIRIT, 2, TBC_P5);
 		var effect = talent.getEffect();
 
-		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(AbilityId.DIVINE_SPIRIT, PRAYER_OF_SPIRIT));
+		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(DIVINE_SPIRIT, PRAYER_OF_SPIRIT));
 		assertStatConversion(effect, 0, SPIRIT, POWER, 10, MiscCondition.SPELL);
 	}
 

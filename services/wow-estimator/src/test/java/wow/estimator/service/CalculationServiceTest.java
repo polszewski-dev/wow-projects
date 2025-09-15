@@ -14,10 +14,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.buff.BuffCategory.SELF_BUFF;
-import static wow.commons.model.spell.AbilityId.CURSE_OF_DOOM;
-import static wow.commons.model.spell.AbilityId.SHADOW_BOLT;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
+import static wow.estimator.constant.AbilityIds.CURSE_OF_DOOM;
+import static wow.estimator.constant.AbilityIds.SHADOW_BOLT;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**

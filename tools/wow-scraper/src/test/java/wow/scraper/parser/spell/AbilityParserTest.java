@@ -18,9 +18,9 @@ import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.OWNER_ATTACKED;
 import static wow.commons.model.effect.component.EventType.SPELL_DAMAGE;
-import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
+import static wow.scraper.constant.AbilityIds.*;
 
 /**
  * User: POlszewski

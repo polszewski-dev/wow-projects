@@ -147,7 +147,7 @@ public class SpecialAbilitySolver {
 	}
 
 	private boolean solveImprovedShadowBoltProc(int rank, Snapshot snapshot, AccumulatedDamagingAbilityStats abilityStats) {
-		if (snapshot.getAbility().getAbilityId() != AbilityId.SHADOW_BOLT) {
+		if (!snapshot.getAbility().getAbilityId().equals(SHADOW_BOLT)) {
 			return false;
 		}
 
@@ -162,6 +162,8 @@ public class SpecialAbilitySolver {
 
 		return true;
 	}
+
+	private static final AbilityId SHADOW_BOLT = AbilityId.of("Shadow Bolt");
 
 	private double getExtraCritCoeff(int rank, double critPct) {
 		var c = critPct / 100;

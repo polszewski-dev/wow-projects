@@ -73,6 +73,14 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return getSpellbook().getAbility(abilityId, rank);
 	}
 
+	default Optional<Ability> getAbility(String abilityName) {
+		return getSpellbook().getAbility(abilityName);
+	}
+
+	default Optional<Ability> getAbility(String abilityName, int rank) {
+		return getSpellbook().getAbility(abilityName, rank);
+	}
+
 	@Override
 	default boolean hasAbility(AbilityId abilityId) {
 		return getAbility(abilityId).isPresent();

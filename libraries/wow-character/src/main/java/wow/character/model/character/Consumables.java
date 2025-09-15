@@ -26,7 +26,7 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 	public Optional<ActivatedAbility> getAbility(AbilityId abilityId) {
 		return enabledConsumables.values().stream()
 				.map(Consumable::getActivatedAbility)
-				.filter(x -> x.getAbilityId() == abilityId)
+				.filter(x -> x.getAbilityId().equals(abilityId))
 				.findAny();
 	}
 

@@ -19,7 +19,7 @@ public final class AttributeConditionChecker {
 					a.getCategory() == c.abilityCategory();
 			case AbilityIdCondition c ->
 					args.getSpell() instanceof Ability a &&
-					a.getAbilityId() == c.abilityId();
+					a.getAbilityId().equals(c.abilityId());
 			case ConditionOperator c ->
 					checkConditionOperator(c, args);
 			case DruidFormCondition c ->
@@ -39,7 +39,7 @@ public final class AttributeConditionChecker {
 			case OwnerIsChannelingCondition c ->
 					args.getSpell() instanceof Ability a &&
 					a.isChanneled() &&
-					a.getAbilityId() == c.abilityId();
+					a.getAbilityId().equals(c.abilityId());
 			case PetTypeCondition c ->
 					args.getCaster().getActivePetType() == c.petType();
 			case ProfessionCondition c ->

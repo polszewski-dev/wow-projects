@@ -1,8 +1,8 @@
 package wow.commons.model.attribute.condition;
 
 import wow.commons.model.spell.AbilityId;
-import wow.commons.util.EnumUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,7 +16,10 @@ public record AbilityIdCondition(AbilityId abilityId) implements AttributeCondit
 	}
 
 	public static AbilityIdCondition of(AbilityId abilityId) {
-		return CACHE.get(abilityId);
+		return CACHE.computeIfAbsent(
+				abilityId,
+				AbilityIdCondition::new
+		);
 	}
 
 	@Override
@@ -24,6 +27,5 @@ public record AbilityIdCondition(AbilityId abilityId) implements AttributeCondit
 		return abilityId.toString();
 	}
 
-	private static final Map<AbilityId, AbilityIdCondition> CACHE = EnumUtil.cache(
-			AbilityId.class, AbilityId.values(), AbilityIdCondition::new);
+	private static final Map<AbilityId, AbilityIdCondition> CACHE = new HashMap<>();
 }

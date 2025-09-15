@@ -30,7 +30,7 @@ import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.profession.ProfessionSpecializationId.SPELLFIRE_TAILORING;
-import static wow.commons.model.spell.AbilityId.*;
+import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TalentNames.IMPROVED_LIFE_TAP;
 import static wow.test.commons.TestConstants.PRECISION;
 

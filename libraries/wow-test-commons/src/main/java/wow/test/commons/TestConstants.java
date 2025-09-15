@@ -12,4 +12,6 @@ public interface TestConstants {
 	Comparator<Double> ROUNDED_DOWN = Comparator.comparingDouble(Double::intValue);
 
 	Offset<Double> PRECISION = Offset.offset(0.01);
+
+	void doNotImplementThis();
 }

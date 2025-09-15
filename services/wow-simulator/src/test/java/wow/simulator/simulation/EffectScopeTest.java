@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.simulator.simulation.EffectScopeTest.ExpectedResult.FIRST_REMOVED;
 
 /**
  * User: POlszewski
@@ -26,19 +25,19 @@ import static wow.simulator.simulation.EffectScopeTest.ExpectedResult.FIRST_REMO
 class EffectScopeTest extends WowSimulatorSpringTest {
 	@ParameterizedTest(name = "[{index}] {0}.{1} & {2}.{3} => {4}")
 	@CsvSource({
-			"Player, CURSE_OF_AGONY,        Player,        CURSE_OF_AGONY,        FIRST_REMOVED", // the same abilities
-			"Player, CURSE_OF_AGONY,        Player,        CURSE_OF_DOOM,         FIRST_REMOVED", // personal -> personal
-			"Player, CURSE_OF_AGONY,        Player,        CURSE_OF_THE_ELEMENTS, FIRST_REMOVED", // personal -> global
-			"Player, CURSE_OF_THE_ELEMENTS, Player,        CURSE_OF_AGONY,        FIRST_REMOVED", // global -> personal
-			"Player, CURSE_OF_WEAKNESS,     Player,        CURSE_OF_THE_ELEMENTS, FIRST_REMOVED", // global -> global
+			"Player, Curse of Agony,        Player,        Curse of Agony,        FIRST_REMOVED", // the same abilities
+			"Player, Curse of Agony,        Player,        Curse of Doom,         FIRST_REMOVED", // personal -> personal
+			"Player, Curse of Agony,        Player,        Curse of the Elements, FIRST_REMOVED", // personal -> global
+			"Player, Curse of the Elements, Player,        Curse of Agony,        FIRST_REMOVED", // global -> personal
+			"Player, Curse of Weakness,     Player,        Curse of the Elements, FIRST_REMOVED", // global -> global
 
-			"Player, CURSE_OF_AGONY,        AnotherPlayer, CURSE_OF_DOOM,         NONE_REMOVED", // personal -> personal
-			"Player, CURSE_OF_AGONY,        AnotherPlayer, CURSE_OF_THE_ELEMENTS, NONE_REMOVED", // personal -> global
-			"Player, CURSE_OF_THE_ELEMENTS, AnotherPlayer, CURSE_OF_AGONY,        NONE_REMOVED", // global -> personal
-			"Player, CURSE_OF_WEAKNESS,     AnotherPlayer, CURSE_OF_THE_ELEMENTS, NONE_REMOVED", // global -> global
+			"Player, Curse of Agony,        AnotherPlayer, Curse of Doom,         NONE_REMOVED", // personal -> personal
+			"Player, Curse of Agony,        AnotherPlayer, Curse of the Elements, NONE_REMOVED", // personal -> global
+			"Player, Curse of the Elements, AnotherPlayer, Curse of Agony,        NONE_REMOVED", // global -> personal
+			"Player, Curse of Weakness,     AnotherPlayer, Curse of the Elements, NONE_REMOVED", // global -> global
 
-			"Player, CURSE_OF_AGONY,        AnotherPlayer, CURSE_OF_AGONY,        NONE_REMOVED", // the same abilities (personal -> personal)
-			"Player, CURSE_OF_THE_ELEMENTS, AnotherPlayer, CURSE_OF_THE_ELEMENTS, FIRST_REMOVED", // the same abilities (global -> global)
+			"Player, Curse of Agony,        AnotherPlayer, Curse of Agony,        NONE_REMOVED", // the same abilities (personal -> personal)
+			"Player, Curse of the Elements, AnotherPlayer, Curse of the Elements, FIRST_REMOVED", // the same abilities (global -> global)
 	})
 	void test(String firstPlayerName, AbilityId firstAbilityId, String secondPlayerName, AbilityId secondAbilityId, ExpectedResult expectedResult) {
 		var firstPlayer = getPlayer(firstPlayerName);
@@ -49,17 +48,22 @@ class EffectScopeTest extends WowSimulatorSpringTest {
 
 		updateUntil(600);
 
-		if (expectedResult == FIRST_REMOVED) {
-			assertThat(effectEvents).isEqualTo(List.of(
-				new Removed(firstPlayerName, firstAbilityId),
-				new Expired(secondPlayerName, secondAbilityId)
-			));
-		} else {
-			// effects can expire at different time
-			assertThat(effectEvents).hasSameElementsAs(List.of(
-					new Expired(firstPlayerName, firstAbilityId),
-					new Expired(secondPlayerName, secondAbilityId)
-			));
+		switch (expectedResult) {
+			case FIRST_REMOVED ->
+
+				assertThat(effectEvents).isEqualTo(List.of(
+						new Removed(firstPlayerName, firstAbilityId),
+						new Expired(secondPlayerName, secondAbilityId)
+				));
+
+			case NONE_REMOVED ->
+
+				// effects can expire at different time
+				assertThat(effectEvents).hasSameElementsAs(List.of(
+						new Expired(firstPlayerName, firstAbilityId),
+						new Expired(secondPlayerName, secondAbilityId)
+				));
+
 		}
 	}
 

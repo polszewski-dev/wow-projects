@@ -5,6 +5,7 @@ import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
 import wow.commons.util.AttributesFormater;
 import wow.scraper.config.ScraperConfig;
@@ -115,6 +116,14 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 
 	protected void setValue(AttributeCondition condition) {
 		setValue(condition.toString());
+	}
+
+	protected void setValue(AbilityId abilityId) {
+		if (abilityId != null) {
+			setValue(abilityId.name());
+		} else {
+			setValue((String) null);
+		}
 	}
 
 	protected void writeIconAndTooltipHeader() {

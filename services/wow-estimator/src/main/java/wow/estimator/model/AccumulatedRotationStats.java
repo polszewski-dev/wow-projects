@@ -11,7 +11,7 @@ import wow.commons.model.spell.ActivatedAbility;
 import wow.estimator.util.NonModifierHandler;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import java.util.Map;
 @Setter
 public class AccumulatedRotationStats implements NonModifierHandler {
 	private AccumulatedBaseStats baseStats;
-	private final Map<AbilityId, AccumulatedDamagingAbilityStats> statsByAbilityId = new EnumMap<>(AbilityId.class);
+	private final Map<AbilityId, AccumulatedDamagingAbilityStats> statsByAbilityId = new HashMap<>();
 	private final List<StatConversion> statConversions = new ArrayList<>();
 	private final List<Effect> nonModifierEffects = new ArrayList<>();
 	private final List<Integer> nonModifierStackCounts = new ArrayList<>();

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.commons.model.categorization.WeaponSubType;
 import wow.commons.model.character.*;
 import wow.commons.model.effect.EffectCategory;
@@ -13,11 +14,13 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.talent.TalentTree;
 
+import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.constant.AbilityIds.*;
 
 /**
  * User: POlszewski
@@ -35,8 +38,8 @@ class AttributeConditionParserTest {
 	void orExpression() {
 		var parsed = parse("Shadow Bolt | Incinerate");
 		var expected = ConditionOperator.or(
-				AttributeCondition.of(AbilityId.SHADOW_BOLT),
-				AttributeCondition.of(AbilityId.INCINERATE)
+				AttributeCondition.of(SHADOW_BOLT),
+				AttributeCondition.of(INCINERATE)
 		);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -46,8 +49,8 @@ class AttributeConditionParserTest {
 	void andExpression() {
 		var parsed = parse("Shadow Bolt & Incinerate");
 		var expected = ConditionOperator.and(
-				AttributeCondition.of(AbilityId.SHADOW_BOLT),
-				AttributeCondition.of(AbilityId.INCINERATE)
+				AttributeCondition.of(SHADOW_BOLT),
+				AttributeCondition.of(INCINERATE)
 		);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -61,7 +64,7 @@ class AttributeConditionParserTest {
 	})
 	void paren(String value) {
 		var parsed = parse(value);
-		var expected = AttributeCondition.of(AbilityId.CREATE_FIRESTONE_GREATER);
+		var expected = AttributeCondition.of(CREATE_FIRESTONE_GREATER);
 
 		assertThat(parsed).isEqualTo(expected);
 	}
@@ -70,8 +73,8 @@ class AttributeConditionParserTest {
 	void commaExpression() {
 		var parsed = parse("Shadow Bolt, Incinerate");
 		var expected = ConditionOperator.comma(
-				AttributeCondition.of(AbilityId.SHADOW_BOLT),
-				AttributeCondition.of(AbilityId.INCINERATE)
+				AttributeCondition.of(SHADOW_BOLT),
+				AttributeCondition.of(INCINERATE)
 		);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -96,9 +99,9 @@ class AttributeConditionParserTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(AbilityId.class)
+	@MethodSource("getAbilityIds")
 	void abilityId(AbilityId value) {
-		if (value == AbilityId.ATIESH_GREATSTAFF_OF_THE_GUARDIAN) {// comma in the name :/
+		if (value.equals(ATIESH_GREATSTAFF_OF_THE_GUARDIAN)) {// comma in the name :/
 			return;
 		}
 
@@ -106,6 +109,10 @@ class AttributeConditionParserTest {
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
+	}
+
+	static Collection<AbilityId> getAbilityIds() {
+		return AbilityId.values();
 	}
 
 	@ParameterizedTest
@@ -190,16 +197,16 @@ class AttributeConditionParserTest {
 
 	@Test
 	void ownerisChanneling() {
-		var expected = OwnerIsChannelingCondition.of(AbilityId.DRAIN_SOUL);
+		var expected = OwnerIsChannelingCondition.of(DRAIN_SOUL);
 		var parsed = parse(expected.toString());
 
 		assertThat(parsed).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
-	@EnumSource(AbilityId.class)
+	@MethodSource("getAbilityIds")
 	void ownerHasEffect(AbilityId abilityId) {
-		if (abilityId == AbilityId.ATIESH_GREATSTAFF_OF_THE_GUARDIAN) {
+		if (abilityId.equals(ATIESH_GREATSTAFF_OF_THE_GUARDIAN)) {
 			return;
 		}
 
@@ -225,7 +232,7 @@ class AttributeConditionParserTest {
 	void noDuplicatedKeys() {
 		var keyFrequency = getAllKeys()
 				.flatMap(Stream::of)
-				.map(Enum::toString)
+				.map(Object::toString)
 				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
 		for (var entry : keyFrequency.entrySet()) {
@@ -235,7 +242,7 @@ class AttributeConditionParserTest {
 		}
 	}
 
-	private static Stream<Enum<? extends Enum<?>>[]> getAllKeys() {
+	private static Stream<Object[]> getAllKeys() {
 		return Stream.of(
 				AbilityCategory.values(),
 				CreatureType.values(),
@@ -245,7 +252,7 @@ class AttributeConditionParserTest {
 				MovementType.values(),
 				PetType.values(),
 				ProfessionId.values(),
-				AbilityId.values(),
+				AbilityId.values().toArray(),
 				SpellSchool.values(),
 				TalentTree.values(),
 				WeaponSubType.values()

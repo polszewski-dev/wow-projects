@@ -2,13 +2,14 @@ package wow.simulator.model.unit.action;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.spell.AbilityId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.PrimaryTarget;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.test.commons.AbilityNames.CORRUPTION;
+import static wow.test.commons.AbilityNames.DRAIN_LIFE;
 import static wow.test.commons.TalentNames.AMPLIFY_CURSE;
 import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 
@@ -19,7 +20,7 @@ import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 class CastSpellActionTest extends WowSimulatorSpringTest {
 	@Test
 	void cast() {
-		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(CORRUPTION);
 
 		clock.advanceTo(Time.at(10));
 
@@ -41,7 +42,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void castShorterThanGcd() {
 		enableTalent(IMPROVED_CORRUPTION, 4);
 
-		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(CORRUPTION);
 
 		clock.advanceTo(Time.at(10));
 
@@ -63,7 +64,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void instant() {
 		enableTalent(IMPROVED_CORRUPTION, 5);
 
-		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(CORRUPTION);
 
 		clock.advanceTo(Time.at(10));
 
@@ -78,7 +79,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	void instantIgnoringGcd() {
 		enableTalent(AMPLIFY_CURSE, 1);
 
-		CastSpellAction action = getCastSpellOnSelfAction(AbilityId.AMPLIFY_CURSE);
+		CastSpellAction action = getCastSpellOnSelfAction(AMPLIFY_CURSE);
 
 		clock.advanceTo(Time.at(10));
 
@@ -91,7 +92,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void channel() {
-		CastSpellAction action = getCastSpellAction(AbilityId.DRAIN_LIFE);
+		CastSpellAction action = getCastSpellAction(DRAIN_LIFE);
 
 		clock.advanceTo(Time.at(10));
 
@@ -104,7 +105,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void cantPayManaCost() {
-		CastSpellAction action = getCastSpellAction(AbilityId.CORRUPTION);
+		CastSpellAction action = getCastSpellAction(CORRUPTION);
 
 		setMana(player, 0);
 
@@ -118,16 +119,16 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 		assertThat(action.getStatus()).isEqualTo(ActionStatus.FINISHED);
 	}
 
-	CastSpellAction getCastSpellAction(AbilityId abilityId) {
-		return getSpellAction(abilityId, PrimaryTarget.ofEnemy(target));
+	CastSpellAction getCastSpellAction(String abilityName) {
+		return getSpellAction(abilityName, PrimaryTarget.ofEnemy(target));
 	}
 
-	CastSpellAction getCastSpellOnSelfAction(AbilityId abilityId) {
-		return getSpellAction(abilityId, PrimaryTarget.ofSelf(player));
+	CastSpellAction getCastSpellOnSelfAction(String abilityName) {
+		return getSpellAction(abilityName, PrimaryTarget.ofSelf(player));
 	}
 
-	private CastSpellAction getSpellAction(AbilityId abilityId, PrimaryTarget primaryTarget) {
-		var ability = player.getAbility(abilityId).orElseThrow();
+	private CastSpellAction getSpellAction(String abilityName, PrimaryTarget primaryTarget) {
+		var ability = player.getAbility(abilityName).orElseThrow();
 		return new CastSpellAction(player, ability, primaryTarget);
 	}
 

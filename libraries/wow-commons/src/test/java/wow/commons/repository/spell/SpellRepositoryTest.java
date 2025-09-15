@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.constant.AbilityIds;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -37,10 +38,10 @@ import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.SPELL_CAST;
 import static wow.commons.model.effect.component.EventType.SPELL_HIT;
 import static wow.commons.model.pve.PhaseId.*;
-import static wow.commons.model.spell.AbilityId.*;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
+import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -55,21 +56,21 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void abilityInfo() {
 		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
 
-		assertThat(ability.getRankedAbilityId()).isEqualTo(new AbilityIdAndRank(SHADOW_BOLT, 11));
-		assertThat(ability.getAbilityId()).isEqualTo(SHADOW_BOLT);
+		assertThat(ability.getRankedAbilityId()).isEqualTo(new AbilityIdAndRank(AbilityIds.SHADOW_BOLT, 11));
+		assertThat(ability.getAbilityId()).isEqualTo(AbilityIds.SHADOW_BOLT);
 		assertThat(ability.getRank()).isEqualTo(11);
 		assertThat(ability.getTalentTree()).isEqualTo(ability.getTalentTree()).isEqualTo(DESTRUCTION);
 	}
 
 	@ParameterizedTest
 	@CsvSource({
-			"SHADOW_BOLT,      11, WARLOCK, 69,       ,           , ",
-			"SHADOWBURN,        8, WARLOCK, 70,       , Shadowburn, ",
-			"SOUL_LINK,         0, WARLOCK,  1,       , Soul Link,  Imp+Voidwalker+Succubus+Incubus+Felhunter+Felguard+Enslaved",
-			"DEVOURING_PLAGUE,  7, PRIEST,  68, UNDEAD,           , ",
+			"Shadow Bolt,      11, WARLOCK, 69,       ,           , ",
+			"Shadowburn,        8, WARLOCK, 70,       , Shadowburn, ",
+			"Soul Link,         0, WARLOCK,  1,       , Soul Link,  Imp+Voidwalker+Succubus+Incubus+Felhunter+Felguard+Enslaved",
+			"Devouring Plague,  7, PRIEST,  68, UNDEAD,           , ",
 	})
-	void abilityCharacterRestriction(AbilityId id, int rank, CharacterClassId characterClassId, int level, RaceId raceId, String talentName, String petTypes) {
-		var ability = getClassAbility(id, rank, TBC_P5);
+	void abilityCharacterRestriction(String name, int rank, CharacterClassId characterClassId, int level, RaceId raceId, String talentName, String petTypes) {
+		var ability = getClassAbility(name, rank, TBC_P5);
 		var characterRestriction = ability.getCharacterRestriction();
 
 		assertThat(characterRestriction.characterClassIds()).isEqualTo(List.of(characterClassId));
@@ -120,12 +121,12 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"SHADOW_BOLT, 11, 3, false, false",
-			"DRAIN_LIFE, 8, 0, true, false",
-			"AMPLIFY_CURSE, 0, 0, false, true",
+			"Shadow Bolt,  11, 3, false, false",
+			"Drain Life,    8, 0, true, false",
+			"Amplify Curse, 0, 0, false, true",
 	})
-	void abilityCastInfo(AbilityId id, int rank, double castTime, boolean channeled, boolean ignoresGcd) {
-		var ability = getClassAbility(id, rank, TBC_P5);
+	void abilityCastInfo(String name, int rank, double castTime, boolean channeled, boolean ignoresGcd) {
+		var ability = getClassAbility(name, rank, TBC_P5);
 		var castInfo = ability.getCastInfo();
 
 		assertThat(castInfo.castTime()).isEqualTo(Duration.seconds(castTime));
@@ -135,12 +136,12 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"SHADOW_BOLT,      11, MANA,   420,  0,  0,           ",
-			"LIFE_TAP,          7, HEALTH, 582,  0, 80,           ",
-			"SUMMON_VOIDWALKER, 0, MANA,     0, 80,  0, SOUL_SHARD",
+			"Shadow Bolt,      11, MANA,   420,  0,  0,           ",
+			"Life Tap,          7, HEALTH, 582,  0, 80,           ",
+			"Summon Voidwalker, 0, MANA,     0, 80,  0, SOUL_SHARD",
 	})
-	void abilityCost(AbilityId id, int rank, ResourceType resourceType, int amount, int baseStatPct, double coeffValue, Reagent reagent) {
-		var ability = getClassAbility(id, rank, TBC_P5);
+	void abilityCost(String name, int rank, ResourceType resourceType, int amount, int baseStatPct, double coeffValue, Reagent reagent) {
+		var ability = getClassAbility(name, rank, TBC_P5);
 		var cost = ability.getCost();
 
 		assertThat(cost.resourceType()).isEqualTo(resourceType);
@@ -172,7 +173,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(bonus.min()).isEqualTo(111);
 		assertThat(bonus.max()).isEqualTo(128);
-		assertThat(bonus.requiredEffect()).isEqualTo(AbilityId.IMMOLATE);
+		assertThat(bonus.requiredEffect()).isEqualTo(AbilityIds.IMMOLATE);
 	}
 
 	@Test
@@ -244,10 +245,10 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertModifier(effect, List.of(
 				Attribute.of(EFFECT_PCT, 50, ConditionOperator.comma(
-						AttributeCondition.of(CURSE_OF_DOOM),
-						AttributeCondition.of(CURSE_OF_AGONY)
+						AttributeCondition.of(AbilityIds.CURSE_OF_DOOM),
+						AttributeCondition.of(AbilityIds.CURSE_OF_AGONY)
 				)),
-				Attribute.of(EFFECT_PCT, 20, AttributeCondition.of(CURSE_OF_EXHAUSTION))
+				Attribute.of(EFFECT_PCT, 20, AttributeCondition.of(AbilityIds.CURSE_OF_EXHAUSTION))
 		));
 	}
 
@@ -275,9 +276,9 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(event.types()).isEqualTo(List.of(SPELL_CAST));
 		assertThat(event.condition()).isEqualTo(ConditionOperator.comma(
-				AttributeCondition.of(CURSE_OF_DOOM),
-				AttributeCondition.of(CURSE_OF_AGONY),
-				AttributeCondition.of(CURSE_OF_EXHAUSTION)
+				AttributeCondition.of(AbilityIds.CURSE_OF_DOOM),
+				AttributeCondition.of(AbilityIds.CURSE_OF_AGONY),
+				AttributeCondition.of(AbilityIds.CURSE_OF_EXHAUSTION)
 		));
 		assertThat(event.chance()).isEqualTo(Percent._100);
 		assertThat(event.actions()).isEqualTo(List.of(REMOVE_CHARGE));
@@ -553,8 +554,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		));
 	}
 
-	private ClassAbility getClassAbility(AbilityId abilityId, int rank, PhaseId phaseId) {
-		return (ClassAbility) spellRepository.getAbility(abilityId, rank, phaseId).orElseThrow();
+	private ClassAbility getClassAbility(String name, int rank, PhaseId phaseId) {
+		return (ClassAbility) spellRepository.getAbility(name, rank, phaseId).orElseThrow();
 	}
 
 	private Spell getSpell(int spellId, PhaseId phaseId) {

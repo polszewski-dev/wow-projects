@@ -147,12 +147,12 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public boolean matches(AbilityId abilityId, Unit owner) {
-		return getSourceSpell() instanceof Ability a && a.getAbilityId() == abilityId && this.owner == owner;
+		return getSourceSpell() instanceof Ability a && a.getAbilityId().equals(abilityId) && this.owner == owner;
 	}
 
 	@Override
 	public boolean matches(AbilityId abilityId) {
-		return getSourceSpell() instanceof Ability a && a.getAbilityId() == abilityId;
+		return getSourceSpell() instanceof Ability a && a.getAbilityId().equals(abilityId);
 	}
 
 	@Override

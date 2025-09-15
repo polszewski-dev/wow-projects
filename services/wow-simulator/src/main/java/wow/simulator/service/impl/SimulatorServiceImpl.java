@@ -16,7 +16,7 @@ import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.update.Scheduler;
-import wow.simulator.script.warlock.RotationScript;
+import wow.simulator.script.RotationScript;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;

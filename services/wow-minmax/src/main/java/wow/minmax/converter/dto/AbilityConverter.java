@@ -16,6 +16,7 @@ public class AbilityConverter implements Converter<Ability, AbilityDTO> {
 	@Override
 	public AbilityDTO doConvert(Ability source) {
 		return new AbilityDTO(
+				source.getId().value(),
 				source.getName(),
 				source.getRank(),
 				source.getIcon(),

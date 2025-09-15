@@ -17,7 +17,7 @@ import wow.scraper.repository.impl.excel.spell.SpellPatternExcelParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Repository
 public class SpellPatternRepositoryImpl implements SpellPatternRepository {
-	private final Map<AbilityId, List<AbilityPattern>> spellPatterns = new EnumMap<>(AbilityId.class);
+	private final Map<AbilityId, List<AbilityPattern>> spellPatterns = new HashMap<>();
 	private final List<ActivatedAbilityPattern> activatedAbilityPatterns = new ArrayList<>();
 	private final List<ProcPattern> procPatterns = new ArrayList<>();
 	private final List<MiscEffectPattern> miscEffectPatterns = new ArrayList<>();

@@ -5,6 +5,7 @@ package wow.minmax.client.dto;
  * Date: 2022-11-25
  */
 public record AbilityDTO(
+		int id,
 		String name,
 		Integer rank,
 		String icon,

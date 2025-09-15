@@ -11,17 +11,13 @@ import wow.commons.model.categorization.PveRole;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.character.constant.AbilityIds.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.profession.ProfessionId.ENCHANTING;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.spell.AbilityId.*;
-import static wow.test.commons.BuffNames.ARCANE_BRILLIANCE;
-import static wow.test.commons.BuffNames.CURSE_OF_THE_ELEMENTS;
-import static wow.test.commons.BuffNames.FEL_ARMOR;
-import static wow.test.commons.BuffNames.PRAYER_OF_FORTITUDE;
 import static wow.test.commons.BuffNames.PRAYER_OF_SPIRIT;
 import static wow.test.commons.BuffNames.*;
 

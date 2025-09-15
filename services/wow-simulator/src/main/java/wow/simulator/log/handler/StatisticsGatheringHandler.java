@@ -3,7 +3,6 @@ package wow.simulator.log.handler;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.cooldown.CooldownInstance;
@@ -112,7 +111,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 			return;
 		}
 
-		if (ability.getAbilityId() == AbilityId.LIFE_TAP) {
+		if (ability.getName().equals(LIFE_TAP)) {
 			return;
 		}
 
@@ -120,6 +119,8 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 			stats.addDamage(ability, amount, crit);
 		}
 	}
+
+	private static final String LIFE_TAP = "Life Tap";
 
 	@Override
 	public void effectApplied(EffectInstance effect) {
