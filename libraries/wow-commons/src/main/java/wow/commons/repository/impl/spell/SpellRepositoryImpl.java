@@ -29,7 +29,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
 @Component
 public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();
-	private final PhaseMap<AbilityIdAndRank, Ability> abilitiesByRankedId = new PhaseMap<>();
+	private final PhaseMap<AbilityNameRank, Ability> abilitiesByNameRank = new PhaseMap<>();
 	private final PhaseMap<SpellId, Spell> spellsById = new PhaseMap<>();
 	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
 	private final GameVersionMap<RaceId, List<RacialEffect>> racialEffects = new GameVersionMap<>();
@@ -49,19 +49,21 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 	@Override
 	public Optional<Ability> getAbility(AbilityId abilityId, int rank, PhaseId phaseId) {
-		return abilitiesByRankedId.getOptional(phaseId, new AbilityIdAndRank(abilityId, rank));
+		var nameRank = new AbilityNameRank(abilityId.name(), rank);
+
+		return abilitiesByNameRank.getOptional(phaseId, nameRank);
 	}
 
 	@Override
 	public Optional<Ability> getAbility(String name, int rank, PhaseId phaseId) {
-		var nameRank = new AbilityIdAndRank(AbilityId.of(name), rank);
+		var nameRank = new AbilityNameRank(name, rank);
 
-		return abilitiesByRankedId.getOptional(phaseId, nameRank);
+		return abilitiesByNameRank.getOptional(phaseId, nameRank);
 	}
 
 	@Override
 	public Optional<Ability> getAbility(SpellId spellId, PhaseId phaseId) {
-		return getSpell(spellId, phaseId).map(spell -> (Ability) spell);
+		return getSpell(spellId, phaseId).map(Ability.class::cast);
 	}
 
 	@Override
@@ -85,7 +87,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 				addEntryForEveryPhase(abilitiesByClass, characterClassId, ability);
 			}
 
-			putForEveryPhase(abilitiesByRankedId, ability.getRankedAbilityId(), ability);
+			putForEveryPhase(abilitiesByNameRank, ability.getNameRank(), ability);
 		}
 
 		putForEveryPhase(spellsById, spell.getId(), spell);

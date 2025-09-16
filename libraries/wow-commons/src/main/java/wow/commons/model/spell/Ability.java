@@ -8,6 +8,8 @@ import wow.commons.model.config.CharacterRestricted;
  * Date: 2023-10-04
  */
 public interface Ability extends Spell, CharacterRestricted {
+	AbilityId getAbilityId();
+
 	AbilityCategory getCategory();
 
 	CastInfo getCastInfo();
@@ -30,9 +32,5 @@ public interface Ability extends Spell, CharacterRestricted {
 
 	int getRank();
 
-	AbilityIdAndRank getRankedAbilityId();
-
-	default AbilityId getAbilityId() {
-		return getRankedAbilityId().abilityId();
-	}
+	AbilityNameRank getNameRank();
 }

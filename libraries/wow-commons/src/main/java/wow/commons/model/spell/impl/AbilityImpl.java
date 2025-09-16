@@ -12,20 +12,21 @@ import wow.commons.model.spell.*;
 @Getter
 @Setter
 public abstract class AbilityImpl extends SpellImpl implements Ability {
+	private AbilityId abilityId;
 	private AbilityCategory category;
 	private CastInfo castInfo;
 	private int range;
 	private AbilityId requiredEffect;
 	private AbilityId effectRemovedOnHit;
 	private CharacterRestriction characterRestriction;
-	private AbilityIdAndRank rankedAbilityId;
+	private AbilityNameRank nameRank;
 
-	public void setRankedAbilityId(int rank) {
-		this.rankedAbilityId = new AbilityIdAndRank(AbilityId.parse(getName()), rank);
+	public void setNameRank(int rank) {
+		this.nameRank = new AbilityNameRank(getName(), rank);
 	}
 
 	@Override
 	public String toString() {
-		return getRankedAbilityId().toString();
+		return nameRank.toString();
 	}
 }

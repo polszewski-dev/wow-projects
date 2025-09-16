@@ -55,7 +55,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		classAbility.setRank(rank);
 		classAbility.setTalentTree(talentTree);
 		classAbility.setCost(cost);
-		classAbility.setRankedAbilityId(rank);
+		classAbility.setNameRank(rank);
 		return classAbility;
 	}
 
@@ -65,7 +65,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 
 		initAbility(racialAbility);
 		racialAbility.setCost(cost);
-		racialAbility.setRankedAbilityId(0);
+		racialAbility.setNameRank(0);
 		return racialAbility;
 	}
 
@@ -76,7 +76,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var activatedAbility = new ActivatedAbilityImpl(cooldownGroup);
 
 		initAbility(activatedAbility);
-		activatedAbility.setRankedAbilityId(0);
+		activatedAbility.setNameRank(0);
 		return activatedAbility;
 	}
 
@@ -113,6 +113,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	protected void initAbility(AbilityImpl ability) {
 		initSpell(ability);
 
+		var abilityId = colName.getEnum(AbilityId::parse);
 		var category = colCategory.getEnum(AbilityCategory::parse, null);
 		var castInfo = getCastInfo(ability instanceof ActivatedAbility);
 		var range = colRange.getInteger();
@@ -120,6 +121,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(AbilityId::parse, null);
 		var characterRestriction = getRestriction();
 
+		ability.setAbilityId(abilityId);
 		ability.setCategory(category);
 		ability.setCastInfo(castInfo);
 		ability.setRange(range);

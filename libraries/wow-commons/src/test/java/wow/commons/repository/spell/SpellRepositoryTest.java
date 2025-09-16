@@ -56,7 +56,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void abilityInfo() {
 		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
 
-		assertThat(ability.getRankedAbilityId()).isEqualTo(new AbilityIdAndRank(AbilityIds.SHADOW_BOLT, 11));
+		assertThat(ability.getNameRank()).isEqualTo(new AbilityNameRank(SHADOW_BOLT, 11));
 		assertThat(ability.getAbilityId()).isEqualTo(AbilityIds.SHADOW_BOLT);
 		assertThat(ability.getRank()).isEqualTo(11);
 		assertThat(ability.getTalentTree()).isEqualTo(ability.getTalentTree()).isEqualTo(DESTRUCTION);

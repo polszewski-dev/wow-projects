@@ -5,7 +5,7 @@ import lombok.Setter;
 import wow.commons.model.Duration;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityIdAndRank;
+import wow.commons.model.spell.AbilityNameRank;
 import wow.commons.model.spell.CooldownId;
 import wow.simulator.model.time.Time;
 
@@ -18,7 +18,7 @@ import java.util.Map;
  * Date: 2023-08-20
  */
 public class Stats {
-	private final Map<AbilityIdAndRank, AbilityStats> abilityStatsById = new LinkedHashMap<>();
+	private final Map<AbilityNameRank, AbilityStats> abilityStatsByNameRank = new LinkedHashMap<>();
 	private final Map<EffectId, EffectStats> effectStatsById = new LinkedHashMap<>();
 	private final Map<CooldownId, CooldownStats> cooldownStatsById = new LinkedHashMap<>();
 
@@ -63,7 +63,7 @@ public class Stats {
 	}
 
 	private AbilityStats getAbilityStats(Ability ability) {
-		return abilityStatsById.computeIfAbsent(ability.getRankedAbilityId(), x -> new AbilityStats(ability));
+		return abilityStatsByNameRank.computeIfAbsent(ability.getNameRank(), x -> new AbilityStats(ability));
 	}
 
 	private EffectStats getEffectStats(EffectId effectId) {
@@ -75,7 +75,7 @@ public class Stats {
 	}
 
 	public List<AbilityStats> getAbilityStats() {
-		return abilityStatsById.values().stream().toList();
+		return abilityStatsByNameRank.values().stream().toList();
 	}
 
 	public int getDps() {

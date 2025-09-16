@@ -51,6 +51,11 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
+	public AbilityId getAbilityId() {
+		return ability.getAbilityId();
+	}
+
+	@Override
 	public AbilityCategory getCategory() {
 		return ability.getCategory();
 	}
@@ -81,8 +86,8 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
-	public AbilityIdAndRank getRankedAbilityId() {
-		return ability.getRankedAbilityId();
+	public AbilityNameRank getNameRank() {
+		return ability.getNameRank();
 	}
 
 	@Override
