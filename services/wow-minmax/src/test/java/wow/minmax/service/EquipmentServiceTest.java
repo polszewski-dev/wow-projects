@@ -8,8 +8,7 @@ import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.item.Item;
-import wow.commons.model.item.SocketType;
+import wow.commons.model.item.*;
 import wow.minmax.model.equipment.SocketStatus;
 
 import java.util.List;
@@ -167,7 +166,10 @@ class EquipmentServiceTest extends ServiceTest {
 			return null;
 		}
 
-		return equippableItemConfig.getItem().getName();
+		var itemId = equippableItemConfig.getItemId();
+		var item = itemRepository.getItem(ItemId.of(itemId), PHASE).orElseThrow();
+
+		return item.getName();
 	}
 
 	private String getEnchantName(ItemSlot itemSlot) {
@@ -177,11 +179,13 @@ class EquipmentServiceTest extends ServiceTest {
 			return null;
 		}
 
-		var enchant = equippableItemConfig.getEnchant();
+		var enchantId = equippableItemConfig.getEnchantId();
 
-		if (enchant == null) {
+		if (enchantId == null) {
 			return null;
 		}
+
+		var enchant = enchantRepository.getEnchant(EnchantId.of(enchantId), PHASE).orElseThrow();
 
 		return enchant.getName();
 	}
@@ -193,11 +197,13 @@ class EquipmentServiceTest extends ServiceTest {
 			return null;
 		}
 
-		var gem = equippableItemConfig.getGems().get(socketNo);
+		var gemId = equippableItemConfig.getGemIds().get(socketNo);
 
-		if (gem == null) {
+		if (gemId == null) {
 			return null;
 		}
+
+		var gem = gemRepository.getGem(GemId.of(gemId), PHASE).orElseThrow();
 
 		return gem.getName();
 	}

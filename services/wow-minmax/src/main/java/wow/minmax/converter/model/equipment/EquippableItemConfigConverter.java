@@ -5,11 +5,12 @@ import org.springframework.stereotype.Component;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
+import wow.commons.model.item.*;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.item.GemRepository;
+import wow.commons.repository.item.ItemRepository;
 import wow.minmax.model.equipment.EquippableItemConfig;
-import wow.minmax.model.equipment.GemConfig;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -18,32 +19,46 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class EquippableItemConfigConverter implements Converter<EquippableItem, EquippableItemConfig>, ParametrizedBackConverter<EquippableItem, EquippableItemConfig, PhaseId> {
-	private final ItemConfigConverter itemConfigConverter;
-	private final EnchantConfigConverter enchantConfigConverter;
-	private final GemConfigConverter gemConfigConverter;
+	private final ItemRepository itemRepository;
+	private final EnchantRepository enchantRepository;
+	private final GemRepository gemRepository;
 
 	@Override
 	public EquippableItemConfig doConvert(EquippableItem source) {
+		var item = source.getItem();
+		var enchant = source.getEnchant();
+		var gems = source.getGems();
+
 		return new EquippableItemConfig(
-				itemConfigConverter.convert(source.getItem()),
-				enchantConfigConverter.convert(source.getEnchant()),
-				gemConfigConverter.convertList(source.getGems())
+				item.getId().value(),
+				enchant != null ? enchant.getId().value() : null,
+				gems.stream().map(gem -> gem != null ? gem.getId().value() : null).toList()
 		);
 	}
 
 	@Override
 	public EquippableItem doConvertBack(EquippableItemConfig source, PhaseId phaseId) {
-		EquippableItem equippableItem = new EquippableItem(itemConfigConverter.convertBack(source.getItem(), phaseId));
+		var itemId = ItemId.of(source.getItemId());
+		var item = itemRepository.getItem(itemId, phaseId).orElseThrow();
+		var enchant = getEnchant(source.getEnchantId(), phaseId);
+		var gems = source.getGemIds().stream()
+				.map(gemId -> getGem(gemId, phaseId))
+				.toList();
 
-		equippableItem.enchant(enchantConfigConverter.convertBack(source.getEnchant(), phaseId));
+		return new EquippableItem(item)
+				.enchant(enchant)
+				.gem(gems);
+	}
 
-		List<GemConfig> gems = source.getGems();
+	private Enchant getEnchant(Integer enchantId, PhaseId phaseId) {
+		return enchantId != null
+				? enchantRepository.getEnchant(EnchantId.of(enchantId), phaseId).orElseThrow()
+				: null;
+	}
 
-		for (int i = 0; i < gems.size(); i++) {
-			GemConfig gem = gems.get(i);
-			equippableItem.insertGem(i, gemConfigConverter.convertBack(gem, phaseId));
-		}
-
-		return equippableItem;
+	private Gem getGem(Integer gemId, PhaseId phaseId) {
+		return gemId != null
+				? gemRepository.getGem(GemId.of(gemId), phaseId).orElseThrow()
+				: null;
 	}
 }

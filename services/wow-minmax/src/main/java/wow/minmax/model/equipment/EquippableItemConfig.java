@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class EquippableItemConfig {
-	private ItemConfig item;
-	private EnchantConfig enchant;
-	private List<GemConfig> gems;
+	private int itemId;
+	private Integer enchantId;
+	private List<Integer> gemIds;
 }
