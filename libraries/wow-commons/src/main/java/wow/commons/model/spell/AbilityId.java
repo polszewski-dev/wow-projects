@@ -34,7 +34,7 @@ public record AbilityId(String name) implements Comparable<AbilityId> {
 		if (value == null) {
 			return null;
 		}
-		return Objects.requireNonNull(tryParse(value));
+		return Objects.requireNonNull(tryParse(value), () -> "Unknown ability id: " + value);
 	}
 
 	public static AbilityId tryParse(String value) {

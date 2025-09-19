@@ -1,0 +1,25 @@
+
+#	Shadow Word: Pain, Devouring Plague, Holy Fire, Mind Blast, Smite, Shoot
+
+
+@	Rotation
+
+	Destruction Potion
+	Berserking
+	Trinket1
+	Trinket2
+
+	Shadow Word: Pain
+	Devouring Plague
+	Starshards
+	Holy Fire
+	Mind Blast
+	Smite
+	Shoot
+
+
+@	CanNotPayManaCost
+
+	Dark Rune
+	Super Mana Potion
+

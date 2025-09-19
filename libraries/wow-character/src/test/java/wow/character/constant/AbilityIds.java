@@ -8,7 +8,10 @@ import wow.test.commons.AbilityNames;
  * Date: 2025-09-15
  */
 public interface AbilityIds {
+	AbilityId AMPLIFY_CURSE = AbilityId.of(AbilityNames.AMPLIFY_CURSE);
 	AbilityId ATIESH_GREATSTAFF_OF_THE_GUARDIAN = AbilityId.of(AbilityNames.ATIESH_GREATSTAFF_OF_THE_GUARDIAN);
+	AbilityId BERSERKING = AbilityId.of(AbilityNames.BERSERKING);
+	AbilityId BLOOD_FURY = AbilityId.of(AbilityNames.BLOOD_FURY);
 	AbilityId CORRUPTION = AbilityId.of(AbilityNames.CORRUPTION);
 	AbilityId CREATE_FIRESTONE_GREATER = AbilityId.of(AbilityNames.CREATE_FIRESTONE_GREATER);
 	AbilityId CURSE_OF_AGONY = AbilityId.of(AbilityNames.CURSE_OF_AGONY);

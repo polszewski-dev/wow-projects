@@ -1,0 +1,30 @@
+
+#	Curse of Doom, Corruption, Immolate, Shadow Bolt
+
+
+@	Rotation
+
+	Destruction Potion
+	Blood Fury
+	Trinket1
+	Trinket2
+
+	Curse of Doom
+	Corruption
+	Immolate
+	Shadow Bolt
+	Shadowburn
+	Shoot
+
+
+@	CanNotPayManaCost
+
+	Dark Rune
+	Super Mana Potion
+	Life Tap
+
+
+@	CanNotPayHealthCost
+
+	Master Healthstone
+	Super Healing Potion

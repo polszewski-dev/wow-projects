@@ -1,0 +1,26 @@
+
+#	Vampiric Touch, Shadow Word: Pain, Devouring Plague, Starshards, Mind Blast, Shadow Word: Death, Mind Flay, Shoot
+
+
+@	Rotation
+
+	Destruction Potion
+	Berserking
+	Trinket1
+	Trinket2
+
+	Vampiric Touch
+	Shadow Word: Pain
+	Devouring Plague
+	Starshards
+	Mind Blast
+	Shadow Word: Death
+	Mind Flay
+	Shoot
+
+
+@	CanNotPayManaCost
+
+	Dark Rune
+	Super Mana Potion
+
