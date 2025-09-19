@@ -24,7 +24,14 @@ class ConsumableServiceTest extends ServiceTest {
 				.toList();
 
 		assertThat(statusStrings).hasSameElementsAs(List.of(
-				"Destruction Potion#false"
+				"Destruction Potion#false",
+				"Major Healing Potion#false",
+				"Super Healing Potion#false",
+				"Major Mana Potion#false",
+				"Super Mana Potion#false",
+				"Major Healthstone#false",
+				"Master Healthstone#false",
+				"Dark Rune#false"
 		));
 	}
 
