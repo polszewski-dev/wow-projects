@@ -58,6 +58,21 @@ class DurationTest {
 
 	@ParameterizedTest
 	@CsvSource({
+			"2,   3,   5",
+			"2,   INF,   INF",
+	})
+	void addAny(String firstStr, String secondStr, String expectedStr) {
+		var first = Duration.parse(firstStr);
+		var second = AnyDuration.parse(secondStr);
+		var expected = AnyDuration.parse(expectedStr);
+
+		var result = first.add(second);
+
+		assertThat(result).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
 			"5, 2,   2.5",
 			"0, 2,   0",
 	})

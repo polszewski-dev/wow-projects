@@ -129,24 +129,28 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void cast(String abilityName) {
-		cast(AbilityId.parse(abilityName));
+		var abilityId = AbilityId.parse(abilityName);
+		cast(abilityId);
 	}
 
 	@Override
 	public void cast(AbilityId abilityId) {
 		var ability = getAbility(abilityId).orElseThrow();
-		cast(ability, getPrimaryTarget(ability, null));
+		var primaryTarget = getPrimaryTarget(ability, null);
+		cast(ability, primaryTarget);
 	}
 
 	@Override
 	public void cast(String abilityName, Unit target) {
-		cast(AbilityId.parse(abilityName), target);
+		var abilityId = AbilityId.parse(abilityName);
+		cast(abilityId, target);
 	}
 
 	@Override
 	public void cast(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
-		cast(ability, getPrimaryTarget(ability, target));
+		var primaryTarget = getPrimaryTarget(ability, target);
+		cast(ability, primaryTarget);
 	}
 
 	private void cast(Ability ability, PrimaryTarget primaryTarget) {
@@ -154,7 +158,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		pendingActionQueue.add(action);
 	}
 
-	private PrimaryTarget getPrimaryTarget(Ability ability, Unit explicitTarget) {
+	@Override
+	public PrimaryTarget getPrimaryTarget(Ability ability, Unit explicitTarget) {
 		var resolver = new PrimaryTargetResolver(ability, this, getTarget(), explicitTarget);
 		return resolver.getPrimaryTarget();
 	}
@@ -189,11 +194,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 	}
 
-	@Override
-	public boolean canCast(String abilityName) {
-		return canCast(AbilityId.parse(abilityName));
-	}
-
 	private boolean isCurrentActionInterruptible() {
 		if (hasActionInProgress()) {
 			return true;
@@ -206,20 +206,29 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public boolean canCast(String abilityName) {
+		var abilityId = AbilityId.parse(abilityName);
+		return canCast(abilityId);
+	}
+
+	@Override
 	public boolean canCast(AbilityId abilityId) {
 		var ability = getAbility(abilityId).orElseThrow();
-		return canCast(ability, getPrimaryTarget(ability, null));
+		var primaryTarget = getPrimaryTarget(ability, null);
+		return canCast(ability, primaryTarget);
 	}
 
 	@Override
 	public boolean canCast(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
-		return canCast(ability, getPrimaryTarget(ability, target));
+		var primaryTarget = getPrimaryTarget(ability, target);
+		return canCast(ability, primaryTarget);
 	}
 
 	@Override
 	public boolean canCast(Ability ability, Unit target) {
-		return canCast(ability, getPrimaryTarget(ability, target));
+		var primaryTarget = getPrimaryTarget(ability, target);
+		return canCast(ability, primaryTarget);
 	}
 
 	@Override

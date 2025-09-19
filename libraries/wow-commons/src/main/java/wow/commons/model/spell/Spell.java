@@ -4,6 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.component.DirectComponent;
 
 import java.util.EnumSet;
@@ -50,6 +51,8 @@ public interface Spell extends Described, TimeRestricted {
 	boolean hasDamagingComponent();
 
 	boolean hasHealingComponent();
+
+	boolean hasPeriodicComponent(ComponentType componentType);
 
 	default boolean hasCooldown() {
 		return getCooldown().isPositive();

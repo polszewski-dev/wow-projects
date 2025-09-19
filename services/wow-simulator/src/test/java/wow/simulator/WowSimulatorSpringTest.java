@@ -45,8 +45,10 @@ import wow.simulator.util.TestEventListBuilder;
 import wow.simulator.util.TestRng;
 
 import java.util.List;
+import java.util.function.DoubleFunction;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -492,4 +494,23 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected void assertEventChanceNo(int rollChanceIdx, double value) {
 		assertThat(rng.getEventRollData().getRollChances().get(rollChanceIdx)).isEqualTo(value);
 	}
+
+	protected <T> void assertResultAfter(double delay, Supplier<T> resultSupplier, T expectedResult) {
+		assertMappedResultAfter(delay, resultSupplier, time -> expectedResult);
+	}
+
+	protected <T> void assertMappedResultAfter(double delay, Supplier<T> resultSupplier, DoubleFunction<T> expectedResultMapper) {
+		simulation.getScheduler().add(
+				Duration.seconds(delay),
+				() -> {
+					var now = simulation.now();
+					var expected = expectedResultMapper.apply(now.secondsSinceZero());
+
+					assertThat(resultSupplier.get())
+							.withFailMessage("at time = %s supplier should return: %s".formatted(now, expected))
+							.isEqualTo(expected);
+				}
+		);
+	}
+
 }

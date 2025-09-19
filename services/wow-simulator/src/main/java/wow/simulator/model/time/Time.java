@@ -47,6 +47,14 @@ public record Time(long timestamp) implements AnyTime {
 		return Duration.millis(this.timestamp - time.timestamp);
 	}
 
+	public Time min(Time time) {
+		return this.timestamp < time.timestamp ? this : time;
+	}
+
+	public Time max(Time time) {
+		return this.timestamp > time.timestamp ? this : time;
+	}
+
 	@Override
 	public int compareTo(AnyTime anyTime) {
 		if (anyTime instanceof Time time) {

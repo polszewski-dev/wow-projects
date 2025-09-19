@@ -16,7 +16,7 @@ import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.update.Scheduler;
-import wow.simulator.script.RotationScript;
+import wow.simulator.script.ScriptExecutor;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
@@ -35,13 +35,12 @@ public class SimulatorServiceImpl implements SimulatorService {
 	@Override
 	public Stats simulate(Player player, Duration duration, RngType rngType, Runnable withinSimulationContext) {
 		var target = player.getTarget();
-		var aiScript = new RotationScript(player);
+		var scriptExecutor = new ScriptExecutor(player);
 		var simulation = createSimulation(rngType);
 		var endTime = Time.at(duration.getSeconds());
 
-		aiScript.setupPlayer();
+		scriptExecutor.setupPlayer();
 
-		player.setOnPendingActionQueueEmpty(x -> aiScript.execute());
 		target.setOnPendingActionQueueEmpty(x -> x.idleUntil(TIME_IN_INFINITY));
 
 		var stats = new Stats();

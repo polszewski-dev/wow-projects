@@ -126,6 +126,11 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
+	public boolean hasPeriodicComponent(ComponentType componentType) {
+		return ability.hasPeriodicComponent(componentType);
+	}
+
+	@Override
 	public CharacterRestriction getCharacterRestriction() {
 		return ability.getCharacterRestriction();
 	}
@@ -138,5 +143,10 @@ public class ShootAbility implements Ability {
 	@Override
 	public TimeRestriction getTimeRestriction() {
 		return ability.getTimeRestriction();
+	}
+
+	@Override
+	public String toString() {
+		return ability.toString();
 	}
 }

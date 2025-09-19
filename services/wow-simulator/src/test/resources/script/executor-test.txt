@@ -1,0 +1,9 @@
+
+
+@	Rotation
+
+	Curse of Agony
+	Corruption
+	Immolate
+	Shadow Bolt
+
