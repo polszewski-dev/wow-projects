@@ -1,7 +1,6 @@
 package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
-import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
@@ -59,7 +58,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				talentIds,
 				source.getRole(),
 				source.getActivePetType(),
-				source.getRotation().getTemplate().toString(),
+				source.getBuild().getScript(),
 				buffIds,
 				List.of(),
 				consumableIds,
@@ -107,7 +106,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 		build.setRole(source.role());
 		build.setActivePet(source.activePet());
-		build.setRotation(RotationTemplate.parse(source.rotation()).createRotation());
+		build.setScript(source.script());
 	}
 
 	private void enableBuffs(PlayerDTO source, P player) {

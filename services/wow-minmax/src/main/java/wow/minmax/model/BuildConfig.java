@@ -18,6 +18,6 @@ import java.util.List;
 public class BuildConfig {
 	private List<Integer> talentIds;
 	private PveRole role;
-	private String rotation;
+	private String script;
 	private PetType activePet;
 }

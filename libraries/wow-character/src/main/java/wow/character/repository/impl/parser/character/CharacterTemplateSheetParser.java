@@ -1,6 +1,5 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.util.TalentLinkParser;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
  */
 public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colTalentLink = column("talent_link");
-	private final ExcelColumn colDefaultRotation = column("default_rotation");
+	private final ExcelColumn colDefaultScript = column("default_script");
 	private final ExcelColumn colActivePet = column("active_pet");
 	private final ExcelColumn colDefaultBuffs = column("default_buffs");
 	private final ExcelColumn colDefaultDebuffs = column("default_debuffs");
@@ -59,7 +58,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
 		var talentLink = colTalentLink.getEnum(x -> TalentLinkParser.parse(x, talentRepository));
-		var defaultRotation = RotationTemplate.parse(colDefaultRotation.getString());
+		var defaultScript = colDefaultScript.getString();
 		var activePet = colActivePet.getEnum(PetType::parse, null);
 		var defaultBuffs = colDefaultBuffs.getList(x -> x);
 		var defaultDebuffs = colDefaultDebuffs.getList(x -> x);
@@ -73,7 +72,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 				characterRestriction,
 				timeRestriction,
 				talentLink,
-				defaultRotation,
+				getScriptPath(timeRestriction, defaultScript),
 				activePet,
 				defaultBuffs,
 				defaultDebuffs,
@@ -82,6 +81,13 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 				exclusiveFactions,
 				isDefault
 		);
+	}
+
+	private static String getScriptPath(TimeRestriction timeRestriction, String defaultScript) {
+		var mainDir = "/wow/character/script";
+		var gameVersionDir = timeRestriction.getGameVersionId().toString().toLowerCase();
+
+		return "%s/%s/%s".formatted(mainDir, gameVersionDir, defaultScript);
 	}
 
 	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction) {

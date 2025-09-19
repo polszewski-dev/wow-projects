@@ -26,7 +26,7 @@ public record PlayerDTO(
 		List<Integer> talentIds,
 		PveRole role,
 		PetType activePet,
-		String rotation,
+		String script,
 		List<Integer> buffIds,
 		List<ActiveEffectDTO> activeEffects,
 		List<Integer> consumableIds,

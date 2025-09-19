@@ -2,14 +2,11 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.build.Build;
-import wow.character.model.build.Rotation;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
-import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.BaseStatInfoRepository;
 import wow.character.repository.CharacterTemplateRepository;
@@ -22,11 +19,8 @@ import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Pet;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Consumable;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
@@ -157,13 +151,13 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void changeBuild(PlayerCharacter character, CharacterTemplate characterTemplate) {
-		Build build = character.getBuild();
+		var build = character.getBuild();
 
 		build.reset();
 		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
 		build.setRole(characterTemplate.getRequiredRole());
 		build.setActivePet(characterTemplate.getActivePet());
-		build.setRotation(characterTemplate.getDefaultRotationTemplate().createRotation());
+		build.setScript(characterTemplate.getDefaultScript());
 
 		refreshSpellbook(character);
 		refreshBuffs(character);
@@ -172,12 +166,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public void updateAfterRestrictionChange(PlayerCharacter character) {
-		Rotation rotation = character.getBuild().getRotation();
-
-		if (rotation != null) {
-			rotation.invalidate();
-		}
-
+		character.getBuild().invalidate();
 		refreshSpellbook(character);
 		refreshActivePet(character);
 		refreshEquipment(character);
@@ -191,7 +180,7 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void refreshActivePet(PlayerCharacter character) {
-		Pet activePet = character.getActivePet();
+		var activePet = character.getActivePet();
 
 		if (activePet != null && !activePet.isAvailableTo(character)) {
 			character.getBuild().setActivePet(null);
@@ -199,12 +188,12 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void refreshBuffs(PlayerCharacter character) {
-		List<Buff> buffs = getAvailableBuffs(character, CHARACTER_BUFF);
+		var buffs = getAvailableBuffs(character, CHARACTER_BUFF);
 
 		character.getBuffs().setAvailable(buffs);
 
 		if (character.getTarget() != null) {
-			List<Buff> debuffs = getAvailableBuffs(character, TARGET_DEBUFF);
+			var debuffs = getAvailableBuffs(character, TARGET_DEBUFF);
 
 			character.getTarget().getBuffs().setAvailable(debuffs);
 		}
@@ -217,14 +206,14 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void refreshEquipment(PlayerCharacter character) {
-		for (ItemSlot itemSlot : ItemSlot.values()) {
+		for (var itemSlot : ItemSlot.values()) {
 			removeInvalidItem(character, itemSlot);
 		}
 	}
 
 	private void removeInvalidItem(PlayerCharacter character, ItemSlot itemSlot) {
-		Equipment equipment = character.getEquipment();
-		EquippableItem item = equipment.get(itemSlot);
+		var equipment = character.getEquipment();
+		var item = equipment.get(itemSlot);
 
 		if (item == null) {
 			return;
@@ -243,7 +232,7 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void removeInvalidEnchant(PlayerCharacter character, EquippableItem item) {
-		Enchant enchant = item.getEnchant();
+		var enchant = item.getEnchant();
 
 		if (enchant != null && !enchant.isAvailableTo(character)) {
 			item.enchant(null);
@@ -251,7 +240,7 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void removeInvalidGem(PlayerCharacter character, EquippableItem item, int socketNo) {
-		Gem gem = item.getGem(socketNo);
+		var gem = item.getGem(socketNo);
 
 		if (gem != null && !gem.isAvailableTo(character)) {
 			item.getSockets().insertGem(socketNo, null);

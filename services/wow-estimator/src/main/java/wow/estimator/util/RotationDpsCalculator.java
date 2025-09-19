@@ -2,8 +2,8 @@ package wow.estimator.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import wow.character.model.build.Rotation;
 import wow.commons.model.spell.Ability;
+import wow.estimator.model.Rotation;
 import wow.estimator.model.Snapshot;
 
 import java.util.function.Function;

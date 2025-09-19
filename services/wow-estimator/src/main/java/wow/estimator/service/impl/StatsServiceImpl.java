@@ -2,7 +2,6 @@ package wow.estimator.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.build.Rotation;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.talent.Talent;
 import wow.estimator.model.*;

@@ -2,7 +2,6 @@ package wow.estimator.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.build.Rotation;
 import wow.character.model.character.Buffs;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedBaseStats;

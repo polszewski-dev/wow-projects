@@ -22,7 +22,7 @@ public class Build implements EffectCollection, Copyable<Build> {
 	private final GameVersion gameVersion;
 	private final Talents talents;
 	private PveRole role;
-	private Rotation rotation;
+	private String script;
 	private Pet activePet;
 
 	public Build(GameVersion gameVersion, Talents talents) {
@@ -37,7 +37,7 @@ public class Build implements EffectCollection, Copyable<Build> {
 				gameVersion,
 				talents.copy(),
 				role,
-				rotation.copy(),
+				script,
 				activePet
 		);
 	}
@@ -45,8 +45,9 @@ public class Build implements EffectCollection, Copyable<Build> {
 	public void reset() {
 		this.talents.reset();
 		this.role = null;
-		this.rotation = null;
+		this.script = null;
 		setActivePet(null);
+		invalidate();
 	}
 
 	public void setActivePet(PetType petType) {
@@ -72,5 +73,9 @@ public class Build implements EffectCollection, Copyable<Build> {
 
 	public boolean hasTalent(String name, int rank) {
 		return talents.has(name, rank);
+	}
+
+	public void invalidate() {
+		// void
 	}
 }

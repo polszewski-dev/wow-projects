@@ -1,7 +1,7 @@
 package wow.estimator.util;
 
-import wow.character.model.build.Rotation;
 import wow.commons.model.spell.Ability;
+import wow.estimator.model.Rotation;
 import wow.estimator.model.RotationSpellStats;
 import wow.estimator.model.RotationStats;
 import wow.estimator.model.Snapshot;

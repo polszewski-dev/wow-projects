@@ -1,6 +1,5 @@
 package wow.estimator.service;
 
-import wow.character.model.build.Rotation;
 import wow.commons.model.spell.AbilityId;
 import wow.estimator.model.*;
 

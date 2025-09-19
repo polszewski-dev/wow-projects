@@ -1,6 +1,5 @@
 package wow.estimator.service;
 
-import wow.character.model.build.Rotation;
 import wow.character.model.snapshot.StatSummary;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.spell.Ability;

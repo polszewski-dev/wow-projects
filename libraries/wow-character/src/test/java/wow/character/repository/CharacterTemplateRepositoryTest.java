@@ -11,14 +11,12 @@ import wow.commons.model.categorization.PveRole;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.constant.AbilityIds.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.profession.ProfessionId.ENCHANTING;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.test.commons.BuffNames.PRAYER_OF_SPIRIT;
 import static wow.test.commons.BuffNames.*;
 
 /**
@@ -46,7 +44,7 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(characterTemplate.getTalentLink()).isEqualTo(link);
 		assertThat(characterTemplate.getRequiredRole()).isEqualTo(PveRole.CASTER_DPS);
-		assertThat(characterTemplate.getDefaultRotationTemplate().getAbilityIds()).isEqualTo(List.of(CURSE_OF_DOOM, CORRUPTION, IMMOLATE, SHADOW_BOLT));
+		assertThat(characterTemplate.getDefaultScript()).isEqualTo("/wow/character/script/tbc/warlock-destro-shadow.txt");
 		assertThat(characterTemplate.getActivePet()).isNull();
 		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
 				FEL_ARMOR,

@@ -1,12 +1,8 @@
 package wow.estimator.util;
 
-import wow.character.model.build.Rotation;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlotGroup;
-import wow.estimator.model.AccumulatedRotationStats;
-import wow.estimator.model.EffectList;
-import wow.estimator.model.Player;
-import wow.estimator.model.Upgrade;
+import wow.estimator.model.*;
 import wow.estimator.service.CalculationService;
 
 import java.util.List;

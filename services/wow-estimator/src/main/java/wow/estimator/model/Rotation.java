@@ -1,4 +1,4 @@
-package wow.character.model.build;
+package wow.estimator.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -68,13 +68,11 @@ public class Rotation implements Copyable<Rotation> {
 		return cooldowns != null;
 	}
 
-	public Rotation invalidate() {
-		this.cooldowns = null;
-		this.filler = null;
-		return this;
-	}
-
 	private void addAbility(Ability ability) {
+		if (!ability.hasDamagingComponent()) {
+			return;
+		}
+
 		if ((hasDotComponent(ability) && !ability.isChanneled()) || ability.hasCooldown()) {
 			cooldowns.add(ability);
 		} else if (filler == null) {

@@ -2,11 +2,7 @@ package wow.estimator.util;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import wow.character.model.build.Rotation;
-import wow.estimator.model.AccumulatedRotationStats;
-import wow.estimator.model.EffectList;
-import wow.estimator.model.Player;
-import wow.estimator.model.SpecialAbility;
+import wow.estimator.model.*;
 import wow.estimator.service.CalculationService;
 
 import java.util.function.DoubleUnaryOperator;

@@ -1,7 +1,6 @@
 package wow.character.model.character;
 
 import wow.character.model.build.Build;
-import wow.character.model.build.Rotation;
 import wow.character.model.build.Talents;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
@@ -144,10 +143,6 @@ public interface PlayerCharacter extends Character {
 	@Override
 	default PveRole getRole() {
 		return getBuild().getRole();
-	}
-
-	default Rotation getRotation() {
-		return getBuild().getRotation().compile(this);
 	}
 
 	default Pet getActivePet() {

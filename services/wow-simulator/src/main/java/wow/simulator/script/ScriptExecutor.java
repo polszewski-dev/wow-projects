@@ -21,7 +21,7 @@ public class ScriptExecutor {
 	private List<ScriptCommandExecutor> rotationCommands;
 
 	public void setupPlayer() {
-		var scriptPath = "/wow/character/script/tbc/warlock-destro-shadow.txt";//todo player.getBuild().getScript();
+		var scriptPath = player.getBuild().getScript();
 		var script = ScriptCompiler.compileResource(scriptPath);
 		var rotationSection = script.getSection(ROTATION);
 

@@ -1,7 +1,6 @@
 package wow.estimator.model.impl;
 
 import lombok.Getter;
-import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
@@ -22,7 +21,7 @@ import wow.estimator.model.Unit;
 @Getter
 public class PlayerImpl extends CharacterImpl implements Player {
 	private final Race race;
-	private final Build build;
+	private final BuildWithRotation build;
 	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
@@ -40,7 +39,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	) {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
-		this.build = new Build(phase.getGameVersion(), talents);
+		this.build = new BuildWithRotation(phase.getGameVersion(), talents);
 		this.equipment = new Equipment();
 		this.professions = new CharacterProfessions();
 		this.exclusiveFactions = new ExclusiveFactions();
@@ -57,7 +56,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Spellbook spellbook,
 			Buffs buffs,
 			Race race,
-			Build build,
+			BuildWithRotation build,
 			Equipment equipment,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions,

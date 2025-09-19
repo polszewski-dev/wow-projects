@@ -2,7 +2,6 @@ package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.build.RotationTemplate;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.impl.PlayerCharacterImpl;
@@ -103,7 +102,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 
 		build.setRole(sourceBuild.getRole());
 		build.setActivePet(sourceBuild.getActivePet());
-		build.setRotation(RotationTemplate.parse(sourceBuild.getRotation()).createRotation());
+		build.setScript(sourceBuild.getScript());
 	}
 
 	private List<BuffId> getBuffIds(List<Integer> buffs) {
