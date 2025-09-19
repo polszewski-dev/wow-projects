@@ -17,6 +17,7 @@ import wow.simulator.converter.StatsConverter;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.service.SimulatorService;
 
 /**
@@ -57,10 +58,12 @@ public class SimulationController {
 	private void applyTargetDebuffs(Player player, SimulationRequestDTO request) {
 		player.getTarget().resetBuffs();
 
+		var buffOwner = createBuffOwner(player);
+
 		for (var buffId : request.player().target().buffIds()) {
 			var activeEffectId = EffectId.of(buffId);
 
-			applyEffect(player.getTarget(), activeEffectId, player);
+			applyEffect(player.getTarget(), activeEffectId, buffOwner);
 		}
 	}
 
@@ -79,5 +82,22 @@ public class SimulationController {
 		);
 
 		target.addEffect(effectInstance, EffectReplacementMode.DEFAULT);
+	}
+
+	private Player createBuffOwner(Player player) {
+		var buffOwner = new PlayerImpl(
+				"%s's buff owner".formatted(player.getName()),
+				player.getPhase(),
+				player.getCharacterClass(),
+				player.getRace(),
+				player.getLevel(),
+				player.getBaseStatInfo(),
+				player.getCombatRatingInfo(),
+				player.getTalents().copy()
+		);
+
+		player.shareSimulationContext(buffOwner);
+
+		return buffOwner;
 	}
 }
