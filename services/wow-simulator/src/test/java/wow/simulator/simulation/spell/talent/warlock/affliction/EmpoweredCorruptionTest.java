@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.test.commons.AbilityNames.CORRUPTION;
-import static wow.test.commons.BuffNames.FEL_ARMOR;
 import static wow.test.commons.TalentNames.EMPOWERED_CORRUPTION;
 
 /**
@@ -20,7 +19,7 @@ class EmpoweredCorruptionTest extends WarlockSpellSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void empoweredCorruption(int rank) {
-		enableBuff(FEL_ARMOR, 2);
+		addSpBonus(100);
 
 		enableTalent(EMPOWERED_CORRUPTION, rank);
 

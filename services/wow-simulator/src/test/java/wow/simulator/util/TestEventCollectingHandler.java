@@ -22,6 +22,7 @@ import wow.simulator.simulation.TimeAware;
 import java.util.ArrayList;
 import java.util.List;
 
+import static wow.simulator.WowSimulatorSpringTest.DummyTestSource;
 import static wow.simulator.util.TestEvent.*;
 
 /**
@@ -190,6 +191,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 			case TalentSource ignored -> EffectType.TALENT;
 			case ItemSource ignored -> EffectType.ITEM;
 			case ItemSetSource ignored -> EffectType.ITEM_SET;
+			case DummyTestSource ignored -> null;
 			default -> throw new IllegalArgumentException();
 		};
 	}

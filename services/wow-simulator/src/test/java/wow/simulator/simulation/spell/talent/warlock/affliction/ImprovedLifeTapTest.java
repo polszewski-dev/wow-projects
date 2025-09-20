@@ -35,7 +35,7 @@ class ImprovedLifeTapTest extends WarlockSpellSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void improvedLifeTapAndSp(int rank) {
-		equip("Azuresong Mageblade");
+		addSpBonus(40);
 
 		enableTalent(IMPROVED_LIFE_TAP, rank);
 		setMana(player, 0);

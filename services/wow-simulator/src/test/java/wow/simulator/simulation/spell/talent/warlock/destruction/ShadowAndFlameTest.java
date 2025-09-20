@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
-import static wow.test.commons.BuffNames.FEL_ARMOR;
 import static wow.test.commons.TalentNames.SHADOW_AND_FLAME;
 
 /**
@@ -20,7 +19,7 @@ class ShadowAndFlameTest extends WarlockSpellSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void additionalSDBonus(int rank) {
-		enableBuff(FEL_ARMOR, 2);
+		addSpBonus(100);
 
 		enableTalent(SHADOW_AND_FLAME, rank);
 
