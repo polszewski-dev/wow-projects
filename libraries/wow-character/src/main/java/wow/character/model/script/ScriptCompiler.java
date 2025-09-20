@@ -85,31 +85,36 @@ public class ScriptCompiler {
 	}
 
 	private ComposableCommand parseComposableCommand(String line) {
-		var matcher = CONDITIONAL_ABILITY_PATTERN.matcher(line);
+		var matcher = COMMAND_PATTERN.matcher(line);
 
-		if (matcher.find()) {
-			var conditionStr = matcher.group(1);
-			var abilityIdStr = matcher.group(2);
-
-			return getComposableCommand(abilityIdStr, conditionStr);
-		} else {
-			return getComposableCommand(line, null);
+		if (!matcher.find()) {
+			throw new IllegalArgumentException("Incorrect command syntax: " + line);
 		}
+
+		var conditionStr = matcher.group(2);
+		var abilityIdStr = matcher.group(3);
+		var rankStr = matcher.group(5);
+		var targetStr = matcher.group(7);
+
+		return getComposableCommand(conditionStr, abilityIdStr, rankStr, targetStr);
 	}
 
-	private static final Pattern CONDITIONAL_ABILITY_PATTERN = Pattern.compile("\\[(.+?)]\\s*(.+)");
+	private static final Pattern COMMAND_PATTERN = Pattern.compile("^(\\[(.+)]\\s*)?(.+?)(\\s*\\(Rank\\s+(\\d+)\\))?(\\s*@\\s*(\\S+))?$");
 
-	private ComposableCommand getComposableCommand(String abilityIdStr, String conditionStr) {
+	private ComposableCommand getComposableCommand(String conditionStr, String abilityIdStr, String rankStr, String targetStr) {
 		var conditionParser = new ScriptCommandConditionParser(conditionStr);
 
 		conditionParser.parse();
 
 		var conditions = conditionParser.getConditions();
-		var target = conditionParser.getTarget();
-
+		var target = parseTarget(targetStr);
 		var itemSlot = tryParseItemSlot(abilityIdStr);
 
 		if (itemSlot != null) {
+			if (rankStr != null) {
+				throw new IllegalArgumentException("Item slot %s can't have rank".formatted(abilityIdStr));
+			}
+
 			return new UseItem(
 					conditions,
 					itemSlot,
@@ -119,11 +124,33 @@ public class ScriptCompiler {
 
 		var abilityId = AbilityId.parse(abilityIdStr);
 
+		if (rankStr != null) {
+			var rank = Integer.parseInt(rankStr);
+
+			return new CastSpellRank(
+					conditions,
+					abilityId.name(),
+					rank,
+					target
+			);
+		}
+
 		return new CastSpell(
 				conditions,
 				abilityId,
 				target
 		);
+	}
+
+	private ScriptCommandTarget parseTarget(String targetStr) {
+		if (targetStr == null) {
+			return ScriptCommandTarget.DEFAULT;
+		}
+
+		return Stream.of(ScriptCommandTarget.values())
+				.filter(x -> x.name().equalsIgnoreCase(targetStr))
+				.findAny()
+				.orElseThrow(() -> new IllegalArgumentException("Invalid target: " + targetStr));
 	}
 
 	private ItemSlot tryParseItemSlot(String line) {

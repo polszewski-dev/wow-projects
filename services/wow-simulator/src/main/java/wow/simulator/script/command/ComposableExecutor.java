@@ -38,6 +38,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	public static ComposableExecutor create(ComposableCommand command, Player player) {
 		return switch (command) {
 			case CastSpell castSpell -> CastSpellExecutor.create(castSpell, player);
+			case CastSpellRank castSpellRank -> CastSpellRankExecutor.create(castSpellRank, player);
 			case UseItem useItem -> UseItemExecutor.create(useItem, player);
 		};
 	}

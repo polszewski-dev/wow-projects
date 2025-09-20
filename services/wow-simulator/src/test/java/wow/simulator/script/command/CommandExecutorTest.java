@@ -1,14 +1,12 @@
 package wow.simulator.script.command;
 
-import wow.character.model.script.ScriptCommand;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import java.util.List;
 
-import static wow.character.model.script.ScriptCommand.CastSpell;
-import static wow.character.model.script.ScriptCommand.UseItem;
+import static wow.character.model.script.ScriptCommand.*;
 import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
 
 /**
@@ -30,6 +28,21 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 		return CastSpellExecutor.create(command, player);
 	}
 
+	CastSpellRank castSpellRank(String abilityName, int rank) {
+		return new CastSpellRank(
+				List.of(),
+				abilityName,
+				rank,
+				DEFAULT
+		);
+	}
+
+	CastSpellRankExecutor getCastSpellRankExecutor(String abilityName, int rank) {
+		var command = castSpellRank(abilityName, rank);
+
+		return CastSpellRankExecutor.create(command, player);
+	}
+
 	UseItemExecutor getUseItemExecutor(ItemSlot itemSlot) {
 		var command = useItem(itemSlot);
 
@@ -44,8 +57,8 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 		);
 	}
 
-	CastSequenceExecutor getCastSequenceExecutor(ScriptCommand.ComposableCommand... commands) {
-		var castSequence = new ScriptCommand.CastSequence(List.of(commands));
+	CastSequenceExecutor getCastSequenceExecutor(ComposableCommand... commands) {
+		var castSequence = new CastSequence(List.of(commands));
 
 		return CastSequenceExecutor.create(castSequence, player);
 	}

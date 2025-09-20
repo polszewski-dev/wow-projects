@@ -1,0 +1,9 @@
+@	Rotation
+
+	Shadow Bolt
+	Shadow Bolt (Rank 1)
+	Shadow Bolt (Rank 10)
+
+	Shadow Bolt			  @ target
+	Shadow Bolt (Rank 1)  @ target
+	Shadow Bolt (Rank 10) @ target

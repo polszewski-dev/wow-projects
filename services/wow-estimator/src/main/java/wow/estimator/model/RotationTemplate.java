@@ -3,15 +3,14 @@ package wow.estimator.model;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.character.model.script.ScriptCommand;
 import wow.character.model.script.ScriptCompiler;
 import wow.commons.model.spell.AbilityId;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
-import static wow.character.model.script.ScriptCommand.CastSequence;
-import static wow.character.model.script.ScriptCommand.CastSpell;
+import static wow.character.model.script.ScriptCommand.*;
 import static wow.character.model.script.ScriptSectionType.ROTATION;
 
 /**
@@ -39,20 +38,27 @@ public class RotationTemplate {
 			switch (command) {
 				case CastSequence(var list) -> {
 					for (var composableCommand : list) {
-						if (composableCommand instanceof CastSpell castSpell) {
-							abilityIds.add(castSpell.abilityId());
-						}
+						addAbilityId(composableCommand, abilityIds);
 					}
 				}
-				case CastSpell castSpell ->
-					abilityIds.add(castSpell.abilityId());
-				case ScriptCommand.UseItem ignored -> {
-					// ignore
-				}
+				case ComposableCommand composableCommand ->
+					addAbilityId(composableCommand, abilityIds);
 			}
 		}
 
 		return List.copyOf(abilityIds);
+	}
+
+	private static void addAbilityId(ComposableCommand command, Set<AbilityId> abilityIds) {
+		switch (command) {
+			case CastSpell castSpell ->
+				abilityIds.add(castSpell.abilityId());
+			case CastSpellRank castSpellRank ->
+				abilityIds.add(AbilityId.of(castSpellRank.abilityName()));
+			case UseItem ignored -> {
+				// ignore
+			}
+		}
 	}
 
 	public Rotation createRotation() {
