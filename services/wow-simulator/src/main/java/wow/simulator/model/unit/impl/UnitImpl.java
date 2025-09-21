@@ -141,21 +141,18 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void cast(String abilityName) {
-		var abilityId = AbilityId.parse(abilityName);
-		cast(abilityId);
-	}
-
-	@Override
-	public void cast(AbilityId abilityId) {
-		var ability = getAbility(abilityId).orElseThrow();
-		var primaryTarget = getPrimaryTarget(ability, null);
-		cast(ability, primaryTarget);
+		cast(abilityName, null);
 	}
 
 	@Override
 	public void cast(String abilityName, Unit target) {
-		var abilityId = AbilityId.parse(abilityName);
+		var abilityId = AbilityId.of(abilityName);
 		cast(abilityId, target);
+	}
+
+	@Override
+	public void cast(AbilityId abilityId) {
+		cast(abilityId, null);
 	}
 
 	@Override
@@ -219,15 +216,18 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public boolean canCast(String abilityName) {
-		var abilityId = AbilityId.parse(abilityName);
-		return canCast(abilityId);
+		return canCast(abilityName, null);
+	}
+
+	@Override
+	public boolean canCast(String abilityName, Unit target) {
+		var abilityId = AbilityId.of(abilityName);
+		return canCast(abilityId, target);
 	}
 
 	@Override
 	public boolean canCast(AbilityId abilityId) {
-		var ability = getAbility(abilityId).orElseThrow();
-		var primaryTarget = getPrimaryTarget(ability, null);
-		return canCast(ability, primaryTarget);
+		return canCast(abilityId, null);
 	}
 
 	@Override

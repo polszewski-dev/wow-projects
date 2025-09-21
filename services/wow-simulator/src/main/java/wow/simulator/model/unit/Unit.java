@@ -34,13 +34,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void ensureAction();
 
-	void cast(String abilityName);
-
 	void cast(AbilityId abilityId);
 
-	void cast(String abilityName, Unit target);
-
 	void cast(AbilityId abilityId, Unit target);
+
+	void cast(String abilityName);
+
+	void cast(String abilityName, Unit target);
 
 	PrimaryTarget getPrimaryTarget(Ability ability, Unit explicitTarget);
 
@@ -53,6 +53,8 @@ public interface Unit extends Character, SimulationContextSource {
 	void interruptCurrentAction();
 
 	boolean canCast(String abilityName);
+
+	boolean canCast(String abilityName, Unit target);
 
 	boolean canCast(AbilityId abilityId);
 
