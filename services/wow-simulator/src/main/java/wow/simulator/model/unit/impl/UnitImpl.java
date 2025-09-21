@@ -86,10 +86,14 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 		if (pendingActionQueue.isEmpty()) {
 			onPendingActionQueueEmpty.accept(this);
-		}
 
-		if (pendingActionQueue.isEmpty()) {
-			throw new IllegalStateException();
+			if (hasActionInProgress()) {
+				return;
+			}
+
+			if (pendingActionQueue.isEmpty()) {
+				throw new IllegalStateException();
+			}
 		}
 
 		var newAction = pendingActionQueue.removeEarliestAction();
@@ -100,6 +104,14 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private void startAction(UnitAction newAction) {
 		this.currentAction = newAction;
 		getScheduler().add(newAction);
+	}
+
+	private void enqueueAction(UnitAction action) {
+		if (pendingActionQueue.isEmpty() && currentAction == null) {
+			startAction(action);
+		} else {
+			pendingActionQueue.add(action);
+		}
 	}
 
 	@Override
@@ -155,7 +167,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	private void cast(Ability ability, PrimaryTarget primaryTarget) {
 		var action = new CastSpellAction(this, ability, primaryTarget);
-		pendingActionQueue.add(action);
+		enqueueAction(action);
 	}
 
 	@Override
@@ -166,7 +178,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void idleUntil(AnyTime time) {
-		pendingActionQueue.add(new IdleAction(this, time));
+		enqueueAction(new IdleAction(this, time));
 	}
 
 	@Override
