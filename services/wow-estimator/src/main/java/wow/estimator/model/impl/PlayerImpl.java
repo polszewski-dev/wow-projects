@@ -5,6 +5,7 @@ import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
+import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
@@ -118,5 +119,16 @@ public class PlayerImpl extends CharacterImpl implements Player {
 
 	private boolean isSchoolPrevented(Ability ability) {
 		return getBuffs().getStream().anyMatch(x -> x.isSchoolPrevented(ability.getSchool()));
+	}
+
+	@Override
+	public void collectEffects(EffectCollector collector) {
+		getBuild().collectEffects(collector);
+		getEquipment().collectEffects(collector);
+		getBuffs().collectEffects(collector);
+		getConsumables().collectEffects(collector);
+		for (var racial : getRace().getRacials(this)) {
+			collector.addEffect(racial);
+		}
 	}
 }

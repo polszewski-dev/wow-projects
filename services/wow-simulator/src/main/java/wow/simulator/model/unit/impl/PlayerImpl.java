@@ -77,7 +77,12 @@ public class PlayerImpl extends UnitImpl implements Player {
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		Player.super.collectEffects(collector);
+		getBuild().collectEffects(collector);
+		getEquipment().collectEffects(collector);
+		getBuffs().collectEffects(collector);
+		for (var racial : getRace().getRacials(this)) {
+			collector.addEffect(racial);
+		}
 		effects.collectEffects(collector);
 		collectAurasFromOtherPartyMembers(collector);
 	}
