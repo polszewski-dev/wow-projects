@@ -278,4 +278,9 @@ public class CharacterServiceImpl implements CharacterService {
 				(itemSlot, equippableItem) -> character.equip(equippableItem.copy(), itemSlot)
 		);
 	}
+
+	@Override
+	public List<GearSet> getAvailableGearSets(PlayerCharacter character) {
+		return gearSetRepository.getAvailableGearSets(character);
+	}
 }

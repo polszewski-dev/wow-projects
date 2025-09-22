@@ -9,7 +9,7 @@ import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStat
 import { EquippableItem } from "../../model/equipment/EquippableItem";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { getSlots, ItemSlotGroup } from "../../model/upgrade/ItemSlotGroup";
-import { changeBuffStatusSuccess, changeConsumableStatusSuccess, dpsChanged, equipEnchantSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from "./character.actions";
+import { changeBuffStatusSuccess, changeConsumableStatusSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from "./character.actions";
 
 export interface CharacterState {
 	characterId: string | null;
@@ -114,6 +114,10 @@ export const characterReducer = createReducer(
 	on(resetEquipmentSuccess, (state) => ({
 		...state,
 		equipment: withAllSlotsSetTo(success(null))
+	})),
+	on(equipGearSetSuccess, (state, { equipment }) => ({
+		...state,
+		equipment: withAllSlotsFilledFrom(equipment),
 	})),
 
 	on(changeBuffStatusSuccess, (state, { buffListType, buffStatusList }) => ({

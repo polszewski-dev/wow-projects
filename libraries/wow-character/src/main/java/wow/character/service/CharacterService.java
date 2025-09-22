@@ -1,11 +1,14 @@
 package wow.character.service;
 
+import wow.character.model.character.GearSet;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -27,4 +30,6 @@ public interface CharacterService {
 	void updateAfterRestrictionChange(PlayerCharacter character);
 
 	void equipGearSet(PlayerCharacter character, String gearSetName);
+
+	List<GearSet> getAvailableGearSets(PlayerCharacter character);
 }

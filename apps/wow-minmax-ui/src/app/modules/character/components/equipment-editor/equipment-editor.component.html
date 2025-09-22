@@ -23,11 +23,37 @@
 
 	<app-item-filter></app-item-filter>
 
-	<div style="text-align: center;">
+	<div style="display: flex;justify-content: center;">
 		<button
 			type="button"
 			class="btn btn-sm btn-link big-btn-link"
 			(click)="resetEquipment(data.characterId)"
 		>Reset</button>
 	</div>
+
+	<div style="display: flex;justify-content: center;">
+		<div ngbDropdown>
+			<a
+				class="btn btn-sm btn-link big-btn-link"
+				tabindex="0"
+				ngbDropdownToggle
+				id="equip-gear-set-select"
+				role="button"
+				style="overflow: clip"
+			>Equip Gear Set</a>
+			<div ngbDropdownMenu aria-labelledby="equip-gear-set-select" class="dropdown-menu dropdown-menu-end">
+				@if (gearSets$ | async; as gearSets) {
+					@for (gearSet of gearSets; track gearSet) {
+						<a
+							ngbDropdownItem
+							href="#"
+							(click)="$event.preventDefault();equipGearSet(data.characterId, gearSet)"
+							class="drop-down-select-item"
+						>{{gearSet}}</a>
+					}
+				}
+			</div>
+		</div>
+	</div>
+
 }

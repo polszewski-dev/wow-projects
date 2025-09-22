@@ -60,6 +60,14 @@ export class EquipmentService {
 		return this.http.delete<void>(`${this.apiUrl}/${characterId}`);
 	}
 
+	getAvailableGearSets(characterId: string) {
+		return this.http.get<string[]>(`${this.apiUrl}/${characterId}/gear-set`);
+	}
+
+	equipGearSet(characterId: string, gearSet: string) {
+		return this.http.get<Equipment>(`${this.apiUrl}/${characterId}/gear-set/${gearSet}/equip`);
+	}
+
 	getSocketStatus(characterId: string) {
 		return this.http.get<EquipmentSocketStatus>(`${this.apiUrl}/${characterId}/socket-status`);
 	}

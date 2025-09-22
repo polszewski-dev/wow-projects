@@ -167,6 +167,21 @@ export const resetEquipmentFailure = createAction(
 	props<{ error: string }>()
 );
 
+export const equipGearSet = createAction(
+	"[Character] Equip Gear Set",
+	props<{ characterId: string, gearSet: string }>()
+);
+
+export const equipGearSetSuccess = createAction(
+	"[Character] Equip Gear Set Success",
+	props<{ characterId: string, equipment: Equipment }>()
+);
+
+export const equipGearSetFailure = createAction(
+	"[Character] Equip Gear Set Failure",
+	props<{ error: string }>()
+);
+
 export const changeBuffStatus = createAction(
 	"[Character] Change Buff Status",
 	props<{ characterId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()

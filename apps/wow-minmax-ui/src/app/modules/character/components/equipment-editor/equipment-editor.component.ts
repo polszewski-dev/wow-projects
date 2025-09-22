@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
+import { DropdownSelectValueFormatter } from 'src/app/modules/shared/components/dropdown-select/dropdown-select.component';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemType } from '../../model/equipment/ItemType';
 import { CharacterModuleState } from '../../state/character-module.state';
-import { resetEquipment } from '../../state/character/character.actions';
+import { equipGearSet, resetEquipment } from '../../state/character/character.actions';
 import { selectCharacterId, selectEquipment } from '../../state/character/character.selectors';
 import { selectEquipmentOptions } from '../../state/equipment-options/equipment-options.selectors';
+import { filter, map, switchMap } from 'rxjs';
+import { EquipmentService } from '../../services/equipment.service';
 
 @Component({
 	selector: 'app-equipment-editor',
@@ -14,11 +17,19 @@ import { selectEquipmentOptions } from '../../state/equipment-options/equipment-
 })
 export class EquipmentEditorComponent {
 	readonly data$ = this.store.select(dataSelector);
+	readonly gearSets$ = this.store.select(selectCharacterId).pipe(
+		filter(characterId => !!characterId),
+		switchMap(characterId => this.equipmentService.getAvailableGearSets(characterId!))
+	);
 
-	constructor(private store: Store<CharacterModuleState>) {}
+	constructor(private store: Store<CharacterModuleState>, private equipmentService: EquipmentService) {}
 
 	resetEquipment(characterId: string) {
 		this.store.dispatch(resetEquipment({ characterId }));
+	}
+
+	equipGearSet(characterId: string, gearSet: string) {
+		this.store.dispatch(equipGearSet({ characterId, gearSet }));
 	}
 
 	readonly itemSlots = Object.values(ItemSlot);

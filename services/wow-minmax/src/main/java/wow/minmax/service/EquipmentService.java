@@ -1,5 +1,6 @@
 package wow.minmax.service;
 
+import wow.character.model.character.GearSet;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
@@ -27,4 +28,8 @@ public interface EquipmentService {
 	PlayerCharacter resetEquipment(CharacterId characterId);
 
 	EquipmentSocketStatus getEquipmentSocketStatus(CharacterId characterId);
+
+	List<GearSet> getAvailableGearSets(CharacterId characterId);
+
+	PlayerCharacter equipGearSet(CharacterId characterId, String gearSet);
 }

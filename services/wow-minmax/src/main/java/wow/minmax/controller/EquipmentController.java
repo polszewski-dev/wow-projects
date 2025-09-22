@@ -3,6 +3,7 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import wow.character.model.character.GearSet;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.client.dto.equipment.EquipmentDTO;
@@ -17,6 +18,8 @@ import wow.minmax.service.EquipmentService;
 
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Comparator.comparing;
 
 /**
  * User: POlszewski
@@ -91,5 +94,33 @@ public class EquipmentController {
 		var equipmentSocketStatus = equipmentService.getEquipmentSocketStatus(characterId);
 
 		return equipmentSocketStatusConverter.convert(equipmentSocketStatus);
+	}
+
+	@GetMapping("{characterId}/gear-set")
+	public List<String> getAvailableGearSets(
+			@PathVariable("characterId") CharacterId characterId
+	) {
+		var gearSets = equipmentService.getAvailableGearSets(characterId);
+
+		return gearSets.stream()
+				.sorted(
+						comparing(GearSet::getEarliestPhaseId).reversed()
+						.thenComparing(GearSet::getName)
+				)
+				.map(GearSet::getName)
+				.toList();
+	}
+
+	@GetMapping("{characterId}/gear-set/{gearSet}/equip")
+	public EquipmentDTO equipGearSet(
+			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("gearSet") String gearSet
+	) {
+		var player = equipmentService.equipGearSet(characterId, gearSet);
+		var equipment = player.getEquipment();
+
+		log.info("Equipped gear set: {}, charId: {}", gearSet, characterId);
+
+		return equipmentConverter.convert(equipment);
 	}
 }

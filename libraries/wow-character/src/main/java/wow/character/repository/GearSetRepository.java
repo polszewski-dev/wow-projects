@@ -3,6 +3,7 @@ package wow.character.repository;
 import wow.character.model.character.Character;
 import wow.character.model.character.GearSet;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,4 +12,6 @@ import java.util.Optional;
  */
 public interface GearSetRepository {
 	Optional<GearSet> getGearSet(String name, Character character);
+
+	List<GearSet> getAvailableGearSets(Character character);
 }

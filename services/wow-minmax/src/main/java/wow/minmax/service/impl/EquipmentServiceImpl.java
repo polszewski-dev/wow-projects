@@ -2,10 +2,12 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.character.GearSet;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
+import wow.character.service.CharacterService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.effect.Effect;
@@ -34,6 +36,7 @@ import static java.util.stream.Collectors.toMap;
 @AllArgsConstructor
 public class EquipmentServiceImpl implements EquipmentService {
 	private final PlayerCharacterService playerCharacterService;
+	private final CharacterService characterService;
 	private final UpgradeService upgradeService;
 
 	@Override
@@ -157,5 +160,23 @@ public class EquipmentServiceImpl implements EquipmentService {
 				item.getSocketType(socketNo),
 				equipment.hasMatchingGem(item, socketNo)
 		);
+	}
+
+	@Override
+	public List<GearSet> getAvailableGearSets(CharacterId characterId) {
+		var player = playerCharacterService.getPlayer(characterId);
+
+		return characterService.getAvailableGearSets(player);
+	}
+
+	@Override
+	public PlayerCharacter equipGearSet(CharacterId characterId, String gearSet) {
+		var player = playerCharacterService.getPlayer(characterId);
+
+		characterService.equipGearSet(player, gearSet);
+
+		playerCharacterService.saveCharacter(characterId, player);
+
+		return player;
 	}
 }

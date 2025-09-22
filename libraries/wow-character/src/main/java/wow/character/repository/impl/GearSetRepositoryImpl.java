@@ -21,9 +21,10 @@ import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
  */
 @Component
 public class GearSetRepositoryImpl implements GearSetRepository {
-	private record Key(String name, CharacterClassId characterClassId) {}
+	private record NameClassKey(String name, CharacterClassId characterClassId) {}
 
-	private final PhaseMap<Key, List<GearSet>> gearSetByKey = new PhaseMap<>();
+	private final PhaseMap<NameClassKey, List<GearSet>> gearSetByNameClass = new PhaseMap<>();
+	private final PhaseMap<CharacterClassId, List<GearSet>> gearSetByClass = new PhaseMap<>();
 
 	public GearSetRepositoryImpl(GearSetExcelParser parser) throws IOException {
 		parser.readFromXls();
@@ -32,17 +33,32 @@ public class GearSetRepositoryImpl implements GearSetRepository {
 
 	@Override
 	public Optional<GearSet> getGearSet(String name, Character character) {
-		var key = new Key(name, character.getCharacterClassId());
+		var phaseId = character.getPhaseId();
+		var key = new NameClassKey(name, character.getCharacterClassId());
 
-		return gearSetByKey.getOptional(character.getPhaseId(), key).stream()
+		return gearSetByNameClass.getOptional(phaseId, key).stream()
 				.flatMap(Collection::stream)
 				.filter(x -> x.isAvailableTo(character))
 				.findAny();
 	}
 
-	private void addGearSet(GearSet gearSet) {
-		var key = new Key(gearSet.getName(), gearSet.getRequiredCharacterClassId());
+	@Override
+	public List<GearSet> getAvailableGearSets(Character character) {
+		var phaseId = character.getPhaseId();
+		var characterClassId = character.getCharacterClassId();
 
-		addEntryForEveryPhase(gearSetByKey, key, gearSet);
+		return gearSetByClass.getOptional(phaseId, characterClassId).stream()
+				.flatMap(Collection::stream)
+				.filter(x -> x.isAvailableTo(character))
+				.toList();
+	}
+
+	private void addGearSet(GearSet gearSet) {
+		var name = gearSet.getName();
+		var characterClassId = gearSet.getRequiredCharacterClassId();
+		var key = new NameClassKey(name, characterClassId);
+
+		addEntryForEveryPhase(gearSetByNameClass, key, gearSet);
+		addEntryForEveryPhase(gearSetByClass, characterClassId, gearSet);
 	}
 }
