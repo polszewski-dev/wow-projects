@@ -32,4 +32,6 @@ public interface EquipmentService {
 	List<GearSet> getAvailableGearSets(CharacterId characterId);
 
 	PlayerCharacter equipGearSet(CharacterId characterId, String gearSet);
+
+	PlayerCharacter equipPreviousPhase(CharacterId characterId);
 }

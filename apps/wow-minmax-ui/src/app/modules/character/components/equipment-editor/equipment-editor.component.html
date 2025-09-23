@@ -55,5 +55,14 @@
 			</div>
 		</div>
 	</div>
-
+	
+	@if (hasPreviousPhase(data.characterId)) {
+		<div style="display: flex;justify-content: center;">
+			<button
+				type="button"
+				class="btn btn-sm btn-link big-btn-link"
+				(click)="equipPreviousPhase(data.characterId)"
+			>Equip Previous Phase</button>
+		</div>
+	}
 }

@@ -68,6 +68,10 @@ export class EquipmentService {
 		return this.http.get<Equipment>(`${this.apiUrl}/${characterId}/gear-set/${gearSet}/equip`);
 	}
 
+	equipPreviousPhase(characterId: string) {
+		return this.http.get<Equipment>(`${this.apiUrl}/${characterId}/equip-previous-phase`);
+	}
+
 	getSocketStatus(characterId: string) {
 		return this.http.get<EquipmentSocketStatus>(`${this.apiUrl}/${characterId}/socket-status`);
 	}

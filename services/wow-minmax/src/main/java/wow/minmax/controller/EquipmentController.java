@@ -123,4 +123,16 @@ public class EquipmentController {
 
 		return equipmentConverter.convert(equipment);
 	}
+
+	@GetMapping("{characterId}/equip-previous-phase")
+	public EquipmentDTO equipPreviousPhase(
+			@PathVariable("characterId") CharacterId characterId
+	) {
+		var player = equipmentService.equipPreviousPhase(characterId);
+		var equipment = player.getEquipment();
+
+		log.info("Equipped previous phase, charId: {}", characterId);
+
+		return equipmentConverter.convert(equipment);
+	}
 }

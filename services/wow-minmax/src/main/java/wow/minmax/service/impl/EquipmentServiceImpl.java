@@ -179,4 +179,33 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		return player;
 	}
+
+	@Override
+	public PlayerCharacter equipPreviousPhase(CharacterId characterId) {
+		var previousPhaseCharacterId = getPreviousPhaseCharacterId(characterId);
+		var previousPhasePlayer = playerCharacterService.getPlayer(previousPhaseCharacterId);
+		var player = playerCharacterService.getPlayer(characterId);
+
+		player.resetEquipment();
+
+		for (var itemSlot : ItemSlot.values()) {
+			var item = previousPhasePlayer.getEquippedItem(itemSlot);
+
+			player.equip(item, itemSlot);
+		}
+
+		playerCharacterService.saveCharacter(characterId, player);
+
+		return player;
+	}
+
+	private CharacterId getPreviousPhaseCharacterId(CharacterId characterId) {
+		return new CharacterId(
+				characterId.profileId(),
+				characterId.phaseId().getPreviousPhase().orElseThrow(),
+				characterId.level(),
+				characterId.enemyType(),
+				characterId.enemyLevelDiff()
+		);
+	}
 }

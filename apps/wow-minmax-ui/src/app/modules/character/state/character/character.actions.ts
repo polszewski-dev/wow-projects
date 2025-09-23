@@ -182,6 +182,21 @@ export const equipGearSetFailure = createAction(
 	props<{ error: string }>()
 );
 
+export const equipPreviousPhase = createAction(
+	"[Character] Equip Previous Phase",
+	props<{ characterId: string }>()
+);
+
+export const equipPreviousPhaseSuccess = createAction(
+	"[Character] Equip Previous Phase Success",
+	props<{ characterId: string, equipment: Equipment }>()
+);
+
+export const equipPreviousPhaseFailure = createAction(
+	"[Character] Equip Previous Phase Failure",
+	props<{ error: string }>()
+);
+
 export const changeBuffStatus = createAction(
 	"[Character] Change Buff Status",
 	props<{ characterId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()

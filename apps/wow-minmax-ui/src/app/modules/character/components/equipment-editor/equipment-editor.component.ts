@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
-import { DropdownSelectValueFormatter } from 'src/app/modules/shared/components/dropdown-select/dropdown-select.component';
+import { filter, switchMap } from 'rxjs';
+import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
+import { parseCharacterId } from '../../model/CharacterId';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemType } from '../../model/equipment/ItemType';
+import { EquipmentService } from '../../services/equipment.service';
 import { CharacterModuleState } from '../../state/character-module.state';
-import { equipGearSet, resetEquipment } from '../../state/character/character.actions';
+import { equipGearSet, equipPreviousPhase, resetEquipment } from '../../state/character/character.actions';
 import { selectCharacterId, selectEquipment } from '../../state/character/character.selectors';
 import { selectEquipmentOptions } from '../../state/equipment-options/equipment-options.selectors';
-import { filter, map, switchMap } from 'rxjs';
-import { EquipmentService } from '../../services/equipment.service';
 
 @Component({
 	selector: 'app-equipment-editor',
@@ -30,6 +31,15 @@ export class EquipmentEditorComponent {
 
 	equipGearSet(characterId: string, gearSet: string) {
 		this.store.dispatch(equipGearSet({ characterId, gearSet }));
+	}
+
+	equipPreviousPhase(characterId: string) {
+		this.store.dispatch(equipPreviousPhase({ characterId }));
+	}
+
+	hasPreviousPhase(characterId: string) {
+		const phaseId = parseCharacterId(characterId).phaseId;
+		return phaseId.toLocaleLowerCase() !== PhaseId.VANILLA_P1.toLocaleLowerCase();
 	}
 
 	readonly itemSlots = Object.values(ItemSlot);
