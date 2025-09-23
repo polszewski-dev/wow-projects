@@ -1,0 +1,27 @@
+.upgrade-list {
+	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 15px;
+}
+
+.upgrade-list-slot-group {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.upgrade-list .item-header {
+	font-size: 15px;
+}
+
+.red-gem { color: #FF4F3C; }
+
+.orange-gem { color: #FFB432; }
+
+.yellow-gem { color: #CEB52A; }
+
+.green-gem { color: green; }
+
+.blue-gem { color: #4187E1; }
+
+.purple-gem { color: #9529c6; }
+
+.meta-gem { color: grey; }

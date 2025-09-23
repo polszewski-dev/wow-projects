@@ -9,51 +9,55 @@
 		</div>
 
 		@if (visible) {
-			<ul class="upgrade-list">
+
+			<nav ngbNav #nav="ngbNav" class="nav-tabs" style="padding-top: 20px;">
 				@for (slotGroup of itemSlotGroups; track slotGroup) {
-					<div>
-						@if (allUpgrades[slotGroup].length > 0) {
-							<li>
-								<span class="upgrade-list-slot-group">{{slotGroup | titlecase}}</span>
-								<ul>
-									@for (upgrade of allUpgrades[slotGroup]; track upgrade) {
-										<li>
-											<b>+{{upgrade.changePct | number:'1.2-2'}}%:</b>&nbsp;
+					@if (allUpgrades[slotGroup].length > 0) {
+						<ng-container ngbNavItem>
+							<a ngbNavLink>{{slotGroup | titlecase}}</a>
+							<ng-template ngbNavContent>
+								<ul class="upgrade-list" style="padding-top: 10px; padding-bottom: 30px">
+										@for (upgrade of allUpgrades[slotGroup]; track upgrade) {
+											<li>
+												<b>+{{upgrade.changePct | number:'1.2-2'}}%:</b>&nbsp;
 
-											@for (item of upgrade.itemDifference; track item.item.id) {
-												<span>
-													<span title="{{item.item.detailedSource}}">[{{item.item.source}}]</span>&nbsp;
-													<span class="rarity-{{item.item.rarity.toLowerCase()}} item-header">{{item.item.name}}</span>
+												@for (item of upgrade.itemDifference; track item.item.id) {
+													<span>
+														<span title="{{item.item.detailedSource}}">[{{item.item.source}}]</span>&nbsp;
+														<span class="rarity-{{item.item.rarity.toLowerCase()}} item-header">{{item.item.name}}</span>
 
-													@for (gem of item.gems; track gem) {
-														<span>
-															@if (!!gem) {
-																<span class="{{gem.color.toLowerCase()}}-gem item-header">[{{gem.shortName}}]</span>
-															}
-														</span>
-													}
+														@for (gem of item.gems; track gem) {
+															<span>
+																@if (!!gem) {
+																	<span class="{{gem.color.toLowerCase()}}-gem item-header">[{{gem.shortName}}]</span>
+																}
+															</span>
+														}
 
-													@if (!$last) {
-														<span> + </span>
-													}
-												</span>
-											},
-											<b>diff:</b>
-											{{upgrade.statDifference.join(",&nbsp;")}}
-											@for (added of upgrade.addedAbilities; track added) {
-												<span class="added-ability">{{added}},&nbsp;</span>
-											}
-											@for (removed of upgrade.removedAbilities; track removed) {
-												<span class="removed-ability">{{removed}},&nbsp;</span>
-											}
-										</li>
-									}
-								</ul>
-							</li>
-						}
-					</div>
+														@if (!$last) {
+															<span> + </span>
+														}
+													</span>
+												},
+												<b>diff:</b>
+												{{upgrade.statDifference.join(",&nbsp;")}}
+												@for (added of upgrade.addedAbilities; track added) {
+													<span class="added-ability">{{added}},&nbsp;</span>
+												}
+												@for (removed of upgrade.removedAbilities; track removed) {
+													<span class="removed-ability">{{removed}},&nbsp;</span>
+												}
+											</li>
+										}
+									</ul>
+							</ng-template>
+						</ng-container>	
+					}
 				}
-			</ul>
+			</nav>
+
+			<div [ngbNavOutlet]="nav"></div>
+			
 		}
 	</div>
 }
