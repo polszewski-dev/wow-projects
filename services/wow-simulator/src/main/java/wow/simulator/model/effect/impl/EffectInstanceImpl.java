@@ -126,6 +126,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	protected void onInterrupted() {
 		this.removed = true;
+		getScheduler().rescheduleInterruptedActionToPresent(this, endTime);
 
 		if (!silentRemoval) {
 			getGameLog().effectRemoved(this);

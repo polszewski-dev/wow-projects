@@ -155,6 +155,33 @@ class MiseryTest extends PriestSpellSimulationTest {
 		);
 	}
 
+	@Test
+	void miseryReappliedAtTheSameTimeItExpired() {
+		enableTalent(MISERY, 5);
+		enableTalent(TalentNames.MIND_FLAY, 1);
+
+		player.cast(MIND_FLAY);
+		player.cast(MIND_FLAY);
+
+		updateUntil(180);
+
+		assertEvents(
+				TestEvent::isEffect,
+				at(0)
+						.effectApplied(MISERY, TALENT, target, Duration.INFINITE)
+						.effectApplied(MIND_FLAY, target, 3),
+				at(3)
+						.effectExpired(MIND_FLAY, target)
+						.effectRemoved(MISERY, TALENT, target)
+						.effectApplied(MISERY, TALENT, target, Duration.INFINITE)
+						.effectApplied(MIND_FLAY, target, 3),
+				at(6)
+						.effectExpired(MIND_FLAY, target)
+						.effectRemoved(MISERY, TALENT, target)
+
+		);
+	}
+
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void spellDamageIsIncreased(int rank) {

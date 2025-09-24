@@ -57,4 +57,6 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	void augment(EffectAugmentations augmentations);
 
 	void increaseEffect(double effectIncreasePct);
+
+	boolean isTerminated();
 }

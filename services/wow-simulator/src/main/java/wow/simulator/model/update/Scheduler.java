@@ -3,6 +3,7 @@ package wow.simulator.model.update;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Duration;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.time.Clock;
 
@@ -88,5 +89,24 @@ public class Scheduler {
 
 	public boolean isEmpty() {
 		return actionsByTime.isEmpty();
+	}
+
+	public void rescheduleInterruptedActionToPresent(Action action, AnyTime updateTime) {
+		if (action.getStatus() != ActionStatus.INTERRUPTED) {
+			throw new IllegalStateException();
+		}
+
+		if (updateTime == null || clock.timeInThePresent(updateTime)) {
+			return;
+		}
+
+		var actions = actionsByTime.get(updateTime);
+
+		if (actions == null || !actions.contains(action)) {
+			return;
+		}
+
+		actions.remove(action);
+		actionsByTime.get(clock.now()).add(action);
 	}
 }

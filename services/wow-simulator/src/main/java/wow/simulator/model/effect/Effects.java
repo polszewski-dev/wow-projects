@@ -65,6 +65,7 @@ public class Effects implements SimulationContextSource, EffectCollection {
 	private EffectInstance getMatchingEffect(EffectInstance newEffect) {
 		return getStream()
 				.filter(existingEffect -> isMatching(existingEffect, newEffect))
+				.filter(existingEffect -> !existingEffect.isTerminated())
 				.findAny()
 				.orElse(null);
 	}
