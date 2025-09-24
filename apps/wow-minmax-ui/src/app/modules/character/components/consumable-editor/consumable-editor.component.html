@@ -9,9 +9,8 @@
 				[(ngModel)]="consumableStatus.enabled"
 				(change)="onChange(data.characterId, consumableStatus)"
 			>
-			<label class="form-check-label" for="consumable-select-{{consumable.id}}" title="{{consumable.tooltip || consumable.attributes}}">
-				<img [src]="consumable.icon | icon"/>
-				<span class="consumable-name px-1">{{consumable.name}}</span>
+			<label class="form-check-label" for="consumable-select-{{consumable.id}}">
+				<app-description [source]="consumable" class="consumable-name"></app-description>
 				<span class="consumable-stats">= {{consumable.attributes}}</span>
 			</label>
 		</div>

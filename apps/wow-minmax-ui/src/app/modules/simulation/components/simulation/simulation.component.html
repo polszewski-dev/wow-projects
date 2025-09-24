@@ -20,10 +20,8 @@
 		<tbody>
 			@for (abilityStats of stats.abilityStats; track abilityStats.ability) {
 				<tr>
-					<td style="text-align: left" title="{{abilityStats.ability.tooltip}}">
-						<strong>
-							<img [src]="abilityStats.ability.icon | icon"/>&nbsp;{{abilityStats.ability.name}}
-						</strong>
+					<td style="text-align: left">
+						<app-description [source]="abilityStats.ability"></app-description>
 					</td>
 					<td style="text-align: center">{{abilityStats.ability.rank | blankZero}}</td>
 					<td>{{abilityStats.numCasts}}</td>

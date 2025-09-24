@@ -10,10 +10,8 @@
 	<tbody>
 		@for (talentStats of talentStats$ | async; track talentStats) {
 			<tr>
-				<td style="text-align: left" [title]="talentStats.statEquivalent.replaceAll(', ', ',\n')">
-					<strong>
-						<img [src]="talentStats.talent.icon | icon"/>&nbsp;{{talentStats.talent.name}}
-					</strong>
+				<td style="text-align: left">
+					<app-description [source]="talentStats.talent"></app-description>
 				</td>
 				<td>{{talentStats.talent.rank + "/" + talentStats.talent.maxRank}}</td>
 				<td [innerHTML]="talentStats.talent.tooltip.replaceAll('\n', '<br/>')"></td>

@@ -1,6 +1,7 @@
 <table class="table table-striped stats-table">
 	<thead>
 		<tr>
+			<th scope="col" style="width: 15%">name</th>
 			<th scope="col">description</th>
 			<th scope="col">stat equivalent</th>
 			<th scope="col">sp equivalent</th>
@@ -9,8 +10,10 @@
 	<tbody>
 		@for (specialAbilityStats of specialAbilityStats$ | async; track specialAbilityStats) {
 			<tr>
-				<td [title]="specialAbilityStats.attributes">
-					<img [src]="specialAbilityStats.ability.icon | icon" [title]="specialAbilityStats.ability.name"/>&nbsp;{{specialAbilityStats.ability.tooltip}}</td>
+				<td>
+					<app-description [source]="specialAbilityStats.ability"></app-description>
+				</td>
+				<td [title]="specialAbilityStats.attributes">{{specialAbilityStats.ability.tooltip}}</td>
 				<td>{{specialAbilityStats.statEquivalent}}</td>
 				<td>{{specialAbilityStats.spEquivalent | number:'1.0-0' | blankZero}}</td>
 			</tr>

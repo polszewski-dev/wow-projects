@@ -9,9 +9,8 @@
 				[(ngModel)]="buffStatus.enabled"
 				(change)="onChange(data.characterId, buffStatus)"
 			>
-			<label class="form-check-label" for="buff-select-{{buff.id}}" title="{{buff.tooltip || buff.attributes}}">
-				<img [src]="buff.icon | icon"/>
-				<span class="buff-name px-1">{{buff.name}}</span>
+			<label class="form-check-label" for="buff-select-{{buff.id}}">
+				<app-description [source]="buff" class="buff-name"></app-description>
 				<span class="buff-stats">= {{buff.attributes}}</span>
 			</label>
 		</div>

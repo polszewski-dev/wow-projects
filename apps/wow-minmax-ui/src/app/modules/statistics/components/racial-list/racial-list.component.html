@@ -9,10 +9,8 @@
 		@if (character$ | async; as character) {
 			@for (racial of character.race.racials; track racial.name) {
 				<tr>
-					<td style="text-align: left" [title]="racial.attributes.replaceAll(', ', ',\n')">
-						<strong>
-							<img [src]="racial.icon | icon"/>&nbsp;{{racial.name}}
-						</strong>
+					<td style="text-align: left">
+						<app-description [source]="racial"></app-description>
 					</td>
 					<td [innerHTML]="racial.tooltip.replaceAll('\n', '<br/>')"></td>
 				</tr>

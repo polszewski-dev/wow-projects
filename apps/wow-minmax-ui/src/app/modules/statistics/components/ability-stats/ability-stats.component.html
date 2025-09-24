@@ -27,10 +27,8 @@
 	<tbody>
 		@for (abilityStats of abilityStatsList$ | async; track abilityStats) {
 			<tr>
-				<td style="text-align: left" title="{{abilityStats.ability.tooltip}}">
-					<strong>
-						<img [src]="abilityStats.ability.icon | icon"/>&nbsp;{{abilityStats.ability.name}}
-					</strong>				
+				<td style="text-align: left">
+					<app-description [source]="abilityStats.ability"></app-description>
 				</td>
 				<td style="text-align: center">{{abilityStats.ability.rank}}</td>
 				<td>{{abilityStats.dps | number:'1.0-0'}}</td>
