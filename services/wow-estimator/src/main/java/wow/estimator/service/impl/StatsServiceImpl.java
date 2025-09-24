@@ -25,12 +25,12 @@ public class StatsServiceImpl implements StatsService {
 	private final CalculationService calculationService;
 
 	@Override
-	public List<SpellStats> getSpellStats(Player player, List<AbilityId> spells, boolean usesCombatRatings, double equivalentAmount) {
-		return spells.stream()
+	public List<AbilityStats> getAbilityStats(Player player, List<AbilityId> abilityIds, boolean usesCombatRatings, double equivalentAmount) {
+		return abilityIds.stream()
 				.map(player::getAbility)
 				.flatMap(Optional::stream)
 				.filter(player::canCast)
-				.map(ability -> calculationService.getSpellStats(player, ability, usesCombatRatings, equivalentAmount))
+				.map(ability -> calculationService.getAbilityStats(player, ability, usesCombatRatings, equivalentAmount))
 				.toList();
 	}
 

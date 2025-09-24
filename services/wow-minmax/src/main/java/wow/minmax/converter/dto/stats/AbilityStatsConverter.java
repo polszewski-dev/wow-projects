@@ -6,7 +6,7 @@ import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.SpellId;
 import wow.commons.repository.spell.SpellRepository;
-import wow.minmax.client.dto.stats.SpellStatsDTO;
+import wow.minmax.client.dto.stats.AbilityStatsDTO;
 import wow.minmax.converter.dto.AbilityConverter;
 
 /**
@@ -15,16 +15,16 @@ import wow.minmax.converter.dto.AbilityConverter;
  */
 @Component
 @AllArgsConstructor
-public class SpellStatsConverter implements ParametrizedConverter<wow.estimator.client.dto.stats.SpellStatsDTO, SpellStatsDTO, PhaseId> {
+public class AbilityStatsConverter implements ParametrizedConverter<wow.estimator.client.dto.stats.AbilityStatsDTO, AbilityStatsDTO, PhaseId> {
 	private final SpellRepository spellRepository;
 	private final AbilityConverter abilityConverter;
 
 	@Override
-	public SpellStatsDTO doConvert(wow.estimator.client.dto.stats.SpellStatsDTO source, PhaseId phaseId) {
+	public AbilityStatsDTO doConvert(wow.estimator.client.dto.stats.AbilityStatsDTO source, PhaseId phaseId) {
 		var spellId = SpellId.of(source.spellId());
 		var ability = spellRepository.getAbility(spellId, phaseId).orElseThrow();
 
-		return new SpellStatsDTO(
+		return new AbilityStatsDTO(
 				abilityConverter.convert(ability),
 				source.totalDamage(),
 				source.dps(),

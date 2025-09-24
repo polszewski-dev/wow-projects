@@ -136,9 +136,9 @@ class CalculationServiceTest extends ServiceTest {
 	}
 
 	@Test
-	void getSpellStats() {
+	void getAbilityStats() {
 		var ability = getAbility(SHADOW_BOLT);
-		var stats = calculationService.getSpellStats(character, ability, true, 10);
+		var stats = calculationService.getAbilityStats(character, ability, true, 10);
 
 		assertThat(stats.getTotalDamage()).isEqualTo(5024.67, PRECISION);
 		assertThat(stats.getDps()).isEqualTo(2689.42, PRECISION);

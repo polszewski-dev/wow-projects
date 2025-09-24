@@ -6,14 +6,14 @@ import { selectDpsChanges } from 'src/app/modules/character/state/character/char
 import { StatsService } from '../../services/stats.service';
 
 @Component({
-	selector: 'app-spell-stats',
-	templateUrl: './spell-stats.component.html',
-	styleUrls: ['./spell-stats.component.css']
+	selector: 'app-ability-stats',
+	templateUrl: './ability-stats.component.html',
+	styleUrls: ['./ability-stats.component.css']
 })
-export class SpellStatsComponent {
-	spellStatsList$ = this.store.select(selectDpsChanges).pipe(
+export class AbilityStatsComponent {
+	abilityStatsList$ = this.store.select(selectDpsChanges).pipe(
 		filter(change => !!change.characterId),
-		switchMap(change => this.statsService.getSpellStats(change.characterId!))
+		switchMap(change => this.statsService.getAbilityStats(change.characterId!))
 	);
 
 	constructor(

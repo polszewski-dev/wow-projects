@@ -23,20 +23,20 @@ import java.util.List;
 public class StatsController {
 	private final PlayerCharacterService playerCharacterService;
 	private final StatsService statsService;
-	private final SpellStatsConverter spellStatsConverter;
+	private final AbilityStatsConverter abilityStatsConverter;
 	private final CharacterStatsConverter characterStatsConverter;
 	private final SpecialAbilityStatsConverter specialAbilityStatsConverter;
 	private final RotationStatsConverter rotationStatsConverter;
 	private final TalentStatsConverter talentStatsConverter;
 
-	@GetMapping("{characterId}/spell")
-	public List<SpellStatsDTO> getSpellStats(
+	@GetMapping("{characterId}/ability")
+	public List<AbilityStatsDTO> getAbilityStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		var player = playerCharacterService.getPlayer(characterId);
-		var stats = statsService.getSpellStats(player).stats();
+		var stats = statsService.getAbilityStats(player).stats();
 
-		return spellStatsConverter.convertList(stats, player.getPhaseId());
+		return abilityStatsConverter.convertList(stats, player.getPhaseId());
 	}
 
 	@GetMapping("{characterId}/character")

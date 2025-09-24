@@ -90,7 +90,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(upgradeService.findUpgrades(any(), any(), any(), any())).thenReturn(List.of());
 		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(0, Item.class)));
 
-		when(statsService.getSpellStats(any())).thenReturn(new GetSpellStatsResponseDTO(List.of()));
+		when(statsService.getAbilityStats(any())).thenReturn(new GetAbilityStatsResponseDTO(List.of()));
 		when(statsService.getCharacterStats(any())).thenReturn(new GetCharacterStatsResponseDTO(List.of()));
 		when(statsService.getSpecialAbilityStats(any())).thenReturn(new GetSpecialAbilityStatsResponseDTO(List.of()));
 		when(statsService.getRotationStats(any())).thenReturn(new GetRotationStatsResponseDTO(new RotationStatsDTO(List.of(), 0, 0)));

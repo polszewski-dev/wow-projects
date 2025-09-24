@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { filter, switchMap, tap } from 'rxjs';
 import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
 import { selectDpsChanges } from 'src/app/modules/character/state/character/character.selectors';
-import { RotationSpellStats } from '../../model/RotationSpellStats';
+import { RotationAbilityStats } from '../../model/RotationAbilityStats';
 import { RotationStats } from '../../model/RotationStats';
 import { StatsService } from '../../services/stats.service';
 
@@ -41,7 +41,7 @@ export class DpsBarComponent {
 		return this.currentRotationStats!.dps - this.previousRotationStats.dps;
 	}
 
-	getDamageShare(stats: RotationSpellStats) {
+	getDamageShare(stats: RotationAbilityStats) {
 		return 100 * (stats.numCasts * stats.damage) / this.currentRotationStats!.totalDamage;
 	}
 }

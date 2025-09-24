@@ -30,11 +30,11 @@ public class StatsServiceImpl implements StatsService {
 	private final WebClient webClient;
 
 	@Override
-	public GetSpellStatsResponseDTO getSpellStats(PlayerCharacter player) {
+	public GetAbilityStatsResponseDTO getAbilityStats(PlayerCharacter player) {
 		var viewConfig = playerCharacterService.getViewConfig(player);
 		var usesCombatRatings = minmaxConfigRepository.hasFeature(player, COMBAT_RATINGS);
 
-		var request = new GetSpellStatsRequestDTO(
+		var request = new GetAbilityStatsRequestDTO(
 				playerConverter.convert(player),
 				viewConfig.relevantSpells(),
 				usesCombatRatings,
@@ -43,11 +43,11 @@ public class StatsServiceImpl implements StatsService {
 
 		return webClient
 				.post()
-				.uri("/spell")
+				.uri("/ability")
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(request)
 				.retrieve()
-				.bodyToMono(GetSpellStatsResponseDTO.class)
+				.bodyToMono(GetAbilityStatsResponseDTO.class)
 				.block();
 	}
 

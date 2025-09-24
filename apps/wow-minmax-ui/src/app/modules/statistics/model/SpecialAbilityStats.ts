@@ -1,8 +1,8 @@
+import { Ability } from "../../shared/model/spell/Ability";
+
 export interface SpecialAbilityStats {
-	description: string;
+	ability: Ability;
 	attributes: string;
 	statEquivalent: string;
 	spEquivalent: number;
-	sourceName: string;
-	sourceIcon: string;
 }

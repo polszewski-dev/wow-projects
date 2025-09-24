@@ -244,13 +244,13 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	@Override
-	public SpellStats getSpellStats(Player player, Ability ability, boolean usesCombatRatings, double equivalentAmount) {
+	public AbilityStats getAbilityStats(Player player, Ability ability, boolean usesCombatRatings, double equivalentAmount) {
 		var snapshot = getSnapshot(player, ability);
 		var totalDamage = snapshot.getTotalDamage();
 		var effectiveCastTime = snapshot.getEffectiveCastTime();
 		var manaCost = snapshot.getManaCost();
 
-		return new SpellStats(
+		return new AbilityStats(
 				player,
 				ability,
 				totalDamage,

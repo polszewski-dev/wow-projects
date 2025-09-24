@@ -19,22 +19,22 @@ import wow.estimator.service.StatsService;
 public class StatsController {
 	private final StatsService statsService;
 	private final PlayerConverter playerConverter;
-	private final SpellStatsConverter spellStatsConverter;
+	private final AbilityStatsConverter abilityStatsConverter;
 	private final CharacterStatsConverter characterStatsConverter;
 	private final SpecialAbilityStatsConverter specialAbilityStatsConverter;
 	private final RotationStatsConverter rotationStatsConverter;
 	private final TalentStatsConverter talentStatsConverter;
 
-	@PostMapping("spell")
-	public GetSpellStatsResponseDTO getSpellStats(@RequestBody GetSpellStatsRequestDTO request) {
+	@PostMapping("ability")
+	public GetAbilityStatsResponseDTO getAbilityStats(@RequestBody GetAbilityStatsRequestDTO request) {
 		var player = playerConverter.convertBack(request.player());
-		var spells = request.spells();
+		var abilityIds = request.abilityIds();
 		var usesCombatRatings = request.usesCombatRatings();
 		var equivalentAmount = request.equivalentAmount();
 
-		var stats = statsService.getSpellStats(player, spells, usesCombatRatings, equivalentAmount);
+		var stats = statsService.getAbilityStats(player, abilityIds, usesCombatRatings, equivalentAmount);
 
-		return new GetSpellStatsResponseDTO(spellStatsConverter.convertList(stats));
+		return new GetAbilityStatsResponseDTO(abilityStatsConverter.convertList(stats));
 	}
 
 	@PostMapping("character")

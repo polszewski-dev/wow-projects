@@ -6,7 +6,7 @@ import wow.commons.client.converter.ParametrizedConverter;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.SpellId;
 import wow.commons.repository.spell.SpellRepository;
-import wow.minmax.client.dto.stats.RotationSpellStatsDTO;
+import wow.minmax.client.dto.stats.RotationAbilityStatsDTO;
 import wow.minmax.converter.dto.AbilityConverter;
 
 /**
@@ -15,16 +15,16 @@ import wow.minmax.converter.dto.AbilityConverter;
  */
 @Component
 @AllArgsConstructor
-public class RotationSpellStatsConverter implements ParametrizedConverter<wow.estimator.client.dto.stats.RotationSpellStatsDTO, RotationSpellStatsDTO, PhaseId> {
+public class RotationSpellStatsConverter implements ParametrizedConverter<wow.estimator.client.dto.stats.RotationSpellStatsDTO, RotationAbilityStatsDTO, PhaseId> {
 	private final SpellRepository spellRepository;
 	private final AbilityConverter abilityConverter;
 
 	@Override
-	public RotationSpellStatsDTO doConvert(wow.estimator.client.dto.stats.RotationSpellStatsDTO source, PhaseId phaseId) {
+	public RotationAbilityStatsDTO doConvert(wow.estimator.client.dto.stats.RotationSpellStatsDTO source, PhaseId phaseId) {
 		var spellId = SpellId.of(source.spellId());
 		var ability = spellRepository.getAbility(spellId, phaseId).orElseThrow();
 
-		return new RotationSpellStatsDTO(
+		return new RotationAbilityStatsDTO(
 				abilityConverter.convert(ability),
 				source.numCasts(),
 				source.damage()

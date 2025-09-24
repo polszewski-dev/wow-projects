@@ -12,7 +12,7 @@ import wow.commons.model.spell.Ability;
  */
 @AllArgsConstructor
 @Getter
-public class SpellStats {
+public class AbilityStats {
 	private Character character;
 	private Ability ability;
 	private double totalDamage;

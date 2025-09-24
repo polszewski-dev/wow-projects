@@ -1,13 +1,11 @@
-package wow.minmax.client.dto.stats;
-
-import wow.minmax.client.dto.AbilityDTO;
+package wow.estimator.client.dto.stats;
 
 /**
  * User: POlszewski
- * Date: 2025-09-03
+ * Date: 2022-01-02
  */
-public record SpellStatsDTO(
-		AbilityDTO spell,
+public record AbilityStatsDTO(
+		int spellId,
 		double totalDamage,
 		double dps,
 		double castTime,

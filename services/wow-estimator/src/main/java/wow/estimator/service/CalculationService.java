@@ -22,7 +22,7 @@ public interface CalculationService {
 
 	RotationStats getRotationStats(Player player, Rotation rotation);
 
-	SpellStats getSpellStats(Player player, Ability ability, boolean usesCombatRatings, double equivalentAmount);
+	AbilityStats getAbilityStats(Player player, Ability ability, boolean usesCombatRatings, double equivalentAmount);
 
 	StatSummary getCurrentStats(Player player);
 

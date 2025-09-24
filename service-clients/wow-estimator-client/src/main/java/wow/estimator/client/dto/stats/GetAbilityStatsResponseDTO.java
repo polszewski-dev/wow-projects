@@ -6,7 +6,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2025-03-17
  */
-public record GetSpellStatsResponseDTO(
-		List<SpellStatsDTO> stats
+public record GetAbilityStatsResponseDTO(
+		List<AbilityStatsDTO> stats
 ) {
 }

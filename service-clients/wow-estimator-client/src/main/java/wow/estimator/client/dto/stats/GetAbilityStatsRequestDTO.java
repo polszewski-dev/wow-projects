@@ -9,9 +9,9 @@ import java.util.List;
  * User: POlszewski
  * Date: 2025-03-17
  */
-public record GetSpellStatsRequestDTO(
+public record GetAbilityStatsRequestDTO(
 		PlayerDTO player,
-		List<AbilityId> spells,
+		List<AbilityId> abilityIds,
 		boolean usesCombatRatings,
 		double equivalentAmount
 ) {

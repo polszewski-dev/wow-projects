@@ -7,7 +7,7 @@ import java.util.List;
  * Date: 2023-04-07
  */
 public record RotationStatsDTO(
-		List<RotationSpellStatsDTO> statList,
+		List<RotationAbilityStatsDTO> statList,
 		double dps,
 		double totalDamage
 ) {

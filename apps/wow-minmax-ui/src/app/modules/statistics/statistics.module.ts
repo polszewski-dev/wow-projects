@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CharacterModule } from '../character/character.module';
+import { AbilityStatsComponent } from './components/ability-stats/ability-stats.component';
 import { CharacterStatsComponent } from './components/character-stats/character-stats.component';
 import { DpsBarComponent } from './components/dps-bar/dps-bar.component';
 import { RacialListComponent } from './components/racial-list/racial-list.component';
 import { SpecialAbilitiesComponent } from './components/special-abilities/special-abilities.component';
-import { SpellStatsComponent } from './components/spell-stats/spell-stats.component';
 import { TalentStatsComponent } from './components/talent-stats/talent-stats.component';
 
 @NgModule({
@@ -13,7 +13,7 @@ import { TalentStatsComponent } from './components/talent-stats/talent-stats.com
 		DpsBarComponent,
 		RacialListComponent,
 		SpecialAbilitiesComponent,
-		SpellStatsComponent,
+		AbilityStatsComponent,
 		TalentStatsComponent
 	],
 	imports: [
@@ -24,7 +24,7 @@ import { TalentStatsComponent } from './components/talent-stats/talent-stats.com
 		DpsBarComponent,
 		RacialListComponent,
 		SpecialAbilitiesComponent,
-		SpellStatsComponent,
+		AbilityStatsComponent,
 		TalentStatsComponent
 	]
 })

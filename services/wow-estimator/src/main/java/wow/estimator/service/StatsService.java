@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 2025-03-17
  */
 public interface StatsService {
-	List<SpellStats> getSpellStats(Player player, List<AbilityId> spells, boolean usesCombatRatings, double equivalentAmount);
+	List<AbilityStats> getAbilityStats(Player player, List<AbilityId> abilityIds, boolean usesCombatRatings, double equivalentAmount);
 
 	CharacterStats getCharacterStats(Player player, boolean worldBuffsAllowed);
 

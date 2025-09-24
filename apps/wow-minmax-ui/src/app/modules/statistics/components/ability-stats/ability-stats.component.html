@@ -1,0 +1,61 @@
+<table class="table table-striped stats-table" style="text-align: right;">
+	<thead>
+		<tr>
+			<th scope="col" style="text-align: left; width: 15%">spell</th>
+			<th scope="col" style="text-align: center">rank</th>
+			<th scope="col">dps</th>
+			<th scope="col">dmg</th>
+			<th scope="col">cast</th>
+			<th scope="col">mana</th>
+			<th scope="col">dpm</th>
+			<th scope="col">sp</th>
+			<th scope="col">hit%</th>
+			<th scope="col">crit%</th>
+			<th scope="col">hast%</th>
+			<th scope="col">coeff dir</th>
+			<th scope="col">coeff dot</th>
+			<th scope="col">cr coeff</th>
+			<th scope="col">hit eqv</th>
+			<th scope="col">crit eqv</th>
+			<th scope="col">hast eqv</th>
+			<th scope="col">duration</th>
+			<th scope="col">cd</th>
+			<th scope="col">threat%</th>
+			<th scope="col">pushbk%</th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (abilityStats of abilityStatsList$ | async; track abilityStats) {
+			<tr>
+				<td style="text-align: left" title="{{abilityStats.ability.tooltip}}">
+					<strong>
+						<img [src]="abilityStats.ability.icon | icon"/>&nbsp;{{abilityStats.ability.name}}
+					</strong>				
+				</td>
+				<td style="text-align: center">{{abilityStats.ability.rank}}</td>
+				<td>{{abilityStats.dps | number:'1.0-0'}}</td>
+				<td>{{abilityStats.totalDamage | number:'1.0-0'}}</td>
+				<td
+					[ngClass]="{'instant-cast': abilityStats.instantCast}"
+					title="{{abilityStats.instantCast ? 'Instant cast' : ''}}"
+				>{{abilityStats.castTime | number:'1.2-2'}}</td>
+				<td>{{abilityStats.manaCost | number:'1.0-0'}}</td>
+				<td>{{abilityStats.dpm | number:'1.0-0'}}</td>
+				<td>{{abilityStats.sp | number:'1.0-0'}}</td>
+				<td>{{abilityStats.totalHit | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.totalCrit | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.totalHaste | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.spellCoeffDirect | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.spellCoeffDoT | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.critCoeff | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.hitSpEqv | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.critSpEqv | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.hasteSpEqv | number:'1.2-2' | blankZero}}</td>
+				<td>{{abilityStats.duration | number:'1.0-2' | blankZero}}</td>
+				<td>{{abilityStats.cooldown | number:'1.0-2' | blankZero}}</td>
+				<td>{{abilityStats.threatPct | number:'1.0-2' | blankZero}}</td>
+				<td>{{abilityStats.pushbackPct | number:'1.0-2' | blankZero}}</td>
+			</tr>
+		}
+	</tbody>
+</table>

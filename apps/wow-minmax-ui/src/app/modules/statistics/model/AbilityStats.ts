@@ -1,7 +1,7 @@
-import { Spell } from "../../shared/model/spell/Spell";
+import { Ability } from "../../shared/model/spell/Ability";
 
-export interface SpellStats {
-	spell: Spell;
+export interface AbilityStats {
+	ability: Ability;
 	dps: number;
 	totalDamage: number;
 	castTime: number;

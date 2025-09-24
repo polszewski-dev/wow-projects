@@ -9,11 +9,11 @@
 				&nbsp;({{dpsDiff > 0 ? "+" : ""}}{{dpsDiff | number:'1.0-0'}})
 			</span>
 		}
-		@for (stats of rotationStats.statList; track stats.spell.name) {
+		@for (stats of rotationStats.statList; track stats.ability.name) {
 			<img
-				[src]="stats.spell.icon | icon"
+				[src]="stats.ability.icon | icon"
 				[ngStyle]="{'margin-left': $index === 0 ? '10px' : '5px'}"
-				[title]="stats.spell.name + ' - ' + (getDamageShare(stats) | number:'1.0-1') + '%'"
+				[title]="stats.ability.name + ' - ' + (getDamageShare(stats) | number:'1.0-1') + '%'"
 			/>
 		}
 	</div>

@@ -8,7 +8,7 @@ import wow.estimator.client.dto.stats.*;
  * Date: 2025-03-17
  */
 public interface StatsService {
-	GetSpellStatsResponseDTO getSpellStats(PlayerCharacter player);
+	GetAbilityStatsResponseDTO getAbilityStats(PlayerCharacter player);
 
 	GetCharacterStatsResponseDTO getCharacterStats(PlayerCharacter player);
 

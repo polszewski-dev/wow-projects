@@ -1,7 +1,7 @@
-import { RotationSpellStats } from "./RotationSpellStats";
+import { RotationAbilityStats } from "./RotationAbilityStats";
 
 export interface RotationStats {
-	statList: RotationSpellStats[];
+	statList: RotationAbilityStats[];
 	dps: number;
 	totalDamage: number;
 }

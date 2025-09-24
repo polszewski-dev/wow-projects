@@ -1,7 +1,7 @@
-import { Spell } from "../../shared/model/spell/Spell";
+import { Ability } from "../../shared/model/spell/Ability";
 
 export interface AbilityStats {
-	ability: Spell;
+	ability: Ability;
 	totalCastTime: number;
 	numCasts: number;
 	numHit: number;

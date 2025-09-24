@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { AbilityStats } from '../model/AbilityStats';
 import { CharacterStats } from '../model/CharacterStats';
 import { RotationStats } from '../model/RotationStats';
 import { SpecialAbilityStats } from '../model/SpecialAbilityStats';
-import { SpellStats } from '../model/SpellStats';
 import { TalentStats } from '../model/TalentStats';
 
 @Injectable({
@@ -15,8 +15,8 @@ export class StatsService {
 
 	constructor(private http: HttpClient) { }
 
-	getSpellStats(characterId: string) {
-		return this.http.get<SpellStats[]>(`${this.apiUrl}/${characterId}/spell`);
+	getAbilityStats(characterId: string) {
+		return this.http.get<AbilityStats[]>(`${this.apiUrl}/${characterId}/ability`);
 	}
 
 	getCharacterStats(characterId: string) {

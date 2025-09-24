@@ -20,8 +20,8 @@ class StatsControllerTest extends ControllerTest {
 	MockMvc mockMvc;
 
 	@Test
-	void getSpellStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{characterId}/spell", CHARACTER_KEY))
+	void getAbilityStats() throws Exception {
+		mockMvc.perform(get("/api/v1/stats/{characterId}/ability", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

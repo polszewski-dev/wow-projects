@@ -25,14 +25,14 @@ class StatsControllerTest extends ControllerTest {
 	MockMvc mockMvc;
 
 	@Test
-	void getSpellStats() throws Exception {
+	void getAbilityStats() throws Exception {
 		var playerDTO = playerConverter.convert(character);
-		var request = new GetSpellStatsRequestDTO(playerDTO, List.of(SHADOW_BOLT), true, 10);
+		var request = new GetAbilityStatsRequestDTO(playerDTO, List.of(SHADOW_BOLT), true, 10);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);
 
-		mockMvc.perform(post("/api/v1/stats/spell")
+		mockMvc.perform(post("/api/v1/stats/ability")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)
