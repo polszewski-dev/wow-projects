@@ -63,6 +63,6 @@ class PredeterminedRngTest extends WowSimulatorSpringTest {
 	@BeforeEach
 	void setUp() {
 		ability = spellRepository.getAbility(SHADOW_BOLT, 1, PhaseId.TBC_P5).orElseThrow();
-		event = spellRepository.getEffect(EffectId.of(-154), PhaseId.TBC_P5).orElseThrow().getEvents().getFirst();
+		event = spellRepository.getEffect(EffectId.of(17800), PhaseId.TBC_P5).orElseThrow().getEvents().getFirst();
 	}
 }

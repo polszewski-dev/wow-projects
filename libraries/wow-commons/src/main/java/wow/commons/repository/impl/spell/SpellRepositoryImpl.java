@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static wow.commons.util.CollectionUtil.getUniqueResult;
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
 
@@ -29,7 +30,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
 @Component
 public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();
-	private final PhaseMap<AbilityNameRank, Ability> abilitiesByNameRank = new PhaseMap<>();
+	private final PhaseMap<AbilityNameRank, List<Ability>> abilitiesByNameRank = new PhaseMap<>();
 	private final PhaseMap<SpellId, Spell> spellsById = new PhaseMap<>();
 	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
 	private final GameVersionMap<RaceId, List<RacialEffect>> racialEffects = new GameVersionMap<>();
@@ -49,16 +50,15 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 	@Override
 	public Optional<Ability> getAbility(AbilityId abilityId, int rank, PhaseId phaseId) {
-		var nameRank = new AbilityNameRank(abilityId.name(), rank);
-
-		return abilitiesByNameRank.getOptional(phaseId, nameRank);
+		return getAbility(abilityId.name(), rank, phaseId);
 	}
 
 	@Override
 	public Optional<Ability> getAbility(String name, int rank, PhaseId phaseId) {
 		var nameRank = new AbilityNameRank(name, rank);
+		var abilities = abilitiesByNameRank.getOrDefault(phaseId, nameRank, List.of());
 
-		return abilitiesByNameRank.getOptional(phaseId, nameRank);
+		return getUniqueResult(abilities);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 				addEntryForEveryPhase(abilitiesByClass, characterClassId, ability);
 			}
 
-			putForEveryPhase(abilitiesByNameRank, ability.getNameRank(), ability);
+			addEntryForEveryPhase(abilitiesByNameRank, ability.getNameRank(), ability);
 		}
 
 		putForEveryPhase(spellsById, spell.getId(), spell);

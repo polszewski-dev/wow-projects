@@ -64,7 +64,7 @@ class SextantOfUnstableCurrentsTest extends WarlockSpellSimulationTest {
 		assertThat(spAfter).isEqualTo(spBefore + 190);
 	}
 
-	CooldownId cooldownId = CooldownId.of(SpellId.of(100130626));
+	CooldownId cooldownId = CooldownId.of(SpellId.of(38347));
 
 	@Override
 	protected void afterSetUp() {

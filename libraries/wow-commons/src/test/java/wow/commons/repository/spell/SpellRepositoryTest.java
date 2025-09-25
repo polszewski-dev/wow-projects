@@ -361,8 +361,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertId(spell, 100127683);
-		assertThat(spell.getName()).isEqualTo("Quagmirran's Eye - proc #1 - triggered");
+		assertId(spell, 33297);
+		assertThat(spell.getName()).isEqualTo("Spell Haste Trinket");
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTarget.SELF, 6, 1, 1, 1);
@@ -395,8 +395,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertId(spell, 100228963);
-		assertThat(spell.getName()).isEqualTo("Voidheart Raiment - P2 bonus - triggered");
+		assertId(spell, 37377);
+		assertThat(spell.getName()).isEqualTo("Flameshadow");
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTarget.SELF, 15, 1, 1, 1);
@@ -432,8 +432,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertId(spell, 101228963);
-		assertThat(spell.getName()).isEqualTo("Voidheart Raiment - P2 bonus - triggered");
+		assertId(spell, 39437);
+		assertThat(spell.getName()).isEqualTo("Shadowflame");
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTarget.SELF, 15, 1, 1, 1);
@@ -497,8 +497,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(spell).isNotNull();
 
-		assertId(spell, 100125893);
-		assertThat(spell.getName()).isEqualTo("Mystical Skyfire Diamond - proc #1 - triggered");
+		assertId(spell, 32837);
+		assertThat(spell.getName()).isEqualTo("Spell Focus Trigger");
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTarget.SELF, 6, 1, 1, 1);

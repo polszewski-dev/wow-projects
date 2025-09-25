@@ -62,7 +62,7 @@ class QuagmirransEyeTest extends WarlockSpellSimulationTest {
 		assertThat(hasteAfter).isEqualTo(hasteBefore + 320);
 	}
 
-	CooldownId cooldownId = CooldownId.of(SpellId.of(100127683));
+	CooldownId cooldownId = CooldownId.of(SpellId.of(33297));
 
 	@Override
 	protected void afterSetUp() {
