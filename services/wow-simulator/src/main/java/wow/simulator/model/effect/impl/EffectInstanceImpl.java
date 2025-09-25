@@ -1,5 +1,6 @@
 package wow.simulator.model.effect.impl;
 
+import lombok.Getter;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.config.Description;
@@ -54,6 +55,9 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	private boolean stacked = false;
 	private boolean removed;
 	private boolean fireStacksMaxed;
+
+	@Getter
+	private EffectInstanceId stackedEffectInstanceId;
 
 	private Runnable onEffectFinished;
 
@@ -186,6 +190,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			return;
 		}
 		this.stacked = true;
+		this.stackedEffectInstanceId = existingEffect.getInstanceId();
 		this.addStacks(existingEffect.getNumStacks());
 		((EffectInstanceImpl) existingEffect).silentRemoval = true;
 	}
