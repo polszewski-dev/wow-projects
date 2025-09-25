@@ -51,7 +51,7 @@ public class SimulationController {
 		log.info("Simulation ended after {} seconds", (end - start) / 1000.0);
 
 		return new SimulationResponseDTO(
-				statsConverter.convert(stats)
+				statsConverter.convert(stats, player)
 		);
 	}
 

@@ -3,6 +3,7 @@ package wow.simulator.model.stats;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.Duration;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityNameRank;
@@ -53,8 +54,8 @@ public class Stats {
 		getCooldownStats(cooldownId).addUptime(duration);
 	}
 
-	public void addEffectUptime(EffectId effectId, Duration duration) {
-		getEffectStats(effectId).addUptime(duration);
+	public void addEffectUptime(Effect effect, Duration duration) {
+		getEffectStats(effect).addUptime(duration);
 	}
 
 	public void addDamage(Ability ability, int damage, boolean crit) {
@@ -66,8 +67,8 @@ public class Stats {
 		return abilityStatsByNameRank.computeIfAbsent(ability.getNameRank(), x -> new AbilityStats(ability));
 	}
 
-	private EffectStats getEffectStats(EffectId effectId) {
-		return effectStatsById.computeIfAbsent(effectId, EffectStats::new);
+	private EffectStats getEffectStats(Effect effect) {
+		return effectStatsById.computeIfAbsent(effect.getId(), x -> new EffectStats(effect));
 	}
 
 	private CooldownStats getCooldownStats(CooldownId cooldownId) {
@@ -75,7 +76,15 @@ public class Stats {
 	}
 
 	public List<AbilityStats> getAbilityStats() {
-		return abilityStatsByNameRank.values().stream().toList();
+		return List.copyOf(abilityStatsByNameRank.values());
+	}
+
+	public List<EffectStats> getEffectStats() {
+		return List.copyOf(effectStatsById.values());
+	}
+
+	public List<CooldownStats> getCooldownStats() {
+		return List.copyOf(cooldownStatsById.values());
 	}
 
 	public int getDps() {

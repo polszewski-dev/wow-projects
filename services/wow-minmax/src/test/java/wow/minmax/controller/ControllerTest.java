@@ -96,6 +96,6 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(statsService.getRotationStats(any())).thenReturn(new GetRotationStatsResponseDTO(new RotationStatsDTO(List.of(), 0, 0)));
 		when(statsService.getTalentStats(any())).thenReturn(new GetTalentStatsResponseDTO(List.of()));
 
-		when(simulatorService.simulate(any())).thenReturn(new StatsDTO(List.of(), 0, 0, 0, 0));
+		when(simulatorService.simulate(any())).thenReturn(new StatsDTO(List.of(), List.of(), List.of(), 0, 0, 0, 0));
 	}
 }

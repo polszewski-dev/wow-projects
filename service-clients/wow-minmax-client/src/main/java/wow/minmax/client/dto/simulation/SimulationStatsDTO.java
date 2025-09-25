@@ -8,6 +8,8 @@ import java.util.List;
  */
 public record SimulationStatsDTO(
 		List<SimulationAbilityStatsDTO> abilityStats,
+		List<SimulationEffectStatsDTO> effectStats,
+		List<SimulationCooldownStatsDTO> cooldownStats,
 		double simulationDuration,
 		int totalDamage,
 		int dps,

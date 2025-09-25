@@ -9,10 +9,7 @@ import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.CooldownInstanceId;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
-import wow.simulator.model.stats.AbilityTimeEntry;
-import wow.simulator.model.stats.CooldownTimeEntry;
-import wow.simulator.model.stats.EffectTimeEntry;
-import wow.simulator.model.stats.Stats;
+import wow.simulator.model.stats.*;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
@@ -102,6 +99,9 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 
 	@Override
 	public void spellHit(Unit caster, Unit target, Spell spell) {
+		if (caster != player) {
+			return;
+		}
 		stats.increaseNumHit((Ability) spell);
 	}
 
@@ -111,27 +111,26 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 			return;
 		}
 
-		if (ability.getName().equals(LIFE_TAP)) {
-			return;
-		}
-
 		if (target != player && type == HEALTH) {
 			stats.addDamage(ability, amount, crit);
 		}
 	}
 
-	private static final String LIFE_TAP = "Life Tap";
-
 	@Override
 	public void effectApplied(EffectInstance effect) {
-		effects.put(effect.getInstanceId(), new EffectTimeEntry(effect.getId(), now()));
+		if (effect.getOwner() != player) {
+			return;
+		}
+		addTimeEntry(effect);
 	}
 
 	@Override
 	public void effectExpired(EffectInstance effect) {
+		if (effect.getOwner() != player) {
+			return;
+		}
 		var timeEntry = effects.remove(effect.getInstanceId());
-		timeEntry.complete(now());
-		stats.addEffectUptime(timeEntry.getEffectId(), timeEntry.getElapsedTime());
+		completeEffect(timeEntry);
 	}
 
 	@Override
@@ -139,14 +138,33 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 		effectExpired(effect);
 	}
 
+	private void addTimeEntry(EffectInstance effect) {
+		effects.put(effect.getInstanceId(), new EffectTimeEntry(effect, now()));
+	}
+
+	private void completeEffect(EffectTimeEntry timeEntry) {
+		timeEntry.complete(now());
+		stats.addEffectUptime(timeEntry.getEffect(), timeEntry.getElapsedTime());
+	}
+
 	@Override
 	public void cooldownStarted(CooldownInstance cooldown) {
+		if (cooldown.getOwner() != player || !CooldownStats.isSupported(cooldown)) {
+			return;
+		}
 		cooldowns.put(cooldown.getId(), new CooldownTimeEntry(cooldown.getCooldownId(), now()));
 	}
 
 	@Override
 	public void cooldownExpired(CooldownInstance cooldown) {
+		if (cooldown.getOwner() != player || !CooldownStats.isSupported(cooldown)) {
+			return;
+		}
 		var timeEntry = cooldowns.remove(cooldown.getId());
+		completeCooldown(timeEntry);
+	}
+
+	private void completeCooldown(CooldownTimeEntry timeEntry) {
 		timeEntry.complete(now());
 		stats.addCooldownUptime(timeEntry.getCooldownId(), timeEntry.getElapsedTime());
 	}
@@ -163,13 +181,11 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 		finishCurrentCast();
 
 		for (var timeEntry : effects.values()) {
-			timeEntry.complete(now());
-			stats.addEffectUptime(timeEntry.getEffectId(), timeEntry.getElapsedTime());
+			completeEffect(timeEntry);
 		}
 
 		for (var timeEntry : cooldowns.values()) {
-			timeEntry.complete(now());
-			stats.addCooldownUptime(timeEntry.getCooldownId(), timeEntry.getElapsedTime());
+			completeCooldown(timeEntry);
 		}
 	}
 }

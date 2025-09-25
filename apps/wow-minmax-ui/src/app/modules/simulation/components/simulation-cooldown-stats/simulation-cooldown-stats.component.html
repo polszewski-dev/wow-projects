@@ -1,0 +1,22 @@
+<table class="table table-striped stats-table" style="text-align: right;">
+	<thead>
+		<tr>
+			<th scope="col" style="text-align: left; width: 25%">cooldown</th>
+			<th scope="col" style="width: 10%">uptime</th>
+			<th scope="col" style="width: 10%">uptime%</th>
+			<th scope="col" style="width: 55%"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (cooldownStats of stats.cooldownStats; track cooldownStats.spell) {
+			<tr>
+				<td style="text-align: left">
+					<app-description [source]="cooldownStats.spell"></app-description>
+				</td>
+				<td>{{cooldownStats.uptime | number:'1.0-0' | blankZero}}</td>
+				<td>{{(100 * cooldownStats.uptime / stats.simulationDuration) | number:'1.2-2' | blankZero}}</td>
+				<td></td>
+			</tr>
+		}
+	</tbody>
+</table>

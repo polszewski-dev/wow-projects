@@ -1,6 +1,7 @@
 package wow.simulator.model.stats;
 
 import lombok.Getter;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
 import wow.simulator.model.time.Time;
 
@@ -10,10 +11,14 @@ import wow.simulator.model.time.Time;
  */
 @Getter
 public final class EffectTimeEntry extends TimeEntry {
-	private final EffectId effectId;
+	private final Effect effect;
 
-	public EffectTimeEntry(EffectId effectId, Time begin) {
+	public EffectTimeEntry(Effect effect, Time begin) {
 		super(begin);
-		this.effectId = effectId;
+		this.effect = effect;
+	}
+
+	public EffectId getEffectId() {
+		return effect.getId();
 	}
 }
