@@ -72,7 +72,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 				characterRestriction,
 				timeRestriction,
 				talentLink,
-				getScriptPath(timeRestriction, defaultScript),
+				defaultScript,
 				activePet,
 				defaultBuffs,
 				defaultDebuffs,
@@ -81,13 +81,6 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 				exclusiveFactions,
 				isDefault
 		);
-	}
-
-	private static String getScriptPath(TimeRestriction timeRestriction, String defaultScript) {
-		var mainDir = "/wow/character/script";
-		var gameVersionDir = timeRestriction.getGameVersionId().toString().toLowerCase();
-
-		return "%s/%s/%s".formatted(mainDir, gameVersionDir, defaultScript);
 	}
 
 	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction) {

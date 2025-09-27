@@ -2,6 +2,7 @@ package wow.simulator.script;
 
 import lombok.RequiredArgsConstructor;
 import wow.character.model.script.ScriptCompiler;
+import wow.character.model.script.ScriptPathResolver;
 import wow.commons.model.Duration;
 import wow.simulator.model.unit.Player;
 import wow.simulator.script.command.ScriptCommandExecutor;
@@ -21,7 +22,7 @@ public class ScriptExecutor {
 	private List<ScriptCommandExecutor> rotationCommands;
 
 	public void setupPlayer() {
-		var scriptPath = player.getBuild().getScript();
+		var scriptPath = ScriptPathResolver.getScriptPath(player);
 		var script = ScriptCompiler.compileResource(scriptPath);
 		var rotationSection = script.getSection(ROTATION);
 

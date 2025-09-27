@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
+import wow.character.model.script.ScriptPathResolver;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.Pet;
 import wow.commons.model.pve.GameVersion;
@@ -53,7 +54,9 @@ public class BuildWithRotation extends Build {
 
 	public Rotation getRotation() {
 		if (rotation == null) {
-			this.rotation = RotationTemplate.parse(getScript()).createRotation();
+			var scriptPath = ScriptPathResolver.getScriptPath(getScript(), getGameVersion());
+
+			this.rotation = RotationTemplate.parse(scriptPath).createRotation();
 		}
 		return rotation;
 	}
