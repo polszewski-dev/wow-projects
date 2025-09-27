@@ -52,6 +52,16 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		}
 	}
 
+	public int getRank(String name) {
+		var talent = talentByName.get(name);
+
+		return talent != null ? talent.getRank() : 0;
+	}
+
+	public List<Talent> getAvailableTalents() {
+		return List.copyOf(availableTalentsById.values());
+	}
+
 	public void reset() {
 		talentByName.clear();
 	}
