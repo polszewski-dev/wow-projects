@@ -3,11 +3,9 @@ package wow.minmax.converter.model;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterProfession;
+import wow.character.model.character.ProfIdSpecIdLevel;
+import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
-import wow.commons.client.converter.ParametrizedBackConverter;
-import wow.commons.model.pve.Phase;
-import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.pve.PhaseRepository;
 import wow.minmax.model.CharacterProfessionConfig;
 
 /**
@@ -16,9 +14,7 @@ import wow.minmax.model.CharacterProfessionConfig;
  */
 @Component
 @AllArgsConstructor
-public class CharacterProfessionConfigConverter implements Converter<CharacterProfession, CharacterProfessionConfig>, ParametrizedBackConverter<CharacterProfession, CharacterProfessionConfig, PhaseId> {
-	private final PhaseRepository phaseRepository;
-
+public class CharacterProfessionConfigConverter implements Converter<CharacterProfession, CharacterProfessionConfig>, BackConverter<ProfIdSpecIdLevel, CharacterProfessionConfig> {
 	@Override
 	public CharacterProfessionConfig doConvert(CharacterProfession source) {
 		return new CharacterProfessionConfig(
@@ -27,11 +23,11 @@ public class CharacterProfessionConfigConverter implements Converter<CharacterPr
 	}
 
 	@Override
-	public CharacterProfession doConvertBack(CharacterProfessionConfig source, PhaseId phaseId) {
-		Phase phase = phaseRepository.getPhase(phaseId).orElseThrow();
-
-		return CharacterProfession.getCharacterProfession(
-				phase, source.getProfessionId(), source.getSpecializationId(), source.getLevel()
+	public ProfIdSpecIdLevel doConvertBack(CharacterProfessionConfig source) {
+		return new ProfIdSpecIdLevel(
+				source.getProfessionId(),
+				source.getSpecializationId(),
+				source.getLevel()
 		);
 	}
 }

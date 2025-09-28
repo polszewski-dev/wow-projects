@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.character.model.character.CharacterTemplate;
-import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.TalentRepository;
 
 import java.io.InputStream;
@@ -28,7 +27,6 @@ public class CharacterTemplateExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 
 	private final TalentRepository talentRepository;
-	private final PhaseRepository phaseRepository;
 
 	@Getter
 	private final List<CharacterTemplate> characterTemplates = new ArrayList<>();
@@ -41,7 +39,7 @@ public class CharacterTemplateExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new CharacterTemplateSheetParser("templates", talentRepository, phaseRepository, this)
+				new CharacterTemplateSheetParser("templates", talentRepository, this)
 		);
 	}
 

@@ -3,9 +3,8 @@ package wow.commons.client.converter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.character.CharacterProfession;
+import wow.character.model.character.ProfIdSpecIdLevel;
 import wow.commons.client.dto.CharacterProfessionDTO;
-import wow.commons.model.pve.PhaseId;
-import wow.commons.repository.pve.PhaseRepository;
 
 /**
  * User: POlszewski
@@ -13,9 +12,7 @@ import wow.commons.repository.pve.PhaseRepository;
  */
 @Component("commonsCharacterProfessionConverter")
 @AllArgsConstructor
-public class CharacterProfessionConverter implements Converter<CharacterProfession, CharacterProfessionDTO>, ParametrizedBackConverter<CharacterProfession, CharacterProfessionDTO, PhaseId> {
-	private final PhaseRepository phaseRepository;
-
+public class CharacterProfessionConverter implements Converter<CharacterProfession, CharacterProfessionDTO>, BackConverter<ProfIdSpecIdLevel, CharacterProfessionDTO> {
 	@Override
 	public CharacterProfessionDTO doConvert(CharacterProfession source) {
 		return new CharacterProfessionDTO(
@@ -26,11 +23,11 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 	}
 
 	@Override
-	public CharacterProfession doConvertBack(CharacterProfessionDTO source, PhaseId phaseId) {
-		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
-
-		return CharacterProfession.getCharacterProfession(
-				phase, source.profession(), source.specialization(), source.level()
+	public ProfIdSpecIdLevel doConvertBack(CharacterProfessionDTO source) {
+		return new ProfIdSpecIdLevel(
+				source.profession(),
+				source.specialization(),
+				source.level()
 		);
 	}
 }

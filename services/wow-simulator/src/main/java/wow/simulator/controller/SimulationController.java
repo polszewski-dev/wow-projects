@@ -93,7 +93,8 @@ public class SimulationController {
 				player.getLevel(),
 				player.getBaseStatInfo(),
 				player.getCombatRatingInfo(),
-				player.getTalents().copy()
+				player.getTalents().copy(),
+				player.getProfessions().copy()
 		);
 
 		player.shareSimulationContext(buffOwner);

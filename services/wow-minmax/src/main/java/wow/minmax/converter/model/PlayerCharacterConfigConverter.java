@@ -75,7 +75,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 
 		changeBuild(character, source);
 
-		character.setProfessions(characterProfessionConfigConverter.convertBackList(source.getProfessions(), character.getPhaseId()));
+		character.setProfessions(characterProfessionConfigConverter.convertBackList(source.getProfessions()));
 		character.getExclusiveFactions().set(source.getExclusiveFactions());
 		character.setEquipment(equipmentConfigConverter.convertBack(source.getEquipment(), character.getPhaseId()));
 

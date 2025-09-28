@@ -1,16 +1,13 @@
 package wow.character.repository.impl.parser.character;
 
-import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.CharacterTemplate;
+import wow.character.model.character.ProfIdSpecId;
 import wow.character.util.TalentLinkParser;
 import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
-import wow.commons.model.pve.Phase;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
-import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.TalentRepository;
 
 import java.util.List;
@@ -36,14 +33,12 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colDefault = column("default");
 
 	private final TalentRepository talentRepository;
-	private final PhaseRepository phaseRepository;
 
 	private final CharacterTemplateExcelParser parser;
 
-	public CharacterTemplateSheetParser(String sheetName, TalentRepository talentRepository, PhaseRepository phaseRepository, CharacterTemplateExcelParser parser) {
+	public CharacterTemplateSheetParser(String sheetName, TalentRepository talentRepository, CharacterTemplateExcelParser parser) {
 		super(sheetName);
 		this.talentRepository = talentRepository;
-		this.phaseRepository = phaseRepository;
 		this.parser = parser;
 	}
 
@@ -63,7 +58,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var defaultBuffs = colDefaultBuffs.getList(x -> x);
 		var defaultDebuffs = colDefaultDebuffs.getList(x -> x);
 		var consumables = colDefaultConsumables.getList(x -> x);
-		var professions = getProfessions(timeRestriction);
+		var professions = getProfessions();
 		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
 		var isDefault = colDefault.getBoolean();
 
@@ -83,16 +78,16 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		);
 	}
 
-	private List<CharacterProfession> getProfessions(TimeRestriction timeRestriction) {
+	private List<ProfIdSpecId> getProfessions() {
 		return Stream.of(
-				getProfession(colProf1, colProf1Spec, timeRestriction),
-				getProfession(colProf2, colProf2Spec, timeRestriction)
+				getProfession(colProf1, colProf1Spec),
+				getProfession(colProf2, colProf2Spec)
 		)
 				.filter(Objects::nonNull)
 				.toList();
 	}
 
-	private CharacterProfession getProfession(ExcelColumn colProf, ExcelColumn colProfSpec, TimeRestriction timeRestriction) {
+	private ProfIdSpecId getProfession(ExcelColumn colProf, ExcelColumn colProfSpec) {
 		var prof = colProf.getEnum(ProfessionId::parse, null);
 		var spec = colProfSpec.getEnum(ProfessionSpecializationId::parse, null);
 
@@ -100,14 +95,6 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 			return null;
 		}
 
-		var phase = getPhase(timeRestriction);
-
-		return CharacterProfession.getCharacterProfession(phase, prof, spec, 1);
-	}
-
-	private Phase getPhase(TimeRestriction timeRestriction) {
-		var phaseId = timeRestriction.earliestPhaseId();
-
-		return phaseRepository.getPhase(phaseId).orElseThrow();
+		return new ProfIdSpecId(prof, spec);
 	}
 }

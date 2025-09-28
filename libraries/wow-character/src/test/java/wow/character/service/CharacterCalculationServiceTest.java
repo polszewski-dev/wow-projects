@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
-import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.snapshot.*;
 import wow.character.util.TalentLinkParser;
@@ -455,9 +454,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.resetEquipment();
 
 		character.resetProfessions();
-		character.setProfessions(List.of(
-				CharacterProfession.getCharacterProfessionMaxLevel(character.getPhase(), TAILORING, SPELLFIRE_TAILORING, character.getLevel())
-		));
+		character.addProfessionMaxLevel(TAILORING, SPELLFIRE_TAILORING);
 
 		character.equip(getItem("Spellfire Robe"));
 		character.equip(getItem("Spellfire Gloves"));

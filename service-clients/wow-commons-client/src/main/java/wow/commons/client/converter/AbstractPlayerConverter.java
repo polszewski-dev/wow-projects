@@ -79,7 +79,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 		changeBuild(player, source);
 
-		player.setProfessions(characterProfessionConverter.convertBackList(source.professions(), source.phaseId()));
+		player.setProfessions(characterProfessionConverter.convertBackList(source.professions()));
 		player.getExclusiveFactions().set(source.exclusiveFactions());
 		player.setEquipment(equipmentConverter.convertBack(source.equipment(), source.phaseId()));
 

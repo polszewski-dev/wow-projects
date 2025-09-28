@@ -102,19 +102,24 @@ public interface PlayerCharacter extends Character {
 		return getActivePetType() == petType;
 	}
 
-	default void setProfessions(List<CharacterProfession> professions) {
-		getProfessions().setProfessions(professions);
-	}
-
 	default void addProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
-		var profession = getGameVersion().getProfession(professionId).orElseThrow();
-		var specialization = specializationId == null ? null : profession.getSpecialization(specializationId).orElseThrow();
-
-		getProfessions().addProfession(profession, specialization, level);
+		getProfessions().add(professionId, specializationId, level);
 	}
 
 	default void addProfession(ProfessionId professionId, int level) {
-		addProfession(professionId, null, level);
+		getProfessions().add(professionId, level);
+	}
+
+	default void addProfessionMaxLevel(ProfessionId professionId, ProfessionSpecializationId specializationId) {
+		getProfessions().addMaxLevel(professionId, specializationId);
+	}
+
+	default void setProfessions(List<ProfIdSpecIdLevel> professions) {
+		getProfessions().set(professions);
+	}
+
+	default void setProfessionMaxLevels(List<ProfIdSpecId> professions) {
+		getProfessions().setMaxLevels(professions);
 	}
 
 	default void resetProfessions() {

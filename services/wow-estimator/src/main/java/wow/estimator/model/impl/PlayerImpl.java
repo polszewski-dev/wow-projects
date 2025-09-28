@@ -36,13 +36,14 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			int level,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents
+			Talents talents,
+			CharacterProfessions professions
 	) {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new BuildWithRotation(phase.getGameVersion(), talents);
 		this.equipment = new Equipment();
-		this.professions = new CharacterProfessions();
+		this.professions = professions;
 		this.exclusiveFactions = new ExclusiveFactions();
 		this.consumables = new Consumables();
 	}

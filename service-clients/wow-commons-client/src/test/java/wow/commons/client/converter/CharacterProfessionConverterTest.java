@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.character.CharacterProfession;
 import wow.commons.client.WowCommonsClientSpringTest;
 import wow.commons.client.dto.CharacterProfessionDTO;
-import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.character.ProfessionRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,15 +36,5 @@ class CharacterProfessionConverterTest extends WowCommonsClientSpringTest {
 						TAILORING, SHADOWEAVE_TAILORING, 375
 				)
 		);
-	}
-
-	@Test
-	void convertBack() {
-		var profession = new CharacterProfessionDTO(TAILORING, SHADOWEAVE_TAILORING, 375);
-		var converted = characterProfessionConverter.convertBack(profession, PhaseId.TBC_P5);
-
-		assertThat(converted.professionId()).isEqualTo(TAILORING);
-		assertThat(converted.specializationId()).isEqualTo(SHADOWEAVE_TAILORING);
-		assertThat(converted.level()).isEqualTo(375);
 	}
 }

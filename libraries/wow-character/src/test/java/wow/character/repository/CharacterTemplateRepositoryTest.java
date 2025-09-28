@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
+import wow.character.model.character.ProfIdSpecId;
 import wow.character.util.TalentLinkParser;
 import wow.commons.model.categorization.PveRole;
 
@@ -63,10 +64,10 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
 				CURSE_OF_THE_ELEMENTS
 		));
-		assertThat(characterTemplate.getProfessions().get(0).professionId()).isEqualTo(ENCHANTING);
-		assertThat(characterTemplate.getProfessions().get(0).specializationId()).isNull();
-		assertThat(characterTemplate.getProfessions().get(1).professionId()).isEqualTo(TAILORING);
-		assertThat(characterTemplate.getProfessions().get(1).specializationId()).isEqualTo(SHADOWEAVE_TAILORING);
+		assertThat(characterTemplate.getProfessions()).isEqualTo(List.of(
+				new ProfIdSpecId(ENCHANTING, null),
+				new ProfIdSpecId(TAILORING, SHADOWEAVE_TAILORING)
+		));
 		assertThat(characterTemplate.getExclusiveFactions()).hasSameElementsAs(List.of(SCRYERS));
 	}
 

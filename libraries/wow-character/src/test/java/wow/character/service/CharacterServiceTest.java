@@ -6,6 +6,7 @@ import wow.character.WowCharacterSpringTest;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.character.ExclusiveFaction;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,7 +43,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 		assertThat(player.getActivePetType()).isNull();
 		assertThat(player.getBuffs().getList()).isEmpty();
 		assertThat(player.getEquipment().toList()).isEmpty();
-		assertThat(player.getProfessions().getList()).isEmpty();
+		assertThat(player.getProfessions().getList()).isEqualTo(Arrays.asList(null, null));
 		assertThat(player.getExclusiveFactions().getList()).isEmpty();
 	}
 

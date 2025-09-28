@@ -17,7 +17,12 @@ import wow.commons.client.converter.equipment.EquipmentConverter;
  */
 @Component
 public class PlayerConverter extends AbstractPlayerConverter<PlayerCharacter, NonPlayerCharacter> {
-	public PlayerConverter(CharacterService characterService, CharacterProfessionConverter characterProfessionConverter, EquipmentConverter equipmentConverter, AbstractNonPlayerConverter<NonPlayerCharacter> nonPlayerConverter) {
+	public PlayerConverter(
+			CharacterService characterService,
+			CharacterProfessionConverter characterProfessionConverter,
+			EquipmentConverter equipmentConverter,
+			AbstractNonPlayerConverter<NonPlayerCharacter> nonPlayerConverter
+	) {
 		super(characterService, characterProfessionConverter, equipmentConverter, nonPlayerConverter);
 	}
 

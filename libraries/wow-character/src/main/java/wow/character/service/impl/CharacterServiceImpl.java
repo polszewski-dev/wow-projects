@@ -21,6 +21,8 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Consumable;
+import wow.commons.model.profession.Profession;
+import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
@@ -59,7 +61,8 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public <T extends PlayerCharacter> T createPlayerCharacter(
-			String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory) {
+			String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory
+	) {
 		var phase = phaseRepository.getPhase(phaseId).orElseThrow();
 		var gameVersion = phase.getGameVersion();
 		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
@@ -67,6 +70,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(gameVersion.getGameVersionId(), characterClassId, raceId, level).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 		var talents = new Talents(getAvailableTalents(characterClassId, phaseId));
+		var professions = new CharacterProfessions(getAvailableProfessions(phase), phase, level);
 
 		return factory.newPlayerCharacter(
 				name,
@@ -76,7 +80,8 @@ public class CharacterServiceImpl implements CharacterService {
 				level,
 				baseStatInfo,
 				combatRatingInfo,
-				talents
+				talents,
+				professions
 		);
 	}
 
@@ -122,7 +127,7 @@ public class CharacterServiceImpl implements CharacterService {
 	private void applyCharacterTemplate(PlayerCharacter character, CharacterTemplate characterTemplate) {
 		changeBuild(character, characterTemplate);
 
-		character.setProfessions(getMaxedProfessions(characterTemplate, character));
+		character.setProfessionMaxLevels(characterTemplate.getProfessions());
 		character.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
 		character.getBuffs().setHighestRanks(characterTemplate.getDefaultBuffs());
 
@@ -133,21 +138,6 @@ public class CharacterServiceImpl implements CharacterService {
 		character.getConsumables().setConsumableNames(characterTemplate.getConsumables());
 
 		updateAfterRestrictionChange(character);
-	}
-
-	private List<CharacterProfession> getMaxedProfessions(CharacterTemplate characterTemplate, PlayerCharacter character) {
-		return characterTemplate.getProfessions().stream()
-				.map(x -> getCharacterProfessionMaxLevel(x, character))
-				.toList();
-	}
-
-	private CharacterProfession getCharacterProfessionMaxLevel(CharacterProfession characterProfession, PlayerCharacter character) {
-		return CharacterProfession.getCharacterProfessionMaxLevel(
-				character.getPhase(),
-				characterProfession.professionId(),
-				characterProfession.specializationId(),
-				character.getLevel()
-		);
 	}
 
 	private void changeBuild(PlayerCharacter character, CharacterTemplate characterTemplate) {
@@ -255,6 +245,10 @@ public class CharacterServiceImpl implements CharacterService {
 
 	private List<Talent> getAvailableTalents(CharacterClassId characterClassId, PhaseId phaseId) {
 		return talentRepository.getAvailableTalents(characterClassId, phaseId);
+	}
+
+	private List<Profession> getAvailableProfessions(Phase phase) {
+		return phase.getGameVersion().getProfessions();
 	}
 
 	private List<Buff> getAvailableBuffs(Character character, BuffListType buffListType) {
