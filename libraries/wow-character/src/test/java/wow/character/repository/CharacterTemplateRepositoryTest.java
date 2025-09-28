@@ -63,10 +63,10 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
 				CURSE_OF_THE_ELEMENTS
 		));
-		assertThat(characterTemplate.getProfessions().get(0).getProfessionId()).isEqualTo(ENCHANTING);
-		assertThat(characterTemplate.getProfessions().get(0).getSpecializationId()).isNull();
-		assertThat(characterTemplate.getProfessions().get(1).getProfessionId()).isEqualTo(TAILORING);
-		assertThat(characterTemplate.getProfessions().get(1).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
+		assertThat(characterTemplate.getProfessions().get(0).professionId()).isEqualTo(ENCHANTING);
+		assertThat(characterTemplate.getProfessions().get(0).specializationId()).isNull();
+		assertThat(characterTemplate.getProfessions().get(1).professionId()).isEqualTo(TAILORING);
+		assertThat(characterTemplate.getProfessions().get(1).specializationId()).isEqualTo(SHADOWEAVE_TAILORING);
 		assertThat(characterTemplate.getExclusiveFactions()).hasSameElementsAs(List.of(SCRYERS));
 	}
 

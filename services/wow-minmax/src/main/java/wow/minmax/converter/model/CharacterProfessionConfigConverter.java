@@ -22,7 +22,7 @@ public class CharacterProfessionConfigConverter implements Converter<CharacterPr
 	@Override
 	public CharacterProfessionConfig doConvert(CharacterProfession source) {
 		return new CharacterProfessionConfig(
-				source.getProfessionId(), source.getSpecializationId(), source.getLevel()
+				source.professionId(), source.specializationId(), source.level()
 		);
 	}
 

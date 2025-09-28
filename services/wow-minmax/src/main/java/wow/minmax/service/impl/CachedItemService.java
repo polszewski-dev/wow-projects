@@ -77,7 +77,7 @@ public class CachedItemService implements ItemService {
 				player.getRaceId() + "#" +
 				player.getRole() + "#" +
 				player.getPhaseId() + "#" +
-				getKey(player.getProfessions().getList(), x -> x.getProfessionId() + "#" + x.getSpecializationId()) + "#" +
+				getKey(player.getProfessions().getList(), x -> x.professionId() + "#" + x.specializationId()) + "#" +
 				getKey(player.getExclusiveFactions().getList(), Enum::toString);
 	}
 

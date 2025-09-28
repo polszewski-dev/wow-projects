@@ -22,9 +22,9 @@ public class CharacterProfessionConverter implements Converter<CharacterProfessi
 	@Override
 	public CharacterProfessionDTO doConvert(CharacterProfession source) {
 		return new CharacterProfessionDTO(
-				source.getProfessionId(),
-				source.getSpecializationId(),
-				source.getLevel()
+				source.professionId(),
+				source.specializationId(),
+				source.level()
 		);
 	}
 

@@ -44,8 +44,8 @@ class CharacterProfessionConverterTest extends WowCommonsClientSpringTest {
 		var profession = new CharacterProfessionDTO(TAILORING, SHADOWEAVE_TAILORING, 375);
 		var converted = characterProfessionConverter.convertBack(profession, PhaseId.TBC_P5);
 
-		assertThat(converted.getProfessionId()).isEqualTo(TAILORING);
-		assertThat(converted.getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
-		assertThat(converted.getLevel()).isEqualTo(375);
+		assertThat(converted.professionId()).isEqualTo(TAILORING);
+		assertThat(converted.specializationId()).isEqualTo(SHADOWEAVE_TAILORING);
+		assertThat(converted.level()).isEqualTo(375);
 	}
 }

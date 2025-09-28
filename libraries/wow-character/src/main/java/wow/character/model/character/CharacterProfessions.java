@@ -46,22 +46,22 @@ public class CharacterProfessions implements Copyable<CharacterProfessions> {
 	}
 
 	public boolean hasProfession(ProfessionId professionId) {
-		return professions.stream().anyMatch(x -> x.getProfessionId() == professionId);
+		return professions.stream().anyMatch(x -> x.professionId() == professionId);
 	}
 
 	public boolean hasProfession(ProfessionId professionId, int level) {
-		return professions.stream().anyMatch(x -> x.getProfessionId() == professionId && x.getLevel() >= level);
+		return professions.stream().anyMatch(x -> x.professionId() == professionId && x.level() >= level);
 	}
 
 	public boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
-		return professions.stream().anyMatch(x -> x.getSpecializationId() == specializationId);
+		return professions.stream().anyMatch(x -> x.specializationId() == specializationId);
 	}
 
 	private static void assertProfessionsAreCorrect(List<CharacterProfession> professions) {
 		if (professions.size() > MAX_PROFESSIONS) {
 			throw new IllegalArgumentException("At most %s professions allowed".formatted(MAX_PROFESSIONS));
 		}
-		if (professions.stream().map(CharacterProfession::getProfessionId).distinct().count() != professions.size()) {
+		if (professions.stream().map(CharacterProfession::professionId).distinct().count() != professions.size()) {
 			throw new IllegalArgumentException("Can't have 2 identical professions");
 		}
 	}

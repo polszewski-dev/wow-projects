@@ -144,8 +144,8 @@ public class CharacterServiceImpl implements CharacterService {
 	private CharacterProfession getCharacterProfessionMaxLevel(CharacterProfession characterProfession, PlayerCharacter character) {
 		return CharacterProfession.getCharacterProfessionMaxLevel(
 				character.getPhase(),
-				characterProfession.getProfessionId(),
-				characterProfession.getSpecializationId(),
+				characterProfession.professionId(),
+				characterProfession.specializationId(),
 				character.getLevel()
 		);
 	}

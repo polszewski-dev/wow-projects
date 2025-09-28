@@ -38,12 +38,12 @@ class CharacterProfessionsTest extends WowCharacterSpringTest {
 		professions.addProfession(enchanting, null, 300);
 
 		assertThat(professions.getList()).hasSize(2);
-		assertThat(professions.getList().get(0).getProfessionId()).isEqualTo(TAILORING);
-		assertThat(professions.getList().get(0).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
-		assertThat(professions.getList().get(0).getLevel()).isEqualTo(375);
-		assertThat(professions.getList().get(1).getProfessionId()).isEqualTo(ENCHANTING);
-		assertThat(professions.getList().get(1).getSpecializationId()).isNull();
-		assertThat(professions.getList().get(1).getLevel()).isEqualTo(300);
+		assertThat(professions.getList().get(0).professionId()).isEqualTo(TAILORING);
+		assertThat(professions.getList().get(0).specializationId()).isEqualTo(SHADOWEAVE_TAILORING);
+		assertThat(professions.getList().get(0).level()).isEqualTo(375);
+		assertThat(professions.getList().get(1).professionId()).isEqualTo(ENCHANTING);
+		assertThat(professions.getList().get(1).specializationId()).isNull();
+		assertThat(professions.getList().get(1).level()).isEqualTo(300);
 
 		assertThat(professions.hasProfession(TAILORING)).isTrue();
 		assertThat(professions.hasProfession(TAILORING, 300)).isTrue();
@@ -87,12 +87,12 @@ class CharacterProfessionsTest extends WowCharacterSpringTest {
 		));
 
 		assertThat(professions.getList()).hasSize(2);
-		assertThat(professions.getList().get(0).getProfessionId()).isEqualTo(HERBALISM);
-		assertThat(professions.getList().get(0).getSpecializationId()).isNull();
-		assertThat(professions.getList().get(0).getLevel()).isEqualTo(200);
-		assertThat(professions.getList().get(1).getProfessionId()).isEqualTo(MINING);
-		assertThat(professions.getList().get(1).getSpecializationId()).isNull();
-		assertThat(professions.getList().get(1).getLevel()).isEqualTo(250);
+		assertThat(professions.getList().get(0).professionId()).isEqualTo(HERBALISM);
+		assertThat(professions.getList().get(0).specializationId()).isNull();
+		assertThat(professions.getList().get(0).level()).isEqualTo(200);
+		assertThat(professions.getList().get(1).professionId()).isEqualTo(MINING);
+		assertThat(professions.getList().get(1).specializationId()).isNull();
+		assertThat(professions.getList().get(1).level()).isEqualTo(250);
 	}
 
 	@Test
@@ -107,12 +107,12 @@ class CharacterProfessionsTest extends WowCharacterSpringTest {
 		professions.reset();
 
 		assertThat(copy.getList()).hasSize(2);
-		assertThat(copy.getList().get(0).getProfessionId()).isEqualTo(TAILORING);
-		assertThat(copy.getList().get(0).getSpecializationId()).isEqualTo(SHADOWEAVE_TAILORING);
-		assertThat(copy.getList().get(0).getLevel()).isEqualTo(375);
-		assertThat(copy.getList().get(1).getProfessionId()).isEqualTo(ENCHANTING);
-		assertThat(copy.getList().get(1).getSpecializationId()).isNull();
-		assertThat(copy.getList().get(1).getLevel()).isEqualTo(300);
+		assertThat(copy.getList().get(0).professionId()).isEqualTo(TAILORING);
+		assertThat(copy.getList().get(0).specializationId()).isEqualTo(SHADOWEAVE_TAILORING);
+		assertThat(copy.getList().get(0).level()).isEqualTo(375);
+		assertThat(copy.getList().get(1).professionId()).isEqualTo(ENCHANTING);
+		assertThat(copy.getList().get(1).specializationId()).isNull();
+		assertThat(copy.getList().get(1).level()).isEqualTo(300);
 
 		assertThat(professions.getList()).isEmpty();
 	}
