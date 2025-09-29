@@ -8,7 +8,6 @@ import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.profession.ProfessionId;
@@ -62,7 +61,7 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	protected ProfessionSpecializationId requiredProfessionSpec;
 	protected String requiredFactionName;
 	protected String requiredFactionStanding;
-	protected ExclusiveFaction exclusiveFaction;
+	protected String exclusiveFaction;
 	protected String droppedBy;
 	protected Percent dropChance;
 	protected Money sellPrice;
@@ -184,7 +183,18 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	private void parseReputation(ParsedMultipleValues factionParams) {
 		this.requiredFactionName = factionParams.get(0);
 		this.requiredFactionStanding = factionParams.get(1);
-		this.exclusiveFaction = ExclusiveFaction.tryParse(requiredFactionName);
+		this.exclusiveFaction = tryParseExclusiveFaction(requiredFactionName);
+	}
+
+	private String tryParseExclusiveFaction(String name) {
+		var exclusiveFactions = List.of(
+				"The Scryers",
+				"The Aldor",
+				"The Oracles",
+				"Frenzyheart Tribe"
+		);
+
+		return exclusiveFactions.contains(name) ? name : null;
 	}
 
 	private void parseRequiredProfession(ParsedMultipleValues params) {

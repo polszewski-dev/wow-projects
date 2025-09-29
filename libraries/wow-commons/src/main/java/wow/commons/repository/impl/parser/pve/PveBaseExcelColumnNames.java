@@ -19,6 +19,7 @@ public final class PveBaseExcelColumnNames {
 
 	public static final String FACTION_VERSION = "version";
 	public static final String FACTION_SIDE = "side";
+	public static final String FACTION_EXCLUSION_GROUP = "exclusion_group";
 
 	private PveBaseExcelColumnNames() {}
 }

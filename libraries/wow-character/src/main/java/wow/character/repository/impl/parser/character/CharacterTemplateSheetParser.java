@@ -3,7 +3,6 @@ package wow.character.repository.impl.parser.character;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.ProfIdSpecId;
 import wow.character.util.TalentLinkParser;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
@@ -59,7 +58,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var defaultDebuffs = colDefaultDebuffs.getList(x -> x);
 		var consumables = colDefaultConsumables.getList(x -> x);
 		var professions = getProfessions();
-		var exclusiveFactions = colXFactions.getList(ExclusiveFaction::parse);
+		var exclusiveFactions = colXFactions.getList(x -> x);
 		var isDefault = colDefault.getBoolean();
 
 		return new CharacterTemplate(

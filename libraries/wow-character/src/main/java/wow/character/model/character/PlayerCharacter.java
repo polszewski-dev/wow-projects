@@ -161,7 +161,7 @@ public interface PlayerCharacter extends Character {
 	ExclusiveFactions getExclusiveFactions();
 
 	@Override
-	default boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction) {
+	default boolean hasExclusiveFaction(String exclusiveFaction) {
 		return getExclusiveFactions().has(exclusiveFaction);
 	}
 

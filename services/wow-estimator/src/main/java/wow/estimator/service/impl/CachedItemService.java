@@ -14,6 +14,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
+import wow.commons.model.pve.Faction;
 import wow.estimator.model.Player;
 import wow.estimator.service.ItemService;
 
@@ -96,7 +97,7 @@ public class CachedItemService implements ItemService {
 				player.getRole() + "#" +
 				player.getPhaseId() + "#" +
 				getKey(player.getProfessions().getList(), x -> x.professionId() + "#" + x.specializationId()) + "#" +
-				getKey(player.getExclusiveFactions().getList(), Enum::toString);
+				getKey(player.getExclusiveFactions().getList(), Faction::getName);
 	}
 
 	private static <T> String getKey(List<T> list, Function<T, String> mapper) {

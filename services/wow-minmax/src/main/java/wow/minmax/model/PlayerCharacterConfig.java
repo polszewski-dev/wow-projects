@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
 import wow.minmax.model.equipment.EquipmentConfig;
@@ -32,7 +31,7 @@ public class PlayerCharacterConfig {
 	private BuildConfig build;
 	private EquipmentConfig equipment;
 	private List<CharacterProfessionConfig> professions;
-	private List<ExclusiveFaction> exclusiveFactions;
+	private List<String> exclusiveFactions;
 	private List<Integer> buffIds;
 	private List<Integer> consumableIds;
 	private NonPlayerCharacterConfig target;

@@ -1,8 +1,10 @@
 package wow.commons.repository.pve;
 
 import wow.commons.model.pve.Faction;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,4 +13,6 @@ import java.util.Optional;
  */
 public interface FactionRepository {
 	Optional<Faction> getFaction(String name, PhaseId phaseId);
+
+	List<Faction> getAvailableExclusiveFactions(GameVersionId gameVersionId);
 }

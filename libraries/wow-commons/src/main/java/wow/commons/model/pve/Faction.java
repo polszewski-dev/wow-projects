@@ -18,6 +18,7 @@ public class Faction implements TimeRestricted {
 	private final String name;
 	private final GameVersionId version;
 	private final Side side;
+	private final FactionExclusionGroupId exclusionGroupId;
 	private final TimeRestriction timeRestriction;
 
 	@Override

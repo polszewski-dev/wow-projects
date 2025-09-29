@@ -2,12 +2,14 @@ package wow.commons.repository.impl.pve;
 
 import org.springframework.stereotype.Component;
 import wow.commons.model.pve.Faction;
+import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.pve.FactionExcelParser;
 import wow.commons.repository.pve.FactionRepository;
 import wow.commons.util.GameVersionMap;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,6 +19,7 @@ import java.util.Optional;
 @Component
 public class FactionRepositoryImpl implements FactionRepository {
 	private final GameVersionMap<String, Faction> factionByName = new GameVersionMap<>();
+	private final GameVersionMap<Faction, Faction> exclusiveFactions = new GameVersionMap<>();
 
 	public FactionRepositoryImpl(FactionExcelParser parser) throws IOException {
 		parser.readFromXls();
@@ -28,7 +31,16 @@ public class FactionRepositoryImpl implements FactionRepository {
 		return factionByName.getOptional(phaseId.getGameVersionId(), name);
 	}
 
+	@Override
+	public List<Faction> getAvailableExclusiveFactions(GameVersionId gameVersionId) {
+		return List.copyOf(exclusiveFactions.values(gameVersionId));
+	}
+
 	private void addFaction(Faction faction) {
 		factionByName.put(faction.getGameVersionId(), faction.getName(), faction);
+
+		if (faction.getExclusionGroupId() != null) {
+			exclusiveFactions.put(faction.getGameVersionId(), faction, faction);
+		}
 	}
 }

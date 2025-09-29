@@ -13,12 +13,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.profession.ProfessionId.ENCHANTING;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.test.commons.BuffNames.*;
+import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 
 /**
  * User: POlszewski

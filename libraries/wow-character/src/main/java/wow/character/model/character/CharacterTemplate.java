@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.build.TalentLink;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
@@ -32,7 +31,7 @@ public class CharacterTemplate implements TimeRestricted, CharacterRestricted {
 	private final List<String> defaultDebuffs;
 	private final List<String> consumables;
 	private final List<ProfIdSpecId> professions;
-	private final List<ExclusiveFaction> exclusiveFactions;
+	private final List<String> exclusiveFactions;
 	private final boolean isDefault;
 
 	public CharacterClassId getRequiredCharacterClassId() {

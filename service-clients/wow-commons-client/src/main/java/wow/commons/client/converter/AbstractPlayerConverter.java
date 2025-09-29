@@ -53,7 +53,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				source.getLevel(),
 				source.getPhaseId(),
 				characterProfessionConverter.convertList(source.getProfessions().getList()),
-				source.getExclusiveFactions().getList(),
+				source.getExclusiveFactions().getNameList(),
 				equipmentConverter.convert(source.getEquipment()),
 				talentIds,
 				source.getRole(),

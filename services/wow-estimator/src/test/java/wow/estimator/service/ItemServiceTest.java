@@ -16,7 +16,6 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
@@ -36,6 +35,8 @@ import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.GameVersionId.VANILLA;
+import static wow.test.commons.ExclusiveFactionNames.ALDOR;
+import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 
 /**
  * User: POlszewski
@@ -157,14 +158,14 @@ class ItemServiceTest extends ServiceTest {
 			@DisplayName("Vanilla")
 			@ParameterizedTest(name = "{0}")
 			@MethodSource("wow.estimator.service.ItemServiceTest#getBestEnchantsWarlockVanilla")
-			void vanilla(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
+			void vanilla(ItemType itemType, ItemSubType itemSubType, String exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(WARLOCK, VANILLA, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
 
 			@DisplayName("TBC")
 			@ParameterizedTest(name = "{0} {2}")
 			@MethodSource("wow.estimator.service.ItemServiceTest#getBestEnchantsWarlockTBC")
-			void tbc(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
+			void tbc(ItemType itemType, ItemSubType itemSubType, String exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(WARLOCK, TBC, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
 		}
@@ -174,14 +175,14 @@ class ItemServiceTest extends ServiceTest {
 			@DisplayName("Vanilla")
 			@ParameterizedTest(name = "{0}")
 			@MethodSource("wow.estimator.service.ItemServiceTest#getBestEnchantsPriestVanilla")
-			void vanilla(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
+			void vanilla(ItemType itemType, ItemSubType itemSubType, String exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(PRIEST, VANILLA, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
 
 			@DisplayName("TBC")
 			@ParameterizedTest(name = "{0} {2}")
 			@MethodSource("wow.estimator.service.ItemServiceTest#getBestEnchantsPriestTBC")
-			void tbc(ItemType itemType, ItemSubType itemSubType, ExclusiveFaction exclusiveFaction, List<String> expectedResult) {
+			void tbc(ItemType itemType, ItemSubType itemSubType, String exclusiveFaction, List<String> expectedResult) {
 				assertBestEnchants(PRIEST, TBC, exclusiveFaction, itemType, itemSubType, expectedResult);
 			}
 		}
@@ -291,12 +292,12 @@ class ItemServiceTest extends ServiceTest {
 				Arguments.of(ItemType.NECK, null, null, List.of(
 
 				)),
-				Arguments.of(ItemType.SHOULDER, ArmorSubType.CLOTH, ExclusiveFaction.SCRYERS, List.of(
+				Arguments.of(ItemType.SHOULDER, ArmorSubType.CLOTH, SCRYERS, List.of(
 						"Zandalar Signet of Mojo",
 						"Power of the Scourge",
 						"Greater Inscription of the Orb"
 				)),
-				Arguments.of(ItemType.SHOULDER, ArmorSubType.CLOTH, ExclusiveFaction.ALDOR, List.of(
+				Arguments.of(ItemType.SHOULDER, ArmorSubType.CLOTH, ALDOR, List.of(
 						"Power of the Scourge",
 						"Greater Inscription of Discipline"
 				)),
@@ -353,7 +354,7 @@ class ItemServiceTest extends ServiceTest {
 		);
 	}
 
-	private void assertBestEnchants(CharacterClassId characterClassId, GameVersionId gameVersionId, ExclusiveFaction exclusiveFaction, ItemType itemType, ItemSubType itemSubType, List<String> expectedResult) {
+	private void assertBestEnchants(CharacterClassId characterClassId, GameVersionId gameVersionId, String exclusiveFaction, ItemType itemType, ItemSubType itemSubType, List<String> expectedResult) {
 		var gameVersion = gameVersionRepository.getGameVersion(gameVersionId).orElseThrow();
 		var lastPhase = gameVersion.getLastPhase();
 		var maxLevel = lastPhase.getMaxLevel();

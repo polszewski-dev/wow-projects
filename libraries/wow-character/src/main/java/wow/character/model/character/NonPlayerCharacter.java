@@ -2,7 +2,6 @@ package wow.character.model.character;
 
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
@@ -55,7 +54,7 @@ public interface NonPlayerCharacter extends Character {
 	}
 
 	@Override
-	default boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction) {
+	default boolean hasExclusiveFaction(String exclusiveFaction) {
 		return false;
 	}
 

@@ -17,6 +17,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
+import wow.commons.repository.pve.FactionRepository;
 import wow.commons.repository.pve.GameVersionRepository;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.BuffRepository;
@@ -60,6 +61,9 @@ public abstract class WowCharacterSpringTest {
 
 	@Autowired
 	protected PhaseRepository phaseRepository;
+
+	@Autowired
+	protected FactionRepository factionRepository;
 
 	protected void equipGearSet(PlayerCharacter character) {
 		characterService.equipGearSet(character, "Wowhead TBC P5 BiS");

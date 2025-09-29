@@ -15,12 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.categorization.ItemType.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.character.ExclusiveFaction.SCRYERS;
 import static wow.commons.model.profession.ProfessionId.ENCHANTING;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P0;
 import static wow.commons.model.pve.PhaseId.TBC_P1;
 import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
+import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 
 /**
  * User: POlszewski

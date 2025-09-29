@@ -55,7 +55,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				buildConfigConverter.convert(source.getBuild()),
 				equipmentConfigConverter.convert(source.getEquipment()),
 				characterProfessionConfigConverter.convertList(source.getProfessions().getList()),
-				source.getExclusiveFactions().getList(),
+				source.getExclusiveFactions().getNameList(),
 				buffIds,
 				consumableIds,
 				nonPlayerCharacterConfigConverter.convert((NonPlayerCharacter) source.getTarget())

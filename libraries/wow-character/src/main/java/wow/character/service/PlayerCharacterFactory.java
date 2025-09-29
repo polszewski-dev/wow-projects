@@ -1,10 +1,7 @@
 package wow.character.service;
 
 import wow.character.model.build.Talents;
-import wow.character.model.character.BaseStatInfo;
-import wow.character.model.character.CharacterProfessions;
-import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.*;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
@@ -24,6 +21,7 @@ public interface PlayerCharacterFactory<T extends PlayerCharacter> {
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents,
-			CharacterProfessions characterProfessions
+			CharacterProfessions characterProfessions,
+			ExclusiveFactions exclusiveFactions
 	);
 }

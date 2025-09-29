@@ -2,7 +2,6 @@ package wow.commons.model.config;
 
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
@@ -33,7 +32,7 @@ public interface CharacterInfo {
 
 	boolean hasActivePet(PetType petType);
 
-	boolean hasExclusiveFaction(ExclusiveFaction exclusiveFaction);
+	boolean hasExclusiveFaction(String exclusiveFaction);
 
 	boolean hasAbility(AbilityId abilityId);
 

@@ -22,11 +22,13 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Consumable;
 import wow.commons.model.profession.Profession;
+import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
 import wow.commons.repository.item.ConsumableRepository;
+import wow.commons.repository.pve.FactionRepository;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.BuffRepository;
 import wow.commons.repository.spell.SpellRepository;
@@ -53,6 +55,7 @@ public class CharacterServiceImpl implements CharacterService {
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 	private final CharacterTemplateRepository characterTemplateRepository;
 	private final GearSetRepository gearSetRepository;
+	private final FactionRepository factionRepository;
 
 	@Override
 	public PlayerCharacter createPlayerCharacter(String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
@@ -71,6 +74,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 		var talents = new Talents(getAvailableTalents(characterClassId, phaseId));
 		var professions = new CharacterProfessions(getAvailableProfessions(phase), phase, level);
+		var exclusiveFactions = new ExclusiveFactions(getAvailableExclusiveFactions(phaseId));
 
 		return factory.newPlayerCharacter(
 				name,
@@ -81,7 +85,8 @@ public class CharacterServiceImpl implements CharacterService {
 				baseStatInfo,
 				combatRatingInfo,
 				talents,
-				professions
+				professions,
+				exclusiveFactions
 		);
 	}
 
@@ -249,6 +254,10 @@ public class CharacterServiceImpl implements CharacterService {
 
 	private List<Profession> getAvailableProfessions(Phase phase) {
 		return phase.getGameVersion().getProfessions();
+	}
+
+	private List<Faction> getAvailableExclusiveFactions(PhaseId phaseId) {
+		return factionRepository.getAvailableExclusiveFactions(phaseId.getGameVersionId());
 	}
 
 	private List<Buff> getAvailableBuffs(Character character, BuffListType buffListType) {

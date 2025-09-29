@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.equipment.EquippableItem;
-import wow.commons.model.character.ExclusiveFaction;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +17,7 @@ import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.profession.ProfessionId.*;
 import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 
 /**
  * User: POlszewski
@@ -84,8 +84,8 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 		assertThat(player.hasProfession(TAILORING, 375)).isTrue();
 		assertThat(player.hasProfessionSpecialization(SHADOWEAVE_TAILORING)).isTrue();
 		assertThat(player.hasProfession(ENCHANTING, 375)).isTrue();
-		assertThat(player.getExclusiveFactions().getList()).hasSameElementsAs(List.of(
-				ExclusiveFaction.SCRYERS
+		assertThat(player.getExclusiveFactions().getNameList()).hasSameElementsAs(List.of(
+				SCRYERS
 		));
 	}
 
@@ -130,8 +130,8 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 		assertThat(player.hasProfession(TAILORING, 375)).isTrue();
 		assertThat(player.hasProfessionSpecialization(SHADOWEAVE_TAILORING)).isTrue();
 		assertThat(player.hasProfession(ENCHANTING, 375)).isTrue();
-		assertThat(player.getExclusiveFactions().getList()).hasSameElementsAs(List.of(
-				ExclusiveFaction.SCRYERS
+		assertThat(player.getExclusiveFactions().getNameList()).hasSameElementsAs(List.of(
+				SCRYERS
 		));
 	}
 

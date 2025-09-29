@@ -8,7 +8,6 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.*;
@@ -173,7 +172,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var profession = colReqProfession.getEnum(ProfessionId::parse, null);
 		var professionLevel = colReqProfessionLevel.getNullableInteger();
 		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecializationId::parse, null);
-		var exclusiveFaction = colExclusiveFaction.getEnum(ExclusiveFaction::parse, null);
+		var exclusiveFaction = colExclusiveFaction.getString(null);
 		var activePet = colReqPet.getList(PetType::parse);
 		var spellId = colReqSpell.getEnum(AbilityId::parse, null);
 		var talentName = colReqTalent.getString(null);

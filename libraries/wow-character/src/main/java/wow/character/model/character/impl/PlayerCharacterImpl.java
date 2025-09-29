@@ -32,14 +32,15 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents,
-			CharacterProfessions professions
+			CharacterProfessions professions,
+			ExclusiveFactions exclusiveFactions
 	) {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
 		this.equipment = new Equipment();
 		this.professions = professions;
-		this.exclusiveFactions = new ExclusiveFactions();
+		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = new Consumables();
 	}
 

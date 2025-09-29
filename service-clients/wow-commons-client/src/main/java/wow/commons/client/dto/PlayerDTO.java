@@ -3,7 +3,6 @@ package wow.commons.client.dto;
 import wow.commons.client.dto.equipment.EquipmentDTO;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.ExclusiveFaction;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
@@ -21,7 +20,7 @@ public record PlayerDTO(
 		int level,
 		PhaseId phaseId,
 		List<CharacterProfessionDTO> professions,
-		List<ExclusiveFaction> exclusiveFactions,
+		List<String> exclusiveFactions,
 		EquipmentDTO equipment,
 		List<Integer> talentIds,
 		PveRole role,
