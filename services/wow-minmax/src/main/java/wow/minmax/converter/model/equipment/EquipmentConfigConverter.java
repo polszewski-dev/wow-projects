@@ -8,9 +8,6 @@ import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.pve.PhaseId;
 import wow.minmax.model.equipment.EquipmentConfig;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * User: POlszewski
  * Date: 2021-12-14
@@ -22,22 +19,15 @@ public class EquipmentConfigConverter implements Converter<Equipment, EquipmentC
 
 	@Override
 	public EquipmentConfig doConvert(Equipment source) {
-		var itemsBySlot = source.toMap().entrySet().stream()
-				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemConfigConverter.convert(e.getValue()))
-				);
+		var itemsBySlot = equippableItemConfigConverter.convertMap(source.toMap());
 
 		return new EquipmentConfig(itemsBySlot);
 	}
 
 	@Override
 	public Equipment doConvertBack(EquipmentConfig source, PhaseId phaseId) {
-		var itemsBySlot = source.getItemsBySlot().entrySet().stream()
-				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemConfigConverter.convertBack(e.getValue(), phaseId))
-				);
-
-		Equipment equipment = new Equipment();
+		var itemsBySlot = equippableItemConfigConverter.convertBackMap(source.getItemsBySlot(), phaseId);
+		var equipment = new Equipment();
 
 		for (var entry : itemsBySlot.entrySet()) {
 			equipment.equip(entry.getValue(), entry.getKey());

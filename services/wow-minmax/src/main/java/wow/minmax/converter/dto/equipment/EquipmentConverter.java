@@ -8,9 +8,6 @@ import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.pve.PhaseId;
 import wow.minmax.client.dto.equipment.EquipmentDTO;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * User: POlszewski
  * Date: 2021-12-14
@@ -22,21 +19,14 @@ public class EquipmentConverter implements Converter<Equipment, EquipmentDTO>, P
 
 	@Override
 	public EquipmentDTO doConvert(Equipment source) {
-		var itemsBySlot = source.toMap().entrySet().stream()
-				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemConverter.convert(e.getValue()))
-				);
+		var itemsBySlot = equippableItemConverter.convertMap(source.toMap());
 
 		return new EquipmentDTO(itemsBySlot);
 	}
 
 	@Override
 	public Equipment doConvertBack(EquipmentDTO source, PhaseId phaseId) {
-		var itemsBySlot = source.itemsBySlot().entrySet().stream()
-				.collect(Collectors.toMap(
-						Map.Entry::getKey, e -> equippableItemConverter.convertBack(e.getValue(), phaseId))
-				);
-
+		var itemsBySlot = equippableItemConverter.convertBackMap(source.itemsBySlot(), phaseId);
 		var equipment = new Equipment();
 
 		for (var entry : itemsBySlot.entrySet()) {
