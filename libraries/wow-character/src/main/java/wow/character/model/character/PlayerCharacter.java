@@ -122,6 +122,10 @@ public interface PlayerCharacter extends Character {
 		getProfessions().setMaxLevels(professions);
 	}
 
+	default void setProfessionMaxLevel(int index, ProfIdSpecId profession) {
+		getProfessions().setMaxLevel(index, profession);
+	}
+
 	default void resetProfessions() {
 		getProfessions().reset();
 	}

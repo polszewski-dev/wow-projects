@@ -2,7 +2,9 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.ProfIdSpecId;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
@@ -15,6 +17,10 @@ import wow.minmax.repository.PlayerProfileRepository;
 import wow.minmax.service.PlayerCharacterService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static wow.commons.model.profession.ProfessionType.SECONDARY;
 
 /**
  * User: POlszewski
@@ -88,5 +94,36 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	@Override
 	public ViewConfig getViewConfig(PlayerCharacter player) {
 		return minmaxConfigRepository.getViewConfig(player).orElseThrow();
+	}
+
+	@Override
+	public List<CharacterProfession> getAvailableProfessions(CharacterId characterId) {
+		var player = getPlayer(characterId);
+		var result = new ArrayList<CharacterProfession>();
+
+		for (var profession : player.getGameVersion().getProfessions()) {
+			if (profession.getType() == SECONDARY) {
+				continue;
+			}
+
+			result.add(new CharacterProfession(profession, null, 1));
+
+			for (var specialization : profession.getSpecializations()) {
+				result.add(new CharacterProfession(profession, specialization, 1));
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public PlayerCharacter changeProfession(CharacterId characterId, int index, ProfIdSpecId profession) {
+		var player = getPlayer(characterId);
+
+		player.setProfessionMaxLevel(index, profession);
+
+		characterService.updateAfterRestrictionChange(player);
+		saveCharacter(characterId, player);
+		return player;
 	}
 }

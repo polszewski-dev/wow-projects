@@ -9,7 +9,7 @@ import { ConsumableService } from "../../services/consumable.service";
 import { EquipmentService } from '../../services/equipment.service';
 import { loadEnchantOptions, loadEquipmentOptions, loadGemOptions, loadItemOptions } from "../equipment-options/equipment-options.actions";
 import { CharacterModuleState } from './../character-module.state';
-import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter, equipGearSet, equipGearSetFailure, equipGearSetSuccess, equipPreviousPhase, equipPreviousPhaseFailure, equipPreviousPhaseSuccess } from './character.actions';
+import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, changeProfession, changeProfessionFailure, changeProfessionSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGearSet, equipGearSetFailure, equipGearSetSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, equipPreviousPhase, equipPreviousPhaseFailure, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 @Injectable()
 export class CharacterEffects {
@@ -161,7 +161,9 @@ export class CharacterEffects {
 			resetEquipmentSuccess,
 			equipGearSetSuccess,
 			equipPreviousPhaseSuccess,
-			changeBuffStatusSuccess
+			changeBuffStatusSuccess,
+			changeConsumableStatusSuccess,
+			changeProfessionSuccess,
 		),
 		map(({ characterId }) => dpsChanged({ characterId: characterId! })
 	)));
@@ -176,6 +178,42 @@ export class CharacterEffects {
 			equipPreviousPhaseSuccess
 		),
 		map(({ characterId }) => loadSocketStatus({ characterId }))
+	));
+
+	changeProfession$ = createEffect(() => this.actions$.pipe(
+		ofType(changeProfession),
+		switchMap(({ characterId, professionIdx, profession }) => this.characterService.changeProfession(characterId, professionIdx, profession).pipe(
+			map(character => changeProfessionSuccess({ characterId, character })),
+			catchError(error => of(changeProfessionFailure({ error })))
+		))
+	));
+
+	itmeOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
+		ofType(
+			changeProfessionSuccess,
+		),
+		map(({ characterId }) => loadItemOptions( { characterId })),
+	));
+
+	enchantOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
+		ofType(
+			changeProfessionSuccess,
+		),
+		map(({ characterId }) => loadEnchantOptions( { characterId })),
+	));
+
+	gemOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
+		ofType(
+			changeProfessionSuccess,
+		),
+		map(({ characterId }) => loadGemOptions({ characterId })),
+	));
+
+	equipmentNeedsReload$ = createEffect(() => this.actions$.pipe(
+		ofType(
+			changeProfessionSuccess,
+		),
+		map(({ characterId }) => loadEquipment({ characterId }))
 	));
 
 	// log$ = createEffect(() => this.actions$.pipe(

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { BuffEditorComponent } from './components/buff-editor/buff-editor.component';
+import { CharacterDetailsComponent } from './components/character-details/character-details.component';
 import { ConsumableEditorComponent } from './components/consumable-editor/consumable-editor.component';
 import { EnchantSelectComponent } from './components/enchant-select/enchant-select.component';
 import { EquipUpgradeButtonComponent } from './components/equip-upgrade-button/equip-upgrade-button.component';
@@ -10,6 +11,7 @@ import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor
 import { GemSelectComponent } from './components/gem-select/gem-select.component';
 import { ItemFilterComponent } from './components/item-filter/item-filter.component';
 import { ItemSelectComponent } from './components/item-select/item-select.component';
+import { ProfessionSelectComponent } from './components/profession-select/profession-select.component';
 import { SocketStatusComponent } from './components/socket-status/socket-status.component';
 import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
 
@@ -25,7 +27,9 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
         SocketStatusComponent,
 		EquipUpgradeButtonComponent,
 		ItemFilterComponent,
-		UpgradeListComponent
+		UpgradeListComponent,
+		CharacterDetailsComponent,
+		ProfessionSelectComponent,
 	],
 	imports: [
 		FormsModule,
@@ -45,7 +49,9 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
         GemSelectComponent,
         SocketStatusComponent,
 		EquipUpgradeButtonComponent,
-		UpgradeListComponent
+		UpgradeListComponent,
+		CharacterDetailsComponent,
+		ProfessionSelectComponent,
 	]
 })
 export class CharacterModule { }

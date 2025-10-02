@@ -2,14 +2,15 @@ package wow.minmax.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import wow.minmax.client.dto.PlayerCharacterDTO;
+import wow.minmax.client.dto.ProfessionDTO;
 import wow.minmax.converter.dto.PlayerCharacterConverter;
+import wow.minmax.converter.dto.ProfessionConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -22,12 +23,39 @@ import wow.minmax.service.PlayerCharacterService;
 public class CharacterController {
 	private final PlayerCharacterService playerCharacterService;
 	private final PlayerCharacterConverter playerCharacterConverter;
+	private final ProfessionConverter professionConverter;
 
 	@GetMapping("{characterId}")
 	public PlayerCharacterDTO getCharacter(
 			@PathVariable("characterId") CharacterId characterId
 	) {
 		var player = playerCharacterService.getPlayer(characterId);
+
+		return playerCharacterConverter.convert(player, characterId);
+	}
+
+	@GetMapping("{characterId}/professions")
+	public List<ProfessionDTO> getAvailableProfessions(
+			@PathVariable("characterId") CharacterId characterId
+	) {
+		var availableProfessions = playerCharacterService.getAvailableProfessions(characterId);
+
+		return professionConverter.convertList(availableProfessions);
+	}
+
+	@PutMapping("{characterId}/professions/{index}")
+	public PlayerCharacterDTO changeProfession(
+			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("index") int index,
+			@RequestBody ProfessionDTO profession
+	) {
+		var player = playerCharacterService.changeProfession(
+				characterId,
+				index,
+				professionConverter.convertBack(profession)
+		);
+
+		log.info("changed profession charId: {}, idx: {}, profession: {}", characterId, index, profession.name());
 
 		return playerCharacterConverter.convert(player, characterId);
 	}

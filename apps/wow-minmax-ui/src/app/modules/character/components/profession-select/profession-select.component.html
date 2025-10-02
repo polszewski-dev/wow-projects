@@ -1,0 +1,7 @@
+<app-dropdown-select
+	[id]="id"
+	[elements]="availableProfessions"
+	[value]="selectedProfession"
+	[valueFormatter]="professionFormatter"
+	(valueChanged)="onProfessionChanged($event)"
+></app-dropdown-select>

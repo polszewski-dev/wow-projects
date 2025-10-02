@@ -116,7 +116,7 @@ public class CharacterProfessions implements Copyable<CharacterProfessions> {
 		setProfessions(characterProfessions);
 	}
 
-	public void set(int index, ProfIdSpecIdLevel profession) {
+	public void setMaxLevel(int index, ProfIdSpecId profession) {
 		if (profession == null) {
 			professions.set(index, null);
 			return;
@@ -129,7 +129,7 @@ public class CharacterProfessions implements Copyable<CharacterProfessions> {
 			professions.set(otherIndex, null);
 		}
 
-		professions.set(index, getCharacterProfession(profession));
+		professions.set(index, getCharacterProfessionMaxLevel(profession));
 	}
 
 	private CharacterProfession getCharacterProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {

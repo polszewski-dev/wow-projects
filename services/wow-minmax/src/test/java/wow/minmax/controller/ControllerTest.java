@@ -21,8 +21,7 @@ import wow.simulator.client.dto.StatsDTO;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -75,6 +74,8 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 
 		when(playerCharacterService.getPlayer(CHARACTER_KEY)).thenReturn(character);
 		when(playerCharacterService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
+		when(playerCharacterService.getAvailableProfessions(any())).thenReturn(List.of());
+		when(playerCharacterService.changeProfession(any(), anyInt(), any())).thenReturn(character);
 
 		when(equipmentService.getEquipment(any())).thenReturn(character.getEquipment());
 		when(equipmentService.resetEquipment(any())).thenReturn(character);

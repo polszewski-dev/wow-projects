@@ -2,14 +2,14 @@ import { createReducer, on } from "@ngrx/store";
 import { failure, Loadable, loading, pending, success } from '../../../shared/state/Loadable';
 import { BuffListType } from '../../model/buff/BuffListType';
 import { BuffStatus } from "../../model/buff/BuffStatus";
-import { Character } from "../../model/Character";
+import { Character } from '../../model/Character';
 import { ConsumableStatus } from "../../model/consumable/ConsumableStatus";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from "../../model/equipment/EquippableItem";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { getSlots, ItemSlotGroup } from "../../model/upgrade/ItemSlotGroup";
-import { changeBuffStatusSuccess, changeConsumableStatusSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
 	characterId: string | null;
@@ -137,7 +137,12 @@ export const characterReducer = createReducer(
 	on(dpsChanged, (state) => ({
 		...state,
 		dpsChangeIdx: state.dpsChangeIdx + 1
-	}))
+	})),
+
+	on(changeProfessionSuccess, (state, { character }) => ({
+		...state,
+		character: success(character)
+	})),
 );
 
 function withAllSlotsSetTo(value: Loadable<EquippableItem | null>) {

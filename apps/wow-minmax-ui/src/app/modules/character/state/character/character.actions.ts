@@ -10,6 +10,7 @@ import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { Gem } from "../../model/equipment/Gem";
 import { Item } from "../../model/equipment/Item";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
+import { Profession } from "../../model/Profession";
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 
 export const selectCharacter = createAction(
@@ -230,4 +231,19 @@ export const changeConsumableStatusFailure = createAction(
 export const dpsChanged = createAction(
 	"[Character] Dps Changed",
 	props<{ characterId: string }>()
+);
+
+export const changeProfession = createAction(
+	"[Character] Change Profession",
+	props<{ characterId: string, professionIdx: number, profession: Profession }>()
+);
+
+export const changeProfessionSuccess = createAction(
+	"[Character] Change Profession Success",
+	props<{ characterId: string, character: Character }>()
+);
+
+export const changeProfessionFailure = createAction(
+	"[Character] Change Profession Failure",
+	props<{ error: string }>()
 );

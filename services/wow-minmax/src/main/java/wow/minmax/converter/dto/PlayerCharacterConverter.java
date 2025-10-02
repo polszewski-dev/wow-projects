@@ -18,13 +18,15 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 	private final CharacterClassConverter characterClassConverter;
 	private final RaceConverter raceConverter;
 	private final RacialConverter racialConverter;
+	private final ProfessionConverter professionConverter;
 
 	@Override
 	public PlayerCharacterDTO doConvert(PlayerCharacter source, CharacterId characterId) {
 		return new PlayerCharacterDTO(
 				characterId.toString(),
 				characterClassConverter.convert(source.getCharacterClass()),
-				getRace(source)
+				getRace(source),
+				professionConverter.convertList(source.getProfessions().getList())
 		);
 	}
 

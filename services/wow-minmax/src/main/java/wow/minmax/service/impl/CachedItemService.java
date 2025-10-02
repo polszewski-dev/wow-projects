@@ -15,10 +15,7 @@ import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.Faction;
 import wow.minmax.service.ItemService;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -84,6 +81,7 @@ public class CachedItemService implements ItemService {
 
 	private static <T> String getKey(List<T> list, Function<T, String> mapper) {
 		return list.stream()
+				.filter(Objects::nonNull)
 				.map(mapper)
 				.sorted()
 				.collect(Collectors.joining("#"));

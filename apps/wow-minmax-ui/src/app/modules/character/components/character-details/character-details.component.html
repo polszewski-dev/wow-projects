@@ -1,0 +1,35 @@
+@if (character$ | async; as character) {
+<form class="row g-3 m-3 character-form">
+	<div class="col-md-2">
+		<label for="character-class" class="form-label">Class</label>
+		<div id="character-class">
+			<app-description [source]="character.characterClass" style="font-weight:normal;"></app-description>
+		</div>
+	</div>
+
+	<div class="col-md-2">
+		<label for="race" class="form-label">Race</label>
+		<div id="race">
+			<app-description [source]="character.race"></app-description>
+		</div>
+	</div>
+
+	<div class="col-md-8"></div>
+
+	@if (availableProfessions$ | async; as availableProfessions) {
+		@for (i of [0, 1]; track i) {
+			<div class="col-md-2">
+				<label for="profession{{i}}-select" class="form-label">Profession #{{i + 1}}</label>
+				<app-profession-select
+					id="profession{{i}}-select"
+					[characterId]="character.characterId"
+					[professionIdx]="i"
+					[selectedProfession]="character.professions[i]"
+					[availableProfessions]="availableProfessions"
+				></app-profession-select>
+			</div>
+		}
+	}
+	<div class="col-md-8"></div>
+</form>
+}
