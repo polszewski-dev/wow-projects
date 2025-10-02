@@ -26,6 +26,7 @@ public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 	private final List<CharacterFeatureConfig> featureConfigs = new ArrayList<>();
 	private final List<FindUpgradesConfig> findUpgradesConfigs = new ArrayList<>();
 	private final List<ItemLevelConfig> itemLevelConfigs = new ArrayList<>();
+	private final List<ScriptInfo> scriptInfos = new ArrayList<>();
 
 	public MinmaxConfigRepositoryImpl(MinMaxConfigExcelParser parser) throws IOException {
 		parser.readFromXls();
@@ -33,6 +34,7 @@ public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 		featureConfigs.addAll(parser.getCharacterFeatureConfigs());
 		findUpgradesConfigs.addAll(parser.getFindUpgradesConfigs());
 		itemLevelConfigs.addAll(parser.getItemLevelConfigs());
+		scriptInfos.addAll(parser.getScriptInfos());
 	}
 
 	@Override
@@ -64,6 +66,23 @@ public class MinmaxConfigRepositoryImpl implements MinmaxConfigRepository {
 	public Optional<ItemLevelFilter> getItemLevelFilter(PlayerCharacter player) {
 		return getFirst(player, itemLevelConfigs)
 				.map(ItemLevelConfig::filter);
+	}
+
+	@Override
+	public List<ScriptInfo> getAvailableScripts(PlayerCharacter player) {
+		return scriptInfos.stream()
+				.filter(x -> x.isAvailableTo(player))
+				.filter(x -> x.isAvailableDuring(player.getPhaseId()))
+				.toList();
+	}
+
+	@Override
+	public Optional<ScriptInfo> getScript(String scriptPath, PlayerCharacter player) {
+		return scriptInfos.stream()
+				.filter(x -> x.path().equals(scriptPath))
+				.filter(x -> x.isAvailableTo(player))
+				.filter(x -> x.isAvailableDuring(player.getPhaseId()))
+				.findAny();
 	}
 
 	private <T extends CharacterRestricted & TimeRestricted> Optional<T> getFirst(PlayerCharacter player, List<T> list) {

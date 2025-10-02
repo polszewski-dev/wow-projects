@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.minmax.client.dto.PlayerCharacterDTO;
 import wow.minmax.client.dto.ProfessionDTO;
+import wow.minmax.client.dto.ScriptInfoDTO;
 import wow.minmax.converter.dto.PlayerCharacterConverter;
 import wow.minmax.converter.dto.ProfessionConverter;
+import wow.minmax.converter.dto.ScriptInfoConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 
@@ -24,6 +26,7 @@ public class CharacterController {
 	private final PlayerCharacterService playerCharacterService;
 	private final PlayerCharacterConverter playerCharacterConverter;
 	private final ProfessionConverter professionConverter;
+	private final ScriptInfoConverter scriptInfoConverter;
 
 	@GetMapping("{characterId}")
 	public PlayerCharacterDTO getCharacter(
@@ -56,6 +59,30 @@ public class CharacterController {
 		);
 
 		log.info("changed profession charId: {}, idx: {}, profession: {}", characterId, index, profession.name());
+
+		return playerCharacterConverter.convert(player, characterId);
+	}
+
+	@GetMapping("{characterId}/scripts")
+	public List<ScriptInfoDTO> getAvailableScripts(
+			@PathVariable("characterId") CharacterId characterId
+	) {
+		var availableScripts = playerCharacterService.getAvailableScripts(characterId);
+
+		return scriptInfoConverter.convertList(availableScripts);
+	}
+
+	@PutMapping("{characterId}/scripts")
+	public PlayerCharacterDTO changeScript(
+			@PathVariable("characterId") CharacterId characterId,
+			@RequestBody ScriptInfoDTO script
+	) {
+		var player = playerCharacterService.changeScript(
+				characterId,
+				script.id()
+		);
+
+		log.info("changed script charId: {}, script: {}", characterId, script.id());
 
 		return playerCharacterConverter.convert(player, characterId);
 	}

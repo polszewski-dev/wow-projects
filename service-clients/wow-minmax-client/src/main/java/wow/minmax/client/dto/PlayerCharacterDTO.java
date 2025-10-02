@@ -10,6 +10,7 @@ public record PlayerCharacterDTO(
 		String characterId,
 		CharacterClassDTO characterClass,
 		RaceDTO race,
-		List<ProfessionDTO> professions
+		List<ProfessionDTO> professions,
+		ScriptInfoDTO script
 ) {
 }

@@ -7,6 +7,8 @@ import wow.commons.client.converter.ParametrizedConverter;
 import wow.minmax.client.dto.PlayerCharacterDTO;
 import wow.minmax.client.dto.RaceDTO;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.config.ScriptInfo;
+import wow.minmax.repository.MinmaxConfigRepository;
 
 /**
  * User: POlszewski
@@ -19,6 +21,8 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 	private final RaceConverter raceConverter;
 	private final RacialConverter racialConverter;
 	private final ProfessionConverter professionConverter;
+	private final ScriptInfoConverter scriptInfoConverter;
+	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
 	public PlayerCharacterDTO doConvert(PlayerCharacter source, CharacterId characterId) {
@@ -26,7 +30,8 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 				characterId.toString(),
 				characterClassConverter.convert(source.getCharacterClass()),
 				getRace(source),
-				professionConverter.convertList(source.getProfessions().getList())
+				professionConverter.convertList(source.getProfessions().getList()),
+				scriptInfoConverter.convert(getScript(source))
 		);
 	}
 
@@ -36,5 +41,11 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 		return raceConverter
 				.convert(source.getRace())
 				.withRacials(racials);
+	}
+
+	private ScriptInfo getScript(PlayerCharacter source) {
+		var scriptPath = source.getBuild().getScript();
+
+		return minmaxConfigRepository.getScript(scriptPath, source).orElseThrow();
 	}
 }

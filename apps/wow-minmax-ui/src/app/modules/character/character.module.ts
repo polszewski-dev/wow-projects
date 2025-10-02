@@ -12,6 +12,7 @@ import { GemSelectComponent } from './components/gem-select/gem-select.component
 import { ItemFilterComponent } from './components/item-filter/item-filter.component';
 import { ItemSelectComponent } from './components/item-select/item-select.component';
 import { ProfessionSelectComponent } from './components/profession-select/profession-select.component';
+import { ScriptSelectComponent } from './components/script-select/script-select.component';
 import { SocketStatusComponent } from './components/socket-status/socket-status.component';
 import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
 
@@ -30,6 +31,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		UpgradeListComponent,
 		CharacterDetailsComponent,
 		ProfessionSelectComponent,
+		ScriptSelectComponent,
 	],
 	imports: [
 		FormsModule,
@@ -52,6 +54,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		UpgradeListComponent,
 		CharacterDetailsComponent,
 		ProfessionSelectComponent,
+		ScriptSelectComponent,
 	]
 })
 export class CharacterModule { }

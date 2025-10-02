@@ -3,6 +3,7 @@ package wow.minmax.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.character.ProfIdSpecId;
+import wow.minmax.model.config.ScriptInfo;
 
 import java.util.List;
 
@@ -67,6 +68,31 @@ class PlayerCharacterServiceTest extends ServiceTest {
 		assertThat(player.hasProfessionSpecialization(TRANSMUTATION_MASTER)).isTrue();
 
 		assertThat(player.hasProfession(ENCHANTING)).isTrue();
+	}
+
+	@Test
+	void getAvailableScripts() {
+		var availableScripts = underTest.getAvailableScripts(CHARACTER_KEY);
+
+		var list = availableScripts.stream()
+				.map(ScriptInfo::path)
+				.toList();
+
+		assertThat(list).hasSameElementsAs(List.of(
+				"warlock-destro-shadow.txt",
+				"warlock-shadow-bolt-spam.txt"
+		));
+	}
+
+	@Test
+	void changeScript() {
+		var newScript = "warlock-shadow-bolt-spam.txt";
+
+		assertThat(character.getBuild().getScript()).isEqualTo("warlock-destro-shadow.txt");
+
+		var player = underTest.changeScript(CHARACTER_KEY, newScript);
+
+		assertThat(player.getBuild().getScript()).isEqualTo(newScript);
 	}
 
 	@Autowired

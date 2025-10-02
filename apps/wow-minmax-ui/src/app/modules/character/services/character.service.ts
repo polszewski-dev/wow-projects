@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Character } from '../model/Character';
 import { Profession } from '../model/Profession';
+import { ScriptInfo } from '../model/ScriptInfo';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,5 +23,13 @@ export class CharacterService {
 
 	changeProfession(characterId: string, professionIdx: number, profession: Profession) {
 		return this.http.put<Character>(`${this.apiUrl}/${characterId}/professions/${professionIdx}`, profession);
+	}
+
+	getAvailableScripts(characterId: string) {
+		return this.http.get<ScriptInfo[]>(`${this.apiUrl}/${characterId}/scripts`);
+	}
+
+	changeScript(characterId: string, script: ScriptInfo) {
+		return this.http.put<Character>(`${this.apiUrl}/${characterId}/scripts`, script);
 	}
 }

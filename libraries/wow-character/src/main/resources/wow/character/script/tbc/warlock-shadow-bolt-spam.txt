@@ -1,0 +1,27 @@
+
+#	Shadow Bolt
+
+
+@	Rotation
+
+	Destruction Potion
+	Blood Fury
+	Trinket1
+	Trinket2
+
+	Shadow Bolt
+	Shadowburn
+	Shoot
+
+
+@	CanNotPayManaCost
+
+	Dark Rune
+	Super Mana Potion
+	Life Tap
+
+
+@	CanNotPayHealthCost
+
+	Master Healthstone
+	Super Healing Potion

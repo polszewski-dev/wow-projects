@@ -4,8 +4,10 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemLevelFilter;
 import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.config.FindUpgradesConfig;
+import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.model.config.ViewConfig;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,4 +25,8 @@ public interface MinmaxConfigRepository {
 	Optional<FindUpgradesConfig> getFindUpgradesConfig(PlayerCharacter player);
 
 	Optional<ItemLevelFilter> getItemLevelFilter(PlayerCharacter player);
+
+	List<ScriptInfo> getAvailableScripts(PlayerCharacter player);
+
+	Optional<ScriptInfo> getScript(String scriptPath, PlayerCharacter player);
 }

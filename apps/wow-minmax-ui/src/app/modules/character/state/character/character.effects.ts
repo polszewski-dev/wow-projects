@@ -9,7 +9,7 @@ import { ConsumableService } from "../../services/consumable.service";
 import { EquipmentService } from '../../services/equipment.service';
 import { loadEnchantOptions, loadEquipmentOptions, loadGemOptions, loadItemOptions } from "../equipment-options/equipment-options.actions";
 import { CharacterModuleState } from './../character-module.state';
-import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, changeProfession, changeProfessionFailure, changeProfessionSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGearSet, equipGearSetFailure, equipGearSetSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, equipPreviousPhase, equipPreviousPhaseFailure, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, changeProfession, changeProfessionFailure, changeProfessionSuccess, changeScript, changeScriptFailure, changeScriptSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGearSet, equipGearSetFailure, equipGearSetSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, equipPreviousPhase, equipPreviousPhaseFailure, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 @Injectable()
 export class CharacterEffects {
@@ -164,6 +164,7 @@ export class CharacterEffects {
 			changeBuffStatusSuccess,
 			changeConsumableStatusSuccess,
 			changeProfessionSuccess,
+			changeScriptSuccess,
 		),
 		map(({ characterId }) => dpsChanged({ characterId: characterId! })
 	)));
@@ -185,6 +186,14 @@ export class CharacterEffects {
 		switchMap(({ characterId, professionIdx, profession }) => this.characterService.changeProfession(characterId, professionIdx, profession).pipe(
 			map(character => changeProfessionSuccess({ characterId, character })),
 			catchError(error => of(changeProfessionFailure({ error })))
+		))
+	));
+
+	changeScript$ = createEffect(() => this.actions$.pipe(
+		ofType(changeScript),
+		switchMap(({ characterId, script }) => this.characterService.changeScript(characterId, script).pipe(
+			map(character => changeScriptSuccess({ characterId, character })),
+			catchError(error => of(changeScriptFailure({ error })))
 		))
 	));
 

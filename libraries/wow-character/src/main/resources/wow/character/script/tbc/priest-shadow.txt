@@ -13,6 +13,7 @@
 	Vampiric Touch
 	Devouring Plague
 	Starshards
+	Inner Focus >>= Mind Blast
 	Mind Blast
 	Shadow Word: Death
 	Mind Flay

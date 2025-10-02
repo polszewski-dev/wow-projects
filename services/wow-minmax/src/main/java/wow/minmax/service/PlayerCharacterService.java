@@ -4,6 +4,7 @@ import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.ProfIdSpecId;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.model.config.ViewConfig;
 
 import java.util.List;
@@ -22,4 +23,8 @@ public interface PlayerCharacterService {
 	List<CharacterProfession> getAvailableProfessions(CharacterId characterId);
 
 	PlayerCharacter changeProfession(CharacterId characterId, int index, ProfIdSpecId profession);
+
+	List<ScriptInfo> getAvailableScripts(CharacterId characterId);
+
+	PlayerCharacter changeScript(CharacterId characterId, String scriptPath);
 }

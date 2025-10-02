@@ -11,6 +11,7 @@ import { Gem } from "../../model/equipment/Gem";
 import { Item } from "../../model/equipment/Item";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { Profession } from "../../model/Profession";
+import { ScriptInfo } from '../../model/ScriptInfo';
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 
 export const selectCharacter = createAction(
@@ -245,5 +246,20 @@ export const changeProfessionSuccess = createAction(
 
 export const changeProfessionFailure = createAction(
 	"[Character] Change Profession Failure",
+	props<{ error: string }>()
+);
+
+export const changeScript = createAction(
+	"[Character] Change Script",
+	props<{ characterId: string, script: ScriptInfo }>()
+);
+
+export const changeScriptSuccess = createAction(
+	"[Character] Change Script Success",
+	props<{ characterId: string, character: Character }>()
+);
+
+export const changeScriptFailure = createAction(
+	"[Character] Change Script Failure",
 	props<{ error: string }>()
 );

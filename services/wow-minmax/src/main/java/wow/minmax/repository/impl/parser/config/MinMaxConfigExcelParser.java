@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
-import wow.minmax.model.config.CharacterFeatureConfig;
-import wow.minmax.model.config.FindUpgradesConfig;
-import wow.minmax.model.config.ItemLevelConfig;
-import wow.minmax.model.config.ViewConfig;
+import wow.minmax.model.config.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,6 +33,8 @@ public class MinMaxConfigExcelParser extends ExcelParser {
 	private final List<ViewConfig> viewConfigs = new ArrayList<>();
 	@Getter
 	private final List<ItemLevelConfig> itemLevelConfigs = new ArrayList<>();
+	@Getter
+	private final List<ScriptInfo> scriptInfos = new ArrayList<>();
 
 	@Override
 	protected InputStream getExcelInputStream() {
@@ -48,7 +47,8 @@ public class MinMaxConfigExcelParser extends ExcelParser {
 				new ViewConfigSheetParser("view", this),
 				new CharacterFeatureConfigSheetParser("features", this),
 				new FindUpgradesConfigSheetParser("find_upgrades", this),
-				new ItemLevelFilterSheetParser("item_level_filters", this)
+				new ItemLevelFilterSheetParser("item_level_filters", this),
+				new ScriptSheetParser("scripts", this)
 		);
 	}
 
@@ -64,7 +64,11 @@ public class MinMaxConfigExcelParser extends ExcelParser {
 		viewConfigs.add(viewConfig);
 	}
 
-	public void add(ItemLevelConfig itemLevelConfig) {
+	void add(ItemLevelConfig itemLevelConfig) {
 		itemLevelConfigs.add(itemLevelConfig);
+	}
+
+	void add(ScriptInfo scriptInfo) {
+		scriptInfos.add(scriptInfo);
 	}
 }

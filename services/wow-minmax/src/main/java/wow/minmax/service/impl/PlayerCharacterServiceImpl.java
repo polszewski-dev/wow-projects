@@ -7,9 +7,11 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.ProfIdSpecId;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
+import wow.character.model.script.ScriptPathResolver;
 import wow.character.service.CharacterService;
 import wow.minmax.converter.model.PlayerCharacterConfigConverter;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.PlayerCharacterConfigRepository;
@@ -19,6 +21,7 @@ import wow.minmax.service.PlayerCharacterService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static wow.commons.model.profession.ProfessionType.SECONDARY;
 
@@ -125,5 +128,31 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		characterService.updateAfterRestrictionChange(player);
 		saveCharacter(characterId, player);
 		return player;
+	}
+
+	@Override
+	public List<ScriptInfo> getAvailableScripts(CharacterId characterId) {
+		var player = getPlayer(characterId);
+
+		return minmaxConfigRepository.getAvailableScripts(player);
+	}
+
+	@Override
+	public PlayerCharacter changeScript(CharacterId characterId, String scriptPath) {
+		var player = getPlayer(characterId);
+
+		requireExistingResource(scriptPath, player);
+
+		player.getBuild().setScript(scriptPath);
+
+		saveCharacter(characterId, player);
+		return player;
+	}
+
+	private void requireExistingResource(String scriptPath, PlayerCharacter player) {
+		var fullScriptPath = ScriptPathResolver.getScriptPath(scriptPath, player.getGameVersionId());
+		var scriptURL = getClass().getResource(fullScriptPath);
+
+		Objects.requireNonNull(scriptURL, "No script %s, full path: %s".formatted(scriptPath, fullScriptPath));
 	}
 }

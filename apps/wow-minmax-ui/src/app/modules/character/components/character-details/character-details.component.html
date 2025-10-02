@@ -31,5 +31,17 @@
 		}
 	}
 	<div class="col-md-8"></div>
+
+	@if (availableScripts$ | async; as availableScripts) {
+		<div class="col-md-6">
+			<label for="script-select" class="form-label">Script</label>
+			<app-script-select
+				id="script-select"
+				[characterId]="character.characterId"
+				[selectedScript]="character.script"
+				[availableScripts]="availableScripts"
+			></app-script-select>
+		</div>
+	}
 </form>
 }

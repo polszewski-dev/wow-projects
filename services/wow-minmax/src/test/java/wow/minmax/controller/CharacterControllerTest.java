@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.minmax.client.dto.ProfessionDTO;
+import wow.minmax.client.dto.ScriptInfoDTO;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -57,6 +58,34 @@ class CharacterControllerTest extends ControllerTest {
 				put("/api/v1/characters/{characterId}/professions/{index}", CHARACTER_KEY, 1)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
+	void getAvailableScripts() throws Exception {
+		mockMvc.perform(get("/api/v1/characters/{characterId}/scripts", CHARACTER_KEY))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
+	void changeScript() throws Exception {
+		var scriptInfoDTO = new ScriptInfoDTO(
+				"warlock-destro-shadow.txt",
+				null
+		);
+
+		var objectMapper = new ObjectMapper();
+		var requestBody = objectMapper.writeValueAsString(scriptInfoDTO);
+
+		mockMvc.perform(
+						put("/api/v1/characters/{characterId}/scripts", CHARACTER_KEY)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(requestBody)
 				)
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))

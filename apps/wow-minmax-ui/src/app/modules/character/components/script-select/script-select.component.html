@@ -1,0 +1,7 @@
+<app-dropdown-select
+	[id]="id"
+	[elements]="availableScripts"
+	[value]="selectedScript"
+	[valueFormatter]="scriptFormatter"
+	(valueChanged)="onScriptChanged($event)"
+></app-dropdown-select>
