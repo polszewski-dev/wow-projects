@@ -25,4 +25,8 @@ public record TalentLink(
 		Objects.requireNonNull(characterClassId);
 		Objects.requireNonNull(talents);
 	}
+
+	public boolean matches(CharacterClassId characterClassId, GameVersionId gameVersionId) {
+		return this.characterClassId == characterClassId && this.gameVersionId == gameVersionId;
+	}
 }

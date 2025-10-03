@@ -1,7 +1,11 @@
 package wow.character.util;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import wow.character.model.build.TalentLink;
 import wow.character.model.build.TalentLinkType;
+import wow.character.model.build.Talents;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.talent.Talent;
@@ -12,29 +16,92 @@ import wow.commons.util.parser.ParserUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static wow.character.util.TalentLinkParser.TalentFinder;
 
 /**
  * User: POlszewski
  * Date: 2023-12-10
  */
-public abstract class TalentLinkParser {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public class TalentLinkParser {
 	private final String link;
-	private final TalentLinkType type;
-	protected final GameVersionId gameVersionId;
-	protected final CharacterClassId characterClassId;
-	private final List<TalentNameRank> talents = new ArrayList<>();
-	protected final TalentRepository talentRepository;
+	private final TalentRepository talentRepository;
+	private final Talents talents;
 
-	protected final ParsedMultipleValues parseResult;
+	private TalentLinkType type;
+	private GameVersionId gameVersionId;
+	private CharacterClassId characterClassId;
+	private String talentListString;
+	private List<TalentNameRank> talentList;
 
-	TalentLinkParser(String link, TalentLinkType type, ParsedMultipleValues parseResult, TalentRepository talentRepository) {
-		this.link = link;
+	public static TalentLink parse(String link, TalentRepository talentRepository) {
+		var parser = new TalentLinkParser(link, talentRepository, null);
+
+		return parser.parse();
+	}
+
+	public static TalentLink parse(String link, Talents talents) {
+		var parser = new TalentLinkParser(link, null, talents);
+
+		return parser.parse();
+	}
+
+	private TalentLink parse() {
+		parsePrefix();
+		parseTalentList();
+
+		return new TalentLink(
+				link,
+				type,
+				gameVersionId,
+				characterClassId,
+				talentList
+		);
+	}
+
+	private void parsePrefix() {
+		var parseResult = ParserUtil.parseMultipleValues("https://www\\.wowhead\\.com/([^/]+)/talent-calc/([^/]+)/?(.*)", link);
+
+		if (!parseResult.isEmpty()) {
+			setPrefix(TalentLinkType.WOWHEAD, parseResult);
+			return;
+		}
+
+		parseResult = ParserUtil.parseMultipleValues("https://legacy-wow\\.com/(.+)-talents/(.+)-talents/\\?tal=(.+)", link);
+
+		if (!parseResult.isEmpty()) {
+			setPrefix(TalentLinkType.LEGACY_WOW, parseResult);
+			return;
+		}
+
+		throw new IllegalArgumentException("Unsupported link format: " + link);
+	}
+
+	private void setPrefix(TalentLinkType type, ParsedMultipleValues parseResult) {
 		this.type = type;
 		this.gameVersionId = parseGameVersion(parseResult);
-		this.characterClassId = CharacterClassId.parse(parseResult.get(1));
-		this.parseResult = parseResult;
-		this.talentRepository = talentRepository;
+		this.characterClassId = parseCharacterClass(parseResult);
+		this.talentListString = parseResult.get(2);
+	}
+
+	private void parseTalentList() {
+		var talentListParser = getTalentListParser();
+
+		talentListParser.parseTalentList(talentListString);
+
+		this.talentList = talentListParser.getTalents();
+	}
+
+	private TalentListParser getTalentListParser() {
+		var talentFinder = getTalentFinder();
+
+		return switch (type) {
+			case WOWHEAD -> new WowheadTalentListParser(talentFinder);
+			case LEGACY_WOW -> new LegacyWowTalentListParser(talentFinder);
+		};
 	}
 
 	private static GameVersionId parseGameVersion(ParsedMultipleValues parseResult) {
@@ -47,34 +114,66 @@ public abstract class TalentLinkParser {
 		return GameVersionId.parse(gameVersionStr);
 	}
 
-	public static TalentLink parse(String link, TalentRepository talentRepository) {
-		var parser = getParser(link, talentRepository);
-		return parser.parse();
+	private static CharacterClassId parseCharacterClass(ParsedMultipleValues parseResult) {
+		return CharacterClassId.parse(parseResult.get(1));
 	}
 
-	private static TalentLinkParser getParser(String link, TalentRepository talentRepository) {
-		var parseResult = ParserUtil.parseMultipleValues("https://www\\.wowhead\\.com/([^/]+)/talent-calc/([^/]+)/?(.*)", link);
+	interface TalentFinder {
+		Optional<Talent> getTalent(int talentCalculatorPosition, int rank);
 
-		if (!parseResult.isEmpty()) {
-			return new WowheadLinkParser(link, parseResult, talentRepository);
+		List<Talent> getAvailableTalents();
+	}
+
+	private TalentFinder getTalentFinder() {
+		if (talentRepository != null) {
+			return getTalentFinder(talentRepository);
+		} else {
+			return getTalentFinder(talents);
 		}
-
-		parseResult = ParserUtil.parseMultipleValues("https://legacy-wow\\.com/(.+)-talents/(.+)-talents/\\?tal=(.+)", link);
-
-		if (!parseResult.isEmpty()) {
-			return new LegacyWowLinkParser(link, parseResult, talentRepository);
-		}
-
-		throw new IllegalArgumentException("Unsupported link format: " + link);
 	}
 
-	private TalentLink parse() {
-		parseTalentList(parseResult.get(2));
+	private TalentFinder getTalentFinder(TalentRepository talentRepository) {
+		return new TalentFinder() {
+			@Override
+			public Optional<Talent> getTalent(int talentCalculatorPosition, int rank) {
+				return talentRepository.getTalent(
+						characterClassId,
+						talentCalculatorPosition,
+						rank,
+						gameVersionId.getEarliestPhase()
+				);
+			}
 
-		return new TalentLink(
-				link, type, gameVersionId, characterClassId, talents
-		);
+			@Override
+			public List<Talent> getAvailableTalents() {
+				return talentRepository.getAvailableTalents(characterClassId, gameVersionId.getEarliestPhase());
+			}
+		};
 	}
+
+	private TalentFinder getTalentFinder(Talents talents) {
+		return new TalentFinder() {
+			@Override
+			public Optional<Talent> getTalent(int talentCalculatorPosition, int rank) {
+				return talents.getTalent(
+						talentCalculatorPosition,
+						rank
+				);
+			}
+
+			@Override
+			public List<Talent> getAvailableTalents() {
+				return talents.getAvailableTalents();
+			}
+		};
+	}
+}
+
+@RequiredArgsConstructor
+abstract class TalentListParser {
+	@Getter
+	private final List<TalentNameRank> talents = new ArrayList<>();
+	protected final TalentFinder talentFinder;
 
 	abstract void parseTalentList(String talentListString);
 
@@ -89,8 +188,7 @@ public abstract class TalentLinkParser {
 	}
 
 	private void addTalent(int position, int talentRank) {
-		var phaseId = gameVersionId.getEarliestPhase();
-		var talent = talentRepository.getTalent(characterClassId, position, talentRank, phaseId).orElseThrow();
+		var talent = talentFinder.getTalent(position, talentRank).orElseThrow();
 
 		talents.add(new TalentNameRank(talent.getName(), talentRank));
 	}
@@ -100,9 +198,9 @@ public abstract class TalentLinkParser {
 	https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025
 */
 
-class WowheadLinkParser extends TalentLinkParser {
-	WowheadLinkParser(String link, ParsedMultipleValues parseResult, TalentRepository talentRepository) {
-		super(link, TalentLinkType.WOWHEAD, parseResult, talentRepository);
+class WowheadTalentListParser extends TalentListParser {
+	WowheadTalentListParser(TalentFinder talentFinder) {
+		super(talentFinder);
 	}
 
 	@Override
@@ -128,7 +226,7 @@ class WowheadLinkParser extends TalentLinkParser {
 			firstTree = talentListString;
 		}
 
-		var talents = talentRepository.getAvailableTalents(characterClassId, gameVersionId.getEarliestPhase());
+		var talents = talentFinder.getAvailableTalents();
 
 		var talentTreeToPosition = talents.stream().collect(Collectors.toMap(
 				Talent::getTalentTree,
@@ -152,9 +250,9 @@ class WowheadLinkParser extends TalentLinkParser {
 	https://legacy-wow.com/tbc-talents/warlock-talents/?tal=0000000000000000000002050130133200100000000555000512210013030250
 */
 
-class LegacyWowLinkParser extends TalentLinkParser {
-	LegacyWowLinkParser(String link, ParsedMultipleValues parseResult, TalentRepository talentRepository) {
-		super(link, TalentLinkType.LEGACY_WOW, parseResult, talentRepository);
+class LegacyWowTalentListParser extends TalentListParser {
+	LegacyWowTalentListParser(TalentFinder talentFinder) {
+		super(talentFinder);
 	}
 
 	@Override

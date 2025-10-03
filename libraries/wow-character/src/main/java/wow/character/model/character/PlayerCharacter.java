@@ -148,6 +148,10 @@ public interface PlayerCharacter extends Character {
 		return getBuild().getTalents();
 	}
 
+	default String getTalentLink() {
+		return getTalents().getTalentLink();
+	}
+
 	@Override
 	default PveRole getRole() {
 		return getBuild().getRole();

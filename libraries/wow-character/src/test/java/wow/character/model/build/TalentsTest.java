@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.PlayerCharacter;
-import wow.character.util.TalentLinkParser;
 
 import java.util.List;
 
@@ -34,8 +33,7 @@ class TalentsTest extends WowCharacterSpringTest {
 
 	@Test
 	void loadFromTalentLink() {
-		var link = TalentLinkParser.parse("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303024", talentRepository);
-		talents.loadFromTalentLink(link);
+		talents.loadFromTalentLink("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303024");
 
 		assertThat(talents.getList().stream().map(x -> x.getName() + "#" + x.getRank())).hasSameElementsAs(List.of(
 				"Improved Healthstone#2",

@@ -72,7 +72,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var race = gameVersion.getRace(raceId).orElseThrow();
 		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(gameVersion.getGameVersionId(), characterClassId, raceId, level).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
-		var talents = new Talents(getAvailableTalents(characterClassId, phaseId));
+		var talents = new Talents(characterClassId, phaseId, getAvailableTalents(characterClassId, phaseId));
 		var professions = new CharacterProfessions(getAvailableProfessions(phase), phase, level);
 		var exclusiveFactions = new ExclusiveFactions(getAvailableExclusiveFactions(phaseId));
 
