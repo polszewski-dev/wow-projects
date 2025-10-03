@@ -8,6 +8,7 @@ import { EquippableItem } from '../model/equipment/EquippableItem';
 import { Gem } from '../model/equipment/Gem';
 import { Item } from '../model/equipment/Item';
 import { ItemSlot } from '../model/equipment/ItemSlot';
+import { EquipmentDiff } from '../model/equipment/ItemSlotStatus';
 import { ItemSlotGroup } from '../model/upgrade/ItemSlotGroup';
 
 @Injectable({
@@ -28,11 +29,11 @@ export class EquipmentService {
 			enchant: null,
 			gems: []
 		};
-		return this.http.put<EquippableItem>(`${this.apiUrl}/${characterId}/slot/${itemSlot}?best-variant=true`, equippableItem);
+		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${characterId}/slot/${itemSlot}?best-variant=true`, equippableItem);
 	}
 
 	equipItem(characterId: string, itemSlot: ItemSlot, item: EquippableItem | null) {
-		return this.http.put<EquippableItem>(`${this.apiUrl}/${characterId}/slot/${itemSlot}`, item);
+		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${characterId}/slot/${itemSlot}`, item);
 	}
 
 	equipEnchant(characterId: string, item: EquippableItem, itemSlot: ItemSlot, enchant: Enchant | null) {

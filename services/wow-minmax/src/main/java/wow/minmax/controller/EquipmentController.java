@@ -9,10 +9,8 @@ import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.client.dto.equipment.EquipmentDTO;
 import wow.minmax.client.dto.equipment.EquipmentSocketStatusDTO;
 import wow.minmax.client.dto.equipment.EquippableItemDTO;
-import wow.minmax.converter.dto.equipment.EquipmentConverter;
-import wow.minmax.converter.dto.equipment.EquipmentSocketStatusConverter;
-import wow.minmax.converter.dto.equipment.EquippableItemConverter;
-import wow.minmax.converter.dto.equipment.ParamToGemFilterConverter;
+import wow.minmax.client.dto.equipment.ItemSlotStatusDTO;
+import wow.minmax.converter.dto.equipment.*;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.EquipmentService;
 
@@ -33,6 +31,7 @@ public class EquipmentController {
 	private final EquipmentService equipmentService;
 	private final EquipmentConverter equipmentConverter;
 	private final EquippableItemConverter equippableItemConverter;
+	private final ItemSlotStatusConverter itemSlotStatusConverter;
 	private final EquipmentSocketStatusConverter equipmentSocketStatusConverter;
 	private final ParamToGemFilterConverter paramToGemFilterConverter;
 
@@ -46,7 +45,7 @@ public class EquipmentController {
 	}
 
 	@PutMapping("{characterId}/slot/{slot}")
-	public EquippableItemDTO equipItem(
+	public List<ItemSlotStatusDTO> equipItem(
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slot") ItemSlot slot,
 			@RequestBody EquippableItemDTO itemDTO,
@@ -56,11 +55,11 @@ public class EquipmentController {
 		var item = equippableItemConverter.convertBack(itemDTO, characterId.phaseId());
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
 
-		var player = equipmentService.equipItem(characterId, slot, item, bestVariant, gemFilter);
-		var equippedItem = player.getEquippedItem(slot);
+		var changedSlots = equipmentService.equipItem(characterId, slot, item, bestVariant, gemFilter);
 
-		log.info("Equipped item charId: {}, slot: {}, item: {}", characterId, slot, equippedItem);
-		return equippableItemConverter.convert(equippedItem);
+		log.info("Equipped item charId: {}, slot: {}, changedSlots: {}", characterId, slot, changedSlots);
+
+		return itemSlotStatusConverter.convertList(changedSlots);
 	}
 
 	@PutMapping("{characterId}/slot-group/{slotGroup}")

@@ -12,6 +12,7 @@ import wow.commons.model.spell.ActivatedAbility;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 /**
  * User: POlszewski
@@ -205,6 +206,17 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 
 	public WeaponStats getWeaponStats() {
 		return item.getWeaponStats();
+	}
+
+	public boolean isTheSameAs(EquippableItem other) {
+		if (other == null) {
+			return false;
+		}
+
+		return item == other.item
+				&& enchant == other.enchant
+				&& IntStream.range(0, sockets.getSocketCount())
+						.allMatch(socketNo -> sockets.getGem(socketNo) == other.sockets.getGem(socketNo));
 	}
 
 	@Override

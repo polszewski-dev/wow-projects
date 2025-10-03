@@ -9,6 +9,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.equipment.EquipmentSocketStatus;
+import wow.minmax.model.equipment.ItemSlotStatus;
 
 import java.util.List;
 
@@ -19,9 +20,9 @@ import java.util.List;
 public interface EquipmentService {
 	Equipment getEquipment(CharacterId characterId);
 
-	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
+	List<ItemSlotStatus> equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item);
 
-	PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter);
+	List<ItemSlotStatus> equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter);
 
 	PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 

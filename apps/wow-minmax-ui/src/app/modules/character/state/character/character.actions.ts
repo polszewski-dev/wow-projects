@@ -10,6 +10,7 @@ import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { Gem } from "../../model/equipment/Gem";
 import { Item } from "../../model/equipment/Item";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
+import { EquipmentDiff } from "../../model/equipment/ItemSlotStatus";
 import { ExclusiveFaction } from "../../model/ExclusiveFaction";
 import { Profession } from "../../model/Profession";
 import { ScriptInfo } from '../../model/ScriptInfo';
@@ -102,7 +103,7 @@ export const equipItemBestVariant = createAction(
 
 export const equipItemBestVariantSuccess = createAction(
 	"[Character] Equip Item Best Variant Success",
-	props<{ characterId: string, itemSlot: ItemSlot, equippableItem: EquippableItem }>()
+	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipItemBestVariantFailure = createAction(
@@ -132,7 +133,7 @@ export const equipEnchant = createAction(
 
 export const equipEnchantSuccess = createAction(
 	"[Character] Equip Enchant Success",
-	props<{ characterId: string, itemSlot: ItemSlot, equippableItem: EquippableItem }>()
+	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipEnchantFailure = createAction(
@@ -147,7 +148,7 @@ export const equipGem = createAction(
 
 export const equipGemSuccess = createAction(
 	"[Character] Equip Gem Success",
-	props<{ characterId: string, itemSlot: ItemSlot, socketNo: number, equippableItem: EquippableItem }>()
+	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipGemFailure = createAction(

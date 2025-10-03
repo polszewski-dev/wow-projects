@@ -83,7 +83,7 @@ export class CharacterEffects {
 	equipItemBestVariant$ = createEffect(() => this.actions$.pipe(
 		ofType(equipItemBestVariant),
 		switchMap(({ characterId, itemSlot, item }) => this.equipmentService.equipItemBestVariant(characterId, itemSlot, item).pipe(
-			map(equippableItem => equipItemBestVariantSuccess({ characterId, itemSlot, equippableItem })),
+			map(equipmentDiff => equipItemBestVariantSuccess({ characterId, equipmentDiff })),
 			catchError(error => of(equipItemBestVariantFailure({ itemSlot, error })))
 		))
 	));
@@ -99,7 +99,7 @@ export class CharacterEffects {
 	equipEnchant$ = createEffect(() => this.actions$.pipe(
 		ofType(equipEnchant),
 		switchMap(({ characterId, equippedItem, itemSlot, enchant }) => this.equipmentService.equipEnchant(characterId, equippedItem, itemSlot, enchant).pipe(
-			map(equippableItem => equipEnchantSuccess({ characterId, itemSlot, equippableItem })),
+			map(equipmentDiff => equipEnchantSuccess({ characterId, equipmentDiff })),
 			catchError(error => of(equipEnchantFailure({ itemSlot, error })))
 		))
 	));
@@ -107,7 +107,7 @@ export class CharacterEffects {
 	equipGem$ = createEffect(() => this.actions$.pipe(
 		ofType(equipGem),
 		switchMap(({ characterId, equippedItem, itemSlot, socketNo, gem }) => this.equipmentService.equipGem(characterId, equippedItem, itemSlot, socketNo, gem).pipe(
-			map(equippableItem => equipGemSuccess({ characterId, itemSlot, socketNo, equippableItem })),
+			map(equipmentDiff => equipGemSuccess({ characterId, equipmentDiff })),
 			catchError(error => of(equipGemFailure({ itemSlot, socketNo, error })))
 		))
 	));

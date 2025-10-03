@@ -23,8 +23,21 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 
 	@Override
 	public Equipment copy() {
-		Equipment copy = new Equipment();
+		var copy = new Equipment();
 		copy.itemsBySlot.putAll(itemsBySlot);
+		return copy;
+	}
+
+	public Equipment deepCopy() {
+		var copy = new Equipment();
+
+		for (var entry : itemsBySlot.entrySet()) {
+			var slot = entry.getKey();
+			var item = entry.getValue();
+
+			copy.itemsBySlot.put(slot, item.copy());
+		}
+
 		return copy;
 	}
 
@@ -214,6 +227,21 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 		}
 
 		return Optional.empty();
+	}
+
+	public Map<ItemSlot, EquippableItem> getChangedSlots(Equipment oldEquipment) {
+		var result = new EnumMap<ItemSlot, EquippableItem>(ItemSlot.class);
+
+		for (var itemSlot : ItemSlot.getDpsSlots()) {
+			var oldItem = oldEquipment.get(itemSlot);
+			var newItem = this.get(itemSlot);
+
+			if (!((oldItem == newItem) || (oldItem != null && oldItem.isTheSameAs(newItem)))) {
+				result.put(itemSlot, newItem);
+			}
+		}
+
+		return result;
 	}
 
 	@Override

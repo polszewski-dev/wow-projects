@@ -21,6 +21,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Consumable;
+import wow.commons.model.item.Gem;
 import wow.commons.model.profession.Profession;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Phase;
@@ -35,7 +36,13 @@ import wow.commons.repository.spell.SpellRepository;
 import wow.commons.repository.spell.TalentRepository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.character.model.character.BuffListType.TARGET_DEBUFF;
 
@@ -285,5 +292,120 @@ public class CharacterServiceImpl implements CharacterService {
 	@Override
 	public List<GearSet> getAvailableGearSets(PlayerCharacter character) {
 		return gearSetRepository.getAvailableGearSets(character);
+	}
+
+	@Override
+	public void equipItem(PlayerCharacter character, ItemSlot slot, EquippableItem equippableItem) {
+		removeDuplicateGem(equippableItem, character, slot);
+
+		character.equip(equippableItem, slot);
+
+		unequipDuplicateItem(character, slot);
+		unequipDuplicateGems(character, slot);
+	}
+
+	private void removeDuplicateGem(EquippableItem itemToEquip, PlayerCharacter character, ItemSlot slot) {
+		if (itemToEquip == null || itemToEquip.getSocketCount() < 2) {
+			return;
+		}
+
+		var currentItem = character.getEquippedItem(slot);
+
+		if (currentItem == null || currentItem.getItem() != itemToEquip.getItem()) {
+			return;
+		}
+
+		var uniqueGems = getUniqueGems(itemToEquip);
+
+		if (uniqueGems.isEmpty()) {
+			return;
+		}
+
+		var gemCounts = uniqueGems.stream()
+				.collect(groupingBy(
+						Function.identity(),
+						counting()
+				));
+
+		gemCounts.entrySet().stream()
+				.filter(e -> e.getValue() > 1)
+				.map(Map.Entry::getKey)
+				.map(duplicateGem -> getDuplicateGemSocketIdx(duplicateGem, currentItem))
+				.forEach(duplicateGemSocketNo -> itemToEquip.insertGem(duplicateGemSocketNo, null));
+	}
+
+	private int getDuplicateGemSocketIdx(Gem duplicateGem, EquippableItem currentItem) {
+		return IntStream.range(0, currentItem.getSocketCount())
+				.filter(socketNo -> currentItem.getGem(socketNo) == duplicateGem)
+				.findFirst()
+				.orElseThrow();
+	}
+
+	private void unequipDuplicateItem(PlayerCharacter character, ItemSlot slot) {
+		var otherSlot = getOtherSlot(slot);
+
+		if (otherSlot == null) {
+			return;
+		}
+
+		var item = character.getEquippedItem(slot);
+		var otherItem = character.getEquippedItem(otherSlot);
+
+		if (item == null || otherItem == null) {
+			return;
+		}
+
+		if (item.getItem() == otherItem.getItem() && item.isUnique()) {
+			character.equip(null, otherSlot);
+		}
+	}
+
+	private void unequipDuplicateGems(PlayerCharacter character, ItemSlot slot) {
+		var item = character.getEquippedItem(slot);
+
+		if (item == null) {
+			return;
+		}
+
+		var uniqueGems = getUniqueGems(item);
+
+		if (uniqueGems.isEmpty()) {
+			return;
+		}
+
+		for (var equippableItem : character.getEquipment().toList()) {
+			for (var uniqueGem : uniqueGems) {
+				if (equippableItem != item) {
+					unequipDuplicateGem(equippableItem, uniqueGem);
+				}
+			}
+		}
+	}
+
+	private List<Gem> getUniqueGems(EquippableItem item) {
+		return item.getGems().stream()
+				.filter(Objects::nonNull)
+				.filter(Gem::isUnique)
+				.toList();
+	}
+
+	private void unequipDuplicateGem(EquippableItem equippableItem, Gem uniqueGem) {
+		for (int socketNo = 0; socketNo < equippableItem.getSocketCount(); ++socketNo) {
+			var equippedGem = equippableItem.getGem(socketNo);
+
+			if (equippedGem == uniqueGem) {
+				equippableItem.insertGem(socketNo, null);
+			}
+		}
+	}
+
+	private ItemSlot getOtherSlot(ItemSlot slot) {
+		return switch (slot) {
+			case FINGER_1 -> ItemSlot.FINGER_2;
+			case FINGER_2 -> ItemSlot.FINGER_1;
+			case TRINKET_1 -> ItemSlot.TRINKET_2;
+			case TRINKET_2 -> ItemSlot.TRINKET_1;
+			default -> null;
+		};
 	}
 }

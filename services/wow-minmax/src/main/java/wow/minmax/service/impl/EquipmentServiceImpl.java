@@ -12,10 +12,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.effect.Effect;
 import wow.minmax.model.CharacterId;
-import wow.minmax.model.equipment.EquipmentSocketStatus;
-import wow.minmax.model.equipment.ItemSocketStatus;
-import wow.minmax.model.equipment.SocketBonusStatus;
-import wow.minmax.model.equipment.SocketStatus;
+import wow.minmax.model.equipment.*;
 import wow.minmax.service.EquipmentService;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.UpgradeService;
@@ -47,20 +44,22 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
+	public List<ItemSlotStatus> equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
 		return equipItem(characterId, slot, item, false, GemFilter.empty());
 	}
 
 	@Override
-	public PlayerCharacter equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
+	public List<ItemSlotStatus> equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
 		var player = playerCharacterService.getPlayer(characterId);
 		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, player);
 
-		player.equip(itemToEquip, slot);
+		var oldEquipment = player.getEquipment().deepCopy();
+
+		characterService.equipItem(player, slot, itemToEquip);
 
 		playerCharacterService.saveCharacter(characterId, player);
 
-		return player;
+		return getEquipmentDiff(oldEquipment, player);
 	}
 
 	@Override
@@ -79,12 +78,22 @@ public class EquipmentServiceImpl implements EquipmentService {
 		for (int slotIdx = 0; slotIdx < min(slots.size(), items.size()); slotIdx++) {
 			var slot = slots.get(slotIdx);
 			var item = items.get(slotIdx);
-			player.equip(item, slot);
+
+			characterService.equipItem(player, slot, item);
 		}
 
 		playerCharacterService.saveCharacter(characterId, player);
 
 		return player;
+	}
+
+	private List<ItemSlotStatus> getEquipmentDiff(Equipment oldEquipment, PlayerCharacter player) {
+		var newEquipment = player.getEquipment().deepCopy();
+		var changedSlots = newEquipment.getChangedSlots(oldEquipment);
+
+		return changedSlots.entrySet().stream()
+				.map(x -> new ItemSlotStatus(x.getKey(), x.getValue()))
+				.toList();
 	}
 
 	@Override

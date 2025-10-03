@@ -6,10 +6,11 @@ import { Character } from '../../model/Character';
 import { ConsumableStatus } from "../../model/consumable/ConsumableStatus";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
-import { EquippableItem } from "../../model/equipment/EquippableItem";
+import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
+import { EquipmentDiff } from "../../model/equipment/ItemSlotStatus";
 import { getSlots, ItemSlotGroup } from "../../model/upgrade/ItemSlotGroup";
-import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeExclusiveFactionSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
 	characterId: string | null;
@@ -95,21 +96,21 @@ export const characterReducer = createReducer(
 		consumableStatuses: success(consumableStatuses)
 	})),
 
-	on(equipItemBestVariantSuccess, (state, { itemSlot, equippableItem }) => ({
+	on(equipItemBestVariantSuccess, (state, { equipmentDiff }) => ({
 		...state,
-		equipment: withSlotSetTo(state.equipment, itemSlot, success(equippableItem))
+		equipment: withEquipmentDiffApplied(state.equipment, equipmentDiff)
 	})),
 	on(equipItemGroupSuccess, (state, { slotGroup, items }) => ({
 		...state,
 		equipment: withSlotGroupSetTo(state.equipment, slotGroup, idx => success(items[idx] || null))
 	})),
-	on(equipEnchantSuccess, (state, { itemSlot, equippableItem }) => ({
+	on(equipEnchantSuccess, (state, { equipmentDiff }) => ({
 		...state,
-		equipment: withSlotSetTo(state.equipment, itemSlot, success(equippableItem))
+		equipment: withEquipmentDiffApplied(state.equipment, equipmentDiff)
 	})),
-	on(equipGemSuccess, (state, { itemSlot, equippableItem }) => ({
+	on(equipGemSuccess, (state, { equipmentDiff }) => ({
 		...state,
-		equipment: withSlotSetTo(state.equipment, itemSlot, success(equippableItem))
+		equipment: withEquipmentDiffApplied(state.equipment, equipmentDiff)
 	})),
 	on(resetEquipmentSuccess, (state) => ({
 		...state,
@@ -201,16 +202,6 @@ function withAllSlotsFilledFrom(equipment: Equipment) {
 	}
 }
 
-function withSlotSetTo(
-	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>,
-	key: ItemSlot,
-	value: Loadable<EquippableItem | null>
-) {
-	const result = { ...equipment };
-	result[key] = value;
-	return result;
-}
-
 function withSlotGroupSetTo(
 	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>,
 	slotGroup: ItemSlotGroup,
@@ -221,6 +212,19 @@ function withSlotGroupSetTo(
 	getSlots(slotGroup).forEach((key, idx) => {
 		result[key] = itemAccessor(idx);
 	});
+
+	return result;
+}
+
+function withEquipmentDiffApplied(
+	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>,
+	equipmentDiff: EquipmentDiff
+) {
+	const result = { ...equipment };
+
+	for (const status of equipmentDiff) {
+		result[status.itemSlot] = success(status.item);
+	}
 
 	return result;
 }

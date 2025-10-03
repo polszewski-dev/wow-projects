@@ -1,9 +1,13 @@
 package wow.character.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
+import wow.commons.model.categorization.ItemSlot;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -239,6 +243,118 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 		assertThat(equippedItem.getGem(0)).isNull();
 		assertThat(equippedItem.getGem(1)).isEqualTo(gem2);
 		assertThat(equippedItem.getGem(2)).isEqualTo(gem2);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Band of the Eternal Sage, FINGER_1,  FINGER_2",
+			"Band of the Eternal Sage, FINGER_2,  FINGER_1",
+			"Scryer's Bloodgem,        TRINKET_1, TRINKET_2",
+			"Scryer's Bloodgem,        TRINKET_2, TRINKET_1",
+	})
+	void duplicateItemUnequipped(String itemName, ItemSlot slot1, ItemSlot slot2) {
+		var player = getCharacter();
+		var uniqueItem = getItem(itemName);
+
+		underTest.equipItem(player, slot1, null);
+		underTest.equipItem(player, slot2, null);
+
+		underTest.equipItem(player, slot1, uniqueItem);
+
+		assertItem(player, slot1, itemName);
+		assertItem(player, slot2, null);
+
+		underTest.equipItem(player, slot2, uniqueItem.copy());
+
+		assertItem(player, slot1, null);
+		assertItem(player, slot2, itemName);
+	}
+
+	@Test
+	void duplicateGemIsUnequippedFromAnotherItem() {
+		var player = getCharacter();
+		var uniqueGemName = "Shining Fire Opal";
+		var normalGemName = "Reckless Pyrestone";
+		var uniqueGem = getGem(uniqueGemName);
+		var normalGem = getGem(normalGemName);
+
+		var bracer = getItem("Bracers of the Malefic").gem(uniqueGem);
+
+		underTest.equipItem(player, WRIST, bracer);
+
+		assertGem(player, WRIST, 0, uniqueGemName);
+
+		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
+
+		underTest.equipItem(player, CHEST, chest);
+
+		assertGem(player, CHEST, 0, normalGemName);
+		assertGem(player, CHEST, 1, normalGemName);
+		assertGem(player, CHEST, 2, uniqueGemName);
+		assertGem(player, WRIST, 0, null);
+	}
+
+	@Test
+	void duplicateGemIsUnequippedFromTheSameItem() {
+		var player = getCharacter();
+		var uniqueGemName = "Shining Fire Opal";
+		var normalGemName = "Reckless Pyrestone";
+		var uniqueGem = getGem(uniqueGemName);
+		var normalGem = getGem(normalGemName);
+
+		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
+
+		underTest.equipItem(player, CHEST, chest);
+
+		assertGem(player, CHEST, 0, normalGemName);
+		assertGem(player, CHEST, 1, normalGemName);
+		assertGem(player, CHEST, 2, uniqueGemName);
+
+		var modifiedChest = chest.copy().gem(normalGem, uniqueGem, uniqueGem);
+
+		underTest.equipItem(player, CHEST, modifiedChest);
+
+		assertGem(player, CHEST, 0, normalGemName);
+		assertGem(player, CHEST, 1, uniqueGemName);
+		assertGem(player, CHEST, 2, null);
+	}
+
+	void assertItem(PlayerCharacter player, ItemSlot itemSlot, String expectedItemName) {
+		var itemName = getItemName(player, itemSlot);
+
+		assertThat(itemName).isEqualTo(expectedItemName);
+	}
+
+	void assertGem(PlayerCharacter player, ItemSlot itemSlot, int socketNo, String expectedGemName) {
+		var gemName = getGemName(player, itemSlot, socketNo);
+
+		assertThat(gemName).isEqualTo(expectedGemName);
+	}
+
+	String getItemName(PlayerCharacter player, ItemSlot itemSlot) {
+		var equippedItem = player.getEquippedItem(itemSlot);
+
+		if (equippedItem == null) {
+			return null;
+		}
+
+		return equippedItem.getName();
+	}
+
+	String getGemName(PlayerCharacter player, ItemSlot itemSlot, int socketNo) {
+		var equippedItem = player.getEquippedItem(itemSlot);
+
+		if (equippedItem == null) {
+			return null;
+		}
+
+		var gem = equippedItem.getGem(socketNo);
+
+		if (gem == null) {
+			return null;
+		}
+
+		return gem.getName();
 	}
 
 	static final List<String> ABILITIES = List.of(

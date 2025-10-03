@@ -2,6 +2,8 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import wow.character.model.equipment.EquippableItem;
@@ -9,6 +11,7 @@ import wow.character.model.equipment.GemFilter;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.*;
+import wow.minmax.model.equipment.ItemSlotStatus;
 import wow.minmax.model.equipment.SocketStatus;
 
 import java.util.List;
@@ -125,6 +128,147 @@ class EquipmentServiceTest extends ServiceTest {
 		assertThat(status.socketStatuses()).isEqualTo(expectedSocketStatuses);
 		assertThat(socketBonusStatus.bonus().getModifierComponent().attributes()).isEqualTo(expectedSocketBonus);
 		assertThat(socketBonusStatus.enabled()).isFalse();
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Band of the Eternal Sage, FINGER_1,  FINGER_2",
+			"Band of the Eternal Sage, FINGER_2,  FINGER_1",
+			"Scryer's Bloodgem,        TRINKET_1, TRINKET_2",
+			"Scryer's Bloodgem,        TRINKET_2, TRINKET_1",
+	})
+	void duplicateItemUnequipped(String itemName, ItemSlot slot1, ItemSlot slot2) {
+		var uniqueItem = getItem(itemName);
+
+		underTest.equipItem(CHARACTER_KEY, slot1, null);
+		underTest.equipItem(CHARACTER_KEY, slot2, null);
+
+		underTest.equipItem(CHARACTER_KEY, slot1, uniqueItem);
+
+		assertItem(slot1, itemName);
+		assertItem(slot2, null);
+
+		underTest.equipItem(CHARACTER_KEY, slot2, uniqueItem.copy());
+
+		assertItem(slot1, null);
+		assertItem(slot2, itemName);
+	}
+
+	@Test
+	void duplicateGemIsUnequippedFromAnotherItem() {
+		var uniqueGemName = "Shining Fire Opal";
+		var normalGemName = "Reckless Pyrestone";
+		var uniqueGem = getGem(uniqueGemName);
+		var normalGem = getGem(normalGemName);
+
+		var bracer = getItem("Bracers of the Malefic").gem(uniqueGem);
+
+		underTest.equipItem(CHARACTER_KEY, WRIST, bracer);
+
+		assertGem(WRIST, 0, uniqueGemName);
+
+		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
+
+		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+
+		assertGem(CHEST, 0, normalGemName);
+		assertGem(CHEST, 1, normalGemName);
+		assertGem(CHEST, 2, uniqueGemName);
+		assertGem(WRIST, 0, null);
+	}
+
+	@Test
+	void duplicateGemIsUnequippedFromTheSameItem() {
+		var uniqueGemName = "Shining Fire Opal";
+		var normalGemName = "Reckless Pyrestone";
+		var uniqueGem = getGem(uniqueGemName);
+		var normalGem = getGem(normalGemName);
+
+		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
+
+		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+
+		assertGem(CHEST, 0, normalGemName);
+		assertGem(CHEST, 1, normalGemName);
+		assertGem(CHEST, 2, uniqueGemName);
+
+		var modifiedChest = chest.copy().gem(normalGem, uniqueGem, uniqueGem);
+
+		underTest.equipItem(CHARACTER_KEY, CHEST, modifiedChest);
+
+		assertGem(CHEST, 0, normalGemName);
+		assertGem(CHEST, 1, uniqueGemName);
+		assertGem(CHEST, 2, null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Band of the Eternal Sage, FINGER_1,  FINGER_2",
+			"Band of the Eternal Sage, FINGER_2,  FINGER_1",
+			"Scryer's Bloodgem,        TRINKET_1, TRINKET_2",
+			"Scryer's Bloodgem,        TRINKET_2, TRINKET_1",
+	})
+	void duplicateItemUnequipped_correctDiff(String itemName, ItemSlot slot1, ItemSlot slot2) {
+		var uniqueItem = getItem(itemName);
+
+		underTest.equipItem(CHARACTER_KEY, slot1, null);
+		underTest.equipItem(CHARACTER_KEY, slot2, null);
+
+		var diff1 = underTest.equipItem(CHARACTER_KEY, slot1, uniqueItem);
+
+		assertDiff(diff1, slot1);
+
+		var diff2 = underTest.equipItem(CHARACTER_KEY, slot2, uniqueItem.copy());
+
+		assertDiff(diff2, slot1, slot2);
+	}
+
+	@Test
+	void duplicateGemIsUnequippedFromAnotherItem_correctDiff() {
+		var uniqueGemName = "Shining Fire Opal";
+		var normalGemName = "Reckless Pyrestone";
+		var uniqueGem = getGem(uniqueGemName);
+		var normalGem = getGem(normalGemName);
+
+		var bracer = getItem("Bracers of the Malefic").gem(uniqueGem);
+
+		var diff1 = underTest.equipItem(CHARACTER_KEY, WRIST, bracer);
+
+		assertDiff(diff1, WRIST);
+
+		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
+
+		var diff2 = underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+
+		assertDiff(diff2, WRIST, CHEST);
+	}
+
+	@Test
+	void duplicateGemIsUnequippedFromTheSameItem_correctDiff() {
+		var uniqueGemName = "Shining Fire Opal";
+		var normalGemName = "Reckless Pyrestone";
+		var uniqueGem = getGem(uniqueGemName);
+		var normalGem = getGem(normalGemName);
+
+		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
+
+		var diff1 = underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+
+		assertDiff(diff1, CHEST);
+
+		var modifiedChest = chest.copy().gem(normalGem, uniqueGem, uniqueGem);
+
+		var diff2 = underTest.equipItem(CHARACTER_KEY, CHEST, modifiedChest);
+
+		assertDiff(diff2, CHEST);
+	}
+
+	void assertDiff(List<ItemSlotStatus> diff, ItemSlot... expectedItemSlots) {
+		var itemSlots = diff.stream()
+				.map(ItemSlotStatus::itemSlot)
+				.toList();
+
+		assertThat(itemSlots).hasSameElementsAs(List.of(expectedItemSlots));
 	}
 
 	@Autowired

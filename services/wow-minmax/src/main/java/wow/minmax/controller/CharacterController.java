@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.minmax.client.dto.*;
-import wow.minmax.converter.dto.*;
+import wow.minmax.converter.dto.ExclusiveFactionGroupConverter;
+import wow.minmax.converter.dto.PlayerCharacterConverter;
+import wow.minmax.converter.dto.ProfessionConverter;
+import wow.minmax.converter.dto.ScriptInfoConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 
@@ -22,7 +25,6 @@ public class CharacterController {
 	private final PlayerCharacterService playerCharacterService;
 	private final PlayerCharacterConverter playerCharacterConverter;
 	private final ProfessionConverter professionConverter;
-	private final ExclusiveFactionConverter exclusiveFactionConverter;
 	private final ExclusiveFactionGroupConverter exclusiveFactionGroupConverter;
 	private final ScriptInfoConverter scriptInfoConverter;
 
