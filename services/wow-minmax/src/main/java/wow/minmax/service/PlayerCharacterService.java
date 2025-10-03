@@ -29,6 +29,8 @@ public interface PlayerCharacterService {
 
 	PlayerCharacter changeExclusiveFaction(CharacterId characterId, String factionName);
 
+	PlayerCharacter changeTalents(CharacterId characterId, String talentLink);
+
 	List<ScriptInfo> getAvailableScripts(CharacterId characterId);
 
 	PlayerCharacter changeScript(CharacterId characterId, String scriptPath);

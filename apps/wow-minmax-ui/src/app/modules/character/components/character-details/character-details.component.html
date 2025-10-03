@@ -48,6 +48,15 @@
 		}
 	}
 
+	<div class="col-md-12">
+		<label for="talent-link" class="form-label">Talents</label>
+		<app-talent-link-select
+			id="talent-link"
+			[characterId]="character.characterId"
+			[talentLink]="character.talentLink"
+		></app-talent-link-select>
+	</div>
+
 	@if (availableScripts$ | async; as availableScripts) {
 		<div class="col-md-6">
 			<label for="script-select" class="form-label">Script</label>

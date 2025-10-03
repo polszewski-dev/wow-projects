@@ -169,6 +169,17 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
+	public PlayerCharacter changeTalents(CharacterId characterId, String talentLink) {
+		var player = getPlayer(characterId);
+
+		player.getBuild().getTalents().loadFromTalentLink(talentLink);
+
+		characterService.updateAfterRestrictionChange(player);
+		saveCharacter(characterId, player);
+		return player;
+	}
+
+	@Override
 	public List<ScriptInfo> getAvailableScripts(CharacterId characterId) {
 		var player = getPlayer(characterId);
 

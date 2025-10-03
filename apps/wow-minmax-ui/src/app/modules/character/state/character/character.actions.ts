@@ -265,6 +265,21 @@ export const changeExclusiveFactionFailure = createAction(
 	props<{ error: string }>()
 );
 
+export const changeTalentLink = createAction(
+	"[Character] Change Talent Link",
+	props<{ characterId: string, talentLink: string }>()
+);
+
+export const changeTalentLinkSuccess = createAction(
+	"[Character] Change Talent Link Success",
+	props<{ characterId: string, character: Character }>()
+);
+
+export const changeTalentLinkFailure = createAction(
+	"[Character] Change Talent Link Failure",
+	props<{ error: string }>()
+);
+
 export const changeScript = createAction(
 	"[Character] Change Script",
 	props<{ characterId: string, script: ScriptInfo }>()

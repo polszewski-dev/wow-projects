@@ -35,6 +35,10 @@ export class CharacterService {
 		return this.http.put<void>(`${this.apiUrl}/${characterId}/xfactions`, exclusiveFaction);
 	}
 
+	changeTalentLink(characterId: string, talentLink: string) {
+		return this.http.put<Character>(`${this.apiUrl}/${characterId}/talents`, talentLink);
+	}
+
 	getAvailableScripts(characterId: string) {
 		return this.http.get<ScriptInfo[]>(`${this.apiUrl}/${characterId}/scripts`);
 	}

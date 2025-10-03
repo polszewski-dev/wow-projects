@@ -31,6 +31,7 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 				characterClassConverter.convert(source.getCharacterClass()),
 				getRace(source),
 				professionConverter.convertList(source.getProfessions().getList()),
+				source.getTalentLink(),
 				scriptInfoConverter.convert(getScript(source))
 		);
 	}

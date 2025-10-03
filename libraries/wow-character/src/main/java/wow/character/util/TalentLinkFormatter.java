@@ -25,7 +25,7 @@ public class TalentLinkFormatter {
 
 	public String format() {
 		var prefix = "https://www.wowhead.com/%s/talent-calc/%s".formatted(
-				gameVersionId.name().toLowerCase(), characterClassId.name().toLowerCase()
+				formatGameVersion(), characterClassId.name().toLowerCase()
 		);
 
 		var talentStringsByTree = getTalentStringsByTree();
@@ -41,6 +41,13 @@ public class TalentLinkFormatter {
 		}
 
 		return prefix + "/" + suffix;
+	}
+
+	private String formatGameVersion() {
+		if (gameVersionId == GameVersionId.VANILLA) {
+			return "classic";
+		}
+		return gameVersionId.name().toLowerCase();
 	}
 
 	private Map<TalentTree, List<String>> getAvailableTalentNamesByTree() {

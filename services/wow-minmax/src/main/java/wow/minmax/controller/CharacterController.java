@@ -83,6 +83,21 @@ public class CharacterController {
 		log.info("changed xfaction charId: {}, xfaction: {}", characterId, exclusiveFaction.name());
 	}
 
+	@PutMapping("{characterId}/talents")
+	public PlayerCharacterDTO changeTalents(
+			@PathVariable("characterId") CharacterId characterId,
+			@RequestBody String talentLink
+	) {
+		var player = playerCharacterService.changeTalents(
+				characterId,
+				talentLink
+		);
+
+		log.info("changed talents charId: {}, link: {}", characterId, talentLink);
+
+		return playerCharacterConverter.convert(player, characterId);
+	}
+
 	@GetMapping("{characterId}/scripts")
 	public List<ScriptInfoDTO> getAvailableScripts(
 			@PathVariable("characterId") CharacterId characterId

@@ -8,5 +8,6 @@ export interface Character {
 	characterClass: CharacterClass;
 	race: Race;
 	professions: (Profession | null)[];
+	talentLink: string;
 	script: ScriptInfo;
 }

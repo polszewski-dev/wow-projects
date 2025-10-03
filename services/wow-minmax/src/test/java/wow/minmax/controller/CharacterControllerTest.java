@@ -95,6 +95,23 @@ class CharacterControllerTest extends ControllerTest {
 	}
 
 	@Test
+	void changeTalents() throws Exception {
+		var talentLink = "https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332-555000512210013030251";
+
+		var objectMapper = new ObjectMapper();
+		var requestBody = objectMapper.writeValueAsString(talentLink);
+
+		mockMvc.perform(
+						put("/api/v1/characters/{characterId}/talents", CHARACTER_KEY)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(requestBody)
+				)
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
 	void getAvailableScripts() throws Exception {
 		mockMvc.perform(get("/api/v1/characters/{characterId}/scripts", CHARACTER_KEY))
 				.andExpect(status().isOk())

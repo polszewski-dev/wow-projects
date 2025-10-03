@@ -101,6 +101,15 @@ class PlayerCharacterServiceTest extends ServiceTest {
 	}
 
 	@Test
+	void change() {
+		assertThat(character.getTalentLink()).isEqualTo("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025");
+
+		var player = underTest.changeTalents(CHARACTER_KEY, "https://www.wowhead.com/tbc/talent-calc/warlock/55022000102351055103--50500051220001");
+
+		assertThat(player.getTalentLink()).isEqualTo("https://www.wowhead.com/tbc/talent-calc/warlock/55022000102351055103--50500051220001");
+	}
+
+	@Test
 	void getAvailableScripts() {
 		var availableScripts = underTest.getAvailableScripts(CHARACTER_KEY);
 

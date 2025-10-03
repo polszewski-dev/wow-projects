@@ -11,6 +11,7 @@ public record PlayerCharacterDTO(
 		CharacterClassDTO characterClass,
 		RaceDTO race,
 		List<ProfessionDTO> professions,
+		String talentLink,
 		ScriptInfoDTO script
 ) {
 }
