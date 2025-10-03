@@ -8,6 +8,7 @@ import { EnchantSelectComponent } from './components/enchant-select/enchant-sele
 import { EquipUpgradeButtonComponent } from './components/equip-upgrade-button/equip-upgrade-button.component';
 import { EquipmentEditorComponent } from './components/equipment-editor/equipment-editor.component';
 import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor/equipment-slot-editor.component';
+import { ExclusiveFactionSelectComponent } from './components/exclusive-faction-select/exclusive-faction-select.component';
 import { GemSelectComponent } from './components/gem-select/gem-select.component';
 import { ItemFilterComponent } from './components/item-filter/item-filter.component';
 import { ItemSelectComponent } from './components/item-select/item-select.component';
@@ -31,6 +32,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		UpgradeListComponent,
 		CharacterDetailsComponent,
 		ProfessionSelectComponent,
+		ExclusiveFactionSelectComponent,
 		ScriptSelectComponent,
 	],
 	imports: [
@@ -54,6 +56,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		UpgradeListComponent,
 		CharacterDetailsComponent,
 		ProfessionSelectComponent,
+		ExclusiveFactionSelectComponent,
 		ScriptSelectComponent,
 	]
 })

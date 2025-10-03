@@ -3,6 +3,7 @@ package wow.minmax.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.character.ProfIdSpecId;
+import wow.commons.model.pve.Faction;
 import wow.minmax.model.config.ScriptInfo;
 
 import java.util.List;
@@ -10,6 +11,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.profession.ProfessionId.*;
 import static wow.commons.model.profession.ProfessionSpecializationId.*;
+import static wow.commons.model.pve.FactionExclusionGroupId.SCRYERS_ALDOR;
+import static wow.test.commons.ExclusiveFactionNames.ALDOR;
+import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 
 /**
  * User: POlszewski
@@ -68,6 +72,32 @@ class PlayerCharacterServiceTest extends ServiceTest {
 		assertThat(player.hasProfessionSpecialization(TRANSMUTATION_MASTER)).isTrue();
 
 		assertThat(player.hasProfession(ENCHANTING)).isTrue();
+	}
+
+	@Test
+	void getAvailableExclusiveFactions() {
+		var availableExclusiveFactions = underTest.getAvailableExclusiveFactions(CHARACTER_KEY);
+
+		assertThat(availableExclusiveFactions).hasSize(1);
+
+		var group = availableExclusiveFactions.getFirst();
+
+		assertThat(group.groupId()).isEqualTo(SCRYERS_ALDOR);
+		assertThat(group.selectedFaction().getName()).isEqualTo(SCRYERS);
+		assertThat(group.availableFactions().stream().map(Faction::getName)).hasSameElementsAs(List.of(
+				ALDOR, SCRYERS
+		));
+	}
+
+	@Test
+	void changeExclusiveFaction() {
+		assertThat(character.hasExclusiveFaction(ALDOR)).isFalse();
+		assertThat(character.hasExclusiveFaction(SCRYERS)).isTrue();
+
+		var player = underTest.changeExclusiveFaction(CHARACTER_KEY, ALDOR);
+
+		assertThat(player.hasExclusiveFaction(ALDOR)).isTrue();
+		assertThat(player.hasExclusiveFaction(SCRYERS)).isFalse();
 	}
 
 	@Test

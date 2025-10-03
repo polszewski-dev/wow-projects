@@ -9,7 +9,7 @@ import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStat
 import { EquippableItem } from "../../model/equipment/EquippableItem";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { getSlots, ItemSlotGroup } from "../../model/upgrade/ItemSlotGroup";
-import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeExclusiveFactionSuccess, changeProfessionSuccess, changeScriptSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
 	characterId: string | null;

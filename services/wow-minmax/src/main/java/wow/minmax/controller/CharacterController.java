@@ -3,12 +3,8 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import wow.minmax.client.dto.PlayerCharacterDTO;
-import wow.minmax.client.dto.ProfessionDTO;
-import wow.minmax.client.dto.ScriptInfoDTO;
-import wow.minmax.converter.dto.PlayerCharacterConverter;
-import wow.minmax.converter.dto.ProfessionConverter;
-import wow.minmax.converter.dto.ScriptInfoConverter;
+import wow.minmax.client.dto.*;
+import wow.minmax.converter.dto.*;
 import wow.minmax.model.CharacterId;
 import wow.minmax.service.PlayerCharacterService;
 
@@ -26,6 +22,8 @@ public class CharacterController {
 	private final PlayerCharacterService playerCharacterService;
 	private final PlayerCharacterConverter playerCharacterConverter;
 	private final ProfessionConverter professionConverter;
+	private final ExclusiveFactionConverter exclusiveFactionConverter;
+	private final ExclusiveFactionGroupConverter exclusiveFactionGroupConverter;
 	private final ScriptInfoConverter scriptInfoConverter;
 
 	@GetMapping("{characterId}")
@@ -61,6 +59,28 @@ public class CharacterController {
 		log.info("changed profession charId: {}, idx: {}, profession: {}", characterId, index, profession.name());
 
 		return playerCharacterConverter.convert(player, characterId);
+	}
+
+	@GetMapping("{characterId}/xfactions")
+	public List<ExclusiveFactionGroupDTO> getAvailableExclusiveFactions(
+			@PathVariable("characterId") CharacterId characterId
+	) {
+		var availableExclusiveFactions = playerCharacterService.getAvailableExclusiveFactions(characterId);
+
+		return exclusiveFactionGroupConverter.convertList(availableExclusiveFactions);
+	}
+
+	@PutMapping("{characterId}/xfactions")
+	public void changeExclusiveFaction(
+			@PathVariable("characterId") CharacterId characterId,
+			@RequestBody ExclusiveFactionDTO exclusiveFaction
+	) {
+		playerCharacterService.changeExclusiveFaction(
+				characterId,
+				exclusiveFaction.name()
+		);
+
+		log.info("changed xfaction charId: {}, xfaction: {}", characterId, exclusiveFaction.name());
 	}
 
 	@GetMapping("{characterId}/scripts")

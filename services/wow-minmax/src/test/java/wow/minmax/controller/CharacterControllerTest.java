@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import wow.minmax.client.dto.ExclusiveFactionDTO;
 import wow.minmax.client.dto.ProfessionDTO;
 import wow.minmax.client.dto.ScriptInfoDTO;
 
@@ -15,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wow.commons.model.profession.ProfessionId.ALCHEMY;
 import static wow.commons.model.profession.ProfessionSpecializationId.TRANSMUTATION_MASTER;
+import static wow.commons.model.pve.FactionExclusionGroupId.SCRYERS_ALDOR;
 
 /**
  * User: POlszewski
@@ -61,6 +63,34 @@ class CharacterControllerTest extends ControllerTest {
 				)
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
+	void getAvailableExclusiveFactions() throws Exception {
+		mockMvc.perform(get("/api/v1/characters/{characterId}/xfactions", CHARACTER_KEY))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		;
+	}
+
+	@Test
+	void changeExclusiveFaction() throws Exception {
+		var exclusiveFactionDTO = new ExclusiveFactionDTO(
+				932,
+				"The Aldor",
+				SCRYERS_ALDOR
+		);
+
+		var objectMapper = new ObjectMapper();
+		var requestBody = objectMapper.writeValueAsString(exclusiveFactionDTO);
+
+		mockMvc.perform(
+						put("/api/v1/characters/{characterId}/xfactions", CHARACTER_KEY)
+								.contentType(MediaType.APPLICATION_JSON)
+								.content(requestBody)
+				)
+				.andExpect(status().isOk())
 		;
 	}
 

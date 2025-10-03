@@ -26,11 +26,19 @@ public class ExclusiveFactions implements Copyable<ExclusiveFactions> {
 	public boolean has(String name) {
 		var faction = getFaction(name).orElseThrow(() -> new IllegalArgumentException(name));
 
-		return factionsByGroup.get(faction.getExclusionGroupId()) == faction;
+		return get(faction.getExclusionGroupId()) == faction;
+	}
+
+	public Faction get(FactionExclusionGroupId groupId) {
+		return factionsByGroup.get(groupId);
 	}
 
 	public List<Faction> getList() {
 		return List.copyOf(factionsByGroup.values());
+	}
+
+	public Map<FactionExclusionGroupId, Faction> getFactionsByGroup() {
+		return Map.copyOf(factionsByGroup);
 	}
 
 	public List<String> getNameList() {

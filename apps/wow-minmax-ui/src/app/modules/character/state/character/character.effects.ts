@@ -9,7 +9,7 @@ import { ConsumableService } from "../../services/consumable.service";
 import { EquipmentService } from '../../services/equipment.service';
 import { loadEnchantOptions, loadEquipmentOptions, loadGemOptions, loadItemOptions } from "../equipment-options/equipment-options.actions";
 import { CharacterModuleState } from './../character-module.state';
-import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, changeProfession, changeProfessionFailure, changeProfessionSuccess, changeScript, changeScriptFailure, changeScriptSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGearSet, equipGearSetFailure, equipGearSetSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, equipPreviousPhase, equipPreviousPhaseFailure, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, changeExclusiveFaction, changeExclusiveFactionFailure, changeExclusiveFactionSuccess, changeProfession, changeProfessionFailure, changeProfessionSuccess, changeScript, changeScriptFailure, changeScriptSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGearSet, equipGearSetFailure, equipGearSetSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, equipPreviousPhase, equipPreviousPhaseFailure, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 @Injectable()
 export class CharacterEffects {
@@ -164,6 +164,7 @@ export class CharacterEffects {
 			changeBuffStatusSuccess,
 			changeConsumableStatusSuccess,
 			changeProfessionSuccess,
+			changeExclusiveFactionSuccess,
 			changeScriptSuccess,
 		),
 		map(({ characterId }) => dpsChanged({ characterId: characterId! })
@@ -189,6 +190,14 @@ export class CharacterEffects {
 		))
 	));
 
+	changeExclusiveFaction$ = createEffect(() => this.actions$.pipe(
+		ofType(changeExclusiveFaction),
+		switchMap(({ characterId, exclusiveFaction }) => this.characterService.changeExclusiveFaction(characterId, exclusiveFaction).pipe(
+			map(character => changeExclusiveFactionSuccess({ characterId })),
+			catchError(error => of(changeExclusiveFactionFailure({ error })))
+		))
+	));
+
 	changeScript$ = createEffect(() => this.actions$.pipe(
 		ofType(changeScript),
 		switchMap(({ characterId, script }) => this.characterService.changeScript(characterId, script).pipe(
@@ -200,6 +209,7 @@ export class CharacterEffects {
 	itmeOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
 		ofType(
 			changeProfessionSuccess,
+			changeExclusiveFactionSuccess,
 		),
 		map(({ characterId }) => loadItemOptions( { characterId })),
 	));
@@ -207,6 +217,7 @@ export class CharacterEffects {
 	enchantOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
 		ofType(
 			changeProfessionSuccess,
+			changeExclusiveFactionSuccess,
 		),
 		map(({ characterId }) => loadEnchantOptions( { characterId })),
 	));
@@ -214,6 +225,7 @@ export class CharacterEffects {
 	gemOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
 		ofType(
 			changeProfessionSuccess,
+			changeExclusiveFactionSuccess,
 		),
 		map(({ characterId }) => loadGemOptions({ characterId })),
 	));
@@ -221,6 +233,7 @@ export class CharacterEffects {
 	equipmentNeedsReload$ = createEffect(() => this.actions$.pipe(
 		ofType(
 			changeProfessionSuccess,
+			changeExclusiveFactionSuccess,
 		),
 		map(({ characterId }) => loadEquipment({ characterId }))
 	));

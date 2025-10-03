@@ -10,6 +10,7 @@ import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { Gem } from "../../model/equipment/Gem";
 import { Item } from "../../model/equipment/Item";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
+import { ExclusiveFaction } from "../../model/ExclusiveFaction";
 import { Profession } from "../../model/Profession";
 import { ScriptInfo } from '../../model/ScriptInfo';
 import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
@@ -246,6 +247,21 @@ export const changeProfessionSuccess = createAction(
 
 export const changeProfessionFailure = createAction(
 	"[Character] Change Profession Failure",
+	props<{ error: string }>()
+);
+
+export const changeExclusiveFaction = createAction(
+	"[Character] Change Exclusive Faction",
+	props<{ characterId: string, exclusiveFaction: ExclusiveFaction }>()
+);
+
+export const changeExclusiveFactionSuccess = createAction(
+	"[Character] Change Exclusive Faction Success",
+	props<{ characterId: string }>()
+);
+
+export const changeExclusiveFactionFailure = createAction(
+	"[Character] Change Exclusive Faction Failure",
 	props<{ error: string }>()
 );
 

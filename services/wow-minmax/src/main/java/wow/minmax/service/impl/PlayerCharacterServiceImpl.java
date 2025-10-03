@@ -9,8 +9,12 @@ import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.script.ScriptPathResolver;
 import wow.character.service.CharacterService;
+import wow.commons.model.pve.Faction;
+import wow.commons.model.pve.FactionExclusionGroupId;
+import wow.commons.repository.spell.TalentRepository;
 import wow.minmax.converter.model.PlayerCharacterConfigConverter;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.ExclusiveFactionGroup;
 import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.repository.MinmaxConfigRepository;
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.groupingBy;
 import static wow.commons.model.profession.ProfessionType.SECONDARY;
 
 /**
@@ -39,6 +44,8 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	private final PlayerCharacterConfigConverter playerCharacterConfigConverter;
 
 	private final PlayerProfileRepository playerProfileRepository;
+
+	private final TalentRepository talentRepository;
 
 	@Override
 	public PlayerCharacter getPlayer(CharacterId characterId) {
@@ -124,6 +131,37 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		var player = getPlayer(characterId);
 
 		player.setProfessionMaxLevel(index, profession);
+
+		characterService.updateAfterRestrictionChange(player);
+		saveCharacter(characterId, player);
+		return player;
+	}
+
+	@Override
+	public List<ExclusiveFactionGroup> getAvailableExclusiveFactions(CharacterId characterId) {
+		var player = getPlayer(characterId);
+
+		var factionsByGroup = player.getExclusiveFactions().getAvailable().stream()
+				.collect(groupingBy(Faction::getExclusionGroupId));
+
+		return factionsByGroup.entrySet().stream()
+				.map(x -> getExclusiveFactionGroup(x.getKey(), x.getValue(), player))
+				.toList();
+	}
+
+	private static ExclusiveFactionGroup getExclusiveFactionGroup(FactionExclusionGroupId groupId, List<Faction> availableFactions, PlayerCharacter player) {
+		return new ExclusiveFactionGroup(
+				groupId,
+				player.getExclusiveFactions().get(groupId),
+				availableFactions
+		);
+	}
+
+	@Override
+	public PlayerCharacter changeExclusiveFaction(CharacterId characterId, String factionName) {
+		var player = getPlayer(characterId);
+
+		player.getExclusiveFactions().enable(factionName);
 
 		characterService.updateAfterRestrictionChange(player);
 		saveCharacter(characterId, player);

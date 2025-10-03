@@ -32,6 +32,22 @@
 	}
 	<div class="col-md-8"></div>
 
+	@if (availableExclusiveFactions$ | async; as availableExclusiveFactions) {
+		@if (availableExclusiveFactions.length > 0) {
+			<div class="col-md-12">
+				<label for="xfactions" class="form-label">Exclusive Factions</label>
+				<div id="xfactions">
+					@for (group of availableExclusiveFactions; track group.groupId) {
+						<app-exclusive-faction-select
+							[characterId]="character.characterId"
+							[exclusiveFactionGroup]="group"
+						></app-exclusive-faction-select>
+					}
+				</div>
+			</div>
+		}
+	}
+
 	@if (availableScripts$ | async; as availableScripts) {
 		<div class="col-md-6">
 			<label for="script-select" class="form-label">Script</label>

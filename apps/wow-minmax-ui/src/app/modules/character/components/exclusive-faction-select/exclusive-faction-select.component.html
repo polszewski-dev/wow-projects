@@ -1,0 +1,14 @@
+@for (exclusiveFaction of exclusiveFactionGroup.availableFactions; track exclusiveFaction.id) {
+	<div class="form-check form-check-inline">
+		<input
+			id="faction-radio-{{exclusiveFaction.id}}"
+			type="radio"
+			class="form-check-input"
+			[name]="exclusiveFactionGroup.groupId"
+			[value]="exclusiveFaction"
+			[checked]="exclusiveFactionGroup.selectedFaction.id === exclusiveFaction.id"
+			(change)="onExclusiveFactionChanged(exclusiveFaction)"
+		>
+		<label class="form-check-label" for="faction-radio-{{exclusiveFaction.id}}">{{exclusiveFaction.name}}</label>
+	</div>
+}

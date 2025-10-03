@@ -18,6 +18,11 @@ export class CharacterDetailsComponent {
 		switchMap(character => this.characterService.getAvailableProfessions(character!.characterId))
 	);
 
+	availableExclusiveFactions$ = this.character$.pipe(
+		filter(character => !!character),
+		switchMap(character => this.characterService.getAvailableExclusiveFactions(character!.characterId))
+	);
+
 	availableScripts$ = this.character$.pipe(
 		filter(character => !!character),
 		switchMap(character => this.characterService.getAvailableScripts(character!.characterId))
