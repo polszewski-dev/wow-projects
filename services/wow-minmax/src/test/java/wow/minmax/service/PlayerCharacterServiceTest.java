@@ -118,8 +118,9 @@ class PlayerCharacterServiceTest extends ServiceTest {
 				.toList();
 
 		assertThat(list).hasSameElementsAs(List.of(
-				"warlock-destro-shadow.txt",
-				"warlock-shadow-bolt-spam.txt"
+				"warlock-curse-plus-shadow-bolt.txt",
+				"warlock-shadow-bolt-spam.txt",
+				"warlock-destro-shadow.txt"
 		));
 	}
 
