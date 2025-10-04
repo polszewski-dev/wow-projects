@@ -24,7 +24,7 @@ public interface EquipmentService {
 
 	List<ItemSlotStatus> equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter);
 
-	PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
+	List<ItemSlotStatus> equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
 	PlayerCharacter resetEquipment(CharacterId characterId);
 

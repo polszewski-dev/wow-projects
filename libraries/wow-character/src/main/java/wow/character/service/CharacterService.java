@@ -5,6 +5,7 @@ import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
@@ -36,4 +37,6 @@ public interface CharacterService {
 	List<GearSet> getAvailableGearSets(PlayerCharacter character);
 
 	void equipItem(PlayerCharacter character, ItemSlot slot, EquippableItem equippableItem);
+
+	void equipItemGroup(PlayerCharacter character, ItemSlotGroup slotGroup, List<EquippableItem> items);
 }

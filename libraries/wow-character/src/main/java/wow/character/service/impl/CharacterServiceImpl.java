@@ -17,6 +17,7 @@ import wow.character.service.NonPlayerCharacterFactory;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
@@ -35,12 +36,14 @@ import wow.commons.repository.spell.BuffRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.commons.repository.spell.TalentRepository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import static java.lang.Math.min;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
@@ -302,6 +305,26 @@ public class CharacterServiceImpl implements CharacterService {
 
 		unequipDuplicateItem(character, slot);
 		unequipDuplicateGems(character, slot);
+	}
+
+	@Override
+	public void equipItemGroup(PlayerCharacter character, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+		var slots = slotGroup.getSlots();
+
+		for (var slot : slots) {
+			character.equip(null, slot);
+		}
+
+		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
+			items = Arrays.asList(items.getFirst(), null);
+		}
+
+		for (int slotIdx = 0; slotIdx < min(slots.size(), items.size()); slotIdx++) {
+			var slot = slots.get(slotIdx);
+			var item = items.get(slotIdx);
+
+			equipItem(character, slot, item);
+		}
 	}
 
 	private void removeDuplicateGem(EquippableItem itemToEquip, PlayerCharacter character, ItemSlot slot) {

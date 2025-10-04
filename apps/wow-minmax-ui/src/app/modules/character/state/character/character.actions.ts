@@ -118,7 +118,7 @@ export const equipItemGroup = createAction(
 
 export const equipItemGroupSuccess = createAction(
 	"[Character] Equip Item Group Success",
-	props<{ characterId: string, slotGroup: ItemSlotGroup, items: EquippableItem[] }>()
+	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipItemGroupFailure = createAction(

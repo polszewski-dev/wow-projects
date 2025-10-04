@@ -54,7 +54,7 @@ export class EquipmentService {
 	}
 
 	equipItems(characterId: string, slotGroup: ItemSlotGroup, items: EquippableItem[]) {
-		return this.http.put<void>(`${this.apiUrl}/${characterId}/slot-group/${slotGroup}`, items);
+		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${characterId}/slot-group/${slotGroup}`, items);
 	}
 
 	resetEquipment(characterId: string) {

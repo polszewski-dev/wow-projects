@@ -17,12 +17,10 @@ import wow.minmax.service.EquipmentService;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.UpgradeService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-import static java.lang.Math.min;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -63,28 +61,16 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public PlayerCharacter equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+	public List<ItemSlotStatus> equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
 		var player = playerCharacterService.getPlayer(characterId);
-		var slots = slotGroup.getSlots();
 
-		for (var slot : slots) {
-			player.equip(null, slot);
-		}
+		var oldEquipment = player.getEquipment().deepCopy();
 
-		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
-			items = Arrays.asList(items.getFirst(), null);
-		}
-
-		for (int slotIdx = 0; slotIdx < min(slots.size(), items.size()); slotIdx++) {
-			var slot = slots.get(slotIdx);
-			var item = items.get(slotIdx);
-
-			characterService.equipItem(player, slot, item);
-		}
+		characterService.equipItemGroup(player, slotGroup, items);
 
 		playerCharacterService.saveCharacter(characterId, player);
 
-		return player;
+		return getEquipmentDiff(oldEquipment, player);
 	}
 
 	private List<ItemSlotStatus> getEquipmentDiff(Equipment oldEquipment, PlayerCharacter player) {

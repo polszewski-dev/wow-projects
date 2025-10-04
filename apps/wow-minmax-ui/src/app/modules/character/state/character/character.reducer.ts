@@ -9,7 +9,6 @@ import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStat
 import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { EquipmentDiff } from "../../model/equipment/ItemSlotStatus";
-import { getSlots, ItemSlotGroup } from "../../model/upgrade/ItemSlotGroup";
 import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
@@ -100,9 +99,9 @@ export const characterReducer = createReducer(
 		...state,
 		equipment: withEquipmentDiffApplied(state.equipment, equipmentDiff)
 	})),
-	on(equipItemGroupSuccess, (state, { slotGroup, items }) => ({
+	on(equipItemGroupSuccess, (state, { equipmentDiff }) => ({
 		...state,
-		equipment: withSlotGroupSetTo(state.equipment, slotGroup, idx => success(items[idx] || null))
+		equipment: withEquipmentDiffApplied(state.equipment, equipmentDiff)
 	})),
 	on(equipEnchantSuccess, (state, { equipmentDiff }) => ({
 		...state,
@@ -200,20 +199,6 @@ function withAllSlotsFilledFrom(equipment: Equipment) {
 		OFF_HAND: get(ItemSlot.OFF_HAND),
 		RANGED: get(ItemSlot.RANGED),
 	}
-}
-
-function withSlotGroupSetTo(
-	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>,
-	slotGroup: ItemSlotGroup,
-	itemAccessor: (idx: number) => Loadable<EquippableItem | null>
-) {
-	const result = { ...equipment };
-
-	getSlots(slotGroup).forEach((key, idx) => {
-		result[key] = itemAccessor(idx);
-	});
-
-	return result;
 }
 
 function withEquipmentDiffApplied(

@@ -63,27 +63,27 @@ public class EquipmentController {
 	}
 
 	@PutMapping("{characterId}/slot-group/{slotGroup}")
-	public void equipItemGroup(
+	public List<ItemSlotStatusDTO> equipItemGroup(
 			@PathVariable("characterId") CharacterId characterId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestBody List<EquippableItemDTO> itemDTOs
 	) {
 		var items = equippableItemConverter.convertBackList(itemDTOs, characterId.phaseId());
 
-		equipmentService.equipItemGroup(characterId, slotGroup, items);
+		var changedSlots = equipmentService.equipItemGroup(characterId, slotGroup, items);
 
 		log.info("Equipped items charId: {}, slotGroup: {}, items: {}", characterId, slotGroup, items);
+
+		return itemSlotStatusConverter.convertList(changedSlots);
 	}
 
 	@DeleteMapping("{characterId}")
-	public EquipmentDTO resetEquipment(
+	public void resetEquipment(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = equipmentService.resetEquipment(characterId);
+		equipmentService.resetEquipment(characterId);
 
 		log.info("Reset charId: {}", characterId);
-
-		return equipmentConverter.convert(player.getEquipment());
 	}
 
 	@GetMapping("{characterId}/socket-status")

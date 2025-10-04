@@ -91,7 +91,7 @@ export class CharacterEffects {
 	equipItemGroup$ = createEffect(() => this.actions$.pipe(
 		ofType(equipItemGroup),
 		switchMap(({ characterId, slotGroup, items }) => this.equipmentService.equipItems(characterId, slotGroup, items).pipe(
-			map(() => equipItemGroupSuccess({ characterId, slotGroup, items })),
+			map(equipmentDiff => equipItemGroupSuccess({ characterId, equipmentDiff })),
 			catchError(error => of(equipItemGroupFailure({ slotGroup, error })))
 		))
 	));

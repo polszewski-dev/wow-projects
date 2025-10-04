@@ -102,7 +102,6 @@ class EquipmentControllerTest extends ControllerTest {
 	void resetEquipment() throws Exception {
 		mockMvc.perform(delete("/api/v1/equipments/{characterId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
 		verify(equipmentService).resetEquipment(CHARACTER_KEY);
