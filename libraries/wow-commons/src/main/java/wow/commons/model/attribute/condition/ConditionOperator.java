@@ -2,9 +2,8 @@ package wow.commons.model.attribute.condition;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.joining;
+import static wow.commons.model.attribute.condition.AttributeConditionFormatter.format;
 
 /**
  * User: POlszewski
@@ -41,7 +40,7 @@ public sealed interface ConditionOperator extends AttributeCondition {
 
 		@Override
 		public String toString() {
-			return conditionToString(this);
+			return format(this);
 		}
 	}
 
@@ -53,7 +52,7 @@ public sealed interface ConditionOperator extends AttributeCondition {
 
 		@Override
 		public String toString() {
-			return conditionToString(this);
+			return format(this);
 		}
 	}
 
@@ -76,71 +75,7 @@ public sealed interface ConditionOperator extends AttributeCondition {
 
 		@Override
 		public String toString() {
-			return conditionToString(this);
-		}
-	}
-
-	private static String conditionToString(AttributeCondition condition) {
-		if (condition instanceof Or or) {
-			return binaryOperatorToString(" | ", or);
-		}
-		if (condition instanceof And and) {
-			return binaryOperatorToString(" & ", and);
-		}
-		if (condition instanceof Comma comma) {
-			return formatComma(comma);
-		}
-		return condition.toString();
-	}
-
-	private static String formatComma(Comma comma) {
-		return comma.conditions().stream()
-				.map(Object::toString)
-				.collect(joining(", "));
-	}
-
-	private static String binaryOperatorToString(String operatorStr, BinaryConditionOperator operator) {
-		int priority = getPriority(operator);
-		int leftPriority = getPriority(operator.left());
-		int rightPriority = getPriority(operator.right());
-
-		var leftStr = conditionToString(operator.left());
-		var rightStr = conditionToString(operator.right());
-
-		if (leftPriority > priority) {
-			leftStr = "(" + leftStr + ")";
-		}
-		if (rightPriority > priority) {
-			rightStr = "(" + rightStr + ")";
-		}
-
-		return leftStr + operatorStr +  rightStr;
-	}
-
-	private static int getPriority(AttributeCondition condition) {
-		if (condition instanceof Or) {
-			return 3;
-		}
-		if (condition instanceof And) {
-			return 2;
-		}
-		if (condition instanceof Comma) {
-			return 1;
-		}
-		return 0;
-	}
-
-	private static Stream<AttributeCondition> getLeaves(AttributeCondition left, AttributeCondition right) {
-		return Stream.concat(
-				getLeaves(left), getLeaves(right)
-		);
-	}
-
-	private static Stream<AttributeCondition> getLeaves(AttributeCondition left) {
-		if (left instanceof BinaryConditionOperator c) {
-			return getLeaves(c.left(), c.right());
-		} else {
-			return Stream.of(left);
+			return format(this);
 		}
 	}
 }
