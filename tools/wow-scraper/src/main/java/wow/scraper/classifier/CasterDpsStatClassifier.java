@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static wow.commons.model.attribute.AttributeType.*;
 import static wow.commons.model.attribute.condition.ConditionOperator.BinaryConditionOperator;
+import static wow.commons.model.attribute.condition.ConditionOperator.Comma;
 
 /**
  * User: POlszewski
@@ -138,11 +140,14 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 	}
 
 	private List<AttributeCondition> getBasicConditions(AttributeCondition condition) {
-		if (condition instanceof BinaryConditionOperator operator) {
-			return operator.getLeaves();
-		} else {
-			return List.of(condition);
-		}
+		return switch (condition) {
+			case BinaryConditionOperator operator -> Stream.concat(
+					getBasicConditions(operator.left()).stream(),
+					getBasicConditions(operator.right()).stream()
+			).toList();
+			case Comma(var conditions) -> conditions;
+			default -> List.of(condition);
+		};
 	}
 
 	private boolean isBasicCasterCondition(AttributeCondition condition) {

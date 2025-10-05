@@ -2,8 +2,9 @@ package wow.commons.model.attribute.condition;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * User: POlszewski
@@ -18,43 +19,18 @@ public sealed interface ConditionOperator extends AttributeCondition {
 		return new And(left, right);
 	}
 
-	static Comma comma(AttributeCondition left, AttributeCondition right) {
-		return new Comma(left, right);
-	}
-
-	static Or or(AttributeCondition... conditions) {
-		return join(conditions, ConditionOperator::or);
-	}
-
-	static And and(AttributeCondition... conditions) {
-		return join(conditions, ConditionOperator::and);
-	}
-
 	static Comma comma(AttributeCondition... conditions) {
-		return join(conditions, ConditionOperator::comma);
+		return new Comma(List.of(conditions));
 	}
 
-	private static <T extends AttributeCondition> T join(AttributeCondition[] conditions, BiFunction<AttributeCondition, AttributeCondition, T> operator) {
-		if (conditions.length < 2) {
-			throw new IllegalArgumentException();
-		}
-
-		var result = conditions[conditions.length - 1];
-
-		for (int i = conditions.length - 2; i >= 0; --i) {
-			result = operator.apply(conditions[i], result);
-		}
-
-		return (T) result;
+	static Comma comma(List<AttributeCondition> conditions) {
+		return new Comma(List.copyOf(conditions));
 	}
 
 	sealed interface BinaryConditionOperator extends ConditionOperator {
 		AttributeCondition left();
-		AttributeCondition right();
 
-		default List<AttributeCondition> getLeaves() {
-			return ConditionOperator.getLeaves(left(), right()).toList();
-		}
+		AttributeCondition right();
 	}
 
 	record Or(AttributeCondition left, AttributeCondition right) implements BinaryConditionOperator {
@@ -81,15 +57,20 @@ public sealed interface ConditionOperator extends AttributeCondition {
 		}
 	}
 
-	record Comma(AttributeCondition left, AttributeCondition right) implements BinaryConditionOperator {
+	record Comma(List<AttributeCondition> conditions) implements ConditionOperator {
 		public Comma {
-			Objects.requireNonNull(left);
-			Objects.requireNonNull(right);
+			Objects.requireNonNull(conditions);
 
-			var leaves = ConditionOperator.getLeaves(left, right).toList();
+			if (conditions.size() < 2) {
+				throw new IllegalArgumentException("At least 2 conditions required");
+			}
 
-			if (leaves.stream().anyMatch(ConditionOperator.class::isInstance)) {
+			if (conditions.stream().anyMatch(ConditionOperator.class::isInstance)) {
 				throw new IllegalArgumentException("Only simple types");
+			}
+
+			if (conditions.stream().map(AttributeCondition::getClass).distinct().count() > 1) {
+				throw new IllegalArgumentException("All conditions must be of the same type");
 			}
 		}
 
@@ -107,9 +88,15 @@ public sealed interface ConditionOperator extends AttributeCondition {
 			return binaryOperatorToString(" & ", and);
 		}
 		if (condition instanceof Comma comma) {
-			return binaryOperatorToString(", ", comma);
+			return formatComma(comma);
 		}
 		return condition.toString();
+	}
+
+	private static String formatComma(Comma comma) {
+		return comma.conditions().stream()
+				.map(Object::toString)
+				.collect(joining(", "));
 	}
 
 	private static String binaryOperatorToString(String operatorStr, BinaryConditionOperator operator) {

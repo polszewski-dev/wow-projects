@@ -66,12 +66,22 @@ class AttributeConditionParser {
 
 	private AttributeCondition commaExpression() {
 		var left = primitiveExpression();
-		if (tokenizer.isCurrentToken(",")) {
-			tokenizer.dropCurrentToken();
-			var right = commaExpression();
-			return ConditionOperator.comma(left, right);
+
+		if (!tokenizer.isCurrentToken(",")) {
+			return left;
 		}
-		return left;
+
+		var conditions = new ArrayList<AttributeCondition>();
+
+		conditions.add(left);
+
+		do {
+			tokenizer.dropCurrentToken();
+			var right = primitiveExpression();
+			conditions.add(right);
+		} while (tokenizer.isCurrentToken(","));
+
+		return ConditionOperator.comma(conditions);
 	}
 
 	private AttributeCondition primitiveExpression() {

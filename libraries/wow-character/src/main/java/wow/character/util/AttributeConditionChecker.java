@@ -7,6 +7,8 @@ import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.ClassAbility;
 import wow.commons.model.spell.ResourceType;
 
+import static wow.commons.model.attribute.condition.ConditionOperator.*;
+
 /**
  * User: POlszewski
  * Date: 29.09.2024
@@ -60,23 +62,22 @@ public final class AttributeConditionChecker {
 
 	private static boolean checkConditionOperator(ConditionOperator operator, AttributeConditionArgs args) {
 		return switch (operator) {
-			case ConditionOperator.BinaryConditionOperator binaryOperator ->
-					checkBinaryOperator(binaryOperator, args);
+			case And(var left, var right) ->
+					check(left, args) && check(right, args);
+			case Or(var left, var right) ->
+					check(left, args) || check(right, args);
+			case Comma comma ->
+					checkComma(comma, args);
 		};
 	}
 
-	private static boolean checkBinaryOperator(ConditionOperator.BinaryConditionOperator operator, AttributeConditionArgs args) {
-		var left = operator.left();
-		var right = operator.right();
-
-		return switch (operator) {
-			case ConditionOperator.And ignored ->
-					check(left, args) && check(right, args);
-			case ConditionOperator.Comma ignored ->
-					check(left, args) || check(right, args);
-			case ConditionOperator.Or ignored ->
-					check(left, args) || check(right, args);
-		};
+	private static boolean checkComma(Comma comma, AttributeConditionArgs args) {
+		for (AttributeCondition condition : comma.conditions()) {
+			if (check(condition, args)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean checkMiscCondition(MiscCondition condition, AttributeConditionArgs args) {

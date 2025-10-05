@@ -13,11 +13,9 @@ public enum AbilityCategory {
 	CURSES("Curses"),
 	DAMAGING_SHOTS("DamagingShots"),
 	FINISHING_MOVES("FinishingMoves"),
-	INTERRUPTS("Interrupts"),
 	JUDGEMENTS("Judgements"),
 	MANA_GEMS("ManaGems"),
 	POISONS("Poisons"),
-	SILENCES("Silences"),
 	SHAPESHIFTS("Shapeshifts"),
 	TOTEMS("Totems"),
 
