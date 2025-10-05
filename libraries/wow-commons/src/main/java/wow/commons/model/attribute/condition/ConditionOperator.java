@@ -3,7 +3,7 @@ package wow.commons.model.attribute.condition;
 import java.util.List;
 import java.util.Objects;
 
-import static wow.commons.model.attribute.condition.AttributeConditionFormatter.format;
+import static wow.commons.model.attribute.condition.AttributeConditionFormatter.formatCondition;
 
 /**
  * User: POlszewski
@@ -40,7 +40,7 @@ public sealed interface ConditionOperator extends AttributeCondition {
 
 		@Override
 		public String toString() {
-			return format(this);
+			return formatCondition(this);
 		}
 	}
 
@@ -52,7 +52,7 @@ public sealed interface ConditionOperator extends AttributeCondition {
 
 		@Override
 		public String toString() {
-			return format(this);
+			return formatCondition(this);
 		}
 	}
 
@@ -75,7 +75,7 @@ public sealed interface ConditionOperator extends AttributeCondition {
 
 		@Override
 		public String toString() {
-			return format(this);
+			return formatCondition(this);
 		}
 	}
 }

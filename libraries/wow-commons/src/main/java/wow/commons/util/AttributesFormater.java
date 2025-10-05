@@ -6,6 +6,7 @@ import wow.commons.model.attribute.Attributes;
 
 import static java.util.stream.Collectors.joining;
 import static wow.commons.model.attribute.AttributeScaling.*;
+import static wow.commons.model.attribute.condition.AttributeConditionFormatter.formatCondition;
 import static wow.commons.util.FormatUtil.decimalPointOnlyIfNecessary;
 
 /**
@@ -44,7 +45,7 @@ public class AttributesFormater {
 		var scaledValue = getScaledValue(attribute.scaling());
 
 		if (attribute.hasCondition()) {
-			return "%s %s [%s]".formatted(scaledValue, id, attribute.condition());
+			return "%s %s [%s]".formatted(scaledValue, id, formatCondition(attribute.condition()));
 		} else {
 			return "%s %s".formatted(scaledValue, id);
 		}

@@ -3,6 +3,7 @@ package wow.commons.model.attribute.condition;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attribute.condition.AttributeConditionFormatter.formatCondition;
 import static wow.commons.model.spell.SpellSchool.*;
 
 /**
@@ -17,7 +18,7 @@ class AttributeConditionTest {
 				MiscCondition.DIRECT
 		);
 
-		assertThat(condition).hasToString("Healing & Direct");
+		assertCondition(condition, "Healing & Direct");
 	}
 
 	@Test
@@ -27,7 +28,7 @@ class AttributeConditionTest {
 				AttributeCondition.of(FROST)
 		);
 
-		assertThat(condition).hasToString("Shadow | Frost");
+		assertCondition(condition, "Shadow | Frost");
 	}
 
 	@Test
@@ -37,6 +38,10 @@ class AttributeConditionTest {
 				ConditionOperator.or(AttributeCondition.of(FROST), AttributeCondition.of(FIRE))
 		);
 
-		assertThat(condition).hasToString("Shadow | Frost | Fire");
+		assertCondition(condition, "Shadow | Frost | Fire");
+	}
+
+	void assertCondition(AttributeCondition condition, String expected) {
+		assertThat(formatCondition(condition)).isEqualTo(expected);
 	}
 }

@@ -4,6 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attribute.condition.AttributeConditionFormatter.formatCondition;
+import static wow.commons.model.attribute.condition.AttributeConditionParser.parseCondition;
 
 /**
  * User: POlszewski
@@ -20,9 +22,8 @@ class AttributeConditionFormatterTest {
 			"Power Word: Shield"
 	})
 	void format(String expectedValue) {
-		var condition = new AttributeConditionParser(expectedValue).parse();
-
-		var actualValue = AttributeConditionFormatter.format(condition);
+		var condition = parseCondition(expectedValue);
+		var actualValue = formatCondition(condition);
 
 		assertThat(actualValue).isEqualTo(expectedValue);
 	}

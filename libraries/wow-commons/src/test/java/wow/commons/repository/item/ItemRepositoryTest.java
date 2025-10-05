@@ -3,8 +3,8 @@ package wow.commons.repository.item;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.attribute.condition.ConditionOperator;
-import wow.commons.model.attribute.condition.SpellSchoolCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
@@ -120,7 +120,7 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(item.getEffects()).hasSize(2);
 		assertEffect(item.getEffects().get(0), POWER, 7, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 7.", source);
-		assertEffect(item.getEffects().get(1), POWER, 21, ConditionOperator.and(SPELL_DAMAGE, SpellSchoolCondition.of(SHADOW)), "+21 Shadow Spell Damage", source);
+		assertEffect(item.getEffects().get(1), POWER, 21, ConditionOperator.and(SPELL_DAMAGE, AttributeCondition.of(SHADOW)), "+21 Shadow Spell Damage", source);
 	}
 
 	@Test

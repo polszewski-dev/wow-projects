@@ -21,6 +21,8 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.*;
+import static wow.commons.model.attribute.condition.AttributeConditionFormatter.formatCondition;
+import static wow.commons.model.attribute.condition.AttributeConditionParser.parseCondition;
 
 /**
  * User: POlszewski
@@ -29,14 +31,14 @@ import static wow.commons.constant.AbilityIds.*;
 class AttributeConditionParserTest {
 	@Test
 	void emptyCondition() {
-		assertThat(parse(null)).isEqualTo(AttributeCondition.EMPTY);
-		assertThat(parse("")).isEqualTo(AttributeCondition.EMPTY);
-		assertThat(parse("   ")).isEqualTo(AttributeCondition.EMPTY);
+		assertThat(parseCondition(null)).isEqualTo(AttributeCondition.EMPTY);
+		assertThat(parseCondition("")).isEqualTo(AttributeCondition.EMPTY);
+		assertThat(parseCondition("   ")).isEqualTo(AttributeCondition.EMPTY);
 	}
 
 	@Test
 	void orExpression() {
-		var parsed = parse("Shadow Bolt | Incinerate");
+		var parsed = parseCondition("Shadow Bolt | Incinerate");
 		var expected = ConditionOperator.or(
 				AttributeCondition.of(SHADOW_BOLT),
 				AttributeCondition.of(INCINERATE)
@@ -47,7 +49,7 @@ class AttributeConditionParserTest {
 
 	@Test
 	void andExpression() {
-		var parsed = parse("Shadow Bolt & Incinerate");
+		var parsed = parseCondition("Shadow Bolt & Incinerate");
 		var expected = ConditionOperator.and(
 				AttributeCondition.of(SHADOW_BOLT),
 				AttributeCondition.of(INCINERATE)
@@ -63,7 +65,7 @@ class AttributeConditionParserTest {
 			"((Create Firestone (Greater)))"
 	})
 	void paren(String value) {
-		var parsed = parse(value);
+		var parsed = parseCondition(value);
 		var expected = AttributeCondition.of(CREATE_FIRESTONE_GREATER);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -71,7 +73,7 @@ class AttributeConditionParserTest {
 
 	@Test
 	void commaExpression() {
-		var parsed = parse("Shadow Bolt, Incinerate");
+		var parsed = parseCondition("Shadow Bolt, Incinerate");
 		var expected = ConditionOperator.comma(
 				AttributeCondition.of(SHADOW_BOLT),
 				AttributeCondition.of(INCINERATE)
@@ -83,7 +85,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(TalentTree.class)
 	void talentTree(TalentTree value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -92,7 +94,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(SpellSchool.class)
 	void spellSchool(SpellSchool value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -105,7 +107,7 @@ class AttributeConditionParserTest {
 			return;
 		}
 
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -118,7 +120,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(AbilityCategory.class)
 	void abilityCategory(AbilityCategory value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -127,7 +129,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(PetType.class)
 	void abilityId(PetType value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -136,7 +138,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(CreatureType.class)
 	void targetType(CreatureType value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -145,7 +147,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(DruidFormType.class)
 	void druidFormType(DruidFormType value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -154,7 +156,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(WeaponSubType.class)
 	void weaponSubType(WeaponSubType value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -163,7 +165,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(ProfessionId.class)
 	void professionId(ProfessionId value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -172,7 +174,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(MiscCondition.class)
 	void miscCondition(MiscCondition value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 
 		assertThat(parsed).isEqualTo(value);
 	}
@@ -180,7 +182,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(EffectCategory.class)
 	void effecType(EffectCategory value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -189,7 +191,7 @@ class AttributeConditionParserTest {
 	@ParameterizedTest
 	@EnumSource(MovementType.class)
 	void professionId(MovementType value) {
-		var parsed = parse(value.toString());
+		var parsed = parseCondition(value.toString());
 		var expected = AttributeCondition.of(value);
 
 		assertThat(parsed).isEqualTo(expected);
@@ -197,8 +199,9 @@ class AttributeConditionParserTest {
 
 	@Test
 	void ownerisChanneling() {
-		var expected = OwnerIsChannelingCondition.of(DRAIN_SOUL);
-		var parsed = parse(expected.toString());
+		var expected = new OwnerIsChannelingCondition(DRAIN_SOUL);
+		var value = formatCondition(expected);
+		var parsed = parseCondition(value);
 
 		assertThat(parsed).isEqualTo(expected);
 	}
@@ -210,22 +213,20 @@ class AttributeConditionParserTest {
 			return;
 		}
 
-		var expected = OwnerHasEffectCondition.of(abilityId);
-		var parsed = parse(expected.toString());
+		var expected = new OwnerHasEffectCondition(abilityId);
+		var value = formatCondition(expected);
+		var parsed = parseCondition(value);
 
 		assertThat(parsed).isEqualTo(expected);
 	}
 
 	@Test
 	void targetClass() {
-		var expected = TargetClassCondition.of(CharacterClassId.WARLOCK);
-		var parsed = parse(expected.toString());
+		var expected = new TargetClassCondition(CharacterClassId.WARLOCK);
+		var value = formatCondition(expected);
+		var parsed = parseCondition(value);
 
 		assertThat(parsed).isEqualTo(expected);
-	}
-
-	private static AttributeCondition parse(String value) {
-		return new AttributeConditionParser(value).parse();
 	}
 
 	@Test

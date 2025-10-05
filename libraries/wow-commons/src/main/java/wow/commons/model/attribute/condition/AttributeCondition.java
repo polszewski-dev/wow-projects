@@ -1,5 +1,6 @@
 package wow.commons.model.attribute.condition;
 
+import wow.commons.model.Condition;
 import wow.commons.model.categorization.WeaponSubType;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.DruidFormType;
@@ -12,11 +13,13 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.talent.TalentTree;
 
+import static wow.commons.model.attribute.condition.AttributeConditionParser.parseCondition;
+
 /**
  * User: POlszewski
  * Date: 2021-10-25
  */
-public sealed interface AttributeCondition permits
+public sealed interface AttributeCondition extends Condition permits
 		AbilityCategoryCondition,
 		ConditionOperator,
 		DruidFormCondition,
@@ -81,10 +84,6 @@ public sealed interface AttributeCondition permits
 	}
 
 	static AttributeCondition parse(String value) {
-		return new AttributeConditionParser(value).parse();
-	}
-
-	default boolean isEmpty() {
-		return false;
+		return parseCondition(value);
 	}
 }

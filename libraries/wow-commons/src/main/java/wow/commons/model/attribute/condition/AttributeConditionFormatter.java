@@ -1,76 +1,57 @@
 package wow.commons.model.attribute.condition;
 
-import java.util.stream.Stream;
+import wow.commons.util.condition.ConditionFormatter;
 
-import static java.util.stream.Collectors.joining;
+import java.util.List;
+
 import static wow.commons.model.attribute.condition.ConditionOperator.*;
 
 /**
  * User: POlszewski
  * Date: 2025-10-05
  */
-public class AttributeConditionFormatter {
-	public static String format(AttributeCondition condition) {
-		if (condition instanceof Or or) {
-			return formatBinaryOperator(" | ", or);
-		}
-		if (condition instanceof And and) {
-			return formatBinaryOperator(" & ", and);
-		}
-		if (condition instanceof Comma comma) {
-			return formatComma(comma);
-		}
+public class AttributeConditionFormatter extends ConditionFormatter<AttributeCondition> {
+	public static String formatCondition(AttributeCondition condition) {
+		return new AttributeConditionFormatter().format(condition);
+	}
+
+	@Override
+	protected String formatPrimitiveCondition(AttributeCondition condition) {
 		return condition.toString();
 	}
 
-	private static String formatBinaryOperator(String operatorStr, BinaryConditionOperator operator) {
-		int priority = getPriority(operator);
-		int leftPriority = getPriority(operator.left());
-		int rightPriority = getPriority(operator.right());
-
-		var leftStr = format(operator.left());
-		var rightStr = format(operator.right());
-
-		if (leftPriority > priority) {
-			leftStr = "(" + leftStr + ")";
-		}
-		if (rightPriority > priority) {
-			rightStr = "(" + rightStr + ")";
-		}
-
-		return leftStr + operatorStr +  rightStr;
+	@Override
+	protected boolean isBinaryOperator(AttributeCondition condition) {
+		return condition instanceof BinaryConditionOperator;
 	}
 
-	private static String formatComma(Comma comma) {
-		return comma.conditions().stream()
-				.map(Object::toString)
-				.collect(joining(", "));
+	@Override
+	protected boolean isOr(AttributeCondition condition) {
+		return condition instanceof Or;
 	}
 
-	private static int getPriority(AttributeCondition condition) {
-		if (condition instanceof Or) {
-			return 3;
-		}
-		if (condition instanceof And) {
-			return 2;
-		}
-		if (condition instanceof Comma) {
-			return 1;
-		}
-		return 0;
+	@Override
+	protected boolean isAnd(AttributeCondition condition) {
+		return condition instanceof And;
 	}
 
-	private static Stream<AttributeCondition> getLeaves(AttributeCondition left, AttributeCondition right) {
-		return Stream.concat(
-				getLeaves(left), getLeaves(right)
-		);
+	@Override
+	protected boolean isComma(AttributeCondition condition) {
+		return condition instanceof Comma;
 	}
 
-	private static Stream<AttributeCondition> getLeaves(AttributeCondition left) {
-		if (left instanceof BinaryConditionOperator c) {
-			return getLeaves(c.left(), c.right());
-		} else {
-			return Stream.of(left);
-		}
+	@Override
+	protected AttributeCondition getLeft(AttributeCondition operator) {
+		return ((BinaryConditionOperator) operator).left();
+	}
+
+	@Override
+	protected AttributeCondition getRight(AttributeCondition operator) {
+		return ((BinaryConditionOperator) operator).right();
+	}
+
+	@Override
+	protected List<AttributeCondition> getCommaConditions(AttributeCondition comma) {
+		return ((Comma) comma).conditions();
 	}
 }
