@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.constant.AbilityIds;
 import wow.commons.constant.AttributeConditions;
+import wow.commons.constant.EventConditions;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -21,6 +22,7 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.effect.component.ComponentType;
+import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
@@ -274,10 +276,10 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var event = effect.getEvents().getFirst();
 
 		assertThat(event.types()).isEqualTo(List.of(SPELL_CAST));
-		assertThat(event.condition()).isEqualTo(AttributeCondition.comma(
-				AttributeConditions.CURSE_OF_DOOM,
-				AttributeConditions.CURSE_OF_AGONY,
-				AttributeConditions.CURSE_OF_EXHAUSTION
+		assertThat(event.condition()).isEqualTo(EventCondition.comma(
+				EventConditions.CURSE_OF_DOOM,
+				EventConditions.CURSE_OF_AGONY,
+				EventConditions.CURSE_OF_EXHAUSTION
 		));
 		assertThat(event.chance()).isEqualTo(Percent._100);
 		assertThat(event.actions()).isEqualTo(List.of(REMOVE_CHARGE));
@@ -350,7 +352,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_HIT),
-				AttributeCondition.IS_HOSTILE_SPELL,
+				EventCondition.IS_HOSTILE_SPELL,
 				10,
 				List.of(TRIGGER_SPELL),
 				Duration.seconds(45)
@@ -384,7 +386,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_HIT),
-				AttributeConditions.SHADOW,
+				EventConditions.SHADOW,
 				5,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO
@@ -421,7 +423,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_HIT),
-				AttributeConditions.FIRE,
+				EventConditions.FIRE,
 				5,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO
@@ -458,7 +460,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_CAST),
-				AttributeCondition.EMPTY,
+				EventCondition.EMPTY,
 				3,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO
@@ -490,7 +492,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var event = effect.getEvents().getFirst();
 
-		assertEvent(event, List.of(SPELL_CAST), AttributeCondition.EMPTY, 15, List.of(TRIGGER_SPELL), Duration.seconds(35));
+		assertEvent(event, List.of(SPELL_CAST), EventCondition.EMPTY, 15, List.of(TRIGGER_SPELL), Duration.seconds(35));
 
 		var spell = event.triggeredSpell();
 

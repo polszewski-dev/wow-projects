@@ -4,7 +4,6 @@ import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.*;
@@ -78,7 +77,7 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertThat(effect.getModifierAttributeList()).isEqualTo(attributes);
 	}
 
-	static void assertEvent(Event event, List<EventType> types, AttributeCondition condition, double chance, List<EventAction> actions, Duration cooldown) {
+	static void assertEvent(Event event, List<EventType> types, EventCondition condition, double chance, List<EventAction> actions, Duration cooldown) {
 		assertThat(event.types()).isEqualTo(types);
 		assertThat(event.condition()).isEqualTo(condition);
 		assertThat(event.chance()).isEqualTo(Percent.of(chance));

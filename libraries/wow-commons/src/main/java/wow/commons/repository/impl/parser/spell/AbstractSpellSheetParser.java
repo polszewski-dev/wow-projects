@@ -2,7 +2,6 @@ package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.*;
@@ -299,7 +298,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		}
 
 		var types = colEventOn.prefixed(prefix).getList(EventType::parse);
-		var condition = colEventCondition.prefixed(prefix).getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
+		var condition = colEventCondition.prefixed(prefix).getEnum(EventCondition::parse, EventCondition.EMPTY);
 		var chance = colEventChance.prefixed(prefix).getPercent(Percent._100);
 		var actions = colEventAction.prefixed(prefix).getList(EventAction::parse);
 		var triggeredSpellId = colEventTriggeredSpell.prefixed(prefix).getNullableInteger(SpellId::ofNullable);

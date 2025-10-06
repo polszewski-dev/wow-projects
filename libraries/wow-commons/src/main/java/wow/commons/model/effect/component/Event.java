@@ -1,7 +1,6 @@
 package wow.commons.model.effect.component;
 
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.spell.Spell;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.Objects;
  */
 public record Event(
 		List<EventType> types,
-		AttributeCondition condition,
+		EventCondition condition,
 		Percent chance,
 		List<EventAction> actions,
 		Spell triggeredSpell,

@@ -3,11 +3,12 @@ package wow.scraper.parser.spell;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spell.*;
 import wow.scraper.constant.AttributeConditions;
+import wow.scraper.constant.EventConditions;
 import wow.scraper.parser.spell.ability.AbilityMatcher;
 
 import java.util.List;
@@ -109,7 +110,7 @@ class AbilityParserTest extends SpellParserTest {
 		assertEvent(
 				event,
 				List.of(EventType.SPELL_DAMAGE),
-				AttributeConditions.SHADOW,
+				EventConditions.SHADOW,
 				100,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO
@@ -128,7 +129,7 @@ class AbilityParserTest extends SpellParserTest {
 		assertEvent(
 				event,
 				List.of(OWNER_ATTACKED),
-				AttributeCondition.EMPTY,
+				EventCondition.EMPTY,
 				100,
 				List.of(REMOVE_CHARGE, TRIGGER_SPELL),
 				Duration.seconds(1)

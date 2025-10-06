@@ -16,10 +16,17 @@ public class AbsorptionConditionFormatter extends ConditionFormatter<AbsorptionC
 	@Override
 	protected String formatPrimitiveCondition(AbsorptionCondition condition) {
 		return switch (condition) {
-			case ActionTypeCondition(var actionType) -> actionType.getName();
-			case EmptyCondition() -> "";
-			case PowerTypeCondition(var powerType) -> powerType.getKey();
-			case SpellSchoolCondition(var spellSchool) -> spellSchool.getName();
+			case ActionTypeCondition(var actionType) ->
+					actionType.getName();
+
+			case EmptyCondition() ->
+					"";
+
+			case PowerTypeCondition(var powerType) ->
+					powerType.getKey();
+
+			case SpellSchoolCondition(var spellSchool) ->
+					spellSchool.getName();
 		};
 	}
 }

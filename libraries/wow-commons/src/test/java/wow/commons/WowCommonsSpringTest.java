@@ -66,7 +66,7 @@ public abstract class WowCommonsSpringTest {
 		assertThat(statConversion.ratioPct()).isEqualTo(Percent.of(ratio));
 	}
 
-	protected static void assertEvent(Event event, List<EventType> types, AttributeCondition condition, double chance, List<EventAction> actions, Duration cooldown) {
+	protected static void assertEvent(Event event, List<EventType> types, EventCondition condition, double chance, List<EventAction> actions, Duration cooldown) {
 		assertThat(event.types()).isEqualTo(types);
 		assertThat(event.condition()).isEqualTo(condition);
 		assertThat(event.chance()).isEqualTo(Percent.of(chance));

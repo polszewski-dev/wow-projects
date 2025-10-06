@@ -31,17 +31,10 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 	private PowerType powerType;
 	private WeaponSubType weaponType;
 
-	private boolean canCrit;
 	private boolean hadCrit;
-
 	private boolean direct;
-	private boolean periodic;
 
 	private SpellSchool spellSchool;
-
-	private boolean hostileSpell;
-	private boolean normalMeleeAttack;
-	private boolean specialAttack;
 
 	public static AttributeConditionArgs forAnySpell(Character caster) {
 		Objects.requireNonNull(caster);

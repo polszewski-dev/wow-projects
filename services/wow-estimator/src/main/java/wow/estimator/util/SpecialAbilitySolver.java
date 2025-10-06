@@ -2,7 +2,7 @@ package wow.estimator.util;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.EventConditionArgs;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.Effect;
@@ -14,7 +14,7 @@ import wow.commons.model.spell.ActivatedAbility;
 import wow.estimator.model.*;
 import wow.estimator.repository.ProcInfoRepository;
 
-import static wow.character.util.AttributeConditionChecker.check;
+import static wow.character.util.EventConditionChecker.check;
 import static wow.commons.model.attribute.AttributeId.CRIT_COEFF_PCT;
 import static wow.commons.model.effect.component.EventType.*;
 
@@ -108,7 +108,7 @@ public class SpecialAbilitySolver {
 		if (event.condition().isEmpty()) {
 			return true;
 		}
-		var args = AttributeConditionArgs.forSpell(player, ability, null);
+		var args = EventConditionArgs.forSpell(player, ability, null);
 		return check(event.condition(), args);
 	}
 

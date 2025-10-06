@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.attribute.AttributeCondition.*;
-import static wow.commons.util.condition.AttributeConditionParser.*;
+import static wow.commons.util.condition.AttributeConditionParser.MISC_CONDITIONS;
+import static wow.commons.util.condition.AttributeConditionParser.OWNER_HEALTH_BELOW_PREFIX;
 
 /**
  * User: POlszewski
@@ -22,74 +23,64 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 		return switch (condition) {
 			case AbilityCategoryCondition(var abilityCategory) ->
 					abilityCategory.getName();
+
 			case AbilityIdCondition(var abilityId) ->
 					abilityId.name();
+
 			case ActionTypeCondition(var actionType) ->
 					actionType.getName();
-			case CanCrit() ->
-					getMiscCondition(condition);
-			case DruidFormCondition(var druidFormType) ->
-					druidFormType.getName();
+
 			case EffectCategoryCondition(var effectCategory) ->
 					effectCategory.toString();
+
 			case EmptyCondition() ->
 					"";
+
 			case HadCrit() ->
 					getMiscCondition(condition);
-			case HadNoCrit() ->
-					getMiscCondition(condition);
-			case HasCastTime() ->
-					getMiscCondition(condition);
+
 			case HasCastTimeUnder10Sec() ->
 					getMiscCondition(condition);
-			case HasDamagingComponent() ->
-					getMiscCondition(condition);
+
 			case HasHealingComponent() ->
 					getMiscCondition(condition);
-			case HasManaCost() ->
-					getMiscCondition(condition);
+
 			case HasPet() ->
 					getMiscCondition(condition);
+
 			case IsDirect() ->
 					getMiscCondition(condition);
-			case IsHostileSpell() ->
-					getMiscCondition(condition);
+
 			case IsInstantCast() ->
 					getMiscCondition(condition);
-			case IsNormalMeleeAttack() ->
-					getMiscCondition(condition);
-			case IsPeriodic() ->
-					getMiscCondition(condition);
-			case IsSpecialAttack() ->
-					getMiscCondition(condition);
-			case IsTargetingOthers() ->
-					getMiscCondition(condition);
+
 			case MovementTypeCondition(var movementType) ->
 					movementType.getName();
+
 			case Operator ignored ->
 					throw new IllegalArgumentException();
-			case OwnerHasEffectCondition(var abilityId) ->
-					OWNER_HAS_EFFECT_PREFIX + abilityId;
+
 			case OwnerHealthBelowPct(var value) ->
 					percentPrefix(OWNER_HEALTH_BELOW_PREFIX, value);
-			case OwnerIsChannelingCondition(var abilityId) ->
-					OWNER_IS_CHANNELING_PREFIX + abilityId;
+
 			case PetTypeCondition(var petType) ->
 					petType.toString();
+
 			case PowerTypeCondition(var powerType) ->
 					powerType.getKey();
+
 			case ProfessionCondition(var professionId) ->
 					professionId.getName();
+
 			case SpellSchoolCondition(var spellSchool) ->
 					spellSchool.getName();
+
 			case TalentTreeCondition(var talentTree) ->
 					talentTree.getName();
-			case TargetClassCondition(var characterClassId) ->
-					TARGET_CLASS_PREFIX + characterClassId;
-			case TargetHealthBelowPct(var value) ->
-					percentPrefix(TARGET_HEALTH_BELOW_PREFIX, value);
+
 			case TargetTypeCondition(var creatureType) ->
 					creatureType.getName();
+
 			case WeaponTypeCondition(var weaponType) ->
 					weaponType.getKey();
 		};

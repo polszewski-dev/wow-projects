@@ -2,7 +2,9 @@ package wow.commons.model.attribute;
 
 import wow.commons.model.Condition;
 import wow.commons.model.categorization.WeaponSubType;
-import wow.commons.model.character.*;
+import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.MovementType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.effect.EffectCategory;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.spell.AbilityCategory;
@@ -27,21 +29,11 @@ public sealed interface AttributeCondition extends Condition {
 	EmptyCondition EMPTY = new EmptyCondition();
 
 	IsDirect IS_DIRECT = new IsDirect();
-	IsPeriodic IS_PERIODIC = new IsPeriodic();
-	HasDamagingComponent HAS_DAMAGING_COMPONENT = new HasDamagingComponent();
 	HasHealingComponent HAS_HEALING_COMPONENT = new HasHealingComponent();
-	IsHostileSpell IS_HOSTILE_SPELL = new IsHostileSpell();
-	IsNormalMeleeAttack IS_NORMAL_MELEE_ATTACK = new IsNormalMeleeAttack();
-	IsSpecialAttack IS_SPECIAL_ATTACK = new IsSpecialAttack();
-	HasManaCost HAS_MANA_COST = new HasManaCost();
-	HasCastTime HAS_CAST_TIME = new HasCastTime();
 	IsInstantCast IS_INSTANT_CAST = new IsInstantCast();
 	HasCastTimeUnder10Sec HAS_CAST_TIME_UNDER_10_SEC = new HasCastTimeUnder10Sec();
-	CanCrit CAN_CRIT = new CanCrit();
 	HadCrit HAD_CRIT = new HadCrit();
-	HadNoCrit HAD_NO_CRIT = new HadNoCrit();
 	HasPet HAS_PET = new HasPet();
-	IsTargetingOthers IS_TARGETING_OTHERS = new IsTargetingOthers();
 
 	static AttributeCondition of(ActionType actionType) {
 		return getCachedValue(actionType, ActionTypeCondition::new);
@@ -77,10 +69,6 @@ public sealed interface AttributeCondition extends Condition {
 
 	static AttributeCondition of(EffectCategory effectCategory) {
 		return getCachedValue(effectCategory, EffectCategoryCondition::new);
-	}
-
-	static AttributeCondition of(DruidFormType druidFormType) {
-		return getCachedValue(druidFormType, DruidFormCondition::new);
 	}
 
 	static AttributeCondition of(WeaponSubType weaponSubType) {
@@ -215,30 +203,6 @@ public sealed interface AttributeCondition extends Condition {
 		}
 	}
 
-	record DruidFormCondition(DruidFormType druidFormType) implements AttributeCondition {
-		public DruidFormCondition {
-			Objects.requireNonNull(druidFormType);
-		}
-	}
-
-	record OwnerHasEffectCondition(AbilityId abilityId) implements AttributeCondition {
-		public OwnerHasEffectCondition {
-			Objects.requireNonNull(abilityId);
-		}
-	}
-
-	record OwnerIsChannelingCondition(AbilityId abilityId) implements AttributeCondition {
-		public OwnerIsChannelingCondition {
-			Objects.requireNonNull(abilityId);
-		}
-	}
-
-	record TargetClassCondition(CharacterClassId characterClassId) implements AttributeCondition {
-		public TargetClassCondition {
-			Objects.requireNonNull(characterClassId);
-		}
-	}
-
 	record WeaponTypeCondition(WeaponSubType weaponType) implements AttributeCondition {
 		public WeaponTypeCondition {
 			Objects.requireNonNull(weaponType);
@@ -259,39 +223,17 @@ public sealed interface AttributeCondition extends Condition {
 
 	record IsDirect() implements AttributeCondition {}
 
-	record IsPeriodic() implements AttributeCondition {}
-
-	record HasDamagingComponent() implements AttributeCondition {}
-
 	record HasHealingComponent() implements AttributeCondition {}
-
-	record IsHostileSpell() implements AttributeCondition {}
-
-	record IsSpecialAttack() implements AttributeCondition {}
-
-	record IsNormalMeleeAttack() implements AttributeCondition {}
-
-	record HasManaCost() implements AttributeCondition {}
-
-	record HasCastTime() implements AttributeCondition {}
 
 	record IsInstantCast() implements AttributeCondition {}
 
 	record HasCastTimeUnder10Sec() implements AttributeCondition {}
 
-	record CanCrit() implements AttributeCondition {}
-
 	record HadCrit() implements AttributeCondition {}
-
-	record HadNoCrit() implements AttributeCondition {}
-
-	record IsTargetingOthers() implements AttributeCondition {}
 
 	record HasPet() implements AttributeCondition {}
 
 	record OwnerHealthBelowPct(int value) implements AttributeCondition {}
-
-	record TargetHealthBelowPct(int value) implements AttributeCondition {}
 }
 
 class AttributeConditionCache extends ConditionCache<AttributeCondition> {

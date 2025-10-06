@@ -3,7 +3,7 @@ package wow.simulator.model.context;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import wow.character.util.AbstractEffectCollector;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.EventConditionArgs;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.Effect;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static wow.character.util.AttributeConditionChecker.check;
+import static wow.character.util.EventConditionChecker.check;
 import static wow.commons.model.effect.component.EventType.*;
 
 /**
@@ -161,10 +161,10 @@ public class EventContext {
 		return caster.getRng().eventRoll(event.chance(), event);
 	}
 
-	private AttributeConditionArgs getConditionArgs(Unit unit) {
+	private EventConditionArgs getConditionArgs(Unit unit) {
 		var args = unit == caster
-				? AttributeConditionArgs.forSpell(caster, spell, target)
-				: AttributeConditionArgs.forSpellTarget(target, spell);
+				? EventConditionArgs.forSpell(caster, spell, target)
+				: EventConditionArgs.forSpellTarget(target, spell);
 
 		args.setHostileSpell(target != null && Unit.areHostile(caster, target));
 

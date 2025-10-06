@@ -13,7 +13,6 @@ public final class AttributeConditionArgsUtil {
 		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target);
 
 		conditionArgs.setPowerType(PowerType.SPELL_DAMAGE);
-		conditionArgs.setHostileSpell(true);
 		return conditionArgs;
 	}
 
@@ -21,18 +20,11 @@ public final class AttributeConditionArgsUtil {
 		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target);
 
 		conditionArgs.setDirect(true);
-		conditionArgs.setCanCrit(true);
-		conditionArgs.setHadCrit(false);
 		return conditionArgs;
 	}
 
 	public static AttributeConditionArgs getPeriodicComponentConditionArgs(Character character, Spell spell, Character target) {
-		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target);
-
-		conditionArgs.setPeriodic(true);
-		conditionArgs.setCanCrit(false);
-		conditionArgs.setHadCrit(false);
-		return conditionArgs;
+		return getDamagingComponentConditionArgs(character, spell, target);
 	}
 
 	public static AttributeConditionArgs getTargetConditionArgs(Character target, Spell spell, PowerType powerType) {

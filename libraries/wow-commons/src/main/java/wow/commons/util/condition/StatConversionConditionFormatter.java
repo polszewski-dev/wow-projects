@@ -16,9 +16,14 @@ public class StatConversionConditionFormatter extends ConditionFormatter<StatCon
 	@Override
 	protected String formatPrimitiveCondition(StatConversionCondition condition) {
 		return switch (condition) {
-			case ActionTypeCondition(var actionType) -> actionType.getName();
-			case EmptyCondition() -> "";
-			case PowerTypeCondition(var powerType) -> powerType.getKey();
+			case ActionTypeCondition(var actionType) ->
+					actionType.getName();
+
+			case EmptyCondition() ->
+					"";
+
+			case PowerTypeCondition(var powerType) ->
+					powerType.getKey();
 		};
 	}
 }

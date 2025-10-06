@@ -72,6 +72,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	public AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school) {
 		var conditionArgs = getTargetConditionArgs(target, spell, powerType);
 
+		conditionArgs.setSpellSchool(school);
+
 		return new AccumulatedTargetStats(conditionArgs);
 	}
 
@@ -592,6 +594,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var conditionArgs = AttributeConditionArgs.forAnySpell(character);
 
 		conditionArgs.setSpellSchool(school);
+
 		return getSpellDamage(character, conditionArgs);
 	}
 

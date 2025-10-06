@@ -1,7 +1,7 @@
 package wow.scraper.parser.spell.params;
 
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.component.EventAction;
+import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.SpellTarget;
 
@@ -15,7 +15,7 @@ import java.util.Objects;
 public record EventParams(
 		SpellTarget target,
 		List<EventType> types,
-		AttributeCondition condition,
+		EventCondition condition,
 		String chancePct,
 		List<EventAction> actions,
 		String cooldown,

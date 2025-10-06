@@ -1,6 +1,5 @@
 package wow.scraper.repository.impl.excel.spell;
 
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
@@ -241,7 +240,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 
 		var target = getTarget(prefix);
 		var eventTypes = colOn.getList(EventType::parse);
-		var condition = colCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
+		var condition = colCondition.getEnum(EventCondition::parse, EventCondition.EMPTY);
 		var chancePct = colChancePct.getString(null);
 		var actions = colAction.getList(EventAction::parse);
 		var cooldown = colCooldown.getString(null);

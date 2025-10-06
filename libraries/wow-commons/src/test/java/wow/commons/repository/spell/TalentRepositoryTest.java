@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.constant.AttributeConditions;
+import wow.commons.constant.EventConditions;
 import wow.commons.constant.StatConversionConditions;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -111,7 +112,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_CRIT),
-				AttributeConditions.SHADOW_BOLT,
+				EventConditions.SHADOW_BOLT,
 				100,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO

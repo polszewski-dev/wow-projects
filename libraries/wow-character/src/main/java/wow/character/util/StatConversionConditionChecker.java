@@ -13,8 +13,10 @@ public final class StatConversionConditionChecker {
 		return switch (condition) {
 			case ActionTypeCondition(var actionType) ->
 					args.getActionType() == actionType;
+
 			case EmptyCondition() ->
 					true;
+
 			case PowerTypeCondition(var powerType) ->
 					args.getPowerType() == powerType;
 		};
