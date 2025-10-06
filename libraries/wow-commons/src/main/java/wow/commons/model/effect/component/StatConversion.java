@@ -1,7 +1,6 @@
 package wow.commons.model.effect.component;
 
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.ValueType;
 
@@ -14,7 +13,7 @@ import java.util.Objects;
 public record StatConversion(
 		AttributeId from,
 		AttributeId to,
-		AttributeCondition toCondition,
+		StatConversionCondition toCondition,
 		Percent ratioPct
 ) implements EffectComponent {
 	public StatConversion {

@@ -5,8 +5,10 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversion;
+import wow.commons.model.effect.component.StatConversionCondition;
 
 import static wow.character.util.AttributeConditionChecker.check;
+import static wow.character.util.StatConversionConditionChecker.check;
 
 /**
  * User: POlszewski
@@ -39,6 +41,12 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	public abstract void accumulateAttribute(AttributeId id, double value);
 
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
+		if (check(condition, conditionArgs)) {
+			accumulateAttribute(id, value);
+		}
+	}
+
+	public void accumulateAttribute(AttributeId id, double value, StatConversionCondition condition) {
 		if (check(condition, conditionArgs)) {
 			accumulateAttribute(id, value);
 		}

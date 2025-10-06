@@ -88,7 +88,7 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		}
 	}
 
-	static void assertStatConversion(Effect effect, int idx, AttributeId from, AttributeId to, AttributeCondition toCondition, int ratio) {
+	static void assertStatConversion(Effect effect, int idx, AttributeId from, AttributeId to, StatConversionCondition toCondition, int ratio) {
 		assertThat(effect.getStatConversions()).hasSizeGreaterThan(idx);
 
 		var statConversion = effect.getStatConversions().get(idx);

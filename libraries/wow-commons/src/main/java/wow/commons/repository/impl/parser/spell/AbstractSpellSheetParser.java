@@ -222,7 +222,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 
 		var from = colStatConversionFrom.prefixed(prefix).getEnum(AttributeId::parse);
 		var to = colStatConversionTo.prefixed(prefix).getEnum(AttributeId::parse);
-		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
+		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(StatConversionCondition::parse, StatConversionCondition.EMPTY);
 		var ratio = colStatConversionRatio.prefixed(prefix).getPercent();
 
 		return new StatConversion(from, to, toCondition, ratio);

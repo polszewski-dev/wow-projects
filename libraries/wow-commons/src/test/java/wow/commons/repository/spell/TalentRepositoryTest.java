@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.constant.AttributeConditions;
+import wow.commons.constant.StatConversionConditions;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -146,7 +147,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var effect = talent.getEffect();
 
 		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(DIVINE_SPIRIT, PRAYER_OF_SPIRIT));
-		assertStatConversion(effect, 0, SPIRIT, POWER, 10, AttributeConditions.SPELL);
+		assertStatConversion(effect, 0, SPIRIT, POWER, 10, StatConversionConditions.SPELL);
 	}
 
 	@Test
@@ -154,8 +155,8 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var talent = getTalent(WARLOCK, DEMONIC_KNOWLEDGE, 3, TBC_P5);
 		var effect = talent.getEffect();
 
-		assertStatConversion(effect, 0, PET_STAMINA, POWER, 12, AttributeConditions.SPELL_DAMAGE);
-		assertStatConversion(effect, 1, PET_INTELLECT, POWER, 12, AttributeConditions.SPELL_DAMAGE);
+		assertStatConversion(effect, 0, PET_STAMINA, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
+		assertStatConversion(effect, 1, PET_INTELLECT, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
 	}
 
 	@Test

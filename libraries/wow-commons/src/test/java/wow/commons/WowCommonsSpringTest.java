@@ -55,7 +55,7 @@ public abstract class WowCommonsSpringTest {
 		assertThat(effect.getModifierAttributeList()).isEqualTo(attributes);
 	}
 
-	protected static void assertStatConversion(Effect effect, int idx, AttributeId from, AttributeId to, int ratio, AttributeCondition toCondition) {
+	protected static void assertStatConversion(Effect effect, int idx, AttributeId from, AttributeId to, int ratio, StatConversionCondition toCondition) {
 		assertThat(effect.getStatConversions()).hasSizeGreaterThan(idx);
 
 		var statConversion = effect.getStatConversions().get(idx);

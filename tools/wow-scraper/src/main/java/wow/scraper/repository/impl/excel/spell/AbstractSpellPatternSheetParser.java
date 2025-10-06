@@ -2,10 +2,7 @@ package wow.scraper.repository.impl.excel.spell;
 
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.effect.component.AbsorptionCondition;
-import wow.commons.model.effect.component.ComponentType;
-import wow.commons.model.effect.component.EventAction;
-import wow.commons.model.effect.component.EventType;
+import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
 import wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames;
 import wow.scraper.parser.spell.SpellPatternType;
@@ -223,7 +220,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var target = getTarget(prefix);
 		var from = colStatConversionFrom.prefixed(prefix).getEnum(AttributeId::parse);
 		var to = colStatConversionTo.prefixed(prefix).getEnum(AttributeId::parse);
-		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
+		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(StatConversionCondition::parse, StatConversionCondition.EMPTY);
 		var ratio = colStatConversionRatio.prefixed(prefix).getString();
 
 		return new StatConversionParams(target, from, to, toCondition, ratio);

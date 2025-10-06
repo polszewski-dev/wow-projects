@@ -9,6 +9,7 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
+import wow.commons.model.effect.component.StatConversionCondition;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.component.DirectComponent;
 
@@ -73,6 +74,21 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
+		cast.accumulateAttribute(id, value, condition);
+		cost.accumulateAttribute(id, value, condition);
+		hit.accumulateAttribute(id, value, condition);
+
+		if (direct != null) {
+			direct.accumulateAttribute(id, value, condition);
+		}
+
+		if (periodic != null) {
+			periodic.accumulateAttribute(id, value, condition);
+			effectDuration.accumulateAttribute(id, value, condition);
+		}
+	}
+
+	public void accumulateAttribute(AttributeId id, double value, StatConversionCondition condition) {
 		cast.accumulateAttribute(id, value, condition);
 		cost.accumulateAttribute(id, value, condition);
 		hit.accumulateAttribute(id, value, condition);
