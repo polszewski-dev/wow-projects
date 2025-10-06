@@ -1,6 +1,6 @@
 package wow.scraper.parser.spell.params;
 
-import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.spell.Coefficient;
 import wow.commons.model.spell.SpellTarget;
 
@@ -13,7 +13,7 @@ import java.util.Objects;
 public record AbsorptionComponentParams(
 		SpellTarget target,
 		Coefficient coefficient,
-		AttributeCondition condition,
+		AbsorptionCondition condition,
 		String min,
 		String max
 ) {

@@ -5,16 +5,18 @@ import wow.commons.model.attribute.Attributes;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
 import wow.commons.util.AttributesFormater;
+import wow.commons.util.condition.AbsorptionConditionFormatter;
+import wow.commons.util.condition.AttributeConditionFormatter;
 import wow.scraper.config.ScraperConfig;
 import wow.scraper.config.ScraperDatafixes;
 
 import java.util.List;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
-import static wow.commons.util.condition.AttributeConditionFormatter.formatCondition;
 
 /**
  * User: POlszewski
@@ -116,7 +118,11 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 	}
 
 	protected void setValue(AttributeCondition condition) {
-		setValue(formatCondition(condition));
+		setValue(AttributeConditionFormatter.formatCondition(condition));
+	}
+
+	protected void setValue(AbsorptionCondition condition) {
+		setValue(AbsorptionConditionFormatter.formatCondition(condition));
 	}
 
 	protected void setValue(AbilityId abilityId) {

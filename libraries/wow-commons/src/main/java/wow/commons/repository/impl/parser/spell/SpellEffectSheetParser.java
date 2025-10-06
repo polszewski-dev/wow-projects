@@ -1,11 +1,11 @@
 package wow.commons.repository.impl.parser.spell;
 
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectExclusionGroup;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.EffectScope;
 import wow.commons.model.effect.component.AbsorptionComponent;
+import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.SpellSchool;
@@ -114,7 +114,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		}
 
 		var coefficient = getCoefficient(ABSORB_PREFIX);
-		var condition = colAbsorbCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
+		var condition = colAbsorbCondition.getEnum(AbsorptionCondition::parse, AbsorptionCondition.EMPTY);
 		var min = colAbsorbMin.getInteger();
 		var max = colAbsorbMax.getInteger();
 

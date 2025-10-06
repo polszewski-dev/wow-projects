@@ -1,6 +1,5 @@
 package wow.commons.model.effect.component;
 
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.spell.Coefficient;
 
 import java.util.Objects;
@@ -11,7 +10,7 @@ import java.util.Objects;
  */
 public record AbsorptionComponent(
 		Coefficient coefficient,
-		AttributeCondition condition,
+		AbsorptionCondition condition,
 		int min,
 		int max
 ) implements EffectComponent {

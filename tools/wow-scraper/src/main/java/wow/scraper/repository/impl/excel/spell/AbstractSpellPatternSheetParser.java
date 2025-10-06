@@ -2,6 +2,7 @@ package wow.scraper.repository.impl.excel.spell;
 
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
@@ -193,7 +194,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 
 		var target = getTarget(prefix);
 		var coeff = getCoefficient(prefix);
-		var condition = colCondition.getEnum(AttributeCondition::parse, AttributeCondition.EMPTY);
+		var condition = colCondition.getEnum(AbsorptionCondition::parse, AbsorptionCondition.EMPTY);
 		var min = colMin.getString();
 		var max = colMax.getString();
 

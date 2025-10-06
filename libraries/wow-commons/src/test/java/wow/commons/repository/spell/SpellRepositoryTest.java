@@ -19,6 +19,7 @@ import wow.commons.model.config.TalentRestriction;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
+import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
@@ -259,7 +260,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var absorptionComponent = effect.getAbsorptionComponent();
 
 		assertCoefficient(absorptionComponent.coefficient(), 30, SHADOW);
-		assertThat(absorptionComponent.condition()).isEqualTo(AttributeConditions.SHADOW);
+		assertThat(absorptionComponent.condition()).isEqualTo(AbsorptionCondition.of(SHADOW));
 		assertThat(absorptionComponent.min()).isEqualTo(875);
 		assertThat(absorptionComponent.max()).isEqualTo(875);
 	}
