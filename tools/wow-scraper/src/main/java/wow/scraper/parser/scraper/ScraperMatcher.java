@@ -1,5 +1,6 @@
 package wow.scraper.parser.scraper;
 
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -79,6 +80,10 @@ public abstract class ScraperMatcher<P extends ScraperPattern<Q>, Q extends Scra
 
 	protected Optional<Duration> getOptionalDuration(String pattern) {
 		return getOptional(pattern, Duration::parse);
+	}
+
+	protected Optional<AnyDuration> getOptionalAnyDuration(String pattern) {
+		return getOptional(pattern, AnyDuration::parse);
 	}
 
 	protected Optional<Percent> getOptionalPercent(String pattern) {

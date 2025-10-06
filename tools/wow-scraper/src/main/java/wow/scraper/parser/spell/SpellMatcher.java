@@ -269,7 +269,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 
 		var target = getEffectTarget(effectApplication.effect()).orElseThrow();
 		var effect = getEffect(effectApplication.effect());
-		var duration = getOptionalDuration(effectApplication.duration()).orElseThrow();
+		var duration = getOptionalAnyDuration(effectApplication.duration()).orElseThrow();
 		var numStacks = getOptionalInteger(effectApplication.numStacks()).orElse(1);
 		var numCharges = getOptionalInteger(effectApplication.numCharges()).orElse(1);
 		var replacementMode = EffectReplacementMode.DEFAULT;
