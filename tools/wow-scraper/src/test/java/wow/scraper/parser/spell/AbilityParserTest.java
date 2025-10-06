@@ -3,9 +3,11 @@ package wow.scraper.parser.spell;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.effect.component.EventType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spell.*;
+import wow.scraper.constant.AttributeConditions;
 import wow.scraper.parser.spell.ability.AbilityMatcher;
 
 import java.util.List;
@@ -17,7 +19,6 @@ import static wow.commons.model.effect.component.ComponentType.DAMAGE;
 import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.OWNER_ATTACKED;
-import static wow.commons.model.effect.component.EventType.SPELL_DAMAGE;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.scraper.constant.AbilityIds.*;
@@ -92,7 +93,7 @@ class AbilityParserTest extends SpellParserTest {
 
 		assertModifier(effect, List.of(
 				Attribute.of(ARMOR, 660),
-				Attribute.of(RESISTANCE, 18, AttributeCondition.of(SHADOW)),
+				Attribute.of(RESISTANCE, 18, AttributeConditions.SHADOW),
 				Attribute.of(HP5, 18)
 		));
 	}
@@ -107,8 +108,8 @@ class AbilityParserTest extends SpellParserTest {
 
 		assertEvent(
 				event,
-				List.of(SPELL_DAMAGE),
-				AttributeCondition.of(SHADOW),
+				List.of(EventType.SPELL_DAMAGE),
+				AttributeConditions.SHADOW,
 				100,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO

@@ -3,7 +3,6 @@ package wow.scraper.parser.spell;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.SpellTarget;
@@ -12,6 +11,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.scraper.constant.AttributeConditions.HEALING;
+import static wow.scraper.constant.AttributeConditions.*;
 
 /**
  * User: POlszewski
@@ -27,8 +28,8 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 		var effect = spell.getEffectApplication().effect();
 
 		assertModifier(effect, List.of(
-				Attribute.of(POWER, 50, MiscCondition.SPELL_DAMAGE),
-				Attribute.of(PENETRATION, 100, MiscCondition.SPELL)
+				Attribute.of(POWER, 50, SPELL_DAMAGE),
+				Attribute.of(PENETRATION, 100, SPELL)
 		));
 
 		assertDuration(spell.getCooldown(), Duration.minutes(3));
@@ -43,8 +44,8 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 		var effect = spell.getEffectApplication().effect();
 
 		assertModifier(effect, List.of(
-				Attribute.of(POWER, 100, MiscCondition.SPELL_DAMAGE),
-				Attribute.of(POWER, 190, MiscCondition.HEALING)
+				Attribute.of(POWER, 100, SPELL_DAMAGE),
+				Attribute.of(POWER, 190, HEALING)
 		));
 		assertDuration(spell.getCooldown(), 75);
 	}
@@ -58,7 +59,7 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 		var effect = spell.getEffectApplication().effect();
 
 		assertModifier(effect, List.of(
-				Attribute.of(POWER, 250, MiscCondition.SPELL),
+				Attribute.of(POWER, 250, SPELL),
 				Attribute.of(MANA_COST_PCT, 20)
 		));
 		assertDuration(spell.getCooldown(), Duration.minutes(5));

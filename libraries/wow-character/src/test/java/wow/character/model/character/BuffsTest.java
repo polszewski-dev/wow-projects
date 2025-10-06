@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
+import static wow.character.constant.AttributeConditions.SPELL_DAMAGE;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.commons.model.attribute.AttributeId.HEALTH_GENERATED_PCT;
 import static wow.commons.model.attribute.AttributeId.POWER;
-import static wow.commons.model.attribute.condition.MiscCondition.SPELL_DAMAGE;
 import static wow.test.commons.BuffNames.*;
 import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
 

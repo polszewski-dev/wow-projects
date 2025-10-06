@@ -1,9 +1,9 @@
 package wow.scraper.parser.tooltip;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
 import wow.scraper.ScraperSpringTest;

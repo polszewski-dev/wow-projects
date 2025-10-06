@@ -2,11 +2,7 @@ package wow.commons.util;
 
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.AttributeScaling;
-import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.*;
 import wow.commons.model.talent.TalentTree;
 
 import java.util.regex.Pattern;

@@ -3,8 +3,8 @@ package wow.commons.client.util;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

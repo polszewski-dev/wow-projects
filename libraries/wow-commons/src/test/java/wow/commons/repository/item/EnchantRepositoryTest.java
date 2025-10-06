@@ -3,9 +3,9 @@ package wow.commons.repository.item;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.constant.AttributeConditions;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.EnchantId;
 import wow.commons.model.item.EnchantSource;
@@ -48,7 +48,7 @@ class EnchantRepositoryTest extends WowCommonsSpringTest {
 		assertEffect(
 				enchant.getEffect(),
 				Attributes.of(
-						Attribute.of(POWER, 35, MiscCondition.SPELL),
+						Attribute.of(POWER, 35, AttributeConditions.SPELL),
 						Attribute.of(STAMINA, 20)
 				),
 				"Use: Permanently embroiders spellthread into pants, increasing spell damage and healing by up to 35 and Stamina by 20.",

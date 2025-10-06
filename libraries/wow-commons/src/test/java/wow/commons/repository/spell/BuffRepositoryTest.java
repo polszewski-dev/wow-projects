@@ -6,9 +6,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.constant.AttributeConditions;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.condition.ConditionOperator;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.buff.BuffExclusionGroup;
 import wow.commons.model.buff.BuffType;
 import wow.commons.model.pve.PhaseId;
@@ -21,7 +21,6 @@ import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.buff.BuffCategory.RAID_BUFF;
 import static wow.commons.model.categorization.PveRole.CASTER_DPS;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.spell.SpellSchool.*;
 import static wow.test.commons.BuffNames.ARCANE_BRILLIANCE;
 import static wow.test.commons.BuffNames.CURSE_OF_THE_ELEMENTS;
 
@@ -48,17 +47,17 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(RAID_BUFF));
 
 		assertModifier(buff.getEffect(), List.of(
-				Attribute.of(RESISTANCE, -88, ConditionOperator.comma(
-						AttributeCondition.of(ARCANE),
-						AttributeCondition.of(FIRE),
-						AttributeCondition.of(FROST),
-						AttributeCondition.of(SHADOW)
+				Attribute.of(RESISTANCE, -88, AttributeCondition.comma(
+						AttributeConditions.ARCANE,
+						AttributeConditions.FIRE,
+						AttributeConditions.FROST,
+						AttributeConditions.SHADOW
 				)),
-				Attribute.of(DAMAGE_TAKEN_PCT, 10, ConditionOperator.comma(
-						AttributeCondition.of(ARCANE),
-						AttributeCondition.of(FIRE),
-						AttributeCondition.of(FROST),
-						AttributeCondition.of(SHADOW)
+				Attribute.of(DAMAGE_TAKEN_PCT, 10, AttributeCondition.comma(
+						AttributeConditions.ARCANE,
+						AttributeConditions.FIRE,
+						AttributeConditions.FROST,
+						AttributeConditions.SHADOW
 				))
 		 ));
 	}

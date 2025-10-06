@@ -2,7 +2,6 @@ package wow.scraper.parser.spell;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.pve.GameVersionId;
 
@@ -12,6 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.scraper.constant.AbilityIds.BATTLE_SHOUT;
 import static wow.scraper.constant.AbilityIds.LIGHTNING_SHIELD;
+import static wow.scraper.constant.AttributeConditions.HEALING;
+import static wow.scraper.constant.AttributeConditions.PHYSICAL;
 
 /**
  * User: POlszewski
@@ -36,7 +37,7 @@ class MiscEffectParserTest extends SpellParserTest {
 		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of((BATTLE_SHOUT)));
 
 		assertModifier(effect, List.of(
-				Attribute.of(POWER, 70, MiscCondition.PHYSICAL)
+				Attribute.of(POWER, 70, PHYSICAL)
 		));
 	}
 
@@ -44,7 +45,7 @@ class MiscEffectParserTest extends SpellParserTest {
 	void statConversion() {
 		var effect = parse("Increases healing by up to 10% of your total Intellect.");
 
-		assertStatConversion(effect, 0, INTELLECT, POWER, MiscCondition.HEALING, 10);
+		assertStatConversion(effect, 0, INTELLECT, POWER, HEALING, 10);
 	}
 
 	private Effect parse(String line) {

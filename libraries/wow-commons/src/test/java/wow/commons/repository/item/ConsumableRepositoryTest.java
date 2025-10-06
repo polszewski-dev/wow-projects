@@ -3,11 +3,11 @@ package wow.commons.repository.item;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.constant.AttributeConditions;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.GroupCooldownId;
@@ -43,8 +43,8 @@ class ConsumableRepositoryTest extends WowCommonsSpringTest {
 		assertEffect(
 				consumable.getActivatedAbility().getAppliedEffect(),
 				Attributes.of(
-						Attribute.of(AttributeId.CRIT_PCT, 2, MiscCondition.SPELL),
-						Attribute.of(AttributeId.POWER, 120, MiscCondition.SPELL_DAMAGE)
+						Attribute.of(AttributeId.CRIT_PCT, 2, AttributeConditions.SPELL),
+						Attribute.of(AttributeId.POWER, 120, AttributeConditions.SPELL_DAMAGE)
 				),
 				"Spell Critical increased by 2% and spell damage increased by 120.",
 				null

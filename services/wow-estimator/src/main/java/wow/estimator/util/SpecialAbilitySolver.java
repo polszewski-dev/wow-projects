@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.Duration;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventType;

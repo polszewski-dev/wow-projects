@@ -2,9 +2,9 @@ package wow.estimator.util;
 
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.config.Described;
 import wow.commons.model.effect.Effect;

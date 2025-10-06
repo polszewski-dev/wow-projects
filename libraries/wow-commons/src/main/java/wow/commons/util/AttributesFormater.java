@@ -6,8 +6,8 @@ import wow.commons.model.attribute.Attributes;
 
 import static java.util.stream.Collectors.joining;
 import static wow.commons.model.attribute.AttributeScaling.*;
-import static wow.commons.model.attribute.condition.AttributeConditionFormatter.formatCondition;
 import static wow.commons.util.FormatUtil.decimalPointOnlyIfNecessary;
+import static wow.commons.util.condition.AttributeConditionFormatter.formatCondition;
 
 /**
  * User: POlszewski

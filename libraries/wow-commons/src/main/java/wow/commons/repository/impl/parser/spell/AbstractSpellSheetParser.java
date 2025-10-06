@@ -2,8 +2,8 @@ package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EffectImpl;

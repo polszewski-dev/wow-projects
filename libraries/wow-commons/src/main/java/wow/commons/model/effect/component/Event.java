@@ -1,7 +1,7 @@
 package wow.commons.model.effect.component;
 
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.spell.Spell;
 
 import java.util.List;

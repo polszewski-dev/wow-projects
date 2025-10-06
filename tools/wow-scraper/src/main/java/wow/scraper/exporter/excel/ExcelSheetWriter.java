@@ -1,7 +1,7 @@
 package wow.scraper.exporter.excel;
 
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
@@ -14,6 +14,7 @@ import wow.scraper.config.ScraperDatafixes;
 import java.util.List;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
+import static wow.commons.util.condition.AttributeConditionFormatter.formatCondition;
 
 /**
  * User: POlszewski
@@ -115,7 +116,7 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 	}
 
 	protected void setValue(AttributeCondition condition) {
-		setValue(condition.toString());
+		setValue(formatCondition(condition));
 	}
 
 	protected void setValue(AbilityId abilityId) {

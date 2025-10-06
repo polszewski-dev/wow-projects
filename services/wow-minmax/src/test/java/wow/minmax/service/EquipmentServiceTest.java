@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static wow.commons.model.attribute.AttributeId.POWER;
-import static wow.commons.model.attribute.condition.MiscCondition.SPELL;
 import static wow.commons.model.categorization.ItemSlot.*;
+import static wow.minmax.constant.AttributeConditions.SPELL;
 
 /**
  * User: POlszewski

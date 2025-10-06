@@ -5,13 +5,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.constant.AttributeConditions;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeScaling;
-import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.condition.ConditionOperator;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.pve.PhaseId;
@@ -22,7 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.DIVINE_SPIRIT;
-import static wow.commons.constant.AbilityIds.*;
+import static wow.commons.constant.AbilityIds.PRAYER_OF_SPIRIT;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
@@ -30,7 +29,6 @@ import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.SPELL_CRIT;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentTree.AFFLICTION;
 import static wow.test.commons.TalentNames.*;
 
@@ -70,7 +68,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		Talent talent = getTalent(WARLOCK, IMPROVED_CORRUPTION, rank, TBC_P5);
 
 		assertModifier(talent.getEffect(), List.of(
-				Attribute.of(CAST_TIME, value, AttributeCondition.of(CORRUPTION))
+				Attribute.of(CAST_TIME, value, AttributeConditions.CORRUPTION)
 		));
 	}
 
@@ -112,7 +110,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_CRIT),
-				AttributeCondition.of(SHADOW_BOLT),
+				AttributeConditions.SHADOW_BOLT,
 				100,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO
@@ -125,7 +123,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var appliedEffect = spell.getEffectApplication().effect();
 
 		assertModifier(appliedEffect, List.of(
-				Attribute.of(DAMAGE_TAKEN_PCT, rank * 4, AttributeCondition.of(SHADOW))
+				Attribute.of(DAMAGE_TAKEN_PCT, rank * 4, AttributeConditions.SHADOW)
 		));
 	}
 
@@ -134,11 +132,11 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var talent = getTalent(WARLOCK, BANE, 5, TBC_P5);
 
 		assertModifier(talent.getEffect(), List.of(
-				Attribute.of(CAST_TIME, -0.5, ConditionOperator.comma(
-						AttributeCondition.of(SHADOW_BOLT),
-						AttributeCondition.of(IMMOLATE)
+				Attribute.of(CAST_TIME, -0.5, AttributeCondition.comma(
+						AttributeConditions.SHADOW_BOLT,
+						AttributeConditions.IMMOLATE
 				)),
-				Attribute.of(CAST_TIME, -2, AttributeCondition.of(SOUL_FIRE))
+				Attribute.of(CAST_TIME, -2, AttributeConditions.SOUL_FIRE)
 		));
 	}
 
@@ -148,7 +146,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var effect = talent.getEffect();
 
 		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(DIVINE_SPIRIT, PRAYER_OF_SPIRIT));
-		assertStatConversion(effect, 0, SPIRIT, POWER, 10, MiscCondition.SPELL);
+		assertStatConversion(effect, 0, SPIRIT, POWER, 10, AttributeConditions.SPELL);
 	}
 
 	@Test
@@ -156,8 +154,8 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var talent = getTalent(WARLOCK, DEMONIC_KNOWLEDGE, 3, TBC_P5);
 		var effect = talent.getEffect();
 
-		assertStatConversion(effect, 0, PET_STAMINA, POWER, 12, MiscCondition.SPELL_DAMAGE);
-		assertStatConversion(effect, 1, PET_INTELLECT, POWER, 12, MiscCondition.SPELL_DAMAGE);
+		assertStatConversion(effect, 0, PET_STAMINA, POWER, 12, AttributeConditions.SPELL_DAMAGE);
+		assertStatConversion(effect, 1, PET_INTELLECT, POWER, 12, AttributeConditions.SPELL_DAMAGE);
 	}
 
 	@Test
@@ -167,7 +165,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var effectIncrease = effect.getModifierAttributeList().getFirst();
 
 		assertThat(effectIncrease.id()).isEqualTo(DAMAGE_PCT);
-		assertThat(effectIncrease.condition()).isEqualTo(AttributeCondition.of(DRAIN_LIFE));
+		assertThat(effectIncrease.condition()).isEqualTo(AttributeConditions.DRAIN_LIFE);
 		assertThat(effectIncrease.value()).isEqualTo(4);
 		assertThat(effectIncrease.scaling()).isEqualTo(new AttributeScaling.NumberOfEffectsOnTarget(
 				AFFLICTION, Percent.of(60)

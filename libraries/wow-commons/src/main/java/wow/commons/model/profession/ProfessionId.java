@@ -1,6 +1,7 @@
 package wow.commons.model.profession;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
@@ -8,6 +9,7 @@ import wow.commons.util.EnumUtil;
  * Date: 2020-07-14
  */
 @AllArgsConstructor
+@Getter
 public enum ProfessionId {
 	ENCHANTING("Enchanting"),
 	JEWELCRAFTING("Jewelcrafting"),

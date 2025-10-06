@@ -1,9 +1,9 @@
 package wow.estimator.util;
 
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScaling;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.Effect;
 
 import java.util.Arrays;

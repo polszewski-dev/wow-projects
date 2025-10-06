@@ -25,6 +25,7 @@ public interface AbilityIds {
 	AbilityId SHADOW_BOLT = AbilityId.of(AbilityNames.SHADOW_BOLT);
 	AbilityId SOUL_FIRE = AbilityId.of(AbilityNames.SOUL_FIRE);
 	AbilityId TOUCH_OF_WEAKNESS = AbilityId.of(AbilityNames.TOUCH_OF_WEAKNESS);
+	AbilityId MANA_SHIELD = AbilityId.of(AbilityNames.MANA_SHIELD);
 
 	void doNotImplementThis();
 }

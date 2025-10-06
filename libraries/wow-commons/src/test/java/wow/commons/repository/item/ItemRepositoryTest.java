@@ -3,8 +3,7 @@ package wow.commons.repository.item;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
-import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.condition.ConditionOperator;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
@@ -14,9 +13,8 @@ import wow.commons.model.item.SocketType;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.constant.AttributeConditions.*;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.attribute.condition.MiscCondition.SPELL;
-import static wow.commons.model.attribute.condition.MiscCondition.SPELL_DAMAGE;
 import static wow.commons.model.categorization.ArmorSubType.CLOTH;
 import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
 import static wow.commons.model.categorization.ItemRarity.EPIC;
@@ -24,7 +22,6 @@ import static wow.commons.model.categorization.ItemType.CHEST;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.pve.PhaseId.VANILLA_P6;
-import static wow.commons.model.spell.SpellSchool.SHADOW;
 
 /**
  * User: POlszewski
@@ -120,7 +117,7 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(item.getEffects()).hasSize(2);
 		assertEffect(item.getEffects().get(0), POWER, 7, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 7.", source);
-		assertEffect(item.getEffects().get(1), POWER, 21, ConditionOperator.and(SPELL_DAMAGE, AttributeCondition.of(SHADOW)), "+21 Shadow Spell Damage", source);
+		assertEffect(item.getEffects().get(1), POWER, 21, AttributeCondition.and(SPELL_DAMAGE, SHADOW), "+21 Shadow Spell Damage", source);
 	}
 
 	@Test

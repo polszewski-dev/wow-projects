@@ -1,7 +1,7 @@
 package wow.scraper.repository.impl.excel.spell;
 
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;

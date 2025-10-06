@@ -3,7 +3,7 @@ package wow.commons.repository.item;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
-import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.constant.AttributeConditions;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.GemColor;
 import wow.commons.model.item.GemId;
@@ -63,8 +63,8 @@ class GemRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(gem.getEffects()).hasSize(2);
 
-		assertEffect(gem.getEffects().get(0), HASTE_RATING, 5, MiscCondition.SPELL, "+5 Spell Haste Rating", source);
-		assertEffect(gem.getEffects().get(1), POWER, 6, MiscCondition.SPELL_DAMAGE, "+6 Spell Damage", source);
+		assertEffect(gem.getEffects().get(0), HASTE_RATING, 5, AttributeConditions.SPELL, "+5 Spell Haste Rating", source);
+		assertEffect(gem.getEffects().get(1), POWER, 6, AttributeConditions.SPELL_DAMAGE, "+6 Spell Damage", source);
 	}
 
 	/*
@@ -88,7 +88,7 @@ class GemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(gem.getMetaEnablers()).hasSameElementsAs(List.of(MetaEnabler.AT_LEAST_2_BLUES));
 
 		assertThat(gem.getEffects()).hasSize(2);
-		assertEffect(gem.getEffects().get(0), CRIT_RATING, 12, MiscCondition.SPELL, "+12 Spell Critical", source);
+		assertEffect(gem.getEffects().get(0), CRIT_RATING, 12, AttributeConditions.SPELL, "+12 Spell Critical", source);
 		assertEffect(gem.getEffects().get(1), CRIT_DAMAGE_PCT, 3, "3% Increased Critical Damage", source);
 	}
 }

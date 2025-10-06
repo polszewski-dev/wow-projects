@@ -1,7 +1,5 @@
 package wow.commons.model.attribute;
 
-import wow.commons.model.attribute.condition.AttributeCondition;
-
 import java.util.Objects;
 
 /**

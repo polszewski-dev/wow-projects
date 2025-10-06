@@ -6,12 +6,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.constant.AbilityIds;
+import wow.commons.constant.AttributeConditions;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.condition.ConditionOperator;
-import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
@@ -38,7 +37,6 @@ import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.SPELL_CAST;
 import static wow.commons.model.effect.component.EventType.SPELL_HIT;
 import static wow.commons.model.pve.PhaseId.*;
-import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
 import static wow.test.commons.AbilityNames.*;
@@ -244,11 +242,11 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(effect.getName()).isEqualTo("Amplify Curse");
 
 		assertModifier(effect, List.of(
-				Attribute.of(EFFECT_PCT, 50, ConditionOperator.comma(
-						AttributeCondition.of(AbilityIds.CURSE_OF_DOOM),
-						AttributeCondition.of(AbilityIds.CURSE_OF_AGONY)
+				Attribute.of(EFFECT_PCT, 50, AttributeCondition.comma(
+						AttributeConditions.CURSE_OF_DOOM,
+						AttributeConditions.CURSE_OF_AGONY
 				)),
-				Attribute.of(EFFECT_PCT, 20, AttributeCondition.of(AbilityIds.CURSE_OF_EXHAUSTION))
+				Attribute.of(EFFECT_PCT, 20, AttributeConditions.CURSE_OF_EXHAUSTION)
 		));
 	}
 
@@ -261,7 +259,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var absorptionComponent = effect.getAbsorptionComponent();
 
 		assertCoefficient(absorptionComponent.coefficient(), 30, SHADOW);
-		assertThat(absorptionComponent.condition()).isEqualTo(AttributeCondition.of(SHADOW));
+		assertThat(absorptionComponent.condition()).isEqualTo(AttributeConditions.SHADOW);
 		assertThat(absorptionComponent.min()).isEqualTo(875);
 		assertThat(absorptionComponent.max()).isEqualTo(875);
 	}
@@ -275,10 +273,10 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var event = effect.getEvents().getFirst();
 
 		assertThat(event.types()).isEqualTo(List.of(SPELL_CAST));
-		assertThat(event.condition()).isEqualTo(ConditionOperator.comma(
-				AttributeCondition.of(AbilityIds.CURSE_OF_DOOM),
-				AttributeCondition.of(AbilityIds.CURSE_OF_AGONY),
-				AttributeCondition.of(AbilityIds.CURSE_OF_EXHAUSTION)
+		assertThat(event.condition()).isEqualTo(AttributeCondition.comma(
+				AttributeConditions.CURSE_OF_DOOM,
+				AttributeConditions.CURSE_OF_AGONY,
+				AttributeConditions.CURSE_OF_EXHAUSTION
 		));
 		assertThat(event.chance()).isEqualTo(Percent._100);
 		assertThat(event.actions()).isEqualTo(List.of(REMOVE_CHARGE));
@@ -333,7 +331,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertId(effect, 132483);
 		assertModifier(effect, List.of(
-			Attribute.of(HASTE_RATING, 175, MiscCondition.SPELL)
+			Attribute.of(HASTE_RATING, 175, AttributeConditions.SPELL)
 		));
 	}
 
@@ -351,7 +349,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_HIT),
-				MiscCondition.HOSTILE_SPELL,
+				AttributeCondition.IS_HOSTILE_SPELL,
 				10,
 				List.of(TRIGGER_SPELL),
 				Duration.seconds(45)
@@ -367,7 +365,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(spell, SpellTarget.SELF, 6, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
-				Attribute.of(HASTE_RATING, 320, MiscCondition.SPELL)
+				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
 		));
 	}
 
@@ -385,7 +383,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_HIT),
-				AttributeCondition.of(SHADOW),
+				AttributeConditions.SHADOW,
 				5,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO
@@ -401,9 +399,9 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(spell, SpellTarget.SELF, 15, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
-				Attribute.of(POWER, 135, ConditionOperator.and(
-						MiscCondition.SPELL_DAMAGE,
-						AttributeCondition.of(SHADOW)
+				Attribute.of(POWER, 135, AttributeCondition.and(
+						AttributeConditions.SPELL_DAMAGE,
+						AttributeConditions.SHADOW
 				))
 		));
 	}
@@ -422,7 +420,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertEvent(
 				event,
 				List.of(SPELL_HIT),
-				AttributeCondition.of(FIRE),
+				AttributeConditions.FIRE,
 				5,
 				List.of(TRIGGER_SPELL),
 				Duration.ZERO
@@ -438,9 +436,9 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(spell, SpellTarget.SELF, 15, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
-				Attribute.of(POWER, 135, ConditionOperator.and(
-						MiscCondition.SPELL_DAMAGE,
-						AttributeCondition.of(FIRE)
+				Attribute.of(POWER, 135, AttributeCondition.and(
+						AttributeConditions.SPELL_DAMAGE,
+						AttributeConditions.FIRE
 				))
 		));
 	}
@@ -503,7 +501,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(spell, SpellTarget.SELF, 6, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
-				Attribute.of(HASTE_RATING, 320, MiscCondition.SPELL)
+				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
 		));
 	}
 
@@ -526,8 +524,8 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var effect = ability.getEffectApplication().effect();
 
 		assertModifier(effect, List.of(
-				Attribute.of(POWER, 3, MiscCondition.SPELL, new LevelScalingByFactor(2)),
-				Attribute.of(POWER, 2, MiscCondition.PHYSICAL, new LevelScalingByFactor(4)),
+				Attribute.of(POWER, 3, AttributeConditions.SPELL, new LevelScalingByFactor(2)),
+				Attribute.of(POWER, 2, AttributeConditions.PHYSICAL, new LevelScalingByFactor(4)),
 				Attribute.of(HEALING_TAKEN_PCT, -50)
 		));
 	}

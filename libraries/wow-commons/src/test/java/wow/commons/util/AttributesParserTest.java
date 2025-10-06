@@ -4,18 +4,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.ConditionOperator;
 import wow.commons.model.talent.TalentTree;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.constant.AttributeConditions.PHYSICAL;
+import static wow.commons.constant.AttributeConditions.SPELL;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.attribute.AttributeScaling.*;
-import static wow.commons.model.attribute.condition.MiscCondition.PHYSICAL;
-import static wow.commons.model.attribute.condition.MiscCondition.SPELL;
 
 /**
  * User: POlszewski
@@ -65,7 +65,7 @@ class AttributesParserTest {
 			new TestData("10 Power%", Attribute.of(POWER_PCT, 10)),
 			new TestData("10 Party.Power", Attribute.of(PARTY_POWER, 10)),
 			new TestData("10 Power [Spell]", Attribute.of(POWER, 10, SPELL)),
-			new TestData("10 Power [Spell | Physical]", Attribute.of(POWER, 10, ConditionOperator.or(SPELL, PHYSICAL))),
+			new TestData("10 Power [Spell | Physical]", Attribute.of(POWER, 10, AttributeCondition.or(SPELL, PHYSICAL))),
 			new TestData("10 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, LEVEL)),
 			new TestData("10 + 0.5 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, new LevelScalingByFactor(0.5))),
 			new TestData(

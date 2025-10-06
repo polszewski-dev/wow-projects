@@ -3,7 +3,6 @@ package wow.scraper.parser.tooltip;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.MetaEnabler;
 import wow.scraper.model.JsonItemDetails;
@@ -19,6 +18,8 @@ import static wow.commons.model.item.GemColor.*;
 import static wow.commons.model.profession.ProfessionId.JEWELCRAFTING;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.*;
+import static wow.scraper.constant.AttributeConditions.SPELL;
+import static wow.scraper.constant.AttributeConditions.SPELL_DAMAGE;
 import static wow.scraper.model.WowheadItemCategory.GEMS;
 
 /**
@@ -71,15 +72,15 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 	@Test
 	@DisplayName("Stats are parsed correctly")
 	void stats() {
-		assertEffect(redGem.getEffects(), 0, POWER, 12, MiscCondition.SPELL_DAMAGE, "+12 Spell Damage");
-		assertEffect(orangeGem.getEffects(), 0, HASTE_RATING, 5, MiscCondition.SPELL, "+5 Spell Haste Rating");
-		assertEffect(orangeGem.getEffects(), 1, POWER, 6, MiscCondition.SPELL_DAMAGE, "+6 Spell Damage");
-		assertEffect(yellowGem.getEffects(), 0, HASTE_RATING, 10, MiscCondition.SPELL, "+10 Spell Haste Rating");
-		assertEffect(greenGem.getEffects(), 0, HASTE_RATING, 5, MiscCondition.SPELL, "+5 Spell Haste Rating");
+		assertEffect(redGem.getEffects(), 0, POWER, 12, SPELL_DAMAGE, "+12 Spell Damage");
+		assertEffect(orangeGem.getEffects(), 0, HASTE_RATING, 5, SPELL, "+5 Spell Haste Rating");
+		assertEffect(orangeGem.getEffects(), 1, POWER, 6, SPELL_DAMAGE, "+6 Spell Damage");
+		assertEffect(yellowGem.getEffects(), 0, HASTE_RATING, 10, SPELL, "+10 Spell Haste Rating");
+		assertEffect(greenGem.getEffects(), 0, HASTE_RATING, 5, SPELL, "+5 Spell Haste Rating");
 		assertEffect(greenGem.getEffects(), 1, STAMINA, 7, "+7 Stamina");
 		assertEffect(blueGem.getEffects(), 0, STAMINA, 18, "+18 Stamina");
 
-		assertEffect(metaGem.getEffects(), 0, CRIT_RATING, 12, MiscCondition.SPELL, "+12 Spell Critical");
+		assertEffect(metaGem.getEffects(), 0, CRIT_RATING, 12, SPELL, "+12 Spell Critical");
 		assertEffect(metaGem.getEffects(), 1, CRIT_DAMAGE_PCT, 3, "3% Increased Critical Damage");
 		assertThat(metaGem.getMetaEnablers()).isEqualTo(List.of(MetaEnabler.AT_LEAST_2_BLUES));
 	}

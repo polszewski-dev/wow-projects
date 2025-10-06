@@ -1,6 +1,7 @@
 package wow.commons.model.character;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
@@ -8,6 +9,7 @@ import wow.commons.util.EnumUtil;
  * Date: 2023-10-14
  */
 @AllArgsConstructor
+@Getter
 public enum MovementType {
 	RUNNING("Running"),
 	MOUNTED("Mounted"),

@@ -2,8 +2,8 @@ package wow.character.model.snapshot;
 
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.effect.component.StatConversion;
 
 import static wow.character.util.AttributeConditionChecker.check;

@@ -8,6 +8,8 @@ import wow.commons.util.FormatUtil;
 import java.io.IOException;
 import java.util.Properties;
 
+import static wow.commons.util.condition.AttributeConditionFormatter.formatCondition;
+
 /**
  * User: POlszewski
  * Date: 2023-03-19
@@ -36,7 +38,9 @@ public final class AttributeFormatter {
 	private static String getFormatStr(Attribute attribute) {
 		var key = attribute.id().getKey();
 		var condition = attribute.condition();
-		var propertyKey = condition.isEmpty() ? key : key + "," + condition.toString().replace(" ", "");
+		var propertyKey = condition.isEmpty()
+				? key
+				: key + "," + formatCondition(condition).replace(" ", "");
 
 		return PROPERTIES.getProperty(propertyKey);
 	}

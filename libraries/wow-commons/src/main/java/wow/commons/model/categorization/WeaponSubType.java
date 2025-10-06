@@ -1,6 +1,7 @@
 package wow.commons.model.categorization;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import wow.commons.util.EnumUtil;
 
 /**
@@ -8,6 +9,7 @@ import wow.commons.util.EnumUtil;
  * Date: 2021-03-02
  */
 @AllArgsConstructor
+@Getter
 public enum WeaponSubType implements ItemSubType {
 	DAGGER("Dagger"),
 	SWORD("Sword"),

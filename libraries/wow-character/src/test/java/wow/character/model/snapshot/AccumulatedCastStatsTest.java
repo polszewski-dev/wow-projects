@@ -6,11 +6,12 @@ import wow.character.WowCharacterSpringTest;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.MiscCondition;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.character.constant.AttributeConditions.PHYSICAL;
+import static wow.character.constant.AttributeConditions.SPELL;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
@@ -61,8 +62,8 @@ class AccumulatedCastStatsTest extends WowCharacterSpringTest {
 	void accumulateTestAttributes(AttributeId attributeId) {
 		var list = List.of(
 				Attribute.of(attributeId, 10),
-				Attribute.of(attributeId, 20, MiscCondition.PHYSICAL),
-				Attribute.of(attributeId, 30, MiscCondition.SPELL),
+				Attribute.of(attributeId, 20, PHYSICAL),
+				Attribute.of(attributeId, 30, SPELL),
 				Attribute.of(attributeId, 40)
 		);
 

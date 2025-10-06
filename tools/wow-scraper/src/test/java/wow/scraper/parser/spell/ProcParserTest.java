@@ -3,9 +3,7 @@ package wow.scraper.parser.spell;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.condition.ConditionOperator;
-import wow.commons.model.attribute.condition.MiscCondition;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
@@ -18,7 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.POWER;
 import static wow.commons.model.effect.component.ComponentType.MANA_GAIN;
 import static wow.commons.model.effect.component.EventType.*;
-import static wow.scraper.constant.AbilityIds.*;
+import static wow.scraper.constant.AttributeConditions.SPELL_DAMAGE;
+import static wow.scraper.constant.AttributeConditions.*;
 
 /**
  * User: POlszewski
@@ -36,9 +35,9 @@ class ProcParserTest extends SpellParserTest {
 		assertEvent(
 				procTrigger,
 				List.of(SPELL_HEAL, SPELL_HIT),
-				ConditionOperator.comma(
-						MiscCondition.SPELL_DAMAGE,
-						MiscCondition.HEALING
+				AttributeCondition.comma(
+						SPELL_DAMAGE,
+						HEALING
 				),
 				10,
 				List.of(EventAction.TRIGGER_SPELL),
@@ -52,8 +51,8 @@ class ProcParserTest extends SpellParserTest {
 		var triggeredEffect = triggeredSpell.getEffectApplication().effect();
 
 		assertModifier(triggeredEffect, List.of(
-				Attribute.of(POWER, 175, MiscCondition.HEALING),
-				Attribute.of(POWER, 59, MiscCondition.SPELL_DAMAGE)
+				Attribute.of(POWER, 175, HEALING),
+				Attribute.of(POWER, 59, SPELL_DAMAGE)
 		));
 	}
 
@@ -78,7 +77,7 @@ class ProcParserTest extends SpellParserTest {
 		assertEvent(
 				procTrigger2,
 				List.of(SPELL_HIT),
-				MiscCondition.HOSTILE_SPELL,
+				AttributeCondition.IS_HOSTILE_SPELL,
 				100,
 				List.of(EventAction.TRIGGER_SPELL),
 				Duration.ZERO
@@ -90,8 +89,8 @@ class ProcParserTest extends SpellParserTest {
 		var effect1 = procTrigger1.triggeredSpell().getEffectApplication().effect();
 		var effect2 = procTrigger2.triggeredSpell().getEffectApplication().effect();
 
-		assertModifier(effect1, List.of(Attribute.of(POWER, 6, MiscCondition.PHYSICAL)));
-		assertModifier(effect2, List.of(Attribute.of(POWER, 8, MiscCondition.SPELL_DAMAGE)));
+		assertModifier(effect1, List.of(Attribute.of(POWER, 6, PHYSICAL)));
+		assertModifier(effect2, List.of(Attribute.of(POWER, 8, SPELL_DAMAGE)));
 	}
 
 	@Test
@@ -107,7 +106,7 @@ class ProcParserTest extends SpellParserTest {
 		assertEvent(
 				procTrigger1,
 				List.of(SPELL_CAST),
-				AttributeCondition.of(LESSER_HEALING_WAVE),
+				LESSER_HEALING_WAVE,
 				10,
 				List.of(EventAction.TRIGGER_SPELL),
 				Duration.ZERO
@@ -116,7 +115,7 @@ class ProcParserTest extends SpellParserTest {
 		assertEvent(
 				procTrigger2,
 				List.of(SPELL_HIT),
-				AttributeCondition.of(LIGHTNING_BOLT),
+				LIGHTNING_BOLT,
 				15,
 				List.of(EventAction.TRIGGER_SPELL),
 				Duration.ZERO
@@ -125,7 +124,7 @@ class ProcParserTest extends SpellParserTest {
 		assertEvent(
 				procTrigger3,
 				List.of(EventType.SPELL_DAMAGE),
-				AttributeCondition.of(STORMSTRIKE),
+				STORMSTRIKE,
 				50,
 				List.of(EventAction.TRIGGER_SPELL),
 				Duration.ZERO
@@ -142,7 +141,7 @@ class ProcParserTest extends SpellParserTest {
 		var effect3 = procTrigger3.triggeredSpell().getEffectApplication().effect();
 
 		assertModifier(effect3, List.of(
-				Attribute.of(POWER, 275, MiscCondition.PHYSICAL)
+				Attribute.of(POWER, 275, PHYSICAL)
 		));
 	}
 

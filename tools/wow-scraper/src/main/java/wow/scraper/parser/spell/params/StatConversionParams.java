@@ -1,7 +1,7 @@
 package wow.scraper.parser.spell.params;
 
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.spell.SpellTarget;
 
 import java.util.Objects;

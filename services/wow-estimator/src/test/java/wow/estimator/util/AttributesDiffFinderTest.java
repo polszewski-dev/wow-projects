@@ -3,7 +3,6 @@ package wow.estimator.util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.condition.AttributeCondition;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.item.Gem;
@@ -15,6 +14,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.estimator.constant.AttributeConditions.SPELL;
+import static wow.estimator.constant.AttributeConditions.SPELL_DAMAGE;
 
 /**
  * User: POlszewski
@@ -31,10 +32,10 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
 				Attribute.of(STAMINA, 36),
 				Attribute.of(INTELLECT, 34),
-				Attribute.of(POWER, 76, AttributeCondition.parse("Spell")),
-				Attribute.of(POWER, 18, AttributeCondition.parse("SpellDamage")),
-				Attribute.of(CRIT_RATING, 40, AttributeCondition.parse("Spell")),
-				Attribute.of(HASTE_RATING, 55, AttributeCondition.parse("Spell")),
+				Attribute.of(POWER, 76, SPELL),
+				Attribute.of(POWER, 18, SPELL_DAMAGE),
+				Attribute.of(CRIT_RATING, 40, SPELL),
+				Attribute.of(HASTE_RATING, 55, SPELL),
 				Attribute.of(ARMOR, 266)
 		));
 		assertThat(diff.addedAbilities()).isEmpty();
@@ -55,9 +56,9 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
 				Attribute.of(STAMINA, 7),
-				Attribute.of(POWER, 9, AttributeCondition.parse("Spell")),
-				Attribute.of(CRIT_RATING, 12, AttributeCondition.parse("Spell")),
-				Attribute.of(HASTE_RATING, -5, AttributeCondition.parse("Spell")),
+				Attribute.of(POWER, 9, SPELL),
+				Attribute.of(CRIT_RATING, 12, SPELL),
+				Attribute.of(HASTE_RATING, -5, SPELL),
 				Attribute.of(CRIT_DAMAGE_PCT, 3)
 		));
 		assertThat(diff.addedAbilities()).isEmpty();
@@ -81,9 +82,9 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
 				Attribute.of(STAMINA, 19),
-				Attribute.of(POWER, 9, AttributeCondition.parse("Spell")),
-				Attribute.of(HIT_RATING, 7, AttributeCondition.parse("Spell")),
-				Attribute.of(CRIT_RATING, 13, AttributeCondition.parse("Spell")),
+				Attribute.of(POWER, 9, SPELL),
+				Attribute.of(HIT_RATING, 7, SPELL),
+				Attribute.of(CRIT_RATING, 13, SPELL),
 				Attribute.of(ARMOR, 31)
 		));
 		assertThat(getTooltips(diff.addedAbilities())).hasSameElementsAs(List.of(
@@ -106,8 +107,8 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 		var diff = finder.getDiff();
 
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
-				Attribute.of(HIT_RATING, -32, AttributeCondition.parse("Spell")),
-				Attribute.of(HASTE_RATING, 54, AttributeCondition.parse("Spell"))
+				Attribute.of(HIT_RATING, -32, SPELL),
+				Attribute.of(HASTE_RATING, 54, SPELL)
 		));
 		assertThat(getTooltips(diff.addedAbilities())).hasSameElementsAs(List.of(
 				"Use: Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains up to 320 spell damage and healing. (1 Min, 30 Sec Cooldown)"

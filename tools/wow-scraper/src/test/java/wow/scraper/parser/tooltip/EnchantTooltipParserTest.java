@@ -3,7 +3,6 @@ package wow.scraper.parser.tooltip;
 import org.junit.jupiter.api.Test;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.scraper.model.JsonSpellDetails;
 import wow.scraper.model.WowheadItemQuality;
@@ -19,6 +18,8 @@ import static wow.commons.model.profession.ProfessionId.ENCHANTING;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P0;
 import static wow.commons.model.pve.PhaseId.TBC_P1;
+import static wow.scraper.constant.AttributeConditions.SPELL;
+import static wow.scraper.constant.AttributeConditions.SPELL_DAMAGE;
 import static wow.scraper.model.WowheadSpellCategory.ENCHANTS;
 import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 
@@ -38,7 +39,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getRequiredClass()).isNull();
 		assertThat(underTest.getRequiredProfession()).isEqualTo(ENCHANTING);
 		assertThat(underTest.getRequiredProfessionLevel()).isEqualTo(360);
-		assertEffect(underTest.getEffect().orElseThrow(), POWER, 12, MiscCondition.SPELL, "Permanently enchant a ring to increase spell damage and healing by up to 12.  Only the Enchanter's rings can be enchanted, and enchanting a ring will cause it to become soulbound.");
+		assertEffect(underTest.getEffect().orElseThrow(), POWER, 12, SPELL, "Permanently enchant a ring to increase spell damage and healing by up to 12.  Only the Enchanter's rings can be enchanted, and enchanting a ring will cause it to become soulbound.");
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2928);
 		assertThat(underTest.getExclusiveFaction()).isNull();
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(-1);
@@ -59,8 +60,8 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertEffect(
 				underTest.getEffect().orElseThrow(),
 				Attributes.of(
-						Attribute.of(CRIT_RATING, 15, MiscCondition.SPELL),
-						Attribute.of(POWER, 12, MiscCondition.SPELL_DAMAGE)
+						Attribute.of(CRIT_RATING, 15, SPELL),
+						Attribute.of(POWER, 12, SPELL_DAMAGE)
 				),
 				"Use: Permanently adds 15 spell critical strike rating and up to 12 spell damage to a shoulder slot item."
 		);
@@ -85,7 +86,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 				underTest.getEffect().orElseThrow(),
 				Attributes.of(
 						Attribute.of(STAMINA, 10),
-						Attribute.of(POWER, 18, MiscCondition.SPELL)
+						Attribute.of(POWER, 18, SPELL)
 				),
 				"Use: Permanently adds 10 Stamina and increases spell damage and healing by up to 18 to a leg or head slot item."
 		);

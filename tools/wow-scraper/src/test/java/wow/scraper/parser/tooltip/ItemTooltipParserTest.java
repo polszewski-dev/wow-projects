@@ -6,10 +6,8 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.commons.model.Money;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.condition.AttributeCondition;
-import wow.commons.model.attribute.condition.ConditionOperator;
-import wow.commons.model.attribute.condition.MiscCondition;
 import wow.commons.model.config.TimeRestriction;
 import wow.scraper.model.JsonItemDetails;
 import wow.scraper.model.WowheadItemCategory;
@@ -27,8 +25,7 @@ import static wow.commons.model.item.SocketType.*;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.scraper.constant.AbilityIds.INCINERATE;
-import static wow.scraper.constant.AbilityIds.SHADOW_BOLT;
+import static wow.scraper.constant.AttributeConditions.*;
 
 /**
  * User: POlszewski
@@ -73,12 +70,12 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 		assertThat(hoodOfMalefic.getSocketTypes()).isEqualTo(List.of(META, YELLOW));
 
 		var hoodSocketBonus = hoodOfMalefic.getSocketBonus().orElseThrow();
-		assertEffect(hoodSocketBonus, POWER, 5, MiscCondition.SPELL, "+5 Spell Damage and Healing");
+		assertEffect(hoodSocketBonus, POWER, 5, SPELL, "+5 Spell Damage and Healing");
 
 		assertThat(sunfireRobe.getSocketTypes()).isEqualTo(List.of(RED, RED, RED));
 
 		var robeSocketBonus = sunfireRobe.getSocketBonus().orElseThrow();
-		assertEffect(robeSocketBonus, POWER, 5, MiscCondition.SPELL, "+5 Spell Damage and Healing");
+		assertEffect(robeSocketBonus, POWER, 5, SPELL, "+5 Spell Damage and Healing");
 	}
 
 	@Test
@@ -91,9 +88,9 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 		assertEffect(parsedEffects, 0, ARMOR, 266, "266 Armor");
 		assertEffect(parsedEffects, 1, STAMINA, 36, "+36 Stamina");
 		assertEffect(parsedEffects, 2, INTELLECT, 34, "+34 Intellect");
-		assertEffect(parsedEffects, 3, CRIT_RATING, 40, MiscCondition.SPELL, "Equip: Improves spell critical strike rating by 40.");
-		assertEffect(parsedEffects, 4, HASTE_RATING, 40, MiscCondition.SPELL, "Equip: Improves spell haste rating by 40.");
-		assertEffect(parsedEffects, 5, POWER, 71, MiscCondition.SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 71.");
+		assertEffect(parsedEffects, 3, CRIT_RATING, 40, SPELL, "Equip: Improves spell critical strike rating by 40.");
+		assertEffect(parsedEffects, 4, HASTE_RATING, 40, SPELL, "Equip: Improves spell haste rating by 40.");
+		assertEffect(parsedEffects, 5, POWER, 71, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 71.");
 	}
 
 	@Test
@@ -134,10 +131,7 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 		assertEffect(
 				itemSetBonuses.get(1).bonusEffect(),
 				Attributes.of(
-						 Attribute.of(DAMAGE_PCT, 6, ConditionOperator.comma(
-								 AttributeCondition.of(SHADOW_BOLT),
-								 AttributeCondition.of(INCINERATE)
-						 ))
+						Attribute.of(DAMAGE_PCT, 6, AttributeCondition.comma(SHADOW_BOLT, INCINERATE))
 				 ),
 				"Increases the damage dealt by your Shadow Bolt and Incinerate abilities by 6%."
 		);

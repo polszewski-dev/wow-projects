@@ -1,6 +1,6 @@
 package wow.commons.repository.impl.parser.spell;
 
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectExclusionGroup;
 import wow.commons.model.effect.EffectId;

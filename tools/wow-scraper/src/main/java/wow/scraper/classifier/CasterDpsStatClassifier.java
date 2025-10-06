@@ -2,15 +2,12 @@ package wow.scraper.classifier;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.AttributeType;
-import wow.commons.model.attribute.PowerType;
-import wow.commons.model.attribute.condition.*;
+import wow.commons.model.attribute.*;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.Spell;
 
@@ -21,9 +18,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static wow.commons.model.attribute.AttributeCondition.*;
 import static wow.commons.model.attribute.AttributeType.*;
-import static wow.commons.model.attribute.condition.ConditionOperator.BinaryConditionOperator;
-import static wow.commons.model.attribute.condition.ConditionOperator.Comma;
 
 /**
  * User: POlszewski
@@ -80,10 +76,8 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 				.sum();
 	}
 
-	private boolean hasMatchingPowerType(AttributeCondition condition, PowerType powerType) {
-		return
-				condition == MiscCondition.SPELL_DAMAGE && powerType == PowerType.SPELL_DAMAGE ||
-				condition == MiscCondition.HEALING && powerType == PowerType.HEALING;
+	private boolean hasMatchingPowerType(AttributeCondition condition, PowerType expectedPowerType) {
+		return condition instanceof PowerTypeCondition(var powerType) && powerType == expectedPowerType;
 	}
 
 	private boolean isCasterEffect(Effect effect) {
@@ -141,7 +135,7 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 
 	private List<AttributeCondition> getBasicConditions(AttributeCondition condition) {
 		return switch (condition) {
-			case BinaryConditionOperator operator -> Stream.concat(
+			case BinaryOperator operator -> Stream.concat(
 					getBasicConditions(operator.left()).stream(),
 					getBasicConditions(operator.right()).stream()
 			).toList();
@@ -152,9 +146,9 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 
 	private boolean isBasicCasterCondition(AttributeCondition condition) {
 		return
-				condition == MiscCondition.SPELL_DAMAGE ||
-				condition == MiscCondition.SPELL ||
-				condition == MiscCondition.HOSTILE_SPELL ||
+				condition.equals(AttributeCondition.of(PowerType.SPELL_DAMAGE)) ||
+				condition.equals(AttributeCondition.of(ActionType.SPELL)) ||
+				condition.equals(AttributeCondition.IS_HOSTILE_SPELL) ||
 				condition instanceof SpellSchoolCondition ||
 				condition instanceof TalentTreeCondition ||
 				condition instanceof AbilityIdCondition

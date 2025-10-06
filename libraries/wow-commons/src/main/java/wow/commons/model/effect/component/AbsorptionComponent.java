@@ -1,6 +1,6 @@
 package wow.commons.model.effect.component;
 
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.spell.Coefficient;
 
 import java.util.Objects;

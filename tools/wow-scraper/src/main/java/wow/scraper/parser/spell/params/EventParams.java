@@ -1,6 +1,6 @@
 package wow.scraper.parser.spell.params;
 
-import wow.commons.model.attribute.condition.AttributeCondition;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.SpellTarget;
