@@ -13,6 +13,7 @@ import wow.simulator.simulation.SimulationContextSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static wow.commons.model.effect.EffectScope.GLOBAL;
@@ -111,6 +112,16 @@ public class Effects implements SimulationContextSource, EffectCollection {
 	public boolean isUnderEffect(AbilityId abilityId) {
 		return getStream()
 				.anyMatch(x -> x.matches(abilityId));
+	}
+
+	public boolean isUnderEffect(Pattern effectNamePattern) {
+		return getStream()
+				.anyMatch(x -> x.matches(effectNamePattern));
+	}
+
+	public boolean isUnderEffect(Pattern effectNamePattern, Unit effectOwner) {
+		return getStream()
+				.anyMatch(x -> x.matches(effectNamePattern, effectOwner));
 	}
 
 	public Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner) {

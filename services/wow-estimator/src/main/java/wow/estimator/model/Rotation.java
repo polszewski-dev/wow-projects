@@ -53,9 +53,11 @@ public class Rotation implements Copyable<Rotation> {
 
 		cooldowns = new ArrayList<>();
 
-		for (AbilityId abilityId : template.getAbilityIds()) {
+		for (var abilityId : template.getAbilityIds()) {
 			character.getAbility(abilityId).ifPresent(this::addAbility);
 		}
+
+		removeMutuallyExclusiveAbilities();
 
 		if (filler == null) {
 			this.filler = character.getAbility(AbilityId.SHOOT).orElseThrow();
@@ -89,6 +91,19 @@ public class Rotation implements Copyable<Rotation> {
 		}
 		return effect.hasPeriodicComponent(ComponentType.DAMAGE);
 	}
+
+	private void removeMutuallyExclusiveAbilities() {
+		if (hasCooldown(CURSE_OF_DOOM) && hasCooldown(CURSE_OF_AGONY)) {
+			cooldowns.removeIf(x -> x.getAbilityId().equals(CURSE_OF_AGONY));
+		}
+	}
+
+	private boolean hasCooldown(AbilityId abilityId) {
+		return cooldowns.stream().anyMatch(x -> x.getAbilityId().equals(abilityId));
+	}
+
+	private static final AbilityId CURSE_OF_DOOM = AbilityId.of("Curse of Doom");
+	private static final AbilityId CURSE_OF_AGONY = AbilityId.of("Curse of Agony");
 
 	public List<Ability> getAbilities() {
 		var result = new ArrayList<Ability>(cooldowns.size() + 1);

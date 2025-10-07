@@ -30,6 +30,7 @@ import wow.simulator.util.IdGenerator;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
 
@@ -418,6 +419,16 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public boolean hasEffect(AbilityId abilityId) {
 		return effects.isUnderEffect(abilityId);
+	}
+
+	@Override
+	public boolean hasEffect(Pattern effectNamePattern) {
+		return effects.isUnderEffect(effectNamePattern);
+	}
+
+	@Override
+	public boolean hasEffect(Pattern effectNamePattern, Unit effectOwner) {
+		return effects.isUnderEffect(effectNamePattern, effectOwner);
 	}
 
 	@Override

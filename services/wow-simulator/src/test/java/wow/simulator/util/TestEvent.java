@@ -18,8 +18,8 @@ import static wow.simulator.util.EffectType.TALENT;
 public sealed interface TestEvent {
 	Time time();
 
-	default boolean nameContains(String cooldown) {
-		return getClass().getSimpleName().toLowerCase().contains(cooldown.toLowerCase());
+	default boolean nameContains(String name) {
+		return getClass().getSimpleName().toLowerCase().contains(name.toLowerCase());
 	}
 
 	default boolean isDamage() {
@@ -60,6 +60,10 @@ public sealed interface TestEvent {
 
 	default boolean isBeginCast() {
 		return this instanceof BeginCast;
+	}
+
+	default boolean isBeginCast(String spellName) {
+		return this instanceof BeginCast bc && bc.spell().equals(spellName);
 	}
 
 	record BeginGcd(Time time, Unit caster) implements TestEvent {}

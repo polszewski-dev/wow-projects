@@ -7,6 +7,7 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import java.util.List;
 
 import static wow.character.model.script.ScriptCommand.*;
+import static wow.character.model.script.ScriptCommandCondition.EMPTY;
 import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
 
 /**
@@ -16,7 +17,7 @@ import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
 abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 	CastSpell castSpell(String abilityName) {
 		return new CastSpell(
-				List.of(),
+				EMPTY,
 				AbilityId.of(abilityName),
 				DEFAULT
 		);
@@ -30,7 +31,7 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 
 	CastSpellRank castSpellRank(String abilityName, int rank) {
 		return new CastSpellRank(
-				List.of(),
+				EMPTY,
 				abilityName,
 				rank,
 				DEFAULT
@@ -51,7 +52,7 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 
 	UseItem useItem(ItemSlot itemSlot) {
 		return new UseItem(
-				List.of(),
+				EMPTY,
 				itemSlot,
 				DEFAULT
 		);

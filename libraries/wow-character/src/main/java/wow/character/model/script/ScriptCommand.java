@@ -13,25 +13,25 @@ import java.util.Objects;
 public sealed interface ScriptCommand {
 	sealed interface ComposableCommand extends ScriptCommand permits CastSpell, CastSpellRank, UseItem {}
 
-	record CastSpell(List<ScriptCommandCondition> conditions, AbilityId abilityId, ScriptCommandTarget target) implements ComposableCommand {
+	record CastSpell(ScriptCommandCondition condition, AbilityId abilityId, ScriptCommandTarget target) implements ComposableCommand {
 		public CastSpell {
-			Objects.requireNonNull(conditions);
+			Objects.requireNonNull(condition);
 			Objects.requireNonNull(abilityId);
 			Objects.requireNonNull(target);
 		}
 	}
 
-	record CastSpellRank(List<ScriptCommandCondition> conditions, String abilityName, int rank, ScriptCommandTarget target) implements ComposableCommand {
+	record CastSpellRank(ScriptCommandCondition condition, String abilityName, int rank, ScriptCommandTarget target) implements ComposableCommand {
 		public CastSpellRank {
-			Objects.requireNonNull(conditions);
+			Objects.requireNonNull(condition);
 			Objects.requireNonNull(abilityName);
 			Objects.requireNonNull(target);
 		}
 	}
 
-	record UseItem(List<ScriptCommandCondition> conditions, ItemSlot itemSlot, ScriptCommandTarget target) implements ComposableCommand {
+	record UseItem(ScriptCommandCondition condition, ItemSlot itemSlot, ScriptCommandTarget target) implements ComposableCommand {
 		public UseItem {
-			Objects.requireNonNull(conditions);
+			Objects.requireNonNull(condition);
 			Objects.requireNonNull(itemSlot);
 			Objects.requireNonNull(target);
 		}

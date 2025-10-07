@@ -11,6 +11,8 @@ import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.simulation.SimulationContextSource;
 
+import java.util.regex.Pattern;
+
 /**
  * User: POlszewski
  * Date: 2023-08-17
@@ -27,6 +29,10 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	boolean matches(AbilityId abilityId);
 
 	boolean matches(TalentTree tree);
+
+	boolean matches(Pattern effectNamePattern);
+
+	boolean matches(Pattern effectNamePattern, Unit owner);
 
 	AnyDuration getRemainingDuration();
 

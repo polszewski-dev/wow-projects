@@ -104,9 +104,8 @@ public class ScriptCompiler {
 	private ComposableCommand getComposableCommand(String conditionStr, String abilityIdStr, String rankStr, String targetStr) {
 		var conditionParser = new ScriptCommandConditionParser(conditionStr);
 
-		conditionParser.parse();
+		var condition = conditionParser.parse();
 
-		var conditions = conditionParser.getConditions();
 		var target = parseTarget(targetStr);
 		var itemSlot = tryParseItemSlot(abilityIdStr);
 
@@ -116,7 +115,7 @@ public class ScriptCompiler {
 			}
 
 			return new UseItem(
-					conditions,
+					condition,
 					itemSlot,
 					target
 			);
@@ -128,7 +127,7 @@ public class ScriptCompiler {
 			var rank = Integer.parseInt(rankStr);
 
 			return new CastSpellRank(
-					conditions,
+					condition,
 					abilityId.name(),
 					rank,
 					target
@@ -136,7 +135,7 @@ public class ScriptCompiler {
 		}
 
 		return new CastSpell(
-				conditions,
+				condition,
 				abilityId,
 				target
 		);

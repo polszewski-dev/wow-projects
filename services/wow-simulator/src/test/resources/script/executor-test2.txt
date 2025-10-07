@@ -1,0 +1,8 @@
+
+
+@	Rotation
+
+	[~Target.HasEffect(Curse of *)] Curse of Doom
+	[~Target.HasEffect(Curse of *)] Curse of Agony
+	Shadow Bolt
+

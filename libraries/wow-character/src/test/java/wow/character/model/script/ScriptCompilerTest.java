@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static wow.character.model.script.ScriptCommand.*;
+import static wow.character.model.script.ScriptCommandCondition.EMPTY;
 import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
 import static wow.character.model.script.ScriptCommandTarget.TARGET;
 import static wow.character.model.script.ScriptSectionType.ROTATION;
@@ -70,7 +71,7 @@ class ScriptCompilerTest {
 
 	CastSpell command(String abilityName, ScriptCommandTarget target) {
 		return new CastSpell(
-				List.of(),
+				EMPTY,
 				AbilityId.of(abilityName),
 				target
 		);
@@ -84,10 +85,9 @@ class ScriptCompilerTest {
 		return command(abilityName, rank, DEFAULT);
 	}
 
-
 	CastSpellRank command(String abilityName, int rank, ScriptCommandTarget target) {
 		return new CastSpellRank(
-				List.of(),
+				EMPTY,
 				abilityName,
 				rank,
 				target
@@ -96,7 +96,7 @@ class ScriptCompilerTest {
 
 	UseItem command(ItemSlot itemSlot) {
 		return new UseItem(
-				List.of(),
+				EMPTY,
 				itemSlot,
 				DEFAULT
 		);

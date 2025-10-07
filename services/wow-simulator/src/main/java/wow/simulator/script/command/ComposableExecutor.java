@@ -9,8 +9,6 @@ import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 
-import java.util.List;
-
 import static wow.character.model.script.ScriptCommand.*;
 import static wow.commons.model.effect.component.ComponentType.DAMAGE;
 
@@ -19,18 +17,18 @@ import static wow.commons.model.effect.component.ComponentType.DAMAGE;
  * Date: 2025-09-18
  */
 public abstract class ComposableExecutor extends ScriptCommandExecutor {
-	protected final List<ScriptCommandCondition> commandConditions;
+	protected final ScriptCommandCondition commandCondition;
 	protected final ScriptCommandTarget commandTarget;
 	protected final Ability ability;
 
 	protected ComposableExecutor(
 			Player player,
-			List<ScriptCommandCondition> commandConditions,
+			ScriptCommandCondition commandCondition,
 			Ability ability,
 			ScriptCommandTarget commandTarget
 	) {
 		super(player);
-		this.commandConditions = commandConditions;
+		this.commandCondition = commandCondition;
 		this.ability = ability;
 		this.commandTarget = commandTarget;
 	}
@@ -52,7 +50,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	public boolean allConditionsAreMet() {
 		var target = getTarget(commandTarget);
 
-		return commandConditions.stream().allMatch(condition -> isConditionMet(condition, target)) &&
+		return isConditionMet(commandCondition, target) &&
 				player.canCast(ability, target) &&
 				shouldCast(target);
 	}
@@ -65,7 +63,14 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	}
 
 	private boolean isConditionMet(ScriptCommandCondition condition, Unit target) {
-		return true;//todo
+		if (condition.isEmpty()) {
+			return true;
+		}
+
+		var primaryTarget = player.getPrimaryTarget(ability, target);
+		var conditionChecker = new ScriptConditionChecker(player, ability, primaryTarget.requireSingleTarget());
+
+		return conditionChecker.check(condition);
 	}
 
 	private boolean shouldCast(Unit target) {

@@ -23,6 +23,7 @@ import wow.simulator.simulation.SimulationContext;
 import wow.simulator.util.IdGenerator;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static wow.commons.util.CollectionUtil.join;
 
@@ -163,6 +164,16 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public boolean matches(TalentTree tree) {
 		return getSourceSpell() instanceof ClassAbility a && a.getTalentTree() == tree;
+	}
+
+	@Override
+	public boolean matches(Pattern effectNamePattern) {
+		return effectNamePattern.matcher(getName()).find();
+	}
+
+	@Override
+	public boolean matches(Pattern effectNamePattern, Unit owner) {
+		return matches(effectNamePattern) && this.owner == owner;
 	}
 
 	@Override

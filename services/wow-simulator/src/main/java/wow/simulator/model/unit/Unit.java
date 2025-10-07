@@ -13,6 +13,7 @@ import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * User: POlszewski
@@ -111,6 +112,10 @@ public interface Unit extends Character, SimulationContextSource {
 	Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner);
 
 	boolean hasEffect(AbilityId requiredEffect, Unit effectOwner);
+
+	boolean hasEffect(Pattern effectNamePattern);
+
+	boolean hasEffect(Pattern effectNamePattern, Unit effectOwner);
 
 	boolean isOnCooldown(AbilityId abilityId);
 
