@@ -12,26 +12,51 @@ import java.util.Optional;
  * Date: 2023-10-13
  */
 public abstract class ConditionParser<T extends Condition> {
-	private final Tokenizer tokenizer;
+	private final Parser parser;
 
 	protected ConditionParser(String value) {
-		this.tokenizer = new Tokenizer(value != null ? value : "");
+		this.parser = new Parser(value);
 	}
 
 	public T parse() {
-		tokenizer.tokenize();
+		var intermediateForm = parser.parse();
 
-		if (tokenizer.getCurrentToken().isEmpty()) {
+		if (intermediateForm == null) {
 			return getEmptyCondition();
 		}
 
-		var result = orExpression();
+		return transform(intermediateForm);
+	}
 
-		if (tokenizer.getCurrentToken().isPresent()) {
-			throw new IllegalArgumentException("There are remaining tokens: " + tokenizer.value);
-		}
+	private T transform(Node node) {
+		return switch (node) {
+			case OrNode(var left, var right) ->
+					orOperator(
+							transform(left),
+							transform(right)
+					);
 
-		return result;
+			case AndNode(var left, var right) ->
+					andOperator(
+							transform(left),
+							transform(right)
+					);
+
+			case CommaNode(var nodes) ->
+					commaOperator(
+							nodes.stream()
+									.map(this::transform)
+									.toList()
+					);
+
+			case NotNode(var sub) ->
+					notOperator(
+							transform(sub)
+					);
+
+			case PrimitiveNode(var value) ->
+					getBasicCondition(value);
+		};
 	}
 
 	protected T orOperator(T left, T right) {
@@ -39,6 +64,10 @@ public abstract class ConditionParser<T extends Condition> {
 	}
 
 	protected T andOperator(T left, T right) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected T notOperator(T condition) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -50,58 +79,112 @@ public abstract class ConditionParser<T extends Condition> {
 
 	protected abstract T getEmptyCondition();
 
-	private T orExpression() {
-		var left = andExpression();
-		if (tokenizer.isCurrentToken("|")) {
-			tokenizer.dropCurrentToken();
-			var right = orExpression();
-			return orOperator(left, right);
+	private static class Parser {
+		private final Tokenizer tokenizer;
+
+		public Parser(String value) {
+			this.tokenizer = new Tokenizer(value != null ? value : "");
 		}
-		return left;
-	}
 
-	private T andExpression() {
-		var left = commaExpression();
-		if (tokenizer.isCurrentToken("&")) {
-			tokenizer.dropCurrentToken();
-			var right = andExpression();
-			return andOperator(left, right);
+		public Node parse() {
+			tokenizer.tokenize();
+
+			if (tokenizer.getCurrentToken().isEmpty()) {
+				return null;
+			}
+
+			var result = orExpression();
+
+			if (tokenizer.getCurrentToken().isPresent()) {
+				throw new IllegalArgumentException("There are remaining tokens: " + tokenizer.value);
+			}
+
+			return result;
 		}
-		return left;
-	}
 
-	private T commaExpression() {
-		var left = primitiveExpression();
+		private Node orExpression() {
+			var left = andExpression();
 
-		if (!tokenizer.isCurrentToken(",")) {
+			if (tokenizer.isCurrentToken("|")) {
+				tokenizer.dropCurrentToken();
+
+				var right = orExpression();
+
+				return new OrNode(left, right);
+			}
+
 			return left;
 		}
 
-		var conditions = new ArrayList<T>();
+		private Node andExpression() {
+			var left = commaExpression();
 
-		conditions.add(left);
+			if (tokenizer.isCurrentToken("&")) {
 
-		do {
+				tokenizer.dropCurrentToken();
+
+				var right = andExpression();
+
+				return new AndNode(left, right);
+			}
+
+			return left;
+		}
+
+		private Node commaExpression() {
+			var left = primitiveExpression();
+
+			if (!tokenizer.isCurrentToken(",")) {
+				return left;
+			}
+
+			var conditions = new ArrayList<Node>();
+
+			conditions.add(left);
+
+			do {
+				tokenizer.dropCurrentToken();
+
+				var right = primitiveExpression();
+
+				conditions.add(right);
+			} while (tokenizer.isCurrentToken(","));
+
+			return new CommaNode(conditions);
+		}
+
+		private Node primitiveExpression() {
+			if (tokenizer.isCurrentToken("(")) {
+				return parenExpression();
+			}
+
+			if (tokenizer.isCurrentToken("~")) {
+				return notExpression();
+			}
+
+			var token = tokenizer.getCurrentToken().orElseThrow();
+
 			tokenizer.dropCurrentToken();
-			var right = primitiveExpression();
-			conditions.add(right);
-		} while (tokenizer.isCurrentToken(","));
 
-		return commaOperator(conditions);
-	}
+			return new PrimitiveNode(token);
+		}
 
-	private T primitiveExpression() {
-		if (tokenizer.isCurrentToken("(")) {
-			tokenizer.dropCurrentToken();
+		private Node parenExpression() {
+			tokenizer.requireAndDrop("(");
+
 			var condition = orExpression();
-			tokenizer.require(")");
-			tokenizer.dropCurrentToken();
+
+			tokenizer.requireAndDrop(")");
 			return condition;
 		}
 
-		var token = tokenizer.getCurrentToken().orElseThrow();
-		tokenizer.dropCurrentToken();
-		return getBasicCondition(token);
+		private Node notExpression() {
+			tokenizer.requireAndDrop("~");
+
+			var expression = primitiveExpression();
+
+			return new NotNode(expression);
+		}
 	}
 
 	@RequiredArgsConstructor
@@ -128,10 +211,15 @@ public abstract class ConditionParser<T extends Condition> {
 			tokens.removeFirst();
 		}
 
-		private void require(String expectedValue) {
+		public void require(String expectedValue) {
 			if (!isCurrentToken(expectedValue)) {
 				throw new IllegalArgumentException("Missing ')': " + value);
 			}
+		}
+
+		public void requireAndDrop(String expectedValue) {
+			require(expectedValue);
+			dropCurrentToken();
 		}
 
 		public void tokenize() {
@@ -218,7 +306,19 @@ public abstract class ConditionParser<T extends Condition> {
 		}
 
 		private boolean isOperator(char c) {
-			return c == '&' || c == '|' || c == ',';
+			return c == '&' || c == '|' || c == ',' || c == '~';
 		}
 	}
+
+	private sealed interface Node {}
+
+	private record OrNode(Node left, Node right) implements Node {}
+
+	private record AndNode(Node left, Node right) implements Node {}
+
+	private record CommaNode(List<Node> nodes) implements Node {}
+
+	private record NotNode(Node node) implements Node {}
+
+	private record PrimitiveNode(String value) implements Node {}
 }
