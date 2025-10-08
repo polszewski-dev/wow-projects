@@ -25,7 +25,7 @@ import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
  * User: POlszewski
  * Date: 2023-10-13
  */
-public class AttributeConditionParser extends ConditionParser<AttributeCondition> {
+public class AttributeConditionParser extends ConditionParser<AttributeCondition, Void> {
 	public static AttributeCondition parseCondition(String value) {
 		return new AttributeConditionParser(value).parse();
 	}

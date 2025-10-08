@@ -367,6 +367,16 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public Percent getHealthPct() {
+		return resources.getHealthPercent();
+	}
+
+	@Override
+	public Percent getManaPct() {
+		return resources.getManaPercent();
+	}
+
+	@Override
 	public int increaseHealth(int amount, boolean crit, Spell spell) {
 		return resources.increaseHealth(amount, crit, spell);
 	}
@@ -461,6 +471,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public Duration getRemainingCooldown(AbilityId abilityId) {
+		return cooldowns.getRemainingCooldown(abilityId);
+	}
+
+	@Override
 	public void triggerCooldown(Ability ability, Duration actualDuration) {
 		cooldowns.triggerCooldown(ability, actualDuration, currentAction);
 	}
@@ -478,11 +493,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			throw new IllegalArgumentException();
 		}
 		super.setTarget(target);
-	}
-
-	@Override
-	public Percent getHealthPct() {
-		return Percent.of(100.0 * resources.getCurrentHealth() / resources.geMaxHealth());
 	}
 
 	@Override

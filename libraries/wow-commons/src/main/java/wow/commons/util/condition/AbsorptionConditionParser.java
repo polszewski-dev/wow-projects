@@ -9,7 +9,7 @@ import wow.commons.model.spell.SpellSchool;
  * User: POlszewski
  * Date: 2025-10-06
  */
-public class AbsorptionConditionParser extends ConditionParser<AbsorptionCondition> {
+public class AbsorptionConditionParser extends ConditionParser<AbsorptionCondition, Void> {
 	public static AbsorptionCondition parseCondition(String value) {
 		return new AbsorptionConditionParser(value).parse();
 	}

@@ -8,7 +8,7 @@ import wow.commons.model.spell.ActionType;
  * User: POlszewski
  * Date: 2025-10-06
  */
-public class StatConversionConditionParser extends ConditionParser<StatConversionCondition> {
+public class StatConversionConditionParser extends ConditionParser<StatConversionCondition, Void> {
 	public static StatConversionCondition parseCondition(String value) {
 		return new StatConversionConditionParser(value).parse();
 	}

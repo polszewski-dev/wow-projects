@@ -11,7 +11,7 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2023-10-13
  */
-public abstract class ConditionParser<T extends Condition> {
+public abstract class ConditionParser<T extends Condition, E> {
 	private final Parser parser;
 
 	protected ConditionParser(String value) {
@@ -49,6 +49,36 @@ public abstract class ConditionParser<T extends Condition> {
 									.toList()
 					);
 
+			case LessThanNode(var left, var right) ->
+					lessThanOperator(
+							expressionTransform(left),
+							expressionTransform(right)
+					);
+
+			case LessThanOrEqualNode(var left, var right) ->
+					lessThanOrEqualOperator(
+							expressionTransform(left),
+							expressionTransform(right)
+					);
+
+			case GreaterThanNode(var left, var right) ->
+					greaterThanOperator(
+							expressionTransform(left),
+							expressionTransform(right)
+					);
+
+			case GreaterThanOrEqualNode(var left, var right) ->
+					greaterThanOrEqualOperator(
+							expressionTransform(left),
+							expressionTransform(right)
+					);
+
+			case EqualsNode(var left, var right) ->
+					equalsOperator(
+							expressionTransform(left),
+							expressionTransform(right)
+					);
+
 			case NotNode(var sub) ->
 					notOperator(
 							transform(sub)
@@ -57,6 +87,24 @@ public abstract class ConditionParser<T extends Condition> {
 			case PrimitiveNode(var value) ->
 					getBasicCondition(value);
 		};
+	}
+
+	private E expressionTransform(Node node) {
+		if (node instanceof PrimitiveNode(var value)) {
+			if (value.matches("^-?\\d*\\.?\\d+$")) {
+				return getConstant(Double.parseDouble(value));
+			}
+
+			var expression = getBasicExpression(value);
+
+			if (expression != null) {
+				return expression;
+			}
+
+			throw new IllegalArgumentException("Invalid expression: " + value);
+		}
+
+		throw new IllegalArgumentException(node.toString());
 	}
 
 	protected T orOperator(T left, T right) {
@@ -72,6 +120,34 @@ public abstract class ConditionParser<T extends Condition> {
 	}
 
 	protected T commaOperator(List<T> conditions) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected T lessThanOperator(E left, E right) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected T lessThanOrEqualOperator(E left, E right) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected T greaterThanOperator(E left, E right) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected T greaterThanOrEqualOperator(E left, E right) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected T equalsOperator(E left, E right) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected E getBasicExpression(String value) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected E getConstant(double value) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -132,7 +208,7 @@ public abstract class ConditionParser<T extends Condition> {
 		}
 
 		private Node commaExpression() {
-			var left = primitiveExpression();
+			var left = comparisonExpression();
 
 			if (!tokenizer.isCurrentToken(",")) {
 				return left;
@@ -145,12 +221,49 @@ public abstract class ConditionParser<T extends Condition> {
 			do {
 				tokenizer.dropCurrentToken();
 
-				var right = primitiveExpression();
+				var right = comparisonExpression();
 
 				conditions.add(right);
 			} while (tokenizer.isCurrentToken(","));
 
 			return new CommaNode(conditions);
+		}
+
+		private Node comparisonExpression() {
+			var left = primitiveExpression();
+
+			var comparisonOperator = getComparisonOperator();
+
+			if (comparisonOperator != null) {
+				tokenizer.dropCurrentToken();
+
+				var right = primitiveExpression();
+
+				return switch (comparisonOperator) {
+					case "<" -> new LessThanNode(left, right);
+					case "<=" -> new LessThanOrEqualNode(left, right);
+					case ">" -> new GreaterThanNode(left, right);
+					case ">=" -> new GreaterThanOrEqualNode(left, right);
+					case "=" -> new EqualsNode(left, right);
+					default -> throw new IllegalArgumentException(comparisonOperator);
+				};
+			}
+
+			return left;
+		}
+
+		private String getComparisonOperator() {
+			if (
+					tokenizer.isCurrentToken("<") ||
+					tokenizer.isCurrentToken("<=") ||
+					tokenizer.isCurrentToken(">") ||
+					tokenizer.isCurrentToken(">=") ||
+					tokenizer.isCurrentToken("<>") ||
+					tokenizer.isCurrentToken("=")
+			) {
+				return tokenizer.getCurrentToken().orElseThrow();
+			}
+			return null;
 		}
 
 		private Node primitiveExpression() {
@@ -235,7 +348,7 @@ public abstract class ConditionParser<T extends Condition> {
 				return;
 			}
 
-			char c = value.charAt(position);
+			char c = currentChar();
 
 			if (isOperator(c)) {
 				extractOperator(c);
@@ -271,6 +384,16 @@ public abstract class ConditionParser<T extends Condition> {
 		}
 
 		private void extractOperator(char c) {
+			if (hasNextChar()) {
+				var n = nextChar();
+
+				if ((c == '<' && (n == '=' || n == '>')) || (c == '>' && n == '=')) {
+					tokens.add(c + "" + n);
+					position += 2;
+					return;
+				}
+			}
+
 			tokens.add("" + c);
 			++position;
 		}
@@ -279,8 +402,8 @@ public abstract class ConditionParser<T extends Condition> {
 			int start = position;
 			int substringParenDepth = 0;
 
-			while (hasChars() && !isOperator(value.charAt(position))) {
-				char c = value.charAt(position);
+			while (hasChars() && !isOperator(currentChar())) {
+				char c = currentChar();
 				if (c == '(') {
 					++substringParenDepth;
 				} else if (c == ')') {
@@ -296,17 +419,29 @@ public abstract class ConditionParser<T extends Condition> {
 		}
 
 		private void eatWhitespaces() {
-			while (hasChars() && Character.isSpaceChar(value.charAt(position))) {
+			while (hasChars() && Character.isSpaceChar(currentChar())) {
 				++position;
 			}
+		}
+
+		private char currentChar() {
+			return value.charAt(position);
+		}
+
+		private char nextChar() {
+			return value.charAt(position + 1);
 		}
 
 		private boolean hasChars() {
 			return position < value.length();
 		}
 
+		private boolean hasNextChar() {
+			return position + 1 < value.length();
+		}
+
 		private boolean isOperator(char c) {
-			return c == '&' || c == '|' || c == ',' || c == '~';
+			return c == '&' || c == '|' || c == ',' || c == '~' || c == '<' || c == '>';
 		}
 	}
 
@@ -317,6 +452,16 @@ public abstract class ConditionParser<T extends Condition> {
 	private record AndNode(Node left, Node right) implements Node {}
 
 	private record CommaNode(List<Node> nodes) implements Node {}
+
+	private record LessThanNode(Node left, Node right) implements Node {}
+
+	private record LessThanOrEqualNode(Node left, Node right) implements Node {}
+
+	private record GreaterThanNode(Node left, Node right) implements Node {}
+
+	private record GreaterThanOrEqualNode(Node left, Node right) implements Node {}
+
+	private record EqualsNode(Node left, Node right) implements Node {}
 
 	private record NotNode(Node node) implements Node {}
 

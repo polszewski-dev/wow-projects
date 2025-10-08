@@ -68,6 +68,13 @@ public class Cooldowns implements SimulationContextSource {
 		return cooldown.isPresent() && cooldown.get().isActive();
 	}
 
+	public Duration getRemainingCooldown(AbilityId abilityId) {
+		var cooldownId = CooldownId.of(abilityId);
+		var cooldown = getCooldown(cooldownId);
+
+		return cooldown.map(CooldownInstance::getRemainingDuration).orElse(Duration.ZERO);
+	}
+
 	private Optional<CooldownInstance> getCooldown(CooldownId cooldownId) {
 		return Optional.ofNullable(cooldownsById.get(cooldownId));
 	}

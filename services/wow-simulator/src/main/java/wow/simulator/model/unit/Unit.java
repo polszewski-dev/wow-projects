@@ -4,6 +4,7 @@ import wow.character.model.character.Character;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.snapshot.*;
 import wow.commons.model.Duration;
+import wow.commons.model.Percent;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
@@ -93,6 +94,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	int getCurrentMana();
 
+	Percent getManaPct();
+
 	int increaseHealth(int amount, boolean crit, Spell spell);
 
 	int decreaseHealth(int amount, boolean crit, Spell spell);
@@ -122,6 +125,8 @@ public interface Unit extends Character, SimulationContextSource {
 	boolean isOnCooldown(Ability ability);
 
 	boolean isOnCooldown(CooldownId cooldownId);
+
+	Duration getRemainingCooldown(AbilityId abilityId);
 
 	void triggerCooldown(Ability ability, Duration actualDuration);
 

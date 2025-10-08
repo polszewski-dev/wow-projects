@@ -13,13 +13,7 @@ import static wow.test.commons.AbilityNames.*;
 class ScriptExecutorTest extends WarlockSpellSimulationTest {
 	@Test
 	void cast_dots_and_then_SB() {
-		player.getBuild().setScript("/script/executor-test.txt");
-
-		var executor = new ScriptExecutor(player);
-
-		executor.setupPlayer();
-
-		updateUntil(60);
+		simulate("/script/executor-test.txt", 60);
 
 		assertEvents(
 				TestEvent::isBeginCast,
@@ -52,20 +46,10 @@ class ScriptExecutorTest extends WarlockSpellSimulationTest {
 	@Test
 	void recast_CoA_after_CoD_missed() {
 		missesOnlyOnFollowingRolls(0);
-
-		player.getBuild().setScript("/script/executor-test2.txt");
-
-		var executor = new ScriptExecutor(player);
-
-		executor.setupPlayer();
-
-		updateUntil(150);
+		simulate("/script/executor-test2.txt", 150);
 
 		assertEvents(
-				testEvent ->
-						testEvent.isBeginCast(CURSE_OF_DOOM) ||
-						testEvent.isBeginCast(CURSE_OF_AGONY) ||
-						testEvent.isSpellResisted(),
+				this::onlyCurses,
 				at(0)
 						.beginCast(player, CURSE_OF_DOOM)
 						.spellResisted(player, CURSE_OF_DOOM, target),
@@ -78,5 +62,53 @@ class ScriptExecutorTest extends WarlockSpellSimulationTest {
 				at(78)
 						.beginCast(player, CURSE_OF_DOOM)
 		);
+	}
+
+	@Test
+	void recast_CoA_after_CoD_missed_and_CoA_casted_only_twice() {
+		missesOnlyOnFollowingRolls(0);
+		simulate("/script/executor-test3.txt", 125);
+
+		assertEvents(
+				this::onlyCurses,
+				at(0)
+						.beginCast(player, CURSE_OF_DOOM)
+						.spellResisted(player, CURSE_OF_DOOM, target),
+				at(1.5)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(27)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(61.5)
+						.beginCast(player, CURSE_OF_DOOM)
+		);
+	}
+
+	@Test
+	void CoA_cast_before_simulation_ends() {
+		simulate("/script/executor-test3.txt", 90);
+
+		assertEvents(
+				this::onlyCurses,
+				at(0)
+						.beginCast(player, CURSE_OF_DOOM),
+				at(61.5)
+						.beginCast(player, CURSE_OF_AGONY)
+		);
+	}
+
+	void simulate(String script, int time) {
+		player.getBuild().setScript(script);
+
+		var executor = new ScriptExecutor(player);
+
+		executor.setupPlayer();
+
+		updateUntil(time);
+	}
+
+	boolean onlyCurses(TestEvent testEvent) {
+		return testEvent.isBeginCast(CURSE_OF_DOOM) ||
+				testEvent.isBeginCast(CURSE_OF_AGONY) ||
+				testEvent.isSpellResisted();
 	}
 }

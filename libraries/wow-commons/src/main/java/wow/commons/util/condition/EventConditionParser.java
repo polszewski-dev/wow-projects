@@ -22,7 +22,7 @@ import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
  * User: POlszewski
  * Date: 2025-10-06
  */
-public class EventConditionParser extends ConditionParser<EventCondition> {
+public class EventConditionParser extends ConditionParser<EventCondition, Void> {
 	public static EventCondition parseCondition(String value) {
 		return new EventConditionParser(value).parse();
 	}

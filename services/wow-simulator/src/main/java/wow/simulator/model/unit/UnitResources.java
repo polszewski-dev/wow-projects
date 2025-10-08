@@ -1,5 +1,6 @@
 package wow.simulator.model.unit;
 
+import wow.commons.model.Percent;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.ResourceType;
@@ -26,6 +27,14 @@ public class UnitResources implements SimulationContextSource {
 		this.owner = owner;
 		add(new UnitResource(HEALTH, owner));
 		add(new UnitResource(MANA, owner));
+	}
+
+	public Percent getHealthPercent() {
+		return get(HEALTH).getPercent();
+	}
+
+	public Percent getManaPercent() {
+		return get(MANA).getPercent();
 	}
 
 	public int getCurrentHealth() {

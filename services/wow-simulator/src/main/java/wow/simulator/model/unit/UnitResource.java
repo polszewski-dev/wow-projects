@@ -2,6 +2,7 @@ package wow.simulator.model.unit;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import wow.commons.model.Percent;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
@@ -19,6 +20,10 @@ public class UnitResource implements SimulationContextSource {
 	private final Unit owner;
 	private int current;
 	private int max;
+
+	public Percent getPercent() {
+		return Percent.of(100.0 * current / max);
+	}
 
 	public void set(int current, int max) {
 		this.current = current;
