@@ -12,7 +12,7 @@
 	Shadow Word: Pain
 	Devouring Plague
 	Starshards
-	Mind Blast
+	? Inner Focus >>= Mind Blast
 	Shadow Word: Death
 	Mind Flay
 	Shoot

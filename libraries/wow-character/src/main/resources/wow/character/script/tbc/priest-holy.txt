@@ -13,7 +13,7 @@
 	Devouring Plague
 	Starshards
 	Holy Fire
-	Mind Blast
+	? Inner Focus >>= Mind Blast
 	Smite
 	Shoot
 

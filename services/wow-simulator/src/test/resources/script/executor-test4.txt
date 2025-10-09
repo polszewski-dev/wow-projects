@@ -1,0 +1,10 @@
+
+
+@	Rotation
+
+	? Trinket1
+			>>= ? Trinket2
+			>>= ? Amplify Curse
+			>>= Curse of Agony
+	Shadow Bolt
+

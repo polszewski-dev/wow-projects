@@ -1,5 +1,6 @@
 package wow.simulator.script.command;
 
+import lombok.Getter;
 import wow.character.model.script.ScriptCommandCondition;
 import wow.character.model.script.ScriptCommandTarget;
 import wow.commons.model.AnyDuration;
@@ -20,17 +21,21 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	protected final ScriptCommandCondition commandCondition;
 	protected final ScriptCommandTarget commandTarget;
 	protected final Ability ability;
+	@Getter
+	protected final boolean optional;
 
 	protected ComposableExecutor(
 			Player player,
 			ScriptCommandCondition commandCondition,
 			Ability ability,
-			ScriptCommandTarget commandTarget
+			ScriptCommandTarget commandTarget,
+			boolean optional
 	) {
 		super(player);
 		this.commandCondition = commandCondition;
 		this.ability = ability;
 		this.commandTarget = commandTarget;
+		this.optional = optional;
 	}
 
 	public static ComposableExecutor create(ComposableCommand command, Player player) {

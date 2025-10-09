@@ -11,9 +11,11 @@ import java.util.Objects;
  * Date: 2025-09-17
  */
 public sealed interface ScriptCommand {
-	sealed interface ComposableCommand extends ScriptCommand permits CastSpell, CastSpellRank, UseItem {}
+	sealed interface ComposableCommand extends ScriptCommand permits CastSpell, CastSpellRank, UseItem {
+		boolean optional();
+	}
 
-	record CastSpell(ScriptCommandCondition condition, AbilityId abilityId, ScriptCommandTarget target) implements ComposableCommand {
+	record CastSpell(ScriptCommandCondition condition, AbilityId abilityId, ScriptCommandTarget target, boolean optional) implements ComposableCommand {
 		public CastSpell {
 			Objects.requireNonNull(condition);
 			Objects.requireNonNull(abilityId);
@@ -21,7 +23,7 @@ public sealed interface ScriptCommand {
 		}
 	}
 
-	record CastSpellRank(ScriptCommandCondition condition, String abilityName, int rank, ScriptCommandTarget target) implements ComposableCommand {
+	record CastSpellRank(ScriptCommandCondition condition, String abilityName, int rank, ScriptCommandTarget target, boolean optional) implements ComposableCommand {
 		public CastSpellRank {
 			Objects.requireNonNull(condition);
 			Objects.requireNonNull(abilityName);
@@ -29,7 +31,7 @@ public sealed interface ScriptCommand {
 		}
 	}
 
-	record UseItem(ScriptCommandCondition condition, ItemSlot itemSlot, ScriptCommandTarget target) implements ComposableCommand {
+	record UseItem(ScriptCommandCondition condition, ItemSlot itemSlot, ScriptCommandTarget target, boolean optional) implements ComposableCommand {
 		public UseItem {
 			Objects.requireNonNull(condition);
 			Objects.requireNonNull(itemSlot);

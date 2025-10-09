@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 import static wow.character.model.script.ScriptCommand.*;
 import static wow.character.model.script.ScriptSectionType.ROTATION;
+import static wow.commons.util.parser.ParserUtil.removePrefix;
 
 /**
  * User: POlszewski
@@ -26,6 +27,7 @@ public class ScriptCompiler {
 	public static final String COMMENT_INDICATOR = "#";
 	public static final String SECTION_INDICATOR = "@";
 	public static final String CAST_SEQUENCE_INDICATOR = ">>=";
+	public static final String OPTIONALITY_INDICATOR = "?";
 	public static final String LINE_CONTINUATION_INDICATOR = "\\";
 
 	private final String path;
@@ -71,12 +73,23 @@ public class ScriptCompiler {
 
 		var command = compose(composableCommands);
 
+		requireCorrectOptionality(command);
+
 		sectionCommands
 				.computeIfAbsent(currentSectionType, x -> new ArrayList<>())
 				.add(command);
 	}
 
 	private ComposableCommand parseComposableCommand(String line) {
+		var optional = false;
+
+		var withoutPrefix = removePrefix(OPTIONALITY_INDICATOR, line);
+
+		if (withoutPrefix != null) {
+			optional = true;
+			line = withoutPrefix.trim();
+		}
+
 		var matcher = COMMAND_PATTERN.matcher(line);
 
 		if (!matcher.find()) {
@@ -88,12 +101,12 @@ public class ScriptCompiler {
 		var rankStr = matcher.group(5);
 		var targetStr = matcher.group(7);
 
-		return getComposableCommand(conditionStr, abilityIdStr, rankStr, targetStr);
+		return getComposableCommand(conditionStr, abilityIdStr, rankStr, targetStr, optional);
 	}
 
 	private static final Pattern COMMAND_PATTERN = Pattern.compile("^(\\[(.+)]\\s*)?(.+?)(\\s*\\(Rank\\s+(\\d+)\\))?(\\s*@\\s*(\\S+))?$");
 
-	private ComposableCommand getComposableCommand(String conditionStr, String abilityIdStr, String rankStr, String targetStr) {
+	private ComposableCommand getComposableCommand(String conditionStr, String abilityIdStr, String rankStr, String targetStr, boolean optional) {
 		var conditionParser = new ScriptCommandConditionParser(conditionStr);
 
 		var condition = conditionParser.parse();
@@ -109,7 +122,8 @@ public class ScriptCompiler {
 			return new UseItem(
 					condition,
 					itemSlot,
-					target
+					target,
+					optional
 			);
 		}
 
@@ -122,14 +136,16 @@ public class ScriptCompiler {
 					condition,
 					abilityId.name(),
 					rank,
-					target
+					target,
+					optional
 			);
 		}
 
 		return new CastSpell(
 				condition,
 				abilityId,
-				target
+				target,
+				optional
 		);
 	}
 
@@ -149,6 +165,21 @@ public class ScriptCompiler {
 				.filter(x -> x.name().replace("_", "").equalsIgnoreCase(line))
 				.findAny()
 				.orElse(null);
+	}
+
+	private void requireCorrectOptionality(ScriptCommand command) {
+		switch (command) {
+			case CastSequence(var list) -> {
+				if (list.getLast().optional()) {
+					throw new IllegalArgumentException("Last command in the sequence cannot be optional");
+				}
+			}
+			case ComposableCommand composableCommand -> {
+				if (composableCommand.optional()) {
+					throw new IllegalArgumentException("Single commands cannot be optional");
+				}
+			}
+		}
 	}
 
 	private List<String> getLines() {

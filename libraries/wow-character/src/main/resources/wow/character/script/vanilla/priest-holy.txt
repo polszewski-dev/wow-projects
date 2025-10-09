@@ -11,7 +11,7 @@
 	Shadow Word: Pain
 	Devouring Plague
 	Holy Fire
-	Mind Blast
+	? Inner Focus >>= Mind Blast
 	Smite
 	Shoot
 

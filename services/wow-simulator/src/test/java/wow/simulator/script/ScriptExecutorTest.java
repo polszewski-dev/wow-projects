@@ -96,6 +96,42 @@ class ScriptExecutorTest extends WarlockSpellSimulationTest {
 		);
 	}
 
+	@Test
+	void CoA_cast_despite_AC_and_trinkets_missing() {
+		simulate("/script/executor-test4.txt", 90);
+
+		assertEvents(
+				this::onlyCurses,
+				at(0)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(25.5)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(51)
+						.beginCast(player, CURSE_OF_AGONY)
+		);
+	}
+
+	@Test
+	void AC_preceeding_CoD_when_available() {
+		enableTalent(AMPLIFY_CURSE, 1);
+		simulate("/script/executor-test5.txt", 300);
+
+		assertEvents(
+				testEvent -> testEvent.isBeginCast(CURSE_OF_DOOM) || testEvent.isBeginCast(AMPLIFY_CURSE),
+				at(0)
+						.beginCast(player, AMPLIFY_CURSE)
+						.beginCast(player, CURSE_OF_DOOM),
+
+				at(61.5)
+						.beginCast(player, CURSE_OF_DOOM),
+				at(123)
+						.beginCast(player, CURSE_OF_DOOM),
+				at(184.5)
+						.beginCast(player, AMPLIFY_CURSE)
+						.beginCast(player, CURSE_OF_DOOM)
+		);
+	}
+
 	void simulate(String script, int time) {
 		player.getBuild().setScript(script);
 

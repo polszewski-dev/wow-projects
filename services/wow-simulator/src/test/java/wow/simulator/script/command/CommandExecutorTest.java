@@ -19,7 +19,8 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 		return new CastSpell(
 				EMPTY,
 				AbilityId.of(abilityName),
-				DEFAULT
+				DEFAULT,
+				false
 		);
 	}
 
@@ -34,7 +35,8 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 				EMPTY,
 				abilityName,
 				rank,
-				DEFAULT
+				DEFAULT,
+				false
 		);
 	}
 
@@ -54,7 +56,8 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 		return new UseItem(
 				EMPTY,
 				itemSlot,
-				DEFAULT
+				DEFAULT,
+				false
 		);
 	}
 

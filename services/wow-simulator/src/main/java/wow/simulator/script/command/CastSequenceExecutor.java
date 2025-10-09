@@ -2,6 +2,7 @@ package wow.simulator.script.command;
 
 import wow.simulator.model.unit.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static wow.character.model.script.ScriptCommand.CastSequence;
@@ -12,6 +13,7 @@ import static wow.character.model.script.ScriptCommand.CastSequence;
  */
 public class CastSequenceExecutor extends ScriptCommandExecutor {
 	private final List<ComposableExecutor> list;
+	private List<ComposableExecutor> toExecute;
 
 	private CastSequenceExecutor(List<ComposableExecutor> list, Player player) {
 		super(player);
@@ -21,6 +23,7 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 	public static CastSequenceExecutor create(CastSequence castSequence, Player player) {
 		var list = castSequence.list().stream()
 				.map(command -> ComposableExecutor.create(command, player))
+				.filter(executor -> executor.isValid() || !executor.isOptional())
 				.toList();
 
 		return new CastSequenceExecutor(list, player);
@@ -28,16 +31,34 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 
 	@Override
 	public boolean isValid() {
-		return list.stream().allMatch(ComposableExecutor::isValid);
+		return !list.isEmpty() &&
+				!list.getLast().isOptional() &&
+				list.stream().allMatch(ComposableExecutor::isValid);
 	}
 
 	@Override
 	public boolean allConditionsAreMet() {
-		return list.stream().allMatch(ComposableExecutor::allConditionsAreMet);
+		this.toExecute = new ArrayList<>();
+
+		for (var executor : list) {
+			if (executor.allConditionsAreMet()) {
+				toExecute.add(executor);
+			} else if (!executor.isOptional()) {
+				toExecute = null;
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override
 	public void execute() {
-		list.forEach(ScriptCommandExecutor::execute);
+		if (toExecute == null) {
+			list.forEach(ScriptCommandExecutor::execute);
+		} else {
+			toExecute.forEach(ScriptCommandExecutor::execute);
+			toExecute = null;
+		}
 	}
 }

@@ -81,6 +81,22 @@ class ScriptCompilerTest {
 		));
 	}
 
+	@Test
+	void castSequences() {
+		var script = ScriptCompiler.compileResource("/script/cast-sequences.txt");
+		var section = script.getSection(ROTATION);
+
+		assertThat(section.commands()).isEqualTo(List.of(
+				compose(List.of(
+						command(TRINKET_1, true),
+						command(TRINKET_2, true),
+						command(AMPLIFY_CURSE, true),
+						command(CURSE_OF_DOOM)
+				))
+		));
+	}
+
+
 	ScriptCommand command(String... abilityNames) {
 		var castSpellCommands = Stream.of(abilityNames)
 				.map(this::command)
@@ -89,24 +105,29 @@ class ScriptCompilerTest {
 		return compose(castSpellCommands);
 	}
 
-	CastSpell command(String abilityName, ScriptCommandTarget target) {
-		return command(abilityName, target, EMPTY);
-	}
-
-	CastSpell command(String abilityName, ScriptCommandTarget target, ScriptCommandCondition condition) {
+	CastSpell command(String abilityName, ScriptCommandTarget target, ScriptCommandCondition condition, boolean optional) {
 		return new CastSpell(
 				condition,
 				AbilityId.of(abilityName),
-				target
+				target,
+				optional
 		);
 	}
 
 	CastSpell command(String abilityName) {
-		return command(abilityName, DEFAULT);
+		return command(abilityName, DEFAULT, EMPTY, false);
+	}
+
+	CastSpell command(String abilityName, ScriptCommandTarget target) {
+		return command(abilityName, target, EMPTY, false);
 	}
 
 	CastSpell command(String abilityName, ScriptCommandCondition condition) {
-		return command(abilityName, DEFAULT, condition);
+		return command(abilityName, DEFAULT, condition, false);
+	}
+
+	CastSpell command(String abilityName, boolean optional) {
+		return command(abilityName, DEFAULT, EMPTY, optional);
 	}
 
 	CastSpellRank command(String abilityName, int rank) {
@@ -118,15 +139,21 @@ class ScriptCompilerTest {
 				EMPTY,
 				abilityName,
 				rank,
-				target
+				target,
+				false
 		);
 	}
 
 	UseItem command(ItemSlot itemSlot) {
+		return command(itemSlot, false);
+	}
+
+	UseItem command(ItemSlot itemSlot, boolean optional) {
 		return new UseItem(
 				EMPTY,
 				itemSlot,
-				DEFAULT
+				DEFAULT,
+				optional
 		);
 	}
 
