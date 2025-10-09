@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -77,7 +76,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 	void interrupted() {
 		player.cast(DRAIN_LIFE);
 
-		simulation.updateUntil(Time.at(1.25));
+		updateUntil(1.25);
 
 		player.interruptCurrentAction();
 

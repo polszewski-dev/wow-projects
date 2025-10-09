@@ -41,9 +41,7 @@ public class Simulation implements SimulationContextSource {
 
 		getGameLog().simulationStarted();
 
-		for (var unit : units) {
-			unit.ensureAction();
-		}
+		ensureUnitsHaveActions();
 
 		while (!getScheduler().isEmpty()) {
 			var nextUpdateTime = getScheduler().getNextUpdateTime().orElseThrow();
@@ -58,6 +56,14 @@ public class Simulation implements SimulationContextSource {
 
 		getClock().advanceTo(timeUntil);
 		getGameLog().simulationEnded();
+	}
+
+	private void ensureUnitsHaveActions() {
+		getScheduler().add(Duration.ZERO, () -> {
+			for (var unit : units) {
+				unit.ensureAction();
+			}
+		});
 	}
 
 	public void addHandler(GameLogHandler handler) {

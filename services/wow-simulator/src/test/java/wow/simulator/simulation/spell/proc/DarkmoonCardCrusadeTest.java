@@ -3,7 +3,6 @@ package wow.simulator.simulation.spell.proc;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
@@ -93,7 +92,7 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 			player.cast(SHADOW_BOLT);
 		}
 
-		simulation.updateUntil(Time.at(numCasts * 3 + 1));
+		updateUntil(numCasts * 3 + 1);
 
 		var dmgAfter = player.getStats().getSpellDamage();
 

@@ -25,6 +25,8 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 		assertResultAfter(24, executor::allConditionsAreMet, false);
 		assertResultAfter(89, executor::allConditionsAreMet, false);
 		assertResultAfter(90, executor::allConditionsAreMet, true);
+
+		updateUntil(120);
 	}
 
 	@Test
@@ -43,6 +45,8 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 		assertResultAfter(1, executor::allConditionsAreMet, false);
 		assertResultAfter(89, executor::allConditionsAreMet, false);
 		assertResultAfter(90, executor::allConditionsAreMet, true);
+
+		updateUntil(120);
 	}
 
 	@Test
@@ -61,12 +65,12 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 		assertResultAfter(1, executor::allConditionsAreMet, false);
 		assertResultAfter(23, executor::allConditionsAreMet, false);
 		assertResultAfter(24, executor::allConditionsAreMet, true);
+
+		updateUntil(120);
 	}
 
 	@Override
 	protected void afterSetUp() {
-		super.afterSetUp();
-
 		equip(SCRYERS_BLOODGEM, TRINKET_1);
 	}
 

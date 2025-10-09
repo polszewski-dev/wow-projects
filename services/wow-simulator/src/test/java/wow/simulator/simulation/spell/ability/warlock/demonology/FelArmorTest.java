@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.ability.warlock.demonology;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +21,7 @@ class FelArmorTest extends WarlockSpellSimulationTest {
 	void success() {
 		player.cast(FEL_ARMOR);
 
-		simulation.updateUntil(Time.at(30 * 60));
+		updateUntil(30 * 60);
 
 		assertEvents(
 				at(0)
