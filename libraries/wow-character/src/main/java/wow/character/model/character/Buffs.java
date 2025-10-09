@@ -52,7 +52,21 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 			availableBuffsByNameRank.put(buff.getNameRank(), buff);
 		}
 
-		enabledBuffsByName.entrySet().removeIf(entry -> !isAvailable(entry.getValue()));
+		var newEnabledBuffList = getNewEnabledBuffList();
+
+		reset();
+
+		for (BuffNameRank nameRank : newEnabledBuffList) {
+			enable(nameRank.name(), nameRank.rank());
+		}
+	}
+
+	private List<BuffNameRank> getNewEnabledBuffList() {
+		var names = enabledBuffsByName.values().stream()
+				.map(Buff::getName)
+				.toList();
+
+		return getHighestRanks(names);
 	}
 
 	public void reset() {
