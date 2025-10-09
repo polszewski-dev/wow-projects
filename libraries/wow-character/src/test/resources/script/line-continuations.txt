@@ -1,0 +1,14 @@
+@	Rotation
+
+	Amplify Curse >>=
+		Curse of Doom
+	Amplify Curse
+		>>= Curse of Agony
+		>>= Corruption
+	Shadow Bolt
+
+	[\
+    	~Target.HasEffect(Curse of *) & \
+    	FullDuration <= RemainingCooldown(Curse of Doom) \
+    ] \
+    	Curse of Doom

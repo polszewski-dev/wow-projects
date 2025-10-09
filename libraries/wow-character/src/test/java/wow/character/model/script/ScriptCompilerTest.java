@@ -3,6 +3,7 @@ package wow.character.model.script;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import wow.character.constant.AbilityIds;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.AbilityId;
 
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static wow.character.model.script.ScriptCommand.*;
-import static wow.character.model.script.ScriptCommandCondition.EMPTY;
+import static wow.character.model.script.ScriptCommandCondition.*;
 import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
 import static wow.character.model.script.ScriptCommandTarget.TARGET;
 import static wow.character.model.script.ScriptSectionType.ROTATION;
@@ -61,6 +62,25 @@ class ScriptCompilerTest {
 		));
 	}
 
+	@Test
+	void lineContinuation() {
+		var script = ScriptCompiler.compileResource("/script/line-continuations.txt");
+		var section = script.getSection(ROTATION);
+
+		assertThat(section.commands()).isEqualTo(List.of(
+				command(AMPLIFY_CURSE, CURSE_OF_DOOM),
+				command(AMPLIFY_CURSE, CURSE_OF_AGONY, CORRUPTION),
+				command(SHADOW_BOLT),
+				command(CURSE_OF_DOOM, new And(
+						new Not(new TargetHasEffect("Curse of *")),
+						new LessThanOrEqual(
+								new FullDuration(),
+								new RemainingCooldown(AbilityIds.CURSE_OF_DOOM)
+						)
+				))
+		));
+	}
+
 	ScriptCommand command(String... abilityNames) {
 		var castSpellCommands = Stream.of(abilityNames)
 				.map(this::command)
@@ -70,8 +90,12 @@ class ScriptCompilerTest {
 	}
 
 	CastSpell command(String abilityName, ScriptCommandTarget target) {
+		return command(abilityName, target, EMPTY);
+	}
+
+	CastSpell command(String abilityName, ScriptCommandTarget target, ScriptCommandCondition condition) {
 		return new CastSpell(
-				EMPTY,
+				condition,
 				AbilityId.of(abilityName),
 				target
 		);
@@ -79,6 +103,10 @@ class ScriptCompilerTest {
 
 	CastSpell command(String abilityName) {
 		return command(abilityName, DEFAULT);
+	}
+
+	CastSpell command(String abilityName, ScriptCommandCondition condition) {
+		return command(abilityName, DEFAULT, condition);
 	}
 
 	CastSpellRank command(String abilityName, int rank) {

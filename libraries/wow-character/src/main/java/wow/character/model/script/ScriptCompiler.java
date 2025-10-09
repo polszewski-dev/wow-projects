@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 import static wow.character.model.script.ScriptCommand.*;
 import static wow.character.model.script.ScriptSectionType.ROTATION;
@@ -25,6 +26,7 @@ public class ScriptCompiler {
 	public static final String COMMENT_INDICATOR = "#";
 	public static final String SECTION_INDICATOR = "@";
 	public static final String CAST_SEQUENCE_INDICATOR = ">>=";
+	public static final String LINE_CONTINUATION_INDICATOR = "\\";
 
 	private final String path;
 	private ScriptSectionType currentSectionType = ROTATION;
@@ -38,12 +40,6 @@ public class ScriptCompiler {
 
 	private Script compile() {
 		for (var line : getLines()) {
-			line = removeSingleLineComment(line);
-
-			if (line.isEmpty()) {
-				continue;
-			}
-
 			if (line.startsWith(SECTION_INDICATOR)) {
 				parseSectionType(line);
 			} else {
@@ -52,10 +48,6 @@ public class ScriptCompiler {
 		}
 
 		return new Script(getSectionsByType());
-	}
-
-	private String removeSingleLineComment(String line) {
-		return line.replaceAll(COMMENT_INDICATOR + ".*", "").trim();
 	}
 
 	private void parseSectionType(String line) {
@@ -159,15 +151,78 @@ public class ScriptCompiler {
 				.orElse(null);
 	}
 
-	@SneakyThrows
 	private List<String> getLines() {
+		var lines = getUnprocessedLines();
+		var result = new ArrayList<String>();
+
+		for (int i = 0; i < lines.size();) {
+			var linesToMerge = new ArrayList<Line>();
+			var current = lines.get(i++);
+
+			linesToMerge.add(current);
+
+			while (i < lines.size() && shouldMergeTogether(current, lines.get(i))) {
+				var next = lines.get(i++);
+
+				linesToMerge.add(next);
+
+				current = next;
+			}
+
+			var mergedLine = merge(linesToMerge);
+
+			if (!mergedLine.isEmpty()) {
+				result.add(mergedLine);
+			}
+		}
+
+		return result;
+	}
+
+	@SneakyThrows
+	private List<Line> getUnprocessedLines() {
 		var inputStream = getClass().getResourceAsStream(path);
 
 		Objects.requireNonNull(inputStream, "No script in " + path);
 
 		try (var reader = new BufferedReader(new InputStreamReader(inputStream))) {
-			return reader.lines().toList();
+			return reader.lines()
+					.map(Line::new)
+					.toList();
 		}
+	}
+
+	private record Line(
+			String rawLine,
+			String cleanedLine
+	) {
+		Line(String rawLine) {
+			this(rawLine, removeSingleLineComment(rawLine));
+		}
+
+		public String cleanedWithoutContinuationMark() {
+			if (!cleanedLine.endsWith(LINE_CONTINUATION_INDICATOR)) {
+				return cleanedLine;
+			}
+
+			return cleanedLine.substring(0, cleanedLine.length() - LINE_CONTINUATION_INDICATOR.length()).trim();
+		}
+	}
+
+	private boolean shouldMergeTogether(Line currentLine, Line nextLine) {
+		return currentLine.cleanedLine().endsWith(LINE_CONTINUATION_INDICATOR) ||
+				currentLine.cleanedLine().endsWith(CAST_SEQUENCE_INDICATOR) ||
+				nextLine.cleanedLine().startsWith(CAST_SEQUENCE_INDICATOR);
+	}
+
+	private String merge(ArrayList<Line> linesToMerge) {
+		return linesToMerge.stream()
+				.map(Line::cleanedWithoutContinuationMark)
+				.collect(joining());
+	}
+
+	private static String removeSingleLineComment(String line) {
+		return line.replaceAll(COMMENT_INDICATOR + ".*", "").trim();
 	}
 
 	private Map<ScriptSectionType, ScriptSection> getSectionsByType() {
