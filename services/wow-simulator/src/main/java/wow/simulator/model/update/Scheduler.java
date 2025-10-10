@@ -6,11 +6,9 @@ import wow.simulator.model.action.Action;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.time.Clock;
+import wow.simulator.model.time.Time;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * User: POlszewski
@@ -36,6 +34,14 @@ public class Scheduler {
 		};
 
 		add(action);
+	}
+
+	public void add(Time time, Runnable runnable) {
+		if (clock.timeInThePast(time)) {
+			throw new IllegalArgumentException("Time %s is in the past (now = %s)".formatted(time, clock.now()));
+		}
+		var delay = time.subtract(clock.now());
+		add(delay, runnable);
 	}
 
 	private void schedule(Action action) {
@@ -108,5 +114,21 @@ public class Scheduler {
 
 		actions.remove(action);
 		actionsByTime.get(clock.now()).add(action);
+	}
+
+	public void interruptUnfinishedActions() {
+		var actions = actionsByTime.values()
+				.stream()
+				.flatMap(Collection::stream)
+				.toList();
+
+		actionsByTime.clear();
+
+		for (var action : actions) {
+			if (action.isInProgress()) {
+				action.interrupt();
+				action.onRemovedFromQueue();
+			}
+		}
 	}
 }

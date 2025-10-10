@@ -67,12 +67,15 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	private void finishCurrentCast() {
-		if (currentCast != null) {
-			currentCast.complete(now());
-			stats.addCastTime(
-					currentCast.getAbility(), currentCast.getElapsedTime(), currentCast.isFinished()
-			);
+		if (currentCast == null) {
+			return;
 		}
+
+		currentCast.complete(now());
+		stats.addCastTime(
+				currentCast.getAbility(), currentCast.getElapsedTime(), currentCast.isFinished()
+		);
+		currentCast = null;
 	}
 
 	@Override
@@ -81,6 +84,15 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 			return;
 		}
 		currentCast.setEnd(now());
+	}
+
+	@Override
+	public void castInterrupted(CastSpellAction action) {
+		if (action.getOwner() != player) {
+			return;
+		}
+		endCast(action);
+		finishCurrentCast();
 	}
 
 	@Override
@@ -200,13 +212,5 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 		stats.setSimulationEnd(now());
 
 		finishCurrentCast();
-
-		for (var timeEntry : effects.values()) {
-			completeEffect(timeEntry);
-		}
-
-		for (var timeEntry : cooldowns.values()) {
-			completeCooldown(timeEntry);
-		}
 	}
 }

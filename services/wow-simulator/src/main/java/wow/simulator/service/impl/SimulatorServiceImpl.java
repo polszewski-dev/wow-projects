@@ -54,6 +54,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		withinSimulationContext.run();
 
 		simulation.updateUntil(endTime);
+		simulation.finish();
 
 		return stats;
 	}

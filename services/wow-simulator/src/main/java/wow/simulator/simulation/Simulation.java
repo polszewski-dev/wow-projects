@@ -14,11 +14,14 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-08-07
  */
-@Getter
 public class Simulation implements SimulationContextSource {
 	private final List<Unit> units = new ArrayList<>();
+	@Getter
 	private final SimulationContext simulationContext;
 
+	private boolean started;
+	@Getter
+	private boolean finished;
 	private Time timeUntilSimulationEnd;
 
 	public Simulation(SimulationContext simulationContext) {
@@ -39,9 +42,7 @@ public class Simulation implements SimulationContextSource {
 	public void updateUntil(Time timeUntil) {
 		this.timeUntilSimulationEnd = timeUntil;
 
-		getGameLog().simulationStarted();
-
-		ensureUnitsHaveActions();
+		start();
 
 		while (!getScheduler().isEmpty()) {
 			var nextUpdateTime = getScheduler().getNextUpdateTime().orElseThrow();
@@ -55,6 +56,25 @@ public class Simulation implements SimulationContextSource {
 		}
 
 		getClock().advanceTo(timeUntil);
+	}
+
+	public void start() {
+		if (started) {
+			return;
+		}
+
+		started = true;
+		getGameLog().simulationStarted();
+		ensureUnitsHaveActions();
+	}
+
+	public void finish() {
+		if (finished) {
+			return;
+		}
+
+		finished = true;
+		getScheduler().interruptUnfinishedActions();
 		getGameLog().simulationEnded();
 	}
 

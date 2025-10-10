@@ -81,6 +81,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void ensureAction() {
+		if (getSimulation().isFinished()) {
+			return;
+		}
+
 		if (hasActionInProgress() || isOnCooldown(GCD)) {
 			return;
 		}

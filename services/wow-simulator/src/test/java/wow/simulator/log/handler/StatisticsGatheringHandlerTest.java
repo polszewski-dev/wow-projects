@@ -44,6 +44,23 @@ class StatisticsGatheringHandlerTest extends WowSimulatorSpringTest {
 
 	@ParameterizedTest
 	@CsvSource({
+			"Shadow Bolt,		3",
+			"Curse of Agony,	1.5",
+			"Drain Life,		5"
+	})
+	void totalCastTimeIncludesInterruptedSpell(String name, double expectedCastTime) {
+		player.cast(name);
+		player.cast(name);
+
+		updateUntil(1.5 * expectedCastTime);
+
+		var stat = getAbilityStat(name);
+
+		assertThat(stat.getTotalCastTime()).isEqualTo(Duration.seconds(1.5 * expectedCastTime));
+	}
+
+	@ParameterizedTest
+	@CsvSource({
 			"Shadow Bolt",
 			"Curse of Agony",
 			"Drain Life"
@@ -240,5 +257,11 @@ class StatisticsGatheringHandlerTest extends WowSimulatorSpringTest {
 
 		simulation.add(player);
 		simulation.add(target);
+	}
+
+	@Override
+	protected void updateUntil(double time) {
+		super.updateUntil(time);
+		simulation.finish();
 	}
 }
