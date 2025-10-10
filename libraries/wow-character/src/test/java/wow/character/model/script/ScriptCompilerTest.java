@@ -28,8 +28,7 @@ import static wow.test.commons.AbilityNames.*;
 class ScriptCompilerTest {
 	@Test
 	void compileResource() {
-		var script = ScriptCompiler.compileResource("/script/script-example.txt");
-		var section = script.getSection(ROTATION);
+		var section = getScriptSection("/script/script-example.txt");
 
 		assertThat(section.commands()).isEqualTo(List.of(
 				command(DESTRUCTION_POTION),
@@ -49,8 +48,7 @@ class ScriptCompilerTest {
 
 	@Test
 	void commandSyntax() {
-		var script = ScriptCompiler.compileResource("/script/various-commands.txt");
-		var section = script.getSection(ROTATION);
+		var section = getScriptSection("/script/various-commands.txt");
 
 		assertThat(section.commands()).isEqualTo(List.of(
 				command(SHADOW_BOLT),
@@ -64,8 +62,7 @@ class ScriptCompilerTest {
 
 	@Test
 	void lineContinuation() {
-		var script = ScriptCompiler.compileResource("/script/line-continuations.txt");
-		var section = script.getSection(ROTATION);
+		var section = getScriptSection("/script/line-continuations.txt");
 
 		assertThat(section.commands()).isEqualTo(List.of(
 				command(AMPLIFY_CURSE, CURSE_OF_DOOM),
@@ -83,8 +80,7 @@ class ScriptCompilerTest {
 
 	@Test
 	void castSequences() {
-		var script = ScriptCompiler.compileResource("/script/cast-sequences.txt");
-		var section = script.getSection(ROTATION);
+		var section = getScriptSection("/script/cast-sequences.txt");
 
 		assertThat(section.commands()).isEqualTo(List.of(
 				compose(List.of(
@@ -96,6 +92,51 @@ class ScriptCompilerTest {
 		));
 	}
 
+	@Test
+	void macros() {
+		var sectionBefore = getScriptSection("/script/before-adding-macros.txt");
+		var sectionAfter = getScriptSection("/script/after-adding-macros.txt");
+
+		var expectedCommands = List.of(
+				command(CURSE_OF_DOOM, new Not(new TargetHasEffect("Curse of *"))),
+				command(CURSE_OF_AGONY, new And(
+						new Not(new TargetHasEffect("Curse of *")),
+						new LessThanOrEqual(
+								new FullDuration(),
+								new RemainingCooldown(AbilityIds.CURSE_OF_DOOM)
+						)
+				)),
+				command(CURSE_OF_AGONY, new And(
+						new Not(new TargetHasEffect("Curse of *")),
+						new Not(new CanCastMoreBeforeSimulationEnds(AbilityIds.CURSE_OF_DOOM))
+				))
+		);
+
+		assertThat(sectionBefore.commands()).isEqualTo(expectedCommands);
+		assertThat(sectionAfter.commands()).isEqualTo(expectedCommands);
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {
+			"/wow/character/script/vanilla/priest-holy.txt",
+			"/wow/character/script/vanilla/priest-shadow.txt",
+			"/wow/character/script/vanilla/warlock-affliction.txt",
+			"/wow/character/script/vanilla/warlock-curse-plus-shadow-bolt.txt",
+			"/wow/character/script/vanilla/warlock-destro-shadow.txt",
+			"/wow/character/script/vanilla/warlock-shadow-bolt-spam.txt",
+			"/wow/character/script/tbc/priest-holy.txt",
+			"/wow/character/script/tbc/priest-shadow.txt",
+			"/wow/character/script/tbc/warlock-affliction.txt",
+			"/wow/character/script/tbc/warlock-affliction-without-ua.txt",
+			"/wow/character/script/tbc/warlock-curse-plus-shadow-bolt.txt",
+			"/wow/character/script/tbc/warlock-destro-shadow.txt",
+			"/wow/character/script/tbc/warlock-shadow-bolt-spam.txt"
+	})
+	void scriptFilesCompileWithoutErrors(String resourcePath) {
+		assertThatNoException().isThrownBy(
+				() -> ScriptCompiler.compileResource(resourcePath)
+		);
+	}
 
 	ScriptCommand command(String... abilityNames) {
 		var castSpellCommands = Stream.of(abilityNames)
@@ -157,18 +198,8 @@ class ScriptCompilerTest {
 		);
 	}
 
-	@ParameterizedTest
-	@ValueSource(strings = {
-			"/wow/character/script/vanilla/priest-holy.txt",
-			"/wow/character/script/vanilla/priest-shadow.txt",
-			"/wow/character/script/vanilla/warlock-destro-shadow.txt",
-			"/wow/character/script/tbc/priest-holy.txt",
-			"/wow/character/script/tbc/priest-shadow.txt",
-			"/wow/character/script/tbc/warlock-destro-shadow.txt",
-	})
-	void scriptFilesCompileWithoutErrors(String resourcePath) {
-		assertThatNoException().isThrownBy(
-				() -> ScriptCompiler.compileResource(resourcePath)
-		);
+	ScriptSection getScriptSection(String path) {
+		var script = ScriptCompiler.compileResource(path);
+		return script.getSection(ROTATION);
 	}
 }

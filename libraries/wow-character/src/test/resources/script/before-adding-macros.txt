@@ -1,0 +1,6 @@
+
+
+[~Target.HasEffect(Curse of *)] Curse of Doom
+[~Target.HasEffect(Curse of *) & FullDuration <= RemainingCooldown(Curse of Doom)] Curse of Agony
+[~Target.HasEffect(Curse of *) & ~CanCastMoreBeforeSimulationEnds(Curse of Doom)] Curse of Agony
+

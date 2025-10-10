@@ -1,6 +1,9 @@
 
 #	Curse of Doom, Corruption, Immolate, Shadow Bolt
 
+@	let noCurse = ~Target.HasEffect(Curse of *)
+@	let coaCond = FullDuration <= RemainingCooldown(Curse of Doom) | ~CanCastMoreBeforeSimulationEnds(Curse of Doom)
+
 
 @	Rotation
 
@@ -9,10 +12,8 @@
 	Trinket1
 	Trinket2
 
-	Amplify Curse
-	[~Target.HasEffect(Curse of *)] Curse of Doom
-	[~Target.HasEffect(Curse of *) & FullDuration <= RemainingCooldown(Curse of Doom)] Curse of Agony
-	[~Target.HasEffect(Curse of *) & ~CanCastMoreBeforeSimulationEnds(Curse of Doom)] Curse of Agony
+	? Amplify Curse >>= [noCurse] Curse of Doom
+	? Amplify Curse >>= [noCurse & coaCond] Curse of Agony
 	Corruption
 	Immolate
 	Siphon Life

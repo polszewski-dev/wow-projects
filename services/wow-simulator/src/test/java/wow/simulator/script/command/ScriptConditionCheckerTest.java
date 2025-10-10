@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import wow.character.model.script.ScriptCommandConditionParser;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
+import java.util.Map;
+
 import static wow.test.commons.AbilityNames.CURSE_OF_AGONY;
 import static wow.test.commons.AbilityNames.CURSE_OF_DOOM;
 
@@ -35,7 +37,7 @@ class ScriptConditionCheckerTest extends WarlockSpellSimulationTest {
 	}
 
 	boolean checkCondition(String condition, String abilityName) {
-		var conditionParser = new ScriptCommandConditionParser(condition);
+		var conditionParser = new ScriptCommandConditionParser(condition, Map.of());
 		var parsedCondition = conditionParser.parse();
 		var ability = player.getAbility(abilityName).orElseThrow();
 		var conditionChecker = new ScriptConditionChecker(player, ability, player.getTarget());

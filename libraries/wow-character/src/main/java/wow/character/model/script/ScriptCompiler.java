@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.util.parser.ParsedMultipleValues;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,6 +17,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 import static wow.character.model.script.ScriptCommand.*;
 import static wow.character.model.script.ScriptSectionType.ROTATION;
+import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
 import static wow.commons.util.parser.ParserUtil.removePrefix;
 
 /**
@@ -30,9 +32,14 @@ public class ScriptCompiler {
 	public static final String OPTIONALITY_INDICATOR = "?";
 	public static final String LINE_CONTINUATION_INDICATOR = "\\";
 
+	private static final String LET_DIRECTIVE_REGEX = "@\\s*let\\s+(\\w+)\\s*=(.*)";
+	private static final Pattern COMMAND_PATTERN = Pattern.compile("^(\\[(.+)]\\s*)?(.+?)(\\s*\\(Rank\\s+(\\d+)\\))?(\\s*@\\s*(\\S+))?$");
+
 	private final String path;
 	private ScriptSectionType currentSectionType = ROTATION;
 	private final Map<ScriptSectionType, List<ScriptCommand>> sectionCommands = new EnumMap<>(ScriptSectionType.class);
+
+	private final Map<String, String> macros = new HashMap<>();
 
 	public static Script compileResource(String path) {
 		var compiler = new ScriptCompiler(path);
@@ -43,13 +50,23 @@ public class ScriptCompiler {
 	private Script compile() {
 		for (var line : getLines()) {
 			if (line.startsWith(SECTION_INDICATOR)) {
-				parseSectionType(line);
+				parseDirective(line);
 			} else {
 				parseCommand(line);
 			}
 		}
 
 		return new Script(getSectionsByType());
+	}
+
+	private void parseDirective(String line) {
+		var result = parseMultipleValues(LET_DIRECTIVE_REGEX, line);
+
+		if (!result.isEmpty()) {
+			parseLet(result);
+		} else {
+			parseSectionType(line);
+		}
 	}
 
 	private void parseSectionType(String line) {
@@ -61,6 +78,13 @@ public class ScriptCompiler {
 		}
 
 		this.currentSectionType = newSectionType;
+	}
+
+	private void parseLet(ParsedMultipleValues parsed) {
+		var name = parsed.get(0).trim();
+		var definition = parsed.get(1).trim();
+
+		macros.put(name, definition);
 	}
 
 	private void parseCommand(String line) {
@@ -104,13 +128,8 @@ public class ScriptCompiler {
 		return getComposableCommand(conditionStr, abilityIdStr, rankStr, targetStr, optional);
 	}
 
-	private static final Pattern COMMAND_PATTERN = Pattern.compile("^(\\[(.+)]\\s*)?(.+?)(\\s*\\(Rank\\s+(\\d+)\\))?(\\s*@\\s*(\\S+))?$");
-
 	private ComposableCommand getComposableCommand(String conditionStr, String abilityIdStr, String rankStr, String targetStr, boolean optional) {
-		var conditionParser = new ScriptCommandConditionParser(conditionStr);
-
-		var condition = conditionParser.parse();
-
+		var condition = parseCondition(conditionStr);
 		var target = parseTarget(targetStr);
 		var itemSlot = tryParseItemSlot(abilityIdStr);
 
@@ -147,6 +166,12 @@ public class ScriptCompiler {
 				target,
 				optional
 		);
+	}
+
+	private ScriptCommandCondition parseCondition(String conditionStr) {
+		var conditionParser = new ScriptCommandConditionParser(conditionStr, macros);
+
+		return conditionParser.parse();
 	}
 
 	private ScriptCommandTarget parseTarget(String targetStr) {

@@ -4,6 +4,8 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.util.condition.ConditionParser;
 import wow.commons.util.parser.ParserUtil;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import static wow.character.model.script.ScriptCommandCondition.*;
@@ -13,8 +15,29 @@ import static wow.character.model.script.ScriptCommandCondition.*;
  * Date: 2025-09-17
  */
 public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandCondition, Expression> {
-	public ScriptCommandConditionParser(String value) {
+	private final Map<String, String> stringMacros;
+	private final Map<String, Node> parsedMacros = new HashMap<>();
+
+	public ScriptCommandConditionParser(String value, Map<String, String> macros) {
 		super(value);
+		this.stringMacros = macros;
+	}
+
+	@Override
+	public ScriptCommandCondition parse() {
+		parseMacros();
+
+		return super.parse();
+	}
+
+	private void parseMacros() {
+		for (var entry : stringMacros.entrySet()) {
+			var name = entry.getKey();
+			var definition = entry.getValue();
+			var parsedDefinition = new Parser(definition).parse();
+
+			parsedMacros.put(name, parsedDefinition);
+		}
 	}
 
 	@Override
@@ -54,6 +77,12 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 
 	@Override
 	protected ScriptCommandCondition getBasicCondition(String value) {
+		var macro = parsedMacros.get(value);
+
+		if (macro != null) {
+			return transform(macro);
+		}
+
 		var casterHasEffect = parseCasterHasEffect(value);
 
 		if (casterHasEffect != null) {
@@ -77,6 +106,12 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 
 	@Override
 	protected Expression getBasicExpression(String value) {
+		var macro = parsedMacros.get(value);
+
+		if (macro != null) {
+			return expressionTransform(macro);
+		}
+
 		if (value.equals("Health")) {
 			return new CasterHealth();
 		}

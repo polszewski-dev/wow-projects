@@ -1,0 +1,9 @@
+
+@let noCurse = ~Target.HasEffect(Curse of *)
+@let canCastBeforeCoD = FullDuration <= RemainingCooldown(Curse of Doom)
+@let noTimeForCoD = ~CanCastMoreBeforeSimulationEnds(Curse of Doom)
+
+[noCurse] Curse of Doom
+[noCurse & canCastBeforeCoD] Curse of Agony
+[noCurse & noTimeForCoD] Curse of Agony
+

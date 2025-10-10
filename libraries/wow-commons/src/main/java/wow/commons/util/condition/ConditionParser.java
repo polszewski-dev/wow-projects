@@ -28,7 +28,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 		return transform(intermediateForm);
 	}
 
-	private T transform(Node node) {
+	protected T transform(Node node) {
 		return switch (node) {
 			case OrNode(var left, var right) ->
 					orOperator(
@@ -89,7 +89,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 		};
 	}
 
-	private E expressionTransform(Node node) {
+	protected E expressionTransform(Node node) {
 		if (node instanceof PrimitiveNode(var value)) {
 			if (value.matches("^-?\\d*\\.?\\d+$")) {
 				return getConstant(Double.parseDouble(value));
@@ -155,7 +155,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 
 	protected abstract T getEmptyCondition();
 
-	private static class Parser {
+	protected static class Parser {
 		private final Tokenizer tokenizer;
 
 		public Parser(String value) {
@@ -445,7 +445,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 		}
 	}
 
-	private sealed interface Node {}
+	protected sealed interface Node {}
 
 	private record OrNode(Node left, Node right) implements Node {}
 

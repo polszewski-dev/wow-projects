@@ -1,5 +1,8 @@
 
-#	Curse of Doom, Corruption, Immolate, Shadow Bolt
+#	Curse of Doom, Unstable Affliction, Corruption, Immolate, Shadow Bolt
+
+@	let noCurse = ~Target.HasEffect(Curse of *)
+@	let coaCond = FullDuration <= RemainingCooldown(Curse of Doom) | ~CanCastMoreBeforeSimulationEnds(Curse of Doom)
 
 
 @	Rotation
@@ -10,9 +13,8 @@
 	Trinket2
 
 	Amplify Curse
-	[~Target.HasEffect(Curse of *)] Curse of Doom
-	[~Target.HasEffect(Curse of *) & FullDuration <= RemainingCooldown(Curse of Doom)] Curse of Agony
-	[~Target.HasEffect(Curse of *) & ~CanCastMoreBeforeSimulationEnds(Curse of Doom)] Curse of Agony
+	[noCurse] Curse of Doom
+	[noCurse & coaCond] Curse of Agony
 	Unstable Affliction
 	Corruption
 	Immolate
