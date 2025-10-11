@@ -15,6 +15,9 @@ import wow.commons.model.talent.TalentTree;
 
 import java.util.Objects;
 
+import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
+import static wow.commons.model.spell.ActionType.SPELL;
+
 /**
  * User: POlszewski
  * Date: 2023-10-13
@@ -28,34 +31,50 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 	private final Character target;
 
 	private final ActionType actionType;
-	private PowerType powerType;
-	private WeaponSubType weaponType;
+	private final PowerType powerType;
+	private final SpellSchool spellSchool;
 
-	private boolean hadCrit;
 	private boolean direct;
 
-	private SpellSchool spellSchool;
+	private WeaponSubType weaponType;
+	private boolean hadCrit;
 
 	public static AttributeConditionArgs forAnySpell(Character caster) {
+		return forAnySpell(caster, null, null);
+	}
+
+	public static AttributeConditionArgs forAnySpell(Character caster, PowerType powerType, SpellSchool spellSchool) {
 		Objects.requireNonNull(caster);
-		return new AttributeConditionArgs(caster, null, null, ActionType.SPELL);
+
+		return new AttributeConditionArgs(caster, null, null, SPELL, powerType, spellSchool);
 	}
 
 	public static AttributeConditionArgs forSpell(Character caster, Spell spell, Character target) {
-		Objects.requireNonNull(caster);
-		Objects.requireNonNull(spell);
-		return new AttributeConditionArgs(caster, spell, target, ActionType.SPELL);
+		return forSpell(caster, spell, target, null, null);
 	}
 
-	public static AttributeConditionArgs forSpellTarget(Character target, Spell spell) {
+	public static AttributeConditionArgs forSpell(Character caster, Spell spell, Character target, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		return new AttributeConditionArgs(caster, spell, target, SPELL, powerType, spellSchool);
+	}
+
+	public static AttributeConditionArgs forSpellDamage(Character caster, Spell spell, Character target, SpellSchool spellSchool) {
+		return forSpell(caster, spell, target, SPELL_DAMAGE, spellSchool);
+	}
+
+	public static AttributeConditionArgs forSpellTarget(Character target, Spell spell, PowerType powerType, SpellSchool spellSchool) {
 		Objects.requireNonNull(target);
 		Objects.requireNonNull(spell);
-		return new AttributeConditionArgs(target, spell, null, ActionType.SPELL);
+
+		return new AttributeConditionArgs(target, spell, null, SPELL, powerType, spellSchool);
 	}
 
-	public static AttributeConditionArgs forBaseStats(Character caster) {
-		Objects.requireNonNull(caster);
-		return new AttributeConditionArgs(caster, null, null, null);
+	public static AttributeConditionArgs forBaseStats(Character owner) {
+		Objects.requireNonNull(owner);
+
+		return new AttributeConditionArgs(owner, null, null, null, null, null);
 	}
 
 	public SpellSchool getSpellSchool() {

@@ -33,10 +33,10 @@ import java.util.stream.Stream;
 
 import static java.lang.Math.clamp;
 import static java.lang.Math.max;
-import static wow.character.util.AttributeConditionArgsUtil.*;
 import static wow.commons.constant.SpellConstants.*;
 import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
+import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 
 /**
  * User: POlszewski
@@ -70,41 +70,37 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	@Override
 	public AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school) {
-		var conditionArgs = getTargetConditionArgs(target, spell, powerType);
-
-		conditionArgs.setSpellSchool(school);
+		var conditionArgs = AttributeConditionArgs.forSpellTarget(target, spell, powerType, school);
 
 		return new AccumulatedTargetStats(conditionArgs);
 	}
 
 	@Override
 	public AccumulatedHitStats newAccumulatedHitStats(Character character, Spell spell, Character target) {
-		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target);
+		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, null);
 
 		return new AccumulatedHitStats(conditionArgs);
 	}
 
 	@Override
 	public AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target) {
-		var conditionArgs = getDamagingComponentConditionArgs(character, spell, target);
+		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, null);
 
 		return new AccumulatedDurationStats(conditionArgs);
 	}
 
 	@Override
 	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, DirectComponent directComponent) {
-		var conditionArgs = getDirectComponentConditionArgs(character, spell, target);
+		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, directComponent.school());
 
-		conditionArgs.setSpellSchool(directComponent.school());
+		conditionArgs.setDirect(true);
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
 
 	@Override
 	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PeriodicComponent periodicComponent) {
-		var conditionArgs = getPeriodicComponentConditionArgs(character, spell, target);
-
-		conditionArgs.setSpellSchool(periodicComponent.school());
+		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, periodicComponent.school());
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
@@ -426,7 +422,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
 		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, directComponent, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, PowerType.SPELL_DAMAGE, directComponent.school());
+		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, SPELL_DAMAGE, directComponent.school());
 
 		return getDirectSpellDamageSnapshot(character, spell, target, directComponent, baseStats, spellStats, targetStats);
 	}
@@ -477,7 +473,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var effectApplication = spell.getEffectApplication();
 		var periodicComponent = effectApplication.effect().getPeriodicComponent();
 		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, periodicComponent, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, PowerType.SPELL_DAMAGE, periodicComponent.school());
+		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, SPELL_DAMAGE, periodicComponent.school());
 
 		return getPeriodicSpellDamageSnapshot(character, spell, target, spellStats, targetStats);
 	}
@@ -537,7 +533,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		snapshot.setBaseStatsSnapshot(baseStatsSnapshot);
 		snapshot.setSpellPower((int) spellStats.getPower());
-		snapshot.setSpellDamage(getSpellDamage(character, conditionArgs));
+		snapshot.setSpellDamage(getSpellDamage(character));
 
 		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character));
 		snapshot.setSpellHitPctBonus(getSpellHitPctBonus(character, hitStats));
@@ -590,17 +586,19 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		));
 	}
 
-	private int getSpellDamage(Character character, SpellSchool school) {
-		var conditionArgs = AttributeConditionArgs.forAnySpell(character);
+	private int getSpellDamage(Character character) {
+		return getSpellDamage(character, (SpellSchool) null);
+	}
 
-		conditionArgs.setSpellSchool(school);
+	private int getSpellDamage(Character character, SpellSchool school) {
+		var conditionArgs = AttributeConditionArgs.forAnySpell(character, SPELL_DAMAGE, school);
 
 		return getSpellDamage(character, conditionArgs);
 	}
 
 	private int getSpellDamage(Character character, AttributeConditionArgs conditionArgs) {
 		var spellStats = new AccumulatedSpellStats(conditionArgs);
-		conditionArgs.setPowerType(PowerType.SPELL_DAMAGE);
+
 		accumulateEffects(character, spellStats);
 		return (int) spellStats.getPower();
 	}
