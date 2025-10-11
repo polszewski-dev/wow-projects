@@ -133,8 +133,6 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"DamageTaken%,    Spell",
 			"DamageTaken%,    SpellDamage",
 			"PowerTaken,      SpellDamage",
-			"ReceivedEffectDuration,  Curse of Doom",
-			"ReceivedEffectDuration%, Curses",
 	})
 	void newAccumulatedTargetStats(String idStr, String conditionStr) {
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
@@ -186,6 +184,18 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void newAccumulatedDurationStats(String idStr, String conditionStr) {
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var stats = characterCalculationService.newAccumulatedDurationStats(character, ability, target);
+
+		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"ReceivedEffectDuration,  Curse of Doom",
+			"ReceivedEffectDuration%, Curses",
+	})
+	void newAccumulatedReceivedEffectStats(String idStr, String conditionStr) {
+		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var stats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -574,8 +584,6 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			case DAMAGE_TAKEN_PCT -> stats.getDamageTakenPct();
 			case POWER_TAKEN -> stats.getPowerTaken();
 			case CRIT_TAKEN_PCT -> stats.getCritTakenPct();
-			case RECEIVED_EFFECT_DURATION -> stats.getReceivedEffectDuration();
-			case RECEIVED_EFFECT_DURATION_PCT -> stats.getReceivedEffectDurationPct();
 			default -> throw new IllegalArgumentException();
 		};
 	}
@@ -594,6 +602,14 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			case DURATION_PCT -> stats.getDurationPct();
 			case HASTE_RATING -> stats.getHasteRating();
 			case HASTE_PCT -> stats.getHastePct();
+			default -> throw new IllegalArgumentException();
+		};
+	}
+
+	private double getValue(AccumulatedReceivedEffectStats stats, AttributeId id) {
+		return switch (id) {
+			case RECEIVED_EFFECT_DURATION -> stats.getReceivedEffectDuration();
+			case RECEIVED_EFFECT_DURATION_PCT -> stats.getReceivedEffectDurationPct();
 			default -> throw new IllegalArgumentException();
 		};
 	}

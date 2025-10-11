@@ -31,6 +31,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private AccumulatedSpellStats direct;
 	private AccumulatedSpellStats periodic;
 	private AccumulatedDurationStats effectDuration;
+	private AccumulatedReceivedEffectStats receivedEffectStats;
 
 	public AccumulatedDamagingAbilityStats(AttributeScalingParams scalingParams) {
 		super(scalingParams);
@@ -48,6 +49,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		this.direct = stats.direct != null ? stats.direct.copy() : null;
 		this.periodic = stats.periodic != null ? stats.periodic.copy() : null;
 		this.effectDuration = stats.effectDuration != null ? stats.effectDuration.copy() : null;
+		this.receivedEffectStats = stats.receivedEffectStats != null ? stats.receivedEffectStats.copy() : null;
 	}
 
 	public AccumulatedDamagingAbilityStats copy() {
@@ -85,6 +87,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		if (periodic != null) {
 			periodic.accumulateAttribute(id, value, condition);
 			effectDuration.accumulateAttribute(id, value, condition);
+			receivedEffectStats.accumulateAttribute(id, value, condition);
 		}
 	}
 
@@ -100,6 +103,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		if (periodic != null) {
 			periodic.accumulateAttribute(id, value, condition);
 			effectDuration.accumulateAttribute(id, value, condition);
+			receivedEffectStats.accumulateAttribute(id, value, condition);
 		}
 	}
 

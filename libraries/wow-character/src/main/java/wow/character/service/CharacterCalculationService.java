@@ -27,6 +27,8 @@ public interface CharacterCalculationService {
 
 	AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target);
 
+	AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell);
+
 	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, DirectComponent directComponent);
 
 	AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PeriodicComponent periodicComponent);
@@ -49,7 +51,7 @@ public interface CharacterCalculationService {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target);
 
-	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, AccumulatedDurationStats durationStats, AccumulatedTargetStats targetStats);
+	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
 
 	DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats);
 

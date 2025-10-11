@@ -84,9 +84,16 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	@Override
 	public AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target) {
-		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, null);
+		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target);
 
 		return new AccumulatedDurationStats(conditionArgs);
+	}
+
+	@Override
+	public AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell) {
+		var conditionArgs = AttributeConditionArgs.forSpellTarget(target, spell);
+
+		return new AccumulatedReceivedEffectStats(conditionArgs);
 	}
 
 	@Override
@@ -347,15 +354,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target) {
 		var durationStats = getAccumulatedDurationStats(character, spell, target);
-		AccumulatedTargetStats targetStats;
+		var receivedEffectStats = getAccumulatedReceivedEffectStats(spell, target);
 
-		if (spell instanceof Ability ability && ability.isChanneled()) {
-			targetStats = null;
-		} else {
-			targetStats = getAccumulatedTargetStats(spell, target, null, null, null);
-		}
-
-		return getEffectDurationSnapshot(character, spell, target, durationStats, targetStats);
+		return getEffectDurationSnapshot(character, spell, target, durationStats, receivedEffectStats);
 	}
 
 	private AccumulatedDurationStats getAccumulatedDurationStats(Character character, Spell spell, Character target) {
@@ -365,8 +366,19 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return durationStats;
 	}
 
+	private AccumulatedReceivedEffectStats getAccumulatedReceivedEffectStats(Spell spell, Character target) {
+		if (spell instanceof Ability ability && ability.isChanneled()) {
+			return null;
+		}
+
+		var receivedEffectStats = newAccumulatedReceivedEffectStats(target, spell);
+
+		accumulateEffects(target, receivedEffectStats, null);
+		return receivedEffectStats;
+	}
+
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, AccumulatedDurationStats durationStats, AccumulatedTargetStats targetStats) {
+	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
 		var effectApplication = spell.getEffectApplication();
 		var effect = effectApplication.effect();
 
@@ -390,7 +402,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			var tickInterval = effect.getTickInterval();
 
 			if (tickInterval != null) {
-				var duration = getEffectDuration((Duration) baseDuration, durationStats, targetStats);
+				var duration = getEffectDuration((Duration) baseDuration, durationStats, receivedEffectStats);
 				var numTicks = duration.millis() / tickInterval.millis();
 
 				durationSnapshot.setNumTicks((int) numTicks);
@@ -399,7 +411,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			} else {
 				var duration = baseDuration.isInfinite()
 						? baseDuration
-						: getEffectDuration((Duration) baseDuration, durationStats, targetStats);
+						: getEffectDuration((Duration) baseDuration, durationStats, receivedEffectStats);
 
 				durationSnapshot.setNumTicks(0);
 				durationSnapshot.setTickInterval(Duration.ZERO);
@@ -410,10 +422,10 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return durationSnapshot;
 	}
 
-	private Duration getEffectDuration(Duration baseDuration, AccumulatedDurationStats durationStats, AccumulatedTargetStats targetStats) {
+	private Duration getEffectDuration(Duration baseDuration, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
 		var baseDurationSeconds = baseDuration.getSeconds();
-		var duration = durationStats.getDuration() + targetStats.getReceivedEffectDuration();
-		var durationPct = durationStats.getDurationPct() + targetStats.getReceivedEffectDurationPct();
+		var duration = durationStats.getDuration() + receivedEffectStats.getReceivedEffectDuration();
+		var durationPct = durationStats.getDurationPct() + receivedEffectStats.getReceivedEffectDurationPct();
 		var result = addAndMultiplyByPct(baseDurationSeconds, duration, durationPct);
 
 		return Duration.seconds(result);

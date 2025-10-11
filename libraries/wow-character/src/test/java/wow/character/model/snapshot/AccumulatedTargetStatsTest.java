@@ -45,18 +45,6 @@ class AccumulatedTargetStatsTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	void getReceivedEffectDuration() {
-		accumulateTestAttributes(RECEIVED_EFFECT_DURATION);
-		assertThat(targetStats.getReceivedEffectDuration()).isEqualTo(160);
-	}
-
-	@Test
-	void getReceivedEffectDurationPct() {
-		accumulateTestAttributes(RECEIVED_EFFECT_DURATION_PCT);
-		assertThat(targetStats.getReceivedEffectDurationPct()).isEqualTo(160);
-	}
-
-	@Test
 	void copy() {
 		targetStats.accumulateAttribute(DAMAGE_TAKEN, 1);
 		targetStats.accumulateAttribute(DAMAGE_TAKEN_PCT, 1);
@@ -71,8 +59,6 @@ class AccumulatedTargetStatsTest extends WowCharacterSpringTest {
 		assertThat(copy.getDamageTakenPct()).isEqualTo(targetStats.getDamageTakenPct());
 		assertThat(copy.getPowerTaken()).isEqualTo(targetStats.getPowerTaken());
 		assertThat(copy.getCritTakenPct()).isEqualTo(targetStats.getCritTakenPct());
-		assertThat(copy.getReceivedEffectDuration()).isEqualTo(targetStats.getReceivedEffectDuration());
-		assertThat(copy.getReceivedEffectDurationPct()).isEqualTo(targetStats.getReceivedEffectDurationPct());
 	}
 
 	void accumulateTestAttributes(AttributeId attributeId) {

@@ -64,6 +64,10 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 		return forSpell(caster, spell, target, SPELL_DAMAGE, spellSchool);
 	}
 
+	public static AttributeConditionArgs forSpellTarget(Character target, Spell spell) {
+		return forSpellTarget(target, spell, null, null);
+	}
+
 	public static AttributeConditionArgs forSpellTarget(Character target, Spell spell, PowerType powerType, SpellSchool spellSchool) {
 		Objects.requireNonNull(target);
 		Objects.requireNonNull(spell);

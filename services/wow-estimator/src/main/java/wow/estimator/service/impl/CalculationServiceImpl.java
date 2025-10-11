@@ -144,9 +144,11 @@ public class CalculationServiceImpl implements CalculationService {
 		if (ability.getAppliedEffect() != null) {
 			var periodicStats = characterCalculationService.newAccumulatedPeriodicComponentStats(player, ability, target, periodicComponent);
 			var effectDurationStats = characterCalculationService.newAccumulatedDurationStats(player, ability, target);
+			var receivedEffectStats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability);
 
 			stats.setPeriodic(periodicStats);
 			stats.setEffectDuration(effectDurationStats);
+			stats.setReceivedEffectStats(receivedEffectStats);
 		}
 
 		return stats;
@@ -236,7 +238,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 		if (ability.getAppliedEffect() != null) {
 			var periodic = characterCalculationService.getPeriodicSpellDamageSnapshot(player, ability, target, abilityStats.getPeriodic(), targetStats);
-			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, target, abilityStats.getEffectDuration(), targetStats);
+			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, target, abilityStats.getEffectDuration(), abilityStats.getReceivedEffectStats());
 
 			snapshot.setPeriodic(periodic);
 			snapshot.setEffectDuration(effectDuration);

@@ -14,8 +14,6 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 	private double damageTakenPct;
 	private double powerTaken;
 	private double critTakenPct;
-	private double receivedEffectDuration;
-	private double receivedEffectDurationPct;
 
 	public AccumulatedTargetStats(AttributeConditionArgs conditionArgs) {
 		super(conditionArgs);
@@ -27,8 +25,6 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 		this.damageTakenPct = stats.damageTakenPct;
 		this.powerTaken = stats.powerTaken;
 		this.critTakenPct = stats.critTakenPct;
-		this.receivedEffectDuration = stats.receivedEffectDuration;
-		this.receivedEffectDurationPct = stats.receivedEffectDurationPct;
 	}
 
 	@Override
@@ -45,12 +41,6 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 				break;
 			case CRIT_TAKEN_PCT:
 				this.critTakenPct += value;
-				break;
-			case RECEIVED_EFFECT_DURATION:
-				this.receivedEffectDuration += value;
-				break;
-			case RECEIVED_EFFECT_DURATION_PCT:
-				this.receivedEffectDurationPct += value;
 				break;
 			default:
 				// ignore the rest
