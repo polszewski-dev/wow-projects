@@ -61,6 +61,8 @@ public interface CharacterCalculationService {
 
 	PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
+	RegenSnapshot getRegenSnapshot(Character character);
+
 	StatSummary getStatSummary(Character character);
 
 	EffectAugmentations getEffectAugmentations(Character character, Spell spell, Character target);

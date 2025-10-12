@@ -18,6 +18,8 @@
 			<th scope="col">spirit</th>
 			<th scope="col">health</th>
 			<th scope="col">mana</th>
+			<th scope="col">health regen</th>
+			<th scope="col">mana regen</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -41,6 +43,8 @@
 				<td>{{charStats.spirit | number:'1.0-0'}}</td>
 				<td>{{charStats.maxHealth | number:'1.0-0'}}</td>
 				<td>{{charStats.maxMana | number:'1.0-0'}}</td>
+				<td title="{{charStats.outOfCombatHealthRegen | number:'1.0-0'}} out of combat">{{charStats.inCombatHealthRegen | number:'1.0-0'}}</td>
+				<td title="{{charStats.uninterruptedManaRegen | number:'1.0-0'}} uninterrupted">{{charStats.interruptedManaRegen | number:'1.0-0'}}</td>
 			</tr>
 		}
 	</tbody>

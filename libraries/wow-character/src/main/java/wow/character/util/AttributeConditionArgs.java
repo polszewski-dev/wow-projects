@@ -81,6 +81,12 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 		return new AttributeConditionArgs(owner, null, null, null, null, null);
 	}
 
+	public static AttributeConditionArgs forRegen(Character owner) {
+		Objects.requireNonNull(owner);
+
+		return new AttributeConditionArgs(owner, null, null, null, null, null);
+	}
+
 	public SpellSchool getSpellSchool() {
 		if (spellSchool != null) {
 			return spellSchool;

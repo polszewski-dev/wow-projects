@@ -29,6 +29,10 @@ public class StatSummary {
 	private int spellHitRating;
 	private int spellCritRating;
 	private int spellHasteRating;
+	private int outOfCombatHealthRegen;
+	private int inCombatHealthRegen;
+	private int uninterruptedManaRegen;
+	private int interruptedManaRegen;
 
 	public int getStrength() {
 		return baseStatsSnapshot.getStrength();
@@ -74,7 +78,11 @@ public class StatSummary {
 				spellHastePct - other.spellHastePct,
 				spellHitRating - other.spellHitRating,
 				spellCritRating - other.spellCritRating,
-				spellHasteRating - other.spellHasteRating
+				spellHasteRating - other.spellHasteRating,
+				outOfCombatHealthRegen - other.outOfCombatHealthRegen,
+				inCombatHealthRegen - other.inCombatHealthRegen,
+				uninterruptedManaRegen - other.uninterruptedManaRegen,
+				interruptedManaRegen - other.interruptedManaRegen
 		);
 	}
 

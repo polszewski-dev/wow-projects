@@ -51,7 +51,11 @@ public class CharacterStatsConverter implements Converter<CharacterStats, List<C
 				source.getIntellect(),
 				source.getSpirit(),
 				source.getMaxHealth(),
-				source.getMaxMana()
+				source.getMaxMana(),
+				source.getOutOfCombatHealthRegen(),
+				source.getInCombatHealthRegen(),
+				source.getUninterruptedManaRegen(),
+				source.getInterruptedManaRegen()
 		);
 	}
 }

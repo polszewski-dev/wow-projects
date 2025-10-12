@@ -525,7 +525,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(snapshot.getSpellHastePct()).isEqualTo(31.96, PRECISION);
 		assertThat(snapshot.getSpellHitRating()).isEqualTo(169);
 		assertThat(snapshot.getSpellCritRating()).isEqualTo(270);
-		assertThat(snapshot.getSpellHasteRating()).isEqualTo(504);
+		assertThat(snapshot.getOutOfCombatHealthRegen()).isZero();
+		assertThat(snapshot.getInCombatHealthRegen()).isZero();
+		assertThat(snapshot.getUninterruptedManaRegen()).isEqualTo(288);
+		assertThat(snapshot.getInterruptedManaRegen()).isZero();
 	}
 
 	private double getValue(AccumulatedBaseStats stats, AttributeId id) {

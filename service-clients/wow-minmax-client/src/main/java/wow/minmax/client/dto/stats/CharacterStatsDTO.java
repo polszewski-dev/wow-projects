@@ -22,6 +22,10 @@ public record CharacterStatsDTO(
 		double intellect,
 		double spirit,
 		double maxHealth,
-		double maxMana
+		double maxMana,
+		double outOfCombatHealthRegen,
+		double inCombatHealthRegen,
+		double uninterruptedManaRegen,
+		double interruptedManaRegen
 ) {
 }

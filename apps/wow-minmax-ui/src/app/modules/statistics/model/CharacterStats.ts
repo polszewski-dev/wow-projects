@@ -15,4 +15,8 @@ export interface CharacterStats {
 	spirit: number;
 	maxHealth: number;
 	maxMana: number;
+	outOfCombatHealthRegen: number;
+	inCombatHealthRegen: number;
+	uninterruptedManaRegen: number;
+	interruptedManaRegen: number;
 }

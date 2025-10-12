@@ -28,7 +28,11 @@ public class CharacterStatsConverter implements Converter<wow.estimator.client.d
 				source.intellect(),
 				source.spirit(),
 				source.maxHealth(),
-				source.maxMana()
+				source.maxMana(),
+				source.outOfCombatHealthRegen(),
+				source.inCombatHealthRegen(),
+				source.uninterruptedManaRegen(),
+				source.interruptedManaRegen()
 		);
 	}
 }
