@@ -37,7 +37,7 @@ class ProfessionFormatter implements DropdownSelectValueFormatter<Profession> {
 	emptySelection = "--select--";
 
 	formatSelection(value: Profession) {
-		return `<img src="${getIcon(value.icon)}" class="me-2"/><span>${value.name}</span>`;
+		return `<img src="${getIcon(value.icon)}" class="me-2"/><strong>${value.name}</strong>`;
 	}
 
 	formatElement(value: Profession) {

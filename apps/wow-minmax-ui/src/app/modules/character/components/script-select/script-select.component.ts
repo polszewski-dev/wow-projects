@@ -31,7 +31,7 @@ class ScriptFormatter implements DropdownSelectValueFormatter<ScriptInfo> {
 	emptySelection = "--select--";
 
 	formatSelection(value: ScriptInfo) {
-		return this.formatElement(value);
+		return '<strong>' + value.name + '</strong>';
 	}
 
 	formatElement(value: ScriptInfo) {
