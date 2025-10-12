@@ -20,6 +20,7 @@ public class AbilityStatsConverter implements Converter<AbilityStats, AbilitySta
 				source.getTotalCastTime().getSeconds(),
 				source.getNumCasts(),
 				source.getNumHit(),
+				source.getNumResisted(),
 				source.getNumCrit(),
 				source.getTotalDamage(),
 				source.getDps()

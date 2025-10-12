@@ -16,6 +16,7 @@ public class AbilityStats {
 	private Duration totalCastTime = Duration.ZERO;
 	private int numCasts;
 	private int numHit;
+	private int numResisted;
 	private int numCrit;
 	private int totalDamage;
 
@@ -29,6 +30,10 @@ public class AbilityStats {
 
 	public void increaseNumHit() {
 		++numHit;
+	}
+
+	public void increaseNumResisted() {
+		++numResisted;
 	}
 
 	public void increaseTotalDamage(int damage, boolean crit) {

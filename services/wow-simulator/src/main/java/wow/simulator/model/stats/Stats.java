@@ -50,6 +50,10 @@ public class Stats {
 		getAbilityStats(ability).increaseNumHit();
 	}
 
+	public void increaseNumResisted(Ability ability) {
+		getAbilityStats(ability).increaseNumResisted();
+	}
+
 	public void addCooldownUptime(CooldownId cooldownId, Duration duration) {
 		getCooldownStats(cooldownId).addUptime(duration);
 	}

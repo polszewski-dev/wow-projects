@@ -5,6 +5,7 @@ export interface AbilityStats {
 	totalCastTime: number;
 	numCasts: number;
 	numHit: number;
+	numResisted: number;
 	numCrit: number;
 	totalDamage: number;
 	dps: number;

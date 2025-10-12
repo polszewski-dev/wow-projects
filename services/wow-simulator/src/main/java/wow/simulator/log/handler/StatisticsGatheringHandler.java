@@ -120,6 +120,14 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
+	public void spellResisted(Unit caster, Unit target, Spell spell) {
+		if (caster != player) {
+			return;
+		}
+		stats.increaseNumResisted((Ability) spell);
+	}
+
+	@Override
 	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
 		if (!(spell instanceof Ability ability)) {
 			return;

@@ -3,10 +3,11 @@
 		<tr>
 			<th scope="col" style="text-align: left; width: 25%">ability</th>
 			<th scope="col" style="text-align: center; width: 5%">rank</th>
-			<th scope="col" style="width: 10%">numCasts</th>
-			<th scope="col" style="width: 10%">numHit</th>
-			<th scope="col" style="width: 10%">hit%</th>
-			<th scope="col" style="width: 10%">numCrit</th>
+			<th scope="col" style="width: 8%">numCasts</th>
+			<th scope="col" style="width: 8%">numHit</th>
+			<th scope="col" style="width: 8%">numMiss</th>
+			<th scope="col" style="width: 8%">hit%</th>
+			<th scope="col" style="width: 8%">numCrit</th>
 			<th scope="col" style="width: 10%">crit%</th>
 			<th scope="col" style="width: 10%">totalDamage</th>
 			<th scope="col" style="width: 10%">dps</th>
@@ -21,6 +22,7 @@
 				<td style="text-align: center">{{abilityStats.ability.rank | blankZero}}</td>
 				<td>{{abilityStats.numCasts}}</td>
 				<td>{{abilityStats.numHit | blankZero}}</td>
+				<td>{{abilityStats.numResisted | blankZero}}</td>
 				<td>{{(100 * abilityStats.numHit / abilityStats.numCasts) | number:'1.2-2' | blankZero}}</td>
 				<td>{{abilityStats.numCrit | blankZero}}</td>
 				<td>{{(100 * abilityStats.numCrit / abilityStats.numCasts) | number:'1.2-2' | blankZero}}</td>
@@ -34,6 +36,7 @@
 			</td>
 			<td></td>
 			<td>{{stats.numCasts}}</td>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td></td>

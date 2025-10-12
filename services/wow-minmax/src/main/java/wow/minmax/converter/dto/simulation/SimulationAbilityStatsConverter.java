@@ -30,6 +30,7 @@ public class SimulationAbilityStatsConverter implements ParametrizedConverter<Ab
 				source.totalCastTime(),
 				source.numCasts(),
 				source.numHit(),
+				source.numResisted(),
 				source.numCrit(),
 				source.totalDamage(),
 				source.dps()

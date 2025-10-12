@@ -9,6 +9,7 @@ public record AbilityStatsDTO(
 		double totalCastTime,
 		int numCasts,
 		int numHit,
+		int numResisted,
 		int numCrit,
 		int totalDamage,
 		int dps
