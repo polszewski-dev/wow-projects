@@ -19,9 +19,11 @@ import wow.simulator.model.unit.Player;
 public class CooldownStats {
 	private final CooldownId cooldownId;
 	private Duration uptime = Duration.ZERO;
+	private int count;
 
 	public void addUptime(Duration duration) {
 		this.uptime = uptime.add(duration);
+		++count;
 	}
 
 	public static boolean isSupported(CooldownInstance cooldown) {

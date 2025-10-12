@@ -6,6 +6,7 @@ package wow.simulator.client.dto;
  */
 public record EffectStatsDTO(
 		int effectId,
-		double uptime
+		double uptime,
+		double count
 ) {
 }

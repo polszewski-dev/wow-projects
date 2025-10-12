@@ -6,6 +6,7 @@ package wow.simulator.client.dto;
  */
 public record CooldownStatsDTO(
 		int spellId,
-		double uptime
+		double uptime,
+		double count
 ) {
 }

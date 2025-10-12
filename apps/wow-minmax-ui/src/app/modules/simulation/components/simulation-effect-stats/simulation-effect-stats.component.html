@@ -2,9 +2,10 @@
 	<thead>
 		<tr>
 			<th scope="col" style="text-align: left; width: 25%">effect</th>
+			<th scope="col" style="width: 10%">count</th>
 			<th scope="col" style="width: 10%">uptime</th>
 			<th scope="col" style="width: 10%">uptime%</th>
-			<th scope="col" style="width: 55%"></th>
+			<th scope="col" style="width: 45%"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -13,6 +14,7 @@
 				<td style="text-align: left">
 					<app-description [source]="effectStats.effect"></app-description>
 				</td>
+				<td>{{effectStats.count}}</td>
 				<td>{{effectStats.uptime | number:'1.0-0' | blankZero}}</td>
 				<td>{{(100 * effectStats.uptime / stats.simulationDuration) | number:'1.2-2' | blankZero}}</td>
 				<td></td>

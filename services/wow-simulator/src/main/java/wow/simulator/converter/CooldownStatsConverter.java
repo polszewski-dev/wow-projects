@@ -20,7 +20,8 @@ public class CooldownStatsConverter implements ParametrizedConverter<CooldownSta
 
 		return new CooldownStatsDTO(
 				spellId.value(),
-				source.getUptime().getSeconds()
+				source.getUptime().getSeconds(),
+				source.getCount()
 		);
 	}
 }

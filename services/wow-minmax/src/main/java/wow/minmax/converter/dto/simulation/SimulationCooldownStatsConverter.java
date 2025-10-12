@@ -27,7 +27,8 @@ public class SimulationCooldownStatsConverter implements ParametrizedConverter<C
 
 		return new SimulationCooldownStatsDTO(
 				spellConverter.convert(spell),
-				source.uptime()
+				source.uptime(),
+				source.count()
 		);
 	}
 }

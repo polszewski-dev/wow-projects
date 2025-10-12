@@ -27,7 +27,8 @@ public class SimulationEffectStatsConverter implements ParametrizedConverter<Eff
 
 		return new SimulationEffectStatsDTO(
 				effectConverter.convert(effect),
-				source.uptime()
+				source.uptime(),
+				source.count()
 		);
 	}
 }

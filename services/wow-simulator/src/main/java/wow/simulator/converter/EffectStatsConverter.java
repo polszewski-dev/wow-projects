@@ -17,7 +17,8 @@ public class EffectStatsConverter implements Converter<EffectStats, EffectStatsD
 	public EffectStatsDTO doConvert(EffectStats source) {
 		return new EffectStatsDTO(
 				source.getEffectId().value(),
-				source.getUptime().getSeconds()
+				source.getUptime().getSeconds(),
+				source.getCount()
 		);
 	}
 }

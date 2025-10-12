@@ -8,6 +8,7 @@ import wow.minmax.client.dto.EffectDTO;
  */
 public record SimulationEffectStatsDTO(
 		EffectDTO effect,
-		double uptime
+		double uptime,
+		double count
 ) {
 }

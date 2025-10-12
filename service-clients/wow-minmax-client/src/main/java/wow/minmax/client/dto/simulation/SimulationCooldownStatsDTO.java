@@ -8,6 +8,7 @@ import wow.minmax.client.dto.SpellDTO;
  */
 public record SimulationCooldownStatsDTO(
 		SpellDTO spell,
-		double uptime
+		double uptime,
+		double count
 ) {
 }

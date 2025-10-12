@@ -15,9 +15,11 @@ import wow.commons.model.effect.EffectId;
 public class EffectStats {
 	private final Effect effect;
 	private Duration uptime = Duration.ZERO;
+	private int count;
 
 	public void addUptime(Duration duration) {
 		this.uptime = uptime.add(duration);
+		++count;
 	}
 
 	public EffectId getEffectId() {
