@@ -34,6 +34,7 @@ import static wow.simulator.util.TestEvent.*;
 public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	List<TestEvent> events = new ArrayList<>();
 	Clock clock;
+	boolean ignoreRegen = true;
 
 	@Override
 	public void beginGcd(UnitAction sourceAction) {
@@ -87,6 +88,9 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+		if (spell == null && ignoreRegen) {
+			return;
+		}
 		addEvent(new IncreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
 	}
 

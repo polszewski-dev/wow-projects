@@ -35,9 +35,6 @@ public class ScriptExecutor {
 	}
 
 	public void execute() {
-		player.increaseHealth(1000, false, null);
-		player.increaseMana(1000, false, null);
-
 		var command = getFirstAvailableCommand();
 
 		if (command != null) {

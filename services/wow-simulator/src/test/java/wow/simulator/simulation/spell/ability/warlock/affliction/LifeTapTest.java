@@ -25,7 +25,7 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertThat(player.getCurrentMana()).isEqualTo(582);
+		assertThat(player.getCurrentMana() - regeneratedMana).isEqualTo(582);
 
 		assertEvents(
 				at(0)
@@ -49,7 +49,7 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertThat(player.getCurrentMana()).isEqualTo(582);
+		assertThat(player.getCurrentMana() - regeneratedMana).isEqualTo(582);
 
 		//can't resist friendly spell
 
@@ -75,7 +75,7 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertThat(player.getCurrentMana()).isEqualTo(582);
+		assertThat(player.getCurrentMana() - regeneratedMana).isEqualTo(582);
 
 		assertEvents(
 				at(0)

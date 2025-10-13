@@ -186,7 +186,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void idleFor(Duration duration) {
-		idleUntil(getClock().now().add(duration));
+		idleUntil(now().add(duration));
 	}
 
 	@Override
@@ -292,9 +292,13 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		var costSnapshot = getSpellCostSnapshot(ability);
 		var cost = costSnapshot.getCostToPay();
 
-		resources.pay(cost, ability);
+		paySpellCost(ability, cost);
 
 		return costSnapshot;
+	}
+
+	protected void paySpellCost(Ability ability, Cost cost) {
+		resources.pay(cost, ability);
 	}
 
 	@Override

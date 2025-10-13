@@ -147,4 +147,10 @@ class ScriptExecutorTest extends WarlockSpellSimulationTest {
 				testEvent.isBeginCast(CURSE_OF_AGONY) ||
 				testEvent.isSpellResisted();
 	}
+
+	@Override
+	protected void afterSetUp() {
+		player.addHiddenEffect("Bonus Hp5", 5000);
+		player.addHiddenEffect("Bonus Mp5", 5000);
+	}
 }

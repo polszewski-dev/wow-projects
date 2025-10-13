@@ -3,6 +3,7 @@ package wow.simulator.model.unit.impl;
 import lombok.Getter;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.effect.EffectCollector;
+import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
@@ -40,5 +41,10 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer {
 	public void collectEffects(EffectCollector collector) {
 		NonPlayer.super.collectEffects(collector);
 		effects.collectEffects(collector);
+	}
+
+	@Override
+	public void regen(Duration sinceLastRegen) {
+		// void
 	}
 }

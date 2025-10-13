@@ -26,7 +26,7 @@ class ImprovedLifeTapTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertIsIncreasedByPct(player.getCurrentMana(), (int) LIFE_TAP_INFO.damage(), 10 * rank);
+		assertIsIncreasedByPct(player.getCurrentMana() - regeneratedMana, (int) LIFE_TAP_INFO.damage(), 10 * rank);
 
 		assertDamageDone(LIFE_TAP, player, LIFE_TAP_INFO.damage(), 10 * rank);
 		assertManaGained(LIFE_TAP, player, LIFE_TAP_INFO.damage(), 10 * rank);
@@ -44,7 +44,7 @@ class ImprovedLifeTapTest extends WarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertIsIncreasedByPct(player.getCurrentMana(), (int) LIFE_TAP_INFO.damage(40), 10 * rank);
+		assertIsIncreasedByPct(player.getCurrentMana() - regeneratedMana, (int) LIFE_TAP_INFO.damage(40), 10 * rank);
 
 		assertDamageDone(LIFE_TAP, player, LIFE_TAP_INFO.damage(40), 10 * rank);
 		assertManaGained(LIFE_TAP, player, LIFE_TAP_INFO.damage(40), 10 * rank);

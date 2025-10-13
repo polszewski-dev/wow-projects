@@ -9,6 +9,7 @@ import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * User: POlszewski
@@ -65,6 +66,7 @@ public class Simulation implements SimulationContextSource {
 
 		started = true;
 		getGameLog().simulationStarted();
+		startRegenAction();
 		ensureUnitsHaveActions();
 	}
 
@@ -76,6 +78,10 @@ public class Simulation implements SimulationContextSource {
 		finished = true;
 		getScheduler().interruptUnfinishedActions();
 		getGameLog().simulationEnded();
+	}
+
+	private void startRegenAction() {
+		add(new RegenAction(this));
 	}
 
 	private void ensureUnitsHaveActions() {
@@ -113,5 +119,9 @@ public class Simulation implements SimulationContextSource {
 		return units.stream()
 				.filter(x -> Unit.areFriendly(x, unit))
 				.toList();
+	}
+
+	public void forEachUnit(Consumer<Unit> action) {
+		units.forEach(action);
 	}
 }

@@ -134,6 +134,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void triggerCooldown(CooldownId cooldownId, Duration actualDuration);
 
+	void regen(Duration sinceLastRegen);
+
 	Party getParty();
 
 	default Raid getRaid() {

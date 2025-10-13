@@ -55,6 +55,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		withinSimulationContext.run();
 
+		player.addHiddenEffect("Bonus Hp5", 5000);
+		player.addHiddenEffect("Bonus Mp5", 5000);
+
 		simulation.updateUntil(endTime);
 		simulation.finish();
 

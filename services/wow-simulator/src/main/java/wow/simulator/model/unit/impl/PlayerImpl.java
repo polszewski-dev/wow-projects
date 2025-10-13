@@ -6,13 +6,17 @@ import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.character.model.snapshot.RegenSnapshot;
 import wow.character.util.AbstractEffectCollector;
+import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.Cost;
+import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.ability.ShootAbility;
@@ -21,6 +25,7 @@ import java.util.Optional;
 
 import static wow.commons.model.categorization.ItemSlot.RANGED;
 import static wow.commons.model.spell.AbilityId.SHOOT;
+import static wow.commons.model.spell.ResourceType.MANA;
 
 /**
  * User: POlszewski
@@ -34,6 +39,8 @@ public class PlayerImpl extends UnitImpl implements Player {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Consumables consumables;
+
+	private Time lastTimeManaSpent;
 
 	public PlayerImpl(
 			String name,
@@ -125,4 +132,53 @@ public class PlayerImpl extends UnitImpl implements Player {
 			collector.addEffect(effect, stackCount);
 		}
 	}
+
+	@Override
+	protected void paySpellCost(Ability ability, Cost cost) {
+		super.paySpellCost(ability, cost);
+
+		if (cost.resourceType() == MANA && cost.amount() > 0) {
+			this.lastTimeManaSpent = now();
+		}
+	}
+
+	@Override
+	public void regen(Duration sinceLastRegen) {
+		var snapshot = getCharacterCalculationService().getRegenSnapshot(this);
+
+		regenHealth(snapshot, sinceLastRegen);
+		regenMana(snapshot, sinceLastRegen);
+	}
+
+	private void regenHealth(RegenSnapshot snapshot, Duration sinceLastRegen) {
+		var inCombatHealthRegen = snapshot.getInCombatHealthRegen();
+		var health = inCombatHealthRegen * sinceLastRegen.getSeconds() / 5.0;
+
+		if (health == 0) {
+			return;
+		}
+
+		increaseHealth((int) health, false, null);
+	}
+
+	private void regenMana(RegenSnapshot snapshot, Duration sinceLastRegen) {
+		var manaRegen = getManaRegen(snapshot);
+		var mana = manaRegen * sinceLastRegen.getSeconds() / 5.0;
+
+		if (mana == 0) {
+			return;
+		}
+
+		increaseMana((int) mana, false, null);
+	}
+
+	private int getManaRegen(RegenSnapshot snapshot) {
+		if (lastTimeManaSpent == null || now().subtract(lastTimeManaSpent).getSeconds() >= SURPRESSED_MANA_DURATION) {
+			return snapshot.getUninterruptedManaRegen();
+		}
+
+		return snapshot.getInterruptedManaRegen();
+	}
+
+	private static final int SURPRESSED_MANA_DURATION = 5;
 }
