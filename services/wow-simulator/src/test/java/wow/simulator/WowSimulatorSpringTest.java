@@ -13,14 +13,12 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Description;
-import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
-import wow.commons.model.spell.EffectReplacementMode;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.SpellRepository;
@@ -28,7 +26,6 @@ import wow.simulator.config.SimulatorContext;
 import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.model.action.Action;
-import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.NonPlayer;
@@ -88,7 +85,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		var clock = new Clock();
 		var gameLog = new GameLog();
 		var scheduler = new Scheduler(clock);
-		return new SimulationContext(clock, gameLog, () -> rng, scheduler, getCharacterCalculationService());
+		return new SimulationContext(clock, gameLog, () -> rng, scheduler, getCharacterCalculationService(), getSpellRepository());
 	}
 
 	protected Player getNakedPlayer() {
@@ -369,24 +366,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void addSpBonus(int amount) {
-		applyDummyEffect(-20001, amount);
-	}
-
-	private void applyDummyEffect(int effectId, int numStacks) {
-		var effect = spellRepository.getEffect(EffectId.of(effectId), player.getPhaseId()).orElseThrow();
-		var effectInstance = new NonPeriodicEffectInstance(
-				player,
-				player,
-				effect,
-				Duration.INFINITE,
-				numStacks,
-				1,
-				new DummyTestSource(),
-				null,
-				null
-		);
-
-		player.addEffect(effectInstance, EffectReplacementMode.DEFAULT);
+		player.addHiddenEffect("Bonus Spell Power", amount);
 	}
 
 	public record DummyTestSource() implements EffectSource {

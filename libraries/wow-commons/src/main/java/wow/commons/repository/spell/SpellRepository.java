@@ -32,5 +32,7 @@ public interface SpellRepository {
 
 	Optional<Effect> getEffect(EffectId effectId, PhaseId phaseId);
 
+	Optional<Effect> getEffect(String name, PhaseId phaseId);
+
 	List<RacialEffect> getRacialEffects(RaceId raceId, GameVersionId gameVersionId);
 }

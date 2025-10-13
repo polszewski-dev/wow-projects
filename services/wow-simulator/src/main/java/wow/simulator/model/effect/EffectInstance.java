@@ -65,4 +65,6 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	void increaseEffect(double effectIncreasePct);
 
 	boolean isTerminated();
+
+	boolean isHidden();
 }

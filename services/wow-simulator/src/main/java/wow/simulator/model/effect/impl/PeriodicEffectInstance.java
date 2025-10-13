@@ -57,4 +57,9 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 	public Duration getTickInterval() {
 		return tickInterval;
 	}
+
+	@Override
+	public boolean isHidden() {
+		return false;
+	}
 }

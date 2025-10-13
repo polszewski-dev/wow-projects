@@ -106,6 +106,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void addEffect(EffectInstance effect, EffectReplacementMode replacementMode);
 
+	void addHiddenEffect(String effectName, int numStacks);
+
 	void removeEffect(EffectInstance effect);
 
 	void removeEffect(AbilityId abilityId, Unit owner);

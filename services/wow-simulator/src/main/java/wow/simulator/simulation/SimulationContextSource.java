@@ -1,6 +1,7 @@
 package wow.simulator.simulation;
 
 import wow.character.service.CharacterCalculationService;
+import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.log.GameLog;
 import wow.simulator.model.rng.RngFactory;
 import wow.simulator.model.time.Clock;
@@ -24,6 +25,10 @@ public interface SimulationContextSource extends TimeSource {
 
 	default CharacterCalculationService getCharacterCalculationService() {
 		return getSimulationContext().getCharacterCalculationService();
+	}
+
+	default SpellRepository getSpellRepository() {
+		return getSimulationContext().getSpellRepository();
 	}
 
 	default RngFactory getRngFactory() {

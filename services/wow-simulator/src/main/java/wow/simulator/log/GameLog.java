@@ -91,41 +91,65 @@ public class GameLog implements GameLogHandler {
 
 	@Override
 	public void effectApplied(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectApplied(effect));
 	}
 
 	@Override
 	public void effectStacked(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectStacked(effect));
 	}
 
 	@Override
 	public void effectStacksIncreased(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectStacksIncreased(effect));
 	}
 
 	@Override
 	public void effectStacksDecreased(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectStacksDecreased(effect));
 	}
 
 	@Override
 	public void effectChargesIncreased(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectChargesIncreased(effect));
 	}
 
 	@Override
 	public void effectChargesDecreased(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectChargesDecreased(effect));
 	}
 
 	@Override
 	public void effectExpired(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectExpired(effect));
 	}
 
 	@Override
 	public void effectRemoved(EffectInstance effect) {
+		if (effect.isHidden()) {
+			return;
+		}
 		handlers.forEach(handler -> handler.effectRemoved(effect));
 	}
 

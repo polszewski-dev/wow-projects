@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.service.CharacterCalculationService;
 import wow.commons.model.Duration;
+import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.client.dto.RngType;
 import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.ConsoleGameLogHandler;
@@ -31,6 +32,7 @@ import static wow.simulator.model.time.AnyTime.TIME_IN_INFINITY;
 @AllArgsConstructor
 public class SimulatorServiceImpl implements SimulatorService {
 	private final CharacterCalculationService characterCalculationService;
+	private final SpellRepository spellRepository;
 
 	@Override
 	public Stats simulate(Player player, Duration duration, RngType rngType, Runnable withinSimulationContext) {
@@ -65,7 +67,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var rngFactory = createRngFactory(rngType);
 		var scheduler = new Scheduler(clock);
 		var simulationContext = new SimulationContext(
-				clock, gameLog, rngFactory, scheduler, characterCalculationService
+				clock, gameLog, rngFactory, scheduler, characterCalculationService, spellRepository
 		);
 
 		return new Simulation(simulationContext);

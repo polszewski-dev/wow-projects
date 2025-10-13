@@ -18,6 +18,7 @@ import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.Effects;
+import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.unit.*;
@@ -403,6 +404,25 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void addEffect(EffectInstance effect, EffectReplacementMode replacementMode) {
 		effects.addEffect(effect, replacementMode);
+	}
+
+	@Override
+	public void addHiddenEffect(String effectName, int numStacks) {
+		var effect = getSpellRepository().getEffect(effectName, getPhaseId()).orElseThrow();
+		var effectInstance = new NonPeriodicEffectInstance(
+				this,
+				this,
+				effect,
+				Duration.INFINITE,
+				numStacks,
+				1,
+				null,
+				null,
+				null
+		);
+
+		effectInstance.setHidden(true);
+		addEffect(effectInstance, EffectReplacementMode.DEFAULT);
 	}
 
 	@Override

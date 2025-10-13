@@ -33,6 +33,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<AbilityNameRank, List<Ability>> abilitiesByNameRank = new PhaseMap<>();
 	private final PhaseMap<SpellId, Spell> spellsById = new PhaseMap<>();
 	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
+	private final PhaseMap<String, List<Effect>> effectByName = new PhaseMap<>();
 	private final GameVersionMap<RaceId, List<RacialEffect>> racialEffects = new GameVersionMap<>();
 
 	public SpellRepositoryImpl(SpellExcelParser parser) throws IOException {
@@ -77,6 +78,13 @@ public class SpellRepositoryImpl implements SpellRepository {
 	}
 
 	@Override
+	public Optional<Effect> getEffect(String name, PhaseId phaseId) {
+		var effects = effectByName.getOrDefault(phaseId, name, List.of());
+
+		return getUniqueResult(effects);
+	}
+
+	@Override
 	public List<RacialEffect> getRacialEffects(RaceId raceId, GameVersionId gameVersionId) {
 		return racialEffects.getOptional(gameVersionId, raceId).orElse(List.of());
 	}
@@ -95,6 +103,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 	private void addEffect(Effect effect) {
 		putForEveryPhase(effectById, effect.getId(), effect);
+		addEntryForEveryPhase(effectByName, effect.getName(), effect);
 
 		var gameVersionId = effect.getGameVersionId();
 
