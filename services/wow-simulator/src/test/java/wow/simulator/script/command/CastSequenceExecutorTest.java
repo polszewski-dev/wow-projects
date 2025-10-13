@@ -17,14 +17,14 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 				castSpell(CURSE_OF_AGONY)
 		);
 
-		assertResultAfter(0, executor::allConditionsAreMet, true);
+		assertResultAt(0, executor::allConditionsAreMet, true);
 
 		executor.execute();
 
-		assertResultAfter(1, executor::allConditionsAreMet, false);
-		assertResultAfter(24, executor::allConditionsAreMet, false);
-		assertResultAfter(89, executor::allConditionsAreMet, false);
-		assertResultAfter(90, executor::allConditionsAreMet, true);
+		assertResultAt(1, executor::allConditionsAreMet, false);
+		assertResultAt(24, executor::allConditionsAreMet, false);
+		assertResultAt(89, executor::allConditionsAreMet, false);
+		assertResultAt(90, executor::allConditionsAreMet, true);
 
 		updateUntil(120);
 	}
@@ -38,13 +38,13 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 
 		var trinketExecutor = getUseItemExecutor(TRINKET_1);
 
-		assertResultAfter(0, executor::allConditionsAreMet, true);
+		assertResultAt(0, executor::allConditionsAreMet, true);
 
 		trinketExecutor.execute();
 
-		assertResultAfter(1, executor::allConditionsAreMet, false);
-		assertResultAfter(89, executor::allConditionsAreMet, false);
-		assertResultAfter(90, executor::allConditionsAreMet, true);
+		assertResultAt(1, executor::allConditionsAreMet, false);
+		assertResultAt(89, executor::allConditionsAreMet, false);
+		assertResultAt(90, executor::allConditionsAreMet, true);
 
 		updateUntil(120);
 	}
@@ -58,13 +58,13 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 
 		var abilityExecutor = getCastSpellExecutor(CURSE_OF_AGONY);
 
-		assertResultAfter(0, executor::allConditionsAreMet, true);
+		assertResultAt(0, executor::allConditionsAreMet, true);
 
 		abilityExecutor.execute();
 
-		assertResultAfter(1, executor::allConditionsAreMet, false);
-		assertResultAfter(23, executor::allConditionsAreMet, false);
-		assertResultAfter(24, executor::allConditionsAreMet, true);
+		assertResultAt(1, executor::allConditionsAreMet, false);
+		assertResultAt(23, executor::allConditionsAreMet, false);
+		assertResultAt(24, executor::allConditionsAreMet, true);
 
 		updateUntil(120);
 	}

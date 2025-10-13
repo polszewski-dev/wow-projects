@@ -76,9 +76,7 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 	void interrupted() {
 		player.cast(DRAIN_LIFE);
 
-		updateUntil(1.25);
-
-		player.interruptCurrentAction();
+		runAt(1.25, player::interruptCurrentAction);
 
 		updateUntil(30);
 

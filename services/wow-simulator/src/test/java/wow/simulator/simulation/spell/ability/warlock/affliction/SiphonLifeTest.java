@@ -90,9 +90,7 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 	void interrupted() {
 		player.cast(SIPHON_LIFE);
 
-		updateUntil(1);
-
-		player.interruptCurrentAction();
+		runAt(1, player::interruptCurrentAction);
 
 		updateUntil(30);
 

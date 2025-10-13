@@ -85,13 +85,8 @@ class CurseOfAgonyTest extends WarlockSpellSimulationTest {
 	void interrupted() {
 		player.cast(CURSE_OF_AGONY);
 
-		updateUntil(1);
-
-		player.interruptCurrentAction();
-
-		updateUntil(10);
-
-		player.interruptCurrentAction();
+		runAt(1, player::interruptCurrentAction);
+		runAt(10, player::interruptCurrentAction);
 
 		updateUntil(30);
 

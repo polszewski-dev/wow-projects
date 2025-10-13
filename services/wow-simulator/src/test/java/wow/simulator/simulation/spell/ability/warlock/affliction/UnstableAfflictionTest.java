@@ -73,9 +73,7 @@ class UnstableAfflictionTest extends WarlockSpellSimulationTest {
 	void interrupted() {
 		player.cast(UNSTABLE_AFFLICTION);
 
-		updateUntil(1);
-
-		player.interruptCurrentAction();
+		runAt(1, player::interruptCurrentAction);
 
 		updateUntil(30);
 

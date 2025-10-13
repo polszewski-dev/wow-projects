@@ -25,12 +25,12 @@ class CastSpellExecutorTest extends CommandExecutorTest {
 		var start = (int) ceil(max(castTime, 1.5));
 		var end = 180;
 
-		assertResultAfter(0, executor::allConditionsAreMet, true);
+		assertResultAt(0, executor::allConditionsAreMet, true);
 
 		executor.execute();
 
 		for (int delay = start; delay <= end; ++delay) {
-			assertMappedResultAfter(delay, executor::allConditionsAreMet, timePredicate);
+			assertMappedResultAt(delay, executor::allConditionsAreMet, timePredicate);
 		}
 
 		updateUntil(end);

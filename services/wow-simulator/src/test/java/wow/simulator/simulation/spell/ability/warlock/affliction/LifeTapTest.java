@@ -71,9 +71,7 @@ class LifeTapTest extends WarlockSpellSimulationTest {
 
 		player.cast(LIFE_TAP);
 
-		updateUntil(1.25);
-
-		player.interruptCurrentAction();
+		runAt(1.25, player::interruptCurrentAction);
 
 		updateUntil(30);
 

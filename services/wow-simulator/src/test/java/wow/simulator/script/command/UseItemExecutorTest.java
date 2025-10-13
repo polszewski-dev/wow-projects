@@ -15,14 +15,14 @@ class UseItemExecutorTest extends CommandExecutorTest {
 	void allConditionsAreMet_Trinket1() {
 		var trinket1Executor = getUseItemExecutor(TRINKET_1);
 
-		assertResultAfter(0, trinket1Executor::allConditionsAreMet, true);
+		assertResultAt(0, trinket1Executor::allConditionsAreMet, true);
 
 		trinket1Executor.execute();
 
-		assertResultAfter(14, trinket1Executor::allConditionsAreMet, false);
-		assertResultAfter(15, trinket1Executor::allConditionsAreMet, false);
-		assertResultAfter(89, trinket1Executor::allConditionsAreMet, false);
-		assertResultAfter(90, trinket1Executor::allConditionsAreMet, true);
+		assertResultAt(14, trinket1Executor::allConditionsAreMet, false);
+		assertResultAt(15, trinket1Executor::allConditionsAreMet, false);
+		assertResultAt(89, trinket1Executor::allConditionsAreMet, false);
+		assertResultAt(90, trinket1Executor::allConditionsAreMet, true);
 
 		updateUntil(180);
 	}
@@ -32,7 +32,7 @@ class UseItemExecutorTest extends CommandExecutorTest {
 		var trinket1Executor = getUseItemExecutor(TRINKET_1);
 		var trinket2Executor = getUseItemExecutor(TRINKET_2);
 
-		assertResultAfter(0, trinket2Executor::allConditionsAreMet, true);
+		assertResultAt(0, trinket2Executor::allConditionsAreMet, true);
 
 		trinket1Executor.execute();
 
@@ -40,12 +40,12 @@ class UseItemExecutorTest extends CommandExecutorTest {
 
 		trinket2Executor.execute();
 
-		assertResultAfter(14, trinket2Executor::allConditionsAreMet, false);
-		assertResultAfter(15, trinket2Executor::allConditionsAreMet, true);
-		assertResultAfter(16, trinket2Executor::allConditionsAreMet, false);
-		assertResultAfter(30, trinket2Executor::allConditionsAreMet, false);
-		assertResultAfter(104, trinket2Executor::allConditionsAreMet, false);
-		assertResultAfter(105, trinket2Executor::allConditionsAreMet, true);
+		assertResultAt(14, trinket2Executor::allConditionsAreMet, false);
+		assertResultAt(15, trinket2Executor::allConditionsAreMet, true);
+		assertResultAt(16, trinket2Executor::allConditionsAreMet, false);
+		assertResultAt(30, trinket2Executor::allConditionsAreMet, false);
+		assertResultAt(104, trinket2Executor::allConditionsAreMet, false);
+		assertResultAt(105, trinket2Executor::allConditionsAreMet, true);
 
 		updateUntil(180);
 	}

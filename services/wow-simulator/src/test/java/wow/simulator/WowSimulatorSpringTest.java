@@ -475,22 +475,22 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(rng.getEventRollData().getRollChances().get(rollChanceIdx)).isEqualTo(value);
 	}
 
-	protected <T> void assertResultAfter(double delay, Supplier<T> resultSupplier, T expectedResult) {
-		assertMappedResultAfter(delay, resultSupplier, time -> expectedResult);
+	protected <T> void assertResultAt(double time, Supplier<T> resultSupplier, T expectedResult) {
+		assertMappedResultAt(time, resultSupplier, x -> expectedResult);
 	}
 
-	protected <T> void assertMappedResultAfter(double delay, Supplier<T> resultSupplier, DoubleFunction<T> expectedResultMapper) {
-		simulation.getScheduler().add(
-				Duration.seconds(delay),
-				() -> {
-					var now = simulation.now();
-					var expected = expectedResultMapper.apply(now.secondsSinceZero());
+	protected <T> void assertMappedResultAt(double time, Supplier<T> resultSupplier, DoubleFunction<T> expectedResultMapper) {
+		runAt(time, () -> {
+					var expected = expectedResultMapper.apply(time);
 
 					assertThat(resultSupplier.get())
-							.withFailMessage("at time = %s supplier should return: %s".formatted(now, expected))
+							.withFailMessage("at time = %s supplier should return: %s".formatted(time, expected))
 							.isEqualTo(expected);
 				}
 		);
 	}
 
+	protected void runAt(double time, Runnable runnable) {
+		simulation.getScheduler().add(Time.at(time), runnable);
+	}
 }

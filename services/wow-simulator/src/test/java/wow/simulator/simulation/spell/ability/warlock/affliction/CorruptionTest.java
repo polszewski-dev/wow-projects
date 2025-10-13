@@ -76,9 +76,7 @@ class CorruptionTest extends WarlockSpellSimulationTest {
 
 		player.cast(CORRUPTION);
 
-		updateUntil(1);
-
-		player.interruptCurrentAction();
+		runAt(1, player::interruptCurrentAction);
 
 		updateUntil(30);
 

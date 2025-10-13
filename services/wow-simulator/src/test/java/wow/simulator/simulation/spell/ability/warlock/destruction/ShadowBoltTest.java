@@ -60,9 +60,7 @@ class ShadowBoltTest extends WarlockSpellSimulationTest {
 	void interrupted() {
 		player.cast(SHADOW_BOLT);
 
-		updateUntil(1);
-
-		player.interruptCurrentAction();
+		runAt(1, player::interruptCurrentAction);
 
 		updateUntil(30);
 

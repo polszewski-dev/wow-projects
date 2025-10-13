@@ -18,7 +18,7 @@ class ScriptConditionCheckerTest extends WarlockSpellSimulationTest {
 	void after_CoD_hits_condition_is_met() {
 		player.cast(CURSE_OF_DOOM);
 
-		assertResultAfter(0.1, () -> checkCondition("Target.HasEffect(Curse of *)", CURSE_OF_DOOM), true);
+		assertResultAt(0.1, () -> checkCondition("Target.HasEffect(Curse of *)", CURSE_OF_DOOM), true);
 
 		updateUntil(120);
 	}
@@ -30,8 +30,8 @@ class ScriptConditionCheckerTest extends WarlockSpellSimulationTest {
 		player.cast(CURSE_OF_DOOM);
 		player.cast(CURSE_OF_AGONY);
 
-		assertResultAfter(1.4, () -> checkCondition("Target.HasEffect(Curse of *)", CURSE_OF_AGONY), false);
-		assertResultAfter(1.6, () -> checkCondition("Target.HasEffect(Curse of *)", CURSE_OF_AGONY), true);
+		assertResultAt(1.4, () -> checkCondition("Target.HasEffect(Curse of *)", CURSE_OF_AGONY), false);
+		assertResultAt(1.6, () -> checkCondition("Target.HasEffect(Curse of *)", CURSE_OF_AGONY), true);
 
 		updateUntil(120);
 	}
