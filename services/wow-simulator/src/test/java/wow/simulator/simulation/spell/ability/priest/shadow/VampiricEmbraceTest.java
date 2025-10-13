@@ -111,5 +111,6 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.VAMPIRIC_EMBRACE, 1);
+		setHealth(player, 1000);
 	}
 }

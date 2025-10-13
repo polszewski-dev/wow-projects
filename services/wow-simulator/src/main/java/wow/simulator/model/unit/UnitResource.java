@@ -38,9 +38,16 @@ public class UnitResource implements SimulationContextSource {
 		assertNonNegative(amount);
 
 		int previous = current;
+
 		this.current = Math.min(current + amount, max);
-		getGameLog().increasedResource(type, spell, owner, amount, current, previous, crit);
-		return current - previous;
+
+		int actualAmount = current - previous;
+
+		if (actualAmount > 0) {
+			getGameLog().increasedResource(type, spell, owner, actualAmount, current, previous, crit);
+		}
+
+		return actualAmount;
 	}
 
 	public int decrease(int amount, boolean crit, Spell spell) {
@@ -51,9 +58,16 @@ public class UnitResource implements SimulationContextSource {
 		assertNonNegative(amount);
 
 		int previous = current;
+
 		this.current = Math.max(current - amount, 0);
-		getGameLog().decreasedResource(type, spell, owner, amount, current, previous, crit);
-		return previous - current;
+
+		int actualAmount = previous - current;
+
+		if (actualAmount > 0) {
+			getGameLog().decreasedResource(type, spell, owner, actualAmount, current, previous, crit);
+		}
+
+		return actualAmount;
 	}
 
 	public void pay(int amount, Ability ability) {

@@ -51,5 +51,6 @@ class T3P8BonusTest extends WarlockSpellSimulationTest {
 		equip("Plagueheart Robe");
 		equip("Plagueheart Sandals");
 		equip("Plagueheart Shoulderpads");
+		setHealth(player, 1000);
 	}
 }

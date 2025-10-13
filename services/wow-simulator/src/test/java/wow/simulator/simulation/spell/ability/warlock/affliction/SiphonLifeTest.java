@@ -160,5 +160,6 @@ class SiphonLifeTest extends WarlockSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.SIPHON_LIFE, 1);
+		setHealth(player, 1000);
 	}
 }

@@ -70,4 +70,9 @@ class DevouringPlagueTest extends PriestSpellSimulationTest {
 
 		assertDamageDone(DEVOURING_PLAGUE, DEVOURING_PLAGUE_INFO.damage());
 	}
+
+	@Override
+	protected void afterSetUp() {
+		setHealth(player, 1000);
+	}
 }

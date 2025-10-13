@@ -168,4 +168,9 @@ class NightfallTest extends WarlockSpellSimulationTest {
 						.effectExpired(CORRUPTION, target)
 		);
 	}
+
+	@Override
+	protected void afterSetUp() {
+		setHealth(player, 1000);
+	}
 }

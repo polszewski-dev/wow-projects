@@ -118,4 +118,9 @@ class DrainLifeTest extends WarlockSpellSimulationTest {
 
 		assertHealthGained(DRAIN_LIFE, player, DRAIN_LIFE_INFO.damage());
 	}
+
+	@Override
+	protected void afterSetUp() {
+		setHealth(player, 1000);
+	}
 }

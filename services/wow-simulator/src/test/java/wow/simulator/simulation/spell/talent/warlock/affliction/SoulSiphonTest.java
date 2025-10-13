@@ -47,4 +47,9 @@ class SoulSiphonTest extends WarlockSpellSimulationTest {
 
 		assertHealthGained(DRAIN_LIFE, player, DRAIN_LIFE_INFO.damage(), 2 * rank * numberOfEffects);
 	}
+
+	@Override
+	protected void afterSetUp() {
+		setHealth(player, 1000);
+	}
 }

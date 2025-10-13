@@ -95,5 +95,6 @@ class T6P2BonusTest extends WarlockSpellSimulationTest {
 	protected void afterSetUp() {
 		equip("Gloves of the Malefic");
 		equip("Hood of the Malefic");
+		setHealth(player, 1000);
 	}
 }

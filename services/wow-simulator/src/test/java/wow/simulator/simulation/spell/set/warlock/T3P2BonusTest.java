@@ -42,5 +42,6 @@ class T3P2BonusTest extends WarlockSpellSimulationTest {
 	protected void afterSetUp() {
 		equip("Plagueheart Belt");
 		equip("Plagueheart Bindings");
+		setHealth(player, 1000);
 	}
 }

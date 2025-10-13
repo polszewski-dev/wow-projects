@@ -54,4 +54,9 @@ class DeathCoilTest extends WarlockSpellSimulationTest {
 
 		assertHealthGained(DEATH_COIL, player, DEATH_COIL_INFO.damage());
 	}
+
+	@Override
+	protected void afterSetUp() {
+		setHealth(player, 1000);
+	}
 }

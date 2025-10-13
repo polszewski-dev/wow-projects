@@ -28,5 +28,6 @@ class T1P3BonusTest extends WarlockSpellSimulationTest {
 		equip("Felheart Belt");
 		equip("Felheart Bracers");
 		equip("Felheart Gloves");
+		setHealth(player, 1000);
 	}
 }

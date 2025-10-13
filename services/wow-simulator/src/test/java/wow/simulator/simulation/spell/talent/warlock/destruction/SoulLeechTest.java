@@ -42,4 +42,9 @@ class SoulLeechTest extends WarlockSpellSimulationTest {
 
 		assertHealthGained(SOUL_LEECH, player, getPercentOf(20, SHADOW_BOLT_INFO.damage()));
 	}
+
+	@Override
+	protected void afterSetUp() {
+		setHealth(player, 1000);
+	}
 }
