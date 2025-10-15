@@ -69,8 +69,6 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		var dmgBefore = player.getStats().getSpellDamage();
-
 		eventsOnlyOnFollowingRolls(0, 1, 2);
 		enableTalent(IMPROVED_CORRUPTION, 5);
 
@@ -78,7 +76,8 @@ class AshtongueTalismanOfShadowsTest extends WarlockSpellSimulationTest {
 
 		updateUntil(10);
 
-		var dmgAfter = player.getStats().getSpellDamage();
+		var dmgBefore = statsAt(0).getSpellDamage();
+		var dmgAfter = statsAt(10).getSpellDamage();
 
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 220);
 	}

@@ -45,13 +45,12 @@ class PrayerOfSpiritTest extends PriestSpellSimulationTest {
 
 	@Test
 	void spiritIsIncreased() {
-		var spiritBefore = player.getStats().getSpirit();
-
 		player.cast(PRAYER_OF_SPIRIT);
 
 		updateUntil(30);
 
-		var spiritAfter = player.getStats().getSpirit();
+		var spiritBefore = statsAt(0).getSpirit();
+		var spiritAfter = statsAt(1).getSpirit();
 
 		assertThat(spiritAfter).isEqualTo(spiritBefore + 50);
 	}

@@ -42,13 +42,12 @@ class HexShrunkenHeadTest extends WarlockSpellSimulationTest {
 	void modifierIsTakenIntoAccount() {
 		equip(HEX_SHRUNKEN_HEAD, TRINKET_1);
 
-		var dmgBefore = player.getStats().getSpellPower();
-
 		player.cast(HEX_SHRUNKEN_HEAD);
 
 		updateUntil(10);
 
-		var dmgAfter = player.getStats().getSpellPower();
+		var dmgBefore = statsAt(0).getSpellPower();
+		var dmgAfter = statsAt(1).getSpellPower();
 
 		assertThat(dmgBefore).isEqualTo(53);
 		assertThat(dmgAfter).isEqualTo(53 + 211);

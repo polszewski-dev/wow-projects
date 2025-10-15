@@ -49,15 +49,14 @@ class QuagmirransEyeTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		var hasteBefore = player.getStats().getSpellHasteRating();
-
 		eventsOnlyOnFollowingRolls(0);
 
 		player.cast(SHADOW_BOLT);
 
 		updateUntil(5);
 
-		var hasteAfter = player.getStats().getSpellHasteRating();
+		var hasteBefore = statsAt(0).getSpellHasteRating();
+		var hasteAfter = statsAt(5).getSpellHasteRating();
 
 		assertThat(hasteAfter).isEqualTo(hasteBefore + 320);
 	}

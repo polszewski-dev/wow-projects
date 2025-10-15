@@ -11,26 +11,27 @@ import static wow.test.commons.AbilityNames.CURSE_OF_AGONY;
  */
 class CastSequenceExecutorTest extends CommandExecutorTest {
 	@Test
-	void allConditionsAreMet_both_commands_activated_at_the_same_time() {
+	void both_commands_activated_at_the_same_time() {
 		var executor = getCastSequenceExecutor(
 				useItem(TRINKET_1),
 				castSpell(CURSE_OF_AGONY)
 		);
 
-		assertResultAt(0, executor::allConditionsAreMet, true);
+		snapshotAt(executor, 0, 1, 24, 89, 90);
 
 		executor.execute();
 
-		assertResultAt(1, executor::allConditionsAreMet, false);
-		assertResultAt(24, executor::allConditionsAreMet, false);
-		assertResultAt(89, executor::allConditionsAreMet, false);
-		assertResultAt(90, executor::allConditionsAreMet, true);
-
 		updateUntil(120);
+
+		assertResultAt(0, true);
+		assertResultAt(1, false);
+		assertResultAt(24, false);
+		assertResultAt(89, false);
+		assertResultAt(90, true);
 	}
 
 	@Test
-	void allConditionsAreMet_trinket_activated_already() {
+	void trinket_activated_already() {
 		var executor = getCastSequenceExecutor(
 				useItem(TRINKET_1),
 				castSpell(CURSE_OF_AGONY)
@@ -38,19 +39,20 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 
 		var trinketExecutor = getUseItemExecutor(TRINKET_1);
 
-		assertResultAt(0, executor::allConditionsAreMet, true);
+		snapshotAt(executor, 0, 1, 89, 90);
 
 		trinketExecutor.execute();
 
-		assertResultAt(1, executor::allConditionsAreMet, false);
-		assertResultAt(89, executor::allConditionsAreMet, false);
-		assertResultAt(90, executor::allConditionsAreMet, true);
-
 		updateUntil(120);
+
+		assertResultAt(0, true);
+		assertResultAt(1, false);
+		assertResultAt(89, false);
+		assertResultAt(90, true);
 	}
 
 	@Test
-	void allConditionsAreMet_ability_activated_already() {
+	void ability_activated_already() {
 		var executor = getCastSequenceExecutor(
 				useItem(TRINKET_1),
 				castSpell(CURSE_OF_AGONY)
@@ -58,15 +60,16 @@ class CastSequenceExecutorTest extends CommandExecutorTest {
 
 		var abilityExecutor = getCastSpellExecutor(CURSE_OF_AGONY);
 
-		assertResultAt(0, executor::allConditionsAreMet, true);
+		snapshotAt(executor, 0, 1, 23, 24);
 
 		abilityExecutor.execute();
 
-		assertResultAt(1, executor::allConditionsAreMet, false);
-		assertResultAt(23, executor::allConditionsAreMet, false);
-		assertResultAt(24, executor::allConditionsAreMet, true);
-
 		updateUntil(120);
+
+		assertResultAt(0, true);
+		assertResultAt(1, false);
+		assertResultAt(23, false);
+		assertResultAt(24, true);
 	}
 
 	@Override

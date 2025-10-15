@@ -134,6 +134,8 @@ class ScriptExecutorTest extends WarlockSpellSimulationTest {
 
 	void simulate(String script, int time) {
 		player.getBuild().setScript(script);
+		player.addHiddenEffect("Bonus Hp5", 5000);
+		player.addHiddenEffect("Bonus Mp5", 5000);
 
 		var executor = new ScriptExecutor(player);
 
@@ -146,11 +148,5 @@ class ScriptExecutorTest extends WarlockSpellSimulationTest {
 		return testEvent.isBeginCast(CURSE_OF_DOOM) ||
 				testEvent.isBeginCast(CURSE_OF_AGONY) ||
 				testEvent.isSpellResisted();
-	}
-
-	@Override
-	protected void afterSetUp() {
-		player.addHiddenEffect("Bonus Hp5", 5000);
-		player.addHiddenEffect("Bonus Mp5", 5000);
 	}
 }

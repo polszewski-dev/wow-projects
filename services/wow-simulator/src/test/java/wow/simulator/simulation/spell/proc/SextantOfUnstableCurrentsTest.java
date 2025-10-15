@@ -50,8 +50,6 @@ class SextantOfUnstableCurrentsTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		var spBefore = player.getStats().getSpellPower();
-
 		critsOnlyOnFollowingRolls(0);
 		eventsOnlyOnFollowingRolls(0);
 
@@ -59,7 +57,8 @@ class SextantOfUnstableCurrentsTest extends WarlockSpellSimulationTest {
 
 		updateUntil(10);
 
-		var spAfter = player.getStats().getSpellPower();
+		var spBefore = statsAt(0).getSpellPower();
+		var spAfter = statsAt(10).getSpellPower();
 
 		assertThat(spAfter).isEqualTo(spBefore + 190);
 	}

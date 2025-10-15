@@ -15,16 +15,17 @@ class UseItemExecutorTest extends CommandExecutorTest {
 	void allConditionsAreMet_Trinket1() {
 		var trinket1Executor = getUseItemExecutor(TRINKET_1);
 
-		assertResultAt(0, trinket1Executor::allConditionsAreMet, true);
+		snapshotAt(trinket1Executor, 0, 14, 15, 89, 90);
 
 		trinket1Executor.execute();
 
-		assertResultAt(14, trinket1Executor::allConditionsAreMet, false);
-		assertResultAt(15, trinket1Executor::allConditionsAreMet, false);
-		assertResultAt(89, trinket1Executor::allConditionsAreMet, false);
-		assertResultAt(90, trinket1Executor::allConditionsAreMet, true);
-
 		updateUntil(180);
+
+		assertResultAt(0, true);
+		assertResultAt(14, false);
+		assertResultAt(15, false);
+		assertResultAt(89, false);
+		assertResultAt(90, true);
 	}
 
 	@Test
@@ -32,7 +33,7 @@ class UseItemExecutorTest extends CommandExecutorTest {
 		var trinket1Executor = getUseItemExecutor(TRINKET_1);
 		var trinket2Executor = getUseItemExecutor(TRINKET_2);
 
-		assertResultAt(0, trinket2Executor::allConditionsAreMet, true);
+		snapshotAt(trinket2Executor, 0, 14, 15, 16, 30, 104, 105);
 
 		trinket1Executor.execute();
 
@@ -40,14 +41,15 @@ class UseItemExecutorTest extends CommandExecutorTest {
 
 		trinket2Executor.execute();
 
-		assertResultAt(14, trinket2Executor::allConditionsAreMet, false);
-		assertResultAt(15, trinket2Executor::allConditionsAreMet, true);
-		assertResultAt(16, trinket2Executor::allConditionsAreMet, false);
-		assertResultAt(30, trinket2Executor::allConditionsAreMet, false);
-		assertResultAt(104, trinket2Executor::allConditionsAreMet, false);
-		assertResultAt(105, trinket2Executor::allConditionsAreMet, true);
-
 		updateUntil(180);
+
+		assertResultAt(0, true);
+		assertResultAt(14, false);
+		assertResultAt(15, true);
+		assertResultAt(16, false);
+		assertResultAt(30, false);
+		assertResultAt(104, false);
+		assertResultAt(105, true);
 	}
 
 	@Override

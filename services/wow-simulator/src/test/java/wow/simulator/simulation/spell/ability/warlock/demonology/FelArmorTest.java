@@ -39,14 +39,13 @@ class FelArmorTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		var dmgBefore = player.getStats().getSpellDamage();
-
 		player.cast(FEL_ARMOR);
+
 		updateUntil(30);
 
-		var dmgAfter = player.getStats().getSpellDamage();
+		var spellDamageBefore = statsAt(0).getSpellDamage();
+		var spellDamageAfter = statsAt(1).getSpellDamage();
 
-		assertThat(dmgBefore).isZero();
-		assertThat(dmgAfter).isEqualTo(100);
+		assertThat(spellDamageAfter).isEqualTo(spellDamageBefore + 100);
 	}
 }

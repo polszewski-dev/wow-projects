@@ -38,13 +38,12 @@ class PowerWordFortitudeTest extends PriestSpellSimulationTest {
 
 	@Test
 	void staminaIsIncreased() {
-		var staminaBefore = player.getStats().getStamina();
-
 		player.cast(POWER_WORD_FORTITUDE);
 
 		updateUntil(30);
 
-		var staminaAfter = player.getStats().getStamina();
+		var staminaBefore = statsAt(0).getStamina();
+		var staminaAfter = statsAt(1).getStamina();
 
 		assertThat(staminaAfter).isEqualTo(staminaBefore + 79);
 	}

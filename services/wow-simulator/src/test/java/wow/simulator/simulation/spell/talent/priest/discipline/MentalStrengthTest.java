@@ -24,8 +24,6 @@ class MentalStrengthTest extends PriestSpellSimulationTest {
 
 		enableTalent(MENTAL_STRENGTH, rank);
 
-		updateUntil(30);
-
 		var maxManaAfter = player.getStats().getMaxMana();
 
 		assertThat(maxManaAfter).isEqualTo(increaseByPct(maxManaBefore, 2 * rank));

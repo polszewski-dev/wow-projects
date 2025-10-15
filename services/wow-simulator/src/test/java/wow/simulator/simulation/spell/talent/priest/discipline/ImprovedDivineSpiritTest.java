@@ -5,9 +5,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.test.commons.AbilityNames.DIVINE_SPIRIT;
-import static wow.test.commons.AbilityNames.SHADOW_WORD_PAIN;
 
 /**
  * User: POlszewski
@@ -25,13 +25,14 @@ class ImprovedDivineSpiritTest extends PriestSpellSimulationTest {
 		enableTalent(TalentNames.IMPROVED_DIVINE_SPIRIT, rank);
 
 		player.cast(DIVINE_SPIRIT);
-		player.cast(SHADOW_WORD_PAIN);
 
 		updateUntil(30);
 
-		var totalSpirit = player.getStats().getSpirit();
-		var totalSp = getPercentOf(5 * rank, totalSpirit);
+		var spBefore = statsAt(0).getSpellPower();
+		var spAfter = statsAt(1).getSpellPower();
+		var totalSpirit = statsAt(1).getSpirit();
+		var spiritSpBonus = getPercentOf(5 * rank, totalSpirit);
 
-		assertDamageDone(SHADOW_WORD_PAIN, SHADOW_WORD_PAIN_INFO.damage(totalSp));
+		assertThat(spAfter).isEqualTo(spBefore + spiritSpBonus);
 	}
 }

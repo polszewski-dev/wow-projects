@@ -4,7 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
-import static wow.test.commons.AbilityNames.CORRUPTION;
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.test.commons.AbilityNames.FEL_ARMOR;
 import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
 
@@ -23,10 +23,12 @@ class DemonicAegisTest extends WarlockSpellSimulationTest {
 		enableTalent(DEMONIC_AEGIS, rank);
 
 		player.cast(FEL_ARMOR);
-		player.cast(CORRUPTION);
 
 		updateUntil(30);
 
-		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(100 + 10 * rank));
+		var sdBefore = statsAt(0).getSpellDamage();
+		var sdAfter = statsAt(1).getSpellDamage();
+
+		assertThat(sdAfter).isEqualTo(sdBefore + 100 + 10 * rank);
 	}
 }

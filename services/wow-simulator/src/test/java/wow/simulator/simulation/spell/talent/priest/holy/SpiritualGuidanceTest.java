@@ -4,8 +4,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.PriestSpellSimulationTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.simulator.util.CalcUtils.getPercentOf;
-import static wow.test.commons.AbilityNames.SHADOW_WORD_PAIN;
 import static wow.test.commons.TalentNames.SPIRITUAL_GUIDANCE;
 
 /**
@@ -20,15 +20,14 @@ class SpiritualGuidanceTest extends PriestSpellSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void damageIsIncreased(int rank) {
+		var spBefore = player.getStats().getSpellPower();
+
 		enableTalent(SPIRITUAL_GUIDANCE, rank);
 
-		player.cast(SHADOW_WORD_PAIN);
-
-		updateUntil(30);
-
+		var spAfter = player.getStats().getSpellPower();
 		var totalSpirit = player.getStats().getSpirit();
-		var totalSp = getPercentOf(5 * rank, totalSpirit);
+		var spiritSpBonus = getPercentOf(5 * rank, totalSpirit);
 
-		assertDamageDone(SHADOW_WORD_PAIN, SHADOW_WORD_PAIN_INFO.damage(totalSp));
+		assertThat(spAfter).isEqualTo(spBefore + spiritSpBonus);
 	}
 }

@@ -43,15 +43,14 @@ class EyeOfMagtheridonTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		var dmgBefore = player.getStats().getSpellDamage();
-
 		missesOnlyOnFollowingRolls(0);
 
 		player.cast(SHADOW_BOLT);
 
 		updateUntil(10);
 
-		var dmgAfter = player.getStats().getSpellDamage();
+		var dmgBefore = statsAt(0).getSpellDamage();
+		var dmgAfter = statsAt(10).getSpellDamage();
 
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 170);
 	}

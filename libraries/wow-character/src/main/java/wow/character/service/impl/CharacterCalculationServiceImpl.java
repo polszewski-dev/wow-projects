@@ -600,7 +600,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		accumulateEffects(character, castStats);
 		accumulateEffects(character, hitStats);
-		accumulateEffects(character, spellStats);
+		accumulateEffects(character, spellStats, baseStatsSnapshot);
 
 		var regenSnapshot = getRegenSnapshot(character);
 

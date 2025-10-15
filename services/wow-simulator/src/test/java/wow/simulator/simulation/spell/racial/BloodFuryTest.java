@@ -32,12 +32,11 @@ class BloodFuryTest extends WarlockSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		var dmgBefore = player.getStats().getSpellPower();
-
 		player.cast(BLOOD_FURY);
 		updateUntil(10);
 
-		var dmgAfter = player.getStats().getSpellPower();
+		var dmgBefore = statsAt(0).getSpellPower();
+		var dmgAfter = statsAt(10).getSpellPower();
 
 		assertThat(dmgBefore).isZero();
 		assertThat(dmgAfter).isEqualTo(143);

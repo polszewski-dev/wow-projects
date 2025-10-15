@@ -22,8 +22,6 @@ class SpiritOfRedemptionTest extends PriestSpellSimulationTest {
 
 		enableTalent(SPIRIT_OF_REDEMPTION, 1);
 
-		updateUntil(30);
-
 		var spiritAfter = player.getStats().getSpirit();
 
 		assertIsIncreasedByPct(spiritAfter, spiritBefore, 5);

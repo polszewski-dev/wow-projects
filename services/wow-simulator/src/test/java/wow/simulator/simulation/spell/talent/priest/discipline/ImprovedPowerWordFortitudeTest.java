@@ -21,15 +21,14 @@ class ImprovedPowerWordFortitudeTest extends PriestSpellSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void effectIsIncreased(int rank) {
-		var staminaBefore = player.getStats().getStamina();
-
 		enableTalent(IMPROVED_POWER_WORD_FORTITUDE, rank);
 
 		player.cast(POWER_WORD_FORTITUDE);
 
 		updateUntil(30);
 
-		var staminaAfter = player.getStats().getStamina();
+		var staminaBefore = statsAt(0).getStamina();
+		var staminaAfter = statsAt(1).getStamina();
 
 		assertThat(staminaAfter).isEqualTo(staminaBefore + increaseByPct(79, 15 * rank));
 	}

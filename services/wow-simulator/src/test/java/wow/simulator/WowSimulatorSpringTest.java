@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.snapshot.StatSummary;
 import wow.commons.model.Duration;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
@@ -42,7 +43,9 @@ import wow.simulator.util.TestEventListBuilder;
 import wow.simulator.util.TestRng;
 
 import java.util.List;
-import java.util.function.DoubleFunction;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -437,6 +440,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		target = getEnemy();
 
 		player.setTarget(target);
+
+		makeSnapshotsUntil(180);
 	}
 
 	protected void updateUntil(double time) {
@@ -475,22 +480,37 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(rng.getEventRollData().getRollChances().get(rollChanceIdx)).isEqualTo(value);
 	}
 
-	protected <T> void assertResultAt(double time, Supplier<T> resultSupplier, T expectedResult) {
-		assertMappedResultAt(time, resultSupplier, x -> expectedResult);
-	}
-
-	protected <T> void assertMappedResultAt(double time, Supplier<T> resultSupplier, DoubleFunction<T> expectedResultMapper) {
-		runAt(time, () -> {
-					var expected = expectedResultMapper.apply(time);
-
-					assertThat(resultSupplier.get())
-							.withFailMessage("at time = %s supplier should return: %s".formatted(time, expected))
-							.isEqualTo(expected);
-				}
-		);
-	}
-
 	protected void runAt(double time, Runnable runnable) {
 		simulation.getScheduler().add(Time.at(time), runnable);
+	}
+
+	private final TestSnapshots<StatSummary> statSnapshots = new TestSnapshots<>();
+
+	protected void snapshotStatsAt(double... times) {
+		statSnapshots.makeSnapshotsAt(() -> player.getStats(), times);
+	}
+
+	protected StatSummary statsAt(double time) {
+		return statSnapshots.get(time);
+	}
+
+	protected void makeSnapshotsUntil(double timeUntil) {
+		for (var time = 0; time <= timeUntil; ++time) {
+			snapshotStatsAt(time);
+		}
+	}
+
+	public class TestSnapshots<T> {
+		private final Map<Double, T> snapshotsByTime = new TreeMap<>();
+
+		public void makeSnapshotsAt(Supplier<T> supplier, double... times) {
+			for (var time : times) {
+				runAt(time, () -> snapshotsByTime.put(time, supplier.get()));
+			}
+		}
+
+		public T get(double time) {
+			return Objects.requireNonNull(snapshotsByTime.get(time));
+		}
 	}
 }

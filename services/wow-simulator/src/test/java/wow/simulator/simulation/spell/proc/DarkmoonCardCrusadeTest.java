@@ -86,15 +86,14 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 			1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 	})
 	void modifierIsTakenIntoAccount(int numCasts) {
-		var dmgBefore = player.getStats().getSpellDamage();
-
 		for (int i = 0; i < numCasts; ++i) {
 			player.cast(SHADOW_BOLT);
 		}
 
 		updateUntil(numCasts * 3 + 1);
 
-		var dmgAfter = player.getStats().getSpellDamage();
+		var dmgBefore = statsAt(0).getSpellDamage();
+		var dmgAfter = statsAt(numCasts * 3 + 1).getSpellDamage();
 
 		assertThat(dmgAfter).isEqualTo(dmgBefore + numCasts * 8);
 	}

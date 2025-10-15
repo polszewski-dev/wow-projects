@@ -12,6 +12,10 @@ import static wow.test.commons.AbilityNames.DESTRUCTION_POTION;
  * Date: 2024-11-22
  */
 class DestructionPotionTest extends WarlockSpellSimulationTest {
+	/*
+	Use: Increases spell critical chance by 2% and spell damage by 120 for 15 sec. (2 Min Cooldown)
+	 */
+
 	@Test
 	void effectActivatesAndCooldownTriggers() {
 		player.getConsumables().enable(DESTRUCTION_POTION);
@@ -38,16 +42,15 @@ class DestructionPotionTest extends WarlockSpellSimulationTest {
 	@Test
 	void modifierIsTakenIntoAccount() {
 		player.getConsumables().enable(DESTRUCTION_POTION);
-		
-		var dmgBefore = player.getStats().getSpellDamage();
-		var critPctBefore = player.getStats().getSpellCritPct();
 
 		player.cast(DESTRUCTION_POTION);
 
 		updateUntil(10);
 
-		var dmgAfter = player.getStats().getSpellDamage();
-		var critPctAfter = player.getStats().getSpellCritPct();
+		var dmgBefore = statsAt(0).getSpellDamage();
+		var dmgAfter = statsAt(1).getSpellDamage();
+		var critPctBefore = statsAt(0).getSpellCritPct();
+		var critPctAfter = statsAt(1).getSpellCritPct();
 
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 120);
 		assertThat(critPctAfter).isEqualTo(critPctBefore + 2);

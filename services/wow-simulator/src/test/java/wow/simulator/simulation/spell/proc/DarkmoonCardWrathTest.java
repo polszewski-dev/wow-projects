@@ -86,15 +86,14 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 			1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 	})
 	void modifierIsTakenIntoAccount(int numCasts) {
-		var critRatingBefore = player.getStats().getSpellCritRating();
-
 		for (int i = 0; i < numCasts; ++i) {
 			player.cast(SHADOW_BOLT);
 		}
 
 		updateUntil(numCasts * 3 + 1);
 
-		var critRatingAfter = player.getStats().getSpellCritRating();
+		var critRatingBefore = statsAt(0).getSpellCritRating();
+		var critRatingAfter = statsAt(numCasts * 3 + 1).getSpellCritRating();
 
 		assertThat(critRatingAfter).isEqualTo(critRatingBefore + numCasts * 17);
 	}

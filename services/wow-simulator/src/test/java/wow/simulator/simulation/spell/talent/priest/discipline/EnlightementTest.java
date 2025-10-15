@@ -24,8 +24,6 @@ class EnlightementTest extends PriestSpellSimulationTest {
 
 		enableTalent(ENLIGHTENMENT, rank);
 
-		updateUntil(30);
-
 		var staminaAfter = player.getStats().getStamina();
 
 		assertThat(staminaAfter).isEqualTo(increaseByPct(staminaBefore, rank));
@@ -38,8 +36,6 @@ class EnlightementTest extends PriestSpellSimulationTest {
 
 		enableTalent(ENLIGHTENMENT, rank);
 
-		updateUntil(30);
-
 		var intellectAfter = player.getStats().getIntellect();
 
 		assertThat(intellectAfter).isEqualTo(increaseByPct(intellectBefore, rank));
@@ -51,8 +47,6 @@ class EnlightementTest extends PriestSpellSimulationTest {
 		var spiritBefore = player.getStats().getSpirit();
 
 		enableTalent(ENLIGHTENMENT, rank);
-
-		updateUntil(30);
 
 		var spiritAfter = player.getStats().getSpirit();
 

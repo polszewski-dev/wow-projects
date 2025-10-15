@@ -6,6 +6,7 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.script.ScriptCommand.*;
 import static wow.character.model.script.ScriptCommandCondition.EMPTY;
 import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
@@ -69,5 +70,19 @@ abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
 
 	double getCastTime(String abilityName) {
 		return player.getAbility(AbilityId.of(abilityName)).orElseThrow().getCastTime().getSeconds();
+	}
+
+	private final TestSnapshots<Boolean> allConditionsAreMetSnapshots = new TestSnapshots<>();
+
+	void snapshotAt(ScriptCommandExecutor executor, double... times) {
+		allConditionsAreMetSnapshots.makeSnapshotsAt(executor::allConditionsAreMet, times);
+	}
+
+	void assertResultAt(double time, boolean expectedValue) {
+		var actualValue = allConditionsAreMetSnapshots.get(time);
+
+		assertThat(actualValue)
+				.withFailMessage("at time = %s allConditionsAreMet should return: %s".formatted(time, expectedValue))
+				.isEqualTo(expectedValue);
 	}
 }

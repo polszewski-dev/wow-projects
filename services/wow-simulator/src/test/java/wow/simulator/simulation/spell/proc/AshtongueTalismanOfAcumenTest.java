@@ -67,15 +67,14 @@ class AshtongueTalismanOfAcumenTest extends PriestSpellSimulationTest {
 
 	@Test
 	void modifierIsTakenIntoAccount() {
-		var dmgBefore = player.getStats().getSpellDamage();
-
 		eventsOnlyOnFollowingRolls(0);
 
 		player.cast(SHADOW_WORD_PAIN);
 
 		updateUntil(10);
 
-		var dmgAfter = player.getStats().getSpellDamage();
+		var dmgBefore = statsAt(0).getSpellDamage();
+		var dmgAfter = statsAt(10).getSpellDamage();
 
 		assertThat(dmgAfter).isEqualTo(dmgBefore + 220);
 	}
