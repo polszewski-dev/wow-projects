@@ -29,7 +29,6 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer {
 	) {
 		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
-		this.resources.setHealth(1_000_000_000, 1_000_000_000);
 	}
 
 	@Override
@@ -46,5 +45,12 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer {
 	@Override
 	public void regen(Duration sinceLastRegen) {
 		// void
+	}
+
+	@Override
+	public void onAddedToSimulation() {
+		addHiddenEffect("Bonus Stamina", 100_000_000);
+		getResources().setHealthToMax();
+		getResources().setManaToMax();
 	}
 }

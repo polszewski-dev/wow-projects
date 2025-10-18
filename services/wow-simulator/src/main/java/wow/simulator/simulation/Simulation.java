@@ -33,6 +33,7 @@ public class Simulation implements SimulationContextSource {
 	public void add(Unit unit) {
 		shareSimulationContext(unit);
 		this.units.add(unit);
+		unit.onAddedToSimulation();
 	}
 
 	public void add(Action action) {

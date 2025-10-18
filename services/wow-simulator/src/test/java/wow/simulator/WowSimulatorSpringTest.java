@@ -372,6 +372,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		player.addHiddenEffect("Bonus Spell Power", amount);
 	}
 
+	protected void addIntellectBonus(int amount) {
+		player.addHiddenEffect("Bonus Intellect", amount);
+		player.setManaToMax();
+	}
+
 	public record DummyTestSource() implements EffectSource {
 		@Override
 		public int getPriority() {
@@ -385,19 +390,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void setHealth(Unit unit, int amount) {
-		unit.decreaseHealth(unit.getCurrentHealth() - amount, false, null);
-		clearEvents();
+		unit.setCurrentHealth(amount);
 	}
 
 	protected void setMana(Unit unit, int amount) {
-		unit.decreaseMana(unit.getCurrentMana() - amount, false, null);
-		clearEvents();
-	}
-
-	protected void clearEvents() {
-		if (handler != null) {
-			handler.getEvents().clear();
-		}
+		unit.setCurrentMana(amount);
 	}
 
 	protected void assertEnablingTalentTeachesAbility(String talentName, String abilityName) {

@@ -207,7 +207,7 @@ public class SpellResolutionContext extends Context {
 
 		return new PeriodicEffectInstance(
 				caster,
-				null,
+				caster,
 				effectApplication.effect(),
 				duration,
 				tickInterval,

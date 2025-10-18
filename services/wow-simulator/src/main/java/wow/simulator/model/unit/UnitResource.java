@@ -9,6 +9,9 @@ import wow.commons.model.spell.Spell;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 /**
  * User: POlszewski
  * Date: 2023-08-12
@@ -26,7 +29,7 @@ public class UnitResource implements SimulationContextSource {
 	}
 
 	public void set(int current, int max) {
-		this.current = current;
+		this.current = min(current, max);
 		this.max = max;
 	}
 
@@ -39,7 +42,7 @@ public class UnitResource implements SimulationContextSource {
 
 		int previous = current;
 
-		this.current = Math.min(current + amount, max);
+		this.current = min(current + amount, max);
 
 		int actualAmount = current - previous;
 
@@ -59,7 +62,7 @@ public class UnitResource implements SimulationContextSource {
 
 		int previous = current;
 
-		this.current = Math.max(current - amount, 0);
+		this.current = max(current - amount, 0);
 
 		int actualAmount = previous - current;
 

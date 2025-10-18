@@ -101,5 +101,6 @@ class DarkmoonCardWrathTest extends WarlockSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		equip("Darkmoon Card: Wrath", TRINKET_1);
+		addIntellectBonus(1000);
 	}
 }

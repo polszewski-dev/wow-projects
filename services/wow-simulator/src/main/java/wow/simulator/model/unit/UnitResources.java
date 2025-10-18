@@ -41,12 +41,16 @@ public class UnitResources implements SimulationContextSource {
 		return get(HEALTH).getCurrent();
 	}
 
-	public int geMaxHealth() {
+	public int getMaxHealth() {
 		return get(HEALTH).getMax();
 	}
 
 	public int getCurrentMana() {
 		return get(MANA).getCurrent();
+	}
+
+	public int getMaxMana() {
+		return get(MANA).getMax();
 	}
 
 	public void setHealth(int current, int max) {
@@ -55,6 +59,14 @@ public class UnitResources implements SimulationContextSource {
 
 	public void setMana(int current, int max) {
 		get(MANA).set(current, max);
+	}
+
+	public void setHealthToMax() {
+		setHealth(getMaxHealth(), getMaxHealth());
+	}
+
+	public void setManaToMax() {
+		setMana(getMaxMana(), getMaxMana());
 	}
 
 	public int increaseHealth(int amount, boolean crit, Spell spell) {

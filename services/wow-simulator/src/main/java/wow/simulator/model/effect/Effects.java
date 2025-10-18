@@ -130,6 +130,12 @@ public class Effects implements SimulationContextSource, EffectCollection {
 				.findAny();
 	}
 
+	public Optional<EffectInstance> getEffect(String effectName) {
+		return getStream()
+				.filter(x -> x.matches(effectName))
+				.findAny();
+	}
+
 	public int getNumberOfEffects(TalentTree tree) {
 		return (int) getStream()
 				.filter(x -> x.matches(tree))

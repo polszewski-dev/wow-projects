@@ -60,7 +60,6 @@ public class PlayerImpl extends UnitImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = new Consumables();
-		this.resources.setHealth(1_000_000_000, 1_000_000_000);
 	}
 
 	@Override
@@ -154,5 +153,11 @@ public class PlayerImpl extends UnitImpl implements Player {
 
 	private Duration getSinceLastManaSpent() {
 		return lastTimeManaSpent != null ? now().subtract(lastTimeManaSpent) : null;
+	}
+
+	@Override
+	public void onAddedToSimulation() {
+		getResources().setHealthToMax();
+		getResources().setManaToMax();
 	}
 }

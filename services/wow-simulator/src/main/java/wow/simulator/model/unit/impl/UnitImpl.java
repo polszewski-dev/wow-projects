@@ -7,6 +7,7 @@ import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.snapshot.*;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
@@ -44,7 +45,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	protected final UnitId id = ID_GENERATOR.newId();
 
-	protected final UnitResources resources = new UnitResources(this);
+	private final UnitResources resources = new UnitResources(this);
 	protected final Effects effects = new Effects(this);
 	private final Cooldowns cooldowns = new Cooldowns(this);
 
@@ -271,7 +272,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			return true;
 		}
 		var costSnapshot = getSpellCostSnapshot(ability);
-		return resources.canPay(costSnapshot.getCostToPay());
+		return getResources().canPay(costSnapshot.getCostToPay());
 	}
 
 	private boolean hasRequiredEffect(Ability ability, PrimaryTarget primaryTarget) {
@@ -298,7 +299,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	protected void paySpellCost(Ability ability, Cost cost) {
-		resources.pay(cost, ability);
+		getResources().pay(cost, ability);
 	}
 
 	@Override
@@ -367,42 +368,72 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public int getCurrentHealth() {
-		return resources.getCurrentHealth();
+		return getResources().getCurrentHealth();
 	}
 
 	@Override
 	public int getCurrentMana() {
-		return resources.getCurrentMana();
+		return getResources().getCurrentMana();
+	}
+
+	@Override
+	public int getMaxHealth() {
+		return getResources().getMaxHealth();
+	}
+
+	@Override
+	public int getMaxMana() {
+		return getResources().getMaxMana();
 	}
 
 	@Override
 	public Percent getHealthPct() {
-		return resources.getHealthPercent();
+		return getResources().getHealthPercent();
 	}
 
 	@Override
 	public Percent getManaPct() {
-		return resources.getManaPercent();
+		return getResources().getManaPercent();
+	}
+
+	@Override
+	public void setCurrentHealth(int amount) {
+		getResources().setHealth(amount, getMaxHealth());
+	}
+
+	@Override
+	public void setCurrentMana(int amount) {
+		getResources().setMana(amount, getMaxMana());
+	}
+
+	@Override
+	public void setHealthToMax() {
+		getResources().setHealthToMax();
+	}
+
+	@Override
+	public void setManaToMax() {
+		getResources().setManaToMax();
 	}
 
 	@Override
 	public int increaseHealth(int amount, boolean crit, Spell spell) {
-		return resources.increaseHealth(amount, crit, spell);
+		return getResources().increaseHealth(amount, crit, spell);
 	}
 
 	@Override
 	public int decreaseHealth(int amount, boolean crit, Spell spell) {
-		return resources.decreaseHealth(amount, crit, spell);
+		return getResources().decreaseHealth(amount, crit, spell);
 	}
 
 	@Override
 	public int increaseMana(int amount, boolean crit, Spell spell) {
-		return resources.increaseMana(amount, crit, spell);
+		return getResources().increaseMana(amount, crit, spell);
 	}
 
 	@Override
 	public int decreaseMana(int amount, boolean crit, Spell spell) {
-		return resources.decreaseMana(amount, crit, spell);
+		return getResources().decreaseMana(amount, crit, spell);
 	}
 
 	@Override
@@ -412,12 +443,17 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void addHiddenEffect(String effectName, int numStacks) {
+		addHiddenEffect(effectName, numStacks, Duration.INFINITE);
+	}
+
+	@Override
+	public void addHiddenEffect(String effectName, int numStacks, AnyDuration duration) {
 		var effect = getSpellRepository().getEffect(effectName, getPhaseId()).orElseThrow();
 		var effectInstance = new NonPeriodicEffectInstance(
 				this,
 				this,
 				effect,
-				Duration.INFINITE,
+				duration,
 				numStacks,
 				1,
 				null,
@@ -447,6 +483,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner) {
 		return effects.getEffect(abilityId, owner);
+	}
+
+	@Override
+	public Optional<EffectInstance> getEffect(String effectName) {
+		return effects.getEffect(effectName);
 	}
 
 	@Override
@@ -552,4 +593,31 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	public void replaceCurrentAction(UnitAction newAction) {
 		startAction(newAction);
 	}
+
+	@Override
+	public void onResourcesNeedRefresh() {
+		resourcesNeedRefresh = true;
+	}
+
+	protected UnitResources getResources() {
+		if (resourcesNeedRefresh) {
+			refreshResources();
+			resourcesNeedRefresh = false;
+		}
+
+		return resources;
+	}
+
+	private void refreshResources() {
+		var stats = getStats();
+		var maxHealth = stats.getMaxHealth();
+		var maxMana = stats.getMaxMana();
+		var currentHealth = resources.getCurrentHealth();
+		var currentMana = resources.getCurrentMana();
+
+		resources.setHealth(currentHealth, maxHealth);
+		resources.setMana(currentMana, maxMana);
+	}
+
+	private boolean resourcesNeedRefresh = true;
 }

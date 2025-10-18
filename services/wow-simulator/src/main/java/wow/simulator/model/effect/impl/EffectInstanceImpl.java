@@ -108,6 +108,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	protected void onStarted() {
+		effectListChanged();
+
 		if (stacked) {
 			getGameLog().effectStacked(this);
 		} else {
@@ -125,6 +127,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			onEffectFinished.run();
 		}
 
+		effectListChanged();
+
 		fireEffectEnded();
 	}
 
@@ -135,6 +139,9 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 		if (!silentRemoval) {
 			getGameLog().effectRemoved(this);
+
+			effectListChanged();
+
 			fireEffectEnded();
 		}
 	}
@@ -144,6 +151,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		super.onRemovedFromQueue();
 		if (target != null) {
 			((UnitImpl) target).detach(this);
+			effectListChanged();
 		}
 	}
 
@@ -164,6 +172,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public boolean matches(TalentTree tree) {
 		return getSourceSpell() instanceof ClassAbility a && a.getTalentTree() == tree;
+	}
+
+	@Override
+	public boolean matches(String effectName) {
+		return getName().equals(effectName);
 	}
 
 	@Override
@@ -213,11 +226,17 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		}
 		addStacks(1);
 		endTime = now().add(duration);
+
+		effectListChanged();
+
 		getGameLog().effectStacksIncreased(this);
 	}
 
 	private void addStacks(int stacksToAdd) {
 		numStacks = Math.min(numStacks + stacksToAdd, getMaxStacks());
+
+		effectListChanged();
+
 		checkIfStacksAreMaxed();
 	}
 
@@ -246,6 +265,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		if (--numStacks <= 0) {
 			removeSelf();
 		} else {
+			effectListChanged();
+
 			getGameLog().effectStacksDecreased(this);
 		}
 	}
@@ -393,6 +414,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		addStatConversions(augmentations.statConversions());
 		addEvents(augmentations.events());
 		addEffectIncrease(augmentations.effectIncreasePct());
+		effectListChanged();
 	}
 
 	private void addEffectIncrease(double effectIncreasePct) {
@@ -426,5 +448,28 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public void increaseEffect(double effectIncreasePct) {
 		effectUpdateContext.increaseEffect(effectIncreasePct);
+	}
+
+	private void effectListChanged() {
+		if (modifierAttributeList == null) {
+			return;
+		}
+
+		if (hasResourceModifier()) {
+			target.onResourcesNeedRefresh();
+		}
+	}
+
+	private boolean hasResourceModifier() {
+		return modifierAttributeList.stream().anyMatch(this::isResourceModifier);
+	}
+
+	private boolean isResourceModifier(Attribute attribute) {
+		return switch (attribute.id()) {
+			case STAMINA, STAMINA_PCT, INTELLECT, INTELLECT_PCT, BASE_STATS, BASE_STATS_PCT, MAX_HEALTH, MAX_HEALTH_PCT, MAX_MANA, MAX_MANA_PCT ->
+					true;
+			default ->
+					false;
+		};
 	}
 }

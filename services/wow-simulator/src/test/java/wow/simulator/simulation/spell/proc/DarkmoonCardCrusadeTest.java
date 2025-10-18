@@ -101,5 +101,6 @@ class DarkmoonCardCrusadeTest extends WarlockSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		equip("Darkmoon Card: Crusade", TRINKET_1);
+		addIntellectBonus(1000);
 	}
 }

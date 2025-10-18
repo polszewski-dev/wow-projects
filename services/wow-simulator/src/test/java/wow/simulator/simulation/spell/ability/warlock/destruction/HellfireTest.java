@@ -29,7 +29,7 @@ class HellfireTest extends WarlockSpellSimulationTest {
 						.beginGcd(player)
 						.endCast(player, HELLFIRE)
 						.decreasedResource(1665, MANA, player, HELLFIRE)
-						.effectApplied(HELLFIRE, null, 15)
+						.effectApplied(HELLFIRE, player, 15)
 						.beginChannel(player, HELLFIRE, 15),
 				at(1)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
@@ -108,7 +108,7 @@ class HellfireTest extends WarlockSpellSimulationTest {
 						.decreasedResource(308, HEALTH, target1, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.effectExpired(HELLFIRE, null)
+						.effectExpired(HELLFIRE, player)
 						.endChannel(player, HELLFIRE)
 		);
 	}

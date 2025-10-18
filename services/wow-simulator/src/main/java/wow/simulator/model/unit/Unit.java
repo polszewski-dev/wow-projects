@@ -3,6 +3,7 @@ package wow.simulator.model.unit;
 import wow.character.model.character.Character;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.snapshot.*;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.spell.*;
@@ -94,7 +95,19 @@ public interface Unit extends Character, SimulationContextSource {
 
 	int getCurrentMana();
 
+	int getMaxHealth();
+
+	int getMaxMana();
+
 	Percent getManaPct();
+
+	void setCurrentHealth(int amount);
+
+	void setCurrentMana(int amount);
+
+	void setHealthToMax();
+
+	void setManaToMax();
 
 	int increaseHealth(int amount, boolean crit, Spell spell);
 
@@ -108,6 +121,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void addHiddenEffect(String effectName, int numStacks);
 
+	void addHiddenEffect(String effectName, int numStacks, AnyDuration duration);
+
 	void removeEffect(EffectInstance effect);
 
 	void removeEffect(AbilityId abilityId, Unit owner);
@@ -115,6 +130,8 @@ public interface Unit extends Character, SimulationContextSource {
 	boolean isUnderEffect(AbilityId abilityId, Unit owner);
 
 	Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner);
+
+	Optional<EffectInstance> getEffect(String effectName);
 
 	boolean hasEffect(AbilityId requiredEffect, Unit effectOwner);
 
@@ -153,4 +170,8 @@ public interface Unit extends Character, SimulationContextSource {
 	static boolean areHostile(Unit first, Unit second) {
 		return !areFriendly(first, second);
 	}
+
+	void onAddedToSimulation();
+
+	void onResourcesNeedRefresh();
 }
