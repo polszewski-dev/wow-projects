@@ -32,9 +32,9 @@ class AccumulatedRegenStatsTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	void getHealthGeneratedPct() {
-		accumulateTestAttributes(HEALTH_GENERATED_PCT);
-		assertThat(regenStats.getHealthGeneratedPct()).isEqualTo(100);
+	void getHealingTakenPct() {
+		accumulateTestAttributes(HEALING_TAKEN_PCT);
+		assertThat(regenStats.getHealingTakenPct()).isEqualTo(100);
 	}
 
 	@Test
@@ -65,7 +65,7 @@ class AccumulatedRegenStatsTest extends WowCharacterSpringTest {
 	void copy() {
 		regenStats.accumulateAttribute(HP5, 1);
 		regenStats.accumulateAttribute(MP5, 2);
-		regenStats.accumulateAttribute(HEALTH_GENERATED_PCT, 3);
+		regenStats.accumulateAttribute(HEALING_TAKEN_PCT, 3);
 		regenStats.accumulateAttribute(HEALTH_REGEN_PCT, 4);
 		regenStats.accumulateAttribute(MANA_REGEN_PCT, 5);
 		regenStats.accumulateAttribute(IN_COMBAT_HEALTH_REGEN_PCT, 6);
@@ -75,7 +75,7 @@ class AccumulatedRegenStatsTest extends WowCharacterSpringTest {
 
 		assertThat(copy.getHp5()).isEqualTo(regenStats.getHp5());
 		assertThat(copy.getMp5()).isEqualTo(regenStats.getMp5());
-		assertThat(copy.getHealthGeneratedPct()).isEqualTo(regenStats.getHealthGeneratedPct());
+		assertThat(copy.getHealingTakenPct()).isEqualTo(regenStats.getHealingTakenPct());
 		assertThat(copy.getHealthRegenPct()).isEqualTo(regenStats.getHealthRegenPct());
 		assertThat(copy.getManaRegenPct()).isEqualTo(regenStats.getManaRegenPct());
 		assertThat(copy.getInCombatHealthRegenPct()).isEqualTo(regenStats.getInCombatHealthRegenPct());

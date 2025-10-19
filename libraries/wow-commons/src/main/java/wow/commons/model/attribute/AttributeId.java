@@ -114,7 +114,6 @@ public enum AttributeId {
 	RECEIVED_EFFECT_DURATION("ReceivedEffectDuration"),
 	RECEIVED_EFFECT_DURATION_PCT("ReceivedEffectDuration%"),
 
-	HEALTH_GENERATED_PCT("HealthGenerated%"),
 	HEALTH_REGEN_PCT("HealthRegen%"),
 	MANA_REGEN_PCT("ManaRegen%"),
 	IN_COMBAT_HEALTH_REGEN_PCT("InCombatHealthRegen%"),

@@ -12,7 +12,7 @@ import wow.commons.model.attribute.AttributeId;
 public class AccumulatedRegenStats extends AccumulatedPartialStats {
 	private double hp5;
 	private double mp5;
-	private double healthGeneratedPct;
+	private double healingTakenPct;
 	private double healthRegenPct;
 	private double manaRegenPct;
 	private double inCombatHealthRegenPct;
@@ -26,7 +26,7 @@ public class AccumulatedRegenStats extends AccumulatedPartialStats {
 		super(stats);
 		this.hp5 = stats.hp5;
 		this.mp5 = stats.mp5;
-		this.healthGeneratedPct = stats.healthGeneratedPct;
+		this.healingTakenPct = stats.healingTakenPct;
 		this.healthRegenPct = stats.healthRegenPct;
 		this.manaRegenPct = stats.manaRegenPct;
 		this.inCombatHealthRegenPct = stats.inCombatHealthRegenPct;
@@ -42,8 +42,8 @@ public class AccumulatedRegenStats extends AccumulatedPartialStats {
 			case MP5, PARTY_MP5:
 				this.mp5 += value;
 				break;
-			case HEALTH_GENERATED_PCT:
-				this.healthGeneratedPct += value;
+			case HEALING_TAKEN_PCT:
+				this.healingTakenPct += value;
 				break;
 			case HEALTH_REGEN_PCT:
 				this.healthRegenPct += value;

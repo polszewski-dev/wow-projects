@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.*;
 import static wow.character.constant.AttributeConditions.SPELL_DAMAGE;
 import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
-import static wow.commons.model.attribute.AttributeId.HEALTH_GENERATED_PCT;
+import static wow.commons.model.attribute.AttributeId.HEALING_TAKEN_PCT;
 import static wow.commons.model.attribute.AttributeId.POWER;
 import static wow.test.commons.BuffNames.*;
 import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
@@ -194,7 +194,7 @@ class BuffsTest extends WowCharacterSpringTest {
 			"2, 24, 120",
 			"3, 26, 130",
 	})
-	void demonicAegisCorrectlyAffectsFelArmor(int rank, int healthGeneratedPct, int spellDamage) {
+	void demonicAegisCorrectlyAffectsFelArmor(int rank, int healingTakenPct, int spellDamage) {
 		var player = getCharacter();
 
 		player.resetEquipment();
@@ -215,7 +215,7 @@ class BuffsTest extends WowCharacterSpringTest {
 				.orElseThrow();
 
 		assertThat(buff.getEffect().getModifierAttributeList()).isEqualTo(List.of(
-				Attribute.of(HEALTH_GENERATED_PCT, healthGeneratedPct),
+				Attribute.of(HEALING_TAKEN_PCT, healingTakenPct),
 				Attribute.of(POWER, spellDamage, SPELL_DAMAGE)
 		));
 	}

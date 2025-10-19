@@ -549,7 +549,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		snapshot.setInterruptedManaRegen((int) interruptedManaRegen);
 		snapshot.setOutOfCombatHealthRegen((int) outOfCombatHealthRegen);
 		snapshot.setInCombatHealthRegen((int) inCombatHealthRegen);
-		snapshot.setHealthGeneratedPct(regenStats.getHealthGeneratedPct());
+		snapshot.setHealthGeneratedPct(regenStats.getHealingTakenPct());
 
 		return snapshot;
 	}

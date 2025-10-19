@@ -154,10 +154,6 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 		return Optional.ofNullable(buff);
 	}
 
-	private boolean isAvailable(Buff buff) {
-		return availableBuffsByNameRank.containsKey(buff.getNameRank());
-	}
-
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		for (var buff : enabledBuffsByName.values()) {
