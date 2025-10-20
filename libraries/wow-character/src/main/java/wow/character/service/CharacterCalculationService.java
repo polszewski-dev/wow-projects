@@ -67,5 +67,7 @@ public interface CharacterCalculationService {
 
 	EffectAugmentations getEffectAugmentations(Character character, Spell spell, Character target);
 
-	double getCopiedValueIncreasePct(Character character, Spell spell);
+	double getCopiedAmountAsHeal(Character character, Spell spell, Character target, int amount, double ratioPct);
+
+	double getCopiedAmountAsManaGain(Character character, Spell spell, Character target, int amount, double ratioPct);
 }

@@ -33,6 +33,18 @@ class AccumulatedTargetStatsTest extends WowCharacterSpringTest {
 	}
 
 	@Test
+	void getHealingTaken() {
+		accumulateTestAttributes(HEALING_TAKEN);
+		assertThat(targetStats.getHealingTaken()).isEqualTo(160);
+	}
+
+	@Test
+	void getHealingTakenPct() {
+		accumulateTestAttributes(HEALING_TAKEN_PCT);
+		assertThat(targetStats.getHealingTakenPct()).isEqualTo(160);
+	}
+
+	@Test
 	void getPowerTaken() {
 		accumulateTestAttributes(POWER_TAKEN);
 		assertThat(targetStats.getPowerTaken()).isEqualTo(160);
@@ -47,16 +59,20 @@ class AccumulatedTargetStatsTest extends WowCharacterSpringTest {
 	@Test
 	void copy() {
 		targetStats.accumulateAttribute(DAMAGE_TAKEN, 1);
-		targetStats.accumulateAttribute(DAMAGE_TAKEN_PCT, 1);
-		targetStats.accumulateAttribute(POWER_TAKEN, 1);
-		targetStats.accumulateAttribute(CRIT_TAKEN_PCT, 1);
-		targetStats.accumulateAttribute(RECEIVED_EFFECT_DURATION, 1);
-		targetStats.accumulateAttribute(RECEIVED_EFFECT_DURATION_PCT, 1);
+		targetStats.accumulateAttribute(DAMAGE_TAKEN_PCT, 2);
+		targetStats.accumulateAttribute(HEALING_TAKEN, 3);
+		targetStats.accumulateAttribute(HEALING_TAKEN_PCT, 4);
+		targetStats.accumulateAttribute(POWER_TAKEN, 5);
+		targetStats.accumulateAttribute(CRIT_TAKEN_PCT, 6);
+		targetStats.accumulateAttribute(RECEIVED_EFFECT_DURATION, 7);
+		targetStats.accumulateAttribute(RECEIVED_EFFECT_DURATION_PCT, 8);
 
 		var copy = targetStats.copy();
 
 		assertThat(copy.getDamageTaken()).isEqualTo(targetStats.getDamageTaken());
 		assertThat(copy.getDamageTakenPct()).isEqualTo(targetStats.getDamageTakenPct());
+		assertThat(copy.getHealingTaken()).isEqualTo(targetStats.getHealingTaken());
+		assertThat(copy.getHealingTakenPct()).isEqualTo(targetStats.getHealingTakenPct());
 		assertThat(copy.getPowerTaken()).isEqualTo(targetStats.getPowerTaken());
 		assertThat(copy.getCritTakenPct()).isEqualTo(targetStats.getCritTakenPct());
 	}

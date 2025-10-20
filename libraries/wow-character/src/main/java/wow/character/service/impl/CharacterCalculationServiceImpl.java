@@ -35,6 +35,7 @@ import static java.lang.Math.*;
 import static wow.commons.constant.SpellConstants.*;
 import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
+import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 
 /**
@@ -643,7 +644,22 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getCopiedValueIncreasePct(Character character, Spell spell) {
+	public double getCopiedAmountAsHeal(Character character, Spell spell, Character target, int amount, double ratioPct) {
+		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
+		var targetStats = getAccumulatedTargetStats(spell, target, null, HEALING, spell.getSchool());
+		var healingTakenPct = targetStats.getHealingTakenPct();
+
+		return multiplyByRatio(amount, ratioPct + copyIncreasePct, healingTakenPct);
+	}
+
+	@Override
+	public double getCopiedAmountAsManaGain(Character character, Spell spell, Character target, int amount, double ratioPct) {
+		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
+
+		return multiplyByRatio(amount, ratioPct + copyIncreasePct, 0);
+	}
+
+	private double getCopiedAmountIncreasePct(Character character, Spell spell) {
 		if (!(spell instanceof Ability ability)) {
 			return 0;
 		}
@@ -654,6 +670,10 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		accumulateEffects(character, accumulatedCopyPct);
 
 		return accumulatedCopyPct.totalValue;
+	}
+
+	private static double multiplyByRatio(int value, double ratioPct, double increasePct) {
+		return value * max(ratioPct / 100.0, 0) * max(1 + increasePct / 100.0, 0);
 	}
 
 	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character) {

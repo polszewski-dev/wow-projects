@@ -5,7 +5,8 @@ import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.test.commons.AbilityNames.FEL_ARMOR;
+import static wow.simulator.util.CalcUtils.increaseByPct;
+import static wow.test.commons.AbilityNames.*;
 
 /**
  * User: POlszewski
@@ -47,5 +48,38 @@ class FelArmorTest extends WarlockSpellSimulationTest {
 		var spellDamageAfter = statsAt(1).getSpellDamage();
 
 		assertThat(spellDamageAfter).isEqualTo(spellDamageBefore + 100);
+	}
+
+	@Test
+	void drain_life_healing_increased() {
+		setHealth(player, 100);
+
+		player.cast(FEL_ARMOR);
+		player.cast(DRAIN_LIFE);
+
+		updateUntil(30);
+
+		var expectedDamage = DRAIN_LIFE_INFO.damage(100);
+		var expectedHealing = increaseByPct(expectedDamage, 20);
+
+		assertDamageDone(DRAIN_LIFE, expectedDamage);
+		assertHealthGained(DRAIN_LIFE, player, expectedHealing);
+	}
+
+	@Test
+	void siphon_life_healing_increased() {
+		enableTalent(SIPHON_LIFE, 1);
+		setHealth(player, 100);
+
+		player.cast(FEL_ARMOR);
+		player.cast(SIPHON_LIFE);
+
+		updateUntil(60);
+
+		var expectedDamage = SIPHON_LIFE_INFO.damage(100);
+		var expectedHealing = increaseByPct(expectedDamage, 20);
+
+		assertDamageDone(SIPHON_LIFE, expectedDamage);
+		assertHealthGained(SIPHON_LIFE, player, expectedHealing);
 	}
 }

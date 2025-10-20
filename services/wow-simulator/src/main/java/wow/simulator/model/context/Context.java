@@ -8,6 +8,10 @@ import wow.commons.model.spell.TriggeredSpell;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
+import wow.simulator.util.RoundingReminder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -29,6 +33,10 @@ public abstract class Context implements SimulationContextSource {
 
 	@Setter
 	private Spell sourceSpellOverride;
+
+	private Map<SpellTarget, RoundingReminder> roundingRemindersBySpellTarget;
+
+	private record SpellTarget(Spell spell, Unit target) {}
 
 	protected Context(Unit caster, Spell spell, Context parentContext) {
 		this.caster = caster;
@@ -83,18 +91,36 @@ public abstract class Context implements SimulationContextSource {
 		}
 	}
 
-	protected Context getSourceContext() {
-		if (parentContext == null || this == parentContext) {
-			return this;
-		}
-		return spell instanceof TriggeredSpell ? parentContext : this;
-	}
-
 	protected Spell getSourceSpell() {
 		if (sourceSpellOverride != null) {
 			return sourceSpellOverride;
 		}
-		return getSourceContext().getSpell();
+		if (spell instanceof TriggeredSpell) {
+			return parentContext.spell;
+		}
+		return spell;
+	}
+
+	private Context getRootContext() {
+		if (parentContext != null) {
+			return parentContext.getRootContext();
+		}
+		return this;
+	}
+
+	private RoundingReminder getRoundingReminder(Spell spell, Unit target) {
+		if (roundingRemindersBySpellTarget == null) {
+			roundingRemindersBySpellTarget = new HashMap<>();
+		}
+
+		return roundingRemindersBySpellTarget.computeIfAbsent(
+				new SpellTarget(spell, target),
+				x -> new RoundingReminder()
+		);
+	}
+
+	protected int roundValue(double value, Unit target) {
+		return getRootContext().getRoundingReminder(spell, target).roundValue(value);
 	}
 
 	@Override

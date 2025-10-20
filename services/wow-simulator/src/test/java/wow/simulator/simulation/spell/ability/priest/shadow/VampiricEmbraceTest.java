@@ -70,19 +70,19 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(7.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(10.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(13.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(16.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
 				at(19.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE)
 		);
 	}
 
@@ -103,9 +103,14 @@ class VampiricEmbraceTest extends PriestSpellSimulationTest {
 
 		updateUntil(60);
 
-		for (int tickNo = 0; tickNo < SHADOW_WORD_PAIN_INFO.numTicks(); ++tickNo) {
-			assertHealthGained(tickNo, VAMPIRIC_EMBRACE, player, getPercentOf(15, SHADOW_WORD_PAIN_INFO.tickDamage()));
-		}
+		var tickDamage = getPercentOf(15, SHADOW_WORD_PAIN_INFO.tickDamage());
+
+		assertHealthGained(0, VAMPIRIC_EMBRACE, player, tickDamage);
+		assertHealthGained(1, VAMPIRIC_EMBRACE, player, tickDamage + 1);
+		assertHealthGained(2, VAMPIRIC_EMBRACE, player, tickDamage + 1);
+		assertHealthGained(3, VAMPIRIC_EMBRACE, player, tickDamage + 1);
+		assertHealthGained(4, VAMPIRIC_EMBRACE, player, tickDamage + 1);
+		assertHealthGained(5, VAMPIRIC_EMBRACE, player, tickDamage + 1);
 	}
 
 	@Override

@@ -113,16 +113,16 @@ class MiseryTest extends PriestSpellSimulationTest {
 						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
 				at(7.5)
 						.decreasedResource(137, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH),
 				at(10.5)
 						.decreasedResource(136, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH),
 				at(13.5)
 						.decreasedResource(137, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH),
 				at(16.5)
 						.decreasedResource(136, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH)
 						.effectExpired(VAMPIRIC_TOUCH, target)
 						.effectRemoved(MISERY, TALENT, target)
 		);

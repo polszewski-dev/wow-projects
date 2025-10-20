@@ -12,6 +12,8 @@ import wow.commons.model.attribute.AttributeId;
 public class AccumulatedTargetStats extends AccumulatedPartialStats {
 	private double damageTaken;
 	private double damageTakenPct;
+	private double healingTaken;
+	private double healingTakenPct;
 	private double powerTaken;
 	private double critTakenPct;
 
@@ -23,6 +25,8 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 		super(stats);
 		this.damageTaken = stats.damageTaken;
 		this.damageTakenPct = stats.damageTakenPct;
+		this.healingTaken = stats.healingTaken;
+		this.healingTakenPct = stats.healingTakenPct;
 		this.powerTaken = stats.powerTaken;
 		this.critTakenPct = stats.critTakenPct;
 	}
@@ -35,6 +39,12 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 				break;
 			case DAMAGE_TAKEN_PCT:
 				this.damageTakenPct += value;
+				break;
+			case HEALING_TAKEN:
+				this.healingTaken += value;
+				break;
+			case HEALING_TAKEN_PCT:
+				this.healingTakenPct += value;
 				break;
 			case POWER_TAKEN:
 				this.powerTaken += value;

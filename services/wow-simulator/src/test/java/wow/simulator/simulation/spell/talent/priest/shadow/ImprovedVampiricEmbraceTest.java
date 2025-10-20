@@ -28,7 +28,9 @@ class ImprovedVampiricEmbraceTest extends PriestSpellSimulationTest {
 
 		updateUntil(60);
 
-		assertHealthGained(VAMPIRIC_EMBRACE, player, getPercentOf(15 + 5 * rank, MIND_BLAST_INFO.damage()));
+		var totalHealing = getPercentOf(15 + 5 * rank, MIND_BLAST_INFO.damage());
+
+		assertHealthGained(VAMPIRIC_EMBRACE, player, totalHealing);
 	}
 
 	@ParameterizedTest
@@ -41,9 +43,9 @@ class ImprovedVampiricEmbraceTest extends PriestSpellSimulationTest {
 
 		updateUntil(60);
 
-		for (int tickNo = 0; tickNo < SHADOW_WORD_PAIN_INFO.numTicks(); ++tickNo) {
-			assertHealthGained(tickNo, VAMPIRIC_EMBRACE, player, getPercentOf(15 + 5 * rank, SHADOW_WORD_PAIN_INFO.tickDamage()));
-		}
+		var totalHealing = getPercentOf(15 + 5 * rank, SHADOW_WORD_PAIN_INFO.damage());
+
+		assertHealthGained(VAMPIRIC_EMBRACE, player, totalHealing);
 	}
 
 	@Override

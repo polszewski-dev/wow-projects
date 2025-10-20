@@ -5,7 +5,6 @@ import wow.commons.model.effect.component.PeriodicComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.util.RoundingReminder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,6 @@ public class EffectUpdateContext extends Context {
 	private final EffectInstance effect;
 	private final TargetResolver targetResolver;
 	private final Map<Unit, PeriodicSpellDamageSnapshot> spellDamageSnapshots = new HashMap<>();
-	private final RoundingReminder roundingReminder = new RoundingReminder();
 
 	public EffectUpdateContext(EffectInstance effect, Context parentContext) {
 		super(effect.getOwner(), effect.getSourceSpell(), parentContext);
@@ -64,7 +62,7 @@ public class EffectUpdateContext extends Context {
 
 		var snapshot = getSpellDamageSnapshot(target);
 		var tickDamage = numStacks * snapshot.getTickDamage(tickNo);
-		var roundedTickDamage = roundingReminder.roundValue(tickDamage);
+		var roundedTickDamage = roundValue(tickDamage, target);
 
 		decreaseHealth(target, roundedTickDamage, false, false);
 	}
