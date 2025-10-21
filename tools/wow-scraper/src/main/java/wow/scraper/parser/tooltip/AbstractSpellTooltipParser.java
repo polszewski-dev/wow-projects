@@ -29,6 +29,22 @@ public abstract class AbstractSpellTooltipParser extends AbstractTooltipParser<J
 	protected final Rule ruleTalent = Rule.exact("Talent", () -> this.talent = true);
 	protected final Rule ruleDescription = Rule.regex("(.+)", x -> parseTooltip(x.get(0)));
 
+	protected final Rule ruleTools = Rule.exact("Tools:", () -> {});
+	protected final Rule ruleTotems = Rule.regex("(Water Totem|Fire Totem|Air Totem|Earth Totem)", x -> {});
+
+	protected final Rule ruleReqMeleeWeapon = Rule.exact("Requires Melee Weapon", () -> {});
+	protected final Rule ruleReqOneHandedMeleeWeapon = Rule.exact("Requires One-Handed Melee Weapon", () -> {});
+	protected final Rule ruleReqCatForm = Rule.exact("Requires Cat Form", () -> {});
+	protected final Rule ruleDireBearForm = Rule.exact("Requires Dire Bear Form", () -> {});
+	protected final Rule ruleAnyBearForm = Rule.exact("Requires Bear Form, Dire Bear Form", () -> {});
+	protected final Rule ruleCatBearForm = Rule.exact("Requires Cat Form, Bear Form, Dire Bear Form", () -> {});
+
+	protected final Rule ruleNaturesSwiftness1 = Rule.exact("Modifies Cast Time -100%:", () -> {});
+	protected final Rule ruleNaturesSwiftness2 = Rule.exact("Entangling Roots, Entangling Roots, Entangling Roots, Entangling Roots, Entangling Roots, Entangling Roots, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Hibernate, Hibernate, Hibernate, Nourish, Rebirth, Rebirth, Rebirth, Rebirth, Rebirth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Soothe Animal, Soothe Animal, Soothe Animal, Starsurge, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath", () -> {});
+	protected final Rule ruleNaturesSwiftness3 = Rule.exact("Cyclone, Entangling Roots, Entangling Roots, Entangling Roots, Entangling Roots, Entangling Roots, Entangling Roots, Entangling Roots, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Healing Touch, Hibernate, Hibernate, Hibernate, Rebirth, Rebirth, Rebirth, Rebirth, Rebirth, Rebirth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Regrowth, Soothe Animal, Soothe Animal, Soothe Animal, Soothe Animal, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath, Wrath", () -> {});
+
+	protected final Rule ruleRangeRange = Rule.exact("8 - 25 yd range", () -> {});
+
 	protected AbstractSpellTooltipParser(JsonSpellDetails details, GameVersionId gameVersion, ScraperContext scraperContext) {
 		super(details, gameVersion, scraperContext);
 	}

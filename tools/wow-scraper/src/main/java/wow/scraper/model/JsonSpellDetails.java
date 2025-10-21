@@ -20,7 +20,6 @@ import java.util.Set;
 		"cat",
 		"learnedat",
 		"nskillup",
-		"rank",
 		"schools",
 		"skill",
 		"source",
@@ -35,6 +34,8 @@ import java.util.Set;
 		"races",
 		"reqrace",
 		"talentspec",
+		"phaseId",
+		"seasonId"
 })
 public class JsonSpellDetails implements JsonCommonDetails {
 	@JsonProperty(value = "id")
@@ -64,6 +65,8 @@ public class JsonSpellDetails implements JsonCommonDetails {
 	private GameVersionId reqVersion;
 
 	private WowheadSpellCategory category;
+
+	private String rank;
 
 	private Integer maxRank;
 }

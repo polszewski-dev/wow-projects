@@ -39,7 +39,7 @@ class AbilityParserTest extends SpellParserTest {
 
 	@Test
 	void curseOfAgony() {
-		var matcher = getAbilityMatcher(CURSE_OF_AGONY, "Curses the target with agony, causing 1356 Shadow damage over 24 sec.  This damage is dealt slowly at first, and builds up as the Curse reaches its full duration.  Only one Curse per Warlock can be active on any one target.");
+		var matcher = getAbilityMatcher(CURSE_OF_AGONY, "Curses the target with agony, causing 1356 Shadow damage over 24 sec. This damage is dealt slowly at first, and builds up as the Curse reaches its full duration. Only one Curse per Warlock can be active on any one target.");
 		var ability = matcher.getAbility();
 
 		var effect = ability.getEffectApplication().effect();
@@ -66,7 +66,7 @@ class AbilityParserTest extends SpellParserTest {
 
 	@Test
 	void drainLife() {
-		var ability = parse(DRAIN_LIFE, "Transfers 108 health every 1 sec from the target to the caster.  Lasts 5 sec.");
+		var ability = parse(DRAIN_LIFE, "Transfers 108 health every 1 sec from the target to the caster. Lasts 5 sec.");
 
 		assertEffectApplication(ability, SpellTarget.ENEMY, 5, 1, 1, 1);
 
@@ -86,7 +86,7 @@ class AbilityParserTest extends SpellParserTest {
 
 	@Test
 	void demonArmor() {
-		var ability = parse(DEMON_ARMOR, "Protects the caster, increasing armor by 660, Shadow resistance by 18 and restores 18 health every 5 sec.  Only one type of Armor spell can be active on the Warlock at any time.  Lasts 30 min.");
+		var ability = parse(DEMON_ARMOR, "Protects the caster, increasing armor by 660, Shadow resistance by 18 and restores 18 health every 5 sec. Only one type of Armor spell can be active on the Warlock at any time. Lasts 30 min.");
 
 		assertEffectApplication(ability, SpellTarget.SELF, 30 * 60, 1, 1, 1);
 
@@ -119,7 +119,7 @@ class AbilityParserTest extends SpellParserTest {
 
 	@Test
 	void shadowguard() {
-		var ability = parse(SHADOWGUARD, "The caster is surrounded by shadows.  When a spell, melee or ranged attack hits the caster, the attacker will be struck for 130 Shadow damage.  Attackers can only be damaged once every few seconds.  This damage causes no threat.  3 charges.  Lasts 10 min.");
+		var ability = parse(SHADOWGUARD, "The caster is surrounded by shadows. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 130 Shadow damage. Attackers can only be damaged once every few seconds. This damage causes no threat. 3 charges. Lasts 10 min.");
 		var effectApplication = ability.getEffectApplication();
 
 		assertEffectApplication(ability, SpellTarget.SELF, 10 * 60, 3, 1, 1);
@@ -143,7 +143,7 @@ class AbilityParserTest extends SpellParserTest {
 	@Test
 	void noSpell() {
 		var parser = spellPatternRepository.getAbilityParser(SUMMON_DREADSTEED, GameVersionId.TBC);
-		boolean success = parser.tryParse("Summons a Dreadsteed, which serves as a mount for the caster.  Speed is increased by 100%.");
+		var success = parser.tryParse("Summons a Dreadsteed, which serves as a mount for the caster. Speed is increased by 100%.");
 
 		assertThat(success).isFalse();
 	}

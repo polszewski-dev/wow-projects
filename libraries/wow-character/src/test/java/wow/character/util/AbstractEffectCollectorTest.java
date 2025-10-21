@@ -30,7 +30,7 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 
 		assertThat(effectCollector.abilities).isEqualTo(List.of(
 				"Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)",
-				"Use: Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains up to 320 spell damage and healing. (1 Min, 30 Sec Cooldown)"
+				"Use: Conjures a Power Circle lasting for 15 sec. While standing in this circle, the caster gains up to 320 spell damage and healing. (1 Min, 30 Sec Cooldown)"
 		));
 	}
 

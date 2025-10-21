@@ -36,6 +36,10 @@ public final class AttributeConditionChecker {
 			case HadCrit() ->
 					args.isHadCrit();
 
+			case HasCastTime() ->
+					args.getSpell() instanceof Ability a &&
+					a.getCastTime().isPositive();
+
 			case HasCastTimeUnder10Sec() ->
 					args.getSpell() instanceof Ability a &&
 					a.getCastTime().getSeconds() < 10;

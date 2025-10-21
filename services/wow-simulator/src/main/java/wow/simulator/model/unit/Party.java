@@ -24,8 +24,22 @@ public class Party {
 			throw new IllegalArgumentException("Party has already %s characters".formatted(MAX_CHARACTERS));
 		}
 
+		if (players.contains(player)) {
+			return;
+		}
+
 		players.add(player);
 		player.setParty(this);
+	}
+
+	public void add(Unit... players) {
+		for (var player : players) {
+			add(player);
+		}
+	}
+
+	public void remove(Unit player) {
+		players.remove(player);
 	}
 
 	public void forEachPartyMember(Consumer<Unit> consumer) {

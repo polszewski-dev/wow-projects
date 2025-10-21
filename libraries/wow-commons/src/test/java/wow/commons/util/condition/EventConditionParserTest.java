@@ -61,7 +61,7 @@ class EventConditionParserTest {
 					of(PowerType.SPELL_DAMAGE)
 			),
 			testData(
-					"ShadowTree",
+					"Shadow Tree",
 					of(TalentTree.SHADOW)
 			),
 			testData(
@@ -135,6 +135,10 @@ class EventConditionParserTest {
 			testData(
 					"HadNoCrit",
 					new HadNoCrit()
+			),
+			testData(
+					"HadCrit",
+					new HadCrit()
 			),
 			testData(
 					"TargetingOthers",

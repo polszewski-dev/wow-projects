@@ -231,6 +231,7 @@ public class EventConditionParser extends ConditionParser<EventCondition, Void> 
 				entry("HasCastTimeUnder10Sec", HAS_CAST_TIME_UNDER_10_SEC),
 				entry("CanCrit", CAN_CRIT),
 				entry("HadNoCrit", HAD_NO_CRIT),
+				entry("HadCrit", HAD_CRIT),
 				entry("TargetingOthers", IS_TARGETING_OTHERS)
 		);
 	}

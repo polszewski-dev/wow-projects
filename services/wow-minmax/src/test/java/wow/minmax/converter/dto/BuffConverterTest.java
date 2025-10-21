@@ -32,9 +32,9 @@ class BuffConverterTest extends WowMinMaxSpringTest {
 						28189,
 						FEL_ARMOR,
 						2,
-						"Surrounds the caster with fel energy, increasing the amount of health generated through spells and effects by 20% and increasing spell damage by up to 100.  Only one type of Armor spell can be active on the Warlock at any time.  Lasts 30 min.",
+						"Surrounds the caster with fel energy, increasing the amount of health generated through spells and effects by 20% and increasing spell damage by up to 100. Only one type of Armor spell can be active on the Warlock at any time. Lasts 30 min.",
 						"spell_shadow_felarmour",
-						"Surrounds the caster with fel energy, increasing the amount of health generated through spells and effects by 20% and increasing spell damage by up to 100.  Only one type of Armor spell can be active on the Warlock at any time.  Lasts 30 min."
+						"Surrounds the caster with fel energy, increasing the amount of health generated through spells and effects by 20% and increasing spell damage by up to 100. Only one type of Armor spell can be active on the Warlock at any time. Lasts 30 min."
 				)
 		);
 	}

@@ -514,7 +514,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(ability.getName()).isEqualTo("Blood Fury");
 		assertThat(ability.getRank()).isZero();
-		assertThat(ability.getTooltip()).isEqualTo("Increases melee attack power by 6 and your damage and healing from spells and effects by up to 5, but reduces healing effects on you by 50%.  Lasts 15 sec.");
+		assertThat(ability.getTooltip()).isEqualTo("Increases melee attack power by 6 and your damage and healing from spells and effects by up to 5, but reduces healing effects on you by 50%. Lasts 15 sec.");
 		assertThat(ability.getCharacterRestriction().raceIds()).isEqualTo(List.of(ORC));
 		assertThat(ability.getCharacterRestriction().characterClassIds()).isEqualTo(List.of(SHAMAN));
 

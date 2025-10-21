@@ -509,7 +509,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(snapshot.getSpirit()).isEqualTo(245);
 		assertThat(snapshot.getMaxHealth()).isEqualTo(11834);
 		assertThat(snapshot.getMaxMana()).isEqualTo(12155);
-		assertThat(snapshot.getSpellPower()).isEqualTo(1176);
+		assertThat(snapshot.getSpellPower()).isEqualTo(1277);
 		assertThat(snapshot.getSpellDamage()).isEqualTo(1604);
 		assertThat(snapshot.getSpellDamageBySchool()).isEqualTo(Map.ofEntries(
 				Map.entry(SpellSchool.FROST, 1738),

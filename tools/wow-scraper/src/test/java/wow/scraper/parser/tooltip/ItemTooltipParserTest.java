@@ -180,8 +180,8 @@ class ItemTooltipParserTest extends TooltipParserTest<JsonItemDetails, ItemToolt
 
 	@BeforeEach
 	void readTestData() {
-		hoodOfMalefic = getTooltip(31051, WowheadItemCategory.HEAD);
-		sunfireRobe = getTooltip(34364, WowheadItemCategory.CHEST);
+		hoodOfMalefic = getTooltip(31051, WowheadItemCategory.CLOTH_HEAD);
+		sunfireRobe = getTooltip(34364, WowheadItemCategory.CLOTH_CHEST);
 		scryersBlodgem = getTooltip(29132, WowheadItemCategory.TRINKETS);
 		magistersStaff = getTooltip(34182, WowheadItemCategory.STAVES);
 		wandOfDemonsoul = getTooltip(34347, WowheadItemCategory.WANDS);

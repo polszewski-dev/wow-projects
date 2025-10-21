@@ -60,7 +60,7 @@ class ProcParserTest extends SpellParserTest {
 
 	@Test
 	void twoTriggers() {
-		var effect = parse("Equip: Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times.");
+		var effect = parse("Equip: Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times. Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times.");
 
 		assertThat(effect.getEvents()).hasSize(2);
 

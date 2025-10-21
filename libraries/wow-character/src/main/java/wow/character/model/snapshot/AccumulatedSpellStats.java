@@ -52,7 +52,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 			case DAMAGE:
 				this.damage += value;
 				break;
-			case DAMAGE_PCT:
+			case DAMAGE_PCT, PARTY_DAMAGE_PCT:
 				this.damagePct += value;
 				break;
 			case EFFECT_PCT:

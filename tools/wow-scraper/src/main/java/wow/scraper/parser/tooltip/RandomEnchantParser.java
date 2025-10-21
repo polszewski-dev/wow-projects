@@ -43,7 +43,9 @@ public class RandomEnchantParser {
 			var position = findDiv(RANDOM_ENCHANT_OPENING_DIV);
 
 			if (position != null) {
-				var randomEnchantDiv = position.substring(html);
+				var randomEnchantDiv = position
+						.substring(html)
+						.replace("+$i ", "+1 ");
 				parseRandomEnchantDiv(randomEnchantDiv);
 			}
 		}

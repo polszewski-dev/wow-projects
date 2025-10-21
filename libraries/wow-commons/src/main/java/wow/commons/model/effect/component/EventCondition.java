@@ -36,6 +36,7 @@ public sealed interface EventCondition extends Condition {
 	HasCastTimeUnder10Sec HAS_CAST_TIME_UNDER_10_SEC = new HasCastTimeUnder10Sec();
 	CanCrit CAN_CRIT = new CanCrit();
 	HadNoCrit HAD_NO_CRIT = new HadNoCrit();
+	HadCrit HAD_CRIT = new HadCrit();
 	IsTargetingOthers IS_TARGETING_OTHERS = new IsTargetingOthers();
 
 	static EventCondition of(ActionType actionType) {
@@ -221,6 +222,8 @@ public sealed interface EventCondition extends Condition {
 	record CanCrit() implements EventCondition {}
 
 	record HadNoCrit() implements EventCondition {}
+
+	record HadCrit() implements EventCondition {}
 
 	record IsTargetingOthers() implements EventCondition {}
 

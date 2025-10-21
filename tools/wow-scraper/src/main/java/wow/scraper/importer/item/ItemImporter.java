@@ -33,6 +33,10 @@ public class ItemImporter extends WowheadImporter<WowheadItemCategory, JsonItemD
 		if ((getCategory().isEquipment() || getCategory() == GEMS) && details.getQuality() < getScraperConfig().getMinQuality(getGameVersion()).getCode()) {
 			return false;
 		}
+		if (details.getSeasonId() != null) {
+			return false;
+		}
+
 		return !getScraperDatafixes().getIgnoredItemIds().contains(details.getId());
 	}
 

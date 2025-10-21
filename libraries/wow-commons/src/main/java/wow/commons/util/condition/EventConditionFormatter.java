@@ -43,6 +43,9 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 			case HadNoCrit() ->
 					getMiscCondition(condition);
 
+			case HadCrit() ->
+					getMiscCondition(condition);
+
 			case HasCastTime() ->
 					getMiscCondition(condition);
 

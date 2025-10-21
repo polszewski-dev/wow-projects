@@ -92,7 +92,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final int MAX_DIRECT_COMPONENTS = 3;
 
 	public static final int MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES = 5;
-	public static final int MAX_ABILITY_EFFECT_EVENTS = 1;
+	public static final int MAX_ABILITY_EFFECT_EVENTS = 2;
 
 	public static final int MAX_ITEM_EFFECT_MODIFIER_ATTRIBUTES = 3;
 	public static final int MAX_ITEM_EFFECT_EVENTS = 5;

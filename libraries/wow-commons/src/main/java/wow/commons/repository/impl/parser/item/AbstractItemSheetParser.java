@@ -91,7 +91,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 
 		if (stats == null) {
 			if (descr != null) {
-				throw new IllegalArgumentException();
+				return Effect.EMPTY;
 			}
 			return null;
 		}

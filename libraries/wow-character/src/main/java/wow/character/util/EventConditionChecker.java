@@ -38,12 +38,16 @@ public final class EventConditionChecker {
 			case HadNoCrit() ->
 					args.isCanCrit() && !args.isHadCrit();
 
+			case HadCrit() ->
+					args.isCanCrit() && args.isHadCrit();
+
 			case HasCastTime() ->
 					args.getSpell() instanceof Ability a &&
 					a.getCastTime().isPositive();
 
 			case HasCastTimeUnder10Sec() ->
 					args.getSpell() instanceof Ability a &&
+					a.getCastTime().getSeconds() > 0 &&
 					a.getCastTime().getSeconds() < 10;
 
 			case HasManaCost() ->

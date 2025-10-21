@@ -620,4 +620,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	private boolean resourcesNeedRefresh = true;
+
+	public void setParty(Party party) {
+		if (this.party != null) {
+			this.party.remove(this);
+		}
+		this.party = party;
+	}
 }

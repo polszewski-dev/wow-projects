@@ -140,6 +140,7 @@ public enum AttributeId {
 	PET_RESISTANCE("Pet.Resistance"),
 	PET_DAMAGETAKEN_PCT("Pet.DamageTaken%"),
 
+	PARTY_DAMAGE_PCT("Party.Damage%"),
 	PARTY_POWER("Party.Power"),
 	PARTY_HIT_PCT("Party.Hit%"),
 	PARTY_CRIT_RATING("Party.CritRating"),

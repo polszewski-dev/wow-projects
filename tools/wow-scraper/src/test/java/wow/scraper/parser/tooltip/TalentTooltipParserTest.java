@@ -26,7 +26,7 @@ class TalentTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Talent
 		assertThat(parser.getGameVersion()).isEqualTo(TBC);
 		assertThat(parser.getTalentCalculatorPosition()).isEqualTo(44);
 		assertThat(parser.getIcon()).isEqualTo("spell_shadow_shadowbolt");
-		assertThat(parser.getDescription()).isEqualTo("Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 20% until 4 non-periodic damage sources are applied.  Effect lasts a maximum of 12 sec.");
+		assertThat(parser.getDescription()).isEqualTo("Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 20% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.");
 	}
 
 	@Override

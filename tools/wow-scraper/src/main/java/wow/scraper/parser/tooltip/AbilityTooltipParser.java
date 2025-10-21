@@ -30,6 +30,8 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 	private Integer healthCost;
 	private Integer baseHealthCost;
 	private Integer healthChannelCost;
+	private Integer energyCost;
+	private Integer rageCost;
 	private Reagent reagent;
 
 	private Duration castTime;
@@ -68,13 +70,17 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 					this.healthCost = x.getInteger(0);
 					this.healthChannelCost = x.getInteger(1);
 				}),
+				Rule.regex("(\\d+) Energy", x -> this.energyCost = x.getInteger(0)),
+				Rule.regex("(\\d+) Rage", x -> this.rageCost = x.getInteger(0)),
 
 				Rule.regex("(\\d+\\.?\\d*) sec cast", x -> this.castTime = Duration.seconds(x.getDouble(0))),
 				Rule.regex("Channeled \\((\\d+) sec cast\\)", x -> this.channelTime = Duration.seconds(x.getDouble(0))),
 				Rule.regex("Channeled \\((\\d+) min cast\\)", x -> this.channelTime = Duration.minutes(x.getInteger(0))),
 				Rule.regex("Instant( cast)?", x -> this.castTime = Duration.ZERO),
+				Rule.exact("Next Melee", () -> this.castTime = Duration.ZERO),
 
 				Rule.regex("(\\d+) yd range", x -> this.range = x.getInteger(0)),
+				Rule.exact("Melee Range", () -> this.range = 0),
 				Rule.exact("Unlimited range", () -> this.unlimitedRange = true),
 
 				ruleReqCLass,
@@ -87,6 +93,18 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 				Rule.exact("Conjured items disappear if logged out for more than 15 minutes.", () -> this.conjured = true),
 
 				ruleTalent,
+				ruleReqMeleeWeapon,
+				ruleReqOneHandedMeleeWeapon,
+				ruleReqCatForm,
+				ruleDireBearForm,
+				ruleAnyBearForm,
+				ruleCatBearForm,
+				ruleTools,
+				ruleTotems,
+				ruleNaturesSwiftness1,
+				ruleNaturesSwiftness2,
+				ruleNaturesSwiftness3,
+				ruleRangeRange,
 
 				ruleDescription,
 		};
@@ -99,11 +117,16 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 
 	@Override
 	protected void afterParse() {
+		if (rank == null && details.getRank() != null) {
+			ruleRank.matchAndTakeAction(details.getRank());
+		}
+
 		if (rank == null) {
 			rank = getScraperDatafixes().getRankOverrides().get(getSpellId());
-			if (rank == null) {
-				rank = 0;
-			}
+		}
+
+		if (rank == null) {
+			rank = 0;
 		}
 
 		if (requiredLevel == null) {
@@ -156,6 +179,16 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 			}
 			baseStatPct = Percent.of(baseHealthCost);
 			type = ResourceType.HEALTH;
+		}
+
+		if (energyCost != null) {
+			amount = energyCost;
+			type = ResourceType.ENERGY;
+		}
+
+		if (rageCost != null) {
+			amount = rageCost;
+			type = ResourceType.RAGE;
 		}
 
 		if (amount == 0 && type == null && baseStatPct.isZero()) {

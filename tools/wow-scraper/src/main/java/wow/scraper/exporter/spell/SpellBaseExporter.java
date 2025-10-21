@@ -26,7 +26,7 @@ public abstract class SpellBaseExporter<B extends WowExcelBuilder> extends Excel
 	}
 
 	private List<JsonSpellDetails> getData(GameVersionId gameVersion, WowheadSpellCategory.Type type) {
-		return Stream.of(WowheadSpellCategory.values())
+		return Stream.of(WowheadSpellCategory.notIgnoredValues())
 				.filter(x -> x.getType() == type)
 				.map(x -> getData(gameVersion, x))
 				.flatMap(Collection::stream)

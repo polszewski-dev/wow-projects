@@ -64,7 +64,7 @@ class AttributeConditionParserTest {
 					of(PowerType.SPELL_DAMAGE)
 			),
 			testData(
-					"ShadowTree",
+					"Shadow Tree",
 					of(TalentTree.SHADOW)
 			),
 			testData(
@@ -114,6 +114,10 @@ class AttributeConditionParserTest {
 			testData(
 					"IsInstantCast",
 					new IsInstantCast()
+			),
+			testData(
+					"HasCastTime",
+					new HasCastTime()
 			),
 			testData(
 					"HasCastTimeUnder10Sec",

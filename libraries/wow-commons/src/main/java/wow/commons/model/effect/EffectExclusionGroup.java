@@ -11,7 +11,19 @@ public enum EffectExclusionGroup {
 	ARMOR,
 	FORTITUDE,
 	SPIRIT,
-	SHADOW_PROTECTION;
+	SHADOW_PROTECTION,
+	ARCANE_INTELLECT,
+	GIFT_OF_THE_WILD,
+	BLESSING,
+	SHIELD,
+	FIRE_TOTEM,
+	WATER_TOTEM,
+	AIR_TOTEM,
+	EARTH_TOTEM,
+	FORM,
+	BLESSING_OF_WISDOM,
+	BLESSING_OF_KINGS
+	;
 
 	public static EffectExclusionGroup parse(String value) {
 		return EnumUtil.parse(value, values());

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import wow.commons.model.categorization.PveRole;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
@@ -116,7 +117,7 @@ public class ScraperDatafixes {
 	private Map<String, String> spellNameOverrides;
 
 	@Value("#{${talent.calculator.positions}}")
-	private Map<GameVersionId, Map<String, Integer>> talentCalculatorPositions;
+	private Map<CharacterClassId, Map<GameVersionId, Map<String, Integer>>> talentCalculatorPositions;
 
 	@Value("#{${missing.spell.ids}}")
 	private Map<WowheadSpellCategory, Map<GameVersionId, List<Integer>>> missingSpells;
@@ -155,22 +156,34 @@ public class ScraperDatafixes {
 	}
 
 	public boolean isTalentSpell(String name, WowheadSpellCategory category, GameVersionId gameVersion) {
-		WowheadSpellCategory abilityCategory = WowheadSpellCategory.abilitiesOf(category.getCharacterClass(), category.getTalentTree()).orElseThrow();
-		return talentSpells.get(abilityCategory).get(gameVersion).contains(name);
+		var abilityCategory = category.getAbilityCategory().orElseThrow();
+
+		return talentSpells
+				.getOrDefault(abilityCategory, Map.of())
+				.getOrDefault(gameVersion, List.of())
+				.contains(name);
 	}
 
-	public Integer getTalentCalculatorPosition(GameVersionId gameVersion, String talentName) {
-		return talentCalculatorPositions.get(gameVersion).get(talentName);
+	public Integer getTalentCalculatorPosition(CharacterClassId characterClass, String talentName, GameVersionId gameVersion) {
+		return talentCalculatorPositions
+				.getOrDefault(characterClass, Map.of())
+				.getOrDefault(gameVersion, Map.of())
+				.get(talentName);
 	}
 
 	public List<Integer> getMissingSpellIds(WowheadSpellCategory category, GameVersionId gameVersion) {
 		if (category == ENCHANTS) {
 			return List.of();
 		}
-		return missingSpells.get(category).get(gameVersion);
+		return missingSpells
+				.getOrDefault(category, Map.of())
+				.getOrDefault(gameVersion, List.of());
 	}
 
 	public boolean isSpellIgnored(Integer spellId, WowheadSpellCategory category, GameVersionId gameVersion) {
+		if (spellId >= 400_000) {
+			return true;
+		}
 		return ignoredSpellIds.getOrDefault(category, Map.of()).getOrDefault(gameVersion, List.of()).contains(spellId);
 	}
 }

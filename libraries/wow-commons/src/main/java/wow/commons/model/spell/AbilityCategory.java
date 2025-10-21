@@ -11,6 +11,8 @@ import wow.commons.util.EnumUtil;
 @AllArgsConstructor
 @Getter
 public enum AbilityCategory {
+	ARMORS("Armors"),
+	AURAS("Auras"),
 	BLESSINGS("Blessings"),
 	CURSES("Curses"),
 	DAMAGING_SHOTS("DamagingShots"),
@@ -18,7 +20,9 @@ public enum AbilityCategory {
 	JUDGEMENTS("Judgements"),
 	MANA_GEMS("ManaGems"),
 	POISONS("Poisons"),
+	SEALS("Seals"),
 	SHAPESHIFTS("Shapeshifts"),
+	SHIELDS("Shields"),
 	TOTEMS("Totems"),
 
 	HEALING_POTIONS("HealingPotions"),

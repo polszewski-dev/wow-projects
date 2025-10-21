@@ -176,6 +176,7 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 				entry("Direct", IS_DIRECT),
 				entry("HasHealingComponent", HAS_HEALING_COMPONENT),
 				entry("IsInstantCast", IS_INSTANT_CAST),
+				entry("HasCastTime", HAS_CAST_TIME),
 				entry("HasCastTimeUnder10Sec", HAS_CAST_TIME_UNDER_10_SEC),
 				entry("HadCrit", HAD_CRIT),
 				entry("HasPet", HAS_PET)

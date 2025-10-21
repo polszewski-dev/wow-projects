@@ -37,6 +37,11 @@ public final class CooldownParser {
 			return Duration.seconds(60.0 * 60.0 * parsedValues.getDouble(0));
 		}
 
+		parsedValues = parseMultipleValues("(\\d+)ms", value);
+		if (!parsedValues.isEmpty()) {
+			return Duration.millis(parsedValues.getInteger(0));
+		}
+
 		throw new IllegalArgumentException(value);
 	}
 

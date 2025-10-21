@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -133,7 +134,7 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 
 		beforeParse();
 
-		this.name = lines.get(0);
+		this.name = lines.getFirst();
 
 		for (currentLineIdx = 1; currentLineIdx < lines.size(); ++currentLineIdx) {
 			String currentLine = lines.get(currentLineIdx);
@@ -230,6 +231,29 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 
 				.replaceAll("<dfn title=\".*?\">(.*)</dfn>", "$1")
 
+				.replaceAll("<span class='q2'>S03 - Tuning and Overrides Passive - (.+?)</span>: ", "")
+				.replace("<!--ppl10138:40:49:2:200:1-->", "")
+
+				.replaceAll("\\[<span class='q9'>\\[Max\\((\\d+), \\d+\\)]</span> / \\d+]", "$1")
+
+				.replaceAll("\\[(\\d+) \\* \\(1\\)]", "$1")
+				.replaceAll("\\[(\\d+) \\* (\\d+) \\* \\(1\\)]", "($1 * $2)")
+
+				.replaceAll("\\[<span class='q9'>Regeneration, or Mass Regeneration, and a \\d+% chance to avoid interruption caused by damage while casting Arcane Blast or Spellfrost Bolt</span>]", "")
+				.replaceAll("\\[<span class='q9'>Increases all damage you deal by \\d+%</span> / (Increases the damage you deal with physical attacks in all forms by \\d+%.)]", "$1")
+				.replace("[<span class='q9'>and non-instant spell casts</span>]", "")
+				.replaceAll("\\[<span class='q9'>\\d+%</span> / (\\d+%)]", "$1")
+				.replaceAll("\\[<span class='q9'>Instantly heals a target with an active Rejuvenation or Regrowth effect for</span> / (Consumes a Rejuvenation or Regrowth effect on a friendly target to instantly heal them)]", "$1")
+				.replaceAll("\\[<span class='q9'>Increases healing from your Riptide and Earth Shield by an additional \\d+%</span>]", "")
+				.replaceAll("\\[<span class='q9'>Activating Holy Shield also grants you \\d+ Spell Power for each point of your defense skill beyond \\(\\d+ \\* \\d+\\)\\. Lasts 15 sec</span>]", "")
+				.replaceAll("\\[<span class='q9'>reduce the target's Attack Power by \\(.*?\\), and increase the Paladin's Attack Power by \\d+% for 30 sec</span> / 10 sec.]", "for 10 sec.")
+				.replaceAll("\\[<span class='q9'>Also Reduces all Physical and Holy threat you generate by \\d+% while Righteous Fury is not active</span>]", "")
+				.replace("[<span class='q9'>Moonfire costs 50% less mana and deals 100% more damage over time, your periodic damage spells can deal critical periodic damage, you gain (60 * 3) spell damage</span>]", "")
+				.replaceAll("\\[<span class='q9'>The Moonkin cannot cast healing spells while shapeshifted</span> / (The Moonkin can only cast Balance spells while shapeshifted.)]", "$1")
+				.replace("[<span class='q9'>Reduces all threat from Arcane and Nature spells by 0% while in this form</span>]", "")
+				.replaceAll("</div> \\(\\d+m?s cooldown\\)</td></tr></table>$", "")
+				.replaceAll("</div> \\(Proc chance: \\d+%\\)</td></tr></table>$", "")
+
 				.replaceAll("</[^>]+?>", "\n")
 				.replaceAll("<[^>]+?>", "")
 		;
@@ -243,6 +267,8 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 				.replace("&lt;", "<")
 				.replace("&gt;", ">")
 				.replace("&quot;", "\"")
+				.replaceAll(" +", " ")
+				.replace(" .", ".")
 		;
 
 		if (tooltip.matches("&[a-z]+;")) {
@@ -324,6 +350,9 @@ public abstract class AbstractTooltipParser<D extends JsonCommonDetails> impleme
 	}
 
 	protected static <T> String regexAny(T[] values) {
-		return Stream.of(values).map(Object::toString).collect(Collectors.joining("|"));
+		return Stream.of(values)
+				.map(Object::toString)
+				.map(Pattern::quote)
+				.collect(Collectors.joining("|"));
 	}
 }

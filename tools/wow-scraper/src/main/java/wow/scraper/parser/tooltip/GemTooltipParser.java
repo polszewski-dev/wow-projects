@@ -89,13 +89,13 @@ public class GemTooltipParser extends AbstractItemTooltipParser {
 	}
 
 	private static GemColor tryParseColor(String line) {
-		if (line.equals("\"Matches a Red Socket.\"") || line.equals("\"Matches a Red Socket.  Socketing this gem causes the item to become Soulbound.\"")) {
+		if (line.equals("\"Matches a Red Socket.\"") || line.equals("\"Matches a Red Socket. Socketing this gem causes the item to become Soulbound.\"")) {
 			return GemColor.RED;
 		}
-		if (line.equals("\"Matches a Yellow Socket.\"") || line.equals("\"Matches a Yellow Socket.  Socketing this gem causes the item to become Soulbound.\"")) {
+		if (line.equals("\"Matches a Yellow Socket.\"") || line.equals("\"Matches a Yellow Socket. Socketing this gem causes the item to become Soulbound.\"")) {
 			return GemColor.YELLOW;
 		}
-		if (line.equals("\"Matches a Blue Socket.\"") || line.startsWith("\"Matches a Blue Socket.  Socketing this gem causes the item to become Soulbound.\"")) {
+		if (line.equals("\"Matches a Blue Socket.\"") || line.startsWith("\"Matches a Blue Socket. Socketing this gem causes the item to become Soulbound.\"")) {
 			return GemColor.BLUE;
 		}
 		if (line.equals("\"Matches a Red or Yellow Socket.\"") || line.equals("\"Matches a Yellow or Red Socket.\"")) {

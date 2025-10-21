@@ -424,8 +424,14 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	private Duration getEffectDuration(Duration baseDuration, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
 		var baseDurationSeconds = baseDuration.getSeconds();
-		var duration = durationStats.getDuration() + receivedEffectStats.getReceivedEffectDuration();
-		var durationPct = durationStats.getDurationPct() + receivedEffectStats.getReceivedEffectDurationPct();
+		var duration = durationStats.getDuration();
+		var durationPct = durationStats.getDurationPct();
+
+		if (receivedEffectStats != null) {
+			duration += receivedEffectStats.getReceivedEffectDuration();
+			durationPct += receivedEffectStats.getReceivedEffectDurationPct();
+		}
+
 		var result = addAndMultiplyByPct(baseDurationSeconds, duration, durationPct);
 
 		return Duration.seconds(result);

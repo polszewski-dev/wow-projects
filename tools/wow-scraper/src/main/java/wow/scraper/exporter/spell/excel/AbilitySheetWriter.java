@@ -61,6 +61,8 @@ public class AbilitySheetWriter extends AbstractSpellSheetWriter<ClassAbility> {
 
 		if (talentRestriction != null) {
 			setValue(talentRestriction.talentName());
+		} else {
+			setValue((String) null);
 		}
 
 		setValue(ability.getCharacterRestriction().activePet());

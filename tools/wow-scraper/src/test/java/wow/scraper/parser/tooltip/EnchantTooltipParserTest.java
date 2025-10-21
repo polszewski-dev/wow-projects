@@ -39,7 +39,7 @@ class EnchantTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Encha
 		assertThat(underTest.getRequiredClass()).isNull();
 		assertThat(underTest.getRequiredProfession()).isEqualTo(ENCHANTING);
 		assertThat(underTest.getRequiredProfessionLevel()).isEqualTo(360);
-		assertEffect(underTest.getEffect().orElseThrow(), POWER, 12, SPELL, "Permanently enchant a ring to increase spell damage and healing by up to 12.  Only the Enchanter's rings can be enchanted, and enchanting a ring will cause it to become soulbound.");
+		assertEffect(underTest.getEffect().orElseThrow(), POWER, 12, SPELL, "Permanently enchant a ring to increase spell damage and healing by up to 12. Only the Enchanter's rings can be enchanted, and enchanting a ring will cause it to become soulbound.");
 		assertThat(underTest.getDetails().getEnchantId()).isEqualTo(2928);
 		assertThat(underTest.getExclusiveFaction()).isNull();
 		assertThat(underTest.getDetails().getQuality()).isEqualTo(-1);

@@ -39,6 +39,9 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 			case HadCrit() ->
 					getMiscCondition(condition);
 
+			case HasCastTime() ->
+					getMiscCondition(condition);
+
 			case HasCastTimeUnder10Sec() ->
 					getMiscCondition(condition);
 

@@ -78,6 +78,7 @@ import java.util.List;
 		"subsubclass",
 		"nslots",
 		"dmgrange",
+		"namedesc"
 })
 public class JsonItemDetails implements JsonCommonDetails {
 	@JsonProperty(value = "id")
@@ -106,6 +107,10 @@ public class JsonItemDetails implements JsonCommonDetails {
 
 	@JsonProperty(value = "icon")
 	private String icon;
+
+	private String seasonId;
+
+	private String phaseId;
 
 	private WowheadItemCategory category;
 

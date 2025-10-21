@@ -29,6 +29,22 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 				ruleTalent,
 				Rule.regex("\\(Proc chance: (\\d+)%\\)", x -> {}),
 				Rule.regex("\\(Proc chance: (\\d+)%, (\\d+)s cooldown\\)", x -> {}),
+
+				Rule.exact("30 yd range", () -> {}),
+				Rule.exact("Instant", () -> {}),
+				Rule.exact("Level 60", ()  -> {}),
+				ruleReqMeleeWeapon,
+				ruleReqOneHandedMeleeWeapon,
+				ruleReqCatForm,
+				ruleDireBearForm,
+				ruleAnyBearForm,
+				ruleCatBearForm,
+				ruleTools,
+				ruleTotems,
+				ruleNaturesSwiftness1,
+				ruleNaturesSwiftness2,
+				ruleNaturesSwiftness3,
+				ruleRangeRange,
 				ruleDescription
 		};
 	}
@@ -50,8 +66,12 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 
 		rank = getScraperDatafixes().getRankOverrides().get(getSpellId());
 
+		if (rank == null && details.getRank() != null) {
+			ruleRank.matchAndTakeAction(details.getRank());
+		}
+
 		if (rank == null) {
-			throw new IllegalArgumentException("No rank: " + name);
+			throw new IllegalArgumentException("No rank: %s, id: %s".formatted(name, details.getId()));
 		}
 	}
 
@@ -75,7 +95,7 @@ public class TalentTooltipParser extends AbstractSpellTooltipParser {
 	}
 
 	public Integer getTalentCalculatorPosition() {
-		return getScraperDatafixes().getTalentCalculatorPosition(getGameVersion(), getName());
+		return getScraperDatafixes().getTalentCalculatorPosition(getCharacterClass(), getName(), getGameVersion());
 	}
 
 	public boolean isTalentSpell() {

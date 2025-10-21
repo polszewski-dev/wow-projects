@@ -11,7 +11,6 @@ import wow.commons.util.EnumUtil;
 @AllArgsConstructor
 @Getter
 public enum TalentTree {
-	RACIAL("Racial"),
 	MISC("Misc"),
 
 	AFFLICTION("Affliction"),
@@ -19,14 +18,22 @@ public enum TalentTree {
 	DESTRUCTION("Destruction"),
 
 	DISCIPLINE("Discipline"),
-	HOLY("HolyTree"),
-	SHADOW("ShadowTree"),
+	HOLY("Holy Tree"),
+	SHADOW("Shadow Tree"),
 
-	ARCANE("ArcaneTree"),
-	FIRE("FireTree"),
-	FROST("FrostTree"),
+	ARCANE("Arcane Tree"),
+	FIRE("Fire Tree"),
+	FROST("Frost Tree"),
 
-	ELEMENTAL("ElementalTree");
+	BALANCE("Balance"),
+	FERAL_COMBAT("Feral Combat"),
+	RESTORATION("Restoration"),
+
+	ELEMENTAL("Elemental Tree"),
+	ENHANCEMENT("Enhancement"),
+
+	PROTECTION("Protection"),
+	RETRIBUTION("Retribution");
 
 	private final String name;
 
