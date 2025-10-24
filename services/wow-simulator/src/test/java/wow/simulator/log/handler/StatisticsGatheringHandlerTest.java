@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.simulator.util.SpellInfos.*;
+import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.*;
 import static wow.test.commons.AbilityNames.*;
 
 /**

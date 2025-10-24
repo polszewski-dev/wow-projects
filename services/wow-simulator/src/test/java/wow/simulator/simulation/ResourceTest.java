@@ -2,13 +2,13 @@ package wow.simulator.simulation;
 
 import wow.commons.model.Duration;
 import wow.simulator.model.effect.EffectInstance;
-import wow.simulator.simulation.spell.PriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 /**
  * User: POlszewski
  * Date: 2025-10-18
  */
-abstract class ResourceTest extends PriestSpellSimulationTest {
+abstract class ResourceTest extends TbcPriestSpellSimulationTest {
 	void addEffect(String effectName) {
 		player.addHiddenEffect(effectName, 10, Duration.seconds(30));
 	}

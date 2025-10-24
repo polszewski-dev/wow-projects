@@ -1,7 +1,7 @@
 package wow.simulator.simulation;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -11,7 +11,7 @@ import static wow.test.commons.AbilityNames.SHADOW_BOLT;
  * User: POlszewski
  * Date: 2025-10-13
  */
-class RegenActionTest extends WarlockSpellSimulationTest {
+class RegenActionTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void uninterrupted_mana_no_mp5() {
 		setMana(player, 500);

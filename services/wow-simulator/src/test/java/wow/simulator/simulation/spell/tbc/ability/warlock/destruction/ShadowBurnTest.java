@@ -1,0 +1,101 @@
+package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
+
+import org.junit.jupiter.api.Test;
+import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.test.commons.TalentNames;
+
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.SHADOWBURN;
+
+/**
+ * User: POlszewski
+ * Date: 2024-11-13
+ */
+class ShadowBurnTest extends TbcWarlockSpellSimulationTest {
+	/*
+	Instantly blasts the target for 597 to 665 Shadow damage.
+	 If the target dies within 5 sec of Shadowburn, and yields experience or honor, the caster gains a Soul Shard.
+	 */
+
+	@Test
+	void success() {
+		player.cast(SHADOWBURN);
+
+		updateUntil(30);
+
+		assertEvents(
+				at(0)
+						.beginCast(player, SHADOWBURN)
+						.beginGcd(player)
+						.endCast(player, SHADOWBURN)
+						.decreasedResource(515, MANA, player, SHADOWBURN)
+						.cooldownStarted(player, SHADOWBURN, 15)
+						.decreasedResource(631, HEALTH, target, SHADOWBURN),
+				at(1.5)
+						.endGcd(player),
+				at(15)
+						.cooldownExpired(player, SHADOWBURN)
+		);
+	}
+
+	@Test
+	void resisted() {
+		missesOnlyOnFollowingRolls(0);
+
+		player.cast(SHADOWBURN);
+
+		updateUntil(30);
+
+		assertEvents(
+				at(0)
+						.beginCast(player, SHADOWBURN)
+						.beginGcd(player)
+						.endCast(player, SHADOWBURN)
+						.decreasedResource(515, MANA, player, SHADOWBURN)
+						.cooldownStarted(player, SHADOWBURN, 15)
+						.spellResisted(player, SHADOWBURN, target),
+				at(1.5)
+						.endGcd(player),
+				at(15)
+						.cooldownExpired(player, SHADOWBURN)
+		);
+	}
+
+	@Test
+	void interrupted() {
+		player.cast(SHADOWBURN);
+
+		runAt(1, player::interruptCurrentAction);
+
+		updateUntil(30);
+
+		assertEvents(
+				at(0)
+						.beginCast(player, SHADOWBURN)
+						.beginGcd(player)
+						.endCast(player, SHADOWBURN)
+						.decreasedResource(515, MANA, player, SHADOWBURN)
+						.cooldownStarted(player, SHADOWBURN, 15)
+						.decreasedResource(631, HEALTH, target, SHADOWBURN),
+				at(1.5)
+						.endGcd(player),
+				at(15)
+						.cooldownExpired(player, SHADOWBURN)
+		);
+	}
+
+	@Test
+	void damageDone() {
+		player.cast(SHADOWBURN);
+
+		updateUntil(30);
+
+		assertDamageDone(SHADOWBURN, SHADOWBURN_INFO.damage());
+	}
+
+	@Override
+	protected void afterSetUp() {
+		enableTalent(TalentNames.SHADOWBURN, 1);
+	}
+}

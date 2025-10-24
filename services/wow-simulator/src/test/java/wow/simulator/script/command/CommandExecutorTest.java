@@ -2,7 +2,7 @@ package wow.simulator.script.command;
 
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.AbilityId;
-import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
  * User: POlszewski
  * Date: 2025-09-20
  */
-abstract class CommandExecutorTest extends WarlockSpellSimulationTest {
+abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 	CastSpell castSpell(String abilityName) {
 		return new CastSpell(
 				EMPTY,

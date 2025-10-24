@@ -1,0 +1,32 @@
+package wow.simulator.simulation.spell.tbc.talent.warlock.destruction;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.TalentNames.SHADOW_AND_FLAME;
+
+/**
+ * User: POlszewski
+ * Date: 2025-01-14
+ */
+class ShadowAndFlameTest extends TbcWarlockSpellSimulationTest {
+	/*
+	Your Shadow Bolt and Incinerate spells gain an additional 20% of your bonus spell damage effects.
+	 */
+
+	@ParameterizedTest
+	@ValueSource(ints = { 1, 2, 3, 4, 5 })
+	void additionalSDBonus(int rank) {
+		addSpBonus(100);
+
+		enableTalent(SHADOW_AND_FLAME, rank);
+
+		player.cast(SHADOW_BOLT);
+
+		updateUntil(30);
+
+		assertDamageDone(SHADOW_BOLT, SHADOW_BOLT_INFO.damage(4 * rank, 100));
+	}
+}

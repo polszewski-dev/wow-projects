@@ -1,7 +1,7 @@
 package wow.simulator.script;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
 import static wow.test.commons.AbilityNames.*;
@@ -10,7 +10,7 @@ import static wow.test.commons.AbilityNames.*;
  * User: POlszewski
  * Date: 2025-09-20
  */
-class ScriptExecutorTest extends WarlockSpellSimulationTest {
+class ScriptExecutorTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void cast_dots_and_then_SB() {
 		simulate("/script/executor-test.txt", 60);

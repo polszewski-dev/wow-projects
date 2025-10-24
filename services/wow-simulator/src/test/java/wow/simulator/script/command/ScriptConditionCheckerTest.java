@@ -2,7 +2,7 @@ package wow.simulator.script.command;
 
 import org.junit.jupiter.api.Test;
 import wow.character.model.script.ScriptCommandConditionParser;
-import wow.simulator.simulation.spell.WarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import static wow.test.commons.AbilityNames.CURSE_OF_DOOM;
  * User: POlszewski
  * Date: 2025-10-08
  */
-class ScriptConditionCheckerTest extends WarlockSpellSimulationTest {
+class ScriptConditionCheckerTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void after_CoD_hits_condition_is_met() {
 		snapshotAt(0.1, "Target.HasEffect(Curse of *)", CURSE_OF_DOOM);
