@@ -4,6 +4,7 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.item.WeaponStats;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellId;
+import wow.scraper.exporter.item.ItemSetExporter;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
 
 import java.util.List;
@@ -16,11 +17,8 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
  * Date: 2023-05-18
  */
 public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
-	private final ItemExcelBuilder builder;
-
 	public ItemSheetWriter(ItemExcelBuilder builder) {
 		super(builder);
-		this.builder = builder;
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class ItemSheetWriter extends ItemBaseSheetWriter<ItemTooltipParser> {
 
 	private List<CharacterClassId> getRequiredClass(ItemTooltipParser parser) {
 		if (parser.getItemSetName() != null) {
-			return builder.getSavedSets().get(parser).getItemSetRequiredClass();
+			return ItemSetExporter.SAVED_SETS.get(parser).getItemSetRequiredClass();
 		}
 		return parser.getRequiredClass();
 	}

@@ -7,6 +7,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.*;
 import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.spell.SpellSchool;
+import wow.commons.repository.item.ItemSetRepository;
 import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
@@ -19,10 +20,12 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 	private final ExcelColumn colSocketTypes = column(ITEM_SOCKET_TYPES);
 	private final ExcelColumn colItemSet = column(ITEM_ITEM_SET);
 
+	private final ItemSetRepository itemSetRepository;
 	private final ItemExcelParser parser;
 
-	public ItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemExcelParser parser) {
+	public ItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemSetRepository itemSetRepository, ItemExcelParser parser) {
 		super(sheetName, sourceParserFactory, spellRepository);
+		this.itemSetRepository = itemSetRepository;
 		this.parser = parser;
 	}
 
@@ -53,11 +56,13 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		item.setSocketSpecification(socketSpecification);
 		item.setActivatedAbility(activatedAbility);
 
-		validateItem(item);
-
 		if (itemSetName != null) {
-			parser.addItemSetPiece(itemSetName, item);
+			var itemSet = itemSetRepository.getItemSet(itemSetName, timeRestriction.earliestPhaseId()).orElseThrow();
+
+			item.setItemSet(itemSet);
 		}
+
+		validateItem(item);
 
 		return item;
 	}

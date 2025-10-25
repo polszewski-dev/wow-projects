@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.ITEM;
-import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.SET;
 
 /**
  * User: POlszewski
@@ -19,15 +18,11 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.SE
  */
 @Getter
 public class ItemExcelBuilder extends WowExcelBuilder {
-	private final SavedSets savedSets = new SavedSets();
-
 	private final ItemSheetWriter itemSheetWriter;
-	private final ItemSetSheetWriter itemSetSheetWriter;
 
 	public ItemExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
 		super(config, datafixes);
 		this.itemSheetWriter = new ItemSheetWriter(this);
-		this.itemSetSheetWriter = new ItemSetSheetWriter(this);
 	}
 
 	public void addItemHeader() {
@@ -38,7 +33,6 @@ public class ItemExcelBuilder extends WowExcelBuilder {
 	@Override
 	public void finish(String fileName) {
 		flushItems();
-		saveSets();
 		super.finish(fileName);
 	}
 
@@ -47,7 +41,6 @@ public class ItemExcelBuilder extends WowExcelBuilder {
 			return;
 		}
 		itemParserQueue.add(parser);
-		savedSets.save(parser);
 	}
 
 	private boolean isToBeIgnored(int itemId) {
@@ -72,10 +65,5 @@ public class ItemExcelBuilder extends WowExcelBuilder {
 		} else {
 			writeRow(parser, itemSheetWriter);
 		}
-	}
-
-	private void saveSets() {
-		writeHeader(SET, itemSetSheetWriter, 1, 1);
-		savedSets.forEach(setInfo -> writeRow(setInfo, itemSetSheetWriter));
 	}
 }

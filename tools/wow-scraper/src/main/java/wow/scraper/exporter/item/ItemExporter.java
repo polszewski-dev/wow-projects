@@ -22,6 +22,7 @@ public class ItemExporter extends AbstractItemExporter<ItemTooltipParser, ItemEx
 	protected void exportPreparedData(ItemExcelBuilder builder) {
 		builder.addItemHeader();
 		parsers.forEach(builder::add);
+		parsers.forEach(ItemSetExporter.SAVED_SETS::save);
 	}
 
 	@Override

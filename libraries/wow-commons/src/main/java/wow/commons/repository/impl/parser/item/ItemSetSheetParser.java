@@ -1,11 +1,9 @@
 package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.item.ItemSetSource;
-import wow.commons.model.item.impl.ItemImpl;
 import wow.commons.model.item.impl.ItemSetImpl;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.repository.spell.SpellRepository;
@@ -20,11 +18,12 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
  * Date: 2022-11-22
  */
 public class ItemSetSheetParser extends AbstractItemSheetParser {
+	private final ExcelColumn colPieces = column(ITEM_SET_PIECES);
 	private final ExcelColumn colIBonusReqProfession = column(ITEM_SET_BONUS_REQ_PROFESSION);
 
-	private final ItemExcelParser parser;
+	private final ItemSetExcelParser parser;
 
-	public ItemSetSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemExcelParser parser) {
+	public ItemSetSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemSetExcelParser parser) {
 		super(sheetName, sourceParserFactory, spellRepository);
 		this.parser = parser;
 	}
@@ -36,21 +35,16 @@ public class ItemSetSheetParser extends AbstractItemSheetParser {
 	}
 
 	private ItemSet getItemSet() {
-		var name = colName.getString();
-
+		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
-		var pieces = parser.getPieces(name, timeRestriction.getGameVersionId());
+		var pieces = colPieces.getList(x -> x);
 		var requiredProfession = colIBonusReqProfession.getEnum(ProfessionId::parse, null);
 
-		var itemSet = new ItemSetImpl(name, timeRestriction, characterRestriction, pieces, requiredProfession);
+		var itemSet = new ItemSetImpl(description, timeRestriction, characterRestriction, pieces, requiredProfession);
 		var itemSetBonuses = getItemSetBonuses(itemSet, timeRestriction);
 
 		itemSet.setItemSetBonuses(itemSetBonuses);
-
-		for (Item item : itemSet.getPieces()) {
-			((ItemImpl)item).setItemSet(itemSet);
-		}
 
 		return itemSet;
 	}

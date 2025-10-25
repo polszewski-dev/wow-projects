@@ -14,7 +14,7 @@ import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
  * Date: 2023-05-18
  */
 public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
-	public ItemSetSheetWriter(ItemExcelBuilder builder) {
+	public ItemSetSheetWriter(ItemSetExcelBuilder builder) {
 		super(builder);
 	}
 
@@ -30,6 +30,9 @@ public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
 			setHeader(itemSetBonusNumPieces(bonusIdx));
 			writeEffectHeader(itemSetBonusStatPrefix(bonusIdx), 1);
 		}
+
+		setHeader(ITEM_SET_PIECES);
+		writeIconAndTooltipHeader();
 	}
 
 	@Override
@@ -40,6 +43,8 @@ public class ItemSetSheetWriter extends ItemBaseSheetWriter<SavedSets.SetInfo> {
 		setValue(setInfo.getItemSetBonusRequiredProfession());
 		setValue(setInfo.getItemSetBonusRequiredProfessionLevel());
 		writeBonuses(setInfo.getItemSetBonuses());
+		setValue(setInfo.getItemSetPieces());
+		writeIconAndTooltip(setInfo.getIcon(), null);
 	}
 
 	private void writeBonuses(List<ItemSetBonus> bonuses) {

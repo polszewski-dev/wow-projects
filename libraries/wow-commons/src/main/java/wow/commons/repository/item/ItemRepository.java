@@ -3,7 +3,6 @@ package wow.commons.repository.item;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
-import wow.commons.model.item.ItemSet;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
@@ -19,6 +18,4 @@ public interface ItemRepository {
 	Optional<Item> getItem(String name, PhaseId phaseId);
 
 	List<Item> getItemsBySlot(ItemSlot itemSlot, PhaseId phaseId);
-
-	Optional<ItemSet> getItemSet(String name, PhaseId phaseId);
 }

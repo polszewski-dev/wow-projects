@@ -111,7 +111,7 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 				Attribute.of(HASTE_RATING, 54, SPELL)
 		));
 		assertThat(getTooltips(diff.addedAbilities())).hasSameElementsAs(List.of(
-				"Use: Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains up to 320 spell damage and healing. (1 Min, 30 Sec Cooldown)"
+				"Use: Conjures a Power Circle lasting for 15 sec. While standing in this circle, the caster gains up to 320 spell damage and healing. (1 Min, 30 Sec Cooldown)"
 		));
 		assertThat(getTooltips(diff.removedAbilities())).hasSameElementsAs(List.of(
 				"Use: Increases spell damage by up to 150 and healing by up to 280 for 15 sec. (1 Min, 30 Sec Cooldown)"

@@ -3,8 +3,6 @@ package wow.commons.model.item;
 import wow.commons.model.config.Description;
 import wow.commons.model.effect.EffectSource;
 
-import java.util.Comparator;
-
 /**
  * User: POlszewski
  * Date: 2023-03-27
@@ -14,7 +12,7 @@ public record ItemSetSource(ItemSet itemSet, int numPieces) implements EffectSou
 	public Description getDescription() {
 		return new Description(
 				"%s (%s)".formatted(itemSet.getName(), numPieces),
-				getFirstItem().getDescription().icon(),
+				itemSet.getIcon(),
 				null
 		);
 	}
@@ -22,12 +20,6 @@ public record ItemSetSource(ItemSet itemSet, int numPieces) implements EffectSou
 	@Override
 	public int getPriority() {
 		return 1;
-	}
-
-	private Item getFirstItem() {
-		return itemSet.getPieces().stream()
-				.min(Comparator.comparing(Item::getItemType))
-				.orElseThrow();
 	}
 
 	@Override

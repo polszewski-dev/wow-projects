@@ -9,9 +9,7 @@ import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.profession.ProfessionId;
 import wow.scraper.parser.tooltip.ItemTooltipParser;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -31,6 +29,21 @@ public class SavedSets {
 		private List<CharacterClassId> itemSetRequiredClass;
 		private ProfessionId itemSetBonusRequiredProfession;
 		private Integer itemSetBonusRequiredProfessionLevel;
+		private final List<ItemTooltipParser> pieces = new ArrayList<>();
+
+		void addPiece(ItemTooltipParser itemParser) {
+			pieces.add(itemParser);
+		}
+
+		String getIcon() {
+			return getFirstItem().getIcon();
+		}
+
+		private ItemTooltipParser getFirstItem() {
+			return pieces.stream()
+					.min(Comparator.comparing(ItemTooltipParser::getItemType))
+					.orElseThrow();
+		}
 	}
 
 	private final Map<String, SetInfo> map = new TreeMap<>();
@@ -40,7 +53,9 @@ public class SavedSets {
 			return;
 		}
 
-		SetInfo setInfo = map.computeIfAbsent(getKey(parser), x -> newSetInfo(parser));
+		var setInfo = map.computeIfAbsent(getKey(parser), x -> newSetInfo(parser));
+
+		setInfo.addPiece(parser);
 
 		syncRequiredClass(setInfo, parser);
 		syncTimeRestriction(setInfo, parser);
