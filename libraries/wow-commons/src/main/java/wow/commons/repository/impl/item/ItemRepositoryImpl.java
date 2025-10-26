@@ -1,12 +1,16 @@
 package wow.commons.repository.impl.item;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.ItemExcelParser;
+import wow.commons.repository.impl.parser.item.SourceParserFactory;
 import wow.commons.repository.item.ItemRepository;
+import wow.commons.repository.item.ItemSetRepository;
+import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 
@@ -27,9 +31,23 @@ public class ItemRepositoryImpl implements ItemRepository {
 	private final PhaseMap<String, List<Item>> itemByName = new PhaseMap<>();
 	private final PhaseMap<ItemSlot, List<Item>> itemBySlot = new PhaseMap<>();
 
-	public ItemRepositoryImpl(ItemExcelParser parser) throws IOException {
-		parser.readFromXls();
-		parser.getItems().forEach(this::addItem);
+	public ItemRepositoryImpl(
+			@Value("${items.xls.file.paths}") String[] xlsFilePaths,
+			SourceParserFactory sourceParserFactory,
+			SpellRepository spellRepository,
+			ItemSetRepository itemSetRepository
+	) throws IOException {
+		for (var xlsFilePath : xlsFilePaths) {
+			var parser = new ItemExcelParser(
+					xlsFilePath,
+					sourceParserFactory,
+					spellRepository,
+					itemSetRepository
+			);
+
+			parser.readFromXls();
+			parser.getItems().forEach(this::addItem);
+		}
 	}
 
 	@Override

@@ -1,9 +1,6 @@
 package wow.commons.repository.impl.parser.item;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.item.Item;
@@ -24,11 +21,8 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.IT
  * User: POlszewski
  * Date: 2022-10-30
  */
-@Component
-@Scope("prototype")
 @RequiredArgsConstructor
 public class ItemExcelParser extends ExcelParser {
-	@Value("${items.xls.file.path}")
 	private final String xlsFilePath;
 
 	private final SourceParserFactory sourceParserFactory;

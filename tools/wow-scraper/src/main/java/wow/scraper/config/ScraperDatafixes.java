@@ -101,6 +101,9 @@ public class ScraperDatafixes {
 	@Value("#{${item.required.side.overrides}}")
 	private Map<Side, Set<Integer>> itemRequiredSideOverrides;
 
+	@Value("#{${item.set.required.class.overrides}}")
+	private Map<String, List<CharacterClassId>> itemSetRequiredClassOverrides;
+
 	@Value("#{${alliance.only.factions}}")
 	private Set<String> allianceOnlyFactions;
 
@@ -185,5 +188,9 @@ public class ScraperDatafixes {
 			return true;
 		}
 		return ignoredSpellIds.getOrDefault(category, Map.of()).getOrDefault(gameVersion, List.of()).contains(spellId);
+	}
+
+	public List<CharacterClassId> getItemSetRequiredClass(String itemSetName) {
+		return itemSetRequiredClassOverrides.get(itemSetName);
 	}
 }

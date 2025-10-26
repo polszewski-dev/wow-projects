@@ -75,7 +75,7 @@ public class SavedSets {
 				parser.getItemSetPieces(),
 				parser.getItemSetBonuses(),
 				parser.getTimeRestriction(),
-				null,
+				parser.getScraperDatafixes().getItemSetRequiredClass(parser.getItemSetName()),
 				parser.getItemSetRequiredProfession(),
 				parser.getItemSetRequiredProfessionLevel()
 		);
