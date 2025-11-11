@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -62,13 +64,12 @@ class DevouringPlagueTest extends TbcPriestSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(DEVOURING_PLAGUE);
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(DEVOURING_PLAGUE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(DEVOURING_PLAGUE, DEVOURING_PLAGUE_INFO.damage());
+		assertDamageDone(DEVOURING_PLAGUE_INFO, spellDamage);
 	}
 
 	@Override

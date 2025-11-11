@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -44,13 +46,12 @@ class MindFlayTest extends TbcPriestSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(MIND_FLAY);
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(MIND_FLAY, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(MIND_FLAY, MIND_FLAY_INFO.damage());
+		assertDamageDone(MIND_FLAY_INFO, spellDamage);
 	}
 
 	@Override

@@ -23,6 +23,10 @@ public record Time(long timestamp) implements AnyTime {
 		return new Time((int)(secondsFromZero * 1000));
 	}
 
+	public static Time atMillis(long millisFromZero) {
+		return new Time(millisFromZero);
+	}
+
 	public double secondsSinceZero() {
 		return timestamp / 1000.0;
 	}

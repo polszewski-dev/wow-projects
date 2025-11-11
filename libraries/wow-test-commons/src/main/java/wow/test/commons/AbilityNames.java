@@ -127,19 +127,30 @@ public interface AbilityNames {
 	String ARCANE_EXPLOSION = "Arcane Explosion";
 	String ARCANE_INTELLECT = "Arcane Intellect";
 	String ARCANE_MISSILES = "Arcane Missiles";
-	String BLAST_WEAVE = "Blast Weave";
+	String ARCANE_POWER = "Arcane Power";
+	String BLAST_WAVE = "Blast Wave";
 	String BLIZZARD = "Blizzard";
 	String BLINK = "Blink";
+	String COMBUSTION = "Combustion";
+	String CONE_OF_COLD = "Cone of Cold";
 	String COUNTERSPELL = "Counterspell";
+	String DRAGONS_BREATH = "Dragon's Breath";
 	String EVOCATION = "Evocation";
 	String FIREBALL = "Fireball";
 	String FIRE_BLAST = "Fire Blast";
 	String FLAMESTRIKE = "Flamestrike";
+	String FROST_ARMOR = "Frost Armor";
+	String FROST_NOVA = "Frost Nova";
 	String FROSTBOLT = "Frostbolt";
+	String ICE_ARMOR = "Ice Armor";
 	String ICE_BLOCK = "Ice Block";
+	String ICE_LANCE = "Ice Lance";
+	String ICY_VEINS = "Icy Veins";
 	String MAGE_ARMOR = "Mage Armor";
 	String MANA_SHIELD = "Mana Shield";
+	String MOLTEN_ARMOR = "Molten Armor";
 	String POLYMORPH = "Polymorph";
+	String PYROBLAST = "Pyroblast";
 	String PRESENCE_OF_MIND = "Presence of Mind";
 	String SCORCH = "Scorch";
 
@@ -211,10 +222,19 @@ public interface AbilityNames {
 
 	// druid
 
+	String ENTANGLING_ROOTS = "Entangling Roots";
 	String FAERIE_FIRE = "Faerie Fire";
 	String FLIGHT_FORM = "Flight Form";
+	String GIFT_OF_THE_WILD = "Gift of the Wild";
 	String HEALING_TOUCH = "Healing Touch";
+	String HURRICANE = "Hurricane";
+	String INNERVATE = "Innervate";
+	String INSECT_SWARM = "Insect Swarm";
 	String MANGLE = "Mangle";
+	String MARK_OF_THE_WILD = "Mark of the Wild";
+	String MOONFIRE = "Moonfire";
+	String MOONKIN_FORM = "Moonkin Form";
+	String NATURES_SWIFTNESS = "Nature's Swiftness";
 	String REGROWTH = "Regrowth";
 	String REJUVENATION = "Rejuvenation";
 	String STARFIRE = "Starfire";
@@ -249,24 +269,46 @@ public interface AbilityNames {
 
 	// shaman
 
+	String BLOODLUST = "Bloodlust";
 	String CHAIN_LIGHTNING = "Chain Lightning";
+	String EARTH_SHOCK = "Earth Shock";
+	String ELEMENTAL_MASTERY = "Elemental Mastery";
+	String FLAME_SHOCK = "Flame Shock";
 	String FROST_SHOCK = "Frost Shock";
 	String HEALING_STREAM_TOTEM = "Healing Stream Totem";
 	String HEALING_WAVE = "Healing Wave";
+	String HEROISM = "Heroism";
 	String LESSER_HEALING_WAVE = "Lesser Healing Wave";
 	String LIGHTNING_BOLT = "Lightning Bolt";
 	String LIGHTNING_SHIELD = "Lightning Shield";
 	String MANA_SPRING_TOTEM = "Mana Spring Totem";
+	String MANA_TIDE_TOTEM = "Mana Tide Totem";
 	String STORMSTRIKE = "Stormstrike";
+	String TOTEM_OF_WRATH = "Totem of Wrath";
+	String WATER_SHIELD = "Water Shield";
+	String WRATH_OF_AIR_TOTEM = "Wrath of Air Totem";
 
 	// paladin
 
+	String AVENGING_WRATH = "Avenging Wrath";
+	String BLESSING_OF_KINGS = "Blessing of Kings";
+	String BLESSING_OF_WISDOM = "Blessing of Wisdom";
 	String CLEANSE = "Cleanse";
+	String CONSECRATION = "Consecration";
+	String DIVINE_FAVOR = "Divine Favor";
+	String DIVINE_ILLUMINATION = "Divine Illumination";
+	String EXORCISM = "Exorcism";
 	String FLASH_OF_LIGHT = "Flash of Light";
+	String GREATER_BLESSING_OF_KINGS = "Greater Blessing of Kings";
+	String GREATER_BLESSING_OF_WISDOM = "Greater Blessing of Wisdom";
 	String HAMMER_OF_JUSTICE = "Hammer of Justice";
+	String HAMMER_OF_WRATH = "Hammer of Wrath";
 	String HOLY_LIGHT = "Holy Light";
+	String HOLY_SHOCK = "Holy Shock";
+	String HOLY_WRATH = "Holy Wrath";
 	String JUDGEMENT_OF_LIGHT = "Judgement of Light";
 	String LAY_ON_HANDS = "Lay on Hands";
+	String SANCTITY_AURA = "Sanctity Aura";
 
 	// warrior
 

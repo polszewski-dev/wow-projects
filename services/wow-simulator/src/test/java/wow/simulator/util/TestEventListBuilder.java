@@ -39,7 +39,11 @@ public class TestEventListBuilder {
 	}
 
 	public TestEventListBuilder beginCast(Unit caster, String abilityName, double castTime) {
-		return addEvent(new BeginCast(time, caster, abilityName, Duration.seconds(castTime)));
+		return beginCast(caster, abilityName, Duration.seconds(castTime));
+	}
+
+	public TestEventListBuilder beginCast(Unit caster, String abilityName, Duration castTime) {
+		return addEvent(new BeginCast(time, caster, abilityName, castTime));
 	}
 
 	public TestEventListBuilder endCast(Unit caster, String abilityName) {

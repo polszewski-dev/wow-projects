@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.holy;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -47,12 +49,11 @@ class HolyFireTest extends TbcPriestSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(HOLY_FIRE);
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(HOLY_FIRE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(HOLY_FIRE, HOLY_FIRE_INFO.damage());
+		assertDamageDone(HOLY_FIRE_INFO, spellDamage);
 	}
 }

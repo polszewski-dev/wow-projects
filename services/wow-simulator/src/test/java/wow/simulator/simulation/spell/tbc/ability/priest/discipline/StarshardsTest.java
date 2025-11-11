@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.discipline;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 import static wow.commons.model.character.RaceId.NIGHT_ELF;
@@ -47,13 +49,12 @@ class StarshardsTest extends TbcPriestSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(STARSHARDS);
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(STARSHARDS, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(STARSHARDS, STARSHARDS_INFO.damage());
+		assertDamageDone(STARSHARDS_INFO, spellDamage);
 	}
 
 	@Override

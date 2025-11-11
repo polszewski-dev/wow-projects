@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.tbc;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
 import static wow.commons.model.character.CharacterClassId.MAGE;
-import static wow.commons.model.character.RaceId.TROLL;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
@@ -14,7 +14,7 @@ public abstract class TbcMageSpellSimulationTest extends SpellSimulationTest imp
 	@Override
 	protected void beforeSetUp() {
 		characterClassId = MAGE;
-		raceId = TROLL;
+		raceId = UNDEAD;
 		phaseId = TBC_P5;
 	}
 }

@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -35,41 +34,26 @@ class RainOfFireTest extends TbcWarlockSpellSimulationTest {
 						.endGcd(player),
 				at(2)
 						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target1, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE),
-				at(4)
-						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target1, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE),
-				at(6)
-						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target1, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE),
-				at(8)
-						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target1, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE),
+				at(4)
+						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE),
+				at(6)
+						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE),
+				at(8)
+						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE)
 						.effectExpired(RAIN_OF_FIRE, null)
 						.endChannel(player, RAIN_OF_FIRE)
 		);
-	}
-
-	Unit target1;
-	Unit target2;
-	Unit target3;
-
-	@Override
-	protected void afterSetUp() {
-		target1 = getEnemy("Target1");
-		target2 = getEnemy("Target2");
-		target3 = getEnemy("Target3");
-
-		simulation.add(target1);
-		simulation.add(target2);
-		simulation.add(target3);
 	}
 }

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.DIVINE_SPIRIT;
 
@@ -38,15 +37,10 @@ class DivineSpiritTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@Test
-	void spiritIsIncreased() {
-		player.cast(DIVINE_SPIRIT);
+	void spirit_is_increased() {
+		simulateBuffSpell(DIVINE_SPIRIT);
 
-		updateUntil(30);
-
-		var spiritBefore = statsAt(0).getSpirit();
-		var spiritAfter = statsAt(1).getSpirit();
-
-		assertThat(spiritAfter).isEqualTo(spiritBefore + 50);
+		assertSpiritIncreasedBy(50);
 	}
 
 	@Override

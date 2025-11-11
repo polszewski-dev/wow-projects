@@ -66,6 +66,10 @@ public sealed interface TestEvent {
 		return this instanceof BeginCast bc && bc.spell().equals(spellName);
 	}
 
+	default boolean isEndCast() {
+		return this instanceof EndCast;
+	}
+
 	record BeginGcd(Time time, Unit caster) implements TestEvent {}
 
 	record EndGcd(Time time, Unit caster) implements TestEvent {}

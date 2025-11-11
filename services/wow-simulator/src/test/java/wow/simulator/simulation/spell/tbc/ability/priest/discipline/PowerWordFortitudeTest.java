@@ -3,7 +3,6 @@ package wow.simulator.simulation.spell.tbc.ability.priest.discipline;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.POWER_WORD_FORTITUDE;
 
@@ -37,14 +36,9 @@ class PowerWordFortitudeTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@Test
-	void staminaIsIncreased() {
-		player.cast(POWER_WORD_FORTITUDE);
+	void stamina_is_increased() {
+		simulateBuffSpell(POWER_WORD_FORTITUDE);
 
-		updateUntil(30);
-
-		var staminaBefore = statsAt(0).getStamina();
-		var staminaAfter = statsAt(1).getStamina();
-
-		assertThat(staminaAfter).isEqualTo(staminaBefore + 79);
+		assertStaminaIncreasedBy(79);
 	}
 }

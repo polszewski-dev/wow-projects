@@ -1,6 +1,7 @@
 package wow.simulator;
 
 import lombok.Getter;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,10 +38,7 @@ import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.model.update.Scheduler;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
-import wow.simulator.util.TestEvent;
-import wow.simulator.util.TestEventCollectingHandler;
-import wow.simulator.util.TestEventListBuilder;
-import wow.simulator.util.TestRng;
+import wow.simulator.util.*;
 
 import java.util.List;
 import java.util.Map;
@@ -97,6 +95,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected Player getNakedPlayer(CharacterClassId characterClassId, String name) {
 		var raceId = getRaceId(characterClassId);
+		return getNakedPlayer(characterClassId, raceId, name);
+	}
+
+	protected PlayerImpl getNakedPlayer(CharacterClassId characterClassId, RaceId raceId, String name) {
 		int level = getLevel();
 
 		var player = getCharacterService().createPlayerCharacter(
@@ -148,6 +150,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected static TestEventListBuilder at(double time) {
 		return new TestEventListBuilder(Time.at(time));
+	}
+
+	protected static TestEventListBuilder atMillis(long millis) {
+		return new TestEventListBuilder(Time.atMillis(millis));
 	}
 
 	private static List<TestEvent> eventList(TestEventListBuilder... builders) {
@@ -240,6 +246,18 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertDamageDone(eventIdx, abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
+	protected void assertDamageDone(SpellInfo spellInfo, Unit target, int sp) {
+		assertDamageDone(spellInfo.name(), target, spellInfo.damage(sp));
+	}
+
+	protected void assertDamageDone(SpellInfo spellInfo, Unit target, int sp, int pctIncrease) {
+		assertDamageDone(spellInfo.name(), target, increaseByPct(spellInfo.damage(sp), pctIncrease));
+	}
+
+	protected void assertDamageDone(SpellInfo spellInfo, int sp) {
+		assertDamageDone(spellInfo, target, sp);
+	}
+
 	protected void assertHealthGained(String spellName, Unit target, double expectedAmount) {//
 		var totalHealthGained = getIncreasedResourceEvents()
 				.filter(x -> x.isHealing(spellName, target))
@@ -262,6 +280,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				.amount();
 
 		assertThat(totalHealthGained).isEqualTo((int) expectedAmount);
+	}
+
+	protected void assertHealthGained(SpellInfo spellInfo, Unit target, int sp) {
+		assertHealthGained(spellInfo.name(), target, spellInfo.damage(sp));
 	}
 
 	protected void assertManaPaid(String abilityName, Unit target, double expectedAmount) {
@@ -369,10 +391,30 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void addSpBonus(int amount) {
+		if (amount == 0) {
+			return;
+		}
 		player.addHiddenEffect("Bonus Spell Power", amount);
 	}
 
+	protected void addSdBonus(int amount) {
+		if (amount == 0) {
+			return;
+		}
+		player.addHiddenEffect("Bonus Spell Damage", amount);
+	}
+
+	protected void addHealingBonus(int amount) {
+		if (amount == 0) {
+			return;
+		}
+		player.addHiddenEffect("Bonus Healing", amount);
+	}
+
 	protected void addIntellectBonus(int amount) {
+		if (amount == 0) {
+			return;
+		}
 		player.addHiddenEffect("Bonus Intellect", amount);
 		player.setManaToMax();
 	}
@@ -462,20 +504,42 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertLastHitChance(double value) {
-		assertThat(rng.getHitRollData().getRollChances().getLast()).isEqualTo(value);
+		var lastHitChance = rng.getHitRollData().getRollChances().getLast();
+
+		assertThat(lastHitChance).isEqualTo(value, PRECISION);
+	}
+
+	protected void assertHitChanceNo(int rollChanceIdx, double value) {
+		var lastHitChance = rng.getHitRollData().getRollChances().get(rollChanceIdx);
+
+		assertThat(lastHitChance).isEqualTo(value, PRECISION);
 	}
 
 	protected void assertLastCritChance(double value) {
-		assertThat(rng.getCritRollData().getRollChances().getLast()).isEqualTo(value);
+		var lastCritChance = rng.getCritRollData().getRollChances().getLast();
+
+		assertThat(lastCritChance).isEqualTo(value, PRECISION);
+	}
+
+	protected void assertCritChanceNo(int rollChanceIdx, double value) {
+		var lastCritChance = rng.getCritRollData().getRollChances().get(rollChanceIdx);
+
+		assertThat(lastCritChance).isEqualTo(value, PRECISION);
 	}
 
 	protected void assertLastEventChance(double value) {
-		assertThat(rng.getEventRollData().getRollChances().getLast()).isEqualTo(value);
+		var lastEventChance = rng.getEventRollData().getRollChances().getLast();
+
+		assertThat(lastEventChance).isEqualTo(value);
 	}
 
 	protected void assertEventChanceNo(int rollChanceIdx, double value) {
-		assertThat(rng.getEventRollData().getRollChances().get(rollChanceIdx)).isEqualTo(value);
+		var lastEventChance = rng.getEventRollData().getRollChances().get(rollChanceIdx);
+
+		assertThat(lastEventChance).isEqualTo(value);
 	}
+
+	protected static final Offset<Double> PRECISION = Offset.offset(0.0001);
 
 	protected void runAt(double time, Runnable runnable) {
 		simulation.getScheduler().add(Time.at(time), runnable);
@@ -489,6 +553,84 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected StatSummary statsAt(double time) {
 		return statSnapshots.get(time);
+	}
+
+	protected double timeBefore = 0;
+	protected double timeAfter = 5;
+
+	protected void assertStaminaIncreasedBy(int amount) {
+		var staminaBefore = statsAt(timeBefore).getStamina();
+		var staminaAfter = statsAt(timeAfter).getStamina();
+
+		assertThat(staminaAfter).isEqualTo(staminaBefore + amount);
+	}
+
+	protected void assertStaminaIncreasedByPct(int pctIncrease) {
+		var staminaBefore = statsAt(timeBefore).getStamina();
+		var staminaAfter = statsAt(timeAfter).getStamina();
+
+		assertThat(staminaAfter).isEqualTo(increaseByPct(staminaBefore, pctIncrease));
+	}
+
+	protected void assertIntellectIncreasedBy(int amount) {
+		var intellectBefore = statsAt(timeBefore).getIntellect();
+		var intellectAfter = statsAt(timeAfter).getIntellect();
+
+		assertThat(intellectAfter).isEqualTo(intellectBefore + amount);
+	}
+
+	protected void assertIntellectIncreasedByPct(int pctIncrease) {
+		var intellectBefore = statsAt(timeBefore).getIntellect();
+		var intellectAfter = statsAt(timeAfter).getIntellect();
+
+		assertThat(intellectAfter).isEqualTo(increaseByPct(intellectBefore, pctIncrease));
+	}
+
+	protected void assertSpiritIncreasedBy(int amount) {
+		var spiritBefore = statsAt(timeBefore).getSpirit();
+		var spiritAfter = statsAt(timeAfter).getSpirit();
+
+		assertThat(spiritAfter).isEqualTo(spiritBefore + amount);
+	}
+
+	protected void assertSpiritIncreasedByPct(int pctIncrease) {
+		var spiritBefore = statsAt(timeBefore).getSpirit();
+		var spiritAfter = statsAt(timeAfter).getSpirit();
+
+		assertThat(spiritAfter).isEqualTo(increaseByPct(spiritBefore, pctIncrease));
+	}
+
+	protected void assertBaseStatsIncreasedBy(int amount) {
+		assertStaminaIncreasedBy(amount);
+		assertIntellectIncreasedBy(amount);
+		assertSpiritIncreasedBy(amount);
+	}
+
+	protected void assertBaseStatsIncreasedByPct(int pctIncrease) {
+		assertStaminaIncreasedByPct(pctIncrease);
+		assertIntellectIncreasedByPct(pctIncrease);
+		assertSpiritIncreasedByPct(pctIncrease);
+	}
+
+	protected void assertSpellPowerIncreasedBy(int amount) {
+		var spBefore = statsAt(timeBefore).getSpellPower();
+		var spAfter = statsAt(timeAfter).getSpellPower();
+
+		assertThat(spAfter).isEqualTo(spBefore + amount);
+	}
+
+	protected void assertSpellHastePctIncreasedBy(int amount) {
+		var hasteBefore = statsAt(timeBefore).getSpellHastePct();
+		var hasteAfter = statsAt(timeAfter).getSpellHastePct();
+
+		assertThat(hasteAfter).isEqualTo(hasteBefore + amount);
+	}
+
+	protected void assertMp5IncreasedBy(int amount) {
+		var mp5Before = statsAt(timeBefore).getInterruptedManaRegen();
+		var mp5After = statsAt(timeAfter).getInterruptedManaRegen();
+
+		assertThat(mp5After).isEqualTo(mp5Before + amount);
 	}
 
 	protected void makeSnapshotsUntil(double timeUntil) {

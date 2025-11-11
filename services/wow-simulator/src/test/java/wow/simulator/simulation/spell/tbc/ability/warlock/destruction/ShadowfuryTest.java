@@ -1,7 +1,6 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -33,9 +32,9 @@ class ShadowfuryTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(710, MANA, player, SHADOWFURY)
 						.cooldownStarted(player, SHADOWFURY, 20)
 						.decreasedResource(670, HEALTH, target, SHADOWFURY)
-						.decreasedResource(670, HEALTH, target1, SHADOWFURY)
 						.decreasedResource(670, HEALTH, target2, SHADOWFURY)
-						.decreasedResource(670, HEALTH, target3, SHADOWFURY),
+						.decreasedResource(670, HEALTH, target3, SHADOWFURY)
+						.decreasedResource(670, HEALTH, target4, SHADOWFURY),
 				at(1.5)
 						.endGcd(player),
 				at(20.5)
@@ -43,20 +42,8 @@ class ShadowfuryTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	Unit target1;
-	Unit target2;
-	Unit target3;
-
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.SHADOWFURY, 1);
-
-		target1 = getEnemy("Target1");
-		target2 = getEnemy("Target2");
-		target3 = getEnemy("Target3");
-
-		simulation.add(target1);
-		simulation.add(target2);
-		simulation.add(target3);
 	}
 }

@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -120,13 +122,12 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(VAMPIRIC_TOUCH);
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(VAMPIRIC_TOUCH, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(VAMPIRIC_TOUCH, VAMPIRIC_TOUCH_INFO.damage());
+		assertDamageDone(VAMPIRIC_TOUCH_INFO, spellDamage);
 	}
 
 	@Override

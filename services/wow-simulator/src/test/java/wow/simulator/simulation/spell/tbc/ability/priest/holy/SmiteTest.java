@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.holy;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -35,12 +37,11 @@ class SmiteTest extends TbcPriestSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(SMITE);
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(SMITE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(SMITE, SMITE_INFO.damage());
+		assertDamageDone(SMITE_INFO, spellDamage);
 	}
 }

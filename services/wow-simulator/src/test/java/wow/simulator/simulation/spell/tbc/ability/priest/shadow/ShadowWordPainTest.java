@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -47,12 +49,11 @@ class ShadowWordPainTest extends TbcPriestSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(SHADOW_WORD_PAIN);
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(SHADOW_WORD_PAIN, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(SHADOW_WORD_PAIN, SHADOW_WORD_PAIN_INFO.damage());
+		assertDamageDone(SHADOW_WORD_PAIN_INFO, spellDamage);
 	}
 }

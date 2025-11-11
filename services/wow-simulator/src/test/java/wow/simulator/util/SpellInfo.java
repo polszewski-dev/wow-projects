@@ -6,7 +6,7 @@ import static wow.simulator.util.CalcUtils.getPercentOf;
  * User: POlszewski
  * Date: 2025-02-18
  */
-public record SpellInfo(Direct direct, Periodic periodic, int manaCost, double baseCastTime) {
+public record SpellInfo(String name, Direct direct, Periodic periodic, int manaCost, double baseCastTime) {
 	public record Direct(int min, int max, double coeff) {
 		public double damage(double coeffBonus, int sp) {
 			return getSpellDmg(min, max, coeff + coeffBonus, sp);
@@ -23,16 +23,16 @@ public record SpellInfo(Direct direct, Periodic periodic, int manaCost, double b
 		}
 	}
 
-	public SpellInfo(int manaCost, double baseCastTime) {
-		this(null, null, manaCost, baseCastTime);
+	public SpellInfo(String name, int manaCost, double baseCastTime) {
+		this(name, null, null, manaCost, baseCastTime);
 	}
 
 	public SpellInfo withDirect(int min, int max, double coeff) {
-		return new SpellInfo(new Direct(min, max, coeff), periodic, manaCost, baseCastTime);
+		return new SpellInfo(name, new Direct(min, max, coeff), periodic, manaCost, baseCastTime);
 	}
 
 	public SpellInfo withPeriodic(int value, double coeff, double duration, int numTicks) {
-		return new SpellInfo(direct, new Periodic(value, coeff, duration, numTicks), manaCost, baseCastTime);
+		return new SpellInfo(name, direct, new Periodic(value, coeff, duration, numTicks), manaCost, baseCastTime);
 	}
 
 	public double damage() {
