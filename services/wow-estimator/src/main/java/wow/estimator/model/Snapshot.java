@@ -21,8 +21,8 @@ public class Snapshot {
 	private SpellCastSnapshot cast;
 	private SpellCostSnapshot cost;
 	private double hitPct;
-	private DirectSpellDamageSnapshot direct;
-	private PeriodicSpellDamageSnapshot periodic;
+	private DirectSpellComponentSnapshot direct;
+	private PeriodicSpellComponentSnapshot periodic;
 	private EffectDurationSnapshot effectDuration;
 
 	public boolean isInstantCast() {
@@ -76,8 +76,8 @@ public class Snapshot {
 
 	private double getDirectDamage() {
 		boolean addBonus = direct.getComponent().bonus() != null;
-		int critDamage = direct.getDirectDamage(RngStrategy.AVERAGED, addBonus, true);
-		int nonCritDamage = direct.getDirectDamage(RngStrategy.AVERAGED, addBonus, false);
+		int critDamage = direct.getDirectAmount(RngStrategy.AVERAGED, addBonus, true);
+		int nonCritDamage = direct.getDirectAmount(RngStrategy.AVERAGED, addBonus, false);
 		double critChance = direct.getCritPct() / 100;
 
 		return critDamage * critChance + nonCritDamage * (1 - critChance);
@@ -88,7 +88,7 @@ public class Snapshot {
 		int tickCount = effectDuration.getNumTicks();
 
 		for (int tickNo = 1; tickNo <= tickCount; ++tickNo) {
-			result += periodic.getTickDamage(tickNo);
+			result += periodic.getTickAmount(tickNo);
 		}
 
 		return result;

@@ -10,10 +10,8 @@ import wow.commons.model.attribute.AttributeId;
  */
 @Getter
 public class AccumulatedTargetStats extends AccumulatedPartialStats {
-	private double damageTaken;
-	private double damageTakenPct;
-	private double healingTaken;
-	private double healingTakenPct;
+	private double amountTaken;
+	private double amountTakenPct;
 	private double powerTaken;
 	private double critTakenPct;
 
@@ -23,10 +21,8 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 
 	private AccumulatedTargetStats(AccumulatedTargetStats stats) {
 		super(stats);
-		this.damageTaken = stats.damageTaken;
-		this.damageTakenPct = stats.damageTakenPct;
-		this.healingTaken = stats.healingTaken;
-		this.healingTakenPct = stats.healingTakenPct;
+		this.amountTaken = stats.amountTaken;
+		this.amountTakenPct = stats.amountTakenPct;
 		this.powerTaken = stats.powerTaken;
 		this.critTakenPct = stats.critTakenPct;
 	}
@@ -35,16 +31,24 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 	public void accumulateAttribute(AttributeId id, double value) {
 		switch (id) {
 			case DAMAGE_TAKEN:
-				this.damageTaken += value;
+				if (isDamage) {
+					this.amountTaken += value;
+				}
 				break;
 			case DAMAGE_TAKEN_PCT:
-				this.damageTakenPct += value;
+				if (isDamage) {
+					this.amountTakenPct += value;
+				}
 				break;
 			case HEALING_TAKEN:
-				this.healingTaken += value;
+				if (isHealing) {
+					this.amountTaken += value;
+				}
 				break;
 			case HEALING_TAKEN_PCT:
-				this.healingTakenPct += value;
+				if (isHealing) {
+					this.amountTakenPct += value;
+				}
 				break;
 			case POWER_TAKEN:
 				this.powerTaken += value;

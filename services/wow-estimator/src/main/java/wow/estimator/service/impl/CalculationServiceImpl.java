@@ -12,7 +12,6 @@ import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.attribute.PowerType;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.buff.BuffNameRank;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 
 /**
  * User: POlszewski
@@ -127,7 +127,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 		var castStats = characterCalculationService.newAccumulatedCastStats(player, ability, target);
 		var costStats = characterCalculationService.newAccumulatedCostStats(player, ability, target);
-		var targetStats = characterCalculationService.newAccumulatedTargetStats(player, ability, PowerType.SPELL_DAMAGE, ability.getSchool());
+		var targetStats = characterCalculationService.newAccumulatedTargetStats(player, ability, SPELL_DAMAGE, ability.getSchool());
 		var hitStats = characterCalculationService.newAccumulatedHitStats(player, ability, target);
 
 		stats.setCast(castStats);
@@ -136,13 +136,13 @@ public class CalculationServiceImpl implements CalculationService {
 		stats.setHit(hitStats);
 
 		if (directComponent != null) {
-			var directComponentStats = characterCalculationService.newAccumulatedDirectComponentStats(player, ability, target, directComponent);
+			var directComponentStats = characterCalculationService.newAccumulatedDirectComponentStats(player, ability, target, SPELL_DAMAGE, directComponent);
 
 			stats.setDirect(directComponentStats);
 		}
 
 		if (ability.getAppliedEffect() != null) {
-			var periodicStats = characterCalculationService.newAccumulatedPeriodicComponentStats(player, ability, target, periodicComponent);
+			var periodicStats = characterCalculationService.newAccumulatedPeriodicComponentStats(player, ability, target, SPELL_DAMAGE, periodicComponent);
 			var effectDurationStats = characterCalculationService.newAccumulatedDurationStats(player, ability, target);
 			var receivedEffectStats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability);
 
@@ -231,14 +231,14 @@ public class CalculationServiceImpl implements CalculationService {
 		var targetStats = abilityStats.getTarget();
 
 		if (abilityStats.getDirectComponent() != null) {
-			var direct = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, abilityStats.getDirectComponent(), base, abilityStats.getDirect(), targetStats);
+			var direct = characterCalculationService.getDirectSpellComponentSnapshot(player, ability, target, abilityStats.getDirectComponent(), base, abilityStats.getDirect(), targetStats);
 
 			snapshot.setDirect(direct);
 		}
 
 		if (ability.getAppliedEffect() != null) {
-			var periodic = characterCalculationService.getPeriodicSpellDamageSnapshot(player, ability, target, abilityStats.getPeriodic(), targetStats);
-			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, target, abilityStats.getEffectDuration(), abilityStats.getReceivedEffectStats());
+			var periodic = characterCalculationService.getPeriodicComponentSnapshot(player, ability, target, abilityStats.getPeriodic(), targetStats);
+			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, abilityStats.getEffectDuration(), abilityStats.getReceivedEffectStats());
 
 			snapshot.setPeriodic(periodic);
 			snapshot.setEffectDuration(effectDuration);

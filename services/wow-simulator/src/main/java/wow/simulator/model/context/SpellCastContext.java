@@ -1,6 +1,5 @@
 package wow.simulator.model.context;
 
-import lombok.Getter;
 import wow.character.model.snapshot.SpellCastSnapshot;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
@@ -18,8 +17,6 @@ public class SpellCastContext extends Context {
 	private final SpellCastSnapshot snapshot;
 	private final Ability ability;
 	private final TargetResolver targetResolver;
-	@Getter
-	private SpellResolutionContext spellResolutionContext;
 
 	public SpellCastContext(Unit caster, Ability ability, TargetResolver targetResolver, SpellCastSnapshot snapshot) {
 		super(caster, ability, null);
@@ -34,10 +31,6 @@ public class SpellCastContext extends Context {
 
 	public Duration getCastTime() {
 		return Duration.seconds(snapshot.getCastTime());
-	}
-
-	public boolean isInstantCast() {
-		return snapshot.isInstantCast();
 	}
 
 	public void paySpellCost() {
@@ -71,7 +64,7 @@ public class SpellCastContext extends Context {
 		};
 	}
 
-	public void createSpellResolutionContext(CastSpellAction action) {
-		this.spellResolutionContext = new SpellResolutionContext(caster, spell, targetResolver, this, action);
+	public SpellResolutionContext createSpellResolutionContext(CastSpellAction action) {
+		return new SpellResolutionContext(caster, spell, targetResolver, this, action);
 	}
 }

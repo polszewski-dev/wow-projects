@@ -14,7 +14,6 @@ import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.PowerType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.SpellSchool;
@@ -24,6 +23,7 @@ import java.util.Map;
 import java.util.function.ToDoubleBiFunction;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
@@ -136,7 +136,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedTargetStats(String idStr, String conditionStr) {
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedTargetStats(target, ability, PowerType.SPELL_DAMAGE, SpellSchool.SHADOW);
+		var stats = characterCalculationService.newAccumulatedTargetStats(target, ability, SPELL_DAMAGE, SpellSchool.SHADOW);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -150,7 +150,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var idStr = "DamageTaken%";
 		var conditionStr = "Spell & Voidwalker";
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedTargetStats(playerTarget, ability, PowerType.SPELL_DAMAGE, SpellSchool.SHADOW);
+		var stats = characterCalculationService.newAccumulatedTargetStats(playerTarget, ability, SPELL_DAMAGE, SpellSchool.SHADOW);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -224,10 +224,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"Crit%,                 Shadow",
 			"Crit%,                 Spell",
 			"Crit%,                 SpellDamage",
-			"CritDamageMultiplier%, Destruction",
+			"CritEffectMultiplier%, Destruction",
 			"CritRating,            Spell",
 			"CritRating,            SpellDamage",
-			"CritDamage%,",
+			"CritEffect%,",
 			"CritCoeff%,",
 	})
 	void newAccumulatedDirectComponentStats(String idStr, String conditionStr) {
@@ -235,7 +235,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
 		var directComponent = ability.getDirectComponents().getFirst();
-		var stats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, directComponent);
+		var stats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, SPELL_DAMAGE, directComponent);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -264,7 +264,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"Crit%,                 Shadow",
 			"Crit%,                 Spell",
 			"Crit%,                 SpellDamage",
-			"CritDamageMultiplier%, Affliction",
+			"CritEffectMultiplier%, Affliction",
 			"CritRating,            Spell",
 			"CritRating,            SpellDamage",
 	})
@@ -273,7 +273,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var periodicComponent = ability.getAppliedEffect().getPeriodicComponent();
-		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, periodicComponent);
+		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, SPELL_DAMAGE, periodicComponent);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -445,8 +445,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		assertThat(snapshot.getCritPct()).isEqualTo(15.87, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
-		assertThat(snapshot.getDamage()).isZero();
-		assertThat(snapshot.getDamagePct()).isEqualTo(25);
+		assertThat(snapshot.getAmount()).isZero();
+		assertThat(snapshot.getAmountPct()).isEqualTo(25);
 		assertThat(snapshot.getPower()).isEqualTo(370);
 		assertThat(snapshot.getPowerPct()).isZero();
 		assertThat(snapshot.getCoeff()).isEqualTo(105.71, PRECISION);
@@ -473,8 +473,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		assertThat(snapshot.getCritPct()).isEqualTo(19.62, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
-		assertThat(snapshot.getDamage()).isZero();
-		assertThat(snapshot.getDamagePct()).isEqualTo(25);
+		assertThat(snapshot.getAmount()).isZero();
+		assertThat(snapshot.getAmountPct()).isEqualTo(25);
 		assertThat(snapshot.getPower()).isEqualTo(387);//370 + 253 * 0.07
 		assertThat(snapshot.getPowerPct()).isZero();
 		assertThat(snapshot.getCoeff()).isEqualTo(105.71, PRECISION);
@@ -489,8 +489,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();
 		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, baseStats);
 
-		assertThat(snapshot.getDamage()).isZero();
-		assertThat(snapshot.getDamagePct()).isEqualTo(25);
+		assertThat(snapshot.getAmount()).isZero();
+		assertThat(snapshot.getAmountPct()).isEqualTo(25);
 		assertThat(snapshot.getPower()).isEqualTo(370);
 		assertThat(snapshot.getPowerPct()).isZero();
 		assertThat(snapshot.getCoeff()).isEqualTo(120);
@@ -583,8 +583,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	private double getValue(AccumulatedTargetStats stats, AttributeId id) {
 		return switch (id) {
-			case DAMAGE_TAKEN -> stats.getDamageTaken();
-			case DAMAGE_TAKEN_PCT -> stats.getDamageTakenPct();
+			case DAMAGE_TAKEN -> stats.getAmountTaken();
+			case DAMAGE_TAKEN_PCT -> stats.getAmountTakenPct();
 			case POWER_TAKEN -> stats.getPowerTaken();
 			case CRIT_TAKEN_PCT -> stats.getCritTakenPct();
 			default -> throw new IllegalArgumentException();
@@ -619,16 +619,16 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	private double getValue(AccumulatedSpellStats stats, AttributeId id) {
 		return switch (id) {
-			case DAMAGE -> stats.getDamage();
-			case DAMAGE_PCT -> stats.getDamagePct();
+			case DAMAGE -> stats.getAmount();
+			case DAMAGE_PCT -> stats.getAmountPct();
 			case EFFECT_PCT -> stats.getEffectPct();
 			case POWER -> stats.getPower();
 			case POWER_PCT -> stats.getPowerPct();
 			case POWER_COEFFICIENT_PCT -> stats.getPowerCoeffPct();
 			case CRIT_RATING -> stats.getCritRating();
 			case CRIT_PCT -> stats.getCritPct();
-			case CRIT_DAMAGE_PCT -> stats.getCritDamagePct();
-			case CRIT_DAMAGE_MULTIPLIER_PCT -> stats.getCritDamageMultiplierPct();
+			case CRIT_EFFECT_PCT -> stats.getCritEffectPct();
+			case CRIT_EFFECT_MULTIPLIER_PCT -> stats.getCritEffectMultiplierPct();
 			case CRIT_COEFF_PCT -> stats.getCritCoeffPct();
 			default -> throw new IllegalArgumentException();
 		};

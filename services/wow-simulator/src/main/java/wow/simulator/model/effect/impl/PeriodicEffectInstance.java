@@ -43,7 +43,7 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 
 	private void tick() {
 		++tickNo;
-		effectUpdateContext.periodicComponentAction(effect.getPeriodicComponent(), tickNo, numStacks);
+		effectUpdateContext.periodicComponentAction(tickNo, numStacks);
 		scheduleNextTick();
 	}
 

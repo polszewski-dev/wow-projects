@@ -14,7 +14,6 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
@@ -97,8 +96,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, DirectComponent directComponent) {
-		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, directComponent.school());
+	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectComponent directComponent) {
+		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, directComponent.school());
 
 		conditionArgs.setDirect(true);
 
@@ -106,8 +105,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PeriodicComponent periodicComponent) {
-		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, periodicComponent.school());
+	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicComponent periodicComponent) {
+		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, periodicComponent.school());
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
@@ -356,7 +355,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var durationStats = getAccumulatedDurationStats(character, spell, target);
 		var receivedEffectStats = getAccumulatedReceivedEffectStats(spell, target);
 
-		return getEffectDurationSnapshot(character, spell, target, durationStats, receivedEffectStats);
+		return getEffectDurationSnapshot(character, spell, durationStats, receivedEffectStats);
 	}
 
 	private AccumulatedDurationStats getAccumulatedDurationStats(Character character, Spell spell, Character target) {
@@ -378,7 +377,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
 		var effectApplication = spell.getEffectApplication();
 		var effect = effectApplication.effect();
 
@@ -438,15 +437,24 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
-		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, directComponent, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, SPELL_DAMAGE, directComponent.school());
-
-		return getDirectSpellDamageSnapshot(character, spell, target, directComponent, baseStats, spellStats, targetStats);
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
+		return getDirectSpellComponentSnapshot(character, spell, target, directComponent, baseStats, SPELL_DAMAGE);
 	}
 
-	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
-		var spellStats = newAccumulatedDirectComponentStats(character, spell, target, directComponent);
+	@Override
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
+		return getDirectSpellComponentSnapshot(character, spell, target, directComponent, baseStats, HEALING);
+	}
+
+	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats, PowerType powerType) {
+		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, powerType, directComponent, baseStats);
+		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, directComponent.school());
+
+		return getDirectSpellComponentSnapshot(character, spell, target, directComponent, baseStats, spellStats, targetStats);
+	}
+
+	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
+		var spellStats = newAccumulatedDirectComponentStats(character, spell, target, powerType, directComponent);
 
 		accumulateEffects(character, spellStats, baseStats);
 		return spellStats;
@@ -460,25 +468,21 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		if (directComponent.type() != ComponentType.DAMAGE) {
-			throw new IllegalArgumentException();
-		}
-
-		var snapshot = new DirectSpellDamageSnapshot(directComponent);
+	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		var snapshot = new DirectSpellComponentSnapshot(directComponent);
 
 		var critPct = getSpellCritPct(character, spellStats, baseStats, targetStats);
 		var critCoeff = getSpellCritCoeff(spellStats);
-		var damage = getSpellDamage(spellStats, targetStats);
-		var damagePct = getSpellDamagePct(spellStats, targetStats);
+		var amount = getSpellAmount(spellStats, targetStats);
+		var amountPct = getSpellAmountPct(spellStats, targetStats);
 		var power = getSpellPower(spellStats, targetStats);
 		var powerPct = spellStats.getPowerPct();
 		var coeff = getPowerCoefficient(directComponent.coefficient(), spellStats);
 
 		snapshot.setCritPct(critPct);
 		snapshot.setCritCoeff(critCoeff);
-		snapshot.setDamage(damage);
-		snapshot.setDamagePct(damagePct);
+		snapshot.setAmount(amount);
+		snapshot.setAmountPct(amountPct);
 		snapshot.setPower(power);
 		snapshot.setPowerPct(powerPct);
 		snapshot.setCoeff(coeff);
@@ -487,41 +491,46 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats) {
-		var effectApplication = spell.getEffectApplication();
-		var periodicComponent = effectApplication.effect().getPeriodicComponent();
-		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, periodicComponent, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, SPELL_DAMAGE, periodicComponent.school());
-
-		return getPeriodicSpellDamageSnapshot(character, spell, target, spellStats, targetStats);
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats) {
+		return getPeriodicComponentSnapshot(character, spell, target, baseStats, SPELL_DAMAGE);
 	}
 
-	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PeriodicComponent periodicComponent, BaseStatsSnapshot baseStats) {
-		var spellStats = newAccumulatedPeriodicComponentStats(character, spell, target, periodicComponent);
+	@Override
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats) {
+		return getPeriodicComponentSnapshot(character, spell, target, baseStats, HEALING);
+	}
+
+	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats, PowerType powerType) {
+		var effectApplication = spell.getEffectApplication();
+		var periodicComponent = effectApplication.effect().getPeriodicComponent();
+		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, powerType, periodicComponent, baseStats);
+		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, periodicComponent.school());
+
+		return getPeriodicComponentSnapshot(character, spell, target, spellStats, targetStats);
+	}
+
+	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicComponent periodicComponent, BaseStatsSnapshot baseStats) {
+		var spellStats = newAccumulatedPeriodicComponentStats(character, spell, target, powerType, periodicComponent);
 
 		accumulateEffects(character, spellStats, baseStats);
 		return spellStats;
 	}
 
 	@Override
-	public PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var effectApplication = spell.getEffectApplication();
 		var periodicComponent = effectApplication.effect().getPeriodicComponent();
 
-		if (periodicComponent.type() != ComponentType.DAMAGE) {
-			throw new IllegalArgumentException();
-		}
+		var snapshot = new PeriodicSpellComponentSnapshot(periodicComponent);
 
-		var snapshot = new PeriodicSpellDamageSnapshot(periodicComponent);
-
-		var damage = getSpellDamage(spellStats, targetStats);
-		var damagePct = getSpellDamagePct(spellStats, targetStats);
+		var amount = getSpellAmount(spellStats, targetStats);
+		var amountPct = getSpellAmountPct(spellStats, targetStats);
 		var power = (int) spellStats.getPower();
 		var powerPct = spellStats.getPowerPct();
 		var coeff = getPowerCoefficient(periodicComponent.coefficient(), spellStats);
 
-		snapshot.setDamage(damage);
-		snapshot.setDamagePct(damagePct);
+		snapshot.setAmount(amount);
+		snapshot.setAmountPct(amountPct);
 		snapshot.setPower(power);
 		snapshot.setPowerPct(powerPct);
 		snapshot.setCoeff(coeff);
@@ -653,7 +662,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	public double getCopiedAmountAsHeal(Character character, Spell spell, Character target, int amount, double ratioPct) {
 		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
 		var targetStats = getAccumulatedTargetStats(spell, target, null, HEALING, spell.getSchool());
-		var healingTakenPct = targetStats.getHealingTakenPct();
+		var healingTakenPct = targetStats.getAmountTakenPct();
 
 		return multiplyByRatio(amount, ratioPct + copyIncreasePct, healingTakenPct);
 	}
@@ -722,20 +731,20 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private double getSpellCritCoeff(AccumulatedSpellStats spellStats) {
-		var increasedCriticalDamage = spellStats.getCritDamagePct() / 100;
-		var talentIncrease = spellStats.getCritDamageMultiplierPct() / 100;
+		var increasedCriticalEffect = spellStats.getCritEffectPct() / 100;
+		var talentIncrease = spellStats.getCritEffectMultiplierPct() / 100;
 		var extraCritCoeff = spellStats.getCritCoeffPct();
 
-		return 1 + (0.5 + 1.5 * increasedCriticalDamage) * (1 + talentIncrease) + extraCritCoeff;
+		return 1 + (0.5 + 1.5 * increasedCriticalEffect) * (1 + talentIncrease) + extraCritCoeff;
 	}
 
 
-	private int getSpellDamage(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		return (int) (spellStats.getDamage() + targetStats.getDamageTaken());
+	private int getSpellAmount(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		return (int) (spellStats.getAmount() + targetStats.getAmountTaken());
 	}
 
-	private double getSpellDamagePct(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		return spellStats.getDamagePct() + spellStats.getEffectPct() + targetStats.getDamageTakenPct();
+	private double getSpellAmountPct(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		return spellStats.getAmountPct() + spellStats.getEffectPct() + targetStats.getAmountTakenPct();
 	}
 
 	private int getSpellPower(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {

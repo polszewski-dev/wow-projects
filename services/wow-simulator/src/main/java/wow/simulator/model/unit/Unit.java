@@ -83,9 +83,17 @@ public interface Unit extends Character, SimulationContextSource {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target);
 
-	DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent);
+	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent);
 
-	PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target);
+	DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectComponent directComponent);
+
+	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target);
+
+	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target);
+
+	PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target);
+
+	PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target);
 
 	BaseStatsSnapshot getBaseStatsSnapshot();
 

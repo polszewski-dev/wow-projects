@@ -68,7 +68,7 @@ class CalculationServiceTest extends ServiceTest {
 
 		var targetStats = abilityStats.getTarget();
 
-		assertThat(targetStats.getDamageTakenPct()).isEqualTo(10);
+		assertThat(targetStats.getAmountTakenPct()).isEqualTo(10);
 
 		var hitStats = abilityStats.getHit();
 
@@ -99,16 +99,16 @@ class CalculationServiceTest extends ServiceTest {
 
 		var direct = abilityStats.getDirect();
 
-		assertThat(direct.getDamage()).isZero();
-		assertThat(direct.getDamagePct()).isEqualTo(21);
+		assertThat(direct.getAmount()).isZero();
+		assertThat(direct.getAmountPct()).isEqualTo(21);
 		assertThat(direct.getEffectPct()).isZero();
 		assertThat(direct.getPower()).isEqualTo(1738);
 		assertThat(direct.getPowerPct()).isZero();
 		assertThat(direct.getPowerCoeffPct()).isEqualTo(20);
 		assertThat(direct.getCritRating()).isEqualTo(270);
 		assertThat(direct.getCritPct()).isEqualTo(12.7, PRECISION);
-		assertThat(direct.getCritDamagePct()).isEqualTo(3);
-		assertThat(direct.getCritDamageMultiplierPct()).isEqualTo(100);
+		assertThat(direct.getCritEffectPct()).isEqualTo(3);
+		assertThat(direct.getCritEffectMultiplierPct()).isEqualTo(100);
 		assertThat(direct.getCritCoeffPct()).isZero();
 
 		assertThat(abilityStats.getPeriodic()).isNull();

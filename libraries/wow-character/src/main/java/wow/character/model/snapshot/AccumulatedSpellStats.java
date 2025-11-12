@@ -11,16 +11,16 @@ import wow.commons.model.attribute.AttributeId;
  */
 @Getter
 public class AccumulatedSpellStats extends AccumulatedPartialStats {
-	private double damage;
-	private double damagePct;
+	private double amount;
+	private double amountPct;
 	private double effectPct;
 	private double power;
 	private double powerPct;
 	private double powerCoeffPct;
 	private double critRating;
 	private double critPct;
-	private double critDamagePct;
-	private double critDamageMultiplierPct;
+	private double critEffectPct;
+	private double critEffectMultiplierPct;
 	private double critCoeffPct;
 
 	public AccumulatedSpellStats(AttributeConditionArgs conditionArgs) {
@@ -29,16 +29,16 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 
 	private AccumulatedSpellStats(AccumulatedSpellStats stats) {
 		super(stats);
-		this.damage = stats.damage;
-		this.damagePct = stats.damagePct;
+		this.amount = stats.amount;
+		this.amountPct = stats.amountPct;
 		this.effectPct = stats.effectPct;
 		this.power = stats.power;
 		this.powerPct = stats.powerPct;
 		this.powerCoeffPct = stats.powerCoeffPct;
 		this.critRating = stats.critRating;
 		this.critPct = stats.critPct;
-		this.critDamagePct = stats.critDamagePct;
-		this.critDamageMultiplierPct = stats.critDamageMultiplierPct;
+		this.critEffectPct = stats.critEffectPct;
+		this.critEffectMultiplierPct = stats.critEffectMultiplierPct;
 		this.critCoeffPct = stats.critCoeffPct;
 	}
 
@@ -50,10 +50,24 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 	public void accumulateAttribute(AttributeId id, double value) {
 		switch (id) {
 			case DAMAGE:
-				this.damage += value;
+				if (isDamage) {
+					this.amount += value;
+				}
 				break;
 			case DAMAGE_PCT, PARTY_DAMAGE_PCT:
-				this.damagePct += value;
+				if (isDamage) {
+					this.amountPct += value;
+				}
+				break;
+			case HEALING:
+				if (isHealing) {
+					this.amount += value;
+				}
+				break;
+			case HEALING_PCT:
+				if (isHealing) {
+					this.amountPct += value;
+				}
 				break;
 			case EFFECT_PCT:
 				this.effectPct += value;
@@ -73,11 +87,11 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 			case CRIT_PCT, PARTY_CRIT_PCT:
 				this.critPct += value;
 				break;
-			case CRIT_DAMAGE_PCT:
-				this.critDamagePct += value;
+			case CRIT_EFFECT_PCT:
+				this.critEffectPct += value;
 				break;
-			case CRIT_DAMAGE_MULTIPLIER_PCT:
-				this.critDamageMultiplierPct += value;
+			case CRIT_EFFECT_MULTIPLIER_PCT:
+				this.critEffectMultiplierPct += value;
 				break;
 			case CRIT_COEFF_PCT:
 				this.critCoeffPct += value;

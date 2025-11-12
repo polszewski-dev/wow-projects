@@ -3,7 +3,6 @@ package wow.simulator.model.unit.action;
 import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.context.EventContext;
 import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
@@ -11,8 +10,6 @@ import wow.simulator.model.unit.PrimaryTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.UnitImpl;
-
-import static wow.commons.model.spell.SpellTarget.GROUND_HOSTILE;
 
 /**
  * User: POlszewski
@@ -114,44 +111,9 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void resolveSpell() {
-		castContext.createSpellResolutionContext(this);
+		var spellResolutionContext = castContext.createSpellResolutionContext(this);
 
-		for (var directComponent : ability.getDirectComponents()) {
-			var delay = getDelay(directComponent);
-			getSimulation().delayedAction(delay, () -> directComponentAction(directComponent));
-		}
-
-		applyEffect();
-	}
-
-	private Duration getDelay(DirectComponent directComponent) {
-		var flightTime = Duration.ZERO;
-		return directComponent.bolt() ? flightTime : Duration.ZERO;
-	}
-
-	private void directComponentAction(DirectComponent directComponent) {
-		var resolutionContext = castContext.getSpellResolutionContext();
-
-		resolutionContext.directComponentAction(directComponent);
-	}
-
-	private void applyEffect() {
-		var effectApplication = ability.getEffectApplication();
-
-		if (effectApplication == null) {
-			return;
-		}
-
-		var resolutionContext = castContext.getSpellResolutionContext();
-
-		if (effectApplication.target() == GROUND_HOSTILE) {
-			appliedEffect = resolutionContext.putPeriodicEffectOnTheGround();
-		} else {
-			targetResolver.forEachTarget(
-					effectApplication,
-					effectTarget -> appliedEffect = resolutionContext.applyEffect(effectTarget)
-			);
-		}
+		this.appliedEffect = spellResolutionContext.resolveSpell();
 	}
 
 	public String getAbilityName() {

@@ -59,7 +59,7 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 				Attribute.of(POWER, 9, SPELL),
 				Attribute.of(CRIT_RATING, 12, SPELL),
 				Attribute.of(HASTE_RATING, -5, SPELL),
-				Attribute.of(CRIT_DAMAGE_PCT, 3)
+				Attribute.of(CRIT_EFFECT_PCT, 3, SPELL_DAMAGE)
 		));
 		assertThat(diff.addedAbilities()).isEmpty();
 		assertThat(diff.removedAbilities()).isEmpty();

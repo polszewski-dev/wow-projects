@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.constant.AttributeConditions.PHYSICAL;
 import static wow.character.constant.AttributeConditions.SPELL;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
@@ -23,25 +24,25 @@ class AccumulatedTargetStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getDamageTaken() {
 		accumulateTestAttributes(DAMAGE_TAKEN);
-		assertThat(targetStats.getDamageTaken()).isEqualTo(160);
+		assertThat(targetStats.getAmountTaken()).isEqualTo(160);
 	}
 
 	@Test
 	void getDamageTakenPct() {
 		accumulateTestAttributes(DAMAGE_TAKEN_PCT);
-		assertThat(targetStats.getDamageTakenPct()).isEqualTo(160);
+		assertThat(targetStats.getAmountTakenPct()).isEqualTo(160);
 	}
 
 	@Test
 	void getHealingTaken() {
 		accumulateTestAttributes(HEALING_TAKEN);
-		assertThat(targetStats.getHealingTaken()).isEqualTo(160);
+		assertThat(targetStats.getAmountTakenPct()).isZero();
 	}
 
 	@Test
 	void getHealingTakenPct() {
 		accumulateTestAttributes(HEALING_TAKEN_PCT);
-		assertThat(targetStats.getHealingTakenPct()).isEqualTo(160);
+		assertThat(targetStats.getAmountTakenPct()).isZero();
 	}
 
 	@Test
@@ -69,10 +70,8 @@ class AccumulatedTargetStatsTest extends WowCharacterSpringTest {
 
 		var copy = targetStats.copy();
 
-		assertThat(copy.getDamageTaken()).isEqualTo(targetStats.getDamageTaken());
-		assertThat(copy.getDamageTakenPct()).isEqualTo(targetStats.getDamageTakenPct());
-		assertThat(copy.getHealingTaken()).isEqualTo(targetStats.getHealingTaken());
-		assertThat(copy.getHealingTakenPct()).isEqualTo(targetStats.getHealingTakenPct());
+		assertThat(copy.getAmountTaken()).isEqualTo(targetStats.getAmountTaken());
+		assertThat(copy.getAmountTakenPct()).isEqualTo(targetStats.getAmountTakenPct());
 		assertThat(copy.getPowerTaken()).isEqualTo(targetStats.getPowerTaken());
 		assertThat(copy.getCritTakenPct()).isEqualTo(targetStats.getCritTakenPct());
 	}
@@ -94,7 +93,7 @@ class AccumulatedTargetStatsTest extends WowCharacterSpringTest {
 	void setUp() {
 		var caster = getCharacter();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null, SPELL_DAMAGE, null);
 
 		this.targetStats = new AccumulatedTargetStats(conditionArgs);
 	}

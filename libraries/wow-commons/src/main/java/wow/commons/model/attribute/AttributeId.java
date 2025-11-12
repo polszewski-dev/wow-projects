@@ -49,8 +49,8 @@ public enum AttributeId {
 	HASTE_RATING("HasteRating"),
 	HASTE_PCT("Haste%"),
 
-	CRIT_DAMAGE_PCT("CritDamage%"),
-	CRIT_DAMAGE_MULTIPLIER_PCT("CritDamageMultiplier%"),
+	CRIT_EFFECT_PCT("CritEffect%"),
+	CRIT_EFFECT_MULTIPLIER_PCT("CritEffectMultiplier%"),
 	CRIT_COEFF_PCT("CritCoeff%"),
 
 	DAMAGE_TAKEN("DamageTaken"),

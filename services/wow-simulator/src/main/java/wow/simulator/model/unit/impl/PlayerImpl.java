@@ -111,6 +111,8 @@ public class PlayerImpl extends UnitImpl implements Player {
 		for (var racial : getRace().getRacials(this)) {
 			collector.addEffect(racial);
 		}
+
+		effects.collectEffects(collector);
 	}
 
 	private static class AuraCollector extends AbstractEffectCollector.OnlyEffects {

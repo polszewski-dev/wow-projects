@@ -1,7 +1,6 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
-import lombok.Setter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
@@ -57,7 +56,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private Rng rng;
 
 	@Getter
-	@Setter
 	private Party party;
 
 	private SimulationContext simulationContext;
@@ -342,15 +340,43 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public DirectSpellDamageSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent) {
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent) {
 		var baseStats = getBaseStatsSnapshot();
 		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, spell, target, directComponent, baseStats);
 	}
 
 	@Override
-	public PeriodicSpellDamageSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target) {
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectComponent directComponent) {
+		var baseStats = getBaseStatsSnapshot();
+		return getCharacterCalculationService().getDirectHealingSnapshot(this, spell, target, directComponent, baseStats);
+	}
+
+	@Override
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target) {
 		var baseStats = getBaseStatsSnapshot();
 		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, spell, target, baseStats);
+	}
+
+	@Override
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target) {
+		var baseStats = getBaseStatsSnapshot();
+		return getCharacterCalculationService().getPeriodicHealingSnapshot(this, spell, target, baseStats);
+	}
+
+	@Override
+	public PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target) {
+		var periodicComponent = spell.getAppliedEffect().getPeriodicComponent();
+
+		return new PeriodicSpellComponentSnapshot(periodicComponent);
+	}
+
+	@Override
+	public PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target) {
+		var periodicComponent = spell.getAppliedEffect().getPeriodicComponent();
+		var maxMana = target.getMaxMana();
+		var pct = periodicComponent.amount();
+
+		return new PeriodicSpellComponentSnapshot(periodicComponent, maxMana * pct / 100);
 	}
 
 	@Override

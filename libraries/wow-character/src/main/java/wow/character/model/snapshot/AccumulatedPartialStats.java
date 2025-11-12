@@ -9,6 +9,7 @@ import wow.commons.model.effect.component.StatConversionCondition;
 
 import static wow.character.util.AttributeConditionChecker.check;
 import static wow.character.util.StatConversionConditionChecker.check;
+import static wow.commons.model.attribute.PowerType.HEALING;
 
 /**
  * User: POlszewski
@@ -16,10 +17,14 @@ import static wow.character.util.StatConversionConditionChecker.check;
  */
 public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	protected final AttributeConditionArgs conditionArgs;
+	protected final boolean isDamage;
+	protected final boolean isHealing;
 
 	protected AccumulatedPartialStats(AttributeConditionArgs conditionArgs) {
 		super(conditionArgs);
 		this.conditionArgs = conditionArgs;
+		this.isDamage = conditionArgs.getPowerType() != null && conditionArgs.getPowerType() != HEALING;
+		this.isHealing = conditionArgs.getPowerType() == HEALING;
 	}
 
 	protected AccumulatedPartialStats(AccumulatedPartialStats stats) {
@@ -63,9 +68,5 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 		var valueTo = valueFrom * ratio;
 
 		accumulateAttribute(statConversion.to(), valueTo);
-	}
-
-	public AttributeConditionArgs getConditionArgs() {
-		return conditionArgs;
 	}
 }

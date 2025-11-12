@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.constant.AttributeConditions.PHYSICAL;
 import static wow.character.constant.AttributeConditions.SPELL;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.pve.GameVersionId.TBC;
@@ -43,13 +44,13 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getDamage() {
 		accumulateTestAttributes(DAMAGE);
-		assertThat(spellStats.getDamage()).isEqualTo(160);
+		assertThat(spellStats.getAmount()).isEqualTo(160);
 	}
 
 	@Test
 	void getDamagePct() {
 		accumulateTestAttributes(DAMAGE_PCT);
-		assertThat(spellStats.getDamagePct()).isEqualTo(160);
+		assertThat(spellStats.getAmountPct()).isEqualTo(160);
 	}
 
 	@Test
@@ -89,15 +90,15 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	void getCritDamagePct() {
-		accumulateTestAttributes(CRIT_DAMAGE_PCT);
-		assertThat(spellStats.getCritDamagePct()).isEqualTo(160);
+	void getCritEffectPct() {
+		accumulateTestAttributes(CRIT_EFFECT_PCT);
+		assertThat(spellStats.getCritEffectPct()).isEqualTo(160);
 	}
 
 	@Test
-	void getCritDamageMultiplierPct() {
-		accumulateTestAttributes(CRIT_DAMAGE_MULTIPLIER_PCT);
-		assertThat(spellStats.getCritDamageMultiplierPct()).isEqualTo(160);
+	void getCritEffectMultiplierPct() {
+		accumulateTestAttributes(CRIT_EFFECT_MULTIPLIER_PCT);
+		assertThat(spellStats.getCritEffectMultiplierPct()).isEqualTo(160);
 	}
 
 	@Test
@@ -126,22 +127,22 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		spellStats.accumulateAttribute(POWER_COEFFICIENT_PCT, 6);
 		spellStats.accumulateAttribute(CRIT_RATING, 7);
 		spellStats.accumulateAttribute(CRIT_PCT, 8);
-		spellStats.accumulateAttribute(CRIT_DAMAGE_PCT, 9);
-		spellStats.accumulateAttribute(CRIT_DAMAGE_MULTIPLIER_PCT, 10);
+		spellStats.accumulateAttribute(CRIT_EFFECT_PCT, 9);
+		spellStats.accumulateAttribute(CRIT_EFFECT_MULTIPLIER_PCT, 10);
 		spellStats.accumulateAttribute(CRIT_COEFF_PCT, 11);
 
 		var copy = spellStats.copy();
 
-		assertThat(copy.getDamage()).isEqualTo(spellStats.getDamage());
-		assertThat(copy.getDamagePct()).isEqualTo(spellStats.getDamagePct());
+		assertThat(copy.getAmount()).isEqualTo(spellStats.getAmount());
+		assertThat(copy.getAmountPct()).isEqualTo(spellStats.getAmountPct());
 		assertThat(copy.getEffectPct()).isEqualTo(spellStats.getEffectPct());
 		assertThat(copy.getPower()).isEqualTo(spellStats.getPower());
 		assertThat(copy.getPowerPct()).isEqualTo(spellStats.getPowerPct());
 		assertThat(copy.getPowerCoeffPct()).isEqualTo(spellStats.getPowerCoeffPct());
 		assertThat(copy.getCritRating()).isEqualTo(spellStats.getCritRating());
 		assertThat(copy.getCritPct()).isEqualTo(spellStats.getCritPct());
-		assertThat(copy.getCritDamagePct()).isEqualTo(spellStats.getCritDamagePct());
-		assertThat(copy.getCritDamageMultiplierPct()).isEqualTo(spellStats.getCritDamageMultiplierPct());
+		assertThat(copy.getCritEffectPct()).isEqualTo(spellStats.getCritEffectPct());
+		assertThat(copy.getCritEffectMultiplierPct()).isEqualTo(spellStats.getCritEffectMultiplierPct());
 		assertThat(copy.getCritCoeffPct()).isEqualTo(spellStats.getCritCoeffPct());
 	}
 
@@ -162,7 +163,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	void setUp() {
 		var caster = getCharacter();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null, SPELL_DAMAGE, null);
 
 		this.spellStats = new AccumulatedSpellStats(conditionArgs);
 	}

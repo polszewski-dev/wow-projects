@@ -81,7 +81,7 @@ class GemTooltipParserTest extends TooltipParserTest<JsonItemDetails, GemTooltip
 		assertEffect(blueGem.getEffects(), 0, STAMINA, 18, "+18 Stamina");
 
 		assertEffect(metaGem.getEffects(), 0, CRIT_RATING, 12, SPELL, "+12 Spell Critical");
-		assertEffect(metaGem.getEffects(), 1, CRIT_DAMAGE_PCT, 3, "3% Increased Critical Damage");
+		assertEffect(metaGem.getEffects(), 1, CRIT_EFFECT_PCT, 3, SPELL_DAMAGE, "3% Increased Critical Damage");
 		assertThat(metaGem.getMetaEnablers()).isEqualTo(List.of(MetaEnabler.AT_LEAST_2_BLUES));
 	}
 

@@ -38,8 +38,8 @@ public enum AttributeType {
 	CRIT("Crit", ratingsAndPercents()),
 	HASTE("Haste", ratingsAndPercents()),
 
-	CRIT_DAMAGE("CritDamage", percents()),//meta
-	CRIT_DAMAGE_MULTIPLIER("CritDamageMultiplier", percents()),//talent
+	CRIT_EFFECT("CritEffect", percents()),//meta
+	CRIT_EFFECT_MULTIPLIER("CritEffectMultiplier", percents()),//talent
 	CRIT_COEFF("CritCoeff", percents()),//isb
 
 	DAMAGE_TAKEN("DamageTaken", pointsAndPercents()),
