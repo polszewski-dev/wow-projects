@@ -2,8 +2,10 @@ package wow.simulator.simulation;
 
 import lombok.Getter;
 import wow.commons.model.Duration;
+import wow.commons.model.spell.EffectReplacementMode;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.action.Action;
+import wow.simulator.model.effect.impl.PeriodicEffectInstance;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
 
@@ -25,8 +27,11 @@ public class Simulation implements SimulationContextSource {
 	private boolean finished;
 	private Time timeUntilSimulationEnd;
 
+	private final GroundEffects groundEffects;
+
 	public Simulation(SimulationContext simulationContext) {
 		this.simulationContext = simulationContext;
+		this.groundEffects = new GroundEffects(simulationContext);
 		simulationContext.setSimulation(this);
 	}
 
@@ -39,6 +44,10 @@ public class Simulation implements SimulationContextSource {
 	public void add(Action action) {
 		shareSimulationContext(action);
 		getScheduler().add(action);
+	}
+
+	public void addGroundEffect(PeriodicEffectInstance effect, EffectReplacementMode replacementMode) {
+		groundEffects.addEffect(effect, replacementMode);
 	}
 
 	public void updateUntil(Time timeUntil) {

@@ -151,8 +151,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		super.onRemovedFromQueue();
 		if (target != null) {
 			((UnitImpl) target).detach(this);
-			effectListChanged();
 		}
+		effectListChanged();
 	}
 
 	private void fireEffectEnded() {

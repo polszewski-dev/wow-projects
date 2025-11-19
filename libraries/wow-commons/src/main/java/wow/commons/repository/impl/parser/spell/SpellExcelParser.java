@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static wow.commons.model.spell.SpellTarget.GROUND_HOSTILE;
+import static wow.commons.model.spell.SpellTarget.GROUND;
 import static wow.commons.model.spell.SpellTarget.TARGET;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
@@ -91,13 +91,14 @@ public class SpellExcelParser extends ExcelParser {
 			var effectTarget = effectApplication.target();
 			var effect = effectApplication.effect();
 
-			if (ability.isChanneled() && effectTarget.isAoE() && effectTarget != GROUND_HOSTILE) {
+			if (ability.isChanneled() && effectTarget.isAoE() && effectTarget != GROUND) {
 				throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
 			}
 
 			if (effect.hasPeriodicComponent()) {
 				var periodicComponentTarget = effect.getPeriodicComponent().target();
-				if (effectTarget == GROUND_HOSTILE && periodicComponentTarget == TARGET) {
+
+				if (effectTarget == GROUND && periodicComponentTarget == TARGET) {
 					throw new IllegalArgumentException("Ground effect has no target specified");
 				}
 			}

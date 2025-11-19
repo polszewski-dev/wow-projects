@@ -29,7 +29,7 @@ class RainOfFireTest extends TbcWarlockSpellSimulationTest {
 						.beginGcd(player)
 						.endCast(player, RAIN_OF_FIRE)
 						.decreasedResource(1480, MANA, player, RAIN_OF_FIRE)
-						.effectApplied(RAIN_OF_FIRE, player, 8)
+						.effectApplied(RAIN_OF_FIRE, null, 8)
 						.beginChannel(player, RAIN_OF_FIRE, 8),
 				at(1.5)
 						.endGcd(player),
@@ -53,7 +53,7 @@ class RainOfFireTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(304, HEALTH, target1, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
-						.effectExpired(RAIN_OF_FIRE, player)
+						.effectExpired(RAIN_OF_FIRE, null)
 						.endChannel(player, RAIN_OF_FIRE)
 		);
 	}

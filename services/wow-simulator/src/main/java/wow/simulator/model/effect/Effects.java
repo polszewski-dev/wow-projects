@@ -7,7 +7,6 @@ import wow.commons.model.spell.EffectReplacementMode;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.effect.impl.EffectInstanceImpl;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.HashMap;
@@ -22,14 +21,8 @@ import static wow.commons.model.effect.EffectScope.GLOBAL;
  * User: POlszewski
  * Date: 2023-08-16
  */
-public class Effects implements SimulationContextSource, EffectCollection {
-	private final Unit owner;
-
+public abstract class Effects implements SimulationContextSource, EffectCollection {
 	private final Map<EffectInstanceId, EffectInstance> effectsById = new HashMap<>();
-
-	public Effects(Unit owner) {
-		this.owner = owner;
-	}
 
 	public void addEffect(EffectInstance effect, EffectReplacementMode replacementMode) {
 		var effectImpl = (EffectInstanceImpl) effect;
@@ -140,11 +133,6 @@ public class Effects implements SimulationContextSource, EffectCollection {
 		return (int) getStream()
 				.filter(x -> x.matches(tree))
 				.count();
-	}
-
-	@Override
-	public SimulationContext getSimulationContext() {
-		return owner.getSimulationContext();
 	}
 
 	@Override

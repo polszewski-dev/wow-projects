@@ -36,6 +36,7 @@ import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
 import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
+import static wow.commons.model.spell.SpellTarget.GROUND;
 
 /**
  * User: POlszewski
@@ -366,7 +367,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private AccumulatedReceivedEffectStats getAccumulatedReceivedEffectStats(Spell spell, Character target) {
-		if (spell instanceof Ability ability && ability.isChanneled()) {
+		if (spell instanceof Ability ability && (ability.isChanneled() || ability.getEffectApplication().target() == GROUND)) {
 			return null;
 		}
 

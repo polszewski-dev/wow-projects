@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static wow.commons.model.spell.SpellTarget.GROUND_HOSTILE;
+import static wow.commons.model.spell.SpellTarget.GROUND;
 
 /**
  * User: POlszewski
@@ -164,7 +164,7 @@ public class SpellResolutionContext extends Context {
 			return null;
 		}
 
-		if (effectApplication.target() == GROUND_HOSTILE) {
+		if (effectApplication.target() == GROUND) {
 			return putPeriodicEffectOnTheGround();
 		}
 
@@ -233,8 +233,9 @@ public class SpellResolutionContext extends Context {
 
 	private PeriodicEffectInstance putPeriodicEffectOnTheGround() {
 		var effect = createGroundPeriodicEffect();
+		var replacementMode = spell.getEffectApplication().replacementMode();
 
-		getScheduler().add(effect);
+		getSimulation().addGroundEffect(effect, replacementMode);
 		return effect;
 	}
 
@@ -246,7 +247,7 @@ public class SpellResolutionContext extends Context {
 
 		return new PeriodicEffectInstance(
 				caster,
-				caster,
+				null,
 				effectApplication.effect(),
 				duration,
 				tickInterval,

@@ -45,7 +45,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	protected final UnitId id = ID_GENERATOR.newId();
 
 	private final UnitResources resources = new UnitResources(this);
-	protected final Effects effects = new Effects(this);
+	protected final Effects effects = new UnitEffects(this);
 	private final Cooldowns cooldowns = new Cooldowns(this);
 
 	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
