@@ -5,7 +5,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spell.ActivatedAbility;
-import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.SpellTargets;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 	void buff1() {
 		var spell = parse("Use: Increases damage done by magical spells and effects by up to 50, and decreases the magical resistances of your spell targets by 100 for 30 sec. (3 Min Cooldown)");
 
-		assertEffectApplication(spell, SpellTarget.SELF, 30, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 30, 1, 1, 1);
 
 		var effect = spell.getEffectApplication().effect();
 
@@ -39,7 +39,7 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 	void buff2() {
 		var spell = parse("Use: Increases your spell damage by up to 100 and your healing by up to 190 for 15 sec. (1 Min, 15 Sec Cooldown)");
 
-		assertEffectApplication(spell, SpellTarget.SELF, 15, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
 
 		var effect = spell.getEffectApplication().effect();
 
@@ -54,7 +54,7 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 	void buff3() {
 		var spell = parse("Use: Increases spell damage and healing by up to 250, and increases mana cost of spells by 20% for 20 sec. (5 Min Cooldown)");
 
-		assertEffectApplication(spell, SpellTarget.SELF, 20, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 20, 1, 1, 1);
 
 		var effect = spell.getEffectApplication().effect();
 

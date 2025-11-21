@@ -34,7 +34,7 @@ public class ShootAbility implements Ability {
 
 		return List.of(
 				new DirectComponent(
-						SpellTarget.ENEMY,
+						SpellTargets.ENEMY,
 						ComponentType.DAMAGE,
 						new Coefficient(Percent.ZERO, weaponStats.damageType()),
 						weaponStats.damageMin(),

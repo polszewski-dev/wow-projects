@@ -1,13 +1,13 @@
 package wow.scraper.repository.impl.excel.spell;
 
 import wow.commons.model.effect.component.EventAction;
-import wow.commons.model.spell.SpellTarget;
 import wow.scraper.parser.spell.misc.MiscEffectPattern;
 import wow.scraper.parser.spell.params.EffectPatternParams;
 import wow.scraper.parser.spell.params.EventParams;
 
 import java.util.Collection;
 
+import static wow.commons.model.spell.SpellTargetType.SELF;
 import static wow.scraper.parser.spell.SpellPatternType.EFFECT;
 
 /**
@@ -68,10 +68,10 @@ public class MiscEffectsSheetParser extends AbstractSpellPatternSheetParser {
 		if (!"INF".equalsIgnoreCase(params.duration())) {
 			throw new IllegalArgumentException("Duration can only be INF");
 		}
-		if (params.modifierComponent() != null && params.modifierComponent().target() != SpellTarget.SELF) {
+		if (params.modifierComponent() != null && !params.modifierComponent().target().hasType(SELF)) {
 			throw new IllegalArgumentException("Modifier target can only be SELF");
 		}
-		if (params.getEvents().stream().anyMatch(x -> x.target() != SpellTarget.SELF)) {
+		if (params.getEvents().stream().anyMatch(x -> !x.target().hasType(SELF))) {
 			throw new IllegalArgumentException("Event target can only be SELF");
 		}
 		if (hasInvalidEventAction(params)) {

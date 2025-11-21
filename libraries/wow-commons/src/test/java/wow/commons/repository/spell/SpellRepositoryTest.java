@@ -158,7 +158,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var index = 0;
 		var directComponent = ability.getDirectComponents().get(index);
 
-		assertThat(directComponent.target()).isEqualTo(SpellTarget.ENEMY);
+		assertThat(directComponent.target()).isEqualTo(SpellTargets.ENEMY);
 		assertThat(directComponent.type()).isEqualTo(ComponentType.DAMAGE);
 		assertCoefficient(directComponent.coefficient(), 85.71, SHADOW);
 		assertThat(directComponent.min()).isEqualTo(544);
@@ -182,7 +182,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var ability = getClassAbility(CORRUPTION, 8, TBC_P5);
 		var effectApplication = ability.getEffectApplication();
 
-		assertEffectApplication(ability, SpellTarget.ENEMY, 18, 1, 1, 1);
+		assertEffectApplication(ability, SpellTargets.ENEMY, 18, 1, 1, 1);
 
 		assertId(effectApplication.effect(), ability.getId().value());
 		assertId(effectApplication.effect(), 27216);
@@ -197,7 +197,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var directComponent = spell.getDirectComponents().getFirst();
 
-		assertThat(directComponent.target()).isEqualTo(SpellTarget.ATTACKER);
+		assertThat(directComponent.target()).isEqualTo(SpellTargets.ATTACKER);
 		assertThat(directComponent.type()).isEqualTo(ComponentType.MANA_DRAIN);
 		assertCoefficient(directComponent.coefficient(), 0, SHADOW);
 		assertThat(directComponent.min()).isEqualTo(165);
@@ -328,7 +328,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getName()).isEqualTo("The Skull of Gul'dan");
 		assertThat(spell.getTooltip()).isEqualTo("Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)");
 
-		assertEffectApplication(spell, SpellTarget.SELF, 20, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 20, 1, 1, 1);
 
 		var effect = spell.getEffectApplication().effect();
 
@@ -366,7 +366,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getName()).isEqualTo("Spell Haste Trinket");
 		assertThat(spell.getTooltip()).isNull();
 
-		assertEffectApplication(spell, SpellTarget.SELF, 6, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 6, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
 				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
 		));
@@ -400,7 +400,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getName()).isEqualTo("Flameshadow");
 		assertThat(spell.getTooltip()).isNull();
 
-		assertEffectApplication(spell, SpellTarget.SELF, 15, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
 				Attribute.of(POWER, 135, AttributeCondition.and(
 						AttributeConditions.SPELL_DAMAGE,
@@ -437,7 +437,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getName()).isEqualTo("Shadowflame");
 		assertThat(spell.getTooltip()).isNull();
 
-		assertEffectApplication(spell, SpellTarget.SELF, 15, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
 				Attribute.of(POWER, 135, AttributeCondition.and(
 						AttributeConditions.SPELL_DAMAGE,
@@ -474,7 +474,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getName()).isEqualTo("Enchant Weapon - Spellsurge - proc #1 - triggered");
 		assertThat(spell.getTooltip()).isNull();
 
-		assertEffectApplication(spell, SpellTarget.PARTY, 10, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.PARTY, 10, 1, 1, 1);
 
 		var triggeredEffect = spell.getEffectApplication().effect();
 
@@ -502,7 +502,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getName()).isEqualTo("Spell Focus Trigger");
 		assertThat(spell.getTooltip()).isNull();
 
-		assertEffectApplication(spell, SpellTarget.SELF, 6, 1, 1, 1);
+		assertEffectApplication(spell, SpellTargets.SELF, 6, 1, 1, 1);
 		assertModifier(spell.getEffectApplication().effect(), List.of(
 				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
 		));
@@ -522,7 +522,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(ability.getCastInfo()).isEqualTo(new CastInfo(Duration.ZERO, false, true));
 		assertThat(ability.getCooldown()).isEqualTo(Duration.minutes(2));
 
-		assertEffectApplication(ability, SpellTarget.SELF, 15, 1, 1, 1);
+		assertEffectApplication(ability, SpellTargets.SELF, 15, 1, 1, 1);
 
 		var effect = ability.getEffectApplication().effect();
 

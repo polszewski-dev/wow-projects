@@ -34,9 +34,9 @@ public abstract class Context implements SimulationContextSource {
 	@Setter
 	private Spell sourceSpellOverride;
 
-	private Map<SpellTarget, RoundingReminder> roundingRemindersBySpellTarget;
+	private Map<SpellAndTarget, RoundingReminder> roundingRemindersBySpellTarget;
 
-	private record SpellTarget(Spell spell, Unit target) {}
+	private record SpellAndTarget(Spell spell, Unit target) {}
 
 	protected Context(Unit caster, Spell spell, Context parentContext) {
 		this.caster = caster;
@@ -114,7 +114,7 @@ public abstract class Context implements SimulationContextSource {
 		}
 
 		return roundingRemindersBySpellTarget.computeIfAbsent(
-				new SpellTarget(spell, target),
+				new SpellAndTarget(spell, target),
 				x -> new RoundingReminder()
 		);
 	}

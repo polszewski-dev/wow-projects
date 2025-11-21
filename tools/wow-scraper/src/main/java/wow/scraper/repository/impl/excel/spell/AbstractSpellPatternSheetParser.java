@@ -13,7 +13,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
 
-import static wow.commons.model.spell.SpellTarget.SELF;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
@@ -332,7 +331,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 
 	private SpellTarget getTarget(String prefix) {
 		if (prefix.equals(TRIGGER_PREFIX)) {
-			return SELF;
+			return SpellTargets.SELF;
 		}
 		return getColTarget(prefix, false).getEnum(SpellTarget::parse, null);
 	}

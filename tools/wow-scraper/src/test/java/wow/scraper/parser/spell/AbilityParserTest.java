@@ -57,7 +57,7 @@ class AbilityParserTest extends SpellParserTest {
 		assertThat(ability.getDirectComponents()).hasSize(1);
 		assertDirectComponent(ability.getDirectComponents().get(0), DAMAGE, 18.65, FIRE, 332, 332);
 
-		assertEffectApplication(ability, SpellTarget.ENEMY, 15, 1, 1, 1);
+		assertEffectApplication(ability, SpellTargets.ENEMY, 15, 1, 1, 1);
 
 		var effect = ability.getEffectApplication().effect();
 
@@ -68,7 +68,7 @@ class AbilityParserTest extends SpellParserTest {
 	void drainLife() {
 		var ability = parse(DRAIN_LIFE, "Transfers 108 health every 1 sec from the target to the caster. Lasts 5 sec.");
 
-		assertEffectApplication(ability, SpellTarget.ENEMY, 5, 1, 1, 1);
+		assertEffectApplication(ability, SpellTargets.ENEMY, 5, 1, 1, 1);
 
 		var effect = ability.getEffectApplication().effect();
 
@@ -88,7 +88,7 @@ class AbilityParserTest extends SpellParserTest {
 	void demonArmor() {
 		var ability = parse(DEMON_ARMOR, "Protects the caster, increasing armor by 660, Shadow resistance by 18 and restores 18 health every 5 sec. Only one type of Armor spell can be active on the Warlock at any time. Lasts 30 min.");
 
-		assertEffectApplication(ability, SpellTarget.SELF, 30 * 60, 1, 1, 1);
+		assertEffectApplication(ability, SpellTargets.SELF, 30 * 60, 1, 1, 1);
 
 		var effect = ability.getEffectApplication().effect();
 
@@ -122,7 +122,7 @@ class AbilityParserTest extends SpellParserTest {
 		var ability = parse(SHADOWGUARD, "The caster is surrounded by shadows. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 130 Shadow damage. Attackers can only be damaged once every few seconds. This damage causes no threat. 3 charges. Lasts 10 min.");
 		var effectApplication = ability.getEffectApplication();
 
-		assertEffectApplication(ability, SpellTarget.SELF, 10 * 60, 3, 1, 1);
+		assertEffectApplication(ability, SpellTargets.SELF, 10 * 60, 3, 1, 1);
 
 		var event = effectApplication.effect().getEvents().getFirst();
 

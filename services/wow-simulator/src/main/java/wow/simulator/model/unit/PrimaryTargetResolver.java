@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.SpellTarget;
 
+import static wow.commons.model.spell.SpellTargetType.SELF;
 import static wow.simulator.model.unit.Unit.areFriendly;
 import static wow.simulator.model.unit.Unit.areHostile;
 
@@ -20,7 +21,9 @@ public class PrimaryTargetResolver {
 
 	public PrimaryTarget getPrimaryTarget() {
 		var targets = ability.getTargets();
-		var singleTargets = targets.stream().filter(SpellTarget::isSingle).toList();
+		var singleTargets = targets.stream()
+				.filter(SpellTarget::isSingle)
+				.toList();
 
 		if (singleTargets.isEmpty()) {
 			if (explicitTarget != null) {
@@ -30,7 +33,9 @@ public class PrimaryTargetResolver {
 			}
 		}
 
-		var singleTargetsExceptSelf = singleTargets.stream().filter(x -> x != SpellTarget.SELF).toList();
+		var singleTargetsExceptSelf = singleTargets.stream()
+				.filter(x -> !x.hasType(SELF))
+				.toList();
 
 		if (singleTargetsExceptSelf.size() == 1) {
 			return resolveTarget(singleTargetsExceptSelf.getFirst());
@@ -44,7 +49,7 @@ public class PrimaryTargetResolver {
 	}
 
 	private PrimaryTarget resolveTarget(SpellTarget spellTarget) {
-		return switch (spellTarget) {
+		return switch (spellTarget.type()) {
 			case SELF ->
 					getSelf();
 			case PET ->

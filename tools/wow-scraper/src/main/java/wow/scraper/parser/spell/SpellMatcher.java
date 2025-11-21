@@ -139,7 +139,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 			return null;
 		}
 
-		var target = SpellTarget.TARGET;
+		var target = SpellTargets.TARGET;
 		var type = periodicComponentParams.type();
 		var tickInterval = getTickInterval(periodicComponentParams);
 		var duration = getOptionalDuration(params.duration()).orElseThrow();

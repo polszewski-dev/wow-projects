@@ -3,6 +3,7 @@ package wow.simulator.model.unit;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.SpellTargets;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
@@ -12,8 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static wow.commons.model.spell.SpellTarget.FRIEND;
-import static wow.commons.model.spell.SpellTarget.FRIENDS_PARTY;
+import static wow.commons.model.spell.SpellTargetType.FRIENDS_PARTY;
 
 /**
  * User: POlszewski
@@ -61,18 +61,18 @@ public class TargetResolver implements SimulationContextSource {
 		return targetResolver;
 	}
 
-	public boolean hasValidTarget(SpellTarget targetType) {
-		if (targetType.isAoE()) {
+	public boolean hasValidTarget(SpellTarget spellTarget) {
+		if (spellTarget.isAoE()) {
 			return true;
 		}
-		if (targetType == FRIENDS_PARTY) {
-			return hasValidTarget(FRIEND);
+		if (spellTarget.hasType(FRIENDS_PARTY)) {
+			return hasValidTarget(SpellTargets.FRIEND);
 		}
-		return getTargets(targetType).size() == 1;
+		return getTargets(spellTarget).size() == 1;
 	}
 
-	public boolean hasAllValidTargets(Collection<SpellTarget> targetTypes) {
-		return targetTypes.stream().allMatch(this::hasValidTarget);
+	public boolean hasAllValidTargets(Collection<SpellTarget> spellTargets) {
+		return spellTargets.stream().allMatch(this::hasValidTarget);
 	}
 
 	public void forEachTarget(DirectComponent directComponent, Consumer<Unit> consumer) {
@@ -87,8 +87,8 @@ public class TargetResolver implements SimulationContextSource {
 		getTargets(effectApplication.target()).forEach(consumer);
 	}
 
-	private List<Unit> getTargets(SpellTarget targetType) {
-		return switch (targetType) {
+	private List<Unit> getTargets(SpellTarget spellTarget) {
+		return switch (spellTarget.type()) {
 			case SELF ->
 					List.of(self);
 			case PET ->
@@ -108,7 +108,7 @@ public class TargetResolver implements SimulationContextSource {
 			case FRIEND_AOE ->
 					getSimulation().getFriendsOf(self);
 			default ->
-					throw new IllegalArgumentException(targetType + "");
+					throw new IllegalArgumentException(spellTarget.type() + "");
 		};
 	}
 

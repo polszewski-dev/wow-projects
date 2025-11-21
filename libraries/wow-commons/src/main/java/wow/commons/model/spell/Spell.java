@@ -7,7 +7,7 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.component.DirectComponent;
 
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +33,7 @@ public interface Spell extends Described, TimeRestricted {
 	}
 
 	default Set<SpellTarget> getTargets() {
-		var result = EnumSet.noneOf(SpellTarget.class);
+		var result = new HashSet<SpellTarget>();
 
 		for (var directComponent : getDirectComponents()) {
 			result.add(directComponent.target());
@@ -45,7 +45,7 @@ public interface Spell extends Described, TimeRestricted {
 			result.add(effectApplication.target());
 		}
 
-		return  result;
+		return result;
 	}
 
 	boolean hasDamagingComponent();

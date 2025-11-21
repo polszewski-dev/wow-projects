@@ -1,42 +1,38 @@
 package wow.commons.model.spell;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import wow.commons.util.EnumUtil;
+import java.util.Objects;
 
 /**
  * User: POlszewski
- * Date: 2023-08-15
+ * Date: 2025-11-21
  */
-@AllArgsConstructor
-@Getter
-public enum SpellTarget {
-	SELF(true),
-	PET(true),
+public record SpellTarget(
+		SpellTargetType type
+) {
+	public SpellTarget {
+		Objects.requireNonNull(type);
+	}
 
-	FRIEND(true),
-	FRIEND_AOE(false),
-	FRIENDS_PARTY(true),
-
-	PARTY(false),
-	PARTY_AOE(false),
-
-	ENEMY(true),
-	ENEMY_AOE(false),
-
-	TARGET(true),
-	ATTACKER(true),
-
-	GROUND(false),
-	;
-
-	private final boolean single;
+	public static SpellTarget of(SpellTargetType type) {
+		return new SpellTarget(type);
+	}
 
 	public static SpellTarget parse(String value) {
-		return EnumUtil.parse(value, values());
+		if (value == null) {
+			return null;
+		}
+		return of(SpellTargetType.parse(value));
+	}
+
+	public boolean hasType(SpellTargetType type) {
+		return this.type == type;
 	}
 
 	public boolean isAoE() {
-		return !single;
+		return type.isAoE();
+	}
+
+	public boolean isSingle() {
+		return type.isSingle();
 	}
 }

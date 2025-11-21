@@ -8,7 +8,7 @@ import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.pve.GameVersionId;
-import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.SpellTargets;
 import wow.scraper.constant.AttributeConditions;
 import wow.scraper.constant.EventConditions;
 
@@ -48,7 +48,7 @@ class ProcParserTest extends SpellParserTest {
 
 		var triggeredSpell = procTrigger.triggeredSpell();
 
-		assertEffectApplication(triggeredSpell, SpellTarget.SELF, 10, 1, 1, 1);
+		assertEffectApplication(triggeredSpell, SpellTargets.SELF, 10, 1, 1, 1);
 
 		var triggeredEffect = triggeredSpell.getEffectApplication().effect();
 
@@ -85,8 +85,8 @@ class ProcParserTest extends SpellParserTest {
 				Duration.ZERO
 		);
 
-		assertEffectApplication(procTrigger1.triggeredSpell(), SpellTarget.SELF, 10, 1, 1, 20);
-		assertEffectApplication(procTrigger2.triggeredSpell(), SpellTarget.SELF, 10, 1, 1, 10);
+		assertEffectApplication(procTrigger1.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 20);
+		assertEffectApplication(procTrigger2.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 10);
 
 		var effect1 = procTrigger1.triggeredSpell().getEffectApplication().effect();
 		var effect2 = procTrigger2.triggeredSpell().getEffectApplication().effect();
@@ -138,7 +138,7 @@ class ProcParserTest extends SpellParserTest {
 		assertDirectComponent(direct1, MANA_GAIN, 0, null, 170, 170);
 		assertDirectComponent(direct2, MANA_GAIN, 0, null, 170, 170);
 
-		assertEffectApplication(procTrigger3.triggeredSpell(), SpellTarget.SELF, 10, 1, 1, 1);
+		assertEffectApplication(procTrigger3.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 1);
 
 		var effect3 = procTrigger3.triggeredSpell().getEffectApplication().effect();
 

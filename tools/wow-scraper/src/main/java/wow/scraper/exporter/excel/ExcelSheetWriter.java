@@ -9,6 +9,7 @@ import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.effect.component.StatConversionCondition;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.SpellTarget;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
 import wow.commons.util.AttributesFormater;
 import wow.commons.util.condition.AbsorptionConditionFormatter;
@@ -135,6 +136,10 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 
 	protected void setValue(EventCondition condition) {
 		setValue(EventConditionFormatter.formatCondition(condition));
+	}
+
+	protected void setValue(SpellTarget target) {
+		setValue(target.type());//todo format
 	}
 
 	protected void setValue(AbilityId abilityId) {

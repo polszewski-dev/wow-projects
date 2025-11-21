@@ -16,7 +16,7 @@ import wow.commons.model.attribute.AttributeScaling;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.SpellTargets;
 import wow.commons.model.talent.Talent;
 
 import java.util.List;
@@ -120,7 +120,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 
 		var spell = event.triggeredSpell();
 
-		assertEffectApplication(spell, SpellTarget.TARGET, 12, 4, 1, 1);
+		assertEffectApplication(spell, SpellTargets.TARGET, 12, 4, 1, 1);
 
 		var appliedEffect = spell.getEffectApplication().effect();
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static wow.commons.model.spell.SpellTarget.GROUND;
+import static wow.commons.model.spell.SpellTargetType.GROUND;
 
 /**
  * User: POlszewski
@@ -164,7 +164,7 @@ public class SpellResolutionContext extends Context {
 			return null;
 		}
 
-		if (effectApplication.target() == GROUND) {
+		if (effectApplication.target().hasType(GROUND)) {
 			return putPeriodicEffectOnTheGround();
 		}
 

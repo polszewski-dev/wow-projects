@@ -11,7 +11,7 @@ import wow.commons.model.attribute.Attributes;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.GroupCooldownId;
-import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.SpellTargets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.DESTRUCTION_POTION;
@@ -39,7 +39,7 @@ class ConsumableRepositoryTest extends WowCommonsSpringTest {
 		assertThat(consumable.getActivatedAbility().getCooldown()).isEqualTo(Duration.seconds(120));
 		assertThat(consumable.getActivatedAbility().getGroupCooldownId()).isEqualTo(GroupCooldownId.POTION);
 
-		assertEffectApplication(consumable.getActivatedAbility(), SpellTarget.SELF, 15, 1, 1, 1);
+		assertEffectApplication(consumable.getActivatedAbility(), SpellTargets.SELF, 15, 1, 1, 1);
 		assertEffect(
 				consumable.getActivatedAbility().getAppliedEffect(),
 				Attributes.of(
