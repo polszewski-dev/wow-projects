@@ -3,6 +3,7 @@ package wow.simulator.simulation.spell.tbc.ability.paladin.holy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import wow.commons.model.character.CreatureType;
 import wow.simulator.simulation.spell.tbc.TbcPaladinSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -52,5 +53,11 @@ class HolyWrathTest extends TbcPaladinSpellSimulationTest {
 		assertDamageDone(HOLY_WRATH_INFO, target2, spellDamage);
 		assertDamageDone(HOLY_WRATH_INFO, target3, spellDamage);
 		assertDamageDone(HOLY_WRATH_INFO, target4, spellDamage);
+	}
+
+	@Override
+	protected void beforeSetUp() {
+		super.beforeSetUp();
+		enemyType = CreatureType.UNDEAD;
 	}
 }

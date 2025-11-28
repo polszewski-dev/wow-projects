@@ -147,8 +147,4 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 				.findAny()
 				.orElseThrow();
 	}
-
-	private String percentPrefix(String prefix, int value) {
-		return prefix + value + "%";
-	}
 }

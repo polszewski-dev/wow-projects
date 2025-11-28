@@ -12,6 +12,7 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.repository.impl.parser.excel.mapper.ItemEffectMapper;
 import wow.commons.util.AttributesFormater;
+import wow.commons.util.SpellTargetFormatter;
 import wow.commons.util.condition.AbsorptionConditionFormatter;
 import wow.commons.util.condition.AttributeConditionFormatter;
 import wow.commons.util.condition.EventConditionFormatter;
@@ -139,7 +140,7 @@ public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends Exc
 	}
 
 	protected void setValue(SpellTarget target) {
-		setValue(target.type());//todo format
+		setValue(SpellTargetFormatter.format(target));
 	}
 
 	protected void setValue(AbilityId abilityId) {

@@ -2,9 +2,12 @@ package wow.simulator.simulation.spell.tbc.ability.paladin.holy;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import wow.commons.model.character.CreatureType;
 import wow.simulator.simulation.spell.tbc.TbcPaladinSpellSimulationTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.EXORCISM;
@@ -45,5 +48,25 @@ class ExorcismTest extends TbcPaladinSpellSimulationTest {
 		simulateDamagingSpell(EXORCISM, spellDamage);
 
 		assertDamageDone(EXORCISM_INFO, spellDamage);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"UNDEAD, true",
+			"DEMON, true",
+			"BEAST, false",
+	})
+	void can_only_be_casted_on_certain_creature_types(CreatureType creatureType, boolean expected) {
+		var target = getEnemy("Target", creatureType);
+
+		var actual = player.canCast(EXORCISM, target);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@Override
+	protected void beforeSetUp() {
+		super.beforeSetUp();
+		enemyType = CreatureType.UNDEAD;
 	}
 }

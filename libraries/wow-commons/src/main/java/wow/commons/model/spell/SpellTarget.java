@@ -1,5 +1,7 @@
 package wow.commons.model.spell;
 
+import wow.commons.util.SpellTargetParser;
+
 import java.util.Objects;
 
 /**
@@ -7,21 +9,28 @@ import java.util.Objects;
  * Date: 2025-11-21
  */
 public record SpellTarget(
-		SpellTargetType type
+		SpellTargetType type,
+		SpellTargetCondition condition
 ) {
 	public SpellTarget {
 		Objects.requireNonNull(type);
+		Objects.requireNonNull(condition);
+	}
+
+	public SpellTarget(SpellTargetType type) {
+		this(type, SpellTargetCondition.EMPTY);
 	}
 
 	public static SpellTarget of(SpellTargetType type) {
-		return new SpellTarget(type);
+		return of(type, SpellTargetCondition.EMPTY);
+	}
+
+	public static SpellTarget of(SpellTargetType type, SpellTargetCondition condition) {
+		return new SpellTarget(type, condition);
 	}
 
 	public static SpellTarget parse(String value) {
-		if (value == null) {
-			return null;
-		}
-		return of(SpellTargetType.parse(value));
+		return SpellTargetParser.parse(value);
 	}
 
 	public boolean hasType(SpellTargetType type) {

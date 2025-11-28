@@ -56,6 +56,7 @@ import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.simulator.model.time.Time.TIME_IN_INFINITY;
+import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.simulator.util.CalcUtils.increaseByPct;
 import static wow.simulator.util.TestEvent.*;
 
@@ -136,6 +137,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected NonPlayer getEnemy(String name) {
+		return getEnemy(name, enemyType);
+	}
+
+	protected NonPlayer getEnemy(String name, CreatureType enemyType) {
 		int level = getLevel();
 
 		var enemy = getCharacterService().createNonPlayerCharacter(
@@ -433,6 +438,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void setHealth(Unit unit, int amount) {
 		unit.setCurrentHealth(amount);
+	}
+
+	protected void setHealthPct(Unit unit, int pct) {
+		unit.setCurrentHealth((int) getPercentOf(pct, (double) unit.getMaxHealth()));
 	}
 
 	protected void setMana(Unit unit, int amount) {

@@ -1,5 +1,6 @@
 package wow.simulator.model.unit;
 
+import wow.character.util.SpellTargetConditionChecker;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.SpellTarget;
@@ -88,6 +89,12 @@ public class TargetResolver implements SimulationContextSource {
 	}
 
 	private List<Unit> getTargets(SpellTarget spellTarget) {
+		return getTargetsUnchecked(spellTarget).stream()
+				.filter(target -> SpellTargetConditionChecker.check(spellTarget.condition(), target))
+				.toList();
+	}
+
+	private List<Unit> getTargetsUnchecked(SpellTarget spellTarget) {
 		return switch (spellTarget.type()) {
 			case SELF ->
 					List.of(self);

@@ -2,9 +2,11 @@ package wow.simulator.simulation.spell.tbc.ability.paladin.holy;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPaladinSpellSimulationTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.HAMMER_OF_WRATH;
@@ -20,6 +22,8 @@ class HammerOfWrathTest extends TbcPaladinSpellSimulationTest {
 
 	@Test
 	void success() {
+		setHealthPct(target, 20);
+
 		player.cast(HAMMER_OF_WRATH);
 
 		updateUntil(30);
@@ -41,8 +45,24 @@ class HammerOfWrathTest extends TbcPaladinSpellSimulationTest {
 	}
 
 	@ParameterizedTest
+	@CsvSource({
+			"19, true",
+			"20, true",
+			"21, false",
+	})
+	void can_only_be_casted_when_targets_health_is_at_most_20_pct(int pct, boolean expected) {
+		setHealthPct(target, pct);
+
+		var actual = player.canCast(HAMMER_OF_WRATH);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
 	@ValueSource(ints = { 0, 100, 1000 })
 	void damage_done(int spellDamage) {
+		setHealthPct(target, 20);
+
 		simulateDamagingSpell(HAMMER_OF_WRATH, spellDamage);
 
 		assertDamageDone(HAMMER_OF_WRATH_INFO, spellDamage);

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
+
 /**
  * User: POlszewski
  * Date: 2023-10-13
@@ -466,4 +468,18 @@ public abstract class ConditionParser<T extends Condition, E> {
 	private record NotNode(Node node) implements Node {}
 
 	private record PrimitiveNode(String value) implements Node {}
+
+	protected Integer parsePercent(String prefix, String value) {
+		var result = parseMultipleValues(prefix + "(\\d+)%", value);
+
+		if (result.isEmpty()) {
+			return null;
+		}
+
+		return Integer.parseInt(result.get(0));
+	}
+
+	protected String withoutPrefix(String value, String targetClassPrefix) {
+		return value.replace(targetClassPrefix, "").trim();
+	}
 }

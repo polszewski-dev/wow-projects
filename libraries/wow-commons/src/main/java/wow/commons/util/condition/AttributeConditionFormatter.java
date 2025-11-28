@@ -131,8 +131,4 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 				.findAny()
 				.orElseThrow();
 	}
-
-	private String percentPrefix(String prefix, int value) {
-		return prefix + value + "%";
-	}
 }

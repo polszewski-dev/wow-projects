@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 import static wow.commons.model.attribute.AttributeCondition.*;
-import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
 
 /**
  * User: POlszewski
@@ -155,16 +154,6 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 		}
 
 		return new OwnerHealthBelowPct(healthPct);
-	}
-
-	private Integer parsePercent(String prefix, String value) {
-		var result = parseMultipleValues(prefix + "(\\d+)%", value);
-
-		if (result.isEmpty()) {
-			return null;
-		}
-
-		return Integer.parseInt(result.get(0));
 	}
 
 	static final String OWNER_HEALTH_BELOW_PREFIX = "OwnerHealthBelow";

@@ -16,7 +16,6 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 import static wow.commons.model.effect.component.EventCondition.*;
-import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
 
 /**
  * User: POlszewski
@@ -194,20 +193,6 @@ public class EventConditionParser extends ConditionParser<EventCondition, Void> 
 		}
 
 		return new TargetHealthBelowPct(healthPct);
-	}
-
-	private Integer parsePercent(String prefix, String value) {
-		var result = parseMultipleValues(prefix + "(\\d+)%", value);
-
-		if (result.isEmpty()) {
-			return null;
-		}
-
-		return Integer.parseInt(result.get(0));
-	}
-
-	private String withoutPrefix(String value, String targetClassPrefix) {
-		return value.replace(targetClassPrefix, "").trim();
 	}
 
 	static final String TARGET_CLASS_PREFIX = "TargetClass=";

@@ -107,4 +107,8 @@ public abstract class ConditionFormatter<T extends Condition> {
 			return Stream.of(left);
 		}
 	}
+
+	protected String percentPrefix(String prefix, int value) {
+		return prefix + value + "%";
+	}
 }
