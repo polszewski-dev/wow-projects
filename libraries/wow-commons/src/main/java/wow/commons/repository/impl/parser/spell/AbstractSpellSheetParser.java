@@ -106,7 +106,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colCategory = column(ABILITY_CATEGORY);
 	private final ExcelColumn colCooldown = column(COOLDOWN);
 	private final ExcelColumn colRange = column(RANGE);
-	private final ExcelColumn colRequiredEffect = column(REQUIRED_EFFECT);
 	private final ExcelColumn colEffectRemovedOnHit = column(EFFECT_REMOVED_ON_HIT);
 
 	protected void initAbility(AbilityImpl ability) {
@@ -116,7 +115,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var category = colCategory.getEnum(AbilityCategory::parse, null);
 		var castInfo = getCastInfo(ability instanceof ActivatedAbility);
 		var range = colRange.getInteger();
-		var requiredEffect = colRequiredEffect.getEnum(AbilityId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(AbilityId::parse, null);
 		var characterRestriction = getRestriction();
 
@@ -124,7 +122,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		ability.setCategory(category);
 		ability.setCastInfo(castInfo);
 		ability.setRange(range);
-		ability.setRequiredEffect(requiredEffect);
 		ability.setEffectRemovedOnHit(effectRemovedOnHit);
 		ability.setCharacterRestriction(characterRestriction);
 	}

@@ -23,7 +23,6 @@ public final class SpellBaseExcelColumnNames {
 	public static final String COOLDOWN = "cooldown";
 	public static final String COOLDOWN_GROUP = "cooldown: group";
 	public static final String RANGE = "range";
-	public static final String REQUIRED_EFFECT = "required effect on target";
 	public static final String EFFECT_REMOVED_ON_HIT = "effect removed on hit";
 	public static final String DIRECT_TYPE = "type";
 	public static final String DIRECT_MIN = "min";

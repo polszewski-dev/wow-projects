@@ -35,7 +35,6 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 		writeCastInfoHeader();
 		setHeader(COOLDOWN);
 		setHeader(RANGE);
-		setHeader(REQUIRED_EFFECT);
 		setHeader(EFFECT_REMOVED_ON_HIT);
 		writeDirectComponentHeader();
 		writeEffectApplicationHeader();
@@ -47,12 +46,10 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			writeCastInfo(ability.getCastInfo());
 			setValue(ability.getCooldown(), Duration.ZERO);
 			setValue(ability.getRange());
-			setValue(ability.getRequiredEffect());
 			setValue(ability.getEffectRemovedOnHit());
 		} else {
 			writeCastInfo(null);
 			setValue(spell.getCooldown(), Duration.ZERO);
-			setValue((String) null);
 			setValue((String) null);
 			setValue((String) null);
 		}

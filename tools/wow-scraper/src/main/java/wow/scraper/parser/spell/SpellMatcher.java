@@ -50,7 +50,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 
 		if (spell instanceof AbilityImpl ability) {
 			ability.setCastInfo(getCastInfo(params));
-			ability.setRequiredEffect(params.requiredEffect());
 			ability.setEffectRemovedOnHit(params.effectRemovedOnHit());
 		}
 		spell.setDirectComponents(getDirectComponents(params));

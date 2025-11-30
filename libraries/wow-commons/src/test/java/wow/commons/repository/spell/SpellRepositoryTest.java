@@ -116,7 +116,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertId(ability, 27209);
 		assertThat(ability.getCooldown()).isEqualTo(Duration.ZERO);
 		assertThat(ability.getRange()).isEqualTo(30);
-		assertThat(ability.getRequiredEffect()).isNull();
 		assertThat(ability.getEffectRemovedOnHit()).isNull();
 	}
 

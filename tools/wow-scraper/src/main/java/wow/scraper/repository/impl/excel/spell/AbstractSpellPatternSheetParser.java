@@ -257,14 +257,12 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	}
 
 	private final ExcelColumn colAbilityCategory = column(ABILITY_CATEGORY, true);
-	private final ExcelColumn colRequiredEffect = column(REQUIRED_EFFECT);
 	private final ExcelColumn colEffectRemovedOnHit = column(EFFECT_REMOVED_ON_HIT);
 
 	protected SpellPatternParams getSpellPatternParams() {
 		var abilityCategory = colAbilityCategory.getEnum(AbilityCategory::parse, null);
 		var cast = getCastParams();
 		var cost = getCostParams();
-		var requiredEffect = colRequiredEffect.getEnum(AbilityId::parse, null);
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(AbilityId::parse, null);
 		var directComponents = getDirectComponents();
 		var effectApplication = getEffectApplicationParams();
@@ -273,7 +271,6 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 				abilityCategory,
 				cast,
 				cost,
-				requiredEffect,
 				effectRemovedOnHit,
 				directComponents,
 				effectApplication

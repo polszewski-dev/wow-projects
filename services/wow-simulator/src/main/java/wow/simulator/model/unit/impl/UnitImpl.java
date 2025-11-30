@@ -253,7 +253,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return hasAllValidTargets(ability, primaryTarget.getTargetResolver(this)) &&
 				!isOnCooldown(ability) &&
 				canPaySpellCost(ability) &&
-				hasRequiredEffect(ability, primaryTarget) &&
 				!isSchoolPrevented(ability.getSchool());
 	}
 
@@ -271,14 +270,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 		var costSnapshot = getSpellCostSnapshot(ability);
 		return getResources().canPay(costSnapshot.getCostToPay());
-	}
-
-	private boolean hasRequiredEffect(Ability ability, PrimaryTarget primaryTarget) {
-		if (ability.getRequiredEffect() == null) {
-			return true;
-		}
-		var target = primaryTarget.requireSingleTarget();
-		return target.isUnderEffect(ability.getRequiredEffect(), this);
 	}
 
 	private boolean isSchoolPrevented(SpellSchool school) {

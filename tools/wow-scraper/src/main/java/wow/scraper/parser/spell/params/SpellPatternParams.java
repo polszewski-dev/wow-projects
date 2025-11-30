@@ -15,7 +15,6 @@ public record SpellPatternParams(
 		AbilityCategory abilityCategory,
 		CastParams cast,
 		CostParams cost,
-		AbilityId requiredEffect,
 		AbilityId effectRemovedOnHit,
 		List<DirectComponentParams> directComponents,
 		EffectApplicationParams effectApplication

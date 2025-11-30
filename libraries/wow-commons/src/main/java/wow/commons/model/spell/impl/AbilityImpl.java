@@ -16,7 +16,6 @@ public abstract class AbilityImpl extends SpellImpl implements Ability {
 	private AbilityCategory category;
 	private CastInfo castInfo;
 	private int range;
-	private AbilityId requiredEffect;
 	private AbilityId effectRemovedOnHit;
 	private CharacterRestriction characterRestriction;
 	private AbilityNameRank nameRank;

@@ -18,8 +18,6 @@ public interface Ability extends Spell, CharacterRestricted {
 
 	int getRange();
 
-	AbilityId getRequiredEffect();
-
 	AbilityId getEffectRemovedOnHit();
 
 	default Duration getCastTime() {
