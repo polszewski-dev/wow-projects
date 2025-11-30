@@ -42,7 +42,7 @@ class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Abili
 
 		var ability = parser.getAbilityMatcher().getAbility();
 
-		assertThat(ability.getDirectComponents()).hasSize(1);
+		assertThat(ability.getDirectCommands()).hasSize(1);
 		assertThat(ability.getEffectApplication()).isNull();
 	}
 
@@ -66,7 +66,7 @@ class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Abili
 
 		var ability = parser.getAbilityMatcher().getAbility();
 
-		assertThat(ability.getDirectComponents()).hasSize(1);
+		assertThat(ability.getDirectCommands()).hasSize(1);
 		assertThat(ability.getEffectApplication()).isNull();
 	}
 
@@ -90,7 +90,7 @@ class AbilityTooltipParserTest extends TooltipParserTest<JsonSpellDetails, Abili
 
 		var ability = parser.getAbilityMatcher().getAbility();
 
-		assertThat(ability.getDirectComponents()).hasSize(1);
+		assertThat(ability.getDirectCommands()).hasSize(1);
 		assertThat(ability.getEffectApplication()).isNotNull();
 	}
 

@@ -24,6 +24,8 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+
 /**
  * User: POlszewski
  * Date: 2023-08-29
@@ -52,7 +54,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 			ability.setCastInfo(getCastInfo(params));
 			ability.setEffectRemovedOnHit(params.effectRemovedOnHit());
 		}
-		spell.setDirectComponents(getDirectComponents(params));
+		spell.setDirectComponent(getDirectComponents(params));
 		spell.setEffectApplication(getEffectApplication(params));
 	}
 
@@ -70,13 +72,19 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		return new CastInfo(castTime, channeled, ignoresGcd);
 	}
 
-	private List<DirectComponent> getDirectComponents(SpellPatternParams params) {
+	private DirectComponent getDirectComponents(SpellPatternParams params) {
+		var commands = getDirectCommands(params);
+
+		return commands.isEmpty() ? null : new DirectComponent(commands);
+	}
+
+	private List<DirectCommand> getDirectCommands(SpellPatternParams params) {
 		return params.directComponents().stream()
-				.map(this::getDirectComponent)
+				.map(this::getDirectCommand)
 				.toList();
 	}
 
-	private DirectComponent getDirectComponent(DirectComponentParams params) {
+	private DirectCommand getDirectCommand(DirectComponentParams params) {
 		var target = params.target();
 		var type = params.type();
 		var coefficient = params.coefficient();
@@ -85,7 +93,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var bonus = getDirectComponentBonus(params.bonus());
 		var bolt = params.bolt();
 
-		return new DirectComponent(target, type, coefficient, min, max, bonus, bolt);
+		return new DirectCommand(target, type, coefficient, min, max, bonus, bolt);
 	}
 
 	private DirectComponentBonus getDirectComponentBonus(DirectComponentBonusParams params) {

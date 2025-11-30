@@ -3,7 +3,8 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import wow.commons.model.spell.component.DirectComponent;
+
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -13,7 +14,7 @@ import wow.commons.model.spell.component.DirectComponent;
 @Getter
 @Setter
 public class DirectSpellComponentSnapshot {
-	private final DirectComponent component;
+	private final DirectCommand command;
 
 	private double critPct;
 	private double critCoeff;
@@ -41,12 +42,12 @@ public class DirectSpellComponentSnapshot {
 	}
 
 	private double getBaseAmount(RngStrategy rngStrategy, boolean addBonus) {
-		int baseAmountMin = component.min();
-		int baseAmountMax = component.max();
+		int baseAmountMin = command.min();
+		int baseAmountMax = command.max();
 
 		if (addBonus) {
-			baseAmountMin += component.bonus().min();
-			baseAmountMax += component.bonus().max();
+			baseAmountMin += command.bonus().min();
+			baseAmountMax += command.bonus().max();
 		}
 
 		return rngStrategy.getAmount(baseAmountMin, baseAmountMax);

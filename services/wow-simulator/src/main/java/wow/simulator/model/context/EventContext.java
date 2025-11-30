@@ -229,8 +229,8 @@ public class EventContext {
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
 
-		for (var directComponent : triggeredSpell.getDirectComponents()) {
-			resolutionContext.directComponentAction(directComponent);
+		for (var command : triggeredSpell.getDirectCommands()) {
+			resolutionContext.directComponentAction(command);
 		}
 
 		if (triggeredSpell.getEffectApplication() != null) {

@@ -175,14 +175,16 @@ public class SpellExcelParser extends ExcelParser {
 	private Set<ComponentType> getComponentTypes(Spell spell) {
 		var result = new HashSet<ComponentType>();
 
-		for (var directComponent : spell.getDirectComponents()) {
-			result.add(directComponent.type());
+		for (var command : spell.getDirectCommands()) {
+			var type = command.type();
+			result.add(type);
 		}
 
 		var appliedEffect = spell.getAppliedEffect();
 
 		if (appliedEffect != null && appliedEffect.hasPeriodicComponent()) {
-			result.add(appliedEffect.getPeriodicComponent().type());
+			var type = appliedEffect.getPeriodicComponent().type();
+			result.add(type);
 		}
 
 		return result;
@@ -191,8 +193,8 @@ public class SpellExcelParser extends ExcelParser {
 	private Optional<SpellSchool> getSpellSchool(Spell spell) {
 		var result = new HashSet<SpellSchool>();
 
-		for (var directComponent : spell.getDirectComponents()) {
-			var school = directComponent.school();
+		for (var command : spell.getDirectCommands()) {
+			var school = command.school();
 			result.add(school);
 		}
 

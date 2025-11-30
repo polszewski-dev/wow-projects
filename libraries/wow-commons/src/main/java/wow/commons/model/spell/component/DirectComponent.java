@@ -1,31 +1,18 @@
 package wow.commons.model.spell.component;
 
-import wow.commons.model.effect.component.ComponentType;
-import wow.commons.model.spell.Coefficient;
-import wow.commons.model.spell.SpellSchool;
-import wow.commons.model.spell.SpellTarget;
-
+import java.util.List;
 import java.util.Objects;
+
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
  * Date: 2023-09-16
  */
 public record DirectComponent(
-		SpellTarget target,
-		ComponentType type,
-		Coefficient coefficient,
-		int min,
-		int max,
-		DirectComponentBonus bonus,
-		boolean bolt
+		List<DirectCommand> commands
 ) implements SpellComponent {
 	public DirectComponent {
-		Objects.requireNonNull(type);
-		Objects.requireNonNull(coefficient);
-	}
-
-	public SpellSchool school() {
-		return coefficient.school();
+		Objects.requireNonNull(commands);
 	}
 }

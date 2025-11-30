@@ -7,7 +7,6 @@ import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.spell.*;
-import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
@@ -16,6 +15,8 @@ import wow.simulator.simulation.SimulationContextSource;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -83,9 +84,9 @@ public interface Unit extends Character, SimulationContextSource {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target);
 
-	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent);
+	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectCommand command);
 
-	DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectComponent directComponent);
+	DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectCommand command);
 
 	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target);
 

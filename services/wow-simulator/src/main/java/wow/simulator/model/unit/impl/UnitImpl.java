@@ -12,7 +12,6 @@ import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.*;
-import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
@@ -34,6 +33,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -331,15 +331,15 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectComponent directComponent) {
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectCommand command) {
 		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, spell, target, directComponent, baseStats);
+		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectComponent directComponent) {
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectCommand command) {
 		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getDirectHealingSnapshot(this, spell, target, directComponent, baseStats);
+		return getCharacterCalculationService().getDirectHealingSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override

@@ -8,7 +8,8 @@ import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
-import wow.commons.model.spell.component.DirectComponent;
+
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -29,7 +30,7 @@ public interface CharacterCalculationService {
 
 	AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell);
 
-	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectComponent directComponent);
+	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command);
 
 	AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicComponent periodicComponent);
 
@@ -53,11 +54,11 @@ public interface CharacterCalculationService {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
 
-	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats);
+	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats);
 
-	DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats);
+	DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats);
 
-	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
 	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats);
 

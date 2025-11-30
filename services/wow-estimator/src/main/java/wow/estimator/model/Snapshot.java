@@ -75,17 +75,17 @@ public class Snapshot {
 	}
 
 	private double getDirectDamage() {
-		boolean addBonus = direct.getComponent().bonus() != null;
-		int critDamage = direct.getDirectAmount(RngStrategy.AVERAGED, addBonus, true);
-		int nonCritDamage = direct.getDirectAmount(RngStrategy.AVERAGED, addBonus, false);
-		double critChance = direct.getCritPct() / 100;
+		var addBonus = direct.getCommand().bonus() != null;
+		var critDamage = direct.getDirectAmount(RngStrategy.AVERAGED, addBonus, true);
+		var nonCritDamage = direct.getDirectAmount(RngStrategy.AVERAGED, addBonus, false);
+		var critChance = direct.getCritPct() / 100;
 
 		return critDamage * critChance + nonCritDamage * (1 - critChance);
 	}
 
 	private double getPeriodicDamage() {
-		double result = 0;
-		int tickCount = effectDuration.getNumTicks();
+		var result = 0.0;
+		var tickCount = effectDuration.getNumTicks();
 
 		for (int tickNo = 1; tickNo <= tickCount; ++tickNo) {
 			result += periodic.getTickAmount(tickNo);

@@ -4,9 +4,11 @@ import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.CastInfo;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.spell.component.DirectComponentBonus;
 
+import java.util.List;
+
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.ID;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
@@ -53,7 +55,7 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			setValue((String) null);
 			setValue((String) null);
 		}
-		writeDirectComponents(spell);
+		writeDirectComponent(spell);
 		writeEffectApplication(spell);
 		writeIconAndTooltip(spell);
 	}
@@ -81,13 +83,13 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 	}
 
 	private void writeDirectComponentHeader() {
-		for (int i = 1; i <= MAX_DIRECT_COMPONENTS; ++i) {
-			writeDirectComponentHeader(i, i == 1);
+		for (int i = 1; i <= MAX_DIRECT_COMMANDS; ++i) {
+			writeDirectCommandHeader(i, i == 1);
 		}
 	}
 
-	private void writeDirectComponentHeader(int idx, boolean writeBonus) {
-		String prefix = getDirectComponentPrefix(idx);
+	private void writeDirectCommandHeader(int idx, boolean writeBonus) {
+		var prefix = getDirectCommandPrefix(idx);
 		setHeader(TARGET, prefix);
 		setHeader(DIRECT_TYPE, prefix);
 		setHeader(COEFF_VALUE, prefix);
@@ -100,37 +102,42 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 		setHeader(DIRECT_BOLT, prefix);
 	}
 
-	private void writeDirectComponents(Spell spell) {
-		assertSizeNoLargerThan("direct components", spell.getDirectComponents(), MAX_DIRECT_COMPONENTS);
+	private void writeDirectComponent(Spell spell) {
+		writeDirectCommands(spell.getDirectCommands());
+	}
 
-		for (int i = 0; i < MAX_DIRECT_COMPONENTS; ++i) {
-			boolean writeBonus = i == 0;
-			if (i < spell.getDirectComponents().size()) {
-				writeDirectComponent(spell.getDirectComponents().get(i), writeBonus);
+	private void writeDirectCommands(List<DirectCommand> commands) {
+		assertSizeNoLargerThan("direct commands", commands, MAX_DIRECT_COMMANDS);
+
+		for (int i = 0; i < MAX_DIRECT_COMMANDS; ++i) {
+			var writeBonus = i == 0;
+
+			if (i < commands.size()) {
+				writeDirectCommand(commands.get(i), writeBonus);
 			} else {
-				writeDirectComponent(null, writeBonus);
+				writeDirectCommand(null, writeBonus);
 			}
 		}
 	}
 
-	private void writeDirectComponent(DirectComponent directComponent, boolean writeBonus) {
-		if (directComponent == null) {
+	private void writeDirectCommand(DirectCommand command, boolean writeBonus) {
+		if (command == null) {
 			fillRemainingEmptyCols(writeBonus ? 10 : 7);
 			return;
 		}
 
-		setValue(directComponent.target());
-		setValue(directComponent.type());
-		setValue(directComponent.coefficient().value());
-		setValue(directComponent.school());
-		setValue(directComponent.min());
-		setValue(directComponent.max());
+		setValue(command.target());
+		setValue(command.type());
+		setValue(command.coefficient().value());
+		setValue(command.school());
+		setValue(command.min());
+		setValue(command.max());
 		if (writeBonus) {
-			writeBonus(directComponent.bonus());
-		} else if (directComponent.bonus() != null) {
+			writeBonus(command.bonus());
+		} else if (command.bonus() != null) {
 			throw new IllegalArgumentException();
 		}
-		setValue(directComponent.bolt());
+		setValue(command.bolt());
 	}
 
 	private void writeBonusHeader(String prefix) {

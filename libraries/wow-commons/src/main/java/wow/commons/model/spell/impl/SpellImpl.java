@@ -12,8 +12,6 @@ import wow.commons.model.spell.SpellId;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.component.DirectComponent;
 
-import java.util.List;
-
 /**
  * User: POlszewski
  * Date: 2023-03-27
@@ -26,7 +24,7 @@ public abstract class SpellImpl implements Spell {
 	private TimeRestriction timeRestriction;
 	private SpellSchool school;
 	private Duration cooldown;
-	private List<DirectComponent> directComponents;
+	private DirectComponent directComponent;
 	private EffectApplication effectApplication;
 	private boolean hasDamagingComponent;
 	private boolean hasHealingComponent;

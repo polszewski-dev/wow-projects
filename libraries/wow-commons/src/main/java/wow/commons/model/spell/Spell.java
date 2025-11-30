@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+
 /**
  * User: POlszewski
  * Date: 2021-09-19
@@ -24,7 +26,13 @@ public interface Spell extends Described, TimeRestricted {
 
 	Duration getCooldown();
 
-	List<DirectComponent> getDirectComponents();
+	DirectComponent getDirectComponent();
+
+	default List<DirectCommand> getDirectCommands() {
+		var directComponent = getDirectComponent();
+
+		return directComponent != null ? directComponent.commands() : List.of();
+	}
 
 	EffectApplication getEffectApplication();
 
@@ -35,8 +43,8 @@ public interface Spell extends Described, TimeRestricted {
 	default Set<SpellTarget> getTargets() {
 		var result = new HashSet<SpellTarget>();
 
-		for (var directComponent : getDirectComponents()) {
-			result.add(directComponent.target());
+		for (var command : getDirectCommands()) {
+			result.add(command.target());
 		}
 
 		var effectApplication = getEffectApplication();

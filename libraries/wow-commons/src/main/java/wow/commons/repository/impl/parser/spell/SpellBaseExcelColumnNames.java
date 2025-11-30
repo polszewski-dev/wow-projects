@@ -76,7 +76,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String TALENT_CALCULATOR_POSITION = "talent calculator position";
 	public static final String TALENT_TREE = "tree";
 
-	public static String getDirectComponentPrefix(int idx) {
+	public static String getDirectCommandPrefix(int idx) {
 		return "direct" + idx + ": ";
 	}
 
@@ -88,7 +88,7 @@ public final class SpellBaseExcelColumnNames {
 		return "event" + idx + ": ";
 	}
 
-	public static final int MAX_DIRECT_COMPONENTS = 3;
+	public static final int MAX_DIRECT_COMMANDS = 3;
 
 	public static final int MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES = 5;
 	public static final int MAX_ABILITY_EFFECT_EVENTS = 2;

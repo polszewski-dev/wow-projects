@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
@@ -91,7 +92,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
-		var directComponents = getDirectComponents();
+		var directComponent = getDirectComponent();
 		var effectApplication = getEffectApplication();
 
 		spell.setId(spellId);
@@ -99,7 +100,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		spell.setTimeRestriction(timeRestriction);
 
 		spell.setCooldown(cooldown);
-		spell.setDirectComponents(directComponents);
+		spell.setDirectComponent(directComponent);
 		spell.setEffectApplication(effectApplication);
 	}
 
@@ -151,9 +152,15 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return new CastInfo(castTime, channeled, ignoresGcd);
 	}
 
-	private List<DirectComponent> getDirectComponents() {
-		return IntStream.rangeClosed(1, MAX_DIRECT_COMPONENTS)
-				.mapToObj(this::getDirectComponent)
+	private DirectComponent getDirectComponent() {
+		var commands = getDirectCommands();
+
+		return commands.isEmpty() ? null : new DirectComponent(commands);
+	}
+
+	private List<DirectCommand> getDirectCommands() {
+		return IntStream.rangeClosed(1, MAX_DIRECT_COMMANDS)
+				.mapToObj(this::getDirectCommand)
 				.filter(Objects::nonNull)
 				.toList();
 	}
@@ -163,8 +170,8 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colDirectMax = column(DIRECT_MAX);
 	private final ExcelColumn colDirectBolt = column(DIRECT_BOLT);
 
-	private DirectComponent getDirectComponent(int idx) {
-		var prefix = getDirectComponentPrefix(idx);
+	private DirectCommand getDirectCommand(int idx) {
+		var prefix = getDirectCommandPrefix(idx);
 
 		if (colTarget.prefixed(prefix).isEmpty()) {
 			return null;
@@ -178,7 +185,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var bonus = getDirectComponentBonus(prefix);
 		var bolt = colDirectBolt.prefixed(prefix).getBoolean();
 
-		return new DirectComponent(target, type, coeff, min, max, bonus, bolt);
+		return new DirectCommand(target, type, coeff, min, max, bonus, bolt);
 	}
 
 	private final ExcelColumn colDirectBonusMin = column(DIRECT_BONUS_MIN, true);

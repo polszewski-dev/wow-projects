@@ -73,7 +73,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	}
 
 	private DirectComponentParams getDirectComponentParams(int idx) {
-		var prefix = SpellBaseExcelColumnNames.getDirectComponentPrefix(idx);
+		var prefix = getDirectCommandPrefix(idx);
 		var optional = idx != 1;
 
 		var colType = column(DIRECT_TYPE, optional).prefixed(prefix);
@@ -282,7 +282,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	}
 
 	private List<DirectComponentParams> getDirectComponents() {
-		return IntStream.rangeClosed(1, MAX_DIRECT_COMPONENTS)
+		return IntStream.rangeClosed(1, MAX_DIRECT_COMMANDS)
 				.mapToObj(this::getDirectComponentParams)
 				.filter(Objects::nonNull)
 				.toList();

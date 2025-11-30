@@ -132,11 +132,11 @@ class ProcParserTest extends SpellParserTest {
 				Duration.ZERO
 		);
 
-		var direct1 = procTrigger1.triggeredSpell().getDirectComponents().getFirst();
-		var direct2 = procTrigger2.triggeredSpell().getDirectComponents().getFirst();
+		var direct1 = procTrigger1.triggeredSpell().getDirectCommands().getFirst();
+		var direct2 = procTrigger2.triggeredSpell().getDirectCommands().getFirst();
 
-		assertDirectComponent(direct1, MANA_GAIN, 0, null, 170, 170);
-		assertDirectComponent(direct2, MANA_GAIN, 0, null, 170, 170);
+		assertDirectCommand(direct1, MANA_GAIN, 0, null, 170, 170);
+		assertDirectCommand(direct2, MANA_GAIN, 0, null, 170, 170);
 
 		assertEffectApplication(procTrigger3.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 1);
 

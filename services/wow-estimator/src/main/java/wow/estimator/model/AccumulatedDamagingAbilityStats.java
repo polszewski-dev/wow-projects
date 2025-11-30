@@ -11,7 +11,8 @@ import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.effect.component.StatConversionCondition;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.component.DirectComponent;
+
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -21,8 +22,8 @@ import wow.commons.model.spell.component.DirectComponent;
 @Setter
 public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private Ability ability;
-	private DirectComponent directComponent;
-	private PeriodicComponent periodicComponent;
+	private DirectCommand directCommand;
+	private PeriodicComponent periodicCommand;
 
 	private AccumulatedCastStats cast;
 	private AccumulatedCostStats cost;
@@ -40,8 +41,8 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private AccumulatedDamagingAbilityStats(AccumulatedDamagingAbilityStats stats) {
 		this(stats.scalingParams);
 		this.ability = stats.ability;
-		this.directComponent = stats.directComponent;
-		this.periodicComponent = stats.periodicComponent;
+		this.directCommand = stats.directCommand;
+		this.periodicCommand = stats.periodicCommand;
 		this.cast = stats.cast.copy();
 		this.cost = stats.cost.copy();
 		this.target = stats.target.copy();

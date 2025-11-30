@@ -21,7 +21,6 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Coefficient;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
-import wow.commons.model.spell.component.DirectComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +36,7 @@ import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
 import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -97,8 +97,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectComponent directComponent) {
-		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, directComponent.school());
+	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command) {
+		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, command.school());
 
 		conditionArgs.setDirect(true);
 
@@ -438,24 +438,24 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
-		return getDirectSpellComponentSnapshot(character, spell, target, directComponent, baseStats, SPELL_DAMAGE);
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats) {
+		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, SPELL_DAMAGE);
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
-		return getDirectSpellComponentSnapshot(character, spell, target, directComponent, baseStats, HEALING);
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats) {
+		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, HEALING);
 	}
 
-	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats, PowerType powerType) {
-		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, powerType, directComponent, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, directComponent.school());
+	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats, PowerType powerType) {
+		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, powerType, command, baseStats);
+		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, command.school());
 
-		return getDirectSpellComponentSnapshot(character, spell, target, directComponent, baseStats, spellStats, targetStats);
+		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, spellStats, targetStats);
 	}
 
-	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectComponent directComponent, BaseStatsSnapshot baseStats) {
-		var spellStats = newAccumulatedDirectComponentStats(character, spell, target, powerType, directComponent);
+	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command, BaseStatsSnapshot baseStats) {
+		var spellStats = newAccumulatedDirectComponentStats(character, spell, target, powerType, command);
 
 		accumulateEffects(character, spellStats, baseStats);
 		return spellStats;
@@ -469,8 +469,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectComponent directComponent, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		var snapshot = new DirectSpellComponentSnapshot(directComponent);
+	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		var snapshot = new DirectSpellComponentSnapshot(command);
 
 		var critPct = getSpellCritPct(character, spellStats, baseStats, targetStats);
 		var critCoeff = getSpellCritCoeff(spellStats);
@@ -478,7 +478,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var amountPct = getSpellAmountPct(spellStats, targetStats);
 		var power = getSpellPower(spellStats, targetStats);
 		var powerPct = spellStats.getPowerPct();
-		var coeff = getPowerCoefficient(directComponent.coefficient(), spellStats);
+		var coeff = getPowerCoefficient(command.coefficient(), spellStats);
 
 		snapshot.setCritPct(critPct);
 		snapshot.setCritCoeff(critCoeff);

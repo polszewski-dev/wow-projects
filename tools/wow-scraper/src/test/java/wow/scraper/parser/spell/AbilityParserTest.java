@@ -33,8 +33,8 @@ class AbilityParserTest extends SpellParserTest {
 	void incinerate() {
 		var ability = parse(INCINERATE, "Deals 444 to 514 Fire damage to your target and an additional 111 to 128 Fire damage if the target is affected by an Immolate spell.");
 
-		assertThat(ability.getDirectComponents()).hasSize(1);
-		assertDirectComponent(ability.getDirectComponents().get(0), DAMAGE, 71.43, FIRE, 444, 514, 111, 128, IMMOLATE);
+		assertThat(ability.getDirectCommands()).hasSize(1);
+		assertDirectCommand(ability.getDirectCommands().getFirst(), DAMAGE, 71.43, FIRE, 444, 514, 111, 128, IMMOLATE);
 	}
 
 	@Test
@@ -54,8 +54,8 @@ class AbilityParserTest extends SpellParserTest {
 	void immolate() {
 		var ability = parse(IMMOLATE, "Burns the enemy for 332 Fire damage and then an additional 615 Fire damage over 15 sec.");
 
-		assertThat(ability.getDirectComponents()).hasSize(1);
-		assertDirectComponent(ability.getDirectComponents().get(0), DAMAGE, 18.65, FIRE, 332, 332);
+		assertThat(ability.getDirectCommands()).hasSize(1);
+		assertDirectCommand(ability.getDirectCommands().getFirst(), DAMAGE, 18.65, FIRE, 332, 332);
 
 		assertEffectApplication(ability, SpellTargets.ENEMY, 15, 1, 1, 1);
 
@@ -78,10 +78,10 @@ class AbilityParserTest extends SpellParserTest {
 	@Test
 	void lifeTap() {
 		var ability = parse(LIFE_TAP, "Converts 582 health into 582 mana.");
-		var directComponent = ability.getDirectComponents().getFirst();
+		var directCommand = ability.getDirectCommands().getFirst();
 
 		assertCost(ability.getCost(), 582, ResourceType.HEALTH, 0, 80, null);
-		assertDirectComponent(directComponent, COPY_HEALTH_PAID_AS_MANA_GAIN_PCT, 0, null, 100, 100);
+		assertDirectCommand(directCommand, COPY_HEALTH_PAID_AS_MANA_GAIN_PCT, 0, null, 100, 100);
 	}
 
 	@Test
@@ -135,9 +135,9 @@ class AbilityParserTest extends SpellParserTest {
 				Duration.seconds(1)
 		);
 
-		var directComponent = event.triggeredSpell().getDirectComponents().getFirst();
+		var directCommand = event.triggeredSpell().getDirectCommands().getFirst();
 
-		assertDirectComponent(directComponent, DAMAGE, 33.33, SHADOW, 130, 130);
+		assertDirectCommand(directCommand, DAMAGE, 33.33, SHADOW, 130, 130);
 	}
 
 	@Test

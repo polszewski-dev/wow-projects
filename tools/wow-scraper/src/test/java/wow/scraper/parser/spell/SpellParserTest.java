@@ -8,12 +8,12 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.spell.*;
-import wow.commons.model.spell.component.DirectComponent;
 import wow.scraper.ScraperSpringTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -28,15 +28,15 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertCoefficient(coeff, school, cost.coefficient());
 	}
 
-	static void assertDirectComponent(DirectComponent direct, ComponentType type, double coeff, SpellSchool school, int min, int max) {
+	static void assertDirectCommand(DirectCommand direct, ComponentType type, double coeff, SpellSchool school, int min, int max) {
 		assertThat(direct.type()).isEqualTo(type);
 		assertCoefficient(coeff, school, direct.coefficient());
 		assertThat(direct.min()).isEqualTo(min);
 		assertThat(direct.max()).isEqualTo(max);
 	}
 
-	static void assertDirectComponent(DirectComponent direct, ComponentType type, double coeff, SpellSchool school, int min, int max, int minBonus, int maxBonus, AbilityId bonusRequiredEffect) {
-		assertDirectComponent(direct, type, coeff, school, min, max);
+	static void assertDirectCommand(DirectCommand direct, ComponentType type, double coeff, SpellSchool school, int min, int max, int minBonus, int maxBonus, AbilityId bonusRequiredEffect) {
+		assertDirectCommand(direct, type, coeff, school, min, max);
 		assertThat(direct.bonus()).isNotNull();
 		assertThat(direct.bonus().min()).isEqualTo(minBonus);
 		assertThat(direct.bonus().max()).isEqualTo(maxBonus);

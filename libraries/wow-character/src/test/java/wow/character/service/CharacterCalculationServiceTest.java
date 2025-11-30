@@ -234,8 +234,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.getBuild().setActivePet(PetType.SUCCUBUS);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directComponent = ability.getDirectComponents().getFirst();
-		var stats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, SPELL_DAMAGE, directComponent);
+		var directCommand = ability.getDirectCommands().getFirst();
+		var stats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, SPELL_DAMAGE, directCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -440,8 +440,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(baseStats.getIntellect()).isEqualTo(203);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directComponent = ability.getDirectComponents().getFirst();
-		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directComponent, baseStats);
+		var directCommand = ability.getDirectCommands().getFirst();
+		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directCommand, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(15.87, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
@@ -468,8 +468,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(baseStats.getIntellect()).isEqualTo(253);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directComponent = ability.getDirectComponents().getFirst();
-		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directComponent, baseStats);
+		var directCommand = ability.getDirectCommands().getFirst();
+		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directCommand, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(19.62, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);

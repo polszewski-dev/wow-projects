@@ -80,9 +80,7 @@ public class AbilityExporter extends MultiPageSpellBaseExporter {
 		if (matcher != null) {
 			return matcher.getAbility();
 		}
-		var ability = new ClassAbilityImpl();
-		ability.setDirectComponents(List.of());
-		return ability;
+		return new ClassAbilityImpl();
 	}
 
 	private void onSpell(Spell spell, int level, int index, ClassAbility ability) {

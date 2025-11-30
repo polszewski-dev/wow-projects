@@ -5,7 +5,6 @@ import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.spell.SpellTargets;
-import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
@@ -15,6 +14,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import static wow.commons.model.spell.SpellTargetType.FRIENDS_PARTY;
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -76,8 +76,8 @@ public class TargetResolver implements SimulationContextSource {
 		return spellTargets.stream().allMatch(this::hasValidTarget);
 	}
 
-	public void forEachTarget(DirectComponent directComponent, Consumer<Unit> consumer) {
-		getTargets(directComponent.target()).forEach(consumer);
+	public void forEachTarget(DirectCommand command, Consumer<Unit> consumer) {
+		getTargets(command.target()).forEach(consumer);
 	}
 
 	public void forEachTarget(PeriodicComponent periodicComponent, Consumer<Unit> consumer) {

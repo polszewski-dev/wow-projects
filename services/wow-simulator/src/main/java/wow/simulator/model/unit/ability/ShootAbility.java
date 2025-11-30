@@ -13,6 +13,8 @@ import wow.commons.model.spell.component.DirectComponent;
 import java.util.List;
 import java.util.Objects;
 
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+
 /**
  * User: POlszewski
  * Date: 2025-02-09
@@ -29,20 +31,20 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
-	public List<DirectComponent> getDirectComponents() {
+	public DirectComponent getDirectComponent() {
 		var weaponStats = rangedWeapon.getWeaponStats();
 
-		return List.of(
-				new DirectComponent(
-						SpellTargets.ENEMY,
-						ComponentType.DAMAGE,
-						new Coefficient(Percent.ZERO, weaponStats.damageType()),
-						weaponStats.damageMin(),
-						weaponStats.damageMax(),
-						null,
-						true
-				)
+		var command = new DirectCommand(
+				SpellTargets.ENEMY,
+				ComponentType.DAMAGE,
+				new Coefficient(Percent.ZERO, weaponStats.damageType()),
+				weaponStats.damageMin(),
+				weaponStats.damageMax(),
+				null,
+				true
 		);
+
+		return new DirectComponent(List.of(command));
 	}
 
 	@Override

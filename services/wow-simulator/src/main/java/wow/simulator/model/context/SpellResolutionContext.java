@@ -7,7 +7,6 @@ import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.component.DirectComponent;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.effect.impl.PeriodicEffectInstance;
@@ -20,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static wow.commons.model.spell.SpellTargetType.GROUND;
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
  * User: POlszewski
@@ -39,21 +39,24 @@ public class SpellResolutionContext extends Context {
 	}
 
 	public EffectInstance resolveSpell() {
-		for (var directComponent : spell.getDirectComponents()) {
-			var delay = getDelay(directComponent);
-
-			getSimulation().delayedAction(
-					delay,
-					() -> directComponentAction(directComponent)
-			);
-		}
-
+		executeDirectCommands();
 		return applyEffect();
 	}
 
-	private Duration getDelay(DirectComponent directComponent) {
+	private void executeDirectCommands() {
+		for (var command : spell.getDirectCommands()) {
+			var delay = getDelay(command);
+
+			getSimulation().delayedAction(
+					delay,
+					() -> directComponentAction(command)
+			);
+		}
+	}
+
+	private Duration getDelay(DirectCommand command) {
 		var flightTime = Duration.ZERO;
-		return directComponent.bolt() ? flightTime : Duration.ZERO;
+		return command.bolt() ? flightTime : Duration.ZERO;
 	}
 
 	private boolean hitRollOnlyOnce(Unit target) {
@@ -68,84 +71,84 @@ public class SpellResolutionContext extends Context {
 		return caster.getRng().critRoll(critChancePct, spell);
 	}
 
-	public void directComponentAction(DirectComponent directComponent) {
+	public void directComponentAction(DirectCommand command) {
 		var lastValueSnapshot = getLastValueSnapshot();
 
 		targetResolver.forEachTarget(
-				directComponent,
-				componentTarget -> directComponentAction(directComponent, componentTarget, lastValueSnapshot)
+				command,
+				componentTarget -> directComponentAction(command, componentTarget, lastValueSnapshot)
 		);
 	}
 
-	private void directComponentAction(DirectComponent directComponent, Unit target, LastValueSnapshot last) {
-		switch (directComponent.type()) {
+	private void directComponentAction(DirectCommand command, Unit target, LastValueSnapshot last) {
+		switch (command.type()) {
 			case DAMAGE ->
-					dealDirectDamage(directComponent, target);
+					dealDirectDamage(command, target);
 			case HEAL ->
-					directHeal(directComponent, target);
+					directHeal(command, target);
 			case MANA_GAIN ->
-					directManaGain(directComponent, target);
+					directManaGain(command, target);
 			case COPY_DAMAGE_AS_HEAL_PCT ->
-					copyAsHeal(directComponent, target, last.damageDone);
+					copyAsHeal(command, target, last.damageDone);
 			case FROM_PARENT_COPY_DAMAGE_AS_HEAL_PCT ->
-					copyAsHeal(directComponent, target, last.parentDamageDone);
+					copyAsHeal(command, target, last.parentDamageDone);
 			case COPY_DAMAGE_AS_MANA_GAIN_PCT ->
-					copyAsManaGain(directComponent, target, last.damageDone);
+					copyAsManaGain(command, target, last.damageDone);
 			case FROM_PARENT_COPY_DAMAGE_AS_MANA_GAIN_PCT ->
-					copyAsManaGain(directComponent, target, last.parentDamageDone);
+					copyAsManaGain(command, target, last.parentDamageDone);
 			case COPY_HEALTH_PAID_AS_MANA_GAIN_PCT ->
-					copyAsManaGain(directComponent, target, last.parentHealthPaid);
+					copyAsManaGain(command, target, last.parentHealthPaid);
 			default ->
 					throw new UnsupportedOperationException();
 		}
 	}
 
-	private void dealDirectDamage(DirectComponent directComponent, Unit target) {
+	private void dealDirectDamage(DirectCommand command, Unit target) {
 		if (!hitRollOnlyOnce(target)) {
 			return;
 		}
 
-		var snapshot = caster.getDirectSpellDamageSnapshot(spell, target, directComponent);
+		var snapshot = caster.getDirectSpellDamageSnapshot(spell, target, command);
 		var critRoll = critRoll(snapshot.getCritPct());
-		var addBonus = shouldAddBonus(directComponent, target);
+		var addBonus = shouldAddBonus(command, target);
 		var directDamage = snapshot.getDirectAmount(RngStrategy.AVERAGED, addBonus, critRoll);
 
 		decreaseHealth(target, directDamage, true, critRoll);
 	}
 
-	private void directHeal(DirectComponent directComponent, Unit target) {
-		var snapshot = caster.getDirectHealingSnapshot(spell, target, directComponent);
+	private void directHeal(DirectCommand command, Unit target) {
+		var snapshot = caster.getDirectHealingSnapshot(spell, target, command);
 		var critRoll = critRoll(snapshot.getCritPct());
-		var addBonus = shouldAddBonus(directComponent, target);
+		var addBonus = shouldAddBonus(command, target);
 		var directHealing = snapshot.getDirectAmount(RngStrategy.AVERAGED, addBonus, critRoll);
 
 		increaseHealth(target, directHealing, true, critRoll);
 	}
 
-	private void directManaGain(DirectComponent directComponent, Unit target) {
-		var mana = (directComponent.min() + directComponent.max()) / 2;
+	private void directManaGain(DirectCommand command, Unit target) {
+		var mana = (command.min() + command.max()) / 2;
 
 		increaseMana(target, mana);
 	}
 
-	private void copyAsHeal(DirectComponent directComponent, Unit target, int value) {
-		var ratioPct = getRatioPct(directComponent);
+	private void copyAsHeal(DirectCommand command, Unit target, int value) {
+		var ratioPct = getRatioPct(command);
 		var heal = getCharacterCalculationService().getCopiedAmountAsHeal(caster, getSourceSpell(), target, value, ratioPct);
 		var roundedHeal = roundValue(heal, target);
 
 		increaseHealth(target, roundedHeal, true, false);
 	}
 
-	private void copyAsManaGain(DirectComponent directComponent, Unit target, int value) {
-		var ratioPct = getRatioPct(directComponent);
+	private void copyAsManaGain(DirectCommand command, Unit target, int value) {
+		var ratioPct = getRatioPct(command);
 		var manaGain = getCharacterCalculationService().getCopiedAmountAsManaGain(caster, getSourceSpell(), target, value, ratioPct);
 		var roundedManaGain = roundValue(manaGain, target);
 
 		increaseMana(target, roundedManaGain);
 	}
 
-	private double getRatioPct(DirectComponent directComponent) {
-		return valueParam != null ? valueParam : directComponent.min();
+	private double getRatioPct(DirectCommand command) {
+		return valueParam != null ? valueParam : command.min();
 	}
 
 	public void applyEffect(EffectSource effectSource) {
@@ -265,8 +268,8 @@ public class SpellResolutionContext extends Context {
 		return getCharacterCalculationService().getEffectAugmentations(caster, spell, target);
 	}
 
-	private boolean shouldAddBonus(DirectComponent directComponent, Unit target) {
-		var bonus = directComponent.bonus();
+	private boolean shouldAddBonus(DirectCommand command, Unit target) {
+		var bonus = command.bonus();
 
 		if (bonus == null) {
 			return false;

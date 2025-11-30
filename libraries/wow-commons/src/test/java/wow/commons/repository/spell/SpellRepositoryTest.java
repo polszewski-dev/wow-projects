@@ -154,22 +154,21 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	@Test
 	void abilityDirectComponent() {
 		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
-		var index = 0;
-		var directComponent = ability.getDirectComponents().get(index);
+		var command = ability.getDirectCommands().getFirst();
 
-		assertThat(directComponent.target()).isEqualTo(SpellTargets.ENEMY);
-		assertThat(directComponent.type()).isEqualTo(ComponentType.DAMAGE);
-		assertCoefficient(directComponent.coefficient(), 85.71, SHADOW);
-		assertThat(directComponent.min()).isEqualTo(544);
-		assertThat(directComponent.max()).isEqualTo(607);
-		assertThat(directComponent.bolt()).isTrue();
+		assertThat(command.target()).isEqualTo(SpellTargets.ENEMY);
+		assertThat(command.type()).isEqualTo(ComponentType.DAMAGE);
+		assertCoefficient(command.coefficient(), 85.71, SHADOW);
+		assertThat(command.min()).isEqualTo(544);
+		assertThat(command.max()).isEqualTo(607);
+		assertThat(command.bolt()).isTrue();
 	}
 
 	@Test
 	void abilityDirectBonus() {
 		var ability = getClassAbility(INCINERATE, 2, TBC_P5);
-		var index = 0;
-		var bonus = ability.getDirectComponents().get(index).bonus();
+		var command = ability.getDirectCommands().getFirst();
+		var bonus = command.bonus();
 
 		assertThat(bonus.min()).isEqualTo(111);
 		assertThat(bonus.max()).isEqualTo(128);
@@ -194,14 +193,14 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertId(spell, 110025441);
 		assertThat(spell.getName()).isEqualTo("Feedback - triggered");
 
-		var directComponent = spell.getDirectComponents().getFirst();
+		var command = spell.getDirectCommands().getFirst();
 
-		assertThat(directComponent.target()).isEqualTo(SpellTargets.ATTACKER);
-		assertThat(directComponent.type()).isEqualTo(ComponentType.MANA_DRAIN);
-		assertCoefficient(directComponent.coefficient(), 0, SHADOW);
-		assertThat(directComponent.min()).isEqualTo(165);
-		assertThat(directComponent.max()).isEqualTo(165);
-		assertThat(directComponent.bolt()).isFalse();
+		assertThat(command.target()).isEqualTo(SpellTargets.ATTACKER);
+		assertThat(command.type()).isEqualTo(ComponentType.MANA_DRAIN);
+		assertCoefficient(command.coefficient(), 0, SHADOW);
+		assertThat(command.min()).isEqualTo(165);
+		assertThat(command.max()).isEqualTo(165);
+		assertThat(command.bolt()).isFalse();
 	}
 
 	@Test
