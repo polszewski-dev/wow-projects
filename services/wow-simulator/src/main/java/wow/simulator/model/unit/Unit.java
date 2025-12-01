@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -88,13 +89,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectCommand command);
 
-	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target);
+	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target, PeriodicCommand command);
 
-	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target);
+	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, PeriodicCommand command);
 
-	PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target);
+	PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command);
 
-	PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target);
+	PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command);
 
 	BaseStatsSnapshot getBaseStatsSnapshot();
 

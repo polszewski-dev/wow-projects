@@ -7,12 +7,12 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScalingParams;
-import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.effect.component.StatConversionCondition;
 import wow.commons.model.spell.Ability;
 
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -23,7 +23,7 @@ import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private Ability ability;
 	private DirectCommand directCommand;
-	private PeriodicComponent periodicCommand;
+	private PeriodicCommand periodicCommand;
 
 	private AccumulatedCastStats cast;
 	private AccumulatedCostStats cost;

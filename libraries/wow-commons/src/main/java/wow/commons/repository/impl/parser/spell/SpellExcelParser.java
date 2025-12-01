@@ -95,10 +95,10 @@ public class SpellExcelParser extends ExcelParser {
 				throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
 			}
 
-			if (effect.hasPeriodicComponent()) {
-				var periodicComponentTarget = effect.getPeriodicComponent().target();
+			for (var command : effect.getPeriodicCommands()) {
+				var commandTarget = command.target();
 
-				if (effectTarget.hasType(GROUND) && periodicComponentTarget.hasType(TARGET)) {
+				if (effectTarget.hasType(GROUND) && commandTarget.hasType(TARGET)) {
 					throw new IllegalArgumentException("Ground effect has no target specified");
 				}
 			}
@@ -176,15 +176,11 @@ public class SpellExcelParser extends ExcelParser {
 		var result = new HashSet<ComponentType>();
 
 		for (var command : spell.getDirectCommands()) {
-			var type = command.type();
-			result.add(type);
+			result.add(command.type());
 		}
 
-		var appliedEffect = spell.getAppliedEffect();
-
-		if (appliedEffect != null && appliedEffect.hasPeriodicComponent()) {
-			var type = appliedEffect.getPeriodicComponent().type();
-			result.add(type);
+		for (var command : spell.getPeriodicCommands()) {
+			result.add(command.type());
 		}
 
 		return result;
@@ -194,15 +190,11 @@ public class SpellExcelParser extends ExcelParser {
 		var result = new HashSet<SpellSchool>();
 
 		for (var command : spell.getDirectCommands()) {
-			var school = command.school();
-			result.add(school);
+			result.add(command.school());
 		}
 
-		var appliedEffect = spell.getAppliedEffect();
-
-		if (appliedEffect != null && appliedEffect.hasPeriodicComponent()) {
-			var school = appliedEffect.getPeriodicComponent().school();
-			result.add(school);
+		for (var command : spell.getPeriodicCommands()) {
+			result.add(command.school());
 		}
 
 		result.remove(null);

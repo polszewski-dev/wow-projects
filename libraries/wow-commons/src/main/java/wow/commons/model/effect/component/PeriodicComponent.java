@@ -1,35 +1,22 @@
 package wow.commons.model.effect.component;
 
 import wow.commons.model.Duration;
-import wow.commons.model.spell.Coefficient;
-import wow.commons.model.spell.SpellSchool;
-import wow.commons.model.spell.SpellTarget;
-import wow.commons.model.spell.TickScheme;
 
+import java.util.List;
 import java.util.Objects;
+
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
  * Date: 2023-09-16
  */
 public record PeriodicComponent(
-		SpellTarget target,
-		ComponentType type,
-		Coefficient coefficient,
-		int amount,
-		int numTicks,
-		Duration tickInterval,
-		TickScheme tickScheme
+		List<PeriodicCommand> commands,
+		Duration tickInterval
 ) implements EffectComponent {
 	public PeriodicComponent {
-		Objects.requireNonNull(target);
-		Objects.requireNonNull(type);
-		Objects.requireNonNull(coefficient);
+		Objects.requireNonNull(commands);
 		Objects.requireNonNull(tickInterval);
-		Objects.requireNonNull(tickScheme);
-	}
-
-	public SpellSchool school() {
-		return coefficient.school();
 	}
 }

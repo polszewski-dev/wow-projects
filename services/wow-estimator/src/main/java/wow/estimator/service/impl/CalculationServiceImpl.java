@@ -16,7 +16,6 @@ import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.buff.BuffNameRank;
 import wow.commons.model.effect.component.ComponentType;
-import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.Ability;
 import wow.estimator.model.*;
@@ -29,6 +28,7 @@ import java.util.stream.Stream;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -161,20 +161,11 @@ public class CalculationServiceImpl implements CalculationService {
 				.orElse(null);
 	}
 
-	private PeriodicComponent getDamagingPeriodicCommand(Ability ability) {
-		var effectApplication = ability.getEffectApplication();
-
-		if (effectApplication == null) {
-			return null;
-		}
-
-		var effect = effectApplication.effect();
-
-		if (effect.hasPeriodicComponent(ComponentType.DAMAGE)) {
-			return effect.getPeriodicComponent();
-		}
-
-		return null;
+	private PeriodicCommand getDamagingPeriodicCommand(Ability ability) {
+		return ability.getPeriodicCommands().stream()
+				.filter(x -> x.type() == ComponentType.DAMAGE)
+				.findAny()
+				.orElse(null);
 	}
 
 	@Override
@@ -237,7 +228,7 @@ public class CalculationServiceImpl implements CalculationService {
 		}
 
 		if (ability.getAppliedEffect() != null) {
-			var periodic = characterCalculationService.getPeriodicComponentSnapshot(player, ability, target, abilityStats.getPeriodic(), targetStats);
+			var periodic = characterCalculationService.getPeriodicComponentSnapshot(player, ability, target, abilityStats.getPeriodicCommand(), abilityStats.getPeriodic(), targetStats);
 			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, abilityStats.getEffectDuration(), abilityStats.getReceivedEffectStats());
 
 			snapshot.setPeriodic(periodic);

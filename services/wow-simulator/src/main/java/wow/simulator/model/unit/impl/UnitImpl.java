@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -343,31 +344,28 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target) {
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target, PeriodicCommand command) {
 		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, spell, target, baseStats);
+		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target) {
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, PeriodicCommand command) {
 		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getPeriodicHealingSnapshot(this, spell, target, baseStats);
+		return getCharacterCalculationService().getPeriodicHealingSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target) {
-		var periodicComponent = spell.getAppliedEffect().getPeriodicComponent();
-
-		return new PeriodicSpellComponentSnapshot(periodicComponent);
+	public PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command) {
+		return new PeriodicSpellComponentSnapshot(command);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target) {
-		var periodicComponent = spell.getAppliedEffect().getPeriodicComponent();
+	public PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command) {
+		var pct = command.amount();
 		var maxMana = target.getMaxMana();
-		var pct = periodicComponent.amount();
 
-		return new PeriodicSpellComponentSnapshot(periodicComponent, maxMana * pct / 100);
+		return new PeriodicSpellComponentSnapshot(command, maxMana * pct / 100);
 	}
 
 	@Override

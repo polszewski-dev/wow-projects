@@ -15,7 +15,6 @@ import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.component.Event;
-import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Coefficient;
@@ -37,6 +36,7 @@ import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -106,8 +106,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicComponent periodicComponent) {
-		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, periodicComponent.school());
+	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
+		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, command.school());
 
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
@@ -492,43 +492,38 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats) {
-		return getPeriodicComponentSnapshot(character, spell, target, baseStats, SPELL_DAMAGE);
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats) {
+		return getPeriodicComponentSnapshot(character, spell, target, command, baseStats, SPELL_DAMAGE);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats) {
-		return getPeriodicComponentSnapshot(character, spell, target, baseStats, HEALING);
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats) {
+		return getPeriodicComponentSnapshot(character, spell, target, command, baseStats, HEALING);
 	}
 
-	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats, PowerType powerType) {
-		var effectApplication = spell.getEffectApplication();
-		var periodicComponent = effectApplication.effect().getPeriodicComponent();
-		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, powerType, periodicComponent, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, periodicComponent.school());
+	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats, PowerType powerType) {
+		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, powerType, command, baseStats);
+		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, command.school());
 
-		return getPeriodicComponentSnapshot(character, spell, target, spellStats, targetStats);
+		return getPeriodicComponentSnapshot(character, spell, target, command, spellStats, targetStats);
 	}
 
-	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicComponent periodicComponent, BaseStatsSnapshot baseStats) {
-		var spellStats = newAccumulatedPeriodicComponentStats(character, spell, target, powerType, periodicComponent);
+	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command, BaseStatsSnapshot baseStats) {
+		var spellStats = newAccumulatedPeriodicComponentStats(character, spell, target, powerType, command);
 
 		accumulateEffects(character, spellStats, baseStats);
 		return spellStats;
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		var effectApplication = spell.getEffectApplication();
-		var periodicComponent = effectApplication.effect().getPeriodicComponent();
-
-		var snapshot = new PeriodicSpellComponentSnapshot(periodicComponent);
+	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		var snapshot = new PeriodicSpellComponentSnapshot(command);
 
 		var amount = getSpellAmount(spellStats, targetStats);
 		var amountPct = getSpellAmountPct(spellStats, targetStats);
 		var power = (int) spellStats.getPower();
 		var powerPct = spellStats.getPowerPct();
-		var coeff = getPowerCoefficient(periodicComponent.coefficient(), spellStats);
+		var coeff = getPowerCoefficient(command.coefficient(), spellStats);
 
 		snapshot.setAmount(amount);
 		snapshot.setAmountPct(amountPct);

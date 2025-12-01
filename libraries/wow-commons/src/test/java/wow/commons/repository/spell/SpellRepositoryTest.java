@@ -230,10 +230,12 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void abilityEffectPeriodicTickScheme() {
 		var effect = getEffect(27218, TBC_P5);
 		var periodicComponent = effect.getPeriodicComponent();
+		var command = periodicComponent.commands().getFirst();
+
 		var tickScheme = new TickScheme(List.of(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5));
 
 		assertThat(effect.getName()).isEqualTo("Curse of Agony");
-		assertThat(periodicComponent.tickScheme()).isEqualTo(tickScheme);
+		assertThat(command.tickScheme()).isEqualTo(tickScheme);
 	}
 
 	@Test

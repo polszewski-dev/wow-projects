@@ -11,6 +11,11 @@ import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.TickScheme;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.IntStream;
+
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
@@ -71,31 +76,53 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		return effect;
 	}
 
-	private final ExcelColumn colPeriodicType = column(PERIODIC_TYPE, true).prefixed(PERIODIC_PREFIX);
-	private final ExcelColumn colPeriodicAmount = column(PERIODIC_AMOUNT).prefixed(PERIODIC_PREFIX);
-	private final ExcelColumn colPeriodicNumTicks = column(PERIODIC_NUM_TICKS).prefixed(PERIODIC_PREFIX);
-	private final ExcelColumn colTickInterval = column(PERIODIC_TICK_INTERVAL).prefixed(PERIODIC_PREFIX);
+	private final ExcelColumn colTickInterval = column(PERIODIC_TICK_INTERVAL, true).prefixed(PERIODIC_PREFIX);
 
 	private PeriodicComponent getPeriodicComponent() {
-		if (colPeriodicType.isEmpty()) {
+		if (colTickInterval.isEmpty()) {
 			return null;
 		}
 
-		var target = getTarget(PERIODIC_PREFIX);
-		var type = colPeriodicType.getEnum(ComponentType::parse);
-		var coefficient = getCoefficient(PERIODIC_PREFIX);
-		var amount = colPeriodicAmount.getInteger();
-		var numTicks = colPeriodicNumTicks.getInteger();
 		var tickInterval = colTickInterval.getDuration(null);
-		var tickScheme = getTickScheme();
+		var commands = getPeriodicCommands();
 
-		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickInterval, tickScheme);
+		return new PeriodicComponent(commands, tickInterval);
 	}
 
-	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS).prefixed(PERIODIC_PREFIX);
+	private List<PeriodicCommand> getPeriodicCommands() {
+		return IntStream.rangeClosed(1, MAX_PERIODIC_COMMANDS)
+				.mapToObj(this::getPeriodicCommand)
+				.filter(Objects::nonNull)
+				.toList();
+	}
 
-	private TickScheme getTickScheme() {
-		var tickWeights = colTickWeights.getList(Double::parseDouble);
+	private final ExcelColumn colPeriodicType = column(PERIODIC_TYPE);
+	private final ExcelColumn colPeriodicAmount = column(PERIODIC_AMOUNT);
+	private final ExcelColumn colPeriodicNumTicks = column(PERIODIC_NUM_TICKS);
+
+	private PeriodicCommand getPeriodicCommand(int idx) {
+		var prefix = getPeriodicCommandPrefix(idx);
+
+		var target = getTarget(prefix);
+
+		if (target == null) {
+			return null;
+		}
+
+		var type = colPeriodicType.prefixed(prefix).getEnum(ComponentType::parse);
+		var coefficient = getCoefficient(prefix);
+		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
+		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
+		var tickScheme = getTickScheme(idx);
+
+		return new PeriodicCommand(target, type, coefficient, amount, numTicks, tickScheme);
+	}
+
+	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS);
+
+	private TickScheme getTickScheme(int idx) {
+		var prefix = getPeriodicCommandPrefix(idx);
+		var tickWeights = colTickWeights.prefixed(prefix).getList(Double::parseDouble);
 
 		if (tickWeights.isEmpty()) {
 			return TickScheme.DEFAULT;

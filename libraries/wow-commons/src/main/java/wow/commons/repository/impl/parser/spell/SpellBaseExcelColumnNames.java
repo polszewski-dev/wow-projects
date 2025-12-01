@@ -80,6 +80,10 @@ public final class SpellBaseExcelColumnNames {
 		return "direct" + idx + ": ";
 	}
 
+	public static String getPeriodicCommandPrefix(int idx) {
+		return "periodic" + idx + ": ";
+	}
+
 	public static String getStatConversionPrefix(int idx) {
 		return "stat conversion" + idx + ": ";
 	}
@@ -89,6 +93,7 @@ public final class SpellBaseExcelColumnNames {
 	}
 
 	public static final int MAX_DIRECT_COMMANDS = 3;
+	public static final int MAX_PERIODIC_COMMANDS = 1;
 
 	public static final int MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES = 5;
 	public static final int MAX_ABILITY_EFFECT_EVENTS = 2;

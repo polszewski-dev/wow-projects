@@ -4,12 +4,12 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.EffectAugmentations;
-import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
 
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -32,7 +32,7 @@ public interface CharacterCalculationService {
 
 	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command);
 
-	AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicComponent periodicComponent);
+	AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command);
 
 	BaseStatsSnapshot getBaseStatsSnapshot(Character character);
 
@@ -60,11 +60,11 @@ public interface CharacterCalculationService {
 
 	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
-	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats);
+	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats);
 
-	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, BaseStatsSnapshot baseStats);
+	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats);
 
-	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
 	RegenSnapshot getRegenSnapshot(Character character);
 

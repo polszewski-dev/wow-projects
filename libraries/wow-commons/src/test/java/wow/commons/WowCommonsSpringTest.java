@@ -20,6 +20,7 @@ import wow.commons.model.talent.Talent;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -42,12 +43,19 @@ public abstract class WowCommonsSpringTest {
 	}
 
 	protected static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double coeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
-		assertThat(periodic.type()).isEqualTo(type);
-		assertCoefficient(coeff, school, periodic.coefficient());
-		assertThat(periodic.amount()).isEqualTo(amount);
-		assertThat(periodic.numTicks()).isEqualTo(numTicks);
+		var command = periodic.commands().getFirst();
+
+		assertPeriodicCommand(command, type, coeff, school, amount, numTicks, tickInterval, tickScheme);
 		assertThat(periodic.tickInterval().getSeconds()).isEqualTo(tickInterval);
-		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
+	}
+
+	protected static void assertPeriodicCommand(PeriodicCommand command, ComponentType type, double coeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
+		assertThat(command.type()).isEqualTo(type);
+		assertCoefficient(coeff, school, command.coefficient());
+		assertThat(command.amount()).isEqualTo(amount);
+		assertThat(command.numTicks()).isEqualTo(numTicks);
+
+		assertThat(command.tickScheme()).isEqualTo(tickScheme);
 	}
 
 	protected static void assertModifier(Effect effect, List<Attribute> attributes) {

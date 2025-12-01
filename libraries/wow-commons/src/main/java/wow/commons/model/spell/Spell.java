@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -38,6 +39,12 @@ public interface Spell extends Described, TimeRestricted {
 
 	default Effect getAppliedEffect() {
 		return getEffectApplication() != null ? getEffectApplication().effect() : null;
+	}
+
+	default List<PeriodicCommand> getPeriodicCommands() {
+		var appliedEffect = getAppliedEffect();
+
+		return appliedEffect != null ? appliedEffect.getPeriodicCommands() : List.of();
 	}
 
 	default Set<SpellTarget> getTargets() {

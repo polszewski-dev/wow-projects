@@ -12,6 +12,8 @@ import wow.commons.model.spell.SpellSchool;
 
 import java.util.List;
 
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+
 /**
  * User: POlszewski
  * Date: 2023-08-31
@@ -34,6 +36,12 @@ public interface Effect extends Described, TimeRestricted {
 	EffectExclusionGroup getExclusionGroup();
 
 	PeriodicComponent getPeriodicComponent();
+
+	default List<PeriodicCommand> getPeriodicCommands() {
+		var periodicComponent = getPeriodicComponent();
+
+		return periodicComponent != null ? periodicComponent.commands() : List.of();
+	}
 
 	default Duration getTickInterval() {
 		return getPeriodicComponent() != null ? getPeriodicComponent().tickInterval() : null;
@@ -80,7 +88,7 @@ public interface Effect extends Described, TimeRestricted {
 	}
 
 	default boolean hasPeriodicComponent(ComponentType componentType) {
-		return hasPeriodicComponent() && getPeriodicComponent().type() == componentType;
+		return hasPeriodicComponent() && getPeriodicComponent().commands().stream().anyMatch(x -> x.type() == componentType);
 	}
 
 	default boolean hasAbsorptionComponent() {

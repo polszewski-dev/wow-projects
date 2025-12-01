@@ -1,7 +1,6 @@
 package wow.simulator.model.unit;
 
 import wow.character.util.SpellTargetConditionChecker;
-import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.spell.SpellTargets;
@@ -15,6 +14,7 @@ import java.util.function.Consumer;
 
 import static wow.commons.model.spell.SpellTargetType.FRIENDS_PARTY;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -80,8 +80,8 @@ public class TargetResolver implements SimulationContextSource {
 		getTargets(command.target()).forEach(consumer);
 	}
 
-	public void forEachTarget(PeriodicComponent periodicComponent, Consumer<Unit> consumer) {
-		getTargets(periodicComponent.target()).forEach(consumer);
+	public void forEachTarget(PeriodicCommand command, Consumer<Unit> consumer) {
+		getTargets(command.target()).forEach(consumer);
 	}
 
 	public void forEachTarget(EffectApplication effectApplication, Consumer<Unit> consumer) {

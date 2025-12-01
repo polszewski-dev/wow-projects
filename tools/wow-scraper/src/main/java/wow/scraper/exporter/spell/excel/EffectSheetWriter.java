@@ -1,13 +1,14 @@
 package wow.scraper.exporter.spell.excel;
 
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.TickScheme;
 
 import java.util.List;
 
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
+import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
 
 /**
  * User: POlszewski
@@ -60,37 +61,66 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 	}
 
 	private void writePeriodicComponentHeader() {
-		String prefix = PERIODIC_PREFIX;
+		setHeader(PERIODIC_TICK_INTERVAL, PERIODIC_PREFIX);
+
+		for (int i = 1; i <= MAX_PERIODIC_COMMANDS; ++i) {
+			writePeriodicCommandHeader(i);
+		}
+	}
+
+	private void writePeriodicCommandHeader(int idx) {
+		var prefix = getPeriodicCommandPrefix(idx);
+		
 		setHeader(TARGET, prefix);
 		setHeader(PERIODIC_TYPE, prefix);
 		setHeader(COEFF_VALUE, prefix);
 		setHeader(COEFF_SCHOOL, prefix);
 		setHeader(PERIODIC_AMOUNT, prefix);
 		setHeader(PERIODIC_NUM_TICKS, prefix);
-		setHeader(PERIODIC_TICK_INTERVAL, prefix);
 		setHeader(PERIODIC_TICK_WEIGHTS, prefix);
 	}
 
 	private void writePeriodicComponent(Effect effect) {
 		var periodicComponent = effect.getPeriodicComponent();
 
-		if (periodicComponent == null) {
-			fillRemainingEmptyCols(8);
+		if (periodicComponent != null) {
+			setValue(periodicComponent.tickInterval());
+		} else {
+			setValue((String) null);
+		}
+
+		writePeriodicCommands(effect.getPeriodicCommands());
+	}
+
+	private void writePeriodicCommands(List<PeriodicCommand> commands) {
+		assertSizeNoLargerThan("periodic commands", commands, MAX_PERIODIC_COMMANDS);
+
+		for (int i = 0; i < MAX_PERIODIC_COMMANDS; ++i) {
+			if (i < commands.size()) {
+				writePeriodicCommand(commands.get(i));
+			} else {
+				writePeriodicCommand(null);
+			}
+		}
+	}
+
+	private void writePeriodicCommand(PeriodicCommand command) {
+		if (command == null) {
+			fillRemainingEmptyCols(7);
 			return;
 		}
 
-		setValue(periodicComponent.target());
-		setValue(periodicComponent.type());
-		setValue(periodicComponent.coefficient().value());
-		setValue(periodicComponent.school());
-		setValue(periodicComponent.amount());
-		setValue(periodicComponent.numTicks());
-		setValue(periodicComponent.tickInterval());
-		setValue(getTickWeights(periodicComponent), Object::toString);
+		setValue(command.target());
+		setValue(command.type());
+		setValue(command.coefficient().value());
+		setValue(command.school());
+		setValue(command.amount());
+		setValue(command.numTicks());
+		setValue(getTickWeights(command), Object::toString);
 	}
 
 	private void writeAbsorptionComponentHeader() {
-		String prefix = ABSORB_PREFIX;
+		var prefix = ABSORB_PREFIX;
 		setHeader(COEFF_VALUE, prefix);
 		setHeader(COEFF_SCHOOL, prefix);
 		setHeader(ABSORB_CONDITION, prefix);
@@ -113,10 +143,10 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setValue(absorptionComponent.max());
 	}
 
-	private List<Double> getTickWeights(PeriodicComponent periodicComponent) {
-		if (periodicComponent.tickScheme() == TickScheme.DEFAULT) {
+	private List<Double> getTickWeights(PeriodicCommand command) {
+		if (command.tickScheme() == TickScheme.DEFAULT) {
 			return List.of();
 		}
-		return periodicComponent.tickScheme().tickWeights();
+		return command.tickScheme().tickWeights();
 	}
 }

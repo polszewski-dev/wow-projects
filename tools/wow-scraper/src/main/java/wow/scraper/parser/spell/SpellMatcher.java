@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -155,7 +156,9 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var amount = getTotalAmount(periodicComponentParams, numTicks);
 		var tickScheme = getTickScheme(periodicComponentParams.tickWeights());
 
-		return new PeriodicComponent(target, type, coefficient, amount, numTicks, tickInterval, tickScheme);
+		var command = new PeriodicCommand(target, type, coefficient, amount, numTicks, tickScheme);
+
+		return new PeriodicComponent(List.of(command), tickInterval);
 	}
 
 	private int getNumTicks(Duration duration, Duration tickInterval) {

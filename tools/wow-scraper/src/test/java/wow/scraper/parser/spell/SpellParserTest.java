@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -44,11 +45,17 @@ abstract class SpellParserTest extends ScraperSpringTest {
 	}
 
 	static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double tickCoeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
+		var command = periodic.commands().getFirst();
+
+		assertPeriodicCommand(command, type, tickCoeff, school, amount, numTicks, tickScheme);
+		assertThat(periodic.tickInterval()).isEqualTo(Duration.seconds(tickInterval));
+	}
+
+	static void assertPeriodicCommand(PeriodicCommand periodic, ComponentType type, double tickCoeff, SpellSchool school, int amount, int numTicks, TickScheme tickScheme) {
 		assertThat(periodic.type()).isEqualTo(type);
 		assertCoefficient(tickCoeff, school, periodic.coefficient());
 		assertThat(periodic.amount()).isEqualTo(amount);
 		assertThat(periodic.numTicks()).isEqualTo(numTicks);
-		assertThat(periodic.tickInterval().getSeconds()).isEqualTo(tickInterval);
 		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
 	}
 

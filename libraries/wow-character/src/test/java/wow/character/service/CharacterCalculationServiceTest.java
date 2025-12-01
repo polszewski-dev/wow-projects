@@ -272,8 +272,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.getBuild().setActivePet(PetType.SUCCUBUS);
 
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var periodicComponent = ability.getAppliedEffect().getPeriodicComponent();
-		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, SPELL_DAMAGE, periodicComponent);
+		var periodicCommand = ability.getAppliedEffect().getPeriodicComponent().commands().getFirst();
+		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, SPELL_DAMAGE, periodicCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -487,7 +487,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
 
 		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();
-		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, baseStats);
+		var periodicCommand = ability.getAppliedEffect().getPeriodicComponent().commands().getFirst();
+		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, periodicCommand, baseStats);
 
 		assertThat(snapshot.getAmount()).isZero();
 		assertThat(snapshot.getAmountPct()).isEqualTo(25);

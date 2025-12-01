@@ -8,7 +8,9 @@ import wow.simulator.model.unit.Unit;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -18,72 +20,70 @@ public class EffectUpdateContext extends Context {
 	private final EffectInstance effect;
 	private final PeriodicComponent periodicComponent;
 	private final TargetResolver targetResolver;
-	private final Map<Unit, PeriodicSpellComponentSnapshot> periodicSnapshots = new HashMap<>();
+	private final Map<CommandAndTarget, PeriodicSpellComponentSnapshot> periodicSnapshots = new HashMap<>();
+
+	private record CommandAndTarget(PeriodicCommand command, Unit target) {}
 
 	public EffectUpdateContext(EffectInstance effect, Context parentContext) {
 		super(effect.getOwner(), effect.getSourceSpell(), parentContext);
 		this.effect = effect;
 		this.periodicComponent = effect.getPeriodicComponent();
 		this.targetResolver = getTargetResolver();
-		computeSingleTargetSnapshot();
+		forEach(this::computeSingleTargetSnapshot);
 	}
 
 	public void periodicComponentAction(int tickNo, int numStacks) {
-		forEachTarget(
-				componentTarget -> periodicComponentAction(tickNo, numStacks, componentTarget)
-		);
+		forEach((command, target) -> periodicComponentAction(tickNo, numStacks, command, target));
 
-		// multi-target periodic component requires snapshot to be computed each time damage is dealt
+		// multi-target periodic command requires snapshot to be computed each time damage is dealt
 
-		if (isAoE()) {
-			periodicSnapshots.clear();
-		}
+		periodicSnapshots.entrySet().removeIf(e -> e.getKey().command().isAoE());
 	}
 
-	private void periodicComponentAction(int tickNo, int numStacks, Unit target) {
-		switch (periodicComponent.type()) {
+	private void periodicComponentAction(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+		switch (command.type()) {
 			case DAMAGE ->
-					dealPeriodicDamage(tickNo, numStacks, target);
+					dealPeriodicDamage(tickNo, numStacks, command, target);
 			case HEAL ->
-					periodicHeal(tickNo, numStacks, target);
+					periodicHeal(tickNo, numStacks, command, target);
 			case MANA_GAIN ->
-					periodicManaGain(tickNo, numStacks, target);
+					periodicManaGain(tickNo, numStacks, command, target);
 			case PCT_OF_TOTAL_MANA_GAIN ->
-					periodicPctOfTotalManaGain(tickNo, numStacks, target);
+					periodicPctOfTotalManaGain(tickNo, numStacks, command, target);
 			default ->
 					throw new UnsupportedOperationException();
 		}
 	}
 
-	private void dealPeriodicDamage(int tickNo, int numStacks, Unit target) {
+	private void dealPeriodicDamage(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
 		// multi-target periodic component requires hit roll each time damage is dealt
 
-		if (isAoE() && !hitRoll(target)) {
+		if (command.isAoE() && !hitRoll(target)) {
 			return;
 		}
 
-		var snapshot = getSpellDamageSnapshot(target);
+		var snapshot = getSpellDamageSnapshot(command, target);
 		var tickDamage = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		decreaseHealth(target, tickDamage, false, false);
 	}
 
-	private void periodicHeal(int tickNo, int numStacks, Unit target) {
-		var snapshot = getHealingSnapshot(target);
+	private void periodicHeal(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+		var snapshot = getHealingSnapshot(command, target);
 		var tickHealing = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		increaseHealth(target, tickHealing, false, false);
 	}
 
-	private void periodicManaGain(int tickNo, int numStacks, Unit target) {
-		var snapshot = getManaGainSnapshot(target);
+	private void periodicManaGain(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+		var snapshot = getManaGainSnapshot(command, target);
 		var roundedTickManaGain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		increaseMana(target, roundedTickManaGain);
 	}
 
-	private void periodicPctOfTotalManaGain(int tickNo, int numStacks, Unit target) {
-		var snapshot = getPctOfTotalManaGainSnapshot(target);
+	private void periodicPctOfTotalManaGain(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+		var snapshot = getPctOfTotalManaGainSnapshot(command, target);
 		var roundedTickManaGain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		increaseMana(target, roundedTickManaGain);
@@ -101,74 +101,68 @@ public class EffectUpdateContext extends Context {
 				: TargetResolver.ofSelf(effect.getOwner());
 	}
 
-	private void forEachTarget(Consumer<Unit> consumer) {
-		targetResolver.forEachTarget(
-				periodicComponent,
-				consumer
-		);
-	}
-
-	private boolean hasSingleTargetComponent() {
-		return periodicComponent != null && periodicComponent.target().isSingle();
-	}
-
-	private boolean isAoE() {
-		return periodicComponent.target().isAoE();
-	}
-
-	private void computeSingleTargetSnapshot() {
-		if (!hasSingleTargetComponent()) {
+	private void forEach(BiConsumer<PeriodicCommand, Unit> consumer) {
+		if (periodicComponent == null) {
 			return;
 		}
 
-		forEachTarget(this::computeSingleTargetSnapshot);
+		for (var command : periodicComponent.commands()) {
+			targetResolver.forEachTarget(
+					command,
+					target -> consumer.accept(command, target)
+			);
+		}
 	}
 
-	private void computeSingleTargetSnapshot(Unit target) {
-		switch (periodicComponent.type()) {
+	private void computeSingleTargetSnapshot(PeriodicCommand command, Unit target) {
+		if (!command.isSingleTarget()) {
+			return;
+		}
+
+		switch (command.type()) {
 			case DAMAGE ->
-					getSpellDamageSnapshot(target);
+					getSpellDamageSnapshot(command, target);
 			case HEAL ->
-					getHealingSnapshot(target);
+					getHealingSnapshot(command, target);
 			case PCT_OF_TOTAL_MANA_GAIN ->
-					getPctOfTotalManaGainSnapshot(target);
+					getPctOfTotalManaGainSnapshot(command, target);
 			default -> {
 				// void
 			}
 		}
 	}
 
-	private PeriodicSpellComponentSnapshot getSpellDamageSnapshot(Unit target) {
+	private PeriodicSpellComponentSnapshot getSpellDamageSnapshot(PeriodicCommand command, Unit target) {
 		return periodicSnapshots.computeIfAbsent(
-				target,
-				x -> caster.getPeriodicSpellDamageSnapshot(spell, target)
+				new CommandAndTarget(command, target),
+				x -> caster.getPeriodicSpellDamageSnapshot(spell, target, command)
 		);
 	}
 
-	private PeriodicSpellComponentSnapshot getHealingSnapshot(Unit target) {
+	private PeriodicSpellComponentSnapshot getHealingSnapshot(PeriodicCommand command, Unit target) {
 		return periodicSnapshots.computeIfAbsent(
-				target,
-				x -> caster.getPeriodicHealingSnapshot(spell, target)
+				new CommandAndTarget(command, target),
+				x -> caster.getPeriodicHealingSnapshot(spell, target, command)
 		);
 	}
 
-	private PeriodicSpellComponentSnapshot getManaGainSnapshot(Unit target) {
+	private PeriodicSpellComponentSnapshot getManaGainSnapshot(PeriodicCommand command, Unit target) {
 		return periodicSnapshots.computeIfAbsent(
-				target,
-				x -> caster.getPeriodicManaGainSnapshot(spell, target)
+				new CommandAndTarget(command, target),
+				x -> caster.getPeriodicManaGainSnapshot(spell, target, command)
 		);
 	}
 
-	private PeriodicSpellComponentSnapshot getPctOfTotalManaGainSnapshot(Unit target) {
+	private PeriodicSpellComponentSnapshot getPctOfTotalManaGainSnapshot(PeriodicCommand command, Unit target) {
 		return periodicSnapshots.computeIfAbsent(
-				target,
-				x -> caster.getPeriodicPctOfTotalManaGainSnapshot(spell, target)
+				new CommandAndTarget(command, target),
+				x -> caster.getPeriodicPctOfTotalManaGainSnapshot(spell, target, command)
 		);
 	}
 
 	public void increaseEffect(double effectIncreasePct) {
-		var snapshot = periodicSnapshots.get(effect.getTarget());
-
-		snapshot.increaseEffect(effectIncreasePct);
+		periodicSnapshots.values().forEach(
+				snapshot -> snapshot.increaseEffect(effectIncreasePct)
+		);
 	}
 }

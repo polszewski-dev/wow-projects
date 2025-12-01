@@ -2,7 +2,8 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.commons.model.effect.component.PeriodicComponent;
+
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -11,7 +12,7 @@ import wow.commons.model.effect.component.PeriodicComponent;
 @Getter
 @Setter
 public class PeriodicSpellComponentSnapshot {
-	private final PeriodicComponent component;
+	private final PeriodicCommand command;
 
 	private int baseAmount;
 
@@ -23,12 +24,12 @@ public class PeriodicSpellComponentSnapshot {
 
 	private double coeff;
 
-	public PeriodicSpellComponentSnapshot(PeriodicComponent component) {
-		this(component, component.amount());
+	public PeriodicSpellComponentSnapshot(PeriodicCommand command) {
+		this(command, command.amount());
 	}
 
-	public PeriodicSpellComponentSnapshot(PeriodicComponent component, int baseAmount) {
-		this.component = component;
+	public PeriodicSpellComponentSnapshot(PeriodicCommand command, int baseAmount) {
+		this.command = command;
 		this.baseAmount = baseAmount;
 	}
 
@@ -38,9 +39,9 @@ public class PeriodicSpellComponentSnapshot {
 		periodicAmount += (power * coeff / 100.0) * (1 + powerPct / 100.0);
 		periodicAmount += amount;
 		periodicAmount *= (1 + amountPct / 100.0);
-		periodicAmount *= component.tickScheme().weight(tickNo);
+		periodicAmount *= command.tickScheme().weight(tickNo);
 
-		return periodicAmount / component.numTicks();
+		return periodicAmount / command.numTicks();
 	}
 
 	public void increaseEffect(double increasePct) {
