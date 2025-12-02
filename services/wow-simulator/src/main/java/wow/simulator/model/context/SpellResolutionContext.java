@@ -86,6 +86,8 @@ public class SpellResolutionContext extends Context {
 					dealDirectDamage(command, target);
 			case HEAL ->
 					directHeal(command, target);
+			case MANA_DRAIN ->
+					directManaDrain(command, target);
 			case MANA_GAIN ->
 					directManaGain(command, target);
 			case COPY_DAMAGE_AS_HEAL_PCT ->
@@ -98,6 +100,8 @@ public class SpellResolutionContext extends Context {
 					copyAsManaGain(command, target, last.parentDamageDone);
 			case COPY_HEALTH_PAID_AS_MANA_GAIN_PCT ->
 					copyAsManaGain(command, target, last.parentHealthPaid);
+			case COPY_MANA_DRAINED_AS_DAMAGE_PCT ->
+					copyAsDamage(command, target, last.manaDrained);
 			default ->
 					throw new UnsupportedOperationException();
 		}
@@ -125,18 +129,26 @@ public class SpellResolutionContext extends Context {
 		increaseHealth(target, directHealing, true, critRoll);
 	}
 
+	private void directManaDrain(DirectCommand command, Unit target) {
+		var mana = (command.min() + command.max()) / 2;
+
+		decreaseMana(target, mana);
+	}
+
 	private void directManaGain(DirectCommand command, Unit target) {
 		var mana = (command.min() + command.max()) / 2;
 
 		increaseMana(target, mana);
 	}
 
+	private void copyAsDamage(DirectCommand command, Unit target, int value) {
+		var ratioPct = getRatioPct(command);
+		copyAsDamage(target, value, ratioPct);
+	}
+
 	private void copyAsHeal(DirectCommand command, Unit target, int value) {
 		var ratioPct = getRatioPct(command);
-		var heal = getCharacterCalculationService().getCopiedAmountAsHeal(caster, getSourceSpell(), target, value, ratioPct);
-		var roundedHeal = roundValue(heal, target);
-
-		increaseHealth(target, roundedHeal, true, false);
+		copyAsHeal(target, value, ratioPct);
 	}
 
 	private void copyAsManaGain(DirectCommand command, Unit target, int value) {
@@ -281,14 +293,16 @@ public class SpellResolutionContext extends Context {
 	private record LastValueSnapshot(
 			int damageDone,
 			int parentDamageDone,
-			int parentHealthPaid
+			int parentHealthPaid,
+			int manaDrained
 	) {}
 
 	private LastValueSnapshot getLastValueSnapshot() {
 		return new LastValueSnapshot(
 			this.getLastDamageDone(),
 			parentContext.getLastDamageDone(),
-			parentContext.getLastHealthPaid()
+			parentContext.getLastHealthPaid(),
+			this.getLastManaDrained()
 		);
 	}
 }

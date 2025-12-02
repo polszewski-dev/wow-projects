@@ -93,6 +93,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, PeriodicCommand command);
 
+	PeriodicSpellComponentSnapshot getPeriodicManaDrainSnapshot(Spell spell, Unit target, PeriodicCommand command);
+
 	PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command);
 
 	PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command);

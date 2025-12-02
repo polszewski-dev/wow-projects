@@ -356,6 +356,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public PeriodicSpellComponentSnapshot getPeriodicManaDrainSnapshot(Spell spell, Unit target, PeriodicCommand command) {
+		return new PeriodicSpellComponentSnapshot(command);
+	}
+
+	@Override
 	public PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command) {
 		return new PeriodicSpellComponentSnapshot(command);
 	}

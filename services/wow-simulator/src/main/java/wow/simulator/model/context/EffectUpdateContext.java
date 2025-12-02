@@ -9,6 +9,7 @@ import wow.simulator.model.unit.Unit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
@@ -46,10 +47,16 @@ public class EffectUpdateContext extends Context {
 					dealPeriodicDamage(tickNo, numStacks, command, target);
 			case HEAL ->
 					periodicHeal(tickNo, numStacks, command, target);
+			case MANA_DRAIN ->
+					periodicManaDrain(tickNo, numStacks, command, target);
 			case MANA_GAIN ->
 					periodicManaGain(tickNo, numStacks, command, target);
 			case PCT_OF_TOTAL_MANA_GAIN ->
 					periodicPctOfTotalManaGain(tickNo, numStacks, command, target);
+			case COPY_DAMAGE_AS_HEAL_PCT ->
+					copyAsHeal(target, this.getLastDamageDone(), command.amount());
+			case COPY_MANA_DRAINED_AS_MANA_PCT ->
+					copyAsManaGain(target, this.getLastManaDrained(), command.amount());
 			default ->
 					throw new UnsupportedOperationException();
 		}
@@ -73,6 +80,13 @@ public class EffectUpdateContext extends Context {
 		var tickHealing = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		increaseHealth(target, tickHealing, false, false);
+	}
+
+	private void periodicManaDrain(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+		var snapshot = getManaDrainSnapshot(command, target);
+		var roundedTickManaDrain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
+
+		decreaseMana(target, roundedTickManaDrain);
 	}
 
 	private void periodicManaGain(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
@@ -133,30 +147,50 @@ public class EffectUpdateContext extends Context {
 	}
 
 	private PeriodicSpellComponentSnapshot getSpellDamageSnapshot(PeriodicCommand command, Unit target) {
-		return periodicSnapshots.computeIfAbsent(
-				new CommandAndTarget(command, target),
-				x -> caster.getPeriodicSpellDamageSnapshot(spell, target, command)
+		return computeSnapshotOnce(
+				command,
+				target,
+				() -> caster.getPeriodicSpellDamageSnapshot(spell, target, command)
 		);
 	}
 
 	private PeriodicSpellComponentSnapshot getHealingSnapshot(PeriodicCommand command, Unit target) {
-		return periodicSnapshots.computeIfAbsent(
-				new CommandAndTarget(command, target),
-				x -> caster.getPeriodicHealingSnapshot(spell, target, command)
+		return computeSnapshotOnce(
+				command,
+				target,
+				() -> caster.getPeriodicHealingSnapshot(spell, target, command)
 		);
 	}
 
+	private PeriodicSpellComponentSnapshot getManaDrainSnapshot(PeriodicCommand command, Unit target) {
+		return computeSnapshotOnce(
+				command,
+				target,
+				() -> caster.getPeriodicManaDrainSnapshot(spell, target, command)
+		);
+	}
+
+
 	private PeriodicSpellComponentSnapshot getManaGainSnapshot(PeriodicCommand command, Unit target) {
-		return periodicSnapshots.computeIfAbsent(
-				new CommandAndTarget(command, target),
-				x -> caster.getPeriodicManaGainSnapshot(spell, target, command)
+		return computeSnapshotOnce(
+				command,
+				target,
+				() -> caster.getPeriodicManaGainSnapshot(spell, target, command)
 		);
 	}
 
 	private PeriodicSpellComponentSnapshot getPctOfTotalManaGainSnapshot(PeriodicCommand command, Unit target) {
+		return computeSnapshotOnce(
+				command,
+				target,
+				() -> caster.getPeriodicPctOfTotalManaGainSnapshot(spell, target, command)
+		);
+	}
+
+	private PeriodicSpellComponentSnapshot computeSnapshotOnce(PeriodicCommand command, Unit target, Supplier<PeriodicSpellComponentSnapshot> supplier) {
 		return periodicSnapshots.computeIfAbsent(
 				new CommandAndTarget(command, target),
-				x -> caster.getPeriodicPctOfTotalManaGainSnapshot(spell, target, command)
+				x -> supplier.get()
 		);
 	}
 

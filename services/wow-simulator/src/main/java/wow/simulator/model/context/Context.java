@@ -79,6 +79,27 @@ public abstract class Context implements SimulationContextSource {
 		this.lastManaDrained = target.decreaseMana(amount, false, getSourceSpell());
 	}
 
+	protected void copyAsDamage(Unit target, int value, double ratioPct) {
+		var damage = getCharacterCalculationService().getCopiedAmountAsDamage(caster, getSourceSpell(), target, value, ratioPct);
+		var roundedDamage = roundValue(damage, target);
+
+		decreaseHealth(target, roundedDamage, true, false);
+	}
+
+	protected void copyAsHeal(Unit target, int value, double ratioPct) {
+		var heal = getCharacterCalculationService().getCopiedAmountAsHeal(caster, getSourceSpell(), target, value, ratioPct);
+		var roundedHeal = roundValue(heal, target);
+
+		increaseHealth(target, roundedHeal, true, false);
+	}
+
+	protected void copyAsManaGain(Unit target, int value, double ratioPct) {
+		var manaGain = getCharacterCalculationService().getCopiedAmountAsManaGain(caster, getSourceSpell(), target, value, ratioPct);
+		var roundedManaGain = roundValue(manaGain, target);
+
+		increaseMana(target, roundedManaGain);
+	}
+
 	protected void setPaidCost(SpellCostSnapshot costSnapshot) {
 		var cost = costSnapshot.getCostToPayUnreduced();
 

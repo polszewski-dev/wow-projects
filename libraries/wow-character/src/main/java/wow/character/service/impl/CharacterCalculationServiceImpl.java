@@ -655,12 +655,23 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
+	public double getCopiedAmountAsDamage(Character character, Spell spell, Character target, int amount, double ratioPct) {
+		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
+		var targetStats = getAccumulatedTargetStats(spell, target, null, SPELL_DAMAGE, spell.getSchool());
+		var damageTaken = targetStats.getAmountTaken();
+		var damageTakenPct = targetStats.getAmountTakenPct();
+
+		return multiplyByRatio(amount + damageTaken, ratioPct + copyIncreasePct, damageTakenPct);
+	}
+
+	@Override
 	public double getCopiedAmountAsHeal(Character character, Spell spell, Character target, int amount, double ratioPct) {
 		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
 		var targetStats = getAccumulatedTargetStats(spell, target, null, HEALING, spell.getSchool());
+		var healingTaken = targetStats.getAmountTaken();
 		var healingTakenPct = targetStats.getAmountTakenPct();
 
-		return multiplyByRatio(amount, ratioPct + copyIncreasePct, healingTakenPct);
+		return multiplyByRatio(amount + healingTaken, ratioPct + copyIncreasePct, healingTakenPct);
 	}
 
 	@Override
@@ -683,7 +694,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return accumulatedCopyPct.totalValue;
 	}
 
-	private static double multiplyByRatio(int value, double ratioPct, double increasePct) {
+	private static double multiplyByRatio(double value, double ratioPct, double increasePct) {
 		return value * max(ratioPct / 100.0, 0) * max(1 + increasePct / 100.0, 0);
 	}
 

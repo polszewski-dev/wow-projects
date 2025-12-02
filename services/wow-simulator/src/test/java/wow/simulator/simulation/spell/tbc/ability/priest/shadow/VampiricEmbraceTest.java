@@ -53,6 +53,7 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 				at(3)
 						.decreasedResource(731, HEALTH, target, MIND_BLAST)
 						.increasedResource(109, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(109, HEALTH, player2, VAMPIRIC_EMBRACE)
 		);
 	}
 
@@ -67,22 +68,28 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 				event -> event.isDamage() || event.isHealing(),
 				at(4.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(30, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(30, HEALTH, player2, VAMPIRIC_EMBRACE),
 				at(7.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(31, HEALTH, player2, VAMPIRIC_EMBRACE),
 				at(10.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(31, HEALTH, player2, VAMPIRIC_EMBRACE),
 				at(13.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(31, HEALTH, player2, VAMPIRIC_EMBRACE),
 				at(16.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE),
+						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(31, HEALTH, player2, VAMPIRIC_EMBRACE),
 				at(19.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 						.increasedResource(31, HEALTH, player, VAMPIRIC_EMBRACE)
+						.increasedResource(31, HEALTH, player2, VAMPIRIC_EMBRACE)
 		);
 	}
 
@@ -116,6 +123,12 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.VAMPIRIC_EMBRACE, 1);
+
 		setHealth(player, 1000);
+		setHealth(player2, 1000);
+		setHealth(player3, 1000);
+		setHealth(player4, 1000);
+
+		player.getParty().add(player2);
 	}
 }

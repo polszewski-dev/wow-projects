@@ -36,19 +36,24 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 							 .endGcd(player),
 					 at(4.5)
 							 .decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-							 .increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
+							 .increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+							 .increasedResource(6, MANA, player2, VAMPIRIC_TOUCH),
 					 at(7.5)
 							 .decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-							 .increasedResource(7, MANA, player, VAMPIRIC_TOUCH),
+							 .increasedResource(7, MANA, player, VAMPIRIC_TOUCH)
+							 .increasedResource(7, MANA, player2, VAMPIRIC_TOUCH),
 					 at(10.5)
 							 .decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-							 .increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
+							 .increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+							 .increasedResource(6, MANA, player2, VAMPIRIC_TOUCH),
 					 at(13.5)
 							 .decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-							 .increasedResource(7, MANA, player, VAMPIRIC_TOUCH),
+							 .increasedResource(7, MANA, player, VAMPIRIC_TOUCH)
+							 .increasedResource(7, MANA, player2, VAMPIRIC_TOUCH),
 					 at(16.5)
 							 .decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 							 .increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+							 .increasedResource(6, MANA, player2, VAMPIRIC_TOUCH)
 							 .effectExpired(VAMPIRIC_TOUCH, target)
 		);
 	}
@@ -64,22 +69,28 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 				event -> event.isDamage() || event.isManaGained(),
 				at(3)
 						.decreasedResource(731, HEALTH, target, MIND_BLAST)
-						.increasedResource(36, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(36, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(36, MANA, player2, VAMPIRIC_TOUCH),
 				at(4.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(6, MANA, player2, VAMPIRIC_TOUCH),
 				at(7.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(7, MANA, player2, VAMPIRIC_TOUCH),
 				at(10.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(6, MANA, player2, VAMPIRIC_TOUCH),
 				at(13.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
-						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(7, MANA, player2, VAMPIRIC_TOUCH),
 				at(16.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(6, MANA, player2, VAMPIRIC_TOUCH)
 		);
 	}
 
@@ -95,28 +106,38 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 				at(4.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(6, MANA, player2, VAMPIRIC_TOUCH)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(10, MANA, player2, VAMPIRIC_TOUCH),
 				at(7.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(7, MANA, player2, VAMPIRIC_TOUCH)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(10, MANA, player2, VAMPIRIC_TOUCH),
 				at(10.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(6, MANA, player2, VAMPIRIC_TOUCH)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(10, MANA, player2, VAMPIRIC_TOUCH),
 				at(13.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(7, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(7, MANA, player2, VAMPIRIC_TOUCH)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(11, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(11, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(11, MANA, player2, VAMPIRIC_TOUCH),
 				at(16.5)
 						.decreasedResource(130, HEALTH, target, VAMPIRIC_TOUCH)
 						.increasedResource(6, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(6, MANA, player2, VAMPIRIC_TOUCH)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH),
+						.increasedResource(10, MANA, player, VAMPIRIC_TOUCH)
+						.increasedResource(10, MANA, player2, VAMPIRIC_TOUCH),
 				at(19.5)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
 		);
@@ -133,5 +154,11 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.VAMPIRIC_TOUCH, 1);
+
+		setMana(player2, 0);
+		setMana(player3, 0);
+		setMana(player4, 0);
+
+		player.getParty().add(player2);
 	}
 }
