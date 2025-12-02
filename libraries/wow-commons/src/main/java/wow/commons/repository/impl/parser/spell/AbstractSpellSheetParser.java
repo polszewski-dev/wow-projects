@@ -96,6 +96,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
+		var bolt = colBolt.getBoolean();
 		var directComponent = getDirectComponent();
 		var effectApplication = getEffectApplication();
 
@@ -104,6 +105,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		spell.setTimeRestriction(timeRestriction);
 
 		spell.setCooldown(cooldown);
+		spell.setBolt(bolt);
 		spell.setDirectComponent(directComponent);
 		spell.setEffectApplication(effectApplication);
 	}
@@ -111,6 +113,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 	private final ExcelColumn colCategory = column(ABILITY_CATEGORY);
 	private final ExcelColumn colCooldown = column(COOLDOWN);
 	private final ExcelColumn colRange = column(RANGE);
+	private final ExcelColumn colBolt = column(BOLT);
 	private final ExcelColumn colEffectRemovedOnHit = column(EFFECT_REMOVED_ON_HIT);
 
 	protected void initAbility(AbilityImpl ability) {
@@ -172,7 +175,6 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 	private final ExcelColumn colDirectType = column(DIRECT_TYPE);
 	private final ExcelColumn colDirectMin = column(DIRECT_MIN);
 	private final ExcelColumn colDirectMax = column(DIRECT_MAX);
-	private final ExcelColumn colDirectBolt = column(DIRECT_BOLT);
 
 	private DirectCommand getDirectCommand(int idx) {
 		var prefix = getDirectCommandPrefix(idx);
@@ -187,9 +189,8 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var min = colDirectMin.prefixed(prefix).getInteger();
 		var max = colDirectMax.prefixed(prefix).getInteger();
 		var bonus = getDirectComponentBonus(prefix);
-		var bolt = colDirectBolt.prefixed(prefix).getBoolean();
 
-		return new DirectCommand(target, type, coeff, min, max, bonus, bolt);
+		return new DirectCommand(target, type, coeff, min, max, bonus);
 	}
 
 	private final ExcelColumn colDirectBonusMin = column(DIRECT_BONUS_MIN, true);

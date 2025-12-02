@@ -2,7 +2,6 @@ package wow.simulator.model.context;
 
 import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
-import wow.commons.model.Duration;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.EffectSource;
@@ -45,18 +44,8 @@ public class SpellResolutionContext extends Context {
 
 	private void executeDirectCommands() {
 		for (var command : spell.getDirectCommands()) {
-			var delay = getDelay(command);
-
-			getSimulation().delayedAction(
-					delay,
-					() -> directComponentAction(command)
-			);
+			directComponentAction(command);
 		}
-	}
-
-	private Duration getDelay(DirectCommand command) {
-		var flightTime = Duration.ZERO;
-		return command.bolt() ? flightTime : Duration.ZERO;
 	}
 
 	private boolean hitRollOnlyOnce(Unit target) {

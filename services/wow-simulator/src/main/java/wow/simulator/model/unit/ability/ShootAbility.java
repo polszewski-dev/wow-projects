@@ -40,8 +40,7 @@ public class ShootAbility implements Ability {
 				new Coefficient(Percent.ZERO, weaponStats.damageType()),
 				weaponStats.damageMin(),
 				weaponStats.damageMax(),
-				null,
-				true
+				null
 		);
 
 		return new DirectComponent(List.of(command));
@@ -105,6 +104,11 @@ public class ShootAbility implements Ability {
 	@Override
 	public Duration getCooldown() {
 		return ability.getCooldown();
+	}
+
+	@Override
+	public boolean isBolt() {
+		return true;
 	}
 
 	@Override

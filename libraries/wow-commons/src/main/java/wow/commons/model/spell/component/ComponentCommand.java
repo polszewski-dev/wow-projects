@@ -29,8 +29,7 @@ public sealed interface ComponentCommand {
 			Coefficient coefficient,
 			int min,
 			int max,
-			DirectComponentBonus bonus,
-			boolean bolt
+			DirectComponentBonus bonus
 	) implements ComponentCommand {
 		public DirectCommand {
 			Objects.requireNonNull(type);

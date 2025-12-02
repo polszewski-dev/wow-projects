@@ -92,9 +92,8 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var min = getOptionalInteger(params.min()).orElseThrow();
 		var max = getOptionalInteger(params.max()).orElseThrow();
 		var bonus = getDirectComponentBonus(params.bonus());
-		var bolt = params.bolt();
 
-		return new DirectCommand(target, type, coefficient, min, max, bonus, bolt);
+		return new DirectCommand(target, type, coefficient, min, max, bonus);
 	}
 
 	private DirectComponentBonus getDirectComponentBonus(DirectComponentBonusParams params) {

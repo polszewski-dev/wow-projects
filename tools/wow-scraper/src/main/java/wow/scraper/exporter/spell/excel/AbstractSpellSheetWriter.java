@@ -41,6 +41,7 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 		writeCastInfoHeader();
 		setHeader(COOLDOWN);
 		setHeader(RANGE);
+		setHeader(BOLT);
 		setHeader(EFFECT_REMOVED_ON_HIT);
 		writeDirectComponentHeader();
 		writeEffectApplicationHeader();
@@ -52,11 +53,13 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			writeCastInfo(ability.getCastInfo());
 			setValue(ability.getCooldown(), Duration.ZERO);
 			setValue(ability.getRange());
+			setValue(ability.isBolt());
 			setValue(ability.getEffectRemovedOnHit());
 		} else {
 			writeCastInfo(null);
 			setValue(spell.getCooldown(), Duration.ZERO);
 			setValue((String) null);
+			setValue(spell.isBolt());
 			setValue((String) null);
 		}
 		writeDirectComponent(spell);
@@ -103,7 +106,6 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 		if (writeBonus) {
 			writeBonusHeader(prefix);
 		}
-		setHeader(DIRECT_BOLT, prefix);
 	}
 
 	private void writeDirectComponent(Spell spell) {
@@ -141,7 +143,6 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 		} else if (command.bonus() != null) {
 			throw new IllegalArgumentException();
 		}
-		setValue(command.bolt());
 	}
 
 	private void writeBonusHeader(String prefix) {

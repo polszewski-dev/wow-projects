@@ -27,6 +27,8 @@ public interface Spell extends Described, TimeRestricted {
 
 	Duration getCooldown();
 
+	boolean isBolt();
+
 	DirectComponent getDirectComponent();
 
 	default List<DirectCommand> getDirectCommands() {

@@ -81,7 +81,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 		var colType = column(DIRECT_TYPE, optional).prefixed(prefix);
 		var colMin = column(DIRECT_MIN, optional).prefixed(prefix);
 		var colMax = column(DIRECT_MAX, optional).prefixed(prefix);
-		var colBolt = column(DIRECT_BOLT, true).prefixed(prefix);
+		var colBolt = column(BOLT, true).prefixed(prefix);
 
 		if (hasEmptyTarget(prefix)) {
 			assertAllColumnsAreEmpty(colType, colMin, colMax);

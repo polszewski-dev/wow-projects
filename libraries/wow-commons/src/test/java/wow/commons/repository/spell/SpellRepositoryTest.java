@@ -161,7 +161,18 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertCoefficient(command.coefficient(), 85.71, SHADOW);
 		assertThat(command.min()).isEqualTo(544);
 		assertThat(command.max()).isEqualTo(607);
-		assertThat(command.bolt()).isTrue();
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Shadow Bolt, 11, true",
+			"Incinerate,   2, true",
+			"Immolate,     8, false",
+	})
+	void bolt_field(String name, int rank, boolean expected) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		assertThat(ability.isBolt()).isEqualTo(expected);
 	}
 
 	@Test
@@ -200,7 +211,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertCoefficient(command.coefficient(), 0, SHADOW);
 		assertThat(command.min()).isEqualTo(165);
 		assertThat(command.max()).isEqualTo(165);
-		assertThat(command.bolt()).isFalse();
 	}
 
 	@Test
