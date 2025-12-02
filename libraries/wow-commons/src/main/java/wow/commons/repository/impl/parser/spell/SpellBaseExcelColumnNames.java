@@ -92,32 +92,6 @@ public final class SpellBaseExcelColumnNames {
 		return "event" + idx + ": ";
 	}
 
-	public static final int MAX_DIRECT_COMMANDS = 3;
-	public static final int MAX_PERIODIC_COMMANDS = 1;
-
-	public static final int MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES = 5;
-	public static final int MAX_ABILITY_EFFECT_EVENTS = 2;
-
-	public static final int MAX_ITEM_EFFECT_MODIFIER_ATTRIBUTES = 3;
-	public static final int MAX_ITEM_EFFECT_EVENTS = 5;
-
-	public static final int MAX_TALENT_MODIFIER_ATTRIBUTES = 6;
-	public static final int MAX_TALENT_EVENTS = 1;
-
-	public static final int MAX_TALENT_EFFECT_MODIFIER_ATTRIBUTES = 3;
-	public static final int MAX_TALENT_EFFECT_EVENTS = 1;
-
-	public static final int MAX_RACIAL_EFFECT_MODIFIER_ATTRIBUTES = 3;
-	public static final int MAX_RACIAL_EFFECT_EVENTS = 0;
-
-	public static final int MAX_BUFF_EFFECT_MODIFIER_ATTRIBUTES = 3;
-	public static final int MAX_BUFF_EFFECT_EVENTS = 0;
-
-	public static final int MAX_CONSUME_EFFECT_MODIFIER_ATTRIBUTES = 3;
-	public static final int MAX_CONSUME_EFFECT_EVENTS = 0;
-
-	public static final int MAX_STAT_CONVERSIONS = 2;
-
 	public static final String EFFECT_ID = "id";
 
 	private SpellBaseExcelColumnNames() {}

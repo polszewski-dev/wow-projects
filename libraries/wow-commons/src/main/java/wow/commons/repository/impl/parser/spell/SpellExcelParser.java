@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.SpellTargetType.TARGET;
-import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
 
@@ -52,17 +52,17 @@ public class SpellExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new AbilitySheetParser(ABILITIES, this),
-				new SpellSheetParser(ABILITY_SPELLS, this),
-				new SpellEffectSheetParser(ABILITY_EFFECTS, this, MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES, MAX_ABILITY_EFFECT_EVENTS),
-				new SpellSheetParser(ITEM_SPELLS, this),
-				new SpellEffectSheetParser(ITEM_EFFECTS, this, MAX_ITEM_EFFECT_MODIFIER_ATTRIBUTES, MAX_ITEM_EFFECT_EVENTS),
-				new SpellSheetParser(TALENT_SPELLS, this),
-				new SpellEffectSheetParser(TALENT_EFFECTS, this, MAX_TALENT_EFFECT_MODIFIER_ATTRIBUTES, MAX_TALENT_EFFECT_EVENTS),
-				new RacialEffectSheetParser(RACIAL_EFFECTS, this, MAX_RACIAL_EFFECT_MODIFIER_ATTRIBUTES, MAX_RACIAL_EFFECT_EVENTS),
-				new SpellEffectSheetParser(BUFF_EFFECTS, this, MAX_BUFF_EFFECT_MODIFIER_ATTRIBUTES, MAX_BUFF_EFFECT_EVENTS),
-				new SpellSheetParser(CONSUME_SPELLS, this),
-				new SpellEffectSheetParser(CONSUME_EFFECTS, this, MAX_CONSUME_EFFECT_MODIFIER_ATTRIBUTES, MAX_CONSUME_EFFECT_EVENTS)
+				new AbilitySheetParser(ABILITIES, this, ABILITIES_CONFIG),
+				new SpellSheetParser(ABILITY_SPELLS, this, ABILITY_SPELLS_CONFIG),
+				new SpellEffectSheetParser(ABILITY_EFFECTS, this, ABILITY_EFFECTS_CONFIG),
+				new SpellSheetParser(ITEM_SPELLS, this, ITEM_SPELLS_CONFIG),
+				new SpellEffectSheetParser(ITEM_EFFECTS, this, ITEM_EFFECTS_CONFIG),
+				new SpellSheetParser(TALENT_SPELLS, this, TALENT_SPELLS_CONFIG),
+				new SpellEffectSheetParser(TALENT_EFFECTS, this, TALENT_EFFECTS_CONFIG),
+				new RacialEffectSheetParser(RACIAL_EFFECTS, this, RACIAL_EFFECTS_CONFIG),
+				new SpellEffectSheetParser(BUFF_EFFECTS, this, BUFF_EFFECTS_CONFIG),
+				new SpellSheetParser(CONSUME_SPELLS, this, CONSUME_SPELLS_CONFIG),
+				new SpellEffectSheetParser(CONSUME_EFFECTS, this, CONSUME_EFFECTS_CONFIG)
 		);
 	}
 

@@ -10,7 +10,7 @@ import wow.commons.repository.spell.SpellRepository;
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class BuffSheetParser extends AbstractSpellSheetParser {
+public class BuffSheetParser extends AbstractSpellBaseSheetParser {
 	private final ExcelColumn colRank = column("rank");
 	private final ExcelColumn colType = column("type");
 	private final ExcelColumn colExclusionGroup = column("exclusion group");

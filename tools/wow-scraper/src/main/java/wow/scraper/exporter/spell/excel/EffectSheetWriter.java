@@ -8,6 +8,7 @@ import java.util.List;
 import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.SpellEffectSheetParser.Config;
 import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
 
 /**
@@ -15,13 +16,11 @@ import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
  * Date: 2023-08-31
  */
 public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExcelBuilder> {
-	private final int maxModAttributes;
-	private final int maxEvents;
+	private final Config config;
 
-	public EffectSheetWriter(SpellBaseExcelBuilder builder, int maxModAttributes, int maxEvents) {
+	public EffectSheetWriter(SpellBaseExcelBuilder builder, Config config) {
 		super(builder);
-		this.maxModAttributes = maxModAttributes;
-		this.maxEvents = maxEvents;
+		this.config = config;
 	}
 
 	@Override
@@ -34,11 +33,11 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setHeader(EXCLUSION_GROUP);
 		writePeriodicComponentHeader();
 		setHeader(AUGMENTED_ABILITY);
-		writeModifierComponentHeader(maxModAttributes);
+		writeModifierComponentHeader(config.maxModAttributes());
 		writeAbsorptionComponentHeader();
 		setHeader(PREVENTED_SCHOOLS);
-		writeStatConversionHeader();
-		writeEventHeader(maxEvents);
+		writeStatConversionsHeader(config.maxStatConversions());
+		writeEventHeader(config.maxEvents());
 		writeIconAndTooltipHeader();
 	}
 
@@ -52,18 +51,18 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setValue(effect.getExclusionGroup());
 		writePeriodicComponent(effect);
 		setValue(effect.getAugmentedAbilities());
-		writeModifierComponent(effect, maxModAttributes);
+		writeModifierComponent(effect, config.maxModAttributes());
 		writeAbsorptionComponent(effect);
 		setValue(effect.getPreventedSchools());
-		writeStatConversions(effect);
-		writeEvents(effect, maxEvents);
+		writeStatConversions(effect, config.maxStatConversions());
+		writeEvents(effect, config.maxEvents());
 		writeIconAndTooltip(effect);
 	}
 
 	private void writePeriodicComponentHeader() {
 		setHeader(PERIODIC_TICK_INTERVAL, PERIODIC_PREFIX);
 
-		for (int i = 1; i <= MAX_PERIODIC_COMMANDS; ++i) {
+		for (int i = 1; i <= config.maxPeriodicCommands(); ++i) {
 			writePeriodicCommandHeader(i);
 		}
 	}
@@ -93,9 +92,9 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 	}
 
 	private void writePeriodicCommands(List<PeriodicCommand> commands) {
-		assertSizeNoLargerThan("periodic commands", commands, MAX_PERIODIC_COMMANDS);
+		assertSizeNoLargerThan("periodic commands", commands, config.maxPeriodicCommands());
 
-		for (int i = 0; i < MAX_PERIODIC_COMMANDS; ++i) {
+		for (int i = 0; i < config.maxPeriodicCommands(); ++i) {
 			if (i < commands.size()) {
 				writePeriodicCommand(commands.get(i));
 			} else {

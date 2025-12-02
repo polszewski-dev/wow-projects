@@ -20,7 +20,9 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2023-09-09
  */
 public abstract class AbstractSpellPatternSheetParser extends AbstractPatternSheetParser {
+	private static final int MAX_DIRECT_COMMANDS = 3;
 	private static final int MAX_MODIFIER_ATTRIBUTES = 3;
+	private static final int MAX_STAT_CONVERSIONS = 2;
 	private static final int MAX_EVENT_PATTERNS = 2;
 	public static final String TRIGGER_PREFIX = "trigger: ";
 

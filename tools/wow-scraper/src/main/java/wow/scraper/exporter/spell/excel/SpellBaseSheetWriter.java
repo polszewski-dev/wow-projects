@@ -30,8 +30,8 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		writeAttributes(attributes, maxAttributes);
 	}
 
-	protected void writeStatConversionHeader() {
-		for (int i = 1; i <= MAX_STAT_CONVERSIONS; ++i) {
+	protected void writeStatConversionsHeader(int maxStatConversions) {
+		for (int i = 1; i <= maxStatConversions; ++i) {
 			writeStatConversionHeader(i);
 		}
 	}
@@ -44,8 +44,8 @@ public abstract class SpellBaseSheetWriter<P, B extends WowExcelBuilder> extends
 		setHeader(STAT_CONVERSION_RATIO, prefix);
 	}
 
-	protected void writeStatConversions(Effect effect) {
-		for (int i = 0; i < MAX_STAT_CONVERSIONS; ++i) {
+	protected void writeStatConversions(Effect effect, int maxStatConversions) {
+		for (int i = 0; i < maxStatConversions; ++i) {
 			if (i < effect.getStatConversions().size()) {
 				writeStatConversion(effect.getStatConversions().get(i));
 			} else {

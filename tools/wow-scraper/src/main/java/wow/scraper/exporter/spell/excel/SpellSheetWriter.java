@@ -4,6 +4,7 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellType;
 
+import static wow.commons.repository.impl.parser.spell.AbstractSpellSheetParser.Config;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.ABILITY_CATEGORY;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.SPELL_TYPE;
 
@@ -12,8 +13,8 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2023-10-05
  */
 public class SpellSheetWriter extends AbstractSpellSheetWriter<Spell> {
-	public SpellSheetWriter(SpellBaseExcelBuilder builder) {
-		super(builder);
+	public SpellSheetWriter(SpellBaseExcelBuilder builder, Config config) {
+		super(builder, config);
 	}
 
 	@Override

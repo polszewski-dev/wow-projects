@@ -2,16 +2,13 @@ package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.EffectId;
-import wow.commons.model.effect.component.*;
-import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.spell.component.DirectComponentBonus;
 import wow.commons.model.spell.impl.*;
 import wow.commons.model.talent.TalentTree;
-import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,9 +21,16 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-10-05
  */
-public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
-	protected AbstractSpellSheetParser(String sheetName) {
+public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetParser {
+	public record Config(
+		int maxDirectCommands
+	) {}
+
+	private final Config config;
+
+	protected AbstractSpellSheetParser(String sheetName, Config config) {
 		super(sheetName);
+		this.config = config;
 	}
 
 	private final ExcelColumn colType = column(SPELL_TYPE);
@@ -159,7 +163,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	}
 
 	private List<DirectCommand> getDirectCommands() {
-		return IntStream.rangeClosed(1, MAX_DIRECT_COMMANDS)
+		return IntStream.rangeClosed(1, config.maxDirectCommands())
 				.mapToObj(this::getDirectCommand)
 				.filter(Objects::nonNull)
 				.toList();
@@ -173,7 +177,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private DirectCommand getDirectCommand(int idx) {
 		var prefix = getDirectCommandPrefix(idx);
 
-		if (colTarget.prefixed(prefix).isEmpty()) {
+		if (hasNoTarget(prefix)) {
 			return null;
 		}
 
@@ -204,33 +208,6 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		return new DirectComponentBonus(min, max, requiredEffect);
 	}
 
-	protected List<StatConversion> getStatConversions() {
-		return IntStream.rangeClosed(1, MAX_STAT_CONVERSIONS)
-				.mapToObj(this::getStatConversion)
-				.filter(Objects::nonNull)
-				.toList();
-	}
-
-	private final ExcelColumn colStatConversionFrom = column(STAT_CONVERSION_FROM);
-	private final ExcelColumn colStatConversionTo = column(STAT_CONVERSION_TO);
-	private final ExcelColumn colStatConversionToCondition = column(STAT_CONVERSION_TO_CONDITION);
-	private final ExcelColumn colStatConversionRatio = column(STAT_CONVERSION_RATIO);
-
-	private StatConversion getStatConversion(int idx) {
-		var prefix = getStatConversionPrefix(idx);
-
-		if (colStatConversionFrom.prefixed(prefix).isEmpty()) {
-			return null;
-		}
-
-		var from = colStatConversionFrom.prefixed(prefix).getEnum(AttributeId::parse);
-		var to = colStatConversionTo.prefixed(prefix).getEnum(AttributeId::parse);
-		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(StatConversionCondition::parse, StatConversionCondition.EMPTY);
-		var ratio = colStatConversionRatio.prefixed(prefix).getPercent();
-
-		return new StatConversion(from, to, toCondition, ratio);
-	}
-
 	private final ExcelColumn colAppliedEffectId = column(APPLIED_EFFECT_ID);
 	private final ExcelColumn colAppliedEffectDuration = column(APPLIED_EFFECT_DURATION);
 	private final ExcelColumn colAppliedEffectStacks = column(APPLIED_EFFECT_STACKS);
@@ -240,7 +217,7 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 	private EffectApplication getEffectApplication() {
 		var prefix = APPLY_PREFIX;
 
-		if (colTarget.prefixed(prefix).isEmpty()) {
+		if (hasNoTarget(prefix)) {
 			return null;
 		}
 
@@ -254,86 +231,5 @@ public abstract class AbstractSpellSheetParser extends WowExcelSheetParser {
 		var dummy = getDummyEffect(effectId);
 
 		return new EffectApplication(target, dummy, duration, numStacks, numCharges, replacementMode);
-	}
-
-	protected EffectImpl getDummyEffect(EffectId effectId) {
-		var dummy = new EffectImpl(List.of());
-		dummy.setId(effectId);
-		return dummy;
-	}
-
-	protected final ExcelColumn colAugmentedAbility = column(AUGMENTED_ABILITY, true);
-
-	protected EffectImpl newEffect() {
-		var augmentedAbilities = colAugmentedAbility.getList(AbilityId::parse);
-
-		return new EffectImpl(augmentedAbilities);
-	}
-
-	protected ModifierComponent getModifierComponent(int maxAttributes) {
-		var attributes = readAttributes(MOD_PREFIX, maxAttributes);
-
-		if (attributes.isEmpty()) {
-			return null;
-		}
-
-		return new ModifierComponent(attributes);
-	}
-
-	protected List<Event> getEvents(int maxEvents) {
-		return IntStream.rangeClosed(1, maxEvents)
-				.mapToObj(this::getEvent)
-				.filter(Objects::nonNull)
-				.toList();
-	}
-
-	private final ExcelColumn colEventOn = column(EVENT_ON);
-	private final ExcelColumn colEventCondition = column(EVENT_CONDITION);
-	private final ExcelColumn colEventChance = column(EVENT_CHANCE_PCT);
-	private final ExcelColumn colEventAction = column(EVENT_ACTION);
-	private final ExcelColumn colEventTriggeredSpell = column(EVENT_TRIGGERED_SPELL);
-	private final ExcelColumn colEventActionParams = column(EVENT_ACTION_PARAMS, true);
-
-	private Event getEvent(int idx) {
-		var prefix = getEventPrefix(idx);
-
-		if (colEventOn.prefixed(prefix).isEmpty()) {
-			return null;
-		}
-
-		var types = colEventOn.prefixed(prefix).getList(EventType::parse);
-		var condition = colEventCondition.prefixed(prefix).getEnum(EventCondition::parse, EventCondition.EMPTY);
-		var chance = colEventChance.prefixed(prefix).getPercent(Percent._100);
-		var actions = colEventAction.prefixed(prefix).getList(EventAction::parse);
-		var triggeredSpellId = colEventTriggeredSpell.prefixed(prefix).getNullableInteger(SpellId::ofNullable);
-		var actionParams = colEventActionParams.prefixed(prefix).getEnum(EventActionParameters::parse, EventActionParameters.EMPTY);
-
-		var dummy = getDummySpell(triggeredSpellId);
-
-		return new Event(types, condition, chance, actions, dummy, actionParams);
-	}
-
-	protected SpellImpl getDummySpell(SpellId spellId) {
-		if (spellId == null) {
-			return null;
-		}
-		var dummy = new TriggeredSpellImpl();
-		dummy.setId(spellId);
-		return dummy;
-	}
-
-	private final ExcelColumn colCoeffValue = column(COEFF_VALUE);
-	private final ExcelColumn colCoeffSchool = column(COEFF_SCHOOL);
-
-	protected Coefficient getCoefficient(String prefix) {
-		var value = colCoeffValue.prefixed(prefix).getPercent(Percent.ZERO);
-		var school = colCoeffSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
-		return new Coefficient(value, school);
-	}
-
-	private final ExcelColumn colTarget = column(TARGET, true);
-
-	protected SpellTarget getTarget(String prefix) {
-		return colTarget.prefixed(prefix).getEnum(SpellTarget::parse);
 	}
 }

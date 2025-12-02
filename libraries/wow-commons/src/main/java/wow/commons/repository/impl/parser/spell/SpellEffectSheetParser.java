@@ -22,17 +22,23 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * User: POlszewski
  * Date: 2023-08-31
  */
-public class SpellEffectSheetParser extends AbstractSpellSheetParser {
+public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 	private final SpellExcelParser parser;
 
-	private final int maxModAttributes;
-	private final int maxEvents;
+	private final Config config;
 
-	public SpellEffectSheetParser(String sheetName, SpellExcelParser parser, int maxModAttributes, int maxEvents) {
+	public record Config(
+			int maxPeriodicCommands,
+			int maxModAttributes,
+			int maxStatConversions,
+			int maxEvents,
+			boolean hasAbsorptionComponent
+	) {}
+
+	public SpellEffectSheetParser(String sheetName, SpellExcelParser parser, Config config) {
 		super(sheetName);
 		this.parser = parser;
-		this.maxModAttributes = maxModAttributes;
-		this.maxEvents = maxEvents;
+		this.config = config;
 	}
 
 	@Override
@@ -55,11 +61,11 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		var scope = colScope.getEnum(EffectScope::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(EffectExclusionGroup::parse, null);
 		var periodicComponent = getPeriodicComponent();
-		var modifierComponent = getModifierComponent(maxModAttributes);
+		var modifierComponent = getModifierComponent(config.maxModAttributes());
 		var absorptionComponent = getAbsorptionComponent();
 		var preventedSchools = colPreventedSchools.getList(SpellSchool::parse);
-		var statConversions = getStatConversions();
-		var events = getEvents(maxEvents);
+		var statConversions = getStatConversions(config.maxStatConversions());
+		var events = getEvents(config.maxEvents());
 
 		effect.setId(effectId);
 		effect.setDescription(description);
@@ -79,7 +85,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colTickInterval = column(PERIODIC_TICK_INTERVAL, true).prefixed(PERIODIC_PREFIX);
 
 	private PeriodicComponent getPeriodicComponent() {
-		if (colTickInterval.isEmpty()) {
+		if (colTickInterval.isEmpty() || config.maxPeriodicCommands() == 0) {
 			return null;
 		}
 
@@ -90,7 +96,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	}
 
 	private List<PeriodicCommand> getPeriodicCommands() {
-		return IntStream.rangeClosed(1, MAX_PERIODIC_COMMANDS)
+		return IntStream.rangeClosed(1, config.maxPeriodicCommands())
 				.mapToObj(this::getPeriodicCommand)
 				.filter(Objects::nonNull)
 				.toList();
@@ -103,12 +109,11 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private PeriodicCommand getPeriodicCommand(int idx) {
 		var prefix = getPeriodicCommandPrefix(idx);
 
-		var target = getTarget(prefix);
-
-		if (target == null) {
+		if (hasNoTarget(prefix)) {
 			return null;
 		}
 
+		var target = getTarget(prefix);
 		var type = colPeriodicType.prefixed(prefix).getEnum(ComponentType::parse);
 		var coefficient = getCoefficient(prefix);
 		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
@@ -118,7 +123,7 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 		return new PeriodicCommand(target, type, coefficient, amount, numTicks, tickScheme);
 	}
 
-	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS);
+	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS, true);
 
 	private TickScheme getTickScheme(int idx) {
 		var prefix = getPeriodicCommandPrefix(idx);
@@ -136,6 +141,10 @@ public class SpellEffectSheetParser extends AbstractSpellSheetParser {
 	private final ExcelColumn colAbsorbMax = column(ABSORB_MAX).prefixed(ABSORB_PREFIX);
 
 	private AbsorptionComponent getAbsorptionComponent() {
+		if (!config.hasAbsorptionComponent()) {
+			return null;
+		}
+
 		if (colAbsorbMin.isEmpty()) {
 			return null;
 		}

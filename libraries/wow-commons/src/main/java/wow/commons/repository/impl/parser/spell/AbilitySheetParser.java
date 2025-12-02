@@ -9,8 +9,8 @@ import wow.commons.model.spell.Ability;
 public class AbilitySheetParser extends AbstractSpellSheetParser {
 	private final SpellExcelParser parser;
 
-	public AbilitySheetParser(String sheetName, SpellExcelParser parser) {
-		super(sheetName);
+	public AbilitySheetParser(String sheetName, SpellExcelParser parser, Config config) {
+		super(sheetName, config);
 		this.parser = parser;
 	}
 

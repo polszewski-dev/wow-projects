@@ -7,6 +7,7 @@ import java.util.List;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 
 /**
  * User: POlszewski
@@ -29,7 +30,7 @@ public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser,
 		setHeader(TALENT_TREE);
 		setHeader(AUGMENTED_ABILITY);
 		writeModifierComponentHeader(MAX_TALENT_MODIFIER_ATTRIBUTES);
-		writeStatConversionHeader();
+		writeStatConversionsHeader(MAX_TALENT_STAT_CONVERSIONS);
 		writeEventHeader(MAX_TALENT_EVENTS);
 		writeIconAndTooltipHeader();
 	}
@@ -50,7 +51,7 @@ public class TalentSheetWriter extends SpellBaseSheetWriter<TalentTooltipParser,
 		setValue(parser.getTalentTree());
 		setValue(effect.getAugmentedAbilities());
 		writeModifierComponent(effect, MAX_TALENT_MODIFIER_ATTRIBUTES);
-		writeStatConversions(effect);
+		writeStatConversions(effect, MAX_TALENT_STAT_CONVERSIONS);
 		writeEvents(effect, MAX_TALENT_EVENTS);
 		writeIconAndTooltip(parser.getIcon(), parser.getDescription());
 	}

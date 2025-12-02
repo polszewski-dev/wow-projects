@@ -11,8 +11,8 @@ import wow.commons.model.spell.AbilityId;
  * Date: 2024-11-18
  */
 public class RacialEffectSheetParser extends SpellEffectSheetParser {
-	public RacialEffectSheetParser(String sheetName, SpellExcelParser parser, int maxModAttributes, int maxEvents) {
-		super(sheetName, parser, maxModAttributes, maxEvents);
+	public RacialEffectSheetParser(String sheetName, SpellExcelParser parser, Config config) {
+		super(sheetName, parser, config);
 	}
 
 	@Override

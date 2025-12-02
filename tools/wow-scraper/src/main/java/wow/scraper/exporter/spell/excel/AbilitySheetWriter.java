@@ -7,6 +7,7 @@ import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.SpellType;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.AbstractSpellSheetParser.Config;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
@@ -14,8 +15,8 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  * Date: 2023-06-20
  */
 public class AbilitySheetWriter extends AbstractSpellSheetWriter<ClassAbility> {
-	public AbilitySheetWriter(SpellBaseExcelBuilder builder) {
-		super(builder);
+	public AbilitySheetWriter(SpellBaseExcelBuilder builder, Config config) {
+		super(builder, config);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import wow.scraper.config.ScraperConfig;
 import wow.scraper.config.ScraperDatafixes;
 import wow.scraper.exporter.excel.WowExcelBuilder;
 
-import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
 
 /**
@@ -26,11 +26,11 @@ public class SpellBaseExcelBuilder extends WowExcelBuilder {
 
 	public SpellBaseExcelBuilder(ScraperConfig config, ScraperDatafixes datafixes) {
 		super(config, datafixes);
-		this.abilitySheetWriter = new AbilitySheetWriter(this);
-		this.abilitySpellSheetWriter = new SpellSheetWriter(this);
-		this.abilityEffectSheetWriter = new EffectSheetWriter(this, MAX_ABILITY_EFFECT_MODIFIER_ATTRIBUTES, MAX_ABILITY_EFFECT_EVENTS);
-		this.itemSpellSheetWriter = new SpellSheetWriter(this);
-		this.itemEffectSheetWriter = new EffectSheetWriter(this, MAX_ITEM_EFFECT_MODIFIER_ATTRIBUTES, MAX_ITEM_EFFECT_EVENTS);
+		this.abilitySheetWriter = new AbilitySheetWriter(this, ABILITIES_CONFIG);
+		this.abilitySpellSheetWriter = new SpellSheetWriter(this, ABILITY_SPELLS_CONFIG);
+		this.abilityEffectSheetWriter = new EffectSheetWriter(this, ABILITY_EFFECTS_CONFIG);
+		this.itemSpellSheetWriter = new SpellSheetWriter(this, ITEM_SPELLS_CONFIG);
+		this.itemEffectSheetWriter = new EffectSheetWriter(this, ITEM_EFFECTS_CONFIG);
 	}
 
 	public void addAbilityHeader() {

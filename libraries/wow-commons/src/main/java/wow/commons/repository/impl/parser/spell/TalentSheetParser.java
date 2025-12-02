@@ -15,12 +15,13 @@ import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 import java.util.List;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
-public class TalentSheetParser extends AbstractSpellSheetParser {
+public class TalentSheetParser extends AbstractSpellBaseSheetParser {
 	private final SpellRepositoryImpl spellRepository;
 	private final TalentExcelParser parser;
 
@@ -76,7 +77,7 @@ public class TalentSheetParser extends AbstractSpellSheetParser {
 	private EffectImpl getEffect() {
 		EffectImpl effect = newEffect();
 		var modifierComponent = getModifierComponent(MAX_TALENT_MODIFIER_ATTRIBUTES);
-		var statConversions = getStatConversions();
+		var statConversions = getStatConversions(MAX_TALENT_STAT_CONVERSIONS);
 		var events = getEvents(MAX_TALENT_EVENTS);
 
 		effect.setMaxStacks(1);

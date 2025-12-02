@@ -11,6 +11,7 @@ import java.util.List;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.ID;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
+import static wow.commons.repository.impl.parser.spell.AbstractSpellSheetParser.Config;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
 
@@ -19,8 +20,11 @@ import static wow.scraper.util.CommonAssertions.assertSizeNoLargerThan;
  * Date: 2023-06-20
  */
 public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBaseSheetWriter<T, SpellBaseExcelBuilder> {
-	protected AbstractSpellSheetWriter(SpellBaseExcelBuilder builder) {
+	private final Config config;
+	
+	protected AbstractSpellSheetWriter(SpellBaseExcelBuilder builder, Config config) {
 		super(builder);
+		this.config = config;
 	}
 
 	protected void writeIdNameHeader() {
@@ -83,7 +87,7 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 	}
 
 	private void writeDirectComponentHeader() {
-		for (int i = 1; i <= MAX_DIRECT_COMMANDS; ++i) {
+		for (int i = 1; i <= config.maxDirectCommands(); ++i) {
 			writeDirectCommandHeader(i, i == 1);
 		}
 	}
@@ -107,9 +111,9 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 	}
 
 	private void writeDirectCommands(List<DirectCommand> commands) {
-		assertSizeNoLargerThan("direct commands", commands, MAX_DIRECT_COMMANDS);
+		assertSizeNoLargerThan("direct commands", commands, config.maxDirectCommands());
 
-		for (int i = 0; i < MAX_DIRECT_COMMANDS; ++i) {
+		for (int i = 0; i < config.maxDirectCommands(); ++i) {
 			var writeBonus = i == 0;
 
 			if (i < commands.size()) {
