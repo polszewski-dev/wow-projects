@@ -12,8 +12,6 @@ import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.TickScheme;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
@@ -96,10 +94,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 	}
 
 	private List<PeriodicCommand> getPeriodicCommands() {
-		return IntStream.rangeClosed(1, config.maxPeriodicCommands())
-				.mapToObj(this::getPeriodicCommand)
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(config.maxPeriodicCommands(), this::getPeriodicCommand);
 	}
 
 	private final ExcelColumn colPeriodicType = column(PERIODIC_TYPE);

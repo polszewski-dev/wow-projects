@@ -5,9 +5,7 @@ import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 import wow.scraper.parser.spell.params.AttributePattern;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.getAttrId;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.getAttrValue;
@@ -39,10 +37,7 @@ public abstract class AbstractPatternSheetParser extends WowExcelSheetParser {
 	}
 
 	protected List<AttributePattern> getAttributes(String prefix, int maxAttributes) {
-		return IntStream.rangeClosed(1, maxAttributes)
-				.mapToObj(idx -> getAttributePattern(prefix, idx))
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(maxAttributes, idx -> getAttributePattern(prefix, idx));
 	}
 
 	private AttributePattern getAttributePattern(String prefix, int idx) {

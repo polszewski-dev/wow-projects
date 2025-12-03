@@ -19,11 +19,9 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.util.AttributesParser;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -197,10 +195,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	}
 
 	protected Attributes readAttributes(String prefix, int maxAttributes) {
-		var list = IntStream.rangeClosed(1, maxAttributes)
-				.mapToObj(idx -> readAttribute(prefix, idx))
-				.filter(Objects::nonNull)
-				.toList();
+		var list = readSections(maxAttributes, idx -> readAttribute(prefix, idx));
 
 		return Attributes.of(list);
 	}
@@ -224,5 +219,12 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 
 	protected Set<PveRole> getPveRoles() {
 		return coPveRoles.getSet(PveRole::parse);
+	}
+
+	protected static <T> List<T> readSections(int numSections, IntFunction<T> sectionMapper) {
+		return IntStream.rangeClosed(1, numSections)
+				.mapToObj(sectionMapper)
+				.filter(Objects::nonNull)
+				.toList();
 	}
 }

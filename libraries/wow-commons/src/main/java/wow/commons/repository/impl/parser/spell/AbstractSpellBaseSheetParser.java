@@ -11,8 +11,6 @@ import wow.commons.model.spell.impl.TriggeredSpellImpl;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
@@ -26,10 +24,7 @@ public abstract class AbstractSpellBaseSheetParser extends WowExcelSheetParser {
 	}
 
 	protected List<StatConversion> getStatConversions(int maxStatConversions) {
-		return IntStream.rangeClosed(1, maxStatConversions)
-				.mapToObj(this::getStatConversion)
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(maxStatConversions, this::getStatConversion);
 	}
 
 	private final ExcelColumn colStatConversionFrom = column(STAT_CONVERSION_FROM);
@@ -77,10 +72,7 @@ public abstract class AbstractSpellBaseSheetParser extends WowExcelSheetParser {
 	}
 
 	protected List<Event> getEvents(int maxEvents) {
-		return IntStream.rangeClosed(1, maxEvents)
-				.mapToObj(this::getEvent)
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(maxEvents, this::getEvent);
 	}
 
 	private final ExcelColumn colEventOn = column(EVENT_ON);

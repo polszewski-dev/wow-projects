@@ -22,7 +22,6 @@ import wow.commons.repository.spell.SpellRepository;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.colEffectDescr;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.colEffectStats;
@@ -76,10 +75,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 	}
 
 	protected List<Effect> readItemEffects(String prefix, int maxEffects, TimeRestriction timeRestriction, EffectSource source) {
-		return IntStream.rangeClosed(1, maxEffects)
-				.mapToObj(i -> readItemEffect(prefix, i, timeRestriction, source))
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(maxEffects, i -> readItemEffect(prefix, i, timeRestriction, source));
 	}
 
 	protected Effect readItemEffect(String prefix, int i, TimeRestriction timeRestriction, EffectSource source) {

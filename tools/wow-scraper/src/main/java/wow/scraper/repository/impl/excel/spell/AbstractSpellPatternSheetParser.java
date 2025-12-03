@@ -9,9 +9,7 @@ import wow.scraper.parser.spell.params.*;
 import wow.scraper.repository.impl.excel.AbstractPatternSheetParser;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.TreeMap;
-import java.util.stream.IntStream;
 
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
@@ -199,10 +197,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	}
 
 	private List<StatConversionParams> getStatConversionParams() {
-		return IntStream.rangeClosed(1, MAX_STAT_CONVERSIONS)
-				.mapToObj(this::getStatConversionParams)
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(MAX_STAT_CONVERSIONS, this::getStatConversionParams);
 	}
 
 	private final ExcelColumn colStatConversionFrom = column(STAT_CONVERSION_FROM);
@@ -284,10 +279,7 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	}
 
 	private List<DirectComponentParams> getDirectComponents() {
-		return IntStream.rangeClosed(1, MAX_DIRECT_COMMANDS)
-				.mapToObj(this::getDirectComponentParams)
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(MAX_DIRECT_COMMANDS, this::getDirectComponentParams);
 	}
 
 	private final ExcelColumn colAugmentedAbility = column(AUGMENTED_ABILITY);
@@ -321,11 +313,13 @@ public abstract class AbstractSpellPatternSheetParser extends AbstractPatternShe
 	}
 
 	private List<EventParams> getEventParamList() {
-		return IntStream.rangeClosed(1, MAX_EVENT_PATTERNS)
-				.mapToObj(SpellBaseExcelColumnNames::getEventPrefix)
-				.map(this::getEventParams)
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(MAX_EVENT_PATTERNS, this::getEventParams);
+	}
+
+	private EventParams getEventParams(int idx) {
+		var prefix = SpellBaseExcelColumnNames.getEventPrefix(idx);
+
+		return getEventParams(prefix);
 	}
 
 	private SpellTarget getTarget(String prefix) {

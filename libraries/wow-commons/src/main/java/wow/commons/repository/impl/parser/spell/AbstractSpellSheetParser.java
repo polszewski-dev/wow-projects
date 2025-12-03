@@ -11,8 +11,6 @@ import wow.commons.model.spell.impl.*;
 import wow.commons.model.talent.TalentTree;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
@@ -166,10 +164,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 	}
 
 	private List<DirectCommand> getDirectCommands() {
-		return IntStream.rangeClosed(1, config.maxDirectCommands())
-				.mapToObj(this::getDirectCommand)
-				.filter(Objects::nonNull)
-				.toList();
+		return readSections(config.maxDirectCommands(), this::getDirectCommand);
 	}
 
 	private final ExcelColumn colDirectType = column(DIRECT_TYPE);
