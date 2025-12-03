@@ -50,7 +50,7 @@ class ProcParserTest extends SpellParserTest {
 
 		assertEffectApplication(triggeredSpell, SpellTargets.SELF, 10, 1, 1, 1);
 
-		var triggeredEffect = triggeredSpell.getEffectApplication().effect();
+		var triggeredEffect = triggeredSpell.getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(triggeredEffect, List.of(
 				Attribute.of(POWER, 175, HEALING),
@@ -88,8 +88,8 @@ class ProcParserTest extends SpellParserTest {
 		assertEffectApplication(procTrigger1.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 20);
 		assertEffectApplication(procTrigger2.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 10);
 
-		var effect1 = procTrigger1.triggeredSpell().getEffectApplication().effect();
-		var effect2 = procTrigger2.triggeredSpell().getEffectApplication().effect();
+		var effect1 = procTrigger1.triggeredSpell().getApplyEffectCommands().getFirst().effect();
+		var effect2 = procTrigger2.triggeredSpell().getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(effect1, List.of(Attribute.of(POWER, 6, PHYSICAL)));
 		assertModifier(effect2, List.of(Attribute.of(POWER, 8, AttributeConditions.SPELL_DAMAGE)));
@@ -140,7 +140,7 @@ class ProcParserTest extends SpellParserTest {
 
 		assertEffectApplication(procTrigger3.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 1);
 
-		var effect3 = procTrigger3.triggeredSpell().getEffectApplication().effect();
+		var effect3 = procTrigger3.triggeredSpell().getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(effect3, List.of(
 				Attribute.of(POWER, 275, PHYSICAL)

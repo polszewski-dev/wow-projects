@@ -41,7 +41,7 @@ class ConsumableRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(consumable.getActivatedAbility(), SpellTargets.SELF, 15, 1, 1, 1);
 		assertEffect(
-				consumable.getActivatedAbility().getAppliedEffect(),
+				consumable.getActivatedAbility().getApplyEffectCommands().getFirst().effect(),
 				Attributes.of(
 						Attribute.of(AttributeId.CRIT_PCT, 2, AttributeConditions.SPELL),
 						Attribute.of(AttributeId.POWER, 120, AttributeConditions.SPELL_DAMAGE)

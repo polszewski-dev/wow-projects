@@ -3,7 +3,6 @@ package wow.commons.model.spell;
 import wow.commons.model.Duration;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
-import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.component.DirectComponent;
 
@@ -11,8 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -39,14 +38,10 @@ public interface Spell extends Described, TimeRestricted {
 
 	EffectApplication getEffectApplication();
 
-	default Effect getAppliedEffect() {
-		return getEffectApplication() != null ? getEffectApplication().effect() : null;
-	}
+	default List<ApplyEffect> getApplyEffectCommands() {
+		var effectApplication = getEffectApplication();
 
-	default List<PeriodicCommand> getPeriodicCommands() {
-		var appliedEffect = getAppliedEffect();
-
-		return appliedEffect != null ? appliedEffect.getPeriodicCommands() : List.of();
+		return effectApplication != null ? effectApplication.commands() : List.of();
 	}
 
 	default Set<SpellTarget> getTargets() {
@@ -56,10 +51,8 @@ public interface Spell extends Described, TimeRestricted {
 			result.add(command.target());
 		}
 
-		var effectApplication = getEffectApplication();
-
-		if (effectApplication != null) {
-			result.add(effectApplication.target());
+		for (var command : getApplyEffectCommands()) {
+			result.add(command.target());
 		}
 
 		return result;

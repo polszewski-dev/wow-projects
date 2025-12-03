@@ -74,7 +74,7 @@ public class SpecialAbilitySolver {
 			return false;
 		}
 
-		var appliedEffect = effectApplication.effect();
+		var appliedEffect = effectApplication.commands().getFirst().effect();
 
 		if (!appliedEffect.hasModifierComponent()) {
 			return false;
@@ -131,17 +131,18 @@ public class SpecialAbilitySolver {
 			return false;
 		}
 
-		var modifierAttributeList = effectApplication.effect().getModifierAttributeList();
+		var command = effectApplication.commands().getFirst();
+		var modifierAttributeList = command.effect().getModifierAttributeList();
 
 		if (modifierAttributeList == null) {
 			return false;
 		}
 
-		var duration = ((Duration) effectApplication.duration()).getSeconds();
+		var duration = ((Duration) command.duration()).getSeconds();
 		var cooldown = activatedAbility.getCooldown().getSeconds();
 		var uptime = cooldown != 0 ? duration / cooldown : 1;
 
-		abilityStats.accumulateAttributes(modifierAttributeList, effectApplication.numStacks() * uptime);
+		abilityStats.accumulateAttributes(modifierAttributeList, command.numStacks() * uptime);
 
 		return true;
 	}
@@ -197,7 +198,7 @@ public class SpecialAbilitySolver {
 	}
 
 	private double getProcUptime(Event procEvent, Snapshot snapshot, double procChance) {
-		var duration = procEvent.triggeredSpell().getEffectApplication().duration();
+		var duration = procEvent.triggeredSpell().getEffectApplication().commands().getFirst().duration();
 		var cooldown = procEvent.triggeredSpell().getCooldown().getSeconds();
 
 		if (duration.isInfinite() && cooldown == 0) {

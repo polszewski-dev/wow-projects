@@ -1,30 +1,18 @@
 package wow.commons.model.spell;
 
-import wow.commons.model.AnyDuration;
-import wow.commons.model.effect.Effect;
-
+import java.util.List;
 import java.util.Objects;
+
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 
 /**
  * User: POlszewski
  * Date: 2023-09-28
  */
 public record EffectApplication(
-		SpellTarget target,
-		Effect effect,
-		AnyDuration duration,
-		int numStacks,
-		int numCharges,
-		EffectReplacementMode replacementMode
+		List<ApplyEffect> commands
 ) {
 	public EffectApplication {
-		Objects.requireNonNull(target);
-		Objects.requireNonNull(effect);
-		Objects.requireNonNull(duration);
-		Objects.requireNonNull(replacementMode);
-	}
-
-	public EffectApplication setEffect(Effect effect) {
-		return new EffectApplication(target, effect, duration, numStacks, numCharges, replacementMode);
+		Objects.requireNonNull(commands);
 	}
 }

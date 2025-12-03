@@ -16,8 +16,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -84,6 +83,10 @@ public interface Unit extends Character, SimulationContextSource {
 	EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target);
+
+	EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target, ApplyEffect command);
+
+	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target, ApplyEffect command);
 
 	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectCommand command);
 

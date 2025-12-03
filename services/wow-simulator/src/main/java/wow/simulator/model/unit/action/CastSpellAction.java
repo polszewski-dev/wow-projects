@@ -11,6 +11,8 @@ import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.UnitImpl;
 
+import java.util.List;
+
 /**
  * User: POlszewski
  * Date: 2023-08-10
@@ -22,7 +24,7 @@ public class CastSpellAction extends UnitAction {
 
 	private TargetResolver targetResolver;
 	private SpellCastContext castContext;
-	private EffectInstance appliedEffect;
+	private List<EffectInstance> appliedEffects = List.of();
 
 	public CastSpellAction(Unit owner, Ability ability, PrimaryTarget primaryTarget) {
 		super(owner);
@@ -45,8 +47,8 @@ public class CastSpellAction extends UnitAction {
 
 	@Override
 	protected void onFinished() {
-		if (ability.isChanneled() && appliedEffect != null) {
-			var channelAction = new ChannelSpellAction(owner, ability, appliedEffect);
+		if (ability.isChanneled() && !appliedEffects.isEmpty()) {
+			var channelAction = new ChannelSpellAction(owner, ability, appliedEffects.getFirst());
 
 			((UnitImpl) owner).replaceCurrentAction(channelAction);
 		} else {
@@ -113,7 +115,7 @@ public class CastSpellAction extends UnitAction {
 	private void resolveSpell() {
 		var spellResolutionContext = castContext.createSpellResolutionContext(this);
 
-		this.appliedEffect = spellResolutionContext.resolveSpell();
+		this.appliedEffects = spellResolutionContext.resolveCastSpell();
 	}
 
 	public String getAbilityName() {

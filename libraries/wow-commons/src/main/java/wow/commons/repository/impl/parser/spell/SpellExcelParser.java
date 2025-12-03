@@ -12,10 +12,7 @@ import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.impl.EffectImpl;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellId;
-import wow.commons.model.spell.SpellSchool;
+import wow.commons.model.spell.*;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
@@ -26,6 +23,8 @@ import java.util.stream.Stream;
 
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.SpellTargetType.TARGET;
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
@@ -85,18 +84,16 @@ public class SpellExcelParser extends ExcelParser {
 			throw new IllegalArgumentException("Channeled ability with non-zero cast time: " + ability);
 		}
 
-		var effectApplication = ability.getEffectApplication();
-
-		if (effectApplication != null) {
-			var effectTarget = effectApplication.target();
-			var effect = effectApplication.effect();
+		for (var applyEffectCommand : ability.getApplyEffectCommands()) {
+			var effectTarget = applyEffectCommand.target();
+			var effect = applyEffectCommand.effect();
 
 			if (ability.isChanneled() && effectTarget.isAoE() && !effectTarget.hasType(GROUND)) {
 				throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
 			}
 
-			for (var command : effect.getPeriodicCommands()) {
-				var commandTarget = command.target();
+			for (var periodicCommand : effect.getPeriodicCommands()) {
+				var commandTarget = periodicCommand.target();
 
 				if (effectTarget.hasType(GROUND) && commandTarget.hasType(TARGET)) {
 					throw new IllegalArgumentException("Ground effect has no target specified");
@@ -134,12 +131,28 @@ public class SpellExcelParser extends ExcelParser {
 			return;
 		}
 
-		var effectId = effectApplication.effect().getId();
-		var phaseId = spell.getEarliestPhaseId();
-		var effect = effectById.getOptional(phaseId, effectId).orElseThrow();
-		var newEffectApplication = effectApplication.setEffect(effect);
+		var newCommands = effectApplication.commands().stream()
+				.map(command -> replaceDummyEffect(command, spell))
+				.toList();
+
+		var newEffectApplication = new EffectApplication(newCommands);
 
 		((SpellImpl) spell).setEffectApplication(newEffectApplication);
+	}
+
+	private ApplyEffect replaceDummyEffect(ApplyEffect command, Spell spell) {
+		var effectId = command.effect().getId();
+		var phaseId = spell.getEarliestPhaseId();
+		var effect = effectById.getOptional(phaseId, effectId).orElseThrow();
+
+		return new ApplyEffect(
+				command.target(),
+				effect,
+				command.duration(),
+				command.numStacks(),
+				command.numCharges(),
+				command.replacementMode()
+		);
 	}
 
 	private void replaceDummySpells(Effect effect) {
@@ -179,7 +192,7 @@ public class SpellExcelParser extends ExcelParser {
 			result.add(command.type());
 		}
 
-		for (var command : spell.getPeriodicCommands()) {
+		for (var command : getPeriodicCommands(spell)) {
 			result.add(command.type());
 		}
 
@@ -193,12 +206,20 @@ public class SpellExcelParser extends ExcelParser {
 			result.add(command.school());
 		}
 
-		for (var command : spell.getPeriodicCommands()) {
+		for (var command : getPeriodicCommands(spell)) {
 			result.add(command.school());
 		}
 
 		result.remove(null);
 
 		return CollectionUtil.getUniqueResult(List.copyOf(result));
+	}
+
+	private List<PeriodicCommand> getPeriodicCommands(Spell spell) {
+		return spell.getApplyEffectCommands().stream()
+				.map(ApplyEffect::effect)
+				.map(Effect::getPeriodicCommands)
+				.flatMap(List::stream)
+				.toList();
 	}
 }

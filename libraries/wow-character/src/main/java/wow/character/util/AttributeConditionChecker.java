@@ -26,9 +26,8 @@ public final class AttributeConditionChecker {
 					args.getActionType() == actionType;
 
 			case EffectCategoryCondition(var effectCategory) ->
-					args.getSpell() != null &&
-					args.getSpell().getAppliedEffect() != null &&
-					args.getSpell().getAppliedEffect().getCategory() == effectCategory;
+					args.getAppliedEffect() != null &&
+					args.getAppliedEffect().getCategory() == effectCategory;
 
 			case EmptyCondition() ->
 					true;

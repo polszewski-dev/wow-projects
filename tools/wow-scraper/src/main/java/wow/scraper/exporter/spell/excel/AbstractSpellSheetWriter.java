@@ -8,6 +8,7 @@ import wow.commons.model.spell.component.DirectComponentBonus;
 
 import java.util.List;
 
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.ID;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
@@ -163,7 +164,14 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 	}
 
 	private void writeEffectApplicationHeader() {
-		var prefix = APPLY_PREFIX;
+		for (int i = 1; i <= config.maxApplyEffectCommands(); ++i) {
+			writeApplyEffectCommandHeader(i);
+		}
+	}
+
+	private void writeApplyEffectCommandHeader(int idx) {
+		var prefix = getApplyEffectCommandPrefix(idx);
+
 		setHeader(TARGET, prefix);
 		setHeader(APPLIED_EFFECT_ID, prefix);
 		setHeader(APPLIED_EFFECT_DURATION, prefix);
@@ -172,17 +180,33 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 	}
 
 	private void writeEffectApplication(Spell spell) {
-		var effectApplication = spell.getEffectApplication();
+		var commands = spell.getApplyEffectCommands();
 
-		if (effectApplication == null) {
+		writeApplyEffectCommands(commands);
+	}
+
+	private void writeApplyEffectCommands(List<ApplyEffect> commands) {
+		assertSizeNoLargerThan("apply effect commands", commands, config.maxApplyEffectCommands());
+
+		for (int i = 0; i < config.maxApplyEffectCommands(); ++i) {
+			if (i < commands.size()) {
+				writeApplyEffectCommand(commands.get(i));
+			} else {
+				writeApplyEffectCommand(null);
+			}
+		}
+	}
+
+	private void writeApplyEffectCommand(ApplyEffect command) {
+		if (command == null) {
 			fillRemainingEmptyCols(5);
 			return;
 		}
 
-		setValue(effectApplication.target());
-		setValue(effectApplication.effect().getId().value());
-		setValue(effectApplication.duration());
-		setValue(effectApplication.numStacks());
-		setValue(effectApplication.numCharges());
+		setValue(command.target());
+		setValue(command.effect().getId().value());
+		setValue(command.duration());
+		setValue(command.numStacks());
+		setValue(command.numCharges());
 	}
 }

@@ -60,7 +60,7 @@ public class SpellCastContext extends Context {
 			case POTION, CONJURED_ITEM ->
 					Duration.seconds(120);
 			case TRINKET ->
-					(Duration) ability.getEffectApplication().duration();
+					(Duration) ability.getApplyEffectCommands().getFirst().duration();
 		};
 	}
 

@@ -35,8 +35,7 @@ import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
 import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -83,15 +82,19 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target) {
+	public AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target, ApplyEffect command) {
 		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target);
+
+		conditionArgs.setAppliedEffect(command.effect());
 
 		return new AccumulatedDurationStats(conditionArgs);
 	}
 
 	@Override
-	public AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell) {
+	public AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell, ApplyEffect command) {
 		var conditionArgs = AttributeConditionArgs.forSpellTarget(target, spell);
+
+		conditionArgs.setAppliedEffect(command.effect());
 
 		return new AccumulatedReceivedEffectStats(conditionArgs);
 	}
@@ -352,40 +355,39 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target) {
-		var durationStats = getAccumulatedDurationStats(character, spell, target);
-		var receivedEffectStats = getAccumulatedReceivedEffectStats(spell, target);
+	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, ApplyEffect command) {
+		var durationStats = getAccumulatedDurationStats(character, spell, target, command);
+		var receivedEffectStats = getAccumulatedReceivedEffectStats(spell, target, command);
 
-		return getEffectDurationSnapshot(character, spell, durationStats, receivedEffectStats);
+		return getEffectDurationSnapshot(character, spell, command, durationStats, receivedEffectStats);
 	}
 
-	private AccumulatedDurationStats getAccumulatedDurationStats(Character character, Spell spell, Character target) {
-		var durationStats = newAccumulatedDurationStats(character, spell, target);
+	private AccumulatedDurationStats getAccumulatedDurationStats(Character character, Spell spell, Character target, ApplyEffect command) {
+		var durationStats = newAccumulatedDurationStats(character, spell, target, command);
 
 		accumulateEffects(character, durationStats);
 		return durationStats;
 	}
 
-	private AccumulatedReceivedEffectStats getAccumulatedReceivedEffectStats(Spell spell, Character target) {
-		if (spell instanceof Ability ability && (ability.isChanneled() || ability.getEffectApplication().target().hasType(GROUND))) {
+	private AccumulatedReceivedEffectStats getAccumulatedReceivedEffectStats(Spell spell, Character target, ApplyEffect command) {
+		if (spell instanceof Ability ability && (ability.isChanneled() || command.target().hasType(GROUND))) {
 			return null;
 		}
 
-		var receivedEffectStats = newAccumulatedReceivedEffectStats(target, spell);
+		var receivedEffectStats = newAccumulatedReceivedEffectStats(target, spell, command);
 
 		accumulateEffects(target, receivedEffectStats, null);
 		return receivedEffectStats;
 	}
 
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
-		var effectApplication = spell.getEffectApplication();
-		var effect = effectApplication.effect();
+	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+		var effect = command.effect();
 
 		var durationSnapshot = new EffectDurationSnapshot();
 
 		if (spell instanceof Ability ability && ability.isChanneled()) {
-			var baseDuration = (Duration) effectApplication.duration();
+			var baseDuration = (Duration) command.duration();
 			var baseDurationMillis = baseDuration.millis();
 			var baseTickIntervalMillis = effect.getTickInterval().millis();
 			var numTicks = baseDurationMillis / baseTickIntervalMillis;
@@ -398,7 +400,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			durationSnapshot.setNumTicks((int) numTicks);
 			durationSnapshot.setTickInterval(Duration.millis(tickIntervalMillis));
 		} else {
-			var baseDuration = effectApplication.duration();
+			var baseDuration = command.duration();
 			var tickInterval = effect.getTickInterval();
 
 			if (tickInterval != null) {

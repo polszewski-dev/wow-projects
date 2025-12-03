@@ -25,7 +25,7 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 
 		assertEffectApplication(spell, SpellTargets.SELF, 30, 1, 1, 1);
 
-		var effect = spell.getEffectApplication().effect();
+		var effect = spell.getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(effect, List.of(
 				Attribute.of(POWER, 50, SPELL_DAMAGE),
@@ -41,7 +41,7 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 
 		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
 
-		var effect = spell.getEffectApplication().effect();
+		var effect = spell.getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(effect, List.of(
 				Attribute.of(POWER, 100, SPELL_DAMAGE),
@@ -56,7 +56,7 @@ class ActivatedAbilityParserTest extends SpellParserTest {
 
 		assertEffectApplication(spell, SpellTargets.SELF, 20, 1, 1, 1);
 
-		var effect = spell.getEffectApplication().effect();
+		var effect = spell.getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(effect, List.of(
 				Attribute.of(POWER, 250, SPELL),

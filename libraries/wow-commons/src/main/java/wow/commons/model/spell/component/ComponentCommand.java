@@ -1,10 +1,9 @@
 package wow.commons.model.spell.component;
 
+import wow.commons.model.AnyDuration;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
-import wow.commons.model.spell.Coefficient;
-import wow.commons.model.spell.SpellSchool;
-import wow.commons.model.spell.SpellTarget;
-import wow.commons.model.spell.TickScheme;
+import wow.commons.model.spell.*;
 
 import java.util.Objects;
 
@@ -58,6 +57,22 @@ public sealed interface ComponentCommand {
 
 		public SpellSchool school() {
 			return coefficient.school();
+		}
+	}
+
+	record ApplyEffect(
+			SpellTarget target,
+			Effect effect,
+			AnyDuration duration,
+			int numStacks,
+			int numCharges,
+			EffectReplacementMode replacementMode
+	) implements ComponentCommand {
+		public ApplyEffect {
+			Objects.requireNonNull(target);
+			Objects.requireNonNull(effect);
+			Objects.requireNonNull(duration);
+			Objects.requireNonNull(replacementMode);
 		}
 	}
 }

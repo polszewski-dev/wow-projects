@@ -24,8 +24,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -283,7 +282,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var numCharges = getOptionalInteger(effectApplication.numCharges()).orElse(1);
 		var replacementMode = EffectReplacementMode.DEFAULT;
 
-		return new EffectApplication(
+		var command = new ApplyEffect(
 				target,
 				effect,
 				duration,
@@ -291,6 +290,8 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 				numCharges,
 				replacementMode
 		);
+
+		return new EffectApplication(List.of(command));
 	}
 
 	private Optional<SpellTarget> getEffectTarget(EffectPatternParams effect) {

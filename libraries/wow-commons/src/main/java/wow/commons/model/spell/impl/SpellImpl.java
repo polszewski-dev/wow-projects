@@ -42,13 +42,9 @@ public abstract class SpellImpl implements Spell {
 
 	@Override
 	public boolean hasPeriodicComponent(ComponentType componentType) {
-		if (effectApplication == null) {
-			return false;
-		}
-
-		var effect = effectApplication.effect();
-
-		return effect != null && effect.hasPeriodicComponent(componentType);
+		return getApplyEffectCommands().stream().anyMatch(
+				x -> x.effect().hasPeriodicComponent(componentType)
+		);
 	}
 
 	@Override

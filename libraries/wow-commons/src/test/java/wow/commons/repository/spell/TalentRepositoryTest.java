@@ -122,7 +122,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(spell, SpellTargets.TARGET, 12, 4, 1, 1);
 
-		var appliedEffect = spell.getEffectApplication().effect();
+		var appliedEffect = spell.getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(appliedEffect, List.of(
 				Attribute.of(DAMAGE_TAKEN_PCT, rank * 4, AttributeConditions.SHADOW)

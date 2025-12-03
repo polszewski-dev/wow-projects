@@ -42,7 +42,7 @@ class AbilityParserTest extends SpellParserTest {
 		var matcher = getAbilityMatcher(CURSE_OF_AGONY, "Curses the target with agony, causing 1356 Shadow damage over 24 sec. This damage is dealt slowly at first, and builds up as the Curse reaches its full duration. Only one Curse per Warlock can be active on any one target.");
 		var ability = matcher.getAbility();
 
-		var effect = ability.getEffectApplication().effect();
+		var effect = ability.getApplyEffectCommands().getFirst().effect();
 		var periodicComponent = effect.getPeriodicComponent();
 		var tickScheme = new TickScheme(List.of(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5));
 
@@ -59,7 +59,7 @@ class AbilityParserTest extends SpellParserTest {
 
 		assertEffectApplication(ability, SpellTargets.ENEMY, 15, 1, 1, 1);
 
-		var effect = ability.getEffectApplication().effect();
+		var effect = ability.getApplyEffectCommands().getFirst().effect();
 
 		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 63.63, FIRE, 615, 5, 3, TickScheme.DEFAULT);
 	}
@@ -70,7 +70,7 @@ class AbilityParserTest extends SpellParserTest {
 
 		assertEffectApplication(ability, SpellTargets.ENEMY, 5, 1, 1, 1);
 
-		var effect = ability.getEffectApplication().effect();
+		var effect = ability.getApplyEffectCommands().getFirst().effect();
 
 		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 71.43, SHADOW, 540, 5, 1, TickScheme.DEFAULT);
 	}
@@ -90,7 +90,7 @@ class AbilityParserTest extends SpellParserTest {
 
 		assertEffectApplication(ability, SpellTargets.SELF, 30 * 60, 1, 1, 1);
 
-		var effect = ability.getEffectApplication().effect();
+		var effect = ability.getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(effect, List.of(
 				Attribute.of(ARMOR, 660),
@@ -102,10 +102,10 @@ class AbilityParserTest extends SpellParserTest {
 	@Test
 	void vampiricEmbrace() {
 		var ability = parse(VAMPIRIC_EMBRACE, "Afflicts your target with Shadow energy that causes all party members to be healed for 15% of any Shadow spell damage you deal for 1 min.");
-		var effectApplication = ability.getEffectApplication();
-		var event = effectApplication.effect().getEvents().getFirst();
+		var command = ability.getApplyEffectCommands().getFirst();
+		var event = command.effect().getEvents().getFirst();
 
-		assertDuration(effectApplication.duration(), Duration.minutes(1));
+		assertDuration(command.duration(), Duration.minutes(1));
 
 		assertEvent(
 				event,
@@ -120,11 +120,11 @@ class AbilityParserTest extends SpellParserTest {
 	@Test
 	void shadowguard() {
 		var ability = parse(SHADOWGUARD, "The caster is surrounded by shadows. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 130 Shadow damage. Attackers can only be damaged once every few seconds. This damage causes no threat. 3 charges. Lasts 10 min.");
-		var effectApplication = ability.getEffectApplication();
+		var effect = ability.getApplyEffectCommands().getFirst().effect();
 
 		assertEffectApplication(ability, SpellTargets.SELF, 10 * 60, 3, 1, 1);
 
-		var event = effectApplication.effect().getEvents().getFirst();
+		var event = effect.getEvents().getFirst();
 
 		assertEvent(
 				event,

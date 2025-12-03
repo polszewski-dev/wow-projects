@@ -53,10 +53,8 @@ public class SpellTraverser {
 
 		onSpell(spell, level, spellIdx++);
 
-		var effectApplication = spell.getEffectApplication();
-
-		if (effectApplication != null) {
-			traverse(effectApplication.effect(), level);
+		for (var command : spell.getApplyEffectCommands()) {
+			traverse(command.effect(), level);
 		}
 	}
 

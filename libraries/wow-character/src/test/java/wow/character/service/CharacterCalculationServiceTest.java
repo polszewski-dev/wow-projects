@@ -183,7 +183,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedDurationStats(String idStr, String conditionStr) {
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedDurationStats(character, ability, target);
+		var command = ability.getApplyEffectCommands().getFirst();
+		var stats = characterCalculationService.newAccumulatedDurationStats(character, ability, target, command);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -195,7 +196,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedReceivedEffectStats(String idStr, String conditionStr) {
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability);
+		var command = ability.getApplyEffectCommands().getFirst();
+		var stats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability, command);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -272,7 +274,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.getBuild().setActivePet(PetType.SUCCUBUS);
 
 		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var periodicCommand = ability.getAppliedEffect().getPeriodicComponent().commands().getFirst();
+		var periodicCommand = ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
 		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, SPELL_DAMAGE, periodicCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
@@ -386,7 +388,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		priest.resetEquipment();
 
 		var ability = priest.getAbility(SHADOW_WORD_PAIN).orElseThrow();
-		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget());
+		var command = ability.getApplyEffectCommands().getFirst();
+		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget(), command);
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(24));
 		assertThat(durationSnapshot.getNumTicks()).isEqualTo(8);
@@ -400,7 +403,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		equipGearSet(character);
 
 		var ability = priest.getAbility(SHADOW_WORD_PAIN).orElseThrow();
-		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget());
+		var command = ability.getApplyEffectCommands().getFirst();
+		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(priest, ability, priest.getTarget(), command);
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(24));
 		assertThat(durationSnapshot.getNumTicks()).isEqualTo(8);
@@ -412,7 +416,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.resetEquipment();
 
 		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
-		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target);
+		var command = ability.getApplyEffectCommands().getFirst();
+		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target, command);
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(5));
 		assertThat(durationSnapshot.getNumTicks()).isEqualTo(5);
@@ -424,7 +429,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		equipGearSet(character);
 
 		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
-		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target);
+		var command = ability.getApplyEffectCommands().getFirst();
+		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target, command);
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.millis(3785));
 		assertThat(durationSnapshot.getNumTicks()).isEqualTo(5);
@@ -487,7 +493,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
 
 		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();
-		var periodicCommand = ability.getAppliedEffect().getPeriodicComponent().commands().getFirst();
+		var periodicCommand = ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
 		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, periodicCommand, baseStats);
 
 		assertThat(snapshot.getAmount()).isZero();

@@ -13,8 +13,7 @@ import wow.scraper.ScraperSpringTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -68,15 +67,18 @@ abstract class SpellParserTest extends ScraperSpringTest {
 	}
 
 	static void assertEffectApplication(Spell spell, SpellTarget target, int duration, int numCharges, int numStacks, int maxStacks) {
-		var effectApplication = spell.getEffectApplication();
+		var command = spell.getApplyEffectCommands().getFirst();
 
-		assertThat(effectApplication).isNotNull();
-		assertThat(effectApplication.target()).isEqualTo(target);
-		assertThat(effectApplication.duration()).isEqualTo(Duration.seconds(duration));
-		assertThat(effectApplication.numCharges()).isEqualTo(numCharges);
-		assertThat(effectApplication.numStacks()).isEqualTo(numStacks);
-		assertThat(effectApplication.effect()).isNotNull();
-		assertThat(effectApplication.effect().getMaxStacks()).isEqualTo(maxStacks);
+		assertApplyEffectCommand(command, target, duration, numCharges, numStacks, maxStacks);
+	}
+
+	static void assertApplyEffectCommand(ApplyEffect command, SpellTarget target, int duration, int numCharges, int numStacks, int maxStacks) {
+		assertThat(command.target()).isEqualTo(target);
+		assertThat(command.duration()).isEqualTo(Duration.seconds(duration));
+		assertThat(command.numCharges()).isEqualTo(numCharges);
+		assertThat(command.numStacks()).isEqualTo(numStacks);
+		assertThat(command.effect()).isNotNull();
+		assertThat(command.effect().getMaxStacks()).isEqualTo(maxStacks);
 	}
 
 	static void assertModifier(Effect effect, List<Attribute> attributes) {

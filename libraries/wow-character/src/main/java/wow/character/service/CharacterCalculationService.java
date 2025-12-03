@@ -8,8 +8,7 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
 
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -26,9 +25,9 @@ public interface CharacterCalculationService {
 
 	AccumulatedHitStats newAccumulatedHitStats(Character character, Spell spell, Character target);
 
-	AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target);
+	AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target, ApplyEffect command);
 
-	AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell);
+	AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell, ApplyEffect command);
 
 	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command);
 
@@ -50,9 +49,9 @@ public interface CharacterCalculationService {
 
 	double getSpellHitPct(Character character, Spell spell, Character target, AccumulatedHitStats hitStats);
 
-	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target);
+	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, ApplyEffect command);
 
-	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
+	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
 
 	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats);
 

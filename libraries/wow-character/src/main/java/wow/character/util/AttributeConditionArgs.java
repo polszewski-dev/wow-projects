@@ -8,6 +8,7 @@ import wow.character.model.character.Character;
 import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.categorization.WeaponSubType;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
@@ -35,6 +36,8 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 	private final SpellSchool spellSchool;
 
 	private boolean direct;
+
+	private Effect appliedEffect;
 
 	private WeaponSubType weaponType;
 	private boolean hadCrit;

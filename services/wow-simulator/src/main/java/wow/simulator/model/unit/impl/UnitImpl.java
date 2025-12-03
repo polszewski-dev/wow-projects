@@ -33,8 +33,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -323,12 +322,27 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
-		return getEffectDurationSnapshot(ability, target);
+		var command = ability.getApplyEffectCommands().getFirst();
+
+		return getEffectDurationSnapshot(ability, target, command);
 	}
 
 	@Override
 	public EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target) {
-		return getCharacterCalculationService().getEffectDurationSnapshot(this, spell, target);
+		var command = spell.getApplyEffectCommands().getFirst();
+
+		return getEffectDurationSnapshot(spell, target, command);
+	}
+
+	@Override
+	public EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target, ApplyEffect command) {
+		var ability = getAbility(abilityId).orElseThrow();
+		return getEffectDurationSnapshot(ability, target, command);
+	}
+
+	@Override
+	public EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target, ApplyEffect command) {
+		return getCharacterCalculationService().getEffectDurationSnapshot(this, spell, target, command);
 	}
 
 	@Override

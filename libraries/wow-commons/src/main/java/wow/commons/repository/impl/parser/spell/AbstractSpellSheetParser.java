@@ -12,6 +12,7 @@ import wow.commons.model.talent.TalentTree;
 
 import java.util.List;
 
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
@@ -21,7 +22,8 @@ import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames
  */
 public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetParser {
 	public record Config(
-		int maxDirectCommands
+		int maxDirectCommands,
+		int maxApplyEffectCommands
 	) {}
 
 	private final Config config;
@@ -204,14 +206,24 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		return new DirectComponentBonus(min, max, requiredEffect);
 	}
 
+	private EffectApplication getEffectApplication() {
+		var commands = getApplyEffectCommands();
+
+		return commands.isEmpty() ? null : new EffectApplication(commands);
+	}
+
+	private List<ApplyEffect> getApplyEffectCommands() {
+		return readSections(config.maxApplyEffectCommands(), this::getApplyEffectCommand);
+	}
+
 	private final ExcelColumn colAppliedEffectId = column(APPLIED_EFFECT_ID);
 	private final ExcelColumn colAppliedEffectDuration = column(APPLIED_EFFECT_DURATION);
 	private final ExcelColumn colAppliedEffectStacks = column(APPLIED_EFFECT_STACKS);
 	private final ExcelColumn colAppliedEffectCharges = column(APPLIED_EFFECT_CHARGES);
 	private final ExcelColumn colReplacementMode = column(APPLIED_EFFECT_REPLACEMENT_MODE, true);
 
-	private EffectApplication getEffectApplication() {
-		var prefix = APPLY_PREFIX;
+	private ApplyEffect getApplyEffectCommand(int idx) {
+		var prefix = getApplyEffectCommandPrefix(idx);
 
 		if (hasNoTarget(prefix)) {
 			return null;
@@ -226,6 +238,6 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 
 		var dummy = getDummyEffect(effectId);
 
-		return new EffectApplication(target, dummy, duration, numStacks, numCharges, replacementMode);
+		return new ApplyEffect(target, dummy, duration, numStacks, numCharges, replacementMode);
 	}
 }

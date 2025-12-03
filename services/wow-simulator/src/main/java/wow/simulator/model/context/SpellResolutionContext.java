@@ -3,6 +3,7 @@ package wow.simulator.model.context;
 import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
 import wow.commons.model.effect.AbilitySource;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.spell.Spell;
@@ -15,9 +16,11 @@ import wow.simulator.model.unit.action.CastSpellAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.spell.SpellTargetType.GROUND;
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 
 /**
@@ -37,9 +40,22 @@ public class SpellResolutionContext extends Context {
 		this.action = action;
 	}
 
-	public EffectInstance resolveSpell() {
+	public List<EffectInstance> resolveCastSpell() {
+		var effectSource = new AbilitySource(action.getAbility());
+
+		return resolveSpell(effectSource);
+	}
+
+	public void resolveTriggeredSpell(Effect sourceEffect) {
+		var effectSource = sourceEffect.getSource();
+
+		resolveSpell(effectSource);
+	}
+
+	private List<EffectInstance> resolveSpell(EffectSource effectSource) {
 		executeDirectCommands();
-		return applyEffect();
+
+		return applyEffects(effectSource);
 	}
 
 	private void executeDirectCommands() {
@@ -60,7 +76,7 @@ public class SpellResolutionContext extends Context {
 		return caster.getRng().critRoll(critChancePct, spell);
 	}
 
-	public void directComponentAction(DirectCommand command) {
+	private void directComponentAction(DirectCommand command) {
 		var lastValueSnapshot = getLastValueSnapshot();
 
 		targetResolver.forEachTarget(
@@ -152,48 +168,48 @@ public class SpellResolutionContext extends Context {
 		return valueParam != null ? valueParam : command.min();
 	}
 
-	public void applyEffect(EffectSource effectSource) {
-		var effectApplication = spell.getEffectApplication();
+	private List<EffectInstance> applyEffects(EffectSource effectSource) {
+		var appliedEffects = new ArrayList<EffectInstance>();
 
-		targetResolver.forEachTarget(
-				effectApplication,
-				effectTarget -> applyEffect(effectTarget, effectSource)
-		);
-	}
+		for (var command : spell.getApplyEffectCommands()) {
+			var appliedEffect = applyEffect(command, effectSource);
 
-	private EffectInstance applyEffect() {
-		var effectApplication = spell.getEffectApplication();
-
-		if (effectApplication == null) {
-			return null;
+			appliedEffects.addAll(appliedEffect);
 		}
 
-		if (effectApplication.target().hasType(GROUND)) {
-			return putPeriodicEffectOnTheGround();
+		return appliedEffects;
+	}
+
+	private List<EffectInstance> applyEffect(ApplyEffect command, EffectSource effectSource) {
+		if (command.target().hasType(GROUND)) {
+			var groundEffect = putPeriodicEffectOnTheGround(command);
+
+			return List.of(groundEffect);
 		}
 
 		var appliedEffects = new ArrayList<EffectInstance>();
 
 		targetResolver.forEachTarget(
-				effectApplication,
-				effectTarget -> appliedEffects.add(applyEffect(effectTarget))
+				command,
+				effectTarget -> {
+					var appliedEffect = applyEffect(command, effectTarget, effectSource);
+
+					if (appliedEffect != null) {
+						appliedEffects.add(appliedEffect);
+					}
+				}
 		);
 
-		return appliedEffects.getFirst();
+		return appliedEffects;
 	}
 
-	private EffectInstance applyEffect(Unit target) {
+	private EffectInstance applyEffect(ApplyEffect command, Unit target, EffectSource effectSource) {
 		if (!hitRollOnlyOnce(target)) {
 			return null;
 		}
 
-		return applyEffect(target, new AbilitySource(action.getAbility()));
-	}
-
-	private EffectInstance applyEffect(Unit target, EffectSource effectSource) {
-		var effectApplication = spell.getEffectApplication();
-		var replacementMode = effectApplication.replacementMode();
-		var appliedEffect = createEffect(target, effectSource);
+		var replacementMode = command.replacementMode();
+		var appliedEffect = createEffect(command, target, effectSource);
 		var augmentations = getEffectAugmentations(appliedEffect);
 
 		appliedEffect.augment(augmentations);
@@ -201,9 +217,8 @@ public class SpellResolutionContext extends Context {
 		return appliedEffect;
 	}
 
-	private EffectInstance createEffect(Unit target, EffectSource effectSource) {
-		var effectApplication = spell.getEffectApplication();
-		var durationSnapshot = caster.getEffectDurationSnapshot(spell, target);
+	private EffectInstance createEffect(ApplyEffect command, Unit target, EffectSource effectSource) {
+		var durationSnapshot = caster.getEffectDurationSnapshot(spell, target, command);
 		var duration = durationSnapshot.getDuration();
 		var tickInterval = durationSnapshot.getTickInterval();
 
@@ -211,11 +226,11 @@ public class SpellResolutionContext extends Context {
 			return new PeriodicEffectInstance(
 					caster,
 					target,
-					effectApplication.effect(),
+					command.effect(),
 					duration,
 					tickInterval,
-					effectApplication.numStacks(),
-					effectApplication.numCharges(),
+					command.numStacks(),
+					command.numCharges(),
 					effectSource,
 					getSourceSpell(),
 					this
@@ -224,10 +239,10 @@ public class SpellResolutionContext extends Context {
 			return new NonPeriodicEffectInstance(
 					caster,
 					target,
-					effectApplication.effect(),
+					command.effect(),
 					duration,
-					effectApplication.numStacks(),
-					effectApplication.numCharges(),
+					command.numStacks(),
+					command.numCharges(),
 					effectSource,
 					getSourceSpell(),
 					this
@@ -235,28 +250,27 @@ public class SpellResolutionContext extends Context {
 		}
 	}
 
-	private PeriodicEffectInstance putPeriodicEffectOnTheGround() {
-		var effect = createGroundPeriodicEffect();
-		var replacementMode = spell.getEffectApplication().replacementMode();
+	private PeriodicEffectInstance putPeriodicEffectOnTheGround(ApplyEffect command) {
+		var effect = createGroundPeriodicEffect(command);
+		var replacementMode = command.replacementMode();
 
 		getSimulation().addGroundEffect(effect, replacementMode);
 		return effect;
 	}
 
-	private PeriodicEffectInstance createGroundPeriodicEffect() {
-		var effectApplication = spell.getEffectApplication();
-		var durationSnapshot = caster.getEffectDurationSnapshot(spell, null);
+	private PeriodicEffectInstance createGroundPeriodicEffect(ApplyEffect command) {
+		var durationSnapshot = caster.getEffectDurationSnapshot(spell, null, command);
 		var duration = durationSnapshot.getDuration();
 		var tickInterval = durationSnapshot.getTickInterval();
 
 		return new PeriodicEffectInstance(
 				caster,
 				null,
-				effectApplication.effect(),
+				command.effect(),
 				duration,
 				tickInterval,
-				effectApplication.numStacks(),
-				effectApplication.numCharges(),
+				command.numStacks(),
+				command.numCharges(),
 				new AbilitySource(action.getAbility()),
 				getSourceSpell(),
 				this

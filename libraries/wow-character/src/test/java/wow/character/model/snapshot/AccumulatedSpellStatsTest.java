@@ -110,7 +110,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
 	void levelScaledAttribute() {
 		var spell = spellRepository.getSpell(SpellId.of(33702), PhaseId.TBC_P5).orElseThrow();
-		var effect = spell.getAppliedEffect();
+		var effect = spell.getApplyEffectCommands().getFirst().effect();
 
 		spellStats.accumulateAttributes(effect.getModifierAttributeList(), 1);
 

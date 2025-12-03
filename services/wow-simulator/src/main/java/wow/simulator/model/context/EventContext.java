@@ -228,14 +228,7 @@ public class EventContext {
 
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
-
-		for (var command : triggeredSpell.getDirectCommands()) {
-			resolutionContext.directComponentAction(command);
-		}
-
-		if (triggeredSpell.getEffectApplication() != null) {
-			resolutionContext.applyEffect(effect.getSource());
-		}
+		resolutionContext.resolveTriggeredSpell(effect);
 	}
 
 	private void increaseThisEffect(Event event, EffectInstance effect) {

@@ -66,7 +66,6 @@ public final class SpellBaseExcelColumnNames {
 	public static final String PERIODIC_PREFIX = "periodic: ";
 	public static final String MOD_PREFIX = "mod: ";
 	public static final String ABSORB_PREFIX = "absorb: ";
-	public static final String APPLY_PREFIX = "apply: ";
 
 	public static final String COEFF_VALUE = "coeff";
 	public static final String COEFF_SCHOOL = "school";
@@ -78,6 +77,10 @@ public final class SpellBaseExcelColumnNames {
 
 	public static String getDirectCommandPrefix(int idx) {
 		return "direct" + idx + ": ";
+	}
+
+	public static String getApplyEffectCommandPrefix(int idx) {
+		return "apply" + idx + ": ";
 	}
 
 	public static String getPeriodicCommandPrefix(int idx) {

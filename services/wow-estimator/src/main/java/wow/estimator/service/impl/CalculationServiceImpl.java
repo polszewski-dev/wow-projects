@@ -15,6 +15,7 @@ import wow.commons.model.attribute.Attributes;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.buff.BuffNameRank;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.Ability;
@@ -27,8 +28,7 @@ import java.util.stream.Stream;
 
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -141,10 +141,13 @@ public class CalculationServiceImpl implements CalculationService {
 			stats.setDirect(directComponentStats);
 		}
 
-		if (ability.getAppliedEffect() != null) {
+		var applyEffectCommands = ability.getApplyEffectCommands();
+
+		if (!applyEffectCommands.isEmpty()) {
+			var command = applyEffectCommands.getFirst();
 			var periodicStats = characterCalculationService.newAccumulatedPeriodicComponentStats(player, ability, target, SPELL_DAMAGE, periodicCommand);
-			var effectDurationStats = characterCalculationService.newAccumulatedDurationStats(player, ability, target);
-			var receivedEffectStats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability);
+			var effectDurationStats = characterCalculationService.newAccumulatedDurationStats(player, ability, target, command);
+			var receivedEffectStats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability, command);
 
 			stats.setPeriodic(periodicStats);
 			stats.setEffectDuration(effectDurationStats);
@@ -162,7 +165,10 @@ public class CalculationServiceImpl implements CalculationService {
 	}
 
 	private PeriodicCommand getDamagingPeriodicCommand(Ability ability) {
-		return ability.getPeriodicCommands().stream()
+		return ability.getApplyEffectCommands().stream()
+				.map(ApplyEffect::effect)
+				.map(Effect::getPeriodicCommands)
+				.flatMap(List::stream)
 				.filter(x -> x.type() == ComponentType.DAMAGE)
 				.findAny()
 				.orElse(null);
@@ -227,9 +233,10 @@ public class CalculationServiceImpl implements CalculationService {
 			snapshot.setDirect(direct);
 		}
 
-		if (ability.getAppliedEffect() != null) {
+		if (!ability.getApplyEffectCommands().isEmpty()) {
+			var command = ability.getApplyEffectCommands().getFirst();
 			var periodic = characterCalculationService.getPeriodicComponentSnapshot(player, ability, target, abilityStats.getPeriodicCommand(), abilityStats.getPeriodic(), targetStats);
-			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, abilityStats.getEffectDuration(), abilityStats.getReceivedEffectStats());
+			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, command, abilityStats.getEffectDuration(), abilityStats.getReceivedEffectStats());
 
 			snapshot.setPeriodic(periodic);
 			snapshot.setEffectDuration(effectDuration);

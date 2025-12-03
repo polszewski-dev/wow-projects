@@ -189,12 +189,12 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	@Test
 	void abilityEffectApplication() {
 		var ability = getClassAbility(CORRUPTION, 8, TBC_P5);
-		var effectApplication = ability.getEffectApplication();
+		var command = ability.getApplyEffectCommands().getFirst();
 
 		assertEffectApplication(ability, SpellTargets.ENEMY, 18, 1, 1, 1);
 
-		assertId(effectApplication.effect(), ability.getId().value());
-		assertId(effectApplication.effect(), 27216);
+		assertId(command.effect(), ability.getId().value());
+		assertId(command.effect(), 27216);
 	}
 
 	@Test
@@ -305,7 +305,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(ability.getEffectApplication()).isNotNull();
 
-		var effect = ability.getEffectApplication().effect();
+		var effect = ability.getApplyEffectCommands().getFirst().effect();
 
 		assertId(effect, 25461);
 		assertThat(effect.getName()).isEqualTo("Touch of Weakness");
@@ -320,7 +320,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertThat(triggeredSpell.getEffectApplication()).isNotNull();
 
-		var triggeredEffect = triggeredSpell.getEffectApplication().effect();
+		var triggeredEffect = triggeredSpell.getApplyEffectCommands().getFirst().effect();
 
 		assertId(triggeredEffect, 110025461);
 		assertThat(triggeredEffect.getName()).isEqualTo("Touch of Weakness - triggered");
@@ -340,7 +340,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(spell, SpellTargets.SELF, 20, 1, 1, 1);
 
-		var effect = spell.getEffectApplication().effect();
+		var effect = spell.getApplyEffectCommands().getFirst().effect();
 
 		assertId(effect, 132483);
 		assertModifier(effect, List.of(
@@ -377,7 +377,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTargets.SELF, 6, 1, 1, 1);
-		assertModifier(spell.getEffectApplication().effect(), List.of(
+		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
 				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
 		));
 	}
@@ -411,7 +411,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
-		assertModifier(spell.getEffectApplication().effect(), List.of(
+		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
 				Attribute.of(POWER, 135, AttributeCondition.and(
 						AttributeConditions.SPELL_DAMAGE,
 						AttributeConditions.SHADOW
@@ -448,7 +448,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
-		assertModifier(spell.getEffectApplication().effect(), List.of(
+		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
 				Attribute.of(POWER, 135, AttributeCondition.and(
 						AttributeConditions.SPELL_DAMAGE,
 						AttributeConditions.FIRE
@@ -486,7 +486,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(spell, SpellTargets.PARTY, 10, 1, 1, 1);
 
-		var triggeredEffect = spell.getEffectApplication().effect();
+		var triggeredEffect = spell.getApplyEffectCommands().getFirst().effect();
 
 		assertPeriodicComponent(triggeredEffect.getPeriodicComponent(), ComponentType.MANA_GAIN, 0, null, 100, 5, 2, TickScheme.DEFAULT);
 	}
@@ -513,7 +513,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		assertThat(spell.getTooltip()).isNull();
 
 		assertEffectApplication(spell, SpellTargets.SELF, 6, 1, 1, 1);
-		assertModifier(spell.getEffectApplication().effect(), List.of(
+		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
 				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
 		));
 	}
@@ -534,7 +534,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		assertEffectApplication(ability, SpellTargets.SELF, 15, 1, 1, 1);
 
-		var effect = ability.getEffectApplication().effect();
+		var effect = ability.getApplyEffectCommands().getFirst().effect();
 
 		assertModifier(effect, List.of(
 				Attribute.of(POWER, 3, AttributeConditions.SPELL, new LevelScalingByFactor(2)),

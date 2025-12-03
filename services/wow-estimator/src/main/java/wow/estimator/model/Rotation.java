@@ -85,10 +85,16 @@ public class Rotation implements Copyable<Rotation> {
 	}
 
 	private boolean hasDotComponent(Spell spell) {
-		var effect = spell.getAppliedEffect();
+		if (spell.getApplyEffectCommands().isEmpty()) {
+			return false;
+		}
+
+		var effect = spell.getApplyEffectCommands().getFirst().effect();
+
 		if (effect == null) {
 			return false;
 		}
+
 		return effect.hasPeriodicComponent(ComponentType.DAMAGE);
 	}
 

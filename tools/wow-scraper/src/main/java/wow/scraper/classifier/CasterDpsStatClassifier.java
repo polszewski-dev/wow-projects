@@ -114,11 +114,9 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 		if (spell == null) {
 			return false;
 		}
-		var effectApplication = spell.getEffectApplication();
-		if (effectApplication == null) {
-			return false;
-		}
-		return isCasterEffect(effectApplication.effect());
+
+		return spell.getApplyEffectCommands().stream()
+				.anyMatch(x -> isCasterEffect(x.effect()));
 	}
 
 	private boolean isCasterAttribute(Attribute attribute) {
