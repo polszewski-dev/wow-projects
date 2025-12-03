@@ -20,8 +20,9 @@ class HolyShockTest extends TbcPaladinSpellSimulationTest {
 	 */
 
 	@Test
-	void success() {
-		player.cast(HOLY_SHOCK);
+	void cast_on_enemy() {
+		setHealth(target, 1000);
+		player.cast(HOLY_SHOCK, target);
 
 		updateUntil(30);
 
@@ -32,8 +33,51 @@ class HolyShockTest extends TbcPaladinSpellSimulationTest {
 						.endCast(player, HOLY_SHOCK)
 						.decreasedResource(650, MANA, player, HOLY_SHOCK)
 						.cooldownStarted(player, HOLY_SHOCK, 15)
-						.decreasedResource(750, HEALTH, target, HOLY_SHOCK)
-						.increasedResource(750, HEALTH, target, HOLY_SHOCK),
+						.decreasedResource(750, HEALTH, target, HOLY_SHOCK),
+				at(1.5)
+						.endGcd(player),
+				at(15)
+						.cooldownExpired(player, HOLY_SHOCK)
+		);
+	}
+
+	@Test
+	void cast_on_friend() {
+		setHealth(player2, 1000);
+		player.cast(HOLY_SHOCK, player2);
+
+		updateUntil(30);
+
+		assertEvents(
+				at(0)
+						.beginCast(player, HOLY_SHOCK)
+						.beginGcd(player)
+						.endCast(player, HOLY_SHOCK)
+						.decreasedResource(650, MANA, player, HOLY_SHOCK)
+						.cooldownStarted(player, HOLY_SHOCK, 15)
+						.increasedResource(950, HEALTH, player2, HOLY_SHOCK),
+				at(1.5)
+						.endGcd(player),
+				at(15)
+						.cooldownExpired(player, HOLY_SHOCK)
+		);
+	}
+
+	@Test
+	void cast_on_self() {
+		setHealth(player, 1000);
+		player.cast(HOLY_SHOCK, player);
+
+		updateUntil(30);
+
+		assertEvents(
+				at(0)
+						.beginCast(player, HOLY_SHOCK)
+						.beginGcd(player)
+						.endCast(player, HOLY_SHOCK)
+						.decreasedResource(650, MANA, player, HOLY_SHOCK)
+						.cooldownStarted(player, HOLY_SHOCK, 15)
+						.increasedResource(950, HEALTH, player, HOLY_SHOCK),
 				at(1.5)
 						.endGcd(player),
 				at(15)
@@ -43,10 +87,30 @@ class HolyShockTest extends TbcPaladinSpellSimulationTest {
 
 	@ParameterizedTest
 	@ValueSource(ints = { 0, 100, 1000 })
-	void damage_done(int spellDamage) {
-		simulateDamagingSpell(HOLY_SHOCK, spellDamage);
+	void damage_done(int sp) {
+		addSpBonus(sp);
+		setHealth(target, 3000);
 
-		assertDamageDone(HOLY_SHOCK_INFO, spellDamage);
+		player.cast(HOLY_SHOCK, target);
+
+		updateUntil(30);
+
+		assertDamageDone(HOLY_SHOCK_INFO, target, sp);
+		assertHealthGained(HOLY_SHOCK, target, 0);
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 0, 100, 1000 })
+	void healing_done(int sp) {
+		addSpBonus(sp);
+		setHealth(player2, 2000);
+
+		player.cast(HOLY_SHOCK, player2);
+
+		updateUntil(30);
+
+		assertDamageDone(HOLY_SHOCK, player2, 0);
+		assertHealthGained(HOLY_SHOCK_HEALING_PART_INFO, player2, sp);
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.tbc.racial;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.character.RaceId.ORC;
 import static wow.test.commons.AbilityNames.BLOOD_FURY;
 
 /**
@@ -11,6 +11,10 @@ import static wow.test.commons.AbilityNames.BLOOD_FURY;
  * Date: 2024-11-13
  */
 class BloodFuryTest extends TbcWarlockSpellSimulationTest {
+	/*
+	Increases your damage and healing from spells and effects by up to 143, but reduces healing effects on you by 50%. Lasts 15 sec.
+	 */
+
 	@Test
 	void success() {
 		player.cast(BLOOD_FURY);
@@ -31,14 +35,17 @@ class BloodFuryTest extends TbcWarlockSpellSimulationTest {
 	}
 
 	@Test
-	void modifierIsTakenIntoAccount() {
+	void sp_increased() {
 		player.cast(BLOOD_FURY);
+
 		updateUntil(10);
 
-		var dmgBefore = statsAt(0).getSpellPower();
-		var dmgAfter = statsAt(10).getSpellPower();
+		assertSpellPowerIncreasedBy(143);
+	}
 
-		assertThat(dmgBefore).isZero();
-		assertThat(dmgAfter).isEqualTo(143);
+	@Override
+	protected void beforeSetUp() {
+		super.beforeSetUp();
+		raceId = ORC;
 	}
 }

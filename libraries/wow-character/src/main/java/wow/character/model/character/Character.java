@@ -122,4 +122,12 @@ public interface Character extends CharacterInfo, EffectCollection {
 	default int getNumberOfEffects(TalentTree tree) {
 		return 0;
 	}
+
+	default boolean isFriendlyWith(Character target) {
+		return this.getSide() == target.getSide();
+	}
+
+	default boolean isHostileWith(Character target) {
+		return !isFriendlyWith(target);
+	}
 }

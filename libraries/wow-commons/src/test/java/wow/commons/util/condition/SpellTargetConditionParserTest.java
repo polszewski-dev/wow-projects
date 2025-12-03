@@ -73,6 +73,14 @@ class SpellTargetConditionParserTest {
 							new HealthPctGreaterThanOrEqual(40),
 							new HealthPctLessThan(70)
 					)
+			),
+			testData(
+					"Friendly",
+					FRIENDLY
+			),
+			testData(
+					"Hostile",
+					HOSTILE
 			)
 	);
 

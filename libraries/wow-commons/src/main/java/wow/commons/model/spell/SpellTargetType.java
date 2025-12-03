@@ -22,6 +22,8 @@ public enum SpellTargetType {
 	ENEMY,
 	ENEMY_AOE,
 
+	ANY,
+
 	TARGET,
 	ATTACKER,
 
@@ -34,7 +36,7 @@ public enum SpellTargetType {
 
 	public boolean isSingle() {
 		return switch (this) {
-			case SELF, PET, FRIEND, FRIENDS_PARTY, ENEMY, TARGET, ATTACKER -> true;
+			case SELF, PET, FRIEND, FRIENDS_PARTY, ENEMY, ANY, TARGET, ATTACKER -> true;
 			default -> false;
 		};
 	}

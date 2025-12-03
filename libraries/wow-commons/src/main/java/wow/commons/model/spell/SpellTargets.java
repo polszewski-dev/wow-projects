@@ -18,6 +18,8 @@ public final class SpellTargets {
 	public static final SpellTarget ENEMY = new SpellTarget(SpellTargetType.ENEMY);
 	public static final SpellTarget ENEMY_AOE = new SpellTarget(SpellTargetType.ENEMY_AOE);
 
+	public static final SpellTarget ANY = new SpellTarget(SpellTargetType.ANY);
+
 	public static final SpellTarget TARGET = new SpellTarget(SpellTargetType.TARGET);
 	public static final SpellTarget ATTACKER = new SpellTarget(SpellTargetType.ATTACKER);
 

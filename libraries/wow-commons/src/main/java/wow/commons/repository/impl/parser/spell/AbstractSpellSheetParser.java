@@ -9,6 +9,7 @@ import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.spell.component.DirectComponentBonus;
 import wow.commons.model.spell.impl.*;
 import wow.commons.model.talent.TalentTree;
+import wow.commons.util.condition.SpellTargetConditionParser;
 
 import java.util.List;
 
@@ -181,13 +182,23 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		}
 
 		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
 		var type = colDirectType.prefixed(prefix).getEnum(ComponentType::parse);
 		var coeff = getCoefficient(prefix);
 		var min = colDirectMin.prefixed(prefix).getInteger();
 		var max = colDirectMax.prefixed(prefix).getInteger();
 		var bonus = getDirectComponentBonus(prefix);
 
-		return new DirectCommand(target, type, coeff, min, max, bonus);
+		return new DirectCommand(target, condition, type, coeff, min, max, bonus);
+	}
+
+	private final ExcelColumn colCondition = column(TARGET_CONDITION, true);
+
+	private SpellTargetCondition getTargetCondition(String prefix) {
+		return colCondition.prefixed(prefix).getEnum(
+				SpellTargetConditionParser::parseCondition,
+				SpellTargetCondition.EMPTY
+		);
 	}
 
 	private final ExcelColumn colDirectBonusMin = column(DIRECT_BONUS_MIN, true);
@@ -230,6 +241,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		}
 
 		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
 		var effectId = colAppliedEffectId.prefixed(prefix).getInteger(EffectId::of);
 		var duration = colAppliedEffectDuration.prefixed(prefix).getAnyDuration();
 		var numStacks = colAppliedEffectStacks.prefixed(prefix).getInteger();
@@ -238,6 +250,6 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 
 		var dummy = getDummyEffect(effectId);
 
-		return new ApplyEffect(target, dummy, duration, numStacks, numCharges, replacementMode);
+		return new ApplyEffect(target, condition, dummy, duration, numStacks, numCharges, replacementMode);
 	}
 }

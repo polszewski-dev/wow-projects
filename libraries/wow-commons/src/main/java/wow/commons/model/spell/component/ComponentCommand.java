@@ -22,14 +22,19 @@ public sealed interface ComponentCommand {
 		return target().isAoE();
 	}
 
+	interface HasSecondaryTargetCondition {
+		SpellTargetCondition condition();
+	}
+
 	record DirectCommand(
 			SpellTarget target,
+			SpellTargetCondition condition,
 			ComponentType type,
 			Coefficient coefficient,
 			int min,
 			int max,
 			DirectComponentBonus bonus
-	) implements ComponentCommand {
+	) implements ComponentCommand, HasSecondaryTargetCondition {
 		public DirectCommand {
 			Objects.requireNonNull(type);
 			Objects.requireNonNull(coefficient);
@@ -62,12 +67,13 @@ public sealed interface ComponentCommand {
 
 	record ApplyEffect(
 			SpellTarget target,
+			SpellTargetCondition condition,
 			Effect effect,
 			AnyDuration duration,
 			int numStacks,
 			int numCharges,
 			EffectReplacementMode replacementMode
-	) implements ComponentCommand {
+	) implements ComponentCommand, HasSecondaryTargetCondition {
 		public ApplyEffect {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(effect);

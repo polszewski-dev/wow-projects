@@ -36,6 +36,7 @@ public class ShootAbility implements Ability {
 
 		var command = new DirectCommand(
 				SpellTargets.ENEMY,
+				SpellTargetCondition.EMPTY,
 				ComponentType.DAMAGE,
 				new Coefficient(Percent.ZERO, weaponStats.damageType()),
 				weaponStats.damageMin(),

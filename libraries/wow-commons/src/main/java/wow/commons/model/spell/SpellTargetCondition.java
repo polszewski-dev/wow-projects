@@ -17,6 +17,10 @@ import static wow.commons.model.spell.SpellTargetConditionCache.getCachedValue;
 public sealed interface SpellTargetCondition extends Condition {
 	Empty EMPTY = new Empty();
 
+	Friendly FRIENDLY = new Friendly();
+
+	Hostile HOSTILE = new Hostile();
+
 	static SpellTargetCondition of(CreatureType creatureType) {
 		return getCachedValue(creatureType, IsCreatureType::new);
 	}
@@ -99,6 +103,10 @@ public sealed interface SpellTargetCondition extends Condition {
 			Objects.requireNonNull(creatureType);
 		}
 	}
+
+	record Friendly() implements SpellTargetCondition {}
+
+	record Hostile() implements SpellTargetCondition {}
 }
 
 class SpellTargetConditionCache extends ConditionCache<SpellTargetCondition> {

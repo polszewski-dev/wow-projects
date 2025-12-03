@@ -58,6 +58,8 @@ public class PrimaryTargetResolver {
 					getFriendlyTarget();
 			case ENEMY ->
 					getHostileTarget();
+			case ANY ->
+					getAnyTarget();
 			default ->
 					throw new UnsupportedOperationException("No AoE targets atm");
 		};
@@ -101,5 +103,15 @@ public class PrimaryTargetResolver {
 		}
 
 		return PrimaryTarget.INVALID;
+	}
+
+	private PrimaryTarget getAnyTarget() {
+		if (explicitTarget != null) {
+			return PrimaryTarget.ofAny(explicitTarget);
+		}
+		if (defaultTarget != null) {
+			return PrimaryTarget.ofAny(defaultTarget);
+		}
+		return PrimaryTarget.ofAny(self);
 	}
 }

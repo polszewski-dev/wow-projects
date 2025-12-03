@@ -10,7 +10,7 @@ import static wow.commons.model.spell.SpellTargetCondition.*;
  * Date: 2025-11-30
  */
 public class SpellTargetConditionChecker {
-	public static boolean check(SpellTargetCondition condition, Character target) {
+	public static boolean check(SpellTargetCondition condition, Character target, Character caster) {
 		return switch (condition) {
 			case Empty() ->
 					true;
@@ -33,14 +33,20 @@ public class SpellTargetConditionChecker {
 			case IsCreatureType(var creatureType) ->
 					target.getCreatureType() == creatureType;
 
+			case Friendly() ->
+					caster.isFriendlyWith(target);
+
+			case Hostile() ->
+					caster.isHostileWith(target);
+
 			case Or(var left, var right) ->
-					check(left, target) || check(right, target);
+					check(left, target, caster) || check(right, target, caster);
 
 			case And(var left, var right) ->
-					check(left, target) && check(right, target);
+					check(left, target, caster) && check(right, target, caster);
 
 			case Comma(var conditions) ->
-					conditions.stream().anyMatch(x -> check(x, target));
+					conditions.stream().anyMatch(x -> check(x, target, caster));
 		};
 	}
 }

@@ -2,6 +2,7 @@ package wow.simulator.model.context;
 
 import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
+import wow.character.util.SpellTargetConditionChecker;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
@@ -20,8 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.spell.SpellTargetType.GROUND;
-import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -86,6 +86,10 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void directComponentAction(DirectCommand command, Unit target, LastValueSnapshot last) {
+		if (!checkSecondaryCondition(command, target)) {
+			return;
+		}
+
 		switch (command.type()) {
 			case DAMAGE ->
 					dealDirectDamage(command, target);
@@ -110,6 +114,10 @@ public class SpellResolutionContext extends Context {
 			default ->
 					throw new UnsupportedOperationException();
 		}
+	}
+
+	private boolean checkSecondaryCondition(HasSecondaryTargetCondition command, Unit target) {
+		return SpellTargetConditionChecker.check(command.condition(), target, caster);
 	}
 
 	private void dealDirectDamage(DirectCommand command, Unit target) {
@@ -204,7 +212,7 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private EffectInstance applyEffect(ApplyEffect command, Unit target, EffectSource effectSource) {
-		if (!hitRollOnlyOnce(target)) {
+		if (!checkSecondaryCondition(command, target) || !hitRollOnlyOnce(target)) {
 			return null;
 		}
 

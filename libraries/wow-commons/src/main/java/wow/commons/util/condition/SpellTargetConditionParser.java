@@ -54,6 +54,14 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 			return hasEffect;
 		}
 
+		if (FRIENDLY.equalsIgnoreCase(value)) {
+			return SpellTargetCondition.FRIENDLY;
+		}
+
+		if (HOSTILE.equalsIgnoreCase(value)) {
+			return SpellTargetCondition.HOSTILE;
+		}
+
 		throw new IllegalArgumentException("Unknown condition: " + value);
 	}
 
@@ -107,4 +115,6 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 
 	static final String HAS_EFFECT = "HasEffect";
 	static final String HEALTH_PCT = "Health%";
+	static final String FRIENDLY = "Friendly";
+	static final String HOSTILE = "Hostile";
 }

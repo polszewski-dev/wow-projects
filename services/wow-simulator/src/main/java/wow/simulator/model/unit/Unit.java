@@ -179,11 +179,11 @@ public interface Unit extends Character, SimulationContextSource {
 	void collectAuras(EffectCollector collector);
 
 	static boolean areFriendly(Unit first, Unit second) {
-		return first.getClass() == second.getClass();
+		return first.isFriendlyWith(second);
 	}
 
 	static boolean areHostile(Unit first, Unit second) {
-		return !areFriendly(first, second);
+		return first.isHostileWith(second);
 	}
 
 	void onAddedToSimulation();

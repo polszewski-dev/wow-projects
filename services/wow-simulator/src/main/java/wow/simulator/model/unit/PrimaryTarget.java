@@ -21,6 +21,8 @@ public sealed interface PrimaryTarget {
 
 	record Enemy(Unit unit) implements Specified {}
 
+	record Any(Unit unit) implements Specified {}
+
 	PrimaryTarget INVALID = new Invalid();
 
 	PrimaryTarget EMPTY = new Empty();
@@ -37,8 +39,12 @@ public sealed interface PrimaryTarget {
 		return new Enemy(unit);
 	}
 
+	static Any ofAny(Unit unit) {
+		return new Any(unit);
+	}
+
 	default Unit getSingleTarget() {
-		return this instanceof PrimaryTarget.Specified s ? s.unit() : null;
+		return this instanceof Specified s ? s.unit() : null;
 	}
 
 	default Unit requireSingleTarget() {
@@ -47,16 +53,18 @@ public sealed interface PrimaryTarget {
 
 	default TargetResolver getTargetResolver(Unit caster) {
 		return switch (this) {
-			case PrimaryTarget.Invalid() ->
+			case Invalid() ->
 					null;
-			case PrimaryTarget.Empty() ->
+			case Empty() ->
 					TargetResolver.ofSelf(caster);
-			case PrimaryTarget.Self(var ignored) ->
+			case Self(var ignored) ->
 					TargetResolver.ofSelf(caster);
-			case PrimaryTarget.Friend(var unit) ->
+			case Friend(var unit) ->
 					TargetResolver.ofFriend(caster, unit);
-			case PrimaryTarget.Enemy(var unit) ->
+			case Enemy(var unit) ->
 					TargetResolver.ofEnemy(caster, unit);
+			case Any(var unit) ->
+					TargetResolver.ofAny(caster, unit);
 		};
 	}
 

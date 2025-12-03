@@ -22,6 +22,7 @@ public class TargetResolver implements SimulationContextSource {
 	private final Unit self;
 	private Unit friend;
 	private Unit enemy;
+	private Unit any;
 	private Unit target;
 
 	private TargetResolver(Unit self) {
@@ -34,22 +35,37 @@ public class TargetResolver implements SimulationContextSource {
 	}
 
 	public static TargetResolver ofFriend(Unit self, Unit friend) {
+		Objects.requireNonNull(self);
 		Objects.requireNonNull(friend);
+
 		if (!Unit.areFriendly(self, friend)) {
 			throw new IllegalArgumentException();
 		}
+
 		var targetResolver = new TargetResolver(self);
 		targetResolver.friend = friend;
 		return targetResolver;
 	}
 
 	public static TargetResolver ofEnemy(Unit self, Unit enemy) {
+		Objects.requireNonNull(self);
 		Objects.requireNonNull(enemy);
+
 		if (!Unit.areHostile(self, enemy)) {
 			throw new IllegalArgumentException();
 		}
+
 		var targetResolver = new TargetResolver(self);
 		targetResolver.enemy = enemy;
+		return targetResolver;
+	}
+
+	public static TargetResolver ofAny(Unit self, Unit any) {
+		Objects.requireNonNull(self);
+		Objects.requireNonNull(any);
+
+		var targetResolver = new TargetResolver(self);
+		targetResolver.any = any;
 		return targetResolver;
 	}
 
@@ -80,7 +96,7 @@ public class TargetResolver implements SimulationContextSource {
 
 	private List<Unit> getTargets(SpellTarget spellTarget) {
 		return getTargetsUnchecked(spellTarget).stream()
-				.filter(target -> SpellTargetConditionChecker.check(spellTarget.condition(), target))
+				.filter(target -> SpellTargetConditionChecker.check(spellTarget.condition(), target, self))
 				.toList();
 	}
 
@@ -94,6 +110,8 @@ public class TargetResolver implements SimulationContextSource {
 					List.of(friend);
 			case ENEMY ->
 					List.of(enemy);
+			case ANY ->
+					List.of(any);
 			case TARGET ->
 					List.of(target);
 			case PARTY ->

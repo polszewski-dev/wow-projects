@@ -147,6 +147,7 @@ public class SpellExcelParser extends ExcelParser {
 
 		return new ApplyEffect(
 				command.target(),
+				command.condition(),
 				effect,
 				command.duration(),
 				command.numStacks(),

@@ -78,5 +78,6 @@ public interface TbcSpellInfos {
 	SpellInfo EXORCISM_INFO = new SpellInfo(EXORCISM, 340, 0).withDirect(626, 698, 42.85);
 	SpellInfo HAMMER_OF_WRATH_INFO = new SpellInfo(HAMMER_OF_WRATH, 440, 0.5).withDirect(672, 742, 42.86);
 	SpellInfo HOLY_SHOCK_INFO = new SpellInfo(HOLY_SHOCK, 650, 0).withDirect(721, 779, 42.85);
+	SpellInfo HOLY_SHOCK_HEALING_PART_INFO = new SpellInfo(HOLY_SHOCK, 650, 0).withDirect(913, 987, 42.85);
 	SpellInfo HOLY_WRATH_INFO = new SpellInfo(HOLY_WRATH, 825, 2).withDirect(637, 748, 19.05);
 }

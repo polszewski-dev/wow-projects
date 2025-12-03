@@ -86,13 +86,14 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 
 	private DirectCommand getDirectCommand(DirectComponentParams params) {
 		var target = params.target();
+		var condition = SpellTargetCondition.EMPTY;
 		var type = params.type();
 		var coefficient = params.coefficient();
 		var min = getOptionalInteger(params.min()).orElseThrow();
 		var max = getOptionalInteger(params.max()).orElseThrow();
 		var bonus = getDirectComponentBonus(params.bonus());
 
-		return new DirectCommand(target, type, coefficient, min, max, bonus);
+		return new DirectCommand(target, condition, type, coefficient, min, max, bonus);
 	}
 
 	private DirectComponentBonus getDirectComponentBonus(DirectComponentBonusParams params) {
@@ -276,6 +277,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		}
 
 		var target = getEffectTarget(effectApplication.effect()).orElseThrow();
+		var condition = SpellTargetCondition.EMPTY;
 		var effect = getEffect(effectApplication.effect());
 		var duration = getOptionalAnyDuration(effectApplication.duration()).orElseThrow();
 		var numStacks = getOptionalInteger(effectApplication.numStacks()).orElse(1);
@@ -284,6 +286,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 
 		var command = new ApplyEffect(
 				target,
+				condition,
 				effect,
 				duration,
 				numStacks,
