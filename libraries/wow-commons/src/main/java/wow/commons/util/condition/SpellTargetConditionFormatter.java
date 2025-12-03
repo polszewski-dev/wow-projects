@@ -44,6 +44,12 @@ public class SpellTargetConditionFormatter extends ConditionFormatter<SpellTarge
 			case IsCreatureType(var creatureType) ->
 					creatureType.getName();
 
+			case IsClass(var classId) ->
+					CLASS + " = " + classId;
+
+			case HasDruidForm(var druidFormType) ->
+					druidFormType.getName();
+
 			case Friendly() ->
 					FRIENDLY;
 

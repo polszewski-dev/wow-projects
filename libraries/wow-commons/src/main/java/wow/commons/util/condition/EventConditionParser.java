@@ -1,9 +1,7 @@
 package wow.commons.util.condition;
 
 import wow.commons.model.attribute.PowerType;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.DruidFormType;
 import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.spell.AbilityCategory;
 import wow.commons.model.spell.AbilityId;
@@ -93,12 +91,6 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 			return of(creatureType);
 		}
 
-		var druidFormType = DruidFormType.tryParse(value);
-
-		if (druidFormType != null) {
-			return of(druidFormType);
-		}
-
 		var ownerHasEffect = tryParseOwnerHasEffect(value);
 
 		if (ownerHasEffect != null) {
@@ -109,12 +101,6 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 
 		if (ownerIsChanneling != null) {
 			return ownerIsChanneling;
-		}
-
-		var targetClass = tryParseTargetClass(value);
-
-		if (targetClass != null) {
-			return targetClass;
 		}
 
 		var miscCondition = MISC_CONDITIONS.get(value);
@@ -154,17 +140,6 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 		return value + "";
 	}
 
-	private TargetClassCondition tryParseTargetClass(String value) {
-		if (value != null && value.startsWith(TARGET_CLASS_PREFIX)) {
-			var characterClassIdStr = withoutPrefix(value, TARGET_CLASS_PREFIX);
-			var characterClassId = CharacterClassId.parse(characterClassIdStr);
-
-			return new TargetClassCondition(characterClassId);
-		}
-
-		return null;
-	}
-
 	private OwnerHasEffectCondition tryParseOwnerHasEffect(String value) {
 		return parseAbilityIdArgument(value, OWNER_HAS_EFFECT, OwnerHasEffectCondition::new);
 	}
@@ -173,7 +148,6 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 		return parseAbilityIdArgument(value, OWNER_IS_CHANNELING, OwnerIsChannelingCondition::new);
 	}
 
-	static final String TARGET_CLASS_PREFIX = "TargetClass=";
 	static final String OWNER_HAS_EFFECT = "Owner.HasEffect";
 	static final String OWNER_IS_CHANNELING = "Owner.IsChanneling";
 

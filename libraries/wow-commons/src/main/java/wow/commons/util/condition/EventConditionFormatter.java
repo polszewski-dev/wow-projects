@@ -34,9 +34,6 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 			case CanCrit() ->
 					getMiscCondition(condition);
 
-			case DruidFormCondition(var druidFormType) ->
-					druidFormType.getName();
-
 			case EmptyCondition() ->
 					"";
 
@@ -93,9 +90,6 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 
 			case TalentTreeCondition(var talentTree) ->
 					talentTree.getName();
-
-			case TargetClassCondition(var characterClassId) ->
-					TARGET_CLASS_PREFIX + characterClassId;
 
 			case TargetHealthPctLessThan(var value) ->
 					formatOperator(TARGET_HEALTH_PCT, "<", value);

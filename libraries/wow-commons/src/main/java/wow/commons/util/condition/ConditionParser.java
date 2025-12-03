@@ -445,7 +445,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 		}
 
 		private boolean isOperator(char c) {
-			return c == '&' || c == '|' || c == ',' || c == '~' || c == '<' || c == '>';
+			return c == '&' || c == '|' || c == ',' || c == '~' || c == '<' || c == '>' || c == '=';
 		}
 	}
 

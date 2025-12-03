@@ -2,12 +2,15 @@ package wow.commons.util.condition;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import wow.commons.model.character.DruidFormType;
 import wow.commons.model.spell.SpellTargetCondition;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.IMMOLATE;
+import static wow.commons.model.character.CharacterClassId.MAGE;
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.DEMON;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.spell.SpellTargetCondition.*;
@@ -64,6 +67,22 @@ class SpellTargetConditionParserTest {
 					new HealthPctGreaterThanOrEqual(20)
 			),
 			testData(
+					"Class = Warlock",
+					new IsClass(WARLOCK)
+			),
+			testData(
+					"CatForm",
+					of(DruidFormType.CAT_FORM)
+			),
+			testData(
+					"Friendly",
+					FRIENDLY
+			),
+			testData(
+					"Hostile",
+					HOSTILE
+			),
+			testData(
 					"Undead, Demon",
 					comma(of(UNDEAD), of(DEMON))
 			),
@@ -75,12 +94,8 @@ class SpellTargetConditionParserTest {
 					)
 			),
 			testData(
-					"Friendly",
-					FRIENDLY
-			),
-			testData(
-					"Hostile",
-					HOSTILE
+					"Class = Mage | Class = Warlock",
+					or(new IsClass(MAGE), new IsClass(WARLOCK))
 			)
 	);
 

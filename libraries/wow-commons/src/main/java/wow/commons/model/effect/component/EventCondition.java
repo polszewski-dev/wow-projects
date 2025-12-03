@@ -2,9 +2,7 @@ package wow.commons.model.effect.component;
 
 import wow.commons.model.Condition;
 import wow.commons.model.attribute.PowerType;
-import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.DruidFormType;
 import wow.commons.model.spell.AbilityCategory;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActionType;
@@ -65,10 +63,6 @@ public sealed interface EventCondition extends Condition {
 
 	static EventCondition of(CreatureType creatureType) {
 		return getCachedValue(creatureType, TargetTypeCondition::new);
-	}
-
-	static EventCondition of(DruidFormType druidFormType) {
-		return getCachedValue(druidFormType, DruidFormCondition::new);
 	}
 
 	static EventCondition parse(String value) {
@@ -179,12 +173,6 @@ public sealed interface EventCondition extends Condition {
 		}
 	}
 
-	record DruidFormCondition(DruidFormType druidFormType) implements EventCondition {
-		public DruidFormCondition {
-			Objects.requireNonNull(druidFormType);
-		}
-	}
-
 	record OwnerHasEffectCondition(AbilityId abilityId) implements EventCondition {
 		public OwnerHasEffectCondition {
 			Objects.requireNonNull(abilityId);
@@ -194,12 +182,6 @@ public sealed interface EventCondition extends Condition {
 	record OwnerIsChannelingCondition(AbilityId abilityId) implements EventCondition {
 		public OwnerIsChannelingCondition {
 			Objects.requireNonNull(abilityId);
-		}
-	}
-
-	record TargetClassCondition(CharacterClassId characterClassId) implements EventCondition {
-		public TargetClassCondition {
-			Objects.requireNonNull(characterClassId);
 		}
 	}
 

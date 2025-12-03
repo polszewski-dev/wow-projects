@@ -1,6 +1,8 @@
 package wow.commons.util.condition;
 
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.DruidFormType;
 import wow.commons.model.spell.SpellTargetCondition;
 
 import java.util.List;
@@ -54,6 +56,12 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 			return hasEffect;
 		}
 
+		var druidFormType = DruidFormType.tryParse(value);
+
+		if (druidFormType != null) {
+			return SpellTargetCondition.of(druidFormType);
+		}
+
 		if (FRIENDLY.equalsIgnoreCase(value)) {
 			return SpellTargetCondition.FRIENDLY;
 		}
@@ -90,6 +98,16 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 		return healthComparator(left, right, HealthPctGreaterThanOrEqual::new);
 	}
 
+	@Override
+	protected SpellTargetCondition equalsOperator(String left, String right) {
+		if (CLASS.equalsIgnoreCase(left)) {
+			var characterClassId = CharacterClassId.parse(right);
+			return new IsClass(characterClassId);
+		}
+
+		throw new IllegalArgumentException("Can't parse: " + left);
+	}
+
 	private SpellTargetCondition healthComparator(String left, String right, DoubleFunction<SpellTargetCondition> mapper) {
 		if (HEALTH_PCT.equalsIgnoreCase(left)) {
 			var pct = Double.parseDouble(right);
@@ -115,6 +133,7 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 
 	static final String HAS_EFFECT = "HasEffect";
 	static final String HEALTH_PCT = "Health%";
+	static final String CLASS = "Class";
 	static final String FRIENDLY = "Friendly";
 	static final String HOSTILE = "Hostile";
 }

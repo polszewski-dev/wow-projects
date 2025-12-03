@@ -5,8 +5,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import wow.commons.constant.AbilityIds;
 import wow.commons.constant.EventConditions;
 import wow.commons.model.attribute.PowerType;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.DruidFormType;
 import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.spell.AbilityCategory;
 import wow.commons.model.spell.AbilityId;
@@ -81,20 +79,12 @@ class EventConditionParserTest {
 					of(UNDEAD)
 			),
 			testData(
-					"CatForm",
-					of(DruidFormType.CAT_FORM)
-			),
-			testData(
 					"Owner.HasEffect(Mana Shield)",
 					new OwnerHasEffectCondition(MANA_SHIELD)
 			),
 			testData(
 					"Owner.IsChanneling(Drain Soul)",
 					new OwnerIsChannelingCondition(DRAIN_SOUL)
-			),
-			testData(
-					"TargetClass=Warlock",
-					new TargetClassCondition(CharacterClassId.WARLOCK)
 			),
 			testData(
 					"Direct",

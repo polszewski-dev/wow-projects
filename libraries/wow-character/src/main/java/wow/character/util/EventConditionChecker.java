@@ -29,9 +29,6 @@ public final class EventConditionChecker {
 			case CanCrit() ->
 					args.isCanCrit();
 
-			case DruidFormCondition(var druidFormType) ->
-					args.getCaster().getDruidForm() == druidFormType;
-
 			case EmptyCondition() ->
 					true;
 
@@ -98,14 +95,13 @@ public final class EventConditionChecker {
 					args.getSpell() instanceof ClassAbility a &&
 					a.getTalentTree() == talentTree;
 
-			case TargetClassCondition(var characterClassId) ->
-					args.getTarget() != null && args.getTarget().getCharacterClassId() == characterClassId;
-
 			case TargetHealthPctLessThan(var value) ->
+					args.getTarget() != null &&
 					args.getTarget().getHealthPct().value() < value;
 
 			case TargetTypeCondition(var creatureType) ->
-					args.getTarget() != null && args.getTarget().getCreatureType() == creatureType;
+					args.getTarget() != null &&
+					args.getTarget().getCreatureType() == creatureType;
 		};
 	}
 

@@ -1,7 +1,9 @@
 package wow.commons.model.spell;
 
 import wow.commons.model.Condition;
+import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.DruidFormType;
 import wow.commons.util.condition.ConditionCache;
 
 import java.util.List;
@@ -23,6 +25,10 @@ public sealed interface SpellTargetCondition extends Condition {
 
 	static SpellTargetCondition of(CreatureType creatureType) {
 		return getCachedValue(creatureType, IsCreatureType::new);
+	}
+
+	static SpellTargetCondition of(DruidFormType druidFormType) {
+		return getCachedValue(druidFormType, HasDruidForm::new);
 	}
 
 	static Or or(SpellTargetCondition left, SpellTargetCondition right) {
@@ -101,6 +107,18 @@ public sealed interface SpellTargetCondition extends Condition {
 	record IsCreatureType(CreatureType creatureType) implements SpellTargetCondition {
 		public IsCreatureType {
 			Objects.requireNonNull(creatureType);
+		}
+	}
+
+	record IsClass(CharacterClassId characterClassId) implements SpellTargetCondition {
+		public IsClass {
+			Objects.requireNonNull(characterClassId);
+		}
+	}
+
+	record HasDruidForm(DruidFormType druidFormType) implements SpellTargetCondition {
+		public HasDruidForm {
+			Objects.requireNonNull(druidFormType);
 		}
 	}
 

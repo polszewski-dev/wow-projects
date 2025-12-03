@@ -35,6 +35,7 @@ class MoonkinFormTest extends TbcDruidSpellSimulationTest {
 						.beginGcd(player)
 						.endCast(player, MOONKIN_FORM)
 						.decreasedResource(848, MANA, player, MOONKIN_FORM)
+						.effectApplied(MOONKIN_FORM, player, Duration.INFINITE)
 						.effectApplied(MOONKIN_FORM, player, Duration.INFINITE),
 				at(1.5)
 						.endGcd(player)
