@@ -236,7 +236,7 @@ public sealed interface AttributeCondition extends Condition {
 
 	record HasPet() implements AttributeCondition {}
 
-	record OwnerHealthBelowPct(int value) implements AttributeCondition {}
+	record OwnerHealthPctLessThan(double value) implements AttributeCondition {}
 }
 
 class AttributeConditionCache extends ConditionCache<AttributeCondition> {

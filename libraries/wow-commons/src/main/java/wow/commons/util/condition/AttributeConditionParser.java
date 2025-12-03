@@ -24,7 +24,7 @@ import static wow.commons.model.attribute.AttributeCondition.*;
  * User: POlszewski
  * Date: 2023-10-13
  */
-public class AttributeConditionParser extends ConditionParser<AttributeCondition, Void> {
+public class AttributeConditionParser extends ConditionParser<AttributeCondition, String> {
 	public static AttributeCondition parseCondition(String value) {
 		return new AttributeConditionParser(value).parse();
 	}
@@ -108,12 +108,6 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 			return of(effectCategory);
 		}
 
-		var ownerHealthBelowPct = tryParseOwnerHealthBelowPct(value);
-
-		if (ownerHealthBelowPct != null) {
-			return ownerHealthBelowPct;
-		}
-
 		var weaponSubType = WeaponSubType.tryParse(value);
 
 		if (weaponSubType != null) {
@@ -146,17 +140,27 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 		return EMPTY;
 	}
 
-	private OwnerHealthBelowPct tryParseOwnerHealthBelowPct(String value) {
-		var healthPct = parsePercent(OWNER_HEALTH_BELOW_PREFIX, value);
-
-		if (healthPct == null) {
-			return null;
+	@Override
+	protected AttributeCondition lessThanOperator(String left, String right) {
+		if (OWNER_HEALTH_PCT.equalsIgnoreCase(left)) {
+			var pct = Double.parseDouble(right);
+			return new OwnerHealthPctLessThan(pct);
 		}
 
-		return new OwnerHealthBelowPct(healthPct);
+		throw new IllegalArgumentException("Can't parse: " + left);
 	}
 
-	static final String OWNER_HEALTH_BELOW_PREFIX = "OwnerHealthBelow";
+	@Override
+	protected String getBasicExpression(String value) {
+		return value;
+	}
+
+	@Override
+	protected String getConstant(double value) {
+		return value + "";
+	}
+
+	static final String OWNER_HEALTH_PCT = "Owner.Health%";
 
 	static final Map<String, AttributeCondition> MISC_CONDITIONS;
 

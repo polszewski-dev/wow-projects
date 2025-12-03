@@ -85,11 +85,11 @@ class EventConditionParserTest {
 					of(DruidFormType.CAT_FORM)
 			),
 			testData(
-					"OwnerHas:Mana Shield",
+					"Owner.HasEffect(Mana Shield)",
 					new OwnerHasEffectCondition(MANA_SHIELD)
 			),
 			testData(
-					"OwnerIsChanneling:Drain Soul",
+					"Owner.IsChanneling(Drain Soul)",
 					new OwnerIsChannelingCondition(DRAIN_SOUL)
 			),
 			testData(
@@ -145,12 +145,12 @@ class EventConditionParserTest {
 					new IsTargetingOthers()
 			),
 			testData(
-					"OwnerHealthBelow35%",
-					new OwnerHealthBelowPct(35)
+					"Owner.Health% < 35",
+					new OwnerHealthPctLessThan(35)
 			),
 			testData(
-					"TargetHealthBelow20%",
-					new TargetHealthBelowPct(20)
+					"Target.Health% < 20",
+					new TargetHealthPctLessThan(20)
 			),
 			testData(
 					"Create Firestone (Greater)",
@@ -193,8 +193,8 @@ class EventConditionParserTest {
 					or(of(SHADOW), EventCondition.or(of(FROST), of(FIRE)))
 			),
 			testData(
-					"Physical & OwnerHealthBelow40%",
-					and(EventConditions.PHYSICAL, new OwnerHealthBelowPct(40))
+					"Physical & Owner.Health% < 40",
+					and(EventConditions.PHYSICAL, new OwnerHealthPctLessThan(40))
 			),
 			testData(
 					"Physical & Undead, Demon",

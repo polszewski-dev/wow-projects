@@ -80,7 +80,7 @@ public final class EventConditionChecker {
 			case OwnerHasEffectCondition(var abilityId) ->
 					args.getCaster().hasEffect(abilityId);
 
-			case OwnerHealthBelowPct(var value) ->
+			case OwnerHealthPctLessThan(var value) ->
 					args.getCaster().getHealthPct().value() < value;
 
 			case OwnerIsChannelingCondition(var abilityId) ->
@@ -101,7 +101,7 @@ public final class EventConditionChecker {
 			case TargetClassCondition(var characterClassId) ->
 					args.getTarget() != null && args.getTarget().getCharacterClassId() == characterClassId;
 
-			case TargetHealthBelowPct(var value) ->
+			case TargetHealthPctLessThan(var value) ->
 					args.getTarget().getHealthPct().value() < value;
 
 			case TargetTypeCondition(var creatureType) ->

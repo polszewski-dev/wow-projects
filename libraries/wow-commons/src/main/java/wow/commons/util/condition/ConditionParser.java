@@ -2,10 +2,12 @@ package wow.commons.util.condition;
 
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Condition;
+import wow.commons.model.spell.AbilityId;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
 
@@ -469,17 +471,30 @@ public abstract class ConditionParser<T extends Condition, E> {
 
 	private record PrimitiveNode(String value) implements Node {}
 
-	protected Integer parsePercent(String prefix, String value) {
-		var result = parseMultipleValues(prefix + "(\\d+)%", value);
+	protected String withoutPrefix(String value, String targetClassPrefix) {
+		return value.replace(targetClassPrefix, "").trim();
+	}
+
+	protected String parseFunctionArgument(String name, String value) {
+		var regex = name + "\\((.+)\\)";
+		var result = parseMultipleValues(regex, value);
 
 		if (result.isEmpty()) {
 			return null;
 		}
 
-		return Integer.parseInt(result.get(0));
+		return result.get(0).trim();
 	}
 
-	protected String withoutPrefix(String value, String targetClassPrefix) {
-		return value.replace(targetClassPrefix, "").trim();
+	protected <R> R parseAbilityIdArgument(String value, String name, Function<AbilityId, R> mapper) {
+		var argument = parseFunctionArgument(name, value);
+
+		if (argument == null) {
+			return null;
+		}
+
+		var abilityId = AbilityId.parse(argument);
+
+		return mapper.apply(abilityId);
 	}
 }

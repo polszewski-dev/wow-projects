@@ -1,10 +1,10 @@
 package wow.commons.util.condition;
 
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellTargetCondition;
 
 import java.util.List;
+import java.util.function.DoubleFunction;
 
 import static wow.commons.model.spell.SpellTargetCondition.*;
 
@@ -12,13 +12,23 @@ import static wow.commons.model.spell.SpellTargetCondition.*;
  * User: POlszewski
  * Date: 2025-11-28
  */
-public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondition, Void> {
+public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondition, String> {
 	public static SpellTargetCondition parseCondition(String value) {
 		return new SpellTargetConditionParser(value).parse();
 	}
 
 	private SpellTargetConditionParser(String value) {
 		super(value);
+	}
+
+	@Override
+	protected SpellTargetCondition orOperator(SpellTargetCondition left, SpellTargetCondition right) {
+		return or(left, right);
+	}
+
+	@Override
+	protected SpellTargetCondition andOperator(SpellTargetCondition left, SpellTargetCondition right) {
+		return and(left, right);
 	}
 
 	@Override
@@ -44,12 +54,6 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 			return hasEffect;
 		}
 
-		var healthBelowPct = tryParseHealthAtMostPct(value);
-
-		if (healthBelowPct != null) {
-			return healthBelowPct;
-		}
-
 		throw new IllegalArgumentException("Unknown condition: " + value);
 	}
 
@@ -58,27 +62,49 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 		return EMPTY;
 	}
 
+	@Override
+	protected SpellTargetCondition lessThanOperator(String left, String right) {
+		return healthComparator(left, right, HealthPctLessThan::new);
+	}
+
+	@Override
+	protected SpellTargetCondition lessThanOrEqualOperator(String left, String right) {
+		return healthComparator(left, right, HealthPctLessThanOrEqual::new);
+	}
+
+	@Override
+	protected SpellTargetCondition greaterThanOperator(String left, String right) {
+		return healthComparator(left, right, HealthPctGreaterThan::new);
+	}
+
+	@Override
+	protected SpellTargetCondition greaterThanOrEqualOperator(String left, String right) {
+		return healthComparator(left, right, HealthPctGreaterThanOrEqual::new);
+	}
+
+	private SpellTargetCondition healthComparator(String left, String right, DoubleFunction<SpellTargetCondition> mapper) {
+		if (HEALTH_PCT.equalsIgnoreCase(left)) {
+			var pct = Double.parseDouble(right);
+			return mapper.apply(pct);
+		}
+
+		throw new IllegalArgumentException("Can't parse: " + left);
+	}
+
+	@Override
+	protected String getBasicExpression(String value) {
+		return value;
+	}
+
+	@Override
+	protected String getConstant(double value) {
+		return value + "";
+	}
+
 	private HasEffect tryParseHasEffect(String value) {
-		if (value != null && value.startsWith(HAS_EFFECT_PREFIX)) {
-			var abilityIdStr = withoutPrefix(value, HAS_EFFECT_PREFIX);
-			var abilityId = AbilityId.parse(abilityIdStr);
-
-			return new HasEffect(abilityId);
-		}
-
-		return null;
+		return parseAbilityIdArgument(value, HAS_EFFECT, HasEffect::new);
 	}
 
-	private HealthAtMostPct tryParseHealthAtMostPct(String value) {
-		var healthPct = parsePercent(HEALTH_AT_MOST_PREFIX, value);
-
-		if (healthPct == null) {
-			return null;
-		}
-
-		return new HealthAtMostPct(healthPct);
-	}
-
-	static final String HAS_EFFECT_PREFIX = "HasEffect:";
-	static final String HEALTH_AT_MOST_PREFIX = "HealthAtMost";
+	static final String HAS_EFFECT = "HasEffect";
+	static final String HEALTH_PCT = "Health%";
 }

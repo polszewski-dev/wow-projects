@@ -227,9 +227,9 @@ public sealed interface EventCondition extends Condition {
 
 	record IsTargetingOthers() implements EventCondition {}
 
-	record OwnerHealthBelowPct(int value) implements EventCondition {}
+	record OwnerHealthPctLessThan(double value) implements EventCondition {}
 
-	record TargetHealthBelowPct(int value) implements EventCondition {}
+	record TargetHealthPctLessThan(double value) implements EventCondition {}
 }
 
 class EventConditionCache extends ConditionCache<EventCondition> {

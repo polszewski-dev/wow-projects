@@ -63,7 +63,7 @@ public final class AttributeConditionChecker {
 			case Operator operator ->
 					checkConditionOperator(operator, args);
 
-			case OwnerHealthBelowPct(var value) ->
+			case OwnerHealthPctLessThan(var value) ->
 					args.getCaster().getHealthPct().value() < value;
 
 			case PetTypeCondition(var petType) ->

@@ -5,8 +5,8 @@ import wow.commons.model.spell.SpellTargetCondition;
 import java.util.List;
 
 import static wow.commons.model.spell.SpellTargetCondition.*;
-import static wow.commons.util.condition.SpellTargetConditionParser.HAS_EFFECT_PREFIX;
-import static wow.commons.util.condition.SpellTargetConditionParser.HEALTH_AT_MOST_PREFIX;
+import static wow.commons.util.condition.SpellTargetConditionParser.HAS_EFFECT;
+import static wow.commons.util.condition.SpellTargetConditionParser.HEALTH_PCT;
 
 /**
  * User: POlszewski
@@ -26,14 +26,48 @@ public class SpellTargetConditionFormatter extends ConditionFormatter<SpellTarge
 					throw new IllegalArgumentException();
 
 			case HasEffect(var abilityId) ->
-					HAS_EFFECT_PREFIX + abilityId;
+					formatFunction(HAS_EFFECT, abilityId);
 
-			case HealthAtMostPct(var value) ->
-					percentPrefix(HEALTH_AT_MOST_PREFIX, value);
+			case HealthPctLessThan(var value) ->
+					formatOperator(HEALTH_PCT, "<", value);
+
+			case HealthPctLessThanOrEqual(var value) ->
+					formatOperator(HEALTH_PCT, "<=", value);
+
+			case HealthPctGreaterThan(var value) ->
+					formatOperator(HEALTH_PCT, ">", value);
+
+			case HealthPctGreaterThanOrEqual(var value) ->
+					formatOperator(HEALTH_PCT, ">=", value);
 
 			case IsCreatureType(var creatureType) ->
 					creatureType.getName();
 		};
+	}
+
+	@Override
+	protected boolean isBinaryOperator(SpellTargetCondition condition) {
+		return condition instanceof BinaryOperator;
+	}
+
+	@Override
+	protected SpellTargetCondition getLeft(SpellTargetCondition operator) {
+		return ((BinaryOperator) operator).left();
+	}
+
+	@Override
+	protected SpellTargetCondition getRight(SpellTargetCondition operator) {
+		return ((BinaryOperator) operator).right();
+	}
+
+	@Override
+	protected boolean isOr(SpellTargetCondition condition) {
+		return condition instanceof Or;
+	}
+
+	@Override
+	protected boolean isAnd(SpellTargetCondition condition) {
+		return condition instanceof And;
 	}
 
 	@Override

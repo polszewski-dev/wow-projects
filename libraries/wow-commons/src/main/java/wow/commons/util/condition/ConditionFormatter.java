@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
+import static wow.commons.util.FormatUtil.decimalPointOnlyIfNecessary;
 
 /**
  * User: POlszewski
@@ -108,7 +109,11 @@ public abstract class ConditionFormatter<T extends Condition> {
 		}
 	}
 
-	protected String percentPrefix(String prefix, int value) {
-		return prefix + value + "%";
+	protected String formatFunction(String name, Object arg) {
+		return name + "(" + arg + ")";
+	}
+
+	protected String formatOperator(String left, String operator, double right) {
+		return left + " " + operator + " " + decimalPointOnlyIfNecessary(right);
 	}
 }

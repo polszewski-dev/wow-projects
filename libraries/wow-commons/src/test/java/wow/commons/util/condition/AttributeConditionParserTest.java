@@ -132,8 +132,8 @@ class AttributeConditionParserTest {
 					new HasPet()
 			),
 			testData(
-					"OwnerHealthBelow35%",
-					new OwnerHealthBelowPct(35)
+					"Owner.Health% < 35",
+					new OwnerHealthPctLessThan(35)
 			),
 			testData(
 					"Create Firestone (Greater)",
@@ -176,8 +176,8 @@ class AttributeConditionParserTest {
 					or(of(SHADOW), AttributeCondition.or(of(FROST), of(FIRE)))
 			),
 			testData(
-					"Physical & OwnerHealthBelow40%",
-					and(AttributeConditions.PHYSICAL, new OwnerHealthBelowPct(40))
+					"Physical & Owner.Health% < 40",
+					and(AttributeConditions.PHYSICAL, new OwnerHealthPctLessThan(40))
 			),
 			testData(
 					"Physical & Undead, Demon",

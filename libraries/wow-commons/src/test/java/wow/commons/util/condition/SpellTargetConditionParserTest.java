@@ -8,6 +8,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.IMMOLATE;
+import static wow.commons.model.character.CreatureType.DEMON;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.spell.SpellTargetCondition.*;
 import static wow.commons.util.condition.SpellTargetConditionParser.parseCondition;
@@ -43,12 +44,35 @@ class SpellTargetConditionParserTest {
 					of(UNDEAD)
 			),
 			testData(
-					"HasEffect:Immolate",
+					"HasEffect(Immolate)",
 					new HasEffect(IMMOLATE)
 			),
 			testData(
-					"HealthAtMost20%",
-					new HealthAtMostPct(20)
+					"Health% < 20",
+					new HealthPctLessThan(20)
+			),
+			testData(
+					"Health% <= 20",
+					new HealthPctLessThanOrEqual(20)
+			),
+			testData(
+					"Health% > 20",
+					new HealthPctGreaterThan(20)
+			),
+			testData(
+					"Health% >= 20",
+					new HealthPctGreaterThanOrEqual(20)
+			),
+			testData(
+					"Undead, Demon",
+					comma(of(UNDEAD), of(DEMON))
+			),
+			testData(
+					"Health% >= 40 & Health% < 70",
+					and(
+							new HealthPctGreaterThanOrEqual(40),
+							new HealthPctLessThan(70)
+					)
 			)
 	);
 

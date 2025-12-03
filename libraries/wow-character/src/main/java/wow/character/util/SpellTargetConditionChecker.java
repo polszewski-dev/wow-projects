@@ -18,11 +18,26 @@ public class SpellTargetConditionChecker {
 			case HasEffect(var abilityId) ->
 					target.hasEffect(abilityId);
 
-			case HealthAtMostPct(var value) ->
+			case HealthPctLessThan(var value) ->
+					target.getHealthPct().value() < value;
+
+			case HealthPctLessThanOrEqual(var value) ->
 					target.getHealthPct().value() <= value;
+
+			case HealthPctGreaterThan(var value) ->
+					target.getHealthPct().value() > value;
+
+			case HealthPctGreaterThanOrEqual(var value) ->
+					target.getHealthPct().value() >= value;
 
 			case IsCreatureType(var creatureType) ->
 					target.getCreatureType() == creatureType;
+
+			case Or(var left, var right) ->
+					check(left, target) || check(right, target);
+
+			case And(var left, var right) ->
+					check(left, target) && check(right, target);
 
 			case Comma(var conditions) ->
 					conditions.stream().anyMatch(x -> check(x, target));

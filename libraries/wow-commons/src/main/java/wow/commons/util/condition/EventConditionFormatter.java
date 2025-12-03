@@ -77,13 +77,13 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 					throw new IllegalArgumentException();
 
 			case OwnerHasEffectCondition(var abilityId) ->
-					OWNER_HAS_EFFECT_PREFIX + abilityId;
+					formatFunction(OWNER_HAS_EFFECT, abilityId);
 
-			case OwnerHealthBelowPct(var value) ->
-					percentPrefix(OWNER_HEALTH_BELOW_PREFIX, value);
+			case OwnerHealthPctLessThan(var value) ->
+					formatOperator(OWNER_HEALTH_PCT, "<", value);
 
 			case OwnerIsChannelingCondition(var abilityId) ->
-					OWNER_IS_CHANNELING_PREFIX + abilityId;
+					formatFunction(OWNER_IS_CHANNELING, abilityId);
 
 			case PowerTypeCondition(var powerType) ->
 					powerType.getKey();
@@ -97,8 +97,8 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 			case TargetClassCondition(var characterClassId) ->
 					TARGET_CLASS_PREFIX + characterClassId;
 
-			case TargetHealthBelowPct(var value) ->
-					percentPrefix(TARGET_HEALTH_BELOW_PREFIX, value);
+			case TargetHealthPctLessThan(var value) ->
+					formatOperator(TARGET_HEALTH_PCT, "<", value);
 
 			case TargetTypeCondition(var creatureType) ->
 					creatureType.getName();

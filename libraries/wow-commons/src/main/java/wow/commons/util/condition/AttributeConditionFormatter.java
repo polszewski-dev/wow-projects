@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static wow.commons.model.attribute.AttributeCondition.*;
 import static wow.commons.util.condition.AttributeConditionParser.MISC_CONDITIONS;
-import static wow.commons.util.condition.AttributeConditionParser.OWNER_HEALTH_BELOW_PREFIX;
+import static wow.commons.util.condition.AttributeConditionParser.OWNER_HEALTH_PCT;
 
 /**
  * User: POlszewski
@@ -63,8 +63,8 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 			case Operator ignored ->
 					throw new IllegalArgumentException();
 
-			case OwnerHealthBelowPct(var value) ->
-					percentPrefix(OWNER_HEALTH_BELOW_PREFIX, value);
+			case OwnerHealthPctLessThan(var value) ->
+					formatOperator(OWNER_HEALTH_PCT, "<", value);
 
 			case PetTypeCondition(var petType) ->
 					petType.toString();

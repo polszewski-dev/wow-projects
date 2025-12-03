@@ -21,6 +21,14 @@ public sealed interface SpellTargetCondition extends Condition {
 		return getCachedValue(creatureType, IsCreatureType::new);
 	}
 
+	static Or or(SpellTargetCondition left, SpellTargetCondition right) {
+		return new Or(left, right);
+	}
+
+	static And and(SpellTargetCondition left, SpellTargetCondition right) {
+		return new And(left, right);
+	}
+
 	static Comma comma(SpellTargetCondition... conditions) {
 		return new Comma(List.of(conditions));
 	}
@@ -37,6 +45,26 @@ public sealed interface SpellTargetCondition extends Condition {
 	}
 
 	sealed interface Operator extends SpellTargetCondition {}
+
+	sealed interface BinaryOperator extends Operator {
+		SpellTargetCondition left();
+
+		SpellTargetCondition right();
+	}
+
+	record Or(SpellTargetCondition left, SpellTargetCondition right) implements BinaryOperator {
+		public Or {
+			Objects.requireNonNull(left);
+			Objects.requireNonNull(right);
+		}
+	}
+
+	record And(SpellTargetCondition left, SpellTargetCondition right) implements BinaryOperator {
+		public And {
+			Objects.requireNonNull(left);
+			Objects.requireNonNull(right);
+		}
+	}
 
 	record Comma(List<SpellTargetCondition> conditions) implements Operator {
 		public Comma {
@@ -58,7 +86,13 @@ public sealed interface SpellTargetCondition extends Condition {
 		}
 	}
 
-	record HealthAtMostPct(int value) implements SpellTargetCondition {}
+	record HealthPctLessThan(double value) implements SpellTargetCondition {}
+
+	record HealthPctLessThanOrEqual(double value) implements SpellTargetCondition {}
+
+	record HealthPctGreaterThan(double value) implements SpellTargetCondition {}
+
+	record HealthPctGreaterThanOrEqual(double value) implements SpellTargetCondition {}
 
 	record IsCreatureType(CreatureType creatureType) implements SpellTargetCondition {
 		public IsCreatureType {

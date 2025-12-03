@@ -21,7 +21,7 @@ import static wow.commons.model.effect.component.EventCondition.*;
  * User: POlszewski
  * Date: 2025-10-06
  */
-public class EventConditionParser extends ConditionParser<EventCondition, Void> {
+public class EventConditionParser extends ConditionParser<EventCondition, String> {
 	public static EventCondition parseCondition(String value) {
 		return new EventConditionParser(value).parse();
 	}
@@ -117,18 +117,6 @@ public class EventConditionParser extends ConditionParser<EventCondition, Void> 
 			return targetClass;
 		}
 
-		var ownerHealthBelowPct = tryParseOwnerHealthBelowPct(value);
-
-		if (ownerHealthBelowPct != null) {
-			return ownerHealthBelowPct;
-		}
-
-		var targetHealthBelowPct = tryParseTargetHealthBelowPct(value);
-
-		if (targetHealthBelowPct != null) {
-			return targetHealthBelowPct;
-		}
-
 		var miscCondition = MISC_CONDITIONS.get(value);
 
 		if (miscCondition != null) {
@@ -143,6 +131,29 @@ public class EventConditionParser extends ConditionParser<EventCondition, Void> 
 		return EMPTY;
 	}
 
+	@Override
+	protected EventCondition lessThanOperator(String left, String right) {
+		if (OWNER_HEALTH_PCT.equalsIgnoreCase(left)) {
+			var pct = Double.parseDouble(right);
+			return new OwnerHealthPctLessThan(pct);
+		}
+		if (TARGET_HEALTH_PCT.equalsIgnoreCase(left)) {
+			var pct = Double.parseDouble(right);
+			return new TargetHealthPctLessThan(pct);
+		}
+		return super.lessThanOperator(left, right);
+	}
+
+	@Override
+	protected String getBasicExpression(String value) {
+		return value;
+	}
+
+	@Override
+	protected String getConstant(double value) {
+		return value + "";
+	}
+
 	private TargetClassCondition tryParseTargetClass(String value) {
 		if (value != null && value.startsWith(TARGET_CLASS_PREFIX)) {
 			var characterClassIdStr = withoutPrefix(value, TARGET_CLASS_PREFIX);
@@ -155,52 +166,19 @@ public class EventConditionParser extends ConditionParser<EventCondition, Void> 
 	}
 
 	private OwnerHasEffectCondition tryParseOwnerHasEffect(String value) {
-		if (value != null && value.startsWith(OWNER_HAS_EFFECT_PREFIX)) {
-			var abilityIdStr = withoutPrefix(value, OWNER_HAS_EFFECT_PREFIX);
-			var abilityId = AbilityId.parse(abilityIdStr);
-
-			return new OwnerHasEffectCondition(abilityId);
-		}
-
-		return null;
+		return parseAbilityIdArgument(value, OWNER_HAS_EFFECT, OwnerHasEffectCondition::new);
 	}
 
 	private OwnerIsChannelingCondition tryParseOwnerIsChanneling(String value) {
-		if (value != null && value.startsWith(OWNER_IS_CHANNELING_PREFIX)) {
-			var abilityIdStr = withoutPrefix(value, OWNER_IS_CHANNELING_PREFIX);
-			var abilityId = AbilityId.parse(abilityIdStr);
-
-			return new OwnerIsChannelingCondition(abilityId);
-		}
-		return null;
-	}
-
-	private OwnerHealthBelowPct tryParseOwnerHealthBelowPct(String value) {
-		var healthPct = parsePercent(OWNER_HEALTH_BELOW_PREFIX, value);
-
-		if (healthPct == null) {
-			return null;
-		}
-
-		return new OwnerHealthBelowPct(healthPct);
-	}
-
-	private TargetHealthBelowPct tryParseTargetHealthBelowPct(String value) {
-		var healthPct = parsePercent(TARGET_HEALTH_BELOW_PREFIX, value);
-
-		if (healthPct == null) {
-			return null;
-		}
-
-		return new TargetHealthBelowPct(healthPct);
+		return parseAbilityIdArgument(value, OWNER_IS_CHANNELING, OwnerIsChannelingCondition::new);
 	}
 
 	static final String TARGET_CLASS_PREFIX = "TargetClass=";
-	static final String OWNER_HAS_EFFECT_PREFIX = "OwnerHas:";
-	static final String OWNER_IS_CHANNELING_PREFIX = "OwnerIsChanneling:";
+	static final String OWNER_HAS_EFFECT = "Owner.HasEffect";
+	static final String OWNER_IS_CHANNELING = "Owner.IsChanneling";
 
-	static final String OWNER_HEALTH_BELOW_PREFIX = "OwnerHealthBelow";
-	static final String TARGET_HEALTH_BELOW_PREFIX = "TargetHealthBelow";
+	static final String OWNER_HEALTH_PCT = "Owner.Health%";
+	static final String TARGET_HEALTH_PCT = "Target.Health%";
 
 	static final Map<String, EventCondition> MISC_CONDITIONS;
 

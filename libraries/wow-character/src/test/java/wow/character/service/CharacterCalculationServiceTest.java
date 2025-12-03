@@ -68,8 +68,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	@ParameterizedTest
 	@CsvSource({
 			"Haste%,      Spell",
-			"Haste%,      OwnerHealthBelow40%",
-			"Haste%,      OwnerHealthBelow70%",
+			"Haste%,      Owner.Health% < 40",
+			"Haste%,      Owner.Health% < 70",
 			"HasteRating, Spell",
 			"CastTime,    Shadow Bolt",
 			"CastTime%,   HasCastTimeUnder10Sec",
@@ -87,8 +87,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	@ParameterizedTest
 	@CsvSource({
 			"Haste%, Physical",
-			"Haste%, OwnerHealthBelow40%",
-			"Haste%, OwnerHealthBelow70%",
+			"Haste%, Owner.Health% < 40",
+			"Haste%, Owner.Health% < 70",
 	})
 	void newAccumulatedCastStatsNotMatchingCondition(String idStr, String conditionStr) {
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
