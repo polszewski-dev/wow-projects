@@ -17,7 +17,6 @@ import wow.commons.util.condition.AbsorptionConditionFormatter;
 import wow.commons.util.condition.AttributeConditionFormatter;
 import wow.commons.util.condition.EventConditionFormatter;
 import wow.commons.util.condition.StatConversionConditionFormatter;
-import wow.scraper.config.ScraperConfig;
 import wow.scraper.config.ScraperDatafixes;
 
 import java.util.List;
@@ -29,13 +28,11 @@ import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
  * Date: 2023-06-20
  */
 public abstract class ExcelSheetWriter<T, B extends WowExcelBuilder> extends ExcelCellWriter {
-	protected final ScraperConfig config;
 	protected final ScraperDatafixes datafixes;
 	private final ItemEffectMapper itemEffectMapper;
 
 	protected ExcelSheetWriter(B builder) {
 		super(builder.getWriter());
-		this.config = builder.getConfig();
 		this.datafixes = builder.getDatafixes();
 		this.itemEffectMapper = new ItemEffectMapper(null);
 	}

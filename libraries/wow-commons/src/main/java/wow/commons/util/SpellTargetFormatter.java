@@ -7,7 +7,7 @@ import wow.commons.util.condition.SpellTargetConditionFormatter;
  * User: POlszewski
  * Date: 2025-11-29
  */
-public class SpellTargetFormatter {
+public final class SpellTargetFormatter {
 	public static String format(SpellTarget spellTarget) {
 		if (spellTarget == null) {
 			return null;
@@ -23,4 +23,6 @@ public class SpellTargetFormatter {
 
 		return "%s [%s]".formatted(typeStr, conditionStr);
 	}
+
+	private SpellTargetFormatter() {}
 }

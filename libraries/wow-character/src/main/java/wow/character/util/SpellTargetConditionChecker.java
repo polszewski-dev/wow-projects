@@ -9,7 +9,7 @@ import static wow.commons.model.spell.SpellTargetCondition.*;
  * User: POlszewski
  * Date: 2025-11-30
  */
-public class SpellTargetConditionChecker {
+public final class SpellTargetConditionChecker {
 	public static boolean check(SpellTargetCondition condition, Character target, Character caster) {
 		return switch (condition) {
 			case Empty() ->
@@ -55,4 +55,6 @@ public class SpellTargetConditionChecker {
 					conditions.stream().anyMatch(x -> check(x, target, caster));
 		};
 	}
+
+	private SpellTargetConditionChecker() {}
 }

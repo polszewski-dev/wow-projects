@@ -96,7 +96,7 @@ public class TargetResolver implements SimulationContextSource {
 
 	private List<Unit> getTargets(SpellTarget spellTarget) {
 		return getTargetsUnchecked(spellTarget).stream()
-				.filter(target -> SpellTargetConditionChecker.check(spellTarget.condition(), target, self))
+				.filter(uncheckedTarget -> SpellTargetConditionChecker.check(spellTarget.condition(), uncheckedTarget, self))
 				.toList();
 	}
 
