@@ -2,8 +2,9 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.commons.model.spell.TickScheme;
 
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.ChangeHealthPeriodically;
 
 /**
  * User: POlszewski
@@ -12,7 +13,8 @@ import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand
 @Getter
 @Setter
 public class PeriodicSpellComponentSnapshot {
-	private final PeriodicCommand command;
+	private final TickScheme tickScheme;
+	private final int numTicks;
 
 	private int baseAmount;
 
@@ -24,13 +26,18 @@ public class PeriodicSpellComponentSnapshot {
 
 	private double coeff;
 
-	public PeriodicSpellComponentSnapshot(PeriodicCommand command) {
-		this(command, command.amount());
+	public PeriodicSpellComponentSnapshot(ChangeHealthPeriodically command) {
+		this(command.amount(), command.numTicks(), command.tickScheme());
 	}
 
-	public PeriodicSpellComponentSnapshot(PeriodicCommand command, int baseAmount) {
-		this.command = command;
+	public PeriodicSpellComponentSnapshot(int baseAmount, int numTicks) {
+		this(baseAmount, numTicks, TickScheme.DEFAULT);
+	}
+
+	public PeriodicSpellComponentSnapshot(int baseAmount, int numTicks, TickScheme tickScheme) {
 		this.baseAmount = baseAmount;
+		this.tickScheme = tickScheme;
+		this.numTicks = numTicks;
 	}
 
 	public double getTickAmount(int tickNo) {
@@ -39,9 +46,9 @@ public class PeriodicSpellComponentSnapshot {
 		periodicAmount += (power * coeff / 100.0) * (1 + powerPct / 100.0);
 		periodicAmount += amount;
 		periodicAmount *= (1 + amountPct / 100.0);
-		periodicAmount *= command.tickScheme().weight(tickNo);
+		periodicAmount *= tickScheme.weight(tickNo);
 
-		return periodicAmount / command.numTicks();
+		return periodicAmount / numTicks;
 	}
 
 	public void increaseEffect(double increasePct) {

@@ -92,8 +92,47 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var min = getOptionalInteger(params.min()).orElseThrow();
 		var max = getOptionalInteger(params.max()).orElseThrow();
 		var bonus = getDirectComponentBonus(params.bonus());
+		var from = From.DAMAGE;//todo
+		var to = To.DAMAGE;//todo
+		var ratio = Percent._100;//todo
 
-		return new DirectCommand(target, condition, type, coefficient, min, max, bonus);
+		return switch (type) {
+			case DAMAGE ->
+					new DealDamageDirectly(target, condition, coefficient, min, max, bonus);
+
+			case HEAL ->
+					new HealDirectly(target, condition, coefficient, min, max, bonus);
+
+			case LOSE_MANA ->
+					new LoseManaDirectly(target, condition, coefficient, min, max);
+
+			case GAIN_MANA ->
+					new GainManaDirectly(target, condition, coefficient, min, max);
+
+			case COPY ->
+					new Copy(target, condition, coefficient.school(), from, to, ratio);
+
+			case GAIN_ENERGY ->
+					new GainEnergyDirectly(target, condition, min);
+
+			case GAIN_RAGE ->
+					new GainRageDirectly(target, condition, min);
+
+			case REFUND_COST_PCT ->
+					new RefundCostPctDirectly(target, condition, ratio);
+
+			case GAIN_PCT_OF_BASE_MANA ->
+					new GainBaseManaPct(target, condition, ratio);
+
+			case REDUCE_THREAT ->
+					new ReduceThreatDirectly(target, condition, min);
+
+			case EXTRA_ATTACKS ->
+					new ExtraAttacks(target, condition, min);
+
+			default ->
+					throw new IllegalArgumentException(type.name());
+		};
 	}
 
 	private DirectComponentBonus getDirectComponentBonus(DirectComponentBonusParams params) {
@@ -147,7 +186,6 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		}
 
 		var target = SpellTargets.TARGET;
-		var type = periodicComponentParams.type();
 		var tickInterval = getTickInterval(periodicComponentParams);
 		var duration = getOptionalDuration(params.duration()).orElseThrow();
 		var numTicks = getNumTicks(duration, tickInterval);
@@ -155,7 +193,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var amount = getTotalAmount(periodicComponentParams, numTicks);
 		var tickScheme = getTickScheme(periodicComponentParams.tickWeights());
 
-		var command = new PeriodicCommand(target, type, coefficient, amount, numTicks, tickScheme);
+		var command = new DealDamagePeriodically(target, coefficient, amount, numTicks, tickScheme);
 
 		return new PeriodicComponent(List.of(command), tickInterval);
 	}

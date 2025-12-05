@@ -28,6 +28,7 @@ import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.profession.ProfessionSpecializationId.SPELLFIRE_TAILORING;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TalentNames.IMPROVED_LIFE_TAP;
 import static wow.test.commons.TestConstants.PRECISION;
@@ -236,7 +237,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		character.getBuild().setActivePet(PetType.SUCCUBUS);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directCommand = ability.getDirectCommands().getFirst();
+		var directCommand = (ChangeHealthDirectly) ability.getDirectCommands().getFirst();
 		var stats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, SPELL_DAMAGE, directCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
@@ -446,7 +447,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(baseStats.getIntellect()).isEqualTo(203);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directCommand = ability.getDirectCommands().getFirst();
+		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directCommand, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(15.87, PRECISION);
@@ -474,7 +475,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(baseStats.getIntellect()).isEqualTo(253);
 
 		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var directCommand = ability.getDirectCommands().getFirst();
+		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directCommand, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(19.62, PRECISION);
@@ -493,7 +494,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
 
 		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();
-		var periodicCommand = ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
+		var periodicCommand = (DealDamagePeriodically) ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
 		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, periodicCommand, baseStats);
 
 		assertThat(snapshot.getAmount()).isZero();

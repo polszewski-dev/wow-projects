@@ -1,6 +1,7 @@
 package wow.scraper.exporter.spell.excel;
 
 import wow.commons.model.Duration;
+import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.CastInfo;
 import wow.commons.model.spell.Spell;
@@ -8,8 +9,8 @@ import wow.commons.model.spell.component.DirectComponentBonus;
 
 import java.util.List;
 
-import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.effect.component.ComponentType.*;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.ID;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.spell.AbstractSpellSheetParser.Config;
@@ -133,17 +134,47 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			return;
 		}
 
+		switch (command) {
+			case DealDamageDirectly dealDamageDirectly -> 
+				writeChangeHealthDirectly(dealDamageDirectly, writeBonus);
+
+			case HealDirectly healDirectly ->
+				writeChangeHealthDirectly(healDirectly, writeBonus);
+			
+			default ->
+				throw new UnsupportedOperationException(command + "");
+		}
+	}
+
+	private void writeChangeHealthDirectly(ChangeHealthDirectly command, boolean writeBonus) {
 		setValue(command.target());
-		setValue(command.type());
+		setValue(getCommandType(command));
 		setValue(command.coefficient().value());
 		setValue(command.school());
 		setValue(command.min());
 		setValue(command.max());
+
 		if (writeBonus) {
 			writeBonus(command.bonus());
 		} else if (command.bonus() != null) {
 			throw new IllegalArgumentException();
 		}
+	}
+
+	private ComponentType getCommandType(DirectCommand command) {
+		return switch (command) {
+			case DealDamageDirectly ignored -> DAMAGE;
+			case HealDirectly ignored -> HEAL;
+			case LoseManaDirectly ignored -> LOSE_MANA;
+			case GainManaDirectly ignored -> GAIN_MANA;
+			case Copy ignored -> COPY;
+			case ExtraAttacks ignored -> EXTRA_ATTACKS;
+			case GainBaseManaPct ignored -> GAIN_PCT_OF_BASE_MANA;
+			case GainEnergyDirectly ignored -> GAIN_ENERGY;
+			case GainRageDirectly ignored -> GAIN_RAGE;
+			case ReduceThreatDirectly ignored -> REDUCE_THREAT;
+			case RefundCostPctDirectly ignored -> REFUND_COST_PCT;
+		};
 	}
 
 	private void writeBonusHeader(String prefix) {

@@ -13,7 +13,7 @@ import wow.scraper.ScraperSpringTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.spell.component.ComponentCommand.*;
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -28,34 +28,8 @@ abstract class SpellParserTest extends ScraperSpringTest {
 		assertCoefficient(coeff, school, cost.coefficient());
 	}
 
-	static void assertDirectCommand(DirectCommand direct, ComponentType type, double coeff, SpellSchool school, int min, int max) {
-		assertThat(direct.type()).isEqualTo(type);
-		assertCoefficient(coeff, school, direct.coefficient());
-		assertThat(direct.min()).isEqualTo(min);
-		assertThat(direct.max()).isEqualTo(max);
-	}
-
-	static void assertDirectCommand(DirectCommand direct, ComponentType type, double coeff, SpellSchool school, int min, int max, int minBonus, int maxBonus, AbilityId bonusRequiredEffect) {
-		assertDirectCommand(direct, type, coeff, school, min, max);
-		assertThat(direct.bonus()).isNotNull();
-		assertThat(direct.bonus().min()).isEqualTo(minBonus);
-		assertThat(direct.bonus().max()).isEqualTo(maxBonus);
-		assertThat(direct.bonus().requiredEffect()).isEqualTo(bonusRequiredEffect);
-	}
-
-	static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double tickCoeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
-		var command = periodic.commands().getFirst();
-
-		assertPeriodicCommand(command, type, tickCoeff, school, amount, numTicks, tickScheme);
+	static void assertTickInterval(PeriodicComponent periodic, double tickInterval) {
 		assertThat(periodic.tickInterval()).isEqualTo(Duration.seconds(tickInterval));
-	}
-
-	static void assertPeriodicCommand(PeriodicCommand periodic, ComponentType type, double tickCoeff, SpellSchool school, int amount, int numTicks, TickScheme tickScheme) {
-		assertThat(periodic.type()).isEqualTo(type);
-		assertCoefficient(tickCoeff, school, periodic.coefficient());
-		assertThat(periodic.amount()).isEqualTo(amount);
-		assertThat(periodic.numTicks()).isEqualTo(numTicks);
-		assertThat(periodic.tickScheme()).isEqualTo(tickScheme);
 	}
 
 	static void assertDuration(AnyDuration duration, double seconds) {

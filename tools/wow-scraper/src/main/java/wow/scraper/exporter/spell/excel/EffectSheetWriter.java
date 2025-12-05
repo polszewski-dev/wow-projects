@@ -1,11 +1,13 @@
 package wow.scraper.exporter.spell.excel;
 
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.TickScheme;
 
 import java.util.List;
 
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.effect.component.ComponentType.*;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 import static wow.commons.repository.impl.parser.spell.SpellEffectSheetParser.Config;
@@ -109,13 +111,39 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 			return;
 		}
 
+		switch (command) {
+			case DealDamagePeriodically dealDamagePeriodically ->
+					writeChangeHealthPeriodically(dealDamagePeriodically);
+
+			case HealPeriodically healPeriodically ->
+					writeChangeHealthPeriodically(healPeriodically);
+
+			default ->
+					throw new UnsupportedOperationException(command + "");
+		}
+	}
+
+	private void writeChangeHealthPeriodically(ChangeHealthPeriodically command) {
 		setValue(command.target());
-		setValue(command.type());
+		setValue(getComponentType(command));
 		setValue(command.coefficient().value());
 		setValue(command.school());
 		setValue(command.amount());
 		setValue(command.numTicks());
 		setValue(getTickWeights(command), Object::toString);
+	}
+
+	private ComponentType getComponentType(PeriodicCommand command) {
+		return switch (command) {
+			case DealDamagePeriodically ignored -> DAMAGE;
+			case HealPeriodically ignored -> HEAL;
+			case LoseManaPeriodically ignored -> LOSE_MANA;
+			case GainManaPeriodically ignored -> GAIN_MANA;
+			case Copy ignored -> COPY;
+			case AddStackPeriodically ignored -> ADD_STACK;
+			case GainPctOfTotalManaPeriodically ignored -> GAIN_PCT_OF_TOTAL_MANA;
+			case HealPctOfDamageTakenPeriodically ignored -> HEAL_PCT_OF_DAMAGE_TAKEN;
+		};
 	}
 
 	private void writeAbsorptionComponentHeader() {
@@ -142,7 +170,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 		setValue(absorptionComponent.max());
 	}
 
-	private List<Double> getTickWeights(PeriodicCommand command) {
+	private List<Double> getTickWeights(ChangeHealthPeriodically command) {
 		if (command.tickScheme() == TickScheme.DEFAULT) {
 			return List.of();
 		}

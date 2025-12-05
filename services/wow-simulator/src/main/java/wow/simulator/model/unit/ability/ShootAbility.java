@@ -6,14 +6,13 @@ import wow.commons.model.Percent;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.DirectComponent;
 
 import java.util.List;
 import java.util.Objects;
 
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.DealDamageDirectly;
 
 /**
  * User: POlszewski
@@ -34,10 +33,9 @@ public class ShootAbility implements Ability {
 	public DirectComponent getDirectComponent() {
 		var weaponStats = rangedWeapon.getWeaponStats();
 
-		var command = new DirectCommand(
+		var command = new DealDamageDirectly(
 				SpellTargets.ENEMY,
 				SpellTargetCondition.EMPTY,
-				ComponentType.DAMAGE,
 				new Coefficient(Percent.ZERO, weaponStats.damageType()),
 				weaponStats.damageMin(),
 				weaponStats.damageMax(),
@@ -128,8 +126,8 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
-	public boolean hasPeriodicComponent(ComponentType componentType) {
-		return ability.hasPeriodicComponent(componentType);
+	public boolean hasDamagingPeriodicComponent() {
+		return ability.hasDamagingPeriodicComponent();
 	}
 
 	@Override

@@ -13,8 +13,7 @@ import wow.commons.util.condition.SpellTargetConditionParser;
 
 import java.util.List;
 
-import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
@@ -181,15 +180,155 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 			return null;
 		}
 
+		var type = colDirectType.prefixed(prefix).getEnum(ComponentType::parse);
+
+		return switch (type) {
+			case DAMAGE ->
+					getDealDamageDirectly(prefix);
+
+			case HEAL ->
+					getHealDirectly(prefix);
+
+			case LOSE_MANA ->
+					getLoseManaDirectly(prefix);
+
+			case GAIN_MANA ->
+					getGainManaDirectly(prefix);
+
+			case COPY ->
+					getCopyDirectly(prefix);
+
+			case GAIN_ENERGY ->
+					getGainEnergyDirectly(prefix);
+
+			case GAIN_RAGE ->
+					getGainRageDirectly(prefix);
+
+			case REFUND_COST_PCT ->
+					getRefundCostPctDirectly(prefix);
+
+			case GAIN_PCT_OF_BASE_MANA ->
+					getGainBaseManaPctDirectly(prefix);
+
+			case REDUCE_THREAT ->
+					getReduceThreadDirectly(prefix);
+
+			case EXTRA_ATTACKS ->
+					getAddExtraAttacksDirectly(prefix);
+
+			default ->
+					throw new IllegalArgumentException(type.name());
+		};
+	}
+
+	private DealDamageDirectly getDealDamageDirectly(String prefix) {
 		var target = getTarget(prefix);
 		var condition = getTargetCondition(prefix);
-		var type = colDirectType.prefixed(prefix).getEnum(ComponentType::parse);
 		var coeff = getCoefficient(prefix);
 		var min = colDirectMin.prefixed(prefix).getInteger();
 		var max = colDirectMax.prefixed(prefix).getInteger();
 		var bonus = getDirectComponentBonus(prefix);
 
-		return new DirectCommand(target, condition, type, coeff, min, max, bonus);
+		return new DealDamageDirectly(target, condition, coeff, min, max, bonus);
+	}
+
+	private HealDirectly getHealDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var coeff = getCoefficient(prefix);
+		var min = colDirectMin.prefixed(prefix).getInteger();
+		var max = colDirectMax.prefixed(prefix).getInteger();
+		var bonus = getDirectComponentBonus(prefix);
+
+		return new HealDirectly(target, condition, coeff, min, max, bonus);
+	}
+
+	private LoseManaDirectly getLoseManaDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var coeff = getCoefficient(prefix);
+		var min = colDirectMin.prefixed(prefix).getInteger();
+		var max = colDirectMax.prefixed(prefix).getInteger();
+
+		return new LoseManaDirectly(target, condition, coeff, min, max);
+	}
+
+	private GainManaDirectly getGainManaDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var coeff = getCoefficient(prefix);
+		var min = colDirectMin.prefixed(prefix).getInteger();
+		var max = colDirectMax.prefixed(prefix).getInteger();
+
+		return new GainManaDirectly(target, condition, coeff, min, max);
+	}
+
+	private final ExcelColumn colSchool = column(DIRECT_SCHOOL, true);
+	private final ExcelColumn colRatio = column(DIRECT_RATIO, true);
+	private final ExcelColumn colFrom = column(DIRECT_FROM, true);
+	private final ExcelColumn colTo = column(DIRECT_TO, true);
+
+	private Copy getCopyDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var school = colSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
+		var ratio = colRatio.prefixed(prefix).getPercent();
+		var from = colFrom.prefixed(prefix).getEnum(From::parse);
+		var to = colTo.prefixed(prefix).getEnum(To::parse);
+
+		return new Copy(target, condition, school, from, to, ratio);
+	}
+
+	private GainEnergyDirectly getGainEnergyDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var amount = getAmount(prefix);
+
+		return new GainEnergyDirectly(target, condition, amount);
+	}
+
+	private GainRageDirectly getGainRageDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var amount = getAmount(prefix);
+
+		return new GainRageDirectly(target, condition, amount);
+	}
+
+	private RefundCostPctDirectly getRefundCostPctDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var ratio = colRatio.prefixed(prefix).getPercent();
+
+		return new RefundCostPctDirectly(target, condition, ratio);
+	}
+
+	private GainBaseManaPct getGainBaseManaPctDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var ratio = colRatio.prefixed(prefix).getPercent();
+
+		return new GainBaseManaPct(target, condition, ratio);
+	}
+
+	private ReduceThreatDirectly getReduceThreadDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var amount = getAmount(prefix);
+
+		return new ReduceThreatDirectly(target, condition, amount);
+	}
+
+	private ExtraAttacks getAddExtraAttacksDirectly(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var amount = getAmount(prefix);
+
+		return new ExtraAttacks(target, condition, amount);
+	}
+
+	private int getAmount(String prefix) {
+		return colDirectMin.prefixed(prefix).getInteger();
 	}
 
 	private final ExcelColumn colCondition = column(TARGET_CONDITION, true);

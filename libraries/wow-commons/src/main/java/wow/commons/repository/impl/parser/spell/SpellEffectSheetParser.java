@@ -9,11 +9,12 @@ import wow.commons.model.effect.component.AbsorptionCondition;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.spell.SpellSchool;
+import wow.commons.model.spell.SpellTargetCondition;
 import wow.commons.model.spell.TickScheme;
 
 import java.util.List;
 
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 
 /**
@@ -108,14 +109,115 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 			return null;
 		}
 
-		var target = getTarget(prefix);
 		var type = colPeriodicType.prefixed(prefix).getEnum(ComponentType::parse);
+
+		return switch (type) {
+			case DAMAGE ->
+					getDealDamagePeriodically(prefix, idx);
+
+			case HEAL ->
+					getHealPeriodically(prefix, idx);
+
+			case LOSE_MANA ->
+					getLoseManaPeriodically(prefix);
+
+			case GAIN_MANA ->
+					getGainManaPeriodically(prefix);
+
+			case GAIN_PCT_OF_TOTAL_MANA ->
+					getGainPctOfTotalManaPeriodically(prefix);
+
+			case COPY ->
+					getCopyPeriodically(prefix);
+
+			case HEAL_PCT_OF_DAMAGE_TAKEN ->
+					getHealPctOfDamageTakenPeriodically(prefix, idx);
+
+			case ADD_STACK ->
+					getAddStackPeriodically(prefix);
+
+			default ->
+					throw new IllegalArgumentException(type.name());
+		};
+	}
+
+	private DealDamagePeriodically getDealDamagePeriodically(String prefix, int idx) {
+		var target = getTarget(prefix);
 		var coefficient = getCoefficient(prefix);
 		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
 		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
 		var tickScheme = getTickScheme(idx);
 
-		return new PeriodicCommand(target, type, coefficient, amount, numTicks, tickScheme);
+		return new DealDamagePeriodically(target, coefficient, amount, numTicks, tickScheme);
+	}
+
+	private HealPeriodically getHealPeriodically(String prefix, int idx) {
+		var target = getTarget(prefix);
+		var coefficient = getCoefficient(prefix);
+		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
+		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
+		var tickScheme = getTickScheme(idx);
+
+		return new HealPeriodically(target, coefficient, amount, numTicks, tickScheme);
+	}
+
+	private LoseManaPeriodically getLoseManaPeriodically(String prefix) {
+		var target = getTarget(prefix);
+		var coefficient = getCoefficient(prefix);
+		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
+		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
+
+		return new LoseManaPeriodically(target, coefficient, amount, numTicks);
+	}
+
+	private GainManaPeriodically getGainManaPeriodically(String prefix) {
+		var target = getTarget(prefix);
+		var coefficient = getCoefficient(prefix);
+		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
+		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
+
+		return new GainManaPeriodically(target, coefficient, amount, numTicks);
+	}
+
+	private GainPctOfTotalManaPeriodically getGainPctOfTotalManaPeriodically(String prefix) {
+		var target = getTarget(prefix);
+		var coefficient = getCoefficient(prefix);
+		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
+		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
+
+		return new GainPctOfTotalManaPeriodically(target, coefficient, amount, numTicks);
+	}
+
+	private final ExcelColumn colSchool = column(PERIODIC_SCHOOL, true);
+	private final ExcelColumn colRatio = column(PERIODIC_RATIO, true);
+	private final ExcelColumn colFrom = column(PERIODIC_FROM, true);
+	private final ExcelColumn colTo = column(PERIODIC_TO, true);
+
+	private Copy getCopyPeriodically(String prefix) {
+		var target = getTarget(prefix);
+		var condition = SpellTargetCondition.EMPTY;
+		var school = colSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
+		var ratio = colRatio.prefixed(prefix).getPercent();
+		var from = colFrom.prefixed(prefix).getEnum(From::parse);
+		var to = colTo.prefixed(prefix).getEnum(To::parse);
+
+		return new Copy(target, condition, school, from, to, ratio);
+	}
+
+	private HealPctOfDamageTakenPeriodically getHealPctOfDamageTakenPeriodically(String prefix, int idx) {
+		var target = getTarget(prefix);
+		var coefficient = getCoefficient(prefix);
+		var amount = colPeriodicAmount.prefixed(prefix).getInteger();
+		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
+		var tickScheme = getTickScheme(idx);
+
+		return new HealPctOfDamageTakenPeriodically(target, coefficient, amount, numTicks, tickScheme);
+	}
+
+	private AddStackPeriodically getAddStackPeriodically(String prefix) {
+		var target = getTarget(prefix);
+
+		return new AddStackPeriodically(target);
 	}
 
 	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS, true);

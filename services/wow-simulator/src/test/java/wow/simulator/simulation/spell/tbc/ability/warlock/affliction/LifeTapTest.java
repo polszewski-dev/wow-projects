@@ -25,8 +25,6 @@ class LifeTapTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertThat(player.getCurrentMana() - regeneratedMana).isEqualTo(582);
-
 		assertEvents(
 				at(0)
 						.beginCast(player, LIFE_TAP)
@@ -37,6 +35,17 @@ class LifeTapTest extends TbcWarlockSpellSimulationTest {
 				at(1.5)
 						.endGcd(player)
 		);
+	}
+
+	@Test
+	void correct_amount_of_mana_gained() {
+		setMana(player, 0);
+
+		player.cast(LIFE_TAP);
+
+		updateUntil(30);
+
+		assertThat(player.getCurrentMana() - regeneratedMana).isEqualTo(582);
 	}
 
 	@Test

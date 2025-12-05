@@ -88,19 +88,19 @@ public interface Unit extends Character, SimulationContextSource {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target, ApplyEffect command);
 
-	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectCommand command);
+	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DealDamageDirectly command);
 
-	DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectCommand command);
+	DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, HealDirectly command);
 
-	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target, PeriodicCommand command);
+	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target, DealDamagePeriodically command);
 
-	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, PeriodicCommand command);
+	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, HealPeriodically command);
 
-	PeriodicSpellComponentSnapshot getPeriodicManaDrainSnapshot(Spell spell, Unit target, PeriodicCommand command);
+	PeriodicSpellComponentSnapshot getPeriodicManaLossSnapshot(Spell spell, Unit target, LoseManaPeriodically command);
 
-	PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command);
+	PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, GainManaPeriodically command);
 
-	PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command);
+	PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, GainPctOfTotalManaPeriodically command);
 
 	BaseStatsSnapshot getBaseStatsSnapshot();
 

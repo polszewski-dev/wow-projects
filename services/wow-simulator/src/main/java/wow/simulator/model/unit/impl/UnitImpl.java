@@ -346,45 +346,45 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DirectCommand command) {
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DealDamageDirectly command) {
 		var baseStats = getBaseStatsSnapshot();
 		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, DirectCommand command) {
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, HealDirectly command) {
 		var baseStats = getBaseStatsSnapshot();
 		return getCharacterCalculationService().getDirectHealingSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target, PeriodicCommand command) {
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target, DealDamagePeriodically command) {
 		var baseStats = getBaseStatsSnapshot();
 		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, PeriodicCommand command) {
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, HealPeriodically command) {
 		var baseStats = getBaseStatsSnapshot();
 		return getCharacterCalculationService().getPeriodicHealingSnapshot(this, spell, target, command, baseStats);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicManaDrainSnapshot(Spell spell, Unit target, PeriodicCommand command) {
-		return new PeriodicSpellComponentSnapshot(command);
+	public PeriodicSpellComponentSnapshot getPeriodicManaLossSnapshot(Spell spell, Unit target, LoseManaPeriodically command) {
+		return new PeriodicSpellComponentSnapshot(command.amount(), command.numTicks());
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command) {
-		return new PeriodicSpellComponentSnapshot(command);
+	public PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, GainManaPeriodically command) {
+		return new PeriodicSpellComponentSnapshot(command.amount(), command.numTicks());
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, PeriodicCommand command) {
+	public PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, GainPctOfTotalManaPeriodically command) {
 		var pct = command.amount();
 		var maxMana = target.getMaxMana();
 
-		return new PeriodicSpellComponentSnapshot(command, maxMana * pct / 100);
+		return new PeriodicSpellComponentSnapshot(maxMana * pct / 100, command.numTicks());
 	}
 
 	@Override

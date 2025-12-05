@@ -9,10 +9,10 @@ import polszewski.excel.reader.templates.ExcelSheetParser;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.*;
+import wow.commons.model.spell.component.ComponentCommand;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
@@ -23,8 +23,7 @@ import java.util.stream.Stream;
 
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.SpellTargetType.TARGET;
-import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
@@ -178,42 +177,59 @@ public class SpellExcelParser extends ExcelParser {
 
 	private void setMissingSpellFields(Spell spell) {
 		var school = getSpellSchool(spell).orElse(null);
-		var componentTypes = getComponentTypes(spell);
+		var hasDamagingComponent = hasDamagingComponent(spell);
+		var hasHealingComponent = hasHealingComponent(spell);
 		var spellImpl = (SpellImpl) spell;
 
 		spellImpl.setSchool(school);
-		spellImpl.setHasDamagingComponent(componentTypes.contains(ComponentType.DAMAGE));
-		spellImpl.setHasHealingComponent(componentTypes.contains(ComponentType.HEAL));
+		spellImpl.setHasDamagingComponent(hasDamagingComponent);
+		spellImpl.setHasHealingComponent(hasHealingComponent);
 	}
 
-	private Set<ComponentType> getComponentTypes(Spell spell) {
-		var result = new HashSet<ComponentType>();
+	private boolean hasDamagingComponent(Spell spell) {
+		var commands = getComponentCommands(spell);
 
-		for (var command : spell.getDirectCommands()) {
-			result.add(command.type());
-		}
+		return commands.stream()
+				.anyMatch(x -> x instanceof DealDamageDirectly || x instanceof DealDamagePeriodically);
+	}
 
-		for (var command : getPeriodicCommands(spell)) {
-			result.add(command.type());
-		}
+	private boolean hasHealingComponent(Spell spell) {
+		var commands = getComponentCommands(spell);
 
-		return result;
+		return commands.stream()
+				.anyMatch(x -> x instanceof HealDirectly || x instanceof HealPeriodically);
 	}
 
 	private Optional<SpellSchool> getSpellSchool(Spell spell) {
+		var commands = getComponentCommands(spell);
+
 		var result = new HashSet<SpellSchool>();
 
-		for (var command : spell.getDirectCommands()) {
-			result.add(command.school());
-		}
+		for (var command : commands) {
+			switch (command) {
+				case DirectCommand c ->
+						result.add(c.school());
 
-		for (var command : getPeriodicCommands(spell)) {
-			result.add(command.school());
+				case PeriodicCommand c ->
+						result.add(c.school());
+
+				default -> {
+					// void
+				}
+			}
 		}
 
 		result.remove(null);
 
 		return CollectionUtil.getUniqueResult(List.copyOf(result));
+	}
+
+	private List<ComponentCommand> getComponentCommands(Spell spell) {
+		var result = new ArrayList<ComponentCommand>();
+
+		result.addAll(spell.getDirectCommands());
+		result.addAll(getPeriodicCommands(spell));
+		return result;
 	}
 
 	private List<PeriodicCommand> getPeriodicCommands(Spell spell) {

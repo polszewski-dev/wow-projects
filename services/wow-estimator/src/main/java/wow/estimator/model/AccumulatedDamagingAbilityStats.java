@@ -11,8 +11,8 @@ import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.effect.component.StatConversionCondition;
 import wow.commons.model.spell.Ability;
 
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.DealDamageDirectly;
+import static wow.commons.model.spell.component.ComponentCommand.DealDamagePeriodically;
 
 /**
  * User: POlszewski
@@ -22,8 +22,8 @@ import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand
 @Setter
 public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private Ability ability;
-	private DirectCommand directCommand;
-	private PeriodicCommand periodicCommand;
+	private DealDamageDirectly directCommand;
+	private DealDamagePeriodically periodicCommand;
 
 	private AccumulatedCastStats cast;
 	private AccumulatedCostStats cost;

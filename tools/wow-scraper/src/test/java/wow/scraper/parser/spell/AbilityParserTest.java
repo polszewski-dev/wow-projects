@@ -2,11 +2,13 @@ package wow.scraper.parser.spell;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
+import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.spell.*;
+import wow.commons.model.spell.component.DirectComponentBonus;
 import wow.scraper.constant.AttributeConditions;
 import wow.scraper.constant.EventConditions;
 import wow.scraper.parser.spell.ability.AbilityMatcher;
@@ -15,13 +17,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.effect.component.ComponentType.COPY_HEALTH_PAID_AS_MANA_GAIN_PCT;
-import static wow.commons.model.effect.component.ComponentType.DAMAGE;
 import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.OWNER_ATTACKED;
 import static wow.commons.model.spell.SpellSchool.FIRE;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.scraper.constant.AbilityIds.*;
 
 /**
@@ -34,7 +35,19 @@ class AbilityParserTest extends SpellParserTest {
 		var ability = parse(INCINERATE, "Deals 444 to 514 Fire damage to your target and an additional 111 to 128 Fire damage if the target is affected by an Immolate spell.");
 
 		assertThat(ability.getDirectCommands()).hasSize(1);
-		assertDirectCommand(ability.getDirectCommands().getFirst(), DAMAGE, 71.43, FIRE, 444, 514, 111, 128, IMMOLATE);
+
+		assertThat(ability.getDirectCommands()).isEqualTo(List.of(
+				new DealDamageDirectly(
+						SpellTargets.ENEMY,
+						SpellTargetCondition.EMPTY,
+						new Coefficient(Percent.of(71.43), FIRE),
+						444,
+						514,
+						new DirectComponentBonus(
+								111, 128, IMMOLATE
+						)
+				)
+		));
 	}
 
 	@Test
@@ -46,7 +59,16 @@ class AbilityParserTest extends SpellParserTest {
 		var periodicComponent = effect.getPeriodicComponent();
 		var tickScheme = new TickScheme(List.of(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5));
 
-		assertPeriodicComponent(periodicComponent, DAMAGE, 120, SHADOW, 1356, 12, 2, tickScheme);
+		assertThat(periodicComponent.commands()).isEqualTo(List.of(
+				new DealDamagePeriodically(
+						SpellTargets.TARGET,
+						new Coefficient(Percent.of(120), SHADOW),
+						1356,
+						12,
+						tickScheme
+				)
+		));
+		assertTickInterval(periodicComponent, 2);
 		assertThat(matcher.getAbilityCategory()).isEqualTo(AbilityCategory.CURSES);
 	}
 	
@@ -55,13 +77,34 @@ class AbilityParserTest extends SpellParserTest {
 		var ability = parse(IMMOLATE, "Burns the enemy for 332 Fire damage and then an additional 615 Fire damage over 15 sec.");
 
 		assertThat(ability.getDirectCommands()).hasSize(1);
-		assertDirectCommand(ability.getDirectCommands().getFirst(), DAMAGE, 18.65, FIRE, 332, 332);
+
+		assertThat(ability.getDirectCommands()).isEqualTo(List.of(
+				new DealDamageDirectly(
+						SpellTargets.ENEMY,
+						SpellTargetCondition.EMPTY,
+						new Coefficient(Percent.of(18.65), FIRE),
+						332,
+						332,
+						null
+				)
+		));
 
 		assertEffectApplication(ability, SpellTargets.ENEMY, 15, 1, 1, 1);
 
 		var effect = ability.getApplyEffectCommands().getFirst().effect();
+		var periodicComponent = effect.getPeriodicComponent();
 
-		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 63.63, FIRE, 615, 5, 3, TickScheme.DEFAULT);
+		assertThat(periodicComponent.commands()).isEqualTo(List.of(
+				new DealDamagePeriodically(
+						SpellTargets.TARGET,
+						new Coefficient(Percent.of(63.63), FIRE),
+						615,
+						5,
+						TickScheme.DEFAULT
+				)
+		));
+
+		assertTickInterval(periodicComponent, 3);
 	}
 
 	@Test
@@ -71,17 +114,45 @@ class AbilityParserTest extends SpellParserTest {
 		assertEffectApplication(ability, SpellTargets.ENEMY, 5, 1, 1, 1);
 
 		var effect = ability.getApplyEffectCommands().getFirst().effect();
+		var periodicComponent = effect.getPeriodicComponent();
 
-		assertPeriodicComponent(effect.getPeriodicComponent(), DAMAGE, 71.43, SHADOW, 540, 5, 1, TickScheme.DEFAULT);
+		assertThat(periodicComponent.commands()).isEqualTo(List.of(
+				new DealDamagePeriodically(
+						SpellTargets.TARGET,
+						new Coefficient(Percent.of(71.43), SHADOW),
+						540,
+						5,
+						TickScheme.DEFAULT
+				)/*,
+				new Copy(
+						SpellTargets.SELF,
+						SpellTargetCondition.EMPTY,
+						SHADOW,
+						From.DAMAGE,
+						To.HEAL,
+						Percent._100
+				)*/
+		));
+
+		assertTickInterval(periodicComponent, 1);
 	}
 
 	@Test
 	void lifeTap() {
 		var ability = parse(LIFE_TAP, "Converts 582 health into 582 mana.");
-		var directCommand = ability.getDirectCommands().getFirst();
 
 		assertCost(ability.getCost(), 582, ResourceType.HEALTH, 0, 80, null);
-		assertDirectCommand(directCommand, COPY_HEALTH_PAID_AS_MANA_GAIN_PCT, 0, null, 100, 100);
+
+		assertThat(ability.getDirectCommands()).isEqualTo(List.of(
+				new Copy(
+						SpellTargets.SELF,
+						SpellTargetCondition.EMPTY,
+						null,//SHADOW,
+						From.DAMAGE,//HEALTH_PAID,
+						To.DAMAGE,//MANA_GAIN,
+						Percent._100
+				)
+		));
 	}
 
 	@Test
@@ -135,9 +206,16 @@ class AbilityParserTest extends SpellParserTest {
 				Duration.seconds(1)
 		);
 
-		var directCommand = event.triggeredSpell().getDirectCommands().getFirst();
-
-		assertDirectCommand(directCommand, DAMAGE, 33.33, SHADOW, 130, 130);
+		assertThat(event.triggeredSpell().getDirectCommands()).isEqualTo(List.of(
+			new DealDamageDirectly(
+					SpellTargets.ATTACKER,
+					SpellTargetCondition.EMPTY,
+					new Coefficient(Percent.of(33.33), SHADOW),
+					130,
+					130,
+					null
+			)
+		));
 	}
 
 	@Test

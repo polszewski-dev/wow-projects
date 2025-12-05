@@ -29,7 +29,7 @@ public interface CharacterCalculationService {
 
 	AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell, ApplyEffect command);
 
-	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command);
+	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command);
 
 	AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command);
 
@@ -53,17 +53,17 @@ public interface CharacterCalculationService {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
 
-	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats);
+	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamageDirectly command, BaseStatsSnapshot baseStats);
 
-	DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats);
+	DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, HealDirectly command, BaseStatsSnapshot baseStats);
 
-	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
-	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats);
+	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamagePeriodically command, BaseStatsSnapshot baseStats);
 
-	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats);
+	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, HealPeriodically command, BaseStatsSnapshot baseStats);
 
-	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
 	RegenSnapshot getRegenSnapshot(Character character);
 

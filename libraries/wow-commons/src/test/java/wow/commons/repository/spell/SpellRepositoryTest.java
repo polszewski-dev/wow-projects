@@ -21,8 +21,8 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.AbsorptionCondition;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.component.EventCondition;
+import wow.commons.model.effect.component.PeriodicComponent;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
@@ -41,6 +41,7 @@ import static wow.commons.model.effect.component.EventType.SPELL_CAST;
 import static wow.commons.model.effect.component.EventType.SPELL_HIT;
 import static wow.commons.model.pve.PhaseId.*;
 import static wow.commons.model.spell.SpellSchool.SHADOW;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.commons.model.talent.TalentTree.DESTRUCTION;
 import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TestConstants.PRECISION;
@@ -156,11 +157,14 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
 		var command = ability.getDirectCommands().getFirst();
 
-		assertThat(command.target()).isEqualTo(SpellTargets.ENEMY);
-		assertThat(command.type()).isEqualTo(ComponentType.DAMAGE);
-		assertCoefficient(command.coefficient(), 85.71, SHADOW);
-		assertThat(command.min()).isEqualTo(544);
-		assertThat(command.max()).isEqualTo(607);
+		assertThat(command).isEqualTo(new DealDamageDirectly(
+				SpellTargets.ENEMY,
+				SpellTargetCondition.EMPTY,
+				new Coefficient(Percent.of(85.71), SHADOW),
+				544,
+				607,
+				null
+		));
 	}
 
 	@ParameterizedTest
@@ -178,7 +182,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	@Test
 	void abilityDirectBonus() {
 		var ability = getClassAbility(INCINERATE, 2, TBC_P5);
-		var command = ability.getDirectCommands().getFirst();
+		var command = (DealDamageDirectly) ability.getDirectCommands().getFirst();
 		var bonus = command.bonus();
 
 		assertThat(bonus.min()).isEqualTo(111);
@@ -206,11 +210,13 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var command = spell.getDirectCommands().getFirst();
 
-		assertThat(command.target()).isEqualTo(SpellTargets.ATTACKER);
-		assertThat(command.type()).isEqualTo(ComponentType.MANA_DRAIN);
-		assertCoefficient(command.coefficient(), 0, SHADOW);
-		assertThat(command.min()).isEqualTo(165);
-		assertThat(command.max()).isEqualTo(165);
+		assertThat(command).isEqualTo(new LoseManaDirectly(
+				SpellTargets.ATTACKER,
+				SpellTargetCondition.EMPTY,
+				new Coefficient(Percent.ZERO, SHADOW),
+				165,
+				165
+		));
 	}
 
 	@Test
@@ -233,14 +239,25 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var periodicComponent = effect.getPeriodicComponent();
 
-		assertPeriodicComponent(periodicComponent, ComponentType.DAMAGE, 100, SHADOW, 822, 6, 3, TickScheme.DEFAULT);
+		assertThat(periodicComponent).isEqualTo(
+				new PeriodicComponent(
+						List.of(new DealDamagePeriodically(
+								SpellTargets.TARGET,
+								new Coefficient(Percent._100, SHADOW),
+								822,
+								6,
+								TickScheme.DEFAULT
+						)),
+						Duration.seconds(3)
+				)
+		);
 	}
 
 	@Test
 	void abilityEffectPeriodicTickScheme() {
 		var effect = getEffect(27218, TBC_P5);
 		var periodicComponent = effect.getPeriodicComponent();
-		var command = periodicComponent.commands().getFirst();
+		var command = (DealDamagePeriodically) periodicComponent.commands().getFirst();
 
 		var tickScheme = new TickScheme(List.of(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5));
 
@@ -488,7 +505,17 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 		var triggeredEffect = spell.getApplyEffectCommands().getFirst().effect();
 
-		assertPeriodicComponent(triggeredEffect.getPeriodicComponent(), ComponentType.MANA_GAIN, 0, null, 100, 5, 2, TickScheme.DEFAULT);
+		assertThat(triggeredEffect.getPeriodicComponent()).isEqualTo(new PeriodicComponent(
+				List.of(
+						new GainManaPeriodically(
+								SpellTargets.TARGET,
+								new Coefficient(Percent.ZERO, null),
+								100,
+								5
+						)
+				),
+				Duration.seconds(2)
+		));
 	}
 
 	@Test

@@ -14,14 +14,16 @@ import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.Enchant;
-import wow.commons.model.spell.*;
+import wow.commons.model.spell.Coefficient;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
+import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.talent.Talent;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 import static wow.test.commons.TestConstants.PRECISION;
 
 /**
@@ -44,22 +46,6 @@ public abstract class WowCommonsSpringTest {
 		assertThat(command.numStacks()).isEqualTo(numStacks);
 		assertThat(command.effect()).isNotNull();
 		assertThat(command.effect().getMaxStacks()).isEqualTo(maxStacks);
-	}
-
-	protected static void assertPeriodicComponent(PeriodicComponent periodic, ComponentType type, double coeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
-		var command = periodic.commands().getFirst();
-
-		assertPeriodicCommand(command, type, coeff, school, amount, numTicks, tickInterval, tickScheme);
-		assertThat(periodic.tickInterval().getSeconds()).isEqualTo(tickInterval);
-	}
-
-	protected static void assertPeriodicCommand(PeriodicCommand command, ComponentType type, double coeff, SpellSchool school, int amount, int numTicks, double tickInterval, TickScheme tickScheme) {
-		assertThat(command.type()).isEqualTo(type);
-		assertCoefficient(coeff, school, command.coefficient());
-		assertThat(command.amount()).isEqualTo(amount);
-		assertThat(command.numTicks()).isEqualTo(numTicks);
-
-		assertThat(command.tickScheme()).isEqualTo(tickScheme);
 	}
 
 	protected static void assertModifier(Effect effect, List<Attribute> attributes) {

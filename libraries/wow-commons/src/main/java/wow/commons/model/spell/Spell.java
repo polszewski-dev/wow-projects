@@ -3,7 +3,6 @@ package wow.commons.model.spell;
 import wow.commons.model.Duration;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.component.DirectComponent;
 
 import java.util.HashSet;
@@ -62,7 +61,7 @@ public interface Spell extends Described, TimeRestricted {
 
 	boolean hasHealingComponent();
 
-	boolean hasPeriodicComponent(ComponentType componentType);
+	boolean hasDamagingPeriodicComponent();
 
 	default boolean hasCooldown() {
 		return getCooldown().isPositive();

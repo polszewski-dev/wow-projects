@@ -5,7 +5,6 @@ import lombok.Setter;
 import wow.commons.model.Duration;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellId;
@@ -41,9 +40,9 @@ public abstract class SpellImpl implements Spell {
 	}
 
 	@Override
-	public boolean hasPeriodicComponent(ComponentType componentType) {
+	public boolean hasDamagingPeriodicComponent() {
 		return getApplyEffectCommands().stream().anyMatch(
-				x -> x.effect().hasPeriodicComponent(componentType)
+				x -> x.effect().hasDamagingPeriodicComponent()
 		);
 	}
 

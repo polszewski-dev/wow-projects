@@ -11,7 +11,6 @@ import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 
 import static wow.character.model.script.ScriptCommand.*;
-import static wow.commons.model.effect.component.ComponentType.DAMAGE;
 
 /**
  * User: POlszewski
@@ -86,7 +85,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			return false;
 		}
 
-		if (!ability.hasPeriodicComponent(DAMAGE)) {
+		if (!ability.hasDamagingPeriodicComponent()) {
 			return true;
 		}
 

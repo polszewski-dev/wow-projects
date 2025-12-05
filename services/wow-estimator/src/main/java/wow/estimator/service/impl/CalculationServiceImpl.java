@@ -16,7 +16,6 @@ import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.buff.BuffNameRank;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.Ability;
 import wow.estimator.model.*;
@@ -157,19 +156,21 @@ public class CalculationServiceImpl implements CalculationService {
 		return stats;
 	}
 
-	private DirectCommand getDamagingDirectCommand(Ability ability) {
+	private DealDamageDirectly getDamagingDirectCommand(Ability ability) {
 		return ability.getDirectCommands().stream()
-				.filter(x -> x.type() == ComponentType.DAMAGE)
+				.filter(DealDamageDirectly.class::isInstance)
+				.map(x -> (DealDamageDirectly) x)
 				.findAny()
 				.orElse(null);
 	}
 
-	private PeriodicCommand getDamagingPeriodicCommand(Ability ability) {
+	private DealDamagePeriodically getDamagingPeriodicCommand(Ability ability) {
 		return ability.getApplyEffectCommands().stream()
 				.map(ApplyEffect::effect)
 				.map(Effect::getPeriodicCommands)
 				.flatMap(List::stream)
-				.filter(x -> x.type() == ComponentType.DAMAGE)
+				.filter(DealDamagePeriodically.class::isInstance)
+				.map(x -> (DealDamagePeriodically) x)
 				.findAny()
 				.orElse(null);
 	}

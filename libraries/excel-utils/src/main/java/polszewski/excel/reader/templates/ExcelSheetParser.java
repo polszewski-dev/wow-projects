@@ -42,11 +42,21 @@ public abstract class ExcelSheetParser {
 	}
 
 	public void readSheet() {
-		ExcelColumn columnIndicatingOptionalRow = getColumnIndicatingOptionalRow();
-		while (excelReader.nextRow()) {
-			if (columnIndicatingOptionalRow == null || !columnIndicatingOptionalRow.isEmpty()) {
-				readSingleRow();
+		try {
+			var columnIndicatingOptionalRow = getColumnIndicatingOptionalRow();
+			while (excelReader.nextRow()) {
+				if (columnIndicatingOptionalRow == null || !columnIndicatingOptionalRow.isEmpty()) {
+					readSingleRow();
+				}
 			}
+		} catch (Exception e) {
+			throw new ReadSheetException("Error while reading %s[%s]".formatted(getCurrentSheetName(), getCurrentRowIdx() + 1), e);
+		}
+	}
+
+	public static class ReadSheetException extends RuntimeException {
+		public ReadSheetException(String message, Throwable cause) {
+			super(message, cause);
 		}
 	}
 

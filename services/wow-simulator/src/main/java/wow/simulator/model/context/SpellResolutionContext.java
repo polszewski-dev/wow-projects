@@ -85,32 +85,27 @@ public class SpellResolutionContext extends Context {
 		);
 	}
 
-	private void directComponentAction(DirectCommand command, Unit target, LastValueSnapshot last) {
-		if (!checkSecondaryCondition(command, target)) {
+	private void directComponentAction(DirectCommand directCommand, Unit target, LastValueSnapshot last) {
+		if (!checkSecondaryCondition(directCommand, target)) {
 			return;
 		}
 
-		switch (command.type()) {
-			case DAMAGE ->
+		switch (directCommand) {
+			case DealDamageDirectly command ->
 					dealDirectDamage(command, target);
-			case HEAL ->
+
+			case HealDirectly command ->
 					directHeal(command, target);
-			case MANA_DRAIN ->
-					directManaDrain(command, target);
-			case MANA_GAIN ->
+
+			case LoseManaDirectly command ->
+					directManaLoss(command, target);
+
+			case GainManaDirectly command ->
 					directManaGain(command, target);
-			case COPY_DAMAGE_AS_HEAL_PCT ->
-					copyAsHeal(command, target, last.damageDone);
-			case FROM_PARENT_COPY_DAMAGE_AS_HEAL_PCT ->
-					copyAsHeal(command, target, last.parentDamageDone);
-			case COPY_DAMAGE_AS_MANA_GAIN_PCT ->
-					copyAsManaGain(command, target, last.damageDone);
-			case FROM_PARENT_COPY_DAMAGE_AS_MANA_GAIN_PCT ->
-					copyAsManaGain(command, target, last.parentDamageDone);
-			case COPY_HEALTH_PAID_AS_MANA_GAIN_PCT ->
-					copyAsManaGain(command, target, last.parentHealthPaid);
-			case COPY_MANA_DRAINED_AS_DAMAGE_PCT ->
-					copyAsDamage(command, target, last.manaDrained);
+
+			case Copy command ->
+					copy(command, target, last);
+
 			default ->
 					throw new UnsupportedOperationException();
 		}
@@ -120,7 +115,7 @@ public class SpellResolutionContext extends Context {
 		return SpellTargetConditionChecker.check(command.condition(), target, caster);
 	}
 
-	private void dealDirectDamage(DirectCommand command, Unit target) {
+	private void dealDirectDamage(DealDamageDirectly command, Unit target) {
 		if (!hitRollOnlyOnce(target)) {
 			return;
 		}
@@ -133,7 +128,7 @@ public class SpellResolutionContext extends Context {
 		decreaseHealth(target, directDamage, true, critRoll);
 	}
 
-	private void directHeal(DirectCommand command, Unit target) {
+	private void directHeal(HealDirectly command, Unit target) {
 		var snapshot = caster.getDirectHealingSnapshot(spell, target, command);
 		var critRoll = critRoll(snapshot.getCritPct());
 		var addBonus = shouldAddBonus(command, target);
@@ -142,38 +137,21 @@ public class SpellResolutionContext extends Context {
 		increaseHealth(target, directHealing, true, critRoll);
 	}
 
-	private void directManaDrain(DirectCommand command, Unit target) {
+	private void directManaLoss(LoseManaDirectly command, Unit target) {
 		var mana = (command.min() + command.max()) / 2;
 
 		decreaseMana(target, mana);
 	}
 
-	private void directManaGain(DirectCommand command, Unit target) {
+	private void directManaGain(GainManaDirectly command, Unit target) {
 		var mana = (command.min() + command.max()) / 2;
 
 		increaseMana(target, mana);
 	}
 
-	private void copyAsDamage(DirectCommand command, Unit target, int value) {
-		var ratioPct = getRatioPct(command);
-		copyAsDamage(target, value, ratioPct);
-	}
-
-	private void copyAsHeal(DirectCommand command, Unit target, int value) {
-		var ratioPct = getRatioPct(command);
-		copyAsHeal(target, value, ratioPct);
-	}
-
-	private void copyAsManaGain(DirectCommand command, Unit target, int value) {
-		var ratioPct = getRatioPct(command);
-		var manaGain = getCharacterCalculationService().getCopiedAmountAsManaGain(caster, getSourceSpell(), target, value, ratioPct);
-		var roundedManaGain = roundValue(manaGain, target);
-
-		increaseMana(target, roundedManaGain);
-	}
-
-	private double getRatioPct(DirectCommand command) {
-		return valueParam != null ? valueParam : command.min();
+	@Override
+	protected double getRatioPct(Copy command) {
+		return valueParam != null ? valueParam : command.ratio().value();
 	}
 
 	private List<EffectInstance> applyEffects(EffectSource effectSource) {
@@ -291,7 +269,7 @@ public class SpellResolutionContext extends Context {
 		return getCharacterCalculationService().getEffectAugmentations(caster, spell, target);
 	}
 
-	private boolean shouldAddBonus(DirectCommand command, Unit target) {
+	private boolean shouldAddBonus(ChangeHealthDirectly command, Unit target) {
 		var bonus = command.bonus();
 
 		if (bonus == null) {
@@ -299,21 +277,5 @@ public class SpellResolutionContext extends Context {
 		}
 
 		return bonus.requiredEffect() == null || target.hasEffect(bonus.requiredEffect(), caster);
-	}
-
-	private record LastValueSnapshot(
-			int damageDone,
-			int parentDamageDone,
-			int parentHealthPaid,
-			int manaDrained
-	) {}
-
-	private LastValueSnapshot getLastValueSnapshot() {
-		return new LastValueSnapshot(
-			this.getLastDamageDone(),
-			parentContext.getLastDamageDone(),
-			parentContext.getLastHealthPaid(),
-			this.getLastManaDrained()
-		);
 	}
 }

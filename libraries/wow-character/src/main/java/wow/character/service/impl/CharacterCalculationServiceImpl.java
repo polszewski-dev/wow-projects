@@ -100,7 +100,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command) {
+	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
 		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, command.school());
 
 		conditionArgs.setDirect(true);
@@ -440,23 +440,23 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats) {
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamageDirectly command, BaseStatsSnapshot baseStats) {
 		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, SPELL_DAMAGE);
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats) {
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, HealDirectly command, BaseStatsSnapshot baseStats) {
 		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, HEALING);
 	}
 
-	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats, PowerType powerType) {
+	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, BaseStatsSnapshot baseStats, PowerType powerType) {
 		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, powerType, command, baseStats);
 		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, command.school());
 
 		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, spellStats, targetStats);
 	}
 
-	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, DirectCommand command, BaseStatsSnapshot baseStats) {
+	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command, BaseStatsSnapshot baseStats) {
 		var spellStats = newAccumulatedDirectComponentStats(character, spell, target, powerType, command);
 
 		accumulateEffects(character, spellStats, baseStats);
@@ -471,7 +471,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, DirectCommand command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new DirectSpellComponentSnapshot(command);
 
 		var critPct = getSpellCritPct(character, spellStats, baseStats, targetStats);
@@ -494,16 +494,16 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats) {
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamagePeriodically command, BaseStatsSnapshot baseStats) {
 		return getPeriodicComponentSnapshot(character, spell, target, command, baseStats, SPELL_DAMAGE);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats) {
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, HealPeriodically command, BaseStatsSnapshot baseStats) {
 		return getPeriodicComponentSnapshot(character, spell, target, command, baseStats, HEALING);
 	}
 
-	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, BaseStatsSnapshot baseStats, PowerType powerType) {
+	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthPeriodically command, BaseStatsSnapshot baseStats, PowerType powerType) {
 		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, powerType, command, baseStats);
 		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, command.school());
 
@@ -518,7 +518,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, PeriodicCommand command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new PeriodicSpellComponentSnapshot(command);
 
 		var amount = getSpellAmount(spellStats, targetStats);

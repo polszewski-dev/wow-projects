@@ -13,6 +13,8 @@ import wow.simulator.util.RoundingReminder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static wow.commons.model.spell.component.ComponentCommand.Copy;
+
 /**
  * User: POlszewski
  * Date: 2023-11-04
@@ -29,7 +31,7 @@ public abstract class Context implements SimulationContextSource {
 	private int lastDamageDone;
 	private int lastHealingDone;
 	private int lastManaRestored;
-	private int lastManaDrained;
+	private int lastManaLost;
 
 	@Setter
 	private Spell sourceSpellOverride;
@@ -76,7 +78,40 @@ public abstract class Context implements SimulationContextSource {
 	}
 
 	protected void decreaseMana(Unit target, int amount) {
-		this.lastManaDrained = target.decreaseMana(amount, false, getSourceSpell());
+		this.lastManaLost = target.decreaseMana(amount, false, getSourceSpell());
+	}
+
+	protected void copy(Copy copy, Unit target, LastValueSnapshot last) {
+		var from = getFrom(copy, last);
+		var ratioPct = getRatioPct(copy);
+
+		switch (copy.to()) {
+			case DAMAGE ->
+					copyAsDamage(target, from, ratioPct);
+
+			case HEAL ->
+					copyAsHeal(target, from, ratioPct);
+
+			case MANA_LOSS ->
+					copyAsManaLoss(target, from, ratioPct);
+
+			case MANA_GAIN ->
+					copyAsManaGain(target, from, ratioPct);
+		}
+	}
+
+	private int getFrom(Copy copy, LastValueSnapshot last) {
+		return switch (copy.from()) {
+			case DAMAGE -> last.damageDone;
+			case MANA_LOSS -> last.manaLost;
+			case HEALTH_PAID -> last.parentHealthPaid;
+			case PARENT_DAMAGE -> last.parentDamageDone;
+			default -> throw new IllegalArgumentException(copy.from().name());
+		};
+	}
+
+	protected double getRatioPct(Copy command) {
+		return command.ratio().value();
 	}
 
 	protected void copyAsDamage(Unit target, int value, double ratioPct) {
@@ -98,6 +133,13 @@ public abstract class Context implements SimulationContextSource {
 		var roundedManaGain = roundValue(manaGain, target);
 
 		increaseMana(target, roundedManaGain);
+	}
+
+	protected void copyAsManaLoss(Unit target, int value, double ratioPct) {
+		var manaLoss = value * ratioPct / 100;
+		var roundedManaGain = roundValue(manaLoss, target);
+
+		decreaseMana(target, roundedManaGain);
 	}
 
 	protected void setPaidCost(SpellCostSnapshot costSnapshot) {
@@ -142,6 +184,22 @@ public abstract class Context implements SimulationContextSource {
 
 	protected int roundValue(double value, Unit target) {
 		return getRootContext().getRoundingReminder(spell, target).roundValue(value);
+	}
+
+	protected record LastValueSnapshot(
+			int damageDone,
+			int parentDamageDone,
+			int parentHealthPaid,
+			int manaLost
+	) {}
+
+	protected LastValueSnapshot getLastValueSnapshot() {
+		return new LastValueSnapshot(
+				this.getLastDamageDone(),
+				parentContext.getLastDamageDone(),
+				parentContext.getLastHealthPaid(),
+				this.getLastManaLost()
+		);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.Copyable;
 import wow.character.model.character.Character;
-import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
@@ -95,7 +94,7 @@ public class Rotation implements Copyable<Rotation> {
 			return false;
 		}
 
-		return effect.hasPeriodicComponent(ComponentType.DAMAGE);
+		return effect.hasDamagingPeriodicComponent();
 	}
 
 	private void removeMutuallyExclusiveAbilities() {

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
@@ -41,28 +41,32 @@ public class EffectUpdateContext extends Context {
 		periodicSnapshots.entrySet().removeIf(e -> e.getKey().command().isAoE());
 	}
 
-	private void periodicComponentAction(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
-		switch (command.type()) {
-			case DAMAGE ->
+	private void periodicComponentAction(int tickNo, int numStacks, PeriodicCommand periodicCommand, Unit target) {
+		switch (periodicCommand) {
+			case DealDamagePeriodically command ->
 					dealPeriodicDamage(tickNo, numStacks, command, target);
-			case HEAL ->
+
+			case HealPeriodically command ->
 					periodicHeal(tickNo, numStacks, command, target);
-			case MANA_DRAIN ->
-					periodicManaDrain(tickNo, numStacks, command, target);
-			case MANA_GAIN ->
+
+			case LoseManaPeriodically command ->
+					periodicManaLoss(tickNo, numStacks, command, target);
+
+			case GainManaPeriodically command ->
 					periodicManaGain(tickNo, numStacks, command, target);
-			case PCT_OF_TOTAL_MANA_GAIN ->
+
+			case GainPctOfTotalManaPeriodically command ->
 					periodicPctOfTotalManaGain(tickNo, numStacks, command, target);
-			case COPY_DAMAGE_AS_HEAL_PCT ->
-					copyAsHeal(target, this.getLastDamageDone(), command.amount());
-			case COPY_MANA_DRAINED_AS_MANA_PCT ->
-					copyAsManaGain(target, this.getLastManaDrained(), command.amount());
+
+			case Copy command ->
+					copy(command, target, getLastValueSnapshot());
+
 			default ->
 					throw new UnsupportedOperationException();
 		}
 	}
 
-	private void dealPeriodicDamage(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+	private void dealPeriodicDamage(int tickNo, int numStacks, DealDamagePeriodically command, Unit target) {
 		// multi-target periodic component requires hit roll each time damage is dealt
 
 		if (command.isAoE() && !hitRoll(target)) {
@@ -75,28 +79,28 @@ public class EffectUpdateContext extends Context {
 		decreaseHealth(target, tickDamage, false, false);
 	}
 
-	private void periodicHeal(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+	private void periodicHeal(int tickNo, int numStacks, HealPeriodically command, Unit target) {
 		var snapshot = getHealingSnapshot(command, target);
 		var tickHealing = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		increaseHealth(target, tickHealing, false, false);
 	}
 
-	private void periodicManaDrain(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
-		var snapshot = getManaDrainSnapshot(command, target);
-		var roundedTickManaDrain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
+	private void periodicManaLoss(int tickNo, int numStacks, LoseManaPeriodically command, Unit target) {
+		var snapshot = getManaLossSnapshot(command, target);
+		var roundedTickManaLoss = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
-		decreaseMana(target, roundedTickManaDrain);
+		decreaseMana(target, roundedTickManaLoss);
 	}
 
-	private void periodicManaGain(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+	private void periodicManaGain(int tickNo, int numStacks, GainManaPeriodically command, Unit target) {
 		var snapshot = getManaGainSnapshot(command, target);
 		var roundedTickManaGain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		increaseMana(target, roundedTickManaGain);
 	}
 
-	private void periodicPctOfTotalManaGain(int tickNo, int numStacks, PeriodicCommand command, Unit target) {
+	private void periodicPctOfTotalManaGain(int tickNo, int numStacks, GainPctOfTotalManaPeriodically command, Unit target) {
 		var snapshot = getPctOfTotalManaGainSnapshot(command, target);
 		var roundedTickManaGain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
@@ -128,25 +132,28 @@ public class EffectUpdateContext extends Context {
 		}
 	}
 
-	private void computeSingleTargetSnapshot(PeriodicCommand command, Unit target) {
-		if (!command.isSingleTarget()) {
+	private void computeSingleTargetSnapshot(PeriodicCommand periodicCommand, Unit target) {
+		if (!periodicCommand.isSingleTarget()) {
 			return;
 		}
 
-		switch (command.type()) {
-			case DAMAGE ->
+		switch (periodicCommand) {
+			case DealDamagePeriodically command ->
 					getSpellDamageSnapshot(command, target);
-			case HEAL ->
+
+			case HealPeriodically command ->
 					getHealingSnapshot(command, target);
-			case PCT_OF_TOTAL_MANA_GAIN ->
+
+			case GainPctOfTotalManaPeriodically command ->
 					getPctOfTotalManaGainSnapshot(command, target);
+
 			default -> {
 				// void
 			}
 		}
 	}
 
-	private PeriodicSpellComponentSnapshot getSpellDamageSnapshot(PeriodicCommand command, Unit target) {
+	private PeriodicSpellComponentSnapshot getSpellDamageSnapshot(DealDamagePeriodically command, Unit target) {
 		return computeSnapshotOnce(
 				command,
 				target,
@@ -154,7 +161,7 @@ public class EffectUpdateContext extends Context {
 		);
 	}
 
-	private PeriodicSpellComponentSnapshot getHealingSnapshot(PeriodicCommand command, Unit target) {
+	private PeriodicSpellComponentSnapshot getHealingSnapshot(HealPeriodically command, Unit target) {
 		return computeSnapshotOnce(
 				command,
 				target,
@@ -162,16 +169,16 @@ public class EffectUpdateContext extends Context {
 		);
 	}
 
-	private PeriodicSpellComponentSnapshot getManaDrainSnapshot(PeriodicCommand command, Unit target) {
+	private PeriodicSpellComponentSnapshot getManaLossSnapshot(LoseManaPeriodically command, Unit target) {
 		return computeSnapshotOnce(
 				command,
 				target,
-				() -> caster.getPeriodicManaDrainSnapshot(spell, target, command)
+				() -> caster.getPeriodicManaLossSnapshot(spell, target, command)
 		);
 	}
 
 
-	private PeriodicSpellComponentSnapshot getManaGainSnapshot(PeriodicCommand command, Unit target) {
+	private PeriodicSpellComponentSnapshot getManaGainSnapshot(GainManaPeriodically command, Unit target) {
 		return computeSnapshotOnce(
 				command,
 				target,
@@ -179,7 +186,7 @@ public class EffectUpdateContext extends Context {
 		);
 	}
 
-	private PeriodicSpellComponentSnapshot getPctOfTotalManaGainSnapshot(PeriodicCommand command, Unit target) {
+	private PeriodicSpellComponentSnapshot getPctOfTotalManaGainSnapshot(GainPctOfTotalManaPeriodically command, Unit target) {
 		return computeSnapshotOnce(
 				command,
 				target,

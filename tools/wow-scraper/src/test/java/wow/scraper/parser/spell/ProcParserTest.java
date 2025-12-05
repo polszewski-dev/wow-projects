@@ -2,12 +2,15 @@ package wow.scraper.parser.spell;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
+import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventCondition;
 import wow.commons.model.effect.component.EventType;
 import wow.commons.model.pve.GameVersionId;
+import wow.commons.model.spell.Coefficient;
+import wow.commons.model.spell.SpellTargetCondition;
 import wow.commons.model.spell.SpellTargets;
 import wow.scraper.constant.AttributeConditions;
 import wow.scraper.constant.EventConditions;
@@ -16,8 +19,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.POWER;
-import static wow.commons.model.effect.component.ComponentType.MANA_GAIN;
 import static wow.commons.model.effect.component.EventType.*;
+import static wow.commons.model.spell.component.ComponentCommand.GainManaDirectly;
 import static wow.scraper.constant.AttributeConditions.HEALING;
 import static wow.scraper.constant.AttributeConditions.PHYSICAL;
 
@@ -135,8 +138,16 @@ class ProcParserTest extends SpellParserTest {
 		var direct1 = procTrigger1.triggeredSpell().getDirectCommands().getFirst();
 		var direct2 = procTrigger2.triggeredSpell().getDirectCommands().getFirst();
 
-		assertDirectCommand(direct1, MANA_GAIN, 0, null, 170, 170);
-		assertDirectCommand(direct2, MANA_GAIN, 0, null, 170, 170);
+		var command = new GainManaDirectly(
+				SpellTargets.SELF,
+				SpellTargetCondition.EMPTY,
+				new Coefficient(Percent.ZERO, null),
+				170,
+				170
+		);
+
+		assertThat(direct1).isEqualTo(command);
+		assertThat(direct2).isEqualTo(command);
 
 		assertEffectApplication(procTrigger3.triggeredSpell(), SpellTargets.SELF, 10, 1, 1, 1);
 

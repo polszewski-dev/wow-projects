@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.ChangeHealthDirectly;
 
 /**
  * User: POlszewski
@@ -14,7 +14,7 @@ import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
 @Getter
 @Setter
 public class DirectSpellComponentSnapshot {
-	private final DirectCommand command;
+	private final ChangeHealthDirectly command;
 
 	private double critPct;
 	private double critCoeff;

@@ -12,6 +12,7 @@ import wow.commons.model.spell.SpellSchool;
 
 import java.util.List;
 
+import static wow.commons.model.spell.component.ComponentCommand.DealDamagePeriodically;
 import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
@@ -87,8 +88,9 @@ public interface Effect extends Described, TimeRestricted {
 		return getPeriodicComponent() != null;
 	}
 
-	default boolean hasPeriodicComponent(ComponentType componentType) {
-		return hasPeriodicComponent() && getPeriodicComponent().commands().stream().anyMatch(x -> x.type() == componentType);
+	default boolean hasDamagingPeriodicComponent() {
+		return hasPeriodicComponent() && getPeriodicComponent().commands().stream()
+				.anyMatch(DealDamagePeriodically.class::isInstance);
 	}
 
 	default boolean hasAbsorptionComponent() {
