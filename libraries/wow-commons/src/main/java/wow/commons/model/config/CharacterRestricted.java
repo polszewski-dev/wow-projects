@@ -2,6 +2,7 @@ package wow.commons.model.config;
 
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
 
 import java.util.List;
 
@@ -26,6 +27,10 @@ public interface CharacterRestricted {
 
 	default List<CharacterClassId> getRequiredCharacterClassIds() {
 		return getCharacterRestriction().characterClassIds();
+	}
+
+	default List<RaceId> getRequiredRaceIds() {
+		return getCharacterRestriction().raceIds();
 	}
 
 	default PveRole getRequiredRole() {

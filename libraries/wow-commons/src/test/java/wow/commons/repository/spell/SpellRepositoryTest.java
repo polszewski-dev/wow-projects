@@ -3,6 +3,7 @@ package wow.commons.repository.spell;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.constant.AbilityIds;
@@ -12,39 +13,46 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.attribute.Attributes;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
-import wow.commons.model.config.TalentRestriction;
-import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.effect.EffectExclusionGroup;
 import wow.commons.model.effect.EffectId;
-import wow.commons.model.effect.component.AbsorptionCondition;
-import wow.commons.model.effect.component.EventCondition;
-import wow.commons.model.effect.component.PeriodicComponent;
+import wow.commons.model.effect.EffectScope;
+import wow.commons.model.effect.component.*;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
+import wow.commons.model.spell.component.DirectComponent;
+import wow.commons.model.spell.component.DirectComponentBonus;
+import wow.commons.model.talent.TalentTree;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.attribute.AttributeScaling.LevelScalingByFactor;
-import static wow.commons.model.character.CharacterClassId.SHAMAN;
+import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.character.RaceId.ORC;
+import static wow.commons.model.config.TalentRestriction.TalentIdRestriction;
 import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.SPELL_CAST;
 import static wow.commons.model.effect.component.EventType.SPELL_HIT;
-import static wow.commons.model.pve.PhaseId.*;
-import static wow.commons.model.spell.SpellSchool.SHADOW;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.commons.model.spell.ResourceType.HEALTH;
+import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.commons.model.spell.SpellSchool.*;
+import static wow.commons.model.spell.SpellTargetType.GROUND;
+import static wow.commons.model.spell.SpellTargetType.TARGET;
 import static wow.commons.model.spell.component.ComponentCommand.*;
-import static wow.commons.model.talent.TalentTree.DESTRUCTION;
 import static wow.test.commons.AbilityNames.*;
-import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski
@@ -54,520 +62,728 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	@Autowired
 	SpellRepository spellRepository;
 
-	@Test
-	void abilityInfo() {
-		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
+	@ParameterizedTest
+	@CsvSource({
+			"27209, Shadow Bolt",
+			"25389, Power Word: Fortitude"
+	})
+	void name_is_correct(int spellId, String expected) {
+		var spell = getSpell(spellId, TBC_P5);
 
-		assertThat(ability.getNameRank()).isEqualTo(new AbilityNameRank(SHADOW_BOLT, 11));
-		assertThat(ability.getAbilityId()).isEqualTo(AbilityIds.SHADOW_BOLT);
-		assertThat(ability.getRank()).isEqualTo(11);
-		assertThat(ability.getTalentTree()).isEqualTo(ability.getTalentTree()).isEqualTo(DESTRUCTION);
+		var actual = spell.getName();
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
 	@CsvSource({
-			"Shadow Bolt,      11, WARLOCK, 69,       ,           , ",
-			"Shadowburn,        8, WARLOCK, 70,       , Shadowburn, ",
-			"Soul Link,         0, WARLOCK,  1,       , Soul Link,  Imp+Voidwalker+Succubus+Incubus+Felhunter+Felguard+Enslaved",
-			"Devouring Plague,  7, PRIEST,  68, UNDEAD,           , ",
+			"27209, 11",
+			"25389, 7",
+			"18288, 0"
 	})
-	void abilityCharacterRestriction(String name, int rank, CharacterClassId characterClassId, int level, RaceId raceId, String talentName, String petTypes) {
-		var ability = getClassAbility(name, rank, TBC_P5);
-		var characterRestriction = ability.getCharacterRestriction();
+	void rank_is_correct(int spellId, int expected) {
+		var spell = (ClassAbility) getSpell(spellId, TBC_P5);
 
-		assertThat(characterRestriction.characterClassIds()).isEqualTo(List.of(characterClassId));
-		assertThat(characterRestriction.level()).isEqualTo(level);
-		assertThat(characterRestriction.raceIds()).isEqualTo(raceId != null ? List.of(raceId) : List.of());
-		assertThat(characterRestriction.talentRestriction()).isEqualTo(TalentRestriction.of(talentName));
+		var actual = spell.getRank();
 
-		var activePets = petTypes != null ? Stream.of(petTypes.split("\\+")).map(PetType::parse).toList() : List.of();
-
-		assertThat(characterRestriction.activePet()).isEqualTo(activePets);
-	}
-
-	@Test
-	void abilityTimeRestriction() {
-		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
-		var timeRestriction = ability.getTimeRestriction();
-
-		assertThat(timeRestriction).isEqualTo(TimeRestriction.of(TBC_P0));
-	}
-
-	@Test
-	void abilityDescription() {
-		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
-		var description = ability.getDescription();
-
-		assertThat(description.name()).isEqualTo("Shadow Bolt");
-		assertThat(description.icon()).isEqualTo("spell_shadow_shadowbolt");
-		assertThat(description.tooltip()).isEqualTo("Sends a shadowy bolt at the enemy, causing 544 to 607 Shadow damage.");
-	}
-
-	@Test
-	void abilityCategory() {
-		var ability = getClassAbility(CURSE_OF_AGONY, 7, TBC_P5);
-
-		assertThat(ability.getCategory()).isEqualTo(AbilityCategory.CURSES);
-	}
-
-	@Test
-	void abilitySpellInfo() {
-		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
-
-		assertId(ability, 27209);
-		assertThat(ability.getCooldown()).isEqualTo(Duration.ZERO);
-		assertThat(ability.getRange()).isEqualTo(30);
-		assertThat(ability.getEffectRemovedOnHit()).isNull();
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
 	@CsvSource({
-			"Shadow Bolt,  11, 3, false, false",
-			"Drain Life,    8, 0, true, false",
-			"Amplify Curse, 0, 0, false, true",
+			"Shadow Bolt, 11, Destruction",
+			"Fireball, 14, Fire Tree",
 	})
-	void abilityCastInfo(String name, int rank, double castTime, boolean channeled, boolean ignoresGcd) {
+	void tree_is_correct(String name, int rank, String expectedStr) {
 		var ability = getClassAbility(name, rank, TBC_P5);
-		var castInfo = ability.getCastInfo();
 
-		assertThat(castInfo.castTime()).isEqualTo(Duration.seconds(castTime));
-		assertThat(castInfo.channeled()).isEqualTo(channeled);
-		assertThat(castInfo.ignoresGcd()).isEqualTo(ignoresGcd);
+		var actual = ability.getTalentTree();
+		var expected = TalentTree.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
 	@CsvSource({
-			"Shadow Bolt,      11, MANA,   420,  0,  0,           ",
-			"Life Tap,          7, HEALTH, 582,  0, 80,           ",
-			"Summon Voidwalker, 0, MANA,     0, 80,  0, SOUL_SHARD",
+			"Shadow Bolt, 11, Warlock",
+			"Fireball, 14, Mage",
 	})
-	void abilityCost(String name, int rank, ResourceType resourceType, int amount, int baseStatPct, double coeffValue, Reagent reagent) {
+	void required_class_is_correct(String name, int rank, String expectedStr) {
 		var ability = getClassAbility(name, rank, TBC_P5);
-		var cost = ability.getCost();
 
-		assertThat(cost.resourceType()).isEqualTo(resourceType);
-		assertThat(cost.amount()).isEqualTo(amount);
-		assertThat(cost.baseStatPct()).isEqualTo(Percent.of(baseStatPct));
-		assertCoefficient(cost.coefficient(), coeffValue, null);
-		assertThat(cost.reagent()).isEqualTo(reagent);
+		var actual = ability.getRequiredCharacterClassIds();
+		var expected = List.of(CharacterClassId.parse(expectedStr));
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@Test
-	void abilityDirectComponent() {
-		var ability = getClassAbility(SHADOW_BOLT, 11, TBC_P5);
-		var command = ability.getDirectCommands().getFirst();
+	void required_classes_are_correct() {
+		var racial = (RacialAbility) getSpell(20554, TBC_P5);
 
-		assertThat(command).isEqualTo(new DealDamageDirectly(
-				SpellTargets.ENEMY,
-				SpellTargetCondition.EMPTY,
-				new Coefficient(Percent.of(85.71), SHADOW),
-				544,
-				607,
-				null
-		));
+		var actual = racial.getRequiredCharacterClassIds();
+		var expected = List.of(MAGE, PRIEST, SHAMAN, HUNTER);
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
 	@CsvSource({
-			"Shadow Bolt, 11, true",
-			"Incinerate,   2, true",
-			"Immolate,     8, false",
+			"Shadow Bolt, 1, 1",
+			"Shadow Bolt, 11, 69",
 	})
-	void bolt_field(String name, int rank, boolean expected) {
+	void required_level_is_correct(String name, int rank, int expected) {
 		var ability = getClassAbility(name, rank, TBC_P5);
 
-		assertThat(ability.isBolt()).isEqualTo(expected);
+		var actual = ability.getRequiredLevel();
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void abilityDirectBonus() {
-		var ability = getClassAbility(INCINERATE, 2, TBC_P5);
-		var command = (DealDamageDirectly) ability.getDirectCommands().getFirst();
-		var bonus = command.bonus();
+	@ParameterizedTest
+	@CsvSource({
+			"Devouring Plague, 7, Undead",
+			"Touch of Weakness, 7, Blood Elf+Undead",
+	})
+	void required_race_is_correct(String name, int rank, String expectedStr) {
+		var ability = getClassAbility(name, rank, TBC_P5);
 
-		assertThat(bonus.min()).isEqualTo(111);
-		assertThat(bonus.max()).isEqualTo(128);
-		assertThat(bonus.requiredEffect()).isEqualTo(AbilityIds.IMMOLATE);
+		var actual = ability.getRequiredRaceIds();
+		var expected = toList(expectedStr, RaceId::parse);
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void abilityEffectApplication() {
-		var ability = getClassAbility(CORRUPTION, 8, TBC_P5);
-		var command = ability.getApplyEffectCommands().getFirst();
+	@ParameterizedTest
+	@CsvSource({
+			"Soul Link, 0, Imp+Voidwalker+Succubus+Incubus+Felhunter+Felguard+Enslaved",
+			"Shadow Bolt, 11, ",
+	})
+	void required_pet_is_correct(String name, int rank, String expectedStr) {
+		var ability = getClassAbility(name, rank, TBC_P5);
 
-		assertEffectApplication(ability, SpellTargets.ENEMY, 18, 1, 1, 1);
+		var actual = ability.getCharacterRestriction().activePet();
+		var expected = toList(expectedStr, PetType::parse);
 
-		assertId(command.effect(), ability.getId().value());
-		assertId(command.effect(), 27216);
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void abilitySpell() {
-		var spell = getSpell(110025441, TBC_P5);
+	@ParameterizedTest
+	@CsvSource({
+			"Vampiric Touch, 1, Vampiric Touch",
+			"Silence, 0, Silence",
+			"Mind Blast, 11, "
+	})
+	void required_talent_is_correct(String name, int rank, String expectedStr) {
+		var ability = getClassAbility(name, rank, TBC_P5);
 
-		assertId(spell, 110025441);
-		assertThat(spell.getName()).isEqualTo("Feedback - triggered");
+		var actual = ability.getCharacterRestriction().talentRestriction();
+		var expected = expectedStr != null ? new TalentIdRestriction(expectedStr) : null;
 
-		var command = spell.getDirectCommands().getFirst();
-
-		assertThat(command).isEqualTo(new LoseManaDirectly(
-				SpellTargets.ATTACKER,
-				SpellTargetCondition.EMPTY,
-				new Coefficient(Percent.ZERO, SHADOW),
-				165,
-				165
-		));
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void abilityEffect() {
-		var effect = getEffect(25311, VANILLA_P6);
+	@ParameterizedTest
+	@CsvSource({
+			"Corruption, 7, VANILLA_P6, VANILLA_P5",
+			"Corruption, 7, TBC_P5, TBC_P0",
+	})
+	void required_phase_is_correct(String name, int rank, String phaseIdStr, String expectedStr) {
+		var ability = getClassAbility(name, rank, PhaseId.parse(phaseIdStr));
 
-		assertId(effect, 25311);
-		assertThat(effect.getName()).isEqualTo("Corruption");
-		assertThat(effect.getTimeRestriction()).isEqualTo(TimeRestriction.of(VANILLA_P5));
-		assertThat(effect.getMaxStacks()).isEqualTo(1);
-		assertThat(effect.getIcon()).isEqualTo("spell_shadow_abominationexplosion");
-		assertThat(effect.getTooltip()).isEqualTo("Corrupts the target, causing 822 Shadow damage over 18 sec.");
+		var actual = ability.getEarliestPhaseId();
+		var expected = PhaseId.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void abilityEffectPeriodic() {
-		var effect = getEffect(25311, VANILLA_P6);
+	@ParameterizedTest
+	@CsvSource({
+			"27209, CLASS_ABILITY",
+			"20554, RACIAL_ABILITY",
+			"129132, ACTIVATED_ABILITY",
+			"33297, TRIGGERED_SPELL",
+	})
+	void type_is_correct(int spellId, SpellType expected) {
+		var ability = getSpell(spellId, TBC_P5);
 
-		assertThat(effect.getName()).isEqualTo("Corruption");
+		var actual = ability.getType();
 
-		var periodicComponent = effect.getPeriodicComponent();
+		assertThat(actual).isEqualTo(expected);
+	}
 
-		assertThat(periodicComponent).isEqualTo(
-				new PeriodicComponent(
-						List.of(new DealDamagePeriodically(
-								SpellTargets.TARGET,
-								new Coefficient(Percent._100, SHADOW),
-								822,
-								6,
-								TickScheme.DEFAULT
-						)),
-						Duration.seconds(3)
+	@ParameterizedTest
+	@CsvSource({
+			"Curse of Agony, 1, Curses",
+			"Curse of Doom, 1, Curses",
+	})
+	void category_is_correct(String name, int rank, String expectedStr) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getCategory();
+		var expected = AbilityCategory.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getCostData")
+	void cost_is_correct(CostData data) {
+		var name = data.abilityName;
+		var rank = data.rank;
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getCost();
+		var expected = data.cost;
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	record CostData(String abilityName, int rank, Cost cost) {}
+
+	static List<CostData> getCostData() {
+		return List.of(
+			new CostData(SHADOW_BOLT, 11, new Cost(MANA, 420)),
+			new CostData(LIFE_TAP, 7, new Cost(HEALTH, 582, Percent.ZERO, coefficient(80, null), null)),
+			new CostData(FEAR, 3, new Cost(MANA, 0, Percent.of(12), Coefficient.NONE, null)),
+			new CostData(SHADOWBURN, 8, new Cost(MANA, 515, Percent.ZERO, Coefficient.NONE, Reagent.SOUL_SHARD))
+		);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getCastTimeData")
+	void cast_time_is_correct(CastTimeData data) {
+		var name = data.abilityName;
+		var rank = data.rank;
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getCastInfo();
+		var expected = data.castInfo;
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	record CastTimeData(String abilityName, int rank, CastInfo castInfo) {}
+
+	static List<CastTimeData> getCastTimeData() {
+		return List.of(
+				new CastTimeData(SHADOW_BOLT, 11, new CastInfo(Duration.seconds(3), false, false)),
+				new CastTimeData(LIFE_TAP, 7, new CastInfo(Duration.ZERO, false, false)),
+				new CastTimeData(AMPLIFY_CURSE, 0, new CastInfo(Duration.ZERO, false, true)),
+				new CastTimeData(MIND_FLAY, 7, new CastInfo(Duration.ZERO, true, false))
+		);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Shadowburn, 7, 15",
+			"Incinerate, 2, 0",
+	})
+	void cooldown_is_correct(String name, int rank, String expectedStr) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getCooldown();
+		var expected = Duration.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Shadowburn, 7, 20",
+			"Incinerate, 2, 30",
+	})
+	void range_is_correct(String name, int rank, int expected) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getRange();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Shadowburn, 7, false",
+			"Incinerate, 2, true",
+	})
+	void bolt_is_correct(String name, int rank, boolean expected) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.isBolt();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Conflagrate, 6, Immolate",
+			"Incinerate, 2, ",
+	})
+	void effect_removed_on_hit_is_correct(String name, int rank, String expectedStr) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getEffectRemovedOnHit();
+		var expected = expectedStr != null ? AbilityId.of(expectedStr) : null;
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getDirectComponentData")
+	void direct_component_is_correct(DirectComponentData data) {
+		var name = data.abilityName;
+		var rank = data.rank;
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getDirectComponent();
+		var expected = data.directComponent;
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	record DirectComponentData(String abilityName, int rank, DirectComponent directComponent) {}
+
+	static List<DirectComponentData> getDirectComponentData() {
+		return List.of(
+				new DirectComponentData(SHADOW_BOLT, 11, new DirectComponent(
+						List.of(
+								new DealDamageDirectly(
+										SpellTargets.ENEMY,
+										SpellTargetCondition.EMPTY,
+										new Coefficient(new Percent(85.71), SHADOW),
+										544,
+										607,
+										null
+								)
+						)
+				)),
+				new DirectComponentData(INCINERATE, 2, new DirectComponent(
+						List.of(
+								new DealDamageDirectly(
+										SpellTargets.ENEMY,
+										SpellTargetCondition.EMPTY,
+										coefficient(71.43, FIRE),
+										444,
+										514,
+										new DirectComponentBonus(111, 128, AbilityIds.IMMOLATE)
+								)
+						)
+				)),
+				new DirectComponentData(LIFE_TAP, 7, new DirectComponent(
+						List.of(
+								new Copy(
+										SpellTargets.SELF,
+										SpellTargetCondition.EMPTY,
+										null,
+										From.HEALTH_PAID,
+										To.MANA_GAIN,
+										Percent._100
+								)
+						)
+				)),
+				new DirectComponentData(HOLY_SHOCK, 5, new DirectComponent(
+						List.of(
+								new DealDamageDirectly(
+										SpellTargets.ANY,
+										SpellTargetCondition.HOSTILE,
+										coefficient(42.85, HOLY),
+										721,
+										779,
+										null
+								),
+								new HealDirectly(
+										SpellTargets.ANY,
+										SpellTargetCondition.FRIENDLY,
+										coefficient(42.85, HOLY),
+										913,
+										987,
+										null
+								)
+						)
+				))
+		);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getEffectApplicationData")
+	void effect_application_is_correct(EffectApplicationData data) {
+		var name = data.abilityName;
+		var rank = data.rank;
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getEffectApplication();
+		var expected = data.getEffectApplication(spellRepository);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	record EffectApplicationData(String abilityName, int rank, Integer effectId, EffectApplication effectApplication) {
+		EffectApplication getEffectApplication(SpellRepository spellRepository) {
+			if (effectApplication == null) {
+				return null;
+			}
+
+			var commands = effectApplication.commands().stream()
+					.map(command -> swapEffect(command, spellRepository))
+					.toList();
+
+			return new EffectApplication(commands);
+		}
+
+		private ApplyEffect swapEffect(ApplyEffect command, SpellRepository spellRepository) {
+			return new ApplyEffect(
+					command.target(),
+					command.condition(),
+					spellRepository.getEffect(EffectId.of(effectId), TBC_P5).orElseThrow(),
+					command.duration(),
+					command.numStacks(),
+					command.numCharges(),
+					command.replacementMode()
+			);
+		}
+	}
+
+	static List<EffectApplicationData> getEffectApplicationData() {
+		return List.of(
+				new EffectApplicationData(CURSE_OF_AGONY, 7, 27218, new EffectApplication(
+						List.of(
+								new ApplyEffect(
+										SpellTargets.ENEMY,
+										SpellTargetCondition.EMPTY,
+										Effect.EMPTY, // can't get correct effect within static method
+										Duration.seconds(24),
+										1,
+										1,
+										EffectReplacementMode.DEFAULT
+								)
+						)
+				)),
+				new EffectApplicationData(LIFE_TAP, 7, null, null)
+		);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Incinerate, 2, Deals 444 to 514 Fire damage to your target and an additional 111 to 128 Fire damage if the target is affected by an Immolate spell.",
+	})
+	void tooltip_is_correct(String name, int rank, String expected) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getTooltip();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Incinerate, 2, spell_fire_burnout",
+	})
+	void icon_is_correct(String name, int rank, String expected) {
+		var ability = getClassAbility(name, rank, TBC_P5);
+
+		var actual = ability.getIcon();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"25311, Corruption",
+			"25389, Power Word: Fortitude"
+	})
+	void effect_name_is_correct(int effectId, String expected) {
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getName();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"25311, VANILLA_P6, VANILLA_P5",
+			"25311, TBC_P5, TBC_P0",
+	})
+	void required_phase_is_correct(int effectId, String phaseIdStr, String expectedStr) {
+		var effect = getEffect(effectId, PhaseId.parse(phaseIdStr));
+
+		var actual = effect.getEarliestPhaseId();
+		var expected = PhaseId.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"25311, 1",
+			"11129, 10",
+	})
+	void effect_max_stacks_is_correct(int effectId, int expected) {
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getMaxStacks();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"25311, Personal",
+			"25389, Global"
+	})
+	void effect_scope_is_correct(int effectId, String expectedStr) {
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getScope();
+		var expected = EffectScope.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"27218, Curse",
+			"28189, Armor"
+	})
+	void effect_exclusion_group_is_correct(int effectId, String expectedStr) {
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getExclusionGroup();
+		var expected = EffectExclusionGroup.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"1230212, Corruption+Immolate",
+			"1223065, Lightning Shield"
+	})
+	void effect_augmented_abilities_are_correct(int effectId, String expectedStr) {
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getAugmentedAbilities();
+		var expected = toList(expectedStr, AbilityId::parse);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"25311, spell_shadow_abominationexplosion",
+	})
+	void effect_icon_is_correct(int effectId, String expected) {
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getIcon();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource(delimiter = ';', value = {
+			"25311; Corrupts the target, causing 822 Shadow damage over 18 sec.",
+	})
+	void effect_tooltip_is_correct(int effectId, String expected) {
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getTooltip();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getPeriodicComponentData")
+	void periodic_component_is_correct(PeriodicComponentData data) {
+		var effectId = data.effectId;
+		var effect = getEffect(effectId, TBC_P5);
+
+		var actual = effect.getPeriodicComponent();
+		var expected = data.periodicComponent;
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	record PeriodicComponentData(int effectId, PeriodicComponent periodicComponent) {}
+
+	static List<PeriodicComponentData> getPeriodicComponentData() {
+		return List.of(
+				new PeriodicComponentData(
+						27218,
+						new PeriodicComponent(
+								List.of(
+										new DealDamagePeriodically(
+												SpellTargets.TARGET,
+												coefficient(120, SHADOW),
+												1356,
+												12,
+												new TickScheme(List.of(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5))
+										)
+								),
+								Duration.seconds(2)
+						)
+				),
+				new PeriodicComponentData(
+						30908,
+						new PeriodicComponent(
+								List.of(
+										new LoseManaPeriodically(
+												SpellTargets.TARGET,
+												coefficient(0, SHADOW),
+												1000,
+												5
+										),
+										new Copy(
+												SpellTargets.SELF,
+												SpellTargetCondition.EMPTY,
+												null,
+												From.MANA_LOSS,
+												To.MANA_GAIN,
+												Percent._100
+										)
+								),
+								Duration.seconds(1)
+						)
 				)
 		);
 	}
 
-	@Test
-	void abilityEffectPeriodicTickScheme() {
-		var effect = getEffect(27218, TBC_P5);
-		var periodicComponent = effect.getPeriodicComponent();
-		var command = (DealDamagePeriodically) periodicComponent.commands().getFirst();
+	@ParameterizedTest
+	@MethodSource("getModifierComponentData")
+	void modifier_component_is_correct(ModifierComponentData data) {
+		var effectId = data.effectId;
+		var effect = getEffect(effectId, TBC_P5);
 
-		var tickScheme = new TickScheme(List.of(0.5, 0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.5, 1.5, 1.5, 1.5));
+		var actual = effect.getModifierComponent();
+		var expected = data.modifierComponent;
 
-		assertThat(effect.getName()).isEqualTo("Curse of Agony");
-		assertThat(command.tickScheme()).isEqualTo(tickScheme);
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void abilityEffectModifier() {
-		var effect = getEffect(18288, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Amplify Curse");
-
-		assertModifier(effect, List.of(
-				Attribute.of(EFFECT_PCT, 50, AttributeCondition.comma(
-						AttributeConditions.CURSE_OF_DOOM,
-						AttributeConditions.CURSE_OF_AGONY
-				)),
-				Attribute.of(EFFECT_PCT, 20, AttributeConditions.CURSE_OF_EXHAUSTION)
-		));
-	}
-
-	@Test
-	void abilityEffectAbsorption() {
-		var effect = getEffect(28610, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Shadow Ward");
-
-		var absorptionComponent = effect.getAbsorptionComponent();
-
-		assertCoefficient(absorptionComponent.coefficient(), 30, SHADOW);
-		assertThat(absorptionComponent.condition()).isEqualTo(AbsorptionCondition.of(SHADOW));
-		assertThat(absorptionComponent.min()).isEqualTo(875);
-		assertThat(absorptionComponent.max()).isEqualTo(875);
-	}
-
-	@Test
-	void abilityEffectEvent() {
-		var effect = getEffect(18288, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Amplify Curse");
-
-		var event = effect.getEvents().getFirst();
-
-		assertThat(event.types()).isEqualTo(List.of(SPELL_CAST));
-		assertThat(event.condition()).isEqualTo(EventCondition.comma(
-				EventConditions.CURSE_OF_DOOM,
-				EventConditions.CURSE_OF_AGONY,
-				EventConditions.CURSE_OF_EXHAUSTION
-		));
-		assertThat(event.chance()).isEqualTo(Percent._100);
-		assertThat(event.actions()).isEqualTo(List.of(REMOVE_CHARGE));
-		assertThat(event.triggeredSpell()).isNull();
-	}
-
-	@Test
-	void abilityMultipleLevels() {
-		var ability = getClassAbility(TOUCH_OF_WEAKNESS, 7, TBC_P5);
-
-		assertId(ability, 25461);
-		assertThat(ability.getName()).isEqualTo("Touch of Weakness");
-
-		assertThat(ability.getEffectApplication()).isNotNull();
-
-		var effect = ability.getApplyEffectCommands().getFirst().effect();
-
-		assertId(effect, 25461);
-		assertThat(effect.getName()).isEqualTo("Touch of Weakness");
-
-		assertThat(effect.getEvents()).hasSize(1);
-
-		var triggeredSpell = effect.getEvents().getFirst().triggeredSpell();
-
-		assertThat(triggeredSpell).isNotNull();
-		assertId(triggeredSpell, 110025461);
-		assertThat(triggeredSpell.getName()).isEqualTo("Touch of Weakness - triggered");
-
-		assertThat(triggeredSpell.getEffectApplication()).isNotNull();
-
-		var triggeredEffect = triggeredSpell.getApplyEffectCommands().getFirst().effect();
-
-		assertId(triggeredEffect, 110025461);
-		assertThat(triggeredEffect.getName()).isEqualTo("Touch of Weakness - triggered");
-	}
-
-	static void assertCoefficient(Coefficient coefficient, double value, SpellSchool school) {
-		assertThat(coefficient.value().value()).isEqualTo(value, PRECISION);
-		assertThat(coefficient.school()).isEqualTo(school);
-	}
-
-	@Test
-	void activatedAbility() {
-		var spell = getSpell(132483, TBC_P5);
-
-		assertThat(spell.getName()).isEqualTo("The Skull of Gul'dan");
-		assertThat(spell.getTooltip()).isEqualTo("Use: Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec. (2 Min Cooldown)");
-
-		assertEffectApplication(spell, SpellTargets.SELF, 20, 1, 1, 1);
-
-		var effect = spell.getApplyEffectCommands().getFirst().effect();
-
-		assertId(effect, 132483);
-		assertModifier(effect, List.of(
-			Attribute.of(HASTE_RATING, 175, AttributeConditions.SPELL)
-		));
-	}
-
-	@Test
-	void itemProc() {
-		var effect = getEffect(127683, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Quagmirran's Eye - proc #1");
-		assertThat(effect.getTooltip()).isEqualTo("Equip: Your harmful spells have a chance to increase your spell haste rating by 320 for 6 secs. (Proc chance: 10%, 45s cooldown)");
-
-		assertThat(effect.getEvents()).hasSize(1);
-
-		var event = effect.getEvents().getFirst();
-
-		assertEvent(
-				event,
-				List.of(SPELL_HIT),
-				EventCondition.IS_HOSTILE_SPELL,
-				10,
-				List.of(TRIGGER_SPELL),
-				Duration.seconds(45)
-		);
-
-		var spell = event.triggeredSpell();
-
-		assertThat(spell).isNotNull();
-
-		assertId(spell, 33297);
-		assertThat(spell.getName()).isEqualTo("Spell Haste Trinket");
-		assertThat(spell.getTooltip()).isNull();
-
-		assertEffectApplication(spell, SpellTargets.SELF, 6, 1, 1, 1);
-		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
-				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
-		));
-	}
-
-	@Test
-	void setBonusProc1() {
-		var effect = getEffect(228963, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Voidheart Raiment - P2 bonus");
-		assertThat(effect.getTooltip()).isEqualTo("Your shadow damage spells have a chance to grant you 135 bonus shadow damage for 15 sec. (Proc chance: 5%)");
-
-		assertThat(effect.getEvents()).hasSize(1);
-
-		var event = effect.getEvents().getFirst();
-
-		assertEvent(
-				event,
-				List.of(SPELL_HIT),
-				EventConditions.SHADOW,
-				5,
-				List.of(TRIGGER_SPELL),
-				Duration.ZERO
-		);
-
-		var spell = event.triggeredSpell();
-
-		assertThat(spell).isNotNull();
-
-		assertId(spell, 37377);
-		assertThat(spell.getName()).isEqualTo("Flameshadow");
-		assertThat(spell.getTooltip()).isNull();
-
-		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
-		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
-				Attribute.of(POWER, 135, AttributeCondition.and(
-						AttributeConditions.SPELL_DAMAGE,
-						AttributeConditions.SHADOW
-				))
-		));
-	}
-
-	@Test
-	void setBonusProc2() {
-		var effect = getEffect(1228963, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Voidheart Raiment - P2 bonus");
-		assertThat(effect.getTooltip()).isEqualTo("Your fire damage spells have a chance to grant you 135 bonus fire damage for 15 sec. (Proc chance: 5%)");
-
-		assertThat(effect.getEvents()).hasSize(1);
-
-		var event = effect.getEvents().getFirst();
-
-		assertEvent(
-				event,
-				List.of(SPELL_HIT),
-				EventConditions.FIRE,
-				5,
-				List.of(TRIGGER_SPELL),
-				Duration.ZERO
-		);
-
-		var spell = event.triggeredSpell();
-
-		assertThat(spell).isNotNull();
-
-		assertId(spell, 39437);
-		assertThat(spell.getName()).isEqualTo("Shadowflame");
-		assertThat(spell.getTooltip()).isNull();
-
-		assertEffectApplication(spell, SpellTargets.SELF, 15, 1, 1, 1);
-		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
-				Attribute.of(POWER, 135, AttributeCondition.and(
-						AttributeConditions.SPELL_DAMAGE,
-						AttributeConditions.FIRE
-				))
-		));
-	}
-
-	@Test
-	void enchantProc() {
-		var effect = getEffect(128003, TBC_P5);
-
-		assertThat(effect.getName()).isEqualTo("Enchant Weapon - Spellsurge - proc #1");
-		assertThat(effect.getTooltip()).isEqualTo("Permanently enchant a Melee Weapon to have a 3% chance on spellcast to restore 100 mana to all party members over 10 seconds.");
-
-		assertThat(effect.getEvents()).hasSize(1);
-
-		var event = effect.getEvents().getFirst();
-
-		assertEvent(
-				event,
-				List.of(SPELL_CAST),
-				EventCondition.EMPTY,
-				3,
-				List.of(TRIGGER_SPELL),
-				Duration.ZERO
-		);
-
-		var spell = event.triggeredSpell();
-
-		assertThat(spell).isNotNull();
-
-		assertId(spell, 100128003);
-		assertThat(spell.getName()).isEqualTo("Enchant Weapon - Spellsurge - proc #1 - triggered");
-		assertThat(spell.getTooltip()).isNull();
-
-		assertEffectApplication(spell, SpellTargets.PARTY, 10, 1, 1, 1);
-
-		var triggeredEffect = spell.getApplyEffectCommands().getFirst().effect();
-
-		assertThat(triggeredEffect.getPeriodicComponent()).isEqualTo(new PeriodicComponent(
-				List.of(
-						new GainManaPeriodically(
-								SpellTargets.TARGET,
-								new Coefficient(Percent.ZERO, null),
-								100,
-								5
+	record ModifierComponentData(int effectId, ModifierComponent modifierComponent) {}
+
+	static List<ModifierComponentData> getModifierComponentData() {
+		return List.of(
+				new ModifierComponentData(
+						18288,
+						new ModifierComponent(
+								Attributes.of(
+										Attribute.of(EFFECT_PCT, 50, AttributeCondition.comma(
+												AttributeConditions.CURSE_OF_DOOM,
+												AttributeConditions.CURSE_OF_AGONY
+										)),
+										Attribute.of(EFFECT_PCT, 20, AttributeConditions.CURSE_OF_EXHAUSTION)
+								)
 						)
 				),
-				Duration.seconds(2)
-		));
+				new ModifierComponentData(
+						18803,
+						new ModifierComponent(
+								Attributes.of(
+										Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
+								)
+						)
+				)
+		);
 	}
 
-	@Test
-	void gemProc() {
-		var effect = getEffect(125893, TBC_P5);
+	@ParameterizedTest
+	@MethodSource("getAbsorptionComponentData")
+	void absorption_component_is_correct(AbsorptionComponentData data) {
+		var effectId = data.effectId;
+		var effect = getEffect(effectId, TBC_P5);
 
-		assertThat(effect.getName()).isEqualTo("Mystical Skyfire Diamond - proc #1");
-		assertThat(effect.getTooltip()).isEqualTo("Chance to Increase Spell Cast Speed");
+		var actual = effect.getAbsorptionComponent();
+		var expected = data.absorptionComponent;
 
-		assertThat(effect.getEvents()).hasSize(1);
-
-		var event = effect.getEvents().getFirst();
-
-		assertEvent(event, List.of(SPELL_CAST), EventCondition.EMPTY, 15, List.of(TRIGGER_SPELL), Duration.seconds(35));
-
-		var spell = event.triggeredSpell();
-
-		assertThat(spell).isNotNull();
-
-		assertId(spell, 32837);
-		assertThat(spell.getName()).isEqualTo("Spell Focus Trigger");
-		assertThat(spell.getTooltip()).isNull();
-
-		assertEffectApplication(spell, SpellTargets.SELF, 6, 1, 1, 1);
-		assertModifier(spell.getApplyEffectCommands().getFirst().effect(), List.of(
-				Attribute.of(HASTE_RATING, 320, AttributeConditions.SPELL)
-		));
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void racialAbility() {
-		var ability = (RacialAbility) getSpell(33697, TBC_P5);
+	record AbsorptionComponentData(int effectId, AbsorptionComponent absorptionComponent) {}
 
-		assertThat(ability.getName()).isEqualTo("Blood Fury");
-		assertThat(ability.getRank()).isZero();
-		assertThat(ability.getTooltip()).isEqualTo("Increases melee attack power by 6 and your damage and healing from spells and effects by up to 5, but reduces healing effects on you by 50%. Lasts 15 sec.");
-		assertThat(ability.getCharacterRestriction().raceIds()).isEqualTo(List.of(ORC));
-		assertThat(ability.getCharacterRestriction().characterClassIds()).isEqualTo(List.of(SHAMAN));
+	static List<AbsorptionComponentData> getAbsorptionComponentData() {
+		return List.of(
+				new AbsorptionComponentData(
+						28610,
+						new AbsorptionComponent(
+								coefficient(30, SHADOW),
+								AbsorptionCondition.of(SHADOW),
+								875,
+								875
+						)
+				)
+		);
+	}
 
-		assertThat(ability.getCost()).isEqualTo(new Cost(ResourceType.MANA, 0));
-		assertThat(ability.getCastInfo()).isEqualTo(new CastInfo(Duration.ZERO, false, true));
-		assertThat(ability.getCooldown()).isEqualTo(Duration.minutes(2));
+	@ParameterizedTest
+	@MethodSource("getEventData")
+	void events_are_correct(EventData data) {
+		var effectId = data.effectId;
+		var effect = getEffect(effectId, TBC_P5);
 
-		assertEffectApplication(ability, SpellTargets.SELF, 15, 1, 1, 1);
+		var actual = effect.getEvents();
+		var expected = data.getEvents(spellRepository);
 
-		var effect = ability.getApplyEffectCommands().getFirst().effect();
+		assertThat(actual).isEqualTo(expected);
+	}
 
-		assertModifier(effect, List.of(
-				Attribute.of(POWER, 3, AttributeConditions.SPELL, new LevelScalingByFactor(2)),
-				Attribute.of(POWER, 2, AttributeConditions.PHYSICAL, new LevelScalingByFactor(4)),
-				Attribute.of(HEALING_TAKEN_PCT, -50)
-		));
+	record EventData(int effectId, List<Integer> triggeredSpellIds, List<Event> events) {
+		List<Event> getEvents(SpellRepository spellRepository) {
+			return IntStream.range(0, events.size())
+					.mapToObj(i -> swapTriggeredSpell(i, spellRepository))
+					.toList();
+		}
+
+		private Event swapTriggeredSpell(int i, SpellRepository spellRepository) {
+			var event = events.get(i);
+			var spellId = SpellId.ofNullable(triggeredSpellIds.get(i));
+
+			return new Event(
+					event.types(),
+					event.condition(),
+					event.chance(),
+					event.actions(),
+					spellId != null ? spellRepository.getSpell(spellId, TBC_P5).orElseThrow() : null,
+					event.actionParameters()
+			);
+		}
+	}
+
+	static List<EventData> getEventData() {
+		return List.of(
+				new EventData(
+						18288,
+						Collections.singletonList(null),
+						List.of(
+								new Event(
+										List.of(SPELL_CAST),
+										EventCondition.comma(
+												EventConditions.CURSE_OF_DOOM,
+												EventConditions.CURSE_OF_AGONY,
+												EventConditions.CURSE_OF_EXHAUSTION
+										),
+										Percent._100,
+										List.of(REMOVE_CHARGE),
+										null,
+										EventActionParameters.EMPTY
+								)
+						)
+				),
+				new EventData(
+						228963,
+						List.of(37377),
+						List.of(
+								new Event(
+										List.of(SPELL_HIT),
+										EventConditions.SHADOW,
+										Percent.of(5),
+										List.of(TRIGGER_SPELL),
+										null,
+										EventActionParameters.EMPTY
+								)
+						)
+				)
+		);
 	}
 
 	@Test
@@ -592,6 +808,77 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		));
 	}
 
+	@Test
+	void all_spells_are_valid() {
+		var spells = spellRepository.getAllSpells();
+
+		for (var spell : spells) {
+			var validationError = validateSpell(spell);
+
+			assertThat(validationError)
+					.withFailMessage(validationError != null ? validationError : "")
+					.isNull();
+		}
+	}
+
+	@Test
+	void all_effects_are_valid() {
+		var effects = spellRepository.getAllEffects();
+
+		for (var effect : effects) {
+			var validationError = validateEffect(effect);
+
+			assertThat(validationError)
+					.withFailMessage(validationError != null ? validationError : "")
+					.isNull();
+		}
+	}
+
+	private String validateSpell(Spell spell) {
+		if (!(spell instanceof Ability ability)) {
+			return null;
+		}
+
+		if (ability.isChanneled() && !ability.getCastTime().isZero()) {
+			return "Channeled ability with non-zero cast time: " + ability;
+		}
+
+		for (var applyEffectCommand : ability.getApplyEffectCommands()) {
+			var effectTarget = applyEffectCommand.target();
+			var effect = applyEffectCommand.effect();
+
+			if (ability.isChanneled() && effectTarget.isAoE() && !effectTarget.hasType(GROUND)) {
+				return "Channeled ability with AoE effect target: " + ability;
+			}
+
+			for (var periodicCommand : effect.getPeriodicCommands()) {
+				var commandTarget = periodicCommand.target();
+
+				if (effectTarget.hasType(GROUND) && commandTarget.hasType(TARGET)) {
+					return "Ground effect has no target specified";
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private String validateEffect(Effect effect) {
+		if (effect.hasAugmentedAbilities() &&
+				(effect.hasPeriodicComponent() || effect.hasAbsorptionComponent())) {
+			return "Can't have augmented ability with either periodic or absorption component: " + effect;
+		}
+
+		if (effect.hasPeriodicComponent()) {
+			if (effect.getTickInterval() == null) {
+				return "No tick interval: " + effect;
+			}
+		}
+
+		return null;
+	}
+
+
 	private ClassAbility getClassAbility(String name, int rank, PhaseId phaseId) {
 		return (ClassAbility) spellRepository.getAbility(name, rank, phaseId).orElseThrow();
 	}
@@ -602,5 +889,11 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	private Effect getEffect(int effectId, PhaseId phaseId) {
 		return spellRepository.getEffect(EffectId.of(effectId), phaseId).orElseThrow();
+	}
+
+	private <T> List<T> toList(String value, Function<String, T> mapper) {
+		return value != null
+				? Stream.of(value.split("\\+")).map(String::trim).map(mapper).toList()
+				: List.of();
 	}
 }

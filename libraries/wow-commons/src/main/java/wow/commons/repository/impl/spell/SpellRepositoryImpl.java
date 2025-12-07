@@ -89,6 +89,16 @@ public class SpellRepositoryImpl implements SpellRepository {
 		return racialEffects.getOptional(gameVersionId, raceId).orElse(List.of());
 	}
 
+	@Override
+	public List<Spell> getAllSpells() {
+		return spellsById.allValues();
+	}
+
+	@Override
+	public List<Effect> getAllEffects() {
+		return effectById.allValues();
+	}
+
 	private void addSpell(Spell spell) {
 		if (spell instanceof Ability ability) {
 			for (var characterClassId : ability.getRequiredCharacterClassIds()) {
@@ -108,7 +118,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 		var gameVersionId = effect.getGameVersionId();
 
 		if (effect instanceof RacialEffect racial) {
-			for (var raceId : racial.getCharacterRestriction().raceIds()) {
+			for (var raceId : racial.getRequiredRaceIds()) {
 				racialEffects.computeIfAbsent(gameVersionId, raceId, x -> new ArrayList<>())
 						.add(racial);
 			}

@@ -33,6 +33,10 @@ import static wow.test.commons.TestConstants.PRECISION;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WowCommonsSpringTestConfig.class)
 public abstract class WowCommonsSpringTest {
+	protected static Coefficient coefficient(double value, SpellSchool school) {
+		return new Coefficient(Percent.of(value), school);
+	}
+
 	protected static void assertEffectApplication(Spell spell, SpellTarget target, int duration, int numCharges, int numStacks, int maxStacks) {
 		var command = spell.getApplyEffectCommands().getFirst();
 

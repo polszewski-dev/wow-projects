@@ -11,18 +11,22 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.impl.EffectImpl;
-import wow.commons.model.spell.*;
+import wow.commons.model.spell.EffectApplication;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellId;
+import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.component.ComponentCommand;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
-import static wow.commons.model.spell.SpellTargetType.GROUND;
-import static wow.commons.model.spell.SpellTargetType.TARGET;
 import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.*;
@@ -65,51 +69,11 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	void addSpell(Spell spell) {
-		validateSpell(spell);
 		putForEveryPhase(spellsById, spell.getId(), spell);
 	}
 
 	void addEffect(Effect effect) {
-		validateEffect(effect);
 		putForEveryPhase(effectById, effect.getId(), effect);
-	}
-
-	private void validateSpell(Spell spell) {
-		if (!(spell instanceof Ability ability)) {
-			return;
-		}
-
-		if (ability.isChanneled() && !ability.getCastTime().isZero()) {
-			throw new IllegalArgumentException("Channeled ability with non-zero cast time: " + ability);
-		}
-
-		for (var applyEffectCommand : ability.getApplyEffectCommands()) {
-			var effectTarget = applyEffectCommand.target();
-			var effect = applyEffectCommand.effect();
-
-			if (ability.isChanneled() && effectTarget.isAoE() && !effectTarget.hasType(GROUND)) {
-				throw new IllegalArgumentException("Channeled ability with AoE effect target: " + ability);
-			}
-
-			for (var periodicCommand : effect.getPeriodicCommands()) {
-				var commandTarget = periodicCommand.target();
-
-				if (effectTarget.hasType(GROUND) && commandTarget.hasType(TARGET)) {
-					throw new IllegalArgumentException("Ground effect has no target specified");
-				}
-			}
-		}
-	}
-
-	private void validateEffect(Effect effect) {
-		if (effect.hasAugmentedAbilities() &&
-				(effect.hasPeriodicComponent() || effect.hasAbsorptionComponent())) {
-			throw new IllegalArgumentException();
-		}
-
-		if (effect.hasPeriodicComponent()) {
-			Objects.requireNonNull(effect.getTickInterval());
-		}
 	}
 
 	public List<Spell> getSpells() {
