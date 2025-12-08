@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.tbc.ability.druid.balance;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcDruidSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -51,7 +51,7 @@ class InsectSwarmTest extends TbcDruidSpellSimulationTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = { 0, 100, 1000 })
+	@MethodSource("spellDamageLevels")
 	void damage_done(int spellDamage) {
 		simulateDamagingSpell(INSECT_SWARM, spellDamage);
 

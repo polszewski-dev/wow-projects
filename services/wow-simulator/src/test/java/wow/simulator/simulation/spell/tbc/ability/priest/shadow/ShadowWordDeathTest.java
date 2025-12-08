@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.tbc.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -41,7 +41,7 @@ class ShadowWordDeathTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = { 0, 100, 1000 })
+	@MethodSource("spellDamageLevels")
 	void damage_done(int spellDamage) {
 		simulateDamagingSpell(SHADOW_WORD_DEATH, spellDamage);
 

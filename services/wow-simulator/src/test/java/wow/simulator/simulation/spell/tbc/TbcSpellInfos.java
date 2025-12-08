@@ -2,6 +2,8 @@ package wow.simulator.simulation.spell.tbc;
 
 import wow.simulator.util.SpellInfo;
 
+import java.util.List;
+
 import static wow.test.commons.AbilityNames.*;
 
 /**
@@ -80,4 +82,12 @@ public interface TbcSpellInfos {
 	SpellInfo HOLY_SHOCK_INFO = new SpellInfo(HOLY_SHOCK, 650, 0).withDirect(721, 779, 42.85);
 	SpellInfo HOLY_SHOCK_HEALING_PART_INFO = new SpellInfo(HOLY_SHOCK, 650, 0).withDirect(913, 987, 42.85);
 	SpellInfo HOLY_WRATH_INFO = new SpellInfo(HOLY_WRATH, 825, 2).withDirect(637, 748, 19.05);
+
+	static List<Integer> spellDamageLevels() {
+		return List.of(0, 100, 1000);
+	}
+
+	static List<Integer> spellHealingLevels() {
+		return List.of(0, 100, 1000);
+	}
 }
