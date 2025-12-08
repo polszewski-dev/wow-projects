@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -99,13 +101,12 @@ class DrainLifeTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(DRAIN_LIFE);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(DRAIN_LIFE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(DRAIN_LIFE, DRAIN_LIFE_INFO.damage());
+		assertDamageDone(DRAIN_LIFE_INFO, spellDamage);
 	}
 
 	@Test

@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -40,12 +42,11 @@ class CurseOfDoomTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(CURSE_OF_DOOM);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(CURSE_OF_DOOM, spellDamage);
 
-		updateUntil(60);
-
-		assertDamageDone(CURSE_OF_DOOM, CURSE_OF_DOOM_INFO.damage());
+		assertDamageDone(CURSE_OF_DOOM_INFO, spellDamage);
 	}
 }

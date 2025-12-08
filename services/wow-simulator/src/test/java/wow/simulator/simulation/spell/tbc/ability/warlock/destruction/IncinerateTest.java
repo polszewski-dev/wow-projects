@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -36,22 +38,24 @@ class IncinerateTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(INCINERATE);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(INCINERATE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(INCINERATE, INCINERATE_INFO.damage());
+		assertDamageDone(INCINERATE_INFO, spellDamage);
 	}
 
-	@Test
-	void additionalDamageWhenImmolateIsOnTarget() {
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void additionalDamageWhenImmolateIsOnTarget(int spellDamage) {
+		addSdBonus(spellDamage);
+
 		player.cast(IMMOLATE);
 		player.cast(INCINERATE);
 
 		updateUntil(30);
 
-		assertDamageDone(INCINERATE, INCINERATE_WITH_BONUS_INFO.damage());
+		assertDamageDone(INCINERATE_WITH_BONUS_INFO, spellDamage);
 	}
 }

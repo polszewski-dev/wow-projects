@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -37,22 +39,20 @@ class DeathCoilTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(DEATH_COIL);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(DEATH_COIL, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(DEATH_COIL, DEATH_COIL_INFO.damage());
+		assertDamageDone(DEATH_COIL_INFO, spellDamage);
 	}
 
-	@Test
-	void healthGained() {
-		player.cast(DEATH_COIL);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void health_gained(int spellDamage) {
+		simulateDamagingSpell(DEATH_COIL, spellDamage);
 
-		updateUntil(30);
-
-		assertHealthGained(DEATH_COIL, player, DEATH_COIL_INFO.damage());
+		assertHealthGained(DEATH_COIL, player, DEATH_COIL_INFO.damage(spellDamage));
 	}
 
 	@Override

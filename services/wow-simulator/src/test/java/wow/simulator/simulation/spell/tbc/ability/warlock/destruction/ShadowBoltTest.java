@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -74,12 +76,11 @@ class ShadowBoltTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(SHADOW_BOLT);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(SHADOW_BOLT, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(SHADOW_BOLT, SHADOW_BOLT_INFO.damage());
+		assertDamageDone(SHADOW_BOLT_INFO, spellDamage);
 	}
 }

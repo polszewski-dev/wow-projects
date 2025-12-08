@@ -90,7 +90,7 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 
 		player.cast(abilityName);
 
-		updateUntil(30);
+		updateUntil(60);
 	}
 
 	protected void simulateHealingSpell(String abilityName, int healing) {
@@ -99,13 +99,13 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 		player2.setCurrentHealth(1);
 		player.cast(abilityName, player2);
 
-		updateUntil(30);
+		updateUntil(60);
 	}
 
 	protected void simulateBuffSpell(String abilityName) {
 		player.cast(abilityName);
 
-		updateUntil(30);
+		updateUntil(60);
 	}
 
 	protected void assertHealthGained(SpellInfo spellInfo, int sp) {

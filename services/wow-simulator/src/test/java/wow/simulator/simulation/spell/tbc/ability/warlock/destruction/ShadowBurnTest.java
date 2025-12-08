@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -85,13 +87,12 @@ class ShadowBurnTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(SHADOWBURN);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(SHADOWBURN, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(SHADOWBURN, SHADOWBURN_INFO.damage());
+		assertDamageDone(SHADOWBURN_INFO, spellDamage);
 	}
 
 	@Override

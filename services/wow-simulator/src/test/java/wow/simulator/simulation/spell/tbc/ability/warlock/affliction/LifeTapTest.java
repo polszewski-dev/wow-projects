@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,15 +39,20 @@ class LifeTapTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void correct_amount_of_mana_gained() {
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void correct_amount_of_mana_gained(int spellPower) {
+		addSpBonus(spellPower);
 		setMana(player, 0);
 
 		player.cast(LIFE_TAP);
 
 		updateUntil(30);
 
-		assertThat(player.getCurrentMana() - regeneratedMana).isEqualTo(582);
+		var actual = player.getCurrentMana() - regeneratedMana;
+		var expected = (int) LIFE_TAP_INFO.damage(spellPower);
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@Test

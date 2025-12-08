@@ -39,7 +39,7 @@ public interface TbcSpellInfos {
 	SpellInfo CONFLAGRATE_INFO = new SpellInfo(CONFLAGRATE, 305, 0).withDirect(579, 721, 42.86);
 	SpellInfo IMMOLATE_INFO = new SpellInfo(IMMOLATE, 445, 2).withDirect(332, 332, 18.65).withPeriodic(615, 63.63, 15, 5);
 	SpellInfo INCINERATE_INFO = new SpellInfo(INCINERATE, 355, 2.5).withDirect(444, 514, 71.43);
-	SpellInfo INCINERATE_WITH_BONUS_INFO = new SpellInfo(INCINERATE, 0, 0).withDirect(444 + 111, 514 + 128, 0);
+	SpellInfo INCINERATE_WITH_BONUS_INFO = new SpellInfo(INCINERATE, 355, 2.5).withDirect(444 + 111, 514 + 128, 71.43);
 	SpellInfo SEARING_PAIN_INFO = new SpellInfo(SEARING_PAIN, 205, 1.5).withDirect(270, 320, 42.86);
 	SpellInfo SHADOW_BOLT_INFO = new SpellInfo(SHADOW_BOLT, 420, 3).withDirect(544, 607, 85.71);
 	SpellInfo SHADOWBURN_INFO = new SpellInfo(SHADOWBURN, 435, 0).withDirect(597, 665, 42.86);

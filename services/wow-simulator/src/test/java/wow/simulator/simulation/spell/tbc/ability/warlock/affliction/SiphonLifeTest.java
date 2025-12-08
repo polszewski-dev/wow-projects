@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -137,13 +139,12 @@ class SiphonLifeTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(SIPHON_LIFE);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(SIPHON_LIFE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(SIPHON_LIFE, SIPHON_LIFE_INFO.damage());
+		assertDamageDone(SIPHON_LIFE_INFO, spellDamage);
 	}
 
 	@Test

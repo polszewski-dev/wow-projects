@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -36,12 +38,11 @@ class SoulFireTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(SOUL_FIRE);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(SOUL_FIRE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(SOUL_FIRE, SOUL_FIRE_INFO.damage());
+		assertDamageDone(SOUL_FIRE_INFO, spellDamage);
 	}
 }

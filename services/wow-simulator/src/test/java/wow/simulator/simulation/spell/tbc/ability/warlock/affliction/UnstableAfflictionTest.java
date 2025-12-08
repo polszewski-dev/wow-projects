@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -87,13 +89,12 @@ class UnstableAfflictionTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(UNSTABLE_AFFLICTION);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(UNSTABLE_AFFLICTION, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(UNSTABLE_AFFLICTION, UNSTABLE_AFFLICTION_INFO.damage());
+		assertDamageDone(UNSTABLE_AFFLICTION_INFO, spellDamage);
 	}
 
 	@Override

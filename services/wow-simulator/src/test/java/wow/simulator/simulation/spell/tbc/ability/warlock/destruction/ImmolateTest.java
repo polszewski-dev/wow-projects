@@ -1,6 +1,8 @@
 package wow.simulator.simulation.spell.tbc.ability.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
@@ -86,12 +88,11 @@ class ImmolateTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void damageDone() {
-		player.cast(IMMOLATE);
+	@ParameterizedTest
+	@MethodSource("spellDamageLevels")
+	void damage_done(int spellDamage) {
+		simulateDamagingSpell(IMMOLATE, spellDamage);
 
-		updateUntil(30);
-
-		assertDamageDone(IMMOLATE, IMMOLATE_INFO.damage());
+		assertDamageDone(IMMOLATE_INFO, spellDamage);
 	}
 }
