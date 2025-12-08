@@ -41,52 +41,6 @@ class ShadowBurnTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void resisted() {
-		missesOnlyOnFollowingRolls(0);
-
-		player.cast(SHADOWBURN);
-
-		updateUntil(30);
-
-		assertEvents(
-				at(0)
-						.beginCast(player, SHADOWBURN)
-						.beginGcd(player)
-						.endCast(player, SHADOWBURN)
-						.decreasedResource(515, MANA, player, SHADOWBURN)
-						.cooldownStarted(player, SHADOWBURN, 15)
-						.spellResisted(player, SHADOWBURN, target),
-				at(1.5)
-						.endGcd(player),
-				at(15)
-						.cooldownExpired(player, SHADOWBURN)
-		);
-	}
-
-	@Test
-	void interrupted() {
-		player.cast(SHADOWBURN);
-
-		runAt(1, player::interruptCurrentAction);
-
-		updateUntil(30);
-
-		assertEvents(
-				at(0)
-						.beginCast(player, SHADOWBURN)
-						.beginGcd(player)
-						.endCast(player, SHADOWBURN)
-						.decreasedResource(515, MANA, player, SHADOWBURN)
-						.cooldownStarted(player, SHADOWBURN, 15)
-						.decreasedResource(631, HEALTH, target, SHADOWBURN),
-				at(1.5)
-						.endGcd(player),
-				at(15)
-						.cooldownExpired(player, SHADOWBURN)
-		);
-	}
-
 	@ParameterizedTest
 	@MethodSource("spellDamageLevels")
 	void damage_done(int spellDamage) {

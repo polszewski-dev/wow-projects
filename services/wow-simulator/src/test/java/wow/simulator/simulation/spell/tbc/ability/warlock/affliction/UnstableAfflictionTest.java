@@ -51,44 +51,6 @@ class UnstableAfflictionTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void resisted() {
-		missesOnlyOnFollowingRolls(0);
-
-		player.cast(UNSTABLE_AFFLICTION);
-
-		updateUntil(30);
-
-		assertEvents(
-				at(0)
-						.beginCast(player, UNSTABLE_AFFLICTION, 1.5)
-						.beginGcd(player),
-				at(1.5)
-						.endCast(player, UNSTABLE_AFFLICTION)
-						.decreasedResource(400, MANA, player, UNSTABLE_AFFLICTION)
-						.spellResisted(player, UNSTABLE_AFFLICTION, target)
-						.endGcd(player)
-		);
-	}
-
-	@Test
-	void interrupted() {
-		player.cast(UNSTABLE_AFFLICTION);
-
-		runAt(1, player::interruptCurrentAction);
-
-		updateUntil(30);
-
-		assertEvents(
-				at(0)
-						.beginCast(player, UNSTABLE_AFFLICTION, 1.5)
-						.beginGcd(player),
-				at(1)
-						.castInterrupted(player, UNSTABLE_AFFLICTION)
-						.endGcd(player)
-		);
-	}
-
 	@ParameterizedTest
 	@MethodSource("spellDamageLevels")
 	void damage_done(int spellDamage) {

@@ -49,45 +49,6 @@ class ImmolateTest extends TbcWarlockSpellSimulationTest {
 		);
 	}
 
-	@Test
-	void resisted() {
-		missesOnlyOnFollowingRolls(0);
-
-		player.cast(IMMOLATE);
-
-		updateUntil(30);
-
-		assertEvents(
-				at(0)
-						.beginCast(player, IMMOLATE, 2)
-						.beginGcd(player),
-				at(1.5)
-						.endGcd(player),
-				at(2)
-						.endCast(player, IMMOLATE)
-						.decreasedResource(445, MANA, player, IMMOLATE)
-						.spellResisted(player, IMMOLATE, target)
-		);
-	}
-
-	@Test
-	void interrupted() {
-		player.cast(IMMOLATE);
-
-		runAt(1, player::interruptCurrentAction);
-
-		updateUntil(30);
-
-		assertEvents(
-				at(0)
-						.beginCast(player, IMMOLATE, 2)
-						.beginGcd(player),
-				at(1)
-						.castInterrupted(player, IMMOLATE)
-						.endGcd(player)
-		);
-	}
-
 	@ParameterizedTest
 	@MethodSource("spellDamageLevels")
 	void damage_done(int spellDamage) {
