@@ -2,6 +2,7 @@ package wow.simulator.simulation;
 
 import wow.commons.model.Duration;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 /**
@@ -17,7 +18,7 @@ abstract class ResourceTest extends TbcPriestSpellSimulationTest {
 		return player.getEffect(effectName).orElseThrow();
 	}
 
-	private record HealthManaStatus(
+	private record ResourceStatus(
 			int currentHealth,
 			int maxHealth,
 			int currentMana,
@@ -25,26 +26,26 @@ abstract class ResourceTest extends TbcPriestSpellSimulationTest {
 			int regeneratedMana
 	) {}
 
-	private final TestSnapshots<HealthManaStatus> healtManaStatusSnapshots = new TestSnapshots<>();
+	private final TestSnapshots<ResourceStatus> resourceStatusSnapshots = new TestSnapshots<>();
 
 	int currentHealthAt(double time) {
-		return healtManaStatusSnapshots.get(time).currentHealth;
+		return resourceStatusSnapshots.get(time).currentHealth;
 	}
 
 	int maxHealthAt(double time) {
-		return healtManaStatusSnapshots.get(time).maxHealth;
+		return resourceStatusSnapshots.get(time).maxHealth;
 	}
 
 	int currentManaAt(double time) {
-		return healtManaStatusSnapshots.get(time).currentMana;
+		return resourceStatusSnapshots.get(time).currentMana;
 	}
 
 	int maxManaAt(double time) {
-		return healtManaStatusSnapshots.get(time).maxMana;
+		return resourceStatusSnapshots.get(time).maxMana;
 	}
 
 	int regeneratedManaAt(double time) {
-		return healtManaStatusSnapshots.get(time).regeneratedMana;
+		return resourceStatusSnapshots.get(time).regeneratedMana;
 	}
 
 	@Override
@@ -58,16 +59,20 @@ abstract class ResourceTest extends TbcPriestSpellSimulationTest {
 
 	void snapshotAt(int... times) {
 		for (int time : times) {
-			healtManaStatusSnapshots.makeSnapshotsAt(
-					() -> new HealthManaStatus(
-							player.getCurrentHealth(),
-							player.getMaxHealth(),
-							player.getCurrentMana(),
-							player.getMaxMana(),
-							regeneratedMana
-					),
+			resourceStatusSnapshots.makeSnapshotsAt(
+					() -> resourceStatus(player),
 					time
 			);
 		}
+	}
+
+	private ResourceStatus resourceStatus(Unit unit) {
+		return new ResourceStatus(
+				unit.getCurrentHealth(),
+				unit.getMaxHealth(),
+				unit.getCurrentMana(),
+				unit.getMaxMana(),
+				getRegeneratedMana(unit)
+		);
 	}
 }

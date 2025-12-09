@@ -1,6 +1,7 @@
 package wow.simulator;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,7 @@ import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.util.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -554,16 +552,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		simulation.getScheduler().add(Time.at(time), runnable);
 	}
 
-	private final TestSnapshots<StatSummary> statSnapshots = new TestSnapshots<>();
-
-	protected void snapshotStatsAt(double... times) {
-		statSnapshots.makeSnapshotsAt(() -> player.getStats(), times);
-	}
-
-	protected StatSummary statsAt(double time) {
-		return statSnapshots.get(time);
-	}
-
 	protected double timeBefore = 0;
 	protected double timeAfter = 5;
 
@@ -644,8 +632,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void makeSnapshotsUntil(double timeUntil) {
 		for (var time = 0; time <= timeUntil; ++time) {
-			snapshotStatsAt(time);
+			runAt(time, this::snapshotAllSimulationUnitStats);
 		}
+	}
+
+	private void snapshotAllSimulationUnitStats() {
+		simulation.forEachUnit(unit -> getContext(unit).makeSnapshot());
 	}
 
 	public class TestSnapshots<T> {
@@ -660,5 +652,50 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public T get(double time) {
 			return Objects.requireNonNull(snapshotsByTime.get(time));
 		}
+	}
+
+	@RequiredArgsConstructor
+	protected static class UnitTestContext {
+		public final Unit unit;
+		public int regeneratedHealth;
+		public int regeneratedMana;
+		public final Map<Time, StatSummary> statSnapshotsByTime = new TreeMap<>();
+
+		public void makeSnapshot() {
+			var stats = unit.getStats();
+			var time = unit.now();
+
+			statSnapshotsByTime.put(time, stats);
+		}
+
+		public StatSummary statsAt(double time) {
+			return statSnapshotsByTime.get(Time.at(time));
+		}
+	}
+
+	private final Map<Unit, UnitTestContext> contextMap = new HashMap<>();
+
+	protected UnitTestContext getContext(Unit unit) {
+		return contextMap.computeIfAbsent(unit, UnitTestContext::new);
+	}
+
+	protected int getRegeneratedHealth(Unit unit) {
+		return getContext(unit).regeneratedHealth;
+	}
+
+	protected int getRegeneratedMana(Unit unit) {
+		return getContext(unit).regeneratedMana;
+	}
+
+	protected int getManaDifference(Player unit) {
+		return unit.getCurrentMana() - getRegeneratedMana(unit);
+	}
+
+	protected StatSummary statsAt(Unit unit, double time) {
+		return getContext(unit).statsAt(time);
+	}
+
+	protected StatSummary statsAt(double time) {
+		return statsAt(player, time);
 	}
 }

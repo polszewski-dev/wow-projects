@@ -90,4 +90,8 @@ public interface TbcSpellInfos {
 	static List<Integer> spellHealingLevels() {
 		return List.of(0, 100, 1000);
 	}
+
+	static List<Integer> spellPowerLevels() {
+		return List.of(0, 100, 1000);
+	}
 }

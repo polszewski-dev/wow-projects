@@ -27,7 +27,9 @@ class T3P8BonusTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertThat(player.getCurrentMana() - regeneratedMana).isEqualTo(959);// (582 + 0.8*272) * 1.2
+		int actual = getManaDifference(player);
+
+		assertThat(actual).isEqualTo(959);// (582 + 0.8*272) * 1.2
 
 		assertEvents(
 				at(0)

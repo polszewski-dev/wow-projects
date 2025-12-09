@@ -49,7 +49,7 @@ class LifeTapTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		var actual = player.getCurrentMana() - regeneratedMana;
+		var actual = getManaDifference(player);
 		var expected = (int) LIFE_TAP_INFO.damage(spellPower);
 
 		assertThat(actual).isEqualTo(expected);

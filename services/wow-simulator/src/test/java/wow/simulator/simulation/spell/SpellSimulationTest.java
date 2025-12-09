@@ -69,19 +69,20 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	protected Unit target3;
 	protected Unit target4;
 
-	protected int regeneratedHealth;
-	protected int regeneratedMana;
-
 	protected CharacterClassId partyMemberClassId = WARLOCK;
 	protected RaceId partyMemberRaceId = ORC;
 
 	@Override
 	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-		if (target == player && spell == null) {
-			switch (type) {
-				case HEALTH -> regeneratedHealth += amount;
-				case MANA -> regeneratedMana += amount;
-			}
+		if (spell != null) {
+			return;
+		}
+
+		var ctx = getContext(target);
+
+		switch (type) {
+			case HEALTH -> ctx.regeneratedHealth += amount;
+			case MANA -> ctx.regeneratedMana += amount;
 		}
 	}
 
