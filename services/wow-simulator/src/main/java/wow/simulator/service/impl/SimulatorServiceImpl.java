@@ -22,8 +22,6 @@ import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 
-import static wow.simulator.model.time.AnyTime.TIME_IN_INFINITY;
-
 /**
  * User: POlszewski
  * Date: 2024-11-10
@@ -43,7 +41,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		scriptExecutor.setupPlayer();
 
-		target.setOnPendingActionQueueEmpty(x -> x.idleUntil(TIME_IN_INFINITY));
+		target.whenNoActionIdleForever();
 
 		var stats = new Stats();
 

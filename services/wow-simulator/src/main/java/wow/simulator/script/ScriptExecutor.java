@@ -21,7 +21,7 @@ public class ScriptExecutor {
 
 	private List<ScriptCommandExecutor> rotationCommands;
 
-	public void setupPlayer() {
+	public void setupPlayer() {// todo musi byc tryb do wykonania komend po kolei i tylko raz!!!!
 		var scriptPath = ScriptPathResolver.getScriptPath(player);
 		var script = ScriptCompiler.compileResource(scriptPath);
 		var rotationSection = script.getSection(ROTATION);

@@ -118,19 +118,19 @@ class PlayerCharacterServiceTest extends ServiceTest {
 				.toList();
 
 		assertThat(list).hasSameElementsAs(List.of(
-				"warlock-destro-shadow.txt",
-				"warlock-curse-plus-shadow-bolt.txt",
-				"warlock-shadow-bolt-spam.txt",
-				"warlock-affliction.txt",
-				"warlock-affliction-without-ua.txt"
+				"warlock-destro-shadow",
+				"warlock-curse-plus-shadow-bolt",
+				"warlock-shadow-bolt-spam",
+				"warlock-affliction",
+				"warlock-affliction-without-ua"
 		));
 	}
 
 	@Test
 	void changeScript() {
-		var newScript = "warlock-shadow-bolt-spam.txt";
+		var newScript = "warlock-shadow-bolt-spam";
 
-		assertThat(character.getBuild().getScript()).isEqualTo("warlock-destro-shadow.txt");
+		assertThat(character.getBuild().getScript()).isEqualTo("warlock-destro-shadow");
 
 		var player = underTest.changeScript(CHARACTER_KEY, newScript);
 

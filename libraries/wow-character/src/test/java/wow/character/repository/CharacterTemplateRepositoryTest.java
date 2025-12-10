@@ -45,7 +45,7 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 
 		assertThat(characterTemplate.getTalentLink()).isEqualTo(link);
 		assertThat(characterTemplate.getRequiredRole()).isEqualTo(PveRole.CASTER_DPS);
-		assertThat(characterTemplate.getDefaultScript()).isEqualTo("warlock-destro-shadow.txt");
+		assertThat(characterTemplate.getDefaultScript()).isEqualTo("warlock-destro-shadow");
 		assertThat(characterTemplate.getActivePet()).isNull();
 		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
 				FEL_ARMOR,

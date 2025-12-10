@@ -17,7 +17,7 @@ public final class ScriptPathResolver {
 		var mainDir = "/wow/character/script";
 		var gameVersionDir = gameVersionId.toString().toLowerCase();
 
-		return "%s/%s/%s".formatted(mainDir, gameVersionDir, scriptName);
+		return "%s/%s/%s.txt".formatted(mainDir, gameVersionDir, scriptName);
 	}
 
 	public static String getScriptPath(String scriptName, GameVersion gameVersion) {

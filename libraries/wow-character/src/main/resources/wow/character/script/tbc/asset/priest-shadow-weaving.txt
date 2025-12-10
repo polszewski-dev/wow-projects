@@ -1,0 +1,10 @@
+
+#	Mind Flay casted 5 times
+
+@	WarmUp
+
+	Mind Flay
+	Mind Flay
+	Mind Flay
+	Mind Flay
+	Mind Flay

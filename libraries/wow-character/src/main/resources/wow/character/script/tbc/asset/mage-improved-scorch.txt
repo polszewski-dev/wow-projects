@@ -1,0 +1,10 @@
+
+#	Scorch casted 5 times
+
+@	WarmUp
+
+	Scorch
+	Scorch
+	Scorch
+	Scorch
+	Scorch

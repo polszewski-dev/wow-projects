@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
 import static wow.commons.model.spell.component.ComponentCommand.*;
+import static wow.simulator.model.time.AnyTime.TIME_IN_INFINITY;
 
 /**
  * User: POlszewski
@@ -149,6 +150,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty) {
 		this.onPendingActionQueueEmpty = onPendingActionQueueEmpty;
+	}
+
+	public void whenNoActionIdleForever() {
+		setOnPendingActionQueueEmpty(x -> x.idleUntil(TIME_IN_INFINITY));
 	}
 
 	@Override

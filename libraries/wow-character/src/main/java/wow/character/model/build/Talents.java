@@ -58,11 +58,18 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 
 	public boolean has(String name, int rank) {
 		var talent = talentByName.get(name);
+
 		if (rank != 0) {
 			return talent != null && talent.getRank() == rank;
 		} else {
 			return talent == null;
 		}
+	}
+
+	public boolean hasMaxRank(String name) {
+		var talent = talentByName.get(name);
+
+		return talent != null && talent.getRank() == talent.getMaxRank();
 	}
 
 	public int getRank(String name) {
@@ -119,6 +126,12 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		enable(talent);
 	}
 
+	public void enableMaxRank(String name) {
+		var talent = getTalentMaxRank(name).orElseThrow();
+
+		enable(talent);
+	}
+
 	private void enable(Talent talent) {
 		talentByName.put(talent.getName(), talent);
 	}
@@ -127,6 +140,12 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		var nameRank = new TalentNameRank(name, rank);
 
 		return Optional.ofNullable(availableTalentsByNameRank.get(nameRank));
+	}
+
+	private Optional<Talent> getTalentMaxRank(String name) {
+		return getTalent(name, 1).flatMap(
+				rank1Talent -> getTalent(name, rank1Talent.getMaxRank())
+		);
 	}
 
 	public Optional<Talent> getTalent(int talentCalculatorPosition, int rank) {
