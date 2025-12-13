@@ -51,7 +51,7 @@ import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.simulator.model.time.Time.TIME_IN_INFINITY;
+import static wow.simulator.model.time.AnyTime.TIME_IN_INFINITY;
 import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.simulator.util.CalcUtils.increaseByPct;
 
@@ -309,6 +309,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void equip(String itemName) {
+		equip(player, itemName);
+	}
+
+	protected void equip(Player player, String itemName) {
 		Item item = getItemRepository().getItem(itemName, player.getPhaseId()).orElseThrow();
 		player.equip(new EquippableItem(item));
 	}
@@ -324,6 +328,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void enableTalent(String name, int rank) {
+		enableTalent(player, name, rank);
+	}
+
+	protected void enableTalent(Player player, String name, int rank) {
 		player.getTalents().enable(name, rank);
 		getCharacterService().updateAfterRestrictionChange(player);
 	}
@@ -333,6 +341,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void addSpBonus(int amount) {
+		addSpBonus(player, amount);
+	}
+
+	protected void addSpBonus(Player player, int amount) {
 		if (amount == 0) {
 			return;
 		}
@@ -351,6 +363,14 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 			return;
 		}
 		player.addHiddenEffect("Bonus Healing", amount);
+	}
+
+	protected void addStaminaBonus(Player player, int amount) {
+		if (amount == 0) {
+			return;
+		}
+		player.addHiddenEffect("Bonus Stamina", amount);
+		player.setHealthToMax();
 	}
 
 	protected void addIntellectBonus(int amount) {
@@ -385,14 +405,28 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		unit.setCurrentMana(amount);
 	}
 
-	protected void assertEnablingTalentTeachesAbility(String talentName, String abilityName) {
-		assertThat(player.getAbility(abilityName)).isEmpty();
-		enableTalent(talentName, 1);
-		assertThat(player.getAbility(abilityName)).isPresent();
+	protected void assertIsIncreasedBy(double newValue, double originalValue, double increase) {
+		assertThat(newValue).isEqualTo(originalValue + increase, PRECISION);
+	}
+
+	protected void assertIsIncreasedBy(int newValue, int originalValue, int increase) {
+		assertThat(newValue).isEqualTo(originalValue + increase);
 	}
 
 	protected void assertIsIncreasedByPct(int newValue, int originalValue, int pct) {
 		assertThat(newValue).isEqualTo(increaseByPct(originalValue, pct));
+	}
+
+	protected void assertIsIncreasedByPct(double newValue, double originalValue, int pct) {
+		assertThat(newValue).isEqualTo(increaseByPct(originalValue, pct));
+	}
+
+	protected void assertIsIncreasedByPctNonExact(int newValue, int originalValue, double pct) {
+		var expected = increaseByPct(originalValue, pct);
+
+		if (Math.abs(newValue - expected) > 2) {
+			assertThat(newValue).isEqualTo(expected);
+		}
 	}
 
 	protected SimulationContext simulationContext;
@@ -468,9 +502,17 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertCritChanceNo(int rollChanceIdx, double value) {
-		var lastCritChance = rng.getCritRollData().getRollChances().get(rollChanceIdx);
+		var lastCritChance = getCritChanceNo(rollChanceIdx);
 
 		assertThat(lastCritChance).isEqualTo(value, PRECISION);
+	}
+
+	protected Double getHitChanceNo(int rollChanceIdx) {
+		return rng.getHitRollData().getRollChances().get(rollChanceIdx);
+	}
+
+	protected Double getCritChanceNo(int rollChanceIdx) {
+		return rng.getCritRollData().getRollChances().get(rollChanceIdx);
 	}
 
 	protected void assertLastEventChance(double value) {

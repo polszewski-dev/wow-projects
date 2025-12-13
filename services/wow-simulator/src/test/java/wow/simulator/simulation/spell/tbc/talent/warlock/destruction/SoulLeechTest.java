@@ -2,8 +2,9 @@ package wow.simulator.simulation.spell.tbc.talent.warlock.destruction;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
+import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.SHADOW_BOLT_INFO;
 import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 import static wow.test.commons.TalentNames.SOUL_LEECH;
@@ -12,7 +13,7 @@ import static wow.test.commons.TalentNames.SOUL_LEECH;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class SoulLeechTest extends TbcWarlockSpellSimulationTest {
+class SoulLeechTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Gives your Shadow Bolt, Shadowburn, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a 30% chance to return health equal to 20% of the damage caused.
 	 */

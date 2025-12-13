@@ -36,6 +36,7 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 	private final SpellSchool spellSchool;
 
 	private boolean direct;
+	private boolean periodic;
 
 	private Effect appliedEffect;
 

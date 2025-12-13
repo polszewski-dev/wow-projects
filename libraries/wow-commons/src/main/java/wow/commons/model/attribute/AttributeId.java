@@ -58,6 +58,7 @@ public enum AttributeId {
 	HEALING_TAKEN("HealingTaken"),
 	HEALING_TAKEN_PCT("HealingTaken%"),
 	POWER_TAKEN("PowerTaken"),
+	HIT_TAKEN("HitTaken%"),
 	CRIT_TAKEN_PCT("CritTaken%"),
 
 	PENETRATION("Penetration"),

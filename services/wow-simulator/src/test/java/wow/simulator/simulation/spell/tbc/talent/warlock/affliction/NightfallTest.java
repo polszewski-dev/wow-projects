@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.tbc.talent.warlock.affliction;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -16,7 +16,7 @@ import static wow.test.commons.TalentNames.NIGHTFALL;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class NightfallTest extends TbcWarlockSpellSimulationTest {
+class NightfallTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Gives your Corruption and Drain Life spells a 4% chance to cause you to enter a Shadow Trance state after damaging the opponent.
 	The Shadow Trance state reduces the casting time of your next Shadow Bolt spell by 100%.

@@ -22,6 +22,7 @@ public enum AbilityCategory {
 	POISONS("Poisons"),
 	SEALS("Seals"),
 	SHAPESHIFTS("Shapeshifts"),
+	SHOCKS("Shocks"),
 	SHIELDS("Shields"),
 	TOTEMS("Totems"),
 

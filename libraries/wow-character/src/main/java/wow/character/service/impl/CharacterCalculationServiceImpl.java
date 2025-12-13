@@ -112,6 +112,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
 		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, command.school());
 
+		conditionArgs.setPeriodic(true);
+
 		return newAccumulatedSpellStats(character, conditionArgs);
 	}
 
@@ -539,7 +541,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public RegenSnapshot getRegenSnapshot(Character character) {
 		var baseStats = getBaseStatsSnapshot(character);
-		var regenStats = getRegenStats(character);
+		var regenStats = getRegenStats(character, baseStats);
 
 		var spiritBasedRegen = getSpiritBasedRegen(baseStats, character);
 		var manaRegenPct = regenStats.getManaRegenPct();
@@ -587,11 +589,11 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return BASE_MANA_REGEN_PER_LEVEL[level];
 	}
 
-	private AccumulatedRegenStats getRegenStats(Character character) {
+	private AccumulatedRegenStats getRegenStats(Character character, BaseStatsSnapshot baseStats) {
 		var conditionArgs = AttributeConditionArgs.forRegen(character);
 		var regenStats = new AccumulatedRegenStats(conditionArgs);
 
-		accumulateEffects(character, regenStats);
+		accumulateEffects(character, regenStats, baseStats);
 
 		return regenStats;
 	}
@@ -620,9 +622,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		snapshot.setBaseStatsSnapshot(baseStatsSnapshot);
 		snapshot.setSpellPower((int) spellStats.getPower());
-		snapshot.setSpellDamage(getSpellDamage(character));
-
-		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character));
+		snapshot.setSpellDamage(getSpellDamage(character, baseStatsSnapshot));
+		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character, baseStatsSnapshot));
+		snapshot.setSpellHealing(getSpellHealing(character, baseStatsSnapshot));
 		snapshot.setSpellHitPctBonus(getSpellHitPctBonus(character, hitStats));
 		snapshot.setSpellHitPct(getSpellHitPct(character, hitStats, levelDifference));
 		snapshot.setSpellCritPct(getSpellCritPct(character, spellStats, baseStatsSnapshot, targetStats));
@@ -700,27 +702,30 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return value * max(ratioPct / 100.0, 0) * max(1 + increasePct / 100.0, 0);
 	}
 
-	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character) {
+	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character, BaseStatsSnapshot baseStats) {
 		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
 				Function.identity(),
-				school -> getSpellDamage(character, school)
+				school -> getSpellDamage(character, school, baseStats)
 		));
 	}
 
-	private int getSpellDamage(Character character) {
-		return getSpellDamage(character, (SpellSchool) null);
+	private int getSpellDamage(Character character, BaseStatsSnapshot baseStats) {
+		return getSpellDamage(character, null, baseStats);
 	}
 
-	private int getSpellDamage(Character character, SpellSchool school) {
-		var conditionArgs = AttributeConditionArgs.forAnySpell(character, SPELL_DAMAGE, school);
-
-		return getSpellDamage(character, conditionArgs);
+	private int getSpellDamage(Character character, SpellSchool school, BaseStatsSnapshot baseStats) {
+		return getSpellAmount(character, baseStats, SPELL_DAMAGE, school);
 	}
 
-	private int getSpellDamage(Character character, AttributeConditionArgs conditionArgs) {
+	private int getSpellHealing(Character character, BaseStatsSnapshot baseStats) {
+		return getSpellAmount(character, baseStats, HEALING, null);
+	}
+
+	private int getSpellAmount(Character character, BaseStatsSnapshot baseStats, PowerType powerType, SpellSchool school) {
+		var conditionArgs = AttributeConditionArgs.forAnySpell(character, powerType, school);
 		var spellStats = new AccumulatedSpellStats(conditionArgs);
 
-		accumulateEffects(character, spellStats);
+		accumulateEffects(character, spellStats, baseStats);
 		return (int) spellStats.getPower();
 	}
 

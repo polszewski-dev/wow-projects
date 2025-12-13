@@ -14,7 +14,9 @@ public enum EffectCategory {
 	STUNS("Stuns"),
 	DISARMS("Disarms"),
 	SILENCES("Silences"),
-	INTERRUPTS("Interrupts");
+	INTERRUPTS("Interrupts"),
+	DISORIENTS("Disorients"),
+	DISEASES("Diseases");
 
 	private final String name;
 

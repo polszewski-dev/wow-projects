@@ -471,10 +471,6 @@ public abstract class ConditionParser<T extends Condition, E> {
 
 	private record PrimitiveNode(String value) implements Node {}
 
-	protected String withoutPrefix(String value, String targetClassPrefix) {
-		return value.replace(targetClassPrefix, "").trim();
-	}
-
 	protected String parseFunctionArgument(String name, String value) {
 		var regex = name + "\\((.+)\\)";
 		var result = parseMultipleValues(regex, value);

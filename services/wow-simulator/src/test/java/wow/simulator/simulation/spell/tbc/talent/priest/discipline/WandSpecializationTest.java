@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.tbc.talent.priest.discipline;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 
 import static wow.test.commons.AbilityNames.SHOOT;
 import static wow.test.commons.TalentNames.WAND_SPECIALIZATION;
@@ -11,21 +11,19 @@ import static wow.test.commons.TalentNames.WAND_SPECIALIZATION;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class WandSpecializationTest extends TbcPriestSpellSimulationTest {
+class WandSpecializationTest extends TbcPriestTalentSimulationTest {
 	/*
 	Increases your damage with Wands by 25%.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
-	void damageIsIncreased(int rank) {
-		enableTalent(WAND_SPECIALIZATION, rank);
-		equip("Wand of the Demonsoul");// 208 - 387 dmg, 1.5 speed
+	void damage_is_increased(int rank) {
+		equip(player, "Wand of the Demonsoul");
+		equip(player2, "Wand of the Demonsoul");
 
-		player.cast(SHOOT);
+		simulateTalent(WAND_SPECIALIZATION, rank, SHOOT);
 
-		updateUntil(30);
-
-		assertDamageDone(SHOOT, SHOOT_INFO.withDirect(208, 387, 0).damage(), 5 * rank);
+		assertDamageIsIncreasedByPct(5 * rank);
 	}
 }

@@ -45,6 +45,7 @@ public enum AttributeType {
 	DAMAGE_TAKEN("DamageTaken", pointsAndPercents()),
 	HEALING_TAKEN("HealingTaken", pointsAndPercents()),
 	POWER_TAKEN("PowerTaken", points()),
+	HIT_TAKEN("HitTaken", percents()),
 	CRIT_TAKEN("CritTaken", percents()),
 
 	PENETRATION("Penetration", points()),

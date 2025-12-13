@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.attribute.AttributeCondition.*;
-import static wow.commons.util.condition.AttributeConditionParser.MISC_CONDITIONS;
-import static wow.commons.util.condition.AttributeConditionParser.OWNER_HEALTH_PCT;
+import static wow.commons.util.condition.AttributeConditionParser.*;
 
 /**
  * User: POlszewski
@@ -54,6 +53,9 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 			case IsDirect() ->
 					getMiscCondition(condition);
 
+			case IsPeriodic() ->
+					getMiscCondition(condition);
+
 			case IsInstantCast() ->
 					getMiscCondition(condition);
 
@@ -62,6 +64,9 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 
 			case Operator ignored ->
 					throw new IllegalArgumentException();
+
+			case OwnerHasEffect(var abilityId) ->
+					formatFunction(OWNER_HAS_EFFECT, abilityId);
 
 			case OwnerHealthPctLessThan(var value) ->
 					formatOperator(OWNER_HEALTH_PCT, "<", value);
@@ -80,6 +85,9 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 
 			case TalentTreeCondition(var talentTree) ->
 					talentTree.getName();
+
+			case TargetHealthPctLessThan(var value) ->
+					formatOperator(TARGET_HEALTH_PCT, "<", value);
 
 			case TargetTypeCondition(var creatureType) ->
 					creatureType.getName();

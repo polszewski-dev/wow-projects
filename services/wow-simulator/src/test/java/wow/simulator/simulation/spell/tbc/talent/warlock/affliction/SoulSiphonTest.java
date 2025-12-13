@@ -2,50 +2,46 @@ package wow.simulator.simulation.spell.tbc.talent.warlock.affliction;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
-import wow.test.commons.TalentNames;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
 import static wow.test.commons.AbilityNames.*;
+import static wow.test.commons.TalentNames.SOUL_SIPHON;
 
 /**
  * User: POlszewski
  * Date: 2025-01-14
  */
-class SoulSiphonTest extends TbcWarlockSpellSimulationTest {
+class SoulSiphonTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Increases the amount drained by your Drain Life spell by an additional 4% for each Affliction effect on the target, up to a maximum of 60% additional effect.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void damageIsIncreased(int rank) {
-		enableTalent(TalentNames.SOUL_SIPHON, rank);
-
+	void damage_is_increased(int rank) {
 		player.cast(CURSE_OF_AGONY);
 		player.cast(CORRUPTION);
-		player.cast(DRAIN_LIFE);
 
-		updateUntil(30);
+		simulateTalent(SOUL_SIPHON, rank, DRAIN_LIFE);
 
 		var numberOfEffects = 2;
 
-		assertDamageDone(DRAIN_LIFE, DRAIN_LIFE_INFO.damage(), 2 * rank * numberOfEffects);
+		assertDamageIsIncreasedByPct(2 * rank * numberOfEffects);
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void healthGainedIsIncreased(int rank) {
-		enableTalent(TalentNames.SOUL_SIPHON, rank);
-
+	void healing_is_increased(int rank) {
 		player.cast(CURSE_OF_AGONY);
 		player.cast(CORRUPTION);
-		player.cast(DRAIN_LIFE);
 
-		updateUntil(30);
+		testingHealingAbility();
+
+		simulateTalent(SOUL_SIPHON, rank, DRAIN_LIFE);
 
 		var numberOfEffects = 2;
 
-		assertHealthGained(DRAIN_LIFE, player, DRAIN_LIFE_INFO.damage(), 2 * rank * numberOfEffects);
+		assertSelfHealingIsIncreasedByPct(2 * rank * numberOfEffects);
 	}
 
 	@Override

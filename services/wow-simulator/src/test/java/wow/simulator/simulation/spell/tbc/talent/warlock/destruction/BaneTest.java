@@ -2,42 +2,41 @@ package wow.simulator.simulation.spell.tbc.talent.warlock.destruction;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
-import static wow.test.commons.AbilityNames.IMMOLATE;
-import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TalentNames.BANE;
 
 /**
  * User: POlszewski
  * Date: 2024-12-01
  */
-class BaneTest extends TbcWarlockSpellSimulationTest {
+class BaneTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Reduces the casting time of your Shadow Bolt and Immolate spells by 0.5 sec and your Soul Fire spell by 2 sec.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
-	void shadowBolt(int rank) {
-		enableTalent(BANE, rank);
+	void sb_cast_time_is_reduced(int rank) {
+		simulateTalent(BANE, rank, SHADOW_BOLT);
 
-		player.cast(SHADOW_BOLT);
-
-		updateUntil(30);
-
-		assertCastTime(SHADOW_BOLT, SHADOW_BOLT_INFO.baseCastTime() - 0.1 * rank);
+		assertCastTimeIsReducedBy(0.1 * rank);
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
-	void immolate(int rank) {
-		enableTalent(BANE, rank);
+	void immolate_cast_time_is_reduced(int rank) {
+		simulateTalent(BANE, rank, IMMOLATE);
 
-		player.cast(IMMOLATE);
+		assertCastTimeIsReducedBy(0.1 * rank);
+	}
 
-		updateUntil(30);
+	@ParameterizedTest
+	@ValueSource(ints = { 1, 2, 3, 4, 5 })
+	void soul_fire_cast_time_is_reduced(int rank) {
+		simulateTalent(BANE, rank, SOUL_FIRE);
 
-		assertCastTime(IMMOLATE, IMMOLATE_INFO.baseCastTime() - 0.1 * rank);
+		assertCastTimeIsReducedBy(0.4 * rank);
 	}
 }

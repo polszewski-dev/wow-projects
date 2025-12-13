@@ -132,8 +132,16 @@ class AttributeConditionParserTest {
 					new HasPet()
 			),
 			testData(
+					"Owner.HasEffect(Mana Shield)",
+					new OwnerHasEffect(MANA_SHIELD)
+			),
+			testData(
 					"Owner.Health% < 35",
 					new OwnerHealthPctLessThan(35)
+			),
+			testData(
+					"Target.Health% < 20",
+					new TargetHealthPctLessThan(20)
 			),
 			testData(
 					"Create Firestone (Greater)",
@@ -165,7 +173,11 @@ class AttributeConditionParserTest {
 			),
 			testData(
 					"Healing & Direct",
-					and(AttributeConditions.HEALING, AttributeCondition.IS_DIRECT)
+					and(AttributeConditions.HEALING, IS_DIRECT)
+			),
+			testData(
+					"Healing & Periodic",
+					and(AttributeConditions.HEALING, IS_PERIODIC)
 			),
 			testData(
 					"Shadow | Frost",
@@ -173,7 +185,7 @@ class AttributeConditionParserTest {
 			),
 			testData(
 					"Shadow | Frost | Fire",
-					or(of(SHADOW), AttributeCondition.or(of(FROST), of(FIRE)))
+					or(of(SHADOW), or(of(FROST), of(FIRE)))
 			),
 			testData(
 					"Physical & Owner.Health% < 40",

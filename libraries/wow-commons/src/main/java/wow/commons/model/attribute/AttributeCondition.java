@@ -29,6 +29,7 @@ public sealed interface AttributeCondition extends Condition {
 	EmptyCondition EMPTY = new EmptyCondition();
 
 	IsDirect IS_DIRECT = new IsDirect();
+	IsPeriodic IS_PERIODIC = new IsPeriodic();
 	HasHealingComponent HAS_HEALING_COMPONENT = new HasHealingComponent();
 	IsInstantCast IS_INSTANT_CAST = new IsInstantCast();
 	HasCastTime HAS_CAST_TIME = new HasCastTime();
@@ -224,6 +225,8 @@ public sealed interface AttributeCondition extends Condition {
 
 	record IsDirect() implements AttributeCondition {}
 
+	record IsPeriodic() implements AttributeCondition {}
+
 	record HasHealingComponent() implements AttributeCondition {}
 
 	record IsInstantCast() implements AttributeCondition {}
@@ -236,7 +239,15 @@ public sealed interface AttributeCondition extends Condition {
 
 	record HasPet() implements AttributeCondition {}
 
+	record OwnerHasEffect(AbilityId abilityId) implements AttributeCondition {
+		public OwnerHasEffect {
+			Objects.requireNonNull(abilityId);
+		}
+	}
+
 	record OwnerHealthPctLessThan(double value) implements AttributeCondition {}
+
+	record TargetHealthPctLessThan(double value) implements AttributeCondition {}
 }
 
 class AttributeConditionCache extends ConditionCache<AttributeCondition> {

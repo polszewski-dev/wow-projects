@@ -2,10 +2,9 @@ package wow.simulator.simulation.spell.tbc.talent.priest.discipline;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.character.model.snapshot.StatSummary;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static wow.simulator.util.CalcUtils.increaseByPct;
 import static wow.test.commons.AbilityNames.POWER_WORD_FORTITUDE;
 import static wow.test.commons.TalentNames.IMPROVED_POWER_WORD_FORTITUDE;
 
@@ -13,23 +12,16 @@ import static wow.test.commons.TalentNames.IMPROVED_POWER_WORD_FORTITUDE;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class ImprovedPowerWordFortitudeTest extends TbcPriestSpellSimulationTest {
+class ImprovedPowerWordFortitudeTest extends TbcPriestTalentSimulationTest {
 	/*
 	Increases the effect of your Power Word: Fortitude and Prayer of Fortitude spells by 30%.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void effectIsIncreased(int rank) {
-		enableTalent(IMPROVED_POWER_WORD_FORTITUDE, rank);
+	void stamina_bonus_is_increased(int rank) {
+		simulateTalent(IMPROVED_POWER_WORD_FORTITUDE, rank, POWER_WORD_FORTITUDE);
 
-		player.cast(POWER_WORD_FORTITUDE);
-
-		updateUntil(30);
-
-		var staminaBefore = statsAt(0).getStamina();
-		var staminaAfter = statsAt(1).getStamina();
-
-		assertThat(staminaAfter).isEqualTo(staminaBefore + increaseByPct(79, 15 * rank));
+		assertStatBonusIsIncreasedByPct(StatSummary::getStamina, 15 * rank);
 	}
 }

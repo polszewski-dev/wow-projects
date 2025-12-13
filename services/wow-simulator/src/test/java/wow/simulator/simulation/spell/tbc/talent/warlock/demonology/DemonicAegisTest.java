@@ -2,9 +2,9 @@ package wow.simulator.simulation.spell.tbc.talent.warlock.demonology;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.character.model.snapshot.StatSummary;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.test.commons.AbilityNames.FEL_ARMOR;
 import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
 
@@ -12,23 +12,16 @@ import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class DemonicAegisTest extends TbcWarlockSpellSimulationTest {
+class DemonicAegisTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Increases the effectiveness of your Demon Armor and Fel Armor spells by 30%.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
-	void spellDamageIsIncreased(int rank) {
-		enableTalent(DEMONIC_AEGIS, rank);
+	void fel_armor_spell_damage_bonus_is_increased(int rank) {
+		simulateTalent(DEMONIC_AEGIS, rank, FEL_ARMOR);
 
-		player.cast(FEL_ARMOR);
-
-		updateUntil(30);
-
-		var sdBefore = statsAt(0).getSpellDamage();
-		var sdAfter = statsAt(1).getSpellDamage();
-
-		assertThat(sdAfter).isEqualTo(sdBefore + 100 + 10 * rank);
+		assertStatBonusIsIncreasedByPct(StatSummary::getSpellDamage, 10 * rank);
 	}
 }

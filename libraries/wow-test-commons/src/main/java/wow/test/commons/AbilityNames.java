@@ -131,6 +131,7 @@ public interface AbilityNames {
 	String BLAST_WAVE = "Blast Wave";
 	String BLIZZARD = "Blizzard";
 	String BLINK = "Blink";
+	String COLD_SNAP = "Cold Snap";
 	String COMBUSTION = "Combustion";
 	String CONE_OF_COLD = "Cone of Cold";
 	String COUNTERSPELL = "Counterspell";
@@ -144,6 +145,7 @@ public interface AbilityNames {
 	String FROSTBOLT = "Frostbolt";
 	String ICE_ARMOR = "Ice Armor";
 	String ICE_BLOCK = "Ice Block";
+	String ICE_BARRIER = "Ice Barrier";
 	String ICE_LANCE = "Ice Lance";
 	String ICY_VEINS = "Icy Veins";
 	String MAGE_ARMOR = "Mage Armor";
@@ -153,6 +155,8 @@ public interface AbilityNames {
 	String PYROBLAST = "Pyroblast";
 	String PRESENCE_OF_MIND = "Presence of Mind";
 	String SCORCH = "Scorch";
+	String SLOW = "Slow";
+	String SUMMON_WATER_ELEMENTAL = "Summon Water Elemental";
 
 	// priest
 
@@ -225,6 +229,7 @@ public interface AbilityNames {
 	String ENTANGLING_ROOTS = "Entangling Roots";
 	String FAERIE_FIRE = "Faerie Fire";
 	String FLIGHT_FORM = "Flight Form";
+	String FORCE_OF_NATURE = "Force of Nature";
 	String GIFT_OF_THE_WILD = "Gift of the Wild";
 	String HEALING_TOUCH = "Healing Touch";
 	String HURRICANE = "Hurricane";
@@ -238,8 +243,10 @@ public interface AbilityNames {
 	String REGROWTH = "Regrowth";
 	String REJUVENATION = "Rejuvenation";
 	String STARFIRE = "Starfire";
+	String SWIFTMEND = "Swiftmend";
 	String SWIFT_FLIGHT_FORM = "Swift Flight Form";
 	String TRANQUILITY = "Tranquility";
+	String TREE_OF_LIFE = "Tree of Life";
 	String WRATH = "Wrath";
 
 	// rogue
@@ -270,7 +277,9 @@ public interface AbilityNames {
 	// shaman
 
 	String BLOODLUST = "Bloodlust";
+	String CHAIN_HEAL = "Chain Heal";
 	String CHAIN_LIGHTNING = "Chain Lightning";
+	String EARTH_SHIELD = "Earth Shield";
 	String EARTH_SHOCK = "Earth Shock";
 	String ELEMENTAL_MASTERY = "Elemental Mastery";
 	String FLAME_SHOCK = "Flame Shock";

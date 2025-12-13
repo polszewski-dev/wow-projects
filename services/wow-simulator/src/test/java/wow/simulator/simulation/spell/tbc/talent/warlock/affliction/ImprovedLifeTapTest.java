@@ -3,11 +3,12 @@ package wow.simulator.simulation.spell.tbc.talent.warlock.affliction;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcSpellInfos;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.LIFE_TAP_INFO;
 import static wow.test.commons.AbilityNames.LIFE_TAP;
 import static wow.test.commons.TalentNames.IMPROVED_LIFE_TAP;
 
@@ -15,7 +16,7 @@ import static wow.test.commons.TalentNames.IMPROVED_LIFE_TAP;
  * User: POlszewski
  * Date: 2024-12-01
  */
-class ImprovedLifeTapTest extends TbcWarlockSpellSimulationTest {
+class ImprovedLifeTapTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Increases the amount of Mana awarded by your Life Tap spell by 20%.
 	 */

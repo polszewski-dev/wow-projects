@@ -53,6 +53,9 @@ public final class AttributeConditionChecker {
 			case IsDirect() ->
 					args.isDirect();
 
+			case IsPeriodic() ->
+					args.isPeriodic();
+
 			case IsInstantCast() ->
 					args.getSpell() instanceof Ability a &&
 					a.getCastTime().isZero();
@@ -62,6 +65,9 @@ public final class AttributeConditionChecker {
 
 			case Operator operator ->
 					checkConditionOperator(operator, args);
+
+			case OwnerHasEffect(var abilityId) ->
+					args.getCaster().hasEffect(abilityId);
 
 			case OwnerHealthPctLessThan(var value) ->
 					args.getCaster().getHealthPct().value() < value;
@@ -77,6 +83,10 @@ public final class AttributeConditionChecker {
 
 			case SpellSchoolCondition(var spellSchool) ->
 					args.getSpellSchool() == spellSchool;
+
+			case TargetHealthPctLessThan(var value) ->
+					args.getTarget() != null &&
+					args.getTarget().getHealthPct().value() < value;
 
 			case TalentTreeCondition(var talentTree) ->
 					args.getSpell() instanceof ClassAbility a &&

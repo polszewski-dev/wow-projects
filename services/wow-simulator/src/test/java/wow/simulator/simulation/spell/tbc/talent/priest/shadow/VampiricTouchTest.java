@@ -1,7 +1,7 @@
 package wow.simulator.simulation.spell.tbc.talent.priest.shadow;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 import wow.test.commons.AbilityNames;
 import wow.test.commons.TalentNames;
 
@@ -9,9 +9,9 @@ import wow.test.commons.TalentNames;
  * User: POlszewski
  * Date: 2025-01-17
  */
-class VampiricTouchTest extends TbcPriestSpellSimulationTest {
+class VampiricTouchTest extends TbcPriestTalentSimulationTest {
 	@Test
-	void talentAddsSpell() {
+	void talent_adds_spell() {
 		assertEnablingTalentTeachesAbility(TalentNames.VAMPIRIC_TOUCH, AbilityNames.VAMPIRIC_TOUCH);
 	}
 }

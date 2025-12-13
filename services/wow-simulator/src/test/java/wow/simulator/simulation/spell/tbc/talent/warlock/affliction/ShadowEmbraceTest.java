@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.tbc.talent.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 import wow.simulator.util.TestEvent;
 import wow.test.commons.TalentNames;
 
@@ -15,7 +15,7 @@ import static wow.test.commons.TalentNames.SHADOW_EMBRACE;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class ShadowEmbraceTest extends TbcWarlockSpellSimulationTest {
+class ShadowEmbraceTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Your Corruption, Curse of Agony, Siphon Life and Seed of Corruption spells also cause the Shadow Embrace effect, which reduces physical damage caused by 5%.
 	 */

@@ -22,6 +22,7 @@ public class StatSummary {
 	private int spellPower;
 	private int spellDamage;
 	private Map<SpellSchool, Integer> spellDamageBySchool;
+	private int spellHealing;
 	private double spellHitPctBonus;
 	private double spellHitPct;
 	private double spellCritPct;
@@ -72,6 +73,7 @@ public class StatSummary {
 				spellPower - other.spellPower,
 				spellDamage - other.spellDamage,
 				getDamageBySchoolDifference(other),
+				spellHealing - other.spellHealing,
 				spellHitPctBonus - other.spellHitPctBonus,
 				spellHitPct - other.spellHitPct,
 				spellCritPct - other.spellCritPct,

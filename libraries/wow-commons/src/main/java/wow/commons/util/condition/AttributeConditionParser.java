@@ -108,6 +108,12 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 			return of(effectCategory);
 		}
 
+		var ownerHasEffect = tryParseOwnerHasEffect(value);
+
+		if (ownerHasEffect != null) {
+			return ownerHasEffect;
+		}
+
 		var weaponSubType = WeaponSubType.tryParse(value);
 
 		if (weaponSubType != null) {
@@ -147,6 +153,11 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 			return new OwnerHealthPctLessThan(pct);
 		}
 
+		if (TARGET_HEALTH_PCT.equalsIgnoreCase(left)) {
+			var pct = Double.parseDouble(right);
+			return new TargetHealthPctLessThan(pct);
+		}
+
 		throw new IllegalArgumentException("Can't parse: " + left);
 	}
 
@@ -160,13 +171,20 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 		return value + "";
 	}
 
+	private OwnerHasEffect tryParseOwnerHasEffect(String value) {
+		return parseAbilityIdArgument(value, OWNER_HAS_EFFECT, OwnerHasEffect::new);
+	}
+
 	static final String OWNER_HEALTH_PCT = "Owner.Health%";
+	static final String OWNER_HAS_EFFECT = "Owner.HasEffect";
+	static final String TARGET_HEALTH_PCT = "Target.Health%";
 
 	static final Map<String, AttributeCondition> MISC_CONDITIONS;
 
 	static {
 		MISC_CONDITIONS = Map.ofEntries(
 				entry("Direct", IS_DIRECT),
+				entry("Periodic", IS_PERIODIC),
 				entry("HasHealingComponent", HAS_HEALING_COMPONENT),
 				entry("IsInstantCast", IS_INSTANT_CAST),
 				entry("HasCastTime", HAS_CAST_TIME),

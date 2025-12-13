@@ -121,7 +121,7 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 				"Slip'kik's Savvy#0",
 				"Songflower Serenade#0",
 				"Shadow Vulnerability#0",
-				"Improved Scorch#0",
+				"Fire Vulnerability#0",
 				"Curse of the Elements#3",
 				"Curse of the Elements#4",
 				"Curse of the Elements (improved)#3",

@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.tbc.talent.priest.holy;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 
 import static wow.test.commons.AbilityNames.HOLY_FIRE;
 import static wow.test.commons.AbilityNames.SMITE;
@@ -12,32 +12,24 @@ import static wow.test.commons.TalentNames.SEARING_LIGHT;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class SearingLightTest extends TbcPriestSpellSimulationTest {
+class SearingLightTest extends TbcPriestTalentSimulationTest {
 	/*
 	Increases the damage of your Smite and Holy Fire spells by 10%.
 	 */
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void smiteDamageIsIncreased(int rank) {
-		enableTalent(SEARING_LIGHT, rank);
+	void smite_damage_is_increased(int rank) {
+		simulateTalent(SEARING_LIGHT, rank, SMITE);
 
-		player.cast(SMITE);
-
-		updateUntil(30);
-
-		assertDamageDone(SMITE, SMITE_INFO.damage(), 5 * rank);
+		assertDamageIsIncreasedByPct(5 * rank);
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void holyFireDamageIsIncreased(int rank) {
-		enableTalent(SEARING_LIGHT, rank);
+	void holy_fire_damage_is_increased(int rank) {
+		simulateTalent(SEARING_LIGHT, rank, HOLY_FIRE);
 
-		player.cast(HOLY_FIRE);
-
-		updateUntil(30);
-
-		assertDamageDone(HOLY_FIRE, HOLY_FIRE_INFO.damage(), 5 * rank);
+		assertDamageIsIncreasedByPct(5 * rank);
 	}
 }

@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.tbc.talent.priest.shadow;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.model.time.Time;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 import wow.simulator.util.TestEvent;
 import wow.test.commons.TalentNames;
 
@@ -16,7 +16,7 @@ import static wow.test.commons.TalentNames.SHADOW_WEAVING;
  * User: POlszewski
  * Date: 2024-11-16
  */
-class ShadowWeavingTest extends TbcPriestSpellSimulationTest {
+class ShadowWeavingTest extends TbcPriestTalentSimulationTest {
 	/*
 	Your Shadow damage spells have a 100% chance to cause your target to be vulnerable to Shadow damage.
 	This vulnerability increases the Shadow damage dealt to your target by 2% and lasts 15 sec. Stacks up to 5 times.

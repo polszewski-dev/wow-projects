@@ -70,6 +70,10 @@ public sealed interface TestEvent {
 		return this instanceof EndCast;
 	}
 
+	default boolean isCast() {
+		return isBeginCast() || isEndCast();
+	}
+
 	record BeginGcd(Time time, Unit caster) implements TestEvent {}
 
 	record EndGcd(Time time, Unit caster) implements TestEvent {}

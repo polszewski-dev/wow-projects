@@ -2,7 +2,7 @@ package wow.simulator.simulation.spell.tbc.talent.priest.holy;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -14,7 +14,7 @@ import static wow.test.commons.TalentNames.SURGE_OF_LIGHT;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class SurgeOfLightTest extends TbcPriestSpellSimulationTest {
+class SurgeOfLightTest extends TbcPriestTalentSimulationTest {
 	/*
 	Your spell criticals have a 50% chance to cause your next Smite spell to be instant cast, cost no mana but be incapable of a critical hit. This effect lasts 10 sec.
 	 */

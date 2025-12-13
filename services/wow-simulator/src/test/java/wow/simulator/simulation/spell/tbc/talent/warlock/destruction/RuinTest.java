@@ -1,7 +1,7 @@
 package wow.simulator.simulation.spell.tbc.talent.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 import static wow.test.commons.TalentNames.RUIN;
@@ -10,21 +10,17 @@ import static wow.test.commons.TalentNames.RUIN;
  * User: POlszewski
  * Date: 2025-01-14
  */
-class RuinTest extends TbcWarlockSpellSimulationTest {
+class RuinTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Increases the critical strike damage bonus of your Destruction spells by 100%.
 	 */
 
 	@Test
-	void critDamageBonusIncreased() {
+	void crit_damage_bonus_is_increased() {
 		critsOnlyOnFollowingRolls(0);
 
-		enableTalent(RUIN, 1);
+		simulateTalent(RUIN, 1, SHADOW_BOLT);
 
-		player.cast(SHADOW_BOLT);
-
-		updateUntil(30);
-
-		assertDamageDone(SHADOW_BOLT, SHADOW_BOLT_INFO.damage(), 100);
+		assertCritDamageBonusIsIncreasedByPct(100);
 	}
 }

@@ -1,7 +1,7 @@
 package wow.simulator.simulation.spell.tbc.talent.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -15,7 +15,7 @@ import static wow.test.commons.TalentNames.IMPROVED_SHADOW_BOLT;
  * User: POlszewski
  * Date: 2024-11-14
  */
-class ImprovedShadowBoltTest extends TbcWarlockSpellSimulationTest {
+class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	/*
 	Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 20% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.
 	 */

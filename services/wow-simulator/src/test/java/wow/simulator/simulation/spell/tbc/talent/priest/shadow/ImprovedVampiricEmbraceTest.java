@@ -2,9 +2,11 @@ package wow.simulator.simulation.spell.tbc.talent.priest.shadow;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 import wow.test.commons.TalentNames;
 
+import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.MIND_BLAST_INFO;
+import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.SHADOW_WORD_PAIN_INFO;
 import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TalentNames.IMPROVED_VAMPIRIC_EMBRACE;
@@ -13,7 +15,7 @@ import static wow.test.commons.TalentNames.IMPROVED_VAMPIRIC_EMBRACE;
  * User: POlszewski
  * Date: 2025-01-17
  */
-class ImprovedVampiricEmbraceTest extends TbcPriestSpellSimulationTest {
+class ImprovedVampiricEmbraceTest extends TbcPriestTalentSimulationTest {
 	/*
 	Increases the percentage healed by Vampiric Embrace by an additional 10%.
 	 */

@@ -4,12 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.commons.model.Duration;
-import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.talent.priest.TbcPriestTalentSimulationTest;
 import wow.simulator.util.TestEvent;
 import wow.test.commons.TalentNames;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.MIND_FLAY_INFO;
 import static wow.simulator.util.EffectType.TALENT;
 import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TalentNames.MISERY;
@@ -18,7 +19,7 @@ import static wow.test.commons.TalentNames.MISERY;
  * User: POlszewski
  * Date: 2025-01-17
  */
-class MiseryTest extends TbcPriestSpellSimulationTest {
+class MiseryTest extends TbcPriestTalentSimulationTest {
 	/*
 	Your Shadow Word: Pain, Mind Flay and Vampiric Touch spells also cause the target to take an additional 5% spell damage.
 	 */

@@ -9,7 +9,7 @@ public final class CalcUtils {
 		return (int) (originalValue * (100 + pct) / 100.0);
 	}
 
-	public static double increaseByPct(double originalValue, int pct) {
+	public static double increaseByPct(double originalValue, double pct) {
 		return originalValue * (100 + pct) / 100.0;
 	}
 

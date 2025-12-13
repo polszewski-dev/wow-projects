@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcPaladinSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.test.commons.AbilityNames.BLESSING_OF_KINGS;
 import static wow.test.commons.AbilityNames.GREATER_BLESSING_OF_KINGS;
 
 /**
@@ -40,15 +41,17 @@ class GreaterBlessingOfKingsTest extends TbcPaladinSpellSimulationTest {
 		);
 	}
 
-	@Override
-	protected void afterSetUp() {
-		player2.getParty().add(player3, player4);
-	}
-
 	@Test
 	void attributes_are_increased() {
 		simulateBuffSpell(GREATER_BLESSING_OF_KINGS);
 
 		assertBaseStatsIncreasedByPct(10);
+	}
+
+	@Override
+	protected void afterSetUp() {
+		enableTalent(BLESSING_OF_KINGS, 1);
+
+		player2.getParty().add(player3, player4);
 	}
 }
