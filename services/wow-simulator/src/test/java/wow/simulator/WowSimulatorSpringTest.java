@@ -20,8 +20,6 @@ import wow.commons.model.effect.EffectSource;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.AbilityId;
-import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.SpellRepository;
@@ -56,7 +54,6 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.simulator.model.time.Time.TIME_IN_INFINITY;
 import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.simulator.util.CalcUtils.increaseByPct;
-import static wow.simulator.util.TestEvent.*;
 
 /**
  * User: POlszewski
@@ -177,41 +174,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(filtered).isEqualTo(eventList(expected));
 	}
 
-	private Stream<DecreasedResource> getDecreasedResourceEvents() {
-		return handler.getEvents().stream()
-				.filter(x -> x instanceof DecreasedResource)
-				.map(x -> (DecreasedResource) x);
-	}
-
-	private Stream<IncreasedResource> getIncreasedResourceEvents() {
-		return handler.getEvents().stream()
-				.filter(x -> x instanceof IncreasedResource)
-				.map(x -> (IncreasedResource) x);
-	}
-
-	private Stream<BeginCast> getBeginCastEvents() {
-		return handler.getEvents().stream()
-				.filter(x -> x instanceof BeginCast)
-				.map(x -> (BeginCast) x);
-	}
-
-	private Stream<CooldownStarted> getCooldownStartedEvents() {
-		return handler.getEvents().stream()
-				.filter(x -> x instanceof CooldownStarted)
-				.map(x -> (CooldownStarted) x);
-	}
-
-	private Stream<EffectApplied> getEffectAppliedEvents() {
-		return handler.getEvents().stream()
-				.filter(x -> x instanceof EffectApplied)
-				.map(x -> (EffectApplied) x);
-	}
-
 	protected void assertDamageDone(String abilityName, Unit target, double expectedAmount) {
-		var totalDamage = getDecreasedResourceEvents()
-				.filter(x -> x.isDamage(abilityName, target))
-				.mapToInt(DecreasedResource::amount)
-				.sum();
+		var totalDamage = handler.getDamageDone(abilityName, target);
 
 		if (Math.abs(totalDamage - (int) expectedAmount) > 1) {
 			assertThat(totalDamage).isEqualTo((int) expectedAmount);
@@ -231,12 +195,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertDamageDone(int eventIdx, String abilityName, Unit target, double expectedAmount) {
-		var totalDamage = getDecreasedResourceEvents()
-				.filter(x -> x.isDamage(abilityName, target))
-				.skip(eventIdx)
-				.findFirst()
-				.orElseThrow()
-				.amount();
+		var totalDamage = handler.getDamageDone(eventIdx, abilityName, target);
 
 		assertThat(Math.abs(totalDamage - (int) expectedAmount)).isLessThanOrEqualTo(1);
 	}
@@ -261,11 +220,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertDamageDone(spellInfo, target, sp);
 	}
 
-	protected void assertHealthGained(String spellName, Unit target, double expectedAmount) {//
-		var totalHealthGained = getIncreasedResourceEvents()
-				.filter(x -> x.isHealing(spellName, target))
-				.mapToInt(IncreasedResource::amount)
-				.sum();
+	protected void assertHealthGained(String spellName, Unit target, double expectedAmount) {
+		var totalHealthGained = handler.getHealthGained(spellName, target);
 
 		assertThat(totalHealthGained).isEqualTo((int) expectedAmount);
 	}
@@ -275,12 +231,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertHealthGained(int eventIdx, String spellName, Unit target, double expectedAmount) {
-		var totalHealthGained = getIncreasedResourceEvents()
-				.filter(x -> x.isHealing(spellName, target))
-				.skip(eventIdx)
-				.findFirst()
-				.orElseThrow()
-				.amount();
+		var totalHealthGained = handler.getHealthGained(eventIdx, spellName, target);
 
 		assertThat(totalHealthGained).isEqualTo((int) expectedAmount);
 	}
@@ -290,10 +241,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertManaPaid(String abilityName, Unit target, double expectedAmount) {
-		var totalManaPaid = getDecreasedResourceEvents()
-				.filter(x -> x.isManaPaid(abilityName, target))
-				.mapToInt(DecreasedResource::amount)
-				.sum();
+		var totalManaPaid = handler.getManaPaid(abilityName, target);
 
 		assertThat(totalManaPaid).isEqualTo((int) expectedAmount);
 	}
@@ -303,10 +251,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertManaGained(String abilityName, Unit target, double expectedAmount) {
-		var totalMana = getIncreasedResourceEvents()
-				.filter(x -> x.isManaGain(abilityName, target))
-				.mapToInt(IncreasedResource::amount)
-				.sum();
+		var totalMana = handler.getManaGained(abilityName, target);
 
 		assertThat(totalMana).isEqualTo((int) expectedAmount);
 	}
@@ -316,13 +261,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertCastTime(String abilityName, double expectedCastTime) {
-		var actualCastTime = getBeginCastEvents()
-				.filter(x -> x.spell().equals(abilityName))
-				.findFirst()
-				.orElseThrow()
-				.castTime();
+		var actualCastTime = handler.getCastTime(abilityName, player);
 
-		assertThat(actualCastTime).isEqualTo(Duration.seconds(expectedCastTime));
+		assertThat(actualCastTime).isEqualTo(expectedCastTime, PRECISION);
 	}
 
 	protected void assertCastTime(String abilityName, double expectedBaseCastTime, int pctIncrease) {
@@ -330,23 +271,13 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertCooldown(String abilityName, double duration) {
-		var abilityId = AbilityId.parse(abilityName);
-		var actualCooldown = getCooldownStartedEvents()
-				.filter(x -> x.cooldownId().equals(CooldownId.of(abilityId)))
-				.findFirst()
-				.orElseThrow()
-				.duration();
+		var actualCooldown = handler.getCooldown(abilityName, player);
 
-		assertThat(actualCooldown).isEqualTo(Duration.seconds(duration));
+		assertThat(actualCooldown).isEqualTo(duration);
 	}
 
 	protected void assertEffectDuration(String abilityName, Unit target, double duration) {
-		var actualEffectDuration = getEffectAppliedEvents()
-				.filter(x -> x.name().equals(abilityName))
-				.filter(x -> x.target() == target)
-				.findFirst()
-				.orElseThrow()
-				.duration();
+		var actualEffectDuration = handler.getEffectDuration(abilityName, target);
 
 		assertThat(actualEffectDuration).isEqualTo(Duration.seconds(duration));
 	}
