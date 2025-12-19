@@ -4,6 +4,7 @@ import wow.commons.model.Condition;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.DruidFormType;
+import wow.commons.model.character.PetType;
 import wow.commons.util.condition.ConditionCache;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public sealed interface SpellTargetCondition extends Condition {
 	Friendly FRIENDLY = new Friendly();
 
 	Hostile HOSTILE = new Hostile();
+
+	HasPet HAS_PET = new HasPet();
 
 	static SpellTargetCondition of(CreatureType creatureType) {
 		return getCachedValue(creatureType, IsCreatureType::new);
@@ -135,6 +138,14 @@ public sealed interface SpellTargetCondition extends Condition {
 	record Friendly() implements SpellTargetCondition {}
 
 	record Hostile() implements SpellTargetCondition {}
+
+	record HasPet() implements SpellTargetCondition {}
+
+	record SacrificedPet(PetType petType) implements SpellTargetCondition {
+		public SacrificedPet {
+			Objects.requireNonNull(petType);
+		}
+	}
 }
 
 class SpellTargetConditionCache extends ConditionCache<SpellTargetCondition> {

@@ -22,7 +22,8 @@ public enum EffectExclusionGroup {
 	EARTH_TOTEM,
 	FORM,
 	BLESSING_OF_WISDOM,
-	BLESSING_OF_KINGS
+	BLESSING_OF_KINGS,
+	DEMONIC_SACRIFICE
 	;
 
 	public static EffectExclusionGroup parse(String value) {

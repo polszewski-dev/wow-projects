@@ -2,6 +2,7 @@ package wow.commons.model.spell.component;
 
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Percent;
+import wow.commons.model.character.PetType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.*;
 import wow.commons.util.EnumUtil;
@@ -28,11 +29,15 @@ public sealed interface ComponentCommand {
 	}
 
 	sealed interface DirectCommand extends ComponentCommand, HasSecondaryTargetCondition {
-		SpellSchool school();
+		default SpellSchool school() {
+			return null;
+		}
 	}
 
 	sealed interface PeriodicCommand extends ComponentCommand {
-		SpellSchool school();
+		default SpellSchool school() {
+			return null;
+		}
 	}
 
 	sealed interface ChangeHealthDirectly extends DirectCommand {
@@ -154,10 +159,6 @@ public sealed interface ComponentCommand {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(condition);
 		}
-
-		public SpellSchool school() {
-			return null;
-		}
 	}
 
 	record GainRageDirectly(
@@ -168,10 +169,6 @@ public sealed interface ComponentCommand {
 		public GainRageDirectly {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(condition);
-		}
-
-		public SpellSchool school() {
-			return null;
 		}
 	}
 
@@ -185,11 +182,6 @@ public sealed interface ComponentCommand {
 			Objects.requireNonNull(condition);
 			Objects.requireNonNull(ratio);
 		}
-
-		@Override
-		public SpellSchool school() {
-			return null;
-		}
 	}
 	record GainBaseManaPct(
 			SpellTarget target,
@@ -200,11 +192,6 @@ public sealed interface ComponentCommand {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(condition);
 			Objects.requireNonNull(ratio);
-		}
-
-		@Override
-		public SpellSchool school() {
-			return null;
 		}
 	}
 
@@ -217,9 +204,27 @@ public sealed interface ComponentCommand {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(condition);
 		}
+	}
 
-		public SpellSchool school() {
-			return null;
+	record SummonPet(
+			SpellTarget target,
+			SpellTargetCondition condition,
+			PetType petType
+	) implements DirectCommand {
+		public SummonPet {
+			Objects.requireNonNull(target);
+			Objects.requireNonNull(condition);
+			Objects.requireNonNull(petType);
+		}
+	}
+
+	record SacrificePet(
+			SpellTarget target,
+			SpellTargetCondition condition
+	) implements DirectCommand {
+		public SacrificePet {
+			Objects.requireNonNull(target);
+			Objects.requireNonNull(condition);
 		}
 	}
 
@@ -276,10 +281,6 @@ public sealed interface ComponentCommand {
 		public ExtraAttacks {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(condition);
-		}
-
-		public SpellSchool school() {
-			return null;
 		}
 	}
 
@@ -365,11 +366,6 @@ public sealed interface ComponentCommand {
 	) implements PeriodicCommand {
 		public AddStackPeriodically {
 			Objects.requireNonNull(target);
-		}
-
-		@Override
-		public SpellSchool school() {
-			return null;
 		}
 	}
 

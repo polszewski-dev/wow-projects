@@ -1,6 +1,5 @@
 package wow.character.util;
 
-import wow.character.model.character.Character;
 import wow.commons.model.spell.SpellTargetCondition;
 
 import static wow.commons.model.spell.SpellTargetCondition.*;
@@ -10,7 +9,10 @@ import static wow.commons.model.spell.SpellTargetCondition.*;
  * Date: 2025-11-30
  */
 public final class SpellTargetConditionChecker {
-	public static boolean check(SpellTargetCondition condition, Character target, Character caster) {
+	public static boolean check(SpellTargetCondition condition, SpellTargetConditionArgs args) {
+		var caster = args.getCaster();
+		var target = args.getTarget();
+
 		return switch (condition) {
 			case Empty() ->
 					true;
@@ -45,17 +47,23 @@ public final class SpellTargetConditionChecker {
 			case Hostile() ->
 					caster.isHostileWith(target);
 
+			case HasPet() ->
+					caster.getActivePetType() != null;
+
+			case SacrificedPet(var petType) ->
+					args.getSacrificedPetType() == petType;
+
 			case Or(var left, var right) ->
-					check(left, target, caster) || check(right, target, caster);
+					check(left, args) || check(right, args);
 
 			case And(var left, var right) ->
-					check(left, target, caster) && check(right, target, caster);
+					check(left, args) && check(right, args);
 
 			case Comma(var conditions) ->
-					conditions.stream().anyMatch(x -> check(x, target, caster));
+					conditions.stream().anyMatch(x -> check(x, args));
 
 			case Not(var innerCondition) ->
-					!check(innerCondition, target, caster);
+					!check(innerCondition, args);
 		};
 	}
 

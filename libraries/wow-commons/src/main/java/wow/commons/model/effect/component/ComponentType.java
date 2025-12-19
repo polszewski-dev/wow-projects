@@ -20,7 +20,9 @@ public enum ComponentType {
 	REFUND_COST_PCT,
 	EXTRA_ATTACKS,
 	ADD_STACK,
-	REDUCE_THREAT;
+	REDUCE_THREAT,
+	SUMMON,
+	SACRIFICE;
 
 	public static ComponentType parse(String value) {
 		return EnumUtil.parse(value, values());

@@ -2,6 +2,7 @@ package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.character.PetType;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.ComponentType;
 import wow.commons.model.spell.*;
@@ -216,6 +217,12 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 			case EXTRA_ATTACKS ->
 					getAddExtraAttacksDirectly(prefix);
 
+			case SUMMON ->
+					getSummonPet(prefix);
+
+			case SACRIFICE ->
+					getSacrificePet(prefix);
+
 			default ->
 					throw new IllegalArgumentException(type.name());
 		};
@@ -325,6 +332,23 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var amount = getAmount(prefix);
 
 		return new ExtraAttacks(target, condition, amount);
+	}
+
+	private final ExcelColumn colPetType = column(DIRECT_PET_TYPE);
+
+	private SummonPet getSummonPet(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var petType = colPetType.prefixed(prefix).getEnum(PetType::parse);
+
+		return new SummonPet(target, condition, petType);
+	}
+
+	private SacrificePet getSacrificePet(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+
+		return new SacrificePet(target, condition);
 	}
 
 	private int getAmount(String prefix) {

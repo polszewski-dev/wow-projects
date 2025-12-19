@@ -1,5 +1,6 @@
 package wow.simulator.model.unit;
 
+import wow.character.util.SpellTargetConditionArgs;
 import wow.character.util.SpellTargetConditionChecker;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.spell.SpellTargets;
@@ -96,8 +97,14 @@ public class TargetResolver implements SimulationContextSource {
 
 	private List<Unit> getTargets(SpellTarget spellTarget) {
 		return getTargetsUnchecked(spellTarget).stream()
-				.filter(uncheckedTarget -> SpellTargetConditionChecker.check(spellTarget.condition(), uncheckedTarget, self))
+				.filter(uncheckedTarget -> checkSpellTargetCondition(spellTarget, uncheckedTarget))
 				.toList();
+	}
+
+	private boolean checkSpellTargetCondition(SpellTarget spellTarget, Unit uncheckedTarget) {
+		var args = new SpellTargetConditionArgs(self, uncheckedTarget);
+
+		return SpellTargetConditionChecker.check(spellTarget.condition(), args);
 	}
 
 	private List<Unit> getTargetsUnchecked(SpellTarget spellTarget) {

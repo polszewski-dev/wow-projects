@@ -3,6 +3,7 @@ package wow.commons.util.condition;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.DruidFormType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.spell.SpellTargetCondition;
 
 import java.util.List;
@@ -75,6 +76,16 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 			return SpellTargetCondition.HOSTILE;
 		}
 
+		if (HAS_PET.equalsIgnoreCase(value)) {
+			return SpellTargetCondition.HAS_PET;
+		}
+
+		var sacrificed = tryParseSacrificed(value);
+
+		if (sacrificed != null) {
+			return sacrificed;
+		}
+
 		throw new IllegalArgumentException("Unknown condition: " + value);
 	}
 
@@ -136,9 +147,15 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 		return parseStringArgument(value, HAS_EFFECT, HasEffect::new);
 	}
 
+	private SacrificedPet tryParseSacrificed(String value) {
+		return parseStringArgument(value, SACRIFICED, argument -> new SacrificedPet(PetType.parse(argument)));
+	}
+
 	static final String HAS_EFFECT = "HasEffect";
 	static final String HEALTH_PCT = "Health%";
 	static final String CLASS = "Class";
 	static final String FRIENDLY = "Friendly";
 	static final String HOSTILE = "Hostile";
+	static final String HAS_PET = "HasPet";
+	static final String SACRIFICED = "Sacrificed";
 }

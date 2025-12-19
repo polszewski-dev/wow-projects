@@ -1,6 +1,7 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
+import lombok.Setter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
@@ -10,6 +11,8 @@ import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.Pet;
+import wow.commons.model.character.PetType;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
@@ -57,6 +60,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Getter
 	private Party party;
+
+	@Getter
+	@Setter
+	private Pet activePet;
 
 	private SimulationContext simulationContext;
 
@@ -665,5 +672,14 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			this.party.remove(this);
 		}
 		this.party = party;
+	}
+
+	@Override
+	public void setActivePet(PetType petType) {
+		if (petType != null) {
+			this.activePet = getGameVersion().getPet(petType).orElseThrow();
+		} else {
+			this.activePet = null;
+		}
 	}
 }

@@ -13,6 +13,7 @@ import static wow.commons.model.character.CharacterClassId.MAGE;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.DEMON;
 import static wow.commons.model.character.CreatureType.UNDEAD;
+import static wow.commons.model.character.PetType.IMP;
 import static wow.commons.model.spell.SpellTargetCondition.*;
 import static wow.commons.util.condition.SpellTargetConditionParser.parseCondition;
 
@@ -81,6 +82,14 @@ class SpellTargetConditionParserTest {
 			testData(
 					"Hostile",
 					HOSTILE
+			),
+			testData(
+					"HasPet",
+					HAS_PET
+			),
+			testData(
+					"Sacrificed(Imp)",
+					new SacrificedPet(IMP)
 			),
 			testData(
 					"Undead, Demon",

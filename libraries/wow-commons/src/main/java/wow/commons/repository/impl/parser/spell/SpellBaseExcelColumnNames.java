@@ -36,6 +36,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String DIRECT_RATIO = "ratio%";
 	public static final String DIRECT_FROM = "from";
 	public static final String DIRECT_TO = "to";
+	public static final String DIRECT_PET_TYPE = "pet type";
 	public static final String PERIODIC_TYPE = "type";
 	public static final String PERIODIC_AMOUNT = "amount";
 	public static final String PERIODIC_NUM_TICKS = "num ticks";

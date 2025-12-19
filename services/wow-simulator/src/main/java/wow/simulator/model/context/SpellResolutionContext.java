@@ -2,7 +2,9 @@ package wow.simulator.model.context;
 
 import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
+import wow.character.util.SpellTargetConditionArgs;
 import wow.character.util.SpellTargetConditionChecker;
+import wow.commons.model.character.PetType;
 import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
@@ -33,6 +35,8 @@ public class SpellResolutionContext extends Context {
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
 	@Setter
 	private Double valueParam;
+
+	private PetType sacrificedPetType;
 
 	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext, CastSpellAction action) {
 		super(caster, spell, parentContext);
@@ -106,13 +110,23 @@ public class SpellResolutionContext extends Context {
 			case Copy command ->
 					copy(command, target, last);
 
+			case SummonPet command ->
+					summonPet(command, target);
+
+			case SacrificePet command ->
+					sacrificePet(command, target);
+
 			default ->
 					throw new UnsupportedOperationException();
 		}
 	}
 
 	private boolean checkSecondaryCondition(HasSecondaryTargetCondition command, Unit target) {
-		return SpellTargetConditionChecker.check(command.condition(), target, caster);
+		var args = new SpellTargetConditionArgs(caster, target);
+
+		args.setSacrificedPetType(sacrificedPetType);
+
+		return SpellTargetConditionChecker.check(command.condition(), args);
 	}
 
 	private void dealDirectDamage(DealDamageDirectly command, Unit target) {
@@ -147,6 +161,16 @@ public class SpellResolutionContext extends Context {
 		var mana = (command.min() + command.max()) / 2;
 
 		increaseMana(target, mana);
+	}
+
+	protected void summonPet(SummonPet command, Unit target) {
+		target.setActivePet(command.petType());
+	}
+
+	protected void sacrificePet(SacrificePet command, Unit target) {
+		this.sacrificedPetType = target.getActivePetType();
+
+		target.setActivePet(null);
 	}
 
 	@Override

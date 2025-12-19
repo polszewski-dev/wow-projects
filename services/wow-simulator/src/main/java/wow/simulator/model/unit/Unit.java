@@ -6,6 +6,7 @@ import wow.character.model.snapshot.*;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
+import wow.commons.model.character.PetType;
 import wow.commons.model.spell.*;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
@@ -167,6 +168,8 @@ public interface Unit extends Character, SimulationContextSource {
 	void triggerCooldown(CooldownId cooldownId, Duration actualDuration);
 
 	void regen(Duration sinceLastRegen);
+
+	void setActivePet(PetType petType);
 
 	Party getParty();
 

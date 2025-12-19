@@ -174,6 +174,8 @@ public abstract class AbstractSpellSheetWriter<T extends Spell> extends SpellBas
 			case GainRageDirectly ignored -> GAIN_RAGE;
 			case ReduceThreatDirectly ignored -> REDUCE_THREAT;
 			case RefundCostPctDirectly ignored -> REFUND_COST_PCT;
+			case SummonPet ignored -> SUMMON;
+			case SacrificePet ignored -> SACRIFICE;
 		};
 	}
 
