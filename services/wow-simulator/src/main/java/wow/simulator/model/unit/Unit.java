@@ -124,13 +124,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setManaToMax();
 
-	int increaseHealth(int amount, boolean crit, Spell spell);
+	int increaseHealth(int amount, boolean crit, Spell spell, Unit caster);
 
-	int decreaseHealth(int amount, boolean crit, Spell spell);
+	int decreaseHealth(int amount, boolean crit, Spell spell, Unit caster);
 
-	int increaseMana(int amount, boolean crit, Spell spell);
+	int increaseMana(int amount, boolean crit, Spell spell, Unit caster);
 
-	int decreaseMana(int amount, boolean crit, Spell spell);
+	int decreaseMana(int amount, boolean crit, Spell spell, Unit caster);
 
 	void addEffect(EffectInstance effect, EffectReplacementMode replacementMode);
 

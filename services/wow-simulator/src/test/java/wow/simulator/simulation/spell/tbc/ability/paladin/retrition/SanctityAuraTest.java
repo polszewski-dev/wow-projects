@@ -44,7 +44,7 @@ class SanctityAuraTest extends TbcPaladinSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertDamageDone(SMITE_INFO, player2.getTarget(), 0, 10);
+		assertDamageDone(SMITE_INFO, player2.getTarget(), player2, 0, 10);
 	}
 
 	@Override

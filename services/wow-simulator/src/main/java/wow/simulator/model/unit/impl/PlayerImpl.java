@@ -149,8 +149,8 @@ public class PlayerImpl extends UnitImpl implements Player {
 		var health = snapshot.getHealthToRegen(true, sinceLastRegen);
 		var mana = snapshot.getManaToRegen(sinceLastManaSpent, sinceLastRegen);
 
-		increaseHealth(health, false, null);
-		increaseMana(mana, false, null);
+		increaseHealth(health, false, null, null);
+		increaseMana(mana, false, null, null);
 	}
 
 	private Duration getSinceLastManaSpent() {

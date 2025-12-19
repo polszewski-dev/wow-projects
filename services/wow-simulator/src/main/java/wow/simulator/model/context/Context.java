@@ -62,23 +62,23 @@ public abstract class Context implements SimulationContextSource {
 	}
 
 	protected void decreaseHealth(Unit target, int amount, boolean directDamage, boolean critRoll) {
-		this.lastDamageDone = target.decreaseHealth(amount, critRoll, getSourceSpell());
+		this.lastDamageDone = target.decreaseHealth(amount, critRoll, getSourceSpell(), caster);
 
 		EventContext.fireSpellDamageEvent(caster, target, spell, directDamage, critRoll, this);
 	}
 
 	protected void increaseHealth(Unit target, int amount, boolean directHeal, boolean critRoll) {
-		this.lastHealingDone = target.increaseHealth(amount, critRoll, getSourceSpell());
+		this.lastHealingDone = target.increaseHealth(amount, critRoll, getSourceSpell(), caster);
 
 		EventContext.fireSpellHealEvent(caster, target, spell, directHeal, critRoll, this);
 	}
 
 	protected void increaseMana(Unit target, int amount) {
-		this.lastManaRestored = target.increaseMana(amount, false, getSourceSpell());
+		this.lastManaRestored = target.increaseMana(amount, false, getSourceSpell(), caster);
 	}
 
 	protected void decreaseMana(Unit target, int amount) {
-		this.lastManaLost = target.decreaseMana(amount, false, getSourceSpell());
+		this.lastManaLost = target.decreaseMana(amount, false, getSourceSpell(), caster);
 	}
 
 	protected void copy(Copy copy, Unit target, LastValueSnapshot last) {

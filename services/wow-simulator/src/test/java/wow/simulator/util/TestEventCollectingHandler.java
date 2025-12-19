@@ -24,7 +24,9 @@ import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.TimeAware;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static wow.simulator.WowSimulatorSpringTest.DummyTestSource;
@@ -40,6 +42,10 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	List<TestEvent> events = new ArrayList<>();
 	Clock clock;
 	boolean ignoreRegen = true;
+
+	private record ExtraArgs(Unit caster) {}
+
+	private Map<TestEvent, ExtraArgs> eventsExtraArgs = new HashMap<>();
 
 	@Override
 	public void beginGcd(UnitAction sourceAction) {
@@ -92,16 +98,22 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
 		if (spell == null && ignoreRegen) {
 			return;
 		}
-		addEvent(new IncreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
+		var event = addEvent(new IncreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
+		addArgs(event, caster);
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
-		addEvent(new DecreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
+		var event = addEvent(new DecreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
+		addArgs(event, caster);
+	}
+
+	private void addArgs(TestEvent event, Unit caster) {
+		eventsExtraArgs.put(event, new ExtraArgs(caster));
 	}
 
 	private static String getAbilityId(Spell spell) {
@@ -215,22 +227,30 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 		addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getCooldownId()));
 	}
 
-	private void addEvent(TestEvent event) {
+	private TestEvent addEvent(TestEvent event) {
 		events.add(event);
+		return event;
 	}
 
 	private Time now() {
 		return clock.now();
 	}
 
-	public int getDamageDone(String abilityName, Unit target) {
-		return getDamageEvents(abilityName, target)
+	private boolean casterIs(TestEvent event, Unit caster) {
+		var extraArgs = eventsExtraArgs.get(event);
+
+		return extraArgs != null && extraArgs.caster() == caster;
+	}
+
+	public int getDamageDone(String abilityName, Unit target, Unit caster) {
+		return getDamageEvents(abilityName, target, caster)
+				.filter(event -> casterIs(event, caster))
 				.mapToInt(DecreasedResource::amount)
 				.sum();
 	}
 
-	public int getDamageDone(int eventIdx, String abilityName, Unit target) {
-		return getDamageEvents(abilityName, target)
+	public int getDamageDone(int eventIdx, String abilityName, Unit target, Unit caster) {
+		return getDamageEvents(abilityName, target, caster)
 				.skip(eventIdx)
 				.findFirst()
 				.orElseThrow()
@@ -294,7 +314,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 				.duration();
 	}
 
-	public Stream<DecreasedResource> getDamageEvents(String abilityName, Unit target) {
+	public Stream<DecreasedResource> getDamageEvents(String abilityName, Unit target, Unit caster) {
 		return getDecreasedResourceEvents()
 				.filter(x -> x.isDamage(abilityName, target));
 	}

@@ -128,7 +128,7 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
 		if (!(spell instanceof Ability ability)) {
 			return;
 		}

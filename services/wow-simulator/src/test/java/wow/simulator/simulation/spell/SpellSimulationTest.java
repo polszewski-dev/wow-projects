@@ -73,7 +73,7 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	protected RaceId partyMemberRaceId = ORC;
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
 		if (spell != null) {
 			return;
 		}

@@ -29,12 +29,12 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 	void increase() {
 		resource.set(500, 1000);
 
-		int actualAmount1 = resource.increase(300, false, null);
+		int actualAmount1 = resource.increase(300, false, null, null);
 
 		assertThat(resource.getCurrent()).isEqualTo(800);
 		assertThat(actualAmount1).isEqualTo(300);
 
-		int actualAmount2 = resource.increase(300, false, null);
+		int actualAmount2 = resource.increase(300, false, null, null);
 
 		assertThat(resource.getCurrent()).isEqualTo(1000);
 		assertThat(actualAmount2).isEqualTo(200);
@@ -44,12 +44,12 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 	void decrease() {
 		resource.set(500, 1000);
 
-		int actualAmount1 = resource.decrease(300, false, null);
+		int actualAmount1 = resource.decrease(300, false, null, null);
 
 		assertThat(resource.getCurrent()).isEqualTo(200);
 		assertThat(actualAmount1).isEqualTo(300);
 
-		int actualAmount2 = resource.decrease(300, false, null);
+		int actualAmount2 = resource.decrease(300, false, null, null);
 
 		assertThat(resource.getCurrent()).isZero();
 		assertThat(actualAmount2).isEqualTo(200);

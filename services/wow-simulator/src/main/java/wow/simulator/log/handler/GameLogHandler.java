@@ -40,9 +40,9 @@ public interface GameLogHandler {
 
 	default void spellResisted(Unit caster, Unit target, Spell spell) {}
 
-	default void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {}
+	default void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {}
 
-	default void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit) {}
+	default void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {}
 
 	default void effectApplied(EffectInstance effect) {}
 

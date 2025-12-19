@@ -451,23 +451,23 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public int increaseHealth(int amount, boolean crit, Spell spell) {
-		return getResources().increaseHealth(amount, crit, spell);
+	public int increaseHealth(int amount, boolean crit, Spell spell, Unit caster) {
+		return getResources().increaseHealth(amount, crit, spell, caster);
 	}
 
 	@Override
-	public int decreaseHealth(int amount, boolean crit, Spell spell) {
-		return getResources().decreaseHealth(amount, crit, spell);
+	public int decreaseHealth(int amount, boolean crit, Spell spell, Unit caster) {
+		return getResources().decreaseHealth(amount, crit, spell, caster);
 	}
 
 	@Override
-	public int increaseMana(int amount, boolean crit, Spell spell) {
-		return getResources().increaseMana(amount, crit, spell);
+	public int increaseMana(int amount, boolean crit, Spell spell, Unit caster) {
+		return getResources().increaseMana(amount, crit, spell, caster);
 	}
 
 	@Override
-	public int decreaseMana(int amount, boolean crit, Spell spell) {
-		return getResources().decreaseMana(amount, crit, spell);
+	public int decreaseMana(int amount, boolean crit, Spell spell, Unit caster) {
+		return getResources().decreaseMana(amount, crit, spell, caster);
 	}
 
 	@Override

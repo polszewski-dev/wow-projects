@@ -33,7 +33,7 @@ public class UnitResource implements SimulationContextSource {
 		this.max = max;
 	}
 
-	public int increase(int amount, boolean crit, Spell spell) {
+	public int increase(int amount, boolean crit, Spell spell, Unit caster) {
 		if (amount == 0) {
 			return 0;
 		}
@@ -47,13 +47,13 @@ public class UnitResource implements SimulationContextSource {
 		int actualAmount = current - previous;
 
 		if (actualAmount > 0) {
-			getGameLog().increasedResource(type, spell, owner, actualAmount, current, previous, crit);
+			getGameLog().increasedResource(type, spell, owner, actualAmount, current, previous, crit, caster);
 		}
 
 		return actualAmount;
 	}
 
-	public int decrease(int amount, boolean crit, Spell spell) {
+	public int decrease(int amount, boolean crit, Spell spell, Unit caster) {
 		if (amount == 0) {
 			return 0;
 		}
@@ -67,7 +67,7 @@ public class UnitResource implements SimulationContextSource {
 		int actualAmount = previous - current;
 
 		if (actualAmount > 0) {
-			getGameLog().decreasedResource(type, spell, owner, actualAmount, current, previous, crit);
+			getGameLog().decreasedResource(type, spell, owner, actualAmount, current, previous, crit, caster);
 		}
 
 		return actualAmount;
@@ -77,7 +77,7 @@ public class UnitResource implements SimulationContextSource {
 		if (!canPay(amount)) {
 			throw new IllegalArgumentException("Can't pay %s when having only %s".formatted(amount, current));
 		}
-		decrease(amount, false, ability);
+		decrease(amount, false, ability, owner);
 	}
 
 	public boolean canPay(int amount) {
