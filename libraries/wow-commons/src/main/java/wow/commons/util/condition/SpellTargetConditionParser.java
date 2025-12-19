@@ -39,6 +39,11 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 	}
 
 	@Override
+	protected SpellTargetCondition notOperator(SpellTargetCondition condition) {
+		return not(condition);
+	}
+
+	@Override
 	protected SpellTargetCondition getBasicCondition(String value) {
 		if (value.isEmpty()) {
 			return EMPTY;
@@ -128,7 +133,7 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 	}
 
 	private HasEffect tryParseHasEffect(String value) {
-		return parseAbilityIdArgument(value, HAS_EFFECT, HasEffect::new);
+		return parseStringArgument(value, HAS_EFFECT, HasEffect::new);
 	}
 
 	static final String HAS_EFFECT = "HasEffect";

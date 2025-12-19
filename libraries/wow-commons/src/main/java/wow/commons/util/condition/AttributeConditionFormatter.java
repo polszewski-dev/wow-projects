@@ -32,6 +32,9 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 			case EffectCategoryCondition(var effectCategory) ->
 					effectCategory.toString();
 
+			case EffectNameCondition(var effectName) ->
+					formatFunction(EFFECT_NAME, effectName);
+
 			case EmptyCondition() ->
 					"";
 

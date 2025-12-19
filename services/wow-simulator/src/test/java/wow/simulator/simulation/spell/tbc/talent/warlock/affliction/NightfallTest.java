@@ -9,6 +9,7 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.TALENT;
 import static wow.test.commons.AbilityNames.*;
+import static wow.test.commons.EffectNames.SHADOW_TRANCE;
 import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 import static wow.test.commons.TalentNames.NIGHTFALL;
 
@@ -45,7 +46,7 @@ class NightfallTest extends TbcWarlockTalentSimulationTest {
 						.endGcd(player),
 				at(3)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectApplied(NIGHTFALL, TALENT, player, 10),
+						.effectApplied(SHADOW_TRANCE, TALENT, player, 10),
 				at(6)
 						.decreasedResource(150, HEALTH, target, CORRUPTION),
 				at(9)
@@ -53,7 +54,7 @@ class NightfallTest extends TbcWarlockTalentSimulationTest {
 				at(12)
 						.decreasedResource(150, HEALTH, target, CORRUPTION),
 				at(13)
-						.effectExpired(NIGHTFALL, TALENT, player),
+						.effectExpired(SHADOW_TRANCE, TALENT, player),
 				at(15)
 						.decreasedResource(150, HEALTH, target, CORRUPTION),
 				at(18)
@@ -83,7 +84,7 @@ class NightfallTest extends TbcWarlockTalentSimulationTest {
 						.beginChannel(player, DRAIN_LIFE, 5),
 				at(1)
 						.decreasedResource(108, HEALTH, target, DRAIN_LIFE)
-						.effectApplied(NIGHTFALL, TALENT, player, 10)
+						.effectApplied(SHADOW_TRANCE, TALENT, player, 10)
 						.increasedResource(108, HEALTH, player, DRAIN_LIFE),
 				at(1.5)
 						.endGcd(player),
@@ -102,7 +103,7 @@ class NightfallTest extends TbcWarlockTalentSimulationTest {
 						.effectExpired(DRAIN_LIFE, target)
 						.endChannel(player, DRAIN_LIFE),
 				at(11)
-						.effectExpired(NIGHTFALL, TALENT, player)
+						.effectExpired(SHADOW_TRANCE, TALENT, player)
 		);
 	}
 
@@ -145,13 +146,13 @@ class NightfallTest extends TbcWarlockTalentSimulationTest {
 						.endGcd(player),
 				at(3)
 						.decreasedResource(150, HEALTH, target, CORRUPTION)
-						.effectApplied(NIGHTFALL, TALENT, player, 10),
+						.effectApplied(SHADOW_TRANCE, TALENT, player, 10),
 				at(4)
 						.beginCast(player, SHADOW_BOLT, 0)
 						.beginGcd(player)
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
-						.effectRemoved(NIGHTFALL, TALENT, player)
+						.effectRemoved(SHADOW_TRANCE, TALENT, player)
 						.decreasedResource(575, HEALTH, target, SHADOW_BOLT),
 				at(5.5)
 						.endGcd(player),

@@ -141,7 +141,7 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 	}
 
 	private OwnerHasEffectCondition tryParseOwnerHasEffect(String value) {
-		return parseAbilityIdArgument(value, OWNER_HAS_EFFECT, OwnerHasEffectCondition::new);
+		return parseStringArgument(value, OWNER_HAS_EFFECT, OwnerHasEffectCondition::new);
 	}
 
 	private OwnerIsChannelingCondition tryParseOwnerIsChanneling(String value) {

@@ -11,6 +11,7 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.ITEM;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.EffectNames.CALL_OF_THE_NEXUS;
 
 /**
  * User: POlszewski
@@ -40,9 +41,9 @@ class ShiffarsNexusHornTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 45)
-						.effectApplied("Shiffar's Nexus-Horn", ITEM, player, 10),
+						.effectApplied(CALL_OF_THE_NEXUS, ITEM, player, 10),
 				at(13)
-						.effectExpired("Shiffar's Nexus-Horn", ITEM, player),
+						.effectExpired(CALL_OF_THE_NEXUS, ITEM, player),
 				at(48)
 						.cooldownExpired(player, cooldownId)
 		);

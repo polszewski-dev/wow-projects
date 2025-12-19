@@ -9,6 +9,7 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.ITEM;
 import static wow.test.commons.AbilityNames.SHADOW_WORD_PAIN;
+import static wow.test.commons.EffectNames.DIVINE_WRATH;
 
 /**
  * User: POlszewski
@@ -38,30 +39,30 @@ class AshtongueTalismanOfAcumenTest extends TbcPriestSpellSimulationTest {
 						.endGcd(player),
 				at(3)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.effectApplied("Ashtongue Talisman of Acumen", ITEM, player, 10),
+						.effectApplied(DIVINE_WRATH, ITEM, player, 10),
 				at(6)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.effectRemoved("Ashtongue Talisman of Acumen", ITEM, player)
-						.effectApplied("Ashtongue Talisman of Acumen", ITEM, player, 10),
+						.effectRemoved(DIVINE_WRATH, ITEM, player)
+						.effectApplied(DIVINE_WRATH, ITEM, player, 10),
 				at(9)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.effectRemoved("Ashtongue Talisman of Acumen", ITEM, player)
-						.effectApplied("Ashtongue Talisman of Acumen", ITEM, player, 10),
+						.effectRemoved(DIVINE_WRATH, ITEM, player)
+						.effectApplied(DIVINE_WRATH, ITEM, player, 10),
 				at(12)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.effectRemoved("Ashtongue Talisman of Acumen", ITEM, player)
-						.effectApplied("Ashtongue Talisman of Acumen", ITEM, player, 10),
+						.effectRemoved(DIVINE_WRATH, ITEM, player)
+						.effectApplied(DIVINE_WRATH, ITEM, player, 10),
 				at(15)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.effectRemoved("Ashtongue Talisman of Acumen", ITEM, player)
-						.effectApplied("Ashtongue Talisman of Acumen", ITEM, player, 10),
+						.effectRemoved(DIVINE_WRATH, ITEM, player)
+						.effectApplied(DIVINE_WRATH, ITEM, player, 10),
 				at(18)
 						.decreasedResource(206, HEALTH, target, SHADOW_WORD_PAIN)
-						.effectRemoved("Ashtongue Talisman of Acumen", ITEM, player)
-						.effectApplied("Ashtongue Talisman of Acumen", ITEM, player, 10)
+						.effectRemoved(DIVINE_WRATH, ITEM, player)
+						.effectApplied(DIVINE_WRATH, ITEM, player, 10)
 						.effectExpired(SHADOW_WORD_PAIN, target),
 				at(28)
-						.effectExpired("Ashtongue Talisman of Acumen", ITEM, player)
+						.effectExpired(DIVINE_WRATH, ITEM, player)
 		);
 	}
 

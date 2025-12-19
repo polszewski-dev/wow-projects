@@ -8,6 +8,7 @@ import wow.test.commons.TalentNames;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.MOONKIN_FORM;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.EffectNames.MOONKIN_AURA;
 
 /**
  * User: POlszewski
@@ -36,7 +37,7 @@ class MoonkinFormTest extends TbcDruidSpellSimulationTest {
 						.endCast(player, MOONKIN_FORM)
 						.decreasedResource(848, MANA, player, MOONKIN_FORM)
 						.effectApplied(MOONKIN_FORM, player, Duration.INFINITE)
-						.effectApplied(MOONKIN_FORM, player, Duration.INFINITE),
+						.effectApplied(MOONKIN_AURA, player, Duration.INFINITE),
 				at(1.5)
 						.endGcd(player)
 		);

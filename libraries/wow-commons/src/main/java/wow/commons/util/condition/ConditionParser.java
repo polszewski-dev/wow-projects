@@ -483,14 +483,16 @@ public abstract class ConditionParser<T extends Condition, E> {
 	}
 
 	protected <R> R parseAbilityIdArgument(String value, String name, Function<AbilityId, R> mapper) {
+		return parseStringArgument(value, name, abilityName -> mapper.apply(AbilityId.parse(abilityName)));
+	}
+
+	protected <R> R parseStringArgument(String value, String name, Function<String, R> mapper) {
 		var argument = parseFunctionArgument(name, value);
 
 		if (argument == null) {
 			return null;
 		}
 
-		var abilityId = AbilityId.parse(argument);
-
-		return mapper.apply(abilityId);
+		return mapper.apply(argument);
 	}
 }

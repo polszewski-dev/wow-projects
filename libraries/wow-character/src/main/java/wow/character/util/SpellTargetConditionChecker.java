@@ -15,8 +15,8 @@ public final class SpellTargetConditionChecker {
 			case Empty() ->
 					true;
 
-			case HasEffect(var abilityId) ->
-					target.hasEffect(abilityId);
+			case HasEffect(var effectName) ->
+					target.hasEffect(effectName);
 
 			case HealthPctLessThan(var value) ->
 					target.getHealthPct().value() < value;
@@ -53,6 +53,9 @@ public final class SpellTargetConditionChecker {
 
 			case Comma(var conditions) ->
 					conditions.stream().anyMatch(x -> check(x, target, caster));
+
+			case Not(var innerCondition) ->
+					!check(innerCondition, target, caster);
 		};
 	}
 

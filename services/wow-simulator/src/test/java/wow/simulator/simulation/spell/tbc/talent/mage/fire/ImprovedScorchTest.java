@@ -9,6 +9,7 @@ import wow.simulator.util.TestEvent;
 
 import static wow.simulator.util.EffectType.TALENT;
 import static wow.test.commons.AbilityNames.SCORCH;
+import static wow.test.commons.EffectNames.FIRE_VULNERABILITY;
 import static wow.test.commons.TalentNames.IMPROVED_SCORCH;
 
 /**
@@ -39,9 +40,9 @@ class ImprovedScorchTest extends TbcMageTalentSimulationTest {
 						.beginCast(player, SCORCH, 1.5),
 				at(1.5)
 						.endCast(player, SCORCH)
-						.effectApplied(IMPROVED_SCORCH, TALENT, target, 30),
+						.effectApplied(FIRE_VULNERABILITY, TALENT, target, 30),
 				at(31.5)
-						.effectExpired(IMPROVED_SCORCH, TALENT, target)
+						.effectExpired(FIRE_VULNERABILITY, TALENT, target)
 		);
 	}
 
@@ -81,19 +82,19 @@ class ImprovedScorchTest extends TbcMageTalentSimulationTest {
 		assertEvents(
 				TestEvent::isEffect,
 				at(1.5)
-						.effectApplied(IMPROVED_SCORCH, TALENT, target, 30),
+						.effectApplied(FIRE_VULNERABILITY, TALENT, target, 30),
 				at(3)
-						.effectStacked(IMPROVED_SCORCH, TALENT, target, 2),
+						.effectStacked(FIRE_VULNERABILITY, TALENT, target, 2),
 				at(4.5)
-						.effectStacked(IMPROVED_SCORCH, TALENT, target, 3),
+						.effectStacked(FIRE_VULNERABILITY, TALENT, target, 3),
 				at(6)
-						.effectStacked(IMPROVED_SCORCH, TALENT, target, 4),
+						.effectStacked(FIRE_VULNERABILITY, TALENT, target, 4),
 				at(7.5)
-						.effectStacked(IMPROVED_SCORCH, TALENT, target, 5),
+						.effectStacked(FIRE_VULNERABILITY, TALENT, target, 5),
 				at(9)
-						.effectStacked(IMPROVED_SCORCH, TALENT, target, 5),
+						.effectStacked(FIRE_VULNERABILITY, TALENT, target, 5),
 				at(39)
-						.effectExpired(IMPROVED_SCORCH, TALENT, target)
+						.effectExpired(FIRE_VULNERABILITY, TALENT, target)
 		);
 	}
 }

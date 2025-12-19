@@ -108,6 +108,12 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 			return of(effectCategory);
 		}
 
+		var effectName = tryParseEffectName(value);
+
+		if (effectName != null) {
+			return effectName;
+		}
+
 		var ownerHasEffect = tryParseOwnerHasEffect(value);
 
 		if (ownerHasEffect != null) {
@@ -172,12 +178,17 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 	}
 
 	private OwnerHasEffect tryParseOwnerHasEffect(String value) {
-		return parseAbilityIdArgument(value, OWNER_HAS_EFFECT, OwnerHasEffect::new);
+		return parseStringArgument(value, OWNER_HAS_EFFECT, OwnerHasEffect::new);
+	}
+
+	private EffectNameCondition tryParseEffectName(String value) {
+		return parseStringArgument(value, EFFECT_NAME, EffectNameCondition::new);
 	}
 
 	static final String OWNER_HEALTH_PCT = "Owner.Health%";
 	static final String OWNER_HAS_EFFECT = "Owner.HasEffect";
 	static final String TARGET_HEALTH_PCT = "Target.Health%";
+	static final String EFFECT_NAME = "EffectName";
 
 	static final Map<String, AttributeCondition> MISC_CONDITIONS;
 

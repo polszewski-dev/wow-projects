@@ -29,6 +29,10 @@ public final class AttributeConditionChecker {
 					args.getAppliedEffect() != null &&
 					args.getAppliedEffect().getCategory() == effectCategory;
 
+			case EffectNameCondition(var effectName) ->
+					args.getAppliedEffect() != null &&
+					args.getAppliedEffect().getName().equals(effectName);
+
 			case EmptyCondition() ->
 					true;
 
@@ -66,8 +70,8 @@ public final class AttributeConditionChecker {
 			case Operator operator ->
 					checkConditionOperator(operator, args);
 
-			case OwnerHasEffect(var abilityId) ->
-					args.getCaster().hasEffect(abilityId);
+			case OwnerHasEffect(var effectName) ->
+					args.getCaster().hasEffect(effectName);
 
 			case OwnerHealthPctLessThan(var value) ->
 					args.getCaster().getHealthPct().value() < value;

@@ -181,6 +181,12 @@ public sealed interface AttributeCondition extends Condition {
 		}
 	}
 
+	record EffectNameCondition(String effectName) implements AttributeCondition {
+		public EffectNameCondition {
+			Objects.requireNonNull(effectName);
+		}
+	}
+
 	record AbilityCategoryCondition(AbilityCategory abilityCategory) implements AttributeCondition {
 		public AbilityCategoryCondition {
 			Objects.requireNonNull(abilityCategory);
@@ -239,9 +245,9 @@ public sealed interface AttributeCondition extends Condition {
 
 	record HasPet() implements AttributeCondition {}
 
-	record OwnerHasEffect(AbilityId abilityId) implements AttributeCondition {
+	record OwnerHasEffect(String effectName) implements AttributeCondition {
 		public OwnerHasEffect {
-			Objects.requireNonNull(abilityId);
+			Objects.requireNonNull(effectName);
 		}
 	}
 

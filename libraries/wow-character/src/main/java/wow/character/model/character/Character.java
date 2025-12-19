@@ -119,6 +119,10 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return false;
 	}
 
+	default boolean hasEffect(String effectName) {
+		return false;
+	}
+
 	default int getNumberOfEffects(TalentTree tree) {
 		return 0;
 	}

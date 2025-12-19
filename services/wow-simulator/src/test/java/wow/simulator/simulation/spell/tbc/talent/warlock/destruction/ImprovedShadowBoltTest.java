@@ -8,6 +8,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.TALENT;
 import static wow.test.commons.AbilityNames.CORRUPTION;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.EffectNames.SHADOW_VULNERABILITY;
 import static wow.test.commons.TalentNames.IMPROVED_CORRUPTION;
 import static wow.test.commons.TalentNames.IMPROVED_SHADOW_BOLT;
 
@@ -40,9 +41,9 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12),
+						.effectApplied(SHADOW_VULNERABILITY, TALENT, target, 12),
 				at(15)
-						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
+						.effectExpired(SHADOW_VULNERABILITY, TALENT, target)
 		);
 	}
 
@@ -70,7 +71,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12)
+						.effectApplied(SHADOW_VULNERABILITY, TALENT, target, 12)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(4.5)
@@ -79,7 +80,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 3)
+						.effectChargesDecreased(SHADOW_VULNERABILITY, TALENT, target, 3)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(7.5)
@@ -88,7 +89,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 2)
+						.effectChargesDecreased(SHADOW_VULNERABILITY, TALENT, target, 2)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(10.5)
@@ -97,13 +98,13 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 1)
+						.effectChargesDecreased(SHADOW_VULNERABILITY, TALENT, target, 1)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(13.5)
 						.endGcd(player),
 				at(15)
-						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
+						.effectExpired(SHADOW_VULNERABILITY, TALENT, target)
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(690, HEALTH, false, target, SHADOW_BOLT)
@@ -132,7 +133,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12)
+						.effectApplied(SHADOW_VULNERABILITY, TALENT, target, 12)
 						.beginCast(player, SHADOW_BOLT, 3)
 						.beginGcd(player),
 				at(4.5)
@@ -141,11 +142,11 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(1035, HEALTH, true, target, SHADOW_BOLT)
-						.effectChargesDecreased(IMPROVED_SHADOW_BOLT, TALENT, target, 3)
-						.effectRemoved(IMPROVED_SHADOW_BOLT, TALENT, target)
-						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12),
+						.effectChargesDecreased(SHADOW_VULNERABILITY, TALENT, target, 3)
+						.effectRemoved(SHADOW_VULNERABILITY, TALENT, target)
+						.effectApplied(SHADOW_VULNERABILITY, TALENT, target, 12),
 				at(18)
-						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
+						.effectExpired(SHADOW_VULNERABILITY, TALENT, target)
 		);
 	}
 
@@ -171,7 +172,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.decreasedResource(863, HEALTH, true, target, SHADOW_BOLT)
-						.effectApplied(IMPROVED_SHADOW_BOLT, TALENT, target, 12)
+						.effectApplied(SHADOW_VULNERABILITY, TALENT, target, 12)
 						.beginCast(player, CORRUPTION)
 						.beginGcd(player)
 						.endCast(player, CORRUPTION)
@@ -186,7 +187,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 				at(12)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),
 				at(15)
-						.effectExpired(IMPROVED_SHADOW_BOLT, TALENT, target)
+						.effectExpired(SHADOW_VULNERABILITY, TALENT, target)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),
 				at(18)
 						.decreasedResource(180, HEALTH, target, CORRUPTION),

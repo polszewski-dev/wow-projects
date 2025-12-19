@@ -173,9 +173,9 @@ public sealed interface EventCondition extends Condition {
 		}
 	}
 
-	record OwnerHasEffectCondition(AbilityId abilityId) implements EventCondition {
+	record OwnerHasEffectCondition(String effectName) implements EventCondition {
 		public OwnerHasEffectCondition {
-			Objects.requireNonNull(abilityId);
+			Objects.requireNonNull(effectName);
 		}
 	}
 

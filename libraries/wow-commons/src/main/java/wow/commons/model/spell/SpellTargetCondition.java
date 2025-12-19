@@ -47,6 +47,10 @@ public sealed interface SpellTargetCondition extends Condition {
 		return new Comma(List.copyOf(conditions));
 	}
 
+	static Not not(SpellTargetCondition condition) {
+		return new Not(condition);
+	}
+
 	record Empty() implements SpellTargetCondition {
 		@Override
 		public boolean isEmpty() {
@@ -90,9 +94,15 @@ public sealed interface SpellTargetCondition extends Condition {
 		}
 	}
 
-	record HasEffect(AbilityId abilityId) implements SpellTargetCondition {
+	record Not(SpellTargetCondition condition) implements Operator {
+		public Not {
+			Objects.requireNonNull(condition);
+		}
+	}
+
+	record HasEffect(String effectName) implements SpellTargetCondition {
 		public HasEffect {
-			Objects.requireNonNull(abilityId);
+			Objects.requireNonNull(effectName);
 		}
 	}
 

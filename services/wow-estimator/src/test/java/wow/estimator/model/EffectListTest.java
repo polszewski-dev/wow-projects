@@ -39,7 +39,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void addEffectMultipleStacks() {
 		var effectList = new EffectList(character);
-		var effect = getEffect(120131856); // Darkmoon Card: Crusade
+		var effect = getEffect(39441); // Darkmoon Card: Crusade
 
 		effectList.addEffect(effect, 10);
 
@@ -77,7 +77,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void removeEffectMultipleStacks() {
 		var effectList = new EffectList(character);
-		var effect = getEffect(120131856); // Darkmoon Card: Crusade
+		var effect = getEffect(39441); // Darkmoon Card: Crusade
 
 		effectList.addEffect(effect, 10);
 

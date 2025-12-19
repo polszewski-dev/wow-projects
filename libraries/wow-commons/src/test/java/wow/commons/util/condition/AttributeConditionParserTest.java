@@ -133,7 +133,7 @@ class AttributeConditionParserTest {
 			),
 			testData(
 					"Owner.HasEffect(Mana Shield)",
-					new OwnerHasEffect(MANA_SHIELD)
+					new OwnerHasEffect(MANA_SHIELD.name())
 			),
 			testData(
 					"Owner.Health% < 35",
@@ -142,6 +142,10 @@ class AttributeConditionParserTest {
 			testData(
 					"Target.Health% < 20",
 					new TargetHealthPctLessThan(20)
+			),
+			testData(
+					"EffectName(Weakened Soul)",
+					new EffectNameCondition("Weakened Soul")
 			),
 			testData(
 					"Create Firestone (Greater)",

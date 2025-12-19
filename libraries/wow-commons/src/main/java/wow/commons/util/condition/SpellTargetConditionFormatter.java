@@ -74,6 +74,11 @@ public class SpellTargetConditionFormatter extends ConditionFormatter<SpellTarge
 	}
 
 	@Override
+	protected SpellTargetCondition getNotCondition(SpellTargetCondition operator) {
+		return ((Not) operator).condition();
+	}
+
+	@Override
 	protected boolean isOr(SpellTargetCondition condition) {
 		return condition instanceof Or;
 	}
@@ -86,6 +91,11 @@ public class SpellTargetConditionFormatter extends ConditionFormatter<SpellTarge
 	@Override
 	protected boolean isComma(SpellTargetCondition condition) {
 		return condition instanceof Comma;
+	}
+
+	@Override
+	protected boolean isNot(SpellTargetCondition condition) {
+		return condition instanceof Not;
 	}
 
 	@Override

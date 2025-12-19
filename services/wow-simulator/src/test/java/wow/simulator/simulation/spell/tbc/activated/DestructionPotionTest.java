@@ -6,6 +6,7 @@ import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.test.commons.AbilityNames.DESTRUCTION_POTION;
+import static wow.test.commons.EffectNames.DESTRUCTION;
 
 /**
  * User: POlszewski
@@ -30,9 +31,9 @@ class DestructionPotionTest extends TbcWarlockSpellSimulationTest {
 						.endCast(player, DESTRUCTION_POTION)
 						.cooldownStarted(player, DESTRUCTION_POTION, 120)
 						.cooldownStarted(player, GroupCooldownId.POTION, 120)
-						.effectApplied(DESTRUCTION_POTION, player, 15),
+						.effectApplied(DESTRUCTION, player, 15),
 				at(15)
-						.effectExpired(DESTRUCTION_POTION, player),
+						.effectExpired(DESTRUCTION, player),
 				at(120)
 						.cooldownExpired(player, DESTRUCTION_POTION)
 						.cooldownExpired(player, GroupCooldownId.POTION)

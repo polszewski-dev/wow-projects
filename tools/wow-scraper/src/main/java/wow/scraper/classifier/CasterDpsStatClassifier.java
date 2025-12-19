@@ -148,7 +148,8 @@ public class CasterDpsStatClassifier implements PveRoleStatClassifier {
 				condition.equals(AttributeCondition.of(ActionType.SPELL)) ||
 				condition instanceof SpellSchoolCondition ||
 				condition instanceof TalentTreeCondition ||
-				condition instanceof AbilityIdCondition
+				condition instanceof AbilityIdCondition ||
+				condition instanceof EffectNameCondition
 		;
 	}
 

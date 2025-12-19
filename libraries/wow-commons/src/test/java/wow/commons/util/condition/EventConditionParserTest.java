@@ -80,7 +80,7 @@ class EventConditionParserTest {
 			),
 			testData(
 					"Owner.HasEffect(Mana Shield)",
-					new OwnerHasEffectCondition(MANA_SHIELD)
+					new OwnerHasEffectCondition(MANA_SHIELD.name())
 			),
 			testData(
 					"Owner.IsChanneling(Drain Soul)",

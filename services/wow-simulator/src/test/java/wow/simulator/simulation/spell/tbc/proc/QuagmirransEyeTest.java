@@ -11,6 +11,7 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.ITEM;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.EffectNames.SPELL_HASTE;
 
 /**
  * User: POlszewski
@@ -38,10 +39,10 @@ class QuagmirransEyeTest extends TbcWarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.cooldownStarted(player, cooldownId, 45)
-						.effectApplied("Quagmirran's Eye", ITEM, player, 6)
+						.effectApplied(SPELL_HASTE, ITEM, player, 6)
 						.decreasedResource(607, HEALTH, false, target, SHADOW_BOLT),
 				at(9)
-						.effectExpired("Quagmirran's Eye", ITEM, player),
+						.effectExpired(SPELL_HASTE, ITEM, player),
 				at(48)
 						.cooldownExpired(player, cooldownId)
 		);

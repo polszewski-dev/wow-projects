@@ -8,6 +8,8 @@ import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.ITEM_SET;
 import static wow.test.commons.AbilityNames.INCINERATE;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.EffectNames.FLAMESHADOW;
+import static wow.test.commons.EffectNames.SHADOWFLAME;
 
 /**
  * User: POlszewski
@@ -36,10 +38,10 @@ class T4P2BonusTest extends TbcWarlockSpellSimulationTest {
 			at(3)
 					.endCast(player, SHADOW_BOLT)
 					.decreasedResource(420, MANA, player, SHADOW_BOLT)
-					.effectApplied("Voidheart Raiment (2)", ITEM_SET, player, 15)
+					.effectApplied(FLAMESHADOW, ITEM_SET, player, 15)
 					.decreasedResource(755, HEALTH, target, SHADOW_BOLT),
 			at(18)
-					.effectExpired("Voidheart Raiment (2)", ITEM_SET, player)
+					.effectExpired(FLAMESHADOW, ITEM_SET, player)
 		);
 	}
 
@@ -60,10 +62,10 @@ class T4P2BonusTest extends TbcWarlockSpellSimulationTest {
 				at(2.5)
 						.endCast(player, INCINERATE)
 						.decreasedResource(355, MANA, player, INCINERATE)
-						.effectApplied("Voidheart Raiment (2)", ITEM_SET, player, 15)
+						.effectApplied(SHADOWFLAME, ITEM_SET, player, 15)
 						.decreasedResource(629, HEALTH, target, INCINERATE),
 				at(17.5)
-						.effectExpired("Voidheart Raiment (2)", ITEM_SET, player)
+						.effectExpired(SHADOWFLAME, ITEM_SET, player)
 		);
 	}
 

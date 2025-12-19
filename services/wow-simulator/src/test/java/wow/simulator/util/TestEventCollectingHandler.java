@@ -123,87 +123,79 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void effectApplied(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 		var duration = effect.getDuration();
 
-		addEvent(new EffectApplied(time, sourceName, type, target, duration));
+		addEvent(new EffectApplied(time, effect.getName(), type, target, duration));
 	}
 
 	@Override
 	public void effectStacked(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 		var numStacks = effect.getNumStacks();
 
-		addEvent(new EffectStacked(time, sourceName, type, target, numStacks));
+		addEvent(new EffectStacked(time, effect.getName(), type, target, numStacks));
 	}
 
 	@Override
 	public void effectStacksIncreased(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 		var numStacks = effect.getNumStacks();
 
-		addEvent(new EffectStacksIncreased(time, sourceName, type, target, numStacks));
+		addEvent(new EffectStacksIncreased(time, effect.getName(), type, target, numStacks));
 	}
 
 	@Override
 	public void effectStacksDecreased(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 		var numStacks = effect.getNumStacks();
 
-		addEvent(new EffectStacksDecreased(time, sourceName, type, target, numStacks));
+		addEvent(new EffectStacksDecreased(time, effect.getName(), type, target, numStacks));
 	}
 
 	@Override
 	public void effectChargesIncreased(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 		var numCharges = effect.getNumCharges();
 
-		addEvent(new EffectChargesIncreased(time, sourceName, type, target, numCharges));
+		addEvent(new EffectChargesIncreased(time, effect.getName(), type, target, numCharges));
 	}
 
 	@Override
 	public void effectChargesDecreased(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 		var numCharges = effect.getNumCharges();
 
-		addEvent(new EffectChargesDecreased(time, sourceName, type, target, numCharges));
+		addEvent(new EffectChargesDecreased(time, effect.getName(), type, target, numCharges));
 	}
 
 	@Override
 	public void effectExpired(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 
-		addEvent(new EffectExpired(time, sourceName, type, target));
+		addEvent(new EffectExpired(time, effect.getName(), type, target));
 	}
 
 	@Override
 	public void effectRemoved(EffectInstance effect) {
 		var time = now();
-		var sourceName = effect.getSource().getName();
 		var type = getEffectType(effect);
 		var target = effect.getTarget();
 
-		addEvent(new EffectRemoved(time, sourceName, type, target));
+		addEvent(new EffectRemoved(time, effect.getName(), type, target));
 	}
 
 	private EffectType getEffectType(EffectInstance effect) {
@@ -244,7 +236,6 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 
 	public int getDamageDone(String abilityName, Unit target, Unit caster) {
 		return getDamageEvents(abilityName, target, caster)
-				.filter(event -> casterIs(event, caster))
 				.mapToInt(DecreasedResource::amount)
 				.sum();
 	}
@@ -316,7 +307,8 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 
 	public Stream<DecreasedResource> getDamageEvents(String abilityName, Unit target, Unit caster) {
 		return getDecreasedResourceEvents()
-				.filter(x -> x.isDamage(abilityName, target));
+				.filter(x -> x.isDamage(abilityName, target))
+				.filter(event -> casterIs(event, caster));
 	}
 
 	public Stream<DecreasedResource> getManaPaidEvents(String abilityName, Unit target) {

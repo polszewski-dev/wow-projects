@@ -74,8 +74,8 @@ public final class EventConditionChecker {
 			case Operator operator ->
 					checkConditionOperator(operator, args);
 
-			case OwnerHasEffectCondition(var abilityId) ->
-					args.getCaster().hasEffect(abilityId);
+			case OwnerHasEffectCondition(var effectName) ->
+					args.getCaster().hasEffect(effectName);
 
 			case OwnerHealthPctLessThan(var value) ->
 					args.getCaster().getHealthPct().value() < value;

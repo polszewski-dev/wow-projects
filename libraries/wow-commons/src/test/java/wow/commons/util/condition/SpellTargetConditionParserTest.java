@@ -48,7 +48,7 @@ class SpellTargetConditionParserTest {
 			),
 			testData(
 					"HasEffect(Immolate)",
-					new HasEffect(IMMOLATE)
+					new HasEffect(IMMOLATE.name())
 			),
 			testData(
 					"Health% < 20",
@@ -96,6 +96,14 @@ class SpellTargetConditionParserTest {
 			testData(
 					"Class = Mage | Class = Warlock",
 					or(new IsClass(MAGE), new IsClass(WARLOCK))
+			),
+			testData(
+					"~HasEffect(Weakened Soul)",
+					not(new HasEffect("Weakened Soul"))
+			),
+			testData(
+					"~(Class = Mage | Class = Warlock)",
+					not(or(new IsClass(MAGE), new IsClass(WARLOCK)))
 			)
 	);
 

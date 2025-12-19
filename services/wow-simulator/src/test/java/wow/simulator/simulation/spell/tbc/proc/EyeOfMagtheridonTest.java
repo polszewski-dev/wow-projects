@@ -8,6 +8,7 @@ import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.ITEM;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.EffectNames.RECURRING_POWER;
 
 /**
  * User: POlszewski
@@ -35,9 +36,9 @@ class EyeOfMagtheridonTest extends TbcWarlockSpellSimulationTest {
 						.endCast(player, SHADOW_BOLT)
 						.decreasedResource(420, MANA, player, SHADOW_BOLT)
 						.spellResisted(player, SHADOW_BOLT, target)
-						.effectApplied("Eye of Magtheridon", ITEM, player, 10),
+						.effectApplied(RECURRING_POWER, ITEM, player, 10),
 				at(13)
-						.effectExpired("Eye of Magtheridon", ITEM, player)
+						.effectExpired(RECURRING_POWER, ITEM, player)
 		);
 	}
 

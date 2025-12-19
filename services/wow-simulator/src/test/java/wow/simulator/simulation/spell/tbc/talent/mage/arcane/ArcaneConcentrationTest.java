@@ -7,6 +7,7 @@ import wow.simulator.simulation.spell.tbc.talent.mage.TbcMageTalentSimulationTes
 
 import static wow.simulator.util.EffectType.TALENT;
 import static wow.test.commons.AbilityNames.SCORCH;
+import static wow.test.commons.EffectNames.CLEARCASTING;
 import static wow.test.commons.TalentNames.ARCANE_CONCENTRATION;
 
 /**
@@ -36,7 +37,7 @@ class ArcaneConcentrationTest extends TbcMageTalentSimulationTest {
 					.beginCast(player, SCORCH, 1.5),
 			at(1.5)
 					.endCast(player, SCORCH)
-					.effectApplied(ARCANE_CONCENTRATION, TALENT, player, Duration.INFINITE)
+					.effectApplied(CLEARCASTING, TALENT, player, Duration.INFINITE)
 		);
 	}
 }

@@ -23,6 +23,9 @@ public abstract class ConditionFormatter<T extends Condition> {
 		if (isComma(condition)) {
 			return formatComma(condition);
 		}
+		if (isNot(condition)) {
+			return formatNot(condition);
+		}
 		return formatPrimitiveCondition(condition);
 	}
 
@@ -50,6 +53,19 @@ public abstract class ConditionFormatter<T extends Condition> {
 				.collect(joining(", "));
 	}
 
+	private String formatNot(T operator) {
+		int priority = getPriority(operator);
+		int conditionPriority = getPriority(getNotCondition(operator));
+
+		var conditionStr = format(getNotCondition(operator));
+
+		if (conditionPriority > priority) {
+			conditionStr = "(" + conditionStr + ")";
+		}
+
+		return "~" + conditionStr;
+	}
+
 	protected abstract String formatPrimitiveCondition(T condition);
 
 	protected boolean isBinaryOperator(T condition) {
@@ -68,6 +84,10 @@ public abstract class ConditionFormatter<T extends Condition> {
 		return false;
 	}
 
+	protected boolean isNot(T condition) {
+		return false;
+	}
+
 	protected T getLeft(T operator) {
 		throw new UnsupportedOperationException();
 	}
@@ -77,6 +97,10 @@ public abstract class ConditionFormatter<T extends Condition> {
 	}
 
 	protected List<T> getCommaConditions(T comma) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected T getNotCondition(T operator) {
 		throw new UnsupportedOperationException();
 	}
 
