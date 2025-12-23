@@ -48,6 +48,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String PERIODIC_TO = "to";
 	public static final String AUGMENTED_ABILITY = "augmented ability";
 	public static final String STACKS_MAX = "stacks: max";
+	public static final String COUNTERS_MAX = "counters: max";
 	public static final String SCOPE = "scope";
 	public static final String EXCLUSION_GROUP = "exclusion group";
 	public static final String PREVENTED_SCHOOLS = "prevented schools";
@@ -70,6 +71,8 @@ public final class SpellBaseExcelColumnNames {
 	public static final String APPLIED_EFFECT_DURATION = "duration";
 	public static final String APPLIED_EFFECT_STACKS = "stacks";
 	public static final String APPLIED_EFFECT_CHARGES = "charges";
+	public static final String APPLIED_EFFECT_NUM_COUNTERS = "counters";
+	public static final String APPLIED_EFFECT_COUNTER_SCALING = "counter scaling";
 	public static final String APPLIED_EFFECT_REPLACEMENT_MODE = "replacement mode";
 
 	public static final String COST_PREFIX = "cost: ";

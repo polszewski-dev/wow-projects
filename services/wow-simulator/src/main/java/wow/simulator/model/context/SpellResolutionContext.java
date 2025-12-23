@@ -241,6 +241,7 @@ public class SpellResolutionContext extends Context {
 					tickInterval,
 					command.numStacks(),
 					command.numCharges(),
+					getNumCounters(command),
 					effectSource,
 					getSourceSpell(),
 					this
@@ -253,6 +254,7 @@ public class SpellResolutionContext extends Context {
 					duration,
 					command.numStacks(),
 					command.numCharges(),
+					getNumCounters(command),
 					effectSource,
 					getSourceSpell(),
 					this
@@ -281,10 +283,20 @@ public class SpellResolutionContext extends Context {
 				tickInterval,
 				command.numStacks(),
 				command.numCharges(),
+				getNumCounters(command),
 				new AbilitySource(action.getAbility()),
 				getSourceSpell(),
 				this
 		);
+	}
+
+	private int getNumCounters(ApplyEffect command) {
+		var counterParams = command.counterParams();
+
+		return switch (counterParams.scaling()) {
+			case DEFAULT -> counterParams.number();
+			case LAST_DAMAGE_DONE_PCT -> (int) (counterParams.number() * parentContext.getLastDamageDone() / 100.0);
+		};
 	}
 
 	private EffectAugmentations getEffectAugmentations(EffectInstance effect) {

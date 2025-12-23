@@ -21,6 +21,7 @@ public enum SpellTargetType {
 
 	ENEMY,
 	ENEMY_AOE,
+	ENEMY_AOE_EXCEPT_TARGET,
 
 	ANY,
 

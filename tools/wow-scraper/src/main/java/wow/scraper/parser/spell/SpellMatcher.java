@@ -158,6 +158,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 
 		var augmentedAbilities = params.augmentedAbilities();
 		var maxStacks = getOptionalInteger(params.maxStacks()).orElse(1);
+		var maxCounters = 0;
 		var periodicComponent = getPeriodicComponent(params);
 		var modifierComponent = getModifierComponent(params);
 		var absorptionComponent = getAbsorptionComponent(params);
@@ -167,6 +168,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var effect = new EffectImpl(augmentedAbilities);
 
 		effect.setMaxStacks(maxStacks);
+		effect.setMaxCounters(maxCounters);
 		effect.setScope(EffectScope.GLOBAL);
 		effect.setPeriodicComponent(periodicComponent);
 		effect.setModifierComponent(modifierComponent);
@@ -320,6 +322,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 		var duration = getOptionalAnyDuration(effectApplication.duration()).orElseThrow();
 		var numStacks = getOptionalInteger(effectApplication.numStacks()).orElse(1);
 		var numCharges = getOptionalInteger(effectApplication.numCharges()).orElse(1);
+		var counterParams = CounterParams.EMPTY;
 		var replacementMode = EffectReplacementMode.DEFAULT;
 
 		var command = new ApplyEffect(
@@ -329,6 +332,7 @@ public abstract class SpellMatcher<P extends SpellPattern<Q>, Q extends ScraperP
 				duration,
 				numStacks,
 				numCharges,
+				counterParams,
 				replacementMode
 		);
 

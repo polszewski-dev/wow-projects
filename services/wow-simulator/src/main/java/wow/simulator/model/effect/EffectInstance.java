@@ -52,11 +52,15 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	void removeCharge();
 
+	void addCounters(int countersToAdd);
+
 	AnyDuration getDuration();
 
 	int getNumStacks();
 
 	int getNumCharges();
+
+	int getNumCounters();
 
 	void setOnEffectFinished(Runnable onEffectFinished);
 

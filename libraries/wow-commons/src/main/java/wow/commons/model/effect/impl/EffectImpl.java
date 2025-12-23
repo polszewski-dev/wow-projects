@@ -28,6 +28,7 @@ public class EffectImpl implements Effect {
 	private Description description;
 	private TimeRestriction timeRestriction;
 	private int maxStacks;
+	private int maxCounters;
 	private EffectScope scope;
 	private EffectExclusionGroup exclusionGroup;
 	private PeriodicComponent periodicComponent;

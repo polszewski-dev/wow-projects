@@ -115,6 +115,7 @@ public class SpellExcelParser extends ExcelParser {
 				command.duration(),
 				command.numStacks(),
 				command.numCharges(),
+				command.counterParams(),
 				command.replacementMode()
 		);
 	}

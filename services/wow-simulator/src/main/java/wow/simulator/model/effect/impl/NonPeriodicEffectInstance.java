@@ -25,11 +25,12 @@ public class NonPeriodicEffectInstance extends EffectInstanceImpl {
 			AnyDuration duration,
 			int numStacks,
 			int numCharges,
+			int numCounters,
 			EffectSource effectSource,
 			Spell sourceSpell,
 			Context parentContext
 	) {
-		super(owner, target, effect, duration, numStacks, numCharges, effectSource, sourceSpell, parentContext);
+		super(owner, target, effect, duration, numStacks, numCharges, numCounters, effectSource, sourceSpell, parentContext);
 	}
 
 	@Override

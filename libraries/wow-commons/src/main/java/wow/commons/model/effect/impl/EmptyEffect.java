@@ -51,6 +51,11 @@ public class EmptyEffect implements Effect {
 	}
 
 	@Override
+	public int getMaxCounters() {
+		return 0;
+	}
+
+	@Override
 	public EffectScope getScope() {
 		return EffectScope.PERSONAL;
 	}

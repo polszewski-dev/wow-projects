@@ -81,6 +81,7 @@ public class TalentSheetParser extends AbstractSpellBaseSheetParser {
 		var events = getEvents(MAX_TALENT_EVENTS);
 
 		effect.setMaxStacks(1);
+		effect.setMaxCounters(0);
 		effect.setScope(EffectScope.GLOBAL);
 		effect.setExclusionGroup(null);
 		effect.setModifierComponent(modifierComponent);

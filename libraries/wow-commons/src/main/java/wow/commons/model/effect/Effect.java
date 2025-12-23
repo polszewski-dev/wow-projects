@@ -32,6 +32,8 @@ public interface Effect extends Described, TimeRestricted {
 
 	int getMaxStacks();
 
+	int getMaxCounters();
+
 	EffectScope getScope();
 
 	EffectExclusionGroup getExclusionGroup();

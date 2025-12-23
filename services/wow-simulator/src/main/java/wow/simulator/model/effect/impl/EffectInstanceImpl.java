@@ -44,6 +44,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	protected int numStacks;
 	protected int numCharges;
+	protected int numCounters;
 
 	private final EffectSource effectSource;
 	private final Spell sourceSpell;
@@ -56,6 +57,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	private boolean stacked = false;
 	private boolean removed;
 	private boolean fireStacksMaxed;
+	private boolean fireCountersMaxed;
 
 	@Getter
 	private EffectInstanceId stackedEffectInstanceId;
@@ -73,6 +75,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			AnyDuration duration,
 			int numStacks,
 			int numCharges,
+			int numCounters,
 			EffectSource effectSource,
 			Spell sourceSpell,
 			Context parentContext
@@ -84,6 +87,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.duration = duration;
 		this.numStacks = numStacks;
 		this.numCharges = numCharges;
+		this.numCounters = numCounters;
 		this.effectSource = effectSource;
 		this.sourceSpell = sourceSpell;
 		this.effectUpdateContext = new EffectUpdateContext(this, parentContext);
@@ -216,6 +220,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.stacked = true;
 		this.stackedEffectInstanceId = existingEffect.getInstanceId();
 		this.addStacks(existingEffect.getNumStacks());
+		this.addCounters(existingEffect.getNumCounters());
 		((EffectInstanceImpl) existingEffect).silentRemoval = true;
 	}
 
@@ -240,9 +245,22 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		checkIfStacksAreMaxed();
 	}
 
+	@Override
+	public void addCounters(int countersToAdd) {
+		numCounters = Math.min(numCounters + countersToAdd, getMaxCounters());
+
+		checkIfCountersAreMaxed();
+	}
+
 	private void checkIfStacksAreMaxed() {
 		if (effect.getMaxStacks() > 1 && numStacks == effect.getMaxStacks() && !silentRemoval) {
 			fireStacksMaxed();
+		}
+	}
+
+	private void checkIfCountersAreMaxed() {
+		if (effect.getMaxCounters() > 1 && numCounters == effect.getMaxCounters() && !silentRemoval) {
+			fireCountersMaxed();
 		}
 	}
 
@@ -254,9 +272,20 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		}
 	}
 
+	private void fireCountersMaxed() {
+		if (getStatus() == ActionStatus.CREATED) {
+			this.fireCountersMaxed = true;
+		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
+			EventContext.fireCountersMaxed(this, effectUpdateContext);
+		}
+	}
+
 	public void fireDeferredEvents() {
 		if (fireStacksMaxed) {
 			EventContext.fireStacksMaxed(this, effectUpdateContext);
+		}
+		if (fireCountersMaxed) {
+			EventContext.fireCountersMaxed(this, effectUpdateContext);
 		}
 	}
 
@@ -321,6 +350,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		return numCharges;
 	}
 
+	@Override
+	public int getNumCounters() {
+		return numCounters;
+	}
+
 	// effect interface
 
 	@Override
@@ -346,6 +380,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	public int getMaxStacks() {
 		return effect.getMaxStacks();
+	}
+
+	@Override
+	public int getMaxCounters() {
+		return effect.getMaxCounters();
 	}
 
 	@Override

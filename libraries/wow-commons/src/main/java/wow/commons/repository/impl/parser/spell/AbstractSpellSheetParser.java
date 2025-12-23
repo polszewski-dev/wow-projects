@@ -409,10 +409,28 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var duration = colAppliedEffectDuration.prefixed(prefix).getAnyDuration();
 		var numStacks = colAppliedEffectStacks.prefixed(prefix).getInteger();
 		var numCharges = colAppliedEffectCharges.prefixed(prefix).getInteger();
+		var counterParams = getCounterParams(prefix);
 		var replacementMode = colReplacementMode.prefixed(prefix).getEnum(EffectReplacementMode::parse, EffectReplacementMode.DEFAULT);
 
 		var dummy = getDummyEffect(effectId);
 
-		return new ApplyEffect(target, condition, dummy, duration, numStacks, numCharges, replacementMode);
+		return new ApplyEffect(target, condition, dummy, duration, numStacks, numCharges, counterParams, replacementMode);
+	}
+
+	private final ExcelColumn colAppliedEffectNumCounters = column(APPLIED_EFFECT_NUM_COUNTERS, true);
+	private final ExcelColumn colAppliedEffectCounterScaling = column(APPLIED_EFFECT_COUNTER_SCALING, true);
+
+	private CounterParams getCounterParams(String prefix) {
+		var colNumCounters = colAppliedEffectNumCounters.prefixed(prefix);
+		var colCounterScaling = colAppliedEffectCounterScaling.prefixed(prefix);
+
+		if (colNumCounters.isEmpty() && colCounterScaling.isEmpty()) {
+			return CounterParams.EMPTY;
+		}
+
+		var numCounters = colNumCounters.getInteger(0);
+		var counterScaling = colCounterScaling.getEnum(CounterScaling::parse, CounterScaling.DEFAULT);
+
+		return new CounterParams(numCounters, counterScaling);
 	}
 }

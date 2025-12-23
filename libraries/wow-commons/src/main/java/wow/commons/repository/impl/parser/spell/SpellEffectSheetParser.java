@@ -47,6 +47,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 	}
 
 	private final ExcelColumn colMaxStacks = column(STACKS_MAX);
+	private final ExcelColumn colMaxCounters = column(COUNTERS_MAX, true);
 	private final ExcelColumn colScope = column(SCOPE);
 	private final ExcelColumn colExclusionGroup = column(EXCLUSION_GROUP);
 	private final ExcelColumn colPreventedSchools = column(PREVENTED_SCHOOLS, true);
@@ -57,6 +58,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
 		var maxStacks = colMaxStacks.getInteger();
+		var maxCounters = colMaxCounters.getInteger(0);
 		var scope = colScope.getEnum(EffectScope::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(EffectExclusionGroup::parse, null);
 		var periodicComponent = getPeriodicComponent();
@@ -70,6 +72,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		effect.setDescription(description);
 		effect.setTimeRestriction(timeRestriction);
 		effect.setMaxStacks(maxStacks);
+		effect.setMaxCounters(maxCounters);
 		effect.setScope(scope);
 		effect.setExclusionGroup(exclusionGroup);
 		effect.setPeriodicComponent(periodicComponent);
@@ -135,6 +138,9 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 
 			case ADD_STACK ->
 					getAddStackPeriodically(prefix);
+
+			case COUNTER_DAMAGE ->
+					getCounterDamage(prefix);
 
 			default ->
 					throw new IllegalArgumentException(type.name());
@@ -218,6 +224,14 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		var target = getTarget(prefix);
 
 		return new AddStackPeriodically(target);
+	}
+
+	private DealCounterDamagePeriodically getCounterDamage(String prefix) {
+		var target = getTarget(prefix);
+		var coefficient = getCoefficient(prefix);
+		var numTicks = colPeriodicNumTicks.prefixed(prefix).getInteger();
+
+		return new DealCounterDamagePeriodically(target, coefficient, numTicks);
 	}
 
 	private final ExcelColumn colTickWeights = column(PERIODIC_TICK_WEIGHTS, true);

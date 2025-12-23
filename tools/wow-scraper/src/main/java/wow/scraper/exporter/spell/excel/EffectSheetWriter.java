@@ -143,6 +143,7 @@ public class EffectSheetWriter extends SpellBaseSheetWriter<Effect, SpellBaseExc
 			case AddStackPeriodically ignored -> ADD_STACK;
 			case GainPctOfTotalManaPeriodically ignored -> GAIN_PCT_OF_TOTAL_MANA;
 			case HealPctOfDamageTakenPeriodically ignored -> HEAL_PCT_OF_DAMAGE_TAKEN;
+			case DealCounterDamagePeriodically ignored -> COUNTER_DAMAGE;
 		};
 	}
 

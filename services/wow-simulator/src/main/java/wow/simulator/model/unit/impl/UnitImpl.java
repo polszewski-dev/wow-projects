@@ -502,6 +502,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 				duration,
 				numStacks,
 				1,
+				0,
 				null,
 				null,
 				null

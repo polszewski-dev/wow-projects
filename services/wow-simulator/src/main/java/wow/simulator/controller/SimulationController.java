@@ -76,6 +76,7 @@ public class SimulationController {
 				Duration.INFINITE,
 				effect.getMaxStacks(),
 				1,
+				0,
 				null,
 				null,
 				null

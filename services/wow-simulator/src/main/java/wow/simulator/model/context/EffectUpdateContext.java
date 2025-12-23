@@ -2,6 +2,7 @@ package wow.simulator.model.context;
 
 import wow.character.model.snapshot.PeriodicSpellComponentSnapshot;
 import wow.commons.model.effect.component.PeriodicComponent;
+import wow.commons.model.spell.TickScheme;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
@@ -61,6 +62,9 @@ public class EffectUpdateContext extends Context {
 			case Copy command ->
 					copy(command, target, getLastValueSnapshot());
 
+			case DealCounterDamagePeriodically command ->
+					dealCounterDamagePeriodically(tickNo, command, target);
+
 			default ->
 					throw new UnsupportedOperationException();
 		}
@@ -105,6 +109,18 @@ public class EffectUpdateContext extends Context {
 		var roundedTickManaGain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
 		increaseMana(target, roundedTickManaGain);
+	}
+
+	private void dealCounterDamagePeriodically(int tickNo, DealCounterDamagePeriodically command, Unit target) {
+		var damageCommand = new DealDamagePeriodically(
+				command.target(),
+				command.coefficient(),
+				effect.getNumCounters(),
+				command.numTicks(),
+				TickScheme.DEFAULT
+		);
+
+		dealPeriodicDamage(tickNo, 1, damageCommand, target);
 	}
 
 	private int getRoundedTickAmount(PeriodicSpellComponentSnapshot snapshot, int tickNo, int numStacks, Unit target) {

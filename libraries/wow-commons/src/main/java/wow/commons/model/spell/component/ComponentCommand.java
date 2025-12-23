@@ -369,6 +369,33 @@ public sealed interface ComponentCommand {
 		}
 	}
 
+	record DealCounterDamagePeriodically(
+			SpellTarget target,
+			Coefficient coefficient,
+			int numTicks
+	) implements PeriodicCommand {
+		public DealCounterDamagePeriodically {
+			Objects.requireNonNull(target);
+		}
+	}
+
+	enum CounterScaling {
+		DEFAULT,
+		LAST_DAMAGE_DONE_PCT;
+
+		public static CounterScaling parse(String value) {
+			return EnumUtil.parse(value, values());
+		}
+	}
+
+	record CounterParams(int number, CounterScaling scaling) {
+		public static CounterParams EMPTY = new CounterParams(0, CounterScaling.DEFAULT);
+
+		public CounterParams {
+			Objects.requireNonNull(scaling);
+		}
+	}
+
 	record ApplyEffect(
 			SpellTarget target,
 			SpellTargetCondition condition,
@@ -376,6 +403,7 @@ public sealed interface ComponentCommand {
 			AnyDuration duration,
 			int numStacks,
 			int numCharges,
+			CounterParams counterParams,
 			EffectReplacementMode replacementMode
 	) implements ComponentCommand, HasSecondaryTargetCondition {
 		public ApplyEffect {

@@ -88,19 +88,33 @@ public class EventContext {
 	}
 
 	public static void fireStacksMaxed(EffectInstance effect, Context parentContext) {
-		var context = new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell(), parentContext);
+		var context = getEffectEventContext(effect, parentContext);
 
-		for (var event : effect.getEvents()) {
-			if (event.types().contains(STACKS_MAXED)) {
-				context.performEventActions(event, effect);
-			}
-		}
+		context.fireEvent(STACKS_MAXED, effect);
+	}
+
+	public static void fireCountersMaxed(EffectInstance effect, Context parentContext) {
+		var context = getEffectEventContext(effect, parentContext);
+
+		context.fireEvent(COUNTERS_MAXED, effect);
 	}
 
 	public static void fireEffectEnded(EffectInstance effect, Context parentContext) {
-		var context = new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell(), parentContext);
+		var context = getEffectEventContext(effect, parentContext);
 
 		context.fireEvent(EFFECT_ENDED);
+	}
+
+	private static EventContext getEffectEventContext(EffectInstance effect, Context parentContext) {
+		return new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell(), parentContext);
+	}
+
+	private void fireEvent(EventType eventType, EffectInstance effect) {
+		for (var event : effect.getEvents()) {
+			if (event.types().contains(eventType)) {
+				performEventActions(event, effect);
+			}
+		}
 	}
 
 	private void fireEvent(EventType eventType) {
@@ -207,6 +221,8 @@ public class EventContext {
 					triggerSpell(event, effect, true);
 			case INCREASE_THIS_EFFECT_BY_PCT ->
 					increaseThisEffect(event, (EffectInstance) effect);
+			case INCREASE_COUNTERS_BY_LAST_DAMAGE_DONE ->
+					increaseCountersByLastDamageDone((EffectInstance) effect);
 		}
 	}
 
@@ -229,6 +245,12 @@ public class EventContext {
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
 		resolutionContext.resolveTriggeredSpell(effect);
+	}
+
+	private void increaseCountersByLastDamageDone(EffectInstance effect) {
+		var lastDamageDone = parentContext.getLastDamageDone();
+
+		effect.addCounters(lastDamageDone);
 	}
 
 	private void increaseThisEffect(Event event, EffectInstance effect) {

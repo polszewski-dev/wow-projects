@@ -22,7 +22,8 @@ public enum ComponentType {
 	ADD_STACK,
 	REDUCE_THREAT,
 	SUMMON,
-	SACRIFICE;
+	SACRIFICE,
+	COUNTER_DAMAGE;
 
 	public static ComponentType parse(String value) {
 		return EnumUtil.parse(value, values());

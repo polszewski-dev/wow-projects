@@ -438,6 +438,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 					command.duration(),
 					command.numStacks(),
 					command.numCharges(),
+					command.counterParams(),
 					command.replacementMode()
 			);
 		}
@@ -454,12 +455,27 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 										Duration.seconds(24),
 										1,
 										1,
+										CounterParams.EMPTY,
 										EffectReplacementMode.DEFAULT
 								)
 						)
 				)),
 				new EffectApplicationData(LIFE_TAP, 7, null, null)
 		);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"22959, 0, DEFAULT",
+			"5012654, 40, LAST_DAMAGE_DONE_PCT"
+	})
+	void counters_is_correct(int spellId, int numCounters, CounterScaling counterScaling) {
+		var spell = getSpell(spellId, TBC_P5);
+
+		var actual = spell.getEffectApplication().commands().getFirst().counterParams();
+		var expected = new CounterParams(numCounters, counterScaling);
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
 	@ParameterizedTest
