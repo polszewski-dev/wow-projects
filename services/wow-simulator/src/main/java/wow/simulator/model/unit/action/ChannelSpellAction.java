@@ -24,7 +24,7 @@ public class ChannelSpellAction extends UnitAction {
 	@Override
 	protected void setUp() {
 		this.channeledEffect.setOnEffectFinished(this::onEndChannel);
-		fromNowAfter(channeledEffect.getDuration(), () -> {});
+		stayIdleFor(channeledEffect.getDuration());
 		onBeginChannel();
 	}
 

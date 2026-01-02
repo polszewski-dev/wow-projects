@@ -26,7 +26,7 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 
 	public void addEffect(EffectInstance effect, EffectReplacementMode replacementMode) {
 		var effectImpl = (EffectInstanceImpl) effect;
-		var matchingEffect = getMatchingEffect(effect);
+		var matchingEffect = (EffectInstanceImpl) getMatchingEffect(effect);
 
 		if (matchingEffect == null) {
 			addNewEffect(effectImpl);
@@ -37,18 +37,20 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 
 	private void addNewEffect(EffectInstanceImpl effect) {
 		attach(effect);
-
 		getScheduler().add(effect);
-
-		effect.fireDeferredEvents();
 	}
 
-	private void replaceExistingEffect(EffectInstanceImpl effect, EffectInstance matchingEffect, EffectReplacementMode replacementMode) {
+	private void replaceExistingEffect(EffectInstanceImpl effect, EffectInstanceImpl matchingEffect, EffectReplacementMode replacementMode) {
 		switch (replacementMode) {
 			case DEFAULT -> {
-				effect.stack(matchingEffect);
-				hardRemoveEffect(matchingEffect);
-				addNewEffect(effect);
+				if (matchingEffect.isRemoved()) {
+					addNewEffect(effect);
+				} else if (matchingEffect.getMaxStacks() == 1) {
+					hardRemoveEffect(matchingEffect);
+					addNewEffect(effect);
+				} else {
+					matchingEffect.stack(effect);
+				}
 			}
 			case ADD_CHARGE ->
 				matchingEffect.addCharge();

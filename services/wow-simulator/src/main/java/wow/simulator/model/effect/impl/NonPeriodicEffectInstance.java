@@ -35,6 +35,12 @@ public class NonPeriodicEffectInstance extends EffectInstanceImpl {
 
 	@Override
 	protected void doSetUp() {
-		fromNowAfter(duration, () -> {});
+		stayIdleFor(duration);
+	}
+
+	@Override
+	protected void resetDuration() {
+		resetEndTime();
+		stayIdleFor(duration);
 	}
 }

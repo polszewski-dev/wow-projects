@@ -53,14 +53,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	protected AnyTime endTime;
 
-	private boolean silentRemoval = false;
-	private boolean stacked = false;
+	@Getter
 	private boolean removed;
+	private boolean deferEvents;
 	private boolean fireStacksMaxed;
 	private boolean fireCountersMaxed;
-
-	@Getter
-	private EffectInstanceId stackedEffectInstanceId;
 
 	private Runnable onEffectFinished;
 
@@ -103,7 +100,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	protected final void setUp() {
-		endTime = now().add(duration);
+		resetEndTime();
 		doSetUp();
 		checkIfStacksAreMaxed();
 	}
@@ -113,12 +110,8 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	protected void onStarted() {
 		effectListChanged();
-
-		if (stacked) {
-			getGameLog().effectStacked(this);
-		} else {
-			getGameLog().effectApplied(this);
-		}
+		getGameLog().effectApplied(this);
+		fireDeferredEvents();
 	}
 
 	@Override
@@ -132,7 +125,6 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		}
 
 		effectListChanged();
-
 		fireEffectEnded();
 	}
 
@@ -141,13 +133,9 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.removed = true;
 		getScheduler().rescheduleInterruptedActionToPresent(this, endTime);
 
-		if (!silentRemoval) {
-			getGameLog().effectRemoved(this);
-
-			effectListChanged();
-
-			fireEffectEnded();
-		}
+		getGameLog().effectRemoved(this);
+		effectListChanged();
+		fireEffectEnded();
 	}
 
 	@Override
@@ -213,15 +201,17 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		target.removeEffect(this);
 	}
 
-	public void stack(EffectInstance existingEffect) {
+	public void stack(EffectInstance newEffect) {
 		if (removed || getMaxStacks() == 1) {
-			return;
+			throw new IllegalStateException();
 		}
-		this.stacked = true;
-		this.stackedEffectInstanceId = existingEffect.getInstanceId();
-		this.addStacks(existingEffect.getNumStacks());
-		this.addCounters(existingEffect.getNumCounters());
-		((EffectInstanceImpl) existingEffect).silentRemoval = true;
+
+		this.deferEvents = true;
+		resetDuration();
+		addStacks(newEffect.getNumStacks());
+		addCounters(newEffect.getNumCounters());
+		getGameLog().effectStacked(this);
+		fireDeferredEvents();
 	}
 
 	@Override
@@ -229,12 +219,16 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		if (removed) {
 			return;
 		}
+
+		resetDuration();
 		addStacks(1);
-		endTime = now().add(duration);
-
-		effectListChanged();
-
 		getGameLog().effectStacksIncreased(this);
+	}
+
+	protected abstract void resetDuration();
+
+	protected void resetEndTime() {
+		endTime = now().add(duration);
 	}
 
 	private void addStacks(int stacksToAdd) {
@@ -253,19 +247,19 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void checkIfStacksAreMaxed() {
-		if (effect.getMaxStacks() > 1 && numStacks == effect.getMaxStacks() && !silentRemoval) {
+		if (effect.getMaxStacks() > 1 && numStacks == effect.getMaxStacks()) {
 			fireStacksMaxed();
 		}
 	}
 
 	private void checkIfCountersAreMaxed() {
-		if (effect.getMaxCounters() > 1 && numCounters == effect.getMaxCounters() && !silentRemoval) {
+		if (effect.getMaxCounters() > 1 && numCounters == effect.getMaxCounters()) {
 			fireCountersMaxed();
 		}
 	}
 
 	private void fireStacksMaxed() {
-		if (getStatus() == ActionStatus.CREATED) {
+		if (getStatus() == ActionStatus.CREATED || deferEvents) {
 			this.fireStacksMaxed = true;
 		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
 			EventContext.fireStacksMaxed(this, effectUpdateContext);
@@ -273,20 +267,21 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void fireCountersMaxed() {
-		if (getStatus() == ActionStatus.CREATED) {
+		if (getStatus() == ActionStatus.CREATED || deferEvents) {
 			this.fireCountersMaxed = true;
 		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
 			EventContext.fireCountersMaxed(this, effectUpdateContext);
 		}
 	}
 
-	public void fireDeferredEvents() {
+	private void fireDeferredEvents() {
 		if (fireStacksMaxed) {
 			EventContext.fireStacksMaxed(this, effectUpdateContext);
 		}
 		if (fireCountersMaxed) {
 			EventContext.fireCountersMaxed(this, effectUpdateContext);
 		}
+		this.deferEvents = false;
 	}
 
 	@Override

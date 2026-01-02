@@ -63,4 +63,9 @@ public class PeriodicEffectInstance extends EffectInstanceImpl {
 	public boolean isHidden() {
 		return false;
 	}
+
+	@Override
+	protected void resetDuration() {
+		resetEndTime();
+	}
 }

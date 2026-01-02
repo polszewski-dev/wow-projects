@@ -9,7 +9,6 @@ import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.CooldownInstanceId;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
-import wow.simulator.model.effect.impl.EffectInstanceImpl;
 import wow.simulator.model.stats.*;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
@@ -23,7 +22,6 @@ import wow.simulator.simulation.TimeSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 
@@ -153,25 +151,6 @@ public class StatisticsGatheringHandler implements GameLogHandler, TimeAware, Ti
 		}
 		var timeEntry = effects.remove(effect.getInstanceId());
 		completeEffect(timeEntry);
-	}
-
-	@Override
-	public void effectStacked(EffectInstance effect) {
-		if (effect.getOwner() != player) {
-			return;
-		}
-
-		var stackedEffectInstanceId = ((EffectInstanceImpl) effect).getStackedEffectInstanceId();
-		var existingTimeEntry = effects.remove(stackedEffectInstanceId);
-
-		Objects.requireNonNull(existingTimeEntry);
-
-		if (existingTimeEntry.getEffectId().equals(effect.getId())) {
-			effects.put(effect.getInstanceId(), existingTimeEntry);
-		} else {
-			completeEffect(existingTimeEntry);
-			addTimeEntry(effect);
-		}
 	}
 
 	@Override

@@ -131,6 +131,10 @@ public abstract class Action implements Updateable {
 		on(clock.after(duration), action);
 	}
 
+	protected void stayIdleFor(AnyDuration duration) {
+		fromNowAfter(duration, () -> {});
+	}
+
 	protected Time onEachTick(Time start, int numTicks, Duration tickInterval, IntConsumer action) {
 		var time = start;
 		for (int tickNo = 1; tickNo <= numTicks; ++tickNo) {
