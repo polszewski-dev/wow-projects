@@ -128,7 +128,7 @@ public class TargetResolver implements SimulationContextSource {
 			case ENEMY_AOE ->
 					getSimulation().getEnemiesOf(self);
 			case ENEMY_AOE_EXCEPT_TARGET ->
-					getSimulation().getEnemiesOf(self).stream().filter(enemy -> enemy != target).toList();
+					getSimulation().getEnemiesOf(self).stream().filter(enemyOfSelf -> enemyOfSelf != target).toList();
 			case FRIEND_AOE ->
 					getSimulation().getFriendsOf(self);
 			default ->

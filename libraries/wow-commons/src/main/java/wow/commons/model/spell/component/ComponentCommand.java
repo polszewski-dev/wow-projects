@@ -47,6 +47,7 @@ public sealed interface ComponentCommand {
 
 		int max();
 
+		@Override
 		default SpellSchool school() {
 			return coefficient().school();
 		}
@@ -61,6 +62,7 @@ public sealed interface ComponentCommand {
 
 		int max();
 
+		@Override
 		default SpellSchool school() {
 			return coefficient().school();
 		}
@@ -75,6 +77,7 @@ public sealed interface ComponentCommand {
 
 		TickScheme tickScheme();
 
+		@Override
 		default SpellSchool school() {
 			return coefficient().school();
 		}
@@ -87,6 +90,7 @@ public sealed interface ComponentCommand {
 
 		int numTicks();
 
+		@Override
 		default SpellSchool school() {
 			return coefficient().school();
 		}

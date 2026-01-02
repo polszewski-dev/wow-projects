@@ -114,7 +114,7 @@ public class SpellResolutionContext extends Context {
 					summonPet(command, target);
 
 			case SacrificePet command ->
-					sacrificePet(command, target);
+					sacrificePet(target);
 
 			default ->
 					throw new UnsupportedOperationException();
@@ -167,7 +167,7 @@ public class SpellResolutionContext extends Context {
 		target.setActivePet(command.petType());
 	}
 
-	protected void sacrificePet(SacrificePet command, Unit target) {
+	protected void sacrificePet(Unit target) {
 		this.sacrificedPetType = target.getActivePetType();
 
 		target.setActivePet(null);
