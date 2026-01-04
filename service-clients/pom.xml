@@ -6,10 +6,15 @@
 
 	<name>service-clients</name>
 
-	<groupId>polszewski</groupId>
 	<artifactId>service-clients</artifactId>
 	<version>1.0</version>
 	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>polszewski</groupId>
+		<artifactId>wow-projects</artifactId>
+		<version>1.0</version>
+	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
