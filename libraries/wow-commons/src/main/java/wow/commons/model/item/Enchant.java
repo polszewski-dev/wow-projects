@@ -22,7 +22,11 @@ public interface Enchant extends Described, TimeRestricted, CharacterRestricted,
 
 	List<ItemSubType> getItemSubTypes();
 
+	int getRequiredItemLevel();
+
 	ItemRarity getRarity();
+
+	int getAppliedEnchantId();
 
 	Effect getEffect();
 

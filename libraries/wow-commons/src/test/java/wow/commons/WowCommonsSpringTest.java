@@ -13,7 +13,6 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.item.AbstractItem;
-import wow.commons.model.item.Enchant;
 import wow.commons.model.spell.Coefficient;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
@@ -21,10 +20,11 @@ import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.talent.Talent;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
-import static wow.test.commons.TestConstants.PRECISION;
 
 /**
  * User: POlszewski
@@ -78,19 +78,6 @@ public abstract class WowCommonsSpringTest {
 		}
 	}
 
-	protected static void assertCoefficient(double tickCoeff, SpellSchool school, Coefficient coefficient) {
-		assertThat(coefficient.value().getCoefficient()).isEqualTo(Percent.of(tickCoeff).getCoefficient(), PRECISION);
-		assertThat(coefficient.school()).isEqualTo(school);
-	}
-
-	protected static void assertEffect(Effect effect, AttributeId id, int value, String tooltip, EffectSource source) {
-		assertEffect(effect, id, value, AttributeCondition.EMPTY, tooltip, source);
-	}
-
-	protected static void assertEffect(Effect effect, AttributeId id, int value, AttributeCondition condition, String tooltip, EffectSource source) {
-		assertEffect(effect, Attributes.of(id, value, condition), tooltip, source);
-	}
-
 	protected static void assertEffect(Effect effect, Attributes attributes, String tooltip, EffectSource source) {
 		assertThat(effect.getModifierComponent()).isNotNull();
 		assertThat(effect.getModifierComponent().attributes()).isEqualTo(attributes);
@@ -98,28 +85,33 @@ public abstract class WowCommonsSpringTest {
 		assertThat(effect.getSource()).isEqualTo(source);
 	}
 
-	protected static void assertEffect(Effect effect, int effectId, String tooltip) {
-		assertId(effect, effectId);
-		assertThat(effect.getTooltip()).isEqualTo(tooltip);
-	}
-
 	protected static void assertId(AbstractItem<?> item, int id) {
 		assertThat(item.getId().value()).isEqualTo(id);
-	}
-
-	protected static void assertId(Enchant enchant, int id) {
-		assertThat(enchant.getId().value()).isEqualTo(id);
 	}
 
 	protected static void assertId(Talent talent, int id) {
 		assertThat(talent.getId().value()).isEqualTo(id);
 	}
 
-	protected static void assertId(Effect effect, int id) {
-		assertThat(effect.getId().value()).isEqualTo(id);
+	protected <T> List<T> toList(String value, Function<String, T> mapper) {
+		return value != null
+				? Stream.of(value.split("\\+")).map(String::trim).map(mapper).toList()
+				: List.of();
 	}
 
-	protected static void assertId(Spell spell, int id) {
-		assertThat(spell.getId().value()).isEqualTo(id);
+	public record StatsData(String name, List<StatLine> statLines) {}
+
+	public record StatLine(Attributes attributes, String tooltip) {
+		public StatLine(Effect effect) {
+			this(effect.getModifierComponent().attributes(), effect.getTooltip());
+		}
+
+		public StatLine(AttributeId id, double value, AttributeCondition condition, String tooltip) {
+			this(Attributes.of(id, value, condition), tooltip);
+		}
+
+		public StatLine(AttributeId id, double value, String tooltip) {
+			this(id, value, AttributeCondition.EMPTY, tooltip);
+		}
 	}
 }

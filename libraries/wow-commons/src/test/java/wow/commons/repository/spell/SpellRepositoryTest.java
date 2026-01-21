@@ -32,9 +32,7 @@ import wow.commons.model.talent.TalentTree;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
@@ -905,11 +903,5 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	private Effect getEffect(int effectId, PhaseId phaseId) {
 		return spellRepository.getEffect(EffectId.of(effectId), phaseId).orElseThrow();
-	}
-
-	private <T> List<T> toList(String value, Function<String, T> mapper) {
-		return value != null
-				? Stream.of(value.split("\\+")).map(String::trim).map(mapper).toList()
-				: List.of();
 	}
 }

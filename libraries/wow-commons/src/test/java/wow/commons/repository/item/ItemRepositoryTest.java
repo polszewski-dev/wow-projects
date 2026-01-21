@@ -1,24 +1,32 @@
 package wow.commons.repository.item;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
+import wow.commons.model.Duration;
 import wow.commons.model.attribute.AttributeCondition;
-import wow.commons.model.config.TimeRestriction;
+import wow.commons.model.categorization.*;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.config.ProfessionRestriction;
+import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
-import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.SocketType;
+import wow.commons.model.item.WeaponStats;
+import wow.commons.model.profession.ProfessionId;
+import wow.commons.model.profession.ProfessionSpecializationId;
+import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.Side;
+import wow.commons.model.spell.SpellSchool;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AttributeConditions.*;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.categorization.ArmorSubType.CLOTH;
-import static wow.commons.model.categorization.Binding.BINDS_ON_PICK_UP;
-import static wow.commons.model.categorization.ItemRarity.EPIC;
-import static wow.commons.model.categorization.ItemType.CHEST;
-import static wow.commons.model.profession.ProfessionId.TAILORING;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 
 /**
  * User: POlszewski
@@ -26,111 +34,366 @@ import static wow.commons.model.pve.PhaseId.VANILLA_P6;
  */
 class ItemRepositoryTest extends WowCommonsSpringTest {
 	@Autowired
-	protected ItemRepository itemRepository;
+	ItemRepository itemRepository;
 
-	/*
-		Sunfire Robe	Phase 5
+	@ParameterizedTest
+	@CsvSource({
+			"24262, Spellstrike Pants",
+			"31051, Hood of the Malefic"
+	})
+	void name_is_correct(int itemId, String expected) {
+		var item = getItem(itemId);
 
-		Item Level 159
-		Binds when picked up
-		Chest	Cloth
-		266 Armor
-		+36 Stamina
-		+34 Intellect
+		var actual = item.getName();
 
-		Red Socket
-		Red Socket
-		Red Socket
-		Socket Bonus: +5 Spell Damage and Healing
-
-		Durability 100 / 100
-		Requires Level 70
-		Requires Tailoring (350)
-		Equip: Improves spell critical strike rating by 40 (1.81% @ L70).
-		Equip: Improves spell haste rating by 40 (2.54% @ L70).
-		Equip: Increases damage and healing done by magical spells and effects by up to 71.
-		Sell Price: 6 8 49
-		 */
-
-	@Test
-	void basicItemInfo() {
-		var itemId = ItemId.of(34364);
-
-		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
-
-		assertThat(item.getId()).isEqualTo(itemId);
-		assertThat(item.getName()).isEqualTo("Sunfire Robe");
-		assertThat(item.getRarity()).isEqualTo(EPIC);
-		assertThat(item.getBinding()).isEqualTo(BINDS_ON_PICK_UP);
-		assertThat(item.isUnique()).isFalse();
-		assertThat(item.getItemLevel()).isEqualTo(159);
-		assertThat(item.getTimeRestriction()).isEqualTo(TimeRestriction.of(TBC_P5));
-		assertThat(item.getCharacterRestriction().level()).isEqualTo(70);
-		assertThat(item.getCharacterRestriction().professionRestriction().professionId()).isEqualTo(TAILORING);
-		assertThat(item.getCharacterRestriction().professionRestriction().level()).isEqualTo(350);
-		assertThat(item.getItemType()).isEqualTo(CHEST);
-		assertThat(item.getItemSubType()).isEqualTo(CLOTH);
-		assertThat(item.getItemSet()).isNull();
-		assertThat(item.getIcon()).isEqualTo("inv_chest_cloth_02");
-		assertThat(item.getWeaponStats()).isNull();
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void socketInfo() {
-		var itemId = ItemId.of(34364);
+	@ParameterizedTest
+	@CsvSource({
+			"Hood of the Malefic, HEAD",
+			"Scryer's Bloodgem, TRINKET"
+	})
+	void item_type_is_correct(String name, ItemType expected) {
+		var item = getItem(name);
 
-		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
+		var actual = item.getItemType();
 
-		var socketSpecification = item.getSocketSpecification();
-
-		assertThat(socketSpecification.getSocketCount()).isEqualTo(3);
-		assertThat(socketSpecification.getSocketType(0)).isEqualTo(SocketType.RED);
-		assertThat(socketSpecification.getSocketType(1)).isEqualTo(SocketType.RED);
-		assertThat(socketSpecification.getSocketType(2)).isEqualTo(SocketType.RED);
-
-		assertEffect(socketSpecification.socketBonus(), POWER, 5, SPELL, "+5 Spell Damage and Healing", new ItemSource(item));
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void itemStats() {
-		var itemId = ItemId.of(34364);
+	@ParameterizedTest
+	@CsvSource({
+			"Hood of the Malefic, CLOTH",
+			"Scryer's Bloodgem, "
+	})
+	void item_subtype_is_correct(String name, String expectedStr) {
+		var item = getItem(name);
 
-		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
-		var source = new ItemSource(item);
+		var actual = item.getItemSubType();
+		var expected = ItemSubType.parse(expectedStr);
 
-		assertThat(item.getEffects()).hasSize(6);
-		assertEffect(item.getEffects().get(0), ARMOR, 266, "266 Armor", source);
-		assertEffect(item.getEffects().get(1), STAMINA, 36, "+36 Stamina", source);
-		assertEffect(item.getEffects().get(2), INTELLECT, 34, "+34 Intellect", source);
-		assertEffect(item.getEffects().get(3), CRIT_RATING, 40, SPELL, "Equip: Improves spell critical strike rating by 40.", source);
-		assertEffect(item.getEffects().get(4), HASTE_RATING, 40, SPELL, "Equip: Improves spell haste rating by 40.", source);
-		assertEffect(item.getEffects().get(5), POWER, 71, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 71.", source);
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void itemWithRandomEnchantStats() {
-		var item = itemRepository.getItem("Drakestone of Shadow Wrath", VANILLA_P6).orElseThrow();
-		var source = new ItemSource(item);
+	@ParameterizedTest
+	@CsvSource({
+			"Hood of the Malefic, EPIC",
+			"Scryer's Bloodgem, RARE"
+	})
+	void rarity_is_correct(String name, ItemRarity expected) {
+		var item = getItem(name);
 
-		assertThat(item.getEffects()).hasSize(2);
-		assertEffect(item.getEffects().get(0), POWER, 7, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 7.", source);
-		assertEffect(item.getEffects().get(1), POWER, 21, AttributeCondition.and(SPELL_DAMAGE, SHADOW), "+21 Shadow Spell Damage", source);
+		var actual = item.getRarity();
+
+		assertThat(actual).isEqualTo(expected);
 	}
 
-	@Test
-	void itemSet() {
-		var itemId = ItemId.of(24262);
+	@ParameterizedTest
+	@CsvSource({
+			"Hood of the Malefic, BINDS_ON_PICK_UP",
+			"Spellstrike Pants, BINDS_ON_EQUIP"
+	})
+	void binding_is_correct(String name, Binding expected) {
+		var item = getItem(name);
 
-		var item = itemRepository.getItem(itemId, TBC_P5).orElseThrow();
-		var itemSet = item.getItemSet();
+		var actual = item.getBinding();
 
-		assertThat(itemSet.getName()).isEqualTo("Spellstrike Infusion");
-		assertThat(itemSet.getRequiredProfession()).isEqualTo(TAILORING);
-		assertThat(itemSet.getItemSetBonuses()).hasSize(1);
+		assertThat(actual).isEqualTo(expected);
+	}
 
-		var bonus = itemSet.getItemSetBonuses().getFirst();
+	@ParameterizedTest
+	@CsvSource({
+			"Ring of Ancient Knowledge, false",
+			"Loop of Forged Power, true"
+	})
+	void unique_is_correct(String name, boolean expected) {
+		var item = getItem(name);
 
-		assertThat(bonus.numPieces()).isEqualTo(2);
-		assertEffect(bonus.bonusEffect(), 224266, "Gives a chance when your harmful spells land to increase the damage of your spells and effects by 92 for 10 sec. (Proc chance: 5%)");
+		var actual = item.isUnique();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Hood of the Malefic, 146",
+			"Spellstrike Pants, 105"
+	})
+	void item_level_is_correct(String name, int expected) {
+		var item = getItem(name);
+
+		var actual = item.getItemLevel();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Hood of the Malefic, Traded: Helm of the Forgotten Conqueror",
+			"Spellstrike Pants, Tailoring"
+	})
+	void source_is_correct(String name, String expected) {
+		var item = getItem(name);
+
+		var actual = item.getSources().stream()
+				.map(Object::toString)
+				.collect(Collectors.joining("+"));
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Sunfire Robe, TBC_P5",
+			"Voidheart Robe, TBC_P1",
+			"Plagueheart Robe, TBC_P0"
+	})
+	void required_phase_is_correct(String name, PhaseId expected) {
+		var item = getItem(name);
+
+		var actual = item.getEarliestPhaseId();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Hood of the Malefic, 70",
+			"Spellstrike Pants, 70"
+	})
+	void required_level_is_correct(String name, int expected) {
+		var item = getItem(name);
+
+		var actual = item.getRequiredLevel();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Voidheart Crown, Warlock",
+			"General's Silk Cuffs, Priest+Mage+Warlock",
+	})
+	void required_class_is_correct(String name, String expectedStr) {
+		var item = getItem(name);
+
+		var actual = item.getRequiredCharacterClassIds();
+		var expected = toList(expectedStr, CharacterClassId::parse);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Mindfang, HORDE",
+			"Sageclaw, ALLIANCE",
+	})
+	void required_side_is_correct(String name, String expectedStr) {
+		var item = getItem(name);
+
+		var actual = item.getCharacterRestriction().side();
+		var expected = Side.parse(expectedStr);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Sunfire Robe, TAILORING, 350",
+			"Pendant of Sunfire, JEWELCRAFTING, 350"
+	})
+	void required_profession_is_correct(String name, ProfessionId expectedProfessionId, int expectedProfessionLevel) {
+		var item = getItem(name);
+
+		var actual = item.getCharacterRestriction().professionRestriction();
+		var expected = ProfessionRestriction.of(expectedProfessionId, expectedProfessionLevel);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Frozen Shadoweave Boots, SHADOWEAVE_TAILORING",
+	})
+	void required_profession_specialization_is_correct(String name, ProfessionSpecializationId expected) {
+		var item = getItem(name);
+
+		var actual = item.getCharacterRestriction().professionSpecId();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Scryer's Bloodgem, The Scryers",
+			"Medallion of the Lightbearer, The Aldor"
+	})
+	void required_xfaction_is_correct(String name, String expected) {
+		var item = getItem(name);
+
+		var actual = item.getCharacterRestriction().exclusiveFaction();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Spellstrike Pants, CASTER_DPS",
+			"Hood of the Malefic, CASTER_DPS"
+	})
+	void pve_roles_is_correct(String name, String expectedStr) {
+		var item = getItem(name);
+
+		var actual = item.getPveRoles();
+		var expected = toList(expectedStr, PveRole::parse);
+
+		assertThat(actual).hasSameElementsAs(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Spellstrike Pants, BLUE+YELLOW+RED",
+			"Hood of the Malefic, META+YELLOW"
+	})
+	void socket_types_is_correct(String name, String expectedStr) {
+		var item = getItem(name);
+
+		var actual = item.getSocketTypes();
+		var expected = toList(expectedStr, SocketType::valueOf);
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getSocketBonusData")
+	void socket_bonus_is_correct(SocketBonusData data) {
+		var item = getItem(data.name);
+
+		var actual = new StatLine(item.getSocketBonus());
+		var expected = data.socketBonus;
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	record SocketBonusData(String name, StatLine socketBonus) {}
+
+	static List<SocketBonusData> getSocketBonusData() {
+		return List.of(
+				new SocketBonusData(
+						"Hood of the Malefic",
+						new StatLine(POWER, 5, SPELL, "+5 Spell Damage and Healing")
+				)
+		);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getStatsData")
+	void stats_is_correct(StatsData data) {
+		var item = getItem(data.name());
+
+		var actual = item.getEffects().stream()
+				.map(StatLine::new)
+				.toList();
+		var expected = data.statLines();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	static List<StatsData> getStatsData() {
+		return List.of(
+				new StatsData(
+						"Drakestone of Shadow Wrath",
+						List.of(
+								new StatLine(POWER, 7, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 7."),
+								new StatLine(POWER, 21, AttributeCondition.and(SPELL_DAMAGE, SHADOW), "+21 Shadow Spell Damage")
+						)
+				),
+				new StatsData(
+						"Sunfire Robe",
+						List.of(
+								new StatLine(ARMOR, 266, "266 Armor"),
+								new StatLine(STAMINA, 36, "+36 Stamina"),
+								new StatLine(INTELLECT, 34, "+34 Intellect"),
+								new StatLine(CRIT_RATING, 40, SPELL, "Equip: Improves spell critical strike rating by 40."),
+								new StatLine(HASTE_RATING, 40, SPELL, "Equip: Improves spell haste rating by 40."),
+								new StatLine(POWER, 71, SPELL, "Equip: Increases damage and healing done by magical spells and effects by up to 71.")
+						)
+				)
+		);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Wand of the Demonsoul, 208, 387, Shadow, 198.33, 1.5",
+	})
+	void weapon_stats_is_correct(
+			String name, int expectedDamageMin, int expectedDamageMax, String expectedDamageTypeStr, double expectedDps, double expectedSpeed
+	) {
+		var item = getItem(name);
+
+		var actual = item.getWeaponStats();
+		var expected = new WeaponStats(expectedDamageMin, expectedDamageMax, SpellSchool.parse(expectedDamageTypeStr), expectedDps, Duration.seconds(expectedSpeed));
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Spellstrike Pants, Spellstrike Infusion",
+			"Hood of the Malefic, Malefic Raiment"
+	})
+	void item_set_is_correct(String name, String expected) {
+		var item = getItem(name);
+
+		var actual = item.getItemSet().getName();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Scryer's Bloodgem, 129132",
+	})
+	void activated_ability_is_correct(String name, int expected) {
+		var item = getItem(name);
+
+		var actual = item.getActivatedAbility().getId().value();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Spellstrike Pants",
+			"Hood of the Malefic",
+	})
+	void tooltip_is_correct(String name) {
+		var item = getItem(name);
+
+		var actual = item.getTooltip();
+
+		assertThat(actual).isBlank();
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"Spellstrike Pants, inv_pants_cloth_14",
+			"Hood of the Malefic, inv_helmet_103",
+	})
+	void icon_is_correct(String name, String expected) {
+		var item = getItem(name);
+
+		var actual = item.getIcon();
+
+		assertThat(actual).isEqualTo(expected);
+	}
+
+	Item getItem(int itemId) {
+		return itemRepository.getItem(ItemId.of(itemId), TBC_P5).orElseThrow();
+	}
+
+	Item getItem(String name) {
+		return itemRepository.getItem(name, TBC_P5).orElseThrow();
 	}
 }

@@ -25,6 +25,7 @@ public interface AttributeConditions {
 	AttributeCondition CORRUPTION = AttributeCondition.of(AbilityIds.CORRUPTION);
 	AttributeCondition IMMOLATE = AttributeCondition.of(AbilityIds.IMMOLATE);
 	AttributeCondition SHADOW_BOLT = AttributeCondition.of(AbilityIds.SHADOW_BOLT);
+	AttributeCondition INCINERATE = AttributeCondition.of(AbilityIds.INCINERATE);
 	AttributeCondition DRAIN_LIFE = AttributeCondition.of(AbilityIds.DRAIN_LIFE);
 	AttributeCondition SOUL_FIRE = AttributeCondition.of(AbilityIds.SOUL_FIRE);
 	AttributeCondition FLAMESTRIKE = AttributeCondition.of(AbilityIds.FLAMESTRIKE);
