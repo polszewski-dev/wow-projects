@@ -15,8 +15,6 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
-import wow.commons.model.config.Description;
-import wow.commons.model.effect.EffectSource;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
@@ -378,18 +376,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		}
 		player.addHiddenEffect("Bonus Intellect", amount);
 		player.setManaToMax();
-	}
-
-	public record DummyTestSource() implements EffectSource {
-		@Override
-		public int getPriority() {
-			return 0;
-		}
-
-		@Override
-		public Description getDescription() {
-			return new Description("Test", null, null);
-		}
 	}
 
 	protected void setHealth(Unit unit, int amount) {

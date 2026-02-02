@@ -10,7 +10,6 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.item.BasicItemInfo;
-import wow.commons.model.item.ItemSource;
 import wow.commons.model.source.Source;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.SpellId;
@@ -108,7 +107,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		return effect;
 	}
 
-	protected ActivatedAbility getActivatedAbility(ItemSource source) {
+	protected ActivatedAbility getActivatedAbility(EffectSource.ItemSource source) {
 		var spellId = colActivatedAbility.getNullableInteger(SpellId::ofNullable);
 
 		if (spellId == null) {

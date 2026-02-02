@@ -7,13 +7,13 @@ import wow.commons.model.spell.SpellId;
 import wow.commons.model.spell.impl.SpellImpl;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
-import wow.commons.model.talent.TalentSource;
 import wow.commons.model.talent.TalentTree;
 import wow.commons.model.talent.impl.TalentImpl;
 import wow.commons.repository.impl.spell.SpellRepositoryImpl;
 
 import java.util.List;
 
+import static wow.commons.model.effect.EffectSource.TalentSource;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.*;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetConfigs.*;
 

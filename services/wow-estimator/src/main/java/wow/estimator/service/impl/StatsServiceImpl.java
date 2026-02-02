@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static wow.commons.model.buff.BuffCategory.*;
+import static wow.commons.model.effect.EffectSource.*;
 
 /**
  * User: POlszewski
@@ -75,10 +76,22 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	private Comparator<SpecialAbility> compareSources() {
-		return Comparator.comparingInt((SpecialAbility x) -> x.getSource().getPriority())
+		return Comparator.comparingInt(StatsServiceImpl::getPriority)
 						.thenComparing((SpecialAbility x) -> (Comparable<Object>)x.getSource())
 						.thenComparingInt(SpecialAbility::getPriority)
 						.thenComparing(SpecialAbility::getTooltip);
+	}
+
+	private static int getPriority(SpecialAbility x) {
+		return switch (x.getSource()) {
+			case AbilitySource ignored -> 0;
+			case BuffSource ignored -> 4;
+			case EnchantSource ignored -> 3;
+			case ItemSetSource ignored -> 1;
+			case ItemSource ignored -> 2;
+			case RacialSource ignored -> 6;
+			case TalentSource ignored -> 5;
+		};
 	}
 
 	@Override

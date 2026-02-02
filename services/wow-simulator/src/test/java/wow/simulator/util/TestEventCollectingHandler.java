@@ -3,14 +3,10 @@ package wow.simulator.util;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.AnyDuration;
-import wow.commons.model.effect.AbilitySource;
-import wow.commons.model.item.ItemSetSource;
-import wow.commons.model.item.ItemSource;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.talent.TalentSource;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
@@ -29,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static wow.simulator.WowSimulatorSpringTest.DummyTestSource;
+import static wow.commons.model.effect.EffectSource.*;
 import static wow.simulator.util.TestEvent.*;
 
 /**
@@ -204,7 +200,6 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 			case TalentSource ignored -> EffectType.TALENT;
 			case ItemSource ignored -> EffectType.ITEM;
 			case ItemSetSource ignored -> EffectType.ITEM_SET;
-			case DummyTestSource ignored -> null;
 			default -> throw new IllegalArgumentException();
 		};
 	}

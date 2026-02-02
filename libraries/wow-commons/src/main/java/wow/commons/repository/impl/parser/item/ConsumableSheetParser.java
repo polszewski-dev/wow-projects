@@ -2,9 +2,10 @@ package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.item.Consumable;
 import wow.commons.model.item.ConsumableId;
-import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.impl.ConsumableImpl;
 import wow.commons.repository.spell.SpellRepository;
+
+import static wow.commons.model.effect.EffectSource.ItemSource;
 
 /**
  * User: POlszewski

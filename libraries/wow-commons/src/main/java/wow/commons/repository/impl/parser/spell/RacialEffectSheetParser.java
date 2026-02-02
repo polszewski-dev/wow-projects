@@ -1,10 +1,11 @@
 package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.RacialSource;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.effect.impl.RacialEffectImpl;
 import wow.commons.model.spell.AbilityId;
+
+import static wow.commons.model.effect.EffectSource.RacialSource;
 
 /**
  * User: POlszewski

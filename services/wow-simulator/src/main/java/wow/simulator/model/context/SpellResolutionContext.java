@@ -5,7 +5,6 @@ import wow.character.model.snapshot.RngStrategy;
 import wow.character.util.SpellTargetConditionArgs;
 import wow.character.util.SpellTargetConditionChecker;
 import wow.commons.model.character.PetType;
-import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.EffectSource;
@@ -22,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static wow.commons.model.effect.EffectSource.AbilitySource;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.component.ComponentCommand.*;
 

@@ -1,10 +1,15 @@
 package wow.commons.repository.impl.parser.spell;
 
-import wow.commons.model.buff.*;
+import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffCategory;
+import wow.commons.model.buff.BuffExclusionGroup;
+import wow.commons.model.buff.BuffType;
 import wow.commons.model.buff.impl.BuffImpl;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.repository.spell.SpellRepository;
+
+import static wow.commons.model.effect.EffectSource.BuffSource;
 
 /**
  * User: POlszewski

@@ -5,15 +5,12 @@ import lombok.RequiredArgsConstructor;
 import wow.character.util.AbstractEffectCollector;
 import wow.character.util.EventConditionArgs;
 import wow.commons.model.attribute.PowerType;
-import wow.commons.model.effect.AbilitySource;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.effect.component.EventType;
-import wow.commons.model.item.ItemSource;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.talent.TalentSource;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
@@ -23,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static wow.character.util.EventConditionChecker.check;
+import static wow.commons.model.effect.EffectSource.*;
 import static wow.commons.model.effect.component.EventType.*;
 
 /**

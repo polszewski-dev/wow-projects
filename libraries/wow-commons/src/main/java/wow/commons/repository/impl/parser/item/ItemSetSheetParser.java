@@ -3,7 +3,6 @@ package wow.commons.repository.impl.parser.item;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.item.ItemSetBonus;
-import wow.commons.model.item.ItemSetSource;
 import wow.commons.model.item.impl.ItemSetImpl;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.repository.spell.SpellRepository;
@@ -11,6 +10,7 @@ import wow.commons.repository.spell.SpellRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static wow.commons.model.effect.EffectSource.ItemSetSource;
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 
 /**

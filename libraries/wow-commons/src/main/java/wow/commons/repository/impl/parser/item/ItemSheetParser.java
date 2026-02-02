@@ -10,6 +10,7 @@ import wow.commons.model.spell.SpellSchool;
 import wow.commons.repository.item.ItemSetRepository;
 import wow.commons.repository.spell.SpellRepository;
 
+import static wow.commons.model.effect.EffectSource.ItemSource;
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 
 /**

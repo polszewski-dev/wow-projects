@@ -5,10 +5,10 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.EnchantId;
-import wow.commons.model.item.EnchantSource;
 import wow.commons.model.item.impl.EnchantImpl;
 import wow.commons.repository.spell.SpellRepository;
 
+import static wow.commons.model.effect.EffectSource.EnchantSource;
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 
 /**

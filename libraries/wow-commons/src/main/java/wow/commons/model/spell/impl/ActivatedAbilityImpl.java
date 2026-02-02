@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.effect.EffectSource;
-import wow.commons.model.item.ItemSource;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.CooldownGroup;
 import wow.commons.model.spell.GroupCooldownId;
+
+import static wow.commons.model.effect.EffectSource.ItemSource;
 
 /**
  * User: POlszewski

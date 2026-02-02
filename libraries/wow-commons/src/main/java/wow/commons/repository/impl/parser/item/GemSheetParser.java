@@ -1,9 +1,13 @@
 package wow.commons.repository.impl.parser.item;
 
-import wow.commons.model.item.*;
+import wow.commons.model.item.Gem;
+import wow.commons.model.item.GemColor;
+import wow.commons.model.item.GemId;
+import wow.commons.model.item.MetaEnabler;
 import wow.commons.model.item.impl.GemImpl;
 import wow.commons.repository.spell.SpellRepository;
 
+import static wow.commons.model.effect.EffectSource.ItemSource;
 import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*;
 
 /**
