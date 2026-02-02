@@ -24,8 +24,8 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 	private final ItemSetRepository itemSetRepository;
 	private final ItemExcelParser parser;
 
-	public ItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ItemSetRepository itemSetRepository, ItemExcelParser parser) {
-		super(sheetName, sourceParserFactory, spellRepository);
+	public ItemSheetParser(String sheetName, ItemSourceParserFactory itemSourceParserFactory, SpellRepository spellRepository, ItemSetRepository itemSetRepository, ItemExcelParser parser) {
+		super(sheetName, itemSourceParserFactory, spellRepository);
 		this.itemSetRepository = itemSetRepository;
 		this.parser = parser;
 	}

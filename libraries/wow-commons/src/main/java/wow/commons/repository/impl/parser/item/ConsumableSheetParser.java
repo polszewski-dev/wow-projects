@@ -14,8 +14,8 @@ import static wow.commons.model.effect.EffectSource.ItemSource;
 public class ConsumableSheetParser extends AbstractItemSheetParser {
 	private final ConsumableExcelParser parser;
 
-	public ConsumableSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, ConsumableExcelParser parser) {
-		super(sheetName, sourceParserFactory, spellRepository);
+	public ConsumableSheetParser(String sheetName, ItemSourceParserFactory itemSourceParserFactory, SpellRepository spellRepository, ConsumableExcelParser parser) {
+		super(sheetName, itemSourceParserFactory, spellRepository);
 		this.parser = parser;
 	}
 

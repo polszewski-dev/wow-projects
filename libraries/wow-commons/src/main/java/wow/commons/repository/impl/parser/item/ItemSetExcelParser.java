@@ -27,7 +27,7 @@ public class ItemSetExcelParser extends ExcelParser {
 	@Value("${item.sets.xls.file.path}")
 	private final String xlsFilePath;
 
-	private final SourceParserFactory sourceParserFactory;
+	private final ItemSourceParserFactory itemSourceParserFactory;
 	private final SpellRepository spellRepository;
 
 	private final PhaseMap<String, ItemSet> itemSetsByName = new PhaseMap<>();
@@ -40,7 +40,7 @@ public class ItemSetExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new ItemSetSheetParser(SET, sourceParserFactory, spellRepository, this)
+				new ItemSetSheetParser(SET, itemSourceParserFactory, spellRepository, this)
 		);
 	}
 

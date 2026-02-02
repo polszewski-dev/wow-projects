@@ -28,7 +28,7 @@ public class EnchantExcelParser extends ExcelParser {
 	@Value("${enchants.xls.file.path}")
 	private final String xlsFilePath;
 
-	private final SourceParserFactory sourceParserFactory;
+	private final ItemSourceParserFactory itemSourceParserFactory;
 	private final SpellRepository spellRepository;
 
 	@Getter
@@ -42,7 +42,7 @@ public class EnchantExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new EnchantSheetParser(ENCHANT, sourceParserFactory, spellRepository, this)
+				new EnchantSheetParser(ENCHANT, itemSourceParserFactory, spellRepository, this)
 		);
 	}
 

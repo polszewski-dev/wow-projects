@@ -13,9 +13,9 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
  * User: POlszewski
  * Date: 2024-11-13
  */
-class SourceConverterTest extends WowMinMaxSpringTest {
+class ItemSourceConverterTest extends WowMinMaxSpringTest {
 	@Autowired
-	SourceConverter sourceConverter;
+	ItemSourceConverter itemSourceConverter;
 
 	@Autowired
 	ItemRepository itemRepository;
@@ -33,7 +33,7 @@ class SourceConverterTest extends WowMinMaxSpringTest {
 	void getSources(String itemName, String expected) {
 		var item = itemRepository.getItem(itemName, TBC_P5).orElseThrow();
 
-		var converted = sourceConverter.getSources(item);
+		var converted = itemSourceConverter.getSources(item);
 
 		assertThat(converted).isEqualTo(expected);
 	}
@@ -51,7 +51,7 @@ class SourceConverterTest extends WowMinMaxSpringTest {
 	void getDetailedSources(String itemName, String expected) {
 		var item = itemRepository.getItem(itemName, TBC_P5).orElseThrow();
 
-		var converted = sourceConverter.getDetailedSources(item);
+		var converted = itemSourceConverter.getDetailedSources(item);
 
 		assertThat(converted).isEqualTo(expected);
 	}

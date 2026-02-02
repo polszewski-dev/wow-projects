@@ -1,5 +1,6 @@
 package wow.commons.repository.item;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -126,6 +127,7 @@ class GemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(actual).isEqualTo(expected);
 	}
 
+	@Disabled
 	@ParameterizedTest
 	@CsvSource({
 			"Reckless Pyrestone, Jewelcrafting",

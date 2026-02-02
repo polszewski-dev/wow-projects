@@ -2,6 +2,7 @@ package wow.commons.repository.impl.parser.item;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.categorization.ItemType;
+import wow.commons.model.item.ItemSource;
 import wow.commons.model.item.TradedItem;
 import wow.commons.model.item.TradedItemId;
 import wow.commons.model.profession.ProfessionId;
@@ -9,7 +10,6 @@ import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Npc;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Zone;
-import wow.commons.model.source.*;
 import wow.commons.repository.item.TradedItemRepository;
 import wow.commons.repository.pve.FactionRepository;
 import wow.commons.repository.pve.NpcRepository;
@@ -21,12 +21,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static wow.commons.model.item.ItemSource.*;
+
 /**
  * User: POlszewski
  * Date: 2021-03-13
  */
 @AllArgsConstructor
-public class SourceParser {
+public class ItemSourceParser {
 	private final PhaseId phaseId;
 
 	private final ZoneRepository zoneRepository;
@@ -34,7 +36,7 @@ public class SourceParser {
 	private final FactionRepository factionRepository;
 	private final TradedItemRepository tradedItemRepository;
 
-	private final Set<Source> result = new LinkedHashSet<>();
+	private final Set<ItemSource> result = new LinkedHashSet<>();
 
 	private final Rule[] rules = {
 			Rule.regex("NpcDrop:(.*):(\\d+)", this::parseNpcDrop),
@@ -53,7 +55,7 @@ public class SourceParser {
 			Rule.regex("ContainerItem:(.*):(\\d+)", this::parseContainerItem),
 	};
 
-	public Set<Source> parse(String line) {
+	public Set<ItemSource> parse(String line) {
 		if (line == null || line.equals("NONE")) {
 			return Set.of();
 		}
@@ -130,15 +132,15 @@ public class SourceParser {
 	}
 
 	private void parseBadges() {
-		result.add(new BadgeVendor());
+		result.add(BADGE_VENDOR);
 	}
 
 	private void parsePvP() {
-		result.add(new PvP());
+		result.add(PVP);
 	}
 
 	private void parseWorldDrop() {
-		result.add(new WorldDrop());
+		result.add(WORLD_DROP);
 	}
 
 	private void parseContainerObjectUnknownZone(ParsedMultipleValues params) {

@@ -7,7 +7,7 @@ import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.item.ItemExcelParser;
-import wow.commons.repository.impl.parser.item.SourceParserFactory;
+import wow.commons.repository.impl.parser.item.ItemSourceParserFactory;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.item.ItemSetRepository;
 import wow.commons.repository.spell.SpellRepository;
@@ -33,14 +33,14 @@ public class ItemRepositoryImpl implements ItemRepository {
 
 	public ItemRepositoryImpl(
 			@Value("${items.xls.file.paths}") String[] xlsFilePaths,
-			SourceParserFactory sourceParserFactory,
+			ItemSourceParserFactory itemSourceParserFactory,
 			SpellRepository spellRepository,
 			ItemSetRepository itemSetRepository
 	) throws IOException {
 		for (var xlsFilePath : xlsFilePaths) {
 			var parser = new ItemExcelParser(
 					xlsFilePath,
-					sourceParserFactory,
+					itemSourceParserFactory,
 					spellRepository,
 					itemSetRepository
 			);

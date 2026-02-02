@@ -14,13 +14,13 @@ import wow.commons.repository.pve.ZoneRepository;
  */
 @AllArgsConstructor
 @Component
-public class SourceParserFactory {
+public class ItemSourceParserFactory {
 	private final ZoneRepository zoneRepository;
 	private final NpcRepository npcRepository;
 	private final FactionRepository factionRepository;
 	private final TradedItemRepository tradedItemRepository;
 
-	public SourceParser create(PhaseId phaseId) {
-		return new SourceParser(phaseId, zoneRepository, npcRepository, factionRepository, tradedItemRepository);
+	public ItemSourceParser create(PhaseId phaseId) {
+		return new ItemSourceParser(phaseId, zoneRepository, npcRepository, factionRepository, tradedItemRepository);
 	}
 }

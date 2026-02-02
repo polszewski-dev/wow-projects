@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.item.Item;
-import wow.commons.model.source.Source;
+import wow.commons.model.item.ItemSource;
 
 import static wow.commons.model.categorization.ItemRarity.LEGENDARY;
 import static wow.commons.model.categorization.ItemRarity.UNCOMMON;
@@ -37,16 +37,16 @@ public class ItemFilter {
 	}
 
 	public boolean matchesFilter(Item item) {
-		if (!heroics && item.allSources(Source::isHeroicDrop)) {
+		if (!heroics && item.allSources(ItemSource::isHeroicDrop)) {
 			return false;
 		}
-		if (!raids && item.allSources(Source::isRaidDrop)) {
+		if (!raids && item.allSources(ItemSource::isRaidDrop)) {
 			return false;
 		}
-		if (!worldBosses && item.allSources(Source::isWorldBossDrop)) {
+		if (!worldBosses && item.allSources(ItemSource::isWorldBossDrop)) {
 			return false;
 		}
-		if (!pvpItems && item.allSources(Source::isPvP)) {
+		if (!pvpItems && item.allSources(ItemSource::isPvP)) {
 			return false;
 		}
 		if (!greens && item.getRarity() == UNCOMMON) {

@@ -8,7 +8,6 @@ import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.source.Source;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -57,12 +56,12 @@ public interface AbstractItem<T extends AbstractItemId> extends Described, TimeR
 		return getBasicItemInfo().itemLevel();
 	}
 
-	default Set<Source> getSources() {
+	default Set<ItemSource> getSources() {
 		return getBasicItemInfo().sources();
 	}
 
 	default boolean isSourcedFromRaid() {
-		return anySource(Source::isRaidDrop);
+		return anySource(ItemSource::isRaidDrop);
 	}
 
 	default boolean isSourcedFromInstance(String instanceName) {
@@ -74,34 +73,34 @@ public interface AbstractItem<T extends AbstractItemId> extends Described, TimeR
 	}
 
 	default boolean isPurchasedFromBadgeVendor() {
-		return anySource(Source::isBadgeVendor);
+		return anySource(ItemSource::isBadgeVendor);
 	}
 
 	default boolean isTradedFromToken() {
-		return anySource(Source::isTraded);
+		return anySource(ItemSource::isTraded);
 	}
 
 	default boolean isCrafted() {
-		return anySource(Source::isCrafted);
+		return anySource(ItemSource::isCrafted);
 	}
 
 	default boolean isPvPReward() {
-		return anySource(Source::isPvP);
+		return anySource(ItemSource::isPvP);
 	}
 
 	default boolean isQuestReward() {
-		return anySource(Source::isQuestReward);
+		return anySource(ItemSource::isQuestReward);
 	}
 
 	default boolean isAvailableOnlyByQuests() {
-		return allSources(Source::isQuestReward);
+		return allSources(ItemSource::isQuestReward);
 	}
 
-	default boolean anySource(Predicate<Source> predicate) {
+	default boolean anySource(Predicate<ItemSource> predicate) {
 		return getSources().stream().anyMatch(predicate);
 	}
 
-	default boolean allSources(Predicate<Source> predicate) {
+	default boolean allSources(Predicate<ItemSource> predicate) {
 		return !getSources().isEmpty() && getSources().stream().allMatch(predicate);
 	}
 }

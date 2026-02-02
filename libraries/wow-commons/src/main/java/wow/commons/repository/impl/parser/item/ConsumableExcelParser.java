@@ -28,7 +28,7 @@ public class ConsumableExcelParser extends ExcelParser {
 	@Value("${consumables.xls.file.path}")
 	private final String xlsFilePath;
 
-	private final SourceParserFactory sourceParserFactory;
+	private final ItemSourceParserFactory itemSourceParserFactory;
 	private final SpellRepository spellRepository;
 
 	@Getter
@@ -42,7 +42,7 @@ public class ConsumableExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new ConsumableSheetParser(CONSUMABLE, sourceParserFactory, spellRepository, this)
+				new ConsumableSheetParser(CONSUMABLE, itemSourceParserFactory, spellRepository, this)
 		);
 	}
 

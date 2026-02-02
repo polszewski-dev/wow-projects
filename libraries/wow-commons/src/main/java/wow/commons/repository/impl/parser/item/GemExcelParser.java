@@ -28,7 +28,7 @@ public class GemExcelParser extends ExcelParser {
 	@Value("${gems.xls.file.path}")
 	private final String xlsFilePath;
 
-	private final SourceParserFactory sourceParserFactory;
+	private final ItemSourceParserFactory itemSourceParserFactory;
 	private final SpellRepository spellRepository;
 
 	@Getter
@@ -42,7 +42,7 @@ public class GemExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new GemSheetParser(GEM, sourceParserFactory, spellRepository, this)
+				new GemSheetParser(GEM, itemSourceParserFactory, spellRepository, this)
 		);
 	}
 

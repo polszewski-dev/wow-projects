@@ -49,7 +49,7 @@ public class TradedItemExcelParser extends ExcelParser {
 
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
-		var sourceParserFactory = new SourceParserFactory(zoneRepository, npcRepository, factionRepository, this::getTradedItem);
+		var sourceParserFactory = new ItemSourceParserFactory(zoneRepository, npcRepository, factionRepository, this::getTradedItem);
 		return Stream.of(
 				new TradedItemSheetParser(TRADE, sourceParserFactory, spellRepository, this)
 		);

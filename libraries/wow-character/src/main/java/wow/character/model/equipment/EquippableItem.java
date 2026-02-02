@@ -7,7 +7,6 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.item.*;
-import wow.commons.model.source.Source;
 import wow.commons.model.spell.ActivatedAbility;
 
 import java.util.List;
@@ -77,7 +76,7 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		return item.getItemSet();
 	}
 
-	public Set<Source> getSources() {
+	public Set<ItemSource> getSources() {
 		return item.getSources();
 	}
 

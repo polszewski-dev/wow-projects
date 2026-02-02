@@ -25,7 +25,7 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelSheetNames.IT
 public class ItemExcelParser extends ExcelParser {
 	private final String xlsFilePath;
 
-	private final SourceParserFactory sourceParserFactory;
+	private final ItemSourceParserFactory itemSourceParserFactory;
 	private final SpellRepository spellRepository;
 	private final ItemSetRepository itemSetRepository;
 
@@ -39,7 +39,7 @@ public class ItemExcelParser extends ExcelParser {
 	@Override
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
-				new ItemSheetParser(ITEM, sourceParserFactory, spellRepository, itemSetRepository, this)
+				new ItemSheetParser(ITEM, itemSourceParserFactory, spellRepository, itemSetRepository, this)
 		);
 	}
 

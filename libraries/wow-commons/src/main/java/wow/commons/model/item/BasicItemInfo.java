@@ -4,7 +4,6 @@ import wow.commons.model.categorization.Binding;
 import wow.commons.model.categorization.ItemRarity;
 import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.source.Source;
 
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +19,7 @@ public record BasicItemInfo(
 		Binding binding,
 		boolean unique,
 		int itemLevel,
-		Set<Source> sources
+		Set<ItemSource> sources
 ) {
 	public BasicItemInfo {
 		Objects.requireNonNull(itemType);

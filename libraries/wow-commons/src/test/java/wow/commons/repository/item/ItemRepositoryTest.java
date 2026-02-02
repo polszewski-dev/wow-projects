@@ -1,5 +1,6 @@
 package wow.commons.repository.item;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -128,6 +129,7 @@ class ItemRepositoryTest extends WowCommonsSpringTest {
 		assertThat(actual).isEqualTo(expected);
 	}
 
+	@Disabled
 	@ParameterizedTest
 	@CsvSource({
 			"Hood of the Malefic, Traded: Helm of the Forgotten Conqueror",

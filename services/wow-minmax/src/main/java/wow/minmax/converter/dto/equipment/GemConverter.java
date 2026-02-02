@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackConverter<Gem, GemDTO, PhaseId> {
-	private final SourceConverter sourceConverter;
+	private final ItemSourceConverter itemSourceConverter;
 	private final GemRepository gemRepository;
 
 	@Override
@@ -31,7 +31,7 @@ public class GemConverter implements Converter<Gem, GemDTO>, ParametrizedBackCon
 				source.getName(),
 				source.getColor(),
 				source.getRarity(),
-				sourceConverter.getSources(source),
+				itemSourceConverter.getSources(source),
 				source.getName(),
 				source.getIcon(),
 				getTooltip(source)

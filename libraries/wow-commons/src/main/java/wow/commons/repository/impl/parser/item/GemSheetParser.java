@@ -20,8 +20,8 @@ public class GemSheetParser extends AbstractItemSheetParser {
 
 	private final GemExcelParser parser;
 
-	public GemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, GemExcelParser parser) {
-		super(sheetName, sourceParserFactory, spellRepository);
+	public GemSheetParser(String sheetName, ItemSourceParserFactory itemSourceParserFactory, SpellRepository spellRepository, GemExcelParser parser) {
+		super(sheetName, itemSourceParserFactory, spellRepository);
 		this.parser = parser;
 	}
 

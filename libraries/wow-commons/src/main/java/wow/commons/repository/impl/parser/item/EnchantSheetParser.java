@@ -24,8 +24,8 @@ public class EnchantSheetParser extends AbstractItemSheetParser {
 
 	private final EnchantExcelParser parser;
 
-	public EnchantSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, EnchantExcelParser parser) {
-		super(sheetName, sourceParserFactory, spellRepository);
+	public EnchantSheetParser(String sheetName, ItemSourceParserFactory itemSourceParserFactory, SpellRepository spellRepository, EnchantExcelParser parser) {
+		super(sheetName, itemSourceParserFactory, spellRepository);
 		this.parser = parser;
 	}
 

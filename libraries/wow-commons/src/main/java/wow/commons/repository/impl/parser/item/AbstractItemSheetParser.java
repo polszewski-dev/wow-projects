@@ -10,7 +10,7 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.item.BasicItemInfo;
-import wow.commons.model.source.Source;
+import wow.commons.model.item.ItemSource;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.SpellId;
 import wow.commons.model.spell.impl.ActivatedAbilityImpl;
@@ -31,13 +31,13 @@ import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.*
  * Date: 2022-11-24
  */
 public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
-	protected final SourceParserFactory sourceParserFactory;
+	protected final ItemSourceParserFactory itemSourceParserFactory;
 	protected final SpellRepository spellRepository;
 	private final ItemEffectMapper itemEffectMapper;
 
-	protected AbstractItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository) {
+	protected AbstractItemSheetParser(String sheetName, ItemSourceParserFactory itemSourceParserFactory, SpellRepository spellRepository) {
 		super(sheetName);
-		this.sourceParserFactory = sourceParserFactory;
+		this.itemSourceParserFactory = itemSourceParserFactory;
 		this.spellRepository = spellRepository;
 		this.itemEffectMapper = new ItemEffectMapper(spellRepository);
 	}
@@ -68,9 +68,9 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		return new BasicItemInfo(itemType, itemSubType, rarity, binding, unique, itemLevel, sources);
 	}
 
-	private Set<Source> getSources(String source) {
+	private Set<ItemSource> getSources(String source) {
 		var reqPhase = getTimeRestriction().earliestPhaseId();
-		return sourceParserFactory.create(reqPhase).parse(source);
+		return itemSourceParserFactory.create(reqPhase).parse(source);
 	}
 
 	protected List<Effect> readItemEffects(String prefix, int maxEffects, TimeRestriction timeRestriction, EffectSource source) {

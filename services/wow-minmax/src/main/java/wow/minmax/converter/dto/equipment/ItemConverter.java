@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 @Component
 @AllArgsConstructor
 public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBackConverter<Item, ItemDTO, PhaseId> {
-	private final SourceConverter sourceConverter;
+	private final ItemSourceConverter itemSourceConverter;
 	private final PhaseConverter phaseConverter;
 	private final ItemRepository itemRepository;
 	private final PhaseRepository phaseRepository;
@@ -38,8 +38,8 @@ public class ItemConverter implements Converter<Item, ItemDTO>, ParametrizedBack
 				source.getItemType(),
 				source.getItemSubType(),
 				source.getItemLevel(),
-				sourceConverter.getSources(source),
-				sourceConverter.getDetailedSources(source),
+				itemSourceConverter.getSources(source),
+				itemSourceConverter.getDetailedSources(source),
 				source.getSocketTypes(),
 				source.getSocketBonus().getTooltip(),
 				source.getIcon(),

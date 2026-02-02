@@ -12,8 +12,8 @@ import wow.commons.repository.spell.SpellRepository;
 public class TradedItemSheetParser extends AbstractItemSheetParser {
 	private final TradedItemExcelParser parser;
 
-	public TradedItemSheetParser(String sheetName, SourceParserFactory sourceParserFactory, SpellRepository spellRepository, TradedItemExcelParser parser) {
-		super(sheetName, sourceParserFactory, spellRepository);
+	public TradedItemSheetParser(String sheetName, ItemSourceParserFactory itemSourceParserFactory, SpellRepository spellRepository, TradedItemExcelParser parser) {
+		super(sheetName, itemSourceParserFactory, spellRepository);
 		this.parser = parser;
 	}
 
