@@ -25,6 +25,14 @@ public class Raid {
 		parties.add(new Party(this));
 	}
 
+	public void add(Unit member) {
+		if (!parties.getLast().canAddAnotherMember()) {
+			addNewParty();
+		}
+
+		parties.getLast().add(member);
+	}
+
 	public Party getFirstParty() {
 		return parties.getFirst();
 	}
@@ -33,9 +41,29 @@ public class Raid {
 		return parties.get(idx);
 	}
 
+	public int getNumPlayers() {
+		return parties.stream()
+				.map(Party::getPlayers)
+				.mapToInt(List::size)
+				.sum();
+	}
+
+	public List<Player> getPlayers() {
+		return parties.stream()
+				.map(Party::getPlayers)
+				.flatMap(List::stream)
+				.toList();
+	}
+
 	public void forEachRaidMember(Consumer<Unit> consumer) {
 		for (var party : parties) {
 			party.forEachPartyMember(consumer);
+		}
+	}
+
+	public void forEachPlayer(Consumer<Player> consumer) {
+		for (var party : parties) {
+			party.forEachPlayer(consumer);
 		}
 	}
 }
