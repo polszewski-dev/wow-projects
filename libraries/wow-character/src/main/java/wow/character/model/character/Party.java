@@ -65,6 +65,10 @@ public class Party<M extends Character> {
 		return members.size();
 	}
 
+	public M getFirstMember() {
+		return members.isEmpty() ? null : members.getFirst();
+	}
+
 	public void forEach(Consumer<? super M> consumer) {
 		members.forEach(consumer);
 	}

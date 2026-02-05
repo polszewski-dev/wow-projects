@@ -28,6 +28,7 @@ public record PlayerDTO(
 		String script,
 		List<Integer> buffIds,
 		List<ActiveEffectDTO> activeEffects,
-		List<Integer> consumableIds
+		List<Integer> consumableIds,
+		List<Integer> assetIds
 ) {
 }

@@ -116,6 +116,10 @@ public record Duration(long millis) implements AnyDuration {
 		return anyDuration;
 	}
 
+	public Duration subtract(Duration duration) {
+		return millis(this.millis - duration.millis);
+	}
+
 	public double divideBy(Duration duration) {
 		if (duration.isZero()) {
 			throw new IllegalArgumentException("X / 0");

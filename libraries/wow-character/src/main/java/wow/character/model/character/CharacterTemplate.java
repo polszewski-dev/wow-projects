@@ -30,6 +30,7 @@ public class CharacterTemplate implements TimeRestricted, CharacterRestricted {
 	private final List<String> defaultBuffs;
 	private final List<String> defaultDebuffs;
 	private final List<String> consumables;
+	private final List<String> defaultAssets;
 	private final List<ProfIdSpecId> professions;
 	private final List<String> exclusiveFactions;
 	private final boolean isDefault;

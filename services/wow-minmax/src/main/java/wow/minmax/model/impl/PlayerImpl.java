@@ -28,6 +28,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Consumables consumables;
+	private final Assets assets;
 
 	public PlayerImpl(
 			PlayerId playerId,
@@ -50,6 +51,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = new Consumables();
+		this.assets = new Assets();
 	}
 
 	@Override

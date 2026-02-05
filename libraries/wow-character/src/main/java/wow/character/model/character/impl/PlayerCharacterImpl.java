@@ -22,6 +22,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Consumables consumables;
+	private final Assets assets;
 
 	public PlayerCharacterImpl(
 			String name,
@@ -42,6 +43,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = new Consumables();
+		this.assets = new Assets();
 	}
 
 	@Override

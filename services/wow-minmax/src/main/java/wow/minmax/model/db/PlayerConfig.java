@@ -35,6 +35,7 @@ public class PlayerConfig {
 	private List<String> exclusiveFactions;
 	private List<Integer> buffIds;
 	private List<Integer> consumableIds;
+	private List<Integer> assetIds;
 	private NonPlayerConfig target;
 
 	public PlayerId getPlayerIdAsRecord() {

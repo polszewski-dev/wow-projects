@@ -56,6 +56,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void idleFor(Duration duration);
 
+	void immediateAction(Consumer<Unit> action);
+
 	void triggerGcd(Duration duration);
 
 	void interruptCurrentAction();
@@ -145,6 +147,8 @@ public interface Unit extends Character, SimulationContextSource {
 	void removeEffect(EffectInstance effect);
 
 	void removeEffect(AbilityId abilityId, Unit owner);
+
+	void removeEffect(String effectName);
 
 	boolean isUnderEffect(AbilityId abilityId, Unit owner);
 

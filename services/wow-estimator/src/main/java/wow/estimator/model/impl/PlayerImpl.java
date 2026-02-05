@@ -27,6 +27,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Consumables consumables;
+	private final Assets assets;
 
 	public PlayerImpl(
 			String name,
@@ -47,6 +48,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = new Consumables();
+		this.assets = new Assets();
 	}
 
 	private PlayerImpl(
@@ -63,7 +65,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Equipment equipment,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions,
-			Consumables consumables
+			Consumables consumables,
+			Assets assets
 	) {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
 		this.race = race;
@@ -72,6 +75,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = consumables;
+		this.assets = assets;
 	}
 
 	@Override
@@ -103,7 +107,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 				getEquipment().copy(),
 				getProfessions().copy(),
 				getExclusiveFactions().copy(),
-				getConsumables().copy()
+				getConsumables().copy(),
+				getAssets().copy()
 		);
 		copy.setTarget(getTarget());
 		return copy;

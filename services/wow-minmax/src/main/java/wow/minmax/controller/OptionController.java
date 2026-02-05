@@ -3,12 +3,11 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import wow.character.model.asset.AssetId;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.ConsumableId;
-import wow.minmax.client.dto.BuffDTO;
-import wow.minmax.client.dto.ConsumableDTO;
-import wow.minmax.client.dto.OptionGroupDTO;
-import wow.minmax.client.dto.OptionStatusDTO;
+import wow.minmax.client.dto.*;
+import wow.minmax.converter.dto.AssetStatusConverter;
 import wow.minmax.converter.dto.BuffStatusConverter;
 import wow.minmax.converter.dto.ConsumableStatusConverter;
 import wow.minmax.model.PlayerId;
@@ -29,6 +28,7 @@ public class OptionController {
 
 	private final BuffStatusConverter buffStatusConverter;
 	private final ConsumableStatusConverter consumableStatusConverter;
+	private final AssetStatusConverter assetStatusConverter;
 
 	@GetMapping("{playerId}/buffs")
 	public List<OptionGroupDTO<BuffDTO>> getBuffStatuses(
@@ -53,7 +53,7 @@ public class OptionController {
 	}
 
 	@GetMapping("{playerId}/consumables")
-	public List<OptionGroupDTO<ConsumableDTO>> getConsumables(
+	public List<OptionGroupDTO<ConsumableDTO>> getConsumableStatuses(
 			@PathVariable("playerId") PlayerId playerId
 	) {
 		var consumableStatuses = optionService.getConsumableStatuses(playerId);
@@ -62,7 +62,7 @@ public class OptionController {
 	}
 
 	@PutMapping("{playerId}/consumables")
-	public void enableConsumable(
+	public void changeConsumableStatus(
 			@PathVariable("playerId") PlayerId playerId,
 			@RequestBody OptionStatusDTO<ConsumableDTO> consumableStatus
 	) {
@@ -72,5 +72,27 @@ public class OptionController {
 		optionService.changeConsumableStatus(playerId, consumableId, enabled);
 
 		log.info("Changed consumable charId: {}, consumableId: {}, enabled: {}", playerId, consumableId, enabled);
+	}
+
+	@GetMapping("{playerId}/assets")
+	public List<OptionGroupDTO<AssetDTO>> getAssetStatuses(
+			@PathVariable("playerId") PlayerId playerId
+	) {
+		var assetStatuses = optionService.getAssetStatuses(playerId);
+
+		return assetStatusConverter.convertAndGroup(assetStatuses);
+	}
+
+	@PutMapping("{playerId}/assets")
+	public void changeAssetStatus(
+			@PathVariable("playerId") PlayerId playerId,
+			@RequestBody OptionStatusDTO<AssetDTO> assetStatus
+	) {
+		var assetId = AssetId.of(assetStatus.option().id());
+		var enabled = assetStatus.enabled();
+
+		optionService.changeAssetStatus(playerId, assetId, enabled);
+
+		log.info("Changed asset charId: {}, assetId: {}, enabled: {}", playerId, assetId, enabled);
 	}
 }

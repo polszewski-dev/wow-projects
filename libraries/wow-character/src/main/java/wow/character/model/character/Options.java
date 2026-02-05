@@ -83,6 +83,10 @@ public abstract class Options<T, I> {
 		}
 	}
 
+	public void setNames(String... names) {
+		setNames(List.of(names));
+	}
+
 	public void setNames(Collection<String> names) {
 		reset();
 

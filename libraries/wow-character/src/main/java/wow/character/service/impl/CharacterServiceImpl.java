@@ -2,15 +2,13 @@ package wow.character.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import wow.character.model.asset.Asset;
 import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.repository.BaseStatInfoRepository;
-import wow.character.repository.CharacterTemplateRepository;
-import wow.character.repository.CombatRatingInfoRepository;
-import wow.character.repository.GearSetRepository;
+import wow.character.repository.*;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.character.service.PlayerCharacterFactory;
@@ -58,6 +56,7 @@ public class CharacterServiceImpl implements CharacterService {
 	private final TalentRepository talentRepository;
 	private final BuffRepository buffRepository;
 	private final ConsumableRepository consumableRepository;
+	private final AssetRepository assetRepository;
 	private final BaseStatInfoRepository baseStatInfoRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 	private final CharacterTemplateRepository characterTemplateRepository;
@@ -149,6 +148,8 @@ public class CharacterServiceImpl implements CharacterService {
 
 		player.getConsumables().setNames(characterTemplate.getConsumables());
 
+		player.getAssets().setNames(characterTemplate.getDefaultAssets());
+
 		updateAfterRestrictionChange(player);
 	}
 
@@ -164,6 +165,7 @@ public class CharacterServiceImpl implements CharacterService {
 		refreshSpellbook(player);
 		refreshBuffs(player);
 		refreshConsumables(player);
+		refreshAssets(player);
 	}
 
 	@Override
@@ -174,6 +176,7 @@ public class CharacterServiceImpl implements CharacterService {
 		refreshEquipment(player);
 		refreshBuffs(player);
 		refreshConsumables(player);
+		refreshAssets(player);
 	}
 
 	private void refreshSpellbook(PlayerCharacter player) {
@@ -205,6 +208,12 @@ public class CharacterServiceImpl implements CharacterService {
 		var consumables = getAvailableConsumes(player);
 
 		player.getConsumables().setAvailable(consumables);
+	}
+
+	private void refreshAssets(PlayerCharacter player) {
+		var assets = getAvailableAssets(player);
+
+		player.getAssets().setAvailable(assets);
 	}
 
 	private void refreshEquipment(PlayerCharacter player) {
@@ -277,6 +286,12 @@ public class CharacterServiceImpl implements CharacterService {
 	private List<Consumable> getAvailableConsumes(PlayerCharacter player) {
 		return consumableRepository.getAvailableConsumables(player.getPhaseId()).stream()
 				.filter(consumable -> consumable.isAvailableTo(player))
+				.toList();
+	}
+
+	private List<Asset> getAvailableAssets(PlayerCharacter player) {
+		return assetRepository.getAvailableAssets(player.getPhaseId()).stream()
+				.filter(asset -> asset.isAvailableTo(player))
 				.toList();
 	}
 

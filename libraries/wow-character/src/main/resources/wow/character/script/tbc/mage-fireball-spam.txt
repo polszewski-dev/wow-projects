@@ -1,0 +1,10 @@
+
+@	Rotation
+
+	Destruction Potion
+	Berserking
+	Trinket1
+	Trinket2
+
+	Fireball
+	Shoot

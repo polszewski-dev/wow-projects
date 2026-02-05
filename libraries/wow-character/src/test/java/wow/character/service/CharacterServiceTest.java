@@ -3,23 +3,33 @@ package wow.character.service;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
+import wow.character.model.asset.Asset;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.RaceId;
+import wow.commons.model.pve.GameVersionId;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static wow.commons.model.categorization.ItemSlot.*;
+import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.UNDEAD;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.profession.ProfessionId.*;
 import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
+import static wow.commons.model.pve.GameVersionId.TBC;
+import static wow.commons.model.pve.GameVersionId.VANILLA;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 
@@ -79,11 +89,14 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 				.map(Object::toString);
 		var buffs = player.getBuffs().getList().stream()
 				.map(Object::toString);
+		var assets = player.getAssets().getList().stream()
+				.map(Asset::name);
 
 		assertThat(abilities).hasSameElementsAs(ABILITIES);
 		assertThat(talents).hasSameElementsAs(TALENTS);
 		assertThat(player.getActivePetType()).isNull();
 		assertThat(buffs).isEqualTo(BUFFS);
+		assertThat(assets).isEqualTo(ASSETS);
 		assertThat(player.getEquipment().toList()).isEmpty();
 		assertThat(player.hasProfession(TAILORING, 375)).isTrue();
 		assertThat(player.hasProfessionSpecialization(SHADOWEAVE_TAILORING)).isTrue();
@@ -125,11 +138,14 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 				.map(Object::toString);
 		var buffs = player.getBuffs().getList().stream()
 				.map(Object::toString);
+		var assets = player.getAssets().getList().stream()
+				.map(Asset::name);
 
 		assertThat(abilities).hasSameElementsAs(ABILITIES);
 		assertThat(talents).hasSameElementsAs(TALENTS);
 		assertThat(player.getActivePetType()).isNull();
 		assertThat(buffs).isEqualTo(BUFFS);
+		assertThat(assets).isEqualTo(ASSETS);
 		assertThat(player.getEquipment().toList()).isEmpty();
 		assertThat(player.hasProfession(TAILORING, 375)).isTrue();
 		assertThat(player.hasProfessionSpecialization(SHADOWEAVE_TAILORING)).isTrue();
@@ -156,10 +172,13 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 				.map(Object::toString);
 		var buffs = player.getBuffs().getList().stream()
 				.map(Object::toString);
+		var assets = player.getAssets().getList().stream()
+				.map(Asset::name);
 
 		assertThat(abilities).hasSameElementsAs(ABILITIES_AFTER_TALENT_RESET);
 		assertThat(player.getActivePetType()).isNull();
 		assertThat(buffs).isEqualTo(BUFFS_AFTER_TALENT_RESET);
+		assertThat(assets).isEqualTo(ASSETS_AFTER_TALENT_RESET);
 	}
 
 	@Test
@@ -243,6 +262,16 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 		assertThat(equippedItem.getGem(0)).isNull();
 		assertThat(equippedItem.getGem(1)).isEqualTo(gem2);
 		assertThat(equippedItem.getGem(2)).isEqualTo(gem2);
+	}
+
+	@ParameterizedTest
+	@MethodSource("getClassRaceLevelCombinations")
+	void applying_default_character_template_does_not_throw_exception(ClassRaceLevel data) {
+		var player = underTest.createPlayerCharacter(
+				"Player", data.characterClassId, data.raceId, data.level, data.gameVersionId.getLastPhase()
+		);
+
+		assertThatNoException().isThrownBy(() -> underTest.applyDefaultCharacterTemplate(player));
 	}
 
 	@ParameterizedTest
@@ -594,6 +623,11 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	static final List<String> DEBUFFS = List.of(
 	);
 
+	static final List<String> ASSETS = List.of(
+			"Fel Armor",
+			"Touch of Shadow"
+	);
+
 	static final List<String> ABILITIES_AFTER_TALENT_RESET = List.of(
 			"Shoot",
 			"Blood Fury",
@@ -791,4 +825,45 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 			"Brilliant Wizard Oil",
 			"Flask of Pure Death"
 	);
+
+	static final List<String> ASSETS_AFTER_TALENT_RESET = List.of(
+			"Fel Armor"
+	);
+
+	record ClassRaceLevel(CharacterClassId characterClassId, RaceId raceId, int level, GameVersionId gameVersionId) {
+		@Override
+		public String toString() {
+			return "%s %s %s %s".formatted(characterClassId, raceId, level, gameVersionId);
+		}
+	}
+
+	static List<ClassRaceLevel> getClassRaceLevelCombinations() {
+		var classes = List.of(
+				new ClassRaceLevel(WARLOCK, RaceId.UNDEAD, 1, null),
+				new ClassRaceLevel(PRIEST, RaceId.UNDEAD, 1, null)
+		);
+
+		var gameVersions = List.of(VANILLA, TBC);
+
+		var result = new ArrayList<ClassRaceLevel>();
+
+		for (var gameVersion : gameVersions) {
+			for (var aClass : classes) {
+				for (var level = 10; level <= getMaxLevel(gameVersion); level += 2) {
+					var x = new ClassRaceLevel(aClass.characterClassId, aClass.raceId, level, gameVersion);
+					result.add(x);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private static int getMaxLevel(GameVersionId gameVersion) {
+		return switch (gameVersion) {
+			case VANILLA -> 60;
+			case TBC -> 70;
+			case WOTLK -> 80;
+		};
+	}
 }

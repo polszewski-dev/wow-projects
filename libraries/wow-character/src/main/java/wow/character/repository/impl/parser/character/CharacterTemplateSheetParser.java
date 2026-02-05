@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static wow.character.model.script.ScriptPathResolver.requireExistingScriptFile;
+
 /**
  * User: POlszewski
  * Date: 2022-11-30
@@ -24,6 +26,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colDefaultBuffs = column("default_buffs");
 	private final ExcelColumn colDefaultDebuffs = column("default_debuffs");
 	private final ExcelColumn colDefaultConsumables = column("default_consumables");
+	private final ExcelColumn colDefaultAssets = column("default_assets");
 	private final ExcelColumn colProf1 = column("prof1");
 	private final ExcelColumn colProf1Spec = column("prof1_spec");
 	private final ExcelColumn colProf2 = column("prof2");
@@ -57,9 +60,12 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var defaultBuffs = colDefaultBuffs.getList(x -> x);
 		var defaultDebuffs = colDefaultDebuffs.getList(x -> x);
 		var consumables = colDefaultConsumables.getList(x -> x);
+		var defaultAssets = colDefaultAssets.getList(x -> x);
 		var professions = getProfessions();
 		var exclusiveFactions = colXFactions.getList(x -> x);
 		var isDefault = colDefault.getBoolean();
+
+		requireExistingScriptFile(defaultScript, timeRestriction.getGameVersionId());
 
 		return new CharacterTemplate(
 				name,
@@ -71,6 +77,7 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 				defaultBuffs,
 				defaultDebuffs,
 				consumables,
+				defaultAssets,
 				professions,
 				exclusiveFactions,
 				isDefault

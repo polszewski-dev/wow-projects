@@ -93,9 +93,17 @@ public abstract class WowCharacterSpringTest {
 		return getPlayer(characterClass, race, LEVEL, PHASE);
 	}
 
+	protected PlayerCharacter getPlayer(String name, CharacterClassId characterClass, RaceId race) {
+		return getPlayer(name, characterClass, race, LEVEL, PHASE);
+	}
+
 	protected PlayerCharacter getPlayer(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+		return getPlayer("Player", characterClass, race, level, phase);
+	}
+
+	protected PlayerCharacter getPlayer(String name, CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
-				"Player",
+				name,
 				characterClass,
 				race,
 				level,

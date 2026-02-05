@@ -1,6 +1,7 @@
 package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
+import wow.character.model.asset.AssetId;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
@@ -28,6 +29,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 		var talentIds = source.getTalents().getIds(TalentId::value);
 		var buffIds = source.getBuffs().getIds(BuffId::value);
 		var consumableIds = source.getConsumables().getIds(ConsumableId::value);
+		var assetIds = source.getAssets().getIds(AssetId::value);
 
 		return new PlayerDTO(
 				source.getName(),
@@ -44,7 +46,8 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 				source.getBuild().getScript(),
 				buffIds,
 				List.of(),
-				consumableIds
+				consumableIds,
+				assetIds
 		);
 	}
 
@@ -69,6 +72,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 
 		player.getBuffs().setIds(source.buffIds(), BuffId::of);
 		player.getConsumables().setIds(source.consumableIds(), ConsumableId::of);
+		player.getAssets().setIds(source.assetIds(), AssetId::of);
 
 		return player;
 	}

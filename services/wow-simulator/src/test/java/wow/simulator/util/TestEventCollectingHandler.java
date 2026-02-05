@@ -39,7 +39,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	Clock clock;
 	boolean ignoreRegen = true;
 
-	private record ExtraArgs(Unit caster) {}
+	private record ExtraArgs(Unit caster, Unit target) {}
 
 	private Map<TestEvent, ExtraArgs> eventsExtraArgs = new HashMap<>();
 
@@ -55,7 +55,8 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 
 	@Override
 	public void beginCast(CastSpellAction action) {
-		addEvent(new BeginCast(now(), action.getOwner(), action.getAbilityName(), action.getCastTime()));
+		var event = addEvent(new BeginCast(now(), action.getOwner(), action.getAbilityName(), action.getCastTime()));
+		addArgs(event, action.getOwner(), action.getPrimaryTarget().getSingleTarget());
 	}
 
 	@Override
@@ -99,17 +100,17 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 			return;
 		}
 		var event = addEvent(new IncreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
-		addArgs(event, caster);
+		addArgs(event, caster, target);
 	}
 
 	@Override
 	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
 		var event = addEvent(new DecreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
-		addArgs(event, caster);
+		addArgs(event, caster, target);
 	}
 
-	private void addArgs(TestEvent event, Unit caster) {
-		eventsExtraArgs.put(event, new ExtraArgs(caster));
+	private void addArgs(TestEvent event, Unit caster, Unit target) {
+		eventsExtraArgs.put(event, new ExtraArgs(caster, target));
 	}
 
 	private static String getAbilityId(Spell spell) {
@@ -229,6 +230,12 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 		return extraArgs != null && extraArgs.caster() == caster;
 	}
 
+	private boolean targetIs(TestEvent event, Unit target) {
+		var extraArgs = eventsExtraArgs.get(event);
+
+		return extraArgs != null && extraArgs.target() == target;
+	}
+
 	public int getDamageDone(String abilityName, Unit target, Unit caster) {
 		return getDamageEvents(abilityName, target, caster)
 				.mapToInt(DecreasedResource::amount)
@@ -338,7 +345,13 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 				.filter(x -> x.caster() == caster && x.spell().equals(abilityName));
 	}
 
-	private Stream<BeginCast> getBeginCastEvents() {
+	public Stream<BeginCast> getBeginCastEvents(String abilityName, Player caster, Unit target) {
+		return getBeginCastEvents()
+				.filter(x -> x.caster() == caster && x.spell().equals(abilityName))
+				.filter(x -> targetIs(x, target));
+	}
+
+	public Stream<BeginCast> getBeginCastEvents() {
 		return events.stream()
 				.filter(x -> x instanceof BeginCast)
 				.map(x -> (BeginCast) x);
@@ -369,5 +382,41 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 		return events.stream()
 				.filter(x -> x instanceof EffectApplied)
 				.map(x -> (EffectApplied) x);
+	}
+
+	public Stream<EffectStacked> getEffectStackedEvents(String abilityName, Unit target) {
+		return getEffectStackedEvents()
+				.filter(x -> x.name().equals(abilityName))
+				.filter(x -> x.target() == target);
+	}
+
+	private Stream<EffectStacked> getEffectStackedEvents() {
+		return events.stream()
+				.filter(x -> x instanceof EffectStacked)
+				.map(x -> (EffectStacked) x);
+	}
+
+	private Stream<EffectRemoved> getEffectRemovedEvents() {
+		return events.stream()
+				.filter(x -> x instanceof EffectRemoved)
+				.map(x -> (EffectRemoved) x);
+	}
+
+	public Stream<EffectRemoved> getEffectRemovedEvents(String abilityName, Unit target) {
+		return getEffectRemovedEvents()
+				.filter(x -> x.name().equals(abilityName))
+				.filter(x -> x.target() == target);
+	}
+
+	private Stream<EffectExpired> getEffectExpiredEvents() {
+		return events.stream()
+				.filter(x -> x instanceof EffectExpired)
+				.map(x -> (EffectExpired) x);
+	}
+
+	public Stream<EffectExpired> getEffectExpiredEvents(String abilityName, Unit target) {
+		return getEffectExpiredEvents()
+				.filter(x -> x.name().equals(abilityName))
+				.filter(x -> x.target() == target);
 	}
 }

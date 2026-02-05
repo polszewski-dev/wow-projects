@@ -1,79 +1,54 @@
 package wow.simulator.simulation.asset.tbc;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import wow.character.model.asset.Asset;
-import wow.character.repository.AssetTemplateRepository;
-import wow.commons.model.character.RaceId;
-import wow.simulator.model.unit.Player;
-import wow.simulator.model.unit.Unit;
-import wow.simulator.service.AssetService;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import wow.simulator.simulation.asset.AssetTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.character.CharacterClassId.*;
+import static wow.commons.model.character.RaceId.*;
+import static wow.commons.model.pve.PhaseId.TBC_P5;
 
 /**
  * User: POlszewski
  * Date: 2025-12-13
  */
-public abstract class TbcAssetTest extends TbcWarlockSpellSimulationTest {
-	@Autowired
-	AssetTemplateRepository assetTemplateRepository;
-
-	@Autowired
-	AssetService assetService;
-
-	protected Asset asset;
-	protected Player partyAsset;
-
-	private String assetTemplateName;
-	private RaceId assetRaceId;
-
+public abstract class TbcAssetTest extends AssetTest {
 	@Override
-	protected void afterSetUp() {
-		super.afterSetUp();
-
-		var assetTemplate = assetTemplateRepository.getAssetTemplate(assetTemplateName, player.getGameVersionId()).orElseThrow();
-
-		asset = new Asset(assetTemplate, assetRaceId);
-		partyAsset = assetService.createPlayer("Asset", asset, player);
-
-		simulation.add(partyAsset);
-
-		player.getParty().add(partyAsset);
+	protected void setDefaults() {
+		phaseId = TBC_P5;
 	}
 
-	protected void setAssetParams(String templateName, RaceId raceId) {
-		assetTemplateName = templateName;
-		assetRaceId = raceId;
+	protected void setUpFireMage(String... enabledAssets) {
+		setAssetParams(MAGE, UNDEAD, "https://www.wowhead.com/tbc/talent-calc/mage/2-5052120123033310531251-053002001", enabledAssets);
 	}
 
-	protected void executePreparationPhase() {
-		assetService.executePreparationPhaseScripts(partyAsset, asset, player);
-
-		updateUntil(60);
+	protected void setUpShadowPriest(String... enabledAssets) {
+		setAssetParams(PRIEST, UNDEAD, "https://www.wowhead.com/tbc/talent-calc/priest/500230013--503250510240103051451", enabledAssets);
 	}
 
-	protected void executeWarmUpPhase() {
-		assetService.executeWarmUpPhaseScripts(partyAsset, asset, player);
-
-		updateUntil(120);
+	protected void setUpDisciplinePriest(String... enabledAssets) {
+		setAssetParams(PRIEST, UNDEAD, "https://www.wowhead.com/tbc/talent-calc/priest/5002303130505120001551-2330500303", enabledAssets);
 	}
 
-	protected void assertHasTalent(String name) {
-		var actual = partyAsset.getTalents().hasMaxRank(name);
-
-		assertThat(actual).isTrue();
+	protected void setUpDestroWarlock(String... enabledAssets) {
+		setAssetParams(WARLOCK, ORC, "https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025", enabledAssets);
 	}
 
-	protected void assertSpellCast(double time, String abilityName, Unit target) {
-		// todo
+	protected void setUpAfflictionWarlock(String... enabledAssets) {
+		setAssetParams(WARLOCK, ORC, "https://www.wowhead.com/tbc/talent-calc/warlock/55022000102351055103--50500051220001", enabledAssets);
 	}
 
-	protected void assertHasEffect(Unit unit, String effectName) {
-		assertHasEffect(unit, effectName, 1);
+	protected void setUpBalanceDruid(String... enabledAssets) {
+		setAssetParams(DRUID, TAUREN, "https://www.wowhead.com/tbc/talent-calc/druid/510022312503135231351--500233", enabledAssets);
 	}
 
-	protected void assertHasEffect(Unit unit, String effectName, int numStacks) {
-		// todo
+	protected void setUpElementalShaman(String... enabledAssets) {
+		setAssetParams(SHAMAN, ORC, "https://www.wowhead.com/tbc/talent-calc/shaman/55003105100213351051--05105301005", enabledAssets);
+	}
+
+	protected void setUpHolyPaladin(String... enabledAssets) {
+		setAssetParams(PALADIN, BLOOD_ELF, "https://www.wowhead.com/tbc/talent-calc/paladin/05503121520132531051-500231-5", enabledAssets);
+	}
+
+	protected void setUpRetributionPaladin(String... enabledAssets) {
+		setAssetParams(PALADIN, BLOOD_ELF, "https://www.wowhead.com/tbc/talent-calc/paladin/5-053201-0523005120033125331051", enabledAssets);
 	}
 }

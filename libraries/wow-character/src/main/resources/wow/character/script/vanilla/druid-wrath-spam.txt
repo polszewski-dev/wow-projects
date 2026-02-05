@@ -1,0 +1,7 @@
+
+@	Rotation
+
+	Trinket1
+	Trinket2
+
+	Wrath

@@ -1,5 +1,7 @@
 package wow.minmax.service;
 
+import wow.character.model.asset.Asset;
+import wow.character.model.asset.AssetId;
 import wow.character.model.character.OptionStatus;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
@@ -22,4 +24,9 @@ public interface OptionService {
 	List<OptionStatus<Consumable>> getConsumableStatuses(PlayerId playerId);
 
 	Player changeConsumableStatus(PlayerId playerId, ConsumableId consumableId, boolean enabled);
+
+	List<OptionStatus<Asset>> getAssetStatuses(PlayerId playerId);
+
+	Player changeAssetStatus(PlayerId playerId, AssetId assetId, boolean enabled);
+
 }

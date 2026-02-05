@@ -38,6 +38,7 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Consumables consumables;
+	private final Assets assets;
 
 	private Time lastTimeManaSpent;
 
@@ -63,6 +64,7 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = new Consumables();
+		this.assets = new Assets();
 
 		Raid.newRaid(this);
 	}

@@ -25,6 +25,7 @@ import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.unit.*;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.IdleAction;
+import wow.simulator.model.unit.action.ImmediateAction;
 import wow.simulator.model.unit.action.UnitAction;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextAware;
@@ -192,6 +193,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void idleFor(Duration duration) {
 		idleUntil(now().add(duration));
+	}
+
+	@Override
+	public void immediateAction(Consumer<Unit> action) {
+		enqueueAction(new ImmediateAction(this, action));
 	}
 
 	@Override
@@ -514,6 +520,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void removeEffect(AbilityId abilityId, Unit owner) {
 		effects.removeEffect(abilityId, owner);
+	}
+
+	@Override
+	public void removeEffect(String effectName) {
+		effects.removeEffect(effectName);
 	}
 
 	@Override

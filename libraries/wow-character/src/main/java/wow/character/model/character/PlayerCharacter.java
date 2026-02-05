@@ -175,6 +175,8 @@ public interface PlayerCharacter extends Character {
 
 	Consumables getConsumables();
 
+	Assets getAssets();
+
 	@Override
 	default Optional<Ability> getAbility(AbilityId abilityId) {
 		var ability = Character.super.getAbility(abilityId);

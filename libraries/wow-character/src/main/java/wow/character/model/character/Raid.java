@@ -67,11 +67,7 @@ public class Raid<M extends Character> {
 	}
 
 	public M getFirstMember() {
-		return parties.stream()
-				.map(Party::getMembers)
-				.flatMap(List::stream)
-				.findFirst()
-				.orElseThrow();
+		return getFirstParty().getFirstMember();
 	}
 
 	public void forEach(Consumer<? super M> consumer) {

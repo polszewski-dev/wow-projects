@@ -20,6 +20,7 @@ import java.util.List;
 public class CastSpellAction extends UnitAction {
 	@Getter
 	private final Ability ability;
+	@Getter
 	private final PrimaryTarget primaryTarget;
 
 	private TargetResolver targetResolver;

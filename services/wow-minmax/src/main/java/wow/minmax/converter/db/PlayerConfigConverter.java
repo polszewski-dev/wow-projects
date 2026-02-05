@@ -2,6 +2,7 @@ package wow.minmax.converter.db;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.asset.AssetId;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
@@ -32,6 +33,7 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 	public PlayerConfig doConvert(Player source) {
 		var buffIds = source.getBuffs().getIds(BuffId::value);
 		var consumableIds = source.getConsumables().getIds(ConsumableId::value);
+		var assetIds = source.getAssets().getIds(AssetId::value);
 
 		return new PlayerConfig(
 				source.getPlayerId().toString(),
@@ -46,6 +48,7 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 				source.getExclusiveFactions().getNameList(),
 				buffIds,
 				consumableIds,
+				assetIds,
 				nonPlayerConfigConverter.convert((NonPlayer) source.getTarget())
 		);
 	}
@@ -75,6 +78,7 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 		player.getBuffs().setIds(source.getBuffIds(), BuffId::of);
 		player.getTarget().getBuffs().setIds(source.getTarget().getDebuffIds(), BuffId::of);
 		player.getConsumables().setIds(source.getConsumableIds(), ConsumableId::of);
+		player.getAssets().setIds(source.getAssetIds(), AssetId::of);
 
 		return player;
 	}

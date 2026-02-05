@@ -1,0 +1,8 @@
+
+@	Rotation
+
+	Destruction Potion
+	Trinket1
+	Trinket2
+
+	Lightning Bolt
