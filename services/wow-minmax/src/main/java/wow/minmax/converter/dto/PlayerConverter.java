@@ -2,21 +2,21 @@ package wow.minmax.converter.dto;
 
 import org.springframework.stereotype.Component;
 import wow.character.model.character.NonPlayerCharacter;
-import wow.character.model.character.PlayerCharacter;
-import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.client.converter.AbstractNonPlayerConverter;
 import wow.commons.client.converter.AbstractPlayerConverter;
 import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.equipment.EquipmentConverter;
+import wow.minmax.model.Player;
+import wow.minmax.model.impl.PlayerImpl;
 
 /**
  * User: POlszewski
  * Date: 2025-03-17
  */
 @Component
-public class PlayerConverter extends AbstractPlayerConverter<PlayerCharacter, NonPlayerCharacter> {
+public class PlayerConverter extends AbstractPlayerConverter<Player, NonPlayerCharacter> {
 	public PlayerConverter(
 			CharacterService characterService,
 			CharacterProfessionConverter characterProfessionConverter,
@@ -27,7 +27,7 @@ public class PlayerConverter extends AbstractPlayerConverter<PlayerCharacter, No
 	}
 
 	@Override
-	protected PlayerCharacterFactory<PlayerCharacter> getFactory(String name) {
-		return PlayerCharacterImpl::new;
+	protected PlayerCharacterFactory<Player> getFactory(String name) {
+		return PlayerImpl::new;
 	}
 }

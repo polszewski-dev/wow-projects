@@ -1,7 +1,6 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
-import lombok.Setter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
@@ -63,7 +62,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private Party party;
 
 	@Getter
-	@Setter
 	private Pet activePet;
 
 	private SimulationContext simulationContext;

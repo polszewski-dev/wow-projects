@@ -2,9 +2,6 @@ package wow.minmax.converter.model;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.NonPlayerCharacter;
-import wow.character.model.character.PlayerCharacter;
-import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
@@ -15,7 +12,10 @@ import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.TalentId;
 import wow.minmax.converter.model.equipment.EquipmentConfigConverter;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.NonPlayer;
+import wow.minmax.model.Player;
 import wow.minmax.model.PlayerCharacterConfig;
+import wow.minmax.model.impl.PlayerImpl;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterConfigConverter implements ParametrizedConverter<PlayerCharacter, PlayerCharacterConfig, CharacterId>, BackConverter<PlayerCharacter, PlayerCharacterConfig> {
+public class PlayerCharacterConfigConverter implements ParametrizedConverter<Player, PlayerCharacterConfig, CharacterId>, BackConverter<Player, PlayerCharacterConfig> {
 	private final BuildConfigConverter buildConfigConverter;
 	private final EquipmentConfigConverter equipmentConfigConverter;
 	private final CharacterProfessionConfigConverter characterProfessionConfigConverter;
@@ -34,7 +34,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 	private final CharacterService characterService;
 
 	@Override
-	public PlayerCharacterConfig doConvert(PlayerCharacter source, CharacterId characterId) {
+	public PlayerCharacterConfig doConvert(Player source, CharacterId characterId) {
 		var buffIds = source.getBuffs().getStream()
 				.map(Buff::getId)
 				.map(BuffId::value)
@@ -58,19 +58,19 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				source.getExclusiveFactions().getNameList(),
 				buffIds,
 				consumableIds,
-				nonPlayerCharacterConfigConverter.convert((NonPlayerCharacter) source.getTarget())
+				nonPlayerCharacterConfigConverter.convert((NonPlayer) source.getTarget())
 		);
 	}
 
 	@Override
-	public PlayerCharacter doConvertBack(PlayerCharacterConfig source) {
+	public Player doConvertBack(PlayerCharacterConfig source) {
 		var character = characterService.createPlayerCharacter(
 				source.getName(),
 				source.getCharacterClassId(),
 				source.getRace(),
 				source.getLevel(),
 				source.getPhaseId(),
-				PlayerCharacterImpl::new
+				PlayerImpl::new
 		);
 
 		changeBuild(character, source);
@@ -92,7 +92,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 		return character;
 	}
 
-	private void changeBuild(PlayerCharacter player, PlayerCharacterConfig source) {
+	private void changeBuild(Player player, PlayerCharacterConfig source) {
 		var build = player.getBuild();
 		var sourceBuild = source.getBuild();
 
