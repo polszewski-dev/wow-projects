@@ -10,7 +10,7 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.minmax.model.NonPlayer;
-import wow.minmax.model.NonPlayerCharacterConfig;
+import wow.minmax.model.NonPlayerConfig;
 import wow.minmax.model.impl.NonPlayerImpl;
 
 /**
@@ -19,19 +19,19 @@ import wow.minmax.model.impl.NonPlayerImpl;
  */
 @Component
 @AllArgsConstructor
-public class NonPlayerCharacterConfigConverter implements Converter<NonPlayer, NonPlayerCharacterConfig>, BackConverter<NonPlayer, NonPlayerCharacterConfig> {
+public class NonPlayerConfigConverter implements Converter<NonPlayer, NonPlayerConfig>, BackConverter<NonPlayer, NonPlayerConfig> {
 	private final PhaseRepository phaseRepository;
 	private final CharacterClassRepository characterClassRepository;
 	private final CombatRatingInfoRepository combatRatingInfoRepository;
 
 	@Override
-	public NonPlayerCharacterConfig doConvert(NonPlayer source) {
+	public NonPlayerConfig doConvert(NonPlayer source) {
 		var buffIds = source.getBuffs().getStream()
 				.map(Buff::getId)
 				.map(BuffId::value)
 				.toList();
 
-		return new NonPlayerCharacterConfig(
+		return new NonPlayerConfig(
 				source.getName(),
 				source.getPhaseId(),
 				source.getCharacterClassId(),
@@ -42,7 +42,7 @@ public class NonPlayerCharacterConfigConverter implements Converter<NonPlayer, N
 	}
 
 	@Override
-	public NonPlayer doConvertBack(NonPlayerCharacterConfig source) {
+	public NonPlayer doConvertBack(NonPlayerConfig source) {
 		var phase = phaseRepository.getPhase(source.getPhaseId()).orElseThrow();
 		var characterClass = characterClassRepository.getCharacterClass(source.getCharacterClassId(), phase.getGameVersionId()).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(phase.getGameVersionId(), source.getLevel()).orElseThrow();

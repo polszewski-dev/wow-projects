@@ -28,7 +28,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getItemsBySlot() {
-		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1, ItemFilter.everything()).stream()
+		List<Item> itemsBySlot = underTest.getItemsBySlot(player, ItemSlot.TRINKET_1, ItemFilter.everything()).stream()
 				.sorted(Comparator.comparing(Item::getName))
 				.toList();
 
@@ -42,7 +42,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getHandEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(character, ItemType.HANDS, ArmorSubType.CLOTH).stream()
+		List<Enchant> enchants = underTest.getEnchants(player, ItemType.HANDS, ArmorSubType.CLOTH).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.toList();
 
@@ -60,7 +60,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getChestEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(character, ItemType.CHEST, ArmorSubType.CLOTH).stream()
+		List<Enchant> enchants = underTest.getEnchants(player, ItemType.CHEST, ArmorSubType.CLOTH).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.toList();
 
@@ -77,7 +77,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getFeetEnchants() {
-		List<Enchant> enchants = underTest.getEnchants(character, ItemType.FEET, ArmorSubType.CLOTH).stream()
+		List<Enchant> enchants = underTest.getEnchants(player, ItemType.FEET, ArmorSubType.CLOTH).stream()
 				.sorted(Comparator.comparing(Enchant::getName))
 				.toList();
 
@@ -91,8 +91,8 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGems() {
-		List<Gem> metaGems = underTest.getGems(character, SocketType.META, false);
-		List<Gem> coloredGems = underTest.getGems(character, SocketType.YELLOW, false);
+		List<Gem> metaGems = underTest.getGems(player, SocketType.META, false);
+		List<Gem> coloredGems = underTest.getGems(player, SocketType.YELLOW, false);
 
 		List<String> metaGemNames = metaGems.stream().map(Gem::getName).toList();
 
@@ -139,7 +139,7 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void testGetGems() {
-		List<Gem> coloredGems = underTest.getGems(character, getItem("Sunfire Robe").getSocketType(1));
+		List<Gem> coloredGems = underTest.getGems(player, getItem("Sunfire Robe").getSocketType(1));
 
 		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
 

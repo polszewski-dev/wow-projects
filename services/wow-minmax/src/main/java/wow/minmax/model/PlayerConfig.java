@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PlayerCharacterConfig {
+public class PlayerConfig {
 	@Id
 	private String characterId;
 	private String name;
@@ -34,7 +34,7 @@ public class PlayerCharacterConfig {
 	private List<String> exclusiveFactions;
 	private List<Integer> buffIds;
 	private List<Integer> consumableIds;
-	private NonPlayerCharacterConfig target;
+	private NonPlayerConfig target;
 
 	public CharacterId getCharacterIdAsRecord() {
 		return CharacterId.parse(characterId);

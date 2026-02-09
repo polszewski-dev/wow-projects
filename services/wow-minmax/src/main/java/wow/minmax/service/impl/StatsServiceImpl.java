@@ -9,7 +9,7 @@ import wow.estimator.client.dto.stats.*;
 import wow.minmax.converter.dto.PlayerConverter;
 import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
-import wow.minmax.service.PlayerCharacterService;
+import wow.minmax.service.PlayerService;
 import wow.minmax.service.StatsService;
 
 import static wow.minmax.model.config.CharacterFeature.COMBAT_RATINGS;
@@ -22,7 +22,7 @@ import static wow.minmax.model.config.CharacterFeature.WORLD_BUFFS;
 @Service
 @AllArgsConstructor
 public class StatsServiceImpl implements StatsService {
-	private final PlayerCharacterService playerCharacterService;
+	private final PlayerService playerService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final PlayerConverter playerConverter;
 
@@ -31,7 +31,7 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetAbilityStatsResponseDTO getAbilityStats(Player player) {
-		var viewConfig = playerCharacterService.getViewConfig(player);
+		var viewConfig = playerService.getViewConfig(player);
 		var usesCombatRatings = minmaxConfigRepository.hasFeature(player, COMBAT_RATINGS);
 
 		var request = new GetAbilityStatsRequestDTO(

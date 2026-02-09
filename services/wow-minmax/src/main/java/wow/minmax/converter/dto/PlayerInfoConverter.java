@@ -3,7 +3,7 @@ package wow.minmax.converter.dto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.commons.client.converter.ParametrizedConverter;
-import wow.minmax.client.dto.PlayerCharacterDTO;
+import wow.minmax.client.dto.PlayerInfoDTO;
 import wow.minmax.client.dto.RaceDTO;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
@@ -16,7 +16,7 @@ import wow.minmax.repository.MinmaxConfigRepository;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterConverter implements ParametrizedConverter<Player, PlayerCharacterDTO, CharacterId> {
+public class PlayerInfoConverter implements ParametrizedConverter<Player, PlayerInfoDTO, CharacterId> {
 	private final CharacterClassConverter characterClassConverter;
 	private final RaceConverter raceConverter;
 	private final RacialConverter racialConverter;
@@ -25,8 +25,8 @@ public class PlayerCharacterConverter implements ParametrizedConverter<Player, P
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
-	public PlayerCharacterDTO doConvert(Player source, CharacterId characterId) {
-		return new PlayerCharacterDTO(
+	public PlayerInfoDTO doConvert(Player source, CharacterId characterId) {
+		return new PlayerInfoDTO(
 				characterId.toString(),
 				characterClassConverter.convert(source.getCharacterClass()),
 				getRace(source),

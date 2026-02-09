@@ -46,6 +46,6 @@ class UpgradeControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerCharacterService).getPlayer(CHARACTER_KEY);
+		verify(playerService).getPlayer(CHARACTER_KEY);
 	}
 }

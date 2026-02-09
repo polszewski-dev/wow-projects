@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.minmax.client.dto.stats.*;
 import wow.minmax.converter.dto.stats.*;
 import wow.minmax.model.CharacterId;
-import wow.minmax.service.PlayerCharacterService;
+import wow.minmax.service.PlayerService;
 import wow.minmax.service.StatsService;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("api/v1/stats")
 @AllArgsConstructor
 public class StatsController {
-	private final PlayerCharacterService playerCharacterService;
+	private final PlayerService playerService;
 	private final StatsService statsService;
 	private final AbilityStatsConverter abilityStatsConverter;
 	private final CharacterStatsConverter characterStatsConverter;
@@ -33,7 +33,7 @@ public class StatsController {
 	public List<AbilityStatsDTO> getAbilityStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 		var stats = statsService.getAbilityStats(player).stats();
 
 		return abilityStatsConverter.convertList(stats, player.getPhaseId());
@@ -43,7 +43,7 @@ public class StatsController {
 	public List<CharacterStatsDTO> getCharacterStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 		var stats = statsService.getCharacterStats(player).stats();
 
 		return characterStatsConverter.convertList(stats);
@@ -53,7 +53,7 @@ public class StatsController {
 	public List<SpecialAbilityStatsDTO> getSpecialAbilityStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 		var stats = statsService.getSpecialAbilityStats(player).stats();
 
 		return specialAbilityStatsConverter.convertList(stats);
@@ -63,7 +63,7 @@ public class StatsController {
 	public RotationStatsDTO getRotationStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 		var stats = statsService.getRotationStats(player).stats();
 
 		return rotationStatsConverter.convert(stats, player.getPhaseId());
@@ -73,7 +73,7 @@ public class StatsController {
 	public List<TalentStatsDTO> getTalentStats(
 			@PathVariable("characterId") CharacterId characterId
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 		var stats = statsService.getTalentStats(player).stats();
 
 		return talentStatsConverter.convertList(stats, player.getPhaseId());

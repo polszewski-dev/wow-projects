@@ -8,7 +8,7 @@ import wow.minmax.model.CharacterId;
 import wow.minmax.model.ConsumableStatus;
 import wow.minmax.model.Player;
 import wow.minmax.service.ConsumableService;
-import wow.minmax.service.PlayerCharacterService;
+import wow.minmax.service.PlayerService;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ConsumableServiceImpl implements ConsumableService {
-	private final PlayerCharacterService playerCharacterService;
+	private final PlayerService playerService;
 
 	@Override
 	public List<ConsumableStatus> getConsumableStatuses(CharacterId characterId) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 
 		return getConsumableStatuses(player);
 	}
@@ -47,11 +47,11 @@ public class ConsumableServiceImpl implements ConsumableService {
 
 	@Override
 	public Player changeConsumableStatus(CharacterId characterId, String consumableName, boolean enabled) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 
 		player.getConsumables().enable(consumableName, enabled);
 
-		playerCharacterService.saveCharacter(characterId, player);
+		playerService.saveCharacter(characterId, player);
 
 		return player;
 	}

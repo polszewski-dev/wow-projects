@@ -19,7 +19,7 @@ import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
  * User: POlszewski
  * Date: 2025-10-02
  */
-class PlayerCharacterServiceTest extends ServiceTest {
+class PlayerServiceTest extends ServiceTest {
 	@Test
 	void getAvailableProfessions() {
 		var availableProfessions = underTest.getAvailableProfessions(CHARACTER_KEY);
@@ -60,11 +60,11 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 	@Test
 	void changeProfession() {
-		assertThat(character.hasProfession(ENCHANTING)).isTrue();
-		assertThat(character.hasProfession(TAILORING)).isTrue();
+		assertThat(player.hasProfession(ENCHANTING)).isTrue();
+		assertThat(player.hasProfession(TAILORING)).isTrue();
 
-		assertThat(character.hasProfession(ALCHEMY)).isFalse();
-		assertThat(character.hasProfessionSpecialization(TRANSMUTATION_MASTER)).isFalse();
+		assertThat(player.hasProfession(ALCHEMY)).isFalse();
+		assertThat(player.hasProfessionSpecialization(TRANSMUTATION_MASTER)).isFalse();
 
 		var player = underTest.changeProfession(CHARACTER_KEY, 1, new ProfIdSpecId(ALCHEMY, TRANSMUTATION_MASTER));
 
@@ -91,8 +91,8 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 	@Test
 	void changeExclusiveFaction() {
-		assertThat(character.hasExclusiveFaction(ALDOR)).isFalse();
-		assertThat(character.hasExclusiveFaction(SCRYERS)).isTrue();
+		assertThat(player.hasExclusiveFaction(ALDOR)).isFalse();
+		assertThat(player.hasExclusiveFaction(SCRYERS)).isTrue();
 
 		var player = underTest.changeExclusiveFaction(CHARACTER_KEY, ALDOR);
 
@@ -102,7 +102,7 @@ class PlayerCharacterServiceTest extends ServiceTest {
 
 	@Test
 	void change() {
-		assertThat(character.getTalentLink()).isEqualTo("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025");
+		assertThat(player.getTalentLink()).isEqualTo("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025");
 
 		var player = underTest.changeTalents(CHARACTER_KEY, "https://www.wowhead.com/tbc/talent-calc/warlock/55022000102351055103--50500051220001");
 
@@ -130,7 +130,7 @@ class PlayerCharacterServiceTest extends ServiceTest {
 	void changeScript() {
 		var newScript = "warlock-shadow-bolt-spam";
 
-		assertThat(character.getBuild().getScript()).isEqualTo("warlock-destro-shadow");
+		assertThat(player.getBuild().getScript()).isEqualTo("warlock-destro-shadow");
 
 		var player = underTest.changeScript(CHARACTER_KEY, newScript);
 
@@ -138,5 +138,5 @@ class PlayerCharacterServiceTest extends ServiceTest {
 	}
 
 	@Autowired
-	PlayerCharacterService underTest;
+	PlayerService underTest;
 }

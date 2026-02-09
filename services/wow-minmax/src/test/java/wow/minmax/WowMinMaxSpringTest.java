@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
 import wow.commons.model.character.CharacterClassId;
@@ -70,8 +69,8 @@ public abstract class WowMinMaxSpringTest {
 	@Autowired
 	protected StatsService statsService;
 
-	protected void equipGearSet(PlayerCharacter character) {
-		characterService.equipGearSet(character, "Wowhead TBC P5 BiS");
+	protected void equipGearSet(Player player) {
+		characterService.equipGearSet(player, "Wowhead TBC P5 BiS");
 	}
 
 	protected EquippableItem getItem(String name) {
@@ -90,16 +89,16 @@ public abstract class WowMinMaxSpringTest {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected Player getCharacter() {
-		return getCharacter(CHARACTER_CLASS, RACE);
+	protected Player getPlayer() {
+		return getPlayer(CHARACTER_CLASS, RACE);
 	}
 
-	protected Player getCharacter(CharacterClassId characterClass, RaceId race) {
-		return getCharacter(characterClass, race, LEVEL, PHASE);
+	protected Player getPlayer(CharacterClassId characterClass, RaceId race) {
+		return getPlayer(characterClass, race, LEVEL, PHASE);
 	}
 
-	protected Player getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
-		var character = characterService.createPlayerCharacter(
+	protected Player getPlayer(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+		var player = characterService.createPlayerCharacter(
 				"Player",
 				characterClass,
 				race,
@@ -116,17 +115,17 @@ public abstract class WowMinMaxSpringTest {
 				NonPlayerImpl::new
 		);
 
-		character.setTarget(target);
+		player.setTarget(target);
 
-		characterService.applyDefaultCharacterTemplate(character);
-		return character;
+		characterService.applyDefaultCharacterTemplate(player);
+		return player;
 	}
 
 	protected PlayerProfile getPlayerProfile() {
-		var character = getCharacter();
+		var player = getPlayer();
 
 		return new PlayerProfile(
-				PROFILE_ID.toString(), PROFILE_NAME, character.getCharacterClassId(), character.getRaceId(), LocalDateTime.now(), CHARACTER_KEY.toString()
+				PROFILE_ID.toString(), PROFILE_NAME, player.getCharacterClassId(), player.getRaceId(), LocalDateTime.now(), CHARACTER_KEY.toString()
 		);
 	}
 

@@ -8,7 +8,7 @@ import wow.character.model.script.ScriptPathResolver;
 import wow.character.service.CharacterService;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.FactionExclusionGroupId;
-import wow.minmax.converter.model.PlayerCharacterConfigConverter;
+import wow.minmax.converter.model.PlayerConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.ExclusiveFactionGroup;
 import wow.minmax.model.Player;
@@ -17,9 +17,9 @@ import wow.minmax.model.config.ViewConfig;
 import wow.minmax.model.impl.NonPlayerImpl;
 import wow.minmax.model.impl.PlayerImpl;
 import wow.minmax.repository.MinmaxConfigRepository;
-import wow.minmax.repository.PlayerCharacterConfigRepository;
+import wow.minmax.repository.PlayerConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
-import wow.minmax.service.PlayerCharacterService;
+import wow.minmax.service.PlayerService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,12 +35,12 @@ import static wow.commons.model.profession.ProfessionType.SECONDARY;
  */
 @Service
 @AllArgsConstructor
-public class PlayerCharacterServiceImpl implements PlayerCharacterService {
+public class PlayerServiceImpl implements PlayerService {
 	private final CharacterService characterService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
-	private final PlayerCharacterConfigRepository playerCharacterConfigRepository;
-	private final PlayerCharacterConfigConverter playerCharacterConfigConverter;
+	private final PlayerConfigRepository playerConfigRepository;
+	private final PlayerConfigConverter playerConfigConverter;
 
 	private final PlayerProfileRepository playerProfileRepository;
 
@@ -50,8 +50,8 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	private Player getExistingOrNewCharacter(CharacterId characterId) {
-		return playerCharacterConfigRepository.findById(characterId.toString())
-				.map(playerCharacterConfigConverter::convertBack)
+		return playerConfigRepository.findById(characterId.toString())
+				.map(playerConfigConverter::convertBack)
 				.orElseGet(() -> createCharacter(characterId));
 	}
 
@@ -85,9 +85,9 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 
 	@Override
 	public void saveCharacter(CharacterId characterId, Player player) {
-		var playerConfig = playerCharacterConfigConverter.convert(player, characterId);
+		var playerConfig = playerConfigConverter.convert(player, characterId);
 
-		playerCharacterConfigRepository.save(playerConfig);
+		playerConfigRepository.save(playerConfig);
 
 		var profileId = characterId.profileId();
 		var profile = playerProfileRepository.findById(profileId.toString()).orElseThrow();

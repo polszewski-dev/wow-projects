@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class NonPlayerCharacterConfig {
+public class NonPlayerConfig {
 	private String name;
 	private PhaseId phaseId;
 	private CharacterClassId characterClassId;

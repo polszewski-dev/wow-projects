@@ -6,7 +6,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-04-09
  */
-public record PlayerCharacterDTO(
+public record PlayerInfoDTO(
 		String characterId,
 		CharacterClassDTO characterClass,
 		RaceDTO race,

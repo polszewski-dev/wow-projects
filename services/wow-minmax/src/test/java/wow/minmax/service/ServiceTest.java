@@ -3,11 +3,11 @@ package wow.minmax.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.converter.model.PlayerCharacterConfigConverter;
+import wow.minmax.converter.model.PlayerConfigConverter;
 import wow.minmax.model.Player;
-import wow.minmax.model.PlayerCharacterConfig;
+import wow.minmax.model.PlayerConfig;
 import wow.minmax.model.PlayerProfile;
-import wow.minmax.repository.PlayerCharacterConfigRepository;
+import wow.minmax.repository.PlayerConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
 
 import java.util.List;
@@ -22,34 +22,34 @@ import static org.mockito.Mockito.when;
  */
 abstract class ServiceTest extends WowMinMaxSpringTest {
 	PlayerProfile profile;
-	Player character;
-	PlayerCharacterConfig savedCharacter;
+	Player player;
+	PlayerConfig savedCharacter;
 
 	@Autowired
-	PlayerCharacterConfigRepository playerCharacterConfigRepository;
+	PlayerConfigRepository playerConfigRepository;
 
 	@Autowired
 	PlayerProfileRepository playerProfileRepository;
 
 	@Autowired
-	PlayerCharacterConfigConverter playerCharacterConfigConverter;
+	PlayerConfigConverter playerConfigConverter;
 
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
-		character = getCharacter();
+		player = getPlayer();
 
-		equipGearSet(character);
+		equipGearSet(player);
 
 		prepareCharacter();
 
-		savedCharacter = playerCharacterConfigConverter.convert(character, CHARACTER_KEY);
+		savedCharacter = playerConfigConverter.convert(player, CHARACTER_KEY);
 
-		when(playerCharacterConfigRepository.findAll()).thenAnswer(input -> List.of(savedCharacter));
-		when(playerCharacterConfigRepository.findById(CHARACTER_KEY.toString())).thenAnswer(input -> Optional.of(savedCharacter));
+		when(playerConfigRepository.findAll()).thenAnswer(input -> List.of(savedCharacter));
+		when(playerConfigRepository.findById(CHARACTER_KEY.toString())).thenAnswer(input -> Optional.of(savedCharacter));
 
-		when(playerCharacterConfigRepository.save(any())).thenAnswer(input -> {
-			var player = input.getArgument(0, PlayerCharacterConfig.class);
+		when(playerConfigRepository.save(any())).thenAnswer(input -> {
+			var player = input.getArgument(0, PlayerConfig.class);
 
 			if (!savedCharacter.getCharacterIdAsRecord().equals(CHARACTER_KEY)) {
 				throw new IllegalArgumentException("Only one character can be used");

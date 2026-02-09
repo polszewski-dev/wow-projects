@@ -56,9 +56,9 @@ class EquipmentServiceTest extends ServiceTest {
 	void changeEnchant() {
 		assertEnchant(MAIN_HAND, "Enchant Weapon - Soulfrost");
 
-		var enchant = enchantRepository.getEnchant("Enchant Weapon - Major Spellpower", character.getPhaseId()).orElseThrow();
+		var enchant = enchantRepository.getEnchant("Enchant Weapon - Major Spellpower", player.getPhaseId()).orElseThrow();
 
-		var mainHand = character.getEquippedItem(MAIN_HAND)
+		var mainHand = player.getEquippedItem(MAIN_HAND)
 				.copy()
 				.enchant(enchant);
 
@@ -72,9 +72,9 @@ class EquipmentServiceTest extends ServiceTest {
 		assertItem(CHEST, "Sunfire Robe");
 		assertGem(CHEST, 1, "Runed Crimson Spinel");
 
-		var gem = gemRepository.getGem("Forceful Seaspray Emerald", character.getPhaseId()).orElseThrow();
+		var gem = gemRepository.getGem("Forceful Seaspray Emerald", player.getPhaseId()).orElseThrow();
 
-		var chest = character.getEquippedItem(CHEST).copy();
+		var chest = player.getEquippedItem(CHEST).copy();
 
 		chest.getSockets().insertGem(1, gem);
 
@@ -109,7 +109,7 @@ class EquipmentServiceTest extends ServiceTest {
 
 	@Test
 	void getEquipmentSocketStatusNonMatching() {
-		var shoulder = character.getEquippedItem(SHOULDER).copy();
+		var shoulder = player.getEquippedItem(SHOULDER).copy();
 		var gem = shoulder.getSockets().getGem(1);// inserting orange gem into blue socket
 
 		shoulder.getSockets().insertGem(0, gem);

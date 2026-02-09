@@ -9,7 +9,7 @@ import wow.minmax.converter.dto.equipment.ParamToGemFilterConverter;
 import wow.minmax.converter.dto.equipment.ParamToItemFilterConverter;
 import wow.minmax.converter.dto.upgrade.UpgradeConverter;
 import wow.minmax.model.CharacterId;
-import wow.minmax.service.PlayerCharacterService;
+import wow.minmax.service.PlayerService;
 import wow.minmax.service.UpgradeService;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Slf4j
 public class UpgradeController {
 	private final UpgradeService upgradeService;
-	private final PlayerCharacterService playerCharacterService;
+	private final PlayerService playerService;
 
 	private final UpgradeConverter upgradeConverter;
 	private final ParamToItemFilterConverter paramToItemFilterConverter;
@@ -37,7 +37,7 @@ public class UpgradeController {
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestParam Map<String, String> requestParams
 	) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 		var itemFilter = paramToItemFilterConverter.convert(requestParams);
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
 

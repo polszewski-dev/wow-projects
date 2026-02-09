@@ -14,7 +14,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2024-10-22
  */
-public interface PlayerCharacterService {
+public interface PlayerService {
 	Player getPlayer(CharacterId characterId);
 
 	void saveCharacter(CharacterId characterId, Player player);

@@ -14,7 +14,7 @@ import wow.minmax.converter.model.equipment.EquipmentConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
-import wow.minmax.model.PlayerCharacterConfig;
+import wow.minmax.model.PlayerConfig;
 import wow.minmax.model.impl.PlayerImpl;
 
 import java.util.List;
@@ -25,16 +25,16 @@ import java.util.List;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterConfigConverter implements ParametrizedConverter<Player, PlayerCharacterConfig, CharacterId>, BackConverter<Player, PlayerCharacterConfig> {
+public class PlayerConfigConverter implements ParametrizedConverter<Player, PlayerConfig, CharacterId>, BackConverter<Player, PlayerConfig> {
 	private final BuildConfigConverter buildConfigConverter;
 	private final EquipmentConfigConverter equipmentConfigConverter;
 	private final CharacterProfessionConfigConverter characterProfessionConfigConverter;
-	private final NonPlayerCharacterConfigConverter nonPlayerCharacterConfigConverter;
+	private final NonPlayerConfigConverter nonPlayerConfigConverter;
 
 	private final CharacterService characterService;
 
 	@Override
-	public PlayerCharacterConfig doConvert(Player source, CharacterId characterId) {
+	public PlayerConfig doConvert(Player source, CharacterId characterId) {
 		var buffIds = source.getBuffs().getStream()
 				.map(Buff::getId)
 				.map(BuffId::value)
@@ -45,7 +45,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				.map(ConsumableId::value)
 				.toList();
 
-		return new PlayerCharacterConfig(
+		return new PlayerConfig(
 				characterId.toString(),
 				source.getName(),
 				source.getCharacterClassId(),
@@ -58,13 +58,13 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				source.getExclusiveFactions().getNameList(),
 				buffIds,
 				consumableIds,
-				nonPlayerCharacterConfigConverter.convert((NonPlayer) source.getTarget())
+				nonPlayerConfigConverter.convert((NonPlayer) source.getTarget())
 		);
 	}
 
 	@Override
-	public Player doConvertBack(PlayerCharacterConfig source) {
-		var character = characterService.createPlayerCharacter(
+	public Player doConvertBack(PlayerConfig source) {
+		var player = characterService.createPlayerCharacter(
 				source.getName(),
 				source.getCharacterClassId(),
 				source.getRace(),
@@ -73,26 +73,26 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				PlayerImpl::new
 		);
 
-		changeBuild(character, source);
+		changeBuild(player, source);
 
-		character.setProfessions(characterProfessionConfigConverter.convertBackList(source.getProfessions()));
-		character.getExclusiveFactions().set(source.getExclusiveFactions());
-		character.setEquipment(equipmentConfigConverter.convertBack(source.getEquipment(), character.getPhaseId()));
+		player.setProfessions(characterProfessionConfigConverter.convertBackList(source.getProfessions()));
+		player.getExclusiveFactions().set(source.getExclusiveFactions());
+		player.setEquipment(equipmentConfigConverter.convertBack(source.getEquipment(), player.getPhaseId()));
 
-		var target = nonPlayerCharacterConfigConverter.convertBack(source.getTarget());
-		character.setTarget(target);
+		var target = nonPlayerConfigConverter.convertBack(source.getTarget());
+		player.setTarget(target);
 
-		characterService.updateAfterRestrictionChange(character);
+		characterService.updateAfterRestrictionChange(player);
 
-		character.getBuffs().setBuffIds(getBuffIds(source.getBuffIds()));
-		character.getTarget().getBuffs().setBuffIds(getBuffIds(source.getTarget().getDebuffIds()));
+		player.getBuffs().setBuffIds(getBuffIds(source.getBuffIds()));
+		player.getTarget().getBuffs().setBuffIds(getBuffIds(source.getTarget().getDebuffIds()));
 
-		character.getConsumables().setConsumableIds(getConsumableIds(source));
+		player.getConsumables().setConsumableIds(getConsumableIds(source));
 
-		return character;
+		return player;
 	}
 
-	private void changeBuild(Player player, PlayerCharacterConfig source) {
+	private void changeBuild(Player player, PlayerConfig source) {
 		var build = player.getBuild();
 		var sourceBuild = source.getBuild();
 
@@ -111,7 +111,7 @@ public class PlayerCharacterConfigConverter implements ParametrizedConverter<Pla
 				.toList();
 	}
 
-	private List<ConsumableId> getConsumableIds(PlayerCharacterConfig source) {
+	private List<ConsumableId> getConsumableIds(PlayerConfig source) {
 		return source.getConsumableIds().stream()
 				.map(ConsumableId::of)
 				.toList();

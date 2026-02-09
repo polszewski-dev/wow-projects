@@ -61,7 +61,7 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void equipItem() throws Exception {
-		var chest = character.getEquipment().getChest();
+		var chest = player.getEquipment().getChest();
 		var chestDTO = equippableItemConverter.convert(chest);
 
 		var objectMapper = new ObjectMapper();
@@ -81,7 +81,7 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void equipItemGroup() throws Exception {
-		var chest = character.getEquipment().getChest();
+		var chest = player.getEquipment().getChest();
 		var chestDTO = equippableItemConverter.convert(chest);
 
 		var objectMapper = new ObjectMapper();

@@ -8,7 +8,7 @@ import wow.minmax.model.BuffStatus;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
 import wow.minmax.service.BuffService;
-import wow.minmax.service.PlayerCharacterService;
+import wow.minmax.service.PlayerService;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class BuffServiceImpl implements BuffService {
-	private final PlayerCharacterService playerCharacterService;
+	private final PlayerService playerService;
 
 	@Override
 	public List<BuffStatus> getBuffStatuses(CharacterId characterId, BuffListType buffListType) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 
 		return getBuffStatuses(player, buffListType);
 	}
@@ -39,11 +39,11 @@ public class BuffServiceImpl implements BuffService {
 
 	@Override
 	public Player changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, boolean enabled) {
-		var player = playerCharacterService.getPlayer(characterId);
+		var player = playerService.getPlayer(characterId);
 
 		player.getBuffList(buffListType).enable(buffId, enabled);
 
-		playerCharacterService.saveCharacter(characterId, player);
+		playerService.saveCharacter(characterId, player);
 
 		return player;
 	}

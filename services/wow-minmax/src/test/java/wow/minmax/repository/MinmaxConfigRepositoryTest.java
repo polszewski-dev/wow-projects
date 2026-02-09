@@ -23,7 +23,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void getViewConfig() {
-		var config = underTest.getViewConfig(getCharacter()).orElseThrow();
+		var config = underTest.getViewConfig(getPlayer()).orElseThrow();
 
 		assertThat(config.relevantSpells()).hasSameElementsAs(List.of(
 				SHADOW_BOLT, CURSE_OF_DOOM, CURSE_OF_AGONY, CORRUPTION, IMMOLATE, SHADOWBURN,
@@ -34,7 +34,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void getFeatures() {
-		var features = underTest.getFeatures(getCharacter());
+		var features = underTest.getFeatures(getPlayer());
 
 		assertThat(features).hasSameElementsAs(Set.of(
 				COMBAT_RATINGS,
@@ -45,19 +45,19 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void hasFeature() {
-		var character = getCharacter();
+		var player = getPlayer();
 
-		assertThat(underTest.hasFeature(character, COMBAT_RATINGS)).isTrue();
-		assertThat(underTest.hasFeature(character, GEMS)).isTrue();
-		assertThat(underTest.hasFeature(character, HEROICS)).isTrue();
+		assertThat(underTest.hasFeature(player, COMBAT_RATINGS)).isTrue();
+		assertThat(underTest.hasFeature(player, GEMS)).isTrue();
+		assertThat(underTest.hasFeature(player, HEROICS)).isTrue();
 
-		assertThat(underTest.hasFeature(character, WORLD_BUFFS)).isFalse();
-		assertThat(underTest.hasFeature(character, GLYPHS)).isFalse();
+		assertThat(underTest.hasFeature(player, WORLD_BUFFS)).isFalse();
+		assertThat(underTest.hasFeature(player, GLYPHS)).isFalse();
 	}
 
 	@Test
 	void getFindUpgradesConfig() {
-		var config = underTest.getFindUpgradesConfig(getCharacter()).orElseThrow();
+		var config = underTest.getFindUpgradesConfig(getPlayer()).orElseThrow();
 
 		assertThat(config.enchantNames()).hasSameElementsAs(List.of(
 				"Glyph of Power",
@@ -79,7 +79,7 @@ class MinmaxConfigRepositoryTest extends WowMinMaxSpringTest {
 
 	@Test
 	void getItemLevelFilter() {
-		var itemLevelFilter = underTest.getItemLevelFilter(getCharacter()).orElseThrow();
+		var itemLevelFilter = underTest.getItemLevelFilter(getPlayer()).orElseThrow();
 
 		assertThat(itemLevelFilter.getMinItemLevelByRarity()).isEqualTo(Map.of(
 				UNCOMMON, 90,

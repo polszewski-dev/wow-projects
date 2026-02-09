@@ -29,7 +29,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	PlayerProfileService playerProfileService;
 
 	@MockBean
-	PlayerCharacterService playerCharacterService;
+	PlayerService playerService;
 
 	@MockBean
 	EquipmentService equipmentService;
@@ -50,15 +50,15 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	SimulatorService simulatorService;
 
 	PlayerProfile profile;
-	Player character;
+	Player player;
 	PlayerProfileInfo profileInfo;
 
 	@BeforeEach
 	void setup() {
 		profile = getPlayerProfile();
-		character = getCharacter();
+		player = getPlayer();
 
-		equipGearSet(character);
+		equipGearSet(player);
 
 		profileInfo = profile.getProfileInfo();
 
@@ -68,26 +68,26 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.getNewProfileOptions()).thenReturn(new NewProfileOptions(List.of()));
 		when(playerProfileService.getCharacterSelectionOptions(any())).thenReturn(new CharacterSelectionOptions(List.of(), List.of(), List.of()));
 
-		when(playerCharacterService.getPlayer(CHARACTER_KEY)).thenReturn(character);
-		when(playerCharacterService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
-		when(playerCharacterService.getAvailableProfessions(any())).thenReturn(List.of());
-		when(playerCharacterService.changeProfession(any(), anyInt(), any())).thenReturn(character);
-		when(playerCharacterService.getAvailableExclusiveFactions(any())).thenReturn(List.of());
-		when(playerCharacterService.changeExclusiveFaction(any(), any())).thenReturn(character);
-		when(playerCharacterService.changeTalents(any(), any())).thenReturn(character);
-		when(playerCharacterService.getAvailableScripts(any())).thenReturn(List.of());
-		when(playerCharacterService.changeScript(any(), any())).thenReturn(character);
+		when(playerService.getPlayer(CHARACTER_KEY)).thenReturn(player);
+		when(playerService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
+		when(playerService.getAvailableProfessions(any())).thenReturn(List.of());
+		when(playerService.changeProfession(any(), anyInt(), any())).thenReturn(player);
+		when(playerService.getAvailableExclusiveFactions(any())).thenReturn(List.of());
+		when(playerService.changeExclusiveFaction(any(), any())).thenReturn(player);
+		when(playerService.changeTalents(any(), any())).thenReturn(player);
+		when(playerService.getAvailableScripts(any())).thenReturn(List.of());
+		when(playerService.changeScript(any(), any())).thenReturn(player);
 
-		when(equipmentService.getEquipment(any())).thenReturn(character.getEquipment());
-		when(equipmentService.resetEquipment(any())).thenReturn(character);
+		when(equipmentService.getEquipment(any())).thenReturn(player.getEquipment());
+		when(equipmentService.resetEquipment(any())).thenReturn(player);
 		when(equipmentService.equipItem(any(), any(), any())).thenReturn(List.of());
 		when(equipmentService.equipItem(any(), any(), any(), anyBoolean(), any())).thenReturn(List.of());
 		when(equipmentService.equipItemGroup(any(), any(), any())).thenReturn(List.of());
 		when(equipmentService.getEquipmentSocketStatus(any())).thenReturn(new EquipmentSocketStatus(Map.of()));
 
-		when(buffService.changeBuffStatus(any(), any(), any(), anyBoolean())).thenReturn(character);
+		when(buffService.changeBuffStatus(any(), any(), any(), anyBoolean())).thenReturn(player);
 
-		when(consumableService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(character);
+		when(consumableService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(player);
 
 		when(upgradeService.findUpgrades(any(), any(), any(), any())).thenReturn(List.of());
 		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(0, Item.class)));
