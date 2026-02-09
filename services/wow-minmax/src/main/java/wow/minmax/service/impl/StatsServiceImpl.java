@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import wow.character.model.character.PlayerCharacter;
 import wow.estimator.client.dto.stats.*;
 import wow.minmax.converter.dto.PlayerConverter;
+import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.PlayerCharacterService;
 import wow.minmax.service.StatsService;
@@ -30,7 +30,7 @@ public class StatsServiceImpl implements StatsService {
 	private final WebClient webClient;
 
 	@Override
-	public GetAbilityStatsResponseDTO getAbilityStats(PlayerCharacter player) {
+	public GetAbilityStatsResponseDTO getAbilityStats(Player player) {
 		var viewConfig = playerCharacterService.getViewConfig(player);
 		var usesCombatRatings = minmaxConfigRepository.hasFeature(player, COMBAT_RATINGS);
 
@@ -52,7 +52,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetCharacterStatsResponseDTO getCharacterStats(PlayerCharacter player) {
+	public GetCharacterStatsResponseDTO getCharacterStats(Player player) {
 		var worldBuffsAllowed = minmaxConfigRepository.hasFeature(player, WORLD_BUFFS);
 
 		var request = new GetCharacterStatsRequestDTO(
@@ -71,7 +71,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(PlayerCharacter player) {
+	public GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(Player player) {
 		var request = new GetSpecialAbilityStatsRequestDTO(
 				playerConverter.convert(player)
 		);
@@ -87,7 +87,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetRotationStatsResponseDTO getRotationStats(PlayerCharacter player) {
+	public GetRotationStatsResponseDTO getRotationStats(Player player) {
 		var request = new GetRotationStatsRequestDTO(
 				playerConverter.convert(player)
 		);
@@ -103,7 +103,7 @@ public class StatsServiceImpl implements StatsService {
 	}
 
 	@Override
-	public GetTalentStatsResponseDTO getTalentStats(PlayerCharacter player) {
+	public GetTalentStatsResponseDTO getTalentStats(Player player) {
 		var request = new GetTalentStatsRequestDTO(
 				playerConverter.convert(player)
 		);

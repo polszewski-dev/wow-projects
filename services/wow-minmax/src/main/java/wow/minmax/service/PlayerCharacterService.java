@@ -1,10 +1,10 @@
 package wow.minmax.service;
 
 import wow.character.model.character.CharacterProfession;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.ProfIdSpecId;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.ExclusiveFactionGroup;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.model.config.ViewConfig;
 
@@ -15,23 +15,23 @@ import java.util.List;
  * Date: 2024-10-22
  */
 public interface PlayerCharacterService {
-	PlayerCharacter getPlayer(CharacterId characterId);
+	Player getPlayer(CharacterId characterId);
 
-	void saveCharacter(CharacterId characterId, PlayerCharacter player);
+	void saveCharacter(CharacterId characterId, Player player);
 
-	ViewConfig getViewConfig(PlayerCharacter player);
+	ViewConfig getViewConfig(Player player);
 
 	List<CharacterProfession> getAvailableProfessions(CharacterId characterId);
 
-	PlayerCharacter changeProfession(CharacterId characterId, int index, ProfIdSpecId profession);
+	Player changeProfession(CharacterId characterId, int index, ProfIdSpecId profession);
 
 	List<ExclusiveFactionGroup> getAvailableExclusiveFactions(CharacterId characterId);
 
-	PlayerCharacter changeExclusiveFaction(CharacterId characterId, String factionName);
+	Player changeExclusiveFaction(CharacterId characterId, String factionName);
 
-	PlayerCharacter changeTalents(CharacterId characterId, String talentLink);
+	Player changeTalents(CharacterId characterId, String talentLink);
 
 	List<ScriptInfo> getAvailableScripts(CharacterId characterId);
 
-	PlayerCharacter changeScript(CharacterId characterId, String scriptPath);
+	Player changeScript(CharacterId characterId, String scriptPath);
 }

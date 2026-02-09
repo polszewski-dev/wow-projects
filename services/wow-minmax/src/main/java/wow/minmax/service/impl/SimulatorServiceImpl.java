@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import wow.character.model.character.PlayerCharacter;
 import wow.minmax.config.SimulationConfig;
 import wow.minmax.converter.dto.PlayerConverter;
+import wow.minmax.model.Player;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
@@ -28,7 +28,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final WebClient webClient;
 
 	@Override
-	public StatsDTO simulate(PlayerCharacter player) {
+	public StatsDTO simulate(Player player) {
 		var request = getSimulationRequestDTO(player);
 
 		var response = webClient.post()
@@ -41,7 +41,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		return response.stats();
 	}
 
-	private SimulationRequestDTO getSimulationRequestDTO(PlayerCharacter player) {
+	private SimulationRequestDTO getSimulationRequestDTO(Player player) {
 		return new SimulationRequestDTO(
 				playerConverter.convert(player),
 				simulationConfig.getDuration(),

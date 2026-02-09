@@ -2,7 +2,6 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
@@ -10,6 +9,7 @@ import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.options.EnchantOptions;
 import wow.minmax.model.options.EquipmentOptions;
@@ -50,14 +50,14 @@ public class EquipmentOptionsServiceImpl implements EquipmentOptionsService {
 		return getItemOptions(player, itemSlot);
 	}
 
-	private ItemOptions getItemOptions(PlayerCharacter player, ItemSlot itemSlot) {
+	private ItemOptions getItemOptions(Player player, ItemSlot itemSlot) {
 		var itemFilter = ItemFilter.everything();
 		var items = itemService.getItemsBySlot(player, itemSlot, itemFilter);
 
 		return new ItemOptions(itemSlot, items);
 	}
 
-	private List<ItemOptions> getItemOptions(PlayerCharacter player) {
+	private List<ItemOptions> getItemOptions(Player player) {
 		return ItemSlot.getDpsSlots().stream()
 				.map(itemSlot -> getItemOptions(player, itemSlot))
 				.toList();
@@ -76,7 +76,7 @@ public class EquipmentOptionsServiceImpl implements EquipmentOptionsService {
 				.toList();
 	}
 
-	private EnchantOptions getEnchantOptions(PlayerCharacter player, ItemTypeAndSubtype x) {
+	private EnchantOptions getEnchantOptions(Player player, ItemTypeAndSubtype x) {
 		var enchants = itemService.getEnchants(player, x.itemType(), x.itemSubType());
 
 		return new EnchantOptions(
@@ -104,7 +104,7 @@ public class EquipmentOptionsServiceImpl implements EquipmentOptionsService {
 				.toList();
 	}
 
-	private GemOptions getGemOptions(PlayerCharacter player, SocketType socketType) {
+	private GemOptions getGemOptions(Player player, SocketType socketType) {
 		var gems = itemService.getGems(player, socketType);
 
 		return new GemOptions(socketType, gems);

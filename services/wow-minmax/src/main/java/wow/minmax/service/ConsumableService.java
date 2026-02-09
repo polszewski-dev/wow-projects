@@ -1,8 +1,8 @@
 package wow.minmax.service;
 
-import wow.character.model.character.PlayerCharacter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.ConsumableStatus;
+import wow.minmax.model.Player;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public interface ConsumableService {
 	List<ConsumableStatus> getConsumableStatuses(CharacterId characterId);
 
-	List<ConsumableStatus> getConsumableStatuses(PlayerCharacter player);
+	List<ConsumableStatus> getConsumableStatuses(Player player);
 
-	PlayerCharacter changeConsumableStatus(CharacterId characterId, String consumableName, boolean enabled);
+	Player changeConsumableStatus(CharacterId characterId, String consumableName, boolean enabled);
 }

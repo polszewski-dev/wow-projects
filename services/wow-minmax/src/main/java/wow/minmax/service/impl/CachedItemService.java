@@ -3,7 +3,6 @@ package wow.minmax.service.impl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSubType;
@@ -13,6 +12,7 @@ import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
 import wow.commons.model.pve.Faction;
+import wow.minmax.model.Player;
 import wow.minmax.service.ItemService;
 
 import java.util.*;
@@ -38,38 +38,38 @@ public class CachedItemService implements ItemService {
 	}
 
 	@Override
-	public List<Item> getItemsBySlot(PlayerCharacter player, ItemSlot itemSlot, ItemFilter itemFilter) {
+	public List<Item> getItemsBySlot(Player player, ItemSlot itemSlot, ItemFilter itemFilter) {
 		return getUnfilteredItems(player, itemSlot).stream()
 				.filter(itemFilter::matchesFilter)
 				.toList();
 	}
 
-	private List<Item> getUnfilteredItems(PlayerCharacter player, ItemSlot itemSlot) {
+	private List<Item> getUnfilteredItems(Player player, ItemSlot itemSlot) {
 		String key = getProfileKey(player) + "#" + itemSlot;
 		return getItemsBySlotCache.computeIfAbsent(key, x -> itemService.getItemsBySlot(player, itemSlot, ItemFilter.everything()));
 	}
 
 	@Override
-	public List<Enchant> getEnchants(PlayerCharacter player, ItemType itemType, ItemSubType itemSubType) {
+	public List<Enchant> getEnchants(Player player, ItemType itemType, ItemSubType itemSubType) {
 		String key = getProfileKey(player) + "#" + itemType + "#" + itemSubType;
 		return getEnchantsCache.computeIfAbsent(key, x -> itemService.getEnchants(player, itemType, itemSubType));
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerCharacter player, SocketType socketType) {
+	public List<Gem> getGems(Player player, SocketType socketType) {
 		boolean meta = socketType == SocketType.META;
 		String key = getProfileKey(player) + "#" + meta;
 		return getGemsCache.computeIfAbsent(key, x -> itemService.getGems(player, socketType));
 	}
 
 	@Override
-	public List<Gem> getGems(PlayerCharacter player, SocketType socketType, boolean uniqueness) {
+	public List<Gem> getGems(Player player, SocketType socketType, boolean uniqueness) {
 		boolean meta = socketType == SocketType.META;
 		String key = getProfileKey(player) + "#" + meta + "#" + uniqueness;
 		return getGemsByUniquenessCache.computeIfAbsent(key, x -> itemService.getGems(player, socketType, uniqueness));
 	}
 
-	private static String getProfileKey(PlayerCharacter player) {
+	private static String getProfileKey(Player player) {
 		return player.getCharacterClassId() + "#" +
 				player.getLevel() + "#" +
 				player.getRaceId() + "#" +

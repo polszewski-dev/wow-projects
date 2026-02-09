@@ -6,8 +6,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.character.PlayerCharacter;
-import wow.character.model.character.impl.NonPlayerCharacterImpl;
-import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
 import wow.commons.model.character.CharacterClassId;
@@ -23,7 +21,10 @@ import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.Player;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.impl.NonPlayerImpl;
+import wow.minmax.model.impl.PlayerImpl;
 import wow.minmax.service.StatsService;
 import wow.minmax.service.UpgradeService;
 
@@ -89,22 +90,22 @@ public abstract class WowMinMaxSpringTest {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected PlayerCharacter getCharacter() {
+	protected Player getCharacter() {
 		return getCharacter(CHARACTER_CLASS, RACE);
 	}
 
-	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race) {
+	protected Player getCharacter(CharacterClassId characterClass, RaceId race) {
 		return getCharacter(characterClass, race, LEVEL, PHASE);
 	}
 
-	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+	protected Player getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
 				"Player",
 				characterClass,
 				race,
 				level,
 				phase,
-				PlayerCharacterImpl::new
+				PlayerImpl::new
 		);
 
 		var target = characterService.createNonPlayerCharacter(
@@ -112,7 +113,7 @@ public abstract class WowMinMaxSpringTest {
 				ENEMY_TYPE,
 				level + LVL_DIFF,
 				phase,
-				NonPlayerCharacterImpl::new
+				NonPlayerImpl::new
 		);
 
 		character.setTarget(target);

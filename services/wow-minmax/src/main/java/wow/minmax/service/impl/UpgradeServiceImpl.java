@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
@@ -19,6 +18,7 @@ import wow.estimator.client.converter.upgrade.ItemLevelFilterConverter;
 import wow.estimator.client.dto.upgrade.*;
 import wow.minmax.config.UpgradeConfig;
 import wow.minmax.converter.dto.PlayerConverter;
+import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.UpgradeService;
 
@@ -45,7 +45,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 	private final WebClient webClient;
 
 	@Override
-	public List<UpgradeDTO> findUpgrades(PlayerCharacter player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
+	public List<UpgradeDTO> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 		var itemLevelFilter = minmaxConfigRepository.getItemLevelFilter(player).orElseThrow();
 
@@ -71,7 +71,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 	}
 
 	@Override
-	public EquippableItem getBestItemVariant(PlayerCharacter player, Item item, ItemSlot slot, GemFilter gemFilter) {
+	public EquippableItem getBestItemVariant(Player player, Item item, ItemSlot slot, GemFilter gemFilter) {
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 
 		var request = new GetBestItemVariantRequestDTO(

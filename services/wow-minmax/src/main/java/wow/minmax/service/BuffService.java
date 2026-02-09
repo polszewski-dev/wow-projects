@@ -1,10 +1,10 @@
 package wow.minmax.service;
 
 import wow.character.model.character.BuffListType;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.buff.BuffId;
 import wow.minmax.model.BuffStatus;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.Player;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public interface BuffService {
 	List<BuffStatus> getBuffStatuses(CharacterId characterId, BuffListType buffListType);
 
-	List<BuffStatus> getBuffStatuses(PlayerCharacter player, BuffListType buffListType);
+	List<BuffStatus> getBuffStatuses(Player player, BuffListType buffListType);
 
-	PlayerCharacter changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, boolean enabled);
+	Player changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, boolean enabled);
 }

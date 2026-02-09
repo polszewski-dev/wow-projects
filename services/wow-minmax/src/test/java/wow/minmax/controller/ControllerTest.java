@@ -2,17 +2,13 @@ package wow.minmax.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.Item;
 import wow.estimator.client.dto.stats.*;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.model.CharacterSelectionOptions;
-import wow.minmax.model.NewProfileOptions;
-import wow.minmax.model.PlayerProfile;
-import wow.minmax.model.PlayerProfileInfo;
+import wow.minmax.model.*;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.model.equipment.EquipmentSocketStatus;
 import wow.minmax.service.*;
@@ -54,7 +50,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	SimulatorService simulatorService;
 
 	PlayerProfile profile;
-	PlayerCharacter character;
+	Player character;
 	PlayerProfileInfo profileInfo;
 
 	@BeforeEach

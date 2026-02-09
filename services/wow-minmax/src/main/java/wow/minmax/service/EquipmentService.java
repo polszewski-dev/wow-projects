@@ -1,13 +1,13 @@
 package wow.minmax.service;
 
 import wow.character.model.character.GearSet;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.Player;
 import wow.minmax.model.equipment.EquipmentSocketStatus;
 import wow.minmax.model.equipment.ItemSlotStatus;
 
@@ -26,13 +26,13 @@ public interface EquipmentService {
 
 	List<ItemSlotStatus> equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items);
 
-	PlayerCharacter resetEquipment(CharacterId characterId);
+	Player resetEquipment(CharacterId characterId);
 
 	EquipmentSocketStatus getEquipmentSocketStatus(CharacterId characterId);
 
 	List<GearSet> getAvailableGearSets(CharacterId characterId);
 
-	PlayerCharacter equipGearSet(CharacterId characterId, String gearSet);
+	Player equipGearSet(CharacterId characterId, String gearSet);
 
-	PlayerCharacter equipPreviousPhase(CharacterId characterId);
+	Player equipPreviousPhase(CharacterId characterId);
 }

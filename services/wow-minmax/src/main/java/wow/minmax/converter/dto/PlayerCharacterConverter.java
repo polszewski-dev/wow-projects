@@ -2,11 +2,11 @@ package wow.minmax.converter.dto;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.minmax.client.dto.PlayerCharacterDTO;
 import wow.minmax.client.dto.RaceDTO;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.repository.MinmaxConfigRepository;
 
@@ -16,7 +16,7 @@ import wow.minmax.repository.MinmaxConfigRepository;
  */
 @Component
 @AllArgsConstructor
-public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCharacter, PlayerCharacterDTO, CharacterId> {
+public class PlayerCharacterConverter implements ParametrizedConverter<Player, PlayerCharacterDTO, CharacterId> {
 	private final CharacterClassConverter characterClassConverter;
 	private final RaceConverter raceConverter;
 	private final RacialConverter racialConverter;
@@ -25,7 +25,7 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
-	public PlayerCharacterDTO doConvert(PlayerCharacter source, CharacterId characterId) {
+	public PlayerCharacterDTO doConvert(Player source, CharacterId characterId) {
 		return new PlayerCharacterDTO(
 				characterId.toString(),
 				characterClassConverter.convert(source.getCharacterClass()),
@@ -36,7 +36,7 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 		);
 	}
 
-	private RaceDTO getRace(PlayerCharacter source) {
+	private RaceDTO getRace(Player source) {
 		var racials = racialConverter.convertList(source.getRacials());
 
 		return raceConverter
@@ -44,7 +44,7 @@ public class PlayerCharacterConverter implements ParametrizedConverter<PlayerCha
 				.withRacials(racials);
 	}
 
-	private ScriptInfo getScript(PlayerCharacter source) {
+	private ScriptInfo getScript(Player source) {
 		var scriptPath = source.getBuild().getScript();
 
 		return minmaxConfigRepository.getScript(scriptPath, source).orElseThrow();

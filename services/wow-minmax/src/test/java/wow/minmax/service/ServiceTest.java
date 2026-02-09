@@ -2,9 +2,9 @@ package wow.minmax.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import wow.character.model.character.PlayerCharacter;
 import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.converter.model.PlayerCharacterConfigConverter;
+import wow.minmax.model.Player;
 import wow.minmax.model.PlayerCharacterConfig;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.repository.PlayerCharacterConfigRepository;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
  */
 abstract class ServiceTest extends WowMinMaxSpringTest {
 	PlayerProfile profile;
-	PlayerCharacter character;
+	Player character;
 	PlayerCharacterConfig savedCharacter;
 
 	@Autowired

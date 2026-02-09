@@ -3,20 +3,19 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.CharacterProfession;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.ProfIdSpecId;
-import wow.character.model.character.impl.NonPlayerCharacterImpl;
-import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.script.ScriptPathResolver;
 import wow.character.service.CharacterService;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.FactionExclusionGroupId;
-import wow.commons.repository.spell.TalentRepository;
 import wow.minmax.converter.model.PlayerCharacterConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.ExclusiveFactionGroup;
+import wow.minmax.model.Player;
 import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.model.config.ViewConfig;
+import wow.minmax.model.impl.NonPlayerImpl;
+import wow.minmax.model.impl.PlayerImpl;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.repository.PlayerCharacterConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
@@ -45,20 +44,18 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 
 	private final PlayerProfileRepository playerProfileRepository;
 
-	private final TalentRepository talentRepository;
-
 	@Override
-	public PlayerCharacter getPlayer(CharacterId characterId) {
+	public Player getPlayer(CharacterId characterId) {
 		return getExistingOrNewCharacter(characterId);
 	}
 
-	private PlayerCharacter getExistingOrNewCharacter(CharacterId characterId) {
+	private Player getExistingOrNewCharacter(CharacterId characterId) {
 		return playerCharacterConfigRepository.findById(characterId.toString())
 				.map(playerCharacterConfigConverter::convertBack)
 				.orElseGet(() -> createCharacter(characterId));
 	}
 
-	private PlayerCharacter createCharacter(CharacterId characterId) {
+	private Player createCharacter(CharacterId characterId) {
 		var profileId = characterId.profileId();
 		var playerProfile = playerProfileRepository.findById(profileId.toString()).orElseThrow();
 
@@ -68,7 +65,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 				playerProfile.getRaceId(),
 				characterId.level(),
 				characterId.phaseId(),
-				PlayerCharacterImpl::new
+				PlayerImpl::new
 		);
 
 		var targetEnemy = characterService.createNonPlayerCharacter(
@@ -76,7 +73,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 				characterId.enemyType(),
 				newCharacter.getLevel() + characterId.enemyLevelDiff(),
 				characterId.phaseId(),
-				NonPlayerCharacterImpl::new
+				NonPlayerImpl::new
 		);
 
 		newCharacter.setTarget(targetEnemy);
@@ -87,7 +84,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public void saveCharacter(CharacterId characterId, PlayerCharacter player) {
+	public void saveCharacter(CharacterId characterId, Player player) {
 		var playerConfig = playerCharacterConfigConverter.convert(player, characterId);
 
 		playerCharacterConfigRepository.save(playerConfig);
@@ -102,7 +99,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public ViewConfig getViewConfig(PlayerCharacter player) {
+	public ViewConfig getViewConfig(Player player) {
 		return minmaxConfigRepository.getViewConfig(player).orElseThrow();
 	}
 
@@ -127,7 +124,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public PlayerCharacter changeProfession(CharacterId characterId, int index, ProfIdSpecId profession) {
+	public Player changeProfession(CharacterId characterId, int index, ProfIdSpecId profession) {
 		var player = getPlayer(characterId);
 
 		player.setProfessionMaxLevel(index, profession);
@@ -149,7 +146,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 				.toList();
 	}
 
-	private static ExclusiveFactionGroup getExclusiveFactionGroup(FactionExclusionGroupId groupId, List<Faction> availableFactions, PlayerCharacter player) {
+	private static ExclusiveFactionGroup getExclusiveFactionGroup(FactionExclusionGroupId groupId, List<Faction> availableFactions, Player player) {
 		return new ExclusiveFactionGroup(
 				groupId,
 				player.getExclusiveFactions().get(groupId),
@@ -158,7 +155,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public PlayerCharacter changeExclusiveFaction(CharacterId characterId, String factionName) {
+	public Player changeExclusiveFaction(CharacterId characterId, String factionName) {
 		var player = getPlayer(characterId);
 
 		player.getExclusiveFactions().enable(factionName);
@@ -169,7 +166,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public PlayerCharacter changeTalents(CharacterId characterId, String talentLink) {
+	public Player changeTalents(CharacterId characterId, String talentLink) {
 		var player = getPlayer(characterId);
 
 		player.getBuild().getTalents().loadFromTalentLink(talentLink);
@@ -187,7 +184,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 	}
 
 	@Override
-	public PlayerCharacter changeScript(CharacterId characterId, String scriptPath) {
+	public Player changeScript(CharacterId characterId, String scriptPath) {
 		var player = getPlayer(characterId);
 
 		requireExistingResource(scriptPath, player);
@@ -198,7 +195,7 @@ public class PlayerCharacterServiceImpl implements PlayerCharacterService {
 		return player;
 	}
 
-	private void requireExistingResource(String scriptPath, PlayerCharacter player) {
+	private void requireExistingResource(String scriptPath, Player player) {
 		var fullScriptPath = ScriptPathResolver.getScriptPath(scriptPath, player.getGameVersionId());
 		var scriptURL = getClass().getResource(fullScriptPath);
 

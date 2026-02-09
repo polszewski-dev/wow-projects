@@ -3,7 +3,6 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.GearSet;
-import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
@@ -12,6 +11,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.effect.Effect;
 import wow.minmax.model.CharacterId;
+import wow.minmax.model.Player;
 import wow.minmax.model.equipment.*;
 import wow.minmax.service.EquipmentService;
 import wow.minmax.service.PlayerCharacterService;
@@ -73,7 +73,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		return getEquipmentDiff(oldEquipment, player);
 	}
 
-	private List<ItemSlotStatus> getEquipmentDiff(Equipment oldEquipment, PlayerCharacter player) {
+	private List<ItemSlotStatus> getEquipmentDiff(Equipment oldEquipment, Player player) {
 		var newEquipment = player.getEquipment().deepCopy();
 		var changedSlots = newEquipment.getChangedSlots(oldEquipment);
 
@@ -83,7 +83,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public PlayerCharacter resetEquipment(CharacterId characterId) {
+	public Player resetEquipment(CharacterId characterId) {
 		var player = playerCharacterService.getPlayer(characterId);
 
 		player.resetEquipment();
@@ -93,7 +93,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		return player;
 	}
 
-	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, PlayerCharacter player) {
+	private EquippableItem getItemToEquip(ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter, Player player) {
 		if (bestVariant) {
 			return upgradeService.getBestItemVariant(player, item.getItem(), slot, gemFilter);
 		} else {
@@ -117,7 +117,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		);
 	}
 
-	private ItemSocketStatus getItemSocketStatus(PlayerCharacter player, ItemSlot itemSlot) {
+	private ItemSocketStatus getItemSocketStatus(Player player, ItemSlot itemSlot) {
 		var item = player.getEquippedItem(itemSlot);
 
 		if (item == null) {
@@ -165,7 +165,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public PlayerCharacter equipGearSet(CharacterId characterId, String gearSet) {
+	public Player equipGearSet(CharacterId characterId, String gearSet) {
 		var player = playerCharacterService.getPlayer(characterId);
 
 		characterService.equipGearSet(player, gearSet);
@@ -176,7 +176,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public PlayerCharacter equipPreviousPhase(CharacterId characterId) {
+	public Player equipPreviousPhase(CharacterId characterId) {
 		var previousPhaseCharacterId = getPreviousPhaseCharacterId(characterId);
 		var previousPhasePlayer = playerCharacterService.getPlayer(previousPhaseCharacterId);
 		var player = playerCharacterService.getPlayer(characterId);
