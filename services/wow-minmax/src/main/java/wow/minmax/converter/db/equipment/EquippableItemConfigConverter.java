@@ -1,4 +1,4 @@
-package wow.minmax.converter.model.equipment;
+package wow.minmax.converter.db.equipment;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
-import wow.minmax.model.equipment.EquippableItemConfig;
+import wow.minmax.model.db.equipment.EquippableItemConfig;
 
 /**
  * User: POlszewski

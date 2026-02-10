@@ -1,7 +1,7 @@
 package wow.minmax.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import wow.minmax.model.PlayerConfig;
+import wow.minmax.model.db.PlayerConfig;
 
 /**
  * User: POlszewski

@@ -1,11 +1,11 @@
-package wow.minmax.converter.model.equipment;
+package wow.minmax.converter.db.equipment;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.equipment.ItemFilter;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
-import wow.minmax.model.equipment.ItemFilterConfig;
+import wow.minmax.model.db.equipment.ItemFilterConfig;
 
 /**
  * User: POlszewski

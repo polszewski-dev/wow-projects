@@ -1,4 +1,4 @@
-package wow.minmax.converter.model;
+package wow.minmax.converter.db;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import wow.character.model.build.Build;
 import wow.commons.client.converter.Converter;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
-import wow.minmax.model.BuildConfig;
+import wow.minmax.model.db.BuildConfig;
 
 /**
  * User: POlszewski

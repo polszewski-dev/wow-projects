@@ -1,4 +1,4 @@
-package wow.minmax.converter.model.equipment;
+package wow.minmax.converter.db.equipment;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import wow.character.model.equipment.Equipment;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
 import wow.commons.model.pve.PhaseId;
-import wow.minmax.model.equipment.EquipmentConfig;
+import wow.minmax.model.db.equipment.EquipmentConfig;
 
 /**
  * User: POlszewski

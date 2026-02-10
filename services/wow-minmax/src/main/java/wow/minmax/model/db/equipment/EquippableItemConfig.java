@@ -1,4 +1,4 @@
-package wow.minmax.model.equipment;
+package wow.minmax.model.db.equipment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

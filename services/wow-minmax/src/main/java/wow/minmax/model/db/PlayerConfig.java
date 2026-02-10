@@ -1,4 +1,4 @@
-package wow.minmax.model;
+package wow.minmax.model.db;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
-import wow.minmax.model.equipment.EquipmentConfig;
+import wow.minmax.model.CharacterId;
+import wow.minmax.model.db.equipment.EquipmentConfig;
 
 import java.util.List;
 

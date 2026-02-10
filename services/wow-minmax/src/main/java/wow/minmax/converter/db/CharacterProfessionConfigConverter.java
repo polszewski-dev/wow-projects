@@ -1,4 +1,4 @@
-package wow.minmax.converter.model;
+package wow.minmax.converter.db;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.ProfIdSpecIdLevel;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
-import wow.minmax.model.CharacterProfessionConfig;
+import wow.minmax.model.db.CharacterProfessionConfig;
 
 /**
  * User: POlszewski

@@ -1,4 +1,4 @@
-package wow.minmax.converter.model;
+package wow.minmax.converter.db;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.minmax.model.NonPlayer;
-import wow.minmax.model.NonPlayerConfig;
+import wow.minmax.model.db.NonPlayerConfig;
 import wow.minmax.model.impl.NonPlayerImpl;
 
 /**

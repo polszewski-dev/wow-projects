@@ -3,10 +3,10 @@ package wow.minmax.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.minmax.WowMinMaxSpringTest;
-import wow.minmax.converter.model.PlayerConfigConverter;
+import wow.minmax.converter.db.PlayerConfigConverter;
 import wow.minmax.model.Player;
-import wow.minmax.model.PlayerConfig;
 import wow.minmax.model.PlayerProfile;
+import wow.minmax.model.db.PlayerConfig;
 import wow.minmax.repository.PlayerConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
 

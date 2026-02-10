@@ -8,7 +8,7 @@ import wow.character.model.script.ScriptPathResolver;
 import wow.character.service.CharacterService;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.FactionExclusionGroupId;
-import wow.minmax.converter.model.PlayerConfigConverter;
+import wow.minmax.converter.db.PlayerConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.ExclusiveFactionGroup;
 import wow.minmax.model.Player;

@@ -1,4 +1,4 @@
-package wow.minmax.converter.model;
+package wow.minmax.converter.db;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,11 +10,11 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.Consumable;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.TalentId;
-import wow.minmax.converter.model.equipment.EquipmentConfigConverter;
+import wow.minmax.converter.db.equipment.EquipmentConfigConverter;
 import wow.minmax.model.CharacterId;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
-import wow.minmax.model.PlayerConfig;
+import wow.minmax.model.db.PlayerConfig;
 import wow.minmax.model.impl.PlayerImpl;
 
 import java.util.List;
