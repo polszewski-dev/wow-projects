@@ -25,23 +25,24 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 
 	protected ComposableExecutor(
 			Player player,
+			Player mainPlayer,
 			ScriptCommandCondition commandCondition,
 			Ability ability,
 			ScriptCommandTarget commandTarget,
 			boolean optional
 	) {
-		super(player);
+		super(player, mainPlayer);
 		this.commandCondition = commandCondition;
 		this.ability = ability;
 		this.commandTarget = commandTarget;
 		this.optional = optional;
 	}
 
-	public static ComposableExecutor create(ComposableCommand command, Player player) {
+	public static ComposableExecutor create(ComposableCommand command, Player player, Player mainPlayer) {
 		return switch (command) {
-			case CastSpell castSpell -> CastSpellExecutor.create(castSpell, player);
-			case CastSpellRank castSpellRank -> CastSpellRankExecutor.create(castSpellRank, player);
-			case UseItem useItem -> UseItemExecutor.create(useItem, player);
+			case CastSpell castSpell -> CastSpellExecutor.create(castSpell, player, mainPlayer);
+			case CastSpellRank castSpellRank -> CastSpellRankExecutor.create(castSpellRank, player, mainPlayer);
+			case UseItem useItem -> UseItemExecutor.create(useItem, player, mainPlayer);
 		};
 	}
 

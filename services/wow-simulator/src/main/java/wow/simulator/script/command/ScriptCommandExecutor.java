@@ -14,15 +14,17 @@ import static wow.character.model.script.ScriptCommand.ComposableCommand;
  */
 public abstract class ScriptCommandExecutor {
 	protected final Player player;
+	protected final Player mainPlayer;
 
-	protected ScriptCommandExecutor(Player player) {
+	protected ScriptCommandExecutor(Player player, Player mainPlayer) {
 		this.player = player;
+		this.mainPlayer = mainPlayer;
 	}
 
-	public static ScriptCommandExecutor create(ScriptCommand command, Player player) {
+	public static ScriptCommandExecutor create(ScriptCommand command, Player player, Player mainPlayer) {
 		return switch (command) {
-			case CastSequence castSequence -> CastSequenceExecutor.create(castSequence, player);
-			case ComposableCommand composableCommand -> ComposableExecutor.create(composableCommand, player);
+			case CastSequence castSequence -> CastSequenceExecutor.create(castSequence, player, mainPlayer);
+			case ComposableCommand composableCommand -> ComposableExecutor.create(composableCommand, player, mainPlayer);
 		};
 	}
 
@@ -37,6 +39,7 @@ public abstract class ScriptCommandExecutor {
 			case DEFAULT -> null;
 			case SELF -> player;
 			case TARGET -> player.getTarget();
+			case MAIN -> mainPlayer;
 		};
 	}
 }

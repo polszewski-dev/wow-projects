@@ -10,12 +10,12 @@ import static wow.character.model.script.ScriptCommand.CastSpellRank;
  * Date: 2025-09-18
  */
 public class CastSpellRankExecutor extends ComposableExecutor {
-	private CastSpellRankExecutor(CastSpellRank command, Player player) {
-		super(player, command.condition(), getAbility(command, player), command.target(), command.optional());
+	private CastSpellRankExecutor(CastSpellRank command, Player player, Player mainPlayer) {
+		super(player, mainPlayer, command.condition(), getAbility(command, player), command.target(), command.optional());
 	}
 
-	public static CastSpellRankExecutor create(CastSpellRank command, Player player) {
-		return new CastSpellRankExecutor(command, player);
+	public static CastSpellRankExecutor create(CastSpellRank command, Player player, Player mainPlayer) {
+		return new CastSpellRankExecutor(command, player, mainPlayer);
 	}
 
 	private static Ability getAbility(CastSpellRank command, Player player) {

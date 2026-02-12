@@ -28,7 +28,7 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 	CastSpellExecutor getCastSpellExecutor(String abilityName) {
 		var command = castSpell(abilityName);
 
-		return CastSpellExecutor.create(command, player);
+		return CastSpellExecutor.create(command, player, player);
 	}
 
 	CastSpellRank castSpellRank(String abilityName, int rank) {
@@ -44,13 +44,13 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 	CastSpellRankExecutor getCastSpellRankExecutor(String abilityName, int rank) {
 		var command = castSpellRank(abilityName, rank);
 
-		return CastSpellRankExecutor.create(command, player);
+		return CastSpellRankExecutor.create(command, player, player);
 	}
 
 	UseItemExecutor getUseItemExecutor(ItemSlot itemSlot) {
 		var command = useItem(itemSlot);
 
-		return UseItemExecutor.create(command, player);
+		return UseItemExecutor.create(command, player, player);
 	}
 
 	UseItem useItem(ItemSlot itemSlot) {
@@ -65,7 +65,7 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 	CastSequenceExecutor getCastSequenceExecutor(ComposableCommand... commands) {
 		var castSequence = new CastSequence(List.of(commands));
 
-		return CastSequenceExecutor.create(castSequence, player);
+		return CastSequenceExecutor.create(castSequence, player, player);
 	}
 
 	double getCastTime(String abilityName) {

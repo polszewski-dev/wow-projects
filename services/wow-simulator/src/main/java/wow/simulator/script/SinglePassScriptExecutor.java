@@ -19,6 +19,7 @@ public class SinglePassScriptExecutor {
 	private final String scriptName;
 	private final ScriptSectionType sectionType;
 	private final Player player;
+	private final Player mainPlayer;
 	private List<ScriptCommandExecutor> commands;
 
 	public void setupPlayer() {
@@ -27,7 +28,7 @@ public class SinglePassScriptExecutor {
 		var section = script.getSection(sectionType);
 
 		this.commands = section.commands().stream()
-				.map(command -> ScriptCommandExecutor.create(command, player))
+				.map(command -> ScriptCommandExecutor.create(command, player, mainPlayer))
 				.filter(ScriptCommandExecutor::isValid)
 				.toList();
 	}

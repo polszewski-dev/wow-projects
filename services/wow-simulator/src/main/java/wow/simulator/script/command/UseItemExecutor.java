@@ -10,12 +10,12 @@ import static wow.character.model.script.ScriptCommand.UseItem;
  * Date: 2025-09-18
  */
 public class UseItemExecutor extends ComposableExecutor {
-	private UseItemExecutor(UseItem command, Player player) {
-		super(player, command.condition(), getActivatedAbility(command, player), command.target(), command.optional());
+	private UseItemExecutor(UseItem command, Player player, Player mainPlayer) {
+		super(player, mainPlayer, command.condition(), getActivatedAbility(command, player), command.target(), command.optional());
 	}
 
-	public static UseItemExecutor create(UseItem command, Player player) {
-		return new UseItemExecutor(command, player);
+	public static UseItemExecutor create(UseItem command, Player player, Player mainPlayer) {
+		return new UseItemExecutor(command, player, mainPlayer);
 	}
 
 	private static ActivatedAbility getActivatedAbility(UseItem useItem, Player player) {

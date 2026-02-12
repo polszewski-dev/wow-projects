@@ -7,5 +7,6 @@ package wow.character.model.script;
 public enum ScriptCommandTarget {
 	DEFAULT,
 	SELF,
-	TARGET
+	TARGET,
+	MAIN
 }

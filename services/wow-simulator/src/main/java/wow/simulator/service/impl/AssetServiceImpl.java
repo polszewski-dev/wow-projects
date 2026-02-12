@@ -55,7 +55,7 @@ public class AssetServiceImpl implements AssetService {
 		for (var option : asset.getSelectedOptions()) {
 			var scriptName = option.preparationPhaseScript();
 
-			executeScript(scriptName, partyAsset, PREPARATION);
+			executeScript(scriptName, partyAsset, mainPlayer, PREPARATION);
 		}
 	}
 
@@ -66,16 +66,16 @@ public class AssetServiceImpl implements AssetService {
 		for (var option : asset.getSelectedOptions()) {
 			var scriptName = option.warmUpPhaseScript();
 
-			executeScript(scriptName, partyAsset, WARM_UP);
+			executeScript(scriptName, partyAsset, mainPlayer, WARM_UP);
 		}
 	}
 
-	private void executeScript(String scriptName, Player partyAsset, ScriptSectionType sectionType) {
+	private void executeScript(String scriptName, Player partyAsset, Player mainPlayer, ScriptSectionType sectionType) {
 		if (scriptName == null) {
 			return;
 		}
 
-		var scriptExecutor = new SinglePassScriptExecutor("asset/" + scriptName, sectionType, partyAsset);
+		var scriptExecutor = new SinglePassScriptExecutor("asset/" + scriptName, sectionType, partyAsset, mainPlayer);
 
 		scriptExecutor.setupPlayer();
 

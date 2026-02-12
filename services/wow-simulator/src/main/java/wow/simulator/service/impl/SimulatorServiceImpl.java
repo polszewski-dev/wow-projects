@@ -35,7 +35,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 	@Override
 	public Stats simulate(Player player, Duration duration, RngType rngType, Runnable withinSimulationContext) {
 		var target = player.getTarget();
-		var scriptExecutor = new ScriptExecutor(player);
+		var scriptExecutor = new ScriptExecutor(player, player);
 		var simulation = createSimulation(rngType);
 		var endTime = Time.at(duration.getSeconds());
 

@@ -10,12 +10,12 @@ import static wow.character.model.script.ScriptCommand.CastSpell;
  * Date: 2025-09-18
  */
 public class CastSpellExecutor extends ComposableExecutor {
-	private CastSpellExecutor(CastSpell command, Player player) {
-		super(player, command.condition(), getAbility(command, player), command.target(), command.optional());
+	private CastSpellExecutor(CastSpell command, Player player, Player mainPlayer) {
+		super(player, mainPlayer, command.condition(), getAbility(command, player), command.target(), command.optional());
 	}
 
-	public static CastSpellExecutor create(CastSpell command, Player player) {
-		return new CastSpellExecutor(command, player);
+	public static CastSpellExecutor create(CastSpell command, Player player, Player mainPlayer) {
+		return new CastSpellExecutor(command, player, mainPlayer);
 	}
 
 	private static Ability getAbility(CastSpell command, Player player) {

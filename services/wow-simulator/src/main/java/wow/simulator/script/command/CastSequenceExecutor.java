@@ -15,18 +15,18 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 	private final List<ComposableExecutor> list;
 	private List<ComposableExecutor> toExecute;
 
-	private CastSequenceExecutor(List<ComposableExecutor> list, Player player) {
-		super(player);
+	private CastSequenceExecutor(List<ComposableExecutor> list, Player player, Player mainPlayer) {
+		super(player, mainPlayer);
 		this.list = list;
 	}
 
-	public static CastSequenceExecutor create(CastSequence castSequence, Player player) {
+	public static CastSequenceExecutor create(CastSequence castSequence, Player player, Player mainPlayer) {
 		var list = castSequence.list().stream()
-				.map(command -> ComposableExecutor.create(command, player))
+				.map(command -> ComposableExecutor.create(command, player, mainPlayer))
 				.filter(executor -> executor.isValid() || !executor.isOptional())
 				.toList();
 
-		return new CastSequenceExecutor(list, player);
+		return new CastSequenceExecutor(list, player, mainPlayer);
 	}
 
 	@Override

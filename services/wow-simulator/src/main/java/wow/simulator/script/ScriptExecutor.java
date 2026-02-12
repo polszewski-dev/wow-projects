@@ -18,6 +18,7 @@ import static wow.character.model.script.ScriptSectionType.ROTATION;
 @RequiredArgsConstructor
 public class ScriptExecutor {
 	private final Player player;
+	private final Player mainPlayer;
 
 	private List<ScriptCommandExecutor> rotationCommands;
 
@@ -27,7 +28,7 @@ public class ScriptExecutor {
 		var rotationSection = script.getSection(ROTATION);
 
 		this.rotationCommands = rotationSection.commands().stream()
-				.map(command -> ScriptCommandExecutor.create(command, player))
+				.map(command -> ScriptCommandExecutor.create(command, player, mainPlayer))
 				.filter(ScriptCommandExecutor::isValid)
 				.toList();
 
