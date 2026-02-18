@@ -75,7 +75,7 @@ public class AssetServiceImpl implements AssetService {
 			return;
 		}
 
-		var scriptExecutor = new SinglePassScriptExecutor("asset/" + scriptName, sectionType, partyAsset, mainPlayer);
+		var scriptExecutor = new SinglePassScriptExecutor(scriptName, sectionType, partyAsset, mainPlayer);
 
 		scriptExecutor.setupPlayer();
 

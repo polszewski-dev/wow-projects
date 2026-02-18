@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.ProfIdSpecId;
-import wow.character.model.script.ScriptPathResolver;
 import wow.character.service.CharacterService;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.FactionExclusionGroupId;
@@ -24,9 +23,9 @@ import wow.minmax.service.PlayerService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.stream.Collectors.groupingBy;
+import static wow.character.model.script.ScriptPathResolver.requireExistingScriptFile;
 import static wow.commons.model.profession.ProfessionType.SECONDARY;
 
 /**
@@ -187,18 +186,11 @@ public class PlayerServiceImpl implements PlayerService {
 	public Player changeScript(CharacterId characterId, String scriptPath) {
 		var player = getPlayer(characterId);
 
-		requireExistingResource(scriptPath, player);
+		requireExistingScriptFile(scriptPath, player.getGameVersionId());
 
 		player.getBuild().setScript(scriptPath);
 
 		saveCharacter(characterId, player);
 		return player;
-	}
-
-	private void requireExistingResource(String scriptPath, Player player) {
-		var fullScriptPath = ScriptPathResolver.getScriptPath(scriptPath, player.getGameVersionId());
-		var scriptURL = getClass().getResource(fullScriptPath);
-
-		Objects.requireNonNull(scriptURL, "No script %s, full path: %s".formatted(scriptPath, fullScriptPath));
 	}
 }

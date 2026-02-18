@@ -4,6 +4,8 @@ import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 
+import java.util.Objects;
+
 /**
  * User: POlszewski
  * Date: 2025-09-27
@@ -28,6 +30,17 @@ public final class ScriptPathResolver {
 		var scriptName = player.getBuild().getScript();
 
 		return getScriptPath(scriptName, player.getGameVersionId());
+	}
+
+	public static void requireExistingScriptFile(String scriptName, GameVersionId gameVersionId) {
+		if (scriptName == null) {
+			return;
+		}
+
+		var path = getScriptPath(scriptName, gameVersionId);
+		var url = ScriptPathResolver.class.getResource(path);
+
+		Objects.requireNonNull(url, "No script in " + path);
 	}
 
 	private ScriptPathResolver() {}

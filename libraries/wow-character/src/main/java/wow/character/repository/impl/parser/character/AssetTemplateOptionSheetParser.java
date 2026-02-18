@@ -48,8 +48,15 @@ public class AssetTemplateOptionSheetParser extends WowExcelSheetParser {
 				isDefault,
 				exclusionGroup,
 				talentName,
-				buffPhaseScript,
-				warmUpPhaseScript
+				insideAssetDirectory(buffPhaseScript),
+				insideAssetDirectory(warmUpPhaseScript)
 		);
+	}
+
+	private String insideAssetDirectory(String fileName) {
+		if (fileName == null) {
+			return null;
+		}
+		return "asset/" + fileName;
 	}
 }

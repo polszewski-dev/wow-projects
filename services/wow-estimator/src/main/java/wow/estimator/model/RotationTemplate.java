@@ -20,13 +20,12 @@ import static wow.character.model.script.ScriptSectionType.ROTATION;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class RotationTemplate {
-	private final String value;
 	private final List<AbilityId> abilityIds;
 
 	public static RotationTemplate parse(String scriptPath) {
 		var abilityIds = getAbilityIds(scriptPath);
 
-		return new RotationTemplate(scriptPath, abilityIds);
+		return new RotationTemplate(abilityIds);
 	}
 
 	private static List<AbilityId> getAbilityIds(String scriptPath) {
@@ -63,10 +62,5 @@ public class RotationTemplate {
 
 	public Rotation createRotation() {
 		return Rotation.create(this);
-	}
-
-	@Override
-	public String toString() {
-		return value;
 	}
 }
