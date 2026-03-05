@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffNameRank;
+import wow.commons.model.config.Described;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.spell.BuffExcelParser;
 import wow.commons.repository.spell.BuffRepository;
@@ -13,7 +14,10 @@ import wow.commons.util.PhaseMap;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.groupingBy;
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
 
@@ -32,8 +36,15 @@ public class BuffRepositoryImpl implements BuffRepository {
 	}
 
 	@Override
-	public List<Buff> getAvailableBuffs(PhaseId phaseId) {
-		return List.copyOf(buffsById.values(phaseId));
+	public List<Buff> getAvailableBuffs(PhaseId phaseId, Predicate<Buff> predicate) {
+		return buffsById.values(phaseId).stream()
+				.filter(predicate)
+				.collect(groupingBy(Described::getName))
+				.values()
+				.stream()
+				.map(x -> x.stream().max(comparingInt(Buff::getRank).thenComparing(Buff::getId)))
+				.flatMap(Optional::stream)
+				.toList();
 	}
 
 	@Override

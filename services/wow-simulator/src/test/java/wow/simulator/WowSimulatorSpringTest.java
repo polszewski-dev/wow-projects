@@ -333,10 +333,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		getCharacterService().updateAfterRestrictionChange(player);
 	}
 
-	protected void enableBuff(String name, int rank) {
-		player.getBuffs().enable(name, rank);
-	}
-
 	protected void addSpBonus(int amount) {
 		addSpBonus(player, amount);
 	}

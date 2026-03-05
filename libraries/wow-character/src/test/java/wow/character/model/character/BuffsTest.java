@@ -7,15 +7,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import wow.character.WowCharacterSpringTest;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.buff.Buff;
+import wow.commons.model.buff.BuffId;
 import wow.commons.model.buff.BuffNameRank;
-import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 import static wow.character.constant.AttributeConditions.SPELL_DAMAGE;
-import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.commons.model.attribute.AttributeId.HEALING_TAKEN_PCT;
 import static wow.commons.model.attribute.AttributeId.POWER;
 import static wow.test.commons.BuffNames.*;
@@ -28,7 +27,7 @@ import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
 class BuffsTest extends WowCharacterSpringTest {
 	@Test
 	void copy() {
-		buffs.enable(ARCANE_BRILLIANCE, 2);
+		buffs.enable(ARCANE_BRILLIANCE);
 
 		assertThat(buffs.getList()).hasSize(1);
 		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
@@ -46,7 +45,7 @@ class BuffsTest extends WowCharacterSpringTest {
 	void getList() {
 		assertThat(buffs.getList()).isEmpty();
 
-		buffs.enable(ARCANE_BRILLIANCE, 2);
+		buffs.enable(ARCANE_BRILLIANCE);
 
 		assertThat(buffs.getList()).hasSize(1);
 		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
@@ -88,7 +87,7 @@ class BuffsTest extends WowCharacterSpringTest {
 	void reset() {
 		assertBuff(ARCANE_BRILLIANCE, false);
 
-		buffs.enable(ARCANE_BRILLIANCE, 2);
+		buffs.enable(ARCANE_BRILLIANCE);
 
 		assertBuff(ARCANE_BRILLIANCE, true);
 
@@ -96,7 +95,7 @@ class BuffsTest extends WowCharacterSpringTest {
 
 		assertBuff(ARCANE_BRILLIANCE, false);
 
-		buffs.enable(ARCANE_BRILLIANCE, 2);
+		buffs.enable(ARCANE_BRILLIANCE);
 
 		assertBuff(ARCANE_BRILLIANCE, true);
 	}
@@ -125,16 +124,16 @@ class BuffsTest extends WowCharacterSpringTest {
 	void set() {
 		assertBuff(ARCANE_BRILLIANCE, false);
 
-		buffs.set(List.of(new BuffNameRank(ARCANE_BRILLIANCE, 2)));
+		buffs.setNames(List.of(ARCANE_BRILLIANCE));
 
 		assertBuff(ARCANE_BRILLIANCE, true);
 
 		assertThat(buffs.getList()).hasSize(1);
 		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 
-		var invalidIds = List.of(new BuffNameRank(ARCANE_BRILLIANCE, 10));
+		var invalidIds = List.of(BuffId.of(-1));
 
-		assertThatThrownBy(() -> buffs.set(invalidIds)).isInstanceOf(NoSuchElementException.class);
+		assertThatThrownBy(() -> buffs.setIds(invalidIds)).isInstanceOf(NoSuchElementException.class);
 		assertThat(buffs.getList()).isEmpty();
 	}
 
@@ -142,20 +141,15 @@ class BuffsTest extends WowCharacterSpringTest {
 	void enable() {
 		assertBuff(ARCANE_BRILLIANCE, false);
 
-		buffs.enable(ARCANE_BRILLIANCE, 2);
+		buffs.enable(ARCANE_BRILLIANCE);
 
 		assertThat(buffs.getList()).hasSize(1);
 		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 
-		buffs.enable(ARCANE_BRILLIANCE, 1);
+		assertThatThrownBy(() -> buffs.enable(BuffId.of(-1))).isInstanceOf(NoSuchElementException.class);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 1);
-
-		assertThatThrownBy(() -> buffs.enable(ARCANE_BRILLIANCE, 10)).isInstanceOf(NoSuchElementException.class);
-
-		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 1);
+		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 	}
 
 	@Test
@@ -163,12 +157,12 @@ class BuffsTest extends WowCharacterSpringTest {
 		assertBuff(DEMON_ARMOR, false);
 		assertBuff(FEL_ARMOR, false);
 
-		buffs.enable(DEMON_ARMOR, 6);
+		buffs.enable(DEMON_ARMOR);
 
 		assertBuff(DEMON_ARMOR, true);
 		assertBuff(FEL_ARMOR, false);
 
-		buffs.enable(FEL_ARMOR, 2);
+		buffs.enable(FEL_ARMOR);
 
 		assertBuff(DEMON_ARMOR, false);
 		assertBuff(FEL_ARMOR, true);
@@ -178,7 +172,7 @@ class BuffsTest extends WowCharacterSpringTest {
 	void has() {
 		assertBuff(ARCANE_BRILLIANCE, false);
 
-		buffs.enable(ARCANE_BRILLIANCE, 2);
+		buffs.enable(ARCANE_BRILLIANCE);
 
 		assertBuff(ARCANE_BRILLIANCE, true);
 
@@ -207,7 +201,7 @@ class BuffsTest extends WowCharacterSpringTest {
 
 		characterService.updateAfterRestrictionChange(player);
 
-		player.getBuffs().enable(FEL_ARMOR, 2, true);
+		player.getBuffs().enable(FEL_ARMOR);
 
 		var buff = player.getBuffs().getList().stream()
 				.filter(x -> x.getName().equals(FEL_ARMOR))
@@ -224,13 +218,8 @@ class BuffsTest extends WowCharacterSpringTest {
 
 	@BeforeEach
 	void setup() {
-		var availableBuffs = buffRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
-				.filter(x -> x.isAvailableTo(getPlayer()))
-				.filter(CHARACTER_BUFF.getFilter())
-				.toList();
-
-		buffs = new Buffs(CHARACTER_BUFF);
-		buffs.setAvailable(availableBuffs);
+		buffs = getPlayer().getBuffs();
+		buffs.reset();
 	}
 
 	void assertBuff(Buff buff, String name, int rank) {

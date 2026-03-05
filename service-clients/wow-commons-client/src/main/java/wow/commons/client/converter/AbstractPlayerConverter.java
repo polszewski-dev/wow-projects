@@ -111,13 +111,13 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	private void enableBuffs(PlayerDTO source, P player) {
 		for (var buffId : source.buffIds()) {
-			player.getBuffs().enable(BuffId.of(buffId), true);
+			player.getBuffs().enable(BuffId.of(buffId));
 		}
 	}
 
 	private void enableTargetBuffs(NonPlayerDTO source, N nonPlayer) {
 		for (var buffId : source.buffIds()) {
-			nonPlayer.getBuffs().enable(BuffId.of(buffId), true);
+			nonPlayer.getBuffs().enable(BuffId.of(buffId));
 		}
 	}
 

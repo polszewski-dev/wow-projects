@@ -6,13 +6,14 @@ import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * User: POlszewski
  * Date: 2020-09-28
  */
 public interface BuffRepository {
-	List<Buff> getAvailableBuffs(PhaseId phaseId);
+	List<Buff> getAvailableBuffs(PhaseId phaseId, Predicate<Buff> predicate);
 
 	Optional<Buff> getBuff(BuffId buffId, PhaseId phaseId);
 

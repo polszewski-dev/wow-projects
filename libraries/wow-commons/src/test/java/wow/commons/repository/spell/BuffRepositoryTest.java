@@ -64,37 +64,19 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void bufByNamefIsCorrect() {
-		var buffNames = buffRepository.getAvailableBuffs(TBC_P5).stream()
+		var buffNames = buffRepository.getAvailableBuffs(TBC_P5, buff -> true).stream()
 				.map(buff -> buff.getName() + "#" + buff.getRank())
 				.toList();
 
 		assertThat(buffNames).hasSameElementsAs(List.of(
-				"Arcane Brilliance#1",
 				"Arcane Brilliance#2",
-				"Prayer of Fortitude#2",
 				"Prayer of Fortitude#3",
-				"Power Word: Fortitude#1",
-				"Power Word: Fortitude#2",
-				"Power Word: Fortitude#3",
-				"Power Word: Fortitude#4",
 				"Power Word: Fortitude#5",
-				"Prayer of Spirit#1",
 				"Prayer of Spirit#2",
-				"Gift of the Wild#2",
 				"Gift of the Wild#3",
 				"Greater Blessing of Kings#0",
 				"Demon Skin#2",
-				"Demon Armor#1",
-				"Demon Armor#2",
-				"Demon Armor#3",
-				"Demon Armor#4",
-				"Demon Armor#5",
 				"Demon Armor#6",
-				"Fel Armor#1",
-				"Fel Armor#1",
-				"Fel Armor#1",
-				"Fel Armor#2",
-				"Fel Armor#2",
 				"Fel Armor#2",
 				"Touch of Shadow#0",
 				"Burning Wish#0",
@@ -122,9 +104,7 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 				"Songflower Serenade#0",
 				"Shadow Vulnerability#0",
 				"Fire Vulnerability#0",
-				"Curse of the Elements#3",
 				"Curse of the Elements#4",
-				"Curse of the Elements (improved)#3",
 				"Curse of the Elements (improved)#4"
 		));
 	}

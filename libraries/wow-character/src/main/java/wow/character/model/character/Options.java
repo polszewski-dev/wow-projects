@@ -32,4 +32,14 @@ public abstract class Options<T, I> {
 	public void disable(I id) {
 		enable(id, false);
 	}
+
+	public abstract void enable(String name, boolean enabled);
+
+	public void enable(String name) {
+		enable(name, true);
+	}
+
+	public void disable(String name) {
+		enable(name, false);
+	}
 }

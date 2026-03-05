@@ -6,7 +6,6 @@ import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.buff.BuffNameRank;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -18,8 +17,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Copyable<Buffs> {
 	private final Map<BuffId, Buff> availableBuffsById = new LinkedHashMap<>();
-	private final Map<String, List<Buff>> availableBuffsByName = new LinkedHashMap<>();
-	private final Map<BuffNameRank, Buff> availableBuffsByNameRank = new LinkedHashMap<>();
+	private final Map<String, Buff> availableBuffsByName = new LinkedHashMap<>();
 	private final Map<String, Buff> enabledBuffsByName = new LinkedHashMap<>();
 	private final BuffListType type;
 
@@ -33,9 +31,7 @@ public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Co
 
 	@Override
 	public List<Buff> getAvailable() {
-		return getHighestRanks(availableBuffsByName.keySet()).stream()
-				.map(availableBuffsByNameRank::get)
-				.toList();
+		return List.copyOf(availableBuffsByName.values());
 	}
 
 	public boolean has(String name) {
@@ -45,68 +41,49 @@ public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Co
 	public void setAvailable(List<Buff> availableBuffs) {
 		availableBuffsById.clear();
 		availableBuffsByName.clear();
-		availableBuffsByNameRank.clear();
 
 		for (var buff : availableBuffs) {
 			availableBuffsById.put(buff.getId(), buff);
-			availableBuffsByName.computeIfAbsent(buff.getName(), x -> new ArrayList<>()).add(buff);
-			availableBuffsByNameRank.put(buff.getNameRank(), buff);
+			availableBuffsByName.put(buff.getName(), buff);
 		}
 
-		var newEnabledBuffList = getNewEnabledBuffList();
+		var namesToEnable = getEnabledNames();
 
 		reset();
 
-		for (BuffNameRank nameRank : newEnabledBuffList) {
-			enable(nameRank.name(), nameRank.rank());
-		}
+		setNames(namesToEnable);
 	}
 
-	private List<BuffNameRank> getNewEnabledBuffList() {
-		var names = enabledBuffsByName.values().stream()
+	private List<String> getEnabledNames() {
+		return enabledBuffsByName.values().stream()
 				.map(Buff::getName)
 				.toList();
-
-		return getHighestRanks(names);
 	}
 
 	public void reset() {
 		enabledBuffsByName.clear();
 	}
 
-	public void setNames(Collection<String> buffNames) {
-		var nameRanks = getHighestRanks(buffNames);
-
-		set(nameRanks);
-	}
-
-	private List<BuffNameRank> getHighestRanks(Collection<String> names) {
-		return names.stream()
-				.map(this::getHighestRank)
-				.flatMap(Optional::stream)
-				.toList();
-	}
-
-	private Optional<BuffNameRank> getHighestRank(String name) {
-		return availableBuffsByName.getOrDefault(name, List.of()).stream()
-				.map(Buff::getNameRank)
-				.max(Comparator.comparingInt(BuffNameRank::rank));
-	}
-
-	public void set(Collection<BuffNameRank> buffNameRanks) {
-		reset();
-
-		for (var nameRank : buffNameRanks) {
-			enable(nameRank.name(), nameRank.rank());
-		}
-	}
-
 	public void setIds(Collection<BuffId> buffIds) {
 		reset();
 
 		for (var buffId : buffIds) {
-			enable(buffId, true);
+			enable(buffId);
 		}
+	}
+
+	public void setNames(Collection<String> names) {
+		reset();
+
+		for (var name : names) {
+			if (isAvailable(name)) {
+				enable(name);
+			}
+		}
+	}
+
+	private boolean isAvailable(String name) {
+		return availableBuffsByName.containsKey(name);
 	}
 
 	public void enable(BuffId buffId, boolean enabled) {
@@ -115,14 +92,10 @@ public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Co
 		enable(buff, enabled);
 	}
 
-	public void enable(String name, int rank, boolean enabled) {
-		var buff = getBuff(new BuffNameRank(name, rank)).orElseThrow();
+	public void enable(String name, boolean enabled) {
+		var buff = getBuff(name).orElseThrow();
 
 		enable(buff, enabled);
-	}
-
-	public void enable(String name, int rank) {
-		enable(name, rank, true);
 	}
 
 	private void enable(Buff buff, boolean enabled) {
@@ -139,18 +112,14 @@ public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Co
 		}
 	}
 
-	public void disable(String name) {
-		enabledBuffsByName.remove(name);
-	}
-
 	private Optional<Buff> getBuff(BuffId buffId) {
 		var buff = availableBuffsById.get(buffId);
 
 		return Optional.ofNullable(buff);
 	}
 
-	private Optional<Buff> getBuff(BuffNameRank nameRank) {
-		var buff = availableBuffsByNameRank.get(nameRank);
+	private Optional<Buff> getBuff(String name) {
+		var buff = availableBuffsByName.get(name);
 
 		return Optional.ofNullable(buff);
 	}
@@ -166,7 +135,6 @@ public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Co
 	public Buffs copy() {
 		var copy = new Buffs(type);
 		copy.availableBuffsById.putAll(this.availableBuffsById);
-		copy.availableBuffsByNameRank.putAll(this.availableBuffsByNameRank);
 		copy.availableBuffsByName.putAll(this.availableBuffsByName);
 		copy.enabledBuffsByName.putAll(this.enabledBuffsByName);
 		return copy;

@@ -270,10 +270,10 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private List<Buff> getAvailableBuffs(PlayerCharacter player, BuffListType buffListType) {
-		return buffRepository.getAvailableBuffs(player.getPhaseId()).stream()
-				.filter(buff -> buff.isAvailableTo(player))
-				.filter(buffListType.getFilter())
-				.toList();
+		return buffRepository.getAvailableBuffs(
+				player.getPhaseId(),
+				buff -> buff.isAvailableTo(player) && buffListType.getFilter().test(buff)
+		);
 	}
 
 	private List<Consumable> getAvailableConsumes(PlayerCharacter player) {

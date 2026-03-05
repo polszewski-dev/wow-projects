@@ -14,7 +14,6 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
-import wow.commons.model.buff.BuffNameRank;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.Ability;
@@ -304,14 +303,14 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public StatSummary getStats(Player player, BuffCategory... buffCategories) {
 		var copy = player.copy();
-		copy.getBuffs().set(getFilteredBuffs(player.getBuffs(), buffCategories));
+		copy.getBuffs().setNames(getFilteredBuffs(player.getBuffs(), buffCategories));
 		return getStats(copy);
 	}
 
-	private List<BuffNameRank> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
+	private List<String> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
 		return buffs.getStream()
 				.filter(x -> Stream.of(buffCategories).anyMatch(y -> x.getCategories().contains(y)))
-				.map(Buff::getNameRank)
+				.map(Buff::getName)
 				.toList();
 	}
 
