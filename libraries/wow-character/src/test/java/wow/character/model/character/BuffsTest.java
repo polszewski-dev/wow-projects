@@ -58,7 +58,7 @@ class BuffsTest extends WowCharacterSpringTest {
 
 	@Test
 	void getAvailableHighestRanks() {
-		var names = buffs.getAvailableHighestRanks().stream()
+		var names = buffs.getAvailable().stream()
 				.map(x -> x.getName() + "#" + x.getRank())
 				.toList();
 
@@ -102,11 +102,11 @@ class BuffsTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	void setHighestRanks() {
+	void setNames() {
 		assertBuff(ARCANE_BRILLIANCE, false);
 		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
-		buffs.setHighestRanks(List.of(ARCANE_BRILLIANCE, FLASK_OF_SUPREME_POWER));
+		buffs.setNames(List.of(ARCANE_BRILLIANCE, FLASK_OF_SUPREME_POWER));
 
 		assertBuff(ARCANE_BRILLIANCE, true);
 		assertBuff(FLASK_OF_SUPREME_POWER, true);
@@ -115,7 +115,7 @@ class BuffsTest extends WowCharacterSpringTest {
 		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
 		assertBuff(buffs.getList().get(1), FLASK_OF_SUPREME_POWER, 0);
 
-		assertThatNoException().isThrownBy(() -> buffs.setHighestRanks(List.of(WARCHIEFS_BLESSING, FLASK_OF_PURE_DEATH)));
+		assertThatNoException().isThrownBy(() -> buffs.setNames(List.of(WARCHIEFS_BLESSING, FLASK_OF_PURE_DEATH)));
 
 		assertThat(buffs.getList()).hasSize(1);
 		assertBuff(buffs.getList().getFirst(), FLASK_OF_PURE_DEATH, 0);

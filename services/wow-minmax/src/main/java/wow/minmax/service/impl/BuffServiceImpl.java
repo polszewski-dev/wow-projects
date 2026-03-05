@@ -32,7 +32,7 @@ public class BuffServiceImpl implements BuffService {
 	public List<BuffStatus> getBuffStatuses(Player player, BuffListType buffListType) {
 		var buffs = player.getBuffList(buffListType);
 
-		return buffs.getAvailableHighestRanks().stream()
+		return buffs.getAvailable().stream()
 				.map(buff -> new BuffStatus(buff, buffs.has(buff.getName())))
 				.toList();
 	}

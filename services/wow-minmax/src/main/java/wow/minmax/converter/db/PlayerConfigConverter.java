@@ -84,10 +84,10 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 
 		characterService.updateAfterRestrictionChange(player);
 
-		player.getBuffs().setBuffIds(getBuffIds(source.getBuffIds()));
-		player.getTarget().getBuffs().setBuffIds(getBuffIds(source.getTarget().getDebuffIds()));
+		player.getBuffs().setIds(getBuffIds(source.getBuffIds()));
+		player.getTarget().getBuffs().setIds(getBuffIds(source.getTarget().getDebuffIds()));
 
-		player.getConsumables().setConsumableIds(getConsumableIds(source));
+		player.getConsumables().setIds(getConsumableIds(source));
 
 		return player;
 	}

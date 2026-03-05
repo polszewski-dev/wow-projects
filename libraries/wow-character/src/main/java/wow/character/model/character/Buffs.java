@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * Date: 2022-12-20
  */
 @AllArgsConstructor
-public class Buffs implements EffectCollection, Copyable<Buffs> {
+public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Copyable<Buffs> {
 	private final Map<BuffId, Buff> availableBuffsById = new LinkedHashMap<>();
 	private final Map<String, List<Buff>> availableBuffsByName = new LinkedHashMap<>();
 	private final Map<BuffNameRank, Buff> availableBuffsByNameRank = new LinkedHashMap<>();
@@ -31,7 +31,8 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 		return enabledBuffsByName.values().stream();
 	}
 
-	public List<Buff> getAvailableHighestRanks() {
+	@Override
+	public List<Buff> getAvailable() {
 		return getHighestRanks(availableBuffsByName.keySet()).stream()
 				.map(availableBuffsByNameRank::get)
 				.toList();
@@ -73,7 +74,7 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 		enabledBuffsByName.clear();
 	}
 
-	public void setHighestRanks(Collection<String> buffNames) {
+	public void setNames(Collection<String> buffNames) {
 		var nameRanks = getHighestRanks(buffNames);
 
 		set(nameRanks);
@@ -100,7 +101,7 @@ public class Buffs implements EffectCollection, Copyable<Buffs> {
 		}
 	}
 
-	public void setBuffIds(Collection<BuffId> buffIds) {
+	public void setIds(Collection<BuffId> buffIds) {
 		reset();
 
 		for (var buffId : buffIds) {

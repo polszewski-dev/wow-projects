@@ -143,13 +143,13 @@ public class CharacterServiceImpl implements CharacterService {
 
 		player.setProfessionMaxLevels(characterTemplate.getProfessions());
 		player.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
-		player.getBuffs().setHighestRanks(characterTemplate.getDefaultBuffs());
+		player.getBuffs().setNames(characterTemplate.getDefaultBuffs());
 
 		if (player.getTarget() != null) {
-			player.getTarget().getBuffs().setHighestRanks(characterTemplate.getDefaultDebuffs());
+			player.getTarget().getBuffs().setNames(characterTemplate.getDefaultDebuffs());
 		}
 
-		player.getConsumables().setConsumableNames(characterTemplate.getConsumables());
+		player.getConsumables().setNames(characterTemplate.getConsumables());
 
 		updateAfterRestrictionChange(player);
 	}

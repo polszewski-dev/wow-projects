@@ -8,17 +8,14 @@ import wow.commons.model.item.ConsumableId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActivatedAbility;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2024-11-21
  */
-public class Consumables implements EffectCollection, Copyable<Consumables> {
+public class Consumables extends Options<Consumable, ConsumableId> implements EffectCollection, Copyable<Consumables> {
 	private final Map<ConsumableId, Consumable> availableConsumablesById = new HashMap<>();
 	private final Map<String, Consumable> availableConsumablesByName = new HashMap<>();
 	private final Map<ConsumableId, Consumable> enabledConsumables = new HashMap<>();
@@ -52,7 +49,7 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		enabledConsumables.clear();
 	}
 
-	public void setConsumableIds(List<ConsumableId> consumableIds) {
+	public void setIds(Collection<ConsumableId> consumableIds) {
 		reset();
 
 		for (var consumableId : consumableIds) {
@@ -60,7 +57,7 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		}
 	}
 
-	public void setConsumableNames(List<String> names) {
+	public void setNames(Collection<String> names) {
 		reset();
 
 		for (var name : names) {
@@ -79,10 +76,6 @@ public class Consumables implements EffectCollection, Copyable<Consumables> {
 		var consumable = getConsumable(consumableId).orElseThrow();
 
 		enable(consumable, enabled);
-	}
-
-	public void enable(ConsumableId consumableId) {
-		enable(consumableId, true);
 	}
 
 	public void enable(String name, boolean enabled) {
