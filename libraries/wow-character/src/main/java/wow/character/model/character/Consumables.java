@@ -8,119 +8,44 @@ import wow.commons.model.item.ConsumableId;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActivatedAbility;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 /**
  * User: POlszewski
  * Date: 2024-11-21
  */
 public class Consumables extends Options<Consumable, ConsumableId> implements EffectCollection, Copyable<Consumables> {
-	private final Map<ConsumableId, Consumable> availableConsumablesById = new HashMap<>();
-	private final Map<String, Consumable> availableConsumablesByName = new HashMap<>();
-	private final Map<ConsumableId, Consumable> enabledConsumables = new HashMap<>();
-
 	public Optional<ActivatedAbility> getAbility(AbilityId abilityId) {
-		return enabledConsumables.values().stream()
+		return getStream()
 				.map(Consumable::getActivatedAbility)
 				.filter(x -> x.getAbilityId().equals(abilityId))
 				.findAny();
 	}
 
-	public List<Consumable> getList() {
-		return List.copyOf(enabledConsumables.values());
-	}
-
-	public Stream<Consumable> getStream() {
-		return enabledConsumables.values().stream();
-	}
-
-	public List<Consumable> getAvailable() {
-		return List.copyOf(availableConsumablesById.values());
-	}
-
-	public boolean has(ConsumableId consumableId) {
-		return getConsumable(consumableId)
-				.map(consumable -> enabledConsumables.containsKey(consumable.getId()))
-				.orElse(false);
-	}
-
-	public void reset() {
-		enabledConsumables.clear();
-	}
-
-	public void setIds(Collection<ConsumableId> consumableIds) {
-		reset();
-
-		for (var consumableId : consumableIds) {
-			enable(consumableId);
-		}
-	}
-
-	public void setNames(Collection<String> names) {
-		reset();
-
-		for (var name : names) {
-			enable(name);
-		}
-	}
-
-	public void setAvailable(List<Consumable> consumables) {
-		for (var consumable : consumables) {
-			availableConsumablesById.put(consumable.getId(), consumable);
-			availableConsumablesByName.put(consumable.getName(), consumable);
-		}
-	}
-
-	public void enable(ConsumableId consumableId, boolean enabled) {
-		var consumable = getConsumable(consumableId).orElseThrow();
-
-		enable(consumable, enabled);
-	}
-
-	public void enable(String name, boolean enabled) {
-		var consumable = getConsumable(name).orElseThrow();
-
-		enable(consumable, enabled);
-	}
-
-	public void enable(String name) {
-		enable(name, true);
-	}
-
-	private void enable(Consumable consumable, boolean enabled) {
-		if (enabled) {
-			enabledConsumables.put(consumable.getId(), consumable);
-		} else {
-			enabledConsumables.remove(consumable.getId());
-		}
-	}
-
-	private Optional<Consumable> getConsumable(ConsumableId consumableId) {
-		var consumable = availableConsumablesById.get(consumableId);
-
-		return Optional.ofNullable(consumable);
-	}
-
-	private Optional<Consumable> getConsumable(String name) {
-		var consumable = availableConsumablesByName.get(name);
-
-		return Optional.ofNullable(consumable);
-	}
-
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		for (var consumable : enabledConsumables.values()) {
-			collector.addActivatedAbility(consumable.getActivatedAbility());
-		}
+		forEach(consumable -> collector.addActivatedAbility(consumable.getActivatedAbility()));
 	}
 
 	@Override
 	public Consumables copy() {
 		var copy = new Consumables();
-		copy.availableConsumablesById.putAll(this.availableConsumablesById);
-		copy.availableConsumablesByName.putAll(this.availableConsumablesByName);
-		copy.enabledConsumables.putAll(this.enabledConsumables);
+		copyInto(copy);
 		return copy;
+	}
+
+	@Override
+	protected ConsumableId getId(Consumable consumable) {
+		return consumable.getId();
+	}
+
+	@Override
+	protected String getName(Consumable consumable) {
+		return consumable.getName();
+	}
+
+	@Override
+	protected String getKey(Consumable consumable) {
+		return consumable.getName();
 	}
 }
