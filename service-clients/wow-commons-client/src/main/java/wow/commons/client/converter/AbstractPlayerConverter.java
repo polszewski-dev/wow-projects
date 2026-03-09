@@ -6,13 +6,9 @@ import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.client.converter.equipment.EquipmentConverter;
-import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.client.dto.PlayerDTO;
-import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.item.AbstractItem;
 import wow.commons.model.item.ConsumableId;
-import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 
 import java.util.List;
@@ -31,20 +27,9 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 	@Override
 	public PlayerDTO doConvert(P source) {
-		var talentIds = source.getTalents().getStream()
-				.map(Talent::getId)
-				.map(TalentId::value)
-				.toList();
-
-		var buffIds = source.getBuffs().getStream()
-				.map(Buff::getId)
-				.map(BuffId::value)
-				.toList();
-
-		var consumableIds = source.getConsumables().getStream()
-				.map(AbstractItem::getId)
-				.map(ConsumableId::value)
-				.toList();
+		var talentIds = source.getTalents().getIds(TalentId::value);
+		var buffIds = source.getBuffs().getIds(BuffId::value);
+		var consumableIds = source.getConsumables().getIds(ConsumableId::value);
 
 		return new PlayerDTO(
 				source.getName(),
@@ -89,10 +74,9 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 
 		characterService.updateAfterRestrictionChange(player);
 
-		enableBuffs(source, player);
-		enableTargetBuffs(source.target(), (N) player.getTarget());
-
-		enableConsumables(source, player);
+		player.getBuffs().setIds(source.buffIds(), BuffId::of);
+		player.getTarget().getBuffs().setIds(source.target().buffIds(), BuffId::of);
+		player.getConsumables().setIds(source.consumableIds(), ConsumableId::of);
 
 		return player;
 	}
@@ -100,33 +84,10 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 	private void changeBuild(PlayerCharacter character, PlayerDTO source) {
 		var build = character.getBuild();
 
-		for (var talentId : source.talentIds()) {
-			build.getTalents().enable(TalentId.of(talentId));
-		}
-
+		build.getTalents().setIds(source.talentIds(), TalentId::of);
 		build.setRole(source.role());
 		build.setActivePet(source.activePet());
 		build.setScript(source.script());
-	}
-
-	private void enableBuffs(PlayerDTO source, P player) {
-		for (var buffId : source.buffIds()) {
-			player.getBuffs().enable(BuffId.of(buffId));
-		}
-	}
-
-	private void enableTargetBuffs(NonPlayerDTO source, N nonPlayer) {
-		for (var buffId : source.buffIds()) {
-			nonPlayer.getBuffs().enable(BuffId.of(buffId));
-		}
-	}
-
-	private void enableConsumables(PlayerDTO source, P player) {
-		for (var consumableId : source.consumableIds()) {
-			var wrappedConsumableId = ConsumableId.of(consumableId);
-
-			player.getConsumables().enable(wrappedConsumableId);
-		}
 	}
 
 	protected abstract PlayerCharacterFactory<P> getFactory(String name);

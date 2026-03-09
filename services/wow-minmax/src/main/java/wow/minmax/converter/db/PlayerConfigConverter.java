@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.ParametrizedConverter;
-import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.item.Consumable;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.TalentId;
 import wow.minmax.converter.db.equipment.EquipmentConfigConverter;
@@ -16,8 +14,6 @@ import wow.minmax.model.Player;
 import wow.minmax.model.PlayerId;
 import wow.minmax.model.db.PlayerConfig;
 import wow.minmax.model.impl.PlayerImpl;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -35,15 +31,8 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 
 	@Override
 	public PlayerConfig doConvert(Player source, PlayerId playerId) {
-		var buffIds = source.getBuffs().getStream()
-				.map(Buff::getId)
-				.map(BuffId::value)
-				.toList();
-
-		var consumableIds = source.getConsumables().getStream()
-				.map(Consumable::getId)
-				.map(ConsumableId::value)
-				.toList();
+		var buffIds = source.getBuffs().getIds(BuffId::value);
+		var consumableIds = source.getConsumables().getIds(ConsumableId::value);
 
 		return new PlayerConfig(
 				playerId.toString(),
@@ -84,10 +73,9 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 
 		characterService.updateAfterRestrictionChange(player);
 
-		player.getBuffs().setIds(getBuffIds(source.getBuffIds()));
-		player.getTarget().getBuffs().setIds(getBuffIds(source.getTarget().getDebuffIds()));
-
-		player.getConsumables().setIds(getConsumableIds(source));
+		player.getBuffs().setIds(source.getBuffIds(), BuffId::of);
+		player.getTarget().getBuffs().setIds(source.getTarget().getDebuffIds(), BuffId::of);
+		player.getConsumables().setIds(source.getConsumableIds(), ConsumableId::of);
 
 		return player;
 	}
@@ -96,24 +84,9 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 		var build = player.getBuild();
 		var sourceBuild = source.getBuild();
 
-		for (var talentId : sourceBuild.getTalentIds()) {
-			build.getTalents().enable(TalentId.of(talentId));
-		}
-
+		build.getTalents().setIds(sourceBuild.getTalentIds(), TalentId::of);
 		build.setRole(sourceBuild.getRole());
 		build.setActivePet(sourceBuild.getActivePet());
 		build.setScript(sourceBuild.getScript());
-	}
-
-	private List<BuffId> getBuffIds(List<Integer> buffs) {
-		return buffs.stream()
-				.map(BuffId::of)
-				.toList();
-	}
-
-	private List<ConsumableId> getConsumableIds(PlayerConfig source) {
-		return source.getConsumableIds().stream()
-				.map(ConsumableId::of)
-				.toList();
 	}
 }

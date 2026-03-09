@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
-import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
 import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.pve.PhaseRepository;
@@ -26,10 +25,7 @@ public class NonPlayerConfigConverter implements Converter<NonPlayer, NonPlayerC
 
 	@Override
 	public NonPlayerConfig doConvert(NonPlayer source) {
-		var buffIds = source.getBuffs().getStream()
-				.map(Buff::getId)
-				.map(BuffId::value)
-				.toList();
+		var buffIds = source.getBuffs().getIds(BuffId::value);
 
 		return new NonPlayerConfig(
 				source.getName(),

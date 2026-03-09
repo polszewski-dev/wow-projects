@@ -2,6 +2,7 @@ package wow.character.model.character;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -59,11 +60,26 @@ public abstract class Options<T, I> {
 				.toList();
 	}
 
+	public <R> List<R> getIds(Function<I, R> mapper) {
+		return getStream()
+				.map(this::getId)
+				.map(mapper)
+				.toList();
+	}
+
+	public List<I> getIds() {
+		return getIds(Function.identity());
+	}
+
 	public void setIds(Collection<I> ids) {
+		setIds(ids, Function.identity());
+	}
+
+	public <M> void setIds(Collection<M> ids, Function<M, I> mapper) {
 		reset();
 
 		for (var id : ids) {
-			enable(id);
+			enable(mapper.apply(id));
 		}
 	}
 

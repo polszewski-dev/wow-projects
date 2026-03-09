@@ -13,6 +13,7 @@ import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentNameRank;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -92,6 +93,17 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		return talentLinkFormatter.format();
 	}
 
+	public <R> List<R> getIds(Function<TalentId, R> mapper) {
+		return getStream()
+				.map(Talent::getId)
+				.map(mapper)
+				.toList();
+	}
+
+	public List<TalentId> getIds() {
+		return getIds(Function.identity());
+	}
+
 	public void reset() {
 		talentByName.clear();
 	}
@@ -111,6 +123,14 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 
 		for (var talent : link.talents()) {
 			enable(talent.name(), talent.rank());
+		}
+	}
+
+	public <M> void setIds(Collection<M> ids, Function<M, TalentId> mapper) {
+		reset();
+
+		for (var id : ids) {
+			enable(mapper.apply(id));
 		}
 	}
 
