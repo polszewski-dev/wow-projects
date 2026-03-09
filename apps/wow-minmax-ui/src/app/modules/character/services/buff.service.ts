@@ -12,11 +12,11 @@ export class BuffService {
 
 	constructor(private http: HttpClient) { }
 
-	getBuffStatuses(characterId: string, buffListType: BuffListType) {
-		return this.http.get<BuffStatus[]>(`${this.apiUrl}/${characterId}/${buffListType}`);
+	getBuffStatuses(playerId: string, buffListType: BuffListType) {
+		return this.http.get<BuffStatus[]>(`${this.apiUrl}/${playerId}/${buffListType}`);
 	}
 
-	changeBuffStatus(characterId: string, buffListType: BuffListType, buffStatus: BuffStatus) {
-		return this.http.put<BuffStatus[]>(`${this.apiUrl}/${characterId}/${buffListType}`, buffStatus);
+	changeBuffStatus(playerId: string, buffListType: BuffListType, buffStatus: BuffStatus) {
+		return this.http.put<BuffStatus[]>(`${this.apiUrl}/${playerId}/${buffListType}`, buffStatus);
 	}
 }

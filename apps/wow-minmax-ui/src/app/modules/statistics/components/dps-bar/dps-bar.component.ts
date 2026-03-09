@@ -14,10 +14,10 @@ import { StatsService } from '../../services/stats.service';
 })
 export class DpsBarComponent {
 	rotationStats$ = this.store.select(selectDpsChanges).pipe(
-		filter(change => !!change.characterId),
+		filter(change => !!change.playerId),
 		filter(change => change.dpsChangeIdx !== this.dpsChangeIdx),
 		tap(change => this.dpsChangeIdx = change.dpsChangeIdx),
-		switchMap(change => this.statsService.getRotationStats(change.characterId!).pipe(
+		switchMap(change => this.statsService.getRotationStats(change.playerId!).pipe(
 			tap(rotationStats => {
 				this.previousRotationStats = this.currentRotationStats;
 				this.currentRotationStats = rotationStats;

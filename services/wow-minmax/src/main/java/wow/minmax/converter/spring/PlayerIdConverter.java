@@ -2,16 +2,16 @@ package wow.minmax.converter.spring;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 
 /**
  * User: POlszewski
  * Date: 2023-04-01
  */
 @Component
-public class CharacterIdConverter implements Converter<String, CharacterId> {
+public class PlayerIdConverter implements Converter<String, PlayerId> {
 	@Override
-	public CharacterId convert(String source) {
-		return CharacterId.parse(source);
+	public PlayerId convert(String source) {
+		return PlayerId.parse(source);
 	}
 }

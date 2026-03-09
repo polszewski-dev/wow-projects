@@ -19,8 +19,8 @@ import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.spell.SpellRepository;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.impl.NonPlayerImpl;
 import wow.minmax.model.impl.PlayerImpl;
@@ -138,7 +138,7 @@ public abstract class WowMinMaxSpringTest {
 	protected static final int LEVEL = 70;
 	protected static final CreatureType ENEMY_TYPE = UNDEAD;
 	protected static final int LVL_DIFF = 3;
-	protected static final CharacterId CHARACTER_KEY = new CharacterId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);
+	protected static final PlayerId CHARACTER_KEY = new PlayerId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);
 
 	protected static void assertId(AbstractItem<?> item, int id) {
 		assertThat(item.getId().value()).isEqualTo(id);

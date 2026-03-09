@@ -3,7 +3,7 @@
 		<span
 			class="badge rounded-pill upgrade-badge upgrade-level-{{ getUpgradeLevel(data.upgrade.changePct) }}"
 			title="Click to equip the best upgrade"
-			(click)="onEquipUpgradeClick(data.characterId, data.upgrade)"
+			(click)="onEquipUpgradeClick(data.playerId, data.upgrade)"
 		>+{{data.upgrade.changePct | number:'1.1-1'}}%</span>
 	} @else {
 		<span class="no-upgrades">✓</span>

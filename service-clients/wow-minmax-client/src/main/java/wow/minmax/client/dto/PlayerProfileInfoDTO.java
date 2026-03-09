@@ -13,6 +13,6 @@ public record PlayerProfileInfoDTO(
 		CharacterClassDTO characterClass,
 		RaceDTO race,
 		LocalDateTime lastModified,
-		String lastUsedCharacterId
+		String lastUsedPlayerId
 ) {
 }

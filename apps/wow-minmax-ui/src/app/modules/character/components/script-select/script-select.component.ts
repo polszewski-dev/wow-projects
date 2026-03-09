@@ -12,16 +12,16 @@ import { changeScript } from '../../state/character/character.actions';
 })
 export class ScriptSelectComponent {
 	@Input({ required: true }) id!: string;
-	@Input({ required: true }) characterId!: string;
+	@Input({ required: true }) playerId!: string;
 	@Input({ required: true }) selectedScript!: ScriptInfo;
 	@Input({ required: true }) availableScripts!: ScriptInfo[];
 
 	constructor(private store: Store<CharacterModuleState>) {}
 
 	onScriptChanged(script: ScriptInfo) {
-		const characterId = this.characterId;
+		const playerId = this.playerId;
 
-		this.store.dispatch(changeScript({ characterId, script }));
+		this.store.dispatch(changeScript({ playerId, script }));
 	}
 
 	readonly scriptFormatter = new ScriptFormatter();

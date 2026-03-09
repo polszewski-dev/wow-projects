@@ -11,7 +11,7 @@ import wow.minmax.client.dto.equipment.EquipmentSocketStatusDTO;
 import wow.minmax.client.dto.equipment.EquippableItemDTO;
 import wow.minmax.client.dto.equipment.ItemSlotStatusDTO;
 import wow.minmax.converter.dto.equipment.*;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.service.EquipmentService;
 
 import java.util.List;
@@ -35,71 +35,71 @@ public class EquipmentController {
 	private final EquipmentSocketStatusConverter equipmentSocketStatusConverter;
 	private final ParamToGemFilterConverter paramToGemFilterConverter;
 
-	@GetMapping("{characterId}")
+	@GetMapping("{playerId}")
 	public EquipmentDTO getEquipment(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var equipment = equipmentService.getEquipment(characterId);
+		var equipment = equipmentService.getEquipment(playerId);
 
 		return equipmentConverter.convert(equipment);
 	}
 
-	@PutMapping("{characterId}/slot/{slot}")
+	@PutMapping("{playerId}/slot/{slot}")
 	public List<ItemSlotStatusDTO> equipItem(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("slot") ItemSlot slot,
 			@RequestBody EquippableItemDTO itemDTO,
 			@RequestParam(name="best-variant", required=false, defaultValue="false") boolean bestVariant,
 			@RequestParam Map<String, String> requestParams
 	) {
-		var item = equippableItemConverter.convertBack(itemDTO, characterId.phaseId());
+		var item = equippableItemConverter.convertBack(itemDTO, playerId.phaseId());
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
 
-		var changedSlots = equipmentService.equipItem(characterId, slot, item, bestVariant, gemFilter);
+		var changedSlots = equipmentService.equipItem(playerId, slot, item, bestVariant, gemFilter);
 
-		log.info("Equipped item charId: {}, slot: {}, changedSlots: {}", characterId, slot, changedSlots);
+		log.info("Equipped item charId: {}, slot: {}, changedSlots: {}", playerId, slot, changedSlots);
 
 		return itemSlotStatusConverter.convertList(changedSlots);
 	}
 
-	@PutMapping("{characterId}/slot-group/{slotGroup}")
+	@PutMapping("{playerId}/slot-group/{slotGroup}")
 	public List<ItemSlotStatusDTO> equipItemGroup(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestBody List<EquippableItemDTO> itemDTOs
 	) {
-		var items = equippableItemConverter.convertBackList(itemDTOs, characterId.phaseId());
+		var items = equippableItemConverter.convertBackList(itemDTOs, playerId.phaseId());
 
-		var changedSlots = equipmentService.equipItemGroup(characterId, slotGroup, items);
+		var changedSlots = equipmentService.equipItemGroup(playerId, slotGroup, items);
 
-		log.info("Equipped items charId: {}, slotGroup: {}, items: {}", characterId, slotGroup, items);
+		log.info("Equipped items charId: {}, slotGroup: {}, items: {}", playerId, slotGroup, items);
 
 		return itemSlotStatusConverter.convertList(changedSlots);
 	}
 
-	@DeleteMapping("{characterId}")
+	@DeleteMapping("{playerId}")
 	public void resetEquipment(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		equipmentService.resetEquipment(characterId);
+		equipmentService.resetEquipment(playerId);
 
-		log.info("Reset charId: {}", characterId);
+		log.info("Reset charId: {}", playerId);
 	}
 
-	@GetMapping("{characterId}/socket-status")
+	@GetMapping("{playerId}/socket-status")
 	public EquipmentSocketStatusDTO getEquipmentSocketStatus(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var equipmentSocketStatus = equipmentService.getEquipmentSocketStatus(characterId);
+		var equipmentSocketStatus = equipmentService.getEquipmentSocketStatus(playerId);
 
 		return equipmentSocketStatusConverter.convert(equipmentSocketStatus);
 	}
 
-	@GetMapping("{characterId}/gear-set")
+	@GetMapping("{playerId}/gear-set")
 	public List<String> getAvailableGearSets(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var gearSets = equipmentService.getAvailableGearSets(characterId);
+		var gearSets = equipmentService.getAvailableGearSets(playerId);
 
 		return gearSets.stream()
 				.sorted(
@@ -110,27 +110,27 @@ public class EquipmentController {
 				.toList();
 	}
 
-	@GetMapping("{characterId}/gear-set/{gearSet}/equip")
+	@GetMapping("{playerId}/gear-set/{gearSet}/equip")
 	public EquipmentDTO equipGearSet(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("gearSet") String gearSet
 	) {
-		var player = equipmentService.equipGearSet(characterId, gearSet);
+		var player = equipmentService.equipGearSet(playerId, gearSet);
 		var equipment = player.getEquipment();
 
-		log.info("Equipped gear set: {}, charId: {}", gearSet, characterId);
+		log.info("Equipped gear set: {}, charId: {}", gearSet, playerId);
 
 		return equipmentConverter.convert(equipment);
 	}
 
-	@GetMapping("{characterId}/equip-previous-phase")
+	@GetMapping("{playerId}/equip-previous-phase")
 	public EquipmentDTO equipPreviousPhase(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = equipmentService.equipPreviousPhase(characterId);
+		var player = equipmentService.equipPreviousPhase(playerId);
 		var equipment = player.getEquipment();
 
-		log.info("Equipped previous phase, charId: {}", characterId);
+		log.info("Equipped previous phase, charId: {}", playerId);
 
 		return equipmentConverter.convert(equipment);
 	}

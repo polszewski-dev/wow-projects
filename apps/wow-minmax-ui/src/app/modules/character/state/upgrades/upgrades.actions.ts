@@ -5,12 +5,12 @@ import { Upgrade } from "../../model/upgrade/Upgrade";
 
 export const updateItemFilter = createAction(
 	"[Upgrades] Update Item Filter",
-	props<{ characterId: string, itemFilter: Partial<ItemFilter> }>()
+	props<{ playerId: string, itemFilter: Partial<ItemFilter> }>()
 );
 
 export const loadAllUpgrades = createAction(
 	"[Upgrades] Load All Upgrades",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadAllUpgradesSuccess = createAction(

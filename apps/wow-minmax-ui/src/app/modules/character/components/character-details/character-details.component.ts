@@ -15,17 +15,17 @@ export class CharacterDetailsComponent {
 
 	availableProfessions$ = this.character$.pipe(
 		filter(character => !!character),
-		switchMap(character => this.characterService.getAvailableProfessions(character!.characterId))
+		switchMap(character => this.characterService.getAvailableProfessions(character!.playerId))
 	);
 
 	availableExclusiveFactions$ = this.character$.pipe(
 		filter(character => !!character),
-		switchMap(character => this.characterService.getAvailableExclusiveFactions(character!.characterId))
+		switchMap(character => this.characterService.getAvailableExclusiveFactions(character!.playerId))
 	);
 
 	availableScripts$ = this.character$.pipe(
 		filter(character => !!character),
-		switchMap(character => this.characterService.getAvailableScripts(character!.characterId))
+		switchMap(character => this.characterService.getAvailableScripts(character!.playerId))
 	);
 
 	constructor(

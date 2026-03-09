@@ -26,14 +26,14 @@ public class PlayerProfile {
 	private CharacterClassId characterClassId;
 	private RaceId raceId;
 	private LocalDateTime lastModified;
-	private String lastModifiedCharacterId;
+	private String lastModifiedPlayerId;
 
 	public UUID getProfileIdAsUUID() {
 		return UUID.fromString(profileId);
 	}
 
-	public CharacterId getLastModifiedCharacterIdAsCharacterId() {
-		return CharacterId.parse(lastModifiedCharacterId);
+	public PlayerId getLastModifiedPlayerIdAsRecord() {
+		return PlayerId.parse(lastModifiedPlayerId);
 	}
 
 	public PlayerProfileInfo getProfileInfo() {
@@ -43,7 +43,7 @@ public class PlayerProfile {
 				characterClassId,
 				raceId,
 				lastModified,
-				getLastModifiedCharacterIdAsCharacterId()
+				getLastModifiedPlayerIdAsRecord()
 		);
 	}
 

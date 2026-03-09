@@ -21,7 +21,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getAbilityStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{characterId}/ability", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/stats/{playerId}/ability", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -29,7 +29,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getCharacterStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{characterId}/character", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/stats/{playerId}/character", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -37,7 +37,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getSpecialAbilityStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{characterId}/special", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/stats/{playerId}/special", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -45,7 +45,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getRotationStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{characterId}/rotation", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/stats/{playerId}/rotation", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -53,7 +53,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getTalentStats() throws Exception {
-		mockMvc.perform(get("/api/v1/stats/{characterId}/talent", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/stats/{playerId}/talent", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

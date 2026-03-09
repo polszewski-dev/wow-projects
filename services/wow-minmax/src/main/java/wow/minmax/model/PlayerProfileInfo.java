@@ -20,5 +20,5 @@ public class PlayerProfileInfo {
 	private final CharacterClassId characterClassId;
 	private final RaceId raceId;
 	private final LocalDateTime lastModified;
-	private final CharacterId lastUsedCharacterId;
+	private final PlayerId lastUsedPlayerId;
 }

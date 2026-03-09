@@ -27,7 +27,7 @@
 		<button
 			type="button"
 			class="btn btn-sm btn-link big-btn-link"
-			(click)="resetEquipment(data.characterId)"
+			(click)="resetEquipment(data.playerId)"
 		>Reset</button>
 	</div>
 
@@ -47,7 +47,7 @@
 						<a
 							ngbDropdownItem
 							href="#"
-							(click)="$event.preventDefault();equipGearSet(data.characterId, gearSet)"
+							(click)="$event.preventDefault();equipGearSet(data.playerId, gearSet)"
 							class="drop-down-select-item"
 						>{{gearSet}}</a>
 					}
@@ -55,13 +55,13 @@
 			</div>
 		</div>
 	</div>
-	
-	@if (hasPreviousPhase(data.characterId)) {
+
+	@if (hasPreviousPhase(data.playerId)) {
 		<div style="display: flex;justify-content: center;">
 			<button
 				type="button"
 				class="btn btn-sm btn-link big-btn-link"
-				(click)="equipPreviousPhase(data.characterId)"
+				(click)="equipPreviousPhase(data.playerId)"
 			>Equip Previous Phase</button>
 		</div>
 	}

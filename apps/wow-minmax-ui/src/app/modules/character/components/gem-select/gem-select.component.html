@@ -5,6 +5,6 @@
 		[value]="data.equippedItem.gems[socketNo]"
 		[elementComparator]="gemComparator"
 		[valueFormatter]="gemFormatter"
-		(valueChanged)="onGemChange(data.characterId, data.equippedItem, $event)"
+		(valueChanged)="onGemChange(data.playerId, data.equippedItem, $event)"
 	></app-dropdown-select>
 }

@@ -12,7 +12,7 @@ import { EquipmentDiff } from "../../model/equipment/ItemSlotStatus";
 import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
-	characterId: string | null;
+	playerId: string | null;
 	character: Loadable<Character | null>;
 	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>;
 	socketStatus: Loadable<EquipmentSocketStatus | null>;
@@ -22,7 +22,7 @@ export interface CharacterState {
 }
 
 const initialState: CharacterState = {
-	characterId: null,
+	playerId: null,
 	character: pending(null),
 	equipment: withAllSlotsSetTo(pending(null)),
 	socketStatus: pending(null),
@@ -33,9 +33,9 @@ const initialState: CharacterState = {
 
 export const characterReducer = createReducer(
 	initialState,
-	on(selectCharacter, (state, { characterId }) => ({
+	on(selectCharacter, (state, { playerId }) => ({
 		...state,
-		characterId
+		playerId
 	})),
 
 	on(loadCharacter, (state) => ({

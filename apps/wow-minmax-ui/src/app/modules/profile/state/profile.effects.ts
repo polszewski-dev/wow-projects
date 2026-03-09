@@ -27,7 +27,7 @@ export class ProfileEffects {
 		ofType(selectProfile),
 		tap(x => this.changeUrl(x.selectedProfile)),
 		map(x => selectCharacter({
-			characterId: x.selectedProfile ? x.selectedProfile.lastUsedCharacterId! : null
+			playerId: x.selectedProfile ? x.selectedProfile.lastUsedPlayerId! : null
 		}))
 	));
 

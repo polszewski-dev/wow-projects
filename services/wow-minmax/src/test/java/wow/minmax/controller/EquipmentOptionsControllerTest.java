@@ -22,7 +22,7 @@ class EquipmentOptionsControllerTest extends ControllerTest {
 
 	@Test
 	void getEquipmentOptions() throws Exception {
-		mockMvc.perform(get("/api/v1/equipment-options/{characterId}", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/equipment-options/{playerId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -30,7 +30,7 @@ class EquipmentOptionsControllerTest extends ControllerTest {
 
 	@Test
 	void getItemOptions() throws Exception {
-		mockMvc.perform(get("/api/v1/equipment-options/{characterId}/item/{slot}", CHARACTER_KEY, ItemSlot.CHEST))
+		mockMvc.perform(get("/api/v1/equipment-options/{playerId}/item/{slot}", CHARACTER_KEY, ItemSlot.CHEST))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -38,7 +38,7 @@ class EquipmentOptionsControllerTest extends ControllerTest {
 
 	@Test
 	void getEnchantOptions() throws Exception {
-		mockMvc.perform(get("/api/v1/equipment-options/{characterId}/enchant", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/equipment-options/{playerId}/enchant", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -46,7 +46,7 @@ class EquipmentOptionsControllerTest extends ControllerTest {
 
 	@Test
 	void getGemOptions() throws Exception {
-		mockMvc.perform(get("/api/v1/equipment-options/{characterId}/gem", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/equipment-options/{playerId}/gem", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

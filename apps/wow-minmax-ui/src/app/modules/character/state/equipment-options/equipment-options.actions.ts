@@ -7,7 +7,7 @@ import { ItemSlot } from '../../model/equipment/ItemSlot';
 
 export const loadEquipmentOptions = createAction(
 	"[Equipment Options] Load Equipment Options",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadEquipmentOptionsSuccess = createAction(
@@ -22,7 +22,7 @@ export const loadEquipmentOptionsFailure = createAction(
 
 export const loadItemOptions = createAction(
 	"[Equipment Options] Load Item Options",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadItemOptionsSuccess = createAction(
@@ -37,7 +37,7 @@ export const loadItemOptionsFailure = createAction(
 
 export const loadEnchantOptions = createAction(
 	"[Equipment Options] Load Enchant Options",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadEnchantOptionsSuccess = createAction(
@@ -52,7 +52,7 @@ export const loadEnchantOptionsFailure = createAction(
 
 export const loadGemOptions = createAction(
 	"[Equipment Options] Load Gem Options",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadGemOptionsSuccess = createAction(

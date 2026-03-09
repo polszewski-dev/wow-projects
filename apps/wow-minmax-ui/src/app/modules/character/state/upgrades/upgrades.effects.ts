@@ -19,15 +19,15 @@ export class UpgradesEffects {
 
 	upgradeListNeedsUpdate$ = createEffect(() => this.actions$.pipe(
 		ofType(selectCharacter, dpsChanged, updateItemFilter),
-		filter(({ characterId }) => !!characterId),
-		map(({ characterId }) => loadAllUpgrades({ characterId: characterId! }))
+		filter(({ playerId }) => !!playerId),
+		map(({ playerId }) => loadAllUpgrades({ playerId: playerId! }))
 	));
 
 	loadAllUpgrades$ = createEffect(() => this.actions$.pipe(
 		ofType(loadAllUpgrades),
 		withLatestFrom(this.store.select(selectItemFilter)),
-		switchMap(([{ characterId }, itemFilter]) => from(Object.values(ItemSlotGroup)).pipe(
-			mergeMap(slotGroup => this.upgradeService.getUpgrades(characterId!, slotGroup, itemFilter).pipe(
+		switchMap(([{ playerId }, itemFilter]) => from(Object.values(ItemSlotGroup)).pipe(
+			mergeMap(slotGroup => this.upgradeService.getUpgrades(playerId!, slotGroup, itemFilter).pipe(
 				map(upgrades => loadAllUpgradesSuccess({ slotGroup, upgrades })),
 				catchError(error => of(loadAllUpgradesFailure({ slotGroup, error })))
 			))

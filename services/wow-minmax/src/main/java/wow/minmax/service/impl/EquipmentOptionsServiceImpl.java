@@ -8,8 +8,8 @@ import wow.commons.model.categorization.ItemSubType;
 import wow.commons.model.categorization.ItemType;
 import wow.commons.model.item.Item;
 import wow.commons.model.item.SocketType;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.config.CharacterFeature;
 import wow.minmax.model.options.EnchantOptions;
 import wow.minmax.model.options.EquipmentOptions;
@@ -35,8 +35,8 @@ public class EquipmentOptionsServiceImpl implements EquipmentOptionsService {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
-	public EquipmentOptions getEquipmentOptions(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public EquipmentOptions getEquipmentOptions(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 		var gems = minmaxConfigRepository.hasFeature(player, CharacterFeature.GEMS);
 		var heroics = minmaxConfigRepository.hasFeature(player, CharacterFeature.HEROICS);
 
@@ -44,8 +44,8 @@ public class EquipmentOptionsServiceImpl implements EquipmentOptionsService {
 	}
 
 	@Override
-	public ItemOptions getItemOptions(CharacterId characterId, ItemSlot itemSlot) {
-		var player = playerService.getPlayer(characterId);
+	public ItemOptions getItemOptions(PlayerId playerId, ItemSlot itemSlot) {
+		var player = playerService.getPlayer(playerId);
 
 		return getItemOptions(player, itemSlot);
 	}
@@ -64,8 +64,8 @@ public class EquipmentOptionsServiceImpl implements EquipmentOptionsService {
 	}
 
 	@Override
-	public List<EnchantOptions> getEnchantOptions(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public List<EnchantOptions> getEnchantOptions(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 		var itemOptions = getItemOptions(player);
 
 		return itemOptions.stream()
@@ -96,8 +96,8 @@ public class EquipmentOptionsServiceImpl implements EquipmentOptionsService {
 	}
 
 	@Override
-	public List<GemOptions> getGemOptions(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public List<GemOptions> getGemOptions(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 
 		return Stream.of(SocketType.values())
 				.map(socketType -> getGemOptions(player, socketType))

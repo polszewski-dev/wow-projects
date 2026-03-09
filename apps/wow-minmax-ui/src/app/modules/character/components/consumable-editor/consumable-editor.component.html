@@ -7,7 +7,7 @@
 				type="checkbox"
 				id="consumable-select-{{consumable.id}}"
 				[(ngModel)]="consumableStatus.enabled"
-				(change)="onChange(data.characterId, consumableStatus)"
+				(change)="onChange(data.playerId, consumableStatus)"
 			>
 			<label class="form-check-label" for="consumable-select-{{consumable.id}}">
 				<app-description [source]="consumable" class="consumable-name"></app-description>

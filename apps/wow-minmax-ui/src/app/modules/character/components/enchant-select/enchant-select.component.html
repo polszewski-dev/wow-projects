@@ -5,6 +5,6 @@
 		[value]="data.equippedItem.enchant"
 		[elementComparator]="enchantComparator"
 		[valueFormatter]="enchantFormatter"
-		(valueChanged)="onChange(data.characterId, data.equippedItem, $event)"
+		(valueChanged)="onChange(data.playerId, data.equippedItem, $event)"
 	></app-dropdown-select>
 }

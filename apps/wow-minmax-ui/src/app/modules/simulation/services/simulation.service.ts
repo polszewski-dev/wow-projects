@@ -11,7 +11,7 @@ export class SimulationService {
 
 	constructor(private http: HttpClient) { }
 
-	simulate(characterId: string) {
-		return this.http.get<SimulationStats>(`${this.apiUrl}/${characterId}`);
+	simulate(playerId: string) {
+		return this.http.get<SimulationStats>(`${this.apiUrl}/${playerId}`);
 	}
 }

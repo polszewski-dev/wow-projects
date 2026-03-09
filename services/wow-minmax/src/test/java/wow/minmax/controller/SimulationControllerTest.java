@@ -21,7 +21,7 @@ class SimulationControllerTest extends ControllerTest {
 
 	@Test
 	void simulate() throws Exception {
-		mockMvc.perform(get("/api/v1/simulations/{characterId}", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/simulations/{playerId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

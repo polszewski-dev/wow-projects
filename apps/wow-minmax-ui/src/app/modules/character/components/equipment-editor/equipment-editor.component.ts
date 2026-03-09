@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { createSelector, Store } from '@ngrx/store';
 import { filter, switchMap } from 'rxjs';
 import { PhaseId } from 'src/app/modules/shared/model/character/PhaseId';
-import { parseCharacterId } from '../../model/CharacterId';
+import { parsePlayerId } from '../../model/PlayerId';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { ItemType } from '../../model/equipment/ItemType';
 import { EquipmentService } from '../../services/equipment.service';
 import { CharacterModuleState } from '../../state/character-module.state';
 import { equipGearSet, equipPreviousPhase, resetEquipment } from '../../state/character/character.actions';
-import { selectCharacterId, selectEquipment } from '../../state/character/character.selectors';
+import { selectPlayerId, selectEquipment } from '../../state/character/character.selectors';
 import { selectEquipmentOptions } from '../../state/equipment-options/equipment-options.selectors';
 
 @Component({
@@ -18,27 +18,27 @@ import { selectEquipmentOptions } from '../../state/equipment-options/equipment-
 })
 export class EquipmentEditorComponent {
 	readonly data$ = this.store.select(dataSelector);
-	readonly gearSets$ = this.store.select(selectCharacterId).pipe(
-		filter(characterId => !!characterId),
-		switchMap(characterId => this.equipmentService.getAvailableGearSets(characterId!))
+	readonly gearSets$ = this.store.select(selectPlayerId).pipe(
+		filter(playerId => !!playerId),
+		switchMap(playerId => this.equipmentService.getAvailableGearSets(playerId!))
 	);
 
 	constructor(private store: Store<CharacterModuleState>, private equipmentService: EquipmentService) {}
 
-	resetEquipment(characterId: string) {
-		this.store.dispatch(resetEquipment({ characterId }));
+	resetEquipment(playerId: string) {
+		this.store.dispatch(resetEquipment({ playerId }));
 	}
 
-	equipGearSet(characterId: string, gearSet: string) {
-		this.store.dispatch(equipGearSet({ characterId, gearSet }));
+	equipGearSet(playerId: string, gearSet: string) {
+		this.store.dispatch(equipGearSet({ playerId, gearSet }));
 	}
 
-	equipPreviousPhase(characterId: string) {
-		this.store.dispatch(equipPreviousPhase({ characterId }));
+	equipPreviousPhase(playerId: string) {
+		this.store.dispatch(equipPreviousPhase({ playerId }));
 	}
 
-	hasPreviousPhase(characterId: string) {
-		const phaseId = parseCharacterId(characterId).phaseId;
+	hasPreviousPhase(playerId: string) {
+		const phaseId = parsePlayerId(playerId).phaseId;
 		return phaseId.toLocaleLowerCase() !== PhaseId.VANILLA_P1.toLocaleLowerCase();
 	}
 
@@ -48,16 +48,16 @@ export class EquipmentEditorComponent {
 }
 
 const dataSelector = createSelector(
-	selectCharacterId,
+	selectPlayerId,
 	selectEquipment,
 	selectEquipmentOptions,
-	(characterId, equipment, equipmentOptions) => {
-		if (!characterId || !equipment || !equipmentOptions) {
+	(playerId, equipment, equipmentOptions) => {
+		if (!playerId || !equipment || !equipmentOptions) {
 			return null;
 		}
 
 		return {
-			characterId,
+			playerId,
 			equipment,
 			equipmentOptions,
 			canEditGems: equipmentOptions.editGems,

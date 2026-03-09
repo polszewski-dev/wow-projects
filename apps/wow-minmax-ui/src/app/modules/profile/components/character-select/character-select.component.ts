@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
-import { formatCharacterId, parseCharacterId } from 'src/app/modules/character/model/CharacterId';
+import { formatPlayerId, parsePlayerId } from 'src/app/modules/character/model/PlayerId';
 import { CharacterSelectionOptions } from 'src/app/modules/character/model/CharacterSelectionOptions';
 import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
 import { selectCharacter } from 'src/app/modules/character/state/character/character.actions';
-import { selectCharacterId } from 'src/app/modules/character/state/character/character.selectors';
+import { selectPlayerId } from 'src/app/modules/character/state/character/character.selectors';
 import { DropdownSelectValueFormatter, ElementComparatorFn } from 'src/app/modules/shared/components/dropdown-select/dropdown-select.component';
 import { EnemyType } from 'src/app/modules/shared/model/character/EnemyType';
 import { LevelDifference } from 'src/app/modules/shared/model/character/LevelDifference';
@@ -32,20 +32,20 @@ export class CharacterSelectComponent implements OnInit {
 
 	data$ = combineLatest({
 		profile: this.store.select(selectSelectedProfile),
-		characterId: this.store.select(selectCharacterId),
+		playerId: this.store.select(selectPlayerId),
 	}).pipe(
 		// p and c have either matching profileId or both are null
-		filter(({ profile, characterId }) => (!!profile && !!characterId && profile.profileId === parseCharacterId(characterId).profileId) || (!profile && !characterId)),
+		filter(({ profile, playerId }) => (!!profile && !!playerId && profile.profileId === parsePlayerId(playerId).profileId) || (!profile && !playerId)),
 		// attach options to the result
-		switchMap(({ profile, characterId }) => profile
+		switchMap(({ profile, playerId }) => profile
 			? this.profileService.getCharacterSelectionOptions(profile.profileId!).pipe(
-				map(characterSelectionOptions => ({ profile, characterId, characterSelectionOptions }))
+				map(characterSelectionOptions => ({ profile, playerId, characterSelectionOptions }))
 			)
-			: of({ profile: null, characterId: null, characterSelectionOptions: null })
+			: of({ profile: null, playerId: null, characterSelectionOptions: null })
 		),
-		tap(({ profile, characterId, characterSelectionOptions }) => {
+		tap(({ profile, playerId, characterSelectionOptions }) => {
 			if (profile) {
-				this.setSelectBoxes(characterId!, characterSelectionOptions!);
+				this.setSelectBoxes(playerId!, characterSelectionOptions!);
 			}
 		})
 	);
@@ -62,8 +62,8 @@ export class CharacterSelectComponent implements OnInit {
 		this.form.controls.levelDiff.valueChanges.subscribe(() => this.onFilterChange('levelDiff'));
 	}
 
-	private setSelectBoxes(selectedCharacterId: string, characterSelectionOptions: CharacterSelectionOptions) {
-		const parts = parseCharacterId(selectedCharacterId);
+	private setSelectBoxes(selectedPlayerId: string, characterSelectionOptions: CharacterSelectionOptions) {
+		const parts = parsePlayerId(selectedPlayerId);
 
 		this.form.setValue({
 			profileId: parts.profileId,
@@ -81,7 +81,7 @@ export class CharacterSelectComponent implements OnInit {
 			this.form.patchValue({ level: this.form.value.phase?.maxLevel }, { emitEvent: false });
 		}
 
-		const newCharacterId = formatCharacterId({
+		const newPlayerId = formatPlayerId({
 			profileId: this.form.value.profileId!,
 			phaseId: this.form.value.phase!.id,
 			level: this.form.value.level!,
@@ -89,7 +89,7 @@ export class CharacterSelectComponent implements OnInit {
 			enemyLevelDiff: this.form.value.levelDiff!.id
 		});
 
-		this.store.dispatch(selectCharacter({ characterId: newCharacterId }));
+		this.store.dispatch(selectCharacter({ playerId: newPlayerId }));
 	}
 
 	readonly phaseFormatter = new PhaseFormatter();

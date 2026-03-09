@@ -25,7 +25,7 @@ class ConsumableControllerTest extends ControllerTest {
 
 	@Test
 	void getConsumables() throws Exception {
-		mockMvc.perform(get("/api/v1/consumables/{characterId}", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/consumables/{playerId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -44,7 +44,7 @@ class ConsumableControllerTest extends ControllerTest {
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(consumableStatusDTO);
 
-		mockMvc.perform(put("/api/v1/consumables/{characterId}", CHARACTER_KEY)
+		mockMvc.perform(put("/api/v1/consumables/{playerId}", CHARACTER_KEY)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)

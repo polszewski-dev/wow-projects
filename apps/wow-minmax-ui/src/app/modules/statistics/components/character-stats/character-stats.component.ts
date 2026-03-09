@@ -15,9 +15,9 @@ export class CharacterStatsComponent {
 		change: this.store.select(selectDpsChanges),
 		character: this.store.select(selectCharacter),
 	}).pipe(
-		filter(({ change }) => !!change.characterId),
+		filter(({ change }) => !!change.playerId),
 		filter(({ character }) => !!character),
-		switchMap(({ character }) => this.statsService.getCharacterStats(character!.characterId).pipe(
+		switchMap(({ character }) => this.statsService.getCharacterStats(character!.playerId).pipe(
 			map(characterStats => ({ characterStats, character: character! }))
 		))
 	);

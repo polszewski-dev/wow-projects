@@ -27,7 +27,7 @@ class BuffControllerTest extends ControllerTest {
 
 	@Test
 	void getBuffs() throws Exception {
-		mockMvc.perform(get("/api/v1/buffs/{characterId}/{buffListType}", CHARACTER_KEY, CHARACTER_BUFF))
+		mockMvc.perform(get("/api/v1/buffs/{playerId}/{buffListType}", CHARACTER_KEY, CHARACTER_BUFF))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -46,7 +46,7 @@ class BuffControllerTest extends ControllerTest {
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(buffStatusDTO);
 
-		mockMvc.perform(put("/api/v1/buffs/{characterId}/{buffListType}", CHARACTER_KEY, CHARACTER_BUFF)
+		mockMvc.perform(put("/api/v1/buffs/{playerId}/{buffListType}", CHARACTER_KEY, CHARACTER_BUFF)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)

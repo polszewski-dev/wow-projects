@@ -11,11 +11,11 @@ export class ConsumableService {
 
 	constructor(private http: HttpClient) { }
 
-	getConsumableStatuses(characterId: string) {
-		return this.http.get<ConsumableStatus[]>(`${this.apiUrl}/${characterId}`);
+	getConsumableStatuses(playerId: string) {
+		return this.http.get<ConsumableStatus[]>(`${this.apiUrl}/${playerId}`);
 	}
 
-	changeConsumableStatus(characterId: string, consumable: ConsumableStatus) {
-		return this.http.put<ConsumableStatus[]>(`${this.apiUrl}/${characterId}`, consumable);
+	changeConsumableStatus(playerId: string, consumable: ConsumableStatus) {
+		return this.http.put<ConsumableStatus[]>(`${this.apiUrl}/${playerId}`, consumable);
 	}
 }

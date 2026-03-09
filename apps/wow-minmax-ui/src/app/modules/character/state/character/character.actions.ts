@@ -18,12 +18,12 @@ import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 
 export const selectCharacter = createAction(
 	"[Character] Select Character",
-	props<{ characterId: string | null }>()
+	props<{ playerId: string | null }>()
 );
 
 export const loadCharacter = createAction(
 	"[Character] Load Character",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadCharacterSuccess = createAction(
@@ -38,7 +38,7 @@ export const loadCharacterFailure = createAction(
 
 export const loadEquipment = createAction(
 	"[Character] Load Equipment",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadEquipmentSuccess = createAction(
@@ -53,7 +53,7 @@ export const loadEquipmentFailure = createAction(
 
 export const loadSocketStatus = createAction(
 	"[Character] Load Socket Status",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadSocketStatusSuccess = createAction(
@@ -68,7 +68,7 @@ export const loadSocketStatusFailure = createAction(
 
 export const loadBuffs = createAction(
 	"[Character] Load Buffs",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadBuffListSuccess = createAction(
@@ -83,7 +83,7 @@ export const loadBuffListFailure = createAction(
 
 export const loadConsumableStatuses = createAction(
 	"[Character] Load Consumable Statuses",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const loadConsumableStatusesSuccess = createAction(
@@ -98,12 +98,12 @@ export const loadConsumableStatusesFailure = createAction(
 
 export const equipItemBestVariant = createAction(
 	"[Character] Equip Item Best Variant",
-	props<{ characterId: string, itemSlot: ItemSlot, item: Item }>()
+	props<{ playerId: string, itemSlot: ItemSlot, item: Item }>()
 );
 
 export const equipItemBestVariantSuccess = createAction(
 	"[Character] Equip Item Best Variant Success",
-	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
+	props<{ playerId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipItemBestVariantFailure = createAction(
@@ -113,12 +113,12 @@ export const equipItemBestVariantFailure = createAction(
 
 export const equipItemGroup = createAction(
 	"[Character] Equip Item Group",
-	props<{ characterId: string, slotGroup: ItemSlotGroup, items: EquippableItem[] }>()
+	props<{ playerId: string, slotGroup: ItemSlotGroup, items: EquippableItem[] }>()
 );
 
 export const equipItemGroupSuccess = createAction(
 	"[Character] Equip Item Group Success",
-	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
+	props<{ playerId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipItemGroupFailure = createAction(
@@ -128,12 +128,12 @@ export const equipItemGroupFailure = createAction(
 
 export const equipEnchant = createAction(
 	"[Character] Equip Enchant",
-	props<{ characterId: string, equippedItem: EquippableItem, itemSlot: ItemSlot, enchant: Enchant }>()
+	props<{ playerId: string, equippedItem: EquippableItem, itemSlot: ItemSlot, enchant: Enchant }>()
 );
 
 export const equipEnchantSuccess = createAction(
 	"[Character] Equip Enchant Success",
-	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
+	props<{ playerId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipEnchantFailure = createAction(
@@ -143,12 +143,12 @@ export const equipEnchantFailure = createAction(
 
 export const equipGem = createAction(
 	"[Character] Equip Gem",
-	props<{ characterId: string, equippedItem: EquippableItem, itemSlot: ItemSlot, socketNo: number, gem: Gem }>()
+	props<{ playerId: string, equippedItem: EquippableItem, itemSlot: ItemSlot, socketNo: number, gem: Gem }>()
 );
 
 export const equipGemSuccess = createAction(
 	"[Character] Equip Gem Success",
-	props<{ characterId: string, equipmentDiff: EquipmentDiff }>()
+	props<{ playerId: string, equipmentDiff: EquipmentDiff }>()
 );
 
 export const equipGemFailure = createAction(
@@ -158,12 +158,12 @@ export const equipGemFailure = createAction(
 
 export const resetEquipment = createAction(
 	"[Character] Reset Equipment",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const resetEquipmentSuccess = createAction(
 	"[Character] Reset Equipment Success",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const resetEquipmentFailure = createAction(
@@ -173,12 +173,12 @@ export const resetEquipmentFailure = createAction(
 
 export const equipGearSet = createAction(
 	"[Character] Equip Gear Set",
-	props<{ characterId: string, gearSet: string }>()
+	props<{ playerId: string, gearSet: string }>()
 );
 
 export const equipGearSetSuccess = createAction(
 	"[Character] Equip Gear Set Success",
-	props<{ characterId: string, equipment: Equipment }>()
+	props<{ playerId: string, equipment: Equipment }>()
 );
 
 export const equipGearSetFailure = createAction(
@@ -188,12 +188,12 @@ export const equipGearSetFailure = createAction(
 
 export const equipPreviousPhase = createAction(
 	"[Character] Equip Previous Phase",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const equipPreviousPhaseSuccess = createAction(
 	"[Character] Equip Previous Phase Success",
-	props<{ characterId: string, equipment: Equipment }>()
+	props<{ playerId: string, equipment: Equipment }>()
 );
 
 export const equipPreviousPhaseFailure = createAction(
@@ -203,12 +203,12 @@ export const equipPreviousPhaseFailure = createAction(
 
 export const changeBuffStatus = createAction(
 	"[Character] Change Buff Status",
-	props<{ characterId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()
+	props<{ playerId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()
 );
 
 export const changeBuffStatusSuccess = createAction(
 	"[Character] Change Buff Status Success",
-	props<{ characterId: string, buffListType: BuffListType, buffStatusList: BuffStatus[] }>()
+	props<{ playerId: string, buffListType: BuffListType, buffStatusList: BuffStatus[] }>()
 );
 
 export const changeBuffStatusFailure = createAction(
@@ -218,12 +218,12 @@ export const changeBuffStatusFailure = createAction(
 
 export const changeConsumableStatus = createAction(
 	"[Character] Change Consumable Status",
-	props<{ characterId: string, consumableStatus: ConsumableStatus }>()
+	props<{ playerId: string, consumableStatus: ConsumableStatus }>()
 );
 
 export const changeConsumableStatusSuccess = createAction(
 	"[Character] Change Consumable Status Success",
-	props<{ characterId: string, consumableStatuses: ConsumableStatus[] }>()
+	props<{ playerId: string, consumableStatuses: ConsumableStatus[] }>()
 );
 
 export const changeConsumableStatusFailure = createAction(
@@ -233,17 +233,17 @@ export const changeConsumableStatusFailure = createAction(
 
 export const dpsChanged = createAction(
 	"[Character] Dps Changed",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const changeProfession = createAction(
 	"[Character] Change Profession",
-	props<{ characterId: string, professionIdx: number, profession: Profession }>()
+	props<{ playerId: string, professionIdx: number, profession: Profession }>()
 );
 
 export const changeProfessionSuccess = createAction(
 	"[Character] Change Profession Success",
-	props<{ characterId: string, character: Character }>()
+	props<{ playerId: string, character: Character }>()
 );
 
 export const changeProfessionFailure = createAction(
@@ -253,12 +253,12 @@ export const changeProfessionFailure = createAction(
 
 export const changeExclusiveFaction = createAction(
 	"[Character] Change Exclusive Faction",
-	props<{ characterId: string, exclusiveFaction: ExclusiveFaction }>()
+	props<{ playerId: string, exclusiveFaction: ExclusiveFaction }>()
 );
 
 export const changeExclusiveFactionSuccess = createAction(
 	"[Character] Change Exclusive Faction Success",
-	props<{ characterId: string }>()
+	props<{ playerId: string }>()
 );
 
 export const changeExclusiveFactionFailure = createAction(
@@ -268,12 +268,12 @@ export const changeExclusiveFactionFailure = createAction(
 
 export const changeTalentLink = createAction(
 	"[Character] Change Talent Link",
-	props<{ characterId: string, talentLink: string }>()
+	props<{ playerId: string, talentLink: string }>()
 );
 
 export const changeTalentLinkSuccess = createAction(
 	"[Character] Change Talent Link Success",
-	props<{ characterId: string, character: Character }>()
+	props<{ playerId: string, character: Character }>()
 );
 
 export const changeTalentLinkFailure = createAction(
@@ -283,12 +283,12 @@ export const changeTalentLinkFailure = createAction(
 
 export const changeScript = createAction(
 	"[Character] Change Script",
-	props<{ characterId: string, script: ScriptInfo }>()
+	props<{ playerId: string, script: ScriptInfo }>()
 );
 
 export const changeScriptSuccess = createAction(
 	"[Character] Change Script Success",
-	props<{ characterId: string, character: Character }>()
+	props<{ playerId: string, character: Character }>()
 );
 
 export const changeScriptFailure = createAction(

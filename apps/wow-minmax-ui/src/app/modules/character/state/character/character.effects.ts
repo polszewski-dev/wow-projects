@@ -24,23 +24,23 @@ export class CharacterEffects {
 
 	selectCharacter$ = createEffect(() => this.actions$.pipe(
 		ofType(selectCharacter),
-		filter(({ characterId }) => !!characterId),
-		switchMap(({ characterId }) => of(
-			loadCharacter({ characterId: characterId! }),
-			loadEquipment({ characterId: characterId! }),
-			loadSocketStatus({ characterId: characterId! }),
-			loadBuffs({ characterId: characterId! }),
-			loadConsumableStatuses({ characterId: characterId! }),
-			loadEquipmentOptions({ characterId: characterId! }),
-			loadItemOptions({ characterId: characterId! }),
-			loadEnchantOptions({ characterId: characterId! }),
-			loadGemOptions({ characterId: characterId! })
+		filter(({ playerId }) => !!playerId),
+		switchMap(({ playerId }) => of(
+			loadCharacter({ playerId: playerId! }),
+			loadEquipment({ playerId: playerId! }),
+			loadSocketStatus({ playerId: playerId! }),
+			loadBuffs({ playerId: playerId! }),
+			loadConsumableStatuses({ playerId: playerId! }),
+			loadEquipmentOptions({ playerId: playerId! }),
+			loadItemOptions({ playerId: playerId! }),
+			loadEnchantOptions({ playerId: playerId! }),
+			loadGemOptions({ playerId: playerId! })
 		))
 	));
 
 	loadCharacter$ = createEffect(() => this.actions$.pipe(
 		ofType(loadCharacter),
-		switchMap(({ characterId }) => this.characterService.getCharacter(characterId).pipe(
+		switchMap(({ playerId }) => this.characterService.getCharacter(playerId).pipe(
 			map(character => loadCharacterSuccess({ character })),
 			catchError(error => of(loadCharacterFailure({ error })))
 		))
@@ -48,7 +48,7 @@ export class CharacterEffects {
 
 	loadEquipment$ = createEffect(() => this.actions$.pipe(
 		ofType(loadEquipment),
-		switchMap(({ characterId }) => this.equipmentService.getEquipment(characterId).pipe(
+		switchMap(({ playerId }) => this.equipmentService.getEquipment(playerId).pipe(
 			map(equipment => loadEquipmentSuccess({ equipment })),
 			catchError(error => of(loadEquipmentFailure({ error })))
 		))
@@ -56,7 +56,7 @@ export class CharacterEffects {
 
 	loadSocketStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(loadSocketStatus),
-		switchMap(({ characterId }) => this.equipmentService.getSocketStatus(characterId).pipe(
+		switchMap(({ playerId }) => this.equipmentService.getSocketStatus(playerId).pipe(
 			map(socketStatus => loadSocketStatusSuccess({ socketStatus })),
 			catchError(error => of(loadSocketStatusFailure({ error })))
 		))
@@ -64,8 +64,8 @@ export class CharacterEffects {
 
 	loadBuffs$ = createEffect(() => this.actions$.pipe(
 		ofType(loadBuffs),
-		switchMap(({ characterId }) => from(Object.values(BuffListType)).pipe(
-			mergeMap(buffListType => this.buffService.getBuffStatuses(characterId, buffListType).pipe(
+		switchMap(({ playerId }) => from(Object.values(BuffListType)).pipe(
+			mergeMap(buffListType => this.buffService.getBuffStatuses(playerId, buffListType).pipe(
 				map(buffStatusList => loadBuffListSuccess({ buffListType, buffStatusList })),
 				catchError(error => of(loadBuffListFailure({ buffListType, error })))
 			))
@@ -74,7 +74,7 @@ export class CharacterEffects {
 
 	loadConsumables$ = createEffect(() => this.actions$.pipe(
 		ofType(loadConsumableStatuses),
-		switchMap(({ characterId }) => this.consumableService.getConsumableStatuses(characterId).pipe(
+		switchMap(({ playerId }) => this.consumableService.getConsumableStatuses(playerId).pipe(
 			map(consumableStatuses => loadConsumableStatusesSuccess({ consumableStatuses })),
 			catchError(error => of(loadConsumableStatusesFailure({ error })))
 		))
@@ -82,72 +82,72 @@ export class CharacterEffects {
 
 	equipItemBestVariant$ = createEffect(() => this.actions$.pipe(
 		ofType(equipItemBestVariant),
-		switchMap(({ characterId, itemSlot, item }) => this.equipmentService.equipItemBestVariant(characterId, itemSlot, item).pipe(
-			map(equipmentDiff => equipItemBestVariantSuccess({ characterId, equipmentDiff })),
+		switchMap(({ playerId, itemSlot, item }) => this.equipmentService.equipItemBestVariant(playerId, itemSlot, item).pipe(
+			map(equipmentDiff => equipItemBestVariantSuccess({ playerId, equipmentDiff })),
 			catchError(error => of(equipItemBestVariantFailure({ itemSlot, error })))
 		))
 	));
 
 	equipItemGroup$ = createEffect(() => this.actions$.pipe(
 		ofType(equipItemGroup),
-		switchMap(({ characterId, slotGroup, items }) => this.equipmentService.equipItems(characterId, slotGroup, items).pipe(
-			map(equipmentDiff => equipItemGroupSuccess({ characterId, equipmentDiff })),
+		switchMap(({ playerId, slotGroup, items }) => this.equipmentService.equipItems(playerId, slotGroup, items).pipe(
+			map(equipmentDiff => equipItemGroupSuccess({ playerId, equipmentDiff })),
 			catchError(error => of(equipItemGroupFailure({ slotGroup, error })))
 		))
 	));
 
 	equipEnchant$ = createEffect(() => this.actions$.pipe(
 		ofType(equipEnchant),
-		switchMap(({ characterId, equippedItem, itemSlot, enchant }) => this.equipmentService.equipEnchant(characterId, equippedItem, itemSlot, enchant).pipe(
-			map(equipmentDiff => equipEnchantSuccess({ characterId, equipmentDiff })),
+		switchMap(({ playerId, equippedItem, itemSlot, enchant }) => this.equipmentService.equipEnchant(playerId, equippedItem, itemSlot, enchant).pipe(
+			map(equipmentDiff => equipEnchantSuccess({ playerId, equipmentDiff })),
 			catchError(error => of(equipEnchantFailure({ itemSlot, error })))
 		))
 	));
 
 	equipGem$ = createEffect(() => this.actions$.pipe(
 		ofType(equipGem),
-		switchMap(({ characterId, equippedItem, itemSlot, socketNo, gem }) => this.equipmentService.equipGem(characterId, equippedItem, itemSlot, socketNo, gem).pipe(
-			map(equipmentDiff => equipGemSuccess({ characterId, equipmentDiff })),
+		switchMap(({ playerId, equippedItem, itemSlot, socketNo, gem }) => this.equipmentService.equipGem(playerId, equippedItem, itemSlot, socketNo, gem).pipe(
+			map(equipmentDiff => equipGemSuccess({ playerId, equipmentDiff })),
 			catchError(error => of(equipGemFailure({ itemSlot, socketNo, error })))
 		))
 	));
 
 	resetEquipment$ = createEffect(() => this.actions$.pipe(
 		ofType(resetEquipment),
-		switchMap(({ characterId }) => this.equipmentService.resetEquipment(characterId).pipe(
-			map(() => resetEquipmentSuccess({ characterId })),
+		switchMap(({ playerId }) => this.equipmentService.resetEquipment(playerId).pipe(
+			map(() => resetEquipmentSuccess({ playerId })),
 			catchError(error => of(resetEquipmentFailure({ error })))
 		))
 	));
 
 	equipGearSet$ = createEffect(() => this.actions$.pipe(
 		ofType(equipGearSet),
-		switchMap(({ characterId, gearSet }) => this.equipmentService.equipGearSet(characterId, gearSet).pipe(
-			map(equipment => equipGearSetSuccess({ characterId, equipment })),
+		switchMap(({ playerId, gearSet }) => this.equipmentService.equipGearSet(playerId, gearSet).pipe(
+			map(equipment => equipGearSetSuccess({ playerId, equipment })),
 			catchError(error => of(equipGearSetFailure({ error })))
 		))
 	));
 
 	equipPreviousPhase$ = createEffect(() => this.actions$.pipe(
 		ofType(equipPreviousPhase),
-		switchMap(({ characterId }) => this.equipmentService.equipPreviousPhase(characterId).pipe(
-			map(equipment => equipPreviousPhaseSuccess({ characterId, equipment })),
+		switchMap(({ playerId }) => this.equipmentService.equipPreviousPhase(playerId).pipe(
+			map(equipment => equipPreviousPhaseSuccess({ playerId, equipment })),
 			catchError(error => of(equipPreviousPhaseFailure({ error })))
 		))
 	));
 
 	changeBuffStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(changeBuffStatus),
-		switchMap(({ characterId, buffListType, buffStatus }) => this.buffService.changeBuffStatus(characterId, buffListType, buffStatus).pipe(
-			map(buffStatusList => changeBuffStatusSuccess({ characterId, buffListType, buffStatusList })),
+		switchMap(({ playerId, buffListType, buffStatus }) => this.buffService.changeBuffStatus(playerId, buffListType, buffStatus).pipe(
+			map(buffStatusList => changeBuffStatusSuccess({ playerId, buffListType, buffStatusList })),
 			catchError(error => of(changeBuffStatusFailure({ buffListType, error })))
 		))
 	));
 
 	changeConsumableStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(changeConsumableStatus),
-		switchMap(({ characterId, consumableStatus }) => this.consumableService.changeConsumableStatus(characterId, consumableStatus).pipe(
-			map(consumableStatuses => changeConsumableStatusSuccess({ characterId, consumableStatuses })),
+		switchMap(({ playerId, consumableStatus }) => this.consumableService.changeConsumableStatus(playerId, consumableStatus).pipe(
+			map(consumableStatuses => changeConsumableStatusSuccess({ playerId, consumableStatuses })),
 			catchError(error => of(changeConsumableStatusFailure({ error })))
 		))
 	));
@@ -168,7 +168,7 @@ export class CharacterEffects {
 			changeTalentLinkSuccess,
 			changeScriptSuccess,
 		),
-		map(({ characterId }) => dpsChanged({ characterId: characterId! })
+		map(({ playerId }) => dpsChanged({ playerId: playerId! })
 	)));
 
 	socketStatusNeedsUpdate$ = createEffect(() => this.actions$.pipe(
@@ -180,37 +180,37 @@ export class CharacterEffects {
 			equipGearSetSuccess,
 			equipPreviousPhaseSuccess
 		),
-		map(({ characterId }) => loadSocketStatus({ characterId }))
+		map(({ playerId }) => loadSocketStatus({ playerId }))
 	));
 
 	changeProfession$ = createEffect(() => this.actions$.pipe(
 		ofType(changeProfession),
-		switchMap(({ characterId, professionIdx, profession }) => this.characterService.changeProfession(characterId, professionIdx, profession).pipe(
-			map(character => changeProfessionSuccess({ characterId, character })),
+		switchMap(({ playerId, professionIdx, profession }) => this.characterService.changeProfession(playerId, professionIdx, profession).pipe(
+			map(character => changeProfessionSuccess({ playerId, character })),
 			catchError(error => of(changeProfessionFailure({ error })))
 		))
 	));
 
 	changeExclusiveFaction$ = createEffect(() => this.actions$.pipe(
 		ofType(changeExclusiveFaction),
-		switchMap(({ characterId, exclusiveFaction }) => this.characterService.changeExclusiveFaction(characterId, exclusiveFaction).pipe(
-			map(character => changeExclusiveFactionSuccess({ characterId })),
+		switchMap(({ playerId, exclusiveFaction }) => this.characterService.changeExclusiveFaction(playerId, exclusiveFaction).pipe(
+			map(character => changeExclusiveFactionSuccess({ playerId })),
 			catchError(error => of(changeExclusiveFactionFailure({ error })))
 		))
 	));
 
 	changeTalentLink$ = createEffect(() => this.actions$.pipe(
 		ofType(changeTalentLink),
-		switchMap(({ characterId, talentLink }) => this.characterService.changeTalentLink(characterId, talentLink).pipe(
-			map(character => changeTalentLinkSuccess({ characterId, character })),
+		switchMap(({ playerId, talentLink }) => this.characterService.changeTalentLink(playerId, talentLink).pipe(
+			map(character => changeTalentLinkSuccess({ playerId, character })),
 			catchError(error => of(changeTalentLinkFailure({ error })))
 		))
 	));
 
 	changeScript$ = createEffect(() => this.actions$.pipe(
 		ofType(changeScript),
-		switchMap(({ characterId, script }) => this.characterService.changeScript(characterId, script).pipe(
-			map(character => changeScriptSuccess({ characterId, character })),
+		switchMap(({ playerId, script }) => this.characterService.changeScript(playerId, script).pipe(
+			map(character => changeScriptSuccess({ playerId, character })),
 			catchError(error => of(changeScriptFailure({ error })))
 		))
 	));
@@ -220,7 +220,7 @@ export class CharacterEffects {
 			changeProfessionSuccess,
 			changeExclusiveFactionSuccess,
 		),
-		map(({ characterId }) => loadItemOptions( { characterId })),
+		map(({ playerId }) => loadItemOptions( { playerId })),
 	));
 
 	enchantOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
@@ -228,7 +228,7 @@ export class CharacterEffects {
 			changeProfessionSuccess,
 			changeExclusiveFactionSuccess,
 		),
-		map(({ characterId }) => loadEnchantOptions( { characterId })),
+		map(({ playerId }) => loadEnchantOptions( { playerId })),
 	));
 
 	gemOptionsNeedReload$ = createEffect(() => this.actions$.pipe(
@@ -236,7 +236,7 @@ export class CharacterEffects {
 			changeProfessionSuccess,
 			changeExclusiveFactionSuccess,
 		),
-		map(({ characterId }) => loadGemOptions({ characterId })),
+		map(({ playerId }) => loadGemOptions({ playerId })),
 	));
 
 	equipmentNeedsReload$ = createEffect(() => this.actions$.pipe(
@@ -244,14 +244,14 @@ export class CharacterEffects {
 			changeProfessionSuccess,
 			changeExclusiveFactionSuccess,
 		),
-		map(({ characterId }) => loadEquipment({ characterId }))
+		map(({ playerId }) => loadEquipment({ playerId }))
 	));
 
 	buffsNeedReload$ = createEffect(() => this.actions$.pipe(
 		ofType(
 			changeTalentLinkSuccess,
 		),
-		map(({ characterId }) => loadBuffs({ characterId }))
+		map(({ playerId }) => loadBuffs({ playerId }))
 	));
 
 	changeTalentLinkFailure$ = createEffect(() => this.actions$.pipe(

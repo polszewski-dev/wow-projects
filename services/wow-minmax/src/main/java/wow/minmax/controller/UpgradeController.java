@@ -8,7 +8,7 @@ import wow.minmax.client.dto.upgrade.UpgradeDTO;
 import wow.minmax.converter.dto.equipment.ParamToGemFilterConverter;
 import wow.minmax.converter.dto.equipment.ParamToItemFilterConverter;
 import wow.minmax.converter.dto.upgrade.UpgradeConverter;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.service.PlayerService;
 import wow.minmax.service.UpgradeService;
 
@@ -31,13 +31,13 @@ public class UpgradeController {
 	private final ParamToItemFilterConverter paramToItemFilterConverter;
 	private final ParamToGemFilterConverter paramToGemFilterConverter;
 
-	@GetMapping("{characterId}/slot/{slotGroup}")
+	@GetMapping("{playerId}/slot/{slotGroup}")
 	public List<UpgradeDTO> findUpgrades(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("slotGroup") ItemSlotGroup slotGroup,
 			@RequestParam Map<String, String> requestParams
 	) {
-		var player = playerService.getPlayer(characterId);
+		var player = playerService.getPlayer(playerId);
 		var itemFilter = paramToItemFilterConverter.convert(requestParams);
 		var gemFilter = paramToGemFilterConverter.convert(requestParams);
 

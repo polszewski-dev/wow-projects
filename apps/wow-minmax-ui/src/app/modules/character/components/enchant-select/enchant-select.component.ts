@@ -9,7 +9,7 @@ import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { CharacterModuleState } from '../../state/character-module.state';
 import { equipEnchant } from '../../state/character/character.actions';
-import { selectCharacterId, selectEquipmentSlot } from '../../state/character/character.selectors';
+import { selectPlayerId, selectEquipmentSlot } from '../../state/character/character.selectors';
 import { selectEnchantOptions } from '../../state/equipment-options/equipment-options.selectors';
 
 @Component({
@@ -28,8 +28,8 @@ export class EnchantSelectComponent implements OnInit {
 		this.data$ = this.store.select(createDataSelector(this.itemSlot));
 	}
 
-	onChange(characterId: string, equippedItem: EquippableItem, enchant: Enchant) {
-		this.store.dispatch(equipEnchant({ characterId, equippedItem, itemSlot: this.itemSlot, enchant }));
+	onChange(playerId: string, equippedItem: EquippableItem, enchant: Enchant) {
+		this.store.dispatch(equipEnchant({ playerId, equippedItem, itemSlot: this.itemSlot, enchant }));
 	}
 
 	readonly enchantFormatter = new EnchantFormatter();
@@ -37,18 +37,18 @@ export class EnchantSelectComponent implements OnInit {
 }
 
 type DataView = {
-	characterId: string;
+	playerId: string;
 	equippedItem: EquippableItem;
 	enchantOptions: Enchant[];
 } | null;
 
 function createDataSelector(itemSlot: ItemSlot) {
 	return createSelector(
-		selectCharacterId,
+		selectPlayerId,
 		selectEquipmentSlot(itemSlot),
 		selectEnchantOptions,
-		(characterId, equippedItem, enchantOptions): DataView => {
-			if (!characterId || !equippedItem) {
+		(playerId, equippedItem, enchantOptions): DataView => {
+			if (!playerId || !equippedItem) {
 				return null;
 			}
 
@@ -59,7 +59,7 @@ function createDataSelector(itemSlot: ItemSlot) {
 			}
 
 			return {
-				characterId,
+				playerId,
 				equippedItem,
 				enchantOptions: filteredEnchantOptions
 			};

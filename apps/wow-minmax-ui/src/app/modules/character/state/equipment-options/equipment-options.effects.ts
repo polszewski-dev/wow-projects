@@ -17,7 +17,7 @@ export class EquipmentOptionsEffects {
 
 	loadEquipmentOptions$ = createEffect(() => this.actions$.pipe(
 		ofType(loadEquipmentOptions),
-		switchMap(({ characterId }) => this.equipmentOptionsService.getEquipmentOptions(characterId).pipe(
+		switchMap(({ playerId }) => this.equipmentOptionsService.getEquipmentOptions(playerId).pipe(
 			map(equipmentOptions => loadEquipmentOptionsSuccess({ equipmentOptions })),
 			catchError(error => of(loadEquipmentOptionsFailure({ error })))
 		))
@@ -25,9 +25,9 @@ export class EquipmentOptionsEffects {
 
 	loadItemOptions$ = createEffect(() => this.actions$.pipe(
 		ofType(loadItemOptions),
-		switchMap(({ characterId }) => from(Object.values(ItemSlot)).pipe(
+		switchMap(({ playerId }) => from(Object.values(ItemSlot)).pipe(
 			filter(itemSlot => itemSlot !== ItemSlot.FINGER_2 && itemSlot !== ItemSlot.TRINKET_2),
-			mergeMap(itemSlot => this.equipmentOptionsService.getItemOptions(characterId, itemSlot).pipe(
+			mergeMap(itemSlot => this.equipmentOptionsService.getItemOptions(playerId, itemSlot).pipe(
 				map(itemOptions => loadItemOptionsSuccess({ itemSlot, itemOptions })),
 				catchError(error => of(loadItemOptionsFailure({ itemSlot, error })))
 			))
@@ -36,7 +36,7 @@ export class EquipmentOptionsEffects {
 
 	loadEnchantOptions$ = createEffect(() => this.actions$.pipe(
 		ofType(loadEnchantOptions),
-		switchMap(({ characterId }) => this.equipmentOptionsService.getEnchantOptions(characterId).pipe(
+		switchMap(({ playerId }) => this.equipmentOptionsService.getEnchantOptions(playerId).pipe(
 			map(enchantOptions => loadEnchantOptionsSuccess({ enchantOptions })),
 			catchError(error => of(loadEnchantOptionsFailure({ error })))
 		))
@@ -44,7 +44,7 @@ export class EquipmentOptionsEffects {
 
 	loadGemOptions$ = createEffect(() => this.actions$.pipe(
 		ofType(loadGemOptions),
-		switchMap(({ characterId }) => this.equipmentOptionsService.getGemOptions(characterId).pipe(
+		switchMap(({ playerId }) => this.equipmentOptionsService.getGemOptions(playerId).pipe(
 			map(gemOptions => loadGemOptionsSuccess({ gemOptions })),
 			catchError(error => of(loadGemOptionsFailure({ error })))
 		))

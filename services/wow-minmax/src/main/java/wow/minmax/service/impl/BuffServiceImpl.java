@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import wow.character.model.character.BuffListType;
 import wow.commons.model.buff.BuffId;
 import wow.minmax.model.BuffStatus;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.service.BuffService;
 import wow.minmax.service.PlayerService;
 
@@ -22,8 +22,8 @@ public class BuffServiceImpl implements BuffService {
 	private final PlayerService playerService;
 
 	@Override
-	public List<BuffStatus> getBuffStatuses(CharacterId characterId, BuffListType buffListType) {
-		var player = playerService.getPlayer(characterId);
+	public List<BuffStatus> getBuffStatuses(PlayerId playerId, BuffListType buffListType) {
+		var player = playerService.getPlayer(playerId);
 
 		return getBuffStatuses(player, buffListType);
 	}
@@ -38,12 +38,12 @@ public class BuffServiceImpl implements BuffService {
 	}
 
 	@Override
-	public Player changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, boolean enabled) {
-		var player = playerService.getPlayer(characterId);
+	public Player changeBuffStatus(PlayerId playerId, BuffListType buffListType, BuffId buffId, boolean enabled) {
+		var player = playerService.getPlayer(playerId);
 
 		player.getBuffList(buffListType).enable(buffId, enabled);
 
-		playerService.saveCharacter(characterId, player);
+		playerService.saveCharacter(playerId, player);
 
 		return player;
 	}

@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { createSelector, Store } from '@ngrx/store';
 import { filter, tap } from 'rxjs';
 import { CharacterModuleState } from '../../state/character-module.state';
-import { selectCharacterId } from '../../state/character/character.selectors';
+import { selectPlayerId } from '../../state/character/character.selectors';
 import { selectEquipmentOptions } from '../../state/equipment-options/equipment-options.selectors';
 import { updateItemFilter } from '../../state/upgrades/upgrades.actions';
 import { selectItemFilter } from '../../state/upgrades/upgrades.selectors';
@@ -23,11 +23,11 @@ export class ItemFilterComponent {
 		legendaries: false
 	});
 
-	characterId!: string;
+	playerId!: string;
 
 	$data = this.store.select(dataSelector).pipe(
 		filter(x => !!x),
-		tap(x => this.characterId = x!.characterId),
+		tap(x => this.playerId = x!.playerId),
 		tap(x => this.form.patchValue(x!.itemFilter, { emitEvent: false }))
 	)
 
@@ -38,22 +38,22 @@ export class ItemFilterComponent {
 
 	ngOnInit(): void {
 		this.form.valueChanges.subscribe(value => {
-			this.store.dispatch(updateItemFilter({ characterId: this.characterId, itemFilter: value }));
+			this.store.dispatch(updateItemFilter({ playerId: this.playerId, itemFilter: value }));
 		});
 	}
 }
 
 const dataSelector = createSelector(
-	selectCharacterId,
+	selectPlayerId,
 	selectItemFilter,
 	selectEquipmentOptions,
-	(characterId, itemFilter, equipmentOptions) => {
-		if (!characterId || !equipmentOptions) {
+	(playerId, itemFilter, equipmentOptions) => {
+		if (!playerId || !equipmentOptions) {
 			return null;
 		}
 
 		return {
-			characterId,
+			playerId,
 			itemFilter,
 			equipmentOptions
 		}

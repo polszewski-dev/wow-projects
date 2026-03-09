@@ -7,7 +7,7 @@ import java.util.List;
  * Date: 2023-04-09
  */
 public record PlayerInfoDTO(
-		String characterId,
+		String playerId,
 		CharacterClassDTO characterClass,
 		RaceDTO race,
 		List<ProfessionDTO> professions,

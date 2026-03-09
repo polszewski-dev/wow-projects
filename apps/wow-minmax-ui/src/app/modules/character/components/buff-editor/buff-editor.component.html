@@ -7,7 +7,7 @@
 				type="checkbox"
 				id="buff-select-{{buff.id}}"
 				[(ngModel)]="buffStatus.enabled"
-				(change)="onChange(data.characterId, buffStatus)"
+				(change)="onChange(data.playerId, buffStatus)"
 			>
 			<label class="form-check-label" for="buff-select-{{buff.id}}">
 				<app-description [source]="buff" class="buff-name"></app-description>

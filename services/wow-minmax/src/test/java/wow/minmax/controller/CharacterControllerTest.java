@@ -29,7 +29,7 @@ class CharacterControllerTest extends ControllerTest {
 
 	@Test
 	void testGetCharacter() throws Exception {
-		mockMvc.perform(get("/api/v1/characters/{characterId}", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/characters/{playerId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -37,7 +37,7 @@ class CharacterControllerTest extends ControllerTest {
 
 	@Test
 	void getAvailableProfessions() throws Exception {
-		mockMvc.perform(get("/api/v1/characters/{characterId}/professions", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/characters/{playerId}/professions", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -57,7 +57,7 @@ class CharacterControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(professionDTO);
 
 		mockMvc.perform(
-				put("/api/v1/characters/{characterId}/professions/{index}", CHARACTER_KEY, 1)
+				put("/api/v1/characters/{playerId}/professions/{index}", CHARACTER_KEY, 1)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 				)
@@ -68,7 +68,7 @@ class CharacterControllerTest extends ControllerTest {
 
 	@Test
 	void getAvailableExclusiveFactions() throws Exception {
-		mockMvc.perform(get("/api/v1/characters/{characterId}/xfactions", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/characters/{playerId}/xfactions", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -86,7 +86,7 @@ class CharacterControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(exclusiveFactionDTO);
 
 		mockMvc.perform(
-						put("/api/v1/characters/{characterId}/xfactions", CHARACTER_KEY)
+						put("/api/v1/characters/{playerId}/xfactions", CHARACTER_KEY)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)
@@ -102,7 +102,7 @@ class CharacterControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(talentLink);
 
 		mockMvc.perform(
-						put("/api/v1/characters/{characterId}/talents", CHARACTER_KEY)
+						put("/api/v1/characters/{playerId}/talents", CHARACTER_KEY)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)
@@ -113,7 +113,7 @@ class CharacterControllerTest extends ControllerTest {
 
 	@Test
 	void getAvailableScripts() throws Exception {
-		mockMvc.perform(get("/api/v1/characters/{characterId}/scripts", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/characters/{playerId}/scripts", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -130,7 +130,7 @@ class CharacterControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(scriptInfoDTO);
 
 		mockMvc.perform(
-						put("/api/v1/characters/{characterId}/scripts", CHARACTER_KEY)
+						put("/api/v1/characters/{playerId}/scripts", CHARACTER_KEY)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)

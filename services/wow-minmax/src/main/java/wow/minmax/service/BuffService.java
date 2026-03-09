@@ -3,8 +3,8 @@ package wow.minmax.service;
 import wow.character.model.character.BuffListType;
 import wow.commons.model.buff.BuffId;
 import wow.minmax.model.BuffStatus;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import java.util.List;
  * Date: 2025-08-29
  */
 public interface BuffService {
-	List<BuffStatus> getBuffStatuses(CharacterId characterId, BuffListType buffListType);
+	List<BuffStatus> getBuffStatuses(PlayerId playerId, BuffListType buffListType);
 
 	List<BuffStatus> getBuffStatuses(Player player, BuffListType buffListType);
 
-	Player changeBuffStatus(CharacterId characterId, BuffListType buffListType, BuffId buffId, boolean enabled);
+	Player changeBuffStatus(PlayerId playerId, BuffListType buffListType, BuffId buffId, boolean enabled);
 }

@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2023-04-01
  */
-public record CharacterId(
+public record PlayerId(
 		UUID profileId,
 		PhaseId phaseId,
 		int level,
@@ -21,17 +21,27 @@ public record CharacterId(
 ) {
 	private static final String SEPARATOR = ",";
 
-	public static CharacterId parse(String value) {
+	public static PlayerId parse(String value) {
 		if (value == null) {
 			return null;
 		}
 		var parts = value.split(SEPARATOR);
-		return new CharacterId(
+		return new PlayerId(
 				UUID.fromString(parts[0]),
 				PhaseId.parse(parts[1]),
 				Integer.parseInt(parts[2]),
 				CreatureType.parse(parts[3]),
 				Integer.parseInt(parts[4])
+		);
+	}
+
+	public PlayerId getPreviousPhasePlayerId() {
+		return new PlayerId(
+				profileId,
+				phaseId.getPreviousPhase().orElseThrow(),
+				level,
+				enemyType,
+				enemyLevelDiff
 		);
 	}
 

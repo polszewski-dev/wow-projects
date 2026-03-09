@@ -8,7 +8,7 @@ import wow.commons.repository.character.CharacterClassRepository;
 import wow.commons.repository.character.RaceRepository;
 import wow.minmax.client.dto.PlayerProfileInfoDTO;
 import wow.minmax.config.ProfileConfig;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.PlayerProfileInfo;
 
 /**
@@ -38,7 +38,7 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 				characterClassConverter.convert(characterClass),
 				raceConverter.convert(race),
 				source.getLastModified(),
-				source.getLastUsedCharacterId().toString()
+				source.getLastUsedPlayerId().toString()
 		);
 	}
 
@@ -50,7 +50,7 @@ public class PlayerProfileInfoConverter implements Converter<PlayerProfileInfo, 
 				source.characterClass().id(),
 				source.race().id(),
 				source.lastModified(),
-				CharacterId.parse(source.lastUsedCharacterId())
+				PlayerId.parse(source.lastUsedPlayerId())
 		);
 	}
 }

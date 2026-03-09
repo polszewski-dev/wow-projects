@@ -19,61 +19,61 @@ export class EquipmentService {
 
 	constructor(private http: HttpClient) {}
 
-	getEquipment(characterId: string) {
-		return this.http.get<Equipment>(`${this.apiUrl}/${characterId}`);
+	getEquipment(playerId: string) {
+		return this.http.get<Equipment>(`${this.apiUrl}/${playerId}`);
 	}
 
-	equipItemBestVariant(characterId: string, itemSlot: ItemSlot, item: Item) {
+	equipItemBestVariant(playerId: string, itemSlot: ItemSlot, item: Item) {
 		var equippableItem: EquippableItem = {
 			item,
 			enchant: null,
 			gems: []
 		};
-		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${characterId}/slot/${itemSlot}?best-variant=true`, equippableItem);
+		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${playerId}/slot/${itemSlot}?best-variant=true`, equippableItem);
 	}
 
-	equipItem(characterId: string, itemSlot: ItemSlot, item: EquippableItem | null) {
-		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${characterId}/slot/${itemSlot}`, item);
+	equipItem(playerId: string, itemSlot: ItemSlot, item: EquippableItem | null) {
+		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${playerId}/slot/${itemSlot}`, item);
 	}
 
-	equipEnchant(characterId: string, item: EquippableItem, itemSlot: ItemSlot, enchant: Enchant | null) {
+	equipEnchant(playerId: string, item: EquippableItem, itemSlot: ItemSlot, enchant: Enchant | null) {
 		const newItem = {
 			...item,
 			enchant
 		};
-		return this.equipItem(characterId, itemSlot, newItem);
+		return this.equipItem(playerId, itemSlot, newItem);
 	}
 
-	equipGem(characterId: string, item: EquippableItem, itemSlot: ItemSlot, socketNo: number, gem: Gem | null) {
+	equipGem(playerId: string, item: EquippableItem, itemSlot: ItemSlot, socketNo: number, gem: Gem | null) {
 		const newItem = {
 			...item,
 			gems: [ ...item.gems ]
 		};
 		newItem.gems[socketNo] = gem;
-		return this.equipItem(characterId, itemSlot, newItem);
+		return this.equipItem(playerId, itemSlot, newItem);
 	}
 
-	equipItems(characterId: string, slotGroup: ItemSlotGroup, items: EquippableItem[]) {
-		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${characterId}/slot-group/${slotGroup}`, items);
+	equipItems(playerId: string, slotGroup: ItemSlotGroup, items: EquippableItem[]) {
+		return this.http.put<EquipmentDiff>(`${this.apiUrl}/${playerId}/slot-group/${slotGroup}`, items);
 	}
 
-	resetEquipment(characterId: string) {
-		return this.http.delete<void>(`${this.apiUrl}/${characterId}`);
+	resetEquipment(playerId: string) {
+		return this.http.delete<void>(`${this.apiUrl}/${playerId}`);
 	}
 
-	getAvailableGearSets(characterId: string) {
-		return this.http.get<string[]>(`${this.apiUrl}/${characterId}/gear-set`);
+	getAvailableGearSets(playerId: string) {
+		return this.http.get<string[]>(`${this.apiUrl}/${playerId}/gear-set`);
 	}
 
-	equipGearSet(characterId: string, gearSet: string) {
-		return this.http.get<Equipment>(`${this.apiUrl}/${characterId}/gear-set/${gearSet}/equip`);
+	equipGearSet(playerId: string, gearSet: string) {
+		return this.http.get<Equipment>(`${this.apiUrl}/${playerId}/gear-set/${gearSet}/equip`);
 	}
 
-	equipPreviousPhase(characterId: string) {
-		return this.http.get<Equipment>(`${this.apiUrl}/${characterId}/equip-previous-phase`);
+	equipPreviousPhase(playerId: string) {
+		return this.http.get<Equipment>(`${this.apiUrl}/${playerId}/equip-previous-phase`);
 	}
 
-	getSocketStatus(characterId: string) {
-		return this.http.get<EquipmentSocketStatus>(`${this.apiUrl}/${characterId}/socket-status`);
+	getSocketStatus(playerId: string) {
+		return this.http.get<EquipmentSocketStatus>(`${this.apiUrl}/${playerId}/socket-status`);
 	}
 }

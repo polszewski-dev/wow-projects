@@ -9,7 +9,7 @@ import { Item } from '../../model/equipment/Item';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { CharacterModuleState } from '../../state/character-module.state';
 import { equipItemBestVariant } from '../../state/character/character.actions';
-import { selectCharacterId, selectEquipmentSlot } from '../../state/character/character.selectors';
+import { selectPlayerId, selectEquipmentSlot } from '../../state/character/character.selectors';
 import { selectItemOptions } from '../../state/equipment-options/equipment-options.selectors';
 
 @Component({
@@ -28,8 +28,8 @@ export class ItemSelectComponent implements OnInit {
 		this.data$ = this.store.select(createDataSelector(this.itemSlot));
 	}
 
-	onChange(characterId: string, item: Item) {
-		this.store.dispatch(equipItemBestVariant({ characterId, itemSlot: this.itemSlot, item }));
+	onChange(playerId: string, item: Item) {
+		this.store.dispatch(equipItemBestVariant({ playerId, itemSlot: this.itemSlot, item }));
 	}
 
 	readonly itemFormatter = new ItemFormatter();
@@ -39,23 +39,23 @@ export class ItemSelectComponent implements OnInit {
 }
 
 type DataView = {
-	characterId: string;
+	playerId: string;
     equippedItem: EquippableItem | null;
     itemOptions: Item[];
 } | null;
 
 function createDataSelector(itemSlot: ItemSlot) {
 	return createSelector(
-		selectCharacterId,
+		selectPlayerId,
 		selectEquipmentSlot(itemSlot),
 		selectItemOptions(itemSlot),
-		(characterId, equippedItem, itemOptions): DataView => {
-			if (!characterId) {
+		(playerId, equippedItem, itemOptions): DataView => {
+			if (!playerId) {
 				return null;
 			}
 
 			return {
-				characterId,
+				playerId,
 				equippedItem,
 				itemOptions: itemOptions?.items || []
 			};

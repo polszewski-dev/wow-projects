@@ -11,9 +11,9 @@ import wow.commons.model.item.Consumable;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.TalentId;
 import wow.minmax.converter.db.equipment.EquipmentConfigConverter;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.db.PlayerConfig;
 import wow.minmax.model.impl.PlayerImpl;
 
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Component
 @AllArgsConstructor
-public class PlayerConfigConverter implements ParametrizedConverter<Player, PlayerConfig, CharacterId>, BackConverter<Player, PlayerConfig> {
+public class PlayerConfigConverter implements ParametrizedConverter<Player, PlayerConfig, PlayerId>, BackConverter<Player, PlayerConfig> {
 	private final BuildConfigConverter buildConfigConverter;
 	private final EquipmentConfigConverter equipmentConfigConverter;
 	private final CharacterProfessionConfigConverter characterProfessionConfigConverter;
@@ -34,7 +34,7 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 	private final CharacterService characterService;
 
 	@Override
-	public PlayerConfig doConvert(Player source, CharacterId characterId) {
+	public PlayerConfig doConvert(Player source, PlayerId playerId) {
 		var buffIds = source.getBuffs().getStream()
 				.map(Buff::getId)
 				.map(BuffId::value)
@@ -46,7 +46,7 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 				.toList();
 
 		return new PlayerConfig(
-				characterId.toString(),
+				playerId.toString(),
 				source.getName(),
 				source.getCharacterClassId(),
 				source.getRaceId(),

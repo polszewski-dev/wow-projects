@@ -4,7 +4,7 @@ import { Profession } from "./Profession";
 import { ScriptInfo } from './ScriptInfo';
 
 export interface Character {
-	characterId: string;
+	playerId: string;
 	characterClass: CharacterClass;
 	race: Race;
 	professions: (Profession | null)[];

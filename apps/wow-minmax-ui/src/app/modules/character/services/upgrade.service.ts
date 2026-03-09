@@ -13,8 +13,8 @@ export class UpgradeService {
 
 	constructor(private http: HttpClient) { }
 
-	getUpgrades(characterId: string, slotGroup: ItemSlotGroup, itemFilter: ItemFilter) {
-		return this.http.get<Upgrade[]>(`${this.apiUrl}/${characterId}/slot/${slotGroup}?${this.getFilterString(itemFilter)}`);
+	getUpgrades(playerId: string, slotGroup: ItemSlotGroup, itemFilter: ItemFilter) {
+		return this.http.get<Upgrade[]>(`${this.apiUrl}/${playerId}/slot/${slotGroup}?${this.getFilterString(itemFilter)}`);
 	}
 
 	private getFilterString(itemFilter: ItemFilter) {

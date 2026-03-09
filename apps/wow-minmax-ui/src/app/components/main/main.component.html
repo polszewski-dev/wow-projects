@@ -3,7 +3,7 @@
 
 	<app-character-select></app-character-select>
 
-	@if (selectedCharacterId$ | async) {
+	@if (selectedPlayerId$ | async) {
 		<app-profile-editor></app-profile-editor>
 	}
 </div>

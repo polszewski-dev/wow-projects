@@ -1,7 +1,7 @@
 package wow.minmax.service;
 
 import wow.commons.model.categorization.ItemSlot;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.options.EnchantOptions;
 import wow.minmax.model.options.EquipmentOptions;
 import wow.minmax.model.options.GemOptions;
@@ -14,11 +14,11 @@ import java.util.List;
  * Date: 2025-08-30
  */
 public interface EquipmentOptionsService {
-	EquipmentOptions getEquipmentOptions(CharacterId characterId);
+	EquipmentOptions getEquipmentOptions(PlayerId playerId);
 
-	ItemOptions getItemOptions(CharacterId characterId, ItemSlot slot);
+	ItemOptions getItemOptions(PlayerId playerId, ItemSlot slot);
 
-	List<EnchantOptions> getEnchantOptions(CharacterId characterId);
+	List<EnchantOptions> getEnchantOptions(PlayerId playerId);
 
-	List<GemOptions> getGemOptions(CharacterId characterId);
+	List<GemOptions> getGemOptions(PlayerId playerId);
 }

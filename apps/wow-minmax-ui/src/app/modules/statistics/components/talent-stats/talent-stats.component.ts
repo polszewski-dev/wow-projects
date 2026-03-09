@@ -12,8 +12,8 @@ import { StatsService } from '../../services/stats.service';
 })
 export class TalentStatsComponent {
 	talentStats$ = this.store.select(selectDpsChanges).pipe(
-		filter(change => !!change.characterId),
-		switchMap(change => this.statsService.getTalentStats(change.characterId!))
+		filter(change => !!change.playerId),
+		switchMap(change => this.statsService.getTalentStats(change.playerId!))
 	);
 
 	constructor(

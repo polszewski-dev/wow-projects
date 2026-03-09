@@ -8,9 +8,9 @@ import { CharacterModuleState } from "../character-module.state";
 
 const selectCharacterState = (state: CharacterModuleState) => state.character;
 
-export const selectCharacterId = createSelector(
+export const selectPlayerId = createSelector(
 	selectCharacterState,
-	state => state.characterId
+	state => state.playerId
 )
 
 export const selectCharacter = createSelector(
@@ -66,10 +66,10 @@ export const selectDpsChangeIdx = createSelector(
 );
 
 export const selectDpsChanges = createSelector(
-	selectCharacterId,
+	selectPlayerId,
 	selectDpsChangeIdx,
-	(characterId, dpsChangeIdx) => {
-		return { characterId, dpsChangeIdx };
+	(playerId, dpsChangeIdx) => {
+		return { playerId, dpsChangeIdx };
 	}
 );
 

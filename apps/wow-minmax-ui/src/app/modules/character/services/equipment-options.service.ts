@@ -15,19 +15,19 @@ export class EquipmentOptionsService {
 
 	constructor(private http: HttpClient) {}
 
-	getEquipmentOptions(characterId: string) {
-		return this.http.get<EquipmentOptions>(`${this.apiUrl}/${characterId}`);
+	getEquipmentOptions(playerId: string) {
+		return this.http.get<EquipmentOptions>(`${this.apiUrl}/${playerId}`);
 	}
 
-	getItemOptions(characterId: string, itemSlot: ItemSlot) {
-		return this.http.get<ItemOptions>(`${this.apiUrl}/${characterId}/item/${itemSlot}`);
+	getItemOptions(playerId: string, itemSlot: ItemSlot) {
+		return this.http.get<ItemOptions>(`${this.apiUrl}/${playerId}/item/${itemSlot}`);
 	}
 
-	getEnchantOptions(characterId: string) {
-		return this.http.get<EnchantOptions[]>(`${this.apiUrl}/${characterId}/enchant`);
+	getEnchantOptions(playerId: string) {
+		return this.http.get<EnchantOptions[]>(`${this.apiUrl}/${playerId}/enchant`);
 	}
 
-	getGemOptions(characterId: string) {
-		return this.http.get<GemOptions[]>(`${this.apiUrl}/${characterId}/gem`);
+	getGemOptions(playerId: string) {
+		return this.http.get<GemOptions[]>(`${this.apiUrl}/${playerId}/gem`);
 	}
 }

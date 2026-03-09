@@ -8,7 +8,7 @@ import wow.minmax.converter.dto.ExclusiveFactionGroupConverter;
 import wow.minmax.converter.dto.PlayerInfoConverter;
 import wow.minmax.converter.dto.ProfessionConverter;
 import wow.minmax.converter.dto.ScriptInfoConverter;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.service.PlayerService;
 
 import java.util.List;
@@ -28,99 +28,99 @@ public class CharacterController {
 	private final ExclusiveFactionGroupConverter exclusiveFactionGroupConverter;
 	private final ScriptInfoConverter scriptInfoConverter;
 
-	@GetMapping("{characterId}")
+	@GetMapping("{playerId}")
 	public PlayerInfoDTO getCharacter(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = playerService.getPlayer(characterId);
+		var player = playerService.getPlayer(playerId);
 
-		return playerInfoConverter.convert(player, characterId);
+		return playerInfoConverter.convert(player, playerId);
 	}
 
-	@GetMapping("{characterId}/professions")
+	@GetMapping("{playerId}/professions")
 	public List<ProfessionDTO> getAvailableProfessions(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var availableProfessions = playerService.getAvailableProfessions(characterId);
+		var availableProfessions = playerService.getAvailableProfessions(playerId);
 
 		return professionConverter.convertList(availableProfessions);
 	}
 
-	@PutMapping("{characterId}/professions/{index}")
+	@PutMapping("{playerId}/professions/{index}")
 	public PlayerInfoDTO changeProfession(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("index") int index,
 			@RequestBody ProfessionDTO profession
 	) {
 		var player = playerService.changeProfession(
-				characterId,
+				playerId,
 				index,
 				professionConverter.convertBack(profession)
 		);
 
-		log.info("changed profession charId: {}, idx: {}, profession: {}", characterId, index, profession.name());
+		log.info("changed profession charId: {}, idx: {}, profession: {}", playerId, index, profession.name());
 
-		return playerInfoConverter.convert(player, characterId);
+		return playerInfoConverter.convert(player, playerId);
 	}
 
-	@GetMapping("{characterId}/xfactions")
+	@GetMapping("{playerId}/xfactions")
 	public List<ExclusiveFactionGroupDTO> getAvailableExclusiveFactions(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var availableExclusiveFactions = playerService.getAvailableExclusiveFactions(characterId);
+		var availableExclusiveFactions = playerService.getAvailableExclusiveFactions(playerId);
 
 		return exclusiveFactionGroupConverter.convertList(availableExclusiveFactions);
 	}
 
-	@PutMapping("{characterId}/xfactions")
+	@PutMapping("{playerId}/xfactions")
 	public void changeExclusiveFaction(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@RequestBody ExclusiveFactionDTO exclusiveFaction
 	) {
 		playerService.changeExclusiveFaction(
-				characterId,
+				playerId,
 				exclusiveFaction.name()
 		);
 
-		log.info("changed xfaction charId: {}, xfaction: {}", characterId, exclusiveFaction.name());
+		log.info("changed xfaction charId: {}, xfaction: {}", playerId, exclusiveFaction.name());
 	}
 
-	@PutMapping("{characterId}/talents")
+	@PutMapping("{playerId}/talents")
 	public PlayerInfoDTO changeTalents(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@RequestBody String talentLink
 	) {
 		var player = playerService.changeTalents(
-				characterId,
+				playerId,
 				talentLink
 		);
 
-		log.info("changed talents charId: {}, link: {}", characterId, talentLink);
+		log.info("changed talents charId: {}, link: {}", playerId, talentLink);
 
-		return playerInfoConverter.convert(player, characterId);
+		return playerInfoConverter.convert(player, playerId);
 	}
 
-	@GetMapping("{characterId}/scripts")
+	@GetMapping("{playerId}/scripts")
 	public List<ScriptInfoDTO> getAvailableScripts(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var availableScripts = playerService.getAvailableScripts(characterId);
+		var availableScripts = playerService.getAvailableScripts(playerId);
 
 		return scriptInfoConverter.convertList(availableScripts);
 	}
 
-	@PutMapping("{characterId}/scripts")
+	@PutMapping("{playerId}/scripts")
 	public PlayerInfoDTO changeScript(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@RequestBody ScriptInfoDTO script
 	) {
 		var player = playerService.changeScript(
-				characterId,
+				playerId,
 				script.id()
 		);
 
-		log.info("changed script charId: {}, script: {}", characterId, script.id());
+		log.info("changed script charId: {}, script: {}", playerId, script.id());
 
-		return playerInfoConverter.convert(player, characterId);
+		return playerInfoConverter.convert(player, playerId);
 	}
 }

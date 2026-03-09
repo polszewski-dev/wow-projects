@@ -46,20 +46,20 @@ public class PlayerProfileServiceImpl implements PlayerProfileService {
 				playerProfileInfo.getCharacterClassId(),
 				playerProfileInfo.getRaceId(),
 				LocalDateTime.now(),
-				getDefaultCharacterId(profileId).toString()
+				getDefaultPlayerId(profileId).toString()
 		);
 
 		saveProfile(playerProfile);
 		return playerProfile;
 	}
 
-	private CharacterId getDefaultCharacterId(UUID profileId) {
+	private PlayerId getDefaultPlayerId(UUID profileId) {
 		var latestSupportedVersionId = profileConfig.getLatestSupportedVersionId();
 		var latestSupportedVersion = gameVersionRepository.getGameVersion(latestSupportedVersionId).orElseThrow();
 
 		var defaultPhase = latestSupportedVersion.getLastPhase();
 
-		return new CharacterId(
+		return new PlayerId(
 				profileId,
 				defaultPhase.getPhaseId(),
 				defaultPhase.getMaxLevel(),

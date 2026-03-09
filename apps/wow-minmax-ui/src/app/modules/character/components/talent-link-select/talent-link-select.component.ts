@@ -10,7 +10,7 @@ import { changeTalentLink } from '../../state/character/character.actions';
 })
 export class TalentLinkSelectComponent {
 	@Input({ required: true }) id!: string;
-	@Input({ required: true }) characterId!: string;
+	@Input({ required: true }) playerId!: string;
 	@Input({ required: true }) talentLink!: string;
 
 	constructor(private store: Store<CharacterModuleState>) {}
@@ -28,7 +28,7 @@ export class TalentLinkSelectComponent {
 		}
 
 		this.store.dispatch(changeTalentLink({
-			characterId: this.characterId,
+			playerId: this.playerId,
 			talentLink: newTalentLink
 		}));
 	}

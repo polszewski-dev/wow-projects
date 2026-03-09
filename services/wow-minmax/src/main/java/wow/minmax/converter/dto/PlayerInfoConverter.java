@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import wow.commons.client.converter.ParametrizedConverter;
 import wow.minmax.client.dto.PlayerInfoDTO;
 import wow.minmax.client.dto.RaceDTO;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.repository.MinmaxConfigRepository;
 
@@ -16,7 +16,7 @@ import wow.minmax.repository.MinmaxConfigRepository;
  */
 @Component
 @AllArgsConstructor
-public class PlayerInfoConverter implements ParametrizedConverter<Player, PlayerInfoDTO, CharacterId> {
+public class PlayerInfoConverter implements ParametrizedConverter<Player, PlayerInfoDTO, PlayerId> {
 	private final CharacterClassConverter characterClassConverter;
 	private final RaceConverter raceConverter;
 	private final RacialConverter racialConverter;
@@ -25,9 +25,9 @@ public class PlayerInfoConverter implements ParametrizedConverter<Player, Player
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
 	@Override
-	public PlayerInfoDTO doConvert(Player source, CharacterId characterId) {
+	public PlayerInfoDTO doConvert(Player source, PlayerId playerId) {
 		return new PlayerInfoDTO(
-				characterId.toString(),
+				playerId.toString(),
 				characterClassConverter.convert(source.getCharacterClass()),
 				getRace(source),
 				professionConverter.convertList(source.getProfessions().getList()),

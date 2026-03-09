@@ -22,7 +22,7 @@
 				<label for="profession{{i}}-select" class="form-label">Profession #{{i + 1}}</label>
 				<app-profession-select
 					id="profession{{i}}-select"
-					[characterId]="character.characterId"
+					[playerId]="character.playerId"
 					[professionIdx]="i"
 					[selectedProfession]="character.professions[i]"
 					[availableProfessions]="availableProfessions"
@@ -39,7 +39,7 @@
 				<div id="xfactions">
 					@for (group of availableExclusiveFactions; track group.groupId) {
 						<app-exclusive-faction-select
-							[characterId]="character.characterId"
+							[playerId]="character.playerId"
 							[exclusiveFactionGroup]="group"
 						></app-exclusive-faction-select>
 					}
@@ -52,7 +52,7 @@
 		<label for="talent-link" class="form-label">Talents</label>
 		<app-talent-link-select
 			id="talent-link"
-			[characterId]="character.characterId"
+			[playerId]="character.playerId"
 			[talentLink]="character.talentLink"
 		></app-talent-link-select>
 	</div>
@@ -62,7 +62,7 @@
 			<label for="script-select" class="form-label">Script</label>
 			<app-script-select
 				id="script-select"
-				[characterId]="character.characterId"
+				[playerId]="character.playerId"
 				[selectedScript]="character.script"
 				[availableScripts]="availableScripts"
 			></app-script-select>

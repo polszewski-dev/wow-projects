@@ -12,8 +12,8 @@ import { StatsService } from '../../services/stats.service';
 })
 export class SpecialAbilitiesComponent {
 	specialAbilityStats$ = this.store.select(selectDpsChanges).pipe(
-		filter(change => !!change.characterId),
-		switchMap(change => this.statsService.getSpecialAbilities(change.characterId!))
+		filter(change => !!change.playerId),
+		switchMap(change => this.statsService.getSpecialAbilities(change.playerId!))
 	);
 
 	constructor(

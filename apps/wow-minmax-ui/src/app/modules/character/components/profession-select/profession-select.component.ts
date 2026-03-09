@@ -14,20 +14,20 @@ import { selectCharacter } from '../../state/character/character.selectors';
 })
 export class ProfessionSelectComponent {
 	@Input({ required: true }) id!: string;
-	@Input({ required: true }) characterId!: string;
+	@Input({ required: true }) playerId!: string;
 	@Input({ required: true }) professionIdx!: number;
 	@Input({ required: true }) selectedProfession!: Profession | null;
 	@Input({ required: true }) availableProfessions!: Profession[];
 
 	character$ = this.store.select(selectCharacter);
-	
+
 	constructor(private store: Store<CharacterModuleState>) {}
 
 	onProfessionChanged(profession: Profession) {
-		const characterId = this.characterId;
+		const playerId = this.playerId;
 		const professionIdx = this.professionIdx;
 
-		this.store.dispatch(changeProfession({ characterId, professionIdx, profession }));
+		this.store.dispatch(changeProfession({ playerId, professionIdx, profession }));
 	}
 
 	readonly professionFormatter = new ProfessionFormatter();

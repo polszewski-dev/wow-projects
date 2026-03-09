@@ -7,5 +7,5 @@ export interface ProfileInfo {
 	characterClass: CharacterClass;
 	race: Race;
 	lastModified?: Date;
-	lastUsedCharacterId?: string;
+	lastUsedPlayerId?: string;
 }

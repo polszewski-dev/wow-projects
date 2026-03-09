@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
-import { selectCharacter, selectCharacterId } from 'src/app/modules/character/state/character/character.selectors';
+import { selectCharacter, selectPlayerId } from 'src/app/modules/character/state/character/character.selectors';
 import { BuffListType } from '../../../character/model/buff/BuffListType';
 
 @Component({
@@ -10,7 +10,7 @@ import { BuffListType } from '../../../character/model/buff/BuffListType';
 	styleUrls: ['./profile-editor.component.css']
 })
 export class ProfileEditorComponent {
-	selectedCharacterId$ = this.store.select(selectCharacterId);
+	selectedPlayerId$ = this.store.select(selectPlayerId);
 	dataLoaded$ = this.store.select(selectCharacter);
 
 	readonly CHARACTER_BUFF = BuffListType.CHARACTER_BUFF;

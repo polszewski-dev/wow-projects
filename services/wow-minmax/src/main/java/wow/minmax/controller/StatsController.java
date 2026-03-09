@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.minmax.client.dto.stats.*;
 import wow.minmax.converter.dto.stats.*;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.service.PlayerService;
 import wow.minmax.service.StatsService;
 
@@ -29,51 +29,51 @@ public class StatsController {
 	private final RotationStatsConverter rotationStatsConverter;
 	private final TalentStatsConverter talentStatsConverter;
 
-	@GetMapping("{characterId}/ability")
+	@GetMapping("{playerId}/ability")
 	public List<AbilityStatsDTO> getAbilityStats(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = playerService.getPlayer(characterId);
+		var player = playerService.getPlayer(playerId);
 		var stats = statsService.getAbilityStats(player).stats();
 
 		return abilityStatsConverter.convertList(stats, player.getPhaseId());
 	}
 
-	@GetMapping("{characterId}/character")
+	@GetMapping("{playerId}/character")
 	public List<CharacterStatsDTO> getCharacterStats(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = playerService.getPlayer(characterId);
+		var player = playerService.getPlayer(playerId);
 		var stats = statsService.getCharacterStats(player).stats();
 
 		return characterStatsConverter.convertList(stats);
 	}
 
-	@GetMapping("{characterId}/special")
+	@GetMapping("{playerId}/special")
 	public List<SpecialAbilityStatsDTO> getSpecialAbilityStats(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = playerService.getPlayer(characterId);
+		var player = playerService.getPlayer(playerId);
 		var stats = statsService.getSpecialAbilityStats(player).stats();
 
 		return specialAbilityStatsConverter.convertList(stats);
 	}
 
-	@GetMapping("{characterId}/rotation")
+	@GetMapping("{playerId}/rotation")
 	public RotationStatsDTO getRotationStats(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = playerService.getPlayer(characterId);
+		var player = playerService.getPlayer(playerId);
 		var stats = statsService.getRotationStats(player).stats();
 
 		return rotationStatsConverter.convert(stats, player.getPhaseId());
 	}
 
-	@GetMapping("{characterId}/talent")
+	@GetMapping("{playerId}/talent")
 	public List<TalentStatsDTO> getTalentStats(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = playerService.getPlayer(characterId);
+		var player = playerService.getPlayer(playerId);
 		var stats = statsService.getTalentStats(player).stats();
 
 		return talentStatsConverter.convertList(stats, player.getPhaseId());

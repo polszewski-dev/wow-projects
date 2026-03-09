@@ -11,14 +11,14 @@ import { changeExclusiveFaction } from '../../state/character/character.actions'
 	styleUrl: './exclusive-faction-select.component.css'
 })
 export class ExclusiveFactionSelectComponent {
-	@Input({ required: true }) characterId!: string;
+	@Input({ required: true }) playerId!: string;
 	@Input({ required: true }) exclusiveFactionGroup!: ExclusiveFactionGroup;
 
 	constructor(private store: Store<CharacterModuleState>) {}
 
 	onExclusiveFactionChanged(exclusiveFaction: ExclusiveFaction) {
-		const characterId = this.characterId;
+		const playerId = this.playerId;
 
-		this.store.dispatch(changeExclusiveFaction({ characterId, exclusiveFaction }));
+		this.store.dispatch(changeExclusiveFaction({ playerId, exclusiveFaction }));
 	}
 }

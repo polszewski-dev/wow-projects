@@ -5,7 +5,7 @@ import { ItemSlotGroup } from '../../model/upgrade/ItemSlotGroup';
 import { Upgrade } from '../../model/upgrade/Upgrade';
 import { CharacterModuleState } from '../../state/character-module.state';
 import { equipItemGroup } from '../../state/character/character.actions';
-import { selectCharacterId } from '../../state/character/character.selectors';
+import { selectPlayerId } from '../../state/character/character.selectors';
 import { selectUpgrades } from '../../state/upgrades/upgrades.selectors';
 
 @Component({
@@ -24,9 +24,9 @@ export class EquipUpgradeButtonComponent implements OnInit {
 		this.data$ = this.store.select(createDataSelector(this.slotGroup));
 	}
 
-	onEquipUpgradeClick(characterId: string, upgrade: Upgrade) {
+	onEquipUpgradeClick(playerId: string, upgrade: Upgrade) {
 		const items = upgrade.itemDifference;
-		this.store.dispatch(equipItemGroup({ characterId, slotGroup: this.slotGroup, items }));
+		this.store.dispatch(equipItemGroup({ playerId, slotGroup: this.slotGroup, items }));
 	}
 
 	getUpgradeLevel(changePct: number) {
@@ -39,21 +39,21 @@ export class EquipUpgradeButtonComponent implements OnInit {
 }
 
 type DataView = {
-	characterId: string;
+	playerId: string;
 	upgrade: Upgrade;
 } | null;
 
 function createDataSelector(slotGroup: ItemSlotGroup) {
 	return createSelector(
-		selectCharacterId,
+		selectPlayerId,
 		selectUpgrades(slotGroup),
-		(characterId, upgrades): DataView => {
-			if (!characterId) {
+		(playerId, upgrades): DataView => {
+			if (!playerId) {
 				return null;
 			}
 
 			return {
-				characterId: characterId!,
+				playerId: playerId!,
 				upgrade: upgrades[0] || null
 			};
 		}

@@ -10,8 +10,8 @@ import wow.character.service.CharacterService;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.effect.Effect;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.equipment.*;
 import wow.minmax.service.EquipmentService;
 import wow.minmax.service.PlayerService;
@@ -35,40 +35,40 @@ public class EquipmentServiceImpl implements EquipmentService {
 	private final UpgradeService upgradeService;
 
 	@Override
-	public Equipment getEquipment(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public Equipment getEquipment(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 
 		return player.getEquipment();
 	}
 
 	@Override
-	public List<ItemSlotStatus> equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item) {
-		return equipItem(characterId, slot, item, false, GemFilter.empty());
+	public List<ItemSlotStatus> equipItem(PlayerId playerId, ItemSlot slot, EquippableItem item) {
+		return equipItem(playerId, slot, item, false, GemFilter.empty());
 	}
 
 	@Override
-	public List<ItemSlotStatus> equipItem(CharacterId characterId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
-		var player = playerService.getPlayer(characterId);
+	public List<ItemSlotStatus> equipItem(PlayerId playerId, ItemSlot slot, EquippableItem item, boolean bestVariant, GemFilter gemFilter) {
+		var player = playerService.getPlayer(playerId);
 		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, player);
 
 		var oldEquipment = player.getEquipment().deepCopy();
 
 		characterService.equipItem(player, slot, itemToEquip);
 
-		playerService.saveCharacter(characterId, player);
+		playerService.saveCharacter(playerId, player);
 
 		return getEquipmentDiff(oldEquipment, player);
 	}
 
 	@Override
-	public List<ItemSlotStatus> equipItemGroup(CharacterId characterId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
-		var player = playerService.getPlayer(characterId);
+	public List<ItemSlotStatus> equipItemGroup(PlayerId playerId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+		var player = playerService.getPlayer(playerId);
 
 		var oldEquipment = player.getEquipment().deepCopy();
 
 		characterService.equipItemGroup(player, slotGroup, items);
 
-		playerService.saveCharacter(characterId, player);
+		playerService.saveCharacter(playerId, player);
 
 		return getEquipmentDiff(oldEquipment, player);
 	}
@@ -83,12 +83,12 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public Player resetEquipment(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public Player resetEquipment(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 
 		player.resetEquipment();
 
-		playerService.saveCharacter(characterId, player);
+		playerService.saveCharacter(playerId, player);
 
 		return player;
 	}
@@ -102,8 +102,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public EquipmentSocketStatus getEquipmentSocketStatus(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public EquipmentSocketStatus getEquipmentSocketStatus(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 		var socketStatusesByItemSlot = ItemSlot.getDpsSlots().stream()
 				.collect(
 						toMap(
@@ -158,28 +158,28 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public List<GearSet> getAvailableGearSets(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public List<GearSet> getAvailableGearSets(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 
 		return characterService.getAvailableGearSets(player);
 	}
 
 	@Override
-	public Player equipGearSet(CharacterId characterId, String gearSet) {
-		var player = playerService.getPlayer(characterId);
+	public Player equipGearSet(PlayerId playerId, String gearSet) {
+		var player = playerService.getPlayer(playerId);
 
 		characterService.equipGearSet(player, gearSet);
 
-		playerService.saveCharacter(characterId, player);
+		playerService.saveCharacter(playerId, player);
 
 		return player;
 	}
 
 	@Override
-	public Player equipPreviousPhase(CharacterId characterId) {
-		var previousPhaseCharacterId = getPreviousPhaseCharacterId(characterId);
-		var previousPhasePlayer = playerService.getPlayer(previousPhaseCharacterId);
-		var player = playerService.getPlayer(characterId);
+	public Player equipPreviousPhase(PlayerId playerId) {
+		var previousPhasePlayerId = playerId.getPreviousPhasePlayerId();
+		var previousPhasePlayer = playerService.getPlayer(previousPhasePlayerId);
+		var player = playerService.getPlayer(playerId);
 
 		player.resetEquipment();
 
@@ -189,18 +189,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			player.equip(item, itemSlot);
 		}
 
-		playerService.saveCharacter(characterId, player);
+		playerService.saveCharacter(playerId, player);
 
 		return player;
 	}
 
-	private CharacterId getPreviousPhaseCharacterId(CharacterId characterId) {
-		return new CharacterId(
-				characterId.profileId(),
-				characterId.phaseId().getPreviousPhase().orElseThrow(),
-				characterId.level(),
-				characterId.enemyType(),
-				characterId.enemyLevelDiff()
-		);
-	}
 }

@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.Consumables;
 import wow.commons.model.item.Consumable;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.ConsumableStatus;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.service.ConsumableService;
 import wow.minmax.service.PlayerService;
 
@@ -22,8 +22,8 @@ public class ConsumableServiceImpl implements ConsumableService {
 	private final PlayerService playerService;
 
 	@Override
-	public List<ConsumableStatus> getConsumableStatuses(CharacterId characterId) {
-		var player = playerService.getPlayer(characterId);
+	public List<ConsumableStatus> getConsumableStatuses(PlayerId playerId) {
+		var player = playerService.getPlayer(playerId);
 
 		return getConsumableStatuses(player);
 	}
@@ -46,12 +46,12 @@ public class ConsumableServiceImpl implements ConsumableService {
 	}
 
 	@Override
-	public Player changeConsumableStatus(CharacterId characterId, String consumableName, boolean enabled) {
-		var player = playerService.getPlayer(characterId);
+	public Player changeConsumableStatus(PlayerId playerId, String consumableName, boolean enabled) {
+		var player = playerService.getPlayer(playerId);
 
 		player.getConsumables().enable(consumableName, enabled);
 
-		playerService.saveCharacter(characterId, player);
+		playerService.saveCharacter(playerId, player);
 
 		return player;
 	}

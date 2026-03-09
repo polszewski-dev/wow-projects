@@ -11,7 +11,7 @@ import { ItemRarity } from '../../model/equipment/ItemRarity';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { CharacterModuleState } from '../../state/character-module.state';
 import { equipGem } from '../../state/character/character.actions';
-import { selectCharacterId, selectEquipmentSlot } from '../../state/character/character.selectors';
+import { selectPlayerId, selectEquipmentSlot } from '../../state/character/character.selectors';
 import { selectGemOptions } from '../../state/equipment-options/equipment-options.selectors';
 
 @Component({
@@ -31,8 +31,8 @@ export class GemSelectComponent implements OnInit {
 		this.data$ = this.store.select(createDataSelector(this.itemSlot, this.socketNo));
 	}
 
-	onGemChange(characterId: string, equippedItem: EquippableItem, gem: Gem) {
-		this.store.dispatch(equipGem({ characterId, equippedItem, itemSlot: this.itemSlot, socketNo: this.socketNo, gem }));
+	onGemChange(playerId: string, equippedItem: EquippableItem, gem: Gem) {
+		this.store.dispatch(equipGem({ playerId, equippedItem, itemSlot: this.itemSlot, socketNo: this.socketNo, gem }));
 	}
 
 	readonly gemFormatter = new GemFormatter();
@@ -40,23 +40,23 @@ export class GemSelectComponent implements OnInit {
 }
 
 type DataView = {
-	characterId: string;
+	playerId: string;
     equippedItem: EquippableItem;
     gemOptions: Gem[];
 } | null;
 
 function createDataSelector(itemSlot: ItemSlot, socketNo: number) {
 	return createSelector(
-		selectCharacterId,
+		selectPlayerId,
 		selectEquipmentSlot(itemSlot),
 		selectGemOptions,
-		(characterId, equippedItem, gemOptions): DataView => {
-			if (!characterId || !equippedItem || !(socketNo < equippedItem.gems.length)) {
+		(playerId, equippedItem, gemOptions): DataView => {
+			if (!playerId || !equippedItem || !(socketNo < equippedItem.gems.length)) {
 				return null;
 			}
 
 			return {
-				characterId,
+				playerId,
 				equippedItem,
 				gemOptions: getMatchingGemOptions(gemOptions, equippedItem, socketNo)
 			};

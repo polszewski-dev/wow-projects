@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.db.equipment.EquipmentConfig;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 public class PlayerConfig {
 	@Id
-	private String characterId;
+	private String playerId;
 	private String name;
 	private CharacterClassId characterClassId;
 	private RaceId race;
@@ -37,7 +37,7 @@ public class PlayerConfig {
 	private List<Integer> consumableIds;
 	private NonPlayerConfig target;
 
-	public CharacterId getCharacterIdAsRecord() {
-		return CharacterId.parse(characterId);
+	public PlayerId getPlayerIdAsRecord() {
+		return PlayerId.parse(playerId);
 	}
 }

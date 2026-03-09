@@ -33,7 +33,7 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void getEquipmentTest() throws Exception {
-		mockMvc.perform(get("/api/v1/equipments/{characterId}", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/equipments/{playerId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -48,7 +48,7 @@ class EquipmentControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(chestDTO);
 
 		mockMvc.perform(
-				put("/api/v1/equipments/{characterId}/slot/{slot}?best-variant=true", CHARACTER_KEY, ItemSlot.CHEST)
+				put("/api/v1/equipments/{playerId}/slot/{slot}?best-variant=true", CHARACTER_KEY, ItemSlot.CHEST)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 				)
@@ -68,7 +68,7 @@ class EquipmentControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(chestDTO);
 
 		mockMvc.perform(
-				put("/api/v1/equipments/{characterId}/slot/{slot}", CHARACTER_KEY, ItemSlot.CHEST)
+				put("/api/v1/equipments/{playerId}/slot/{slot}", CHARACTER_KEY, ItemSlot.CHEST)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 				)
@@ -88,7 +88,7 @@ class EquipmentControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(List.of(chestDTO));
 
 		mockMvc.perform(
-				put("/api/v1/equipments/{characterId}/slot-group/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
+				put("/api/v1/equipments/{playerId}/slot-group/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 				)
@@ -100,7 +100,7 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void resetEquipment() throws Exception {
-		mockMvc.perform(delete("/api/v1/equipments/{characterId}", CHARACTER_KEY))
+		mockMvc.perform(delete("/api/v1/equipments/{playerId}", CHARACTER_KEY))
 				.andExpect(status().isOk())
 		;
 
@@ -109,7 +109,7 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void getEquipmentSocketStatus() throws Exception {
-		mockMvc.perform(get("/api/v1/equipments/{characterId}/socket-status", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/equipments/{playerId}/socket-status", CHARACTER_KEY))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

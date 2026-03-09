@@ -8,9 +8,9 @@ import wow.character.service.CharacterService;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.FactionExclusionGroupId;
 import wow.minmax.converter.db.PlayerConfigConverter;
-import wow.minmax.model.CharacterId;
 import wow.minmax.model.ExclusiveFactionGroup;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.config.ScriptInfo;
 import wow.minmax.model.config.ViewConfig;
 import wow.minmax.model.impl.NonPlayerImpl;
@@ -44,34 +44,34 @@ public class PlayerServiceImpl implements PlayerService {
 	private final PlayerProfileRepository playerProfileRepository;
 
 	@Override
-	public Player getPlayer(CharacterId characterId) {
-		return getExistingOrNewCharacter(characterId);
+	public Player getPlayer(PlayerId playerId) {
+		return getExistingOrNewCharacter(playerId);
 	}
 
-	private Player getExistingOrNewCharacter(CharacterId characterId) {
-		return playerConfigRepository.findById(characterId.toString())
+	private Player getExistingOrNewCharacter(PlayerId playerId) {
+		return playerConfigRepository.findById(playerId.toString())
 				.map(playerConfigConverter::convertBack)
-				.orElseGet(() -> createCharacter(characterId));
+				.orElseGet(() -> createCharacter(playerId));
 	}
 
-	private Player createCharacter(CharacterId characterId) {
-		var profileId = characterId.profileId();
+	private Player createCharacter(PlayerId playerId) {
+		var profileId = playerId.profileId();
 		var playerProfile = playerProfileRepository.findById(profileId.toString()).orElseThrow();
 
 		var newCharacter = characterService.createPlayerCharacter(
 				playerProfile.getProfileName(),
 				playerProfile.getCharacterClassId(),
 				playerProfile.getRaceId(),
-				characterId.level(),
-				characterId.phaseId(),
+				playerId.level(),
+				playerId.phaseId(),
 				PlayerImpl::new
 		);
 
 		var targetEnemy = characterService.createNonPlayerCharacter(
 				"Target",
-				characterId.enemyType(),
-				newCharacter.getLevel() + characterId.enemyLevelDiff(),
-				characterId.phaseId(),
+				playerId.enemyType(),
+				newCharacter.getLevel() + playerId.enemyLevelDiff(),
+				playerId.phaseId(),
 				NonPlayerImpl::new
 		);
 
@@ -83,15 +83,15 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 
 	@Override
-	public void saveCharacter(CharacterId characterId, Player player) {
-		var playerConfig = playerConfigConverter.convert(player, characterId);
+	public void saveCharacter(PlayerId playerId, Player player) {
+		var playerConfig = playerConfigConverter.convert(player, playerId);
 
 		playerConfigRepository.save(playerConfig);
 
-		var profileId = characterId.profileId();
+		var profileId = playerId.profileId();
 		var profile = playerProfileRepository.findById(profileId.toString()).orElseThrow();
 
-		profile.setLastModifiedCharacterId(characterId.toString());
+		profile.setLastModifiedPlayerId(playerId.toString());
 		profile.setLastModified(LocalDateTime.now());
 
 		playerProfileRepository.save(profile);
@@ -103,8 +103,8 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 
 	@Override
-	public List<CharacterProfession> getAvailableProfessions(CharacterId characterId) {
-		var player = getPlayer(characterId);
+	public List<CharacterProfession> getAvailableProfessions(PlayerId playerId) {
+		var player = getPlayer(playerId);
 		var result = new ArrayList<CharacterProfession>();
 
 		for (var profession : player.getGameVersion().getProfessions()) {
@@ -123,19 +123,19 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 
 	@Override
-	public Player changeProfession(CharacterId characterId, int index, ProfIdSpecId profession) {
-		var player = getPlayer(characterId);
+	public Player changeProfession(PlayerId playerId, int index, ProfIdSpecId profession) {
+		var player = getPlayer(playerId);
 
 		player.setProfessionMaxLevel(index, profession);
 
 		characterService.updateAfterRestrictionChange(player);
-		saveCharacter(characterId, player);
+		saveCharacter(playerId, player);
 		return player;
 	}
 
 	@Override
-	public List<ExclusiveFactionGroup> getAvailableExclusiveFactions(CharacterId characterId) {
-		var player = getPlayer(characterId);
+	public List<ExclusiveFactionGroup> getAvailableExclusiveFactions(PlayerId playerId) {
+		var player = getPlayer(playerId);
 
 		var factionsByGroup = player.getExclusiveFactions().getAvailable().stream()
 				.collect(groupingBy(Faction::getExclusionGroupId));
@@ -154,43 +154,43 @@ public class PlayerServiceImpl implements PlayerService {
 	}
 
 	@Override
-	public Player changeExclusiveFaction(CharacterId characterId, String factionName) {
-		var player = getPlayer(characterId);
+	public Player changeExclusiveFaction(PlayerId playerId, String factionName) {
+		var player = getPlayer(playerId);
 
 		player.getExclusiveFactions().enable(factionName);
 
 		characterService.updateAfterRestrictionChange(player);
-		saveCharacter(characterId, player);
+		saveCharacter(playerId, player);
 		return player;
 	}
 
 	@Override
-	public Player changeTalents(CharacterId characterId, String talentLink) {
-		var player = getPlayer(characterId);
+	public Player changeTalents(PlayerId playerId, String talentLink) {
+		var player = getPlayer(playerId);
 
 		player.getBuild().getTalents().loadFromTalentLink(talentLink);
 
 		characterService.updateAfterRestrictionChange(player);
-		saveCharacter(characterId, player);
+		saveCharacter(playerId, player);
 		return player;
 	}
 
 	@Override
-	public List<ScriptInfo> getAvailableScripts(CharacterId characterId) {
-		var player = getPlayer(characterId);
+	public List<ScriptInfo> getAvailableScripts(PlayerId playerId) {
+		var player = getPlayer(playerId);
 
 		return minmaxConfigRepository.getAvailableScripts(player);
 	}
 
 	@Override
-	public Player changeScript(CharacterId characterId, String scriptPath) {
-		var player = getPlayer(characterId);
+	public Player changeScript(PlayerId playerId, String scriptPath) {
+		var player = getPlayer(playerId);
 
 		requireExistingScriptFile(scriptPath, player.getGameVersionId());
 
 		player.getBuild().setScript(scriptPath);
 
-		saveCharacter(characterId, player);
+		saveCharacter(playerId, player);
 		return player;
 	}
 }

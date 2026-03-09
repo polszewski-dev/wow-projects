@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CharacterModuleState } from 'src/app/modules/character/state/character-module.state';
-import { selectCharacterId } from '../../modules/character/state/character/character.selectors';
+import { selectPlayerId } from '../../modules/character/state/character/character.selectors';
 
 @Component({
 	selector: 'app-main',
@@ -9,7 +9,7 @@ import { selectCharacterId } from '../../modules/character/state/character/chara
 	styleUrls: ['./main.component.css']
 })
 export class MainComponent {
-	selectedCharacterId$ = this.store.select(selectCharacterId);
+	selectedPlayerId$ = this.store.select(selectPlayerId);
 
 	constructor(private store: Store<CharacterModuleState>) {}
 }

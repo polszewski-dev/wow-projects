@@ -15,7 +15,7 @@ import wow.minmax.converter.dto.options.EnchantOptionsConverter;
 import wow.minmax.converter.dto.options.EquipmentOptionsConverter;
 import wow.minmax.converter.dto.options.GemOptionsConverter;
 import wow.minmax.converter.dto.options.ItemOptionsConverter;
-import wow.minmax.model.CharacterId;
+import wow.minmax.model.PlayerId;
 import wow.minmax.service.EquipmentOptionsService;
 
 import java.util.List;
@@ -35,39 +35,39 @@ public class EquipmentOptionsController {
 	private final EnchantOptionsConverter enchantOptionsConverter;
 	private final GemOptionsConverter gemOptionsConverter;
 
-	@GetMapping("{characterId}")
+	@GetMapping("{playerId}")
 	public EquipmentOptionsDTO getEquipmentOptions(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var equipmentOptions = equipmentOptionsService.getEquipmentOptions(characterId);
+		var equipmentOptions = equipmentOptionsService.getEquipmentOptions(playerId);
 
 		return equipmentOptionsConverter.convert(equipmentOptions);
 	}
 
-	@GetMapping("{characterId}/item/{slot}")
+	@GetMapping("{playerId}/item/{slot}")
 	public ItemOptionsDTO getItemOptions(
-			@PathVariable("characterId") CharacterId characterId,
+			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("slot") ItemSlot slot
 	) {
-		var itemOptions = equipmentOptionsService.getItemOptions(characterId, slot);
+		var itemOptions = equipmentOptionsService.getItemOptions(playerId, slot);
 
 		return itemOptionsConverter.convert(itemOptions);
 	}
 
-	@GetMapping("{characterId}/enchant")
+	@GetMapping("{playerId}/enchant")
 	public List<EnchantOptionsDTO> getEnchantOptions(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var enchantOptions = equipmentOptionsService.getEnchantOptions(characterId);
+		var enchantOptions = equipmentOptionsService.getEnchantOptions(playerId);
 
 		return enchantOptionsConverter.convertList(enchantOptions);
 	}
 
-	@GetMapping("{characterId}/gem")
+	@GetMapping("{playerId}/gem")
 	public List<GemOptionsDTO> getGemOptions(
-			@PathVariable("characterId") CharacterId characterId
+			@PathVariable("playerId") PlayerId playerId
 	) {
-		var gemOptions = equipmentOptionsService.getGemOptions(characterId);
+		var gemOptions = equipmentOptionsService.getGemOptions(playerId);
 
 		return gemOptionsConverter.convertList(gemOptions);
 	}

@@ -15,35 +15,35 @@ export class CharacterService {
 
 	constructor(private http: HttpClient) { }
 
-	getCharacter(characterId: string) {
-		return this.http.get<Character>(`${this.apiUrl}/${characterId}`);
+	getCharacter(playerId: string) {
+		return this.http.get<Character>(`${this.apiUrl}/${playerId}`);
 	}
 
-	getAvailableProfessions(characterId: string) {
-		return this.http.get<Profession[]>(`${this.apiUrl}/${characterId}/professions`);
+	getAvailableProfessions(playerId: string) {
+		return this.http.get<Profession[]>(`${this.apiUrl}/${playerId}/professions`);
 	}
 
-	changeProfession(characterId: string, professionIdx: number, profession: Profession) {
-		return this.http.put<Character>(`${this.apiUrl}/${characterId}/professions/${professionIdx}`, profession);
+	changeProfession(playerId: string, professionIdx: number, profession: Profession) {
+		return this.http.put<Character>(`${this.apiUrl}/${playerId}/professions/${professionIdx}`, profession);
 	}
 
-	getAvailableExclusiveFactions(characterId: string) {
-		return this.http.get<ExclusiveFactionGroup[]>(`${this.apiUrl}/${characterId}/xfactions`);
+	getAvailableExclusiveFactions(playerId: string) {
+		return this.http.get<ExclusiveFactionGroup[]>(`${this.apiUrl}/${playerId}/xfactions`);
 	}
 
-	changeExclusiveFaction(characterId: string, exclusiveFaction: ExclusiveFaction) {
-		return this.http.put<void>(`${this.apiUrl}/${characterId}/xfactions`, exclusiveFaction);
+	changeExclusiveFaction(playerId: string, exclusiveFaction: ExclusiveFaction) {
+		return this.http.put<void>(`${this.apiUrl}/${playerId}/xfactions`, exclusiveFaction);
 	}
 
-	changeTalentLink(characterId: string, talentLink: string) {
-		return this.http.put<Character>(`${this.apiUrl}/${characterId}/talents`, talentLink);
+	changeTalentLink(playerId: string, talentLink: string) {
+		return this.http.put<Character>(`${this.apiUrl}/${playerId}/talents`, talentLink);
 	}
 
-	getAvailableScripts(characterId: string) {
-		return this.http.get<ScriptInfo[]>(`${this.apiUrl}/${characterId}/scripts`);
+	getAvailableScripts(playerId: string) {
+		return this.http.get<ScriptInfo[]>(`${this.apiUrl}/${playerId}/scripts`);
 	}
 
-	changeScript(characterId: string, script: ScriptInfo) {
-		return this.http.put<Character>(`${this.apiUrl}/${characterId}/scripts`, script);
+	changeScript(playerId: string, script: ScriptInfo) {
+		return this.http.put<Character>(`${this.apiUrl}/${playerId}/scripts`, script);
 	}
 }

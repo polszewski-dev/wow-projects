@@ -3,7 +3,7 @@ import { createSelector, Store } from '@ngrx/store';
 import { ConsumableStatus } from '../../model/consumable/ConsumableStatus';
 import { CharacterModuleState } from '../../state/character-module.state';
 import { changeConsumableStatus } from '../../state/character/character.actions';
-import { selectCharacterId, selectConsumableStatuses } from '../../state/character/character.selectors';
+import { selectPlayerId, selectConsumableStatuses } from '../../state/character/character.selectors';
 
 @Component({
 	selector: 'app-consumable-editor',
@@ -15,26 +15,26 @@ export class ConsumableEditorComponent {
 
 	constructor(private store: Store<CharacterModuleState>) {}
 
-	onChange(characterId: string, consumableStatus: ConsumableStatus) {
-		this.store.dispatch(changeConsumableStatus({ characterId, consumableStatus }));
+	onChange(playerId: string, consumableStatus: ConsumableStatus) {
+		this.store.dispatch(changeConsumableStatus({ playerId, consumableStatus }));
 	}
 }
 
 type DataView = {
-	characterId: string;
+	playerId: string;
 	consumableStatuses: ConsumableStatus[]
 } | null;
 
 const dataSelector = createSelector(
-	selectCharacterId,
+	selectPlayerId,
 	selectConsumableStatuses,
-	(characterId, consumableStatuses): DataView => {
-		if (!characterId) {
+	(playerId, consumableStatuses): DataView => {
+		if (!playerId) {
 			return null;
 		}
 
 		return {
-			characterId,
+			playerId,
 			consumableStatuses: consumableStatuses.map(x => ({ ...x }))
 		};
 	}

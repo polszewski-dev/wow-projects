@@ -15,23 +15,23 @@ export class StatsService {
 
 	constructor(private http: HttpClient) { }
 
-	getAbilityStats(characterId: string) {
-		return this.http.get<AbilityStats[]>(`${this.apiUrl}/${characterId}/ability`);
+	getAbilityStats(playerId: string) {
+		return this.http.get<AbilityStats[]>(`${this.apiUrl}/${playerId}/ability`);
 	}
 
-	getCharacterStats(characterId: string) {
-		return this.http.get<CharacterStats[]>(`${this.apiUrl}/${characterId}/character`);
+	getCharacterStats(playerId: string) {
+		return this.http.get<CharacterStats[]>(`${this.apiUrl}/${playerId}/character`);
 	}
 
-	getSpecialAbilities(characterId: string) {
-		return this.http.get<SpecialAbilityStats[]>(`${this.apiUrl}/${characterId}/special`);
+	getSpecialAbilities(playerId: string) {
+		return this.http.get<SpecialAbilityStats[]>(`${this.apiUrl}/${playerId}/special`);
 	}
 
-	getRotationStats(characterId: string) {
-		return this.http.get<RotationStats>(`${this.apiUrl}/${characterId}/rotation`);
+	getRotationStats(playerId: string) {
+		return this.http.get<RotationStats>(`${this.apiUrl}/${playerId}/rotation`);
 	}
 
-	getTalentStats(characterId: string) {
-		return this.http.get<TalentStats[]>(`${this.apiUrl}/${characterId}/talent`);
+	getTalentStats(playerId: string) {
+		return this.http.get<TalentStats[]>(`${this.apiUrl}/${playerId}/talent`);
 	}
 }
