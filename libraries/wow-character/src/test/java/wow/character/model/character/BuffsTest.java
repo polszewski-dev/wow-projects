@@ -195,7 +195,7 @@ class BuffsTest extends WowCharacterSpringTest {
 			"3, 26, 130",
 	})
 	void demonicAegisCorrectlyAffectsFelArmor(int rank, int healingTakenPct, int spellDamage) {
-		var player = getCharacter();
+		var player = getPlayer();
 
 		player.resetEquipment();
 		player.resetBuffs();
@@ -225,7 +225,7 @@ class BuffsTest extends WowCharacterSpringTest {
 	@BeforeEach
 	void setup() {
 		var availableBuffs = buffRepository.getAvailableBuffs(PhaseId.TBC_P5).stream()
-				.filter(x -> x.isAvailableTo(getCharacter()))
+				.filter(x -> x.isAvailableTo(getPlayer()))
 				.filter(CHARACTER_BUFF.getFilter())
 				.toList();
 

@@ -39,10 +39,10 @@ class UpgradeServiceTest extends ServiceTest {
 			"RANGED"
 	})
 	void findUpgradesChestNoEquippedItems(ItemSlot itemSlot) {
-		character.getEquipment().reset();
+		player.getEquipment().reset();
 
 		var slotGroup = ItemSlotGroup.getGroup(itemSlot).orElseThrow();
-		var upgrades = underTest.findUpgrades(character, slotGroup, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
+		var upgrades = underTest.findUpgrades(player, slotGroup, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
 
 		assertThat(upgrades).hasSize(10);
 	}
@@ -62,47 +62,47 @@ class UpgradeServiceTest extends ServiceTest {
 			"RANGED"
 	})
 	void findUpgradesChest(ItemSlot itemSlot) {
-		character.equip(null, itemSlot);
+		player.equip(null, itemSlot);
 
 		var slotGroup = ItemSlotGroup.getGroup(itemSlot).orElseThrow();
-		var upgrades = underTest.findUpgrades(character, slotGroup, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
+		var upgrades = underTest.findUpgrades(player, slotGroup, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
 
 		assertThat(upgrades).hasSize(10);
 	}
 
 	@Test
 	void findUpgradesRings() {
-		character.equip(null, ItemSlot.FINGER_1);
-		character.equip(null, ItemSlot.FINGER_2);
+		player.equip(null, ItemSlot.FINGER_1);
+		player.equip(null, ItemSlot.FINGER_2);
 
-		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.FINGERS, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
+		var upgrades = underTest.findUpgrades(player, ItemSlotGroup.FINGERS, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
 
 		assertThat(upgrades).hasSize(10);
 	}
 
 	@Test
 	void findUpgradesTrinkets() {
-		character.equip(null, ItemSlot.TRINKET_1);
-		character.equip(null, ItemSlot.TRINKET_2);
+		player.equip(null, ItemSlot.TRINKET_1);
+		player.equip(null, ItemSlot.TRINKET_2);
 
-		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.TRINKETS, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
+		var upgrades = underTest.findUpgrades(player, ItemSlotGroup.TRINKETS, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
 
 		assertThat(upgrades).hasSize(10);
 	}
 
 	@Test
 	void findUpgradesWeapons() {
-		character.equip(null, ItemSlot.MAIN_HAND);
-		character.equip(null, ItemSlot.OFF_HAND);
+		player.equip(null, ItemSlot.MAIN_HAND);
+		player.equip(null, ItemSlot.OFF_HAND);
 
-		var upgrades = underTest.findUpgrades(character, ItemSlotGroup.WEAPONS, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
+		var upgrades = underTest.findUpgrades(player, ItemSlotGroup.WEAPONS, ItemFilter.everything(), ItemLevelFilter.everything(), GemFilter.empty(), ENCHANT_NAMES, MAX_UPGRADES);
 
 		assertThat(upgrades).hasSize(10);
 	}
 
 	@Test
 	void getBestItemVariant() {
-		var item = underTest.getBestItemVariant(character, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, GemFilter.empty(), ENCHANT_NAMES);
+		var item = underTest.getBestItemVariant(player, getItem("Sunfire Robe").getItem(), ItemSlot.CHEST, GemFilter.empty(), ENCHANT_NAMES);
 
 		assertThat(item.getEnchant()).isNotNull();
 
@@ -116,7 +116,7 @@ class UpgradeServiceTest extends ServiceTest {
 	void setup() {
 		super.setup();
 
-		equipGearSet(character);
+		equipGearSet(player);
 	}
 
 	private static final Set<String> ENCHANT_NAMES = Set.of(

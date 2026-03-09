@@ -59,7 +59,7 @@ class AccumulatedReceivedEffectStatsTest extends WowCharacterSpringTest {
 
 	@BeforeEach
 	void setUp() {
-		var caster = getCharacter();
+		var caster = getPlayer();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
 		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
 

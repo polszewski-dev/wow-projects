@@ -30,23 +30,23 @@ class CalculationServiceTest extends ServiceTest {
 
 	@Test
 	void getTalentSpEquivalent() {
-		double spEquivalent = calculationService.getTalentSpEquivalent(TalentNames.RUIN, character);
+		double spEquivalent = calculationService.getTalentSpEquivalent(TalentNames.RUIN, player);
 
 		assertThat(spEquivalent).isEqualTo(288.45, PRECISION);
 	}
 
 	@Test
 	void getRotationDps() {
-		var effectList = EffectList.createSolved(character);
-		var targetEffectList = EffectList.createSolvedForTarget(character);
-		var dps = calculationService.getRotationDps(character, character.getRotation(), effectList, targetEffectList);
+		var effectList = EffectList.createSolved(player);
+		var targetEffectList = EffectList.createSolvedForTarget(player);
+		var dps = calculationService.getRotationDps(player, player.getRotation(), effectList, targetEffectList);
 
 		assertThat(dps).isEqualTo(2799.67, PRECISION);
 	}
 
 	@Test
 	void getAccumulatedRotationStats() {
-		var stats = calculationService.getAccumulatedRotationStats(character, character.getRotation());
+		var stats = calculationService.getAccumulatedRotationStats(player, player.getRotation());
 
 		var baseStats = stats.getBaseStats();
 
@@ -94,7 +94,7 @@ class CalculationServiceTest extends ServiceTest {
 
 	@Test
 	void getAccumulatedRotationStatsDirectComponentOnly() {
-		var stats = calculationService.getAccumulatedRotationStats(character, character.getRotation());
+		var stats = calculationService.getAccumulatedRotationStats(player, player.getRotation());
 		var abilityStats = stats.get(SHADOW_BOLT);
 
 		var direct = abilityStats.getDirect();
@@ -117,7 +117,7 @@ class CalculationServiceTest extends ServiceTest {
 
 	@Test
 	void getRotationStats() {
-		var stats = calculationService.getRotationStats(character, character.getRotation());
+		var stats = calculationService.getRotationStats(player, player.getRotation());
 
 		assertThat(stats.getDps()).isEqualTo(2799.67, PRECISION);
 		assertThat(stats.getTotalDamage()).isEqualTo(839903.18, PRECISION);
@@ -138,7 +138,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	void getAbilityStats() {
 		var ability = getAbility(SHADOW_BOLT);
-		var stats = calculationService.getAbilityStats(character, ability, true, 10);
+		var stats = calculationService.getAbilityStats(player, ability, true, 10);
 
 		assertThat(stats.getTotalDamage()).isEqualTo(5024.67, PRECISION);
 		assertThat(stats.getDps()).isEqualTo(2689.42, PRECISION);
@@ -152,7 +152,7 @@ class CalculationServiceTest extends ServiceTest {
 
 	@Test
 	void getCurrentStats() {
-		var stats = calculationService.getCurrentStats(character);
+		var stats = calculationService.getCurrentStats(player);
 
 		assertThat(stats.getSpellDamage()).isEqualTo(1604);
 		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1738);
@@ -173,7 +173,7 @@ class CalculationServiceTest extends ServiceTest {
 
 	@Test
 	void getStats() {
-		var stats = calculationService.getStats(character, SELF_BUFF);
+		var stats = calculationService.getStats(player, SELF_BUFF);
 
 		assertThat(stats.getSpellDamage()).isEqualTo(1444);
 		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1498);
@@ -194,7 +194,7 @@ class CalculationServiceTest extends ServiceTest {
 
 	@Test
 	void getEquipmentStats() {
-		var stats = calculationService.getEquipmentStats(character);
+		var stats = calculationService.getEquipmentStats(player);
 
 		assertThat(stats.getSpellDamage()).isEqualTo(1314);
 		assertThat(stats.getSpellDamageBySchool()).containsEntry(SHADOW, 1368);
@@ -216,7 +216,7 @@ class CalculationServiceTest extends ServiceTest {
 	@Test
 	void getSpecialAbilityStats() {
 		var activatedAbility = (ActivatedAbility) spellRepository.getSpell(SpellId.of(132483), PHASE).orElseThrow();//The Skull of Gul'dan
-		var stats = calculationService.getSpecialAbilityStats(SpecialAbility.of(activatedAbility), character);
+		var stats = calculationService.getSpecialAbilityStats(SpecialAbility.of(activatedAbility), player);
 
 		assertThat(stats.getSpEquivalent()).isEqualTo(32.31, PRECISION);
 	}
@@ -226,6 +226,6 @@ class CalculationServiceTest extends ServiceTest {
 	void setup() {
 		super.setup();
 
-		equipGearSet(character);
+		equipGearSet(player);
 	}
 }

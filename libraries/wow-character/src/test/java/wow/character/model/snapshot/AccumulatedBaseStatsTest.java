@@ -192,7 +192,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 
 	@BeforeEach
 	void setUp() {
-		var caster = getCharacter();
+		var caster = getPlayer();
 		var conditionArgs = AttributeConditionArgs.forBaseStats(caster);
 
 		this.baseStats = new AccumulatedBaseStats(conditionArgs);

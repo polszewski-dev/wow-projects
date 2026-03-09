@@ -68,12 +68,12 @@ class SpellbookTest extends WowCharacterSpringTest {
 		assertThat(spell.getRank()).isEqualTo(1);
 	}
 
-	Character character;
+	Character player;
 	Spellbook spellbook;
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
-		spellbook = character.getSpellbook();
+		player = getPlayer();
+		spellbook = player.getSpellbook();
 	}
 }

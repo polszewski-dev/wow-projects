@@ -253,7 +253,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 			"Scryer's Bloodgem,        TRINKET_2, TRINKET_1",
 	})
 	void duplicateItemUnequipped(String itemName, ItemSlot slot1, ItemSlot slot2) {
-		var player = getCharacter();
+		var player = getPlayer();
 		var uniqueItem = getItem(itemName);
 
 		underTest.equipItem(player, slot1, null);
@@ -272,7 +272,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void duplicateGemIsUnequippedFromAnotherItem() {
-		var player = getCharacter();
+		var player = getPlayer();
 		var uniqueGemName = "Shining Fire Opal";
 		var normalGemName = "Reckless Pyrestone";
 		var uniqueGem = getGem(uniqueGemName);
@@ -296,7 +296,7 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void duplicateGemIsUnequippedFromTheSameItem() {
-		var player = getCharacter();
+		var player = getPlayer();
 		var uniqueGemName = "Shining Fire Opal";
 		var normalGemName = "Reckless Pyrestone";
 		var uniqueGem = getGem(uniqueGemName);

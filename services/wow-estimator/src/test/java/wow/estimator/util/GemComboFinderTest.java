@@ -54,11 +54,11 @@ class GemComboFinderTest extends WowEstimatorSpringTest {
 	})
 	void getGemCombos(String colorStr, int expectedComboCount, int expectedMatchingComboCount) {
 		var socketTypes = Stream.of(colorStr.split(";")).map(SocketType::valueOf).toList();
-		var character = getCharacter();
+		var player = getPlayer();
 		var specification = new ItemSocketSpecification(socketTypes, Effect.EMPTY);
 		var sockets = ItemSockets.create(specification);
 
-		var finder = new GemComboFinder(character, specification, HEAD, false, itemService);
+		var finder = new GemComboFinder(player, specification, HEAD, false, itemService);
 
 		var gemCombos = finder.getGemCombos();
 		var matchingCount = gemCombos.stream().filter(sockets::matchesSockets).count();
@@ -98,11 +98,11 @@ class GemComboFinderTest extends WowEstimatorSpringTest {
 	})
 	void getGemCombosWithUniqueGems(String colorStr, int expectedComboCount, int expectedMatchingComboCount) {
 		var socketTypes = Stream.of(colorStr.split(";")).map(SocketType::valueOf).toList();
-		var character = getCharacter();
+		var player = getPlayer();
 		var specification = new ItemSocketSpecification(socketTypes, Effect.EMPTY);
 		var sockets = ItemSockets.create(specification);
 
-		var finder = new GemComboFinder(character, specification, HEAD, true, itemService);
+		var finder = new GemComboFinder(player, specification, HEAD, true, itemService);
 
 		var gemCombos = finder.getGemCombos();
 		var matchingCount = gemCombos.stream().filter(sockets::matchesSockets).count();

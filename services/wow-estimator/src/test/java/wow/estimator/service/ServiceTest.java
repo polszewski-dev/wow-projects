@@ -11,14 +11,14 @@ import wow.estimator.model.Player;
  * Date: 2022-11-20
  */
 abstract class ServiceTest extends WowEstimatorSpringTest {
-	Player character;
+	Player player;
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
+		player = getPlayer();
 	}
 
 	Ability getAbility(AbilityId abilityId) {
-		return character.getAbility(abilityId).orElseThrow();
+		return player.getAbility(abilityId).orElseThrow();
 	}
 }

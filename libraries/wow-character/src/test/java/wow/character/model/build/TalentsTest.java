@@ -72,12 +72,12 @@ class TalentsTest extends WowCharacterSpringTest {
 		assertThat(talents.has(SHADOW_MASTERY, 1)).isFalse();
 	}
 
-	PlayerCharacter character;
+	PlayerCharacter player;
 	Talents talents;
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
-		talents = character.getTalents();
+		player = getPlayer();
+		talents = player.getTalents();
 	}
 }

@@ -14,12 +14,12 @@ abstract class ControllerTest extends WowEstimatorSpringTest {
 	@Autowired
 	PlayerConverter playerConverter;
 
-	Player character;
+	Player player;
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
+		player = getPlayer();
 
-		equipGearSet(character);
+		equipGearSet(player);
 	}
 }

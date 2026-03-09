@@ -97,7 +97,7 @@ class AccumulatedRegenStatsTest extends WowCharacterSpringTest {
 
 	@BeforeEach
 	void setUp() {
-		var caster = getCharacter();
+		var caster = getPlayer();
 		var conditionArgs = AttributeConditionArgs.forRegen(caster);
 
 		this.regenStats = new AccumulatedRegenStats(conditionArgs);

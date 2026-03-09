@@ -23,8 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 	@Test
 	void activatedAbilities() {
-		character.equip(getItem("The Skull of Gul'dan"), ItemSlot.TRINKET_1);
-		character.equip(getItem("Shifting Naaru Sliver"), ItemSlot.TRINKET_2);
+		player.equip(getItem("The Skull of Gul'dan"), ItemSlot.TRINKET_1);
+		player.equip(getItem("Shifting Naaru Sliver"), ItemSlot.TRINKET_2);
 
 		effectCollector.solveAll();
 
@@ -36,8 +36,8 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 
 	@Test
 	void setBonuses2Pieces() {
-		character.equip(getItem("Mantle of the Malefic"));
-		character.equip(getItem("Bracers of the Malefic"));
+		player.equip(getItem("Mantle of the Malefic"));
+		player.equip(getItem("Bracers of the Malefic"));
 
 		onlySetBonusesAndMeta();
 
@@ -48,10 +48,10 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 
 	@Test
 	void setBonuses4Pieces() {
-		character.equip(getItem("Mantle of the Malefic"));
-		character.equip(getItem("Bracers of the Malefic"));
-		character.equip(getItem("Belt of the Malefic"));
-		character.equip(getItem("Boots of the Malefic"));
+		player.equip(getItem("Mantle of the Malefic"));
+		player.equip(getItem("Bracers of the Malefic"));
+		player.equip(getItem("Belt of the Malefic"));
+		player.equip(getItem("Boots of the Malefic"));
 
 		onlySetBonusesAndMeta();
 
@@ -63,10 +63,10 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 
 	@Test
 	void setBonusesHasRequiredProfession() {
-		assertThat(character.hasProfession(ProfessionId.TAILORING, 350)).isTrue();
+		assertThat(player.hasProfession(ProfessionId.TAILORING, 350)).isTrue();
 
-		character.equip(getItem("Spellstrike Hood"));
-		character.equip(getItem("Spellstrike Pants"));
+		player.equip(getItem("Spellstrike Hood"));
+		player.equip(getItem("Spellstrike Pants"));
 
 		onlySetBonusesAndMeta();
 
@@ -77,12 +77,12 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 
 	@Test
 	void setBonusesHasNotRequiredProfession() {
-		character.resetProfessions();
+		player.resetProfessions();
 
-		assertThat(character.hasProfession(ProfessionId.TAILORING, 350)).isFalse();
+		assertThat(player.hasProfession(ProfessionId.TAILORING, 350)).isFalse();
 
-		character.equip(getItem("Spellstrike Hood"));
-		character.equip(getItem("Spellstrike Pants"));
+		player.equip(getItem("Spellstrike Hood"));
+		player.equip(getItem("Spellstrike Pants"));
 
 		onlySetBonusesAndMeta();
 
@@ -95,8 +95,8 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 		Gem orangeGem = getGem("Reckless Pyrestone");
 		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
 
-		character.equip(getItem("Hood of the Corruptor").gem(metaGem, violetGem));//mv
-		character.equip(getItem("Mantle of the Malefic").gem(violetGem, orangeGem));//by
+		player.equip(getItem("Hood of the Corruptor").gem(metaGem, violetGem));//mv
+		player.equip(getItem("Mantle of the Malefic").gem(violetGem, orangeGem));//by
 
 		onlySetBonusesAndMeta();
 
@@ -115,8 +115,8 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 		Gem orangeGem = getGem("Reckless Pyrestone");
 		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
 
-		character.equip(getItem("Hood of the Corruptor").gem(metaGem, violetGem));//mv
-		character.equip(getItem("Mantle of the Malefic").gem(orangeGem, orangeGem));//by
+		player.equip(getItem("Hood of the Corruptor").gem(metaGem, violetGem));//mv
+		player.equip(getItem("Mantle of the Malefic").gem(orangeGem, orangeGem));//by
 
 		onlySetBonusesAndMeta();
 
@@ -132,17 +132,17 @@ class AbstractEffectCollectorTest extends WowCharacterSpringTest {
 		effectCollector.collectRest();
 	}
 
-	PlayerCharacter character;
+	PlayerCharacter player;
 	TestEffectCollector effectCollector;
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
-		character.resetBuffs();
-		character.resetEquipment();
-		character.resetBuild();
+		player = getPlayer();
+		player.resetBuffs();
+		player.resetEquipment();
+		player.resetBuild();
 
-		effectCollector = new TestEffectCollector(character);
+		effectCollector = new TestEffectCollector(player);
 	}
 
 	static class TestEffectCollector extends AbstractEffectCollector {

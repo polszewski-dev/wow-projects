@@ -28,7 +28,7 @@ class UpgradeControllerTest extends ControllerTest {
 
 	@Test
 	void findUpgrades() throws Exception {
-		var playerDTO = playerConverter.convert(character);
+		var playerDTO = playerConverter.convert(player);
 		var slotGroup = ItemSlotGroup.HEAD;
 		var itemFilterDTO = new ItemFilterDTO(true, true, true, true, true, true);
 		var itemLevelFilterDTO = new ItemLevelFilterDTO(Map.of());
@@ -51,9 +51,9 @@ class UpgradeControllerTest extends ControllerTest {
 
 	@Test
 	void getBestItemVariant() throws Exception {
-		var playerDTO = playerConverter.convert(character);
+		var playerDTO = playerConverter.convert(player);
 		var itemSlot = ItemSlot.HEAD;
-		var item = character.getEquippedItem(itemSlot).getItem();
+		var item = player.getEquippedItem(itemSlot).getItem();
 		int itemId = item.getId().value();
 		var gemFilterDTO = new GemFilterDTO(true);
 		var enchantNames = Set.<String>of();

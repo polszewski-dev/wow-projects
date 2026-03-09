@@ -30,8 +30,8 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 
 	@Test
 	void getCharacterTemplate() {
-		var character = getCharacter();
-		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, character);
+		var player = getPlayer();
+		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, player);
 
 		assertThat(optionalCharacterTemplate).isPresent();
 
@@ -73,8 +73,8 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 
 	@Test
 	void getDefaultCharacterTemplate() {
-		var character = getCharacter();
-		var characterTemplate = underTest.getDefaultCharacterTemplate(character).orElseThrow();
+		var player = getPlayer();
+		var characterTemplate = underTest.getDefaultCharacterTemplate(player).orElseThrow();
 
 		assertThat(characterTemplate.getName()).isEqualTo(WARLOCK_TEMPLATE_NAME);
 		assertThat(characterTemplate.isDefault()).isTrue();
@@ -83,8 +83,8 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 10, 20, 30, 40, 50, 60, 70 })
 	void namedTemplatePresentForEachLevel(int level) {
-		var character = getCharacter(WARLOCK, RACE, level, TBC_P5);
-		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, character);
+		var player = getPlayer(WARLOCK, RACE, level, TBC_P5);
+		var optionalCharacterTemplate = underTest.getCharacterTemplate(WARLOCK_TEMPLATE_NAME, player);
 
 		assertThat(optionalCharacterTemplate).isPresent();
 
@@ -96,8 +96,8 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 10, 20, 30, 40, 50, 60, 70 })
 	void defaultTemplatePresentForEachLevel(int level) {
-		var character = getCharacter(WARLOCK, RACE, level, TBC_P5);
-		var optionalCharacterTemplate = underTest.getDefaultCharacterTemplate(character);
+		var player = getPlayer(WARLOCK, RACE, level, TBC_P5);
+		var optionalCharacterTemplate = underTest.getDefaultCharacterTemplate(player);
 
 		assertThat(optionalCharacterTemplate).isPresent();
 

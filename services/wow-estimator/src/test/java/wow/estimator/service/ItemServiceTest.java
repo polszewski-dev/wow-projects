@@ -52,11 +52,11 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getItemsBySlot() {
-		List<Item> itemsBySlot = underTest.getItemsBySlot(character, ItemSlot.TRINKET_1, ItemFilter.everything(), ItemLevelFilter.everything()).stream()
+		var itemsBySlot = underTest.getItemsBySlot(player, ItemSlot.TRINKET_1, ItemFilter.everything(), ItemLevelFilter.everything()).stream()
 				.sorted(Comparator.comparing(Item::getName))
 				.toList();
 
-		List<String> names = itemsBySlot.stream().map(Item::getName).toList();
+		var names = itemsBySlot.stream().map(Item::getName).toList();
 
 		assertThat(names).contains(
 				"Shifting Naaru Sliver",
@@ -66,10 +66,10 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGems() {
-		List<Gem> metaGems = underTest.getGems(character, SocketType.META, false);
-		List<Gem> coloredGems = underTest.getGems(character, SocketType.YELLOW, false);
+		var metaGems = underTest.getGems(player, SocketType.META, false);
+		var coloredGems = underTest.getGems(player, SocketType.YELLOW, false);
 
-		List<String> metaGemNames = metaGems.stream().map(Gem::getName).toList();
+		var metaGemNames = metaGems.stream().map(Gem::getName).toList();
 
 		assertThat(metaGemNames).hasSameElementsAs(List.of(
 				"Destructive Skyfire Diamond",
@@ -79,7 +79,7 @@ class ItemServiceTest extends ServiceTest {
 				"Imbued Unstable Diamond"
 		));
 
-		List<String> coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
+		var coloredGemNames = coloredGems.stream().map(Gem::getName).toList();
 
 		assertThat(coloredGemNames).hasSameElementsAs(List.of(
 				"Runed Blood Garnet",
@@ -114,9 +114,9 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Bracers of the Malefic").getItem(), WRIST, GemFilter.empty());
+		var gemCombos = underTest.getBestGemCombos(player, getItem("Bracers of the Malefic").getItem(), WRIST, GemFilter.empty());
 
-		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
+		var names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
 				"Quick Lionseye",
@@ -134,18 +134,18 @@ class ItemServiceTest extends ServiceTest {
 
 	@Test
 	void getGemCombos2() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Dark Conjuror's Collar").getItem(), HEAD, GemFilter.empty());
+		var gemCombos = underTest.getBestGemCombos(player, getItem("Dark Conjuror's Collar").getItem(), HEAD, GemFilter.empty());
 
-		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
+		var names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
 		assertThat(names).hasSize(50);
 	}
 
 	@Test
 	void getGemCombos3() {
-		List<Gem[]> gemCombos = underTest.getBestGemCombos(character, getItem("Sunfire Robe").getItem(), CHEST, GemFilter.empty());
+		var gemCombos = underTest.getBestGemCombos(player, getItem("Sunfire Robe").getItem(), CHEST, GemFilter.empty());
 
-		List<String> names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
+		var names = gemCombos.stream().map(x -> Stream.of(x).map(Gem::getName).collect(Collectors.joining(","))).toList();
 
 		assertThat(names).hasSize(220);
 	}
@@ -358,13 +358,13 @@ class ItemServiceTest extends ServiceTest {
 		var gameVersion = gameVersionRepository.getGameVersion(gameVersionId).orElseThrow();
 		var lastPhase = gameVersion.getLastPhase();
 		var maxLevel = lastPhase.getMaxLevel();
-		var character = getCharacter(characterClassId, RaceId.UNDEAD, maxLevel, lastPhase.getPhaseId());
+		var player = getPlayer(characterClassId, RaceId.UNDEAD, maxLevel, lastPhase.getPhaseId());
 
 		if (exclusiveFaction != null) {
-			character.getExclusiveFactions().set(List.of(exclusiveFaction));
+			player.getExclusiveFactions().set(List.of(exclusiveFaction));
 		}
 
-		var enchants = underTest.getBestEnchants(character, itemType, itemSubType);
+		var enchants = underTest.getBestEnchants(player, itemType, itemSubType);
 
 		assertThat(enchants.stream().map(Enchant::getName)).hasSameElementsAs(expectedResult);
 	}

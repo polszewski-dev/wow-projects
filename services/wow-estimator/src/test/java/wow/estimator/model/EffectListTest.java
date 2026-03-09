@@ -24,7 +24,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void addEffectSingleStack() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var effect = getEffect(28189); // Fel Armor
 
 		effectList.addEffect(effect);
@@ -38,7 +38,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 
 	@Test
 	void addEffectMultipleStacks() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var effect = getEffect(39441); // Darkmoon Card: Crusade
 
 		effectList.addEffect(effect, 10);
@@ -52,7 +52,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 
 	@Test
 	void addEffectActivatedAbility() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var activatedAbility = getActivatedAbility(132483); // The Skull of Gul'dan
 
 		effectList.addActivatedAbility(activatedAbility);
@@ -64,7 +64,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 
 	@Test
 	void removeEffectSingleStack() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var effect = getEffect(28189); // Fel Armor
 
 		effectList.addEffect(effect);
@@ -76,7 +76,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 
 	@Test
 	void removeEffectMultipleStacks() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var effect = getEffect(39441); // Darkmoon Card: Crusade
 
 		effectList.addEffect(effect, 10);
@@ -89,7 +89,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 
 	@Test
 	void removeEffectNotOnTheListModifierOnly() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var effect = EffectImpl.newAttributeEffect(Attributes.of(
 				POWER_PCT, 1
 		));
@@ -109,7 +109,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 
 	@Test
 	void removeEffectActivatedAbility() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var activatedAbility = getActivatedAbility(132483); // The Skull of Gul'dan
 
 		effectList.addActivatedAbility(activatedAbility);
@@ -121,7 +121,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 
 	@Test
 	void removeAll() {
-		var effectList = new EffectList(character);
+		var effectList = new EffectList(player);
 		var effect = getEffect(28189); // Fel Armor
 		var activatedAbility = getActivatedAbility(132483); // The Skull of Gul'dan
 
@@ -134,12 +134,12 @@ class EffectListTest extends WowEstimatorSpringTest {
 		assertThat(effectList.getActivatedAbilities()).isEmpty();
 	}
 
-	Player character;
+	Player player;
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
-		equipGearSet(character);
+		player = getPlayer();
+		equipGearSet(player);
 	}
 
 	private Effect getEffect(int effectId) {

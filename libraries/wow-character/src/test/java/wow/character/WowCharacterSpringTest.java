@@ -85,15 +85,15 @@ public abstract class WowCharacterSpringTest {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected PlayerCharacter getCharacter() {
-		return getCharacter(CHARACTER_CLASS, RACE);
+	protected PlayerCharacter getPlayer() {
+		return getPlayer(CHARACTER_CLASS, RACE);
 	}
 
-	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race) {
-		return getCharacter(characterClass, race, LEVEL, PHASE);
+	protected PlayerCharacter getPlayer(CharacterClassId characterClass, RaceId race) {
+		return getPlayer(characterClass, race, LEVEL, PHASE);
 	}
 
-	protected PlayerCharacter getCharacter(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+	protected PlayerCharacter getPlayer(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
 				"Player",
 				characterClass,

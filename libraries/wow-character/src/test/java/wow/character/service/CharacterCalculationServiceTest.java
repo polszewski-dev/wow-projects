@@ -61,7 +61,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"MaxMana%",
 	})
 	void newAccumulatedBaseStats(String idStr) {
-		var stats = characterCalculationService.newAccumulatedBaseStats(character);
+		var stats = characterCalculationService.newAccumulatedBaseStats(player);
 
 		assertAccumulatedValue(idStr, 10, 10, null, stats, this::getValue);
 	}
@@ -77,10 +77,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"CastTime%,   Shadow Bolt"
 	})
 	void newAccumulatedCastStats(String idStr, String conditionStr) {
-		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCastStats(character, ability, null);
+		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
+		var stats = characterCalculationService.newAccumulatedCastStats(player, ability, null);
 
-		character.setHealthPct(Percent.of(30));
+		player.setHealthPct(Percent.of(30));
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -92,8 +92,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"Haste%, Owner.Health% < 70",
 	})
 	void newAccumulatedCastStatsNotMatchingCondition(String idStr, String conditionStr) {
-		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCastStats(character, ability, null);
+		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
+		var stats = characterCalculationService.newAccumulatedCastStats(player, ability, null);
 
 		assertAccumulatedValue(idStr, 10, 0, conditionStr, stats, this::getValue);
 	}
@@ -118,8 +118,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"Cooldown%,      Curse of Doom",
 	})
 	void newAccumulatedCostStats(String idStr, String conditionStr) {
-		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCostStats(character, ability, null);
+		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var stats = characterCalculationService.newAccumulatedCostStats(player, ability, null);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -136,7 +136,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"PowerTaken,      SpellDamage",
 	})
 	void newAccumulatedTargetStats(String idStr, String conditionStr) {
-		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var stats = characterCalculationService.newAccumulatedTargetStats(target, ability, SPELL_DAMAGE, SpellSchool.SHADOW);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
@@ -144,13 +144,13 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void newAccumulatedTargetStatsTargetHasPet() {
-		var playerTarget = character;
+		var playerTarget = player;
 
 		playerTarget.getBuild().setActivePet(PetType.VOIDWALKER);
 
 		var idStr = "DamageTaken%";
 		var conditionStr = "Spell & Voidwalker";
-		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var stats = characterCalculationService.newAccumulatedTargetStats(playerTarget, ability, SPELL_DAMAGE, SpellSchool.SHADOW);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
@@ -167,8 +167,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"HitRating, Spell",
 	})
 	void newAccumulatedHitStats(String idStr, String conditionStr) {
-		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedHitStats(character, ability, target);
+		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var stats = characterCalculationService.newAccumulatedHitStats(player, ability, target);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -183,9 +183,9 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"HasteRating, Spell"
 	})
 	void newAccumulatedDurationStats(String idStr, String conditionStr) {
-		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
-		var stats = characterCalculationService.newAccumulatedDurationStats(character, ability, target, command);
+		var stats = characterCalculationService.newAccumulatedDurationStats(player, ability, target, command);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -196,7 +196,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"ReceivedEffectDuration%, Curses",
 	})
 	void newAccumulatedReceivedEffectStats(String idStr, String conditionStr) {
-		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
 		var stats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability, command);
 
@@ -234,11 +234,11 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"CritCoeff%,",
 	})
 	void newAccumulatedDirectComponentStats(String idStr, String conditionStr) {
-		character.getBuild().setActivePet(PetType.SUCCUBUS);
+		player.getBuild().setActivePet(PetType.SUCCUBUS);
 
-		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
+		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (ChangeHealthDirectly) ability.getDirectCommands().getFirst();
-		var stats = characterCalculationService.newAccumulatedDirectComponentStats(character, ability, target, SPELL_DAMAGE, directCommand);
+		var stats = characterCalculationService.newAccumulatedDirectComponentStats(player, ability, target, SPELL_DAMAGE, directCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -272,11 +272,11 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"CritRating,            SpellDamage",
 	})
 	void newAccumulatedPeriodicComponentStats(String idStr, String conditionStr) {
-		character.getBuild().setActivePet(PetType.SUCCUBUS);
+		player.getBuild().setActivePet(PetType.SUCCUBUS);
 
-		var ability = character.getAbility(CURSE_OF_DOOM).orElseThrow();
+		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var periodicCommand = ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
-		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(character, ability, target, SPELL_DAMAGE, periodicCommand);
+		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(player, ability, target, SPELL_DAMAGE, periodicCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -297,10 +297,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getBaseStatsSnapshot() {
-		character.resetEquipment();
-		character.resetBuffs();
+		player.resetEquipment();
+		player.resetBuffs();
 
-		var snapshot = characterCalculationService.getBaseStatsSnapshot(character);
+		var snapshot = characterCalculationService.getBaseStatsSnapshot(player);
 
 		assertThat(snapshot.getStrength()).isEqualTo(50);
 		assertThat(snapshot.getAgility()).isEqualTo(56);
@@ -313,10 +313,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getSpellCastSnapshot() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCastSnapshot(character, ability, (Character) null);
+		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
+		var snapshot = characterCalculationService.getSpellCastSnapshot(player, ability, (Character) null);
 
 		assertThat(snapshot.getHastePct()).isZero();
 		assertThat(snapshot.getCastTime()).isEqualTo(2.5);
@@ -326,11 +326,11 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getSpellCostSnapshot() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
-		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, null, baseStats);
+		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
+		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
+		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, null, baseStats);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.MANA);
 		assertThat(snapshot.getCost()).isEqualTo(399);
@@ -340,15 +340,15 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getSpellCostSnapshot2() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		character.getTalents().loadFromTalentLink("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025");
+		player.getTalents().loadFromTalentLink("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025");
 
-		assertThat(character.hasTalent(IMPROVED_LIFE_TAP)).isTrue();
+		assertThat(player.hasTalent(IMPROVED_LIFE_TAP)).isTrue();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
-		var ability = character.getAbility(LIFE_TAP).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, null, baseStats);
+		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
+		var ability = player.getAbility(LIFE_TAP).orElseThrow();
+		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, null, baseStats);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.HEALTH);
 		assertThat(snapshot.getCost()).isEqualTo(698);
@@ -358,11 +358,11 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getSpellCostSnapshot3() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
-		var ability = character.getAbility(SHADOWBURN).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(character, ability, null, baseStats);
+		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
+		var ability = player.getAbility(SHADOWBURN).orElseThrow();
+		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, null, baseStats);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.MANA);
 		assertThat(snapshot.getCost()).isEqualTo(489);
@@ -372,19 +372,19 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getSpellHitPct() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		character.getTalents().loadFromTalentLink("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025");
+		player.getTalents().loadFromTalentLink("https://www.wowhead.com/tbc/talent-calc/warlock/550220200203--55500051221001303025");
 
-		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();
-		var hitPct = characterCalculationService.getSpellHitPct(character, ability, target);
+		var ability = player.getAbility(CURSE_OF_AGONY).orElseThrow();
+		var hitPct = characterCalculationService.getSpellHitPct(player, ability, target);
 
 		assertThat(hitPct).isEqualTo(96);
 	}
 
 	@Test
 	void getEffectDurationSnapshotEffectZero() {
-		var priest = getCharacter(PRIEST, UNDEAD);
+		var priest = getPlayer(PRIEST, UNDEAD);
 
 		priest.resetEquipment();
 
@@ -399,9 +399,9 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getEffectDurationSnapshotEffectSomeHaste() {
-		var priest = getCharacter(PRIEST, UNDEAD);
+		var priest = getPlayer(PRIEST, UNDEAD);
 
-		equipGearSet(character);
+		equipGearSet(player);
 
 		var ability = priest.getAbility(SHADOW_WORD_PAIN).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
@@ -414,11 +414,11 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getEffectDurationSnapshotChannelZeroHaste() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
+		var ability = player.getAbility(DRAIN_LIFE).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
-		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target, command);
+		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(player, ability, target, command);
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.seconds(5));
 		assertThat(durationSnapshot.getNumTicks()).isEqualTo(5);
@@ -427,11 +427,11 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getEffectDurationSnapshotChannelSomeHaste() {
-		equipGearSet(character);
+		equipGearSet(player);
 
-		var ability = character.getAbility(DRAIN_LIFE).orElseThrow();
+		var ability = player.getAbility(DRAIN_LIFE).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
-		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(character, ability, target, command);
+		var durationSnapshot = characterCalculationService.getEffectDurationSnapshot(player, ability, target, command);
 
 		assertThat(durationSnapshot.getDuration()).isEqualTo(Duration.millis(3785));
 		assertThat(durationSnapshot.getNumTicks()).isEqualTo(5);
@@ -440,15 +440,15 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getDirectSpellDamageSnapshot() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
+		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 
 		assertThat(baseStats.getIntellect()).isEqualTo(203);
 
-		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
+		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
-		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directCommand, baseStats);
+		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(15.87, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
@@ -461,22 +461,22 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getDirectSpellDamageSnapshotIntToSpConversion() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		character.resetProfessions();
-		character.addProfessionMaxLevel(TAILORING, SPELLFIRE_TAILORING);
+		player.resetProfessions();
+		player.addProfessionMaxLevel(TAILORING, SPELLFIRE_TAILORING);
 
-		character.equip(getItem("Spellfire Robe"));
-		character.equip(getItem("Spellfire Gloves"));
-		character.equip(getItem("Spellfire Belt"));
+		player.equip(getItem("Spellfire Robe"));
+		player.equip(getItem("Spellfire Gloves"));
+		player.equip(getItem("Spellfire Belt"));
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
+		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 
 		assertThat(baseStats.getIntellect()).isEqualTo(253);
 
-		var ability = character.getAbility(SHADOW_BOLT).orElseThrow();
+		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
-		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(character, ability, target, directCommand, baseStats);
+		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand, baseStats);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(19.62, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
@@ -489,13 +489,13 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getPeriodicSpellDamageSnapshot() {
-		character.resetEquipment();
+		player.resetEquipment();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(character);
+		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 
-		var ability = character.getAbility(CURSE_OF_AGONY).orElseThrow();
+		var ability = player.getAbility(CURSE_OF_AGONY).orElseThrow();
 		var periodicCommand = (DealDamagePeriodically) ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
-		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(character, ability, target, periodicCommand, baseStats);
+		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(player, ability, target, periodicCommand, baseStats);
 
 		assertThat(snapshot.getAmount()).isZero();
 		assertThat(snapshot.getAmountPct()).isEqualTo(25);
@@ -506,9 +506,9 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@Test
 	void getStatSummary() {
-		equipGearSet(character);
+		equipGearSet(player);
 
-		var snapshot = characterCalculationService.getStatSummary(character);
+		var snapshot = characterCalculationService.getStatSummary(player);
 
 		assertThat(snapshot.getStrength()).isEqualTo(77);
 		assertThat(snapshot.getAgility()).isEqualTo(83);
@@ -642,12 +642,12 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	PlayerCharacter character;
+	PlayerCharacter player;
 	Character target;
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
-		target = character.getTarget();
+		player = getPlayer();
+		target = player.getTarget();
 	}
 }

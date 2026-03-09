@@ -24,8 +24,8 @@ class GearSetRepositoryTest extends WowCharacterSpringTest {
 
 	@Test
 	void getGearSet() {
-		var character = getCharacter(PRIEST, UNDEAD, 70, TBC_P5);
-		var gearSet = gearSetRepository.getGearSet("Wowhead TBC P5 BiS", character).orElseThrow();
+		var player = getPlayer(PRIEST, UNDEAD, 70, TBC_P5);
+		var gearSet = gearSetRepository.getGearSet("Wowhead TBC P5 BiS", player).orElseThrow();
 
 		assertSlot(gearSet, HEAD, "Dark Conjuror's Collar", "Glyph of Power", "Mystical Skyfire Diamond", "Glowing Shadowsong Amethyst");
 		assertSlot(gearSet, NECK, "Amulet of Unfettered Magics");

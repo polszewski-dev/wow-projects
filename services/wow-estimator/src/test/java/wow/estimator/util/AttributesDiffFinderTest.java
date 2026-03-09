@@ -26,7 +26,7 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 	void singleItem() {
 		var chest = getItem("Sunfire Robe").gem(orangeGem, orangeGem, orangeGem);
 
-		var finder = new AttributesDiffFinder(character, ItemSlotGroup.CHEST, List.of(chest));
+		var finder = new AttributesDiffFinder(player, ItemSlotGroup.CHEST, List.of(chest));
 		var diff = finder.getDiff();
 
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
@@ -48,10 +48,10 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 		var shoulderWrongGem = getItem("Mantle of the Malefic").enchant(getEnchant("Greater Inscription of the Orb")).gem(orangeGem, orangeGem);
 		var shoulder = getItem("Mantle of the Malefic").enchant(getEnchant("Greater Inscription of the Orb")).gem(violetGem, orangeGem);
 
-		character.equip(head);
-		character.equip(shoulderWrongGem);
+		player.equip(head);
+		player.equip(shoulderWrongGem);
 
-		var finder = new AttributesDiffFinder(character, ItemSlotGroup.SHOULDER, List.of(shoulder));
+		var finder = new AttributesDiffFinder(player, ItemSlotGroup.SHOULDER, List.of(shoulder));
 		var diff = finder.getDiff();
 
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
@@ -73,11 +73,11 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 		var t6Head = getItem("Hood of the Malefic");
 		var t6Shoulder = getItem("Mantle of the Malefic");
 
-		character.equip(t4Shoulder);
-		character.equip(t4Hands);
-		character.equip(t6Head);
+		player.equip(t4Shoulder);
+		player.equip(t4Hands);
+		player.equip(t6Head);
 
-		var finder = new AttributesDiffFinder(character, ItemSlotGroup.SHOULDER, List.of(t6Shoulder));
+		var finder = new AttributesDiffFinder(player, ItemSlotGroup.SHOULDER, List.of(t6Shoulder));
 		var diff = finder.getDiff();
 
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
@@ -101,9 +101,9 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 		var bloodGem = getItem("Scryer's Bloodgem");
 		var silver = getItem("Shifting Naaru Sliver");
 
-		character.equip(bloodGem, ItemSlot.TRINKET_1);
+		player.equip(bloodGem, ItemSlot.TRINKET_1);
 
-		var finder = new AttributesDiffFinder(character, ItemSlotGroup.TRINKET_1, List.of(silver));
+		var finder = new AttributesDiffFinder(player, ItemSlotGroup.TRINKET_1, List.of(silver));
 		var diff = finder.getDiff();
 
 		assertThat(diff.attributes().list()).isEqualTo(List.of(
@@ -122,7 +122,7 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 		return specialAbilities.stream().map(SpecialAbility::getTooltip).toList();
 	}
 
-	Player character;
+	Player player;
 
 	Gem metaGem;
 	Gem redGem;
@@ -131,8 +131,8 @@ class AttributesDiffFinderTest extends WowEstimatorSpringTest {
 
 	@BeforeEach
 	void setup() {
-		character = getCharacter();
-		character.resetEquipment();
+		player = getPlayer();
+		player.resetEquipment();
 
 		metaGem = getGem("Chaotic Skyfire Diamond");
 		redGem = getGem(32196);

@@ -26,7 +26,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getAbilityStats() throws Exception {
-		var playerDTO = playerConverter.convert(character);
+		var playerDTO = playerConverter.convert(player);
 		var request = new GetAbilityStatsRequestDTO(playerDTO, List.of(SHADOW_BOLT), true, 10);
 
 		var objectMapper = new ObjectMapper();
@@ -43,7 +43,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getCharacterStats() throws Exception {
-		var playerDTO = playerConverter.convert(character);
+		var playerDTO = playerConverter.convert(player);
 		var request = new GetCharacterStatsRequestDTO(playerDTO, true);
 
 		var objectMapper = new ObjectMapper();
@@ -60,7 +60,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getSpecialAbilityStats() throws Exception {
-		var playerDTO = playerConverter.convert(character);
+		var playerDTO = playerConverter.convert(player);
 		var request = new GetSpecialAbilityStatsRequestDTO(playerDTO);
 
 		var objectMapper = new ObjectMapper();
@@ -77,7 +77,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getRotationStats() throws Exception {
-		var playerDTO = playerConverter.convert(character);
+		var playerDTO = playerConverter.convert(player);
 		var request = new GetRotationStatsRequestDTO(playerDTO);
 
 		var objectMapper = new ObjectMapper();
@@ -94,7 +94,7 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getTalentStats() throws Exception {
-		var playerDTO = playerConverter.convert(character);
+		var playerDTO = playerConverter.convert(player);
 		var request = new GetTalentStatsRequestDTO(playerDTO);
 
 		var objectMapper = new ObjectMapper();
