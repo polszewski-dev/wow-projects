@@ -125,7 +125,7 @@ public abstract class WowMinMaxSpringTest {
 		var player = getPlayer();
 
 		return new PlayerProfile(
-				PROFILE_ID.toString(), PROFILE_NAME, player.getCharacterClassId(), player.getRaceId(), LocalDateTime.now(), CHARACTER_KEY.toString()
+				PROFILE_ID.toString(), PROFILE_NAME, player.getCharacterClassId(), player.getRaceId(), LocalDateTime.now(), PLAYER_ID.toString()
 		);
 	}
 
@@ -138,7 +138,7 @@ public abstract class WowMinMaxSpringTest {
 	protected static final int LEVEL = 70;
 	protected static final CreatureType ENEMY_TYPE = UNDEAD;
 	protected static final int LVL_DIFF = 3;
-	protected static final PlayerId CHARACTER_KEY = new PlayerId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);
+	protected static final PlayerId PLAYER_ID = new PlayerId(PROFILE_ID, PHASE, LEVEL, ENEMY_TYPE, LVL_DIFF);
 
 	protected static void assertId(AbstractItem<?> item, int id) {
 		assertThat(item.getId().value()).isEqualTo(id);

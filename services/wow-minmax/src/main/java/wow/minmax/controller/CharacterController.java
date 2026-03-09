@@ -29,7 +29,7 @@ public class CharacterController {
 	private final ScriptInfoConverter scriptInfoConverter;
 
 	@GetMapping("{playerId}")
-	public PlayerInfoDTO getCharacter(
+	public PlayerInfoDTO getPlayer(
 			@PathVariable("playerId") PlayerId playerId
 	) {
 		var player = playerService.getPlayer(playerId);

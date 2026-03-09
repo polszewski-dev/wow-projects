@@ -21,7 +21,7 @@ import static wow.test.commons.BuffNames.FLASK_OF_SUPREME_POWER;
 class BuffServiceTest extends ServiceTest {
 	@Test
 	void getBuffStatuses() {
-		var buffStatuses = underTest.getBuffStatuses(CHARACTER_KEY, CHARACTER_BUFF);
+		var buffStatuses = underTest.getBuffStatuses(PLAYER_ID, CHARACTER_BUFF);
 
 		var statusStrings = buffStatuses.stream()
 				.map(x -> x.buff().getName() + "#" + x.enabled())
@@ -55,7 +55,7 @@ class BuffServiceTest extends ServiceTest {
 		assertBuffStatus(FLASK_OF_SUPREME_POWER, false);
 		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
-		underTest.changeBuffStatus(CHARACTER_KEY, CHARACTER_BUFF, BuffId.of(17628), true);// FLASK_OF_SUPREME_POWER
+		underTest.changeBuffStatus(PLAYER_ID, CHARACTER_BUFF, BuffId.of(17628), true);// FLASK_OF_SUPREME_POWER
 
 		assertBuffStatus(FLASK_OF_SUPREME_POWER, true);
 		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
@@ -65,7 +65,7 @@ class BuffServiceTest extends ServiceTest {
 	void disableBuff() {
 		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
-		underTest.changeBuffStatus(CHARACTER_KEY, CHARACTER_BUFF, BuffId.of(28540), false);// FLASK_OF_PURE_DEATH
+		underTest.changeBuffStatus(PLAYER_ID, CHARACTER_BUFF, BuffId.of(28540), false);// FLASK_OF_PURE_DEATH
 
 		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
 	}

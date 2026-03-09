@@ -38,7 +38,7 @@ class UpgradeControllerTest extends ControllerTest {
 		String requestBody = objectMapper.writeValueAsString(convert);
 
 		mockMvc.perform(
-						get("/api/v1/upgrades/{playerId}/slot/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
+						get("/api/v1/upgrades/{playerId}/slot/{slotGroup}", PLAYER_ID, ItemSlotGroup.CHEST)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)
@@ -46,6 +46,6 @@ class UpgradeControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(playerService).getPlayer(CHARACTER_KEY);
+		verify(playerService).getPlayer(PLAYER_ID);
 	}
 }

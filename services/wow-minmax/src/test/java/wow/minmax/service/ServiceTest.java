@@ -43,15 +43,15 @@ abstract class ServiceTest extends WowMinMaxSpringTest {
 
 		prepareCharacter();
 
-		savedCharacter = playerConfigConverter.convert(player, CHARACTER_KEY);
+		savedCharacter = playerConfigConverter.convert(player, PLAYER_ID);
 
 		when(playerConfigRepository.findAll()).thenAnswer(input -> List.of(savedCharacter));
-		when(playerConfigRepository.findById(CHARACTER_KEY.toString())).thenAnswer(input -> Optional.of(savedCharacter));
+		when(playerConfigRepository.findById(PLAYER_ID.toString())).thenAnswer(input -> Optional.of(savedCharacter));
 
 		when(playerConfigRepository.save(any())).thenAnswer(input -> {
 			var player = input.getArgument(0, PlayerConfig.class);
 
-			if (!savedCharacter.getPlayerIdAsRecord().equals(CHARACTER_KEY)) {
+			if (!savedCharacter.getPlayerIdAsRecord().equals(PLAYER_ID)) {
 				throw new IllegalArgumentException("Only one character can be used");
 			}
 

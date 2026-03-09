@@ -13,7 +13,7 @@ import static wow.commons.model.categorization.ItemSlot.HEAD;
 class EquipmentOptionsServiceTest extends ServiceTest {
 	@Test
 	void getEquipmentOptions() {
-		var equipmentOptions =  underTest.getEquipmentOptions(CHARACTER_KEY);
+		var equipmentOptions =  underTest.getEquipmentOptions(PLAYER_ID);
 
 		assertThat(equipmentOptions.editGems()).isTrue();
 		assertThat(equipmentOptions.heroics()).isTrue();
@@ -21,7 +21,7 @@ class EquipmentOptionsServiceTest extends ServiceTest {
 
 	@Test
 	void getItemOptions() {
-		var itemOptions = underTest.getItemOptions(CHARACTER_KEY, HEAD);
+		var itemOptions = underTest.getItemOptions(PLAYER_ID, HEAD);
 
 		assertThat(itemOptions.itemSlot()).isEqualTo(HEAD);
 		assertThat(itemOptions.items()).hasSize(144);
@@ -29,14 +29,14 @@ class EquipmentOptionsServiceTest extends ServiceTest {
 
 	@Test
 	void getEnchantOptions() {
-		var enchantOptions = underTest.getEnchantOptions(CHARACTER_KEY);
+		var enchantOptions = underTest.getEnchantOptions(PLAYER_ID);
 
 		assertThat(enchantOptions).hasSize(19);
 	}
 
 	@Test
 	void getGemOptions() {
-		var gemOptions = underTest.getGemOptions(CHARACTER_KEY);
+		var gemOptions = underTest.getGemOptions(PLAYER_ID);
 
 		assertThat(gemOptions).hasSize(4);
 	}

@@ -17,7 +17,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2023-04-01
  */
-@Document("character")
+@Document("player")
 @AllArgsConstructor
 @Getter
 @Setter

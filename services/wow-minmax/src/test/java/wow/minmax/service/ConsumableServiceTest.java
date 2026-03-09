@@ -16,7 +16,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 class ConsumableServiceTest extends ServiceTest {
 	@Test
 	void getConsumableStatuses() {
-		var consumableStatuses = underTest.getConsumableStatuses(CHARACTER_KEY);
+		var consumableStatuses = underTest.getConsumableStatuses(PLAYER_ID);
 
 		var statusStrings = consumableStatuses.stream()
 				.map(x -> x.consumable().getName() + "#" + x.enabled())
@@ -39,11 +39,11 @@ class ConsumableServiceTest extends ServiceTest {
 	void enableAndDisableConsumable() {
 		assertConsumableStatus("Destruction Potion", false);
 
-		underTest.changeConsumableStatus(CHARACTER_KEY, "Destruction Potion", true);
+		underTest.changeConsumableStatus(PLAYER_ID, "Destruction Potion", true);
 
 		assertConsumableStatus("Destruction Potion", true);
 
-		underTest.changeConsumableStatus(CHARACTER_KEY, "Destruction Potion", false);
+		underTest.changeConsumableStatus(PLAYER_ID, "Destruction Potion", false);
 
 		assertConsumableStatus("Destruction Potion", false);
 	}

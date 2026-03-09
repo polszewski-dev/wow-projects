@@ -33,7 +33,7 @@ class EquipmentControllerTest extends ControllerTest {
 
 	@Test
 	void getEquipmentTest() throws Exception {
-		mockMvc.perform(get("/api/v1/equipments/{playerId}", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/equipments/{playerId}", PLAYER_ID))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -48,7 +48,7 @@ class EquipmentControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(chestDTO);
 
 		mockMvc.perform(
-				put("/api/v1/equipments/{playerId}/slot/{slot}?best-variant=true", CHARACTER_KEY, ItemSlot.CHEST)
+				put("/api/v1/equipments/{playerId}/slot/{slot}?best-variant=true", PLAYER_ID, ItemSlot.CHEST)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 				)
@@ -56,7 +56,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(equipmentService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(true), any());
+		verify(equipmentService).equipItem(eq(PLAYER_ID), eq(ItemSlot.CHEST), any(), eq(true), any());
 	}
 
 	@Test
@@ -68,7 +68,7 @@ class EquipmentControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(chestDTO);
 
 		mockMvc.perform(
-				put("/api/v1/equipments/{playerId}/slot/{slot}", CHARACTER_KEY, ItemSlot.CHEST)
+				put("/api/v1/equipments/{playerId}/slot/{slot}", PLAYER_ID, ItemSlot.CHEST)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 				)
@@ -76,7 +76,7 @@ class EquipmentControllerTest extends ControllerTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 
-		verify(equipmentService).equipItem(eq(CHARACTER_KEY), eq(ItemSlot.CHEST), any(), eq(false), any());
+		verify(equipmentService).equipItem(eq(PLAYER_ID), eq(ItemSlot.CHEST), any(), eq(false), any());
 	}
 
 	@Test
@@ -88,28 +88,28 @@ class EquipmentControllerTest extends ControllerTest {
 		var requestBody = objectMapper.writeValueAsString(List.of(chestDTO));
 
 		mockMvc.perform(
-				put("/api/v1/equipments/{playerId}/slot-group/{slotGroup}", CHARACTER_KEY, ItemSlotGroup.CHEST)
+				put("/api/v1/equipments/{playerId}/slot-group/{slotGroup}", PLAYER_ID, ItemSlotGroup.CHEST)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(requestBody)
 				)
 				.andExpect(status().isOk())
 		;
 
-		verify(equipmentService).equipItemGroup(eq(CHARACTER_KEY), eq(ItemSlotGroup.CHEST), any());
+		verify(equipmentService).equipItemGroup(eq(PLAYER_ID), eq(ItemSlotGroup.CHEST), any());
 	}
 
 	@Test
 	void resetEquipment() throws Exception {
-		mockMvc.perform(delete("/api/v1/equipments/{playerId}", CHARACTER_KEY))
+		mockMvc.perform(delete("/api/v1/equipments/{playerId}", PLAYER_ID))
 				.andExpect(status().isOk())
 		;
 
-		verify(equipmentService).resetEquipment(CHARACTER_KEY);
+		verify(equipmentService).resetEquipment(PLAYER_ID);
 	}
 
 	@Test
 	void getEquipmentSocketStatus() throws Exception {
-		mockMvc.perform(get("/api/v1/equipments/{playerId}/socket-status", CHARACTER_KEY))
+		mockMvc.perform(get("/api/v1/equipments/{playerId}/socket-status", PLAYER_ID))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;

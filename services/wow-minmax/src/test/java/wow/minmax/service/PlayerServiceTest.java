@@ -22,7 +22,7 @@ import static wow.test.commons.ExclusiveFactionNames.SCRYERS;
 class PlayerServiceTest extends ServiceTest {
 	@Test
 	void getAvailableProfessions() {
-		var availableProfessions = underTest.getAvailableProfessions(CHARACTER_KEY);
+		var availableProfessions = underTest.getAvailableProfessions(PLAYER_ID);
 
 		var list = availableProfessions.stream()
 				.map(x -> new ProfIdSpecId(x.professionId(), x.specializationId()))
@@ -66,7 +66,7 @@ class PlayerServiceTest extends ServiceTest {
 		assertThat(player.hasProfession(ALCHEMY)).isFalse();
 		assertThat(player.hasProfessionSpecialization(TRANSMUTATION_MASTER)).isFalse();
 
-		var player = underTest.changeProfession(CHARACTER_KEY, 1, new ProfIdSpecId(ALCHEMY, TRANSMUTATION_MASTER));
+		var player = underTest.changeProfession(PLAYER_ID, 1, new ProfIdSpecId(ALCHEMY, TRANSMUTATION_MASTER));
 
 		assertThat(player.hasProfession(ALCHEMY)).isTrue();
 		assertThat(player.hasProfessionSpecialization(TRANSMUTATION_MASTER)).isTrue();
@@ -76,7 +76,7 @@ class PlayerServiceTest extends ServiceTest {
 
 	@Test
 	void getAvailableExclusiveFactions() {
-		var availableExclusiveFactions = underTest.getAvailableExclusiveFactions(CHARACTER_KEY);
+		var availableExclusiveFactions = underTest.getAvailableExclusiveFactions(PLAYER_ID);
 
 		assertThat(availableExclusiveFactions).hasSize(1);
 
@@ -94,7 +94,7 @@ class PlayerServiceTest extends ServiceTest {
 		assertThat(player.hasExclusiveFaction(ALDOR)).isFalse();
 		assertThat(player.hasExclusiveFaction(SCRYERS)).isTrue();
 
-		var player = underTest.changeExclusiveFaction(CHARACTER_KEY, ALDOR);
+		var player = underTest.changeExclusiveFaction(PLAYER_ID, ALDOR);
 
 		assertThat(player.hasExclusiveFaction(ALDOR)).isTrue();
 		assertThat(player.hasExclusiveFaction(SCRYERS)).isFalse();
@@ -104,14 +104,14 @@ class PlayerServiceTest extends ServiceTest {
 	void change() {
 		assertThat(player.getTalentLink()).isEqualTo("https://www.wowhead.com/tbc/talent-calc/warlock/-20501301332001-55500051221001303025");
 
-		var player = underTest.changeTalents(CHARACTER_KEY, "https://www.wowhead.com/tbc/talent-calc/warlock/55022000102351055103--50500051220001");
+		var player = underTest.changeTalents(PLAYER_ID, "https://www.wowhead.com/tbc/talent-calc/warlock/55022000102351055103--50500051220001");
 
 		assertThat(player.getTalentLink()).isEqualTo("https://www.wowhead.com/tbc/talent-calc/warlock/55022000102351055103--50500051220001");
 	}
 
 	@Test
 	void getAvailableScripts() {
-		var availableScripts = underTest.getAvailableScripts(CHARACTER_KEY);
+		var availableScripts = underTest.getAvailableScripts(PLAYER_ID);
 
 		var list = availableScripts.stream()
 				.map(ScriptInfo::path)
@@ -132,7 +132,7 @@ class PlayerServiceTest extends ServiceTest {
 
 		assertThat(player.getBuild().getScript()).isEqualTo("warlock-destro-shadow");
 
-		var player = underTest.changeScript(CHARACTER_KEY, newScript);
+		var player = underTest.changeScript(PLAYER_ID, newScript);
 
 		assertThat(player.getBuild().getScript()).isEqualTo(newScript);
 	}

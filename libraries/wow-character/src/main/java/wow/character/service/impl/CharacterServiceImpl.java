@@ -3,7 +3,6 @@ package wow.character.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.build.Talents;
-import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
@@ -126,37 +125,37 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public void applyDefaultCharacterTemplate(PlayerCharacter character) {
-		var characterTemplate = characterTemplateRepository.getDefaultCharacterTemplate(character).orElseThrow();
+	public void applyDefaultCharacterTemplate(PlayerCharacter player) {
+		var characterTemplate = characterTemplateRepository.getDefaultCharacterTemplate(player).orElseThrow();
 
-		applyCharacterTemplate(character, characterTemplate);
+		applyCharacterTemplate(player, characterTemplate);
 	}
 
 	@Override
-	public void applyCharacterTemplate(PlayerCharacter character, String templateName) {
-		var characterTemplate = characterTemplateRepository.getCharacterTemplate(templateName, character).orElseThrow();
+	public void applyCharacterTemplate(PlayerCharacter player, String templateName) {
+		var characterTemplate = characterTemplateRepository.getCharacterTemplate(templateName, player).orElseThrow();
 
-		applyCharacterTemplate(character, characterTemplate);
+		applyCharacterTemplate(player, characterTemplate);
 	}
 
-	private void applyCharacterTemplate(PlayerCharacter character, CharacterTemplate characterTemplate) {
-		changeBuild(character, characterTemplate);
+	private void applyCharacterTemplate(PlayerCharacter player, CharacterTemplate characterTemplate) {
+		changeBuild(player, characterTemplate);
 
-		character.setProfessionMaxLevels(characterTemplate.getProfessions());
-		character.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
-		character.getBuffs().setHighestRanks(characterTemplate.getDefaultBuffs());
+		player.setProfessionMaxLevels(characterTemplate.getProfessions());
+		player.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
+		player.getBuffs().setHighestRanks(characterTemplate.getDefaultBuffs());
 
-		if (character.getTarget() != null) {
-			character.getTarget().getBuffs().setHighestRanks(characterTemplate.getDefaultDebuffs());
+		if (player.getTarget() != null) {
+			player.getTarget().getBuffs().setHighestRanks(characterTemplate.getDefaultDebuffs());
 		}
 
-		character.getConsumables().setConsumableNames(characterTemplate.getConsumables());
+		player.getConsumables().setConsumableNames(characterTemplate.getConsumables());
 
-		updateAfterRestrictionChange(character);
+		updateAfterRestrictionChange(player);
 	}
 
-	private void changeBuild(PlayerCharacter character, CharacterTemplate characterTemplate) {
-		var build = character.getBuild();
+	private void changeBuild(PlayerCharacter player, CharacterTemplate characterTemplate) {
+		var build = player.getBuild();
 
 		build.reset();
 		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
@@ -164,97 +163,97 @@ public class CharacterServiceImpl implements CharacterService {
 		build.setActivePet(characterTemplate.getActivePet());
 		build.setScript(characterTemplate.getDefaultScript());
 
-		refreshSpellbook(character);
-		refreshBuffs(character);
-		refreshConsumables(character);
+		refreshSpellbook(player);
+		refreshBuffs(player);
+		refreshConsumables(player);
 	}
 
 	@Override
-	public void updateAfterRestrictionChange(PlayerCharacter character) {
-		character.getBuild().invalidate();
-		refreshSpellbook(character);
-		refreshActivePet(character);
-		refreshEquipment(character);
-		refreshBuffs(character);
-		refreshConsumables(character);
+	public void updateAfterRestrictionChange(PlayerCharacter player) {
+		player.getBuild().invalidate();
+		refreshSpellbook(player);
+		refreshActivePet(player);
+		refreshEquipment(player);
+		refreshBuffs(player);
+		refreshConsumables(player);
 	}
 
-	private void refreshSpellbook(PlayerCharacter character) {
-		character.getSpellbook().reset();
-		character.getSpellbook().addAbilities(getAvailableAbilities(character));
+	private void refreshSpellbook(PlayerCharacter player) {
+		player.getSpellbook().reset();
+		player.getSpellbook().addAbilities(getAvailableAbilities(player));
 	}
 
-	private void refreshActivePet(PlayerCharacter character) {
-		var activePet = character.getActivePet();
+	private void refreshActivePet(PlayerCharacter player) {
+		var activePet = player.getActivePet();
 
-		if (activePet != null && !activePet.isAvailableTo(character)) {
-			character.getBuild().setActivePet(null);
+		if (activePet != null && !activePet.isAvailableTo(player)) {
+			player.getBuild().setActivePet(null);
 		}
 	}
 
-	private void refreshBuffs(PlayerCharacter character) {
-		var buffs = getAvailableBuffs(character, CHARACTER_BUFF);
+	private void refreshBuffs(PlayerCharacter player) {
+		var buffs = getAvailableBuffs(player, CHARACTER_BUFF);
 
-		character.getBuffs().setAvailable(buffs);
+		player.getBuffs().setAvailable(buffs);
 
-		if (character.getTarget() != null) {
-			var debuffs = getAvailableBuffs(character, TARGET_DEBUFF);
+		if (player.getTarget() != null) {
+			var debuffs = getAvailableBuffs(player, TARGET_DEBUFF);
 
-			character.getTarget().getBuffs().setAvailable(debuffs);
+			player.getTarget().getBuffs().setAvailable(debuffs);
 		}
 	}
 
-	private void refreshConsumables(PlayerCharacter character) {
-		var consumables = getAvailableConsumes(character);
+	private void refreshConsumables(PlayerCharacter player) {
+		var consumables = getAvailableConsumes(player);
 
-		character.getConsumables().setAvailable(consumables);
+		player.getConsumables().setAvailable(consumables);
 	}
 
-	private void refreshEquipment(PlayerCharacter character) {
+	private void refreshEquipment(PlayerCharacter player) {
 		for (var itemSlot : ItemSlot.values()) {
-			removeInvalidItem(character, itemSlot);
+			removeInvalidItem(player, itemSlot);
 		}
 	}
 
-	private void removeInvalidItem(PlayerCharacter character, ItemSlot itemSlot) {
-		var equipment = character.getEquipment();
+	private void removeInvalidItem(PlayerCharacter player, ItemSlot itemSlot) {
+		var equipment = player.getEquipment();
 		var item = equipment.get(itemSlot);
 
 		if (item == null) {
 			return;
 		}
 
-		if (!item.getItem().isAvailableTo(character)) {
+		if (!item.getItem().isAvailableTo(player)) {
 			equipment.equip(null, itemSlot);
 			return;
 		}
 
-		removeInvalidEnchant(character, item);
+		removeInvalidEnchant(player, item);
 
 		for (int socketNo = 0; socketNo < item.getSocketCount(); ++socketNo) {
-			removeInvalidGem(character, item, socketNo);
+			removeInvalidGem(player, item, socketNo);
 		}
 	}
 
-	private void removeInvalidEnchant(PlayerCharacter character, EquippableItem item) {
+	private void removeInvalidEnchant(PlayerCharacter player, EquippableItem item) {
 		var enchant = item.getEnchant();
 
-		if (enchant != null && !enchant.isAvailableTo(character)) {
+		if (enchant != null && !enchant.isAvailableTo(player)) {
 			item.enchant(null);
 		}
 	}
 
-	private void removeInvalidGem(PlayerCharacter character, EquippableItem item, int socketNo) {
+	private void removeInvalidGem(PlayerCharacter player, EquippableItem item, int socketNo) {
 		var gem = item.getGem(socketNo);
 
-		if (gem != null && !gem.isAvailableTo(character)) {
+		if (gem != null && !gem.isAvailableTo(player)) {
 			item.getSockets().insertGem(socketNo, null);
 		}
 	}
 
-	private List<Ability> getAvailableAbilities(Character character) {
-		return spellRepository.getAvailableAbilities(character.getCharacterClassId(), character.getLevel(), character.getPhaseId()).stream()
-				.filter(spell -> spell.isAvailableTo(character))
+	private List<Ability> getAvailableAbilities(PlayerCharacter player) {
+		return spellRepository.getAvailableAbilities(player.getCharacterClassId(), player.getLevel(), player.getPhaseId()).stream()
+				.filter(spell -> spell.isAvailableTo(player))
 				.toList();
 	}
 
@@ -270,49 +269,49 @@ public class CharacterServiceImpl implements CharacterService {
 		return factionRepository.getAvailableExclusiveFactions(phaseId.getGameVersionId());
 	}
 
-	private List<Buff> getAvailableBuffs(Character character, BuffListType buffListType) {
-		return buffRepository.getAvailableBuffs(character.getPhaseId()).stream()
-				.filter(buff -> buff.isAvailableTo(character))
+	private List<Buff> getAvailableBuffs(PlayerCharacter player, BuffListType buffListType) {
+		return buffRepository.getAvailableBuffs(player.getPhaseId()).stream()
+				.filter(buff -> buff.isAvailableTo(player))
 				.filter(buffListType.getFilter())
 				.toList();
 	}
 
-	private List<Consumable> getAvailableConsumes(Character character) {
-		return consumableRepository.getAvailableConsumables(character.getPhaseId()).stream()
-				.filter(consumable -> consumable.isAvailableTo(character))
+	private List<Consumable> getAvailableConsumes(PlayerCharacter player) {
+		return consumableRepository.getAvailableConsumables(player.getPhaseId()).stream()
+				.filter(consumable -> consumable.isAvailableTo(player))
 				.toList();
 	}
 
 	@Override
-	public void equipGearSet(PlayerCharacter character, String gearSetName) {
-		var gearSet = gearSetRepository.getGearSet(gearSetName, character).orElseThrow();
+	public void equipGearSet(PlayerCharacter player, String gearSetName) {
+		var gearSet = gearSetRepository.getGearSet(gearSetName, player).orElseThrow();
 
 		gearSet.getItemsBySlot().forEach(
-				(itemSlot, equippableItem) -> character.equip(equippableItem.copy(), itemSlot)
+				(itemSlot, equippableItem) -> player.equip(equippableItem.copy(), itemSlot)
 		);
 	}
 
 	@Override
-	public List<GearSet> getAvailableGearSets(PlayerCharacter character) {
-		return gearSetRepository.getAvailableGearSets(character);
+	public List<GearSet> getAvailableGearSets(PlayerCharacter player) {
+		return gearSetRepository.getAvailableGearSets(player);
 	}
 
 	@Override
-	public void equipItem(PlayerCharacter character, ItemSlot slot, EquippableItem equippableItem) {
-		removeDuplicateGem(equippableItem, character, slot);
+	public void equipItem(PlayerCharacter player, ItemSlot slot, EquippableItem equippableItem) {
+		removeDuplicateGem(equippableItem, player, slot);
 
-		character.equip(equippableItem, slot);
+		player.equip(equippableItem, slot);
 
-		unequipDuplicateItem(character, slot);
-		unequipDuplicateGems(character, slot);
+		unequipDuplicateItem(player, slot);
+		unequipDuplicateGems(player, slot);
 	}
 
 	@Override
-	public void equipItemGroup(PlayerCharacter character, ItemSlotGroup slotGroup, List<EquippableItem> items) {
+	public void equipItemGroup(PlayerCharacter player, ItemSlotGroup slotGroup, List<EquippableItem> items) {
 		var slots = slotGroup.getSlots();
 
 		for (var slot : slots) {
-			character.equip(null, slot);
+			player.equip(null, slot);
 		}
 
 		if (slotGroup == ItemSlotGroup.WEAPONS && items.size() == 1) {
@@ -323,16 +322,16 @@ public class CharacterServiceImpl implements CharacterService {
 			var slot = slots.get(slotIdx);
 			var item = items.get(slotIdx);
 
-			equipItem(character, slot, item);
+			equipItem(player, slot, item);
 		}
 	}
 
-	private void removeDuplicateGem(EquippableItem itemToEquip, PlayerCharacter character, ItemSlot slot) {
+	private void removeDuplicateGem(EquippableItem itemToEquip, PlayerCharacter player, ItemSlot slot) {
 		if (itemToEquip == null || itemToEquip.getSocketCount() < 2) {
 			return;
 		}
 
-		var currentItem = character.getEquippedItem(slot);
+		var currentItem = player.getEquippedItem(slot);
 
 		if (currentItem == null || currentItem.getItem() != itemToEquip.getItem()) {
 			return;
@@ -364,27 +363,27 @@ public class CharacterServiceImpl implements CharacterService {
 				.orElseThrow();
 	}
 
-	private void unequipDuplicateItem(PlayerCharacter character, ItemSlot slot) {
+	private void unequipDuplicateItem(PlayerCharacter player, ItemSlot slot) {
 		var otherSlot = getOtherSlot(slot);
 
 		if (otherSlot == null) {
 			return;
 		}
 
-		var item = character.getEquippedItem(slot);
-		var otherItem = character.getEquippedItem(otherSlot);
+		var item = player.getEquippedItem(slot);
+		var otherItem = player.getEquippedItem(otherSlot);
 
 		if (item == null || otherItem == null) {
 			return;
 		}
 
 		if (item.getItem() == otherItem.getItem() && item.isUnique()) {
-			character.equip(null, otherSlot);
+			player.equip(null, otherSlot);
 		}
 	}
 
-	private void unequipDuplicateGems(PlayerCharacter character, ItemSlot slot) {
-		var item = character.getEquippedItem(slot);
+	private void unequipDuplicateGems(PlayerCharacter player, ItemSlot slot) {
+		var item = player.getEquippedItem(slot);
 
 		if (item == null) {
 			return;
@@ -396,7 +395,7 @@ public class CharacterServiceImpl implements CharacterService {
 			return;
 		}
 
-		for (var equippableItem : character.getEquipment().toList()) {
+		for (var equippableItem : player.getEquipment().toList()) {
 			for (var uniqueGem : uniqueGems) {
 				if (equippableItem != item) {
 					unequipDuplicateGem(equippableItem, uniqueGem);

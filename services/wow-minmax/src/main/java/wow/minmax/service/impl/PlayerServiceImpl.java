@@ -45,20 +45,20 @@ public class PlayerServiceImpl implements PlayerService {
 
 	@Override
 	public Player getPlayer(PlayerId playerId) {
-		return getExistingOrNewCharacter(playerId);
+		return getExistingOrNewPlayer(playerId);
 	}
 
-	private Player getExistingOrNewCharacter(PlayerId playerId) {
+	private Player getExistingOrNewPlayer(PlayerId playerId) {
 		return playerConfigRepository.findById(playerId.toString())
 				.map(playerConfigConverter::convertBack)
-				.orElseGet(() -> createCharacter(playerId));
+				.orElseGet(() -> createPlayer(playerId));
 	}
 
-	private Player createCharacter(PlayerId playerId) {
+	private Player createPlayer(PlayerId playerId) {
 		var profileId = playerId.profileId();
 		var playerProfile = playerProfileRepository.findById(profileId.toString()).orElseThrow();
 
-		var newCharacter = characterService.createPlayerCharacter(
+		var newPlayer = characterService.createPlayerCharacter(
 				playerProfile.getProfileName(),
 				playerProfile.getCharacterClassId(),
 				playerProfile.getRaceId(),
@@ -70,20 +70,20 @@ public class PlayerServiceImpl implements PlayerService {
 		var targetEnemy = characterService.createNonPlayerCharacter(
 				"Target",
 				playerId.enemyType(),
-				newCharacter.getLevel() + playerId.enemyLevelDiff(),
+				newPlayer.getLevel() + playerId.enemyLevelDiff(),
 				playerId.phaseId(),
 				NonPlayerImpl::new
 		);
 
-		newCharacter.setTarget(targetEnemy);
+		newPlayer.setTarget(targetEnemy);
 
-		characterService.applyDefaultCharacterTemplate(newCharacter);
+		characterService.applyDefaultCharacterTemplate(newPlayer);
 
-		return newCharacter;
+		return newPlayer;
 	}
 
 	@Override
-	public void saveCharacter(PlayerId playerId, Player player) {
+	public void savePlayer(PlayerId playerId, Player player) {
 		var playerConfig = playerConfigConverter.convert(player, playerId);
 
 		playerConfigRepository.save(playerConfig);
@@ -129,7 +129,7 @@ public class PlayerServiceImpl implements PlayerService {
 		player.setProfessionMaxLevel(index, profession);
 
 		characterService.updateAfterRestrictionChange(player);
-		saveCharacter(playerId, player);
+		savePlayer(playerId, player);
 		return player;
 	}
 
@@ -160,7 +160,7 @@ public class PlayerServiceImpl implements PlayerService {
 		player.getExclusiveFactions().enable(factionName);
 
 		characterService.updateAfterRestrictionChange(player);
-		saveCharacter(playerId, player);
+		savePlayer(playerId, player);
 		return player;
 	}
 
@@ -171,7 +171,7 @@ public class PlayerServiceImpl implements PlayerService {
 		player.getBuild().getTalents().loadFromTalentLink(talentLink);
 
 		characterService.updateAfterRestrictionChange(player);
-		saveCharacter(playerId, player);
+		savePlayer(playerId, player);
 		return player;
 	}
 
@@ -190,7 +190,7 @@ public class PlayerServiceImpl implements PlayerService {
 
 		player.getBuild().setScript(scriptPath);
 
-		saveCharacter(playerId, player);
+		savePlayer(playerId, player);
 		return player;
 	}
 }

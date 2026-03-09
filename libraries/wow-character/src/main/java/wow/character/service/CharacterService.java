@@ -26,17 +26,17 @@ public interface CharacterService {
 
 	<T extends NonPlayerCharacter> T createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory);
 
-	void applyDefaultCharacterTemplate(PlayerCharacter character);
+	void applyDefaultCharacterTemplate(PlayerCharacter player);
 
-	void applyCharacterTemplate(PlayerCharacter character, String templateName);
+	void applyCharacterTemplate(PlayerCharacter player, String templateName);
 
-	void updateAfterRestrictionChange(PlayerCharacter character);
+	void updateAfterRestrictionChange(PlayerCharacter player);
 
-	void equipGearSet(PlayerCharacter character, String gearSetName);
+	void equipGearSet(PlayerCharacter player, String gearSetName);
 
-	List<GearSet> getAvailableGearSets(PlayerCharacter character);
+	List<GearSet> getAvailableGearSets(PlayerCharacter player);
 
-	void equipItem(PlayerCharacter character, ItemSlot slot, EquippableItem equippableItem);
+	void equipItem(PlayerCharacter player, ItemSlot slot, EquippableItem equippableItem);
 
-	void equipItemGroup(PlayerCharacter character, ItemSlotGroup slotGroup, List<EquippableItem> items);
+	void equipItemGroup(PlayerCharacter player, ItemSlotGroup slotGroup, List<EquippableItem> items);
 }

@@ -68,7 +68,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(playerProfileService.getNewProfileOptions()).thenReturn(new NewProfileOptions(List.of()));
 		when(playerProfileService.getCharacterSelectionOptions(any())).thenReturn(new CharacterSelectionOptions(List.of(), List.of(), List.of()));
 
-		when(playerService.getPlayer(CHARACTER_KEY)).thenReturn(player);
+		when(playerService.getPlayer(PLAYER_ID)).thenReturn(player);
 		when(playerService.getViewConfig(any())).thenReturn(new ViewConfig(CharacterRestriction.EMPTY, TimeRestriction.of(PHASE), 1, List.of()));
 		when(playerService.getAvailableProfessions(any())).thenReturn(List.of());
 		when(playerService.changeProfession(any(), anyInt(), any())).thenReturn(player);

@@ -17,7 +17,7 @@ import java.util.List;
 public interface PlayerService {
 	Player getPlayer(PlayerId playerId);
 
-	void saveCharacter(PlayerId playerId, Player player);
+	void savePlayer(PlayerId playerId, Player player);
 
 	ViewConfig getViewConfig(Player player);
 

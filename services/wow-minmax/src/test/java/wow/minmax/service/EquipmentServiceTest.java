@@ -34,7 +34,7 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var item = getItem("Chronicle of Dark Secrets");
 
-		underTest.equipItem(CHARACTER_KEY, OFF_HAND, item, true, GemFilter.empty());
+		underTest.equipItem(PLAYER_ID, OFF_HAND, item, true, GemFilter.empty());
 
 		assertItem(OFF_HAND, "Chronicle of Dark Secrets");
 	}
@@ -46,7 +46,7 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var item = getItem("Grand Magister's Staff of Torrents");
 
-		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, item, true, GemFilter.empty());
+		underTest.equipItem(PLAYER_ID, MAIN_HAND, item, true, GemFilter.empty());
 
 		assertItem(MAIN_HAND, "Grand Magister's Staff of Torrents");
 		assertItem(OFF_HAND, null);
@@ -62,7 +62,7 @@ class EquipmentServiceTest extends ServiceTest {
 				.copy()
 				.enchant(enchant);
 
-		underTest.equipItem(CHARACTER_KEY, MAIN_HAND, mainHand);
+		underTest.equipItem(PLAYER_ID, MAIN_HAND, mainHand);
 
 		assertEnchant(MAIN_HAND, "Enchant Weapon - Major Spellpower");
 	}
@@ -78,21 +78,21 @@ class EquipmentServiceTest extends ServiceTest {
 
 		chest.getSockets().insertGem(1, gem);
 
-		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+		underTest.equipItem(PLAYER_ID, CHEST, chest);
 
 		assertGem(CHEST, 1, "Forceful Seaspray Emerald");
 	}
 
 	@Test
 	void resetEquipment() {
-		underTest.resetEquipment(CHARACTER_KEY);
+		underTest.resetEquipment(PLAYER_ID);
 
 		assertThat(savedCharacter.getEquipment().getItemsBySlot()).isEmpty();
 	}
 
 	@Test
 	void getEquipmentSocketStatusMatching() {
-		var statuses = underTest.getEquipmentSocketStatus(CHARACTER_KEY);
+		var statuses = underTest.getEquipmentSocketStatus(PLAYER_ID);
 		var status = statuses.socketStatusesByItemSlot().get(SHOULDER);
 		var socketBonusStatus = status.socketBonusStatus();
 
@@ -113,9 +113,9 @@ class EquipmentServiceTest extends ServiceTest {
 		var gem = shoulder.getSockets().getGem(1);// inserting orange gem into blue socket
 
 		shoulder.getSockets().insertGem(0, gem);
-		underTest.equipItem(CHARACTER_KEY, SHOULDER, shoulder);
+		underTest.equipItem(PLAYER_ID, SHOULDER, shoulder);
 
-		var statuses = underTest.getEquipmentSocketStatus(CHARACTER_KEY);
+		var statuses = underTest.getEquipmentSocketStatus(PLAYER_ID);
 		var status = statuses.socketStatusesByItemSlot().get(SHOULDER);
 		var socketBonusStatus = status.socketBonusStatus();
 
@@ -140,15 +140,15 @@ class EquipmentServiceTest extends ServiceTest {
 	void duplicateItemUnequipped(String itemName, ItemSlot slot1, ItemSlot slot2) {
 		var uniqueItem = getItem(itemName);
 
-		underTest.equipItem(CHARACTER_KEY, slot1, null);
-		underTest.equipItem(CHARACTER_KEY, slot2, null);
+		underTest.equipItem(PLAYER_ID, slot1, null);
+		underTest.equipItem(PLAYER_ID, slot2, null);
 
-		underTest.equipItem(CHARACTER_KEY, slot1, uniqueItem);
+		underTest.equipItem(PLAYER_ID, slot1, uniqueItem);
 
 		assertItem(slot1, itemName);
 		assertItem(slot2, null);
 
-		underTest.equipItem(CHARACTER_KEY, slot2, uniqueItem.copy());
+		underTest.equipItem(PLAYER_ID, slot2, uniqueItem.copy());
 
 		assertItem(slot1, null);
 		assertItem(slot2, itemName);
@@ -163,13 +163,13 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var bracer = getItem("Bracers of the Malefic").gem(uniqueGem);
 
-		underTest.equipItem(CHARACTER_KEY, WRIST, bracer);
+		underTest.equipItem(PLAYER_ID, WRIST, bracer);
 
 		assertGem(WRIST, 0, uniqueGemName);
 
 		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
 
-		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+		underTest.equipItem(PLAYER_ID, CHEST, chest);
 
 		assertGem(CHEST, 0, normalGemName);
 		assertGem(CHEST, 1, normalGemName);
@@ -186,7 +186,7 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
 
-		underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+		underTest.equipItem(PLAYER_ID, CHEST, chest);
 
 		assertGem(CHEST, 0, normalGemName);
 		assertGem(CHEST, 1, normalGemName);
@@ -194,7 +194,7 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var modifiedChest = chest.copy().gem(normalGem, uniqueGem, uniqueGem);
 
-		underTest.equipItem(CHARACTER_KEY, CHEST, modifiedChest);
+		underTest.equipItem(PLAYER_ID, CHEST, modifiedChest);
 
 		assertGem(CHEST, 0, normalGemName);
 		assertGem(CHEST, 1, uniqueGemName);
@@ -211,14 +211,14 @@ class EquipmentServiceTest extends ServiceTest {
 	void duplicateItemUnequipped_correctDiff(String itemName, ItemSlot slot1, ItemSlot slot2) {
 		var uniqueItem = getItem(itemName);
 
-		underTest.equipItem(CHARACTER_KEY, slot1, null);
-		underTest.equipItem(CHARACTER_KEY, slot2, null);
+		underTest.equipItem(PLAYER_ID, slot1, null);
+		underTest.equipItem(PLAYER_ID, slot2, null);
 
-		var diff1 = underTest.equipItem(CHARACTER_KEY, slot1, uniqueItem);
+		var diff1 = underTest.equipItem(PLAYER_ID, slot1, uniqueItem);
 
 		assertDiff(diff1, slot1);
 
-		var diff2 = underTest.equipItem(CHARACTER_KEY, slot2, uniqueItem.copy());
+		var diff2 = underTest.equipItem(PLAYER_ID, slot2, uniqueItem.copy());
 
 		assertDiff(diff2, slot1, slot2);
 	}
@@ -232,13 +232,13 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var bracer = getItem("Bracers of the Malefic").gem(uniqueGem);
 
-		var diff1 = underTest.equipItem(CHARACTER_KEY, WRIST, bracer);
+		var diff1 = underTest.equipItem(PLAYER_ID, WRIST, bracer);
 
 		assertDiff(diff1, WRIST);
 
 		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
 
-		var diff2 = underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+		var diff2 = underTest.equipItem(PLAYER_ID, CHEST, chest);
 
 		assertDiff(diff2, WRIST, CHEST);
 	}
@@ -252,13 +252,13 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var chest = getItem("Sunfire Robe").gem(normalGem, normalGem, uniqueGem);
 
-		var diff1 = underTest.equipItem(CHARACTER_KEY, CHEST, chest);
+		var diff1 = underTest.equipItem(PLAYER_ID, CHEST, chest);
 
 		assertDiff(diff1, CHEST);
 
 		var modifiedChest = chest.copy().gem(normalGem, uniqueGem, uniqueGem);
 
-		var diff2 = underTest.equipItem(CHARACTER_KEY, CHEST, modifiedChest);
+		var diff2 = underTest.equipItem(PLAYER_ID, CHEST, modifiedChest);
 
 		assertDiff(diff2, CHEST);
 	}
