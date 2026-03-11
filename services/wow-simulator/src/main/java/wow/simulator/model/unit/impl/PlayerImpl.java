@@ -31,7 +31,7 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * Date: 2023-08-07
  */
 @Getter
-public class PlayerImpl extends UnitImpl implements Player {
+public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> {
 	private final Race race;
 	private final Build build;
 	private final Equipment equipment;
@@ -40,6 +40,9 @@ public class PlayerImpl extends UnitImpl implements Player {
 	private final Consumables consumables;
 
 	private Time lastTimeManaSpent;
+
+	@Getter
+	private Party<Player> party;
 
 	public PlayerImpl(
 			String name,
@@ -60,6 +63,8 @@ public class PlayerImpl extends UnitImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.consumables = new Consumables();
+
+		Raid.newRaid(this);
 	}
 
 	@Override
@@ -97,7 +102,7 @@ public class PlayerImpl extends UnitImpl implements Player {
 	private void collectAurasFromOtherPartyMembers(EffectCollector collector) {
 		var auraCollector = new AuraCollector(this, collector);
 
-		getParty().forEachPartyMember(player -> {
+		getParty().forEachMemberOrPet(player -> {
 			if (player != this) {
 				player.collectAuras(auraCollector);
 			}
@@ -161,5 +166,13 @@ public class PlayerImpl extends UnitImpl implements Player {
 	public void onAddedToSimulation() {
 		getResources().setHealthToMax();
 		getResources().setManaToMax();
+	}
+
+	@Override
+	public void onAdd(Party<Player> party) {
+		if (this.party != null) {
+			this.party.remove(this);
+		}
+		this.party = party;
 	}
 }

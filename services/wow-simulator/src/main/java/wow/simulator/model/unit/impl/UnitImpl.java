@@ -59,9 +59,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private Rng rng;
 
 	@Getter
-	private Party party;
-
-	@Getter
 	private Pet activePet;
 
 	private SimulationContext simulationContext;
@@ -70,7 +67,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
-		new Raid().getFirstParty().add(this);
 	}
 
 	@Override
@@ -670,13 +666,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	private boolean resourcesNeedRefresh = true;
-
-	public void setParty(Party party) {
-		if (this.party != null) {
-			this.party.remove(this);
-		}
-		this.party = party;
-	}
 
 	@Override
 	public void setActivePet(PetType petType) {

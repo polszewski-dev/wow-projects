@@ -2,6 +2,8 @@ package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
 import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.Party;
+import wow.character.model.character.Raid;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
@@ -16,8 +18,11 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
  * Date: 2023-08-07
  */
 @Getter
-public class NonPlayerImpl extends UnitImpl implements NonPlayer {
+public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<NonPlayer> {
 	private final CreatureType creatureType;
+
+	@Getter
+	private Party<NonPlayer> party;
 
 	public NonPlayerImpl(
 			String name,
@@ -29,6 +34,8 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer {
 	) {
 		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
+
+		Raid.newRaid(this);
 	}
 
 	@Override
@@ -52,5 +59,13 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer {
 		addHiddenEffect("Bonus Stamina", 100_000_000);
 		getResources().setHealthToMax();
 		getResources().setManaToMax();
+	}
+
+	@Override
+	public void onAdd(Party<NonPlayer> party) {
+		if (this.party != null) {
+			this.party.remove(this);
+		}
+		this.party = party;
 	}
 }

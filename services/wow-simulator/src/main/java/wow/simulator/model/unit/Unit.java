@@ -13,6 +13,7 @@ import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
 import wow.simulator.simulation.SimulationContextSource;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -173,13 +174,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setActivePet(PetType petType);
 
-	Party getParty();
-
-	default Raid getRaid() {
-		return getParty().getRaid();
-	}
-
-	void setParty(Party party);
+	List<Unit> getPartyMembers();
 
 	void collectAuras(EffectCollector collector);
 

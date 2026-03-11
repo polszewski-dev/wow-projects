@@ -44,7 +44,6 @@ class AuraTest extends WowSimulatorSpringTest {
 		player3 = getNakedPlayer(WARLOCK, "Player3");
 
 		player.getParty().add(player2);
-		player.getRaid().addNewParty();
 		player.getRaid().getParty(1).add(player3);
 
 		simulation.add(player);
