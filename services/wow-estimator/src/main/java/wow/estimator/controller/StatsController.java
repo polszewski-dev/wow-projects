@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.estimator.client.dto.stats.*;
 import wow.estimator.converter.*;
+import wow.estimator.service.PlayerService;
 import wow.estimator.service.StatsService;
 
 /**
@@ -18,7 +19,9 @@ import wow.estimator.service.StatsService;
 @AllArgsConstructor
 public class StatsController {
 	private final StatsService statsService;
-	private final PlayerConverter playerConverter;
+	private final PlayerService playerService;
+	private final RaidConverter raidConverter;
+	private final NonPlayerConverter nonPlayerConverter;
 	private final AbilityStatsConverter abilityStatsConverter;
 	private final CharacterStatsConverter characterStatsConverter;
 	private final SpecialAbilityStatsConverter specialAbilityStatsConverter;
@@ -27,7 +30,9 @@ public class StatsController {
 
 	@PostMapping("ability")
 	public GetAbilityStatsResponseDTO getAbilityStats(@RequestBody GetAbilityStatsRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var target = nonPlayerConverter.convertBack(request.target());
+		var player = playerService.getPlayer(raid, target);
 		var abilityIds = request.abilityIds();
 		var usesCombatRatings = request.usesCombatRatings();
 		var equivalentAmount = request.equivalentAmount();
@@ -39,7 +44,9 @@ public class StatsController {
 
 	@PostMapping("character")
 	public GetCharacterStatsResponseDTO getCharacterStats(@RequestBody GetCharacterStatsRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var target = nonPlayerConverter.convertBack(request.target());
+		var player = playerService.getPlayer(raid, target);
 		var worldBuffsAllowed = request.worldBuffsAllowed();
 
 		var stats = statsService.getCharacterStats(player, worldBuffsAllowed);
@@ -49,7 +56,9 @@ public class StatsController {
 
 	@PostMapping("special")
 	public GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(@RequestBody GetSpecialAbilityStatsRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var target = nonPlayerConverter.convertBack(request.target());
+		var player = playerService.getPlayer(raid, target);
 
 		var stats = statsService.getSpecialAbilityStats(player);
 
@@ -58,7 +67,9 @@ public class StatsController {
 
 	@PostMapping("rotation")
 	public GetRotationStatsResponseDTO getRotationStats(@RequestBody GetRotationStatsRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var target = nonPlayerConverter.convertBack(request.target());
+		var player = playerService.getPlayer(raid, target);
 
 		var rotationStats = statsService.getRotationStats(player, player.getRotation());
 
@@ -67,7 +78,9 @@ public class StatsController {
 
 	@PostMapping("talent")
 	public GetTalentStatsResponseDTO getTalentStats(@RequestBody GetTalentStatsRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var target = nonPlayerConverter.convertBack(request.target());
+		var player = playerService.getPlayer(raid, target);
 
 		var stats = statsService.getTalentStats(player);
 

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import wow.character.model.character.Raid;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
@@ -17,9 +18,12 @@ import wow.estimator.client.converter.upgrade.ItemFilterConverter;
 import wow.estimator.client.converter.upgrade.ItemLevelFilterConverter;
 import wow.estimator.client.dto.upgrade.*;
 import wow.minmax.config.UpgradeConfig;
-import wow.minmax.converter.dto.PlayerConverter;
+import wow.minmax.converter.dto.NonPlayerConverter;
+import wow.minmax.converter.dto.RaidConverter;
+import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
+import wow.minmax.service.PlayerService;
 import wow.minmax.service.UpgradeService;
 
 import java.util.List;
@@ -33,7 +37,10 @@ import java.util.List;
 public class UpgradeServiceImpl implements UpgradeService {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
-	private final PlayerConverter playerConverter;
+	private final PlayerService playerService;
+
+	private final RaidConverter raidConverter;
+	private final NonPlayerConverter nonPlayerConverter;
 	private final ItemFilterConverter itemFilterConverter;
 	private final ItemLevelFilterConverter itemLevelFilterConverter;
 	private final GemFilterConverter gemFilterConverter;
@@ -46,11 +53,13 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 	@Override
 	public List<UpgradeDTO> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
+		var raid = playerService.getRaid(player);
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 		var itemLevelFilter = minmaxConfigRepository.getItemLevelFilter(player).orElseThrow();
 
 		var request = new FindUpgradesRequestDTO(
-				playerConverter.convert(player),
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid)),
 				slotGroup,
 				itemFilterConverter.convert(itemFilter),
 				itemLevelFilterConverter.convert(itemLevelFilter),
@@ -72,10 +81,12 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 	@Override
 	public EquippableItem getBestItemVariant(Player player, Item item, ItemSlot slot, GemFilter gemFilter) {
+		var raid = playerService.getRaid(player);
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 
 		var request = new GetBestItemVariantRequestDTO(
-				playerConverter.convert(player),
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid)),
 				item.getId().value(),
 				slot,
 				gemFilterConverter.convert(gemFilter),
@@ -92,5 +103,9 @@ public class UpgradeServiceImpl implements UpgradeService {
 				.block();
 
 		return equippableItemConverter.convertBack(response.bestVariant(), player.getPhaseId());
+	}
+
+	private static NonPlayer getTarget(Raid<Player> raid) {
+		return (NonPlayer) raid.getFirstMember().getTarget();
 	}
 }

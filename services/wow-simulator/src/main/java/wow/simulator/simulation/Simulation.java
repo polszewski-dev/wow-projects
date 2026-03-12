@@ -69,6 +69,12 @@ public class Simulation implements SimulationContextSource {
 		getClock().advanceTo(timeUntil);
 	}
 
+	public void updateFor(Duration duration) {
+		var timeUntil = getClock().after(duration);
+
+		updateUntil(timeUntil);
+	}
+
 	public void start() {
 		if (started) {
 			return;
@@ -100,6 +106,10 @@ public class Simulation implements SimulationContextSource {
 				unit.ensureAction();
 			}
 		});
+	}
+
+	public void addHandlers(List<GameLogHandler> handlers) {
+		handlers.forEach(this::addHandler);
 	}
 
 	public void addHandler(GameLogHandler handler) {

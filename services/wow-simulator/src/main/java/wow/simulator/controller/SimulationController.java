@@ -7,18 +7,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wow.commons.model.Duration;
-import wow.commons.model.effect.EffectId;
-import wow.commons.model.spell.EffectReplacementMode;
-import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
-import wow.simulator.converter.PlayerConverter;
+import wow.simulator.converter.NonPlayerConverter;
+import wow.simulator.converter.RaidConverter;
 import wow.simulator.converter.StatsConverter;
-import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
-import wow.simulator.model.unit.Player;
-import wow.simulator.model.unit.Unit;
-import wow.simulator.model.unit.impl.PlayerImpl;
+import wow.simulator.log.handler.ConsoleGameLogHandler;
+import wow.simulator.log.handler.GameLogHandler;
+import wow.simulator.log.handler.StatisticsGatheringHandler;
+import wow.simulator.model.stats.Stats;
 import wow.simulator.service.SimulatorService;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -31,20 +31,26 @@ import wow.simulator.service.SimulatorService;
 public class SimulationController {
 	private final SimulatorService simulatorService;
 
-	private final SpellRepository spellRepository;
-
-	private final PlayerConverter playerConverter;
+	private final RaidConverter raidConverter;
+	private final NonPlayerConverter nonPlayerConverter;
 	private final StatsConverter statsConverter;
 
 	@PostMapping
 	public SimulationResponseDTO simulate(@RequestBody SimulationRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var player = raid.getFirstMember();
+		var target = nonPlayerConverter.convertBack(request.target());
 		var duration = Duration.seconds(request.duration());
 		var rngType = request.rngType();
+		var stats = new Stats();
+		var handlers = List.<GameLogHandler>of(
+				new ConsoleGameLogHandler(),
+				new StatisticsGatheringHandler(player, stats)
+		);
 
 		long start = System.currentTimeMillis();
 
-		var stats = simulatorService.simulate(player, duration, rngType, () -> applyTargetDebuffs(player, request));
+		simulatorService.simulate(raid, target, duration, rngType, handlers);
 
 		long end = System.currentTimeMillis();
 
@@ -53,54 +59,5 @@ public class SimulationController {
 		return new SimulationResponseDTO(
 				statsConverter.convert(stats, player)
 		);
-	}
-
-	private void applyTargetDebuffs(Player player, SimulationRequestDTO request) {
-		player.getTarget().resetBuffs();
-
-		var buffOwner = createBuffOwner(player);
-
-		for (var buffId : request.player().target().buffIds()) {
-			var activeEffectId = EffectId.of(buffId);
-
-			applyEffect(player.getTarget(), activeEffectId, buffOwner);
-		}
-	}
-
-	private void applyEffect(Unit target, EffectId activeEffectId, Unit owner) {
-		var effect = spellRepository.getEffect(activeEffectId, target.getPhaseId()).orElseThrow();
-		var effectInstance = new NonPeriodicEffectInstance(
-				owner,
-				target,
-				effect,
-				Duration.INFINITE,
-				effect.getMaxStacks(),
-				1,
-				0,
-				null,
-				null,
-				null
-		);
-
-		target.addEffect(effectInstance, EffectReplacementMode.DEFAULT);
-	}
-
-	private Player createBuffOwner(Player player) {
-		var buffOwner = new PlayerImpl(
-				"%s's buff owner".formatted(player.getName()),
-				player.getPhase(),
-				player.getCharacterClass(),
-				player.getRace(),
-				player.getLevel(),
-				player.getBaseStatInfo(),
-				player.getCombatRatingInfo(),
-				player.getTalents().copy(),
-				player.getProfessions().copy(),
-				player.getExclusiveFactions().copy()
-		);
-
-		player.shareSimulationContext(buffOwner);
-
-		return buffOwner;
 	}
 }

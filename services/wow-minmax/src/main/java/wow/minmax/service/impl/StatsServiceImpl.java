@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import wow.character.model.character.Raid;
 import wow.estimator.client.dto.stats.*;
-import wow.minmax.converter.dto.PlayerConverter;
+import wow.minmax.converter.dto.NonPlayerConverter;
+import wow.minmax.converter.dto.RaidConverter;
+import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.PlayerService;
@@ -24,18 +27,21 @@ import static wow.minmax.model.config.CharacterFeature.WORLD_BUFFS;
 public class StatsServiceImpl implements StatsService {
 	private final PlayerService playerService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
-	private final PlayerConverter playerConverter;
+	private final RaidConverter raidConverter;
+	private final NonPlayerConverter nonPlayerConverter;
 
 	@Qualifier("statsWebClient")
 	private final WebClient webClient;
 
 	@Override
 	public GetAbilityStatsResponseDTO getAbilityStats(Player player) {
+		var raid = playerService.getRaid(player);
 		var viewConfig = playerService.getViewConfig(player);
 		var usesCombatRatings = minmaxConfigRepository.hasFeature(player, COMBAT_RATINGS);
 
 		var request = new GetAbilityStatsRequestDTO(
-				playerConverter.convert(player),
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid)),
 				viewConfig.relevantSpells(),
 				usesCombatRatings,
 				viewConfig.equivalentAmount()
@@ -53,10 +59,12 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetCharacterStatsResponseDTO getCharacterStats(Player player) {
+		var raid = playerService.getRaid(player);
 		var worldBuffsAllowed = minmaxConfigRepository.hasFeature(player, WORLD_BUFFS);
 
 		var request = new GetCharacterStatsRequestDTO(
-				playerConverter.convert(player),
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid)),
 				worldBuffsAllowed
 		);
 
@@ -72,8 +80,11 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(Player player) {
+		var raid = playerService.getRaid(player);
+
 		var request = new GetSpecialAbilityStatsRequestDTO(
-				playerConverter.convert(player)
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid))
 		);
 
 		return webClient
@@ -88,8 +99,11 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetRotationStatsResponseDTO getRotationStats(Player player) {
+		var raid = playerService.getRaid(player);
+
 		var request = new GetRotationStatsRequestDTO(
-				playerConverter.convert(player)
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid))
 		);
 
 		return webClient
@@ -104,8 +118,11 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetTalentStatsResponseDTO getTalentStats(Player player) {
+		var raid = playerService.getRaid(player);
+
 		var request = new GetTalentStatsRequestDTO(
-				playerConverter.convert(player)
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid))
 		);
 
 		return webClient
@@ -116,5 +133,9 @@ public class StatsServiceImpl implements StatsService {
 				.retrieve()
 				.bodyToMono(GetTalentStatsResponseDTO.class)
 				.block();
+	}
+
+	private static NonPlayer getTarget(Raid<Player> raid) {
+		return (NonPlayer) raid.getFirstMember().getTarget();
 	}
 }

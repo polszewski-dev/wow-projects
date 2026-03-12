@@ -1,7 +1,6 @@
 package wow.commons.client.converter;
 
 import lombok.AllArgsConstructor;
-import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
@@ -18,12 +17,11 @@ import java.util.List;
  * Date: 2024-11-10
  */
 @AllArgsConstructor
-public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N extends NonPlayerCharacter> implements Converter<P, PlayerDTO>, BackConverter<P, PlayerDTO> {
+public abstract class AbstractPlayerConverter<P extends PlayerCharacter> implements Converter<P, PlayerDTO>, BackConverter<P, PlayerDTO> {
 	private final CharacterService characterService;
 
 	private final CharacterProfessionConverter characterProfessionConverter;
 	private final EquipmentConverter equipmentConverter;
-	private final AbstractNonPlayerConverter<N> nonPlayerConverter;
 
 	@Override
 	public PlayerDTO doConvert(P source) {
@@ -46,8 +44,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				source.getBuild().getScript(),
 				buffIds,
 				List.of(),
-				consumableIds,
-				nonPlayerConverter.convert((N) source.getTarget())
+				consumableIds
 		);
 	}
 
@@ -68,14 +65,9 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 		player.getExclusiveFactions().set(source.exclusiveFactions());
 		player.setEquipment(equipmentConverter.convertBack(source.equipment(), source.phaseId()));
 
-		var target = nonPlayerConverter.convertBack(source.target());
-
-		player.setTarget(target);
-
 		characterService.updateAfterRestrictionChange(player);
 
 		player.getBuffs().setIds(source.buffIds(), BuffId::of);
-		player.getTarget().getBuffs().setIds(source.target().buffIds(), BuffId::of);
 		player.getConsumables().setIds(source.consumableIds(), ConsumableId::of);
 
 		return player;

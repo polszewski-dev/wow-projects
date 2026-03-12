@@ -26,8 +26,9 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getAbilityStats() throws Exception {
-		var playerDTO = playerConverter.convert(player);
-		var request = new GetAbilityStatsRequestDTO(playerDTO, List.of(SHADOW_BOLT), true, 10);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = getTargetDTO(player);
+		var request = new GetAbilityStatsRequestDTO(raidDTO, targetDTO, List.of(SHADOW_BOLT), true, 10);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);
@@ -43,8 +44,9 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getCharacterStats() throws Exception {
-		var playerDTO = playerConverter.convert(player);
-		var request = new GetCharacterStatsRequestDTO(playerDTO, true);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = getTargetDTO(player);
+		var request = new GetCharacterStatsRequestDTO(raidDTO, targetDTO, true);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);
@@ -60,8 +62,9 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getSpecialAbilityStats() throws Exception {
-		var playerDTO = playerConverter.convert(player);
-		var request = new GetSpecialAbilityStatsRequestDTO(playerDTO);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = getTargetDTO(player);
+		var request = new GetSpecialAbilityStatsRequestDTO(raidDTO, targetDTO);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);
@@ -77,8 +80,9 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getRotationStats() throws Exception {
-		var playerDTO = playerConverter.convert(player);
-		var request = new GetRotationStatsRequestDTO(playerDTO);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = getTargetDTO(player);
+		var request = new GetRotationStatsRequestDTO(raidDTO, targetDTO);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);
@@ -94,8 +98,9 @@ class StatsControllerTest extends ControllerTest {
 
 	@Test
 	void getTalentStats() throws Exception {
-		var playerDTO = playerConverter.convert(player);
-		var request = new GetTalentStatsRequestDTO(playerDTO);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = getTargetDTO(player);
+		var request = new GetTalentStatsRequestDTO(raidDTO, targetDTO);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);

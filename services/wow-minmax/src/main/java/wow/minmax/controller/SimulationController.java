@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import wow.minmax.client.dto.simulation.SimulationStatsDTO;
 import wow.minmax.converter.dto.simulation.SimulationStatsConverter;
 import wow.minmax.model.PlayerId;
-import wow.minmax.service.PlayerService;
 import wow.minmax.service.SimulatorService;
 
 /**
@@ -19,7 +18,6 @@ import wow.minmax.service.SimulatorService;
 @RequestMapping("api/v1/simulations")
 @AllArgsConstructor
 public class SimulationController {
-	private final PlayerService playerService;
 	private final SimulatorService simulatorService;
 	private final SimulationStatsConverter simulationStatsConverter;
 
@@ -27,9 +25,8 @@ public class SimulationController {
 	public SimulationStatsDTO simulate(
 			@PathVariable("playerId") PlayerId playerId
 	) {
-		var player = playerService.getPlayer(playerId);
-		var stats = simulatorService.simulate(player);
+		var stats = simulatorService.simulate(playerId);
 
-		return simulationStatsConverter.convert(stats, player.getPhaseId());
+		return simulationStatsConverter.convert(stats, playerId.phaseId());
 	}
 }

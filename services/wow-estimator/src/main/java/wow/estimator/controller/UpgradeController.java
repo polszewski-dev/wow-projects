@@ -16,8 +16,10 @@ import wow.estimator.client.dto.upgrade.FindUpgradesRequestDTO;
 import wow.estimator.client.dto.upgrade.FindUpgradesResponseDTO;
 import wow.estimator.client.dto.upgrade.GetBestItemVariantRequestDTO;
 import wow.estimator.client.dto.upgrade.GetBestItemVariantResponseDTO;
-import wow.estimator.converter.PlayerConverter;
+import wow.estimator.converter.NonPlayerConverter;
+import wow.estimator.converter.RaidConverter;
 import wow.estimator.converter.UpgradeConverter;
+import wow.estimator.service.PlayerService;
 import wow.estimator.service.UpgradeService;
 
 /**
@@ -30,8 +32,10 @@ import wow.estimator.service.UpgradeService;
 @Slf4j
 public class UpgradeController {
 	private final UpgradeService upgradeService;
+	private final PlayerService playerService;
 	private final ItemRepository itemRepository;
-	private final PlayerConverter playerConverter;
+	private final RaidConverter raidConverter;
+	private final NonPlayerConverter nonPlayerConverter;
 	private final UpgradeConverter upgradeConverter;
 	private final EquippableItemConverter equippableItemConverter;
 	private final ItemFilterConverter itemFilterConverter;
@@ -40,7 +44,9 @@ public class UpgradeController {
 
 	@PostMapping
 	public FindUpgradesResponseDTO findUpgrades(@RequestBody FindUpgradesRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var target = nonPlayerConverter.convertBack(request.target());
+		var player = playerService.getPlayer(raid, target);
 		var slotGroup = request.slotGroup();
 		var itemFilter = itemFilterConverter.convertBack(request.itemFilter());
 		var itemLevelFilter = itemLevelFilterConverter.convertBack(request.itemLevelFilter());
@@ -57,7 +63,9 @@ public class UpgradeController {
 
 	@PostMapping("best-variant")
 	public GetBestItemVariantResponseDTO getBestItemVariant(@RequestBody GetBestItemVariantRequestDTO request) {
-		var player = playerConverter.convertBack(request.player());
+		var raid = raidConverter.convertBack(request.raid());
+		var target = nonPlayerConverter.convertBack(request.target());
+		var player = playerService.getPlayer(raid, target);
 		var itemId = ItemId.of(request.itemId());
 		var item = itemRepository.getItem(itemId, player.getPhaseId()).orElseThrow();
 		var itemSlot = request.itemSlot();

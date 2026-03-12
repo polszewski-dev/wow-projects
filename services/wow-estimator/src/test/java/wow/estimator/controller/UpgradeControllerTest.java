@@ -28,14 +28,15 @@ class UpgradeControllerTest extends ControllerTest {
 
 	@Test
 	void findUpgrades() throws Exception {
-		var playerDTO = playerConverter.convert(player);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = getTargetDTO(player);
 		var slotGroup = ItemSlotGroup.HEAD;
 		var itemFilterDTO = new ItemFilterDTO(true, true, true, true, true, true);
 		var itemLevelFilterDTO = new ItemLevelFilterDTO(Map.of());
 		var gemFilterDTO = new GemFilterDTO(true);
 		var enchantNames = Set.<String>of();
 		var maxUpgrades = 10;
-		var request = new FindUpgradesRequestDTO(playerDTO, slotGroup, itemFilterDTO, itemLevelFilterDTO, gemFilterDTO, enchantNames, maxUpgrades);
+		var request = new FindUpgradesRequestDTO(raidDTO, targetDTO, slotGroup, itemFilterDTO, itemLevelFilterDTO, gemFilterDTO, enchantNames, maxUpgrades);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);
@@ -51,13 +52,14 @@ class UpgradeControllerTest extends ControllerTest {
 
 	@Test
 	void getBestItemVariant() throws Exception {
-		var playerDTO = playerConverter.convert(player);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = getTargetDTO(player);
 		var itemSlot = ItemSlot.HEAD;
 		var item = player.getEquippedItem(itemSlot).getItem();
 		int itemId = item.getId().value();
 		var gemFilterDTO = new GemFilterDTO(true);
 		var enchantNames = Set.<String>of();
-		var request = new GetBestItemVariantRequestDTO(playerDTO, itemId, itemSlot, gemFilterDTO, enchantNames);
+		var request = new GetBestItemVariantRequestDTO(raidDTO, targetDTO, itemId, itemSlot, gemFilterDTO, enchantNames);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);

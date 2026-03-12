@@ -5,9 +5,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import wow.character.model.character.Raid;
 import wow.minmax.config.SimulationConfig;
-import wow.minmax.converter.dto.PlayerConverter;
+import wow.minmax.converter.dto.NonPlayerConverter;
+import wow.minmax.converter.dto.RaidConverter;
+import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
+import wow.minmax.service.PlayerService;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
@@ -20,7 +25,9 @@ import wow.simulator.client.dto.StatsDTO;
 @Service
 @RequiredArgsConstructor
 public class SimulatorServiceImpl implements SimulatorService {
-	private final PlayerConverter playerConverter;
+	private final PlayerService playerService;
+	private final RaidConverter raidConverter;
+	private final NonPlayerConverter nonPlayerConverter;
 
 	private final SimulationConfig simulationConfig;
 
@@ -28,8 +35,8 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final WebClient webClient;
 
 	@Override
-	public StatsDTO simulate(Player player) {
-		var request = getSimulationRequestDTO(player);
+	public StatsDTO simulate(PlayerId playerId) {
+		var request = getSimulationRequestDTO(playerId);
 
 		var response = webClient.post()
 				.contentType(MediaType.APPLICATION_JSON)
@@ -41,11 +48,18 @@ public class SimulatorServiceImpl implements SimulatorService {
 		return response.stats();
 	}
 
-	private SimulationRequestDTO getSimulationRequestDTO(Player player) {
+	private SimulationRequestDTO getSimulationRequestDTO(PlayerId playerId) {
+		var raid = playerService.getRaid(playerId);
+
 		return new SimulationRequestDTO(
-				playerConverter.convert(player),
+				raidConverter.convert(raid),
+				nonPlayerConverter.convert(getTarget(raid)),
 				simulationConfig.getDuration(),
 				simulationConfig.getRngType()
 		);
+	}
+
+	private static NonPlayer getTarget(Raid<Player> raid) {
+		return (NonPlayer) raid.getFirstMember().getTarget();
 	}
 }

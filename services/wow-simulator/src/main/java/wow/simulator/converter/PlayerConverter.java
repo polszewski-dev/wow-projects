@@ -3,11 +3,9 @@ package wow.simulator.converter;
 import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
 import wow.character.service.PlayerCharacterFactory;
-import wow.commons.client.converter.AbstractNonPlayerConverter;
 import wow.commons.client.converter.AbstractPlayerConverter;
 import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.equipment.EquipmentConverter;
-import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.impl.PlayerImpl;
 
@@ -16,14 +14,13 @@ import wow.simulator.model.unit.impl.PlayerImpl;
  * Date: 2024-11-10
  */
 @Component
-public class PlayerConverter extends AbstractPlayerConverter<Player, NonPlayer> {
+public class PlayerConverter extends AbstractPlayerConverter<Player> {
 	public PlayerConverter(
 			CharacterService characterService,
 			CharacterProfessionConverter characterProfessionConverter,
-			EquipmentConverter equipmentConverter,
-			AbstractNonPlayerConverter<NonPlayer> nonPlayerConverter
+			EquipmentConverter equipmentConverter
 	) {
-		super(characterService, characterProfessionConverter, equipmentConverter, nonPlayerConverter);
+		super(characterService, characterProfessionConverter, equipmentConverter);
 	}
 
 	@Override

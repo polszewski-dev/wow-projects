@@ -7,10 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import wow.character.model.character.Raid;
+import wow.commons.client.dto.RaidDTO;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.client.dto.RngType;
 import wow.simulator.client.dto.SimulationRequestDTO;
-import wow.simulator.converter.PlayerConverter;
+import wow.simulator.converter.NonPlayerConverter;
+import wow.simulator.converter.RaidConverter;
+import wow.simulator.model.unit.NonPlayer;
+import wow.simulator.model.unit.Player;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -26,14 +31,18 @@ class SimulationControllerTest extends WowSimulatorSpringTest {
 	MockMvc mockMvc;
 
 	@Autowired
-	PlayerConverter playerConverter;
+	RaidConverter raidConverter;
+
+	@Autowired
+	NonPlayerConverter nonPlayerConverter;
 
 	@Test
 	void simulate() throws Exception {
-		var playerDTO = playerConverter.convert(player);
+		var raidDTO = getRaidDTO(player);
+		var targetDTO = nonPlayerConverter.convert((NonPlayer) target);
 		var duration = 60;
 		var rngType = RngType.REAL;
-		var request = new SimulationRequestDTO(playerDTO, duration, rngType);
+		var request = new SimulationRequestDTO(raidDTO, targetDTO, duration, rngType);
 
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(request);
@@ -51,5 +60,11 @@ class SimulationControllerTest extends WowSimulatorSpringTest {
 	public void setUp() {
 		setupTestObjects();
 		getCharacterService().applyDefaultCharacterTemplate(player);
+	}
+
+	RaidDTO getRaidDTO(Player player) {
+		var raid = Raid.newRaid(player);
+
+		return raidConverter.convert(raid);
 	}
 }

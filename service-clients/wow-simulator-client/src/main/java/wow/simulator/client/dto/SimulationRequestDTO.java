@@ -1,13 +1,15 @@
 package wow.simulator.client.dto;
 
-import wow.commons.client.dto.PlayerDTO;
+import wow.commons.client.dto.NonPlayerDTO;
+import wow.commons.client.dto.RaidDTO;
 
 /**
  * User: POlszewski
  * Date: 2024-11-10
  */
 public record SimulationRequestDTO(
-		PlayerDTO player,
+		RaidDTO raid,
+		NonPlayerDTO target,
 		double duration,
 		RngType rngType
 ) {

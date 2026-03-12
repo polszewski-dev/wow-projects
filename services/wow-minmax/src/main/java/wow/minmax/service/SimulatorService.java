@@ -1,6 +1,6 @@
 package wow.minmax.service;
 
-import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.simulator.client.dto.StatsDTO;
 
 /**
@@ -8,5 +8,5 @@ import wow.simulator.client.dto.StatsDTO;
  * Date: 2024-11-09
  */
 public interface SimulatorService {
-	StatsDTO simulate(Player player);
+	StatsDTO simulate(PlayerId playerId);
 }
