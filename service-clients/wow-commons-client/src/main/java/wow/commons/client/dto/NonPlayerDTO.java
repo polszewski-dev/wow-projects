@@ -1,6 +1,7 @@
 package wow.commons.client.dto;
 
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public record NonPlayerDTO(
 		String name,
 		CreatureType enemyType,
 		int enemyLevel,
+		PhaseId phaseId,
 		List<Integer> buffIds,
 		List<ActiveEffectDTO> activeEffects
 ) {

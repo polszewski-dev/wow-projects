@@ -6,7 +6,6 @@ import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * Date: 2024-11-10
  */
 @AllArgsConstructor
-public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> implements Converter<N, NonPlayerDTO>, ParametrizedBackConverter<N, NonPlayerDTO, PhaseId> {
+public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> implements Converter<N, NonPlayerDTO>, BackConverter<N, NonPlayerDTO> {
 	private final CharacterService characterService;
 
 	@Override
@@ -26,18 +25,19 @@ public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> i
 				source.getName(),
 				source.getCreatureType(),
 				source.getLevel(),
+				source.getPhaseId(),
 				buffIds,
 				List.of()
 		);
 	}
 
 	@Override
-	public N doConvertBack(NonPlayerDTO source, PhaseId phaseId) {
+	public N doConvertBack(NonPlayerDTO source) {
 		return characterService.createNonPlayerCharacter(
 				source.name(),
 				source.enemyType(),
 				source.enemyLevel(),
-				phaseId,
+				source.phaseId(),
 				getFactory(source.name())
 		);
 	}

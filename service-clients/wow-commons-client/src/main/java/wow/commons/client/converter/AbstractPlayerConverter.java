@@ -68,7 +68,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 		player.getExclusiveFactions().set(source.exclusiveFactions());
 		player.setEquipment(equipmentConverter.convertBack(source.equipment(), source.phaseId()));
 
-		var target = nonPlayerConverter.convertBack(source.target(), source.phaseId());
+		var target = nonPlayerConverter.convertBack(source.target());
 
 		player.setTarget(target);
 
