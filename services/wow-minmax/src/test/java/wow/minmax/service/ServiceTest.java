@@ -9,6 +9,7 @@ import wow.minmax.model.PlayerProfile;
 import wow.minmax.model.db.PlayerConfig;
 import wow.minmax.repository.PlayerConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
+import wow.minmax.repository.RaidConfigRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,9 @@ abstract class ServiceTest extends WowMinMaxSpringTest {
 
 	@Autowired
 	PlayerProfileRepository playerProfileRepository;
+
+	@Autowired
+	RaidConfigRepository raidConfigRepository;
 
 	@Autowired
 	PlayerConfigConverter playerConfigConverter;

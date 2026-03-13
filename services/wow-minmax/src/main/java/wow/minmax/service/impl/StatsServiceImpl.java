@@ -13,6 +13,7 @@ import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
 import wow.minmax.service.PlayerService;
+import wow.minmax.service.RaidService;
 import wow.minmax.service.StatsService;
 
 import static wow.minmax.model.config.CharacterFeature.COMBAT_RATINGS;
@@ -26,6 +27,7 @@ import static wow.minmax.model.config.CharacterFeature.WORLD_BUFFS;
 @AllArgsConstructor
 public class StatsServiceImpl implements StatsService {
 	private final PlayerService playerService;
+	private final RaidService raidService;
 	private final MinmaxConfigRepository minmaxConfigRepository;
 	private final RaidConverter raidConverter;
 	private final NonPlayerConverter nonPlayerConverter;
@@ -35,7 +37,7 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetAbilityStatsResponseDTO getAbilityStats(Player player) {
-		var raid = playerService.getRaid(player);
+		var raid = raidService.getRaid(player);
 		var viewConfig = playerService.getViewConfig(player);
 		var usesCombatRatings = minmaxConfigRepository.hasFeature(player, COMBAT_RATINGS);
 
@@ -59,7 +61,7 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetCharacterStatsResponseDTO getCharacterStats(Player player) {
-		var raid = playerService.getRaid(player);
+		var raid = raidService.getRaid(player);
 		var worldBuffsAllowed = minmaxConfigRepository.hasFeature(player, WORLD_BUFFS);
 
 		var request = new GetCharacterStatsRequestDTO(
@@ -80,7 +82,7 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetSpecialAbilityStatsResponseDTO getSpecialAbilityStats(Player player) {
-		var raid = playerService.getRaid(player);
+		var raid = raidService.getRaid(player);
 
 		var request = new GetSpecialAbilityStatsRequestDTO(
 				raidConverter.convert(raid),
@@ -99,7 +101,7 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetRotationStatsResponseDTO getRotationStats(Player player) {
-		var raid = playerService.getRaid(player);
+		var raid = raidService.getRaid(player);
 
 		var request = new GetRotationStatsRequestDTO(
 				raidConverter.convert(raid),
@@ -118,7 +120,7 @@ public class StatsServiceImpl implements StatsService {
 
 	@Override
 	public GetTalentStatsResponseDTO getTalentStats(Player player) {
-		var raid = playerService.getRaid(player);
+		var raid = raidService.getRaid(player);
 
 		var request = new GetTalentStatsRequestDTO(
 				raidConverter.convert(raid),

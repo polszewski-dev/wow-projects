@@ -5,6 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.reactive.function.client.WebClient;
 import wow.minmax.repository.PlayerConfigRepository;
 import wow.minmax.repository.PlayerProfileRepository;
+import wow.minmax.repository.RaidConfigRepository;
 
 /**
  * User: POlszewski
@@ -21,6 +22,9 @@ public class WowMinMaxSpringTestConfig {
 
 	@MockBean
 	PlayerConfigRepository playerConfigRepository;
+
+	@MockBean
+	RaidConfigRepository raidConfigRepository;
 
 	@MockBean(name = "upgradesWebClient")
 	WebClient upgradesWebClient;

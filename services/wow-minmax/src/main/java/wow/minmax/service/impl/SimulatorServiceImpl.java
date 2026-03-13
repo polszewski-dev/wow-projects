@@ -12,7 +12,7 @@ import wow.minmax.converter.dto.RaidConverter;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
 import wow.minmax.model.PlayerId;
-import wow.minmax.service.PlayerService;
+import wow.minmax.service.RaidService;
 import wow.minmax.service.SimulatorService;
 import wow.simulator.client.dto.SimulationRequestDTO;
 import wow.simulator.client.dto.SimulationResponseDTO;
@@ -25,7 +25,8 @@ import wow.simulator.client.dto.StatsDTO;
 @Service
 @RequiredArgsConstructor
 public class SimulatorServiceImpl implements SimulatorService {
-	private final PlayerService playerService;
+	private final RaidService raidService;
+
 	private final RaidConverter raidConverter;
 	private final NonPlayerConverter nonPlayerConverter;
 
@@ -49,7 +50,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 	}
 
 	private SimulationRequestDTO getSimulationRequestDTO(PlayerId playerId) {
-		var raid = playerService.getRaid(playerId);
+		var raid = raidService.getRaid(playerId);
 
 		return new SimulationRequestDTO(
 				raidConverter.convert(raid),

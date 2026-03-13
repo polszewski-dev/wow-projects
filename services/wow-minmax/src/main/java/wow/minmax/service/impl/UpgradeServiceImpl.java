@@ -23,7 +23,7 @@ import wow.minmax.converter.dto.RaidConverter;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
 import wow.minmax.repository.MinmaxConfigRepository;
-import wow.minmax.service.PlayerService;
+import wow.minmax.service.RaidService;
 import wow.minmax.service.UpgradeService;
 
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.List;
 public class UpgradeServiceImpl implements UpgradeService {
 	private final MinmaxConfigRepository minmaxConfigRepository;
 
-	private final PlayerService playerService;
+	private final RaidService raidService;
 
 	private final RaidConverter raidConverter;
 	private final NonPlayerConverter nonPlayerConverter;
@@ -53,7 +53,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 	@Override
 	public List<UpgradeDTO> findUpgrades(Player player, ItemSlotGroup slotGroup, ItemFilter itemFilter, GemFilter gemFilter) {
-		var raid = playerService.getRaid(player);
+		var raid = raidService.getRaid(player);
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 		var itemLevelFilter = minmaxConfigRepository.getItemLevelFilter(player).orElseThrow();
 
@@ -81,7 +81,7 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 	@Override
 	public EquippableItem getBestItemVariant(Player player, Item item, ItemSlot slot, GemFilter gemFilter) {
-		var raid = playerService.getRaid(player);
+		var raid = raidService.getRaid(player);
 		var findUpgradesConfig = minmaxConfigRepository.getFindUpgradesConfig(player).orElseThrow();
 
 		var request = new GetBestItemVariantRequestDTO(

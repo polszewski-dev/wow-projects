@@ -2,7 +2,6 @@ package wow.minmax.service;
 
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.ProfIdSpecId;
-import wow.character.model.character.Raid;
 import wow.minmax.model.ExclusiveFactionGroup;
 import wow.minmax.model.Player;
 import wow.minmax.model.PlayerId;
@@ -17,10 +16,6 @@ import java.util.List;
  */
 public interface PlayerService {
 	Player getPlayer(PlayerId playerId);
-
-	Raid<Player> getRaid(PlayerId playerId);
-
-	Raid<Player> getRaid(Player player);
 
 	void savePlayer(Player player);
 

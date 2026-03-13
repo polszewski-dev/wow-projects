@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.CharacterProfession;
 import wow.character.model.character.ProfIdSpecId;
-import wow.character.model.character.Raid;
 import wow.character.service.CharacterService;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.FactionExclusionGroupId;
@@ -81,22 +80,6 @@ public class PlayerServiceImpl implements PlayerService {
 		characterService.applyDefaultCharacterTemplate(newPlayer);
 
 		return newPlayer;
-	}
-
-	@Override
-	public Raid<Player> getRaid(PlayerId playerId) {
-		var player = getPlayer(playerId);
-
-		return getRaid(player);
-	}
-
-	@Override
-	public Raid<Player> getRaid(Player player) {
-		var raid = new Raid<Player>();
-
-		raid.add(player);
-
-		return raid;
 	}
 
 	@Override
