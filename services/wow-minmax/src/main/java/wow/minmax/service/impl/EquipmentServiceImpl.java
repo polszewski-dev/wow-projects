@@ -55,7 +55,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		characterService.equipItem(player, slot, itemToEquip);
 
-		playerService.savePlayer(playerId, player);
+		playerService.savePlayer(player);
 
 		return getEquipmentDiff(oldEquipment, player);
 	}
@@ -68,7 +68,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		characterService.equipItemGroup(player, slotGroup, items);
 
-		playerService.savePlayer(playerId, player);
+		playerService.savePlayer(player);
 
 		return getEquipmentDiff(oldEquipment, player);
 	}
@@ -88,7 +88,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		player.resetEquipment();
 
-		playerService.savePlayer(playerId, player);
+		playerService.savePlayer(player);
 
 		return player;
 	}
@@ -170,7 +170,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		characterService.equipGearSet(player, gearSet);
 
-		playerService.savePlayer(playerId, player);
+		playerService.savePlayer(player);
 
 		return player;
 	}
@@ -189,7 +189,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			player.equip(item, itemSlot);
 		}
 
-		playerService.savePlayer(playerId, player);
+		playerService.savePlayer(player);
 
 		return player;
 	}

@@ -51,7 +51,7 @@ public class ConsumableServiceImpl implements ConsumableService {
 
 		player.getConsumables().enable(consumableName, enabled);
 
-		playerService.savePlayer(playerId, player);
+		playerService.savePlayer(player);
 
 		return player;
 	}

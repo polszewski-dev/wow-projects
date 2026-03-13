@@ -4,14 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.service.CharacterService;
 import wow.commons.client.converter.BackConverter;
-import wow.commons.client.converter.ParametrizedConverter;
+import wow.commons.client.converter.Converter;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.TalentId;
 import wow.minmax.converter.db.equipment.EquipmentConfigConverter;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
-import wow.minmax.model.PlayerId;
 import wow.minmax.model.db.PlayerConfig;
 import wow.minmax.model.impl.PlayerImpl;
 
@@ -21,7 +20,7 @@ import wow.minmax.model.impl.PlayerImpl;
  */
 @Component
 @AllArgsConstructor
-public class PlayerConfigConverter implements ParametrizedConverter<Player, PlayerConfig, PlayerId>, BackConverter<Player, PlayerConfig> {
+public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, BackConverter<Player, PlayerConfig> {
 	private final BuildConfigConverter buildConfigConverter;
 	private final EquipmentConfigConverter equipmentConfigConverter;
 	private final CharacterProfessionConfigConverter characterProfessionConfigConverter;
@@ -30,12 +29,12 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 	private final CharacterService characterService;
 
 	@Override
-	public PlayerConfig doConvert(Player source, PlayerId playerId) {
+	public PlayerConfig doConvert(Player source) {
 		var buffIds = source.getBuffs().getIds(BuffId::value);
 		var consumableIds = source.getConsumables().getIds(ConsumableId::value);
 
 		return new PlayerConfig(
-				playerId.toString(),
+				source.getPlayerId().toString(),
 				source.getName(),
 				source.getCharacterClassId(),
 				source.getRaceId(),
@@ -59,7 +58,7 @@ public class PlayerConfigConverter implements ParametrizedConverter<Player, Play
 				source.getRace(),
 				source.getLevel(),
 				source.getPhaseId(),
-				PlayerImpl::new
+				PlayerImpl.getFactory(source.getPlayerIdAsRecord())
 		);
 
 		changeBuild(player, source);

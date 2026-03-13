@@ -104,7 +104,7 @@ public abstract class WowMinMaxSpringTest {
 				race,
 				level,
 				phase,
-				PlayerImpl::new
+				PlayerImpl.getFactory(PLAYER_ID)
 		);
 
 		var target = characterService.createNonPlayerCharacter(

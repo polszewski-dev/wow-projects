@@ -9,7 +9,6 @@ import wow.commons.client.converter.CharacterProfessionConverter;
 import wow.commons.client.converter.equipment.EquipmentConverter;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Player;
-import wow.minmax.model.impl.PlayerImpl;
 
 /**
  * User: POlszewski
@@ -27,7 +26,7 @@ public class PlayerConverter extends AbstractPlayerConverter<Player, NonPlayer> 
 	}
 
 	@Override
-	protected PlayerCharacterFactory<Player> getFactory(String name) {
-		return PlayerImpl::new;
+	protected PlayerCharacterFactory<Player> getFactory() {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -27,7 +27,7 @@ public class PlayerConverter extends AbstractPlayerConverter<Player, NonPlayer> 
 	}
 
 	@Override
-	protected PlayerCharacterFactory<Player> getFactory(String name) {
+	protected PlayerCharacterFactory<Player> getFactory() {
 		return PlayerImpl::new;
 	}
 }

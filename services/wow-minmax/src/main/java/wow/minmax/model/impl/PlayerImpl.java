@@ -7,10 +7,12 @@ import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.character.service.PlayerCharacterFactory;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.minmax.model.Player;
+import wow.minmax.model.PlayerId;
 import wow.minmax.model.Unit;
 
 /**
@@ -19,6 +21,7 @@ import wow.minmax.model.Unit;
  */
 @Getter
 public class PlayerImpl extends CharacterImpl implements Player {
+	private final PlayerId playerId;
 	private final Race race;
 	private final Build build;
 	private final Equipment equipment;
@@ -27,6 +30,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final Consumables consumables;
 
 	public PlayerImpl(
+			PlayerId playerId,
 			String name,
 			Phase phase,
 			CharacterClass characterClass,
@@ -39,6 +43,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			ExclusiveFactions exclusiveFactions
 	) {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
+		this.playerId = playerId;
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
 		this.equipment = new Equipment();
@@ -61,5 +66,9 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	@Override
 	public Unit getTarget() {
 		return (Unit) super.getTarget();
+	}
+
+	public static PlayerCharacterFactory<Player> getFactory(PlayerId playerId) {
+		return (name, phase, characterClass, race, level, baseStatInfo, combatRatingInfo, talents, professions, exclusiveFactions) -> new PlayerImpl(playerId, name, phase, characterClass, race, level, baseStatInfo, combatRatingInfo, talents, professions, exclusiveFactions);
 	}
 }

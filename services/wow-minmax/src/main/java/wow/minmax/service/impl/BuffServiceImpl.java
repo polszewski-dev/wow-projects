@@ -43,7 +43,7 @@ public class BuffServiceImpl implements BuffService {
 
 		player.getBuffList(buffListType).enable(buffId, enabled);
 
-		playerService.savePlayer(playerId, player);
+		playerService.savePlayer(player);
 
 		return player;
 	}

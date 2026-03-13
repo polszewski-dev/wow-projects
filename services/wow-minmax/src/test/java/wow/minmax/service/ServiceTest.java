@@ -43,7 +43,7 @@ abstract class ServiceTest extends WowMinMaxSpringTest {
 
 		prepareCharacter();
 
-		savedCharacter = playerConfigConverter.convert(player, PLAYER_ID);
+		savedCharacter = playerConfigConverter.convert(player);
 
 		when(playerConfigRepository.findAll()).thenAnswer(input -> List.of(savedCharacter));
 		when(playerConfigRepository.findById(PLAYER_ID.toString())).thenAnswer(input -> Optional.of(savedCharacter));

@@ -34,7 +34,7 @@ public class CharacterController {
 	) {
 		var player = playerService.getPlayer(playerId);
 
-		return playerInfoConverter.convert(player, playerId);
+		return playerInfoConverter.convert(player);
 	}
 
 	@GetMapping("{playerId}/professions")
@@ -60,7 +60,7 @@ public class CharacterController {
 
 		log.info("changed profession charId: {}, idx: {}, profession: {}", playerId, index, profession.name());
 
-		return playerInfoConverter.convert(player, playerId);
+		return playerInfoConverter.convert(player);
 	}
 
 	@GetMapping("{playerId}/xfactions")
@@ -97,7 +97,7 @@ public class CharacterController {
 
 		log.info("changed talents charId: {}, link: {}", playerId, talentLink);
 
-		return playerInfoConverter.convert(player, playerId);
+		return playerInfoConverter.convert(player);
 	}
 
 	@GetMapping("{playerId}/scripts")
@@ -121,6 +121,6 @@ public class CharacterController {
 
 		log.info("changed script charId: {}, script: {}", playerId, script.id());
 
-		return playerInfoConverter.convert(player, playerId);
+		return playerInfoConverter.convert(player);
 	}
 }

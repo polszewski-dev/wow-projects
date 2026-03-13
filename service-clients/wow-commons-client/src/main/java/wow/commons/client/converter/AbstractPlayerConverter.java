@@ -59,7 +59,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 				source.raceId(),
 				source.level(),
 				source.phaseId(),
-				getFactory(source.name())
+				getFactory()
 		);
 
 		changeBuild(player, source);
@@ -90,5 +90,5 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter, N exten
 		build.setScript(source.script());
 	}
 
-	protected abstract PlayerCharacterFactory<P> getFactory(String name);
+	protected abstract PlayerCharacterFactory<P> getFactory();
 }

@@ -7,4 +7,5 @@ import wow.character.model.character.PlayerCharacter;
  * Date: 2026-02-09
  */
 public interface Player extends Unit, PlayerCharacter {
+	PlayerId getPlayerId();
 }
