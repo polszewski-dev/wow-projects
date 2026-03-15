@@ -16,9 +16,11 @@ import wow.commons.util.parser.ParserUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparingInt;
 import static wow.character.util.TalentLinkParser.TalentFinder;
 
 /**
@@ -234,7 +236,10 @@ class WowheadTalentListParser extends TalentListParser {
 				Math::min
 		));
 
-		var trees = talentTreeToPosition.keySet().stream().sorted().toList();
+		var trees = talentTreeToPosition.entrySet().stream()
+				.sorted(comparingInt(Map.Entry::getValue))
+				.map(Map.Entry::getKey)
+				.toList();
 
 		var firstPosition = talentTreeToPosition.get(trees.get(0));
 		var secondPosition = talentTreeToPosition.get(trees.get(1));
