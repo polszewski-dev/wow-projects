@@ -92,13 +92,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 		getBuffs().reset();
 	}
 
-	default Buffs getBuffList(BuffListType buffListType) {
-		return switch (buffListType) {
-			case CHARACTER_BUFF -> getBuffs();
-			case TARGET_DEBUFF -> getTarget().getBuffs();
-		};
-	}
-
 	static int getLevelDifference(Character caster, Character target) {
 		return target.getLevel() - caster.getLevel();
 	}

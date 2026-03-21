@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { BuffListType } from '../../model/buff/BuffListType';
 import { BuffStatus } from '../../model/buff/BuffStatus';
 import { changeBuffStatus } from '../../state/character/character.actions';
-import { selectBuffList } from '../../state/character/character.selectors';
+import { selectBuffStatuses } from '../../state/character/character.selectors';
 
 @Component({
 	selector: 'app-buff-editor',
@@ -10,9 +9,9 @@ import { selectBuffList } from '../../state/character/character.selectors';
 	styleUrls: ['./buff-editor.component.css']
 })
 export class BuffEditorComponent {
-	readonly selector = selectBuffList(BuffListType.CHARACTER_BUFF);
+	readonly selector = selectBuffStatuses;
 	
 	actionGenerator(playerId: string, buffStatus: BuffStatus) {
-		return changeBuffStatus({ playerId, buffListType: BuffListType.CHARACTER_BUFF, buffStatus });
+		return changeBuffStatus({ playerId, buffStatus });
 	}
 }

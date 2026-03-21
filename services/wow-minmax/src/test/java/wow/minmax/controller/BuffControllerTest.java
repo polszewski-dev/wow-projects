@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.test.commons.BuffNames.FEL_ARMOR;
 
 /**
@@ -27,7 +26,7 @@ class BuffControllerTest extends ControllerTest {
 
 	@Test
 	void getBuffs() throws Exception {
-		mockMvc.perform(get("/api/v1/buffs/{playerId}/{buffListType}", PLAYER_ID, CHARACTER_BUFF))
+		mockMvc.perform(get("/api/v1/buffs/{playerId}", PLAYER_ID))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
@@ -46,7 +45,7 @@ class BuffControllerTest extends ControllerTest {
 		var objectMapper = new ObjectMapper();
 		var requestBody = objectMapper.writeValueAsString(buffStatusDTO);
 
-		mockMvc.perform(put("/api/v1/buffs/{playerId}/{buffListType}", PLAYER_ID, CHARACTER_BUFF)
+		mockMvc.perform(put("/api/v1/buffs/{playerId}", PLAYER_ID)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(requestBody)
 				)

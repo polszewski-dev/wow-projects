@@ -45,8 +45,6 @@ import java.util.stream.IntStream;
 import static java.lang.Math.min;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
-import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
-import static wow.character.model.character.BuffListType.TARGET_DEBUFF;
 
 /**
  * User: POlszewski
@@ -192,12 +190,12 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void refreshBuffs(PlayerCharacter player) {
-		var buffs = getAvailableBuffs(player, CHARACTER_BUFF);
+		var buffs = getAvailableBuffs(player, false);
 
 		player.getBuffs().setAvailable(buffs);
 
 		if (player.getTarget() != null) {
-			var debuffs = getAvailableBuffs(player, TARGET_DEBUFF);
+			var debuffs = getAvailableBuffs(player, true);
 
 			player.getTarget().getBuffs().setAvailable(debuffs);
 		}
@@ -269,10 +267,10 @@ public class CharacterServiceImpl implements CharacterService {
 		return factionRepository.getAvailableExclusiveFactions(phaseId.getGameVersionId());
 	}
 
-	private List<Buff> getAvailableBuffs(PlayerCharacter player, BuffListType buffListType) {
+	private List<Buff> getAvailableBuffs(PlayerCharacter player, boolean debuff) {
 		return buffRepository.getAvailableBuffs(
 				player.getPhaseId(),
-				buff -> buff.isAvailableTo(player) && buffListType.getFilter().test(buff)
+				buff -> buff.isAvailableTo(player) && buff.isDebuff() == debuff
 		);
 	}
 

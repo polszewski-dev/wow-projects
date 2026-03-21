@@ -1,9 +1,8 @@
 import { createReducer, on } from "@ngrx/store";
 import { failure, Loadable, loading, pending, success } from '../../../shared/state/Loadable';
-import { BuffListType } from '../../model/buff/BuffListType';
-import { BuffGroup, BuffStatus } from "../../model/buff/BuffStatus";
+import { BuffGroup } from "../../model/buff/BuffStatus";
 import { Character } from '../../model/Character';
-import { ConsumableGroup, ConsumableStatus } from "../../model/consumable/ConsumableStatus";
+import { ConsumableGroup } from "../../model/consumable/ConsumableStatus";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
@@ -18,7 +17,7 @@ export interface CharacterState {
 	character: Loadable<Character | null>;
 	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>;
 	socketStatus: Loadable<EquipmentSocketStatus | null>;
-	buffStatuses: Record<BuffListType, Loadable<BuffGroup[]>>;
+	buffStatuses: Loadable<BuffGroup[]>;
 	consumableStatuses: Loadable<ConsumableGroup[]>;
 	dpsChangeIdx: number;
 }
@@ -28,7 +27,7 @@ const initialState: CharacterState = {
 	character: pending(null),
 	equipment: withAllSlotsSetTo(pending(null)),
 	socketStatus: pending(null),
-	buffStatuses: withAllBuffListsSetTo(pending([])),
+	buffStatuses: pending([]),
 	consumableStatuses: pending([]),
 	dpsChangeIdx: 0
 };
@@ -77,15 +76,15 @@ export const characterReducer = createReducer(
 
 	on(loadBuffs, (state) => ({
 		...state,
-		buffStatuses: withAllBuffListsSetTo(loading([]))
+		buffStatuses: loading([])
 	})),
-	on(loadBuffListSuccess, (state, { buffListType, buffStatusList }) => ({
+	on(loadBuffListSuccess, (state, { buffStatuses }) => ({
 		...state,
-		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, success(buffStatusList))
+		buffStatuses: success(buffStatuses)
 	})),
-	on(loadBuffListFailure, (state, { buffListType, error }) => ({
+	on(loadBuffListFailure, (state, { error }) => ({
 		...state,
-		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, failure([], error))
+		buffStatuses: failure([], error)
 	})),
 
 	on(loadConsumableStatuses, (state) => ({
@@ -126,14 +125,14 @@ export const characterReducer = createReducer(
 		equipment: withAllSlotsFilledFrom(equipment),
 	})),
 
-	on(changeBuffStatusSuccess, (state, { buffListType, buffStatus }) => ({
+	on(changeBuffStatusSuccess, (state, { buffStatus }) => ({
 		...state,
-		buffStatuses: withBuffStatusChanged(state.buffStatuses, buffListType, buffStatus)
+		buffStatuses: withChangedStatus(state.buffStatuses, buffStatus)
 	})),
 
 	on(changeConsumableStatusSuccess, (state, { consumableStatus }) => ({
 		...state,
-		consumableStatuses: withConsumableStatusChanged(state.consumableStatuses, consumableStatus)
+		consumableStatuses: withChangedStatus(state.consumableStatuses, consumableStatus)
 	})),
 
 	on(dpsChanged, (state) => ({
@@ -214,31 +213,6 @@ function withEquipmentDiffApplied(
 	}
 
 	return result;
-}
-
-function withAllBuffListsSetTo(value: Loadable<BuffGroup[]>) {
-	return {
-		CHARACTER_BUFF: value,
-		TARGET_DEBUFF: value
-	}
-}
-
-function withBuffListSetTo(buffStatuses: Record<BuffListType, Loadable<BuffGroup[]>>, key: BuffListType, value: Loadable<BuffGroup[]>) {
-	const result = { ...buffStatuses };
-	result[key] = value;
-	return result;
-}
-
-function withBuffStatusChanged(buffStatuses: Record<BuffListType, Loadable<BuffGroup[]>>, key: BuffListType, buffStatus: BuffStatus): Record<BuffListType, Loadable<BuffGroup[]>> {
-	const result = { ...buffStatuses };
-
-	result[key] = withChangedStatus(buffStatuses[key], buffStatus);
-
-	return result;
-}
-
-function withConsumableStatusChanged(consumableStatuses: Loadable<ConsumableGroup[]>, consumableStatus: ConsumableStatus): Loadable<ConsumableGroup[]> {
-	return withChangedStatus(consumableStatuses, consumableStatus);
 }
 
 function withChangedStatus<T extends { id: number }>(groups: Loadable<OptionGroup<T>[]>, status: OptionStatus<T>): Loadable<OptionGroup<T>[]> {

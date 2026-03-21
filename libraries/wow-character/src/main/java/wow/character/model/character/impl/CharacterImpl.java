@@ -8,8 +8,6 @@ import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.pve.Phase;
 
-import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
-
 /**
  * User: POlszewski
  * Date: 2023-10-31
@@ -36,7 +34,7 @@ public abstract class CharacterImpl implements Character {
 		this.baseStatInfo = baseStatInfo;
 		this.combatRatingInfo = combatRatingInfo;
 		this.spellbook = new Spellbook();
-		this.buffs = new Buffs(CHARACTER_BUFF);
+		this.buffs = new Buffs();
 	}
 
 	@Override

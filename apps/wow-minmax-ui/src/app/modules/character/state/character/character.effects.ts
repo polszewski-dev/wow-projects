@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { catchError, filter, from, map, mergeMap, of, switchMap, tap } from "rxjs";
-import { BuffListType } from "../../model/buff/BuffListType";
+import { catchError, filter, map, of, switchMap, tap } from "rxjs";
 import { BuffService } from '../../services/buff.service';
 import { CharacterService } from '../../services/character.service';
 import { ConsumableService } from "../../services/consumable.service";
@@ -64,11 +63,9 @@ export class CharacterEffects {
 
 	loadBuffs$ = createEffect(() => this.actions$.pipe(
 		ofType(loadBuffs),
-		switchMap(({ playerId }) => from(Object.values(BuffListType)).pipe(
-			mergeMap(buffListType => this.buffService.getBuffStatuses(playerId, buffListType).pipe(
-				map(buffStatusList => loadBuffListSuccess({ buffListType, buffStatusList })),
-				catchError(error => of(loadBuffListFailure({ buffListType, error })))
-			))
+		switchMap(({ playerId }) => this.buffService.getBuffStatuses(playerId).pipe(
+			map(buffStatuses => loadBuffListSuccess({ buffStatuses })),
+			catchError(error => of(loadBuffListFailure({ error })))
 		))
 	));
 
@@ -138,9 +135,9 @@ export class CharacterEffects {
 
 	changeBuffStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(changeBuffStatus),
-		switchMap(({ playerId, buffListType, buffStatus }) => this.buffService.changeBuffStatus(playerId, buffListType, buffStatus).pipe(
-			map(() => changeBuffStatusSuccess({ playerId, buffListType, buffStatus })),
-			catchError(error => of(changeBuffStatusFailure({ buffListType, error })))
+		switchMap(({ playerId, buffStatus }) => this.buffService.changeBuffStatus(playerId, buffStatus).pipe(
+			map(() => changeBuffStatusSuccess({ playerId, buffStatus })),
+			catchError(error => of(changeBuffStatusFailure({ error })))
 		))
 	));
 

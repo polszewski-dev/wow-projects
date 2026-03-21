@@ -1,5 +1,4 @@
 import { createAction, props } from "@ngrx/store";
-import { BuffListType } from '../../model/buff/BuffListType';
 import { BuffGroup, BuffStatus } from "../../model/buff/BuffStatus";
 import { Character } from '../../model/Character';
 import { ConsumableGroup, ConsumableStatus } from "../../model/consumable/ConsumableStatus";
@@ -73,12 +72,12 @@ export const loadBuffs = createAction(
 
 export const loadBuffListSuccess = createAction(
 	"[Character] Load Buff Status List Success",
-	props<{ buffListType: BuffListType, buffStatusList: BuffGroup[] }>()
+	props<{ buffStatuses: BuffGroup[] }>()
 );
 
 export const loadBuffListFailure = createAction(
 	"[Character] Load Buff List Failure",
-	props<{ buffListType: BuffListType, error: string }>()
+	props<{ error: string }>()
 );
 
 export const loadConsumableStatuses = createAction(
@@ -203,17 +202,17 @@ export const equipPreviousPhaseFailure = createAction(
 
 export const changeBuffStatus = createAction(
 	"[Character] Change Buff Status",
-	props<{ playerId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()
+	props<{ playerId: string, buffStatus: BuffStatus }>()
 );
 
 export const changeBuffStatusSuccess = createAction(
 	"[Character] Change Buff Status Success",
-	props<{ playerId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()
+	props<{ playerId: string, buffStatus: BuffStatus }>()
 );
 
 export const changeBuffStatusFailure = createAction(
 	"[Character] Change Buff Status Failure",
-	props<{ buffListType: BuffListType, error: string }>()
+	props<{ error: string }>()
 );
 
 export const changeConsumableStatus = createAction(

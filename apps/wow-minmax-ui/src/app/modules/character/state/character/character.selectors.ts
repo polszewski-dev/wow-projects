@@ -1,7 +1,6 @@
 import { createSelector } from "@ngrx/store";
 import { Loadable } from "../../../shared/state/Loadable";
 import { LoadStatus } from "../../../shared/state/LoadStatus";
-import { BuffListType } from '../../model/buff/BuffListType';
 import { EquippableItem } from "../../model/equipment/EquippableItem";
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { CharacterModuleState } from "../character-module.state";
@@ -47,12 +46,10 @@ export function selectSocketStatus(itemSlot: ItemSlot) {
 	);
 }
 
-export function selectBuffList(buffListType: BuffListType) {
-	return createSelector(
-		selectCharacterState,
-		state => state.buffStatuses[buffListType].value
-	);
-}
+export const selectBuffStatuses = createSelector(
+	selectCharacterState,
+	state => state.buffStatuses.value
+);
 
 export const selectConsumableStatuses = createSelector(
 	selectCharacterState,

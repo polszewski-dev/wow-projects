@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.character.BuffListType.CHARACTER_BUFF;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.test.commons.BuffNames.FLASK_OF_PURE_DEATH;
 import static wow.test.commons.BuffNames.FLASK_OF_SUPREME_POWER;
@@ -21,7 +20,7 @@ import static wow.test.commons.BuffNames.FLASK_OF_SUPREME_POWER;
 class BuffServiceTest extends ServiceTest {
 	@Test
 	void getBuffStatuses() {
-		var buffStatuses = underTest.getBuffStatuses(PLAYER_ID, CHARACTER_BUFF);
+		var buffStatuses = underTest.getBuffStatuses(PLAYER_ID);
 
 		var statusStrings = buffStatuses.stream()
 				.map(x -> x.option().getName() + "#" + x.enabled())
@@ -55,7 +54,7 @@ class BuffServiceTest extends ServiceTest {
 		assertBuffStatus(FLASK_OF_SUPREME_POWER, false);
 		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
-		underTest.changeBuffStatus(PLAYER_ID, CHARACTER_BUFF, BuffId.of(17628), true);// FLASK_OF_SUPREME_POWER
+		underTest.changeBuffStatus(PLAYER_ID, BuffId.of(17628), true);// FLASK_OF_SUPREME_POWER
 
 		assertBuffStatus(FLASK_OF_SUPREME_POWER, true);
 		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
@@ -65,7 +64,7 @@ class BuffServiceTest extends ServiceTest {
 	void disableBuff() {
 		assertBuffStatus(FLASK_OF_PURE_DEATH, true);
 
-		underTest.changeBuffStatus(PLAYER_ID, CHARACTER_BUFF, BuffId.of(28540), false);// FLASK_OF_PURE_DEATH
+		underTest.changeBuffStatus(PLAYER_ID, BuffId.of(28540), false);// FLASK_OF_PURE_DEATH
 
 		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
 	}

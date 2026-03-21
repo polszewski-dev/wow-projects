@@ -13,8 +13,6 @@ import wow.commons.model.buff.BuffId;
  */
 @AllArgsConstructor
 public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Copyable<Buffs> {
-	private final BuffListType type;
-
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		forEach(buff -> collector.addEffect(buff.getEffect(), buff.getStacks()));
@@ -22,7 +20,7 @@ public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Co
 
 	@Override
 	public Buffs copy() {
-		var copy = new Buffs(type);
+		var copy = new Buffs();
 		copyInto(copy);
 		return copy;
 	}

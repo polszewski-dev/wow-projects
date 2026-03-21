@@ -85,7 +85,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(equipmentService.equipItemGroup(any(), any(), any())).thenReturn(List.of());
 		when(equipmentService.getEquipmentSocketStatus(any())).thenReturn(new EquipmentSocketStatus(Map.of()));
 
-		when(buffService.changeBuffStatus(any(), any(), any(), anyBoolean())).thenReturn(player);
+		when(buffService.changeBuffStatus(any(), any(), anyBoolean())).thenReturn(player);
 
 		when(consumableService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(player);
 
