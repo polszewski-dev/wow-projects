@@ -3,6 +3,7 @@ package wow.minmax.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.buff.BuffId;
+import wow.commons.repository.item.ConsumableRepository;
 import wow.commons.repository.spell.BuffRepository;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import static wow.test.commons.BuffNames.FLASK_OF_SUPREME_POWER;
  * User: POlszewski
  * Date: 2025-08-29
  */
-class BuffServiceTest extends ServiceTest {
+class OptionServiceTest extends ServiceTest {
 	@Test
 	void getBuffStatuses() {
 		var buffStatuses = underTest.getBuffStatuses(PLAYER_ID);
@@ -69,11 +70,48 @@ class BuffServiceTest extends ServiceTest {
 		assertBuffStatus(FLASK_OF_PURE_DEATH, false);
 	}
 
+	@Test
+	void getConsumableStatuses() {
+		var consumableStatuses = underTest.getConsumableStatuses(PLAYER_ID);
+
+		var statusStrings = consumableStatuses.stream()
+				.map(x -> x.option().getName() + "#" + x.enabled())
+				.sorted()
+				.toList();
+
+		assertThat(statusStrings).hasSameElementsAs(List.of(
+				"Destruction Potion#false",
+				"Major Healing Potion#false",
+				"Super Healing Potion#false",
+				"Major Mana Potion#false",
+				"Super Mana Potion#false",
+				"Major Healthstone#false",
+				"Master Healthstone#false",
+				"Dark Rune#false"
+		));
+	}
+
+	@Test
+	void enableAndDisableConsumable() {
+		assertConsumableStatus("Destruction Potion", false);
+
+		underTest.changeConsumableStatus(PLAYER_ID, "Destruction Potion", true);
+
+		assertConsumableStatus("Destruction Potion", true);
+
+		underTest.changeConsumableStatus(PLAYER_ID, "Destruction Potion", false);
+
+		assertConsumableStatus("Destruction Potion", false);
+	}
+
 	@Autowired
-	BuffService underTest;
+	OptionService underTest;
 
 	@Autowired
 	BuffRepository buffRepository;
+
+	@Autowired
+	ConsumableRepository consumableRepository;
 
 	private void assertBuffStatus(String name, boolean enabled) {
 		assertThat(savedCharacter.getBuffIds().stream()
@@ -82,5 +120,14 @@ class BuffServiceTest extends ServiceTest {
 						   .map(Optional::orElseThrow)
 						   .anyMatch(buff -> buff.getName().equals(name))
 		).isEqualTo(enabled);
+	}
+
+	private void assertConsumableStatus(String consumableName, boolean enabled) {
+		var consumable = consumableRepository.getConsumable(consumableName, TBC_P5).orElseThrow();
+
+		var actual = savedCharacter.getConsumableIds().stream()
+				.anyMatch(consumableId -> consumableId == consumable.getId().value());
+
+		assertThat(actual).isEqualTo(enabled);
 	}
 }

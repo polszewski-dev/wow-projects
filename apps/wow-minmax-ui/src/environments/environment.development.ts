@@ -6,8 +6,7 @@ export const environment = {
 	equipmentOptionApiUrl: 'http://localhost:8080/api/v1/equipment-options',
 	upgradeApiUrl: 'http://localhost:8080/api/v1/upgrades',
 	talentApiUrl: 'http://localhost:8080/api/v1/talents',
-	buffApiUrl: 'http://localhost:8080/api/v1/buffs',
-	consumableApiUrl: 'http://localhost:8080/api/v1/consumables',
+	optionApiUrl: 'http://localhost:8080/api/v1/options',
 	statsApiUrl: 'http://localhost:8080/api/v1/stats',
 	simulationApiUrl:  'http://localhost:8080/api/v1/simulations',
 };

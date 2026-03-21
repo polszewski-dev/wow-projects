@@ -1,24 +1,19 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { Store } from "@ngrx/store";
 import { catchError, filter, map, of, switchMap, tap } from "rxjs";
-import { BuffService } from '../../services/buff.service';
 import { CharacterService } from '../../services/character.service';
-import { ConsumableService } from "../../services/consumable.service";
 import { EquipmentService } from '../../services/equipment.service';
+import { OptionService } from '../../services/option.service';
 import { loadEnchantOptions, loadEquipmentOptions, loadGemOptions, loadItemOptions } from "../equipment-options/equipment-options.actions";
-import { CharacterModuleState } from './../character-module.state';
 import { changeBuffStatus, changeBuffStatusFailure, changeBuffStatusSuccess, changeConsumableStatus, changeConsumableStatusFailure, changeConsumableStatusSuccess, changeExclusiveFaction, changeExclusiveFactionFailure, changeExclusiveFactionSuccess, changeProfession, changeProfessionFailure, changeProfessionSuccess, changeScript, changeScriptFailure, changeScriptSuccess, changeTalentLink, changeTalentLinkFailure, changeTalentLinkSuccess, dpsChanged, equipEnchant, equipEnchantFailure, equipEnchantSuccess, equipGearSet, equipGearSetFailure, equipGearSetSuccess, equipGem, equipGemFailure, equipGemSuccess, equipItemBestVariant, equipItemBestVariantFailure, equipItemBestVariantSuccess, equipItemGroup, equipItemGroupFailure, equipItemGroupSuccess, equipPreviousPhase, equipPreviousPhaseFailure, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesFailure, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatus, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipment, resetEquipmentFailure, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 @Injectable()
 export class CharacterEffects {
 	constructor(
 		private actions$: Actions,
-		private store: Store<CharacterModuleState>,
 		private characterService: CharacterService,
 		private equipmentService: EquipmentService,
-		private buffService: BuffService,
-		private consumableService: ConsumableService
+		private optionService: OptionService,
 	) {}
 
 	selectCharacter$ = createEffect(() => this.actions$.pipe(
@@ -63,7 +58,7 @@ export class CharacterEffects {
 
 	loadBuffs$ = createEffect(() => this.actions$.pipe(
 		ofType(loadBuffs),
-		switchMap(({ playerId }) => this.buffService.getBuffStatuses(playerId).pipe(
+		switchMap(({ playerId }) => this.optionService.getBuffStatuses(playerId).pipe(
 			map(buffStatuses => loadBuffListSuccess({ buffStatuses })),
 			catchError(error => of(loadBuffListFailure({ error })))
 		))
@@ -71,7 +66,7 @@ export class CharacterEffects {
 
 	loadConsumables$ = createEffect(() => this.actions$.pipe(
 		ofType(loadConsumableStatuses),
-		switchMap(({ playerId }) => this.consumableService.getConsumableStatuses(playerId).pipe(
+		switchMap(({ playerId }) => this.optionService.getConsumableStatuses(playerId).pipe(
 			map(consumableStatuses => loadConsumableStatusesSuccess({ consumableStatuses })),
 			catchError(error => of(loadConsumableStatusesFailure({ error })))
 		))
@@ -135,7 +130,7 @@ export class CharacterEffects {
 
 	changeBuffStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(changeBuffStatus),
-		switchMap(({ playerId, buffStatus }) => this.buffService.changeBuffStatus(playerId, buffStatus).pipe(
+		switchMap(({ playerId, buffStatus }) => this.optionService.changeBuffStatus(playerId, buffStatus).pipe(
 			map(() => changeBuffStatusSuccess({ playerId, buffStatus })),
 			catchError(error => of(changeBuffStatusFailure({ error })))
 		))
@@ -143,7 +138,7 @@ export class CharacterEffects {
 
 	changeConsumableStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(changeConsumableStatus),
-		switchMap(({ playerId, consumableStatus }) => this.consumableService.changeConsumableStatus(playerId, consumableStatus).pipe(
+		switchMap(({ playerId, consumableStatus }) => this.optionService.changeConsumableStatus(playerId, consumableStatus).pipe(
 			map(() => changeConsumableStatusSuccess({ playerId, consumableStatus })),
 			catchError(error => of(changeConsumableStatusFailure({ error })))
 		))

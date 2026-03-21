@@ -35,10 +35,7 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 	EquipmentService equipmentService;
 
 	@MockBean
-	BuffService buffService;
-
-	@MockBean
-	ConsumableService consumableService;
+	OptionService optionService;
 
 	@MockBean
 	UpgradeService upgradeService;
@@ -85,9 +82,8 @@ abstract class ControllerTest extends WowMinMaxSpringTest {
 		when(equipmentService.equipItemGroup(any(), any(), any())).thenReturn(List.of());
 		when(equipmentService.getEquipmentSocketStatus(any())).thenReturn(new EquipmentSocketStatus(Map.of()));
 
-		when(buffService.changeBuffStatus(any(), any(), anyBoolean())).thenReturn(player);
-
-		when(consumableService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(player);
+		when(optionService.changeBuffStatus(any(), any(), anyBoolean())).thenReturn(player);
+		when(optionService.changeConsumableStatus(any(), any(), anyBoolean())).thenReturn(player);
 
 		when(upgradeService.findUpgrades(any(), any(), any(), any())).thenReturn(List.of());
 		when(upgradeService.getBestItemVariant(any(), any(), any(), any())).thenAnswer(input -> new EquippableItem(input.getArgument(0, Item.class)));
