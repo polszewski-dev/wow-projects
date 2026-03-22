@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { BuffGroup, BuffStatus } from '../model/buff/BuffStatus';
-import { ConsumableGroup, ConsumableStatus } from '../model/consumable/ConsumableStatus';
+import { BuffGroup, BuffStatus } from '../model/Buff';
+import { ConsumableGroup, ConsumableStatus } from '../model/Consumable';
 
 @Injectable({
 	providedIn: 'root'

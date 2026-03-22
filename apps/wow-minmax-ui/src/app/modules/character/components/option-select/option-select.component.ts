@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Description } from '../../../shared/model/Description';
 import { OptionGroup } from '../../model/OptionGroup';
 import { OptionStatus } from '../../model/OptionStatus';

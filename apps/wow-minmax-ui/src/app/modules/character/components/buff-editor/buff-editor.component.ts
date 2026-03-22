@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BuffStatus } from '../../model/buff/BuffStatus';
+import { BuffStatus } from '../../model/Buff';
 import { changeBuffStatus } from '../../state/character/character.actions';
 import { selectBuffStatuses } from '../../state/character/character.selectors';
 

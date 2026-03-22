@@ -2,12 +2,10 @@ import { Component, Input } from '@angular/core';
 import { Action, createSelector, Selector, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Description } from 'src/app/modules/shared/model/Description';
-import { BuffStatus } from '../../model/buff/BuffStatus';
 import { copyOptionGroup, OptionGroup } from '../../model/OptionGroup';
-import { CharacterModuleState } from '../../state/character-module.state';
-import { changeBuffStatus } from '../../state/character/character.actions';
-import { selectPlayerId } from '../../state/character/character.selectors';
 import { OptionStatus } from '../../model/OptionStatus';
+import { CharacterModuleState } from '../../state/character-module.state';
+import { selectPlayerId } from '../../state/character/character.selectors';
 
 @Component({
 	selector: 'app-option-editor',

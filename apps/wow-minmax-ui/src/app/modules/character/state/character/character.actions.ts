@@ -1,7 +1,7 @@
 import { createAction, props } from "@ngrx/store";
-import { BuffGroup, BuffStatus } from "../../model/buff/BuffStatus";
+import { BuffGroup, BuffStatus } from "../../model/Buff";
 import { Character } from '../../model/Character';
-import { ConsumableGroup, ConsumableStatus } from "../../model/consumable/ConsumableStatus";
+import { ConsumableGroup, ConsumableStatus } from "../../model/Consumable";
 import { Enchant } from "../../model/equipment/Enchant";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
@@ -65,18 +65,18 @@ export const loadSocketStatusFailure = createAction(
 	props<{ error: string }>()
 );
 
-export const loadBuffs = createAction(
-	"[Character] Load Buffs",
+export const loadBuffStatuses = createAction(
+	"[Character] Load Buff Statuses",
 	props<{ playerId: string }>()
 );
 
-export const loadBuffListSuccess = createAction(
-	"[Character] Load Buff Status List Success",
+export const loadBuffStatusesSuccess = createAction(
+	"[Character] Load Buff Statuses Success",
 	props<{ buffStatuses: BuffGroup[] }>()
 );
 
-export const loadBuffListFailure = createAction(
-	"[Character] Load Buff List Failure",
+export const loadBuffStatusesFailure = createAction(
+	"[Character] Load Buff Statuses Failure",
 	props<{ error: string }>()
 );
 

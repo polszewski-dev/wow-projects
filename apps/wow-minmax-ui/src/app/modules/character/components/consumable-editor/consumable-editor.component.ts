@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ConsumableStatus } from '../../model/consumable/ConsumableStatus';
+import { ConsumableStatus } from '../../model/Consumable';
 import { changeConsumableStatus } from '../../state/character/character.actions';
 import { selectConsumableStatuses } from '../../state/character/character.selectors';
 

@@ -1,8 +1,8 @@
 import { createReducer, on } from "@ngrx/store";
 import { failure, Loadable, loading, pending, success } from '../../../shared/state/Loadable';
-import { BuffGroup } from "../../model/buff/BuffStatus";
+import { BuffGroup } from "../../model/Buff";
 import { Character } from '../../model/Character';
-import { ConsumableGroup } from "../../model/consumable/ConsumableStatus";
+import { ConsumableGroup } from "../../model/Consumable";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
@@ -10,7 +10,7 @@ import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { EquipmentDiff } from "../../model/equipment/ItemSlotStatus";
 import { copyOptionGroup, OptionGroup } from "../../model/OptionGroup";
 import { OptionStatus } from "../../model/OptionStatus";
-import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffStatusesFailure, loadBuffStatusesSuccess, loadBuffStatuses, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
 	playerId: string | null;
@@ -74,15 +74,15 @@ export const characterReducer = createReducer(
 		socketStatus: failure(null, error)
 	})),
 
-	on(loadBuffs, (state) => ({
+	on(loadBuffStatuses, (state) => ({
 		...state,
 		buffStatuses: loading([])
 	})),
-	on(loadBuffListSuccess, (state, { buffStatuses }) => ({
+	on(loadBuffStatusesSuccess, (state, { buffStatuses }) => ({
 		...state,
 		buffStatuses: success(buffStatuses)
 	})),
-	on(loadBuffListFailure, (state, { error }) => ({
+	on(loadBuffStatusesFailure, (state, { error }) => ({
 		...state,
 		buffStatuses: failure([], error)
 	})),
