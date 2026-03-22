@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { AssetGroup, AssetStatus } from '../model/Asset';
 import { BuffGroup, BuffStatus } from '../model/Buff';
 import { ConsumableGroup, ConsumableStatus } from '../model/Consumable';
 
@@ -26,5 +27,13 @@ export class OptionService {
 
 	changeConsumableStatus(playerId: string, consumable: ConsumableStatus) {
 		return this.http.put<void>(`${this.apiUrl}/${playerId}/consumables`, consumable);
+	}
+
+	getAssetStatuses(playerId: string) {
+		return this.http.get<AssetGroup[]>(`${this.apiUrl}/${playerId}/assets`);
+	}
+
+	changeAssetStatus(playerId: string, assetStatus: AssetStatus) {
+		return this.http.put<void>(`${this.apiUrl}/${playerId}/assets`, assetStatus);
 	}
 }

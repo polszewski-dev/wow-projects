@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { AssetEditorComponent } from './components/asset-editor/asset-editor.component';
 import { BuffEditorComponent } from './components/buff-editor/buff-editor.component';
 import { CharacterDetailsComponent } from './components/character-details/character-details.component';
 import { ConsumableEditorComponent } from './components/consumable-editor/consumable-editor.component';
@@ -22,6 +23,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 
 @NgModule({
 	declarations: [
+		AssetEditorComponent,
 		BuffEditorComponent,
 		ConsumableEditorComponent,
 		EquipmentEditorComponent,
@@ -50,6 +52,7 @@ import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.com
 		FormsModule,
 		ReactiveFormsModule,
 		SharedModule,
+		AssetEditorComponent,
 		BuffEditorComponent,
 		ConsumableEditorComponent,
 		EquipmentEditorComponent,

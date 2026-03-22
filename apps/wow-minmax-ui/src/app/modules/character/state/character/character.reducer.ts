@@ -1,5 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { failure, Loadable, loading, pending, success } from '../../../shared/state/Loadable';
+import { AssetGroup } from "../../model/Asset";
 import { BuffGroup } from "../../model/Buff";
 import { Character } from '../../model/Character';
 import { ConsumableGroup } from "../../model/Consumable";
@@ -10,7 +11,7 @@ import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { EquipmentDiff } from "../../model/equipment/ItemSlotStatus";
 import { copyOptionGroup, OptionGroup } from "../../model/OptionGroup";
 import { OptionStatus } from "../../model/OptionStatus";
-import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffStatusesFailure, loadBuffStatusesSuccess, loadBuffStatuses, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
+import { changeAssetStatusSuccess, changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadAssetStatuses, loadAssetStatusesFailure, loadAssetStatusesSuccess, loadBuffStatuses, loadBuffStatusesFailure, loadBuffStatusesSuccess, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
 	playerId: string | null;
@@ -19,6 +20,7 @@ export interface CharacterState {
 	socketStatus: Loadable<EquipmentSocketStatus | null>;
 	buffStatuses: Loadable<BuffGroup[]>;
 	consumableStatuses: Loadable<ConsumableGroup[]>;
+	assetStatuses: Loadable<AssetGroup[]>;
 	dpsChangeIdx: number;
 }
 
@@ -29,6 +31,7 @@ const initialState: CharacterState = {
 	socketStatus: pending(null),
 	buffStatuses: pending([]),
 	consumableStatuses: pending([]),
+	assetStatuses: pending([]),
 	dpsChangeIdx: 0
 };
 
@@ -96,6 +99,19 @@ export const characterReducer = createReducer(
 		consumableStatuses: success(consumableStatuses)
 	})),
 
+	on(loadAssetStatuses, (state) => ({
+		...state,
+		assetStatuses: loading([])
+	})),
+	on(loadAssetStatusesSuccess, (state, { assetStatuses }) => ({
+		...state,
+		assetStatuses: success(assetStatuses)
+	})),
+	on(loadAssetStatusesFailure, (state, { error }) => ({
+		...state,
+		assetStatuses: failure([], error)
+	})),
+
 	on(equipItemBestVariantSuccess, (state, { equipmentDiff }) => ({
 		...state,
 		equipment: withEquipmentDiffApplied(state.equipment, equipmentDiff)
@@ -133,6 +149,11 @@ export const characterReducer = createReducer(
 	on(changeConsumableStatusSuccess, (state, { consumableStatus }) => ({
 		...state,
 		consumableStatuses: withChangedStatus(state.consumableStatuses, consumableStatus)
+	})),
+
+	on(changeAssetStatusSuccess, (state, { assetStatus }) => ({
+		...state,
+		assetStatuses: withChangedStatus(state.assetStatuses, assetStatus)
 	})),
 
 	on(dpsChanged, (state) => ({

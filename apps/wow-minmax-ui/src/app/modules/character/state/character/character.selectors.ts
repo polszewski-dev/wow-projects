@@ -56,6 +56,10 @@ export const selectConsumableStatuses = createSelector(
 	state => state.consumableStatuses.value
 );
 
+export const selectAssetStatuses = createSelector(
+	selectCharacterState,
+	state => state.assetStatuses.value
+);
 
 export const selectDpsChangeIdx = createSelector(
 	selectCharacterState,

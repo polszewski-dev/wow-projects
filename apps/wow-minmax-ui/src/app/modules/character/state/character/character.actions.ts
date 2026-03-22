@@ -1,4 +1,5 @@
 import { createAction, props } from "@ngrx/store";
+import { AssetGroup, AssetStatus } from "../../model/Asset";
 import { BuffGroup, BuffStatus } from "../../model/Buff";
 import { Character } from '../../model/Character';
 import { ConsumableGroup, ConsumableStatus } from "../../model/Consumable";
@@ -92,6 +93,21 @@ export const loadConsumableStatusesSuccess = createAction(
 
 export const loadConsumableStatusesFailure = createAction(
 	"[Character] Load Consumable Statuses Failure",
+	props<{ error: string }>()
+);
+
+export const loadAssetStatuses = createAction(
+	"[Character] Load Asset Statuses",
+	props<{ playerId: string }>()
+);
+
+export const loadAssetStatusesSuccess = createAction(
+	"[Character] Load Asset Statuses Success",
+	props<{ assetStatuses: AssetGroup[] }>()
+);
+
+export const loadAssetStatusesFailure = createAction(
+	"[Character] Load Asset Statuses Failure",
 	props<{ error: string }>()
 );
 
@@ -227,6 +243,21 @@ export const changeConsumableStatusSuccess = createAction(
 
 export const changeConsumableStatusFailure = createAction(
 	"[Character] Change Consumable Status Failure",
+	props<{ error: string }>()
+);
+
+export const changeAssetStatus = createAction(
+	"[Character] Change Asset Status",
+	props<{ playerId: string, assetStatus: AssetStatus }>()
+);
+
+export const changeAssetStatusSuccess = createAction(
+	"[Character] Change Asset Status Success",
+	props<{ playerId: string, assetStatus: AssetStatus }>()
+);
+
+export const changeAssetStatusFailure = createAction(
+	"[Character] Change Asset Status Failure",
 	props<{ error: string }>()
 );
 
