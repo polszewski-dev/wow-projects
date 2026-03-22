@@ -15,6 +15,7 @@ import wow.commons.model.spell.SpellTargets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.DESTRUCTION_POTION;
+import static wow.commons.model.item.ConsumableExclusionGroup.POTION;
 
 /**
  * User: POlszewski
@@ -33,6 +34,7 @@ class ConsumableRepositoryTest extends WowCommonsSpringTest {
 		assertThat(consumable.getId()).isEqualTo(consumableId);
 		assertThat(consumable.getName()).isEqualTo("Destruction Potion");
 		assertThat(consumable.getRequiredLevel()).isEqualTo(60);
+		assertThat(consumable.getExclusionGroup()).isEqualTo(POTION);
 		assertThat(consumable.getTooltip()).isEqualTo("Use: Increases spell critical chance by 2% and spell damage by 120 for 15 sec. (2 Min Cooldown)");
 
 		assertThat(consumable.getActivatedAbility().getAbilityId()).isEqualTo(DESTRUCTION_POTION);

@@ -16,6 +16,8 @@ public class ConsumableStatusConverter extends OptionStatusConverter<Consumable,
 
 	@Override
 	protected String getGroupKey(Consumable source) {
-		return source.getName();
+		return source.getExclusionGroup() != null
+				? source.getExclusionGroup().name()
+				: source.getName();
 	}
 }

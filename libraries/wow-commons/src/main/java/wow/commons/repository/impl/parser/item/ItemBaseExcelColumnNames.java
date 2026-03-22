@@ -39,6 +39,8 @@ public final class ItemBaseExcelColumnNames {
 	public static final String GEM_EFFECT_PREFIX = "";
 	public static final int GEM_MAX_EFFECTS = 2;
 
+	public static final String CONSUMABLE_EXCLUSION_GROUP = "exclusion_group";
+
 	public static final String ITEM_SET_PIECES = "pieces";
 	public static final String ITEM_SET_BONUS_REQ_PROFESSION = "bonus_req_prof";
 	public static final String ITEM_SET_BONUS_REQ_PROFESSION_LEVEL = "bonus_req_prof_lvl";

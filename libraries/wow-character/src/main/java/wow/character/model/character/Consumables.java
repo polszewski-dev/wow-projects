@@ -46,6 +46,10 @@ public class Consumables extends Options<Consumable, ConsumableId> implements Ef
 
 	@Override
 	protected String getKey(Consumable consumable) {
+		if (consumable.getExclusionGroup() != null) {
+			return consumable.getExclusionGroup().toString();
+		}
+
 		return consumable.getName();
 	}
 }

@@ -3,6 +3,7 @@ package wow.minmax.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.buff.BuffId;
+import wow.commons.model.item.ConsumableId;
 import wow.commons.repository.item.ConsumableRepository;
 import wow.commons.repository.spell.BuffRepository;
 
@@ -95,11 +96,11 @@ class OptionServiceTest extends ServiceTest {
 	void enableAndDisableConsumable() {
 		assertConsumableStatus("Destruction Potion", false);
 
-		underTest.changeConsumableStatus(PLAYER_ID, "Destruction Potion", true);
+		underTest.changeConsumableStatus(PLAYER_ID, ConsumableId.of(22839), true);//DESTRUCTION_POTION
 
 		assertConsumableStatus("Destruction Potion", true);
 
-		underTest.changeConsumableStatus(PLAYER_ID, "Destruction Potion", false);
+		underTest.changeConsumableStatus(PLAYER_ID, ConsumableId.of(22839), false);//DESTRUCTION_POTION
 
 		assertConsumableStatus("Destruction Potion", false);
 	}

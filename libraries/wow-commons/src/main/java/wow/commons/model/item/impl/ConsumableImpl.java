@@ -8,6 +8,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.Consumable;
+import wow.commons.model.item.ConsumableExclusionGroup;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.spell.ActivatedAbility;
 
@@ -18,6 +19,7 @@ import wow.commons.model.spell.ActivatedAbility;
 @Getter
 @Setter
 public class ConsumableImpl extends AbstractItemImpl<ConsumableId> implements Consumable {
+	private final ConsumableExclusionGroup exclusionGroup;
 	private ActivatedAbility activatedAbility;
 
 	public ConsumableImpl(
@@ -25,9 +27,11 @@ public class ConsumableImpl extends AbstractItemImpl<ConsumableId> implements Co
 			Description description,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
-			BasicItemInfo basicItemInfo
+			BasicItemInfo basicItemInfo,
+			ConsumableExclusionGroup exclusionGroup
 	) {
 		super(id, description, timeRestriction, characterRestriction, basicItemInfo);
 		assertItemType(ItemType.CONSUMABLE);
+		this.exclusionGroup = exclusionGroup;
 	}
 }

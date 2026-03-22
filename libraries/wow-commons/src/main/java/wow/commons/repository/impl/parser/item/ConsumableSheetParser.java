@@ -1,17 +1,21 @@
 package wow.commons.repository.impl.parser.item;
 
 import wow.commons.model.item.Consumable;
+import wow.commons.model.item.ConsumableExclusionGroup;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.item.impl.ConsumableImpl;
 import wow.commons.repository.spell.SpellRepository;
 
 import static wow.commons.model.effect.EffectSource.ItemSource;
+import static wow.commons.repository.impl.parser.item.ItemBaseExcelColumnNames.CONSUMABLE_EXCLUSION_GROUP;
 
 /**
  * User: POlszewski
  * Date: 2022-11-22
  */
 public class ConsumableSheetParser extends AbstractItemSheetParser {
+	private final ExcelColumn colExclusionGroup = column(CONSUMABLE_EXCLUSION_GROUP);
+
 	private final ConsumableExcelParser parser;
 
 	public ConsumableSheetParser(String sheetName, ItemSourceParserFactory itemSourceParserFactory, SpellRepository spellRepository, ConsumableExcelParser parser) {
@@ -32,8 +36,9 @@ public class ConsumableSheetParser extends AbstractItemSheetParser {
 		var timeRestriction = getTimeRestriction();
 		var characterRestriction = getRestriction();
 		var basicItemInfo = getBasicItemInfo();
+		var exclusionGroup = colExclusionGroup.getEnum(ConsumableExclusionGroup::parse, null);
 
-		var consumable = new ConsumableImpl(id, description, timeRestriction, characterRestriction, basicItemInfo);
+		var consumable = new ConsumableImpl(id, description, timeRestriction, characterRestriction, basicItemInfo, exclusionGroup);
 
 		var activatedAbility = getActivatedAbility(new ItemSource(consumable));
 

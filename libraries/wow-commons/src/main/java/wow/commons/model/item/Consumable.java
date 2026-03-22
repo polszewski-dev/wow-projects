@@ -7,5 +7,7 @@ import wow.commons.model.spell.ActivatedAbility;
  * Date: 2024-11-22
  */
 public interface Consumable extends AbstractItem<ConsumableId> {
+	ConsumableExclusionGroup getExclusionGroup();
+
 	ActivatedAbility getActivatedAbility();
 }
